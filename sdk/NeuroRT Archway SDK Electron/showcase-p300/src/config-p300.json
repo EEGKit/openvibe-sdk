@@ -1,0 +1,18 @@
+{
+  "pipeline": "0x00000024",
+  "delayBetweenFlash": 350,
+  "durationFlash": 100,
+  "backgroundColor": "white",
+
+  "target": {
+    "number": 20,
+    "color": "red",
+    "label": "0x00008205"
+  },
+
+  "nonTarget": {
+    "number": 80,
+    "color": "gray",
+    "label": "0x00008206"
+  }
+}

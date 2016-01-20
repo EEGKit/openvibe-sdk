@@ -1,0 +1,20 @@
+{
+  "title": "Example Application",
+  "children": {
+    "run.cmd": {
+      "title": "run.cmd"
+    },
+    "package.json": {
+      "title": "package.json"
+    },
+    "main.js": {
+      "title": "main.js"
+    },
+    "index.html": {
+      "title": "index.html"
+    },
+    "config.conf": {
+      "title": "config.conf"
+    }
+  }
+}

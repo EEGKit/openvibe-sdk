@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- Archway related method are here (same code as showcase-console, but simplified) -->
+    <script type="text/javascript">
+      // Get the Archway object
+      var archway = require('../../SDK/archway-node');
+
+      // Whether we are currently reading data from Archway
+      var acquisitionLoopRunning = false;
+
+      // The javascript timeout object (so we can stop the loop when necessary)
+      var acquisitionLoopTimeout = null;
+
+      // Holds the ID of the monitoring pipeline we will create in the NeuroRT Engine
+      var pipelineId = null;
+
+      // The number of channels available on the first acquisition device
+      // We will use this value to correctly display incoming values
+      var firstAcquisitionDeviceChannelCount = null;
+
+      /**
+        * Print the string into the div element serving as a console
+        */
+      function log(string) {
+        var date = new Date();
+        console.log("[LOG] " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + " - ", string);
+      }
+
+      // Uninitialize archway if it is initialized
+      // This is useful when testing the application as Electron does not reload the
+      // plugins when the webpage is refreshed.
+
+      if (archway.isStarted()) {
+        archway.stopEngine();
+      }
+      if (archway.isAcquiring()) {
+        archway.stopAllAcquisitionDevices();
+      }
+      if (archway.isInitialized()) {
+        archway.uninitialize();
+      }
+
+      /**
+       * Get the last error code that occurred in Archway
+       * Get the corresponding message in English
+       * Return object containing both
+       */
+      function getLastError(archway) {
+        var errorCode = archway.getLastError();
+        var errorMessage = archway.getErrorString(errorCode);
+        return {
+          code: errorCode,
+          message: errorMessage
+        }
+      }
+
+      /**
+        * Get the last error code and the associated message from Archway
+        * Print them into the console
+        */
+      function logError(error) {
+        var msg = "[ERROR] CODE " + error.code + " - " + error.message;
+        console.error(msg);
+        alert(msg);
+      }
+
+      /**
+        * Starts executing a loop which calls the archway.mainloop() every 10ms
+        */
+      function startAcquisitionLoop() {
+        if (acquisitionLoopRunning) {
+          return;
+        }
+        log("Starting the acquisition loop\n");
+
+        acquisitionLoopRunning = true;
+
+        (function acquisitionLoop() {
+          acquisitionLoopTimeout = setTimeout( function () {
+            if (!acquisitionLoopRunning) {
+              return;
+            }
+
+            if (!archway.mainloop()) {
+              logError(getLastError(archway));
+              acquisitionLoopRunning = false;
+              clearTimeout(acquisitionLoopTimeout);
+            }
+
+            // As long as there is data available on the 1st channel of the monitor pipeline
+            while (archway.getPendingValueCount(pipelineId, 1) > 0) {
+              // NOTE: the getPendingValue function can throw error if the Archway is not started, initialized etc.
+              try {
+                var values = archway.getPendingValue(pipelineId, 1);
+                // We use the first value only (see the related scenario in
+                // NeuroRT Studio for more informations). As it goes from -1
+                // to 1, -1 being the first class and 1 the second, the
+                // algorithm to define the intensity of the light is as follow
+
+                // intensity = (maxValue - minValue) * (1 + value)
+                // with minValue = 0 and maxValue = 240
+
+                // So the intensity ranges from 0 to 240
+                lightIntensity = 120 * (1 + values[0]);
+              } catch (archwayError) {
+                logError(archwayError);
+                break;
+              }
+            }
+
+            // Drop the pending values, we don't need them anymore, or else it
+            // will increase memory consumption. See the Archway doc for more
+            // informations.
+            archway.dropPendingValues(0);
+
+            acquisitionLoop();
+          }, 10);
+        })();
+
+      }
+
+      function stopAcquisitionLoop() {
+        log("Stopping the acquisition loop\n");
+        acquisitionLoopRunning = false;
+        clearTimeout(acquisitionLoopTimeout);
+      }
+
+      // ------------------------------------------------------
+      // SEPARATED CALLS
+      //
+      // These calls use the simple, synchronous API to control the Archway
+      // ------------------------------------------------------
+
+
+      // Initialize Archway, this will connect to the Engine
+      function initialize() {
+        if (archway.initialize('login', 'password', 'showcase-2classes', 'config.conf')) {
+          log('Archway initialized\n');
+        } else {
+          logError(getLastError(archway));
+        }
+      }
+
+      // Start Acquiring EEG from all configured devices
+      function startDevices() {
+        if (archway.startAllAcquisitionDevices()) {
+          log('Acquisition devices started\n');
+
+          // Save the number of channels of the first acquisition device, we will need this
+          // to display the incoming values correctly
+          firstAcquisitionDeviceChannelCount = archway.getAcquisitionDeviceChannelCount(0);
+        } else {
+          logError(getLastError(archway));
+        }
+      }
+
+      // Create the pipeline and start sending data from Archway to the Engine
+      // Also start looping on the mainloop() call to get data
+      function start(pipe) {
+        // Create the Echo pipeline
+        pipelineId = archway.createPipeline(pipe, "");
+        if (pipelineId != 0) {
+          log('Pipeline created\n');
+        } else {
+          log('Failed to create the pipeline\n');
+          logError(getLastError(archway));
+          return;
+        }
+
+        // Start the Engine processing
+        if (archway.startEngine()) {
+          log('Engine started\n');
+
+          // Start the local mainloop() loop
+          startAcquisitionLoop();
+        } else {
+          logError(getLastError(archway));
+        }
+      }
+
+      // Stop the processing loop and the Engine
+      function stop() {
+        if (acquisitionLoopRunning == true) {
+          stopAcquisitionLoop();
+        }
+
+        // Stop the Engine
+        if (archway.stopEngine()) {
+          log('Engine stopped\n');
+         } else {
+          logError(getLastError(archway));
+          return;
+        }
+
+        // Release the pipeline
+        if (archway.releasePipeline(pipelineId)) {
+          log('Pipeline released\n');
+        } else {
+          log('Failed to release the pipeline\n');
+          logError(getLastError(archway));
+        }
+
+      }
+
+      // Stop acquiring data from the EEG devices
+      function stopDevices() {
+        if (archway.stopAllAcquisitionDevices()) {
+          log('Acquisition devices stopped\n');
+        } else {
+          logError(getLastError(archway));
+        }
+      }
+
+      // Uninitialize Archway and disconnect from the Engine
+      function uninitialize() {
+        if (archway.uninitialize()) {
+          log('Archway uninitialized\n');
+        } else {
+          logError(getLastError(archway));
+        }
+      }
+    </script>
+
+    <!-- 2classes game related methods are here -->
+    <script type="text/javascript">
+      var settings = {},
+      isCalibrationRunning = false,
+      isCalibrationDone = false,
+      isGameRunning = false,
+      relaxTaggingCount = -80,
+      focusTaggingCount = -80,
+      lightIntensity = 150,
+      lightGradient,
+      ctx, instructions;
+
+      /////////////////
+      // CALIBRATION //
+      /////////////////
+
+      /**
+       * Send a stim to the pipeline, 16 times per second. The method ends and
+       * goes to the focusing session after the duration of relaxation is
+       * reached.
+       */
+      function relaxTagging() {
+        // Tag the pipeline with OVTK_StimulationId_Label_01
+        archway.triggerEvent(pipelineId, 1, parseInt(settings.calibration.relax.label));
+
+        // If it is still the time to tag, call this function again and
+        // increment the total count.
+        if(relaxTaggingCount < settings.calibration.relax.duration * 16) {
+          relaxTaggingCount++;
+
+          // After 5 seconds, change the message
+          if(relaxTaggingCount === 0) {
+            instructions.innerHTML = settings.calibration.relax.message;
+          }
+
+          // Wait 62.5ms until next tag
+          setTimeout(relaxTagging, 62.5);
+          // Else it is time for the focus phase
+        } else {
+          // Clear the screen
+          instructions.style.background = 'white';
+          instructions.innerHTML = '';
+
+          // Wait 5 seconds before next calibration phase
+          setTimeout(startFocus, 5000);
+        }
+      };
+
+      /**
+       * Start a relaxing acquisition. Only set the style for the relaxing
+       * session, and call the tagging method that will loop on itself.
+       */
+      function startRelax() {
+        // Set new style
+        instructions.style.color = 'white';
+        instructions.style.background = settings.calibration.relax.color;
+        // Write instructions
+        instructions.innerHTML = 'Prepare to relax...';
+
+        log("Starting the calibration of relax phase");
+
+        // Start the relax tagging
+        relaxTagging();
+      };
+
+      /**
+       * Send a stim to the pipeline, 16 times per second. The method ends
+       * after the duration of focusing is reached. The following step is the
+       * post processing.
+       */
+      function focusTagging() {
+        // Tag the pipeline with OVTK_StimulationId_Label_01
+        archway.triggerEvent(pipelineId, 1, parseInt(settings.calibration.focus.label));
+
+        // If it is still the time to tag, call this function again and
+        // increment the total count.
+        if(focusTaggingCount < settings.calibration.focus.duration * 16) {
+          focusTaggingCount++;
+
+          // After 5 seconds, change the message
+          if(focusTaggingCount === 0) {
+            instructions.innerHTML = settings.calibration.focus.message;
+          }
+
+          // Wait 62.5ms until next tag
+          setTimeout(focusTagging, 62.5);
+          // Else it is the end of the calibration
+        } else {
+          stopCalibration();
+        }
+      };
+
+      /**
+       * Start a focusing acquisition. Only set the style for the relaxing
+       * session, and call the tagging method that will loop on itself.
+       */
+      function startFocus() {
+        // Set new style
+        instructions.style.background = settings.calibration.focus.color;
+        // Write instructions
+        instructions.innerHTML = 'Prepare to get focused !';
+
+        log("Starting the calibration of focus phase");
+
+        // Start the focus tagging
+        focusTagging();
+      };
+
+      /**
+       * Start the calibration phase.
+       */
+      function startCalibration() {
+        // Start devices
+        startDevices();
+
+        // Start the acquisition
+        if(!acquisitionLoopRunning) start(parseInt(settings.calibration.pipeline));
+        isCalibrationRunning = true;
+
+        // Set style
+        instructions.style.font = '48px bold sans-serif';
+        instructions.style['text-align'] = 'center';
+        instructions.innerHTML = '';
+
+        // First start with the calibration of the relax phase
+        setTimeout(startRelax, 3000);
+      };
+
+      /**
+       * Post treatment after the calibration.
+       */
+      function stopCalibration() {
+        // Change flags
+        isCalibrationDone = true;
+        isCalibrationRunning = false;
+
+        // Set new style
+        instructions.style.background = 'white';
+        instructions.style.color = 'black';
+        // Waiting screen when there is the post treatment
+        instructions.innerHTML = settings.calibration.waitMessage;
+
+        // Stop the acquisition; it will automatically launch the LUA post
+        // treatment script, doing the classification. As we do not use
+        // Promises in this program, it is blocked here until it is finished.
+        // If you don't want the application to freeze, use the Promise
+        // methods, as seen in the console showcase.
+        stop();
+
+        // Start the game
+        startGame();
+      };
+
+      //////////
+      // GAME //
+      //////////
+
+      /**
+       * The function that update the content on screen
+       */
+      function updateLight() {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        // Initialize the gradient of the light
+        lightGradient = ctx.createRadialGradient(ctx.canvas.width / 2, ctx.canvas.height / 2, lightIntensity, ctx.canvas.width / 2, ctx.canvas.height / 2 + 30, 0);
+
+        // Set the color for the gradient, to create a halo of light
+        lightGradient.addColorStop(0, 'black');
+        lightGradient.addColorStop(1, 'white');
+
+        // Draw the gradient
+        ctx.fillStyle = lightGradient;
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        // If the light intensity is not inferior to the value to reach, and
+        // the game is still running, do a loop on this function, using the
+        // refreshment rate of the screen.
+        // See https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+        if(isGameRunning) {
+          window.requestAnimationFrame(updateLight);
+        } else {
+          // End the game
+          stopGame();
+        }
+      }
+
+      /**
+       * Initialize and start the game with the light.
+       *
+       * @return {[type]} [description]
+       */
+      function startGame() {
+        log('Starting the game part');
+
+        // Start archway with the correct pipeline
+        start(parseInt(settings.online.pipeline));
+
+        // Update our flag
+        isGameRunning = true;
+
+        // Hide the instructions div
+        instructions.style.display = 'none';
+
+        // Show the canvas
+        ctx.canvas.height = 600;
+        ctx.canvas.style.height = '600px';
+
+        // Go to the main function of the game
+        updateLight();
+      };
+
+      /**
+       * End of the game, called when the intensity of the light has almost
+       * reached 0.
+       */
+      function stopGame() {
+        // Update our flag
+        isGameRunning = false;
+
+        // Put an overlay on top of the canvas to indicate the end
+        instructions.style.display = 'block';
+        instructions.style.position = 'fixed';
+        instructions.style.background = 'rgba(255, 255, 255, 0.5)';
+        // Message to display at the end
+        instructions.innerHTML = settings.online.endMessage;
+
+        // Stop archway
+        stop();
+
+        // Stop devices
+        stopDevices();
+      };
+
+      //////////////////
+      // INTERACTIONS //
+      //////////////////
+
+      /** Action on `play` hit */
+      function play() {
+        if(!isCalibrationDone && !isCalibrationRunning) startCalibration();
+        if(isCalibrationDone && !isGameRunning) startGame();
+      };
+
+      /** Action on `pause` hit */
+      function pause() {
+        // If the game isn't already paused, stop the acquisition
+        if(acquisitionLoopRunning) stop();
+
+        // Stop the drawing loop
+        isGameRunning = false;
+      };
+
+      // Actions performed once the page is loaded
+      document.addEventListener("DOMContentLoaded", function(event) {
+        // If the license isn't valid, end the application
+        if(!archway.isLicenseValid()) {
+          logError({
+            'code': 'LICENSE',
+            'message': 'There is no valid license for Archway'
+          });
+          return;
+        }
+
+        // Once the page loaded, load the configuration JSON using XHR
+        // See https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function(res){
+          settings = JSON.parse(res.srcElement.responseText);
+        };
+        xhr.open('GET', './config-2classes.json');
+        xhr.send();
+
+        // Initialize Archway
+        initialize();
+
+        // Initialize the instructions div
+        instructions = document.getElementById('instructions');
+
+        // Initialize the canvas and its context
+        ctx = document.getElementById('twoclasses-game');
+        ctx.width = ctx.clientWidth;
+        // A Canvas2D is used here to draw things on screen
+        // See https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
+        ctx = ctx.getContext('2d');
+      });
+    </script>
+
+    <style type="text/css">
+      html, body { height: 100%; }
+      body { margin: 0px 8px; }
+      #instructions {
+        height: 400px;
+        padding-top: 180px;
+        width: 100%;
+        font: 20px sans-serif;
+        vertical-align: middle;
+      }
+      #twoclasses-game { height: 0; width: 100%; }
+      #toolbar button { width: 24%; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div id="statusbar">
+        NeuroRT JavaScript Electron SDK
+      </div>
+    </header>
+
+    <!-- The container of the game -->
+    <main>
+      <!-- For simplicity, written instructions are in a div -->
+      <div id="instructions">
+        This showcase demonstrates the usage of a 2class scenario. There are three phases :
+        <ol>
+          <li>Acquisition of signal in the two states (relaxing and focusing) -> ov-acquisition pipeline</li>
+          <li>Creation of a classification using the previously fetched data -> ov-calibration-x</li>
+          <li>The game, responding to the state of the user : the user should try to relax and lower the light to a minimum intensity, or focus and bring the light to a maximum intensity -> ov-online</li>
+        </ol>
+        Hit the <b>play</b> button below to begin !
+      </div>
+      <!-- Canvas allows us to draw things -->
+      <canvas id="twoclasses-game"></canvas>
+    </main>
+
+    <!-- Availables actions with the data and the visualization -->
+    <aside id="actions" class="right">
+      <button onclick="play()">Play</button>
+      <button onclick="stopGame()">Stop</button>
+    </aside>
+
+    <footer>
+      © Mensia Technologies
+    </footer>
+
+  </body>
+</html>

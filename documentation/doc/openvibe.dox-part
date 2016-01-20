@@ -1,0 +1,40 @@
+/**
+  \mainpage Home
+  
+  \image html mensia-logo-small.png
+  
+  <h1>Welcome to the @BRAND_NAME@ Documentation Home!</h1>
+  You will find here the documentation of every boxes included in @BRAND_NAME@ @STUDIO_NAME@, and some advice regarding the use of Engine and Advanced Visualization plugins.
+
+  \section Content
+@if DOC_NEURORT
+  - \subpage Doc_General_Engine : In this section you will find general information regarding the @BRAND_NAME@ Engine boxes.
+  - \subpage Doc_Mensia_AdvViz : In this section you will find recommendations, use-cases and other information on the @BRAND_NAME@ Advanced Visualization Toolset.
+@endif
+  - \subpage Doc_BoxAlgorithms : index of all box algorithm plugins available in the @BRAND_NAME@ @STUDIO_NAME@.
+
+  \section Legal
+ This documentation is brought to you by Mensia Technologies SA, (c) 2012-2016 all rights reserved.
+ 
+ This product and all its components (@BRAND_NAME@ plugins, documentation pages,
+ examples of scenarios and related assets) are the property of Mensia Technologies SA,
+ based on OpenViBE @ov_doxy_header_version@, a software from Inria.
+ This product can be used under the licensing terms defined upon purchase.
+ Please refer to the License contract for further details.
+  
+@if DOC_OPENVIBE
+ OpenViBE is the property of Inria, (c) All Rights Reserved.
+@endif
+  
+  \section Contacts
+ If you have any question regarding the @BRAND_NAME@ @STUDIO_NAME@ boxes, that may have not been covered in this documentation, 
+ Please contact us at <a href=mailto:support@mensiatech.com>support@mensiatech.com</a>.
+
+*/
+
+
+
+
+
+
+

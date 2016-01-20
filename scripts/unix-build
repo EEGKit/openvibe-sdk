@@ -1,0 +1,45 @@
+#!/bin/bash
+
+uname_string=$(uname)
+
+if [[ "$uname_string" == 'Darwin' ]]; then
+  export PKG_CONFIG_PATH="/opt/X11/lib/pkgconfig:$PKG_CONFIG_PATH"
+fi
+
+ov_build_type=Release
+if [ "$1" == "--debug" ]; then
+	ov_build_type=Debug
+	shift
+fi
+
+ov_script_dir="${PWD}"
+ov_build_dir="${ov_script_dir}/../../certivibe-build/build-${ov_build_type}"
+ov_install_dir="${ov_script_dir}/../../certivibe-build/dist-${ov_build_type}"
+
+mkdir -p "${ov_build_dir}" 2> /dev/null
+pushd "${ov_build_dir}" 2> /dev/null
+
+echo "Creating makefiles..."
+
+if [ ! -f ${ov_build_dir}/CMakeCache.txt ]; then
+  cmake ${ov_script_dir}/.. -G Ninja -DCMAKE_BUILD_TYPE=${ov_build_type} -DCMAKE_INSTALL_PREFIX=${ov_install_dir}
+fi
+
+if [ $? -eq 0 ]; then
+	echo CMake has been called successfully !
+else
+	exit -1
+fi;
+
+echo "Building ..."
+
+ninja install # VERBOSE=1
+if [ $? -eq 0 ]; then
+	echo Ninja has been called successfully !
+else
+	exit -1
+fi;
+
+popd 2> /dev/null
+
+true

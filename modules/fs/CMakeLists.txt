@@ -1,0 +1,57 @@
+PROJECT(openvibe-module-fs)
+
+SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
+SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
+SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
+SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+
+FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.hpp src/*.inl include/*.h)
+INCLUDE_DIRECTORIES(include/fs)
+INCLUDE("FindSourceRCProperties")
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${source_files})
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+	VERSION ${PROJECT_VERSION}
+	SOVERSION ${PROJECT_VERSION_MAJOR}
+	COMPILE_FLAGS "-DFS_Shared -DFS_Exports")
+
+ADD_LIBRARY(${PROJECT_NAME}-static STATIC ${source_files})
+SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES
+	VERSION ${PROJECT_VERSION}
+	SOVERSION ${PROJECT_VERSION_MAJOR}
+	COMPILE_FLAGS "-DFS_Static -DFS_Exports")
+
+INCLUDE("FindOpenViBECommon")
+INCLUDE("FindThirdPartyBoost")
+INCLUDE("FindThirdPartyBoost_FileSystem")
+INCLUDE("FindThirdPartyBoost_System")	# Linux packaging ("lintian") complains if not linked to
+
+# ---------------------------------
+# Test applications
+# ---------------------------------
+IF(OV_COMPILE_TESTS)
+	ADD_SUBDIRECTORY(test)
+ENDIF(OV_COMPILE_TESTS)
+
+# ---------------------------------
+# Target macros
+# Defines target operating system
+# Defines target architecture
+# Defines target compiler
+# ---------------------------------
+SET_BUILD_PLATFORM()
+
+# -----------------------------
+# Install files
+# -----------------------------
+INSTALL(TARGETS ${PROJECT_NAME}
+	RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+
+INSTALL(TARGETS ${PROJECT_NAME}-static
+	RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+
+INSTALL(DIRECTORY include/   DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)

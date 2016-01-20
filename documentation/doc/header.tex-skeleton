@@ -1,0 +1,90 @@
+\documentclass{book}
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{makeidx}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{ifthen}
+\usepackage[table]{xcolor}
+\usepackage{textcomp}
+\usepackage{alltt}
+\usepackage{tabularx}
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[pdftex,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\else
+\usepackage[ps2pdf,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\usepackage{pspicture}
+\fi
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage[scaled=.90]{helvet}
+\usepackage{courier}
+\usepackage{sectsty}
+\usepackage{amssymb}
+\usepackage[titles]{tocloft}
+\usepackage{doxygen}
+\usepackage{amsmath,amsfonts} %added by Quba
+\usepackage{fancyhdr} %added by Quba
+\raggedbottom
+\lstset{language=C++,inputencoding=utf8,basicstyle=\footnotesize,breaklines=true,breakatwhitespace=true,tabsize=8,numbers=left }
+\setcounter{secnumdepth}{1}    % Number subsubsections in the chapters
+\setcounter{tocdepth}{1}
+\makeindex
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\familydefault}{\sfdefault}
+\newcommand{\+}{\kern0.05em}
+\ifcsname clearemptydoublepage\endcsname
+\else
+	\let\origdoublepage\cleardoublepage %added by Quba
+	\newcommand{\clearemptydoublepage}{ \clearpage  {\pagestyle{empty}\origdoublepage} } %added by Quba
+\fi
+\hfuzz=15pt
+\setlength{\emergencystretch}{15pt}
+\hbadness=750
+\tolerance=750
+\begin{document}
+\hypersetup{pageanchor=false,citecolor=blue}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titlepage}
+\begin{center}
+
+\vspace*{2cm}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=10cm]{mensia-logo-large.png}
+\end{figure}
+
+
+\vspace*{3cm}
+{\Huge @ov_doxy_header_product_name@}\\
+{\Large Version @m_doxy_header_version@}\\
+\vspace*{3cm}
+{\huge Reference Manual}\\
+\end{center}
+\vspace*{6cm}
+\hfill {\small This document is part of the @ov_doxy_header_product_name@, Mensia Technologies SA (c) 2012-2016}\\
+\vspace*{1cm}
+\hfill {\small version: @m_doxy_header_version@ (@ov_doxy_header_branch@/@ov_doxy_header_hash@), based on OpenViBE @ov_doxy_header_version@}\\
+\end{titlepage}
+
+\clearemptydoublepage
+\pagenumbering{roman}
+\tableofcontents
+\clearemptydoublepage
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true,citecolor=blue}

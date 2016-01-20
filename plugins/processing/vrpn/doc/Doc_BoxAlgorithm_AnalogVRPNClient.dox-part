@@ -1,0 +1,62 @@
+/**
+ * \page BoxAlgorithm_AnalogVRPNClient Analog VRPN Client
+__________________________________________________________________
+
+Detailed description
+__________________________________________________________________
+
+ * |OVP_DocBegin_BoxAlgorithm_AnalogVRPNClient_Description|
+ This box connects to an external VRPN device and translate an analog information into 
+ BRAND_NAME signal, so that it can be used in BRAND_NAME applications.
+ * |OVP_DocEnd_BoxAlgorithm_AnalogVRPNClient_Description|
+__________________________________________________________________
+
+Outputs description
+__________________________________________________________________
+
+ * |OVP_DocBegin_BoxAlgorithm_AnalogVRPNClient_Outputs|
+ * |OVP_DocEnd_BoxAlgorithm_AnalogVRPNClient_Outputs|
+
+ * |OVP_DocBegin_BoxAlgorithm_AnalogVRPNClient_Output1|
+ This output is used to import data from the VRPN server to a BRAND_NAME signal
+ stream.
+ * |OVP_DocEnd_BoxAlgorithm_AnalogVRPNClient_Output1|
+__________________________________________________________________
+
+Settings description
+__________________________________________________________________
+
+ * |OVP_DocBegin_BoxAlgorithm_AnalogVRPNClient_Settings|
+ * |OVP_DocEnd_BoxAlgorithm_AnalogVRPNClient_Settings|
+
+ * |OVP_DocBegin_BoxAlgorithm_AnalogVRPNClient_Setting1|
+ This setting specifies the name of the analog device to connect to.
+ * |OVP_DocEnd_BoxAlgorithm_AnalogVRPNClient_Setting1|
+
+ * |OVP_DocBegin_BoxAlgorithm_AnalogVRPNClient_Setting2|
+ This setting is used to format the generated output signal.
+ * |OVP_DocEnd_BoxAlgorithm_AnalogVRPNClient_Setting2|
+
+ * |OVP_DocBegin_BoxAlgorithm_AnalogVRPNClient_Setting3|
+ This setting is used to format the generated output signal.
+ * |OVP_DocEnd_BoxAlgorithm_AnalogVRPNClient_Setting3|
+
+ * |OVP_DocBegin_BoxAlgorithm_AnalogVRPNClient_Setting4|
+ This setting is used to set the number of samples per channel in
+ the output signal.
+ * |OVP_DocEnd_BoxAlgorithm_AnalogVRPNClient_Setting4|
+__________________________________________________________________
+
+Examples description
+__________________________________________________________________
+
+ * |OVP_DocBegin_BoxAlgorithm_AnalogVRPNClient_Examples|
+ * |OVP_DocEnd_BoxAlgorithm_AnalogVRPNClient_Examples|
+__________________________________________________________________
+
+Miscellaneous description
+__________________________________________________________________
+
+ * |OVP_DocBegin_BoxAlgorithm_AnalogVRPNClient_Miscellaneous|
+ * |OVP_DocEnd_BoxAlgorithm_AnalogVRPNClient_Miscellaneous|
+ */
