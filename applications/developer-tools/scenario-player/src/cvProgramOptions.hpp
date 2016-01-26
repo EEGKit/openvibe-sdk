@@ -13,7 +13,7 @@ namespace CertiViBE
 	/**
 	* \struct ProgramOptionsTraits
 	* \author cgarraud (INRIA)
-	* \date 2016-26-01
+	* \date 2016-01-26
 	* \brief Helper class for ProgramOptions type checking
 	* \ingroup ScenarioPlayer
 	*
@@ -150,7 +150,7 @@ namespace CertiViBE
 	/**
 	* \class ProgramOptions
 	* \author cgarraud (INRIA)
-	* \date 2016-25-01
+	* \date 2016-01-25
 	* \brief Command-line options parser
 	* \ingroup ScenarioPlayer
 	*

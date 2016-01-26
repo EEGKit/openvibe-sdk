@@ -39,7 +39,7 @@ Program can be run in interactive mode to set the list of commands to execute in
 
 int main(int argc, char** argv)
 {
-	ScenarioPlayer::ReturnCode returnCode = ScenarioPlayer::ReturnCode::Sucess;
+	PlayerReturnCode returnCode = PlayerReturnCode::Sucess;
 
 	OptionsParser parser;
 	initializeParser(parser);
@@ -47,20 +47,20 @@ int main(int argc, char** argv)
 	if (!parser.parse(argc, argv))
 	{
 		std::cout << "ERROR: Failed to parse arguments" << std::endl;
-		returnCode = ScenarioPlayer::ReturnCode::InvalidArg;
+		returnCode = PlayerReturnCode::InvalidArg;
 	}
 	else
 	{
 		if (parser.hasOption("help"))
 		{
 			parser.printOptionsDesc();
-			returnCode = ScenarioPlayer::ReturnCode::Sucess;
+			returnCode = PlayerReturnCode::Sucess;
 		}
 		else if (parser.hasOption("version"))
 		{
 			// PROJECT_VERSION is added to definition from cmake
 			std::cout << "version: " << PROJECT_VERSION << std::endl;
-			returnCode = ScenarioPlayer::ReturnCode::Sucess;
+			returnCode = PlayerReturnCode::Sucess;
 		}
 		else
 		{
