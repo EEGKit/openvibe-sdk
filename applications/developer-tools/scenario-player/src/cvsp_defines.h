@@ -15,9 +15,7 @@ namespace CertiViBE
 	*/
 	enum class PlayerReturnCode
 	{
-		/** No error occurred during execution */
-		Sucess = 0,
-		/** Invalid command line options giden to the application */
-		InvalidArg
+		Sucess = 0, /*!< No error during execution */
+		InvalidArg /*!< Invalid command-line options */
 	};
 }

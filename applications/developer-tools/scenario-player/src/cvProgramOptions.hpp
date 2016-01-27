@@ -154,19 +154,20 @@ namespace CertiViBE
 	* \brief Command-line options parser
 	* \ingroup ScenarioPlayer
 	*
-	* This class is a basic class used to parse program options.\n
-	* Input format requirements:\n
-	* - Option prefix must be '-' or '--' e.g. cmd -help or --help\n
-	* - Option value assignment must be set with '=': e.g. cmd -config=myfile.txt\n
-	* - Option value that consists of pair are set with (): e.g. cmd -newToken=(key,value)\n
+	* This class is a basic class used to parse program options.
+	* Input format requirements:
+	* - Option prefix must be '-' or '--' e.g. cmd -help or --help
+	* - Option value assignment must be set with '=': e.g. cmd -config=myfile.txt
+	* - Option value that consists of pair are set with (): e.g. cmd -newToken=(key,value)
+	* .
 	*
 	* Template parameters are the list of option types that can be handled by the class.
 	* This list of options must comply to types defined in ProgramOptionsTrait.\n
 	*
-	* Parsing options occurs in 2 steps:\n
-	* - Populating the list of possible options with simple options (e.g. --help) and value options (e.g. --option=value)\n
-	* - Parsing options from command line\n
-	*
+	* Parsing options occurs in 2 steps:
+	* - Populating the list of possible options with simple options (e.g. --help) and value options (e.g. --option=value)
+	* - Parsing options from command line
+	* .
 	* 
 	* \todo The parser has only be tested for the player use. It needs more in-depth testing
 	* to be used in another context. Moreover, it should be extended to accept any type.
