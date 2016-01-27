@@ -1,15 +1,16 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "cvsp_defines.h"
-#include "cvProgramOptions.hpp"
+#include "cvKernelFacade.h"
+#include "cvCommandInterface.h"
+#include "cvCommandLineOptionParser.h"
 
 using namespace CertiViBE;
-using OptionsParser = ProgramOptions<ProgramOptionsTraits::String, ProgramOptionsTraits::TokenPairList>;
 
-
-void initializeParser(OptionsParser& parser)
+void initializeParser(ProgramOptionParser& optionParser)
 {
 	std::string desc = R"d(Usage: program options
 
@@ -18,45 +19,45 @@ Program can be run in command mode to execute list of commands from a file
 Program can be run in interactive mode to set the list of commands to execute interactively
 
 )d";
-	parser.setGlobalDesc(desc);
+	optionParser.setGlobalDesc(desc);
 
-	parser.addSimpleOption("help", { "h", "Help" });
-	parser.addSimpleOption("version", { "v", "Program version" });
+	optionParser.addSimpleOption("help", { "h", "Help" });
+	optionParser.addSimpleOption("version", { "v", "Program version" });
 
-	parser.addValueOption<ProgramOptionsTraits::String>("mode", { "m", "Execution mode: 'x' for express, c for command, i for interactive" });
+	optionParser.addValueOption<ProgramOptionsTraits::String>("mode", { "m", "Execution mode: 'x' for express, c for command, i for interactive [mandatory]" });
 
 	// express mode options
-	parser.addValueOption<ProgramOptionsTraits::String>("config-file", { "", "Path to configuration file (express mode only)" });
-	parser.addValueOption<ProgramOptionsTraits::String>("play-file", { "", "Path to scenario file (express mode only)" });
-	parser.addValueOption<ProgramOptionsTraits::String>("play-mode", { "", "std for standard and ff for fast-foward (express mode only)" });
+	optionParser.addValueOption<ProgramOptionsTraits::String>("config-file", { "", "Path to configuration file (express mode only)" });
+	optionParser.addValueOption<ProgramOptionsTraits::String>("play-file", { "", "Path to scenario file (express mode only) [mandatory]" });
+	optionParser.addValueOption<ProgramOptionsTraits::String>("play-mode", { "", "std for standard and ff for fast-foward (express mode only)" });
 
-	parser.addValueOption<ProgramOptionsTraits::TokenPairList>("dg", { "", "global user-defined token" });
-	parser.addValueOption<ProgramOptionsTraits::TokenPairList>("ds", { "", "scenario user-defined token" });
+	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("dg", { "", "global user-defined token" });
+	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("ds", { "", "scenario user-defined token" });
 
 	// command mode options
-	parser.addValueOption<ProgramOptionsTraits::String>("command-file", { "", "Path to command file (command mode only)" });
+	optionParser.addValueOption<ProgramOptionsTraits::String>("command-file", { "", "Path to command file (command mode only) [mandatory]" });
 }
 
 int main(int argc, char** argv)
 {
 	PlayerReturnCode returnCode = PlayerReturnCode::Sucess;
 
-	OptionsParser parser;
-	initializeParser(parser);
+	ProgramOptionParser optionParser;
+	initializeParser(optionParser);
 
-	if (!parser.parse(argc, argv))
+	if (!optionParser.parse(argc, argv))
 	{
 		std::cout << "ERROR: Failed to parse arguments" << std::endl;
 		returnCode = PlayerReturnCode::InvalidArg;
 	}
 	else
 	{
-		if (parser.hasOption("help"))
+		if (optionParser.hasOption("help"))
 		{
-			parser.printOptionsDesc();
+			optionParser.printOptionsDesc();
 			returnCode = PlayerReturnCode::Sucess;
 		}
-		else if (parser.hasOption("version"))
+		else if (optionParser.hasOption("version"))
 		{
 			// PROJECT_VERSION is added to definition from cmake
 			std::cout << "version: " << PROJECT_VERSION << std::endl;
@@ -64,45 +65,55 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			if (parser.hasOption("mode"))
+		
+			if (optionParser.hasOption("mode"))
 			{
-				std::cout << "mode = " << parser.getOptionValue<ProgramOptionsTraits::String>("mode") << std::endl;
-			}
+				// command parser type is selected from mode
+				std::unique_ptr<CommandParserInterface> commandParser{ nullptr };
+				auto mode = optionParser.getOptionValue<ProgramOptionsTraits::String>("mode");
 
-			if (parser.hasOption("config-file"))
-			{
-				std::cout << "config-file = " << parser.getOptionValue<ProgramOptionsTraits::String>("config-file") << std::endl;
-			}
-
-			if (parser.hasOption("play-file"))
-			{
-				std::cout << "play-file = " << parser.getOptionValue<ProgramOptionsTraits::String>("play-file") << std::endl;
-			}
-
-			if (parser.hasOption("play-mode"))
-			{
-				std::cout << "play-mode = " << parser.getOptionValue<ProgramOptionsTraits::String>("play-mode") << std::endl;
-			}
-
-			if (parser.hasOption("dg"))
-			{
-				for (auto& token : parser.getOptionValue<ProgramOptionsTraits::TokenPairList>("dg"))
+				if (mode == "i")
 				{
-					std::cout << "token = (" << token.first << "," << token.second << ")" << std::endl;
+					std::cout << "Crash expected: interactive mode not yet implemented" << std::endl;
+				}
+				else if (mode == "c")
+				{
+					std::cout << "Crash expected: command mode not yet implemented" << std::endl;
+				}
+				else if (mode == "x")
+				{
+					commandParser.reset(new CommandLineOptionParser(optionParser));
+				}
+				else
+				{
+					std::cout << "ERROR: unknown mode set" << std::endl;
+					std::cout << "Mode must be 'x','i' or 'c'" << std::endl;
+					returnCode = PlayerReturnCode::InvalidArg;
+				}
+
+				commandParser->initialize();
+
+				returnCode = commandParser->parse();
+
+				if (returnCode == PlayerReturnCode::Sucess)
+				{
+					KernelFacade kernel;
+
+					for (auto& cmd : commandParser->getCommandList())
+					{
+						returnCode = cmd->execute(kernel);
+
+						if (returnCode != PlayerReturnCode::Sucess)
+						{
+							break;
+						}
+					}
 				}
 			}
-
-			if (parser.hasOption("ds"))
+			else
 			{
-				for (auto& token : parser.getOptionValue<ProgramOptionsTraits::TokenPairList>("ds"))
-				{
-					std::cout << "token = (" << token.first << "," << token.second << ")" << std::endl;
-				}
-			}
-
-			if (parser.hasOption("command-file"))
-			{
-				std::cout << "command-file = " << parser.getOptionValue<ProgramOptionsTraits::String>("command-file") << std::endl;
+				std::cout << "ERROR: mandatory option 'mode' not set" << std::endl;
+				returnCode = PlayerReturnCode::MissingMandatoryArg;
 			}
 		}
 	}
