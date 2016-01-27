@@ -310,7 +310,6 @@ namespace CertiViBE
 		std::map<std::string, FullOptionDesc> m_DescMap;
 		std::map<std::string, OptionValue> m_ValueMap;
 		std::vector<std::string> m_ParsedOptions;
-
 	};
 
 	///////////////////////////////////////////

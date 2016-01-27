@@ -1,5 +1,7 @@
 #pragma once
 
+#include "cvProgramOptions.hpp"
+
 namespace CertiViBE
 {
 	/**
@@ -16,6 +18,11 @@ namespace CertiViBE
 	enum class PlayerReturnCode
 	{
 		Sucess = 0, /*!< No error during execution */
-		InvalidArg /*!< Invalid command-line options */
+		InvalidArg, /*!< Invalid command-line options */
+		MissingMandatoryArg, /*!< A mandatory argument is missing */
 	};
+
+	/* Define the common parser to be used in the application */
+	//using ProgramOptionParser = ProgramOptions<ProgramOptionsTraits::String, ProgramOptionsTraits::TokenPairList>;
+	typedef ProgramOptions<ProgramOptionsTraits::String, ProgramOptionsTraits::TokenPairList> ProgramOptionParser;
 }
