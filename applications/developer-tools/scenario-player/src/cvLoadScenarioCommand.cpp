@@ -51,8 +51,18 @@ namespace CertiViBE
 	PlayerReturnCode LoadScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
 		// to be implemented
-		std::cout << "LoadScenarioCommand not yet implemented" << std::endl;
+
+		std::cout << "About to execute:" << std::endl;
+		std::cout << *this << std::endl;
+		std::cout << "Execution not yet implemented" << std::endl;
 
 		return PlayerReturnCode::Sucess;
+	}
+
+	void LoadScenarioCommand::doPrint(std::ostream& os) const
+	{
+		os << "command name: LoadScenarioCommand" << std::endl;
+		os << "scenarioName: " << ((this->hasScenarioName()) ? m_ScenarioName : "not set") << std::endl;
+		os << "scenarioFile: " << ((this->hasScenarioFile()) ? m_ScenarioFile : "not set") << std::endl;
 	}
 }

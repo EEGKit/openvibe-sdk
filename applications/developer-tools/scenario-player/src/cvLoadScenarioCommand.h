@@ -40,6 +40,10 @@ namespace CertiViBE
 
 		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
+	protected:
+
+		virtual void doPrint(std::ostream& os) const override;
+
 	private:
 
 		std::string m_ScenarioFile;

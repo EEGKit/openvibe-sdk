@@ -29,6 +29,8 @@ namespace CertiViBE
 	class RunScenarioCommand : public CommandInterface
 	{
 
+	public:
+
 		using Token = std::pair<std::string, std::string>;
 
 		enum class PlayMode
@@ -60,6 +62,10 @@ namespace CertiViBE
 		virtual void clear() override;
 
 		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+
+	protected:
+
+		virtual void doPrint(std::ostream& os) const override;
 
 	private:
 

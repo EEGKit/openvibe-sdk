@@ -32,8 +32,17 @@ namespace CertiViBE
 	{
 		// to be implemented
 
-		std::cout << "InitCommand not yet implemented" << std::endl;
+		std::cout << "About to execute:" << std::endl;
+		std::cout << *this << std::endl;
+		std::cout << "Execution not yet implemented" << std::endl;
 
 		return PlayerReturnCode::Sucess;
+	}
+
+	void InitCommand::doPrint(std::ostream& os) const
+	{
+
+		os << "command name: InitCommand" << std::endl;
+		os << "benchmark: " << ((this->hasBenchmark()) ? std::to_string(m_Benchmark) : "not set") << std::endl;
 	}
 }

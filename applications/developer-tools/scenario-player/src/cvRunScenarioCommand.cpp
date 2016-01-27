@@ -104,8 +104,74 @@ namespace CertiViBE
 	PlayerReturnCode RunScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
 		// to be implemented
-		std::cout << "RunScenarioCommand not yet implemented" << std::endl;
+		
+		std::cout << "About to execute:" << std::endl;
+		std::cout << *this << std::endl;
+		std::cout << "Execution not yet implemented" << std::endl;
 
 		return PlayerReturnCode::Sucess;
+	}
+
+	void RunScenarioCommand::doPrint(std::ostream& os) const
+	{
+		os << "command name: RunScenarioCommand" << std::endl;
+
+		os << "scenarioList:";
+		if (this->hasScenarioList())
+		{
+			for (auto& scenario : m_ScenarioList)
+			{
+				os << " " << scenario;
+			}
+		}
+		else
+		{
+			os << " not set";
+		}
+		os << std::endl;
+
+		os << "playMode: ";
+		if (this->hasPlayMode())
+		{
+			std::string modeAsString = (m_PlayMode == PlayMode::Fastfoward) ? "fastforward" : "standard";
+			os << modeAsString;
+		}
+		else
+		{
+			os << "not set";
+		}
+		os << std::endl;
+
+
+		os << "timeout: " << ((this->hasTimeout()) ? std::to_string(m_Timeout) : "not set") << std::endl;
+
+		os << "resetList:";
+		if (this->hasResetList())
+		{
+			for (auto& token : m_ResetList)
+			{
+				os << " " << token;
+			}
+		}
+		else
+		{
+			os << " not set";
+		}
+		os << std::endl;
+
+		os << "tokenList:";
+		if (this->hasTokenList())
+		{
+			for (auto& token : m_TokenList)
+			{
+				os << " (" << token.first << "," << token.second << ")";
+			}
+		}
+		else
+		{
+			os << " not set";
+		}
+		os << std::endl;
+
 	}
 }

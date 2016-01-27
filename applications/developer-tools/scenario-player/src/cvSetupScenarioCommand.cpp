@@ -67,8 +67,47 @@ namespace CertiViBE
 	PlayerReturnCode SetupScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
 		// to be implemented
-		std::cout << "SetupScenarioCommand not yet implemented" << std::endl;
+		
+		std::cout << "About to execute:" << std::endl;
+		std::cout << *this << std::endl;
+		std::cout << "Execution not yet implemented" << std::endl;
 
 		return PlayerReturnCode::Sucess;
+	}
+
+	void SetupScenarioCommand::doPrint(std::ostream& os) const
+	{
+		os << "command name: SetupScenarioCommand" << std::endl;
+
+		os << "scenarioName: " << ((this->hasScenarioName()) ? m_ScenarioName : "not set") << std::endl;
+
+		os << "resetList:";
+		if (this->hasResetList())
+		{
+			for (auto& token : m_ResetList)
+			{
+				os << " " << token;
+			}
+		}
+		else
+		{
+			os << " not set";
+		}
+		os << std::endl;
+
+		os << "tokenList:";
+		if (this->hasTokenList())
+		{
+			for (auto& token : m_TokenList)
+			{
+				os << " (" << token.first << "," << token.second << ")";
+			}
+		}
+		else
+		{
+			os << " not set";
+		}
+		os << std::endl;
+
 	}
 }

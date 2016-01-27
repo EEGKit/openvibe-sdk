@@ -23,9 +23,10 @@ namespace CertiViBE
 
 	public:
 
-		virtual ~CommandInterface()
-		{
-		}
+		CommandInterface() = default;
+		virtual ~CommandInterface() = default;
+
+		friend std::ostream& operator<< (std::ostream& os, const CommandInterface& cmd);
 
 		/**
 		* \brief Clear command internal state
@@ -38,6 +39,11 @@ namespace CertiViBE
 		*/
 		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const = 0;
 
+	protected:
+
+		// use of the non-virtual interface pattern to implement printing in the class hierarchy
+		virtual void doPrint(std::ostream& os) const = 0;
+
 	private:
 
 		// disable copy and assignment because it is not meant to used
@@ -45,4 +51,10 @@ namespace CertiViBE
 		CommandInterface(const CommandInterface&) = delete;
 		CommandInterface &operator=(const CommandInterface&) = delete;
 	};
+
+	inline std::ostream& operator<<(std::ostream& os, const CommandInterface& cmd)
+	{
+		cmd.doPrint(os);
+		return os;
+	}
 }
