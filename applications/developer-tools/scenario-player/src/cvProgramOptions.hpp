@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <map>
-#include <regex>
+#include <vector>
 
 #include <boost/variant.hpp>
 
@@ -512,15 +512,19 @@ namespace CertiViBE
 	template <typename First, typename... Types>
 	ProgramOptionsTraits::TokenPair ProgramOptions<First, Types...>::OptionVisitor::parsePair(const std::string& str) const
 	{
-		std::regex pairRegex("\\(.+,.+\\)"); // (a,b) pattern
+		auto split = str.find_first_of(":");
+		auto size = str.size();
 
-		if (!std::regex_match(str, pairRegex))
+		// (a:b) pattern expected
+		// minimal regex std::regex("\\(.+:.+\\)")
+		if (!(size >= 5 && str[0] == '(' && str[size - 1] == ')') ||
+			split == std::string::npos)
 		{
-			throw std::runtime_error("Failed to parse pair from value: " + str);
+			throw std::runtime_error("Failed to parse token pair from value: " + str);
 		}
 
-		auto split = m_Value.find_first_of(",");
-
-		return std::make_pair(m_Value.substr(1, split - 1), m_Value.substr(split + 1, m_Value.size() - split - 2));
+		// magic 2 numbers is because substr takes a length as second parameter
+		// 2 = remove the last ) + account for the first one
+		return std::make_pair(str.substr(1, split - 1), str.substr(split + 1, size - split - 2));
 	}
 }
