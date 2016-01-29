@@ -18,9 +18,9 @@ namespace CertiViBE
 	* \ingroup ScenarioPlayer
 	*
 	* SetupScenarioCommand contains the following properties:
-	* - Name: name of the scenario to setup (required)
+	* - ScenarioName: name of the scenario to setup (mandatory)
 	* - ResetList: List of token to reset (optional)
-	* - TokenList: List of scenario specific (token,value) pairs (optional)
+	* - TokenList: List of scenario specific (optional)
 	* .
 	*
 	*/

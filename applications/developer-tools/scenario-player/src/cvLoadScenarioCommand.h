@@ -17,8 +17,8 @@ namespace CertiViBE
 	* \ingroup ScenarioPlayer
 	*
 	* LoadScenarioCommand contains the following properties:
-	* - ScenarioFile: Path to xml scenario file (required)
-	* - ScenarioName: Name of the scenario (required)
+	* - ScenarioFile: Path to xml scenario file (mandatory)
+	* - ScenarioName: Name of the scenario (mandatory)
 	* .
 	*
 	*/

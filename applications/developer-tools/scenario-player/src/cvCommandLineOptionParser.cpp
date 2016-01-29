@@ -64,7 +64,7 @@ namespace CertiViBE
 		}
 		else
 		{
-			std::cout << "ERROR: mandatory option 'play-file' not set" << std::endl;
+			std::cerr << "ERROR: mandatory option 'play-file' not set" << std::endl;
 			return PlayerReturnCode::MissingMandatoryArg;
 		}
 
@@ -100,6 +100,6 @@ namespace CertiViBE
 
 		m_CommandList.push_back(runCmd);
 
-		return PlayerReturnCode::Sucess;
+		return PlayerReturnCode::Success;
 	}
 }

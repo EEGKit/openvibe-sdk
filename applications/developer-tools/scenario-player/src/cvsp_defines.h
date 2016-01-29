@@ -17,9 +17,12 @@ namespace CertiViBE
 	*/
 	enum class PlayerReturnCode
 	{
-		Sucess = 0, /*!< No error during execution */
+		Success = 0, /*!< No error during execution */
 		InvalidArg, /*!< Invalid command-line options */
 		MissingMandatoryArg, /*!< A mandatory argument is missing */
+		OpeningFileFailure, /*!< A file could not be opened */
+		ParsingCommandFailure, /*!< General parsing command error*/
+		UnkownFailure, /*!< Error of unknown type*/
 	};
 
 	/* Define the common parser to be used in the application */

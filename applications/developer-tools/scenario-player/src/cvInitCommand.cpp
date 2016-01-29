@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <string>
 
 #include "cvInitCommand.h"
 
@@ -36,7 +37,7 @@ namespace CertiViBE
 		std::cout << *this << std::endl;
 		std::cout << "Execution not yet implemented" << std::endl;
 
-		return PlayerReturnCode::Sucess;
+		return PlayerReturnCode::Success;
 	}
 
 	void InitCommand::doPrint(std::ostream& os) const

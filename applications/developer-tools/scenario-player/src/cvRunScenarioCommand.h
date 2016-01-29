@@ -18,7 +18,7 @@ namespace CertiViBE
 	* \ingroup ScenarioPlayer
 	*
 	* RunScenarioCommand contains the following properties:
-	* - ScenarioList: Names of scenario that must be executed (required)
+	* - ScenarioList: Names of scenario that must be executed (mandatory)
 	* - PlayMode: 0 for standard, 1 for fastforward (optional)
 	* - Timeout: Time limit in second to kill execution (optional)
 	* - ResetList: Names of scenario whose setup must be reset (optional)

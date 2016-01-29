@@ -21,6 +21,12 @@ namespace CertiViBE
 
 	public:
 
+		/**
+		*
+		* \brief Constructor
+		* \param[in] parser Specific instantiation of ProgramOptions parser
+		*
+		*/
 		explicit CommandLineOptionParser(ProgramOptionParser& parser);
 
 		virtual void initialize() override;
