@@ -1,6 +1,7 @@
 
 #include <iostream>
 
+#include "cvKernelFacade.h"
 #include "cvRunScenarioCommand.h"
 
 namespace CertiViBE
@@ -22,13 +23,13 @@ namespace CertiViBE
 		return m_HasScenarioList;
 	}
 
-	void RunScenarioCommand::setPlayMode(RunScenarioCommand::PlayMode playMode)
+	void RunScenarioCommand::setPlayMode(PlayMode playMode)
 	{
 		m_PlayMode= playMode;
 		m_HasPlayMode = true;
 	}
 
-	RunScenarioCommand::PlayMode RunScenarioCommand::getPlayMode() const
+	PlayMode RunScenarioCommand::getPlayMode() const
 	{
 		return m_PlayMode;
 	}
@@ -38,20 +39,20 @@ namespace CertiViBE
 		return m_HasPlayMode;
 	}
 
-	void RunScenarioCommand::setTimeout(unsigned timeout)
+	void RunScenarioCommand::setMaximumExecutionTime(double timeout)
 	{
-		m_Timeout = timeout;
-		m_HasTimeout = true;
+		m_MaximumExecutionTime = timeout;
+		m_HasMaximumExecutionTime = true;
 	}
 
-	unsigned RunScenarioCommand::getTimeout() const
+	double RunScenarioCommand::getMaximumExecutionTime() const
 	{
-		return m_Timeout;
+		return m_MaximumExecutionTime;
 	}
 
-	bool RunScenarioCommand::hasTimeout() const
+	bool RunScenarioCommand::hasMaximumExecutionTime() const
 	{
-		return m_HasTimeout;
+		return m_HasMaximumExecutionTime;
 	}
 
 	void RunScenarioCommand::setResetList(const std::vector<std::string>& resetList)
@@ -90,26 +91,55 @@ namespace CertiViBE
 	{
 		m_ScenarioList.clear();
 		m_PlayMode = PlayMode::Standard;
-		m_Timeout = 0;
+		m_MaximumExecutionTime = -1.0;
 		m_ResetList.clear();
 		m_TokenList.clear();
 
 		m_HasScenarioList = false;
 		m_HasPlayMode = false;
-		m_HasTimeout = false;
+		m_HasMaximumExecutionTime = false;
 		m_HasResetList = false;
 		m_HasTokenList = false;
 	}
 
 	PlayerReturnCode RunScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
-		// to be implemented
-		
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
-		std::cout << "Execution not yet implemented" << std::endl;
+		
+		KernelFacade::RunParameters parameters;
 
-		return PlayerReturnCode::Success;
+		if (this->hasScenarioList())
+		{
+			parameters.m_ScenarioList = this->getScenarioList();
+		}
+		else
+		{
+			std::cerr << "Missing required arguments for command: ScenarioList" << std::endl;
+			return PlayerReturnCode::MissingMandatoryArg;
+		}
+
+		if (this->hasMaximumExecutionTime())
+		{
+			parameters.m_MaximumExecutionTime = this->getMaximumExecutionTime();
+		}
+
+		if (this->hasPlayMode())
+		{
+			parameters.m_PlayMode = this->getPlayMode();
+		}
+
+		if (this->hasResetList())
+		{
+			parameters.m_ResetList = this->getResetList();
+		}
+
+		if (this->hasTokenList())
+		{
+			parameters.m_TokenList = this->getTokenList();
+		}
+
+		return kernelFacade.runScenarioList(parameters);
 	}
 
 	void RunScenarioCommand::doPrint(std::ostream& os) const
@@ -143,7 +173,7 @@ namespace CertiViBE
 		os << std::endl;
 
 
-		os << "timeout: " << ((this->hasTimeout()) ? std::to_string(m_Timeout) : "not set") << std::endl;
+		os << "MaximumExecutionTime: " << ((this->hasMaximumExecutionTime()) ? std::to_string(m_MaximumExecutionTime) : "not set") << std::endl;
 
 		os << "resetList:";
 		if (this->hasResetList())

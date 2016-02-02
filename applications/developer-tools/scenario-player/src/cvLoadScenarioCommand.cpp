@@ -1,6 +1,7 @@
 
 #include <iostream>
 
+#include "cvKernelFacade.h"
 #include "cvLoadScenarioCommand.h"
 
 namespace CertiViBE
@@ -50,13 +51,16 @@ namespace CertiViBE
 
 	PlayerReturnCode LoadScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
-		// to be implemented
-
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
-		std::cout << "Execution not yet implemented" << std::endl;
+		
+		if (!this->hasScenarioName() || !this->hasScenarioFile())
+		{
+			std::cerr << "Missing required arguments for command" << std::endl;
+			return PlayerReturnCode::MissingMandatoryArg;
+		}
 
-		return PlayerReturnCode::Success;
+		return kernelFacade.loadScenario(this->getScenarioName(), this->getScenarioFile());
 	}
 
 	void LoadScenarioCommand::doPrint(std::ostream& os) const

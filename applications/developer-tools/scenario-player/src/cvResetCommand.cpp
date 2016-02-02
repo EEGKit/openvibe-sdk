@@ -1,6 +1,7 @@
 
 #include <iostream>
 
+#include "cvKernelFacade.h"
 #include "cvResetCommand.h"
 
 namespace CertiViBE
@@ -11,8 +12,9 @@ namespace CertiViBE
 
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
-		std::cout << "Execution not yet implemented" << std::endl;
 
+		std::cout << "Not implemented yet" << std::endl;
+		
 		return PlayerReturnCode::Success;
 	}
 

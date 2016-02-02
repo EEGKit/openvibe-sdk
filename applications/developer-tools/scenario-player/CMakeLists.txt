@@ -9,16 +9,22 @@ SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
 SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
 # ----------------------
-# External dependecies
-# ----------------------
-INCLUDE("FindThirdPartyBoost")
-
-# ----------------------
 # Add executable
 # ----------------------
 ADD_DEFINITIONS( -DPROJECT_VERSION="${PROJECT_VERSION}" )
 FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.hpp)
 ADD_EXECUTABLE(${PROJECT_NAME} ${source_files})
+
+# ----------------------
+# External dependecies 
+# ----------------------
+
+# To be done after add executable because FindOpenViBEXXX files need a target name
+INCLUDE("FindOpenViBE")
+INCLUDE("FindOpenViBECommon")
+INCLUDE("FindOpenViBEToolkit")
+INCLUDE("FindOpenViBEModuleSystem")
+INCLUDE("FindThirdPartyBoost")
 
 # ---------------------------------
 # Target macros
@@ -27,11 +33,6 @@ ADD_EXECUTABLE(${PROJECT_NAME} ${source_files})
 # Defines target compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
-
-# ----------------------
-# Generate launch script
-# ----------------------
-#OV_INSTALL_LAUNCH_SCRIPT(SCRIPT_PREFIX "cv-scenario-player" EXECUTABLE_NAME "${PROJECT_NAME}" PAUSE)
 
 # -----------------------------
 # Install files

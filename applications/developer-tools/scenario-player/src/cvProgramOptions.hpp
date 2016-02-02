@@ -23,6 +23,9 @@ namespace CertiViBE
 	*/
 	struct ProgramOptionsTraits
 	{
+		// add a new type here (type must be default constructible)
+		// and add the corresponding callback in ProgramOptions
+
 		// types handled by ProgramOptions
 		using TokenPair = std::pair<std::string, std::string>;
 		using String = std::string;
@@ -182,7 +185,7 @@ namespace CertiViBE
 
 	public:
 
-		// static assert are used to raise understandable at compile time
+		// static assert are used to raise understandable errors at compile time
 		static_assert(!ProgramOptionsUtils::HasDuplicate<First, Types...>::value, "Duplicates in the type list");
 		static_assert(ProgramOptionsUtils::IsSignatureCompliant<First, Types...>::value, "Types not handled by ProgramOptions");
 
@@ -334,7 +337,7 @@ namespace CertiViBE
 	{
 		m_DescMap[name] = std::make_pair(false, optionDesc);
 
-		T defaultValue; // with this implementation, only default constructible type can be added 
+		T defaultValue{}; // with this implementation, only default constructible type can be added 
 		m_ValueMap[name] = defaultValue;
 	}
 

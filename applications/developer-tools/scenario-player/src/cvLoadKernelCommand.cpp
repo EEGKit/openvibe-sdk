@@ -1,6 +1,7 @@
 
 #include <iostream>
 
+#include "cvKernelFacade.h"
 #include "cvLoadKernelCommand.h"
 
 namespace CertiViBE
@@ -30,13 +31,11 @@ namespace CertiViBE
 
 	PlayerReturnCode LoadKernelCommand::execute(KernelFacade& kernelFacade) const
 	{
-		// to be implemented
-
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
-		std::cout << "Execution not yet implemented" << std::endl;
 
-		return PlayerReturnCode::Success;
+		// default config file is an empty one so it is not problem to give it directly as param
+		return kernelFacade.loadKernel(this->getConfigurationFile());
 	}
 
 	void LoadKernelCommand::doPrint(std::ostream& os) const

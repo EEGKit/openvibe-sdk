@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 
+#include "cvKernelFacade.h"
 #include "cvInitCommand.h"
 
 namespace CertiViBE
@@ -31,13 +32,10 @@ namespace CertiViBE
 
 	PlayerReturnCode InitCommand::execute(KernelFacade& kernelFacade) const
 	{
-		// to be implemented
-
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
-		std::cout << "Execution not yet implemented" << std::endl;
-
-		return PlayerReturnCode::Success;
+		
+		return kernelFacade.initialize(this->getBenchmark());
 	}
 
 	void InitCommand::doPrint(std::ostream& os) const
