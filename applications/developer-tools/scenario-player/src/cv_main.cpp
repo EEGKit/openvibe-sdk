@@ -28,8 +28,9 @@ Program can be run in command mode to execute list of commands from a file
 
 	// express mode options
 	optionParser.addValueOption<ProgramOptionsTraits::String>("config-file", { "", "Path to configuration file (express mode only)" });
-	optionParser.addValueOption<ProgramOptionsTraits::String>("play-file", { "", "Path to scenario file (express mode only) [mandatory]" });
-	optionParser.addValueOption<ProgramOptionsTraits::String>("play-mode", { "", "Play mode: std for standard and ff for fast-foward (express mode only)" });
+	optionParser.addValueOption<ProgramOptionsTraits::String>("scenario-file", { "", "Path to scenario file (express mode only) [mandatory]" });
+	optionParser.addValueOption<ProgramOptionsTraits::String>("play-mode", { "", "Play mode: std for standard and ff for fast-foward (express mode only) [default=std]" });
+	optionParser.addValueOption<ProgramOptionsTraits::Float>("max-time", { "", "Scenarios playing execution time limit (express mode only)" });
 
 	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("dg", { "", "Global user-defined token: -dg=\"(token:value)\" (express mode only)"});
 	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("ds", { "", "Scenario user-defined token: -ds=\"(token:value)\" (express mode only)" });

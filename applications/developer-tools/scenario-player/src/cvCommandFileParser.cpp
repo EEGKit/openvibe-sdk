@@ -427,11 +427,11 @@ namespace CertiViBE
 				}
 				else if (param.first == "PlayMode")
 				{
-					command->setPlayMode(static_cast<RunScenarioCommand::PlayMode>(std::stoi(param.second)));
+					command->setPlayMode(static_cast<PlayMode>(std::stoi(param.second)));
 				}
-				else if (param.first == "Timeout")
+				else if (param.first == "MaxExecutionTime")
 				{
-					command->setTimeout(std::stoi(param.second));
+					command->setMaximumExecutionTime(std::stod(param.second));
 				}
 				else if (param.first == "ResetList")
 				{

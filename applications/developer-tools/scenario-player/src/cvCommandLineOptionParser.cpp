@@ -55,16 +55,16 @@ namespace CertiViBE
 		// scenario loading is a mandatory step
 		std::shared_ptr<LoadScenarioCommand> scenarioCmd = std::make_shared<LoadScenarioCommand>();
 
-		if (m_OptionParser.hasOption("play-file")) // mandatory option
+		if (m_OptionParser.hasOption("scenario-file")) // mandatory option
 		{
-			scenarioCmd->setScenarioFile(m_OptionParser.getOptionValue<std::string>("play-file"));
+			scenarioCmd->setScenarioFile(m_OptionParser.getOptionValue<std::string>("scenario-file"));
 
 			// set dumb name as it used to recognize scenario in the application
 			scenarioCmd->setScenarioName(scenarioName);
 		}
 		else
 		{
-			std::cerr << "ERROR: mandatory option 'play-file' not set" << std::endl;
+			std::cerr << "ERROR: mandatory option 'scenario-file' not set" << std::endl;
 			return PlayerReturnCode::MissingMandatoryArg;
 		}
 
@@ -88,9 +88,20 @@ namespace CertiViBE
 		{
 			auto playMode = m_OptionParser.getOptionValue<std::string>("play-mode");
 
+			if (playMode != "ff" && playMode != "std")
+			{
+				std::cerr << "ERROR: option 'play-mode' must be ff or std" << std::endl;
+				return PlayerReturnCode::BadArg;
+			}
+
 			// permissive code here
 			// any other entry than ff leads to standard mode...
-			runCmd->setPlayMode((playMode == "ff") ? RunScenarioCommand::PlayMode::Fastfoward : RunScenarioCommand::PlayMode::Standard);
+			runCmd->setPlayMode((playMode == "ff") ? PlayMode::Fastfoward : PlayMode::Standard);
+		}
+
+		if (m_OptionParser.hasOption("max-time"))
+		{
+			runCmd->setMaximumExecutionTime(m_OptionParser.getOptionValue<double>("max-time"));
 		}
 
 		if (m_OptionParser.hasOption("dg"))
