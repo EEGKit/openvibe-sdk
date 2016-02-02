@@ -20,7 +20,7 @@ namespace CertiViBE
 	* RunScenarioCommand contains the following properties:
 	* - ScenarioList: Names of scenario that must be executed (mandatory)
 	* - PlayMode: 0 for standard, 1 for fastforward (optional)
-	* - Timeout: Time limit in second to kill execution (optional)
+	* - MaximumExecutionTime: Scenarios playing execution time limit (optional)
 	* - ResetList: Names of scenario whose setup must be reset (optional)
 	* - TokenList: List of global (token,value) pairs (optional)
 	* .
@@ -32,12 +32,6 @@ namespace CertiViBE
 	public:
 
 		using Token = std::pair<std::string, std::string>;
-
-		enum class PlayMode
-		{
-			Standard = 0,
-			Fastfoward
-		};
 		
 		void setScenarioList(const std::vector<std::string>& scenarioList);
 		std::vector<std::string> getScenarioList() const;
@@ -47,9 +41,9 @@ namespace CertiViBE
 		PlayMode getPlayMode() const;
 		bool hasPlayMode() const;
 
-		void setTimeout(unsigned timeout);
-		unsigned getTimeout() const;
-		bool hasTimeout() const;
+		void setMaximumExecutionTime(double timeout);
+		double getMaximumExecutionTime() const;
+		bool hasMaximumExecutionTime() const;
 
 		void setResetList(const std::vector<std::string>& resetList);
 		std::vector<std::string> getResetList() const;
@@ -73,11 +67,11 @@ namespace CertiViBE
 		std::vector<std::string> m_ResetList;
 		std::vector<Token> m_TokenList;
 		PlayMode m_PlayMode{ PlayMode::Standard };
-		int m_Timeout{ 0 };
+		double m_MaximumExecutionTime{ -1.0 };
 
 		bool m_HasScenarioList{ false };
 		bool m_HasPlayMode{ false };
-		bool m_HasTimeout{ false };
+		bool m_HasMaximumExecutionTime{ false };
 		bool m_HasResetList{ false };
 		bool m_HasTokenList{ false };
 	};
