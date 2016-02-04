@@ -22,11 +22,7 @@
 * If not, see <http://www.gnu.org/licenses/>.                        *
 *********************************************************************/
 
-#include "cvInitCommand.h"
-#include "cvLoadKernelCommand.h"
-#include "cvLoadScenarioCommand.h"
-#include "cvSetupScenarioCommand.h"
-#include "cvRunScenarioCommand.h"
+#include "cvCommand.h"
 #include "cvCommandLineOptionParser.h"
 
 namespace CertiViBE
@@ -70,7 +66,7 @@ namespace CertiViBE
 
 		if (m_OptionParser.hasOption("config-file")) // optional
 		{
-			kernelCmd->setConfigurationFile(m_OptionParser.getOptionValue<std::string>("config-file"));
+			kernelCmd->m_ConfigurationFile = m_OptionParser.getOptionValue<std::string>("config-file");
 		}
 
 		m_CommandList.push_back(kernelCmd);
@@ -80,10 +76,10 @@ namespace CertiViBE
 
 		if (m_OptionParser.hasOption("scenario-file")) // mandatory option
 		{
-			scenarioCmd->setScenarioFile(m_OptionParser.getOptionValue<std::string>("scenario-file"));
+			scenarioCmd->m_ScenarioFile = m_OptionParser.getOptionValue<std::string>("scenario-file");
 
 			// set dumb name as it used to recognize scenario in the application
-			scenarioCmd->setScenarioName(scenarioName);
+			scenarioCmd->m_ScenarioName = scenarioName;
 		}
 		else
 		{
@@ -97,15 +93,15 @@ namespace CertiViBE
 		if (m_OptionParser.hasOption("ds"))
 		{
 			std::shared_ptr<SetupScenarioCommand> setupCmd = std::make_shared<SetupScenarioCommand>();
-			setupCmd->setScenarioName(scenarioName);
-			setupCmd->setTokenList(m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("ds"));
+			setupCmd->m_ScenarioName = scenarioName;
+			setupCmd->m_TokenList = m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("ds");
 
 			m_CommandList.push_back(setupCmd);
 		}
 
 		// last command in the workflow is the run command
 		std::shared_ptr<RunScenarioCommand> runCmd = std::make_shared<RunScenarioCommand>();
-		runCmd->setScenarioList({ scenarioName });
+		runCmd->m_ScenarioList = std::vector<std::string>{ scenarioName };
 		
 		if (m_OptionParser.hasOption("play-mode"))
 		{
@@ -119,17 +115,17 @@ namespace CertiViBE
 
 			// permissive code here
 			// any other entry than ff leads to standard mode...
-			runCmd->setPlayMode((playMode == "ff") ? PlayMode::Fastfoward : PlayMode::Standard);
+			runCmd->m_PlayMode = ((playMode == "ff") ? PlayMode::Fastfoward : PlayMode::Standard);
 		}
 
 		if (m_OptionParser.hasOption("max-time"))
 		{
-			runCmd->setMaximumExecutionTime(m_OptionParser.getOptionValue<double>("max-time"));
+			runCmd->m_MaximumExecutionTime = m_OptionParser.getOptionValue<double>("max-time");
 		}
 
 		if (m_OptionParser.hasOption("dg"))
 		{
-			runCmd->setTokenList(m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("dg"));
+			runCmd->m_TokenList = m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("dg");
 		}
 
 		m_CommandList.push_back(runCmd);

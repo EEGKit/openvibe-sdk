@@ -31,7 +31,7 @@
 
 namespace CertiViBE
 {
-	class CommandInterface;
+	struct CommandInterface;
 
 	/**
 	* \class CommandParserInterface

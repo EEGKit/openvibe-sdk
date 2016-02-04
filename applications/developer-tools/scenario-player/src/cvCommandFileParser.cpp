@@ -22,12 +22,7 @@
 * If not, see <http://www.gnu.org/licenses/>.                        *
 *********************************************************************/
 
-#include "cvInitCommand.h"
-#include "cvLoadKernelCommand.h"
-#include "cvLoadScenarioCommand.h"
-#include "cvSetupScenarioCommand.h"
-#include "cvRunScenarioCommand.h"
-#include "cvResetCommand.h"
+#include "cvCommand.h"
 #include "cvCommandFileParser.h"
 
 namespace CertiViBE
@@ -318,7 +313,7 @@ namespace CertiViBE
 
 				if (param.first == "Benchmark")
 				{
-					command->setBenchmark(toBool(param.second));
+					command->m_Benchmark = toBool(param.second);
 				}
 				else
 				{
@@ -354,7 +349,7 @@ namespace CertiViBE
 
 				if (param.first == "ConfigurationFile")
 				{
-					command->setConfigurationFile(param.second);
+					command->m_ConfigurationFile = param.second;
 				}
 				else
 				{
@@ -381,11 +376,11 @@ namespace CertiViBE
 
 				if (param.first == "ScenarioName")
 				{
-					command->setScenarioName(param.second);
+					command->m_ScenarioName = param.second;
 				}
 				else if (param.first == "ScenarioFile")
 				{
-					command->setScenarioFile(param.second);
+					command->m_ScenarioFile = param.second;
 				}
 				else
 				{
@@ -412,15 +407,15 @@ namespace CertiViBE
 
 				if (param.first == "ScenarioName")
 				{
-					command->setScenarioName(param.second);
+					command->m_ScenarioName = param.second;
 				}
 				else if (param.first == "ResetList")
 				{
-					command->setResetList(toList(param.second));
+					command->m_ResetList = toList(param.second);
 				}
 				else if (param.first == "TokenList")
 				{
-					command->setTokenList(toTokenList(param.second));
+					command->m_TokenList = toTokenList(param.second);
 				}
 				else
 				{
@@ -447,23 +442,23 @@ namespace CertiViBE
 
 				if (param.first == "ScenarioList")
 				{
-					command->setScenarioList(toList(param.second));
+					command->m_ScenarioList = toList(param.second);
 				}
 				else if (param.first == "PlayMode")
 				{
-					command->setPlayMode(static_cast<PlayMode>(std::stoi(param.second)));
+					command->m_PlayMode = static_cast<PlayMode>(std::stoi(param.second));
 				}
-				else if (param.first == "MaxExecutionTime")
+				else if (param.first == "MaximumExecutionTime")
 				{
-					command->setMaximumExecutionTime(std::stod(param.second));
+					command->m_MaximumExecutionTime = std::stod(param.second);
 				}
 				else if (param.first == "ResetList")
 				{
-					command->setResetList(toList(param.second));
+					command->m_ResetList = toList(param.second);
 				}
 				else if (param.first == "TokenList")
 				{
-					command->setTokenList(toTokenList(param.second));
+					command->m_TokenList = (toTokenList(param.second));
 				}
 				else
 				{

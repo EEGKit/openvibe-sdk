@@ -30,6 +30,13 @@
 
 namespace CertiViBE
 {
+	struct InitCommand;
+	struct ResetCommand;
+	struct LoadKernelCommand;
+	struct LoadScenarioCommand;
+	struct SetupScenarioCommand;
+	struct RunScenarioCommand;
+
 	/**
 	* \class KernelFacade
 	* \author cgarraud (INRIA)
@@ -46,26 +53,14 @@ namespace CertiViBE
 
 	public:
 
-		/**
-		* Scenario running parameters wrapper
-		*/
-		struct RunParameters
-		{
-			double m_MaximumExecutionTime{ -1.0 }; /*!< Scenarios playing execution time limit */
-			PlayMode m_PlayMode{ PlayMode::Standard }; /*!< Play mode for scenario execution */
-			std::vector<std::string> m_ScenarioList; /*!< Names of scenarios to be executed */
-			std::vector<std::string> m_ResetList; /*!< Names of token to be reset */
-			std::vector<std::pair<std::string, std::string>> m_TokenList; /*!< List of condiguration token,value pairs */
-		};
-
 		KernelFacade();
 		~KernelFacade();
 
 		/**
 		* \brief Initialize session parameters
-		* \param[in] benchmark true if benchmarking on scenario playing is needed
+		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode initialize(bool benchmark = false);
+		PlayerReturnCode initialize(const InitCommand& command);
 
 
 		/**
@@ -75,9 +70,9 @@ namespace CertiViBE
 
 		/**
 		* \brief Load kernel
-		* \param[in] configFile openvibe configuration file
+		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode loadKernel(const std::string& configFile = "");
+		PlayerReturnCode loadKernel(const LoadKernelCommand& command);
 
 		/**
 		* \brief Unload kernel
@@ -86,16 +81,15 @@ namespace CertiViBE
 
 		/**
 		* \brief Load scenario
-		* \param[in] scenarioName alias used to refer to this scenario
-		* \param[in] scenarioFilename scenario xml file
+		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode loadScenario(const std::string& scenarioName, const std::string& scenarioFilename);
+		PlayerReturnCode loadScenario(const LoadScenarioCommand& command);
 
 		/**
 		* \brief Run one or multiple scenarios
-		* \param[in] parameters run session setup
+		* \param[in] command command containing all mandatory properties
 		*/
-		PlayerReturnCode runScenarioList(const RunParameters& parameters);
+		PlayerReturnCode runScenarioList(const RunScenarioCommand& command);
 
 	private:
 

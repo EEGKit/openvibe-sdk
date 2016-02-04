@@ -25,10 +25,12 @@
 #include <cstdio>
 #include <map>
 #include <limits>
+#include <cassert>
 
 #include <system/Time.h>
 #include <openvibe/ovITimeArithmetics.h>
 
+#include "cvCommand.h"
 #include "cvsp_base.h"
 #include "cvKernelFacade.h"
 
@@ -59,7 +61,7 @@ namespace CertiViBE
 		this->uninitialize();
 	}
 
-	PlayerReturnCode KernelFacade::initialize(bool benchmark)
+	PlayerReturnCode KernelFacade::initialize(const InitCommand& command)
 	{
 		return PlayerReturnCode::Success;
 	}
@@ -69,7 +71,7 @@ namespace CertiViBE
 		return PlayerReturnCode::Success;
 	}
 
-	PlayerReturnCode KernelFacade::loadKernel(const std::string& configFile)
+	PlayerReturnCode KernelFacade::loadKernel(const LoadKernelCommand& command)
 	{
 		if (m_Pimpl->m_KernelContext)
 		{
@@ -107,9 +109,9 @@ namespace CertiViBE
 
 		CString configurationFile;
 
-		if (!configFile.empty())
+		if (command.m_ConfigurationFile && !command.m_ConfigurationFile.get().empty())
 		{
-			configurationFile = configFile.c_str();
+			configurationFile = command.m_ConfigurationFile.get().c_str();
 		}
 		else
 		{
@@ -153,12 +155,18 @@ namespace CertiViBE
 		return PlayerReturnCode::Success;
 	}
 
-	PlayerReturnCode KernelFacade::loadScenario(const std::string& scenarioName, const std::string& scenarioFilename)
+	PlayerReturnCode KernelFacade::loadScenario(const LoadScenarioCommand& command)
 	{
-		if (!m_Pimpl->m_KernelContext && this->loadKernel() != PlayerReturnCode::Success)
+		assert(command.m_ScenarioFile && command.m_ScenarioName);
+
+		if (!m_Pimpl->m_KernelContext)
 		{
-			return PlayerReturnCode::KernelLoadingFailure;
+			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
+			return PlayerReturnCode::KernelInternalFailure;
 		}
+
+		std::string scenarioFile = command.m_ScenarioFile.get();
+		std::string scenarioName = command.m_ScenarioName.get();
 
 		CIdentifier scenarioIdentifier;
 		auto& scenarioManager = m_Pimpl->m_KernelContext->getScenarioManager();
@@ -176,7 +184,7 @@ namespace CertiViBE
 		PlayerReturnCode returnCode = PlayerReturnCode::Success;
 
 		CMemoryBuffer fileBuffer;
-		std::FILE* fileHandle = std::fopen(scenarioFilename.c_str(), "rb");
+		std::FILE* fileHandle = std::fopen(scenarioFile.c_str(), "rb");
 		
 		if (fileHandle)
 		{
@@ -224,7 +232,7 @@ namespace CertiViBE
 		}
 		else
 		{
-			std::cerr << "ERROR: failed to open scenario file at location " << scenarioFilename.c_str() << std::endl;
+			std::cerr << "ERROR: failed to open scenario file at location " << scenarioFile << std::endl;
 			returnCode =  PlayerReturnCode::OpeningFileFailure;
 		}
 
@@ -247,12 +255,17 @@ namespace CertiViBE
 	}
 
 
-	PlayerReturnCode KernelFacade::runScenarioList(const RunParameters& parameters)
+	PlayerReturnCode KernelFacade::runScenarioList(const RunScenarioCommand& command)
 	{
-		if (!m_Pimpl->m_KernelContext && this->loadKernel() != PlayerReturnCode::Success)
+		assert(command.m_ScenarioList);
+
+		if (!m_Pimpl->m_KernelContext)
 		{
-			return PlayerReturnCode::KernelLoadingFailure;
+			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
+			return PlayerReturnCode::KernelInternalFailure;
 		}
+
+		auto scenarioList = command.m_ScenarioList.get();
 
 		// use of returnCode to store error and achive an RAII-like
 		// behavior by releasing all players at the end
@@ -269,8 +282,8 @@ namespace CertiViBE
 		// attach players to scenario
 		for (auto& pair : m_Pimpl->m_ScenarioMap)
 		{
-			if (std::find(parameters.m_ScenarioList.begin(), parameters.m_ScenarioList.end(), pair.first) ==
-				parameters.m_ScenarioList.end()) // not in the list of scenario to run
+			if (std::find(scenarioList.begin(), scenarioList.end(), pair.first) ==
+				scenarioList.end()) // not in the list of scenario to run
 			{
 				continue;
 			}
@@ -288,7 +301,7 @@ namespace CertiViBE
 			// Scenario attachment with setup of local token
 			if (player->setScenario(pair.second) && player->initialize())
 			{
-				if (parameters.m_PlayMode == PlayMode::Fastfoward)
+				if (command.m_PlayMode && command.m_PlayMode.get() == PlayMode::Fastfoward)
 				{
 					player->forward();
 				}
@@ -318,9 +331,17 @@ namespace CertiViBE
 			// because it could overflow
 			float64 boundedMaxExecutionTimeInS = ITimeArithmetics::timeToSeconds(std::numeric_limits<uint64>::max());
 
-			uint64 maxExecutionTimeInFixedPoint = ((parameters.m_MaximumExecutionTime > boundedMaxExecutionTimeInS)
-				|| (parameters.m_MaximumExecutionTime <= 0)) ?
-				std::numeric_limits<uint64>::max() : ITimeArithmetics::secondsToTime(parameters.m_MaximumExecutionTime);
+			uint64 maxExecutionTimeInFixedPoint;
+			if (command.m_MaximumExecutionTime &&
+				command.m_MaximumExecutionTime.get() > 0 &&
+				command.m_MaximumExecutionTime.get() < boundedMaxExecutionTimeInS)
+			{
+				maxExecutionTimeInFixedPoint = ITimeArithmetics::secondsToTime(command.m_MaximumExecutionTime.get());
+			}
+			else
+			{
+				maxExecutionTimeInFixedPoint = std::numeric_limits<uint64>::max();
+			}
 
 			bool allStopped{ false };
 			while (!allStopped) // negative condition here because it is easier to reason about it
@@ -333,8 +354,6 @@ namespace CertiViBE
 
 					if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint)
 					{
-						std::cout << "max execution time " << parameters.m_MaximumExecutionTime << std::endl;
-						std::cout << "stopped at " << ITimeArithmetics::timeToSeconds(p->getCurrentSimulatedTime()) << std::endl;
 						p->stop();
 					}
 

@@ -29,7 +29,7 @@
 
 #include "cvsp_defines.h"
 #include "cvKernelFacade.h"
-#include "cvCommandInterface.h"
+#include "cvCommand.h"
 #include "cvCommandLineOptionParser.h"
 #include "cvCommandFileParser.h"
 
