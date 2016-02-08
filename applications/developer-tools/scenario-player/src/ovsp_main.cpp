@@ -151,8 +151,6 @@ int main(int argc, char** argv)
 		}
 	}
 
-	std::cout << "here" << std::endl;
-
 	return static_cast<int>(PlayerReturnCode::Success);
 }
 

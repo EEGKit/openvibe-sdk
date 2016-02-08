@@ -123,7 +123,7 @@ namespace OpenViBE
 			return PlayerReturnCode::KernelInvalidDesc;
 		}
 
-		//kernelContext->initialize();
+		// kernelContext->initialize();
 		m_Pimpl->m_KernelContext = kernelContext;
 		OpenViBEToolkit::initialize(*kernelContext);
 
@@ -137,8 +137,17 @@ namespace OpenViBE
 	{
 		if (m_Pimpl->m_KernelContext)
 		{
+			// not releasing the scenario before releasing the kernel
+			// causes a segfault on linux
+			auto& scenarioManager = m_Pimpl->m_KernelContext->getScenarioManager();
+			for (auto scenarioPair : m_Pimpl->m_ScenarioMap)
+			{
+				scenarioManager.releaseScenario(scenarioPair.second);
+			}
+
+
 			OpenViBEToolkit::uninitialize(*m_Pimpl->m_KernelContext);
-			//m_Pimpl->m_KernelContext->uninitialize();
+			// m_Pimpl->m_KernelContext->uninitialize();
 			IKernelDesc* kernelDesc{ nullptr };
 			m_Pimpl->m_KernelLoader.getKernelDesc(kernelDesc);
 			kernelDesc->releaseKernel(m_Pimpl->m_KernelContext);
