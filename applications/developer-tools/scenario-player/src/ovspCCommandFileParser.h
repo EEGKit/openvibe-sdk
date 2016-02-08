@@ -1,26 +1,23 @@
 /*********************************************************************
-* Software License Agreement (AGPL-3 License)                        *
-*                                                                    *
-* CertiViBE                                                          *
-* Based on OpenViBE V1.1.0, Copyright (C) INRIA, 2006-2015           *
-* Copyright (C) INRIA, 2015-2017,V1.0                                *
-*                                                                    *
-* \author Charles Garraud (INRIA)                                    *
-*                                                                    *
-* This program is free software: you can redistribute it and/or      *
-* modify it under the terms of the GNU Affero General Public License *
-* as published by the Free Software Foundation, either version 3 of  *
-* the License.                                                       *
-*                                                                    *
-* This program is distributed in the hope that it will be useful,    *
-* but WITHOUT ANY WARRANTY; without even the implied warranty of     *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU   *
-* Affero General Public License for more details.                    *
-*                                                                    *
-* You should have received a copy of the GNU Affero General Public   *
-* License along with this program.                                   *
-* If not, see <http://www.gnu.org/licenses/>.                        *
-*********************************************************************/
+* Software License Agreement (AGPL-3 License)
+*
+* CertiViBE Test Software
+* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
+* Copyright (C) Inria, 2015-2017,V1.0
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License version 3,
+* as published by the Free Software Foundation.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #pragma once
 
@@ -30,10 +27,10 @@
 #include <vector>
 #include <map>
 
-#include "cvCommandParserInterface.h"
-#include "cvsp_defines.h"
+#include "ovspICommandParser.h"
+#include "ovsp_defines.h"
 
-namespace CertiViBE
+namespace OpenViBE
 {
 	/**
 	* \class CommandFileParser
@@ -59,7 +56,7 @@ namespace CertiViBE
 	* \note Use of regex would simplify the implementation but boost::regex is not header-only and std::regex not implemented in gcc 4.8
 	*
 	*/
-	class CommandFileParser : public CommandParserInterface
+	class CommandFileParser : public ICommandParser
 	{
 
 	public:
@@ -76,7 +73,7 @@ namespace CertiViBE
 
 		virtual void uninitialize() override;
 
-		virtual std::vector<std::shared_ptr<CommandInterface>> getCommandList() const override;
+		virtual std::vector<std::shared_ptr<ICommand>> getCommandList() const override;
 
 		virtual PlayerReturnCode parse() override;
 
@@ -102,7 +99,7 @@ namespace CertiViBE
 		PlayerReturnCode runScenarioCommandCb(const std::vector<std::string>& sectionContent);
 
 		std::string m_CommandFile;
-		std::vector<std::shared_ptr<CommandInterface>> m_CommandList;
+		std::vector<std::shared_ptr<ICommand>> m_CommandList;
 		std::map<std::string, CallbackType> m_CallbackList;
 	};
 }

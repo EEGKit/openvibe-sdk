@@ -1,39 +1,36 @@
 /*********************************************************************
-* Software License Agreement (AGPL-3 License)                        *
-*                                                                    *
-* CertiViBE                                                          *
-* Based on OpenViBE V1.1.0, Copyright (C) INRIA, 2006-2015           *
-* Copyright (C) INRIA, 2015-2017,V1.0                                *
-*                                                                    *
-* \author Charles Garraud (INRIA)                                    *
-*                                                                    *
-* This program is free software: you can redistribute it and/or      *
-* modify it under the terms of the GNU Affero General Public License *
-* as published by the Free Software Foundation, either version 3 of  *
-* the License.                                                       *
-*                                                                    *
-* This program is distributed in the hope that it will be useful,    *
-* but WITHOUT ANY WARRANTY; without even the implied warranty of     *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU   *
-* Affero General Public License for more details.                    *
-*                                                                    *
-* You should have received a copy of the GNU Affero General Public   *
-* License along with this program.                                   *
-* If not, see <http://www.gnu.org/licenses/>.                        *
-*********************************************************************/
+* Software License Agreement (AGPL-3 License)
+*
+* CertiViBE Test Software
+* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
+* Copyright (C) Inria, 2015-2017,V1.0
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License version 3,
+* as published by the Free Software Foundation.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
 
-#include "cvsp_defines.h"
-#include "cvKernelFacade.h"
-#include "cvCommand.h"
-#include "cvCommandLineOptionParser.h"
-#include "cvCommandFileParser.h"
+#include "ovsp_defines.h"
+#include "ovspCKernelFacade.h"
+#include "ovspCCommand.h"
+#include "ovspCCommandLineOptionParser.h"
+#include "ovspCCommandFileParser.h"
 
-using namespace CertiViBE;
+using namespace OpenViBE;
 
 void initializeParser(ProgramOptionParser& optionParser)
 {
@@ -92,7 +89,7 @@ int main(int argc, char** argv)
 			if (optionParser.hasOption("mode"))
 			{
 				// command parser type is selected from mode
-				std::unique_ptr<CommandParserInterface> commandParser{ nullptr };
+				std::unique_ptr<ICommandParser> commandParser{ nullptr };
 				auto mode = optionParser.getOptionValue<ProgramOptionsTraits::String>("mode");
 
 				if (mode == "c")
@@ -153,6 +150,8 @@ int main(int argc, char** argv)
 			}
 		}
 	}
+
+	std::cout << "here" << std::endl;
 
 	return static_cast<int>(PlayerReturnCode::Success);
 }

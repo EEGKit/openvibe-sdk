@@ -1,31 +1,28 @@
 /*********************************************************************
-* Software License Agreement (AGPL-3 License)                        *
-*                                                                    *
-* CertiViBE                                                          *
-* Based on OpenViBE V1.1.0, Copyright (C) INRIA, 2006-2015           *
-* Copyright (C) INRIA, 2015-2017,V1.0                                *
-*                                                                    *
-* \author Charles Garraud (INRIA)                                    *
-*                                                                    *
-* This program is free software: you can redistribute it and/or      *
-* modify it under the terms of the GNU Affero General Public License *
-* as published by the Free Software Foundation, either version 3 of  *
-* the License.                                                       *
-*                                                                    *
-* This program is distributed in the hope that it will be useful,    *
-* but WITHOUT ANY WARRANTY; without even the implied warranty of     *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU   *
-* Affero General Public License for more details.                    *
-*                                                                    *
-* You should have received a copy of the GNU Affero General Public   *
-* License along with this program.                                   *
-* If not, see <http://www.gnu.org/licenses/>.                        *
-*********************************************************************/
+* Software License Agreement (AGPL-3 License)
+*
+* CertiViBE Test Software
+* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
+* Copyright (C) Inria, 2015-2017,V1.0
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License version 3,
+* as published by the Free Software Foundation.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
 
-#include "cvKernelFacade.h"
-#include "cvCommand.h"
+#include "ovspCKernelFacade.h"
+#include "ovspCCommand.h"
 
-namespace CertiViBE
+namespace OpenViBE
 {
 	PlayerReturnCode InitCommand::execute(KernelFacade& kernelFacade) const
 	{
@@ -39,7 +36,7 @@ namespace CertiViBE
 	{
 
 		os << "command name: InitCommand" << std::endl;
-		os << "benchmark: " << ( m_Benchmark ? std::to_string(m_Benchmark.get()) : "not set") << std::endl;
+		os << "Benchmark: " << (this->benchmark ? std::to_string(this->benchmark.get()) : "not set") << std::endl;
 	}
 
 	PlayerReturnCode LoadKernelCommand::execute(KernelFacade& kernelFacade) const
@@ -54,7 +51,7 @@ namespace CertiViBE
 	void LoadKernelCommand::doPrint(std::ostream& os) const
 	{
 		os << "command name: LoadKernelCommand" << std::endl;
-		os << "configFile: " << (m_ConfigurationFile ? m_ConfigurationFile.get() : "not set") << std::endl;
+		os << "ConfigurationFile: " << (this->configurationFile ? this->configurationFile.get() : "not set") << std::endl;
 	}
 
 	PlayerReturnCode LoadScenarioCommand::execute(KernelFacade& kernelFacade) const
@@ -62,7 +59,7 @@ namespace CertiViBE
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
 
-		if (!m_ScenarioName || !m_ScenarioFile)
+		if (!this->scenarioName || !this->scenarioFile)
 		{
 			std::cerr << "Missing required arguments for command" << std::endl;
 			return PlayerReturnCode::MissingMandatoryArg;
@@ -74,8 +71,8 @@ namespace CertiViBE
 	void LoadScenarioCommand::doPrint(std::ostream& os) const
 	{
 		os << "command name: LoadScenarioCommand" << std::endl;
-		os << "scenarioName: " << (m_ScenarioName ? m_ScenarioName.get() : "not set") << std::endl;
-		os << "scenarioFile: " << (m_ScenarioFile ? m_ScenarioFile.get() : "not set") << std::endl;
+		os << "ScenarioName: " << (this->scenarioName ? this->scenarioName.get() : "not set") << std::endl;
+		os << "ScenarioFile: " << (this->scenarioFile ? this->scenarioFile.get() : "not set") << std::endl;
 	}
 
 	PlayerReturnCode ResetCommand::execute(KernelFacade& kernelFacade) const
@@ -100,7 +97,7 @@ namespace CertiViBE
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
 
-		if (!m_ScenarioList)
+		if (!this->scenarioList)
 		{
 			std::cerr << "Missing required arguments for command: ScenarioList" << std::endl;
 			return PlayerReturnCode::MissingMandatoryArg;
@@ -113,10 +110,10 @@ namespace CertiViBE
 	{
 		os << "command name: RunScenarioCommand" << std::endl;
 
-		os << "scenarioList:";
-		if (m_ScenarioList)
+		os << "ScenarioList:";
+		if (this->scenarioList)
 		{
-			for (auto& scenario : m_ScenarioList.get())
+			for (auto& scenario : this->scenarioList.get())
 			{
 				os << " " << scenario;
 			}
@@ -127,10 +124,10 @@ namespace CertiViBE
 		}
 		os << std::endl;
 
-		os << "playMode: ";
-		if (m_PlayMode)
+		os << "PlayMode: ";
+		if (this->playMode)
 		{
-			std::string modeAsString = (m_PlayMode == PlayMode::Fastfoward) ? "fastforward" : "standard";
+			std::string modeAsString = (this->playMode == PlayerPlayMode::Fastfoward) ? "fastforward" : "standard";
 			os << modeAsString;
 		}
 		else
@@ -140,12 +137,12 @@ namespace CertiViBE
 		os << std::endl;
 
 
-		os << "MaximumExecutionTime: " << ( m_MaximumExecutionTime ? std::to_string(m_MaximumExecutionTime.get()) : "not set") << std::endl;
+		os << "MaximumExecutionTime: " << (this->maximumExecutionTime ? std::to_string(this->maximumExecutionTime.get()) : "not set") << std::endl;
 
-		os << "resetList:";
-		if (m_ResetList)
+		os << "ResetList:";
+		if (this->resetList)
 		{
-			for (auto& token : m_ResetList.get())
+			for (auto& token : this->resetList.get())
 			{
 				os << " " << token;
 			}
@@ -156,10 +153,10 @@ namespace CertiViBE
 		}
 		os << std::endl;
 
-		os << "tokenList:";
-		if (m_TokenList)
+		os << "TokenList:";
+		if (this->tokenList)
 		{
-			for (auto& token : m_TokenList.get())
+			for (auto& token : this->tokenList.get())
 			{
 				os << " (" << token.first << "," << token.second << ")";
 			}
@@ -187,12 +184,12 @@ namespace CertiViBE
 	{
 		os << "command name: SetupScenarioCommand" << std::endl;
 
-		os << "scenarioName: " << (m_ScenarioName ? m_ScenarioName.get() : "not set") << std::endl;
+		os << "ScenarioName: " << (this->scenarioName ? this->scenarioName.get() : "not set") << std::endl;
 
-		os << "resetList:";
-		if (m_ResetList)
+		os << "ResetList:";
+		if (this->resetList)
 		{
-			for (auto& token : m_ResetList.get())
+			for (auto& token : this->resetList.get())
 			{
 				os << " " << token;
 			}
@@ -203,10 +200,10 @@ namespace CertiViBE
 		}
 		os << std::endl;
 
-		os << "tokenList:";
-		if (m_TokenList)
+		os << "TokenList:";
+		if (this->tokenList)
 		{
-			for (auto& token : m_TokenList.get())
+			for (auto& token : this->tokenList.get())
 			{
 				os << " (" << token.first << "," << token.second << ")";
 			}

@@ -1,26 +1,23 @@
 /*********************************************************************
-* Software License Agreement (AGPL-3 License)                        *
-*                                                                    *
-* CertiViBE                                                          *
-* Based on OpenViBE V1.1.0, Copyright (C) INRIA, 2006-2015           *
-* Copyright (C) INRIA, 2015-2017,V1.0                                *
-*                                                                    *
-* \author Charles Garraud (INRIA)                                    *
-*                                                                    *
-* This program is free software: you can redistribute it and/or      *
-* modify it under the terms of the GNU Affero General Public License *
-* as published by the Free Software Foundation, either version 3 of  *
-* the License.                                                       *
-*                                                                    *
-* This program is distributed in the hope that it will be useful,    *
-* but WITHOUT ANY WARRANTY; without even the implied warranty of     *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU   *
-* Affero General Public License for more details.                    *
-*                                                                    *
-* You should have received a copy of the GNU Affero General Public   *
-* License along with this program.                                   *
-* If not, see <http://www.gnu.org/licenses/>.                        *
-*********************************************************************/
+* Software License Agreement (AGPL-3 License)
+*
+* CertiViBE Test Software
+* Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
+* Copyright (C) Inria, 2015-2017,V1.0
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License version 3,
+* as published by the Free Software Foundation.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.
+* If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include <cstdio>
 #include <map>
@@ -30,13 +27,12 @@
 #include <system/Time.h>
 #include <openvibe/ovITimeArithmetics.h>
 
-#include "cvCommand.h"
-#include "cvsp_base.h"
-#include "cvKernelFacade.h"
+#include "ovspCCommand.h"
+#include "ovsp_base.h"
+#include "ovspCKernelFacade.h"
 
-namespace CertiViBE
+namespace OpenViBE
 {
-	using namespace OpenViBE;
 	using namespace OpenViBE::Kernel;
 	using namespace OpenViBE::Plugins;
 
@@ -109,9 +105,9 @@ namespace CertiViBE
 
 		CString configurationFile;
 
-		if (command.m_ConfigurationFile && !command.m_ConfigurationFile.get().empty())
+		if (command.configurationFile && !command.configurationFile.get().empty())
 		{
-			configurationFile = command.m_ConfigurationFile.get().c_str();
+			configurationFile = command.configurationFile.get().c_str();
 		}
 		else
 		{
@@ -165,8 +161,8 @@ namespace CertiViBE
 			return PlayerReturnCode::KernelInternalFailure;
 		}
 
-		std::string scenarioFile = command.m_ScenarioFile.get();
-		std::string scenarioName = command.m_ScenarioName.get();
+		std::string scenarioFile = command.scenarioFile.get();
+		std::string scenarioName = command.scenarioName.get();
 
 		CIdentifier scenarioIdentifier;
 		auto& scenarioManager = m_Pimpl->m_KernelContext->getScenarioManager();
@@ -265,7 +261,7 @@ namespace CertiViBE
 			return PlayerReturnCode::KernelInternalFailure;
 		}
 
-		auto scenarioList = command.m_ScenarioList.get();
+		auto scenarioList = command.scenarioList.get();
 
 		// use of returnCode to store error and achive an RAII-like
 		// behavior by releasing all players at the end
@@ -301,7 +297,7 @@ namespace CertiViBE
 			// Scenario attachment with setup of local token
 			if (player->setScenario(pair.second) && player->initialize())
 			{
-				if (command.m_PlayMode && command.m_PlayMode.get() == PlayMode::Fastfoward)
+				if (command.playMode && command.playMode.get() == PlayerPlayMode::Fastfoward)
 				{
 					player->forward();
 				}
@@ -332,11 +328,11 @@ namespace CertiViBE
 			float64 boundedMaxExecutionTimeInS = ITimeArithmetics::timeToSeconds(std::numeric_limits<uint64>::max());
 
 			uint64 maxExecutionTimeInFixedPoint;
-			if (command.m_MaximumExecutionTime &&
-				command.m_MaximumExecutionTime.get() > 0 &&
-				command.m_MaximumExecutionTime.get() < boundedMaxExecutionTimeInS)
+			if (command.maximumExecutionTime &&
+				command.maximumExecutionTime.get() > 0 &&
+				command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS)
 			{
-				maxExecutionTimeInFixedPoint = ITimeArithmetics::secondsToTime(command.m_MaximumExecutionTime.get());
+				maxExecutionTimeInFixedPoint = ITimeArithmetics::secondsToTime(command.maximumExecutionTime.get());
 			}
 			else
 			{
