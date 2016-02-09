@@ -162,7 +162,7 @@ namespace OpenViBE
 
 	PlayerReturnCode KernelFacade::loadScenario(const LoadScenarioCommand& command)
 	{
-		assert(command.m_ScenarioFile && command.m_ScenarioName);
+		assert(command.scenarioFile && command.scenarioName);
 
 		if (!m_Pimpl->m_KernelContext)
 		{
@@ -262,7 +262,7 @@ namespace OpenViBE
 
 	PlayerReturnCode KernelFacade::runScenarioList(const RunScenarioCommand& command)
 	{
-		assert(command.m_ScenarioList);
+		assert(command.scenarioList);
 
 		if (!m_Pimpl->m_KernelContext)
 		{
