@@ -136,6 +136,10 @@ int main(int argc, char** argv)
 							}
 						}
 					}
+					else
+					{
+						return static_cast<int>(returnCode);
+					}
 				}
 				catch (const std::exception& e)
 				{
