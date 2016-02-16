@@ -79,8 +79,10 @@ namespace OpenViBE
 
 #if defined TARGET_OS_Windows
 		kernelFile = OpenViBE::Directories::getLibDir() + "/openvibe-kernel.dll";
-#else
+#elif defined TARGET_OS_Linux
 		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
+#elif defined TARGET_OS_MacOS
+		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 
 		CKernelLoader& kernelLoader = m_Pimpl->m_KernelLoader;
