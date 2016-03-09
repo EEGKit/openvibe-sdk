@@ -73,40 +73,6 @@
 #define OVP_TypeId_MatchMethod_Index                       OpenViBE::CIdentifier(0x0E0BF9E8, 0x3D612618)
 #define OVP_TypeId_MatchMethod_Smart                       OpenViBE::CIdentifier(0x2D87EF07, 0xA2828AC0)
 
-#define OVP_ClassId_BoxAlgorithm_DifferentialIntegral         OpenViBE::CIdentifier(0xCE490CBF, 0xDF7BA2E2)
-#define OVP_ClassId_BoxAlgorithm_DifferentialIntegralDesc     OpenViBE::CIdentifier(0xCE490CBF, 0xDF7BA2E2)
-#define OVP_TypeId_DifferentialIntegralOperation              OpenViBE::CIdentifier(0x6E6AD85D, 0x14FD203A)
-#define OVP_TypeId_DifferentialIntegralOperation_Differential OpenViBE::CIdentifier(0x8EEF4E01, 0x1F9823C2)
-#define OVP_TypeId_DifferentialIntegralOperation_Integral     OpenViBE::CIdentifier(0x44269C45, 0x77988564)
-
-#define OVP_ClassId_Algorithm_ARBurgMethod                        			OpenViBE::CIdentifier(0x3EC6A165, 0x2823A034)
-#define OVP_ClassId_Algorithm_ARBurgMethodDesc                    			OpenViBE::CIdentifier(0xD7234DFF, 0x55447A14)
-#define OVP_Algorithm_ARBurgMethod_InputParameterId_Matrix       			OpenViBE::CIdentifier(0x36A69669, 0x3651271D)
-#define OVP_Algorithm_ARBurgMethod_OutputParameterId_Matrix      			OpenViBE::CIdentifier(0x55EF8C81, 0x178A51B2)
-#define OVP_Algorithm_ARBurgMethod_InputParameterId_UInteger     			OpenViBE::CIdentifier(0x33139BC1, 0x03D30D3B)
-#define OVP_Algorithm_ARBurgMethod_InputTriggerId_Initialize 	 			OpenViBE::CIdentifier(0xC27B06C6, 0xB8EB5F8D)
-#define OVP_Algorithm_ARBurgMethod_InputTriggerId_Process		     		OpenViBE::CIdentifier(0xBEEBBE84, 0x4F14F8F8)
-#define OVP_Algorithm_ARBurgMethod_OutputTriggerId_ProcessDone           	OpenViBE::CIdentifier(0xA5AAD435, 0x9EC3DB80) 
-
-#define OVP_ClassId_BoxAlgorithm_ConnectivityMeasure 					OpenViBE::CIdentifier(0x8E3A1AEF, 0x7CACD368)
-#define OVP_ClassId_BoxAlgorithm_ConnectivityMeasureDesc 				OpenViBE::CIdentifier(0xA20B0A40, 0x1A92D645)
-#define OVP_TypeId_Algorithm_SingleTrialPhaseLockingValue				OpenViBE::CIdentifier(0x740E1284, 0x24107052)
-#define OVP_TypeId_Algorithm_SingleTrialPhaseLockingValueDesc			OpenViBE::CIdentifier(0x71CA3FD4, 0x0ED22534)
-
-#define OVP_ClassId_Algorithm_HilbertTransform								OpenViBE::CIdentifier(0x344B79DE, 0x89EAAABB)
-#define OVP_ClassId_Algorithm_HilbertTransformDesc							OpenViBE::CIdentifier(0x8CAB236A, 0xA789800D)
-#define OVP_Algorithm_HilbertTransform_InputParameterId_Matrix				OpenViBE::CIdentifier(0xC117CE9A, 0x3FFCB156)
-#define OVP_Algorithm_HilbertTransform_OutputParameterId_HilbertMatrix		OpenViBE::CIdentifier(0xDAE13CB8, 0xEFF82E69)
-#define OVP_Algorithm_HilbertTransform_OutputParameterId_EnvelopeMatrix		OpenViBE::CIdentifier(0x9D0A023A, 0x7690C48E)
-#define OVP_Algorithm_HilbertTransform_OutputParameterId_PhaseMatrix		OpenViBE::CIdentifier(0x495B55E2, 0x8CAAC08E)
-#define OVP_Algorithm_HilbertTransform_InputTriggerId_Initialize			OpenViBE::CIdentifier(0xE4B3CB4A, 0xF0121A20)
-#define OVP_Algorithm_HilbertTransform_InputTriggerId_Process				OpenViBE::CIdentifier(0xC3DC087D, 0x4AAFC1F0)
-#define OVP_Algorithm_HilbertTransform_OutputTriggerId_ProcessDone			OpenViBE::CIdentifier(0xB0B2A2DD, 0x73529B46)
-
-#define OVP_ClassId_BoxAlgorithm_Hilbert				OpenViBE::CIdentifier(0x7878A47F, 0x9A8FE349)
-#define OVP_ClassId_BoxAlgorithm_HilbertDesc			OpenViBE::CIdentifier(0x2DB54E2F, 0x435675EF)
-
-
 //___________________________________________________________________//
 //                                                                   //
 // Plugin Object Descriptor Class Identifiers                        //
@@ -118,11 +84,7 @@
 #define OVP_ClassId_ChannelSelectorDesc                                                OpenViBE::CIdentifier(0x34893489, 0x44934897)
 #define OVP_ClassId_SimpleDSPDesc                                                      OpenViBE::CIdentifier(0x00C44BFE, 0x76C9269E)
 #define OVP_ClassId_SignalAverageDesc                                                  OpenViBE::CIdentifier(0x007CDCE9, 0x16034F77)
-#define OVP_ClassId_SignalConcatenationDesc                                            OpenViBE::CIdentifier(0x3921BACD, 0x1E9546FE)
-#define OVP_ClassId_FirstDifferenceDetrendingDesc                                      OpenViBE::CIdentifier(0x0039EF62, 0x11DA5967)
-#define OVP_ClassId_SecondDifferenceDetrendingDesc                                     OpenViBE::CIdentifier(0x000B30B6, 0x29E85D42)
 #define OVP_ClassId_OverlappingEpochAverageDesc                                        OpenViBE::CIdentifier(0x000C8040, 0x7A4F177E)
-#define OVP_ClassId_BoxAlgorithm_QuadraticFormDesc                                     OpenViBE::CIdentifier(0x31C11856, 0x3E4F7B67)
 //___________________________________________________________________//
 //                                                                   //
 // Plugin Object Class Identifiers                                   //
@@ -134,9 +96,6 @@
 #define OVP_ClassId_ChannelSelector                                                    OpenViBE::CIdentifier(0x39484563, 0x46386889)
 #define OVP_ClassId_SimpleDSP                                                          OpenViBE::CIdentifier(0x00E26FA1, 0x1DBAB1B2)
 #define OVP_ClassId_SignalAverage                                                      OpenViBE::CIdentifier(0x00642C4D, 0x5DF7E50A)
-#define OVP_ClassId_SignalConcatenation                                                OpenViBE::CIdentifier(0x6568D29B, 0x0D753CCA)
-#define OVP_ClassId_FirstDifferenceDetrending                                          OpenViBE::CIdentifier(0x001B4E3D, 0x7FEE9CB1)
-#define OVP_ClassId_SecondDifferenceDetrending                                         OpenViBE::CIdentifier(0x00D283A5, 0x40D76DD3)
 #define OVP_ClassId_OverlappingEpochAverage                                            OpenViBE::CIdentifier(0x0042232E, 0x6F5B5E21)
 #define OVP_ClassId_BoxAlgorithm_QuadraticForm                                         OpenViBE::CIdentifier(0x54E73B81, 0x1AD356C6)
 
