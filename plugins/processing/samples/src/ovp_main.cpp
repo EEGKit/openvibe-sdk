@@ -10,7 +10,6 @@
 //#include "box-algorithms/ovpCLog.h"
 //#include "box-algorithms/ovpCTest.h"
 //#include "box-algorithms/ovpCBoxAlgorithmClock.h"
-#include "box-algorithms/ovpCBoxAlgorithmClockStimulator.h"
 
 //#include "algorithms/ovpCAlgorithmAddition.h"
 //#include "ovpCBoxAlgorithmAdditionTest.h"
@@ -47,7 +46,6 @@ OVP_Declare_Begin();
 	OVP_Declare_New(OpenViBEPlugins::Samples::CIdentityDesc);
 	// OVP_Declare_New(OpenViBEPlugins::Samples::CLogDesc);
 	// OVP_Declare_New(OpenViBEPlugins::Samples::CBoxAlgorithmClockDesc);
-	OVP_Declare_New(OpenViBEPlugins::Samples::CBoxAlgorithmClockStimulatorDesc);
 
 	// OVP_Declare_New(OpenViBEPlugins::Samples::CTestDesc);
 
