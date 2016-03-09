@@ -11,7 +11,6 @@
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 #include "algorithms/ovpCAlgorithmConditionedCovariance.h"
-#include "algorithms/ovpCAlgorithmClassifierShrinkageLDA.h"
 #endif // TARGET_HAS_ThirdPartyEIGEN
 
 OVP_Declare_Begin();
@@ -25,9 +24,6 @@ OVP_Declare_Begin();
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 	OVP_Declare_New(OpenViBEPlugins::Classification::CAlgorithmConditionedCovarianceDesc);
-
-	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationAlgorithm,   "Shrinkage LDA", OVP_ClassId_Algorithm_ClassifierShrinkageLDA.toUInteger());
-	OVP_Declare_New(OpenViBEPlugins::Classification::CAlgorithmClassifierShrinkageLDADesc);
 
 #endif // TARGET_HAS_ThirdPartyEIGEN
 
