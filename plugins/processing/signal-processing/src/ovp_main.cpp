@@ -3,6 +3,7 @@
 #include "algorithms/epoching/ovpCAlgorithmStimulationBasedEpoching.h"
 //#include "algorithms/filters/ovpCApplySpatialFilter.h"
 
+#include "box-algorithms/basic/ovpCIdentity.h"
 #include "box-algorithms/basic/ovpCBoxAlgorithmChannelRename.h"
 #include "box-algorithms/basic/ovpCBoxAlgorithmChannelSelector.h"
 #include "box-algorithms/basic/ovpCBoxAlgorithmEpochAverage.h"
@@ -58,6 +59,7 @@ OVP_Declare_Begin()
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_DifferentialIntegralOperation, "Differential", OVP_TypeId_DifferentialIntegralOperation_Differential.toUInteger());
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_DifferentialIntegralOperation, "Integral",     OVP_TypeId_DifferentialIntegralOperation_Integral.toUInteger());
 
+	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CIdentityDesc);
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CTimeBasedEpochingDesc);
 
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CMatrixAverageDesc)
