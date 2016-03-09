@@ -14,7 +14,7 @@
 
 namespace OpenViBEPlugins
 {
-	namespace Samples
+	namespace FileIO
 	{
 		#define _default_and_copy_constructor_1_(c,m1)                      c(void) { } c(const c& r) : m1(r.m1) { }
 		#define _default_and_copy_constructor_2_(c,m1,m2)                   c(void) { } c(const c& r) : m1(r.m1), m2(r.m2) { }
@@ -155,7 +155,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getFileExtension(void) const       { return OpenViBE::CString("xml;XML"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_ScenarioImporterXML; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Samples::CScenarioImporterXML(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::FileIO::CScenarioImporterXML(); }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IScenarioImporterDesc, OVP_ClassId_ScenarioImporterXMLDesc)
 		};

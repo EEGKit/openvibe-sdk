@@ -12,7 +12,7 @@
 
 namespace OpenViBEPlugins
 {
-	namespace Samples
+	namespace FileIO
 	{
 		class CScenarioExporterXML
 			: public OpenViBE::Plugins::IScenarioExporter
@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getFileExtension(void) const       { return OpenViBE::CString("xml;XML"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_ScenarioExporterXML; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Samples::CScenarioExporterXML(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::FileIO::CScenarioExporterXML(); }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IScenarioExporterDesc, OVP_ClassId_ScenarioExporterXMLDesc)
 		};

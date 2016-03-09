@@ -1,5 +1,8 @@
 #include "ovp_defines.h"
 
+#include "ovpCScenarioImporterXML.h"
+#include "ovpCScenarioExporterXML.h"
+
 #include "algorithms/ovpCAlgorithmOVMatrixFileReader.h"
 #include "algorithms/ovpCAlgorithmOVMatrixFileWriter.h"
 
@@ -18,6 +21,9 @@
 #include "box-algorithms/ovpCBoxAlgorithmSignalConcatenation.h"
 
 OVP_Declare_Begin()
+	OVP_Declare_New(OpenViBEPlugins::FileIO::CScenarioImporterXMLDesc);
+	OVP_Declare_New(OpenViBEPlugins::FileIO::CScenarioExporterXMLDesc);
+
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CAlgorithmOVMatrixFileReaderDesc)
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CAlgorithmOVMatrixFileWriterDesc)
 

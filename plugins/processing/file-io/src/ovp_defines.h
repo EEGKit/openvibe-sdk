@@ -6,6 +6,10 @@
 // Plugin Object Descriptor Class Identifiers                        //
 //___________________________________________________________________//
 //                                                                   //
+#define OVP_ClassId_ScenarioExporterXMLDesc                 OpenViBE::CIdentifier(0x5B2B5C67, 0x78EA7539)
+#define OVP_ClassId_ScenarioImporterXMLDesc                 OpenViBE::CIdentifier(0x28DC180C, 0x4CCA7314)
+#define OVP_ClassId_ScenarioExporterXML                     OpenViBE::CIdentifier(0x77075B3B, 0x3D632492)
+#define OVP_ClassId_ScenarioImporterXML                     OpenViBE::CIdentifier(0x440BF3AC, 0x2D960300)
 
 #define OVP_ClassId_GenericStreamReaderDesc                                    OpenViBE::CIdentifier(0x1E8AAB1A, 0x085D72F6)
 #define OVP_ClassId_GenericStreamWriterDesc                                    OpenViBE::CIdentifier(0x02817C77, 0x77FE3D6A)
