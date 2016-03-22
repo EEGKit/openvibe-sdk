@@ -6,11 +6,7 @@
 
 #include <map>
 
-#if defined TARGET_HAS_ThirdPartyOgre3D
-#include "../player/ovkCOgreVisualisation.h"
-#else
 class COgreVisualisation;
-#endif
 typedef struct _GtkWidget GtkWidget;
 
 namespace OpenViBE

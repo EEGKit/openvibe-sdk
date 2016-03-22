@@ -1,3 +1,4 @@
+(??)
 /**
  * \file defines.h
  * \author Yann Renard (INRIA/IRISA)
@@ -42,12 +43,18 @@
  */
 #define EBML_Identifier_EBMLVersion			EBML::CIdentifier(0x0286)
 /**
+ * EBML Read Version.
+ * This is a child node of type \c integer.
+ * Indicates the EBML version a parser has to support to read this file
+ */
+#define EBML_Identifier_EBMLReadVersion		EBML::CIdentifier(0x02F7)
+/**
  * EBML Identifier Length.
  * This is a child node of type \c integer.
  * Indicates the parser the maximum number of bytes an identifier
  * can have.
  */
-#define EBML_Identifier_EBMLIdLength		EBML::CIdentifier(0x02F7)
+#define EBML_Identifier_EBMLIdLength		EBML::CIdentifier(0x02F2)
 /**
  * EBML Size Length.
  * This is a child node of type \c integer.
@@ -91,26 +98,8 @@
 
 //@}
 
-#if defined EBML_Shared
-	#if defined TARGET_OS_Windows
-		#define EBML_API_Export __declspec(dllexport)
-		#define EBML_API_Import __declspec(dllimport)
-	#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		#define EBML_API_Export __attribute__((visibility("default")))
-		#define EBML_API_Import __attribute__((visibility("default")))
-	#else
-		#define EBML_API_Export
-		#define EBML_API_Import
-	#endif
-#else
-	#define EBML_API_Export
-	#define EBML_API_Import
-#endif
+(??)
 
-#if defined EBML_Exports
-	#define EBML_API EBML_API_Export
-#else
-	#define EBML_API EBML_API_Import
-#endif
+(??)
 
 #endif // __EBML_defines_H__

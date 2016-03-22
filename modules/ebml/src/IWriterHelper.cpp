@@ -1,5 +1,5 @@
-#include "ebml/IWriterHelper.h"
-#include "ebml/IWriter.h"
+#include "IWriterHelper.h"
+#include "IWriter.h"
 
 #include <cstdlib>
 #include <cstring>

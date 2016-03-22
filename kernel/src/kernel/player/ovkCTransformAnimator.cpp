@@ -1,4 +1,5 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 
 #include "Ogre.h"
 #include "ovkCTransformAnimator.h"
@@ -57,4 +58,4 @@ void CTransformAnimator::setScale(Ogre::Real scaleX, Ogre::Real scaleY, Ogre::Re
 	}
 }
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif

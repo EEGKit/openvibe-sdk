@@ -14,6 +14,7 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <cstdio>
+#include <cstring>
 
 using namespace FS;
 using namespace std;

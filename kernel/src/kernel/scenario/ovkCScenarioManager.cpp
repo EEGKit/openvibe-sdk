@@ -78,6 +78,7 @@ boolean CScenarioManager::releaseScenario(
 		return false;
 	}
 
+	//release scenario visualisation
 	CScenario* l_pScenario = itScenario->second;
 
 	if(this->getConfigurationManager().expandAsBoolean("${Kernel_WithGUI}"))

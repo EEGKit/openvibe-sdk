@@ -1,3 +1,5 @@
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
+
 /************************************************************************/
 /* This file is part of openMask(c) INRIA, CNRS, Universite de Rennes 1 */
 /* 1993-2002, thereinafter the Software                                 */
@@ -18,8 +20,6 @@
 /* Universite Rennes 1 for the software may use this file in            */
 /* acordance with that specific license                                 */
 /************************************************************************/
-
-#if defined TARGET_HAS_ThirdPartyOgre3D
 
 #include "ovkCMaterial.h"
 

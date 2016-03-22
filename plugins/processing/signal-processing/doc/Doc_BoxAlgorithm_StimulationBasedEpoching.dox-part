@@ -7,7 +7,7 @@ __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_StimulationBasedEpoching_Description|
  The aim of this box it to select some signal near a specific event. The event
- is sent to the box in the form of an BRAND_NAME Stimulation. The author can
+ is sent to the box in the form of an OpenViBE Stimulation. The author can
  configure the duration of the selected signal and the offset of this selection
  as regarding to the stimulation. For instance, it is possible to start the selection
  a few hundreds of milliseconds <em>after</em> the event, or even a few hundreds of

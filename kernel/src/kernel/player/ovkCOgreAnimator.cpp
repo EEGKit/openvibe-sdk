@@ -1,4 +1,5 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 
 #include "Ogre.h"
 #include "ovkCMaterial.h"
@@ -84,4 +85,4 @@ std::string COgreAnimator::getNameWithoutDotSceneDelimiter(const std::string& rN
   return s;
 }
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif

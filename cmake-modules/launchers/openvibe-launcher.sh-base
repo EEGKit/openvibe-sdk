@@ -5,17 +5,6 @@
 #export OV_PATH_BIN="$OV_PATH_ROOT/bin"
 #export OV_PATH_LIB="$OV_PATH_ROOT/lib"
 #export OV_PATH_DATA="$OV_PATH_ROOT/share/openvibe"
-#export MENSIA_PATH_DATA="$OV_PATH_ROOT/share/mensia"
-
-# Tries to locate matlab executable from $PATH, and set the library path to the corresponding matlab libs.
-if [ "`which matlab`" != "" ] ; then
-	MATLAB_ROOT=`matlab -e | grep "^MATLAB=" | sed -e "s/^MATLAB=//"`
-	MATLAB_ARCH=`matlab -e | grep "^ARCH=" | sed -e "s/^ARCH=//"`
-	MATLAB_LIBPATH="$MATLAB_ROOT/bin/$MATLAB_ARCH"
-	# echo Matlab libs expected at $MATLAB_LIBPATH
-	export LD_LIBRARY_PATH="$MATLAB_LIBPATH:$LD_LIBRARY_PATH"
-fi
-
 if [ "$OV_PATH_BIN" == "" ]; then
 	OV_PATH_BIN="@CMAKE_INSTALL_FULL_BINDIR@"
 fi
@@ -25,15 +14,9 @@ fi
 if [ "$OV_PATH_DATA" == "" ]; then
 	OV_PATH_DATA="@CMAKE_INSTALL_FULL_DATADIR@/openvibe"
 fi
-if [ "$MENSIA_PATH_DATA" == "" ]; then
-	MENSIA_PATH_DATA="@CMAKE_INSTALL_FULL_DATADIR@/mensia"
-fi
 
 export LD_LIBRARY_PATH="$OV_PATH_LIB:@CMAKE_SOURCE_DIR@/dependencies/lib:$LD_LIBRARY_PATH"
 export LC_ALL=C
-
-export LUA_CPATH="$OV_PATH_LIB/lib?.so;`echo 'print(package.cpath)' | lua - `"
-export LUA_PATH="$OV_PATH_BIN/?.lua;`echo 'print(package.path)' | lua - `"
 
 # The following line is there to help in cases where OpenViBE can consume excessive
 # amounts of CPU or grind the swap. You can remove it if you know what you're doing.
@@ -41,13 +24,19 @@ renice 19 $$
 
 ov_debugger=
 if [ "$1" == "--debug" ]; then
-	ov_debugger="gdb --args"
-	shift
+        ov_debugger="gdb --args"
+        shift
+fi
+
+if [ "$1" == "--memcheck" ]; then
+        ov_debugger="valkyrie "
+        #ov_debugger="valgrind --tool=memcheck --log-file='valgrind_@OV_CMD_EXECUTABLE@_%p.log'"
+        shift
 fi
 ov_run_bg=0
 if [ "$1" == "--run-bg" ]; then
-	ov_run_bg=1
-	shift
+        ov_run_bg=1
+        shift
 fi
 
 ret_code=0

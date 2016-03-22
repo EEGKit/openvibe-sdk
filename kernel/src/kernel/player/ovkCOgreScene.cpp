@@ -1,4 +1,5 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 
 #include "OgreRoot.h"
 #include "OgreRenderWindow.h"
@@ -8,17 +9,6 @@
 #include "ovkCOgreObject.h"
 #include "ovkCOgreVisualisation.h"
 #include "ovkCOgreScene.h"
-
-#if defined TARGET_OS_Windows
-#  include <gdk/gdkwin32.h>
-#elif defined TARGET_OS_Linux
-#  include <gdk/gdkx.h>
-#elif defined TARGET_OS_MacOS
-#  define Cursor XCursor
-#  include <gdk/gdkx.h>
-#  undef Cursor
-#else
-#endif
 
 using namespace std;
 using namespace OpenViBE;
@@ -139,12 +129,12 @@ void COgreScene::getBoundingBox(float32& rMinX, float32& rMinY, float32& rMinZ, 
 	{
 		std::map < CIdentifier, COgreObject* >::iterator it;
 
-		rMinX = FLT_MAX;
-		rMinY = FLT_MAX;
-		rMinZ = FLT_MAX;
-		rMaxX = -FLT_MAX;
-		rMaxY = -FLT_MAX;
-		rMaxZ = -FLT_MAX;
+		rMinX = std::numeric_limits<float>::max();
+		rMinY = std::numeric_limits<float>::max();
+		rMinZ = std::numeric_limits<float>::max();
+		rMaxX = -std::numeric_limits<float>::max();
+		rMaxY = -std::numeric_limits<float>::max();
+		rMaxZ = -std::numeric_limits<float>::max();
 
 		//get each object's bounding box and update global bounding box
 		for(it = m_mOgreObjectIds.begin(); it != m_mOgreObjectIds.end(); it++)
@@ -239,4 +229,4 @@ COgreObject* COgreScene::getOgreObject(CIdentifier rObjectIdentifier)
 	return m_mOgreObjectIds[rObjectIdentifier];
 }
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif

@@ -2,11 +2,29 @@
 #define __OpenViBE_Kernel_Scenario_IBox_H__
 
 #include "ovIAttributable.h"
+#include "../../ovCObservable.h"
 
 namespace OpenViBE
 {
 	namespace Kernel
 	{
+
+		enum BoxEventMessageType{
+			SettingValueUpdate,
+			SettingChange,
+			SettingDelete,
+			SettingAdd,
+			SettingsReorder,
+			SettingsAllChange
+		};
+
+		class OV_API BoxEventMessage{
+		public:
+			BoxEventMessageType m_eType;
+			OpenViBE::int32 m_i32FirstIndex;
+			OpenViBE::int32 m_i32SecondIndex;
+		};
+
 		/**
 		 * \class IBox
 		 * \author Yann Renard (IRISA/INRIA)
@@ -19,7 +37,7 @@ namespace OpenViBE
 		 * OpenViBE black box. It describes its identification values,
 		 * its inputs, its outputs and its settings.
 		 */
-		class OV_API IBox : public OpenViBE::Kernel::IAttributable
+		class OV_API IBox : public OpenViBE::Kernel::IAttributable, public OpenViBE::CObservable
 		{
 		public:
 
@@ -279,16 +297,21 @@ namespace OpenViBE
 			 *        setting type identifier
 			 * \param sDefaultValue [in] : The default
 			 *        value for this setting
+			 * \param i32Index [in] : The index where to
+			 *        add the setting
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
-			 * The setting is always added after the last
-			 * already existing setting.
+			 * The setting is added to the index required.
+			 * The default value -1 means that the setting
+			 * will be add to the end.
 			 */
 			virtual OpenViBE::boolean addSetting(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sDefaultValue)=0;
+				const OpenViBE::CString& sDefaultValue,
+				const OpenViBE::int32 i32Index = -1,
+				const OpenViBE::boolean bModifiability = false)=0;
 			/**
 			 * \brief Removes a setting for this box
 			 * \param ui32SettingIndex [in] : The index
@@ -421,7 +444,91 @@ namespace OpenViBE
 				const OpenViBE::uint32 ui32SettingIndex,
 				const OpenViBE::CString& rValue)=0;
 
+
+			/**
+			 * \brief Gets the setting modifiability
+			 * \param ui32SettingIndex [in] : The setting index
+			 * \param rValue [out] : The value
+			 * \return \e true in case of success.
+			 * \return \e false in case of error.
+			 */
+			virtual OpenViBE::boolean getSettingMod(
+				const OpenViBE::uint32 ui32SettingIndex,
+				OpenViBE::boolean& rValue) const=0;
+
+			/**
+			 * \brief Sets the setting modifiability
+			 * \param ui32SettingIndex [in] : The setting index
+			 * \param rValue [in] : The value
+			 * \return \e true in case of success.
+			 * \return \e false in case of error.
+			 */
+			virtual OpenViBE::boolean setSettingMod(
+				const OpenViBE::uint32 ui32SettingIndex,
+				const OpenViBE::boolean rValue)=0;
+
+			/**
+			 * \brief Inform if the box possess a modifiable interface
+			 * \return \e true if it does.
+			 * \return \e false otherwise.
+			 */
+			virtual OpenViBE::boolean hasModifiableSettings(void)const=0;
+
+
+			virtual OpenViBE::uint32* getModifiableSettings(OpenViBE::uint32& rCount)const =0;
+
 			//@}
+
+
+			/** \name Input/Output management */
+			//@{
+			/**
+			  * \brief Marks this type as supported by inputs
+			  * \param rTypeIdentifier [in] : The type identifier
+			  * \return \e true in case of success.
+			  * \return \e false in case of error.
+			  */
+			virtual OpenViBE::boolean addInputSupport(
+					const OpenViBE::CIdentifier& rTypeIdentifier)=0;
+
+			/**
+			  * \brief Indicates if a type is support by inputs
+			  * \param rTypeIdentifier [in] : The type identifier
+			  * \return \e true if type is support.
+			  * \return \e false if type isn't support.
+			  */
+			virtual OpenViBE::boolean hasInputSupport(
+					const OpenViBE::CIdentifier& rTypeIdentifier) const =0;
+
+			/**
+			  * \brief Marks this type as supported by outputs
+			  * \param rTypeIdentifier [in] : The type identifier
+			  * \return \e true in case of success.
+			  * \return \e false in case of error.
+			  */
+			virtual OpenViBE::boolean addOutputSupport(
+					const OpenViBE::CIdentifier& rTypeIdentifier)=0;
+
+			/**
+			  * \brief Indicates if a type is support by outputs
+			  * \param rTypeIdentifier [in] : The type identifier
+			  * \return \e true if type is support.
+			  * \return \e false if type isn't support.
+			  */
+			virtual OpenViBE::boolean hasOutputSupport(
+					const OpenViBE::CIdentifier& rTypeIdentifier) const =0;
+			//@}
+
+			/**
+			 * \brief Set the supported stream type for input and output according
+			 * to the restriction of the algorithm whose identifier is given in parameter.
+			 * \param rTypeIdentifier [in] : identifier of the algorithm
+			 * \return \e true in case of success.
+			 * \return \e false in case of error.
+			 * \note The supported stream list is not reset.
+			 */
+			virtual OpenViBE::boolean setSupportTypeFromAlgorithmIdentifier(
+					const OpenViBE::CIdentifier& rTypeIdentifier)=0;
 
 			/** \name Message input management */
 			//@{
@@ -435,7 +542,7 @@ namespace OpenViBE
 			 * already existing message input.
 			 */
 			virtual OpenViBE::boolean addMessageInput(
-				const OpenViBE::CString& sName)=0;
+					const OpenViBE::CString& sName)=0;
 			/**
 			 * \brief Removes a message input for this box
 			 * \param ui32InputIndex [in] : The index
@@ -448,7 +555,7 @@ namespace OpenViBE
 			 * they all decrease by 1.
 			 */
 			virtual OpenViBE::boolean removeMessageInput(
-				const OpenViBE::uint32 ui32InputIndex)=0;
+					const OpenViBE::uint32 ui32InputIndex)=0;
 			/**
 			 * \brief Gets the number of message inputs for this box
 			 * \return The number of message inputs for this box.
@@ -464,8 +571,8 @@ namespace OpenViBE
 			 *         \c rName remains unchanged.
 			 */
 			virtual OpenViBE::boolean getMessageInputName(
-				const OpenViBE::uint32 ui32InputIndex,
-				OpenViBE::CString& rName) const=0;
+					const OpenViBE::uint32 ui32InputIndex,
+					OpenViBE::CString& rName) const=0;
 
 			/**
 			 * \brief Sets a message input name
@@ -475,8 +582,8 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean setMessageInputName(
-				const OpenViBE::uint32 ui32InputIndex,
-				const OpenViBE::CString& rName)=0;
+					const OpenViBE::uint32 ui32InputIndex,
+					const OpenViBE::CString& rName)=0;
 			//@}
 
 			/** \name Message output management */
@@ -491,7 +598,7 @@ namespace OpenViBE
 			 * already existing message output.
 			 */
 			virtual OpenViBE::boolean addMessageOutput(
-				const OpenViBE::CString& sName)=0;
+					const OpenViBE::CString& sName)=0;
 			/**
 			 * \brief Removes an message output for this box
 			 * \param ui32OutputIndex [in] : The index
@@ -504,7 +611,7 @@ namespace OpenViBE
 			 * they all decrease by 1.
 			 */
 			virtual OpenViBE::boolean removeMessageOutput(
-				const OpenViBE::uint32 ui32OutputIndex)=0;
+					const OpenViBE::uint32 ui32OutputIndex)=0;
 			/**
 			 * \brief Gets the number of message outputs for this box
 			 * \return The number of message outputs for this box.
@@ -520,8 +627,8 @@ namespace OpenViBE
 			 *         \c rName remains unchanged.
 			 */
 			virtual OpenViBE::boolean getMessageOutputName(
-				const OpenViBE::uint32 ui32OutputIndex,
-				OpenViBE::CString& rName) const=0;
+					const OpenViBE::uint32 ui32OutputIndex,
+					OpenViBE::CString& rName) const=0;
 
 			/**
 			 * \brief Sets a message output name
@@ -531,9 +638,13 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean setMessageOutputName(
-				const OpenViBE::uint32 ui32OutputIndex,
-				const OpenViBE::CString& rName)=0;
+					const OpenViBE::uint32 ui32OutputIndex,
+					const OpenViBE::CString& rName)=0;
 			//@}
+
+			virtual void storeState(void)=0;
+
+			virtual void restoreState(void)=0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Box)
 		};

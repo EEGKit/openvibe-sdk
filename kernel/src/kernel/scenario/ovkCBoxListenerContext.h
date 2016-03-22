@@ -35,8 +35,8 @@ namespace OpenViBE
 				__BridgeBindFunc1__(getKernelContext().getLogManager(), void, log, , const boolean, bValue)
 
 				__BridgeBindFunc1__(getKernelContext().getLogManager(), void, log, , const CIdentifier&, rValue)
-				__BridgeBindFunc1__(getKernelContext().getLogManager(), void, log, , const CString&, rValue);
-				__BridgeBindFunc1__(getKernelContext().getLogManager(), void, log, , const char*, rValue);
+				__BridgeBindFunc1__(getKernelContext().getLogManager(), void, log, , const CString&, rValue)
+				__BridgeBindFunc1__(getKernelContext().getLogManager(), void, log, , const char*, rValue)
 
 				// __BridgeBindFunc1__(getKernelContext().getLogManager(), void, log, , const ELogLevel, eLogLevel)
 				__BridgeBindFunc1__(getKernelContext().getLogManager(), void, log, , const ELogColor, eLogColor)

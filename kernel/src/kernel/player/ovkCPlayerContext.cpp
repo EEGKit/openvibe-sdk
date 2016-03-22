@@ -53,6 +53,7 @@ namespace OpenViBE
 
 				__BridgeBindFunc2__(getKernelContext().getConfigurationManager(), boolean, setConfigurationTokenName, , const CIdentifier&, rConfigurationTokenIdentifier, const CString&, rConfigurationTokenName);
 				__BridgeBindFunc2__(getKernelContext().getConfigurationManager(), boolean, setConfigurationTokenValue, , const CIdentifier&, rConfigurationTokenIdentifier, const CString&, rConfigurationTokenValue);
+				__BridgeBindFunc2__(getKernelContext().getConfigurationManager(), boolean, addOrReplaceConfigurationToken, , const CString&, rConfigurationTokenName, const CString&, rConfigurationTokenValue);
 
 				__BridgeBindFunc2__(getKernelContext().getConfigurationManager(), CIdentifier, lookUpConfigurationTokenIdentifier, const, const CString&, rConfigurationTokenName, const boolean, bRecursive);
 				__BridgeBindFunc1__(getKernelContext().getConfigurationManager(), CString, lookUpConfigurationTokenValue, const, const CString&, rConfigurationTokenName);
@@ -118,6 +119,8 @@ namespace OpenViBE
 
 				void log(const ELogLevel eLogLevel)
 				{
+					CIdentifier l_idBoxId;
+					m_pSimulatedBox->getBoxIdentifier(l_idBoxId);
 					getKernelContext().getLogManager()
 						<< eLogLevel
 						<< "At time "
@@ -128,6 +131,8 @@ namespace OpenViBE
 						<< "Box algorithm"
 						<< LogColor_PopStateBit
 						<< "::"
+						<< l_idBoxId
+						<< " aka "
 						<< m_pSimulatedBox->getName()
 						<< "> ";
 				}

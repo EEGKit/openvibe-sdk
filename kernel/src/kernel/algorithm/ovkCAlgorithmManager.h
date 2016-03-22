@@ -1,5 +1,5 @@
-#ifndef __OpenViBEKernel_Kernel_Algorithm_IAlgorithmManager_H__
-#define __OpenViBEKernel_Kernel_Algorithm_IAlgorithmManager_H__
+#ifndef __OpenViBEKernel_Kernel_Algorithm_CAlgorithmManager_H__
+#define __OpenViBEKernel_Kernel_Algorithm_CAlgorithmManager_H__
 
 #include "../ovkTKernelObject.h"
 
@@ -21,8 +21,6 @@ namespace OpenViBE
 
 			virtual OpenViBE::CIdentifier createAlgorithm(
 				const OpenViBE::CIdentifier& rAlgorithmClassIdentifier);
-			virtual OpenViBE::CIdentifier createAlgorithm(
-				const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc);
 			virtual OpenViBE::boolean releaseAlgorithm(
 				const OpenViBE::CIdentifier& rAlgorithmIdentifier);
 			virtual OpenViBE::boolean releaseAlgorithm(
@@ -45,4 +43,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Kernel_Algorithm_IAlgorithmManager_H__
+#endif // __OpenViBEKernel_Kernel_Algorithm_CAlgorithmManager_H__

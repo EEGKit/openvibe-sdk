@@ -108,9 +108,10 @@ boolean CBoxProto::addOutput(
 boolean CBoxProto::addSetting(
 	const CString& sName,
 	const CIdentifier& rTypeIdentifier,
-	const CString& sDefaultValue)
+	const CString& sDefaultValue,
+	const OpenViBE::boolean bModifiable)
 {
-	if(!m_rBox.addSetting(sName, rTypeIdentifier, sDefaultValue))
+	if(!m_rBox.addSetting(sName, rTypeIdentifier, sDefaultValue, -1, bModifiable))
 	{
 		return false;
 	}
@@ -128,6 +129,20 @@ boolean CBoxProto::addSetting(
 
 	return true;
 }
+/*
+uint32 CBoxProto::addSetting(
+	const OpenViBE::CString& sName,
+	const OpenViBE::CIdentifier& rTypeIdentifier,
+	const OpenViBE::CString& sDefaultValue,
+	const OpenViBE::boolean bModifiable)
+{
+	addSetting(sName, rTypeIdentifier, sDefaultValue);
+	uint32 l_ui32LastSetting = m_rBox.getSettingCount();
+	m_rBox.setSettingMod(l_ui32LastSetting, bModifiable);
+	return true;
+
+}
+/*/
 
 boolean CBoxProto::addFlag(
 	const EBoxFlag eBoxFlag)
@@ -152,4 +167,14 @@ boolean CBoxProto::addFlag(
 			return false;
 	}
 	return true;
+}
+
+boolean CBoxProto::addInputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)
+{
+	return m_rBox.addInputSupport(rTypeIdentifier);
+}
+
+boolean CBoxProto::addOutputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)
+{
+	return m_rBox.addOutputSupport(rTypeIdentifier);
 }

@@ -1,4 +1,5 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 
 #include "OgreRoot.h"
 #include "OgreRenderWindow.h"
@@ -144,7 +145,7 @@ boolean COgreWindow::handleSizeAllocateEvent(unsigned int uiWidth, unsigned int 
 #if defined TARGET_OS_Windows
 	m_pRenderWindow->resize(uiWidth, uiHeight);
 	m_pRenderWindow->windowMovedOrResized();
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#elif defined TARGET_OS_Linux
 	m_pRenderWindow->resize(uiWidth, uiHeight);
 #endif
 
@@ -452,4 +453,4 @@ boolean COgreWindow::updateCamera()
 	return true;
 }
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif

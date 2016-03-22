@@ -16,8 +16,10 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::TParameterHandler < const OpenViBE::IMemoryBuffer* > m_pInputMemoryBuffer;
 
+
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
+		using T::m_ui32ConnectorIndex;
 
 		virtual void setInputChunk(const OpenViBE::IMemoryBuffer * pInputChunkMemoryBuffer)
 		{
@@ -34,7 +36,7 @@ namespace OpenViBEToolkit
 			return m_pCodec->isOutputTriggerActive(oTrigger);
 		}
 
-		virtual OpenViBE::boolean process(OpenViBE::CIdentifier& oTrigger)
+		virtual OpenViBE::boolean process(OpenViBE::CIdentifier oTrigger)
 		{
 			return m_pCodec->process(oTrigger);
 		}
@@ -53,11 +55,11 @@ namespace OpenViBEToolkit
 		- decode it (specific for each decoder)
 		- mark input as deprecated
 		*/
-		virtual OpenViBE::boolean decode(OpenViBE::uint32 ui32InputIndex, OpenViBE::uint32 ui32ChunkIndex, OpenViBE::boolean bMarkInputAsDeprecated = true)
+		virtual OpenViBE::boolean decode(OpenViBE::uint32 ui32ChunkIndex, OpenViBE::boolean bMarkInputAsDeprecated = true)
 		{
-			this->setInputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getInputChunk(ui32InputIndex, ui32ChunkIndex));
+			this->setInputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getInputChunk(m_ui32ConnectorIndex, ui32ChunkIndex));
 			if(! m_pCodec->process()) return false;
-			if( bMarkInputAsDeprecated) m_pBoxAlgorithm->getDynamicBoxContext().markInputAsDeprecated(ui32InputIndex, ui32ChunkIndex);
+			if( bMarkInputAsDeprecated) m_pBoxAlgorithm->getDynamicBoxContext().markInputAsDeprecated(m_ui32ConnectorIndex, ui32ChunkIndex);
 			return true;
 		}
 

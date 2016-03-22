@@ -1,4 +1,5 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 
 #include "ovkCColorAnimator.h"
 
@@ -92,4 +93,5 @@ void CColorAnimator::setTransparency(Ogre::Real t)
 	}
 }
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+
+#endif

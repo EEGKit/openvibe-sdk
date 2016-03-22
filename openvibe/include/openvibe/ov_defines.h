@@ -167,6 +167,8 @@
 #define OV_AttributeId_Box_FlagCanAddMessageOutput           OpenViBE::CIdentifier(0x98BEA2F6, 0xE7144D95)
 #define OV_AttributeId_Box_FlagCanModifyMessageOutput        OpenViBE::CIdentifier(0xA7AE8227, 0x2C4D83DE)
 
+#define OV_AttributeId_Box_Muted                             OpenViBE::CIdentifier(0xC73E83EC, 0xF855C5BC)
+
 #define OV_AttributeId_Comment_XCenterPosition               OpenViBE::CIdentifier(0x473D9A43, 0x97FC0A97)
 #define OV_AttributeId_Comment_YCenterPosition               OpenViBE::CIdentifier(0x7234B86B, 0x2B8651A5)
 // #define OV_AttributeId_Comment_XSize                         OpenViBE::CIdentifier(0xE680C753, 0x605306E0)
@@ -201,17 +203,21 @@
 #define OV_TypeId_ColorGradient                              OpenViBE::CIdentifier(0x3D3C7C7F, 0xEF0E7129)
 
 #define OV_TypeId_EBMLStream                                 OpenViBE::CIdentifier(0x434F6587, 0x2EFD2B7E)
-#define   OV_TypeId_ChannelLocalisation                      OpenViBE::CIdentifier(0x013DF452, 0xA3A8879A)
 #define   OV_TypeId_ExperimentInformation                    OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)
 #define   OV_TypeId_ExperimentationInformation               OpenViBE::CIdentifier(0x403488E7, 0x565D70B6) // deprecated, kept for compatibility
 #define   OV_TypeId_Stimulations                             OpenViBE::CIdentifier(0x6F752DD0, 0x082A321E)
 #define   OV_TypeId_StreamedMatrix                           OpenViBE::CIdentifier(0x544A003E, 0x6DCBA5F6)
+#define     OV_TypeId_ChannelLocalisation                    OpenViBE::CIdentifier(0x013DF452, 0xA3A8879A)
+#define     OV_TypeId_ChannelUnits                           OpenViBE::CIdentifier(0x6AB26B81, 0x0F8C02F3)
 #define     OV_TypeId_FeatureVector                          OpenViBE::CIdentifier(0x17341935, 0x152FF448)
 #define     OV_TypeId_Signal                                 OpenViBE::CIdentifier(0x5BA36127, 0x195FEAE1)
 #define     OV_TypeId_Spectrum                               OpenViBE::CIdentifier(0x1F261C0A, 0x593BF6BD)
 #define     OV_TypeId_CovarianceMatrix                       OpenViBE::CIdentifier(0x897F844E, 0xB7958255)
 
 #define OV_TypeId_Message                                    OpenViBE::CIdentifier(0x0A261C0A, 0xBD3BF6BD)
+
+#define OV_TypeId_MeasurementUnit                            OpenViBE::CIdentifier(0x2F3563A4, 0x571E194D)
+#define OV_TypeId_Factor                                     OpenViBE::CIdentifier(0x501F79FA, 0x7E1F6680)
 
 //___________________________________________________________________//
 //                                                                   //

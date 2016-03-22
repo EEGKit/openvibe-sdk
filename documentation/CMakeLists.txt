@@ -1,4 +1,5 @@
 PROJECT(openvibe-documentation)
+OV_ADD_THIS_TO_PROJECT_LIST()
 IF(NOT(${SKIP_DOCUMENTATION}))
 
 	IF(WIN32)
@@ -69,7 +70,7 @@ IF(NOT(${SKIP_DOCUMENTATION}))
 			# this file also uses DOXYGEN_BIN, HHC_BIN, LATEX_BIN and GHOSTSCRIPT_BIN
 			CONFIGURE_FILE(src/build-documentation.cmake-skeleton "${DOCUMENTATION_TEMP_DIRECTORY}/build-documentation-openvibe.cmake" @ONLY)
 			FILE(APPEND "${DOCUMENTATION_TEMP_DIRECTORY}/build-documentation.cmd"
-				"call ../neurort-plugin-inspector.cmd --no-pause --box-snapshot-directory=openvibe/box-algorithm-doc/opt --box-doc-directory=openvibe/box-algorithm-doc/dox\n"
+				"call ../openvibe-plugin-inspector.cmd --no-pause --box-snapshot-directory=openvibe/box-algorithm-doc/opt --box-doc-directory=openvibe/box-algorithm-doc/dox\n"
 				"cmake -P build-documentation-openvibe.cmake\n")
 		ENDIF()
 

@@ -1,3 +1,6 @@
+
+#if defined(TARGET_HAS_ThirdPartyGTK)
+
 #include "ovkCVisualisationTree.h"
 
 #include "../ovkCObjectVisitorContext.h"
@@ -90,13 +93,11 @@ CVisualisationTree::~CVisualisationTree()
 	//delete display panels
 	//TODO!
 
-
 	std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::IVisualisationWidget*>::iterator i;
 	for (i=m_vVisualisationWidget.begin();i!=m_vVisualisationWidget.end();i++)
 	{
 		delete (*i).second;
 	}
-
 
 	g_object_unref(m_pTreeStore);
 }
@@ -150,7 +151,7 @@ IVisualisationWidget* CVisualisationTree::getVisualisationWidgetFromBoxIdentifie
 boolean CVisualisationTree::addVisualisationWidget(CIdentifier& rIdentifier, const CString& rName, EVisualisationWidgetType oType,
 	const CIdentifier& rParentIdentifier, uint32 ui32Index, const CIdentifier& rBoxIdentifier, uint32 ui32NbChildren, const OpenViBE::CIdentifier& rSuggestedIdentifier)
 {
-	this->getLogManager() << LogLevel_Debug << "Adding new visualisation widget\n";
+	this->getLogManager() << LogLevel_Trace << "Adding new visualisation widget\n";
 
 	//create new widget
 	IVisualisationWidget* l_pVisualisationWidget = OpenViBE::Tools::CKernelObjectFactoryHelper(getKernelContext().getKernelObjectFactory()).createObject<IVisualisationWidget*>(OV_ClassId_Kernel_Visualisation_VisualisationWidget);
@@ -166,6 +167,7 @@ boolean CVisualisationTree::addVisualisationWidget(CIdentifier& rIdentifier, con
 	//parent it
 	if(rParentIdentifier != OV_UndefinedIdentifier)
 	{
+		this->getLogManager() << LogLevel_Trace << "Parenting visualisation widget\n";
 		IVisualisationWidget* l_pParentVisualisationWidget = getVisualisationWidget(rParentIdentifier);
 
 		if(l_pParentVisualisationWidget != NULL)
@@ -407,7 +409,6 @@ boolean CVisualisationTree::reloadTree()
 	{
 		gtk_tree_store_remove(m_pTreeStore, &l_oIter);
 	}
-
 	//create 'unaffected display plugins' node
 	gtk_tree_store_append(m_pTreeStore, &l_oIter, NULL);
 	gtk_tree_store_set(m_pTreeStore, &l_oIter,
@@ -694,20 +695,27 @@ boolean CVisualisationTree::dragDataReceivedOutsideWidgetCB(const CIdentifier& r
 	//-----------------------------
 	IVisualisationWidget* l_pSrcVisualisationWidget = getVisualisationWidget(rSrcIdentifier);
 	if(l_pSrcVisualisationWidget == NULL)
+	{
 		return false;
+	}
 	// FIXME is it necessary to keep next line uncomment ? 
-	//CIdentifier l_oSrcParentIdentifier = l_pSrcVisualisationWidget->getParentIdentifier();
+	// CIdentifier l_oSrcParentIdentifier = l_pSrcVisualisationWidget->getParentIdentifier();
 
 	//retrieve dest widget and dest widget parent identifiers
 	//-------------------------------------------------------
 	::GtkTreeIter l_oDstIter;
 	if(findChildNodeFromRoot(&l_oDstIter, m_pTreeViewCB->getTreeWidget(pDstWidget)) == false)
+	{
 		return false;
+	}
 	CIdentifier l_oDstIdentifier;
 	getIdentifierFromTreeIter(&l_oDstIter, l_oDstIdentifier, EVisualisationTreeColumn_StringIdentifier);
 	IVisualisationWidget* l_pDstVisualisationWidget = getVisualisationWidget(l_oDstIdentifier);
 	if(l_pDstVisualisationWidget == NULL)
+	{
 		return false;
+	}
+	//dst widget is the widget already present in
 	CIdentifier l_oDstParentIdentifier = l_pDstVisualisationWidget->getParentIdentifier();
 
 	//unparent source widget
@@ -1001,3 +1009,5 @@ boolean CVisualisationTree::acceptVisitor(IObjectVisitor& rObjectVisitor)
 
 	return true;
 }
+
+#endif

@@ -29,6 +29,9 @@
 #include "ovIKernelLoader.h"
 #include "ovCKernelLoader.h"
 
+#include "ovIObserver.h"
+#include "ovCObservable.h"
+
 //___________________________________________________________________//
 //                                                                   //
 // Kernel includes                                                   //

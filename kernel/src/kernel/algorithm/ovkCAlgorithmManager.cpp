@@ -2,7 +2,7 @@
 #include "ovkCAlgorithmProxy.h"
 #include "ovkCAlgorithm.h"
 
-#include <system/Math.h>
+#include <system/ovCMath.h>
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -41,25 +41,6 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 
 	CIdentifier l_oAlgorithmIdentifier=getUnusedIdentifier();
 	CAlgorithm* l_pTrueAlgorithm=new CAlgorithm(getKernelContext(), *l_pAlgorithm, *l_pAlgorithmDesc);
-	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pTrueAlgorithm);
-	m_vAlgorithm[l_oAlgorithmIdentifier]=pair < CAlgorithm*, CAlgorithmProxy* >(l_pTrueAlgorithm, l_pAlgorithmProxy);
-	return l_oAlgorithmIdentifier;
-}
-
-CIdentifier CAlgorithmManager::createAlgorithm(
-	const IAlgorithmDesc& rAlgorithmDesc)
-{
-	IAlgorithm* l_pAlgorithm=getKernelContext().getPluginManager().createAlgorithm(rAlgorithmDesc);
-	if(!l_pAlgorithm)
-	{
-		this->getLogManager() << LogLevel_Warning << "Algorithm creation failed, class identifier :" << rAlgorithmDesc.getClassIdentifier() << "\n";
-		return OV_UndefinedIdentifier;
-	}
-
-	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmDesc.getClassIdentifier() << "\n";
-
-	CIdentifier l_oAlgorithmIdentifier=getUnusedIdentifier();
-	CAlgorithm* l_pTrueAlgorithm=new CAlgorithm(getKernelContext(), *l_pAlgorithm, rAlgorithmDesc);
 	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pTrueAlgorithm);
 	m_vAlgorithm[l_oAlgorithmIdentifier]=pair < CAlgorithm*, CAlgorithmProxy* >(l_pTrueAlgorithm, l_pAlgorithmProxy);
 	return l_oAlgorithmIdentifier;

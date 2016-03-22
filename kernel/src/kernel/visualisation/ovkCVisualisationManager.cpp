@@ -1,10 +1,14 @@
 #include "ovkCVisualisationTree.h"
-#include "ovkCVisualisationTreeNull.h"
 #include "ovkCVisualisationManager.h"
-#include "../player/ovkCOgreVisualisation.h"
 #include "../ovkGtkOVCustom.h"
 
-#include <cstdlib>
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
+#include "../player/ovkCOgreVisualisation.h"
+#endif
+
+
+#if defined(TARGET_HAS_ThirdPartyGTK)
+
 #if defined TARGET_OS_Windows
 #  include <gdk/gdkwin32.h>
 #elif defined TARGET_OS_Linux
@@ -16,19 +20,22 @@
 #else
 #endif
 
+#endif
+
 using namespace std;
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
 using namespace OpenViBE::Tools;
 
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 typedef Ogre::Real ogre_float;
 typedef Ogre::uint32 ogre_uint32;
 typedef Ogre::uint64 ogre_uint64;
 typedef Ogre::uint16 ogre_uint16;
 typedef Ogre::uint8  ogre_uint8;
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif
 
 #define uint8  OpenViBE::uint8
 #define uint16 OpenViBE::uint16
@@ -45,22 +52,25 @@ CVisualisationManager::CVisualisationManager(const IKernelContext& rKernelContex
 
 CVisualisationManager::~CVisualisationManager()
 {
+	
+#if defined(TARGET_HAS_ThirdPartyGTK)
 	if(m_pPrimaryRenderWindowWidget != NULL)
 	{
 		//destroy Gtk widget only - the primary RenderWindow it contains will be deleted by Ogre
 		gtk_widget_destroy(GTK_WIDGET(m_pPrimaryRenderWindowWidget));
 	}
+#endif
 
-#if defined TARGET_HAS_ThirdPartyOgre3D
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 	delete m_pOgreVisualisation;
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif
 }
 
 boolean CVisualisationManager::initialize3DContext(void)
 {
-#if defined TARGET_HAS_ThirdPartyOgre3D
 	try
 	{
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 		//initialize Ogre
 		//---------------
 		m_pOgreVisualisation = new COgreVisualisation(getKernelContext());
@@ -70,6 +80,11 @@ boolean CVisualisationManager::initialize3DContext(void)
 			this->getLogManager() << LogLevel_Warning << "Ogre initialization failed, 3D rendering disabled!\n";
 			return false;
 		}
+#else
+		this->getLogManager() << LogLevel_Info << "Ogre was not available or was disabled during compilation.\n";
+		this->getLogManager() << LogLevel_Info << "3D rendering is not available.\n";
+		return false;
+#endif
 	}
 	catch(std::exception& e)
 	{
@@ -81,6 +96,8 @@ boolean CVisualisationManager::initialize3DContext(void)
 
 	try
 	{
+
+#if defined(TARGET_HAS_ThirdPartyGTK)
 		this->getLogManager() << LogLevel_Trace << "Creating primary render window\n";
 		//create primary render window
 		//----------------------------
@@ -93,6 +110,10 @@ boolean CVisualisationManager::initialize3DContext(void)
 		gtk_widget_show_all(m_pPrimaryRenderWindowWidget);
 		//hide window from now on
 		gtk_widget_hide_all(m_pPrimaryRenderWindowWidget);
+#else
+		this->getLogManager() << LogLevel_Info << "No GTK, visualisation context has been disabled.\n";
+		return false;
+#endif
 	}
 	catch(std::exception& e)
 	{
@@ -103,14 +124,11 @@ boolean CVisualisationManager::initialize3DContext(void)
 	}
 
 	return true;
-#else
-	return false;
-#endif // TARGET_HAS_ThirdPartyOgre3D
 }
 
 boolean CVisualisationManager::createResourceGroup(CIdentifier& rResourceGroupIdentifier, const CString& rResourceGroupName)
 {
-#if defined TARGET_HAS_ThirdPartyOgre3D
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 	if(m_pOgreVisualisation == NULL)
 	{
 		return false;
@@ -119,12 +137,12 @@ boolean CVisualisationManager::createResourceGroup(CIdentifier& rResourceGroupId
 	return true;
 #else
 	return false;
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif
 }
 
 boolean CVisualisationManager::addResourceLocation(const CIdentifier& rResourceGroupIdentifier, const CString& rPath, EResourceType type,	bool bRecursive)
 {
-#if defined TARGET_HAS_ThirdPartyOgre3D
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 	if(m_pOgreVisualisation == NULL)
 	{
 		return false;
@@ -142,12 +160,12 @@ boolean CVisualisationManager::addResourceLocation(const CIdentifier& rResourceG
 	return false;
 #else
 	return false;
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif
 }
 
 boolean CVisualisationManager::initializeResourceGroup(const CIdentifier& rResourceGroupIdentifier)
 {
-#if defined TARGET_HAS_ThirdPartyOgre3D
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 	if(m_pOgreVisualisation == NULL || m_pOgreVisualisation->ogreInitialized() == false)
 	{
 		return false;
@@ -155,12 +173,12 @@ boolean CVisualisationManager::initializeResourceGroup(const CIdentifier& rResou
 	return m_pOgreVisualisation->initializeResourceGroup(rResourceGroupIdentifier);
 #else
 	return false;
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif
 }
 
 boolean CVisualisationManager::destroyResourceGroup(const CIdentifier& rResourceGroupIdentifier)
 {
-#if defined TARGET_HAS_ThirdPartyOgre3D
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 	if(m_pOgreVisualisation == NULL || m_pOgreVisualisation->ogreInitialized() == false)
 	{
 		return false;
@@ -168,7 +186,7 @@ boolean CVisualisationManager::destroyResourceGroup(const CIdentifier& rResource
 	return m_pOgreVisualisation->destroyResourceGroup(rResourceGroupIdentifier);
 #else
 	return false;
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif
 }
 
 COgreVisualisation* CVisualisationManager::getOgreVisualisation()
@@ -178,9 +196,9 @@ COgreVisualisation* CVisualisationManager::getOgreVisualisation()
 
 boolean CVisualisationManager::handleRealizeEvent(::GtkWidget* pOVCustomWidget)
 {
-#if defined TARGET_HAS_ThirdPartyOgre3D
+#if defined(TARGET_HAS_ThirdPartyOgre3D) && defined(TARGET_HAS_ThirdPartyGTK) 
 	//ensure Ogre could be initialized
-	if(m_pOgreVisualisation->ogreInitialized() == false)
+	if(m_pOgreVisualisation == NULL || m_pOgreVisualisation->ogreInitialized() == false)
 	{
 		return false;
 	}
@@ -193,7 +211,7 @@ boolean CVisualisationManager::handleRealizeEvent(::GtkWidget* pOVCustomWidget)
 	std::string l_sExternalHandle;
 #if defined TARGET_OS_Windows
 	l_sExternalHandle=Ogre::StringConverter::toString((unsigned long)GDK_WINDOW_HWND(pOVCustomWidget->window));
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#elif defined TARGET_OS_Linux
 	::XSync(GDK_WINDOW_XDISPLAY(pOVCustomWidget->window), False);
 
 	::GdkDisplay* l_pGdkDisplay=gdk_drawable_get_display(GDK_DRAWABLE(pOVCustomWidget->window));
@@ -257,7 +275,7 @@ boolean CVisualisationManager::handleRealizeEvent(::GtkWidget* pOVCustomWidget)
 	return true;
 #else
 	return false;
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif
 }
 
 boolean CVisualisationManager::createVisualisationTree(CIdentifier& rVisualisationTreeIdentifier)
@@ -290,18 +308,10 @@ boolean CVisualisationManager::releaseVisualisationTree(const CIdentifier& rVisu
 
 IVisualisationTree& CVisualisationManager::getVisualisationTree(const CIdentifier& rVisualisationTreeIdentifier)
 {
-	static CVisualisationTreeNull l_oVisualisationTreeNull(this->getKernelContext());
-	if(rVisualisationTreeIdentifier==OV_UndefinedIdentifier)
-	{
-		this->getLogManager() << LogLevel_Debug << "Requested undefined Visualisation Tree !\n";
-		return l_oVisualisationTreeNull;
-	}
-
 	map<CIdentifier, IVisualisationTree*>::const_iterator it = m_vVisualisationTree.find(rVisualisationTreeIdentifier);
 	if(it == m_vVisualisationTree.end())
 	{
-		this->getLogManager() << LogLevel_Warning << "Visualisation Tree " << rVisualisationTreeIdentifier << " does not exist !\n";
-		return l_oVisualisationTreeNull;
+		this->getLogManager() << LogLevel_Fatal << "Visualisation Tree " << rVisualisationTreeIdentifier << " does not exist !\n";
 	}
 	return *it->second;
 }
@@ -350,3 +360,4 @@ CIdentifier CVisualisationManager::getUnusedIdentifier(void) const
 	while(it!=m_vVisualisationTree.end() || l_oResult==OV_UndefinedIdentifier);
 	return l_oResult;
 }
+

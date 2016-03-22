@@ -9,7 +9,7 @@
 #include "../scenario/ovkCScenarioManager.h"
 #include "../scenario/ovkCScenarioSettingKeywordParserCallback.h"
 
-#include <system/Time.h>
+#include <system/ovCTime.h>
 
 #include <xml/IReader.h>
 
@@ -29,10 +29,6 @@ using namespace OpenViBE::Plugins;
 
 const uint64 g_ui64Scheduler_Default_Frequency_ = 128;
 const uint64 g_ui64Scheduler_Maximum_Loops_Duration_ = (100LL << 22); /* 100/1024 seconds, approx 100ms */
-
-//___________________________________________________________________//
-//                                                                   //
-
 
 //___________________________________________________________________//
 //                                                                   //
@@ -205,42 +201,39 @@ IScenarioManager& CPlayer::getRuntimeScenarioManager(void)
 	return *m_pRuntimeScenarioManager;
 }
 
-boolean CPlayer::initialize(void)
+EPlayerReturnCode CPlayer::initialize(void)
 {
 	if(m_eStatus!=PlayerStatus_Uninitialized)
 	{
 		this->getLogManager() << LogLevel_Warning << "Trying to initialize an initialized player !\n";
-		return false;
+		return PlayerReturnCode_Failed;
 	}
 
 	this->getLogManager() << LogLevel_Trace << "Player initialize\n";
 
-	m_bIsInitializing=true;
 	m_f64FastForwardMaximumFactor=0;
 	// At this point we've inserted the bridge as a stand-in for Kernel context to the local CConfigurationManager, but the manager in the bridge is still the
 	// 'global' one. Now lets change the config manager in the bridge to point to the local manager in order to load configurations into the local manager.
 	m_oKernelContextBridge.setConfigurationManager(m_pRuntimeConfigurationManager);
 
-	if(!m_oScheduler.initialize()) 
+	SchedulerInitializationCode l_eCode = m_oScheduler.initialize();
+	if(l_eCode == SchedulerInitialization_Failed)
 	{
 		this->getLogManager() << LogLevel_Error << "Scheduler initialization failed\n";
-		return false;
+		return PlayerReturnCode_Failed;
 	}
-
-	if(m_oScheduler.isInitializationAborted())
-	{
-		this->getLogManager() << LogLevel_Warning << "A box requested player to stop during initialization - Player initialization aborted\n";
-	}
-
 	m_oBenchmarkChrono.reset(static_cast<uint32>(m_oScheduler.getFrequency()));
 
 	m_ui64CurrentTimeToReach=0;
 	m_ui64Lateness=0;
 	m_ui64InnerLateness=0;
-	m_eStatus=PlayerStatus_Stop;
-	m_bIsInitializing=false;
 
-	return true;
+	m_eStatus=PlayerStatus_Stop;
+	if(l_eCode == SchedulerInitialization_BoxInitializationFailed)
+	{
+		return PlayerReturnCode_BoxInitializationFailed;
+	}
+	return PlayerReturnCode_Sucess;
 }
 
 boolean CPlayer::uninitialize(void)
@@ -259,6 +252,8 @@ boolean CPlayer::uninitialize(void)
 
 	m_sScenarioConfigurationFile="";
 	m_sWorkspaceConfigurationFile="";
+	delete m_pRuntimeConfigurationManager;
+	m_pRuntimeConfigurationManager=NULL;
 
 	m_eStatus=PlayerStatus_Uninitialized;
 	return true;
@@ -268,21 +263,13 @@ boolean CPlayer::stop(void)
 {
 	if(m_eStatus==PlayerStatus_Uninitialized)
 	{
-		if(!m_bIsInitializing)
-		{
-			this->getLogManager() << LogLevel_Warning << "Player has to be initialized before you can switch to stop !\n";
-			return false;
-		}
+		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
+		return false;
 	}
 
 	this->getLogManager() << LogLevel_Trace << "Player stop\n";
 
 	m_eStatus=PlayerStatus_Stop;
-
-	if(m_bIsInitializing)
-	{
-		m_oScheduler.abortInitialization();
-	}
 
 	return true;
 }
