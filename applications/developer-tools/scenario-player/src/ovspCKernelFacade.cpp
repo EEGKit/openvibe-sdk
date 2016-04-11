@@ -24,7 +24,7 @@
 #include <limits>
 #include <cassert>
 
-#include <system/Time.h>
+#include <system/ovCTime.h>
 #include <openvibe/ovITimeArithmetics.h>
 
 #include "ovspCCommand.h"
@@ -306,7 +306,7 @@ namespace OpenViBE
 			IPlayer* player = &playerManager.getPlayer(playerIdentifier);
 
 			// Scenario attachment with setup of local token
-			if (player->setScenario(pair.second) && player->initialize())
+			if (player->setScenario(pair.second) && player->initialize() == PlayerReturnCode_Sucess)
 			{
 				if (command.playMode && command.playMode.get() == PlayerPlayMode::Fastfoward)
 				{
@@ -375,6 +375,7 @@ namespace OpenViBE
 		// release players
 		for (auto& id : playerIdentifiersList)
 		{
+			playerManager.getPlayer(id).uninitialize();
 			playerManager.releasePlayer(id);
 		}
 		
