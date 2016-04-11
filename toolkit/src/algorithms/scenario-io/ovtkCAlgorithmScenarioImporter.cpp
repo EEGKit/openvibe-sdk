@@ -408,6 +408,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 		l_ui32ScenarioOutputIndex++;
 	}
 
+#if defined TARGET_HAS_ThirdPartyGTK
 	for(v=l_rSymbolicScenario.m_vVisualisationWidget.begin(); v!=l_rSymbolicScenario.m_vVisualisationWidget.end(); v++)
 	{
 		CIdentifier l_oBoxIdentifier = v->m_oBoxIdentifier;
@@ -446,6 +447,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 		}
 		l_vVisualisationWidgetIdMapping[v->m_oIdentifier]=l_oNewVisualisationWidgetIdentifier;
 	}
+#endif
 	for(a=l_rSymbolicScenario.m_vAttribute.begin(); a!=l_rSymbolicScenario.m_vAttribute.end(); a++)
 	{
 		l_pScenario->addAttribute(

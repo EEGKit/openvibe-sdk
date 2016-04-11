@@ -304,6 +304,7 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 		}
 	}
 
+#if defined TARGET_HAS_ThirdPartyGTK
 	// Get the whole visualisation tree from the original scenario and push it into the current one
 
 	// First we are going to determine the order in which we can insert elements into the visualisation tree
@@ -391,6 +392,7 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 		CString l_sAttributeValue = rScenario.getVisualisationTreeDetails().getAttributeValue(l_oVisualisationTreeAttributeIdentifier);
 		this->getVisualisationTreeDetails().addAttribute(l_oVisualisationTreeAttributeIdentifier, l_sAttributeValue);
 	}
+#endif
 
 	// Copies message links
 	// TODO_JL copy message links here
@@ -1533,10 +1535,12 @@ boolean CScenario::acceptVisitor(
 		}
 	}
 
+#if defined TARGET_HAS_ThirdPartyGTK
 	if(!getKernelContext().getVisualisationManager().getVisualisationTree(m_oVisualisationTreeIdentifier).acceptVisitor(rObjectVisitor))
 	{
 		return false;
 	}
+#endif
 
 	if(!rObjectVisitor.processEnd(l_oObjectVisitorContext, *this))
 	{
