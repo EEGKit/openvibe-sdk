@@ -15,7 +15,7 @@
  * - randomUInteger32WithCeiling() may not be dense either
  *
  */
-#include "ovCMath.h"
+#include "system/ovCMath.h"
 #include <cstdlib>
 #include <cstring>
 
@@ -97,22 +97,22 @@ uint32 Math::randomUInteger32WithCeiling(uint32 ui32upperLimit)
 	return l_ui32ReturnValue;
 }
 
-int8 Math::randomSInterger8(void)
+int8 Math::randomSInteger8(void)
 {
 	return static_cast<int8>(randomUInteger64());
 }
 
-int16 Math::randomSInterger16(void)
+int16 Math::randomSInteger16(void)
 {
 	return static_cast<int16>(randomUInteger64());
 }
 
-int32 Math::randomSInterger32(void)
+int32 Math::randomSInteger32(void)
 {
 	return static_cast<int32>(randomUInteger64());
 }
 
-int64 Math::randomSInterger64(void)
+int64 Math::randomSInteger64(void)
 {
 	return static_cast<int64>(randomUInteger64());
 }
@@ -138,4 +138,48 @@ float64 Math::randomFloat64(void)
 	return fr;
 }
 
+boolean Math::isfinite(float64 f64Value)
+{
+#ifdef TARGET_OS_Windows
+	return (_finite(f64Value) != 0 || f64Value == 0.);
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+	return std::isfinite(f64Value);
+#else
+	return std::isfinite(f64Value);
+#endif
+}
 
+boolean Math::isinf(float64 f64Value)
+{
+#ifdef TARGET_OS_Windows
+	int32 l_i32Class = _fpclass(f64Value);
+	return (l_i32Class == _FPCLASS_NINF || l_i32Class == _FPCLASS_PINF);
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+	return std::isinf(f64Value);
+#else
+	return std::isinf(f64Value);
+#endif
+}
+
+boolean Math::isnan(float64 f64Value)
+{
+#ifdef TARGET_OS_Windows
+	return (_isnan(f64Value) != 0);
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+	return std::isnan(f64Value);
+#else
+	return std::isnan(f64Value);
+#endif
+}
+
+boolean Math::isnormal(float64 f64Value)
+{
+#ifdef TARGET_OS_Windows
+	int32 l_i32Class = _fpclass(f64Value);
+	return (l_i32Class == _FPCLASS_NN || l_i32Class == _FPCLASS_PN);
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+	return std::isnormal(f64Value);
+#else
+	return std::isnormal(f64Value);
+#endif
+}

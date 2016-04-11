@@ -5,6 +5,11 @@
 
 namespace OpenViBE
 {
+	namespace Plugins
+	{
+		class IAlgorithmDesc;
+	}
+
 	namespace Kernel
 	{
 		class IAlgorithmProxy;
@@ -31,6 +36,16 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::CIdentifier createAlgorithm(
 				const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)=0;
+			/**
+			  * \brief Creates a new algorithm
+			  * \param rAlgorithmDesc [in] : the algorithm descriptor of
+			  *        the algorithm to create
+			  * \return \e identifier of the created algorithm
+			  * \return \e OV_UndefinedIdentifier
+			  */
+			 virtual OpenViBE::CIdentifier createAlgorithm(
+				 const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc)=0;
+
 			/**
 			 * \brief Releases an existing algorithm
 			 * \param rAlgorithmIdentifier [in] : the existing algorithm identifier

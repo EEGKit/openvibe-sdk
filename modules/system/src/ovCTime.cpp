@@ -1,4 +1,4 @@
-#include "ovCTime.h"
+#include "system/ovCTime.h"
 
 #include <cmath>
 
@@ -15,7 +15,7 @@
 
 #if defined(OV_CLASSIC_TIME)
 
-#if defined TARGET_OS_Linux
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
  #include <unistd.h>
  #include <ctime>
  #include <sys/time.h>
@@ -158,7 +158,7 @@ namespace
 
 boolean System::Time::zsleep(const uint64 ui64Seconds)
 {
-#if defined TARGET_OS_Linux
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	usleep((ui64Seconds*1000000)>>32);
 #elif defined TARGET_OS_Windows
 	Sleep((uint32)(((ui64Seconds>>10)*1000)>>22));
@@ -172,11 +172,14 @@ uint32 System::Time::getTime(void)
 	return (uint32)(((zgetTime()>>22)*1000)>>10);
 }
 
-#if defined TARGET_OS_Linux
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 uint64 System::Time::zgetTime(void)
 {
 	uint64 l_ui64Result=0;
+
+	static boost::mutex l_oMutex;
+	boost::mutex::scoped_lock l_oLock(l_oMutex);
 
 	static boolean l_bInitialized=false;
 	static struct timeval l_oTimeValueStart;

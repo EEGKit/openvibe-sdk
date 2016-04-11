@@ -70,6 +70,7 @@ boolean CBoxAlgorithmTimeout::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmTimeout::process(void)
 {
+	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
 	// Discard input data
 	for(uint32 i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)

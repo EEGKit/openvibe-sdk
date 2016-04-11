@@ -339,7 +339,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 
 	boolean l_bHasGUI = this->getConfigurationManager().expandAsBoolean("${Kernel_WithGUI}", true);
 
-	CBoxSettingModifierVisitor l_oBoxSettingModifierVisitor(this->getKernelContext());
+	CBoxSettingModifierVisitor l_oBoxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
 	if(!m_pScenario->acceptVisitor(l_oBoxSettingModifierVisitor))
 	{
 		this->getLogManager() << LogLevel_Error << "Scenario " << m_oScenarioIdentifier << " setting modification with acceptVisitor() failed\n";

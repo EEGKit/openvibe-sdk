@@ -19,8 +19,8 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		extern OV_API void registerAvailableDecisionEnumeration(const OpenViBE::CIdentifier& rAlgorithmIdentifier, OpenViBE::CIdentifier pDecision);
-		extern OV_API OpenViBE::CIdentifier getAvailableDecisionEnumeration(const OpenViBE::CIdentifier& rAlgorithmIdentifier);
+		extern OVP_API void registerAvailableDecisionEnumeration(const OpenViBE::CIdentifier& rAlgorithmIdentifier, OpenViBE::CIdentifier pDecision);
+		extern OVP_API OpenViBE::CIdentifier getAvailableDecisionEnumeration(const OpenViBE::CIdentifier& rAlgorithmIdentifier);
 
 		//The aim of this structure is to record informations returned by the sub-classifier. They will be used by
 		// pairwise decision algorithms to compute probability vector.

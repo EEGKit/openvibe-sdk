@@ -3,6 +3,7 @@
 #include <system/ovCMemory.h>
 
 #include <iostream>
+#include <algorithm>
 
 #include <openvibe/ovITimeArithmetics.h>
 
@@ -134,7 +135,7 @@ bool CTimeBasedEpoching::COutputHandler::process()
 		if(m_ui32SampleIndex<m_ui32SampleCountPerEpoch) // Some samples should be filled
 		{
 			// Copies samples to buffer
-			const uint32 l_ui32SamplesToFill=min(m_ui32SampleCountPerEpoch-m_ui32SampleIndex, l_ui32InputSampleCount-l_ui32SamplesProcessed);
+			const uint32 l_ui32SamplesToFill=std::min(m_ui32SampleCountPerEpoch-m_ui32SampleIndex, l_ui32InputSampleCount-l_ui32SamplesProcessed);
 			for(uint32 i=0; i<m_ui32ChannelCount; i++)
 			{
 				System::Memory::copy(

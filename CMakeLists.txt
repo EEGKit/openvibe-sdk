@@ -16,6 +16,7 @@ SET(OV_GLOBAL_VERSION_STRING "${OV_GLOBAL_VERSION_MAJOR}.${OV_GLOBAL_VERSION_MIN
 MESSAGE(STATUS "Appending compilation flags...")
 
 SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies")
+SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
 # If OpenMP is available, it will allow Eigen to use multiple cores in matrix math.
 INCLUDE("FindOpenMP")
@@ -107,9 +108,6 @@ ADD_DEFINITIONS(-DBRAND_NAME="${BRAND_NAME}")
 
 SET(OV_LAUNCHER_SOURCE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules/launchers")
 
-# if want to compile tests, use the following.
-SET(OV_COMPILE_TESTS "true")
-
 # By setting SKIP[_FOLDER]* you can skip a subtree (example: SKIP_A_B_C skips folder a/b/c and all its subfolders if any)
 
 # Skip building documentation
@@ -158,29 +156,29 @@ ADD_SUBDIRECTORY("documentation/")
 ADD_SUBDIRECTORY("common/")
 
 IF(NOT(SKIP_OPENVIBE))
-	ADD_SUBDIRECTORY("openvibe/")
+    ADD_SUBDIRECTORY("openvibe/")
 ENDIF()
 
 IF(NOT(SKIP_KERNEL))
-	ADD_SUBDIRECTORY("kernel/")
+    ADD_SUBDIRECTORY("kernel/")
 ENDIF()
 
 ADD_SUBDIRECTORY("modules/")
 
 IF(NOT(SKIP_TOOLKIT))
-	ADD_SUBDIRECTORY("toolkit/")
+    ADD_SUBDIRECTORY("toolkit/")
 ENDIF()
 
 IF(NOT(SKIP_PLUGINS))
-	ADD_SUBDIRECTORY("plugins/")
+    ADD_SUBDIRECTORY("plugins/")
 ENDIF()
 
 IF(NOT(SKIP_APPLICATIONS))
-	ADD_SUBDIRECTORY("applications/")
+    ADD_SUBDIRECTORY("applications/")
 ENDIF()
 
 IF(NOT(SKIP_EXTERNALS))
-	ADD_SUBDIRECTORY("externals/")
+    ADD_SUBDIRECTORY("externals/")
 ENDIF()
 
 # make a copy of the dependency script, this is done so we can use the same launch scripts both in win install and win devel situations.
@@ -195,6 +193,3 @@ ADD_DEPENDENCIES(openvibe-toolkit openvibe-stimulation-generator )
 # add the scripts to the project so IDEs using the CMake file are aware of them
 FILE(GLOB_RECURSE script_files scripts/*.cmd scripts/*.sh scripts/*.nsi)
 ADD_CUSTOM_TARGET(openvibe-scripts SOURCES ${script_files})
-
-CONFIGURE_FILE("${CMAKE_MODULE_PATH}/launchers/${OV_EXT_CMD_FILE}-base" "${CMAKE_CURRENT_BINARY_DIR}/${OV_EXT_CMD_FILE}")
-INSTALL(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${OV_EXT_CMD_FILE} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

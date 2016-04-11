@@ -1,6 +1,7 @@
 #include "ovpCBoxAlgorithmGenericStreamReader.h"
 
 #include <iostream>
+#include <fs/Files.h>
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;

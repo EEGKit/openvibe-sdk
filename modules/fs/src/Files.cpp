@@ -23,7 +23,6 @@ using namespace std;
 //                     windows platform SDK because it defines itself
 //                     a 'boolean' type. Thus the following define to
 //                     force the use of FS::boolean !
-#define boolean FS::boolean
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
@@ -137,7 +136,7 @@ boolean Files::equals(const char* pFile1, const char* pFile2)
 
 #elif defined TARGET_OS_Windows
 
-boolean Files::equals(const char* pFile1, const char* pFile2)
+FS::boolean Files::equals(const char* pFile1, const char* pFile2)
 {
 	boolean l_bResult=true;
 	if(pFile1 && pFile2)
@@ -185,7 +184,7 @@ boolean Files::equals(const char* pFile1, const char* pFile2)
 
 #endif
 
-boolean Files::fileExists(const char *pathToCheck) {
+FS::boolean Files::fileExists(const char *pathToCheck) {
 	if(!pathToCheck) 
 	{
 		return false;
@@ -199,7 +198,7 @@ boolean Files::fileExists(const char *pathToCheck) {
 	}
 }
 
-boolean Files::directoryExists(const char *pathToCheck) {
+FS::boolean Files::directoryExists(const char *pathToCheck) {
 	if(!pathToCheck) 
 	{
 		return false;

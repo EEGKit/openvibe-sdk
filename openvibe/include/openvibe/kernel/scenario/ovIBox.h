@@ -642,10 +642,6 @@ namespace OpenViBE
 					const OpenViBE::CString& rName)=0;
 			//@}
 
-			virtual void storeState(void)=0;
-
-			virtual void restoreState(void)=0;
-
 			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Box)
 		};
 

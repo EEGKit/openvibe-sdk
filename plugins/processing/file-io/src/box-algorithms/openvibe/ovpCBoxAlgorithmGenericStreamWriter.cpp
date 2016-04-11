@@ -1,5 +1,7 @@
 #include "ovpCBoxAlgorithmGenericStreamWriter.h"
 
+#include <fs/Files.h>
+
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;

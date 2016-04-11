@@ -6,6 +6,7 @@
 
 #include <openvibe/ovIObjectVisitor.h>
 #include <xml/IReader.h>
+#include <fs/Files.h>
 
 #include <string>
 #include <iostream>
@@ -14,6 +15,7 @@
 #include <limits>
 
 #define OVD_AttributeId_SettingOverrideFilename             OpenViBE::CIdentifier(0x8D21FF41, 0xDF6AFE7E)
+#define OV_AttributeId_Box_Disabled                         OpenViBE::CIdentifier(0x341D3912, 0x1478DE86)
 
 //___________________________________________________________________//
 //                                                                   //
@@ -61,9 +63,9 @@ void CBoxSettingModifierVisitor::closeChild(void)
 	m_bIsParsingSettingValue=false;
 }
 
-boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
+OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
 {
-	boolean l_bReturnValue = true;
+	OpenViBE::boolean l_bReturnValue = true;
 
 	m_pObjectVisitorContext=&rObjectVisitorContext;
 
@@ -136,11 +138,11 @@ boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectV
 				rBox.getSettingName(i, l_sSettingName);
 				rBox.getSettingValue(i, l_sRawSettingValue);
 				CString l_sSettingValue = l_sRawSettingValue;
-				l_sSettingValue = m_rKernelContext.getConfigurationManager().expand(l_sSettingValue);
+				l_sSettingValue = m_pConfigurationManager->expand(l_sSettingValue);
 				if(!rBox.evaluateSettingValue(i, l_sSettingValue))
 				{
-					m_rKernelContext.getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" <<  rBox.getName() << "> The following value: ["<< l_sRawSettingValue 
-						<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not a numeric value.\n";
+//					m_rKernelContext.getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" <<  rBox.getName() << "> The following value: ["<< l_sRawSettingValue
+//						<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not a numeric value.\n";
 					l_bReturnValue = false;
 				}
 			}
@@ -154,7 +156,7 @@ boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectV
 			else
 			{
 				// override file was not found
-				m_rKernelContext.getLogManager() << LogLevel_Error << "Could not override [" << rBox.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal << "] could not be opened\n";
+//				m_rKernelContext.getLogManager() << LogLevel_Error << "Could not override [" << rBox.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal << "] could not be opened\n";
 				l_bReturnValue = false;
 			}
 		}

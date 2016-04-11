@@ -409,12 +409,14 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 			CString l_sSettingName;
 			CString l_sDefaultValue;
 			CString l_sValue;
+			bool l_bModifiable;
 			rScenario.getSettingType(l_ui32SettingIndex, l_oSettingTypeIdentifier);
 			rScenario.getSettingName(l_ui32SettingIndex, l_sSettingName);
 			rScenario.getSettingDefaultValue(l_ui32SettingIndex, l_sDefaultValue);
 			rScenario.getSettingValue(l_ui32SettingIndex, l_sValue);
+			rScenario.getSettingMod(l_ui32SettingIndex, l_bModifiable);
 
-			this->addSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sDefaultValue);
+			this->addSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sDefaultValue, -1, l_bModifiable);
 			this->setSettingValue(l_ui32PreviousSettingCount + l_ui32SettingIndex, l_sValue);
 
 		}

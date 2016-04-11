@@ -22,11 +22,11 @@ typedef OpenViBE::int32 (*fClassifierComparison)(OpenViBE::IMatrix&, OpenViBE::I
 
 namespace OpenViBEToolkit
 {
-	extern OV_API void registerClassificationComparisionFunction(const OpenViBE::CIdentifier& rClassIdentifier, fClassifierComparison pComparision);
-	extern OV_API fClassifierComparison getClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier);
+	extern OVTK_API void registerClassificationComparisionFunction(const OpenViBE::CIdentifier& rClassIdentifier, fClassifierComparison pComparision);
+	extern OVTK_API fClassifierComparison getClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier);
 
 
-	class OV_API CAlgorithmPairingStrategy : public CAlgorithmClassifier
+	class OVTK_API CAlgorithmPairingStrategy : public CAlgorithmClassifier
 	{
 	public:
 
@@ -55,7 +55,7 @@ namespace OpenViBEToolkit
 		OpenViBE::CIdentifier m_oSubClassifierAlgorithmIdentifier;
 	};
 
-	class OV_API CAlgorithmPairingStrategyDesc: public OpenViBEToolkit::CAlgorithmClassifierDesc
+	class OVTK_API CAlgorithmPairingStrategyDesc: public OpenViBEToolkit::CAlgorithmClassifierDesc
 	{
 	public:
 

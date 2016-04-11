@@ -49,6 +49,7 @@ namespace OpenViBEPlugins
 				};
 
 				ETimeoutState m_oTimeoutState;		
+				bool m_bIsHeaderSent;
 
 				OpenViBE::uint64 m_ui64Timeout;
 				OpenViBE::uint64 m_ui64LastTimePolled;

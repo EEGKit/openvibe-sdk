@@ -410,6 +410,19 @@
 #define OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedEnd                                         OpenViBE::CIdentifier(0xc4aa114c, 0x628c2d77) // Duplicate of OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_OutputTriggerId_ReceivedEnd
 
 // -----------------------------------------------------
+// Channel units stream decoder
+// -----------------------------------------------------
+
+#define OVP_GD_ClassId_Algorithm_ChannelUnitsStreamDecoder                                                                      OpenViBE::CIdentifier(0x5f973ddf, 0x4a582daf)
+#define OVP_GD_ClassId_Algorithm_ChannelUnitsStreamDecoderDesc                                                                  OpenViBE::CIdentifier(0x2d59257d, 0x3b1915da)
+#define OVP_GD_Algorithm_ChannelUnitsStreamDecoder_InputParameterId_MemoryBufferToDecode                                        OpenViBE::CIdentifier(0x2f98ea3c, 0xfb0be096) // Duplicate of OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_InputParameterId_MemoryBufferToDecode
+#define OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Dynamic                                                    OpenViBE::CIdentifier(0x31cf1c7a, 0x17475323)
+#define OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Matrix                                                     OpenViBE::CIdentifier(0x79ef3123, 0x35e3ea4d) // Duplicate of OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_OutputParameterId_Matrix
+#define OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedHeader                                               OpenViBE::CIdentifier(0x815234bf, 0xaabae5f2) // Duplicate of OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_OutputTriggerId_ReceivedHeader
+#define OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedBuffer                                               OpenViBE::CIdentifier(0xaa2738bf, 0xf7fe9fc3) // Duplicate of OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_OutputTriggerId_ReceivedBuffer
+#define OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedEnd                                                  OpenViBE::CIdentifier(0xc4aa114c, 0x628c2d77) // Duplicate of OVP_GD_Algorithm_ChannelLocalisationStreamDecoder_OutputTriggerId_ReceivedEnd
+
+// -----------------------------------------------------
 // Feature vector stream decoder
 // -----------------------------------------------------
 

@@ -21,6 +21,8 @@ namespace OpenViBE
 
 			virtual OpenViBE::CIdentifier createAlgorithm(
 				const OpenViBE::CIdentifier& rAlgorithmClassIdentifier);
+			virtual OpenViBE::CIdentifier createAlgorithm(
+				const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc);
 			virtual OpenViBE::boolean releaseAlgorithm(
 				const OpenViBE::CIdentifier& rAlgorithmIdentifier);
 			virtual OpenViBE::boolean releaseAlgorithm(

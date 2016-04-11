@@ -5,7 +5,7 @@
 
 namespace System
 {
-	class OV_API CChrono
+	class System_API CChrono
 	{
 	public:
 
