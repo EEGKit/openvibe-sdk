@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStimulationEncoder;
+			OpenViBEToolkit::TStimulationEncoder< CBoxAlgorithmClockStimulator > m_oStimulationEncoder;
 			OpenViBE::uint64 m_ui64StimulationId;
 			OpenViBE::uint64 m_ui64InterstimulationInterval;
 			OpenViBE::uint64 m_ui64LastStimulationDate;
@@ -51,9 +51,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
 			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Periodic stimulation generator"); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Triggers stimulation at fixed frequency"); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Data generation"); }
+			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Stimulation"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-missing-image"); }
+			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-execute"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_ClockStimulator; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Stimulation::CBoxAlgorithmClockStimulator; }

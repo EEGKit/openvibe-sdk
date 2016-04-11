@@ -1,6 +1,6 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
 
-#include <fs/Files.h>
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
+
 #include <sstream>
 #include <locale>
 #if defined TARGET_OS_Windows
@@ -378,8 +378,7 @@ boolean COgreObject::loadWorldMatrix()
 
 	//try and open matrix file
 #if 0
-	std::ifstream l_oFile;
-	FS::Files::openIFStream(l_oFile, l_oFilename.c_str(), std::ios_base::in);
+	std::ifstream l_oFile(l_oFilename.c_str(), std::ios_base::in);
 	if(!l_oFile.good())
 	{
 		return true;
@@ -519,6 +518,7 @@ boolean COgreObject::loadWorldMatrix()
 					//stop at first whitespace char or when vector end is found
 					if(std::isspace(*l_oIt, l_oLocale) == true || *l_oIt == ']')
 					{
+						errno = 0;
 						float64 l_f64Value = atof(l_sCurString.c_str());
 #if defined TARGET_OS_Windows
 						if(errno == ERANGE)
@@ -559,6 +559,7 @@ boolean COgreObject::loadWorldMatrix()
 					//stop at first whitespace char or when vector end is found
 					if(std::isspace(*l_oIt, l_oLocale) == true || *l_oIt == ']')
 					{
+						errno = 0;
 						float64 l_f64Value = atof(l_sCurString.c_str());
 #if defined TARGET_OS_Windows
 						if(errno == ERANGE)
@@ -599,6 +600,7 @@ boolean COgreObject::loadWorldMatrix()
 					//stop at first whitespace char or when vector end is found
 					if(std::isspace(*l_oIt, l_oLocale) == true || *l_oIt == ']')
 					{
+						errno = 0;
 						float64 l_f64Value = atof(l_sCurString.c_str());
 #if defined TARGET_OS_Windows
 						if(errno == ERANGE)
@@ -1051,4 +1053,5 @@ boolean COgreObject::getWorldBoundingBox(float32& rMinX, float32& rMinY, float32
 	return true;
 }
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+
+#endif

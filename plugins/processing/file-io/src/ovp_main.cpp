@@ -9,6 +9,7 @@
 #include "algorithms/xml-scenario/ovpCAlgorithmXMLScenarioExporter.h"
 #include "algorithms/xml-scenario/ovpCAlgorithmXMLScenarioImporter.h"
 
+
 #include "box-algorithms/csv/ovpCBoxAlgorithmCSVFileWriter.h"
 #include "box-algorithms/csv/ovpCBoxAlgorithmCSVFileReader.h"
 
@@ -17,10 +18,10 @@
 
 #include "box-algorithms/ovpCBoxAlgorithmElectrodeLocalizationFileReader.h"
 
-
 #include "box-algorithms/ovpCBoxAlgorithmSignalConcatenation.h"
 
 OVP_Declare_Begin()
+
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CScenarioImporterXMLDesc);
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CScenarioExporterXMLDesc);
 
@@ -37,7 +38,6 @@ OVP_Declare_Begin()
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmGenericStreamWriterDesc)
 
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmElectrodeLocalisationFileReaderDesc)
-	
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmSignalConcatenationDesc)
 
 OVP_Declare_End()

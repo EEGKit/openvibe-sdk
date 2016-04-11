@@ -37,6 +37,7 @@ namespace OpenViBE
 				virtual __BridgeBindFunc1__((*m_pBox), CIdentifier, getNextAttributeIdentifier, const, const CIdentifier&, rPreviousIdentifier);
 
 				// IBox
+				virtual __BridgeBindFunc0__((*m_pBox), boolean, hasModifiableSettings, const);
 
 				virtual __BridgeBindFunc0__((*m_pBox), CIdentifier, getIdentifier, const);
 				virtual __BridgeBindFunc0__((*m_pBox), CString, getName, const);
@@ -82,7 +83,7 @@ namespace OpenViBE
 				virtual __BridgeImplFunc2__((*m_pBox), boolean, setOutputType, , return false, const uint32, ui32OutputIndex, const CIdentifier&, rTypeIdentifier);
 				virtual __BridgeImplFunc2__((*m_pBox), boolean, setOutputName, , return false, const uint32, ui32OutputIndex, const CString&, rName);
 
-				virtual __BridgeImplFunc3__((*m_pBox), boolean, addSetting, , return false, const CString&, sName, const CIdentifier&, rTypeIdentifier, const CString&, sDefaultValue);
+				virtual __BridgeImplFunc5__((*m_pBox), boolean, addSetting, , return false, const CString&, sName, const CIdentifier&, rTypeIdentifier, const CString&, sDefaultValue, const int32, i32Index, const boolean, bModifiability);
 				virtual __BridgeImplFunc1__((*m_pBox), boolean, removeSetting, , return false, const uint32, ui32Index);
 				virtual __BridgeBindFunc0__((*m_pBox), uint32, getSettingCount, const);
 				virtual __BridgeBindFunc1__((*m_pBox), boolean, hasSettingWithName, const, const CString&, rName);
@@ -90,40 +91,41 @@ namespace OpenViBE
 				virtual __BridgeBindFunc2__((*m_pBox), boolean, getSettingType, const, const uint32, ui32SettingIndex, CIdentifier&, rTypeIdentifier);
 				virtual __BridgeBindFunc2__((*m_pBox), boolean, getSettingName, const, const uint32, ui32SettingIndex, CString&, rName);
 				virtual __BridgeBindFunc2__((*m_pBox), boolean, getSettingDefaultValue, const, const uint32, ui32SettingIndex, CString&, rDefaultValue);
-#if 0
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getSettingValue, const, const uint32, ui32SettingIndex, CString&, rValue);
-#else
-				
+
+				virtual __BridgeImplFunc1__((*m_pBox), boolean, addInputSupport, , return false, const CIdentifier&, rTypeIdentifier);
+				virtual __BridgeImplFunc1__((*m_pBox), boolean, addInputAndDerivedSupport, , return false, const CIdentifier&, rTypeIdentifier);
+				virtual __BridgeImplFunc1__((*m_pBox), boolean, hasInputSupport, const, return false, const CIdentifier&, rTypeIdentifier);
+				virtual __BridgeImplFunc1__((*m_pBox), boolean, addOutputSupport, , return false, const CIdentifier&, rTypeIdentifier);
+				virtual __BridgeImplFunc1__((*m_pBox), boolean, addOutputAndDerivedSupport, , return false, const CIdentifier&, rTypeIdentifier);
+				virtual __BridgeImplFunc1__((*m_pBox), boolean, hasOutputSupport, const, return false, const CIdentifier&, rTypeIdentifier);
+				virtual __BridgeImplFunc1__((*m_pBox), boolean, setSupportTypeFromAlgorithmIdentifier, , return false, const CIdentifier&, rTypeIdentifier);
+
+//lmlm//
+				virtual __BridgeBindFunc2__((*m_pBox), boolean, getSettingMod, const, const uint32, ui32SettingIndex, boolean&, rValue);
+				virtual __BridgeImplFunc1__((*m_pBox), uint32*, getModifiableSettings, const , return NULL, uint32&, rCount);
+
 				virtual boolean getSettingValue(const uint32 ui32SettingIndex, CString& rValue) const
 				{
-					CString l_sResult;
-					m_pBox->getSettingValue(ui32SettingIndex, l_sResult);
-	#if 0
-					if(l_oTypeIdentifier==OV_TypeId_Filename)
-					{
-						rValue=this->getConfigurationManager().expand(l_sResult);
-					}
-					else
-					{
-						rValue=l_sResult;
-					}
-					return true;
-	#else
-					rValue=this->getConfigurationManager().expand(l_sResult);
 					CIdentifier l_oTypeIdentifier;
 					if(!m_pBox->getSettingType(ui32SettingIndex, l_oTypeIdentifier))
 					{
 						return false;
 					}
+					CString l_sResult;
+					if(!m_pBox->getSettingValue(ui32SettingIndex, l_sResult))
+					{
+						return false;
+					}
+					rValue=this->getConfigurationManager().expand(l_sResult);
 					// If the token is a numeric value, it may be an arithmetic operation
 					if(!m_pBox->evaluateSettingValue(ui32SettingIndex, rValue))
 					{
-						this->getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" << m_pBox->getName() << "> The following value: ["<< rValue 
+						this->getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" << m_pBox->getName() << "> The following value: ["<< rValue
 							<<"] expanded as ["<< l_sResult <<"] given as setting is not a numeric value.\n";
 						return false;
 					}
-	#endif
 					return true;
+
 				}
 
 				/* 
@@ -134,11 +136,12 @@ namespace OpenViBE
 					return m_pBox->evaluateSettingValue(ui32SettingIndex, rValue);
 				}
 				
-#endif
 				virtual __BridgeImplFunc2__((*m_pBox), boolean, setSettingType, , return false, const uint32, ui32SettingIndex, const CIdentifier&, rTypeIdentifier);
 				virtual __BridgeImplFunc2__((*m_pBox), boolean, setSettingName, , return false, const uint32, ui32SettingIndex, const CString&, rName);
 				virtual __BridgeImplFunc2__((*m_pBox), boolean, setSettingDefaultValue, , return false, const uint32, ui32SettingIndex, const CString&, rDefaultValue);
 				virtual __BridgeImplFunc2__((*m_pBox), boolean, setSettingValue, , return false, const uint32, ui32SettingIndex, const CString&, rValue);
+				//lnln//
+				virtual __BridgeImplFunc2__((*m_pBox), boolean, setSettingMod, , return false, const uint32, ui32SettingIndex, const boolean, rValue);
 
 				_IsDerivedFromClass_Final_(TKernelObject<IBox>, OVK_ClassId_Kernel_Player_StaticBoxContext)
 

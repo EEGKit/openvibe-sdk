@@ -6,7 +6,7 @@
 
 #include "../ovkCKernelContext.h"
 
-#include <system/CChrono.h>
+#include <system/ovCChrono.h>
 
 #include <map>
 #include <string>
@@ -31,7 +31,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IConfigurationManager& getRuntimeConfigurationManager(void);
 			virtual OpenViBE::Kernel::IScenarioManager& getRuntimeScenarioManager(void);
 
-			virtual OpenViBE::boolean initialize(void);
+			virtual OpenViBE::Kernel::EPlayerReturnCode initialize(void);
 			virtual OpenViBE::boolean uninitialize(void);
 
 			virtual OpenViBE::boolean stop(void);

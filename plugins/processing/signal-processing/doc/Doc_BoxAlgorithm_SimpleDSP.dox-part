@@ -89,23 +89,22 @@ __________________________________________________________________
  *  - /
  *
  * - Unary functions
- *  - abs (absolute value)
- *  - acos (arc cosinus, requires n in the range [-1:1], result ranged in [0:M_PI])
- *  - asin (arc sinus, requires n in the range [-1:1], result ranged in [-M_PI_2:M_PI_2])
- *  - atan (arc tangent, requires n in the range [-1:1], result ranged in [-M_PI_2:M_PI_2])
- *  - ceil (upper-bound rounding)
- *  - cos (cosinus, n in radians, result ranged in [-1:1])
- *  - exp (exponential)
- *  - floor (lower-bound rounding)
- *  - log (natural logarithm, requires n>0)
- *  - log10 (decimal logarithm, requires n>0)
- *  - sin (sinus, n in radians, result ranged in [-1:1])
- *  - rand (pseudo-random, result ranged in [0:n])
- *  - sqrt (square root, requires n>=0)
- *  - tan (tangent, n in radians, result ranged in [-1:1])
+ *  - abs
+ *  - acos
+ *  - asin
+ *  - atan
+ *  - ceil
+ *  - cos
+ *  - exp
+ *  - floor
+ *  - log
+ *  - log10
+ *  - sin
+ *  - sqrt
+ *  - tan
  *
  * - Binary function
- *  - pow (power)
+ *  - pow
  *
  * - Comparison operators
  *  - >

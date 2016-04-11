@@ -28,6 +28,7 @@ ENDIF(UNIX)
 INCLUDE("FindOpenViBECommon")
 
 INCLUDE("FindThirdPartyBoost")
+INCLUDE("FindThirdPartyBoost_Chrono")
 INCLUDE("FindThirdPartyBoost_System")
 INCLUDE("FindThirdPartyBoost_Thread")
 
@@ -49,21 +50,12 @@ IF(WIN32)
 ENDIF(WIN32)
 
 # ---------------------------------
-# Test applications
-# ---------------------------------
-OPTION(BUILD_OPENVIBE_MODULE_System_EXAMPLES "Build OpenViBE module System examples" OFF)
-IF(BUILD_OPENVIBE_MODULE_System_EXAMPLES)
-	SUBDIRS(test)
-ENDIF(BUILD_OPENVIBE_MODULE_System_EXAMPLES)
-
-# ---------------------------------
 # Target macros
 # Defines target operating system
 # Defines target architecture
 # Defines target compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
-
 
 # -----------------------------
 # Install files

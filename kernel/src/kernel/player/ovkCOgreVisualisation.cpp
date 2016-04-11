@@ -1,4 +1,5 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 
 #include "ovkCMaterial.h"
 #include "ovkCOgreWindow.h"
@@ -462,4 +463,4 @@ CIdentifier COgreVisualisation::getUnusedResourceGroupIdentifier(void) const
 	return l_oResult;
 }
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif

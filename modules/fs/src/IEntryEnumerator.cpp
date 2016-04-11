@@ -355,7 +355,7 @@ boolean CEntryEnumeratorWindows::enumerate(const char* sWildCard, boolean bRecur
 	// $$$ (cFileName member of WIN32_FIND_DATA structure
 	// $$$ loses the initial path !!)
 	// $$$ TODO
-	
+
 	char l_sExtendedWildCard[1024];
 	char* l_sExtendedWildCardFileName=NULL;
 	int a=GetFullPathName(sWildCard, sizeof(l_sExtendedWildCard), l_sExtendedWildCard, &l_sExtendedWildCardFileName);

@@ -21,6 +21,13 @@ namespace OpenViBE
 			PlayerStatus_Forward,
 		};
 
+		enum EPlayerReturnCode
+		{
+			PlayerReturnCode_Sucess,
+			PlayerReturnCode_Failed,
+			PlayerReturnCode_BoxInitializationFailed
+		};
+
 		/**
 		 * \class IPlayer
 		 * \author Yann Renard (INRIA/IRISA)
@@ -76,7 +83,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean initialize(void)=0;
+			virtual EPlayerReturnCode initialize(void)=0;
 			/**
 			 * \brief Uninitializes this player
 			 * \return \e true in case of success.

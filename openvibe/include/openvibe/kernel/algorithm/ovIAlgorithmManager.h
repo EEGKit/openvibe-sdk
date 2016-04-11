@@ -31,22 +31,21 @@ namespace OpenViBE
 			 * \brief Creates a new algorithm
 			 * \param rAlgorithmClassIdentifier [out] : the class identifier of
 			 *        the newly created algorithm
-			 * \return \e identifier of the created algorithm
-			 * \return \e OV_UndefinedIdentifier
+			 * \return \e true in case of success.
+			 * \return \e OV_UndefinedIdentifier in case of error.
 			 */
 			virtual OpenViBE::CIdentifier createAlgorithm(
 				const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)=0;
 			/**
-			 * \brief Creates a new algorithm directly from the descriptor object reference.
-			 * \param rAlgorithmDesc [in] : the algorithm descriptor of
-			 *        the algorithm to create
-			 * \return \e identifier of the created algorithm
-			 * \return \e OV_UndefinedIdentifier
-			 * \note You must keep the reference to the descriptor alive for the
-			 * whole time you wish to use the algorithm.
-			 */
-			virtual OpenViBE::CIdentifier createAlgorithm(
-				const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc)=0;
+			  * \brief Creates a new algorithm
+			  * \param rAlgorithmDesc [in] : the algorithm descriptor of
+			  *        the algorithm to create
+			  * \return \e identifier of the created algorithm
+			  * \return \e OV_UndefinedIdentifier
+			  */
+			 virtual OpenViBE::CIdentifier createAlgorithm(
+				 const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc)=0;
+
 			/**
 			 * \brief Releases an existing algorithm
 			 * \param rAlgorithmIdentifier [in] : the existing algorithm identifier

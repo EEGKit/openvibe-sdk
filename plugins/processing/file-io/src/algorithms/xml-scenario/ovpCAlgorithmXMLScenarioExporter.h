@@ -2,6 +2,7 @@
 #define __OpenViBEPlugins_Algorithm_XMLScenarioExporter_H__
 
 #include "../../ovp_defines.h"
+
 #include <openvibe/ov_all.h>
 
 #include <toolkit/ovtk_all.h>

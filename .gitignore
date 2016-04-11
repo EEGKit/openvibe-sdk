@@ -10,12 +10,5 @@ CustomCMakeLists.txt
 externals/*/
 *~
 *.swp
-
-dist.a
-scripts/packages/output/*
-
-ctest/tmp_test/*
-node_modules
-bower_modules
-npm-debug.log
-build-*.log
+.project
+.cproject

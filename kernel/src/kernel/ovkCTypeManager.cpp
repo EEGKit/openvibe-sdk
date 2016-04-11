@@ -273,7 +273,6 @@ uint64 CTypeManager::getEnumerationEntryValueFromName(
 	std::map<uint64, CString>::const_iterator itEnumerationEntry;
 	if(itEnumeration==m_vEnumeration.end())
 	{
-		this->getLogManager() << LogLevel_ImportantWarning << "You're trying to access a value in an empty enumeration\n"; 
 		return 0xffffffffffffffffll;
 	}
 
@@ -308,8 +307,7 @@ uint64 CTypeManager::getEnumerationEntryValueFromName(
 			return l_ui64Value;
 		}
 	}
-	
-	//this->getLogManager() << LogLevel_ImportantWarning << "The enumeration value "<< rEntryName <<" could not be identified.\n";
+
 	return 0xffffffffffffffffll;
 }
 

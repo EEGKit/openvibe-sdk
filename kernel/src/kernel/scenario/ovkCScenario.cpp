@@ -304,6 +304,7 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 		}
 	}
 
+#if defined TARGET_HAS_ThirdPartyGTK
 	// Get the whole visualisation tree from the original scenario and push it into the current one
 
 	// First we are going to determine the order in which we can insert elements into the visualisation tree
@@ -391,6 +392,7 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 		CString l_sAttributeValue = rScenario.getVisualisationTreeDetails().getAttributeValue(l_oVisualisationTreeAttributeIdentifier);
 		this->getVisualisationTreeDetails().addAttribute(l_oVisualisationTreeAttributeIdentifier, l_sAttributeValue);
 	}
+#endif
 
 	// Copies message links
 	// TODO_JL copy message links here
@@ -409,12 +411,14 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 			CString l_sSettingName;
 			CString l_sDefaultValue;
 			CString l_sValue;
+			bool l_bModifiable;
 			rScenario.getSettingType(l_ui32SettingIndex, l_oSettingTypeIdentifier);
 			rScenario.getSettingName(l_ui32SettingIndex, l_sSettingName);
 			rScenario.getSettingDefaultValue(l_ui32SettingIndex, l_sDefaultValue);
 			rScenario.getSettingValue(l_ui32SettingIndex, l_sValue);
+			rScenario.getSettingMod(l_ui32SettingIndex, l_bModifiable);
 
-			this->addSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sDefaultValue);
+			this->addSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sDefaultValue, -1, l_bModifiable);
 			this->setSettingValue(l_ui32PreviousSettingCount + l_ui32SettingIndex, l_sValue);
 
 		}
@@ -1531,10 +1535,12 @@ boolean CScenario::acceptVisitor(
 		}
 	}
 
+#if defined TARGET_HAS_ThirdPartyGTK
 	if(!getKernelContext().getVisualisationManager().getVisualisationTree(m_oVisualisationTreeIdentifier).acceptVisitor(rObjectVisitor))
 	{
 		return false;
 	}
+#endif
 
 	if(!rObjectVisitor.processEnd(l_oObjectVisitorContext, *this))
 	{

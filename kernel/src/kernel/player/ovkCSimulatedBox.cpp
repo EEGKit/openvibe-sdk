@@ -14,8 +14,11 @@
 #include "ovkCOgreScene.h"
 #include "../ovkGtkOVCustom.h"
 
+#include <openvibe/ovITimeArithmetics.h>
+
 #include <cstdlib>
 #include <algorithm>
+#if defined TARGET_HAS_ThirdPartyGTK
 #if defined TARGET_OS_Windows
 #  include <gdk/gdkwin32.h>
 #elif defined TARGET_OS_Linux
@@ -25,6 +28,7 @@
 #  include <gdk/gdkx.h>
 #  undef Cursor
 #else
+#endif
 #endif
 
 using namespace std;
@@ -897,8 +901,9 @@ boolean CSimulatedBox::initialize(void)
 			{
 				if(!m_pBoxAlgorithm->initialize(l_oBoxAlgorithmContext))
 				{
-					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because initialization phase returned bad status\n";
+					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because initialize() function returned error\n";
 					m_bSuspended=true;
+					return false;
 				}
 			}
 			catch (...)
@@ -931,7 +936,7 @@ boolean CSimulatedBox::uninitialize(void)
 				{
 					if(!m_pBoxAlgorithm->uninitialize(l_oBoxAlgorithmContext))
 					{
-						getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because uninitialization phase returned bad status\n";
+						getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because uninitialize() function returned error\n";
 						m_bSuspended=true;
 					}
 				}
@@ -976,7 +981,11 @@ boolean CSimulatedBox::processClock(void)
 				{
 					if(l_ui64NewClockFrequency > m_rScheduler.getFrequency()<<32)
 					{
-						this->getLogManager() << LogLevel_ImportantWarning << "Box " << m_pBox->getName() << " requested higher clock frequency (" << l_ui64NewClockFrequency << ") than what the scheduler can handle (" << (m_rScheduler.getFrequency()<<32) << ")\n";
+						this->getLogManager() << LogLevel_ImportantWarning << "Box " << m_pBox->getName() 
+							<< " requested higher clock frequency (" << l_ui64NewClockFrequency << " == " 
+							<< ITimeArithmetics::timeToSeconds(l_ui64NewClockFrequency) << "hz) "
+							<< "than what the scheduler can handle (" << (m_rScheduler.getFrequency()<<32) << " == "
+							<< ITimeArithmetics::timeToSeconds(m_rScheduler.getFrequency()<<32) << "hz)\n";
 					}
 
 					// note: 1LL should be left shifted 64 bits but this
@@ -1016,7 +1025,12 @@ boolean CSimulatedBox::processClock(void)
 
 				CMessageClock l_oClockMessage(this->getKernelContext());
 				l_oClockMessage.setTime(m_ui64LastClockActivationDate);
-				m_pBoxAlgorithm->processClock(l_oBoxAlgorithmContext, l_oClockMessage);
+				if(!m_pBoxAlgorithm->processClock(l_oBoxAlgorithmContext, l_oClockMessage))
+				{
+					// In future, we may want to behave in a similar manner as in process(). Change not introduced for 0.18 due to insufficient testing.
+					// getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because processClock() function returned error\n";
+					// m_bSuspended=true;
+				}
 				m_oBenchmarkChronoProcessClock.stepOut();
 			}
 			catch (...)
@@ -1050,7 +1064,12 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 			try
 			{
 				m_oBenchmarkChronoProcessInput.stepIn();
-				m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex);
+				if(!m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex))
+				{
+					// In future, we may want to behave in a similar manner as in process(). Change not introduced for 0.18 due to insufficient testing.
+					// getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because processInput() function returned error\n";
+					// m_bSuspended=true;
+				}
 				m_oBenchmarkChronoProcessInput.stepOut();
 			}
 			catch (...)
@@ -1086,7 +1105,7 @@ boolean CSimulatedBox::process(void)
 				m_oBenchmarkChronoProcess.stepIn();
 				if(!m_pBoxAlgorithm->process(l_oBoxAlgorithmContext))
 				{
-					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because process phase returned bad status\n";
+					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because process() function returned error\n";
 					m_bSuspended=true;
 				}
 				m_oBenchmarkChronoProcess.stepOut();

@@ -10,7 +10,6 @@
 
 #include <stack>
 #include <map>
-#include <string>
 
 #include <cstdio>
 #include <cstdlib>
@@ -42,6 +41,7 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_GenericStreamReader);
 
+
 		protected:
 
 			OpenViBE::CString m_sFilename;
@@ -56,6 +56,7 @@ namespace OpenViBEPlugins
 			OpenViBE::uint32 m_ui32OutputIndex;
 			OpenViBE::boolean m_bPending;
 			OpenViBE::boolean m_bUseCompression;
+			OpenViBE::boolean m_bHasEBMLHeader;
 
 			::FILE* m_pFile;
 			std::stack < EBML::CIdentifier > m_vNodes;
@@ -63,6 +64,7 @@ namespace OpenViBEPlugins
 			std::map < OpenViBE::uint32, OpenViBE::CIdentifier > m_vStreamIndexToTypeIdentifier;
 
 		private:
+			OpenViBE::boolean initializeFile();
 
 			virtual EBML::boolean isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
@@ -74,20 +76,34 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual OpenViBE::boolean onDefaultInitialized(OpenViBE::Kernel::IBox& rBox)
+			OpenViBE::boolean check(OpenViBE::Kernel::IBox& rBox)
 			{
-				rBox.setOutputName(0, "Output Signal");
-				rBox.setOutputType(0, OV_TypeId_Signal);
-				rBox.addOutput("Output Stimulations", OV_TypeId_Stimulations);
+				char l_sName[1024];
+				OpenViBE::uint32 i;
+				for(i=0; i<rBox.getOutputCount(); i++)
+				{
+					sprintf(l_sName, "Output stream %u", i+1);
+					rBox.setOutputName(i, l_sName);
+				}
 				return true;
 			}
 
 			virtual OpenViBE::boolean onOutputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
-				char l_sName[1024];
-				::sprintf(l_sName, "Output Stream %u", ui32Index+1);
-				rBox.setOutputName(ui32Index, l_sName);
 				rBox.setOutputType(ui32Index, OV_TypeId_EBMLStream);
+				this->check(rBox);
+				return true;
+			}
+
+			virtual OpenViBE::boolean onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			{
+				this->check(rBox);
+				return true;
+			}
+
+			virtual OpenViBE::boolean onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			{
+				this->check(rBox);
 				return true;
 			}
 
@@ -104,7 +120,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
 			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA"); }
 			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Reads OpenViBE streams saved in the .ov format"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("This box allows to read and streams the signal that is stored under the OpenViBE .ov file format."); }
+			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Generic Stream Writer box can be used to store data in the format read by this box"); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("File reading and writing/OpenViBE"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
 			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-open"); }

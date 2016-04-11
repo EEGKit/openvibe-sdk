@@ -1,5 +1,5 @@
-#ifndef __OpenViBE_Kernel_TimeArithmetics_H__
-#define __OpenViBE_Kernel_TimeArithmetics_H__
+#ifndef __OpenViBE_Kernel_ITimeArithmetics_H__
+#define __OpenViBE_Kernel_ITimeArithmetics_H__
 
 #include "ov_types.h"
 
@@ -28,8 +28,8 @@ namespace OpenViBE
 		static uint64 sampleCountToTime(const uint64 ui64SamplingRate, const uint64 ui64SampleCount)
 		{
 			// Note that if samplingRate is 0, this will crash. Its preferable to silent fail, the caller should check the argument.
-
-			return (ui64SamplingRate!=0)?((ui64SampleCount<<32)/ui64SamplingRate):0;
+			// FIXME: assert or something
+			return (ui64SampleCount<<32)/ui64SamplingRate;
 		}
 
 		/**

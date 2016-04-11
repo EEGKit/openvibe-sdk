@@ -5,8 +5,8 @@
 #include <fs/IEntryEnumerator.h>
 #include <fs/Files.h>
 
-#include <system/Time.h>
-#include <system/Math.h>
+#include <system/ovCTime.h>
+#include <system/ovCMath.h>
 
 #include <stack>
 #include <string>
@@ -176,7 +176,7 @@ namespace OpenViBE
 	};
 };
 
-#define boolean OpenViBE::boolean
+//#define boolean OpenViBE::boolean
 
 CConfigurationManager::CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager)
 	:TKernelObject<IConfigurationManager>(rKernelContext)
@@ -191,7 +191,7 @@ void CConfigurationManager::clear(void)
 	m_vConfigurationToken.clear();
 }
 
-boolean CConfigurationManager::addConfigurationFromFile(
+OpenViBE::boolean CConfigurationManager::addConfigurationFromFile(
 	const CString& rFileNameWildCard)
 {
 	this->getLogManager() << LogLevel_Trace << "Adding configuration file(s) [" << rFileNameWildCard << "]\n";
@@ -224,7 +224,7 @@ CIdentifier CConfigurationManager::createConfigurationToken(
 	return l_oIdentifier;
 }
 
-boolean CConfigurationManager::releaseConfigurationToken(
+OpenViBE::boolean CConfigurationManager::releaseConfigurationToken(
 	const CIdentifier& rConfigurationTokenIdentifier)
 {
 	std::map < CIdentifier, SConfigurationToken >::iterator itConfigurationToken=m_vConfigurationToken.find(rConfigurationTokenIdentifier);
@@ -285,7 +285,7 @@ CString CConfigurationManager::getConfigurationTokenValue(
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-boolean CConfigurationManager::setConfigurationTokenName(
+OpenViBE::boolean CConfigurationManager::setConfigurationTokenName(
 	const CIdentifier& rConfigurationTokenIdentifier,
 	const CString& rConfigurationTokenName)
 {
@@ -306,7 +306,7 @@ boolean CConfigurationManager::setConfigurationTokenName(
 	return true;
 }
 
-boolean CConfigurationManager::setConfigurationTokenValue(
+OpenViBE::boolean CConfigurationManager::setConfigurationTokenValue(
 	const CIdentifier& rConfigurationTokenIdentifier,
 	const CString& rConfigurationTokenValue)
 {
@@ -321,11 +321,26 @@ boolean CConfigurationManager::setConfigurationTokenValue(
 	return true;
 }
 
+OpenViBE::boolean CConfigurationManager::addOrReplaceConfigurationToken(
+	const CString& rConfigurationTokenName,
+	const CString& rConfigurationTokenValue)
+{
+	const CIdentifier l_oOldIdentifier = this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false);
+	if(l_oOldIdentifier == OV_UndefinedIdentifier)
+	{
+		return OV_UndefinedIdentifier != this->createConfigurationToken(rConfigurationTokenName,rConfigurationTokenValue);
+	}
+	else
+	{
+		return this->setConfigurationTokenValue(l_oOldIdentifier, rConfigurationTokenValue);
+	}
+}
+
 // ----------------------------------------------------------------------------------------------------------------------------
 
 CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(
 	const CString& rConfigurationTokenName,
-	const boolean bRecursive) const
+	const OpenViBE::boolean bRecursive) const
 {
 	std::map < CIdentifier, SConfigurationToken >::const_iterator itConfigurationToken=m_vConfigurationToken.begin();
 	while(itConfigurationToken!=m_vConfigurationToken.end())
@@ -364,7 +379,7 @@ CString CConfigurationManager::lookUpConfigurationTokenValue(
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-boolean CConfigurationManager::registerKeywordParser(const OpenViBE::CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback)
+OpenViBE::boolean CConfigurationManager::registerKeywordParser(const OpenViBE::CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback)
 {
 	// This should really be an assert
 	if (rKeyword == CString("") || rKeyword == CString("core") || rKeyword == CString("environment"))
@@ -378,7 +393,7 @@ boolean CConfigurationManager::registerKeywordParser(const OpenViBE::CString& rK
 	return true;
 }
 
-boolean CConfigurationManager::unregisterKeywordParser(const OpenViBE::CString& rKeyword)
+OpenViBE::boolean CConfigurationManager::unregisterKeywordParser(const OpenViBE::CString& rKeyword)
 {
 	if (m_vKeywordOverride.count(rKeyword))
 	{
@@ -392,7 +407,7 @@ boolean CConfigurationManager::unregisterKeywordParser(const OpenViBE::CString& 
 	return true;
 }
 
-boolean CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordExpandCallback& rCallback)
+OpenViBE::boolean CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordExpandCallback& rCallback)
 {
 	std::map < OpenViBE::CString, const OpenViBE::Kernel::IConfigurationKeywordExpandCallback*>::iterator l_itOverrideIterator = m_vKeywordOverride.begin();
 
@@ -453,7 +468,7 @@ namespace
 	};
 };
 
-boolean CConfigurationManager::internalExpand(const std::string& sValue, std::string& sResult) const
+OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValue, std::string& sResult) const
 {
 	std::stack < std::pair < ENodeType, std::string > > l_vChildren;
 	l_vChildren.push(std::make_pair(NodeType_Value, std::string()));
@@ -617,7 +632,7 @@ boolean CConfigurationManager::internalExpand(const std::string& sValue, std::st
 	return true;
 }
 
-boolean CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult) const
+OpenViBE::boolean CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult) const
 {
 	std::stack < std::pair < ENodeType, std::string > > l_vChildren;
 	l_vChildren.push(std::make_pair(NodeType_Value, std::string()));
@@ -784,7 +799,7 @@ boolean CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKey
 	return true;
 }
 
-boolean CConfigurationManager::internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const
+OpenViBE::boolean CConfigurationManager::internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const
 {
 	CIdentifier l_oTokenIdentifier=this->lookUpConfigurationTokenIdentifier(sTokenName.c_str(), false);
 	if(l_oTokenIdentifier == OV_UndefinedIdentifier)
@@ -861,9 +876,9 @@ uint64 CConfigurationManager::expandAsUInteger(
 	return ui64FallbackValue;
 }
 
-boolean CConfigurationManager::expandAsBoolean(
+OpenViBE::boolean CConfigurationManager::expandAsBoolean(
 	const CString& rExpression,
-	const boolean bFallbackValue) const
+	const OpenViBE::boolean bFallbackValue) const
 {
 	std::string l_sResult=this->expand(rExpression).toASCIIString();
 	std::transform(l_sResult.begin(), l_sResult.end(), l_sResult.begin(), ::to_lower<std::string::value_type>);

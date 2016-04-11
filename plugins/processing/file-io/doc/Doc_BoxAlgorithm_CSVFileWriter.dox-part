@@ -6,11 +6,11 @@ Detailed description
 __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Description|
-This box allows to output some of the BRAND_NAME streams in a text file that is
+This box allows to output some of the OpenViBE streams in a text file that is
 easy to read by the machine and easy to read by the human. CSV files are text files
 with different values separated by a special character such as a colon, a semicolon
 or a tabulation. This basic syntax makes them very easy to read for both machine and
-human. The purpose of this box is to quickly export some data to other softwares.
+human. The purpose of this box is to quicly export some data to other softwares.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Description|
 __________________________________________________________________
 
@@ -21,9 +21,10 @@ __________________________________________________________________
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Inputs|
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Input1|
-This input is used what data to dump in the considered file. The type of
+This is input is used to know what data to dump in the considered file. The type of
 this input can be modified by the user and the format of the output will be adapted
-depending on this type. Supported inputs are : Signal, Spectrum and Stimulations.
+depending on this type. Supported inputs are : Signal, Spectrum, Streamed Matrix,
+Feature Vector, and Stimulations.
 Format specific to each of these stream types is detailed in section
 \ref Doc_BoxAlgorithm_CSVFileWriter_Miscellaneous.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Input1|
@@ -45,9 +46,7 @@ fields. Typical examples are colon, semi colon and tabulations.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Setting2|
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Setting3|
-Due to the fact that text files can grow very quickly, it is possible to compress the
-file using gzip format. If you want to use compression, just tick this setting.
-<b>Note: this is not implemented at the moment</b>.
+This allows you to set std::precision, i.e. how many digits are used to represent each input value in the output.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Setting3|
 __________________________________________________________________
 
@@ -55,10 +54,6 @@ Examples description
 __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Examples|
- Most of the time, to store data, it is preferable to use other formats that allow
- to store more information and are more compressed. However the CSV format is useful 
- while testing a processing pipeline, as the content of the file is readable by a 
- human.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Examples|
 __________________________________________________________________
 
@@ -73,9 +68,30 @@ For the Signal stream, you will have something like this :
 \verbatim
 Time (s), Channel 1, Channel 2, ..., Channel n, Sampling Rate
 Time of measure 1, Measure 1 of channel 1, Measure 1 of channel 2, ..., Measure 1 of channel n, Value of the sampling rate
-Time of measure 2, Measure 2 of channel 1, Measure 2 of channel 2, ..., Measure 2 of channel n
+Time of measure 2, Measure 2 of channel 1, Measure 2 of channel 2, ..., Measure 2 of channel n,
 ...
-Time of measure t, Measure t of channel 1, Measure t of channel 2, ..., Measure t of channel n
+Time of measure t, Measure t of channel 1, Measure t of channel 2, ..., Measure t of channel n,
+\endverbatim
+
+For the Streamed Matrix stream, you will have something like this :
+\verbatim
+Time (s), Column 1, Column 2, ..., Column n
+Time of matrix 1, slot [1,1] of 1, slot[1,2] of 1, ..., slot[1,n] of 1
+Time of matrix 1, slot [2,1] of 1, slot[2,2] of 1, ..., slot[2,n] of 1
+...
+Time of matrix 1, slot [m,1] of 1, slot[m,2] of 1, ..., slot[m,n] of 1
+...
+Time of matrix 2, slot [1,1] of 2, slot[1,2] of 2, ..., slot[1,n] of 2
+...
+\endverbatim
+
+For the Feature Vector stream, you will have something like this :
+\verbatim
+Time (s), Feature 1, Feature 2, ..., Feature n
+Time of vector 1, feature 1, feature 2, ..., feature n
+Time of vector 2, feature 1, feature 2, ..., feature n
+...
+Time of vector k, feature 1, feature 2, ..., feature n
 \endverbatim
 
 For the Spectrum stream, you will have something like this :

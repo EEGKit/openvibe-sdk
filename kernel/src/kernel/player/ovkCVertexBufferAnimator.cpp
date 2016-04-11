@@ -1,4 +1,5 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 
 #include "ovkMaterialAction.h"
 #include "ovkCVertexBufferAnimator.h"
@@ -54,4 +55,4 @@ void CVertexBufferAnimator::setVertexColorArray(Ogre::uint32 ui32VertexColorCoun
 	m_pNodeMaterial->doAction(MaterialVertexBuffer(m_rKernelContext, ui32VertexColorCount, pVertexColorArray));
 }
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif

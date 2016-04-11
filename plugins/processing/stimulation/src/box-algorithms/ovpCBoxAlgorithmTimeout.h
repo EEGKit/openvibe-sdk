@@ -41,13 +41,21 @@ namespace OpenViBEPlugins
 				OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmTimeout > m_oStimulationEncoder;
 
 			private:
-				OpenViBE::boolean m_bTimeoutReached;
-				OpenViBE::boolean m_bIsHeaderSent;
-				OpenViBE::boolean m_bIsFinished;
+				enum ETimeoutState
+				{
+					ETimeout_No,
+					ETimeout_Occurred,
+					ETimeout_Sent
+				};
+
+				ETimeoutState m_oTimeoutState;		
+				bool m_bIsHeaderSent;
+
 				OpenViBE::uint64 m_ui64Timeout;
 				OpenViBE::uint64 m_ui64LastTimePolled;
+				OpenViBE::uint64 m_ui64PreviousTime;
 				OpenViBE::uint64 m_ui64StimulationToSend;
-				OpenViBE::uint64 m_ui64LastEndTime;
+
 		};
 
 		/**
@@ -69,7 +77,7 @@ namespace OpenViBEPlugins
 				virtual OpenViBE::CString getShortDescription(void) const      { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal"); }
 				virtual OpenViBE::CString getDetailedDescription(void) const   { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection."); }
 				virtual OpenViBE::CString getCategory(void) const              { return OpenViBE::CString("Stimulation"); }
-				virtual OpenViBE::CString getVersion(void) const               { return OpenViBE::CString("1.0"); }
+				virtual OpenViBE::CString getVersion(void) const               { return OpenViBE::CString("1.1"); }
 				virtual OpenViBE::CString getAddedSoftwareVersion(void) const  { return OpenViBE::CString("1.0.0.0"); }
 				virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const{ return OpenViBE::CString("2.4.0.0"); }
 				virtual OpenViBE::CString getStockItemName(void) const         { return OpenViBE::CString("gtk-disconnect"); }

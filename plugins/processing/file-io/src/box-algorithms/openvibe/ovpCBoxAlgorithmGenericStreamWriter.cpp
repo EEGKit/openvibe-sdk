@@ -1,4 +1,5 @@
 #include "ovpCBoxAlgorithmGenericStreamWriter.h"
+
 #include <fs/Files.h>
 
 using namespace OpenViBE;
@@ -10,6 +11,7 @@ using namespace OpenViBEPlugins::FileIO;
 
 CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter(void)
 	:m_bUseCompression(true)
+	,m_bIsHeaderGenerate(false)
 	,m_oWriter(*this)
 {
 }
@@ -29,12 +31,43 @@ boolean CBoxAlgorithmGenericStreamWriter::initialize(void)
 
 	if(m_bUseCompression)
 	{
-		this->getLogManager() << LogLevel_Trace << "Compression flag not used yet, the file will be flagged uncompressed and stored as is\n";
+		this->getLogManager() << LogLevel_Info << "Compression flag not used yet, the file will be flagged uncompressed and stored as is\n";
 	}
+
+	return true;
+}
+
+boolean CBoxAlgorithmGenericStreamWriter::uninitialize(void)
+{
+	if(m_oFile.is_open())
+	{
+		m_oFile.close();
+	}
+	return true;
+}
+
+boolean CBoxAlgorithmGenericStreamWriter::generateFileHeader()
+{
+	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	m_oSwap.setSize(0, true);
 
 	m_oWriterHelper.connect(&m_oWriter);
+
+	m_oWriterHelper.openChild(EBML_Identifier_Header);
+	 m_oWriterHelper.openChild(EBML_Identifier_DocType);
+	  m_oWriterHelper.setASCIIStringAsChildData("OpenViBE_Stream_File");
+	 m_oWriterHelper.closeChild();
+
+	 m_oWriterHelper.openChild(EBML_Identifier_EBMLVersion);
+	  m_oWriterHelper.setUIntegerAsChildData(1);
+	 m_oWriterHelper.closeChild();
+
+	 m_oWriterHelper.openChild(EBML_Identifier_EBMLIdLength);
+	  m_oWriterHelper.setUIntegerAsChildData(10);
+	 m_oWriterHelper.closeChild();
+	m_oWriterHelper.closeChild();
+
 	m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header);
 	 m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header_Compression);
 	  m_oWriterHelper.setUIntegerAsChildData(0 /* m_bUseCompression?1:0 */);
@@ -44,7 +77,7 @@ boolean CBoxAlgorithmGenericStreamWriter::initialize(void)
 		CIdentifier l_oIdentifier;
 		l_rStaticBoxContext.getInputType(i, l_oIdentifier);
 
-		m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header_ChannelType);
+		m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header_StreamType);
 		 m_oWriterHelper.setUIntegerAsChildData(l_oIdentifier.toUInteger());
 		m_oWriterHelper.closeChild();
 	}
@@ -54,17 +87,12 @@ boolean CBoxAlgorithmGenericStreamWriter::initialize(void)
 	FS::Files::openOFStream(m_oFile, m_sFilename.toASCIIString(), std::ios::binary | std::ios::trunc);
 	if(!m_oFile.good())
 	{
-		this->getLogManager() << LogLevel_Error << "Could not open file [" << m_sFilename << "]\n";
+		this->getLogManager() << LogLevel_Error << "Could not open file [" << m_sFilename << "] for writing\n";
 		return false;
 	}
 	m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), (std::streamsize)m_oSwap.getSize());
 
-	return true;
-}
-
-boolean CBoxAlgorithmGenericStreamWriter::uninitialize(void)
-{
-	m_oFile.close();
+	m_bIsHeaderGenerate = true;
 	return true;
 }
 
@@ -79,6 +107,14 @@ boolean CBoxAlgorithmGenericStreamWriter::process(void)
 	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
+	if(!m_bIsHeaderGenerate)
+	{
+		if(!generateFileHeader())
+		{
+			return false;
+		}
+	}
+
 	m_oSwap.setSize(0, true);
 
 	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
@@ -87,7 +123,7 @@ boolean CBoxAlgorithmGenericStreamWriter::process(void)
 		{
 			m_oWriterHelper.connect(&m_oWriter);
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer);
-			 m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_ChannelIndex);
+			 m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_StreamIndex);
 			  m_oWriterHelper.setUIntegerAsChildData(i);
 			 m_oWriterHelper.closeChild();
 			 m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_StartTime);

@@ -134,9 +134,9 @@ public:
 	XML::IWriter& m_rWriter;
 	IVisualisationTree* m_pVisualisationTree;
 
-#undef boolean
+//#undef boolean
 	_IsDerivedFromClass_Final_(IObjectVisitor, OV_UndefinedIdentifier);
-#define boolean OpenViBE::boolean
+//#define boolean OpenViBE::boolean
 };
 
 //___________________________________________________________________//

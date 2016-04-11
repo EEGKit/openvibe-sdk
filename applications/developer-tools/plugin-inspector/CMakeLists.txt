@@ -8,6 +8,7 @@ SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_
 FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.inl)
 # Pull the designer's metabox loader into the Plugin Inspector source code
 INCLUDE("FindSourceCommonMetaboxLoader")
+
 ADD_EXECUTABLE(${PROJECT_NAME} ${source_files})
 
 INCLUDE("FindOpenViBE")
@@ -29,8 +30,7 @@ SET_BUILD_PLATFORM()
 # ----------------------
 # Generate launch script
 # ----------------------
-OV_INSTALL_LAUNCH_SCRIPT(SCRIPT_PREFIX "neurort-plugin-inspector" EXECUTABLE_NAME "${PROJECT_NAME}" PAUSE)
-
+OV_INSTALL_LAUNCH_SCRIPT(SCRIPT_PREFIX "openvibe-plugin-inspector" EXECUTABLE_NAME "${PROJECT_NAME}" PAUSE)
 
 # -----------------------------
 # Install files

@@ -36,8 +36,8 @@ boolean CBoxAlgorithmMatrixValidityChecker::initialize(void)
 	m_vStreamEncoder.resize(l_rStaticBoxContext.getInputCount());
 	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
 	{
-		m_vStreamDecoder[i].initialize(*this);
-		m_vStreamEncoder[i].initialize(*this);
+		m_vStreamDecoder[i].initialize(*this, i);
+		m_vStreamEncoder[i].initialize(*this, i);
 		m_vStreamEncoder[i].getInputMatrix().setReferenceTarget(m_vStreamDecoder[i].getOutputMatrix());
 	}
 	
@@ -85,7 +85,7 @@ boolean CBoxAlgorithmMatrixValidityChecker::process(void)
 
 			if(m_vStreamDecoder[i].isHeaderReceived())
 			{
-				if(l_rStaticBoxContext.getSettingCount()>1) m_vStreamEncoder[i].encodeHeader(i);
+				if(l_rStaticBoxContext.getSettingCount()>1) m_vStreamEncoder[i].encodeHeader();
 
 				if( m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger() )
 				{
@@ -162,11 +162,11 @@ boolean CBoxAlgorithmMatrixValidityChecker::process(void)
 					this->getLogManager() << LogLevel_Warning << "Unknown action type [" << m_ui64ValidityCheckerType << "].\n";
 				}
 
-				if(l_rStaticBoxContext.getSettingCount()>1) m_vStreamEncoder[i].encodeBuffer(i);
+				if(l_rStaticBoxContext.getSettingCount()>1) m_vStreamEncoder[i].encodeBuffer();
 			}
 			if(m_vStreamDecoder[i].isEndReceived())
 			{
-				if(l_rStaticBoxContext.getSettingCount()>1) m_vStreamEncoder[i].encodeEnd(i);
+				if(l_rStaticBoxContext.getSettingCount()>1) m_vStreamEncoder[i].encodeEnd();
 			}
 			if(l_rStaticBoxContext.getSettingCount()>1) l_rDynamicBoxContext.markOutputAsReadyToSend(i, l_rDynamicBoxContext.getInputChunkStartTime(i, j), l_rDynamicBoxContext.getInputChunkEndTime(i, j));
 		}

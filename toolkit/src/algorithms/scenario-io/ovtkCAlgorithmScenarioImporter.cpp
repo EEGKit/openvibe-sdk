@@ -72,11 +72,18 @@ namespace OpenViBEToolkit
 
 		typedef struct _SSetting
 		{
-			_default_and_copy_constructor_4_(_SSetting, m_oTypeIdentifier, m_sName, m_sDefaultValue, m_sValue);
+			//_default_and_copy_constructor_4_(_SSetting, m_oTypeIdentifier, m_sName, m_sDefaultValue, m_sValue);
+			_SSetting(void) :m_bModifiability(false) { }
+			_SSetting(const _SSetting& r) : m_oTypeIdentifier(r.m_oTypeIdentifier),
+				m_sName(r.m_sName),
+				m_sDefaultValue(r.m_sDefaultValue),
+				m_sValue(r.m_sValue),
+				m_bModifiability(r.m_bModifiability) { }
 			CIdentifier m_oTypeIdentifier;
 			CString m_sName;
 			CString m_sDefaultValue;
 			CString m_sValue;
+			boolean m_bModifiability;
 		} SSetting;
 		typedef struct _SAttribute
 		{
@@ -282,13 +289,24 @@ boolean CAlgorithmScenarioImporter::process(void)
 			}
 			for(s=b->m_vSetting.begin(); s!=b->m_vSetting.end(); s++)
 			{
+				const CIdentifier& l_oType = s->m_oTypeIdentifier;
+				if(l_oType!=OV_TypeId_Boolean && l_oType!=OV_TypeId_Integer && l_oType!=OV_TypeId_Float && l_oType!=OV_TypeId_String
+						&& l_oType!=OV_TypeId_Filename && l_oType!=OV_TypeId_Script && l_oType!=OV_TypeId_Color && l_oType!=OV_TypeId_ColorGradient
+						&& !(this->getTypeManager().isEnumeration(l_oType)) && (!this->getTypeManager().isBitMask(l_oType)))
+				{
+					this->getLogManager() << LogLevel_Warning << "The type of the setting " << s->m_sName <<" (" << l_oType.toString()
+										  << ") from box " << b->m_sName << " cannot be recognized.\n";
+				}
 				l_pBox->addSetting(
 					s->m_sName,
 					s->m_oTypeIdentifier,
-					s->m_sDefaultValue);
+					s->m_sDefaultValue,
+					-1,
+					s->m_bModifiability);
 				l_pBox->setSettingValue(
 					l_pBox->getSettingCount()-1,
 					s->m_sValue);
+
 			}
 			for(a=b->m_vAttribute.begin(); a!=b->m_vAttribute.end(); a++)
 			{
@@ -390,6 +408,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 		l_ui32ScenarioOutputIndex++;
 	}
 
+#if defined TARGET_HAS_ThirdPartyGTK
 	for(v=l_rSymbolicScenario.m_vVisualisationWidget.begin(); v!=l_rSymbolicScenario.m_vVisualisationWidget.end(); v++)
 	{
 		CIdentifier l_oBoxIdentifier = v->m_oBoxIdentifier;
@@ -428,6 +447,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 		}
 		l_vVisualisationWidgetIdMapping[v->m_oIdentifier]=l_oNewVisualisationWidgetIdentifier;
 	}
+#endif
 	for(a=l_rSymbolicScenario.m_vAttribute.begin(); a!=l_rSymbolicScenario.m_vAttribute.end(); a++)
 	{
 		l_pScenario->addAttribute(
@@ -458,6 +478,8 @@ boolean CAlgorithmScenarioImporterContext::processStart(const CIdentifier& rIden
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input)                           { m_oSymbolicScenario.m_vScenarioInput.push_back(SScenarioInput()); }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Outputs)                         { }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output)                          { m_oSymbolicScenario.m_vScenarioOutput.push_back(SScenarioOutput()); }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Creator)                                  { }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_CreatorVersion)                           { }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationTree)                        { }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget)                      { m_oSymbolicScenario.m_vVisualisationWidget.push_back(SVisualisationWidget()); }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attributes)           {  }
@@ -553,6 +575,7 @@ boolean CAlgorithmScenarioImporterContext::processString(const CIdentifier& rIde
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Name)                         { m_oSymbolicScenario.m_vBox.back().m_vSetting.back().m_sName=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_DefaultValue)                 { m_oSymbolicScenario.m_vBox.back().m_vSetting.back().m_sDefaultValue=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Value)                        { m_oSymbolicScenario.m_vBox.back().m_vSetting.back().m_sValue=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Modifiability)				  { m_oSymbolicScenario.m_vBox.back().m_vSetting.back().m_bModifiability=(rValue==CString("true"))?true:false; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Text)                             { m_oSymbolicScenario.m_vComment.back().m_sText=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Value)                  { m_oSymbolicScenario.m_vComment.back().m_vAttribute.back().m_sValue=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Value)                     { m_oSymbolicScenario.m_vLink.back().m_vAttribute.back().m_sValue=rValue; }

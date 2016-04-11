@@ -1,4 +1,7 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 
 #include "ovkMaterialAction.h"
 
@@ -318,4 +321,4 @@ void MaterialSetShader::subEntityAction( SubEntityMaterial* subEntity ) const
 
 //===========================================================================
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif

@@ -1,4 +1,5 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 
 #include "OgreRoot.h"
 #include "ovkCOgreFrameListener.h"
@@ -80,4 +81,4 @@ void COgreFrameListener::updateStats(void)
 	catch(...) { /* ignore */ }
 }
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif

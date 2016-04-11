@@ -1,4 +1,5 @@
-#if defined TARGET_HAS_ThirdPartyOgre3D
+
+#if defined(TARGET_HAS_ThirdPartyOgre3D)
 
 #include "ovkCOgreResourceGroup.h"
 
@@ -183,4 +184,4 @@ bool COgreResourceGroup::destroy()
 	return false;
 }
 
-#endif // TARGET_HAS_ThirdPartyOgre3D
+#endif

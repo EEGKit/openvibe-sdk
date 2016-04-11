@@ -9,15 +9,15 @@ using namespace OpenViBEPlugins::Stimulation;
 
 boolean CBoxAlgorithmTimeout::initialize(void)
 {
-	m_bTimeoutReached = false;
-	m_bIsFinished = false;
-	m_oStimulationEncoder.initialize(*this);
+	m_oTimeoutState = ETimeout_No;
+
+	m_oStimulationEncoder.initialize(*this,0);
 	
 	m_ui64Timeout = static_cast<uint64>(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)) << 32;
 	m_ui64StimulationToSend = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	m_ui64LastTimePolled = 0;
-	m_ui64LastEndTime = 0;
+	m_ui64PreviousTime = 0;
 	m_bIsHeaderSent = false;
 
 	return true;
@@ -35,17 +35,12 @@ boolean CBoxAlgorithmTimeout::uninitialize(void)
 
 boolean CBoxAlgorithmTimeout::processClock(IMessageClock& rMessageClock)
 {
-	if (m_bTimeoutReached)
-	{
-		return true;
-	}
-
 	// if there was nothing received on the input for a period of time we raise the
 	// timeout flag and let the box send a stimulation
-	if (this->getPlayerContext().getCurrentTime() > m_ui64LastTimePolled + m_ui64Timeout)
+	if (m_oTimeoutState == ETimeout_No && getPlayerContext().getCurrentTime() > m_ui64LastTimePolled + m_ui64Timeout)
 	{
 		this->getLogManager() << LogLevel_Trace << "Timeout reached at time " << time64(this->getPlayerContext().getCurrentTime()) << "\n";
-		m_bTimeoutReached = true;
+		m_oTimeoutState = ETimeout_Occurred;
 	}
 
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
@@ -76,7 +71,6 @@ boolean CBoxAlgorithmTimeout::processInput(uint32 ui32InputIndex)
 boolean CBoxAlgorithmTimeout::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
-	uint64 l_ui64CurrentTime = this->getPlayerContext().getCurrentTime();
 
 	// Discard input data
 	for(uint32 i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
@@ -84,33 +78,31 @@ boolean CBoxAlgorithmTimeout::process(void)
 		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
 	}
 
-	// If time out has been sent, just leave
-	if(m_bIsFinished)
-	{
-		return true;
-	}
-
-	// If the timeout was not send but was reached we send the stimulation on the output 0
-	if(m_bTimeoutReached)
-	{
-		IStimulationSet* l_pStimulationSet = m_oStimulationEncoder.getInputStimulationSet();
-		l_pStimulationSet->clear();
-		l_pStimulationSet->appendStimulation(m_ui64StimulationToSend, l_ui64CurrentTime, 0);
-		m_bIsFinished = true;
-	}
-
 	// Encoding the header
 	if(!m_bIsHeaderSent)
 	{
-		m_oStimulationEncoder.encodeHeader(0);
+		m_oStimulationEncoder.encodeHeader();
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);
 		m_bIsHeaderSent = true;
 	}
 
-	// Encoding the stimulation in the buffer
-	m_oStimulationEncoder.encodeBuffer(0);
-	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_ui64LastEndTime, l_ui64CurrentTime);
-	m_ui64LastEndTime = l_ui64CurrentTime;
+	IStimulationSet* l_pStimulationSet = m_oStimulationEncoder.getInputStimulationSet();
+	l_pStimulationSet->clear();
+
+	const uint64 l_ui64StimulationDate = this->getPlayerContext().getCurrentTime();
+
+	// If the timeout is reached we send the stimulation on the output 0
+	if (m_oTimeoutState == ETimeout_Occurred)
+	{
+		l_pStimulationSet->appendStimulation(m_ui64StimulationToSend, l_ui64StimulationDate, 0);
+		m_oTimeoutState = ETimeout_Sent;
+	}
+
+	// we need to send an empty chunk even if there's no stim
+	m_oStimulationEncoder.encodeBuffer();
+	this->getDynamicBoxContext().markOutputAsReadyToSend(0, m_ui64PreviousTime, l_ui64StimulationDate);
+
+	m_ui64PreviousTime = l_ui64StimulationDate;
 
 	return true;
 }

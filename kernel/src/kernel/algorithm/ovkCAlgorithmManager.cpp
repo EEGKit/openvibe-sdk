@@ -2,7 +2,7 @@
 #include "ovkCAlgorithmProxy.h"
 #include "ovkCAlgorithm.h"
 
-#include <system/Math.h>
+#include <system/ovCMath.h>
 
 using namespace OpenViBE;
 using namespace Kernel;
@@ -47,7 +47,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 }
 
 CIdentifier CAlgorithmManager::createAlgorithm(
-	const IAlgorithmDesc& rAlgorithmDesc)
+		const IAlgorithmDesc& rAlgorithmDesc)
 {
 	IAlgorithm* l_pAlgorithm=getKernelContext().getPluginManager().createAlgorithm(rAlgorithmDesc);
 	if(!l_pAlgorithm)
@@ -64,6 +64,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	m_vAlgorithm[l_oAlgorithmIdentifier]=pair < CAlgorithm*, CAlgorithmProxy* >(l_pTrueAlgorithm, l_pAlgorithmProxy);
 	return l_oAlgorithmIdentifier;
 }
+
 
 boolean CAlgorithmManager::releaseAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)

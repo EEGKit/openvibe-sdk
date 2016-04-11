@@ -11,7 +11,6 @@ INCLUDE_DIRECTORIES(include)
 # A headers-only project, the executable is a NOP having some static asserts, not to be installed.
 ADD_EXECUTABLE(${PROJECT_NAME} ${source_files})
 INCLUDE("FindThirdPartyBoost")
-INCLUDE("FindThirdPartyGTK")
 	
 # ---------------------------------
 # Target macros
@@ -20,12 +19,9 @@ INCLUDE("FindThirdPartyGTK")
 # Defines target compiler
 # ---------------------------------
 SET_BUILD_PLATFORM()
+
 # -----------------------------
 # Install files
 # -----------------------------
 
 INSTALL(DIRECTORY include/   DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR} FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h" PATTERN ".svn" EXCLUDE PATTERN "doc" EXCLUDE)
-
-# Configure Gtk ui file:
-CONFIGURE_FILE(share/activation-interface.ui-base "${CMAKE_CURRENT_BINARY_DIR}/activation-interface.ui")
-INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/activation-interface.ui" DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/mensia/neurort-activation)

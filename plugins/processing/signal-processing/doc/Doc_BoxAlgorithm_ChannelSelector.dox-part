@@ -9,6 +9,9 @@ __________________________________________________________________
  * This box allows to restrict outgoing signal data to a subset of incoming data based on a list of channels.
  * Channels may be identified by their index, their name (the case matters), or a mix of both. Additionally,
  * the channels can be rejected instead of being selected.
+ * The name of the box displayed in the designer is the channel list (first setting). It allows the user to see directly if the box configuration is correct.
+ * However, should the user chose to rename the box manually, further change in the configuration won't be reflected in the name, except if the name is set 
+ * back to its default value.
  * |OVP_DocEnd_BoxAlgorithm_ChannelSelector_Description|
 __________________________________________________________________
 
@@ -43,8 +46,9 @@ __________________________________________________________________
  * |OVP_DocEnd_BoxAlgorithm_ChannelSelector_Settings|
 
  * |OVP_DocBegin_BoxAlgorithm_ChannelSelector_Setting1|
- * A semi-colon separates list of channel identifiers. You can use the name of the channel or the index of the channel, starting from 1 for the beginning and from -1 for the end. 
- * Also, ranges can be selected specifying first channel identifier, followed by a colon, followed by the second channel identifier.
+ * A semi colon separated list of channel identifiers. You can use the index of the channel or the name of the
+ * channel. Also, ranges can be selected specifying first channel identifier, followed by a colon, followed by
+ * the second channel identifier.
  * |OVP_DocEnd_BoxAlgorithm_ChannelSelector_Setting1|
 
  * |OVP_DocBegin_BoxAlgorithm_ChannelSelector_Setting2|
