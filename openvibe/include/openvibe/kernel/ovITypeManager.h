@@ -310,6 +310,8 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& rEntryCompositionName) const=0;
 
+			virtual boolean evaluateSettingValue(const OpenViBE::CString sSettingValue, OpenViBE::float64& tResult) const = 0;
+
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_TypeManager);
