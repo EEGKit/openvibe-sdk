@@ -95,6 +95,8 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& rEntryCompositionName) const;
 
+			virtual bool evaluateSettingValue(const CString sSettingValue, float64& tResult) const;
+
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ITypeManager>, OVK_ClassId_Kernel_TypeManager);
 
 		protected:

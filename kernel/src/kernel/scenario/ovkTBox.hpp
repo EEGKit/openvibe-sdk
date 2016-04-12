@@ -914,10 +914,15 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean evaluateSettingValue(const OpenViBE::uint32 ui32SettingIndex, OpenViBE::CString& rValue) const
+			virtual OpenViBE::boolean checkSettingValue(const OpenViBE::uint32 ui32SettingIndex) const
 			{
 				CIdentifier l_oTypeIdentifier;
 				if(!getSettingType(ui32SettingIndex, l_oTypeIdentifier))
+				{
+					return false;
+				}
+				CString l_oSettingValue;
+				if (!getSettingValue(ui32SettingIndex, l_oSettingValue))
 				{
 					return false;
 				}
@@ -925,22 +930,9 @@ namespace OpenViBE
 				if(l_oTypeIdentifier == OV_TypeId_Float || l_oTypeIdentifier == OV_TypeId_Integer)
 				{
 					// parse and expression with no variables or functions
-					double l_dEvaluatedExp = 0;
 					try
 					{
-						l_dEvaluatedExp = Lepton::Parser::parse(std::string(rValue).c_str()).evaluate();
-						if(l_oTypeIdentifier == OV_TypeId_Float)
-						{
-							char l_sTmpValue[64];
-							sprintf(l_sTmpValue, "%.17e", l_dEvaluatedExp);
-							rValue = l_sTmpValue;
-						}
-						else
-						{
-							char l_sTmpValue[64];
-							sprintf(l_sTmpValue, "%d", (int) l_dEvaluatedExp);
-							rValue = l_sTmpValue;
-						}
+						double l_dEvaluatedExp = Lepton::Parser::parse(l_oSettingValue.toASCIIString()).evaluate();
 					}
 					catch(...)
 					{
