@@ -24,7 +24,7 @@ uint64 CBoxAlgorithmGenericStreamReader::getClockFrequency(void)
 
 boolean CBoxAlgorithmGenericStreamReader::initialize(void)
 {
-	getStaticBoxContext().getSettingValue(0, m_sFilename);
+	m_sFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
 	m_bPending=false;
 	m_bUseCompression=false;

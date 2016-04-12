@@ -18,14 +18,10 @@ CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter(void)
 
 boolean CBoxAlgorithmGenericStreamWriter::initialize(void)
 {
-	CString l_sUseCompression;
-
 	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
-	l_rStaticBoxContext.getSettingValue(0, m_sFilename);
-	l_rStaticBoxContext.getSettingValue(1, l_sUseCompression);
-
-	m_bUseCompression=(l_sUseCompression==CString("true"));
+	m_sFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_bUseCompression = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	this->getLogManager() << LogLevel_Trace << "Compression flag set to " << m_bUseCompression << "\n";
 

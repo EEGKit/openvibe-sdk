@@ -161,8 +161,7 @@ boolean CBoxAlgorithmClassifierProcessor::initialize(void)
 	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	//First of all, let's get the XML file for configuration
-	CString l_sConfigurationFilename;
-	l_rStaticBoxContext.getSettingValue(0, l_sConfigurationFilename);
+	CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
 	if(l_sConfigurationFilename == CString("")) 
 	{
@@ -230,8 +229,7 @@ boolean CBoxAlgorithmClassifierProcessor::process(void)
 				{
 					const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
-					CString l_sConfigurationFilename;
-					l_rStaticBoxContext.getSettingValue(0, l_sConfigurationFilename);
+					CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
 					this->getLogManager() << LogLevel_Trace << "Reloading classifier\n";
 					if(!loadClassifier(l_sConfigurationFilename.toASCIIString()))
