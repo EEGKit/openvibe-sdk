@@ -60,6 +60,7 @@ if ($distribution eq 'Ubuntu 14.04') {
   push @packages, "libboost-dev";
   push @packages, "libboost-thread-dev";
   push @packages, "libboost-regex-dev";
+  push @packages, "libboost-chrono-dev";
   push @packages, "libboost-filesystem1.54-dev";
   push @packages, "ninja-build";
   push @packages, "libzzip-dev";
