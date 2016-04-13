@@ -749,7 +749,7 @@ namespace OpenViBE
 			virtual OpenViBE::boolean setSupportTypeFromAlgorithmIdentifier(const CIdentifier &rTypeIdentifier)
 			{
 
-				const Plugins::IPluginObjectDesc* l_pPluginObjectDescriptor=getKernelContext().getPluginManager().getPluginObjectDescCreating(rTypeIdentifier);
+				const Plugins::IPluginObjectDesc* l_pPluginObjectDescriptor=this->getKernelContext().getPluginManager().getPluginObjectDescCreating(rTypeIdentifier);
 				const Plugins::IBoxAlgorithmDesc *l_pBoxAlgorithmDescriptor=dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(l_pPluginObjectDescriptor);
 				if(l_pBoxAlgorithmDescriptor == NULL)
 				{
@@ -821,7 +821,7 @@ namespace OpenViBE
 				}
 				else
 				{
-					std::vector<CSetting>::iterator l_it = m_vSetting.begin();
+					typename std::vector<CSetting>::iterator l_it = m_vSetting.begin();
 					l_it += l_i32Index;
 					m_vSetting.insert(l_it, s);
 					l_i32InsertLocation = i32Index;
@@ -844,7 +844,7 @@ namespace OpenViBE
 			virtual OpenViBE::boolean removeSetting(const OpenViBE::uint32 ui32SettingIndex)
 			{
 				uint32 i=0;
-				std::vector<CSetting>::iterator it=m_vSetting.begin();
+				typename std::vector<CSetting>::iterator it=m_vSetting.begin();
 				for(i=0; i<ui32SettingIndex && it!=m_vSetting.end(); i++)
 				{
 					it++;
