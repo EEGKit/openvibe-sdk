@@ -44,23 +44,6 @@ namespace OpenViBE
 		class TParameterHandler
 		{
 
-		private:
-
-#if defined TARGET_OS_Linux
-
-			/**
-			 * \brief Private copy constructor
-			 *
-			 * The copy constructor is not implemented and made private to avoid
-			 * actual copy between parameter handlers. Developers should either
-			 * use an intermediate handled data type to carry the copy or
-			 * use the setReferenceTarget to have stronger relation between
-			 * the two parameter handlers
-			 */
-			TParameterHandler < T >& operator = (const TParameterHandler < T >& src);
-
-#endif
-
 		public:
 
 			/** \name Construction */
