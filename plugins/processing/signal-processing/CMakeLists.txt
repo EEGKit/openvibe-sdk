@@ -30,11 +30,6 @@ INCLUDE("FindThirdPartyEigen")
 # ---------------------------------
 SET_BUILD_PLATFORM()
 
-
-IF(OV_COMPILE_TESTS)
-    ADD_SUBDIRECTORY("test")
-ENDIF(OV_COMPILE_TESTS)
-
 # -----------------------------
 # Install files
 # -----------------------------
