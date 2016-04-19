@@ -29,14 +29,6 @@ ENDIF(UNIX)
 INCLUDE("FindOpenViBECommon")
 
 # ---------------------------------
-# Test applications
-# ---------------------------------
-OPTION(BUILD_OPENVIBE_MODULE_EBML_EXAMPLES "Build OpenViBE module EBML examples" OFF)
-IF(OV_COMPILE_TESTS)
-        ADD_SUBDIRECTORY(test)
-ENDIF(OV_COMPILE_TESTS)
-
-# ---------------------------------
 # Target macros
 # Defines target operating system
 # Defines target architecture
