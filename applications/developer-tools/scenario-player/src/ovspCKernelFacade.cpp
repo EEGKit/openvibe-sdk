@@ -305,6 +305,9 @@ namespace OpenViBE
 
 			IPlayer* player = &playerManager.getPlayer(playerIdentifier);
 
+			// player identifier is pushed here to ensure a correct cleanup event if player initialization fails
+			playerIdentifiersList.push_back(playerIdentifier);
+
 			// Scenario attachment with setup of local token
 			if (player->setScenario(pair.second) && player->initialize() == PlayerReturnCode_Sucess)
 			{
@@ -318,7 +321,6 @@ namespace OpenViBE
 				}
 
 				playerList.push_back(player);	
-				playerIdentifiersList.push_back(playerIdentifier);
 			}
 			else
 			{
