@@ -166,7 +166,7 @@ namespace OpenViBE
 	*
 	* SetupScenarioCommand contains the following properties:
 	* - ScenarioName: name of the scenario to setup (mandatory)
-	* - TokenList: List of scenario specific token (optional)
+	* - TokenList: List of scenario specific tokens (optional)
 	* .
 	*
 	* The token list overwrites the previous token list if the command was already
