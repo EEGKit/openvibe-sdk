@@ -157,13 +157,16 @@ namespace OpenViBE
 
 	PlayerReturnCode SetupScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
-		// to be implemented
-
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
-		std::cout << "Execution not yet implemented" << std::endl;
 
-		return PlayerReturnCode::Success;
+		if (!this->scenarioName)
+		{
+			std::cerr << "Missing required arguments for command" << std::endl;
+			return PlayerReturnCode::MissingMandatoryArg;
+		}
+
+		return kernelFacade.setupScenario(*this);
 	}
 
 	void SetupScenarioCommand::doPrint(std::ostream& os) const

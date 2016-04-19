@@ -48,7 +48,8 @@ namespace OpenViBE
 		KernelLoadingFailure, /*!< Kernel loading failed*/
 		KernelInvalidDesc, /*!< Invalid kernel descriptor*/
 		KernelInvalidContext, /*!< Invalid kernel context*/
-		KernelInternalFailure /*!< Generic error type for kernel internal error*/
+		KernelInternalFailure, /*!< Generic error type for kernel internal error*/
+		ScenarioNotLoaded /*!< Error triggered when an action is requested on an unknown scenario */
 	};
 
 	/**

@@ -83,6 +83,12 @@ namespace OpenViBE
 		PlayerReturnCode loadScenario(const LoadScenarioCommand& command);
 
 		/**
+		* \brief Configure scenario
+		* \param[in] command command containing all mandatory properties
+		*/
+		PlayerReturnCode setupScenario(const SetupScenarioCommand& command);
+
+		/**
 		* \brief Run one or multiple scenarios
 		* \param[in] command command containing all mandatory properties
 		*/
