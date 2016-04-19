@@ -35,14 +35,34 @@ namespace OpenViBE
 {
 	using namespace OpenViBE::Kernel;
 	using namespace OpenViBE::Plugins;
+	using TokenList = std::vector<std::pair<std::string, std::string>>;
+
+	namespace
+	{
+		void setConfigurationTokenList(IConfigurationManager& configurationManager, const TokenList& tokenList)
+		{
+			for (auto& token : tokenList)
+			{
+				auto tokenName = token.first;
+				auto tokenIdentifier = configurationManager.lookUpConfigurationTokenIdentifier(tokenName.c_str());
+
+				if (tokenIdentifier == OV_UndefinedIdentifier)
+				{
+					configurationManager.createConfigurationToken(tokenName.c_str(), token.second.c_str());
+				}
+				else
+				{
+					configurationManager.setConfigurationTokenValue(tokenIdentifier, token.second.c_str());
+				}
+			}
+		}
+	}
 
 	struct KernelFacade::KernelFacadeImpl
 	{
 		CKernelLoader kernelLoader;
 		IKernelContext* kernelContext{ nullptr };
 		std::map<std::string, CIdentifier> scenarioMap;
-
-		using TokenList = std::vector<std::pair<std::string, std::string>>;
 		std::map<std::string, TokenList> scenarioTokenMap;
 	};
 
@@ -282,7 +302,10 @@ namespace OpenViBE
 
 		// token list is just stored at this step for further use at runtime
 		// current token list overwrites the previous one
-		m_Pimpl->scenarioTokenMap[scenarioName] = command.tokenList.get();
+		if (command.tokenList)
+		{
+			m_Pimpl->scenarioTokenMap[scenarioName] = command.tokenList.get();
+		}
 
 		return PlayerReturnCode::Success;
 	}
@@ -303,6 +326,12 @@ namespace OpenViBE
 		// behavior by releasing all players at the end
 		PlayerReturnCode returnCode = PlayerReturnCode::Success;
 
+		// set up global token
+		if (command.tokenList)
+		{
+			setConfigurationTokenList(m_Pimpl->kernelContext->getConfigurationManager(), command.tokenList.get());
+		}
+		
 		auto& playerManager = m_Pimpl->kernelContext->getPlayerManager();
 
 		// Keep 2 different containers because identifier information is
@@ -334,22 +363,8 @@ namespace OpenViBE
 			// Scenario attachment with setup of local token
 			if (player->setScenario(scenarioPair.second))
 			{
-				// set token
-				auto& runtimeConfigurationManager = player->getRuntimeConfigurationManager();
-				for (auto& token : m_Pimpl->scenarioTokenMap[scenarioName])
-				{
-					auto tokenName = token.first;
-					auto tokenIdentifier = runtimeConfigurationManager.lookUpConfigurationTokenIdentifier(tokenName.c_str());
-
-					if (tokenIdentifier == OV_UndefinedIdentifier)
-					{
-						runtimeConfigurationManager.createConfigurationToken(tokenName.c_str(), token.second.c_str());
-					}
-					else
-					{
-						runtimeConfigurationManager.setConfigurationTokenValue(tokenIdentifier, token.second.c_str());
-					}
-				}
+				// set scenario specific token
+				setConfigurationTokenList(player->getRuntimeConfigurationManager(), m_Pimpl->scenarioTokenMap[scenarioName]);
 			}
 			else
 			{
