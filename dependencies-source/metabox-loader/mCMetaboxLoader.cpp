@@ -3,6 +3,7 @@
 //#define OVTK_Algorithm_ScenarioImporter_OutputParameterId_Scenario    OpenViBE::CIdentifier(0x29574C87, 0x7BA77780)
 //#define OVTK_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer OpenViBE::CIdentifier(0x600463A3, 0x474B7F66)
 
+// This definition should be removed. It has been added to make the build process work after the merge.
 #define OVP_GD_ClassId_Algorithm_BinaryScenarioHeaderImporter OpenViBE::CIdentifier(0x512C1BEF, 0x4541752C)
 
 #include <ovp_global_defines.h>
