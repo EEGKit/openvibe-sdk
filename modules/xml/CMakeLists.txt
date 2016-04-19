@@ -30,14 +30,6 @@ INCLUDE("FindThirdPartyBoost")
 INCLUDE("FindThirdPartyExpat")
 
 # ---------------------------------
-# Test applications
-# ---------------------------------
-OPTION(BUILD_OPENVIBE_MODULE_XML_EXAMPLES "Build OpenViBE module XML examples" OFF)
-IF(BUILD_OPENVIBE_MODULE_XML_EXAMPLES)
-	SUBDIRS(test)
-ENDIF(BUILD_OPENVIBE_MODULE_XML_EXAMPLES)
-
-# ---------------------------------
 # Target macros
 # Defines target operating system
 # Defines target architecture

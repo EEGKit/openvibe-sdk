@@ -50,14 +50,6 @@ IF(WIN32)
 ENDIF(WIN32)
 
 # ---------------------------------
-# Test applications
-# ---------------------------------
-OPTION(BUILD_OPENVIBE_MODULE_Socket_EXAMPLES "Build OpenViBE module Socket examples" OFF)
-IF(BUILD_OPENVIBE_MODULE_Socket_EXAMPLES)
-	SUBDIRS(test)
-ENDIF(BUILD_OPENVIBE_MODULE_Socket_EXAMPLES)
-
-# ---------------------------------
 # Target macros
 # Defines target operating system
 # Defines target architecture
