@@ -43,17 +43,7 @@ namespace OpenViBE
 		{
 			for (auto& token : tokenList)
 			{
-				auto tokenName = token.first;
-				auto tokenIdentifier = configurationManager.lookUpConfigurationTokenIdentifier(tokenName.c_str());
-
-				if (tokenIdentifier == OV_UndefinedIdentifier)
-				{
-					configurationManager.createConfigurationToken(tokenName.c_str(), token.second.c_str());
-				}
-				else
-				{
-					configurationManager.setConfigurationTokenValue(tokenIdentifier, token.second.c_str());
-				}
+				configurationManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str());
 			}
 		}
 	}
@@ -289,6 +279,12 @@ namespace OpenViBE
 		if (!m_Pimpl->kernelContext)
 		{
 			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
+			return PlayerReturnCode::KernelInternalFailure;
+		}
+
+		if (!command.scenarioName)
+		{
+			std::cerr << "ERROR: Missing scenario name for setup" << std::endl;
 			return PlayerReturnCode::KernelInternalFailure;
 		}
 
