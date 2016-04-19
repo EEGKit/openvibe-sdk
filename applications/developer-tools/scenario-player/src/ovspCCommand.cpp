@@ -139,20 +139,6 @@ namespace OpenViBE
 
 		os << "MaximumExecutionTime: " << (this->maximumExecutionTime ? std::to_string(this->maximumExecutionTime.get()) : "not set") << std::endl;
 
-		os << "ResetList:";
-		if (this->resetList)
-		{
-			for (auto& token : this->resetList.get())
-			{
-				os << " " << token;
-			}
-		}
-		else
-		{
-			os << " not set";
-		}
-		os << std::endl;
-
 		os << "TokenList:";
 		if (this->tokenList)
 		{
@@ -185,20 +171,6 @@ namespace OpenViBE
 		os << "command name: SetupScenarioCommand" << std::endl;
 
 		os << "ScenarioName: " << (this->scenarioName ? this->scenarioName.get() : "not set") << std::endl;
-
-		os << "ResetList:";
-		if (this->resetList)
-		{
-			for (auto& token : this->resetList.get())
-			{
-				os << " " << token;
-			}
-		}
-		else
-		{
-			os << " not set";
-		}
-		os << std::endl;
 
 		os << "TokenList:";
 		if (this->tokenList)
