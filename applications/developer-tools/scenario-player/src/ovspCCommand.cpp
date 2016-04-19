@@ -62,7 +62,7 @@ namespace OpenViBE
 		if (!this->scenarioName || !this->scenarioFile)
 		{
 			std::cerr << "Missing required arguments for command" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArg;
+			return PlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		return kernelFacade.loadScenario(*this);
@@ -100,7 +100,7 @@ namespace OpenViBE
 		if (!this->scenarioList)
 		{
 			std::cerr << "Missing required arguments for command: ScenarioList" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArg;
+			return PlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		return kernelFacade.runScenarioList(*this);
@@ -163,7 +163,7 @@ namespace OpenViBE
 		if (!this->scenarioName)
 		{
 			std::cerr << "Missing required arguments for command" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArg;
+			return PlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		return kernelFacade.setupScenario(*this);

@@ -81,7 +81,7 @@ namespace OpenViBE
 		else
 		{
 			std::cerr << "ERROR: mandatory option 'scenario-file' not set" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArg;
+			return PlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		m_CommandList.push_back(scenarioCmd);
