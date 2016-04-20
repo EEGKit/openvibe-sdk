@@ -65,6 +65,7 @@ CScheduler::CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer)
 	,m_ui64StepDuration(0)
 	,m_ui64CurrentTime(0)
 	,m_bIsInitialized(false)
+	,m_bInitializationAborted(false)
 {
 }
 

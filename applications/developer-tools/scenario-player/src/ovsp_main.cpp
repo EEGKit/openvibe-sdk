@@ -102,7 +102,7 @@ int main(int argc, char** argv)
 					else
 					{
 						std::cerr << "ERROR: mandatory option 'command-file' not set" << std::endl;
-						return static_cast<int>(PlayerReturnCode::MissingMandatoryArg);
+						return static_cast<int>(PlayerReturnCode::MissingMandatoryArgument);
 					}
 				}
 				else if (mode == "x")
@@ -150,7 +150,7 @@ int main(int argc, char** argv)
 			else
 			{
 				std::cerr << "ERROR: mandatory option 'mode' not set" << std::endl;
-				return static_cast<int>(PlayerReturnCode::MissingMandatoryArg);
+				return static_cast<int>(PlayerReturnCode::MissingMandatoryArgument);
 			}
 		}
 	}

@@ -40,7 +40,7 @@ namespace OpenViBE
 	{
 		Success = 0, /*!< No error during execution */
 		InvalidArg, /*!< Invalid command-line options */
-		MissingMandatoryArg, /*!< A mandatory argument is missing */
+		MissingMandatoryArgument, /*!< A mandatory argument is missing */
 		BadArg, /*!< An argument is given with a wrong value */
 		OpeningFileFailure, /*!< A file could not be opened */
 		ParsingCommandFailure, /*!< General parsing command error*/
@@ -48,7 +48,8 @@ namespace OpenViBE
 		KernelLoadingFailure, /*!< Kernel loading failed*/
 		KernelInvalidDesc, /*!< Invalid kernel descriptor*/
 		KernelInvalidContext, /*!< Invalid kernel context*/
-		KernelInternalFailure /*!< Generic error type for kernel internal error*/
+		KernelInternalFailure, /*!< Generic error type for kernel internal error*/
+		ScenarioNotLoaded /*!< Error triggered when an action is requested on an unknown scenario */
 	};
 
 	/**

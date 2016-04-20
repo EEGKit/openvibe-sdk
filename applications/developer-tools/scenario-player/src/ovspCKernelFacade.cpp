@@ -35,12 +35,25 @@ namespace OpenViBE
 {
 	using namespace OpenViBE::Kernel;
 	using namespace OpenViBE::Plugins;
+	using TokenList = std::vector<std::pair<std::string, std::string>>;
+
+	namespace
+	{
+		void setConfigurationTokenList(IConfigurationManager& configurationManager, const TokenList& tokenList)
+		{
+			for (auto& token : tokenList)
+			{
+				configurationManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str());
+			}
+		}
+	}
 
 	struct KernelFacade::KernelFacadeImpl
 	{
-		CKernelLoader m_KernelLoader;
-		IKernelContext* m_KernelContext{ nullptr };
-		std::map<std::string, CIdentifier> m_ScenarioMap;
+		CKernelLoader kernelLoader;
+		IKernelContext* kernelContext{ nullptr };
+		std::map<std::string, CIdentifier> scenarioMap;
+		std::map<std::string, TokenList> scenarioTokenMap;
 	};
 
 	KernelFacade::KernelFacade() : m_Pimpl(new KernelFacadeImpl())
@@ -69,7 +82,7 @@ namespace OpenViBE
 
 	PlayerReturnCode KernelFacade::loadKernel(const LoadKernelCommand& command)
 	{
-		if (m_Pimpl->m_KernelContext)
+		if (m_Pimpl->kernelContext)
 		{
 			std::cout << "WARNING: The kernel is already loaded" << std::endl;
 			return PlayerReturnCode::Success;
@@ -85,7 +98,7 @@ namespace OpenViBE
 		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 
-		CKernelLoader& kernelLoader = m_Pimpl->m_KernelLoader;
+		CKernelLoader& kernelLoader = m_Pimpl->kernelLoader;
 		CString error;
 
 		if (!kernelLoader.load(kernelFile, &error))
@@ -126,7 +139,7 @@ namespace OpenViBE
 		}
 
 		// kernelContext->initialize();
-		m_Pimpl->m_KernelContext = kernelContext;
+		m_Pimpl->kernelContext = kernelContext;
 		OpenViBEToolkit::initialize(*kernelContext);
 
 		IConfigurationManager& configurationManager = kernelContext->getConfigurationManager();
@@ -137,27 +150,27 @@ namespace OpenViBE
 
 	PlayerReturnCode KernelFacade::unloadKernel()
 	{
-		if (m_Pimpl->m_KernelContext)
+		if (m_Pimpl->kernelContext)
 		{
 			// not releasing the scenario before releasing the kernel
 			// causes a segfault on linux
-			auto& scenarioManager = m_Pimpl->m_KernelContext->getScenarioManager();
-			for (auto scenarioPair : m_Pimpl->m_ScenarioMap)
+			auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
+			for (auto scenarioPair : m_Pimpl->scenarioMap)
 			{
 				scenarioManager.releaseScenario(scenarioPair.second);
 			}
 
 
-			OpenViBEToolkit::uninitialize(*m_Pimpl->m_KernelContext);
-			// m_Pimpl->m_KernelContext->uninitialize();
+			OpenViBEToolkit::uninitialize(*m_Pimpl->kernelContext);
+			// m_Pimpl->kernelContext->uninitialize();
 			IKernelDesc* kernelDesc{ nullptr };
-			m_Pimpl->m_KernelLoader.getKernelDesc(kernelDesc);
-			kernelDesc->releaseKernel(m_Pimpl->m_KernelContext);
-			m_Pimpl->m_KernelContext = nullptr;
+			m_Pimpl->kernelLoader.getKernelDesc(kernelDesc);
+			kernelDesc->releaseKernel(m_Pimpl->kernelContext);
+			m_Pimpl->kernelContext = nullptr;
 		}
 
-		m_Pimpl->m_KernelLoader.uninitialize();
-		m_Pimpl->m_KernelLoader.unload();
+		m_Pimpl->kernelLoader.uninitialize();
+		m_Pimpl->kernelLoader.unload();
 
 		return PlayerReturnCode::Success;
 	}
@@ -166,7 +179,7 @@ namespace OpenViBE
 	{
 		assert(command.scenarioFile && command.scenarioName);
 
-		if (!m_Pimpl->m_KernelContext)
+		if (!m_Pimpl->kernelContext)
 		{
 			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
 			return PlayerReturnCode::KernelInternalFailure;
@@ -176,7 +189,7 @@ namespace OpenViBE
 		std::string scenarioName = command.scenarioName.get();
 
 		CIdentifier scenarioIdentifier;
-		auto& scenarioManager = m_Pimpl->m_KernelContext->getScenarioManager();
+		auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
 
 		if (!scenarioManager.createScenario(scenarioIdentifier))
 		{
@@ -202,7 +215,7 @@ namespace OpenViBE
 			std::fread(fileBuffer.getDirectPointer(), 1, static_cast<std::size_t>(fileBuffer.getSize()), fileHandle);
 			std::fclose(fileHandle);
 
-			auto& algorithmManager = m_Pimpl->m_KernelContext->getAlgorithmManager();
+			auto& algorithmManager = m_Pimpl->kernelContext->getAlgorithmManager();
 			auto algorithmIdentifier = algorithmManager.createAlgorithm(OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 
 			IAlgorithmProxy* scenarioImporter{ nullptr };
@@ -249,24 +262,55 @@ namespace OpenViBE
 		}
 		else
 		{
-			auto scenarioToReleaseIt = m_Pimpl->m_ScenarioMap.find(scenarioName);
-			if (scenarioToReleaseIt != m_Pimpl->m_ScenarioMap.end())
+			auto scenarioToReleaseIt = m_Pimpl->scenarioMap.find(scenarioName);
+			if (scenarioToReleaseIt != m_Pimpl->scenarioMap.end())
 			{
 				scenarioManager.releaseScenario(scenarioToReleaseIt->second);
 			}
 
-			m_Pimpl->m_ScenarioMap[scenarioName] = scenarioIdentifier;
+			m_Pimpl->scenarioMap[scenarioName] = scenarioIdentifier;
 		}
 
 		return returnCode;
 	}
 
+	PlayerReturnCode KernelFacade::setupScenario(const SetupScenarioCommand& command)
+	{
+		if (!m_Pimpl->kernelContext)
+		{
+			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
+			return PlayerReturnCode::KernelInternalFailure;
+		}
+
+		if (!command.scenarioName)
+		{
+			std::cerr << "ERROR: Missing scenario name for setup" << std::endl;
+			return PlayerReturnCode::KernelInternalFailure;
+		}
+
+		auto scenarioName = command.scenarioName.get();
+
+		if (m_Pimpl->scenarioMap.find(scenarioName) == m_Pimpl->scenarioMap.end())
+		{
+			std::cerr << "ERROR: Trying to configure not loaded scenario " << scenarioName << std::endl;
+			return PlayerReturnCode::ScenarioNotLoaded;
+		}
+
+		// token list is just stored at this step for further use at runtime
+		// current token list overwrites the previous one
+		if (command.tokenList)
+		{
+			m_Pimpl->scenarioTokenMap[scenarioName] = command.tokenList.get();
+		}
+
+		return PlayerReturnCode::Success;
+	}
 
 	PlayerReturnCode KernelFacade::runScenarioList(const RunScenarioCommand& command)
 	{
 		assert(command.scenarioList);
 
-		if (!m_Pimpl->m_KernelContext)
+		if (!m_Pimpl->kernelContext)
 		{
 			std::cerr << "ERROR: Kernel is not loaded" << std::endl;
 			return PlayerReturnCode::KernelInternalFailure;
@@ -278,7 +322,13 @@ namespace OpenViBE
 		// behavior by releasing all players at the end
 		PlayerReturnCode returnCode = PlayerReturnCode::Success;
 
-		auto& playerManager = m_Pimpl->m_KernelContext->getPlayerManager();
+		// set up global token
+		if (command.tokenList)
+		{
+			setConfigurationTokenList(m_Pimpl->kernelContext->getConfigurationManager(), command.tokenList.get());
+		}
+		
+		auto& playerManager = m_Pimpl->kernelContext->getPlayerManager();
 
 		// Keep 2 different containers because identifier information is
 		// not relevant during the performance sensitive loop task.
@@ -287,9 +337,10 @@ namespace OpenViBE
 		std::vector<CIdentifier> playerIdentifiersList;
 
 		// attach players to scenario
-		for (auto& pair : m_Pimpl->m_ScenarioMap)
+		for (auto& scenarioPair : m_Pimpl->scenarioMap)
 		{
-			if (std::find(scenarioList.begin(), scenarioList.end(), pair.first) ==
+			auto scenarioName = scenarioPair.first;
+			if (std::find(scenarioList.begin(), scenarioList.end(), scenarioName) ==
 				scenarioList.end()) // not in the list of scenario to run
 			{
 				continue;
@@ -309,7 +360,19 @@ namespace OpenViBE
 			playerIdentifiersList.push_back(playerIdentifier);
 
 			// Scenario attachment with setup of local token
-			if (player->setScenario(pair.second) && player->initialize() == PlayerReturnCode_Sucess)
+			if (player->setScenario(scenarioPair.second))
+			{
+				// set scenario specific token
+				setConfigurationTokenList(player->getRuntimeConfigurationManager(), m_Pimpl->scenarioTokenMap[scenarioName]);
+			}
+			else
+			{
+				std::cerr << "ERROR: impossible to set player scenario " << scenarioName << std::endl;
+				returnCode = PlayerReturnCode::KernelInternalFailure;
+				break;
+			}
+
+			if (player->initialize() == PlayerReturnCode_Sucess)
 			{
 				if (command.playMode && command.playMode.get() == PlayerPlayMode::Fastfoward)
 				{
@@ -320,11 +383,11 @@ namespace OpenViBE
 					player->play();
 				}
 
-				playerList.push_back(player);	
+				playerList.push_back(player);
 			}
 			else
 			{
-				std::cerr << "ERROR: impossible to initialize player for scenario " << pair.first.c_str() << std::endl;
+				std::cerr << "ERROR: impossible to initialize player for scenario " << scenarioName << std::endl;
 				returnCode = PlayerReturnCode::KernelInternalFailure;
 				break;
 			}

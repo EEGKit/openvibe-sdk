@@ -406,10 +406,6 @@ namespace OpenViBE
 				{
 					command->scenarioName = param.second;
 				}
-				else if (param.first == "ResetList")
-				{
-					command->resetList = toList(param.second);
-				}
 				else if (param.first == "TokenList")
 				{
 					command->tokenList = toTokenList(param.second);
@@ -448,10 +444,6 @@ namespace OpenViBE
 				else if (param.first == "MaximumExecutionTime")
 				{
 					command->maximumExecutionTime = std::stod(param.second);
-				}
-				else if (param.first == "ResetList")
-				{
-					command->resetList = toList(param.second);
 				}
 				else if (param.first == "TokenList")
 				{

@@ -133,7 +133,6 @@ namespace OpenViBE
 	* - ScenarioList: Names of scenario that must be executed (mandatory)
 	* - PlayMode: 0 for standard, 1 for fastforward (optional)
 	* - MaximumExecutionTime: Scenarios playing execution time limit (optional)
-	* - ResetList: Names of scenario whose setup must be reset (optional)
 	* - TokenList: List of global (token,value) pairs (optional)
 	* .
 	*
@@ -149,7 +148,6 @@ namespace OpenViBE
 		boost::optional<std::vector<std::string>> scenarioList;
 		boost::optional<PlayerPlayMode> playMode;
 		boost::optional<double> maximumExecutionTime;
-		boost::optional<std::vector<std::string>> resetList;
 		boost::optional<std::vector<Token>> tokenList;
 
 		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
@@ -168,9 +166,11 @@ namespace OpenViBE
 	*
 	* SetupScenarioCommand contains the following properties:
 	* - ScenarioName: name of the scenario to setup (mandatory)
-	* - ResetList: List of token to reset (optional)
-	* - TokenList: List of scenario specific (optional)
+	* - TokenList: List of scenario specific tokens (optional)
 	* .
+	*
+	* The token list overwrites the previous token list if the command was already
+	* called on the same scenario (note that an empty token list is allowed).
 	*
 	*/
 	struct SetupScenarioCommand : ICommand
@@ -180,7 +180,6 @@ namespace OpenViBE
 
 		// List of properties
 		boost::optional<std::string> scenarioName;
-		boost::optional<std::vector<std::string>> resetList;
 		boost::optional<std::vector<Token>> tokenList;
 
 

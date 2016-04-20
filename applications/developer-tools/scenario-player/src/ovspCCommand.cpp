@@ -62,7 +62,7 @@ namespace OpenViBE
 		if (!this->scenarioName || !this->scenarioFile)
 		{
 			std::cerr << "Missing required arguments for command" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArg;
+			return PlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		return kernelFacade.loadScenario(*this);
@@ -100,7 +100,7 @@ namespace OpenViBE
 		if (!this->scenarioList)
 		{
 			std::cerr << "Missing required arguments for command: ScenarioList" << std::endl;
-			return PlayerReturnCode::MissingMandatoryArg;
+			return PlayerReturnCode::MissingMandatoryArgument;
 		}
 
 		return kernelFacade.runScenarioList(*this);
@@ -139,20 +139,6 @@ namespace OpenViBE
 
 		os << "MaximumExecutionTime: " << (this->maximumExecutionTime ? std::to_string(this->maximumExecutionTime.get()) : "not set") << std::endl;
 
-		os << "ResetList:";
-		if (this->resetList)
-		{
-			for (auto& token : this->resetList.get())
-			{
-				os << " " << token;
-			}
-		}
-		else
-		{
-			os << " not set";
-		}
-		os << std::endl;
-
 		os << "TokenList:";
 		if (this->tokenList)
 		{
@@ -171,13 +157,16 @@ namespace OpenViBE
 
 	PlayerReturnCode SetupScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
-		// to be implemented
-
 		std::cout << "About to execute:" << std::endl;
 		std::cout << *this << std::endl;
-		std::cout << "Execution not yet implemented" << std::endl;
 
-		return PlayerReturnCode::Success;
+		if (!this->scenarioName)
+		{
+			std::cerr << "Missing required arguments for command" << std::endl;
+			return PlayerReturnCode::MissingMandatoryArgument;
+		}
+
+		return kernelFacade.setupScenario(*this);
 	}
 
 	void SetupScenarioCommand::doPrint(std::ostream& os) const
@@ -185,20 +174,6 @@ namespace OpenViBE
 		os << "command name: SetupScenarioCommand" << std::endl;
 
 		os << "ScenarioName: " << (this->scenarioName ? this->scenarioName.get() : "not set") << std::endl;
-
-		os << "ResetList:";
-		if (this->resetList)
-		{
-			for (auto& token : this->resetList.get())
-			{
-				os << " " << token;
-			}
-		}
-		else
-		{
-			os << " not set";
-		}
-		os << std::endl;
 
 		os << "TokenList:";
 		if (this->tokenList)
