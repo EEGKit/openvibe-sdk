@@ -914,31 +914,23 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean checkSettingValue(const OpenViBE::uint32 ui32SettingIndex) const
+			virtual OpenViBE::boolean checkSettingValue(const OpenViBE::uint32 ui32SettingIndex,
+				const OpenViBE::CString sValue, const OpenViBE::CIdentifier oTypeIdentifier) const
 			{
-				CIdentifier l_oTypeIdentifier;
-				if(!getSettingType(ui32SettingIndex, l_oTypeIdentifier))
-				{
-					return false;
-				}
-				CString l_oSettingValue;
-				if (!getSettingValue(ui32SettingIndex, l_oSettingValue))
-				{
-					return false;
-				}
 				// If the token is a numeric value, it may be an arithmetic operation
-				if(l_oTypeIdentifier == OV_TypeId_Float || l_oTypeIdentifier == OV_TypeId_Integer)
+				if (oTypeIdentifier == OV_TypeId_Float || oTypeIdentifier == OV_TypeId_Integer)
 				{
 					// parse and expression with no variables or functions
 					try
 					{
-						double l_dEvaluatedExp = Lepton::Parser::parse(l_oSettingValue.toASCIIString()).evaluate();
+						double l_dEvaluatedExp = Lepton::Parser::parse(sValue.toASCIIString()).evaluate();
 					}
 					catch(...)
 					{
 						return false;
 					}
 				}
+				//TODO: else
 				return true;
 			}
 

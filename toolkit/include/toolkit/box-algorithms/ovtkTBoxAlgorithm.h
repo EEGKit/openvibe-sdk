@@ -133,64 +133,76 @@ namespace OpenViBEToolkit
 
 			operator OpenViBE::uint32 (void)
 			{
-				double l_ui32Result = 0xffffffffll;
-				if (m_rTypeManager.evaluateSettingValue(m_sSettingValue, l_ui32Result))
+				double l_dResult;
+				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
+				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
 				{
-					m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand [" << m_sSettingValue << "]\n";
-					return static_cast<OpenViBE::uint32>(l_ui32Result);
+					return static_cast<OpenViBE::uint32>(l_dResult);
 				}
+				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand [" << m_sSettingValue << "]\n";
 				return 0xffffffffll;
 			}
 			operator OpenViBE::uint64 (void)
 			{
 				OpenViBE::uint64 l_ui64StimId = 0xffffffffffffffffll;
+				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
+				double l_dResult;
 				if (m_rTypeManager.isBitMask(m_oSettingType))
 				{
 					l_ui64StimId = m_rTypeManager.getBitMaskEntryValueFromName(m_oSettingType, m_sSettingValue);
 					if (l_ui64StimId == 0xffffffffffffffffll)
 					{
-						m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Did not find an enumeration value for [" << m_rTypeManager.getTypeName(m_oSettingType) << ":" << m_sSettingValue << "]\n";
+						m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Did not find a bitmask value for [" 
+							<< m_rTypeManager.getTypeName(m_oSettingType) << ":" << m_sSettingValue << "]\n";
 					}
-					return l_ui64StimId;
 				}
-				if(m_rTypeManager.isEnumeration(m_oSettingType))
+				else if(m_rTypeManager.isEnumeration(m_oSettingType))
 				{
-					l_ui64StimId=m_rTypeManager.getEnumerationEntryValueFromName(m_oSettingType, m_sSettingValue);
-					if(l_ui64StimId==0xffffffffffffffffll)
+					l_ui64StimId = m_rTypeManager.getEnumerationEntryValueFromName(m_oSettingType, m_sSettingValue);
+					if (l_ui64StimId == 0xffffffffffffffffll)
 					{
 						m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Did not find an enumeration value for [" << m_rTypeManager.getTypeName(m_oSettingType) << "] = [" << m_sSettingValue << "]\n";
 					}
-					return l_ui64StimId;
 				}
-				double l_dResult;
-				if (m_rTypeManager.evaluateSettingValue(m_sSettingValue, l_dResult))
+				else if (m_rTypeManager.evaluateSettingValue(m_sSettingValue, l_dResult))
 				{
-					m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand [" << m_sSettingValue << "]\n";
 					return static_cast<OpenViBE::uint64>(l_dResult);
 				}
-				return 0xffffffffffffffffll;
+				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand [" << m_sSettingValue << "]\n";
+				return l_ui64StimId;
 			}
 			operator OpenViBE::int32 (void)
 			{
-				return OpenViBE::int32(m_rConfigurationManager.expandAsInteger(m_sSettingValue));
+				double l_dResult;
+				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
+				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
+				{
+					return static_cast<OpenViBE::int32>(l_dResult);
+				}
+				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand [" << m_sSettingValue << "]\n";
+				return 0xffffffffll;
 			}
 			operator OpenViBE::int64 (void)
 			{
-				return OpenViBE::int64(m_rConfigurationManager.expandAsInteger(m_sSettingValue));
+				double l_dResult;
+				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
+				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
+				{
+					return static_cast<OpenViBE::int64>(l_dResult);
+				}
+				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand [" << m_sSettingValue << "]\n";
+				return 0xffffffffll;
 			}
 			operator OpenViBE::float64 (void)
 			{
-				//float64 l_f64Result = 0;
 				double l_dResult;
-				if (m_rTypeManager.evaluateSettingValue(m_sSettingValue, l_dResult))
+				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
+				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
 				{
-					m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand [" << m_sSettingValue << "]\n";
 					return static_cast<OpenViBE::float64>(l_dResult);
 				}
-				else
-				{
-					return static_cast<OpenViBE::float64>(m_rConfigurationManager.expandAsFloat(m_sSettingValue));
-				}
+				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "]\n";
+				return 0.0;
 			}
 			operator OpenViBE::boolean (void)
 			{

@@ -119,14 +119,12 @@ namespace
 				}
 				for(uint32 i = 0; i<m_ui32SettingIndex; i++)
 				{
-					CString l_sSettingName = "";
-					CString l_sRawSettingValue = "";
-
-					rBox.getSettingName(i, l_sSettingName);
+					CString l_sRawSettingValue;
 					rBox.getSettingValue(i, l_sRawSettingValue);
-					CString l_sSettingValue = l_sRawSettingValue;
-					l_sSettingValue = m_rKernelContext.getConfigurationManager().expand(l_sSettingValue);
-					if(!rBox.checkSettingValue(i))
+					CString l_sSettingValue = m_rKernelContext.getConfigurationManager().expand(l_sRawSettingValue);
+					CIdentifier l_oTypeIdentifier;
+					rBox.getSettingType(i, l_oTypeIdentifier);
+					if (!rBox.checkSettingValue(i, l_sSettingValue, l_oTypeIdentifier))
 					{
 						m_rKernelContext.getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" <<  rBox.getName() << "> The following value: ["<< l_sRawSettingValue 
 							<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not a numeric value.\n";
