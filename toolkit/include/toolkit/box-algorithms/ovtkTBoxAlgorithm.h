@@ -180,7 +180,7 @@ namespace OpenViBEToolkit
 					return static_cast<OpenViBE::int32>(l_dResult);
 				}
 				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand [" << m_sSettingValue << "]\n";
-				return 0xffffffffll;
+				return 0xffffll;
 			}
 			operator OpenViBE::int64 (void)
 			{
