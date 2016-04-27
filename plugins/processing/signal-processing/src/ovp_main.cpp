@@ -13,6 +13,7 @@
 #include "box-algorithms/epoching/ovpCBoxAlgorithmStimulationBasedEpoching.h"
 #include "box-algorithms/filters/ovpCBoxAlgorithmCommonAverageReference.h"
 #include "box-algorithms/filters/ovpCBoxAlgorithmSpatialFilter.h"
+#include "box-algorithms/filters/ovpCBoxAlgorithmTemporalFilter.h"
 
 #include "box-algorithms/filters/ovpCBoxAlgorithmRegularizedCSPTrainer.h"
 #include "algorithms/basic/ovpCAlgorithmOnlineCovariance.h"
@@ -65,6 +66,7 @@ OVP_Declare_Begin()
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmCommonAverageReferenceDesc)
 
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpatialFilterDesc)
+	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTemporalFilterDesc)
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 	rPluginModuleContext.getTypeManager().registerEnumerationType(OVP_TypeId_OnlineCovariance_UpdateMethod, "Update method");
