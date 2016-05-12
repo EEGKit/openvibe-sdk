@@ -88,7 +88,6 @@ CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& r
 	:TKernelObject<IBoxIO>(rKernelContext)
 	,m_ui32CrashCount(0)
 	,m_bReadyToProcess(false)
-	,m_bSuspended(false)
 	,m_bCrashed(false)
 	,m_bChunkConsistencyChecking(false)
 	,m_eChunkConsistencyCheckingLogLevel(LogLevel_Warning)
@@ -316,8 +315,7 @@ CIdentifier CSimulatedBox::create3DWidget(::GtkWidget*& p3DWidget)
 	//don't attempt to create 3D widget if Ogre wasn't initialized properly.
 	if(!m_pOgreVis || m_pOgreVis->ogreInitialized() == false || m_pOgreVis->resourcesInitialized() == false)
 	{
-		this->getLogManager() << LogLevel_Error << "Plugin " << m_pBox->getName() << " was disabled because the required 3D context couldn't be created!\n";
-		m_bSuspended=true;
+		this->getLogManager() << LogLevel_Error << "Plugin " << m_pBox->getName() << " could not create the required 3D context!\n";
 		return OV_UndefinedIdentifier;
 	}
 
@@ -861,7 +859,6 @@ boolean CSimulatedBox::initialize(void)
 	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
 #endif
 
-	if(m_bSuspended) return false;
 	if(m_bCrashed) return false;
 
 	// FIXME test for already initialized boxes etc
@@ -886,8 +883,7 @@ boolean CSimulatedBox::initialize(void)
 	m_pBoxAlgorithm=getPluginManager().createBoxAlgorithm(m_pBox->getAlgorithmClassIdentifier(), NULL);
 	if(!m_pBoxAlgorithm)
 	{
-		getLogManager() << LogLevel_Error << "Could not create box algorithm with class id " << m_pBox->getAlgorithmClassIdentifier() << "... This box will be deactivated but this might alter the scenario behavior!\n";
-		m_bSuspended=true;
+		getLogManager() << LogLevel_Error << "Could not create box algorithm with class id " << m_pBox->getAlgorithmClassIdentifier() << "...\n";
 		return false;
 	}
 
@@ -901,8 +897,7 @@ boolean CSimulatedBox::initialize(void)
 			{
 				if(!m_pBoxAlgorithm->initialize(l_oBoxAlgorithmContext))
 				{
-					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because initialize() function returned error\n";
-					m_bSuspended=true;
+					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> initialization failed\n";
 					return false;
 				}
 			}
@@ -936,8 +931,7 @@ boolean CSimulatedBox::uninitialize(void)
 				{
 					if(!m_pBoxAlgorithm->uninitialize(l_oBoxAlgorithmContext))
 					{
-						getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because uninitialize() function returned error\n";
-						m_bSuspended=true;
+						getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> uninitialization failed\n";
 					}
 				}
 				catch (...)
@@ -960,7 +954,6 @@ boolean CSimulatedBox::processClock(void)
 	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
 #endif
 
-	if(m_bSuspended) return false;
 	if(m_bCrashed) return false;
 
 	{
@@ -1028,8 +1021,7 @@ boolean CSimulatedBox::processClock(void)
 				if(!m_pBoxAlgorithm->processClock(l_oBoxAlgorithmContext, l_oClockMessage))
 				{
 					// In future, we may want to behave in a similar manner as in process(). Change not introduced for 0.18 due to insufficient testing.
-					// getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because processClock() function returned error\n";
-					// m_bSuspended=true;
+					// getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> processClock() function failed\n";
 				}
 				m_oBenchmarkChronoProcessClock.stepOut();
 			}
@@ -1050,7 +1042,6 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
 #endif
 
-	if(m_bSuspended) return false;
 	if(m_bCrashed) return false;
 
 	m_vInput[ui32InputIndex].push_back(rChunk);
@@ -1067,8 +1058,7 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 				if(!m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex))
 				{
 					// In future, we may want to behave in a similar manner as in process(). Change not introduced for 0.18 due to insufficient testing.
-					// getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because processInput() function returned error\n";
-					// m_bSuspended=true;
+					// getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> processInput() failed\n";
 				}
 				m_oBenchmarkChronoProcessInput.stepOut();
 			}
@@ -1089,7 +1079,6 @@ boolean CSimulatedBox::process(void)
 	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
 #endif
 
-	if(m_bSuspended) return false;
 	if(m_bCrashed) return false;
 
 	if(!m_bReadyToProcess) return true;
@@ -1105,8 +1094,7 @@ boolean CSimulatedBox::process(void)
 				m_oBenchmarkChronoProcess.stepIn();
 				if(!m_pBoxAlgorithm->process(l_oBoxAlgorithmContext))
 				{
-					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> has been deactivated because process() function returned error\n";
-					m_bSuspended=true;
+					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> process() function failed\n";
 				}
 				m_oBenchmarkChronoProcess.stepOut();
 			}
@@ -1256,16 +1244,14 @@ const IScenario& CSimulatedBox::getScenario(void) const
 
 namespace
 {
-	void __out_of_bound_input(ILogManager& rLogManager, const CString& sName, boolean& bSuspended, uint32 ui32InputIndex, uint32 ui32InputCount)
+	void __out_of_bound_input(ILogManager& rLogManager, const CString& sName, uint32 ui32InputIndex, uint32 ui32InputCount)
 	{
-		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound input (" << ui32InputIndex << "/" << ui32InputCount << ") - Disabled box\n";
-		bSuspended = true;
+		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound input (" << ui32InputIndex << "/" << ui32InputCount << ")\n";
 	}
 
-	void __out_of_bound_input_chunk(ILogManager& rLogManager, const CString& sName, boolean& bSuspended, uint32 ui32InputIndex, uint32 ui32InputChunkIndex, uint32 ui32InputChunkCount)
+	void __out_of_bound_input_chunk(ILogManager& rLogManager, const CString& sName, uint32 ui32InputIndex, uint32 ui32InputChunkIndex, uint32 ui32InputChunkCount)
 	{
-		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound input (" << ui32InputIndex << ":" << ui32InputChunkIndex << "/" << ui32InputChunkCount << ") - Disabled box\n";
-		bSuspended = true;
+		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound input (" << ui32InputIndex << ":" << ui32InputChunkIndex << "/" << ui32InputChunkCount << ")\n";
 	}
 }
 
@@ -1277,7 +1263,7 @@ uint32 CSimulatedBox::getInputChunkCount(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, m_vInput.size());
+		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return 0;
 	}
 	return m_vInput[ui32InputIndex].size();
@@ -1293,12 +1279,12 @@ boolean CSimulatedBox::getInputChunk(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, m_vInput.size());
+		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return false;
 	}
 	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
 	{
-		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
+		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
 		return false;
 	}
 
@@ -1316,12 +1302,12 @@ const IMemoryBuffer* CSimulatedBox::getInputChunk(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, m_vInput.size());
+		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return NULL;
 	}
 	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
 	{
-		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
+		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
 		return NULL;
 	}
 	return &_my_get_(m_vInput[ui32InputIndex], ui32ChunkIndex).getBuffer();
@@ -1333,12 +1319,12 @@ uint64 CSimulatedBox::getInputChunkStartTime(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, m_vInput.size());
+		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return false;
 	}
 	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
 	{
-		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
+		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
 		return false;
 	}
 
@@ -1352,12 +1338,12 @@ uint64 CSimulatedBox::getInputChunkEndTime(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, m_vInput.size());
+		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return false;
 	}
 	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
 	{
-		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
+		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
 		return false;
 	}
 
@@ -1371,12 +1357,12 @@ boolean CSimulatedBox::markInputAsDeprecated(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, m_vInput.size());
+		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return false;
 	}
 	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
 	{
-		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), m_bSuspended, ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
+		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
 		return false;
 	}
 	_my_get_(m_vInput[ui32InputIndex], ui32ChunkIndex).markAsDeprecated(true);
@@ -1388,10 +1374,9 @@ boolean CSimulatedBox::markInputAsDeprecated(
 
 namespace
 {
-	void __out_of_bound_output(ILogManager& rLogManager, const CString& sName, boolean& bSuspended, uint32 ui32OutputIndex, uint32 ui32OutputCount)
+	void __out_of_bound_output(ILogManager& rLogManager, const CString& sName, uint32 ui32OutputIndex, uint32 ui32OutputCount)
 	{
-		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound output (" << ui32OutputIndex << "/" << ui32OutputCount << ") - Disabled box\n";
-		bSuspended = true;
+		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound output (" << ui32OutputIndex << "/" << ui32OutputCount << ")\n";
 	}
 }
 
@@ -1403,7 +1388,7 @@ uint64 CSimulatedBox::getOutputChunkSize(
 {
 	if(ui32OutputIndex>=m_vCurrentOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), m_bSuspended, ui32OutputIndex, m_vCurrentOutput.size());
+		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return 0;
 	}
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getSize();
@@ -1416,7 +1401,7 @@ boolean CSimulatedBox::setOutputChunkSize(
 {
 	if(ui32OutputIndex>=m_vOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), m_bSuspended, ui32OutputIndex, m_vCurrentOutput.size());
+		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return false;
 	}
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().setSize(ui64Size, bDiscard);
@@ -1427,7 +1412,7 @@ uint8* CSimulatedBox::getOutputChunkBuffer(
 {
 	if(ui32OutputIndex>=m_vOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), m_bSuspended, ui32OutputIndex, m_vCurrentOutput.size());
+		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return NULL;
 	}
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getDirectPointer();
@@ -1440,7 +1425,7 @@ boolean CSimulatedBox::appendOutputChunkData(
 {
 	if(ui32OutputIndex>=m_vOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), m_bSuspended, ui32OutputIndex, m_vCurrentOutput.size());
+		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return false;
 	}
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().append(pBuffer, ui64BufferSize);
@@ -1451,7 +1436,7 @@ IMemoryBuffer* CSimulatedBox::getOutputChunk(
 {
 	if(ui32OutputIndex>=m_vOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), m_bSuspended, ui32OutputIndex, m_vCurrentOutput.size());
+		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return NULL;
 	}
 	return &m_vCurrentOutput[ui32OutputIndex].getBuffer();
@@ -1464,7 +1449,7 @@ boolean CSimulatedBox::markOutputAsReadyToSend(
 {
 	if(ui32OutputIndex>=m_vOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), m_bSuspended, ui32OutputIndex, m_vCurrentOutput.size());
+		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return false;
 	}
 
