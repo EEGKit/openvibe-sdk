@@ -231,46 +231,6 @@ CPlayerContext::~CPlayerContext(void)
 	delete m_pAlgorithmManagerBridge;
 }
 
-boolean CPlayerContext::sendSignal(
-	const CMessageSignal& rMessageSignal)
-{
-	// TODO
-	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendSignal - Not yet implemented\n";
-	return false;
-}
-
-boolean CPlayerContext::sendMessage(
-	const CMessageEvent& rMessageEvent,
-	const CIdentifier& rTargetIdentifier)
-{
-	// TODO
-	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
-	return false;
-}
-
-boolean CPlayerContext::sendMessage(
-	const CMessageEvent& rMessageEvent,
-	const CIdentifier* pTargetIdentifier,
-	const uint32 ui32TargetIdentifierCount)
-{
-	// TODO
-	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
-	return false;
-}
-
-boolean CPlayerContext::sendMessage( const IMessageWithData& message, uint32 outputIndex)
-{
-	return m_pSimulatedBox->sendMessage(message, outputIndex);
-}
-
-IMessageWithData& CPlayerContext::createMessage(void)
-{
-	this->getLogManager() << LogLevel_Debug << "CPlayerContext::createdMessage\n";
-	IMessageWithData& rMyMessage = m_pSimulatedBox->createMessage();
-
-	return rMyMessage;
-}
-
 uint64 CPlayerContext::getCurrentTime(void) const
 {
 	return m_pSimulatedBox->getScheduler().getCurrentTime();

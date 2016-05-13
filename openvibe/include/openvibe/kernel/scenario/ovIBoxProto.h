@@ -21,10 +21,6 @@ namespace OpenViBE
 			BoxFlag_CanModifySetting,
 			BoxFlag_IsDeprecated,
 			BoxFlag_IsUnstable,
-			BoxFlag_CanAddMessageInput,
-			BoxFlag_CanModifyMessageInput,
-			BoxFlag_CanAddMessageOutput,
-			BoxFlag_CanModifyMessageOutput,
 			BoxFlag_IsGhost = 8001,
 			BoxFlag_IsMensia = 8002,
 			BoxFlag_IsNew = 8003
@@ -59,21 +55,6 @@ namespace OpenViBE
 			virtual OpenViBE::boolean addInput(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier)=0;
-			/**
-			* \brief Adds a message input to the box
-			* \param sName [in] : the name of the message input to add
-			* \return The created message input index.
-			*/
-			virtual OpenViBE::boolean addMessageInput(
-			const OpenViBE::CString& sName)=0;
-
-			/**
-			* \brief Adds a message output to the box
-			* \param sName [in] : the name of the message output to add
-			* \return The created message output index.
-			*/
-			virtual OpenViBE::boolean addMessageOutput(
-			const OpenViBE::CString& sName)=0;
 
 			/**
 			 * \brief Adds an output to the box

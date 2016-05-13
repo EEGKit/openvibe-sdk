@@ -30,55 +30,6 @@ namespace OpenViBE
 		{
 		public:
 
-			/** \name Messages sending */
-			//@{
-
-			/**
-			 * \brief Sends signal to the kernel
-			 * \param rMessageSignal [in] : the signal message to send
-			 * \return \e true in case of success, \e false in other cases.
-			 */
-			virtual OpenViBE::boolean sendSignal(
-				const OpenViBE::Kernel::IMessageSignal& rMessageSignal)=0;
-			/**
-			 * \brief Sends a message to another box
-			 * \param rMessageEvent [in] : the message to send to the other box
-			 * \param rTargetIdentifier [in] : the identifier of the other box
-			 * \return \e true in case of success, \e false in other cases.
-			 */
-			virtual OpenViBE::boolean sendMessage(
-				const OpenViBE::Kernel::IMessageEvent& rMessageEvent,
-				const OpenViBE::CIdentifier& rTargetIdentifier)=0;
-			/**
-			 * \brief Broadcasts a message to several other boxes
-			 * \param rMessageEvent [in] : the message to send
-			 * \param pTargetIdentifier [in] : a pointer containing all
-			 *        the targets which should receive the sent message.
-			 * \param ui32TargetIdentifierCount [in] : the number of
-			 *        targets contained in the \c pTargetIdentifier array.
-			 * \return \e true in case of success, \e false in other cases.
-			 */
-			virtual OpenViBE::boolean sendMessage(
-				const OpenViBE::Kernel::IMessageEvent& rMessageEvent,
-				const OpenViBE::CIdentifier* pTargetIdentifier,
-				const OpenViBE::uint32 ui32TargetIdentifierCount)=0;
-
-			/**
-			 * \brief Sends a message to a box message output, forward the call to CSimulatedBox then CScheduler
-			 * \param message [in] : the message to send
-			 * \param outputIndex [in] : the index of the message output to send the message from
-			 * \return \e true in case of success, \e false in other cases.
-			 */
-			virtual OpenViBE::boolean sendMessage( const OpenViBE::Kernel::IMessageWithData& message, OpenViBE::uint32 outputIndex)=0;
-
-			/**
-			 * \brief Creates a message in the CSimulatedBox
-			 * \return \e a reference to the created message
-			 * \warning Messages are erased at each cycle so the reference is only valid for one cycle
-			 */
-			virtual OpenViBE::Kernel::IMessageWithData& createMessage(void)=0;
-
-			//@}
 			/** \name Time management */
 			//@{
 
