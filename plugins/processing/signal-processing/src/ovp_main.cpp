@@ -10,9 +10,11 @@
 #include "box-algorithms/basic/ovpCBoxAlgorithmCrop.h"
 #include "box-algorithms/basic/ovpCBoxAlgorithmSignalDecimation.h"
 #include "box-algorithms/basic/ovpCBoxAlgorithmReferenceChannel.h"
+#include "box-algorithms/basic/ovpCBoxAlgorithmZeroCrossingDetector.h"
 #include "box-algorithms/epoching/ovpCBoxAlgorithmStimulationBasedEpoching.h"
 #include "box-algorithms/filters/ovpCBoxAlgorithmCommonAverageReference.h"
 #include "box-algorithms/filters/ovpCBoxAlgorithmSpatialFilter.h"
+#include "box-algorithms/filters/ovpCBoxAlgorithmTemporalFilter.h"
 
 #include "box-algorithms/filters/ovpCBoxAlgorithmRegularizedCSPTrainer.h"
 #include "algorithms/basic/ovpCAlgorithmOnlineCovariance.h"
@@ -61,10 +63,12 @@ OVP_Declare_Begin()
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CEpochAverageDesc)
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmCropDesc)
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalDecimationDesc)
+	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmZeroCrossingDetectorDesc)
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmStimulationBasedEpochingDesc)
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmCommonAverageReferenceDesc)
 
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpatialFilterDesc)
+	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTemporalFilterDesc)
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 	rPluginModuleContext.getTypeManager().registerEnumerationType(OVP_TypeId_OnlineCovariance_UpdateMethod, "Update method");
