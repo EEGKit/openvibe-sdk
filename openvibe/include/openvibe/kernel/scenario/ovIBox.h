@@ -60,11 +60,6 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::CIdentifier getAlgorithmClassIdentifier(void) const=0;
 			/**
-			 * \brief Gets processing unit identifier for this box
-			 * \return This box' processing unit identifier
-			 */
-			virtual OpenViBE::CIdentifier getProcessingUnitIdentifier(void) const=0;
-			/**
 			 * \brief Changes the identifier of this box
 			 * \param rIdentifier [in] : The new identifier
 			 *        this box should take.
@@ -90,16 +85,6 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::boolean setAlgorithmClassIdentifier(
 				const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)=0;
-			/**
-			 * \brief Changes the processing unit identifier of this box
-			 * \param rProcessingUnitIdentifier [in] : The new processing
-			 *        unit identifier this box should take.
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
-			 */
-			virtual OpenViBE::boolean setProcessingUnitIdentifier(
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier)=0;
-
 			//@}
 			/** \name Initialisation from prototypes etc... */
 			//@{

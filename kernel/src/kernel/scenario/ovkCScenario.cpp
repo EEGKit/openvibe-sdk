@@ -6,7 +6,6 @@
 #include "ovkTBox.hpp"
 #include "ovkCComment.h"
 #include "ovkCLink.h"
-#include "ovkCProcessingUnit.h"
 
 #include "../ovkCObjectVisitorContext.h"
 
@@ -62,13 +61,6 @@ namespace
 		boolean operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getTargetBoxIdentifier()==m_rId && it->second->getTargetBoxInputIndex()==m_ui32Id; }
 		const CIdentifier& m_rId;
 		uint32 m_ui32Id;
-	};
-
-	struct TTestEqProcessingUnitIdentifier
-	{
-		TTestEqProcessingUnitIdentifier(const CIdentifier& rId) : m_rId(rId) { }
-		boolean operator()(map<CIdentifier, CBox*>::const_iterator it) const { return it->second->getProcessingUnitIdentifier()==m_rId; }
-		const CIdentifier& m_rId;
 	};
 
 	template <class T, class TTest>
@@ -153,14 +145,6 @@ boolean CScenario::clear(void)
 		delete itLink->second;
 	}
 	m_vLink.clear();
-
-	// Clears processing units
-	map<CIdentifier, CProcessingUnit*>::iterator itProcessingUnit;
-	for(itProcessingUnit=m_vProcessingUnit.begin(); itProcessingUnit!=m_vProcessingUnit.end(); itProcessingUnit++)
-	{
-		delete itProcessingUnit->second;
-	}
-	m_vProcessingUnit.clear();
 
 	// Remove all settings
 	while (this->getSettingCount())
@@ -422,13 +406,6 @@ CIdentifier CScenario::getNextBoxIdentifier(
 	const CIdentifier& rPreviousIdentifier) const
 {
 	return getNextTIdentifier<CBox, TTestTrue<CBox> >(m_vBox, rPreviousIdentifier, TTestTrue<CBox>());
-}
-
-CIdentifier CScenario::getNextBoxIdentifierOnProcessingUnit(
-	const CIdentifier& rPreviousIdentifier,
-	const CIdentifier& rProcessingUnitIdentifier) const
-{
-	return getNextTIdentifier<CBox, TTestEqProcessingUnitIdentifier >(m_vBox, rPreviousIdentifier, TTestEqProcessingUnitIdentifier(rProcessingUnitIdentifier));
 }
 
 const IBox* CScenario::getBoxDetails(
@@ -1063,101 +1040,6 @@ boolean CScenario::disconnect(
 //___________________________________________________________________//
 //                                                                   //
 
-CIdentifier CScenario::getNextProcessingUnitIdentifier(
-	const CIdentifier& rPreviousIdentifier) const
-{
-	return getNextTIdentifier<CProcessingUnit, TTestTrue<CProcessingUnit> >(m_vProcessingUnit, rPreviousIdentifier, TTestTrue<CProcessingUnit>());
-}
-
-boolean CScenario::isProcessingUnit(
-	const CIdentifier& rIdentifier) const
-{
-	map<CIdentifier, CProcessingUnit*>::const_iterator itProcessingUnit=m_vProcessingUnit.find(rIdentifier);
-	return itProcessingUnit!=m_vProcessingUnit.end()?true:false;
-}
-
-const IProcessingUnit* CScenario::getProcessingUnitDetails(
-	const CIdentifier& rProcessingUnitIdentifier) const
-{
-	this->getLogManager() << LogLevel_Debug << "Getting const processing unit details from scenario\n";
-
-	map<CIdentifier, CProcessingUnit*>::const_iterator itProcessingUnit;
-	itProcessingUnit=m_vProcessingUnit.find(rProcessingUnitIdentifier);
-	if(itProcessingUnit==m_vProcessingUnit.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "The processing unit does not exist\n";
-		return NULL;
-	}
-	return itProcessingUnit->second;
-}
-
-IProcessingUnit* CScenario::getProcessingUnitDetails(
-	const CIdentifier& rProcessingUnitIdentifier)
-{
-	this->getLogManager() << LogLevel_Debug << "Getting processing unit details from scenario\n";
-
-	map<CIdentifier, CProcessingUnit*>::const_iterator itProcessingUnit;
-	itProcessingUnit=m_vProcessingUnit.find(rProcessingUnitIdentifier);
-	if(itProcessingUnit==m_vProcessingUnit.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "The processing unit does not exist\n";
-		return NULL;
-	}
-	return itProcessingUnit->second;
-}
-
-boolean CScenario::addProcessingUnit(
-	CIdentifier& rProcessingUnitIdentifier,
-	const CIdentifier& rSuggestedProcessingUnitIdentifier)
-{
-	this->getLogManager() << LogLevel_Debug << "Adding new processing unit in scenario\n";
-
-	CProcessingUnit* l_pProcessingUnit=new CProcessingUnit(getKernelContext());
-	rProcessingUnitIdentifier=getUnusedIdentifier(rSuggestedProcessingUnitIdentifier);
-	l_pProcessingUnit->setIdentifier(rProcessingUnitIdentifier);
-
-	m_vProcessingUnit[rProcessingUnitIdentifier]=l_pProcessingUnit;
-	return true;
-}
-
-boolean CScenario::removeProcessingUnit(
-	const CIdentifier& rProcessingUnitIdentifier)
-{
-	this->getLogManager() << LogLevel_Debug << "Removing processing unit from scenario\n";
-
-	// Finds the processing unit according to its identifier
-	map<CIdentifier, CProcessingUnit*>::iterator itProcessingUnit;
-	itProcessingUnit=m_vProcessingUnit.find(rProcessingUnitIdentifier);
-	if(itProcessingUnit==m_vProcessingUnit.end())
-	{
-		// The processing unit does not exist !
-		this->getLogManager() << LogLevel_Warning << "The processing unit does not exist\n";
-		return false;
-	}
-
-	// Found the processing unit,
-	// now unaffect all the boxes that are using this processing unit
-	map<CIdentifier, CBox*>::const_iterator itBox;
-	for(itBox=m_vBox.begin(); itBox!=m_vBox.end(); )
-	{
-		if(itBox->second->getProcessingUnitIdentifier() == rProcessingUnitIdentifier)
-		{
-			this->getLogManager() << LogLevel_Debug << "The box " << itBox->second->getIdentifier() << " is affected to this processing unit - it will now be affected to undefined processing unit\n";
-
-			// Affects to unknown identifier
-			itBox->second->setProcessingUnitIdentifier(OV_UndefinedIdentifier);
-		}
-		itBox++;
-	}
-
-	// Deletes the processing unit itself
-	delete itProcessingUnit->second;
-
-	// Removes processing unit from the processing unit list
-	m_vProcessingUnit.erase(itProcessingUnit);
-	return true;
-}
-
 boolean CScenario::applyLocalSettings()
 {
 	for (auto l_pBox : m_vBox)
@@ -1238,15 +1120,6 @@ boolean CScenario::acceptVisitor(
 	for(k=m_vLink.begin(); k!=m_vLink.end(); k++)
 	{
 		if(!k->second->acceptVisitor(rObjectVisitor))
-		{
-			return false;
-		}
-	}
-
-	map<CIdentifier, CProcessingUnit*>::iterator l;
-	for(l=m_vProcessingUnit.begin(); l!=m_vProcessingUnit.end(); l++)
-	{
-		if(!l->second->acceptVisitor(rObjectVisitor))
 		{
 			return false;
 		}

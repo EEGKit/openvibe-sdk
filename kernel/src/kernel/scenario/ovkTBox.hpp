@@ -68,7 +68,6 @@ namespace OpenViBE
 				,m_bIsObserverNotificationActive(true)
 				,m_oIdentifier(OV_UndefinedIdentifier)
 			    ,m_oAlgorithmClassIdentifier(OV_UndefinedIdentifier)
-			    ,m_oProcessingUnitIdentifier(OV_UndefinedIdentifier)
 			    ,m_sName("unnamed")
 			{
 			}
@@ -101,11 +100,6 @@ namespace OpenViBE
 			virtual OpenViBE::CIdentifier getAlgorithmClassIdentifier(void) const
 			{
 				return m_oAlgorithmClassIdentifier;
-			}
-
-			virtual OpenViBE::CIdentifier getProcessingUnitIdentifier(void) const
-			{
-				return m_oProcessingUnitIdentifier;
 			}
 
 			virtual OpenViBE::boolean setIdentifier(const OpenViBE::CIdentifier& rIdentifier)
@@ -169,15 +163,6 @@ namespace OpenViBE
 				m_pBoxAlgorithmDescriptor->getBoxPrototype(oTempProto);
 
 				this->notify(BoxModification_AlgorithmClassIdentifierChanged);
-
-				return true;
-			}
-
-			virtual OpenViBE::boolean setProcessingUnitIdentifier(const OpenViBE::CIdentifier& rProcessingUnitIdentifier)
-			{
-				m_oProcessingUnitIdentifier=rProcessingUnitIdentifier;
-
-				this->notify(BoxModification_ProcessingUnitChanged);
 
 				return true;
 			}
@@ -1191,7 +1176,6 @@ namespace OpenViBE
 
 			OpenViBE::CIdentifier m_oIdentifier;
 			OpenViBE::CIdentifier m_oAlgorithmClassIdentifier;
-			OpenViBE::CIdentifier m_oProcessingUnitIdentifier;
 			OpenViBE::CString m_sName;
 
 			std::vector<CInput> m_vInput;

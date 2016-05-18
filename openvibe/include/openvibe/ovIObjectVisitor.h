@@ -12,7 +12,6 @@ namespace OpenViBE
 		class IBox;
 		class IComment;
 		class ILink;
-		class IProcessingUnit;
 		class IScenario;
 
 		class IVisualisationTree;
@@ -26,7 +25,6 @@ namespace OpenViBE
 		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox)                                 { return true; }
 		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IComment& rComment)                         { return true; }
 		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::ILink& rLink)                               { return true; }
-		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IProcessingUnit& rProcessingUnit)           { return true; }
 		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IScenario& rScenario)                       { return true; }
 
 		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IVisualisationTree& rVisualisationTree)     { return true; }
@@ -35,7 +33,6 @@ namespace OpenViBE
 		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox)                                 { return true; }
 		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IComment& rComment)                         { return true; }
 		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::ILink& rLink)                               { return true; }
-		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IProcessingUnit& rProcessingUnit)           { return true; }
 		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IScenario& rScenario)                       { return true; }
 
 		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IVisualisationTree& rVisualisationTree)     { return true; }

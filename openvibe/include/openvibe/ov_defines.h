@@ -59,7 +59,6 @@
 #define OV_ClassId_Kernel_Scenario_BoxProto                  OpenViBE::CIdentifier(0x169ED1C1, 0x639C5957)
 #define OV_ClassId_Kernel_Scenario_Comment                   OpenViBE::CIdentifier(0x13597D48, 0xB7268440)
 #define OV_ClassId_Kernel_Scenario_Link                      OpenViBE::CIdentifier(0x38F6E10D, 0x6BA2721A)
-#define OV_ClassId_Kernel_Scenario_ProcessingUnit            OpenViBE::CIdentifier(0x3681EC07, 0x337DE51F)
 #define OV_ClassId_Kernel_Scenario_Scenario                  OpenViBE::CIdentifier(0x6EED456C, 0x2FC6F03A)
 #define OV_ClassId_Kernel_Scenario_ScenarioImporterContext   OpenViBE::CIdentifier(0x734C0B6A, 0x7EFEBBC8)
 #define OV_ClassId_Kernel_Scenario_ScenarioExporterContext   OpenViBE::CIdentifier(0x583A5B71, 0x2C06662D)

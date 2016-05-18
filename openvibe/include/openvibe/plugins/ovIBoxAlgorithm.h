@@ -22,7 +22,6 @@ namespace OpenViBE
 			BoxModification_NameChanged,
 			BoxModification_IdentifierChanged,
 			BoxModification_AlgorithmClassIdentifierChanged,
-			BoxModification_ProcessingUnitChanged,
 			BoxModification_InputConnected,
 			BoxModification_InputDisconnected,
 			BoxModification_InputAdded,

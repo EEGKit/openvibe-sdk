@@ -16,8 +16,6 @@ namespace OpenViBE
 		typedef TBox< OpenViBE::Kernel::IBox > CBox;
 		class CComment;
 		class CLink;
-		class CProcessingUnit;
-
 
 		class CScenario : public TBox< OpenViBE::Kernel::IScenario >
 		{
@@ -40,9 +38,6 @@ namespace OpenViBE
 
 			virtual OpenViBE::CIdentifier getNextBoxIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
-			virtual OpenViBE::CIdentifier getNextBoxIdentifierOnProcessingUnit(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier) const;
 			virtual OpenViBE::boolean isBox(
 				const OpenViBE::CIdentifier& rBoxIdentifier) const;
 			virtual const OpenViBE::Kernel::IBox* getBoxDetails(
@@ -155,20 +150,6 @@ namespace OpenViBE
 			virtual OpenViBE::boolean disconnect(
 				const OpenViBE::CIdentifier& rLinkIdentifier);
 
-			virtual OpenViBE::CIdentifier getNextProcessingUnitIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
-			virtual OpenViBE::boolean isProcessingUnit(
-				const OpenViBE::CIdentifier& rIdentifier) const;
-			virtual const OpenViBE::Kernel::IProcessingUnit* getProcessingUnitDetails(
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier) const;
-			virtual OpenViBE::Kernel::IProcessingUnit* getProcessingUnitDetails(
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier);
-			virtual OpenViBE::boolean addProcessingUnit(
-				OpenViBE::CIdentifier& rProcessingUnitIdentifier,
-				const OpenViBE::CIdentifier& rSuggestedProcessingUnitIdentifier);
-			virtual OpenViBE::boolean removeProcessingUnit(
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier);
-
 			virtual OpenViBE::boolean applyLocalSettings(void);
 			virtual OpenViBE::boolean checkSettings(IConfigurationManager* pConfig);
 
@@ -195,7 +176,6 @@ namespace OpenViBE
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CBox*> m_vBox;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CComment*> m_vComment;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CLink*> m_vLink;
-			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CProcessingUnit*> m_vProcessingUnit;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CBox*> m_vNeedsUpdatesBoxes;
 
 			OpenViBE::boolean m_bHasIO;

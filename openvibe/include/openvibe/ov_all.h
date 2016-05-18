@@ -80,7 +80,6 @@
 #include "kernel/scenario/ovIBoxProto.h"
 #include "kernel/scenario/ovIComment.h"
 #include "kernel/scenario/ovILink.h"
-#include "kernel/scenario/ovIProcessingUnit.h"
 #include "kernel/scenario/ovIScenario.h"
 #include "kernel/scenario/ovIScenarioExporterContext.h"
 #include "kernel/scenario/ovIScenarioImporterContext.h"

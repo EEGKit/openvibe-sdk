@@ -15,7 +15,6 @@ namespace OpenViBE
 	namespace Kernel
 	{
 		class ILink;
-		class IProcessingUnit;
 
 		/**
 		 * \class IScenario
@@ -99,25 +98,6 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::CIdentifier getNextBoxIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
-			/**
-			 * \brief Gets next box identifier running on a given process unit
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding box
-			 * \param rProcessingUnitIdentifier [in] : The identifier
-			 *        for the processing unit which the box should
-			 *        be ran on.
-			 * \return The identifier of the next box in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first box
-			 *       identifier.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rProcessingUnitIdentifier
-			 *       will cause this function to return an unaffected box
-			 *       identifier.
-			 */
-			virtual OpenViBE::CIdentifier getNextBoxIdentifierOnProcessingUnit(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier) const=0;
 			/**
 			 * \brief Tests whether a given identifier is a box or not
 			 * \param rBoxIdentifier [in] : the identifier to test
@@ -484,65 +464,7 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::boolean removeComment(
 				const OpenViBE::CIdentifier& rCommentIdentifier)=0;
-
-			//@}
-			/** \name Processing units management */
-			//@{
-
-			/**
-			 * \brief Gets next processing unit identifier
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding processing unit
-			 * \return The identifier of the next processing unit in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first processing unit
-			 *       identifier.
-			 */
-			virtual OpenViBE::CIdentifier getNextProcessingUnitIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
-			/**
-			 * \brief Tests if a processing unit exists
-			 * \param rIdentifier [in] : the identifier which should be tested
-			 * \return \e true if the provided identifier is a processing unit identifier.
-			 * \return \e false in other cases.
-			 */
-			virtual OpenViBE::boolean isProcessingUnit(
-				const OpenViBE::CIdentifier& rIdentifier) const=0;
-			/**
-			 * \brief Gets processing unit details
-			 * \param rProcessingUnitIdentifier [in] : the identifier of the processing unit which details should be returned
-			 * \return the details for the identifier processing unit in case of success.
-			 * \return \c NULL in case of error.
-			 */
-			virtual const OpenViBE::Kernel::IProcessingUnit* getProcessingUnitDetails(
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier) const=0;
-			/// \copydoc getProcessingUnitDetails(const OpenViBE::CIdentifier&)const
-			virtual OpenViBE::Kernel::IProcessingUnit* getProcessingUnitDetails(
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier)=0;
-			/**
-			 * \brief Adds a new processing unit in the scenario
-			 * \param rProcessingUnitIdentifier [out] : the newly created identifier
-			 * \param rSuggestedProcessingUnitIdentifier [in] : a suggestion for the new
-			 *        processing unit identifier. If this specific identifier is not
-			 *        yet used, this scenario might use it. If the identifier
-			 *        is already used or \c OV_UndefinedIdentifier is passed,
-			 *        then a random unused identifier will be used.
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
-			 */
-			virtual OpenViBE::boolean addProcessingUnit(
-				OpenViBE::CIdentifier& rProcessingUnitIdentifier,
-				const OpenViBE::CIdentifier& rSuggestedProcessingUnitIdentifier)=0;
-			/**
-			 * \brief Removes a processing unit in the scenario
-			 * \param rProcessingUnitIdentifier [in] : the identifier of the processing unit to remove
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
-			 */
-			virtual OpenViBE::boolean removeProcessingUnit(
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier)=0;
-
+			
 			/**
 			 * \brief replaces settings of each box by its locally expanded version
 			 * only expands the $var{} tokens, it leaves others as is
