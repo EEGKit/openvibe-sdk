@@ -1,6 +1,6 @@
 # ---------------------------------
-# Finds Lepton sources
-# Sets lepton_source_files
+# Find r8brain sources
+# Sets r9brain_source_files
 # Adds appropriate include dir
 # ---------------------------------
 
