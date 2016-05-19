@@ -1,7 +1,7 @@
 #ifndef __OpenViBEToolkit_Defines_H__
 #define __OpenViBEToolkit_Defines_H__
 
-#include "ovtk_stimulations.h"
+#include <toolkit/ovtk_stimulations.h>
 
 //___________________________________________________________________//
 //                                                                   //

@@ -121,6 +121,7 @@ SET_PROPERTY(GLOBAL PROPERTY OV_PROP_CURRENT_PROJECTS_BUILD_DIR "")
 
 # Used by the various Find* scripts to locate OpenViBE modules
 SET(OV_BASE_DIR ${CMAKE_SOURCE_DIR})
+SET(OV_BASE_BIN_DIR ${CMAKE_BINARY_DIR})
 
 # needed for making visual studio projects when this script is called without CMAKE_BUILD_TYPE
 SET_PROPERTY(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_DEBUG "TARGET_BUILDTYPE_Debug")
@@ -186,9 +187,6 @@ IF(WIN32)
 	SET(ABSOLUTE_PATH_DEPENDENCIES ${OV_CUSTOM_DEPENDENCIES_PATH})
 	CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/scripts/windows-set-environment.cmd-base "${CMAKE_INSTALL_FULL_BINDIR}/openvibe-set-env.cmd")
 ENDIF(WIN32)
-
-
-ADD_DEPENDENCIES(openvibe-toolkit openvibe-stimulation-generator )
 
 # add the scripts to the project so IDEs using the CMake file are aware of them
 FILE(GLOB_RECURSE script_files scripts/*.cmd scripts/*.sh scripts/*.nsi)

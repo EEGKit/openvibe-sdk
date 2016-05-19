@@ -7,31 +7,42 @@ SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
 SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
 
-#We need to generate the stimulation files
-add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/toolkit/ovtk_stimulations.h ${CMAKE_CURRENT_SOURCE_DIR}/src/ovtk_stimulations.cpp
+# Command to generate cpp compliant stimulation files from text file
+ADD_CUSTOM_COMMAND(
+	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/toolkit/ovtk_stimulations.h ${CMAKE_CURRENT_BINARY_DIR}/src/ovtk_stimulations.cpp
     DEPENDS openvibe-stimulation-generator ${CMAKE_CURRENT_SOURCE_DIR}/share/stimulation_list.txt
     COMMAND openvibe-stimulation-generator
     --cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/share/stimulation_list.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/toolkit/ovtk_stimulations.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ovtk_stimulations.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/include/toolkit/ovtk_stimulations.h
+    ${CMAKE_CURRENT_BINARY_DIR}/src/ovtk_stimulations.cpp
     COMMENT "Generating stimulation sources..." )
-    
-add_custom_target(generate_stimulations_file DEPENDS include/toolkit/ovtk_stimulations.h src/ovtk_stimulations.cpp)
+
+# ADD_CUSTOM_TARGET will automatically trigger the command defined above
+# as it depends on its outputs
+ADD_CUSTOM_TARGET(openvibe-generate-stimulation-file
+	DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/include/toolkit/ovtk_stimulations.h ${CMAKE_CURRENT_BINARY_DIR}/src/ovtk_stimulations.cpp)
 
 FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.inl src/*.hpp include/*.h)
 INCLUDE("FindSourceRCProperties")
 
-INCLUDE_DIRECTORIES(${openvibe-toolkit_SOURCE_DIR}/include/)
-INCLUDE_DIRECTORIES(${openvibe-toolkit_SOURCE_DIR}/include/toolkit/algorithms/scenario-io)
-INCLUDE_DIRECTORIES(${openvibe-toolkit_SOURCE_DIR}/include/toolkit/algorithms/classification)
-INCLUDE_DIRECTORIES(${openvibe-toolkit_SOURCE_DIR}/include/toolkit/deprecated/writer)
-INCLUDE_DIRECTORIES(${openvibe-toolkit_SOURCE_DIR}/include/toolkit/deprecated/reader)
-INCLUDE_DIRECTORIES(${openvibe-toolkit_SOURCE_DIR}/include/toolkit/training)
-INCLUDE_DIRECTORIES(${openvibe-toolkit_SOURCE_DIR}/include/toolkit/tools)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include/)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include/toolkit/algorithms/scenario-io)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include/toolkit/algorithms/classification)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include/toolkit/deprecated/writer)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include/toolkit/deprecated/reader)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include/toolkit/training)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include/toolkit/tools)
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${source_files} ${CMAKE_CURRENT_SOURCE_DIR}/src/ovtk_stimulations.cpp)
-add_dependencies(openvibe-toolkit generate_stimulations_file)
+# add binary directory to includes as it contains generated stimulation header
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/include/)
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED 
+	${source_files} 
+	${CMAKE_CURRENT_BINARY_DIR}/include/toolkit/ovtk_stimulations.h 
+	${CMAKE_CURRENT_BINARY_DIR}/src/ovtk_stimulations.cpp
+	)
+ADD_DEPENDENCIES(${PROJECT_NAME} openvibe-generate-stimulation-file)
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
@@ -61,4 +72,5 @@ INSTALL(TARGETS ${PROJECT_NAME}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
 
-INSTALL(DIRECTORY include/   DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
+INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ ${CMAKE_CURRENT_BINARY_DIR}/include/   DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
+
