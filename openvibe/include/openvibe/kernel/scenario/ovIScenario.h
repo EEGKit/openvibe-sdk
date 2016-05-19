@@ -15,7 +15,6 @@ namespace OpenViBE
 	namespace Kernel
 	{
 		class ILink;
-		class IProcessingUnit;
 
 		/**
 		 * \class IScenario
@@ -99,25 +98,6 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::CIdentifier getNextBoxIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
-			/**
-			 * \brief Gets next box identifier running on a given process unit
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding box
-			 * \param rProcessingUnitIdentifier [in] : The identifier
-			 *        for the processing unit which the box should
-			 *        be ran on.
-			 * \return The identifier of the next box in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first box
-			 *       identifier.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rProcessingUnitIdentifier
-			 *       will cause this function to return an unaffected box
-			 *       identifier.
-			 */
-			virtual OpenViBE::CIdentifier getNextBoxIdentifierOnProcessingUnit(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier) const=0;
 			/**
 			 * \brief Tests whether a given identifier is a box or not
 			 * \param rBoxIdentifier [in] : the identifier to test
@@ -407,165 +387,6 @@ namespace OpenViBE
 			virtual OpenViBE::boolean removeScenarioOutput(const uint32 ui32OutputIndex) = 0;
 
 			//@}
-			/** \name Message connection management */
-			//@{
-			/**
-			 * \brief Gets next  message link identifier
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding link
-			 * \return The identifier of the next link in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first link
-			 *       identifier.
-			 */
-			virtual OpenViBE::CIdentifier getNextMessageLinkIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
-
-			/**
-			 * \brief Gets next message link identifier from fixed box
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding message link
-			 * \param rBoxIdentifier [in] : The box identifier
-			 *        which the message link should end to
-			 * \return The identifier of the next message link in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first message link
-			 *       identifier.
-			 */
-			virtual OpenViBE::CIdentifier getNextMessageLinkIdentifierFromBox(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rBoxIdentifier) const=0;
-			/**
-			 * \brief Gets next message  link identifier from fixed box output
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding message  link
-			 * \param rBoxIdentifier [in] : The box identifier
-			 *        which the message  link should end to
-			 * \param ui32OutputIndex [in] : The input index
-			 *        which the message  link should end to
-			 * \return The identifier of the next message  link in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first message  link
-			 *       identifier.
-			 */
-			virtual OpenViBE::CIdentifier getNextMessageLinkIdentifierFromBoxOutput(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::uint32 ui32OutputIndex) const=0;
-
-			/**
-			 * \brief Gets next message link identifier from fixed box
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding message link
-			 * \param rBoxIdentifier [in] : The box identifier
-			 *        which the message link should start from
-			 * \return The identifier of the next message link in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first message link
-			 *       identifier.
-			 */
-			virtual OpenViBE::CIdentifier getNextMessageLinkIdentifierToBox(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rBoxIdentifier) const=0;
-			/**
-			 * \brief Gets next message link identifier from fixed box input
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding message link
-			 * \param rBoxIdentifier [in] : The box identifier
-			 *        which the message link should start from
-			 * \param ui32InputInex [in] : The input index
-			 *        which the message link should start from
-			 * \return The identifier of the next message link in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first message link
-			 *       identifier.
-			 */
-			virtual OpenViBE::CIdentifier getNextMessageLinkIdentifierToBoxInput(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::uint32 ui32InputInex) const=0;
-
-			/**
-			 * \brief Tests whether a given identifier is a message link or not
-			 * \param rIdentifier [in] : the identifier to test
-			 * \return \e true if the identified object is a message link
-			 * \return \e false if the identified object is not a message link
-			 * \note Requesting a bad identifier returns \e false
-			 */
-			virtual OpenViBE::boolean isMessageLink(
-				const OpenViBE::CIdentifier& rIdentifier) const=0;
-
-			/**
-			 * \brief Gets the details for a specific message link
-			 * \param rLinkIdentifier [in] : The identifier
-			 *        of the message link which details should be
-			 *        sent.
-			 * \return The message link details
-			 */
-			virtual OpenViBE::Kernel::ILink* getMessageLinkDetails(
-				const OpenViBE::CIdentifier& rLinkIdentifier)=0;
-			/// \copydoc getMessageLinkDetails(const OpenViBE::CIdentifier&)const
-			virtual const OpenViBE::Kernel::ILink* getMessageLinkDetails(
-				const OpenViBE::CIdentifier& rLinkIdentifier) const=0;
-
-			/**
-			 * \brief Creates a message connection between two boxes
-			 * \param rLinkIdentifier [out] : The created link identifier.
-			 * \param rSourceBoxIdentifier [in] : The source box identifier
-			 * \param ui32SourceBoxOutputIndex [in] : The output index for the given source box
-			 * \param rTargetBoxIdentifier [in] : The target box identifier
-			 * \param ui32TargetBoxInputIndex [in] : The input index for the given target box
-			 * \param rSuggestedMessageLinkIdentifier [in] : a suggestion for the new
-			 *        message link identifier. If this specific identifier is not
-			 *        yet used, this scenario might use it. If the identifier
-			 *        is already used or \c OV_UndefinedIdentifier is passed,
-			 *        then a random unused identifier will be used.
-			 * \return \e true in case of success.
-			 * \return \e false in case of error. In such case,
-			 *         rLinkIdentifier remains unchanged.
-			 */
-			virtual OpenViBE::boolean connectMessage(
-				OpenViBE::CIdentifier& rLinkIdentifier,
-				const OpenViBE::CIdentifier& rSourceBoxIdentifier,
-				const OpenViBE::uint32 ui32SourceBoxOutputIndex,
-				const OpenViBE::CIdentifier& rTargetBoxIdentifier,
-				const OpenViBE::uint32 ui32TargetBoxInputIndex,
-				const OpenViBE::CIdentifier& rSuggestedMessageLinkIdentifier)=0;
-
-			/**
-			 * \brief Deletes a message connection between two boxes
-			 * \param rSourceBoxIdentifier [in] : The source
-			 *        box identifier
-			 * \param ui32SourceBoxOutputIndex [in] : The message output
-			 *        index for the given source box
-			 * \param rTargetBoxIdentifier [in] : The target
-			 *        box identifier
-			 * \param ui32TargetBoxInputIndex [in] : The message input
-			 *        index for the given target box
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
-			 */
-			virtual OpenViBE::boolean disconnectMessage(
-				const OpenViBE::CIdentifier& rSourceBoxIdentifier,
-				const OpenViBE::uint32 ui32SourceBoxOutputIndex,
-				const OpenViBE::CIdentifier& rTargetBoxIdentifier,
-				const OpenViBE::uint32 ui32TargetBoxInputIndex)=0;
-			/**
-			 * \brief Deletes a message connection between two boxes
-			 * \param rLinkIdentifier [out] : The identifier
-			 *        for the message link to be deleted
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
-			 */
-			virtual OpenViBE::boolean disconnectMessage(
-				const OpenViBE::CIdentifier& rLinkIdentifier)=0;
-
-			//@}
 			/** \name Comment management */
 			//@{
 
@@ -643,65 +464,7 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::boolean removeComment(
 				const OpenViBE::CIdentifier& rCommentIdentifier)=0;
-
-			//@}
-			/** \name Processing units management */
-			//@{
-
-			/**
-			 * \brief Gets next processing unit identifier
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding processing unit
-			 * \return The identifier of the next processing unit in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first processing unit
-			 *       identifier.
-			 */
-			virtual OpenViBE::CIdentifier getNextProcessingUnitIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
-			/**
-			 * \brief Tests if a processing unit exists
-			 * \param rIdentifier [in] : the identifier which should be tested
-			 * \return \e true if the provided identifier is a processing unit identifier.
-			 * \return \e false in other cases.
-			 */
-			virtual OpenViBE::boolean isProcessingUnit(
-				const OpenViBE::CIdentifier& rIdentifier) const=0;
-			/**
-			 * \brief Gets processing unit details
-			 * \param rProcessingUnitIdentifier [in] : the identifier of the processing unit which details should be returned
-			 * \return the details for the identifier processing unit in case of success.
-			 * \return \c NULL in case of error.
-			 */
-			virtual const OpenViBE::Kernel::IProcessingUnit* getProcessingUnitDetails(
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier) const=0;
-			/// \copydoc getProcessingUnitDetails(const OpenViBE::CIdentifier&)const
-			virtual OpenViBE::Kernel::IProcessingUnit* getProcessingUnitDetails(
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier)=0;
-			/**
-			 * \brief Adds a new processing unit in the scenario
-			 * \param rProcessingUnitIdentifier [out] : the newly created identifier
-			 * \param rSuggestedProcessingUnitIdentifier [in] : a suggestion for the new
-			 *        processing unit identifier. If this specific identifier is not
-			 *        yet used, this scenario might use it. If the identifier
-			 *        is already used or \c OV_UndefinedIdentifier is passed,
-			 *        then a random unused identifier will be used.
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
-			 */
-			virtual OpenViBE::boolean addProcessingUnit(
-				OpenViBE::CIdentifier& rProcessingUnitIdentifier,
-				const OpenViBE::CIdentifier& rSuggestedProcessingUnitIdentifier)=0;
-			/**
-			 * \brief Removes a processing unit in the scenario
-			 * \param rProcessingUnitIdentifier [in] : the identifier of the processing unit to remove
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
-			 */
-			virtual OpenViBE::boolean removeProcessingUnit(
-				const OpenViBE::CIdentifier& rProcessingUnitIdentifier)=0;
-
+			
 			/**
 			 * \brief replaces settings of each box by its locally expanded version
 			 * only expands the $var{} tokens, it leaves others as is

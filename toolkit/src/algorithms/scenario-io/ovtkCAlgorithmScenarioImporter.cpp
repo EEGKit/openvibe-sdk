@@ -50,25 +50,12 @@ namespace OpenViBEToolkit
 			CString m_sName;
 		} SInput;
 
-		typedef struct _SMessageInput
-		{
-			_default_and_copy_constructor_1_(_SMessageInput, m_sName);
-			CString m_sName;
-		} SMessageInput;
-
 		typedef struct _SOutput
 		{
 			_default_and_copy_constructor_2_(_SOutput, m_oTypeIdentifier, m_sName);
 			CIdentifier m_oTypeIdentifier;
 			CString m_sName;
 		} SOutput;
-
-		typedef struct _SMessageOutput
-		{
-			_default_and_copy_constructor_1_(_SMessageOutput, m_sName);
-			//CIdentifier m_oTypeIdentifier;
-			CString m_sName;
-		} SMessageOutput;
 
 		typedef struct _SSetting
 		{
@@ -93,7 +80,7 @@ namespace OpenViBEToolkit
 		} SAttribute;
 		typedef struct _SBox
 		{
-			_default_and_copy_constructor_9_(_SBox, m_oIdentifier, m_oAlgorithmClassIdentifier, m_sName, m_vInput, m_vOutput, m_vSetting, m_vAttribute, m_vMessageInput, m_vMessageOutput);
+			_default_and_copy_constructor_7_(_SBox, m_oIdentifier, m_oAlgorithmClassIdentifier, m_sName, m_vInput, m_vOutput, m_vSetting, m_vAttribute);
 			CIdentifier m_oIdentifier;
 			CIdentifier m_oAlgorithmClassIdentifier;
 			CString m_sName;
@@ -101,8 +88,6 @@ namespace OpenViBEToolkit
 			std::vector<SOutput> m_vOutput;
 			std::vector<SSetting> m_vSetting;
 			std::vector<SAttribute> m_vAttribute;
-			std::vector<SMessageInput> m_vMessageInput;
-			std::vector<SMessageOutput> m_vMessageOutput;
 		} SBox;
 		typedef struct _SComment
 		{
@@ -145,14 +130,13 @@ namespace OpenViBEToolkit
 		} SVisualisationWidget;
 		typedef struct _SScenario
 		{
-			_default_and_copy_constructor_6_(_SScenario, m_vBox, m_vComment, m_vLink, m_vMessageLink, m_vAttribute, m_vVisualisationWidget);
+			_default_and_copy_constructor_5_(_SScenario, m_vBox, m_vComment, m_vLink, m_vAttribute, m_vVisualisationWidget);
 			std::vector<SSetting> m_vSetting;
 			std::vector<SScenarioInput> m_vScenarioInput;
 			std::vector<SScenarioOutput> m_vScenarioOutput;
 			std::vector<SBox> m_vBox;
 			std::vector<SComment> m_vComment;
 			std::vector<SLink> m_vLink;
-			std::vector<SLink> m_vMessageLink;
 			std::vector<SAttribute> m_vAttribute;
 			std::vector<SVisualisationWidget> m_vVisualisationWidget;
 		} SScenario;
@@ -213,7 +197,6 @@ boolean CAlgorithmScenarioImporter::process(void)
 	std::map<CIdentifier, CIdentifier> l_vBoxIdMapping;
 	std::map<CIdentifier, CIdentifier> l_vCommentIdMapping;
 	std::map<CIdentifier, CIdentifier> l_vLinkIdMapping;
-	std::map<CIdentifier, CIdentifier> l_vMessageLinkIdMapping;
 	std::map<CIdentifier, CIdentifier> l_vVisualisationWidgetIdMapping;
 
 	CAlgorithmScenarioImporterContext l_oContext(this->getAlgorithmContext());
@@ -231,8 +214,6 @@ boolean CAlgorithmScenarioImporter::process(void)
 	std::vector<SBox>::const_iterator b;
 	std::vector<SComment>::const_iterator c;
 	std::vector<SInput>::const_iterator i;
-	std::vector<SMessageInput>::const_iterator mi;
-	std::vector<SMessageOutput>::const_iterator mo;
 	std::vector<SOutput>::const_iterator o;
 	std::vector<SSetting>::const_iterator s;
 	std::vector<SLink>::const_iterator l;
@@ -269,18 +250,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 					i->m_sName,
 					i->m_oTypeIdentifier);
 			}
-			//
-			for(mi=b->m_vMessageInput.begin(); mi!=b->m_vMessageInput.end(); mi++)
-			{
-				l_pBox->addMessageInput(
-					mi->m_sName);
-			}
-			for(mo=b->m_vMessageOutput.begin(); mo!=b->m_vMessageOutput.end(); mo++)
-			{
-				l_pBox->addMessageOutput(
-					mo->m_sName);
-			}
-			//
+			
 			for(o=b->m_vOutput.begin(); o!=b->m_vOutput.end(); o++)
 			{
 				l_pBox->addOutput(
@@ -364,31 +334,6 @@ boolean CAlgorithmScenarioImporter::process(void)
 					a->m_sValue);
 			}
 			l_vLinkIdMapping[l->m_oIdentifier]=l_oNewLinkIdentifier;
-		}
-	}
-
-	for(ml=l_rSymbolicScenario.m_vMessageLink.begin(); ml!=l_rSymbolicScenario.m_vMessageLink.end(); ml++)
-	{
-		ILink* l_pLink=NULL;
-		CIdentifier l_oNewLinkIdentifier;
-
-		l_pScenario->connectMessage(
-			l_oNewLinkIdentifier,
-			l_vBoxIdMapping[ml->m_oLinkSource.m_oBoxIdentifier],
-			ml->m_oLinkSource.m_ui32BoxOutputIndex,
-			l_vBoxIdMapping[ml->m_oLinkTarget.m_oBoxIdentifier],
-			ml->m_oLinkTarget.m_ui32BoxInputIndex,
-			ml->m_oIdentifier);
-		l_pLink=l_pScenario->getMessageLinkDetails(l_oNewLinkIdentifier);
-		if(l_pLink)
-		{
-			for(a=ml->m_vAttribute.begin(); a!=ml->m_vAttribute.end(); a++)
-			{
-				l_pLink->addAttribute(
-					a->m_oIdentifier,
-					a->m_sValue);
-			}
-			l_vMessageLinkIdMapping[ml->m_oIdentifier]=l_oNewLinkIdentifier;
 		}
 	}
 
@@ -490,8 +435,6 @@ boolean CAlgorithmScenarioImporterContext::processStart(const CIdentifier& rIden
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute)                            { m_oSymbolicScenario.m_vBox.back().m_vAttribute.push_back(SAttribute()); }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attributes)                          { }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute)                           { m_oSymbolicScenario.m_vLink.back().m_vAttribute.push_back(SAttribute()); }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Attributes)                   { }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Attribute)                    { m_oSymbolicScenario.m_vMessageLink.back().m_vAttribute.push_back(SAttribute()); }//Message
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attributes)           { }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attribute)            { m_oSymbolicScenario.m_vVisualisationWidget.back().m_vAttribute.push_back(SAttribute()); }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Boxes)                                    { }
@@ -510,14 +453,6 @@ boolean CAlgorithmScenarioImporterContext::processStart(const CIdentifier& rIden
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output)                               { m_oSymbolicScenario.m_vBox.back().m_vOutput.push_back(SOutput()); }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Settings)                             { }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting)                              { m_oSymbolicScenario.m_vBox.back().m_vSetting.push_back(SSetting()); }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_MessageInputs)                               { }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_MessageInput)                                { m_oSymbolicScenario.m_vBox.back().m_vMessageInput.push_back(SMessageInput()); }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_MessageOutputs)                              { }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_MessageOutput)                               { m_oSymbolicScenario.m_vBox.back().m_vMessageOutput.push_back(SMessageOutput()); }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLinks)                                    { }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink)                                     { m_oSymbolicScenario.m_vMessageLink.push_back(SLink()); }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Source)                              { }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Target)                              { }
 	//
 	else m_rAlgorithmContext.getLogManager() << LogLevel_Warning << "(start) Unexpected node identifier " << rIdentifier << "\n";
 
@@ -552,11 +487,6 @@ boolean CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxIdentifier)                { m_oSymbolicScenario.m_vLink.back().m_oLinkSource.m_oBoxIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxIdentifier)                { m_oSymbolicScenario.m_vLink.back().m_oLinkTarget.m_oBoxIdentifier=rValue; }
 
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Attribute_Identifier)                { m_oSymbolicScenario.m_vMessageLink.back().m_vAttribute.back().m_oIdentifier=rValue; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Identifier)                          { m_oSymbolicScenario.m_vMessageLink.back().m_oIdentifier=rValue; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Source_BoxIdentifier)                { m_oSymbolicScenario.m_vMessageLink.back().m_oLinkSource.m_oBoxIdentifier=rValue; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Target_BoxIdentifier)                { m_oSymbolicScenario.m_vMessageLink.back().m_oLinkTarget.m_oBoxIdentifier=rValue; }
-
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier)            { m_oSymbolicScenario.m_vAttribute.back().m_oIdentifier=rValue; }
 	else m_rAlgorithmContext.getLogManager() << LogLevel_Warning << "(id) Unexpected node identifier " << rIdentifier << "\n";
 
@@ -579,11 +509,8 @@ boolean CAlgorithmScenarioImporterContext::processString(const CIdentifier& rIde
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Text)                             { m_oSymbolicScenario.m_vComment.back().m_sText=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Value)                  { m_oSymbolicScenario.m_vComment.back().m_vAttribute.back().m_sValue=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Value)                     { m_oSymbolicScenario.m_vLink.back().m_vAttribute.back().m_sValue=rValue; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Attribute_Value)              { m_oSymbolicScenario.m_vMessageLink.back().m_vAttribute.back().m_sValue=rValue; }
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value)                 { m_oSymbolicScenario.m_vAttribute.back().m_sValue=rValue; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_MessageInput_Name)                    { m_oSymbolicScenario.m_vBox.back().m_vMessageInput.back().m_sName=rValue; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_MessageOutput_Name)                   { m_oSymbolicScenario.m_vBox.back().m_vMessageOutput.back().m_sName=rValue; }
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Name)                         { m_oSymbolicScenario.m_vSetting.back().m_sName=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_DefaultValue)                 { m_oSymbolicScenario.m_vSetting.back().m_sDefaultValue=rValue; }
@@ -605,8 +532,6 @@ boolean CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& rI
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_NumChildren)          { m_oSymbolicScenario.m_vVisualisationWidget.back().m_ui32NbChildren=(uint32)ui64Value; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex)               { m_oSymbolicScenario.m_vLink.back().m_oLinkSource.m_ui32BoxOutputIndex=(uint32)ui64Value; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIndex)                { m_oSymbolicScenario.m_vLink.back().m_oLinkTarget.m_ui32BoxInputIndex=(uint32)ui64Value; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Source_BoxOutputIndex)        { m_oSymbolicScenario.m_vMessageLink.back().m_oLinkSource.m_ui32BoxOutputIndex=(uint32)ui64Value; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MessageLink_Target_BoxInputIndex)         { m_oSymbolicScenario.m_vMessageLink.back().m_oLinkTarget.m_ui32BoxInputIndex=(uint32)ui64Value; }
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIndex)       { m_oSymbolicScenario.m_vScenarioInput.back().m_ui32LinkedBoxInputIndex=(uint32)ui64Value; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex)     { m_oSymbolicScenario.m_vScenarioOutput.back().m_ui32LinkedBoxOutputIndex=(uint32)ui64Value; }

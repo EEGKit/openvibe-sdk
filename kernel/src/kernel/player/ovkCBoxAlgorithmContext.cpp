@@ -42,12 +42,10 @@ namespace OpenViBE
 				virtual __BridgeBindFunc0__((*m_pBox), CIdentifier, getIdentifier, const);
 				virtual __BridgeBindFunc0__((*m_pBox), CString, getName, const);
 				virtual __BridgeBindFunc0__((*m_pBox), CIdentifier, getAlgorithmClassIdentifier, const);
-				virtual __BridgeBindFunc0__((*m_pBox), CIdentifier, getProcessingUnitIdentifier, const);
 				virtual __BridgeImplFunc1__((*m_pBox), boolean, setIdentifier, , return false, const CIdentifier&, rIdentifier);
 				virtual __BridgeImplFunc1__((*m_pBox), boolean, setName, , return false, const CString&, sName);
 				virtual __BridgeImplFunc1__((*m_pBox), boolean, setAlgorithmClassIdentifier, , return false, const CIdentifier&, rAlgorithmClassIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, setProcessingUnitIdentifier, , return false, const CIdentifier&, rProcessingUnitIdentifier);
-
+				
 				virtual __BridgeImplFunc1__((*m_pBox), boolean, initializeFromAlgorithmClassIdentifier, , return false, const CIdentifier&, rAlgorithmClassIdentifier);
 				virtual __BridgeImplFunc1__((*m_pBox), boolean, initializeFromExistingBox, , return false, const IBox&, rExisitingBox);
 
@@ -58,22 +56,6 @@ namespace OpenViBE
 				virtual __BridgeBindFunc2__((*m_pBox), boolean, getInputName, const, const uint32, ui32InputIndex, CString&, rName);
 				virtual __BridgeImplFunc2__((*m_pBox), boolean, setInputType, , return false, const uint32, ui32InputIndex, const CIdentifier&, rTypeIdentifier);
 				virtual __BridgeImplFunc2__((*m_pBox), boolean, setInputName, , return false, const uint32, ui32InputIndex, const CString&, rName);
-
-				//
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, addMessageInput, , return false, const CString&, sName);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, removeMessageInput, , return false, const uint32, ui32InputIndex);
-				virtual __BridgeBindFunc0__((*m_pBox), uint32, getMessageInputCount, const);
-
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getMessageInputName, const, const uint32, ui32InputIndex, CString&, rName);
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setMessageInputName, , return false, const uint32, ui32InputIndex, const CString&, rName);
-				//
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, addMessageOutput, , return false, const CString&, sName);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, removeMessageOutput, , return false, const uint32, ui32InputIndex);
-				virtual __BridgeBindFunc0__((*m_pBox), uint32, getMessageOutputCount, const);
-
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getMessageOutputName, const, const uint32, ui32InputIndex, CString&, rName);
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setMessageOutputName, , return false, const uint32, ui32InputIndex, const CString&, rName);
-				//
 
 				virtual __BridgeImplFunc2__((*m_pBox), boolean, addOutput, , return false, const CString&, sName, const CIdentifier&, rTypeIdentifier);
 				virtual __BridgeImplFunc1__((*m_pBox), boolean, removeOutput, , return false, const uint32, ui32OutputIndex);

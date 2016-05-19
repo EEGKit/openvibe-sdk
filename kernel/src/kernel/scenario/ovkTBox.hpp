@@ -33,11 +33,6 @@ namespace{
 			const OpenViBE::CString& sName,
 			const OpenViBE::CIdentifier& rTypeIdentifier){return true;}
 
-		virtual OpenViBE::boolean addMessageInput(
-			const OpenViBE::CString& sName){return true;}
-		virtual OpenViBE::boolean addMessageOutput(
-			const OpenViBE::CString& sName){return true;}
-
 		virtual OpenViBE::boolean addOutput(
 			const OpenViBE::CString& sName,
 			const OpenViBE::CIdentifier& rTypeIdentifier){return true;}
@@ -73,7 +68,6 @@ namespace OpenViBE
 				,m_bIsObserverNotificationActive(true)
 				,m_oIdentifier(OV_UndefinedIdentifier)
 			    ,m_oAlgorithmClassIdentifier(OV_UndefinedIdentifier)
-			    ,m_oProcessingUnitIdentifier(OV_UndefinedIdentifier)
 			    ,m_sName("unnamed")
 			{
 			}
@@ -106,11 +100,6 @@ namespace OpenViBE
 			virtual OpenViBE::CIdentifier getAlgorithmClassIdentifier(void) const
 			{
 				return m_oAlgorithmClassIdentifier;
-			}
-
-			virtual OpenViBE::CIdentifier getProcessingUnitIdentifier(void) const
-			{
-				return m_oProcessingUnitIdentifier;
 			}
 
 			virtual OpenViBE::boolean setIdentifier(const OpenViBE::CIdentifier& rIdentifier)
@@ -174,15 +163,6 @@ namespace OpenViBE
 				m_pBoxAlgorithmDescriptor->getBoxPrototype(oTempProto);
 
 				this->notify(BoxModification_AlgorithmClassIdentifierChanged);
-
-				return true;
-			}
-
-			virtual OpenViBE::boolean setProcessingUnitIdentifier(const OpenViBE::CIdentifier& rProcessingUnitIdentifier)
-			{
-				m_oProcessingUnitIdentifier=rProcessingUnitIdentifier;
-
-				this->notify(BoxModification_ProcessingUnitChanged);
 
 				return true;
 			}
@@ -269,13 +249,6 @@ namespace OpenViBE
 					addInput(l_sName, l_oType);
 				}
 
-				for(i=0; i<rExistingBox.getMessageInputCount(); i++)
-				{
-					CString l_sName;
-					rExistingBox.getMessageInputName(i, l_sName);
-					addMessageInput(l_sName);
-				}
-
 				for(i=0; i<rExistingBox.getOutputCount(); i++)
 				{
 					CIdentifier l_oType;
@@ -283,13 +256,6 @@ namespace OpenViBE
 					rExistingBox.getOutputType(i, l_oType);
 					rExistingBox.getOutputName(i, l_sName);
 					addOutput(l_sName, l_oType);
-				}
-
-				for(i=0; i<rExistingBox.getMessageOutputCount(); i++)
-				{
-					CString l_sName;
-					rExistingBox.getMessageOutputName(i, l_sName);
-					addMessageOutput(l_sName);
 				}
 
 				for(i=0; i<rExistingBox.getSettingCount(); i++)
@@ -1117,215 +1083,6 @@ namespace OpenViBE
 				return rObjectVisitor.processBegin(l_oObjectVisitorContext, *this) && rObjectVisitor.processEnd(l_oObjectVisitorContext, *this);
 			}
 
-			//messages input
-			virtual OpenViBE::boolean addMessageInput(const OpenViBE::CString& sName)
-			{
-				//this->getLogManager() << LogLevel_Fatal << "adding message input named "<< sName << "for box "<< m_sName << "\n";
-				CMessageInput l_oMessageInput;
-				l_oMessageInput.m_sName = sName;
-				m_vMessageInput.push_back(l_oMessageInput);
-
-				this->notify(BoxModification_MessageInputAdded, m_vMessageInput.size()-1);
-
-				return true;
-			}
-
-			virtual OpenViBE::boolean removeMessageInput(const OpenViBE::uint32 ui32InputIndex)
-			{
-				CIdentifier l_oIdentifier;
-				size_t i;
-
-				if(ui32InputIndex >= m_vMessageInput.size())
-				{
-					return false;
-				}
-
-				while((l_oIdentifier=m_pOwnerScenario->getNextMessageLinkIdentifierToBoxInput(l_oIdentifier, m_oIdentifier, ui32InputIndex))!=OV_UndefinedIdentifier)
-				{
-					m_pOwnerScenario->disconnectMessage(l_oIdentifier);
-				}
-
-				// $$$
-				// The way the links are removed here
-				// is not correct because they are all
-				// collected and then all removed. In case
-				// the box listener callback on box removal,
-				// the nextcoming links would potentially be
-				// invalid
-				std::vector < CIdentifier > l_vMessageLinksToRemove;
-				std::vector < std::pair < std::pair < uint64, uint32 >, std::pair < uint64, uint32 > > > l_vMessageLink;
-				while((l_oIdentifier=m_pOwnerScenario->getNextMessageLinkIdentifierToBox(l_oIdentifier, m_oIdentifier))!=OV_UndefinedIdentifier)
-				{
-					ILink* l_pLink=m_pOwnerScenario->getMessageLinkDetails(l_oIdentifier);
-					if(l_pLink->getTargetBoxInputIndex()>ui32InputIndex)
-					{
-						std::pair < std::pair < uint64, uint32 >, std::pair < uint64, uint32 > > l;
-						l.first.first=l_pLink->getSourceBoxIdentifier().toUInteger();
-						l.first.second=l_pLink->getSourceBoxOutputIndex();
-						l.second.first=l_pLink->getTargetBoxIdentifier().toUInteger();
-						l.second.second=l_pLink->getTargetBoxInputIndex();
-						l_vMessageLink.push_back(l);
-						l_vMessageLinksToRemove.push_back(l_oIdentifier);
-					}
-				}
-
-				for(i=0; i<l_vMessageLinksToRemove.size(); i++)
-				{
-					m_pOwnerScenario->disconnectMessage(l_vMessageLinksToRemove[i]);
-				}
-
-				m_vMessageInput.erase(m_vMessageInput.begin()+ui32InputIndex);
-
-				for(i=0; i<l_vMessageLink.size(); i++)
-				{
-					m_pOwnerScenario->connectMessage(
-								l_oIdentifier,
-								l_vMessageLink[i].first.first,
-								l_vMessageLink[i].first.second,
-								l_vMessageLink[i].second.first,
-								l_vMessageLink[i].second.second-1,
-								OV_UndefinedIdentifier);
-				}
-
-				this->notify(BoxModification_MessageInputRemoved, ui32InputIndex);
-
-				return true;
-			}
-
-			virtual OpenViBE::uint32 getMessageInputCount(void) const
-			{
-				//this->getLogManager() << LogLevel_Fatal << "box "<< m_sName << " has " << (uint64)m_vMessageInput.size() << " message input\n";
-				return m_vMessageInput.size();
-			}
-
-			virtual OpenViBE::boolean getMessageInputName(const OpenViBE::uint32 ui32InputIndex, OpenViBE::CString& rName) const
-			{
-				if(ui32InputIndex>=m_vMessageInput.size())
-				{
-					return false;
-				}
-				rName=m_vMessageInput[ui32InputIndex].m_sName;
-				return true;
-			}
-
-			virtual OpenViBE::boolean setMessageInputName(const OpenViBE::uint32 ui32InputIndex, const OpenViBE::CString& rName)
-			{
-				if(ui32InputIndex>=m_vMessageInput.size())
-				{
-					return false;
-				}
-				m_vMessageInput[ui32InputIndex].m_sName=rName;
-
-				this->notify(BoxModification_MessageInputNameChanged, ui32InputIndex);
-
-				return true;
-			}
-
-			//message output
-			virtual OpenViBE::boolean addMessageOutput(const OpenViBE::CString& sName)
-			{
-				//this->getLogManager() << LogLevel_Fatal << "adding message Output named "<< sName << "for box "<< m_sName << "\n";
-				CMessageOutput l_oMessageOutput;
-				l_oMessageOutput.m_sName = sName;
-				m_vMessageOutput.push_back(l_oMessageOutput);
-
-				this->notify(BoxModification_MessageOutputAdded, m_vMessageOutput.size()-1);
-
-				return true;
-			}
-
-			virtual OpenViBE::boolean removeMessageOutput(const OpenViBE::uint32 ui32OutputIndex)
-			{
-				CIdentifier l_oIdentifier;
-				size_t i;
-
-				if(ui32OutputIndex >= m_vMessageOutput.size())
-				{
-					return false;
-				}
-
-				while((l_oIdentifier=m_pOwnerScenario->getNextMessageLinkIdentifierFromBoxOutput(l_oIdentifier, m_oIdentifier, ui32OutputIndex))!=OV_UndefinedIdentifier)
-				{
-					m_pOwnerScenario->disconnectMessage(l_oIdentifier);
-				}
-
-				// $$$
-				// The way the links are removed here
-				// is not correct because they are all
-				// collected and then all removed. In case
-				// the box listener callback on box removal,
-				// the nextcoming links would potentially be
-				// invalid
-				std::vector < CIdentifier > l_vMessageLinksToRemove;
-				std::vector < std::pair < std::pair < uint64, uint32 >, std::pair < uint64, uint32 > > > l_vMessageLink;
-				while((l_oIdentifier=m_pOwnerScenario->getNextMessageLinkIdentifierFromBox(l_oIdentifier, m_oIdentifier))!=OV_UndefinedIdentifier)
-				{
-					ILink* l_pLink=m_pOwnerScenario->getMessageLinkDetails(l_oIdentifier);
-					if(l_pLink->getSourceBoxOutputIndex()>ui32OutputIndex)
-					{
-						std::pair < std::pair < uint64, uint32 >, std::pair < uint64, uint32 > > l;
-						l.first.first=l_pLink->getSourceBoxIdentifier().toUInteger();
-						l.first.second=l_pLink->getSourceBoxOutputIndex();
-						l.second.first=l_pLink->getTargetBoxIdentifier().toUInteger();
-						l.second.second=l_pLink->getTargetBoxInputIndex();
-						l_vMessageLink.push_back(l);
-						l_vMessageLinksToRemove.push_back(l_oIdentifier);
-					}
-				}
-
-				for(i=0; i<l_vMessageLinksToRemove.size(); i++)
-				{
-					m_pOwnerScenario->disconnectMessage(l_vMessageLinksToRemove[i]);
-				}
-
-				m_vMessageOutput.erase(m_vMessageOutput.begin()+ui32OutputIndex);
-
-				for(i=0; i<l_vMessageLink.size(); i++)
-				{
-					m_pOwnerScenario->connectMessage(
-								l_oIdentifier,
-								l_vMessageLink[i].first.first,
-								l_vMessageLink[i].first.second-1,
-								l_vMessageLink[i].second.first,
-								l_vMessageLink[i].second.second,
-								OV_UndefinedIdentifier);
-				}
-
-				this->notify(BoxModification_MessageOutputRemoved, ui32OutputIndex);
-
-				return true;
-			}
-
-			virtual OpenViBE::uint32 getMessageOutputCount(void) const
-			{
-				//this->getLogManager() << LogLevel_Fatal << "box "<< m_sName << " has " << (uint64)m_vMessageOutput.size() << " message Output\n";
-				return m_vMessageOutput.size();
-			}
-			virtual OpenViBE::boolean getMessageOutputName(const OpenViBE::uint32 ui32InputIndex, OpenViBE::CString& rName) const
-			{
-				if(ui32InputIndex>=m_vMessageOutput.size())
-				{
-					return false;
-				}
-				rName=m_vMessageOutput[ui32InputIndex].m_sName;
-				return true;
-			}
-
-			virtual OpenViBE::boolean setMessageOutputName(const OpenViBE::uint32 ui32InputIndex, const OpenViBE::CString& rName)
-			{
-				if(ui32InputIndex>=m_vMessageOutput.size())
-				{
-					return false;
-				}
-				m_vMessageOutput[ui32InputIndex].m_sName=rName;
-
-				this->notify(BoxModification_MessageOutputNameChanged, ui32InputIndex);
-
-				return true;
-			}
-
-
-
 		protected:
 
 			virtual void clearBox(void)
@@ -1336,8 +1093,6 @@ namespace OpenViBE
 				m_vInput.clear();
 				m_vOutput.clear();
 				m_vSetting.clear();
-				m_vMessageInput.clear();
-				m_vMessageOutput.clear();
 				this->removeAllAttributes();
 			}
 
@@ -1408,26 +1163,6 @@ namespace OpenViBE
 				OpenViBE::boolean m_bMod;
 			};
 
-			class CMessageInput
-			{
-			public:
-				CMessageInput(void) { }
-				CMessageInput(const CMessageInput& mi)
-					:m_sName(mi.m_sName) { }
-				OpenViBE::CString m_sName;
-
-			};
-
-			class CMessageOutput
-			{
-			public:
-				CMessageOutput(void) { }
-				CMessageOutput(const CMessageOutput& mi)
-					:m_sName(mi.m_sName) { }
-				OpenViBE::CString m_sName;
-
-			};
-
 			_IsDerivedFromClass_Final_(TAttributable< TKernelObject <T> >, OVK_ClassId_Kernel_Scenario_Box)
 
 		protected:
@@ -1441,7 +1176,6 @@ namespace OpenViBE
 
 			OpenViBE::CIdentifier m_oIdentifier;
 			OpenViBE::CIdentifier m_oAlgorithmClassIdentifier;
-			OpenViBE::CIdentifier m_oProcessingUnitIdentifier;
 			OpenViBE::CString m_sName;
 
 			std::vector<CInput> m_vInput;
@@ -1453,11 +1187,6 @@ namespace OpenViBE
 
 			std::vector<CIdentifier> m_vSupportInputType;
 			std::vector<CIdentifier> m_vSupportOutputType;
-
-			//only the name of the in/output are stored for message socket
-			std::vector<CMessageInput> m_vMessageInput;
-			std::vector<CMessageOutput> m_vMessageOutput;
-
 		};
 	}
 }

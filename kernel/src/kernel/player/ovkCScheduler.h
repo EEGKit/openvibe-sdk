@@ -50,8 +50,6 @@ namespace OpenViBE
 			virtual OpenViBE::float64 getCPUUsage(void) const;
 			virtual OpenViBE::float64 getFastForwardMaximumFactor(void) const;
 
-			bool sendMessage(const IMessageWithData &msg, CIdentifier targetBox, uint32 inputIndex);
-
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler);
 
 			CPlayer& getPlayer(void)

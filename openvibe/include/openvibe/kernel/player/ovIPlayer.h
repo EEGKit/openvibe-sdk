@@ -145,10 +145,9 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets an estimate of the actual time ratio spent in the player's loop
-			 * \param rProcessingUnitIdentifier [in] : ignored
 			 * \return the amount of time spent in the player's loop (given in percentage)
 			 */
-			virtual OpenViBE::float64 getCPUUsage(const OpenViBE::CIdentifier& rProcessingUnitIdentifier) const=0;
+			virtual OpenViBE::float64 getCPUUsage() const=0;
 
 			/**
 			 * \brief "short time" function to be called repeatedly by the outstide application

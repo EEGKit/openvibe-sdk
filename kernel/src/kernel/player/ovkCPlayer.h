@@ -45,7 +45,7 @@ namespace OpenViBE
 			virtual OpenViBE::boolean setFastForwardMaximumFactor(const OpenViBE::float64 f64FastForwardFactor);
 			virtual OpenViBE::float64 getFastForwardMaximumFactor(void) const;
 
-			virtual OpenViBE::float64 getCPUUsage(const OpenViBE::CIdentifier& rProcessingUnitIdentifier) const;
+			virtual OpenViBE::float64 getCPUUsage() const;
 
 			virtual OpenViBE::boolean loop(
 				const OpenViBE::uint64 ui64ElapsedTime,

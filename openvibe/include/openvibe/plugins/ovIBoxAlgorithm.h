@@ -10,7 +10,6 @@ namespace OpenViBE
 		class IMessageClock;
 		class IMessageEvent;
 		class IMessageSignal;
-		class IMessageWithData;
 
 		/**
 		 * \brief This enum lists all the way a box can be modified
@@ -23,7 +22,6 @@ namespace OpenViBE
 			BoxModification_NameChanged,
 			BoxModification_IdentifierChanged,
 			BoxModification_AlgorithmClassIdentifierChanged,
-			BoxModification_ProcessingUnitChanged,
 			BoxModification_InputConnected,
 			BoxModification_InputDisconnected,
 			BoxModification_InputAdded,
@@ -42,18 +40,8 @@ namespace OpenViBE
 			BoxModification_SettingNameChanged,
 			BoxModification_SettingDefaultValueChanged,
 			BoxModification_SettingValueChanged,
-			BoxModification_MessageInputConnected,//
-			BoxModification_MessageInputDisconnected,
-			BoxModification_MessageInputAdded,
-			BoxModification_MessageInputRemoved,
 			//BoxModification_InputTypeChanged,
-			BoxModification_MessageInputNameChanged,//
-			BoxModification_MessageOutputConnected,//
-			BoxModification_MessageOutputDisconnected,
-			BoxModification_MessageOutputAdded,
-			BoxModification_MessageOutputRemoved,
 			//BoxModification_OutputTypeChanged,
-			BoxModification_MessageOutputNameChanged,
 		};
 	};
 
@@ -270,25 +258,6 @@ namespace OpenViBE
 			virtual OpenViBE::boolean process(
 				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext)=0;
 
-			/**
-			 * \brief Reaction to an event launched by another box
-			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
-			 * \param rMessageEvent [in] : the message the box just received
-			 * \return \e true when the message is processed.
-			 * \return \e false when the message is not processed.
-			 * \note Default implementation returns \e false
-			 *
-			 * This function is called by the OpenViBE kernel when
-			 * another box tries to send an event message to this
-			 * box. This event message is described in the
-			 * rMessageEvent parameter and can be interpreted by this
-			 * algorithm.
-			 *
-			 * \sa OpenViBE::IBoxAlgorithmContext
-			 */
-			virtual OpenViBE::boolean processMessage(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, 
-				const OpenViBE::Kernel::IMessageWithData& rMessageWithData, OpenViBE::uint32 inputIndex ) {return false; }
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_BoxAlgorithm)

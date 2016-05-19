@@ -350,7 +350,7 @@ float64 CPlayer::getFastForwardMaximumFactor(void) const
 	return m_f64FastForwardMaximumFactor;
 }
 
-float64 CPlayer::getCPUUsage(const CIdentifier& rProcessingUnitIdentifier) const
+float64 CPlayer::getCPUUsage() const
 {
 	return m_oScheduler.getCPUUsage();
 }

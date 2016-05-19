@@ -58,8 +58,6 @@
 #if !defined(TARGET_ARCHITECTURE_i386)
 #if defined(_MSC_VER)
  #pragma message( __WARNING__ "No i386 target architecture defined!")
-#else
- #warning "No i386 target architecture defined!"
 #endif
 #endif
 

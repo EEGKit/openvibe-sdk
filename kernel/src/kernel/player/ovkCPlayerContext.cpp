@@ -258,19 +258,6 @@ boolean CPlayerContext::sendMessage(
 	return false;
 }
 
-boolean CPlayerContext::sendMessage( const IMessageWithData& message, uint32 outputIndex)
-{
-	return m_pSimulatedBox->sendMessage(message, outputIndex);
-}
-
-IMessageWithData& CPlayerContext::createMessage(void)
-{
-	this->getLogManager() << LogLevel_Debug << "CPlayerContext::createdMessage\n";
-	IMessageWithData& rMyMessage = m_pSimulatedBox->createMessage();
-
-	return rMyMessage;
-}
-
 uint64 CPlayerContext::getCurrentTime(void) const
 {
 	return m_pSimulatedBox->getScheduler().getCurrentTime();
