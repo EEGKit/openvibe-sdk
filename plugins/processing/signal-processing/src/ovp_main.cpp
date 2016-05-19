@@ -22,6 +22,8 @@
 #include "box-algorithms/spectral-analysis/ovpCBoxAlgorithmFrequencyBandSelector.h"
 #include "box-algorithms/spectral-analysis/ovpCBoxAlgorithmSpectrumAverage.h"
 
+#include "box-algorithms/resampling/ovpCBoxAlgorithmSignalResampling.h"
+
 #include "box-algorithms/ovpCTimeBasedEpoching.h"
 #include "box-algorithms/ovpCSimpleDSP.h"
 #include "box-algorithms/ovpCSignalAverage.h"
@@ -78,6 +80,10 @@ OVP_Declare_Begin()
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmRegularizedCSPTrainerDesc)
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CAlgorithmOnlineCovarianceDesc)
 
+#endif
+
+#if defined TARGET_HAS_R8BRAIN
+	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalResamplingDesc)
 #endif
 
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CSimpleDSPDesc)
