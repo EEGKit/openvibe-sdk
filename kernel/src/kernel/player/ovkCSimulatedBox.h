@@ -297,7 +297,6 @@ namespace OpenViBE
 
 			OpenViBE::uint32 m_ui32CrashCount;
 			OpenViBE::boolean m_bReadyToProcess;
-			mutable OpenViBE::boolean m_bSuspended;
 			mutable OpenViBE::boolean m_bCrashed;
 			OpenViBE::boolean m_bChunkConsistencyChecking;
 			OpenViBE::Kernel::ELogLevel m_eChunkConsistencyCheckingLogLevel;
