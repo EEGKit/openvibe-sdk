@@ -8,6 +8,7 @@ SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_
 FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.hpp src/*.inl)
 INCLUDE("FindSourceRCProperties")
 INCLUDE("FindSourceDependencyDSPFilters")
+INCLUDE("FindSourceDependencyR8Brain")
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${source_files})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
