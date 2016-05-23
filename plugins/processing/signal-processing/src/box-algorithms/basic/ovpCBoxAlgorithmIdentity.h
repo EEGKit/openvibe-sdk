@@ -1,15 +1,17 @@
-#ifndef __SamplePlugin_CIdentity_H__
-#define __SamplePlugin_CIdentity_H__
+#ifndef __OpenViBEPlugins_BoxAlgorithm_Identity_H__
+#define __OpenViBEPlugins_BoxAlgorithm_Identity_H__
 
-#include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 #include <cstdio>
+
+#define OVP_ClassId_BoxAlgorithm_Identity                                              OpenViBE::CIdentifier(0x5DFFE431, 0x35215C50)
+#define OVP_ClassId_BoxAlgorithm_IdentityDesc                                          OpenViBE::CIdentifier(0x54743810, 0x6A1A88CC)
 
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CIdentity : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmIdentity : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -17,10 +19,10 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
 			virtual OpenViBE::boolean process(void);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_Identity)
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_Identity)
 		};
 
-		class CIdentityListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmIdentityListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
 		{
 		public:
 
@@ -97,7 +99,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
 		};
 
-		class CIdentityDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmIdentityDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 
@@ -111,9 +113,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
 			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-copy"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Identity; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CIdentity(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CIdentityListener; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_Identity; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmIdentity(); }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmIdentityListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual OpenViBE::boolean getBoxPrototype(
@@ -128,9 +130,9 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_IdentityDesc)
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_IdentityDesc)
 		};
 	};
 };
 
-#endif // __SamplePlugin_CIdentity_H__
+#endif // __OpenViBEPlugins_BoxAlgorithm_Identity_H__

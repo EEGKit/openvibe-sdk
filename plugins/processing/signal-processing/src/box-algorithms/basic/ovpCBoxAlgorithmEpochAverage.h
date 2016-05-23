@@ -1,15 +1,17 @@
-#ifndef __OpenViBEPlugins_SignalProcessing_BoxAlgorithms_CEpochAverage_H__
-#define __OpenViBEPlugins_SignalProcessing_BoxAlgorithms_CEpochAverage_H__
+#ifndef __OpenViBEPlugins_BoxAlgorithm_EpochAverage_H__
+#define __OpenViBEPlugins_BoxAlgorithm_EpochAverage_H__
 
 #include "../../ovp_defines.h"
-
 #include <toolkit/ovtk_all.h>
+
+#define OVP_ClassId_BoxAlgorithm_EpochAverage                                          OpenViBE::CIdentifier(0x21283D9F, 0xE76FF640)
+#define OVP_ClassId_BoxAlgorithm_EpochAverageDesc                                      OpenViBE::CIdentifier(0x95F5F43E, 0xBE629D82)
 
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CEpochAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmEpochAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -33,7 +35,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64AveragingMethod;
 		};
 
-		class CEpochAverageListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmEpochAverageListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
 		{
 		public:
 
@@ -56,7 +58,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
 		};
 
-		class CEpochAverageDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmEpochAverageDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 
@@ -71,8 +73,8 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-missing-image"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_EpochAverage; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CEpochAverage(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CEpochAverageListener; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmEpochAverage(); }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmEpochAverageListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual OpenViBE::boolean getBoxPrototype(
@@ -102,4 +104,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_SignalProcessing_BoxAlgorithms_CEpochAverage_H__
+#endif // __OpenViBEPlugins_BoxAlgorithm_EpochAverage_H__

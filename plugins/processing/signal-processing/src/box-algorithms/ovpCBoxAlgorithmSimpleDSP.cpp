@@ -1,4 +1,4 @@
-#include "ovpCSimpleDSP.h"
+#include "ovpCBoxAlgorithmSimpleDSP.h"
 
 #include <system/ovCMemory.h>
 
@@ -12,7 +12,7 @@ using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 using namespace std;
 
-CSimpleDSP::CSimpleDSP(void)
+CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP(void)
 	:m_pStreamEncoder(NULL)
 	,m_pEquationParser(NULL)
 	,m_ui64EquationType(OP_USERDEF)
@@ -20,7 +20,7 @@ CSimpleDSP::CSimpleDSP(void)
 {
 }
 
-boolean CSimpleDSP::initialize(void)
+boolean CBoxAlgorithmSimpleDSP::initialize(void)
 {
 	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	uint32 i;
@@ -116,7 +116,7 @@ boolean CSimpleDSP::initialize(void)
 	return true;
 }
 
-boolean CSimpleDSP::uninitialize(void)
+boolean CBoxAlgorithmSimpleDSP::uninitialize(void)
 {
 	std::vector < IAlgorithmProxy* >::iterator it;
 	for(it=m_vStreamDecoder.begin(); it!=m_vStreamDecoder.end(); it++)
@@ -142,7 +142,7 @@ boolean CSimpleDSP::uninitialize(void)
 	return true;
 }
 
-boolean CSimpleDSP::processInput(uint32 ui32InputIndex)
+boolean CBoxAlgorithmSimpleDSP::processInput(uint32 ui32InputIndex)
 {
 	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext=this->getDynamicBoxContext();
@@ -178,7 +178,7 @@ boolean CSimpleDSP::processInput(uint32 ui32InputIndex)
 	return true;
 }
 
-boolean CSimpleDSP::process(void)
+boolean CBoxAlgorithmSimpleDSP::process(void)
 {
 	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext=this->getDynamicBoxContext();
@@ -255,7 +255,7 @@ boolean CSimpleDSP::process(void)
 	return true;
 }
 
-void CSimpleDSP::evaluate(void)
+void CBoxAlgorithmSimpleDSP::evaluate(void)
 {
 	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 

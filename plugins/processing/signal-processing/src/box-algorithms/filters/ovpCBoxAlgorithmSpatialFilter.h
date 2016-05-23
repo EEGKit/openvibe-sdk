@@ -3,23 +3,14 @@
 #ifndef __OpenViBEPlugins_BoxAlgorithm_SpatialFilter_H__
 #define __OpenViBEPlugins_BoxAlgorithm_SpatialFilter_H__
 
-#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include <vector>
 
-// do undef for testing without eigen ...
-// #undef TARGET_HAS_ThirdPartyEIGEN
-
-/* */
 #define OVP_ClassId_BoxAlgorithm_SpatialFilter     OpenViBE::CIdentifier(0xDD332C6C, 0x195B4FD4)
 #define OVP_ClassId_BoxAlgorithm_SpatialFilterDesc OpenViBE::CIdentifier(0x72A01C92, 0xF8C1FA24)
-/* */
-/*
-#define OVP_ClassId_BoxAlgorithm_SpatialFilter     OpenViBE::CIdentifier(0xDD332C6C, 0x195B4FD5)
-#define OVP_ClassId_BoxAlgorithm_SpatialFilterDesc OpenViBE::CIdentifier(0x72A01C92, 0xF8C1FA25)
-*/
+
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing

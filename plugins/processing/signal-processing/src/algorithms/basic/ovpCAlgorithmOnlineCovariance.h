@@ -30,12 +30,6 @@
 #define OVP_Algorithm_OnlineCovariance_Process_GetCov                                     OpenViBE::CIdentifier(0x2BBC4A91, 0x27050CFD) // also returns the mean estimate
 #define OVP_Algorithm_OnlineCovariance_Process_GetCovRaw                                  OpenViBE::CIdentifier(0x0915148C, 0x5F792B2A) // also returns the mean estimate
 
-#define OVP_TypeId_OnlineCovariance_UpdateMethod									      OpenViBE::CIdentifier(0x59E83F33, 0x592F1DD0)
-#define OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage						      OpenViBE::CIdentifier(0x079E14D3, 0x784A2BD1)
-#define OVP_TypeId_OnlineCovariance_UpdateMethod_Incremental		    			      OpenViBE::CIdentifier(0x39E20E6D, 0x6A87073C)
-
-
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing

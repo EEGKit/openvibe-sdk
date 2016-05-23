@@ -1,13 +1,8 @@
 #ifndef __OpenViBEPlugins_BoxAlgorithm_CommonAverageReference_H__
 #define __OpenViBEPlugins_BoxAlgorithm_CommonAverageReference_H__
 
-#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
-
-// TODO:
-// - please move the identifier definitions in ovp_defines.h
-// - please include your desciptor in ovp_main.cpp
 
 #define OVP_ClassId_BoxAlgorithm_CommonAverageReference     OpenViBE::CIdentifier(0x009C0CE3, 0x6BDF71C3)
 #define OVP_ClassId_BoxAlgorithm_CommonAverageReferenceDesc OpenViBE::CIdentifier(0x0033EAF8, 0x09C65E4E)
