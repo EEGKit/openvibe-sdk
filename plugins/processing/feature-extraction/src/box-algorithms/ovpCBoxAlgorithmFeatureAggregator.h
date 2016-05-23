@@ -1,5 +1,5 @@
-#ifndef __OpenViBEPlugins_Stimulation_CFeatureAggregator_H__
-#define __OpenViBEPlugins_Stimulation_CFeatureAggregator_H__
+#ifndef __OpenViBEPlugins_BoxAlgorithm_FeatureAggregator_H__
+#define __OpenViBEPlugins_BoxAlgorithm_FeatureAggregator_H__
 
 #include "../ovp_defines.h"
 
@@ -11,6 +11,10 @@
 #include <queue>
 #include <cstdio>
 
+
+#define OVP_ClassId_BoxAlgorithm_FeatureAggregatorDesc                             OpenViBE::CIdentifier(0x00B5B638, 0x25821BAF)
+#define OVP_ClassId_BoxAlgorithm_FeatureAggregator                                 OpenViBE::CIdentifier(0x00682417, 0x453635F9)
+
 namespace OpenViBEPlugins
 {
 	namespace FeatureExtraction
@@ -19,11 +23,11 @@ namespace OpenViBEPlugins
 		 * Main plugin class of the feature aggregator plugins.
 		 * Aggregates the features received in a feature vector then outputs it.
 		 * */
-		class CFeatureAggregator : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmFeatureAggregator : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
-			CFeatureAggregator(void);
+			CBoxAlgorithmFeatureAggregator(void);
 
 			virtual void release(void) { delete this; }
 
@@ -34,12 +38,12 @@ namespace OpenViBEPlugins
 
 			virtual OpenViBE::boolean process();
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_FeatureAggregator)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_FeatureAggregator)
 
 		public:
 				//codecs
-				OpenViBEToolkit::TFeatureVectorEncoder<CFeatureAggregator>* m_pFeatureVectorEncoder;
-				std::vector< OpenViBEToolkit::TStreamedMatrixDecoder<CFeatureAggregator>* > m_pStreamedMatrixDecoder;
+			OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>* m_pFeatureVectorEncoder;
+			std::vector< OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>* > m_pStreamedMatrixDecoder;
 
 				// contains the labels for each dimension for each input
 				std::vector<std::vector<std::vector<std::string> > > m_oFeatureNames;
@@ -70,7 +74,7 @@ namespace OpenViBEPlugins
 				OpenViBE::boolean m_bHeaderSent;
 		};
 
-		class CFeatureAggregatorListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmFeatureAggregatorListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
 		{
 		public:
 
@@ -98,7 +102,7 @@ namespace OpenViBEPlugins
 		/**
 		* Plugin's description
 		*/
-		class CFeatureAggregatorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmFeatureAggregatorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Feature aggregator"); }
@@ -110,9 +114,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
 			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-convert"); }
 			virtual void release(void)                                   { }
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_FeatureAggregator; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::FeatureExtraction::CFeatureAggregator(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CFeatureAggregatorListener; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_FeatureAggregator; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::FeatureExtraction::CBoxAlgorithmFeatureAggregator(); }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmFeatureAggregatorListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
@@ -125,7 +129,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_FeatureAggregatorDesc)
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_FeatureAggregatorDesc)
 
 		};
 
