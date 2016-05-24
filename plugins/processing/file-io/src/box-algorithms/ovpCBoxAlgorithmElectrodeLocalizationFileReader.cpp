@@ -1,5 +1,7 @@
 #include "ovpCBoxAlgorithmElectrodeLocalizationFileReader.h"
 
+#include "../algorithms/ovpCAlgorithmOVMatrixFileReader.h"
+
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
