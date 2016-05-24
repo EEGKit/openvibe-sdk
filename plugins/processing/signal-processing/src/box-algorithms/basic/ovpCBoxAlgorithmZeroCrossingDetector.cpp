@@ -97,7 +97,7 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 
 	for(i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
-		m_oDecoder.decode(0, i);
+		m_oDecoder.decode(i);
 		m_oEncoder1.getInputStimulationSet()->clear();
 
 		uint32 l_ui32ChannelCount=m_oDecoder.getOutputMatrix()->getDimensionSize(0);

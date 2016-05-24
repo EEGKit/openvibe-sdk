@@ -109,7 +109,7 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 
 	for(i=0; i<m_pDynamicBoxContext->getInputChunkCount(0); i++)
 	{
-		m_oDecoder.decode(0, i);
+		m_oDecoder.decode(i);
 
 		IMatrix* l_pInputMatrix=m_oDecoder.getOutputMatrix();
 		IMatrix* l_pOutputMatrix=m_oEncoder.getInputMatrix();
