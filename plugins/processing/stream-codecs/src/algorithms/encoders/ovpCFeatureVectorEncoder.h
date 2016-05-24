@@ -3,6 +3,9 @@
 
 #include "ovpCStreamedMatrixEncoder.h"
 
+#define OVP_ClassId_Algorithm_FeatureVectorStreamEncoder                                                   OpenViBE::CIdentifier(0x7EBE049D, 0xF777A602)
+#define OVP_ClassId_Algorithm_FeatureVectorStreamEncoderDesc                                               OpenViBE::CIdentifier(0xC249527B, 0x89EE1996)
+
 namespace OpenViBEPlugins
 {
 	namespace StreamCodecs

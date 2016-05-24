@@ -3,6 +3,15 @@
 
 #include "ovpCEBMLBaseDecoder.h"
 
+#define OVP_ClassId_Algorithm_AcquisitionStreamDecoder                                                     OpenViBE::CIdentifier(0x1E0812B7, 0x3F686DD4)
+#define OVP_ClassId_Algorithm_AcquisitionStreamDecoderDesc                                                 OpenViBE::CIdentifier(0xA01599B0, 0x7F51631A)
+#define OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_BufferDuration                            OpenViBE::CIdentifier(0x7527D6E5, 0xB7A70339)
+#define OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ExperimentInformationStream               OpenViBE::CIdentifier(0xA7F1D539, 0xEC708539)
+#define OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_SignalStream                              OpenViBE::CIdentifier(0x42C0D7BD, 0xBBCEA3F3)
+#define OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_StimulationStream                         OpenViBE::CIdentifier(0x08FC3C12, 0x86A07BF7)
+#define OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ChannelLocalisationStream                 OpenViBE::CIdentifier(0x4EB92F81, 0x6ECDA6B9)
+#define OVP_Algorithm_AcquisitionStreamDecoder_OutputParameterId_ChannelUnitsStream                        OpenViBE::CIdentifier(0x11B93981, 0x6E5DA9B0)
+
 namespace OpenViBEPlugins
 {
 	namespace StreamCodecs

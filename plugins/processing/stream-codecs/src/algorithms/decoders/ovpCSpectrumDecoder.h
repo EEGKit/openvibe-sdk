@@ -3,6 +3,10 @@
 
 #include "ovpCStreamedMatrixDecoder.h"
 
+#define OVP_ClassId_Algorithm_SpectrumStreamDecoder                                                        OpenViBE::CIdentifier(0x128202DB, 0x449FC7A6)
+#define OVP_ClassId_Algorithm_SpectrumStreamDecoderDesc                                                    OpenViBE::CIdentifier(0x54D18EE8, 0x5DBD913A)
+#define OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_MinMaxFrequencyBands                         OpenViBE::CIdentifier(0x375E55E9, 0x9B3666F6)
+
 namespace OpenViBEPlugins
 {
 	namespace StreamCodecs

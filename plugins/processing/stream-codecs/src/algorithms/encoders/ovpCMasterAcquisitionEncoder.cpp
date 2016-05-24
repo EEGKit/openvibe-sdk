@@ -1,4 +1,12 @@
+#include <iostream>
+
 #include "ovpCMasterAcquisitionEncoder.h"
+#include "../../algorithms/encoders/ovpCAcquisitionEncoder.h"
+#include "../../algorithms/encoders/ovpCExperimentInformationEncoder.h"
+#include "../../algorithms/encoders/ovpCSignalEncoder.h"
+#include "../../algorithms/encoders/ovpCStimulationEncoder.h"
+#include "../../algorithms/encoders/ovpCChannelLocalisationEncoder.h"
+#include "../../algorithms/encoders/ovpCChannelUnitsEncoder.h"
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -6,8 +14,6 @@ using namespace OpenViBE::Plugins;
 
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::StreamCodecs;
-
-#include <iostream>
 
 boolean CMasterAcquisitionEncoder::initialize(void)
 {	

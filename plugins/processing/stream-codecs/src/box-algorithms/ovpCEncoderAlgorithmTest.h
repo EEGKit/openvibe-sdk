@@ -1,9 +1,10 @@
 #ifndef __OpenViBEPlugins_BoxAlgorithms_CEncoderAlgorithmTest_H__
 #define __OpenViBEPlugins_BoxAlgorithms_CEncoderAlgorithmTest_H__
 
-#include "../ovp_defines.h"
-
 #include <toolkit/ovtk_all.h>
+
+#define OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest                                                OpenViBE::CIdentifier(0x87D18C62, 0xF2DAF779)
+#define OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTestDesc                                            OpenViBE::CIdentifier(0x95E27325, 0x6893A519)
 
 namespace OpenViBEPlugins
 {

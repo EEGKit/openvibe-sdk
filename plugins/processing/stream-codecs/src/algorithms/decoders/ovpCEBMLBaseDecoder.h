@@ -13,6 +13,13 @@
 
 #include <stack>
 
+#define OVP_ClassId_Algorithm_EBMLBaseStreamDecoder                                                        OpenViBE::CIdentifier(0xFD30C96D, 0x8245A8F8)
+#define OVP_ClassId_Algorithm_EBMLBaseStreamDecoderDesc                                                    OpenViBE::CIdentifier(0x4F701AC9, 0xDFBE912E)
+#define OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode                              OpenViBE::CIdentifier(0x2F98EA3C, 0xFB0BE096)
+#define OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedHeader                                     OpenViBE::CIdentifier(0x815234BF, 0xAABAE5F2)
+#define OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedBuffer                                     OpenViBE::CIdentifier(0xAA2738BF, 0xF7FE9FC3)
+#define OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedEnd                                        OpenViBE::CIdentifier(0xC4AA114C, 0x628C2D77)
+
 namespace OpenViBEPlugins
 {
 	namespace StreamCodecs

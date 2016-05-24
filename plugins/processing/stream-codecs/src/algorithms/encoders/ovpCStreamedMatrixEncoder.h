@@ -3,6 +3,10 @@
 
 #include "ovpCEBMLBaseEncoder.h"
 
+#define OVP_ClassId_Algorithm_StreamedMatrixStreamEncoder                                                  OpenViBE::CIdentifier(0x5CB32C71, 0x576F00A6)
+#define OVP_ClassId_Algorithm_StreamedMatrixStreamEncoderDesc                                              OpenViBE::CIdentifier(0xEEEFE060, 0x646EE8AB)
+#define OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix                                  OpenViBE::CIdentifier(0xA3E9E5B0, 0xAE756303)
+
 namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
