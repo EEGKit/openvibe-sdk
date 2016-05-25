@@ -1,6 +1,5 @@
 #include "ovkCBoxAlgorithmContext.h"
 #include "ovkCPlayerContext.h"
-#include "../visualisation/ovkCVisualisationContext.h"
 #include "ovkCSimulatedBox.h"
 #include "../../tools/ovk_bridge_bind_function.h"
 
@@ -173,18 +172,15 @@ CBoxAlgorithmContext::CBoxAlgorithmContext(const IKernelContext& rKernelContext,
 	,m_pStaticBoxContext(NULL)
 	,m_pDynamicBoxContext(NULL)
 	,m_pPlayerContext(NULL)
-	,m_pVisualisationContext(NULL)
 	,m_bReadyToProcess(false)
 {
 	m_pStaticBoxContext=new CBoxBridge(rKernelContext, pBox);
 	m_pDynamicBoxContext=new CBoxIOBridge(rKernelContext, pSimulatedBox);
 	m_pPlayerContext=new CPlayerContext(rKernelContext, pSimulatedBox);
-	m_pVisualisationContext=new CVisualisationContext(rKernelContext, pSimulatedBox);
 }
 
 CBoxAlgorithmContext::~CBoxAlgorithmContext(void)
 {
-	delete m_pVisualisationContext;
 	delete m_pPlayerContext;
 	delete m_pDynamicBoxContext;
 	delete m_pStaticBoxContext;
@@ -203,11 +199,6 @@ IBoxIO* CBoxAlgorithmContext::getDynamicBoxContext(void)
 IPlayerContext* CBoxAlgorithmContext::getPlayerContext(void)
 {
 	return m_pPlayerContext;
-}
-
-IVisualisationContext* CBoxAlgorithmContext::getVisualisationContext(void)
-{
-	return m_pVisualisationContext;
 }
 
 boolean CBoxAlgorithmContext::markAlgorithmAsReadyToProcess(void)

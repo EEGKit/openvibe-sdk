@@ -331,11 +331,6 @@ int main(int argc, char ** argv)
 				gtk_init(&argc, &argv);
 				// gtk_rc_parse(OpenViBE::Directories::getDataDir() + "/applications/designer/interface.gtkrc");
 
-				if(l_rConfigurationManager.expandAsBoolean("${Kernel_3DVisualisationEnabled}"))
-				{
-					l_pKernelContext->getVisualisationManager().initialize3DContext();
-				}
-
 				if (!l_bIgnoreMetaboxes)
 				{
 					// by default (if no parameters are specified) we load only mxb type metaboxes
