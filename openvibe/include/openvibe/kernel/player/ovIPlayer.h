@@ -9,7 +9,6 @@ namespace OpenViBE
 	{
 		class IScenario;
 		class IConfigurationManager;
-		class IVisualisationTree;
 
 		enum EPlayerStatus
 		{

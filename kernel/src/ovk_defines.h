@@ -67,11 +67,6 @@
 
 #define OVK_ClassId_Kernel_ObjectVisitorContext               OpenViBE::CIdentifier(0x7F6010A3, 0x17F4F20A)
 
-#define OVK_ClassId_Kernel_Visualisation_VisualisationContext OpenViBE::CIdentifier(0xC364264A, 0x6CFD8F12)
-#define OVK_ClassId_Kernel_Visualisation_VisualisationManager OpenViBE::CIdentifier(0xB067FED2, 0x279602C1)
-#define OVK_ClassId_Kernel_Visualisation_VisualisationWidget  OpenViBE::CIdentifier(0xE13332C5, 0x80E01818)
-#define OVK_ClassId_Kernel_Visualisation_VisualisationTree    OpenViBE::CIdentifier(0x110D7E2A, 0x10C0E999)
-
 //___________________________________________________________________//
 //                                                                   //
 // Tools Class Identifiers                                           //

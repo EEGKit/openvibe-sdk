@@ -223,9 +223,6 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 			pScenarioMergeCallback->process(l_oBoxIdentifier, l_oNewIdentifier);
 		}
 
-		// Updates visualisation manager
-		// CIdentifier l_oBoxAlgorithmIdentifier = l_pBox->getAlgorithmClassIdentifier();
-		// const IPluginObjectDesc* l_pPOD = this->getPluginManager().getPluginObjectDescCreating(l_oBoxAlgorithmIdentifier);
 	}
 
 	// Copies links

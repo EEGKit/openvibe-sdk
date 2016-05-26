@@ -23,9 +23,7 @@ namespace OpenViBEToolkit
 			boolean exportInput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32InputIndex);
 			boolean exportOutput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32OutputIndex);
 			boolean exportLink(IMemoryBuffer& rMemoryBuffer, const ILink& rLink);
-			boolean exportVisualisationTree(IMemoryBuffer& rMemoryBuffer, const IVisualisationTree& rVisualisationTree);
-			boolean exportVisualisationWidget(IMemoryBuffer& rMemoryBuffer, const IVisualisationTree& rVisualisationTree, const IVisualisationWidget& rVisualisationWidget);
-
+		
 		protected:
 
 			IAlgorithmContext& m_rAlgorithmContext;
@@ -63,7 +61,6 @@ boolean CAlgorithmScenarioExporter::process(void)
 	CIdentifier l_oBoxIdentifer;
 	CIdentifier l_oCommentIdentifier;
 	CIdentifier l_oLinkIdentifier;
-	CIdentifier l_oVisualisationWidgetIdentifier;
 
 	// preallocates 1 Mbytes
 	l_oTemporaryMemoryBuffer.reserve(1024*1024);
