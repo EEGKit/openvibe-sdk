@@ -54,8 +54,6 @@ namespace OpenViBE
 			virtual OpenViBE::uint64 getCurrentSimulatedTime(void) const;
 			virtual OpenViBE::uint64 getCurrentSimulatedLateness(void) const;
 
-			virtual IVisualisationTree* getRuntimeVisualisationTree(void) const;
-
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IPlayer >, OVK_ClassId_Kernel_Player_Player);
 

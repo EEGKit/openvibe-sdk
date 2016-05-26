@@ -10,7 +10,6 @@
 #include "log/ovkCLogManager.h"
 #include "log/ovkCLogListenerConsole.h"
 #include "log/ovkCLogListenerFile.h"
-#include "visualisation/ovkCVisualisationManager.h"
 
 #include <string>
 #include <algorithm>
@@ -105,7 +104,6 @@ CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const
 	,m_pScenarioManager(NULL)
 	,m_pTypeManager(NULL)
 	,m_pLogManager(NULL)
-	,m_pVisualisationManager(NULL)
 	,m_bIsInitialized(false)
 	,m_sApplicationName(rApplicationName)
 	,m_sConfigurationFile(rConfigurationFile)
@@ -291,9 +289,6 @@ boolean CKernelContext::initialize(void)
 	this->getLogManager() << LogLevel_Trace << "Creating scenario manager\n";
 	m_pScenarioManager=new CScenarioManager(m_rMasterKernelContext);
 
-	this->getLogManager() << LogLevel_Trace << "Creating visualisation manager\n";
-	m_pVisualisationManager=new CVisualisationManager(m_rMasterKernelContext);
-
 	this->getLogManager() << LogLevel_Trace << "Creating plugin manager\n";
 	m_pPluginManager=new CPluginManager(m_rMasterKernelContext);
 
@@ -310,10 +305,6 @@ boolean CKernelContext::uninitialize(void)
 	this->getLogManager() << LogLevel_Trace << "Releasing plugin manager\n";
 	delete m_pPluginManager;
 	m_pPluginManager=NULL;
-
-	this->getLogManager() << LogLevel_Trace << "Releasing visualisation manager\n";
-	delete m_pVisualisationManager;
-	m_pVisualisationManager=NULL;
 
 	this->getLogManager() << LogLevel_Trace << "Releasing scenario manager\n";
 	delete m_pScenarioManager;
@@ -408,12 +399,6 @@ ILogManager& CKernelContext::getLogManager(void) const
 	if(!m_bIsInitialized) m_pThis->initialize();
 	static CLogManagerNULL l_oLogManagerNULL;
 	return m_pLogManager?*m_pLogManager:l_oLogManagerNULL;
-}
-
-IVisualisationManager& CKernelContext::getVisualisationManager(void) const
-{
-	if(!m_bIsInitialized) m_pThis->initialize();
-	return *m_pVisualisationManager;
 }
 
 ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)

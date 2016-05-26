@@ -338,8 +338,6 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		return SchedulerInitialization_Failed;
 	}
 
-	boolean l_bHasGUI = this->getConfigurationManager().expandAsBoolean("${Kernel_WithGUI}", true);
-
 	CBoxSettingModifierVisitor l_oBoxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
 	if(!m_pScenario->acceptVisitor(l_oBoxSettingModifierVisitor))
 	{
@@ -362,7 +360,6 @@ SchedulerInitializationCode CScheduler::initialize(void)
 
 		if(l_pBox->hasAttribute(OV_AttributeId_Box_Priority)) 
 		{
-			// This is mostly retained for debugging use. The value can be entered to .xml by hand but there is no GUI to change this (on purpose)
 			::sscanf(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString(), "%i", &l_iPriority);
 		}
 		else
@@ -391,9 +388,9 @@ SchedulerInitializationCode CScheduler::initialize(void)
 			{
 				this->getLogManager() << LogLevel_Warning << "Disabled box " << l_oBoxIdentifier << " with name " << l_pBox->getName() << " - Plugin object descriptor could not be found\n";
 			}
-			else if(l_pBoxDesc->hasFunctionality(PluginFunctionality_Visualization) && !l_bHasGUI)
+			else if(l_pBoxDesc->hasFunctionality(PluginFunctionality_Visualization))
 			{
-				this->getLogManager() << LogLevel_Trace << "Disabled box " << l_oBoxIdentifier << " with name " << l_pBox->getName() << " - Box had visualization functionality and GUI has explicitely been disabled\n";
+				this->getLogManager() << LogLevel_Trace << "Disabled box " << l_oBoxIdentifier << " with name " << l_pBox->getName() << " - Box had visualization functionality and such boxes are not handled by Kernel module anymore\n";
 			}
 			else if(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
 			{

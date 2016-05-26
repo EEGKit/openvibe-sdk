@@ -64,11 +64,6 @@ namespace OpenViBE
 				return m_rKernelContext.getLogManager();
 			}
 
-			virtual OpenViBE::Kernel::IVisualisationManager& getVisualisationManager(void) const
-			{
-				return m_rKernelContext.getVisualisationManager();
-			}
-
 			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_KernelObjectT)
 
 		private:

@@ -247,96 +247,6 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 		}
 	}
 
-#if defined TARGET_HAS_ThirdPartyGTK
-	// Get the whole visualisation tree from the original scenario and push it into the current one
-
-	// First we are going to determine the order in which we can insert elements into the visualisation tree
-	// then we will insert them into the original tree as top levels
-
-	// Collect ids of all widgets in old scenario
-	std::vector<CIdentifier> l_vOldWidgetIdentifier;
-	CIdentifier l_oCurrentWidgetIdentifier;
-	while ((rScenario.getVisualisationTreeDetails().getNextVisualisationWidgetIdentifier(l_oCurrentWidgetIdentifier)))
-	{
-		l_vOldWidgetIdentifier.push_back(l_oCurrentWidgetIdentifier);
-	}
-
-	std::vector<CIdentifier> l_vOrderedWidget;
-
-	// Now reorder them in a way that parents are always before their children
-	while (!l_vOldWidgetIdentifier.empty())
-	{
-		// Go through all non-ordered widgets, if the widgets has no parent or its parent is already
-		// in the list, we add it to the list.
-		for (auto l_itOldWidget = l_vOldWidgetIdentifier.begin(); l_itOldWidget != l_vOldWidgetIdentifier.end();)
-		{
-			CIdentifier l_oWidgetParentIdentifier = rScenario.getVisualisationTreeDetails().getVisualisationWidget(*l_itOldWidget)->getParentIdentifier();
-
-			bool l_bIsParentInList = std::find(l_vOrderedWidget.begin(), l_vOrderedWidget.end(), l_oWidgetParentIdentifier) != l_vOrderedWidget.end();
-
-			if (l_oWidgetParentIdentifier == OV_UndefinedIdentifier || l_bIsParentInList)
-			{
-				l_vOrderedWidget.push_back(*l_itOldWidget);
-				l_itOldWidget = l_vOldWidgetIdentifier.erase(l_itOldWidget);
-			}
-			else
-			{
-				++l_itOldWidget;
-			}
-		}
-	}
-
-
-	// Now go through the tree again and replace the parent identifiers and indexes by the new identifiers
-//	for (auto l_oWidget : l_vOrderedWidget) // better
-	for (auto l_itWidget = l_vOrderedWidget.cbegin(); l_itWidget != l_vOrderedWidget.cend(); l_itWidget++ ) // old
-	{
-		const CIdentifier& l_oWidget = *l_itWidget;
-
-		IVisualisationWidget* l_pVisualisationWidget = rScenario.getVisualisationTreeDetails().getVisualisationWidget(l_oWidget);
-
-		// Find out the index at which the widget was in the parent
-		CIdentifier l_oParentIdentifier = l_pVisualisationWidget->getParentIdentifier();
-		uint32 l_ui32WidgetIndexWithinParent = 0;
-		if (l_oParentIdentifier != OV_UndefinedIdentifier)
-		{
-			rScenario.getVisualisationTreeDetails().getVisualisationWidget(l_oParentIdentifier)->getChildIndex(l_oWidget, l_ui32WidgetIndexWithinParent);
-		}
-
-		CIdentifier l_oNewVisualisationWidgetIdentifier;
-		this->getVisualisationTreeDetails().addVisualisationWidget(
-		            l_oNewVisualisationWidgetIdentifier,
-		            l_pVisualisationWidget->getName(),
-		            l_pVisualisationWidget->getType(),
-		            // This works because we are sure that all parents already exist within the tree
-		            l_vIdMapping[l_oParentIdentifier],
-		            l_ui32WidgetIndexWithinParent,
-		            l_vIdMapping[l_pVisualisationWidget->getBoxIdentifier()],
-		            l_pVisualisationWidget->getNbChildren(),
-		            OV_UndefinedIdentifier
-		            );
-
-		l_vIdMapping[l_oWidget] = l_oNewVisualisationWidgetIdentifier;
-
-		// Copy the widget attributes
-		CIdentifier l_oWidgetAttributeIdentifier = OV_UndefinedIdentifier;
-		while ((l_oWidgetAttributeIdentifier = l_pVisualisationWidget->getNextAttributeIdentifier(l_oWidgetAttributeIdentifier)) != OV_UndefinedIdentifier)
-		{
-			CString l_sAttributeValue = l_pVisualisationWidget->getAttributeValue(l_oWidgetAttributeIdentifier);
-			this->getVisualisationTreeDetails().getVisualisationWidget(l_oNewVisualisationWidgetIdentifier)->addAttribute(l_oWidgetAttributeIdentifier, l_sAttributeValue);
-		}
-
-	}
-
-	// Copy visualisation tree attributes
-	CIdentifier l_oVisualisationTreeAttributeIdentifier = OV_UndefinedIdentifier;
-	while ((l_oVisualisationTreeAttributeIdentifier = rScenario.getVisualisationTreeDetails().getNextAttributeIdentifier(l_oVisualisationTreeAttributeIdentifier)) != OV_UndefinedIdentifier)
-	{
-		CString l_sAttributeValue = rScenario.getVisualisationTreeDetails().getAttributeValue(l_oVisualisationTreeAttributeIdentifier);
-		this->getVisualisationTreeDetails().addAttribute(l_oVisualisationTreeAttributeIdentifier, l_sAttributeValue);
-	}
-#endif
-
 	// Copy comments
 
 	// Copy settings if requested
@@ -373,30 +283,6 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 	}
 
 	return true;
-}
-
-//___________________________________________________________________//
-//                                                                   //
-
-boolean CScenario::setVisualisationTreeIdentifier(const CIdentifier& rVisualisationTreeIdentifier)
-{
-	m_oVisualisationTreeIdentifier=rVisualisationTreeIdentifier;
-	return true;
-}
-
-CIdentifier CScenario::getVisualisationTreeIdentifier(void) const
-{
-	return m_oVisualisationTreeIdentifier;
-}
-
-const IVisualisationTree& CScenario::getVisualisationTreeDetails() const
-{
-	return getKernelContext().getVisualisationManager().getVisualisationTree(m_oVisualisationTreeIdentifier);
-}
-
-IVisualisationTree& CScenario::getVisualisationTreeDetails()
-{
-	return getKernelContext().getVisualisationManager().getVisualisationTree(m_oVisualisationTreeIdentifier);
 }
 
 //___________________________________________________________________//
@@ -1124,13 +1010,6 @@ boolean CScenario::acceptVisitor(
 			return false;
 		}
 	}
-
-#if defined TARGET_HAS_ThirdPartyGTK
-	if(!getKernelContext().getVisualisationManager().getVisualisationTree(m_oVisualisationTreeIdentifier).acceptVisitor(rObjectVisitor))
-	{
-		return false;
-	}
-#endif
 
 	if(!rObjectVisitor.processEnd(l_oObjectVisitorContext, *this))
 	{

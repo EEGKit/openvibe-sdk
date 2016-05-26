@@ -4,9 +4,6 @@
 
 #include "plugins/ovkCPluginModule.h"
 
-#include "visualisation/ovkCVisualisationWidget.h"
-#include "visualisation/ovkCVisualisationTree.h"
-
 #include <string>
 #include <algorithm>
 
@@ -35,11 +32,6 @@ IObject* Kernel::CKernelObjectFactory::createObject(
 	IObject* l_pResult=NULL;
 
 	create(rClassIdentifier, OV_ClassId_Kernel_Plugins_PluginModule,              l_pResult, Kernel::CPluginModule);
-
-#if defined(TARGET_HAS_ThirdPartyGTK)
-	create(rClassIdentifier, OV_ClassId_Kernel_Visualisation_VisualisationTree,   l_pResult, Kernel::CVisualisationTree);
-#endif
-	create(rClassIdentifier, OV_ClassId_Kernel_Visualisation_VisualisationWidget, l_pResult, Kernel::CVisualisationWidget);
 
 	create(rClassIdentifier, OV_ClassId_Kernel_Configurable,                      l_pResult, Kernel::CConfigurable);
 

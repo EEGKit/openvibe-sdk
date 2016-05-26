@@ -78,7 +78,6 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const { return this->getKernelContext().getScenarioManager(); }
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const { return this->getKernelContext().getTypeManager(); }
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const { return m_oLogManager; }
-			virtual OpenViBE::Kernel::IVisualisationManager& getVisualisationManager(void) const { return this->getKernelContext().getVisualisationManager(); }
 			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const { return this->getKernelContext().getConfigurationManager(); }
 
 			virtual OpenViBE::Kernel::IBox& getBox(void) const { return m_rBox; }

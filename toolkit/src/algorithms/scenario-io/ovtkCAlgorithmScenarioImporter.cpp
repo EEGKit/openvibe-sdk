@@ -353,46 +353,6 @@ boolean CAlgorithmScenarioImporter::process(void)
 		l_ui32ScenarioOutputIndex++;
 	}
 
-#if defined TARGET_HAS_ThirdPartyGTK
-	for(v=l_rSymbolicScenario.m_vVisualisationWidget.begin(); v!=l_rSymbolicScenario.m_vVisualisationWidget.end(); v++)
-	{
-		CIdentifier l_oBoxIdentifier = v->m_oBoxIdentifier;
-		IVisualisationWidget* l_pVisualisationWidget=NULL;
-		CIdentifier l_oNewVisualisationWidgetIdentifier;
-		CString l_sWidgetName = v->m_sName;
-		if(EVisualisationWidgetType(v->m_ui32Type) == EVisualisationWidget_VisualisationBox)
-		{
-			IBox* l_pBox = l_pScenario->getBoxDetails(l_vBoxIdMapping[l_oBoxIdentifier]);
-			if(!l_pBox)
-			{
-				this->getLogManager() << LogLevel_Error << "The box identifier ["<< l_oBoxIdentifier <<"] used in Windows manager was not found in scenario.\n";
-				return false;
-			}
-			l_sWidgetName = l_pBox->getName();
-		}
-
-		l_pScenario->getVisualisationTreeDetails().addVisualisationWidget(
-			l_oNewVisualisationWidgetIdentifier,
-			l_sWidgetName,
-			EVisualisationWidgetType(v->m_ui32Type),
-			l_vVisualisationWidgetIdMapping[v->m_oParentIdentifier],
-			v->m_ui32Index,
-			l_vBoxIdMapping[l_oBoxIdentifier],
-			v->m_ui32NbChildren,
-			l_oBoxIdentifier);
-		l_pVisualisationWidget=l_pScenario->getVisualisationTreeDetails().getVisualisationWidget(l_oNewVisualisationWidgetIdentifier);
-		if(l_pVisualisationWidget)
-		{
-			for(a=v->m_vAttribute.begin(); a!=v->m_vAttribute.end(); a++)
-			{
-				l_pVisualisationWidget->addAttribute(
-					a->m_oIdentifier,
-					a->m_sValue);
-			}
-		}
-		l_vVisualisationWidgetIdMapping[v->m_oIdentifier]=l_oNewVisualisationWidgetIdentifier;
-	}
-#endif
 	for(a=l_rSymbolicScenario.m_vAttribute.begin(); a!=l_rSymbolicScenario.m_vAttribute.end(); a++)
 	{
 		l_pScenario->addAttribute(

@@ -80,8 +80,7 @@ namespace OpenViBEPlugins
 				virtual OpenViBE::CString getVersion(void) const               { return OpenViBE::CString("1.1"); }
 				virtual OpenViBE::CString getAddedSoftwareVersion(void) const  { return OpenViBE::CString("1.0.0.0"); }
 				virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const{ return OpenViBE::CString("2.4.0.0"); }
-				virtual OpenViBE::CString getStockItemName(void) const         { return OpenViBE::CString("gtk-disconnect"); }
-
+				
 				virtual OpenViBE::CIdentifier getCreatedClass(void) const      { return OVP_ClassId_BoxAlgorithm_Timeout; }
 				virtual OpenViBE::Plugins::IPluginObject* create(void)         { return new OpenViBEPlugins::Stimulation::CBoxAlgorithmTimeout; }
 

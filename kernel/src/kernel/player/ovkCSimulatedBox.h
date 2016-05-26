@@ -3,7 +3,6 @@
 
 #include "../ovkTKernelObject.h"
 #include "ovkCBuffer.h"
-#include "../ovkIGtkOVCustomHandler.h"
 
 #include <system/ovCChrono.h>
 #include <vector>
@@ -86,7 +85,7 @@ namespace OpenViBE
 			OpenViBE::boolean m_bIsDeprecated;
 		};
 
-		class CSimulatedBox : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >, public IGtkOVCustomHandler
+		class CSimulatedBox : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >
 		{
 		public:
 

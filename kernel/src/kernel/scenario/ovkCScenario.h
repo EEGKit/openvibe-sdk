@@ -30,12 +30,6 @@ namespace OpenViBE
 			        OpenViBE::Kernel::IScenario::IScenarioMergeCallback* pScenarioMergeCallback,
 			        OpenViBE::boolean bMergeSettings);
 
-			virtual OpenViBE::boolean setVisualisationTreeIdentifier(
-				const OpenViBE::CIdentifier& rVisualisationTreeIdentifier);
-			virtual OpenViBE::CIdentifier getVisualisationTreeIdentifier(void) const;
-			virtual const OpenViBE::Kernel::IVisualisationTree& getVisualisationTreeDetails() const;
-			virtual OpenViBE::Kernel::IVisualisationTree& getVisualisationTreeDetails();
-
 			virtual OpenViBE::CIdentifier getNextBoxIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
 			virtual OpenViBE::boolean isBox(
@@ -172,7 +166,6 @@ namespace OpenViBE
 		protected:
 
 			OpenViBE::CIdentifier m_oIdentifier;
-			OpenViBE::CIdentifier m_oVisualisationTreeIdentifier;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CBox*> m_vBox;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CComment*> m_vComment;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CLink*> m_vLink;

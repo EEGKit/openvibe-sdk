@@ -134,10 +134,6 @@ boolean CAlgorithmScenarioExporter::process(void)
 	}
 	this->exportStop(l_oTemporaryMemoryBuffer);
 
-	this->exportStart(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationTree);
-	l_oHelper.exportVisualisationTree(l_oTemporaryMemoryBuffer, l_pScenario->getVisualisationTreeDetails());
-	this->exportStop(l_oTemporaryMemoryBuffer);
-
 	__export_attributes__(*l_pScenario, *this, l_oTemporaryMemoryBuffer, Scenario);
 
 	this->exportStop(l_oTemporaryMemoryBuffer);
@@ -336,74 +332,6 @@ boolean CAlgorithmScenarioExporterHelper::exportOutput(IMemoryBuffer& rMemoryBuf
 	m_rParent.exportString(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name, l_sOutputName);
 	m_rParent.exportIdentifier(rMemoryBuffer,OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier, l_oLinkedBoxIdentifier);
 	m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex, (uint64)l_ui32LinkedBoxOutputIndex);
-
-	m_rParent.exportStop(rMemoryBuffer);
-
-	return true;
-}
-
-boolean CAlgorithmScenarioExporterHelper::exportVisualisationTree(IMemoryBuffer& rMemoryBuffer, const IVisualisationTree& rVisualisationTree)
-{
-	CIdentifier l_oIdentifier;
-
-	std::vector < CIdentifier > l_vWidget;
-
-	while(rVisualisationTree.getNextVisualisationWidgetIdentifier(l_oIdentifier))
-	{
-		IVisualisationWidget* l_pWidget=rVisualisationTree.getVisualisationWidget(l_oIdentifier);
-		if(l_pWidget->getType()==EVisualisationWidget_VisualisationWindow
-		|| l_pWidget->getParentIdentifier()==OV_UndefinedIdentifier)
-		{
-			l_vWidget.push_back(l_oIdentifier);
-		}
-	}
-
-	for(std::vector < CIdentifier >::size_type i=0; i<l_vWidget.size(); i++)
-	{
-		IVisualisationWidget* l_pWidget=rVisualisationTree.getVisualisationWidget(l_vWidget[i]);
-
-		this->exportVisualisationWidget(rMemoryBuffer, rVisualisationTree, *l_pWidget);
-
-		for(uint32 i=0; i<l_pWidget->getNbChildren(); i++)
-		{
-			if(l_pWidget->getChildIdentifier(i, l_oIdentifier))
-			{
-				l_vWidget.push_back(l_oIdentifier);
-			}
-		}
-	}
-
-	return true;
-}
-
-boolean CAlgorithmScenarioExporterHelper::exportVisualisationWidget(IMemoryBuffer& rMemoryBuffer, const IVisualisationTree& rVisualisationTree, const IVisualisationWidget& rVisualisationWidget)
-{
-	m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget);
-
-	m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Identifier, rVisualisationWidget.getIdentifier());
-
-	// visualisation box name can be retrieved from corresponding IBox, so we can skip it for these
-	if(rVisualisationWidget.getType() != EVisualisationWidget_VisualisationBox)
-	{
-		m_rParent.exportString(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Name, rVisualisationWidget.getName());
-	}
-
-	m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Type, (uint64)rVisualisationWidget.getType());
-	m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_ParentIdentifier, rVisualisationWidget.getParentIdentifier());
-
-	// visualisation widget index
-	IVisualisationWidget* l_pParentVisualisationWidget=rVisualisationTree.getVisualisationWidget(rVisualisationWidget.getParentIdentifier());
-	if(l_pParentVisualisationWidget != NULL)
-	{
-		uint32 l_ui32ChildIndex=0;
-		l_pParentVisualisationWidget->getChildIndex(rVisualisationWidget.getIdentifier(), l_ui32ChildIndex);
-		m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Index, l_ui32ChildIndex);
-	}
-
-	m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_BoxIdentifier, rVisualisationWidget.getBoxIdentifier());
-	m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_NumChildren, rVisualisationWidget.getNbChildren());
-
-	 __export_attributes__(rVisualisationWidget, m_rParent, rMemoryBuffer, VisualisationWidget);
 
 	m_rParent.exportStop(rMemoryBuffer);
 

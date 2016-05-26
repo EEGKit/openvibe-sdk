@@ -7,25 +7,10 @@
 #include "ovkCMessageEvent.h"
 #include "ovkCMessageSignal.h"
 
-#include "../visualisation/ovkCVisualisationManager.h"
-#include "../ovkGtkOVCustom.h"
-
 #include <openvibe/ovITimeArithmetics.h>
 
 #include <cstdlib>
 #include <algorithm>
-#if defined TARGET_HAS_ThirdPartyGTK
-#if defined TARGET_OS_Windows
-#  include <gdk/gdkwin32.h>
-#elif defined TARGET_OS_Linux
-#  include <gdk/gdkx.h>
-#elif defined TARGET_OS_MacOS
-#  define Cursor XCursor
-#  include <gdk/gdkx.h>
-#  undef Cursor
-#else
-#endif
-#endif
 
 using namespace std;
 using namespace OpenViBE;

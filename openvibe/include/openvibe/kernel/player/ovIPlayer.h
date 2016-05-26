@@ -166,8 +166,6 @@ namespace OpenViBE
 
 			virtual OpenViBE::uint64 getCurrentSimulatedTime(void) const=0;
 
-			virtual OpenViBE::Kernel::IVisualisationTree* getRuntimeVisualisationTree(void) const = 0;
-
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Player);
 		};
 	};

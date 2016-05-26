@@ -295,8 +295,7 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const { return m_pBoxListenerContext->getScenarioManager(); }
 		virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const { return m_pBoxListenerContext->getTypeManager(); }
 		virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const { return m_pBoxListenerContext->getLogManager(); }
-		virtual OpenViBE::Kernel::IVisualisationManager& getVisualisationManager(void) const { return m_pBoxListenerContext->getVisualisationManager(); }
-		virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const { return m_pBoxListenerContext->getConfigurationManager(); }
+				virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const { return m_pBoxListenerContext->getConfigurationManager(); }
 
 		virtual OpenViBE::Kernel::IScenario& getScenario(void) const { return m_pBoxListenerContext->getScenario(); }
 
