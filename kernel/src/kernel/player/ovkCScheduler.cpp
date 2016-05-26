@@ -365,10 +365,6 @@ SchedulerInitializationCode CScheduler::initialize(void)
 			{
 				this->getLogManager() << LogLevel_Warning << "Disabled box " << l_oBoxIdentifier << " with name " << l_pBox->getName() << " - Plugin object descriptor could not be found\n";
 			}
-			else if(l_pBoxDesc->hasFunctionality(PluginFunctionality_Visualization))
-			{
-				this->getLogManager() << LogLevel_Trace << "Disabled box " << l_oBoxIdentifier << " with name " << l_pBox->getName() << " - Box had visualization functionality and such boxes are not handled by Kernel module anymore\n";
-			}
 			else if(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
 			{
 				this->getLogManager() << LogLevel_Trace << "Disabled box " << l_oBoxIdentifier << " with name " << l_pBox->getName() << " - Box had the " << CString("Disabled") << " attribute\n";
