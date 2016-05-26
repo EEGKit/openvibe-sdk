@@ -358,29 +358,6 @@ SchedulerInitializationCode CScheduler::initialize(void)
 			return SchedulerInitialization_Failed;
 		}
 
-		if(l_pBox->hasAttribute(OV_AttributeId_Box_Priority)) 
-		{
-			::sscanf(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString(), "%i", &l_iPriority);
-		}
-		else
-		{
-			// Decide the priority based on the location of the box in the GUI. Priority decreases in top->bottom, left->right order.
-
-			int l_iYPosition = 0;
-			::sscanf(l_pBox->getAttributeValue(OV_AttributeId_Box_YCenterPosition).toASCIIString(), "%i", &l_iYPosition);
-			int l_iXPosition = 0;
-			::sscanf(l_pBox->getAttributeValue(OV_AttributeId_Box_XCenterPosition).toASCIIString(), "%i", &l_iXPosition);
-
-			this->getLogManager() << LogLevel_Debug << " Inserting box " << l_pBox->getName() << " with coords (x=" << l_iXPosition << ",y=" << l_iYPosition << ")\n";
-
-			const int32 l_iMaxInt16 = std::numeric_limits<int16>::max();				// Signed max
-			l_iYPosition = std::max(std::min(l_iYPosition,l_iMaxInt16),0);				// y = Truncate to 0:int16
-			l_iXPosition = std::max(std::min(l_iXPosition,l_iMaxInt16),0);				// x = Truncate to 0:int16
-			l_iPriority = -( (l_iYPosition << 15)  + l_iXPosition);						// compose pri32=[int16,int16] = [y,x]
-
-			this->getLogManager() << LogLevel_Debug << "  -> coord-based box priority is " << l_iPriority << "\n";
-		}
-
 		if (l_pBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox)
 		{
 			const IPluginObjectDesc* l_pBoxDesc=this->getPluginManager().getPluginObjectDescCreating(l_pBox->getAlgorithmClassIdentifier());
