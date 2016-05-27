@@ -30,6 +30,20 @@ boolean CBoxAlgorithmStimulationBasedEpoching::initialize(void)
 	m_pSignalStreamDecoder->initialize();
 	m_pSignalStreamEncoder->initialize();
 
+	op_ui64SamplingRate.initialize(m_pSignalStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+	op_pStimulationSet.initialize(m_pStimulationStreamDecoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
+	ip_pStimulationSet.initialize(m_pStimulationStreamEncoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
+	ip_pSignal.initialize(m_pSignalStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_Matrix));
+	op_pSignal.initialize(m_pSignalStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Matrix));
+
+	op_pStimulationMemoryBuffer.initialize(m_pStimulationStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	ip_pStimulationMemoryBuffer.initialize(m_pStimulationStreamDecoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_InputParameterId_MemoryBufferToDecode));
+	op_SignalMemoryBuffer.initialize(m_pSignalStreamEncoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+	ip_SignalMemoryBuffer.initialize(m_pSignalStreamDecoder->getInputParameter(OVP_GD_Algorithm_SignalStreamDecoder_InputParameterId_MemoryBufferToDecode));
+
+
+	m_pOutputSignalDescription = new CMatrix();
+
 	float64 l_f64EpochDuration = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	this->getLogManager() << LogLevel_Debug << "Epoch duration : " << l_f64EpochDuration << "\n";
 	m_ui64EpochDuration=(int64)(l_f64EpochDuration*(1LL<<32)); // $$$ Casted in (int64) because of Ubuntu 7.10 crash !
@@ -38,10 +52,10 @@ boolean CBoxAlgorithmStimulationBasedEpoching::initialize(void)
 	this->getLogManager() << LogLevel_Debug << "Epoch offset : " << l_f64EpochOffset << "\n";
 	m_i64EpochOffset = (int64)(l_f64EpochOffset*(1LL << 32));
 
-	if (l_f64EpochOffset <= 0 || l_f64EpochDuration <= 0)
+	if (l_f64EpochDuration <= 0)
 	{
 		this->getLogManager() << LogLevel_Error << "Epocher settings are invalid (duration:" << l_f64EpochDuration
-			<< "|" << "interval:" << l_f64EpochOffset << ")... These parameters should be strictly positive.\n";
+			<<  ")... This parameter should be strictly positive.\n";
 		return false;
 	}
 	
@@ -58,17 +72,6 @@ boolean CBoxAlgorithmStimulationBasedEpoching::initialize(void)
 	m_ui64LastStimulationInputEndTime=0;
 	m_ui64LastStimulationOutputEndTime=0;
 
-	op_ui64SamplingRate.initialize(m_pSignalStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
-	op_pStimulationSet.initialize(m_pStimulationStreamDecoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
-	ip_pStimulationSet.initialize(m_pStimulationStreamEncoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
-	ip_pSignal.initialize(m_pSignalStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_Matrix));
-	op_pSignal.initialize(m_pSignalStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Matrix));
-
-	op_pStimulationMemoryBuffer.initialize(m_pStimulationStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
-	ip_pStimulationMemoryBuffer.initialize(m_pStimulationStreamDecoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_InputParameterId_MemoryBufferToDecode));
-	op_SignalMemoryBuffer.initialize(m_pSignalStreamEncoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
-	ip_SignalMemoryBuffer.initialize(m_pSignalStreamDecoder->getInputParameter(OVP_GD_Algorithm_SignalStreamDecoder_InputParameterId_MemoryBufferToDecode));
-
 	this->getLogManager() << LogLevel_Debug << "Parameters existence : " << op_ui64SamplingRate.exists() << ip_pStimulationSet.exists() << op_pStimulationSet.exists() << ip_pSignal.exists() << op_pSignal.exists() << "\n";
 
 	m_pOutputSignalDescription=new CMatrix();
@@ -79,19 +82,29 @@ boolean CBoxAlgorithmStimulationBasedEpoching::initialize(void)
 	m_pStimulationStreamEncoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeHeader);
 	l_rDynamicBoxContext.markOutputAsReadyToSend(1, 0, 0);
 
-
 	return true;
 }
 
 boolean CBoxAlgorithmStimulationBasedEpoching::uninitialize(void)
 {
 	delete m_pOutputSignalDescription;
-	m_pOutputSignalDescription=NULL;
+	m_pOutputSignalDescription = NULL;
 
 	m_pSignalStreamEncoder->uninitialize();
 	m_pSignalStreamDecoder->uninitialize();
 	m_pStimulationStreamEncoder->uninitialize();
 	m_pStimulationStreamDecoder->uninitialize();
+
+	op_pStimulationSet.uninitialize();
+	op_ui64SamplingRate.uninitialize();
+	ip_pStimulationSet.uninitialize();
+	ip_pSignal.uninitialize();
+	op_pSignal.uninitialize();
+
+	op_pStimulationMemoryBuffer.uninitialize();
+	ip_pStimulationMemoryBuffer.uninitialize();
+	op_SignalMemoryBuffer.uninitialize();
+	ip_SignalMemoryBuffer.uninitialize();
 
 	getAlgorithmManager().releaseAlgorithm(*m_pSignalStreamEncoder);
 	getAlgorithmManager().releaseAlgorithm(*m_pSignalStreamDecoder);
@@ -100,10 +113,9 @@ boolean CBoxAlgorithmStimulationBasedEpoching::uninitialize(void)
 
 	m_vStimulationId.clear();
 
-	std::vector < SStimulationBasedEpoching >::iterator itStimulationBasedEpoching;
-	for(itStimulationBasedEpoching=m_vStimulationBasedEpoching.begin(); itStimulationBasedEpoching!=m_vStimulationBasedEpoching.end(); itStimulationBasedEpoching++)
+	for (SStimulationBasedEpoching itStimulationBasedEpoching : m_vStimulationBasedEpoching)
 	{
-		getAlgorithmManager().releaseAlgorithm(*itStimulationBasedEpoching->m_pEpocher);
+		getAlgorithmManager().releaseAlgorithm(*itStimulationBasedEpoching.m_pEpocher);
 	}
 
 	return true;
