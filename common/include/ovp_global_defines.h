@@ -7,6 +7,7 @@
 // -----------------------------------------------------
 
 #define OVP_GD_ClassId_Algorithm_XMLScenarioImporter                                                                            OpenViBE::CIdentifier(0xe80c3ea2, 0x149c4a05)
+#define OVP_GD_ClassId_Algorithm_XMLScenarioExporter																			OpenViBE::CIdentifier(0x53693531, 0xb136cf3f)
 
 // -----------------------------------------------------
 // Streamed matrix stream encoder
