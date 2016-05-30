@@ -1,4 +1,4 @@
-#include "ovpCIdentity.h"
+#include "ovpCBoxAlgorithmIdentity.h"
 
 #include <iostream>
 
@@ -10,18 +10,18 @@ using namespace OpenViBEPlugins::SignalProcessing;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-void CIdentity::release(void)
+void CBoxAlgorithmIdentity::release(void)
 {
 	delete this;
 }
 
-boolean CIdentity::processInput(uint32 ui32InputIndex)
+boolean CBoxAlgorithmIdentity::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CIdentity::process(void)
+boolean CBoxAlgorithmIdentity::process(void)
 {
 	IBox* l_pStaticBoxContext=getBoxAlgorithmContext()->getStaticBoxContext();
 	IBoxIO* l_pDynamicBoxContext=getBoxAlgorithmContext()->getDynamicBoxContext();

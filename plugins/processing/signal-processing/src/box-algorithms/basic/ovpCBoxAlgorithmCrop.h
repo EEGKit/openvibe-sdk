@@ -5,6 +5,8 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
+#define OVP_ClassId_BoxAlgorithm_Crop                                                  OpenViBE::CIdentifier(0x7F1A3002, 0x358117BA)
+#define OVP_ClassId_BoxAlgorithm_CropDesc                                              OpenViBE::CIdentifier(0x64D619D7, 0x26CC42C9)
 
 namespace OpenViBEPlugins
 {

@@ -1,7 +1,9 @@
-#include "ovpCBoxAlgorithmStimulationBasedEpoching.h"
 #include <cstdio>
 
 #include <openvibe/ovITimeArithmetics.h>
+
+#include "../../algorithms/epoching/ovpCAlgorithmStimulationBasedEpoching.h"
+#include "ovpCBoxAlgorithmStimulationBasedEpoching.h"
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;

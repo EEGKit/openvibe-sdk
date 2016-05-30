@@ -1,4 +1,4 @@
-#include "ovpCMatrixAverage.h"
+#include "ovpCAlgorithmMatrixAverage.h"
 
 #include <system/ovCMemory.h>
 #include <cmath>
@@ -13,7 +13,7 @@ using namespace OpenViBEPlugins::SignalProcessing;
 // ________________________________________________________________________________________________________________
 //
 
-boolean CMatrixAverage::initialize(void)
+boolean CAlgorithmMatrixAverage::initialize(void)
 {
 	ip_ui64AveragingMethod.initialize(getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_AveragingMethod));
 	ip_ui64MatrixCount.initialize(getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_MatrixCount));
@@ -23,7 +23,7 @@ boolean CMatrixAverage::initialize(void)
 	return true;
 }
 
-boolean CMatrixAverage::uninitialize(void)
+boolean CAlgorithmMatrixAverage::uninitialize(void)
 {
 	std::deque < OpenViBE::CMatrix* >::iterator it;
 	for(it=m_vHistory.begin(); it!=m_vHistory.end(); it++)
@@ -43,7 +43,7 @@ boolean CMatrixAverage::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CMatrixAverage::process(void)
+boolean CAlgorithmMatrixAverage::process(void)
 {
 	IMatrix* l_pInputMatrix=ip_pMatrix;
 	IMatrix* l_pOutputMatrix=op_pAveragedMatrix;

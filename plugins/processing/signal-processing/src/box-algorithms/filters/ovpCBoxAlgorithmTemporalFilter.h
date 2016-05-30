@@ -10,19 +10,6 @@
 #define OVP_ClassId_BoxAlgorithm_TemporalFilter     OpenViBE::CIdentifier(0xB4F9D042, 0x9D79F2E5)
 #define OVP_ClassId_BoxAlgorithm_TemporalFilterDesc OpenViBE::CIdentifier(0x7BF6BA62, 0xAF829A37)
 
-// Filter method identifiers from OpenViBE 0.14.0
-#define OVP_TypeId_FilterMethod                     OpenViBE::CIdentifier(0x2F2C606C, 0x8512ED68)
-#define OVP_TypeId_FilterMethod_Butterworth         OpenViBE::CIdentifier(0x00E4EADE, 0x9586A50E)
-#define OVP_TypeId_FilterMethod_Chebyshev           OpenViBE::CIdentifier(0x0C3F5301, 0x7397A7FB)
-#define OVP_TypeId_FilterMethod_YuleWalker          OpenViBE::CIdentifier(0x7BF59C86, 0xB6D459BA)
-
-// Filter type identifiers from OpenViBE 0.14.0
-#define OVP_TypeId_FilterType                       OpenViBE::CIdentifier(0xFA20178E, 0x4CBA62E9)
-#define OVP_TypeId_FilterType_LowPass               OpenViBE::CIdentifier(0x0C33A568, 0xE2BD46D2)
-#define OVP_TypeId_FilterType_BandPass              OpenViBE::CIdentifier(0x19E89DDB, 0xD1FF7FF5)
-#define OVP_TypeId_FilterType_HighPass              OpenViBE::CIdentifier(0x2F677195, 0x9F9F15B9)
-#define OVP_TypeId_FilterType_BandStop              OpenViBE::CIdentifier(0x41C34DD7, 0xF70E4043)
-
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing

@@ -1,19 +1,23 @@
-#ifndef __SamplePlugin_CTimeSignalGenerator_H__
-#define __SamplePlugin_CTimeSignalGenerator_H__
+#ifndef __OpenViBEPlugins_BoxAlgorithm_TimeSignalGenerator_H__
+#define __OpenViBEPlugins_BoxAlgorithm_TimeSignalGenerator_H__
 
 #include "../ovp_defines.h"
 
 #include <toolkit/ovtk_all.h>
 
+#define OVP_ClassId_BoxAlgorithm_TimeSignalGeneratorDesc                 OpenViBE::CIdentifier(0x57AD8655, 0x1966B4DC)
+
+#define OVP_ClassId_BoxAlgorithm_TimeSignalGenerator                     OpenViBE::CIdentifier(0x28A5E7FF, 0x530095DE)
+
 namespace OpenViBEPlugins
 {
 	namespace DataGeneration
 	{
-		class CTimeSignalGenerator : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmTimeSignalGenerator : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
-			CTimeSignalGenerator(void);
+			CBoxAlgorithmTimeSignalGenerator(void);
 
 			virtual void release(void);
 
@@ -25,11 +29,11 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::boolean processClock(OpenViBE::Kernel::IMessageClock& rMessageClock);
 			virtual OpenViBE::boolean process(void);
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_TimeSignalGenerator)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeSignalGenerator)
 
 		protected:
 
-			OpenViBEToolkit::TSignalEncoder < CTimeSignalGenerator > m_oSignalEncoder;
+			OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmTimeSignalGenerator > m_oSignalEncoder;
 
 			OpenViBE::boolean m_bHeaderSent;
 			OpenViBE::uint32 m_ui32SamplingFrequency;
@@ -37,7 +41,7 @@ namespace OpenViBEPlugins
 			OpenViBE::uint32 m_ui32SentSampleCount;
 		};
 
-		class CTimeSignalGeneratorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmTimeSignalGeneratorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 
@@ -50,8 +54,8 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Data generation"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_TimeSignalGenerator; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::DataGeneration::CTimeSignalGenerator(); }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::DataGeneration::CBoxAlgorithmTimeSignalGenerator(); }
 			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-execute"); }
 
 			virtual OpenViBE::boolean getBoxPrototype(
@@ -65,9 +69,9 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_TimeSignalGeneratorDesc)
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeSignalGeneratorDesc)
 		};
 	};
 };
 
-#endif // __SamplePlugin_CTimeSignalGenerator_H__
+#endif // __OpenViBEPlugins_BoxAlgorithm_TimeSignalGenerator_H__

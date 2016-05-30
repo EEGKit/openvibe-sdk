@@ -1,4 +1,4 @@
-#include "ovpCFeatureAggregator.h"
+#include "ovpCBoxAlgorithmFeatureAggregator.h"
 
 #include <system/ovCMemory.h>
 
@@ -20,7 +20,7 @@ namespace OpenViBEPlugins
 	namespace FeatureExtraction
 	{
 
-		CFeatureAggregator::CFeatureAggregator(void) :
+		CBoxAlgorithmFeatureAggregator::CBoxAlgorithmFeatureAggregator(void) :
 			m_ui64LastChunkStartTime(0),
 			m_ui64LastChunkEndTime(0),
 			m_ui32CurrentInput(0),
@@ -29,18 +29,18 @@ namespace OpenViBEPlugins
 		{
 		}
 
-		OpenViBE::boolean CFeatureAggregator::initialize()
+		OpenViBE::boolean CBoxAlgorithmFeatureAggregator::initialize()
 		{
 			m_ui32NumberOfInput = getBoxAlgorithmContext()->getStaticBoxContext()->getInputCount();
 
 			// Prepares decoders
 			for(uint32 i=0; i<m_ui32NumberOfInput; i++)
 			{
-				TStreamedMatrixDecoder<CFeatureAggregator>* l_pStreamedMatrixDecoder = new TStreamedMatrixDecoder<CFeatureAggregator>();
+				TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>* l_pStreamedMatrixDecoder = new TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>();
 				m_pStreamedMatrixDecoder.push_back(l_pStreamedMatrixDecoder);
 				m_pStreamedMatrixDecoder.back()->initialize(*this, i);
 			}
-			m_pFeatureVectorEncoder = new TFeatureVectorEncoder<CFeatureAggregator>;
+			m_pFeatureVectorEncoder = new TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>;
 			m_pFeatureVectorEncoder->initialize(*this,0);
 
 			//resizes everything as needed
@@ -53,7 +53,7 @@ namespace OpenViBEPlugins
 			return true;
 		}
 
-		OpenViBE::boolean CFeatureAggregator::uninitialize()
+		OpenViBE::boolean CBoxAlgorithmFeatureAggregator::uninitialize()
 		{
 			for(uint32 i=0; i<m_ui32NumberOfInput; i++)
 			{
@@ -74,7 +74,7 @@ namespace OpenViBEPlugins
 			return true;
 		}
 
-		boolean CFeatureAggregator::processInput(uint32 ui32InputIndex)
+		boolean CBoxAlgorithmFeatureAggregator::processInput(uint32 ui32InputIndex)
 		{
 
 			if(m_bError)
@@ -144,7 +144,7 @@ namespace OpenViBEPlugins
 			return true;
 		}
 
-		OpenViBE::boolean CFeatureAggregator::process()
+		OpenViBE::boolean CBoxAlgorithmFeatureAggregator::process()
 		{
 			IBox* l_pStaticBoxContext = getBoxAlgorithmContext()->getStaticBoxContext();
 			IBoxIO* l_pBoxIO=getBoxAlgorithmContext()->getDynamicBoxContext();

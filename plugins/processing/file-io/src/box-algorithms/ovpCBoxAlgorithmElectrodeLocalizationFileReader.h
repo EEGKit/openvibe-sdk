@@ -1,9 +1,11 @@
 #ifndef __OpenViBEPlugins_BoxAlgorithm_ElectrodeLocalisationFileReader_H__
 #define __OpenViBEPlugins_BoxAlgorithm_ElectrodeLocalisationFileReader_H__
 
-#include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
+
+#define OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReader               OpenViBE::CIdentifier(0x40704155, 0x19C50E8F)
+#define OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReaderDesc           OpenViBE::CIdentifier(0x4796613F, 0x653A48D5)
 
 namespace OpenViBEPlugins
 {

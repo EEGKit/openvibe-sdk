@@ -218,7 +218,7 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 
 	for(i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
-		m_oDecoder.decode(0, i);
+		m_oDecoder.decode(i);
 
 		uint32 l_ui32ChannelCount=m_oDecoder.getOutputMatrix()->getDimensionSize(0);
 		uint32 l_ui32SampleCount=m_oDecoder.getOutputMatrix()->getDimensionSize(1);

@@ -1,4 +1,4 @@
-#include "ovpCTimeBasedEpoching.h"
+#include "ovpCBoxAlgorithmTimeBasedEpoching.h"
 
 #include <system/ovCMemory.h>
 
@@ -20,11 +20,11 @@ using namespace std;
 //--------------------------------------------------------------------------------------------------------------------
 
 // This class wraps one output stream encoder and keeps track of the state using the epoch params specific of that output.
-class CTimeBasedEpoching::COutputHandler
+class CBoxAlgorithmTimeBasedEpoching::COutputHandler
 {
 public:
 
-	COutputHandler(CTimeBasedEpoching& rParent, uint32 ui32OutputIndex);
+	COutputHandler(CBoxAlgorithmTimeBasedEpoching& rParent, uint32 ui32OutputIndex);
 	virtual ~COutputHandler(void);
 
 public:
@@ -56,13 +56,13 @@ protected:
 
 	bool m_bHeaderSent;
 
-	CTimeBasedEpoching& m_rParent;
+	CBoxAlgorithmTimeBasedEpoching& m_rParent;
 
-	OpenViBEToolkit::TSignalEncoder<CTimeBasedEpoching> m_oSignalEncoder;
+	OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeBasedEpoching> m_oSignalEncoder;
 
 };
 
-CTimeBasedEpoching::COutputHandler::COutputHandler(CTimeBasedEpoching& rParent, uint32 ui32OutputIndex)
+CBoxAlgorithmTimeBasedEpoching::COutputHandler::COutputHandler(CBoxAlgorithmTimeBasedEpoching& rParent, uint32 ui32OutputIndex)
 	:m_ui32OutputIndex(ui32OutputIndex)
 	,m_ui32EpochIndex(0)
 	,m_ui32ChannelCount(0)
@@ -78,19 +78,19 @@ CTimeBasedEpoching::COutputHandler::COutputHandler(CTimeBasedEpoching& rParent, 
 	m_oSignalEncoder.initialize(rParent, ui32OutputIndex);
 }
 
-CTimeBasedEpoching::COutputHandler::~COutputHandler(void)
+CBoxAlgorithmTimeBasedEpoching::COutputHandler::~COutputHandler(void)
 {
 	m_oSignalEncoder.uninitialize();
 }
 
-void CTimeBasedEpoching::COutputHandler::reset(const uint64 ui64DeltaTime)
+void CBoxAlgorithmTimeBasedEpoching::COutputHandler::reset(const uint64 ui64DeltaTime)
 {
 	m_ui64DeltaTime=ui64DeltaTime;
 	m_ui32SampleIndex=0;
 	m_ui32EpochIndex=0;
 }
 
-bool CTimeBasedEpoching::COutputHandler::process()
+bool CBoxAlgorithmTimeBasedEpoching::COutputHandler::process()
 {
 	if(!m_bHeaderSent)
 	{
@@ -202,17 +202,17 @@ bool CTimeBasedEpoching::COutputHandler::process()
 //--------------------------------------------------------------------------------------------------------------------
 
 
-CTimeBasedEpoching::CTimeBasedEpoching(void)
+CBoxAlgorithmTimeBasedEpoching::CBoxAlgorithmTimeBasedEpoching(void)
 	:m_ui32InputSampleCountPerBuffer(0)
 {
 }
 
-void CTimeBasedEpoching::release(void)
+void CBoxAlgorithmTimeBasedEpoching::release(void)
 {
 	delete this;
 }
 
-boolean CTimeBasedEpoching::initialize(void)
+boolean CBoxAlgorithmTimeBasedEpoching::initialize(void)
 {
 	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
@@ -220,7 +220,7 @@ boolean CTimeBasedEpoching::initialize(void)
 
 	for(uint32 i=0; i<getBoxAlgorithmContext()->getStaticBoxContext()->getOutputCount(); i++)
 	{
-		CTimeBasedEpoching::COutputHandler* l_pOutputHandler=new CTimeBasedEpoching::COutputHandler(*this, i);
+		CBoxAlgorithmTimeBasedEpoching::COutputHandler* l_pOutputHandler=new CBoxAlgorithmTimeBasedEpoching::COutputHandler(*this, i);
 		CString l_sEpochDuration;
 		CString l_sEpochInterval;
 
@@ -256,11 +256,11 @@ boolean CTimeBasedEpoching::initialize(void)
 	return true;
 }
 
-boolean CTimeBasedEpoching::uninitialize(void)
+boolean CBoxAlgorithmTimeBasedEpoching::uninitialize(void)
 {
 	m_oSignalDecoder.uninitialize();
 
-	vector<CTimeBasedEpoching::COutputHandler*>::iterator itOutputHandler;
+	vector<CBoxAlgorithmTimeBasedEpoching::COutputHandler*>::iterator itOutputHandler;
 	for(itOutputHandler=m_vOutputHandler.begin(); itOutputHandler!=m_vOutputHandler.end(); itOutputHandler++)
 	{
 		delete *itOutputHandler;
@@ -270,13 +270,13 @@ boolean CTimeBasedEpoching::uninitialize(void)
 	return true;
 }
 
-boolean CTimeBasedEpoching::processInput(uint32 ui32InputIndex)
+boolean CBoxAlgorithmTimeBasedEpoching::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CTimeBasedEpoching::process(void)
+boolean CBoxAlgorithmTimeBasedEpoching::process(void)
 {
 	IDynamicBoxContext& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
@@ -297,7 +297,7 @@ boolean CTimeBasedEpoching::process(void)
 			if(m_ui64LastEndTime!=l_ui64ChunkStartTime)
 			{
 				this->getLogManager() << LogLevel_Debug << "Consecutive chunk start/end time differ (" << m_ui64LastEndTime << ":" << l_ui64ChunkStartTime << "), the epocher will restart\n";
-				vector<CTimeBasedEpoching::COutputHandler*>::iterator itOutputHandler;
+				vector<CBoxAlgorithmTimeBasedEpoching::COutputHandler*>::iterator itOutputHandler;
 				for(itOutputHandler=m_vOutputHandler.begin(); itOutputHandler!=m_vOutputHandler.end(); itOutputHandler++)
 				{
 					(*itOutputHandler)->reset(l_ui64ChunkStartTime);
@@ -309,7 +309,7 @@ boolean CTimeBasedEpoching::process(void)
 			}
 
 			// Add the chunk appropriately to each output stream
-			vector<CTimeBasedEpoching::COutputHandler*>::iterator itOutputHandler;
+			vector<CBoxAlgorithmTimeBasedEpoching::COutputHandler*>::iterator itOutputHandler;
 			for(itOutputHandler=m_vOutputHandler.begin(); itOutputHandler!=m_vOutputHandler.end(); itOutputHandler++)
 			{
 				if(!((*itOutputHandler)->process())) {

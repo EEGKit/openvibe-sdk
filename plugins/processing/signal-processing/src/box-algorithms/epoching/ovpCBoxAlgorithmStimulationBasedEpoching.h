@@ -1,12 +1,14 @@
 #ifndef __OpenViBEPlugins_BoxAlgorithm_StimulationBasedEpoching_H__
 #define __OpenViBEPlugins_BoxAlgorithm_StimulationBasedEpoching_H__
 
-#include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
 #include <vector>
 #include <map>
+
+#define OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching                              OpenViBE::CIdentifier(0x426163D1, 0x324237B0)
+#define OVP_ClassId_BoxAlgorithm_StimulationBasedEpochingDesc                          OpenViBE::CIdentifier(0x4F60616D, 0x468E0A8C)
 
 namespace OpenViBEPlugins
 {

@@ -1,22 +1,24 @@
-#ifndef __SamplePlugin_CTimeBasedEpoching_H__
-#define __SamplePlugin_CTimeBasedEpoching_H__
+#ifndef __OpenViBEPlugins_BoxAlgorithm_TimeBasedEpoching_H__
+#define __OpenViBEPlugins_BoxAlgorithm_TimeBasedEpoching_H__
 
-#include "../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
 #include <vector>
 #include <cstdio>
+
+#define OVP_ClassId_BoxAlgorithm_TimeBasedEpoching                                     OpenViBE::CIdentifier(0x00777FA0, 0x5DC3F560)
+#define OVP_ClassId_BoxAlgorithm_TimeBasedEpochingDesc                                 OpenViBE::CIdentifier(0x00ABDABE, 0x41381683)
 
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CTimeBasedEpoching : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmTimeBasedEpoching : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 			class COutputHandler;
 
 		public:
 
-			CTimeBasedEpoching(void);
+			CBoxAlgorithmTimeBasedEpoching(void);
 
 			virtual void release(void);
 
@@ -26,13 +28,13 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
 			virtual OpenViBE::boolean process(void);
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_TimeBasedEpoching)
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeBasedEpoching)
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder<CTimeBasedEpoching> m_oSignalDecoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTimeBasedEpoching> m_oSignalDecoder;
 			
-			std::vector<OpenViBEPlugins::SignalProcessing::CTimeBasedEpoching::COutputHandler*> m_vOutputHandler;
+			std::vector<OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTimeBasedEpoching::COutputHandler*> m_vOutputHandler;
 
 			OpenViBE::uint32 m_ui32InputSampleCountPerBuffer;
 			OpenViBE::uint64 m_ui64LastStartTime;
@@ -40,7 +42,7 @@ namespace OpenViBEPlugins
 
 		};
 
-		class CTimeBasedEpochingListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmTimeBasedEpochingListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
 		{
 		public:
 
@@ -89,7 +91,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
 		};
 
-		class CTimeBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmTimeBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 
@@ -103,9 +105,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
 			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-cut"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_TimeBasedEpoching; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CTimeBasedEpoching(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CTimeBasedEpochingListener; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_TimeBasedEpoching; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTimeBasedEpoching(); }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmTimeBasedEpochingListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual OpenViBE::boolean getBoxPrototype(
@@ -124,9 +126,9 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_TimeBasedEpochingDesc)
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeBasedEpochingDesc)
 		};
 	};
 };
 
-#endif // __SamplePlugin_CTimeBasedEpoching_H__
+#endif // __OpenViBEPlugins_BoxAlgorithm_TimeBasedEpoching_H__

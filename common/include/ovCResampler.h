@@ -356,13 +356,13 @@ namespace Common
 						l_bIsFirstChannel = false;
 					}
 
-					for(int k = 0; k < l_iCount; k++)
+					for(size_t k = 0; k < l_iCount; k++)
 					{
 						l_vOutputBuffer[k*m_ui32ChannelCount + j] = static_cast<TFloat>(l_pResamplerOutputBuffer[k]);
 					}
 				}
 				
-				for(int k = 0; k < l_iCount; k++)
+				for(size_t k = 0; k < l_iCount; k++)
 				{
 					rCallback.process(&l_vOutputBuffer[k*m_ui32ChannelCount], m_ui32ChannelCount);
 				}

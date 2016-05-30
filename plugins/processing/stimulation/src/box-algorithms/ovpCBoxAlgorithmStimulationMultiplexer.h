@@ -8,6 +8,9 @@
 #include <map>
 #include <cstdio>
 
+#define OVP_ClassId_BoxAlgorithm_StimulationMultiplexer       OpenViBE::CIdentifier(0x07DB4EFA, 0x472B0938)
+#define OVP_ClassId_BoxAlgorithm_StimulationMultiplexerDesc   OpenViBE::CIdentifier(0x79EF4E4D, 0x178F09E6)
+
 namespace OpenViBEPlugins
 {
 	namespace Stimulation

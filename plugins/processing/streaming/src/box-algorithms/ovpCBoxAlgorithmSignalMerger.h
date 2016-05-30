@@ -1,7 +1,6 @@
 #ifndef __OpenViBEPlugins_BoxAlgorithm_SignalMerger_H__
 #define __OpenViBEPlugins_BoxAlgorithm_SignalMerger_H__
 
-#include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 #include <vector>

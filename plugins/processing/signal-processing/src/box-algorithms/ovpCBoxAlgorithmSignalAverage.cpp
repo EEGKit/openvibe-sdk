@@ -1,4 +1,4 @@
-#include "ovpCSignalAverage.h"
+#include "ovpCBoxAlgorithmSignalAverage.h"
 
 #include <cmath>
 #include <iostream>
@@ -11,7 +11,7 @@ using namespace OpenViBEPlugins::SignalProcessing;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-void CSignalAverage::computeAverage(void)
+void CBoxAlgorithmSignalAverage::computeAverage(void)
 {
 	const float64* l_pInput = m_oSignalDecoder.getOutputMatrix()->getBuffer();
 	float64* l_pOutput = m_oSignalEncoder.getInputMatrix()->getBuffer();
@@ -36,15 +36,15 @@ void CSignalAverage::computeAverage(void)
 }
 
 
-CSignalAverage::CSignalAverage(void)
+CBoxAlgorithmSignalAverage::CBoxAlgorithmSignalAverage(void)
 {
 }
 
-void CSignalAverage::release(void)
+void CBoxAlgorithmSignalAverage::release(void)
 {
 }
 
-boolean CSignalAverage::initialize()
+boolean CBoxAlgorithmSignalAverage::initialize()
 {	 
 	m_oSignalDecoder.initialize(*this,0);
 	m_oSignalEncoder.initialize(*this,0);
@@ -52,7 +52,7 @@ boolean CSignalAverage::initialize()
 	return true;
 }
 
-boolean CSignalAverage::uninitialize()
+boolean CBoxAlgorithmSignalAverage::uninitialize()
 {
 	m_oSignalEncoder.uninitialize();
 	m_oSignalDecoder.uninitialize();
@@ -60,13 +60,13 @@ boolean CSignalAverage::uninitialize()
 	return true;
 }
 
-boolean CSignalAverage::processInput( uint32 ui32InputIndex)
+boolean CBoxAlgorithmSignalAverage::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CSignalAverage::process()
+boolean CBoxAlgorithmSignalAverage::process()
 {
 	IDynamicBoxContext* l_pDynamicBoxContext=getBoxAlgorithmContext()->getDynamicBoxContext();
 

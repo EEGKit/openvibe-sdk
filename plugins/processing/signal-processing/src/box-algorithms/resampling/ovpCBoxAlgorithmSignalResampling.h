@@ -18,7 +18,6 @@
 #ifndef __OpenViBEPlugins_BoxAlgorithm_SignalResampling_H__
 #define __OpenViBEPlugins_BoxAlgorithm_SignalResampling_H__
 
-#include "../../ovp_defines.h"
 #include "ovCResampler.h"
 
 #include <openvibe/ov_all.h>

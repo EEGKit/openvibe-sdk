@@ -1,5 +1,12 @@
 #include "ovpCDecoderAlgorithmTest.h"
 
+#include "../algorithms/decoders/ovpCExperimentInformationDecoder.h"
+#include "../algorithms/decoders/ovpCFeatureVectorDecoder.h"
+#include "../algorithms/decoders/ovpCSignalDecoder.h"
+#include "../algorithms/decoders/ovpCSpectrumDecoder.h"
+#include "../algorithms/decoders/ovpCStimulationDecoder.h"
+#include "../algorithms/decoders/ovpCChannelLocalisationDecoder.h"
+
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;

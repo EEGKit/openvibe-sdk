@@ -1,7 +1,5 @@
-#ifndef __OpenViBEPlugins_SignalProcessing_CSimpleDSP_H__
-#define __OpenViBEPlugins_SignalProcessing_CSimpleDSP_H__
-
-#include "../ovp_defines.h"
+#ifndef __OpenViBEPlugins_BoxAlgorithm_SimpleDSP_H__
+#define __OpenViBEPlugins_BoxAlgorithm_SimpleDSP_H__
 
 #include <system/ovCTime.h>
 #include <toolkit/ovtk_all.h>
@@ -13,15 +11,18 @@
 #include <cstdio>
 #include <cstdlib>
 
+#define OVP_ClassId_BoxAlgorithm_SimpleDSP                                             OpenViBE::CIdentifier(0x00E26FA1, 0x1DBAB1B2)
+#define OVP_ClassId_BoxAlgorithm_SimpleDSPDesc                                         OpenViBE::CIdentifier(0x00C44BFE, 0x76C9269E)
+
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CSimpleDSP : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSimpleDSP : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
-			CSimpleDSP(void);
+			CBoxAlgorithmSimpleDSP(void);
 
 			virtual void release(void) { delete this; }
 
@@ -31,7 +32,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::boolean process(void);
 			virtual void evaluate(void);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_SimpleDSP)
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_SimpleDSP)
 
 		public:
 
@@ -48,7 +49,7 @@ namespace OpenViBEPlugins
 			OpenViBE::boolean m_bCheckChunkDates;
 		};
 
-		class CSimpleDSPListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmSimpleDSPListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
 		{
 		public:
 
@@ -92,7 +93,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
 		};
 
-		class CSimpleDSPDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmSimpleDSPDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 
@@ -105,9 +106,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Basic"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_SimpleDSP; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CSimpleDSP(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CSimpleDSPListener; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_SimpleDSP; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSimpleDSP(); }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmSimpleDSPListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
@@ -133,9 +134,9 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_SimpleDSPDesc)
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SimpleDSPDesc)
 		};
 	}
 }
 
-#endif // __OpenViBEPlugins_SignalProcessing_CSimpleDSP_H__
+#endif // __OpenViBEPlugins_BoxAlgorithm_SimpleDSP_H__

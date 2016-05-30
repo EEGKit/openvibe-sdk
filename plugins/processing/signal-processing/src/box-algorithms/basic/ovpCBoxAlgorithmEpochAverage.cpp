@@ -1,4 +1,7 @@
 #include "ovpCBoxAlgorithmEpochAverage.h"
+
+#include "../../algorithms/basic/ovpCAlgorithmMatrixAverage.h"
+
 #include <cstdlib>
 
 using namespace OpenViBE;
@@ -8,7 +11,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-boolean CEpochAverage::initialize(void)
+boolean CBoxAlgorithmEpochAverage::initialize(void)
 {
 	CIdentifier l_oInputTypeIdentifier;
 	getStaticBoxContext().getInputType(0, l_oInputTypeIdentifier);
@@ -75,7 +78,7 @@ boolean CEpochAverage::initialize(void)
 	return true;
 }
 
-boolean CEpochAverage::uninitialize(void)
+boolean CBoxAlgorithmEpochAverage::uninitialize(void)
 {
 	ip_ui64AveragingMethod.uninitialize();
 	ip_ui64MatrixCount.uninitialize();
@@ -91,13 +94,13 @@ boolean CEpochAverage::uninitialize(void)
 	return true;
 }
 
-boolean CEpochAverage::processInput(uint32 ui32InputIndex)
+boolean CBoxAlgorithmEpochAverage::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CEpochAverage::process(void)
+boolean CBoxAlgorithmEpochAverage::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext=getDynamicBoxContext();
 	IBox& l_rStaticBoxContext=getStaticBoxContext();

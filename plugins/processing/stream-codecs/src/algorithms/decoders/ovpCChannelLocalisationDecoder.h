@@ -3,6 +3,10 @@
 
 #include "ovpCStreamedMatrixDecoder.h"
 
+#define OVP_ClassId_Algorithm_ChannelLocalisationStreamDecoder                                      OpenViBE::CIdentifier(0x8222F065, 0xB05D35CF)
+#define OVP_ClassId_Algorithm_ChannelLocalisationStreamDecoderDesc                                  OpenViBE::CIdentifier(0x713A29FD, 0xA5A95E2C)
+#define OVP_Algorithm_ChannelLocalisationStreamDecoder_OutputParameterId_Dynamic                    OpenViBE::CIdentifier(0xD20991FD, 0xA3153651)
+
 namespace OpenViBEPlugins
 {
 	namespace StreamCodecs

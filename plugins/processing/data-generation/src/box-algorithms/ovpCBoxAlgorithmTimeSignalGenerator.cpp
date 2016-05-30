@@ -1,4 +1,4 @@
-#include "ovpCTimeSignalGenerator.h"
+#include "ovpCBoxAlgorithmTimeSignalGenerator.h"
 
 #include <iostream>
 #include <cmath>
@@ -14,7 +14,7 @@ using namespace OpenViBEPlugins::DataGeneration;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-CTimeSignalGenerator::CTimeSignalGenerator(void)
+CBoxAlgorithmTimeSignalGenerator::CBoxAlgorithmTimeSignalGenerator(void)
 	: m_bHeaderSent(false)
 	,m_ui32SamplingFrequency(0)
 	,m_ui32GeneratedEpochSampleCount(0)
@@ -23,12 +23,12 @@ CTimeSignalGenerator::CTimeSignalGenerator(void)
 
 }
 
-void CTimeSignalGenerator::release(void)
+void CBoxAlgorithmTimeSignalGenerator::release(void)
 {
 	delete this;
 }
 
-boolean CTimeSignalGenerator::initialize(void)
+boolean CBoxAlgorithmTimeSignalGenerator::initialize(void)
 {
 	m_oSignalEncoder.initialize(*this,0);
 
@@ -46,20 +46,20 @@ boolean CTimeSignalGenerator::initialize(void)
 	return true;
 }
 
-boolean CTimeSignalGenerator::uninitialize(void)
+boolean CBoxAlgorithmTimeSignalGenerator::uninitialize(void)
 {
 	m_oSignalEncoder.uninitialize();
 
 	return true;
 }
 
-boolean CTimeSignalGenerator::processClock(CMessageClock& rMessageClock)
+boolean CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& rMessageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CTimeSignalGenerator::process(void)
+boolean CBoxAlgorithmTimeSignalGenerator::process(void)
 {
 	IBoxIO* l_pDynamicBoxContext=getBoxAlgorithmContext()->getDynamicBoxContext();
 
@@ -104,7 +104,7 @@ boolean CTimeSignalGenerator::process(void)
 	return true;
 }
 
-OpenViBE::uint64 CTimeSignalGenerator::getClockFrequency(void) 
+OpenViBE::uint64 CBoxAlgorithmTimeSignalGenerator::getClockFrequency(void)
 {
 	// Intentional parameter swap to get the frequency
 	return ITimeArithmetics::sampleCountToTime(m_ui32GeneratedEpochSampleCount, m_ui32SamplingFrequency);

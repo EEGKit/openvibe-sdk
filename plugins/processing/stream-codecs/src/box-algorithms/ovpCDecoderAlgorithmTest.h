@@ -5,6 +5,9 @@
 
 #include <toolkit/ovtk_all.h>
 
+#define OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTest                                                OpenViBE::CIdentifier(0x3C2EF355, 0xFE495C3D)
+#define OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTestDesc                                            OpenViBE::CIdentifier(0xE5176EB9, 0xD6E47D7F)
+
 namespace OpenViBEPlugins
 {
 	namespace StreamCodecs

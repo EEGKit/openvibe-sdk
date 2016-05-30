@@ -3,6 +3,19 @@
 
 #include "ovpCEBMLBaseEncoder.h"
 
+#define OVP_ClassId_Algorithm_ExperimentInformationStreamEncoder                                           OpenViBE::CIdentifier(0x56B354FE, 0xBF175468)
+#define OVP_ClassId_Algorithm_ExperimentInformationStreamEncoderDesc                                       OpenViBE::CIdentifier(0x8CC2C754, 0x61665FDA)
+#define OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_ExperimentIdentifier             OpenViBE::CIdentifier(0x40259641, 0x478C73DE)
+#define OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_ExperimentDate                   OpenViBE::CIdentifier(0xBC0266A2, 0x9C2935F1)
+#define OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_SubjectIdentifier                OpenViBE::CIdentifier(0x97C5D20D, 0x203E65B3)
+#define OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_SubjectName                      OpenViBE::CIdentifier(0x3D3826EA, 0xE8883815)
+#define OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_SubjectAge                       OpenViBE::CIdentifier(0xC36C6B08, 0x5227380A)
+#define OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_SubjectGender                    OpenViBE::CIdentifier(0x7D5059E8, 0xE4D8B38D)
+#define OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_LaboratoryIdentifier             OpenViBE::CIdentifier(0xE761D3D4, 0x44BA1EBF)
+#define OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_LaboratoryName                   OpenViBE::CIdentifier(0x5CA80FA5, 0x774F01CB)
+#define OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_TechnicianIdentifier             OpenViBE::CIdentifier(0xC8ECFBBC, 0x0DCDA310)
+#define OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_TechnicianName                   OpenViBE::CIdentifier(0xB8A94B68, 0x389393D9)
+
 namespace OpenViBEPlugins
 {
 	namespace StreamCodecs

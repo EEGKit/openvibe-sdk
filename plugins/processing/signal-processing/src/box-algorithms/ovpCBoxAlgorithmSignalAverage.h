@@ -1,12 +1,13 @@
-#ifndef __OpenViBEPlugins_SignalProcessing_CSignalAverage_H__
-#define __OpenViBEPlugins_SignalProcessing_CSignalAverage_H__
-
-#include "../ovp_defines.h"
+#ifndef __OpenViBEPlugins_BoxAlgorithm_SignalAverage_H__
+#define __OpenViBEPlugins_BoxAlgorithm_SignalAverage_H__
 
 #include <toolkit/ovtk_all.h>
 
 #include <string>
 #include <vector>
+
+#define OVP_ClassId_BoxAlgorithm_SignalAverage                                         OpenViBE::CIdentifier(0x00642C4D, 0x5DF7E50A)
+#define OVP_ClassId_BoxAlgorithm_SignalAverageDesc                                     OpenViBE::CIdentifier(0x007CDCE9, 0x16034F77)
 
 namespace OpenViBEPlugins
 {
@@ -14,12 +15,12 @@ namespace OpenViBEPlugins
 	{
 		/**
 		*/
-		class CSignalAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSignalAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 
 		public:
 
-			CSignalAverage(void);
+			CBoxAlgorithmSignalAverage(void);
 
 			virtual void release(void);
 
@@ -30,7 +31,7 @@ namespace OpenViBEPlugins
 
 			virtual OpenViBE::boolean process(void);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_SignalAverage)
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_SignalAverage)
 
 		public:
 
@@ -39,8 +40,8 @@ namespace OpenViBEPlugins
 		public:
 
 			// Needed to read the input and write the output
-			OpenViBEToolkit::TSignalDecoder<CSignalAverage> m_oSignalDecoder;		
-			OpenViBEToolkit::TSignalEncoder<CSignalAverage> m_oSignalEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_oSignalDecoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalAverage> m_oSignalEncoder;
 
 		};
 
@@ -60,8 +61,8 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Averaging"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("0.5"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_SignalAverage; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CSignalAverage(); }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_SignalAverage; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalAverage(); }
 
 			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{
@@ -71,10 +72,10 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_SignalAverageDesc)
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalAverageDesc)
 		};
 	}
 }
 
-#endif // __OpenViBEPlugins_SignalProcessing_CSignalAverage_H__
+#endif // __OpenViBEPlugins_BoxAlgorithm_SignalAverage_H__
 
