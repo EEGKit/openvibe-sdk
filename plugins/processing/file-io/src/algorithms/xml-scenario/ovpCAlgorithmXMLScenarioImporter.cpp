@@ -34,11 +34,6 @@ enum
 	Status_ParsingLinkSource,
 	Status_ParsingLinkTarget,
 	Status_ParsingLinkAttribute,
-
-	Status_ParsingVisualisationTree,
-
-	Status_ParsingVisualisationWidget,
-	Status_ParsingVisualisationWidgetAttribute,
 };
 
 namespace
@@ -96,11 +91,6 @@ void CAlgorithmXMLScenarioImporter::openChild(const char* sName, const char** sA
 	else if(l_sTop=="Source"              && m_ui32Status==Status_ParsingLink)     { m_ui32Status=Status_ParsingLinkSource;        m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source); }
 	else if(l_sTop=="Target"              && m_ui32Status==Status_ParsingLink)     { m_ui32Status=Status_ParsingLinkTarget;        m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target); }
 	else if(l_sTop=="Attribute"           && m_ui32Status==Status_ParsingLink)     { m_ui32Status=Status_ParsingLinkAttribute;     m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute); }
-
-	else if(l_sTop=="VisualisationTree"   && m_ui32Status==Status_ParsingScenario) { m_ui32Status=Status_ParsingVisualisationTree; m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationTree); }
-
-	else if(l_sTop=="VisualisationWidget" && m_ui32Status==Status_ParsingVisualisationTree)   { m_ui32Status=Status_ParsingVisualisationWidget;          m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget); }
-	else if(l_sTop=="Attribute"           && m_ui32Status==Status_ParsingVisualisationWidget) { m_ui32Status=Status_ParsingVisualisationWidgetAttribute; m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attribute); }
 }
 
 void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
@@ -180,20 +170,6 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
 			if(l_sTop=="LinkedBoxOutputIndex")      m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex, _AutoBind_(sData));
 			break;
 
-		case Status_ParsingVisualisationWidget:
-			if(l_sTop=="Identifier")               m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Identifier, _AutoBind_(sData));
-			if(l_sTop=="Name")                     m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Name, _AutoBind_(sData));
-			if(l_sTop=="Type")                     m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Type, _AutoBind_(sData));
-			if(l_sTop=="ParentIdentifier")         m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_ParentIdentifier, _AutoBind_(sData));
-			if(l_sTop=="Index")                    m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Index, _AutoBind_(sData));
-			if(l_sTop=="BoxIdentifier")            m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_BoxIdentifier, _AutoBind_(sData));
-			if(l_sTop=="NumChildren")              m_pContext->processUInteger(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_NumChildren, _AutoBind_(sData));
-			break;
-		case Status_ParsingVisualisationWidgetAttribute:
-			if(l_sTop=="Identifier")               m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attribute_Identifier, _AutoBind_(sData));
-			if(l_sTop=="Value")                    m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attribute_Value, _AutoBind_(sData));
-			break;
-
 		case Status_ParsingScenarioAttribute:
 			if(l_sTop=="Identifier")               m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier, _AutoBind_(sData));
 			if(l_sTop=="Value")                    m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value, _AutoBind_(sData));
@@ -227,11 +203,6 @@ void CAlgorithmXMLScenarioImporter::closeChild(void)
 	else if(l_sTop=="Source"              && m_ui32Status==Status_ParsingLinkSource)        { m_ui32Status=Status_ParsingLink;     m_pContext->processStop(); }
 	else if(l_sTop=="Target"              && m_ui32Status==Status_ParsingLinkTarget)        { m_ui32Status=Status_ParsingLink;     m_pContext->processStop(); }
 	else if(l_sTop=="Attribute"           && m_ui32Status==Status_ParsingLinkAttribute)     { m_ui32Status=Status_ParsingLink;     m_pContext->processStop(); }
-
-	else if(l_sTop=="VisualisationTree"   && m_ui32Status==Status_ParsingVisualisationTree) { m_ui32Status=Status_ParsingScenario; m_pContext->processStop(); }
-
-	else if(l_sTop=="VisualisationWidget" && m_ui32Status==Status_ParsingVisualisationWidget)          { m_ui32Status=Status_ParsingVisualisationTree;   m_pContext->processStop(); }
-	else if(l_sTop=="Attribute"           && m_ui32Status==Status_ParsingVisualisationWidgetAttribute) { m_ui32Status=Status_ParsingVisualisationWidget; m_pContext->processStop(); }
 
 	m_vNodes.pop();
 }

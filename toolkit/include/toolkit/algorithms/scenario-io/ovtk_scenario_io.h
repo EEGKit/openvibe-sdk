@@ -81,18 +81,4 @@
 #define OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier            OpenViBE::CIdentifier(0x66A99FF0, 0x402B6F19)
 #define OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value                 OpenViBE::CIdentifier(0xA4795600, 0x31AFDFB1)
 
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationTree                        OpenViBE::CIdentifier(0x0EBD3609, 0x24BA5E97)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget                      OpenViBE::CIdentifier(0x12A84EEB, 0x69766575)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Identifier           OpenViBE::CIdentifier(0x66FA2B30, 0x4D1672BE)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Name                 OpenViBE::CIdentifier(0x12AA197C, 0x33757384)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Type                 OpenViBE::CIdentifier(0x32F77316, 0x32F149DF)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_ParentIdentifier     OpenViBE::CIdentifier(0x18F387AC, 0x7DB9250F)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Index                OpenViBE::CIdentifier(0xC2011BE7, 0x31D98611)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_BoxIdentifier        OpenViBE::CIdentifier(0xE5291CBD, 0x734A3441)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_NumChildren          OpenViBE::CIdentifier(0xF6D07A2A, 0x92628DF5)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attributes           OpenViBE::CIdentifier(0x56A082C5, 0x7B61F7E8)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attribute            OpenViBE::CIdentifier(0xFE0A0425, 0x3A9F017B)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attribute_Identifier OpenViBE::CIdentifier(0x074544F4, 0x0C5B3F76)
-#define OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attribute_Value      OpenViBE::CIdentifier(0x2A2A7A67, 0xD1F930E3)
-
 #endif // __OpenViBEToolkit_ScenarioIO_H__

@@ -62,6 +62,11 @@ namespace OpenViBE
 			 * Default implementation returns empty string. If
 			 * the item can not be found by name, or an empty string
 			 * is returned, a default item will be displayed.
+			 *
+			 * \deprecated This method was used when visualisation was handled
+			 * within the Kernel. This is kept for backward compatibility. Such features
+			 * should now be handled at application level.
+			 *
 			 */
 			virtual OpenViBE::CString getStockItemName(void) const
 			{

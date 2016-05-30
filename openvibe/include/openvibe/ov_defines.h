@@ -64,11 +64,6 @@
 #define OV_ClassId_Kernel_Scenario_ScenarioExporterContext   OpenViBE::CIdentifier(0x583A5B71, 0x2C06662D)
 #define OV_ClassId_Kernel_Scenario_ScenarioManager           OpenViBE::CIdentifier(0x67F31911, 0x3FA45C02)
 
-#define OV_ClassId_Kernel_Visualisation_VisualisationContext OpenViBE::CIdentifier(0x525AE260, 0x0B2F7E1F)
-#define OV_ClassId_Kernel_Visualisation_VisualisationManager OpenViBE::CIdentifier(0x36E5DE48, 0xFD4AF8A8)
-#define OV_ClassId_Kernel_Visualisation_VisualisationWidget  OpenViBE::CIdentifier(0xD88B5297, 0xFE0E9041)
-#define OV_ClassId_Kernel_Visualisation_VisualisationTree    OpenViBE::CIdentifier(0xB8F4A764, 0x8D1FF3BF)
-
 #define OV_ClassId_Kernel_Server_ServerExtensionProto        OpenViBE::CIdentifier(0x93A6ECFB, 0x1199459F)
 
 //___________________________________________________________________//

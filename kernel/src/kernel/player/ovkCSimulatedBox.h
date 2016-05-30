@@ -3,14 +3,11 @@
 
 #include "../ovkTKernelObject.h"
 #include "ovkCBuffer.h"
-#include "../ovkIGtkOVCustomHandler.h"
 
 #include <system/ovCChrono.h>
 #include <vector>
 #include <string>
 #include <deque>
-
-class COgreVisualisation;
 
 namespace OpenViBE
 {
@@ -88,7 +85,7 @@ namespace OpenViBE
 			OpenViBE::boolean m_bIsDeprecated;
 		};
 
-		class CSimulatedBox : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >, public IGtkOVCustomHandler
+		class CSimulatedBox : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >
 		{
 		public:
 
@@ -97,18 +94,6 @@ namespace OpenViBE
 				OpenViBE::Kernel::CScheduler& rScheduler);
 
 			virtual ~CSimulatedBox() ;
-
-			/** \name IGtkOVCustomHandler implementation */
-			//@{
-			OpenViBE::boolean handleDestroyEvent(::GtkWidget* pOVCustomWidget);
-			OpenViBE::boolean handleRealizeEvent(::GtkWidget* pOVCustomWidget);
-			OpenViBE::boolean handleUnrealizeEvent(::GtkWidget* pOVCustomWidget);
-			OpenViBE::boolean handleSizeAllocateEvent(::GtkWidget* pOVCustomWidget, unsigned int uiWidth, unsigned int uiHeight);
-			OpenViBE::boolean handleExposeEvent(::GtkWidget* pOVCustomWidget);
-			OpenViBE::boolean handleMotionEvent(::GtkWidget* pOVCustomWidget,	int i32X, int i32Y);
-			OpenViBE::boolean handleButtonPressEvent(::GtkWidget* pOVCustomWidget, unsigned int uiButton,	int i32X, int i32Y);
-			OpenViBE::boolean handleButtonReleaseEvent(::GtkWidget* pOVCustomWidget, unsigned int uiButton,	int i32X, int i32Y);
-			//@}
 
 			virtual OpenViBE::boolean setScenarioIdentifier(
 				const OpenViBE::CIdentifier& rScenarioIdentifier);
@@ -177,97 +162,6 @@ namespace OpenViBE
 				const OpenViBE::uint64 ui64EndTime);
 			//@}
 
-			/** \name 3D API - window management */
-			//@{
-			OpenViBE::CIdentifier create3DWidget(
-				::GtkWidget*& p3DWidget);
-			OpenViBE::boolean is3DWidgetRealized(
-				const OpenViBE::CIdentifier& rWidgetIdentifier) const;
-			OpenViBE::boolean update3DWidget(
-				const OpenViBE::CIdentifier& rWidgetIdentifier);
-			OpenViBE::boolean setBackgroundColor(
-				const OpenViBE::CIdentifier& rWindowIdentifier,
-				OpenViBE::float32 f32ColorRed,
-				OpenViBE::float32 f32ColorGreen,
-				OpenViBE::float32 f32ColorBlue);
-			OpenViBE::boolean setCameraToEncompassObjects(
-				const OpenViBE::CIdentifier& rWindowIdentifier);
-			OpenViBE::boolean setCameraSphericalCoordinates(
-				const CIdentifier& rWindowIdentifier,
-				OpenViBE::float32 f32Theta,
-				OpenViBE::float32 f32Phi,
-				OpenViBE::float32 f32Radius);
-			OpenViBE::boolean getCameraSphericalCoordinates(
-				const CIdentifier& rWindowIdentifier,
-				OpenViBE::float32& rTheta,
-				OpenViBE::float32& rPhi,
-				OpenViBE::float32& rRadius);
-			//@}
-
-			/** \name 3D API - scene management */
-			//@{
-			OpenViBE::CIdentifier createObject(
-				const OpenViBE::CString& rObjectFileName,
-				const OpenViBE::CNameValuePairList* pObjectParams);
-			OpenViBE::CIdentifier createObject(
-				const OpenViBE::Kernel::EStandard3DObject eStandard3DObject,
-				const OpenViBE::CNameValuePairList* pObjectParams);
-			OpenViBE::boolean removeObject(
-				const OpenViBE::CIdentifier& rIdentifier);
-			OpenViBE::boolean setObjectVisible(
-				const OpenViBE::CIdentifier& rIdentifier,
-				OpenViBE::boolean bVisible);
-			OpenViBE::boolean setObjectPosition(
-				const OpenViBE::CIdentifier& rIdentifier,
-				OpenViBE::float32 f32PositionX,
-				OpenViBE::float32 f32PositionY,
-				OpenViBE::float32 f32PositionZ);
-			OpenViBE::boolean setObjectOrientation(
-				const OpenViBE::CIdentifier& rIdentifier,
-				OpenViBE::float32 f32OrientationX,
-				OpenViBE::float32 f32OrientationY,
-				OpenViBE::float32 f32OrientationZ,
-				OpenViBE::float32 f32OrientationW);
-			OpenViBE::boolean setObjectScale(
-				const OpenViBE::CIdentifier& rIdentifier,
-				OpenViBE::float32 f32ScaleX,
-				OpenViBE::float32 f32ScaleY,
-				OpenViBE::float32 f32ScaleZ);
-			OpenViBE::boolean setObjectScale(
-				const OpenViBE::CIdentifier& rIdentifier,
-				OpenViBE::float32 f32Scale);
-			OpenViBE::boolean setObjectColor(
-				const OpenViBE::CIdentifier& rIdentifier,
-				OpenViBE::float32 f32ColorRed,
-				OpenViBE::float32 f32ColorGreen,
-				OpenViBE::float32 f32ColorBlue);
-			OpenViBE::boolean setObjectTransparency(
-				const OpenViBE::CIdentifier& rIdentifier,
-				OpenViBE::float32 f32Transparency);
-			OpenViBE::boolean setObjectVertexColorArray(
-				const OpenViBE::CIdentifier& rIdentifier,
-				const OpenViBE::uint32 ui32VertexColorCount,
-				const OpenViBE::float32* pVertexColorArray);
-			OpenViBE::boolean getObjectAxisAlignedBoundingBox(
-				const OpenViBE::CIdentifier& rIdentifier,
-				OpenViBE::float32* pMinimum,
-				OpenViBE::float32* pMaximum);
-			OpenViBE::boolean getObjectVertexCount(
-				const OpenViBE::CIdentifier& rIdentifier,
-				OpenViBE::uint32& ui32VertexCount) const;
-			OpenViBE::boolean getObjectVertexPositionArray(
-				const OpenViBE::CIdentifier& rIdentifier,
-				const uint32 ui32VertexCount,
-				OpenViBE::float32* pVertexPositionArray) const;
-			OpenViBE::boolean getObjectTriangleCount(
-				const OpenViBE::CIdentifier& rIdentifier,
-				OpenViBE::uint32& ui32TriangleCount) const;
-			OpenViBE::boolean getObjectTriangleIndexArray(
-				const OpenViBE::CIdentifier& rIdentifier,
-				const uint32 ui32TriangleCount,
-				OpenViBE::uint32* pTriangleIndexArray) const;
-			//@}
-
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >, OVK_ClassId_Kernel_Player_SimulatedBox);
 
 			OpenViBE::Kernel::CScheduler& getScheduler(void)
@@ -276,8 +170,6 @@ namespace OpenViBE
 			}
 
 		private:
-
-			CIdentifier createOgreWindow();
 
 			CIdentifier getUnusedIdentifier(void) const;
 
@@ -306,14 +198,8 @@ namespace OpenViBE
 			System::CChrono m_oBenchmarkChronoProcessInput;
 			System::CChrono m_oBenchmarkChronoProcess;
 
-			//OpenViBE::CString m_sName;
-			COgreVisualisation* m_pOgreVis;
-
 			OpenViBE::CIdentifier m_oSceneIdentifier;
 			OpenViBE::CString m_oSceneName;
-
-			/// maps GtkWidgets to corresponding COgreWindow identifiers
-			std::map<GtkWidget*, OpenViBE::CIdentifier> m_mOgreWindows;
 
 			/// maps object identifiers to object names
 			std::map<OpenViBE::CIdentifier, OpenViBE::CString> m_mSimulatedObjects;

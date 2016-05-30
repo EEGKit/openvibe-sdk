@@ -185,12 +185,6 @@ boolean CPlayer::setScenario(
 	return m_oScheduler.setScenario(m_oRuntimeScenarioIdentifier);
 }
 
-IVisualisationTree* CPlayer::getRuntimeVisualisationTree(void) const
-{
-	IScenario& l_rRuntimeScenario = m_pRuntimeScenarioManager->getScenario(m_oRuntimeScenarioIdentifier);
-	return &l_rRuntimeScenario.getVisualisationTreeDetails();
-}
-
 IConfigurationManager& CPlayer::getRuntimeConfigurationManager(void)
 {
 	return *m_pRuntimeConfigurationManager;

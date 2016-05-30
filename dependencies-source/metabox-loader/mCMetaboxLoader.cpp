@@ -59,7 +59,7 @@ FS::boolean CMetaboxLoaderEntryEnumeratorCallBack::callback(
 		            l_rScenario.getAttributeValue(OV_AttributeId_Scenario_DetailedDescription),
 		            l_rScenario.getAttributeValue(OV_AttributeId_Scenario_Category),
 		            l_rScenario.getAttributeValue(OV_AttributeId_Scenario_Version),
-		            "gtk-add",
+		            "",
 		            l_rScenario.getAttributeValue(OV_AttributeId_Scenario_AddedSoftwareVersion),
 		            l_rScenario.getAttributeValue(OV_AttributeId_Scenario_UpdatedSoftwareVersion)
 		            );

@@ -119,21 +119,6 @@ boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer,
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute                       ) l_sNodeName="Attribute";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier            ) l_sNodeName="Identifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value                 ) l_sNodeName="Value";
-
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationTree                        ) l_sNodeName="VisualisationTree";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget                      ) l_sNodeName="VisualisationWidget";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Identifier           ) l_sNodeName="Identifier";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Name                 ) l_sNodeName="Name";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Type                 ) l_sNodeName="Type";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_ParentIdentifier     ) l_sNodeName="ParentIdentifier";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Index                ) l_sNodeName="Index";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_BoxIdentifier        ) l_sNodeName="BoxIdentifier";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_NumChildren          ) l_sNodeName="NumChildren";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attributes           ) l_sNodeName="Attributes";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attribute            ) l_sNodeName="Attribute";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attribute_Identifier ) l_sNodeName="Identifier";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_VisualisationWidget_Attribute_Value      ) l_sNodeName="Value";
-
 	else return false;
 
 	m_pWriter->openChild(l_sNodeName.toASCIIString());

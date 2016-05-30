@@ -9,7 +9,6 @@ namespace OpenViBE
 	{
 		class IScenario;
 		class IConfigurationManager;
-		class IVisualisationTree;
 
 		enum EPlayerStatus
 		{
@@ -165,8 +164,6 @@ namespace OpenViBE
 				const OpenViBE::uint64 ui64MaximumTimeToReach=OpenViBE::uint64(-1))=0;
 
 			virtual OpenViBE::uint64 getCurrentSimulatedTime(void) const=0;
-
-			virtual OpenViBE::Kernel::IVisualisationTree* getRuntimeVisualisationTree(void) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Player);
 		};

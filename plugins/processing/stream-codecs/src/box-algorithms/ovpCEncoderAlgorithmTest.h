@@ -53,8 +53,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Note: Data sent in the streams does not change over time"); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Tests/Algorithms"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-about"); }
-
+			
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::StreamCodecs::CEncoderAlgorithmTest(); }
 

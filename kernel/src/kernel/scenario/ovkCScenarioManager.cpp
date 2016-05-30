@@ -50,22 +50,6 @@ boolean CScenarioManager::createScenario(
 	CScenario* l_pScenario=new CScenario(getKernelContext(), rScenarioIdentifier);
 	m_vScenario[rScenarioIdentifier]=l_pScenario;
 
-#ifdef TARGET_HAS_ThirdPartyGTK
-	if(this->getConfigurationManager().expandAsBoolean("${Kernel_WithGUI}"))
-	{
-		//create a scenario visualisation object as well
-		CIdentifier l_oVisualisationTreeIdentifier;
-		getKernelContext().getVisualisationManager().createVisualisationTree(l_oVisualisationTreeIdentifier);
-
-		//initialize it
-		IVisualisationTree& l_rVisualisationTree = getKernelContext().getVisualisationManager().getVisualisationTree(l_oVisualisationTreeIdentifier);
-		l_rVisualisationTree.init(l_pScenario);
-
-		//store identifier of visualisation tree in Scenario
-		l_pScenario->setVisualisationTreeIdentifier(l_oVisualisationTreeIdentifier);
-	}
-#endif
-
 	return true;
 }
 
@@ -80,18 +64,10 @@ boolean CScenarioManager::releaseScenario(
 		return false;
 	}
 
-	//release scenario visualisation
 	CScenario* l_pScenario = itScenario->second;
-
-	if(this->getConfigurationManager().expandAsBoolean("${Kernel_WithGUI}"))
-	{
-		//release scenario visualisation
-		getKernelContext().getVisualisationManager().releaseVisualisationTree(l_pScenario->getVisualisationTreeIdentifier());
-	}
-
-	//release scenario
 	delete l_pScenario;
 	m_vScenario.erase(itScenario);
+
 	return true;
 }
 

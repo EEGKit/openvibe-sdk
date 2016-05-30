@@ -19,7 +19,6 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IBox* getStaticBoxContext(void);
 			virtual OpenViBE::Kernel::IBoxIO* getDynamicBoxContext(void);
 			virtual OpenViBE::Kernel::IPlayerContext* getPlayerContext(void);
-			virtual OpenViBE::Kernel::IVisualisationContext* getVisualisationContext(void);
 
 			virtual OpenViBE::boolean markAlgorithmAsReadyToProcess(void);
 
@@ -32,7 +31,6 @@ namespace OpenViBE
 			OpenViBE::Kernel::IBox* m_pStaticBoxContext;
 			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext;
 			OpenViBE::Kernel::IPlayerContext* m_pPlayerContext;
-			OpenViBE::Kernel::IVisualisationContext* m_pVisualisationContext;
 			OpenViBE::boolean m_bReadyToProcess;
 		};
 	};

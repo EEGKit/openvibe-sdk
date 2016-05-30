@@ -13,9 +13,8 @@ namespace OpenViBE
 		enum EPluginFunctionality
 		{
 			PluginFunctionality_Undefined,
-			PluginFunctionality_Visualization,
 			PluginFunctionality_Processing,
-			PluginFunctionality_Acquisition,
+
 		};
 
 		/**

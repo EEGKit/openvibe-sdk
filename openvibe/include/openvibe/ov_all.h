@@ -85,11 +85,6 @@
 #include "kernel/scenario/ovIScenarioImporterContext.h"
 #include "kernel/scenario/ovIScenarioManager.h"
 
-#include "kernel/visualisation/ovIVisualisationContext.h"
-#include "kernel/visualisation/ovIVisualisationTree.h"
-#include "kernel/visualisation/ovIVisualisationManager.h"
-#include "kernel/visualisation/ovIVisualisationWidget.h"
-
 //___________________________________________________________________//
 //                                                                   //
 // Plugins includes                                                  //
