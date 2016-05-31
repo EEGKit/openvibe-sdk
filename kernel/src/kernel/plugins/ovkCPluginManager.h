@@ -41,12 +41,6 @@ namespace OpenViBE
 				const OpenViBE::Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const;
 			virtual OpenViBE::boolean isPluginObjectFlaggedAsDeprecated(
 				const OpenViBE::CIdentifier& rClassIdentifier) const;
-			virtual OpenViBE::boolean isPluginObjectFlaggedAsUnstable(
-				const OpenViBE::CIdentifier& rClassIdentifier) const;
-			virtual OpenViBE::boolean isPluginObjectFlaggedAsGhost(
-				const OpenViBE::CIdentifier& rClassIdentifier) const;
-			virtual OpenViBE::boolean isPluginObjectFlaggedAsMensia(
-				const OpenViBE::CIdentifier& rClassIdentifier) const;
 
 			virtual OpenViBE::Plugins::IPluginObject* createPluginObject(
 				const OpenViBE::CIdentifier& rClassIdentifier);

@@ -171,8 +171,6 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyInput);
 				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 
-				//rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_IsUnstable);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_IsMensia);
 				return true;
 			}
 

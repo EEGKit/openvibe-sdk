@@ -145,42 +145,6 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::boolean isPluginObjectFlaggedAsDeprecated(
 				const OpenViBE::CIdentifier& rClassIdentifier) const=0;
-			/**
-			 * \brief Gets a hint whether a plugin is fully functionnal or not
-			 * \param rClassIdentifier [in] : the class identifier of the plugin which stability should be returned
-			 * \return \e true in case the plugin is considered as unstable
-			 * \return \e false in case the plugin is considered as stable
-			 *
-			 * Getting \e true from this function for a given plugin
-			 * reflects the fact that this plugin is known not to be
-			 * fully usable. This could either be because of work in progress
-			 * for this plugin or either because there are known limitations
-			 * that could not be bypassed. This plugin probably is functionnal
-			 * enough for well known cases, and may produce unexpected results
-			 * in other cases. Use it at your own risks (expect crashes for example)
-			 */
-			virtual OpenViBE::boolean isPluginObjectFlaggedAsUnstable(
-				const OpenViBE::CIdentifier& rClassIdentifier) const=0;
-
-			/**
-			 * \brief Gets a hint whether a plugin is only an empty shell of a box
-			 * \param rClassIdentifier [in] : the class identifier of the plugin which status should be returned
-			 * \return \e true in case the plugin is considered as ghost
-			 * \return \e false in case the plugin is implemented
-			 *
-			 */
-				virtual OpenViBE::boolean isPluginObjectFlaggedAsGhost(
-				const OpenViBE::CIdentifier& rClassIdentifier) const=0;
-
-			/**
-			 * \brief Gets a hint whether a plugin was made by Mensia
-			 * \param rClassIdentifier [in] : the class identifier of the plugin which status should be returned
-			 * \return \e true in case the plugin is made by Mensia
-			 * \return \e false in case the plugin was not made by Mensia
-			 *
-			 */
-				virtual OpenViBE::boolean isPluginObjectFlaggedAsMensia(
-				const OpenViBE::CIdentifier& rClassIdentifier) const=0;
 				
 				//@}
 			/** \name Plugin creation and destruction */
