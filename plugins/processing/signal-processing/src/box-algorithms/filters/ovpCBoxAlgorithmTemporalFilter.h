@@ -78,7 +78,7 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addSetting("Low Cut-off Frequency (Hz)",  OV_TypeId_Float, "1");
 				rBoxAlgorithmPrototype.addSetting("High Cut-off Frequency (Hz)", OV_TypeId_Float, "40");
 				rBoxAlgorithmPrototype.addSetting("Band Pass Ripple (dB)", OV_TypeId_Float, "0.5");
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_IsMensia);
+
 				return true;
 			}
 

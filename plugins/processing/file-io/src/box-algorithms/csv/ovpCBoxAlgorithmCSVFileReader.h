@@ -149,8 +149,6 @@ namespace OpenViBEPlugins
 
 				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_IsUnstable);
-
 				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_StreamedMatrix);
 				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_FeatureVector);
 				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_ChannelLocalisation);

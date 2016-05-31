@@ -96,7 +96,6 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer",                    OV_TypeId_Integer, "8");
 				rBoxAlgorithmPrototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true"); // displayed for backward compatibility, but never used
 
-				rBoxAlgorithmPrototype.addFlag  (OpenViBE::Kernel::BoxFlag_IsMensia);
 				return true;
 			}
 

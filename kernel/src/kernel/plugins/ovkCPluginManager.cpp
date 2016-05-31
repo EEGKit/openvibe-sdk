@@ -283,10 +283,6 @@ namespace
 
 		SBoxProto(void)
 			:m_bIsDeprecated(false)
-			,m_bIsUnstable(false)
-			,m_bIsGhost(false)
-			,m_bIsMensia(false)
-			,m_bIsNew(false)
 			,m_ui64InputCountHash  (0x64AC3CB54A35888CLL)
 			,m_ui64OutputCountHash (0x21E0FAAFE5CAF1E1LL)
 			,m_ui64SettingCountHash(0x6BDFB15B54B09F63LL)
@@ -366,10 +362,6 @@ namespace
 				case BoxFlag_CanAddSetting:     m_oHash=m_oHash.toUInteger()^OpenViBE::CIdentifier(0xFA7A50DC, 0x2140C013).toUInteger(); break;
 				case BoxFlag_CanModifySetting:  m_oHash=m_oHash.toUInteger()^OpenViBE::CIdentifier(0x624D7661, 0xD8DDEA0A).toUInteger(); break;
 				case BoxFlag_IsDeprecated:      m_bIsDeprecated=true; break;
-				case BoxFlag_IsUnstable:        m_bIsUnstable=true;   break;
-				case BoxFlag_IsGhost:           m_bIsGhost=true;   break;
-				case BoxFlag_IsMensia:          m_bIsMensia=true;  break;
-				case BoxFlag_IsNew:             m_bIsNew=true;  break;
 				default:
 					return false;
 					break;
@@ -398,10 +390,6 @@ namespace
 
 		CIdentifier m_oHash;
 		boolean m_bIsDeprecated;
-		boolean m_bIsUnstable;
-		boolean m_bIsGhost;
-		boolean m_bIsMensia;
-		boolean m_bIsNew;
 		uint64 m_ui64InputCountHash;
 		uint64 m_ui64OutputCountHash;
 		uint64 m_ui64SettingCountHash;
@@ -443,47 +431,6 @@ boolean CPluginManager::isPluginObjectFlaggedAsDeprecated(
 	return false;
 }
 
-boolean CPluginManager::isPluginObjectFlaggedAsUnstable(
-	const CIdentifier& rClassIdentifier) const
-{
-	const IPluginObjectDesc* l_pPluginObjectDesc=this->getPluginObjectDescCreating(rClassIdentifier);
-	const IBoxAlgorithmDesc* l_pBoxAlgorithmDesc=dynamic_cast<const IBoxAlgorithmDesc*>(l_pPluginObjectDesc);
-	if(l_pBoxAlgorithmDesc)
-	{
-		SBoxProto l_oBoxPrototype;
-		l_pBoxAlgorithmDesc->getBoxPrototype(l_oBoxPrototype);
-		return l_oBoxPrototype.m_bIsUnstable;
-	}
-	return false;
-}
-
-boolean CPluginManager::isPluginObjectFlaggedAsGhost(
-	const CIdentifier& rClassIdentifier) const
-{
-	const IPluginObjectDesc* l_pPluginObjectDesc=this->getPluginObjectDescCreating(rClassIdentifier);
-	const IBoxAlgorithmDesc* l_pBoxAlgorithmDesc=dynamic_cast<const IBoxAlgorithmDesc*>(l_pPluginObjectDesc);
-	if(l_pBoxAlgorithmDesc)
-	{
-		SBoxProto l_oBoxPrototype;
-		l_pBoxAlgorithmDesc->getBoxPrototype(l_oBoxPrototype);
-		return l_oBoxPrototype.m_bIsGhost;
-	}
-	return false;
-}
-
-boolean CPluginManager::isPluginObjectFlaggedAsMensia(
-	const CIdentifier& rClassIdentifier) const
-{
-	const IPluginObjectDesc* l_pPluginObjectDesc=this->getPluginObjectDescCreating(rClassIdentifier);
-	const IBoxAlgorithmDesc* l_pBoxAlgorithmDesc=dynamic_cast<const IBoxAlgorithmDesc*>(l_pPluginObjectDesc);
-	if(l_pBoxAlgorithmDesc)
-	{
-		SBoxProto l_oBoxPrototype;
-		l_pBoxAlgorithmDesc->getBoxPrototype(l_oBoxPrototype);
-		return l_oBoxPrototype.m_bIsMensia;
-	}
-	return false;
-}
 IPluginObject* CPluginManager::createPluginObject(
 	const CIdentifier& rClassIdentifier)
 {

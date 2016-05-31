@@ -124,7 +124,6 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addSetting("Class 1",                OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
 				rBoxAlgorithmPrototype.addSetting("Class 2",                OV_TypeId_Stimulation, "OVTK_StimulationId_Label_01");
 
-				// rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_IsUnstable);
 				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddSetting);
 				// rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_IsDeprecated);
 

@@ -19,11 +19,7 @@ namespace OpenViBE
 			BoxFlag_CanModifyOutput,
 			BoxFlag_CanAddSetting,
 			BoxFlag_CanModifySetting,
-			BoxFlag_IsDeprecated,
-			BoxFlag_IsUnstable,
-			BoxFlag_IsGhost = 8001,
-			BoxFlag_IsMensia = 8002,
-			BoxFlag_IsNew = 8003
+			BoxFlag_IsDeprecated
 		};
 
 		/**
