@@ -20,8 +20,6 @@ INCLUDE("FindOpenViBEModuleEBML")
 INCLUDE("FindOpenViBEModuleSystem")
 INCLUDE("FindOpenViBEModuleFS")
 
-INCLUDE("FindThirdPartyX11")
-
 # ---------------------------------
 # Target macros
 # Defines target operating system
