@@ -51,10 +51,7 @@ if ($distribution eq 'Ubuntu 14.04') {
   push @packages, "cmake";
   push @packages, "gcc";
   push @packages, "g++";
-  push @packages, "libgtk2.0-dev";
-  push @packages, "libglade2-dev";
   push @packages, "libexpat1-dev";
-  push @packages, "libpcre3-dev";
   push @packages, "libncurses5-dev";
   push @packages, "libeigen3-dev";
   push @packages, "libboost-dev";
@@ -64,7 +61,6 @@ if ($distribution eq 'Ubuntu 14.04') {
   push @packages, "libboost-filesystem1.54-dev";
   push @packages, "ninja-build";
   push @packages, "libzzip-dev";
-  push @packages, "libfreeimage-dev";
 }
 
 # Update package list
