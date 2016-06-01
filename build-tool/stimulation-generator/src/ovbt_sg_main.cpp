@@ -9,7 +9,7 @@
 using namespace std;
 
 typedef enum{
-	CPP, UNKNOWN
+	CPP, MATLAB, PYTHON, LUA, UNKNOWN
 }generation_type;
 
 
@@ -17,6 +17,15 @@ generation_type parse_argument(string option)
 {
 	if(option == "--cpp"){
 		return CPP;
+	}
+	else if(option == "--matlab"){
+		return MATLAB;
+	}
+	else if(option == "--python"){
+		return PYTHON;
+	}
+	else if(option == "--lua"){
+		return LUA;
 	}
 	else{
 		return UNKNOWN;
@@ -47,6 +56,19 @@ int generate_generator_list(vector<CFileGeneratorBase*> & rList, generation_type
 			rList.push_back(gen);
 			return 0;
 		}
+
+		case MATLAB:
+		{
+			CFileGeneratorBase* gen = new CMatlabGenerator();
+			if(!gen->openFile(argv[3])){
+				cerr << "Unable to open " << argv[3] << endl;
+				return -1;
+			}
+			rList.push_back(gen);
+			return 0;
+		}
+		case PYTHON:
+		case LUA:
 		case UNKNOWN:
 		default:
 		{
