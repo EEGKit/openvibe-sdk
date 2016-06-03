@@ -1,50 +1,37 @@
+#include <type_traits>
+#include <functional>
+
 #include "ovkCAlgorithm.h"
 #include "ovkCAlgorithmContext.h"
 #include "ovkCAlgorithmProto.h"
 
 #include "../../ovk_tools.h"
 
+#include <openvibe/ovExceptionHandler.h>
+
 using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;
 using namespace std;
 
-#define _MaxCrash_ 5
-
-#define __proxy_func_0__(_func_, _message_, _before_, _after_) \
-	{ \
-		if(!m_bActive) \
-		{ \
-			return false; \
-		} \
-/* getLogManager() << LogLevel_Debug << "CAlgorithm#1: " << _message_ << "\n"; */ \
-		CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc); \
-		boolean l_bResult=false; \
-		try \
-		{ \
-/* getLogManager() << LogLevel_Debug << "CAlgorithm#2: " << _message_ << "\n"; */ \
-			_before_; \
-/* getLogManager() << LogLevel_Debug << "CAlgorithm#3: " << _message_ << "\n"; */ \
-			l_bResult=m_rAlgorithm._func_(l_oAlgorithmContext); \
-/* getLogManager() << LogLevel_Debug << "CAlgorithm#4: " << _message_ << "\n"; */ \
-			_after_; \
-/* getLogManager() << LogLevel_Debug << "CAlgorithm#5: " << _message_ << "\n"; */ \
-		} \
-		catch (...) \
-		{ \
-			this->handleCrash(_message_); \
-			return false; \
-		} \
-/* getLogManager() << LogLevel_Debug << "CAlgorithm#6: " << _message_ << "\n"; */ \
-		return l_bResult; \
+namespace OpenViBE
+{
+	// provide specialization for generic function defined in ovExceptionHandler.h
+	template<>
+	void handleException(const CAlgorithm& algorithm, const char* errorHint, const std::exception* exception)
+	{
+		algorithm.getLogManager() << LogLevel_Error << "Exception caught in algorithm\n";
+		algorithm.getLogManager() << LogLevel_Error << "  [name: " << algorithm.getAlgorithmDesc().getName() << "]\n";
+		algorithm.getLogManager() << LogLevel_Error << "  [class identifier: " << algorithm.getAlgorithmDesc().getCreatedClass() << "]\n";
+		algorithm.getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
+		algorithm.getLogManager() << LogLevel_Error << "  [cause: " << (exception ? exception->what() : "unknown") << "]\n";
 	}
+}
 
 CAlgorithm::CAlgorithm(const IKernelContext& rKernelContext, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
 	:TKernelObject < IKernelObject >(rKernelContext)
 	,m_pInputConfigurable(NULL)
 	,m_pOutputConfigurable(NULL)
-	,m_ui32CrashCount(0)
-	,m_bActive(true)
 	,m_rAlgorithmDesc(rAlgorithmDesc)
 	,m_rAlgorithm(rAlgorithm)
 {
@@ -354,33 +341,57 @@ boolean CAlgorithm::removeOutputTrigger(
 
 boolean CAlgorithm::initialize(void)
 {
-	__proxy_func_0__(initialize, "initialize callback", , );
+	return translateException(
+		[&]() {
+			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+			return m_rAlgorithm.initialize(l_oAlgorithmContext);
+		},
+		*this,
+		"Algorithm initialization"
+	);
 }
 
 boolean CAlgorithm::uninitialize(void)
 {
-	__proxy_func_0__(uninitialize, "uninitialize callback", , );
+	return translateException(
+		[&]() {
+			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+			return m_rAlgorithm.uninitialize(l_oAlgorithmContext);
+		},
+		*this,
+		"Algorithm uninitialization"
+	);
 }
 
 boolean CAlgorithm::process(void)
 {
-	__proxy_func_0__(process, "process callback", this->setAllOutputTriggers(false), this->setAllInputTriggers(false));
+	return translateException(
+		[&]() {
+			
+			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+			
+			this->setAllOutputTriggers(false);
+			
+			bool l_bResult = m_rAlgorithm.process(l_oAlgorithmContext);
+			
+			this->setAllInputTriggers(false);
+			
+			return l_bResult;
+		},
+		*this,
+		"Algorithm processing"
+	);
 }
 
 boolean CAlgorithm::process(
 	const CIdentifier& rTriggerIdentifier)
 {
-	if(!m_bActive)
-	{
-		return false;
-	}
-
 	if(!this->activateInputTrigger(rTriggerIdentifier, true))
 	{
 		return false;
 	}
-
-	__proxy_func_0__(process, "process callback", this->setAllOutputTriggers(false), this->setAllInputTriggers(false));
+	
+	return this->process();
 }
 
 void CAlgorithm::setAllInputTriggers(const boolean bTriggerStatus)
@@ -398,22 +409,6 @@ void CAlgorithm::setAllOutputTriggers(const boolean bTriggerStatus)
 	for(itTrigger=m_vOutputTrigger.begin(); itTrigger!=m_vOutputTrigger.end(); itTrigger++)
 	{
 		itTrigger->second.second=bTriggerStatus;
-	}
-}
-
-void CAlgorithm::handleCrash(const char* sWhere)
-{
-	m_ui32CrashCount++;
-
-	this->getLogManager() << LogLevel_Error << "Plugin code caused crash " << m_ui32CrashCount << " time(s)\n";
-	this->getLogManager() << LogLevel_Error << "  [name:" << m_rAlgorithmDesc.getName() << "]\n";
-	this->getLogManager() << LogLevel_Error << "  [class identifier:" << m_rAlgorithm.getClassIdentifier() << "]\n";
-	this->getLogManager() << LogLevel_Error << "  [location:" << sWhere << "]\n";
-
-	if(m_ui32CrashCount>=_MaxCrash_)
-	{
-		this->getLogManager() << LogLevel_Fatal << "  This plugin has been disabled !\n";
-		m_bActive=false;
 	}
 }
 
