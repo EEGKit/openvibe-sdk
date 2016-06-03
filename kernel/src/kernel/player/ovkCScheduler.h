@@ -74,6 +74,8 @@ namespace OpenViBE
 			std::map < OpenViBE::CIdentifier, std::map < OpenViBE::uint32, std::list < OpenViBE::Kernel::CChunk > > > m_vSimulatedBoxInput;
 
 		private:
+			
+			boolean processBox(CSimulatedBox* simulatedBox, const OpenViBE::CIdentifier& boxIdentifier);
 			OpenViBE::boolean flattenScenario(void);
 			System::CChrono m_oBenchmarkChrono;
 		};

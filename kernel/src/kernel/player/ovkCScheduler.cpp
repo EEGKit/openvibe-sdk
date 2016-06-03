@@ -1,5 +1,6 @@
 
 #include <openvibe/ovITimeArithmetics.h>
+#include <openvibe/ovExceptionHandler.h>
 
 #include "ovkCScheduler.h"
 #include "ovkCSimulatedBox.h"
@@ -47,6 +48,24 @@ namespace
 {
 	CIdentifier openScenario(const IKernelContext& rKernelContext, IScenarioManager& rScenarioManager, const char* sFileName);
 }
+
+namespace OpenViBE
+{
+	// provide specialization for generic function defined in ovExceptionHandler.h
+	template<>
+	void handleException(const CSimulatedBox& box, const char* errorHint, const std::exception* exception)
+	{
+		CIdentifier l_oTargetBoxIdentifier = OV_UndefinedIdentifier;
+		box.getBoxIdentifier(l_oTargetBoxIdentifier);
+		
+		box.getLogManager() << LogLevel_Error << "Exception caught in box\n";
+		box.getLogManager() << LogLevel_Error << "  [name:" << box.getName() << "]\n";
+		box.getLogManager() << LogLevel_Error << "  [class identifier:" << l_oTargetBoxIdentifier << "]\n";
+		box.getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
+		box.getLogManager() << LogLevel_Error << "  [cause:" << (exception ? exception->what() : "unknown") << "]\n";
+	}
+}
+
 //___________________________________________________________________//
 //                                                                   //
 
@@ -390,29 +409,36 @@ SchedulerInitializationCode CScheduler::initialize(void)
 
 	boolean l_bBoxInitialization = true;
 	for(map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
-	{
-		const IBox* l_pBox=m_pScenario->getBoxDetails(itSimulatedBox->first.second);
-		this->getLogManager() << LogLevel_Trace << "Scheduled box : id = " << itSimulatedBox->first.second << " priority = " << -itSimulatedBox->first.first << " name = " << l_pBox->getName() << "\n";
-		if(itSimulatedBox->second)
+	{	
+		if(auto l_pSimulatedBox = itSimulatedBox->second)
 		{
-			if(!itSimulatedBox->second->initialize())
+			this->getLogManager() << LogLevel_Trace << "Scheduled box : id = " << itSimulatedBox->first.second << " priority = " << -itSimulatedBox->first.first << " name = " << l_pSimulatedBox->getName() << "\n";
+			if(!translateException(
+				[&]() {					
+					return l_pSimulatedBox->initialize();								
+				},
+				l_pSimulatedBox,
+				"Box initialization")
+			)
 			{
 				l_bBoxInitialization = false;
+				
+				// return as soon as possible
+				// no need to keep on initializing boxes if a box failed to initialize
+				break;
 			}
 		}
 	}
 
 	m_ui64Steps=0;
 	m_ui64CurrentTime=0;
+	// has to be kept to true for now in order to enable
+	// cleaning already initialized boxes on call to uninitialize()
 	m_bIsInitialized=true;
 
 	m_oBenchmarkChrono.reset((System::uint32)m_ui64Frequency);
-
-	if(l_bBoxInitialization)
-	{
-		return SchedulerInitialization_Success;
-	}
-	return SchedulerInitialization_BoxInitializationFailed;
+	
+	return (l_bBoxInitialization ? SchedulerInitialization_Success : SchedulerInitialization_Failed);
 }
 
 boolean CScheduler::uninitialize(void)
@@ -425,11 +451,23 @@ boolean CScheduler::uninitialize(void)
 		return false;
 	}
 
+	bool l_bBoxUninitialization = true;
 	for(map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
 	{
-		if(itSimulatedBox->second)
+		if(auto l_pSimulatedBox = itSimulatedBox->second)
 		{
-			itSimulatedBox->second->uninitialize();
+			if(!translateException(
+				[&]() {					
+					return itSimulatedBox->second->uninitialize();								
+				},
+				l_pSimulatedBox,
+				"Box uninitialization")
+			)
+			{
+				// do not break here because we want to try to
+				// at least uninitialize other resources properly
+				l_bBoxUninitialization = false;
+			}
 		}
 	}
 
@@ -442,7 +480,8 @@ boolean CScheduler::uninitialize(void)
 	m_pScenario=NULL;
 
 	m_bIsInitialized=false;
-	return true;
+	
+	return l_bBoxUninitialization;
 }
 
 boolean CScheduler::abortInitialization(void)
@@ -461,57 +500,47 @@ boolean CScheduler::loop(void)
 		return false;
 	}
 
+	bool l_bBoxProcessing = true;
 	m_oBenchmarkChrono.stepIn();
 	for(map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
 	{
 		CSimulatedBox* l_pSimulatedBox=itSimulatedBox->second;
+		
 		System::CChrono& l_rSimulatedBoxChrono=m_vSimulatedBoxChrono[itSimulatedBox->first.second];
 
 		IBox* l_pBox=m_pScenario->getBoxDetails(itSimulatedBox->first.second);
+		
 		if(!l_pBox) {
 			this->getLogManager() << LogLevel_Warning << "Unable to get box details for box with id " << itSimulatedBox->first.second << "\n";
-			continue;
+			l_bBoxProcessing = false;
+			break;
 		}
 
 		l_rSimulatedBoxChrono.stepIn();
-		if(l_pSimulatedBox)
+
+		if(!translateException(
+				[&]() {					
+					return this->processBox(l_pSimulatedBox, itSimulatedBox->first.second);								
+				},
+				l_pSimulatedBox,
+				"Box processing")
+		)
 		{
-			l_pSimulatedBox->processClock();
-
-			if(l_pSimulatedBox->isReadyToProcess())
-			{
-				// FIXME: test the return code
-				l_pSimulatedBox->process();
-			}
-
-
-			//if the box is muted we still have to erase chunks that arrives at the input
-			map < uint32, list < CChunk > >& l_rSimulatedBoxInput=m_vSimulatedBoxInput[itSimulatedBox->first.second];
-			map < uint32, list < CChunk > >::iterator itSimulatedBoxInput;
-			for(itSimulatedBoxInput=l_rSimulatedBoxInput.begin(); itSimulatedBoxInput!=l_rSimulatedBoxInput.end(); itSimulatedBoxInput++)
-			{
-				list < CChunk >& l_rSimulatedBoxInputChunkList=itSimulatedBoxInput->second;
-				list < CChunk >::iterator itSimulatedBoxInputChunkList;
-				for(itSimulatedBoxInputChunkList=l_rSimulatedBoxInputChunkList.begin(); itSimulatedBoxInputChunkList!=l_rSimulatedBoxInputChunkList.end(); itSimulatedBoxInputChunkList++)
-				{
-					l_pSimulatedBox->processInput(itSimulatedBoxInput->first, *itSimulatedBoxInputChunkList);
-
-					if(l_pSimulatedBox->isReadyToProcess())
-					{
-						l_pSimulatedBox->process();
-					}
-				}
-				l_rSimulatedBoxInputChunkList.clear();
-			}
+			l_bBoxProcessing = false;
+			
+			// break here because we don not want to keep on processing if one
+			// box fails
+			break;
 		}
+		
 		l_rSimulatedBoxChrono.stepOut();
 
 		if(l_rSimulatedBoxChrono.hasNewEstimation())
 		{
-			IBox* l_pBox=m_pScenario->getBoxDetails(itSimulatedBox->first.second);
+			//IBox* l_pBox=m_pScenario->getBoxDetails(itSimulatedBox->first.second);
 			l_pBox->addAttribute(OV_AttributeId_Box_ComputationTimeLastSecond, "");
 			l_pBox->setAttributeValue(OV_AttributeId_Box_ComputationTimeLastSecond, CIdentifier(l_rSimulatedBoxChrono.getTotalStepInDuration()).toString());
-		}
+		}		
 	}
 	m_oBenchmarkChrono.stepOut();
 
@@ -535,6 +564,52 @@ boolean CScheduler::loop(void)
 
 	m_ui64CurrentTime=m_ui64Steps*ITimeArithmetics::sampleCountToTime(m_ui64Frequency, 1LL);
 
+	return l_bBoxProcessing;
+}
+
+boolean CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxIdentifier)
+{
+	if(simulatedBox)
+	{
+		if(!simulatedBox->processClock())
+		{
+			return false;
+		}
+
+		if(simulatedBox->isReadyToProcess())
+		{
+			if(!simulatedBox->process())
+			{
+				return false;
+			}
+		}
+
+		//if the box is muted we still have to erase chunks that arrives at the input
+		map < uint32, list < CChunk > >& l_rSimulatedBoxInput=m_vSimulatedBoxInput[boxIdentifier];
+		map < uint32, list < CChunk > >::iterator itSimulatedBoxInput;
+		for(itSimulatedBoxInput=l_rSimulatedBoxInput.begin(); itSimulatedBoxInput!=l_rSimulatedBoxInput.end(); itSimulatedBoxInput++)
+		{
+			list < CChunk >& l_rSimulatedBoxInputChunkList=itSimulatedBoxInput->second;
+			list < CChunk >::iterator itSimulatedBoxInputChunkList;
+			for(itSimulatedBoxInputChunkList=l_rSimulatedBoxInputChunkList.begin(); itSimulatedBoxInputChunkList!=l_rSimulatedBoxInputChunkList.end(); itSimulatedBoxInputChunkList++)
+			{
+				if(!simulatedBox->processInput(itSimulatedBoxInput->first, *itSimulatedBoxInputChunkList))
+				{
+					return false;
+				}
+
+				if(simulatedBox->isReadyToProcess())
+				{
+					if(!simulatedBox->process())
+					{
+						return false;
+					}
+				}
+			}
+			l_rSimulatedBoxInputChunkList.clear();
+		}
+	}
+	
 	return true;
 }
 
