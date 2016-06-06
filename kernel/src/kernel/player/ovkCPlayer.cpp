@@ -364,6 +364,11 @@ boolean CPlayer::loop(
 		m_eStatus=PlayerStatus_Stop;
 		return false;
 	}
+	
+	if(m_eStatus==PlayerStatus_Stop)
+	{
+		return false;
+	}
 
 	boolean l_bHasTimeToReach=false;
 	switch(m_eStatus)
@@ -434,7 +439,11 @@ boolean CPlayer::loop(
 				m_ui64InnerLateness = 0;
 			}
 
-			m_oScheduler.loop();
+			if(!m_oScheduler.loop())
+			{
+				m_eStatus=PlayerStatus_Stop;
+				return false;
+			}
 
 #if defined CPlayer_Debug_Time
 ::printf("Iterates (%f / %f - %s)\n", (m_oScheduler.getCurrentTime()>>22)/1024., (ui64MaximumTimeToReach>>22)/1024., (m_eStatus==PlayerStatus_Forward?"true":"false"));

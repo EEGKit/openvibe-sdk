@@ -15,8 +15,6 @@
 #include <string>
 #include <cstring>
 
-
-#include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <limits>
@@ -49,6 +47,7 @@ namespace
 	CIdentifier openScenario(const IKernelContext& rKernelContext, IScenarioManager& rScenarioManager, const char* sFileName);
 }
 
+#include <iostream>
 namespace OpenViBE
 {
 	// provide specialization for generic function defined in ovExceptionHandler.h
@@ -369,7 +368,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 	{
 		int l_iPriority = 0;
 		const IBox* l_pBox = m_pScenario->getBoxDetails(l_oBoxIdentifier);
-
+		
 		if(m_pScenario->hasNeedsUpdateBox() && this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxNeedsUpdate}", false))
 		{
 			this->getLogManager() << LogLevel_ImportantWarning << "Box [" << l_pBox->getName() << "] with class identifier [" << l_oBoxIdentifier << "] should be updated."
@@ -417,7 +416,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 				[&]() {					
 					return l_pSimulatedBox->initialize();								
 				},
-				l_pSimulatedBox,
+				*l_pSimulatedBox,
 				"Box initialization")
 			)
 			{
@@ -458,9 +457,9 @@ boolean CScheduler::uninitialize(void)
 		{
 			if(!translateException(
 				[&]() {					
-					return itSimulatedBox->second->uninitialize();								
+					return l_pSimulatedBox->uninitialize();								
 				},
-				l_pSimulatedBox,
+				*l_pSimulatedBox,
 				"Box uninitialization")
 			)
 			{
@@ -522,13 +521,13 @@ boolean CScheduler::loop(void)
 				[&]() {					
 					return this->processBox(l_pSimulatedBox, itSimulatedBox->first.second);								
 				},
-				l_pSimulatedBox,
+				*l_pSimulatedBox,
 				"Box processing")
 		)
 		{
 			l_bBoxProcessing = false;
 			
-			// break here because we don not want to keep on processing if one
+			// break here because we do not want to keep on processing if one
 			// box fails
 			break;
 		}

@@ -180,7 +180,8 @@ boolean CSimulatedBox::uninitialize(void)
 #if defined _SimulatedBox_ScopeTester_
 	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
 #endif
-
+	
+	bool l_bResult = true;
 	if(!m_pBoxAlgorithm) return false;
 
 	{
@@ -192,7 +193,8 @@ boolean CSimulatedBox::uninitialize(void)
 			{
 				if(!m_pBoxAlgorithm->uninitialize(l_oBoxAlgorithmContext))
 				{
-					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> uninitialization failed\n";
+					getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> uninitialization failed\n";
+					l_bResult = false;
 				}
 			}
 		}
@@ -201,7 +203,7 @@ boolean CSimulatedBox::uninitialize(void)
 	getPluginManager().releasePluginObject(m_pBoxAlgorithm);
 	m_pBoxAlgorithm=NULL;
 
-	return true ;
+	return l_bResult ;
 }
 
 boolean CSimulatedBox::processClock(void)
@@ -265,8 +267,8 @@ boolean CSimulatedBox::processClock(void)
 			l_oClockMessage.setTime(m_ui64LastClockActivationDate);
 			if(!m_pBoxAlgorithm->processClock(l_oBoxAlgorithmContext, l_oClockMessage))
 			{
-				// In future, we may want to behave in a similar manner as in process(). Change not introduced for 0.18 due to insufficient testing.
-				// getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> processClock() function failed\n";
+				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> processClock() function failed\n";
+				return false;
 			}
 			m_oBenchmarkChronoProcessClock.stepOut();
 				
@@ -294,8 +296,8 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 			m_oBenchmarkChronoProcessInput.stepIn();
 			if(!m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex))
 			{
-				// In future, we may want to behave in a similar manner as in process(). Change not introduced for 0.18 due to insufficient testing.
-				// getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> processInput() failed\n";
+				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> processInput() failed\n";
+				return false;
 			}
 			m_oBenchmarkChronoProcessInput.stepOut();
 		}
@@ -322,7 +324,8 @@ boolean CSimulatedBox::process(void)
 			m_oBenchmarkChronoProcess.stepIn();
 			if(!m_pBoxAlgorithm->process(l_oBoxAlgorithmContext))
 			{
-				getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> process() function failed\n";
+				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> process() function failed\n";
+				return false;
 			}
 			m_oBenchmarkChronoProcess.stepOut();
 		}
