@@ -42,7 +42,7 @@ CPlayer::CPlayer(const IKernelContext& rKernelContext)
 	,m_oScheduler(m_oKernelContextBridge, *this)
 	,m_ui64CurrentTimeToReach(0)
 	,m_ui64Lateness(0)
-	,m_eStatus(PlayerStatus_Uninitialized)
+	,m_eStatus(PlayerStatus_Stop)
 	,m_bIsInitializing(false)
 {
 	uint64 l_ui64SchedulerFrequency=this->getConfigurationManager().expandAsUInteger("${Kernel_PlayerFrequency}");
@@ -60,7 +60,7 @@ CPlayer::CPlayer(const IKernelContext& rKernelContext)
 
 CPlayer::~CPlayer(void)
 {
-	if(m_eStatus!=PlayerStatus_Uninitialized)
+	if(this->isHoldingResources())
 	{
 		this->uninitialize();
 	}
@@ -76,9 +76,9 @@ boolean CPlayer::setScenario(
 	const CIdentifier& rScenarioIdentifier,
 	const OpenViBE::CNameValuePairList* pLocalConfigurationTokens)
 {
-	if(m_eStatus!=PlayerStatus_Uninitialized)
+	if(this->isHoldingResources())
 	{
-		this->getLogManager() << LogLevel_Warning << "Trying to configure an initialized player !\n";
+		this->getLogManager() << LogLevel_Warning << "Trying to configure a player with non-empty resources. Try uninitializing first!\n";
 		return false;
 	}
 
@@ -197,9 +197,9 @@ IScenarioManager& CPlayer::getRuntimeScenarioManager(void)
 
 EPlayerReturnCode CPlayer::initialize(void)
 {
-	if(m_eStatus!=PlayerStatus_Uninitialized)
+	if(this->isHoldingResources())
 	{
-		this->getLogManager() << LogLevel_Warning << "Trying to initialize an initialized player !\n";
+		this->getLogManager() << LogLevel_Warning << "Trying to configure a player with non-empty resources. Try uninitializing first!\n";
 		return PlayerReturnCode_Failed;
 	}
 
@@ -216,6 +216,11 @@ EPlayerReturnCode CPlayer::initialize(void)
 		this->getLogManager() << LogLevel_Error << "Scheduler initialization failed\n";
 		return PlayerReturnCode_Failed;
 	}
+	else if(l_eCode == SchedulerInitialization_BoxInitializationFailed)
+	{
+		return PlayerReturnCode_BoxInitializationFailed;
+	}
+	
 	m_oBenchmarkChrono.reset(static_cast<uint32>(m_oScheduler.getFrequency()));
 
 	m_ui64CurrentTimeToReach=0;
@@ -223,21 +228,11 @@ EPlayerReturnCode CPlayer::initialize(void)
 	m_ui64InnerLateness=0;
 
 	m_eStatus=PlayerStatus_Stop;
-	if(l_eCode == SchedulerInitialization_BoxInitializationFailed)
-	{
-		return PlayerReturnCode_BoxInitializationFailed;
-	}
 	return PlayerReturnCode_Sucess;
 }
 
 boolean CPlayer::uninitialize(void)
 {
-	if(m_eStatus==PlayerStatus_Uninitialized)
-	{
-		this->getLogManager() << LogLevel_Warning << "Trying to uninitialize an uninitialized player !\n";
-		return false;
-	}
-
 	this->getLogManager() << LogLevel_Trace << "Player uninitialize\n";
 
 	m_oScheduler.uninitialize();
@@ -246,16 +241,18 @@ boolean CPlayer::uninitialize(void)
 
 	m_sScenarioConfigurationFile="";
 	m_sWorkspaceConfigurationFile="";
-	delete m_pRuntimeConfigurationManager;
-	m_pRuntimeConfigurationManager=NULL;
+	if(m_pRuntimeConfigurationManager != NULL)
+	{
+		delete m_pRuntimeConfigurationManager;
+		m_pRuntimeConfigurationManager=NULL;
+	}
 
-	m_eStatus=PlayerStatus_Uninitialized;
 	return true;
 }
 
 boolean CPlayer::stop(void)
 {
-	if(m_eStatus==PlayerStatus_Uninitialized)
+	if(!this->isHoldingResources())
 	{
 		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
 		return false;
@@ -270,7 +267,7 @@ boolean CPlayer::stop(void)
 
 boolean CPlayer::pause(void)
 {
-	if(m_eStatus==PlayerStatus_Uninitialized)
+	if(!this->isHoldingResources())
 	{
 		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
 		return false;
@@ -285,7 +282,7 @@ boolean CPlayer::pause(void)
 
 boolean CPlayer::step(void)
 {
-	if(m_eStatus==PlayerStatus_Uninitialized)
+	if(!this->isHoldingResources())
 	{
 		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
 		return false;
@@ -300,7 +297,7 @@ boolean CPlayer::step(void)
 
 boolean CPlayer::play(void)
 {
-	if(m_eStatus==PlayerStatus_Uninitialized)
+	if(!this->isHoldingResources())
 	{
 		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
 		return false;
@@ -315,7 +312,7 @@ boolean CPlayer::play(void)
 
 boolean CPlayer::forward(void)
 {
-	if(m_eStatus==PlayerStatus_Uninitialized)
+	if(!this->isHoldingResources())
 	{
 		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
 		return false;
@@ -349,19 +346,18 @@ float64 CPlayer::getCPUUsage() const
 	return m_oScheduler.getCPUUsage();
 }
 
+OpenViBE::boolean CPlayer::isHoldingResources() const
+{
+	return m_oScheduler.isHoldingResources();
+}
+
 boolean CPlayer::loop(
 	const uint64 ui64ElapsedTime,
 	const uint64 ui64MaximumTimeToReach)
 {
-	if(m_eStatus==PlayerStatus_Uninitialized)
+	if(!this->isHoldingResources())
 	{
 		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
-		return false;
-	}
-
-	if(m_oScheduler.isInitializationAborted())
-	{
-		m_eStatus=PlayerStatus_Stop;
 		return false;
 	}
 	

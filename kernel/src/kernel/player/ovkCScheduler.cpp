@@ -82,17 +82,12 @@ CScheduler::CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer)
 	,m_ui64Frequency(0)
 	,m_ui64StepDuration(0)
 	,m_ui64CurrentTime(0)
-	,m_bIsInitialized(false)
-	,m_bInitializationAborted(false)
 {
 }
 
 CScheduler::~CScheduler(void)
 {
-	if(m_bIsInitialized)
-	{
-		this->uninitialize();
-	}
+	this->uninitialize();
 }
 
 //___________________________________________________________________//
@@ -103,9 +98,9 @@ boolean CScheduler::setScenario(
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setScenario\n";
 
-	if(m_bIsInitialized)
+	if(this->isHoldingResources())
 	{
-		this->getLogManager() << LogLevel_Warning << "Trying to configure an initialized scheduler !\n";
+		this->getLogManager() << LogLevel_Warning << "Trying to configure a scheduler with non-empty resources. Try uninitializing first!\n";
 		return false;
 	}
 
@@ -130,16 +125,24 @@ boolean CScheduler::setFrequency(
 	const uint64 ui64Frequency)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setFrequency\n";
-
-	if(m_bIsInitialized)
+	
+	if(this->isHoldingResources())
 	{
-		this->getLogManager() << LogLevel_Warning << "Trying to configure an initialized scheduler !\n";
+		this->getLogManager() << LogLevel_Warning << "Trying to configure a scheduler with non-empty resources. Try uninitializing first!\n";
 		return false;
 	}
 
 	m_ui64Frequency=ui64Frequency;
 	m_ui64StepDuration=(1LL<<32)/ui64Frequency;
 	return true;
+}
+
+//___________________________________________________________________//
+//                                                                   //
+
+OpenViBE::boolean CScheduler::isHoldingResources() const
+{
+	return !m_vSimulatedBox.empty();
 }
 
 //___________________________________________________________________//
@@ -343,9 +346,9 @@ SchedulerInitializationCode CScheduler::initialize(void)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler initialize\n";
 
-	if(m_bIsInitialized)
+	if(this->isHoldingResources())
 	{
-		this->getLogManager() << LogLevel_Warning << "Trying to initialize an intialized scheduler !\n";
+		this->getLogManager() << LogLevel_Warning << "Trying to initialize a scheduler with non-empty resources. Try uninitializing first!\n";
 		return SchedulerInitialization_Failed;
 	}
 
@@ -431,9 +434,6 @@ SchedulerInitializationCode CScheduler::initialize(void)
 
 	m_ui64Steps=0;
 	m_ui64CurrentTime=0;
-	// has to be kept to true for now in order to enable
-	// cleaning already initialized boxes on call to uninitialize()
-	m_bIsInitialized=true;
 
 	m_oBenchmarkChrono.reset((System::uint32)m_ui64Frequency);
 	
@@ -443,13 +443,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 boolean CScheduler::uninitialize(void)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler uninitialize\n";
-
-	if(!m_bIsInitialized)
-	{
-		this->getLogManager() << LogLevel_Warning << "Trying to uninitialize an uninitialized player !\n";
-		return false;
-	}
-
+	
 	bool l_bBoxUninitialization = true;
 	for(map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
 	{
@@ -477,16 +471,8 @@ boolean CScheduler::uninitialize(void)
 	m_vSimulatedBox.clear();
 
 	m_pScenario=NULL;
-
-	m_bIsInitialized=false;
 	
 	return l_bBoxUninitialization;
-}
-
-boolean CScheduler::abortInitialization(void)
-{
-	m_bInitializationAborted=true;
-	return true;
 }
 
 //___________________________________________________________________//
@@ -494,7 +480,7 @@ boolean CScheduler::abortInitialization(void)
 
 boolean CScheduler::loop(void)
 {
-	if(!m_bIsInitialized)
+	if(!this->isHoldingResources())
 	{
 		return false;
 	}
