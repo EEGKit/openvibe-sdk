@@ -47,21 +47,18 @@ namespace
 	CIdentifier openScenario(const IKernelContext& rKernelContext, IScenarioManager& rScenarioManager, const char* sFileName);
 }
 
-#include <iostream>
-namespace OpenViBE
+namespace
 {
-	// provide specialization for generic function defined in ovExceptionHandler.h
-	template<>
-	void handleException(const CSimulatedBox& box, const char* errorHint, const std::exception* exception)
+	void handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception)
 	{
 		CIdentifier l_oTargetBoxIdentifier = OV_UndefinedIdentifier;
-		box.getBoxIdentifier(l_oTargetBoxIdentifier);
+		box->getBoxIdentifier(l_oTargetBoxIdentifier);
 		
-		box.getLogManager() << LogLevel_Error << "Exception caught in box\n";
-		box.getLogManager() << LogLevel_Error << "  [name:" << box.getName() << "]\n";
-		box.getLogManager() << LogLevel_Error << "  [class identifier:" << l_oTargetBoxIdentifier << "]\n";
-		box.getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
-		box.getLogManager() << LogLevel_Error << "  [cause:" << (exception ? exception->what() : "unknown") << "]\n";
+		box->getLogManager() << LogLevel_Error << "Exception caught in box\n";
+		box->getLogManager() << LogLevel_Error << "  [name:" << box->getName() << "]\n";
+		box->getLogManager() << LogLevel_Error << "  [class identifier:" << l_oTargetBoxIdentifier << "]\n";
+		box->getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
+		box->getLogManager() << LogLevel_Error << "  [cause:" << exception.what() << "]\n";
 	}
 }
 
@@ -419,8 +416,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 				[&]() {					
 					return l_pSimulatedBox->initialize();								
 				},
-				*l_pSimulatedBox,
-				"Box initialization")
+				std::bind(handleException, l_pSimulatedBox, "Box initialization", std::placeholders::_1))
 			)
 			{
 				l_bBoxInitialization = false;
@@ -453,8 +449,7 @@ boolean CScheduler::uninitialize(void)
 				[&]() {					
 					return l_pSimulatedBox->uninitialize();								
 				},
-				*l_pSimulatedBox,
-				"Box uninitialization")
+				std::bind(handleException, l_pSimulatedBox, "Box uninitialization", std::placeholders::_1))
 			)
 			{
 				// do not break here because we want to try to
@@ -507,8 +502,7 @@ boolean CScheduler::loop(void)
 				[&]() {					
 					return this->processBox(l_pSimulatedBox, itSimulatedBox->first.second);								
 				},
-				*l_pSimulatedBox,
-				"Box processing")
+				std::bind(handleException, l_pSimulatedBox, "Box processing", std::placeholders::_1))
 		)
 		{
 			l_bBoxProcessing = false;

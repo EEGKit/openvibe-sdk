@@ -1,6 +1,3 @@
-#include <type_traits>
-#include <functional>
-
 #include "ovkCAlgorithm.h"
 #include "ovkCAlgorithmContext.h"
 #include "ovkCAlgorithmProto.h"
@@ -14,17 +11,15 @@ using namespace Kernel;
 using namespace Plugins;
 using namespace std;
 
-namespace OpenViBE
+namespace
 {
-	// provide specialization for generic function defined in ovExceptionHandler.h
-	template<>
-	void handleException(const CAlgorithm& algorithm, const char* errorHint, const std::exception* exception)
+	void handleException(const CAlgorithm* algorithm, const char* errorHint, const std::exception& exception)
 	{
-		algorithm.getLogManager() << LogLevel_Error << "Exception caught in algorithm\n";
-		algorithm.getLogManager() << LogLevel_Error << "  [name: " << algorithm.getAlgorithmDesc().getName() << "]\n";
-		algorithm.getLogManager() << LogLevel_Error << "  [class identifier: " << algorithm.getAlgorithmDesc().getCreatedClass() << "]\n";
-		algorithm.getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
-		algorithm.getLogManager() << LogLevel_Error << "  [cause: " << (exception ? exception->what() : "unknown") << "]\n";
+		algorithm->getLogManager() << LogLevel_Error << "Exception caught in algorithm\n";
+		algorithm->getLogManager() << LogLevel_Error << "  [name: " << algorithm->getAlgorithmDesc().getName() << "]\n";
+		algorithm->getLogManager() << LogLevel_Error << "  [class identifier: " << algorithm->getAlgorithmDesc().getCreatedClass() << "]\n";
+		algorithm->getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
+		algorithm->getLogManager() << LogLevel_Error << "  [cause: " << exception.what() << "]\n";
 	}
 }
 
@@ -346,8 +341,7 @@ boolean CAlgorithm::initialize(void)
 			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
 			return m_rAlgorithm.initialize(l_oAlgorithmContext);
 		},
-		*this,
-		"Algorithm initialization"
+		std::bind(handleException, this, "Algorithm initialization", std::placeholders::_1)
 	);
 }
 
@@ -358,8 +352,7 @@ boolean CAlgorithm::uninitialize(void)
 			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
 			return m_rAlgorithm.uninitialize(l_oAlgorithmContext);
 		},
-		*this,
-		"Algorithm uninitialization"
+		std::bind(handleException, this, "Algorithm uninitialization", std::placeholders::_1)
 	);
 }
 
@@ -378,8 +371,7 @@ boolean CAlgorithm::process(void)
 			
 			return l_bResult;
 		},
-		*this,
-		"Algorithm processing"
+		std::bind(handleException, this, "Algorithm processing", std::placeholders::_1)
 	);
 }
 

@@ -19,53 +19,33 @@
 * If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
 #include <type_traits>
 #include <exception>
+#include <functional>
 
 namespace OpenViBE
 {
-	
-	/**
-	  * \brief Applies specific actions when an exception occurs
-	  * \tparam T handler type
-	  * 
-	  * \param handler helper object used to handle exceptions
-	  * \param errorHint additonal information
-	  * \param exception the exception to handle (null for exceptions of unknown types)
-	  * 
-	  * \details This function should typically be specialized for specific handlers.
-	  * 		 Typical handlers would be Kernel objects able to log information
-	  * 		 and to provide details on the entity suffering the exception.
-	  */
-	template<typename T>
-	void handleException(const T& handler, const char* errorHint = nullptr, const std::exception* exception = nullptr)
-	{
-		std::cerr << "  [handler address: " << &handler << "]\n";
-		std::cerr << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
-		std::cerr << "  [cause:"  << (exception ? exception->what() : "unknown") << "]\n";
-	}
-	
+	using ExceptionHandlerType = std::function<void(const std::exception&)>;
 	
 	/**
 	  * \brief Invokes code and potentially translates exceptions to boolean
 	  * 
 	  * \tparam Callback callable type (e.g. functor) with Callback() returning boolean
-	  * \tparam Handler exception handler type (\see handleException)
 	  * 
 	  * \param callable code that must be guarded against exceptions
-	  * \param handler helper object used to handle exceptions
-	  * \param errorHint additional information used if an error occurs
+	  * \param exceptionHandler callback that handles the exception
 	  * \return false either if callable() returns false or an exception 
 	  * 		occurs, true otherwise
 	  * 
 	  * \details This method is a specific exception-to-boolean translation
 	  * 		 method. If an exception is caught, it is handled by calling
-	  * 		 handleException.
+	  * 		 the provided exception handler.
 	  */
-	template <typename Callback,typename Handler>
-	typename std::enable_if<std::is_same<bool, typename std::result_of<Callback()>::type >::value, bool>::type
-	translateException(Callback&& callable, const Handler& handler, const char* errorHint)
+	template <
+			  typename Callback,
+			  typename std::enable_if<std::is_same<bool, typename std::result_of<Callback()>::type >::value>::type* = nullptr
+			  >
+	bool translateException(Callback&& callable, ExceptionHandlerType exceptionHandler)
 	{
 		try
 		{
@@ -73,12 +53,12 @@ namespace OpenViBE
 		}
 		catch(const std::exception& exception)
 		{
-			handleException(handler, errorHint, &exception);
+			exceptionHandler(exception);
 			return false;
 		}
 		catch(...)
 		{
-			handleException(handler, errorHint);
+			exceptionHandler(std::runtime_error("unknown exception"));
 			return false;
    		}
 	}
