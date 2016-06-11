@@ -95,7 +95,7 @@ boolean CScheduler::setScenario(
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setScenario\n";
 
-	if(this->isHoldingResources())
+	if (this->isHoldingResources())
 	{
 		this->getLogManager() << LogLevel_Warning << "Trying to configure a scheduler with non-empty resources. Try uninitializing first!\n";
 		return false;
@@ -108,7 +108,7 @@ boolean CScheduler::setScenario(
 	// The application needs to initialize necessary windows for the boxes to draw into.
 	m_pScenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_oScenarioIdentifier);
 
-	if(!this->flattenScenario())
+	if (!this->flattenScenario())
 	{
 		return false;
 	}
@@ -123,7 +123,7 @@ boolean CScheduler::setFrequency(
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setFrequency\n";
 	
-	if(this->isHoldingResources())
+	if (this->isHoldingResources())
 	{
 		this->getLogManager() << LogLevel_Warning << "Trying to configure a scheduler with non-empty resources. Try uninitializing first!\n";
 		return false;
@@ -147,7 +147,7 @@ OpenViBE::boolean CScheduler::isHoldingResources() const
 
 boolean CScheduler::flattenScenario()
 {
-	if(!m_pScenario->applyLocalSettings())
+	if (!m_pScenario->applyLocalSettings())
 	{
 		return false;
 	}
@@ -167,7 +167,7 @@ boolean CScheduler::flattenScenario()
 		while ((l_oCurrentBoxIdentifier = m_pScenario->getNextBoxIdentifier(l_oPreviousBoxIdentifier)) != OV_UndefinedIdentifier)
 		{
 			bool l_bCurrentBoxRemoved = false;
-			if(m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
+			if (m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 			{
 				// We only process this box if it is not disabled
 				bool l_bIsBoxDisabled = m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->hasAttribute(OV_AttributeId_Box_Disabled);
@@ -256,7 +256,7 @@ boolean CScheduler::flattenScenario()
 				l_rMetaboxScenarioInstance.addSetting("Player_MetaboxScenarioFilename", OV_TypeId_Filename, l_sMetaboxScenarioPath);
 
 				size_t l_uiLastSlashPosition = l_sMetaboxFilename.rfind("/");
-				if(l_uiLastSlashPosition != std::string::npos)
+				if (l_uiLastSlashPosition != std::string::npos)
 				{
 					l_sMetaboxDirectoryPath = l_sMetaboxFilename.substr(0, l_uiLastSlashPosition).c_str();
 				}
@@ -343,21 +343,21 @@ SchedulerInitializationCode CScheduler::initialize(void)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler initialize\n";
 
-	if(this->isHoldingResources())
+	if (this->isHoldingResources())
 	{
 		this->getLogManager() << LogLevel_Warning << "Trying to initialize a scheduler with non-empty resources. Try uninitializing first!\n";
 		return SchedulerInitialization_Failed;
 	}
 
 	m_pScenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_oScenarioIdentifier);
-	if(!m_pScenario)
+	if (!m_pScenario)
 	{
 		this->getLogManager() << LogLevel_ImportantWarning << "Scenario " << m_oScenarioIdentifier << " does not exist !\n";
 		return SchedulerInitialization_Failed;
 	}
 
 	CBoxSettingModifierVisitor l_oBoxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
-	if(!m_pScenario->acceptVisitor(l_oBoxSettingModifierVisitor))
+	if (!m_pScenario->acceptVisitor(l_oBoxSettingModifierVisitor))
 	{
 		this->getLogManager() << LogLevel_Error << "Scenario " << m_oScenarioIdentifier << " setting modification with acceptVisitor() failed\n";
 		return SchedulerInitialization_Failed;
@@ -369,7 +369,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		int l_iPriority = 0;
 		const IBox* l_pBox = m_pScenario->getBoxDetails(l_oBoxIdentifier);
 		
-		if(m_pScenario->hasNeedsUpdateBox() && this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxNeedsUpdate}", false))
+		if (m_pScenario->hasNeedsUpdateBox() && this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxNeedsUpdate}", false))
 		{
 			this->getLogManager() << LogLevel_ImportantWarning << "Box [" << l_pBox->getName() << "] with class identifier [" << l_oBoxIdentifier << "] should be updated."
 				" The token ${Kernel_AbortPlayerWhenBoxNeedsUpdate} was set to true, the scenario will not be played.\n";
@@ -379,11 +379,11 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		if (l_pBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox)
 		{
 			const IPluginObjectDesc* l_pBoxDesc=this->getPluginManager().getPluginObjectDescCreating(l_pBox->getAlgorithmClassIdentifier());
-			if(l_pBoxDesc == NULL)
+			if (l_pBoxDesc == NULL)
 			{
 				this->getLogManager() << LogLevel_Warning << "Disabled box " << l_oBoxIdentifier << " with name " << l_pBox->getName() << " - Plugin object descriptor could not be found\n";
 			}
-			else if(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
+			else if (l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
 			{
 				this->getLogManager() << LogLevel_Trace << "Disabled box " << l_oBoxIdentifier << " with name " << l_pBox->getName() << " - Box had the " << CString("Disabled") << " attribute\n";
 			}
@@ -407,12 +407,12 @@ SchedulerInitializationCode CScheduler::initialize(void)
 	}
 
 	boolean l_bBoxInitialization = true;
-	for(map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
+	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
 	{	
-		if(auto l_pSimulatedBox = itSimulatedBox->second)
+		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
 			this->getLogManager() << LogLevel_Trace << "Scheduled box : id = " << itSimulatedBox->first.second << " priority = " << -itSimulatedBox->first.first << " name = " << l_pSimulatedBox->getName() << "\n";
-			if(!translateException(
+			if (!translateException(
 				[&]() {					
 					return l_pSimulatedBox->initialize();								
 				},
@@ -441,11 +441,11 @@ boolean CScheduler::uninitialize(void)
 	this->getLogManager() << LogLevel_Trace << "Scheduler uninitialize\n";
 	
 	bool l_bBoxUninitialization = true;
-	for(map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
+	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
 	{
-		if(auto l_pSimulatedBox = itSimulatedBox->second)
+		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
-			if(!translateException(
+			if (!translateException(
 				[&]() {					
 					return l_pSimulatedBox->uninitialize();								
 				},
@@ -459,7 +459,7 @@ boolean CScheduler::uninitialize(void)
 		}
 	}
 
-	for(map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
+	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
 	{
 		delete itSimulatedBox->second;
 	}
@@ -475,14 +475,14 @@ boolean CScheduler::uninitialize(void)
 
 boolean CScheduler::loop(void)
 {
-	if(!this->isHoldingResources())
+	if (!this->isHoldingResources())
 	{
 		return false;
 	}
 
 	bool l_bBoxProcessing = true;
 	m_oBenchmarkChrono.stepIn();
-	for(map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
+	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
 	{
 		CSimulatedBox* l_pSimulatedBox=itSimulatedBox->second;
 		
@@ -490,7 +490,7 @@ boolean CScheduler::loop(void)
 
 		IBox* l_pBox=m_pScenario->getBoxDetails(itSimulatedBox->first.second);
 		
-		if(!l_pBox) {
+		if (!l_pBox) {
 			this->getLogManager() << LogLevel_Warning << "Unable to get box details for box with id " << itSimulatedBox->first.second << "\n";
 			l_bBoxProcessing = false;
 			break;
@@ -498,7 +498,7 @@ boolean CScheduler::loop(void)
 
 		l_rSimulatedBoxChrono.stepIn();
 
-		if(!translateException(
+		if (!translateException(
 				[&]() {					
 					return this->processBox(l_pSimulatedBox, itSimulatedBox->first.second);								
 				},
@@ -514,7 +514,7 @@ boolean CScheduler::loop(void)
 		
 		l_rSimulatedBoxChrono.stepOut();
 
-		if(l_rSimulatedBoxChrono.hasNewEstimation())
+		if (l_rSimulatedBoxChrono.hasNewEstimation())
 		{
 			//IBox* l_pBox=m_pScenario->getBoxDetails(itSimulatedBox->first.second);
 			l_pBox->addAttribute(OV_AttributeId_Box_ComputationTimeLastSecond, "");
@@ -523,7 +523,7 @@ boolean CScheduler::loop(void)
 	}
 	m_oBenchmarkChrono.stepOut();
 
-	if((m_ui64Steps%m_ui64Frequency)==0)
+	if ((m_ui64Steps%m_ui64Frequency)==0)
 	{
 		this->getLogManager() << LogLevel_Debug
 			<< "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Scheduler" << LogColor_PopStateBit
@@ -531,7 +531,7 @@ boolean CScheduler::loop(void)
 			<< m_ui64Steps/m_ui64Frequency << "s\n";
 	}
 
-	if(m_oBenchmarkChrono.hasNewEstimation())
+	if (m_oBenchmarkChrono.hasNewEstimation())
 	{
 		this->getLogManager() << LogLevel_Benchmark
 			<< "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Scheduler" << LogColor_PopStateBit
@@ -548,16 +548,16 @@ boolean CScheduler::loop(void)
 
 boolean CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxIdentifier)
 {
-	if(simulatedBox)
+	if (simulatedBox)
 	{
-		if(!simulatedBox->processClock())
+		if (!simulatedBox->processClock())
 		{
 			return false;
 		}
 
-		if(simulatedBox->isReadyToProcess())
+		if (simulatedBox->isReadyToProcess())
 		{
-			if(!simulatedBox->process())
+			if (!simulatedBox->process())
 			{
 				return false;
 			}
@@ -566,20 +566,20 @@ boolean CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& b
 		//if the box is muted we still have to erase chunks that arrives at the input
 		map < uint32, list < CChunk > >& l_rSimulatedBoxInput=m_vSimulatedBoxInput[boxIdentifier];
 		map < uint32, list < CChunk > >::iterator itSimulatedBoxInput;
-		for(itSimulatedBoxInput=l_rSimulatedBoxInput.begin(); itSimulatedBoxInput!=l_rSimulatedBoxInput.end(); itSimulatedBoxInput++)
+		for (itSimulatedBoxInput=l_rSimulatedBoxInput.begin(); itSimulatedBoxInput!=l_rSimulatedBoxInput.end(); itSimulatedBoxInput++)
 		{
 			list < CChunk >& l_rSimulatedBoxInputChunkList=itSimulatedBoxInput->second;
 			list < CChunk >::iterator itSimulatedBoxInputChunkList;
-			for(itSimulatedBoxInputChunkList=l_rSimulatedBoxInputChunkList.begin(); itSimulatedBoxInputChunkList!=l_rSimulatedBoxInputChunkList.end(); itSimulatedBoxInputChunkList++)
+			for (itSimulatedBoxInputChunkList=l_rSimulatedBoxInputChunkList.begin(); itSimulatedBoxInputChunkList!=l_rSimulatedBoxInputChunkList.end(); itSimulatedBoxInputChunkList++)
 			{
-				if(!simulatedBox->processInput(itSimulatedBoxInput->first, *itSimulatedBoxInputChunkList))
+				if (!simulatedBox->processInput(itSimulatedBoxInput->first, *itSimulatedBoxInputChunkList))
 				{
 					return false;
 				}
 
-				if(simulatedBox->isReadyToProcess())
+				if (simulatedBox->isReadyToProcess())
 				{
-					if(!simulatedBox->process())
+					if (!simulatedBox->process())
 					{
 						return false;
 					}
@@ -601,13 +601,13 @@ boolean CScheduler::sendInput(
 	const uint32 ui32InputIndex)
 {
 	IBox* l_pBox=m_pScenario->getBoxDetails(rBoxIdentifier);
-	if(!l_pBox)
+	if (!l_pBox)
 	{
 		getLogManager() << LogLevel_Warning << "Tried to send data chunk with invalid box identifier " << rBoxIdentifier << "\n";
 		return false;
 	}
 
-	if(ui32InputIndex >= l_pBox->getInputCount())
+	if (ui32InputIndex >= l_pBox->getInputCount())
 	{
 		getLogManager() << LogLevel_Warning << "Tried to send data chunk with invalid input index " << ui32InputIndex << " for box identifier" << rBoxIdentifier << "\n";
 		return false;
@@ -618,14 +618,14 @@ boolean CScheduler::sendInput(
 	{
 		itSimulatedBox++;
 	}
-	if(itSimulatedBox==m_vSimulatedBox.end())
+	if (itSimulatedBox==m_vSimulatedBox.end())
 	{
 //		getLogManager() << LogLevel_ImportantWarning << "Tried to send data chunk with valid box identifier but invalid simulated box identifier " << rBoxIdentifier << "\n";
 		return false;
 	}
 #endif
 	CSimulatedBox* l_pSimulatedBox=itSimulatedBox->second;
-	if(!l_pSimulatedBox)
+	if (!l_pSimulatedBox)
 	{
 		getLogManager() << LogLevel_ImportantWarning << "Tried to send data chunk with valid box identifier, valid simulated box identifier " << rBoxIdentifier << " but the box has never been created\n";
 		return false;
@@ -680,7 +680,7 @@ namespace
 	CIdentifier openScenario(const IKernelContext& rKernelContext, IScenarioManager& rScenarioManager, const char* sFileName)
 	{
 		CIdentifier l_oScenarioIdentifier;
-		if(rScenarioManager.createScenario(l_oScenarioIdentifier))
+		if (rScenarioManager.createScenario(l_oScenarioIdentifier))
 		{
 			IScenario& l_rScenario = rScenarioManager.getScenario(l_oScenarioIdentifier);
 
@@ -688,12 +688,12 @@ namespace
 //			boolean l_bSuccess = false;
 
 			FILE* l_pFile = FS::Files::open(sFileName, "rb");
-			if(l_pFile)
+			if (l_pFile)
 			{
 				::fseek(l_pFile, 0, SEEK_END);
 				l_oMemoryBuffer.setSize(::ftell(l_pFile), true);
 				::fseek(l_pFile, 0, SEEK_SET);
-				if(::fread(reinterpret_cast<char*>(l_oMemoryBuffer.getDirectPointer()), (size_t)l_oMemoryBuffer.getSize(), 1, l_pFile)!=1)
+				if (::fread(reinterpret_cast<char*>(l_oMemoryBuffer.getDirectPointer()), (size_t)l_oMemoryBuffer.getSize(), 1, l_pFile)!=1)
 				{
 					rKernelContext.getLogManager() << LogLevel_Error << "Problem reading '" << sFileName << "'\n";
 					::fclose(l_pFile);
@@ -709,7 +709,7 @@ namespace
 				return OV_UndefinedIdentifier;
 			}
 
-			if(l_oMemoryBuffer.getSize())
+			if (l_oMemoryBuffer.getSize())
 			{
 				CIdentifier l_oImporterIdentifier = OV_UndefinedIdentifier;
 
@@ -719,7 +719,7 @@ namespace
 
 				// this should be const but can't since default contstructor for Descriptors is not explicitly defined
 				//OpenViBEPlugins::Mensia::CAlgorithmBinaryScenarioImporterDesc l_oMensiaBinaryScenarioImporterDesc;
-				if(l_bIsFileBinary)
+				if (l_bIsFileBinary)
 				{
 					//l_oImporterIdentifier = rKernelContext.getAlgorithmManager().createAlgorithm(l_oMensiaBinaryScenarioImporterDesc);
 				}
@@ -728,10 +728,10 @@ namespace
 					l_oImporterIdentifier = rKernelContext.getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 				}
 
-				if(l_oImporterIdentifier!=OV_UndefinedIdentifier)
+				if (l_oImporterIdentifier!=OV_UndefinedIdentifier)
 				{
 					IAlgorithmProxy* l_pImporter = &rKernelContext.getAlgorithmManager().getAlgorithm(l_oImporterIdentifier);
-					if(l_pImporter)
+					if (l_pImporter)
 					{
 						l_pImporter->initialize();
 

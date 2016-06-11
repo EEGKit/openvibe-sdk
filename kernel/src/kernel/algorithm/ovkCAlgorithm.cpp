@@ -65,7 +65,7 @@ boolean CAlgorithm::addInputParameter(
 	const EParameterType eParameterType,
 	const CIdentifier& rSubTypeIdentifier)
 {
-	if(m_pInputConfigurable->getParameter(rInputParameterIdentifier)!=NULL)
+	if (m_pInputConfigurable->getParameter(rInputParameterIdentifier)!=NULL)
 	{
 		getLogManager() << LogLevel_Warning << "For algorithm " << m_rAlgorithmDesc.getName() << " : Input parameter id " << rInputParameterIdentifier << " already exists\n";
 		return false;
@@ -85,10 +85,10 @@ IParameter* CAlgorithm::getInputParameter(
 	const CIdentifier& rInputParameterIdentifier)
 {
 	IParameter* l_pParameter=m_pInputConfigurable->getParameter(rInputParameterIdentifier);
-	if(!l_pParameter)
+	if (!l_pParameter)
 	{
 		getLogManager() << LogLevel_Warning << "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null input parameter id " << rInputParameterIdentifier;
-		if(m_pOutputConfigurable->getParameter(rInputParameterIdentifier))
+		if (m_pOutputConfigurable->getParameter(rInputParameterIdentifier))
 		{
 			getLogManager() << " Did you mean " << CString("output") << " parameter ?";
 		}
@@ -101,7 +101,7 @@ EParameterType CAlgorithm::getInputParameterType(
 	const CIdentifier& rInputParameterIdentifier) const
 {
 	IParameter* l_pParameter=m_pInputConfigurable->getParameter(rInputParameterIdentifier);
-	if(!l_pParameter)
+	if (!l_pParameter)
 	{
 		return ParameterType_None;
 	}
@@ -112,7 +112,7 @@ CString CAlgorithm::getInputParameterName(
 	const CIdentifier& rInputParameterIdentifier) const
 {
 	map<CIdentifier, CString>::const_iterator itName=m_vInputParameterName.find(rInputParameterIdentifier);
-	if(itName==m_vInputParameterName.end())
+	if (itName==m_vInputParameterName.end())
 	{
 		return "";
 	}
@@ -122,7 +122,7 @@ CString CAlgorithm::getInputParameterName(
 boolean CAlgorithm::removeInputParameter(
 	const CIdentifier& rInputParameterIdentifier)
 {
-	if(!m_pInputConfigurable->removeParameter(rInputParameterIdentifier))
+	if (!m_pInputConfigurable->removeParameter(rInputParameterIdentifier))
 	{
 		return false;
 	}
@@ -136,7 +136,7 @@ boolean CAlgorithm::addOutputParameter(
 	const EParameterType eParameterType,
 	const CIdentifier& rSubTypeIdentifier)
 {
-	if(m_pOutputConfigurable->getParameter(rOutputParameterIdentifier)!=NULL)
+	if (m_pOutputConfigurable->getParameter(rOutputParameterIdentifier)!=NULL)
 	{
 		getLogManager() << LogLevel_Warning << "For algorithm " << m_rAlgorithmDesc.getName() << " : Output parameter id " << rOutputParameterIdentifier << " already exists\n";
 		return false;
@@ -156,10 +156,10 @@ IParameter* CAlgorithm::getOutputParameter(
 	const CIdentifier& rOutputParameterIdentifier)
 {
 	IParameter* l_pParameter=m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
-	if(!l_pParameter)
+	if (!l_pParameter)
 	{
 		getLogManager() << LogLevel_Warning << "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null output parameter id " << rOutputParameterIdentifier;
-		if(m_pInputConfigurable->getParameter(rOutputParameterIdentifier))
+		if (m_pInputConfigurable->getParameter(rOutputParameterIdentifier))
 		{
 			getLogManager() << " Did you mean " << CString("input") << " parameter ?";
 		}
@@ -172,7 +172,7 @@ EParameterType CAlgorithm::getOutputParameterType(
 	const CIdentifier& rOutputParameterIdentifier) const
 {
 	IParameter* l_pParameter=m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
-	if(!l_pParameter)
+	if (!l_pParameter)
 	{
 		return ParameterType_None;
 	}
@@ -183,7 +183,7 @@ CString CAlgorithm::getOutputParameterName(
 	const CIdentifier& rOutputParameterIdentifier) const
 {
 	map<CIdentifier, CString>::const_iterator itName=m_vOutputParameterName.find(rOutputParameterIdentifier);
-	if(itName==m_vOutputParameterName.end())
+	if (itName==m_vOutputParameterName.end())
 	{
 		return "";
 	}
@@ -193,7 +193,7 @@ CString CAlgorithm::getOutputParameterName(
 boolean CAlgorithm::removeOutputParameter(
 	const CIdentifier& rOutputParameterIdentifier)
 {
-	if(!m_pOutputConfigurable->removeParameter(rOutputParameterIdentifier))
+	if (!m_pOutputConfigurable->removeParameter(rOutputParameterIdentifier))
 	{
 		return false;
 	}
@@ -205,7 +205,7 @@ boolean CAlgorithm::addInputTrigger(
 	const CIdentifier& rInputTriggerIdentifier,
 	const CString& rInputTriggerName)
 {
-	if(m_vInputTrigger.find(rInputTriggerIdentifier)!=m_vInputTrigger.end())
+	if (m_vInputTrigger.find(rInputTriggerIdentifier)!=m_vInputTrigger.end())
 	{
 		return false;
 	}
@@ -224,7 +224,7 @@ CString CAlgorithm::getInputTriggerName(
 	const CIdentifier& rInputTriggerIdentifier) const
 {
 	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
-	if(itTrigger==m_vInputTrigger.end())
+	if (itTrigger==m_vInputTrigger.end())
 	{
 		return "";
 	}
@@ -235,7 +235,7 @@ boolean CAlgorithm::isInputTriggerActive(
 	const CIdentifier& rInputTriggerIdentifier) const
 {
 	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
-	if(itTrigger==m_vInputTrigger.end())
+	if (itTrigger==m_vInputTrigger.end())
 	{
 		return false;
 	}
@@ -247,7 +247,7 @@ boolean CAlgorithm::activateInputTrigger(
 	const boolean bTriggerState)
 {
 	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
-	if(itTrigger==m_vInputTrigger.end())
+	if (itTrigger==m_vInputTrigger.end())
 	{
 		return false;
 	}
@@ -259,7 +259,7 @@ boolean CAlgorithm::removeInputTrigger(
 	const CIdentifier& rInputTriggerIdentifier)
 {
 	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
-	if(itTrigger==m_vInputTrigger.end())
+	if (itTrigger==m_vInputTrigger.end())
 	{
 		return false;
 	}
@@ -271,7 +271,7 @@ boolean CAlgorithm::addOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier,
 	const CString& rOutputTriggerName)
 {
-	if(m_vOutputTrigger.find(rOutputTriggerIdentifier)!=m_vOutputTrigger.end())
+	if (m_vOutputTrigger.find(rOutputTriggerIdentifier)!=m_vOutputTrigger.end())
 	{
 		return false;
 	}
@@ -290,7 +290,7 @@ CString CAlgorithm::getOutputTriggerName(
 	const CIdentifier& rOutputTriggerIdentifier) const
 {
 	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
-	if(itTrigger==m_vOutputTrigger.end())
+	if (itTrigger==m_vOutputTrigger.end())
 	{
 		return "";
 	}
@@ -301,7 +301,7 @@ boolean CAlgorithm::isOutputTriggerActive(
 	const CIdentifier& rOutputTriggerIdentifier) const
 {
 	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
-	if(itTrigger==m_vOutputTrigger.end())
+	if (itTrigger==m_vOutputTrigger.end())
 	{
 		return false;
 	}
@@ -313,7 +313,7 @@ boolean CAlgorithm::activateOutputTrigger(
 	const boolean bTriggerState)
 {
 	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
-	if(itTrigger==m_vOutputTrigger.end())
+	if (itTrigger==m_vOutputTrigger.end())
 	{
 		return false;
 	}
@@ -325,7 +325,7 @@ boolean CAlgorithm::removeOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier)
 {
 	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
-	if(itTrigger==m_vOutputTrigger.end())
+	if (itTrigger==m_vOutputTrigger.end())
 	{
 		return false;
 	}
@@ -378,7 +378,7 @@ boolean CAlgorithm::process(void)
 boolean CAlgorithm::process(
 	const CIdentifier& rTriggerIdentifier)
 {
-	if(!this->activateInputTrigger(rTriggerIdentifier, true))
+	if (!this->activateInputTrigger(rTriggerIdentifier, true))
 	{
 		return false;
 	}
@@ -389,7 +389,7 @@ boolean CAlgorithm::process(
 void CAlgorithm::setAllInputTriggers(const boolean bTriggerStatus)
 {
 	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger;
-	for(itTrigger=m_vInputTrigger.begin(); itTrigger!=m_vInputTrigger.end(); itTrigger++)
+	for (itTrigger=m_vInputTrigger.begin(); itTrigger!=m_vInputTrigger.end(); itTrigger++)
 	{
 		itTrigger->second.second=bTriggerStatus;
 	}
@@ -398,7 +398,7 @@ void CAlgorithm::setAllInputTriggers(const boolean bTriggerStatus)
 void CAlgorithm::setAllOutputTriggers(const boolean bTriggerStatus)
 {
 	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger;
-	for(itTrigger=m_vOutputTrigger.begin(); itTrigger!=m_vOutputTrigger.end(); itTrigger++)
+	for (itTrigger=m_vOutputTrigger.begin(); itTrigger!=m_vOutputTrigger.end(); itTrigger++)
 	{
 		itTrigger->second.second=bTriggerStatus;
 	}
