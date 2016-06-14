@@ -422,8 +422,11 @@ namespace OpenViBE
 				allStopped = true;
 				for (auto p : playerList)
 				{
-					p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint);
-
+					if(p->getStatus() != EPlayerStatus::PlayerStatus_Stop)
+					{
+						p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint);
+					}
+					
 					if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint)
 					{
 						p->stop();

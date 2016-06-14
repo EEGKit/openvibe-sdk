@@ -51,6 +51,7 @@ namespace OpenViBE
 			 * \param rAlgorithmContext [in] : the extecution context for this algorithm
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
+			 * \exception this method must be noexcept
 			 */
 			virtual OpenViBE::boolean uninitialize(
 				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }

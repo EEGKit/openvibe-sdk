@@ -12,7 +12,6 @@ namespace OpenViBE
 
 		enum EPlayerStatus
 		{
-			PlayerStatus_Uninitialized,
 			PlayerStatus_Stop,
 			PlayerStatus_Pause,
 			PlayerStatus_Step,

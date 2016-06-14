@@ -21,7 +21,6 @@ using namespace OpenViBE::Plugins;
 
 //#define _BoxAlgorithm_ScopeTester_
 //#define _SimulatedBox_ScopeTester_
-#define _MaxCrash_ 5
 
 #define __OV_FUNC__ CString("unknown_function_name")
 #define __OV_LINE__ uint32(__LINE__)
@@ -55,9 +54,7 @@ static const CNameValuePairList s_oDummyNameValuePairList;
 
 CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& rScheduler)
 	:TKernelObject<IBoxIO>(rKernelContext)
-	,m_ui32CrashCount(0)
 	,m_bReadyToProcess(false)
-	,m_bCrashed(false)
 	,m_bChunkConsistencyChecking(false)
 	,m_eChunkConsistencyCheckingLogLevel(LogLevel_Warning)
 	,m_pBoxAlgorithm(NULL)
@@ -107,7 +104,7 @@ boolean CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentif
 	return m_pScenario!=NULL;
 }
 
-boolean CSimulatedBox::getBoxIdentifier(CIdentifier& rBoxIdentifier)
+boolean CSimulatedBox::getBoxIdentifier(CIdentifier& rBoxIdentifier) const
 {
 	if(m_pBox == NULL)
 	{
@@ -133,8 +130,6 @@ boolean CSimulatedBox::initialize(void)
 #if defined _SimulatedBox_ScopeTester_
 	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
 #endif
-
-	if(m_bCrashed) return false;
 
 	// FIXME test for already initialized boxes etc
 	if(!m_pBox) return false;
@@ -168,17 +163,11 @@ boolean CSimulatedBox::initialize(void)
 #if defined _BoxAlgorithm_ScopeTester_
 			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::initialize)"));
 #endif
-			try
+
+			if(!m_pBoxAlgorithm->initialize(l_oBoxAlgorithmContext))
 			{
-				if(!m_pBoxAlgorithm->initialize(l_oBoxAlgorithmContext))
-				{
-					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> initialization failed\n";
-					return false;
-				}
-			}
-			catch (...)
-			{
-				this->handleCrash("initialization callback");
+				getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> initialization failed\n";
+				return false;
 			}
 		}
 	}
@@ -191,8 +180,8 @@ boolean CSimulatedBox::uninitialize(void)
 #if defined _SimulatedBox_ScopeTester_
 	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
 #endif
-
-	if(m_bCrashed) return false;
+	
+	bool l_bResult = true;
 	if(!m_pBoxAlgorithm) return false;
 
 	{
@@ -202,16 +191,10 @@ boolean CSimulatedBox::uninitialize(void)
 			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::uninitialize)"));
 #endif
 			{
-				try
+				if(!m_pBoxAlgorithm->uninitialize(l_oBoxAlgorithmContext))
 				{
-					if(!m_pBoxAlgorithm->uninitialize(l_oBoxAlgorithmContext))
-					{
-						getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> uninitialization failed\n";
-					}
-				}
-				catch (...)
-				{
-					this->handleCrash("uninitialization callback");
+					getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> uninitialization failed\n";
+					l_bResult = false;
 				}
 			}
 		}
@@ -220,7 +203,7 @@ boolean CSimulatedBox::uninitialize(void)
 	getPluginManager().releasePluginObject(m_pBoxAlgorithm);
 	m_pBoxAlgorithm=NULL;
 
-	return true ;
+	return l_bResult ;
 }
 
 boolean CSimulatedBox::processClock(void)
@@ -229,45 +212,36 @@ boolean CSimulatedBox::processClock(void)
 	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
 #endif
 
-	if(m_bCrashed) return false;
-
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
 #if defined _BoxAlgorithm_ScopeTester_
 			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::getClockFrequency)"));
 #endif
-			try
+			uint64 l_ui64NewClockFrequency=m_pBoxAlgorithm->getClockFrequency(l_oBoxAlgorithmContext);
+			if(l_ui64NewClockFrequency==0)
 			{
-				uint64 l_ui64NewClockFrequency=m_pBoxAlgorithm->getClockFrequency(l_oBoxAlgorithmContext);
-				if(l_ui64NewClockFrequency==0)
+				m_ui64ClockActivationStep=_Bad_Time_;
+				m_ui64LastClockActivationDate=_Bad_Time_;
+			}
+			else
+			{
+				if(l_ui64NewClockFrequency > m_rScheduler.getFrequency()<<32)
 				{
-					m_ui64ClockActivationStep=_Bad_Time_;
-					m_ui64LastClockActivationDate=_Bad_Time_;
+					this->getLogManager() << LogLevel_ImportantWarning << "Box " << m_pBox->getName() 
+						<< " requested higher clock frequency (" << l_ui64NewClockFrequency << " == " 
+						<< ITimeArithmetics::timeToSeconds(l_ui64NewClockFrequency) << "hz) "
+						<< "than what the scheduler can handle (" << (m_rScheduler.getFrequency()<<32) << " == "
+						<< ITimeArithmetics::timeToSeconds(m_rScheduler.getFrequency()<<32) << "hz)\n";
 				}
-				else
-				{
-					if(l_ui64NewClockFrequency > m_rScheduler.getFrequency()<<32)
-					{
-						this->getLogManager() << LogLevel_ImportantWarning << "Box " << m_pBox->getName() 
-							<< " requested higher clock frequency (" << l_ui64NewClockFrequency << " == " 
-							<< ITimeArithmetics::timeToSeconds(l_ui64NewClockFrequency) << "hz) "
-							<< "than what the scheduler can handle (" << (m_rScheduler.getFrequency()<<32) << " == "
-							<< ITimeArithmetics::timeToSeconds(m_rScheduler.getFrequency()<<32) << "hz)\n";
-					}
 
-					// note: 1LL should be left shifted 64 bits but this
-					//       would result in an integer over shift (the one
-					//       would exit). Thus the left shift of 63 bits
-					//       and the left shift of 1 bit after the division
-					m_ui64ClockActivationStep=((1LL<<63)/l_ui64NewClockFrequency)<<1;
-				}
-				m_ui64ClockFrequency=l_ui64NewClockFrequency;
+				// note: 1LL should be left shifted 64 bits but this
+				//       would result in an integer over shift (the one
+				//       would exit). Thus the left shift of 63 bits
+				//       and the left shift of 1 bit after the division
+				m_ui64ClockActivationStep=((1LL<<63)/l_ui64NewClockFrequency)<<1;
 			}
-			catch (...)
-			{
-				this->handleCrash("clock frequency request callback");
-			}
+			m_ui64ClockFrequency=l_ui64NewClockFrequency;
 		}
 	}
 
@@ -277,33 +251,27 @@ boolean CSimulatedBox::processClock(void)
 		{
 #if defined _BoxAlgorithm_ScopeTester_
 			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::processClock)"));
-#endif
-			try
-			{
-				m_oBenchmarkChronoProcessClock.stepIn();
+#endif	
+			m_oBenchmarkChronoProcessClock.stepIn();
 
-				if(m_ui64LastClockActivationDate==_Bad_Time_)
-				{
-					m_ui64LastClockActivationDate=m_rScheduler.getCurrentTime();
-				}
-				else
-				{
-					m_ui64LastClockActivationDate=m_ui64LastClockActivationDate+m_ui64ClockActivationStep;
-				}
-
-				CMessageClock l_oClockMessage(this->getKernelContext());
-				l_oClockMessage.setTime(m_ui64LastClockActivationDate);
-				if(!m_pBoxAlgorithm->processClock(l_oBoxAlgorithmContext, l_oClockMessage))
-				{
-					// In future, we may want to behave in a similar manner as in process(). Change not introduced for 0.18 due to insufficient testing.
-					// getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> processClock() function failed\n";
-				}
-				m_oBenchmarkChronoProcessClock.stepOut();
-			}
-			catch (...)
+			if(m_ui64LastClockActivationDate==_Bad_Time_)
 			{
-				this->handleCrash("clock processing callback");
+				m_ui64LastClockActivationDate=m_rScheduler.getCurrentTime();
 			}
+			else
+			{
+				m_ui64LastClockActivationDate=m_ui64LastClockActivationDate+m_ui64ClockActivationStep;
+			}
+
+			CMessageClock l_oClockMessage(this->getKernelContext());
+			l_oClockMessage.setTime(m_ui64LastClockActivationDate);
+			if(!m_pBoxAlgorithm->processClock(l_oBoxAlgorithmContext, l_oClockMessage))
+			{
+				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> processClock() function failed\n";
+				return false;
+			}
+			m_oBenchmarkChronoProcessClock.stepOut();
+				
 			m_bReadyToProcess|=l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 		}
 	}
@@ -317,8 +285,6 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
 #endif
 
-	if(m_bCrashed) return false;
-
 	m_vInput[ui32InputIndex].push_back(rChunk);
 
 	{
@@ -327,20 +293,13 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 #if defined _BoxAlgorithm_ScopeTester_
 			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::processInput)"));
 #endif
-			try
+			m_oBenchmarkChronoProcessInput.stepIn();
+			if(!m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex))
 			{
-				m_oBenchmarkChronoProcessInput.stepIn();
-				if(!m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex))
-				{
-					// In future, we may want to behave in a similar manner as in process(). Change not introduced for 0.18 due to insufficient testing.
-					// getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> processInput() failed\n";
-				}
-				m_oBenchmarkChronoProcessInput.stepOut();
+				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> processInput() failed\n";
+				return false;
 			}
-			catch (...)
-			{
-				this->handleCrash("input processing callback");
-			}
+			m_oBenchmarkChronoProcessInput.stepOut();
 		}
 		m_bReadyToProcess|=l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 	}
@@ -354,8 +313,6 @@ boolean CSimulatedBox::process(void)
 	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
 #endif
 
-	if(m_bCrashed) return false;
-
 	if(!m_bReadyToProcess) return true;
 
 	{
@@ -364,19 +321,13 @@ boolean CSimulatedBox::process(void)
 #if defined _BoxAlgorithm_ScopeTester_
 			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::process)"));
 #endif
-			try
+			m_oBenchmarkChronoProcess.stepIn();
+			if(!m_pBoxAlgorithm->process(l_oBoxAlgorithmContext))
 			{
-				m_oBenchmarkChronoProcess.stepIn();
-				if(!m_pBoxAlgorithm->process(l_oBoxAlgorithmContext))
-				{
-					getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> process() function failed\n";
-				}
-				m_oBenchmarkChronoProcess.stepOut();
+				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> process() function failed\n";
+				return false;
 			}
-			catch (...)
-			{
-				this->handleCrash("processing callback");
-			}
+			m_oBenchmarkChronoProcess.stepOut();
 		}
 	}
 
@@ -772,26 +723,6 @@ boolean CSimulatedBox::markOutputAsReadyToSend(
 	m_vCurrentOutput[ui32OutputIndex].getBuffer().setSize(0, true);
 
 	return true;
-}
-
-// ________________________________________________________________________________________________________________
-//
-
-void CSimulatedBox::handleCrash(const char* sHintName)
-{
-	m_ui32CrashCount++;
-
-	this->getLogManager() << LogLevel_Error << "At time " << time64(m_rScheduler.getCurrentTime()) << ", plugin code caused a crash " << m_ui32CrashCount << " time(s)\n";
-	this->getLogManager() << LogLevel_Error << "  [name:" << m_pBox->getName() << "]\n";
-	this->getLogManager() << LogLevel_Error << "  [identifier:" << m_pBox->getIdentifier() << "]\n";
-	this->getLogManager() << LogLevel_Error << "  [algorithm class identifier:" << m_pBox->getAlgorithmClassIdentifier() << "]\n";
-	this->getLogManager() << LogLevel_Error << "  [location:" << sHintName << "]\n";
-
-	if(m_ui32CrashCount>=_MaxCrash_)
-	{
-		this->getLogManager() << LogLevel_Fatal << "  This plugin has been disabled !\n";
-		m_bCrashed=true;
-	}
 }
 
 // #endif // __MY_COMPILE_ALL

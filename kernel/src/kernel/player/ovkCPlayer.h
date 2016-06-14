@@ -31,6 +31,8 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IConfigurationManager& getRuntimeConfigurationManager(void);
 			virtual OpenViBE::Kernel::IScenarioManager& getRuntimeScenarioManager(void);
 
+			virtual OpenViBE::boolean isHoldingResources() const;
+
 			virtual OpenViBE::Kernel::EPlayerReturnCode initialize(void);
 			virtual OpenViBE::boolean uninitialize(void);
 

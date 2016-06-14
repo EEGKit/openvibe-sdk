@@ -33,13 +33,11 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rScenarioIdentifier);
 			virtual OpenViBE::boolean setFrequency(
 				const OpenViBE::uint64 ui64Frequency);
+				
+			virtual OpenViBE::boolean isHoldingResources() const;
 
 			virtual SchedulerInitializationCode initialize(void);
 			virtual OpenViBE::boolean uninitialize(void);
-
-			virtual OpenViBE::boolean abortInitialization(void);
-			virtual OpenViBE::boolean isInitializationAborted(void) { return m_bInitializationAborted; }
-
 			virtual OpenViBE::boolean loop(void);
 
 			virtual OpenViBE::boolean sendInput(const OpenViBE::Kernel::CChunk& rChunk, const OpenViBE::CIdentifier& rBoxIdentifier, const OpenViBE::uint32 ui32InputIndex);
@@ -66,14 +64,14 @@ namespace OpenViBE
 			OpenViBE::uint64 m_ui64Frequency;
 			OpenViBE::uint64 m_ui64StepDuration;
 			OpenViBE::uint64 m_ui64CurrentTime;
-			OpenViBE::boolean m_bIsInitialized;
-			OpenViBE::boolean m_bInitializationAborted;
 
 			std::map < std::pair < OpenViBE::int32, OpenViBE::CIdentifier>, OpenViBE::Kernel::CSimulatedBox* > m_vSimulatedBox;
 			std::map < OpenViBE::CIdentifier, System::CChrono > m_vSimulatedBoxChrono;
 			std::map < OpenViBE::CIdentifier, std::map < OpenViBE::uint32, std::list < OpenViBE::Kernel::CChunk > > > m_vSimulatedBoxInput;
 
 		private:
+			
+			boolean processBox(CSimulatedBox* simulatedBox, const OpenViBE::CIdentifier& boxIdentifier);
 			OpenViBE::boolean flattenScenario(void);
 			System::CChrono m_oBenchmarkChrono;
 		};

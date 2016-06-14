@@ -107,11 +107,6 @@ namespace OpenViBE
 			void setAllInputTriggers(const OpenViBE::boolean bTriggerStatus);
 			void setAllOutputTriggers(const OpenViBE::boolean bTriggerStatus);
 
-			void handleCrash(const char* sWhere);
-
-			OpenViBE::uint32 m_ui32CrashCount;
-			OpenViBE::boolean m_bActive;
-
 		private:
 
 			const OpenViBE::Plugins::IAlgorithmDesc& m_rAlgorithmDesc;

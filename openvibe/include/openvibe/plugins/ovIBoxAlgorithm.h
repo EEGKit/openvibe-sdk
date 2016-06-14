@@ -133,6 +133,7 @@ namespace OpenViBE
 			 * \param rBoxAlgorithmContext [in] : the plugin object context
 			 * \return \e true when this object sucessfully uninitialized
 			 *         or \e false if didn't succeed to uninitialize.
+			 * \exception this method must be noexcept
 			 * \note Default implementation simply returns \e true.
 			 *
 			 * If this function returns \e false, it means it could not
