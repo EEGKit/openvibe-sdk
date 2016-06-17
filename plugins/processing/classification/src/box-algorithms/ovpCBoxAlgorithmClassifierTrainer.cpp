@@ -45,7 +45,7 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 	m_pClassifier = NULL;
 	m_pParameter = NULL;
 
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	//As we add some parameter in the middle of "static" parameters, we cannot rely on settings index.
 	m_pParameter = new map<CString , CString> ();
 	for(uint32 i = 0 ; i < l_rStaticBoxContext.getSettingCount() ; ++i)
@@ -201,7 +201,7 @@ boolean CBoxAlgorithmClassifierTrainer::processInput(uint32 ui32InputIndex)
 // Find the most likely class and resample the dataset so that each class is as likely
 boolean CBoxAlgorithmClassifierTrainer::balanceDataset()
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	const uint32 l_ui32ClassCount = l_rStaticBoxContext.getInputCount() - 1;
 
@@ -260,7 +260,7 @@ boolean CBoxAlgorithmClassifierTrainer::balanceDataset()
 
 boolean CBoxAlgorithmClassifierTrainer::process(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
 	uint32 i, j;
@@ -638,7 +638,7 @@ boolean CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMat
 boolean CBoxAlgorithmClassifierTrainer::saveConfiguration(void)
 {
 	CIdentifier l_oStrategyClassIdentifier, l_oClassifierAlgorithmClassIdentifier;
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	TParameterHandler < XML::IXMLNode* > op_pConfiguration(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
 	XML::IXMLNode* l_pAlgorithmConfigurationNode = XML::createNode(c_sClassifierRoot);

@@ -27,7 +27,7 @@ void CBoxAlgorithmEBMLStreamSpy::release(void)
 
 boolean CBoxAlgorithmEBMLStreamSpy::initialize(void)
 {
-	IBox& l_rStaticBoxContext=getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=getStaticBoxContext();
 
 	m_pReader=EBML::createReader(*this);
 	m_pReaderHelper=EBML::createReaderHelper();
@@ -264,7 +264,7 @@ boolean CBoxAlgorithmEBMLStreamSpy::processInput(uint32 ui32InputIndex)
 boolean CBoxAlgorithmEBMLStreamSpy::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext=getDynamicBoxContext();
-	IBox& l_rStaticBoxContext=getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=getStaticBoxContext();
 
 	uint64 l_ui64StartTime=0;
 	uint64 l_ui64EndTime=0;

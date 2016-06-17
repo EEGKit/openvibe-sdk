@@ -74,7 +74,7 @@ boolean CBoxAlgorithmGenericStreamReader::process(void)
 			return false;
 		}
 	}
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
 	uint64 l_ui64Time=this->getPlayerContext().getCurrentTime();
@@ -246,7 +246,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 
 	if(l_rTop==OVP_NodeId_OpenViBEStream_Header)
 	{
-		IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+		const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 		std::map < uint32, CIdentifier >::const_iterator it;
 		std::map < uint32, uint32 > l_vOutputIndexToStreamIndex;

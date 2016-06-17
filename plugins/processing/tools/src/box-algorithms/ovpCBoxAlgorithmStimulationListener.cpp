@@ -10,7 +10,7 @@ using namespace OpenViBEPlugins::Tools;
 
 boolean CBoxAlgorithmStimulationListener::initialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
 	{		
 		m_vStimulationDecoder.push_back(new OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmStimulationListener >(*this,i));
@@ -25,7 +25,7 @@ boolean CBoxAlgorithmStimulationListener::initialize(void)
 
 boolean CBoxAlgorithmStimulationListener::uninitialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
 	{
 		m_vStimulationDecoder[i]->uninitialize();
@@ -44,7 +44,7 @@ boolean CBoxAlgorithmStimulationListener::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmStimulationListener::process(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
 	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)

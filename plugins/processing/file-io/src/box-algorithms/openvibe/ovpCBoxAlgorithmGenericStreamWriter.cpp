@@ -20,7 +20,7 @@ boolean CBoxAlgorithmGenericStreamWriter::initialize(void)
 {
 	CString l_sUseCompression;
 
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	l_rStaticBoxContext.getSettingValue(0, m_sFilename);
 	l_rStaticBoxContext.getSettingValue(1, l_sUseCompression);
@@ -48,7 +48,7 @@ boolean CBoxAlgorithmGenericStreamWriter::uninitialize(void)
 
 boolean CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	m_oSwap.setSize(0, true);
 
@@ -104,7 +104,7 @@ boolean CBoxAlgorithmGenericStreamWriter::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmGenericStreamWriter::process(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
 	if(!m_bIsHeaderGenerate)

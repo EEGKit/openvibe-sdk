@@ -23,7 +23,7 @@ boolean CBoxAlgorithmIdentity::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmIdentity::process(void)
 {
-	IBox* l_pStaticBoxContext=getBoxAlgorithmContext()->getStaticBoxContext();
+	const IBox* l_pStaticBoxContext=getBoxAlgorithmContext()->getStaticBoxContext();
 	IBoxIO* l_pDynamicBoxContext=getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	uint64 l_ui64StartTime=0;

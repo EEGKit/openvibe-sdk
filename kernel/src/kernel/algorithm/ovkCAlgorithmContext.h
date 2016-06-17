@@ -42,7 +42,7 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::Kernel::ILogManager* m_pLogManager;
+			OpenViBE::Kernel::ILogManager& m_rLogManager;
 			OpenViBE::Kernel::CAlgorithm& m_rAlgorithm;
 		};
 	};

@@ -146,7 +146,7 @@ namespace OpenViBEPlugins
 
 		OpenViBE::boolean CBoxAlgorithmFeatureAggregator::process()
 		{
-			IBox* l_pStaticBoxContext = getBoxAlgorithmContext()->getStaticBoxContext();
+			const IBox* l_pStaticBoxContext = getBoxAlgorithmContext()->getStaticBoxContext();
 			IBoxIO* l_pBoxIO=getBoxAlgorithmContext()->getDynamicBoxContext();
 
 			IMatrix* l_pOutputMatrix = m_pFeatureVectorEncoder->getInputMatrix();

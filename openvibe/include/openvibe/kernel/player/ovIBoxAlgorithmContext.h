@@ -44,7 +44,7 @@ namespace OpenViBE
 			 *          has finished its work, it could be deprecated.
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext::getDynamicBoxContext
 			 */
-			virtual OpenViBE::Kernel::IBox* getStaticBoxContext(void)=0;
+			virtual const OpenViBE::Kernel::IBox* getStaticBoxContext(void)=0;
 			/**
 			 * \brief Gets the dynamic context of the box corresponding to the algorithm
 			 * \return A pointer on the corresponding context
