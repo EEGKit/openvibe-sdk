@@ -26,16 +26,25 @@ namespace OpenViBE
 			/**
 			 * \brief Gets a reference on the current configuration manager
 			 * \return a reference on the configuration manager
+			 * 
+			 * \warning The algorithm should not use this reference after it
+			 *          has finished its work, it could be deprecated.
 			 */
 			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const=0;
 			/**
 			 * \brief Gets a reference on the current algorithm manager
 			 * \return a reference on the algorithm manager
+			 * 
+			 * \warning The algorithm should not use this reference after it
+			 *          has finished its work, it could be deprecated.
 			 */
 			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const=0;
 			/**
 			 * \brief Gets a reference on the current log manager
 			 * \return a reference on the current log manager
+			 * 
+			 * \warning The algorithm should not use this reference after it
+			 *          has finished its work, it could be deprecated.
 			 */
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const=0;
 			/**
