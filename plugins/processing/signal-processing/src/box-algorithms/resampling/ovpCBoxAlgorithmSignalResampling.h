@@ -46,7 +46,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::boolean process(void);
 
 			// implementation for TResampler::ICallback
-			virtual void process(const OpenViBE::float64* pSample, size_t ui32ChannelCount) const;
+			virtual void processResampler(const OpenViBE::float64* pSample, size_t ui32ChannelCount) const;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalResampling);
 

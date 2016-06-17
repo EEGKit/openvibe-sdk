@@ -188,7 +188,7 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 	return true;
 }
 
-void CBoxAlgorithmSignalResampling::process(const float64* pSample, size_t ui32ChannelCount) const
+void CBoxAlgorithmSignalResampling::processResampler(const float64* pSample, size_t ui32ChannelCount) const
 {
 	float64* l_pBuffer = m_oEncoder.getInputMatrix()->getBuffer();
 	uint64 l_ui64OutputSampleIndex = m_ui64TotalOutputSampleCount%m_ui32OutputSampleCount;

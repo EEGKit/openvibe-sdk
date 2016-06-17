@@ -27,7 +27,7 @@ namespace Common
 			public:
 
 				virtual ~ICallback(void) { }
-				virtual void process(const TFloat* pSample, size_t ui32ChannelCount) const=0;
+				virtual void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const=0;
 			};
 
 		private:
@@ -364,7 +364,7 @@ namespace Common
 				
 				for(size_t k = 0; k < l_iCount; k++)
 				{
-					rCallback.process(&l_vOutputBuffer[k*m_ui32ChannelCount], m_ui32ChannelCount);
+					rCallback.processResampler(&l_vOutputBuffer[k*m_ui32ChannelCount], m_ui32ChannelCount);
 				}
 
 				return l_iCount;
@@ -412,7 +412,7 @@ namespace Common
 				
 				for(int k = 0; k < l_iCount; k++)
 				{
-					rCallback.process(&l_vOutputBuffer[k*m_ui32ChannelCount], m_ui32ChannelCount);
+					rCallback.processResampler(&l_vOutputBuffer[k*m_ui32ChannelCount], m_ui32ChannelCount);
 				}
 
 				return l_iCount;
@@ -431,7 +431,7 @@ namespace Common
 				{
 				}
 
-				virtual void process(const TFloat* pSample, size_t ui32ChannelCount) const
+				virtual void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const
 				{
 					for(size_t i=0; i<ui32ChannelCount; i++)
 					{
@@ -457,7 +457,7 @@ namespace Common
 				{
 				}
 
-				virtual void process(const TFloat* pSample, size_t ui32ChannelCount) const
+				virtual void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const
 				{
 					for(size_t i=0; i<ui32ChannelCount; i++)
 					{
