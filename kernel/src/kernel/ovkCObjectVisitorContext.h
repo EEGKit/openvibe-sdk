@@ -20,10 +20,6 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IObjectVisitorContext >, OVK_ClassId_Kernel_ObjectVisitorContext)
-
-		protected:
-
-			OpenViBE::Kernel::ILogManager* m_pLogManager;
 		};
 	};
 };
