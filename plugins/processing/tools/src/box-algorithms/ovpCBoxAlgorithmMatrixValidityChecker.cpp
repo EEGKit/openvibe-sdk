@@ -19,7 +19,7 @@ using namespace OpenViBEPlugins::Tools;
 
 boolean CBoxAlgorithmMatrixValidityChecker::initialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	uint64 l_ui64LogLevel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_eLogLevel = static_cast<ELogLevel>(l_ui64LogLevel);
@@ -53,7 +53,7 @@ boolean CBoxAlgorithmMatrixValidityChecker::initialize(void)
 
 boolean CBoxAlgorithmMatrixValidityChecker::uninitialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
 	{
 		m_vStreamDecoder[i].uninitialize();
@@ -73,7 +73,7 @@ boolean CBoxAlgorithmMatrixValidityChecker::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmMatrixValidityChecker::process(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
 	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)

@@ -214,7 +214,7 @@ void CBoxAlgorithmTimeBasedEpoching::release(void)
 
 boolean CBoxAlgorithmTimeBasedEpoching::initialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	m_oSignalDecoder.initialize(*this,0);
 

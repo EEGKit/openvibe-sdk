@@ -8,185 +8,20 @@
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 
-namespace OpenViBE
-{
-	namespace Kernel
-	{
-		namespace
-		{
-			class CBoxBridge : public TKernelObject<IBox>
-			{
-			public:
-
-				CBoxBridge(const IKernelContext& rKernelContext, const IBox* pBox)
-					:TKernelObject<IBox>(rKernelContext)
-					,m_pBox(pBox)
-				{
-				}
-
-				// IAttributables
-
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, addAttribute, , return false, const CIdentifier&, rAttributeIdentifier, const CString&, sAttributeValue);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, removeAttribute, , return false, const CIdentifier&, rAttributeIdentifier);
-				virtual __BridgeImplFunc0__((*m_pBox), boolean, removeAllAttributes, , return false);
-				virtual __BridgeBindFunc1__((*m_pBox), CString, getAttributeValue, const, const CIdentifier&, rAttributeIdentifier);
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setAttributeValue, , return false, const CIdentifier&, rAttributeIdentifier, const CString&, sAttributeValue);
-				virtual __BridgeBindFunc1__((*m_pBox), boolean, hasAttribute, const, const CIdentifier&, rAttributeIdentifier);
-				virtual __BridgeBindFunc0__((*m_pBox), boolean, hasAttributes, const);
-				virtual __BridgeBindFunc1__((*m_pBox), CIdentifier, getNextAttributeIdentifier, const, const CIdentifier&, rPreviousIdentifier);
-
-				// IBox
-				virtual __BridgeBindFunc0__((*m_pBox), boolean, hasModifiableSettings, const);
-
-				virtual __BridgeBindFunc0__((*m_pBox), CIdentifier, getIdentifier, const);
-				virtual __BridgeBindFunc0__((*m_pBox), CString, getName, const);
-				virtual __BridgeBindFunc0__((*m_pBox), CIdentifier, getAlgorithmClassIdentifier, const);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, setIdentifier, , return false, const CIdentifier&, rIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, setName, , return false, const CString&, sName);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, setAlgorithmClassIdentifier, , return false, const CIdentifier&, rAlgorithmClassIdentifier);
-				
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, initializeFromAlgorithmClassIdentifier, , return false, const CIdentifier&, rAlgorithmClassIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, initializeFromExistingBox, , return false, const IBox&, rExisitingBox);
-
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, addInput, , return false, const CString&, sName, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, removeInput, , return false, const uint32, ui32InputIndex);
-				virtual __BridgeBindFunc0__((*m_pBox), uint32, getInputCount, const);
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getInputType, const, const uint32, ui32InputIndex, CIdentifier&, rTypeIdentifier);
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getInputName, const, const uint32, ui32InputIndex, CString&, rName);
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setInputType, , return false, const uint32, ui32InputIndex, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setInputName, , return false, const uint32, ui32InputIndex, const CString&, rName);
-
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, addOutput, , return false, const CString&, sName, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, removeOutput, , return false, const uint32, ui32OutputIndex);
-				virtual __BridgeBindFunc0__((*m_pBox), uint32, getOutputCount, const);
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getOutputType, const, const uint32, ui32OutputIndex, CIdentifier&, rTypeIdentifier);
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getOutputName, const, const uint32, ui32OutputIndex, CString&, rName);
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setOutputType, , return false, const uint32, ui32OutputIndex, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setOutputName, , return false, const uint32, ui32OutputIndex, const CString&, rName);
-
-				virtual __BridgeImplFunc5__((*m_pBox), boolean, addSetting, , return false, const CString&, sName, const CIdentifier&, rTypeIdentifier, const CString&, sDefaultValue, const int32, i32Index, const boolean, bModifiability);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, removeSetting, , return false, const uint32, ui32Index);
-				virtual __BridgeBindFunc0__((*m_pBox), uint32, getSettingCount, const);
-				virtual __BridgeBindFunc1__((*m_pBox), boolean, hasSettingWithName, const, const CString&, rName);
-				virtual __BridgeBindFunc1__((*m_pBox), int32, getSettingIndex, const, const CString&, rName);
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getSettingType, const, const uint32, ui32SettingIndex, CIdentifier&, rTypeIdentifier);
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getSettingName, const, const uint32, ui32SettingIndex, CString&, rName);
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getSettingDefaultValue, const, const uint32, ui32SettingIndex, CString&, rDefaultValue);
-
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, addInputSupport, , return false, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, addInputAndDerivedSupport, , return false, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, hasInputSupport, const, return false, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, addOutputSupport, , return false, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, addOutputAndDerivedSupport, , return false, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, hasOutputSupport, const, return false, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc1__((*m_pBox), boolean, setSupportTypeFromAlgorithmIdentifier, , return false, const CIdentifier&, rTypeIdentifier);
-
-//lmlm//
-				virtual __BridgeBindFunc2__((*m_pBox), boolean, getSettingMod, const, const uint32, ui32SettingIndex, boolean&, rValue);
-				virtual __BridgeImplFunc1__((*m_pBox), uint32*, getModifiableSettings, const , return NULL, uint32&, rCount);
-
-				virtual boolean getSettingValue(const uint32 ui32SettingIndex, CString& rValue) const
-				{
-					CIdentifier l_oTypeIdentifier;
-					if(!m_pBox->getSettingType(ui32SettingIndex, l_oTypeIdentifier))
-					{
-						return false;
-					}
-					CString l_sResult;
-					if(!m_pBox->getSettingValue(ui32SettingIndex, l_sResult))
-					{
-						return false;
-					}
-					rValue=this->getConfigurationManager().expand(l_sResult);
-					// If the token is a numeric value, it may be an arithmetic operation
-					if(!m_pBox->evaluateSettingValue(ui32SettingIndex, rValue))
-					{
-						this->getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" << m_pBox->getName() << "> The following value: ["<< rValue
-							<<"] expanded as ["<< l_sResult <<"] given as setting is not a numeric value.\n";
-						return false;
-					}
-					return true;
-
-				}
-
-				/* 
-				 * In this class, the arithmetic expression are evaluated in getSettingValue so evaluateSettingValue just calls it
-				 */
-				virtual OpenViBE::boolean evaluateSettingValue(const OpenViBE::uint32 ui32SettingIndex, OpenViBE::CString& rValue) const
-				{
-					return m_pBox->evaluateSettingValue(ui32SettingIndex, rValue);
-				}
-				
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setSettingType, , return false, const uint32, ui32SettingIndex, const CIdentifier&, rTypeIdentifier);
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setSettingName, , return false, const uint32, ui32SettingIndex, const CString&, rName);
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setSettingDefaultValue, , return false, const uint32, ui32SettingIndex, const CString&, rDefaultValue);
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setSettingValue, , return false, const uint32, ui32SettingIndex, const CString&, rValue);
-				//lnln//
-				virtual __BridgeImplFunc2__((*m_pBox), boolean, setSettingMod, , return false, const uint32, ui32SettingIndex, const boolean, rValue);
-
-				_IsDerivedFromClass_Final_(TKernelObject<IBox>, OVK_ClassId_Kernel_Player_StaticBoxContext)
-
-			protected:
-
-				const IBox* m_pBox;
-			};
-
-			class CBoxIOBridge : public TKernelObject<IBoxIO>
-			{
-			public:
-
-				CBoxIOBridge(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox)
-					:TKernelObject<IBoxIO>(rKernelContext)
-					,m_pSimulatedBox(pSimulatedBox)
-				{
-				}
-
-				// IBoxIO
-
-				virtual __BridgeBindFunc1__((*m_pSimulatedBox), uint32, getInputChunkCount, const, const uint32, ui32InputIndex);
-				virtual __BridgeBindFunc6__((*m_pSimulatedBox), boolean, getInputChunk, const, const uint32, ui32InputIndex, const uint32, ui32ChunkIndex, uint64&, rStartTime, uint64&, rEndTime, uint64&, rChunkSize, const uint8*&, rpChunkBuffer);
-				virtual __BridgeBindFunc2__((*m_pSimulatedBox), const IMemoryBuffer*, getInputChunk, const, const uint32, ui32InputIndex, const uint32, ui32ChunkIndex);
-				virtual __BridgeBindFunc2__((*m_pSimulatedBox), uint64, getInputChunkStartTime, const, const uint32, ui32InputIndex, const uint32, ui32ChunkIndex);
-				virtual __BridgeBindFunc2__((*m_pSimulatedBox), uint64, getInputChunkEndTime, const, const uint32, ui32InputIndex, const uint32, ui32ChunkIndex);
-				virtual __BridgeBindFunc2__((*m_pSimulatedBox), boolean, markInputAsDeprecated, , const uint32, ui32InputIndex, const uint32, ui32ChunkIndex);
-
-				virtual __BridgeBindFunc1__((*m_pSimulatedBox), uint64, getOutputChunkSize, const, const uint32, ui32OutputIndex);
-				virtual __BridgeBindFunc3__((*m_pSimulatedBox), boolean, setOutputChunkSize, , const uint32, ui32OutputIndex, const uint64, ui64Size, const boolean, bDiscard);
-				virtual __BridgeBindFunc1__((*m_pSimulatedBox), uint8*, getOutputChunkBuffer, , const uint32, ui32OutputIndex);
-				virtual __BridgeBindFunc3__((*m_pSimulatedBox), boolean, appendOutputChunkData, , const uint32, ui32OutputIndex, const uint8*, pBuffer, const uint64, ui64BufferSize);
-				virtual __BridgeBindFunc1__((*m_pSimulatedBox), IMemoryBuffer*, getOutputChunk, , const uint32, ui32OutputIndex);
-				virtual __BridgeBindFunc3__((*m_pSimulatedBox), boolean, markOutputAsReadyToSend, , const uint32, ui32OutputIndex, const uint64, ui64StartTime, const uint64, ui64EndTime);
-
-				_IsDerivedFromClass_Final_(TKernelObject<IBoxIO>, OVK_ClassId_Kernel_Player_DynamicBoxContext)
-
-			protected:
-
-				CSimulatedBox *m_pSimulatedBox;
-			};
-		};
-	};
-};
-
 CBoxAlgorithmContext::CBoxAlgorithmContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox, const IBox* pBox)
 	:TKernelObject<IBoxAlgorithmContext>(rKernelContext)
-	,m_pStaticBoxContext(NULL)
-	,m_pDynamicBoxContext(NULL)
-	,m_pPlayerContext(NULL)
+	,m_pStaticBoxContext(pBox)
+	,m_pDynamicBoxContext(pSimulatedBox)
+	,m_oPlayerContext(rKernelContext, pSimulatedBox)
 	,m_bReadyToProcess(false)
 {
-	m_pStaticBoxContext=new CBoxBridge(rKernelContext, pBox);
-	m_pDynamicBoxContext=new CBoxIOBridge(rKernelContext, pSimulatedBox);
-	m_pPlayerContext=new CPlayerContext(rKernelContext, pSimulatedBox);
 }
 
 CBoxAlgorithmContext::~CBoxAlgorithmContext(void)
 {
-	delete m_pPlayerContext;
-	delete m_pDynamicBoxContext;
-	delete m_pStaticBoxContext;
 }
 
-IBox* CBoxAlgorithmContext::getStaticBoxContext(void)
+const IBox* CBoxAlgorithmContext::getStaticBoxContext(void)
 {
 	return m_pStaticBoxContext;
 }
@@ -198,7 +33,7 @@ IBoxIO* CBoxAlgorithmContext::getDynamicBoxContext(void)
 
 IPlayerContext* CBoxAlgorithmContext::getPlayerContext(void)
 {
-	return m_pPlayerContext;
+	return &m_oPlayerContext;
 }
 
 boolean CBoxAlgorithmContext::markAlgorithmAsReadyToProcess(void)

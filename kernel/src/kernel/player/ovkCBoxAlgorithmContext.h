@@ -2,6 +2,7 @@
 #define __OpenViBEKernel_Kernel_Player_CBoxAlgorithmContext_H__
 
 #include "../ovkTKernelObject.h"
+#include "ovkCPlayerContext.h"
 
 namespace OpenViBE
 {
@@ -16,7 +17,7 @@ namespace OpenViBE
 			CBoxAlgorithmContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CSimulatedBox* pSimulatedBox, const OpenViBE::Kernel::IBox* pBox);
 			virtual ~CBoxAlgorithmContext(void);
 
-			virtual OpenViBE::Kernel::IBox* getStaticBoxContext(void);
+			virtual const OpenViBE::Kernel::IBox* getStaticBoxContext(void);
 			virtual OpenViBE::Kernel::IBoxIO* getDynamicBoxContext(void);
 			virtual OpenViBE::Kernel::IPlayerContext* getPlayerContext(void);
 
@@ -28,9 +29,11 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::Kernel::IBox* m_pStaticBoxContext;
+			const OpenViBE::Kernel::IBox* m_pStaticBoxContext;
 			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext;
-			OpenViBE::Kernel::IPlayerContext* m_pPlayerContext;
+			// here we prefer value type over reference/pointer
+			// in order to improve performance at runtime (no heap allocation)
+			OpenViBE::Kernel::CPlayerContext m_oPlayerContext;
 			OpenViBE::boolean m_bReadyToProcess;
 		};
 	};

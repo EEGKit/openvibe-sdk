@@ -16,7 +16,7 @@ using namespace OpenViBEPlugins::Stimulation;
 
 boolean CBoxAlgorithmStimulationVoter::initialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	if(l_rStaticBoxContext.getInputCount()!=1) 
 	{

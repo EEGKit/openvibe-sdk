@@ -158,7 +158,7 @@ boolean CBoxAlgorithmClassifierProcessor::initialize(void)
 {
 	m_pClassifier = NULL;
 
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	//First of all, let's get the XML file for configuration
 	CString l_sConfigurationFilename;
@@ -228,7 +228,7 @@ boolean CBoxAlgorithmClassifierProcessor::process(void)
 			{
 				if(m_oStimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(i) == OVTK_StimulationId_TrainCompleted)
 				{
-					IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+					const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 					CString l_sConfigurationFilename;
 					l_rStaticBoxContext.getSettingValue(0, l_sConfigurationFilename);

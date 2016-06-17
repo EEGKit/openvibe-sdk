@@ -16,7 +16,7 @@ using namespace OpenViBEPlugins::Classification;
 
 boolean CBoxAlgorithmVotingClassifier::initialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	m_oClassificationChoiceEncoder.initialize(*this, 0);
 
@@ -66,7 +66,7 @@ boolean CBoxAlgorithmVotingClassifier::initialize(void)
 
 boolean CBoxAlgorithmVotingClassifier::uninitialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	// IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 	uint32 i;
 
@@ -91,7 +91,7 @@ boolean CBoxAlgorithmVotingClassifier::processInput(uint32 ui32Index)
 
 boolean CBoxAlgorithmVotingClassifier::process(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 	uint32 i, j, k;
 

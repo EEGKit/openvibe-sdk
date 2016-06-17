@@ -45,7 +45,7 @@ boolean CBoxAlgorithmElectrodeLocalisationFileReader::initialize(void)
 
 
 	// Configures settings according to box
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	l_rStaticBoxContext.getSettingValue(0, m_sFilename);
 	*ip_sFilename = m_sFilename;
 

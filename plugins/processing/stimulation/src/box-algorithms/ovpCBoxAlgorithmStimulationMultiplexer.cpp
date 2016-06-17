@@ -18,7 +18,7 @@ uint64 CBoxAlgorithmStimulationMultiplexer::getClockFrequency(void)
 
 boolean CBoxAlgorithmStimulationMultiplexer::initialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	m_vStreamDecoder.resize(getStaticBoxContext().getInputCount());
 	m_vStreamDecoderEndTime.resize(getStaticBoxContext().getInputCount());
@@ -40,7 +40,7 @@ boolean CBoxAlgorithmStimulationMultiplexer::initialize(void)
 
 boolean CBoxAlgorithmStimulationMultiplexer::uninitialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	m_pStreamEncoder->uninitialize();
 	getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
@@ -95,7 +95,7 @@ boolean CBoxAlgorithmStimulationMultiplexer::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmStimulationMultiplexer::process(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
 	uint32 i,j,k;

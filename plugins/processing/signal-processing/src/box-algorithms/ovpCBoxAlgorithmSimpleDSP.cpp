@@ -22,7 +22,7 @@ CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP(void)
 
 boolean CBoxAlgorithmSimpleDSP::initialize(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	uint32 i;
 
 	m_ppVariable=new float64*[l_rStaticBoxContext.getInputCount()];
@@ -144,7 +144,7 @@ boolean CBoxAlgorithmSimpleDSP::uninitialize(void)
 
 boolean CBoxAlgorithmSimpleDSP::processInput(uint32 ui32InputIndex)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
 	if(l_rDynamicBoxContext.getInputChunkCount(0) == 0)
@@ -180,7 +180,7 @@ boolean CBoxAlgorithmSimpleDSP::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmSimpleDSP::process(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
 	uint32 i;
@@ -257,7 +257,7 @@ boolean CBoxAlgorithmSimpleDSP::process(void)
 
 void CBoxAlgorithmSimpleDSP::evaluate(void)
 {
-	IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
 	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
 	{
