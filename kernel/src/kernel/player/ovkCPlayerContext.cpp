@@ -3,8 +3,6 @@
 #include "ovkCScheduler.h"
 #include "ovkCPlayer.h"
 
-#include "../../tools/ovk_bridge_bind_function.h"
-
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 

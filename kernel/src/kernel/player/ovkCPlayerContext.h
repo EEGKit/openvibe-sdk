@@ -47,7 +47,7 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerContext>, OVK_ClassId_Kernel_Player_PlayerContext)
 
-		protected:
+		private:
 
 			OpenViBE::Kernel::CSimulatedBox& m_rSimulatedBox;
 			OpenViBE::Kernel::IAlgorithmManager& m_rAlgorithmManager;

@@ -1,7 +1,6 @@
 #include "ovkCBoxAlgorithmContext.h"
 #include "ovkCPlayerContext.h"
 #include "ovkCSimulatedBox.h"
-#include "../../tools/ovk_bridge_bind_function.h"
 
 #include "lepton/Lepton.h"
 

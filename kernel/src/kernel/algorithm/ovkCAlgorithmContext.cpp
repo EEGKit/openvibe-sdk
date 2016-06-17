@@ -1,8 +1,6 @@
 #include "ovkCAlgorithmContext.h"
 #include "ovkCAlgorithm.h"
 
-#include "../../tools/ovk_bridge_bind_function.h"
-
 using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;
