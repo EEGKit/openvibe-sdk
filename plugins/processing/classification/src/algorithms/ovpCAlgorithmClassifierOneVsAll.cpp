@@ -14,7 +14,7 @@ namespace{
 	const char* const c_sAlgorithmIdAttribute = "algorithm-id";
 	const char* const c_sSubClassifierCountNodeName = "SubClassifierCount";
 	const char* const c_sSubClassifiersNodeName = "SubClassifiers";
-	const char* const c_sSubClassifierNodeName = "SubClassifier";
+//	const char* const c_sSubClassifierNodeName = "SubClassifier";
 }
 
 extern const char* const c_sClassifierRoot;
@@ -52,10 +52,10 @@ boolean CAlgorithmClassifierOneVsAll::uninitialize(void)
 
 boolean CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVectorSet)
 {
-	const uint32 l_ui32ClassCount = m_oSubClassifierList.size();
+	const uint32 l_ui32ClassCount = static_cast<uint32>(m_oSubClassifierList.size());
 	std::map < float64, size_t > l_vClassLabels;
 
-	for(size_t i=0; i<rFeatureVectorSet.getFeatureVectorCount(); i++)
+	for(uint32 i=0; i<rFeatureVectorSet.getFeatureVectorCount(); i++)
 	{
 		if(!l_vClassLabels.count(rFeatureVectorSet[i].getLabel()))
 		{
@@ -78,7 +78,7 @@ boolean CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVec
 	ip_pFeatureVectorSetReference->setDimensionSize(1, l_ui32FeatureVectorSize+1);
 
 	float64* l_pFeatureVectorSetBuffer=ip_pFeatureVectorSetReference->getBuffer();
-	for(size_t j=0; j<rFeatureVectorSet.getFeatureVectorCount(); j++)
+	for(uint32 j=0; j<rFeatureVectorSet.getFeatureVectorCount(); j++)
 	{
 		System::Memory::copy(
 					l_pFeatureVectorSetBuffer,
@@ -95,7 +95,7 @@ boolean CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVec
 		ip_pFeatureVectorSet = (IMatrix*)ip_pFeatureVectorSetReference;
 
 		float64* l_pFeatureVectorSetBuffer=ip_pFeatureVectorSet->getBuffer();
-		for(size_t j=0; j<rFeatureVectorSet.getFeatureVectorCount(); j++)
+		for(uint32 j=0; j<rFeatureVectorSet.getFeatureVectorCount(); j++)
 		{
 			//Modify the class of each featureVector
 			const float64 l_f64Class = rFeatureVectorSet[j].getLabel();
@@ -158,7 +158,7 @@ boolean CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVec
 	for(size_t l_iClassificationCount = 0; l_iClassificationCount < l_oClassificationVector.size() ; ++l_iClassificationCount)
 	{
 		CClassifierOutput&   l_pTemp = l_oClassificationVector[l_iClassificationCount];
-		if(l_pTemp.first==0)		// Predicts its "own" class, class=0
+		if(static_cast<int>(l_pTemp.first)==0)		// Predicts its "own" class, class=0
 		{
 			if(l_oBest.second == NULL)
 			{
@@ -177,7 +177,7 @@ boolean CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVec
 	}
 
 	//If no one recognize the class, let's take the more relevant
-	if(rf64Class == -1)
+	if(static_cast<int>(rf64Class) == -1)
 	{
 		this->getLogManager() << LogLevel_Debug << "Unable to find a class in first instance\n";
 		for(uint32 l_iClassificationCount = 0; l_iClassificationCount < l_oClassificationVector.size() ; ++l_iClassificationCount)
@@ -359,7 +359,7 @@ uint32 CAlgorithmClassifierOneVsAll::getOutputDistanceVectorLength()
 
 boolean CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNode *pSubClassifiersNode)
 {
-	for( size_t i = 0; i < pSubClassifiersNode->getChildCount() ; ++i)
+	for( uint32 i = 0; i < pSubClassifiersNode->getChildCount() ; ++i)
 	{
 		XML::IXMLNode *l_pSubClassifierNode = pSubClassifiersNode->getChild(i);
 		TParameterHandler < XML::IXMLNode* > ip_pConfiguration(m_oSubClassifierList[i]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
@@ -375,7 +375,7 @@ boolean CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNo
 
 uint32 CAlgorithmClassifierOneVsAll::getClassCount(void) const
 {
-	return m_oSubClassifierList.size();
+	return static_cast<uint32>(m_oSubClassifierList.size());
 }
 
 boolean CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const OpenViBE::CIdentifier &rId)

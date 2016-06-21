@@ -129,9 +129,9 @@ namespace Socket
 		uint32 sendBuffer(const void* pBuffer, const uint32 ui32BufferSize = 8)
 		{
 			if (!this->isConnected()) return 0;
-			uint8 l_ui8Value = *(static_cast<const uint8*>(pBuffer));
 
 #if defined TARGET_OS_Windows
+			uint8 l_ui8Value = *(static_cast<const uint8*>(pBuffer));
 
 			m_lpfnTVicPortWrite(m_ui16PortNumber, l_ui8Value);
 			return ui32BufferSize;
