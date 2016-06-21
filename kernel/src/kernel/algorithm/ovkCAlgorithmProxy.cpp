@@ -27,8 +27,8 @@ namespace
 
 CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& rKernelContext, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
 	:TKernelObject < IAlgorithmProxy >(rKernelContext)
-	,m_pInputConfigurable(NULL)
-	,m_pOutputConfigurable(NULL)
+	,m_pInputConfigurable(nullptr)
+	,m_pOutputConfigurable(nullptr)
 	,m_rAlgorithmDesc(rAlgorithmDesc)
 	,m_rAlgorithm(rAlgorithm)
 	,m_bIsInitialized(false)
@@ -68,7 +68,7 @@ boolean CAlgorithmProxy::addInputParameter(
 	const EParameterType eParameterType,
 	const CIdentifier& rSubTypeIdentifier)
 {
-	if (m_pInputConfigurable->getParameter(rInputParameterIdentifier)!=NULL)
+	if (m_pInputConfigurable->getParameter(rInputParameterIdentifier) != nullptr)
 	{
 		getLogManager() << LogLevel_Warning << "For algorithm " << m_rAlgorithmDesc.getName() << " : Input parameter id " << rInputParameterIdentifier << " already exists\n";
 		return false;
@@ -139,7 +139,7 @@ boolean CAlgorithmProxy::addOutputParameter(
 	const EParameterType eParameterType,
 	const CIdentifier& rSubTypeIdentifier)
 {
-	if (m_pOutputConfigurable->getParameter(rOutputParameterIdentifier)!=NULL)
+	if (m_pOutputConfigurable->getParameter(rOutputParameterIdentifier) != nullptr)
 	{
 		getLogManager() << LogLevel_Warning << "For algorithm " << m_rAlgorithmDesc.getName() << " : Output parameter id " << rOutputParameterIdentifier << " already exists\n";
 		return false;
@@ -403,19 +403,17 @@ boolean CAlgorithmProxy::process(
 
 void CAlgorithmProxy::setAllInputTriggers(const boolean bTriggerStatus)
 {
-	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger;
-	for (itTrigger=m_vInputTrigger.begin(); itTrigger!=m_vInputTrigger.end(); itTrigger++)
+	for(auto& trigger : m_vInputTrigger)
 	{
-		itTrigger->second.second=bTriggerStatus;
+		trigger.second.second=bTriggerStatus;
 	}
 }
 
 void CAlgorithmProxy::setAllOutputTriggers(const boolean bTriggerStatus)
 {
-	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger;
-	for (itTrigger=m_vOutputTrigger.begin(); itTrigger!=m_vOutputTrigger.end(); itTrigger++)
+	for(auto& trigger : m_vOutputTrigger)
 	{
-		itTrigger->second.second=bTriggerStatus;
+		trigger.second.second=bTriggerStatus;
 	}
 }
 

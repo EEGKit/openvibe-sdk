@@ -15,10 +15,9 @@ CAlgorithmManager::CAlgorithmManager(const IKernelContext& rKernelContext)
 
 CAlgorithmManager::~CAlgorithmManager(void)
 {
-	AlgorithmMap::iterator itAlgorithm;
-	for(itAlgorithm=m_vAlgorithms.begin(); itAlgorithm!=m_vAlgorithms.end(); itAlgorithm++)
+	for(auto& algorithm : m_vAlgorithms)
 	{
-		CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;		
+		CAlgorithmProxy* l_pAlgorithmProxy = algorithm.second;
 		IAlgorithm& l_rAlgorithm = l_pAlgorithmProxy->getAlgorithm();
 		delete l_pAlgorithmProxy;
 		
@@ -68,8 +67,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 boolean CAlgorithmManager::releaseAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
-	AlgorithmMap::iterator itAlgorithm;
-	itAlgorithm=m_vAlgorithms.find(rAlgorithmIdentifier);
+	AlgorithmMap::iterator itAlgorithm = m_vAlgorithms.find(rAlgorithmIdentifier);
 	if(itAlgorithm==m_vAlgorithms.end())
 	{
 		getLogManager() << LogLevel_Warning << "Algorithm release failed, identifier " << rAlgorithmIdentifier << "\n";
@@ -91,10 +89,9 @@ boolean CAlgorithmManager::releaseAlgorithm(
 boolean CAlgorithmManager::releaseAlgorithm(
 	IAlgorithmProxy& rAlgorithm)
 {
-	AlgorithmMap::iterator itAlgorithm;
-	for(itAlgorithm=m_vAlgorithms.begin(); itAlgorithm!=m_vAlgorithms.end(); itAlgorithm++)
+	for(auto& algorithm : m_vAlgorithms)
 	{
-		CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;	
+		CAlgorithmProxy* l_pAlgorithmProxy = algorithm.second;	
 		if((IAlgorithmProxy*)l_pAlgorithmProxy==&rAlgorithm)
 		{
 			IAlgorithm& l_rAlgorithm=l_pAlgorithmProxy->getAlgorithm();
@@ -104,11 +101,12 @@ boolean CAlgorithmManager::releaseAlgorithm(
 				delete l_pAlgorithmProxy;
 				l_pAlgorithmProxy = NULL;
 			}
-			m_vAlgorithms.erase(itAlgorithm);
+			m_vAlgorithms.erase(algorithm.first);
 			getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 			return true;
 		}
 	}
+	
 	getLogManager() << LogLevel_Warning << "Algorithm release failed\n";
 	return false;
 }
@@ -116,8 +114,7 @@ boolean CAlgorithmManager::releaseAlgorithm(
 IAlgorithmProxy& CAlgorithmManager::getAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
-	AlgorithmMap::const_iterator itAlgorithm;
-	itAlgorithm=m_vAlgorithms.find(rAlgorithmIdentifier);
+	AlgorithmMap::const_iterator itAlgorithm = m_vAlgorithms.find(rAlgorithmIdentifier);
 	if(itAlgorithm==m_vAlgorithms.end())
 	{
 		this->getLogManager() << LogLevel_Fatal << "Algorithm " << rAlgorithmIdentifier << " does not exist !\n";
