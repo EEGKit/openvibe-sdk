@@ -1,5 +1,4 @@
-#ifndef __System_ovCMemory_H__
-#define __System_ovCMemory_H__
+#pragma once
 
 #include "defines.h"
 
@@ -57,5 +56,3 @@ namespace System
 		Memory(void);
 	};
 };
-
-#endif // __System_ovCMemory_H__

@@ -1,5 +1,4 @@
-#ifndef __System_ovCChrono_H__
-#define __System_ovCChrono_H__
+#pragma once
 
 #include "defines.h"
 
@@ -39,5 +38,3 @@ namespace System
 		System::uint64 m_ui64TotalStepOutTime;
 	};
 };
-
-#endif // __System_ovCChrono_H__

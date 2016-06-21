@@ -1,5 +1,4 @@
-#ifndef __System_ovCTime_H__
-#define __System_ovCTime_H__
+#pragma once
 
 #include "defines.h"
 
@@ -22,4 +21,3 @@ namespace System
 	};
 };
 
-#endif // __System_ovCTime_H__

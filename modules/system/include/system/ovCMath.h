@@ -1,5 +1,4 @@
-#ifndef __System_ovCMath_H__
-#define __System_ovCMath_H__
+#pragma once
 
 #include "defines.h"
 
@@ -51,4 +50,3 @@ namespace System
 	};
 };
 
-#endif // __System_ovCMath_H__
