@@ -76,11 +76,11 @@ boolean CBoxAlgorithmMatrixValidityChecker::process(void)
 	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
-	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
+	for(uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		for(uint32 j=0; j<l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for(uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
-			m_vStreamDecoder[i].decode(i, j);
+			m_vStreamDecoder[i].decode(j);
 			IMatrix* l_pMatrix = m_vStreamDecoder[i].getOutputMatrix();
 
 			if(m_vStreamDecoder[i].isHeaderReceived())
