@@ -9,7 +9,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CAlgorithm : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >
+		class CAlgorithm : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >
 		{
 		public:
 
@@ -91,7 +91,7 @@ namespace OpenViBE
 			virtual OpenViBE::boolean isAlgorithmDerivedFrom(
 				const OpenViBE::CIdentifier& rClassIdentifier);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Algorithm_Algorithm)
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >, OVK_ClassId_Kernel_Algorithm_Algorithm)
 
 		protected:
 
@@ -111,6 +111,7 @@ namespace OpenViBE
 
 			const OpenViBE::Plugins::IAlgorithmDesc& m_rAlgorithmDesc;
 			OpenViBE::Plugins::IAlgorithm& m_rAlgorithm;
+			bool m_bIsInitialized;
 		};
 	};
 };

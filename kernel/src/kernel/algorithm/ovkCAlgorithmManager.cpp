@@ -1,5 +1,4 @@
 #include "ovkCAlgorithmManager.h"
-#include "ovkCAlgorithmProxy.h"
 #include "ovkCAlgorithm.h"
 
 #include <system/ovCMath.h>
@@ -16,12 +15,13 @@ CAlgorithmManager::CAlgorithmManager(const IKernelContext& rKernelContext)
 
 CAlgorithmManager::~CAlgorithmManager(void)
 {
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::iterator itAlgorithm;
+	AlgorithmMap::iterator itAlgorithm;
 	for(itAlgorithm=m_vAlgorithm.begin(); itAlgorithm!=m_vAlgorithm.end(); itAlgorithm++)
 	{
-		IAlgorithm& l_rAlgorithm=itAlgorithm->second.first->getAlgorithm();
-		delete itAlgorithm->second.second;
-		delete itAlgorithm->second.first;
+		CAlgorithm* l_rAlgorithmWrapper = itAlgorithm->second;		
+		IAlgorithm& l_rAlgorithm = l_rAlgorithmWrapper->getAlgorithm();
+		delete l_rAlgorithmWrapper;
+		
 		getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 	}
 }
@@ -40,9 +40,9 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmClassIdentifier << "\n";
 
 	CIdentifier l_oAlgorithmIdentifier=getUnusedIdentifier();
-	CAlgorithm* l_pTrueAlgorithm=new CAlgorithm(getKernelContext(), *l_pAlgorithm, *l_pAlgorithmDesc);
-	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pTrueAlgorithm);
-	m_vAlgorithm[l_oAlgorithmIdentifier]=pair < CAlgorithm*, CAlgorithmProxy* >(l_pTrueAlgorithm, l_pAlgorithmProxy);
+	CAlgorithm* l_pAlgorithmWrapper=new CAlgorithm(getKernelContext(), *l_pAlgorithm, *l_pAlgorithmDesc);
+	
+	m_vAlgorithm[l_oAlgorithmIdentifier]=l_pAlgorithmWrapper;
 	return l_oAlgorithmIdentifier;
 }
 
@@ -59,9 +59,8 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmDesc.getClassIdentifier() << "\n";
 
 	CIdentifier l_oAlgorithmIdentifier=getUnusedIdentifier();
-	CAlgorithm* l_pTrueAlgorithm=new CAlgorithm(getKernelContext(), *l_pAlgorithm, rAlgorithmDesc);
-	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pTrueAlgorithm);
-	m_vAlgorithm[l_oAlgorithmIdentifier]=pair < CAlgorithm*, CAlgorithmProxy* >(l_pTrueAlgorithm, l_pAlgorithmProxy);
+	CAlgorithm* l_pAlgorithmWrapper=new CAlgorithm(getKernelContext(), *l_pAlgorithm, rAlgorithmDesc);
+	m_vAlgorithm[l_oAlgorithmIdentifier]=l_pAlgorithmWrapper;
 	return l_oAlgorithmIdentifier;
 }
 
@@ -69,7 +68,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 boolean CAlgorithmManager::releaseAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::iterator itAlgorithm;
+	AlgorithmMap::iterator itAlgorithm;
 	itAlgorithm=m_vAlgorithm.find(rAlgorithmIdentifier);
 	if(itAlgorithm==m_vAlgorithm.end())
 	{
@@ -77,16 +76,12 @@ boolean CAlgorithmManager::releaseAlgorithm(
 		return false;
 	}
 	getLogManager() << LogLevel_Debug << "Releasing algorithm with identifier " << rAlgorithmIdentifier << "\n";
-	IAlgorithm& l_rAlgorithm=itAlgorithm->second.first->getAlgorithm();
-	if(itAlgorithm->second.second) 
+	CAlgorithm* l_rAlgorithmWrapper = itAlgorithm->second;		
+	IAlgorithm& l_rAlgorithm=l_rAlgorithmWrapper->getAlgorithm();
+	if(l_rAlgorithmWrapper) 
 	{
-		delete itAlgorithm->second.second;
-		itAlgorithm->second.second = NULL;
-	}
-	if(itAlgorithm->second.first) 
-	{
-		delete itAlgorithm->second.first;
-		itAlgorithm->second.first = NULL;
+		delete l_rAlgorithmWrapper;
+		l_rAlgorithmWrapper = NULL;
 	}
 	m_vAlgorithm.erase(itAlgorithm);
 	getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
@@ -96,22 +91,18 @@ boolean CAlgorithmManager::releaseAlgorithm(
 boolean CAlgorithmManager::releaseAlgorithm(
 	IAlgorithmProxy& rAlgorithm)
 {
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::iterator itAlgorithm;
+	AlgorithmMap::iterator itAlgorithm;
 	for(itAlgorithm=m_vAlgorithm.begin(); itAlgorithm!=m_vAlgorithm.end(); itAlgorithm++)
 	{
-		if((IAlgorithmProxy*)itAlgorithm->second.second==&rAlgorithm)
+		CAlgorithm* l_rAlgorithmWrapper = itAlgorithm->second;	
+		if((IAlgorithmProxy*)l_rAlgorithmWrapper==&rAlgorithm)
 		{
-			IAlgorithm& l_rAlgorithm=itAlgorithm->second.first->getAlgorithm();
+			IAlgorithm& l_rAlgorithm=l_rAlgorithmWrapper->getAlgorithm();
 			getLogManager() << LogLevel_Debug << "Releasing algorithm with class id " << l_rAlgorithm.getClassIdentifier() << "\n";
-			if(itAlgorithm->second.second) 
+			if(l_rAlgorithmWrapper) 
 			{
-				delete itAlgorithm->second.second;
-				itAlgorithm->second.second = NULL;
-			}
-			if(itAlgorithm->second.first) 
-			{
-				delete itAlgorithm->second.first;
-				itAlgorithm->second.first = NULL;
+				delete l_rAlgorithmWrapper;
+				l_rAlgorithmWrapper = NULL;
 			}
 			m_vAlgorithm.erase(itAlgorithm);
 			getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
@@ -125,19 +116,19 @@ boolean CAlgorithmManager::releaseAlgorithm(
 IAlgorithmProxy& CAlgorithmManager::getAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::const_iterator itAlgorithm;
+	AlgorithmMap::const_iterator itAlgorithm;
 	itAlgorithm=m_vAlgorithm.find(rAlgorithmIdentifier);
 	if(itAlgorithm==m_vAlgorithm.end())
 	{
 		this->getLogManager() << LogLevel_Fatal << "Algorithm " << rAlgorithmIdentifier << " does not exist !\n";
 	}
-	return *itAlgorithm->second.second;
+	return *itAlgorithm->second;
 }
 
 CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(
 	const CIdentifier& rPreviousIdentifier) const
 {
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::const_iterator itAlgorithm=m_vAlgorithm.begin();
+	AlgorithmMap::const_iterator itAlgorithm=m_vAlgorithm.begin();
 
 	if(rPreviousIdentifier==OV_UndefinedIdentifier)
 	{
@@ -160,7 +151,7 @@ CIdentifier CAlgorithmManager::getUnusedIdentifier(void) const
 {
 	uint64 l_ui64Identifier=System::Math::randomUInteger64();
 	CIdentifier l_oResult;
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::const_iterator i;
+	AlgorithmMap::const_iterator i;
 	do
 	{
 		l_ui64Identifier++;

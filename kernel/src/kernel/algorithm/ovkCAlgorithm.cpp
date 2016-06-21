@@ -1,3 +1,5 @@
+#include <cassert>
+
 #include "ovkCAlgorithm.h"
 #include "ovkCAlgorithmContext.h"
 #include "ovkCAlgorithmProto.h"
@@ -24,11 +26,12 @@ namespace
 }
 
 CAlgorithm::CAlgorithm(const IKernelContext& rKernelContext, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
-	:TKernelObject < IKernelObject >(rKernelContext)
+	:TKernelObject < IAlgorithmProxy >(rKernelContext)
 	,m_pInputConfigurable(NULL)
 	,m_pOutputConfigurable(NULL)
 	,m_rAlgorithmDesc(rAlgorithmDesc)
 	,m_rAlgorithm(rAlgorithm)
+	,m_bIsInitialized(false)
 {
 	m_pInputConfigurable=dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
 	m_pOutputConfigurable=dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
@@ -336,10 +339,16 @@ boolean CAlgorithm::removeOutputTrigger(
 
 boolean CAlgorithm::initialize(void)
 {
+	assert(!m_bIsInitialized);
+	
 	return translateException(
 		[&]() {
 			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
-			return m_rAlgorithm.initialize(l_oAlgorithmContext);
+			// The dual state initialized or not does not take into account
+			// a partially initialized state. Thus, we have to trust algorithms to implement
+			// their initialization routine as a rollback transaction mechanism
+			m_bIsInitialized = m_rAlgorithm.initialize(l_oAlgorithmContext);
+			return m_bIsInitialized;
 		},
 		std::bind(handleException, this, "Algorithm initialization", std::placeholders::_1)
 	);
@@ -347,6 +356,8 @@ boolean CAlgorithm::initialize(void)
 
 boolean CAlgorithm::uninitialize(void)
 {
+	assert(m_bIsInitialized);
+	
 	return translateException(
 		[&]() {
 			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
@@ -358,6 +369,8 @@ boolean CAlgorithm::uninitialize(void)
 
 boolean CAlgorithm::process(void)
 {
+	assert(m_bIsInitialized);
+	
 	return translateException(
 		[&]() {
 			
@@ -378,6 +391,8 @@ boolean CAlgorithm::process(void)
 boolean CAlgorithm::process(
 	const CIdentifier& rTriggerIdentifier)
 {
+	assert(m_bIsInitialized);
+	
 	if (!this->activateInputTrigger(rTriggerIdentifier, true))
 	{
 		return false;

@@ -157,6 +157,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \note The algorithm context is managed internally
+			 * \pre The algorithm is not yet initialized
 			 */
 			virtual OpenViBE::boolean initialize(void)=0;
 			/**
@@ -164,6 +165,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \note The algorithm context is managed internally
+			 * \pre The algorithm is initialized
 			 */
 			virtual OpenViBE::boolean uninitialize(void)=0;
 			/**
@@ -171,6 +173,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \note The algorithm context is managed internally
+			 * \pre The algorithm is initialized
 			 */
 			virtual OpenViBE::boolean process(void)=0;
 			/**
@@ -179,6 +182,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case the trigger does not exist or the processing did not succeed.
 			 * \note The algorithm context is managed internally
+			 * \pre The algorithm is initialized
 			 */
 			virtual OpenViBE::boolean process(
 				const OpenViBE::CIdentifier& rTriggerIdentifier)=0;

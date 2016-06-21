@@ -40,7 +40,8 @@ namespace OpenViBE
 
 		protected:
 
-			std::map < OpenViBE::CIdentifier, std::pair < OpenViBE::Kernel::CAlgorithm*, OpenViBE::Kernel::CAlgorithmProxy* > > m_vAlgorithm;
+			using AlgorithmMap = std::map < OpenViBE::CIdentifier, OpenViBE::Kernel::CAlgorithm* >;
+			AlgorithmMap m_vAlgorithm;
 		};
 	};
 };
