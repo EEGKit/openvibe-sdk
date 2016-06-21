@@ -4,7 +4,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <commctrl.h>
-#define boolean Socket::boolean
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #include <sys/ioctl.h>
 #include <string.h>
@@ -60,13 +59,13 @@ namespace Socket
 #endif
 		}
 
-		boolean open(void)
+		bool open(void)
 		{
 			// Should never be used
 			return false;
 		}
 
-		boolean close(void)
+		bool close(void)
 		{
 #if defined TARGET_OS_Windows
 
@@ -107,16 +106,14 @@ namespace Socket
 				m_iFile = -1;
 			}*/
 #endif
-
-			return true;
 		}
 
-		boolean isReadyToSend(Socket::uint32 ui32TimeOut = 0) const
+		bool isReadyToSend(Socket::uint32 ui32TimeOut = 0) const
 		{
 			return this->isConnected();
 		}
 
-		boolean isReadyToReceive(Socket::uint32 ui32TimeOut = 0) const
+		bool isReadyToReceive(Socket::uint32 ui32TimeOut = 0) const
 		{
 			return this->isConnected();
 		}
@@ -138,7 +135,7 @@ namespace Socket
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			return false;
+			return 0;
 
 			/*if (ioctl(m_iFile, PPWDATA, &l_ui8Value) < 0) 
 			{
@@ -146,8 +143,6 @@ namespace Socket
 			}*/
 
 #endif
-
-			return 0;
 		}
 
 		uint32 receiveBuffer(void* pBuffer, const uint32 ui32BufferSize = 8)
@@ -191,7 +186,7 @@ namespace Socket
 
 		}
 
-		boolean sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
+		bool sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
 		{
 			const char* l_pPointer = reinterpret_cast<const char*>(pBuffer);
 			uint32 l_ui32BytesLeft = ui32BufferSize;
@@ -204,7 +199,7 @@ namespace Socket
 			return this->isConnected();
 		}
 
-		boolean receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
+		bool receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
 		{
 			char* l_pPointer = reinterpret_cast<char*>(pBuffer);
 			uint32 l_ui32BytesLeft = ui32BufferSize;
@@ -217,7 +212,7 @@ namespace Socket
 			return this->isConnected();
 		}
 
-		boolean isConnected(void) const
+		bool isConnected(void) const
 		{
 #if defined TARGET_OS_Windows
 
@@ -228,8 +223,6 @@ namespace Socket
 			return m_iFile != 0;
 
 #endif
-
-			return false;
 		}
 
 		void release(void)
@@ -247,7 +240,7 @@ namespace Socket
 			delete this;
 		}
 
-		boolean connect(unsigned short ui16PortNumber)
+		bool connect(unsigned short ui16PortNumber)
 		{
 			if (this->isConnected()) return false;
 
@@ -294,8 +287,6 @@ namespace Socket
 			}*/
 
 #endif
-
-			return true;
 		}
 
 		std::string getLastError()
