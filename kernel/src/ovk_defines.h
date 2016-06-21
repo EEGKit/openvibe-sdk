@@ -20,11 +20,10 @@
 #define OVK_ClassId_Kernel_KernelContext                      OpenViBE::CIdentifier(0x72D4050C, 0x543DDAD8)
 #define OVK_ClassId_Kernel_TypeManager                        OpenViBE::CIdentifier(0x11D27788, 0x0602030A)
 
-#define OVK_ClassId_Kernel_Algorithm_Algorithm                OpenViBE::CIdentifier(0x7C741F2F, 0x24314CFF)
+#define OVK_ClassId_Kernel_Algorithm_AlgorithmProxy           OpenViBE::CIdentifier(0x7C741F2F, 0x24314CFF)
 #define OVK_ClassId_Kernel_Algorithm_AlgorithmContext         OpenViBE::CIdentifier(0xBE3E7F65, 0x2752D79E)
 #define OVK_ClassId_Kernel_Algorithm_AlgorithmManager         OpenViBE::CIdentifier(0xA75B6AA8, 0xEE0A25A4)
 #define OVK_ClassId_Kernel_Algorithm_AlgorithmProto           OpenViBE::CIdentifier(0x3C83B501, 0xD5992078)
-#define OVK_ClassId_Kernel_Algorithm_AlgorithmProxy           OpenViBE::CIdentifier(0x25BBE1E2, 0x18275693)
 
 #define OVK_ClassId_Kernel_Configuration_ConfigurationManager OpenViBE::CIdentifier(0xE483786B, 0xA464DD55)
 

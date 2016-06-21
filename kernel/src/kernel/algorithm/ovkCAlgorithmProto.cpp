@@ -1,12 +1,12 @@
 #include "ovkCAlgorithmProto.h"
-#include "ovkCAlgorithm.h"
+#include "ovkCAlgorithmProxy.h"
 
 using namespace OpenViBE;
 using namespace Kernel;
 
-CAlgorithmProto::CAlgorithmProto(const IKernelContext& rKernelContext, CAlgorithm& rAlgorithm)
+CAlgorithmProto::CAlgorithmProto(const IKernelContext& rKernelContext, CAlgorithmProxy& rAlgorithmProxy)
 	:TKernelObject < IAlgorithmProto >(rKernelContext)
-	,m_rAlgorithm(rAlgorithm)
+	,m_rAlgorithmProxy(rAlgorithmProxy)
 {
 }
 
@@ -16,7 +16,7 @@ boolean CAlgorithmProto::addInputParameter(
 	const EParameterType eParameterType,
 	const CIdentifier& rSubTypeIdentifier)
 {
-	return m_rAlgorithm.addInputParameter(rInputParameterIdentifier, sInputName, eParameterType, rSubTypeIdentifier);
+	return m_rAlgorithmProxy.addInputParameter(rInputParameterIdentifier, sInputName, eParameterType, rSubTypeIdentifier);
 }
 
 boolean CAlgorithmProto::addOutputParameter(
@@ -25,19 +25,19 @@ boolean CAlgorithmProto::addOutputParameter(
 	const EParameterType eParameterType,
 	const CIdentifier& rSubTypeIdentifier)
 {
-	return m_rAlgorithm.addOutputParameter(rOutputParameterIdentifier, sOutputName, eParameterType, rSubTypeIdentifier);
+	return m_rAlgorithmProxy.addOutputParameter(rOutputParameterIdentifier, sOutputName, eParameterType, rSubTypeIdentifier);
 }
 
 boolean CAlgorithmProto::addInputTrigger(
 	const CIdentifier& rInputTriggerIdentifier,
 	const CString& rInputTriggerName)
 {
-	return m_rAlgorithm.addInputTrigger(rInputTriggerIdentifier, rInputTriggerName);
+	return m_rAlgorithmProxy.addInputTrigger(rInputTriggerIdentifier, rInputTriggerName);
 }
 
 boolean CAlgorithmProto::addOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier,
 	const CString& rOutputTriggerName)
 {
-	return m_rAlgorithm.addOutputTrigger(rOutputTriggerIdentifier, rOutputTriggerName);
+	return m_rAlgorithmProxy.addOutputTrigger(rOutputTriggerIdentifier, rOutputTriggerName);
 }

@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "ovkCAlgorithm.h"
+#include "ovkCAlgorithmProxy.h"
 #include "ovkCAlgorithmContext.h"
 #include "ovkCAlgorithmProto.h"
 
@@ -15,7 +15,7 @@ using namespace std;
 
 namespace
 {
-	void handleException(const CAlgorithm* algorithm, const char* errorHint, const std::exception& exception)
+	void handleException(const CAlgorithmProxy* algorithm, const char* errorHint, const std::exception& exception)
 	{
 		algorithm->getLogManager() << LogLevel_Error << "Exception caught in algorithm\n";
 		algorithm->getLogManager() << LogLevel_Error << "  [name: " << algorithm->getAlgorithmDesc().getName() << "]\n";
@@ -25,7 +25,7 @@ namespace
 	}
 }
 
-CAlgorithm::CAlgorithm(const IKernelContext& rKernelContext, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
+CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& rKernelContext, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
 	:TKernelObject < IAlgorithmProxy >(rKernelContext)
 	,m_pInputConfigurable(NULL)
 	,m_pOutputConfigurable(NULL)
@@ -41,28 +41,28 @@ CAlgorithm::CAlgorithm(const IKernelContext& rKernelContext, IAlgorithm& rAlgori
 	rAlgorithmDesc.getAlgorithmPrototype(l_oProto);
 }
 
-CAlgorithm::~CAlgorithm(void)
+CAlgorithmProxy::~CAlgorithmProxy(void)
 {
 	getKernelContext().getKernelObjectFactory().releaseObject(m_pOutputConfigurable);
 	getKernelContext().getKernelObjectFactory().releaseObject(m_pInputConfigurable);
 }
 
-IAlgorithm& CAlgorithm::getAlgorithm(void)
+IAlgorithm& CAlgorithmProxy::getAlgorithm(void)
 {
 	return m_rAlgorithm;
 }
 
-const IAlgorithm& CAlgorithm::getAlgorithm(void) const
+const IAlgorithm& CAlgorithmProxy::getAlgorithm(void) const
 {
 	return m_rAlgorithm;
 }
 
-const IAlgorithmDesc& CAlgorithm::getAlgorithmDesc(void) const
+const IAlgorithmDesc& CAlgorithmProxy::getAlgorithmDesc(void) const
 {
 	return m_rAlgorithmDesc;
 }
 
-boolean CAlgorithm::addInputParameter(
+boolean CAlgorithmProxy::addInputParameter(
 	const CIdentifier& rInputParameterIdentifier,
 	const CString& sInputName,
 	const EParameterType eParameterType,
@@ -78,13 +78,13 @@ boolean CAlgorithm::addInputParameter(
 	return true;
 }
 
-CIdentifier CAlgorithm::getNextInputParameterIdentifier(
+CIdentifier CAlgorithmProxy::getNextInputParameterIdentifier(
 	const CIdentifier& rPreviousInputParameterIdentifier) const
 {
 	return m_pInputConfigurable->getNextParameterIdentifier(rPreviousInputParameterIdentifier);
 }
 
-IParameter* CAlgorithm::getInputParameter(
+IParameter* CAlgorithmProxy::getInputParameter(
 	const CIdentifier& rInputParameterIdentifier)
 {
 	IParameter* l_pParameter=m_pInputConfigurable->getParameter(rInputParameterIdentifier);
@@ -100,7 +100,7 @@ IParameter* CAlgorithm::getInputParameter(
 	return l_pParameter;
 }
 
-EParameterType CAlgorithm::getInputParameterType(
+EParameterType CAlgorithmProxy::getInputParameterType(
 	const CIdentifier& rInputParameterIdentifier) const
 {
 	IParameter* l_pParameter=m_pInputConfigurable->getParameter(rInputParameterIdentifier);
@@ -111,7 +111,7 @@ EParameterType CAlgorithm::getInputParameterType(
 	return l_pParameter->getType();
 }
 
-CString CAlgorithm::getInputParameterName(
+CString CAlgorithmProxy::getInputParameterName(
 	const CIdentifier& rInputParameterIdentifier) const
 {
 	map<CIdentifier, CString>::const_iterator itName=m_vInputParameterName.find(rInputParameterIdentifier);
@@ -122,7 +122,7 @@ CString CAlgorithm::getInputParameterName(
 	return itName->second;
 }
 
-boolean CAlgorithm::removeInputParameter(
+boolean CAlgorithmProxy::removeInputParameter(
 	const CIdentifier& rInputParameterIdentifier)
 {
 	if (!m_pInputConfigurable->removeParameter(rInputParameterIdentifier))
@@ -133,7 +133,7 @@ boolean CAlgorithm::removeInputParameter(
 	return true;
 }
 
-boolean CAlgorithm::addOutputParameter(
+boolean CAlgorithmProxy::addOutputParameter(
 	const CIdentifier& rOutputParameterIdentifier,
 	const CString& sOutputName,
 	const EParameterType eParameterType,
@@ -149,13 +149,13 @@ boolean CAlgorithm::addOutputParameter(
 	return true;
 }
 
-CIdentifier CAlgorithm::getNextOutputParameterIdentifier(
+CIdentifier CAlgorithmProxy::getNextOutputParameterIdentifier(
 	const CIdentifier& rPreviousOutputParameterIdentifier) const
 {
 	return m_pOutputConfigurable->getNextParameterIdentifier(rPreviousOutputParameterIdentifier);
 }
 
-IParameter* CAlgorithm::getOutputParameter(
+IParameter* CAlgorithmProxy::getOutputParameter(
 	const CIdentifier& rOutputParameterIdentifier)
 {
 	IParameter* l_pParameter=m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
@@ -171,7 +171,7 @@ IParameter* CAlgorithm::getOutputParameter(
 	return l_pParameter;
 }
 
-EParameterType CAlgorithm::getOutputParameterType(
+EParameterType CAlgorithmProxy::getOutputParameterType(
 	const CIdentifier& rOutputParameterIdentifier) const
 {
 	IParameter* l_pParameter=m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
@@ -182,7 +182,7 @@ EParameterType CAlgorithm::getOutputParameterType(
 	return l_pParameter->getType();
 }
 
-CString CAlgorithm::getOutputParameterName(
+CString CAlgorithmProxy::getOutputParameterName(
 	const CIdentifier& rOutputParameterIdentifier) const
 {
 	map<CIdentifier, CString>::const_iterator itName=m_vOutputParameterName.find(rOutputParameterIdentifier);
@@ -193,7 +193,7 @@ CString CAlgorithm::getOutputParameterName(
 	return itName->second;
 }
 
-boolean CAlgorithm::removeOutputParameter(
+boolean CAlgorithmProxy::removeOutputParameter(
 	const CIdentifier& rOutputParameterIdentifier)
 {
 	if (!m_pOutputConfigurable->removeParameter(rOutputParameterIdentifier))
@@ -204,7 +204,7 @@ boolean CAlgorithm::removeOutputParameter(
 	return true;
 }
 
-boolean CAlgorithm::addInputTrigger(
+boolean CAlgorithmProxy::addInputTrigger(
 	const CIdentifier& rInputTriggerIdentifier,
 	const CString& rInputTriggerName)
 {
@@ -217,13 +217,13 @@ boolean CAlgorithm::addInputTrigger(
 	return true;
 }
 
-CIdentifier CAlgorithm::getNextInputTriggerIdentifier(
+CIdentifier CAlgorithmProxy::getNextInputTriggerIdentifier(
 	const CIdentifier& rPreviousInputTriggerIdentifier) const
 {
 	return getNextIdentifier< pair<CString, boolean> >(m_vInputTrigger, rPreviousInputTriggerIdentifier);
 }
 
-CString CAlgorithm::getInputTriggerName(
+CString CAlgorithmProxy::getInputTriggerName(
 	const CIdentifier& rInputTriggerIdentifier) const
 {
 	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
@@ -234,7 +234,7 @@ CString CAlgorithm::getInputTriggerName(
 	return itTrigger->second.first;
 }
 
-boolean CAlgorithm::isInputTriggerActive(
+boolean CAlgorithmProxy::isInputTriggerActive(
 	const CIdentifier& rInputTriggerIdentifier) const
 {
 	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
@@ -245,7 +245,7 @@ boolean CAlgorithm::isInputTriggerActive(
 	return itTrigger->second.second;
 }
 
-boolean CAlgorithm::activateInputTrigger(
+boolean CAlgorithmProxy::activateInputTrigger(
 	const CIdentifier& rInputTriggerIdentifier,
 	const boolean bTriggerState)
 {
@@ -258,7 +258,7 @@ boolean CAlgorithm::activateInputTrigger(
 	return true;
 }
 
-boolean CAlgorithm::removeInputTrigger(
+boolean CAlgorithmProxy::removeInputTrigger(
 	const CIdentifier& rInputTriggerIdentifier)
 {
 	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
@@ -270,7 +270,7 @@ boolean CAlgorithm::removeInputTrigger(
 	return true;
 }
 
-boolean CAlgorithm::addOutputTrigger(
+boolean CAlgorithmProxy::addOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier,
 	const CString& rOutputTriggerName)
 {
@@ -283,13 +283,13 @@ boolean CAlgorithm::addOutputTrigger(
 	return true;
 }
 
-CIdentifier CAlgorithm::getNextOutputTriggerIdentifier(
+CIdentifier CAlgorithmProxy::getNextOutputTriggerIdentifier(
 	const CIdentifier& rPreviousOutputTriggerIdentifier) const
 {
 	return getNextIdentifier< pair<CString, boolean> >(m_vOutputTrigger, rPreviousOutputTriggerIdentifier);
 }
 
-CString CAlgorithm::getOutputTriggerName(
+CString CAlgorithmProxy::getOutputTriggerName(
 	const CIdentifier& rOutputTriggerIdentifier) const
 {
 	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
@@ -300,7 +300,7 @@ CString CAlgorithm::getOutputTriggerName(
 	return itTrigger->second.first;
 }
 
-boolean CAlgorithm::isOutputTriggerActive(
+boolean CAlgorithmProxy::isOutputTriggerActive(
 	const CIdentifier& rOutputTriggerIdentifier) const
 {
 	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
@@ -311,7 +311,7 @@ boolean CAlgorithm::isOutputTriggerActive(
 	return itTrigger->second.second;
 }
 
-boolean CAlgorithm::activateOutputTrigger(
+boolean CAlgorithmProxy::activateOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier,
 	const boolean bTriggerState)
 {
@@ -324,7 +324,7 @@ boolean CAlgorithm::activateOutputTrigger(
 	return true;
 }
 
-boolean CAlgorithm::removeOutputTrigger(
+boolean CAlgorithmProxy::removeOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier)
 {
 	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
@@ -337,7 +337,7 @@ boolean CAlgorithm::removeOutputTrigger(
 }
 
 
-boolean CAlgorithm::initialize(void)
+boolean CAlgorithmProxy::initialize(void)
 {
 	assert(!m_bIsInitialized);
 	
@@ -354,7 +354,7 @@ boolean CAlgorithm::initialize(void)
 	);
 }
 
-boolean CAlgorithm::uninitialize(void)
+boolean CAlgorithmProxy::uninitialize(void)
 {
 	assert(m_bIsInitialized);
 	
@@ -367,7 +367,7 @@ boolean CAlgorithm::uninitialize(void)
 	);
 }
 
-boolean CAlgorithm::process(void)
+boolean CAlgorithmProxy::process(void)
 {
 	assert(m_bIsInitialized);
 	
@@ -388,7 +388,7 @@ boolean CAlgorithm::process(void)
 	);
 }
 
-boolean CAlgorithm::process(
+boolean CAlgorithmProxy::process(
 	const CIdentifier& rTriggerIdentifier)
 {
 	assert(m_bIsInitialized);
@@ -401,7 +401,7 @@ boolean CAlgorithm::process(
 	return this->process();
 }
 
-void CAlgorithm::setAllInputTriggers(const boolean bTriggerStatus)
+void CAlgorithmProxy::setAllInputTriggers(const boolean bTriggerStatus)
 {
 	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger;
 	for (itTrigger=m_vInputTrigger.begin(); itTrigger!=m_vInputTrigger.end(); itTrigger++)
@@ -410,7 +410,7 @@ void CAlgorithm::setAllInputTriggers(const boolean bTriggerStatus)
 	}
 }
 
-void CAlgorithm::setAllOutputTriggers(const boolean bTriggerStatus)
+void CAlgorithmProxy::setAllOutputTriggers(const boolean bTriggerStatus)
 {
 	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger;
 	for (itTrigger=m_vOutputTrigger.begin(); itTrigger!=m_vOutputTrigger.end(); itTrigger++)
@@ -419,7 +419,7 @@ void CAlgorithm::setAllOutputTriggers(const boolean bTriggerStatus)
 	}
 }
 
-boolean CAlgorithm::isAlgorithmDerivedFrom(const CIdentifier& rClassIdentifier)
+boolean CAlgorithmProxy::isAlgorithmDerivedFrom(const CIdentifier& rClassIdentifier)
 {
 	return m_rAlgorithm.isDerivedFromClass(rClassIdentifier);
 }

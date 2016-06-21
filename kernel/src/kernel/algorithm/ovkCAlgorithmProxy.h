@@ -1,5 +1,5 @@
-#ifndef __OpenViBEKernel_Kernel_CAlgorithm_H__
-#define __OpenViBEKernel_Kernel_CAlgorithm_H__
+#ifndef __OpenViBEKernel_Kernel_CAlgorithmProxy_H__
+#define __OpenViBEKernel_Kernel_CAlgorithmProxy_H__
 
 #include "../ovkTKernelObject.h"
 
@@ -9,12 +9,12 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CAlgorithm : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >
+		class CAlgorithmProxy : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >
 		{
 		public:
 
-			CAlgorithm(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Plugins::IAlgorithm& rAlgorithm, const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc);
-			virtual ~CAlgorithm(void);
+			CAlgorithmProxy(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Plugins::IAlgorithm& rAlgorithm, const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc);
+			virtual ~CAlgorithmProxy(void);
 
 			virtual OpenViBE::Plugins::IAlgorithm& getAlgorithm(void);
 			virtual const OpenViBE::Plugins::IAlgorithm& getAlgorithm(void) const;
@@ -91,7 +91,7 @@ namespace OpenViBE
 			virtual OpenViBE::boolean isAlgorithmDerivedFrom(
 				const OpenViBE::CIdentifier& rClassIdentifier);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >, OVK_ClassId_Kernel_Algorithm_Algorithm)
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >, OVK_ClassId_Kernel_Algorithm_AlgorithmProxy )
 
 		protected:
 

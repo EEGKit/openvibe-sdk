@@ -7,13 +7,13 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CAlgorithm;
+		class CAlgorithmProxy;
 
 		class CAlgorithmContext : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmContext >
 		{
 		public:
 
-			CAlgorithmContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CAlgorithm& rAlgorithm, const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc);
+			CAlgorithmContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CAlgorithmProxy& rAlgorithmProxy, const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc);
 			virtual ~CAlgorithmContext(void);
 
 			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const;
@@ -43,7 +43,7 @@ namespace OpenViBE
 		protected:
 
 			OpenViBE::Kernel::ILogManager& m_rLogManager;
-			OpenViBE::Kernel::CAlgorithm& m_rAlgorithm;
+			OpenViBE::Kernel::CAlgorithmProxy& m_rAlgorithmProxy;
 		};
 	};
 };

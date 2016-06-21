@@ -7,13 +7,13 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CAlgorithm;
+		class CAlgorithmProxy;
 
 		class CAlgorithmProto : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProto >
 		{
 		public:
 
-			CAlgorithmProto(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CAlgorithm& rAlgorithm);
+			CAlgorithmProto(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CAlgorithmProxy& rAlgorithmProxy);
 
 			virtual OpenViBE::boolean addInputParameter(
 				const OpenViBE::CIdentifier& rInputParameterIdentifier,
@@ -39,7 +39,7 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::Kernel::CAlgorithm& m_rAlgorithm;
+			OpenViBE::Kernel::CAlgorithmProxy& m_rAlgorithmProxy;
 		};
 	};
 };

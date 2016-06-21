@@ -1,5 +1,5 @@
 #include "ovkCAlgorithmManager.h"
-#include "ovkCAlgorithm.h"
+#include "ovkCAlgorithmProxy.h"
 
 #include <system/ovCMath.h>
 
@@ -16,11 +16,11 @@ CAlgorithmManager::CAlgorithmManager(const IKernelContext& rKernelContext)
 CAlgorithmManager::~CAlgorithmManager(void)
 {
 	AlgorithmMap::iterator itAlgorithm;
-	for(itAlgorithm=m_vAlgorithm.begin(); itAlgorithm!=m_vAlgorithm.end(); itAlgorithm++)
+	for(itAlgorithm=m_vAlgorithms.begin(); itAlgorithm!=m_vAlgorithms.end(); itAlgorithm++)
 	{
-		CAlgorithm* l_rAlgorithmWrapper = itAlgorithm->second;		
-		IAlgorithm& l_rAlgorithm = l_rAlgorithmWrapper->getAlgorithm();
-		delete l_rAlgorithmWrapper;
+		CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;		
+		IAlgorithm& l_rAlgorithm = l_pAlgorithmProxy->getAlgorithm();
+		delete l_pAlgorithmProxy;
 		
 		getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 	}
@@ -40,9 +40,9 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmClassIdentifier << "\n";
 
 	CIdentifier l_oAlgorithmIdentifier=getUnusedIdentifier();
-	CAlgorithm* l_pAlgorithmWrapper=new CAlgorithm(getKernelContext(), *l_pAlgorithm, *l_pAlgorithmDesc);
+	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pAlgorithm, *l_pAlgorithmDesc);
 	
-	m_vAlgorithm[l_oAlgorithmIdentifier]=l_pAlgorithmWrapper;
+	m_vAlgorithms[l_oAlgorithmIdentifier]=l_pAlgorithmProxy;
 	return l_oAlgorithmIdentifier;
 }
 
@@ -59,8 +59,8 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmDesc.getClassIdentifier() << "\n";
 
 	CIdentifier l_oAlgorithmIdentifier=getUnusedIdentifier();
-	CAlgorithm* l_pAlgorithmWrapper=new CAlgorithm(getKernelContext(), *l_pAlgorithm, rAlgorithmDesc);
-	m_vAlgorithm[l_oAlgorithmIdentifier]=l_pAlgorithmWrapper;
+	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pAlgorithm, rAlgorithmDesc);
+	m_vAlgorithms[l_oAlgorithmIdentifier]=l_pAlgorithmProxy;
 	return l_oAlgorithmIdentifier;
 }
 
@@ -69,21 +69,21 @@ boolean CAlgorithmManager::releaseAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
 	AlgorithmMap::iterator itAlgorithm;
-	itAlgorithm=m_vAlgorithm.find(rAlgorithmIdentifier);
-	if(itAlgorithm==m_vAlgorithm.end())
+	itAlgorithm=m_vAlgorithms.find(rAlgorithmIdentifier);
+	if(itAlgorithm==m_vAlgorithms.end())
 	{
 		getLogManager() << LogLevel_Warning << "Algorithm release failed, identifier " << rAlgorithmIdentifier << "\n";
 		return false;
 	}
 	getLogManager() << LogLevel_Debug << "Releasing algorithm with identifier " << rAlgorithmIdentifier << "\n";
-	CAlgorithm* l_rAlgorithmWrapper = itAlgorithm->second;		
-	IAlgorithm& l_rAlgorithm=l_rAlgorithmWrapper->getAlgorithm();
-	if(l_rAlgorithmWrapper) 
+	CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;		
+	IAlgorithm& l_rAlgorithm=l_pAlgorithmProxy->getAlgorithm();
+	if(l_pAlgorithmProxy) 
 	{
-		delete l_rAlgorithmWrapper;
-		l_rAlgorithmWrapper = NULL;
+		delete l_pAlgorithmProxy;
+		l_pAlgorithmProxy = NULL;
 	}
-	m_vAlgorithm.erase(itAlgorithm);
+	m_vAlgorithms.erase(itAlgorithm);
 	getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 	return true;
 }
@@ -92,19 +92,19 @@ boolean CAlgorithmManager::releaseAlgorithm(
 	IAlgorithmProxy& rAlgorithm)
 {
 	AlgorithmMap::iterator itAlgorithm;
-	for(itAlgorithm=m_vAlgorithm.begin(); itAlgorithm!=m_vAlgorithm.end(); itAlgorithm++)
+	for(itAlgorithm=m_vAlgorithms.begin(); itAlgorithm!=m_vAlgorithms.end(); itAlgorithm++)
 	{
-		CAlgorithm* l_rAlgorithmWrapper = itAlgorithm->second;	
-		if((IAlgorithmProxy*)l_rAlgorithmWrapper==&rAlgorithm)
+		CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;	
+		if((IAlgorithmProxy*)l_pAlgorithmProxy==&rAlgorithm)
 		{
-			IAlgorithm& l_rAlgorithm=l_rAlgorithmWrapper->getAlgorithm();
+			IAlgorithm& l_rAlgorithm=l_pAlgorithmProxy->getAlgorithm();
 			getLogManager() << LogLevel_Debug << "Releasing algorithm with class id " << l_rAlgorithm.getClassIdentifier() << "\n";
-			if(l_rAlgorithmWrapper) 
+			if(l_pAlgorithmProxy) 
 			{
-				delete l_rAlgorithmWrapper;
-				l_rAlgorithmWrapper = NULL;
+				delete l_pAlgorithmProxy;
+				l_pAlgorithmProxy = NULL;
 			}
-			m_vAlgorithm.erase(itAlgorithm);
+			m_vAlgorithms.erase(itAlgorithm);
 			getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 			return true;
 		}
@@ -117,8 +117,8 @@ IAlgorithmProxy& CAlgorithmManager::getAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
 	AlgorithmMap::const_iterator itAlgorithm;
-	itAlgorithm=m_vAlgorithm.find(rAlgorithmIdentifier);
-	if(itAlgorithm==m_vAlgorithm.end())
+	itAlgorithm=m_vAlgorithms.find(rAlgorithmIdentifier);
+	if(itAlgorithm==m_vAlgorithms.end())
 	{
 		this->getLogManager() << LogLevel_Fatal << "Algorithm " << rAlgorithmIdentifier << " does not exist !\n";
 	}
@@ -128,23 +128,23 @@ IAlgorithmProxy& CAlgorithmManager::getAlgorithm(
 CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(
 	const CIdentifier& rPreviousIdentifier) const
 {
-	AlgorithmMap::const_iterator itAlgorithm=m_vAlgorithm.begin();
+	AlgorithmMap::const_iterator itAlgorithm=m_vAlgorithms.begin();
 
 	if(rPreviousIdentifier==OV_UndefinedIdentifier)
 	{
-		itAlgorithm=m_vAlgorithm.begin();
+		itAlgorithm=m_vAlgorithms.begin();
 	}
 	else
 	{
-		itAlgorithm=m_vAlgorithm.find(rPreviousIdentifier);
-		if(itAlgorithm==m_vAlgorithm.end())
+		itAlgorithm=m_vAlgorithms.find(rPreviousIdentifier);
+		if(itAlgorithm==m_vAlgorithms.end())
 		{
 			return OV_UndefinedIdentifier;
 		}
 		itAlgorithm++;
 	}
 
-	return itAlgorithm!=m_vAlgorithm.end()?itAlgorithm->first:OV_UndefinedIdentifier;
+	return itAlgorithm!=m_vAlgorithms.end()?itAlgorithm->first:OV_UndefinedIdentifier;
 }
 
 CIdentifier CAlgorithmManager::getUnusedIdentifier(void) const
@@ -156,8 +156,8 @@ CIdentifier CAlgorithmManager::getUnusedIdentifier(void) const
 	{
 		l_ui64Identifier++;
 		l_oResult=CIdentifier(l_ui64Identifier);
-		i=m_vAlgorithm.find(l_oResult);
+		i=m_vAlgorithms.find(l_oResult);
 	}
-	while(i!=m_vAlgorithm.end() || l_oResult==OV_UndefinedIdentifier);
+	while(i!=m_vAlgorithms.end() || l_oResult==OV_UndefinedIdentifier);
 	return l_oResult;
 }
