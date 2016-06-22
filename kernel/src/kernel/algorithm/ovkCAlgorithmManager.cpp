@@ -23,6 +23,8 @@ CAlgorithmManager::~CAlgorithmManager(void)
 		
 		getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 	}
+	
+	m_vAlgorithms.clear();
 }
 
 CIdentifier CAlgorithmManager::createAlgorithm(
@@ -74,33 +76,35 @@ boolean CAlgorithmManager::releaseAlgorithm(
 		return false;
 	}
 	getLogManager() << LogLevel_Debug << "Releasing algorithm with identifier " << rAlgorithmIdentifier << "\n";
-	CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;		
-	IAlgorithm& l_rAlgorithm=l_pAlgorithmProxy->getAlgorithm();
+	CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;
 	if(l_pAlgorithmProxy) 
-	{
+	{		
+		IAlgorithm& l_rAlgorithm=l_pAlgorithmProxy->getAlgorithm();
+
 		delete l_pAlgorithmProxy;
 		l_pAlgorithmProxy = NULL;
+		
+		getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 	}
 	m_vAlgorithms.erase(itAlgorithm);
-	getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
+
 	return true;
 }
 
 boolean CAlgorithmManager::releaseAlgorithm(
 	IAlgorithmProxy& rAlgorithm)
-{
+{	
 	for(auto& algorithm : m_vAlgorithms)
 	{
-		CAlgorithmProxy* l_pAlgorithmProxy = algorithm.second;	
-		if((IAlgorithmProxy*)l_pAlgorithmProxy==&rAlgorithm)
+		CAlgorithmProxy* l_pAlgorithmProxy = algorithm.second;
+		if(l_pAlgorithmProxy==&rAlgorithm)
 		{
 			IAlgorithm& l_rAlgorithm=l_pAlgorithmProxy->getAlgorithm();
 			getLogManager() << LogLevel_Debug << "Releasing algorithm with class id " << l_rAlgorithm.getClassIdentifier() << "\n";
-			if(l_pAlgorithmProxy) 
-			{
-				delete l_pAlgorithmProxy;
-				l_pAlgorithmProxy = NULL;
-			}
+
+			delete l_pAlgorithmProxy;
+			l_pAlgorithmProxy = NULL;
+				
 			m_vAlgorithms.erase(algorithm.first);
 			getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 			return true;
