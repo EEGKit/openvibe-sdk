@@ -1,6 +1,5 @@
 #include "ovkCAlgorithmManager.h"
 #include "ovkCAlgorithmProxy.h"
-#include "ovkCAlgorithm.h"
 
 #include <system/ovCMath.h>
 
@@ -16,14 +15,16 @@ CAlgorithmManager::CAlgorithmManager(const IKernelContext& rKernelContext)
 
 CAlgorithmManager::~CAlgorithmManager(void)
 {
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::iterator itAlgorithm;
-	for(itAlgorithm=m_vAlgorithm.begin(); itAlgorithm!=m_vAlgorithm.end(); itAlgorithm++)
+	for(auto& algorithm : m_vAlgorithms)
 	{
-		IAlgorithm& l_rAlgorithm=itAlgorithm->second.first->getAlgorithm();
-		delete itAlgorithm->second.second;
-		delete itAlgorithm->second.first;
+		CAlgorithmProxy* l_pAlgorithmProxy = algorithm.second;
+		IAlgorithm& l_rAlgorithm = l_pAlgorithmProxy->getAlgorithm();
+		delete l_pAlgorithmProxy;
+		
 		getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 	}
+	
+	m_vAlgorithms.clear();
 }
 
 CIdentifier CAlgorithmManager::createAlgorithm(
@@ -40,9 +41,9 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmClassIdentifier << "\n";
 
 	CIdentifier l_oAlgorithmIdentifier=getUnusedIdentifier();
-	CAlgorithm* l_pTrueAlgorithm=new CAlgorithm(getKernelContext(), *l_pAlgorithm, *l_pAlgorithmDesc);
-	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pTrueAlgorithm);
-	m_vAlgorithm[l_oAlgorithmIdentifier]=pair < CAlgorithm*, CAlgorithmProxy* >(l_pTrueAlgorithm, l_pAlgorithmProxy);
+	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pAlgorithm, *l_pAlgorithmDesc);
+	
+	m_vAlgorithms[l_oAlgorithmIdentifier]=l_pAlgorithmProxy;
 	return l_oAlgorithmIdentifier;
 }
 
@@ -59,9 +60,8 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmDesc.getClassIdentifier() << "\n";
 
 	CIdentifier l_oAlgorithmIdentifier=getUnusedIdentifier();
-	CAlgorithm* l_pTrueAlgorithm=new CAlgorithm(getKernelContext(), *l_pAlgorithm, rAlgorithmDesc);
-	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pTrueAlgorithm);
-	m_vAlgorithm[l_oAlgorithmIdentifier]=pair < CAlgorithm*, CAlgorithmProxy* >(l_pTrueAlgorithm, l_pAlgorithmProxy);
+	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pAlgorithm, rAlgorithmDesc);
+	m_vAlgorithms[l_oAlgorithmIdentifier]=l_pAlgorithmProxy;
 	return l_oAlgorithmIdentifier;
 }
 
@@ -69,55 +69,48 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 boolean CAlgorithmManager::releaseAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::iterator itAlgorithm;
-	itAlgorithm=m_vAlgorithm.find(rAlgorithmIdentifier);
-	if(itAlgorithm==m_vAlgorithm.end())
+	AlgorithmMap::iterator itAlgorithm = m_vAlgorithms.find(rAlgorithmIdentifier);
+	if(itAlgorithm==m_vAlgorithms.end())
 	{
 		getLogManager() << LogLevel_Warning << "Algorithm release failed, identifier " << rAlgorithmIdentifier << "\n";
 		return false;
 	}
 	getLogManager() << LogLevel_Debug << "Releasing algorithm with identifier " << rAlgorithmIdentifier << "\n";
-	IAlgorithm& l_rAlgorithm=itAlgorithm->second.first->getAlgorithm();
-	if(itAlgorithm->second.second) 
-	{
-		delete itAlgorithm->second.second;
-		itAlgorithm->second.second = NULL;
+	CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;
+	if(l_pAlgorithmProxy) 
+	{		
+		IAlgorithm& l_rAlgorithm=l_pAlgorithmProxy->getAlgorithm();
+
+		delete l_pAlgorithmProxy;
+		l_pAlgorithmProxy = NULL;
+		
+		getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 	}
-	if(itAlgorithm->second.first) 
-	{
-		delete itAlgorithm->second.first;
-		itAlgorithm->second.first = NULL;
-	}
-	m_vAlgorithm.erase(itAlgorithm);
-	getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
+	m_vAlgorithms.erase(itAlgorithm);
+
 	return true;
 }
 
 boolean CAlgorithmManager::releaseAlgorithm(
 	IAlgorithmProxy& rAlgorithm)
-{
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::iterator itAlgorithm;
-	for(itAlgorithm=m_vAlgorithm.begin(); itAlgorithm!=m_vAlgorithm.end(); itAlgorithm++)
+{	
+	for(auto& algorithm : m_vAlgorithms)
 	{
-		if((IAlgorithmProxy*)itAlgorithm->second.second==&rAlgorithm)
+		CAlgorithmProxy* l_pAlgorithmProxy = algorithm.second;
+		if(l_pAlgorithmProxy==&rAlgorithm)
 		{
-			IAlgorithm& l_rAlgorithm=itAlgorithm->second.first->getAlgorithm();
+			IAlgorithm& l_rAlgorithm=l_pAlgorithmProxy->getAlgorithm();
 			getLogManager() << LogLevel_Debug << "Releasing algorithm with class id " << l_rAlgorithm.getClassIdentifier() << "\n";
-			if(itAlgorithm->second.second) 
-			{
-				delete itAlgorithm->second.second;
-				itAlgorithm->second.second = NULL;
-			}
-			if(itAlgorithm->second.first) 
-			{
-				delete itAlgorithm->second.first;
-				itAlgorithm->second.first = NULL;
-			}
-			m_vAlgorithm.erase(itAlgorithm);
+
+			delete l_pAlgorithmProxy;
+			l_pAlgorithmProxy = NULL;
+				
+			m_vAlgorithms.erase(algorithm.first);
 			getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 			return true;
 		}
 	}
+	
 	getLogManager() << LogLevel_Warning << "Algorithm release failed\n";
 	return false;
 }
@@ -125,48 +118,47 @@ boolean CAlgorithmManager::releaseAlgorithm(
 IAlgorithmProxy& CAlgorithmManager::getAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::const_iterator itAlgorithm;
-	itAlgorithm=m_vAlgorithm.find(rAlgorithmIdentifier);
-	if(itAlgorithm==m_vAlgorithm.end())
+	AlgorithmMap::const_iterator itAlgorithm = m_vAlgorithms.find(rAlgorithmIdentifier);
+	if(itAlgorithm==m_vAlgorithms.end())
 	{
 		this->getLogManager() << LogLevel_Fatal << "Algorithm " << rAlgorithmIdentifier << " does not exist !\n";
 	}
-	return *itAlgorithm->second.second;
+	return *itAlgorithm->second;
 }
 
 CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(
 	const CIdentifier& rPreviousIdentifier) const
 {
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::const_iterator itAlgorithm=m_vAlgorithm.begin();
+	AlgorithmMap::const_iterator itAlgorithm=m_vAlgorithms.begin();
 
 	if(rPreviousIdentifier==OV_UndefinedIdentifier)
 	{
-		itAlgorithm=m_vAlgorithm.begin();
+		itAlgorithm=m_vAlgorithms.begin();
 	}
 	else
 	{
-		itAlgorithm=m_vAlgorithm.find(rPreviousIdentifier);
-		if(itAlgorithm==m_vAlgorithm.end())
+		itAlgorithm=m_vAlgorithms.find(rPreviousIdentifier);
+		if(itAlgorithm==m_vAlgorithms.end())
 		{
 			return OV_UndefinedIdentifier;
 		}
 		itAlgorithm++;
 	}
 
-	return itAlgorithm!=m_vAlgorithm.end()?itAlgorithm->first:OV_UndefinedIdentifier;
+	return itAlgorithm!=m_vAlgorithms.end()?itAlgorithm->first:OV_UndefinedIdentifier;
 }
 
 CIdentifier CAlgorithmManager::getUnusedIdentifier(void) const
 {
 	uint64 l_ui64Identifier=System::Math::randomUInteger64();
 	CIdentifier l_oResult;
-	map < CIdentifier, pair < CAlgorithm*, CAlgorithmProxy* > >::const_iterator i;
+	AlgorithmMap::const_iterator i;
 	do
 	{
 		l_ui64Identifier++;
 		l_oResult=CIdentifier(l_ui64Identifier);
-		i=m_vAlgorithm.find(l_oResult);
+		i=m_vAlgorithms.find(l_oResult);
 	}
-	while(i!=m_vAlgorithm.end() || l_oResult==OV_UndefinedIdentifier);
+	while(i!=m_vAlgorithms.end() || l_oResult==OV_UndefinedIdentifier);
 	return l_oResult;
 }

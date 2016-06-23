@@ -9,7 +9,6 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CAlgorithm;
 		class CAlgorithmProxy;
 
 		class CAlgorithmManager : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmManager >
@@ -40,7 +39,8 @@ namespace OpenViBE
 
 		protected:
 
-			std::map < OpenViBE::CIdentifier, std::pair < OpenViBE::Kernel::CAlgorithm*, OpenViBE::Kernel::CAlgorithmProxy* > > m_vAlgorithm;
+			using AlgorithmMap = std::map < OpenViBE::CIdentifier, OpenViBE::Kernel::CAlgorithmProxy* >;
+			AlgorithmMap m_vAlgorithms;
 		};
 	};
 };

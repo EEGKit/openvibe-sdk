@@ -1,14 +1,14 @@
 #include "ovkCAlgorithmContext.h"
-#include "ovkCAlgorithm.h"
+#include "ovkCAlgorithmProxy.h"
 
 using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;
 
-CAlgorithmContext::CAlgorithmContext(const IKernelContext& rKernelContext, CAlgorithm& rAlgorithm, const IPluginObjectDesc& rPluginObjectDesc)
+CAlgorithmContext::CAlgorithmContext(const IKernelContext& rKernelContext, CAlgorithmProxy& rAlgorithmProxy, const IPluginObjectDesc& rPluginObjectDesc)
 	:TKernelObject < IAlgorithmContext >(rKernelContext)
 	,m_rLogManager(rKernelContext.getLogManager())
-	,m_rAlgorithm(rAlgorithm)
+	,m_rAlgorithmProxy(rAlgorithmProxy)
 {
 }
 
@@ -39,36 +39,36 @@ ITypeManager& CAlgorithmContext::getTypeManager(void) const
 CIdentifier CAlgorithmContext::getNextInputParameterIdentifier(
 	const CIdentifier& rPreviousInputParameterIdentifier) const
 {
-	return m_rAlgorithm.getNextInputParameterIdentifier(rPreviousInputParameterIdentifier);
+	return m_rAlgorithmProxy.getNextInputParameterIdentifier(rPreviousInputParameterIdentifier);
 }
 
 IParameter* CAlgorithmContext::getInputParameter(
 	const CIdentifier& rInputParameterIdentifier)
 {
-	return m_rAlgorithm.getInputParameter(rInputParameterIdentifier);
+	return m_rAlgorithmProxy.getInputParameter(rInputParameterIdentifier);
 }
 
 CIdentifier CAlgorithmContext::getNextOutputParameterIdentifier(
 	const CIdentifier& rPreviousOutputParameterIdentifier) const
 {
-	return m_rAlgorithm.getNextOutputParameterIdentifier(rPreviousOutputParameterIdentifier);
+	return m_rAlgorithmProxy.getNextOutputParameterIdentifier(rPreviousOutputParameterIdentifier);
 }
 
 IParameter* CAlgorithmContext::getOutputParameter(
 	const CIdentifier& rOutputParameterIdentifier)
 {
-	return m_rAlgorithm.getOutputParameter(rOutputParameterIdentifier);
+	return m_rAlgorithmProxy.getOutputParameter(rOutputParameterIdentifier);
 }
 
 boolean CAlgorithmContext::isInputTriggerActive(
 	const CIdentifier& rInputTriggerIdentifier) const
 {
-	return m_rAlgorithm.isInputTriggerActive(rInputTriggerIdentifier);
+	return m_rAlgorithmProxy.isInputTriggerActive(rInputTriggerIdentifier);
 }
 
 boolean CAlgorithmContext::activateOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier,
 	const boolean bTriggerState)
 {
-	return m_rAlgorithm.activateOutputTrigger(rOutputTriggerIdentifier, bTriggerState);
+	return m_rAlgorithmProxy.activateOutputTrigger(rOutputTriggerIdentifier, bTriggerState);
 }
