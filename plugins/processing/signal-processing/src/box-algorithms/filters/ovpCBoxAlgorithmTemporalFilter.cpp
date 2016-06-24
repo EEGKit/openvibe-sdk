@@ -61,6 +61,7 @@ namespace
 	typedef Dsp::SmoothedFilterDesign < Dsp::ChebyshevI::Design::HighPass < 4 >, 1, Dsp::DirectFormII > CChebyshevHighPass;
 	typedef Dsp::SmoothedFilterDesign < Dsp::ChebyshevI::Design::LowPass < 4 >, 1, Dsp::DirectFormII > CChebyshevLowPass;
 
+	/*
 	Dsp::Filter* createChebishevFilter(uint64 ui64FilterType, uint64 ui64SmoothingSampleCount)
 	{
 		switch(ui64FilterType)
@@ -100,6 +101,7 @@ namespace
 		}
 		return true;
 	}
+	*/
 
 	typedef boolean (*fpGetParameters_t)(Dsp::Params& rParameters, uint64 ui64FilterType, uint64 ui64SamplingRate, uint64 ui64Order, float64 f64LowCutFrequency, float64 f64HighCutFrequency, float64 f64BandPassRipple);
 	typedef Dsp::Filter* (*fpCreateFilter_t)(uint64 ui64FilterType, uint64 ui64SmoothingSampleCount);

@@ -5,7 +5,25 @@ SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
 SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
 SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
-FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.hpp src/*.inl include/*.h)
+SET(source_files
+	include/system/defines.h
+	include/system/ovCChrono.h
+	include/system/ovCMath.h
+	include/system/ovCMemory.h
+	include/system/ovCTime.h
+	src/ovCChrono.cpp
+	src/ovCMath.cpp
+	src/ovCMemory.cpp
+	src/ovCTime.cpp
+	)
+
+IF(WIN32)
+	LIST(APPEND source_files
+		"include/system/WindowsUtilities.h"
+		"src/WindowsUtilities.cpp"
+		)
+ENDIF()
+
 INCLUDE_DIRECTORIES(include)
 INCLUDE("FindSourceRCProperties")
 

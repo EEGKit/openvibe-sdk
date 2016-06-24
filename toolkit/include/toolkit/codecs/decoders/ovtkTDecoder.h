@@ -36,7 +36,7 @@ namespace OpenViBEToolkit
 			return m_pCodec->isOutputTriggerActive(oTrigger);
 		}
 
-		virtual OpenViBE::boolean process(OpenViBE::CIdentifier oTrigger)
+		virtual OpenViBE::boolean process(const OpenViBE::CIdentifier& oTrigger)
 		{
 			return m_pCodec->process(oTrigger);
 		}

@@ -40,7 +40,6 @@ namespace OpenViBEPlugins
 
 		private:
 
-			OpenViBE::uint64 m_ui64MatrixBufferSize;
 		};
 
 		class CAcquisitionEncoderDesc : public OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc

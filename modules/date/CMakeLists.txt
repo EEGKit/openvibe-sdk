@@ -5,7 +5,19 @@ SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
 SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
 SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
-FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.hpp src/*.inl include/*.h)
+SET(source_files
+	include/date/defines.h
+	include/date/DateParser.h
+	src/DateParser.cpp
+	)
+
+IF(WIN32)
+	LIST(APPEND source_files
+		"include/date/WindowsDateParser.h"
+		"src/WindowsDateParser.cpp"
+		)
+ENDIF()
+
 INCLUDE_DIRECTORIES(include/date)
 INCLUDE("FindSourceRCProperties")
 

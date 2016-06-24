@@ -22,6 +22,7 @@
 #include <type_traits>
 #include <exception>
 #include <functional>
+#include <stdexcept>
 
 namespace OpenViBE
 {

@@ -16,9 +16,9 @@
 namespace{
 	const char* const c_sTypeNodeName = "LDA";
 	const char* const c_sClassesNodeName = "Classes";
-	const char* const c_sCoefficientsNodeName = "Weights";
-	const char* const c_sBiasDistanceNodeName = "Bias-distance";
-	const char* const c_sCoefficientProbabilityNodeName = "Coefficient-probability";
+//	const char* const c_sCoefficientsNodeName = "Weights";
+//	const char* const c_sBiasDistanceNodeName = "Bias-distance";
+//	const char* const c_sCoefficientProbabilityNodeName = "Coefficient-probability";
 	const char* const c_sComputationHelpersConfigurationNode = "Class-config-list";
 	const char* const c_sLDAConfigFileVersionAttributeName = "version";
 }
