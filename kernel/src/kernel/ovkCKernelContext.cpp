@@ -73,14 +73,12 @@ boolean CKernelContext::initialize(void)
 	this->getLogManager() << LogLevel_Trace << "Resetting configuration manager\n";
 	m_pConfigurationManager.reset(new CConfigurationManager(m_rMasterKernelContext));
 
-#if defined TARGET_BUILDTYPE_Release
-	m_pConfigurationManager->createConfigurationToken("BuildType",                    "Release");
-#elif defined TARGET_BUILDTYPE_Debug
-	m_pConfigurationManager->createConfigurationToken("BuildType",                    "Debug");
-#else
-	m_pConfigurationManager->createConfigurationToken("BuildType",                    "Unknown");
-#endif
-
+	m_pConfigurationManager->createConfigurationToken("ApplicationName",              m_sApplicationName);
+	m_pConfigurationManager->createConfigurationToken("Path_UserData",                OpenViBE::Directories::getUserDataDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Log",                     OpenViBE::Directories::getLogDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Tmp",                     "${Path_UserData}/tmp");
+	m_pConfigurationManager->createConfigurationToken("Path_Lib", 					  OpenViBE::Directories::getLibDir());
+	
 #if defined TARGET_OS_Windows
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem",              "Windows");
 #elif defined TARGET_OS_Linux
@@ -90,21 +88,12 @@ boolean CKernelContext::initialize(void)
 #else
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem",              "Unknown");
 #endif
-	m_pConfigurationManager->createConfigurationToken("UserHome",                     OpenViBE::Directories::getUserHomeDir());
-	m_pConfigurationManager->createConfigurationToken("Path_UserData",                OpenViBE::Directories::getUserDataDir());
 
-	m_pConfigurationManager->createConfigurationToken("ApplicationName",              m_sApplicationName);
-	m_pConfigurationManager->createConfigurationToken("Path_Root",                    OpenViBE::Directories::getDistRootDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Bin",                     OpenViBE::Directories::getBinDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Data",                    OpenViBE::Directories::getDataDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Lib",                     OpenViBE::Directories::getLibDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Log",                     OpenViBE::Directories::getLogDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Tmp",                     "${Path_UserData}/tmp");
-	m_pConfigurationManager->createConfigurationToken("Path_Samples",                 "${Path_Data}/scenarios");
 	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternMacOS",   "libopenvibe-plugins-*.dylib");
 	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternLinux",   "libopenvibe-plugins-*.so");
 	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternWindows", "openvibe-plugins-*.dll");
-	m_pConfigurationManager->createConfigurationToken("Kernel_Plugins",               "${Path_Lib}/${Kernel_PluginsPattern${OperatingSystem}}");
+	m_pConfigurationManager->createConfigurationToken("Kernel_Plugins", "${Path_Lib}/${Kernel_PluginsPattern${OperatingSystem}}");
+
 	m_pConfigurationManager->createConfigurationToken("Kernel_MainLogLevel",          "Debug");
 	m_pConfigurationManager->createConfigurationToken("Kernel_ConsoleLogLevel",       "Information");
 	m_pConfigurationManager->createConfigurationToken("Kernel_FileLogLevel",          "Debug");
@@ -127,10 +116,6 @@ boolean CKernelContext::initialize(void)
 	FS::Files::createPath(l_sPathTmp.toASCIIString());
 	l_sPathTmp = m_pConfigurationManager->expand("${Path_Tmp}");
 	FS::Files::createPath(l_sPathTmp.toASCIIString());
-	l_sPathTmp = m_pConfigurationManager->expand("${CustomConfiguration}");
-	FS::Files::createParentPath(l_sPathTmp.toASCIIString());
-	l_sPathTmp = m_pConfigurationManager->expand("${CustomConfigurationApplication}");
-	FS::Files::createParentPath(l_sPathTmp.toASCIIString());
 	l_sPathTmp = m_pConfigurationManager->expand("${Path_Log}");
 	FS::Files::createPath(l_sPathTmp);
 	CString l_sLogFile = l_sPathTmp + "/openvibe-" + m_sApplicationName + ".log";
