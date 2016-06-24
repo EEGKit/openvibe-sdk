@@ -11,6 +11,7 @@
 #include "log/ovkCLogListenerConsole.h"
 #include "log/ovkCLogListenerFile.h"
 
+#include <cassert>
 #include <string>
 #include <algorithm>
 #include <functional>
@@ -34,105 +35,43 @@ namespace
 
 };
 
-namespace OpenViBE
-{
-	namespace Kernel
-	{
-		namespace
-		{
-			class CLogManagerNULL : public OpenViBE::Kernel::ILogManager
-			{
-			public:
-
-				virtual OpenViBE::boolean isActive(OpenViBE::Kernel::ELogLevel eLogLevel) { return false; }
-				virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eLogLevel, OpenViBE::boolean bActive) { return false; }
-				virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eStartLogLevel, OpenViBE::Kernel::ELogLevel eEndLogLevel, OpenViBE::boolean bActive) { return false; }
-				virtual OpenViBE::boolean activate(OpenViBE::boolean bActive) { return false; }
-
-				virtual void log(const OpenViBE::time64 time64Value) { }
-
-				virtual void log(const OpenViBE::uint64 ui64Value) { }
-				virtual void log(const OpenViBE::uint32 ui32Value) { }
-				virtual void log(const OpenViBE::uint16 ui16Value) { }
-				virtual void log(const OpenViBE::uint8 ui8Value) { }
-
-				virtual void log(const OpenViBE::int64 i64Value) { }
-				virtual void log(const OpenViBE::int32 i32Value) { }
-				virtual void log(const OpenViBE::int16 i16Value) { }
-				virtual void log(const OpenViBE::int8 i8Value) { }
-
-				virtual void log(const OpenViBE::float64 f64Value) { }
-				virtual void log(const OpenViBE::float32 f32Value) { }
-
-				virtual void log(const OpenViBE::boolean bValue) { }
-
-				virtual void log(const OpenViBE::CIdentifier& rValue) { }
-				virtual void log(const OpenViBE::CString& rValue) { }
-				virtual void log(const char* pValue) { }
-
-				virtual void log(const OpenViBE::Kernel::ELogLevel eLogLevel) { }
-				virtual void log(const OpenViBE::Kernel::ELogColor eLogColor) { }
-
-				virtual OpenViBE::boolean addListener(OpenViBE::Kernel::ILogListener* pListener) { return false; }
-				virtual OpenViBE::boolean removeListener(OpenViBE::Kernel::ILogListener* pListener) { return false; }
-
-				_IsDerivedFromClass_Final_(OpenViBE::Kernel::ILogManager, OV_UndefinedIdentifier);
-			};
-		};
-	};
-};
 
 CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFile)
 	:m_rMasterKernelContext(pMasterKernelContext?*pMasterKernelContext:*this)
-	,m_pThis(this)
-	,m_pAlgorithmManager(NULL)
-	,m_pConfigurationManager(NULL)
-	,m_pKernelObjectFactory(NULL)
-	,m_pPlayerManager(NULL)
-	,m_pPluginManager(NULL)
-	,m_pScenarioManager(NULL)
-	,m_pTypeManager(NULL)
-	,m_pLogManager(NULL)
-	,m_bIsInitialized(false)
+	,m_pAlgorithmManager(nullptr)
+	,m_pConfigurationManager(nullptr)
+	,m_pKernelObjectFactory(nullptr)
+	,m_pPlayerManager(nullptr)
+	,m_pPluginManager(nullptr)
+	,m_pScenarioManager(nullptr)
+	,m_pTypeManager(nullptr)
+	,m_pLogManager(nullptr)
 	,m_sApplicationName(rApplicationName)
 	,m_sConfigurationFile(rConfigurationFile)
-	,m_pLogListenerConsole(NULL)
-	,m_pLogListenerFile(NULL)
+	,m_pLogListenerConsole(nullptr)
+	,m_pLogListenerFile(nullptr)
 {
 }
 
 CKernelContext::~CKernelContext(void)
 {
-	if(m_bIsInitialized)
-	{
-		this->uninitialize();
-	}
+	this->uninitialize();
 }
 
 boolean CKernelContext::initialize(void)
 {
-	if(m_bIsInitialized)
-	{
-		return true;
-	}
+	m_pKernelObjectFactory.reset(new CKernelObjectFactory(m_rMasterKernelContext));
 
-	m_bIsInitialized=true;
-
-	m_pKernelObjectFactory=new CKernelObjectFactory(m_rMasterKernelContext);
-
-	this->getLogManager() << LogLevel_Trace << "Creating log manager\n";
-
-	m_pLogManager=new CLogManager(m_rMasterKernelContext);
+	m_pLogManager.reset(new CLogManager(m_rMasterKernelContext));
 	m_pLogManager->activate(true);
 
-	this->getLogManager() << LogLevel_Trace << "Creating and configuring console log listener\n";
-	m_pLogListenerConsole=new CLogListenerConsole(m_rMasterKernelContext, m_sApplicationName);
+	m_pLogListenerConsole.reset(new CLogListenerConsole(m_rMasterKernelContext, m_sApplicationName));
 	m_pLogListenerConsole->activate(false);
 	m_pLogListenerConsole->activate(LogLevel_Info, LogLevel_Last, true);
-	this->getLogManager().addListener(m_pLogListenerConsole);
+	this->getLogManager().addListener(m_pLogListenerConsole.get());
 
-	this->getLogManager() << LogLevel_Trace << "Creating configuration manager\n";
-	m_pConfigurationManager=new CConfigurationManager(m_rMasterKernelContext);
+	this->getLogManager() << LogLevel_Trace << "Resetting configuration manager\n";
+	m_pConfigurationManager.reset(new CConfigurationManager(m_rMasterKernelContext));
 
 #if defined TARGET_BUILDTYPE_Release
 	m_pConfigurationManager->createConfigurationToken("BuildType",                    "Release");
@@ -197,10 +136,10 @@ boolean CKernelContext::initialize(void)
 	CString l_sLogFile = l_sPathTmp + "/openvibe-" + m_sApplicationName + ".log";
 
 	// We do this here to allow user to set the Path_Log in the .conf. The downside is that earlier log messages will not appear in the file log.
-	this->getLogManager() << LogLevel_Trace << "Creating and configuring file log listener\n";
-	m_pLogListenerFile=new CLogListenerFile(m_rMasterKernelContext, m_sApplicationName, l_sLogFile);
+	this->getLogManager() << LogLevel_Trace << "Resetting and configuring file log listener\n";
+	m_pLogListenerFile.reset(new CLogListenerFile(m_rMasterKernelContext, m_sApplicationName, l_sLogFile));
 	m_pLogListenerFile->activate(true);
-	this->getLogManager().addListener(m_pLogListenerFile);
+	this->getLogManager().addListener(m_pLogListenerFile.get());
 
 	ELogLevel l_eMainLogLevel   =this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_MainLogLevel}"));
 	ELogLevel l_eConsoleLogLevel=this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_ConsoleLogLevel}"));
@@ -217,14 +156,14 @@ boolean CKernelContext::initialize(void)
 	m_pLogListenerFile->configure(*m_pConfigurationManager);
 	m_pLogListenerConsole->configure(*m_pConfigurationManager);
 
-	this->getLogManager() << LogLevel_Trace << "Creating algorithm manager\n";
-	m_pAlgorithmManager=new CAlgorithmManager(m_rMasterKernelContext);
+	this->getLogManager() << LogLevel_Trace << "Resetting algorithm manager\n";
+	m_pAlgorithmManager.reset(new CAlgorithmManager(m_rMasterKernelContext));
 
-	this->getLogManager() << LogLevel_Trace << "Creating player manager\n";
-	m_pPlayerManager=new CPlayerManager(m_rMasterKernelContext);
+	this->getLogManager() << LogLevel_Trace << "Resetting player manager\n";
+	m_pPlayerManager.reset(new CPlayerManager(m_rMasterKernelContext));
 
-	this->getLogManager() << LogLevel_Trace << "Creating and configuring type manager\n";
-	m_pTypeManager=new CTypeManager(m_rMasterKernelContext);
+	this->getLogManager() << LogLevel_Trace << "Resetting and configuring type manager\n";
+	m_pTypeManager.reset(new CTypeManager(m_rMasterKernelContext));
 
 	m_pTypeManager->registerType(OV_TypeId_Boolean,  "Boolean");
 	m_pTypeManager->registerType(OV_TypeId_Integer,  "Integer");
@@ -263,124 +202,111 @@ boolean CKernelContext::initialize(void)
 
 	m_pTypeManager->registerType(OV_TypeId_Message,  "Message");
 
-	this->getLogManager() << LogLevel_Trace << "Creating scenario manager\n";
-	m_pScenarioManager=new CScenarioManager(m_rMasterKernelContext);
+	this->getLogManager() << LogLevel_Trace << "Resetting scenario manager\n";
+	m_pScenarioManager.reset(new CScenarioManager(m_rMasterKernelContext));
 
-	this->getLogManager() << LogLevel_Trace << "Creating plugin manager\n";
-	m_pPluginManager=new CPluginManager(m_rMasterKernelContext);
+	this->getLogManager() << LogLevel_Trace << "Resetting plugin manager\n";
+	m_pPluginManager.reset(new CPluginManager(m_rMasterKernelContext));
 
 	return true;
 }
 
 boolean CKernelContext::uninitialize(void)
 {
-	if(!m_bIsInitialized)
-	{
-		return true;
-	}
-
 	this->getLogManager() << LogLevel_Trace << "Releasing plugin manager\n";
-	delete m_pPluginManager;
-	m_pPluginManager=NULL;
+	m_pPluginManager.release();
 
 	this->getLogManager() << LogLevel_Trace << "Releasing scenario manager\n";
-	delete m_pScenarioManager;
-	m_pScenarioManager=NULL;
+	m_pScenarioManager.release();
 
 	this->getLogManager() << LogLevel_Trace << "Releasing type manager\n";
-	delete m_pTypeManager;
-	m_pTypeManager=NULL;
+	m_pTypeManager.release();
 
 	this->getLogManager() << LogLevel_Trace << "Releasing player manager\n";
-	delete m_pPlayerManager;
-	m_pPlayerManager=NULL;
+	m_pPlayerManager.release();
 
 	this->getLogManager() << LogLevel_Trace << "Releasing algorithm manager\n";
-	delete m_pAlgorithmManager;
-	m_pAlgorithmManager=NULL;
+	m_pAlgorithmManager.release();
 
 	this->getLogManager() << LogLevel_Trace << "Releasing configuration manager\n";
-	delete m_pConfigurationManager;
-	m_pConfigurationManager=NULL;
+	m_pConfigurationManager.release();
 
+	this->getLogManager() << LogLevel_Trace << "Releasing log manager\n";
 	this->getLogManager() << LogLevel_Trace << "Detaching log console listener\n";
-	this->getLogManager().removeListener(m_pLogListenerConsole);
+	this->getLogManager().removeListener(m_pLogListenerConsole.get());
 
 	this->getLogManager() << LogLevel_Trace << "Detaching log file listener\n";
-	this->getLogManager().removeListener(m_pLogListenerFile);
+	this->getLogManager().removeListener(m_pLogListenerFile.get());
 
-	this->getLogManager() << LogLevel_Trace << "Releasing log manager - no more log possible with log manager !\n";
-	delete m_pLogManager;
-	m_pLogManager=NULL;
+	m_pLogManager.release();
+	m_pLogListenerConsole.release();
+	m_pLogListenerFile.release();
 
-	this->getLogManager() << LogLevel_Trace << "Releasing log console listener\n";
-	delete m_pLogListenerConsole;
-	m_pLogListenerConsole=NULL;
-
-	this->getLogManager() << LogLevel_Trace << "Releasing log file listener\n";
-	delete m_pLogListenerFile;
-	m_pLogListenerFile=NULL;
-
-	delete m_pKernelObjectFactory;
-	m_pKernelObjectFactory=NULL;
-
-	m_bIsInitialized=false;
+	m_pKernelObjectFactory.release();
 
 	return true;
 }
 
 IAlgorithmManager& CKernelContext::getAlgorithmManager(void) const
 {
-	if(!m_bIsInitialized) m_pThis->initialize();
+	assert(m_pLogManager);
+	
 	return *m_pAlgorithmManager;
 }
 
 IConfigurationManager& CKernelContext::getConfigurationManager(void) const
 {
-	if(!m_bIsInitialized) m_pThis->initialize();
+	assert(m_pConfigurationManager);
+	
 	return *m_pConfigurationManager;
 }
 
 IKernelObjectFactory& CKernelContext::getKernelObjectFactory(void) const
 {
-	if(!m_bIsInitialized) m_pThis->initialize();
+	assert(m_pKernelObjectFactory);
+	
 	return *m_pKernelObjectFactory;
 }
 
 IPlayerManager& CKernelContext::getPlayerManager(void) const
 {
-	if(!m_bIsInitialized) m_pThis->initialize();
+	assert(m_pPlayerManager);
+	
 	return *m_pPlayerManager;
 }
 
 IPluginManager& CKernelContext::getPluginManager(void) const
 {
-	if(!m_bIsInitialized) m_pThis->initialize();
+	assert(m_pPluginManager);
+	
 	return *m_pPluginManager;
 }
 
 IScenarioManager& CKernelContext::getScenarioManager(void) const
 {
-	if(!m_bIsInitialized) m_pThis->initialize();
+	assert(m_pScenarioManager);
+	
 	return *m_pScenarioManager;
 }
 
 ITypeManager& CKernelContext::getTypeManager(void) const
 {
-	if(!m_bIsInitialized) m_pThis->initialize();
+	assert(m_pTypeManager);
+	
 	return *m_pTypeManager;
 }
 
 ILogManager& CKernelContext::getLogManager(void) const
 {
-	if(!m_bIsInitialized) m_pThis->initialize();
-	static CLogManagerNULL l_oLogManagerNULL;
-	return m_pLogManager?*m_pLogManager:l_oLogManagerNULL;
+	assert(m_pLogManager);
+	
+	return *m_pLogManager;
 }
 
 ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)
 {
-	if(!m_bIsInitialized) m_pThis->initialize();
+	assert(m_pLogManager);
+	
 	std::string l_sValue(rLogLevelName.toASCIIString());
 	std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
 
