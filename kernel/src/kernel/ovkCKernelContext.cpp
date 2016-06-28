@@ -70,24 +70,23 @@ boolean CKernelContext::initialize(void)
 	m_pLogListenerConsole->activate(LogLevel_Info, LogLevel_Last, true);
 	this->getLogManager().addListener(m_pLogListenerConsole.get());
 
-	this->getLogManager() << LogLevel_Trace << "Resetting configuration manager\n";
 	m_pConfigurationManager.reset(new CConfigurationManager(m_rMasterKernelContext));
 
-	m_pConfigurationManager->createConfigurationToken("ApplicationName",              m_sApplicationName);
-	m_pConfigurationManager->createConfigurationToken("Path_UserData",                OpenViBE::Directories::getUserDataDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Log",                     OpenViBE::Directories::getLogDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Tmp",                     "${Path_UserData}/tmp");
-	m_pConfigurationManager->createConfigurationToken("Path_Lib", 					  OpenViBE::Directories::getLibDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Bin",                     OpenViBE::Directories::getBinDir());
+	m_pConfigurationManager->createConfigurationToken("ApplicationName", m_sApplicationName);
+	m_pConfigurationManager->createConfigurationToken("Path_UserData", OpenViBE::Directories::getUserDataDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Log", OpenViBE::Directories::getLogDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Tmp", "${Path_UserData}/tmp");
+	m_pConfigurationManager->createConfigurationToken("Path_Lib", OpenViBE::Directories::getLibDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Bin", OpenViBE::Directories::getBinDir());
 	
 #if defined TARGET_OS_Windows
-	m_pConfigurationManager->createConfigurationToken("OperatingSystem",              "Windows");
+	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Windows");
 #elif defined TARGET_OS_Linux
-	m_pConfigurationManager->createConfigurationToken("OperatingSystem",              "Linux");
+	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Linux");
 #elif defined TARGET_OS_MacOS
-	m_pConfigurationManager->createConfigurationToken("OperatingSystem",              "MacOS");
+	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "MacOS");
 #else
-	m_pConfigurationManager->createConfigurationToken("OperatingSystem",              "Unknown");
+	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Unknown");
 #endif
 
 	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternMacOS",   "libopenvibe-plugins-*.dylib");
@@ -95,12 +94,12 @@ boolean CKernelContext::initialize(void)
 	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternWindows", "openvibe-plugins-*.dll");
 	m_pConfigurationManager->createConfigurationToken("Kernel_Plugins", "${Path_Lib}/${Kernel_PluginsPattern${OperatingSystem}}");
 
-	m_pConfigurationManager->createConfigurationToken("Kernel_MainLogLevel",          "Debug");
-	m_pConfigurationManager->createConfigurationToken("Kernel_ConsoleLogLevel",       "Information");
-	m_pConfigurationManager->createConfigurationToken("Kernel_FileLogLevel",          "Debug");
-	m_pConfigurationManager->createConfigurationToken("Kernel_PlayerFrequency",       "128");
+	m_pConfigurationManager->createConfigurationToken("Kernel_MainLogLevel", "Debug");
+	m_pConfigurationManager->createConfigurationToken("Kernel_ConsoleLogLevel", "Information");
+	m_pConfigurationManager->createConfigurationToken("Kernel_FileLogLevel", "Debug");
+	m_pConfigurationManager->createConfigurationToken("Kernel_PlayerFrequency", "128");
 	// Add this two tokens to be used to know what documentation should be loaded
-	m_pConfigurationManager->createConfigurationToken("Brand_Name",                   BRAND_NAME);
+	m_pConfigurationManager->createConfigurationToken("Brand_Name", BRAND_NAME);
 
 	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_sConfigurationFile << "]\n";
 	if(!m_pConfigurationManager->addConfigurationFromFile(m_sConfigurationFile)) {
@@ -122,7 +121,6 @@ boolean CKernelContext::initialize(void)
 	CString l_sLogFile = l_sPathTmp + "/openvibe-" + m_sApplicationName + ".log";
 
 	// We do this here to allow user to set the Path_Log in the .conf. The downside is that earlier log messages will not appear in the file log.
-	this->getLogManager() << LogLevel_Trace << "Resetting and configuring file log listener\n";
 	m_pLogListenerFile.reset(new CLogListenerFile(m_rMasterKernelContext, m_sApplicationName, l_sLogFile));
 	m_pLogListenerFile->activate(true);
 	this->getLogManager().addListener(m_pLogListenerFile.get());
@@ -142,56 +140,51 @@ boolean CKernelContext::initialize(void)
 	m_pLogListenerFile->configure(*m_pConfigurationManager);
 	m_pLogListenerConsole->configure(*m_pConfigurationManager);
 
-	this->getLogManager() << LogLevel_Trace << "Resetting algorithm manager\n";
 	m_pAlgorithmManager.reset(new CAlgorithmManager(m_rMasterKernelContext));
 
-	this->getLogManager() << LogLevel_Trace << "Resetting player manager\n";
 	m_pPlayerManager.reset(new CPlayerManager(m_rMasterKernelContext));
 
-	this->getLogManager() << LogLevel_Trace << "Resetting and configuring type manager\n";
 	m_pTypeManager.reset(new CTypeManager(m_rMasterKernelContext));
 
-	m_pTypeManager->registerType(OV_TypeId_Boolean,  "Boolean");
-	m_pTypeManager->registerType(OV_TypeId_Integer,  "Integer");
-	m_pTypeManager->registerType(OV_TypeId_Float,    "Float");
-	m_pTypeManager->registerType(OV_TypeId_String,   "String");
+	m_pTypeManager->registerType(OV_TypeId_Boolean, "Boolean");
+	m_pTypeManager->registerType(OV_TypeId_Integer, "Integer");
+	m_pTypeManager->registerType(OV_TypeId_Float, "Float");
+	m_pTypeManager->registerType(OV_TypeId_String, "String");
 	m_pTypeManager->registerType(OV_TypeId_Filename, "Filename");
-	m_pTypeManager->registerType(OV_TypeId_Script,   "Script");
-	m_pTypeManager->registerType(OV_TypeId_Color,    "Color");
+	m_pTypeManager->registerType(OV_TypeId_Script, "Script");
+	m_pTypeManager->registerType(OV_TypeId_Color, "Color");
 	m_pTypeManager->registerType(OV_TypeId_ColorGradient, "Color Gradient");
 
 	m_pTypeManager->registerEnumerationType(OV_TypeId_Stimulation, "Stimulation");
 
 	m_pTypeManager->registerEnumerationType(OV_TypeId_MeasurementUnit, "Measurement unit");
-	m_pTypeManager->registerEnumerationType(OV_TypeId_Factor,          "Factor");
+	m_pTypeManager->registerEnumerationType(OV_TypeId_Factor, "Factor");
 
 	m_pTypeManager->registerEnumerationType(OV_TypeId_LogLevel, "Log level");
-	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "None",                     LogLevel_None);
-	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Debug",                    LogLevel_Debug);
+	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "None", LogLevel_None);
+	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Debug", LogLevel_Debug);
 	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Benchmarking / Profiling", LogLevel_Benchmark);
-	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Trace",                    LogLevel_Trace);
-	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Information",              LogLevel_Info);
-	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Warning",                  LogLevel_Warning);
-	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Important warning",        LogLevel_ImportantWarning);
-	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Error",                    LogLevel_Error);
-	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Fatal error",              LogLevel_Fatal);
+	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Trace", LogLevel_Trace);
+	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Information", LogLevel_Info);
+	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Warning", LogLevel_Warning);
+	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Important warning", LogLevel_ImportantWarning);
+	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Error", LogLevel_Error);
+	m_pTypeManager->registerEnumerationEntry(OV_TypeId_LogLevel, "Fatal error", LogLevel_Fatal);
 
 	m_pTypeManager->registerStreamType(OV_TypeId_EBMLStream, "EBML stream", OV_UndefinedIdentifier);
-	m_pTypeManager->registerStreamType(  OV_TypeId_ExperimentInformation, "Experiment information", OV_TypeId_EBMLStream);
-	m_pTypeManager->registerStreamType(  OV_TypeId_Stimulations, "Stimulations", OV_TypeId_EBMLStream);
-	m_pTypeManager->registerStreamType(  OV_TypeId_StreamedMatrix, "Streamed matrix", OV_TypeId_EBMLStream);
-	m_pTypeManager->registerStreamType(    OV_TypeId_ChannelLocalisation, "Channel localisation", OV_TypeId_StreamedMatrix);
-	m_pTypeManager->registerStreamType(    OV_TypeId_ChannelUnits, "Channel units", OV_TypeId_StreamedMatrix);
-	m_pTypeManager->registerStreamType(    OV_TypeId_FeatureVector, "Feature vector", OV_TypeId_StreamedMatrix);
-	m_pTypeManager->registerStreamType(    OV_TypeId_Signal, "Signal", OV_TypeId_StreamedMatrix);
-	m_pTypeManager->registerStreamType(    OV_TypeId_Spectrum, "Spectrum", OV_TypeId_StreamedMatrix);
+	m_pTypeManager->registerStreamType(OV_TypeId_ExperimentInformation, "Experiment information", OV_TypeId_EBMLStream);
+	m_pTypeManager->registerStreamType(OV_TypeId_Stimulations, "Stimulations", OV_TypeId_EBMLStream);
+	m_pTypeManager->registerStreamType(OV_TypeId_StreamedMatrix, "Streamed matrix", OV_TypeId_EBMLStream);
+	m_pTypeManager->registerStreamType(OV_TypeId_ChannelLocalisation, "Channel localisation", OV_TypeId_StreamedMatrix);
+	m_pTypeManager->registerStreamType(OV_TypeId_ChannelUnits, "Channel units", OV_TypeId_StreamedMatrix);
+	m_pTypeManager->registerStreamType(OV_TypeId_FeatureVector, "Feature vector", OV_TypeId_StreamedMatrix);
+	m_pTypeManager->registerStreamType(OV_TypeId_Signal, "Signal", OV_TypeId_StreamedMatrix);
+	m_pTypeManager->registerStreamType(OV_TypeId_Spectrum, "Spectrum", OV_TypeId_StreamedMatrix);
 
 	m_pTypeManager->registerType(OV_TypeId_Message,  "Message");
 
-	this->getLogManager() << LogLevel_Trace << "Resetting scenario manager\n";
 	m_pScenarioManager.reset(new CScenarioManager(m_rMasterKernelContext));
 
-	this->getLogManager() << LogLevel_Trace << "Resetting plugin manager\n";
 	m_pPluginManager.reset(new CPluginManager(m_rMasterKernelContext));
 
 	return true;
@@ -199,29 +192,14 @@ boolean CKernelContext::initialize(void)
 
 boolean CKernelContext::uninitialize(void)
 {
-	this->getLogManager() << LogLevel_Trace << "Releasing plugin manager\n";
 	m_pPluginManager.release();
-
-	this->getLogManager() << LogLevel_Trace << "Releasing scenario manager\n";
 	m_pScenarioManager.release();
-
-	this->getLogManager() << LogLevel_Trace << "Releasing type manager\n";
 	m_pTypeManager.release();
-
-	this->getLogManager() << LogLevel_Trace << "Releasing player manager\n";
 	m_pPlayerManager.release();
-
-	this->getLogManager() << LogLevel_Trace << "Releasing algorithm manager\n";
 	m_pAlgorithmManager.release();
-
-	this->getLogManager() << LogLevel_Trace << "Releasing configuration manager\n";
 	m_pConfigurationManager.release();
-
-	this->getLogManager() << LogLevel_Trace << "Releasing log manager\n";
-	this->getLogManager() << LogLevel_Trace << "Detaching log console listener\n";
+	
 	this->getLogManager().removeListener(m_pLogListenerConsole.get());
-
-	this->getLogManager() << LogLevel_Trace << "Detaching log file listener\n";
 	this->getLogManager().removeListener(m_pLogListenerFile.get());
 
 	m_pLogManager.release();
