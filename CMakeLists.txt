@@ -180,9 +180,7 @@ IF(NOT(SKIP_APPLICATIONS))
     ADD_SUBDIRECTORY("applications/")
 ENDIF()
 
-IF(NOT(SKIP_EXTERNALS))
-    ADD_SUBDIRECTORY("externals/")
-ENDIF()
+ADD_SUBDIRECTORY("test-runner/")
 
 # make a copy of the dependency script, this is done so we can use the same launch scripts both in win install and win devel situations.
 IF(WIN32)
