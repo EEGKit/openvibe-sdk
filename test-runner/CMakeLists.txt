@@ -1,7 +1,7 @@
 project(test-run)
 
 add_custom_target(${PROJECT_NAME}-cmake
-	COMMAND cmake "${CMAKE_SOURCE_DIR}/test" "-DOV_ROOT_DIR=${CMAKE_INSTALL_PREFIX}" "-GNinja"
+	COMMAND cmake "${CMAKE_SOURCE_DIR}/test" "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}" "-DOV_ROOT_DIR=${CMAKE_INSTALL_PREFIX}" "-GNinja"
 	WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test"
 	COMMENT "Configuring the test project"
 	)
