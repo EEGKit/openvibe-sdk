@@ -138,7 +138,7 @@ namespace OpenViBE
 			return PlayerReturnCode::KernelInvalidDesc;
 		}
 
-		// kernelContext->initialize();
+		kernelContext->initialize();
 		m_Pimpl->kernelContext = kernelContext;
 		OpenViBEToolkit::initialize(*kernelContext);
 

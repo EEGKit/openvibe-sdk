@@ -1,6 +1,8 @@
 #ifndef __OpenViBEKernel_CKernelContext_H__
 #define __OpenViBEKernel_CKernelContext_H__
 
+#include <memory>
+
 #include "ovkTKernelObject.h"
 
 namespace OpenViBE
@@ -35,26 +37,24 @@ namespace OpenViBE
 
 			virtual OpenViBE::Kernel::ELogLevel earlyGetLogLevel(const OpenViBE::CString& rLogLevelName);
 
-		protected:
+		private:
 
 			const OpenViBE::Kernel::IKernelContext& m_rMasterKernelContext;
 
-			mutable OpenViBE::Kernel::IKernelContext* m_pThis;
-			mutable OpenViBE::Kernel::IAlgorithmManager* m_pAlgorithmManager;
-			mutable OpenViBE::Kernel::IConfigurationManager* m_pConfigurationManager;
-			mutable OpenViBE::Kernel::IKernelObjectFactory* m_pKernelObjectFactory;
-			mutable OpenViBE::Kernel::IPlayerManager* m_pPlayerManager;
-			mutable OpenViBE::Kernel::IPluginManager* m_pPluginManager;
-			mutable OpenViBE::Kernel::IScenarioManager* m_pScenarioManager;
-			mutable OpenViBE::Kernel::ITypeManager* m_pTypeManager;
-			mutable OpenViBE::Kernel::ILogManager* m_pLogManager;
+			std::unique_ptr<OpenViBE::Kernel::IAlgorithmManager> m_pAlgorithmManager;
+			std::unique_ptr<OpenViBE::Kernel::IConfigurationManager> m_pConfigurationManager;
+			std::unique_ptr<OpenViBE::Kernel::IKernelObjectFactory> m_pKernelObjectFactory;
+			std::unique_ptr<OpenViBE::Kernel::IPlayerManager> m_pPlayerManager;
+			std::unique_ptr<OpenViBE::Kernel::IPluginManager> m_pPluginManager;
+			std::unique_ptr<OpenViBE::Kernel::IScenarioManager> m_pScenarioManager;
+			std::unique_ptr<OpenViBE::Kernel::ITypeManager> m_pTypeManager;
+			std::unique_ptr<OpenViBE::Kernel::ILogManager> m_pLogManager;
 
-			OpenViBE::boolean m_bIsInitialized;
 			OpenViBE::CString m_sApplicationName;
 			OpenViBE::CString m_sConfigurationFile;
 
-			OpenViBE::Kernel::CLogListenerConsole* m_pLogListenerConsole;
-			OpenViBE::Kernel::CLogListenerFile* m_pLogListenerFile;
+			std::unique_ptr<OpenViBE::Kernel::CLogListenerConsole> m_pLogListenerConsole;
+			std::unique_ptr<OpenViBE::Kernel::CLogListenerFile> m_pLogListenerFile;
 
 		private:
 
