@@ -180,10 +180,15 @@ IF(NOT(SKIP_APPLICATIONS))
     ADD_SUBDIRECTORY("applications/")
 ENDIF()
 
-SET(OVT_LOG_DIR "${CMAKE_BINARY_DIR}/test/log")
-SET(OVT_TEST_DATA_DIR "${CMAKE_SOURCE_DIR}/dependencies/test-data")
 
-ADD_SUBDIRECTORY("test-runner/")
+OPTION(BUILD_TESTING "Include and build unit tests" ON)
+
+IF(BUILD_TESTING)
+	SET(OVT_LOG_DIR "${CMAKE_BINARY_DIR}/test/log" CACHE PATH "Path to directory containing test logs")
+	SET(OVT_TEST_DATA_DIR "${CMAKE_SOURCE_DIR}/dependencies/test-data" CACHE PATH "Path to test data files")
+
+	ADD_SUBDIRECTORY("test-runner/")
+ENDIF()
 
 # make a copy of the dependency script, this is done so we can use the same launch scripts both in win install and win devel situations.
 IF(WIN32)
