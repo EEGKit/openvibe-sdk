@@ -19,11 +19,11 @@ add_custom_target(${PROJECT_NAME}-build
 
 if(WIN32)
 	add_custom_target(${PROJECT_NAME}
-		COMMAND "ctest-launcher.cmd"
+		COMMAND "ctest-launcher.cmd -T Test"
 		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test")
 else()
 	add_custom_target(${PROJECT_NAME}
-		COMMAND sh ctest-launcher.sh
+		COMMAND sh ctest-launcher.sh -T Test
 		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test")
 endif()
 
