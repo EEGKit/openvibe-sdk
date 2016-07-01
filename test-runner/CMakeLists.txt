@@ -23,7 +23,7 @@ if(WIN32)
 		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test")
 else()
 	add_custom_target(${PROJECT_NAME}
-		COMMAND sh ctest-launcher.sh -T Test
+		COMMAND bash ctest-launcher.sh -T Test
 		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test")
 endif()
 
