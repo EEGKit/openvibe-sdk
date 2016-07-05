@@ -92,7 +92,7 @@ boolean CBoxAlgorithmSignalMerger::process(void)
 
 	uint32 l_ui32NumChunks = l_rDynamicBoxContext.getInputChunkCount(0);
 
-	for (uint32 input = 0; input < l_rStaticBoxContext.getInputCount(); input++)
+	for (uint32 input = 1; input < l_rStaticBoxContext.getInputCount(); input++)
 	{
 		if (l_rDynamicBoxContext.getInputChunkCount(input) < l_ui32NumChunks)
 		{
