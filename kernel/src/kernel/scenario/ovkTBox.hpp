@@ -12,7 +12,6 @@
 
 #include <openvibe/ov_defines.h>
 
-#include "lepton/Lepton.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -911,26 +910,6 @@ namespace OpenViBE
 					return false;
 				}
 				rValue = m_vSetting[ui32SettingIndex].m_sValue;
-				return true;
-			}
-
-			virtual OpenViBE::boolean checkSettingValue(const OpenViBE::uint32 ui32SettingIndex,
-				const OpenViBE::CString sValue, const OpenViBE::CIdentifier oTypeIdentifier) const
-			{
-				// If the token is a numeric value, it may be an arithmetic operation
-				if (oTypeIdentifier == OV_TypeId_Float || oTypeIdentifier == OV_TypeId_Integer)
-				{
-					// parse and expression with no variables or functions
-					try
-					{
-						double l_dEvaluatedExp = Lepton::Parser::parse(sValue.toASCIIString()).evaluate();
-					}
-					catch(...)
-					{
-						return false;
-					}
-				}
-				//TODO: else
 				return true;
 			}
 

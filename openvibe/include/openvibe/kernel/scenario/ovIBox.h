@@ -376,19 +376,6 @@ namespace OpenViBE
 				const OpenViBE::uint32 ui32SettingIndex,
 				OpenViBE::CString& rValue) const=0;
 			/**
-			 * \brief Check the setting value (if the setting is numeric),
-			 * test if it is a correct arithmetic expression, should be used after 
-			 * retrieving the value with "getSettingValue"
-			 * \param ui32SettingIndex [in] : The setting index
-			 * \param sValue [in] : The value of setting to check
-			 * \param oTypeIdentifier [in] : The type of setting to check
-			 * \return \e true in case of success (numeric value is well formed).
-			 * \return \e false in case of error. In such case,
-			 *         \c rValue remains unchanged.
-			 */
-			virtual OpenViBE::boolean checkSettingValue(
-				const OpenViBE::uint32 ui32SettingIndex, const OpenViBE::CString sValue, const OpenViBE::CIdentifier oTypeIdentifier) const = 0;
-			/**
 			 * \brief Sets a setting type identifier
 			 * \param ui32SettingIndex [in] : The setting index
 			 * \param rTypeIdentifier [in] : The type identifier

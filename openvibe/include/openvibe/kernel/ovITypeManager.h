@@ -310,7 +310,17 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& rEntryCompositionName) const=0;
 
-			virtual boolean evaluateSettingValue(const OpenViBE::CString sSettingValue, OpenViBE::float64& tResult) const = 0;
+			/**
+			* \brief Evaluate the string arithmetic expression settingValue 
+			* to a numeric value as a float
+			* \param settingValue [in] : arithmetic expression to evaluate
+			* \param numericResult [out] : result of evaluation
+			* \return true if the arithmetic evaluation succeeded, 
+			* \return false if the arithmetic expression is incorrect
+			*/
+			virtual boolean evaluateSettingValue(
+				const OpenViBE::CString settingValue, 
+				OpenViBE::float64& numericResult) const = 0;
 
 			//@}
 

@@ -8,6 +8,7 @@
 #include "ovkCLink.h"
 
 #include "../ovkCObjectVisitorContext.h"
+#include "../../tools/ovkCSettingChecker.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -1077,7 +1078,7 @@ boolean CScenario::checkSettings(IConfigurationManager* pConfig)
 			{
 				l_sSettingValue = this->getConfigurationManager().expandOnlyKeyword("var", l_sSettingValue);
 			}
-			if (!l_pBox.second->checkSettingValue(l_ui32SettingIndex, l_sSettingValue, l_oTypeIdentifier))
+			if (!::checkSettingValue(l_sSettingValue, l_oTypeIdentifier))
 			{
 				this->getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" << l_pBox.second->getName() << "> The following value: ["<< l_sRawSettingValue 
 					<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not valid.\n";
