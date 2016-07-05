@@ -228,8 +228,9 @@ boolean CBoxAlgorithmClassifierProcessor::process(void)
 				if(m_oStimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(i) == OVTK_StimulationId_TrainCompleted)
 				{
 					const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-
-					CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+					
+					CString l_sConfigurationFilename;
+					l_rStaticBoxContext.getSettingValue(0, l_sConfigurationFilename);
 
 					this->getLogManager() << LogLevel_Trace << "Reloading classifier\n";
 					if(!loadClassifier(l_sConfigurationFilename.toASCIIString()))
