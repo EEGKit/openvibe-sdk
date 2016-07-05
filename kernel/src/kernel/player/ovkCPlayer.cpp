@@ -416,6 +416,10 @@ boolean CPlayer::loop(
 #if defined CPlayer_Debug_Time
 ::printf("    Next time : %llx\n", l_ui64NextSchedulerTime);
 #endif // CPlayer_Debug_Time
+		if (m_eStatus == PlayerStatus_Stop)
+		{
+			l_bFinished = true;
+		}
 
 		if((l_bHasTimeToReach && (l_ui64NextSchedulerTime > m_ui64CurrentTimeToReach)) || ((m_eStatus == PlayerStatus_Forward || l_bHasTimeToReach) && (m_oScheduler.getCurrentTime() >= ui64MaximumTimeToReach)))
 		{

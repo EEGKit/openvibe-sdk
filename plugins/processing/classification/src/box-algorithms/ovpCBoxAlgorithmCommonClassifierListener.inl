@@ -403,7 +403,7 @@ namespace OpenViBEPlugins
 
 							if(l_bValid)
 							{
-								rBox.addSetting(l_sParameterName, l_oTypeIdentifier, l_sBuffer, rBox.getSettingCount()-1);
+								rBox.addSetting(l_sParameterName, l_oTypeIdentifier, l_sBuffer, rBox.getSettingCount()-2);
 								DEBUG_PRINT(std::cout << "Adding setting (case A) " << l_sParameterName << " : " << l_sBuffer << "\n";)
 								i++;
 							}

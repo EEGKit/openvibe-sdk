@@ -68,7 +68,17 @@ boolean CBoxAlgorithmSignalMerger::processInput(uint32 ui32InputIndex)
 			this->getLogManager() << LogLevel_Error << "End time of input [" << i << "] does not match with end time of input 0. Try to use the same epoching for all inputs.\n";
 			return false;
 		}
-		if(l_rDynamicBoxContext.getInputChunkCount(0) != l_rDynamicBoxContext.getInputChunkCount(i)) { return false; }
+	}
+
+	if (ui32InputIndex == l_rStaticBoxContext.getInputCount() -1)
+	{
+		for(uint32 i=1; i<l_rStaticBoxContext.getInputCount(); i++)
+		{
+			if(l_rDynamicBoxContext.getInputChunkCount(0) < l_rDynamicBoxContext.getInputChunkCount(i))
+			{
+				return false;
+			}
+		}
 	}
 
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
@@ -80,7 +90,15 @@ boolean CBoxAlgorithmSignalMerger::process(void)
 	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
-	const uint32 l_ui32NumChunks=l_rDynamicBoxContext.getInputChunkCount(0);
+	uint32 l_ui32NumChunks = l_rDynamicBoxContext.getInputChunkCount(0);
+
+	for (uint32 input = 1; input < l_rStaticBoxContext.getInputCount(); input++)
+	{
+		if (l_rDynamicBoxContext.getInputChunkCount(input) < l_ui32NumChunks)
+		{
+			l_ui32NumChunks = l_rDynamicBoxContext.getInputChunkCount(input);
+		}
+	}
 
 	for(uint32 c=0;c<l_ui32NumChunks;c++)
 	{

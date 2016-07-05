@@ -366,7 +366,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 
 			vector<float64> l_vPartitionAccuracies((unsigned int)m_ui64PartitionCount);
 
-			const boolean l_bRandomizeVectorOrder = (&(this->getConfigurationManager()))->expandAsBoolean("${Plugin_Classification_RandomizeKFoldTestData}");
+			const bool l_bRandomizeVectorOrder = this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_RandomizeKFoldTestData}", false);
 
 			// create a vector used for mapping feature vectors (initialize it as v[i] = i)
 			std::vector < size_t > l_vFeaturePermutation;
