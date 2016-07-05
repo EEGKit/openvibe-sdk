@@ -139,7 +139,9 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 				rBox.getSettingValue(i, l_sRawSettingValue);
 				CString l_sSettingValue = l_sRawSettingValue;
 				l_sSettingValue = m_pConfigurationManager->expand(l_sSettingValue);
-				if(!rBox.evaluateSettingValue(i, l_sSettingValue))
+				CIdentifier l_oSettingType;
+				rBox.getSettingType(i, l_oSettingType);
+				if (!rBox.checkSettingValue(i, l_sSettingValue, l_oSettingType))
 				{
 //					m_rKernelContext.getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" <<  rBox.getName() << "> The following value: ["<< l_sRawSettingValue
 //						<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not a numeric value.\n";
