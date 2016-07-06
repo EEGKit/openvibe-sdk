@@ -18,8 +18,6 @@ CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter(void)
 
 boolean CBoxAlgorithmGenericStreamWriter::initialize(void)
 {
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-
 	m_sFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_bUseCompression = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 

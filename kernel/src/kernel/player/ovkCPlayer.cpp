@@ -177,7 +177,7 @@ boolean CPlayer::setScenario(
 
 			if(!l_pScenario->checkSettings(m_pRuntimeConfigurationManager) )
 			{
-				this->getLogManager() << LogLevel_Error << "The check of settings in scenario [" << "] failed. Check above logs to understand the problem.\n";
+				this->getLogManager() << LogLevel_Error << "The check of settings failed. Check above logs to understand the problem.\n";
 				return false;
 			}
 		}

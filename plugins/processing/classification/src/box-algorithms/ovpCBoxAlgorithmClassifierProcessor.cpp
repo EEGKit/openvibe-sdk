@@ -158,8 +158,6 @@ boolean CBoxAlgorithmClassifierProcessor::initialize(void)
 {
 	m_pClassifier = NULL;
 
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-
 	//First of all, let's get the XML file for configuration
 	CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 

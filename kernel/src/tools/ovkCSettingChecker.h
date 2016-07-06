@@ -23,7 +23,7 @@ namespace
 			// parse and expression with no variables or functions
 			try
 			{
-				double evaluatedExpression = Lepton::Parser::parse(value.toASCIIString()).evaluate();
+				Lepton::Parser::parse(value.toASCIIString());
 			}
 			catch (...)
 			{
