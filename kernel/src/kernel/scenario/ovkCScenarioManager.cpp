@@ -2,6 +2,9 @@
 #include "ovkCScenario.h"
 
 #include <cstdlib>
+#include <fs/Files.h>
+#include <cassert>
+#include <openvibe/kernel/scenario/ovIAlgorithmScenarioImporter.h>
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -42,7 +45,7 @@ CIdentifier CScenarioManager::getNextScenarioIdentifier(
 	return itScenario!=m_vScenario.end()?itScenario->first:OV_UndefinedIdentifier;
 }
 
-boolean CScenarioManager::createScenario(
+bool CScenarioManager::createScenario(
 	CIdentifier& rScenarioIdentifier)
 {
 	//create scenario object
@@ -53,7 +56,132 @@ boolean CScenarioManager::createScenario(
 	return true;
 }
 
-boolean CScenarioManager::releaseScenario(
+
+bool CScenarioManager::importScenario(OpenViBE::CIdentifier& newScenarioIdentifier, const IMemoryBuffer& inputMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmIdentifier)
+{
+	newScenarioIdentifier = OV_UndefinedIdentifier;
+
+	bool hasCreateScenarioSucceeded = this->createScenario(newScenarioIdentifier);
+	(void)hasCreateScenarioSucceeded;
+	assert(hasCreateScenarioSucceeded);
+
+	auto releaseScenario = [&](){
+		bool hasReleaseScenarioSucceeded = this->releaseScenario(newScenarioIdentifier);
+		(void)hasReleaseScenarioSucceeded;
+		assert(hasReleaseScenarioSucceeded);
+	};
+
+	IScenario& newScenarioInstance = this->getScenario(newScenarioIdentifier);
+
+	if (!inputMemoryBuffer.getSize())
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Buffer containing scenario data is empty" << "\n";
+		releaseScenario();
+		return false;
+	}
+
+	CIdentifier importerInstanceIdentifier = this->getKernelContext().getAlgorithmManager().createAlgorithm(scenarioImporterAlgorithmIdentifier);
+
+	if (importerInstanceIdentifier == OV_UndefinedIdentifier)
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not create the requested scenario importer" << "\n";
+		releaseScenario();
+		return false;
+	}
+
+	IAlgorithmProxy* importer = &this->getKernelContext().getAlgorithmManager().getAlgorithm(importerInstanceIdentifier);
+	assert(importer);
+
+	auto releaseAlgorithm = [&](){
+		bool hasReleaseSucceeded = this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*importer);
+		(void)hasReleaseSucceeded;
+		assert(hasReleaseSucceeded);
+	};
+
+	if (!importer->initialize())
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not initialize the requested scenario importer" << "\n";
+		releaseScenario();
+		releaseAlgorithm();
+		return false;
+	}
+
+	IParameter* memoryBufferParameter = importer->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer);
+	IParameter* scenarioParameter = importer->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario);
+
+	if (!(memoryBufferParameter && scenarioParameter))
+	{
+		if (!memoryBufferParameter)
+		{
+			this->getKernelContext().getLogManager() << LogLevel_Error << "The requested importer does not have a MemoryBuffer input parameter with identifier " << OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer << "\n";
+		}
+		if (!scenarioParameter)
+		{
+			this->getKernelContext().getLogManager() << LogLevel_Error << "The requested importer does not have a Scenario output parameter with identifier " << OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario << "\n";
+		}
+		releaseScenario();
+		releaseAlgorithm();
+		return false;
+	}
+
+
+	TParameterHandler<const IMemoryBuffer*> memoryBufferParameterHandler(memoryBufferParameter);
+	TParameterHandler<IScenario*> scenarioParameterHandler(scenarioParameter);
+
+	memoryBufferParameterHandler = &inputMemoryBuffer;
+	scenarioParameterHandler = &newScenarioInstance;
+
+	if (!importer->process())
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not process data using the requested scenario importer" << "\n";
+		releaseScenario();
+		releaseAlgorithm();
+		return false;
+	}
+
+	if (!importer->uninitialize())
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not uninitialize the requested scenario importer" << "\n";
+		releaseScenario();
+		releaseAlgorithm();
+		return false;
+	}
+
+	releaseAlgorithm();
+
+	return true;
+}
+
+bool CScenarioManager::importScenarioFromFile(OpenViBE::CIdentifier& newScenarioIdentifier, const char* fileName, const CIdentifier& scenarioImporterAlgorithmIdentifier)
+{
+	newScenarioIdentifier = OV_UndefinedIdentifier;
+
+	CMemoryBuffer memoryBuffer;
+
+	FILE* inputFile = FS::Files::open(fileName, "rb");
+	if (!inputFile)
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not open scenario file '" << fileName << "'" << "\n";
+		return false;
+	}
+
+	fseek(inputFile, 0, SEEK_END);
+	memoryBuffer.setSize(static_cast<size_t>(::ftell(inputFile)), true);
+	fseek(inputFile, 0, SEEK_SET);
+
+	if (fread(reinterpret_cast<char*>(memoryBuffer.getDirectPointer()), (size_t)memoryBuffer.getSize(), 1, inputFile) != 1)
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Problem reading scenario file '" << fileName << "'" << "\n";
+		fclose(inputFile);
+		return false;
+	}
+	fclose(inputFile);
+
+	return this->importScenario(newScenarioIdentifier, memoryBuffer, scenarioImporterAlgorithmIdentifier);
+}
+}
+
+bool CScenarioManager::releaseScenario(
 	const CIdentifier& rScenarioIdentifier)
 {
 	//retrieve iterator to scenario

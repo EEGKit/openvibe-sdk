@@ -225,8 +225,8 @@ namespace OpenViBE
 			{
 				scenarioImporter->initialize();
 
-				TParameterHandler<const IMemoryBuffer*> inputBuffer(scenarioImporter->getInputParameter(OVTK_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
-				TParameterHandler<IScenario*> outputScenario(scenarioImporter->getOutputParameter(OVTK_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
+				TParameterHandler<const IMemoryBuffer*> inputBuffer(scenarioImporter->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
+				TParameterHandler<IScenario*> outputScenario(scenarioImporter->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
 
 				inputBuffer = &fileBuffer;
 				outputScenario = &scenarioToImport;

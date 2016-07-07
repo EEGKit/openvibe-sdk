@@ -165,7 +165,7 @@ namespace OpenViBEToolkit
 
 boolean CAlgorithmScenarioImporter::process(void)
 {
-	TParameterHandler < IScenario* > op_pScenario(this->getOutputParameter(OVTK_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
+	TParameterHandler < IScenario* > op_pScenario(this->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
 	IScenario* l_pScenario=op_pScenario;
 	if(!l_pScenario)
 	{
@@ -173,7 +173,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 		return false;
 	}
 
-	TParameterHandler < IMemoryBuffer* > ip_pMemoryBuffer(this->getInputParameter(OVTK_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
+	TParameterHandler < IMemoryBuffer* > ip_pMemoryBuffer(this->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
 	IMemoryBuffer* l_pMemoryBuffer=ip_pMemoryBuffer;
 	if(!l_pMemoryBuffer)
 	{

@@ -5,6 +5,8 @@
 
 namespace OpenViBE
 {
+	class IMemoryBuffer;
+
 	namespace Kernel
 	{
 		class IScenario;
@@ -45,6 +47,20 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::boolean createScenario(
 				OpenViBE::CIdentifier& rScenarioIdentifier)=0;
+
+
+			virtual bool importScenario(
+			        OpenViBE::CIdentifier& newScenarioIdentifier,
+			        const OpenViBE::IMemoryBuffer& inputMemoryBuffer,
+			        const OpenViBE::CIdentifier& scenarioImporterAlgorithmIdentifier
+			        ) = 0;
+
+			virtual bool importScenarioFromFile(
+			        OpenViBE::CIdentifier& newScenarioIdentifier,
+			        const char* fileName,
+			        const OpenViBE::CIdentifier& scenarioImporterAlgorithmIdentifier
+			        ) = 0;
+
 			/**
 			 * \brief Releases an existing scenario
 			 * \param rScenarioIdentifier [in] : the existing scenario identifier
