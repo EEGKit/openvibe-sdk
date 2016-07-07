@@ -189,11 +189,6 @@ namespace OpenViBE
 			OpenViBE::uint64 m_ui64ClockActivationStep;
 
 		private:
-
-			System::CChrono m_oBenchmarkChronoProcessClock;
-			System::CChrono m_oBenchmarkChronoProcessInput;
-			System::CChrono m_oBenchmarkChronoProcess;
-
 			OpenViBE::CIdentifier m_oSceneIdentifier;
 			OpenViBE::CString m_oSceneName;
 
