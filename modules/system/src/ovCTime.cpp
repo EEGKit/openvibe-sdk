@@ -81,10 +81,10 @@ System::uint64 System::Time::zgetTime(void)
 
 	const chrono::microseconds l_oElapsedMs = chrono::duration_cast<chrono::microseconds>(l_oElapsed);
 
-	const uint64_t l_ui64MicrosPerSecond = 1000 * 1000;
+	const uint64_t l_ui64MicrosPerSecond = 1000ULL * 1000ULL;
 
-	const uint64_t l_ui64Seconds = l_oElapsedMs.count() / l_ui64MicrosPerSecond;
-	const uint64_t l_ui64Fraction = l_oElapsedMs.count() % l_ui64MicrosPerSecond;
+	const uint64_t l_ui64Seconds = static_cast<uint64_t>(l_oElapsedMs.count() / l_ui64MicrosPerSecond);
+	const uint64_t l_ui64Fraction = static_cast<uint64_t>(l_oElapsedMs.count() % l_ui64MicrosPerSecond);
 
 	// below in fraction part, scale [0,l_ui64MicrosPerSecond-1] to 32bit integer range
 	const uint64_t l_ui64ReturnValue = (l_ui64Seconds << 32) + l_ui64Fraction*(0xFFFFFFFF / l_ui64MicrosPerSecond);
