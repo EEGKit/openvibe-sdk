@@ -117,6 +117,7 @@ boolean CBoxAlgorithmStimulationBasedEpoching::uninitialize(void)
 	{
 		getAlgorithmManager().releaseAlgorithm(*itStimulationBasedEpoching.m_pEpocher);
 	}
+	m_vStimulationBasedEpoching.clear();
 
 	return true;
 }

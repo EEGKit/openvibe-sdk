@@ -199,13 +199,7 @@ namespace OpenViBEToolkit
 				{
 					return static_cast<OpenViBE::float64>(l_dResult);
 				}
-				// Seems like currently some plugins use FSettingValueAutoCast without knowing then settng type.
-				// In this case, to avoid to pollute the console with useless messages, throw a message only if the 
-				// setting should be an integer.
-				else if (m_oSettingType == OV_TypeId_Float)
-				{
-					m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to float.\n";
-				}
+				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to float.\n";
 				return 0.0;
 			}
 			operator OpenViBE::boolean (void)
