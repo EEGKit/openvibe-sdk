@@ -212,9 +212,9 @@ namespace OpenViBEToolkit
 			{
 				return m_rConfigurationManager.expandAsBoolean(m_sSettingValue);
 			}
-			operator const OpenViBE::CString (void)
+			operator OpenViBE::CString (void)
 			{
-				return m_sSettingValue;
+				return m_rConfigurationManager.expand(m_sSettingValue);
 			}
 		private:
 			OpenViBE::Kernel::ILogManager& m_rLogManager;
