@@ -87,7 +87,7 @@ System::uint64 System::Time::zgetTime(void)
 	const uint64_t l_ui64Fraction = static_cast<uint64_t>(l_oElapsedMs.count() % l_ui64MicrosPerSecond);
 
 	// below in fraction part, scale [0,l_ui64MicrosPerSecond-1] to 32bit integer range
-	const uint64_t l_ui64ReturnValue = (l_ui64Seconds << 32) + l_ui64Fraction*(0xFFFFFFFF / l_ui64MicrosPerSecond);
+	const uint64_t l_ui64ReturnValue = (l_ui64Seconds<<32) + l_ui64Fraction*(0xFFFFFFFFLL / (l_ui64MicrosPerSecond-1));
 
 	return l_ui64ReturnValue;
 }
