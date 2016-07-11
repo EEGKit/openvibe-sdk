@@ -7,7 +7,7 @@
 #include <openvibe/ovIObjectVisitor.h>
 #include <xml/IReader.h>
 #include <fs/Files.h>
-#include "../../tools/ovkCSettingChecker.h"
+#include "../../tools/ovk_setting_checker.h"
 
 #include <string>
 #include <iostream>

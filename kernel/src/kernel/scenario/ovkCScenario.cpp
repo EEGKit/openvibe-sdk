@@ -8,7 +8,7 @@
 #include "ovkCLink.h"
 
 #include "../ovkCObjectVisitorContext.h"
-#include "../../tools/ovkCSettingChecker.h"
+#include "../../tools/ovk_setting_checker.h"
 
 #include <iostream>
 #include <cstdlib>
