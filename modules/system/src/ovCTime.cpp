@@ -12,7 +12,7 @@
 // time handling strategy selection
 // \note With officialy supported compilers and required boost version
 //       it should never fallback in a OV_USE_SYSTEM case
-#if (defined(_MSC_VER) && _MSC_VER <= 1800) 
+#if (defined(_MSC_VER) && _MSC_VER <= 1800)
 
 #ifdef TARGET_HAS_Boost_Chrono
 
@@ -20,56 +20,23 @@
 
 #ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
 
-#define OV_USE_BOOST
-#define OV_USE_STEADY
-
-#else // BOOST_CHRONO_HAS_CLOCK_STEADY
-
-#define OV_USE_STD
-#define OV_USE_SYSTEM
+#include <chrono>
+#include <thread>
+using namespace std;
 
 #endif // BOOST_CHRONO_HAS_CLOCK_STEADY
-
-#else // TARGET_HAS_Boost_Chrono
-
-#define OV_USE_STD
-#define OV_USE_SYSTEM
 
 #endif // TARGET_HAS_Boost_Chrono
 
 #else // defined(_MSC_VER) && _MSC_VER <= 1800
 
-#define OV_USE_STD
-#define OV_USE_STEADY
-
-#endif // defined(_MSC_VER) && _MSC_VER <= 1800
-
-// select chrono framework
-#if defined OV_USE_STD
-
 #include <chrono>
 #include <thread>
 using namespace std;
 
-#elif defined OV_USE_BOOST // OV_USE_STD
-
-#include <boost/chrono.hpp>
-#include <boost/thread.hpp>
-using namespace boost;
-
-#endif // OV_USE_STD
-
-// select clock
-#if defined OV_USE_STEADY
+#endif // defined(_MSC_VER) && _MSC_VER <= 1800
 
 using internal_clock = chrono::steady_clock;
-
-#elif defined OV_USE_SYSTEM
-
-#pragma message("Warning: Clock used in the framework is not monotonic")
-using internal_clock = chrono::system_clock;
-	
-#endif
 
 bool System::Time::sleep(const uint32 ui32MilliSeconds)
 {
@@ -109,7 +76,7 @@ System::uint64 System::Time::zgetTime(void)
 	}
 
 	const internal_clock::time_point l_oTimeNow = internal_clock::now();
-
+	
 	const internal_clock::duration l_oElapsed = l_oTimeNow - l_oTimeStart;
 
 	const chrono::microseconds l_oElapsedMs = chrono::duration_cast<chrono::microseconds>(l_oElapsed);
