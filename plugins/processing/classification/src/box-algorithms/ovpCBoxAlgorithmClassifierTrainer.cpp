@@ -52,7 +52,7 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 	{
 		CString l_pInputName;
 		l_rStaticBoxContext.getSettingName(i, l_pInputName);
-		CString l_pInputValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+		CString l_pInputValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
 		(*m_pParameter)[l_pInputName] = l_pInputValue;
 	}
 
