@@ -15,10 +15,7 @@ uint64 CBoxAlgorithmClockStimulator::getClockFrequency(void)
 
 boolean CBoxAlgorithmClockStimulator::initialize(void)
 {
-	CString l_sSettingValue;
-	float64 l_f64InterstimulationInterval=0;
-	getStaticBoxContext().getSettingValue(0, l_sSettingValue);
-	l_f64InterstimulationInterval=::atof(l_sSettingValue.toASCIIString());
+	float64 l_f64InterstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	
 	const float64 l_f64MinInterstimulationInterval= 0.0001;
 	if ( l_f64InterstimulationInterval < l_f64MinInterstimulationInterval )
@@ -31,8 +28,7 @@ boolean CBoxAlgorithmClockStimulator::initialize(void)
 	
 	m_ui64InterstimulationInterval=(uint64)(l_f64InterstimulationInterval*(1LL<<32));
 
-	getStaticBoxContext().getSettingValue(1, l_sSettingValue);
-	m_ui64StimulationId=getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, l_sSettingValue);
+	m_ui64StimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	m_ui64LastStimulationDate=0;
 	m_ui64LastEndTime=0;

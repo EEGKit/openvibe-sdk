@@ -1,6 +1,6 @@
 #include "ovkCTypeManager.h"
 
-#include "../ovk_tools.h"
+#include "lepton/Lepton.h"
 
 #include <string>
 #include <algorithm>
@@ -499,3 +499,18 @@ uint64 CTypeManager::getBitMaskEntryCompositionValueFromName(
 
 	return l_ui64Result;
 }
+
+bool CTypeManager::evaluateSettingValue(const CString settingValue, double& numericResult) const
+{
+	// parse and expression with no variables or functions
+	try
+	{
+		numericResult = Lepton::Parser::parse(settingValue.toASCIIString()).evaluate();
+	}
+	catch (...)
+	{
+		return false;
+	}
+	return true;
+}
+

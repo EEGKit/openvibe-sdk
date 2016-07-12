@@ -82,7 +82,7 @@ boolean CPlayer::setScenario(
 		return false;
 	}
 
-	this->getLogManager() << LogLevel_Trace << "Player setScenario\n";
+	this->getLogManager() << LogLevel_Debug << "Player setScenario\n";
 
 	/*
 	// Create a fresh runtime configuration manager which will handle scenario-specific
@@ -103,7 +103,7 @@ boolean CPlayer::setScenario(
 
 
 
-	// Create a copy of the scenario
+	// Create a copy of the scenario - should not fail
 	if (!m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier))
 	{
 		return false;
@@ -177,6 +177,7 @@ boolean CPlayer::setScenario(
 
 			if(!l_pScenario->checkSettings(m_pRuntimeConfigurationManager) )
 			{
+				this->getLogManager() << LogLevel_Error << "The check of settings failed. Check above logs to understand the problem.\n";
 				return false;
 			}
 		}
@@ -203,7 +204,7 @@ EPlayerReturnCode CPlayer::initialize(void)
 		return PlayerReturnCode_Failed;
 	}
 
-	this->getLogManager() << LogLevel_Trace << "Player initialize\n";
+	this->getLogManager() << LogLevel_Trace << "Player initialized.\n";
 
 	m_f64FastForwardMaximumFactor=0;
 	// At this point we've inserted the bridge as a stand-in for Kernel context to the local CConfigurationManager, but the manager in the bridge is still the

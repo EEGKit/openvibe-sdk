@@ -69,17 +69,13 @@ boolean CBoxAlgorithmCSVFileReader::initialize(void)
 	m_ui32SamplesPerBuffer=1;
 	if(m_oTypeIdentifier == OV_TypeId_ChannelLocalisation)
 	{
-		CString l_sParam;
-		this->getBoxAlgorithmContext()->getStaticBoxContext()->getSettingValue(3,l_sParam);
-		m_ui32ChannelNumberPerBuffer=static_cast<uint32>(atoi((const char*)l_sParam));
+		m_ui32ChannelNumberPerBuffer = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
 	}
 	else if(m_oTypeIdentifier != OV_TypeId_Stimulations
 			&& m_oTypeIdentifier != OV_TypeId_Spectrum)
 	{
-		CString l_sParam;
-		this->getBoxAlgorithmContext()->getStaticBoxContext()->getSettingValue(3,l_sParam);
-		m_ui32SamplesPerBuffer=static_cast<uint32>(atoi((const char*)l_sParam));
+		m_ui32SamplesPerBuffer = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	}
 
 

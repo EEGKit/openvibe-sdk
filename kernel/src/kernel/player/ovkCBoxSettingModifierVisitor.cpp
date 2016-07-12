@@ -7,6 +7,7 @@
 #include <openvibe/ovIObjectVisitor.h>
 #include <xml/IReader.h>
 #include <fs/Files.h>
+#include "../../tools/ovk_setting_checker.h"
 
 #include <string>
 #include <iostream>
@@ -139,7 +140,9 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 				rBox.getSettingValue(i, l_sRawSettingValue);
 				CString l_sSettingValue = l_sRawSettingValue;
 				l_sSettingValue = m_pConfigurationManager->expand(l_sSettingValue);
-				if(!rBox.evaluateSettingValue(i, l_sSettingValue))
+				CIdentifier settingType;
+				rBox.getSettingType(i, settingType);
+				if (!::checkSettingValue(l_sSettingValue, settingType))
 				{
 //					m_rKernelContext.getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" <<  rBox.getName() << "> The following value: ["<< l_sRawSettingValue
 //						<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not a numeric value.\n";

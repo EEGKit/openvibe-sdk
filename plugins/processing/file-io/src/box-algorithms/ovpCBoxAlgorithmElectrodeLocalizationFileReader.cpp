@@ -42,11 +42,8 @@ boolean CBoxAlgorithmElectrodeLocalisationFileReader::initialize(void)
 
 	m_pChannelLocalisationStreamEncoder->getInputDynamic() = false;
 
-
-
 	// Configures settings according to box
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	l_rStaticBoxContext.getSettingValue(0, m_sFilename);
+	m_sFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	*ip_sFilename = m_sFilename;
 
 	return true;

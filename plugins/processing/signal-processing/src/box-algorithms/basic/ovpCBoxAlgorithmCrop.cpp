@@ -58,16 +58,9 @@ boolean CBoxAlgorithmCrop::initialize(void)
 	TParameterHandler < IMatrix* >(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)).setReferenceTarget(m_pMatrix);
 	TParameterHandler < IMatrix* >(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix)).setReferenceTarget(m_pMatrix);
 
-	CString l_sSettingValue;
-
-	getStaticBoxContext().getSettingValue(0, l_sSettingValue);
-	m_ui64CropMethod=getTypeManager().getEnumerationEntryValueFromName(OVP_TypeId_CropMethod, l_sSettingValue);
-
-	getStaticBoxContext().getSettingValue(1, l_sSettingValue);
-	m_f64MinCropValue=::atof(l_sSettingValue);
-
-	getStaticBoxContext().getSettingValue(2, l_sSettingValue);
-	m_f64MaxCropValue=::atof(l_sSettingValue);
+	m_ui64CropMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_f64MinCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_f64MaxCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	if(m_f64MinCropValue >= m_f64MaxCropValue)
 	{

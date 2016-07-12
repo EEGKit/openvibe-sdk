@@ -51,11 +51,9 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 	for(uint32 i = 0 ; i < l_rStaticBoxContext.getSettingCount() ; ++i)
 	{
 		CString l_pInputName;
-		CString l_pInputValue;
 		l_rStaticBoxContext.getSettingName(i, l_pInputName);
-		l_rStaticBoxContext.getSettingValue(i, l_pInputValue);
+		CString l_pInputValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
 		(*m_pParameter)[l_pInputName] = l_pInputValue;
-
 	}
 
 	boolean l_bIsPairing=false;
@@ -644,9 +642,8 @@ boolean CBoxAlgorithmClassifierTrainer::saveConfiguration(void)
 	XML::IXMLHandler *l_pHandler = XML::createXMLHandler();
 	CString l_sConfigurationFilename(this->getConfigurationManager().expand((*m_pParameter)[c_sFilenameSettingName]));
 
-	CString l_sClassifierAlgorithmClassIdentifier, l_sStrategyClassIdentifier;
-	l_rStaticBoxContext.getSettingValue(0, l_sStrategyClassIdentifier);
-	l_rStaticBoxContext.getSettingValue(1, l_sClassifierAlgorithmClassIdentifier);
+	CString l_sStrategyClassIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	CString l_sClassifierAlgorithmClassIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	XML::IXMLNode *l_sRoot = XML::createNode(c_sClassificationBoxRoot);
 	std::stringstream l_sVersion;

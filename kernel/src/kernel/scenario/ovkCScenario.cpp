@@ -8,6 +8,7 @@
 #include "ovkCLink.h"
 
 #include "../ovkCObjectVisitorContext.h"
+#include "../../tools/ovk_setting_checker.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -1059,6 +1060,7 @@ boolean CScenario::checkSettings(IConfigurationManager* pConfig)
 		{
 			CString l_sSettingName = "";
 			CString l_sRawSettingValue = "";
+			CIdentifier l_oTypeIdentifier;
 
 			if(l_pBox.second->hasAttribute(OVD_AttributeId_SettingOverrideFilename))
 			{
@@ -1066,6 +1068,7 @@ boolean CScenario::checkSettings(IConfigurationManager* pConfig)
 			}
 			l_pBox.second->getSettingName(l_ui32SettingIndex, l_sSettingName);
 			l_pBox.second->getSettingValue(l_ui32SettingIndex, l_sRawSettingValue);
+			l_pBox.second->getSettingType(l_ui32SettingIndex, l_oTypeIdentifier);
 			CString l_sSettingValue = l_sRawSettingValue;
 			if(pConfig != NULL)
 			{
@@ -1075,10 +1078,10 @@ boolean CScenario::checkSettings(IConfigurationManager* pConfig)
 			{
 				l_sSettingValue = this->getConfigurationManager().expandOnlyKeyword("var", l_sSettingValue);
 			}
-			if( !l_pBox.second->evaluateSettingValue(l_ui32SettingIndex, l_sSettingValue) )
+			if (!::checkSettingValue(l_sSettingValue, l_oTypeIdentifier))
 			{
 				this->getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" << l_pBox.second->getName() << "> The following value: ["<< l_sRawSettingValue 
-					<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not a numeric value.\n";
+					<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not valid.\n";
 				return false;
 			}
 		}

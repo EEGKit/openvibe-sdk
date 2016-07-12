@@ -130,42 +130,85 @@ namespace OpenViBEToolkit
 				rBoxAlgorithmContext.getStaticBoxContext()->getSettingValue(ui32Index, m_sSettingValue);
 				rBoxAlgorithmContext.getStaticBoxContext()->getSettingType(ui32Index, m_oSettingType);
 			}
+
 			operator OpenViBE::uint32 (void)
 			{
-				return OpenViBE::uint32(m_rConfigurationManager.expandAsUInteger(m_sSettingValue));
+				double l_dResult;
+				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
+				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
+				{
+					return static_cast<OpenViBE::uint32>(l_dResult);
+				}
+				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 32bits.\n";
+				return 0xffffffffll;
 			}
 			operator OpenViBE::uint64 (void)
 			{
+				OpenViBE::uint64 l_ui64StimId = 0xffffffffffffffffll;
+				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
+				double l_dResult;
 				if(m_rTypeManager.isEnumeration(m_oSettingType))
 				{
-					OpenViBE::uint64 l_ui64StimId=m_rTypeManager.getEnumerationEntryValueFromName(m_oSettingType, m_sSettingValue);
-					if(l_ui64StimId==0xffffffffffffffffll)
+					l_ui64StimId = m_rTypeManager.getEnumerationEntryValueFromName(m_oSettingType, l_sSettingValue);
+					if (l_ui64StimId == 0xffffffffffffffffll)
 					{
 						m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Did not find an enumeration value for [" << m_rTypeManager.getTypeName(m_oSettingType) << "] = [" << m_sSettingValue << "]\n";
 					}
-					return l_ui64StimId;
 				}
-				return OpenViBE::uint64(m_rConfigurationManager.expandAsUInteger(m_sSettingValue));
+				else if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
+				{
+					return static_cast<OpenViBE::uint64>(l_dResult);
+				}
+				else if (m_oSettingType == OV_TypeId_Integer)
+				{
+					// Seems like currently some plugins use FSettingValueAutoCast without knowing then setting type.
+					// In this case, to avoid to pollute the console with useless messages, throw a message only if the 
+					// setting should be an integer.
+					m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 64bits.\n";
+				}
+				return l_ui64StimId;
 			}
+
 			operator OpenViBE::int32 (void)
 			{
-				return OpenViBE::int32(m_rConfigurationManager.expandAsInteger(m_sSettingValue));
+				double l_dResult;
+				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
+				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
+				{
+					return static_cast<OpenViBE::int32>(l_dResult);
+				}
+				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to integer 32bits.\n";
+				return 0xffffll;
 			}
 			operator OpenViBE::int64 (void)
 			{
-				return OpenViBE::int64(m_rConfigurationManager.expandAsInteger(m_sSettingValue));
+				double l_dResult;
+				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
+				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
+				{
+					return static_cast<OpenViBE::int64>(l_dResult);
+				}
+				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to integer 64bits.\n";
+				return 0xffffffffll;
 			}
 			operator OpenViBE::float64 (void)
 			{
-				return m_rConfigurationManager.expandAsFloat(m_sSettingValue);
+				double l_dResult;
+				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
+				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
+				{
+					return static_cast<OpenViBE::float64>(l_dResult);
+				}
+				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to float.\n";
+				return 0.0;
 			}
 			operator OpenViBE::boolean (void)
 			{
 				return m_rConfigurationManager.expandAsBoolean(m_sSettingValue);
 			}
-			operator const OpenViBE::CString (void)
+			operator OpenViBE::CString (void)
 			{
-				return m_sSettingValue;
+				return m_rConfigurationManager.expand(m_sSettingValue);
 			}
 		private:
 			OpenViBE::Kernel::ILogManager& m_rLogManager;

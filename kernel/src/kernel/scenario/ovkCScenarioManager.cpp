@@ -79,6 +79,8 @@ IScenario& CScenarioManager::getScenario(
 	if(itScenario==m_vScenario.end())
 	{
 		this->getLogManager() << LogLevel_Fatal << "Scenario " << rScenarioIdentifier << " does not exist !\n";
+		// If the call is wrongly handled, and falls in this condition then next instruction causes a crash...
+		// TODO: return something here (but what ?)
 	}
 	return *itScenario->second;
 }
