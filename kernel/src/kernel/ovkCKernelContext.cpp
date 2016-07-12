@@ -213,7 +213,7 @@ boolean CKernelContext::uninitialize(void)
 
 IAlgorithmManager& CKernelContext::getAlgorithmManager(void) const
 {
-	assert(m_pLogManager);
+	assert(m_pAlgorithmManager);
 	
 	return *m_pAlgorithmManager;
 }
