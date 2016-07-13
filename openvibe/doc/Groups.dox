@@ -22,6 +22,11 @@
  */
 
 /**
+ * \defgroup Group_Error Error management
+ * \ingroup Group_Error
+ */
+
+/**
  * \defgroup Group_Player Scenario playback
  * \ingroup Group_Kernel
  */
