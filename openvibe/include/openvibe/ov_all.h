@@ -82,6 +82,8 @@
 #include "kernel/scenario/ovILink.h"
 #include "kernel/scenario/ovIScenario.h"
 #include "kernel/scenario/ovIScenarioManager.h"
+#include "kernel/scenario/ovIAlgorithmScenarioImporter.h"
+#include "kernel/scenario/ovIAlgorithmScenarioExporter.h"
 
 //___________________________________________________________________//
 //                                                                   //
