@@ -61,6 +61,18 @@ namespace OpenViBE
 			        const OpenViBE::CIdentifier& scenarioImporterAlgorithmIdentifier
 			        ) = 0;
 
+			virtual bool exportScenario(
+			        OpenViBE::IMemoryBuffer& outputMemoryBuffer,
+			        const OpenViBE::CIdentifier& scenarioIdentifier,
+			        const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier
+			        ) = 0;
+
+			virtual bool exportScenarioToFile(
+			        const char* fileName,
+			        const OpenViBE::CIdentifier& scenarioIdentifier,
+			        const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier
+			        ) = 0;
+
 			/**
 			 * \brief Releases an existing scenario
 			 * \param rScenarioIdentifier [in] : the existing scenario identifier

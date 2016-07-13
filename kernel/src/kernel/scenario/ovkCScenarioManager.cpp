@@ -5,6 +5,8 @@
 #include <fs/Files.h>
 #include <cassert>
 #include <openvibe/kernel/scenario/ovIAlgorithmScenarioImporter.h>
+#include <openvibe/kernel/scenario/ovIAlgorithmScenarioExporter.h>
+#include "../../tools/ovkSBoxProto.h"
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -179,6 +181,150 @@ bool CScenarioManager::importScenarioFromFile(OpenViBE::CIdentifier& newScenario
 
 	return this->importScenario(newScenarioIdentifier, memoryBuffer, scenarioImporterAlgorithmIdentifier);
 }
+
+bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffer, const OpenViBE::CIdentifier& scenarioIdentifier, const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier)
+{
+	if (m_vScenario.find(scenarioIdentifier) == m_vScenario.end())
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Scenario with identifier " << scenarioIdentifier << " does not exist." << "\n";
+		return false;
+	}
+
+	// If the scenario is a metabox, we will save its prototype hash into an attribute of the scenario
+	// that way the standalone scheduler can check whether metaboxes included inside need updating.
+	IScenario& scenario = this->getScenario(scenarioIdentifier);
+
+
+	if (scenario.isMetabox())
+	{
+		SBoxProto l_oMetaboxProto;
+
+		for (uint32 l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < scenario.getInputCount(); l_ui32ScenarioInputIndex++)
+		{
+			CString l_sInputName;
+			CIdentifier l_oInputTypeIdentifier;
+
+			scenario.getInputType(l_ui32ScenarioInputIndex, l_oInputTypeIdentifier);
+			scenario.getInputName(l_ui32ScenarioInputIndex, l_sInputName);
+
+			l_oMetaboxProto.addInput(l_sInputName, l_oInputTypeIdentifier);
+		}
+
+		for (uint32 l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < scenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
+		{
+			CString l_sOutputName;
+			CIdentifier l_oOutputTypeIdentifier;
+
+			scenario.getOutputType(l_ui32ScenarioOutputIndex, l_oOutputTypeIdentifier);
+			scenario.getOutputName(l_ui32ScenarioOutputIndex, l_sOutputName);
+
+			l_oMetaboxProto.addOutput(l_sOutputName, l_oOutputTypeIdentifier);
+		}
+
+		for (uint32 l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < scenario.getSettingCount(); l_ui32ScenarioSettingIndex++)
+		{
+			CString l_sSettingName;
+			CIdentifier l_oSettingTypeIdentifier;
+			CString l_sSettingDefaultValue;
+
+			scenario.getSettingName(l_ui32ScenarioSettingIndex, l_sSettingName);
+			scenario.getSettingType(l_ui32ScenarioSettingIndex, l_oSettingTypeIdentifier);
+			scenario.getSettingDefaultValue(l_ui32ScenarioSettingIndex, l_sSettingDefaultValue);
+
+			l_oMetaboxProto.addSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sSettingDefaultValue);
+		}
+
+		if (scenario.hasAttribute(OV_AttributeId_Scenario_MetaboxHash))
+		{
+			scenario.setAttributeValue(OV_AttributeId_Scenario_MetaboxHash, l_oMetaboxProto.m_oHash.toString());
+		}
+		else
+		{
+			scenario.addAttribute(OV_AttributeId_Scenario_MetaboxHash, l_oMetaboxProto.m_oHash.toString());
+		}
+	}
+
+	CIdentifier exporterInstanceIdentifier = this->getKernelContext().getAlgorithmManager().createAlgorithm(scenarioExporterAlgorithmIdentifier);
+
+	if (exporterInstanceIdentifier == OV_UndefinedIdentifier)
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not create the requested scenario exporter" << "\n";
+		return false;
+	}
+
+	IAlgorithmProxy* exporter = &this->getKernelContext().getAlgorithmManager().getAlgorithm(exporterInstanceIdentifier);
+	assert(exporter);
+
+	auto releaseAlgorithm = [&](){
+		bool hasReleaseSucceeded = this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*exporter);
+		(void)hasReleaseSucceeded;
+		assert(hasReleaseSucceeded);
+	};
+
+	if (!exporter->initialize())
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not initialize the requested scenario exporter" << "\n";
+		releaseAlgorithm();
+		return false;
+	}
+
+	IParameter* scenarioParameter = exporter->getInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario);
+	IParameter* memoryBufferParameter = exporter->getOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer);
+
+	if (!(memoryBufferParameter && scenarioParameter))
+	{
+		if (!scenarioParameter)
+		{
+			this->getKernelContext().getLogManager() << LogLevel_Error << "The requested exporter does not have a Scenario input parameter with identifier " << OV_Algorithm_ScenarioExporter_InputParameterId_Scenario << "\n";
+		}
+		if (!memoryBufferParameter)
+		{
+			this->getKernelContext().getLogManager() << LogLevel_Error << "The requested exporter does not have a MemoryBuffer output parameter with identifier " << OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer << "\n";
+		}
+		releaseAlgorithm();
+		return false;
+	}
+
+	TParameterHandler<IScenario*> scenarioParameterHandler(scenarioParameter);
+	TParameterHandler<const IMemoryBuffer*> memoryBufferParameterHandler(memoryBufferParameter);
+
+	scenarioParameterHandler = &scenario;
+	memoryBufferParameterHandler = &outputMemoryBuffer;
+
+	if (!exporter->process())
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not process data using the requested scenario exporter" << "\n";
+		releaseAlgorithm();
+		return false;
+	}
+
+	if (!exporter->uninitialize())
+	{
+		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not uninitialize the requested scenario exporter" << "\n";
+		releaseAlgorithm();
+		return false;
+	}
+
+	releaseAlgorithm();
+	return true;
+}
+
+bool CScenarioManager::exportScenarioToFile(const char* fileName, const OpenViBE::CIdentifier& scenarioIdentifier, const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier)
+{
+	CMemoryBuffer memoryBuffer;
+	this->exportScenario(memoryBuffer, scenarioIdentifier, scenarioExporterAlgorithmIdentifier);
+
+	std::ofstream outputFileStream;
+	FS::Files::openOFStream(outputFileStream, fileName, ios::binary);
+	if (!outputFileStream.good())
+	{
+		return false;
+	}
+
+	outputFileStream.write(reinterpret_cast<const char*>(memoryBuffer.getDirectPointer()), static_cast<long>(memoryBuffer.getSize()));
+	outputFileStream.close();
+
+	return true;
 }
 
 bool CScenarioManager::releaseScenario(
