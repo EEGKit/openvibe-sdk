@@ -63,6 +63,7 @@ void CAlgorithmScenarioExporterHelper::exportAttributes(const IAttributable& att
 			m_rParent.exportString(memoryBuffer, idAttributeValue, attributable.getAttributeValue(attributeIdentifier));
 			m_rParent.exportStop(memoryBuffer);
 		}
+		m_rParent.exportStop(memoryBuffer);
 	}
 }
 
