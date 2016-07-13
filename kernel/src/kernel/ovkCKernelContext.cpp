@@ -190,7 +190,7 @@ boolean CKernelContext::initialize(void)
 	return true;
 }
 
-boolean CKernelContext::uninitialize(void)
+bool CKernelContext::uninitialize(void)
 {
 	m_pPluginManager.reset();
 	m_pScenarioManager.reset();

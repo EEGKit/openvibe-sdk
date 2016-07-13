@@ -79,15 +79,15 @@ namespace OpenViBE
 				IPluginObjectDesc* l_pPluginObjectDesc=NULL;
 				while(l_pPluginModule->getPluginObjectDescription(l_ui32Index, l_pPluginObjectDesc))
 				{
-					boolean l_bFound=false;
+					bool l_bFound=false;
 
-					map<IPluginObjectDesc*, IPluginModule*>::const_iterator i;
-					for(i=m_rPluginObjectDesc.begin(); i!=m_rPluginObjectDesc.end() && !l_bFound; i++)
+					for (auto pluginObjectDesc : m_rPluginObjectDesc)
 					{
-						if(i->first->getClassIdentifier()==l_pPluginObjectDesc->getClassIdentifier())
+						if (pluginObjectDesc.first->getClassIdentifier() == l_pPluginObjectDesc->getClassIdentifier())
 						{
-							this->getLogManager() << LogLevel_ImportantWarning << "Duplicate plugin object descriptor class identifier [" << i->first->getName() << "] and [" << l_pPluginObjectDesc->getName() << "]... second one is ignored.\n";
-							l_bFound=true;
+							this->getLogManager() << LogLevel_ImportantWarning << "Duplicate plugin object descriptor class identifier [" << pluginObjectDesc.first->getName() << "] and [" << l_pPluginObjectDesc->getName() << "]... second one is ignored.\n";
+							l_bFound = true;
+							break;
 						}
 					}
 
@@ -135,16 +135,21 @@ CPluginManager::CPluginManager(const IKernelContext& rKernelContext)
 
 CPluginManager::~CPluginManager(void)
 {
-	map < IPluginObjectDesc*, vector < IPluginObject* > >::iterator i;
-	vector < IPluginObject* >::iterator j;
-	for(i=m_vPluginObject.begin(); i!=m_vPluginObject.end(); i++)
+	for (auto& pluginObjectVector : m_vPluginObject)
 	{
-		for(j=i->second.begin(); j!=i->second.end(); j++)
+		for (auto& pluginObject : pluginObjectVector.second)
 		{
-			this->getLogManager() << LogLevel_ImportantWarning << "Trying to release plugin object with class id " << (*j)->getClassIdentifier() << " and plugin object descriptor " << i->first->getName() << " at plugin manager destruction time\n";
-			(*j)->release();
+			this->getLogManager() << LogLevel_ImportantWarning << "Trying to release plugin object with class id " << pluginObject->getClassIdentifier() << " and plugin object descriptor " << pluginObjectVector.first->getName() << " at plugin manager destruction time\n";
+			pluginObject->release();
 		}
 	}
+	m_vPluginObject.clear();
+
+	for (auto& pluginObjectDesc : m_vPluginObjectDesc)
+	{
+		pluginObjectDesc.first->release();
+	}
+	m_vPluginObjectDesc.clear();
 
 	vector < IPluginModule* >::iterator k;
 	for(k=m_vPluginModule.begin(); k!=m_vPluginModule.end(); k++)
@@ -153,6 +158,7 @@ CPluginManager::~CPluginManager(void)
 		(*k)->uninitialize();
 		delete (*k);
 	}
+	m_vPluginModule.clear();
 }
 
 boolean CPluginManager::addPluginsFromFiles(
