@@ -192,21 +192,21 @@ boolean CKernelContext::initialize(void)
 
 boolean CKernelContext::uninitialize(void)
 {
-	m_pPluginManager.release();
-	m_pScenarioManager.release();
-	m_pTypeManager.release();
-	m_pPlayerManager.release();
-	m_pAlgorithmManager.release();
-	m_pConfigurationManager.release();
+	m_pPluginManager.reset();
+	m_pScenarioManager.reset();
+	m_pTypeManager.reset();
+	m_pPlayerManager.reset();
+	m_pAlgorithmManager.reset();
+	m_pConfigurationManager.reset();
 	
 	this->getLogManager().removeListener(m_pLogListenerConsole.get());
 	this->getLogManager().removeListener(m_pLogListenerFile.get());
 
-	m_pLogManager.release();
-	m_pLogListenerConsole.release();
-	m_pLogListenerFile.release();
+	m_pLogManager.reset();
+	m_pLogListenerConsole.reset();
+	m_pLogListenerFile.reset();
 
-	m_pKernelObjectFactory.release();
+	m_pKernelObjectFactory.reset();
 
 	return true;
 }
