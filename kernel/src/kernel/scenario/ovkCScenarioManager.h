@@ -19,6 +19,9 @@ namespace OpenViBE
 
 			virtual OpenViBE::CIdentifier getNextScenarioIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
+
+			virtual bool isScenario(const OpenViBE::CIdentifier& scenarioIdentifier) const;
+
 			virtual OpenViBE::boolean createScenario(
 				OpenViBE::CIdentifier& rScenarioIdentifier);
 

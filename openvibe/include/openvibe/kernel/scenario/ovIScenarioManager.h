@@ -38,6 +38,8 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::CIdentifier getNextScenarioIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
+
+			virtual bool isScenario(const OpenViBE::CIdentifier& scenarioIdentifier) const = 0;
 			/**
 			 * \brief Creates a new scenario
 			 * \param rScenarioIdentifier [out] : the identifier of

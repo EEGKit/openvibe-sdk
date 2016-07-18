@@ -47,6 +47,11 @@ CIdentifier CScenarioManager::getNextScenarioIdentifier(
 	return itScenario!=m_vScenario.end()?itScenario->first:OV_UndefinedIdentifier;
 }
 
+bool CScenarioManager::isScenario(const OpenViBE::CIdentifier& scenarioIdentifier) const
+{
+	return m_vScenario.find(scenarioIdentifier) != m_vScenario.end();
+}
+
 bool CScenarioManager::createScenario(
 	CIdentifier& rScenarioIdentifier)
 {
@@ -57,7 +62,6 @@ bool CScenarioManager::createScenario(
 
 	return true;
 }
-
 
 bool CScenarioManager::importScenario(OpenViBE::CIdentifier& newScenarioIdentifier, const IMemoryBuffer& inputMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmIdentifier)
 {
