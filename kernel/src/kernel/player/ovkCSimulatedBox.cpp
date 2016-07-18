@@ -64,9 +64,13 @@ CIdentifier CSimulatedBox::getUnusedIdentifier(void) const
 bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentifier)
 {
 	// FIXME: test if rScenario is a scenario identifier
+	if (!m_rScheduler.getPlayer().getRuntimeScenarioManager().isScenario(rScenarioIdentifier))
+	{
+		this->getLogManager()<< LogLevel_Error << "Scenario with identifier " << rScenarioIdentifier << " does not exist" << "\n";
+		return false;
+	}
 	m_pScenario=&m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(rScenarioIdentifier);
-	assert(m_pScenario);
-	return m_pScenario!=NULL;
+	return true;
 }
 
 bool CSimulatedBox::getBoxIdentifier(CIdentifier& rBoxIdentifier) const
