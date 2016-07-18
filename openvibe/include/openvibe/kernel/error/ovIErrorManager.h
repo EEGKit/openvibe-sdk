@@ -94,7 +94,7 @@ namespace OpenViBE
 			 *
 			 * \warning The manager keeps the ownership of IError instances.
 			 *          Therefore the API consumer is not responsible for their
-			 *          life cycle and management and must use releaseErrors to
+			 *          life cycle/management and must use releaseErrors to
 			 *          release them.
 			 */
 			virtual const OpenViBE::Kernel::IError* getLastError() const = 0;

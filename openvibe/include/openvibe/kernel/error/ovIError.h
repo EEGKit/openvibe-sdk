@@ -70,6 +70,10 @@ namespace OpenViBE
 			/**
 			 * \brief Retrieve nested error
 			 * \return the nested error if there is one, nullptr otherwise
+			 *
+			 * \warning The error keeps the ownership of the nested error.
+			 *          Therefore the API consumer is not responsible for its
+			 *          life cycle/management
 			 */
 			virtual const OpenViBE::Kernel::IError* getNestedError() const = 0;
 
