@@ -67,14 +67,12 @@ bool CScenarioManager::importScenario(OpenViBE::CIdentifier& newScenarioIdentifi
 {
 	newScenarioIdentifier = OV_UndefinedIdentifier;
 
-	bool hasCreateScenarioSucceeded = this->createScenario(newScenarioIdentifier);
-	(void)hasCreateScenarioSucceeded;
-	assert(hasCreateScenarioSucceeded);
+	this->createScenario(newScenarioIdentifier);
+	// TODO: fatal if createScenario fails
 
 	auto releaseScenario = [&](){
-		bool hasReleaseScenarioSucceeded = this->releaseScenario(newScenarioIdentifier);
-		(void)hasReleaseScenarioSucceeded;
-		assert(hasReleaseScenarioSucceeded);
+		this->releaseScenario(newScenarioIdentifier);
+		// TODO: fatal if releaseScenario fails
 	};
 
 	IScenario& newScenarioInstance = this->getScenario(newScenarioIdentifier);
@@ -96,12 +94,11 @@ bool CScenarioManager::importScenario(OpenViBE::CIdentifier& newScenarioIdentifi
 	}
 
 	IAlgorithmProxy* importer = &this->getKernelContext().getAlgorithmManager().getAlgorithm(importerInstanceIdentifier);
-	assert(importer);
+	// TODO: fatal if the importer does not exist as we have just create it
 
 	auto releaseAlgorithm = [&](){
-		bool hasReleaseSucceeded = this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*importer);
-		(void)hasReleaseSucceeded;
-		assert(hasReleaseSucceeded);
+		this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*importer);
+		// TODO: fatal if the releaseAlgorithm fails as we have just created it
 	};
 
 	if (!importer->initialize())
@@ -257,12 +254,11 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 	}
 
 	IAlgorithmProxy* exporter = &this->getKernelContext().getAlgorithmManager().getAlgorithm(exporterInstanceIdentifier);
-	assert(exporter);
+	// TODO: fatal if exporter does not exist as we have just created it
 
 	auto releaseAlgorithm = [&](){
-		bool hasReleaseSucceeded = this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*exporter);
-		(void)hasReleaseSucceeded;
-		assert(hasReleaseSucceeded);
+		this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*exporter);
+		// TODO: fatal if release algorithm fails as we have just created it
 	};
 
 	if (!exporter->initialize())
