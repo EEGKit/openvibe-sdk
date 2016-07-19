@@ -94,7 +94,7 @@ namespace OpenViBE
 
 		void CErrorManager::addError(ErrorType type, const char* description)
 		{
-			this->addErrorAtLocation(type, description, "NoFileLocation", 0);
+			this->addErrorAtLocation(type, description, "NoLocationInfo", 0);
 		}
 
 		void CErrorManager::addErrorAtLocation(ErrorType type, const char* description, const char* filename, unsigned int line)
