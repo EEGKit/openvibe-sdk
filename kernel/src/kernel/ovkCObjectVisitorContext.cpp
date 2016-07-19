@@ -32,3 +32,8 @@ ILogManager& CObjectVisitorContext::getLogManager(void) const
 {
 	return TKernelObject < IObjectVisitorContext >::getLogManager();
 }
+
+IErrorManager& CObjectVisitorContext::getErrorManager(void) const
+{
+	return TKernelObject < IObjectVisitorContext >::getErrorManager();
+}

@@ -38,6 +38,11 @@ namespace OpenViBE
 			 * \return a reference on the current log manager
 			 */
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const=0;
+			/**
+			 * \brief Gets a reference on the current error manager
+			 * \return a reference on the current error manager
+			 */
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const=0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_ObjectVisitorContext)
 		};

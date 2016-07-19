@@ -12,6 +12,7 @@
 #include "log/ovkCLogManager.h"
 #include "log/ovkCLogListenerConsole.h"
 #include "log/ovkCLogListenerFile.h"
+#include "error/ovkCErrorManager.h"
 
 #include <cassert>
 #include <string>
@@ -48,6 +49,7 @@ CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const
 	,m_pScenarioManager(nullptr)
 	,m_pTypeManager(nullptr)
 	,m_pLogManager(nullptr)
+	,m_pErrorManager(nullptr)
 	,m_sApplicationName(rApplicationName)
 	,m_sConfigurationFile(rConfigurationFile)
 	,m_pLogListenerConsole(nullptr)
@@ -62,6 +64,8 @@ CKernelContext::~CKernelContext(void)
 
 boolean CKernelContext::initialize(void)
 {
+	m_pErrorManager.reset(new CErrorManager(m_rMasterKernelContext));
+
 	m_pKernelObjectFactory.reset(new CKernelObjectFactory(m_rMasterKernelContext));
 
 	m_pLogManager.reset(new CLogManager(m_rMasterKernelContext));
@@ -209,7 +213,7 @@ bool CKernelContext::uninitialize(void)
 	m_pPlayerManager.reset();
 	m_pAlgorithmManager.reset();
 	m_pConfigurationManager.reset();
-	
+
 	this->getLogManager().removeListener(m_pLogListenerConsole.get());
 	this->getLogManager().removeListener(m_pLogListenerFile.get());
 
@@ -218,6 +222,8 @@ bool CKernelContext::uninitialize(void)
 	m_pLogListenerFile.reset();
 
 	m_pKernelObjectFactory.reset();
+
+	m_pErrorManager.reset();
 
 	return true;
 }
@@ -276,6 +282,13 @@ ILogManager& CKernelContext::getLogManager(void) const
 	assert(m_pLogManager);
 
 	return *m_pLogManager;
+}
+
+IErrorManager& CKernelContext::getErrorManager(void) const
+{
+	assert(m_pErrorManager);
+
+	return *m_pErrorManager;
 }
 
 ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)

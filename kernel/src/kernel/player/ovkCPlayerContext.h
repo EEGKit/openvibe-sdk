@@ -42,6 +42,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const;
 			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const;
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const;
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const;
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const;
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const;
 
@@ -53,6 +54,7 @@ namespace OpenViBE
 			OpenViBE::Kernel::IAlgorithmManager& m_rAlgorithmManager;
 			OpenViBE::Kernel::IConfigurationManager& m_rConfigurationManager;
 			OpenViBE::Kernel::ILogManager& m_rLogManager;
+			OpenViBE::Kernel::IErrorManager& m_rErrorManager;
 			OpenViBE::Kernel::IScenarioManager& m_rScenarioManager;
 			OpenViBE::Kernel::ITypeManager& m_rTypeManager;
 		};

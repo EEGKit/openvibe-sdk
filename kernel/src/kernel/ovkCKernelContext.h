@@ -30,6 +30,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const;
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const;
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const;
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelContext, OVK_ClassId_Kernel_KernelContext)
 
@@ -49,6 +50,7 @@ namespace OpenViBE
 			std::unique_ptr<OpenViBE::Kernel::IScenarioManager> m_pScenarioManager;
 			std::unique_ptr<OpenViBE::Kernel::ITypeManager> m_pTypeManager;
 			std::unique_ptr<OpenViBE::Kernel::ILogManager> m_pLogManager;
+			std::unique_ptr<OpenViBE::Kernel::IErrorManager> m_pErrorManager;
 
 			OpenViBE::CString m_sApplicationName;
 			OpenViBE::CString m_sConfigurationFile;
@@ -75,6 +77,7 @@ namespace OpenViBE
 				,m_pScenarioManager(NULL)
 				,m_pTypeManager(NULL)
 				,m_pLogManager(NULL)
+				,m_pErrorManager(NULL)
 			{
 			}
 
@@ -89,7 +92,8 @@ namespace OpenViBE
 			void setScenarioManager(OpenViBE::Kernel::IScenarioManager* pScenarioManager) { m_pScenarioManager=pScenarioManager; }
 			void setTypeManager(OpenViBE::Kernel::ITypeManager* pTypeManager) { m_pTypeManager=pTypeManager; }
 			void setLogManager(OpenViBE::Kernel::ILogManager* pLogManager) { m_pLogManager=pLogManager; }
-			
+			void setErrorManager(OpenViBE::Kernel::IErrorManager* pErrorManager) { m_pErrorManager=pErrorManager; }
+
 			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const { return m_pAlgorithmManager?*m_pAlgorithmManager:m_rKernelContext.getAlgorithmManager(); }
 			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const { return m_pConfigurationManager?*m_pConfigurationManager:m_rKernelContext.getConfigurationManager(); }
 			virtual OpenViBE::Kernel::IKernelObjectFactory& getKernelObjectFactory(void) const { return m_pKernelObjectFactory?*m_pKernelObjectFactory:m_rKernelContext.getKernelObjectFactory(); }
@@ -98,6 +102,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const { return m_pScenarioManager?*m_pScenarioManager:m_rKernelContext.getScenarioManager(); }
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const { return m_pTypeManager?*m_pTypeManager:m_rKernelContext.getTypeManager(); }
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const { return m_pLogManager?*m_pLogManager:m_rKernelContext.getLogManager(); }
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const { return m_pErrorManager?*m_pErrorManager:m_rKernelContext.getErrorManager(); }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelContext, OVK_ClassId_Kernel_KernelContext)
 
@@ -115,6 +120,7 @@ namespace OpenViBE
 			mutable OpenViBE::Kernel::IScenarioManager* m_pScenarioManager;
 			mutable OpenViBE::Kernel::ITypeManager* m_pTypeManager;
 			mutable OpenViBE::Kernel::ILogManager* m_pLogManager;
+			mutable OpenViBE::Kernel::IErrorManager* m_pErrorManager;
 		};
 	};
 };
