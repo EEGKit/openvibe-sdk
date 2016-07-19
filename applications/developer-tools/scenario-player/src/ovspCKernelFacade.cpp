@@ -191,87 +191,21 @@ namespace OpenViBE
 		CIdentifier scenarioIdentifier;
 		auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
 
-		if (!scenarioManager.createScenario(scenarioIdentifier))
+		if (!scenarioManager.importScenarioFromFile(scenarioIdentifier, scenarioFile.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
 		{
 			std::cerr << "ERROR: failed to create scenario " << std::endl;
 			return PlayerReturnCode::KernelInternalFailure;
 		}
 
-		IScenario& scenarioToImport = scenarioManager.getScenario(scenarioIdentifier);
-
-		// use of returnCode to store error and achive an RAII-like
-		// behavior by releasing scenario at the end
-		PlayerReturnCode returnCode = PlayerReturnCode::Success;
-
-		CMemoryBuffer fileBuffer;
-		std::FILE* fileHandle = std::fopen(scenarioFile.c_str(), "rb");
-		
-		if (fileHandle)
+		auto scenarioToReleaseIt = m_Pimpl->scenarioMap.find(scenarioName);
+		if (scenarioToReleaseIt != m_Pimpl->scenarioMap.end())
 		{
-			std::string contents;
-			std::fseek(fileHandle, 0, SEEK_END);
-			fileBuffer.setSize(std::ftell(fileHandle), true);
-			std::rewind(fileHandle);
-			std::fread(fileBuffer.getDirectPointer(), 1, static_cast<std::size_t>(fileBuffer.getSize()), fileHandle);
-			std::fclose(fileHandle);
-
-			auto& algorithmManager = m_Pimpl->kernelContext->getAlgorithmManager();
-			auto algorithmIdentifier = algorithmManager.createAlgorithm(OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
-
-			IAlgorithmProxy* scenarioImporter{ nullptr };
-			if (algorithmIdentifier != OV_UndefinedIdentifier &&
-				(scenarioImporter = &algorithmManager.getAlgorithm(algorithmIdentifier))) // assignment in 'if' is generally an anti-pattern because of
-																						  // non-maintainability but here we can get rid of an if/else section...
-			{
-				scenarioImporter->initialize();
-
-				TParameterHandler<const IMemoryBuffer*> inputBuffer(scenarioImporter->getInputParameter(OVTK_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
-				TParameterHandler<IScenario*> outputScenario(scenarioImporter->getOutputParameter(OVTK_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
-
-				inputBuffer = &fileBuffer;
-				outputScenario = &scenarioToImport;
-				
-				bool importSuccess = scenarioImporter->process();
-				scenarioImporter->uninitialize();
-
-				algorithmManager.releaseAlgorithm(*scenarioImporter);
-
-				if (!importSuccess)
-				{
-					std::cerr << "ERROR: failed to import scenario  " << std::endl;
-					returnCode = PlayerReturnCode::KernelInternalFailure;
-				}
-
-			}
-			else
-			{
-				std::cerr << "ERROR: failed to generate an importer to import scenario file " << std::endl;
-				returnCode = PlayerReturnCode::KernelInternalFailure;
-			}
-
-		}
-		else
-		{
-			std::cerr << "ERROR: failed to open scenario file at location " << scenarioFile << std::endl;
-			returnCode =  PlayerReturnCode::OpeningFileFailure;
+			scenarioManager.releaseScenario(scenarioToReleaseIt->second);
 		}
 
-		if (returnCode != PlayerReturnCode::Success)
-		{
-			scenarioManager.releaseScenario(scenarioIdentifier);
-		}
-		else
-		{
-			auto scenarioToReleaseIt = m_Pimpl->scenarioMap.find(scenarioName);
-			if (scenarioToReleaseIt != m_Pimpl->scenarioMap.end())
-			{
-				scenarioManager.releaseScenario(scenarioToReleaseIt->second);
-			}
+		m_Pimpl->scenarioMap[scenarioName] = scenarioIdentifier;
 
-			m_Pimpl->scenarioMap[scenarioName] = scenarioIdentifier;
-		}
-
-		return returnCode;
+		return PlayerReturnCode::Success;
 	}
 
 	PlayerReturnCode KernelFacade::setupScenario(const SetupScenarioCommand& command)

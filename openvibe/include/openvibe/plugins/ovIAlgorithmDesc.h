@@ -2,6 +2,7 @@
 #define __OpenViBE_Plugins_IAlgorithmDesc_H__
 
 #include "ovIPluginObjectDesc.h"
+#include "../kernel/algorithm/ovIAlgorithmProto.h"
 
 namespace OpenViBE
 {

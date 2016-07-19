@@ -2,6 +2,8 @@
 #include "ovkCKernelObjectFactory.h"
 #include "ovkCTypeManager.h"
 
+#include <openvibe/ovCIdentifier.h>
+
 #include "algorithm/ovkCAlgorithmManager.h"
 #include "configuration/ovkCConfigurationManager.h"
 #include "player/ovkCPlayerManager.h"
@@ -78,7 +80,7 @@ boolean CKernelContext::initialize(void)
 	m_pConfigurationManager->createConfigurationToken("Path_Tmp", "${Path_UserData}/tmp");
 	m_pConfigurationManager->createConfigurationToken("Path_Lib", OpenViBE::Directories::getLibDir());
 	m_pConfigurationManager->createConfigurationToken("Path_Bin", OpenViBE::Directories::getBinDir());
-	
+
 #if defined TARGET_OS_Windows
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Windows");
 #elif defined TARGET_OS_Linux
@@ -190,87 +192,96 @@ boolean CKernelContext::initialize(void)
 	return true;
 }
 
-boolean CKernelContext::uninitialize(void)
+bool CKernelContext::uninitialize(void)
 {
-	m_pPluginManager.release();
-	m_pScenarioManager.release();
-	m_pTypeManager.release();
-	m_pPlayerManager.release();
-	m_pAlgorithmManager.release();
-	m_pConfigurationManager.release();
+	// As releaseScenario() can call into Plugin Manager we have to clear the scenario manager
+	// before destroying the Plugin Manager. We can not destroy the Scenario Manager first
+	// before Plugin Manager destructor needs it.
+	CIdentifier scenarioIdentifier;
+	while ((scenarioIdentifier = m_pScenarioManager->getNextScenarioIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier)
+	{
+		m_pScenarioManager->releaseScenario(scenarioIdentifier);
+	}
+
+	m_pPluginManager.reset();
+	m_pScenarioManager.reset();
+	m_pTypeManager.reset();
+	m_pPlayerManager.reset();
+	m_pAlgorithmManager.reset();
+	m_pConfigurationManager.reset();
 	
 	this->getLogManager().removeListener(m_pLogListenerConsole.get());
 	this->getLogManager().removeListener(m_pLogListenerFile.get());
 
-	m_pLogManager.release();
-	m_pLogListenerConsole.release();
-	m_pLogListenerFile.release();
+	m_pLogManager.reset();
+	m_pLogListenerConsole.reset();
+	m_pLogListenerFile.reset();
 
-	m_pKernelObjectFactory.release();
+	m_pKernelObjectFactory.reset();
 
 	return true;
 }
 
 IAlgorithmManager& CKernelContext::getAlgorithmManager(void) const
 {
-	assert(m_pLogManager);
-	
+	assert(m_pAlgorithmManager);
+
 	return *m_pAlgorithmManager;
 }
 
 IConfigurationManager& CKernelContext::getConfigurationManager(void) const
 {
 	assert(m_pConfigurationManager);
-	
+
 	return *m_pConfigurationManager;
 }
 
 IKernelObjectFactory& CKernelContext::getKernelObjectFactory(void) const
 {
 	assert(m_pKernelObjectFactory);
-	
+
 	return *m_pKernelObjectFactory;
 }
 
 IPlayerManager& CKernelContext::getPlayerManager(void) const
 {
 	assert(m_pPlayerManager);
-	
+
 	return *m_pPlayerManager;
 }
 
 IPluginManager& CKernelContext::getPluginManager(void) const
 {
 	assert(m_pPluginManager);
-	
+
 	return *m_pPluginManager;
 }
 
 IScenarioManager& CKernelContext::getScenarioManager(void) const
 {
 	assert(m_pScenarioManager);
-	
+
 	return *m_pScenarioManager;
 }
 
 ITypeManager& CKernelContext::getTypeManager(void) const
 {
 	assert(m_pTypeManager);
-	
+
 	return *m_pTypeManager;
 }
 
 ILogManager& CKernelContext::getLogManager(void) const
 {
 	assert(m_pLogManager);
-	
+
 	return *m_pLogManager;
 }
 
 ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)
 {
 	assert(m_pLogManager);
-	
+
 	std::string l_sValue(rLogLevelName.toASCIIString());
 	std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
 

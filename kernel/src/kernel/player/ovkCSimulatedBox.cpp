@@ -11,45 +11,17 @@
 
 #include <cstdlib>
 #include <algorithm>
+#include <cassert>
 
 using namespace std;
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
 
-#define boolean OpenViBE::boolean
-
-//#define _BoxAlgorithm_ScopeTester_
-//#define _SimulatedBox_ScopeTester_
-
-#define __OV_FUNC__ CString("unknown_function_name")
-#define __OV_LINE__ uint32(__LINE__)
-#define __OV_FILE__ CString(__FILE__)
-
 // ________________________________________________________________________________________________________________
 //
 
-namespace
-{
-	template <typename T>
-	T& _my_get_(deque<T>& rList, uint32 ui32Index)
-	{
-		typename deque<T>::iterator it=rList.begin()+ui32Index;
-		return *it;
-	}
-
-	template <typename T>
-	const T& _my_get_(const deque<T>& rList, uint32 ui32Index)
-	{
-		typename deque<T>::const_iterator it=rList.begin()+ui32Index;
-		return *it;
-	}
-}
-
-// ________________________________________________________________________________________________________________
-//
-
-#define _Bad_Time_ 0xffffffffffffffffll
+#define OV_IncorrectTime 0xffffffffffffffffll
 static const CNameValuePairList s_oDummyNameValuePairList;
 
 CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& rScheduler)
@@ -57,27 +29,19 @@ CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& r
 	,m_bReadyToProcess(false)
 	,m_bChunkConsistencyChecking(false)
 	,m_eChunkConsistencyCheckingLogLevel(LogLevel_Warning)
-	,m_pBoxAlgorithm(NULL)
-	,m_pScenario(NULL)
-	,m_pBox(NULL)
+	,m_pBoxAlgorithm(nullptr)
+	,m_pScenario(nullptr)
+	,m_pBox(nullptr)
 	,m_rScheduler(rScheduler)
-	,m_ui64LastClockActivationDate(_Bad_Time_)
+	,m_ui64LastClockActivationDate(OV_IncorrectTime)
 	,m_ui64ClockFrequency(0)
 	,m_ui64ClockActivationStep(0)
 	,m_oSceneIdentifier(OV_UndefinedIdentifier)
 {
-#if defined _SimulatedBox_ScopeTester_
-	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
-#endif
 }
 
 CSimulatedBox::~CSimulatedBox(void)
 {
-#if defined _SimulatedBox_ScopeTester_
-	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
-#endif
-
-	//clear simulated objects map
 	m_mSimulatedObjects.clear();
 }
 
@@ -97,56 +61,61 @@ CIdentifier CSimulatedBox::getUnusedIdentifier(void) const
 	return l_oResult;
 }
 
-boolean CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentifier)
+bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentifier)
 {
-	// FIXME test if rScenario is a scenario identifier
+	// FIXME: test if rScenario is a scenario identifier
+	if (!m_rScheduler.getPlayer().getRuntimeScenarioManager().isScenario(rScenarioIdentifier))
+	{
+		this->getLogManager()<< LogLevel_Error << "Scenario with identifier " << rScenarioIdentifier << " does not exist" << "\n";
+		return false;
+	}
 	m_pScenario=&m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(rScenarioIdentifier);
-	return m_pScenario!=NULL;
+	return true;
 }
 
-boolean CSimulatedBox::getBoxIdentifier(CIdentifier& rBoxIdentifier) const
+bool CSimulatedBox::getBoxIdentifier(CIdentifier& rBoxIdentifier) const
 {
-	if(m_pBox == NULL)
+	if (!m_pBox)
 	{
 		return false;
 	}
+
 	rBoxIdentifier = m_pBox->getIdentifier();
 	return true;
 }
 
-boolean CSimulatedBox::setBoxIdentifier(const CIdentifier& rBoxIdentifier)
+bool CSimulatedBox::setBoxIdentifier(const CIdentifier& rBoxIdentifier)
 {
-	if(!m_pScenario)
+	if (!m_pScenario)
 	{
 		return false;
 	}
 
-	m_pBox=m_pScenario->getBoxDetails(rBoxIdentifier);
+	m_pBox = m_pScenario->getBoxDetails(rBoxIdentifier);
 	return m_pBox!=NULL;
 }
 
-boolean CSimulatedBox::initialize(void)
+bool CSimulatedBox::initialize(void)
 {
-#if defined _SimulatedBox_ScopeTester_
-	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
-#endif
-
 	// FIXME test for already initialized boxes etc
-	if(!m_pBox) return false;
-	if(!m_pScenario) return false;
+	if (!m_pBox)
+	{
+		return false;
+	}
 
-	m_bChunkConsistencyChecking=this->getConfigurationManager().expandAsBoolean("${Kernel_CheckChunkConsistency}", true);
+	if (!m_pScenario)
+	{
+		return false;
+	}
+
+	m_bChunkConsistencyChecking = this->getConfigurationManager().expandAsBoolean("${Kernel_CheckChunkConsistency}", true);
 	m_vInput.resize(m_pBox->getInputCount());
 	m_vOutput.resize(m_pBox->getOutputCount());
 	m_vCurrentOutput.resize(m_pBox->getOutputCount());
 	m_vLastOutputStartTime.resize(m_pBox->getOutputCount(), 0);
 	m_vLastOutputEndTime.resize(m_pBox->getOutputCount(), 0);
 
-	m_oBenchmarkChronoProcessClock.reset(1024);
-	m_oBenchmarkChronoProcessInput.reset(1024);
-	m_oBenchmarkChronoProcess.reset(1024);
-
-	m_ui64LastClockActivationDate=_Bad_Time_;
+	m_ui64LastClockActivationDate=OV_IncorrectTime;
 	m_ui64ClockFrequency=0;
 	m_ui64ClockActivationStep=0;
 
@@ -160,10 +129,6 @@ boolean CSimulatedBox::initialize(void)
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-#if defined _BoxAlgorithm_ScopeTester_
-			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::initialize)"));
-#endif
-
 			if(!m_pBoxAlgorithm->initialize(l_oBoxAlgorithmContext))
 			{
 				getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> initialization failed\n";
@@ -177,19 +142,12 @@ boolean CSimulatedBox::initialize(void)
 
 boolean CSimulatedBox::uninitialize(void)
 {
-#if defined _SimulatedBox_ScopeTester_
-	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
-#endif
-	
 	bool l_bResult = true;
 	if(!m_pBoxAlgorithm) return false;
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-#if defined _BoxAlgorithm_ScopeTester_
-			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::uninitialize)"));
-#endif
 			{
 				if(!m_pBoxAlgorithm->uninitialize(l_oBoxAlgorithmContext))
 				{
@@ -208,21 +166,14 @@ boolean CSimulatedBox::uninitialize(void)
 
 boolean CSimulatedBox::processClock(void)
 {
-#if defined _SimulatedBox_ScopeTester_
-	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
-#endif
-
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-#if defined _BoxAlgorithm_ScopeTester_
-			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::getClockFrequency)"));
-#endif
 			uint64 l_ui64NewClockFrequency=m_pBoxAlgorithm->getClockFrequency(l_oBoxAlgorithmContext);
 			if(l_ui64NewClockFrequency==0)
 			{
-				m_ui64ClockActivationStep=_Bad_Time_;
-				m_ui64LastClockActivationDate=_Bad_Time_;
+				m_ui64ClockActivationStep=OV_IncorrectTime;
+				m_ui64LastClockActivationDate=OV_IncorrectTime;
 			}
 			else
 			{
@@ -239,22 +190,17 @@ boolean CSimulatedBox::processClock(void)
 				//       would result in an integer over shift (the one
 				//       would exit). Thus the left shift of 63 bits
 				//       and the left shift of 1 bit after the division
-				m_ui64ClockActivationStep=((1LL<<63)/l_ui64NewClockFrequency)<<1;
+				m_ui64ClockActivationStep=((1ULL<<63)/l_ui64NewClockFrequency)<<1;
 			}
 			m_ui64ClockFrequency=l_ui64NewClockFrequency;
 		}
 	}
 
-	if((m_ui64ClockFrequency!=0) && (m_ui64LastClockActivationDate==_Bad_Time_ || m_rScheduler.getCurrentTime()-m_ui64LastClockActivationDate>=m_ui64ClockActivationStep))
+	if((m_ui64ClockFrequency!=0) && (m_ui64LastClockActivationDate==OV_IncorrectTime || m_rScheduler.getCurrentTime()-m_ui64LastClockActivationDate>=m_ui64ClockActivationStep))
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-#if defined _BoxAlgorithm_ScopeTester_
-			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::processClock)"));
-#endif	
-			m_oBenchmarkChronoProcessClock.stepIn();
-
-			if(m_ui64LastClockActivationDate==_Bad_Time_)
+			if(m_ui64LastClockActivationDate==OV_IncorrectTime)
 			{
 				m_ui64LastClockActivationDate=m_rScheduler.getCurrentTime();
 			}
@@ -270,7 +216,6 @@ boolean CSimulatedBox::processClock(void)
 				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> processClock() function failed\n";
 				return false;
 			}
-			m_oBenchmarkChronoProcessClock.stepOut();
 				
 			m_bReadyToProcess|=l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 		}
@@ -281,25 +226,16 @@ boolean CSimulatedBox::processClock(void)
 
 boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& rChunk)
 {
-#if defined _SimulatedBox_ScopeTester_
-	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
-#endif
-
 	m_vInput[ui32InputIndex].push_back(rChunk);
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-#if defined _BoxAlgorithm_ScopeTester_
-			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::processInput)"));
-#endif
-			m_oBenchmarkChronoProcessInput.stepIn();
 			if(!m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex))
 			{
 				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> processInput() failed\n";
 				return false;
 			}
-			m_oBenchmarkChronoProcessInput.stepOut();
 		}
 		m_bReadyToProcess|=l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 	}
@@ -309,25 +245,19 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 
 boolean CSimulatedBox::process(void)
 {
-#if defined _SimulatedBox_ScopeTester_
-	this->getLogManager() << LogLevel_Debug << __OV_FUNC__ << " - " << __OV_FILE__ << ":" << __OV_LINE__ << "\n";
-#endif
-
-	if(!m_bReadyToProcess) return true;
+	if (!m_bReadyToProcess)
+	{
+		return true;
+	}
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-#if defined _BoxAlgorithm_ScopeTester_
-			Tools::CScopeTester l_oScopeTester(getKernelContext(), m_pBox->getName() + CString(" (IBoxAlgorithm::process)"));
-#endif
-			m_oBenchmarkChronoProcess.stepIn();
 			if(!m_pBoxAlgorithm->process(l_oBoxAlgorithmContext))
 			{
 				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> process() function failed\n";
 				return false;
 			}
-			m_oBenchmarkChronoProcess.stepOut();
 		}
 	}
 
@@ -353,85 +283,54 @@ boolean CSimulatedBox::process(void)
 	}
 
 	// iterators for input and output chunks
-	vector < deque< CChunk > >::iterator i;
-	deque < CChunk >::iterator j;
-	vector < CChunk >::iterator k;
+	vector < deque< CChunk > >::iterator socketIterator;
+	deque < CChunk >::iterator inputChunkIterator;
 
 	// perform input cleaning
-	i=m_vInput.begin();
-	while(i!=m_vInput.end())
+	socketIterator=m_vInput.begin();
+	while(socketIterator!=m_vInput.end())
 	{
-		j=i->begin();
-		while(j!=i->end())
+		inputChunkIterator=socketIterator->begin();
+		while(inputChunkIterator!=socketIterator->end())
 		{
-			if(j->isDeprecated())
+			if(inputChunkIterator->isDeprecated())
 			{
-				j=i->erase(j);
+				inputChunkIterator=socketIterator->erase(inputChunkIterator);
 			}
 			else
 			{
-				++j;
+				++inputChunkIterator;
 			}
 		}
-		++i;
+		++socketIterator;
 	}
 
 	// flushes sent output chunks
-	i=m_vOutput.begin();
-	while(i!=m_vOutput.end())
+	socketIterator=m_vOutput.begin();
+	while(socketIterator!=m_vOutput.end())
 	{
-		i->resize(0);
-		++i;
+		socketIterator->resize(0);
+		++socketIterator;
 	}
 
+	vector < CChunk >::iterator outputChunkIterator;
 	// discards waiting output chunks
-	k=m_vCurrentOutput.begin();
-	while(k!=m_vCurrentOutput.end())
+	outputChunkIterator=m_vCurrentOutput.begin();
+	while(outputChunkIterator!=m_vCurrentOutput.end())
 	{
 		// checks buffer size
-		if(k->getBuffer().getSize())
+		if(outputChunkIterator->getBuffer().getSize())
 		{
 			// the buffer has been (partially ?) filled but not sent
 			CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 			l_oBoxAlgorithmContext.getPlayerContext()->getLogManager() << LogLevel_Warning << "Output buffer filled but not marked as ready to send\n"; // $$$ should use log
-			k->getBuffer().setSize(0, true);
+			outputChunkIterator->getBuffer().setSize(0, true);
 		}
 
-		++k;
+		++outputChunkIterator;
 	}
 
 	m_bReadyToProcess=false;
-
-#if 1
-/*-----------------------------------------------*/
-/* TODO send this messages with better frequency */
-	if(m_oBenchmarkChronoProcessClock.hasNewEstimation())
-	{
-		this->getLogManager() << LogLevel_Benchmark
-			<< "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Player" << LogColor_PopStateBit
-			<< "::" << LogColor_PushStateBit << LogColor_ForegroundBlue << "process clock" << LogColor_PopStateBit
-			<< "::" << m_pBox->getName() << "> "
-			<< "Average computing time is " << ((m_oBenchmarkChronoProcessClock.getAverageStepInDuration()*1000000)>>32) << "us\n";
-	}
-	if(m_oBenchmarkChronoProcessInput.hasNewEstimation())
-	{
-		this->getLogManager() << LogLevel_Benchmark
-			<< "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Player" << LogColor_PopStateBit
-			<< "::" << LogColor_PushStateBit << LogColor_ForegroundBlue << "process input" << LogColor_PopStateBit
-			<< "::" << m_pBox->getName() << "> "
-			<< "Average computing time is " << ((m_oBenchmarkChronoProcessInput.getAverageStepInDuration()*1000000)>>32) << "us\n";
-	}
-	if(m_oBenchmarkChronoProcess.hasNewEstimation())
-	{
-		this->getLogManager() << LogLevel_Benchmark
-			<< "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Player" << LogColor_PopStateBit
-			<< "::" << LogColor_PushStateBit << LogColor_ForegroundBlue << "process      " << LogColor_PopStateBit
-			<< "::" << m_pBox->getName() << "> "
-			<< "Average computing time is " << ((m_oBenchmarkChronoProcess.getAverageStepInDuration()*1000000)>>32) << "us\n";
-	}
-/* TODO Thank you for reading :)                 */
-/*-----------------------------------------------*/
-#endif
 
 	return true;
 }
@@ -460,14 +359,14 @@ const IScenario& CSimulatedBox::getScenario(void) const
 
 namespace
 {
-	void __out_of_bound_input(ILogManager& rLogManager, const CString& sName, uint32 ui32InputIndex, uint32 ui32InputCount)
+	void warningOnOutOfBoundInput(ILogManager& rLogManager, const CString& sName, uint32 ui32InputIndex, size_t ui32InputCount)
 	{
-		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound input (" << ui32InputIndex << "/" << ui32InputCount << ")\n";
+		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound input (" << ui32InputIndex << "/" << static_cast<uint64>(ui32InputCount) << ")\n";
 	}
 
-	void __out_of_bound_input_chunk(ILogManager& rLogManager, const CString& sName, uint32 ui32InputIndex, uint32 ui32InputChunkIndex, uint32 ui32InputChunkCount)
+	void warningOnOutOfBoundInputChunk(ILogManager& rLogManager, const CString& sName, uint32 ui32InputIndex, uint32 ui32InputChunkIndex, size_t ui32InputChunkCount)
 	{
-		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound input (" << ui32InputIndex << ":" << ui32InputChunkIndex << "/" << ui32InputChunkCount << ")\n";
+		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound input (" << ui32InputIndex << ":" << ui32InputChunkIndex << "/" << static_cast<uint64>(ui32InputChunkCount) << ")\n";
 	}
 }
 
@@ -479,7 +378,7 @@ uint32 CSimulatedBox::getInputChunkCount(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
+		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return 0;
 	}
 	return m_vInput[ui32InputIndex].size();
@@ -495,16 +394,16 @@ boolean CSimulatedBox::getInputChunk(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
+		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return false;
 	}
 	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
 	{
-		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
+		warningOnOutOfBoundInputChunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
 		return false;
 	}
 
-	const CChunk& l_rChunk=_my_get_(m_vInput[ui32InputIndex], ui32ChunkIndex);
+	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
 	rStartTime=l_rChunk.getStartTime();
 	rEndTime=l_rChunk.getEndTime();
 	rChunkSize=l_rChunk.getBuffer().getSize();
@@ -518,15 +417,15 @@ const IMemoryBuffer* CSimulatedBox::getInputChunk(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
+		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return NULL;
 	}
 	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
 	{
-		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
+		warningOnOutOfBoundInputChunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
 		return NULL;
 	}
-	return &_my_get_(m_vInput[ui32InputIndex], ui32ChunkIndex).getBuffer();
+	return &(m_vInput[ui32InputIndex][ui32ChunkIndex]).getBuffer();
 }
 
 uint64 CSimulatedBox::getInputChunkStartTime(
@@ -535,16 +434,16 @@ uint64 CSimulatedBox::getInputChunkStartTime(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
+		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return false;
 	}
 	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
 	{
-		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
+		warningOnOutOfBoundInputChunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
 		return false;
 	}
 
-	const CChunk& l_rChunk=_my_get_(m_vInput[ui32InputIndex], ui32ChunkIndex);
+	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
 	return l_rChunk.getStartTime();
 }
 
@@ -554,16 +453,16 @@ uint64 CSimulatedBox::getInputChunkEndTime(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
+		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return false;
 	}
 	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
 	{
-		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
+		warningOnOutOfBoundInputChunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
 		return false;
 	}
 
-	const CChunk& l_rChunk=_my_get_(m_vInput[ui32InputIndex], ui32ChunkIndex);
+	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
 	return l_rChunk.getEndTime();
 }
 
@@ -573,15 +472,15 @@ boolean CSimulatedBox::markInputAsDeprecated(
 {
 	if(ui32InputIndex>=m_vInput.size())
 	{
-		__out_of_bound_input(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
+		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
 		return false;
 	}
 	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
 	{
-		__out_of_bound_input_chunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
+		warningOnOutOfBoundInputChunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
 		return false;
 	}
-	_my_get_(m_vInput[ui32InputIndex], ui32ChunkIndex).markAsDeprecated(true);
+	m_vInput[ui32InputIndex][ui32ChunkIndex].markAsDeprecated(true);
 	return true;
 }
 
@@ -590,9 +489,9 @@ boolean CSimulatedBox::markInputAsDeprecated(
 
 namespace
 {
-	void __out_of_bound_output(ILogManager& rLogManager, const CString& sName, uint32 ui32OutputIndex, uint32 ui32OutputCount)
+	void warningOnOutOfBoundOutput(ILogManager& rLogManager, const CString& sName, uint32 ui32OutputIndex, size_t ui32OutputCount)
 	{
-		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound output (" << ui32OutputIndex << "/" << ui32OutputCount << ")\n";
+		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound output (" << ui32OutputIndex << "/" << static_cast<uint64>(ui32OutputCount) << ")\n";
 	}
 }
 
@@ -604,7 +503,7 @@ uint64 CSimulatedBox::getOutputChunkSize(
 {
 	if(ui32OutputIndex>=m_vCurrentOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
+		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return 0;
 	}
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getSize();
@@ -617,7 +516,7 @@ boolean CSimulatedBox::setOutputChunkSize(
 {
 	if(ui32OutputIndex>=m_vOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
+		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return false;
 	}
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().setSize(ui64Size, bDiscard);
@@ -628,7 +527,7 @@ uint8* CSimulatedBox::getOutputChunkBuffer(
 {
 	if(ui32OutputIndex>=m_vOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
+		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return NULL;
 	}
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getDirectPointer();
@@ -641,7 +540,7 @@ boolean CSimulatedBox::appendOutputChunkData(
 {
 	if(ui32OutputIndex>=m_vOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
+		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return false;
 	}
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().append(pBuffer, ui64BufferSize);
@@ -652,7 +551,7 @@ IMemoryBuffer* CSimulatedBox::getOutputChunk(
 {
 	if(ui32OutputIndex>=m_vOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
+		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return NULL;
 	}
 	return &m_vCurrentOutput[ui32OutputIndex].getBuffer();
@@ -665,7 +564,7 @@ boolean CSimulatedBox::markOutputAsReadyToSend(
 {
 	if(ui32OutputIndex>=m_vOutput.size())
 	{
-		__out_of_bound_output(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
+		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
 		return false;
 	}
 

@@ -81,9 +81,9 @@
 #include "kernel/scenario/ovIComment.h"
 #include "kernel/scenario/ovILink.h"
 #include "kernel/scenario/ovIScenario.h"
-#include "kernel/scenario/ovIScenarioExporterContext.h"
-#include "kernel/scenario/ovIScenarioImporterContext.h"
 #include "kernel/scenario/ovIScenarioManager.h"
+#include "kernel/scenario/ovIAlgorithmScenarioImporter.h"
+#include "kernel/scenario/ovIAlgorithmScenarioExporter.h"
 
 //___________________________________________________________________//
 //                                                                   //
@@ -99,12 +99,6 @@
 
 #include "plugins/ovIBoxAlgorithm.h"
 #include "plugins/ovIBoxAlgorithmDesc.h"
-
-#include "plugins/ovIScenarioImporter.h"
-#include "plugins/ovIScenarioImporterDesc.h"
-
-#include "plugins/ovIScenarioExporter.h"
-#include "plugins/ovIScenarioExporterDesc.h"
 
 namespace OpenViBE
 {

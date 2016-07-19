@@ -19,7 +19,7 @@ namespace OpenViBE
 	{ \
 		return ((rClassIdentifier==_ClassIdentifier_) \
 		     || _SuperClassName_::isDerivedFromClass(rClassIdentifier)); \
-	} \
+	}
 
 #define _IsDerivedFromClass_Final_(_SuperClassName_,_ClassIdentifier_) \
 	_IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
