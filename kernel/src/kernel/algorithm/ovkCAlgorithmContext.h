@@ -19,6 +19,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const;
 			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const;
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const;
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const;
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const;
 
 			virtual OpenViBE::CIdentifier getNextInputParameterIdentifier(

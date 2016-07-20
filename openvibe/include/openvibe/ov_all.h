@@ -60,6 +60,10 @@
 #include "kernel/log/ovILogManager.h"
 #include "kernel/log/ovILogListener.h"
 
+#include "kernel/error/ovIErrorManager.h"
+#include "kernel/error/ovIError.h"
+#include "kernel/error/ovErrorType.h"
+
 #include "kernel/player/ovIBoxAlgorithmContext.h"
 #include "kernel/player/ovIMessage.h"
 #include "kernel/player/ovIMessageClock.h"

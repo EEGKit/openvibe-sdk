@@ -33,6 +33,9 @@
 #define OVK_ClassId_Kernel_Log_LogListenerDebug               OpenViBE::CIdentifier(0x45C1A72F, 0x647DE336)
 #define OVK_ClassId_Kernel_Log_LogListenerNull                OpenViBE::CIdentifier(0x1341E7E6, 0x2232EB75)
 
+#define OVK_ClassId_Kernel_Error_ErrorManager                 OpenViBE::CIdentifier(0xB4F8AA7C, 0x286FE5C6)
+#define OVK_ClassId_Kernel_Error_Error                        OpenViBE::CIdentifier(0xA52EA1C9, 0xC14FC982)
+
 #define OVK_ClassId_Kernel_Plugins_PluginManager              OpenViBE::CIdentifier(0x07DB32AD, 0x76FAD392)
 #define OVK_ClassId_Kernel_Plugins_PluginModule               OpenViBE::CIdentifier(0x34883FDB, 0x78B6D1E6)
 #define OVK_ClassId_Kernel_Plugins_PluginModuleContext        OpenViBE::CIdentifier(0x78071145, 0x308261A2)

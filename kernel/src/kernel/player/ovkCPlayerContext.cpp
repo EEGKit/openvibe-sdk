@@ -12,6 +12,7 @@ CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedB
 	,m_rAlgorithmManager(rKernelContext.getAlgorithmManager())
 	,m_rConfigurationManager(rKernelContext.getConfigurationManager())
 	,m_rLogManager(rKernelContext.getLogManager())
+	,m_rErrorManager(rKernelContext.getErrorManager())
 	,m_rScenarioManager(rKernelContext.getScenarioManager())
 	,m_rTypeManager(rKernelContext.getTypeManager())
 {
@@ -106,6 +107,11 @@ IConfigurationManager& CPlayerContext::getConfigurationManager(void) const
 ILogManager& CPlayerContext::getLogManager(void) const
 {
 	return m_rLogManager;
+}
+
+IErrorManager& CPlayerContext::getErrorManager(void) const
+{
+	return m_rErrorManager;
 }
 
 IScenarioManager& CPlayerContext::getScenarioManager(void) const

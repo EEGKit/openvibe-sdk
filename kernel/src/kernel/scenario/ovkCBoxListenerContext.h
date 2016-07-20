@@ -11,10 +11,10 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxListenerContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::IBox& rBox, OpenViBE::uint32 ui32Index) : 
-					TKernelObject<IBoxListenerContext>(rKernelContext), 
-					m_rBox(rBox), 
-					m_ui32Index(ui32Index) 
+			CBoxListenerContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::IBox& rBox, OpenViBE::uint32 ui32Index) :
+					TKernelObject<IBoxListenerContext>(rKernelContext),
+					m_rBox(rBox),
+					m_ui32Index(ui32Index)
 			{
 			}
 
@@ -24,6 +24,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const { return this->getKernelContext().getScenarioManager(); }
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const { return this->getKernelContext().getTypeManager(); }
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const { return this->getKernelContext().getLogManager(); }
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const { return this->getKernelContext().getErrorManager(); }
 			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const { return this->getKernelContext().getConfigurationManager(); }
 
 			virtual OpenViBE::Kernel::IBox& getBox(void) const { return m_rBox; }

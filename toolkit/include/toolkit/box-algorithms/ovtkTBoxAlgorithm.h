@@ -91,6 +91,7 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) { return getPlayerContext().getAlgorithmManager(); }
 		virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) { return getPlayerContext().getConfigurationManager(); }
 		virtual OpenViBE::Kernel::ILogManager& getLogManager(void) { return getPlayerContext().getLogManager(); }
+		virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) { return getPlayerContext().getErrorManager(); }
 		virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) { return getPlayerContext().getScenarioManager(); }
 		virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) { return getPlayerContext().getTypeManager(); }
 
@@ -338,6 +339,7 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const { return m_pBoxListenerContext->getScenarioManager(); }
 		virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const { return m_pBoxListenerContext->getTypeManager(); }
 		virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const { return m_pBoxListenerContext->getLogManager(); }
+		virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const { return m_pBoxListenerContext->getErrorManager(); }
 				virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const { return m_pBoxListenerContext->getConfigurationManager(); }
 
 		virtual OpenViBE::Kernel::IScenario& getScenario(void) const { return m_pBoxListenerContext->getScenario(); }

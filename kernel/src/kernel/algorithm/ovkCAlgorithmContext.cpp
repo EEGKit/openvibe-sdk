@@ -31,6 +31,11 @@ ILogManager& CAlgorithmContext::getLogManager(void) const
 	return m_rLogManager;
 }
 
+IErrorManager& CAlgorithmContext::getErrorManager(void) const
+{
+	return getKernelContext().getErrorManager();
+}
+
 ITypeManager& CAlgorithmContext::getTypeManager(void) const
 {
 	return getKernelContext().getTypeManager();

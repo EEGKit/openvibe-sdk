@@ -19,6 +19,9 @@ namespace OpenViBE
 			{
 			}
 
+			TKernelObject(const TKernelObject&) = delete;
+			TKernelObject& operator=(const TKernelObject&) = delete;
+
 			const OpenViBE::Kernel::IKernelContext& getKernelContext(void) const
 			{
 				return m_rKernelContext;
@@ -62,6 +65,11 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const
 			{
 				return m_rKernelContext.getLogManager();
+			}
+
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const
+			{
+				return m_rKernelContext.getErrorManager();
 			}
 
 			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_KernelObjectT)

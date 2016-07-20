@@ -65,6 +65,11 @@ namespace OpenViBEToolkit
 			return m_pAlgorithmContext->getLogManager(); // should never be null
 		}
 
+		virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void)
+		{
+			return m_pAlgorithmContext->getErrorManager(); // should never be null
+		}
+
 		virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void)
 		{
 			return m_pAlgorithmContext->getTypeManager(); // should never be null

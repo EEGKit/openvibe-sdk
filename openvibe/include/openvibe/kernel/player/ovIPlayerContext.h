@@ -131,41 +131,50 @@ namespace OpenViBE
 			//@{
 
 			/**
-			 * \brief Gets the current player' configuration manager
-			 * \return The current player' configuration manager
-			 * 
+			 * \brief Gets the current player's configuration manager
+			 * \return The current player's configuration manager
+			 *
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
 			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const=0;
 			/**
-			 * \brief Gets the current player' algorithm manager
-			 * \return The current player' algorithm manager
-			 * 
+			 * \brief Gets the current player's algorithm manager
+			 * \return The current player's algorithm manager
+			 *
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
 			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const=0;
 			/**
-			 * \brief Gets the current player' log manager
-			 * \return The current player' log manager
-			 * 
+			 * \brief Gets the current player's log manager
+			 * \return The current player's log manager
+			 *
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const=0;
 			/**
-			 * \brief Gets the current player' scenario manager
-			 * \return The current player' scenario manager
-			 * 
+			 * \brief Gets the current player's error manager
+			 * \return The current player's error manager
+			 *
+			 * \warning The plugin object should not use this reference after it
+			 *          has finished its work, it could be deprecated.
+			 */
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const=0;
+
+			/**
+			 * \brief Gets the current player's scenario manager
+			 * \return The current player's scenario manager
+			 *
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const=0;
 			/**
-			 * \brief Gets the current player' type manager
-			 * \return The current player' type manager
-			 * 
+			 * \brief Gets the current player's type manager
+			 * \return The current player's type manager
+			 *
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */

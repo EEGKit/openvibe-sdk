@@ -15,6 +15,7 @@ namespace OpenViBE
 		class IScenarioManager;
 		class ITypeManager;
 		class ILogManager;
+		class IErrorManager;
 
 		/**
 		 * \class IKernelContext
@@ -85,6 +86,12 @@ namespace OpenViBE
 			 * \return a reference on the kernel's log manager
 			 */
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const=0;
+			/**
+			 * \brief Gets a reference on the kernel's error manager
+			 * \return a reference on the kernel's error manager
+			 */
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const=0;
+
 
 			// backward compatibility
 			virtual OpenViBE::Kernel::IKernelObjectFactory& getObjectFactory(void) const { return getKernelObjectFactory(); }

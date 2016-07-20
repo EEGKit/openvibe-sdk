@@ -54,6 +54,11 @@ namespace OpenViBE
 			 * \return a reference on the current log manager
 			 */
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const=0;
+			/**
+			 * \brief Gets a reference on the current error manager
+			 * \return a reference on the current error manager
+			 */
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const=0;
 
 			/**
 			 * \brief Gets a reference on the current configuration manager

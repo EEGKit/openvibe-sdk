@@ -39,6 +39,9 @@
 #define OV_ClassId_Kernel_Log_LogManager                     OpenViBE::CIdentifier(0x22990B50, 0x571010D4)
 #define OV_ClassId_Kernel_Log_LogListener                    OpenViBE::CIdentifier(0x766B92CB, 0x33B01B15)
 
+#define OV_ClassId_Kernel_Error_ErrorManager                 OpenViBE::CIdentifier(0x34F53481, 0x8838301F)
+#define OV_ClassId_Kernel_Error_Error                        OpenViBE::CIdentifier(0x7E013D8C, 0x35E27990)
+
 #define OV_ClassId_Kernel_Player_BoxAlgorithmContext         OpenViBE::CIdentifier(0x275F4BB8, 0x49E08D24)
 #define OV_ClassId_Kernel_Player_Message                     OpenViBE::CIdentifier(0x64DCCE4E, 0x530CA785)
 #define OV_ClassId_Kernel_Player_MessageClock                OpenViBE::CIdentifier(0x58AE3092, 0x0C3371A7)

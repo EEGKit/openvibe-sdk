@@ -18,6 +18,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const;
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const;
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const;
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IObjectVisitorContext >, OVK_ClassId_Kernel_ObjectVisitorContext)
 		};
