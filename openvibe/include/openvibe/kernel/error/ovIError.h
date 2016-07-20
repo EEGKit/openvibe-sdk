@@ -65,7 +65,7 @@ namespace OpenViBE
 			/**
 			 * \brief Retrieve error type
 			 */
-			virtual const OpenViBE::Kernel::ErrorType getErrorType() const = 0;
+			virtual OpenViBE::Kernel::ErrorType getErrorType() const = 0;
 
 			/**
 			 * \brief Retrieve nested error

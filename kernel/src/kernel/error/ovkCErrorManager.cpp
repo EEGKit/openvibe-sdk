@@ -36,7 +36,9 @@ namespace OpenViBE
 		public:
 
 			CError(ErrorType type, const char* description,IError* nestedError, const char* filename, unsigned int line) :
-				m_ErrorType(type), m_NestedError(nestedError), m_Description(description)
+				m_ErrorType(type),
+				m_NestedError(nestedError),
+				m_Description(description)
 			{
 				m_Location = std::string(filename) + ":" + std::to_string(line);
 			}
@@ -55,7 +57,7 @@ namespace OpenViBE
 				return m_Location.c_str();
 			}
 
-			const ErrorType getErrorType() const override
+			ErrorType getErrorType() const override
 			{
 				return m_ErrorType;
 			}
@@ -92,12 +94,12 @@ namespace OpenViBE
 			this->releaseErrors();
 		}
 
-		void CErrorManager::addError(ErrorType type, const char* description)
+		void CErrorManager::pushError(ErrorType type, const char* description)
 		{
-			this->addErrorAtLocation(type, description, "NoLocationInfo", 0);
+			this->pushErrorAtLocation(type, description, "NoLocationInfo", 0);
 		}
 
-		void CErrorManager::addErrorAtLocation(ErrorType type, const char* description, const char* filename, unsigned int line)
+		void CErrorManager::pushErrorAtLocation(ErrorType type, const char* description, const char* filename, unsigned int line)
 		{
 			std::lock_guard<std::mutex> lock(m_ManagerGuard);
 			auto lastTopError = m_TopError.release();
@@ -128,7 +130,7 @@ namespace OpenViBE
 			return (m_TopError ? m_TopError->getErrorString() : "");
 		}
 
-		const ErrorType CErrorManager::getLastErrorType() const
+		ErrorType CErrorManager::getLastErrorType() const
 		{
 			std::lock_guard<std::mutex> lock(m_ManagerGuard);
 			return (m_TopError ? m_TopError->getErrorType() : ErrorType::NoErrorFound);

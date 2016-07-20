@@ -43,9 +43,9 @@ namespace OpenViBE
 			CErrorManager(const OpenViBE::Kernel::IKernelContext& context);
 			~CErrorManager();
 
-			void addError(OpenViBE::Kernel::ErrorType type, const char* description) override;
+			void pushError(OpenViBE::Kernel::ErrorType type, const char* description) override;
 
-			void addErrorAtLocation(OpenViBE::Kernel::ErrorType type, const char* description, const char* filename, unsigned int line) override;
+			void pushErrorAtLocation(OpenViBE::Kernel::ErrorType type, const char* description, const char* filename, unsigned int line) override;
 
 			void releaseErrors() override;
 
@@ -55,7 +55,7 @@ namespace OpenViBE
 
 			const char* getLastErrorString() const override;
 
-			const OpenViBE::Kernel::ErrorType getLastErrorType() const override;
+			OpenViBE::Kernel::ErrorType getLastErrorType() const override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IErrorManager>, OVK_ClassId_Kernel_Error_ErrorManager);
 

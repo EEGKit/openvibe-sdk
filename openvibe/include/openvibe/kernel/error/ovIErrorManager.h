@@ -49,17 +49,17 @@ namespace OpenViBE
 		public:
 
 			/**
-			 * \brief Add error to the manager
+			 * \brief Push error to the manager
 			 * \param type the error type
 			 * \param description a self-explanatory description message
 			 *
 			 * Errors already added to the manager will be nested in the
 			 * newly added error.
 			 */
-			virtual void addError(OpenViBE::Kernel::ErrorType type, const char* description) = 0;
+			virtual void pushError(OpenViBE::Kernel::ErrorType type, const char* description) = 0;
 
 			/**
-			 * \brief Add error with location information to the manager
+			 * \brief Push error with location information to the manager
 			 * \param type the error type
 			 * \param description a self-explanatory description of the error
 			 * \param filename the source file where the error was detected
@@ -68,7 +68,7 @@ namespace OpenViBE
 			 * Errors already added to the manager will be nested in the
 			 * newly added error.
 			 */
-			virtual void addErrorAtLocation(OpenViBE::Kernel::ErrorType type, const char* description, const char* filename, unsigned int line) = 0;
+			virtual void pushErrorAtLocation(OpenViBE::Kernel::ErrorType type, const char* description, const char* filename, unsigned int line) = 0;
 
 			/**
 			 * \brief Release manager errors
@@ -109,7 +109,7 @@ namespace OpenViBE
 			 * \brief Get type of last error added to the manager
 			 * \return the type if manager contains error, NoErrorFound otherwise
 			 */
-			virtual const OpenViBE::Kernel::ErrorType getLastErrorType() const = 0;
+			virtual OpenViBE::Kernel::ErrorType getLastErrorType() const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Error_ErrorManager);
 		};
