@@ -57,6 +57,26 @@ do { \
 } \
 while (0)
 
+#define convertErrorTypeToString(type) #type
+
+/**
+ * \brief Use this macro to log an error
+ * \param description the error description
+ * \param type the error type (see ovErrorType.h)
+ */
+#define OV_ERROR(description, type) \
+do { \
+	this->getLogManager() << LogLevel_Error \
+						  << "[Error description] = " \
+						  << (description) \
+						  << " / [Error type] = " \
+						  << convertErrorTypeToString(type) \
+						  << " (code " \
+						  << static_cast<unsigned int>((type)) \
+						  << ")\n"; \
+} \
+while (0)
+
 /**
  * \brief Use this macro to trigger an error conditionnally
  * \param expression the boolean condition to assess
@@ -76,12 +96,6 @@ while (0)
 do { \
 	if (!(expression)) \
 	{ \
-		this->getLogManager() << LogLevel_Error \
-							  << "[Error description] = " \
-							  << (description) \
-							  << " / [Error code] = " \
-							  << static_cast<unsigned int>((type)) \
-							  << "\n"; \
 		this->getErrorManager().pushErrorAtLocation(type, description, __FILE__, __LINE__); \
 		return returnValue; \
 	} \
@@ -91,7 +105,17 @@ while (0)
 /**
  * \brief Shorthand for OV_ERROR_UNLESS with false as return value
  */
-#define OV_ERROR_UNLESS_BOOL(expression, description, type) OV_ERROR_UNLESS(expression, description, type, false)
+#define OV_ERROR_UNLESS_RF(expression, description, type) OV_ERROR_UNLESS(expression, description, type, false)
+
+/**
+ * \brief Shorthand for OV_ERROR_UNLESS with 0 as return value
+ */
+#define OV_ERROR_UNLESS_RO(expression, description, type) OV_ERROR_UNLESS(expression, description, type, 0)
+
+/**
+ * \brief Shorthand for OV_ERROR_UNLESS with OV_UndefinedIdentifieras return value
+ */
+#define OV_ERROR_UNLESS_RU(expression, description, type) OV_ERROR_UNLESS(expression, description, type, OV_UndefinedIdentifier)
 
 /**
  * \brief Use this macro to terminate the program on fatal error.
