@@ -37,6 +37,7 @@ namespace OpenViBE
 		{
 			NoErrorFound = 0, /*!< Used when no error occurs */
 			Unknown, /*!< Used when error type is unknown */
+			Internal, /*!< Used when no detail about the error type should be communicated */
 			OutOfBound, /*!< Used when a container index variable is set to an out-of-range value */
 			Overflow, /*!< Used to report arithmetic overflow */
 			ResourceNotFound, /*!< Used to report that a resource (file, plugin etc.) was not found */
