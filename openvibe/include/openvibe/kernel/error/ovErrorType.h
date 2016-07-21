@@ -36,16 +36,17 @@ namespace OpenViBE
 		enum class ErrorType
 		{
 			NoErrorFound = 0, /*!< Used when no error occurs */
-			Unknown, /*!< Used when error type is unknown */
-			OutOfBound, /*!< Used when a container index variable is set to an out-of-range value */
-			Overflow, /*!< Used to report arithmetic overflow */
-			ResourceNotFound, /*!< Used to report that a resource (file, plugin etc.) was not found */
-			BadArguments, /*!< Used when a function is fed with invalid arguments */
-			BadCast, /*!< Used when a cast failed */
-			BadAlloc, /*!< Used when an allocation failed */
-			BadFileRead, /*!< Used when reading from a file failed */
-			BadFileWrite, /*!< Used when writing to a file failed */
-			BadNetworkConnection /*!< Used when network connection failed */
+			Unknown = 1, /*!< Used when error type is unknown */
+			Internal = 2, /*!< Used when no detail about the error type should be communicated */
+			OutOfBound = 3, /*!< Used when a container index variable is set to an out-of-range value */
+			Overflow = 4, /*!< Used to report arithmetic overflow */
+			ResourceNotFound = 5, /*!< Used to report that a resource (file, plugin etc.) was not found */
+			BadArguments = 6, /*!< Used when a function is fed with invalid arguments */
+			BadCast = 7, /*!< Used when a cast failed */
+			BadAlloc = 8, /*!< Used when an allocation failed */
+			BadFileRead = 9, /*!< Used when reading from a file failed */
+			BadFileWrite = 10, /*!< Used when writing to a file failed */
+			BadNetworkConnection = 11 /*!< Used when network connection failed */
 		};
 	}
 }
