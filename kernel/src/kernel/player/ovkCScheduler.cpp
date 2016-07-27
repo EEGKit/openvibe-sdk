@@ -42,10 +42,6 @@ using namespace OpenViBE::Plugins;
 #include <ovp_global_defines.h>
 #define OVTK_Algorithm_ScenarioImporter_OutputParameterId_Scenario    OpenViBE::CIdentifier(0x29574C87, 0x7BA77780)
 #define OVTK_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer OpenViBE::CIdentifier(0x600463A3, 0x474B7F66)
-namespace
-{
-	CIdentifier openScenario(const IKernelContext& rKernelContext, IScenarioManager& rScenarioManager, const char* sFileName);
-}
 
 //___________________________________________________________________//
 //                                                                   //
@@ -217,8 +213,17 @@ boolean CScheduler::flattenScenario()
 
 			// We are going to copy the template scenario, flatten it and then copy all
 			// Note that copy constructor for IScenario does not exist
+			CIdentifier l_oMetaboxScenarioTemplateIdentifier;
 
-			CIdentifier l_oMetaboxScenarioTemplateIdentifier = openScenario(this->getKernelContext(), m_rPlayer.getRuntimeScenarioManager(), l_sMetaboxScenarioPath);
+			OV_ERROR_UNLESS_KRF(
+				m_rPlayer.getRuntimeScenarioManager().importScenarioFromFile(
+					l_oMetaboxScenarioTemplateIdentifier,
+					l_sMetaboxScenarioPath,
+					OVP_GD_ClassId_Algorithm_XMLScenarioImporter),
+				"Failed to import the scenario file",
+				ErrorType::Internal
+			);
+
 			IScenario& l_rMetaboxScenarioInstance = m_rPlayer.getRuntimeScenarioManager().getScenario(l_oMetaboxScenarioTemplateIdentifier);
 
 			OV_WARNING_UNLESS_K(
@@ -681,97 +686,4 @@ void CScheduler::handleException(const CSimulatedBox* box, const char* errorHint
 	box->getLogManager() << LogLevel_Error << "  [cause:" << exception.what() << "]\n";
 
 	OV_ERROR_KRV("Caught exception: " << exception.what(), ErrorType::ExceptionCaught);
-}
-
-namespace
-{
-	/**
-	 * @brief Loads a scenario into the given kernelContext's scenario manager
-	 * @param rKernelContext a kernel context for algorithms and logs
-	 * @param rScenarioManager the scenario manager to put the scenario in
-	 * @param sFileName path to the scenario to load, its type is inferred from the extension
-	 * @return CIdentifier of the scenario within the scenario manager
-	 */
-	CIdentifier openScenario(const IKernelContext& rKernelContext, IScenarioManager& rScenarioManager, const char* sFileName)
-	{
-		CIdentifier l_oScenarioIdentifier;
-		if (rScenarioManager.createScenario(l_oScenarioIdentifier))
-		{
-			IScenario& l_rScenario = rScenarioManager.getScenario(l_oScenarioIdentifier);
-
-			CMemoryBuffer l_oMemoryBuffer;
-//			boolean l_bSuccess = false;
-
-			FILE* l_pFile = FS::Files::open(sFileName, "rb");
-			if (l_pFile)
-			{
-				::fseek(l_pFile, 0, SEEK_END);
-				l_oMemoryBuffer.setSize(::ftell(l_pFile), true);
-				::fseek(l_pFile, 0, SEEK_SET);
-				if (::fread(reinterpret_cast<char*>(l_oMemoryBuffer.getDirectPointer()), (size_t)l_oMemoryBuffer.getSize(), 1, l_pFile)!=1)
-				{
-					rKernelContext.getLogManager() << LogLevel_Error << "Problem reading '" << sFileName << "'\n";
-					::fclose(l_pFile);
-					rScenarioManager.releaseScenario(l_oScenarioIdentifier);
-					return OV_UndefinedIdentifier;
-				}
-				::fclose(l_pFile);
-			}
-			else
-			{
-				rKernelContext.getLogManager() << LogLevel_Error << "Unable to open '" << sFileName << "' for reading\n";
-				rScenarioManager.releaseScenario(l_oScenarioIdentifier);
-				return OV_UndefinedIdentifier;
-			}
-
-			if (l_oMemoryBuffer.getSize())
-			{
-				CIdentifier l_oImporterIdentifier = OV_UndefinedIdentifier;
-
-				bool l_bIsFileBinary = false;
-				l_bIsFileBinary = (::strlen(sFileName) > 4  && (stricmp(sFileName+strlen(sFileName)-4, ".mbs") == 0 ||
-				                                                stricmp(sFileName+strlen(sFileName)-4, ".mbb") == 0));
-
-				// this should be const but can't since default contstructor for Descriptors is not explicitly defined
-				//OpenViBEPlugins::Mensia::CAlgorithmBinaryScenarioImporterDesc l_oMensiaBinaryScenarioImporterDesc;
-				if (l_bIsFileBinary)
-				{
-					//l_oImporterIdentifier = rKernelContext.getAlgorithmManager().createAlgorithm(l_oMensiaBinaryScenarioImporterDesc);
-				}
-				else
-				{
-					l_oImporterIdentifier = rKernelContext.getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
-				}
-
-				if (l_oImporterIdentifier!=OV_UndefinedIdentifier)
-				{
-					IAlgorithmProxy* l_pImporter = &rKernelContext.getAlgorithmManager().getAlgorithm(l_oImporterIdentifier);
-					if (l_pImporter)
-					{
-						l_pImporter->initialize();
-
-						TParameterHandler < const IMemoryBuffer* > ip_pMemoryBuffer(l_pImporter->getInputParameter(OVTK_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
-						TParameterHandler < IScenario* > op_pScenario(l_pImporter->getOutputParameter(OVTK_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
-
-						ip_pMemoryBuffer=&l_oMemoryBuffer;
-						op_pScenario=&l_rScenario;
-
-						bool l_bSuccess = l_pImporter->process();
-						l_pImporter->uninitialize();
-						rKernelContext.getAlgorithmManager().releaseAlgorithm(*l_pImporter);
-
-						if (l_bSuccess)
-						{
-							return l_oScenarioIdentifier;
-						}
-					}
-				}
-			}
-
-			rScenarioManager.releaseScenario(l_oScenarioIdentifier);
-		}
-
-		rKernelContext.getLogManager() << LogLevel_Warning << "Importing metabox failed\n";
-		return OV_UndefinedIdentifier;
-	}
 }
