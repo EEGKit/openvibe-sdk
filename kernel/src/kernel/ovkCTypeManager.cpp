@@ -135,11 +135,11 @@ boolean CTypeManager::registerBitMaskEntry(
 		if(ui64EntryValue&(1LL<<i))
 		{
 			l_ui32BitCount++;
-			if(l_ui32BitCount>1)
-			{
-				this->getLogManager() << LogLevel_ImportantWarning << "Discarded bitmask entry (" << m_vName[rTypeIdentifier] << ":" << sEntryName << ") because value " << ui64EntryValue << " contains more than one bit\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				l_ui32BitCount <= 1,
+				"Discarded bitmask entry (" << m_vName[rTypeIdentifier] << ":" << sEntryName << ") because value " << ui64EntryValue << " contains more than one bit",
+				ErrorType::Overflow
+			);
 		}
 	}
 	itBitMask->second[ui64EntryValue]=sEntryName;

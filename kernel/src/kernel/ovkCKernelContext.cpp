@@ -108,12 +108,12 @@ boolean CKernelContext::initialize(void)
 	m_pConfigurationManager->createConfigurationToken("Brand_Name", BRAND_NAME);
 
 	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_sConfigurationFile << "]\n";
-	if(!m_pConfigurationManager->addConfigurationFromFile(m_sConfigurationFile)) {
-		this->getLogManager() << LogLevel_Error << "Problem parsing config file [" << m_sConfigurationFile << "]. This will not work.\n";
-		// Since OpenViBE components usually don't react to return value of initialize(), we just quit here
-		this->getLogManager() << LogLevel_Error << "Forcing an exit.\n";
-		exit(-1);
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		m_pConfigurationManager->addConfigurationFromFile(m_sConfigurationFile),
+		"Problem parsing config file [" << m_sConfigurationFile << "]",
+		ErrorType::Internal
+	);
 
 	// Generate the openvibe directories that the applications may write to. These are done after addConfigurationFromFile(), in case the defaults have been modified.
 	// @FIXME note that there is an issue if these paths are changed by a delayed configuration, then the directories are not created unless the caller does it.
@@ -308,7 +308,10 @@ ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)
 	if(l_sValue=="error")                    return LogLevel_Error;
 	if(l_sValue=="fatal error")              return LogLevel_Fatal;
 
-	(*m_pLogManager) << LogLevel_Warning << "Invalid log level " << rLogLevelName << " specified in configuration file, falling back to " << CString("Debug") << "\n";
+	OV_WARNING(
+		"Invalid log level " << rLogLevelName << " specified in configuration file, falling back to " << CString("Debug"),
+		(*m_pLogManager)
+	);
 
 	return LogLevel_Debug;
 }
