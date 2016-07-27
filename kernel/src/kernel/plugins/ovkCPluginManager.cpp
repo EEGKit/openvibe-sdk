@@ -50,7 +50,7 @@ namespace OpenViBE
 
 					if(FS::Files::equals(rEntry.getName(), (const char*)l_sPluginModuleName))
 					{
-						this->getLogManager() << LogLevel_Warning << "Module [" << CString(rEntry.getName()) << "] has already been loaded\n";
+						OV_WARNING_K("Module [" << CString(rEntry.getName()) << "] has already been loaded");
 						return true;
 					}
 				}
@@ -60,8 +60,10 @@ namespace OpenViBE
 				if(!l_pPluginModule->load(rEntry.getName(), &l_sLoadError))
 				{
 					delete l_pPluginModule;
-					this->getLogManager() << LogLevel_Warning << "File [" << CString(rEntry.getName()) << "] is not a plugin module (error:" << l_sLoadError << ")\n";
-					return true;
+					OV_ERROR_KRF(
+						"File [" << CString(rEntry.getName()) << "] is not a plugin module (error:" << l_sLoadError << ")",
+						ErrorType::BadFileRead
+					);
 				}
 
 				if(!l_pPluginModule->initialize())
@@ -69,8 +71,10 @@ namespace OpenViBE
 					l_pPluginModule->uninitialize();
 					l_pPluginModule->unload();
 					delete l_pPluginModule;
-					this->getLogManager() << LogLevel_Warning << "Module [" << CString(rEntry.getName()) << "] did not initialize correctly\n";
-					return true;
+					OV_ERROR_KRF(
+						"Module [" << CString(rEntry.getName()) << "] did not initialize correctly",
+						ErrorType::Internal
+					);
 				}
 
 				boolean l_bPluginObjectDescAdded=false;
@@ -85,7 +89,7 @@ namespace OpenViBE
 					{
 						if (pluginObjectDesc.first->getClassIdentifier() == l_pPluginObjectDesc->getClassIdentifier())
 						{
-							this->getLogManager() << LogLevel_ImportantWarning << "Duplicate plugin object descriptor class identifier [" << pluginObjectDesc.first->getName() << "] and [" << l_pPluginObjectDesc->getName() << "]... second one is ignored.\n";
+							OV_WARNING_K("Duplicate plugin object descriptor class identifier [" << pluginObjectDesc.first->getName() << "] and [" << l_pPluginObjectDesc->getName() << "]... second one is ignored");
 							l_bFound = true;
 							break;
 						}
@@ -105,14 +109,13 @@ namespace OpenViBE
 					l_pPluginObjectDesc=NULL;
 				}
 
-				if(l_bPluginObjectDescAdded)
-				{
-					this->getLogManager() << LogLevel_Info << "Added " << l_ui32Count << " plugin object descriptor(s) from [" << CString(rEntry.getName()) << "]\n";
-				}
-				else
-				{
-					this->getLogManager() << LogLevel_Warning << "No 'plugin object descriptor' found from [" << CString(rEntry.getName()) << "] even if it looked like a plugin module\n";
-				}
+				OV_ERROR_UNLESS_KRF(
+					l_bPluginObjectDescAdded,
+					"No 'plugin object descriptor' found from [" << CString(rEntry.getName()) << "] even if it looked like a plugin module\n",
+					ErrorType::BadFileParsing
+				);
+
+				this->getLogManager() << LogLevel_Info << "Added " << l_ui32Count << " plugin object descriptor(s) from [" << CString(rEntry.getName()) << "]\n";
 
 				return true;
 			}
@@ -139,7 +142,7 @@ CPluginManager::~CPluginManager(void)
 	{
 		for (auto& pluginObject : pluginObjectVector.second)
 		{
-			this->getLogManager() << LogLevel_ImportantWarning << "Trying to release plugin object with class id " << pluginObject->getClassIdentifier() << " and plugin object descriptor " << pluginObjectVector.first->getName() << " at plugin manager destruction time\n";
+			OV_WARNING_K("Trying to release plugin object with class id " << pluginObject->getClassIdentifier() << " and plugin object descriptor " << pluginObjectVector.first->getName() << " at plugin manager destruction time");
 			pluginObject->release();
 		}
 	}
@@ -171,6 +174,8 @@ boolean CPluginManager::addPluginsFromFiles(
 	FS::IEntryEnumerator* l_pEntryEnumerator=FS::createEntryEnumerator(l_rCB);
 	l_bResult=l_pEntryEnumerator->enumerate(rFileNameWildCard);
 	l_pEntryEnumerator->release();
+
+	// Just return l_bResult. Error handling is performed within CPluginManagerEntryEnumeratorCallBack.
 	return l_bResult;
 }
 
@@ -344,8 +349,10 @@ boolean CPluginManager::releasePluginObject(
 		}
 	}
 
-	this->getLogManager() << LogLevel_Warning << "Plugin object has not been created by this plugin manager (class id was " << pPluginObject->getClassIdentifier() << ")\n";
-	return false;
+	OV_ERROR_KRF(
+		"Plugin object has not been created by this plugin manager (class id was " << pPluginObject->getClassIdentifier().toString() << ")",
+		ErrorType::ResourceNotFound
+	);
 }
 
 IAlgorithm* CPluginManager::createAlgorithm(
@@ -360,20 +367,21 @@ IAlgorithm* CPluginManager::createAlgorithm(
 {
 	IAlgorithmDesc* l_pAlgorithmDesc = const_cast<IAlgorithmDesc*>(&rAlgorithmDesc);
 	IPluginObject* l_pPluginObject = l_pAlgorithmDesc->create();
-	if(!l_pPluginObject)
-	{
-		this->getLogManager() << LogLevel_Debug << "Could not create plugin object from " << rAlgorithmDesc.getName() << " plugin object descriptor\n";
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		l_pPluginObject,
+		"Could not create plugin object from " << rAlgorithmDesc.getName() << " plugin object descriptor",
+		ErrorType::BadResourceCreation
+	);
 
 	IAlgorithmDesc* l_pPluginObjectDescT=dynamic_cast<IAlgorithmDesc*>(l_pAlgorithmDesc);
 	IAlgorithm* l_pPluginObjectT=dynamic_cast<IAlgorithm*>(l_pPluginObject);
-	if(!l_pPluginObjectDescT || !l_pPluginObjectT)
-	{
-		this->getLogManager() << LogLevel_Debug << "Could not downcast plugin object and/or plugin object descriptor\n";
-		l_pPluginObject->release();
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		l_pPluginObjectDescT && l_pPluginObjectT,
+		"Could not downcast plugin object and/or plugin object descriptor for " << rAlgorithmDesc.getName() << " plugin object descriptor",
+		ErrorType::BadResourceCreation
+	);
 
 	m_vPluginObject[l_pPluginObjectDescT].push_back(l_pPluginObjectT);
 	return l_pPluginObjectT;
@@ -426,27 +434,29 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 			l_pPluginObjectDesc=i->first;
 		}
 	}
-	if(!l_pPluginObjectDesc)
-	{
-		this->getLogManager() << LogLevel_Debug << "Did not find the plugin object descriptor with requested class identifier " << CIdentifier(l_ui64SourceClassIdentifier) << " in registered plugin object descriptors\n";
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		l_pPluginObjectDesc,
+		"Did not find the plugin object descriptor with requested class identifier " << CIdentifier(l_ui64SourceClassIdentifier).toString() << " in registered plugin object descriptors",
+		ErrorType::BadResourceCreation
+	);
 
 	IPluginObject* l_pPluginObject=l_pPluginObjectDesc->create();
-	if(!l_pPluginObject)
-	{
-		this->getLogManager() << LogLevel_Debug << "Could not create plugin object from " << l_pPluginObjectDesc->getName() << " plugin object descriptor\n";
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		l_pPluginObject,
+		"Could not create plugin object from " << l_pPluginObjectDesc->getName() << " plugin object descriptor",
+		ErrorType::BadResourceCreation
+	);
 
 	IPluginObjectDescT* l_pPluginObjectDescT=dynamic_cast<IPluginObjectDescT*>(l_pPluginObjectDesc);
 	IPluginObjectT* l_pPluginObjectT=dynamic_cast<IPluginObjectT*>(l_pPluginObject);
-	if(!l_pPluginObjectDescT || !l_pPluginObjectT)
-	{
-		this->getLogManager() << LogLevel_Debug << "Could not downcast plugin object and/or plugin object descriptor\n";
-		l_pPluginObject->release();
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		l_pPluginObjectDescT && l_pPluginObjectT,
+		"Could not downcast plugin object and/or plugin object descriptor for " << l_pPluginObjectDesc->getName() << " plugin object descriptor",
+		ErrorType::BadResourceCreation
+	);
 
 	if(ppPluginObjectDescT)
 	{
