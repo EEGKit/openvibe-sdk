@@ -151,6 +151,24 @@ namespace OpenViBE
 									else
 									{
 										m_rLogManager << LogLevel_Trace << "Changing configuration token " << CString(l_sTokenName.c_str()) << " to " << CString(l_sTokenValue.c_str()) << "\n";
+
+										// warning if base token are overwritten here
+										OV_WARNING_UNLESS(
+											l_sTokenName != "Path_UserData" &&
+											l_sTokenName != "Path_Log" &&
+											l_sTokenName != "Path_Tmp" &&
+											l_sTokenName != "Path_Lib" &&
+											l_sTokenName != "Path_Bin" &&
+											l_sTokenName != "OperatingSystem" &&
+											l_sTokenName != "Kernel_PluginsPatternMacOS" &&
+											l_sTokenName != "Kernel_PluginsPatternLinux" &&
+											l_sTokenName != "Kernel_PluginsPatternWindows" &&
+											l_sTokenName != "Kernel_Plugins" &&
+											l_sTokenName != "Kernel_PluginsPatternLinux",
+											"Overwriting critical token " << l_sTokenName.c_str(),
+											m_rLogManager
+										);
+
 										m_rConfigurationManager.setConfigurationTokenValue(l_oTokenIdentifier, l_sTokenValue.c_str());
 									}
 								}
