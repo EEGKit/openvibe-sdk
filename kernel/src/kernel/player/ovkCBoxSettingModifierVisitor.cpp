@@ -66,10 +66,6 @@ void CBoxSettingModifierVisitor::closeChild(void)
 
 OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
 {
-	OpenViBE::boolean l_bReturnValue = true;
-	OpenViBE::ErrorStream l_oErrorStream;
-	OpenViBE::Kernel::ErrorType l_oErrorType;
-
 	m_pObjectVisitorContext=&rObjectVisitorContext;
 
 	// checks if this box should override
@@ -98,6 +94,18 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 		m_ui32SettingIndex=0;
 		m_bIsParsingSettingValue=false;
 		m_bIsParsingSettingOverride=false;
+
+		auto cleanup = [&](){
+			// cleans up internal state
+			m_pBox = NULL;
+			m_ui32SettingIndex = 0;
+			m_bIsParsingSettingValue = false;
+			m_bIsParsingSettingOverride = false;
+
+			// releases XML reader
+			l_pReader->release();
+			l_pReader = NULL;
+		};
 
 		// 1. Open settings file (binary because read would conflict with tellg for text files)
 		// 2. Loop until end of file, reading it
@@ -141,18 +149,27 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 					rBox.getSettingType(i, settingType);
 					if (!::checkSettingValue(l_sSettingValue, settingType))
 					{
-						l_oErrorType = ErrorType::BadArgument;
-						l_oErrorStream << "<" <<  rBox.getName() << "> The following value: ["<< l_sRawSettingValue
-							<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not a numeric value.\n";
-						l_bReturnValue = false;
+						cleanup();
+						OV_ERROR(
+							"<" << rBox.getName() << "> The following value: [" << l_sRawSettingValue << "] expanded as [" << l_sSettingValue << "] given as setting is not a numeric value.",
+							ErrorType::BadArgument,
+							false,
+							m_pObjectVisitorContext->getErrorManager(),
+							m_pObjectVisitorContext->getLogManager()
+						);
 					}
 				}
 			}
 			else
 			{
-				l_oErrorType = ErrorType::OutOfBound;
-				l_oErrorStream << "Overrode " << m_ui32SettingIndex << " setting(s) with configuration file [" << l_sSettingOverrideFilenameFinal << "]. That does not match the box setting count " << rBox.getSettingCount();
-				l_bReturnValue = false;
+				cleanup();
+				OV_ERROR(
+					"Overrode " << m_ui32SettingIndex << " setting(s) with configuration file [" << l_sSettingOverrideFilenameFinal << "]. That does not match the box setting count " << rBox.getSettingCount(),
+					ErrorType::OutOfBound,
+					false,
+					m_pObjectVisitorContext->getErrorManager(),
+					m_pObjectVisitorContext->getLogManager()
+				);
 			}
 		}
 		else
@@ -163,34 +180,21 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 			}
 			else
 			{
-				// override file was not found
-				l_oErrorType = ErrorType::ResourceNotFound;
-				l_oErrorStream << "Could not override [" << rBox.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal << "] could not be opened\n";
-				l_bReturnValue = false;
+				cleanup();
+				OV_ERROR(
+					"Could not override [" << rBox.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal << "] could not be opened",
+					ErrorType::ResourceNotFound,
+					false,
+					m_pObjectVisitorContext->getErrorManager(),
+					m_pObjectVisitorContext->getLogManager()
+				);
 			}
 		}
 
-		// cleans up internal state
-		m_pBox=NULL;
-		m_ui32SettingIndex=0;
-		m_bIsParsingSettingValue=false;
-		m_bIsParsingSettingOverride=false;
-
-		// releases XML reader
-		l_pReader->release();
-		l_pReader=NULL;
+		cleanup();
 	}
 
-	OV_ERROR_UNLESS(
-		l_bReturnValue,
-		l_oErrorStream,
-		l_oErrorType,
-		false,
-		m_pObjectVisitorContext->getErrorManager(),
-		m_pObjectVisitorContext->getLogManager()
-	);
-
-	return l_bReturnValue;
+	return true;
 }
 
 boolean CBoxSettingModifierVisitor::processEnd(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
