@@ -21,6 +21,14 @@
 
 #pragma once
 
+#include <sstream>
+#include <cassert>
+
+namespace OpenViBE
+{
+	typedef std::ostringstream ErrorStream;
+}
+
 /**
  * \author Charles Garraud (Inria)
  * \date 2016-07-20
@@ -28,112 +36,341 @@
  *        * Warning
  *        * Error
  *        * Fatal error
- */
-
-/**
- * \brief Use this macro to trigger a warning
- * \param message the warning message
  *
  * A warning should be triggered to warn the api consumer about an
  * expected and important event that is not a fault.
- */
-#define OV_WARNING(message) \
-do { \
-	this->getLogManager() << LogLevel_Warning << (message) << "\n"; \
-} \
-while (0)
-
-/**
- * \brief Use this macro to trigger a warning conditionnally
- * \param expression the boolean condition to assess
- * \param message the warning message
- */
-#define OV_WARNING_UNLESS(expression, message) \
-do { \
-	if (!(expression)) \
-	{ \
-		OV_WARNING((message)); \
-	} \
-} \
-while (0)
-
-#define convertErrorTypeToString(type) #type
-
-/**
- * \brief Use this macro to log an error
- * \param description the error description
- * \param type the error type (see ovErrorType.h)
- */
-#define OV_ERROR(description, type) \
-do { \
-	this->getLogManager() << LogLevel_Error \
-						  << "[Error description] = " \
-						  << (description) \
-						  << " / [Error type] = " \
-						  << convertErrorTypeToString(type) \
-						  << " (code " \
-						  << static_cast<unsigned int>((type)) \
-						  << ")\n"; \
-} \
-while (0)
-
-/**
- * \brief Use this macro to trigger an error conditionnally
- * \param expression the boolean condition to assess
- * \param description the error description
- * \param type the error type (see ovErrorType.h)
- * \param returnValue the value to return if an error is to be triggered
  *
  * An error should be triggered when a failure occurs. A failure is a
  * faulty expected event that alter the correct behavior of the framework.
  *
  * Most OpenViBE API functions communicates a failure occurrence through
  * their return value (false boolean, null pointer, bad identifier...).
- * Therefore, this macro takes a return value that will be returned in case
- * the assessed condition is not met.
+ *
+ * A fatal event should be triggered when failure impacting the sanity of
+ * the system occurs and it is impossible to recover from it.
  */
-#define OV_ERROR_UNLESS(expression, description, type, returnValue) \
+
+ // internal use
+ #define convertErrorTypeToString(type) #type
+
+/**
+ * \def OV_WARNING_LOG(message, logManager)
+ *
+ * Log a warning \a message using the provided \a logManager.
+ * Should not be used directly (use OV_WARNING* instead)
+ */
+#define OV_WARNING_LOG(message, logManager) \
+do { \
+	logManager << LogLevel_Warning << message << "\n"; \
+} \
+while (0)
+
+/**
+ * \def OV_WARNING(message, logManager)
+ *
+ * Use this macro to trigger a warning. \a message is a warning message and
+ * \a logManager a logger used to log this message.
+ */
+#define OV_WARNING(message, logManager) OV_WARNING_LOG(message, logManager)
+
+/**
+ * \def OV_WARNING_UNLESS(expression, message, logManager)
+ * \see OV_WARNING(message, logManager)
+ *
+ * Use this macro to trigger a warning unless the condition expressed by
+ * \a expression is true.
+ */
+#define OV_WARNING_UNLESS(expression, message, logManager) \
 do { \
 	if (!(expression)) \
 	{ \
-		this->getErrorManager().pushErrorAtLocation(type, description, __FILE__, __LINE__); \
-		return returnValue; \
+		OV_WARNING(message, logManager); \
 	} \
 } \
 while (0)
 
 /**
- * \brief Shorthand for OV_ERROR_UNLESS with false as return value
- */
-#define OV_ERROR_UNLESS_RF(expression, description, type) OV_ERROR_UNLESS(expression, description, type, false)
-
-/**
- * \brief Shorthand for OV_ERROR_UNLESS with 0 as return value
- */
-#define OV_ERROR_UNLESS_RO(expression, description, type) OV_ERROR_UNLESS(expression, description, type, 0)
-
-/**
- * \brief Shorthand for OV_ERROR_UNLESS with OV_UndefinedIdentifieras return value
- */
-#define OV_ERROR_UNLESS_RU(expression, description, type) OV_ERROR_UNLESS(expression, description, type, OV_UndefinedIdentifier)
-
-/**
- * \brief Use this macro to terminate the program on fatal error.
- * \param expression the boolean condition to assess
- * \param message the fatal message
+ * \def OV_WARNING_K(message)
+ * \see OV_WARNING(message, logManager)
  *
- * A fatal event should be triggered to when a failures that cannot be
- * handled smoothly occurs.
+ * Shorthand for warning macro launched by objects that have direct
+ * access to kernel logger through this->getLogManager().
+ *
+ * Suffix K stands for Kernel.
  */
-#define OV_FATAL_UNLESS(expression, description, type) \
+#define OV_WARNING_K(message) OV_WARNING(message, this->getLogManager())
+
+/**
+ * \def OV_WARNING_UNLESS_K(expression, message)
+ * \see OV_WARNING_UNLESS(expression, message, logManager)
+ *
+ * Shorthand for warning macro launched by objects that have direct
+ * access to kernel logger through this->getLogManager().
+ *
+ * Suffix K stands for Kernel.
+ */
+#define OV_WARNING_UNLESS_K(expression, message) OV_WARNING_UNLESS(expression, message, this->getLogManager())
+
+
+/**
+ * \def OV_ERROR_LOG(description, type, file, line, logManager)
+ *
+ * Log an error using the provided \a logManager.
+ * Should not be used directly (use OV_ERROR* instead)
+ */
+#define OV_ERROR_LOG(description, type, file, line, logManager) \
 do { \
-		this->getLogManager() << LogLevel_Fatal \
-							  << "[Error description] = " \
-							  << (description) \
-							  << " / [Error code] = " \
-							  << static_cast<unsigned int>((type)) \
-							  << "\n"; \
-		std::abort(); \
+	logManager << LogLevel_Error \
+			   << "[Error description] = " \
+			   << description \
+			   << "; [Error type] = " \
+			   << convertErrorTypeToString(type) \
+			   << " (code " \
+			   << static_cast<unsigned int>((type)) \
+			   << ") [Error location] = " \
+			   << file << ":" << line\
+			   << "\n"; \
 } \
 while (0)
 
+/**
+ * \def OV_ERROR(description, type, returnValue, errorManager, logManager)
+ *
+ * Low-level macro used to handle an error. The error is described by its
+ * \a description and \a type. The generated block of code is returning a
+ * value defined by \a returnValue. Error handling is performed with
+ * the given \a errorManager and \a logManager.
+ *
+ * Use this in very specific cases. Prefer the use of higher level macros
+ * instead.
+ */
+#define OV_ERROR(description, type, returnValue, errorManager, logManager) \
+do { \
+	errorManager.pushErrorAtLocation( \
+		type, \
+		static_cast<OpenViBE::ErrorStream&>(OpenViBE::ErrorStream() << description).str().c_str(), \
+		__FILE__, __LINE__ \
+	); \
+	OV_ERROR_LOG(description, type, __FILE__, __LINE__ , logManager); \
+	return returnValue; \
+} \
+while (0)
+
+/**
+ * \def OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
+ * \see OV_ERROR(description, type, returnValue, errorManager, logManager)
+ *
+ * Low-level macro used to handle an error unless the condition expressed by
+ * \a expression is true.
+ *
+ * Use this in very specific cases. Prefer the use of higher level macros
+ * instead.
+ */
+#define OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager) \
+do { \
+	if (!(expression)) \
+	{ \
+		OV_ERROR(description, type, returnValue, errorManager, logManager); \
+	} \
+} \
+while (0)
+
+/**
+ * \def OV_ERROR_K(description, type, returnValue)
+ * \see OV_ERROR(description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for error macro launched by objects that have direct
+ * access to kernel logger and error managers through this->getLogManager()
+ * and this->getErrorManager().
+ *
+ * Suffix K stands for Kernel.
+ */
+#define OV_ERROR_K(description, type, returnValue) OV_ERROR(description, type, returnValue, this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_KRF(description, type)
+ * \see OV_ERROR(description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for error macro that returns false and launched by objects
+ * that have direct access to kernel logger and error managers through this->getLogManager()
+ * and this->getErrorManager().
+ *
+ * Suffix KRF stands for Kernel Return False.
+ */
+#define OV_ERROR_KRF(description, type) OV_ERROR(description, type, false, this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_KRO(description, type)
+ * \see OV_ERROR(description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for error macro that returns zero and launched by objects
+ * that have direct access to kernel logger and error managers through this->getLogManager()
+ * and this->getErrorManager().
+ *
+ * Suffix KRO stands for Kernel Return 0.
+ */
+#define OV_ERROR_KRO(description, type) OV_ERROR(description, type, 0, this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_KRO(description, type)
+ * \see OV_ERROR(description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for error macro that returns OV_UndefinedIdentifier and launched by objects
+ * that have direct access to kernel logger and error managers through this->getLogManager()
+ * and this->getErrorManager().
+ *
+ * Suffix KRU stands for Kernel Return Undefined.
+ */
+#define OV_ERROR_KRU(description, type) OV_ERROR(description, type, OV_UndefinedIdentifier, this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_KRV(description, type)
+ * \see OV_ERROR(description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for error macro that returns nothing and launched by objects
+ * that have direct access to kernel logger and error managers through this->getLogManager()
+ * and this->getErrorManager().
+ *
+ * Suffix KRV stands for Kernel Return Void.
+ */
+#define OV_ERROR_KRV(description, type) OV_ERROR(description, type, , this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_KRN(description, type)
+ * \see OV_ERROR(description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for error macro that returns nullptr and launched by objects
+ * that have direct access to kernel logger and error managers through this->getLogManager()
+ * and this->getErrorManager().
+ *
+ * Suffix KRN stands for Kernel Return Null.
+ */
+#define OV_ERROR_KRN(description, type) OV_ERROR(description, type, nullptr, this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_UNLESS_K(expression, description, type, returnValue)
+ * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for contitional error macro launched by objects that have direct
+ * access to kernel logger and error managers through this->getLogManager()
+ * and this->getErrorManager().
+ *
+ * Suffix K stands for Kernel.
+ */
+#define OV_ERROR_UNLESS_K(expression, description, type, returnValue) OV_ERROR_UNLESS(expression, description, type, returnValue, this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_UNLESS_KRF(expression, description, type)
+ * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for contitional error macro that returns false and
+ * launched by objects that have direct access to kernel logger and error
+ * managers through this->getLogManager() and this->getErrorManager().
+ *
+ * Suffix KRF stands for Kernel Return False.
+ */
+#define OV_ERROR_UNLESS_KRF(expression, description, type) OV_ERROR_UNLESS(expression, description, type, false, this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_UNLESS_KRO(expression, description, type)
+ * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for contitional error macro that returns zero and
+ * launched by objects that have direct access to kernel logger and error
+ * managers through this->getLogManager() and this->getErrorManager().
+ *
+ * Suffix KRO stands for Kernel Return 0.
+ */
+#define OV_ERROR_UNLESS_KRO(expression, description, type) OV_ERROR_UNLESS(expression, description, type, 0, this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_UNLESS_KRU(expression, description, type)
+ * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for contitional error macro that returns OV_UndefinedIdentifier and
+ * launched by objects that have direct access to kernel logger and error
+ * managers through this->getLogManager() and this->getErrorManager().
+ *
+ * Suffix KRU stands for Kernel Return Undefined.
+ */
+#define OV_ERROR_UNLESS_KRU(expression, description, type) OV_ERROR_UNLESS(expression, description, type, OV_UndefinedIdentifier, this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_UNLESS_KRV(expression, description, type)
+ * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for contitional error macro that returns nothing and
+ * launched by objects that have direct access to kernel logger and error
+ * managers through this->getLogManager() and this->getErrorManager().
+ *
+ * Suffix KRV stands for Kernel Return Void.
+ */
+#define OV_ERROR_UNLESS_KRV(expression, description, type) OV_ERROR_UNLESS(expression, description, type, , this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_ERROR_UNLESS_KRN(expression, description, type)
+ * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
+ *
+ * Shorthand for contitional error macro that returns nullptr and
+ * launched by objects that have direct access to kernel logger and error
+ * managers through this->getLogManager() and this->getErrorManager().
+ *
+ * Suffix KRN stands for Kernel Return Null.
+ */
+#define OV_ERROR_UNLESS_KRN(expression, description, type) OV_ERROR_UNLESS(expression, description, type, nullptr, this->getErrorManager(), this->getLogManager())
+
+/**
+ * \def OV_FATAL(description, type, logManager)
+ *
+ * Use this macro to handle fatal error described by its \a description
+ * and \a type. \a logManager it the logger used to log the fatal message.
+ */
+#define OV_FATAL(description, type, logManager) \
+do { \
+	logManager << LogLevel_Fatal \
+						  << "[Error description] = " \
+						  << description \
+						  << "; [Error code] = " \
+						  << static_cast<unsigned int>((type)) \
+						  << "\n"; \
+	std::abort(); \
+} \
+while (0)
+
+/**
+ * \def OV_FATAL_UNLESS(expression, description, type, logManager)
+ * \see OV_FATAL(description, type, logManager)
+ *
+ * Use this macro to handle fatal errors unless the condition expressed by
+ * \a expression is true.
+ */
+#define OV_FATAL_UNLESS(expression, description, type, logManager) \
+do { \
+	if (!(expression)) \
+	{ \
+		OV_FATAL(description, type, logManager); \
+	} \
+} \
+while (0)
+
+/**
+ * \def OV_FATAL_K(description, type)
+ * \see OV_FATAL(description, type, logManager)
+ *
+ * Shorthand for fatal macro launched by objects that have direct
+ * access to kernel logger through this->getLogManager().
+ *
+ * Suffix K stands for Kernel.
+ */
+#define OV_FATAL_K(description, type) OV_FATAL(description, type, this->getLogManager())
+
+/**
+ * \def OV_FATAL_UNLESS_K(description, type)
+ * \see OV_FATAL(expression, description, type)
+ *
+ * Shorthand for fatal contitional macro launched by objects that have direct
+ * access to kernel logger through this->getLogManager().
+ *
+ * Suffix K stands for Kernel.
+ */
+#define OV_FATAL_UNLESS_K(expression, description, type) OV_FATAL_UNLESS(expression, description, type, this->getLogManager())
