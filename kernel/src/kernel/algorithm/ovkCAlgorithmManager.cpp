@@ -20,10 +20,10 @@ CAlgorithmManager::~CAlgorithmManager(void)
 		CAlgorithmProxy* l_pAlgorithmProxy = algorithm.second;
 		IAlgorithm& l_rAlgorithm = l_pAlgorithmProxy->getAlgorithm();
 		delete l_pAlgorithmProxy;
-		
+
 		getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 	}
-	
+
 	m_vAlgorithms.clear();
 }
 
@@ -32,17 +32,18 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 {
 	const IAlgorithmDesc* l_pAlgorithmDesc=NULL;
 	IAlgorithm* l_pAlgorithm=getKernelContext().getPluginManager().createAlgorithm(rAlgorithmClassIdentifier, &l_pAlgorithmDesc);
-	if(!l_pAlgorithm || !l_pAlgorithmDesc)
-	{
-		getLogManager() << LogLevel_Warning << "Algorithm creation failed, class identifier :" << rAlgorithmClassIdentifier << "\n";
-		return OV_UndefinedIdentifier;
-	}
+
+	OV_ERROR_UNLESS_KRU(
+		l_pAlgorithm && l_pAlgorithmDesc,
+		"Algorithm creation failed, class identifier :" << rAlgorithmClassIdentifier.toString(),
+		ErrorType::BadResourceCreation
+	);
 
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmClassIdentifier << "\n";
 
 	CIdentifier l_oAlgorithmIdentifier=getUnusedIdentifier();
 	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pAlgorithm, *l_pAlgorithmDesc);
-	
+
 	m_vAlgorithms[l_oAlgorithmIdentifier]=l_pAlgorithmProxy;
 	return l_oAlgorithmIdentifier;
 }
@@ -51,11 +52,12 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 		const IAlgorithmDesc& rAlgorithmDesc)
 {
 	IAlgorithm* l_pAlgorithm=getKernelContext().getPluginManager().createAlgorithm(rAlgorithmDesc);
-	if(!l_pAlgorithm)
-	{
-		this->getLogManager() << LogLevel_Warning << "Algorithm creation failed, class identifier :" << rAlgorithmDesc.getClassIdentifier() << "\n";
-		return OV_UndefinedIdentifier;
-	}
+
+	OV_ERROR_UNLESS_KRU(
+		l_pAlgorithm,
+		"Algorithm creation failed, class identifier :" << rAlgorithmDesc.getClassIdentifier().toString(),
+		ErrorType::BadResourceCreation
+	);
 
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmDesc.getClassIdentifier() << "\n";
 
@@ -70,20 +72,22 @@ boolean CAlgorithmManager::releaseAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
 	AlgorithmMap::iterator itAlgorithm = m_vAlgorithms.find(rAlgorithmIdentifier);
-	if(itAlgorithm==m_vAlgorithms.end())
-	{
-		getLogManager() << LogLevel_Warning << "Algorithm release failed, identifier " << rAlgorithmIdentifier << "\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		itAlgorithm != m_vAlgorithms.end(),
+		"Algorithm release failed, identifier :" << rAlgorithmIdentifier.toString(),
+		ErrorType::ResourceNotFound
+	);
+
 	getLogManager() << LogLevel_Debug << "Releasing algorithm with identifier " << rAlgorithmIdentifier << "\n";
 	CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;
-	if(l_pAlgorithmProxy) 
-	{		
+	if(l_pAlgorithmProxy)
+	{
 		IAlgorithm& l_rAlgorithm=l_pAlgorithmProxy->getAlgorithm();
 
 		delete l_pAlgorithmProxy;
 		l_pAlgorithmProxy = NULL;
-		
+
 		getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 	}
 	m_vAlgorithms.erase(itAlgorithm);
@@ -93,7 +97,8 @@ boolean CAlgorithmManager::releaseAlgorithm(
 
 boolean CAlgorithmManager::releaseAlgorithm(
 	IAlgorithmProxy& rAlgorithm)
-{	
+{
+	bool l_bResult = false;
 	for(auto& algorithm : m_vAlgorithms)
 	{
 		CAlgorithmProxy* l_pAlgorithmProxy = algorithm.second;
@@ -104,25 +109,34 @@ boolean CAlgorithmManager::releaseAlgorithm(
 
 			delete l_pAlgorithmProxy;
 			l_pAlgorithmProxy = NULL;
-				
+
 			m_vAlgorithms.erase(algorithm.first);
 			getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
-			return true;
+			l_bResult = true;
+			break;
 		}
 	}
-	
-	getLogManager() << LogLevel_Warning << "Algorithm release failed\n";
-	return false;
+
+	OV_ERROR_UNLESS_KRF(
+		l_bResult,
+		"Algorithm release failed",
+		ErrorType::ResourceNotFound
+	);
+
+	return l_bResult;
 }
 
 IAlgorithmProxy& CAlgorithmManager::getAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
 	AlgorithmMap::const_iterator itAlgorithm = m_vAlgorithms.find(rAlgorithmIdentifier);
-	if(itAlgorithm==m_vAlgorithms.end())
-	{
-		this->getLogManager() << LogLevel_Fatal << "Algorithm " << rAlgorithmIdentifier << " does not exist !\n";
-	}
+
+	OV_FATAL_UNLESS_K(
+		itAlgorithm != m_vAlgorithms.end(),
+		"Algorithm " << rAlgorithmIdentifier << " does not exist !",
+		ErrorType::ResourceNotFound
+	);
+
 	return *itAlgorithm->second;
 }
 
