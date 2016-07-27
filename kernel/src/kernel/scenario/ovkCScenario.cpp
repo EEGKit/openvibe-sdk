@@ -171,10 +171,11 @@ boolean CScenario::clear(void)
 
 boolean CScenario::removeScenarioInput(const uint32 ui32InputIndex)
 {
-	if (ui32InputIndex >= this->getInputCount())
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32InputIndex < this->getInputCount(),
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	// Remove the link within the scenario to this input
 	if (ui32InputIndex < m_vScenarioInputLink.size())
@@ -188,10 +189,11 @@ boolean CScenario::removeScenarioInput(const uint32 ui32InputIndex)
 
 boolean CScenario::removeScenarioOutput(const uint32 ui32OutputIndex)
 {
-	if (ui32OutputIndex >= this->getOutputCount())
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32OutputIndex < this->getOutputCount(),
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	// Remove the link within the scenario to this output
 	if (ui32OutputIndex < m_vScenarioOutputLink.size())
@@ -297,11 +299,13 @@ const IBox* CScenario::getBoxDetails(
 
 	map<CIdentifier, CBox*>::const_iterator itBox;
 	itBox=m_vBox.find(rBoxIdentifier);
-	if(itBox==m_vBox.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "The box does not exist\n";
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		itBox != m_vBox.end(),
+		"Box [" << rBoxIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
 	return itBox->second;
 }
 
@@ -320,11 +324,13 @@ IBox* CScenario::getBoxDetails(
 
 	map<CIdentifier, CBox*>::const_iterator itBox;
 	itBox=m_vBox.find(rBoxIdentifier);
-	if(itBox==m_vBox.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "The box does not exist\n";
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		itBox != m_vBox.end(),
+		"Box [" << rBoxIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
 	return itBox->second;
 }
 
@@ -352,12 +358,14 @@ boolean CScenario::addBox(
 
 	if(!addBox(rBoxIdentifier, rSuggestedBoxIdentifier))
 	{
+		// error is handled in addBox
 		return false;
 	}
 
 	IBox* l_pBox=getBoxDetails(rBoxIdentifier);
 	if(!l_pBox)
 	{
+		// error is handled in getBoxDetails
 		return false;
 	}
 
@@ -373,12 +381,14 @@ boolean CScenario::addBox(
 
 	if(!addBox(rBoxIdentifier, rSuggestedBoxIdentifier))
 	{
+		// error is handled in addBox
 		return false;
 	}
 
 	IBox* l_pBox=getBoxDetails(rBoxIdentifier);
 	if(!l_pBox)
 	{
+		// error is handled in getBoxDetails
 		return false;
 	}
 
@@ -391,12 +401,14 @@ boolean CScenario::addBox(CIdentifier& rBoxIdentifier, const IBoxAlgorithmDesc& 
 
 	if(!addBox(rBoxIdentifier, rSuggestedBoxIdentifier))
 	{
+		// error is handled in addBox
 		return false;
 	}
 
 	IBox* l_pBox = getBoxDetails(rBoxIdentifier);
 	if(!l_pBox)
 	{
+		// error is handled in getBoxDetails
 		return false;
 	}
 
@@ -412,12 +424,12 @@ boolean CScenario::removeBox(
 	// Finds the box according to its identifier
 	map<CIdentifier, CBox*>::iterator itBox;
 	itBox=m_vBox.find(rBoxIdentifier);
-	if(itBox==m_vBox.end())
-	{
-		// The box does not exist !
-		this->getLogManager() << LogLevel_Warning << "The box does not exist\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		itBox != m_vBox.end(),
+		"Box [" << rBoxIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
 
 	this->getLogManager() << LogLevel_Debug << "Found the box !\n";
 
@@ -468,11 +480,13 @@ const IComment* CScenario::getCommentDetails(
 
 	map<CIdentifier, CComment*>::const_iterator itComment;
 	itComment=m_vComment.find(rCommentIdentifier);
-	if(itComment==m_vComment.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "The comment does not exist\n";
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		itComment != m_vComment.end(),
+		"Comment [" << rCommentIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
 	return itComment->second;
 }
 
@@ -491,11 +505,13 @@ IComment* CScenario::getCommentDetails(
 
 	map<CIdentifier, CComment*>::const_iterator itComment;
 	itComment=m_vComment.find(rCommentIdentifier);
-	if(itComment==m_vComment.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "The comment does not exist\n";
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		itComment != m_vComment.end(),
+		"Comment [" << rCommentIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
 	return itComment->second;
 }
 
@@ -522,12 +538,14 @@ boolean CScenario::addComment(
 
 	if(!addComment(rCommentIdentifier, rSuggestedCommentIdentifier))
 	{
+		// error is handled in addComment above
 		return false;
 	}
 
 	IComment* l_pComment=getCommentDetails(rCommentIdentifier);
 	if(!l_pComment)
 	{
+		// error is handled in getCommentDetails
 		return false;
 	}
 
@@ -542,12 +560,12 @@ boolean CScenario::removeComment(
 	// Finds the comment according to its identifier
 	map<CIdentifier, CComment*>::iterator itComment;
 	itComment=m_vComment.find(rCommentIdentifier);
-	if(itComment==m_vComment.end())
-	{
-		// The comment does not exist !
-		this->getLogManager() << LogLevel_Warning << "The comment does not exist\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		itComment != m_vComment.end(),
+		"Comment [" << rCommentIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
 
 	this->getLogManager() << LogLevel_Debug << "Found the comment !\n";
 
@@ -623,10 +641,24 @@ boolean CScenario::hasIO() const
 
 boolean CScenario::setScenarioInputLink(const uint32 ui32ScenarioInputIndex, const CIdentifier& rBoxIdentifier, const uint32 ui32BoxInputIndex)
 {
-	if (ui32ScenarioInputIndex >= this->getInputCount() || !this->isBox(rBoxIdentifier) || ui32BoxInputIndex >= this->getBoxDetails(rBoxIdentifier)->getInputCount())
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32ScenarioInputIndex < this->getInputCount(),
+		"Scenario Input index = [" << ui32ScenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		this->isBox(rBoxIdentifier),
+		"Box [" << rBoxIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		ui32BoxInputIndex < this->getBoxDetails(rBoxIdentifier)->getInputCount(),
+		"Box Input index = [" << ui32BoxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(rBoxIdentifier)->getInputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
 	if (ui32ScenarioInputIndex >= m_vScenarioInputLink.size())
 	{
 		m_vScenarioInputLink.resize(this->getInputCount());
@@ -658,12 +690,24 @@ boolean CScenario::setScenarioInputLink(const uint32 ui32ScenarioInputIndex, con
 
 boolean CScenario::setScenarioOutputLink(const uint32 ui32ScenarioOutputIndex, const CIdentifier& rBoxIdentifier, const uint32 ui32BoxOutputIndex)
 {
-	if (ui32ScenarioOutputIndex >= this->getOutputCount() ||
-	        !this->isBox(rBoxIdentifier) ||
-	        ui32BoxOutputIndex >= this->getBoxDetails(rBoxIdentifier)->getOutputCount())
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32ScenarioOutputIndex < this->getOutputCount(),
+		"Scenario output index = [" << ui32ScenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		this->isBox(rBoxIdentifier),
+		"Box [" << rBoxIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		ui32BoxOutputIndex < this->getBoxDetails(rBoxIdentifier)->getOutputCount(),
+		"Box output index = [" << ui32BoxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(rBoxIdentifier)->getOutputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
 	if (ui32ScenarioOutputIndex >= m_vScenarioOutputLink.size())
 	{
 		m_vScenarioOutputLink.resize(this->getOutputCount());
@@ -689,10 +733,11 @@ boolean CScenario::setScenarioOutputLink(const uint32 ui32ScenarioOutputIndex, c
 
 boolean CScenario::getScenarioInputLink(const uint32 ui32ScenarioInputIndex, CIdentifier& rBoxIdentifier, uint32& rBoxInputIndex) const
 {
-	if (ui32ScenarioInputIndex >= this->getInputCount())
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32ScenarioInputIndex < this->getInputCount(),
+		"Scenario input index = [" << ui32ScenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	if (ui32ScenarioInputIndex >= m_vScenarioInputLink.size())
 	{
@@ -707,10 +752,11 @@ boolean CScenario::getScenarioInputLink(const uint32 ui32ScenarioInputIndex, CId
 
 boolean CScenario::getScenarioOutputLink(const uint32 ui32ScenarioOutputIndex, CIdentifier& rBoxIdentifier, uint32& rBoxOutputIndex) const
 {
-	if (ui32ScenarioOutputIndex >= this->getOutputCount())
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32ScenarioOutputIndex < this->getOutputCount(),
+		"Scenario output index = [" << ui32ScenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	if (ui32ScenarioOutputIndex >= m_vScenarioOutputLink.size())
 	{
@@ -727,13 +773,23 @@ boolean CScenario::getScenarioOutputLink(const uint32 ui32ScenarioOutputIndex, C
 // but to keep things simpler we give it all the info
 boolean CScenario::removeScenarioInputLink(const uint32 ui32ScenarioInputIndex, const CIdentifier& rBoxIdentifier, const uint32 ui32BoxInputIndex)
 {
-	if (ui32ScenarioInputIndex >= this->getInputCount() ||
-	        !this->isBox(rBoxIdentifier) ||
-	        ui32BoxInputIndex >= this->getBoxDetails(rBoxIdentifier)->getInputCount())
-	{
-		// this really should not happen
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32ScenarioInputIndex < this->getInputCount(),
+		"Scenario Input index = [" << ui32ScenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		this->isBox(rBoxIdentifier),
+		"Box [" << rBoxIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		ui32BoxInputIndex < this->getBoxDetails(rBoxIdentifier)->getInputCount(),
+		"Box Input index = [" << ui32BoxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(rBoxIdentifier)->getInputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	// This should not happen either
 	if (ui32ScenarioInputIndex >= m_vScenarioInputLink.size())
@@ -749,13 +805,23 @@ boolean CScenario::removeScenarioInputLink(const uint32 ui32ScenarioInputIndex, 
 // but to keep things simpler we give it all the info
 boolean CScenario::removeScenarioOutputLink(const uint32 ui32ScenarioOutputIndex, const CIdentifier& rBoxIdentifier, const uint32 ui32BoxOutputIndex)
 {
-	if (ui32ScenarioOutputIndex >= this->getOutputCount() ||
-	        !this->isBox(rBoxIdentifier) ||
-	        ui32BoxOutputIndex >= this->getBoxDetails(rBoxIdentifier)->getOutputCount())
-	{
-		// this really should not happen
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32ScenarioOutputIndex < this->getOutputCount(),
+		"Scenario output index = [" << ui32ScenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		this->isBox(rBoxIdentifier),
+		"Box [" << rBoxIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		ui32BoxOutputIndex < this->getBoxDetails(rBoxIdentifier)->getOutputCount(),
+		"Box output index = [" << ui32BoxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(rBoxIdentifier)->getOutputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	// This should not happen either
 	if (ui32ScenarioOutputIndex >= m_vScenarioOutputLink.size())
@@ -774,11 +840,13 @@ const ILink* CScenario::getLinkDetails(
 
 	map<CIdentifier, CLink*>::const_iterator itLink;
 	itLink=m_vLink.find(rLinkIdentifier);
-	if(itLink==m_vLink.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "The link does not exist\n";
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		itLink != m_vLink.end(),
+		"link [" << rLinkIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
 	return itLink->second;
 }
 
@@ -789,11 +857,13 @@ ILink* CScenario::getLinkDetails(
 
 	map<CIdentifier, CLink*>::const_iterator itLink;
 	itLink=m_vLink.find(rLinkIdentifier);
-	if(itLink==m_vLink.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "The link does not exist\n";
-		return NULL;
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		itLink != m_vLink.end(),
+		"Link [" << rLinkIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
 	return itLink->second;
 }
 
@@ -811,23 +881,33 @@ boolean CScenario::connect(
 	map<CIdentifier, CBox*>::const_iterator itBox2;
 	itBox1=m_vBox.find(rSourceBoxIdentifier);
 	itBox2=m_vBox.find(rTargetBoxIdentifier);
-	if(itBox1==m_vBox.end() || itBox2==m_vBox.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "At least one of the boxes does not exist\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		itBox1 != m_vBox.end(),
+		"Source Box [" << rSourceBoxIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		itBox2 != m_vBox.end(),
+		"Target Box [" << rTargetBoxIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
 	CBox* l_pSourceBox=itBox1->second;
 	CBox* l_pTargetBox=itBox2->second;
-	if(ui32SourceBoxOutputIndex >= l_pSourceBox->getOutputCount())
-	{
-		this->getLogManager() << LogLevel_Warning << "Wrong output index\n";
-		return false;
-	}
-	if(ui32TargetBoxInputIndex >= l_pTargetBox->getInputCount())
-	{
-		this->getLogManager() << LogLevel_Warning << "Wrong input index\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		ui32TargetBoxInputIndex < l_pTargetBox->getInputCount(),
+		"Target box input index = [" << ui32TargetBoxInputIndex << "] is out of range (max index = [" << (l_pTargetBox->getInputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		ui32SourceBoxOutputIndex < l_pSourceBox->getOutputCount(),
+		"Source box output index = [" << ui32SourceBoxOutputIndex << "] is out of range (max index = [" << (l_pSourceBox->getOutputCount() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	// Looks for any connected link to this box input and removes it
 	map<CIdentifier, CLink*>::iterator itLink=m_vLink.begin();
@@ -887,8 +967,10 @@ boolean CScenario::disconnect(
 		}
 	}
 
-	this->getLogManager() << LogLevel_Warning << "The link does not exist\n";
-	return false;
+	OV_ERROR_KRF(
+		"Link is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
 }
 
 boolean CScenario::disconnect(
@@ -899,12 +981,12 @@ boolean CScenario::disconnect(
 	// Finds the link according to its identifier
 	map<CIdentifier, CLink*>::iterator itLink;
 	itLink=m_vLink.find(rLinkIdentifier);
-	if(itLink==m_vLink.end())
-	{
-		// The link does not exist !
-		this->getLogManager() << LogLevel_Warning << "The link does not exist\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		itLink != m_vLink.end(),
+		"Link [" << rLinkIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
 
 	this->getLogManager() << LogLevel_Debug << "Found the link !\n";
 
@@ -1076,12 +1158,12 @@ boolean CScenario::checkSettings(IConfigurationManager* pConfig)
 			{
 				l_sSettingValue = this->getConfigurationManager().expandOnlyKeyword("var", l_sSettingValue);
 			}
-			if (!::checkSettingValue(l_sSettingValue, l_oTypeIdentifier))
-			{
-				this->getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" << l_pBox.second->getName() << "> The following value: ["<< l_sRawSettingValue 
-					<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not valid.\n";
-				return false;
-			}
+
+			OV_ERROR_UNLESS_KRF(
+				!::checkSettingValue(l_sSettingValue, l_oTypeIdentifier),
+				"<" << l_pBox.second->getName() << "> The following value: ["<< l_sRawSettingValue <<"] expanded as ["<< l_sSettingValue <<"] given as setting is not valid.",
+				ErrorType::BadValue
+			);
 		}
 
 		this->getConfigurationManager().unregisterKeywordParser("var");
@@ -1131,6 +1213,6 @@ boolean CScenario::checkNeedsUpdateBox()
 			m_vNeedsUpdatesBoxes.insert(l_pBox);
 		}
 	}
-	
+
 	return l_bResult;
 }

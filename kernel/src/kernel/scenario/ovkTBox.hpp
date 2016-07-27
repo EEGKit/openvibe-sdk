@@ -103,14 +103,18 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean setIdentifier(const OpenViBE::CIdentifier& rIdentifier)
 			{
-				if(m_oIdentifier!=OV_UndefinedIdentifier)
-				{
-					return false;
-				}
-				if(rIdentifier==OV_UndefinedIdentifier)
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					m_oIdentifier == OV_UndefinedIdentifier,
+					"Trying to overwrite an already set indentifier",
+					ErrorType::BadCall
+				);
+
+				OV_ERROR_UNLESS_KRF(
+					rIdentifier != OV_UndefinedIdentifier,
+					"Trying to set an undefined identifier",
+					ErrorType::BadArgument
+				);
+
 				m_oIdentifier=rIdentifier;
 
 				this->notify(BoxModification_IdentifierChanged);
@@ -129,13 +133,13 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean setAlgorithmClassIdentifier(const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)
 			{
-				m_oAlgorithmClassIdentifier=rAlgorithmClassIdentifier;
+				OV_ERROR_UNLESS_KRF(
+					rAlgorithmClassIdentifier == OVP_ClassId_BoxAlgorithm_Metabox || this->getKernelContext().getPluginManager().canCreatePluginObject(rAlgorithmClassIdentifier),
+					"Box algorithm descriptor not found " << rAlgorithmClassIdentifier.toString(),
+					ErrorType::ResourceNotFound
+				);
 
-				if(rAlgorithmClassIdentifier != OVP_ClassId_BoxAlgorithm_Metabox && !this->getKernelContext().getPluginManager().canCreatePluginObject(rAlgorithmClassIdentifier))
-				{
-					this->getLogManager() << LogLevel_Warning << "Box algorithm descriptor not found " << rAlgorithmClassIdentifier << "\n";
-					return false;
-				}
+				m_oAlgorithmClassIdentifier=rAlgorithmClassIdentifier;
 
 				if(m_pBoxAlgorithmDescriptor && m_pBoxListener)
 				{
@@ -173,11 +177,8 @@ namespace OpenViBE
 				const Plugins::IBoxAlgorithmDesc* l_pBoxAlgorithmDesc=dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(rAlgorithmClassIdentifier));
 				if(!l_pBoxAlgorithmDesc)
 				{
-					this->getLogManager() << LogLevel_Warning << "Algorithm descriptor not found " << rAlgorithmClassIdentifier << "\n";
-
 					this->enableNotification();
-
-					return false;
+					OV_ERROR_KRF("Algorithm descriptor not found " << rAlgorithmClassIdentifier.toString(), ErrorType::ResourceNotFound);
 				}
 
 				this->clearBox();
@@ -310,17 +311,11 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean addInput(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
-				if(!this->getTypeManager().isStream(rTypeIdentifier))
-				{
-					if(rTypeIdentifier==OV_UndefinedIdentifier)
-					{
-						this->getLogManager() << LogLevel_Warning << "Box '" << getName() << "' input '" << sName << "' maps to OV_UndefinedIdentifier. Please configure the box.\n";
-					}
-					else
-					{
-						this->getLogManager() << LogLevel_Warning << "While adding input '" << sName << "' to box '" << getName() << "', unknown stream type identifier " << rTypeIdentifier << "\n";
-					}
-				}
+				OV_ERROR_UNLESS_KRF(
+					this->getTypeManager().isStream(rTypeIdentifier),
+					"While adding input '" << sName << "' to box '" << getName() << "', unknown stream type identifier " << rTypeIdentifier.toString(),
+					ErrorType::BadArgument
+				);
 
 				CInput i;
 				i.m_sName=sName;
@@ -334,13 +329,14 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean removeInput(const OpenViBE::uint32 ui32InputIndex)
 			{
+				OV_ERROR_UNLESS_KRF(
+					ui32InputIndex < m_vInput.size(),
+					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				CIdentifier l_oIdentifier;
 				size_t i;
-
-				if(ui32InputIndex >= m_vInput.size())
-				{
-					return false;
-				}
 
 				while((l_oIdentifier=m_pOwnerScenario->getNextLinkIdentifierToBoxInput(l_oIdentifier, m_oIdentifier, ui32InputIndex))!=OV_UndefinedIdentifier)
 				{
@@ -438,35 +434,42 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean getInputType( const OpenViBE::uint32 ui32InputIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
 			{
-				if(ui32InputIndex>=m_vInput.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32InputIndex < m_vInput.size(),
+					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				rTypeIdentifier=m_vInput[ui32InputIndex].m_oTypeIdentifier;
 				return true;
 			}
 
 			virtual OpenViBE::boolean getInputName(const OpenViBE::uint32 ui32InputIndex, OpenViBE::CString& rName) const
 			{
-				if(ui32InputIndex>=m_vInput.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32InputIndex < m_vInput.size(),
+					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				rName=m_vInput[ui32InputIndex].m_sName;
 				return true;
 			}
 
 			virtual OpenViBE::boolean setInputType(const OpenViBE::uint32 ui32InputIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
-				if(!this->getTypeManager().isStream(rTypeIdentifier))
-				{
-					this->getLogManager() << LogLevel_Warning << "While changing box '" << getName() << "' input type, unknown stream type identifier " << rTypeIdentifier << "\n";
-				}
+				OV_ERROR_UNLESS_KRF(
+					this->getTypeManager().isStream(rTypeIdentifier),
+					"While changing box '" << getName() << "' input type, unknown stream type identifier " << rTypeIdentifier.toString(),
+					ErrorType::BadArgument
+				);
 
-				if(ui32InputIndex>=m_vInput.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32InputIndex < m_vInput.size(),
+					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				m_vInput[ui32InputIndex].m_oTypeIdentifier=rTypeIdentifier;
 
 				this->notify(BoxModification_InputTypeChanged, ui32InputIndex);
@@ -476,10 +479,12 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean setInputName(const OpenViBE::uint32 ui32InputIndex, const OpenViBE::CString& rName)
 			{
-				if(ui32InputIndex>=m_vInput.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32InputIndex < m_vInput.size(),
+					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				m_vInput[ui32InputIndex].m_sName=rName;
 
 				this->notify(BoxModification_InputNameChanged, ui32InputIndex);
@@ -492,17 +497,11 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean addOutput(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
-				if(!this->getTypeManager().isStream(rTypeIdentifier))
-				{
-					if(rTypeIdentifier==OV_UndefinedIdentifier)
-					{
-						this->getLogManager() << LogLevel_Warning << "Box '" << getName() << "' output '" << sName << "' maps to OV_UndefinedIdentifier. Please configure the box.\n";
-					}
-					else
-					{
-						this->getLogManager() << LogLevel_Warning << "While adding output '" << sName << "' to box '" << getName() << "', unknown stream type identifier " << rTypeIdentifier << "\n";
-					}
-				}
+				OV_ERROR_UNLESS_KRF(
+					this->getTypeManager().isStream(rTypeIdentifier),
+					"While adding output '" << sName << "' to box '" << getName() << "', unknown stream type identifier " << rTypeIdentifier.toString(),
+					ErrorType::BadArgument
+				);
 
 				COutput o;
 				o.m_sName=sName;
@@ -516,13 +515,14 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean removeOutput(const OpenViBE::uint32 ui32OutputIndex)
 			{
+				OV_ERROR_UNLESS_KRF(
+					ui32OutputIndex < m_vOutput.size(),
+					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vOutput.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				CIdentifier l_oIdentifier;
 				size_t i;
-
-				if(ui32OutputIndex >= m_vOutput.size())
-				{
-					return false;
-				}
 
 				while((l_oIdentifier=m_pOwnerScenario->getNextLinkIdentifierFromBoxOutput(l_oIdentifier, m_oIdentifier, ui32OutputIndex))!=OV_UndefinedIdentifier)
 				{
@@ -620,35 +620,42 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean getOutputType(const OpenViBE::uint32 ui32OutputIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
 			{
-				if(ui32OutputIndex>=m_vOutput.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32OutputIndex < m_vOutput.size(),
+					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vOutput.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				rTypeIdentifier=m_vOutput[ui32OutputIndex].m_oTypeIdentifier;
 				return true;
 			}
 
 			virtual OpenViBE::boolean getOutputName(const OpenViBE::uint32 ui32OutputIndex, OpenViBE::CString& rName) const
 			{
-				if(ui32OutputIndex>=m_vOutput.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32OutputIndex < m_vOutput.size(),
+					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vOutput.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				rName=m_vOutput[ui32OutputIndex].m_sName;
 				return true;
 			}
 
 			virtual OpenViBE::boolean setOutputType(const OpenViBE::uint32 ui32OutputIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
-				if(!this->getTypeManager().isStream(rTypeIdentifier))
-				{
-					this->getLogManager() << LogLevel_Warning << "While changing box '" << getName() << "' output type, unknown stream type identifier " << rTypeIdentifier << "\n";
-				}
+				OV_ERROR_UNLESS_KRF(
+					this->getTypeManager().isStream(rTypeIdentifier),
+					"While changing box '" << getName() << "' output type, unknown stream type identifier " << rTypeIdentifier.toString(),
+					ErrorType::BadArgument
+				);
 
-				if(ui32OutputIndex>=m_vOutput.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32OutputIndex < m_vOutput.size(),
+					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vOutput.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				m_vOutput[ui32OutputIndex].m_oTypeIdentifier=rTypeIdentifier;
 
 				this->notify(BoxModification_OutputTypeChanged, ui32OutputIndex);
@@ -658,10 +665,12 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean setOutputName(const OpenViBE::uint32 ui32OutputIndex, const OpenViBE::CString& rName)
 			{
-				if(ui32OutputIndex>=m_vOutput.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32OutputIndex < m_vOutput.size(),
+					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vOutput.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				m_vOutput[ui32OutputIndex].m_sName=rName;
 
 				this->notify(BoxModification_OutputNameChanged, ui32OutputIndex);
@@ -716,11 +725,12 @@ namespace OpenViBE
 
 				const Plugins::IPluginObjectDesc* l_pPluginObjectDescriptor=this->getKernelContext().getPluginManager().getPluginObjectDescCreating(rTypeIdentifier);
 				const Plugins::IBoxAlgorithmDesc *l_pBoxAlgorithmDescriptor=dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(l_pPluginObjectDescriptor);
-				if(l_pBoxAlgorithmDescriptor == NULL)
-				{
-					this->getLogManager() << LogLevel_Error << "Tried to initialize with an unregistered algorithm\n";
-					return false;
-				}
+
+				OV_ERROR_UNLESS_KRF(
+					l_pBoxAlgorithmDescriptor,
+					"Tried to initialize with an unregistered algorithm",
+					ErrorType::Internal
+				);
 
 				//We use the neutralized version of CBoxProto to just initialize the stream restriction mecanism
 				CBoxProtoRestriction oTempProto(this->getKernelContext(), *this);
@@ -731,7 +741,7 @@ namespace OpenViBE
 			virtual OpenViBE::boolean addSetting(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sDefaultValue, 
+				const OpenViBE::CString& sDefaultValue,
 				const int32 i32Index,
 				const OpenViBE::boolean bModifiability)
 			{
@@ -771,11 +781,11 @@ namespace OpenViBE
 
 				int32 l_i32Index = i32Index;
 
-				if(i32Index>static_cast<int32>(m_vSetting.size())) {
-					// Don't accept pushes that are not either inside the existing array or an append right at the end
-					this->getLogManager() << LogLevel_Error << "Tried to push '" << sName << "' to slot " << i32Index << " with the array size being " << static_cast<int32>(m_vSetting.size()) << "\n";
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					i32Index <= static_cast<int32>(m_vSetting.size()),
+					"Tried to push '" << sName << "' to slot " << i32Index << " with the array size being " << static_cast<int32>(m_vSetting.size()),
+					ErrorType::OutOfBound
+				);
 
 				int32 l_i32InsertLocation;
 
@@ -814,10 +824,13 @@ namespace OpenViBE
 				{
 					it++;
 				}
-				if(it==m_vSetting.end())
-				{
-					return false;
-				}
+
+				OV_ERROR_UNLESS_KRF(
+					it != m_vSetting.end(),
+					"No setting found at index " << ui32SettingIndex,
+					ErrorType::ResourceNotFound
+				);
+
 				it=m_vSetting.erase(it);
 
 				//update the modifiable setting indexes
@@ -874,51 +887,60 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean getSettingType(const OpenViBE::uint32 ui32SettingIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
 			{
-				if(ui32SettingIndex>=m_vSetting.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32SettingIndex < m_vSetting.size(),
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				rTypeIdentifier=m_vSetting[ui32SettingIndex].m_oTypeIdentifier;
 				return true;
 			}
 
 			virtual OpenViBE::boolean getSettingName(const OpenViBE::uint32 ui32SettingIndex, OpenViBE::CString& rName) const
 			{
-				if(ui32SettingIndex>=m_vSetting.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32SettingIndex < m_vSetting.size(),
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				rName=m_vSetting[ui32SettingIndex].m_sName;
 				return true;
 			}
 
 			virtual OpenViBE::boolean getSettingDefaultValue(const OpenViBE::uint32 ui32SettingIndex, OpenViBE::CString& rDefaultValue) const
 			{
-				if(ui32SettingIndex>=m_vSetting.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32SettingIndex < m_vSetting.size(),
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				rDefaultValue=m_vSetting[ui32SettingIndex].m_sDefaultValue;
 				return true;
 			}
 
 			virtual OpenViBE::boolean getSettingValue(const OpenViBE::uint32 ui32SettingIndex, OpenViBE::CString& rValue) const
 			{
-				// This getSettingValue
-				if(ui32SettingIndex>=m_vSetting.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32SettingIndex < m_vSetting.size(),
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				rValue = m_vSetting[ui32SettingIndex].m_sValue;
 				return true;
 			}
 
 			virtual OpenViBE::boolean setSettingType(const OpenViBE::uint32 ui32SettingIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
-				if(ui32SettingIndex>=m_vSetting.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32SettingIndex < m_vSetting.size(),
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				if(m_vSetting[ui32SettingIndex].m_oTypeIdentifier == rTypeIdentifier)
 				{
 					// no change, don't bother notifying
@@ -935,10 +957,12 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean setSettingName(const OpenViBE::uint32 ui32SettingIndex, const OpenViBE::CString& rName)
 			{
-				if(ui32SettingIndex>=m_vSetting.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32SettingIndex < m_vSetting.size(),
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				m_vSetting[ui32SettingIndex].m_sName=rName;
 
 				this->notify(BoxModification_SettingNameChanged, ui32SettingIndex);
@@ -949,10 +973,12 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean setSettingDefaultValue(const OpenViBE::uint32 ui32SettingIndex, const OpenViBE::CString& rDefaultValue)
 			{
-				if(ui32SettingIndex>=m_vSetting.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32SettingIndex < m_vSetting.size(),
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				m_vSetting[ui32SettingIndex].m_sDefaultValue=rDefaultValue;
 
 				this->notify(BoxModification_SettingDefaultValueChanged, ui32SettingIndex);
@@ -962,10 +988,12 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean setSettingValue(const OpenViBE::uint32 ui32SettingIndex, const OpenViBE::CString& rValue)
 			{
-				if(ui32SettingIndex>=m_vSetting.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32SettingIndex < m_vSetting.size(),
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				m_vSetting[ui32SettingIndex].m_sValue=rValue;
 
 				this->notify(BoxModification_SettingValueChanged, ui32SettingIndex);
@@ -993,10 +1021,12 @@ namespace OpenViBE
 					const OpenViBE::uint32 ui32SettingIndex,
 					OpenViBE::boolean& rValue) const
 			{
-				if(ui32SettingIndex>=m_vSetting.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32SettingIndex < m_vSetting.size(),
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				rValue=m_vSetting[ui32SettingIndex].m_bMod;
 				return true;
 			}
@@ -1006,10 +1036,12 @@ namespace OpenViBE
 					const OpenViBE::uint32 ui32SettingIndex,
 					const OpenViBE::boolean rValue)
 			{
-				if(ui32SettingIndex>=m_vSetting.size())
-				{
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					ui32SettingIndex < m_vSetting.size(),
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					ErrorType::OutOfBound
+				);
+
 				m_vSetting[ui32SettingIndex].m_bMod=rValue;
 
 				//this->notify(BoxModification_SettingNameChanged, ui32SettingIndex);
