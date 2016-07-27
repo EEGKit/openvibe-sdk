@@ -63,22 +63,19 @@ CIdentifier CSimulatedBox::getUnusedIdentifier(void) const
 
 bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentifier)
 {
-	// FIXME: test if rScenario is a scenario identifier
-	if (!m_rScheduler.getPlayer().getRuntimeScenarioManager().isScenario(rScenarioIdentifier))
-	{
-		this->getLogManager()<< LogLevel_Error << "Scenario with identifier " << rScenarioIdentifier << " does not exist" << "\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		m_rScheduler.getPlayer().getRuntimeScenarioManager().isScenario(rScenarioIdentifier),
+		"Scenario with identifier " << rScenarioIdentifier.toString() << " does not exist",
+		ErrorType::ResourceNotFound
+	);
+
 	m_pScenario=&m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(rScenarioIdentifier);
 	return true;
 }
 
 bool CSimulatedBox::getBoxIdentifier(CIdentifier& rBoxIdentifier) const
 {
-	if (!m_pBox)
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(m_pBox, "Simulated box not initialized", ErrorType::BadCall);
 
 	rBoxIdentifier = m_pBox->getIdentifier();
 	return true;
@@ -86,10 +83,7 @@ bool CSimulatedBox::getBoxIdentifier(CIdentifier& rBoxIdentifier) const
 
 bool CSimulatedBox::setBoxIdentifier(const CIdentifier& rBoxIdentifier)
 {
-	if (!m_pScenario)
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(m_pScenario, "No scenario set", ErrorType::BadCall);
 
 	m_pBox = m_pScenario->getBoxDetails(rBoxIdentifier);
 	return m_pBox!=NULL;
@@ -97,16 +91,8 @@ bool CSimulatedBox::setBoxIdentifier(const CIdentifier& rBoxIdentifier)
 
 bool CSimulatedBox::initialize(void)
 {
-	// FIXME test for already initialized boxes etc
-	if (!m_pBox)
-	{
-		return false;
-	}
-
-	if (!m_pScenario)
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(m_pBox, "Simulated box not initialized", ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(m_pScenario, "No scenario set", ErrorType::BadCall);
 
 	m_bChunkConsistencyChecking = this->getConfigurationManager().expandAsBoolean("${Kernel_CheckChunkConsistency}", true);
 	m_vInput.resize(m_pBox->getInputCount());
@@ -120,20 +106,21 @@ bool CSimulatedBox::initialize(void)
 	m_ui64ClockActivationStep=0;
 
 	m_pBoxAlgorithm=getPluginManager().createBoxAlgorithm(m_pBox->getAlgorithmClassIdentifier(), NULL);
-	if(!m_pBoxAlgorithm)
-	{
-		getLogManager() << LogLevel_Error << "Could not create box algorithm with class id " << m_pBox->getAlgorithmClassIdentifier() << "...\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		m_pBoxAlgorithm,
+		"Could not create box algorithm with class id " << m_pBox->getAlgorithmClassIdentifier().toString(),
+		ErrorType::BadResourceCreation
+	);
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-			if(!m_pBoxAlgorithm->initialize(l_oBoxAlgorithmContext))
-			{
-				getLogManager() << LogLevel_ImportantWarning << "Box algorithm <" << m_pBox->getName() << "> initialization failed\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				m_pBoxAlgorithm->initialize(l_oBoxAlgorithmContext),
+				"Box algorithm <" << m_pBox->getName() << "> initialization failed",
+				ErrorType::Internal
+			);
 		}
 	}
 
@@ -143,18 +130,17 @@ bool CSimulatedBox::initialize(void)
 boolean CSimulatedBox::uninitialize(void)
 {
 	bool l_bResult = true;
-	if(!m_pBoxAlgorithm) return false;
+
+	OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm, "Simulated box not initialized", ErrorType::BadCall);
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-			{
-				if(!m_pBoxAlgorithm->uninitialize(l_oBoxAlgorithmContext))
-				{
-					getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> uninitialization failed\n";
-					l_bResult = false;
-				}
-			}
+			OV_ERROR_UNLESS_KRF(
+				m_pBoxAlgorithm->uninitialize(l_oBoxAlgorithmContext),
+				"Box algorithm <" << m_pBox->getName() << "> uninitialization failed",
+				ErrorType::Internal
+			);
 		}
 	}
 
@@ -177,14 +163,15 @@ boolean CSimulatedBox::processClock(void)
 			}
 			else
 			{
-				if(l_ui64NewClockFrequency > m_rScheduler.getFrequency()<<32)
-				{
-					this->getLogManager() << LogLevel_ImportantWarning << "Box " << m_pBox->getName() 
-						<< " requested higher clock frequency (" << l_ui64NewClockFrequency << " == " 
-						<< ITimeArithmetics::timeToSeconds(l_ui64NewClockFrequency) << "hz) "
-						<< "than what the scheduler can handle (" << (m_rScheduler.getFrequency()<<32) << " == "
-						<< ITimeArithmetics::timeToSeconds(m_rScheduler.getFrequency()<<32) << "hz)\n";
-				}
+				OV_ERROR_UNLESS_KRF(
+					l_ui64NewClockFrequency <= m_rScheduler.getFrequency()<<32,
+					"Box " << m_pBox->getName()
+						   << " requested higher clock frequency (" << l_ui64NewClockFrequency << " == "
+						   << ITimeArithmetics::timeToSeconds(l_ui64NewClockFrequency) << "hz) "
+						   << "than what the scheduler can handle (" << (m_rScheduler.getFrequency()<<32) << " == "
+						   << ITimeArithmetics::timeToSeconds(m_rScheduler.getFrequency()<<32) << "hz)",
+					ErrorType::BadConfig
+				);
 
 				// note: 1LL should be left shifted 64 bits but this
 				//       would result in an integer over shift (the one
@@ -211,12 +198,13 @@ boolean CSimulatedBox::processClock(void)
 
 			CMessageClock l_oClockMessage(this->getKernelContext());
 			l_oClockMessage.setTime(m_ui64LastClockActivationDate);
-			if(!m_pBoxAlgorithm->processClock(l_oBoxAlgorithmContext, l_oClockMessage))
-			{
-				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> processClock() function failed\n";
-				return false;
-			}
-				
+
+			OV_ERROR_UNLESS_KRF(
+				m_pBoxAlgorithm->processClock(l_oBoxAlgorithmContext, l_oClockMessage),
+				"Box algorithm <" << m_pBox->getName() << "> processClock() function failed",
+				ErrorType::Internal
+			);
+
 			m_bReadyToProcess|=l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 		}
 	}
@@ -231,11 +219,11 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-			if(!m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex))
-			{
-				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> processInput() failed\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex),
+				"Box algorithm <" << m_pBox->getName() << "> processInput() function failed",
+				ErrorType::Internal
+			);
 		}
 		m_bReadyToProcess|=l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 	}
@@ -253,11 +241,11 @@ boolean CSimulatedBox::process(void)
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-			if(!m_pBoxAlgorithm->process(l_oBoxAlgorithmContext))
-			{
-				getLogManager() << LogLevel_Error << "Box algorithm <" << m_pBox->getName() << "> process() function failed\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				m_pBoxAlgorithm->process(l_oBoxAlgorithmContext),
+				"Box algorithm <" << m_pBox->getName() << "> processInput function failed",
+				ErrorType::Internal
+			);
 		}
 	}
 
@@ -318,14 +306,11 @@ boolean CSimulatedBox::process(void)
 	outputChunkIterator=m_vCurrentOutput.begin();
 	while(outputChunkIterator!=m_vCurrentOutput.end())
 	{
-		// checks buffer size
-		if(outputChunkIterator->getBuffer().getSize())
-		{
-			// the buffer has been (partially ?) filled but not sent
-			CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
-			l_oBoxAlgorithmContext.getPlayerContext()->getLogManager() << LogLevel_Warning << "Output buffer filled but not marked as ready to send\n"; // $$$ should use log
-			outputChunkIterator->getBuffer().setSize(0, true);
-		}
+		OV_FATAL_UNLESS_K(
+			outputChunkIterator->getBuffer().getSize() == 0,
+			"Output buffer filled but not marked as ready to send. Possible loss of data.",
+			ErrorType::Internal
+		);
 
 		++outputChunkIterator;
 	}
@@ -357,30 +342,15 @@ const IScenario& CSimulatedBox::getScenario(void) const
 // ________________________________________________________________________________________________________________
 //
 
-namespace
-{
-	void warningOnOutOfBoundInput(ILogManager& rLogManager, const CString& sName, uint32 ui32InputIndex, size_t ui32InputCount)
-	{
-		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound input (" << ui32InputIndex << "/" << static_cast<uint64>(ui32InputCount) << ")\n";
-	}
-
-	void warningOnOutOfBoundInputChunk(ILogManager& rLogManager, const CString& sName, uint32 ui32InputIndex, uint32 ui32InputChunkIndex, size_t ui32InputChunkCount)
-	{
-		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound input (" << ui32InputIndex << ":" << ui32InputChunkIndex << "/" << static_cast<uint64>(ui32InputChunkCount) << ")\n";
-	}
-}
-
-// ________________________________________________________________________________________________________________
-//
-
 uint32 CSimulatedBox::getInputChunkCount(
 	const uint32 ui32InputIndex) const
 {
-	if(ui32InputIndex>=m_vInput.size())
-	{
-		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
-		return 0;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32InputIndex < m_vInput.size(),
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
 	return m_vInput[ui32InputIndex].size();
 }
 
@@ -392,16 +362,17 @@ boolean CSimulatedBox::getInputChunk(
 	uint64& rChunkSize,
 	const uint8*& rpChunkBuffer) const
 {
-	if(ui32InputIndex>=m_vInput.size())
-	{
-		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
-		return false;
-	}
-	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
-	{
-		warningOnOutOfBoundInputChunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32InputIndex < m_vInput.size(),
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
+		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput[ui32InputIndex].size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
 	rStartTime=l_rChunk.getStartTime();
@@ -415,16 +386,18 @@ const IMemoryBuffer* CSimulatedBox::getInputChunk(
 	const uint32 ui32InputIndex,
 	const uint32 ui32ChunkIndex) const
 {
-	if(ui32InputIndex>=m_vInput.size())
-	{
-		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
-		return NULL;
-	}
-	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
-	{
-		warningOnOutOfBoundInputChunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
-		return NULL;
-	}
+	OV_ERROR_UNLESS_KRN(
+		ui32InputIndex < m_vInput.size(),
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
+	OV_ERROR_UNLESS_KRN(
+		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
+		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput[ui32InputIndex].size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
 	return &(m_vInput[ui32InputIndex][ui32ChunkIndex]).getBuffer();
 }
 
@@ -432,16 +405,17 @@ uint64 CSimulatedBox::getInputChunkStartTime(
 	const uint32 ui32InputIndex,
 	const uint32 ui32ChunkIndex) const
 {
-	if(ui32InputIndex>=m_vInput.size())
-	{
-		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
-		return false;
-	}
-	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
-	{
-		warningOnOutOfBoundInputChunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
-		return false;
-	}
+	OV_ERROR_UNLESS_KRO(
+		ui32InputIndex < m_vInput.size(),
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
+	OV_ERROR_UNLESS_KRO(
+		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
+		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput[ui32InputIndex].size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
 	return l_rChunk.getStartTime();
@@ -451,16 +425,17 @@ uint64 CSimulatedBox::getInputChunkEndTime(
 	const uint32 ui32InputIndex,
 	const uint32 ui32ChunkIndex) const
 {
-	if(ui32InputIndex>=m_vInput.size())
-	{
-		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
-		return false;
-	}
-	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
-	{
-		warningOnOutOfBoundInputChunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
-		return false;
-	}
+	OV_ERROR_UNLESS_KRO(
+		ui32InputIndex < m_vInput.size(),
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
+	OV_ERROR_UNLESS_KRO(
+		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
+		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput[ui32InputIndex].size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
 	return l_rChunk.getEndTime();
@@ -470,29 +445,20 @@ boolean CSimulatedBox::markInputAsDeprecated(
 	const uint32 ui32InputIndex,
 	const uint32 ui32ChunkIndex)
 {
-	if(ui32InputIndex>=m_vInput.size())
-	{
-		warningOnOutOfBoundInput(this->getLogManager(), this->getName(), ui32InputIndex, m_vInput.size());
-		return false;
-	}
-	if(ui32ChunkIndex>=m_vInput[ui32InputIndex].size())
-	{
-		warningOnOutOfBoundInputChunk(this->getLogManager(), this->getName(), ui32InputIndex, ui32ChunkIndex, m_vInput[ui32InputIndex].size());
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32InputIndex < m_vInput.size(),
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
+		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput[ui32InputIndex].size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
 	m_vInput[ui32InputIndex][ui32ChunkIndex].markAsDeprecated(true);
 	return true;
-}
-
-// ________________________________________________________________________________________________________________
-//
-
-namespace
-{
-	void warningOnOutOfBoundOutput(ILogManager& rLogManager, const CString& sName, uint32 ui32OutputIndex, size_t ui32OutputCount)
-	{
-		rLogManager << LogLevel_ImportantWarning << "<" << sName << "> Access request on out-of-bound output (" << ui32OutputIndex << "/" << static_cast<uint64>(ui32OutputCount) << ")\n";
-	}
 }
 
 // ________________________________________________________________________________________________________________
@@ -501,11 +467,12 @@ namespace
 uint64 CSimulatedBox::getOutputChunkSize(
 	const uint32 ui32OutputIndex) const
 {
-	if(ui32OutputIndex>=m_vCurrentOutput.size())
-	{
-		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
-		return 0;
-	}
+	OV_ERROR_UNLESS_KRO(
+		ui32OutputIndex < m_vCurrentOutput.size(),
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getSize();
 }
 
@@ -514,22 +481,24 @@ boolean CSimulatedBox::setOutputChunkSize(
 	const uint64 ui64Size,
 	const boolean bDiscard)
 {
-	if(ui32OutputIndex>=m_vOutput.size())
-	{
-		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32OutputIndex < m_vCurrentOutput.size(),
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().setSize(ui64Size, bDiscard);
 }
 
 uint8* CSimulatedBox::getOutputChunkBuffer(
 	const uint32 ui32OutputIndex)
 {
-	if(ui32OutputIndex>=m_vOutput.size())
-	{
-		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
-		return NULL;
-	}
+	OV_ERROR_UNLESS_KRN(
+		ui32OutputIndex < m_vCurrentOutput.size(),
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getDirectPointer();
 }
 
@@ -538,22 +507,24 @@ boolean CSimulatedBox::appendOutputChunkData(
 	const uint8* pBuffer,
 	const uint64 ui64BufferSize)
 {
-	if(ui32OutputIndex>=m_vOutput.size())
-	{
-		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32OutputIndex < m_vCurrentOutput.size(),
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().append(pBuffer, ui64BufferSize);
 }
 
 IMemoryBuffer* CSimulatedBox::getOutputChunk(
 	const uint32 ui32OutputIndex)
 {
-	if(ui32OutputIndex>=m_vOutput.size())
-	{
-		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
-		return NULL;
-	}
+	OV_ERROR_UNLESS_KRN(
+		ui32OutputIndex < m_vCurrentOutput.size(),
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
+
 	return &m_vCurrentOutput[ui32OutputIndex].getBuffer();
 }
 
@@ -562,11 +533,11 @@ boolean CSimulatedBox::markOutputAsReadyToSend(
 	const uint64 ui64StartTime,
 	const uint64 ui64EndTime)
 {
-	if(ui32OutputIndex>=m_vOutput.size())
-	{
-		warningOnOutOfBoundOutput(this->getLogManager(), this->getName(), ui32OutputIndex, m_vCurrentOutput.size());
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ui32OutputIndex < m_vCurrentOutput.size(),
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		ErrorType::OutOfBound
+	);
 
 	if(m_bChunkConsistencyChecking)
 	{

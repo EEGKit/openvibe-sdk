@@ -67,6 +67,8 @@ void CBoxSettingModifierVisitor::closeChild(void)
 OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
 {
 	OpenViBE::boolean l_bReturnValue = true;
+	OpenViBE::ErrorStream l_oErrorStream;
+	OpenViBE::Kernel::ErrorType l_oErrorType;
 
 	m_pObjectVisitorContext=&rObjectVisitorContext;
 
@@ -125,29 +127,32 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 			if(m_ui32SettingIndex == rBox.getSettingCount())
 			{
 				rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Overrode " << m_ui32SettingIndex << " setting(s) with this configuration file...\n";
+
+				for(uint32 i = 0; i<m_ui32SettingIndex; i++)
+				{
+					CString l_sSettingName = "";
+					CString l_sRawSettingValue = "";
+
+					rBox.getSettingName(i, l_sSettingName);
+					rBox.getSettingValue(i, l_sRawSettingValue);
+					CString l_sSettingValue = l_sRawSettingValue;
+					l_sSettingValue = m_pConfigurationManager->expand(l_sSettingValue);
+					CIdentifier settingType;
+					rBox.getSettingType(i, settingType);
+					if (!::checkSettingValue(l_sSettingValue, settingType))
+					{
+						l_oErrorType = ErrorType::BadArgument;
+						l_oErrorStream << "<" <<  rBox.getName() << "> The following value: ["<< l_sRawSettingValue
+							<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not a numeric value.\n";
+						l_bReturnValue = false;
+					}
+				}
 			}
 			else
 			{
-				rObjectVisitorContext.getLogManager() << LogLevel_Warning << "Overrode " << m_ui32SettingIndex << " setting(s) with configuration file [" << l_sSettingOverrideFilenameFinal << "]. That does not match the box setting count " << rBox.getSettingCount() << "...\n";
-			}
-
-			for(uint32 i = 0; i<m_ui32SettingIndex; i++)
-			{
-				CString l_sSettingName = "";
-				CString l_sRawSettingValue = "";
-
-				rBox.getSettingName(i, l_sSettingName);
-				rBox.getSettingValue(i, l_sRawSettingValue);
-				CString l_sSettingValue = l_sRawSettingValue;
-				l_sSettingValue = m_pConfigurationManager->expand(l_sSettingValue);
-				CIdentifier settingType;
-				rBox.getSettingType(i, settingType);
-				if (!::checkSettingValue(l_sSettingValue, settingType))
-				{
-//					m_rKernelContext.getLogManager() << OpenViBE::Kernel::LogLevel_ImportantWarning << "<" <<  rBox.getName() << "> The following value: ["<< l_sRawSettingValue
-//						<<"] expanded as ["<< l_sSettingValue <<"] given as setting is not a numeric value.\n";
-					l_bReturnValue = false;
-				}
+				l_oErrorType = ErrorType::OutOfBound;
+				l_oErrorStream << "Overrode " << m_ui32SettingIndex << " setting(s) with configuration file [" << l_sSettingOverrideFilenameFinal << "]. That does not match the box setting count " << rBox.getSettingCount();
+				l_bReturnValue = false;
 			}
 		}
 		else
@@ -159,7 +164,8 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 			else
 			{
 				// override file was not found
-//				m_rKernelContext.getLogManager() << LogLevel_Error << "Could not override [" << rBox.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal << "] could not be opened\n";
+				l_oErrorType = ErrorType::ResourceNotFound;
+				l_oErrorStream << "Could not override [" << rBox.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal << "] could not be opened\n";
 				l_bReturnValue = false;
 			}
 		}
@@ -174,6 +180,15 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 		l_pReader->release();
 		l_pReader=NULL;
 	}
+
+	OV_ERROR_UNLESS(
+		l_bReturnValue,
+		l_oErrorStream,
+		l_oErrorType,
+		false,
+		m_pObjectVisitorContext->getErrorManager(),
+		m_pObjectVisitorContext->getLogManager()
+	);
 
 	return l_bReturnValue;
 }

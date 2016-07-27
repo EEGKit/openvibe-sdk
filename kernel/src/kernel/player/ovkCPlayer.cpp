@@ -48,7 +48,7 @@ CPlayer::CPlayer(const IKernelContext& rKernelContext)
 	uint64 l_ui64SchedulerFrequency=this->getConfigurationManager().expandAsUInteger("${Kernel_PlayerFrequency}");
 	if(l_ui64SchedulerFrequency==0)
 	{
-		getLogManager() << LogLevel_ImportantWarning << "Invalid frequency configuration " << CString("Kernel_PlayerFrequency") << "=" << this->getConfigurationManager().expand("${Kernel_PlayerFrequency}") << " restored to default " << g_ui64Scheduler_Default_Frequency_ << "\n";
+		OV_WARNING_K("Invalid frequency configuration " << CString("Kernel_PlayerFrequency") << "=" << this->getConfigurationManager().expand("${Kernel_PlayerFrequency}") << " restored to default " << g_ui64Scheduler_Default_Frequency_);
 		l_ui64SchedulerFrequency=g_ui64Scheduler_Default_Frequency_;
 	}
 	else
@@ -76,11 +76,11 @@ boolean CPlayer::setScenario(
 	const CIdentifier& rScenarioIdentifier,
 	const OpenViBE::CNameValuePairList* pLocalConfigurationTokens)
 {
-	if(this->isHoldingResources())
-	{
-		this->getLogManager() << LogLevel_Warning << "Trying to configure a player with non-empty resources. Try uninitializing first!\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		!this->isHoldingResources(),
+		"Trying to configure a player with non-empty resources",
+		ErrorType::BadCall
+	);
 
 	this->getLogManager() << LogLevel_Debug << "Player setScenario\n";
 
@@ -101,13 +101,11 @@ boolean CPlayer::setScenario(
 	delete m_pRuntimeScenarioManager;
 	m_pRuntimeScenarioManager = new CScenarioManager(this->getKernelContext());
 
-
-
-	// Create a copy of the scenario - should not fail
-	if (!m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier))
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier),
+		"Fail to create a scenario duplicate for the current runtime session",
+		ErrorType::BadResourceCreation
+	);
 
 	IScenario& l_rRuntimeScenario = m_pRuntimeScenarioManager->getScenario(m_oRuntimeScenarioIdentifier);
 	l_rRuntimeScenario.merge(l_rOriginalScenario, NULL, true);
@@ -144,7 +142,7 @@ boolean CPlayer::setScenario(
 				this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(l_sScenarioConfigurationFile.c_str()) << "] to runtime configuration manager\n";
 				m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(l_sScenarioConfigurationFile.c_str()));
 			}
-			
+
 			// Sets configuration tokens for this player
 			// Once every token file, applies the configuration tokens coming from Mensia Player
 			if(pLocalConfigurationTokens != NULL)
@@ -175,11 +173,11 @@ boolean CPlayer::setScenario(
 				}
 			}
 
-			if(!l_pScenario->checkSettings(m_pRuntimeConfigurationManager) )
-			{
-				this->getLogManager() << LogLevel_Error << "The check of settings failed. Check above logs to understand the problem.\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				l_pScenario->checkSettings(m_pRuntimeConfigurationManager),
+				"Checking settings failed for scenario duplicate instantiated for the current runtime session",
+				ErrorType::BadArgument
+			);
 		}
 	}
 
@@ -198,11 +196,12 @@ IScenarioManager& CPlayer::getRuntimeScenarioManager(void)
 
 EPlayerReturnCode CPlayer::initialize(void)
 {
-	if(this->isHoldingResources())
-	{
-		this->getLogManager() << LogLevel_Warning << "Trying to configure a player with non-empty resources. Try uninitializing first!\n";
-		return PlayerReturnCode_Failed;
-	}
+	OV_ERROR_UNLESS_K(
+		!this->isHoldingResources(),
+		"Trying to configure a player with non-empty resources",
+		ErrorType::BadCall,
+		PlayerReturnCode_Failed
+	);
 
 	this->getLogManager() << LogLevel_Trace << "Player initialized.\n";
 
@@ -212,16 +211,16 @@ EPlayerReturnCode CPlayer::initialize(void)
 	m_oKernelContextBridge.setConfigurationManager(m_pRuntimeConfigurationManager);
 
 	SchedulerInitializationCode l_eCode = m_oScheduler.initialize();
+
 	if(l_eCode == SchedulerInitialization_Failed)
 	{
-		this->getLogManager() << LogLevel_Error << "Scheduler initialization failed\n";
-		return PlayerReturnCode_Failed;
+		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_Failed);
 	}
 	else if(l_eCode == SchedulerInitialization_BoxInitializationFailed)
 	{
-		return PlayerReturnCode_BoxInitializationFailed;
+		OV_ERROR_K("Failed to initialize player", ErrorType::Internal ,PlayerReturnCode_BoxInitializationFailed);
 	}
-	
+
 	m_oBenchmarkChrono.reset(static_cast<uint32>(m_oScheduler.getFrequency()));
 
 	m_ui64CurrentTimeToReach=0;
@@ -253,11 +252,11 @@ boolean CPlayer::uninitialize(void)
 
 boolean CPlayer::stop(void)
 {
-	if(!this->isHoldingResources())
-	{
-		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		this->isHoldingResources(),
+		"Trying to use an uninitialized player",
+		ErrorType::BadCall
+	);
 
 	this->getLogManager() << LogLevel_Trace << "Player stop\n";
 
@@ -268,11 +267,11 @@ boolean CPlayer::stop(void)
 
 boolean CPlayer::pause(void)
 {
-	if(!this->isHoldingResources())
-	{
-		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		this->isHoldingResources(),
+		"Trying to use an uninitialized player",
+		ErrorType::BadCall
+	);
 
 	this->getLogManager() << LogLevel_Trace << "Player pause\n";
 
@@ -283,11 +282,11 @@ boolean CPlayer::pause(void)
 
 boolean CPlayer::step(void)
 {
-	if(!this->isHoldingResources())
-	{
-		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		this->isHoldingResources(),
+		"Trying to use an uninitialized player",
+		ErrorType::BadCall
+	);
 
 	this->getLogManager() << LogLevel_Trace << "Player step\n";
 
@@ -298,11 +297,11 @@ boolean CPlayer::step(void)
 
 boolean CPlayer::play(void)
 {
-	if(!this->isHoldingResources())
-	{
-		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		this->isHoldingResources(),
+		"Trying to use an uninitialized player",
+		ErrorType::BadCall
+	);
 
 	this->getLogManager() << LogLevel_Trace << "Player play\n";
 
@@ -313,11 +312,11 @@ boolean CPlayer::play(void)
 
 boolean CPlayer::forward(void)
 {
-	if(!this->isHoldingResources())
-	{
-		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		this->isHoldingResources(),
+		"Trying to use an uninitialized player",
+		ErrorType::BadCall
+	);
 
 	this->getLogManager() << LogLevel_Trace << "Player forward\n";
 
@@ -356,15 +355,15 @@ boolean CPlayer::loop(
 	const uint64 ui64ElapsedTime,
 	const uint64 ui64MaximumTimeToReach)
 {
-	if(!this->isHoldingResources())
-	{
-		this->getLogManager() << LogLevel_Warning << "Player has to be initialized before to use it !\n";
-		return false;
-	}
-	
+	OV_ERROR_UNLESS_KRF(
+		this->isHoldingResources(),
+		"Trying to use an uninitialized player",
+		ErrorType::BadCall
+	);
+
 	if(m_eStatus==PlayerStatus_Stop)
 	{
-		return false;
+		return true;
 	}
 
 	boolean l_bHasTimeToReach=false;
@@ -480,14 +479,12 @@ boolean CPlayer::loop(
 
 	uint64 l_ui64LatenessSec = l_ui64Lateness>>32;
 	uint64 m_ui64LatenessSec = m_ui64Lateness>>32;
-	if(l_ui64LatenessSec != m_ui64LatenessSec)
-	{
-		this->getLogManager() << (l_ui64LatenessSec==0?LogLevel_Info:(l_ui64LatenessSec>=10?LogLevel_ImportantWarning:LogLevel_Warning))
-			<< "<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Player" << LogColor_PopStateBit
-			<< "::" << LogColor_PushStateBit << LogColor_ForegroundBlue << "can not reach realtime" << LogColor_PopStateBit << "> "
-			<< l_ui64LatenessSec << " second(s) late...\n";
-		m_ui64Lateness=l_ui64Lateness;
-	}
+	OV_WARNING_UNLESS_K(
+		l_ui64LatenessSec == m_ui64LatenessSec,
+		"<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Player" << LogColor_PopStateBit
+		<< "::" << LogColor_PushStateBit << LogColor_ForegroundBlue << "can not reach realtime" << LogColor_PopStateBit << "> "
+		<< l_ui64LatenessSec << " second(s) late...\n"
+	);
 
 	return true;
 }
