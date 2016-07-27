@@ -52,9 +52,10 @@ namespace OpenViBE
 		{
 		public:
 
-			CConfigurationManagerEntryEnumeratorCallBack(ILogManager& rLogManager, IConfigurationManager& rConfigurationManger)
+			CConfigurationManagerEntryEnumeratorCallBack(ILogManager& rLogManager, IConfigurationManager& rConfigurationManger, IErrorManager& rErrorManager)
 				:m_rLogManager(rLogManager),
-				  m_rConfigurationManager(rConfigurationManger)
+				 m_rConfigurationManager(rConfigurationManger),
+				 m_rErrorManager(rErrorManager)
 			{
 			}
 
@@ -80,11 +81,15 @@ namespace OpenViBE
 			{
 				std::ifstream l_oFile;
 				FS::Files::openIFStream(l_oFile, rEntry.getName());
-				if(!l_oFile.good())
-				{
-					m_rLogManager << LogLevel_Warning << "Could not open file " << CString(rEntry.getName()) << "\n";
-					return true;
-				}
+
+				OV_ERROR_UNLESS(
+					l_oFile.good(),
+					"Could not open file " << CString(rEntry.getName()),
+					ErrorType::ResourceNotFound,
+					false,
+					m_rErrorManager,
+					m_rLogManager
+				);
 
 				m_rLogManager << LogLevel_Trace << "Processing configuration file " << CString(rEntry.getName()) << "\n";
 
@@ -118,34 +123,35 @@ namespace OpenViBE
 								m_rLogManager << LogLevel_Debug << "Ignored comment in configuration file " << CString(rEntry.getName()) << " : " << CString(l_sLine.c_str()) << "\n";
 								break;
 							default :
-								if((eq=l_sLine.find("="))==std::string::npos)
+								OV_ERROR_UNLESS(
+									(eq=l_sLine.find("=")) != std::string::npos,
+									"Invalid syntax in configuration file " << CString(rEntry.getName()) << " : " << CString(l_sLine.c_str()),
+									ErrorType::BadFileParsing,
+									false,
+									m_rErrorManager,
+									m_rLogManager
+								);
+								std::string l_sTokenName(reduce(l_sLine.substr(0, eq)));
+								std::string l_sTokenValue(reduce(l_sLine.substr(eq+1, l_sLine.length()-eq)));
+								if(l_sTokenName=="Include")
 								{
-									m_rLogManager << LogLevel_Warning << "Invalid syntax in configuration file " << CString(rEntry.getName()) << " : " << CString(l_sLine.c_str()) << "\n";
+									CString l_sWildcard=m_rConfigurationManager.expand(l_sTokenValue.c_str());
+									m_rLogManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << "...\n";
+									m_rConfigurationManager.addConfigurationFromFile(l_sWildcard);
+									m_rLogManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << " done...\n";
 								}
 								else
 								{
-									std::string l_sTokenName(reduce(l_sLine.substr(0, eq)));
-									std::string l_sTokenValue(reduce(l_sLine.substr(eq+1, l_sLine.length()-eq)));
-									if(l_sTokenName=="Include")
+									CIdentifier l_oTokenIdentifier=m_rConfigurationManager.lookUpConfigurationTokenIdentifier(l_sTokenName.c_str());
+									if(l_oTokenIdentifier==OV_UndefinedIdentifier)
 									{
-										CString l_sWildcard=m_rConfigurationManager.expand(l_sTokenValue.c_str());
-										m_rLogManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << "...\n";
-										m_rConfigurationManager.addConfigurationFromFile(l_sWildcard);
-										m_rLogManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << " done...\n";
+										m_rLogManager << LogLevel_Trace << "Adding configuration token " << CString(l_sTokenName.c_str()) << " : " << CString(l_sTokenValue.c_str()) << "\n";
+										m_rConfigurationManager.createConfigurationToken(l_sTokenName.c_str(), l_sTokenValue.c_str());
 									}
 									else
 									{
-										CIdentifier l_oTokenIdentifier=m_rConfigurationManager.lookUpConfigurationTokenIdentifier(l_sTokenName.c_str());
-										if(l_oTokenIdentifier==OV_UndefinedIdentifier)
-										{
-											m_rLogManager << LogLevel_Trace << "Adding configuration token " << CString(l_sTokenName.c_str()) << " : " << CString(l_sTokenValue.c_str()) << "\n";
-											m_rConfigurationManager.createConfigurationToken(l_sTokenName.c_str(), l_sTokenValue.c_str());
-										}
-										else
-										{
-											m_rLogManager << LogLevel_Trace << "Changing configuration token " << CString(l_sTokenName.c_str()) << " to " << CString(l_sTokenValue.c_str()) << "\n";
-											m_rConfigurationManager.setConfigurationTokenValue(l_oTokenIdentifier, l_sTokenValue.c_str());
-										}
+										m_rLogManager << LogLevel_Trace << "Changing configuration token " << CString(l_sTokenName.c_str()) << " to " << CString(l_sTokenValue.c_str()) << "\n";
+										m_rConfigurationManager.setConfigurationTokenValue(l_oTokenIdentifier, l_sTokenValue.c_str());
 									}
 								}
 								break;
@@ -154,10 +160,14 @@ namespace OpenViBE
 #if 0 // Might not be necessary as the no-new-line at the end of file case is now handled properly
 					else
 					{
-						if(l_sLine!="")
-						{
-							m_rKernelContext.getLogManager() << LogLevel_Warning << "Unexpected end of file in configuration file " << CString(rEntry.getName()) << "\n";
-						}
+						OV_ERROR_UNLESS(
+							l_sLine == "",
+							"Unexpected end of file in configuration file " << CString(rEntry.getName()),
+							ErrorType::BadFileParsing,
+							false,
+							m_rErrorManager,
+							m_rLogManager
+						);
 					}
 #endif
 				}
@@ -172,6 +182,7 @@ namespace OpenViBE
 
 			ILogManager& m_rLogManager;
 			IConfigurationManager& m_rConfigurationManager;
+			IErrorManager& m_rErrorManager;
 		};
 	};
 };
@@ -198,7 +209,7 @@ OpenViBE::boolean CConfigurationManager::addConfigurationFromFile(
 
 
 	boolean l_bResult;
-	CConfigurationManagerEntryEnumeratorCallBack l_rCB(getKernelContext().getLogManager(), *this);
+	CConfigurationManagerEntryEnumeratorCallBack l_rCB(getKernelContext().getLogManager(), *this, getKernelContext().getErrorManager());
 	FS::IEntryEnumerator* l_pEntryEnumerator=FS::createEntryEnumerator(l_rCB);
 	l_bResult=l_pEntryEnumerator->enumerate(rFileNameWildCard);
 	l_pEntryEnumerator->release();
@@ -212,11 +223,11 @@ CIdentifier CConfigurationManager::createConfigurationToken(
 	const CString& rConfigurationTokenName,
 	const CString& rConfigurationTokenValue)
 {
-	if(this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false)!=OV_UndefinedIdentifier)
-	{
-		this->getLogManager() << LogLevel_Warning << "Configuration token name " << rConfigurationTokenName << " already exists\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false) == OV_UndefinedIdentifier,
+		"Configuration token name " << rConfigurationTokenName << " already exists",
+		ErrorType::BadResourceCreation
+	);
 
 	CIdentifier l_oIdentifier=this->getUnusedIdentifier();
 	m_vConfigurationToken[l_oIdentifier].m_sConfigurationName=rConfigurationTokenName;
@@ -228,11 +239,13 @@ OpenViBE::boolean CConfigurationManager::releaseConfigurationToken(
 	const CIdentifier& rConfigurationTokenIdentifier)
 {
 	std::map < CIdentifier, SConfigurationToken >::iterator itConfigurationToken=m_vConfigurationToken.find(rConfigurationTokenIdentifier);
-	if(itConfigurationToken==m_vConfigurationToken.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "Configuration token not found " << rConfigurationTokenIdentifier << "\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		itConfigurationToken != m_vConfigurationToken.end(),
+		"Configuration token not found " << rConfigurationTokenIdentifier.toString(),
+		ErrorType::ResourceNotFound
+	);
+
 	m_vConfigurationToken.erase(itConfigurationToken);
 	return true;
 }
@@ -289,18 +302,19 @@ OpenViBE::boolean CConfigurationManager::setConfigurationTokenName(
 	const CIdentifier& rConfigurationTokenIdentifier,
 	const CString& rConfigurationTokenName)
 {
-	if(this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false)!=OV_UndefinedIdentifier)
-	{
-		getLogManager() << LogLevel_Warning << "Configuration token " << rConfigurationTokenName << " already exists\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false) == OV_UndefinedIdentifier,
+		"Configuration token name " << rConfigurationTokenName << " already exists",
+		ErrorType::BadResourceCreation
+	);
 
 	std::map < CIdentifier, SConfigurationToken >::iterator itConfigurationToken=m_vConfigurationToken.find(rConfigurationTokenIdentifier);
-	if(itConfigurationToken==m_vConfigurationToken.end())
-	{
-		getLogManager() << LogLevel_Warning << "Configuration token " << rConfigurationTokenIdentifier << " does not exist\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		itConfigurationToken != m_vConfigurationToken.end(),
+		"Configuration token " << rConfigurationTokenIdentifier.toString() << " does not exist",
+		ErrorType::BadResourceCreation
+	);
 
 	itConfigurationToken->second.m_sConfigurationName=rConfigurationTokenName;
 	return true;
@@ -311,11 +325,12 @@ OpenViBE::boolean CConfigurationManager::setConfigurationTokenValue(
 	const CString& rConfigurationTokenValue)
 {
 	std::map < CIdentifier, SConfigurationToken >::iterator itConfigurationToken=m_vConfigurationToken.find(rConfigurationTokenIdentifier);
-	if(itConfigurationToken==m_vConfigurationToken.end())
-	{
-		getLogManager() << LogLevel_Warning << "Configuration token " << rConfigurationTokenIdentifier << " does not exist\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		itConfigurationToken != m_vConfigurationToken.end(),
+		"Configuration token " << rConfigurationTokenIdentifier.toString() << " does not exist",
+		ErrorType::BadResourceCreation
+	);
 
 	itConfigurationToken->second.m_sConfigurationValue=rConfigurationTokenValue;
 	return true;
@@ -381,12 +396,11 @@ CString CConfigurationManager::lookUpConfigurationTokenValue(
 
 OpenViBE::boolean CConfigurationManager::registerKeywordParser(const OpenViBE::CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback)
 {
-	// This should really be an assert
-	if (rKeyword == CString("") || rKeyword == CString("core") || rKeyword == CString("environment"))
-	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not override internal keywords in configuration manager\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		rKeyword != CString("") && rKeyword != CString("core") && rKeyword != CString("environment"),
+		"Trying to overwrite internal keyword " << rKeyword,
+		ErrorType::BadResourceCreation
+	);
 
 	m_vKeywordOverride[rKeyword] = &rCallback;
 
@@ -395,14 +409,13 @@ OpenViBE::boolean CConfigurationManager::registerKeywordParser(const OpenViBE::C
 
 OpenViBE::boolean CConfigurationManager::unregisterKeywordParser(const OpenViBE::CString& rKeyword)
 {
-	if (m_vKeywordOverride.count(rKeyword))
-	{
-		m_vKeywordOverride.erase(rKeyword);
-	}
-	else
-	{
-		this->getKernelContext().getLogManager() << LogLevel_Warning << "Override for keyword [" << rKeyword << "] was not found\n";
-	}
+	OV_ERROR_UNLESS_KRF(
+		m_vKeywordOverride.count(rKeyword),
+		"Override for keyword [" << rKeyword << "] was not found",
+		ErrorType::ResourceNotFound
+	);
+
+	m_vKeywordOverride.erase(rKeyword);
 
 	return true;
 }
@@ -411,18 +424,25 @@ OpenViBE::boolean CConfigurationManager::unregisterKeywordParser(const IConfigur
 {
 	std::map < OpenViBE::CString, const OpenViBE::Kernel::IConfigurationKeywordExpandCallback*>::iterator l_itOverrideIterator = m_vKeywordOverride.begin();
 
+	OpenViBE::boolean l_bResult = false;
 	while (l_itOverrideIterator != m_vKeywordOverride.end())
 	{
 		if (l_itOverrideIterator->second == &rCallback)
 		{
 			m_vKeywordOverride.erase(l_itOverrideIterator);
-			return true;
+			l_bResult = true;
+			break;
 		}
 		l_itOverrideIterator++;
 	}
-	this->getKernelContext().getLogManager() << LogLevel_Warning << "Override for the callback was not found\n";
 
-	return true;
+	OV_ERROR_UNLESS_KRF(
+		l_bResult,
+		"Override for the callback was not found",
+		ErrorType::ResourceNotFound
+	);
+
+	return l_bResult;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -491,21 +511,20 @@ OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValu
 				break;
 
 			case '{':
-				if(l_vChildren.top().first != NodeType_NamePrefix)
-				{
-					this->getLogManager() << LogLevel_Warning << "Could not expand token with syntax error while expanding " << CString(sValue.c_str()) << "\n";
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					l_vChildren.top().first == NodeType_NamePrefix,
+					"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
+					ErrorType::BadFileParsing
+				);
 				l_vChildren.push(std::make_pair(NodeType_NamePostfix, std::string()));
 				break;
 
 			case '}':
-				if(l_vChildren.top().first != NodeType_NamePostfix)
-				{
-					this->getLogManager() << LogLevel_Warning << "Could not expand token with syntax error while expanding " << CString(sValue.c_str()) << "\n";
-					return false;
-				}
-
+				OV_ERROR_UNLESS_KRF(
+					l_vChildren.top().first == NodeType_NamePostfix,
+					"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
+					ErrorType::BadFileParsing
+				);
 				l_sPostfix=l_vChildren.top().second;
 				l_vChildren.pop();
 
@@ -564,41 +583,40 @@ OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValu
 					}
 					else
 					{
-						this->getLogManager() << LogLevel_Warning << "Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix and " << CString(l_sPostfix.c_str()) << " postfix while expanding " << CString(sValue.c_str()) << "\n";
-						return false;
+						OV_ERROR_UNLESS_KRF(
+							false,
+							"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix and " << CString(l_sPostfix.c_str()) << " postfix while expanding " << CString(sValue.c_str()),
+							ErrorType::BadFileParsing
+						);
 					}
 				}
 				else
 				{
-					if (m_vKeywordOverride.count(l_sLowerPrefix.c_str()))
-					{
-						CString l_sOverridenValue("");
+					OV_ERROR_UNLESS_KRF(
+						m_vKeywordOverride.count(l_sLowerPrefix.c_str()),
+						"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
+						ErrorType::BadFileParsing
+					);
 
-						if ((m_vKeywordOverride.find(l_sLowerPrefix.c_str())->second)->expand(CString(l_sPostfix.c_str()), l_sOverridenValue))
-						{
-							l_sValue = l_sOverridenValue;
-						}
-						else
-						{
-							this->getLogManager() << LogLevel_Warning << "Could not expand $" << l_sLowerPrefix.c_str() << "{" << l_sLowerPostfix.c_str() << "}\n";
-							l_sValue = "";
-						}
+					CString l_sOverridenValue("");
 
-					}
-					else
-					{
-						this->getLogManager() << LogLevel_Warning << "Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()) << "\n";
-						return false;
-					}
+					OV_ERROR_UNLESS_KRF(
+						(m_vKeywordOverride.find(l_sLowerPrefix.c_str())->second)->expand(CString(l_sPostfix.c_str()), l_sOverridenValue),
+						"Could not expand $" << l_sLowerPrefix.c_str() << "{" << l_sLowerPostfix.c_str() << "}",
+						ErrorType::BadFileParsing
+					);
+
+					l_sValue = l_sOverridenValue;
 				}
 
 				if(l_bShouldExpand)
 				{
-					if(!this->internalExpand(l_sValue, l_sExpandedValue))
-					{
-						this->getLogManager() << LogLevel_Warning << "Could not expand " << CString(l_sValue.c_str()) << " while expanding " << CString(sValue.c_str()) << "\n";
-						return false;
-					}
+					OV_ERROR_UNLESS_KRF(
+						this->internalExpand(l_sValue, l_sExpandedValue),
+						"Could not expand " << CString(l_sValue.c_str()) << " while expanding " << CString(sValue.c_str()),
+						ErrorType::BadFileParsing
+					);
+
 					l_vChildren.top().second += l_sExpandedValue;
 				}
 				else
@@ -609,11 +627,11 @@ OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValu
 
 			case '\\':
 				i++;
-				if(i>=sValue.length())
-				{
-					this->getLogManager() << LogLevel_Warning << "Could not expand token with unterminated string while expanding " << CString(sValue.c_str()) << "\n";
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					i < sValue.length(),
+					"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
+					ErrorType::BadFileParsing
+				);
 
 			default:
 				l_vChildren.top().second+=sValue[i];
@@ -621,11 +639,11 @@ OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValu
 		}
 	}
 
-	if(l_vChildren.size()!=1)
-	{
-		this->getLogManager() << LogLevel_Warning << "Could not expand token with unterminated string while expanding " << CString(sValue.c_str()) << "\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_vChildren.size() == 1,
+		"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
+		ErrorType::BadFileParsing
+	);
 
 	sResult=l_vChildren.top().second;
 
@@ -655,20 +673,20 @@ OpenViBE::boolean CConfigurationManager::internalExpandOnlyKeyword(const std::st
 				break;
 
 			case '{':
-				if(l_vChildren.top().first != NodeType_NamePrefix)
-				{
-					this->getLogManager() << LogLevel_Warning << "Could not expand token with syntax error while expanding " << CString(sValue.c_str()) << "\n";
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					l_vChildren.top().first == NodeType_NamePrefix,
+					"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
+					ErrorType::BadFileParsing
+				);
 				l_vChildren.push(std::make_pair(NodeType_NamePostfix, std::string()));
 				break;
 
 			case '}':
-				if(l_vChildren.top().first != NodeType_NamePostfix)
-				{
-					this->getLogManager() << LogLevel_Warning << "Could not expand token with syntax error while expanding " << CString(sValue.c_str()) << "\n";
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					l_vChildren.top().first == NodeType_NamePostfix,
+					"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
+					ErrorType::BadFileParsing
+				);
 
 				l_sPostfix=l_vChildren.top().second;
 				l_vChildren.pop();
@@ -731,26 +749,21 @@ OpenViBE::boolean CConfigurationManager::internalExpandOnlyKeyword(const std::st
 				else*/
 				if (l_sLowerPrefix == sKeyword)
 				{
-					if (m_vKeywordOverride.count(l_sLowerPrefix.c_str()))
-					{
-						CString l_sOverridenValue("");
+					OV_ERROR_UNLESS_KRF(
+						m_vKeywordOverride.count(l_sLowerPrefix.c_str()),
+						"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
+						ErrorType::BadFileParsing
+					);
 
-						if ((m_vKeywordOverride.find(l_sLowerPrefix.c_str())->second)->expand(CString(l_sPostfix.c_str()), l_sOverridenValue))
-						{
-							l_sValue = l_sOverridenValue;
-						}
-						else
-						{
-							this->getLogManager() << LogLevel_Warning << "Could not expand $" << l_sLowerPrefix.c_str() << "{" << l_sLowerPostfix.c_str() << "}\n";
-							l_sValue = "";
-						}
+					CString l_sOverridenValue("");
 
-					}
-					else
-					{
-						this->getLogManager() << LogLevel_Warning << "Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()) << "\n";
-						return false;
-					}
+					OV_ERROR_UNLESS_KRF(
+						(m_vKeywordOverride.find(l_sLowerPrefix.c_str())->second)->expand(CString(l_sPostfix.c_str()), l_sOverridenValue),
+						"Could not expand $" << l_sLowerPrefix.c_str() << "{" << l_sLowerPostfix.c_str() << "}",
+						ErrorType::BadFileParsing
+					);
+
+					l_sValue = l_sOverridenValue;
 				}
 				else
 				{
@@ -761,11 +774,12 @@ OpenViBE::boolean CConfigurationManager::internalExpandOnlyKeyword(const std::st
 
 				if(l_bShouldExpand)
 				{
-					if(!this->internalExpandOnlyKeyword(sKeyword, l_sValue, l_sExpandedValue))
-					{
-						this->getLogManager() << LogLevel_Warning << "Could not expand " << CString(l_sValue.c_str()) << " while expanding " << CString(sValue.c_str()) << "\n";
-						return false;
-					}
+					OV_ERROR_UNLESS_KRF(
+						this->internalExpandOnlyKeyword(sKeyword, l_sValue, l_sExpandedValue),
+						"Could not expand " << CString(l_sValue.c_str()) << " while expanding " << CString(sValue.c_str()),
+						ErrorType::BadFileParsing
+					);
+
 					l_vChildren.top().second += l_sExpandedValue;
 				}
 				else
@@ -776,11 +790,11 @@ OpenViBE::boolean CConfigurationManager::internalExpandOnlyKeyword(const std::st
 
 			case '\\':
 				i++;
-				if(i >= sValue.length())
-				{
-					this->getLogManager() << LogLevel_Warning << "Could not expand token with unterminated string while expanding " << CString(sValue.c_str()) << "\n";
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					i < sValue.length(),
+					"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
+					ErrorType::BadFileParsing
+				);
 
 			default:
 				l_vChildren.top().second+=sValue[i];
@@ -788,11 +802,11 @@ OpenViBE::boolean CConfigurationManager::internalExpandOnlyKeyword(const std::st
 		}
 	}
 
-	if(l_vChildren.size()!=1)
-	{
-		this->getLogManager() << LogLevel_Warning << "Could not expand token with unterminated string while expanding " << CString(sValue.c_str()) << "\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_vChildren.size() == 1,
+		"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
+		ErrorType::BadFileParsing
+	);
 
 	sResult = l_vChildren.top().second;
 
@@ -804,15 +818,14 @@ OpenViBE::boolean CConfigurationManager::internalGetConfigurationTokenValueFromN
 	CIdentifier l_oTokenIdentifier=this->lookUpConfigurationTokenIdentifier(sTokenName.c_str(), false);
 	if(l_oTokenIdentifier == OV_UndefinedIdentifier)
 	{
-		if(m_pParentConfigurationManager)
-		{
-			std::string l_sNewString=std::string("${")+sTokenName+("}");
-			sTokenValue=m_pParentConfigurationManager->expand(l_sNewString.c_str());
-		}
-		else
-		{
-			this->getLogManager() << LogLevel_Warning << "Could not expand token [" << CString(sTokenName.c_str()) << "]. This token does not exist. If this is expected behavior, please add \"" << sTokenName.c_str() << " = \" to your configuration file\n";
-		}
+		OV_ERROR_UNLESS_KRF(
+			m_pParentConfigurationManager,
+			"Could not expand token [" << CString(sTokenName.c_str()) << "]. This token does not exist. If this is expected behavior, please add \"" << sTokenName.c_str() << " = \" to your configuration file",
+			ErrorType::ResourceNotFound
+		);
+
+		std::string l_sNewString=std::string("${")+sTokenName+("}");
+		sTokenValue=m_pParentConfigurationManager->expand(l_sNewString.c_str());
 	}
 	else
 	{
