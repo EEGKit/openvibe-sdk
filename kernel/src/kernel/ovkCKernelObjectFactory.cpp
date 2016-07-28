@@ -35,16 +35,11 @@ IObject* Kernel::CKernelObjectFactory::createObject(
 
 	create(rClassIdentifier, OV_ClassId_Kernel_Configurable,                      l_pResult, Kernel::CConfigurable);
 
-	// create(rClassIdentifier, OV_ClassId_, l_pResult, Plugins::CBoxContext);
-
-	if(l_pResult)
-	{
-		this->getLogManager() << LogLevel_Debug << "Created object with class id " << rClassIdentifier << " and final class id " << l_pResult->getClassIdentifier() << "\n";
-	}
-	else
-	{
-		this->getLogManager() << LogLevel_Warning << "Unable to allocate object with class id " << rClassIdentifier << "\n";
-	}
+	OV_ERROR_UNLESS_KRN(
+		l_pResult,
+		"Unable to allocate object with class id " << rClassIdentifier.toString(),
+		ErrorType::BadAlloc
+	);
 
 	return l_pResult;
 }
@@ -62,11 +57,13 @@ boolean Kernel::CKernelObjectFactory::releaseObject(
 
 	vector<IObject*>::iterator i;
 	i=find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
-	if(i==m_oCreatedObjects.end())
-	{
-		this->getLogManager() << LogLevel_Warning << "Can not release object with final class id " << l_rClassIdentifier << " - it is not owned by this fatory\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		i != m_oCreatedObjects.end(),
+		"Can not release object with final class id " << l_rClassIdentifier.toString() << " - it is not owned by this fatory",
+		ErrorType::ResourceNotFound
+	);
+
 	m_oCreatedObjects.erase(i);
 	delete pObject;
 

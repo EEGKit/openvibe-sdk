@@ -13,18 +13,6 @@ using namespace Kernel;
 using namespace Plugins;
 using namespace std;
 
-namespace
-{
-	void handleException(const CAlgorithmProxy* algorithm, const char* errorHint, const std::exception& exception)
-	{
-		algorithm->getLogManager() << LogLevel_Error << "Exception caught in algorithm\n";
-		algorithm->getLogManager() << LogLevel_Error << "  [name: " << algorithm->getAlgorithmDesc().getName() << "]\n";
-		algorithm->getLogManager() << LogLevel_Error << "  [class identifier: " << algorithm->getAlgorithmDesc().getCreatedClass() << "]\n";
-		algorithm->getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
-		algorithm->getLogManager() << LogLevel_Error << "  [cause: " << exception.what() << "]\n";
-	}
-}
-
 CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& rKernelContext, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
 	:TKernelObject < IAlgorithmProxy >(rKernelContext)
 	,m_pInputConfigurable(nullptr)
@@ -68,11 +56,12 @@ boolean CAlgorithmProxy::addInputParameter(
 	const EParameterType eParameterType,
 	const CIdentifier& rSubTypeIdentifier)
 {
-	if (m_pInputConfigurable->getParameter(rInputParameterIdentifier) != nullptr)
-	{
-		getLogManager() << LogLevel_Warning << "For algorithm " << m_rAlgorithmDesc.getName() << " : Input parameter id " << rInputParameterIdentifier << " already exists\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		m_pInputConfigurable->getParameter(rInputParameterIdentifier) == nullptr,
+		"For algorithm " << m_rAlgorithmDesc.getName() << " : Input parameter id " << rInputParameterIdentifier.toString() << " already exists",
+		ErrorType::BadResourceCreation
+	);
+
 	m_pInputConfigurable->createParameter(rInputParameterIdentifier, eParameterType, rSubTypeIdentifier);
 	m_vInputParameterName[rInputParameterIdentifier]=sInputName;
 	return true;
@@ -88,15 +77,13 @@ IParameter* CAlgorithmProxy::getInputParameter(
 	const CIdentifier& rInputParameterIdentifier)
 {
 	IParameter* l_pParameter=m_pInputConfigurable->getParameter(rInputParameterIdentifier);
-	if (!l_pParameter)
-	{
-		getLogManager() << LogLevel_Warning << "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null input parameter id " << rInputParameterIdentifier;
-		if (m_pOutputConfigurable->getParameter(rInputParameterIdentifier))
-		{
-			getLogManager() << " Did you mean " << CString("output") << " parameter ?";
-		}
-		getLogManager() << "\n";
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		l_pParameter,
+		"For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null input parameter id " << rInputParameterIdentifier.toString(),
+		ErrorType::ResourceNotFound
+	);
+
 	return l_pParameter;
 }
 
@@ -139,11 +126,12 @@ boolean CAlgorithmProxy::addOutputParameter(
 	const EParameterType eParameterType,
 	const CIdentifier& rSubTypeIdentifier)
 {
-	if (m_pOutputConfigurable->getParameter(rOutputParameterIdentifier) != nullptr)
-	{
-		getLogManager() << LogLevel_Warning << "For algorithm " << m_rAlgorithmDesc.getName() << " : Output parameter id " << rOutputParameterIdentifier << " already exists\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		m_pOutputConfigurable->getParameter(rOutputParameterIdentifier) == nullptr,
+		"For algorithm " << m_rAlgorithmDesc.getName() << " : Output parameter id " << rOutputParameterIdentifier.toString() << " already exists",
+		ErrorType::BadResourceCreation
+	);
+
 	m_pOutputConfigurable->createParameter(rOutputParameterIdentifier, eParameterType, rSubTypeIdentifier);
 	m_vOutputParameterName[rOutputParameterIdentifier]=sOutputName;
 	return true;
@@ -159,15 +147,13 @@ IParameter* CAlgorithmProxy::getOutputParameter(
 	const CIdentifier& rOutputParameterIdentifier)
 {
 	IParameter* l_pParameter=m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
-	if (!l_pParameter)
-	{
-		getLogManager() << LogLevel_Warning << "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null output parameter id " << rOutputParameterIdentifier;
-		if (m_pInputConfigurable->getParameter(rOutputParameterIdentifier))
-		{
-			getLogManager() << " Did you mean " << CString("input") << " parameter ?";
-		}
-		getLogManager() << "\n";
-	}
+
+	OV_ERROR_UNLESS_KRN(
+		l_pParameter,
+		"For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null output parameter id " << rOutputParameterIdentifier.toString(),
+		ErrorType::ResourceNotFound
+	);
+
 	return l_pParameter;
 }
 
@@ -340,7 +326,7 @@ boolean CAlgorithmProxy::removeOutputTrigger(
 boolean CAlgorithmProxy::initialize(void)
 {
 	assert(!m_bIsInitialized);
-	
+
 	return translateException(
 		[&]() {
 			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
@@ -350,41 +336,41 @@ boolean CAlgorithmProxy::initialize(void)
 			m_bIsInitialized = m_rAlgorithm.initialize(l_oAlgorithmContext);
 			return m_bIsInitialized;
 		},
-		std::bind(handleException, this, "Algorithm initialization", std::placeholders::_1)
+		std::bind(&CAlgorithmProxy::handleException, this, "Algorithm initialization", std::placeholders::_1)
 	);
 }
 
 boolean CAlgorithmProxy::uninitialize(void)
 {
 	assert(m_bIsInitialized);
-	
+
 	return translateException(
 		[&]() {
 			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
 			return m_rAlgorithm.uninitialize(l_oAlgorithmContext);
 		},
-		std::bind(handleException, this, "Algorithm uninitialization", std::placeholders::_1)
+		std::bind(&CAlgorithmProxy::handleException, this, "Algorithm uninitialization", std::placeholders::_1)
 	);
 }
 
 boolean CAlgorithmProxy::process(void)
 {
 	assert(m_bIsInitialized);
-	
+
 	return translateException(
 		[&]() {
-			
+
 			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
-			
+
 			this->setAllOutputTriggers(false);
-			
+
 			bool l_bResult = m_rAlgorithm.process(l_oAlgorithmContext);
-			
+
 			this->setAllInputTriggers(false);
-			
+
 			return l_bResult;
 		},
-		std::bind(handleException, this, "Algorithm processing", std::placeholders::_1)
+		std::bind(&CAlgorithmProxy::handleException, this, "Algorithm processing", std::placeholders::_1)
 	);
 }
 
@@ -392,12 +378,12 @@ boolean CAlgorithmProxy::process(
 	const CIdentifier& rTriggerIdentifier)
 {
 	assert(m_bIsInitialized);
-	
+
 	if (!this->activateInputTrigger(rTriggerIdentifier, true))
 	{
 		return false;
 	}
-	
+
 	return this->process();
 }
 
@@ -420,4 +406,15 @@ void CAlgorithmProxy::setAllOutputTriggers(const boolean bTriggerStatus)
 boolean CAlgorithmProxy::isAlgorithmDerivedFrom(const CIdentifier& rClassIdentifier)
 {
 	return m_rAlgorithm.isDerivedFromClass(rClassIdentifier);
+}
+
+void CAlgorithmProxy::handleException(const char* errorHint, const std::exception& exception)
+{
+	this->getLogManager() << LogLevel_Error << "Exception caught in algorithm\n";
+	this->getLogManager() << LogLevel_Error << "  [name: " << this->getAlgorithmDesc().getName() << "]\n";
+	this->getLogManager() << LogLevel_Error << "  [class identifier: " << this->getAlgorithmDesc().getCreatedClass() << "]\n";
+	this->getLogManager() << LogLevel_Error << "  [hint: " << (errorHint ? errorHint : "no hint") << "]\n";
+	this->getLogManager() << LogLevel_Error << "  [cause: " << exception.what() << "]\n";
+
+	OV_ERROR_KRV("Caught exception: " << exception.what(), ErrorType::ExceptionCaught);
 }

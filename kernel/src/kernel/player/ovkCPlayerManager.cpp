@@ -27,10 +27,13 @@ boolean CPlayerManager::releasePlayer(
 {
 	map<CIdentifier, CPlayer*>::iterator itPlayer;
 	itPlayer=m_vPlayer.find(rPlayerIdentifier);
-	if(itPlayer==m_vPlayer.end())
-	{
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		itPlayer != m_vPlayer.end(),
+		"Player release failed, identifier :" << rPlayerIdentifier.toString(),
+		ErrorType::ResourceNotFound
+	);
+
 	delete itPlayer->second;
 	m_vPlayer.erase(itPlayer);
 	return true;
@@ -41,14 +44,23 @@ IPlayer& CPlayerManager::getPlayer(
 {
 	map<CIdentifier, CPlayer*>::const_iterator itPlayer;
 	itPlayer=m_vPlayer.find(rPlayerIdentifier);
-	if(itPlayer==m_vPlayer.end())
-	{
-		this->getLogManager() << LogLevel_Fatal << "Player " << rPlayerIdentifier << " does not exist !\n";
-	}
-	if(!itPlayer->second)
-	{
-		this->getLogManager() << LogLevel_Fatal << "NULL Player (this should never happen) !\n";
-	}
+
+	// use fatal here because the signature does not allow
+	// proper checking
+	OV_FATAL_UNLESS_K(
+		itPlayer != m_vPlayer.end(),
+		"Trying to retrieve non existing player with id " << rPlayerIdentifier.toString(),
+		ErrorType::ResourceNotFound
+	);
+
+	// use a fatal here because failing to meet this invariant
+	// means there is a bug in the manager implementation
+	OV_FATAL_UNLESS_K(
+		itPlayer->second,
+		"Null player found for id " << rPlayerIdentifier.toString(),
+		ErrorType::BadValue
+	);
+
 	return *itPlayer->second;
 }
 

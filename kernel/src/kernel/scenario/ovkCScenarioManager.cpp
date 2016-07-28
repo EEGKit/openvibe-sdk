@@ -67,46 +67,61 @@ bool CScenarioManager::importScenario(OpenViBE::CIdentifier& newScenarioIdentifi
 {
 	newScenarioIdentifier = OV_UndefinedIdentifier;
 
-	this->createScenario(newScenarioIdentifier);
-	// TODO: fatal if createScenario fails
+	OV_ERROR_UNLESS_KRF(
+		this->createScenario(newScenarioIdentifier),
+		"Error creating new scenario",
+		ErrorType::BadResourceCreation
+	);
 
 	auto releaseScenario = [&](){
-		this->releaseScenario(newScenarioIdentifier);
-		// TODO: fatal if releaseScenario fails
+		// use a fatal here because a release failure while creation succeeded
+		// means we are in an unexpected state
+		OV_FATAL_UNLESS_K(
+			this->releaseScenario(newScenarioIdentifier),
+			"Releasing just created scenario failed for " << newScenarioIdentifier.toString(),
+			ErrorType::Internal
+		);
 	};
 
 	IScenario& newScenarioInstance = this->getScenario(newScenarioIdentifier);
 
 	if (!inputMemoryBuffer.getSize())
 	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Buffer containing scenario data is empty" << "\n";
 		releaseScenario();
-		return false;
+		OV_ERROR_KRF("Buffer containing scenario data is empty", ErrorType::BadValue);
 	}
 
 	CIdentifier importerInstanceIdentifier = this->getKernelContext().getAlgorithmManager().createAlgorithm(scenarioImporterAlgorithmIdentifier);
 
 	if (importerInstanceIdentifier == OV_UndefinedIdentifier)
 	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not create the requested scenario importer" << "\n";
 		releaseScenario();
-		return false;
+		OV_ERROR_KRF("Can not create the requested scenario importer", ErrorType::BadResourceCreation);
 	}
 
 	IAlgorithmProxy* importer = &this->getKernelContext().getAlgorithmManager().getAlgorithm(importerInstanceIdentifier);
-	// TODO: fatal if the importer does not exist as we have just create it
+
+	OV_FATAL_UNLESS_K(
+		importer,
+		"Importer with id " << importerInstanceIdentifier.toString() << " not found although it has just been created",
+		ErrorType::ResourceNotFound
+	);
 
 	auto releaseAlgorithm = [&](){
-		this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*importer);
-		// TODO: fatal if the releaseAlgorithm fails as we have just created it
+		// use a fatal here because a release failure while creation succeeded
+		// means we are in an unexpected state
+		OV_FATAL_UNLESS_K(
+			this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*importer),
+			"Releasing just created algorithm failed for " << importerInstanceIdentifier.toString(),
+			ErrorType::Internal
+		);
 	};
 
 	if (!importer->initialize())
 	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not initialize the requested scenario importer" << "\n";
 		releaseScenario();
 		releaseAlgorithm();
-		return false;
+		OV_ERROR_KRF("Can not initialize the requested scenario importer", ErrorType::Internal);
 	}
 
 	IParameter* memoryBufferParameter = importer->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer);
@@ -114,17 +129,20 @@ bool CScenarioManager::importScenario(OpenViBE::CIdentifier& newScenarioIdentifi
 
 	if (!(memoryBufferParameter && scenarioParameter))
 	{
-		if (!memoryBufferParameter)
-		{
-			this->getKernelContext().getLogManager() << LogLevel_Error << "The requested importer does not have a MemoryBuffer input parameter with identifier " << OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer << "\n";
-		}
-		if (!scenarioParameter)
-		{
-			this->getKernelContext().getLogManager() << LogLevel_Error << "The requested importer does not have a Scenario output parameter with identifier " << OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario << "\n";
-		}
 		releaseScenario();
 		releaseAlgorithm();
-		return false;
+
+		OV_ERROR_UNLESS_KRF(
+			memoryBufferParameter,
+			"The requested importer does not have a MemoryBuffer input parameter with identifier " << OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer.toString(),
+			ErrorType::BadInput
+		);
+
+		OV_ERROR_UNLESS_KRF(
+			scenarioParameter,
+			"The requested importer does not have a Scenario output parameter with identifier " << OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario.toString(),
+			ErrorType::BadOutput
+		);
 	}
 
 
@@ -136,18 +154,16 @@ bool CScenarioManager::importScenario(OpenViBE::CIdentifier& newScenarioIdentifi
 
 	if (!importer->process())
 	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not process data using the requested scenario importer" << "\n";
 		releaseScenario();
 		releaseAlgorithm();
-		return false;
+		OV_ERROR_KRF("Can not process data using the requested scenario importer", ErrorType::Internal);
 	}
 
 	if (!importer->uninitialize())
 	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not uninitialize the requested scenario importer" << "\n";
 		releaseScenario();
 		releaseAlgorithm();
-		return false;
+		OV_ERROR_KRF("Can not uninitialize the requested scenario importer", ErrorType::Internal);
 	}
 
 	releaseAlgorithm();
@@ -162,11 +178,12 @@ bool CScenarioManager::importScenarioFromFile(OpenViBE::CIdentifier& newScenario
 	CMemoryBuffer memoryBuffer;
 
 	FILE* inputFile = FS::Files::open(fileName, "rb");
-	if (!inputFile)
-	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not open scenario file '" << fileName << "'" << "\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		inputFile,
+		"Can not open scenario file '" << fileName << "'",
+		ErrorType::BadFileRead
+	);
 
 	fseek(inputFile, 0, SEEK_END);
 	memoryBuffer.setSize(static_cast<size_t>(::ftell(inputFile)), true);
@@ -174,9 +191,8 @@ bool CScenarioManager::importScenarioFromFile(OpenViBE::CIdentifier& newScenario
 
 	if (fread(reinterpret_cast<char*>(memoryBuffer.getDirectPointer()), (size_t)memoryBuffer.getSize(), 1, inputFile) != 1)
 	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Problem reading scenario file '" << fileName << "'" << "\n";
 		fclose(inputFile);
-		return false;
+		OV_ERROR_KRF("Problem reading scenario file '" << fileName << "'", ErrorType::BadFileRead);
 	}
 	fclose(inputFile);
 
@@ -185,11 +201,11 @@ bool CScenarioManager::importScenarioFromFile(OpenViBE::CIdentifier& newScenario
 
 bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffer, const OpenViBE::CIdentifier& scenarioIdentifier, const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier)
 {
-	if (m_vScenario.find(scenarioIdentifier) == m_vScenario.end())
-	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Scenario with identifier " << scenarioIdentifier << " does not exist." << "\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		m_vScenario.find(scenarioIdentifier) != m_vScenario.end(),
+		"Scenario with identifier " << scenarioIdentifier.toString() << " does not exist.",
+		ErrorType::ResourceNotFound
+	);
 
 	// If the scenario is a metabox, we will save its prototype hash into an attribute of the scenario
 	// that way the standalone scheduler can check whether metaboxes included inside need updating.
@@ -247,25 +263,34 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 
 	CIdentifier exporterInstanceIdentifier = this->getKernelContext().getAlgorithmManager().createAlgorithm(scenarioExporterAlgorithmIdentifier);
 
-	if (exporterInstanceIdentifier == OV_UndefinedIdentifier)
-	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not create the requested scenario exporter" << "\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		exporterInstanceIdentifier != OV_UndefinedIdentifier,
+		"Can not create the requested scenario exporter",
+		ErrorType::BadResourceCreation
+	);
 
 	IAlgorithmProxy* exporter = &this->getKernelContext().getAlgorithmManager().getAlgorithm(exporterInstanceIdentifier);
-	// TODO: fatal if exporter does not exist as we have just created it
+
+	OV_FATAL_UNLESS_K(
+		exporter,
+		"Exporter with id " << exporterInstanceIdentifier.toString() << " not found although it has just been created",
+		ErrorType::ResourceNotFound
+	);
 
 	auto releaseAlgorithm = [&](){
-		this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*exporter);
-		// TODO: fatal if release algorithm fails as we have just created it
+		// use a fatal here because a release failure while creation succeeded
+		// means we are in an unexpected state
+		OV_FATAL_UNLESS_K(
+			this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*exporter),
+			"Releasing just created algorithm failed for " << exporterInstanceIdentifier.toString(),
+			ErrorType::Internal
+		);
 	};
 
 	if (!exporter->initialize())
 	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not initialize the requested scenario exporter" << "\n";
 		releaseAlgorithm();
-		return false;
+		OV_ERROR_KRF("Can not initialize the requested scenario exporter", ErrorType::Internal);
 	}
 
 	IParameter* scenarioParameter = exporter->getInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario);
@@ -273,16 +298,19 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 
 	if (!(memoryBufferParameter && scenarioParameter))
 	{
-		if (!scenarioParameter)
-		{
-			this->getKernelContext().getLogManager() << LogLevel_Error << "The requested exporter does not have a Scenario input parameter with identifier " << OV_Algorithm_ScenarioExporter_InputParameterId_Scenario << "\n";
-		}
-		if (!memoryBufferParameter)
-		{
-			this->getKernelContext().getLogManager() << LogLevel_Error << "The requested exporter does not have a MemoryBuffer output parameter with identifier " << OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer << "\n";
-		}
 		releaseAlgorithm();
-		return false;
+
+		OV_ERROR_UNLESS_KRF(
+			scenarioParameter,
+			"The requested exporter does not have a Scenario input parameter with identifier " << OV_Algorithm_ScenarioExporter_InputParameterId_Scenario.toString(),
+			ErrorType::BadInput
+		);
+
+		OV_ERROR_UNLESS_KRF(
+			memoryBufferParameter,
+			"The requested exporter does not have a MemoryBuffer output parameter with identifier " << OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer.toString(),
+			ErrorType::BadOutput
+		);
 	}
 
 	TParameterHandler<IScenario*> scenarioParameterHandler(scenarioParameter);
@@ -293,16 +321,14 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 
 	if (!exporter->process())
 	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not process data using the requested scenario exporter" << "\n";
 		releaseAlgorithm();
-		return false;
+		OV_ERROR_KRF("Can not process data using the requested scenario exporter", ErrorType::Internal);
 	}
 
 	if (!exporter->uninitialize())
 	{
-		this->getKernelContext().getLogManager() << LogLevel_Error << "Can not uninitialize the requested scenario exporter" << "\n";
 		releaseAlgorithm();
-		return false;
+		OV_ERROR_KRF("Can not uninitialize the requested scenario exporter", ErrorType::Internal);
 	}
 
 	releaseAlgorithm();
@@ -316,10 +342,12 @@ bool CScenarioManager::exportScenarioToFile(const char* fileName, const OpenViBE
 
 	std::ofstream outputFileStream;
 	FS::Files::openOFStream(outputFileStream, fileName, ios::binary);
-	if (!outputFileStream.good())
-	{
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		outputFileStream.good(),
+		"Failed to open file " << fileName,
+		ErrorType::BadFileRead
+	);
 
 	outputFileStream.write(reinterpret_cast<const char*>(memoryBuffer.getDirectPointer()), static_cast<long>(memoryBuffer.getSize()));
 	outputFileStream.close();
@@ -335,6 +363,7 @@ bool CScenarioManager::releaseScenario(
 	itScenario=m_vScenario.find(rScenarioIdentifier);
 	if(itScenario==m_vScenario.end())
 	{
+		// error is handled on a higher level
 		return false;
 	}
 
@@ -350,12 +379,15 @@ IScenario& CScenarioManager::getScenario(
 {
 	map<CIdentifier, CScenario*>::const_iterator itScenario;
 	itScenario=m_vScenario.find(rScenarioIdentifier);
-	if(itScenario==m_vScenario.end())
-	{
-		this->getLogManager() << LogLevel_Fatal << "Scenario " << rScenarioIdentifier << " does not exist !\n";
-		// If the call is wrongly handled, and falls in this condition then next instruction causes a crash...
-		// TODO: return something here (but what ?)
-	}
+
+	// If the call is wrongly handled, and falls in this condition then next instruction causes a crash...
+	// At least, here the abortion is handled!
+	OV_FATAL_UNLESS_K(
+		itScenario != m_vScenario.end(),
+		"Scenario " << rScenarioIdentifier.toString() << " does not exist !",
+		ErrorType::ResourceNotFound
+	);
+
 	return *itScenario->second;
 }
 

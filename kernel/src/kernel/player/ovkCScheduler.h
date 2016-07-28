@@ -33,7 +33,7 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rScenarioIdentifier);
 			virtual OpenViBE::boolean setFrequency(
 				const OpenViBE::uint64 ui64Frequency);
-				
+
 			virtual OpenViBE::boolean isHoldingResources() const;
 
 			virtual SchedulerInitializationCode initialize(void);
@@ -70,7 +70,8 @@ namespace OpenViBE
 			std::map < OpenViBE::CIdentifier, std::map < OpenViBE::uint32, std::list < OpenViBE::Kernel::CChunk > > > m_vSimulatedBoxInput;
 
 		private:
-			
+
+			void handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception);
 			boolean processBox(CSimulatedBox* simulatedBox, const OpenViBE::CIdentifier& boxIdentifier);
 			OpenViBE::boolean flattenScenario(void);
 			System::CChrono m_oBenchmarkChrono;

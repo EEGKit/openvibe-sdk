@@ -30,8 +30,11 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IBox& getBox(void) const { return m_rBox; }
 			virtual OpenViBE::Kernel::IScenario& getScenario(void) const
 			{
-				this->getKernelContext().getLogManager() << OpenViBE::Kernel::LogLevel_Fatal << "Getting scenario from box listener context is not yet implemented\n"; // $$$
-				return *((IScenario*)NULL);
+				OV_FATAL(
+					"Getting scenario from box listener context is not yet implemented",
+					ErrorType::NotImplemented,
+					this->getKernelContext().getLogManager()
+				);
 			}
 			virtual OpenViBE::uint32 getIndex(void) const { return m_ui32Index; }
 

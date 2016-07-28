@@ -109,6 +109,8 @@ namespace OpenViBE
 
 		private:
 
+			void handleException(const char* errorHint, const std::exception& exception);
+
 			const OpenViBE::Plugins::IAlgorithmDesc& m_rAlgorithmDesc;
 			OpenViBE::Plugins::IAlgorithm& m_rAlgorithm;
 			bool m_bIsInitialized;
