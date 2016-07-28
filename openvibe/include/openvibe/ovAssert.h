@@ -233,7 +233,7 @@ while (0)
  *
  * Suffix KRV stands for Kernel Return Void.
  */
-#define OV_ERROR_KRV(description, type) OV_ERROR(description, type, , this->getErrorManager(), this->getLogManager())
+#define OV_ERROR_KRV(description, type) OV_ERROR(description, type, void(), this->getErrorManager(), this->getLogManager())
 
 /**
  * \def OV_ERROR_KRN(description, type)
