@@ -374,27 +374,39 @@ namespace OpenViBE
 					}
 				}
 
-				// This reorganizes scenario links
-				std::vector < std::pair < uint32, std::pair < uint64, uint32 > > > l_vScenarioLink;
-				for(i=0; i<m_pOwnerScenario->getInputCount(); i++)
+				// This reorganizes the parent's scenario links if this box is not actually a scenario itself
+				if (m_oIdentifier != OV_UndefinedIdentifier)
 				{
-					std::pair < uint32, std::pair < uint64, uint32 > > l;
-					CIdentifier l_oBoxIdentier;
-					uint32 l_ui32BoxConnectorIndex=uint32(-1);
-					m_pOwnerScenario->getScenarioInputLink(i, l_oBoxIdentier, l_ui32BoxConnectorIndex);
-					if(l_oBoxIdentier == m_oIdentifier)
+					std::vector < std::pair < uint32, std::pair < uint64, uint32 > > > l_vScenarioLink;
+					for(i=0; i<m_pOwnerScenario->getInputCount(); i++)
 					{
-						if(l_ui32BoxConnectorIndex > ui32InputIndex)
+						std::pair < uint32, std::pair < uint64, uint32 > > l;
+						CIdentifier l_oBoxIdentifier;
+						uint32 l_ui32BoxConnectorIndex=uint32(-1);
+						m_pOwnerScenario->getScenarioInputLink(i, l_oBoxIdentifier, l_ui32BoxConnectorIndex);
+						if(l_oBoxIdentifier == m_oIdentifier)
 						{
-							l.first = i;
-							l.second.first = l_oBoxIdentier.toUInteger();
-							l.second.second = l_ui32BoxConnectorIndex;
-							l_vScenarioLink.push_back(l);
+							if(l_ui32BoxConnectorIndex > ui32InputIndex)
+							{
+								l.first = i;
+								l.second.first = l_oBoxIdentifier.toUInteger();
+								l.second.second = l_ui32BoxConnectorIndex;
+								l_vScenarioLink.push_back(l);
+							}
+							if(l_ui32BoxConnectorIndex >= ui32InputIndex)
+							{
+								m_pOwnerScenario->removeScenarioInputLink(i, l_oBoxIdentifier, l_ui32BoxConnectorIndex);
+							}
 						}
-						if(l_ui32BoxConnectorIndex >= ui32InputIndex)
-						{
-							m_pOwnerScenario->removeScenarioInputLink(i, l_oBoxIdentier, l_ui32BoxConnectorIndex);
-						}
+					}
+
+					// Reconnects scenario links
+					for(i=0; i<l_vScenarioLink.size(); i++)
+					{
+						m_pOwnerScenario->setScenarioInputLink(
+						    l_vScenarioLink[i].first,
+						    l_vScenarioLink[i].second.first,
+						    l_vScenarioLink[i].second.second-1);
 					}
 				}
 
@@ -413,14 +425,7 @@ namespace OpenViBE
 					            OV_UndefinedIdentifier);
 				}
 
-				// Reconnects scenario links
-				for(i=0; i<l_vScenarioLink.size(); i++)
-				{
-					m_pOwnerScenario->setScenarioInputLink(
-					    l_vScenarioLink[i].first,
-					    l_vScenarioLink[i].second.first,
-					    l_vScenarioLink[i].second.second-1);
-				}
+
 
 				this->notify(BoxModification_InputRemoved, ui32InputIndex);
 
@@ -560,29 +565,42 @@ namespace OpenViBE
 					}
 				}
 
-				// This reorganizes scenario links
-				std::vector < std::pair < uint32, std::pair < uint64, uint32 > > > l_vScenarioLink;
-				for(i=0; i<m_pOwnerScenario->getOutputCount(); i++)
+				// This reorganizes the parent's scenario links if this box is not actually a scenario
+				if (m_oIdentifier != OV_UndefinedIdentifier)
 				{
-					std::pair < uint32, std::pair < uint64, uint32 > > l;
-					CIdentifier l_oBoxIdentier;
-					uint32 l_ui32BoxConnectorIndex=uint32(-1);
-					m_pOwnerScenario->getScenarioOutputLink(i, l_oBoxIdentier, l_ui32BoxConnectorIndex);
-					if(l_oBoxIdentier == m_oIdentifier)
+					std::vector < std::pair < uint32, std::pair < uint64, uint32 > > > l_vScenarioLink;
+					for(i=0; i<m_pOwnerScenario->getOutputCount(); i++)
 					{
-						if(l_ui32BoxConnectorIndex > ui32OutputIndex)
+						std::pair < uint32, std::pair < uint64, uint32 > > l;
+						CIdentifier l_oBoxIdentier;
+						uint32 l_ui32BoxConnectorIndex=uint32(-1);
+						m_pOwnerScenario->getScenarioOutputLink(i, l_oBoxIdentier, l_ui32BoxConnectorIndex);
+						if(l_oBoxIdentier == m_oIdentifier)
 						{
-							l.first = i;
-							l.second.first = l_oBoxIdentier.toUInteger();
-							l.second.second = l_ui32BoxConnectorIndex;
-							l_vScenarioLink.push_back(l);
-						}
-						if(l_ui32BoxConnectorIndex >= ui32OutputIndex)
-						{
-							m_pOwnerScenario->removeScenarioOutputLink(i, l_oBoxIdentier, l_ui32BoxConnectorIndex);
+							if(l_ui32BoxConnectorIndex > ui32OutputIndex)
+							{
+								l.first = i;
+								l.second.first = l_oBoxIdentier.toUInteger();
+								l.second.second = l_ui32BoxConnectorIndex;
+								l_vScenarioLink.push_back(l);
+							}
+							if(l_ui32BoxConnectorIndex >= ui32OutputIndex)
+							{
+								m_pOwnerScenario->removeScenarioOutputLink(i, l_oBoxIdentier, l_ui32BoxConnectorIndex);
+							}
 						}
 					}
+
+					// Reconnects scenario links
+					for(i=0; i<l_vScenarioLink.size(); i++)
+					{
+						m_pOwnerScenario->setScenarioOutputLink(
+						            l_vScenarioLink[i].first,
+						            l_vScenarioLink[i].second.first,
+						            l_vScenarioLink[i].second.second-1);
+					}
 				}
+
 
 				// Erases actual output
 				m_vOutput.erase(m_vOutput.begin()+ui32OutputIndex);
@@ -599,14 +617,6 @@ namespace OpenViBE
 								OV_UndefinedIdentifier);
 				}
 
-				// Reconnects scenario links
-				for(i=0; i<l_vScenarioLink.size(); i++)
-				{
-					m_pOwnerScenario->setScenarioOutputLink(
-						l_vScenarioLink[i].first,
-						l_vScenarioLink[i].second.first,
-						l_vScenarioLink[i].second.second-1);
-				}
 
 				this->notify(BoxModification_OutputRemoved, ui32OutputIndex);
 

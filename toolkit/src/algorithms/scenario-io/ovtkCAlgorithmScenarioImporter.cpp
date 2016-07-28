@@ -195,8 +195,6 @@ boolean CAlgorithmScenarioImporter::process(void)
 	SScenario& l_rSymbolicScenario=l_oContext.m_oSymbolicScenario;
 
 	// Now build the scenario according to what has been loaded
-	std::vector<SScenarioInput>::const_iterator si;
-	std::vector<SScenarioOutput>::const_iterator so;
 	std::vector<SBox>::const_iterator b;
 	std::vector<SComment>::const_iterator c;
 	std::vector<SInput>::const_iterator i;
@@ -323,18 +321,24 @@ boolean CAlgorithmScenarioImporter::process(void)
 	}
 
 	uint32 l_ui32ScenarioInputIndex = 0;
-	for(si=l_rSymbolicScenario.m_vScenarioInput.begin(); si!=l_rSymbolicScenario.m_vScenarioInput.end(); si++)
+	for(auto symbolicScenarioInput : l_rSymbolicScenario.m_vScenarioInput)
 	{
-		l_pScenario->addInput(si->m_sName, si->m_oTypeIdentifier);
-		l_pScenario->setScenarioInputLink(l_ui32ScenarioInputIndex, si->m_oLinkedBoxIdentifier, si->m_ui32LinkedBoxInputIndex);
+		l_pScenario->addInput(symbolicScenarioInput.m_sName, symbolicScenarioInput.m_oTypeIdentifier);
+		if (symbolicScenarioInput.m_oLinkedBoxIdentifier != OV_UndefinedIdentifier)
+		{
+			l_pScenario->setScenarioInputLink(l_ui32ScenarioInputIndex, symbolicScenarioInput.m_oLinkedBoxIdentifier, symbolicScenarioInput.m_ui32LinkedBoxInputIndex);
+		}
 		l_ui32ScenarioInputIndex++;
 	}
 
 	uint32 l_ui32ScenarioOutputIndex = 0;
-	for(so=l_rSymbolicScenario.m_vScenarioOutput.begin(); so!=l_rSymbolicScenario.m_vScenarioOutput.end(); so++)
+	for(auto symbolicScenarioOutput : l_rSymbolicScenario.m_vScenarioOutput)
 	{
-		l_pScenario->addOutput(so->m_sName, so->m_oTypeIdentifier);
-		l_pScenario->setScenarioOutputLink(l_ui32ScenarioOutputIndex, so->m_oLinkedBoxIdentifier, so->m_ui32LinkedBoxOutputIndex);
+		l_pScenario->addOutput(symbolicScenarioOutput.m_sName, symbolicScenarioOutput.m_oTypeIdentifier);
+		if (symbolicScenarioOutput.m_oLinkedBoxIdentifier != OV_UndefinedIdentifier)
+		{
+			l_pScenario->setScenarioOutputLink(l_ui32ScenarioOutputIndex, symbolicScenarioOutput.m_oLinkedBoxIdentifier, symbolicScenarioOutput.m_ui32LinkedBoxOutputIndex);
+		}
 		l_ui32ScenarioOutputIndex++;
 	}
 
