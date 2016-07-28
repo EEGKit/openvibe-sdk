@@ -299,13 +299,13 @@ while (0)
  * \def OV_ERROR_UNLESS_KRV(expression, description, type)
  * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for contitional error macro that returns nothing and
+ * Shorthand for contitional error macro that returns void() and
  * launched by objects that have direct access to kernel logger and error
  * managers through this->getLogManager() and this->getErrorManager().
  *
  * Suffix KRV stands for Kernel Return Void.
  */
-#define OV_ERROR_UNLESS_KRV(expression, description, type) OV_ERROR_UNLESS(expression, description, type, , this->getErrorManager(), this->getLogManager())
+#define OV_ERROR_UNLESS_KRV(expression, description, type) OV_ERROR_UNLESS(expression, description, type, void() , this->getErrorManager(), this->getLogManager())
 
 /**
  * \def OV_ERROR_UNLESS_KRN(expression, description, type)
