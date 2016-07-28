@@ -1160,7 +1160,7 @@ boolean CScenario::checkSettings(IConfigurationManager* pConfig)
 			}
 
 			OV_ERROR_UNLESS_KRF(
-				!::checkSettingValue(l_sSettingValue, l_oTypeIdentifier),
+				::checkSettingValue(l_sSettingValue, l_oTypeIdentifier),
 				"<" << l_pBox.second->getName() << "> The following value: ["<< l_sRawSettingValue <<"] expanded as ["<< l_sSettingValue <<"] given as setting is not valid.",
 				ErrorType::BadValue
 			);

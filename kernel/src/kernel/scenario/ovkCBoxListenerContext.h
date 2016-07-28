@@ -35,8 +35,6 @@ namespace OpenViBE
 					ErrorType::NotImplemented,
 					this->getKernelContext().getLogManager()
 				);
-
-				//return *((IScenario*)NULL);
 			}
 			virtual OpenViBE::uint32 getIndex(void) const { return m_ui32Index; }
 

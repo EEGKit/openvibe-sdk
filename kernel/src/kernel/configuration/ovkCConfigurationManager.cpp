@@ -1,3 +1,4 @@
+
 #include "ovkCConfigurationManager.h"
 
 #include <openvibe/kernel/configuration/ovIConfigurationKeywordExpandCallback.h>
@@ -52,10 +53,11 @@ namespace OpenViBE
 		{
 		public:
 
-			CConfigurationManagerEntryEnumeratorCallBack(ILogManager& rLogManager, IConfigurationManager& rConfigurationManger, IErrorManager& rErrorManager)
+			CConfigurationManagerEntryEnumeratorCallBack(ILogManager& rLogManager, IErrorManager& rErrorManager, IConfigurationManager& rConfigurationManger)
 				:m_rLogManager(rLogManager),
-				 m_rConfigurationManager(rConfigurationManger),
-				 m_rErrorManager(rErrorManager)
+				 m_rErrorManager(rErrorManager),
+				 m_rConfigurationManager(rConfigurationManger)
+
 			{
 			}
 
@@ -113,81 +115,60 @@ namespace OpenViBE
 						l_sLine+=reduce(l_sLinePart);
 					}
 
-					if (l_sLine.size() > 0)
-					{
-						switch(l_sLine[0])
-						{
-							case '\0': // empty line
-								break;
-							case '#':
-								m_rLogManager << LogLevel_Debug << "Ignored comment in configuration file " << CString(rEntry.getName()) << " : " << CString(l_sLine.c_str()) << "\n";
-								break;
-							default :
-								OV_ERROR_UNLESS(
-									(eq=l_sLine.find("=")) != std::string::npos,
-									"Invalid syntax in configuration file " << CString(rEntry.getName()) << " : " << CString(l_sLine.c_str()),
-									ErrorType::BadFileParsing,
-									false,
-									m_rErrorManager,
-									m_rLogManager
-								);
-								std::string l_sTokenName(reduce(l_sLine.substr(0, eq)));
-								std::string l_sTokenValue(reduce(l_sLine.substr(eq+1, l_sLine.length()-eq)));
-								if(l_sTokenName=="Include")
-								{
-									CString l_sWildcard=m_rConfigurationManager.expand(l_sTokenValue.c_str());
-									m_rLogManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << "...\n";
-									m_rConfigurationManager.addConfigurationFromFile(l_sWildcard);
-									m_rLogManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << " done...\n";
-								}
-								else
-								{
-									CIdentifier l_oTokenIdentifier=m_rConfigurationManager.lookUpConfigurationTokenIdentifier(l_sTokenName.c_str());
-									if(l_oTokenIdentifier==OV_UndefinedIdentifier)
-									{
-										m_rLogManager << LogLevel_Trace << "Adding configuration token " << CString(l_sTokenName.c_str()) << " : " << CString(l_sTokenValue.c_str()) << "\n";
-										m_rConfigurationManager.createConfigurationToken(l_sTokenName.c_str(), l_sTokenValue.c_str());
-									}
-									else
-									{
-										m_rLogManager << LogLevel_Trace << "Changing configuration token " << CString(l_sTokenName.c_str()) << " to " << CString(l_sTokenValue.c_str()) << "\n";
-
-										// warning if base token are overwritten here
-										OV_WARNING_UNLESS(
-											l_sTokenName != "Path_UserData" &&
-											l_sTokenName != "Path_Log" &&
-											l_sTokenName != "Path_Tmp" &&
-											l_sTokenName != "Path_Lib" &&
-											l_sTokenName != "Path_Bin" &&
-											l_sTokenName != "OperatingSystem" &&
-											l_sTokenName != "Kernel_PluginsPatternMacOS" &&
-											l_sTokenName != "Kernel_PluginsPatternLinux" &&
-											l_sTokenName != "Kernel_PluginsPatternWindows" &&
-											l_sTokenName != "Kernel_Plugins" &&
-											l_sTokenName != "Kernel_PluginsPatternLinux",
-											"Overwriting critical token " << l_sTokenName.c_str(),
-											m_rLogManager
-										);
-
-										m_rConfigurationManager.setConfigurationTokenValue(l_oTokenIdentifier, l_sTokenValue.c_str());
-									}
-								}
-								break;
-						}
-					}
-#if 0 // Might not be necessary as the no-new-line at the end of file case is now handled properly
-					else
+					// process everything except empty line or comment
+					if (l_sLine.size() > 0 && l_sLine[0] != '\0' && l_sLine[0] != '#')
 					{
 						OV_ERROR_UNLESS(
-							l_sLine == "",
-							"Unexpected end of file in configuration file " << CString(rEntry.getName()),
+							(eq=l_sLine.find("=")) != std::string::npos,
+							"Invalid syntax in configuration file " << CString(rEntry.getName()) << " : " << CString(l_sLine.c_str()),
 							ErrorType::BadFileParsing,
 							false,
 							m_rErrorManager,
 							m_rLogManager
 						);
+
+						std::string l_sTokenName(reduce(l_sLine.substr(0, eq)));
+						std::string l_sTokenValue(reduce(l_sLine.substr(eq+1, l_sLine.length()-eq)));
+						if(l_sTokenName=="Include")
+						{
+							CString l_sWildcard=m_rConfigurationManager.expand(l_sTokenValue.c_str());
+							m_rLogManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << "...\n";
+							m_rConfigurationManager.addConfigurationFromFile(l_sWildcard);
+							m_rLogManager << LogLevel_Trace << "Including configuration file " << l_sWildcard << " done...\n";
+						}
+						else
+						{
+							CIdentifier l_oTokenIdentifier=m_rConfigurationManager.lookUpConfigurationTokenIdentifier(l_sTokenName.c_str());
+							if(l_oTokenIdentifier==OV_UndefinedIdentifier)
+							{
+								m_rLogManager << LogLevel_Trace << "Adding configuration token " << CString(l_sTokenName.c_str()) << " : " << CString(l_sTokenValue.c_str()) << "\n";
+								m_rConfigurationManager.createConfigurationToken(l_sTokenName.c_str(), l_sTokenValue.c_str());
+							}
+							else
+							{
+								m_rLogManager << LogLevel_Trace << "Changing configuration token " << CString(l_sTokenName.c_str()) << " to " << CString(l_sTokenValue.c_str()) << "\n";
+
+								// warning if base token are overwritten here
+								OV_WARNING_UNLESS(
+									l_sTokenName != "Path_UserData" &&
+									l_sTokenName != "Path_Log" &&
+									l_sTokenName != "Path_Tmp" &&
+									l_sTokenName != "Path_Lib" &&
+									l_sTokenName != "Path_Bin" &&
+									l_sTokenName != "OperatingSystem" &&
+									l_sTokenName != "Kernel_PluginsPatternMacOS" &&
+									l_sTokenName != "Kernel_PluginsPatternLinux" &&
+									l_sTokenName != "Kernel_PluginsPatternWindows" &&
+									l_sTokenName != "Kernel_Plugins" &&
+									l_sTokenName != "Kernel_PluginsPatternLinux",
+									"Overwriting critical token " << l_sTokenName.c_str(),
+									m_rLogManager
+								);
+
+								m_rConfigurationManager.setConfigurationTokenValue(l_oTokenIdentifier, l_sTokenValue.c_str());
+							}
+						}
 					}
-#endif
 				}
 				while(!l_oFile.eof());
 
@@ -199,8 +180,8 @@ namespace OpenViBE
 		protected:
 
 			ILogManager& m_rLogManager;
-			IConfigurationManager& m_rConfigurationManager;
 			IErrorManager& m_rErrorManager;
+			IConfigurationManager& m_rConfigurationManager;
 		};
 	};
 };
@@ -227,7 +208,7 @@ OpenViBE::boolean CConfigurationManager::addConfigurationFromFile(
 
 
 	boolean l_bResult;
-	CConfigurationManagerEntryEnumeratorCallBack l_rCB(getKernelContext().getLogManager(), *this, getKernelContext().getErrorManager());
+	CConfigurationManagerEntryEnumeratorCallBack l_rCB(getKernelContext().getLogManager(), getKernelContext().getErrorManager(), *this);
 	FS::IEntryEnumerator* l_pEntryEnumerator=FS::createEntryEnumerator(l_rCB);
 	l_bResult=l_pEntryEnumerator->enumerate(rFileNameWildCard);
 	l_pEntryEnumerator->release();
@@ -442,7 +423,7 @@ OpenViBE::boolean CConfigurationManager::unregisterKeywordParser(const IConfigur
 {
 	std::map < OpenViBE::CString, const OpenViBE::Kernel::IConfigurationKeywordExpandCallback*>::iterator l_itOverrideIterator = m_vKeywordOverride.begin();
 
-	OpenViBE::boolean l_bResult = false;
+	bool l_bResult = false;
 	while (l_itOverrideIterator != m_vKeywordOverride.end())
 	{
 		if (l_itOverrideIterator->second == &rCallback)
@@ -601,8 +582,7 @@ OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValu
 					}
 					else
 					{
-						OV_ERROR_UNLESS_KRF(
-							false,
+						OV_ERROR_KRF(
 							"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix and " << CString(l_sPostfix.c_str()) << " postfix while expanding " << CString(sValue.c_str()),
 							ErrorType::BadFileParsing
 						);

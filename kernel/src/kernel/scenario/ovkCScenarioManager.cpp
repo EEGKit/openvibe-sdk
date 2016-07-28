@@ -345,8 +345,8 @@ bool CScenarioManager::exportScenarioToFile(const char* fileName, const OpenViBE
 
 	OV_ERROR_UNLESS_KRF(
 		outputFileStream.good(),
-		"Failed to write to file " << fileName,
-		ErrorType::BadFileWrite
+		"Failed to open file " << fileName,
+		ErrorType::BadFileRead
 	);
 
 	outputFileStream.write(reinterpret_cast<const char*>(memoryBuffer.getDirectPointer()), static_cast<long>(memoryBuffer.getSize()));

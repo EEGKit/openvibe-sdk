@@ -97,14 +97,14 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 
 		auto cleanup = [&](){
 			// cleans up internal state
-			m_pBox = NULL;
+			m_pBox = nullptr;
 			m_ui32SettingIndex = 0;
 			m_bIsParsingSettingValue = false;
 			m_bIsParsingSettingOverride = false;
 
 			// releases XML reader
 			l_pReader->release();
-			l_pReader = NULL;
+			l_pReader = nullptr;
 		};
 
 		// 1. Open settings file (binary because read would conflict with tellg for text files)

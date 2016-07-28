@@ -148,7 +148,7 @@ while (0)
 do { \
 	errorManager.pushErrorAtLocation( \
 		type, \
-		static_cast<OpenViBE::ErrorStream&>(OpenViBE::ErrorStream() << description).str().c_str(), \
+		static_cast<const OpenViBE::ErrorStream&>(OpenViBE::ErrorStream() << description).str().c_str(), \
 		__FILE__, __LINE__ \
 	); \
 	OV_ERROR_LOG(description, type, __FILE__, __LINE__ , logManager); \
