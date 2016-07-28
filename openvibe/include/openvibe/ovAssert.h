@@ -272,16 +272,16 @@ while (0)
 #define OV_ERROR_UNLESS_KRF(expression, description, type) OV_ERROR_UNLESS(expression, description, type, false, this->getErrorManager(), this->getLogManager())
 
 /**
- * \def OV_ERROR_UNLESS_KRO(expression, description, type)
+ * \def OV_ERROR_UNLESS_KRZ(expression, description, type)
  * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
  *
  * Shorthand for contitional error macro that returns zero and
  * launched by objects that have direct access to kernel logger and error
  * managers through this->getLogManager() and this->getErrorManager().
  *
- * Suffix KRO stands for Kernel Return 0.
+ * Suffix KRZ stands for Kernel Return Zero.
  */
-#define OV_ERROR_UNLESS_KRO(expression, description, type) OV_ERROR_UNLESS(expression, description, type, 0, this->getErrorManager(), this->getLogManager())
+#define OV_ERROR_UNLESS_KRZ(expression, description, type) OV_ERROR_UNLESS(expression, description, type, 0, this->getErrorManager(), this->getLogManager())
 
 /**
  * \def OV_ERROR_UNLESS_KRU(expression, description, type)
