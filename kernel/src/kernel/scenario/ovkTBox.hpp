@@ -336,7 +336,6 @@ namespace OpenViBE
 				);
 
 				CIdentifier l_oIdentifier;
-				size_t i;
 
 				while((l_oIdentifier=m_pOwnerScenario->getNextLinkIdentifierToBoxInput(l_oIdentifier, m_oIdentifier, ui32InputIndex))!=OV_UndefinedIdentifier)
 				{
@@ -354,21 +353,25 @@ namespace OpenViBE
 				std::vector < std::pair < std::pair < uint64, uint32 >, std::pair < uint64, uint32 > > > l_vLink;
 				while((l_oIdentifier=m_pOwnerScenario->getNextLinkIdentifierToBox(l_oIdentifier, m_oIdentifier))!=OV_UndefinedIdentifier)
 				{
-					ILink* l_pLink=m_pOwnerScenario->getLinkDetails(l_oIdentifier);
-					if(l_pLink->getTargetBoxInputIndex()>ui32InputIndex)
+					ILink* l_pLink = m_pOwnerScenario->getLinkDetails(l_oIdentifier);
+					if (l_pLink->getTargetBoxInputIndex() > ui32InputIndex)
 					{
-						std::pair < std::pair < uint64, uint32 >, std::pair < uint64, uint32 > > l;
-						l.first.first=l_pLink->getSourceBoxIdentifier().toUInteger();
-						l.first.second=l_pLink->getSourceBoxOutputIndex();
-						l.second.first=l_pLink->getTargetBoxIdentifier().toUInteger();
-						l.second.second=l_pLink->getTargetBoxInputIndex();
-						l_vLink.push_back(l);
+						l_vLink.push_back({
+						                      {
+						                          l_pLink->getSourceBoxIdentifier().toUInteger(),
+						                          l_pLink->getSourceBoxOutputIndex()
+						                      },
+						                      {
+						                          l_pLink->getTargetBoxIdentifier().toUInteger(),
+						                          l_pLink->getTargetBoxInputIndex()
+						                      }
+						                  });
 						l_vLinksToRemove.push_back(l_oIdentifier);
 					}
 				}
-				for(i=0; i<l_vLinksToRemove.size(); i++)
+				for (size_t i = 0; i < l_vLinksToRemove.size(); i++)
 				{
-					if(m_pOwnerScenario->isLink(l_vLinksToRemove[i]))
+					if (m_pOwnerScenario->isLink(l_vLinksToRemove[i]))
 					{
 						m_pOwnerScenario->disconnect(l_vLinksToRemove[i]);
 					}
@@ -378,30 +381,32 @@ namespace OpenViBE
 				if (m_oIdentifier != OV_UndefinedIdentifier)
 				{
 					std::vector < std::pair < uint32, std::pair < uint64, uint32 > > > l_vScenarioLink;
-					for(i=0; i<m_pOwnerScenario->getInputCount(); i++)
+					for(uint32 scenarioInputIndex = 0; scenarioInputIndex < m_pOwnerScenario->getInputCount(); scenarioInputIndex++)
 					{
-						std::pair < uint32, std::pair < uint64, uint32 > > l;
 						CIdentifier l_oBoxIdentifier;
-						uint32 l_ui32BoxConnectorIndex=uint32(-1);
-						m_pOwnerScenario->getScenarioInputLink(i, l_oBoxIdentifier, l_ui32BoxConnectorIndex);
-						if(l_oBoxIdentifier == m_oIdentifier)
+						uint32 l_ui32BoxConnectorIndex = uint32(-1);
+						m_pOwnerScenario->getScenarioInputLink(scenarioInputIndex, l_oBoxIdentifier, l_ui32BoxConnectorIndex);
+						if (l_oBoxIdentifier == m_oIdentifier)
 						{
-							if(l_ui32BoxConnectorIndex > ui32InputIndex)
+							if (l_ui32BoxConnectorIndex > ui32InputIndex)
 							{
-								l.first = i;
-								l.second.first = l_oBoxIdentifier.toUInteger();
-								l.second.second = l_ui32BoxConnectorIndex;
-								l_vScenarioLink.push_back(l);
+								l_vScenarioLink.push_back({
+								                              scenarioInputIndex,
+								                              {
+								                                  l_oBoxIdentifier.toUInteger(),
+								                                  l_ui32BoxConnectorIndex
+								                              }
+								                          });
 							}
-							if(l_ui32BoxConnectorIndex >= ui32InputIndex)
+							if (l_ui32BoxConnectorIndex >= ui32InputIndex)
 							{
-								m_pOwnerScenario->removeScenarioInputLink(i, l_oBoxIdentifier, l_ui32BoxConnectorIndex);
+								m_pOwnerScenario->removeScenarioInputLink(scenarioInputIndex, l_oBoxIdentifier, l_ui32BoxConnectorIndex);
 							}
 						}
 					}
 
 					// Reconnects scenario links
-					for(i=0; i<l_vScenarioLink.size(); i++)
+					for(size_t i = 0; i < l_vScenarioLink.size(); i++)
 					{
 						m_pOwnerScenario->setScenarioInputLink(
 						    l_vScenarioLink[i].first,
@@ -414,7 +419,7 @@ namespace OpenViBE
 				m_vInput.erase(m_vInput.begin()+ui32InputIndex);
 
 				// Reconnects box links
-				for(i=0; i<l_vLink.size(); i++)
+				for (size_t i = 0; i < l_vLink.size(); i++)
 				{
 					m_pOwnerScenario->connect(
 					            l_oIdentifier,
@@ -527,7 +532,6 @@ namespace OpenViBE
 				);
 
 				CIdentifier l_oIdentifier;
-				size_t i;
 
 				while((l_oIdentifier=m_pOwnerScenario->getNextLinkIdentifierFromBoxOutput(l_oIdentifier, m_oIdentifier, ui32OutputIndex))!=OV_UndefinedIdentifier)
 				{
@@ -548,16 +552,20 @@ namespace OpenViBE
 					ILink* l_pLink=m_pOwnerScenario->getLinkDetails(l_oIdentifier);
 					if(l_pLink->getSourceBoxOutputIndex()>ui32OutputIndex)
 					{
-						std::pair < std::pair < uint64, uint32 >, std::pair < uint64, uint32 > > l;
-						l.first.first=l_pLink->getSourceBoxIdentifier().toUInteger();
-						l.first.second=l_pLink->getSourceBoxOutputIndex();
-						l.second.first=l_pLink->getTargetBoxIdentifier().toUInteger();
-						l.second.second=l_pLink->getTargetBoxInputIndex();
-						l_vLink.push_back(l);
+						l_vLink.push_back({
+						                      {
+						                          l_pLink->getSourceBoxIdentifier().toUInteger(),
+						                          l_pLink->getSourceBoxOutputIndex()
+						                      },
+						                      {
+						                          l_pLink->getTargetBoxIdentifier().toUInteger(),
+						                          l_pLink->getTargetBoxInputIndex()
+						                      }
+						                  });
 						l_vLinksToRemove.push_back(l_oIdentifier);
 					}
 				}
-				for(i=0; i<l_vLinksToRemove.size(); i++)
+				for(size_t i=0; i<l_vLinksToRemove.size(); i++)
 				{
 					if(m_pOwnerScenario->isLink(l_vLinksToRemove[i]))
 					{
@@ -569,30 +577,32 @@ namespace OpenViBE
 				if (m_oIdentifier != OV_UndefinedIdentifier)
 				{
 					std::vector < std::pair < uint32, std::pair < uint64, uint32 > > > l_vScenarioLink;
-					for(i=0; i<m_pOwnerScenario->getOutputCount(); i++)
+					for(uint32 scenarioOutputIndex = 0; scenarioOutputIndex < m_pOwnerScenario->getOutputCount(); scenarioOutputIndex++)
 					{
-						std::pair < uint32, std::pair < uint64, uint32 > > l;
 						CIdentifier l_oBoxIdentier;
-						uint32 l_ui32BoxConnectorIndex=uint32(-1);
-						m_pOwnerScenario->getScenarioOutputLink(i, l_oBoxIdentier, l_ui32BoxConnectorIndex);
-						if(l_oBoxIdentier == m_oIdentifier)
+						uint32 l_ui32BoxConnectorIndex = uint32(-1);
+						m_pOwnerScenario->getScenarioOutputLink(scenarioOutputIndex, l_oBoxIdentier, l_ui32BoxConnectorIndex);
+						if (l_oBoxIdentier == m_oIdentifier)
 						{
-							if(l_ui32BoxConnectorIndex > ui32OutputIndex)
+							if (l_ui32BoxConnectorIndex > ui32OutputIndex)
 							{
-								l.first = i;
-								l.second.first = l_oBoxIdentier.toUInteger();
-								l.second.second = l_ui32BoxConnectorIndex;
-								l_vScenarioLink.push_back(l);
+								l_vScenarioLink.push_back({
+								                              scenarioOutputIndex,
+								                              {
+								                                  l_oBoxIdentier.toUInteger(),
+								                                  l_ui32BoxConnectorIndex
+								                              }
+								                          });
 							}
-							if(l_ui32BoxConnectorIndex >= ui32OutputIndex)
+							if (l_ui32BoxConnectorIndex >= ui32OutputIndex)
 							{
-								m_pOwnerScenario->removeScenarioOutputLink(i, l_oBoxIdentier, l_ui32BoxConnectorIndex);
+								m_pOwnerScenario->removeScenarioOutputLink(scenarioOutputIndex, l_oBoxIdentier, l_ui32BoxConnectorIndex);
 							}
 						}
 					}
 
 					// Reconnects scenario links
-					for(i=0; i<l_vScenarioLink.size(); i++)
+					for(size_t i=0; i<l_vScenarioLink.size(); i++)
 					{
 						m_pOwnerScenario->setScenarioOutputLink(
 						            l_vScenarioLink[i].first,
@@ -606,7 +616,7 @@ namespace OpenViBE
 				m_vOutput.erase(m_vOutput.begin()+ui32OutputIndex);
 
 				// Reconnects box links
-				for(i=0; i<l_vLink.size(); i++)
+				for(size_t i=0; i<l_vLink.size(); i++)
 				{
 					m_pOwnerScenario->connect(
 								l_oIdentifier,
