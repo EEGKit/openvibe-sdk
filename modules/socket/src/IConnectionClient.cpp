@@ -84,7 +84,7 @@ namespace Socket
 			errno = 0;
 			if(::connect(m_i32Socket, (struct sockaddr*)&l_oServerAddress, sizeof(struct sockaddr_in))<0)
 			{
-				boolean l_bInProgress=false;
+				boolean l_bInProgress;
 
 #if defined TARGET_OS_Linux
 
@@ -93,7 +93,8 @@ namespace Socket
 #elif defined TARGET_OS_Windows
 
 				l_bInProgress=(WSAGetLastError()==WSAEINPROGRESS || WSAGetLastError()==WSAEWOULDBLOCK);
-
+#else
+				l_bInProgress = false;
 #endif
 
 				if(l_bInProgress)

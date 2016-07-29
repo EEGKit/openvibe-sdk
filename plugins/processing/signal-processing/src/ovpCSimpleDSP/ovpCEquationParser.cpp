@@ -281,8 +281,6 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 		//gets the function's Id from the unary function's symbols table
 		if( (l_ui64FunctionIdentifier = find(unaryFunction_p, l_sValue.c_str())) != NULL)
 		{
-			std::string l_sValue(i->children.begin()->value.begin(), i->children.begin()->value.end());
-
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
@@ -318,8 +316,6 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 		//gets the function's Id from the comparison function's symbols table
 		if( (l_ui64FunctionIdentifier = find(comparison1Function_p, l_sValue.c_str())) != NULL)
 		{
-			std::string l_sValue(i->children.begin()->value.begin(), i->children.begin()->value.end());
-
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
@@ -329,8 +325,6 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 		//gets the function's Id from the comparison function's symbols table
 		else if( (l_ui64FunctionIdentifier = find(comparison2Function_p, l_sValue.c_str())) != NULL)
 		{
-			std::string l_sValue(i->children.begin()->value.begin(), i->children.begin()->value.end());
-
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
@@ -349,8 +343,6 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 		//gets the function's Id from the binary boolean function's symbols table
 		if( (l_ui64FunctionIdentifier = find(binaryBoolean1Function_p, l_sValue.c_str()))!= NULL)
 		{
-			std::string l_sValue(i->children.begin()->value.begin(), i->children.begin()->value.end());
-
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
@@ -360,8 +352,6 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 		//gets the function's Id from the binary boolean function's symbols table
 		else if( (l_ui64FunctionIdentifier = find(binaryBoolean2Function_p, l_sValue.c_str()))!= NULL)
 		{
-			std::string l_sValue(i->children.begin()->value.begin(), i->children.begin()->value.end());
-
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
@@ -371,8 +361,6 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 		//gets the function's Id from the binary boolean function's symbols table
 		else if( (l_ui64FunctionIdentifier = find(binaryBoolean3Function_p, l_sValue.c_str()))!= NULL)
 		{
-			std::string l_sValue(i->children.begin()->value.begin(), i->children.begin()->value.end());
-
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
@@ -382,8 +370,6 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 		//gets the function's Id from the binary boolean function's symbols table
 		else if( (l_ui64FunctionIdentifier = find(unaryBooleanFunction_p, l_sValue.c_str()))!= NULL)
 		{
-			std::string l_sValue(i->children.begin()->value.begin(), i->children.begin()->value.end());
-
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),

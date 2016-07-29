@@ -302,7 +302,7 @@ boolean OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, c
 						}
 
 						l_vValuesCount.resize(rMatrix.getDimensionCount());
-						
+
 						// set labels now that we know the matrix size
 						uint32 l_ui32Element = 0;
 						for(uint32 i=0;i<rMatrix.getDimensionCount();i++)
@@ -503,7 +503,7 @@ boolean OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, c
 						if(*l_oIt == CONSTANT_RIGHT_SQUARE_BRACKET)
 						{
 							//move back iterator by one character so that closing bracket is taken into account in Status_ParsingBuffer case
-							l_oIt--;
+							--l_oIt;
 						}
 
 						//retrieve value
@@ -541,7 +541,7 @@ boolean OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, c
 			} // switch(l_ui32Status)
 
 			//increment iterator
-			l_oIt++;
+			++l_oIt;
 
 		} // while(l_oIt != l_sWhat.end()) (read each character of current line)
 
@@ -563,7 +563,7 @@ boolean OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, c
 	return true;
 }
 
-// A recursive helper function to spool matrix contents to a txt stringstream. 
+// A recursive helper function to spool matrix contents to a txt stringstream.
 boolean dumpMatrixBuffer(const OpenViBE::IMatrix& rMatrix, std::stringstream& buffer, uint32 ui32DimensionIndex, uint32& ui32ElementIndex)
 {
 	//are we in innermost dimension?
@@ -657,7 +657,7 @@ boolean OpenViBEToolkit::Tools::Matrix::loadFromTextFile(OpenViBE::IMatrix& rMat
 		return false;
 	}
 
-	std::stringstream l_oBuffer; 
+	std::stringstream l_oBuffer;
 
 	l_oBuffer << m_oDataFile.rdbuf();
 
@@ -675,14 +675,14 @@ boolean OpenViBEToolkit::Tools::Matrix::saveToTextFile(const OpenViBE::IMatrix& 
 	if(!m_oDataFile.is_open()) {
 		return false;
 	}
-	
+
 	CString l_sMatrix;
 
 	if(!OpenViBEToolkit::Tools::Matrix::toString(rMatrix, l_sMatrix, ui32Precision))
 	{
 		return false;
 	}
-	
+
 	m_oDataFile << l_sMatrix.toASCIIString();
 
 	m_oDataFile.close();

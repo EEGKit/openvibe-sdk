@@ -286,7 +286,7 @@ boolean CEntryEnumeratorLinux::enumerate(const char* sWildCard, boolean bRecursi
 		break;
 	}
 
-	if(l_oGlobStruc.gl_pathc<=0) 
+	if(l_oGlobStruc.gl_pathc<=0)
 	{
 		// Nothing found
 		return true;
@@ -355,15 +355,11 @@ boolean CEntryEnumeratorWindows::enumerate(const char* sWildCard, boolean bRecur
 	// $$$ (cFileName member of WIN32_FIND_DATA structure
 	// $$$ loses the initial path !!)
 	// $$$ TODO
+	std::string l_sPath(sWildCard, strlen(sWildCard));
 
-	char l_sExtendedWildCard[1024];
-	char* l_sExtendedWildCardFileName=NULL;
-	int a=GetFullPathName(sWildCard, sizeof(l_sExtendedWildCard), l_sExtendedWildCard, &l_sExtendedWildCardFileName);
-	std::string l_sPath(sWildCard, strlen(sWildCard)-(l_sExtendedWildCardFileName?strlen(l_sExtendedWildCardFileName):0));
-	
 	std::stack<std::string> l_vFoldersToEnumerate;
 	l_vFoldersToEnumerate.push(std::string(l_sPath));
-	
+
 	// if we need to recurse over subfolders, let's fetch all subfolders in l_vFoldersToEnumerate
 	if(bRecursive)
 	{
@@ -385,7 +381,7 @@ boolean CEntryEnumeratorWindows::enumerate(const char* sWildCard, boolean bRecur
 				{
 					if (std::string(l_oFindData.cFileName) != "." && std::string(l_oFindData.cFileName) != "..")
 					{
-						if (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) 
+						if (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 						{
 							l_vFoldersToEnumerate.push(l_sCurrentSearchPath + l_oFindData.cFileName + "/");
 							l_oTemporaryFolderSearchStack.push(l_sCurrentSearchPath + l_oFindData.cFileName + "/");
@@ -401,7 +397,7 @@ boolean CEntryEnumeratorWindows::enumerate(const char* sWildCard, boolean bRecur
 			}
 		}
 	}
-	
+
 	std::string l_sCurrentPath;
 	while(! l_vFoldersToEnumerate.empty())
 	{
@@ -410,7 +406,7 @@ boolean CEntryEnumeratorWindows::enumerate(const char* sWildCard, boolean bRecur
 
 		WIN32_FIND_DATA l_oFindData;
 		HANDLE l_pFileHandle;
-		l_pFileHandle=FindFirstFile((l_sCurrentPath+l_sExtendedWildCardFileName).c_str(), &l_oFindData);
+		l_pFileHandle=FindFirstFile((l_sCurrentPath).c_str(), &l_oFindData);
 		if(l_pFileHandle!=INVALID_HANDLE_VALUE)
 		{
 			boolean l_bFinished=false;

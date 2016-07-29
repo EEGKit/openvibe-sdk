@@ -59,7 +59,7 @@ boolean CWriter::openChild(const char* sName)
 	}
 
 	string l_sIndent(m_vNodes.size(), '\t');
-	string l_sResult=(m_vNodes.size()!=0?string("\n"):string(""))+l_sIndent+string("<")+string(sName);
+	string l_sResult=(!m_vNodes.empty()?string("\n"):string(""))+l_sIndent+string("<")+string(sName);
 	m_rWriterCallback.write(l_sResult.c_str());
 	m_vNodes.push(sName);
 	m_bHasChild=false;
@@ -132,7 +132,7 @@ boolean CWriter::setAttribute(const char* sAttributeName, const char* sAttribute
 
 boolean CWriter::closeChild(void)
 {
-	if(m_vNodes.size()==0)
+	if(m_vNodes.empty())
 	{
 		return false;
 	}
@@ -154,7 +154,7 @@ boolean CWriter::closeChild(void)
 
 void CWriter::release(void)
 {
-	while(m_vNodes.size())
+	while(!m_vNodes.empty())
 	{
 		closeChild();
 	}

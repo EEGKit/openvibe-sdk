@@ -57,7 +57,7 @@ boolean OpenViBEToolkit::Tools::ColorGradient::parse(IMatrix& rColorGradient, co
 
 	uint32 i=0;
 	std::map < float64, SColor > ::const_iterator it;
-	for(it=l_vColorGradient.begin(); it!=l_vColorGradient.end(); it++, i++)
+	for(it=l_vColorGradient.begin(); it!=l_vColorGradient.end(); ++it, i++)
 	{
 		rColorGradient[i*4  ]=it->second.fPercent;
 		rColorGradient[i*4+1]=it->second.fRed;
@@ -155,15 +155,15 @@ boolean OpenViBEToolkit::Tools::ColorGradient::interpolate(IMatrix& rInterpolate
 
 	std::map < float64, SColor >::const_iterator it1=l_vColors.begin();
 	std::map < float64, SColor >::const_iterator it2=l_vColors.begin();
-	it2++;
+	++it2;
 
 	for(i=0; i<ui32Steps; i++)
 	{
 		float64 t=i*100/(ui32Steps-1);
 		while(it2->first < t)
 		{
-			it1++;
-			it2++;
+			++it1;
+			++it2;
 		}
 
 		float64 a=it2->first-t;

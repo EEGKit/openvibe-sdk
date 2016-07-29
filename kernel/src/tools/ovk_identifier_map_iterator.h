@@ -25,7 +25,7 @@ namespace
 			{
 				return OV_UndefinedIdentifier;
 			}
-			it++;
+			++it;
 		}
 
 		return it!=rMap.end()?it->first:OV_UndefinedIdentifier;

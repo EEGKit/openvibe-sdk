@@ -58,7 +58,7 @@ boolean CBoxAlgorithmStimulationBasedEpoching::initialize(void)
 			<<  ")... This parameter should be strictly positive.\n";
 		return false;
 	}
-	
+
 	for(uint32 i=2; i<getStaticBoxContext().getSettingCount(); i++)
 	{
 		uint64 l_ui64StimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
@@ -266,7 +266,7 @@ boolean CBoxAlgorithmStimulationBasedEpoching::process(void)
 				}
 				else
 				{
-					j++;
+					++j;
 				}
 			}
 		}

@@ -362,7 +362,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 	CIdentifier l_oBoxIdentifier;
 	while((l_oBoxIdentifier = m_pScenario->getNextBoxIdentifier(l_oBoxIdentifier)) != OV_UndefinedIdentifier)
 	{
-		int l_iPriority = 0;
+		int l_iPriority;
 		const IBox* l_pBox = m_pScenario->getBoxDetails(l_oBoxIdentifier);
 
 		OV_ERROR_UNLESS_K(
@@ -398,13 +398,22 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		CSimulatedBox* l_pSimulatedBox=new CSimulatedBox(this->getKernelContext(), *this);
 		l_pSimulatedBox->setScenarioIdentifier(m_oScenarioIdentifier);
 		l_pSimulatedBox->setBoxIdentifier(l_oBoxIdentifier);
-		::sscanf(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString(), "%i", &l_iPriority);
+
+		try
+		{
+			l_iPriority = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
+		}
+		catch(const std::exception&)
+		{
+			l_iPriority = 0;
+		}
+
 		m_vSimulatedBox[std::make_pair(-l_iPriority, l_oBoxIdentifier)]=l_pSimulatedBox;
 		m_vSimulatedBoxChrono[l_oBoxIdentifier].reset(static_cast<uint32>(m_ui64Frequency));
 	}
 
 	boolean l_bBoxInitialization = true;
-	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
+	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
@@ -438,7 +447,7 @@ boolean CScheduler::uninitialize(void)
 	this->getLogManager() << LogLevel_Trace << "Scheduler uninitialize\n";
 
 	bool l_bBoxUninitialization = true;
-	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
+	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
@@ -456,7 +465,7 @@ boolean CScheduler::uninitialize(void)
 		}
 	}
 
-	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
+	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		delete itSimulatedBox->second;
 	}
@@ -480,7 +489,7 @@ boolean CScheduler::loop(void)
 
 	bool l_bBoxProcessing = true;
 	m_oBenchmarkChrono.stepIn();
-	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); itSimulatedBox++)
+	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		CSimulatedBox* l_pSimulatedBox=itSimulatedBox->second;
 
@@ -566,11 +575,11 @@ boolean CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& b
 		//if the box is muted we still have to erase chunks that arrives at the input
 		map < uint32, list < CChunk > >& l_rSimulatedBoxInput=m_vSimulatedBoxInput[boxIdentifier];
 		map < uint32, list < CChunk > >::iterator itSimulatedBoxInput;
-		for (itSimulatedBoxInput=l_rSimulatedBoxInput.begin(); itSimulatedBoxInput!=l_rSimulatedBoxInput.end(); itSimulatedBoxInput++)
+		for (itSimulatedBoxInput=l_rSimulatedBoxInput.begin(); itSimulatedBoxInput!=l_rSimulatedBoxInput.end(); ++itSimulatedBoxInput)
 		{
 			list < CChunk >& l_rSimulatedBoxInputChunkList=itSimulatedBoxInput->second;
 			list < CChunk >::iterator itSimulatedBoxInputChunkList;
-			for (itSimulatedBoxInputChunkList=l_rSimulatedBoxInputChunkList.begin(); itSimulatedBoxInputChunkList!=l_rSimulatedBoxInputChunkList.end(); itSimulatedBoxInputChunkList++)
+			for (itSimulatedBoxInputChunkList=l_rSimulatedBoxInputChunkList.begin(); itSimulatedBoxInputChunkList!=l_rSimulatedBoxInputChunkList.end(); ++itSimulatedBoxInputChunkList)
 			{
 				OV_ERROR_UNLESS_KRF(
 					simulatedBox->processInput(itSimulatedBoxInput->first, *itSimulatedBoxInputChunkList),
@@ -619,7 +628,7 @@ boolean CScheduler::sendInput(
 	map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin();
 	while(itSimulatedBox!=m_vSimulatedBox.end() && itSimulatedBox->first.second != rBoxIdentifier)
 	{
-		itSimulatedBox++;
+		++itSimulatedBox;
 	}
 
 	OV_ERROR_UNLESS_KRF(

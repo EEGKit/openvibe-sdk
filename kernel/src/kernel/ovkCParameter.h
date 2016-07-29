@@ -12,7 +12,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		#define _parameter_template_instance_1_(_CName_, CType, IType, oClassId) \
+		#define _parameter_template_instance_simple_type_(_CName_, CType, IType, oClassId) \
 			typedef OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType > _Base_##_CName_; \
 			class _CName_ : public _Base_##_CName_ \
 			{ \
@@ -28,7 +28,7 @@ namespace OpenViBE
 				CType m_oDefaultValue; \
 			};
 
-		#define _parameter_template_instance_2_(_CName_, CType, IType, oClassId) \
+		#define _parameter_template_instance_object_(_CName_, CType, IType, oClassId) \
 			typedef OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType > _Base_##_CName_; \
 			class _CName_ : public _Base_##_CName_ \
 			{ \
@@ -44,18 +44,35 @@ namespace OpenViBE
 				CType m_oDefaultValue; \
 			};
 
-		_parameter_template_instance_1_(CIntegerParameter,        OpenViBE::int64,           OpenViBE::int64,            OVK_ClassId_Kernel_IntegerParameter);
-		_parameter_template_instance_1_(CUIntegerParameter,       OpenViBE::uint64,          OpenViBE::uint64,           OVK_ClassId_Kernel_UIntegerParameter);
-		_parameter_template_instance_1_(CEnumerationParameter,    OpenViBE::uint64,          OpenViBE::uint64,           OVK_ClassId_Kernel_EnumerationParameter);
-		_parameter_template_instance_1_(CBooleanParameter,        OpenViBE::boolean,         OpenViBE::boolean,          OVK_ClassId_Kernel_BooleanParameter);
-		_parameter_template_instance_1_(CFloatParameter,          OpenViBE::float64,         OpenViBE::float64,          OVK_ClassId_Kernel_FloatParameter);
-		_parameter_template_instance_2_(CStringParameter,         OpenViBE::CString,         OpenViBE::CString*,         OVK_ClassId_Kernel_StringParameter);
-		_parameter_template_instance_2_(CIdentifierParameter,     OpenViBE::CIdentifier,     OpenViBE::CIdentifier*,     OVK_ClassId_Kernel_IdentifierParameter);
-		_parameter_template_instance_2_(CMatrixParameter,         OpenViBE::CMatrix,         OpenViBE::IMatrix*,         OVK_ClassId_Kernel_MatrixParameter);
-		_parameter_template_instance_2_(CStimulationSetParameter, OpenViBE::CStimulationSet, OpenViBE::IStimulationSet*, OVK_ClassId_Kernel_StimulationSetParameter);
-		_parameter_template_instance_2_(CMemoryBufferParameter,   OpenViBE::CMemoryBuffer,   OpenViBE::IMemoryBuffer*,   OVK_ClassId_Kernel_MemoryBufferParameter);
-		_parameter_template_instance_2_(CObjectParameter,         OpenViBE::CNullObject,     OpenViBE::IObject*,         OVK_ClassId_Kernel_ObjectParameter);
-		_parameter_template_instance_2_(CPointerParameter,        void*,                     void*,                      OVK_ClassId_Kernel_PointerParameter);
+		#define _parameter_template_instance_pointer_(_CName_, CType, IType, oClassId) \
+			typedef OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType > _Base_##_CName_; \
+			class _CName_ : public _Base_##_CName_ \
+			{ \
+			public: \
+				_CName_(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::EParameterType eParameterType) \
+					:OpenViBE::Kernel::TBaseParameter < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IParameter >, IType >(rKernelContext, eParameterType) \
+				{ \
+					m_oDefaultValue = nullptr; \
+					IType l_pDefaultValue=&m_oDefaultValue; \
+					memcpy(&m_Value, &l_pDefaultValue, sizeof(IType)); \
+				} \
+				_IsDerivedFromClass_Final_(_Base_##_CName_, oClassId); \
+			protected: \
+				CType m_oDefaultValue; \
+			};
+
+		_parameter_template_instance_simple_type_(CIntegerParameter, OpenViBE::int64, OpenViBE::int64, OVK_ClassId_Kernel_IntegerParameter);
+		_parameter_template_instance_simple_type_(CUIntegerParameter, OpenViBE::uint64, OpenViBE::uint64, OVK_ClassId_Kernel_UIntegerParameter);
+		_parameter_template_instance_simple_type_(CEnumerationParameter, OpenViBE::uint64, OpenViBE::uint64, OVK_ClassId_Kernel_EnumerationParameter);
+		_parameter_template_instance_simple_type_(CBooleanParameter, OpenViBE::boolean, OpenViBE::boolean, OVK_ClassId_Kernel_BooleanParameter);
+		_parameter_template_instance_simple_type_(CFloatParameter, OpenViBE::float64, OpenViBE::float64, OVK_ClassId_Kernel_FloatParameter);
+		_parameter_template_instance_object_(CStringParameter, OpenViBE::CString, OpenViBE::CString*, OVK_ClassId_Kernel_StringParameter);
+		_parameter_template_instance_object_(CIdentifierParameter, OpenViBE::CIdentifier, OpenViBE::CIdentifier*, OVK_ClassId_Kernel_IdentifierParameter);
+		_parameter_template_instance_object_(CMatrixParameter, OpenViBE::CMatrix, OpenViBE::IMatrix*, OVK_ClassId_Kernel_MatrixParameter);
+		_parameter_template_instance_object_(CStimulationSetParameter, OpenViBE::CStimulationSet, OpenViBE::IStimulationSet*, OVK_ClassId_Kernel_StimulationSetParameter);
+		_parameter_template_instance_object_(CMemoryBufferParameter, OpenViBE::CMemoryBuffer, OpenViBE::IMemoryBuffer*, OVK_ClassId_Kernel_MemoryBufferParameter);
+		_parameter_template_instance_object_(CObjectParameter, OpenViBE::CNullObject, OpenViBE::IObject*, OVK_ClassId_Kernel_ObjectParameter);
+		_parameter_template_instance_pointer_(CPointerParameter, void*, void*, OVK_ClassId_Kernel_PointerParameter);
 
 		#undef _instance_
 	};

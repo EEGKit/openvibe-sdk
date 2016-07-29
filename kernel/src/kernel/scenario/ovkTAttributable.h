@@ -92,7 +92,7 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean hasAttributes(void) const
 			{
-				return m_vAttribute.size()!=0;
+				return !m_vAttribute.empty();
 			}
 
 			virtual OpenViBE::CIdentifier getNextAttributeIdentifier(

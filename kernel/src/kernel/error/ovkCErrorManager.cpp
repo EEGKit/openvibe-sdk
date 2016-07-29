@@ -38,9 +38,9 @@ namespace OpenViBE
 			CError(ErrorType type, const char* description,IError* nestedError, const char* filename, unsigned int line) :
 				m_ErrorType(type),
 				m_NestedError(nestedError),
-				m_Description(description)
+				m_Description(description),
+				m_Location(std::string(filename) + ":" + std::to_string(line))
 			{
-				m_Location = std::string(filename) + ":" + std::to_string(line);
 			}
 
 			~CError()

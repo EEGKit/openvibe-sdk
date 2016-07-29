@@ -367,7 +367,7 @@ void CLogListenerConsole::log(const ELogColor eLogColor)
 		// Tests 'pop state' bit
 		if(eLogColor&LogColor_PopStateBit)
 		{
-			if(m_vLogColor.size())
+			if(!m_vLogColor.empty())
 			{
 				m_eLogColor=m_vLogColor.top();
 				m_vLogColor.pop();

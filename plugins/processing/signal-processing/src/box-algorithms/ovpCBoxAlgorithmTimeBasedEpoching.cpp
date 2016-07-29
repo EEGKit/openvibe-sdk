@@ -230,8 +230,16 @@ boolean CBoxAlgorithmTimeBasedEpoching::initialize(void)
 		l_rStaticBoxContext.getSettingValue(i*2+0, l_sEpochDuration);
 		l_rStaticBoxContext.getSettingValue(i*2+1, l_sEpochInterval);
 
-		sscanf(l_sEpochDuration, "%lf", &l_f64EpochDuration);
-		sscanf(l_sEpochInterval, "%lf", &l_f64EpochInterval);
+		try
+		{
+			l_f64EpochDuration = std::stod(l_sEpochDuration.toASCIIString());
+			l_f64EpochInterval = std::stod(l_sEpochInterval.toASCIIString());
+		}
+		catch(const std::exception&)
+		{
+			// TODO: Add error management here
+			return false;
+		}
 
 		if(l_f64EpochDuration>0 && l_f64EpochInterval>0)
 		{
@@ -261,7 +269,7 @@ boolean CBoxAlgorithmTimeBasedEpoching::uninitialize(void)
 	m_oSignalDecoder.uninitialize();
 
 	vector<CBoxAlgorithmTimeBasedEpoching::COutputHandler*>::iterator itOutputHandler;
-	for(itOutputHandler=m_vOutputHandler.begin(); itOutputHandler!=m_vOutputHandler.end(); itOutputHandler++)
+	for(itOutputHandler=m_vOutputHandler.begin(); itOutputHandler!=m_vOutputHandler.end(); ++itOutputHandler)
 	{
 		delete *itOutputHandler;
 	}
@@ -284,12 +292,12 @@ boolean CBoxAlgorithmTimeBasedEpoching::process(void)
 	{
 		m_oSignalDecoder.decode(i);
 
-		if(m_oSignalDecoder.isHeaderReceived()) 
+		if(m_oSignalDecoder.isHeaderReceived())
 		{
 			// NOP
 		}
 
-		if(m_oSignalDecoder.isBufferReceived()) 
+		if(m_oSignalDecoder.isBufferReceived())
 		{
 			const uint64 l_ui64ChunkStartTime=l_rDynamicBoxContext.getInputChunkStartTime(0, i);
 			const uint64 l_ui64ChunkEndTime=l_rDynamicBoxContext.getInputChunkEndTime(0, i);
@@ -298,7 +306,7 @@ boolean CBoxAlgorithmTimeBasedEpoching::process(void)
 			{
 				this->getLogManager() << LogLevel_Debug << "Consecutive chunk start/end time differ (" << m_ui64LastEndTime << ":" << l_ui64ChunkStartTime << "), the epocher will restart\n";
 				vector<CBoxAlgorithmTimeBasedEpoching::COutputHandler*>::iterator itOutputHandler;
-				for(itOutputHandler=m_vOutputHandler.begin(); itOutputHandler!=m_vOutputHandler.end(); itOutputHandler++)
+				for(itOutputHandler=m_vOutputHandler.begin(); itOutputHandler!=m_vOutputHandler.end(); ++itOutputHandler)
 				{
 					(*itOutputHandler)->reset(l_ui64ChunkStartTime);
 				}
@@ -310,12 +318,12 @@ boolean CBoxAlgorithmTimeBasedEpoching::process(void)
 
 			// Add the chunk appropriately to each output stream
 			vector<CBoxAlgorithmTimeBasedEpoching::COutputHandler*>::iterator itOutputHandler;
-			for(itOutputHandler=m_vOutputHandler.begin(); itOutputHandler!=m_vOutputHandler.end(); itOutputHandler++)
+			for(itOutputHandler=m_vOutputHandler.begin(); itOutputHandler!=m_vOutputHandler.end(); ++itOutputHandler)
 			{
 				if(!((*itOutputHandler)->process())) {
 					return false;
 				}
-			}						
+			}
 
 			m_ui64LastStartTime=l_ui64ChunkStartTime;
 			m_ui64LastEndTime=l_ui64ChunkEndTime;

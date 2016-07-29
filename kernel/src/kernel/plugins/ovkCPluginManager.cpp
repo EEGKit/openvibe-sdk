@@ -40,7 +40,7 @@ namespace OpenViBE
 				FS::IEntryEnumerator::IAttributes& rAttributes)
 			{
 				vector<IPluginModule*>::iterator i;
-				for(i=m_rPluginModule.begin(); i!=m_rPluginModule.end(); i++)
+				for(i=m_rPluginModule.begin(); i!=m_rPluginModule.end(); ++i)
 				{
 					CString l_sPluginModuleName;
 					if(!(*i)->getFileName(l_sPluginModuleName))
@@ -155,7 +155,7 @@ CPluginManager::~CPluginManager(void)
 	m_vPluginObjectDesc.clear();
 
 	vector < IPluginModule* >::iterator k;
-	for(k=m_vPluginModule.begin(); k!=m_vPluginModule.end(); k++)
+	for(k=m_vPluginModule.begin(); k!=m_vPluginModule.end(); ++k)
 	{
 		this->getLogManager() << LogLevel_Trace << "Releasing plugin module with class id " << (*k)->getClassIdentifier() << "\n";
 		(*k)->uninitialize();
@@ -191,7 +191,7 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(
 {
 	boolean l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
 	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); i++)
+	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
 	{
 		if(!l_bFoundPrevious)
 		{
@@ -214,7 +214,7 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(
 {
 	boolean l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
 	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); i++)
+	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
 	{
 		if(!l_bFoundPrevious)
 		{
@@ -240,7 +240,7 @@ boolean CPluginManager::canCreatePluginObject(
 //	this->getLogManager() << LogLevel_Debug << "Searching if can build plugin object\n";
 
 	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); i++)
+	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
 	{
 		if(i->first->getCreatedClass()==rClassIdentifier)
 		{
@@ -257,7 +257,7 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(
 //	this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
 	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); i++)
+	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
 	{
 		if(i->first->getClassIdentifier()==rClassIdentifier)
 		{
@@ -275,7 +275,7 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDescCreating(
 //	this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
 	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); i++)
+	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
 	{
 		if(i->first->getCreatedClass()==rClassIdentifier)
 		{
@@ -336,9 +336,9 @@ boolean CPluginManager::releasePluginObject(
 
 	map < IPluginObjectDesc*, vector < IPluginObject* > >::iterator i;
 	vector < IPluginObject* >::iterator j;
-	for(i=m_vPluginObject.begin(); i!=m_vPluginObject.end(); i++)
+	for(i=m_vPluginObject.begin(); i!=m_vPluginObject.end(); ++i)
 	{
-		for(j=i->second.begin(); j!=i->second.end(); j++)
+		for(j=i->second.begin(); j!=i->second.end(); ++j)
 		{
 			if((*j)==pPluginObject)
 			{
@@ -414,7 +414,25 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 		CString l_sSubstitutionTokenValue;
 		l_sSubstitutionTokenValue=this->getConfigurationManager().getConfigurationTokenValue(l_oSubstitutionTokenIdentifier);
 		l_sSubstitutionTokenValue=this->getConfigurationManager().expand(l_sSubstitutionTokenValue);
-		::sscanf(l_sSubstitutionTokenValue.toASCIIString(), "%llx", &l_ui64TargetClassIdentifier);
+
+		try
+		{
+			l_ui64TargetClassIdentifier = std::stoull(l_sSubstitutionTokenValue.toASCIIString(), 0, 16);
+		}
+		catch(const std::invalid_argument& exception)
+		{
+			OV_ERROR_KRN(
+				"Received exception while converting class identifier from string to number: " << exception.what(),
+				ErrorType::BadArgument
+			);
+		}
+		catch(const std::out_of_range& exception)
+		{
+			OV_ERROR_KRN(
+				"Received exception while converting class identifier from string to number: " << exception.what(),
+				ErrorType::OutOfBound
+			);
+		}
 	}
 	if(l_ui64TargetClassIdentifier!=l_ui64SourceClassIdentifier)
 	{
@@ -427,7 +445,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 
 	IPluginObjectDesc* l_pPluginObjectDesc=NULL;
 	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); i++)
+	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
 	{
 		if(i->first->getCreatedClass()==CIdentifier(l_ui64TargetClassIdentifier))
 		{

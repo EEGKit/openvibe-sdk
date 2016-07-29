@@ -18,12 +18,14 @@ public:
 
 	CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = NULL) :
 		OpenViBE::IObjectVisitor(),
+		m_pObjectVisitorContext(nullptr),
+		m_pBox(nullptr),
 		m_pConfigurationManager(pConfigurationManager)
 	{}
 
 	virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount);
 
-	virtual void processChildData(const char* sData);	
+	virtual void processChildData(const char* sData);
 
 	virtual void closeChild(void);
 

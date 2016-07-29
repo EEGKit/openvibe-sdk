@@ -124,9 +124,7 @@ EBML::boolean CBoxAlgorithmEBMLStreamSpy::isMasterChild(const EBML::CIdentifier&
 void CBoxAlgorithmEBMLStreamSpy::openChild(const EBML::CIdentifier& rIdentifier)
 {
 	map<EBML::CIdentifier, string>::iterator n;
-	map<EBML::CIdentifier, string>::iterator t;
 	n=m_vName.find(rIdentifier);
-	t=m_vType.find(rIdentifier);
 
 	getLogManager() << m_eLogLevel;
 
@@ -167,9 +165,7 @@ void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const E
 
 void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
 {
-	map<EBML::CIdentifier, string>::iterator n;
 	map<EBML::CIdentifier, string>::iterator t;
-	n=m_vName.find(m_vNodes.top());
 	t=m_vType.find(m_vNodes.top());
 
 	if(t!=m_vType.end())
@@ -292,7 +288,7 @@ boolean CBoxAlgorithmEBMLStreamSpy::process(void)
 				l_rDynamicBoxContext.markInputAsDeprecated(i, j);
 
 				getLogManager() << m_eLogLevel
-					<< "For chunk [id:" << j << "] at [time:" << CIdentifier(l_ui64StartTime) << "," << CIdentifier(l_ui64EndTime) 
+					<< "For chunk [id:" << j << "] at [time:" << CIdentifier(l_ui64StartTime) << "," << CIdentifier(l_ui64EndTime)
 					<< " / " << time64(l_ui64StartTime) << "," << time64(l_ui64EndTime)
 					<< "]\n";
 

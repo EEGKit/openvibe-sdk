@@ -77,7 +77,7 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 		const CIdentifier l_oClassifierAlgorithmIdentifier = this->getAlgorithmManager().createAlgorithm(l_oClassifierAlgorithmClassIdentifier);
 		if(l_oClassifierAlgorithmIdentifier == OV_UndefinedIdentifier)
 		{
-			this->getLogManager() << LogLevel_Error << "Error instantiating classifier class with id " 
+			this->getLogManager() << LogLevel_Error << "Error instantiating classifier class with id "
 				<< l_oClassifierAlgorithmClassIdentifier
 				<< ". If you've loaded an old scenario or configuration file(s), make sure that the classifiers specified in it are still available.\n";
 			return false;
@@ -126,7 +126,7 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 
 	// Provide the number of classes to the classifier
 	const uint32 l_ui32ClassCount = l_rStaticBoxContext.getInputCount() - 1;
-	TParameterHandler< uint64 > ip_NumClasses = m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses);
+	TParameterHandler< uint64 > ip_NumClasses(m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
 	ip_NumClasses = l_ui32ClassCount;
 
 	//If we have to deal with a pairing strategy we have to pass argument
@@ -149,7 +149,7 @@ boolean CBoxAlgorithmClassifierTrainer::uninitialize(void)
 	m_oStimulationDecoder.uninitialize();
 	m_oStimulationEncoder.uninitialize();
 
-	if(m_pClassifier) 
+	if(m_pClassifier)
 	{
 		m_pClassifier->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pClassifier);
@@ -204,8 +204,8 @@ boolean CBoxAlgorithmClassifierTrainer::balanceDataset()
 	const uint32 l_ui32ClassCount = l_rStaticBoxContext.getInputCount() - 1;
 
 	this->getLogManager() << LogLevel_Info << "Balancing dataset...\n";
-	
-	// Collect index set of feature vectors per class 
+
+	// Collect index set of feature vectors per class
 	std::vector< std::vector<uint32> > l_vClassIndexes;
 	l_vClassIndexes.resize(l_ui32ClassCount);
 	for(size_t i=0; i<m_vDataset.size();i++)
@@ -218,7 +218,7 @@ boolean CBoxAlgorithmClassifierTrainer::balanceDataset()
 	for(uint32 i=0;i<l_ui32ClassCount;i++) {
 		l_ui32MaxCount = std::max<uint32>(l_ui32MaxCount,l_vClassIndexes[i].size());
 	}
-	
+
 	m_vBalancedDataset.clear();
 
 	// Pad those classes with resampled examples (sampling with replacement) that have fewer examples than the largest class
@@ -236,7 +236,7 @@ boolean CBoxAlgorithmClassifierTrainer::balanceDataset()
 			this->getLogManager() << LogLevel_Debug << "Padding class " << i << " with " << l_ui32PaddingNeeded << " examples\n";
 		}
 
-		// Copy all the examples first to a temporary array so we don't mess with the original data. 
+		// Copy all the examples first to a temporary array so we don't mess with the original data.
 		// This is not too bad as instead of data, we copy the pointer. m_vDataset owns the data pointer.
 		const std::vector<uint32>& l_vThisClassesIndexes = l_vClassIndexes[i];
 		for(uint32 j=0;j<l_ui32ExamplesInClass;j++)
@@ -336,7 +336,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 	// On train stimulation reception, build up the labelled feature vector set matrix and go on training
 	if(l_bTrainStimulationReceived)
 	{
-		if(m_vDataset.size()<m_ui64PartitionCount) 
+		if(m_vDataset.size()<m_ui64PartitionCount)
 		{
 			this->getLogManager() << LogLevel_Error << "Fewer examples (" << (uint32)m_vDataset.size() << ") than the specified partition count (" << m_ui64PartitionCount << ").\n";
 			return false;
@@ -347,7 +347,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << (uint32) m_vDataset.size() << "x" 
+			this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << (uint32) m_vDataset.size() << "x"
 				<< m_vDataset[0].m_pFeatureVectorMatrix->getBufferElementCount() << "]\n";
 			for(i=1; i<l_rStaticBoxContext.getInputCount(); i++)
 			{
@@ -425,14 +425,14 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 				this->getLogManager() << LogLevel_Info << "Cross-validation test accuracy is " << l_fMean << "% (sigma = " << l_fDeviation << "%)\n";
 
 				printConfusionMatrix(l_oConfusion);
-			} 
+			}
 			else
 			{
 				this->getLogManager() << LogLevel_Info << "Training without cross-validation.\n";
 				this->getLogManager() << LogLevel_Info << "*** Reported training set accuracy will be optimistic ***\n";
 			}
 
-		
+
 			this->getLogManager() << LogLevel_Trace << "Training final classifier on the whole set...\n";
 			if(!this->train(l_rActualDataset, l_vFeaturePermutation, 0, 0))
 			{
@@ -440,7 +440,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 				return false;
 			}
 
-			
+
 			OpenViBEToolkit::Tools::Matrix::clearContent(l_oConfusion);
 			const float64 l_f64TrainAccuracy = this->getAccuracy(l_rActualDataset, l_vFeaturePermutation, 0, l_rActualDataset.size(), l_oConfusion);
 
@@ -458,7 +458,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 	return true;
 }
 
-boolean CBoxAlgorithmClassifierTrainer::train(const std::vector < SFeatureVector >& rDataset, 
+boolean CBoxAlgorithmClassifierTrainer::train(const std::vector < SFeatureVector >& rDataset,
 	const std::vector< size_t >& rPermutation, const size_t uiStartIndex, const size_t uiStopIndex)
 {
 	if(uiStopIndex-uiStartIndex==1)
@@ -510,7 +510,7 @@ boolean CBoxAlgorithmClassifierTrainer::train(const std::vector < SFeatureVector
 }
 
 // Note that this function is incremental for oConfusionMatrix and can be called many times; so we don't clear the matrix
-float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector < CBoxAlgorithmClassifierTrainer::SFeatureVector >& rDataset, 
+float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector < CBoxAlgorithmClassifierTrainer::SFeatureVector >& rDataset,
 	const std::vector< size_t >& rPermutation, const size_t uiStartIndex, const size_t uiStopIndex, CMatrix& oConfusionMatrix)
 {
 	if(uiStopIndex-uiStartIndex==0)
@@ -563,7 +563,7 @@ float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector < CBoxAlgo
 		if(l_f64PredictedValue<oConfusionMatrix.getDimensionSize(0) && l_f64CorrectValue<oConfusionMatrix.getDimensionSize(0))
 		{
 			float64* buf = oConfusionMatrix.getBuffer();
-			buf[static_cast<uint32>(l_f64CorrectValue)*oConfusionMatrix.getDimensionSize(1) + 
+			buf[static_cast<uint32>(l_f64CorrectValue)*oConfusionMatrix.getDimensionSize(1) +
 				static_cast<uint32>(l_f64PredictedValue)] += 1.0;
 		}
 		else
@@ -619,7 +619,7 @@ boolean CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMat
 
 	ss.precision(1);
 	for(uint32 i=0;i<l_ui32Rows;i++) {
-		ss.str("") ; 
+		ss.str("") ;
 		ss << "  Target " << setw(2) << (i+1) << ": ";
 		for(uint32 j=0;j<l_ui32Rows;j++) {
 			ss << setw(6) << l_oTmp[i*l_ui32Rows+j]*100;

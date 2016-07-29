@@ -19,7 +19,7 @@ using namespace OpenViBEPlugins::SignalProcessing;
 typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
 #endif
 
-OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CString &rCoefficients, const char c1, const char c2, uint32 nRows, uint32 nCols) 
+OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CString &rCoefficients, const char c1, const char c2, uint32 nRows, uint32 nCols)
 {
 	this->getLogManager() << LogLevel_Trace << "Parsing coefficients matrix\n";
 
@@ -28,28 +28,28 @@ OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CS
 	this->getLogManager() << LogLevel_Trace << "Counting the number of coefficients\n";
 	uint32 l_u32count = 0;
 	const char *l_sPtr = rCoefficients.toASCIIString();
-	while(*l_sPtr!=0) 
+	while(*l_sPtr!=0)
 	{
 		// Skip separator characters
-		while(*l_sPtr==c1 || *l_sPtr==c2) 
-		{ 
-			l_sPtr++; 
+		while(*l_sPtr==c1 || *l_sPtr==c2)
+		{
+			l_sPtr++;
 		}
-		if(*l_sPtr==0) 
+		if(*l_sPtr==0)
 		{
 			break;
 		}
 		// Ok, we have reached something that is not NULL or separator, assume its a number
 		l_u32count++;
 		// Skip the normal characters
-		while(*l_sPtr!=c1 && *l_sPtr!=c2 && *l_sPtr!=0) 
-		{ 
-			l_sPtr++; 
+		while(*l_sPtr!=c1 && *l_sPtr!=c2 && *l_sPtr!=0)
+		{
+			l_sPtr++;
 		}
 	}
 
 	if(l_u32count != nRows*nCols ) {
-		this->getLogManager() << LogLevel_Error << "Number of coefficients expected (" 
+		this->getLogManager() << LogLevel_Error << "Number of coefficients expected ("
 			<< nRows * nCols << ") did not match the number counted ("
 			<< l_u32count << ")\n";
 		return 0;
@@ -66,25 +66,25 @@ OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CS
 	this->getLogManager() << LogLevel_Trace << "Converting the coefficients to a float vector\n";
 	l_sPtr = rCoefficients.toASCIIString();
 	uint32 l_ui32currentIdx = 0;
-	while(*l_sPtr!=0) 
+	while(*l_sPtr!=0)
 	{
 		const int BUFFSIZE=1024;
 		char l_sBuffer[BUFFSIZE];
 		// Skip separator characters
-		while(*l_sPtr==c1 || *l_sPtr==c2) 
-		{ 
-			l_sPtr++; 
+		while(*l_sPtr==c1 || *l_sPtr==c2)
+		{
+			l_sPtr++;
 		}
-		if(*l_sPtr==0) 
+		if(*l_sPtr==0)
 		{
 			break;
 		}
 		// Copy the normal characters, don't exceed buffer size
 		int i=0;
-		while(*l_sPtr!=c1 && *l_sPtr!=c2 && *l_sPtr!=0) 
-		{ 
+		while(*l_sPtr!=c1 && *l_sPtr!=c2 && *l_sPtr!=0)
+		{
 			if(i<BUFFSIZE-1) {
-				l_sBuffer[i++] = *l_sPtr; 
+				l_sBuffer[i++] = *l_sPtr;
 			}
 			else
 			{
@@ -100,15 +100,20 @@ OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CS
 		}
 
 		// Finally, convert
-		if(!sscanf(l_sBuffer, "%lf", &l_pFilter[l_ui32currentIdx])) 
+		try
+		{
+			l_pFilter[l_ui32currentIdx] = std::stod(l_sBuffer);
+		}
+		catch(const std::exception&)
 		{
 			const uint32 l_ui32currentRow = l_ui32currentIdx/nRows + 1;
 			const uint32 l_ui32currentCol = l_ui32currentIdx%nRows + 1;
 
-			this->getLogManager() << LogLevel_Error << "Error parsing coefficient nr. " << l_ui32currentIdx 
+			this->getLogManager() << LogLevel_Error << "Error parsing coefficient nr. " << l_ui32currentIdx
 				<< " for matrix position (" << l_ui32currentRow << "," << l_ui32currentCol << "), stopping.\n";
 			return 0;
 		}
+
 		l_ui32currentIdx++;
 	}
 
@@ -137,7 +142,7 @@ boolean CBoxAlgorithmSpatialFilter::initialize(void)
 
 		((OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputSamplingRate().setReferenceTarget(
 			((OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSpatialFilter>*)m_pStreamDecoder)->getOutputSamplingRate());
-	} 
+	}
 	else if(l_oIdentifier==OV_TypeId_Spectrum)
 	{
 		m_pStreamDecoder=new OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmSpatialFilter >(*this, 0);
@@ -145,7 +150,7 @@ boolean CBoxAlgorithmSpatialFilter::initialize(void)
 
 		((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputMinMaxFrequencyBands().setReferenceTarget(
 			((OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*)m_pStreamDecoder)->getOutputMinMaxFrequencyBands());
-	} 
+	}
 	else
 	{
 		this->getLogManager() << LogLevel_Error << "Unhandled input stream type " << l_oIdentifier << "\n";
@@ -153,7 +158,7 @@ boolean CBoxAlgorithmSpatialFilter::initialize(void)
 	}
 
 	// If we have a filter file, use dimensions and coefficients from that. Otherwise, use box config params.
-	CString l_sFilterFile = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);	
+	CString l_sFilterFile = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	if(l_sFilterFile!=CString(""))
 	{
 		if(!OpenViBEToolkit::Tools::Matrix::loadFromTextFile(m_oFilterBank, l_sFilterFile)) {
@@ -172,8 +177,8 @@ boolean CBoxAlgorithmSpatialFilter::initialize(void)
 	}
 	else
 	{
-		const CString l_sCoefficient=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);	
-		// The double cast is needed until FSettingValueAutoCast supports uint32. 
+		const CString l_sCoefficient=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+		// The double cast is needed until FSettingValueAutoCast supports uint32.
 		const uint32 l_ui32OutputChannelCountSetting=(uint32)(uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 		const uint32 l_ui32InputChannelCountSetting=(uint32)(uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 		const uint32 l_ui32nCoefficients = loadCoefficients(l_sCoefficient, ' ', OV_Value_EnumeratedStringSeparator, l_ui32OutputChannelCountSetting, l_ui32InputChannelCountSetting);
@@ -225,7 +230,7 @@ boolean CBoxAlgorithmSpatialFilter::process(void)
 	{
 
 		m_pStreamDecoder->decode(i);
-		if(m_pStreamDecoder->isHeaderReceived()) 
+		if(m_pStreamDecoder->isHeaderReceived())
 		{
 			// we can treat them all as matrix decoders as they all inherit from it
 			const IMatrix *l_pInputMatrix = (static_cast< OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>* >(m_pStreamDecoder))->getOutputMatrix();
@@ -233,7 +238,7 @@ boolean CBoxAlgorithmSpatialFilter::process(void)
 			const uint32 l_ui32InputChannelCount=l_pInputMatrix->getDimensionSize(0);
 			const uint32 l_ui32InputSamplesCount=l_pInputMatrix->getDimensionSize(1);
 
-			if(l_ui32InputChannelCount == 0 || l_ui32InputSamplesCount == 0) 
+			if(l_ui32InputChannelCount == 0 || l_ui32InputSamplesCount == 0)
 			{
 				this->getLogManager() << LogLevel_Error  << "Bad matrix size on input, [" << l_ui32InputChannelCount << " x " << l_ui32InputSamplesCount << "]\n";
 				return false;

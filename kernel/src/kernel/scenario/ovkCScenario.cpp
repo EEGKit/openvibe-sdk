@@ -81,7 +81,7 @@ namespace
 			{
 				return OV_UndefinedIdentifier;
 			}
-			it++;
+			++it;
 		}
 
 		while(it!=vMap.end())
@@ -90,7 +90,7 @@ namespace
 			{
 				return it->first;
 			}
-			it++;
+			++it;
 		}
 
 		return OV_UndefinedIdentifier;
@@ -123,7 +123,7 @@ boolean CScenario::clear(void)
 
 	// Clears boxes
 	map<CIdentifier, CBox*>::iterator itBox;
-	for(itBox=m_vBox.begin(); itBox!=m_vBox.end(); itBox++)
+	for(itBox=m_vBox.begin(); itBox!=m_vBox.end(); ++itBox)
 	{
 		delete itBox->second;
 	}
@@ -131,7 +131,7 @@ boolean CScenario::clear(void)
 
 	// Clears comments
 	map<CIdentifier, CComment*>::iterator itComment;
-	for(itComment=m_vComment.begin(); itComment!=m_vComment.end(); itComment++)
+	for(itComment=m_vComment.begin(); itComment!=m_vComment.end(); ++itComment)
 	{
 		delete itComment->second;
 	}
@@ -139,7 +139,7 @@ boolean CScenario::clear(void)
 
 	// Clears links
 	map<CIdentifier, CLink*>::iterator itLink;
-	for(itLink=m_vLink.begin(); itLink!=m_vLink.end(); itLink++)
+	for(itLink=m_vLink.begin(); itLink!=m_vLink.end(); ++itLink)
 	{
 		delete itLink->second;
 	}
@@ -439,7 +439,7 @@ boolean CScenario::removeBox(
 	while(itLink!=m_vLink.end())
 	{
 		map<CIdentifier, CLink*>::iterator itLinkCurrent=itLink;
-		itLink++;
+		++itLink;
 
 		if(itLinkCurrent->second->getSourceBoxIdentifier()==rBoxIdentifier || itLinkCurrent->second->getTargetBoxIdentifier()==rBoxIdentifier)
 		{
@@ -914,7 +914,7 @@ boolean CScenario::connect(
 	while(itLink!=m_vLink.end())
 	{
 		map<CIdentifier, CLink*>::iterator itLinkCurrent=itLink;
-		itLink++;
+		++itLink;
 
 		CLink* l_pLink=itLinkCurrent->second;
 		if(l_pLink)
@@ -947,7 +947,7 @@ boolean CScenario::disconnect(
 {
 	// Looks for any link with the same signature
 	map<CIdentifier, CLink*>::iterator itLink;
-	for(itLink=m_vLink.begin(); itLink!=m_vLink.end(); itLink++)
+	for(itLink=m_vLink.begin(); itLink!=m_vLink.end(); ++itLink)
 	{
 		CLink* l_pLink=itLink->second;
 		if(l_pLink)
@@ -1063,7 +1063,7 @@ boolean CScenario::acceptVisitor(
 	}
 
 	map<CIdentifier, CBox*>::iterator i;
-	for(i=m_vBox.begin(); i!=m_vBox.end(); i++)
+	for(i=m_vBox.begin(); i!=m_vBox.end(); ++i)
 	{
 		if(!i->second->acceptVisitor(rObjectVisitor))
 		{
@@ -1072,7 +1072,7 @@ boolean CScenario::acceptVisitor(
 	}
 
 	map<CIdentifier, CComment*>::iterator j;
-	for(j=m_vComment.begin(); j!=m_vComment.end(); j++)
+	for(j=m_vComment.begin(); j!=m_vComment.end(); ++j)
 	{
 		if(!j->second->acceptVisitor(rObjectVisitor))
 		{
@@ -1081,7 +1081,7 @@ boolean CScenario::acceptVisitor(
 	}
 
 	map<CIdentifier, CLink*>::iterator k;
-	for(k=m_vLink.begin(); k!=m_vLink.end(); k++)
+	for(k=m_vLink.begin(); k!=m_vLink.end(); ++k)
 	{
 		if(!k->second->acceptVisitor(rObjectVisitor))
 		{

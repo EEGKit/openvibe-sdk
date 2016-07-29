@@ -27,14 +27,19 @@ namespace
 		}
 		else if(rMatchMethodIdentifier==OVP_TypeId_MatchMethod_Index)
 		{
-			unsigned int value;
-			if(::sscanf(rChannel.toASCIIString(), "%u", &value)==1)
+			try
 			{
+				unsigned int value = std::stoul(rChannel.toASCIIString());
 				value--; // => makes it 0-indexed !
+
 				if(uiStart <= uint32(value) && uint32(value) < rMatrix.getDimensionSize(0))
 				{
 					l_ui32Result=uint32(value);
 				}
+			}
+			catch(const std::exception&)
+			{
+				// catch block intentionnaly left blank
 			}
 		}
 		else if(rMatchMethodIdentifier==OVP_TypeId_MatchMethod_Smart)

@@ -156,7 +156,7 @@ CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(
 		{
 			return OV_UndefinedIdentifier;
 		}
-		itAlgorithm++;
+		++itAlgorithm;
 	}
 
 	return itAlgorithm!=m_vAlgorithms.end()?itAlgorithm->first:OV_UndefinedIdentifier;

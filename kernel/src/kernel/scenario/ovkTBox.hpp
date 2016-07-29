@@ -842,7 +842,7 @@ namespace OpenViBE
 				typename std::vector<CSetting>::iterator it=m_vSetting.begin();
 				for(i=0; i<ui32SettingIndex && it!=m_vSetting.end(); i++)
 				{
-					it++;
+					++it;
 				}
 
 				OV_ERROR_UNLESS_KRF(
@@ -865,7 +865,7 @@ namespace OpenViBE
 					{
 						m_vModifiableSettingIndexes[i]-=1;
 					}
-					it2++;
+					++it2;
 				}
 
 				this->notify(BoxModification_SettingRemoved, ui32SettingIndex);

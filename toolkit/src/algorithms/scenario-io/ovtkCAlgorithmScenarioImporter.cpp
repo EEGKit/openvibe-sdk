@@ -182,8 +182,6 @@ boolean CAlgorithmScenarioImporter::process(void)
 	}
 
 	std::map<CIdentifier, CIdentifier> l_vBoxIdMapping;
-	std::map<CIdentifier, CIdentifier> l_vCommentIdMapping;
-	std::map<CIdentifier, CIdentifier> l_vLinkIdMapping;
 
 	CAlgorithmScenarioImporterContext l_oContext(this->getAlgorithmContext());
 	if(!this->import(l_oContext, *l_pMemoryBuffer))
@@ -201,10 +199,9 @@ boolean CAlgorithmScenarioImporter::process(void)
 	std::vector<SOutput>::const_iterator o;
 	std::vector<SSetting>::const_iterator s;
 	std::vector<SLink>::const_iterator l;
-	std::vector<SLink>::const_iterator ml;
 	std::vector<SAttribute>::const_iterator a;
 
-	for(s=l_rSymbolicScenario.m_vSetting.begin(); s!=l_rSymbolicScenario.m_vSetting.end(); s++)
+	for(s=l_rSymbolicScenario.m_vSetting.begin(); s!=l_rSymbolicScenario.m_vSetting.end(); ++s)
 	{
 		l_pScenario->addSetting(
 			s->m_sName,
@@ -216,7 +213,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 	}
 
 
-	for(b=l_rSymbolicScenario.m_vBox.begin(); b!=l_rSymbolicScenario.m_vBox.end(); b++)
+	for(b=l_rSymbolicScenario.m_vBox.begin(); b!=l_rSymbolicScenario.m_vBox.end(); ++b)
 	{
 		IBox* l_pBox=NULL;
 		CIdentifier l_oNewBoxIdentifier;
@@ -227,20 +224,20 @@ boolean CAlgorithmScenarioImporter::process(void)
 		{
 			l_pBox->setName(b->m_sName);
 
-			for(i=b->m_vInput.begin(); i!=b->m_vInput.end(); i++)
+			for(i=b->m_vInput.begin(); i!=b->m_vInput.end(); ++i)
 			{
 				l_pBox->addInput(
 					i->m_sName,
 					i->m_oTypeIdentifier);
 			}
-			
-			for(o=b->m_vOutput.begin(); o!=b->m_vOutput.end(); o++)
+
+			for(o=b->m_vOutput.begin(); o!=b->m_vOutput.end(); ++o)
 			{
 				l_pBox->addOutput(
 					o->m_sName,
 					o->m_oTypeIdentifier);
 			}
-			for(s=b->m_vSetting.begin(); s!=b->m_vSetting.end(); s++)
+			for(s=b->m_vSetting.begin(); s!=b->m_vSetting.end(); ++s)
 			{
 				const CIdentifier& l_oType = s->m_oTypeIdentifier;
 				if(l_oType!=OV_TypeId_Boolean && l_oType!=OV_TypeId_Integer && l_oType!=OV_TypeId_Float && l_oType!=OV_TypeId_String
@@ -261,7 +258,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 					s->m_sValue);
 
 			}
-			for(a=b->m_vAttribute.begin(); a!=b->m_vAttribute.end(); a++)
+			for(a=b->m_vAttribute.begin(); a!=b->m_vAttribute.end(); ++a)
 			{
 				l_pBox->addAttribute(
 					a->m_oIdentifier,
@@ -275,7 +272,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 		l_vBoxIdMapping[b->m_oIdentifier]=l_oNewBoxIdentifier;
 	}
 
-	for(c=l_rSymbolicScenario.m_vComment.begin(); c!=l_rSymbolicScenario.m_vComment.end(); c++)
+	for(c=l_rSymbolicScenario.m_vComment.begin(); c!=l_rSymbolicScenario.m_vComment.end(); ++c)
 	{
 		IComment* l_pComment=NULL;
 		CIdentifier l_oNewCommentIdentifier;
@@ -286,16 +283,15 @@ boolean CAlgorithmScenarioImporter::process(void)
 		{
 			l_pComment->setText(c->m_sText);
 
-			for(a=c->m_vAttribute.begin(); a!=c->m_vAttribute.end(); a++)
+			for(a=c->m_vAttribute.begin(); a!=c->m_vAttribute.end(); ++a)
 			{
 				l_pComment->addAttribute(
 					a->m_oIdentifier,
 					a->m_sValue);
 			}
 		}
-		l_vCommentIdMapping[c->m_oIdentifier]=l_oNewCommentIdentifier;
 	}
-	for(l=l_rSymbolicScenario.m_vLink.begin(); l!=l_rSymbolicScenario.m_vLink.end(); l++)
+	for(l=l_rSymbolicScenario.m_vLink.begin(); l!=l_rSymbolicScenario.m_vLink.end(); ++l)
 	{
 		ILink* l_pLink=NULL;
 		CIdentifier l_oNewLinkIdentifier;
@@ -310,13 +306,12 @@ boolean CAlgorithmScenarioImporter::process(void)
 		l_pLink=l_pScenario->getLinkDetails(l_oNewLinkIdentifier);
 		if(l_pLink)
 		{
-			for(a=l->m_vAttribute.begin(); a!=l->m_vAttribute.end(); a++)
+			for(a=l->m_vAttribute.begin(); a!=l->m_vAttribute.end(); ++a)
 			{
 				l_pLink->addAttribute(
 					a->m_oIdentifier,
 					a->m_sValue);
 			}
-			l_vLinkIdMapping[l->m_oIdentifier]=l_oNewLinkIdentifier;
 		}
 	}
 
@@ -342,7 +337,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 		l_ui32ScenarioOutputIndex++;
 	}
 
-	for(a=l_rSymbolicScenario.m_vAttribute.begin(); a!=l_rSymbolicScenario.m_vAttribute.end(); a++)
+	for(a=l_rSymbolicScenario.m_vAttribute.begin(); a!=l_rSymbolicScenario.m_vAttribute.end(); ++a)
 	{
 		l_pScenario->addAttribute(
 			a->m_oIdentifier,
