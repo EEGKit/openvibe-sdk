@@ -14,7 +14,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CMessageClock(const OpenViBE::Kernel::IKernelContext& rKernelContext)
+			explicit CMessageClock(const OpenViBE::Kernel::IKernelContext& rKernelContext)
 				:OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >(rKernelContext)
 			{
 			}

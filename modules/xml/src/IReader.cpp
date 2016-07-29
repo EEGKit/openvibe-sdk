@@ -12,7 +12,7 @@ namespace XML
 	class CReader : public IReader
 	{
 	public:
-		CReader(IReaderCallback& rReaderCallback);
+		explicit CReader(IReaderCallback& rReaderCallback);
 
 		virtual boolean processData(const void* pBuffer, const uint64 ui64BufferSize);
 		virtual void release(void);

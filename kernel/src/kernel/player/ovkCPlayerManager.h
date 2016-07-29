@@ -15,7 +15,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CPlayerManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CPlayerManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 
 			virtual OpenViBE::boolean createPlayer(
 				OpenViBE::CIdentifier& rPlayerIdentifier);

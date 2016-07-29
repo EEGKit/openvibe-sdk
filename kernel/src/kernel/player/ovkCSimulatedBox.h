@@ -26,7 +26,7 @@ namespace OpenViBE
 			{
 			}
 
-			CChunk(const OpenViBE::Kernel::CChunk& rChunk)
+			explicit CChunk(const OpenViBE::Kernel::CChunk& rChunk)
 				:m_oBuffer(rChunk.m_oBuffer)
 				,m_ui64StartTime(rChunk.m_ui64StartTime)
 				,m_ui64EndTime(rChunk.m_ui64EndTime)

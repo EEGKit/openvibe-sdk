@@ -66,8 +66,8 @@ boolean CLogListenerConsole::activate(boolean bActive)
 
 void CLogListenerConsole::log(const time64 time64Value)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat=cout.flags();
 
 	if(m_bTimeInSeconds)
@@ -96,13 +96,13 @@ void CLogListenerConsole::log(const time64 time64Value)
 	}
 
 	cout.flags(l_oFormat);
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const uint64 ui64Value)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat=cout.flags();
 	cout << dec << ui64Value;
 	if(m_bLogWithHexa)
@@ -111,13 +111,13 @@ void CLogListenerConsole::log(const uint64 ui64Value)
 	}
 
 	cout.flags(l_oFormat);
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const uint32 ui32Value)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat=cout.flags();
 	cout << dec << ui32Value;
 	if(m_bLogWithHexa)
@@ -125,13 +125,13 @@ void CLogListenerConsole::log(const uint32 ui32Value)
 		cout << " (0x" << hex << ui32Value << ")";
 	}
 	cout.flags(l_oFormat);
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const uint16 ui16Value)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat=cout.flags();
 	cout << dec << ui16Value;
 	if(m_bLogWithHexa)
@@ -139,13 +139,13 @@ void CLogListenerConsole::log(const uint16 ui16Value)
 		cout << " (0x" << hex << ui16Value << ")";
 	}
 	cout.flags(l_oFormat);
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const uint8 ui8Value)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat=cout.flags();
 	cout << dec << ui8Value;
 	if(m_bLogWithHexa)
@@ -153,13 +153,13 @@ void CLogListenerConsole::log(const uint8 ui8Value)
 		cout << " (0x" << hex << ui8Value << ")";
 	}
 	cout.flags(l_oFormat);
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const int64 i64Value)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat=cout.flags();
 	cout << dec << i64Value;
 	if(m_bLogWithHexa)
@@ -167,12 +167,12 @@ void CLogListenerConsole::log(const int64 i64Value)
 		cout << " (0x" << hex << i64Value << ")";
 	}
 	cout.flags(l_oFormat);
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const int32 i32Value)
-{	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+{	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat=cout.flags();
 	cout << dec << i32Value;
 	if(m_bLogWithHexa)
@@ -180,13 +180,13 @@ void CLogListenerConsole::log(const int32 i32Value)
 		cout << " (0x" << hex << i32Value << ")";
 	}
 	cout.flags(l_oFormat);
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const int16 i16Value)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat=cout.flags();
 	cout << dec << i16Value;
 	if(m_bLogWithHexa)
@@ -194,13 +194,13 @@ void CLogListenerConsole::log(const int16 i16Value)
 		cout << " (0x" << hex << i16Value << ")";
 	}
 	cout.flags(l_oFormat);
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const int8 i8Value)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat=cout.flags();
 	cout << dec << i8Value;
 	if(m_bLogWithHexa)
@@ -208,47 +208,47 @@ void CLogListenerConsole::log(const int8 i8Value)
 		cout << " (0x" << hex << i8Value << ")";
 	}
 	cout.flags(l_oFormat);
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const float64 f64Value)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	cout << f64Value;
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const float32 f32Value)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	cout << f32Value;
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const boolean bValue)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	cout << (bValue?"true":"false");
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const CIdentifier& rValue)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	cout << rValue.toString();
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const CString& rValue)
 {
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	cout << rValue;
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 }
 
 void CLogListenerConsole::log(const char* pValue)
@@ -263,73 +263,73 @@ void CLogListenerConsole::log(const ELogLevel eLogLevel)
 	{
 		case LogLevel_Debug:
 			cout << "[";
-			log(LogColor_PushStateBit);
-			log(LogColor_ForegroundBlue);
+			this->log(LogColor_PushStateBit);
+			this->log(LogColor_ForegroundBlue);
 			cout << " DEBUG ";
-			log(LogColor_PopStateBit);
+			this->log(LogColor_PopStateBit);
 			cout << "]";
 			break;
 
 		case LogLevel_Benchmark:
 			cout << "[";
-			log(LogColor_PushStateBit);
-			log(LogColor_ForegroundMagenta);
+			this->log(LogColor_PushStateBit);
+			this->log(LogColor_ForegroundMagenta);
 			cout << " BENCH ";
-			log(LogColor_PopStateBit);
+			this->log(LogColor_PopStateBit);
 			cout << "]";
 			break;
 
 		case LogLevel_Trace:
 			cout << "[";
-			log(LogColor_PushStateBit);
-			log(LogColor_ForegroundYellow);
+			this->log(LogColor_PushStateBit);
+			this->log(LogColor_ForegroundYellow);
 			cout << " TRACE ";
-			log(LogColor_PopStateBit);
+			this->log(LogColor_PopStateBit);
 			cout << "]";
 			break;
 
 		case LogLevel_Info:
 			cout << "[";
-			log(LogColor_PushStateBit);
-			log(LogColor_ForegroundGreen);
+			this->log(LogColor_PushStateBit);
+			this->log(LogColor_ForegroundGreen);
 			cout << "  INF  ";
-			log(LogColor_PopStateBit);
+			this->log(LogColor_PopStateBit);
 			cout << "]";
 			break;
 
 		case LogLevel_Warning:
 			cout << "[";
-			log(LogColor_PushStateBit);
-			log(LogColor_ForegroundCyan);
+			this->log(LogColor_PushStateBit);
+			this->log(LogColor_ForegroundCyan);
 			cout << "WARNING";
-			log(LogColor_PopStateBit);
+			this->log(LogColor_PopStateBit);
 			cout << "]";
 			break;
 
 		case LogLevel_ImportantWarning:
 			cout << "[";
-			log(LogColor_PushStateBit);
-			log(LogColor_ForegroundRed);
+			this->log(LogColor_PushStateBit);
+			this->log(LogColor_ForegroundRed);
 			cout << "WARNING";
-			log(LogColor_PopStateBit);
+			this->log(LogColor_PopStateBit);
 			cout << "]";
 			break;
 
 		case LogLevel_Error:
 			cout << "[";
-			log(LogColor_PushStateBit);
-			log(LogColor_ForegroundRed);
+			this->log(LogColor_PushStateBit);
+			this->log(LogColor_ForegroundRed);
 			cout << " ERROR ";
-			log(LogColor_PopStateBit);
+			this->log(LogColor_PopStateBit);
 			cout << "]";
 			break;
 
 		case LogLevel_Fatal:
 			cout << "[";
-			log(LogColor_PushStateBit);
-			log(LogColor_ForegroundRed);
+			this->log(LogColor_PushStateBit);
+			this->log(LogColor_ForegroundRed);
 			cout << " FATAL ";
-			log(LogColor_PopStateBit);
+			this->log(LogColor_PopStateBit);
 			cout << "]";
 			break;
 
@@ -341,15 +341,15 @@ void CLogListenerConsole::log(const ELogLevel eLogLevel)
 
 #if 0
 	cout << "<";
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundBlue);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundBlue);
 	cout << "Application";
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 	cout << "::";
-	log(LogColor_PushStateBit);
-	log(LogColor_ForegroundMagenta);
+	this->log(LogColor_PushStateBit);
+	this->log(LogColor_ForegroundMagenta);
 	cout << m_sApplicationName.toASCIIString();
-	log(LogColor_PopStateBit);
+	this->log(LogColor_PopStateBit);
 	cout << "> ";
 #endif
 }
@@ -367,7 +367,7 @@ void CLogListenerConsole::log(const ELogColor eLogColor)
 		// Tests 'pop state' bit
 		if(eLogColor&LogColor_PopStateBit)
 		{
-			if(m_vLogColor.size())
+			if(!m_vLogColor.empty())
 			{
 				m_eLogColor=m_vLogColor.top();
 				m_vLogColor.pop();
@@ -562,20 +562,20 @@ void CLogListenerConsole::applyColor(void)
 	{
 		if(m_eLogColor&LogColor_ForegroundColorBit)
 		{
-			l_dwTextAttribute|=(m_eLogColor&LogColor_ForegroundColorRedBit?FOREGROUND_RED:0);
-			l_dwTextAttribute|=(m_eLogColor&LogColor_ForegroundColorGreenBit?FOREGROUND_GREEN:0);
-			l_dwTextAttribute|=(m_eLogColor&LogColor_ForegroundColorBlueBit?FOREGROUND_BLUE:0);
+			l_dwTextAttribute |= ((m_eLogColor & LogColor_ForegroundColorRedBit) ? FOREGROUND_RED : 0);
+			l_dwTextAttribute |= ((m_eLogColor & LogColor_ForegroundColorGreenBit) ? FOREGROUND_GREEN : 0);
+			l_dwTextAttribute |= ((m_eLogColor & LogColor_ForegroundColorBlueBit) ? FOREGROUND_BLUE : 0);
 		}
 		else
 		{
-			l_dwTextAttribute|=FOREGROUND_RED;
-			l_dwTextAttribute|=FOREGROUND_GREEN;
-			l_dwTextAttribute|=FOREGROUND_BLUE;
+			l_dwTextAttribute |= FOREGROUND_RED;
+			l_dwTextAttribute |= FOREGROUND_GREEN;
+			l_dwTextAttribute |= FOREGROUND_BLUE;
 		}
 
 		if(m_eLogColor&LogColor_ForegroundLightBit && m_eLogColor&LogColor_ForegroundLightStateBit)
 		{
-			l_dwTextAttribute|=FOREGROUND_INTENSITY;
+			l_dwTextAttribute |= FOREGROUND_INTENSITY;
 		}
 
 		if(m_eLogColor&LogColor_ForegroundBoldBit && m_eLogColor&LogColor_ForegroundBoldStateBit)
@@ -585,7 +585,7 @@ void CLogListenerConsole::applyColor(void)
 
 		if(m_eLogColor&LogColor_ForegroundUnderlineBit && m_eLogColor&LogColor_ForegroundUnderlineStateBit)
 		{
-			l_dwTextAttribute|=COMMON_LVB_UNDERSCORE;
+			l_dwTextAttribute |= COMMON_LVB_UNDERSCORE;
 		}
 
 		if(m_eLogColor&LogColor_ForegroundBlinkBit && m_eLogColor&LogColor_ForegroundBlinkStateBit)
@@ -595,23 +595,23 @@ void CLogListenerConsole::applyColor(void)
 	}
 	else
 	{
-		l_dwTextAttribute|=FOREGROUND_RED;
-		l_dwTextAttribute|=FOREGROUND_GREEN;
-		l_dwTextAttribute|=FOREGROUND_BLUE;
+		l_dwTextAttribute |= FOREGROUND_RED;
+		l_dwTextAttribute |= FOREGROUND_GREEN;
+		l_dwTextAttribute |= FOREGROUND_BLUE;
 	}
 
 	if(m_eLogColor&LogColor_BackgroundBit)
 	{
 		if(m_eLogColor&LogColor_BackgroundColorBit)
 		{
-			l_dwTextAttribute|=(m_eLogColor&LogColor_BackgroundColorRedBit?BACKGROUND_RED:0);
-			l_dwTextAttribute|=(m_eLogColor&LogColor_BackgroundColorGreenBit?BACKGROUND_GREEN:0);
-			l_dwTextAttribute|=(m_eLogColor&LogColor_BackgroundColorBlueBit?BACKGROUND_BLUE:0);
+			l_dwTextAttribute |= ((m_eLogColor & LogColor_BackgroundColorRedBit) ? BACKGROUND_RED : 0);
+			l_dwTextAttribute |= ((m_eLogColor & LogColor_BackgroundColorGreenBit) ? BACKGROUND_GREEN : 0);
+			l_dwTextAttribute |= ((m_eLogColor & LogColor_BackgroundColorBlueBit) ? BACKGROUND_BLUE : 0);
 		}
 
 		if(m_eLogColor&LogColor_BackgroundLightBit && m_eLogColor&LogColor_BackgroundLightStateBit)
 		{
-			l_dwTextAttribute|=BACKGROUND_INTENSITY;
+			l_dwTextAttribute |= BACKGROUND_INTENSITY;
 		}
 
 		if(m_eLogColor&LogColor_BackgroundBlinkBit && m_eLogColor&LogColor_BackgroundBlinkStateBit)

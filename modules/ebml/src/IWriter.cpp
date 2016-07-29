@@ -112,12 +112,12 @@ CWriterNode::CWriterNode(const CIdentifier& rIdentifier, EBML::CWriterNode* pPar
 CWriterNode::~CWriterNode(void)
 {
 	vector<CWriterNode*>::iterator i;
-	for(i=m_vChildren.begin(); i!=m_vChildren.end(); i++)
+	for(i=m_vChildren.begin(); i!=m_vChildren.end(); ++i)
 	{
 		delete (*i);
 	}
-	
-	if(m_pBuffer) 
+
+	if(m_pBuffer)
 	{
 		delete [] m_pBuffer;
 		m_pBuffer = NULL;
@@ -152,7 +152,7 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	else
 	{
 		vector<CWriterNode*>::iterator i;
-		for(i=m_vChildren.begin(); i!=m_vChildren.end(); i++)
+		for(i=m_vChildren.begin(); i!=m_vChildren.end(); ++i)
 		{
 			(*i)->process(rWriterCallback);
 		}
@@ -169,7 +169,7 @@ uint64 CWriterNode::getTotalContentSize(boolean bCountIdentifierAndSize)
 	else
 	{
 		vector<CWriterNode*>::iterator i;
-		for(i=m_vChildren.begin(); i!=m_vChildren.end(); i++)
+		for(i=m_vChildren.begin(); i!=m_vChildren.end(); ++i)
 		{
 			l_ui64ContentSize+=(*i)->getTotalContentSize(true);
 		}
@@ -196,7 +196,7 @@ namespace EBML
 		{
 		public:
 
-			CWriter(IWriterCallback& rWriterCallback);
+			explicit CWriter(IWriterCallback& rWriterCallback);
 
 			virtual boolean openChild(const CIdentifier& rIdentifier);
 			virtual boolean setChildData(const void* pBuffer, const uint64 ui64BufferSize);
@@ -271,7 +271,7 @@ boolean CWriter::setChildData(const void* pBuffer, const uint64 ui64BufferSize)
 		memcpy(l_pBufferCopy, pBuffer, (size_t)(ui64BufferSize));
 	}
 
-	if(m_pCurrentNode->m_pBuffer) 
+	if(m_pCurrentNode->m_pBuffer)
 	{
 		delete [] m_pCurrentNode->m_pBuffer;
 	}

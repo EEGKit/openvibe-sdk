@@ -307,7 +307,7 @@ struct CEquationGrammar : public grammar<CEquationGrammar>
 	template <typename ScannerT>
 	struct definition
 	{
-		definition(CEquationGrammar const&)
+		explicit definition(CEquationGrammar const&)
 		{
 			real = leaf_node_d[real_p];
 

@@ -14,7 +14,7 @@ namespace OpenViBE
 		{
 		public:
 
-			TKernelObject(const OpenViBE::Kernel::IKernelContext& rKernelContext)
+			explicit TKernelObject(const OpenViBE::Kernel::IKernelContext& rKernelContext)
 				:m_rKernelContext(rKernelContext)
 			{
 			}

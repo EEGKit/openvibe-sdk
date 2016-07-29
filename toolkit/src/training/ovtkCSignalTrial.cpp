@@ -22,7 +22,7 @@ CSignalTrial::CSignalTrial(void)
 CSignalTrial::~CSignalTrial(void)
 {
 	map<uint32, float64*>::iterator itChannel;
-	for(itChannel=m_vChannelSample.begin(); itChannel!=m_vChannelSample.end(); itChannel++)
+	for(itChannel=m_vChannelSample.begin(); itChannel!=m_vChannelSample.end(); ++itChannel)
 	{
 		delete [] itChannel->second;
 	}
@@ -82,7 +82,7 @@ boolean CSignalTrial::setSampleCount(const uint32 ui32SampleCount, const boolean
 	{
 		uint32 l_ui32SampleCountReserved=(ui32SampleCount+l_ui32SampleCountRounding+1)&(~l_ui32SampleCountRounding);
 		map<uint32, float64*>::iterator itChannelSample;
-		for(itChannelSample=m_vChannelSample.begin(); itChannelSample!=m_vChannelSample.end(); itChannelSample++)
+		for(itChannelSample=m_vChannelSample.begin(); itChannelSample!=m_vChannelSample.end(); ++itChannelSample)
 		{
 			float64* l_pSample=new float64[l_ui32SampleCountReserved];
 			if(bPreserve)

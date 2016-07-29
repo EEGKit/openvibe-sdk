@@ -21,9 +21,11 @@ namespace OpenViBEPlugins
 	{
 
 		CBoxAlgorithmFeatureAggregator::CBoxAlgorithmFeatureAggregator(void) :
+			m_pFeatureVectorEncoder(nullptr),
 			m_ui64LastChunkStartTime(0),
 			m_ui64LastChunkEndTime(0),
 			m_ui32CurrentInput(0),
+			m_pVectorBuffer(nullptr),
 			m_ui32VectorSize(0),
 			m_bError(false)
 		{

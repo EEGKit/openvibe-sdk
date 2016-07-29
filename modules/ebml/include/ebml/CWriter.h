@@ -9,7 +9,7 @@ namespace EBML
 	{
 	public:
 
-		CWriter(EBML::IWriterCallback& rWriterCallback);
+		explicit CWriter(EBML::IWriterCallback& rWriterCallback);
 		virtual ~CWriter(void);
 
 		virtual EBML::boolean openChild(const EBML::CIdentifier& rIdentifier);

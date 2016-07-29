@@ -84,10 +84,16 @@ boolean CNameValuePairList::getValue(const CString& rName, float64& rValue) cons
 		return false;
 	}
 	float64 temp;
-	if(sscanf(m_pNameValuePairListImpl->m_oMap[rName].toASCIIString(), "%lf", &temp)!=1)
+
+	try
+	{
+		temp = std::stod(m_pNameValuePairListImpl->m_oMap[rName].toASCIIString());
+	}
+	catch(const std::exception&)
 	{
 		return false;
 	}
+
 	rValue = temp;
 	return true;
 }

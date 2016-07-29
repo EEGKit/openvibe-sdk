@@ -44,32 +44,38 @@ boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
 	std::vector < std::string > l_vSetting=::split(l_sSettingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
 	std::vector < std::string > l_vSettingRange;
 	std::vector < std::string >::const_iterator it;
-	std::vector < std::string >::const_iterator itRange;
 	boolean l_bHadError = false;
 	m_vSelected.clear();
-	for(it=l_vSetting.begin(); it!=l_vSetting.end(); it++)
+	for(it=l_vSetting.begin(); it!=l_vSetting.end(); ++it)
 	{
-		boolean l_bGood=false;
+		boolean l_bGood=true;
 		l_vSettingRange=::split(*it, OV_Value_RangeStringSeparator);
 		if(l_vSettingRange.size() == 1)
 		{
-			double l_dValue;
-			if(::sscanf(l_vSettingRange[0].c_str(), "%lf", &l_dValue)==1)
+			try
 			{
+				double l_dValue = std::stod(l_vSettingRange[0].c_str());
 				m_vSelected.push_back(std::pair < float64, float64 >(l_dValue, l_dValue));
-				l_bGood=true;
+			}
+			catch(const std::exception&)
+			{
+				l_bGood=false;
 			}
 		}
 		else if(l_vSettingRange.size() == 2)
 		{
-			double l_dLowValue;
-			double l_dHighValue;
-			if(::sscanf(l_vSettingRange[0].c_str(), "%lf", &l_dLowValue)==1 && ::sscanf(l_vSettingRange[1].c_str(), "%lf", &l_dHighValue)==1)
+			try
 			{
+				double l_dLowValue = std::stod(l_vSettingRange[0].c_str());
+				double l_dHighValue = std::stod(l_vSettingRange[1].c_str());
 				m_vSelected.push_back(std::pair < float64, float64 >(min(l_dLowValue, l_dHighValue), max(l_dLowValue, l_dHighValue)));
-				l_bGood=true;
+			}
+			catch(const std::exception&)
+			{
+				l_bGood=false;
 			}
 		}
+
 		if(!l_bGood)
 		{
 			this->getLogManager() << LogLevel_ImportantWarning << "Ignored invalid frequency band : " << CString(it->c_str()) << "\n";
@@ -95,7 +101,7 @@ boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
 	ip_pMatrix=&m_oMatrix;
 	op_pMatrix=&m_oMatrix;
 
-	if(l_bHadError && m_vSelected.size()==0) 
+	if(l_bHadError && m_vSelected.size()==0)
 	{
 		this->getLogManager() << LogLevel_ImportantWarning << "Unable to correctly parse the frequency band options.\n";
 		return false;

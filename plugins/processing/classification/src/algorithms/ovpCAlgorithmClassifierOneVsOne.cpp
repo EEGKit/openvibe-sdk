@@ -76,7 +76,7 @@ boolean CAlgorithmClassifierOneVsOne::uninitialize(void)
 	}
 
 	std::map< std::pair<uint32, uint32>, IAlgorithmProxy* >::iterator it;
-	for(it = m_oSubClassifiers.begin(); it != m_oSubClassifiers.end(); it++)
+	for(it = m_oSubClassifiers.begin(); it != m_oSubClassifiers.end(); ++it)
 	{
 		IAlgorithmProxy* l_pSubClassifier = (*it).second;
 		l_pSubClassifier->uninitialize();
@@ -108,7 +108,7 @@ boolean CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVec
 		this->getLogManager() << LogLevel_Error << "Tried to get algorithm id for pairwise decision strategy " << OVP_TypeId_ClassificationPairwiseStrategy << " but failed\n";
 		return false;
 	}
-	
+
 	if(m_pDecisionStrategyAlgorithm != NULL){
 		m_pDecisionStrategyAlgorithm->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
@@ -288,7 +288,7 @@ boolean CAlgorithmClassifierOneVsOne::createSubClassifiers(void)
 {
 	// Clear any previous ones
 	std::map< std::pair<uint32, uint32>, IAlgorithmProxy* >::iterator it;
-	for(it = m_oSubClassifiers.begin(); it != m_oSubClassifiers.end(); it++)
+	for(it = m_oSubClassifiers.begin(); it != m_oSubClassifiers.end(); ++it)
 	{
 		IAlgorithmProxy* l_pSubClassifier = (*it).second;
 		l_pSubClassifier->uninitialize();
@@ -391,7 +391,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfiguration(void)
 	XML::IXMLNode *l_pSubClassifersNode = XML::createNode(c_sSubClassifiersNodeName);
 
 	std::map< std::pair<uint32, uint32>, IAlgorithmProxy* >::iterator it;
-	for(it = m_oSubClassifiers.begin(); it != m_oSubClassifiers.end(); it++)
+	for(it = m_oSubClassifiers.begin(); it != m_oSubClassifiers.end(); ++it)
 	{
 		l_pSubClassifersNode->addChild(getClassifierConfiguration((*it).first.first, (*it).first.second, (*it).second));
 	}

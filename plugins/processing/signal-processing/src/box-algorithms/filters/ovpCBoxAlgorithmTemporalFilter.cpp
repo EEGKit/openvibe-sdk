@@ -175,7 +175,7 @@ boolean CBoxAlgorithmTemporalFilter::uninitialize(void)
 {
 	std::vector < Dsp::Filter* >::iterator it;
 
-	for(it=m_vFilter.begin(); it!=m_vFilter.end(); it++)
+	for(it=m_vFilter.begin(); it!=m_vFilter.end(); ++it)
 	{
 		delete *it;
 	}
@@ -244,7 +244,7 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 				}
 			}
 
-			for(it=m_vFilter.begin(); it!=m_vFilter.end(); it++)
+			for(it=m_vFilter.begin(); it!=m_vFilter.end(); ++it)
 			{
 				delete *it;
 			}

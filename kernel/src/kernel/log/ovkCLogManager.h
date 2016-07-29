@@ -14,7 +14,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CLogManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CLogManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 
 			virtual OpenViBE::boolean isActive(OpenViBE::Kernel::ELogLevel eLogLevel);
 			virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eLogLevel, OpenViBE::boolean bActive);
@@ -57,7 +57,7 @@ namespace OpenViBE
 				if(m_eCurrentLogLevel!=LogLevel_None && this->isActive(m_eCurrentLogLevel))
 				{
 					std::vector<OpenViBE::Kernel::ILogListener*>::iterator i;
-					for(i=m_vListener.begin(); i!=m_vListener.end(); i++)
+					for(i=m_vListener.begin(); i!=m_vListener.end(); ++i)
 					{
 						if((*i)->isActive(m_eCurrentLogLevel))
 						{

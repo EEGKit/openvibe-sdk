@@ -34,7 +34,7 @@ void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrix(OpenViBE::Kernel::ILogManage
 void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrixFile(const MatrixXd& mat, const char *fn)
 {
 	FILE *fp = fopen(fn, "w");
-	if(!fp) { this->getLogManager() << LogLevel_Error << "Cannot open " << fn << "\n"; return; }; 
+	if(!fp) { this->getLogManager() << LogLevel_Error << "Cannot open " << fn << "\n"; return; };
 	for(int i=0;i<mat.rows();i++) {
 		for(int j=0;j<mat.cols();j++) {
 			fprintf(fp, "%s%e", (j>0 ? "," : ""), mat(i,j));
@@ -52,7 +52,7 @@ void CBoxAlgorithmRegularizedCSPTrainer::dumpVector(OpenViBE::Kernel::ILogManage
 	}
 	rMgr << "\n";
 }
-#else 
+#else
 void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrix(OpenViBE::Kernel::ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 void CBoxAlgorithmRegularizedCSPTrainer::dumpVector(OpenViBE::Kernel::ILogManager &rMgr, const VectorXd &mat, const CString &desc) { }
 void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrixFile(const MatrixXd& mat, const char *fn) { }
@@ -162,9 +162,9 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::updateCov(int index)
 
 	for(uint32 i=0; i<l_rDynamicBoxContext.getInputChunkCount(index+1); i++)
 	{
-		OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmRegularizedCSPTrainer >* l_oDecoder = &m_oSignalDecoders[index];			
+		OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmRegularizedCSPTrainer >* l_oDecoder = &m_oSignalDecoders[index];
 		const IMatrix* l_pInputSignal = l_oDecoder->getOutputMatrix();
-		
+
 		l_oDecoder->decode(i);
 		if(l_oDecoder->isHeaderReceived())
 		{
@@ -173,7 +173,7 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::updateCov(int index)
 			ip_pFeatureVectorSet->setDimensionCount(2);
 			ip_pFeatureVectorSet->setDimensionSize(0, l_pInputSignal->getDimensionSize(1));
 			ip_pFeatureVectorSet->setDimensionSize(1, l_pInputSignal->getDimensionSize(0));
-			
+
 			if(m_ui32FilterDimension>l_pInputSignal->getDimensionSize(0)) {
 				this->getLogManager() << LogLevel_Error << "CSP filter dimension cannot exceed the number of input channels (" << l_pInputSignal->getDimensionSize(1) << ") in the stream " << i+1 << "\n";
 				return false;
@@ -211,7 +211,7 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::updateCov(int index)
 	}
 
 	return true;
-}		
+}
 
 boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 {
@@ -253,15 +253,15 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 	// Update all covs with the current data chunks (if any)
 	for(uint32 i=0;i<2;i++)
 	{
-		if(!updateCov(i)) 
+		if(!updateCov(i))
 		{
 			return false;
 		}
 	}
-	
+
 	if(l_bShouldTrain)
 	{
-		this->getLogManager() << LogLevel_Info << "Received train stimulation - be patient\n";	
+		this->getLogManager() << LogLevel_Info << "Received train stimulation - be patient\n";
 
 		const IMatrix* l_pInput = m_oSignalDecoders[0].getOutputMatrix();
 		const uint32 l_ui32nChannels = l_pInput->getDimensionSize(0);
@@ -270,7 +270,7 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 
 
 		// Get out the covariances
-		MatrixXd l_oCov[2],l_oCovRaw[2];	
+		MatrixXd l_oCov[2];
 		for(uint32 i=0;i<2;i++) {
 
 			if(m_ui64nSamples[i] < 2)
@@ -280,7 +280,7 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 			}
 
 			TParameterHandler < OpenViBE::IMatrix* > op_pCovarianceMatrix(m_pIncrementalCov[i]->getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
-		
+
 			// Get regularized cov
 			m_pIncrementalCov[i]->activateInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCov, true);
 			if(!m_pIncrementalCov[i]->process()) {
@@ -293,18 +293,12 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 			// std::stringstream ss; ss << "C:/jl/dump_cov" << i << ".csv";
 			// CString tmp(ss.str().c_str());
 			// dumpMatrixFile(l_oCov[i], tmp);
-			
+
 			// Get vanilla cov
 			m_pIncrementalCov[i]->activateInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCovRaw, true);
 			if(!m_pIncrementalCov[i]->process()) {
 				return false;
 			}
-
-			l_oCovRaw[i] = l_oCovMapper;
-
-			// ss.str(""); ss << "C:/jl/dump_covraw" << i << ".csv";
-			// tmp = CString(ss.str().c_str());
-			// dumpMatrixFile(l_oCovRaw[i], tmp);
 		}
 
 		if(l_oCov[0].rows() != l_oCov[1].rows() || l_oCov[0].cols() != l_oCov[1].cols() )
@@ -315,9 +309,9 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 
 		this->getLogManager() << LogLevel_Info << "Data covariance dims are [" << static_cast<uint32>(l_oCov[0].rows()) << "x" << static_cast<uint32>(l_oCov[0].cols())
 			<< "]. Number of samples per condition : \n";
-		this->getLogManager() << LogLevel_Info << "  cond1 = " 
+		this->getLogManager() << LogLevel_Info << "  cond1 = "
 			<< m_ui64nBuffers[0] << " chunks, sized " << l_pInput->getDimensionSize(1) << " -> " << m_ui64nSamples[0] << " samples\n";
-		this->getLogManager() << LogLevel_Info << "  cond2 = " 
+		this->getLogManager() << LogLevel_Info << "  cond2 = "
 			<< m_ui64nBuffers[1] << " chunks, sized " << l_pInput->getDimensionSize(1) << " -> " << m_ui64nSamples[1] << " samples\n";
 		// this->getLogManager() << LogLevel_Info << "Using shrinkage coeff " << m_f64Shrinkage << " ...\n";
 
@@ -337,12 +331,12 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 		// eig(inv(sigma2+tikhonov)*sigma1) and eig(inv(sigma1+tikhonov)*sigma2
 		// and pick the ones corresponding to the largest eigenvalues as
 		// spatial filters [following Lotte & Guan 2011]. Assumes the shrink
-		// of the sigmas (if its used) has been performed inside the cov 
+		// of the sigmas (if its used) has been performed inside the cov
 		// computation algorithm.
-	
+
 		EigenSolver<MatrixXd> l_oEigenSolverGeneral;
 
-		for(uint32 c=0;c<2;c++) 
+		for(uint32 c=0;c<2;c++)
 		{
 			try {
 				l_oCovInv[c] = (l_oCov[c]+l_oTikhonov).inverse();
@@ -366,7 +360,7 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 			l_oEigenValues[c] = l_oEigenSolverGeneral.eigenvalues().real();
 			l_oEigenVectors[c] = l_oEigenSolverGeneral.eigenvectors().real();
 
-			// Sort the vectors -_- 
+			// Sort the vectors -_-
 			std::vector< std::pair<float64, int> > l_oIndexes;
 			for(int i=0; i<l_oEigenValues[c].size(); i++)
 			{
@@ -383,7 +377,7 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 				// this->getLogManager() << LogLevel_Info << "E " << i << " " << (l_oSortedEigenValues[c])[i] << "\n";
 			}
 		}
-	
+
 		const uint32 l_ui32HowMany = (m_ui32FilterDimension/2);
 
 		CMatrix l_oSelectedVectors;
@@ -392,8 +386,8 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 		l_oSelectedVectors.setDimensionSize(1, l_ui32nChannels);
 
 		Map<MatrixXdRowMajor> l_oSelectedVectorsMapper(l_oSelectedVectors.getBuffer(), m_ui32FilterDimension, l_ui32nChannels);
-		l_oSelectedVectorsMapper  << 
-			l_oSortedEigenVectors[0].block(0,0,l_ui32nChannels, l_ui32HowMany).transpose() , 
+		l_oSelectedVectorsMapper  <<
+			l_oSortedEigenVectors[0].block(0,0,l_ui32nChannels, l_ui32HowMany).transpose() ,
 			l_oSortedEigenVectors[1].block(0,0,l_ui32nChannels, l_ui32HowMany).transpose();
 
 		this->getLogManager() << LogLevel_Info << "The filter(s) for cond " << 1 << " cover " << 100.0*l_oSortedEigenValues[0].head(m_ui32FilterDimension).sum()/l_oSortedEigenValues[0].sum() << "% of corresp. eigenvalues\n";
@@ -416,7 +410,7 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 			{
 				::fprintf(l_pFile, "%e ", l_oSelectedVectors.getBuffer()[i]);
 			}
-		
+
 			::fprintf(l_pFile, "</SettingValue>\n");
 			::fprintf(l_pFile, "\t<SettingValue>%d</SettingValue>\n", m_ui32FilterDimension);
 			::fprintf(l_pFile, "\t<SettingValue>%d</SettingValue>\n", l_ui32nChannels);
@@ -428,7 +422,7 @@ boolean CBoxAlgorithmRegularizedCSPTrainer::process(void)
 		else
 		{
 
-			if(!OpenViBEToolkit::Tools::Matrix::saveToTextFile(l_oSelectedVectors, m_sSpatialFilterConfigurationFilename, 10)) 
+			if(!OpenViBEToolkit::Tools::Matrix::saveToTextFile(l_oSelectedVectors, m_sSpatialFilterConfigurationFilename, 10))
 			{
 				this->getLogManager() << LogLevel_Error << "Save to file [" << m_sSpatialFilterConfigurationFilename << "] failed\n";
 				return false;

@@ -33,9 +33,10 @@ namespace
 		}
 		else if(rMatchMethodIdentifier==OVP_TypeId_MatchMethod_Index)
 		{
-			int value;
-			if(::sscanf(rChannel.toASCIIString(), "%i", &value)==1)
+			try
 			{
+				int value = std::stoi(rChannel.toASCIIString());
+
 				if(value < 0)
 				{
 					uint32 l_ui32Index = uint32(- value - 1); // => makes it 0-indexed !
@@ -59,6 +60,10 @@ namespace
 						}
 					}
 				}
+			}
+			catch(const std::exception&)
+			{
+				// catch block intentionnaly left blank
 			}
 		}
 		else if(rMatchMethodIdentifier==OVP_TypeId_MatchMethod_Smart)

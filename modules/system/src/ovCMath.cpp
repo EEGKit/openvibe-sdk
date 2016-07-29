@@ -29,7 +29,7 @@ private:
 public:
 	static const uint32 l_ui32RandMax = 0x7FFFFFFF; // (2^32)/2-1 == 2147483647
 
-	RandomGenerator(uint32 seed = 1) : l_ui32NextValue( seed ) {}
+	explicit RandomGenerator(uint32 seed = 1) : l_ui32NextValue( seed ) {}
 
 	int32 rand(void)
 	{

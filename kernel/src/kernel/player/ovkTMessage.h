@@ -14,7 +14,7 @@ namespace OpenViBE
 		{
 		public:
 
-			TMessage(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit TMessage(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 
 			virtual OpenViBE::CIdentifier getIdentifier(void) const;
 			virtual OpenViBE::uint64 getTime(void) const;

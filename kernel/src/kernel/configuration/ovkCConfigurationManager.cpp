@@ -99,8 +99,6 @@ namespace OpenViBE
 				{
 					std::string l_sLine;
 					std::string l_sLinePart;
-					std::string l_sLineTokenName;
-					std::string l_sLineTokenValue;
 					std::string::size_type eq;
 
 					while(!l_oFile.eof() && (l_sLine.length()==0 || l_sLine[l_sLine.length()-1]=='\\'))
@@ -159,8 +157,7 @@ namespace OpenViBE
 									l_sTokenName != "Kernel_PluginsPatternMacOS" &&
 									l_sTokenName != "Kernel_PluginsPatternLinux" &&
 									l_sTokenName != "Kernel_PluginsPatternWindows" &&
-									l_sTokenName != "Kernel_Plugins" &&
-									l_sTokenName != "Kernel_PluginsPatternLinux",
+									l_sTokenName != "Kernel_Plugins",
 									"Overwriting critical token " << l_sTokenName.c_str(),
 									m_rLogManager
 								);
@@ -265,7 +262,7 @@ CIdentifier CConfigurationManager::getNextConfigurationTokenIdentifier(
 		{
 			return OV_UndefinedIdentifier;
 		}
-		itConfigurationToken++;
+		++itConfigurationToken;
 	}
 
 	return itConfigurationToken!=m_vConfigurationToken.end()?itConfigurationToken->first:OV_UndefinedIdentifier;
@@ -363,7 +360,7 @@ CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(
 		{
 			return itConfigurationToken->first;
 		}
-		itConfigurationToken++;
+		++itConfigurationToken;
 	}
 	if(bRecursive && m_pParentConfigurationManager)
 	{
@@ -382,7 +379,7 @@ CString CConfigurationManager::lookUpConfigurationTokenValue(
 		{
 			return itConfigurationToken->second.m_sConfigurationValue;
 		}
-		itConfigurationToken++;
+		++itConfigurationToken;
 	}
 	if(m_pParentConfigurationManager)
 	{
@@ -432,7 +429,7 @@ OpenViBE::boolean CConfigurationManager::unregisterKeywordParser(const IConfigur
 			l_bResult = true;
 			break;
 		}
-		l_itOverrideIterator++;
+		++l_itOverrideIterator;
 	}
 
 	OV_ERROR_UNLESS_KRF(
@@ -850,13 +847,18 @@ float64 CConfigurationManager::expandAsFloat(
 	const float64 f64FallbackValue) const
 {
 	CString l_sResult=this->expand(rExpression);
-	float64 l_f64Result=0;
-	if(sscanf(l_sResult.toASCIIString(), "%lf", &l_f64Result)==1)
+	float64 l_f64Result;
+
+	try
 	{
-		return l_f64Result;
+		l_f64Result = std::stod(l_sResult.toASCIIString());
+	}
+	catch(const std::exception&)
+	{
+		l_f64Result = f64FallbackValue;
 	}
 
-	return f64FallbackValue;
+	return l_f64Result;
 }
 
 int64 CConfigurationManager::expandAsInteger(
@@ -864,13 +866,18 @@ int64 CConfigurationManager::expandAsInteger(
 	const int64 i64FallbackValue) const
 {
 	CString l_sResult=this->expand(rExpression);
-	int64 l_i64Result=0;
-	if(sscanf(l_sResult.toASCIIString(), "%lli", &l_i64Result)==1)
+	int64 l_i64Result;
+
+	try
 	{
-		return l_i64Result;
+		l_i64Result = std::stoll(l_sResult.toASCIIString());
+	}
+	catch(const std::exception&)
+	{
+		l_i64Result = i64FallbackValue;
 	}
 
-	return i64FallbackValue;
+	return l_i64Result;
 }
 
 uint64 CConfigurationManager::expandAsUInteger(
@@ -878,13 +885,18 @@ uint64 CConfigurationManager::expandAsUInteger(
 	const uint64 ui64FallbackValue) const
 {
 	CString l_sResult=this->expand(rExpression);
-	uint64 l_ui64Result=0;
-	if(sscanf(l_sResult.toASCIIString(), "%llu", &l_ui64Result)==1)
+	uint64 l_ui64Result;
+
+	try
 	{
-		return l_ui64Result;
+		l_ui64Result = std::stoull(l_sResult.toASCIIString());
+	}
+	catch(const std::exception&)
+	{
+		l_ui64Result = ui64FallbackValue;
 	}
 
-	return ui64FallbackValue;
+	return l_ui64Result;
 }
 
 OpenViBE::boolean CConfigurationManager::expandAsBoolean(

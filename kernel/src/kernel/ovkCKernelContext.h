@@ -67,7 +67,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CKernelContextBridge(const OpenViBE::Kernel::IKernelContext& rKernelContext)
+			explicit CKernelContextBridge(const OpenViBE::Kernel::IKernelContext& rKernelContext)
 				:m_rKernelContext(rKernelContext)
 				,m_pAlgorithmManager(NULL)
 				,m_pConfigurationManager(NULL)

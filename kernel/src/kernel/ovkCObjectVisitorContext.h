@@ -11,7 +11,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CObjectVisitorContext(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CObjectVisitorContext(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 			virtual ~CObjectVisitorContext(void);
 
 			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const;

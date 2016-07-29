@@ -19,7 +19,7 @@ CScenarioManager::CScenarioManager(const IKernelContext& rKernelContext)
 
 CScenarioManager::~CScenarioManager(void)
 {
-	for(map<CIdentifier, CScenario*>::iterator i=m_vScenario.begin(); i!=m_vScenario.end(); i++)
+	for(map<CIdentifier, CScenario*>::iterator i=m_vScenario.begin(); i!=m_vScenario.end(); ++i)
 	{
 		delete i->second;
 	}
@@ -41,7 +41,7 @@ CIdentifier CScenarioManager::getNextScenarioIdentifier(
 		{
 			return OV_UndefinedIdentifier;
 		}
-		itScenario++;
+		++itScenario;
 	}
 
 	return itScenario!=m_vScenario.end()?itScenario->first:OV_UndefinedIdentifier;
@@ -194,7 +194,10 @@ bool CScenarioManager::importScenarioFromFile(OpenViBE::CIdentifier& newScenario
 		fclose(inputFile);
 		OV_ERROR_KRF("Problem reading scenario file '" << fileName << "'", ErrorType::BadFileRead);
 	}
-	fclose(inputFile);
+	else
+	{
+		fclose(inputFile);
+	}
 
 	return this->importScenario(newScenarioIdentifier, memoryBuffer, scenarioImporterAlgorithmIdentifier);
 }

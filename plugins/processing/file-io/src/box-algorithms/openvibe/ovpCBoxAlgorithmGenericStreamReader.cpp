@@ -255,7 +255,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 		boolean l_bLastOutputs=false;
 
 		// Go on each stream of the file
-		for(it=m_vStreamIndexToTypeIdentifier.begin(); it!=m_vStreamIndexToTypeIdentifier.end(); it++)
+		for(it=m_vStreamIndexToTypeIdentifier.begin(); it!=m_vStreamIndexToTypeIdentifier.end(); ++it)
 		{
 			CIdentifier l_oOutputTypeIdentifier;
 			uint32 l_ui32Index=(uint32)-1;
@@ -288,9 +288,9 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 						{
 							const CString l_sSourceTypeName=this->getTypeManager().getTypeName(it->second);
 							const CString l_sOutputTypeName=this->getTypeManager().getTypeName(l_oOutputTypeIdentifier);
-							this->getLogManager() << LogLevel_Info << "Note: downcasting output " << i+1 << " from " 
+							this->getLogManager() << LogLevel_Info << "Note: downcasting output " << i+1 << " from "
 								<< l_sSourceTypeName << " to " << l_sOutputTypeName << ", as there is no exactly type-matching output connector.\n";
-							l_ui32Index=i;								
+							l_ui32Index=i;
 						}
 					}
 				}
@@ -314,7 +314,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 							if(this->getTypeManager().isDerivedFromStream(l_oOutputTypeIdentifier, it->second))
 							{
 								this->getLogManager() << LogLevel_Warning << "Note that output " << i+1 << " has a derived type identifier for the stream. This is not supported. Please change the connector type.\n";
-								
+
 							}
 						}
 					}

@@ -51,7 +51,7 @@ namespace OpenViBE
 	struct KernelFacade::KernelFacadeImpl
 	{
 		CKernelLoader kernelLoader;
-		IKernelContext* kernelContext{ nullptr };
+		IKernelContext* kernelContext = nullptr;
 		std::map<std::string, CIdentifier> scenarioMap;
 		std::map<std::string, TokenList> scenarioTokenMap;
 	};
@@ -109,9 +109,9 @@ namespace OpenViBE
 
 		kernelLoader.initialize();
 
-		IKernelDesc* kernelDesc{ nullptr };
+		IKernelDesc* kernelDesc = nullptr;
 		kernelLoader.getKernelDesc(kernelDesc);
-		
+
 		if (!kernelDesc)
 		{
 			std::cerr << "ERROR: impossible to retrieve kernel descriptor " << std::endl;
@@ -163,7 +163,7 @@ namespace OpenViBE
 
 			OpenViBEToolkit::uninitialize(*m_Pimpl->kernelContext);
 			// m_Pimpl->kernelContext->uninitialize();
-			IKernelDesc* kernelDesc{ nullptr };
+			IKernelDesc* kernelDesc = nullptr;
 			m_Pimpl->kernelLoader.getKernelDesc(kernelDesc);
 			kernelDesc->releaseKernel(m_Pimpl->kernelContext);
 			m_Pimpl->kernelContext = nullptr;
@@ -261,7 +261,7 @@ namespace OpenViBE
 		{
 			setConfigurationTokenList(m_Pimpl->kernelContext->getConfigurationManager(), command.tokenList.get());
 		}
-		
+
 		auto& playerManager = m_Pimpl->kernelContext->getPlayerManager();
 
 		// Keep 2 different containers because identifier information is
@@ -360,7 +360,7 @@ namespace OpenViBE
 					{
 						p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint);
 					}
-					
+
 					if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint)
 					{
 						p->stop();
@@ -380,7 +380,7 @@ namespace OpenViBE
 			playerManager.getPlayer(id).uninitialize();
 			playerManager.releasePlayer(id);
 		}
-		
+
 		return returnCode;
 	}
 }

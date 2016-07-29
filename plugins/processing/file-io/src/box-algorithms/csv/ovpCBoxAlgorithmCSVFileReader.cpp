@@ -15,7 +15,7 @@ using namespace OpenViBEPlugins::FileIO;
 
 namespace
 {
-	std::vector < std::string > split(const std::string& sString, const std::string c)
+	std::vector < std::string > split(const std::string& sString, const std::string& c)
 	{
 		std::vector < std::string > l_vResult;
 		std::string::size_type i=0;
@@ -43,9 +43,10 @@ namespace
 };
 
 CBoxAlgorithmCSVFileReader::CBoxAlgorithmCSVFileReader(void)
-	: m_pFile(NULL),
+	: m_pFile(nullptr),
 	m_ui64SamplingRate(0),
-	m_fpRealProcess(NULL),
+	m_fpRealProcess(nullptr),
+	m_pAlgorithmEncoder(nullptr),
 	m_bHeaderSent(false)
 {
 }
@@ -96,7 +97,7 @@ boolean CBoxAlgorithmCSVFileReader::uninitialize(void)
 		::fclose(m_pFile);
 		m_pFile=NULL;
 	}
-	if(m_pAlgorithmEncoder) 
+	if(m_pAlgorithmEncoder)
 	{
 		m_pAlgorithmEncoder->uninitialize();
 		delete m_pAlgorithmEncoder;
@@ -263,7 +264,7 @@ boolean CBoxAlgorithmCSVFileReader::process(void)
 		if( (m_oTypeIdentifier == OV_TypeId_StreamedMatrix || m_oTypeIdentifier == OV_TypeId_Signal)
 			&& feof(m_pFile) && l_ui32NbSamples<m_ui32SamplesPerBuffer)
 		{
-			// Last chunk will be partial, zero the whole output matrix... 
+			// Last chunk will be partial, zero the whole output matrix...
 			IMatrix* ip_pMatrix=((OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmCSVFileReader >*)m_pAlgorithmEncoder)->getInputMatrix();
 			OpenViBEToolkit::Tools::Matrix::clearContent(*ip_pMatrix);
 		}
@@ -580,7 +581,7 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_featureVector(void)
 		const uint64 l_ui64StartTime = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[i][0].c_str()));
 		l_rDynamicBoxContext.markOutputAsReadyToSend(0,l_ui64StartTime,l_ui64StartTime);
 	}
-		
+
 	clearMatrix(m_vDataMatrix);
 
 	return true;
@@ -664,14 +665,14 @@ bool CBoxAlgorithmCSVFileReader::convertVectorDataToMatrix(IMatrix* matrix)
 	// We accept partial data, but not buffer overruns ...
 	if(matrix->getDimensionSize(1) < m_vDataMatrix.size()
 		|| matrix->getDimensionSize(0) < m_ui32NbColumn-1 ) {
-		this->getLogManager() << LogLevel_Error 
-			<< "Matrix size incompatibility, data suggests " 
-			<< m_ui32NbColumn-1 << "x" << static_cast<uint64>(m_vDataMatrix.size()) << ", expected at most " 
-			<< matrix->getDimensionSize(0) << "x" << matrix->getDimensionSize(0) 
+		this->getLogManager() << LogLevel_Error
+			<< "Matrix size incompatibility, data suggests "
+			<< m_ui32NbColumn-1 << "x" << static_cast<uint64>(m_vDataMatrix.size()) << ", expected at most "
+			<< matrix->getDimensionSize(0) << "x" << matrix->getDimensionSize(0)
 			<< "\n";
 		return false;
 	}
-	
+
 	std::stringstream  l_sMatrix;
 	for(uint32 i=0;i<m_vDataMatrix.size();i++)
 	{

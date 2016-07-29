@@ -13,7 +13,7 @@ namespace OpenViBE
 		public:
 
 			CMemoryBufferImpl(void);
-			CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer);
+			explicit CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer);
 			CMemoryBufferImpl(const uint8* pMemoryBuffer, const uint64 ui64BufferSize);
 			virtual ~CMemoryBufferImpl(void);
 
@@ -116,10 +116,8 @@ boolean CMemoryBufferImpl::reserve(const uint64 ui64Size)
 			return false;
 		}
 		::memcpy(m_pBuffer, l_pSavedBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
-		if(l_pSavedBuffer) 
-		{
-			delete [] l_pSavedBuffer;
-		}
+
+		delete [] l_pSavedBuffer;
 		m_ui64AllocatedSize=ui64Size;
 		m_pBuffer[m_ui64AllocatedSize]=0;
 	}

@@ -11,7 +11,7 @@ CBuffer::CBuffer(const CBuffer& rBuffer)
 	System::Memory::copy(this->getDirectPointer(), rBuffer.getDirectPointer(), rBuffer.getSize());
 }
 
-const CBuffer& CBuffer::operator=(
+CBuffer& CBuffer::operator=(
 	const CBuffer& rBuffer)
 {
 	this->setSize(rBuffer.getSize(), true);

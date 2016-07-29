@@ -18,7 +18,7 @@ boolean CBoxAlgorithmStimulationVoter::initialize(void)
 {
 	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
-	if(l_rStaticBoxContext.getInputCount()!=1) 
+	if(l_rStaticBoxContext.getInputCount()!=1)
 	{
 		this->getLogManager() << LogLevel_Error << "Only one input supported, merge first\n";
 		return false;
@@ -26,7 +26,7 @@ boolean CBoxAlgorithmStimulationVoter::initialize(void)
 
 	CIdentifier l_oTypeIdentifier;
 	l_rStaticBoxContext.getInputType(0, l_oTypeIdentifier);
-	if(l_oTypeIdentifier!=OV_TypeId_Stimulations) 
+	if(l_oTypeIdentifier!=OV_TypeId_Stimulations)
 	{
 		this->getLogManager() << LogLevel_Error << "Only OV_TypeId_Stimulations is supported as input type\n";
 		return false;
@@ -101,7 +101,7 @@ boolean CBoxAlgorithmStimulationVoter::process(void)
 				uint64 l_ui64StimulationIdentifier=op_pStimulationSet->getStimulationIdentifier(k);
 				uint64 l_ui64StimulationDate = op_pStimulationSet->getStimulationDate(k);
 				m_ui64LatestStimulusDate = std::max(m_ui64LatestStimulusDate, l_ui64StimulationDate);
-				if(ITimeArithmetics::timeToSeconds(m_ui64LatestStimulusDate - l_ui64StimulationDate) <= m_f64TimeWindow) 
+				if(ITimeArithmetics::timeToSeconds(m_ui64LatestStimulusDate - l_ui64StimulationDate) <= m_f64TimeWindow)
 				{
 					// Stimulus is fresh, append
 					m_oStimulusDeque.push_back(std::pair<uint64, uint64>(l_ui64StimulationIdentifier, l_ui64StimulationDate));
@@ -115,12 +115,12 @@ boolean CBoxAlgorithmStimulationVoter::process(void)
 		l_rDynamicBoxContext.markInputAsDeprecated(0, j);
 	}
 
-	if(m_oStimulusDeque.empty() || !l_bNewStimulus) 
+	if(m_oStimulusDeque.empty() || !l_bNewStimulus)
 	{
 		return true;
 	}
 
-	// Always clear too old votes that have slipped off the time window. The time window is relative to the time of the latest stimulus received. 
+	// Always clear too old votes that have slipped off the time window. The time window is relative to the time of the latest stimulus received.
 	while(!m_oStimulusDeque.empty()) {
 		uint64 l_ui64FrontDate = m_oStimulusDeque.front().second;
 		if(ITimeArithmetics::timeToSeconds(m_ui64LatestStimulusDate - l_ui64FrontDate) > m_f64TimeWindow) {
@@ -134,7 +134,7 @@ boolean CBoxAlgorithmStimulationVoter::process(void)
 
 	this->getLogManager() << LogLevel_Debug << "Queue size is " << (uint64)m_oStimulusDeque.size() << "\n";
 
-	if(m_oStimulusDeque.size() < m_ui64MinimumVotes) 
+	if(m_oStimulusDeque.size() < m_ui64MinimumVotes)
 	{
 		// Not enough stimuli to vote
 		return true;
@@ -146,7 +146,7 @@ boolean CBoxAlgorithmStimulationVoter::process(void)
 	// Make a histogram of the votes
 	for(std::deque< std::pair<uint64, uint64> >::const_iterator it = m_oStimulusDeque.begin();
 		it != m_oStimulusDeque.end();
-		it++) {
+		++it) {
 		uint64 l_ui64StimulusType = (*it).first;
 		uint64 l_ui64StimulusDate = (*it).second;
 
@@ -160,13 +160,13 @@ boolean CBoxAlgorithmStimulationVoter::process(void)
 	uint64 l_ui64MaxVotes = 0;
 
 	for(std::map<uint64, uint32>::const_iterator it = l_mVotes.begin();
-		it != l_mVotes.end(); 
-		it ++) 
+		it != l_mVotes.end();
+		++it)
 	{
 		uint64 l_ui64StimulusType = (*it).first;
 		uint64 l_ui64StimulusVotes = (*it).second; // can not be zero by construction above
 
-		if( m_oRejectClass_CanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && l_ui64StimulusType == m_ui64RejectClassLabel) 
+		if( m_oRejectClass_CanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && l_ui64StimulusType == m_ui64RejectClassLabel)
 		{
 			// Reject class never wins
 			continue;
@@ -192,7 +192,7 @@ boolean CBoxAlgorithmStimulationVoter::process(void)
 		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastTime, m_ui64LastTime);
 	}
 
-	if( m_oRejectClass_CanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && l_ui64ResultClassLabel == m_ui64RejectClassLabel ) 
+	if( m_oRejectClass_CanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && l_ui64ResultClassLabel == m_ui64RejectClassLabel )
 	{
 		this->getLogManager() << LogLevel_Debug << "Winning class " << l_ui64ResultClassLabel << " was 'rejected' with " << l_ui64MaxVotes << "votes. Dropped.\n";
 	}
@@ -201,15 +201,15 @@ boolean CBoxAlgorithmStimulationVoter::process(void)
 		uint64 l_ui64CurrentTime = getPlayerContext().getCurrentTime();
 
 		uint64 l_ui64TimeStamp;
-		if(m_oOutputDateMode == OVP_TypeId_Voting_OutputTime_Vote) 
+		if(m_oOutputDateMode == OVP_TypeId_Voting_OutputTime_Vote)
 		{
 			l_ui64TimeStamp = l_ui64CurrentTime;
 		}
 		else if(m_oOutputDateMode == OVP_TypeId_Voting_OutputTime_Winner)
 		{
 			l_ui64TimeStamp = l_oLastSeen[l_ui64ResultClassLabel];
-		} 
-		else 
+		}
+		else
 		{
 			l_ui64TimeStamp = m_ui64LatestStimulusDate;
 		}

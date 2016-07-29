@@ -13,10 +13,11 @@ using namespace OpenViBEPlugins::SignalProcessing;
 using namespace std;
 
 CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP(void)
-	:m_pStreamEncoder(NULL)
-	,m_pEquationParser(NULL)
+	:m_pStreamEncoder(nullptr)
+	,m_pEquationParser(nullptr)
 	,m_ui64EquationType(OP_USERDEF)
 	,m_f64SpecialEquationParameter(0)
+	,m_ppVariable(nullptr)
 {
 }
 
@@ -34,14 +35,14 @@ boolean CBoxAlgorithmSimpleDSP::initialize(void)
 
 	CString l_sEquation=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_pEquationParser=new CEquationParser(*this, m_ppVariable, l_rStaticBoxContext.getInputCount());
-	if(!m_pEquationParser) 
+	if(!m_pEquationParser)
 	{
-		this->getLogManager() << LogLevel_Error << "Failed to create EquationParser\n";	
+		this->getLogManager() << LogLevel_Error << "Failed to create EquationParser\n";
 		return false;
 	}
 	if(!m_pEquationParser->compileEquation(l_sEquation.toASCIIString()))
 	{
-		this->getLogManager() << LogLevel_Error << "Failed to compile equation '" << l_sEquation << "'\n";	
+		this->getLogManager() << LogLevel_Error << "Failed to compile equation '" << l_sEquation << "'\n";
 		return false;
 	}
 	m_ui64EquationType=m_pEquationParser->getTreeCategory();
@@ -51,7 +52,7 @@ boolean CBoxAlgorithmSimpleDSP::initialize(void)
 	l_rStaticBoxContext.getOutputType(0, l_oStreamType);
 	if(!this->getTypeManager().isDerivedFromStream(l_oStreamType, OV_TypeId_StreamedMatrix))
 	{
-		this->getLogManager() << LogLevel_Error << "Output stream is not derived from OV_TypeId_StreamedMatrix\n";	
+		this->getLogManager() << LogLevel_Error << "Output stream is not derived from OV_TypeId_StreamedMatrix\n";
 		return false;
 	}
 	if(l_oStreamType==OV_TypeId_StreamedMatrix)
@@ -119,7 +120,7 @@ boolean CBoxAlgorithmSimpleDSP::initialize(void)
 boolean CBoxAlgorithmSimpleDSP::uninitialize(void)
 {
 	std::vector < IAlgorithmProxy* >::iterator it;
-	for(it=m_vStreamDecoder.begin(); it!=m_vStreamDecoder.end(); it++)
+	for(it=m_vStreamDecoder.begin(); it!=m_vStreamDecoder.end(); ++it)
 	{
 		(*it)->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(**it);

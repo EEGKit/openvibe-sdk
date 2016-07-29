@@ -17,7 +17,7 @@ namespace XML
 	class IXMLNodeImpl: public IXMLNode
 	{
 	public:
-		IXMLNodeImpl(const char* sName);
+		explicit IXMLNodeImpl(const char* sName);
 
 		virtual const char* getName() const;
 

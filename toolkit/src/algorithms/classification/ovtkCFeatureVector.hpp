@@ -11,7 +11,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TFeatureVector(OpenViBE::IMatrix& rMatrix)
+		explicit TFeatureVector(OpenViBE::IMatrix& rMatrix)
 			:OpenViBEToolkit::TVector < CParent >(rMatrix)
 		{
 		}

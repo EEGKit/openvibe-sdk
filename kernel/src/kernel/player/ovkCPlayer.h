@@ -21,7 +21,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CPlayer(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CPlayer(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 			virtual ~CPlayer(void);
 
 			virtual OpenViBE::boolean setScenario(

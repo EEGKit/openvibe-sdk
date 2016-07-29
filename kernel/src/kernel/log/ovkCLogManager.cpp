@@ -142,7 +142,7 @@ boolean CLogManager::addListener(ILogListener* pListener)
 		{
 			return false;
 		}
-		itLogListener++;
+		++itLogListener;
 	}
 
 	m_vListener.push_back(pListener);
@@ -159,7 +159,7 @@ boolean CLogManager::removeListener(ILogListener* pListener)
 			m_vListener.erase(itLogListener);
 			return true;	// due to constraint in addListener(), pListener can be in the array only once, so we can return
 		}
-		itLogListener++;
+		++itLogListener;
 	}
 	return false;
 }

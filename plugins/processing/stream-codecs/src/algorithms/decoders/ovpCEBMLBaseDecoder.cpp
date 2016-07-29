@@ -64,7 +64,6 @@ EBML::boolean CEBMLBaseDecoder::isMasterChild(const EBML::CIdentifier& rIdentifi
 	if(rIdentifier==OVTK_NodeId_Header)                    { return true; }
 	else if(rIdentifier==OVTK_NodeId_Header_StreamVersion) { return false; }
 	else if(rIdentifier==OVTK_NodeId_Header_StreamType)    { return false; }
-	else if(rIdentifier==OVTK_NodeId_Header)               { return true; }
 	else if(rIdentifier==OVTK_NodeId_Buffer)               { return true; }
 	else if(rIdentifier==OVTK_NodeId_End)                  { return true; }
 	return false;

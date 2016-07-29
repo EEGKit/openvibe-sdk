@@ -26,7 +26,7 @@ boolean CAlgorithmMatrixAverage::initialize(void)
 boolean CAlgorithmMatrixAverage::uninitialize(void)
 {
 	std::deque < OpenViBE::CMatrix* >::iterator it;
-	for(it=m_vHistory.begin(); it!=m_vHistory.end(); it++)
+	for(it=m_vHistory.begin(); it!=m_vHistory.end(); ++it)
 	{
 		delete *it;
 	}
@@ -53,7 +53,7 @@ boolean CAlgorithmMatrixAverage::process(void)
 	if(this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_Reset))
 	{
 		std::deque < CMatrix* >::iterator it;
-		for(it=m_vHistory.begin(); it!=m_vHistory.end(); it++)
+		for(it=m_vHistory.begin(); it!=m_vHistory.end(); ++it)
 		{
 			delete *it;
 		}
@@ -111,7 +111,7 @@ boolean CAlgorithmMatrixAverage::process(void)
 			if(m_vHistory.size()>=ip_ui64MatrixCount)
 			{
 				std::deque < CMatrix* >::iterator it;
-				for(it=m_vHistory.begin(); it!=m_vHistory.end(); it++)
+				for(it=m_vHistory.begin(); it!=m_vHistory.end(); ++it)
 				{
 					delete *it;
 				}
@@ -150,7 +150,7 @@ boolean CAlgorithmMatrixAverage::process(void)
 			float64 l_f64Scale=1./m_vHistory.size();
 
 			std::deque < CMatrix* >::iterator it;
-			for(it=m_vHistory.begin(); it!=m_vHistory.end(); it++)
+			for(it=m_vHistory.begin(); it!=m_vHistory.end(); ++it)
 			{
 				float64* l_pOutputMatrixBuffer=l_pOutputMatrix->getBuffer();
 				float64* l_pInputMatrixBuffer=(*it)->getBuffer();

@@ -160,19 +160,19 @@ boolean CBoxAlgorithmStimulationMultiplexer::process(void)
 			if(it->first < l_ui64ReadChunkMinEndTime)
 			{
 				it_backup=it;
-				it++;
+				++it;
 				l_vStimulationToSend.insert(make_pair(it_backup->first, it_backup->second));
 				m_vStimulation.erase(it_backup);
 			}
 			else
 			{
-				it++;
+				++it;
 			}
 		}
 
 		TParameterHandler < IStimulationSet* > l_ipStimulationSet(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
 		l_ipStimulationSet->setStimulationCount(l_vStimulationToSend.size());
-		for(k=0, it=l_vStimulationToSend.begin(); it!=l_vStimulationToSend.end(); it++, k++)
+		for(k=0, it=l_vStimulationToSend.begin(); it!=l_vStimulationToSend.end(); ++it, k++)
 		{
 			l_ipStimulationSet->setStimulationIdentifier(k, it->second.m_ui64Identifier);
 			l_ipStimulationSet->setStimulationDate(k, it->second.m_ui64Date);

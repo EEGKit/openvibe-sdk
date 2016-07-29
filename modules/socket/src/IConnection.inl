@@ -55,7 +55,7 @@ namespace Socket
 #endif
 		}
 
-		TConnection(int32 i32Socket)
+		explicit TConnection(int32 i32Socket)
 			:m_i32Socket(i32Socket)
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS

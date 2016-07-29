@@ -238,7 +238,7 @@ boolean CTypeManager::getEnumerationEntry(
 	}
 
 	std::map<uint64, CString>::const_iterator itEnumerationEntry=itEnumeration->second.begin();
-	for(uint64 i=0; i<ui64EntryIndex && itEnumerationEntry!=itEnumeration->second.end(); i++, itEnumerationEntry++)
+	for(uint64 i=0; i<ui64EntryIndex && itEnumerationEntry!=itEnumeration->second.end(); i++, ++itEnumerationEntry)
 	{
 	}
 
@@ -277,7 +277,7 @@ uint64 CTypeManager::getEnumerationEntryValueFromName(
 	}
 
 	// first looks at the exact std::string match
-	for(itEnumerationEntry=itEnumeration->second.begin(); itEnumerationEntry!=itEnumeration->second.end(); itEnumerationEntry++)
+	for(itEnumerationEntry=itEnumeration->second.begin(); itEnumerationEntry!=itEnumeration->second.end(); ++itEnumerationEntry)
 	{
 		if(itEnumerationEntry->second==rEntryName)
 		{
@@ -288,7 +288,7 @@ uint64 CTypeManager::getEnumerationEntryValueFromName(
 	// then looks at the caseless std::string match
 	std::string l_sEntryNameLower=rEntryName.toASCIIString();
 	std::transform(l_sEntryNameLower.begin(), l_sEntryNameLower.end(), l_sEntryNameLower.begin(), ::to_lower<std::string::value_type>);
-	for(itEnumerationEntry=itEnumeration->second.begin(); itEnumerationEntry!=itEnumeration->second.end(); itEnumerationEntry++)
+	for(itEnumerationEntry=itEnumeration->second.begin(); itEnumerationEntry!=itEnumeration->second.end(); ++itEnumerationEntry)
 	{
 		std::string l_sItEntryNameLower=itEnumerationEntry->second.toASCIIString();
 		std::transform(l_sItEntryNameLower.begin(), l_sItEntryNameLower.end(), l_sItEntryNameLower.begin(), ::to_lower<std::string::value_type>);
@@ -299,13 +299,18 @@ uint64 CTypeManager::getEnumerationEntryValueFromName(
 	}
 
 	// then looks at the std::string being the value itself
-	uint64 l_ui64Value;
-	if(::sscanf((const char*)rEntryName, "%lli", &l_ui64Value)==1)
+	try
 	{
+		uint64 l_ui64Value = std::stoll((const char*)rEntryName);
+
 		if(itEnumeration->second.find(l_ui64Value)!=itEnumeration->second.end() || this->getConfigurationManager().expandAsBoolean("Kernel_AllowUnregisteredNumericalStimulationIdentifiers"))
 		{
 			return l_ui64Value;
 		}
+	}
+	catch(const std::exception&)
+	{
+		return 0xffffffffffffffffll;
 	}
 
 	return 0xffffffffffffffffll;
@@ -340,7 +345,7 @@ boolean CTypeManager::getBitMaskEntry(
 	}
 
 	std::map<uint64, CString>::const_iterator itBitMaskEntry=itBitMask->second.begin();
-	for(uint64 i=0; i<ui64EntryIndex && itBitMaskEntry!=itBitMask->second.end(); i++, itBitMaskEntry++)
+	for(uint64 i=0; i<ui64EntryIndex && itBitMaskEntry!=itBitMask->second.end(); i++, ++itBitMaskEntry)
 	{
 	}
 
@@ -379,7 +384,7 @@ uint64 CTypeManager::getBitMaskEntryValueFromName(
 	}
 
 	// first looks at the exact std::string match
-	for(itBitMaskEntry=itBitMask->second.begin(); itBitMaskEntry!=itBitMask->second.end(); itBitMaskEntry++)
+	for(itBitMaskEntry=itBitMask->second.begin(); itBitMaskEntry!=itBitMask->second.end(); ++itBitMaskEntry)
 	{
 		if(itBitMaskEntry->second==rEntryName)
 		{
@@ -390,7 +395,7 @@ uint64 CTypeManager::getBitMaskEntryValueFromName(
 	// then looks at the caseless std::string match
 	std::string l_sEntryNameLower=rEntryName.toASCIIString();
 	std::transform(l_sEntryNameLower.begin(), l_sEntryNameLower.end(), l_sEntryNameLower.begin(), ::to_lower<std::string::value_type>);
-	for(itBitMaskEntry=itBitMask->second.begin(); itBitMaskEntry!=itBitMask->second.end(); itBitMaskEntry++)
+	for(itBitMaskEntry=itBitMask->second.begin(); itBitMaskEntry!=itBitMask->second.end(); ++itBitMaskEntry)
 	{
 		std::string l_sItEntryNameLower=itBitMaskEntry->second.toASCIIString();
 		std::transform(l_sItEntryNameLower.begin(), l_sItEntryNameLower.end(), l_sItEntryNameLower.begin(), ::to_lower<std::string::value_type>);
@@ -401,13 +406,18 @@ uint64 CTypeManager::getBitMaskEntryValueFromName(
 	}
 
 	// then looks at the std::string being the value itself
-	uint64 l_ui64Value;
-	if(sscanf((const char*)rEntryName, "%lli", &l_ui64Value)==1)
+	try
 	{
+		uint64 l_ui64Value = std::stoll((const char*)rEntryName);
+
 		if(itBitMask->second.find(l_ui64Value)!=itBitMask->second.end())
 		{
 			return l_ui64Value;
 		}
+	}
+	catch(const std::exception&)
+	{
+		return 0xffffffffffffffffll;
 	}
 
 	return 0xffffffffffffffffll;
@@ -477,7 +487,7 @@ uint64 CTypeManager::getBitMaskEntryCompositionValueFromName(
 
 			boolean l_bFound=false;
 			std::map<uint64, CString>::const_iterator itBitMaskEntry;
-			for(itBitMaskEntry=itBitMask->second.begin(); itBitMaskEntry!=itBitMask->second.end(); itBitMaskEntry++)
+			for(itBitMaskEntry=itBitMask->second.begin(); itBitMaskEntry!=itBitMask->second.end(); ++itBitMaskEntry)
 			{
 				if(itBitMaskEntry->second==CString(l_sEntryName.c_str()))
 				{
