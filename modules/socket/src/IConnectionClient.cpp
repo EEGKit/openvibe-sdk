@@ -29,7 +29,7 @@ namespace Socket
 			uint32 ui32ServerPort,
 			uint32 ui32TimeOut)
 		{
-#if defined TARGET_OS_Linux
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			long l_iValue;
 
@@ -52,7 +52,7 @@ namespace Socket
 				return false;
 			}
 
-#if defined TARGET_OS_Linux
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			// Sets non blocking
 			if((l_iValue=::fcntl(m_i32Socket, F_GETFL, NULL))<0)
@@ -86,7 +86,7 @@ namespace Socket
 			{
 				boolean l_bInProgress;
 
-#if defined TARGET_OS_Linux
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 				l_bInProgress=(errno==EINPROGRESS);
 
@@ -126,7 +126,7 @@ namespace Socket
 
 					// Checks error status
 					int l_iOption=0;
-#if defined TARGET_OS_Linux
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 					socklen_t l_iOptionLength=sizeof(l_iOption);
 					::getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, (void*)(&l_iOption), &l_iOptionLength);
 #elif defined TARGET_OS_Windows
@@ -146,7 +146,7 @@ namespace Socket
 				}
 			}
 
-#if defined TARGET_OS_Linux
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			// Sets back to blocking
 			if((l_iValue=::fcntl(m_i32Socket, F_GETFL, NULL))<0)
