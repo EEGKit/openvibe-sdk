@@ -14,7 +14,7 @@ namespace OpenViBE
 		public:
 
 			CBuffer(void) { }
-			CBuffer(const OpenViBE::Kernel::CBuffer& rBuffer);
+			explicit CBuffer(const OpenViBE::Kernel::CBuffer& rBuffer);
 
 			CBuffer& operator=(const CBuffer& rBuffer);
 		};

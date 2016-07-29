@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CKernelObjectFactoryHelper(OpenViBE::Kernel::IKernelObjectFactory& rKernelObjectFactory)
+			explicit CKernelObjectFactoryHelper(OpenViBE::Kernel::IKernelObjectFactory& rKernelObjectFactory)
 				:m_rKernelObjectFactory(rKernelObjectFactory)
 			{
 			}

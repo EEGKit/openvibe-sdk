@@ -9,7 +9,7 @@ namespace EBML
 	{
 	public:
 
-		CReader(EBML::IReaderCallback& rReaderCallback);
+		explicit CReader(EBML::IReaderCallback& rReaderCallback);
 		virtual ~CReader(void);
 
 		virtual EBML::boolean processData(const void* pBuffer, const EBML::uint64 ui64BufferSize);

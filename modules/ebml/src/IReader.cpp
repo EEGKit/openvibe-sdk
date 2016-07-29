@@ -129,7 +129,7 @@ namespace EBML
 		{
 		public:
 
-			CReader(IReaderCallback& rReaderCallback);
+			explicit CReader(IReaderCallback& rReaderCallback);
 			virtual ~CReader(void);
 
 			virtual boolean processData(const void* pBuffer, const uint64 ui64BufferSize);

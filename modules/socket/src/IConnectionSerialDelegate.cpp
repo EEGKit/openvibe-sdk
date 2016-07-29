@@ -14,7 +14,7 @@ namespace Socket
 	class CConnectionSerialDelegate : public Socket::IConnectionSerialDelegate
 	{
 	public:
-		CConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) :
+		explicit CConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) :
 			IConnectionSerialDelegate(oConnectionSerialDelegate)
 		{
 			m_oConnectionSerialDelegate = oConnectionSerialDelegate;

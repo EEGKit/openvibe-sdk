@@ -43,9 +43,10 @@ namespace
 };
 
 CBoxAlgorithmCSVFileReader::CBoxAlgorithmCSVFileReader(void)
-	: m_pFile(NULL),
+	: m_pFile(nullptr),
 	m_ui64SamplingRate(0),
-	m_fpRealProcess(NULL),
+	m_fpRealProcess(nullptr),
+	m_pAlgorithmEncoder(nullptr),
 	m_bHeaderSent(false)
 {
 }

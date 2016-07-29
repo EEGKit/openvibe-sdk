@@ -196,7 +196,7 @@ namespace EBML
 		{
 		public:
 
-			CWriter(IWriterCallback& rWriterCallback);
+			explicit CWriter(IWriterCallback& rWriterCallback);
 
 			virtual boolean openChild(const CIdentifier& rIdentifier);
 			virtual boolean setChildData(const void* pBuffer, const uint64 ui64BufferSize);

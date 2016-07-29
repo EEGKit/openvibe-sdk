@@ -268,7 +268,7 @@ boolean CScheduler::flattenScenario()
 			class CScenarioMergeCallback : public IScenario::IScenarioMergeCallback
 			{
 			public:
-				CScenarioMergeCallback(std::map<CIdentifier, CIdentifier>& rIdentifierCorrespondence)
+				explicit CScenarioMergeCallback(std::map<CIdentifier, CIdentifier>& rIdentifierCorrespondence)
 					: m_rIdentifierCorrespondence(rIdentifierCorrespondence)
 				{
 				}

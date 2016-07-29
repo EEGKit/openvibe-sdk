@@ -143,7 +143,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		CAlgorithmScenarioImporterContext(IAlgorithmContext& rAlgorithmContext)
+		explicit CAlgorithmScenarioImporterContext(IAlgorithmContext& rAlgorithmContext)
 			:m_rAlgorithmContext(rAlgorithmContext)
 		{
 		}

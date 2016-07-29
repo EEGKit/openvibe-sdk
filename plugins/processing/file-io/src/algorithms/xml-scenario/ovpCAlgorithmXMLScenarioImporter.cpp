@@ -41,7 +41,7 @@ namespace
 	class _AutoBind_
 	{
 	public:
-		_AutoBind_(const std::string& sValue) : m_sValue(sValue) { }
+		explicit _AutoBind_(const std::string& sValue) : m_sValue(sValue) { }
 		operator CString (void) { return CString(m_sValue.c_str()); }
 		operator CIdentifier (void) { CIdentifier l_oResult; l_oResult.fromString(m_sValue.c_str()); return l_oResult; }
 		operator uint32 (void) { return atoi(m_sValue.c_str()); }

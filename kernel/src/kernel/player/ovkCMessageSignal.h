@@ -14,7 +14,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CMessageSignal(const OpenViBE::Kernel::IKernelContext& rKernelContext)
+			explicit CMessageSignal(const OpenViBE::Kernel::IKernelContext& rKernelContext)
 				:OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageSignal> >(rKernelContext)
 			{
 			}

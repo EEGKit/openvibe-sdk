@@ -18,7 +18,7 @@ namespace OpenViBE
 		{
 		public:
 
-			TBaseConfigurable(const OpenViBE::Kernel::IKernelContext& rKernelContext)
+			explicit TBaseConfigurable(const OpenViBE::Kernel::IKernelContext& rKernelContext)
 				:IBase(rKernelContext)
 			{
 			}

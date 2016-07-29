@@ -10,7 +10,7 @@ namespace OpenViBE
 		class CScenarioSettingKeywordParserCallback : public OpenViBE::Kernel::IConfigurationKeywordExpandCallback
 		{
 		public:
-			CScenarioSettingKeywordParserCallback(const IScenario& rScenario)
+			explicit CScenarioSettingKeywordParserCallback(const IScenario& rScenario)
 			    : m_rScenario(rScenario)
 			{}
 

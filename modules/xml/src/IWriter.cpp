@@ -12,7 +12,7 @@ namespace XML
 	class CWriter : public IWriter
 	{
 	public:
-		CWriter(IWriterCallback& rWriterCallback);
+		explicit CWriter(IWriterCallback& rWriterCallback);
 
 		virtual boolean openChild(const char* sName);
 		virtual boolean setChildData(const char* sData);
@@ -144,7 +144,7 @@ boolean CWriter::closeChild(void)
 	}
 
 	string l_sIndent(m_vNodes.size()-1, '\t');
-	string l_sResult=((m_bHasData||(!m_bHasData&&!m_bHasChild))?string(""):string("\n")+l_sIndent)+string("</")+m_vNodes.top()+string(">");
+	string l_sResult=((m_bHasData||!m_bHasChild)?string(""):string("\n")+l_sIndent)+string("</")+m_vNodes.top()+string(">");
 	m_rWriterCallback.write(l_sResult.c_str());
 	m_vNodes.pop();
 	m_bHasChild=true;

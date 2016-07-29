@@ -40,7 +40,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CErrorManager(const OpenViBE::Kernel::IKernelContext& context);
+			explicit CErrorManager(const OpenViBE::Kernel::IKernelContext& context);
 			~CErrorManager();
 
 			void pushError(OpenViBE::Kernel::ErrorType type, const char* description) override;

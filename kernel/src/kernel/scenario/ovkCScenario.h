@@ -165,7 +165,6 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::CIdentifier m_oIdentifier;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CBox*> m_vBox;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CComment*> m_vComment;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CLink*> m_vLink;

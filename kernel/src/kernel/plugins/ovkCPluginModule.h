@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CPluginModule(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CPluginModule(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 			virtual ~CPluginModule(void);
 
 			virtual OpenViBE::boolean load(

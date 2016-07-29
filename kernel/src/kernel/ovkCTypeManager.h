@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CTypeManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CTypeManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 
 			virtual OpenViBE::CIdentifier getNextTypeIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const;

@@ -194,7 +194,10 @@ bool CScenarioManager::importScenarioFromFile(OpenViBE::CIdentifier& newScenario
 		fclose(inputFile);
 		OV_ERROR_KRF("Problem reading scenario file '" << fileName << "'", ErrorType::BadFileRead);
 	}
-	fclose(inputFile);
+	else
+	{
+		fclose(inputFile);
+	}
 
 	return this->importScenario(newScenarioIdentifier, memoryBuffer, scenarioImporterAlgorithmIdentifier);
 }

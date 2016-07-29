@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CKernelObjectFactory(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CKernelObjectFactory(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 
 			virtual OpenViBE::IObject* createObject(
 				const OpenViBE::CIdentifier& rClassIdentifier);

@@ -34,7 +34,7 @@ namespace
 
 	struct TTestEqSourceBox
 	{
-		TTestEqSourceBox(const CIdentifier& rId) : m_rId(rId) { }
+		explicit TTestEqSourceBox(const CIdentifier& rId) : m_rId(rId) { }
 		boolean operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getSourceBoxIdentifier()==m_rId; }
 		const CIdentifier& m_rId;
 	};
@@ -49,7 +49,7 @@ namespace
 
 	struct TTestEqTargetBox
 	{
-		TTestEqTargetBox(const CIdentifier& rId) : m_rId(rId) { }
+		explicit TTestEqTargetBox(const CIdentifier& rId) : m_rId(rId) { }
 		boolean operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getTargetBoxIdentifier()==m_rId; }
 		const CIdentifier& m_rId;
 	};
@@ -102,11 +102,11 @@ namespace
 
 CScenario::CScenario(const IKernelContext& rKernelContext, const CIdentifier& rIdentifier)
 	:TBox< IScenario > (rKernelContext)
-	,m_oIdentifier(rIdentifier)
 {
 	// Some operations on boxes manipulate the owner scenario, for example removing inputs
 	// by default we set the scenario as owning itself to avoid segfaults
 	this->setOwnerScenario(this);
+	this->m_oIdentifier = rIdentifier;
 }
 
 CScenario::~CScenario(void)
@@ -1207,7 +1207,7 @@ boolean CScenario::checkNeedsUpdateBox()
 
 		l_oBoxHashCode2.fromString(l_pBox.second->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue));
 
-		if(!(l_oBoxHashCode1 == OV_UndefinedIdentifier || (l_oBoxHashCode1 != OV_UndefinedIdentifier && l_oBoxHashCode1 == l_oBoxHashCode2)))
+		if(!(l_oBoxHashCode1 == OV_UndefinedIdentifier || l_oBoxHashCode1 == l_oBoxHashCode2))
 		{
 			l_bResult = true;
 			m_vNeedsUpdatesBoxes.insert(l_pBox);

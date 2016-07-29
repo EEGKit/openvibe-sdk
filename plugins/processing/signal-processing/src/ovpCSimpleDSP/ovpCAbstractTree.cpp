@@ -483,8 +483,8 @@ void CAbstractTree::recognizeSpecialTree(uint64& ui64TreeIdentifier, float64& f6
 	else if(l_ui64NumberOfChildren == 2)
 	{
 		boolean l_bIsVariable[2];
-		l_bIsVariable[0] = l_oChildren[0]->isTerminal() & !l_oChildren[0]->isConstant();
-		l_bIsVariable[1] = l_oChildren[1]->isTerminal() & !l_oChildren[1]->isConstant();
+		l_bIsVariable[0] = l_oChildren[0]->isTerminal() && !l_oChildren[0]->isConstant();
+		l_bIsVariable[1] = l_oChildren[1]->isTerminal() && !l_oChildren[1]->isConstant();
 
 		//(* X X)
 		if(l_ui64NodeIdentifier == OP_MUL && l_bIsVariable[0] && l_bIsVariable[1] )

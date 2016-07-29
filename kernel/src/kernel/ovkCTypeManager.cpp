@@ -238,7 +238,7 @@ boolean CTypeManager::getEnumerationEntry(
 	}
 
 	std::map<uint64, CString>::const_iterator itEnumerationEntry=itEnumeration->second.begin();
-	for(uint64 i=0; i<ui64EntryIndex && itEnumerationEntry!=itEnumeration->second.end(); i++, itEnumerationEntry++)
+	for(uint64 i=0; i<ui64EntryIndex && itEnumerationEntry!=itEnumeration->second.end(); i++, ++itEnumerationEntry)
 	{
 	}
 
@@ -345,7 +345,7 @@ boolean CTypeManager::getBitMaskEntry(
 	}
 
 	std::map<uint64, CString>::const_iterator itBitMaskEntry=itBitMask->second.begin();
-	for(uint64 i=0; i<ui64EntryIndex && itBitMaskEntry!=itBitMask->second.end(); i++, itBitMaskEntry++)
+	for(uint64 i=0; i<ui64EntryIndex && itBitMaskEntry!=itBitMask->second.end(); i++, ++itBitMaskEntry)
 	{
 	}
 

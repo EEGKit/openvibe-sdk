@@ -15,7 +15,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CConfigurable(const OpenViBE::Kernel::IKernelContext& rKernelContext)
+			explicit CConfigurable(const OpenViBE::Kernel::IKernelContext& rKernelContext)
 				:OpenViBE::Kernel::TBaseConfigurable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IConfigurable > >(rKernelContext)
 			{
 			}

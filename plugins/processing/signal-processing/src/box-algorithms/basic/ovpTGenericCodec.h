@@ -248,7 +248,7 @@ namespace OpenViBEPlugins
 			Type_All = 0xffffffff,
 		} EType;
 
-		TGenericListener(const OpenViBE::uint32 ui32ValidTypeFlag=Type_All)
+		explicit TGenericListener(const OpenViBE::uint32 ui32ValidTypeFlag=Type_All)
 		{
 			if(ui32ValidTypeFlag & Type_StreamedMatrix) m_vAllowedTypeIdentifier[OV_TypeId_StreamedMatrix] = true;
 			if(ui32ValidTypeFlag & Type_Signal) m_vAllowedTypeIdentifier[OV_TypeId_Signal] = true;

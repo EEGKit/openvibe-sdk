@@ -22,7 +22,7 @@ namespace OpenViBE
 		class CPluginModuleBase : public TKernelObject<IPluginModule>
 		{
 		public:
-			CPluginModuleBase(const IKernelContext& rKernelContext);
+			explicit CPluginModuleBase(const IKernelContext& rKernelContext);
 			virtual ~CPluginModuleBase();
 
 			virtual boolean initialize(void);
@@ -59,7 +59,7 @@ namespace OpenViBE
 			{
 			public:
 
-				CPluginModuleContext(const IKernelContext& rKernelContext)
+				explicit CPluginModuleContext(const IKernelContext& rKernelContext)
 					:TKernelObject<IPluginModuleContext>(rKernelContext)
 					,m_rLogManager(rKernelContext.getLogManager())
 					,m_rTypeManager(rKernelContext.getTypeManager())
@@ -214,7 +214,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CPluginModuleWindows(const IKernelContext& rKernelContext);
+			explicit CPluginModuleWindows(const IKernelContext& rKernelContext);
 
 			virtual boolean load(
 				const CString& sFileName,
@@ -245,7 +245,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CPluginModuleDummy(const IKernelContext& rKernelContext);
+			explicit CPluginModuleDummy(const IKernelContext& rKernelContext);
 
 			virtual boolean load(
 				const CString& sFileName,

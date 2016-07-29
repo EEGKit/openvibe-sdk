@@ -14,7 +14,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CLogListenerNull(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CLogListenerNull(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 
 			virtual OpenViBE::boolean isActive(OpenViBE::Kernel::ELogLevel eLogLevel);
 			virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eLogLevel, OpenViBE::boolean bActive);

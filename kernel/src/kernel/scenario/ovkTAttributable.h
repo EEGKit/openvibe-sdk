@@ -17,7 +17,7 @@ namespace OpenViBE
 		{
 		public:
 
-			TAttributable(const OpenViBE::Kernel::IKernelContext& rKernelContext)
+			explicit TAttributable(const OpenViBE::Kernel::IKernelContext& rKernelContext)
 				:T(rKernelContext)
 			{
 			}

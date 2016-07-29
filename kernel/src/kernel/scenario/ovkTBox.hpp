@@ -57,7 +57,7 @@ namespace OpenViBE
 		{
 		public:
 
-			TBox(const OpenViBE::Kernel::IKernelContext& rKernelContext)
+			explicit TBox(const OpenViBE::Kernel::IKernelContext& rKernelContext)
 			    :TAttributable< TKernelObject <T> >(rKernelContext)
 			    ,m_pOwnerScenario(NULL)
 			    ,m_pBoxAlgorithmDescriptor(NULL)

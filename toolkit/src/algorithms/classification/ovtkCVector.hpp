@@ -11,7 +11,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TVector(OpenViBE::IMatrix& rMatrix)
+		explicit TVector(OpenViBE::IMatrix& rMatrix)
 			:m_rMatrix(rMatrix)
 		{
 		}

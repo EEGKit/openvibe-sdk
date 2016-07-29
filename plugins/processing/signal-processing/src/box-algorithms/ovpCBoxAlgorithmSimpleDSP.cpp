@@ -13,10 +13,11 @@ using namespace OpenViBEPlugins::SignalProcessing;
 using namespace std;
 
 CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP(void)
-	:m_pStreamEncoder(NULL)
-	,m_pEquationParser(NULL)
+	:m_pStreamEncoder(nullptr)
+	,m_pEquationParser(nullptr)
 	,m_ui64EquationType(OP_USERDEF)
 	,m_f64SpecialEquationParameter(0)
+	,m_ppVariable(nullptr)
 {
 }
 

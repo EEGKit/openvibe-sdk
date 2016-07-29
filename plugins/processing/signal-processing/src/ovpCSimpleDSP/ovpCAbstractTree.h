@@ -262,7 +262,7 @@ protected:
 
 public:
 
-	CAbstractTreeValueNode(OpenViBE::float64 f64Value) : CAbstractTreeNode(true, true), m_f64Value(f64Value) {}
+	explicit CAbstractTreeValueNode(OpenViBE::float64 f64Value) : CAbstractTreeNode(true, true), m_f64Value(f64Value) {}
 
 	//! Destructor
 	virtual ~CAbstractTreeValueNode()
@@ -310,7 +310,7 @@ class CAbstractTreeVariableNode : public CAbstractTreeNode
 {
 public:
 
-	CAbstractTreeVariableNode(OpenViBE::uint32 ui32Index)
+	explicit CAbstractTreeVariableNode(OpenViBE::uint32 ui32Index)
 		:CAbstractTreeNode(true, false)
 		,m_ui32Index(ui32Index)
 	{
@@ -363,7 +363,7 @@ protected:
 public:
 
 	//! Constructor
-	CAbstractTree(CAbstractTreeNode * pRoot)
+	explicit CAbstractTree(CAbstractTreeNode * pRoot)
 		:m_pRoot(pRoot)
 	{
 	}

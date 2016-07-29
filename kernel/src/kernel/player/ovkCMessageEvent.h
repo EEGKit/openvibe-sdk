@@ -14,7 +14,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CMessageEvent(const OpenViBE::Kernel::IKernelContext& rKernelContext)
+			explicit CMessageEvent(const OpenViBE::Kernel::IKernelContext& rKernelContext)
 				:OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageEvent> >(rKernelContext)
 			{
 			}
