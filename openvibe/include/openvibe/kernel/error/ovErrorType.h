@@ -48,6 +48,7 @@ namespace OpenViBE
 			BadCast = 12, /*!< Used when a cast failed */
 			OutOfBound = 13, /*!< Used for out of range value (specific case of BadValue/BadArguments) */
 			Overflow = 14, /*!< Used to report arithmetic overflow */
+			BadParsing = 15, /*!< Used to report data parsing error */
 			// Alloc
 			BadAlloc = 20, /*!< Used when an allocation failed */
 			OutOfMemory = 21, /*!< Used when the system is running out of memory (specific case of BadAlloc) */

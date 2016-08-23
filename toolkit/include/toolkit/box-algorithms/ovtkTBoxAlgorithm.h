@@ -142,7 +142,7 @@ namespace OpenViBEToolkit
 				OV_ERROR_UNLESS(
 					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
 					"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 32bits.",
-					OpenViBE::Kernel::ErrorType::BadCast,
+					OpenViBE::Kernel::ErrorType::BadParsing,
 					std::numeric_limits<OpenViBE::uint32>::max(),
 					m_rErrorManager,
 					m_rLogManager
@@ -163,7 +163,7 @@ namespace OpenViBEToolkit
 					OV_ERROR_UNLESS(
 						l_ui64StimId != std::numeric_limits<OpenViBE::uint64>::max(),
 						"Did not find an enumeration value for [" << m_rTypeManager.getTypeName(m_oSettingType) << "] = [" << m_sSettingValue << "]",
-						OpenViBE::Kernel::ErrorType::BadCast,
+						OpenViBE::Kernel::ErrorType::BadParsing,
 						std::numeric_limits<OpenViBE::uint64>::max(),
 						m_rErrorManager,
 						m_rLogManager
@@ -180,7 +180,7 @@ namespace OpenViBEToolkit
 				OV_ERROR_UNLESS(
 					l_ui64StimId != std::numeric_limits<OpenViBE::uint64>::max() || m_oSettingType != OV_TypeId_Integer,
 					"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 64bits.",
-					OpenViBE::Kernel::ErrorType::BadCast,
+					OpenViBE::Kernel::ErrorType::BadParsing,
 					std::numeric_limits<OpenViBE::uint64>::max(),
 					m_rErrorManager,
 					m_rLogManager
@@ -197,7 +197,7 @@ namespace OpenViBEToolkit
 				OV_ERROR_UNLESS(
 					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
 					"Could not expand numeric expression [" << m_sSettingValue << "] to integer 32bits.",
-					OpenViBE::Kernel::ErrorType::BadCast,
+					OpenViBE::Kernel::ErrorType::BadParsing,
 					std::numeric_limits<OpenViBE::int32>::max(),
 					m_rErrorManager,
 					m_rLogManager
@@ -214,7 +214,7 @@ namespace OpenViBEToolkit
 				OV_ERROR_UNLESS(
 					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
 					"Could not expand numeric expression [" << m_sSettingValue << "] to integer 64bits.",
-					OpenViBE::Kernel::ErrorType::BadCast,
+					OpenViBE::Kernel::ErrorType::BadParsing,
 					std::numeric_limits<OpenViBE::int64>::max(),
 					m_rErrorManager,
 					m_rLogManager
@@ -230,7 +230,7 @@ namespace OpenViBEToolkit
 				OV_ERROR_UNLESS(
 					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
 					"Could not expand numeric expression [" << m_sSettingValue << "] to float.",
-					OpenViBE::Kernel::ErrorType::BadCast,
+					OpenViBE::Kernel::ErrorType::BadParsing,
 					std::numeric_limits<OpenViBE::float64>::max(),
 					m_rErrorManager,
 					m_rLogManager
