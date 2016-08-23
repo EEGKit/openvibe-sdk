@@ -80,19 +80,21 @@ boolean CAlgorithmScenarioExporter::process(void)
 
 	TParameterHandler < IScenario* > ip_pScenario(this->getInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario));
 	IScenario* l_pScenario=ip_pScenario;
-	if(!l_pScenario)
-	{
-		this->getLogManager() << LogLevel_Warning << "No scenario to export\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		l_pScenario,
+		"Input scenario is NULL",
+		OpenViBE::Kernel::ErrorType::BadInput
+	);
 
 	TParameterHandler < IMemoryBuffer* > op_pMemoryBuffer(this->getOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer));
 	IMemoryBuffer* l_pMemoryBuffer=op_pMemoryBuffer;
-	if(!l_pMemoryBuffer)
-	{
-		this->getLogManager() << LogLevel_Warning << "No memory buffer to export scenario to\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		l_pMemoryBuffer,
+		"Output memory buffer is NULL",
+		OpenViBE::Kernel::ErrorType::BadOutput
+	);
 
 	this->exportStart(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario);
 

@@ -16,8 +16,8 @@ boolean CAlgorithmClassifierTrainer::process(void)
 		IMatrix* l_pFeatureVectorSet=ip_pFeatureVectorSet;
 		if(!l_pFeatureVectorSet)
 		{
-			this->getLogManager() << LogLevel_ImportantWarning << "Feature vector set matrix is NULL\n";
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
+			OV_ERROR_KRF("Feature vector set is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
 		else
 		{
@@ -29,6 +29,7 @@ boolean CAlgorithmClassifierTrainer::process(void)
 			else
 			{
 				this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
+				OV_ERROR_KRF("Training failed", OpenViBE::Kernel::ErrorType::Internal);
 			}
 		}
 	}
@@ -38,8 +39,8 @@ boolean CAlgorithmClassifierTrainer::process(void)
 		IMemoryBuffer* l_pConfiguration=op_pConfiguration;
 		if(!l_pConfiguration)
 		{
-			this->getLogManager() << LogLevel_ImportantWarning << "Configuration memory buffer is NULL\n";
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
+			OV_ERROR_KRF("Configuration memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
 		}
 		else
 		{
@@ -51,6 +52,7 @@ boolean CAlgorithmClassifierTrainer::process(void)
 			else
 			{
 				this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
+				OV_ERROR_KRF("Saving configuration failed", OpenViBE::Kernel::ErrorType::Internal);
 			}
 		}
 	}

@@ -40,7 +40,7 @@ boolean CAlgorithmPairingStrategy::process(void)
 		else
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			return false;
+			OV_ERROR_KRF("Designing architecture failed", OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
 	else
