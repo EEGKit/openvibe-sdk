@@ -247,10 +247,17 @@ boolean CAlgorithmScenarioImporter::process(void)
 						&& l_oType!=OV_TypeId_Filename && l_oType!=OV_TypeId_Script && l_oType!=OV_TypeId_Color && l_oType!=OV_TypeId_ColorGradient
 						&& !(this->getTypeManager().isEnumeration(l_oType)) && (!this->getTypeManager().isBitMask(l_oType)))
 				{
-					OV_ERROR_KRF(
-						"The type of the setting " << s->m_sName <<" (" << l_oType.toString() << ") from box " << b->m_sName << " cannot be recognized.",
-						OpenViBE::Kernel::ErrorType::BadSetting
-					);
+					if(this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportOnUnknownSetting}", true))
+					{
+						OV_ERROR_KRF(
+							"The type of the setting " << s->m_sName <<" (" << l_oType.toString() << ") from box " << b->m_sName << " cannot be recognized.",
+							OpenViBE::Kernel::ErrorType::BadSetting
+						);
+					}
+					else
+					{
+						OV_WARNING_K("The type of the setting " << s->m_sName <<" (" << l_oType.toString() << ") from box " << b->m_sName << " cannot be recognized.");
+					}
 				}
 
 				l_pBox->addSetting(
