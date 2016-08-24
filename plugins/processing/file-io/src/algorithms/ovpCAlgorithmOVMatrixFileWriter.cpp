@@ -25,15 +25,11 @@ boolean CAlgorithmOVMatrixFileWriter::uninitialize(void)
 
 boolean CAlgorithmOVMatrixFileWriter::process(void)
 {
+	OV_ERROR_UNLESS_KRF(
+		OpenViBEToolkit::Tools::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()),
+		"Writing matrix file " << *ip_sFilename << " failed",
+		OpenViBE::Kernel::ErrorType::BadFileWrite
+	);
 
-	if(OpenViBEToolkit::Tools::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()))
-	{
-		getLogManager() << LogLevel_Trace << "Writing " << *ip_sFilename << " succeeded\n";
-		return true;
-	}
-	else
-	{
-		getLogManager() << LogLevel_Error << "Writing " << *ip_sFilename << " failed\n";
-		return false;
-	}
+	this->getLogManager() << LogLevel_Error << "Writing " << *ip_sFilename << " failed\n";
 }

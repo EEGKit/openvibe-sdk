@@ -27,14 +27,13 @@ boolean CAlgorithmOVMatrixFileReader::uninitialize(void)
 
 boolean CAlgorithmOVMatrixFileReader::process(void)
 {
-	if(OpenViBEToolkit::Tools::Matrix::loadFromTextFile(*op_pMatrix, ip_sFilename->toASCIIString()))
-	{
-		getLogManager() << LogLevel_Trace << "Parsing " << *ip_sFilename << " succeeded\n";
-		return true;
-	}
-	else
-	{
-		getLogManager() << LogLevel_Warning << "Parsing " << *ip_sFilename << " failed\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		OpenViBEToolkit::Tools::Matrix::loadFromTextFile(*op_pMatrix, ip_sFilename->toASCIIString()),
+		"Reading matrix file " << *ip_sFilename << " failed",
+		OpenViBE::Kernel::ErrorType::BadFileRead
+	);
+
+	this->getLogManager() << LogLevel_Trace << "Parsing " << *ip_sFilename << " succeeded\n";
+
+	return true;
 }
