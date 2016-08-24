@@ -87,12 +87,11 @@ boolean CBoxAlgorithmElectrodeLocalisationFileReader::process(void)
 	m_pOVMatrixFileReader->process(/*OVP_Algorithm_OVMatrixFileReader_InputTriggerId_Next*/);
 
 	//ensure matrix is 2 dimensional and that dimension sizes are correct
-	if(op_pMatrix->getDimensionCount() != 2 ||
-		op_pMatrix->getDimensionSize(1) != 3)
-	{
-		getLogManager() << LogLevel_Warning << "Wrong format for electrode localisation matrix loaded from file " << m_sFilename << " !\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		op_pMatrix->getDimensionCount() == 2 && op_pMatrix->getDimensionSize(1) == 3,
+		"Wrong format for electrode localisation matrix loaded from file " << m_sFilename,
+		OpenViBE::Kernel::ErrorType::BadParsing
+	);
 
 	if(m_bHeaderSent == false)
 	{
