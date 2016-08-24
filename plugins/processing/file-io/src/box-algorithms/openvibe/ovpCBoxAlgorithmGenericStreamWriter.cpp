@@ -79,11 +79,13 @@ boolean CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 	m_oWriterHelper.disconnect();
 
 	FS::Files::openOFStream(m_oFile, m_sFilename.toASCIIString(), std::ios::binary | std::ios::trunc);
-	if(!m_oFile.good())
-	{
-		this->getLogManager() << LogLevel_Error << "Could not open file [" << m_sFilename << "] for writing\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		m_oFile.good(),
+		"Error opening file [" << m_sFilename << "] for writing",
+		OpenViBE::Kernel::ErrorType::BadFileWrite
+	);
+
 	m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), (std::streamsize)m_oSwap.getSize());
 
 	m_bIsHeaderGenerate = true;
@@ -138,11 +140,12 @@ boolean CBoxAlgorithmGenericStreamWriter::process(void)
 	if(m_oSwap.getSize() != 0)
 	{
 		m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), (std::streamsize)m_oSwap.getSize());
-		if(!m_oFile.good())
-		{
-			this->getLogManager() << LogLevel_ImportantWarning << "Could not write to file " << m_sFilename << "\n";
-			return false;
-		}
+
+		OV_ERROR_UNLESS_KRF(
+			m_oFile.good(),
+			"Error opening file [" << m_sFilename << "] for writing",
+			OpenViBE::Kernel::ErrorType::BadFileWrite
+		);
 	}
 
 	return true;

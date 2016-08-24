@@ -1,6 +1,7 @@
 #include "ovpCBoxAlgorithmGenericStreamReader.h"
 
 #include <iostream>
+#include <limits>
 #include <fs/Files.h>
 
 using namespace OpenViBE;
@@ -50,11 +51,13 @@ boolean CBoxAlgorithmGenericStreamReader::initializeFile()
 {
 
 	m_pFile = FS::Files::open(m_sFilename.toASCIIString(), "rb");
-	if(!m_pFile)
-	{
-		this->getLogManager() << LogLevel_ImportantWarning << "Could not open file [" << m_sFilename << "]\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		m_pFile,
+		"Error opening file [" << m_sFilename << "] for reading",
+		OpenViBE::Kernel::ErrorType::BadFileRead
+	);
+
 	return true;
 }
 
@@ -86,15 +89,14 @@ boolean CBoxAlgorithmGenericStreamReader::process(void)
 		{
 			if(m_ui64EndTime<=l_ui64Time)
 			{
-				if(m_ui32OutputIndex>=l_rStaticBoxContext.getOutputCount())
-				{
-					this->getLogManager() << LogLevel_Warning << "Stream index " << m_ui32OutputIndex << " can not be output from this box because it does not have enough outputs\n";
-				}
-				else
-				{
-					l_rDynamicBoxContext.getOutputChunk(m_ui32OutputIndex)->append(m_oPendingChunk);
-					l_rDynamicBoxContext.markOutputAsReadyToSend(m_ui32OutputIndex, m_ui64StartTime, m_ui64EndTime);
-				}
+				OV_ERROR_UNLESS_KRF(
+					m_ui32OutputIndex < l_rStaticBoxContext.getOutputCount(),
+					"Stream index " << m_ui32OutputIndex << " can not be output from this box because it does not have enough outputs",
+					OpenViBE::Kernel::ErrorType::BadOutput
+				);
+
+				l_rDynamicBoxContext.getOutputChunk(m_ui32OutputIndex)->append(m_oPendingChunk);
+				l_rDynamicBoxContext.markOutputAsReadyToSend(m_ui32OutputIndex, m_ui64StartTime, m_ui64EndTime);
 				m_bPending=false;
 			}
 			else
@@ -110,11 +112,11 @@ boolean CBoxAlgorithmGenericStreamReader::process(void)
 				uint8 l_ui8Byte;
 				size_t s=::fread(&l_ui8Byte, sizeof(uint8), 1, m_pFile);
 
-				if(s!=1 && !l_bJustStarted)
-				{
-					this->getLogManager() << LogLevel_ImportantWarning << "Unexpected end of file " << m_sFilename << "\n";
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					s == 1 || l_bJustStarted,
+					"Unexpected EOF in " << m_sFilename,
+					OpenViBE::Kernel::ErrorType::BadParsing
+				);
 
 				m_oReader.processData(&l_ui8Byte, sizeof(l_ui8Byte));
 				l_bJustStarted=false;
@@ -124,24 +126,18 @@ boolean CBoxAlgorithmGenericStreamReader::process(void)
 				m_oSwap.setSize(m_oReader.getCurrentNodeSize(), true);
 				size_t s= (size_t) ::fread(m_oSwap.getDirectPointer(), sizeof(uint8), (size_t) m_oSwap.getSize(), m_pFile);
 
-				if(s!=m_oSwap.getSize())
-				{
-					this->getLogManager() << LogLevel_ImportantWarning << "Unexpected end of file " << m_sFilename << "\n";
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					s == m_oSwap.getSize(),
+					"Unexpected EOF in " << m_sFilename,
+					OpenViBE::Kernel::ErrorType::BadParsing
+				);
 
 				m_oPendingChunk.setSize(0, true);
-				m_ui64StartTime=(uint64)-1;
-				m_ui64EndTime=(uint64)-1;
-				m_ui32OutputIndex=(uint32)-1;
+				m_ui64StartTime = std::numeric_limits<uint64>::max();
+				m_ui64EndTime = std::numeric_limits<uint64>::max();
+				m_ui32OutputIndex = std::numeric_limits<uint32>::max();
 
 				m_oReader.processData(m_oSwap.getDirectPointer(), m_oSwap.getSize());
-
-				// FIXME
-				if(m_bUseCompression)
-				{
-					return false;
-				}
 			}
 		}
 	}
@@ -198,14 +194,9 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* pBuffer, con
 	}
 	if(l_rTop==OVP_NodeId_OpenViBEStream_Header_Compression)
 	{
-		if(m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize)!=0)
+		if(m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) != 0)
 		{
-			m_bUseCompression=true;
-			this->getLogManager() << LogLevel_ImportantWarning << "File decompression not yet implemented\n";
-		}
-		else
-		{
-			m_bUseCompression=false;
+			OV_WARNING_K("Impossible to use compression as it is not yet implemented");
 		}
 	}
 	if(l_rTop==OVP_NodeId_OpenViBEStream_Header_StreamType)
@@ -258,10 +249,10 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 		for(it=m_vStreamIndexToTypeIdentifier.begin(); it!=m_vStreamIndexToTypeIdentifier.end(); ++it)
 		{
 			CIdentifier l_oOutputTypeIdentifier;
-			uint32 l_ui32Index=(uint32)-1;
+			uint32 l_ui32Index = std::numeric_limits<uint32>::max();
 
 			// Find the first box output with this type that has no file stream connected
-			for(uint32 i=0; i<l_rStaticBoxContext.getOutputCount() && l_ui32Index==(uint32)-1; i++)
+			for(uint32 i=0; i<l_rStaticBoxContext.getOutputCount() && l_ui32Index == std::numeric_limits<uint32>::max(); i++)
 			{
 				if(l_rStaticBoxContext.getOutputType(i, l_oOutputTypeIdentifier))
 				{
@@ -278,7 +269,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 			}
 
 			// In case no suitable output was found, see if we can downcast some type
-			for(uint32 i=0; i<l_rStaticBoxContext.getOutputCount() && l_ui32Index==(uint32)-1; i++)
+			for(uint32 i=0; i<l_rStaticBoxContext.getOutputCount() && l_ui32Index == std::numeric_limits<uint32>::max(); i++)
 			{
 				if(l_rStaticBoxContext.getOutputType(i, l_oOutputTypeIdentifier))
 				{
@@ -297,28 +288,14 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 			}
 
 			// In case it was not found
-			if(l_ui32Index==(uint32)-1)
+			if(l_ui32Index == std::numeric_limits<uint32>::max())
 			{
 				CString l_sTypeName=this->getTypeManager().getTypeName(it->second);
-				this->getLogManager() << LogLevel_Warning << "No free output connector for stream " << it->first << " of type " << it->second << " (" << l_sTypeName << ")\n";
-				m_vStreamIndexToOutputIndex[it->first]=(uint32)-1;
+
+				OV_WARNING_K("No free output connector for stream " << it->first << " of type " << it->second << " (" << l_sTypeName << ")");
+
+				m_vStreamIndexToOutputIndex[it->first] = std::numeric_limits<uint32>::max();
 				l_bLostStreams=true;
-
-				// In case no suitable output was found, just check if the user made a mistake and inform of that
-				for(uint32 i=0; i<l_rStaticBoxContext.getOutputCount() && l_ui32Index==(uint32)-1; i++)
-				{
-					if(l_rStaticBoxContext.getOutputType(i, l_oOutputTypeIdentifier))
-					{
-						if(l_vOutputIndexToStreamIndex.find(i)==l_vOutputIndexToStreamIndex.end())
-						{
-							if(this->getTypeManager().isDerivedFromStream(l_oOutputTypeIdentifier, it->second))
-							{
-								this->getLogManager() << LogLevel_Warning << "Note that output " << i+1 << " has a derived type identifier for the stream. This is not supported. Please change the connector type.\n";
-
-							}
-						}
-					}
-				}
 			}
 			else
 			{
@@ -332,21 +309,24 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 		{
 			if(l_vOutputIndexToStreamIndex.find(i)==l_vOutputIndexToStreamIndex.end())
 			{
-				this->getLogManager() << LogLevel_Warning << "Output " << i+1 << " did not find a stream candidate from the input file\n";
+				OV_WARNING_K("No stream candidate in file for output " << i+1);
 				l_bLastOutputs=true;
 			}
 		}
 
 		// When both outputs and streams were lost, there most probably was a damn mistake
-		if(l_bLastOutputs && l_bLostStreams)
-		{
-			this->getLogManager() << LogLevel_ImportantWarning << "Current configuration has both file stream(s) with no output connector and output connector(s) with no file stream, you probably should check your box configuration\n";
-		}
+		OV_ERROR_UNLESS_KRV(
+			!l_bLastOutputs || !l_bLostStreams,
+			"Invalid configuration: missing output for stream(s) and missing stream for output(s)",
+			OpenViBE::Kernel::ErrorType::BadConfig
+		);
 	}
 
 	if(l_rTop==OVP_NodeId_OpenViBEStream_Buffer)
 	{
-		m_bPending=((m_ui32OutputIndex!=(uint32)-1) && (m_ui64StartTime!=(uint64)-1) && (m_ui64EndTime!=(uint64)-1));
+		m_bPending = ((m_ui32OutputIndex != std::numeric_limits<uint32>::max()) &&
+					  (m_ui64StartTime != std::numeric_limits<uint64>::max()) &&
+					  (m_ui64EndTime != std::numeric_limits<uint64>::max()));
 	}
 
 	m_vNodes.pop();
