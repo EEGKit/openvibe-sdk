@@ -65,7 +65,7 @@ CFeatureVectorSet::CFeatureVectorSet(const IMatrix& rMatrix)
 {
 	if(rMatrix.getDimensionCount()!=2)
 	{
-		throw;
+		throw std::runtime_error("Fetaure vector set matrix must be 2 dimensions");
 	}
 
 	for(uint32 i=0; i<rMatrix.getDimensionSize(0); i++)

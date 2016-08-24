@@ -61,7 +61,7 @@ namespace OpenViBE
  */
 #define OV_WARNING_LOG(message, logManager) \
 do { \
-	logManager << LogLevel_Warning << message << "\n"; \
+	logManager << OpenViBE::Kernel::LogLevel_Warning << message << "\n"; \
 } \
 while (0)
 
@@ -120,7 +120,7 @@ while (0)
  */
 #define OV_ERROR_LOG(description, type, file, line, logManager) \
 do { \
-	logManager << LogLevel_Error \
+	logManager << OpenViBE::Kernel::LogLevel_Error \
 			   << "[Error description] = " \
 			   << description \
 			   << "; [Error type] = " \
@@ -327,12 +327,12 @@ while (0)
  */
 #define OV_FATAL(description, type, logManager) \
 do { \
-	logManager << LogLevel_Fatal \
-						  << "[Error description] = " \
-						  << description \
-						  << "; [Error code] = " \
-						  << static_cast<unsigned int>((type)) \
-						  << "\n"; \
+	logManager << OpenViBE::Kernel::LogLevel_Fatal \
+			   << "[Error description] = " \
+			   << description \
+			   << "; [Error code] = " \
+			   << static_cast<unsigned int>((type)) \
+			   << "\n"; \
 	std::abort(); \
 } \
 while (0)

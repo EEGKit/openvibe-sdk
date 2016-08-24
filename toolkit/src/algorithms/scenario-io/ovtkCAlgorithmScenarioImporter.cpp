@@ -167,28 +167,31 @@ boolean CAlgorithmScenarioImporter::process(void)
 {
 	TParameterHandler < IScenario* > op_pScenario(this->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
 	IScenario* l_pScenario=op_pScenario;
-	if(!l_pScenario)
-	{
-		this->getLogManager() << LogLevel_Error << "No scenario to import to\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		l_pScenario,
+		"Output scecnario is NULL",
+		OpenViBE::Kernel::ErrorType::BadOutput
+	);
 
 	TParameterHandler < IMemoryBuffer* > ip_pMemoryBuffer(this->getInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer));
 	IMemoryBuffer* l_pMemoryBuffer=ip_pMemoryBuffer;
-	if(!l_pMemoryBuffer)
-	{
-		this->getLogManager() << LogLevel_Error << "No memory buffer to import scenario from\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		l_pMemoryBuffer,
+		"Input memory buffer is NULL",
+		OpenViBE::Kernel::ErrorType::BadInput
+	);
 
 	std::map<CIdentifier, CIdentifier> l_vBoxIdMapping;
 
 	CAlgorithmScenarioImporterContext l_oContext(this->getAlgorithmContext());
-	if(!this->import(l_oContext, *l_pMemoryBuffer))
-	{
-		this->getLogManager() << LogLevel_Error << "Import failed\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		this->import(l_oContext, *l_pMemoryBuffer),
+		"Import failed",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
 
 	SScenario& l_rSymbolicScenario=l_oContext.m_oSymbolicScenario;
 
@@ -244,9 +247,19 @@ boolean CAlgorithmScenarioImporter::process(void)
 						&& l_oType!=OV_TypeId_Filename && l_oType!=OV_TypeId_Script && l_oType!=OV_TypeId_Color && l_oType!=OV_TypeId_ColorGradient
 						&& !(this->getTypeManager().isEnumeration(l_oType)) && (!this->getTypeManager().isBitMask(l_oType)))
 				{
-					this->getLogManager() << LogLevel_Warning << "The type of the setting " << s->m_sName <<" (" << l_oType.toString()
-										  << ") from box " << b->m_sName << " cannot be recognized.\n";
+					if(this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportOnUnknownSetting}", true))
+					{
+						OV_ERROR_KRF(
+							"The type of the setting " << s->m_sName <<" (" << l_oType.toString() << ") from box " << b->m_sName << " cannot be recognized.",
+							OpenViBE::Kernel::ErrorType::BadSetting
+						);
+					}
+					else
+					{
+						OV_WARNING_K("The type of the setting " << s->m_sName <<" (" << l_oType.toString() << ") from box " << b->m_sName << " cannot be recognized.");
+					}
 				}
+
 				l_pBox->addSetting(
 					s->m_sName,
 					s->m_oTypeIdentifier,
@@ -350,7 +363,18 @@ boolean CAlgorithmScenarioImporter::process(void)
 		while((l_oBoxIdentifier = l_pScenario->getNextNeedsUpdateBoxIdentifier(l_oBoxIdentifier)) != OV_UndefinedIdentifier)
 		{
 			const IBox* l_pBox = l_pScenario->getBoxDetails(l_oBoxIdentifier);
-			this->getLogManager() << LogLevel_ImportantWarning << "Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier()<< "] should be updated\n";
+
+			if(this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportWhenBoxNeedsUpdate}", true))
+			{
+				OV_ERROR_KRF(
+					"Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier().toString() << "] must be updated",
+					OpenViBE::Kernel::ErrorType::BadConfig
+				);
+			}
+			else
+			{
+				OV_WARNING_K("Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier().toString() << "] should be updated");
+			}
 		}
 	}
 
@@ -392,7 +416,7 @@ boolean CAlgorithmScenarioImporterContext::processStart(const CIdentifier& rIden
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Settings)                             { }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting)                              { m_oSymbolicScenario.m_vBox.back().m_vSetting.push_back(SSetting()); }
 	//
-	else m_rAlgorithmContext.getLogManager() << LogLevel_Warning << "(start) Unexpected node identifier " << rIdentifier << "\n";
+	else OV_ERROR("(start) Unexpected node identifier " << rIdentifier.toString(), OpenViBE::Kernel::ErrorType::BadArgument, false, m_rAlgorithmContext.getErrorManager(), m_rAlgorithmContext.getLogManager());
 
 	return true;
 }
@@ -422,7 +446,7 @@ boolean CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxIdentifier)                { m_oSymbolicScenario.m_vLink.back().m_oLinkTarget.m_oBoxIdentifier=rValue; }
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier)            { m_oSymbolicScenario.m_vAttribute.back().m_oIdentifier=rValue; }
-	else m_rAlgorithmContext.getLogManager() << LogLevel_Warning << "(id) Unexpected node identifier " << rIdentifier << "\n";
+	else OV_ERROR("(id) Unexpected node identifier " << rIdentifier.toString(), OpenViBE::Kernel::ErrorType::BadArgument, false, m_rAlgorithmContext.getErrorManager(), m_rAlgorithmContext.getLogManager());
 
 	return true;
 }
@@ -451,7 +475,7 @@ boolean CAlgorithmScenarioImporterContext::processString(const CIdentifier& rIde
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Name)                        { m_oSymbolicScenario.m_vScenarioInput.back().m_sName=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name)                       { m_oSymbolicScenario.m_vScenarioOutput.back().m_sName=rValue; }
 
-	else m_rAlgorithmContext.getLogManager() << LogLevel_Warning << "(string) Unexpected node identifier " << rIdentifier << "\n";
+	else OV_ERROR("(string) Unexpected node identifier " << rIdentifier.toString(), OpenViBE::Kernel::ErrorType::BadArgument, false, m_rAlgorithmContext.getErrorManager(), m_rAlgorithmContext.getLogManager());
 
 	return true;
 }
@@ -465,7 +489,7 @@ boolean CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& rI
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIndex)       { m_oSymbolicScenario.m_vScenarioInput.back().m_ui32LinkedBoxInputIndex=(uint32)ui64Value; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex)     { m_oSymbolicScenario.m_vScenarioOutput.back().m_ui32LinkedBoxOutputIndex=(uint32)ui64Value; }
 
-	else m_rAlgorithmContext.getLogManager() << LogLevel_Warning << "(uint) Unexpected node identifier " << rIdentifier << "\n";
+	else OV_ERROR("(uint) Unexpected node identifier " << rIdentifier.toString(), OpenViBE::Kernel::ErrorType::BadArgument, false, m_rAlgorithmContext.getErrorManager(), m_rAlgorithmContext.getLogManager());
 
 	return true;
 }

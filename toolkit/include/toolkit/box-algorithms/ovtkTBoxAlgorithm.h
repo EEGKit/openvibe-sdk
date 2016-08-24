@@ -2,6 +2,7 @@
 #define __OpenViBEToolkit_TBoxAlgorithm_H__
 
 #include "../ovtkIObject.h"
+#include <limits>
 
 namespace OpenViBEToolkit
 {
@@ -125,6 +126,7 @@ namespace OpenViBEToolkit
 		public:
 			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const OpenViBE::uint32 ui32Index)
 				:m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
+				,m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
 				,m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
 				,m_rConfigurationManager(rBoxAlgorithmContext.getPlayerContext()->getConfigurationManager())
 			{
@@ -136,37 +138,54 @@ namespace OpenViBEToolkit
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
-				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
-				{
-					return static_cast<OpenViBE::uint32>(l_dResult);
-				}
-				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 32bits.\n";
-				return 0xffffffffll;
+
+				OV_ERROR_UNLESS(
+					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
+					"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 32bits.",
+					OpenViBE::Kernel::ErrorType::BadParsing,
+					std::numeric_limits<OpenViBE::uint32>::max(),
+					m_rErrorManager,
+					m_rLogManager
+				);
+
+				return static_cast<OpenViBE::uint32>(l_dResult);
 			}
+
 			operator OpenViBE::uint64 (void)
 			{
-				OpenViBE::uint64 l_ui64StimId = 0xffffffffffffffffll;
+				OpenViBE::uint64 l_ui64StimId = std::numeric_limits<OpenViBE::uint64>::max();
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 				double l_dResult;
 				if(m_rTypeManager.isEnumeration(m_oSettingType))
 				{
 					l_ui64StimId = m_rTypeManager.getEnumerationEntryValueFromName(m_oSettingType, l_sSettingValue);
-					if (l_ui64StimId == 0xffffffffffffffffll)
-					{
-						m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Did not find an enumeration value for [" << m_rTypeManager.getTypeName(m_oSettingType) << "] = [" << m_sSettingValue << "]\n";
-					}
+
+					OV_ERROR_UNLESS(
+						l_ui64StimId != std::numeric_limits<OpenViBE::uint64>::max(),
+						"Did not find an enumeration value for [" << m_rTypeManager.getTypeName(m_oSettingType) << "] = [" << m_sSettingValue << "]",
+						OpenViBE::Kernel::ErrorType::BadParsing,
+						std::numeric_limits<OpenViBE::uint64>::max(),
+						m_rErrorManager,
+						m_rLogManager
+					);
 				}
 				else if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
 				{
 					return static_cast<OpenViBE::uint64>(l_dResult);
 				}
-				else if (m_oSettingType == OV_TypeId_Integer)
-				{
-					// Seems like currently some plugins use FSettingValueAutoCast without knowing then setting type.
-					// In this case, to avoid to pollute the console with useless messages, throw a message only if the 
-					// setting should be an integer.
-					m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 64bits.\n";
-				}
+
+				// Seems like currently some plugins use FSettingValueAutoCast without knowing then setting type.
+				// In this case, to avoid to pollute the console with useless messages, throw a message only if the
+				// setting should be an integer.
+				OV_ERROR_UNLESS(
+					l_ui64StimId != std::numeric_limits<OpenViBE::uint64>::max() || m_oSettingType != OV_TypeId_Integer,
+					"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 64bits.",
+					OpenViBE::Kernel::ErrorType::BadParsing,
+					std::numeric_limits<OpenViBE::uint64>::max(),
+					m_rErrorManager,
+					m_rLogManager
+				);
+
 				return l_ui64StimId;
 			}
 
@@ -174,34 +193,50 @@ namespace OpenViBEToolkit
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
-				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
-				{
-					return static_cast<OpenViBE::int32>(l_dResult);
-				}
-				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to integer 32bits.\n";
-				return 0xffffll;
+
+				OV_ERROR_UNLESS(
+					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
+					"Could not expand numeric expression [" << m_sSettingValue << "] to integer 32bits.",
+					OpenViBE::Kernel::ErrorType::BadParsing,
+					std::numeric_limits<OpenViBE::int32>::max(),
+					m_rErrorManager,
+					m_rLogManager
+				);
+
+				return static_cast<OpenViBE::int32>(l_dResult);
 			}
+
 			operator OpenViBE::int64 (void)
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
-				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
-				{
-					return static_cast<OpenViBE::int64>(l_dResult);
-				}
-				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to integer 64bits.\n";
-				return 0xffffffffll;
+
+				OV_ERROR_UNLESS(
+					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
+					"Could not expand numeric expression [" << m_sSettingValue << "] to integer 64bits.",
+					OpenViBE::Kernel::ErrorType::BadParsing,
+					std::numeric_limits<OpenViBE::int64>::max(),
+					m_rErrorManager,
+					m_rLogManager
+				);
+
+				return static_cast<OpenViBE::int64>(l_dResult);;
 			}
 			operator OpenViBE::float64 (void)
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
-				if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
-				{
-					return static_cast<OpenViBE::float64>(l_dResult);
-				}
-				m_rLogManager << OpenViBE::Kernel::LogLevel_ImportantWarning << "Could not expand numeric expression [" << m_sSettingValue << "] to float.\n";
-				return 0.0;
+
+				OV_ERROR_UNLESS(
+					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
+					"Could not expand numeric expression [" << m_sSettingValue << "] to float.",
+					OpenViBE::Kernel::ErrorType::BadParsing,
+					std::numeric_limits<OpenViBE::float64>::max(),
+					m_rErrorManager,
+					m_rLogManager
+				);
+
+				return static_cast<OpenViBE::float64>(l_dResult);
 			}
 			operator OpenViBE::boolean (void)
 			{
@@ -213,6 +248,7 @@ namespace OpenViBEToolkit
 			}
 		private:
 			OpenViBE::Kernel::ILogManager& m_rLogManager;
+			OpenViBE::Kernel::IErrorManager& m_rErrorManager;
 			OpenViBE::Kernel::ITypeManager& m_rTypeManager;
 			OpenViBE::Kernel::IConfigurationManager& m_rConfigurationManager;
 			OpenViBE::CString m_sSettingValue;
@@ -296,7 +332,7 @@ namespace OpenViBEToolkit
 				case OpenViBE::Kernel::BoxModification_SettingNameChanged: return this->onSettingNameChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
 				case OpenViBE::Kernel::BoxModification_SettingDefaultValueChanged: return this->onSettingDefaultValueChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
 				case OpenViBE::Kernel::BoxModification_SettingValueChanged: return this->onSettingValueChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				default: this->getLogManager() << OpenViBE::Kernel::LogLevel_Warning << "Unhandled box modification type " << (OpenViBE::uint32)eBoxModificationType << "\n";
+				default: OV_ERROR_KRF("Unhandled box modification type " << (OpenViBE::uint32)eBoxModificationType, OpenViBE::Kernel::ErrorType::BadArgument);
 			}
 			return false;
 		}

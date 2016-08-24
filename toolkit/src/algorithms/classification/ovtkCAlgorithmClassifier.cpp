@@ -46,8 +46,8 @@ boolean CAlgorithmClassifier::process(void)
 		IMatrix* l_pFeatureVectorSet=ip_pFeatureVectorSet;
 		if(!l_pFeatureVectorSet)
 		{
-			this->getLogManager() << LogLevel_ImportantWarning << "Feature vector set matrix is NULL\n";
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
+			OV_ERROR_KRF("Feature vector set is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
 		else
 		{
@@ -59,7 +59,7 @@ boolean CAlgorithmClassifier::process(void)
 			else
 			{
 				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-				return false;
+				OV_ERROR_KRF("Training failed", OpenViBE::Kernel::ErrorType::Internal);
 			}
 		}
 	}
@@ -72,8 +72,8 @@ boolean CAlgorithmClassifier::process(void)
 
 		if(!l_pFeatureVector || !l_pClassificationValues || !l_pProbabilityValues)
 		{
-			this->getLogManager() << LogLevel_ImportantWarning << "Either feature vector matrix or classification values matrix or probability values matrix is NULL\n";
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
+			OV_ERROR_KRF("Classifying failed", (!l_pFeatureVector) ? OpenViBE::Kernel::ErrorType::BadInput : OpenViBE::Kernel::ErrorType::BadOutput);
 		}
 		else
 		{
@@ -99,7 +99,7 @@ boolean CAlgorithmClassifier::process(void)
 			else
 			{
 				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-				return false;
+				OV_ERROR_KRF("Classifying failed", OpenViBE::Kernel::ErrorType::Internal);
 			}
 		}
 	}
@@ -114,9 +114,8 @@ boolean CAlgorithmClassifier::process(void)
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Error << "Unable to save configuration\n";
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			return false;
+			OV_ERROR_KRF("Saving configuration failed", OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
 
@@ -125,9 +124,8 @@ boolean CAlgorithmClassifier::process(void)
 		XML::IXMLNode *l_pNode = ip_pConfiguration;
 		if(!l_pNode)
 		{
-			this->getLogManager() << LogLevel_ImportantWarning << "Configuration XML node is NULL\n";
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			return false;
+			OV_ERROR_KRF("Configuration XML node is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
 		else
 		{
@@ -142,7 +140,7 @@ boolean CAlgorithmClassifier::process(void)
 			else
 			{
 				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-				return false;
+				OV_ERROR_KRF("Loading configuration failed", OpenViBE::Kernel::ErrorType::Internal);
 			}
 		}
 	}
