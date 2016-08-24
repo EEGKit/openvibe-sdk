@@ -107,11 +107,14 @@ namespace OpenViBEPlugins
 				}
 				else
 				{
-					this->getLogManager() << OpenViBE::Kernel::LogLevel_Error << "Unsupported stream type " << l_oTypeIdentifier << "\n";
 					rBox.setOutputType(ui32Index, OV_TypeId_Signal);
 					rBox.setSettingName(3,"Samples per buffer");
 					rBox.setSettingValue(3,"32");
-					return false;
+
+					OV_ERROR_KRF(
+						"Unsupported stream type " << l_oTypeIdentifier.toString(),
+						OpenViBE::Kernel::ErrorType::BadOutput
+					);
 				}
 				return true;
 			}
@@ -132,7 +135,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("File reading and writing/CSV"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			
+
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_CSVFileReader; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileReader; }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmCSVFileReaderListener; }
