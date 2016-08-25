@@ -30,4 +30,6 @@ boolean CAlgorithmOVMatrixFileWriter::process(void)
 		"Writing matrix file " << *ip_sFilename << " failed",
 		OpenViBE::Kernel::ErrorType::BadFileWrite
 	);
+
+	return true;
 }

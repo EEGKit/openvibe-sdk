@@ -79,7 +79,6 @@ boolean CBoxAlgorithmCSVFileReader::initialize(void)
 		m_ui32SamplesPerBuffer = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	}
 
-	getLogManager() << LogLevel_Trace << "use the file time: "<<(!m_bDoNotUseFileTime)<<"\n";
 	m_f64NextTime=0.;
 
 	m_ui64ChunkStartTime=0;
@@ -224,7 +223,6 @@ boolean CBoxAlgorithmCSVFileReader::initializeFile()
 			ErrorType::BadValue
 		);
 	}
-	getLogManager()<< LogLevel_Trace <<"number of column without parameters: "<<m_ui32NbColumn<<"\n";
 
 	return true;
 }
@@ -406,8 +404,6 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_stimulation(void)
 		//stimulation duration
 		const uint64 l_ui64StimulationDuration = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[i][2].c_str()));
 
-		getLogManager()<<LogLevel_Trace<<"  Stimulation "<<l_ui64Stimulation<<" start at time: "<<l_ui64StimulationDate<<"("<<ITimeArithmetics::timeToSeconds(l_ui64StimulationDate)<<" s)"<<" end during:"<<l_ui64StimulationDuration<<"("<<ITimeArithmetics::timeToSeconds(l_ui64StimulationDuration)<<" s)\n";
-
 		ip_pStimulationSet->appendStimulation(l_ui64Stimulation,l_ui64StimulationDate,l_ui64StimulationDuration);
 
 	}
@@ -447,7 +443,6 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_signal(void)
 			ip_pMatrix->setDimensionLabel(0,i-1,m_vHeaderFile[i].c_str());
 		}
 
-		this->getLogManager() << LogLevel_Trace << "Sampling rate is " << m_ui64SamplingRate << "hz.\n";
 		((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmCSVFileReader >*)m_pAlgorithmEncoder)->getInputSamplingRate()=m_ui64SamplingRate;
 
 		m_pAlgorithmEncoder->encodeHeader();

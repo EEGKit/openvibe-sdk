@@ -33,7 +33,5 @@ boolean CAlgorithmOVMatrixFileReader::process(void)
 		OpenViBE::Kernel::ErrorType::BadFileRead
 	);
 
-	this->getLogManager() << LogLevel_Trace << "Parsing " << *ip_sFilename << " succeeded\n";
-
 	return true;
 }
