@@ -215,11 +215,11 @@ boolean CAlgorithmXMLScenarioImporter::import(IAlgorithmScenarioImporterContext&
 
 	boolean m_bOk = m_pReader->processData(rMemoryBuffer.getDirectPointer(), rMemoryBuffer.getSize());
 
-	if(!m_bScenarioRecognized)
-	{
-		// This is not a conforming openvibe XML scenario, lacking the <OpenViBE-Scenario> tag
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		m_bScenarioRecognized,
+		"Scenario not recognized: missing <OpenViBE-Scenario> tag",
+		OpenViBE::Kernel::ErrorType::BadParsing
+	);
 
 	return m_bOk;
 }

@@ -62,7 +62,7 @@ boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer,
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name                     ) l_sNodeName="Name";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier      ) l_sNodeName="LinkedBoxIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex     ) l_sNodeName="LinkedBoxOutputIndex";
-	
+
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Creator                                  ) l_sNodeName="Creator";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_CreatorVersion                           ) l_sNodeName="CreatorVersion";
 
@@ -119,7 +119,8 @@ boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer,
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute                       ) l_sNodeName="Attribute";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier            ) l_sNodeName="Identifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value                 ) l_sNodeName="Value";
-	else return false;
+	//
+	else OV_ERROR_KRF("(start) Unexpected node identifier " << rIdentifier.toString(), OpenViBE::Kernel::ErrorType::BadArgument);
 
 	m_pWriter->openChild(l_sNodeName.toASCIIString());
 
@@ -130,7 +131,12 @@ boolean CAlgorithmXMLScenarioExporter::exportIdentifier(IMemoryBuffer& rMemoryBu
 {
 	m_pMemoryBuffer=&rMemoryBuffer;
 
-	this->exportStart(rMemoryBuffer, rIdentifier);
+	OV_ERROR_UNLESS_KRF(
+		this->exportStart(rMemoryBuffer, rIdentifier),
+		"Exporting identifier failed",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
+
 	m_pWriter->setChildData(rValue.toString().toASCIIString());
 	this->exportStop(rMemoryBuffer);
 
@@ -141,7 +147,12 @@ boolean CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& rMemoryBuffer
 {
 	m_pMemoryBuffer=&rMemoryBuffer;
 
-	this->exportStart(rMemoryBuffer, rIdentifier);
+	OV_ERROR_UNLESS_KRF(
+		this->exportStart(rMemoryBuffer, rIdentifier),
+		"Exporting string failed",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
+
 	m_pWriter->setChildData(rValue.toASCIIString());
 	this->exportStop(rMemoryBuffer);
 
@@ -155,7 +166,12 @@ boolean CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& rMemoryBuff
 
 	m_pMemoryBuffer=&rMemoryBuffer;
 
-	this->exportStart(rMemoryBuffer, rIdentifier);
+	OV_ERROR_UNLESS_KRF(
+		this->exportStart(rMemoryBuffer, rIdentifier),
+		"Exporting uint failed",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
+
 	m_pWriter->setChildData(l_sValue);
 	this->exportStop(rMemoryBuffer);
 
