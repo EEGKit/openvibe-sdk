@@ -107,7 +107,7 @@ boolean CDecoderAlgorithmTest::process(void)
 					TParameterHandler < IMatrix* > l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
 					if(l_oHandle.exists())
 					{
-						getLogManager() << LogLevel_Warning << *l_oHandle << "\n";
+						OV_WARNING_K(*l_oHandle);
 					}
 				}
 
@@ -115,7 +115,7 @@ boolean CDecoderAlgorithmTest::process(void)
 					TParameterHandler < IMatrix* > l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_MinMaxFrequencyBands));
 					if(l_oHandle.exists())
 					{
-						getLogManager() << LogLevel_Warning << *l_oHandle << "\n";
+						OV_WARNING_K(*l_oHandle);
 					}
 				}
 
@@ -123,7 +123,7 @@ boolean CDecoderAlgorithmTest::process(void)
 					TParameterHandler < uint64 > l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
 					if(l_oHandle.exists())
 					{
-						getLogManager() << LogLevel_Warning << l_oHandle << "\n";
+						OV_WARNING_K(l_oHandle);
 					}
 				}
 			}
