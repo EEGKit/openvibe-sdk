@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 			m_ui32CurrentInput(0),
 			m_pVectorBuffer(nullptr),
 			m_ui32VectorSize(0),
-			m_bError(false)
+			m_bHeaderSent(false)
 		{
 		}
 
@@ -78,12 +78,6 @@ namespace OpenViBEPlugins
 
 		boolean CBoxAlgorithmFeatureAggregator::processInput(uint32 ui32InputIndex)
 		{
-
-			if(m_bError)
-			{
-				return false;
-			}
-
 			IBoxIO* l_pBoxIO=getBoxAlgorithmContext()->getDynamicBoxContext();
 
 			uint64 l_ui64LastBufferChunkSize;
@@ -124,11 +118,12 @@ namespace OpenViBEPlugins
 							}
 						}
 
-						getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << LogLevel_Warning << "Problem with incoming input chunks' time lengths (different)\n";
-
 						l_bReadyToProcess = false;
-						m_bError = true;
-						return false;
+
+						OV_ERROR_KRF(
+							"Invalid incoming input chunks: duration differs between chunks",
+							OpenViBE::Kernel::ErrorType::BadInput
+						);
 					}
 				}
 				else
@@ -199,7 +194,6 @@ namespace OpenViBEPlugins
 				}
 			}
 
-
 			if(m_bHeaderSent&&l_bBufferReceived)
 			{
 				float64* l_pOutputBuffer = l_pOutputMatrix->getBuffer();
@@ -210,8 +204,6 @@ namespace OpenViBEPlugins
 				m_pFeatureVectorEncoder->encodeBuffer();
 				l_pBoxIO->markOutputAsReadyToSend(0,m_ui64LastChunkStartTime,m_ui64LastChunkEndTime);
 			}
-
-
 
 			return true;
 		}
