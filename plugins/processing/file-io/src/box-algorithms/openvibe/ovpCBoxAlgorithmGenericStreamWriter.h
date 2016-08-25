@@ -42,7 +42,6 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::boolean m_bUseCompression;
 			OpenViBE::boolean m_bIsHeaderGenerate;
 			OpenViBE::CString m_sFilename;
 			EBML::CWriter m_oWriter;
@@ -117,7 +116,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("File reading and writing/OpenViBE"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			
+
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_GenericStreamWriter; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::FileIO::CBoxAlgorithmGenericStreamWriter; }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmGenericStreamWriterListener; }

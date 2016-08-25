@@ -79,8 +79,6 @@ boolean CBoxAlgorithmCSVFileReader::initialize(void)
 		m_ui32SamplesPerBuffer = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	}
 
-
-	m_bUseCompression=false;
 	getLogManager() << LogLevel_Trace << "use the file time: "<<(!m_bDoNotUseFileTime)<<"\n";
 	m_f64NextTime=0.;
 

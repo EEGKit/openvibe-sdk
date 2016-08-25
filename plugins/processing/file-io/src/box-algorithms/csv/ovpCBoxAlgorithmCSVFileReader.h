@@ -47,7 +47,6 @@ namespace OpenViBEPlugins
 			std::string m_sSeparator;
 			OpenViBE::boolean m_bDoNotUseFileTime;
 			OpenViBE::CString m_sFilename;
-			OpenViBE::boolean m_bUseCompression;
 
 			OpenViBE::CIdentifier m_oTypeIdentifier;
 			OpenViBE::uint32 m_ui32NbColumn;

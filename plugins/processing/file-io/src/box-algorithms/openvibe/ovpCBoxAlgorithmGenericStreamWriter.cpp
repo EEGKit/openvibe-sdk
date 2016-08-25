@@ -10,8 +10,7 @@ using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::FileIO;
 
 CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter(void)
-	:m_bUseCompression(true)
-	,m_bIsHeaderGenerate(false)
+	:m_bIsHeaderGenerate(false)
 	,m_oWriter(*this)
 {
 }
@@ -19,13 +18,11 @@ CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter(void)
 boolean CBoxAlgorithmGenericStreamWriter::initialize(void)
 {
 	m_sFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_bUseCompression = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	bool l_bUseCompression = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	this->getLogManager() << LogLevel_Trace << "Compression flag set to " << m_bUseCompression << "\n";
-
-	if(m_bUseCompression)
+	if(l_bUseCompression)
 	{
-		this->getLogManager() << LogLevel_Info << "Compression flag not used yet, the file will be flagged uncompressed and stored as is\n";
+		OV_WARNING_K("Impossible to use compression as it is not yet implemented");
 	}
 
 	return true;
@@ -64,7 +61,7 @@ boolean CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 
 	m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header);
 	 m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header_Compression);
-	  m_oWriterHelper.setUIntegerAsChildData(0 /* m_bUseCompression?1:0 */);
+	  m_oWriterHelper.setUIntegerAsChildData(0 /* compression flag */);
 	 m_oWriterHelper.closeChild();
 	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
 	{

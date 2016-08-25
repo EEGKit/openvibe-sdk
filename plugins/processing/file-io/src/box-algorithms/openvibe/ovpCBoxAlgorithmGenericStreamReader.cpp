@@ -28,7 +28,6 @@ boolean CBoxAlgorithmGenericStreamReader::initialize(void)
 	m_sFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
 	m_bPending=false;
-	m_bUseCompression=false;
 
 	m_vStreamIndexToOutputIndex.clear();
 	m_vStreamIndexToTypeIdentifier.clear();
