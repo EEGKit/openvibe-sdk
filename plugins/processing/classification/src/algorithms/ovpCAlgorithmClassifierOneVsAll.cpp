@@ -48,8 +48,6 @@ boolean CAlgorithmClassifierOneVsAll::uninitialize(void)
 	return CAlgorithmPairingStrategy::uninitialize();
 }
 
-
-
 boolean CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVectorSet)
 {
 	const uint32 l_ui32ClassCount = static_cast<uint32>(m_oSubClassifierList.size());
@@ -64,11 +62,11 @@ boolean CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVec
 		l_vClassLabels[rFeatureVectorSet[i].getLabel()]++;
 	}
 
-	if(l_vClassLabels.size() != l_ui32ClassCount)
-	{
-		this->getLogManager() << LogLevel_Error << "There are samples for " << (uint32)l_vClassLabels.size() << " classes but expected samples for " << l_ui32ClassCount << " classes.\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_vClassLabels.size() == l_ui32ClassCount,
+		"There are samples for " << (uint32)l_vClassLabels.size() << " classes but expected samples for " << l_ui32ClassCount << " classes.",
+		OpenViBE::Kernel::ErrorType::BadConfig
+	);
 
 	//We set the IMatrix fo the first classifier
 	const uint32 l_ui32FeatureVectorSize=rFeatureVectorSet[0].getSize();
@@ -200,11 +198,11 @@ boolean CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVec
 		}
 	}
 
-	//If we still don't have a better classification, we face an error
-	if(l_oBest.second == NULL)
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_oBest.second != NULL,
+		"Unable to find a class for feature vector",
+		OpenViBE::Kernel::ErrorType::BadProcessing
+	);
 
 	//Now that we made the calculation, we send the corresponding data
 	IAlgorithmProxy* l_pWinner = this->m_oSubClassifierList[static_cast<uint32>(rf64Class)];
@@ -225,11 +223,13 @@ boolean CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVec
 boolean CAlgorithmClassifierOneVsAll::addNewClassifierAtBack(void)
 {
 	const CIdentifier l_oSubClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_oSubClassifierAlgorithmIdentifier);
-	if(l_oSubClassifierAlgorithm == OV_UndefinedIdentifier)
-	{
-		this->getLogManager() << LogLevel_Error << "Unable to instantiate classifier for class " << this->m_oSubClassifierAlgorithmIdentifier << "\n. Is the classifier still available in OpenViBE?";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		l_oSubClassifierAlgorithm != OV_UndefinedIdentifier,
+		"Invalid classifier identifier: " << this->m_oSubClassifierAlgorithmIdentifier.toString(),
+		OpenViBE::Kernel::ErrorType::BadConfig
+	);
+
 	IAlgorithmProxy* l_pSubClassifier = &this->getAlgorithmManager().getAlgorithm(l_oSubClassifierAlgorithm);
 	l_pSubClassifier->initialize();
 
@@ -364,11 +364,12 @@ boolean CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNo
 		XML::IXMLNode *l_pSubClassifierNode = pSubClassifiersNode->getChild(i);
 		TParameterHandler < XML::IXMLNode* > ip_pConfiguration(m_oSubClassifierList[i]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
 		ip_pConfiguration = l_pSubClassifierNode;
-		if(!m_oSubClassifierList[i]->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration))
-		{
-			this->getLogManager() << LogLevel_Error << "Unable to load the configuration of the classifier " << static_cast<uint64>(i+1) << " \n";
-			return false;
-		}
+
+		OV_ERROR_UNLESS_KRF(
+			m_oSubClassifierList[i]->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
+			"Unable to load the configuration of the classifier " << static_cast<uint64>(i+1),
+			OpenViBE::Kernel::ErrorType::Internal
+		);
 	}
 	return true;
 }
@@ -383,11 +384,12 @@ boolean CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const OpenViBE:
 	m_oSubClassifierAlgorithmIdentifier = rId;
 	m_fAlgorithmComparison = getClassificationComparisonFunction(rId);
 
-	if(m_fAlgorithmComparison == NULL)
-	{
-		this->getLogManager() << LogLevel_Error << "Cannot find the comparison function for the sub classifier\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		m_fAlgorithmComparison != NULL,
+		"No comparison function found for classifier " << m_oSubClassifierAlgorithmIdentifier.toString(),
+		OpenViBE::Kernel::ErrorType::ResourceNotFound
+	);
+
 	return true;
 }
 

@@ -69,7 +69,7 @@ void CAlgorithmClassifierLDA::dumpMatrix(OpenViBE::Kernel::ILogManager &rMgr, co
 		rMgr << "\n";
 	}
 }
-#else 
+#else
 void CAlgorithmClassifierLDA::dumpMatrix(OpenViBE::Kernel::ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 #endif
 
@@ -88,7 +88,12 @@ boolean CAlgorithmClassifierLDA::initialize(void)
 {
 	// Initialize the Conditioned Covariance Matrix algorithm
 	m_pCovarianceAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ConditionedCovariance));
-	m_pCovarianceAlgorithm->initialize();
+
+	OV_ERROR_UNLESS_KRF(
+		m_pCovarianceAlgorithm->initialize(),
+		"Failed to initialize covariance algorithm",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
 
 	// This is the weight parameter local to this module and automatically exposed to the GUI. Its redirected to the corresponding parameter of the cov alg.
 	TParameterHandler< float64 > ip_f64Shrinkage(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage));
@@ -105,7 +110,12 @@ boolean CAlgorithmClassifierLDA::initialize(void)
 
 boolean CAlgorithmClassifierLDA::uninitialize(void)
 {
-	m_pCovarianceAlgorithm->uninitialize();
+	OV_ERROR_UNLESS_KRF(
+		m_pCovarianceAlgorithm->uninitialize(),
+		"Failed to uninitialize covariance algorithm",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
+
 	this->getAlgorithmManager().releaseAlgorithm(*m_pCovarianceAlgorithm);
 
 	return CAlgorithmClassifier::uninitialize();
@@ -113,7 +123,11 @@ boolean CAlgorithmClassifierLDA::uninitialize(void)
 
 boolean CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 {
-	this->initializeExtraParameterMechanism();
+	OV_ERROR_UNLESS_KRF(
+		this->initializeExtraParameterMechanism(),
+		"Failed to unitialize extra parameters",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
 
 	//We need to clear list because a instance of this class should support more that one training.
 	m_vLabelList.clear();
@@ -138,7 +152,12 @@ boolean CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSe
 		ip_bDiagonalCov = false;
 		l_pDiagonalCov = false;
 	}
-	this->uninitializeExtraParameterMechanism();
+
+	OV_ERROR_UNLESS_KRF(
+		this->uninitializeExtraParameterMechanism(),
+		"Failed to ininitialize extra parameters",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
 
 	// IO to the covariance alg
 	TParameterHandler < OpenViBE::IMatrix* > op_pMean(m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
@@ -147,13 +166,14 @@ boolean CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSe
 
 	const uint32 l_ui32nRows = rFeatureVectorSet.getFeatureVectorCount();
 	const uint32 l_ui32nCols = (l_ui32nRows > 0 ? rFeatureVectorSet[0].getSize() : 0);
-	this->getLogManager() << LogLevel_Debug << "Feature set input dims [" 
+	this->getLogManager() << LogLevel_Debug << "Feature set input dims ["
 		<< rFeatureVectorSet.getFeatureVectorCount() << "x" << l_ui32nCols << "]\n";
 
-	if(l_ui32nRows==0 || l_ui32nCols==0) {
-		this->getLogManager() << LogLevel_Error << "Input data has a zero-size dimension, dims = [" << l_ui32nRows << "x" << l_ui32nCols << "]\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_ui32nRows != 0 && l_ui32nCols != 0,
+		"Input data has a zero-size dimension, dims = [" << l_ui32nRows << "x" << l_ui32nCols << "]",
+		OpenViBE::Kernel::ErrorType::BadInput
+	);
 
 	// The max amount of classes to be expected
 	TParameterHandler < uint64 > ip_pNumberOfClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
@@ -181,7 +201,7 @@ boolean CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSe
 	MatrixXd l_oGlobalCov = MatrixXd::Zero(l_ui32nCols,l_ui32nCols);
 
 	// We need the means per class
-	for(uint32 l_ui32classIdx=0;l_ui32classIdx<m_ui32NumClasses;l_ui32classIdx++) 
+	for(uint32 l_ui32classIdx=0;l_ui32classIdx<m_ui32NumClasses;l_ui32classIdx++)
 	{
 		if(l_vClassCounts[l_ui32classIdx]>0)
 		{
@@ -196,13 +216,13 @@ boolean CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSe
 			float64 *l_pBuffer = l_oClassData.getBuffer();
 			for(uint32 i=0;i<l_ui32nRows;i++)
 			{
-				if(rFeatureVectorSet[i].getLabel() == l_ui32classIdx) 
+				if(rFeatureVectorSet[i].getLabel() == l_ui32classIdx)
 				{
 					System::Memory::copy(l_pBuffer, rFeatureVectorSet[i].getBuffer(), l_ui32nCols*sizeof(float64));
 					l_pBuffer += l_ui32nCols;
 				}
 			}
-		
+
 			// Get the mean out of it
 			Map<MatrixXdRowMajor> l_oDataMapper(l_oClassData.getBuffer(), l_ui32nExamplesInClass, l_ui32nCols);
 			const MatrixXd l_oClassMean = l_oDataMapper.colwise().mean().transpose();
@@ -228,14 +248,14 @@ boolean CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSe
 			System::Memory::copy(l_pBuffer, rFeatureVectorSet[i].getBuffer(), l_ui32nCols*sizeof(float64));
 			l_pBuffer += l_ui32nCols;
 		}
-		
+
 		// Compute cov
 		if(!m_pCovarianceAlgorithm->process()) {
-			this->getLogManager() << LogLevel_Error << "Global covariance computation failed\n";
 
 			//Free memory before leaving
 			delete[] l_oPerClassMeans;
-			return false;
+
+			OV_ERROR_KRF("Global covariance computation failed", OpenViBE::Kernel::ErrorType::Internal);
 		}
 
 		// Get the results from the cov algorithm
@@ -268,7 +288,7 @@ boolean CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSe
 			l_oEigenValues(i) = 1.0/l_oEigenValues(i);
 		}
 	}
-	const MatrixXd l_oGlobalCovInv = l_oEigenSolver.eigenvectors() * l_oEigenValues.asDiagonal() * l_oEigenSolver.eigenvectors().inverse();	
+	const MatrixXd l_oGlobalCovInv = l_oEigenSolver.eigenvectors() * l_oEigenValues.asDiagonal() * l_oEigenSolver.eigenvectors().inverse();
 
 	// const MatrixXd l_oGlobalCovInv = l_oGlobalCov.inverse();
 	//We send the bias and the weight of each class to ComputationHelper
@@ -285,7 +305,7 @@ boolean CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSe
 			const float64 l_f64Bias = l_oInter(0,0) + std::log(l_f64ExamplesInClass/l_ui32TotalExamples);
 
 			this->getLogManager() << LogLevel_Debug << "Bias for " << static_cast<const OpenViBE::uint64>(i) << " is " << l_f64Bias << ", from " << l_f64ExamplesInClass / l_ui32TotalExamples
-		 		<< ", " << l_f64ExamplesInClass << "/" << l_ui32TotalExamples << ", int=" << l_oInter(0,0) 
+		 		<< ", " << l_f64ExamplesInClass << "/" << l_ui32TotalExamples << ", int=" << l_oInter(0,0)
 		 		<< "\n";
 			// dumpMatrix(this->getLogManager(), l_oPerClassMeans[i], "Means");
 
@@ -318,7 +338,7 @@ boolean CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSe
 	}
 
 	m_ui32NumCols = l_ui32nCols;
-	
+
 	// Debug output
 	//dumpMatrix(this->getLogManager(), l_oGlobalCov, "Global cov");
 	//dumpMatrix(this->getLogManager(), l_oEigenValues, "Eigenvalues");
@@ -332,17 +352,17 @@ boolean CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSe
 
 boolean CAlgorithmClassifierLDA::classify(const IFeatureVector& rFeatureVector, float64& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
 {
-	if(m_vDiscriminantFunctions.empty())
-	{
-		this->getLogManager() << LogLevel_Error << "LDA discriminant function list is empty\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		!m_vDiscriminantFunctions.empty(),
+		"LDA discriminant function list is empty",
+		OpenViBE::Kernel::ErrorType::BadConfig
+	);
 
-	if(rFeatureVector.getSize() != m_vDiscriminantFunctions[0].getWeightVectorSize())
-	{
-		this->getLogManager() << LogLevel_Error << "Classifier expected " << m_vDiscriminantFunctions[0].getWeightVectorSize() << " features, got " << rFeatureVector.getSize() << "\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		rFeatureVector.getSize() == m_vDiscriminantFunctions[0].getWeightVectorSize(),
+		"Classifier expected " << m_vDiscriminantFunctions[0].getWeightVectorSize() << " features, got " << rFeatureVector.getSize(),
+		OpenViBE::Kernel::ErrorType::BadInput
+	);
 
 	const Map<VectorXd> l_oFeatureVec(const_cast<float64*>(rFeatureVector.getBuffer()), rFeatureVector.getSize());
 	const VectorXd l_oWeights = l_oFeatureVec;
@@ -441,22 +461,23 @@ float64 getFloatFromNode(XML::IXMLNode *pNode)
 
 boolean CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode *pConfigurationNode)
 {
-	//If the attribute exist, we deal with the new version
-	if(!pConfigurationNode->hasAttribute(c_sLDAConfigFileVersionAttributeName))
-	{
-		this->getLogManager() << LogLevel_Error << "The model was trained with an old version of LDA. Please retrain the classifier.\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		pConfigurationNode->hasAttribute(c_sLDAConfigFileVersionAttributeName),
+		 "Invalid model: model trained with an obsolete version of LDA",
+		OpenViBE::Kernel::ErrorType::BadConfig
+	);
 
 	m_vLabelList.clear();
 	m_vDiscriminantFunctions.clear();
 
-	XML::IXMLNode* l_pTempNode;
+	XML::IXMLNode* l_pTempNode = pConfigurationNode->getChildByName(c_sClassesNodeName);
 
-	if((l_pTempNode = pConfigurationNode->getChildByName(c_sClassesNodeName)) == NULL)
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_pTempNode != NULL,
+		 "Failed to retrieve xml node",
+		OpenViBE::Kernel::ErrorType::BadParsing
+	);
+
 	loadClassesFromNode(l_pTempNode);
 
 
