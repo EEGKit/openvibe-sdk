@@ -110,16 +110,14 @@ boolean CBoxAlgorithmVotingClassifier::process(void)
 				{
 					if(l_rInput.op_pMatrix->getBufferElementCount() != 1)
 					{
-						if(l_rInput.op_pMatrix->getBufferElementCount() == 2)
-						{
-							this->getLogManager() << LogLevel_Trace << "Input got two dimensions, the value use for the vote will be the difference between the two values\n";
-							l_rInput.m_bTwoValueInput = true;
-						}
-						else
-						{
-							this->getLogManager() << LogLevel_ImportantWarning << "Input matrix should have one or two values\n";
-							return false;
-						}
+						OV_ERROR_UNLESS_KRF(
+							l_rInput.op_pMatrix->getBufferElementCount() == 2,
+							"Invalid input matrix with " << l_rInput.op_pMatrix->getBufferElementCount() << "values (1 or 2 values expected",
+							OpenViBE::Kernel::ErrorType::BadInput
+						);
+
+						this->getLogManager() << LogLevel_Debug << "Input got two dimensions, the value use for the vote will be the difference between the two values\n";
+						l_rInput.m_bTwoValueInput = true;
 					}
 				}
 			}
@@ -197,16 +195,16 @@ boolean CBoxAlgorithmVotingClassifier::process(void)
 
 			l_rInput.m_vScore.erase(l_rInput.m_vScore.begin(), l_rInput.m_vScore.begin()+(int)m_ui64NumberOfRepetitions);
 
-			this->getLogManager() << LogLevel_Trace << "Input " << i << " got score " << l_vScore[i] << "\n";
+			this->getLogManager() << LogLevel_Debug << "Input " << i << " got score " << l_vScore[i] << "\n";
 		}
 
 		if(l_ui64ResultClassLabel != m_ui64RejectClassLabel)
 		{
-			this->getLogManager() << LogLevel_Trace << "Chosed " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, l_ui64ResultClassLabel) << " with score " << l_f64ResultScore << "\n";
+			this->getLogManager() << LogLevel_Debug << "Chosed " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, l_ui64ResultClassLabel) << " with score " << l_f64ResultScore << "\n";
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Trace << "Chosed rejection " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, l_ui64ResultClassLabel) << "\n";
+			this->getLogManager() << LogLevel_Debug << "Chosed rejection " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, l_ui64ResultClassLabel) << "\n";
 		}
 		m_oClassificationChoiceEncoder.getInputStimulationSet()->clear();
 		m_oClassificationChoiceEncoder.getInputStimulationSet()->appendStimulation(l_ui64ResultClassLabel, l_ui64Time, 0);

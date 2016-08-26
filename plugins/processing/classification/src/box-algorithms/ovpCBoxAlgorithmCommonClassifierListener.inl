@@ -16,7 +16,7 @@
 #ifdef OV_DEBUG_CLASSIFIER_LISTENER
 #define DEBUG_PRINT(x) x
 #else
-#define DEBUG_PRINT(x) 
+#define DEBUG_PRINT(x)
 #endif
 
 namespace OpenViBEPlugins
@@ -203,39 +203,40 @@ namespace OpenViBEPlugins
 				OpenViBE::uint32 i=getStrategyIndex() + 1;
 				if(m_oStrategyClassIdentifier == OVP_ClassId_Algorithm_ClassifierOneVsOne){
 					OpenViBE::CIdentifier l_oEnum = getAvailableDecisionEnumeration(m_oClassifierClassIdentifier);
-					if(l_oEnum == OV_UndefinedIdentifier){
-						this->getLogManager() << OpenViBE::Kernel::LogLevel_Error << "Unable to find Pairwise Decision for the algorithm" << m_oClassifierClassIdentifier.toString() << "\n";
-						return false;
+
+					OV_ERROR_UNLESS_KRF(
+						l_oEnum != OV_UndefinedIdentifier,
+						"Unable to find Pairwise Decision for the algorithm" << m_oClassifierClassIdentifier.toString(),
+						OpenViBE::Kernel::ErrorType::BadConfig
+					);
+
+					OpenViBE::Kernel::IParameter* l_pParameter=m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
+					OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64Parameter(l_pParameter);
+
+					OpenViBE::CString l_sEnumTypeName=this->getTypeManager().getTypeName(l_oEnum);
+					OpenViBE::uint64 l_ui64EnumValue = ip_ui64Parameter;
+					OpenViBE::uint64 l_ui64EnumIndex;
+					OpenViBE::CString l_sEnumValue;
+
+					rBox.getSettingValue(i, l_sEnumValue);
+
+					OpenViBE::uint64 l_ui64OldId = this->getTypeManager().getEnumerationEntryValueFromName(l_oEnum, l_sEnumValue);
+					if(l_ui64OldId == OV_UndefinedIdentifier)//The previous strategy does not exists in the new enum, let's switch to the default value (the first)
+					{
+						l_ui64EnumIndex = 0;
 					}
 					else
 					{
-						OpenViBE::Kernel::IParameter* l_pParameter=m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
-						OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64Parameter(l_pParameter);
-
-						OpenViBE::CString l_sEnumTypeName=this->getTypeManager().getTypeName(l_oEnum);
-						OpenViBE::uint64 l_ui64EnumValue = ip_ui64Parameter;
-						OpenViBE::uint64 l_ui64EnumIndex;
-						OpenViBE::CString l_sEnumValue;
-
-						rBox.getSettingValue(i, l_sEnumValue);
-
-						OpenViBE::uint64 l_ui64OldId = this->getTypeManager().getEnumerationEntryValueFromName(l_oEnum, l_sEnumValue);
-						if(l_ui64OldId == OV_UndefinedIdentifier)//The previous strategy does not exists in the new enum, let's switch to the default value (the first)
-						{
-							l_ui64EnumIndex = 0;
-						}
-						else
-						{
-							l_ui64EnumIndex = l_ui64OldId;
-						}
-
-						this->getTypeManager().getEnumerationEntry(l_oEnum, l_ui64EnumIndex, l_sEnumValue, l_ui64EnumValue);
-						ip_ui64Parameter = l_ui64EnumValue;
-
-						rBox.setSettingType(i, l_oEnum);
-						rBox.setSettingName(i, l_sEnumTypeName);
-						rBox.setSettingValue(i, l_sEnumValue);
+						l_ui64EnumIndex = l_ui64OldId;
 					}
+
+					this->getTypeManager().getEnumerationEntry(l_oEnum, l_ui64EnumIndex, l_sEnumValue, l_ui64EnumValue);
+					ip_ui64Parameter = l_ui64EnumValue;
+
+					rBox.setSettingType(i, l_oEnum);
+					rBox.setSettingName(i, l_sEnumTypeName);
+					rBox.setSettingValue(i, l_sEnumValue);
+
 				}
 				return true;
 			}
@@ -287,26 +288,26 @@ namespace OpenViBEPlugins
 					OpenViBE::uint32 i=getStrategyIndex() + 1;
 					if(m_oStrategyClassIdentifier == OVP_ClassId_Algorithm_ClassifierOneVsOne){
 						OpenViBE::CIdentifier l_oEnum = getAvailableDecisionEnumeration(l_oClassifierIdentifier);
-						if(l_oEnum == OV_UndefinedIdentifier){
-							this->getLogManager() << OpenViBE::Kernel::LogLevel_Error << "Unable to find Pariwise Decision for the algorithm " << m_oClassifierClassIdentifier.toString() << "\n";
-							return false;
-						}
-						else
-						{
-							//As we just switch to this strategy, we take the default value set in the strategy to initialize the value
-							OpenViBE::Kernel::IParameter* l_pParameter=m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
-							OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64Parameter(l_pParameter);
-							OpenViBE::uint64 l_ui64EnumValue = ip_ui64Parameter;
-							OpenViBE::CString l_sEnumName;
-							l_sEnumName = this->getTypeManager().getEnumerationEntryNameFromValue(l_oEnum, l_ui64EnumValue);
 
-							OpenViBE::CString l_sParameterName=this->getTypeManager().getTypeName(l_oEnum);
+						OV_ERROR_UNLESS_KRF(
+							l_oEnum != OV_UndefinedIdentifier,
+							"Unable to find Pairwise Decision for the algorithm" << m_oClassifierClassIdentifier.toString(),
+							OpenViBE::Kernel::ErrorType::BadConfig
+						);
 
-							DEBUG_PRINT(std::cout << "Adding setting (case C) " << l_sParameterName << " : '" << l_sEnumName << "' to index " << i << "\n";)
-							rBox.addSetting(l_sParameterName, l_oEnum, l_sEnumName, i);
+						//As we just switch to this strategy, we take the default value set in the strategy to initialize the value
+						OpenViBE::Kernel::IParameter* l_pParameter=m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
+						OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64Parameter(l_pParameter);
+						OpenViBE::uint64 l_ui64EnumValue = ip_ui64Parameter;
+						OpenViBE::CString l_sEnumName;
+						l_sEnumName = this->getTypeManager().getEnumerationEntryNameFromValue(l_oEnum, l_ui64EnumValue);
 
-							m_i32StrategyAmountSettings = 1;
-						}
+						OpenViBE::CString l_sParameterName=this->getTypeManager().getTypeName(l_oEnum);
+
+						DEBUG_PRINT(std::cout << "Adding setting (case C) " << l_sParameterName << " : '" << l_sEnumName << "' to index " << i << "\n";)
+						rBox.addSetting(l_sParameterName, l_oEnum, l_sEnumName, i);
+
+						m_i32StrategyAmountSettings = 1;
 					}
 				}
 

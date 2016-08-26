@@ -43,6 +43,7 @@ namespace OpenViBE
 			ExceptionCaught = 4, /*!< Used to report an error related to a c++ expection caught in the system */
 			BadCall = 5, /*!< Used when an API call is incompatible with the current state */
 			BadProcessing = 6, /*!< Used when a processing/computation failed */
+			BadVersion = 7, /*!< Used for plugin or api version mismatch */
 			// Value setting
 			BadValue = 10, /*!< Used when an entity is given an invalid value */
 			BadArgument = 11, /*!< Used when a function is fed with invalid arguments */
