@@ -69,8 +69,6 @@ namespace OpenViBEPlugins
 				// the feature vector size
 				OpenViBE::uint32 m_ui32VectorSize;
 
-				// error flag
-				OpenViBE::boolean m_bError;
 				OpenViBE::boolean m_bHeaderSent;
 		};
 
@@ -112,7 +110,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Each chunk of input will be catenated into one feature vector."); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Feature extraction"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			
+
 			virtual void release(void)                                   { }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_FeatureAggregator; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::FeatureExtraction::CBoxAlgorithmFeatureAggregator(); }
