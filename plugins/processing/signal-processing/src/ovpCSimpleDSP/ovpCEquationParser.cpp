@@ -172,18 +172,21 @@ boolean CEquationParser::compileEquation(const char * pEquation)
 	}
 	else
 	{
-		//if the parsing failed
-		m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << LogLevel_Warning << pEquation << " Failed parsing\n";
 		std::string l_oErrorString;
 
 		for (int i = 0; i < (l_oInfo.stop - pEquation); i++)
 		{
-			l_oErrorString+=" ";
+			l_oErrorString += "*";
 		}
-		l_oErrorString+="^--Here\n";
-		m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << LogLevel_Warning << l_oErrorString.c_str();
+		l_oErrorString+="^<--here";
 
-		return false;
+		OV_ERROR(
+			"Failed parsing equation [" << pEquation << "] at " <<  l_oErrorString.c_str(),
+			OpenViBE::Kernel::ErrorType::BadParsing,
+			false,
+			m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
+			m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
+		);
 	}
 }
 
@@ -255,7 +258,10 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 
 		if(l_ui32Index>=m_ui32VariableCount)
 		{
-			m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << LogLevel_Warning << "No such input " << l_ui32Index+1 << " (referenced with variable [" << CString(l_sValue.c_str()) << "])\n";
+			OV_WARNING(
+				"Missing input " << l_ui32Index+1 << " (referenced with variable [" << CString(l_sValue.c_str()) << "])",
+				m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
+			);
 			return new CAbstractTreeValueNode(0);
 		}
 		return new CAbstractTreeVariableNode(l_ui32Index);

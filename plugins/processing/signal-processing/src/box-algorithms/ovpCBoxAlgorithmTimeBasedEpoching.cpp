@@ -101,17 +101,23 @@ bool CBoxAlgorithmTimeBasedEpoching::COutputHandler::process()
 		m_ui32SampleCountPerEpoch = ((uint32)(m_f64EpochDuration*m_ui64SamplingRate));
 		m_ui32SampleCountBetweenEpoch = ((uint32)(m_f64EpochInterval*m_ui64SamplingRate));
 
-		if(m_ui64SamplingRate == 0)
-		{
-			m_rParent.getLogManager() << LogLevel_Error << "Input sampling rate is 0, not supported\n";
-			return false;
-		}
+		OV_ERROR_UNLESS(
+			m_ui64SamplingRate != 0,
+			"Invalid input sampling rate [" << m_ui64SamplingRate << "] (expected value > 0)",
+			OpenViBE::Kernel::ErrorType::BadInput,
+			false,
+			m_rParent.getErrorManager(),
+			m_rParent.getLogManager()
+		);
 
-		if(m_ui32SampleCountPerEpoch == 0)
-		{
-			m_rParent.getLogManager() << LogLevel_Error << "Computed sample count per epoch is 0\n";
-			return false;
-		}
+		OV_ERROR_UNLESS(
+			m_ui32SampleCountPerEpoch != 0,
+			"Invalid sample count per epoch [" << m_ui32SampleCountPerEpoch << "] (expected value > 0)",
+			OpenViBE::Kernel::ErrorType::BadInput,
+			false,
+			m_rParent.getErrorManager(),
+			m_rParent.getLogManager()
+		);
 
 		m_oSignalEncoder.getInputSamplingRate() = m_ui64SamplingRate;
 
@@ -235,10 +241,12 @@ boolean CBoxAlgorithmTimeBasedEpoching::initialize(void)
 			l_f64EpochDuration = std::stod(l_sEpochDuration.toASCIIString());
 			l_f64EpochInterval = std::stod(l_sEpochInterval.toASCIIString());
 		}
-		catch(const std::exception&)
+		catch(const std::exception& e)
 		{
-			// TODO: Add error management here
-			return false;
+			OV_ERROR_KRF(
+				"Invalid setting conversion for output " << i << " (duration: [" << l_sEpochDuration << "] |" << "interval: [" << l_sEpochInterval << "]) : " << e.what(),
+				OpenViBE::Kernel::ErrorType::BadSetting
+			);
 		}
 
 		if(l_f64EpochDuration>0 && l_f64EpochInterval>0)
@@ -251,8 +259,10 @@ boolean CBoxAlgorithmTimeBasedEpoching::initialize(void)
 			l_pOutputHandler->m_f64EpochDuration=1.0;
 			l_pOutputHandler->m_f64EpochInterval=0.5;
 
-			this->getLogManager() << LogLevel_Error << "Epocher settings for output " << i << " are invalid (duration:" << l_f64EpochDuration << "|" << "interval:" << l_f64EpochInterval << ")\n";
-			return false;
+			OV_ERROR_KRF(
+				"Invalid epocher settings for output " << i << " (duration: [" << l_f64EpochDuration << "] |" << "interval: [" << l_f64EpochInterval << "] (expected values > 0)",
+				OpenViBE::Kernel::ErrorType::BadSetting
+			);
 		}
 		m_vOutputHandler.push_back(l_pOutputHandler);
 	}

@@ -11,19 +11,18 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-#define CBoxAlgorithmSignalDecimation_Debug 0
-
 boolean CBoxAlgorithmSignalDecimation::initialize(void)
 {
 	m_pStreamDecoder=NULL;
 	m_pStreamEncoder=NULL;
 
 	m_i64DecimationFactor=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	if(m_i64DecimationFactor<=1)
-	{
-		this->getLogManager() << LogLevel_Error << "Decimation factor should be strictly greater than 1 !\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		m_i64DecimationFactor > 1,
+		"Invalid decimation factor [" << m_i64DecimationFactor << "] (expected value > 1)",
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
 
 	m_pStreamDecoder=&this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
 	m_pStreamDecoder->initialize();
@@ -116,22 +115,22 @@ boolean CBoxAlgorithmSignalDecimation::process(void)
 			m_ui32InputSampleCountPerSentBlock=op_pMatrix->getDimensionSize(1);
 			m_ui64InputSamplingFrequency=op_ui64SamplingRate;
 
-			if(m_ui64InputSamplingFrequency%m_i64DecimationFactor != 0)
-			{
-				this->getLogManager() << LogLevel_Error << "Input signal sampling frequency " << m_ui64InputSamplingFrequency << " is not a multiple of the decimation factor " << m_i64DecimationFactor << "\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				m_ui64InputSamplingFrequency%m_i64DecimationFactor == 0,
+				"Failed to decimate: input sampling frequency [" << m_ui64InputSamplingFrequency << "] not multiple of decimation factor [" << m_i64DecimationFactor << "]",
+				OpenViBE::Kernel::ErrorType::BadSetting
+			);
 
 			m_ui32OutputSampleIndex=0;
 			m_ui32OutputSampleCountPerSentBlock=(uint32)(m_ui32InputSampleCountPerSentBlock/m_i64DecimationFactor);
 			m_ui32OutputSampleCountPerSentBlock=(m_ui32OutputSampleCountPerSentBlock?m_ui32OutputSampleCountPerSentBlock:1);
 			m_ui64OutputSamplingFrequency=op_ui64SamplingRate/m_i64DecimationFactor;
 
-			if(m_ui64OutputSamplingFrequency==0) 
-			{
-				this->getLogManager() << LogLevel_Error << "Output sampling frequency is 0\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				m_ui64OutputSamplingFrequency != 0,
+				"Failed to decimate: output sampling frequency is 0",
+				OpenViBE::Kernel::ErrorType::BadOutput
+			);
 
 			m_ui32ChannelCount=op_pMatrix->getDimensionSize(0);
 			m_ui64TotalSampleCount=0;
@@ -160,10 +159,6 @@ boolean CBoxAlgorithmSignalDecimation::process(void)
 					l_pInputBufferTmp+=m_ui32InputSampleCountPerSentBlock;
 				}
 
-#if CBoxAlgorithmSignalDecimation_Debug
-this->getLogManager() << LogLevel_Info << "Processed input sample\n";
-#endif
-
 				m_ui32InputSampleIndex++;
 				if(m_ui32InputSampleIndex==m_i64DecimationFactor)
 				{
@@ -175,18 +170,10 @@ this->getLogManager() << LogLevel_Info << "Processed input sample\n";
 						l_pOutputBufferTmp+=m_ui32OutputSampleCountPerSentBlock;
 					}
 
-#if CBoxAlgorithmSignalDecimation_Debug
-this->getLogManager() << LogLevel_Info << "Fed output sample " << m_ui32OutputSampleIndex << "\n";
-#endif
-
 					l_pOutputBuffer++;
 					m_ui32OutputSampleIndex++;
 					if(m_ui32OutputSampleIndex==m_ui32OutputSampleCountPerSentBlock)
 					{
-
-#if CBoxAlgorithmSignalDecimation_Debug
-this->getLogManager() << LogLevel_Info << "Built buffer chunk\n";
-#endif
 
 						l_pOutputBuffer=ip_pMatrix->getBuffer();
 						m_ui32OutputSampleIndex=0;
@@ -202,11 +189,6 @@ this->getLogManager() << LogLevel_Info << "Built buffer chunk\n";
 
 				l_pInputBuffer++;
 			}
-
-#if CBoxAlgorithmSignalDecimation_Debug
-this->getLogManager() << LogLevel_Info << "Finished\n";
-#endif
-
 		}
 		if(m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedEnd))
 		{

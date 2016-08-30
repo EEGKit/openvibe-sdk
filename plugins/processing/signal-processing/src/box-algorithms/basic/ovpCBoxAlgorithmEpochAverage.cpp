@@ -69,11 +69,11 @@ boolean CBoxAlgorithmEpochAverage::initialize(void)
 	m_pMatrixAverage->getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_Matrix)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
 	m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setReferenceTarget(m_pMatrixAverage->getOutputParameter(OVP_Algorithm_MatrixAverage_OutputParameterId_AveragedMatrix));
 
-	if(ip_ui64MatrixCount<=0)
-	{
-		getLogManager() << LogLevel_Error << "You should provide a positive number of epochs better than " << ip_ui64MatrixCount << "\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		ip_ui64MatrixCount > 0,
+		"Invalid number of epochs (expected value > 0)",
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
 
 	return true;
 }

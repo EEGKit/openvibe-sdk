@@ -89,24 +89,26 @@ boolean CBoxAlgorithmReferenceChannel::process(void)
 			IMatrix& l_rInputMatrix=*m_oDecoder.getOutputMatrix();
 			IMatrix& l_rOutputMatrix=*m_oEncoder.getInputMatrix();
 
-			if(l_rInputMatrix.getDimensionSize(0)<2)
-			{
-				this->getLogManager() << LogLevel_Error << "Needs at least 2 channels, got " << l_rInputMatrix.getDimensionSize(0) << "\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				l_rInputMatrix.getDimensionSize(0) >= 2,
+				"Invalid input matrix with [" << l_rInputMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
+				OpenViBE::Kernel::ErrorType::BadInput
+			);
 
 			CString l_sChannel=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			uint64 l_ui64MatchMethod=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 			m_ui32ReferenceChannelIndex=::_find_channel_(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
-			if(m_ui32ReferenceChannelIndex==uint32(-1))
-			{
-				this->getLogManager() << LogLevel_Error << "Channel not found [" << l_sChannel << "]\n";
-				return false;
-			}
+
+			OV_ERROR_UNLESS_KRF(
+				m_ui32ReferenceChannelIndex != uint32(-1),
+				"Invalid channel [" << l_sChannel << "]: channel not found",
+				OpenViBE::Kernel::ErrorType::BadSetting
+			);
+
 			if(::_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex+1)!=uint32(-1))
 			{
-				this->getLogManager() << LogLevel_Warning << "Several channel can be selected [" << l_sChannel << "]. Selected " << m_ui32ReferenceChannelIndex << "\n";
+				OV_WARNING_K("Multiple channels match for setting [" << l_sChannel << "]. Selecting [" << m_ui32ReferenceChannelIndex << "]");
 			}
 
 			l_rOutputMatrix.setDimensionCount(2);

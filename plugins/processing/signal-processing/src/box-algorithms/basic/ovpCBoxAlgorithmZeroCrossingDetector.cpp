@@ -18,7 +18,7 @@
 #include "ovpCBoxAlgorithmZeroCrossingDetector.h"
 
 #include <system/ovCMemory.h>
-#include <openvibe/ovITimeArithmetics.h> 
+#include <openvibe/ovITimeArithmetics.h>
 
 #include <vector>
 #include <algorithm>
@@ -39,11 +39,12 @@ boolean CBoxAlgorithmZeroCrossingDetector::initialize(void)
 
 	m_f64HysteresisThreshold = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_f64WindowTime = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	if ( m_f64WindowTime <= 0 )
-	{
-		this->getLogManager() << LogLevel_Error << "Window length for the rythm estimation can not be negative.\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		m_f64WindowTime > 0,
+		"Invalid negative number for window length",
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
 
 	m_ui64StimulationId1 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_ui64StimulationId2 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
@@ -68,8 +69,7 @@ boolean CBoxAlgorithmZeroCrossingDetector::initialize(void)
 	}
 	else
 	{
-		this->getLogManager() << LogLevel_Error << "Unhandled input type " << l_oTypeIdentifier << ".\n";
-		return false;
+		OV_ERROR_KRF("Invalid input type [" << l_oTypeIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput);
 	}
 
 	return true;
@@ -112,7 +112,7 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 			l_pOutputMatrix2->setDimensionSize(1, l_ui32SampleCount);
 
 			m_vSignalHistory.clear();
-			m_vSignalHistory.resize(l_ui32ChannelCount,0); 
+			m_vSignalHistory.resize(l_ui32ChannelCount,0);
 			m_vStateHistory.clear();
 			m_vStateHistory.resize(l_ui32ChannelCount);
 

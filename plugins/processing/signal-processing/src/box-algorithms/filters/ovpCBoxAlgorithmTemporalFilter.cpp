@@ -115,51 +115,54 @@ boolean CBoxAlgorithmTemporalFilter::initialize(void)
 	m_f64LowCutFrequency=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	m_f64HighCutFrequency=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
-	if(l_i64FilterOrder < 1)
-	{
-		this->getLogManager() << LogLevel_Error << "Filter order can not be inferior to 1.\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_i64FilterOrder >= 1,
+		"Invalid filter order [" << l_i64FilterOrder << "] (expected value >= 1)",
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
+
 	m_ui64FilterOrder = static_cast<uint64>(l_i64FilterOrder);
 
 	if(m_ui64FilterType == OVP_TypeId_FilterType_LowPass)
 	{
-		if(m_f64HighCutFrequency <= 0)
-		{
-			this->getLogManager() << LogLevel_Error << "High cut-off frequency can not be negative.\n";
-			return false;
-		}
+		OV_ERROR_UNLESS_KRF(
+			m_f64HighCutFrequency > 0,
+			"Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value > 0)",
+			OpenViBE::Kernel::ErrorType::BadSetting
+		);
 	}
 	else if(m_ui64FilterType == OVP_TypeId_FilterType_HighPass)
 	{
-		if(m_f64LowCutFrequency <= 0)
-		{
-			this->getLogManager() << LogLevel_Error << "Low cut-off frequency can not be negative.\n";
-			return false;
-		}
+		OV_ERROR_UNLESS_KRF(
+			m_f64LowCutFrequency > 0,
+			"Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value > 0)",
+			OpenViBE::Kernel::ErrorType::BadSetting
+		);
 	}
 	else if(m_ui64FilterType == OVP_TypeId_FilterType_BandPass || m_ui64FilterType == FilterType_BandStop)
 	{
-		if(m_f64LowCutFrequency < 0)
-		{
-			this->getLogManager() << LogLevel_Error << "Low cut-off frequency can not be negative.\n";
-			return false;
-		}
-		if(m_f64HighCutFrequency <= 0)
-		{
-			this->getLogManager() << LogLevel_Error << "High cut-off frequency can not be negative.\n";
-			return false;
-		}
-		if(m_f64HighCutFrequency <= m_f64LowCutFrequency)
-		{
-			this->getLogManager() << LogLevel_Warning << "High cut-off frequency can not be inferior or equal to low cut-off frequency.\n";
-			return false;
-		}
+		OV_ERROR_UNLESS_KRF(
+			m_f64LowCutFrequency >= 0,
+			"Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value >= 0)",
+			OpenViBE::Kernel::ErrorType::BadSetting
+		);
+
+		OV_ERROR_UNLESS_KRF(
+			m_f64HighCutFrequency > 0,
+			"Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value > 0)",
+			OpenViBE::Kernel::ErrorType::BadSetting
+		);
+
+		OV_ERROR_UNLESS_KRF(
+			m_f64HighCutFrequency > m_f64LowCutFrequency,
+			"Invalid cut-off frequencies [" << m_f64LowCutFrequency << "," << m_f64HighCutFrequency << "] (expected low frequency < high frequency)",
+			OpenViBE::Kernel::ErrorType::BadSetting
+		);
+
 	}
 	else
 	{
-		this->getLogManager() << LogLevel_Warning << "Unknown filter type [" << m_ui64FilterType << "].\n";
-		return false;
+		OV_ERROR_KRF("Invalid filter type [" << m_ui64FilterType << "]", OpenViBE::Kernel::ErrorType::BadSetting);
 	}
 
 	m_oDecoder.initialize(*this, 0);
@@ -229,19 +232,19 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 		{
 			if(m_ui64FilterType != OVP_TypeId_FilterType_LowPass) // verification for high-pass, band-pass and band-stop filters
 			{
-				if(m_f64LowCutFrequency > m_oDecoder.getOutputSamplingRate()*.5)
-				{
-					this->getLogManager() << LogLevel_Error << "Low cut-off frequency (" << m_f64LowCutFrequency << " Hz) is above Nyquist criteria (sampling rate is " << m_oDecoder.getOutputSamplingRate() << " Hz), can not proceed !\n";
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					m_f64LowCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
+					"Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value must meet nyquist criteria for samplign rate " <<  m_oDecoder.getOutputSamplingRate() << ")",
+					OpenViBE::Kernel::ErrorType::BadConfig
+				);
 			}
 			if(m_ui64FilterType != OVP_TypeId_FilterType_HighPass) // verification for low-pass, band-pass and band-stop filters
 			{
-				if(m_f64HighCutFrequency > m_oDecoder.getOutputSamplingRate()*.5)
-				{
-					this->getLogManager() << LogLevel_Error << "High cut-off frequency (" << m_f64HighCutFrequency << " Hz) is above Nyquist criteria (sampling rate is " << m_oDecoder.getOutputSamplingRate() << " Hz), can not proceed !\n";
-					return false;
-				}
+				OV_ERROR_UNLESS_KRF(
+					m_f64HighCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
+					"Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value must meet nyquist criteria for samplign rate " <<  m_oDecoder.getOutputSamplingRate() << ")",
+					OpenViBE::Kernel::ErrorType::BadConfig
+				);
 			}
 
 			for(it=m_vFilter.begin(); it!=m_vFilter.end(); ++it)
@@ -266,8 +269,7 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 			else if(m_ui64FilterMethod == OVP_TypeId_FilterMethod_Chebyshev.toUInteger()) // Chebyshev
 			{
 #if 1
-				this->getLogManager() << LogLevel_Error << "This method is not yet implemented\n";
-				return false;
+				OV_ERROR_KRF("Chebyshev method not implemented", OpenViBE::Kernel::ErrorType::NotImplemented);
 #else
 				fpGetParameters = getChebishevParameters;
 				fpCreateFilter = createChebishevFilter;
@@ -276,7 +278,7 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 			else if(m_ui64FilterMethod == OVP_TypeId_FilterMethod_YuleWalker.toUInteger()) // YuleWalker
 			{
 #if 1
-				this->getLogManager() << LogLevel_Error << "This method is not yet implemented\n";
+				OV_ERROR_KRF("YuleWalker method not implemented", OpenViBE::Kernel::ErrorType::NotImplemented);
 				return false;
 #else
 				fpGetParameters = getYuleWalkerParameters;
@@ -285,17 +287,16 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 			}
 			else
 			{
-				this->getLogManager() << LogLevel_Error << "Unidentified filter method [" << m_ui64FilterMethod << "]\n";
-				return false;
+				OV_ERROR_KRF("Invalid filter method [" << m_ui64FilterMethod << "]", OpenViBE::Kernel::ErrorType::BadSetting);
 			}
 
 			if (m_ui64FilterType == OVP_TypeId_FilterType_HighPass.toUInteger())
 			{
-				this->getLogManager() << LogLevel_Trace << "Low cut frequency of the High pass filter : " << m_f64LowCutFrequency << "Hz\n";
+				this->getLogManager() << LogLevel_Debug << "Low cut frequency of the High pass filter : " << m_f64LowCutFrequency << "Hz\n";
 			}
 			if (m_ui64FilterType == OVP_TypeId_FilterType_LowPass.toUInteger())
 			{
-				this->getLogManager() << LogLevel_Trace << "High cut frequency of the Low pass filter : " << m_f64HighCutFrequency << "Hz\n";
+				this->getLogManager() << LogLevel_Debug << "High cut frequency of the Low pass filter : " << m_f64HighCutFrequency << "Hz\n";
 			}
 
 			uint64 l_ui64SamplingRate=m_oDecoder.getOutputSamplingRate();

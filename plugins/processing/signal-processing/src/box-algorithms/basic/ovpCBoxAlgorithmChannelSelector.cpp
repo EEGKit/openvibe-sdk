@@ -123,8 +123,7 @@ boolean CBoxAlgorithmChannelSelector::initialize(void)
 	}
 	else
 	{
-		this->getLogManager() << LogLevel_Error << "Unhandled type of input [" << l_oTypeIdentifier << "]\n";
-		return false;
+		OV_ERROR_KRF("Invalid input type [" << l_oTypeIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput);
 	}
 
 	m_vLookup.clear();
@@ -218,20 +217,18 @@ boolean CBoxAlgorithmChannelSelector::process(void)
 						if(l_ui32RangeEndIndex  ==uint32(-1) && l_sSubToken[1]==CString("")) l_ui32RangeEndIndex=m_pInputMatrix->getDimensionSize(0)-1;
 
 						// After these corections, if either first or second token were not found, or if start index is greater than start index, consider this an error and invalid range
-						if(l_ui32RangeStartIndex==uint32(-1) || l_ui32RangeEndIndex  ==uint32(-1) || l_ui32RangeStartIndex>l_ui32RangeEndIndex)
+						OV_ERROR_UNLESS_KRF(
+							l_ui32RangeStartIndex != uint32(-1) && l_ui32RangeEndIndex != uint32(-1) && l_ui32RangeStartIndex <= l_ui32RangeEndIndex,
+							"Invalid channel range [" << l_sToken[j] << "] - splitted as [" << l_sSubToken[0] << "][" << l_sSubToken[1] << "]",
+							OpenViBE::Kernel::ErrorType::BadSetting
+						);
+
+						// The range is valid so selects all the channels in this range
+						this->getLogManager() << LogLevel_Debug << "For range [" << l_sToken[j] << "] :\n";
+						for(uint32 k=l_ui32RangeStartIndex; k<=l_ui32RangeEndIndex; k++)
 						{
-							this->getLogManager() << LogLevel_Error << "Invalid channel range [" << l_sToken[j] << "] - splitted as [" << l_sSubToken[0] << "][" << l_sSubToken[1] << "]\n";
-							return false;
-						}
-						else
-						{
-							// The range is valid so selects all the channels in this range
-							this->getLogManager() << LogLevel_Trace << "For range [" << l_sToken[j] << "] :\n";
-							for(uint32 k=l_ui32RangeStartIndex; k<=l_ui32RangeEndIndex; k++)
-							{
-								m_vLookup.push_back(k);
-								this->getLogManager() << LogLevel_Trace << "  Selected channel [" << k+1 << "]\n";
-							}
+							m_vLookup.push_back(k);
+							this->getLogManager() << LogLevel_Debug << "  Selected channel [" << k+1 << "]\n";
 						}
 					}
 					else
@@ -245,15 +242,14 @@ boolean CBoxAlgorithmChannelSelector::process(void)
 						{
 							l_bFound=true;
 							m_vLookup.push_back(l_ui32Index);
-							this->getLogManager() << LogLevel_Trace << "Selected channel [" << l_ui32Index+1 << "]\n";
+							this->getLogManager() << LogLevel_Debug << "Selected channel [" << l_ui32Index+1 << "]\n";
 						}
 
-						// When no channel was found, consider it a missing channel
-						if(!l_bFound)
-						{
-							this->getLogManager() << LogLevel_Warning << "Invalid channel [" << l_sToken[j] << "]\n";
-							m_vLookup.push_back(uint32(-1));
-						}
+						OV_ERROR_UNLESS_KRF(
+							l_bFound,
+							"Invalid channel [" << l_sToken[j] << "]",
+							OpenViBE::Kernel::ErrorType::BadSetting
+						);
 					}
 				}
 
@@ -289,11 +285,11 @@ boolean CBoxAlgorithmChannelSelector::process(void)
 			// ______________________________________________________________________________________________________________________________________________________
 			//
 
-			if(m_vLookup.size() == 0)
-			{
-				this->getLogManager() << LogLevel_Warning << "No channel selected\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				!m_vLookup.empty(),
+				"No channel selected",
+				OpenViBE::Kernel::ErrorType::BadConfig
+			);
 
 			m_pOutputMatrix->setDimensionCount(2);
 			m_pOutputMatrix->setDimensionSize(0, m_vLookup.size());
