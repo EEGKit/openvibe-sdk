@@ -64,7 +64,7 @@ boolean CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVec
 
 	OV_ERROR_UNLESS_KRF(
 		l_vClassLabels.size() == l_ui32ClassCount,
-		"There are samples for " << (uint32)l_vClassLabels.size() << " classes but expected samples for " << l_ui32ClassCount << " classes.",
+		"Invalid samples count for [" << (uint32)l_vClassLabels.size() << "] classes (expected samples for " << l_ui32ClassCount << " classes)",
 		OpenViBE::Kernel::ErrorType::BadConfig
 	);
 
@@ -226,7 +226,7 @@ boolean CAlgorithmClassifierOneVsAll::addNewClassifierAtBack(void)
 
 	OV_ERROR_UNLESS_KRF(
 		l_oSubClassifierAlgorithm != OV_UndefinedIdentifier,
-		"Invalid classifier identifier: " << this->m_oSubClassifierAlgorithmIdentifier.toString(),
+		"Invalid classifier identifier [" << this->m_oSubClassifierAlgorithmIdentifier.toString() << "]",
 		OpenViBE::Kernel::ErrorType::BadConfig
 	);
 
@@ -386,7 +386,7 @@ boolean CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const OpenViBE:
 
 	OV_ERROR_UNLESS_KRF(
 		m_fAlgorithmComparison != NULL,
-		"No comparison function found for classifier " << m_oSubClassifierAlgorithmIdentifier.toString(),
+		"No comparison function found for classifier [" << m_oSubClassifierAlgorithmIdentifier.toString() << "]",
 		OpenViBE::Kernel::ErrorType::ResourceNotFound
 	);
 

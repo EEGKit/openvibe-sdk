@@ -62,14 +62,14 @@ OpenViBE::boolean CAlgorithmConditionedCovariance::process(void)
 
 	OV_ERROR_UNLESS_KRF(
 		l_f64Shrinkage <= 1.0,
-		"Invalid shrinkage value " << l_f64Shrinkage << "[max value = 1.0]",
+		"Invalid shrinkage value " << l_f64Shrinkage << "(expected value <= 1.0)",
 		OpenViBE::Kernel::ErrorType::BadConfig
 	);
 
 
 	OV_ERROR_UNLESS_KRF(
 		ip_pFeatureVectorSet->getDimensionCount() == 2,
-		"Invalid dimension count for vector set " << ip_pFeatureVectorSet->getDimensionCount() << "[expected value = 2]",
+		"Invalid dimension count for vector set " << ip_pFeatureVectorSet->getDimensionCount() << "(expected value = 2)",
 		OpenViBE::Kernel::ErrorType::BadInput
 	);
 
@@ -78,7 +78,7 @@ OpenViBE::boolean CAlgorithmConditionedCovariance::process(void)
 
 	OV_ERROR_UNLESS_KRF(
 		l_ui32nRows >= 1 && l_ui32nCols >= 1,
-		"Invalid input matrix [" << l_ui32nRows << "x" << l_ui32nCols << "[minimum expected = 1x1]",
+		"Invalid input matrix [" << l_ui32nRows << "x" << l_ui32nCols << "] (expected at least 1x1 size)",
 		OpenViBE::Kernel::ErrorType::BadInput
 	);
 

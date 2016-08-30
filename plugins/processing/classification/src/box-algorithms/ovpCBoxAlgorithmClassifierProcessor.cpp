@@ -47,17 +47,16 @@ boolean CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	uint32 l_ui32Version;
 	l_sData >> l_ui32Version;
 
-	OV_ERROR_UNLESS_KRF(
+	OV_WARNING_UNLESS_K(
 		l_ui32Version <= OVP_Classification_BoxTrainerFormatVersion,
-		"Classifier configuration in " << sFilename << " saved using a newer version [saved version = " << l_ui32Version
-		<< ", current version = " << OVP_Classification_BoxTrainerFormatVersion << "]",
-		OpenViBE::Kernel::ErrorType::BadVersion
+		"Classifier configuration in [" << sFilename << "] saved using a newer version: saved version = [" << l_ui32Version
+		<< "] vs current version = [" << OVP_Classification_BoxTrainerFormatVersion << "]"
 	);
 
 	OV_ERROR_UNLESS_KRF(
 		l_ui32Version >= OVP_Classification_BoxTrainerFormatVersionRequired,
-		"Classifier configuration in " << sFilename << " saved using an obsolete version [saved version = " << l_ui32Version
-		<< ", minimum expected version = " << OVP_Classification_BoxTrainerFormatVersionRequired << "]",
+		"Classifier configuration in [" << sFilename << "] saved using an obsolete version [" << l_ui32Version
+		<< "] (minimum expected version = " << OVP_Classification_BoxTrainerFormatVersionRequired << ")",
 		OpenViBE::Kernel::ErrorType::BadVersion
 	);
 
@@ -89,7 +88,7 @@ boolean CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 		//If the algorithm is still unknown, that means that we face an error
 		OV_ERROR_UNLESS_KRF(
 			l_oAlgorithmClassIdentifier != OV_UndefinedIdentifier,
-			"No classifier retrieved from configuration file " << sFilename,
+			"No classifier retrieved from configuration file [" << sFilename << "]",
 			OpenViBE::Kernel::ErrorType::BadConfig
 		);
 	}
@@ -134,7 +133,7 @@ boolean CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 	OV_ERROR_UNLESS_KRF(
 		l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
-		"Invalid classifier algorithm in configuration file [" << sFilename,
+		"Invalid classifier algorithm with id [" << l_oAlgorithmClassIdentifier.toString() << "] in configuration file [" << sFilename << "]",
 		OpenViBE::Kernel::ErrorType::BadConfig
 	);
 
@@ -155,8 +154,8 @@ boolean CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 	OV_ERROR_UNLESS_KRF(
 		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
-		"Loading configuration failed for subclassifier " << l_oClassifierAlgorithmIdentifier.toString(),
-		OpenViBE::Kernel::ErrorType::BadProcessing
+		"Loading configuration failed for subclassifier [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
+		OpenViBE::Kernel::ErrorType::Internal
 	);
 
 	l_pRootNode->release();
@@ -271,10 +270,8 @@ boolean CBoxAlgorithmClassifierProcessor::process(void)
 				m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify) &&
 				m_pClassifier->isOutputTriggerActive(OVTK_Algorithm_Classifier_OutputTriggerId_Success),
 				"Classification failed",
-				OpenViBE::Kernel::ErrorType::BadProcessing
+				OpenViBE::Kernel::ErrorType::Internal
 			);
-
-			//this->getLogManager() << LogLevel_Warning << "---Classification successful---\n";
 
 			TParameterHandler < float64 > op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 

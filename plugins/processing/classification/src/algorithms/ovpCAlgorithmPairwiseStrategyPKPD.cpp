@@ -38,7 +38,7 @@ boolean CAlgorithmPairwiseStrategyPKPD::parameterize()
 
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
-		"Pairwise decision PKPD algorithm needs at least 2 classes [" << m_ui32ClassCount << " found]",
+		"Pairwise decision PKPD algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
 		OpenViBE::Kernel::ErrorType::BadInput
 	);
 
@@ -49,7 +49,7 @@ boolean CAlgorithmPairwiseStrategyPKPD::compute(std::vector< SClassificationInfo
 {
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
-		"Pairwise decision PKPD algorithm needs at least 2 classes [" << m_ui32ClassCount << " found]",
+		"Pairwise decision PKPD algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
 		OpenViBE::Kernel::ErrorType::BadInput
 	);
 

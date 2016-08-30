@@ -206,7 +206,7 @@ namespace OpenViBEPlugins
 
 					OV_ERROR_UNLESS_KRF(
 						l_oEnum != OV_UndefinedIdentifier,
-						"Unable to find Pairwise Decision for the algorithm" << m_oClassifierClassIdentifier.toString(),
+						"Unable to find Pairwise Decision for the algorithm [" << m_oClassifierClassIdentifier.toString() << "]",
 						OpenViBE::Kernel::ErrorType::BadConfig
 					);
 
@@ -291,7 +291,7 @@ namespace OpenViBEPlugins
 
 						OV_ERROR_UNLESS_KRF(
 							l_oEnum != OV_UndefinedIdentifier,
-							"Unable to find Pairwise Decision for the algorithm" << m_oClassifierClassIdentifier.toString(),
+							"Unable to find Pairwise Decision for the algorithm [" << m_oClassifierClassIdentifier.toString() << "]",
 							OpenViBE::Kernel::ErrorType::BadConfig
 						);
 

@@ -78,7 +78,7 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 
 		OV_ERROR_UNLESS_KRF(
 			l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
-			"Unable to instantiate classifier for class " << l_oClassifierAlgorithmIdentifier.toString(),
+			"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
 			OpenViBE::Kernel::ErrorType::BadConfig
 		);
 
@@ -97,7 +97,7 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 
 	OV_ERROR_UNLESS_KRF(
 		l_i64PartitionCount >= 0,
-		"Invalid partition count " << l_i64PartitionCount << " (value >= 0 expected",
+		"Invalid partition count [" << l_i64PartitionCount << "] (expected value >= 0)",
 		OpenViBE::Kernel::ErrorType::BadSetting
 	);
 
@@ -120,7 +120,7 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 
 	OV_ERROR_UNLESS_KRF(
 		l_rStaticBoxContext.getInputCount() >= 2,
-		"Invalid input count " << l_rStaticBoxContext.getInputCount() << " (at least 2 input expected)",
+		"Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (at least 2 input expected)",
 		OpenViBE::Kernel::ErrorType::BadSetting
 	);
 
@@ -405,7 +405,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 				OV_ERROR_UNLESS_KRF(
 					this->train(l_rActualDataset, l_vFeaturePermutation, l_uiStartIndex, l_uiStopIndex),
 					"Training failed: bailing out (from xval)",
-					OpenViBE::Kernel::ErrorType::BadProcessing
+					OpenViBE::Kernel::ErrorType::Internal
 				);
 
 				l_f64PartitionAccuracy = this->getAccuracy(l_rActualDataset, l_vFeaturePermutation, l_uiStartIndex, l_uiStopIndex, l_oConfusion);
@@ -441,7 +441,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 		OV_ERROR_UNLESS_KRF(
 			this->train(l_rActualDataset, l_vFeaturePermutation, 0, 0),
 			"Training failed: bailing out (from whole set training)",
-			OpenViBE::Kernel::ErrorType::BadProcessing
+			OpenViBE::Kernel::ErrorType::Internal
 		);
 
 		OpenViBEToolkit::Tools::Matrix::clearContent(l_oConfusion);
@@ -496,7 +496,7 @@ boolean CBoxAlgorithmClassifierTrainer::train(const std::vector < SFeatureVector
 	OV_ERROR_UNLESS_KRF(
 		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train),
 		"Training failed",
-		OpenViBE::Kernel::ErrorType::BadProcessing
+		OpenViBE::Kernel::ErrorType::Internal
 	);
 
 	TParameterHandler < XML::IXMLNode* > op_pConfiguration(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
@@ -517,7 +517,7 @@ float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector < CBoxAlgo
 	const std::vector< size_t >& rPermutation, const size_t uiStartIndex, const size_t uiStopIndex, CMatrix& oConfusionMatrix)
 {
 	OV_ERROR_UNLESS_KRF(
-		uiStopIndex - uiStartIndex != 0,
+		uiStopIndex != uiStartIndex,
 		"Invalid indexes: start index equals stop index",
 		OpenViBE::Kernel::ErrorType::BadArgument
 	);
@@ -699,7 +699,7 @@ boolean CBoxAlgorithmClassifierTrainer::saveConfiguration(void)
 	if(!l_pHandler->writeXMLInFile(*l_sRoot, l_sConfigurationFilename.toASCIIString()))
 	{
 		cleanup();
-		OV_ERROR_KRF("Failed saving configuration to file [" << l_sConfigurationFilename, OpenViBE::Kernel::ErrorType::BadFileWrite);
+		OV_ERROR_KRF("Failed saving configuration to file [" << l_sConfigurationFilename << "]", OpenViBE::Kernel::ErrorType::BadFileWrite);
 	}
 
 	cleanup();
