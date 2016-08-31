@@ -154,13 +154,24 @@ boolean CAlgorithmClassifier::initializeExtraParameterMechanism()
 	m_pExtraParameter = (std::map<CString, CString>*) ip_pExtraParameter;
 
 	m_pAlgorithmProxy = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(this->getClassIdentifier()));
-	m_pAlgorithmProxy->initialize();
+
+	OV_ERROR_UNLESS_KRF(
+		m_pAlgorithmProxy->initialize(),
+		"Failed to initialize algorithm",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
+
 	return true;
 }
 
 boolean CAlgorithmClassifier::uninitializeExtraParameterMechanism()
 {
-	m_pAlgorithmProxy->uninitialize();
+	OV_ERROR_UNLESS_KRF(
+		m_pAlgorithmProxy->uninitialize(),
+		"Failed to uninitialize algorithm",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
+
 	this->getAlgorithmManager().releaseAlgorithm(*m_pAlgorithmProxy);
 
 	m_pAlgorithmProxy = NULL;

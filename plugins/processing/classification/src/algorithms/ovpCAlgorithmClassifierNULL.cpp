@@ -41,9 +41,9 @@ boolean CAlgorithmClassifierNULL::train(const IFeatureVectorSet& rFeatureVectorS
 	TParameterHandler < float64 > ip_f64Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
 	TParameterHandler < uint64 > ip_ui64Parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
 
-	this->getLogManager() << LogLevel_Warning << "Parameter 1 : " << ip_bParameter1 << "\n";
-	this->getLogManager() << LogLevel_Warning << "Parameter 2 : " << ip_f64Parameter2 << "\n";
-	this->getLogManager() << LogLevel_Warning << "Parameter 3 : " << ip_ui64Parameter3 << "\n";
+	OV_WARNING_K("Parameter 1 : " << ip_bParameter1 );
+	OV_WARNING_K("Parameter 2 : " << ip_f64Parameter2 );
+	OV_WARNING_K("Parameter 3 : " << ip_ui64Parameter3 );
 
 	return true;
 }

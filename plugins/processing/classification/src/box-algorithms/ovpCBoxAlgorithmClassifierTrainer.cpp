@@ -58,13 +58,13 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 
 	boolean l_bIsPairing=false;
 
-
 	CString l_sConfigurationFilename(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
-	if(l_sConfigurationFilename == CString(""))
-	{
-		this->getLogManager() << LogLevel_Error << "An output filename is required\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		l_sConfigurationFilename != CString(""),
+		"Invalid empty configuration filename",
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
 
 	CIdentifier l_oStrategyClassIdentifier, l_oClassifierAlgorithmClassIdentifier;
 
@@ -75,13 +75,12 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 	{
 		//That means that we want to use a classical algorithm so just let's create it
 		const CIdentifier l_oClassifierAlgorithmIdentifier = this->getAlgorithmManager().createAlgorithm(l_oClassifierAlgorithmClassIdentifier);
-		if(l_oClassifierAlgorithmIdentifier == OV_UndefinedIdentifier)
-		{
-			this->getLogManager() << LogLevel_Error << "Error instantiating classifier class with id "
-				<< l_oClassifierAlgorithmClassIdentifier
-				<< ". If you've loaded an old scenario or configuration file(s), make sure that the classifiers specified in it are still available.\n";
-			return false;
-		}
+
+		OV_ERROR_UNLESS_KRF(
+			l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
+			"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
+			OpenViBE::Kernel::ErrorType::BadConfig
+		);
 
 		m_pClassifier=&this->getAlgorithmManager().getAlgorithm(l_oClassifierAlgorithmIdentifier);
 		m_pClassifier->initialize();
@@ -95,11 +94,13 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 	m_ui64TrainStimulation = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation ,(*m_pParameter)[c_sTrainTriggerSettingName]);
 
 	int64 l_i64PartitionCount = this->getConfigurationManager().expandAsInteger((*m_pParameter)[c_sKFoldSettingName]);
-	if(l_i64PartitionCount<0)
-	{
-		this->getLogManager() << LogLevel_Error << "Partition count can not be less than 0 (was " << l_i64PartitionCount << ")\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		l_i64PartitionCount >= 0,
+		"Invalid partition count [" << l_i64PartitionCount << "] (expected value >= 0)",
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
+
 	m_ui64PartitionCount=uint64(l_i64PartitionCount);
 
 	m_oStimulationDecoder.initialize(*this,0);
@@ -117,12 +118,11 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 
 	m_vFeatureCount.clear();
 
-	if(l_rStaticBoxContext.getInputCount()<2)
-	{
-		// This shouldn't happen.
-		this->getLogManager() << LogLevel_Error << "Must have at least one feature input\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_rStaticBoxContext.getInputCount() >= 2,
+		"Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (at least 2 input expected)",
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
 
 	// Provide the number of classes to the classifier
 	const uint32 l_ui32ClassCount = l_rStaticBoxContext.getInputCount() - 1;
@@ -134,11 +134,12 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 	{
 		TParameterHandler < CIdentifier* > ip_oClassId(m_pClassifier->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
 		ip_oClassId = &l_oClassifierAlgorithmClassIdentifier;
-		if(!m_pClassifier->process(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture))
-		{
-			//This call can return false if there is no function to compare to classification register
-			return false;
-		}
+
+		OV_ERROR_UNLESS_KRF(
+			m_pClassifier->process(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture),
+			"Failed to design architecture",
+			OpenViBE::Kernel::ErrorType::Internal
+		);
 	}
 
 	return true;
@@ -286,7 +287,6 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 				{
 					l_bTrainStimulationReceived=true;
 
-					this->getLogManager() << LogLevel_Trace << "Raising train-completed Flag.\n";
 					uint64 l_ui32TrainCompletedStimulation = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation,"OVTK_StimulationId_TrainCompleted");
 					l_oOutputStimulationSet->appendStimulation(l_ui32TrainCompletedStimulation, l_oInputStimulationSet->getStimulationDate(j), 0);
 				}
@@ -336,123 +336,126 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 	// On train stimulation reception, build up the labelled feature vector set matrix and go on training
 	if(l_bTrainStimulationReceived)
 	{
-		if(m_vDataset.size()<m_ui64PartitionCount)
+		OV_ERROR_UNLESS_KRF(
+			m_vDataset.size() >= m_ui64PartitionCount,
+			"Received fewer examples (" << static_cast<uint32>(m_vDataset.size()) << ") than specified partition count (" << m_ui64PartitionCount << ")",
+			OpenViBE::Kernel::ErrorType::BadInput
+		);
+
+		OV_ERROR_UNLESS_KRF(
+			!m_vDataset.empty(),
+			"No training example received",
+			OpenViBE::Kernel::ErrorType::BadInput
+		);
+
+		this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << (uint32) m_vDataset.size() << "x"
+			<< m_vDataset[0].m_pFeatureVectorMatrix->getBufferElementCount() << "]\n";
+		for(i=1; i<l_rStaticBoxContext.getInputCount(); i++)
 		{
-			this->getLogManager() << LogLevel_Error << "Fewer examples (" << (uint32)m_vDataset.size() << ") than the specified partition count (" << m_ui64PartitionCount << ").\n";
-			return false;
+			this->getLogManager() << LogLevel_Info << "For information, we have " << m_vFeatureCount[i] << " feature vector(s) for input " << i << "\n";
 		}
-		if(m_vDataset.empty())
+
+		const boolean l_bBalanceDataset = this->getConfigurationManager().expandAsBoolean((*m_pParameter)[c_sBalanceSettingName]);
+		if(l_bBalanceDataset)
 		{
-			this->getLogManager() << LogLevel_Warning << "Received train stimulation but no training examples received\n";
+			balanceDataset();
+		}
+
+		const std::vector < SFeatureVector >& l_rActualDataset = (l_bBalanceDataset ? m_vBalancedDataset : m_vDataset);
+
+		vector<float64> l_vPartitionAccuracies((unsigned int)m_ui64PartitionCount);
+
+		const bool l_bRandomizeVectorOrder = this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_RandomizeKFoldTestData}", false);
+
+		// create a vector used for mapping feature vectors (initialize it as v[i] = i)
+		std::vector < size_t > l_vFeaturePermutation;
+		for (size_t i = 0; i < l_rActualDataset.size(); i++)
+		{
+			l_vFeaturePermutation.push_back(i);
+		}
+
+		// randomize the vector if necessary
+		if (l_bRandomizeVectorOrder)
+		{
+			this->getLogManager() << LogLevel_Info << "Randomizing the feature vector set\n";
+			random_shuffle(l_vFeaturePermutation.begin(), l_vFeaturePermutation.end(), System::Math::randomUInteger32WithCeiling);
+		}
+
+		const uint32 l_ui32ClassCount = l_rStaticBoxContext.getInputCount() - 1;
+		CMatrix l_oConfusion;
+		l_oConfusion.setDimensionCount(2);
+		l_oConfusion.setDimensionSize(0, l_ui32ClassCount);
+		l_oConfusion.setDimensionSize(1, l_ui32ClassCount);
+
+		if(m_ui64PartitionCount>=2)
+		{
+			float64 l_f64PartitionAccuracy=0;
+			float64 l_f64FinalAccuracy=0;
+
+			OpenViBEToolkit::Tools::Matrix::clearContent(l_oConfusion);
+
+			this->getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
+			for(uint64 i=0; i<m_ui64PartitionCount; i++)
+			{
+				const size_t l_uiStartIndex=(size_t)(((i  )*l_rActualDataset.size())/m_ui64PartitionCount);
+				const size_t l_uiStopIndex =(size_t)(((i+1)*l_rActualDataset.size())/m_ui64PartitionCount);
+
+				this->getLogManager() << LogLevel_Trace << "Training on partition " << i << " (feature vectors " << (uint32)l_uiStartIndex << " to " << (uint32)l_uiStopIndex-1 << ")...\n";
+
+				OV_ERROR_UNLESS_KRF(
+					this->train(l_rActualDataset, l_vFeaturePermutation, l_uiStartIndex, l_uiStopIndex),
+					"Training failed: bailing out (from xval)",
+					OpenViBE::Kernel::ErrorType::Internal
+				);
+
+				l_f64PartitionAccuracy = this->getAccuracy(l_rActualDataset, l_vFeaturePermutation, l_uiStartIndex, l_uiStopIndex, l_oConfusion);
+				l_vPartitionAccuracies[(unsigned int)i]=l_f64PartitionAccuracy;
+				l_f64FinalAccuracy+=l_f64PartitionAccuracy;
+
+				this->getLogManager() << LogLevel_Info << "Finished with partition " << i+1 << " / " << m_ui64PartitionCount << " (performance : " << l_f64PartitionAccuracy << "%)\n";
+			}
+
+			const float64 l_fMean = l_f64FinalAccuracy/m_ui64PartitionCount;
+			float64 l_fDeviation = 0;
+
+			for (uint64 i = 0; i < m_ui64PartitionCount; i++)
+			{
+				const float64 l_fDiff = l_vPartitionAccuracies[(unsigned int)i] - l_fMean;
+				l_fDeviation += l_fDiff * l_fDiff;
+			}
+			l_fDeviation = sqrt( l_fDeviation / m_ui64PartitionCount );
+
+			this->getLogManager() << LogLevel_Info << "Cross-validation test accuracy is " << l_fMean << "% (sigma = " << l_fDeviation << "%)\n";
+
+			printConfusionMatrix(l_oConfusion);
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << (uint32) m_vDataset.size() << "x"
-				<< m_vDataset[0].m_pFeatureVectorMatrix->getBufferElementCount() << "]\n";
-			for(i=1; i<l_rStaticBoxContext.getInputCount(); i++)
-			{
-				this->getLogManager() << LogLevel_Info << "For information, we have " << m_vFeatureCount[i] << " feature vector(s) for input " << i << "\n";
-			}
-
-			const boolean l_bBalanceDataset = this->getConfigurationManager().expandAsBoolean((*m_pParameter)[c_sBalanceSettingName]);
-			if(l_bBalanceDataset)
-			{
-				balanceDataset();
-			}
-
-			const std::vector < SFeatureVector >& l_rActualDataset = (l_bBalanceDataset ? m_vBalancedDataset : m_vDataset);
-
-			vector<float64> l_vPartitionAccuracies((unsigned int)m_ui64PartitionCount);
-
-			const bool l_bRandomizeVectorOrder = this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_RandomizeKFoldTestData}", false);
-
-			// create a vector used for mapping feature vectors (initialize it as v[i] = i)
-			std::vector < size_t > l_vFeaturePermutation;
-			for (size_t i = 0; i < l_rActualDataset.size(); i++)
-			{
-				l_vFeaturePermutation.push_back(i);
-			}
-
-			// randomize the vector if necessary
-			if (l_bRandomizeVectorOrder)
-			{
-				this->getLogManager() << LogLevel_Info << "Randomizing the feature vector set\n";
-				random_shuffle(l_vFeaturePermutation.begin(), l_vFeaturePermutation.end(), System::Math::randomUInteger32WithCeiling);
-			}
-
-			const uint32 l_ui32ClassCount = l_rStaticBoxContext.getInputCount() - 1;
-			CMatrix l_oConfusion;
-			l_oConfusion.setDimensionCount(2);
-			l_oConfusion.setDimensionSize(0, l_ui32ClassCount);
-			l_oConfusion.setDimensionSize(1, l_ui32ClassCount);
-
-			if(m_ui64PartitionCount>=2)
-			{
-				float64 l_f64PartitionAccuracy=0;
-				float64 l_f64FinalAccuracy=0;
-
-				OpenViBEToolkit::Tools::Matrix::clearContent(l_oConfusion);
-
-				this->getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
-				for(uint64 i=0; i<m_ui64PartitionCount; i++)
-				{
-					const size_t l_uiStartIndex=(size_t)(((i  )*l_rActualDataset.size())/m_ui64PartitionCount);
-					const size_t l_uiStopIndex =(size_t)(((i+1)*l_rActualDataset.size())/m_ui64PartitionCount);
-
-					this->getLogManager() << LogLevel_Trace << "Training on partition " << i << " (feature vectors " << (uint32)l_uiStartIndex << " to " << (uint32)l_uiStopIndex-1 << ")...\n";
-					if(this->train(l_rActualDataset, l_vFeaturePermutation, l_uiStartIndex, l_uiStopIndex))
-					{
-						l_f64PartitionAccuracy = this->getAccuracy(l_rActualDataset, l_vFeaturePermutation, l_uiStartIndex, l_uiStopIndex, l_oConfusion);
-						l_vPartitionAccuracies[(unsigned int)i]=l_f64PartitionAccuracy;
-						l_f64FinalAccuracy+=l_f64PartitionAccuracy;
-					} else {
-						this->getLogManager() << LogLevel_Error << "Bailing out (from xval)...\n";
-						return false;
-					}
-					this->getLogManager() << LogLevel_Info << "Finished with partition " << i+1 << " / " << m_ui64PartitionCount << " (performance : " << l_f64PartitionAccuracy << "%)\n";
-				}
-
-				const float64 l_fMean = l_f64FinalAccuracy/m_ui64PartitionCount;
-				float64 l_fDeviation = 0;
-
-				for (uint64 i = 0; i < m_ui64PartitionCount; i++)
-				{
-					const float64 l_fDiff = l_vPartitionAccuracies[(unsigned int)i] - l_fMean;
-					l_fDeviation += l_fDiff * l_fDiff;
-				}
-				l_fDeviation = sqrt( l_fDeviation / m_ui64PartitionCount );
-
-				this->getLogManager() << LogLevel_Info << "Cross-validation test accuracy is " << l_fMean << "% (sigma = " << l_fDeviation << "%)\n";
-
-				printConfusionMatrix(l_oConfusion);
-			}
-			else
-			{
-				this->getLogManager() << LogLevel_Info << "Training without cross-validation.\n";
-				this->getLogManager() << LogLevel_Info << "*** Reported training set accuracy will be optimistic ***\n";
-			}
-
-
-			this->getLogManager() << LogLevel_Trace << "Training final classifier on the whole set...\n";
-			if(!this->train(l_rActualDataset, l_vFeaturePermutation, 0, 0))
-			{
-				this->getLogManager() << LogLevel_Error << "Bailing out (from whole set training)...\n";
-				return false;
-			}
-
-
-			OpenViBEToolkit::Tools::Matrix::clearContent(l_oConfusion);
-			const float64 l_f64TrainAccuracy = this->getAccuracy(l_rActualDataset, l_vFeaturePermutation, 0, l_rActualDataset.size(), l_oConfusion);
-
-			this->getLogManager() << LogLevel_Info << "Training set accuracy is " << l_f64TrainAccuracy << "% (optimistic)\n";
-
-			printConfusionMatrix(l_oConfusion);
-			if(!this->saveConfiguration())
-			{
-				this->getLogManager() << LogLevel_Error << "Error saving classifier\n";
-				return false;
-			}
+			this->getLogManager() << LogLevel_Info << "Training without cross-validation.\n";
+			this->getLogManager() << LogLevel_Info << "*** Reported training set accuracy will be optimistic ***\n";
 		}
+
+
+		this->getLogManager() << LogLevel_Trace << "Training final classifier on the whole set...\n";
+
+		OV_ERROR_UNLESS_KRF(
+			this->train(l_rActualDataset, l_vFeaturePermutation, 0, 0),
+			"Training failed: bailing out (from whole set training)",
+			OpenViBE::Kernel::ErrorType::Internal
+		);
+
+		OpenViBEToolkit::Tools::Matrix::clearContent(l_oConfusion);
+		const float64 l_f64TrainAccuracy = this->getAccuracy(l_rActualDataset, l_vFeaturePermutation, 0, l_rActualDataset.size(), l_oConfusion);
+
+		this->getLogManager() << LogLevel_Info << "Training set accuracy is " << l_f64TrainAccuracy << "% (optimistic)\n";
+
+		printConfusionMatrix(l_oConfusion);
+
+		OV_ERROR_UNLESS_KRF(
+			this->saveConfiguration(),
+			"Failed to save configuration",
+			OpenViBE::Kernel::ErrorType::Internal
+		);
 	}
 
 	return true;
@@ -461,11 +464,11 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 boolean CBoxAlgorithmClassifierTrainer::train(const std::vector < SFeatureVector >& rDataset,
 	const std::vector< size_t >& rPermutation, const size_t uiStartIndex, const size_t uiStopIndex)
 {
-	if(uiStopIndex-uiStartIndex==1)
-	{
-		this->getLogManager() << LogLevel_Error << "stopIndex-trainIndex=1\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		uiStopIndex - uiStartIndex != 1,
+		"Invalid indexes: stopIndex - trainIndex = 1",
+		OpenViBE::Kernel::ErrorType::BadArgument
+	);
 
 	const uint32 l_ui32FeatureVectorCount=rDataset.size()-(uiStopIndex-uiStartIndex);
 	const uint32 l_ui32FeatureVectorSize=rDataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
@@ -490,11 +493,11 @@ boolean CBoxAlgorithmClassifierTrainer::train(const std::vector < SFeatureVector
 		l_pFeatureVectorSetBuffer+=(l_ui32FeatureVectorSize+1);
 	}
 
-	if(m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train) == false)
-	{
-		this->getLogManager() << LogLevel_Error << "Training failed.\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train),
+		"Training failed",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
 
 	TParameterHandler < XML::IXMLNode* > op_pConfiguration(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
 	XML::IXMLNode *l_pTempNode = (XML::IXMLNode*)op_pConfiguration;
@@ -513,11 +516,11 @@ boolean CBoxAlgorithmClassifierTrainer::train(const std::vector < SFeatureVector
 float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector < CBoxAlgorithmClassifierTrainer::SFeatureVector >& rDataset,
 	const std::vector< size_t >& rPermutation, const size_t uiStartIndex, const size_t uiStopIndex, CMatrix& oConfusionMatrix)
 {
-	if(uiStopIndex-uiStartIndex==0)
-	{
-		this->getLogManager() << LogLevel_Error << "Start and stop indexes are the same (" << static_cast<uint64>(uiStartIndex) << ")\n";
-		return 0;
-	}
+	OV_ERROR_UNLESS_KRF(
+		uiStopIndex != uiStartIndex,
+		"Invalid indexes: start index equals stop index",
+		OpenViBE::Kernel::ErrorType::BadArgument
+	);
 
 	const uint32 l_ui32FeatureVectorSize=rDataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
 
@@ -577,12 +580,12 @@ float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector < CBoxAlgo
 
 boolean CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix)
 {
-	if(oMatrix.getDimensionCount() != 2 ||
-		oMatrix.getDimensionSize(0) != oMatrix.getDimensionSize(1))
-	{
-		this->getLogManager() << LogLevel_Warning << "Confusion matrix has unusual size, not printing\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		oMatrix.getDimensionCount() == 2 && oMatrix.getDimensionSize(0) == oMatrix.getDimensionSize(1),
+		"Invalid confution matrix [dim count = " << oMatrix.getDimensionCount() << ", dim size 0 = "
+		<< oMatrix.getDimensionSize(0) << ", dim size 1 = "<< oMatrix.getDimensionSize(1) << "] (expected 2 dimensions with same size)",
+		OpenViBE::Kernel::ErrorType::BadArgument
+	);
 
 	const uint32 l_ui32Rows = oMatrix.getDimensionSize(0);
 
@@ -650,6 +653,12 @@ boolean CBoxAlgorithmClassifierTrainer::saveConfiguration(void)
 	l_sVersion << OVP_Classification_BoxTrainerFormatVersion;
 	l_sRoot->addAttribute(c_sFormatVersionAttributeName, l_sVersion.str().c_str());
 
+	auto cleanup = [&](){
+		l_pHandler->release();
+		l_sRoot->release();
+		op_pConfiguration=NULL;
+	};
+
 	l_sRoot->addAttribute(c_sCreatorAttributeName, OV_PROJECT_NAME);
 
 	std::stringstream l_sCreatorVersion;
@@ -686,16 +695,13 @@ boolean CBoxAlgorithmClassifierTrainer::saveConfiguration(void)
 	l_sRoot->addChild(l_pStimulationsNode);
 
 	l_sRoot->addChild(l_pAlgorithmConfigurationNode);
-	//std::cout << l_sRoot->getXML() << std::endl;
+
 	if(!l_pHandler->writeXMLInFile(*l_sRoot, l_sConfigurationFilename.toASCIIString()))
 	{
-		this->getLogManager() << LogLevel_Error << "Could not save configuration to file [" << l_sConfigurationFilename << "]\n";
-		return false;
+		cleanup();
+		OV_ERROR_KRF("Failed saving configuration to file [" << l_sConfigurationFilename << "]", OpenViBE::Kernel::ErrorType::BadFileWrite);
 	}
 
-
-	l_pHandler->release();
-	l_sRoot->release();
-	op_pConfiguration=NULL;
+	cleanup();
 	return true;
 }

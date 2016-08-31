@@ -25,110 +25,118 @@ boolean CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	XML::IXMLHandler *l_pHandler = XML::createXMLHandler();
 	XML::IXMLNode *l_pRootNode = l_pHandler->parseFile(sFilename);
 
-	if(!l_pRootNode) 
-	{
-		this->getLogManager() << LogLevel_Error << "Unable to get root node from [" << sFilename << "]\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_pRootNode,
+		"Unable to get xml root node from file at " << sFilename,
+		OpenViBE::Kernel::ErrorType::BadParsing
+	);
 
 	m_vStimulation.clear();
 
 	// Check the version of the file
+	OV_ERROR_UNLESS_KRF(
+		l_pRootNode->hasAttribute(c_sFormatVersionAttributeName),
+		"Configuration file [" << sFilename << "] has no version information",
+		OpenViBE::Kernel::ErrorType::ResourceNotFound
+	);
+
 	string l_sVersion;
-	if(l_pRootNode->hasAttribute(c_sFormatVersionAttributeName))
-	{
-		l_sVersion = l_pRootNode->getAttribute(c_sFormatVersionAttributeName);
-		std::stringstream l_sData(l_sVersion);
-		uint32 l_ui32Version;
-		l_sData >> l_ui32Version;
-		if(l_ui32Version > OVP_Classification_BoxTrainerFormatVersion)
-		{
-			this->getLogManager() << LogLevel_Warning << "The classifier configuration in [" << sFilename << "] was saved using a newer version of OpenViBE. Problems may occur.\n";
-		}
-		else if(l_ui32Version < OVP_Classification_BoxTrainerFormatVersionRequired)
-		{
-			this->getLogManager() << LogLevel_Error << "The classifier configuration in [" << sFilename << "] has XML version " << l_ui32Version << " but version " << OVP_Classification_BoxTrainerFormatVersionRequired
-				<< " is required. Please retrain the classifier using your current OpenViBE version.\n";
-			return false;
-		}
-	}
-	else
-	{
-		this->getLogManager() << LogLevel_Error << "The configuration file [" << sFilename << "] has no version information. Please retrain your classifier using your current OpenViBE version.\n";
-		return false;
-	}
+
+	l_sVersion = l_pRootNode->getAttribute(c_sFormatVersionAttributeName);
+	std::stringstream l_sData(l_sVersion);
+	uint32 l_ui32Version;
+	l_sData >> l_ui32Version;
+
+	OV_WARNING_UNLESS_K(
+		l_ui32Version <= OVP_Classification_BoxTrainerFormatVersion,
+		"Classifier configuration in [" << sFilename << "] saved using a newer version: saved version = [" << l_ui32Version
+		<< "] vs current version = [" << OVP_Classification_BoxTrainerFormatVersion << "]"
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		l_ui32Version >= OVP_Classification_BoxTrainerFormatVersionRequired,
+		"Classifier configuration in [" << sFilename << "] saved using an obsolete version [" << l_ui32Version
+		<< "] (minimum expected version = " << OVP_Classification_BoxTrainerFormatVersionRequired << ")",
+		OpenViBE::Kernel::ErrorType::BadVersion
+	);
 
 	CIdentifier l_oAlgorithmClassIdentifier = OV_UndefinedIdentifier;
 
 	XML::IXMLNode * l_pTempNode = l_pRootNode->getChildByName(c_sStrategyNodeName);
-	if(l_pTempNode) {
-		l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(c_sIdentifierAttributeName));
-	} else {
-		this->getLogManager() << LogLevel_Warning << "The configuration file had no node [" << c_sStrategyNodeName << "]. Trouble may appear later.\n";
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		l_pTempNode,
+		"Configuration file [" << sFilename << "] has no node " << c_sStrategyNodeName,
+		OpenViBE::Kernel::ErrorType::BadParsing
+	);
+
+	l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(c_sIdentifierAttributeName));
 
 	//If the Identifier is undefined, that means we need to load a native algorithm
 	if(l_oAlgorithmClassIdentifier == OV_UndefinedIdentifier){
-		this->getLogManager() << LogLevel_Trace << "Using Native algorithm\n";
+
 		l_pTempNode = l_pRootNode->getChildByName(c_sAlgorithmNodeName);
-		if(l_pTempNode)
-		{
-			l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(c_sIdentifierAttributeName));
-		}
-		else
-		{
-			this->getLogManager() << LogLevel_Warning << "The configuration file had no node [" << c_sAlgorithmNodeName << "]. Trouble may appear later.\n";
-		}
+
+		OV_ERROR_UNLESS_KRF(
+			l_pTempNode,
+			"Configuration file [" << sFilename << "] has no node " << c_sAlgorithmNodeName,
+			OpenViBE::Kernel::ErrorType::BadParsing
+		);
+
+		l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(c_sIdentifierAttributeName));
 
 		//If the algorithm is still unknown, that means that we face an error
-		if(l_oAlgorithmClassIdentifier==OV_UndefinedIdentifier)
-		{
-			this->getLogManager() << LogLevel_Error << "Couldn't restore a classifier from the file [" << sFilename << "].\n";
-			return false;
-		}
+		OV_ERROR_UNLESS_KRF(
+			l_oAlgorithmClassIdentifier != OV_UndefinedIdentifier,
+			"No classifier retrieved from configuration file [" << sFilename << "]",
+			OpenViBE::Kernel::ErrorType::BadConfig
+		);
 	}
 
 	//Now loading all stimulations output
 	XML::IXMLNode *l_pStimulationsNode = l_pRootNode->getChildByName(c_sStimulationsNodeName);
-	if(l_pStimulationsNode)
-	{
-		//Now load every stimulation and store them in the map with the right class id
-		for(uint32 i=0; i < l_pStimulationsNode->getChildCount(); i++)
-		{
-			l_pTempNode = l_pStimulationsNode->getChild(i);
-			if(!l_pTempNode)
-			{
-				this->getLogManager() << LogLevel_Error << "Expected child node " << i << " for node [" << c_sStimulationsNodeName << "]. Output labels not known. Aborting.\n";
-				return false;
-			}
-			CString l_sStimulationName(l_pTempNode->getPCData());
 
-			OpenViBE::float64 l_f64ClassId;
-			const char *l_sAttributeData = l_pTempNode->getAttribute(c_sIdentifierAttributeName);
-			if(!l_sAttributeData) 
-			{
-				this->getLogManager() << LogLevel_Error << "Expected child node " << i << " for node [" << c_sStimulationsNodeName << "] to have attribute [" << c_sIdentifierAttributeName <<  "]. Aborting.\n";
-				return false;
-			}
+	OV_ERROR_UNLESS_KRF(
+		l_pStimulationsNode,
+		"Configuration file [" << sFilename << "] has no node " << c_sStimulationsNodeName,
+		OpenViBE::Kernel::ErrorType::BadParsing
+	);
 
-			std::stringstream l_sIdentifierData(l_sAttributeData);
-			l_sIdentifierData >> l_f64ClassId ;
-			m_vStimulation[l_f64ClassId]=this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, l_sStimulationName);
-		}
-	}
-	else
+	//Now load every stimulation and store them in the map with the right class id
+	for(uint32 i=0; i < l_pStimulationsNode->getChildCount(); i++)
 	{
-		this->getLogManager() << LogLevel_Warning << "The configuration file had no node " << c_sStimulationsNodeName << ". Trouble may appear later.\n";
+		l_pTempNode = l_pStimulationsNode->getChild(i);
+
+		OV_ERROR_UNLESS_KRF(
+			l_pTempNode,
+			"Invalid NULL child node " << i << " for node [" << c_sStimulationsNodeName << "]",
+			OpenViBE::Kernel::ErrorType::BadParsing
+		);
+
+		CString l_sStimulationName(l_pTempNode->getPCData());
+
+		OpenViBE::float64 l_f64ClassId;
+		const char *l_sAttributeData = l_pTempNode->getAttribute(c_sIdentifierAttributeName);
+
+		OV_ERROR_UNLESS_KRF(
+			l_sAttributeData,
+			"Invalid child node " << i << " for node [" << c_sStimulationsNodeName << "]: attribute [" << c_sIdentifierAttributeName << "] not found",
+			OpenViBE::Kernel::ErrorType::BadParsing
+		);
+
+		std::stringstream l_sIdentifierData(l_sAttributeData);
+		l_sIdentifierData >> l_f64ClassId ;
+		m_vStimulation[l_f64ClassId]=this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, l_sStimulationName);
 	}
 
 	const CIdentifier l_oClassifierAlgorithmIdentifier = this->getAlgorithmManager().createAlgorithm(l_oAlgorithmClassIdentifier);
-	if(l_oClassifierAlgorithmIdentifier == OV_UndefinedIdentifier)
-	{
-		this->getLogManager() << LogLevel_Error << "Error instantiating classifier class with id " 
-			<< l_oAlgorithmClassIdentifier
-			<< ". If you've loaded an old scenario or configuration file(s), make sure that the classifiers specified in it are still available.\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
+		"Invalid classifier algorithm with id [" << l_oAlgorithmClassIdentifier.toString() << "] in configuration file [" << sFilename << "]",
+		OpenViBE::Kernel::ErrorType::BadConfig
+	);
+
 	m_pClassifier=&this->getAlgorithmManager().getAlgorithm(l_oClassifierAlgorithmIdentifier);
 	m_pClassifier->initialize();
 
@@ -143,10 +151,12 @@ boolean CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 	TParameterHandler < XML::IXMLNode* > ip_pClassificationConfiguration(m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
 	ip_pClassificationConfiguration = l_pRootNode->getChildByName(c_sClassifierRoot)->getChild(0);
-	if(!m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration)){
-		this->getLogManager() << LogLevel_Error << "Subclassifier failed to load config\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
+		"Loading configuration failed for subclassifier [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
+		OpenViBE::Kernel::ErrorType::Internal
+	);
 
 	l_pRootNode->release();
 	l_pHandler->release();
@@ -161,11 +171,11 @@ boolean CBoxAlgorithmClassifierProcessor::initialize(void)
 	//First of all, let's get the XML file for configuration
 	CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-	if(l_sConfigurationFilename == CString("")) 
-	{
-		this->getLogManager() << LogLevel_Error << "You need to specify a classifier .xml for the box (use Classifier Trainer to create one)\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_sConfigurationFilename != CString(""),
+		"Invalid empty configuration file name",
+		OpenViBE::Kernel::ErrorType::BadConfig
+	);
 
 	m_oFeatureVectorDecoder.initialize(*this,0);
 	m_oStimulationDecoder.initialize(*this, 1);
@@ -174,12 +184,7 @@ boolean CBoxAlgorithmClassifierProcessor::initialize(void)
 	m_oHyperplaneValuesEncoder.initialize(*this, 1);
 	m_oProbabilityValuesEncoder.initialize(*this, 2);
 
-	if(!loadClassifier(l_sConfigurationFilename.toASCIIString()))
-	{
-		return false;
-	}
-
-	return true;
+	return loadClassifier(l_sConfigurationFilename.toASCIIString());
 }
 
 boolean CBoxAlgorithmClassifierProcessor::uninitialize(void)
@@ -226,14 +231,12 @@ boolean CBoxAlgorithmClassifierProcessor::process(void)
 				if(m_oStimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(i) == OVTK_StimulationId_TrainCompleted)
 				{
 					const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-					
+
 					CString l_sConfigurationFilename;
 					l_rStaticBoxContext.getSettingValue(0, l_sConfigurationFilename);
 
-					this->getLogManager() << LogLevel_Trace << "Reloading classifier\n";
 					if(!loadClassifier(l_sConfigurationFilename.toASCIIString()))
 					{
-						this->getLogManager() << LogLevel_Error << "Error reloading classifier\n";
 						return false;
 					}
 				}
@@ -262,43 +265,31 @@ boolean CBoxAlgorithmClassifierProcessor::process(void)
 			l_rDynamicBoxContext.markOutputAsReadyToSend(2, l_ui64StartTime, l_ui64EndTime);
 		}
 		if(m_oFeatureVectorDecoder.isBufferReceived())
-		{	
-			if(m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify))
-			{
-				if (m_pClassifier->isOutputTriggerActive(OVTK_Algorithm_Classifier_OutputTriggerId_Success))
-				{
-					//this->getLogManager() << LogLevel_Warning << "---Classification successful---\n";
+		{
+			OV_ERROR_UNLESS_KRF(
+				m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify) &&
+				m_pClassifier->isOutputTriggerActive(OVTK_Algorithm_Classifier_OutputTriggerId_Success),
+				"Classification failed",
+				OpenViBE::Kernel::ErrorType::Internal
+			);
 
-					TParameterHandler < float64 > op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
+			TParameterHandler < float64 > op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 
-					IStimulationSet* l_pSet = m_oLabelsEncoder.getInputStimulationSet();
+			IStimulationSet* l_pSet = m_oLabelsEncoder.getInputStimulationSet();
 
-					l_pSet->setStimulationCount(1);
-					l_pSet->setStimulationIdentifier(0, m_vStimulation[op_f64ClassificationStateClass]);
-					l_pSet->setStimulationDate(0, l_ui64EndTime);
-					l_pSet->setStimulationDuration(0, 0);
+			l_pSet->setStimulationCount(1);
+			l_pSet->setStimulationIdentifier(0, m_vStimulation[op_f64ClassificationStateClass]);
+			l_pSet->setStimulationDate(0, l_ui64EndTime);
+			l_pSet->setStimulationDuration(0, 0);
 
-					m_oLabelsEncoder.encodeBuffer();
-					m_oHyperplaneValuesEncoder.encodeBuffer();
-					m_oProbabilityValuesEncoder.encodeBuffer();
+			m_oLabelsEncoder.encodeBuffer();
+			m_oHyperplaneValuesEncoder.encodeBuffer();
+			m_oProbabilityValuesEncoder.encodeBuffer();
 
-					l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
-					l_rDynamicBoxContext.markOutputAsReadyToSend(1, l_ui64StartTime, l_ui64EndTime);
-					l_rDynamicBoxContext.markOutputAsReadyToSend(2, l_ui64StartTime, l_ui64EndTime);
-
-				}
-				else
-				{
-					this->getLogManager() << LogLevel_Error << "Classification failed (success trigger not active).\n";
-					return false;
-				}
-			}
-			else
-			{
-				this->getLogManager() << LogLevel_Error << "Classification algorithm failed.\n";
-				return false;
-			}
-		}		
+			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
+			l_rDynamicBoxContext.markOutputAsReadyToSend(1, l_ui64StartTime, l_ui64EndTime);
+			l_rDynamicBoxContext.markOutputAsReadyToSend(2, l_ui64StartTime, l_ui64EndTime);
+		}
 
 		if(m_oFeatureVectorDecoder.isEndReceived())
 		{
@@ -312,8 +303,6 @@ boolean CBoxAlgorithmClassifierProcessor::process(void)
 		}
 
 	}
-
-
 
 	return true;
 }
