@@ -25,6 +25,8 @@ namespace OpenViBEPlugins
 		{
 		public:
 
+			CBoxAlgorithmRegularizedCSPTrainer(void);
+
 			virtual void release(void) { delete this; }
 
 			virtual OpenViBE::boolean initialize(void);
@@ -49,7 +51,6 @@ namespace OpenViBEPlugins
 			OpenViBE::CString m_sSpatialFilterConfigurationFilename;
 			OpenViBE::uint32 m_ui32FilterDimension;
 			OpenViBE::boolean m_bSaveAsBoxConf;
-			OpenViBE::boolean m_bHasBeenInitialized;
 
 			OpenViBE::float64 m_f64Tikhonov;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pIncrementalCov[2];
@@ -72,7 +73,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Filtering"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("0.5"); }
-			
+
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmRegularizedCSPTrainer; }
 
@@ -82,7 +83,7 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addInput  ("Stimulations",                 OV_TypeId_Stimulations);
 				rBoxAlgorithmPrototype.addInput  ("Signal condition 1",           OV_TypeId_Signal);
 				rBoxAlgorithmPrototype.addInput  ("Signal condition 2",           OV_TypeId_Signal);
-								
+
 				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
 				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
 
@@ -92,33 +93,12 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addSetting("Save filters as box config",   OV_TypeId_Boolean, "false");
 
 				// Params of the cov algorithm; would be better to poll the params from the algorithm, however this is not straightforward to do
-				rBoxAlgorithmPrototype.addSetting("Covariance update",            OVP_TypeId_OnlineCovariance_UpdateMethod, OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toString());   
-				rBoxAlgorithmPrototype.addSetting("Trace normalization",          OV_TypeId_Boolean, "false");   
+				rBoxAlgorithmPrototype.addSetting("Covariance update",            OVP_TypeId_OnlineCovariance_UpdateMethod, OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toString());
+				rBoxAlgorithmPrototype.addSetting("Trace normalization",          OV_TypeId_Boolean, "false");
 				rBoxAlgorithmPrototype.addSetting("Shrinkage coefficient",        OV_TypeId_Float,   "0.0");
 				rBoxAlgorithmPrototype.addSetting("Tikhonov coefficient",         OV_TypeId_Float,   "0.0");
 
 				rBoxAlgorithmPrototype.addOutput ("Train-completed Flag",         OV_TypeId_Stimulations);
-
-#if 0
-				// Pull params from the cov alg
-				this->
-				rBoxAlgorithmPrototype.
-				const CIdentifier l_oCovAlgId = ->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_OnlineCovariance);
-				if(l_oCovAlgId == OV_UndefinedIdentifier)
-				{
-					this->getLogManager() << LogLevel_Error << "Unable to create the online cov algorithm\n";
-					return false;
-				}
-
-				IAlgorithm:: &this->getAlgorithmManager().getAlgorithm(l_oCovAlgId);
-				m_pIncrementalCov[i]->initialize();
-
-				OpenViBE::CIdentifier l_oIdentifier = OV_UndefinedIdentifier;
-				while((l_oIdentifier=m_pClassifier->getNextInputParameterIdentifier(l_oIdentifier))!=OV_UndefinedIdentifier)
-#endif
-
-//				IAlgorithmProto proto;
-//				OpenViBEPlugins::SignalProcessing::CAlgorithmOnlineCovarianceDesc::getAlgorithmPrototype(proto);
 
 				return true;
 			}

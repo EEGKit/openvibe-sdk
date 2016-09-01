@@ -45,6 +45,7 @@ boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
 	std::vector < std::string > l_vSettingRange;
 	std::vector < std::string >::const_iterator it;
 	boolean l_bHadError = false;
+	CString l_sErrorMessage;
 	m_vSelected.clear();
 	for(it=l_vSetting.begin(); it!=l_vSetting.end(); ++it)
 	{
@@ -78,7 +79,7 @@ boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
 
 		if(!l_bGood)
 		{
-			this->getLogManager() << LogLevel_ImportantWarning << "Ignored invalid frequency band : " << CString(it->c_str()) << "\n";
+			l_sErrorMessage = CString("Invalid frequency band [") + it->c_str() + "]";
 			l_bHadError=true;
 		}
 	}
@@ -101,11 +102,11 @@ boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
 	ip_pMatrix=&m_oMatrix;
 	op_pMatrix=&m_oMatrix;
 
-	if(l_bHadError && m_vSelected.size()==0)
-	{
-		this->getLogManager() << LogLevel_ImportantWarning << "Unable to correctly parse the frequency band options.\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		!l_bHadError || !m_vSelected.empty(),
+		l_sErrorMessage,
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
 
 	return true;
 }

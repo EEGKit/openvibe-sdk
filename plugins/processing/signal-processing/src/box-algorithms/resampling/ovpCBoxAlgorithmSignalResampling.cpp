@@ -64,16 +64,17 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::initialize(void)
 	int64 l_i64OutputSamplingRate = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	int64 l_i64OutputSampleCount = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	if(l_i64OutputSamplingRate <= 0)
-	{
-		this->getLogManager() << LogLevel_Error << "Output sampling frequency can not be negative.\n";
-		return false;
-	}
-	if(l_i64OutputSampleCount <= 0)
-	{
-		this->getLogManager() << LogLevel_Error << "Sample count per buffer can not be negative.\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_i64OutputSamplingRate > 0,
+		"Invalid output sampling rate [" << l_i64OutputSamplingRate << "] (expected value > 0)",
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
+
+	OV_ERROR_UNLESS_KRF(
+		l_i64OutputSampleCount > 0,
+		"Invalid sample count per buffer [" << l_i64OutputSampleCount << "] (expected value > 0)",
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
 
 	m_ui32OutputSamplingRate = static_cast<uint32>(l_i64OutputSamplingRate);
 	m_ui32OutputSampleCount = static_cast<uint32>(l_i64OutputSampleCount);
@@ -120,11 +121,13 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 		if(m_oDecoder.isHeaderReceived())
 		{
 			m_ui32InputSamplingRate = static_cast<uint32>(m_oDecoder.getOutputSamplingRate());
-			if(m_ui32InputSamplingRate==0)
-			{
-				this->getLogManager() << LogLevel_Error << "Input sampling frequency is equal to 0. Plugin can not process.\n";
-				return false;
-			}
+
+			OV_ERROR_UNLESS_KRF(
+				m_ui32InputSamplingRate > 0,
+				"Invalid input sampling rate [" << m_ui32InputSamplingRate << "] (expected value > 0)",
+				OpenViBE::Kernel::ErrorType::BadInput
+			);
+
 			this->getLogManager() << LogLevel_Info << "Resampling from [" << m_ui32InputSamplingRate <<  "] Hz to [" << m_ui32OutputSamplingRate <<  "] Hz.\n";
 
 			float64 l_f64SRC = 1.0 * m_ui32OutputSamplingRate / m_ui32InputSamplingRate;
@@ -137,7 +140,7 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 			}
 			else
 			{
-				this->getLogManager() << LogLevel_Warning << "Sampling rate conversion [" << l_f64SRC << "] : upsampling by a factor of [" << l_ui32FactorUpsampling <<  "], low-pass filtering, and downsampling by a factor of [" << l_ui32FactorDownsampling << "].\n";
+				OV_WARNING_K("Sampling rate conversion [" << l_f64SRC << "] : upsampling by a factor of [" << l_ui32FactorUpsampling <<  "], low-pass filtering, and downsampling by a factor of [" << l_ui32FactorDownsampling << "]");
 			}
 
 			m_oResampler.setFractionalDelayFilterSampleCount(m_iFractionalDelayFilterSampleCount);
@@ -156,12 +159,12 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 			}
 			else if(0.5 < l_f32BuiltInLatency)
 			{
-				this->getLogManager() << LogLevel_Warning << "Latency induced by the resampling is [" << l_f32BuiltInLatency << "] s.\n";
+				OV_WARNING_K("Latency induced by the resampling is [" << l_f32BuiltInLatency << "] s.");
 			}
 
 			OpenViBEToolkit::Tools::Matrix::copyDescription(*l_pOutputMatrix, *l_pInputMatrix);
 			l_pOutputMatrix->setDimensionSize(1, m_ui32OutputSampleCount);
-			
+
 			m_ui64TotalOutputSampleCount = 0;
 
 			m_oEncoder.encodeHeader();
@@ -192,7 +195,7 @@ void CBoxAlgorithmSignalResampling::processResampler(const float64* pSample, siz
 {
 	float64* l_pBuffer = m_oEncoder.getInputMatrix()->getBuffer();
 	uint64 l_ui64OutputSampleIndex = m_ui64TotalOutputSampleCount%m_ui32OutputSampleCount;
-	
+
 	for(uint32 j=0; j<ui32ChannelCount; j++)
 	{
 		l_pBuffer[j*m_ui32OutputSampleCount + l_ui64OutputSampleIndex] = pSample[j];

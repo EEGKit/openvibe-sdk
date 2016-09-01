@@ -54,11 +54,13 @@ namespace OpenViBEPlugins
 				}
 				else
 				{
-					this->getLogManager() << OpenViBE::Kernel::LogLevel_Error << "Supported types are Signal, Spectrum and Streamed Matrix, change refused.\n";
-
 					rBox.getInputType(0, l_oTypeIdentifier);
 					rBox.setOutputType(0, l_oTypeIdentifier);
-					return false;
+
+					OV_ERROR_KRF(
+						"Invalid output type [" << l_oTypeIdentifier.toString() << "] (expected Signal, Spectrum or Streamed Matrix)",
+						OpenViBE::Kernel::ErrorType::BadOutput
+					);
 				}
 				return true;
 			}
@@ -75,11 +77,13 @@ namespace OpenViBEPlugins
 				}
 				else
 				{
-					this->getLogManager() << OpenViBE::Kernel::LogLevel_Error << "Supported types are Signal, Spectrum and Streamed Matrix, change refused.\n";
-
 					rBox.getOutputType(0, l_oTypeIdentifier);
 					rBox.setInputType(0, l_oTypeIdentifier);
-					return false;
+
+					OV_ERROR_KRF(
+						"Invalid input type [" << l_oTypeIdentifier.toString() << "] (expected Signal, Spectrum or Streamed Matrix)",
+						OpenViBE::Kernel::ErrorType::BadInput
+					);
 				}
 			}
 
@@ -95,7 +99,7 @@ namespace OpenViBEPlugins
 					OpenViBE::CIdentifier l_oSelectionEnumIdentifier;
 					rBox.getSettingValue(1, l_sSelectionMethod);
 					rBox.getSettingType(1, l_oSelectionEnumIdentifier);
-				
+
 					const OpenViBE::CIdentifier l_oSelectionMethodIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(l_oSelectionEnumIdentifier, l_sSelectionMethod);
 
 					if(l_oSelectionMethodIdentifier==OVP_TypeId_SelectionMethod_Reject)
@@ -146,7 +150,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Selection can be based on channel name (case-sensitive) or index starting from 0"); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Channels"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			
+
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_ChannelSelector; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmChannelSelector; }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmChannelSelectorListener; }

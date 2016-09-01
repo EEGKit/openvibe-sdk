@@ -200,16 +200,16 @@ while (0)
 #define OV_ERROR_KRF(description, type) OV_ERROR(description, type, false, this->getErrorManager(), this->getLogManager())
 
 /**
- * \def OV_ERROR_KRO(description, type)
+ * \def OV_ERROR_KRZ(description, type)
  * \see OV_ERROR(description, type, returnValue, errorManager, logManager)
  *
  * Shorthand for error macro that returns zero and launched by objects
  * that have direct access to kernel logger and error managers through this->getLogManager()
  * and this->getErrorManager().
  *
- * Suffix KRO stands for Kernel Return 0.
+ * Suffix KRZ stands for Kernel Return Zero.
  */
-#define OV_ERROR_KRO(description, type) OV_ERROR(description, type, 0, this->getErrorManager(), this->getLogManager())
+#define OV_ERROR_KRZ(description, type) OV_ERROR(description, type, 0, this->getErrorManager(), this->getLogManager())
 
 /**
  * \def OV_ERROR_KRO(description, type)

@@ -21,11 +21,8 @@ typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor
 
 OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CString &rCoefficients, const char c1, const char c2, uint32 nRows, uint32 nCols)
 {
-	this->getLogManager() << LogLevel_Trace << "Parsing coefficients matrix\n";
-
 	// Count the number of entries
 	// @Note To avoid doing a ton of subsequent memory allocations (very slow on Windows debug builds), we first count the number of entries in the vector. If the file format had specified the vector dimension, we wouldn't have to do this step.
-	this->getLogManager() << LogLevel_Trace << "Counting the number of coefficients\n";
 	uint32 l_u32count = 0;
 	const char *l_sPtr = rCoefficients.toASCIIString();
 	while(*l_sPtr!=0)
@@ -48,12 +45,11 @@ OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CS
 		}
 	}
 
-	if(l_u32count != nRows*nCols ) {
-		this->getLogManager() << LogLevel_Error << "Number of coefficients expected ("
-			<< nRows * nCols << ") did not match the number counted ("
-			<< l_u32count << ")\n";
-		return 0;
-	}
+	OV_ERROR_UNLESS_KRZ(
+		l_u32count == nRows*nCols,
+		"Invalid computed coefficients count [" << l_u32count << "] (expected " << nRows * nCols << " coefficients)",
+		OpenViBE::Kernel::ErrorType::BadProcessing
+	);
 
 	// Resize in one step for efficiency.
 	m_oFilterBank.setDimensionCount(2);
@@ -63,7 +59,6 @@ OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CS
 	float64* l_pFilter = m_oFilterBank.getBuffer();
 
 	// Ok, convert to floats
-	this->getLogManager() << LogLevel_Trace << "Converting the coefficients to a float vector\n";
 	l_sPtr = rCoefficients.toASCIIString();
 	uint32 l_ui32currentIdx = 0;
 	while(*l_sPtr!=0)
@@ -94,10 +89,11 @@ OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CS
 		}
 		l_sBuffer[i]=0;
 
-		if(l_ui32currentIdx >= l_u32count) {
-			this->getLogManager() << LogLevel_Error << "Parsed coefficient number exceeds what we counted before, shouldn't happen\n";
-			return 0;
-		}
+		OV_ERROR_UNLESS_KRZ(
+			l_ui32currentIdx < l_u32count,
+			"Invalid parsed coefficient number [" << l_ui32currentIdx << "] (expected maximium " << l_u32count << " coefficients)",
+			OpenViBE::Kernel::ErrorType::BadProcessing
+		);
 
 		// Finally, convert
 		try
@@ -109,9 +105,10 @@ OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CS
 			const uint32 l_ui32currentRow = l_ui32currentIdx/nRows + 1;
 			const uint32 l_ui32currentCol = l_ui32currentIdx%nRows + 1;
 
-			this->getLogManager() << LogLevel_Error << "Error parsing coefficient nr. " << l_ui32currentIdx
-				<< " for matrix position (" << l_ui32currentRow << "," << l_ui32currentCol << "), stopping.\n";
-			return 0;
+			OV_ERROR_KRZ(
+				"Failed to parse coefficient number [" << l_ui32currentIdx << "] at matrix positions [" << l_ui32currentRow << "," << l_ui32currentCol << "]",
+				OpenViBE::Kernel::ErrorType::BadProcessing
+			);
 		}
 
 		l_ui32currentIdx++;
@@ -153,23 +150,24 @@ boolean CBoxAlgorithmSpatialFilter::initialize(void)
 	}
 	else
 	{
-		this->getLogManager() << LogLevel_Error << "Unhandled input stream type " << l_oIdentifier << "\n";
-		return false;
+		OV_ERROR_KRF("Invalid input stream type [" << l_oIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput);
 	}
 
 	// If we have a filter file, use dimensions and coefficients from that. Otherwise, use box config params.
 	CString l_sFilterFile = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	if(l_sFilterFile!=CString(""))
 	{
-		if(!OpenViBEToolkit::Tools::Matrix::loadFromTextFile(m_oFilterBank, l_sFilterFile)) {
-			this->getLogManager() << LogLevel_Error << "Unable to load filter file [" << l_sFilterFile << "]\n";
-			return false;
-		}
-		if(m_oFilterBank.getDimensionCount() != 2)
-		{
-			this->getLogManager() << LogLevel_Error << "Specified filter matrix in the file didn't have 2 dimensions\n";
-			return false;
-		}
+		OV_ERROR_UNLESS_KRF(
+			OpenViBEToolkit::Tools::Matrix::loadFromTextFile(m_oFilterBank, l_sFilterFile),
+			"Failed to load filter parameters from file at location [" << l_sFilterFile << "]",
+			OpenViBE::Kernel::ErrorType::BadFileRead
+		);
+
+		OV_ERROR_UNLESS_KRF(
+			m_oFilterBank.getDimensionCount() == 2,
+			"Invalid filter matrix in file " << l_sFilterFile << ": found [" << m_oFilterBank.getDimensionCount() << "] dimensions (expected 2 dimension)",
+			OpenViBE::Kernel::ErrorType::BadConfig
+		);
 
 #if defined(DEBUG)
 		OpenViBEToolkit::Tools::Matrix::saveToTextFile(m_oFilterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));
@@ -183,11 +181,12 @@ boolean CBoxAlgorithmSpatialFilter::initialize(void)
 		const uint32 l_ui32InputChannelCountSetting=(uint32)(uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 		const uint32 l_ui32nCoefficients = loadCoefficients(l_sCoefficient, ' ', OV_Value_EnumeratedStringSeparator, l_ui32OutputChannelCountSetting, l_ui32InputChannelCountSetting);
 
-		if(l_ui32nCoefficients != l_ui32OutputChannelCountSetting * l_ui32InputChannelCountSetting)
-		{
-			this->getLogManager() << LogLevel_Error << "Unable to parse the expected number of filter coefficients.\n";
-			return false;
-		}
+		OV_ERROR_UNLESS_KRF(
+			l_ui32nCoefficients == l_ui32OutputChannelCountSetting * l_ui32InputChannelCountSetting,
+			"Invalid number of coefficients [" << l_ui32nCoefficients << "] (expected "<< l_ui32OutputChannelCountSetting * l_ui32InputChannelCountSetting <<" coefficients)",
+			OpenViBE::Kernel::ErrorType::BadConfig
+		);
+
 #if defined(DEBUG)
 		OpenViBEToolkit::Tools::Matrix::saveToTextFile(m_oFilterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));
 #endif
@@ -238,20 +237,20 @@ boolean CBoxAlgorithmSpatialFilter::process(void)
 			const uint32 l_ui32InputChannelCount=l_pInputMatrix->getDimensionSize(0);
 			const uint32 l_ui32InputSamplesCount=l_pInputMatrix->getDimensionSize(1);
 
-			if(l_ui32InputChannelCount == 0 || l_ui32InputSamplesCount == 0)
-			{
-				this->getLogManager() << LogLevel_Error  << "Bad matrix size on input, [" << l_ui32InputChannelCount << " x " << l_ui32InputSamplesCount << "]\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				l_ui32InputChannelCount != 0 && l_ui32InputSamplesCount != 0,
+				"Invalid matrix size with zero dimension on input [" << l_ui32InputChannelCount << " x " << l_ui32InputSamplesCount << "]",
+				OpenViBE::Kernel::ErrorType::BadConfig
+			);
 
 			const uint32 l_ui32FilterInputChannelCount = m_oFilterBank.getDimensionSize(1);
 			const uint32 l_ui32FilterOutputChannelCount = m_oFilterBank.getDimensionSize(0);
 
-			if(l_ui32InputChannelCount!=l_ui32FilterInputChannelCount)
-			{
-				this->getLogManager() << LogLevel_Error  << "Bad matrix size - Filter has " << l_ui32FilterInputChannelCount << " channels but data needs " << l_ui32InputChannelCount << " channels\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				l_ui32InputChannelCount == l_ui32FilterInputChannelCount,
+				"Invalid input channel count  [" << l_ui32InputChannelCount << "] (expected " << l_ui32FilterInputChannelCount << " channel count)",
+				OpenViBE::Kernel::ErrorType::BadConfig
+			);
 
 			IMatrix *l_pOutputMatrix = ((OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputMatrix();
 			l_pOutputMatrix->setDimensionCount(2);

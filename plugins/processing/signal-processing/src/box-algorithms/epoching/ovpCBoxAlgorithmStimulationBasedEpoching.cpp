@@ -52,12 +52,11 @@ boolean CBoxAlgorithmStimulationBasedEpoching::initialize(void)
 	this->getLogManager() << LogLevel_Debug << "Epoch offset : " << l_f64EpochOffset << "\n";
 	m_i64EpochOffset = (int64)(l_f64EpochOffset*(1LL << 32));
 
-	if (l_f64EpochDuration <= 0)
-	{
-		this->getLogManager() << LogLevel_Error << "Epocher settings are invalid (duration:" << l_f64EpochDuration
-			<<  ")... This parameter should be strictly positive.\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_f64EpochDuration > 0,
+		"Invalid epoch duration [" << l_f64EpochDuration << "] (expected value > 0)",
+		OpenViBE::Kernel::ErrorType::BadSetting
+	);
 
 	for(uint32 i=2; i<getStaticBoxContext().getSettingCount(); i++)
 	{
@@ -173,7 +172,7 @@ boolean CBoxAlgorithmStimulationBasedEpoching::process(void)
 					}
 					else
 					{
-						getLogManager() << LogLevel_Warning << "Skipped epocher that should have started at a negative time\n";
+						OV_WARNING_K("Skipped epocher that should have started at a negative time");
 					}
 				}
 			}
@@ -205,11 +204,11 @@ boolean CBoxAlgorithmStimulationBasedEpoching::process(void)
 		if(m_pSignalStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader))
 		{
 			// can only test after we have the header...
-			if(op_ui64SamplingRate == 0)
-			{
-				this->getLogManager() << LogLevel_Error << "Sampling rate 0 is not supported\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				op_ui64SamplingRate > 0,
+				"Invalid sampling rate [" << op_ui64SamplingRate << "] (expected value > 0)",
+				OpenViBE::Kernel::ErrorType::BadSetting
+			);
 
 			m_pOutputSignalDescription->setDimensionCount(2);
 			m_pOutputSignalDescription->setDimensionSize(0, ip_pSignal->getDimensionSize(0));
