@@ -3,6 +3,7 @@
 #include <system/ovCMemory.h>
 
 #include <cstdio>
+#include <limits>
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -18,7 +19,7 @@ namespace
 	inline uint32 _find_channel_(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32 uiStart=0)
 	{
 		uint32 i;
-		uint32 l_ui32Result = uint32(-1);
+		uint32 l_ui32Result = std::numeric_limits<uint32>::max();
 		uint32 l_ui32ChannelCount = rMatrix.getDimensionSize(0);
 
 		if(rMatchMethodIdentifier==OVP_TypeId_MatchMethod_Name)
@@ -68,8 +69,8 @@ namespace
 		}
 		else if(rMatchMethodIdentifier==OVP_TypeId_MatchMethod_Smart)
 		{
-			if(l_ui32Result==uint32(-1)) l_ui32Result=_find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart);
-			if(l_ui32Result==uint32(-1)) l_ui32Result=_find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart);
+			if(l_ui32Result==std::numeric_limits<uint32>::max()) l_ui32Result=_find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart);
+			if(l_ui32Result==std::numeric_limits<uint32>::max()) l_ui32Result=_find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart);
 		}
 
 		return l_ui32Result;
@@ -213,12 +214,12 @@ boolean CBoxAlgorithmChannelSelector::process(void)
 						uint32 l_ui32RangeEndIndex=::_find_channel_(*m_pInputMatrix, l_sSubToken[1], OVP_TypeId_MatchMethod_Index);
 
 						// When first or second part is not found but associated token is empty, don't consider this as an error
-						if(l_ui32RangeStartIndex==uint32(-1) && l_sSubToken[0]==CString("")) l_ui32RangeStartIndex=0;
-						if(l_ui32RangeEndIndex  ==uint32(-1) && l_sSubToken[1]==CString("")) l_ui32RangeEndIndex=m_pInputMatrix->getDimensionSize(0)-1;
+						if(l_ui32RangeStartIndex==std::numeric_limits<uint32>::max() && l_sSubToken[0]==CString("")) l_ui32RangeStartIndex=0;
+						if(l_ui32RangeEndIndex  ==std::numeric_limits<uint32>::max() && l_sSubToken[1]==CString("")) l_ui32RangeEndIndex=m_pInputMatrix->getDimensionSize(0)-1;
 
 						// After these corections, if either first or second token were not found, or if start index is greater than start index, consider this an error and invalid range
 						OV_ERROR_UNLESS_KRF(
-							l_ui32RangeStartIndex != uint32(-1) && l_ui32RangeEndIndex != uint32(-1) && l_ui32RangeStartIndex <= l_ui32RangeEndIndex,
+							l_ui32RangeStartIndex != std::numeric_limits<uint32>::max() && l_ui32RangeEndIndex != std::numeric_limits<uint32>::max() && l_ui32RangeStartIndex <= l_ui32RangeEndIndex,
 							"Invalid channel range [" << l_sToken[j] << "] - splitted as [" << l_sSubToken[0] << "][" << l_sSubToken[1] << "]",
 							OpenViBE::Kernel::ErrorType::BadSetting
 						);
@@ -235,10 +236,10 @@ boolean CBoxAlgorithmChannelSelector::process(void)
 					{
 						// This is not a range, so we can consider the whole token as a single token name
 						uint32 l_bFound=false;
-						uint32 l_ui32Index=uint32(-1);
+						uint32 l_ui32Index=std::numeric_limits<uint32>::max();
 
 						// Looks for all the channels with this name
-						while((l_ui32Index=::_find_channel_(*m_pInputMatrix, l_sToken[j], l_ui64MatchMethodIdentifier, l_ui32Index+1))!=uint32(-1))
+						while((l_ui32Index=::_find_channel_(*m_pInputMatrix, l_sToken[j], l_ui64MatchMethodIdentifier, l_ui32Index+1))!=std::numeric_limits<uint32>::max())
 						{
 							l_bFound=true;
 							m_vLookup.push_back(l_ui32Index);

@@ -1,6 +1,7 @@
 #include "ovpCBoxAlgorithmReferenceChannel.h"
 
 #include <cstdio>
+#include <limits>
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -13,7 +14,7 @@ namespace
 {
 	uint32 _find_channel_(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32 uiStart=0)
 	{
-		uint32 i, l_ui32Result=uint32(-1);
+		uint32 i, l_ui32Result=std::numeric_limits<uint32>::max();
 
 		if(rMatchMethodIdentifier==OVP_TypeId_MatchMethod_Name)
 		{
@@ -44,8 +45,8 @@ namespace
 		}
 		else if(rMatchMethodIdentifier==OVP_TypeId_MatchMethod_Smart)
 		{
-			if(l_ui32Result==uint32(-1)) l_ui32Result=_find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart);
-			if(l_ui32Result==uint32(-1)) l_ui32Result=_find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart);
+			if(l_ui32Result==std::numeric_limits<uint32>::max()) l_ui32Result=_find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart);
+			if(l_ui32Result==std::numeric_limits<uint32>::max()) l_ui32Result=_find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart);
 		}
 
 		return l_ui32Result;
@@ -101,12 +102,12 @@ boolean CBoxAlgorithmReferenceChannel::process(void)
 			m_ui32ReferenceChannelIndex=::_find_channel_(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
 
 			OV_ERROR_UNLESS_KRF(
-				m_ui32ReferenceChannelIndex != uint32(-1),
+				m_ui32ReferenceChannelIndex != std::numeric_limits<uint32>::max(),
 				"Invalid channel [" << l_sChannel << "]: channel not found",
 				OpenViBE::Kernel::ErrorType::BadSetting
 			);
 
-			if(::_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex+1)!=uint32(-1))
+			if(::_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex+1)!=std::numeric_limits<uint32>::max())
 			{
 				OV_WARNING_K("Multiple channels match for setting [" << l_sChannel << "]. Selecting [" << m_ui32ReferenceChannelIndex << "]");
 			}

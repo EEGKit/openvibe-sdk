@@ -151,7 +151,7 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 			float l_f32BuiltInLatency = m_oResampler.getBuiltInLatency();
 			if(l_f32BuiltInLatency <= 0.15)
 			{
-				this->getLogManager() << LogLevel_Debug << "Latency induced by the resampling is [" << l_f32BuiltInLatency << "] s.\n";
+				this->getLogManager() << LogLevel_Trace << "Latency induced by the resampling is [" << l_f32BuiltInLatency << "] s.\n";
 			}
 			else if(0.15 < l_f32BuiltInLatency && l_f32BuiltInLatency <= 0.5)
 			{

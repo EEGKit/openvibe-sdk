@@ -31,12 +31,13 @@ void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrix(OpenViBE::Kernel::ILogManage
 		rMgr << "\n";
 	}
 }
-void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrixFile(const MatrixXd& mat, const char *fn)
+void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrixFile(const MatrixXd& mat, const char *filename)
 {
-	FILE *fp = fopen(fn, "w");
+	FILE *file = fopen(filename, "w");
+
 	OV_ERROR_UNLESS_KRV(
 		fp,
-		"Failed to open file located at [" << fn << "]",
+		"Failed to open file located at [" << filename << "]",
 		OpenViBE::Kernel::ErrorType::BadFileRead
 	);
 
@@ -69,10 +70,8 @@ CBoxAlgorithmRegularizedCSPTrainer::CBoxAlgorithmRegularizedCSPTrainer(void) :
 		m_bSaveAsBoxConf(false),
 		m_f64Tikhonov(0.0)
 {
-	for(uint32 i=0;i<2;i++)
-	{
-		m_pIncrementalCov[i] = NULL;
-	}
+	m_pIncrementalCov[0] = nullptr;
+	m_pIncrementalCov[1] = nullptr;
 }
 
 boolean CBoxAlgorithmRegularizedCSPTrainer::initialize(void)

@@ -176,7 +176,7 @@ boolean CEquationParser::compileEquation(const char * pEquation)
 
 		for (int i = 0; i < (l_oInfo.stop - pEquation); i++)
 		{
-			l_oErrorString += "*";
+			l_oErrorString += " ";
 		}
 		l_oErrorString+="^<--here";
 
