@@ -126,7 +126,7 @@ boolean CBoxAlgorithmMatrixValidityChecker::process(void)
 					{
 						for(uint32 l=0; l<l_ui32SampleCount; l++)
 						{
-							if( isnan( l_pBuffer[l+k*l_ui32SampleCount] ) || isinf( l_pBuffer[l+k*l_ui32SampleCount] ) )
+							if( std::isnan( l_pBuffer[l+k*l_ui32SampleCount] ) || std::isinf( l_pBuffer[l+k*l_ui32SampleCount] ) )
 							{
 								// interpolation : order 0 (easiest for online interpolation)
 								l_pBuffer[l+k*l_ui32SampleCount] = m_vLastValidSample[i][k];
