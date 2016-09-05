@@ -18,19 +18,20 @@ boolean CBoxAlgorithmStimulationVoter::initialize(void)
 {
 	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
-	if(l_rStaticBoxContext.getInputCount()!=1)
-	{
-		this->getLogManager() << LogLevel_Error << "Only one input supported, merge first\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_rStaticBoxContext.getInputCount() == 1,
+		"Invalid number of inputs [" << l_rStaticBoxContext.getInputCount() << "] (expected 1 single input)",
+		OpenViBE::Kernel::ErrorType::BadInput
+	);
 
 	CIdentifier l_oTypeIdentifier;
 	l_rStaticBoxContext.getInputType(0, l_oTypeIdentifier);
-	if(l_oTypeIdentifier!=OV_TypeId_Stimulations)
-	{
-		this->getLogManager() << LogLevel_Error << "Only OV_TypeId_Stimulations is supported as input type\n";
-		return false;
-	}
+
+	OV_ERROR_UNLESS_KRF(
+		l_oTypeIdentifier == OV_TypeId_Stimulations,
+		"Invalid input type [" << l_oTypeIdentifier.toString() << "] (expected OV_TypeId_Stimulations type)",
+		OpenViBE::Kernel::ErrorType::BadInput
+	);
 
 	m_pEncoder=&this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamEncoder));
 	m_pEncoder->initialize();

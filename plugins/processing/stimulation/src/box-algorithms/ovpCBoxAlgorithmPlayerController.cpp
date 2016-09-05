@@ -66,7 +66,7 @@ boolean CBoxAlgorithmPlayerController::process(void)
 						<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_ui64StimulationIdentifier) << "] causing action ["
 						<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]\n";
 
-					boolean l_bResult=true;
+					boolean l_bResult=false;
 					if(m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Play)
 					{
 						l_bResult=this->getPlayerContext().play();
@@ -84,10 +84,11 @@ boolean CBoxAlgorithmPlayerController::process(void)
 						l_bResult=this->getPlayerContext().forward();
 					}
 
-					if(!l_bResult)
-					{
-						this->getLogManager() << LogLevel_Warning << "Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]\n";
-					}
+					OV_ERROR_UNLESS_KRF(
+						l_bResult,
+						"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]",
+						OpenViBE::Kernel::ErrorType::BadConfig
+					);
 				}
 			}
 		}
