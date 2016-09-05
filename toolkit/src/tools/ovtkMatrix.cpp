@@ -15,14 +15,6 @@
 #include <locale> // std::isspace
 #include <sstream>
 
-#if defined TARGET_OS_Windows
- #define isnan _isnan
- #define isinf !_finite
-#elif defined TARGET_OS_MacOS
- #define isnan std::isnan
- #define isinf std::isinf
-#endif
-
 using namespace OpenViBE;
 using namespace OpenViBEToolkit;
 using namespace OpenViBEToolkit::Tools;

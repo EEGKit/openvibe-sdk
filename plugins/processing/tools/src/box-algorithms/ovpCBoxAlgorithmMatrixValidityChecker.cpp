@@ -9,14 +9,6 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::Tools;
 
-#if defined TARGET_OS_Windows
- #define isnan _isnan
- #define isinf !_finite
-#elif defined TARGET_OS_MacOS
- #define isnan std::isnan
- #define isinf std::isinf
-#endif
-
 boolean CBoxAlgorithmMatrixValidityChecker::initialize(void)
 {
 	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
