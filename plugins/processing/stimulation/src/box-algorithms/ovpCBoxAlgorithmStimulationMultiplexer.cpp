@@ -1,5 +1,7 @@
 #include "ovpCBoxAlgorithmStimulationMultiplexer.h"
 
+#include <limits>
+
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
@@ -54,39 +56,6 @@ boolean CBoxAlgorithmStimulationMultiplexer::uninitialize(void)
 	return true;
 }
 
-/*
-boolean CBoxAlgorithmStimulationMultiplexer::processEvent(IMessageEvent& rMessageEvent)
-{
-	// ...
-
-	// getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-
-	return true;
-}
-*/
-
-/*
-boolean CBoxAlgorithmStimulationMultiplexer::processSignal(IMessageSignal& rMessageSignal)
-{
-	// ...
-
-	// getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-
-	return true;
-}
-*/
-
-/*
-boolean CBoxAlgorithmStimulationMultiplexer::processClock(IMessageClock& rMessageClock)
-{
-	// ...
-
-	// getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-
-	return true;
-}
-*/
-
 boolean CBoxAlgorithmStimulationMultiplexer::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
@@ -110,7 +79,7 @@ boolean CBoxAlgorithmStimulationMultiplexer::process(void)
 		m_bHasSentHeader=true;
 	}
 
-	uint64 l_ui64ReadChunkMinEndTime=0xffffffffffffffffll;
+	uint64 l_ui64ReadChunkMinEndTime = std::numeric_limits<uint64>::max();
 	for(i=0; i<l_rStaticBoxContext.getInputCount(); i++)
 	{
 		for(j=0; j<l_rDynamicBoxContext.getInputChunkCount(i); j++)

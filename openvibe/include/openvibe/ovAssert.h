@@ -121,15 +121,15 @@ while (0)
 #define OV_ERROR_LOG(description, type, file, line, logManager) \
 do { \
 	logManager << OpenViBE::Kernel::LogLevel_Error \
-			   << "[Error description] = " \
+			   << "{Error description} : {" \
 			   << description \
-			   << "; [Error type] = " \
+			   << "}, {Error type} : {" \
 			   << convertErrorTypeToString(type) \
 			   << " (code " \
 			   << static_cast<unsigned int>((type)) \
-			   << ") [Error location] = " \
-			   << file << ":" << line\
-			   << "\n"; \
+			   << ")}, {Error location} : {" \
+			   << file << "::" << line\
+			   << "}\n"; \
 } \
 while (0)
 
