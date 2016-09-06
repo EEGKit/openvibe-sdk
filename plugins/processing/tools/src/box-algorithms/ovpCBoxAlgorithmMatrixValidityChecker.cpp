@@ -18,11 +18,11 @@ boolean CBoxAlgorithmMatrixValidityChecker::initialize(void)
 	m_ui64ValidityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	if(l_rStaticBoxContext.getSettingCount()==1) m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); // note that for boxes with one setting, we fallback to the old behavior
 
-	if(l_rStaticBoxContext.getSettingCount()>1 && l_rStaticBoxContext.getInputCount()!=l_rStaticBoxContext.getOutputCount())
-	{
-		this->getLogManager() << LogLevel_Error << "Number of input(s) different from number of output(s).\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		l_rStaticBoxContext.getSettingCount() <= 1 || l_rStaticBoxContext.getInputCount() == l_rStaticBoxContext.getOutputCount(),
+		"Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (expected same value as output count [" << l_rStaticBoxContext.getOutputCount() << "])",
+		OpenViBE::Kernel::ErrorType::BadConfig
+	);
 
 	m_vStreamDecoder.resize(l_rStaticBoxContext.getInputCount());
 	m_vStreamEncoder.resize(l_rStaticBoxContext.getInputCount());
@@ -32,7 +32,7 @@ boolean CBoxAlgorithmMatrixValidityChecker::initialize(void)
 		m_vStreamEncoder[i].initialize(*this, i);
 		m_vStreamEncoder[i].getInputMatrix().setReferenceTarget(m_vStreamDecoder[i].getOutputMatrix());
 	}
-	
+
 	m_vLastValidSample.clear();
 	m_vLastValidSample.resize(l_rStaticBoxContext.getInputCount());
 	m_ui32TotalInterpolatedSampleCount.clear();
@@ -102,8 +102,11 @@ boolean CBoxAlgorithmMatrixValidityChecker::process(void)
 				{
 					if(!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
 					{
-						this->getLogManager() << LogLevel_Error << "Matrix on input " << i << " either contains NAN or Infinity between " << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << " and " << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << ".\n";
 						this->getPlayerContext().stop();
+						OV_ERROR_KRF(
+							"Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << "]",
+							OpenViBE::Kernel::ErrorType::BadInput
+						);
 					}
 				}
 				// interpolate
@@ -151,7 +154,7 @@ boolean CBoxAlgorithmMatrixValidityChecker::process(void)
 				}
 				else
 				{
-					this->getLogManager() << LogLevel_Warning << "Unknown action type [" << m_ui64ValidityCheckerType << "].\n";
+					OV_WARNING_K("Invalid action type [" << m_ui64ValidityCheckerType << "]");
 				}
 
 				if(l_rStaticBoxContext.getSettingCount()>1) m_vStreamEncoder[i].encodeBuffer();
