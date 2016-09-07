@@ -58,26 +58,32 @@ boolean CBoxAlgorithmSignalMerger::processInput(uint32 ui32InputIndex)
 		{
 			return true;
 		}
-		if(l_ui64StartTime!=l_rDynamicBoxContext.getInputChunkStartTime(i, 0))
-		{
-			this->getLogManager() << LogLevel_Error << "Start time of input [" << i << "] does not match with start time of input 0. Try to use the same epoching for all inputs.\n";
-			return false;
-		}
-		if(l_ui64EndTime!=l_rDynamicBoxContext.getInputChunkEndTime(i, 0))
-		{
-			this->getLogManager() << LogLevel_Error << "End time of input [" << i << "] does not match with end time of input 0. Try to use the same epoching for all inputs.\n";
-			return false;
-		}
+
+		OV_ERROR_UNLESS_KRF(
+			l_ui64StartTime == l_rDynamicBoxContext.getInputChunkStartTime(i, 0),
+			"Invalid start time [" << l_rDynamicBoxContext.getInputChunkStartTime(i, 0) << "] on input [" << i
+			<< "] (expected value must match start time on input 0 [" << l_ui64StartTime << "])",
+			OpenViBE::Kernel::ErrorType::BadInput
+		);
+
+		OV_ERROR_UNLESS_KRF(
+			l_ui64EndTime == l_rDynamicBoxContext.getInputChunkEndTime(i, 0),
+			"Invalid end time [" << l_rDynamicBoxContext.getInputChunkEndTime(i, 0) << "] on input [" << i
+			<< "] (expected value must match end time on input 0 [" << l_ui64EndTime << "])",
+			OpenViBE::Kernel::ErrorType::BadInput
+		);
 	}
 
 	if (ui32InputIndex == l_rStaticBoxContext.getInputCount() -1)
 	{
 		for(uint32 i=1; i<l_rStaticBoxContext.getInputCount(); i++)
 		{
-			if(l_rDynamicBoxContext.getInputChunkCount(0) < l_rDynamicBoxContext.getInputChunkCount(i))
-			{
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				l_rDynamicBoxContext.getInputChunkCount(0) >= l_rDynamicBoxContext.getInputChunkCount(i),
+				"Invalid input chunk count [" << l_rDynamicBoxContext.getInputChunkCount(i) << "] on input [" << i
+				<< "] (expected value must be <= to chunk count on input 0 [" << l_rDynamicBoxContext.getInputChunkCount(0) << "])",
+				OpenViBE::Kernel::ErrorType::BadInput
+			);
 		}
 	}
 
@@ -124,14 +130,19 @@ boolean CBoxAlgorithmSignalMerger::process(void)
 				else
 				{
 					// Check that properties agree
-					if(l_ui32SampleCountPerSentBlock!=op_pMatrix->getDimensionSize(1)) { return false; }
-					if(m_vStreamDecoder[0]->getOutputSamplingRate() != m_vStreamDecoder[i]->getOutputSamplingRate())
-					{
-						this->getLogManager() << LogLevel_Error << "Sampling rates of inputs 1 and " << i+1 << " differ, "
-							<< m_vStreamDecoder[0]->getOutputSamplingRate() << " vs " << m_vStreamDecoder[i]->getOutputSamplingRate() 
-							<< "\n";
-						return false;
-					}
+					OV_ERROR_UNLESS_KRF(
+						l_ui32SampleCountPerSentBlock == op_pMatrix->getDimensionSize(1),
+						"Output matrix dimension [" << op_pMatrix->getDimensionSize(1) << "] on input [" << i
+						<< "] must match sample count per block [" << l_ui32SampleCountPerSentBlock << "]",
+						OpenViBE::Kernel::ErrorType::BadInput
+					);
+
+					OV_ERROR_UNLESS_KRF(
+						m_vStreamDecoder[0]->getOutputSamplingRate() == m_vStreamDecoder[i]->getOutputSamplingRate(),
+						"Output sampling rate [" << m_vStreamDecoder[i]->getOutputSamplingRate() << "] on input [" << i
+						<< "] must match the sampling rate on input 0 [" << m_vStreamDecoder[0]->getOutputSamplingRate() << "]",
+						OpenViBE::Kernel::ErrorType::BadInput
+					);
 
 					l_ui32ChannelCount+=op_pMatrix->getDimensionSize(0);
 				}
@@ -146,21 +157,23 @@ boolean CBoxAlgorithmSignalMerger::process(void)
 			}
 		}
 
-		if(l_ui32HeaderCount && l_ui32HeaderCount!=l_rStaticBoxContext.getInputCount())
-		{
-			this->getLogManager() << LogLevel_Error << "Plugin has received [" << l_ui32HeaderCount << "] headers whereas there are [" << l_rStaticBoxContext.getInputCount() << "] declared inputs. Try to connect all inputs.\n";
-			return false;
-		}
-		if(l_ui32BufferCount && l_ui32BufferCount!=l_rStaticBoxContext.getInputCount())
-		{
-			this->getLogManager() << LogLevel_Error << "Plugin has received [" << l_ui32BufferCount << "] buffers whereas there are [" << l_rStaticBoxContext.getInputCount() << "] declared inputs. Try to connect all inputs.\n";
-			return false;
-		}
-		if(l_ui32EndCount && l_ui32EndCount!=l_rStaticBoxContext.getInputCount())
-		{
-			this->getLogManager() << LogLevel_Error << "Plugin has received [" << l_ui32EndCount << "] ends whereas there are [" << l_rStaticBoxContext.getInputCount() << "] declared inputs. Try to connect all inputs.\n";
-			return false;
-		}
+		OV_ERROR_UNLESS_KRF(
+			!l_ui32HeaderCount || l_ui32HeaderCount == l_rStaticBoxContext.getInputCount(),
+			"Received [" << l_ui32HeaderCount << "] headers for [" << l_rStaticBoxContext.getInputCount() << "] declared inputs",
+			OpenViBE::Kernel::ErrorType::BadInput
+		);
+
+		OV_ERROR_UNLESS_KRF(
+			!l_ui32BufferCount || l_ui32BufferCount == l_rStaticBoxContext.getInputCount(),
+			"Received [" << l_ui32BufferCount << "] buffers for [" << l_rStaticBoxContext.getInputCount() << "] declared inputs",
+			OpenViBE::Kernel::ErrorType::BadInput
+		);
+
+		OV_ERROR_UNLESS_KRF(
+			!l_ui32EndCount || l_ui32EndCount == l_rStaticBoxContext.getInputCount(),
+			"Received [" << l_ui32EndCount << "] ends for [" << l_rStaticBoxContext.getInputCount() << "] declared inputs",
+			OpenViBE::Kernel::ErrorType::BadInput
+		);
 
 		if(l_ui32HeaderCount)
 		{
@@ -180,11 +193,11 @@ boolean CBoxAlgorithmSignalMerger::process(void)
 			}
 			const uint64 l_ui64SamplingRate = m_vStreamDecoder[0]->getOutputSamplingRate();
 			m_pStreamEncoder->getInputSamplingRate() = l_ui64SamplingRate;
-			
+
 			this->getLogManager() << LogLevel_Debug << "Setting sampling rate to " << l_ui64SamplingRate << "\n";
 
 			m_pStreamEncoder->encodeHeader();
-			
+
 			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, c), l_rDynamicBoxContext.getInputChunkEndTime(0, c));
 		}
 
