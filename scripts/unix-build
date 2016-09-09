@@ -4,7 +4,7 @@
 # unix-based platform.
 
 # Functions definition
- 
+
 function usage()
 {
 		echo "usage: ./unix-build [options]"
@@ -23,10 +23,12 @@ function usage()
 # variables
 ov_script_dir="${PWD}"
 ov_build_type=Release
-ov_build_dir="${ov_script_dir}/../../certivibe-build/build-${ov_build_type}"
-ov_install_dir="${ov_script_dir}/../../certivibe-build/dist-${ov_build_type}"
+ov_build_dir=""
+ov_install_dir=""
 ov_test_data_dir="${ov_script_dir}/../dependencies/test-data"
 verbose=0
+build_dir_set=0
+install_dir_set=0
 
 # Parse arguments
 for i in "$@"
@@ -46,10 +48,12 @@ do
 			;;
 		--build-dir=*)
 			ov_build_dir="${i#*=}"
+			build_dir_set=1
 			shift
 			;;
 		--install-dir=*)
 			ov_install_dir="${i#*=}"
+			install_dir_set=1
 			shift
 			;;
 		--test-data-dir=*)
@@ -70,6 +74,15 @@ if [[ ${ov_build_type} != "Debug" ]] \
 then
 	echo "ERROR: ${ov_build_type} not handled as build type"
 	exit 1
+fi
+
+# Update directories only if they point to the default one
+if [[ $build_dir_set -eq 0 ]]; then
+	ov_build_dir="${ov_script_dir}/../../certivibe-build/build-${ov_build_type}"
+fi
+
+if [[ $install_dir_set -eq 0 ]]; then
+	ov_install_dir="${ov_script_dir}/../../certivibe-build/dist-${ov_build_type}"
 fi
 
 echo "**************************************"
@@ -116,7 +129,7 @@ echo "Building project..."
 
 if [[ $verbose == 1 ]]; then
 	ninja -v install
-else 
+else
 	ninja install
 fi
 
