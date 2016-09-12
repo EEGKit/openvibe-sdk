@@ -161,9 +161,12 @@ namespace OpenViBE
 					}
 				}
 
-				//We use the neutralized version of CBoxProto to just initialize the stream restriction mecanism
-				CBoxProtoRestriction oTempProto(this->getKernelContext(), *this);
-				m_pBoxAlgorithmDescriptor->getBoxPrototype(oTempProto);
+				if (rAlgorithmClassIdentifier != OVP_ClassId_BoxAlgorithm_Metabox)
+				{
+					//We use the neutralized version of CBoxProto to just initialize the stream restriction mecanism
+					CBoxProtoRestriction oTempProto(this->getKernelContext(), *this);
+					m_pBoxAlgorithmDescriptor->getBoxPrototype(oTempProto);
+				}
 
 				this->notify(BoxModification_AlgorithmClassIdentifierChanged);
 
