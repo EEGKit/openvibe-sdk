@@ -21,11 +21,11 @@ if(WIN32)
 		COMMAND ninja
 		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test"
 		COMMENT "Building the test project")
-	
+
 	add_custom_target(${PROJECT_NAME}
 		COMMAND ctest-launcher.cmd -T Test
 		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test")
-	
+
 	add_dependencies(${PROJECT_NAME}-build ${PROJECT_NAME}-cmake)
 else()
 	add_custom_target(${PROJECT_NAME}-env
@@ -47,7 +47,7 @@ else()
 	add_custom_target(${PROJECT_NAME}
 		COMMAND bash ctest-launcher.sh -T Test
 		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test")
-		
+
 	add_dependencies(${PROJECT_NAME}-build ${PROJECT_NAME}-env)
 
 endif()
