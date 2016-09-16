@@ -9,17 +9,17 @@
 		* cache found but dependency not found in the cache
 		* cache not found (old archives are overwritten)
 	- Extract dependencies in destination folder (old dependencies are overwritten)
-	
-	Search for the cache directory is made through CV_DEPENDENCY_CACHE environment 
-	variable. If you maintain such a cache to synchronize local data with remote ones, 
-	please set CV_DEPENDENCY_CACHE. 
-	
+
+	Search for the cache directory is made through CV_DEPENDENCY_CACHE environment
+	variable. If you maintain such a cache to synchronize local data with remote ones,
+	please set CV_DEPENDENCY_CACHE.
+
 	Expected hierarchy of the cache directory is:
 	- '\dependencies' directory used to store project dependencies (binaries etc.)
 	- '\tests' used to store test data
 .PARAMETER dependencies_file
-	The manifest file containing the required archives to install. 
-	
+	The manifest file containing the required archives to install.
+
 	Expected format is:
 	archive_name;folder_to_unzip;archive_url
 	archive_name;folder_to_unzip;archive_url
@@ -27,13 +27,13 @@
 .PARAMETER data_type
 	The type of data to install. This parameter is mainly used to look at the right directory
 	in the cache.
-	
+
 	Expected value: 'dependencies' or 'tests'.
 .PARAMETER dest_dir
 	Destination directory for extracted archives. Each archive found in the manifest file
 	is extracted in 'dest_dir\folder_to_unzip'.
-	
-	Note that if no cache is found, archives are also downloaded in 'dest_dir\arch'. 
+
+	Note that if no cache is found, archives are also downloaded in 'dest_dir\arch'.
 .NOTES
 	File Name      : windows-install-dependencies.ps1
 	Prerequisite   : Tested with PS v4.0 on windows 8.1 pro.
@@ -63,15 +63,16 @@ Param(
 If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator"))
 {
 	# manually forward the parameters
-	# generic way of forwarding with parsing of $myinvocation.Line failed because $myinvocation.Line is empty when the script is called from command line with powershell.exe
-    $argumentList = (" -dependencies_file", "`"$dependencies_file`"")
+	# generic way of forwarding with parsing of $myinvocation.Line failed
+	# because $myinvocation.Line is empty when the script is called from command line with powershell.exe
+	$argumentList = (" -dependencies_file", "`"$dependencies_file`"")
 	$argumentList += (" -data_type", "`"$data_type`"")
 	$argumentList += (" -dest_dir", "`"$dest_dir`"")
-	
+
 	$command = $myinvocation.MyCommand.Definition + $argumentList
 	Start-Process powershell.exe "-NoExit -NoProfile -ExecutionPolicy Bypass -File $command" -Verb RunAs
-	
-	Exit 
+
+	Exit
 }
 
 #
@@ -79,11 +80,11 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 #
 
 If (-Not (Test-Path $dependencies_file)){
-  Throw New-Object System.IO.FileNotFoundException "$dependencies_file not found" 
+	Throw New-Object System.IO.FileNotFoundException "$dependencies_file not found"
 }
 
 If (-Not (Test-Path $dest_dir)){
-  Throw New-Object System.IO.FileNotFoundException "$dest_dir not found" 
+	Throw New-Object System.IO.FileNotFoundException "$dest_dir not found"
 }
 
 Write-Host "===Parameters==="
@@ -94,9 +95,9 @@ Write-Host ""
 
 #
 # script variables
-# 
+#
 
-# we keep 2 different variables here because there is 2 different behaviors:
+# we keep 2 different variables here because there are 2 different behaviors:
 # - cache archives shoud not be overwritten (It is the responsability of the system admin to keep it in sync with remote directories)
 # - destination directory archives must be overwritten to ensure a regular update
 $Script:cache_dir = ""
@@ -108,14 +109,46 @@ $Script:extract_count = 0
 
 #
 # script functions
-# 
+#
 
+# taken and modified from:
+# https://blogs.msdn.microsoft.com/jasonn/2008/06/13/downloading-files-from-the-internet-in-powershell-with-progress/
 function DownloadDeps($url, $dest)
 {
 	Write-Host "Download: [" $url "] -> [" $dest "]"
-	
-	(New-Object Net.WebClient).DownloadFile($url, $dest)
-	 
+
+	$uri = New-Object System.Uri $url
+	$request = [System.Net.HttpWebRequest]::Create($uri)
+	$request.set_Timeout(15000) #15 second timeout
+	$response = $request.GetResponse()
+
+	# retrieve total size of data to download
+	$total_len = $response.get_ContentLength()
+
+	$response_stream = $response.GetResponseStream()
+	$target_stream = New-Object -TypeName System.IO.FileStream -ArgumentList $dest, Create
+
+	$buffer = new-object byte[] 10KB
+	$bytes_read = 0
+
+	Do {
+		#transfer data from response stream to target stream
+		$count = $response_stream.Read($buffer, 0, $buffer.length)
+		$target_stream.Write($buffer, 0, $count)
+		$bytes_read += $count
+
+		$percent_complete = [System.Math]::Floor(100 * $bytes_read / $total_len)
+
+		Write-Progress -Status "Progress: $percent_complete%" -Activity ("Downloading " + (Split-Path -Leaf $dest)) -PercentComplete $percent_complete
+
+	} While ($count -gt 0)
+
+	$target_stream.Flush()
+	$target_stream.Close()
+	$target_stream.Dispose()
+	$response_stream.Dispose()
+	$response_stream.Close()
+
 	$Script:download_count++
 }
 
@@ -123,31 +156,51 @@ function ExpandZipFile($zip, $dest)
 {
 	Write-Host "Extract: [" $zip "] -> [" $dest "]"
 	$shell = New-Object -ComObject Shell.Application
-	
+
 	# create dest if it does not exists
 	If(-Not (Test-Path $dest)) {
 		New-Item $dest -itemtype directory | Out-Null
 	}
-	
+
 	# expand folders because NameSpace command expects absolute paths
-	$zip = (resolve-path $zip)
-	$dest = (resolve-path $dest)
-	
-	ForEach($item in $shell.NameSpace("$zip").items()) {
-		$shell.Namespace("$dest").copyhere($item, 0x14)
+	$zip = (Resolve-Path $zip)
+	$dest = (Resolve-Path $dest)
+
+	$folder = $shell.NameSpace("$zip")
+
+	# Progress based on count is pretty dumb. However
+	# the sizes retrieved by $folder.GetDetailsOf($item, 2)
+	# or $item.Size are unreliable. At least, it allows the script
+	# user to see something is going on.
+	$count = 0
+	$total_count = $folder.Items().Count
+	ForEach($item in $folder.Items()) {
+
+		$item_name = $folder.GetDetailsOf($item, 0)
+		$percent_complete = [System.Math]::Floor(100 * $count / $total_count)
+		Write-Progress `
+			-Status "Progress: $percent_complete%" `
+			-Activity ("Extracting " + (Split-Path -Leaf $zip) + " to " + (Split-Path -Leaf $dest)) `
+			-CurrentOperation "Copying $item_name (this can take a long time...)" `
+			-PercentComplete $percent_complete
+
+		# 0x14 = sum of options 4 (donnot display windows box) and 16 (answer yes to all)
+		$shell.Namespace("$dest").CopyHere($item, 0x14)
+
+		$count++
 	}
-	
+
 	$Script:extract_count++
 }
 
 function InstallDeps($arch, $dir, $url)
 {
 	$zip = $Script:arch_dir + "\" + $arch
-	
+
 	If(($Script:cache_dir -and -Not (Test-Path $zip)) -or (-Not $Script:cache_dir)) {
 		DownloadDeps $url $zip
 	}
-	
+
 	ExpandZipFile $zip ($Script:dest_dir + "\" + $dir)
 }
 
@@ -158,28 +211,28 @@ function InstallDeps($arch, $dir, $url)
 # check if a cache directory is available through CV_DEPENDENCY_CACHE env variable
 Write-Host "===Looking for cache==="
 If ((Test-Path env:\CV_DEPENDENCY_CACHE) -and (Test-Path $env:CV_DEPENDENCY_CACHE)) {
-	
+
 	Write-Host "Found cache directory: "  ($env:CV_DEPENDENCY_CACHE)
 	$cache_dir = $env:CV_DEPENDENCY_CACHE + "\" + $data_type
 	$arch_dir = $cache_dir
-	
+
 	If(-Not (Test-Path $cache_dir)) {
 		New-Item $cache_dir -itemtype directory | Out-Null
 		Write-Host "Created archive directory in cache: "  $cache_dir
 	}
-	
+
 	Write-Host "Missing archives will be transferred to " $arch_dir
-	
+
 } else {
 	Write-Host "Found no cache directory"
-	
-	$arch_dir = $dest_dir + "\arch" 
-	
+
+	$arch_dir = $dest_dir + "\arch"
+
 	If(-Not (Test-Path $arch_dir)) {
 		New-Item $arch_dir -itemtype directory | Out-Null
 		Write-Host "Created archive directory in destination: "  $arch_dir
 	}
-	
+
 	Write-Host "All archives will be transferred to " $arch_dir
 }
 
@@ -193,11 +246,10 @@ ForEach ($dep in (Get-Content $dependencies_file)) {
 }
 $timer.Stop()
 
-
 Write-Host ""
 Write-Host "===Install Summary==="
 Write-Host "State = Success"
-Write-Host "Number of archives downloaded = $download_count" 
+Write-Host "Number of archives downloaded = $download_count"
 Write-Host "Number of archives extracted = $extract_count"
 Write-Host "Installation time = "  $([string]::Format("{0:d2}h:{1:d2}mn:{2:d2}s", $timer.Elapsed.hours, $timer.Elapsed.minutes, $timer.Elapsed.seconds)) -nonewline
 Write-Host ""
