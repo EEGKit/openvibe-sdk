@@ -80,19 +80,19 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 #
 
 Write-Host "===Input validation==="
-If (-Not (Test-Path $dependencies_file)){
-	Throw New-Object System.IO.FileNotFoundException "$dependencies_file not found"
-} Else {
+If (Test-Path $dependencies_file){
 	Write-Host "Dependencies file found"
+} Else {
+	Throw New-Object System.IO.FileNotFoundException "$dependencies_file not found"
 }
 
-If (-Not (Test-Path $dest_dir)){
-	Write-Host "Destination directory not found"
+If (Test-Path $dest_dir){
+	Write-Host "Destination directory found"
 
+} Else {
+	Write-Host "Destination directory not found"
 	New-Item $dest_dir -itemtype directory | Out-Null
 	Write-Host "Created destination directory: "  $dest_dir
-} Else {
-	Write-Host "Destination directory found"
 }
 Write-Host ""
 
