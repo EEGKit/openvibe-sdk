@@ -16,7 +16,7 @@
 
 	Expected hierarchy of the cache directory is:
 	- '\dependencies' directory used to store project dependencies (binaries etc.)
-	- '\tests' used to store test data
+	- '\test' used to store test data
 .PARAMETER dependencies_file
 	The manifest file containing the required archives to install.
 
@@ -28,7 +28,7 @@
 	The type of data to install. This parameter is mainly used to look at the right directory
 	in the cache.
 
-	Expected value: 'dependencies' or 'tests'.
+	Expected value: 'dependencies' or 'test'.
 .PARAMETER dest_dir
 	Destination directory for extracted archives. Each archive found in the manifest file
 	is extracted in 'dest_dir\folder_to_unzip'.
@@ -41,7 +41,7 @@
 	Detailed specifications:
 	https://jira.mensiatech.com/confluence/pages/viewpage.action?spaceKey=CT&title=Dependency+management
 .EXAMPLE
-	.\windows-install-dependencies.ps1 -dependencies_file \absolute\path\to\dep\dependencies.txt -data-type dependencies -dest_dir \absolute\path\to\dep\
+	.\windows-install-dependencies.ps1 -dependencies_file \absolute\path\to\dep\dependencies.txt -data_type dependencies -dest_dir \absolute\path\to\dep\
 .EXAMPLE
 	powershell.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File \absolute\path\to\windows-install-dependencies.ps1 -dependencies_file \absolute\path\to\dep\dependencies.txt -data_type dependencies -dest_dir \absolute\path\to\dep\
 #>
@@ -52,7 +52,7 @@
 
 Param(
 [parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$dependencies_file,
-[parameter(Mandatory=$true)][ValidateSet('tests','dependencies', ignorecase=$False)][string]$data_type,
+[parameter(Mandatory=$true)][ValidateSet('test','dependencies', ignorecase=$False)][string]$data_type,
 [parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$dest_dir
 )
 
@@ -79,13 +79,22 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 # input validation
 #
 
+Write-Host "===Input validation==="
 If (-Not (Test-Path $dependencies_file)){
 	Throw New-Object System.IO.FileNotFoundException "$dependencies_file not found"
+} Else {
+	Write-Host "Dependencies file found"
 }
 
 If (-Not (Test-Path $dest_dir)){
-	Throw New-Object System.IO.FileNotFoundException "$dest_dir not found"
+	Write-Host "Destination directory not found"
+
+	New-Item $dest_dir -itemtype directory | Out-Null
+	Write-Host "Created destination directory: "  $dest_dir
+} Else {
+	Write-Host "Destination directory found"
 }
+Write-Host ""
 
 Write-Host "===Parameters==="
 Write-Host "Dependencies file = $dependencies_file"
@@ -117,39 +126,58 @@ function DownloadDeps($url, $dest)
 {
 	Write-Host "Download: [" $url "] -> [" $dest "]"
 
-	$uri = New-Object System.Uri $url
-	$request = [System.Net.HttpWebRequest]::Create($uri)
-	$request.set_Timeout(15000) #15 second timeout
-	$response = $request.GetResponse()
+	Try {
+		$uri = New-Object System.Uri $url
+		$request = [System.Net.HttpWebRequest]::Create($uri)
+		$request.Timeout = 15000 #15 second timeout
+		$response = $request.GetResponse()
+	} Catch {
+		 $error = $_.Exception.Message
+		 Write-Host "Failed to download resources: "  $error
+		 return $false
+	}
 
-	# retrieve total size of data to download
-	$total_len = $response.get_ContentLength()
+	If($request.HaveResponse) {
+		# retrieve total size of data to download
+		$total_len = $response.ContentLength
 
-	$response_stream = $response.GetResponseStream()
-	$target_stream = New-Object -TypeName System.IO.FileStream -ArgumentList $dest, Create
+		If($total_len -eq -1) {
+			Write-Host "Failed to download resources: content length = -1"
+			return $false
+		}
 
-	$buffer = new-object byte[] 10KB
-	$bytes_read = 0
+		$response_stream = $response.GetResponseStream()
+		$target_stream = New-Object -TypeName System.IO.FileStream -ArgumentList $dest, Create
 
-	Do {
-		#transfer data from response stream to target stream
-		$count = $response_stream.Read($buffer, 0, $buffer.length)
-		$target_stream.Write($buffer, 0, $count)
-		$bytes_read += $count
+		$buffer = new-object byte[] 10KB
+		$bytes_read = 0
 
-		$percent_complete = [System.Math]::Floor(100 * $bytes_read / $total_len)
+		Do {
+			#transfer data from response stream to target stream
+			$count = $response_stream.Read($buffer, 0, $buffer.length)
+			$target_stream.Write($buffer, 0, $count)
+			$bytes_read += $count
 
-		Write-Progress -Status "Progress: $percent_complete%" -Activity ("Downloading " + (Split-Path -Leaf $dest)) -PercentComplete $percent_complete
+			$percent_complete = [System.Math]::Floor(100 * $bytes_read / $total_len)
 
-	} While ($count -gt 0)
+			Write-Progress -Status "Progress: $percent_complete%" -Activity ("Downloading " + (Split-Path -Leaf $dest)) -PercentComplete $percent_complete
 
-	$target_stream.Flush()
-	$target_stream.Close()
-	$target_stream.Dispose()
-	$response_stream.Dispose()
-	$response_stream.Close()
+		} While ($count -gt 0)
 
-	$Script:download_count++
+		$target_stream.Flush()
+		$target_stream.Close()
+		$target_stream.Dispose()
+		$response_stream.Close()
+		$response_stream.Dispose()
+
+		$Script:download_count++
+
+	} Else {
+		Write-Host "Failed to retrieve response from the server"
+		return $false
+	}
+
+	return $true
 }
 
 function ExpandZipFile($zip, $dest)
@@ -197,11 +225,15 @@ function InstallDeps($arch, $dir, $url)
 {
 	$zip = $Script:arch_dir + "\" + $arch
 
+	$do_extract = $true
+
 	If(($Script:cache_dir -and -Not (Test-Path $zip)) -or (-Not $Script:cache_dir)) {
-		DownloadDeps $url $zip
+		$do_extract = DownloadDeps $url $zip
 	}
 
-	ExpandZipFile $zip ($Script:dest_dir + "\" + $dir)
+	if($do_extract) {
+		ExpandZipFile $zip ($Script:dest_dir + "\" + $dir)
+	}
 }
 
 #
