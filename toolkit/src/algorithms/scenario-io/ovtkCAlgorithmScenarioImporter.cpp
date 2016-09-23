@@ -3,6 +3,17 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <memory>
+#include <string>
+
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
+#include <xercesc/validators/common/Grammar.hpp>
+
+XERCES_CPP_NAMESPACE_USE
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -161,7 +172,118 @@ namespace OpenViBEToolkit
 		IAlgorithmContext& m_rAlgorithmContext;
 		SScenario m_oSymbolicScenario;
 	};
-};
+
+	std::string xercesToString(const XMLCh* xercesString)
+	{
+		std::unique_ptr<char[]> charArray(XMLString::transcode(xercesString));
+		return std::string(charArray.get());
+	}
+
+	const char* xercesToCString(const XMLCh* xercesString)
+	{
+		return xercesToString(xercesString).c_str();
+	}
+
+	class CErrorHandler final : public xercesc::HandlerBase
+	{
+		public:
+
+		explicit CErrorHandler(IAlgorithmContext& rAlgorithmContext)
+			:m_rAlgorithmContext(rAlgorithmContext)
+		{
+		}
+
+		void fatalError(const xercesc::SAXParseException& exception) override
+		{
+			this->error(exception);
+		}
+
+		void error(const xercesc::SAXParseException& exception) override
+		{
+			// we just issue a warning here because the calling method
+			// implements a fallback mechanism and we don't want to populate
+			// the error manager if the importer returns gracefully.
+			OV_WARNING(
+				"Failed to validate xml: error [" << xercesToCString(exception.getMessage()) << "], line number [" << static_cast<uint64>(exception.getLineNumber()) << "]",
+				m_rAlgorithmContext.getLogManager()
+			);
+		}
+
+		void warning(const xercesc::SAXParseException& exception) override
+		{
+			OV_WARNING(
+				"Warning while validating xml: warning [" << xercesToCString(exception.getMessage()) << "], line number [" << static_cast<uint64>(exception.getLineNumber()) << "]",
+				m_rAlgorithmContext.getLogManager()
+			);
+		}
+
+		private:
+			IAlgorithmContext& m_rAlgorithmContext;
+	};
+}
+
+bool CAlgorithmScenarioImporter::validateXML(const unsigned char* xmlBuffer, unsigned long xmlBufferSize)
+{
+	// implementation of the fallback mechanism
+
+	// error manager is used to differentiate errors from invalid xml
+	this->getErrorManager().releaseErrors();
+
+	if(this->validateXMLAgainstSchema((OpenViBE::Directories::getDataDir() + "/kernel/openvibe-scenario-v1.xsd"), xmlBuffer, xmlBufferSize)) {
+		return true;
+	}
+	else if(this->getErrorManager().hasError())
+	{
+		// this is not a validation error thus we return directly
+		return false;
+	}
+
+	if(this->validateXMLAgainstSchema((OpenViBE::Directories::getDataDir() + "/kernel/openvibe-scenario-legacy.xsd"), xmlBuffer, xmlBufferSize)) {
+		OV_WARNING_K("Importing scenario with legacy format: legacy scenarii might be deprecated in the future so upgrade to v1 format when possible");
+		return true;
+	}
+	else if(this->getErrorManager().hasError())
+	{
+		// this is not a validation error thus we return directly
+		return false;
+	}
+
+	OV_ERROR_KRF(
+		"Failed to validate scenario against XSD schemas",
+		OpenViBE::Kernel::ErrorType::BadXMLSchemaValidation
+	);
+}
+
+bool CAlgorithmScenarioImporter::validateXMLAgainstSchema(const char *validationSchema, const unsigned char* xmlBuffer, unsigned long xmlBufferSize)
+{
+
+	this->getLogManager() << LogLevel_Info << "Validating XML against schema [" << validationSchema << "]\n";
+
+	XMLPlatformUtils::Initialize();
+	MemBufInputSource* xercesBuffer = new MemBufInputSource(xmlBuffer, xmlBufferSize, "xml memory buffer");
+
+	XercesDOMParser* parser = new XercesDOMParser();
+	parser->setValidationScheme(XercesDOMParser::Val_Always);
+    parser->setDoNamespaces(true);
+    parser->setDoSchema(true);
+    parser->setValidationConstraintFatal(true);
+    parser->setValidationSchemaFullChecking(true);
+    parser->setExternalNoNamespaceSchemaLocation(validationSchema);
+
+	ErrorHandler* errorHandler = (ErrorHandler*) new CErrorHandler(this->getAlgorithmContext());
+    parser->setErrorHandler(errorHandler);
+
+    parser->parse(*xercesBuffer);
+    unsigned int errorCount = parser->getErrorCount();
+
+    delete parser;
+	delete errorHandler;
+	delete xercesBuffer;
+
+	XMLPlatformUtils::Terminate();
+
+	return (errorCount == 0);
+}
 
 boolean CAlgorithmScenarioImporter::process(void)
 {
@@ -170,7 +292,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 
 	OV_ERROR_UNLESS_KRF(
 		l_pScenario,
-		"Output scecnario is NULL",
+		"Output scenario is NULL",
 		OpenViBE::Kernel::ErrorType::BadOutput
 	);
 
@@ -182,6 +304,11 @@ boolean CAlgorithmScenarioImporter::process(void)
 		"Input memory buffer is NULL",
 		OpenViBE::Kernel::ErrorType::BadInput
 	);
+
+	if(!this->validateXML(l_pMemoryBuffer->getDirectPointer(), l_pMemoryBuffer->getSize()))
+	{
+		return false; // error handling is handled in validateXML
+	}
 
 	std::map<CIdentifier, CIdentifier> l_vBoxIdMapping;
 
