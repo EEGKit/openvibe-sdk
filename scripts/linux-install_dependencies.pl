@@ -105,6 +105,7 @@ if ($distribution eq 'Ubuntu 14.04') {
   push @packages, "libboost-filesystem1.54-dev";
   push @packages, "ninja-build";
   push @packages, "libzzip-dev";
+  push @packages, "libxerces-c-dev";
 } elsif ($distribution eq 'Ubuntu 16.04') {
   # common packages with certivibe
   push @packages, "doxygen";
@@ -121,6 +122,7 @@ if ($distribution eq 'Ubuntu 14.04') {
   push @packages, "libboost-filesystem1.58-dev";
   push @packages, "ninja-build";
   push @packages, "libzzip-dev";
+  push @packages, "libxerces-c-dev";
 }
 
 # Update package list
