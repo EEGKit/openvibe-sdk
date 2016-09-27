@@ -179,11 +179,6 @@ namespace OpenViBEToolkit
 		return std::string(charArray.get());
 	}
 
-	const char* xercesToCString(const XMLCh* xercesString)
-	{
-		return xercesToString(xercesString).c_str();
-	}
-
 	class CErrorHandler final : public xercesc::HandlerBase
 	{
 		public:
@@ -204,7 +199,7 @@ namespace OpenViBEToolkit
 			// implements a fallback mechanism and we don't want to populate
 			// the error manager if the importer returns gracefully.
 			OV_WARNING(
-				"Failed to validate xml: error [" << xercesToCString(exception.getMessage()) << "], line number [" << static_cast<uint64>(exception.getLineNumber()) << "]",
+				"Failed to validate xml: error [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << static_cast<uint64>(exception.getLineNumber()) << "]",
 				m_rAlgorithmContext.getLogManager()
 			);
 		}
@@ -212,7 +207,7 @@ namespace OpenViBEToolkit
 		void warning(const xercesc::SAXParseException& exception) override
 		{
 			OV_WARNING(
-				"Warning while validating xml: warning [" << xercesToCString(exception.getMessage()) << "], line number [" << static_cast<uint64>(exception.getLineNumber()) << "]",
+				"Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << static_cast<uint64>(exception.getLineNumber()) << "]",
 				m_rAlgorithmContext.getLogManager()
 			);
 		}
