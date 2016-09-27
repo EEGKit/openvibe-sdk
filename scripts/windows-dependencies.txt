@@ -8,4 +8,5 @@ ninja-1.4.0.zip;ninja;https://www.dropbox.com/s/ug6z7j7ob7d02o7/ninja-1.4.0.zip?
 pthread-2.8.0.zip;pthread;https://www.dropbox.com/s/p9byne4l2tscidw/pthread-2.8.0.zip?dl=1
 tvicport-5.0.2.1.zip;tvicport;https://www.dropbox.com/s/3qlgz84t00dlij6/tvicport-5.0.2.1.zip?dl=1
 vcredist.zip;vcredist;https://www.dropbox.com/s/k09jax30ltv705r/vcredist.zip?dl=1
+xerces-c-3.1.1.zip;xerces-c;https://www.dropbox.com/s/bhami8xog9y9tsd/xerces-c-3.1.1.zip?dl=1
 zip-3.0.zip;zip;https://www.dropbox.com/s/323gug7fslbf87n/zip-3.0.zip?dl=1

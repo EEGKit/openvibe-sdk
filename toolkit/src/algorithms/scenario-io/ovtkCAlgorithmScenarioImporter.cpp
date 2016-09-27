@@ -305,7 +305,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 		OpenViBE::Kernel::ErrorType::BadInput
 	);
 
-	if(!this->validateXML(l_pMemoryBuffer->getDirectPointer(), l_pMemoryBuffer->getSize()))
+	if(!this->validateXML(l_pMemoryBuffer->getDirectPointer(), static_cast<unsigned long>(l_pMemoryBuffer->getSize())))
 	{
 		return false; // error handling is handled in validateXML
 	}

@@ -22,14 +22,9 @@ Windows 8
 Certivibe
 ---------
 
-Install dependendencies available on [Dropbox](https://www.dropbox.com/home/Mensia%20CertiViBE/09%20-%20Dependencies/certivibe)
-in `%root%\dependencies\`.
+Use windows-install-dependencies.ps1 available in the scripts directory.
 
 Unit test
 ---------
 
-Install dependendencies available at [Dropbox](https://www.dropbox.com/home/Mensia%20CertiViBE/09%20-%20Dependencies/certivibe-test)
-in `%root%\dependencies\`.
-
-Install and unzip unit test data available on [Dropbox](https://www.dropbox.com/sh/ctb4g92hxxo9tyf/AAAQgM0KL5Vp8hYOLemUMayqa?dl=0)
-in `%root%\dependencies\test-data`.
+Use windows-install-dependencies.ps1 available in the scripts directory

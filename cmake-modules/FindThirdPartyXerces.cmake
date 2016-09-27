@@ -2,6 +2,11 @@
 # Finds Xerces dependency
 # ---------------------------------
 
+IF(WIN32)
+	SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "${OV_CUSTOM_DEPENDENCIES_PATH}/xerces-c/include")
+	SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${OV_CUSTOM_DEPENDENCIES_PATH}/xerces-c/lib")
+ENDIF()
+
 FIND_PACKAGE(XercesC REQUIRED)
 
 IF(XercesC_FOUND)
