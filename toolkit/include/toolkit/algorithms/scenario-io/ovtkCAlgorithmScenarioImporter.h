@@ -18,11 +18,6 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::boolean process(void);
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithmScenarioImporter >, OVP_ClassId_Algorithm_ScenarioImporter)
-
-	private:
-
-		bool validateXML(const unsigned char* xmlBuffer, unsigned long xmlBufferSize);
-		bool validateXMLAgainstSchema(const char *validationSchema, const unsigned char* xmlBuffer, unsigned long xmlBufferSize);
 	};
 
 	class OVTK_API CAlgorithmScenarioImporterDesc : public OpenViBE::Plugins::IAlgorithmScenarioImporterDesc

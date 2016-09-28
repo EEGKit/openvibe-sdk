@@ -57,7 +57,6 @@ INCLUDE("FindOpenViBECommon")
 INCLUDE("FindOpenViBEModuleEBML")
 INCLUDE("FindOpenViBEModuleXML")
 INCLUDE("FindOpenViBEModuleSystem")
-INCLUDE("FindThirdPartyXerces")
 
 # ---------------------------------
 # Target macros
