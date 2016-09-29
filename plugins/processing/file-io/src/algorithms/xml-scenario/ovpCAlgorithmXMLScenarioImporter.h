@@ -36,12 +36,13 @@ namespace OpenViBEPlugins
 
 		protected:
 
+			bool validateXML(const unsigned char* xmlBuffer, unsigned long xmlBufferSize);
+			bool validateXMLAgainstSchema(const char *validationSchema, const unsigned char* xmlBuffer, unsigned long xmlBufferSize);
+
 			OpenViBE::Plugins::IAlgorithmScenarioImporterContext* m_pContext;
 			OpenViBE::uint32 m_ui32Status;
 			XML::IReader* m_pReader;
 			std::stack < std::string > m_vNodes;
-
-			OpenViBE::boolean m_bScenarioRecognized;
 		};
 
 		class CAlgorithmXMLScenarioImporterDesc : public OpenViBEToolkit::CAlgorithmScenarioImporterDesc

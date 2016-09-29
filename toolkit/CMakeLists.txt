@@ -8,7 +8,7 @@ SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_
 
 
 # Command to generate cpp compliant stimulation files from text file
-# Creating output directories is mandatory as it is not handled by ADD_CUSTOM_COMMAND 
+# Creating output directories is mandatory as it is not handled by ADD_CUSTOM_COMMAND
 FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/toolkit)
 FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src)
 ADD_CUSTOM_COMMAND(
@@ -40,9 +40,9 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include/toolkit/tools)
 # add binary directory to includes as it contains generated stimulation header
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/include/)
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED 
-	${source_files} 
-	${CMAKE_CURRENT_BINARY_DIR}/include/toolkit/ovtk_stimulations.h 
+ADD_LIBRARY(${PROJECT_NAME} SHARED
+	${source_files}
+	${CMAKE_CURRENT_BINARY_DIR}/include/toolkit/ovtk_stimulations.h
 	${CMAKE_CURRENT_BINARY_DIR}/src/ovtk_stimulations.cpp
 	)
 ADD_DEPENDENCIES(${PROJECT_NAME} openvibe-generate-stimulation-file)

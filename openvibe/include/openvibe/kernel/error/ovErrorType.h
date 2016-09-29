@@ -62,6 +62,7 @@ namespace OpenViBE
 			BadFileWrite = 41, /*!< Used when writing to a file failed */
 			BadFileParsing = 42, /*!< Used when reading succeeded but parsing of data within the file failed */
 			BadNetworkConnection = 43, /*!< Used when network connection failed */
+			BadXMLSchemaValidation = 44, /*!< Used when validation of xml files against xsd schema fails */
 			// Config
 			BadConfig = 50, /*!< Used when a given configuration state is erroneous */
 			BadInput = 51, /*!< Used when an input (box, algorithm) is missing, empty or has a wrong value */

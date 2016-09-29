@@ -3,6 +3,8 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <memory>
+#include <string>
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -161,7 +163,7 @@ namespace OpenViBEToolkit
 		IAlgorithmContext& m_rAlgorithmContext;
 		SScenario m_oSymbolicScenario;
 	};
-};
+}
 
 boolean CAlgorithmScenarioImporter::process(void)
 {
@@ -170,7 +172,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 
 	OV_ERROR_UNLESS_KRF(
 		l_pScenario,
-		"Output scecnario is NULL",
+		"Output scenario is NULL",
 		OpenViBE::Kernel::ErrorType::BadOutput
 	);
 
