@@ -108,7 +108,6 @@ CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter(void)
 	:m_pContext(NULL)
 	,m_ui32Status(Status_ParsingNothing)
 	,m_pReader(NULL)
-	,m_bScenarioRecognized(false)
 {
 	m_pReader=XML::createReader(*this);
 }
@@ -126,7 +125,7 @@ void CAlgorithmXMLScenarioImporter::openChild(const char* sName, const char** sA
 
 	if(false) { }
 
-	else if(l_sTop=="OpenViBE-Scenario"   && m_ui32Status==Status_ParsingNothing)  { m_ui32Status=Status_ParsingScenario;          m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario); m_bScenarioRecognized = true; }
+	else if(l_sTop=="OpenViBE-Scenario"   && m_ui32Status==Status_ParsingNothing)  { m_ui32Status=Status_ParsingScenario;          m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario);}
 	else if(l_sTop=="Attribute"           && m_ui32Status==Status_ParsingScenario) { m_ui32Status=Status_ParsingScenarioAttribute; m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute); }
 	else if(l_sTop=="Setting"             && m_ui32Status==Status_ParsingScenario)      { m_ui32Status=Status_ParsingScenarioSetting;        m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting); }
 	else if(l_sTop=="Input"               && m_ui32Status==Status_ParsingScenario)      { m_ui32Status=Status_ParsingScenarioInput;        m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input); }
@@ -297,26 +296,27 @@ bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char *validat
 {
 	this->getLogManager() << LogLevel_Info << "Validating XML against schema [" << validationSchema << "]\n";
 
+	unsigned int errorCount = 0;
+
 	XMLPlatformUtils::Initialize();
-	MemBufInputSource* xercesBuffer = new MemBufInputSource(xmlBuffer, xmlBufferSize, "xml memory buffer");
 
-	XercesDOMParser* parser = new XercesDOMParser();
-	parser->setValidationScheme(XercesDOMParser::Val_Always);
-	parser->setDoNamespaces(true);
-	parser->setDoSchema(true);
-	parser->setValidationConstraintFatal(true);
-	parser->setValidationSchemaFullChecking(true);
-	parser->setExternalNoNamespaceSchemaLocation(validationSchema);
+	{ // scope the content here to ensure unique_ptr contents are destroyed before the call to XMLPlatformUtils::Terminate();
+		std::unique_ptr<MemBufInputSource> xercesBuffer(new MemBufInputSource(xmlBuffer, xmlBufferSize, "xml memory buffer"));
 
-	ErrorHandler* errorHandler = (ErrorHandler*) new CErrorHandler(this->getAlgorithmContext());
-	parser->setErrorHandler(errorHandler);
+		std::unique_ptr<XercesDOMParser> parser(new XercesDOMParser());
+		parser->setValidationScheme(XercesDOMParser::Val_Always);
+		parser->setDoNamespaces(true);
+		parser->setDoSchema(true);
+		parser->setValidationConstraintFatal(true);
+		parser->setValidationSchemaFullChecking(true);
+		parser->setExternalNoNamespaceSchemaLocation(validationSchema);
 
-	parser->parse(*xercesBuffer);
-	unsigned int errorCount = parser->getErrorCount();
+		std::unique_ptr<ErrorHandler> errorHandler(new CErrorHandler(this->getAlgorithmContext()));
+		parser->setErrorHandler(errorHandler.get());
 
-	delete parser;
-	delete errorHandler;
-	delete xercesBuffer;
+		parser->parse(*xercesBuffer);
+		errorCount = parser->getErrorCount();
+	}
 
 	XMLPlatformUtils::Terminate();
 
@@ -332,15 +332,5 @@ boolean CAlgorithmXMLScenarioImporter::import(IAlgorithmScenarioImporterContext&
 		return false; // error handling is handled in validateXML
 	}
 
-	m_bScenarioRecognized = false;
-
-	boolean m_bOk = m_pReader->processData(rMemoryBuffer.getDirectPointer(), rMemoryBuffer.getSize());
-
-	OV_ERROR_UNLESS_KRF(
-		m_bScenarioRecognized,
-		"Scenario not recognized: missing <OpenViBE-Scenario> tag",
-		OpenViBE::Kernel::ErrorType::BadParsing
-	);
-
-	return m_bOk;
+	return m_pReader->processData(rMemoryBuffer.getDirectPointer(), rMemoryBuffer.getSize());
 }
