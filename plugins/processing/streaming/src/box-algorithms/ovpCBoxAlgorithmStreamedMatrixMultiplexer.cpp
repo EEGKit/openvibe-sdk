@@ -50,17 +50,15 @@ boolean CBoxAlgorithmStreamedMatrixMultiplexer::process(void)
 					l_pInputMemoryBuffer->getDirectPointer(),
 					l_pInputMemoryBuffer->getSize());
 
-				//
-				// \warning: The box implementation is bad now because m_ui64LastStartTime and m_ui64LastEndTime
-				// 			 are never updated
-				//
-
 				OV_ERROR_UNLESS_KRF(
 					l_ui64StartTime >= m_ui64LastStartTime && l_ui64EndTime >= m_ui64LastEndTime,
 					"Invalid chunk times with start = [" << l_ui64StartTime << "] and end = [" << l_ui64EndTime
 					<< "] while last chunk has start = [" << m_ui64LastStartTime << "] and end = [" << m_ui64LastEndTime << "]",
 					OpenViBE::Kernel::ErrorType::BadInput
 				);
+
+				m_ui64LastStartTime = l_ui64StartTime;
+				m_ui64LastEndTime = l_ui64EndTime;
 
 				l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
 				m_bHeaderSent=true;
