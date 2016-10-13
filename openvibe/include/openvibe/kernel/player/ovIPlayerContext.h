@@ -5,6 +5,10 @@
 
 namespace OpenViBE
 {
+	namespace Plugins
+	{
+		class IPluginObject;
+	}
 	namespace Kernel
 	{
 		class IConfigurationManager;
@@ -179,6 +183,10 @@ namespace OpenViBE
 			 *          has finished its work, it could be deprecated.
 			 */
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const=0;
+
+			virtual bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const = 0;
+			virtual OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const = 0;
+			virtual bool releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject) const = 0;
 
 			//@}
 

@@ -96,6 +96,21 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) { return getPlayerContext().getScenarioManager(); }
 		virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) { return getPlayerContext().getTypeManager(); }
 
+		virtual bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier)
+		{
+			return getPlayerContext().canCreatePluginObject(pluginIdentifier);
+		}
+
+		virtual OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier)
+		{
+			return getPlayerContext().createPluginObject(pluginIdentifier);
+		}
+
+		virtual bool releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject)
+		{
+			return getPlayerContext().releasePluginObject(pluginObject);
+		}
+
 // ====================================================================================================================================
 
 		virtual void appendOutputChunkData(const OpenViBE::uint32 ui32OutputIndex, const void* pBuffer, const OpenViBE::uint64 ui64BufferSize)
@@ -376,7 +391,7 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const { return m_pBoxListenerContext->getTypeManager(); }
 		virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const { return m_pBoxListenerContext->getLogManager(); }
 		virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const { return m_pBoxListenerContext->getErrorManager(); }
-				virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const { return m_pBoxListenerContext->getConfigurationManager(); }
+		virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const { return m_pBoxListenerContext->getConfigurationManager(); }
 
 		virtual OpenViBE::Kernel::IScenario& getScenario(void) const { return m_pBoxListenerContext->getScenario(); }
 

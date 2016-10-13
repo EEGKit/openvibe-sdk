@@ -45,11 +45,15 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const;
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const;
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const;
+			bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const;
+			OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const;
+			bool releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject) const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerContext>, OVK_ClassId_Kernel_Player_PlayerContext)
 
 		private:
 
+			const OpenViBE::Kernel::IKernelContext& m_rKernelContext;
 			OpenViBE::Kernel::CSimulatedBox& m_rSimulatedBox;
 			OpenViBE::Kernel::IAlgorithmManager& m_rAlgorithmManager;
 			OpenViBE::Kernel::IConfigurationManager& m_rConfigurationManager;

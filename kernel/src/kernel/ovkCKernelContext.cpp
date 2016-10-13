@@ -205,6 +205,12 @@ bool CKernelContext::uninitialize(void)
 		m_pScenarioManager->releaseScenario(scenarioIdentifier);
 	}
 
+	CIdentifier algorithmIdentifier;
+	while ((algorithmIdentifier = m_pAlgorithmManager->getNextAlgorithmIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier)
+	{
+		m_pAlgorithmManager->releaseAlgorithm(algorithmIdentifier);
+	}
+
 	m_pPluginManager.reset();
 	m_pScenarioManager.reset();
 	m_pTypeManager.reset();
