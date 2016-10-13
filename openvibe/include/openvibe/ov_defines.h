@@ -61,6 +61,7 @@
 #define OV_ClassId_Kernel_Scenario_BoxListenerContext        OpenViBE::CIdentifier(0xB4344A89, 0xC5044324)
 #define OV_ClassId_Kernel_Scenario_BoxProto                  OpenViBE::CIdentifier(0x169ED1C1, 0x639C5957)
 #define OV_ClassId_Kernel_Scenario_Comment                   OpenViBE::CIdentifier(0x13597D48, 0xB7268440)
+#define OV_ClassId_Kernel_Scenario_Metadata                  OpenViBE::CIdentifier(0x2D26542A, 0xC08B01D3)
 #define OV_ClassId_Kernel_Scenario_Link                      OpenViBE::CIdentifier(0x38F6E10D, 0x6BA2721A)
 #define OV_ClassId_Kernel_Scenario_Scenario                  OpenViBE::CIdentifier(0x6EED456C, 0x2FC6F03A)
 #define OV_ClassId_Kernel_Scenario_ScenarioImporterContext   OpenViBE::CIdentifier(0x734C0B6A, 0x7EFEBBC8)
@@ -186,8 +187,6 @@
 #define OV_TypeId_Script                                     OpenViBE::CIdentifier(0xB0D0DB45, 0x49CBC34A)
 #define OV_TypeId_Stimulation                                OpenViBE::CIdentifier(0x2C132D6E, 0x44AB0D97)
 #define OV_TypeId_LogLevel                                   OpenViBE::CIdentifier(0xA88B3667, 0x0871638C)
-#define OV_TypeId_Color                                      OpenViBE::CIdentifier(0x7F45A2A9, 0x7DB12219)
-#define OV_TypeId_ColorGradient                              OpenViBE::CIdentifier(0x3D3C7C7F, 0xEF0E7129)
 
 #define OV_TypeId_EBMLStream                                 OpenViBE::CIdentifier(0x434F6587, 0x2EFD2B7E)
 #define   OV_TypeId_ExperimentInformation                    OpenViBE::CIdentifier(0x403488E7, 0x565D70B6)

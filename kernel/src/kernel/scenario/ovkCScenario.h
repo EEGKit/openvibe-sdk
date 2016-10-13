@@ -15,6 +15,7 @@ namespace OpenViBE
 	{
 		typedef TBox< OpenViBE::Kernel::IBox > CBox;
 		class CComment;
+		class CMetadata;
 		class CLink;
 
 		class CScenario : public TBox< OpenViBE::Kernel::IScenario >
@@ -28,7 +29,8 @@ namespace OpenViBE
 			virtual OpenViBE::boolean merge(
 			        const OpenViBE::Kernel::IScenario& rScenario,
 			        OpenViBE::Kernel::IScenario::IScenarioMergeCallback* pScenarioMergeCallback,
-			        OpenViBE::boolean bMergeSettings);
+			        OpenViBE::boolean bMergeSettings,
+			        bool shouldPreserveIdentifiers);
 
 			virtual OpenViBE::CIdentifier getNextBoxIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
@@ -73,6 +75,13 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rSuggestedCommentIdentifier);
 			virtual OpenViBE::boolean removeComment(
 				const OpenViBE::CIdentifier& rCommentIdentifier);
+
+			OpenViBE::CIdentifier getNextMetadataIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const;
+			bool isMetadata(const OpenViBE::CIdentifier& metadataIdentifier) const;
+			const OpenViBE::Kernel::IMetadata* getMetadataDetails(const OpenViBE::CIdentifier& metadataIdentifier) const;
+			OpenViBE::Kernel::IMetadata* getMetadataDetails(const OpenViBE::CIdentifier& metadataIdentifier);
+			bool addMetadata(OpenViBE::CIdentifier& metadataIdentifier, const OpenViBE::CIdentifier& suggestedMetadataIdentifier);
+			bool removeMetadata(const OpenViBE::CIdentifier& metadataIdentifier);
 
 			virtual OpenViBE::CIdentifier getNextLinkIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
@@ -167,6 +176,7 @@ namespace OpenViBE
 
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CBox*> m_vBox;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CComment*> m_vComment;
+			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CMetadata*> m_metadata;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CLink*> m_vLink;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CBox*> m_vNeedsUpdatesBoxes;
 
@@ -174,6 +184,12 @@ namespace OpenViBE
 
 			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32> > m_vScenarioInputLink;
 			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32> > m_vScenarioOutputLink;
+
+		private:
+			// Helper members
+			std::map<OpenViBE::CIdentifier, OpenViBE::CIdentifier> m_nextMetadataIdentifier;
+			OpenViBE::CIdentifier m_firstMetadataIdentifier;
+
 		};
 	}
 }

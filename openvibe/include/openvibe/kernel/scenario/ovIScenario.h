@@ -15,6 +15,9 @@ namespace OpenViBE
 	namespace Kernel
 	{
 		class ILink;
+		class IComment;
+		class IMetadata;
+		class IConfigurationManager;
 
 		/**
 		 * \class IScenario
@@ -48,18 +51,24 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean clear(void)=0;
+
 			/**
 			 * \brief Merges this scenario with an other existing scenario
-			 * \param rScenario [in] : a reference to the scenario to merge this scenario with
-			 * \return \e true in case of success
-			 * \return \e false in case of error
+			 * \param rScenario A reference to the scenario to merge this scenario with
+			 * \param pScenarioCallback A callback that will be called for each merged element and will be passed the old and new identifiers
+			 * \param bMergeSettings When true, the settings from the source scenario will also be merged
+			 * \param bPreserveIdentifiers When true, the element identifiers from the source scenario will be preserved.
+			 * \retval true In case of success
+			 * \retval false In case of error
+			 * \note The \c bPreservedIdentifiers setting is only reliable when the destination scenario is empty.
 			 */
 			virtual OpenViBE::boolean merge(
 			        const OpenViBE::Kernel::IScenario& rScenario,
 			        OpenViBE::Kernel::IScenario::IScenarioMergeCallback* pScenarioMergeCallback,
-			        OpenViBE::boolean bMergeSettings) = 0;
+			        OpenViBE::boolean bMergeSettings,
+			        OpenViBE::boolean bPreserveIdentifiers) = 0;
 
-			//@{
+			//@}
 			/** \name Box management */
 			//@{
 
@@ -442,6 +451,57 @@ namespace OpenViBE
 			virtual OpenViBE::boolean removeComment(
 				const OpenViBE::CIdentifier& rCommentIdentifier)=0;
 			
+			//@}
+			/** \name Metadata management */
+			//@{
+
+			/**
+			 * \brief Get next metadata identifier in regards to another
+			 * \param previousIdentifier The identifier of the metadata
+			 * \retval OV_UndefinedIdentifier In case when metadata with the \c previousIdentifier is not present
+			 * \retval OV_UndefinedIdentifier In case when metadata with the \c previousIdentifier is last in the scenario
+			 * \return The identifier of the next metadata
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first comment identifier.
+			 */
+			virtual OpenViBE::CIdentifier getNextMetadataIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
+
+			/**
+			 * \param commentIdentifier The identifier to test
+			 * \retval true If the identified object is metadata
+			 * \retval false If the identified object is not metadata or when the identifier is not present in the scenario
+			 */
+			virtual bool isMetadata(const OpenViBE::CIdentifier& metadataIdentifier) const = 0;
+
+
+			/**
+			 * \param metadataIdentifier The identifier of a metadata
+			 * \return Pointer to object containing metadata details
+			 */
+			virtual const OpenViBE::Kernel::IMetadata* getMetadataDetails(const OpenViBE::CIdentifier& metadataIdentifier) const = 0;
+
+			/// \copydoc getMetadataDetails(const OpenViBE::CIdentifier&)const
+			virtual OpenViBE::Kernel::IMetadata* getMetadataDetails(const OpenViBE::CIdentifier& metadataIdentifier) = 0;
+
+			/**
+			 * \brief Add new metadata in the scenario
+			 * \param[out] metadataIdentifier The identifier of the newly created metadata
+			 * \param suggestedMetadataIdentifier A suggestion for the new identifier. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
+			 *        then a random unused identifier will be used.
+			 * \retval true In case of success.
+			 * \retval false In case of error. In this case, \c metadataIdentifier remains unchanged.
+			 * \note This method creates an empty metadata.
+			 */
+			virtual bool addMetadata(OpenViBE::CIdentifier& metadataIdentifier, const OpenViBE::CIdentifier& suggestedMetadataIdentifier) = 0;
+
+			/**
+			 * \brief Remove metadata from the scenario
+			 * \param metadataIdentifier The comment identifier
+			 * \retval true In case of success.
+			 * \retval false In case of error.
+			 */
+			virtual bool removeMetadata(const OpenViBE::CIdentifier& metadataIdentifier) = 0;
+			//@}
+
 			/**
 			 * \brief replaces settings of each box by its locally expanded version
 			 * only expands the $var{} tokens, it leaves others as is

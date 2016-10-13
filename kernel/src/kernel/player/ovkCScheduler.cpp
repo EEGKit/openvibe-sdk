@@ -285,7 +285,7 @@ boolean CScheduler::flattenScenario()
 			CScenarioMergeCallback l_oScenarioMergeCallback(l_mIdentifierCorrespondence);
 
 			// Copy the boxes and the links from the template metabox scenario to this one
-			m_pScenario->merge(l_rMetaboxScenarioInstance, &l_oScenarioMergeCallback, false);
+			m_pScenario->merge(l_rMetaboxScenarioInstance, &l_oScenarioMergeCallback, false, false);
 
 			// Now reconnect all the pipes
 

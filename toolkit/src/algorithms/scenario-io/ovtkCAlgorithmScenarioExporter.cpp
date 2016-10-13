@@ -20,6 +20,7 @@ namespace OpenViBEToolkit
 			CAlgorithmScenarioExporterHelper(IAlgorithmContext& rKernelContext, CAlgorithmScenarioExporter& rParent);
 			boolean exportBox(IMemoryBuffer& rMemoryBuffer, const IBox& rBox);
 			boolean exportComment(IMemoryBuffer& rMemoryBuffer, const IComment& rComment);
+			boolean exportMetadata(IMemoryBuffer& rMemoryBuffer, const IMetadata& rMetadata);
 			boolean exportSetting(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32SettingIndex);
 			boolean exportInput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32InputIndex);
 			boolean exportOutput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32OutputIndex);
@@ -98,6 +99,8 @@ boolean CAlgorithmScenarioExporter::process(void)
 
 	this->exportStart(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario);
 
+	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion, CString("1"));
+
 	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Creator, CString(OV_PROJECT_NAME));
 
 	std::stringstream l_sOpenViBEVersion;
@@ -143,6 +146,14 @@ boolean CAlgorithmScenarioExporter::process(void)
 	while((l_oCommentIdentifier=l_pScenario->getNextCommentIdentifier(l_oCommentIdentifier))!=OV_UndefinedIdentifier)
 	{
 		l_oHelper.exportComment(l_oTemporaryMemoryBuffer, *l_pScenario->getCommentDetails(l_oCommentIdentifier));
+	}
+	this->exportStop(l_oTemporaryMemoryBuffer);
+
+	CIdentifier metadataIdentifier;
+	this->exportStart(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Metadata);
+	while ((metadataIdentifier = l_pScenario->getNextMetadataIdentifier(metadataIdentifier)) != OV_UndefinedIdentifier)
+	{
+		l_oHelper.exportMetadata(l_oTemporaryMemoryBuffer, *l_pScenario->getMetadataDetails(metadataIdentifier));
 	}
 	this->exportStop(l_oTemporaryMemoryBuffer);
 
@@ -250,6 +261,18 @@ boolean CAlgorithmScenarioExporterHelper::exportComment(IMemoryBuffer& rMemoryBu
 	exportAttributesMacro((*this), rComment, rMemoryBuffer, Comment);
 
 	m_rParent.exportStop(rMemoryBuffer);
+
+	return true;
+}
+
+bool CAlgorithmScenarioExporterHelper::exportMetadata(IMemoryBuffer& memoryBuffer, const IMetadata& metadata)
+{
+	m_rParent.exportStart(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry);
+	 m_rParent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Identifier, metadata.getIdentifier());
+	 m_rParent.exportIdentifier(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Type, metadata.getType());
+	 m_rParent.exportString(memoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Data, metadata.getData());
+
+	m_rParent.exportStop(memoryBuffer);
 
 	return true;
 }

@@ -3,6 +3,7 @@
 
 #include "ovkTBox.hpp"
 #include "ovkCComment.h"
+#include "ovkCMetadata.h"
 #include "ovkCLink.h"
 
 #include "../ovkCObjectVisitorContext.h"
@@ -102,6 +103,7 @@ namespace
 
 CScenario::CScenario(const IKernelContext& rKernelContext, const CIdentifier& rIdentifier)
 	:TBox< IScenario > (rKernelContext)
+    ,m_firstMetadataIdentifier(OV_UndefinedIdentifier)
 {
 	// Some operations on boxes manipulate the owner scenario, for example removing inputs
 	// by default we set the scenario as owning itself to avoid segfaults
@@ -136,6 +138,13 @@ boolean CScenario::clear(void)
 		delete itComment->second;
 	}
 	m_vComment.clear();
+
+	// Clears metadata
+	for (auto it = m_metadata.begin(); it != m_metadata.end(); ++it)
+	{
+		delete it->second;
+	}
+	m_metadata.clear();
 
 	// Clears links
 	map<CIdentifier, CLink*>::iterator itLink;
@@ -205,7 +214,7 @@ boolean CScenario::removeScenarioOutput(const uint32 ui32OutputIndex)
 	return true;
 }
 
-boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pScenarioMergeCallback, boolean bMergeSettings)
+boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pScenarioMergeCallback, bool bMergeSettings, bool bShouldPreserveIdentifiers)
 {
 	// Prepares copy
 	map < CIdentifier, CIdentifier > l_vIdMapping;
@@ -216,14 +225,14 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 	{
 		CIdentifier l_oNewIdentifier;
 		const IBox* l_pBox = rScenario.getBoxDetails(l_oBoxIdentifier);
-		this->addBox(l_oNewIdentifier, *l_pBox, OV_UndefinedIdentifier);
+		CIdentifier suggestedNewIdentifier = bShouldPreserveIdentifiers ? l_pBox->getIdentifier() : OV_UndefinedIdentifier;
+		this->addBox(l_oNewIdentifier, *l_pBox, suggestedNewIdentifier);
 		l_vIdMapping[l_oBoxIdentifier] = l_oNewIdentifier;
 
 		if (pScenarioMergeCallback)
 		{
 			pScenarioMergeCallback->process(l_oBoxIdentifier, l_oNewIdentifier);
 		}
-
 	}
 
 	// Copies links
@@ -246,6 +255,18 @@ boolean CScenario::merge(const IScenario& rScenario, IScenarioMergeCallback* pSc
 	}
 
 	// Copy comments
+
+	// Copy metadata
+	CIdentifier oldMetadataIdentifier;
+	while ((oldMetadataIdentifier = rScenario.getNextMetadataIdentifier(oldMetadataIdentifier)) != OV_UndefinedIdentifier)
+	{
+		CIdentifier newIdentifier;
+		const IMetadata* oldMetadata = rScenario.getMetadataDetails(oldMetadataIdentifier);
+		CIdentifier suggestedNewIdentifier = bShouldPreserveIdentifiers ? oldMetadataIdentifier : OV_UndefinedIdentifier;
+		this->addMetadata(newIdentifier, suggestedNewIdentifier);
+		IMetadata* newMetadata = this->getMetadataDetails(newIdentifier);
+		newMetadata->initializeFromExistingMetadata(*oldMetadata);
+	}
 
 	// Copy settings if requested
 
@@ -580,6 +601,99 @@ boolean CScenario::removeComment(
 	return true;
 }
 
+// Metadata
+CIdentifier CScenario::getNextMetadataIdentifier(const CIdentifier& previousIdentifier) const
+{
+	if (previousIdentifier == OV_UndefinedIdentifier)
+	{
+		return m_firstMetadataIdentifier;
+	}
+
+	if (m_metadata.count(previousIdentifier) == 0)
+	{
+		return OV_UndefinedIdentifier;
+	}
+
+	return m_nextMetadataIdentifier.at(previousIdentifier);
+}
+
+const IMetadata* CScenario::getMetadataDetails(const CIdentifier& metadataIdentifier) const
+{
+	auto itMetadata = m_metadata.find(metadataIdentifier);
+
+	OV_ERROR_UNLESS_KRN(
+		itMetadata != m_metadata.end(),
+		"Metadata [" << metadataIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
+	return itMetadata->second;
+}
+
+IMetadata* CScenario::getMetadataDetails(const CIdentifier& metadataIdentifier)
+{
+	auto itMetadata = m_metadata.find(metadataIdentifier);
+
+	OV_ERROR_UNLESS_KRN(
+		itMetadata != m_metadata.end(),
+		"Metadata [" << metadataIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
+	return itMetadata->second;
+}
+
+bool CScenario::isMetadata(const CIdentifier& identifier) const
+{
+	return m_metadata.count(identifier) > 0;
+}
+
+bool CScenario::addMetadata(CIdentifier& metadataIdentifier, const CIdentifier& suggestedMetadataIdentifier)
+{
+	metadataIdentifier = getUnusedIdentifier(suggestedMetadataIdentifier);
+	CMetadata* metadata = new CMetadata(this->getKernelContext(), *this);
+	metadata->setIdentifier(metadataIdentifier);
+
+	m_nextMetadataIdentifier[metadataIdentifier] = m_firstMetadataIdentifier;
+	m_firstMetadataIdentifier = metadataIdentifier;
+	m_metadata[metadataIdentifier] = metadata;
+	return true;
+}
+
+bool CScenario::removeMetadata(const CIdentifier& metadataIdentifier)
+{
+	// Finds the comment according to its identifier
+	auto itMetadata = m_metadata.find(metadataIdentifier);
+
+	OV_ERROR_UNLESS_KRF(
+		itMetadata != m_metadata.end(),
+		"Comment [" << metadataIdentifier.toString() << "] is not part of the scenario",
+		ErrorType::ResourceNotFound
+	);
+
+	// Deletes the comment itself
+	delete itMetadata->second;
+
+	// Removes comment from the comment list
+	m_metadata.erase(itMetadata);
+
+	if (metadataIdentifier == m_firstMetadataIdentifier)
+	{
+		m_firstMetadataIdentifier = m_nextMetadataIdentifier[m_firstMetadataIdentifier];
+		m_nextMetadataIdentifier.erase(metadataIdentifier);
+	}
+	else
+	{
+		auto previousIdentifier = std::find_if( m_nextMetadataIdentifier.begin(), m_nextMetadataIdentifier.end(), [metadataIdentifier](const std::pair<CIdentifier, CIdentifier>& v) {
+			return v.second == metadataIdentifier;
+		});
+
+		m_nextMetadataIdentifier[previousIdentifier->first] = m_nextMetadataIdentifier[metadataIdentifier];
+		m_nextMetadataIdentifier.erase(metadataIdentifier);
+	}
+
+	return true;
+}
 //___________________________________________________________________//
 //                                                                   //
 
