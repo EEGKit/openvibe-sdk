@@ -372,7 +372,7 @@ namespace OpenViBE
 			virtual OpenViBE::CIdentifier getNextMetadataIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
 
 			/**
-			 * \param commentIdentifier The identifier to test
+			 * \param metadataIdentifier The identifier to test
 			 * \retval true If the identified object is metadata
 			 * \retval false If the identified object is not metadata or when the identifier is not present in the scenario
 			 */
