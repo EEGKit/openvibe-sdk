@@ -11,6 +11,10 @@ namespace OpenViBE
 		 * \author Jozef Legeny
 		 * \date 2016-10-11
 		 * \brief Metadata class for scenarios
+		 *
+		 * Scenario can contain string metadata for the purpose of being used by applications. Each piece of metadata is identified by a (unique) Identifier
+		 * and a (non-unique) Type. Applications can create metadata in scenarios and should not modify metadata with types they do not understand.
+		 *
 		 * \ingroup Group_Scenario
 		 * \ingroup Group_Kernel
 		 */

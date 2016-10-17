@@ -209,11 +209,11 @@
 	</xs:element>
 	<xs:element name="Entry">
 		<xs:complexType>
-			<xs:all>
+			<xs:sequence>
 				<xs:element name="Identifier" type="IdentifierType"/>
 				<xs:element name="Type" type="IdentifierType"/>
 				<xs:element name="Data" type="xs:string"/>
-            </xs:all>
+            </xs:sequence>
         </xs:complexType>
     </xs:element>
 

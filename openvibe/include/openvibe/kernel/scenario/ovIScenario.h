@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Scenario_IScenario_H__
-#define __OpenViBE_Kernel_Scenario_IScenario_H__
+#pragma once
 
 #include "ovIBox.h"
 
@@ -39,7 +38,7 @@ namespace OpenViBE
 			class IScenarioMergeCallback
 			{
 			public:
-				virtual void process(OpenViBE::CIdentifier& rOriginalIdentifier, OpenViBE::CIdentifier& rNewIdentifier) = 0;
+				virtual void process(OpenViBE::CIdentifier& originalIdentifier, OpenViBE::CIdentifier& newIdentifier) = 0;
 			};
 
 			/** \name General purpose functions */
@@ -47,26 +46,28 @@ namespace OpenViBE
 
 			/**
 			 * \brief Clears the scenario
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
+			 * \retval true In case of success.
+			 * \retval false In case of error.
 			 */
-			virtual OpenViBE::boolean clear(void)=0;
+			virtual bool clear(void) = 0;
 
 			/**
 			 * \brief Merges this scenario with an other existing scenario
-			 * \param rScenario A reference to the scenario to merge this scenario with
-			 * \param pScenarioCallback A callback that will be called for each merged element and will be passed the old and new identifiers
-			 * \param bMergeSettings When true, the settings from the source scenario will also be merged
-			 * \param bPreserveIdentifiers When true, the element identifiers from the source scenario will be preserved.
+			 * \param scenario A reference to the scenario to merge this scenario with
+			 * \param scenarioMergaCallback A callback that will be called for each merged element and will be passed the old and new identifiers
+			 * \param mergeSettings When true, the settings from the source scenario will also be merged
+			 * \param preserveIdentifiers When true, the element identifiers from the source scenario will be preserved.
 			 * \retval true In case of success
 			 * \retval false In case of error
-			 * \note The \c bPreservedIdentifiers setting is only reliable when the destination scenario is empty.
+			 * \note The \c bPreservedIdentifiers setting is only reliable when the destination scenario is empty. As an identifier can only be
+			 * preserved when the destination scenario does not contain any elements which use it. In general, this parameter should only be set
+			 * to true when cloning a scenario.
 			 */
-			virtual OpenViBE::boolean merge(
-			        const OpenViBE::Kernel::IScenario& rScenario,
-			        OpenViBE::Kernel::IScenario::IScenarioMergeCallback* pScenarioMergeCallback,
-			        OpenViBE::boolean bMergeSettings,
-			        OpenViBE::boolean bPreserveIdentifiers) = 0;
+			virtual bool merge(
+			        const OpenViBE::Kernel::IScenario& scenario,
+			        OpenViBE::Kernel::IScenario::IScenarioMergeCallback* scenarioMergeCallback,
+			        bool mergeSettings,
+			        bool preserveIdentifiers) = 0;
 
 			//@}
 			/** \name Box management */
@@ -74,105 +75,81 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets next box identifier
-			 * \param rPreviousIdentifier [in] : The identifier
+			 * \param previousIdentifier The identifier
 			 *        for the preceeding box
 			 * \return The identifier of the next box in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
+			 * \retval OV_UndefinedIdentifier on error.
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier
 			 *       will cause this function to return the first box
 			 *       identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextBoxIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
+			virtual OpenViBE::CIdentifier getNextBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
+
 			/**
 			 * \brief Tests whether a given identifier is a box or not
-			 * \param rBoxIdentifier [in] : the identifier to test
-			 * \return \e true if the identified object is a box
-			 * \return \e false if the identified object is not a box
+			 * \param boxIdentifier the identifier to test
+			 * \retval true if the identified object is a box
+			 * \retval false if the identified object is not a box
 			 * \note Requesting a bad identifier returns \e false
 			 */
-			virtual OpenViBE::boolean isBox(
-				const OpenViBE::CIdentifier& rBoxIdentifier) const=0;
+			virtual bool isBox(const OpenViBE::CIdentifier& boxIdentifier) const = 0;
+
 			/**
 			 * \brief Gets the details for a specific box
-			 * \param rBoxIdentifier [in] : The identifier
-			 *        of the box which details should be
-			 *        sent.
+			 * \param boxIdentifier The identifier of the box which details should be sent.
 			 * \return The box details
 			 */
-			virtual const OpenViBE::Kernel::IBox* getBoxDetails(
-				const OpenViBE::CIdentifier& rBoxIdentifier) const=0;
+			virtual const OpenViBE::Kernel::IBox* getBoxDetails(const OpenViBE::CIdentifier& boxIdentifier) const = 0;
+
 			/// \copydoc getBoxDetails(const OpenViBE::CIdentifier&)const
-			virtual OpenViBE::Kernel::IBox* getBoxDetails(
-				const OpenViBE::CIdentifier& rBoxIdentifier)=0;
+			virtual OpenViBE::Kernel::IBox* getBoxDetails(const OpenViBE::CIdentifier& boxIdentifier) = 0;
+
 			/**
 			 * \brief Adds a new box in the scenario
-			 * \param rBoxIdentifier [out] : The identifier of the created box
-			 * \param rSuggestedBoxIdentifier [in] : a suggestion for the new
-			 *        box identifier. If this specific identifier is not
-			 *        yet used, this scenario might use it. If the identifier
-			 *        is already used or \c OV_UndefinedIdentifier is passed,
+			 * \param[out] boxIdentifier The identifier of the created box
+			 * \param suggestedBoxIdentifier A suggestion for the new box identifier. If this specific identifier is not
+			 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
 			 *        then a random unused identifier will be used.
-			 * \return \e true in case of success.
-			 * \return \e false in case of error. In such case,
-			 *         \c rBoxIdentifier remains unchanged.
-			 * \note This produces an empty and unconfigured box !
+			 * \retval true In case of success.
+			 * \retval false In case of error. In such case, \c boxIdentifier remains unchanged.
+			 * \note This produces an empty and unconfigured box!
 			 */
-			virtual OpenViBE::boolean addBox(
-				OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::CIdentifier& rSuggestedBoxIdentifier)=0;
+			virtual bool addBox(OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::CIdentifier& suggestedBoxIdentifier) = 0;
 			/**
 			 * \brief Adds a new box in the scenario based on an existing box
-			 * \param rBoxIdentifier [out] : The identifier of the created box
-			 * \param rBox [in] : the box to copy in this scenario
-			 * \param rSuggestedBoxIdentifier [in] : a suggestion for the new
-			 *        box identifier. If this specific identifier is not
-			 *        yet used, this scenario might use it. If the identifier
-			 *        is already used or \c OV_UndefinedIdentifier is passed,
+			 * \param[out] boxIdentifier The identifier of the created box
+			 * \param box The box to copy in this scenario
+			 * \param suggestedBoxIdentifier a suggestion for the new box identifier. If this specific identifier is not
+			 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
 			 *        then a random unused identifier will be used.
-			 * \return \e true in case of success.
-			 * \return \e false in case of error. In such case,
-			 *         \c rBoxIdentifier remains unchanged.
+			 * \retval true In case of success.
+			 * \retval false In case of error. In such case, \c boxIdentifier remains unchanged.
 			 */
-			virtual OpenViBE::boolean addBox(
-				OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::Kernel::IBox& rBox,
-				const OpenViBE::CIdentifier& rSuggestedBoxIdentifier)=0;
+			virtual bool addBox(OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::Kernel::IBox& box, const OpenViBE::CIdentifier& suggestedBoxIdentifier) = 0;
 			/**
 			 * \brief Adds a new box in the scenario
-			 * \param rBoxIdentifier [out] : The identifier of the created box
-			 * \param rBoxAlgorithmClassIdentifier [in] : The
-			 *        class identifier of the algorithm for
-			 *        this box
-			 * \param rSuggestedBoxIdentifier [in] : a suggestion for the new
-			 *        box identifier. If this specific identifier is not
-			 *        yet used, this scenario might use it. If the identifier
-			 *        is already used or \c OV_UndefinedIdentifier is passed,
+			 * \param[out] boxIdentifier The identifier of the created box
+			 * \param boxAlgorithmClassIdentifier The class identifier of the algorithm for this box
+			 * \param suggestedBoxIdentifier a suggestion for the new box identifier. If this specific identifier is not
+			 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
 			 *        then a random unused identifier will be used.
-			 * \return \e true in case of success.
-			 * \return \e false in case of error. In such case,
-			 *         \c rBoxIdentifier remains unchanged.
-			 * \note This function prepares the box according
-			 *       to its algorithm class identifier !
+			 * \retval true In case of success.
+			 * \retval false In case of error. In such case, \c boxIdentifier remains unchanged.
+			 * \note This function prepares the box according to its algorithm class identifier !
 			 */
-			virtual OpenViBE::boolean addBox(
-				OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::CIdentifier& rBoxAlgorithmClassIdentifier,
-				const OpenViBE::CIdentifier& rSuggestedBoxIdentifier)=0;
+			virtual bool addBox(OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::CIdentifier& boxAlgorithmClassIdentifier, const OpenViBE::CIdentifier& suggestedBoxIdentifier) = 0;
 
-			virtual OpenViBE::boolean addBox(
-			        OpenViBE::CIdentifier& rBoxIdentifier,
-			        const OpenViBE::Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc,
-			        const OpenViBE::CIdentifier& rSuggestedBoxIdentifier)=0;
+			// TODO_JL: Doc
+			virtual bool addBox(OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::Plugins::IBoxAlgorithmDesc& boxAlgorithmDesc, const OpenViBE::CIdentifier& suggestedBoxIdentifier) = 0;
+
 			/**
 			 * \brief Removes a box of the scenario
-			 * \param rBoxIdentifier [in] : The box identifier
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
+			 * \param boxIdentifier The box identifier
+			 * \retval true In case of success.
+			 * \retval false In case of error.
 			 * \note Each link related to this box is also removed
 			 */
-			virtual OpenViBE::boolean removeBox(
-				const OpenViBE::CIdentifier& rBoxIdentifier)=0;
+			virtual bool removeBox(const OpenViBE::CIdentifier& boxIdentifier) = 0;
 
 			//@}
 			/** \name Connection management */
@@ -180,197 +157,142 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets next link identifier
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding link
+			 * \param previousIdentifier The identifier for the preceeding link
 			 * \return The identifier of the next link in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first link
-			 *       identifier.
+			 * \retval OV_UndefinedIdentifier on error.
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextLinkIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
+			virtual OpenViBE::CIdentifier getNextLinkIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding link
-			 * \param rBoxIdentifier [in] : The box identifier
-			 *        which the link should end to
+			 * \param previousIdentifier The identifier for the preceeding link
+			 * \param boxIdentifier The box identifier which the link should end to
 			 * \return The identifier of the next link in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first link
-			 *       identifier.
+			 * \retval OV_UndefinedIdentifier on error.
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextLinkIdentifierFromBox(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rBoxIdentifier) const=0;
+			virtual OpenViBE::CIdentifier getNextLinkIdentifierFromBox(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box output
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding link
-			 * \param rBoxIdentifier [in] : The box identifier
-			 *        which the link should end to
-			 * \param ui32OutputIndex [in] : The input index
-			 *        which the link should end to
+			 * \param previousIdentifier The identifier for the preceeding link
+			 * \param boxIdentifier The box identifier which the link should end to
+			 * \param outputIndex The input index which the link should end to
 			 * \return The identifier of the next link in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first link
-			 *       identifier.
+			 * \retval OV_UndefinedIdentifier on error.
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextLinkIdentifierFromBoxOutput(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::uint32 ui32OutputIndex) const=0;
+				const OpenViBE::CIdentifier& previousIdentifier,
+				const OpenViBE::CIdentifier& boxIdentifier,
+				const OpenViBE::uint32 outputIndex) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding link
-			 * \param rBoxIdentifier [in] : The box identifier
-			 *        which the link should start from
+			 * \param previousIdentifier The identifier for the preceeding link
+			 * \param boxIdentifier The box identifier which the link should start from
 			 * \return The identifier of the next link in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first link
-			 *       identifier.
+			 * \retval OV_UndefinedIdentifier on error.
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextLinkIdentifierToBox(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rBoxIdentifier) const=0;
+			virtual OpenViBE::CIdentifier getNextLinkIdentifierToBox(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box input
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding link
-			 * \param rBoxIdentifier [in] : The box identifier
-			 *        which the link should start from
-			 * \param ui32InputInex [in] : The input index
-			 *        which the link should start from
+			 * \param previousIdentifier The identifier for the preceeding link
+			 * \param boxIdentifier The box identifier which the link should start from
+			 * \param inputIndex The input index which the link should start from
 			 * \return The identifier of the next link in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first link
-			 *       identifier.
+			 * \retval OV_UndefinedIdentifier on error.
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextLinkIdentifierToBoxInput(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::uint32 ui32InputInex) const=0;
+			virtual OpenViBE::CIdentifier getNextLinkIdentifierToBoxInput(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 inputIndex) const = 0;
 
 			/**
 			 * \brief Tests whether a given identifier is a link or not
-			 * \param rIdentifier [in] : the identifier to test
-			 * \return \e true if the identified object is a link
-			 * \return \e false if the identified object is not a link
+			 * \param identifier the identifier to test
+			 * \retval true if the identified object is a link
+			 * \retval false if the identified object is not a link
 			 * \note Requesting a bad identifier returns \e false
 			 */
-			virtual OpenViBE::boolean isLink(
-				const OpenViBE::CIdentifier& rIdentifier) const=0;
+			virtual bool isLink(const OpenViBE::CIdentifier& identifier) const = 0;
 
 			/**
 			 * \brief Gets the details for a specific link
-			 * \param rLinkIdentifier [in] : The identifier
-			 *        of the link which details should be
-			 *        sent.
+			 * \param linkIdentifier The identifier of the link which details should be sent.
 			 * \return The link details
 			 */
-			virtual const OpenViBE::Kernel::ILink* getLinkDetails(
-				const OpenViBE::CIdentifier& rLinkIdentifier) const=0;
+			virtual const OpenViBE::Kernel::ILink* getLinkDetails(const OpenViBE::CIdentifier& linkIdentifier) const = 0;
+
 			/// \copydoc getLinkDetails(const OpenViBE::CIdentifier&)const
-			virtual OpenViBE::Kernel::ILink* getLinkDetails(
-				const OpenViBE::CIdentifier& rLinkIdentifier)=0;
+			virtual OpenViBE::Kernel::ILink* getLinkDetails(const OpenViBE::CIdentifier& linkIdentifier) = 0;
 
 			/**
 			 * \brief Creates a connection between two boxes
-			 * \param rLinkIdentifier [out] : The created link identifier.
-			 * \param rSourceBoxIdentifier [in] : The source box identifier
-			 * \param ui32SourceBoxOutputIndex [in] : The output index for the given source box
-			 * \param rTargetBoxIdentifier [in] : The target box identifier
-			 * \param ui32TargetBoxInputIndex [in] : The input index for the given target box
-			 * \param rSuggestedLinkIdentifier [in] : a suggestion for the new
-			 *        link identifier. If this specific identifier is not
-			 *        yet used, this scenario might use it. If the identifier
-			 *        is already used or \c OV_UndefinedIdentifier is passed,
+			 * \param[out] linkIdentifier The created link identifier.
+			 * \param sourceBoxIdentifier The source box identifier
+			 * \param sourceBoxOutputIndex The output index for the given source box
+			 * \param targetBoxIdentifier The target box identifier
+			 * \param targetBoxInputIndex The input index for the given target box
+			 * \param suggestedLinkIdentifier a suggestion for the new link identifier. If this specific identifier is not
+			 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
 			 *        then a random unused identifier will be used.
-			 * \return \e true in case of success.
-			 * \return \e false in case of error. In such case,
-			 *         rLinkIdentifier remains unchanged.
+			 * \retval true In case of success.
+			 * \retval false In case of error. In such case, \c linkIdentifier remains unchanged.
 			 */
-			virtual OpenViBE::boolean connect(
-				OpenViBE::CIdentifier& rLinkIdentifier,
-				const OpenViBE::CIdentifier& rSourceBoxIdentifier,
-				const OpenViBE::uint32 ui32SourceBoxOutputIndex,
-				const OpenViBE::CIdentifier& rTargetBoxIdentifier,
-				const OpenViBE::uint32 ui32TargetBoxInputIndex,
-				const OpenViBE::CIdentifier& rSuggestedLinkIdentifier)=0;
+			virtual bool connect(
+				OpenViBE::CIdentifier& linkIdentifier,
+				const OpenViBE::CIdentifier& sourceBoxIdentifier,
+				const OpenViBE::uint32 sourceBoxOutputIndex,
+				const OpenViBE::CIdentifier& targetBoxIdentifier,
+				const OpenViBE::uint32 targetBoxInputIndex,
+				const OpenViBE::CIdentifier& suggestedLinkIdentifier) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
-			 * \param rSourceBoxIdentifier [in] : The source box identifier
-			 * \param ui32SourceBoxOutputIndex [in] : The output index for the given source box
-			 * \param rTargetBoxIdentifier [in] : The target box identifier
-			 * \param ui32TargetBoxInputIndex [in] : The input index for the given target box
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
+			 * \param sourceBoxIdentifier The source box identifier
+			 * \param sourceBoxOutputIndex The output index for the given source box
+			 * \param targetBoxIdentifier The target box identifier
+			 * \param targetBoxInputIndex The input index for the given target box
+			 * \retval true In case of success.
+			 * \retval false In case of error.
 			 */
-			virtual OpenViBE::boolean disconnect(
-				const OpenViBE::CIdentifier& rSourceBoxIdentifier,
-				const OpenViBE::uint32 ui32SourceBoxOutputIndex,
-				const OpenViBE::CIdentifier& rTargetBoxIdentifier,
-				const OpenViBE::uint32 ui32TargetBoxInputIndex)=0;
+			virtual bool disconnect(
+				const OpenViBE::CIdentifier& sourceBoxIdentifier,
+				const OpenViBE::uint32 sourceBoxOutputIndex,
+				const OpenViBE::CIdentifier& targetBoxIdentifier,
+				const OpenViBE::uint32 targetBoxInputIndex) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
-			 * \param rLinkIdentifier [out] : The identifier for the link to be deleted
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
+			 * \param[out] linkIdentifier The identifier for the link to be deleted
+			 * \retval true In case of success.
+			 * \retval false In case of error.
 			 */
-			virtual OpenViBE::boolean disconnect(
-				const OpenViBE::CIdentifier& rLinkIdentifier)=0;
+			virtual bool disconnect(const OpenViBE::CIdentifier& linkIdentifier) = 0;
 
 			//@}
 			/** \name Scenario Input/Output and MetaBox management */
 			//@{
 
-			virtual OpenViBE::boolean setHasIO(const OpenViBE::boolean bHasIO) = 0;
-			virtual OpenViBE::boolean hasIO() const = 0;
+			virtual bool setHasIO(const bool hasIO) = 0;
+			virtual bool hasIO() const = 0;
 
-			virtual OpenViBE::boolean setScenarioInputLink(
-			        const OpenViBE::uint32 ui32ScenarioInputIndex,
-			        const OpenViBE::CIdentifier& rBoxIdentifier,
-			        const OpenViBE::uint32 ui32BoxInputIndex) = 0;
+			virtual bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex) = 0;
 
-			virtual OpenViBE::boolean setScenarioOutputLink(
-			        const OpenViBE::uint32 ui32ScenarioOutputIndex,
-			        const OpenViBE::CIdentifier& rBoxIdentifier,
-			        const OpenViBE::uint32 ui32BoxOutputIndex) = 0;
+			virtual bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxOutputIndex) = 0;
 
-			virtual OpenViBE::boolean getScenarioInputLink(
-			        const OpenViBE::uint32 ui32ScenarioInputIndex,
-			        OpenViBE::CIdentifier& rBoxIdentifier,
-			        OpenViBE::uint32& rBoxInputIndex) const = 0;
+			virtual bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::uint32& boxInputIndex) const = 0;
 
-			virtual OpenViBE::boolean getScenarioOutputLink(
-			        const OpenViBE::uint32 ui32ScenarioOutputIndex,
-			        OpenViBE::CIdentifier& rBoxIdentifier,
-			        OpenViBE::uint32& rBoxOutputIndex) const = 0;
+			virtual bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::uint32& boxOutputIndex) const = 0;
 
-			virtual OpenViBE::boolean removeScenarioInputLink(
-			        const OpenViBE::uint32 ui32ScenarioInputIndex,
-			        const OpenViBE::CIdentifier& rBoxIdentifier,
-			        const OpenViBE::uint32 ui32BoxInputIndex) = 0;
+			virtual bool removeScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex) = 0;
 
-			virtual OpenViBE::boolean removeScenarioOutputLink(
-			        const OpenViBE::uint32 ui32ScenarioOutputIndex,
-			        const OpenViBE::CIdentifier& rBoxIdentifier,
-			        const OpenViBE::uint32 ui32BoxOutputIndex) = 0;
+			virtual bool removeScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxOutputIndex) = 0;
 
-			virtual OpenViBE::boolean removeScenarioInput(const uint32 ui32InputIndex) = 0;
-			virtual OpenViBE::boolean removeScenarioOutput(const uint32 ui32OutputIndex) = 0;
+			virtual bool removeScenarioInput(const uint32 inputIndex) = 0;
+			virtual bool removeScenarioOutput(const uint32 outputIndex) = 0;
 
 			//@}
 			/** \name Comment management */
@@ -378,78 +300,62 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets next comment identifier
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding comment
+			 * \param previousIdentifier The identifier for the preceeding comment
 			 * \return The identifier of the next comment in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first comment
-			 *       identifier.
+			 * \retval OV_UndefinedIdentifier on error.
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first comment identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextCommentIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
+			virtual OpenViBE::CIdentifier getNextCommentIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
+
 			/**
 			 * \brief Tests whether a given identifier is a comment or not
-			 * \param rCommentIdentifier [in] : the identifier to test
-			 * \return \e true if the identified object is a comment
-			 * \return \e false if the identified object is not a comment
+			 * \param commentIdentifier the identifier to test
+			 * \retval true if the identified object is a comment
+			 * \retval false if the identified object is not a comment
 			 * \note Requesting a bad identifier returns \e false
 			 */
-			virtual OpenViBE::boolean isComment(
-				const OpenViBE::CIdentifier& rCommentIdentifier) const=0;
+			virtual bool isComment(const OpenViBE::CIdentifier& commentIdentifier) const = 0;
+
 			/**
 			 * \brief Gets the details for a specific comment
-			 * \param rCommentIdentifier [in] : The identifier
-			 *        of the comment which details should be
-			 *        sent.
+			 * \param commentIdentifier The identifier of the comment which details should be sent.
 			 * \return The comment details
 			 */
-			virtual const OpenViBE::Kernel::IComment* getCommentDetails(
-				const OpenViBE::CIdentifier& rCommentIdentifier) const=0;
+			virtual const OpenViBE::Kernel::IComment* getCommentDetails(const OpenViBE::CIdentifier& commentIdentifier) const = 0;
+
 			/// \copydoc getCommentDetails(const OpenViBE::CIdentifier&)const
-			virtual OpenViBE::Kernel::IComment* getCommentDetails(
-				const OpenViBE::CIdentifier& rCommentIdentifier)=0;
+			virtual OpenViBE::Kernel::IComment* getCommentDetails(const OpenViBE::CIdentifier& commentIdentifier) = 0;
+
 			/**
 			 * \brief Adds a new comment in the scenario
-			 * \param rCommentIdentifier [out] : The identifier of the created comment
-			 * \param rSuggestedCommentIdentifier [in] : a suggestion for the new
-			 *        comment identifier. If this specific identifier is not
-			 *        yet used, this scenario might use it. If the identifier
-			 *        is already used or \c OV_UndefinedIdentifier is passed,
+			 * \param[out] commentIdentifier The identifier of the created comment
+			 * \param suggestedCommentIdentifier a suggestion for the new comment identifier. If this specific identifier is not
+			 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
 			 *        then a random unused identifier will be used.
-			 * \return \e true in case of success.
-			 * \return \e false in case of error. In such case,
-			 *         \c rCommentIdentifier remains unchanged.
-			 * \note This produces an empty and unconfigured comment !
+			 * \retval true In case of success.
+			 * \retval false In case of error. In such case, \c commentIdentifier remains unchanged.
+			 * \note This produces an empty and unconfigured comment!
 			 */
-			virtual OpenViBE::boolean addComment(
-				OpenViBE::CIdentifier& rCommentIdentifier,
-				const OpenViBE::CIdentifier& rSuggestedCommentIdentifier)=0;
+			virtual bool addComment(OpenViBE::CIdentifier& commentIdentifier, const OpenViBE::CIdentifier& suggestedCommentIdentifier) = 0;
+
 			/**
 			 * \brief Adds a new comment in the scenario based on an existing comment
-			 * \param rCommentIdentifier [out] : The identifier of the created comment
-			 * \param rComment [in] : the comment to copy in this scenario
-			 * \param rSuggestedCommentIdentifier [in] : a suggestion for the new
-			 *        comment identifier. If this specific identifier is not
-			 *        yet used, this scenario might use it. If the identifier
-			 *        is already used or \c OV_UndefinedIdentifier is passed,
+			 * \param[out] commentIdentifier The identifier of the created comment
+			 * \param comment the comment to copy in this scenario
+			 * \param suggestedCommentIdentifier a suggestion for the new comment identifier. If this specific identifier is not
+			 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
 			 *        then a random unused identifier will be used.
-			 * \return \e true in case of success.
-			 * \return \e false in case of error. In such case,
-			 *         \c rCommentIdentifier remains unchanged.
+			 * \retval true In case of success.
+			 * \retval false In case of error. In such case, \c commentIdentifier remains unchanged.
 			 */
-			virtual OpenViBE::boolean addComment(
-				OpenViBE::CIdentifier& rCommentIdentifier,
-				const OpenViBE::Kernel::IComment& rComment,
-				const OpenViBE::CIdentifier& rSuggestedCommentIdentifier)=0;
+			virtual bool addComment(OpenViBE::CIdentifier& commentIdentifier, const OpenViBE::Kernel::IComment& comment, const OpenViBE::CIdentifier& suggestedCommentIdentifier) = 0;
 			/**
 			 * \brief Removes a comment of the scenario
-			 * \param rCommentIdentifier [in] : The comment identifier
-			 * \return \e true in case of success.
-			 * \return \e false in case of error.
+			 * \param commentIdentifier The comment identifier
+			 * \retval true In case of success.
+			 * \retval false In case of error.
 			 */
-			virtual OpenViBE::boolean removeComment(
-				const OpenViBE::CIdentifier& rCommentIdentifier)=0;
+			virtual bool removeComment(const OpenViBE::CIdentifier& commentIdentifier) = 0;
 			
 			//@}
 			/** \name Metadata management */
@@ -461,7 +367,7 @@ namespace OpenViBE
 			 * \retval OV_UndefinedIdentifier In case when metadata with the \c previousIdentifier is not present
 			 * \retval OV_UndefinedIdentifier In case when metadata with the \c previousIdentifier is last in the scenario
 			 * \return The identifier of the next metadata
-			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first comment identifier.
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first metadata identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextMetadataIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
 
@@ -495,7 +401,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Remove metadata from the scenario
-			 * \param metadataIdentifier The comment identifier
+			 * \param metadataIdentifier The metadata identifier
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
@@ -503,56 +409,50 @@ namespace OpenViBE
 			//@}
 
 			/**
-			 * \brief replaces settings of each box by its locally expanded version
-			 * only expands the $var{} tokens, it leaves others as is
+			 * \brief replaces settings of each box by its locally expanded version only expands the $var{} tokens, it leaves others as is
 			 */
-			virtual OpenViBE::boolean applyLocalSettings(void) = 0;
+			virtual bool applyLocalSettings(void) = 0;
 			
 			/**
 			 * \brief Check settings before playing scenario, if the settings are not suitable, stop scenario
 			 * and launch a console warning. Only check numeric values in the beginning
-			 * \param pConfig: local configuration manager that can contain the definition of local scenario settings
+			 * \param configurationManager: local configuration manager that can contain the definition of local scenario settings
 			 */
-			virtual OpenViBE::boolean checkSettings(IConfigurationManager* pConfig) = 0;
+			virtual bool checkSettings(IConfigurationManager* configurationManager) = 0;
 
 			/**
 			 * \brief Check if boxes in scenario need to be updated. Feed an array with the identifiers
 			 * of boxes that need to be updated
 			 * \return true if at least one box needs to updated
 			 */
-			virtual OpenViBE::boolean checkNeedsUpdateBox() = 0;
+			virtual bool checkNeedsUpdateBox() = 0;
 			
 			/**
 			* \brief Gets identifier of next box that needs to be updated
-			 * \param rPreviousIdentifier [in] : The identifier
-			 *        for the preceeding box that needs updates
+			 * \param previousIdentifier The identifier for the preceeding box that needs updates
 			 * \return The identifier of the next box that needs updates in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
-			 *       will cause this function to return the first processing unit
-			 *       identifier.
+			 * \retval OV_UndefinedIdentifier on error.
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first processing unit identifier.
 			 * \note Warning: You need to call at least once the function "checkNeedsUpdateBox", before calling this function
 			 */
-			virtual OpenViBE::CIdentifier getNextNeedsUpdateBoxIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const = 0;
+			virtual OpenViBE::CIdentifier getNextNeedsUpdateBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
 
 			/**
 			 * \brief Indicates if at least one box in scenario need to be updated.
 			 * \return true if at least one box needs to updated
 			 * \note Warning: You need to call at least once the function "checkNeedsUpdateBox", before calling this function
 			 */
-			virtual OpenViBE::boolean hasNeedsUpdateBox() = 0;
+			virtual bool hasNeedsUpdateBox() = 0;
 
 			/**
 			 * \return true if the scenario is actually a metabox
 			 */
-			virtual OpenViBE::boolean isMetabox(void) = 0;
+			virtual bool isMetabox(void) = 0;
 
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Scenario)
 		};
-	};
-};
+	}
+}
 
-#endif // __OpenViBE_Kernel_Scenario_IScenario_H__

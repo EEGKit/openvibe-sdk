@@ -3,10 +3,6 @@
 #include <openvibe/kernel/scenario/ovIMetadata.h>
 #include "../ovkTKernelObject.h"
 
-#include <vector>
-#include <string>
-#include <iostream>
-
 namespace OpenViBE
 {
 	namespace Kernel
@@ -27,7 +23,7 @@ namespace OpenViBE
 			bool setType(const OpenViBE::CIdentifier& identifier) override;
 			bool setData(const OpenViBE::CString& data) override;
 
-			bool initializeFromExistingMetadata(const OpenViBE::Kernel::IMetadata& exisitingComment) override;
+			bool initializeFromExistingMetadata(const OpenViBE::Kernel::IMetadata& exisitingMetadata) override;
 
 			bool acceptVisitor(OpenViBE::IObjectVisitor& objectVisitor) override;
 
@@ -35,12 +31,12 @@ namespace OpenViBE
 
 		private:
 
-			OpenViBE::Kernel::CScenario& m_ownerScenario;
+			OpenViBE::Kernel::CScenario& m_OwnerScenario;
 
-			OpenViBE::CIdentifier m_identifier;
-			OpenViBE::CIdentifier m_type;
-			OpenViBE::CString m_data;
+			OpenViBE::CIdentifier m_Identifier;
+			OpenViBE::CIdentifier m_Type;
+			OpenViBE::CString m_Data;
 		};
-	};
-};
+	}
+}
 
