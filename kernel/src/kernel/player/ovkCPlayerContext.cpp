@@ -8,7 +8,7 @@ using namespace OpenViBE::Kernel;
 
 CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox)
 	:TKernelObject<IPlayerContext>(rKernelContext)
-	,m_rKernelContext(rKernelContext)
+	,m_rPluginManager(rKernelContext.getPluginManager())
 	,m_rSimulatedBox(*pSimulatedBox)
 	,m_rAlgorithmManager(rKernelContext.getAlgorithmManager())
 	,m_rConfigurationManager(rKernelContext.getConfigurationManager())
@@ -127,15 +127,15 @@ ITypeManager& CPlayerContext::getTypeManager(void) const
 
 bool CPlayerContext::canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const
 {
-	return m_rKernelContext.getPluginManager().canCreatePluginObject(pluginIdentifier);
+	return m_rPluginManager.canCreatePluginObject(pluginIdentifier);
 }
 
 OpenViBE::Plugins::IPluginObject* CPlayerContext::createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const
 {
-	return m_rKernelContext.getPluginManager().createPluginObject(pluginIdentifier);
+	return m_rPluginManager.createPluginObject(pluginIdentifier);
 }
 
 bool CPlayerContext::releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject) const
 {
-	return m_rKernelContext.getPluginManager().releasePluginObject(pluginObject);
+	return m_rPluginManager.releasePluginObject(pluginObject);
 }

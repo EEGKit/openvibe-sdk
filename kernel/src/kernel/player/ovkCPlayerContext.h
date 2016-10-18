@@ -53,8 +53,8 @@ namespace OpenViBE
 
 		private:
 
-			const OpenViBE::Kernel::IKernelContext& m_rKernelContext;
 			OpenViBE::Kernel::CSimulatedBox& m_rSimulatedBox;
+			OpenViBE::Kernel::IPluginManager& m_rPluginManager;
 			OpenViBE::Kernel::IAlgorithmManager& m_rAlgorithmManager;
 			OpenViBE::Kernel::IConfigurationManager& m_rConfigurationManager;
 			OpenViBE::Kernel::ILogManager& m_rLogManager;
