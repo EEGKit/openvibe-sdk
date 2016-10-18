@@ -85,6 +85,7 @@
 #include "kernel/scenario/ovIBoxListenerContext.h"
 #include "kernel/scenario/ovIBoxProto.h"
 #include "kernel/scenario/ovIComment.h"
+#include "kernel/scenario/ovIMetadata.h"
 #include "kernel/scenario/ovILink.h"
 #include "kernel/scenario/ovIScenario.h"
 #include "kernel/scenario/ovIScenarioManager.h"

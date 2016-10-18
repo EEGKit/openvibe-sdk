@@ -108,7 +108,7 @@ boolean CPlayer::setScenario(
 	);
 
 	IScenario& l_rRuntimeScenario = m_pRuntimeScenarioManager->getScenario(m_oRuntimeScenarioIdentifier);
-	l_rRuntimeScenario.merge(l_rOriginalScenario, NULL, true);
+	l_rRuntimeScenario.merge(l_rOriginalScenario, NULL, true, true);
 	// l_rRuntimeScenario.flatten();
 
 	IScenario* l_pScenario = &l_rRuntimeScenario;

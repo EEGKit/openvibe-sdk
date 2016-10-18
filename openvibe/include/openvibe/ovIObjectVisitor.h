@@ -11,6 +11,7 @@ namespace OpenViBE
 
 		class IBox;
 		class IComment;
+		class IMetadata;
 		class ILink;
 		class IScenario;
 	};
@@ -21,11 +22,13 @@ namespace OpenViBE
 
 		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox)                                 { return true; }
 		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IComment& rComment)                         { return true; }
+		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IMetadata& rMetadata)                       { return true; }
 		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::ILink& rLink)                               { return true; }
 		virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IScenario& rScenario)                       { return true; }
 
 		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox)                                 { return true; }
 		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IComment& rComment)                         { return true; }
+		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IMetadata& rMetadata)                       { return true; }
 		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::ILink& rLink)                               { return true; }
 		virtual OpenViBE::boolean processEnd  (OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IScenario& rScenario)                       { return true; }
 

@@ -63,6 +63,7 @@ boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer,
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier      ) l_sNodeName="LinkedBoxIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex     ) l_sNodeName="LinkedBoxOutputIndex";
 
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion                            ) l_sNodeName="FormatVersion";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Creator                                  ) l_sNodeName="Creator";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_CreatorVersion                           ) l_sNodeName="CreatorVersion";
 
@@ -100,6 +101,12 @@ boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer,
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute                        ) l_sNodeName="Attribute";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Identifier             ) l_sNodeName="Identifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Value                  ) l_sNodeName="Value";
+
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Metadata                                 ) l_sNodeName="Metadata";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry                            ) l_sNodeName="Entry";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Identifier                 ) l_sNodeName="Identifier";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Type                       ) l_sNodeName="Type";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_MetadataEntry_Data                       ) l_sNodeName="Data";
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Links                                    ) l_sNodeName="Links";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link                                     ) l_sNodeName="Link";

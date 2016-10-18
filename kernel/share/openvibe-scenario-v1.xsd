@@ -44,7 +44,7 @@
 				<xs:element minOccurs="0" ref="Inputs"/>
 				<xs:element minOccurs="0" ref="Outputs"/>
 				<xs:element minOccurs="0" ref="Attributes"/>
-				<xs:element minOccurs="0" ref="MetaData"/>
+				<xs:element minOccurs="0" ref="Metadata"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
@@ -199,8 +199,8 @@
 		</xs:complexType>
 	</xs:element>
 
-	<!-- MetaData -->
-	<xs:element name="MetaData">
+	<!-- Metadata -->
+	<xs:element name="Metadata">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element minOccurs="0" maxOccurs="unbounded" ref="Entry"/>
@@ -210,11 +210,12 @@
 	<xs:element name="Entry">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
-			</xs:sequence>
-			<xs:attribute name="type" type="xs:string" use="required"/>
-		</xs:complexType>
-	</xs:element>
+				<xs:element name="Identifier" type="IdentifierType"/>
+				<xs:element name="Type" type="IdentifierType"/>
+				<xs:element name="Data" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
 </xs:schema>
 
