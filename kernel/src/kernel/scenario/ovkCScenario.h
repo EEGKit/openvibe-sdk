@@ -94,7 +94,7 @@ namespace OpenViBE
 			bool disconnect(const OpenViBE::CIdentifier& linkIdentifier);
 
 			bool applyLocalSettings(void);
-			bool checkSettings(IConfigurationManager* pConfig);
+			bool checkSettings(IConfigurationManager* configurationManager);
 
 			bool checkNeedsUpdateBox();
 			bool hasNeedsUpdateBox();

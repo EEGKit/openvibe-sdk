@@ -35,59 +35,59 @@ namespace
 
 	struct TTestEqSourceBox
 	{
-		explicit TTestEqSourceBox(const CIdentifier& rId) : m_rId(rId) { }
-		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getSourceBoxIdentifier()==m_rId; }
-		const CIdentifier& m_rId;
+		explicit TTestEqSourceBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
+		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getSourceBoxIdentifier()==m_BoxId; }
+		const CIdentifier& m_BoxId;
 	};
 
 	struct TTestEqSourceBoxOutput
 	{
-		TTestEqSourceBoxOutput(const CIdentifier& rId, uint32 ui32Id) : m_rId(rId), m_ui32Id(ui32Id) { }
-		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getSourceBoxIdentifier()==m_rId && it->second->getSourceBoxOutputIndex()==m_ui32Id; }
-		const CIdentifier& m_rId;
-		uint32 m_ui32Id;
+		TTestEqSourceBoxOutput(const CIdentifier& boxId, uint32 outputIndex) : m_BoxId(boxId), m_OutputIndex(outputIndex) { }
+		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getSourceBoxIdentifier()==m_BoxId && it->second->getSourceBoxOutputIndex()==m_OutputIndex; }
+		const CIdentifier& m_BoxId;
+		uint32 m_OutputIndex;
 	};
 
 	struct TTestEqTargetBox
 	{
-		explicit TTestEqTargetBox(const CIdentifier& rId) : m_rId(rId) { }
-		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getTargetBoxIdentifier()==m_rId; }
-		const CIdentifier& m_rId;
+		explicit TTestEqTargetBox(const CIdentifier& boxId) : m_BoxId(boxId) { }
+		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getTargetBoxIdentifier()==m_BoxId; }
+		const CIdentifier& m_BoxId;
 	};
 
 	struct TTestEqTargetBoxInput
 	{
-		TTestEqTargetBoxInput(const CIdentifier& rId, uint32 ui32Id) : m_rId(rId), m_ui32Id(ui32Id) { }
-		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getTargetBoxIdentifier()==m_rId && it->second->getTargetBoxInputIndex()==m_ui32Id; }
-		const CIdentifier& m_rId;
-		uint32 m_ui32Id;
+		TTestEqTargetBoxInput(const CIdentifier& boxId, uint32 inputIndex) : m_BoxId(boxId), m_InputIndex(inputIndex) { }
+		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getTargetBoxIdentifier()==m_BoxId && it->second->getTargetBoxInputIndex()==m_InputIndex; }
+		const CIdentifier& m_BoxId;
+		uint32 m_InputIndex;
 	};
 
 	template <class T, class TTest>
 	CIdentifier getNextTIdentifier(
-		const map<CIdentifier, T*>& vMap,
+		const map<CIdentifier, T*>& elementMap,
 		const CIdentifier& previousIdentifier,
-		const TTest& rTest)
+		const TTest& testFunctor)
 	{
 		typename map<CIdentifier, T*>::const_iterator it;
 
 		if(previousIdentifier==OV_UndefinedIdentifier)
 		{
-			it=vMap.begin();
+			it=elementMap.begin();
 		}
 		else
 		{
-			it=vMap.find(previousIdentifier);
-			if(it==vMap.end())
+			it=elementMap.find(previousIdentifier);
+			if(it==elementMap.end())
 			{
 				return OV_UndefinedIdentifier;
 			}
 			++it;
 		}
 
-		while(it!=vMap.end())
+		while(it!=elementMap.end())
 		{
-			if(rTest(it))
+			if(testFunctor(it))
 			{
 				return it->first;
 			}
@@ -284,8 +284,8 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 		CIdentifier attributeIdentifier;
 		while ((attributeIdentifier = scenario.getNextAttributeIdentifier(attributeIdentifier)) != OV_UndefinedIdentifier)
 		{
-			CString l_sAttributeValue = scenario.getAttributeValue(attributeIdentifier);
-			this->addAttribute(attributeIdentifier, l_sAttributeValue);
+			CString attributeValue = scenario.getAttributeValue(attributeIdentifier);
+			this->addAttribute(attributeIdentifier, attributeValue);
 		}
 	}
 
@@ -482,10 +482,10 @@ IComment* CScenario::getCommentDetails(const CIdentifier& commentIdentifier)
 bool CScenario::addComment(CIdentifier& commentIdentifier, const CIdentifier& suggestedCommentIdentifier)
 {
 	commentIdentifier = getUnusedIdentifier(suggestedCommentIdentifier);
-	CComment* l_pComment = new CComment(this->getKernelContext(), *this);
-	l_pComment->setIdentifier(commentIdentifier);
+	CComment* newComment = new CComment(this->getKernelContext(), *this);
+	newComment->setIdentifier(commentIdentifier);
 
-	m_Comments[commentIdentifier] = l_pComment;
+	m_Comments[commentIdentifier] = newComment;
 	return true;
 }
 
@@ -744,15 +744,15 @@ bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CI
 	}
 
 	// Remove any existing outputs connected to the
-	for (size_t uiOutputLinkIndex = 0; uiOutputLinkIndex < m_ScenarioOutputLinks.size(); uiOutputLinkIndex++)
+	for (size_t outputLinkIndex = 0; outputLinkIndex < m_ScenarioOutputLinks.size(); outputLinkIndex++)
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
 		uint32 alreadyConnectedBoxOutputIndex;
-		this->getScenarioOutputLink(static_cast<uint32>(uiOutputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
+		this->getScenarioOutputLink(static_cast<uint32>(outputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
 
 		if (alreadyConnectedBoxIdentifier == boxIdentifier && alreadyConnectedBoxOutputIndex == boxOutputIndex)
 		{
-			this->removeScenarioOutputLink(static_cast<uint32>(uiOutputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
+			this->removeScenarioOutputLink(static_cast<uint32>(outputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
 		}
 	}
 
