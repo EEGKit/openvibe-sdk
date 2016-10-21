@@ -307,7 +307,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, 
 
 bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char *validationSchema, const unsigned char* xmlBuffer, unsigned long xmlBufferSize)
 {
-	this->getLogManager() << LogLevel_Info << "Validating XML against schema [" << validationSchema << "]\n";
+	this->getLogManager() << LogLevel_Trace << "Validating XML against schema [" << validationSchema << "]\n";
 
 	unsigned int errorCount = 0;
 
