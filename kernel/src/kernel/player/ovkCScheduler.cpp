@@ -389,7 +389,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		);
 
 		OV_ERROR_UNLESS_K(
-			!l_pBox->hasAttribute(OV_AttributeId_Box_Disabled),
+			!l_pBox->hasAttribute(OV_AttributeId_Box_Disabled) || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsDisabled}", false),
 			"Disabled box [" << l_pBox->getName() << "] with class identifier [" << l_oBoxIdentifier.toString() << "] detected in the scenario",
 			ErrorType::Internal,
 			SchedulerInitialization_Failed
