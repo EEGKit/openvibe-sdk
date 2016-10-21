@@ -205,6 +205,14 @@ namespace OpenViBE
 			 * \return \e false otherwise.
 			 */
 			virtual OpenViBE::boolean hasFunctionality(OpenViBE::Kernel::EPluginFunctionality ePF) const { return false; }
+
+			/**
+			 * \brief Tests whether the plugin has a specific functionality identified by a CIdentifier
+			 * \param functionalityIdentifier The identifier of the functionality to poll
+			 * \retval true If the plugin has the demanded functionality.
+			 * \retval false If the plugin does not have the demanded functionality.
+			 */
+			virtual OpenViBE::boolean hasFunctionality(OpenViBE::CIdentifier functionalityIdentifier) const { return false; }
 			/**
 			 * \brief Tests the licence type for this plugin
 			 * \param eLT [in] : the licence type that this plugin may have
