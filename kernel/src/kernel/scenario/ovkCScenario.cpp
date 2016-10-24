@@ -140,6 +140,8 @@ bool CScenario::clear(void)
 		delete metadata.second;
 	}
 	m_Metadata.clear();
+	m_FirstMetadataIdentifier = OV_UndefinedIdentifier;
+	m_NextMetadataIdentifier.clear();
 
 	for (auto& link : m_Links)
 	{

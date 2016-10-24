@@ -174,14 +174,18 @@ boolean CEquationParser::compileEquation(const char * pEquation)
 	{
 		std::string l_oErrorString;
 
-		for (int i = 0; i < (l_oInfo.stop - pEquation); i++)
+		size_t errorPosition = l_sEquation.find(l_oInfo.stop);
+		if (errorPosition != std::string::npos)
 		{
-			l_oErrorString += " ";
+			for (size_t i = 0; i < errorPosition; i++)
+			{
+				l_oErrorString+=" ";
+			}
+			l_oErrorString+="^--Here\n";
 		}
-		l_oErrorString+="^<--here";
 
 		OV_ERROR(
-			"Failed parsing equation [" << pEquation << "] at " <<  l_oErrorString.c_str(),
+			"Failed parsing equation \n[" << pEquation << "]\n " <<  l_oErrorString.c_str(),
 			OpenViBE::Kernel::ErrorType::BadParsing,
 			false,
 			m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),

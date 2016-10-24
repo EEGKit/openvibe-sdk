@@ -56,18 +56,21 @@ namespace OpenViBE
  // internal use
  #define convertErrorTypeToString(type) #type
 
-// overload needed to enable streaming time data in error description
-inline std::ostream& operator<<(std::ostream& os, const OpenViBE::time64 time)
+namespace OpenViBE
 {
-	std::stringstream ss;
-	ss.precision(3);
-	ss.setf(std::ios::fixed,std::ios::floatfield);
-	ss << OpenViBE::ITimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
-	ss << " sec";
+	// overload needed to enable streaming time data in error description
+	inline std::ostream& operator<<(std::ostream& os, const OpenViBE::time64 time)
+	{
+		std::stringstream ss;
+		ss.precision(3);
+		ss.setf(std::ios::fixed,std::ios::floatfield);
+		ss << OpenViBE::ITimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
+		ss << " sec";
 
-	os << ss.str();
+		os << ss.str();
 
-	return os;
+		return os;
+	}
 }
 
 /**
