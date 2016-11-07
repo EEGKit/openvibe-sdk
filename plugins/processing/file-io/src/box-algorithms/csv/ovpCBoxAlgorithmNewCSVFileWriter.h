@@ -9,8 +9,8 @@
 #include <iostream>
 #include <fstream>
 
-#define OVP_ClassId_BoxAlgorithm_NewCSVFileWriter     							   OpenViBE::CIdentifier(0x2C9312F1, 0x2D6613E5)
-#define OVP_ClassId_BoxAlgorithm_NewCSVFileWriterDesc 							   OpenViBE::CIdentifier(0x65075FF7, 0x2B555E97)
+#define OVP_ClassId_BoxAlgorithm_NewCSVFileWriter     							   OpenViBE::CIdentifier(0x428375E8, 0x325F2DB9)
+#define OVP_ClassId_BoxAlgorithm_NewCSVFileWriterDesc 							   OpenViBE::CIdentifier(0x4B5C1D8F, 0x570E45FD)
 
 namespace OpenViBEPlugins
 {
@@ -48,8 +48,10 @@ namespace OpenViBEPlugins
 			OpenViBE::CMatrix m_Matrix;		// This represents the properties of the input, no data
 
 			unsigned long long m_SampleCount;
+			unsigned long long m_Epoch;
 
 			bool m_IsHeaderReceived;
+			bool m_IsFileOpen;
 
 		};
 
@@ -66,9 +68,9 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("CSV File Writer"); }
+			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("New CSV File Writer"); }
 			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Victor Herlin"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("Mensia Technologies"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("Mensia Technologies SA"); }
 			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Writes signal in a CSV (text based) file"); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("File reading and writing/CSV"); }

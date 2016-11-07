@@ -15,6 +15,8 @@
 
 #include "box-algorithms/ovpCBoxAlgorithmElectrodeLocalizationFileReader.h"
 
+#include "box-algorithms/csv/ovpCBoxAlgorithmNewCSVFileWriter.h"
+
 OVP_Declare_Begin()
 
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CAlgorithmOVMatrixFileReaderDesc)
@@ -30,5 +32,7 @@ OVP_Declare_Begin()
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmGenericStreamWriterDesc)
 
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmElectrodeLocalisationFileReaderDesc)
+
+	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmNewCSVFileWriterDesc)
 
 OVP_Declare_End()

@@ -16,11 +16,14 @@ CBoxAlgorithmNewCSVFileWriter::CBoxAlgorithmNewCSVFileWriter(void)
 	:
 	m_RealProcess(NULL)
 	, m_StreamDecoder(NULL)
+	, m_IsFileOpen(false)
+	, m_Epoch(0)
 {
 }
 
 bool CBoxAlgorithmNewCSVFileWriter::initialize(void)
 {
+	m_WriterLib = OpenViBE::CSV::createCSVLib();
 	this->getStaticBoxContext().getInputType(0, m_TypeIdentifier);
 
 	m_Separator = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -42,7 +45,7 @@ bool CBoxAlgorithmNewCSVFileWriter::initialize(void)
 	}
 	else
 	{
-		this->getLogManager() << LogLevel_Error << "this input type identifier (" << this->getTypeManager().getTypeName(m_TypeIdentifier) << ") is an invalid input type identifier";
+		this->getLogManager() << LogLevel_Error << "this input type identifier (" << this->getTypeManager().getTypeName(m_TypeIdentifier) << ") is an invalid input type identifier\n";
 		return false;
 	}
 
@@ -73,7 +76,7 @@ bool CBoxAlgorithmNewCSVFileWriter::initializeFile()
 	}
 	else
 	{
-		this->getLogManager() << LogLevel_Info << "File written in: " << filename.toASCIIString();
+		this->getLogManager() << LogLevel_Info << "File written in: " << filename.toASCIIString() << "\n";
 	}
 
 	return true;
@@ -90,12 +93,13 @@ bool CBoxAlgorithmNewCSVFileWriter::processInput(unsigned int inputIndex)
 
 bool CBoxAlgorithmNewCSVFileWriter::process(void)
 {
-	if (!m_FileStream.is_open())
+	if (!m_IsFileOpen)
 	{
 		if (!initializeFile())
 		{
 			return false;
 		}
+		m_IsFileOpen = true;
 	}
 	return (this->*m_RealProcess)();
 }
@@ -103,7 +107,6 @@ bool CBoxAlgorithmNewCSVFileWriter::process(void)
 bool CBoxAlgorithmNewCSVFileWriter::processStreamedMatrix(void)
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
-	unsigned long long epoch = 0;
 
 	for (unsigned int index = 0; index < dynamicBoxContext.getInputChunkCount(0); index++)
 	{
@@ -117,10 +120,15 @@ bool CBoxAlgorithmNewCSVFileWriter::processStreamedMatrix(void)
 
 				const IMatrix* matrix = ((OpenViBEToolkit::TStreamedMatrixDecoder < CBoxAlgorithmNewCSVFileWriter >*)m_StreamDecoder)->getOutputMatrix();
 
+				if (m_TypeIdentifier != OV_TypeId_FeatureVector)
+				{
+					OpenViBEToolkit::Tools::Matrix::copyDescription(m_Matrix, *matrix);
+				}
+
 				if (m_TypeIdentifier == OV_TypeId_Signal)
 				{
 					std::vector<std::string> dimensionLabels;
-					for (size_t index = 0; index < matrix->getDimensionCount(); index++)
+					for (size_t index = 0; index < matrix->getDimensionSize(0); index++)
 					{
 						dimensionLabels.push_back(matrix->getDimensionLabel(0, index));
 					}
@@ -155,11 +163,11 @@ bool CBoxAlgorithmNewCSVFileWriter::processStreamedMatrix(void)
 			const unsigned int numChannels = m_Matrix.getDimensionSize(0);
 			const unsigned int numSamples = m_Matrix.getDimensionSize(1);
 
-			double lastTime;
+			double lastTime = 0.0;
 			for (unsigned int sampleCount = 0; sampleCount < numSamples; sampleCount++)
 			{
-				double startingTime;
-				double endingTime;
+				double startingTime = 0.0;
+				double endingTime = 0.0;
 
 				// get starting and ending time
 				if (m_TypeIdentifier == OV_TypeId_Signal)
@@ -179,16 +187,18 @@ bool CBoxAlgorithmNewCSVFileWriter::processStreamedMatrix(void)
 				}
 
 				// add sample to the library
-				if (!m_WriterLib->addSample({ startingTime, endingTime, matrix, epoch }))
+				if (!m_WriterLib->addSample({ startingTime, endingTime, matrix, m_Epoch }))
 				{
 					this->getLogManager() << LogLevel_Error << OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n";
 					return false;
 				}
+
+				matrix.clear();
 				lastTime = endingTime;
 			}
 
 			// write into the library
-			if (!m_WriterLib->noEventsUntilDate(lastTime))
+			if (!m_WriterLib->noEventsUntilDate(lastTime + 0.5))
 			{
 				this->getLogManager() << LogLevel_Error << OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n";
 				return false;
@@ -200,7 +210,7 @@ bool CBoxAlgorithmNewCSVFileWriter::processStreamedMatrix(void)
 				return false;
 			}
 
-			epoch++;
+			m_Epoch++;
 		}
 
 		if (!dynamicBoxContext.markInputAsDeprecated(0, index))
