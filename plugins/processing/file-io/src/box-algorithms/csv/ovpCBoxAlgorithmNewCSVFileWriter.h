@@ -38,8 +38,6 @@ namespace OpenViBEPlugins
 			OpenViBE::CSV::ICSVLib* m_WriterLib;
 			bool initializeFile();
 
-			std::ofstream m_FileStream;
-
 			OpenViBE::CString m_Separator;
 			OpenViBE::CIdentifier m_TypeIdentifier;
 			bool (OpenViBEPlugins::FileIO::CBoxAlgorithmNewCSVFileWriter::*m_RealProcess)(void);
@@ -47,7 +45,6 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TDecoder < CBoxAlgorithmNewCSVFileWriter >* m_StreamDecoder;
 			OpenViBE::CMatrix m_Matrix;		// This represents the properties of the input, no data
 
-			unsigned long long m_SampleCount;
 			unsigned long long m_Epoch;
 
 			bool m_IsHeaderReceived;

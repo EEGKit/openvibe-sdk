@@ -14,15 +14,15 @@ using namespace OpenViBEPlugins::FileIO;
 
 CBoxAlgorithmNewCSVFileWriter::CBoxAlgorithmNewCSVFileWriter(void)
 	:
-	m_RealProcess(NULL)
-	, m_StreamDecoder(NULL)
-	, m_IsFileOpen(false)
-	, m_Epoch(0)
+	m_RealProcess(nullptr)
+	, m_StreamDecoder(nullptr)
 {
 }
 
 bool CBoxAlgorithmNewCSVFileWriter::initialize(void)
 {
+	m_IsFileOpen = false;
+	m_Epoch = 0;
 	m_WriterLib = OpenViBE::CSV::createCSVLib();
 	this->getStaticBoxContext().getInputType(0, m_TypeIdentifier);
 
@@ -58,6 +58,7 @@ bool CBoxAlgorithmNewCSVFileWriter::uninitialize(void)
 {
 	if (!m_WriterLib->closeFile())
 	{
+		this->getLogManager() << LogLevel_Error << OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << ": " << m_WriterLib->getLastErrorString().c_str() << "\n";
 		return false;
 	}
 
@@ -148,7 +149,7 @@ bool CBoxAlgorithmNewCSVFileWriter::processStreamedMatrix(void)
 			}
 			else
 			{
-				this->getLogManager() << LogLevel_Error << OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n";
+				OV_ERROR_KRF("Multiple streamed matrix headers received", ErrorType::BadInput);
 				return false;
 			}
 		}
