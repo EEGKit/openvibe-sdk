@@ -118,7 +118,6 @@ bool CBoxAlgorithmNewCSVFileWriter::processStreamedMatrix(void)
 			else
 			{
 				OV_ERROR_KRF("Multiple streamed matrix headers received", ErrorType::BadInput);
-				return false;
 			}
 		}
 
@@ -141,7 +140,7 @@ bool CBoxAlgorithmNewCSVFileWriter::processStreamedMatrix(void)
 				// get starting and ending time
 				if (m_TypeIdentifier == OV_TypeId_Signal)
 				{
-					const unsigned long long samplingFrequency = ((OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmNewCSVFileWriter >*)m_StreamDecoder)->getOutputSamplingRate();
+					const unsigned long long samplingFrequency = static_cast<OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmNewCSVFileWriter >*>(m_StreamDecoder)->getOutputSamplingRate();
 					unsigned long long timeOfNthSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex); // assuming chunk start is 0
 					unsigned long long sampleTime = chunkStartTime + timeOfNthSample;
 					startTime = ITimeArithmetics::timeToSeconds(sampleTime);
