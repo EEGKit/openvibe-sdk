@@ -16,34 +16,29 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CBoxAlgorithmNewCSVFileWriter : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmNewCSVFileWriter final : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
 		{
 		public:
 
 			CBoxAlgorithmNewCSVFileWriter(void);
-			virtual void release(void) { delete this; }
+			void release(void) override { delete this; }
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
-			virtual bool processInput(unsigned int inputIndex);
-			virtual bool process(void);
-
-			bool processStreamedMatrix(void);
-			bool processStimulation(void);
+			bool initialize(void) override;
+			bool uninitialize(void) override;
+			bool processInput(unsigned int inputIndex) override;
+			bool process(void) override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_NewCSVFileWriter);
 
 
 		private:
 			OpenViBE::CSV::ICSVLib* m_WriterLib;
-			bool initializeFile();
 
 			OpenViBE::CString m_Separator;
 			OpenViBE::CIdentifier m_TypeIdentifier;
-			bool (OpenViBEPlugins::FileIO::CBoxAlgorithmNewCSVFileWriter::*m_RealProcess)(void);
+			bool processStreamedMatrix(void);
 
 			OpenViBEToolkit::TDecoder < CBoxAlgorithmNewCSVFileWriter >* m_StreamDecoder;
-			OpenViBE::CMatrix m_Matrix;		// This represents the properties of the input, no data
 
 			unsigned long long m_Epoch;
 
@@ -89,7 +84,6 @@ namespace OpenViBEPlugins
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);
-				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Stimulations);
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_FeatureVector);
 
 				return true;
