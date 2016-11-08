@@ -123,7 +123,7 @@ bool CBoxAlgorithmNewCSVFileWriter::processStreamedMatrix(void)
 
 		if (m_StreamDecoder->isBufferReceived())
 		{
-			const IMatrix* imatrix = ((OpenViBEToolkit::TStreamedMatrixDecoder < CBoxAlgorithmNewCSVFileWriter >*)m_StreamDecoder)->getOutputMatrix();
+			const IMatrix* imatrix = static_cast<OpenViBEToolkit::TStreamedMatrixDecoder < CBoxAlgorithmNewCSVFileWriter >*>(m_StreamDecoder)->getOutputMatrix();
 			std::vector<double> matrixValues;
 
 			const unsigned long long chunkStartTime = dynamicBoxContext.getInputChunkStartTime(0, index);
