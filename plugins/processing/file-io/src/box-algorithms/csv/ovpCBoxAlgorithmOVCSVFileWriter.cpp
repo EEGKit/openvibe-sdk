@@ -30,10 +30,9 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 	{
 		m_WriterLib = OpenViBE::CSV::createCSVLib();
 		m_StreamDecoder = new OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmOVCSVFileWriter >();
-		if (!m_StreamDecoder->initialize(*this, 0))
-		{
-			OV_ERROR_KRF("Error while stream decoder initialization\n", ErrorType::Internal);
-		}
+		OV_ERROR_UNLESS_KRF(m_StreamDecoder->initialize(*this, 0),
+			"Error while stream decoder initialization\n",
+			ErrorType::Internal);
 		m_WriterLib->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	}
 	else
@@ -43,14 +42,9 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 
 	const CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-	if (!m_WriterLib->openFile(filename.toASCIIString(), OpenViBE::CSV::EFileAccessMode::Write))
-	{
-		OV_ERROR_KRF(OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n", ErrorType::Internal);
-	}
-	else
-	{
-		this->getLogManager() << LogLevel_Info << "File written in: " << filename.toASCIIString() << "\n";
-	}
+	OV_ERROR_UNLESS_KRF(m_WriterLib->openFile(filename.toASCIIString(), OpenViBE::CSV::EFileAccessMode::Write),
+		OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n",
+		ErrorType::Internal);
 
 	m_IsHeaderReceived = false;
 
@@ -61,23 +55,20 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize(void)
 {
 	if (!m_WriterLib->closeFile())
 	{
-		this->getLogManager() << LogLevel_Error << OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << ": " << m_WriterLib->getLastErrorString().c_str() << "\n";
+		OV_FATAL_K(OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << ": " << m_WriterLib->getLastErrorString().c_str() << "\n", ErrorType::Internal);
 	}
-
 	OpenViBE::CSV::releaseCSVLib(m_WriterLib);
-	if (!m_StreamDecoder->uninitialize())
-	{
-		OV_ERROR_KRF("Error have been thrown error while stream decoder unitialize\n", ErrorType::Internal);
-	}
+	OV_ERROR_UNLESS_KRF(m_StreamDecoder->uninitialize(),
+		"Error have been thrown error while stream decoder unitialize\n",
+		ErrorType::Internal);
 	return true;
 }
 
 bool CBoxAlgorithmOVCSVFileWriter::processInput(unsigned int inputIndex)
 {
-	if (!getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess())
-	{
-		OV_ERROR_KRF("Error while marling algorithm as ready to process\n", ErrorType::Internal);
-	}
+	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(),
+		"Error while marking algorithm as ready to process\n",
+		ErrorType::Internal);
 	return true;
 }
 
@@ -110,15 +101,13 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 						dimensionLabels.push_back(matrix->getDimensionLabel(0, index));
 					}
 
-					if (!m_WriterLib->setSignalInformation(dimensionLabels, static_cast<unsigned int>(((OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmOVCSVFileWriter>*)m_StreamDecoder)->getOutputSamplingRate()), matrix->getDimensionSize(1)))
-					{
-						OV_ERROR_KRF(OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n", ErrorType::Internal);
-					}
+					OV_ERROR_UNLESS_KRF(m_WriterLib->setSignalInformation(dimensionLabels, static_cast<unsigned int>(((OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmOVCSVFileWriter>*)m_StreamDecoder)->getOutputSamplingRate()), matrix->getDimensionSize(1)),
+						OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n",
+						ErrorType::Internal);
 
-					if (!m_WriterLib->writeHeaderToFile())
-					{
-						OV_ERROR_KRF(OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n", ErrorType::Internal);
-					}
+					OV_ERROR_UNLESS_KRF(m_WriterLib->writeHeaderToFile(),
+						OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n",
+						ErrorType::Internal);
 				}
 			}
 			else
@@ -161,33 +150,28 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 				}
 
 				// add sample to the library
-				if (!m_WriterLib->addSample({ startTime, endTime, matrixValues, m_Epoch }))
-				{
-					OV_ERROR_KRF(OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n", ErrorType::Internal);
-				}
+				OV_ERROR_UNLESS_KRF(m_WriterLib->addSample({ startTime, endTime, matrixValues, m_Epoch }),
+					OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n",
+					ErrorType::Internal);
 
 				matrixValues.clear();
 				lastTime = endTime;
 			}
 
 			// write into the library
-			if (!m_WriterLib->noEventsUntilDate(lastTime + 0.5))
-			{
-				OV_ERROR_KRF(OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n", ErrorType::Internal);
-			}
-
-			if (!m_WriterLib->writeDataToFile())
-			{
-				OV_ERROR_KRF(OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n", ErrorType::Internal);
-			}
+			OV_ERROR_UNLESS_KRF(m_WriterLib->noEventsUntilDate(lastTime + 0.5),
+				OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n",
+				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_WriterLib->writeDataToFile(),
+				OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n",
+				ErrorType::Internal);
 
 			m_Epoch++;
 		}
 
-		if (!dynamicBoxContext.markInputAsDeprecated(0, index))
-		{
-			return false;
-		}
+		OV_ERROR_UNLESS_KRF(dynamicBoxContext.markInputAsDeprecated(0, index),
+			"Fail to mark input as deprecated\n",
+			ErrorType::Internal);
 	}
 
 	return true;

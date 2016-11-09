@@ -76,7 +76,6 @@ namespace OpenViBEPlugins
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& boxAlgorithmPrototype) const
 			{
 				boxAlgorithmPrototype.addInput  ("Input stream",     OV_TypeId_Signal);
-				boxAlgorithmPrototype.addInput  ("Stimulation stream", OV_TypeId_Stimulation);
 				boxAlgorithmPrototype.addSetting("Filename",         OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
 				boxAlgorithmPrototype.addSetting("Column separator", OV_TypeId_String, ";");
 				boxAlgorithmPrototype.addSetting("Precision",        OV_TypeId_Integer, "10");
@@ -86,7 +85,6 @@ namespace OpenViBEPlugins
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_FeatureVector);
-				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Stimulation);
 
 				return true;
 			}
