@@ -34,7 +34,6 @@ namespace OpenViBEPlugins
 		private:
 			OpenViBE::CSV::ICSVLib* m_WriterLib;
 
-			OpenViBE::CString m_Separator;
 			OpenViBE::CIdentifier m_TypeIdentifier;
 			bool processStreamedMatrix(void);
 			bool processStimulation(void);
