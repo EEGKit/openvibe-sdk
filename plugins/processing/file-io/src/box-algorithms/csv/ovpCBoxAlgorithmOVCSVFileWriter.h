@@ -50,6 +50,22 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmOVCSVFileWriterListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
 		{
 		public:
+	
+			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const unsigned int inputIndex)
+			{
+				if (inputIndex == 1)
+				{
+					OpenViBE::CIdentifier l_oTypeIdentifier;
+					box.getInputType(1, l_oTypeIdentifier);
+					if (l_oTypeIdentifier != OV_TypeId_Stimulations)
+					{
+						box.setInputType(1, OV_TypeId_Stimulations);
+						return true;
+					}
+				}
+
+				return true;
+			}
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
 		};
@@ -78,7 +94,6 @@ namespace OpenViBEPlugins
 				boxAlgorithmPrototype.addInput  ("Input stream",        OV_TypeId_Signal);
 				boxAlgorithmPrototype.addInput  ("Stimulations stream", OV_TypeId_Stimulations);
 				boxAlgorithmPrototype.addSetting("Filename",            OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
-				boxAlgorithmPrototype.addSetting("Column separator",    OV_TypeId_String, ";");
 				boxAlgorithmPrototype.addSetting("Precision",           OV_TypeId_Integer, "10");
 				boxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 
@@ -86,7 +101,6 @@ namespace OpenViBEPlugins
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_FeatureVector);
-				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Stimulations);
 
 				return true;
 			}
