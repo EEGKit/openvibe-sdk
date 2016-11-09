@@ -22,10 +22,9 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 {
 	m_IsFileOpen = false;
 	m_Epoch = 0;
-	this->getStaticBoxContext().getInputType(0, m_TypeIdentifier);
-
-	m_Separator = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-
+	OV_ERROR_UNLESS_KRF(this->getStaticBoxContext().getInputType(0, m_TypeIdentifier),
+		"Error while getting input type",
+		ErrorType::Internal);
 	if (m_TypeIdentifier == OV_TypeId_Signal)
 	{
 		m_WriterLib = OpenViBE::CSV::createCSVLib();
