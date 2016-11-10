@@ -52,6 +52,11 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 
 bool CBoxAlgorithmOVCSVFileWriter::uninitialize(void)
 {
+	if (!m_WriterLib->writeAllDataToFile())
+	{
+		OV_FATAL_K(OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << ": " << m_WriterLib->getLastErrorString().c_str(), ErrorType::Internal);
+	}
+
 	if (!m_WriterLib->closeFile())
 	{
 		OV_FATAL_K(OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << ": " << m_WriterLib->getLastErrorString().c_str(), ErrorType::Internal);
@@ -73,7 +78,22 @@ bool CBoxAlgorithmOVCSVFileWriter::processInput(unsigned int inputIndex)
 
 bool CBoxAlgorithmOVCSVFileWriter::process(void)
 {
-	return processStreamedMatrix();
+	if (!processStreamedMatrix()) // OV_ERROR already in the function
+	{
+		return false;
+	}
+	else if (!processStimulation()) // OV_ERROR already in the function
+	{
+		return false;
+	}
+
+	// write into the library
+	if (!m_WriterLib->writeDataToFile())
+	{
+		OV_ERROR_KRF(OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n", ErrorType::Internal);
+	}
+
+	return true;
 }
 
 bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
@@ -82,7 +102,9 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 
 	for (unsigned int index = 0; index < dynamicBoxContext.getInputChunkCount(0); index++)
 	{
-		m_StreamDecoder->decode(index);
+		OV_ERROR_UNLESS_KRF(m_StreamDecoder->decode(index),
+			"Failed to decode chunk",
+			ErrorType::Internal);
 		// represents the properties of the input, no data
 		const IMatrix* matrix = static_cast<OpenViBEToolkit::TStreamedMatrixDecoder < CBoxAlgorithmOVCSVFileWriter >*>(m_StreamDecoder)->getOutputMatrix();
 
@@ -116,8 +138,8 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 			const IMatrix* imatrix = static_cast<OpenViBEToolkit::TStreamedMatrixDecoder < CBoxAlgorithmOVCSVFileWriter >*>(m_StreamDecoder)->getOutputMatrix();
 			std::vector<double> matrixValues;
 
+			const unsigned long long samplingFrequency = static_cast<OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmOVCSVFileWriter >*>(m_StreamDecoder)->getOutputSamplingRate();
 			const unsigned long long chunkStartTime = dynamicBoxContext.getInputChunkStartTime(0, index);
-			const unsigned long long chunkEndTime = dynamicBoxContext.getInputChunkEndTime(0, index);
 			const unsigned int numChannels = matrix->getDimensionSize(0);
 			const unsigned int numSamples = matrix->getDimensionSize(1);
 
@@ -130,11 +152,11 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 				// get starting and ending time
 				if (m_TypeIdentifier == OV_TypeId_Signal)
 				{
-					const unsigned long long samplingFrequency = static_cast<OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmOVCSVFileWriter >*>(m_StreamDecoder)->getOutputSamplingRate();
 					unsigned long long timeOfNthSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex); // assuming chunk start is 0
 					unsigned long long sampleTime = chunkStartTime + timeOfNthSample;
 					startTime = ITimeArithmetics::timeToSeconds(sampleTime);
-					sampleTime = chunkEndTime + timeOfNthSample;
+					unsigned long long timeOfNthAndOneSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex + 1);
+					sampleTime = chunkStartTime + timeOfNthAndOneSample;
 					endTime = ITimeArithmetics::timeToSeconds(sampleTime);
 				}
 
@@ -153,19 +175,52 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 				lastTime = endTime;
 			}
 
-			// write into the library
-			OV_ERROR_UNLESS_KRF(m_WriterLib->noEventsUntilDate(lastTime + 0.5),
-				OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str(),
-				ErrorType::Internal);
-			OV_ERROR_UNLESS_KRF(m_WriterLib->writeDataToFile(),
-				OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str(),
-				ErrorType::Internal);
-
 			m_Epoch++;
 		}
 
 		OV_ERROR_UNLESS_KRF(dynamicBoxContext.markInputAsDeprecated(0, index),
 			"Fail to mark input as deprecated",
+			ErrorType::Internal);
+	}
+
+	return true;
+}
+
+bool CBoxAlgorithmOVCSVFileWriter::processStimulation(void)
+{
+	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
+
+	// add every stimulation received
+	for (unsigned int index = 0; index < dynamicBoxContext.getInputChunkCount(1); index++)
+	{
+		OpenViBEToolkit::TDecoder < CBoxAlgorithmOVCSVFileWriter >* stimulationDecoder = new OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmOVCSVFileWriter >();
+		OV_ERROR_UNLESS_KRF(stimulationDecoder->initialize(*this, 1),
+			"Error while stimulation decoder initialization\n",
+			ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(stimulationDecoder->decode(index),
+			"Failed to decode stimulation chunk",
+			ErrorType::Internal);
+		if (stimulationDecoder->isBufferReceived())
+		{
+			const IStimulationSet* stimulationSet = ((OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmOVCSVFileWriter >*)stimulationDecoder)->getOutputStimulationSet();
+			// for each stimulation, get its informations
+
+			for (unsigned int stimulationIndex = 0; stimulationIndex < stimulationSet->getStimulationCount(); stimulationIndex++)
+			{
+				OV_ERROR_UNLESS_KRF(m_WriterLib->addEvent({ stimulationSet->getStimulationIdentifier(stimulationIndex),
+					ITimeArithmetics::timeToSeconds(stimulationSet->getStimulationDate(stimulationIndex)),
+					ITimeArithmetics::timeToSeconds(stimulationSet->getStimulationDuration(stimulationIndex)) }),
+					OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n",
+					ErrorType::Internal);
+			}
+			// set NoEventUntilDate to prevent time that will be empty of stimulations until the end of the last chunk
+			OV_ERROR_UNLESS_KRF(m_WriterLib->noEventsUntilDate(ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkEndTime(1, (dynamicBoxContext.getInputChunkCount(1) - 1)))),
+				OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()).c_str() << "\n",
+				ErrorType::Internal);
+		}
+
+		OV_ERROR_UNLESS_KRF(dynamicBoxContext.markInputAsDeprecated(1, index),
+			"Fail to mark stimulations input as deprecated",
 			ErrorType::Internal);
 	}
 
