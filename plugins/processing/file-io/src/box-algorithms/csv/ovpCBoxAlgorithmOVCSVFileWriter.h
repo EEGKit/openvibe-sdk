@@ -38,6 +38,7 @@ namespace OpenViBEPlugins
 			bool processStreamedMatrix(void);
 			bool processStimulation(void);
 			OpenViBEToolkit::TDecoder < CBoxAlgorithmOVCSVFileWriter >* m_StreamDecoder;
+			OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmOVCSVFileWriter >* m_StimulationDecoder;
 
 			unsigned long long m_Epoch;
 
