@@ -350,6 +350,13 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		SchedulerInitialization_Failed
 	);
 
+	OV_ERROR_UNLESS_K(
+		m_pScenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier,
+		"Cannot initialize scheduler with an empty scenario",
+		ErrorType::BadCall,
+		SchedulerInitialization_Failed
+	);
+
 	CBoxSettingModifierVisitor l_oBoxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
 
 	OV_ERROR_UNLESS_K(
