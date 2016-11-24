@@ -1,13 +1,15 @@
 #pragma once
 
-#include <openvibe/ov_all.h>
-#include <toolkit/ovtk_all.h>
-#include "csv/ovICSV.h"
-
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
 #include <fstream>
+#include <memory>
+
+#include <openvibe/ov_all.h>
+#include <toolkit/ovtk_all.h>
+
+#include "csv/ovICSV.h"
 
 #define OVP_ClassId_BoxAlgorithm_OVCSVFileWriter     							   OpenViBE::CIdentifier(0x428375E8, 0x325F2DB9)
 #define OVP_ClassId_BoxAlgorithm_OVCSVFileWriterDesc 							   OpenViBE::CIdentifier(0x4B5C1D8F, 0x570E45FD)
@@ -32,7 +34,7 @@ namespace OpenViBEPlugins
 
 
 		private:
-			OpenViBE::CSV::ICSVLib* m_WriterLib;
+			std::unique_ptr<OpenViBE::CSV::ICSVLib, decltype(&OpenViBE::CSV::releaseCSVLib)>m_WriterLib;
 
 			OpenViBE::CIdentifier m_TypeIdentifier;
 			bool processStreamedMatrix(void);
@@ -44,6 +46,7 @@ namespace OpenViBEPlugins
 
 			bool m_IsHeaderReceived;
 			bool m_IsFileOpen;
+			bool m_AppendData;
 
 		};
 
@@ -95,6 +98,7 @@ namespace OpenViBEPlugins
 				boxAlgorithmPrototype.addInput  ("Stimulations stream", OV_TypeId_Stimulations);
 				boxAlgorithmPrototype.addSetting("Filename",            OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
 				boxAlgorithmPrototype.addSetting("Precision",           OV_TypeId_Integer, "10");
+				boxAlgorithmPrototype.addSetting("Append data",         OV_TypeId_Boolean, "false");
 				boxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
