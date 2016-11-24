@@ -610,7 +610,7 @@ bool CCSVLib::writeAllDataToFile(void)
 	{
 		m_Fs.write(m_Buffer.c_str(), m_Buffer.size());
 	}
-	catch (std::ios_base::failure fail)
+	catch (std::ios_base::failure& fail)
 	{
 		m_LogError = LogErrorCodes_ErrorWhileWriting;
 		return false;
@@ -908,9 +908,11 @@ bool CCSVLib::createHeaderString(void)
 
 		while (updateIteratedPosition(position))
 		{
+			unsigned int previousDimensionsSize = 0;
 			for (size_t index = 0; index < position.size(); index++)
 			{
-				m_Header += m_DimensionLabels[(index * m_DimensionSizes[index]) + position[index]];
+				m_Header += m_DimensionLabels[previousDimensionsSize + position[index]];
+				previousDimensionsSize += m_DimensionSizes[index];
 				if ((index + 1) < position.size())
 				{
 					m_Header += m_InternalDataSeparator;
