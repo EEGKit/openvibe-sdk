@@ -84,6 +84,7 @@ boolean CKernelContext::initialize(void)
 	m_pConfigurationManager->createConfigurationToken("Path_Tmp", "${Path_UserData}/tmp");
 	m_pConfigurationManager->createConfigurationToken("Path_Lib", OpenViBE::Directories::getLibDir());
 	m_pConfigurationManager->createConfigurationToken("Path_Bin", OpenViBE::Directories::getBinDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Data", OpenViBE::Directories::getDataDir());
 
 #if defined TARGET_OS_Windows
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Windows");
