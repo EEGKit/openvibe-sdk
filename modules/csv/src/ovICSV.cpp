@@ -35,7 +35,8 @@ namespace {
 		{ LogErrorCodes_InvalidArgumentException, "An invalid argument exeption have been thrown, refer to getLastErrorString function for more information" },
 		{ LogErrorCodes_CantWriteHeader, "Can not write header, data already began to be written or header already written" },
 		{ LogErrorCodes_ErrorWhileWriting, "Error occured while trying to write" },
-		{ LogErrorCodes_WrongParameters, "Error with (one of )the parameter(s), refer to GetLastErrorString function for more information" }
+		{ LogErrorCodes_WrongParameters, "Error with (one of )the parameter(s), refer to GetLastErrorString function for more information" },
+		{ LogErrorCodes_MissingData, "Missing data in file, file may be corrupted" }
 	};
 }
 

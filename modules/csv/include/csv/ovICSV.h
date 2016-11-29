@@ -65,6 +65,7 @@ namespace OpenViBE
 
 		enum ELogErrorCodes
 		{
+			LogErrorCodes_MissingData = -31,
 			LogErrorCodes_WrongParameters = -30,
 			LogErrorCodes_ErrorWhileWriting = -29,
 			LogErrorCodes_CantWriteHeader = -28,
@@ -138,11 +139,12 @@ namespace OpenViBE
 			 *
 			 * \param channelNames reference to fill with file channel names
 			 * \param samplingFrequency sampling frequency
+			 * \param sampleCountPeBuffer number of sample per buffer
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency) = 0;
+			virtual bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, unsigned int& sampleCountPerBuffer) = 0;
 
 			/**
 			 * \brief Set informations to read or write spectrum data
@@ -160,11 +162,12 @@ namespace OpenViBE
 			 *
 			 * \param channelNames reference to fill with file channel names
 			 * \param frequencyBands frequency bands
+			 * \param sampleCountPerBuffer number of sample per buffer
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands) = 0;
+			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands, unsigned int& sampleCountPerBuffer) = 0;
 
 			/**
 			 * \brief Set informations to read or write vector data
@@ -252,16 +255,16 @@ namespace OpenViBE
 			virtual bool writeAllDataToFile(void) = 0;
 
 			/**
-			 * \brief Read samples and events on the specified number of lines
+			 * \brief Read samples and events on the specified number of chunks
 			 *
-			 * \param linesToRead number of lines to read
+			 * \param chunksToRead number of chunks to read
 			 * \param samples structures reference to put the data in
 			 * \param events reference to a vector of event structure to put the data in
-			 * \param linesRead reference to read lines during the function call
+			 * \param chunksRead reference to read chunks during the function call
 			 *
-			 * \return number of read lines
+			 * \return number of read chunks
 			 */
-			virtual bool readSamplesAndEventsFromFile(unsigned long long linesToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events, unsigned long long& linesRead) = 0;
+			virtual bool readSamplesAndEventsFromFile(unsigned long long chunksToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events) = 0;
 
 			/**
 			 * \brief Open file specified on parameter

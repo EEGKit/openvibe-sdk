@@ -55,7 +55,7 @@ namespace {
 }
 
 CCSVLib::CCSVLib(void)
-	: m_LastStringError("No more information"),
+	: m_LastStringError(""),
 	m_Separator(','),
 	m_InternalDataSeparator(':'),
 	m_DimensionCount(0),
@@ -91,11 +91,13 @@ bool CCSVLib::setSignalInformation(const std::vector<std::string>& channelNames,
 {
 	if (m_InputTypeIdentifier != EStreamType::Signal)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
 	else if (m_IsSetInfoCalled)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_SetInfoOnce;
 		return false;
 	}
@@ -103,6 +105,7 @@ bool CCSVLib::setSignalInformation(const std::vector<std::string>& channelNames,
 	m_IsSetInfoCalled = true;
 	if (channelNames.empty())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_NoChannelsName;
 		return false;
 	}
@@ -113,10 +116,11 @@ bool CCSVLib::setSignalInformation(const std::vector<std::string>& channelNames,
 	return true;
 }
 
-bool CCSVLib::getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency)
+bool CCSVLib::getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, unsigned int& sampleCountPerBuffer)
 {
 	if (m_InputTypeIdentifier != EStreamType::Signal)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
@@ -138,15 +142,22 @@ bool CCSVLib::getSignalInformation(std::vector<std::string>& channelNames, unsig
 		m_LogError = LogErrorCodes_WrongHeader;
 		return false;
 	}
-	else if (samplingFrequency == 0)
+	else if (m_SamplingRate == 0)
 	{
-		m_LastStringError = "Sampling rate isn't recuparated";
+		m_LastStringError = "Sampling rate invalid";
+		m_LogError = LogErrorCodes_WrongHeader;
+		return false;
+	}
+	else if (m_SampleCountPerBuffer == 0)
+	{
+		m_LastStringError = "Sample count per buffer is invalid";
 		m_LogError = LogErrorCodes_WrongHeader;
 		return false;
 	}
 
 	channelNames = m_DimensionLabels;
 	samplingFrequency = m_SamplingRate;
+	sampleCountPerBuffer = m_SampleCountPerBuffer;
 	return true;
 }
 
@@ -154,12 +165,14 @@ bool CCSVLib::setSpectrumInformation(const std::vector<std::string>& channelName
 {
 	if (m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
 
 	if (m_IsSetInfoCalled)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_SetInfoOnce;
 		return false;
 	}
@@ -167,6 +180,7 @@ bool CCSVLib::setSpectrumInformation(const std::vector<std::string>& channelName
 
 	if (channelNames.empty())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_NoChannelsName;
 		return false;
 	}
@@ -177,10 +191,11 @@ bool CCSVLib::setSpectrumInformation(const std::vector<std::string>& channelName
 	return true;
 }
 
-bool CCSVLib::getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands)
+bool CCSVLib::getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands, unsigned int& sampleCountPerBuffer)
 {
 	if (m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
@@ -208,15 +223,22 @@ bool CCSVLib::getSpectrumInformation(std::vector<std::string>& channelNames, std
 		m_LogError = LogErrorCodes_WrongHeader;
 		return false;
 	}
-	else if (m_FrequenceBandsBuffer.empty())
+	else if (m_FrequencyBandsBuffer.empty())
 	{
 		m_LastStringError = "No dimension labels, header reading may have failed";
 		m_LogError = LogErrorCodes_WrongHeader;
 		return false;
 	}
+	else if (m_SampleCountPerBuffer == 0)
+	{
+		m_LastStringError = "Sample count per buffer is invalid";
+		m_LogError = LogErrorCodes_WrongHeader;
+		return false;
+	}
 
 	channelNames = m_DimensionLabels;
-	frequencyBands = m_FrequenceBandsBuffer;
+	frequencyBands = m_FrequencyBandsBuffer;
+	sampleCountPerBuffer = m_SampleCountPerBuffer;
 	return true;
 }
 
@@ -224,17 +246,20 @@ bool CCSVLib::setFeatureVectorInformation(const std::vector<std::string>& channe
 {
 	if (m_InputTypeIdentifier != EStreamType::FeatureVector)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
 	else if (m_IsSetInfoCalled)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_SetInfoOnce;
 		return false;
 	}
 	m_IsSetInfoCalled = true;
 	if (channelNames.empty())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_NoChannelsName;
 		return false;
 	}
@@ -246,6 +271,7 @@ bool CCSVLib::getFeatureVectorInformation(std::vector<std::string>& channelNames
 {
 	if (m_InputTypeIdentifier != EStreamType::FeatureVector)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
@@ -276,11 +302,13 @@ bool CCSVLib::setCovarianceMatrixInformation(const std::vector<std::string>& cha
 {
 	if (m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
 	else if (m_IsSetInfoCalled)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_SetInfoOnce;
 		return false;
 	}
@@ -288,6 +316,7 @@ bool CCSVLib::setCovarianceMatrixInformation(const std::vector<std::string>& cha
 	m_IsSetInfoCalled = true;
 	if (channelNames.empty())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_NoChannelsName;
 		return false;
 	}
@@ -299,6 +328,7 @@ bool CCSVLib::getCovarianceMatrixInformation(std::vector<std::string>& channelNa
 {
 	if (m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
@@ -329,18 +359,21 @@ bool CCSVLib::setStreamedMatrixInformation(const std::vector<unsigned int>& dime
 {
 	if (m_IsSetInfoCalled)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_SetInfoOnce;
 		return false;
 	}
 
 	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
 
 	if (dimensionSizes.empty())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_DimensionSizeEmpty;
 		return false;
 	}
@@ -352,6 +385,7 @@ bool CCSVLib::setStreamedMatrixInformation(const std::vector<unsigned int>& dime
 
 	if (size != labels.size())
 	{
+		m_LastStringError = "dimension count is " + std::to_string(size) + " and labels count is " + std::to_string(labels.size());
 		m_LogError = LogErrorCodes_WrongDimensionSize;
 		return false;
 	}
@@ -366,6 +400,7 @@ bool CCSVLib::getStreamedMatrixInformation(std::vector<unsigned int>& dimensionS
 {
 	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix)
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
@@ -409,6 +444,7 @@ bool CCSVLib::openFile(const std::string& fileName, EFileAccessMode mode)
 {
 	if (m_Fs.is_open())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_CantOpenFile;
 		return false;
 	}
@@ -419,12 +455,14 @@ bool CCSVLib::openFile(const std::string& fileName, EFileAccessMode mode)
 		FILE *file = fopen(m_Filename.c_str(), "w");
 		if (!file)
 		{
+			m_LastStringError.clear();
 			m_LogError = LogErrorCodes_CantOpenFile;
 			return false;
 		}
 
 		if (fclose(file) != 0)
 		{
+			m_LastStringError.clear();
 			m_LogError = LogErrorCodes_ErrorWhileClosing;
 			return false;
 		}
@@ -443,6 +481,7 @@ bool CCSVLib::openFile(const std::string& fileName, EFileAccessMode mode)
 
 	if (!m_Fs.is_open())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_CantOpenFile;
 		return false;
 	}
@@ -460,80 +499,118 @@ bool CCSVLib::openFile(const std::string& fileName, EFileAccessMode mode)
 	return true;
 }
 
-bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long linesToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& stimulations, unsigned long long& linesRead)
+bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations)
 {
 	if (!m_IsHeaderRead)
 	{
 		m_Fs.seekg(0);
-		std::getline(m_Fs, m_Header);
-		m_IsHeaderRead = true;
-	}
-
-	if (!parseHeader()) // m_LogError set in this function
-	{
-		return false;
-	}
-
-	samples.clear();
-	unsigned long long line = 0;
-	linesRead = line;
-	while (line < linesToRead)
-	{
-		if (!std::getline(m_Fs, m_Buffer))
+		if (!std::getline(m_Fs, m_Header))
 		{
-			linesRead = line;
-			return true;
-		}
-
-		unsigned int columnCounter = 1;
-		for (unsigned int index = 0; index < m_Buffer.size(); index++)
-		{
-			if (m_Buffer[index] == m_Separator)
-			{
-				columnCounter++;
-			}
-		}
-
-		if (columnCounter != m_ColumnCount)
-		{
-			m_LastStringError = "There is " + std::to_string(columnCounter)
-				+ " columns in the Header instead of " + std::to_string(m_ColumnCount)
-				+ " on line " + std::to_string(line + 1);
-			m_LogError = LogErrorCodes_WrongLineSize;
+			m_LastStringError = "No header in the file or file empty";
+			m_LogError = LogErrorCodes_EmptyColumn;
 			return false;
 		}
+		m_IsHeaderRead = true;
 
-		std::istringstream iss(m_Buffer);
-		for (unsigned int index = 0; index < (m_ColumnCount - 3); index++)
+		if (!parseHeader()) // m_LogError set in this function
 		{
-			std::string column;
-			std::getline(iss, column, m_Separator);
-			if (column.empty())
+			return false;
+		}
+	}
+
+	chunks.clear();
+	SMatrixChunk chunk(0, 0, {}, 0);
+
+	while (chunks.size() < chunksToRead)
+	{
+		if ((m_InputTypeIdentifier == EStreamType::Signal)
+			&& chunks.size() == 0)
+		{
+			chunk.matrix.resize(m_SampleCountPerBuffer * (m_ColumnCount - (s_ColumnStartMatrixIndex + s_ColumnEndMatrixIndex)));
+		}
+		else if ((m_InputTypeIdentifier == EStreamType::Spectrum)
+			&& chunks.size() == 0)
+		{
+			chunk.matrix.resize(m_SampleCountPerBuffer * (m_DimensionSizes[0] * m_DimensionSizes[1]));
+		}
+		for (unsigned long long line = 0; line < m_SampleCountPerBuffer; line++)
+		{
+			if (!std::getline(m_Fs, m_Buffer))
 			{
-				m_LogError = LogErrorCodes_EmptyColumn;
+				if (line != 0)
+				{
+					m_LastStringError = "Chunk is not complete";
+					m_LogError = LogErrorCodes_MissingData;
+					return false;
+				}
+				else
+				{
+					// it means that their is no more data to read
+					return true;
+				}
+			}
+
+			std::vector<std::string> lineColumns;
+			::split(m_Buffer, m_Separator, lineColumns);
+			if (lineColumns[0].empty())
+			{
+				if (line != 0)
+				{
+					m_LastStringError = "Can't reach all the chunk, file doesn't get enough";
+					m_LogError = LogErrorCodes_WrongParameters;
+					return false;
+				}
+				else
+				{
+					// it means that their is no more chunk to read because we read all
+					return true;
+				}
+			}
+
+			if (lineColumns.size() != m_ColumnCount)
+			{
+				m_LastStringError = "There is " + std::to_string(lineColumns.size())
+					+ " columns in the Header instead of " + std::to_string(m_ColumnCount)
+					+ " on line " + std::to_string(line + 1);
+				m_LogError = LogErrorCodes_WrongLineSize;
 				return false;
 			}
 
-			m_LineColumns.push_back(column);
+			for (size_t index = 0; index < lineColumns.size() - 3; index++)
+			{
+				std::string column = lineColumns[index];
+				if (column.empty())
+				{
+					m_LastStringError.clear();
+					m_LogError = LogErrorCodes_EmptyColumn;
+					return false;
+				}
+
+				m_LineColumns.push_back(column);
+			}
+			// get Matrix chunk, LogError set in the function
+			if (!readSampleChunk(chunk, line))
+			{
+				return false;
+			}
+			// get stimulations chunk, LogError set in the function
+			if (!readStimulationChunk(stimulations, line + 1))
+			{
+				return false;
+			}
+			m_LineColumns.clear();
 		}
-		// get Matrix chunk, LogError set in the function
-		SMatrixChunk sample(0, 0, {}, 0);
-		if (!readSampleChunk(sample))
-		{
-			return false;
-		}
-		// get stimulations chunk, LogError set in the function
-		if (!readStimulationChunk(stimulations, line + 1))
-		{
-			return false;
-		}
-		m_LineColumns.clear();
-		samples.push_back(sample);
-		sample.matrix.clear();
-		line++;
+
+		chunks.push_back(chunk);
 	}
 
-	linesRead = line;
+	if (chunks.size() != chunksToRead)
+	{
+		m_LastStringError = "File doesn't contain enough chunk";
+		m_LogError = LogErrorCodes_WrongParameters;
+		return false;
+	}
+
 	return true;
 }
 
@@ -541,12 +618,14 @@ bool CCSVLib::writeHeaderToFile(void)
 {
 	if (!m_Fs.is_open())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_NoFileDefined;
 		return false;
 	}
 
 	if (m_IsFirstLineWritten)
 	{
+		m_LastStringError = "Header already written";
 		m_LogError = LogErrorCodes_CantWriteHeader;
 		return false;
 	}
@@ -574,6 +653,7 @@ bool CCSVLib::writeDataToFile(void)
 {
 	if (!m_Fs.is_open())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_NoFileDefined;
 		return false;
 	}
@@ -612,6 +692,7 @@ bool CCSVLib::writeAllDataToFile(void)
 	}
 	catch (std::ios_base::failure& fail)
 	{
+		m_LastStringError = fail.what();
 		m_LogError = LogErrorCodes_ErrorWhileWriting;
 		return false;
 	}
@@ -652,18 +733,21 @@ bool CCSVLib::addSample(const SMatrixChunk& sample)
 {
 	if (sample.matrix.empty())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_MatrixEmpty;
 		return false;
 	}
 	else if (m_InputTypeIdentifier == EStreamType::Signal
 		&& sample.matrix.size() != m_DimensionLabels.size())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongMatrixSize;
 		return false;
 	}
 	else if (m_InputTypeIdentifier == EStreamType::Spectrum
 		&& sample.matrix.size() != (m_DimensionLabels.size() * m_FrequencyBands.size()))
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongMatrixSize;
 		return false;
 	}
@@ -678,6 +762,7 @@ bool CCSVLib::addSample(const SMatrixChunk& sample)
 
 		if (sample.matrix.size() != columnsToHave)
 		{
+			m_LastStringError = "Matrix size is " + std::to_string(sample.matrix.size()) + " and size to have is " + std::to_string(columnsToHave);
 			m_LogError = LogErrorCodes_WrongMatrixSize;
 			return false;
 		}
@@ -688,6 +773,7 @@ bool CCSVLib::addSample(const SMatrixChunk& sample)
 			|| std::signbit(sample.endTime)
 			|| sample.endTime < sample.startTime)
 		{
+			m_LastStringError.clear();
 			m_LogError = LogErrorCodes_WrongSampleDate;
 			return false;
 		}
@@ -700,6 +786,7 @@ bool CCSVLib::addBuffer(const std::vector<SMatrixChunk>& samples)
 {
 	if (samples.empty())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_NoSample;
 		return false;
 	}
@@ -708,11 +795,13 @@ bool CCSVLib::addBuffer(const std::vector<SMatrixChunk>& samples)
 	{
 		if (sample.matrix.empty())
 		{
+			m_LastStringError.clear();
 			m_LogError = LogErrorCodes_MatrixEmpty;
 			return false;
 		}
 		else if (sample.matrix.size() != m_DimensionLabels.size())
 		{
+			m_LastStringError.clear();
 			m_LogError = LogErrorCodes_WrongMatrixSize;
 			return false;
 		}
@@ -723,6 +812,7 @@ bool CCSVLib::addBuffer(const std::vector<SMatrixChunk>& samples)
 				|| std::signbit(sample.endTime)
 				|| sample.endTime < sample.startTime)
 			{
+				m_LastStringError.clear();
 				m_LogError = LogErrorCodes_WrongSampleDate;
 				return false;
 			}
@@ -736,12 +826,14 @@ bool CCSVLib::addEvent(unsigned long long code, double date, double duration)
 {
 	if (std::signbit(date))
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_DateError;
 		return false;
 	}
 
 	if (std::signbit(duration))
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_DurationError;
 		return false;
 	}
@@ -754,12 +846,14 @@ bool CCSVLib::addEvent(const SStimulationChunk& stimulation)
 {
 	if (std::signbit(stimulation.stimulationDate))
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_DateError;
 		return false;
 	}
 
 	if (std::signbit(stimulation.stimulationDuration))
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_DurationError;
 		return false;
 	}
@@ -771,6 +865,8 @@ bool CCSVLib::noEventsUntilDate(double date)
 {
 	if (std::signbit(date))
 	{
+		m_LastStringError = "Date is negative: ";
+		m_LastStringError += std::to_string(date);
 		m_LogError = LogErrorCodes_WrongSampleDate;
 		return false;
 	}
@@ -852,6 +948,7 @@ bool CCSVLib::createHeaderString(void)
 		m_Header += m_InternalDataSeparator;
 		if (m_DimensionCount == 0)
 		{
+			m_LastStringError.clear();
 			m_LogError = LogErrorCodes_DimensionCountZero;
 			return false;
 		}
@@ -880,6 +977,7 @@ bool CCSVLib::createHeaderString(void)
 
 	if (m_DimensionLabels.empty())
 	{
+		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_NoMatrixLabels;
 		return false;
 	}
@@ -900,6 +998,7 @@ bool CCSVLib::createHeaderString(void)
 		{
 			if (size == 0)
 			{
+				m_LastStringError.clear();
 				m_LogError = LogErrorCodes_DimensionSizeZero;
 				return false;
 			}
@@ -969,7 +1068,7 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 	unsigned long long linesWritten = 0;
 	while (!m_Chunks.empty()
 		&& ((m_Stimulations.empty() && m_Chunks.front().endTime <= m_NoEventSince)
-		|| (!m_Stimulations.empty() && m_Chunks.front().endTime <= m_Stimulations.back().stimulationDate)))
+		|| (!m_Stimulations.empty() && m_Chunks.front().startTime <= m_Stimulations.back().stimulationDate)))
 	{
 		// Signal data must be written as sampleCounterPerBuffer th lines;
 		if (m_InputTypeIdentifier == EStreamType::Signal
@@ -984,6 +1083,7 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 		if ((m_InputTypeIdentifier == EStreamType::Signal || m_InputTypeIdentifier == EStreamType::Spectrum)
 			&& (m_Chunks.front().matrix.size() + 5) != m_ColumnCount)
 		{
+			m_LastStringError.clear();
 			m_LogError = LogErrorCodes_WrongLineSize;
 			return false;
 		}
@@ -1000,6 +1100,7 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 
 			if (columnstoHave + 4 != m_ColumnCount)
 			{
+				m_LastStringError = "Line size is " + std::to_string(columnstoHave + 4) + " but must be " + std::to_string (m_ColumnCount);
 				m_LogError = LogErrorCodes_WrongLineSize;
 				return false;
 			}
@@ -1080,6 +1181,7 @@ bool CCSVLib::parseHeader(void)
 	{
 		if (columnPart.empty())
 		{
+			m_LastStringError.clear();
 			m_LogError = LogErrorCodes_EmptyColumn;
 			return false;
 		}
@@ -1168,11 +1270,17 @@ bool CCSVLib::parseSignalHeader(void)
 		return false;
 	}
 
-	// get labels
-	for (unsigned int index = 2; index < (m_LineColumns.size() - s_ColumnEndMatrixIndex); index++)
+	// get dimension labels
+	for (unsigned int index = 2; index < m_LineColumns.size() - s_ColumnEndMatrixIndex; index++)
 	{
 		m_DimensionLabels.push_back(m_LineColumns[index]);
 	}
+
+	if (!calculateSampleCountPerBuffer()) // m_LastErrorString set in the function, m_LogError set outside the function
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -1293,7 +1401,7 @@ bool CCSVLib::parseSpectrumHeader(void)
 					return false;
 				}
 
-				m_FrequenceBandsBuffer.push_back(frequency);
+				m_FrequencyBandsBuffer.push_back(frequency);
 			}
 			else
 			{
@@ -1319,7 +1427,7 @@ bool CCSVLib::parseSpectrumHeader(void)
 					return false;
 				}
 
-				if (frequency != m_FrequenceBandsBuffer[labelSizeCounter])
+				if (!(std::fabs(frequency - m_FrequencyBandsBuffer[labelSizeCounter]) < std::numeric_limits<double>::epsilon()))
 				{
 					m_LastStringError = "Channels must have the same frequency bands";
 					return false;
@@ -1332,6 +1440,11 @@ bool CCSVLib::parseSpectrumHeader(void)
 				return false;
 			}
 		}
+	}
+
+	if (!calculateSampleCountPerBuffer()) // m_LastErrorString set in the function, m_LogError set outside the function
+	{
+		return false;
 	}
 	return true;
 }
@@ -1427,7 +1540,7 @@ bool CCSVLib::parseMatrixHeader(void)
 		}
 		// check column labels
 
-		for (long index = positionInDimensions.size() - 1; index >= 0; index--)
+		for (size_t index = positionInDimensions.size() - 1; index != std::numeric_limits<unsigned int>::max(); index--)
 		{
 			std::vector<std::string> currentDimension = labelsInDimensions[index];
 			unsigned int currentPosition = positionInDimensions[index];
@@ -1485,14 +1598,20 @@ bool CCSVLib::parseMatrixHeader(void)
 			m_DimensionLabels.push_back(label);
 		}
 	}
+	m_SampleCountPerBuffer = 1;
 	return true;
 }
 
-bool CCSVLib::readSampleChunk(SMatrixChunk& sample)
+bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 {
 	std::istringstream ssTime(m_LineColumns[0]);
 	std::string column;
-	std::getline(ssTime, column, m_InternalDataSeparator);
+	if (!std::getline(ssTime, column, m_InternalDataSeparator))
+	{
+		m_LastStringError = "Missing data in Time column";
+		m_LogError = LogErrorCodes_MissingData;
+		return false;
+	}
 	double startTime;
 	try
 	{
@@ -1513,38 +1632,60 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample)
 		return false;
 	}
 
-	std::getline(ssTime, column, m_InternalDataSeparator);
+	if (line % m_SampleCountPerBuffer == 0)
+	{
+		sample.startTime = startTime;
+	}
+
 	double endTime;
-	try
+	if (m_InputTypeIdentifier == EStreamType::Signal)
 	{
-		endTime = std::stod(column);
+		sample.endTime = sample.startTime + (static_cast<double>(m_SampleCountPerBuffer) / static_cast<double>(m_SamplingRate));
 	}
-	catch (const std::invalid_argument& ia)
+	else
 	{
-		m_LastStringError = "Invalid argument error on end time: ";
-		m_LastStringError += ia.what();
-		m_LogError = LogErrorCodes_InvalidArgumentException;
-		return false;
-	}
-	catch (const std::out_of_range& oor)
-	{
-		m_LastStringError = "Out of range error: ";
-		m_LastStringError += oor.what();
-		m_LogError = LogErrorCodes_OutOfRangeException;
-		return false;
+		if (!std::getline(ssTime, column, m_InternalDataSeparator))
+		{
+			m_LastStringError = "Missing data in Time column";
+			m_LogError = LogErrorCodes_MissingData;
+			return false;
+		}
+
+		try
+		{
+			endTime = std::stod(column);
+		}
+		catch (const std::invalid_argument& ia)
+		{
+			m_LastStringError = "Invalid argument error on end time: ";
+			m_LastStringError += ia.what();
+			m_LogError = LogErrorCodes_InvalidArgumentException;
+			return false;
+		}
+		catch (const std::out_of_range& oor)
+		{
+			m_LastStringError = "Out of range error: ";
+			m_LastStringError += oor.what();
+			m_LogError = LogErrorCodes_OutOfRangeException;
+			return false;
+		}
+		sample.endTime = endTime;
 	}
 
 	std::istringstream ssEpoch(m_LineColumns[1]);
-	std::getline(ssEpoch, column, '\0');
-	std::vector<double> matrix;
-	unsigned long long epoch;
+	if (!std::getline(ssEpoch, column, '\0'))
+	{
+		m_LastStringError = "Missing data in Epoch column";
+		m_LogError = LogErrorCodes_MissingData;
+		return false;
+	}
 
 	if (m_InputTypeIdentifier == EStreamType::Signal
 		|| m_InputTypeIdentifier == EStreamType::Spectrum)
 	{
 		try
 		{
-			epoch = std::stoull(column.c_str());
+			sample.epoch = std::stoull(column.c_str());
 		}
 		catch (const std::invalid_argument& ia)
 		{
@@ -1563,13 +1704,13 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample)
 	}
 	else
 	{
-		epoch = std::numeric_limits<unsigned long long>::max();
+		sample.epoch = std::numeric_limits<unsigned long long>::max();
 	}
 
 	if (m_InputTypeIdentifier == EStreamType::Signal
 		|| m_InputTypeIdentifier == EStreamType::Spectrum)
 	{
-		for (unsigned int index = s_ColumnStartMatrixIndex; index < (m_LineColumns.size() - s_ColumnEndMatrixIndex); index++)
+		for (unsigned int index = s_ColumnStartMatrixIndex; index < m_LineColumns.size(); index++)
 		{
 			if (!m_LineColumns[index].empty())
 			{
@@ -1591,7 +1732,7 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample)
 					m_LogError = LogErrorCodes_OutOfRangeException;
 					return false;
 				}
-				matrix.push_back(matrixValue);
+				sample.matrix[((index - s_ColumnStartMatrixIndex) * m_SampleCountPerBuffer) + static_cast<unsigned int>(line)] = matrixValue;
 			}
 		}
 	}
@@ -1618,11 +1759,11 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample)
 				m_LogError = LogErrorCodes_OutOfRangeException;
 				return false;
 			}
-			matrix.push_back(matrixValue);
+
+			sample.matrix.push_back(matrixValue);
 		}
 	}
 
-	sample = { startTime, endTime, matrix, epoch };
 	return true;
 }
 
@@ -1660,7 +1801,7 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 		double date;
 		try
 		{
-			date = std::stof(column);
+			date = std::stod(column);
 		}
 		catch (const std::exception& e)
 		{
@@ -1671,6 +1812,8 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 
 		if (std::signbit(date))
 		{
+			m_LastStringError = "Stimulation date is negative: ";
+			m_LastStringError += std::to_string(date);
 			m_LogError = LogErrorCodes_NegativeStimulation;
 			return false;
 		}
@@ -1687,7 +1830,7 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 		double duration;
 		try
 		{
-			duration = std::stof(column);
+			duration = std::stod(column);
 		}
 		catch (const std::exception& e)
 		{
@@ -1698,6 +1841,8 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 
 		if (std::signbit(duration))
 		{
+			m_LastStringError = "Stimulation duration is negative: ";
+			m_LastStringError += std::to_string(duration);
 			m_LogError = LogErrorCodes_NegativeStimulation;
 			return false;
 		}
@@ -1707,6 +1852,7 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 	if (stimIdentifiers.size() != stimDates.size()
 		|| stimIdentifiers.size() != stimDurations.size())
 	{
+		m_LastStringError = "There is " + std::to_string(stimIdentifiers.size()) + " identifiers, " + std::to_string(stimDates.size()) + " dates, and " + std::to_string(stimDurations.size()) + " durations";
 		m_LogError = LogErrorCodes_StimulationSize;
 		return false;
 	}
@@ -1720,11 +1866,12 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 
 bool CCSVLib::updateIteratedPosition(std::vector<unsigned int>& position)
 {
-	for (long index = position.size() - 1; index >= 0; index--)
+	for (size_t counter = 1; counter <= position.size(); counter++)
 	{
+		size_t index = position.size() - counter;
 		if ((position[index] + 1) > m_DimensionSizes[index])
 		{
-			if (index != 0)
+			if ((position.size() - counter) != 0)
 			{
 				position[index] = 0;
 				position[index - 1]++;
@@ -1735,6 +1882,47 @@ bool CCSVLib::updateIteratedPosition(std::vector<unsigned int>& position)
 			}
 		}
 	}
+	return true;
+}
+
+bool CCSVLib::calculateSampleCountPerBuffer()
+{
+	// get samples per buffer
+
+	std::fstream::pos_type posEndHeader = m_Fs.tellg();
+	std::vector<std::string> lineParts({ "", "0" });
+	unsigned int sampleCount = 0;
+	while (lineParts[1] == "0")
+	{
+		std::string line;
+		if (!std::getline(m_Fs, line))
+		{
+			// protect against sampleCount--, no need here
+			sampleCount++;
+			break;
+		}
+
+		lineParts.clear();
+		::split(line, m_Separator, lineParts);
+		if (lineParts.size() != m_LineColumns.size())
+		{
+			m_LastStringError = "File may be corrupt, can't found sample count per buffer";
+			return false;
+		}
+
+		sampleCount++;
+	}
+	// assume that we might read too far
+	sampleCount--;
+
+	if (sampleCount == 0)
+	{
+		m_LastStringError = "File contain no data to get sample count per buffer, or is corrupted";
+		return false;
+	}
+
+	m_SampleCountPerBuffer = sampleCount;
+	m_Fs.seekg(posEndHeader);
 	return true;
 }
 

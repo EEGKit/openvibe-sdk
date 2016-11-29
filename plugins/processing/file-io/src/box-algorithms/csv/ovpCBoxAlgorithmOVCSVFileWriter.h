@@ -34,11 +34,13 @@ namespace OpenViBEPlugins
 
 
 		private:
+			bool processStreamedMatrix(void);
+			bool processStimulation(void);
+
 			std::unique_ptr<OpenViBE::CSV::ICSVLib, decltype(&OpenViBE::CSV::releaseCSVLib)>m_WriterLib;
 
 			OpenViBE::CIdentifier m_TypeIdentifier;
-			bool processStreamedMatrix(void);
-			bool processStimulation(void);
+
 			OpenViBEToolkit::TDecoder < CBoxAlgorithmOVCSVFileWriter >* m_StreamDecoder;
 			OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmOVCSVFileWriter > m_StimulationDecoder;
 
