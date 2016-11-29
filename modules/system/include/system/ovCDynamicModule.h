@@ -18,43 +18,58 @@ namespace System
 	class System_API CDynamicModule
 	{
 	public:
+		enum ELogErrorCodes :unsigned int
+		{
+			LogErrorCodes_NoError = 0,
+			LogErrorCodes_ModuleAlreadyLoaded = 1,
+			LogErrorCodes_NoModuleLoaded = 2,
+			LogErrorCodes_FilenameEmpty = 3,
+			LogErrorCodes_FolderPathInvalid = 4,
+			LogErrorCodes_RegistryQueryFailed = 5,
+			LogErrorCodes_UnloadModuleFailed = 6,
+			LogErrorCodes_FailToLoadModule = 7,
+			LogErrorCodes_InvalidSymbol = 8,
+			LogErrorCodes_EnvironmentVariableInvalid = 9,
+			LogErrorCodes_ModuleNotFound = 10
+		};
+
 		CDynamicModule(void);
 		virtual ~CDynamicModule(void);
 
 		/**
 		 * \brief Load existing module that was already loaded by the process.
 		 *
-		 * \param sModulePath The path to the module.
-		 * \param sSymbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
+		 * \param modulePath The path to the module.
+		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 		 *
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
 		 */
-		bool loadFromExisting(const char* sModulePath, const char* sSymbolNameCheck = nullptr);
+		bool loadFromExisting(const char* modulePath, const char* symbolNameCheck = nullptr);
 
 		/**
 		 * \brief Load module from a path.
 		 *
-		 * \param sModulePath
-		 * \param sSymbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
+		 * \param modulePath
+		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 		 *
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
 		 */
-		bool loadFromPath(const char* sModulePath, const char* sSymbolNameCheck = nullptr);
+		bool loadFromPath(const char* modulePath, const char* symbolNameCheck = nullptr);
 
 #if defined TARGET_OS_Windows
 		/**
 		 * \brief Load module from known path. Windows only.
 		 *
-		 * \param iStandardPath A CSIDL value that identifies the folder whose path is to be retrieved. Only real folders are valid. If a virtual folder is specified, this function fails. You can force creation of a folder by combining the folder's CSIDL with CSIDL_FLAG_CREATE.
-		 * \param sModulePath
-		 * \param sSymbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
+		 * \param standardPath A CSIDL value that identifies the folder whose path is to be retrieved. Only real folders are valid. If a virtual folder is specified, this function fails. You can force creation of a folder by combining the folder's CSIDL with CSIDL_FLAG_CREATE.
+		 * \param modulePath
+		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 		 *
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
 		 */
-		bool loadFromKnownPath(int iStandardPath, const char* sModulePath, const char* sSymbolNameCheck = nullptr);
+		bool loadFromKnownPath(int standardPath, const char* modulePath, const char* symbolNameCheck = nullptr);
 #endif
 
 #if defined TARGET_OS_Windows
@@ -68,7 +83,7 @@ namespace System
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
 		 */
-		bool loadFromEnvironment(const char* sEnvironmentPath, const char* sModulePath, const char* sSymbolNameCheck = nullptr);
+		bool loadFromEnvironment(const char* environmentPath, const char* modulePath, const char* symbolNameCheck = nullptr);
 #endif
 
 #if defined TARGET_OS_Windows
@@ -83,7 +98,7 @@ namespace System
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
 		 */
-		bool loadFromRegistry(HKEY key, const char* sRegistryPath, const char* sModulePath, const char* sSymbolNameCheck = nullptr);
+		bool loadFromRegistry(HKEY key, const char* registryPath, const char* modulePath, const char* symbolNameCheck = nullptr);
 #endif
 
 #if defined TARGET_OS_Windows
@@ -95,13 +110,13 @@ namespace System
 		 * - x64: 0x8664
 		 * - ia64: 0x0200
 		 *
-		 * \param sFilePath Module file path
+		 * \param filePath Module file path
 		 * \param architecture Architecture code
 		 *
 		 * \retval true If the module architecture is equal to the architecture parameter. 
 		 * \retval false If the module is unequal to the architecture parameter.
 		 */
-		static bool isModuleCompatible(const std::string& sFilePath, int architecture);
+		static bool isModuleCompatible(const std::string& filePath, int architecture);
 #endif
 
 		// --------------------------------------
@@ -136,10 +151,9 @@ namespace System
 		const char* getFilename(void) const;
 
 		/**
-		 * Should be used to avoid the warning "Missing dll" when loading acquisition server
-		 * This can happen when the loaded library needs a second library that is not detected
+		 * \brief
 		 */
-		void setDynamicModuleErrorMode(uint32 ui32ErrorMode);
+		void setDynamicModuleErrorMode(unsigned int errorMode);
 
 		/**
 		 * \brief Set if the module should, or not, be free. By default the module will be free.
@@ -148,19 +162,29 @@ namespace System
 		 *
 		 * \sa unload
 		 */
-		void setShouldFreeModule(bool bShouldFreeModule);
+		void setShouldFreeModule(bool shouldFreeModule);
 
-	protected:
-		void* m_pHandle;
-		char m_sFilename[1024];
-		uint32 m_ui32ErrorMode;
-		bool m_bShouldFreeModule;
+		unsigned getLastError(void) const;
+		const char* getErrorString(unsigned int errorCode) const;
+		const char* getErrorDetails(void) const;
+
+	private:
+		void* m_Handle;
+		char m_Filename[1024];
+		unsigned int m_ErrorMode;
+		bool m_ShouldFreeModule;
 		typedef void(*pSymbol_t)(void);
+
+		char m_ErrorDetails[1024];
+		mutable ELogErrorCodes m_ErrorCode;
+		
 
 		static const unsigned int m_ErrorModeNull = 0xffffffff;
 
 	private:
 		friend class CSymbolHelper;
+
+		void setError(ELogErrorCodes errorCode, const std::string& details = std::string());
 
 		/**
 		* \brief Get a symbol from the module.
@@ -169,7 +193,7 @@ namespace System
 		*
 		* \return The symbol
 		*/
-		pSymbol_t getSymbolGeneric(const char* sSymbolName) const;
+		pSymbol_t getSymbolGeneric(const char* symbolName) const;
 
 #ifdef TARGET_OS_Windows
 		/**
@@ -181,7 +205,7 @@ namespace System
 		 * \retval true
 		 * \retval false
 		 */
-		static bool getImageFileHeaders(const std::string& sFilePath, IMAGE_NT_HEADERS& headers);
+		static bool getImageFileHeaders(const std::string& filePath, IMAGE_NT_HEADERS& headers);
 #endif
 
 	};
@@ -199,10 +223,10 @@ namespace System
 		 * \retval false If the symbol does not exist.
 		 */
 		template <typename T>
-		static bool getSymbol(CDynamicModule& dynamicModule, const char* sSymbolName, T* pSymbol)
+		static bool getSymbol(CDynamicModule& dynamicModule, const char* symbolName, T* symbol)
 		{
-			*pSymbol = (T)dynamicModule.getSymbolGeneric(sSymbolName);
-			return *pSymbol != NULL;
+			*symbol = reinterpret_cast<T>(dynamicModule.getSymbolGeneric(symbolName));
+			return *symbol != NULL;
 		}
 	};
 };
