@@ -92,15 +92,17 @@ namespace System
 		/**
 		 * \brief Load module from the registry. Windows only.
 		 *
-		 * \param ui32Key Registry key. Check https://msdn.microsoft.com/en-us/library/windows/desktop/ms724836
-		 * \param sRegistryPath Registry path.
-		 * \param sModulePath sModulePath Module path.
-		 * \param sSymbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
+		 * \param key Registry key. Check https://msdn.microsoft.com/en-us/library/windows/desktop/ms724836
+		 * \param registryPath Registry path.
+		 * \param registryKeyName Key name.
+		 * \param samDesired A mask that specifies the desired access rights to the key to be opened. The function fails if the security descriptor of the key does not permit the requested access for the calling process. Check https://msdn.microsoft.com/fr-fr/library/windows/desktop/ms724878
+		 * \param modulePath sModulePath Module path.
+		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 		 *
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
 		 */
-		bool loadFromRegistry(HKEY key, const char* registryPath, const char* modulePath, const char* symbolNameCheck = nullptr);
+		bool loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath, const char* symbolNameCheck = nullptr);
 #endif
 
 #if defined TARGET_OS_Windows

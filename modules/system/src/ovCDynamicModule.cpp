@@ -134,7 +134,6 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 	}
 
 #if defined TARGET_OS_Windows
-	DWORD l_ErrorCode = ERROR_SUCCESS;
 
 	if (m_ErrorMode == m_ErrorModeNull)
 	{
@@ -150,16 +149,15 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 		
 	if (m_Handle == NULL)
 	{
-		l_ErrorCode = GetLastError();
-		this->setError(LogErrorCodes_FailToLoadModule);
+		this->setError(LogErrorCodes_FailToLoadModule, "Fail to load [" + std::string(modulePath) + "]. Windows error :" + std::to_string(GetLastError()));
 		return false;
 	}
 
-	if (m_Handle != NULL && symbolNameCheck != nullptr)
+	if (symbolNameCheck != nullptr)
 	{
 		if (::GetProcAddress((HMODULE)m_Handle, symbolNameCheck) == NULL)
 		{
-			this->setError(LogErrorCodes_InvalidSymbol, "Symbol invalid: [" + std::string(symbolNameCheck) + "].Windows error code : " + std::to_string(GetLastError()));
+			this->setError(LogErrorCodes_InvalidSymbol, "Symbol invalid: [" + std::string(symbolNameCheck) + "]. Windows error code : " + std::to_string(GetLastError()));
 			this->unload();
 			return false;
 		}
@@ -253,24 +251,24 @@ bool CDynamicModule::loadFromEnvironment(const char* environmentPath, const char
 #endif
 
 #if defined TARGET_OS_Windows
-bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const char* modulePath, const char* symbolNameCheck)
+bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath, const char* symbolNameCheck)
 {
 	char l_sDLLPath[1024];
 	DWORD l_uiSize = sizeof(l_sDLLPath);
 	l_sDLLPath[0] = '\0';
 
 	HKEY l_hKey = 0;
-	LONG result = RegOpenKeyEx(key, TEXT(registryPath), NULL, KEY_ALL_ACCESS | KEY_WOW64_32KEY, &l_hKey);
+
+	LONG result = RegOpenKeyEx(key, TEXT(registryPath), NULL, samDesired, &l_hKey);
 
 	if (result != ERROR_SUCCESS)
 	{
-		this->setError(LogErrorCodes_RegistryQueryFailed, "Fail to open key. Windows error code: " + std::to_string(::GetLastError()));
+		this->setError(LogErrorCodes_RegistryQueryFailed, "Fail to open registry key. Windows error code: " + std::to_string(result));
 		RegCloseKey(l_hKey);
 		return false;
 	}
 
-	result = ::RegQueryValueEx(l_hKey, NULL, NULL, NULL, (unsigned char*)l_sDLLPath, &l_uiSize);
-	RegCloseKey(l_hKey);
+	result = ::RegQueryValueEx(l_hKey, registryKeyName, 0, NULL, (unsigned char*)l_sDLLPath, &l_uiSize);
 
 	if (result == ERROR_SUCCESS)
 	{
@@ -279,7 +277,7 @@ bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const 
 	}
 	else
 	{
-		this->setError(LogErrorCodes_RegistryQueryFailed, "Fail to query value. Windows error code: " + std::to_string(::GetLastError()));
+		this->setError(LogErrorCodes_RegistryQueryFailed, "Fail to query registry value. Windows error code: " + std::to_string(result));
 		return false;
 	}
 }
