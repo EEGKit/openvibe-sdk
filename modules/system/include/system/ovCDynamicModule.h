@@ -13,7 +13,7 @@
 
 namespace System
 {
-	class CSymbolHelper; // forward declare to make function declaration possible
+	class CDynamicModuleSymbolLoader; // forward declare to make function declaration possible
 
 	class System_API CDynamicModule
 	{
@@ -36,6 +36,7 @@ namespace System
 		CDynamicModule(void);
 		virtual ~CDynamicModule(void);
 
+#if defined TARGET_OS_Windows
 		/**
 		 * \brief Load existing module that was already loaded by the process.
 		 *
@@ -46,6 +47,7 @@ namespace System
 		 * \retval false If module loading failed.
 		 */
 		bool loadFromExisting(const char* modulePath, const char* symbolNameCheck = nullptr);
+#endif
 
 		/**
 		 * \brief Load module from a path.
@@ -63,7 +65,7 @@ namespace System
 		 * \brief Load module from known path. Windows only.
 		 *
 		 * \param standardPath A CSIDL value that identifies the folder whose path is to be retrieved. Only real folders are valid. If a virtual folder is specified, this function fails. You can force creation of a folder by combining the folder's CSIDL with CSIDL_FLAG_CREATE.
-		 * \param modulePath
+		 * \param modulePath Path of the module to load.
 		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 		 *
 		 * \retval true If the module loaded successfully.
@@ -76,8 +78,8 @@ namespace System
 		/**
 		 * \brief Load module from Windows environment. Windows only.
 		 *
-		 * \param sEnvironmentPath Environment path
-		 * \param sModulePath Module file path
+		 * \param sEnvironmentPath Environment path.
+		 * \param sModulePath Module file path.
 		 * \param sSymbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 		 *
 		 * \retval true If the module loaded successfully.
@@ -91,7 +93,7 @@ namespace System
 		 * \brief Load module from the registry. Windows only.
 		 *
 		 * \param ui32Key Registry key. Check https://msdn.microsoft.com/en-us/library/windows/desktop/ms724836
-		 * \param sRegistryPath Registry path
+		 * \param sRegistryPath Registry path.
 		 * \param sModulePath sModulePath Module path.
 		 * \param sSymbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 		 *
@@ -124,8 +126,8 @@ namespace System
 		/**
 		 * \brief Unload the module. If setShouldFreeModule(false) is called, the unload() has no effect.
 		 *
-		 * \retval true In case of success
-		 * \retval false In case of failure
+		 * \retval true In case of success.
+		 * \retval false In case of failure.
 		 *
 		 * \sa setShouldFreeModule
 		 * \sa isLoaded
@@ -144,9 +146,9 @@ namespace System
 		bool isLoaded(void) const;
 
 		/**
-		 * \brief Get the filename of the module
+		 * \brief Get the filename of the module.
 		 *
-		 * \return the file name of the module
+		 * \return the file name of the module.
 		 */
 		const char* getFilename(void) const;
 
@@ -182,7 +184,7 @@ namespace System
 		static const unsigned int m_ErrorModeNull = 0xffffffff;
 
 	private:
-		friend class CSymbolHelper;
+		friend class CDynamicModuleSymbolLoader;
 
 		void setError(ELogErrorCodes errorCode, const std::string& details = std::string());
 
@@ -202,22 +204,22 @@ namespace System
 		 * \param sFileName The file path.
 		 * \param headers [out] The header
 		 *
-		 * \retval true
-		 * \retval false
+		 * \retval true In case of success.
+		 * \retval false In case of failure.
 		 */
 		static bool getImageFileHeaders(const std::string& filePath, IMAGE_NT_HEADERS& headers);
 #endif
 
 	};
 
-	class CSymbolHelper
+	class CDynamicModuleSymbolLoader
 	{
 	public:
 		/**
-		 * \brief Get a symbol from the module
+		 * \brief Get a symbol from the module.
 		 *
-		 * \param sSymbolName The symbol name
-		 * \param pSymbol [out] The symbol
+		 * \param sSymbolName The symbol name.
+		 * \param pSymbol [out] The symbol.
 		 *
 		 * \retval true If the symbol exists.
 		 * \retval false If the symbol does not exist.

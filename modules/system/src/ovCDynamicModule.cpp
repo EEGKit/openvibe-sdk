@@ -83,6 +83,7 @@ CDynamicModule::~CDynamicModule(void)
 
 // --------------------------------------
 
+#if defined TARGET_OS_Windows
 bool CDynamicModule::loadFromExisting(const char* modulePath, const char* symbolNameCheck)
 {
 	if (m_Handle)
@@ -91,7 +92,6 @@ bool CDynamicModule::loadFromExisting(const char* modulePath, const char* symbol
 		return false;
 	}
 
-#if defined TARGET_OS_Windows
 	m_Handle = ::GetModuleHandle(modulePath);
 
 	if (m_Handle == NULL)
@@ -109,9 +109,6 @@ bool CDynamicModule::loadFromExisting(const char* modulePath, const char* symbol
 			return false;
 		}
 	}
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-	#warning ("CDynamicModule::loadFromExisting - No implementation for Linux and MacOS")
-#endif
 	if (m_Handle)
 	{
 		::strcpy(m_Filename, modulePath);
@@ -119,6 +116,7 @@ bool CDynamicModule::loadFromExisting(const char* modulePath, const char* symbol
 
 	return true ;
 }
+#endif
 
 bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolNameCheck)
 {
@@ -326,7 +324,7 @@ bool CDynamicModule::unload(void)
 		return false;
 	}
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-	if(::dlclose(m_pHandle) != 0)
+	if(::dlclose(m_Handle) != 0)
 	{
 		this->setError(LogErrorCodes_UnloadModuleFailed);
 		return false;
@@ -385,7 +383,7 @@ CDynamicModule::pSymbol_t CDynamicModule::getSymbolGeneric(const char* symbolNam
 		}
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		l_pResult = (CDynamicModule::pSymbol_t)::dlsym(m_pHandle, symbolName);
+		l_pResult = (CDynamicModule::pSymbol_t)::dlsym(m_Handle, symbolName);
 
 		if (!l_pResult)
 		{
