@@ -575,7 +575,7 @@ bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std:
 				m_LogError = LogErrorCodes_WrongLineSize;
 				return false;
 			}
-
+			//get matrix data
 			for (size_t index = 0; index < lineColumns.size() - 3; index++)
 			{
 				std::string column = lineColumns[index];
@@ -592,6 +592,13 @@ bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std:
 			if (!readSampleChunk(chunk, line))
 			{
 				return false;
+			}
+
+			// get stimulation
+			m_LineColumns.clear();
+			for (size_t index = lineColumns.size() - 3; index < lineColumns.size(); index++)
+			{
+				m_LineColumns.push_back(lineColumns[index]);
 			}
 			// get stimulations chunk, LogError set in the function
 			if (!readStimulationChunk(stimulations, line + 1))

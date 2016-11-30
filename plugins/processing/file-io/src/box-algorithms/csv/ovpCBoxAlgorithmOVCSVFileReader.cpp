@@ -38,6 +38,7 @@ CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader(void)
 	, m_SamplingRate(0)
 	, m_AlgorithmEncoder(nullptr)
 	, m_IsHeaderSent(false)
+	, m_IsStimulationHeaderSent(false)
 {
 }
 
@@ -51,6 +52,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 	m_SamplingRate = 0;
 	m_AlgorithmEncoder = nullptr;
 	m_IsHeaderSent = false;
+	m_IsStimulationHeaderSent = false;
 
 	this->getStaticBoxContext().getOutputType(0, m_TypeIdentifier);
 
@@ -70,6 +72,9 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 		OV_ERROR_KRF("Output is a type derived from matrix that the box doesn't recognize support", ErrorType::BadInput);
 	}
 
+	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.initialize(*this, 1),
+		"Error during stimulation encoder initialize",
+		ErrorType::Internal);
 	std::vector<SMatrixChunk> matrixChunks;
 	std::vector<SStimulationChunk> stimulationChunks;
 	OV_ERROR_UNLESS_KRF(m_ReaderLib->readSamplesAndEventsFromFile(0, matrixChunks, stimulationChunks),
@@ -96,6 +101,11 @@ bool CBoxAlgorithmOVCSVFileReader::uninitialize(void)
 		delete m_AlgorithmEncoder;
 		m_AlgorithmEncoder = nullptr;
 	}
+
+	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.uninitialize(),
+		"Failed to unitialize the stimulation encoder",
+		ErrorType::Internal);
+
 	return true;
 }
 
@@ -166,7 +176,49 @@ bool CBoxAlgorithmOVCSVFileReader::processSignal(void)
 			ITimeArithmetics::secondsToTime(matrixChunk.back().endTime)),
 			"Failed to mark signal output as ready to send",
 			ErrorType::Internal);
+
+		// send stimulations if there is some
+		if (!stimulationChunk.empty())
+		{
+			OV_ERROR_UNLESS_KRF(processStimulation(matrixChunk, stimulationChunk),
+				"Error during stimulation process",
+				ErrorType::Internal);
+		}
 	}
 
+	return true;
+}
+
+bool CBoxAlgorithmOVCSVFileReader::processStimulation(const std::vector<SMatrixChunk>& matrixChunk, const std::vector<SStimulationChunk>& stimulationChunk)
+{
+	if (!m_IsStimulationHeaderSent)
+	{
+		OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeHeader(),
+			"Failed to encode stimulation header",
+			ErrorType::Internal);
+		m_IsStimulationHeaderSent = true;
+
+		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1, 0, 0),
+			"Failed to mark stimulation header as ready to send",
+			ErrorType::Internal);
+	}
+
+	IStimulationSet* stimulationSet = m_StimulationEncoder.getInputStimulationSet();
+
+	for (const SStimulationChunk& chunk : stimulationChunk)
+	{
+		stimulationSet->appendStimulation(chunk.stimulationIdentifier,
+			ITimeArithmetics::secondsToTime(chunk.stimulationDate),
+			ITimeArithmetics::secondsToTime(chunk.stimulationDuration));
+	}
+
+	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),
+		"Failed to encode stimulation buffer",
+		ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
+		ITimeArithmetics::secondsToTime(matrixChunk.back().startTime),
+		ITimeArithmetics::secondsToTime(matrixChunk.back().endTime)),
+		"Failed to mark stimulation output as ready to send",
+		ErrorType::Internal);
 	return true;
 }
