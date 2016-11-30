@@ -204,6 +204,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const std::vector<SMatrixC
 	}
 
 	IStimulationSet* stimulationSet = m_StimulationEncoder.getInputStimulationSet();
+	stimulationSet->clear();
 
 	for (const SStimulationChunk& chunk : stimulationChunk)
 	{
@@ -216,7 +217,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const std::vector<SMatrixC
 		"Failed to encode stimulation buffer",
 		ErrorType::Internal);
 	OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
-		ITimeArithmetics::secondsToTime(matrixChunk.back().startTime),
+		ITimeArithmetics::secondsToTime(matrixChunk.front().startTime),
 		ITimeArithmetics::secondsToTime(matrixChunk.back().endTime)),
 		"Failed to mark stimulation output as ready to send",
 		ErrorType::Internal);
