@@ -13,8 +13,8 @@ using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::FileIO;
 
 CBoxAlgorithmOVCSVFileWriter::CBoxAlgorithmOVCSVFileWriter(void)
-	: m_StreamDecoder(nullptr)
-	, m_WriterLib(OpenViBE::CSV::createCSVLib(), OpenViBE::CSV::releaseCSVLib)
+	: m_WriterLib(OpenViBE::CSV::createCSVLib(), OpenViBE::CSV::releaseCSVLib)
+	, m_StreamDecoder(nullptr)
 {
 }
 

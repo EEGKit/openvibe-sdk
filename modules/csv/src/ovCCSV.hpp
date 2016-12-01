@@ -47,10 +47,10 @@ namespace OpenViBE
 			EStreamType getFormatType(void);
 
 			bool setSignalInformation(const std::vector<std::string>& channelNames, unsigned int samplingFrequency, unsigned int sampleCountPerBuffer);
-			bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency);
+			bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, unsigned int& sampleCountPerBuffer);
 
 			bool setSpectrumInformation(const std::vector<std::string>& channelNames, std::vector<std::array<double, 2>> frequencyBands);
-			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands);
+			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands, unsigned int& sampleCountPerBuffer);
 
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames);
 			bool getFeatureVectorInformation(std::vector<std::string>& channelNames);
@@ -67,7 +67,7 @@ namespace OpenViBE
 
 			bool writeAllDataToFile(void);
 
-			bool readSamplesAndEventsFromFile(unsigned long long linesToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events, unsigned long long& linesRead);
+			bool readSamplesAndEventsFromFile(unsigned long long linesToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events);
 
 			bool openFile(const std::string& fileName, EFileAccessMode mode);
 
@@ -151,11 +151,12 @@ namespace OpenViBE
 			 * \brief Read line data concerning time, epoch and matrix
 			 *
 			 * \param sample reference to stock data in
+			 * \param line index of the read line
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readSampleChunk(SMatrixChunk& sample);
+			bool readSampleChunk(SMatrixChunk& sample, unsigned long long line);
 
 			/**
 			 * \brief Read line data conerning stimulations
@@ -178,6 +179,14 @@ namespace OpenViBE
 			 */
 			bool updateIteratedPosition(std::vector<unsigned int>& position);
 
+			/**
+			 * \brief Read lines of the first epoch to found sample count per buffer
+			 *
+			 * \retval true in case of success
+			 * \retval false in case of error
+			 */
+			bool calculateSampleCountPerBuffer();
+
 			std::fstream m_Fs;
 			std::string m_Filename;
 			std::string m_Header;
@@ -198,11 +207,12 @@ namespace OpenViBE
 			double m_NoEventSince;
 
 			std::vector<std::array<double, 2>> m_FrequencyBands;
-			std::vector<double> m_FrequenceBandsBuffer;
+			std::vector<double> m_FrequencyBandsBuffer;
 
 			// columns between each separator (as : {Time, Epoch, O1, O2, O3, Event Id, Event date, Event Duration})
 			std::vector<std::string> m_LineColumns;
 			unsigned int m_SamplingRate;
+			unsigned long long m_Epoch;
 			unsigned int m_ColumnCount;
 
 			bool m_IsSetInputType;
