@@ -7,7 +7,21 @@
 // -----------------------------------------------------
 
 #define OVP_GD_ClassId_Algorithm_XMLScenarioImporter                                                                            OpenViBE::CIdentifier(0xe80c3ea2, 0x149c4a05)
-#define OVP_GD_ClassId_Algorithm_XMLScenarioExporter																			OpenViBE::CIdentifier(0x53693531, 0xb136cf3f)
+#define OVP_GD_ClassId_Algorithm_XMLScenarioExporter                                                                            OpenViBE::CIdentifier(0x53693531, 0xb136cf3f)
+
+// Algorithm OVMatrixFileReader
+
+#define OVP_GD_ClassId_Algorithm_OVMatrixFileReader                               OpenViBE::CIdentifier(0x10661A33, 0x0B0F44A7)
+#define OVP_GD_ClassId_Algorithm_OVMatrixFileReaderDesc                           OpenViBE::CIdentifier(0x0E873B5E, 0x0A287FCB)
+
+
+#define OVP_GD_Algorithm_OVMatrixFileReader_InputParameterId_Filename             OpenViBE::CIdentifier(0x28F87B29, 0x0B09737E)
+#define OVP_GD_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix              OpenViBE::CIdentifier(0x2F9521E0, 0x027D789F)
+#define OVP_GD_Algorithm_OVMatrixFileReader_InputTriggerId_Open                   OpenViBE::CIdentifier(0x2F996376, 0x2A942485)
+#define OVP_GD_Algorithm_OVMatrixFileReader_InputTriggerId_Load                   OpenViBE::CIdentifier(0x22841807, 0x102D681C)
+#define OVP_GD_Algorithm_OVMatrixFileReader_InputTriggerId_Close                  OpenViBE::CIdentifier(0x7FDE77DA, 0x384A0B3D)
+#define OVP_GD_Algorithm_OVMatrixFileReader_OutputTriggerId_Error                 OpenViBE::CIdentifier(0x6D4F2F4B, 0x05EC6CB9)
+#define OVP_GD_Algorithm_OVMatrixFileReader_OutputTriggerId_DataProduced          OpenViBE::CIdentifier(0x76F46051, 0x003B6FE8)
 
 // -----------------------------------------------------
 // Streamed matrix stream encoder

@@ -84,6 +84,7 @@ boolean CKernelContext::initialize(void)
 	m_pConfigurationManager->createConfigurationToken("Path_Tmp", "${Path_UserData}/tmp");
 	m_pConfigurationManager->createConfigurationToken("Path_Lib", OpenViBE::Directories::getLibDir());
 	m_pConfigurationManager->createConfigurationToken("Path_Bin", OpenViBE::Directories::getBinDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Data", OpenViBE::Directories::getDataDir());
 
 #if defined TARGET_OS_Windows
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Windows");
@@ -184,6 +185,8 @@ boolean CKernelContext::initialize(void)
 	m_pTypeManager->registerStreamType(OV_TypeId_FeatureVector, "Feature vector", OV_TypeId_StreamedMatrix);
 	m_pTypeManager->registerStreamType(OV_TypeId_Signal, "Signal", OV_TypeId_StreamedMatrix);
 	m_pTypeManager->registerStreamType(OV_TypeId_Spectrum, "Spectrum", OV_TypeId_StreamedMatrix);
+	m_pTypeManager->registerStreamType(OV_TypeId_TimeFrequency, "Time-frequency", OV_TypeId_StreamedMatrix);
+
 
 	m_pTypeManager->registerType(OV_TypeId_Message,  "Message");
 

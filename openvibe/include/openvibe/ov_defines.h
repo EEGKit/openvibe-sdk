@@ -199,6 +199,8 @@
 #define     OV_TypeId_Signal                                 OpenViBE::CIdentifier(0x5BA36127, 0x195FEAE1)
 #define     OV_TypeId_Spectrum                               OpenViBE::CIdentifier(0x1F261C0A, 0x593BF6BD)
 #define     OV_TypeId_CovarianceMatrix                       OpenViBE::CIdentifier(0x897F844E, 0xB7958255)
+#define     OV_TypeId_TimeFrequency                          OpenViBE::CIdentifier(0x5A90816B, 0xFF2AFF72)
+
 
 #define OV_TypeId_Message                                    OpenViBE::CIdentifier(0x0A261C0A, 0xBD3BF6BD)
 
