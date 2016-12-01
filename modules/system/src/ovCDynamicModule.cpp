@@ -1,9 +1,9 @@
-#pragma once
-
 #include "system/ovCDynamicModule.h"
 
 #if defined TARGET_OS_Windows
 	#include <system/WindowsUtilities.h> // Allowed to use utf8_to_utf16 function for os that use utf16
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+	#include <dlfcn.h>
 #endif
 
 #include <map>
@@ -25,9 +25,9 @@ namespace
 		{ CDynamicModule::LogErrorCodes_FailToLoadModule, "Fail to load the module." },
 		{ CDynamicModule::LogErrorCodes_InvalidSymbol, "The symbol is invalid." },
 		{ CDynamicModule::LogErrorCodes_ModuleNotFound, "Module not found." }
-		
 	};
 
+#if defined TARGET_OS_Windows
 	std::vector<std::string> split(char* str, const char* delim)
 	{
 		char* token = strtok(str, delim);
@@ -42,6 +42,7 @@ namespace
 
 		return result;
 	}
+#endif
 }
 
 const char* CDynamicModule::getErrorString(unsigned int errorCode) const
@@ -171,21 +172,20 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 		return false;
 	}
 
-	if(m_Handle != NULL && symbolNameCheck != NULL)
+	if(symbolNameCheck != NULL)
 	{
 		if(::dlsym(m_Handle, symbolNameCheck) == NULL)
 		{
 			::dlclose(m_Handle);
 			m_Handle = NULL;
-			this->setError(LogErrorCodes_FailToLoadModule);
+
+			this->setError(LogErrorCodes_InvalidSymbol, "Linux error: " + std::string(::dlerror()));
 			return false;
 		}
 	}
 #endif
-	if (m_Handle)
-	{
-		::strcpy(m_Filename, modulePath);
-	}
+
+	::strcpy(m_Filename, modulePath);
 
 	return true;
 }
@@ -324,7 +324,7 @@ bool CDynamicModule::unload(void)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	if(::dlclose(m_Handle) != 0)
 	{
-		this->setError(LogErrorCodes_UnloadModuleFailed);
+		this->setError(LogErrorCodes_UnloadModuleFailed, "Linux error: " + std::string(::dlerror()));
 		return false;
 	}
 #else
