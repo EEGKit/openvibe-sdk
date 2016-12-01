@@ -3,10 +3,10 @@
 #include "defines.h"
 
 #if defined TARGET_OS_Windows
-#include <shlobj.h>
-#include <Dbghelp.h>
+	#include <shlobj.h>
+	#include <Dbghelp.h>
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-#include <dlfcn.h>
+	#include <linux/limits.h>
 #endif
 
 #include <string>
@@ -64,9 +64,11 @@ namespace System
 		/**
 		 * \brief Load module from known path. Windows only.
 		 *
-		 * \param standardPath A CSIDL value that identifies the folder whose path is to be retrieved. Only real folders are valid. If a virtual folder is specified, this function fails. You can force creation of a folder by combining the folder's CSIDL with CSIDL_FLAG_CREATE.
+		 * \param standardPath A CSIDL value that identifies the folder whose path is to be retrieved.
+		 * Only real folders are valid. If a virtual folder is specified, this function fails.
+		 * You can force creation of a folder by combining the folder's CSIDL with CSIDL_FLAG_CREATE.
 		 * \param modulePath Path of the module to load.
-		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
+		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optional and is nullptr by default.
 		 *
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
@@ -162,7 +164,7 @@ namespace System
 		/**
 		 * \brief Set if the module should, or not, be free. By default the module will be free.
 		 *
-		 * \param bShouldFreeModule Set to true to free the module when unload is called. False otherwise.
+		 * \param shouldFreeModule Set to true to free the module when unload is called. False otherwise.
 		 *
 		 * \sa unload
 		 */
@@ -174,10 +176,16 @@ namespace System
 
 	private:
 		void* m_Handle;
-		char m_Filename[1024];
+
+#if defined TARGET_OS_Windows
+		char m_Filename[MAX_PATH];
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+		char m_Filename[PATH_MAX];
+#endif
+
 		unsigned int m_ErrorMode;
 		bool m_ShouldFreeModule;
-		typedef void(*pSymbol_t)(void);
+		typedef void(*symbol_t)(void);
 
 		char m_ErrorDetails[1024];
 		mutable ELogErrorCodes m_ErrorCode;
@@ -197,7 +205,7 @@ namespace System
 		*
 		* \return The symbol
 		*/
-		pSymbol_t getSymbolGeneric(const char* symbolName) const;
+		symbol_t getSymbolGeneric(const char* symbolName) const;
 
 #ifdef TARGET_OS_Windows
 		/**

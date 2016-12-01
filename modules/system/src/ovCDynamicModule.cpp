@@ -68,7 +68,7 @@ unsigned int CDynamicModule::getLastError(void) const
 }
 
 CDynamicModule::CDynamicModule(void)
-	: m_Handle(nullptr)
+	: m_Handle(NULL)
 	, m_ErrorMode(m_ErrorModeNull)
 	, m_ShouldFreeModule(true)
 	, m_ErrorCode(LogErrorCodes_NoError)
@@ -101,15 +101,16 @@ bool CDynamicModule::loadFromExisting(const char* modulePath, const char* symbol
 		return false;
 	}
 
-	if (m_Handle != nullptr && symbolNameCheck != nullptr)
+	if (m_Handle != NULL && symbolNameCheck != NULL)
 	{
 		if (::GetProcAddress((HMODULE)m_Handle, symbolNameCheck) == NULL)
 		{
-			this->setError(LogErrorCodes_InvalidSymbol, "Windows error code: " + std::to_string(::GetLastError()));
 			this->unload();
+			this->setError(LogErrorCodes_InvalidSymbol, "Windows error code: " + std::to_string(::GetLastError()));
 			return false;
 		}
 	}
+
 	if (m_Handle)
 	{
 		::strcpy(m_Filename, modulePath);
@@ -154,12 +155,12 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 		return false;
 	}
 
-	if (symbolNameCheck != nullptr)
+	if (symbolNameCheck != NULL)
 	{
 		if (::GetProcAddress((HMODULE)m_Handle, symbolNameCheck) == NULL)
 		{
-			this->setError(LogErrorCodes_InvalidSymbol, "Symbol invalid: [" + std::string(symbolNameCheck) + "]. Windows error code : " + std::to_string(GetLastError()));
 			this->unload();
+			this->setError(LogErrorCodes_InvalidSymbol, "Symbol invalid: [" + std::string(symbolNameCheck) + "]. Windows error code : " + std::to_string(GetLastError()));
 			return false;
 		}
 	}
@@ -199,9 +200,9 @@ bool CDynamicModule::loadFromKnownPath(int standardPath, const char* modulePath,
 		return false;
 	}
 
-	char l_sDLLPath[MAX_PATH];
+	char l_DLLPath[MAX_PATH];
 
-	HRESULT result = ::SHGetFolderPath(NULL, standardPath, NULL, SHGFP_TYPE_CURRENT, l_sDLLPath);
+	HRESULT result = ::SHGetFolderPath(NULL, standardPath, NULL, SHGFP_TYPE_CURRENT, l_DLLPath);
 
 	if (result != S_OK)
 	{
@@ -209,9 +210,9 @@ bool CDynamicModule::loadFromKnownPath(int standardPath, const char* modulePath,
 		return false;
 	}
 
-	::strcat(l_sDLLPath, "\\");
-	::strcat(l_sDLLPath, modulePath);
-	return CDynamicModule::loadFromPath(l_sDLLPath, symbolNameCheck); // Error set in the loadFromPath function
+	::strcat(l_DLLPath, "\\");
+	::strcat(l_DLLPath, modulePath);
+	return CDynamicModule::loadFromPath(l_DLLPath, symbolNameCheck); // Error set in the loadFromPath function
 }
 #endif
 
@@ -224,22 +225,22 @@ bool CDynamicModule::loadFromEnvironment(const char* environmentPath, const char
 		return false;
 	}
 
-	char* l_sEnvironmentPath = ::getenv(environmentPath);
+	char* l_EnvironmentPath = ::getenv(environmentPath);
 
-	if (l_sEnvironmentPath == NULL)
+	if (l_EnvironmentPath == NULL)
 	{
 		this->setError(LogErrorCodes_EnvironmentVariableInvalid);
 		return false;
 	}
 
-	std::vector<std::string> paths = split(l_sEnvironmentPath, ";");
+	std::vector<std::string> paths = split(l_EnvironmentPath, ";");
 
 	for (const std::string& path : paths)
 	{
-		char l_sDLLPath[1024];
-		::sprintf(l_sDLLPath, "%s\\%s", path.c_str(), modulePath);
+		char l_DLLPath[MAX_PATH];
+		::sprintf(l_DLLPath, "%s\\%s", path.c_str(), modulePath);
 
-		if (CDynamicModule::loadFromPath(l_sDLLPath, symbolNameCheck))
+		if (CDynamicModule::loadFromPath(l_DLLPath, symbolNameCheck))
 		{
 			return true;
 		}
@@ -253,27 +254,27 @@ bool CDynamicModule::loadFromEnvironment(const char* environmentPath, const char
 #if defined TARGET_OS_Windows
 bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const char* registryKeyName, REGSAM samDesired, const char* modulePath, const char* symbolNameCheck)
 {
-	char l_sDLLPath[1024];
-	DWORD l_uiSize = sizeof(l_sDLLPath);
-	l_sDLLPath[0] = '\0';
+	char l_DLLPath[MAX_PATH];
+	DWORD l_Size = sizeof(l_DLLPath);
+	l_DLLPath[0] = '\0';
 
-	HKEY l_hKey = 0;
+	HKEY l_Key = 0;
 
-	LONG result = RegOpenKeyEx(key, TEXT(registryPath), NULL, samDesired, &l_hKey);
+	LONG result = RegOpenKeyEx(key, TEXT(registryPath), NULL, samDesired, &l_Key);
 
 	if (result != ERROR_SUCCESS)
 	{
 		this->setError(LogErrorCodes_RegistryQueryFailed, "Fail to open registry key. Windows error code: " + std::to_string(result));
-		RegCloseKey(l_hKey);
+		RegCloseKey(l_Key);
 		return false;
 	}
 
-	result = ::RegQueryValueEx(l_hKey, registryKeyName, 0, NULL, (unsigned char*)l_sDLLPath, &l_uiSize);
+	result = ::RegQueryValueEx(l_Key, registryKeyName, 0, NULL, (unsigned char*)l_DLLPath, &l_Size);
 
 	if (result == ERROR_SUCCESS)
 	{
-		::strcat(l_sDLLPath, modulePath);
-		return CDynamicModule::loadFromPath(l_sDLLPath, symbolNameCheck); // Error set in the loadFromPath function
+		::strcat(l_DLLPath, modulePath);
+		return CDynamicModule::loadFromPath(l_DLLPath, symbolNameCheck); // Error set in the loadFromPath function
 	}
 	else
 	{
@@ -358,107 +359,105 @@ void CDynamicModule::setShouldFreeModule(bool shouldFreeModule)
 	m_ShouldFreeModule = shouldFreeModule;
 }
 
-CDynamicModule::pSymbol_t CDynamicModule::getSymbolGeneric(const char* symbolName) const
+CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName) const
 {
-	CDynamicModule::pSymbol_t l_pResult = NULL;
+	CDynamicModule::symbol_t l_Result = NULL;
 
 	if (!m_Handle)
 	{
 		m_ErrorCode = LogErrorCodes_NoModuleLoaded;
-		return l_pResult;
+		return l_Result;
 	}
 	
 	if (m_Handle)
 	{
 #if defined TARGET_OS_Windows
-		l_pResult = (CDynamicModule::pSymbol_t)::GetProcAddress(reinterpret_cast<HMODULE>(m_Handle), symbolName);
+		l_Result = (CDynamicModule::symbol_t)::GetProcAddress(reinterpret_cast<HMODULE>(m_Handle), symbolName);
 
-		if (!l_pResult)
+		if (!l_Result)
 		{
-			//m_ErrorDetails = "Windows error code: " + GetLastError();
 			m_ErrorCode = LogErrorCodes_InvalidSymbol;
-			return l_pResult;
+			return l_Result;
 		}
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		l_pResult = (CDynamicModule::pSymbol_t)::dlsym(m_Handle, symbolName);
+		l_Result = (CDynamicModule::pSymbol_t)::dlsym(m_Handle, symbolName);
 
-		if (!l_pResult)
+		if (!l_Result)
 		{
-			//m_ErrorDetails = "Linux error: " + std::string(::dlerror());
 			m_ErrorCode = LogErrorCodes_InvalidSymbol;
-			return l_pResult;
+			return l_Result;
 		}
 #else
 #endif
 	}
 
-	return l_pResult;
+	return l_Result;
 }
 
 #ifdef TARGET_OS_Windows
 bool CDynamicModule::getImageFileHeaders(const std::string& fileName, IMAGE_NT_HEADERS& headers)
 {
-	HANDLE l_hFileHandle = CreateFile(
+	HANDLE l_FileHandle = CreateFile(
 		fileName.c_str(),
 		GENERIC_READ,
 		FILE_SHARE_READ,
-		nullptr,
+		NULL,
 		OPEN_EXISTING,
 		FILE_ATTRIBUTE_NORMAL,
 		0
 		);
 
-	if (l_hFileHandle == INVALID_HANDLE_VALUE)
+	if (l_FileHandle == INVALID_HANDLE_VALUE)
 	{
 		return false;
 	}
 
-	HANDLE l_hImageHandle = CreateFileMapping(
-		l_hFileHandle,
-		nullptr,
+	HANDLE l_ImageHandle = CreateFileMapping(
+		l_FileHandle,
+		NULL,
 		PAGE_READONLY,
 		0,
 		0,
-		nullptr
+		NULL
 		);
 
-	if (l_hImageHandle == 0)
+	if (l_ImageHandle == 0)
 	{
-		CloseHandle(l_hFileHandle);
+		CloseHandle(l_FileHandle);
 		return false;
 	}
 
-	void* l_pImagePtr = MapViewOfFile(
-		l_hImageHandle,
+	void* l_ImagePtr = MapViewOfFile(
+		l_ImageHandle,
 		FILE_MAP_READ,
 		0,
 		0,
 		0
 		);
 
-	if (l_pImagePtr == nullptr)
+	if (l_ImagePtr == NULL)
 	{
-		CloseHandle(l_hImageHandle);
-		CloseHandle(l_hFileHandle);
+		CloseHandle(l_ImageHandle);
+		CloseHandle(l_FileHandle);
 		return false;
 	}
 
-	PIMAGE_NT_HEADERS l_headersPtr = ImageNtHeader(l_pImagePtr);
+	PIMAGE_NT_HEADERS l_HeadersPtr = ImageNtHeader(l_ImagePtr);
 
-	if (l_headersPtr == nullptr)
+	if (l_HeadersPtr == NULL)
 	{
-		UnmapViewOfFile(l_pImagePtr);
-		CloseHandle(l_hImageHandle);
-		CloseHandle(l_hFileHandle);
+		UnmapViewOfFile(l_ImagePtr);
+		CloseHandle(l_ImageHandle);
+		CloseHandle(l_FileHandle);
 		return false;
 	}
 
-	headers = *l_headersPtr;
+	headers = *l_HeadersPtr;
 
-	UnmapViewOfFile(l_pImagePtr);
-	CloseHandle(l_hImageHandle);
-	CloseHandle(l_hFileHandle);
+	UnmapViewOfFile(l_ImagePtr);
+	CloseHandle(l_ImageHandle);
+	CloseHandle(l_FileHandle);
 
 	return true;
 };
