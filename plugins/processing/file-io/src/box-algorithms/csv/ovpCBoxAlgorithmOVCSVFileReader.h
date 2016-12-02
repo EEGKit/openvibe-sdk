@@ -59,15 +59,32 @@ namespace OpenViBEPlugins
 
 			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const unsigned int index)
 			{
-				if (index == 1)
+				OpenViBE::CIdentifier typeIdentifier;
+				if (index == 0)
 				{
-					OpenViBE::CIdentifier l_oTypeIdentifier;
-					box.getOutputType(index, l_oTypeIdentifier);
-					if (l_oTypeIdentifier != OV_TypeId_Stimulations)
+					box.getOutputType(index, typeIdentifier);
+					if (typeIdentifier == OV_TypeId_Stimulations)
 					{
-						box.setInputType(index, OV_TypeId_Stimulations);
+						OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Signal),
+							"Failed to reset input type to signal",
+							OpenViBE::Kernel::ErrorType::Internal);
 						return true;
 					}
+				}
+				else if (index == 1)
+				{
+					box.getOutputType(index, typeIdentifier);
+					if (typeIdentifier != OV_TypeId_Stimulations)
+					{
+						OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Stimulations),
+							"Failed to reset input type to signal",
+							OpenViBE::Kernel::ErrorType::Internal);
+						return true;
+					}
+				}
+				else
+				{
+					OV_ERROR_UNLESS_KRF(false, "Too much outputs", ErrorType::Internal);
 				}
 
 				return true;
