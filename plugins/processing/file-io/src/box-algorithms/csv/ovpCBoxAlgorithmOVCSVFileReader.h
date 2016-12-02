@@ -60,31 +60,26 @@ namespace OpenViBEPlugins
 			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const unsigned int index)
 			{
 				OpenViBE::CIdentifier typeIdentifier;
-				if (index == 0)
+				box.getOutputType(index, typeIdentifier);
+				if (index == 0
+					&& typeIdentifier == OV_TypeId_Stimulations)
 				{
-					box.getOutputType(index, typeIdentifier);
-					if (typeIdentifier == OV_TypeId_Stimulations)
-					{
-						OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Signal),
-							"Failed to reset input type to signal",
-							OpenViBE::Kernel::ErrorType::Internal);
-						return true;
-					}
+					OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Signal),
+						"Failed to reset input type to signal",
+						OpenViBE::Kernel::ErrorType::Internal);
+					return true;
 				}
-				else if (index == 1)
+				else if (index == 1
+					&& typeIdentifier != OV_TypeId_Stimulations)
 				{
-					box.getOutputType(index, typeIdentifier);
-					if (typeIdentifier != OV_TypeId_Stimulations)
-					{
-						OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Stimulations),
-							"Failed to reset input type to signal",
-							OpenViBE::Kernel::ErrorType::Internal);
-						return true;
-					}
+					OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Stimulations),
+						"Failed to reset input type to signal",
+						OpenViBE::Kernel::ErrorType::Internal);
+					return true;
 				}
 				else
 				{
-					OV_ERROR_UNLESS_KRF(false, "Too much outputs", ErrorType::Internal);
+					OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", ErrorType::Internal);
 				}
 
 				return true;
