@@ -67,7 +67,6 @@ namespace OpenViBEPlugins
 					OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Signal),
 						"Failed to reset input type to signal",
 						OpenViBE::Kernel::ErrorType::Internal);
-					return true;
 				}
 				else if (index == 1
 					&& typeIdentifier != OV_TypeId_Stimulations)
@@ -75,7 +74,6 @@ namespace OpenViBEPlugins
 					OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Stimulations),
 						"Failed to reset input type to signal",
 						OpenViBE::Kernel::ErrorType::Internal);
-					return true;
 				}
 				else if (index > 1)
 				{
