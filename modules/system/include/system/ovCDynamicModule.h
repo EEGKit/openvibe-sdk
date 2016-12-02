@@ -65,8 +65,8 @@ namespace System
 		 * \brief Load module from known path. Windows only.
 		 *
 		 * \param standardPath A CSIDL value that identifies the folder whose path is to be retrieved.
-		 * Only real folders are valid. If a virtual folder is specified, this function fails.
-		 * You can force creation of a folder by combining the folder's CSIDL with CSIDL_FLAG_CREATE.
+		 *		Only real folders are valid. If a virtual folder is specified, this function fails.
+		 *		You can force creation of a folder by combining the folder's CSIDL with CSIDL_FLAG_CREATE.
 		 * \param modulePath Path of the module to load.
 		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optional and is nullptr by default.
 		 *
@@ -97,7 +97,9 @@ namespace System
 		 * \param key Registry key. Check https://msdn.microsoft.com/en-us/library/windows/desktop/ms724836
 		 * \param registryPath Registry path.
 		 * \param registryKeyName Key name.
-		 * \param samDesired A mask that specifies the desired access rights to the key to be opened. The function fails if the security descriptor of the key does not permit the requested access for the calling process. Check https://msdn.microsoft.com/fr-fr/library/windows/desktop/ms724878
+		 * \param samDesired A mask that specifies the desired access rights to the key to be opened.
+		 *		The function fails if the security descriptor of the key does not permit the requested access for the calling process
+		 *		Check https://msdn.microsoft.com/fr-fr/library/windows/desktop/ms724878
 		 * \param modulePath sModulePath Module path.
 		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 		 *
@@ -157,7 +159,10 @@ namespace System
 		const char* getFilename(void) const;
 
 		/**
-		 * \brief
+		 * \brief Should be used to avoid the warning "Missing dll" when loading acquisition server
+		 * This can happen when the loaded library needs a second library that is not detected.
+		 *
+		 * \param errorMode
 		 */
 		void setDynamicModuleErrorMode(unsigned int errorMode);
 
@@ -170,8 +175,27 @@ namespace System
 		 */
 		void setShouldFreeModule(bool shouldFreeModule);
 
-		unsigned getLastError(void) const;
+		/** 
+		 * \brief Get the last error code.
+		 *
+		 * \return The error code.
+		 */
+		unsigned int getLastError(void) const;
+
+		/**
+		 * \brief Get the error message corresponding to the error code.
+		 *
+		 * \param errorCode The error code.
+		 *
+		 * \return the message corresponding to the error code.
+		 */
 		const char* getErrorString(unsigned int errorCode) const;
+
+		/**
+		 * \brief Get the detailed error
+		 *
+		 * \return A string with detailed information about the last error.
+		 */
 		const char* getErrorDetails(void) const;
 
 	private:
@@ -190,12 +214,17 @@ namespace System
 		char m_ErrorDetails[1024];
 		mutable ELogErrorCodes m_ErrorCode;
 		
-
 		static const unsigned int m_ErrorModeNull = 0xffffffff;
 
 	private:
 		friend class CDynamicModuleSymbolLoader;
-
+		
+		/**
+		 * \brief Set the error code and details.
+		 *
+		 * \param errorCode Error code.
+		 * \param details Detailed string error.
+		 */
 		void setError(ELogErrorCodes errorCode, const std::string& details = std::string());
 
 		/**
@@ -203,7 +232,7 @@ namespace System
 		*
 		* \param sSymbolName Symbol name.
 		*
-		* \return The symbol
+		* \return The symbol.
 		*/
 		symbol_t getSymbolGeneric(const char* symbolName) const;
 
@@ -212,7 +241,7 @@ namespace System
 		 * \brief Get the image file headers. Windows only.
 		 * 
 		 * \param sFileName The file path.
-		 * \param headers [out] The header
+		 * \param headers [out] The header.
 		 *
 		 * \retval true In case of success.
 		 * \retval false In case of failure.

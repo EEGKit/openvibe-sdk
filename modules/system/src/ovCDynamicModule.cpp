@@ -42,6 +42,25 @@ namespace
 
 		return result;
 	}
+
+	std::string formatWindowsError(DWORD errorCode)
+	{
+		LPTSTR l_ErrorText;
+
+		FormatMessage(
+			FORMAT_MESSAGE_FROM_SYSTEM |                 // use system message tables to retrieve error text
+			FORMAT_MESSAGE_ALLOCATE_BUFFER |             // allocate buffer on local heap for error text
+			FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
+			NULL,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
+			errorCode,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			(LPTSTR)&l_ErrorText,                        // output
+			0,                                           // minimum size for output buffer
+			NULL
+			);                                           // arguments - see note
+
+		return std::string(l_ErrorText);
+	}
 #endif
 }
 
@@ -97,24 +116,21 @@ bool CDynamicModule::loadFromExisting(const char* modulePath, const char* symbol
 
 	if (m_Handle == NULL)
 	{
-		this->setError(LogErrorCodes_FailToLoadModule, "Windows error code: " + std::to_string(::GetLastError()));
+		this->setError(LogErrorCodes_FailToLoadModule, "Windows error: " + ::formatWindowsError(::GetLastError()));
 		return false;
 	}
 
-	if (m_Handle != NULL && symbolNameCheck != NULL)
+	if (symbolNameCheck != NULL)
 	{
 		if (::GetProcAddress((HMODULE)m_Handle, symbolNameCheck) == NULL)
 		{
 			this->unload();
-			this->setError(LogErrorCodes_InvalidSymbol, "Windows error code: " + std::to_string(::GetLastError()));
+			this->setError(LogErrorCodes_InvalidSymbol, "Windows error: " + ::formatWindowsError(::GetLastError()));
 			return false;
 		}
 	}
 
-	if (m_Handle)
-	{
-		::strcpy(m_Filename, modulePath);
-	}
+	::strcpy(m_Filename, modulePath);
 
 	return true ;
 }
@@ -151,7 +167,7 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 		
 	if (m_Handle == NULL)
 	{
-		this->setError(LogErrorCodes_FailToLoadModule, "Fail to load [" + std::string(modulePath) + "]. Windows error :" + std::to_string(GetLastError()));
+		this->setError(LogErrorCodes_FailToLoadModule, "Fail to load [" + std::string(modulePath) + "]. Windows error:" + ::formatWindowsError(::GetLastError()));
 		return false;
 	}
 
@@ -160,7 +176,7 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 		if (::GetProcAddress((HMODULE)m_Handle, symbolNameCheck) == NULL)
 		{
 			this->unload();
-			this->setError(LogErrorCodes_InvalidSymbol, "Symbol invalid: [" + std::string(symbolNameCheck) + "]. Windows error code : " + std::to_string(GetLastError()));
+			this->setError(LogErrorCodes_InvalidSymbol, "Symbol invalid: [" + std::string(symbolNameCheck) + "]. Windows error: " + ::formatWindowsError(::GetLastError()));
 			return false;
 		}
 	}
@@ -319,7 +335,7 @@ bool CDynamicModule::unload(void)
 #if defined TARGET_OS_Windows		
 	if (::FreeModule(reinterpret_cast<HMODULE>(m_Handle)) == 0)
 	{
-		this->setError(LogErrorCodes_UnloadModuleFailed, "Windows error code: " + std::to_string(::GetLastError()));
+		this->setError(LogErrorCodes_UnloadModuleFailed, "Windows error code: " + ::formatWindowsError(::GetLastError()));
 		return false;
 	}
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
@@ -347,9 +363,7 @@ const char* CDynamicModule::getFilename(void) const
 	return m_Filename;
 }
 
-// Should be used to avoid the warning "Missing dll" when loading acquisition server
-// This can happen when the loaded library needs a second library that is not detected
-void CDynamicModule::setDynamicModuleErrorMode(uint32 errorMode)
+void CDynamicModule::setDynamicModuleErrorMode(unsigned int errorMode)
 {
 	m_ErrorMode = errorMode;
 }
