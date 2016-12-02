@@ -44,13 +44,13 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmOVCSVFileReader > m_StimulationEncoder;
 
 			OpenViBE::CIdentifier m_TypeIdentifier;
+			std::vector<std::string> m_ChannelNames;
 			unsigned int m_SamplingRate;
 			unsigned int m_SampleCountPerBuffer;
 			unsigned int m_ColumnCount;
 
 			bool m_IsHeaderSent;
 			bool m_IsStimulationHeaderSent;
-			std::vector<std::string> m_ChannelNames;
 		};
 
 		class CBoxAlgorithmOVCSVFileReaderListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
@@ -59,36 +59,17 @@ namespace OpenViBEPlugins
 
 			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const unsigned int index)
 			{
-				OpenViBE::CIdentifier typeIdentifier;
-				box.getOutputType(index, typeIdentifier);
-				
-				if (index == 0)
+				if (index == 1)
 				{
-					if (typeIdentifier != OV_TypeId_Signal)
-					{
-						box.setOutputType(index, OV_TypeId_Signal);
-					}
-					else
-					{
-						OV_ERROR_KRF("Unsupported stream type " << typeIdentifier.toString(),
-							OpenViBE::Kernel::ErrorType::BadOutput
-							);
-					}
-				}
-				else if (index == 1)
-				{
-					if (typeIdentifier != OV_TypeId_Stimulations)
+					OpenViBE::CIdentifier l_oTypeIdentifier;
+					box.getOutputType(index, l_oTypeIdentifier);
+					if (l_oTypeIdentifier != OV_TypeId_Stimulations)
 					{
 						box.setInputType(index, OV_TypeId_Stimulations);
-					}
-					else
-					{
-						OV_ERROR_KRF("Unsupported stream type " << typeIdentifier.toString(),
-							OpenViBE::Kernel::ErrorType::BadOutput
-							);
+						return true;
 					}
 				}
-				
+
 				return true;
 			}
 
