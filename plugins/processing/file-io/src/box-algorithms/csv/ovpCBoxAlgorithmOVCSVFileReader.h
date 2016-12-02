@@ -77,7 +77,7 @@ namespace OpenViBEPlugins
 				}
 				else if (index > 1)
 				{
-					OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", ErrorType::Internal);
+					OV_ERROR_UNLESS_KRF(false, "The index of the output does not exist", OpenViBE::Kernel::ErrorType::Internal);
 				}
 
 				return true;
