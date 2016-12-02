@@ -14,25 +14,6 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::FileIO;
 
-namespace
-{
-	std::vector < std::string > split(const std::string& string, const std::string& sep)
-	{
-		std::vector < std::string > result;
-		std::string::size_type i = 0;
-		std::string::size_type j = 0;
-		while ((j = string.find(sep, i)) != std::string::npos)
-		{
-			result.push_back(std::string(string, i, j - i));
-			i = j + sep.size();
-		}
-		//the last element without the \n character
-		result.push_back(std::string(string, i, string.size() - 1 - i));
-
-		return result;
-	}
-};
-
 CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader(void)
 	: m_ReaderLib(createCSVLib(), releaseCSVLib)
 	, m_SamplingRate(0)
