@@ -1644,7 +1644,6 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 		sample.startTime = startTime;
 	}
 
-	double endTime;
 	if (m_InputTypeIdentifier == EStreamType::Signal)
 	{
 		sample.endTime = sample.startTime + (static_cast<double>(m_SampleCountPerBuffer) / static_cast<double>(m_SamplingRate));
@@ -1660,7 +1659,7 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 
 		try
 		{
-			endTime = std::stod(column);
+			sample.endTime = std::stod(column);
 		}
 		catch (const std::invalid_argument& ia)
 		{
@@ -1676,7 +1675,6 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 			m_LogError = LogErrorCodes_OutOfRangeException;
 			return false;
 		}
-		sample.endTime = endTime;
 	}
 
 	std::istringstream ssEpoch(m_LineColumns[1]);
@@ -1745,7 +1743,7 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 	}
 	else
 	{
-		for (unsigned int index = 1; index < (m_LineColumns.size() - s_ColumnEndMatrixIndex); index++)
+		for (unsigned int index = 1; index < (m_LineColumns.size()); index++)
 		{
 			double matrixValue;
 

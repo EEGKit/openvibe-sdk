@@ -129,9 +129,7 @@ bool CBoxAlgorithmOVCSVFileReader::processSignal(void)
 {
 	IMatrix* matrix = ((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputMatrix();
 	std::vector<SMatrixChunk> matrixChunk;
-	std::vector<SMatrixChunk> matrixChunkBuffer;
 	std::vector<SStimulationChunk> stimulationChunk;
-	SMatrixChunk firstSampleOfSecondEpoch(0.0, 0.0, { 0.0 }, 0);
 
 	// encode Header if not already encoded
 	if (!m_IsHeaderSent)
