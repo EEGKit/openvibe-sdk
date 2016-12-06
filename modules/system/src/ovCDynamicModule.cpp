@@ -98,7 +98,6 @@ CDynamicModule::CDynamicModule(void)
 
 CDynamicModule::~CDynamicModule(void)
 {
-	this->unload();
 }
 
 // --------------------------------------
@@ -180,7 +179,7 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 			return false;
 		}
 	}
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#elif defined TARGET_OS_Linux || defsined TARGET_OS_MacOS
 	m_Handle = ::dlopen(modulePath, RTLD_LAZY|RTLD_GLOBAL);
 
 	if (m_Handle == NULL)
@@ -193,10 +192,20 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 	{
 		if(::dlsym(m_Handle, symbolNameCheck) == NULL)
 		{
+			char * linuxError = ::dlerror();
+			
+			if(linuxError != NULL)
+			{
+				this->setError(LogErrorCodes_InvalidSymbol, "Linux error: " + std::string(linuxError));
+			}
+			else
+			{
+				this->setError(LogErrorCodes_InvalidSymbol);
+			}
+
 			::dlclose(m_Handle);
 			m_Handle = NULL;
-
-			this->setError(LogErrorCodes_InvalidSymbol, "Linux error: " + std::string(::dlerror()));
+			
 			return false;
 		}
 	}
@@ -341,7 +350,17 @@ bool CDynamicModule::unload(void)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	if(::dlclose(m_Handle) != 0)
 	{
-		this->setError(LogErrorCodes_UnloadModuleFailed, "Linux error: " + std::string(::dlerror()));
+		char * linuxError = ::dlerror();
+
+		if(linuxError != NULL)
+		{
+			this->setError(LogErrorCodes_UnloadModuleFailed, "Linux error: " + std::string(linuxError));
+		}
+		else
+		{
+			this->setError(LogErrorCodes_UnloadModuleFailed);
+		}
+
 		return false;
 	}
 #else
