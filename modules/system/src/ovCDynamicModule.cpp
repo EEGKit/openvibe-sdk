@@ -395,7 +395,7 @@ CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName
 		}
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-		l_Result = (CDynamicModule::pSymbol_t)::dlsym(m_Handle, symbolName);
+		l_Result = (CDynamicModule::symbol_t)::dlsym(m_Handle, symbolName);
 
 		if (!l_Result)
 		{
