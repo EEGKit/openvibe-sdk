@@ -35,7 +35,6 @@ namespace OpenViBEPlugins
 
 		private:
 			bool initializeFile();
-			bool processSignal(void);
 			bool processStimulation(const std::vector<OpenViBE::CSV::SMatrixChunk>& matrixChunk, const std::vector<OpenViBE::CSV::SStimulationChunk> &stimulationChunk);
 
 			std::unique_ptr<OpenViBE::CSV::ICSVLib, decltype(&OpenViBE::CSV::releaseCSVLib)>m_ReaderLib;

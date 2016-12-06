@@ -100,14 +100,6 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& rMessageClock)
 
 bool CBoxAlgorithmOVCSVFileReader::process(void)
 {
-	OV_ERROR_UNLESS_KRF(processSignal(),
-		"Error during signal process",
-		ErrorType::Internal);
-	return true;
-}
-
-bool CBoxAlgorithmOVCSVFileReader::processSignal(void)
-{
 	IMatrix* matrix = ((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputMatrix();
 	std::vector<SMatrixChunk> matrixChunk;
 	std::vector<SStimulationChunk> stimulationChunk;
@@ -126,7 +118,7 @@ bool CBoxAlgorithmOVCSVFileReader::processSignal(void)
 				"Failed to set dimension label",
 				ErrorType::Internal);
 		}
-		
+
 		((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputSamplingRate() = m_SamplingRate;
 		OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->encodeHeader(),
 			"Failed to encode signal header",
