@@ -42,6 +42,8 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TEncoder < CBoxAlgorithmOVCSVFileReader >* m_AlgorithmEncoder;
 			OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmOVCSVFileReader > m_StimulationEncoder;
 
+			unsigned long long m_lastStimulationDate;
+
 			OpenViBE::CIdentifier m_TypeIdentifier;
 			std::vector<std::string> m_ChannelNames;
 			unsigned int m_SamplingRate;

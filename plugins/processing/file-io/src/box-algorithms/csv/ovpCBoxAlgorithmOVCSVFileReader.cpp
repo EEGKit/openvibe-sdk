@@ -16,8 +16,9 @@ using namespace OpenViBEPlugins::FileIO;
 
 CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader(void)
 	: m_ReaderLib(createCSVLib(), releaseCSVLib)
-	, m_SamplingRate(0)
 	, m_AlgorithmEncoder(nullptr)
+	, m_lastStimulationDate(0)
+	, m_SamplingRate(0)
 	, m_IsHeaderSent(false)
 	, m_IsStimulationHeaderSent(false)
 {
@@ -180,12 +181,23 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const std::vector<SMatrixC
 			ITimeArithmetics::secondsToTime(chunk.stimulationDuration));
 	}
 
+	unsigned long long stimulationChunkStartTime = m_lastStimulationDate;
+	unsigned long long stimulationChunkEndTime;
+	if (!stimulationChunk.empty())
+	{
+		stimulationChunkEndTime = ITimeArithmetics::secondsToTime(stimulationChunk.back().stimulationDate);
+	}
+	else
+	{
+		stimulationChunkEndTime = ITimeArithmetics::secondsToTime(matrixChunk.back().startTime);
+	}
+	m_lastStimulationDate = stimulationChunkEndTime;
 	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),
 		"Failed to encode stimulation buffer",
 		ErrorType::Internal);
 	OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
-		ITimeArithmetics::secondsToTime(matrixChunk.front().startTime),
-		ITimeArithmetics::secondsToTime(matrixChunk.back().endTime)),
+		stimulationChunkStartTime,
+		stimulationChunkEndTime),
 		"Failed to mark stimulation output as ready to send",
 		ErrorType::Internal);
 	return true;
