@@ -174,31 +174,43 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const std::vector<SMatrixC
 	IStimulationSet* stimulationSet = m_StimulationEncoder.getInputStimulationSet();
 	stimulationSet->clear();
 
-	for (const SStimulationChunk& chunk : stimulationChunk)
-	{
-		stimulationSet->appendStimulation(chunk.stimulationIdentifier,
-			ITimeArithmetics::secondsToTime(chunk.stimulationDate),
-			ITimeArithmetics::secondsToTime(chunk.stimulationDuration));
-	}
-
 	unsigned long long stimulationChunkStartTime = m_lastStimulationDate;
 	unsigned long long stimulationChunkEndTime;
-	if (!stimulationChunk.empty())
+	if (stimulationChunk.empty())
 	{
-		stimulationChunkEndTime = ITimeArithmetics::secondsToTime(stimulationChunk.back().stimulationDate);
+		if (ITimeArithmetics::secondsToTime(matrixChunk.back().startTime) > m_lastStimulationDate)
+		{
+			stimulationChunkEndTime = ITimeArithmetics::secondsToTime(matrixChunk.back().startTime);
+			m_lastStimulationDate = stimulationChunkEndTime;
+			OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),
+				"Failed to encode stimulation buffer",
+				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
+				stimulationChunkStartTime,
+				stimulationChunkEndTime),
+				"Failed to mark stimulation output as ready to send",
+				ErrorType::Internal);
+		}
 	}
 	else
 	{
-		stimulationChunkEndTime = ITimeArithmetics::secondsToTime(matrixChunk.back().startTime);
+		for (const SStimulationChunk& chunk : stimulationChunk)
+		{
+			stimulationSet->appendStimulation(chunk.stimulationIdentifier,
+				ITimeArithmetics::secondsToTime(chunk.stimulationDate),
+				ITimeArithmetics::secondsToTime(chunk.stimulationDuration));
+		}
+
+		stimulationChunkEndTime = ITimeArithmetics::secondsToTime(stimulationChunk.back().stimulationDate);
+		m_lastStimulationDate = stimulationChunkEndTime;
+		OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),
+			"Failed to encode stimulation buffer",
+			ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
+			stimulationChunkStartTime,
+			stimulationChunkEndTime),
+			"Failed to mark stimulation output as ready to send",
+			ErrorType::Internal);
 	}
-	m_lastStimulationDate = stimulationChunkEndTime;
-	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),
-		"Failed to encode stimulation buffer",
-		ErrorType::Internal);
-	OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
-		stimulationChunkStartTime,
-		stimulationChunkEndTime),
-		"Failed to mark stimulation output as ready to send",
-		ErrorType::Internal);
 	return true;
 }
