@@ -179,7 +179,7 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 			return false;
 		}
 	}
-#elif defined TARGET_OS_Linux || defsined TARGET_OS_MacOS
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_Handle = ::dlopen(modulePath, RTLD_LAZY|RTLD_GLOBAL);
 
 	if (m_Handle == NULL)
