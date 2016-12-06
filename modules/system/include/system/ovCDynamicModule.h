@@ -124,7 +124,7 @@ namespace System
 		 * \retval true If the module architecture is equal to the architecture parameter. 
 		 * \retval false If the module is unequal to the architecture parameter.
 		 */
-		static bool isModuleCompatible(const std::string& filePath, int architecture);
+		static bool isModuleCompatible(const char* filePath, int architecture);
 #endif
 
 		// --------------------------------------
@@ -218,7 +218,6 @@ namespace System
 
 	private:
 		friend class CDynamicModuleSymbolLoader;
-		
 		/**
 		 * \brief Set the error code and details.
 		 *
@@ -246,7 +245,7 @@ namespace System
 		 * \retval true In case of success.
 		 * \retval false In case of failure.
 		 */
-		static bool getImageFileHeaders(const std::string& filePath, IMAGE_NT_HEADERS& headers);
+		static bool getImageFileHeaders(const char* filePath, IMAGE_NT_HEADERS& headers);
 #endif
 
 	};

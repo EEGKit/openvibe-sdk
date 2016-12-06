@@ -301,7 +301,7 @@ bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const 
 #endif
 
 #if defined TARGET_OS_Windows
-bool CDynamicModule::isModuleCompatible(const std::string& filePath, int architecture)
+bool CDynamicModule::isModuleCompatible(const char* filePath, int architecture)
 {
 	IMAGE_NT_HEADERS headers;
 
@@ -410,10 +410,10 @@ CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName
 }
 
 #ifdef TARGET_OS_Windows
-bool CDynamicModule::getImageFileHeaders(const std::string& fileName, IMAGE_NT_HEADERS& headers)
+bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS& headers)
 {
 	HANDLE l_FileHandle = CreateFile(
-		fileName.c_str(),
+		fileName,
 		GENERIC_READ,
 		FILE_SHARE_READ,
 		NULL,
