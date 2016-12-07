@@ -192,11 +192,11 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 	{
 		if(::dlsym(m_Handle, symbolNameCheck) == NULL)
 		{
-			char * linuxError = ::dlerror();
+			char* error = ::dlerror();
 			
-			if(linuxError != NULL)
+			if(error)
 			{
-				this->setError(LogErrorCodes_InvalidSymbol, "Linux error: " + std::string(linuxError));
+				this->setError(LogErrorCodes_InvalidSymbol, "Linux error: " + std::string(error));
 			}
 			else
 			{
@@ -350,11 +350,11 @@ bool CDynamicModule::unload(void)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	if(::dlclose(m_Handle) != 0)
 	{
-		char * linuxError = ::dlerror();
+		char* error = ::dlerror();
 
-		if(linuxError != NULL)
+		if(error)
 		{
-			this->setError(LogErrorCodes_UnloadModuleFailed, "Linux error: " + std::string(linuxError));
+			this->setError(LogErrorCodes_UnloadModuleFailed, "Linux error: " + std::string(error));
 		}
 		else
 		{
