@@ -581,12 +581,7 @@ bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std:
 				if (m_LineColumns[index].empty()
 					&& index < m_LineColumns.size() - 3)
 				{
-					m_LastStringError = "Empty at index " + std::to_string(index) + " (size of the line is " + std::to_string(m_LineColumns.size()) + ")";
-					printf("line: \"%s\"\n", m_Buffer);
-					for (size_t index = 0; index < m_LineColumns.size(); index++)
-					{
-						printf("m_LineColumns[%d] : \"%s\"\n", index, m_LineColumns[index].c_str());
-					}
+					m_LastStringError = "Empty at index " + std::to_string(index);
 					m_LogError = LogErrorCodes_EmptyColumn;
 					return false;
 				}
