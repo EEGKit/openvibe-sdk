@@ -196,7 +196,7 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 			
 			if(error)
 			{
-				this->setError(LogErrorCodes_InvalidSymbol, "Linux error: " + std::string(error));
+				this->setError(LogErrorCodes_InvalidSymbol, "Error: " + std::string(error));
 			}
 			else
 			{
@@ -354,7 +354,7 @@ bool CDynamicModule::unload(void)
 
 		if(error)
 		{
-			this->setError(LogErrorCodes_UnloadModuleFailed, "Linux error: " + std::string(error));
+			this->setError(LogErrorCodes_UnloadModuleFailed, "Error: " + std::string(error));
 		}
 		else
 		{
