@@ -1654,8 +1654,7 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 		}
 	}
 
-	std::istringstream ssEpoch(m_LineColumns[1]);
-	if (!std::getline(ssEpoch, column, '\0'))
+	if (m_LineColumns[1].empty())
 	{
 		m_LastStringError = "Missing data in Epoch column";
 		m_LogError = LogErrorCodes_MissingData;
@@ -1667,7 +1666,7 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 	{
 		try
 		{
-			sample.epoch = std::stoull(column.c_str());
+			sample.epoch = std::stoull(m_LineColumns[1].c_str());
 		}
 		catch (const std::invalid_argument& ia)
 		{
@@ -1754,6 +1753,11 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 	std::vector<std::string> column;
 	std::vector<unsigned long long> stimIdentifiers;
 	// pick all time identifiers for the actual time
+	if (m_LineColumns[m_LineColumns.size() - s_ColumnEndMatrixIndex].empty())
+	{
+		return true;
+	}
+
 	::split(m_LineColumns[m_LineColumns.size() - s_ColumnEndMatrixIndex], m_InternalDataSeparator, column);
 	for (std::string idValue : column)
 	{
