@@ -130,23 +130,33 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 			ErrorType::Internal);
 	}
 
-	OV_ERROR_UNLESS_KRF(m_ReaderLib->readSamplesAndEventsFromFile(1, matrixChunk, stimulationChunk),
-		(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
-		ErrorType::Internal);
+	std::vector<SMatrixChunk> savedChunks;
+	do
+	{
+		OV_ERROR_UNLESS_KRF(m_ReaderLib->readSamplesAndEventsFromFile(1, matrixChunk, stimulationChunk),
+			(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
+			ErrorType::Internal);
+		savedChunks.insert(savedChunks.end(), matrixChunk.begin(), matrixChunk.end());
+	} while (!matrixChunk.empty()
+		&& matrixChunk.begin()->startTime < ITimeArithmetics::timeToSeconds(this->getPlayerContext().getCurrentTime()));
 
+	matrixChunk = savedChunks;
 	if (!matrixChunk.empty())
 	{
-		// copy read matrix into buffer to encode
-		std::copy(matrixChunk.back().matrix.begin(), matrixChunk.back().matrix.end(), matrix->getBuffer());
+		for (SMatrixChunk chunk : matrixChunk)
+		{
+			// copy read matrix into buffer to encode
+			std::copy(chunk.matrix.begin(), chunk.matrix.end(), matrix->getBuffer());
 
-		OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->encodeBuffer(),
-			"Failed to encode signal buffer",
-			ErrorType::Internal);
-		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0,
-			ITimeArithmetics::secondsToTime(matrixChunk.back().startTime),
-			ITimeArithmetics::secondsToTime(matrixChunk.back().endTime)),
-			"Failed to mark signal output as ready to send",
-			ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->encodeBuffer(),
+				"Failed to encode signal buffer",
+				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0,
+				ITimeArithmetics::secondsToTime(chunk.startTime),
+				ITimeArithmetics::secondsToTime(chunk.endTime)),
+				"Failed to mark signal output as ready to send",
+				ErrorType::Internal);
+		}
 
 		// send stimulations chunk even if there is no stimulations, chunks have to be continued
 		OV_ERROR_UNLESS_KRF(processStimulation(matrixChunk, stimulationChunk),

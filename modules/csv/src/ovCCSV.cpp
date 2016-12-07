@@ -550,9 +550,9 @@ bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std:
 				}
 			}
 
-			std::vector<std::string> lineColumns;
-			::split(m_Buffer, m_Separator, lineColumns);
-			if (lineColumns[0].empty())
+			m_LineColumns.clear();
+			::split(m_Buffer, m_Separator, m_LineColumns);
+			if (m_LineColumns[0].empty())
 			{
 				if (line != 0)
 				{
@@ -567,55 +567,47 @@ bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std:
 				}
 			}
 
-			if (lineColumns.size() != m_ColumnCount)
+			if (m_LineColumns.size() != m_ColumnCount)
 			{
-				m_LastStringError = "There is " + std::to_string(lineColumns.size())
+				m_LastStringError = "There is " + std::to_string(m_LineColumns.size())
 					+ " columns in the Header instead of " + std::to_string(m_ColumnCount)
 					+ " on line " + std::to_string(line + 1);
 				m_LogError = LogErrorCodes_WrongLineSize;
 				return false;
 			}
 			//get matrix data
-			for (size_t index = 0; index < lineColumns.size() - 3; index++)
+			for (size_t index = 0; index < m_LineColumns.size(); index++)
 			{
-				std::string column = lineColumns[index];
-				if (column.empty())
+				if (m_LineColumns[index].empty()
+					&& index < m_LineColumns.size() - 3)
 				{
-					m_LastStringError.clear();
+					m_LastStringError = "Empty at index " + std::to_string(index) + " (size of the line is " + std::to_string(m_LineColumns.size()) + ")";
+					printf("line: \"%s\"\n", m_Buffer);
+					for (size_t index = 0; index < m_LineColumns.size(); index++)
+					{
+						printf("m_LineColumns[%d] : \"%s\"\n", index, m_LineColumns[index].c_str());
+					}
 					m_LogError = LogErrorCodes_EmptyColumn;
 					return false;
 				}
-
-				m_LineColumns.push_back(column);
 			}
+
 			// get Matrix chunk, LogError set in the function
 			if (!readSampleChunk(chunk, line))
 			{
 				return false;
 			}
 
-			// get stimulation
-			m_LineColumns.clear();
-			for (size_t index = lineColumns.size() - 3; index < lineColumns.size(); index++)
-			{
-				m_LineColumns.push_back(lineColumns[index]);
-			}
 			// get stimulations chunk, LogError set in the function
 			if (!readStimulationChunk(stimulations, line + 1))
 			{
 				return false;
 			}
+
 			m_LineColumns.clear();
 		}
 
 		chunks.push_back(chunk);
-	}
-
-	if (chunks.size() != chunksToRead)
-	{
-		m_LastStringError = "File doesn't contain enough chunk";
-		m_LogError = LogErrorCodes_WrongParameters;
-		return false;
 	}
 
 	return true;
@@ -1369,13 +1361,15 @@ bool CCSVLib::parseSpectrumHeader(void)
 		{
 			std::string dimensionData;
 			// get channel name and check that it's the same one for all the frequency dimension size
-			std::istringstream iss(m_LineColumns.at((labelCounter * m_DimensionSizes[1]) + labelSizeCounter + s_ColumnStartMatrixIndex));
-			if (!std::getline(iss, dimensionData, m_InternalDataSeparator))
+			std::vector<std::string> spectrumChannel;
+			::split(m_LineColumns.at((labelCounter * m_DimensionSizes[1]) + labelSizeCounter + s_ColumnStartMatrixIndex), m_InternalDataSeparator, spectrumChannel);
+
+			if (spectrumChannel.size() != 2)
 			{
-				m_LastStringError = "Line don't have enough parameters";
-				return false;
+				m_LastStringError = "Spectrum channel is invalid: " + m_LineColumns.at((labelCounter * m_DimensionSizes[1]) + labelSizeCounter + s_ColumnStartMatrixIndex);
 			}
 
+			dimensionData = spectrumChannel[0];
 			if (labelSizeCounter == 0)
 			{
 				channelLabel = dimensionData;
@@ -1383,20 +1377,15 @@ bool CCSVLib::parseSpectrumHeader(void)
 			}
 			else if (channelLabel != dimensionData)
 			{
-				m_LastStringError = "Channel name must be the same during " + std::to_string(m_DimensionSizes[1]) + "columns (number of frequencies per channel)";
+				m_LastStringError = "Channel name must be the same during " + std::to_string(m_DimensionSizes[1]) + " columns (number of frequencies per channel)";
 				return false;
 			}
 
 			// get all frequency and check that they're the same for all labels
-			if (!std::getline(iss, dimensionData, m_InternalDataSeparator))
-			{
-				m_LastStringError = "Line don't have enough parameters : must have channel name and frequency";
-				return false;
-			}
-
+			dimensionData = spectrumChannel[1];
+			double frequency;
 			if (labelCounter == 0)
 			{
-				double frequency;
 				try
 				{
 					frequency = std::stod(dimensionData);
@@ -1412,7 +1401,6 @@ bool CCSVLib::parseSpectrumHeader(void)
 			}
 			else
 			{
-				double frequency;
 				try
 				{
 					frequency = std::stod(dimensionData);
@@ -1439,12 +1427,6 @@ bool CCSVLib::parseSpectrumHeader(void)
 					m_LastStringError = "Channels must have the same frequency bands";
 					return false;
 				}
-			}
-			// check that their is only label and frequency on the column
-			if (std::getline(iss, dimensionData, m_InternalDataSeparator))
-			{
-				m_LastStringError = "Error, too much data on the column " + std::to_string((labelCounter * m_DimensionSizes[1]) + labelSizeCounter + s_ColumnStartMatrixIndex + 1);
-				return false;
 			}
 		}
 	}
@@ -1715,7 +1697,7 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 	if (m_InputTypeIdentifier == EStreamType::Signal
 		|| m_InputTypeIdentifier == EStreamType::Spectrum)
 	{
-		for (unsigned int index = s_ColumnStartMatrixIndex; index < m_LineColumns.size(); index++)
+		for (unsigned int index = s_ColumnStartMatrixIndex; index < (m_LineColumns.size() - s_ColumnEndMatrixIndex); index++)
 		{
 			if (!m_LineColumns[index].empty())
 			{
@@ -1743,7 +1725,7 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 	}
 	else
 	{
-		for (unsigned int index = 1; index < (m_LineColumns.size()); index++)
+		for (unsigned int index = 1; index < (m_LineColumns.size() - s_ColumnEndMatrixIndex); index++)
 		{
 			double matrixValue;
 
@@ -1774,84 +1756,91 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 
 bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations, unsigned long long line)
 {
-	std::istringstream ssStimeId(m_LineColumns[m_LineColumns.size() - s_ColumnEndMatrixIndex]);
+	std::vector<std::string> column;
 	std::vector<unsigned long long> stimIdentifiers;
-
-	std::string column;
-
 	// pick all time identifiers for the actual time
-	while (std::getline(ssStimeId, column, m_InternalDataSeparator))
+	::split(m_LineColumns[m_LineColumns.size() - s_ColumnEndMatrixIndex], m_InternalDataSeparator, column);
+	for (std::string idValue : column)
 	{
-		unsigned long long id;
-		try
+		if (!idValue.empty())
 		{
-			id = std::stoull(column);
-		}
-		catch (const std::exception& e)
-		{
-			m_LastStringError = "At line " + std::to_string(line) + " column " + std::to_string(m_LineColumns.size() - s_StimulationIdentifierColumnNbr) + " : " + e.what();
-			m_LogError = LogErrorCodes_InvalidStimulationArgument;
-			return false;
-		}
+			unsigned long long id;
+			try
+			{
+				id = std::stoull(idValue);
+			}
+			catch (const std::exception& e)
+			{
+				m_LastStringError = "At line " + std::to_string(line) + " column " + std::to_string(m_LineColumns.size() - s_StimulationIdentifierColumnNbr) + " : " + e.what();
+				m_LogError = LogErrorCodes_InvalidStimulationArgument;
+				return false;
+			}
 
-		stimIdentifiers.push_back(id);
+			stimIdentifiers.push_back(id);
+		}
 	}
+	column.clear();
 
 	// pick all time dates for the actual time
-
-	std::istringstream ssStimeDate(m_LineColumns[m_LineColumns.size() - s_StimulationDateColumn]);
 	std::vector<double> stimDates;
-	while (std::getline(ssStimeDate, column, m_InternalDataSeparator))
+	::split(m_LineColumns[m_LineColumns.size() - s_StimulationIdentifierColumnNbr], m_InternalDataSeparator, column);
+	for (std::string dateValue : column)
 	{
-		double date;
-		try
+		if (!dateValue.empty())
 		{
-			date = std::stod(column);
-		}
-		catch (const std::exception& e)
-		{
-			m_LastStringError = "At line " + std::to_string(line) + " column " + std::to_string(m_LineColumns.size() - s_StimulationDateColumnNbr) + " : " + e.what();
-			m_LogError = LogErrorCodes_InvalidStimulationArgument;
-			return false;
-		}
+			double date;
+			try
+			{
+				date = std::stod(dateValue);
+			}
+			catch (const std::exception& e)
+			{
+				m_LastStringError = "At line " + std::to_string(line) + " column " + std::to_string(m_LineColumns.size() - s_StimulationDateColumnNbr) + " : " + e.what();
+				m_LogError = LogErrorCodes_InvalidStimulationArgument;
+				return false;
+			}
 
-		if (std::signbit(date))
-		{
-			m_LastStringError = "Stimulation date is negative: ";
-			m_LastStringError += std::to_string(date);
-			m_LogError = LogErrorCodes_NegativeStimulation;
-			return false;
+			if (std::signbit(date))
+			{
+				m_LastStringError = "Stimulation date is negative: ";
+				m_LastStringError += std::to_string(date);
+				m_LogError = LogErrorCodes_NegativeStimulation;
+				return false;
+			}
+			stimDates.push_back(date);
 		}
-		stimDates.push_back(date);
 	}
+	column.clear();
 
 	// pick all time durations for the actual time
 
-	std::istringstream ssStimeDuration(m_LineColumns.back());
 	std::vector<double> stimDurations;
-
-	while (std::getline(ssStimeDuration, column, m_InternalDataSeparator))
+	::split(m_LineColumns.back(), m_InternalDataSeparator, column);
+	for (std::string durationValue : column)
 	{
-		double duration;
-		try
+		if (!durationValue.empty())
 		{
-			duration = std::stod(column);
-		}
-		catch (const std::exception& e)
-		{
-			m_LastStringError = "At line " + std::to_string(line) + " column " + std::to_string(m_LineColumns.size()) + " : " + e.what();
-			m_LogError = LogErrorCodes_InvalidStimulationArgument;
-			return false;
-		}
+			double duration;
+			try
+			{
+				duration = std::stod(durationValue);
+			}
+			catch (const std::exception& e)
+			{
+				m_LastStringError = "At line " + std::to_string(line) + " column " + std::to_string(m_LineColumns.size()) + " : " + e.what();
+				m_LogError = LogErrorCodes_InvalidStimulationArgument;
+				return false;
+			}
 
-		if (std::signbit(duration))
-		{
-			m_LastStringError = "Stimulation duration is negative: ";
-			m_LastStringError += std::to_string(duration);
-			m_LogError = LogErrorCodes_NegativeStimulation;
-			return false;
+			if (std::signbit(duration))
+			{
+				m_LastStringError = "Stimulation duration is negative: ";
+				m_LastStringError += std::to_string(duration);
+				m_LogError = LogErrorCodes_NegativeStimulation;
+				return false;
+			}
+			stimDurations.push_back(duration);
 		}
-		stimDurations.push_back(duration);
 	}
 
 	if (stimIdentifiers.size() != stimDates.size()
