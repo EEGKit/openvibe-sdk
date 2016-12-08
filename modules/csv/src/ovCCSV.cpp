@@ -1752,12 +1752,12 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 
 bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations, unsigned long long line)
 {
-	std::vector<std::string> column;
 	std::vector<unsigned long long> stimIdentifiers;
 	// pick all time identifiers for the actual time
 
 	if (!m_LineColumns[m_LineColumns.size() - s_ColumnEndMatrixIndex].empty())
 	{
+		std::vector<std::string> column;
 		::split(m_LineColumns[m_LineColumns.size() - s_ColumnEndMatrixIndex], m_InternalDataSeparator, column);
 		for (const std::string& idValue : column)
 		{
@@ -1776,12 +1776,12 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 			stimIdentifiers.push_back(id);
 		}
 	}
-	column.clear();
 
 	// pick all time dates for the actual time
 	std::vector<double> stimDates;
 	if (!m_LineColumns[m_LineColumns.size() - s_StimulationIdentifierColumnNbr].empty())
 	{
+		std::vector<std::string> column;
 		::split(m_LineColumns[m_LineColumns.size() - s_StimulationIdentifierColumnNbr], m_InternalDataSeparator, column);
 		if (column.size() != stimIdentifiers.size())
 		{
@@ -1814,13 +1814,13 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 			stimDates.push_back(date);
 		}
 	}
-	column.clear();
 
 	// pick all time durations for the actual time
 
 	std::vector<double> stimDurations;
 	if (!m_LineColumns.back().empty())
 	{
+		std::vector<std::string> column;
 		::split(m_LineColumns.back(), m_InternalDataSeparator, column);
 		if (column.size() != stimIdentifiers.size())
 		{
