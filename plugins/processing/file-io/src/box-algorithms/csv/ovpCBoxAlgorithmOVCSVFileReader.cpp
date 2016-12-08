@@ -102,8 +102,6 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& rMessageClock)
 bool CBoxAlgorithmOVCSVFileReader::process(void)
 {
 	IMatrix* matrix = ((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputMatrix();
-	std::vector<SMatrixChunk> matrixChunk;
-	std::vector<SStimulationChunk> stimulationChunk;
 
 	// encode Header if not already encoded
 	if (!m_IsHeaderSent)
@@ -130,6 +128,8 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 			ErrorType::Internal);
 	}
 
+	std::vector<SMatrixChunk> matrixChunk;
+	std::vector<SStimulationChunk> stimulationChunk;
 	std::vector<SMatrixChunk> savedChunks;
 	do
 	{
@@ -143,7 +143,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 	matrixChunk = savedChunks;
 	if (!matrixChunk.empty())
 	{
-		for (SMatrixChunk chunk : matrixChunk)
+		for (const SMatrixChunk& chunk : matrixChunk)
 		{
 			// copy read matrix into buffer to encode
 			std::copy(chunk.matrix.begin(), chunk.matrix.end(), matrix->getBuffer());

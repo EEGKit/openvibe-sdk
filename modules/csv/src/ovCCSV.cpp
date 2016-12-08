@@ -1362,6 +1362,7 @@ bool CCSVLib::parseSpectrumHeader(void)
 			if (spectrumChannel.size() != 2)
 			{
 				m_LastStringError = "Spectrum channel is invalid: " + m_LineColumns.at((labelCounter * m_DimensionSizes[1]) + labelSizeCounter + s_ColumnStartMatrixIndex);
+				return false;
 			}
 
 			dimensionData = spectrumChannel[0];
@@ -1378,9 +1379,9 @@ bool CCSVLib::parseSpectrumHeader(void)
 
 			// get all frequency and check that they're the same for all labels
 			dimensionData = spectrumChannel[1];
-			double frequency;
 			if (labelCounter == 0)
 			{
+				double frequency;
 				try
 				{
 					frequency = std::stod(dimensionData);
@@ -1396,6 +1397,7 @@ bool CCSVLib::parseSpectrumHeader(void)
 			}
 			else
 			{
+				double frequency;
 				try
 				{
 					frequency = std::stod(dimensionData);
@@ -1452,18 +1454,18 @@ bool CCSVLib::parseMatrixHeader(void)
 
 	// check if at least one dimension
 	if (!std::getline(iss, linePart, m_InternalDataSeparator)
-		|| linePart == "")
+		|| linePart.empty())
 	{
 		m_LastStringError = "First column must indicate at least one dimension size";
 		return false;
 	}
 
-	std::istringstream dimensionPart(linePart);
-	std::string dimensionSize;
 	unsigned int size = 0;
 	m_DimensionSizes.clear();
+	std::vector<std::string> dimensionParts;
+	::split(linePart, 'x', dimensionParts);
 	m_DimensionCount = 0;
-	while (std::getline(dimensionPart, dimensionSize, 'x'))
+	for (const std::string& dimensionSize : dimensionParts)
 	{
 		try
 		{
@@ -1753,15 +1755,11 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 	std::vector<std::string> column;
 	std::vector<unsigned long long> stimIdentifiers;
 	// pick all time identifiers for the actual time
-	if (m_LineColumns[m_LineColumns.size() - s_ColumnEndMatrixIndex].empty())
-	{
-		return true;
-	}
 
-	::split(m_LineColumns[m_LineColumns.size() - s_ColumnEndMatrixIndex], m_InternalDataSeparator, column);
-	for (std::string idValue : column)
+	if (!m_LineColumns[m_LineColumns.size() - s_ColumnEndMatrixIndex].empty())
 	{
-		if (!idValue.empty())
+		::split(m_LineColumns[m_LineColumns.size() - s_ColumnEndMatrixIndex], m_InternalDataSeparator, column);
+		for (const std::string& idValue : column)
 		{
 			unsigned long long id;
 			try
@@ -1782,10 +1780,17 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 
 	// pick all time dates for the actual time
 	std::vector<double> stimDates;
-	::split(m_LineColumns[m_LineColumns.size() - s_StimulationIdentifierColumnNbr], m_InternalDataSeparator, column);
-	for (std::string dateValue : column)
+	if (!m_LineColumns[m_LineColumns.size() - s_StimulationIdentifierColumnNbr].empty())
 	{
-		if (!dateValue.empty())
+		::split(m_LineColumns[m_LineColumns.size() - s_StimulationIdentifierColumnNbr], m_InternalDataSeparator, column);
+		if (column.size() != stimIdentifiers.size())
+		{
+			m_LastStringError = "At line " + std::to_string(line) + " column " + std::to_string(m_LineColumns.size() - s_StimulationDateColumnNbr) + " : all stimulations columns must have the same number of stimulations";
+			m_LogError = LogErrorCodes_InvalidStimulationArgument;
+			return false;
+		}
+
+		for (const std::string& dateValue : column)
 		{
 			double date;
 			try
@@ -1814,10 +1819,16 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 	// pick all time durations for the actual time
 
 	std::vector<double> stimDurations;
-	::split(m_LineColumns.back(), m_InternalDataSeparator, column);
-	for (std::string durationValue : column)
+	if (!m_LineColumns.back().empty())
 	{
-		if (!durationValue.empty())
+		::split(m_LineColumns.back(), m_InternalDataSeparator, column);
+		if (column.size() != stimIdentifiers.size())
+		{
+			m_LastStringError = "At line " + std::to_string(line) + " column " + std::to_string(m_LineColumns.size()) + " : all stimulations columns must have the same number of stimulations";
+			m_LogError = LogErrorCodes_InvalidStimulationArgument;
+			return false;
+		}
+		for (const std::string& durationValue : column)
 		{
 			double duration;
 			try
