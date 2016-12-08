@@ -1094,7 +1094,7 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 
 			if (columnstoHave + 4 != m_ColumnCount)
 			{
-				m_LastStringError = "Line size is " + std::to_string(columnstoHave + 4) + " but must be " + std::to_string (m_ColumnCount);
+				m_LastStringError = "Line size is " + std::to_string(columnstoHave + 4) + " but must be " + std::to_string(m_ColumnCount);
 				m_LogError = LogErrorCodes_WrongLineSize;
 				return false;
 			}
@@ -1536,10 +1536,11 @@ bool CCSVLib::parseMatrixHeader(void)
 				// check if label is the good one
 				if (!currentDimension[currentPosition].empty())
 				{
-					m_LastStringError = "Error at column " + std::to_string(columnIndex)
+					m_LastStringError = "Error at column " + std::to_string(columnIndex + 2)
 						+ " for the label \"" + columnLabels[index]
-						+ "\" in dimension number " + std::to_string(index) +
-						" is trying to reset label that have been already set";
+						+ "\" in dimension " + std::to_string(index + 1)
+						+ " is trying to reset label to \"" + columnLabels[index]
+						+ "\" that have been already set to \"" + currentDimension[currentPosition] + "\"";
 					m_LogError = LogErrorCodes_WrongHeader;
 					return false;
 				}
@@ -1552,7 +1553,7 @@ bool CCSVLib::parseMatrixHeader(void)
 			{
 				// position no fill, fill it with new label
 				if (columnLabels[index] != currentDimension[currentPosition]
-					&& !filledLabel[index][currentPosition])
+					&& !(filledLabel[index][currentPosition]))
 				{
 					currentDimension[currentPosition] = columnLabels[index];
 					filledLabel[index][currentPosition] = true;
@@ -1561,10 +1562,11 @@ bool CCSVLib::parseMatrixHeader(void)
 				else if (columnLabels[index] != currentDimension[currentPosition]
 					&& filledLabel[index][currentPosition])
 				{
-					m_LastStringError = "Error at column " + std::to_string(columnIndex)
+					m_LastStringError = "Error at column " + std::to_string(columnIndex + 2)
 						+ " for the label \"" + columnLabels[index]
-						+ "\" in dimension number " + std::to_string(index) +
-						" that is trying to reset label that have been already set";
+						+ "\" in dimension " + std::to_string(index + 1)
+						+ " is trying to reset label to \"" + columnLabels[index]
+						+ "\" that have been already set to \"" + currentDimension[currentPosition] + "\"";
 					m_LogError = LogErrorCodes_WrongHeader;
 					return false;
 				}

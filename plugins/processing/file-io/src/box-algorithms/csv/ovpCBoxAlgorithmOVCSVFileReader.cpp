@@ -49,6 +49,11 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 		m_AlgorithmEncoder = new OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >(*this, 0);
 		m_ReaderLib->setFormatType(EStreamType::Signal);
 	}
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+	{
+		m_AlgorithmEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >(*this, 0);
+		m_ReaderLib->setFormatType(EStreamType::StreamedMatrix);
+	}
 	else
 	{
 		OV_ERROR_KRF("Output is a type derived from matrix that the box doesn't recognize support", ErrorType::BadInput);
@@ -69,6 +74,12 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 			(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
 			ErrorType::Internal);
 	}
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+	{
+		OV_ERROR_UNLESS_KRF(m_ReaderLib->getStreamedMatrixInformation(m_DimensionSizes, m_ChannelNames),
+			(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
+			ErrorType::Internal);
+	}
 
 	return true;
 }
@@ -84,6 +95,8 @@ bool CBoxAlgorithmOVCSVFileReader::uninitialize(void)
 		m_AlgorithmEncoder = nullptr;
 	}
 
+	m_ChannelNames.clear();
+	m_DimensionSizes.clear();
 	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.uninitialize(),
 		"Failed to uninitialize stimulation encoder",
 		ErrorType::Internal);
@@ -101,24 +114,52 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& rMessageClock)
 
 bool CBoxAlgorithmOVCSVFileReader::process(void)
 {
-	IMatrix* matrix = ((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputMatrix();
+	IMatrix* matrix;
 
+	if (m_TypeIdentifier == OV_TypeId_Signal)
+	{
+		matrix = ((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputMatrix();
+	}
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+	{
+		matrix = ((OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputMatrix();
+	}
 	// encode Header if not already encoded
 	if (!m_IsHeaderSent)
 	{
-		matrix->setDimensionCount(2);
-		matrix->setDimensionSize(0, m_ChannelNames.size());
-		matrix->setDimensionSize(1, m_SampleCountPerBuffer);
-
-		unsigned int index = 0;
-		for (const std::string& channelName : m_ChannelNames)
+		if (m_TypeIdentifier == OV_TypeId_Signal)
 		{
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(0, index++, channelName.c_str()),
-				"Failed to set dimension label",
-				ErrorType::Internal);
-		}
+			matrix->setDimensionCount(2);
+			matrix->setDimensionSize(0, m_ChannelNames.size());
+			matrix->setDimensionSize(1, m_SampleCountPerBuffer);
 
-		((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputSamplingRate() = m_SamplingRate;
+			unsigned int index = 0;
+			for (const std::string& channelName : m_ChannelNames)
+			{
+				OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(0, index++, channelName.c_str()),
+					"Failed to set dimension label",
+					ErrorType::Internal);
+			}
+
+			((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputSamplingRate() = m_SamplingRate;
+		}
+		else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+		{
+			matrix->setDimensionCount(m_DimensionSizes.size());
+			unsigned int previousDimensionSize = 0;
+			for (size_t index = 0; index < m_DimensionSizes.size(); index++)
+			{
+				matrix->setDimensionSize(index, m_DimensionSizes[index]);
+				for (size_t labelIndex = 0; labelIndex < m_DimensionSizes[index]; labelIndex++)
+				{
+					OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(index, labelIndex++, m_ChannelNames[previousDimensionSize + labelIndex].c_str()),
+						"Failed to set dimension label",
+						ErrorType::Internal);
+				}
+
+				previousDimensionSize += m_DimensionSizes[index];
+			}
+		}
 		OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->encodeHeader(),
 			"Failed to encode signal header",
 			ErrorType::Internal);

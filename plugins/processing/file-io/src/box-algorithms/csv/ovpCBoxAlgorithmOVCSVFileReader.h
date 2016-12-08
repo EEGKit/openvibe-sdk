@@ -46,6 +46,7 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CIdentifier m_TypeIdentifier;
 			std::vector<std::string> m_ChannelNames;
+			std::vector<unsigned int> m_DimensionSizes;
 			unsigned int m_SamplingRate;
 			unsigned int m_SampleCountPerBuffer;
 			unsigned int m_ColumnCount;
