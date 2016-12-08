@@ -11,10 +11,12 @@ SET(source_files
 	include/system/ovCMath.h
 	include/system/ovCMemory.h
 	include/system/ovCTime.h
+	include/system/ovCDynamicModule.h
 	src/ovCChrono.cpp
 	src/ovCMath.cpp
 	src/ovCMemory.cpp
 	src/ovCTime.cpp
+	src/ovCDynamicModule.cpp
 	)
 
 IF(WIN32)
@@ -57,7 +59,9 @@ INCLUDE("FindThirdPartyBoost_Thread")
 # ---------------------------------
 IF(WIN32)
 	INCLUDE("OvSetWindowsSDKPath")
+	
 	FIND_LIBRARY(LIB_STANDARD_MODULE_WINMM winmm ${OV_MS_SDK_PATH}/lib)
+	
 	IF(LIB_STANDARD_MODULE_WINMM)
 		MESSAGE(STATUS "  Found winmm...")
 		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_STANDARD_MODULE_WINMM})
@@ -65,6 +69,18 @@ IF(WIN32)
 	ELSE(LIB_STANDARD_MODULE_WINMM)
 		MESSAGE(STATUS "  FAILED to find winmm...")
 	ENDIF(LIB_STANDARD_MODULE_WINMM)
+
+	FIND_LIBRARY(LIB_STANDARD_MODULE_DBGHELP dbghelp ${OV_MS_SDK_PATH}/lib)
+
+	IF(LIB_STANDARD_MODULE_DBGHELP)
+		MESSAGE(STATUS "  Found dbghelp...")
+		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_STANDARD_MODULE_DBGHELP})
+		TARGET_LINK_LIBRARIES(${PROJECT_NAME}-static ${LIB_STANDARD_MODULE_DBGHELP})
+	ELSE(LIB_STANDARD_MODULE_DBGHELP)
+		MESSAGE(STATUS "  FAILED to find dbghelp...")
+	ENDIF(LIB_STANDARD_MODULE_DBGHELP)
+ELSE(WIN32)
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_DL_LIBS})
 ENDIF(WIN32)
 
 # ---------------------------------
