@@ -20,7 +20,7 @@ namespace {
 		{ LogErrorCodes_NoChannelsName, "No channel names in the vector" },
 		{ LogErrorCodes_SetInfoOnce, "The setTypeInformation function should be called only once" },
 		{ LogErrorCodes_WrongInputType, "Wrong input type" },
-		{ LogErrorCodes_WrongHeader, "Error in the header of the file, refer to getLastErrorString function for more information" },
+		{ LogErrorCodes_WrongHeader, "Error in the header of the file" },
 		{ LogErrorCodes_WrongLineSize, "There is a difference between the current line size and the size that it should have" },
 		{ LogErrorCodes_SampleNotEmpty, "Matrix must be empty to store in results of reading" },
 		{ LogErrorCodes_NotEnoughLines, "Can't reach the line in parameter, not enough lines in the file" },
@@ -32,10 +32,10 @@ namespace {
 		{ LogErrorCodes_WrongDimensionSize, "Size of dimension sizes vector must be equal to the number of dimensions" },
 		{ LogErrorCodes_DimensionCountZero, "Number of dimension must be at least 1" },
 		{ LogErrorCodes_OutOfRangeException, "Convertion from string to number is impossible : string is out of range" },
-		{ LogErrorCodes_InvalidArgumentException, "An invalid argument exeption have been thrown, refer to getLastErrorString function for more information" },
+		{ LogErrorCodes_InvalidArgumentException, "An invalid argument exeption have been thrown" },
 		{ LogErrorCodes_CantWriteHeader, "Can not write header, data already began to be written or header already written" },
 		{ LogErrorCodes_ErrorWhileWriting, "Error occured while trying to write" },
-		{ LogErrorCodes_WrongParameters, "Error with (one of )the parameter(s), refer to GetLastErrorString function for more information" },
+		{ LogErrorCodes_WrongParameters, "Error with (one of )the parameter(s)" },
 		{ LogErrorCodes_MissingData, "Missing data in file, file may be corrupted" }
 	};
 }
