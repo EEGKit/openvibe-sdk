@@ -1014,7 +1014,7 @@ bool CCSVLib::createHeaderString(void)
 				}
 			}
 			m_Header += m_Separator;
-		} while (advancePosition(position));
+		} while (increasePositionIndexes(position));
 	}
 	else if (m_InputTypeIdentifier == EStreamType::Spectrum)
 	{
@@ -1578,7 +1578,7 @@ bool CCSVLib::parseMatrixHeader(void)
 		}
 
 		columnIndex++;
-	} while (advancePosition(positionsInDimensions));
+	} while (increasePositionIndexes(positionsInDimensions));
 	for (const std::vector<std::string>& dimensionIndex : labelsInDimensions)
 	{
 		for (const std::string& label : dimensionIndex)
@@ -1870,7 +1870,7 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 	return true;
 }
 
-bool CCSVLib::advancePosition(std::vector<unsigned int>& position)
+bool CCSVLib::increasePositionIndexes(std::vector<unsigned int>& position)
 {
 	position.back()++;
 	for (size_t counter = 1; counter <= position.size(); counter++)

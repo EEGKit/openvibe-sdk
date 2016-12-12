@@ -129,9 +129,15 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 	{
 		if (m_TypeIdentifier == OV_TypeId_Signal)
 		{
-			matrix->setDimensionCount(2);
-			matrix->setDimensionSize(0, m_ChannelNames.size());
-			matrix->setDimensionSize(1, m_SampleCountPerBuffer);
+			OV_ERROR_UNLESS_KRF(matrix->setDimensionCount(2),
+				"Failed to set dimension count",
+				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(0, m_ChannelNames.size()),
+				"Failed to set first dimension size",
+				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(1, m_SampleCountPerBuffer),
+				"Failed to set second dimension size",
+				ErrorType::Internal);
 
 			unsigned int index = 0;
 			for (const std::string& channelName : m_ChannelNames)
@@ -145,11 +151,15 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 		}
 		else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
 		{
-			matrix->setDimensionCount(m_DimensionSizes.size());
+			OV_ERROR_UNLESS_KRF(matrix->setDimensionCount(m_DimensionSizes.size()),
+				"Failed to set dimension count",
+				ErrorType::Internal);
 			unsigned int previousDimensionSize = 0;
 			for (size_t index = 0; index < m_DimensionSizes.size(); index++)
 			{
-				matrix->setDimensionSize(index, m_DimensionSizes[index]);
+				OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(index, m_DimensionSizes[index]),
+					"Failed to set dimension size " + std::to_string(index + 1),
+					ErrorType::Internal);
 				for (size_t labelIndex = 0; labelIndex < m_DimensionSizes[index]; labelIndex++)
 				{
 					OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(index, labelIndex, m_ChannelNames[previousDimensionSize + labelIndex].c_str()),
