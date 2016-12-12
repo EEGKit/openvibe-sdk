@@ -152,7 +152,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 				matrix->setDimensionSize(index, m_DimensionSizes[index]);
 				for (size_t labelIndex = 0; labelIndex < m_DimensionSizes[index]; labelIndex++)
 				{
-					OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(index, labelIndex++, m_ChannelNames[previousDimensionSize + labelIndex].c_str()),
+					OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(index, labelIndex, m_ChannelNames[previousDimensionSize + labelIndex].c_str()),
 						"Failed to set dimension label",
 						ErrorType::Internal);
 				}

@@ -996,10 +996,12 @@ bool CCSVLib::createHeaderString(void)
 				m_LogError = LogErrorCodes_DimensionSizeZero;
 				return false;
 			}
+			m_ColumnCount *= size;
 		}
-		std::vector<unsigned int> position(m_DimensionCount, 0);
 
-		while (updateIteratedPosition(position))
+		m_ColumnCount++;
+		std::vector<unsigned int> position(m_DimensionCount, 0);
+		do
 		{
 			unsigned int previousDimensionsSize = 0;
 			for (size_t index = 0; index < position.size(); index++)
@@ -1012,9 +1014,7 @@ bool CCSVLib::createHeaderString(void)
 				}
 			}
 			m_Header += m_Separator;
-			position.back()++;
-			m_ColumnCount++;
-		}
+		} while (advancePosition(position));
 	}
 	else if (m_InputTypeIdentifier == EStreamType::Spectrum)
 	{
@@ -1501,84 +1501,84 @@ bool CCSVLib::parseMatrixHeader(void)
 		return false;
 	}
 
-	m_ColumnCount = matrixColumnCount;
-	//get matrix labels
-	std::vector<std::vector<std::string>> labelsInDimensions(m_DimensionCount);
-	std::vector<std::vector<bool>> filledLabel(m_DimensionCount);
+	m_ColumnCount = m_LineColumns.size();
 
+	// it saves labels for each dimensions
+	std::vector<std::vector<std::string>> labelsInDimensions(m_DimensionCount);
+	// check if labels are already filled or if it's a reset (labels are empty before being set, but empty labels are accepted)
+	std::vector<std::vector<bool>> filledLabel(m_DimensionCount);
 	for (size_t index = 0; index < m_DimensionSizes.size(); index++)
 	{
 		labelsInDimensions[index].resize(m_DimensionSizes[index]);
 		filledLabel[index].resize(m_DimensionSizes[index], false);
 	}
-	std::vector<unsigned int> positionInDimensions(m_DimensionCount, 0);
 
-	for (size_t columnIndex = 0; columnIndex < m_ColumnCount; columnIndex++)
+	// corresponding to the position in the multi multidimensional matrix (as exemple the third label of the second dimension will be positionsInDimensions[1] = 2)
+	std::vector<unsigned int> positionsInDimensions(m_DimensionCount, 0);
+	size_t columnIndex = 0;
+	// we will visit each column containing matrix labels
+	do
 	{
 		std::vector<std::string> columnLabels;
 		// get all column part
 		::split(m_LineColumns[columnIndex + 1], m_InternalDataSeparator, columnLabels);
 		if (columnLabels.size() != m_DimensionCount)
 		{
-			m_LastStringError = "Label names must be " + std::to_string(m_DimensionCount) + " per column(empty labels autorized)";
+			m_LastStringError = "On column " + std::to_string(columnIndex + 1) + "(" + m_LineColumns[columnIndex + 1] + "), there is " + std::to_string(columnLabels.size()) + " label instead of " + std::to_string(m_DimensionCount);
 			m_LogError = LogErrorCodes_WrongHeader;
 			return false;
 		}
-		// check column labels
+		// check column labels one per one
 
-		for (size_t index = positionInDimensions.size() - 1; index != std::numeric_limits<unsigned int>::max(); index--)
+		for (size_t dimensionIndex = 0; dimensionIndex < columnLabels.size(); dimensionIndex++)
 		{
-			std::vector<std::string> currentDimension = labelsInDimensions[index];
-			unsigned int currentPosition = positionInDimensions[index];
-			// two type of label, empty label or not
-			if (columnLabels[index].empty())
+			// replace variable by a shorter one
+			size_t positionInCurrentDimension = positionsInDimensions[dimensionIndex];
+			// two case, empty label or not
+			if (columnLabels[dimensionIndex].empty())
 			{
-				// check if label is the good one
-				if (!currentDimension[currentPosition].empty())
+				// if saved label is empty, mark it as saved (even if he's already)
+				if (labelsInDimensions[dimensionIndex][positionInCurrentDimension].empty())
 				{
-					m_LastStringError = "Error at column " + std::to_string(columnIndex + 2)
-						+ " for the label \"" + columnLabels[index]
-						+ "\" in dimension " + std::to_string(index + 1)
-						+ " is trying to reset label to \"" + columnLabels[index]
-						+ "\" that have been already set to \"" + currentDimension[currentPosition] + "\"";
-					m_LogError = LogErrorCodes_WrongHeader;
-					return false;
+					filledLabel[dimensionIndex][positionInCurrentDimension] = true;
 				}
+				// else,there is an error, it means that label is already set
 				else
 				{
-					filledLabel[index][currentPosition] = true;
+					m_LastStringError = "Error at column " + std::to_string(columnIndex + 1)
+						+ " for the label \"" + columnLabels[dimensionIndex]
+						+ "\" in dimension " + std::to_string(dimensionIndex + 1)
+						+ " is trying to reset label to \"" + columnLabels[dimensionIndex]
+						+ "\" that have been already set to \"" + labelsInDimensions[dimensionIndex][positionInCurrentDimension] + "\"";
+					m_LogError = LogErrorCodes_WrongHeader;
+					return false;
 				}
 			}
 			else
 			{
-				// position no fill, fill it with new label
-				if (columnLabels[index] != currentDimension[currentPosition]
-					&& !(filledLabel[index][currentPosition]))
+				// if label is already set, check that it'st the same, if it's not, there is an error
+				if (labelsInDimensions[dimensionIndex][positionInCurrentDimension] != columnLabels[dimensionIndex]
+					&& filledLabel[dimensionIndex][positionInCurrentDimension])
 				{
-					currentDimension[currentPosition] = columnLabels[index];
-					filledLabel[index][currentPosition] = true;
-				}
-				// error if position already fill
-				else if (columnLabels[index] != currentDimension[currentPosition]
-					&& filledLabel[index][currentPosition])
-				{
-					m_LastStringError = "Error at column " + std::to_string(columnIndex + 2)
-						+ " for the label \"" + columnLabels[index]
-						+ "\" in dimension " + std::to_string(index + 1)
-						+ " is trying to reset label to \"" + columnLabels[index]
-						+ "\" that have been already set to \"" + currentDimension[currentPosition] + "\"";
+					m_LastStringError = "Error at column " + std::to_string(columnIndex + 1)
+						+ " for the label \"" + columnLabels[dimensionIndex]
+						+ "\" in dimension " + std::to_string(dimensionIndex + 1)
+						+ " is trying to reset label to \"" + columnLabels[dimensionIndex]
+						+ "\" that have been already set to \"" + labelsInDimensions[dimensionIndex][positionInCurrentDimension] + "\"";
 					m_LogError = LogErrorCodes_WrongHeader;
 					return false;
 				}
+				// if label isn't set, set it
+				else if (!(filledLabel[dimensionIndex][positionInCurrentDimension]))
+				{
+					labelsInDimensions[dimensionIndex][positionInCurrentDimension] = columnLabels[dimensionIndex];
+					filledLabel[dimensionIndex][positionInCurrentDimension] = true;
+				}
 			}
 		}
-		positionInDimensions.back()++;
-		if (!updateIteratedPosition(positionInDimensions))
-		{
-			break;
-		}
-	}
 
+		columnIndex++;
+	} while (advancePosition(positionsInDimensions));
 	for (const std::vector<std::string>& dimensionIndex : labelsInDimensions)
 	{
 		for (const std::string& label : dimensionIndex)
@@ -1870,19 +1870,20 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 	return true;
 }
 
-bool CCSVLib::updateIteratedPosition(std::vector<unsigned int>& position)
+bool CCSVLib::advancePosition(std::vector<unsigned int>& position)
 {
+	position.back()++;
 	for (size_t counter = 1; counter <= position.size(); counter++)
 	{
 		size_t index = position.size() - counter;
 		if ((position[index] + 1) > m_DimensionSizes[index])
 		{
-			if ((position.size() - counter) != 0)
+			if (index != 0)
 			{
 				position[index] = 0;
 				position[index - 1]++;
 			}
-			else
+			else if ((position[index] + 1) > m_DimensionSizes[index])
 			{
 				return false;
 			}

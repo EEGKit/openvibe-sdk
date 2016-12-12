@@ -177,7 +177,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of browse matrix
 			 */
-			bool updateIteratedPosition(std::vector<unsigned int>& position);
+			bool advancePosition(std::vector<unsigned int>& position);
 
 			/**
 			 * \brief Read lines of the first epoch to found sample count per buffer
