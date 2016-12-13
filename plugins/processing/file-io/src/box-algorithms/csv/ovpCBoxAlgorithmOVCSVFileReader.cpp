@@ -158,7 +158,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 			for (size_t index = 0; index < m_DimensionSizes.size(); index++)
 			{
 				OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(index, m_DimensionSizes[index]),
-					"Failed to set dimension size " + std::to_string(index + 1),
+					"Failed to set dimension size " << std::to_string(index + 1).c_str(),
 					ErrorType::Internal);
 				for (size_t labelIndex = 0; labelIndex < m_DimensionSizes[index]; labelIndex++)
 				{

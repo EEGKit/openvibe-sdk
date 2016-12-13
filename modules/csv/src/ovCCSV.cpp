@@ -988,6 +988,7 @@ bool CCSVLib::createHeaderString(void)
 	}
 	else if (m_InputTypeIdentifier == EStreamType::StreamedMatrix)
 	{
+		unsigned int matrixColumns = 1;
 		for (unsigned int size : m_DimensionSizes)
 		{
 			if (size == 0)
@@ -996,10 +997,10 @@ bool CCSVLib::createHeaderString(void)
 				m_LogError = LogErrorCodes_DimensionSizeZero;
 				return false;
 			}
-			m_ColumnCount *= size;
+			matrixColumns *= size;
 		}
 
-		m_ColumnCount++;
+		m_ColumnCount += matrixColumns;
 		std::vector<unsigned int> position(m_DimensionCount, 0);
 		do
 		{
@@ -1532,12 +1533,10 @@ bool CCSVLib::parseMatrixHeader(void)
 
 		for (size_t dimensionIndex = 0; dimensionIndex < columnLabels.size(); dimensionIndex++)
 		{
-			// replace variable by a shorter one
 			size_t positionInCurrentDimension = positionsInDimensions[dimensionIndex];
-			// two case, empty label or not
 			if (columnLabels[dimensionIndex].empty())
 			{
-				// if saved label is empty, mark it as saved (even if he's already)
+				// if saved label is empty, mark it as saved (even if it is already)
 				if (labelsInDimensions[dimensionIndex][positionInCurrentDimension].empty())
 				{
 					filledLabel[dimensionIndex][positionInCurrentDimension] = true;
