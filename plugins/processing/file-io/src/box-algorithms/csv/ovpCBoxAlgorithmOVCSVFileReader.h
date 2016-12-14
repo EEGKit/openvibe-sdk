@@ -35,12 +35,15 @@ namespace OpenViBEPlugins
 
 		private:
 			bool initializeFile();
-			bool processStimulation(const std::vector<OpenViBE::CSV::SMatrixChunk>& matrixChunk, const std::vector<OpenViBE::CSV::SStimulationChunk> &stimulationChunk);
+			bool processStimulation(std::vector<OpenViBE::CSV::SStimulationChunk> &stimulationChunk);
 
 			std::unique_ptr<OpenViBE::CSV::ICSVLib, decltype(&OpenViBE::CSV::releaseCSVLib)>m_ReaderLib;
 
 			OpenViBEToolkit::TEncoder < CBoxAlgorithmOVCSVFileReader >* m_AlgorithmEncoder;
 			OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmOVCSVFileReader > m_StimulationEncoder;
+
+			std::vector<OpenViBE::CSV::SMatrixChunk> m_SavedChunks;
+			std::vector<OpenViBE::CSV::SStimulationChunk> m_SavedStimulations;
 
 			unsigned long long m_lastStimulationDate;
 
