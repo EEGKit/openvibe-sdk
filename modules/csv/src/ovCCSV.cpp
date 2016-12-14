@@ -21,6 +21,7 @@
 #endif
 
 #include <sstream>
+#include <numeric>
 
 #include "ovCCSV.hpp"
 
@@ -988,16 +989,12 @@ bool CCSVLib::createHeaderString(void)
 	}
 	else if (m_InputTypeIdentifier == EStreamType::StreamedMatrix)
 	{
-		unsigned int matrixColumns = 1;
-		for (unsigned int size : m_DimensionSizes)
+		unsigned int matrixColumns = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<unsigned int>());
+		if (matrixColumns == 0)
 		{
-			if (size == 0)
-			{
-				m_LastStringError.clear();
-				m_LogError = LogErrorCodes_DimensionSizeZero;
-				return false;
-			}
-			matrixColumns *= size;
+			m_LastStringError.clear();
+			m_LogError = LogErrorCodes_DimensionSizeZero;
+			return false;
 		}
 
 		m_ColumnCount += matrixColumns;
