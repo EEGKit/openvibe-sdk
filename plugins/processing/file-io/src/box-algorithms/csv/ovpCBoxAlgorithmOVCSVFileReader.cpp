@@ -220,11 +220,11 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 
 		while (chunksToRemove != 0)
 		{
-			m_SavedChunks.erase(m_SavedChunks.begin());
+			m_SavedChunks.pop_front();
 			chunksToRemove--;
 		}
 		// send stimulations chunk even if there is no stimulations, chunks have to be continued
-		OV_ERROR_UNLESS_KRF(processStimulation(m_SavedStimulations),
+		OV_ERROR_UNLESS_KRF(processStimulation(),
 			"Error during stimulation process",
 			ErrorType::Internal);
 	}
@@ -232,7 +232,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileReader::processStimulation(std::vector<SStimulationChunk>& stimulationChunk)
+bool CBoxAlgorithmOVCSVFileReader::processStimulation()
 {
 	if (!m_IsStimulationHeaderSent)
 	{
@@ -251,7 +251,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(std::vector<SStimulationCh
 
 	unsigned long long stimulationChunkStartTime = m_lastStimulationDate;
 	unsigned long long currentTime = getPlayerContext().getCurrentTime();
-	if (stimulationChunk.empty())
+	if (m_SavedStimulations.empty())
 	{
 		if (currentTime > m_lastStimulationDate)
 		{
@@ -270,7 +270,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(std::vector<SStimulationCh
 	{
 		double lastTimeSent;
 		unsigned int chunksToRemove = 0;
-		for (const SStimulationChunk& chunk : stimulationChunk)
+		for (const SStimulationChunk& chunk : m_SavedStimulations)
 		{
 			if (currentTime > ITimeArithmetics::secondsToTime(chunk.stimulationDate))
 			{
@@ -284,7 +284,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(std::vector<SStimulationCh
 
 		while (chunksToRemove != 0)
 		{
-			stimulationChunk.erase(stimulationChunk.begin());
+			m_SavedStimulations.pop_front();
 			chunksToRemove--;
 		}
 
