@@ -49,6 +49,11 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 		m_AlgorithmEncoder = new OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >(*this, 0);
 		m_ReaderLib->setFormatType(EStreamType::Signal);
 	}
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+	{
+		m_AlgorithmEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >(*this, 0);
+		m_ReaderLib->setFormatType(EStreamType::StreamedMatrix);
+	}
 	else
 	{
 		OV_ERROR_KRF("Output is a type derived from matrix that the box doesn't recognize support", ErrorType::BadInput);
@@ -69,6 +74,12 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 			(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
 			ErrorType::Internal);
 	}
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+	{
+		OV_ERROR_UNLESS_KRF(m_ReaderLib->getStreamedMatrixInformation(m_DimensionSizes, m_ChannelNames),
+			(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
+			ErrorType::Internal);
+	}
 
 	return true;
 }
@@ -84,6 +95,8 @@ bool CBoxAlgorithmOVCSVFileReader::uninitialize(void)
 		m_AlgorithmEncoder = nullptr;
 	}
 
+	m_ChannelNames.clear();
+	m_DimensionSizes.clear();
 	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.uninitialize(),
 		"Failed to uninitialize stimulation encoder",
 		ErrorType::Internal);
@@ -101,24 +114,66 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& rMessageClock)
 
 bool CBoxAlgorithmOVCSVFileReader::process(void)
 {
-	IMatrix* matrix = ((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputMatrix();
+	IMatrix* matrix(nullptr);
 
+	if (m_TypeIdentifier == OV_TypeId_Signal)
+	{
+		OV_ERROR_UNLESS_KRN(matrix = (dynamic_cast<OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
+			"Failed to get input matrix",
+			ErrorType::Internal);
+	}
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+	{
+		OV_ERROR_UNLESS_KRN(matrix = (dynamic_cast<OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
+			"Failed to get input matrix",
+			ErrorType::Internal);
+	}
 	// encode Header if not already encoded
 	if (!m_IsHeaderSent)
 	{
-		matrix->setDimensionCount(2);
-		matrix->setDimensionSize(0, m_ChannelNames.size());
-		matrix->setDimensionSize(1, m_SampleCountPerBuffer);
-
-		unsigned int index = 0;
-		for (const std::string& channelName : m_ChannelNames)
+		if (m_TypeIdentifier == OV_TypeId_Signal)
 		{
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(0, index++, channelName.c_str()),
-				"Failed to set dimension label",
+			OV_ERROR_UNLESS_KRF(matrix->setDimensionCount(2),
+				"Failed to set dimension count",
 				ErrorType::Internal);
-		}
+			OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(0, m_ChannelNames.size()),
+				"Failed to set first dimension size",
+				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(1, m_SampleCountPerBuffer),
+				"Failed to set second dimension size",
+				ErrorType::Internal);
 
-		((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputSamplingRate() = m_SamplingRate;
+			unsigned int index = 0;
+			for (const std::string& channelName : m_ChannelNames)
+			{
+				OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(0, index++, channelName.c_str()),
+					"Failed to set dimension label",
+					ErrorType::Internal);
+			}
+
+			((OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*)m_AlgorithmEncoder)->getInputSamplingRate() = m_SamplingRate;
+		}
+		else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+		{
+			OV_ERROR_UNLESS_KRF(matrix->setDimensionCount(m_DimensionSizes.size()),
+				"Failed to set dimension count",
+				ErrorType::Internal);
+			unsigned int previousDimensionSize = 0;
+			for (size_t index = 0; index < m_DimensionSizes.size(); index++)
+			{
+				OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(index, m_DimensionSizes[index]),
+					"Failed to set dimension size " << std::to_string(index + 1).c_str(),
+					ErrorType::Internal);
+				for (size_t labelIndex = 0; labelIndex < m_DimensionSizes[index]; labelIndex++)
+				{
+					OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(index, labelIndex, m_ChannelNames[previousDimensionSize + labelIndex].c_str()),
+						"Failed to set dimension label",
+						ErrorType::Internal);
+				}
+
+				previousDimensionSize += m_DimensionSizes[index];
+			}
+		}
 		OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->encodeHeader(),
 			"Failed to encode signal header",
 			ErrorType::Internal);
@@ -130,36 +185,46 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 
 	std::vector<SMatrixChunk> matrixChunk;
 	std::vector<SStimulationChunk> stimulationChunk;
-	std::vector<SMatrixChunk> savedChunks;
 	do
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->readSamplesAndEventsFromFile(1, matrixChunk, stimulationChunk),
 			(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
 			ErrorType::Internal);
-		savedChunks.insert(savedChunks.end(), matrixChunk.begin(), matrixChunk.end());
+		m_SavedChunks.insert(m_SavedChunks.end(), matrixChunk.begin(), matrixChunk.end());
+		m_SavedStimulations.insert(m_SavedStimulations.end(), stimulationChunk.begin(), stimulationChunk.end());
 	} while (!matrixChunk.empty()
 		&& matrixChunk.begin()->startTime < ITimeArithmetics::timeToSeconds(this->getPlayerContext().getCurrentTime()));
 
-	matrixChunk = savedChunks;
-	if (!matrixChunk.empty())
-	{
-		for (const SMatrixChunk& chunk : matrixChunk)
-		{
-			// copy read matrix into buffer to encode
-			std::copy(chunk.matrix.begin(), chunk.matrix.end(), matrix->getBuffer());
 
-			OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->encodeBuffer(),
-				"Failed to encode signal buffer",
-				ErrorType::Internal);
-			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0,
-				ITimeArithmetics::secondsToTime(chunk.startTime),
-				ITimeArithmetics::secondsToTime(chunk.endTime)),
-				"Failed to mark signal output as ready to send",
-				ErrorType::Internal);
+	if (!m_SavedChunks.empty())
+	{
+		unsigned int chunksToRemove = 0;
+		for (const SMatrixChunk& chunk : m_SavedChunks)
+		{
+			if (ITimeArithmetics::timeToSeconds(getPlayerContext().getCurrentTime()) > chunk.startTime)
+			{
+				// copy read matrix into buffer to encode
+				std::copy(chunk.matrix.begin(), chunk.matrix.end(), matrix->getBuffer());
+
+				OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->encodeBuffer(),
+					"Failed to encode signal buffer",
+					ErrorType::Internal);
+				OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0,
+					ITimeArithmetics::secondsToTime(chunk.startTime),
+					ITimeArithmetics::secondsToTime(chunk.endTime)),
+					"Failed to mark signal output as ready to send",
+					ErrorType::Internal);
+				chunksToRemove++;
+			}
 		}
 
+		while (chunksToRemove != 0)
+		{
+			m_SavedChunks.pop_front();
+			chunksToRemove--;
+		}
 		// send stimulations chunk even if there is no stimulations, chunks have to be continued
-		OV_ERROR_UNLESS_KRF(processStimulation(matrixChunk, stimulationChunk),
+		OV_ERROR_UNLESS_KRF(processStimulation(),
 			"Error during stimulation process",
 			ErrorType::Internal);
 	}
@@ -167,7 +232,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileReader::processStimulation(const std::vector<SMatrixChunk>& matrixChunk, const std::vector<SStimulationChunk>& stimulationChunk)
+bool CBoxAlgorithmOVCSVFileReader::processStimulation()
 {
 	if (!m_IsStimulationHeaderSent)
 	{
@@ -185,40 +250,51 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(const std::vector<SMatrixC
 	stimulationSet->clear();
 
 	unsigned long long stimulationChunkStartTime = m_lastStimulationDate;
-	unsigned long long stimulationChunkEndTime;
-	if (stimulationChunk.empty())
+	unsigned long long currentTime = getPlayerContext().getCurrentTime();
+	if (m_SavedStimulations.empty())
 	{
-		if (ITimeArithmetics::secondsToTime(matrixChunk.back().startTime) > m_lastStimulationDate)
+		if (currentTime > m_lastStimulationDate)
 		{
-			stimulationChunkEndTime = ITimeArithmetics::secondsToTime(matrixChunk.back().startTime);
-			m_lastStimulationDate = stimulationChunkEndTime;
+			m_lastStimulationDate = currentTime;
 			OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),
 				"Failed to encode stimulation buffer",
 				ErrorType::Internal);
 			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
 				stimulationChunkStartTime,
-				stimulationChunkEndTime),
+				currentTime),
 				"Failed to mark stimulation output as ready to send",
 				ErrorType::Internal);
 		}
 	}
 	else
 	{
-		for (const SStimulationChunk& chunk : stimulationChunk)
+		double lastTimeSent;
+		unsigned int chunksToRemove = 0;
+		for (const SStimulationChunk& chunk : m_SavedStimulations)
 		{
-			stimulationSet->appendStimulation(chunk.stimulationIdentifier,
-				ITimeArithmetics::secondsToTime(chunk.stimulationDate),
-				ITimeArithmetics::secondsToTime(chunk.stimulationDuration));
+			if (currentTime > ITimeArithmetics::secondsToTime(chunk.stimulationDate))
+			{
+				lastTimeSent = chunk.stimulationDate;
+				stimulationSet->appendStimulation(chunk.stimulationIdentifier,
+					ITimeArithmetics::secondsToTime(chunk.stimulationDate),
+					ITimeArithmetics::secondsToTime(chunk.stimulationDuration));
+				chunksToRemove++;
+			}
 		}
 
-		stimulationChunkEndTime = ITimeArithmetics::secondsToTime(stimulationChunk.back().stimulationDate);
-		m_lastStimulationDate = stimulationChunkEndTime;
+		while (chunksToRemove != 0)
+		{
+			m_SavedStimulations.pop_front();
+			chunksToRemove--;
+		}
+
+		m_lastStimulationDate = currentTime;
 		OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),
 			"Failed to encode stimulation buffer",
 			ErrorType::Internal);
 		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
 			stimulationChunkStartTime,
-			stimulationChunkEndTime),
+			currentTime),
 			"Failed to mark stimulation output as ready to send",
 			ErrorType::Internal);
 	}
