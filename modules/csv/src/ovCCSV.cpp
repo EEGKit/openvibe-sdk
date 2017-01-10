@@ -104,6 +104,7 @@ bool CCSVLib::setSignalInformation(const std::vector<std::string>& channelNames,
 	}
 
 	m_IsSetInfoCalled = true;
+
 	if (channelNames.empty())
 	{
 		m_LastStringError.clear();
@@ -265,6 +266,7 @@ bool CCSVLib::setFeatureVectorInformation(const std::vector<std::string>& channe
 		return false;
 	}
 	m_DimensionLabels = channelNames;
+	m_DimensionSizes = { static_cast<unsigned int>(channelNames.size())};
 	return true;
 }
 
