@@ -21,26 +21,28 @@ boolean CBoxAlgorithmSpectralAnalysis::initialize()
 {
 	m_oDecoder.initialize(*this, 0);
 
-	CString l_sSpectralComponents = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_ui64BitmaskSpectralComponents = this->getTypeManager().getBitMaskEntryCompositionValueFromName(OVP_TypeId_SpectralComponent, l_sSpectralComponents);
+	m_bIsAmplitudeProcessingEnabled = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_bIsPhaseProcessingEnabled = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_bIsRealPartProcessingEnabled = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_bIsImaginaryPartProcessingEnabled = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
 	m_pFrequencyBandDescription = new CMatrix();
 
 	// Amplitude
 	m_vSpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 0));
-	m_vIsSpectrumEncoderActive.push_back(isAmplitudeProcessingEnabled());
+	m_vIsSpectrumEncoderActive.push_back(m_bIsAmplitudeProcessingEnabled);
 
 	// Phase
 	m_vSpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 1));
-	m_vIsSpectrumEncoderActive.push_back(isPhaseProcessingEnabled());
+	m_vIsSpectrumEncoderActive.push_back(m_bIsPhaseProcessingEnabled);
 
 	//Real Part
 	m_vSpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 2));
-	m_vIsSpectrumEncoderActive.push_back(isRealPartProcessingEnabled());
+	m_vIsSpectrumEncoderActive.push_back(m_bIsRealPartProcessingEnabled);
 
 	// Imaginary part
 	m_vSpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 3));
-	m_vIsSpectrumEncoderActive.push_back(isImaginaryPartProcessingEnabled());
+	m_vIsSpectrumEncoderActive.push_back(m_bIsImaginaryPartProcessingEnabled);
 
 	//All encoders share the same frequency band description
 	m_vSpectrumEncoders[0]->getInputMinMaxFrequencyBands().setReferenceTarget(m_pFrequencyBandDescription);
@@ -49,10 +51,10 @@ boolean CBoxAlgorithmSpectralAnalysis::initialize()
 	m_vSpectrumEncoders[3]->getInputMinMaxFrequencyBands().setReferenceTarget(m_pFrequencyBandDescription);
 
 	this->getLogManager() << LogLevel_Trace << "Spectral components selected from Bitmask[" << m_ui64BitmaskSpectralComponents << "] : [ "
-		<< (isAmplitudeProcessingEnabled() ? CString("AMP ") : "")
-		<< (isPhaseProcessingEnabled() ? CString("PHASE ") : "")
-		<< (isRealPartProcessingEnabled() ? CString("REAL ") : "")
-		<< (isImaginaryPartProcessingEnabled() ? CString("IMG ") : "")
+		<< (m_bIsAmplitudeProcessingEnabled ? CString("AMP ") : "")
+		<< (m_bIsPhaseProcessingEnabled ? CString("PHASE ") : "")
+		<< (m_bIsRealPartProcessingEnabled ? CString("REAL ") : "")
+		<< (m_bIsImaginaryPartProcessingEnabled ? CString("IMG ") : "")
 		<< "]\n";
 
 	return true;
@@ -204,7 +206,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 				{
 					IMatrix * l_pSpectrum = m_vSpectrumEncoders[encoderIndex]->getInputMatrix();
 
-					if (isAmplitudeProcessingEnabled() && encoderIndex == 0)
+					if (m_bIsAmplitudeProcessingEnabled && encoderIndex == 0)
 					{
 						for (uint32 j = 0; j < m_ui32ChannelCount; j++)
 						{
@@ -216,7 +218,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 						}
 					}
 
-					if (isPhaseProcessingEnabled() && encoderIndex == 1)
+					if (m_bIsPhaseProcessingEnabled && encoderIndex == 1)
 					{
 						for (uint32 j = 0; j < m_ui32ChannelCount; j++)
 						{
@@ -228,7 +230,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 						}
 					}
 
-					if (isRealPartProcessingEnabled() && encoderIndex == 2)
+					if (m_bIsRealPartProcessingEnabled && encoderIndex == 2)
 					{
 						for (uint32 j = 0; j < m_ui32ChannelCount; j++)
 						{
@@ -240,7 +242,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 						}
 					}
 
-					if (isImaginaryPartProcessingEnabled() && encoderIndex == 3)
+					if (m_bIsImaginaryPartProcessingEnabled && encoderIndex == 3)
 					{
 						for (uint32 j = 0; j < m_ui32ChannelCount; j++)
 						{

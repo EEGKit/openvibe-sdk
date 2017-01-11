@@ -76,9 +76,27 @@ __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_SpectralAnalysis_Setting1|
  
- Spectral parts you want to compute. Corresponding outputs will be either activated or deactivated depending on these settings.
+ Activate or not the Amplitude output. 
  
  * |OVP_DocEnd_BoxAlgorithm_SpectralAnalysis_Setting1|
+ 
+ * |OVP_DocBegin_BoxAlgorithm_SpectralAnalysis_Setting2|
+ 
+  Activate or not the Phase output. 
+ 
+ * |OVP_DocEnd_BoxAlgorithm_SpectralAnalysis_Setting2|
+ 
+ * |OVP_DocBegin_BoxAlgorithm_SpectralAnalysis_Setting3|
+ 
+  Activate or not the Real Part output. 
+ 
+ * |OVP_DocEnd_BoxAlgorithm_SpectralAnalysis_Setting3|
+ 
+ * |OVP_DocBegin_BoxAlgorithm_SpectralAnalysis_Setting4|
+ 
+  Activate or not the Imaginary Part output. 
+ 
+ * |OVP_DocEnd_BoxAlgorithm_SpectralAnalysis_Setting4|
 __________________________________________________________________
 
 Examples description
