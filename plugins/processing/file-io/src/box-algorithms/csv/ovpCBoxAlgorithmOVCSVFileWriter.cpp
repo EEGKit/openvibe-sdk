@@ -29,7 +29,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 	{
 		m_StreamDecoder = new OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmOVCSVFileWriter >();
 		OV_ERROR_UNLESS_KRF(m_StreamDecoder->initialize(*this, 0),
-			"Error while stream decoder initialization",
+			"Error during stream decoder initialization",
 			ErrorType::Internal);
 		m_WriterLib->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	}
@@ -37,7 +37,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 	{
 		m_StreamDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder < CBoxAlgorithmOVCSVFileWriter >();
 		OV_ERROR_UNLESS_KRF(m_StreamDecoder->initialize(*this, 0),
-			"Error while stream decoder initialization",
+			"Error during stream decoder initialization",
 			ErrorType::Internal);
 		m_WriterLib->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
 	}
@@ -45,7 +45,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 	{
 		m_StreamDecoder = new OpenViBEToolkit::TFeatureVectorDecoder< CBoxAlgorithmOVCSVFileWriter >();
 		OV_ERROR_UNLESS_KRF(m_StreamDecoder->initialize(*this, 0),
-			"Error while stream decoder initialization",
+			"Error during stream decoder initialization",
 			ErrorType::Internal);
 		m_WriterLib->setFormatType(OpenViBE::CSV::EStreamType::FeatureVector);
 
@@ -150,7 +150,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 			if (m_TypeIdentifier == OV_TypeId_Signal)
 			{
 				std::vector<std::string> dimensionLabels;
-				for (size_t index = 0; index < matrix->getDimensionSize(0); index++)
+				for (unsigned int index = 0; index < matrix->getDimensionSize(0); index++)
 				{
 					dimensionLabels.push_back(matrix->getDimensionLabel(0, index));
 				}
@@ -189,7 +189,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 			{
 
 				std::vector<std::string> channelsLabels;
-				for (size_t index = 0; index < matrix->getDimensionSize(0); index++)
+				for (unsigned int index = 0; index < matrix->getDimensionSize(0); index++)
 				{
 					channelsLabels.push_back(matrix->getDimensionLabel(0, index));
 				}
