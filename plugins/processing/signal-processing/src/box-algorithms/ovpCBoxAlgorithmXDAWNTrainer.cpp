@@ -16,10 +16,17 @@ namespace
 {
 	Eigen::MatrixXd operator ^ (const Eigen::MatrixXd& A, const Eigen::MatrixXd& B)
 	{
-		Eigen::MatrixXd C(A.rows(), A.cols() + B.cols());
-		C.block(0, 0, A.rows(), A.cols()) = A;
-		C.block(0, A.cols(), B.rows(), B.cols()) = B;
-		return C;
+		if (A.rows() == 0 && A.cols() == 0)
+		{
+			return B;
+		}
+		else
+		{
+			Eigen::MatrixXd C(A.rows(), A.cols() + B.cols());
+			C.block(0, 0, A.rows(), A.cols()) = A;
+			C.block(0, A.cols(), B.rows(), B.cols()) = B;
+			return C;
+		}
 	}
 };
 
