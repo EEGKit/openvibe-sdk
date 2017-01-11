@@ -129,19 +129,19 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 
 	if (m_TypeIdentifier == OV_TypeId_Signal)
 	{
-		OV_ERROR_UNLESS_KRN(matrix = (dynamic_cast<OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
+		OV_ERROR_UNLESS_KRF(matrix = (dynamic_cast<OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
 			"Failed to get input matrix",
 			ErrorType::Internal);
 	}
 	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
 	{
-		OV_ERROR_UNLESS_KRN(matrix = (dynamic_cast<OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
+		OV_ERROR_UNLESS_KRF(matrix = (dynamic_cast<OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
 			"Failed to get input matrix",
 			ErrorType::Internal);
 	}
 	else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
 	{
-		OV_ERROR_UNLESS_KRN(matrix = (dynamic_cast<OpenViBEToolkit::TFeatureVectorEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
+		OV_ERROR_UNLESS_KRF(matrix = (dynamic_cast<OpenViBEToolkit::TFeatureVectorEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
 			"Failed to get input matrix",
 			ErrorType::Internal);
 	}
