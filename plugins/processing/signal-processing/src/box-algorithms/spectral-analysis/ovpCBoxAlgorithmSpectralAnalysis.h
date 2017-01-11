@@ -36,13 +36,6 @@ namespace OpenViBEPlugins
 			OpenViBE::uint32 m_ui32FFTSize;
 
 			OpenViBE::IMatrix * m_pFrequencyBandDescription;
-
-			OpenViBE::uint64 m_ui64BitmaskSpectralComponents;
-
-			bool m_bIsAmplitudeProcessingEnabled;
-			bool m_bIsPhaseProcessingEnabled;
-			bool m_bIsRealPartProcessingEnabled;
-			bool m_bIsImaginaryPartProcessingEnabled;
 		};
 
 		class CBoxAlgorithmSpectralAnalysisDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
