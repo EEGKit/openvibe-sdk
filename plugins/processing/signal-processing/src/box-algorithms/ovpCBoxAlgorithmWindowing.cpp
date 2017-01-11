@@ -91,7 +91,8 @@ boolean CBoxAlgorithmWindowing::process()
 				/* from MATLAB implementation, as ITPP documentation seems to be flawed */
 				for (uint32 k = 1; k <= (n + 1) / 2; k++)
 				{
-					if (n % 2 == 1) {
+					if (n % 2 == 1) 
+					{
 						m_vWindowCoefficients[k - 1] = static_cast<double>((2. * k) / (n + 1.)); 
 					}
 					else
@@ -102,7 +103,8 @@ boolean CBoxAlgorithmWindowing::process()
 
 				for (uint32 k = n / 2 + 1; k <= n; k++)
 				{
-					if (n % 2 == 1) { 
+					if (n % 2 == 1) 
+					{ 
 						m_vWindowCoefficients[k - 1] = static_cast<double>(2. - (2. * k) / (n + 1.));
 					}
 					else {
@@ -154,7 +156,7 @@ boolean CBoxAlgorithmWindowing::process()
 			{
 				for (uint32 k = 0; k < l_pMatrix->getDimensionSize(1); k++) // samples
 				{
-					l_pMatrix->getBuffer()[j*l_pMatrix->getDimensionSize(1) + k] *= m_vWindowCoefficients[k];
+					l_pMatrix->getBuffer()[j * l_pMatrix->getDimensionSize(1) + k] *= m_vWindowCoefficients[k];
 				}
 			}
 

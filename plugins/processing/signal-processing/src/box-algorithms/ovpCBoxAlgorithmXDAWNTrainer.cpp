@@ -135,19 +135,19 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 				if (m_rSignalDecoder.isHeaderReceived())
 				{
 					OV_ERROR_UNLESS_KRF(
-						l_ui32SamplingRate == 0,
+						l_ui32SamplingRate > 0,
 						"Input sampling frequency is equal to 0. Plugin can not process.\n",
 						OpenViBE::Kernel::ErrorType::BadValue
 						);
 
 					OV_ERROR_UNLESS_KRF(
-						l_ui32ChannelCount == 0,
+						l_ui32ChannelCount > 0,
 						"For condition " << j + 1 << " got no channel in signal stream.\n",
 						OpenViBE::Kernel::ErrorType::BadValue
 						);
 
 					OV_ERROR_UNLESS_KRF(
-						l_ui32SampleCount == 0,
+						l_ui32SampleCount > 0,
 						"For condition " << j + 1 << " got no samples in signal stream.\n",
 						OpenViBE::Kernel::ErrorType::BadValue
 						);
@@ -190,7 +190,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 			}
 
 			OV_ERROR_UNLESS_KRF(
-				n[j] == 0,
+				n[j] != 0,
 				"Did not have input signal for condition " << j + 1 << "\n",
 				OpenViBE::Kernel::ErrorType::BadValue
 				);
@@ -211,7 +211,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 
 		// We need equal number of channels
 		OV_ERROR_UNLESS_KRF(
-			X[0].rows() == X[1].rows(),
+			X[0].rows() != X[1].rows(),
 			"Dimension mismatch, first input had " << uint32(X[0].rows()) << " channels while second input had " << uint32(X[1].rows()) << " channels\n",
 			OpenViBE::Kernel::ErrorType::BadValue
 			);
@@ -270,7 +270,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 		FILE* l_pFile = FS::Files::open(m_sFilterFilename.toASCIIString(), "wt");
 
 		OV_ERROR_UNLESS_KRF(
-			l_pFile == NULL,
+			l_pFile != NULL,
 			"Could not open file [" << m_sFilterFilename << "] for writing.\n",
 			OpenViBE::Kernel::ErrorType::BadFileWrite
 			);

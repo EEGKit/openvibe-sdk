@@ -54,6 +54,7 @@ boolean CBoxAlgorithmSpectralAnalysis::initialize()
 		<< (isRealPartProcessingEnabled() ? CString("REAL ") : "")
 		<< (isImaginaryPartProcessingEnabled() ? CString("IMG ") : "")
 		<< "]\n";
+
 	return true;
 }
 
@@ -98,7 +99,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 			this->getLogManager() << LogLevel_Trace << "Input signal is [" << m_ui32ChannelCount << " x " << m_ui32SampleCount << "] @ " << m_ui32SamplingRate << "Hz.\n";
 
 			OV_ERROR_UNLESS_KRZ(
-				m_ui32SamplingRate,
+				m_ui32SamplingRate > 0,
 				"Invalid sampling rate [" << m_ui32SamplingRate << "] (expected value > 0)",
 				OpenViBE::Kernel::ErrorType::BadInput
 				);
@@ -115,8 +116,9 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 			// Min Max frequency band values
 			for (uint32 j = 0; j < m_ui32FFTSize; j++)
 			{
-				float64 l_float64BandStart = j*((double)(m_ui32SamplingRate / 2.) / m_ui32FFTSize);
-				float64 l_float64BandStop = (j + 1)*((double)(m_ui32SamplingRate / 2.) / m_ui32FFTSize);
+				float64 l_float64BandStart = j * (static_cast<double>(m_ui32SamplingRate / 2.) / m_ui32FFTSize);
+				float64 l_float64BandStop = (j + 1) * (static_cast<double>(m_ui32SamplingRate / 2.) / m_ui32FFTSize);
+				
 				if (l_float64BandStop < l_float64BandStart)
 				{
 					l_float64BandStop = l_float64BandStart;
@@ -219,8 +221,8 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 						{
 							for (uint32 k = 0; k < m_ui32FFTSize; k++)
 							{
-								float64 l_f64Amplitude = sqrt(l_oSpectra(j, k).real()*l_oSpectra(j, k).real() + l_oSpectra(j, k).imag()*l_oSpectra(j, k).imag());
-								l_pSpectrum->getBuffer()[j*m_ui32FFTSize + k] = l_f64Amplitude;
+								float64 l_f64Amplitude = sqrt(l_oSpectra(j, k).real() * l_oSpectra(j, k).real() + l_oSpectra(j, k).imag() * l_oSpectra(j, k).imag());
+								l_pSpectrum->getBuffer()[j * m_ui32FFTSize + k] = l_f64Amplitude;
 							}
 						}
 					}
@@ -232,7 +234,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 							for (uint32 k = 0; k < m_ui32FFTSize; k++)
 							{
 								float64 l_f64Phase = ::atan2(l_oSpectra(j, k).imag(), l_oSpectra(j, k).real());
-								l_pSpectrum->getBuffer()[j*m_ui32FFTSize + k] = l_f64Phase;
+								l_pSpectrum->getBuffer()[j * m_ui32FFTSize + k] = l_f64Phase;
 							}
 						}
 					}
@@ -244,7 +246,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 							for (uint32 k = 0; k < m_ui32FFTSize; k++)
 							{
 								float64 l_f64RealPart = l_oSpectra(j, k).real();
-								l_pSpectrum->getBuffer()[j*m_ui32FFTSize + k] = l_f64RealPart;
+								l_pSpectrum->getBuffer()[j * m_ui32FFTSize + k] = l_f64RealPart;
 							}
 						}
 					}
@@ -256,7 +258,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 							for (uint32 k = 0; k < m_ui32FFTSize; k++)
 							{
 								float64 l_f64ImagPart = l_oSpectra(j, k).imag();
-								l_pSpectrum->getBuffer()[j*m_ui32FFTSize + k] = l_f64ImagPart;
+								l_pSpectrum->getBuffer()[j * m_ui32FFTSize + k] = l_f64ImagPart;
 							}
 						}
 					}
