@@ -96,7 +96,6 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 			m_ui32ChannelCount = l_pMatrix->getDimensionSize(0);
 			m_ui32SampleCount = l_pMatrix->getDimensionSize(1);
 			m_ui32SamplingRate = (uint32)m_oDecoder.getOutputSamplingRate();
-			this->getLogManager() << LogLevel_Trace << "Input signal is [" << m_ui32ChannelCount << " x " << m_ui32SampleCount << "] @ " << m_ui32SamplingRate << "Hz.\n";
 
 			OV_ERROR_UNLESS_KRF(
 				m_ui32SamplingRate > 0,
@@ -106,8 +105,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 
 			// size of the spectrum
 			m_ui32FFTSize = m_ui32SampleCount / 2 + 1;
-			this->getLogManager() << LogLevel_Trace << "Output spectrum is [" << m_ui32ChannelCount << " x " << m_ui32FFTSize << "].\n";
-
+			
 			// Constructing the frequency band description matrix, same for every possible output (and given through reference target mechanism)
 			m_pFrequencyBandDescription->setDimensionCount(2);  // a list of (min,max) pairs
 			m_pFrequencyBandDescription->setDimensionSize(0, 2); // Min and Max
@@ -126,16 +124,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 
 				m_pFrequencyBandDescription->getBuffer()[j * 2] = l_float64BandStart;
 				m_pFrequencyBandDescription->getBuffer()[j * 2 + 1] = l_float64BandStop;
-
-				//m_pFrequencyBandDescription->getBuffer()[j] = j*( 1.0 * m_ui32SamplingRate / m_ui32SampleCount ); // TRUE ABSCISSA
 			}
-
-			/*this->getLogManager() << LogLevel_Info << " Frequency resolution = " << 1.0*m_ui32SamplingRate/m_ui32SampleCount << "\n ";
-			// if m_ui32FFTSize is odd, no Nyquist bin
-			for (uint32 j=0; j < m_ui32FFTSize; j++)
-			{
-			this->getLogManager() << LogLevel_Info << j*( 1.0*m_ui32SamplingRate/m_ui32SampleCount ) << "\n ";
-			}*/
 
 			// All spectra share the same header structure
 			for (size_t encoderIndex = 0; encoderIndex < m_vSpectrumEncoders.size(); encoderIndex++)
