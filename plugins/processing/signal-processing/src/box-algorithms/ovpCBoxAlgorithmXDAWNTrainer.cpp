@@ -25,14 +25,29 @@ namespace
 
 boolean CBoxAlgorithmXDAWNTrainer::initialize(void)
 {
+	m_ui64TrainStimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_sFilterFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+
+	OV_ERROR_UNLESS_KRF(
+		FS::Files::fileExists(m_sFilterFilename),
+		"The filter file does not exist.\n",
+		OpenViBE::Kernel::ErrorType::BadFileRead
+		);
+
+	int32 l_i32FilterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+
+	OV_ERROR_UNLESS_KRF(
+		m_ui32FilterDimension > 0,
+		"The dimension of the filter must be strictly positive.\n",
+		OpenViBE::Kernel::ErrorType::OutOfBound
+		);
+
+	m_ui32FilterDimension = static_cast<uint32>(l_i32FilterDimension);
+	
 	m_oStimDecoder.initialize(*this, 0);
 	m_oSignalDecoder[0].initialize(*this, 1);
 	m_oSignalDecoder[1].initialize(*this, 2);
 	m_oStimEncoder.initialize(*this, 0);
-
-	m_ui64TrainStimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_sFilterFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_ui32FilterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	return true;
 }
@@ -137,19 +152,25 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 					OV_ERROR_UNLESS_KRF(
 						l_ui32SamplingRate > 0,
 						"Input sampling frequency is equal to 0. Plugin can not process.\n",
-						OpenViBE::Kernel::ErrorType::BadValue
+						OpenViBE::Kernel::ErrorType::OutOfBound
 						);
 
 					OV_ERROR_UNLESS_KRF(
 						l_ui32ChannelCount > 0,
 						"For condition " << j + 1 << " got no channel in signal stream.\n",
-						OpenViBE::Kernel::ErrorType::BadValue
+						OpenViBE::Kernel::ErrorType::OutOfBound
 						);
 
 					OV_ERROR_UNLESS_KRF(
 						l_ui32SampleCount > 0,
 						"For condition " << j + 1 << " got no samples in signal stream.\n",
-						OpenViBE::Kernel::ErrorType::BadValue
+						OpenViBE::Kernel::ErrorType::OutOfBound
+						);
+
+					OV_ERROR_UNLESS_KRF(
+						m_ui32FilterDimension <= l_ui32ChannelCount,
+						"The filter dimension must not be superior than the channel count.\n",
+						OpenViBE::Kernel::ErrorType::OutOfBound
 						);
 
 					X[j] = Eigen::MatrixXd::Zero(l_ui32ChannelCount, l_ui32SampleCount);
@@ -255,7 +276,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 
 			OV_ERROR_KRF(
 				"Could not solve generalized eigen decomposition, got error[" << CString(l_sError) << "]\n",
-				OpenViBE::Kernel::ErrorType::BadValue
+				OpenViBE::Kernel::ErrorType::BadProcessing
 				);
 		}
 
@@ -291,7 +312,11 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 		::fprintf(l_pFile, "\t<SettingValue>%i</SettingValue>\n", m_ui32FilterDimension);
 		::fprintf(l_pFile, "\t<SettingValue>%i</SettingValue>\n", l_ui32ChannelCount);
 		::fprintf(l_pFile, "</OpenViBE-SettingsOverride>");
-		::fclose(l_pFile);
+
+		OV_WARNING_UNLESS_K(
+			::fclose(l_pFile) == 0,
+			"Could not close file[" << m_sFilterFilename << "].\n"
+			);
 
 		this->getLogManager() << LogLevel_Info << "Training finished and saved to [" << m_sFilterFilename << "]!\n";
 	}
