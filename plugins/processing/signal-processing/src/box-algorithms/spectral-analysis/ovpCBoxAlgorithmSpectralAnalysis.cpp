@@ -98,7 +98,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 			m_ui32SamplingRate = (uint32)m_oDecoder.getOutputSamplingRate();
 			this->getLogManager() << LogLevel_Trace << "Input signal is [" << m_ui32ChannelCount << " x " << m_ui32SampleCount << "] @ " << m_ui32SamplingRate << "Hz.\n";
 
-			OV_ERROR_UNLESS_KRZ(
+			OV_ERROR_UNLESS_KRF(
 				m_ui32SamplingRate > 0,
 				"Invalid sampling rate [" << m_ui32SamplingRate << "] (expected value > 0)",
 				OpenViBE::Kernel::ErrorType::BadInput
