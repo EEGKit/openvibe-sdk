@@ -14,6 +14,20 @@ boolean CBoxAlgorithmWindowing::initialize()
 	//reads the plugin settings
 	m_ui64WindowMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
+	if (m_ui64WindowMethod != OVP_TypeId_WindowMethod_None
+		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_Hamming
+		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_Hanning
+		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_Hann
+		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_Blackman
+		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_Triangular
+		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_SquareRoot)
+	{
+		OV_ERROR_KRF(
+			"No valid windowing method set.\n",
+			OpenViBE::Kernel::ErrorType::BadSetting
+			);
+	}
+
 	m_oDecoder.initialize(*this, 0);
 	m_oEncoder.initialize(*this, 0);
 	m_oEncoder.getInputMatrix().setReferenceTarget(m_oDecoder.getOutputMatrix());
@@ -27,12 +41,12 @@ boolean CBoxAlgorithmWindowing::uninitialize()
 	m_oDecoder.uninitialize();
 	m_oEncoder.uninitialize();
 
-	return true;
+	return true;	
 }
 
 boolean CBoxAlgorithmWindowing::processInput(uint32 ui32InputIndex)
 {
-	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
+	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
@@ -138,12 +152,19 @@ boolean CBoxAlgorithmWindowing::process()
 					}
 				}
 			}
-			else // identity
+			else if (m_ui64WindowMethod == OVP_TypeId_WindowMethod_None)
 			{
 				for (uint32 k = 0; k < n; k++)
 				{
 					m_vWindowCoefficients[k] = 1;
 				}
+			}
+			else
+			{
+				OV_ERROR_KRF(
+					"The windows method chosen is not supported.\n",
+					OpenViBE::Kernel::ErrorType::BadSetting
+					);
 			}
 
 			m_oEncoder.encodeHeader();
