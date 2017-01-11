@@ -140,7 +140,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 
 		// Decodes input signals
 
-		for (size_t j = 0; j < 2; j++)
+		for (unsigned int j = 0; j < 2; j++)
 		{
 			n[j] = 0;
 
