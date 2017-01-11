@@ -54,6 +54,11 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 		m_AlgorithmEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >(*this, 0);
 		m_ReaderLib->setFormatType(EStreamType::StreamedMatrix);
 	}
+	else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
+	{
+		m_AlgorithmEncoder = new OpenViBEToolkit::TFeatureVectorEncoder < CBoxAlgorithmOVCSVFileReader >(*this, 0);
+		m_ReaderLib->setFormatType(EStreamType::FeatureVector);
+	}
 	else
 	{
 		OV_ERROR_KRF("Output is a type derived from matrix that the box doesn't recognize support", ErrorType::BadInput);
@@ -77,6 +82,12 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->getStreamedMatrixInformation(m_DimensionSizes, m_ChannelNames),
+			(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
+			ErrorType::Internal);
+	}
+	else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
+	{
+		OV_ERROR_UNLESS_KRF(m_ReaderLib->getFeatureVectorInformation(m_ChannelNames),
 			(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
 			ErrorType::Internal);
 	}
@@ -128,6 +139,12 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 			"Failed to get input matrix",
 			ErrorType::Internal);
 	}
+	else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
+	{
+		OV_ERROR_UNLESS_KRN(matrix = (dynamic_cast<OpenViBEToolkit::TFeatureVectorEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
+			"Failed to get input matrix",
+			ErrorType::Internal);
+	}
 	// encode Header if not already encoded
 	if (!m_IsHeaderSent)
 	{
@@ -174,6 +191,24 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 				previousDimensionSize += m_DimensionSizes[index];
 			}
 		}
+		else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
+		{
+			OV_ERROR_UNLESS_KRF(matrix->setDimensionCount(1),
+				"Failed to set dimension count",
+				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(0, m_ChannelNames.size()),
+				"Failed to set first dimension size",
+				ErrorType::Internal);
+
+			unsigned int index = 0;
+			for (const std::string& channelName : m_ChannelNames)
+			{
+				OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(0, index++, channelName.c_str()),
+					"Failed to set dimension label",
+					ErrorType::Internal);
+			}
+		}
+
 		OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->encodeHeader(),
 			"Failed to encode signal header",
 			ErrorType::Internal);
