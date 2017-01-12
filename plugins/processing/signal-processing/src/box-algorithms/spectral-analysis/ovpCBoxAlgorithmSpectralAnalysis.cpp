@@ -8,6 +8,7 @@
 #include <sstream>
 #include <cstdio>
 #include <iostream>
+#include <functional>
 
 using namespace Eigen;
 
@@ -16,6 +17,33 @@ using namespace OpenViBE::Kernel;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 using namespace OpenViBEToolkit;
+
+namespace {
+	double amplitude(unsigned int channelIndex, unsigned int FFTIndex, const Eigen::MatrixXcd& matrix)
+	{
+		return sqrt(
+			matrix(channelIndex, FFTIndex).real()
+			* matrix(channelIndex, FFTIndex).real()
+			+ matrix(channelIndex, FFTIndex).imag()
+			* matrix(channelIndex, FFTIndex).imag()
+			);
+	}
+
+	double phase(unsigned int channelIndex, unsigned int FFTIndex, const Eigen::MatrixXcd& matrix)
+	{
+		return ::atan2(matrix(channelIndex, FFTIndex).imag(), matrix(channelIndex, FFTIndex).real());
+	}
+
+	double realPart(unsigned int channelIndex, unsigned int FFTIndex, const Eigen::MatrixXcd& matrix)
+	{
+		return matrix(channelIndex, FFTIndex).real();
+	}
+
+	double imaginaryPart(unsigned int channelIndex, unsigned int FFTIndex, const Eigen::MatrixXcd& matrix)
+	{
+		return matrix(channelIndex, FFTIndex).imag();
+	}
+}
 
 boolean CBoxAlgorithmSpectralAnalysis::initialize()
 {
@@ -199,52 +227,24 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 				// We build the chunk only if the encoder is activated
 				if (m_IsSpectrumEncoderActive[encoderIndex])
 				{
-					IMatrix * spectrum = m_SpectrumEncoders[encoderIndex]->getInputMatrix();
+					std::function<double(unsigned int, unsigned int, const Eigen::MatrixXcd&)> processResult;
 
 					switch (encoderIndex)
 					{
 						case 0:
-							for (unsigned int j = 0; j < m_ChannelCount; j++)
-							{
-								for (unsigned int k = 0; k < m_FFTSize; k++)
-								{
-									double amplitude = sqrt(spectra(j, k).real() * spectra(j, k).real() + spectra(j, k).imag() * spectra(j, k).imag());
-									spectrum->getBuffer()[j * m_FFTSize + k] = amplitude;
-								}
-							}
+							processResult = amplitude;
 							break;
 
 						case 1:
-							for (unsigned int j = 0; j < m_ChannelCount; j++)
-							{
-								for (unsigned int k = 0; k < m_FFTSize; k++)
-								{
-									double phase = ::atan2(spectra(j, k).imag(), spectra(j, k).real());
-									spectrum->getBuffer()[j * m_FFTSize + k] = phase;
-								}
-							}
+							processResult = phase;
 							break;
 
 						case 2:
-							for (unsigned int j = 0; j < m_ChannelCount; j++)
-							{
-								for (unsigned int k = 0; k < m_FFTSize; k++)
-								{
-									double realPart = spectra(j, k).real();
-									spectrum->getBuffer()[j * m_FFTSize + k] = realPart;
-								}
-							}
+							processResult = realPart;
 							break;
 
 						case 3:
-							for (unsigned int j = 0; j < m_ChannelCount; j++)
-							{
-								for (unsigned int k = 0; k < m_FFTSize; k++)
-								{
-									double imagPart = spectra(j, k).imag();
-									spectrum->getBuffer()[j * m_FFTSize + k] = imagPart;
-								}
-							}
+							processResult = imaginaryPart;
 							break;
 
 						default:
@@ -252,6 +252,16 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 								"Invalid decoder output.\n",
 								OpenViBE::Kernel::ErrorType::BadProcessing
 								);
+					}
+
+					IMatrix* spectrum = m_SpectrumEncoders[encoderIndex]->getInputMatrix();
+
+					for (unsigned int j = 0; j < m_ChannelCount; j++)
+					{
+						for (unsigned int k = 0; k < m_FFTSize; k++)
+						{
+							spectrum->getBuffer()[j * m_FFTSize + k] = processResult(j, k, spectra);
+						}
 					}
 
 					m_SpectrumEncoders[encoderIndex]->encodeBuffer();
