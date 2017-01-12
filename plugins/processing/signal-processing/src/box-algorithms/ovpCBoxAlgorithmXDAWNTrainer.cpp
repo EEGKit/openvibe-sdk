@@ -57,7 +57,7 @@ boolean CBoxAlgorithmXDAWNTrainer::initialize(void)
 	unsigned int filterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	OV_ERROR_UNLESS_KRF(
-		m_FilterDimension > 0,
+		filterDimension > 0,
 		"The dimension of the filter must be strictly positive.\n",
 		OpenViBE::Kernel::ErrorType::OutOfBound
 		);
