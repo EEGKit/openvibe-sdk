@@ -129,7 +129,7 @@ boolean CBoxAlgorithmWindowing::process()
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_SquareRoot)
 			{
-				for (uint32 k = 1; k <= (n + 1) / 2; k++)
+				for (size_t k = 1; k <= (n + 1) / 2; k++)
 				{
 					if (n % 2 == 1)
 					{
@@ -141,7 +141,7 @@ boolean CBoxAlgorithmWindowing::process()
 					}
 				}
 
-				for (uint32 k = n / 2 + 1; k <= n; k++)
+				for (size_t k = n / 2 + 1; k <= n; k++)
 				{
 					if (n % 2 == 1)
 					{

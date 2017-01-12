@@ -54,7 +54,7 @@ boolean CBoxAlgorithmXDAWNTrainer::initialize(void)
 		::fclose(file);
 	}
 
-	unsigned int filterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	int filterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	OV_ERROR_UNLESS_KRF(
 		filterDimension > 0,
@@ -62,7 +62,7 @@ boolean CBoxAlgorithmXDAWNTrainer::initialize(void)
 		OpenViBE::Kernel::ErrorType::OutOfBound
 		);
 
-	m_FilterDimension = static_cast<uint32>(filterDimension);
+	m_FilterDimension = static_cast<unsigned int>(filterDimension);
 
 	m_StimDecoder.initialize(*this, 0);
 	m_SignalDecoder[0].initialize(*this, 1);
@@ -144,10 +144,10 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 		Eigen::MatrixXd D, DI;
 		Eigen::MatrixXd X[2]; // X[0] is session matrix, X[1] is averaged ERP
 		Eigen::MatrixXd C[2]; // Covariance matrices
-		unsigned int  n[2];
-		unsigned int  channelCount = 0;
-		unsigned int  sampleCount = 0;
-		unsigned int  samplingRate = 0;
+		unsigned int n[2];
+		unsigned int channelCount = 0;
+		unsigned int sampleCount = 0;
+		unsigned int samplingRate = 0;
 
 		this->getLogManager() << LogLevel_Info << "Received train stimulation...\n";
 
@@ -329,8 +329,8 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 		}
 
 		::fprintf(file, "</SettingValue>\n");
-		::fprintf(file, "\t<SettingValue>%i</SettingValue>\n", m_FilterDimension);
-		::fprintf(file, "\t<SettingValue>%i</SettingValue>\n", channelCount);
+		::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_FilterDimension);
+		::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", channelCount);
 		::fprintf(file, "</OpenViBE-SettingsOverride>");
 
 		OV_WARNING_UNLESS_K(
