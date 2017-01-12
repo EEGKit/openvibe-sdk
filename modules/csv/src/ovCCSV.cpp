@@ -104,6 +104,7 @@ bool CCSVLib::setSignalInformation(const std::vector<std::string>& channelNames,
 	}
 
 	m_IsSetInfoCalled = true;
+
 	if (channelNames.empty())
 	{
 		m_LastStringError.clear();
@@ -265,6 +266,8 @@ bool CCSVLib::setFeatureVectorInformation(const std::vector<std::string>& channe
 		return false;
 	}
 	m_DimensionLabels = channelNames;
+	m_DimensionSizes = { static_cast<unsigned int>(channelNames.size())};
+	m_DimensionCount = 1;
 	return true;
 }
 
@@ -938,7 +941,8 @@ bool CCSVLib::createHeaderString(void)
 		m_Header += "x";
 		m_Header += std::to_string(m_DimensionSizes[1]);
 	}
-	else if (m_InputTypeIdentifier == EStreamType::StreamedMatrix)
+	else if (m_InputTypeIdentifier == EStreamType::StreamedMatrix
+			 || m_InputTypeIdentifier == EStreamType::FeatureVector)
 	{
 		m_Header += m_InternalDataSeparator;
 		if (m_DimensionCount == 0)
