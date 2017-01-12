@@ -109,7 +109,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 			m_FrequencyBandDescription->setDimensionSize(1, m_FFTSize); // FFTSize bands 
 
 			// Min Max frequency band values
-			for (unsigned long long j = 0; j < m_FFTSize; j++)
+			for (unsigned int j = 0; j < m_FFTSize; j++)
 			{
 				double bandStart = j * (static_cast<double>(m_SamplingRate / 2.) / m_FFTSize);
 				double bandStop = (j + 1) * (static_cast<double>(m_SamplingRate / 2.) / m_FFTSize);

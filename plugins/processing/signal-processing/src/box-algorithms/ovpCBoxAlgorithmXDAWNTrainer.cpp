@@ -139,7 +139,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 
 	if (train)
 	{
-		std::vector<unsigned int > ERPSampleIndexes;
+		std::vector<unsigned int> ERPSampleIndexes;
 		Eigen::MatrixXd A;
 		Eigen::MatrixXd D, DI;
 		Eigen::MatrixXd X[2]; // X[0] is session matrix, X[1] is averaged ERP
@@ -211,7 +211,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 
 							// $$$ Assumes continuous session signal starting at date 0
 							{
-								uint32 ERPSampleIndex = static_cast<uint32>(((dynamicBoxContext.getInputChunkStartTime(j + 1, i) >> 16)*samplingRate) >> 16);
+								unsigned int ERPSampleIndex = static_cast<unsigned int>(((dynamicBoxContext.getInputChunkStartTime(j + 1, i) >> 16)*samplingRate) >> 16);
 								ERPSampleIndexes.push_back(ERPSampleIndex);
 							}
 							break;
@@ -267,9 +267,9 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 		DI = Eigen::MatrixXd::Identity(sampleCountERP, sampleCountERP);
 		D = Eigen::MatrixXd::Zero(sampleCountERP, sampleCountSession);
 
-		for (size_t j = 0; j < ERPSampleIndexes.size(); j++)
+		for (unsigned int sampleIndex : ERPSampleIndexes)
 		{
-			D.block(0, ERPSampleIndexes[j], sampleCountERP, sampleCountERP) += DI;
+			D.block(0, sampleIndex, sampleCountERP, sampleCountERP) += DI;
 		}
 
 		// Computes covariance matrices

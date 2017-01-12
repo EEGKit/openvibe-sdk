@@ -29,11 +29,11 @@ namespace OpenViBEPlugins
 			std::vector < OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis > * > m_SpectrumEncoders;
 			std::vector < OpenViBE::boolean > m_IsSpectrumEncoderActive;
 
-			OpenViBE::uint32 m_ChannelCount;
-			OpenViBE::uint32 m_SampleCount;
-			OpenViBE::uint32 m_SamplingRate;
+			unsigned int m_ChannelCount;
+			unsigned int m_SampleCount;
+			unsigned int m_SamplingRate;
 
-			OpenViBE::uint32 m_FFTSize;
+			unsigned int m_FFTSize;
 
 			OpenViBE::IMatrix * m_FrequencyBandDescription;
 		};
