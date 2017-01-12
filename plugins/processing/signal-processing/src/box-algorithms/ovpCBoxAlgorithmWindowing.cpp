@@ -12,15 +12,15 @@ using namespace OpenViBEToolkit;
 boolean CBoxAlgorithmWindowing::initialize()
 {
 	//reads the plugin settings
-	m_ui64WindowMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_WindowMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-	if (m_ui64WindowMethod != OVP_TypeId_WindowMethod_None
-		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_Hamming
-		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_Hanning
-		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_Hann
-		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_Blackman
-		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_Triangular
-		&& m_ui64WindowMethod != OVP_TypeId_WindowMethod_SquareRoot)
+	if (m_WindowMethod != OVP_TypeId_WindowMethod_None
+		&& m_WindowMethod != OVP_TypeId_WindowMethod_Hamming
+		&& m_WindowMethod != OVP_TypeId_WindowMethod_Hanning
+		&& m_WindowMethod != OVP_TypeId_WindowMethod_Hann
+		&& m_WindowMethod != OVP_TypeId_WindowMethod_Blackman
+		&& m_WindowMethod != OVP_TypeId_WindowMethod_Triangular
+		&& m_WindowMethod != OVP_TypeId_WindowMethod_SquareRoot)
 	{
 		OV_ERROR_KRF(
 			"No valid windowing method set.\n",
@@ -28,20 +28,20 @@ boolean CBoxAlgorithmWindowing::initialize()
 			);
 	}
 
-	m_oDecoder.initialize(*this, 0);
-	m_oEncoder.initialize(*this, 0);
-	m_oEncoder.getInputMatrix().setReferenceTarget(m_oDecoder.getOutputMatrix());
-	m_oEncoder.getInputSamplingRate().setReferenceTarget(m_oDecoder.getOutputSamplingRate());
+	m_Decoder.initialize(*this, 0);
+	m_Encoder.initialize(*this, 0);
+	m_Encoder.getInputMatrix().setReferenceTarget(m_Decoder.getOutputMatrix());
+	m_Encoder.getInputSamplingRate().setReferenceTarget(m_Decoder.getOutputSamplingRate());
 
 	return true;
 }
 
 boolean CBoxAlgorithmWindowing::uninitialize()
 {
-	m_oDecoder.uninitialize();
-	m_oEncoder.uninitialize();
+	m_Decoder.uninitialize();
+	m_Encoder.uninitialize();
 
-	return true;	
+	return true;
 }
 
 boolean CBoxAlgorithmWindowing::processInput(uint32 ui32InputIndex)
@@ -52,91 +52,92 @@ boolean CBoxAlgorithmWindowing::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmWindowing::process()
 {
-	IBoxIO* l_pDynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
+	IBoxIO* dynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	// Process input data
-	for (uint32 i = 0; i < l_pDynamicBoxContext->getInputChunkCount(0); i++)
+	for (unsigned int i = 0; i < dynamicBoxContext->getInputChunkCount(0); i++)
 	{
-		uint64 l_ui64StartTime = l_pDynamicBoxContext->getInputChunkStartTime(0, i);
-		uint64 l_ui64EndTime = l_pDynamicBoxContext->getInputChunkEndTime(0, i);
+		unsigned long long startTime = dynamicBoxContext->getInputChunkStartTime(0, i);
+		unsigned long long endTime = dynamicBoxContext->getInputChunkEndTime(0, i);
 
-		m_oDecoder.decode(i);
-		IMatrix * l_pMatrix = m_oDecoder.getOutputMatrix();
+		m_Decoder.decode(i);
+		IMatrix * matrix = m_Decoder.getOutputMatrix();
 
-		if (m_oDecoder.isHeaderReceived())
+		if (m_Decoder.isHeaderReceived())
 		{
 			/*
 			 * Depending on the Window method, we compute the coefficient vector
 			 * To be applied on each channel.
 			 */
-			m_vWindowCoefficients.resize(l_pMatrix->getDimensionSize(1));
-			uint32 n = m_vWindowCoefficients.size();
+			m_WindowCoefficients.resize(matrix->getDimensionSize(1));
+			size_t n = m_WindowCoefficients.size();
 
-			if (m_ui64WindowMethod == OVP_TypeId_WindowMethod_Hamming)
+			if (m_WindowMethod == OVP_TypeId_WindowMethod_Hamming)
 			{
-				for (uint32 k = 0; k < n; k++)
+				for (size_t k = 0; k < n; k++)
 				{
-					m_vWindowCoefficients[k] = 0.54 - 0.46 * cos(2. * M_PI * k / (n - 1.));
+					m_WindowCoefficients[k] = 0.54 - 0.46 * cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n)-1.));
 				}
 			}
-			else if (m_ui64WindowMethod == OVP_TypeId_WindowMethod_Hanning)
+			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Hanning)
 			{
-				for (uint32 k = 0; k < n; k++)
+				for (size_t k = 0; k < n; k++)
 				{
-					m_vWindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * (k + 1.) / (n + 1.)));
+					m_WindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * (static_cast<double>(k)+1.) / (static_cast<double>(n)+1.)));
 				}
 			}
-			else if (m_ui64WindowMethod == OVP_TypeId_WindowMethod_Hann)
+			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Hann)
 			{
-				for (uint32 k = 0; k < n; k++)
+				for (size_t k = 0; k < n; k++)
 				{
-					m_vWindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * k / (n - 1.)));
+					m_WindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n)-1.)));
 				}
 			}
-			else if (m_ui64WindowMethod == OVP_TypeId_WindowMethod_Blackman)
+			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Blackman)
 			{
-				for (uint32 k = 0; k < n; k++)
+				for (size_t k = 0; k < n; k++)
 				{
-					m_vWindowCoefficients[k] = 0.42 - 0.5 * cos(2. * M_PI * k / (n - 1.)) + 0.08 * cos(4. * M_PI * k / (n - 1.));
+					m_WindowCoefficients[k] = 0.42 - 0.5 * cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n)-1.)) + 0.08 * cos(4. * M_PI * static_cast<double>(k) / (static_cast<double>(n)-1.));
 				}
 			}
-			else if (m_ui64WindowMethod == OVP_TypeId_WindowMethod_Triangular)
+			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Triangular)
 			{
 				/* from MATLAB implementation, as ITPP documentation seems to be flawed */
-				for (uint32 k = 1; k <= (n + 1) / 2; k++)
+				for (size_t k = 1; k <= (n + 1) / 2; k++)
 				{
-					if (n % 2 == 1) 
+					if (n % 2 == 1)
 					{
-						m_vWindowCoefficients[k - 1] = static_cast<double>((2. * k) / (n + 1.)); 
+						m_WindowCoefficients[k - 1] = static_cast<double>((2. * static_cast<double>(k)) / (static_cast<double>(n)+1.));
 					}
 					else
-					{ 
-						m_vWindowCoefficients[k - 1] = static_cast<double>((2. * k - 1.) / n);
+					{
+						m_WindowCoefficients[k - 1] = static_cast<double>((2. * static_cast<double>(k)-1.) / static_cast<double>(n));
 					}
 				}
 
-				for (uint32 k = n / 2 + 1; k <= n; k++)
+				for (size_t k = n / 2 + 1; k <= n; k++)
 				{
-					if (n % 2 == 1) 
-					{ 
-						m_vWindowCoefficients[k - 1] = static_cast<double>(2. - (2. * k) / (n + 1.));
+					if (n % 2 == 1)
+					{
+						m_WindowCoefficients[k - 1] = static_cast<double>(2. - (2. * static_cast<double>(k)) / (static_cast<double>(n)+1.));
 					}
-					else {
-						m_vWindowCoefficients[k - 1] = static_cast<double>(2. - (2. * k - 1.) / n);
+					else
+					{
+						m_WindowCoefficients[k - 1] = static_cast<double>(2. - (2. * static_cast<double>(k)-1.) / static_cast<double>(n));
 					}
 				}
 			}
-			else if (m_ui64WindowMethod == OVP_TypeId_WindowMethod_SquareRoot)
+			else if (m_WindowMethod == OVP_TypeId_WindowMethod_SquareRoot)
 			{
 				for (uint32 k = 1; k <= (n + 1) / 2; k++)
 				{
 					if (n % 2 == 1)
 					{
-						m_vWindowCoefficients[k - 1] = sqrt(static_cast<double>((2. * k) / (n + 1.)));
+						m_WindowCoefficients[k - 1] = sqrt(2. * static_cast<double>(k) / (static_cast<double>(n)+1.));
 					}
 					else
 					{
-						m_vWindowCoefficients[k - 1] = sqrt(static_cast<double>((2. * k - 1.) / n));
+						m_WindowCoefficients[k - 1] = sqrt((2. * static_cast<double>(k)-1.) / static_cast<double>(n));
 					}
 				}
 
@@ -144,19 +145,19 @@ boolean CBoxAlgorithmWindowing::process()
 				{
 					if (n % 2 == 1)
 					{
-						m_vWindowCoefficients[k - 1] = sqrt(static_cast<double>(2. - (2. * k) / (n + 1.)));
+						m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k)) / (static_cast<double>(n)+1.));
 					}
 					else
 					{
-						m_vWindowCoefficients[k - 1] = sqrt(static_cast<double>(2. - (2. * k - 1.) / n));
+						m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k)-1.) / static_cast<double>(n));
 					}
 				}
 			}
-			else if (m_ui64WindowMethod == OVP_TypeId_WindowMethod_None)
+			else if (m_WindowMethod == OVP_TypeId_WindowMethod_None)
 			{
-				for (uint32 k = 0; k < n; k++)
+				for (size_t k = 0; k < n; k++)
 				{
-					m_vWindowCoefficients[k] = 1;
+					m_WindowCoefficients[k] = 1;
 				}
 			}
 			else
@@ -167,29 +168,29 @@ boolean CBoxAlgorithmWindowing::process()
 					);
 			}
 
-			m_oEncoder.encodeHeader();
+			m_Encoder.encodeHeader();
 		}
 
-		if (m_oDecoder.isBufferReceived())
+		if (m_Decoder.isBufferReceived())
 		{
 			/* We filter each channel with the window function */
-			for (uint32 j = 0; j < l_pMatrix->getDimensionSize(0); j++) // channels
+			for (unsigned int j = 0; j < matrix->getDimensionSize(0); j++) // channels
 			{
-				for (uint32 k = 0; k < l_pMatrix->getDimensionSize(1); k++) // samples
+				for (unsigned int k = 0; k < matrix->getDimensionSize(1); k++) // samples
 				{
-					l_pMatrix->getBuffer()[j * l_pMatrix->getDimensionSize(1) + k] *= m_vWindowCoefficients[k];
+					matrix->getBuffer()[j * matrix->getDimensionSize(1) + k] *= m_WindowCoefficients[k];
 				}
 			}
 
-			m_oEncoder.encodeBuffer();
+			m_Encoder.encodeBuffer();
 		}
 
-		if (m_oDecoder.isEndReceived())
+		if (m_Decoder.isEndReceived())
 		{
-			m_oEncoder.encodeEnd();
+			m_Encoder.encodeEnd();
 		}
 
-		l_pDynamicBoxContext->markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
+		dynamicBoxContext->markOutputAsReadyToSend(0, startTime, endTime);
 	}
 
 	return true;

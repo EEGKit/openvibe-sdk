@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSpectralAnalysis :  public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmSpectralAnalysis : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
 		{
 		public:
 
@@ -24,18 +24,18 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_SpectralAnalysis)
 
 		protected:
-			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmSpectralAnalysis > m_oDecoder;
+			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmSpectralAnalysis > m_Decoder;
 
-			std::vector < OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis > * > m_vSpectrumEncoders;
-			std::vector < OpenViBE::boolean > m_vIsSpectrumEncoderActive;
+			std::vector < OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis > * > m_SpectrumEncoders;
+			std::vector < OpenViBE::boolean > m_IsSpectrumEncoderActive;
 
-			OpenViBE::uint32 m_ui32ChannelCount;
-			OpenViBE::uint32 m_ui32SampleCount;
-			OpenViBE::uint32 m_ui32SamplingRate;
+			OpenViBE::uint32 m_ChannelCount;
+			OpenViBE::uint32 m_SampleCount;
+			OpenViBE::uint32 m_SamplingRate;
 
-			OpenViBE::uint32 m_ui32FFTSize;
+			OpenViBE::uint32 m_FFTSize;
 
-			OpenViBE::IMatrix * m_pFrequencyBandDescription;
+			OpenViBE::IMatrix * m_FrequencyBandDescription;
 		};
 
 		class CBoxAlgorithmSpectralAnalysisDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

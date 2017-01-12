@@ -19,37 +19,37 @@ using namespace OpenViBEToolkit;
 
 boolean CBoxAlgorithmSpectralAnalysis::initialize()
 {
-	m_oDecoder.initialize(*this, 0);
+	m_Decoder.initialize(*this, 0);
 
-	m_pFrequencyBandDescription = new CMatrix();
+	m_FrequencyBandDescription = new CMatrix();
 
 	// Amplitude
-	m_vSpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 0));
-	m_vIsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
+	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 0));
+	m_IsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
 
 	// Phase
-	m_vSpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 1));
-	m_vIsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));
+	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 1));
+	m_IsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));
 
 	//Real Part
-	m_vSpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 2));
-	m_vIsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
+	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 2));
+	m_IsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
 
 	// Imaginary part
-	m_vSpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 3));
-	m_vIsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
+	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 3));
+	m_IsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
 
 	//All encoders share the same frequency band description
-	m_vSpectrumEncoders[0]->getInputMinMaxFrequencyBands().setReferenceTarget(m_pFrequencyBandDescription);
-	m_vSpectrumEncoders[1]->getInputMinMaxFrequencyBands().setReferenceTarget(m_pFrequencyBandDescription);
-	m_vSpectrumEncoders[2]->getInputMinMaxFrequencyBands().setReferenceTarget(m_pFrequencyBandDescription);
-	m_vSpectrumEncoders[3]->getInputMinMaxFrequencyBands().setReferenceTarget(m_pFrequencyBandDescription);
+	m_SpectrumEncoders[0]->getInputMinMaxFrequencyBands().setReferenceTarget(m_FrequencyBandDescription);
+	m_SpectrumEncoders[1]->getInputMinMaxFrequencyBands().setReferenceTarget(m_FrequencyBandDescription);
+	m_SpectrumEncoders[2]->getInputMinMaxFrequencyBands().setReferenceTarget(m_FrequencyBandDescription);
+	m_SpectrumEncoders[3]->getInputMinMaxFrequencyBands().setReferenceTarget(m_FrequencyBandDescription);
 
 	this->getLogManager() << LogLevel_Trace << "Spectral components selected : [ "
-		<< (m_vIsSpectrumEncoderActive[0] ? CString("AMP ") : "")
-		<< (m_vIsSpectrumEncoderActive[1] ? CString("PHASE ") : "")
-		<< (m_vIsSpectrumEncoderActive[2] ? CString("REAL ") : "")
-		<< (m_vIsSpectrumEncoderActive[3] ? CString("IMG ") : "")
+		<< (m_IsSpectrumEncoderActive[0] ? CString("AMP ") : "")
+		<< (m_IsSpectrumEncoderActive[1] ? CString("PHASE ") : "")
+		<< (m_IsSpectrumEncoderActive[2] ? CString("REAL ") : "")
+		<< (m_IsSpectrumEncoderActive[3] ? CString("IMG ") : "")
 		<< "]\n";
 
 	return true;
@@ -57,19 +57,19 @@ boolean CBoxAlgorithmSpectralAnalysis::initialize()
 
 boolean CBoxAlgorithmSpectralAnalysis::uninitialize()
 {
-	for (size_t i = 0; i < m_vSpectrumEncoders.size(); i++)
+	for (size_t i = 0; i < m_SpectrumEncoders.size(); i++)
 	{
-		m_vSpectrumEncoders[i]->uninitialize();
-		delete m_vSpectrumEncoders[i];
+		m_SpectrumEncoders[i]->uninitialize();
+		delete m_SpectrumEncoders[i];
 	}
 
-	m_vSpectrumEncoders.clear();
+	m_SpectrumEncoders.clear();
 
-	m_oDecoder.uninitialize();
+	m_Decoder.uninitialize();
 	return true;
 }
 
-boolean CBoxAlgorithmSpectralAnalysis::processInput(uint32 ui32InputIndex)
+boolean CBoxAlgorithmSpectralAnalysis::processInput(unsigned int ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -77,172 +77,172 @@ boolean CBoxAlgorithmSpectralAnalysis::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmSpectralAnalysis::process()
 {
-	IBoxIO* l_pDynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
+	IBoxIO* dynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	// Process input data
-	for (uint32 i = 0; i < l_pDynamicBoxContext->getInputChunkCount(0); i++)
+	for (unsigned int i = 0; i < dynamicBoxContext->getInputChunkCount(0); i++)
 	{
-		uint64 l_ui64StartTime = l_pDynamicBoxContext->getInputChunkStartTime(0, i);
-		uint64 l_ui64EndTime = l_pDynamicBoxContext->getInputChunkEndTime(0, i);
+		unsigned long long startTime = dynamicBoxContext->getInputChunkStartTime(0, i);
+		unsigned long long endTime = dynamicBoxContext->getInputChunkEndTime(0, i);
 
-		m_oDecoder.decode(i);
-		IMatrix * l_pMatrix = m_oDecoder.getOutputMatrix();
+		m_Decoder.decode(i);
+		IMatrix * matrix = m_Decoder.getOutputMatrix();
 
-		if (m_oDecoder.isHeaderReceived())
+		if (m_Decoder.isHeaderReceived())
 		{
-			m_ui32ChannelCount = l_pMatrix->getDimensionSize(0);
-			m_ui32SampleCount = l_pMatrix->getDimensionSize(1);
-			m_ui32SamplingRate = (uint32)m_oDecoder.getOutputSamplingRate();
+			m_ChannelCount = matrix->getDimensionSize(0);
+			m_SampleCount = matrix->getDimensionSize(1);
+			m_SamplingRate = (unsigned int)m_Decoder.getOutputSamplingRate();
 
 			OV_ERROR_UNLESS_KRF(
-				m_ui32SamplingRate > 0,
-				"Invalid sampling rate [" << m_ui32SamplingRate << "] (expected value > 0)",
+				m_SamplingRate > 0,
+				"Invalid sampling rate [" << m_SamplingRate << "] (expected value > 0)",
 				OpenViBE::Kernel::ErrorType::BadInput
 				);
 
 			// size of the spectrum
-			m_ui32FFTSize = m_ui32SampleCount / 2 + 1;
+			m_FFTSize = m_SampleCount / 2 + 1;
 
 			// Constructing the frequency band description matrix, same for every possible output (and given through reference target mechanism)
-			m_pFrequencyBandDescription->setDimensionCount(2);  // a list of (min,max) pairs
-			m_pFrequencyBandDescription->setDimensionSize(0, 2); // Min and Max
-			m_pFrequencyBandDescription->setDimensionSize(1, m_ui32FFTSize); // FFTSize bands 
+			m_FrequencyBandDescription->setDimensionCount(2);  // a list of (min,max) pairs
+			m_FrequencyBandDescription->setDimensionSize(0, 2); // Min and Max
+			m_FrequencyBandDescription->setDimensionSize(1, m_FFTSize); // FFTSize bands 
 
 			// Min Max frequency band values
-			for (uint32 j = 0; j < m_ui32FFTSize; j++)
+			for (unsigned long long j = 0; j < m_FFTSize; j++)
 			{
-				float64 l_float64BandStart = j * (static_cast<double>(m_ui32SamplingRate / 2.) / m_ui32FFTSize);
-				float64 l_float64BandStop = (j + 1) * (static_cast<double>(m_ui32SamplingRate / 2.) / m_ui32FFTSize);
+				double bandStart = j * (static_cast<double>(m_SamplingRate / 2.) / m_FFTSize);
+				double bandStop = (j + 1) * (static_cast<double>(m_SamplingRate / 2.) / m_FFTSize);
 
-				if (l_float64BandStop < l_float64BandStart)
+				if (bandStop < bandStart)
 				{
-					l_float64BandStop = l_float64BandStart;
+					bandStop = bandStart;
 				}
 
-				m_pFrequencyBandDescription->getBuffer()[j * 2] = l_float64BandStart;
-				m_pFrequencyBandDescription->getBuffer()[j * 2 + 1] = l_float64BandStop;
+				m_FrequencyBandDescription->getBuffer()[j * 2] = bandStart;
+				m_FrequencyBandDescription->getBuffer()[j * 2 + 1] = bandStop;
 			}
 
 			// All spectra share the same header structure
-			for (size_t encoderIndex = 0; encoderIndex < m_vSpectrumEncoders.size(); encoderIndex++)
+			for (size_t encoderIndex = 0; encoderIndex < m_SpectrumEncoders.size(); encoderIndex++)
 			{
 				// We build the chunk only if the encoder is activated
-				if (m_vIsSpectrumEncoderActive[encoderIndex])
+				if (m_IsSpectrumEncoderActive[encoderIndex])
 				{
 					// Spectrum matrix
-					IMatrix * l_pSpectrum = m_vSpectrumEncoders[encoderIndex]->getInputMatrix();
-					l_pSpectrum->setDimensionCount(2);
-					l_pSpectrum->setDimensionSize(0, m_ui32ChannelCount);
-					l_pSpectrum->setDimensionSize(1, m_ui32FFTSize);
+					IMatrix * spectrum = m_SpectrumEncoders[encoderIndex]->getInputMatrix();
+					spectrum->setDimensionCount(2);
+					spectrum->setDimensionSize(0, m_ChannelCount);
+					spectrum->setDimensionSize(1, m_FFTSize);
 
 					// Spectrum channel names
-					for (uint32 j = 0; j < m_ui32ChannelCount; j++)
+					for (unsigned int j = 0; j < m_ChannelCount; j++)
 					{
-						l_pSpectrum->setDimensionLabel(0, j, l_pMatrix->getDimensionLabel(0, j));
+						spectrum->setDimensionLabel(0, j, matrix->getDimensionLabel(0, j));
 					}
 
 					// We also name the spectrum bands "Min-Max"
-					for (uint32 j = 0; j < m_ui32FFTSize; j++)
+					for (unsigned int j = 0; j < m_FFTSize; j++)
 					{
-						char l_sFrequencyBandName[1024];
-						sprintf(l_sFrequencyBandName, "%lg-%lg", m_pFrequencyBandDescription->getBuffer()[j * 2], m_pFrequencyBandDescription->getBuffer()[j * 2 + 1]);
-						l_pSpectrum->setDimensionLabel(1, j, l_sFrequencyBandName);
+						char frequencyBandName[1024];
+						sprintf(frequencyBandName, "%lg-%lg", m_FrequencyBandDescription->getBuffer()[j * 2], m_FrequencyBandDescription->getBuffer()[j * 2 + 1]);
+						spectrum->setDimensionLabel(1, j, frequencyBandName);
 					}
 
-					m_vSpectrumEncoders[encoderIndex]->encodeHeader();
-					l_pDynamicBoxContext->markOutputAsReadyToSend(encoderIndex, l_ui64StartTime, l_ui64EndTime);
+					m_SpectrumEncoders[encoderIndex]->encodeHeader();
+					dynamicBoxContext->markOutputAsReadyToSend(encoderIndex, startTime, endTime);
 				}
 			}
 		}
 
-		if (m_oDecoder.isBufferReceived())
+		if (m_Decoder.isBufferReceived())
 		{
 			// Compute the FFT
-			Eigen::FFT<double> l_oEigenFFT;
-			l_oEigenFFT.SetFlag(l_oEigenFFT.HalfSpectrum); // REAL signal => spectrum with conjugate symmetry
+			Eigen::FFT<double> eigenFFT;
+			eigenFFT.SetFlag(eigenFFT.HalfSpectrum); // REAL signal => spectrum with conjugate symmetry
 
 			// This matrix will contain the channels spectra (COMPLEX values, RowMajor for copy into openvibe matrix)
-			Eigen::MatrixXcd l_oSpectra = Eigen::MatrixXcd::Zero(m_ui32ChannelCount, m_ui32FFTSize);
+			Eigen::MatrixXcd spectra = Eigen::MatrixXcd::Zero(m_ChannelCount, m_FFTSize);
 
-			for (uint32 j = 0; j < m_ui32ChannelCount; j++)
+			for (unsigned int j = 0; j < m_ChannelCount; j++)
 			{
-				Eigen::VectorXd l_oSamples = Eigen::VectorXd::Zero(m_ui32SampleCount);
+				Eigen::VectorXd samples = Eigen::VectorXd::Zero(m_SampleCount);
 
-				for (uint32 k = 0; k < m_ui32SampleCount; k++)
+				for (unsigned int k = 0; k < m_SampleCount; k++)
 				{
-					l_oSamples(k) = l_pMatrix->getBuffer()[j * m_ui32SampleCount + k];
+					samples(k) = matrix->getBuffer()[j * m_SampleCount + k];
 				}
 
-				Eigen::VectorXcd l_oSpectrum; // initialization useless: EigenFFT resizes l_oSpectrum in function .fwd()
+				Eigen::VectorXcd spectrum; // initialization useless: EigenFFT resizes spectrum in function .fwd()
 
 				// EigenFFT
-				l_oEigenFFT.fwd(l_oSpectrum, l_oSamples);
+				eigenFFT.fwd(spectrum, samples);
 
-				// return of a mirror spectrum of size 2*m_ui32FFTSize: so we take only the first m_ui32FFTSize values
-				l_oSpectra.row(j) = l_oSpectrum;
+				// return of a mirror spectrum of size 2*m_FFTSize: so we take only the first m_FFTSize values
+				spectra.row(j) = spectrum;
 			}
 
 			// multiplication by sqrt(2), since half spectrum has been removed
-			if (m_ui32SampleCount % 2 == 0)
+			if (m_SampleCount % 2 == 0)
 			{
 				// even case : DC and Nyquist bins are not concerned
-				l_oSpectra.block(0, 1, m_ui32ChannelCount, m_ui32FFTSize - 2) *= std::sqrt(2);
+				spectra.block(0, 1, m_ChannelCount, m_FFTSize - 2) *= std::sqrt(2);
 			}
 			else
 			{
 				// odd case : DC bin is not concerned
-				l_oSpectra.block(0, 1, m_ui32ChannelCount, m_ui32FFTSize - 1) *= std::sqrt(2);
+				spectra.block(0, 1, m_ChannelCount, m_FFTSize - 1) *= std::sqrt(2);
 			}
 
-			for (size_t encoderIndex = 0; encoderIndex < m_vSpectrumEncoders.size(); encoderIndex++)
+			for (size_t encoderIndex = 0; encoderIndex < m_SpectrumEncoders.size(); encoderIndex++)
 			{
 				// We build the chunk only if the encoder is activated
-				if (m_vIsSpectrumEncoderActive[encoderIndex])
+				if (m_IsSpectrumEncoderActive[encoderIndex])
 				{
-					IMatrix * l_pSpectrum = m_vSpectrumEncoders[encoderIndex]->getInputMatrix();
+					IMatrix * spectrum = m_SpectrumEncoders[encoderIndex]->getInputMatrix();
 
 					switch (encoderIndex)
 					{
 						case 0:
-							for (uint32 j = 0; j < m_ui32ChannelCount; j++)
+							for (unsigned int j = 0; j < m_ChannelCount; j++)
 							{
-								for (uint32 k = 0; k < m_ui32FFTSize; k++)
+								for (unsigned int k = 0; k < m_FFTSize; k++)
 								{
-									float64 l_f64Amplitude = sqrt(l_oSpectra(j, k).real() * l_oSpectra(j, k).real() + l_oSpectra(j, k).imag() * l_oSpectra(j, k).imag());
-									l_pSpectrum->getBuffer()[j * m_ui32FFTSize + k] = l_f64Amplitude;
+									double amplitude = sqrt(spectra(j, k).real() * spectra(j, k).real() + spectra(j, k).imag() * spectra(j, k).imag());
+									spectrum->getBuffer()[j * m_FFTSize + k] = amplitude;
 								}
 							}
 							break;
 
 						case 1:
-							for (uint32 j = 0; j < m_ui32ChannelCount; j++)
+							for (unsigned int j = 0; j < m_ChannelCount; j++)
 							{
-								for (uint32 k = 0; k < m_ui32FFTSize; k++)
+								for (unsigned int k = 0; k < m_FFTSize; k++)
 								{
-									float64 l_f64Phase = ::atan2(l_oSpectra(j, k).imag(), l_oSpectra(j, k).real());
-									l_pSpectrum->getBuffer()[j * m_ui32FFTSize + k] = l_f64Phase;
+									double phase = ::atan2(spectra(j, k).imag(), spectra(j, k).real());
+									spectrum->getBuffer()[j * m_FFTSize + k] = phase;
 								}
 							}
 							break;
 
 						case 2:
-							for (uint32 j = 0; j < m_ui32ChannelCount; j++)
+							for (unsigned int j = 0; j < m_ChannelCount; j++)
 							{
-								for (uint32 k = 0; k < m_ui32FFTSize; k++)
+								for (unsigned int k = 0; k < m_FFTSize; k++)
 								{
-									float64 l_f64RealPart = l_oSpectra(j, k).real();
-									l_pSpectrum->getBuffer()[j * m_ui32FFTSize + k] = l_f64RealPart;
+									double realPart = spectra(j, k).real();
+									spectrum->getBuffer()[j * m_FFTSize + k] = realPart;
 								}
 							}
 							break;
 
 						case 3:
-							for (uint32 j = 0; j < m_ui32ChannelCount; j++)
+							for (unsigned int j = 0; j < m_ChannelCount; j++)
 							{
-								for (uint32 k = 0; k < m_ui32FFTSize; k++)
+								for (unsigned int k = 0; k < m_FFTSize; k++)
 								{
-									float64 l_f64ImagPart = l_oSpectra(j, k).imag();
-									l_pSpectrum->getBuffer()[j * m_ui32FFTSize + k] = l_f64ImagPart;
+									double imagPart = spectra(j, k).imag();
+									spectrum->getBuffer()[j * m_FFTSize + k] = imagPart;
 								}
 							}
 							break;
@@ -254,21 +254,21 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 								);
 					}
 
-					m_vSpectrumEncoders[encoderIndex]->encodeBuffer();
-					l_pDynamicBoxContext->markOutputAsReadyToSend(encoderIndex, l_ui64StartTime, l_ui64EndTime);
+					m_SpectrumEncoders[encoderIndex]->encodeBuffer();
+					dynamicBoxContext->markOutputAsReadyToSend(encoderIndex, startTime, endTime);
 				}
 			}
 		}
 
-		if (m_oDecoder.isEndReceived())
+		if (m_Decoder.isEndReceived())
 		{
-			for (size_t encoderIndex = 0; encoderIndex < m_vSpectrumEncoders.size(); encoderIndex++)
+			for (size_t encoderIndex = 0; encoderIndex < m_SpectrumEncoders.size(); encoderIndex++)
 			{
 				// We build the chunk only if the encoder is activated
-				if (m_vIsSpectrumEncoderActive[encoderIndex])
+				if (m_IsSpectrumEncoderActive[encoderIndex])
 				{
-					m_vSpectrumEncoders[encoderIndex]->encodeEnd();
-					l_pDynamicBoxContext->markOutputAsReadyToSend(encoderIndex, l_ui64StartTime, l_ui64EndTime);
+					m_SpectrumEncoders[encoderIndex]->encodeEnd();
+					dynamicBoxContext->markOutputAsReadyToSend(encoderIndex, startTime, endTime);
 				}
 			}
 		}

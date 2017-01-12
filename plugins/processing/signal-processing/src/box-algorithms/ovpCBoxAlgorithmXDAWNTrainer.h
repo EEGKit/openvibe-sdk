@@ -27,20 +27,20 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmXDAWNTrainer > m_oStimDecoder;
-			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmXDAWNTrainer > m_oSignalDecoder[2];
-			OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmXDAWNTrainer > m_oStimEncoder;
+			OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmXDAWNTrainer > m_StimDecoder;
+			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmXDAWNTrainer > m_SignalDecoder[2];
+			OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmXDAWNTrainer > m_StimEncoder;
 
-			OpenViBE::uint64 m_ui64TrainStimulationId;
-			OpenViBE::CString m_sFilterFilename;
-			OpenViBE::uint32 m_ui32FilterDimension;
+			unsigned long long m_TrainStimulationId;
+			OpenViBE::CString m_FilterFilename;
+			unsigned int m_FilterDimension;
 		};
 
 		class CBoxAlgorithmXDAWNTrainerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release(void) {}
 
 			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("xDAWN Trainer"); }
 			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
@@ -56,10 +56,12 @@ namespace OpenViBEPlugins
 
 			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
-				rBoxAlgorithmPrototype.addInput  ("Stimulations", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addInput  ("Session signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInput  ("Evoked potential epochs", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput ("Train-completed Flag", OV_TypeId_Stimulations);
+				rBoxAlgorithmPrototype.addInput("Stimulations", OV_TypeId_Stimulations);
+				rBoxAlgorithmPrototype.addInput("Session signal", OV_TypeId_Signal);
+				rBoxAlgorithmPrototype.addInput("Evoked potential epochs", OV_TypeId_Signal);
+
+				rBoxAlgorithmPrototype.addOutput("Train-completed Flag", OV_TypeId_Stimulations);
+
 				rBoxAlgorithmPrototype.addSetting("Train stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_Train");
 				rBoxAlgorithmPrototype.addSetting("Spatial filter configuration", OV_TypeId_Filename, "");
 				rBoxAlgorithmPrototype.addSetting("Filter dimension", OV_TypeId_Integer, "4");
