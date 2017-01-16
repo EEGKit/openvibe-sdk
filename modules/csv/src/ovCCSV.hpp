@@ -55,9 +55,6 @@ namespace OpenViBE
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames);
 			bool getFeatureVectorInformation(std::vector<std::string>& channelNames);
 
-			bool setCovarianceMatrixInformation(const std::vector<std::string>& channelNames);
-			bool getCovarianceMatrixInformation(std::vector<std::string>& channelNames);
-
 			bool setStreamedMatrixInformation(const std::vector<unsigned int>& dimensionSizes, const std::vector<std::string>& labels);
 			bool getStreamedMatrixInformation(std::vector<unsigned int>& dimensionSizes, std::vector<std::string>& labels);
 

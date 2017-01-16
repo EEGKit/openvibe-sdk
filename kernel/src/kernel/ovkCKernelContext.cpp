@@ -186,6 +186,7 @@ boolean CKernelContext::initialize(void)
 	m_pTypeManager->registerStreamType(OV_TypeId_Signal, "Signal", OV_TypeId_StreamedMatrix);
 	m_pTypeManager->registerStreamType(OV_TypeId_Spectrum, "Spectrum", OV_TypeId_StreamedMatrix);
 	m_pTypeManager->registerStreamType(OV_TypeId_TimeFrequency, "Time-frequency", OV_TypeId_StreamedMatrix);
+	m_pTypeManager->registerStreamType(OV_TypeId_CovarianceMatrix, "Covariance Matrix", OV_TypeId_StreamedMatrix);
 
 
 	m_pTypeManager->registerType(OV_TypeId_Message,  "Message");

@@ -325,63 +325,6 @@ bool CCSVLib::getFeatureVectorInformation(std::vector<std::string>& channelNames
 	return true;
 }
 
-bool CCSVLib::setCovarianceMatrixInformation(const std::vector<std::string>& channelNames)
-{
-	if (m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
-	{
-		m_LastStringError.clear();
-		m_LogError = LogErrorCodes_WrongInputType;
-		return false;
-	}
-	else if (m_IsSetInfoCalled)
-	{
-		m_LastStringError.clear();
-		m_LogError = LogErrorCodes_SetInfoOnce;
-		return false;
-	}
-
-	m_IsSetInfoCalled = true;
-	if (channelNames.empty())
-	{
-		m_LastStringError.clear();
-		m_LogError = LogErrorCodes_NoChannelsName;
-		return false;
-	}
-	m_DimensionLabels = channelNames;
-	return true;
-}
-
-bool CCSVLib::getCovarianceMatrixInformation(std::vector<std::string>& channelNames)
-{
-	if (m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
-	{
-		m_LastStringError.clear();
-		m_LogError = LogErrorCodes_WrongInputType;
-		return false;
-	}
-	else if (!m_IsHeaderRead)
-	{
-		m_LastStringError = "No header read yet";
-		m_LogError = LogErrorCodes_WrongHeader;
-		return false;
-	}
-	else if (!channelNames.empty())
-	{
-		m_LastStringError = "channelNames already filled";
-		m_LogError = LogErrorCodes_WrongParameters;
-		return false;
-	}
-	else if (m_DimensionLabels.empty())
-	{
-		m_LastStringError = "No dimension labels, header reading may have failed";
-		m_LogError = LogErrorCodes_WrongHeader;
-		return false;
-	}
-
-	channelNames = m_DimensionLabels;
-	return true;
-}
-
 bool CCSVLib::setStreamedMatrixInformation(const std::vector<unsigned int>& dimensionSizes, const std::vector<std::string>& labels)
 {
 	if (m_IsSetInfoCalled)
@@ -1530,11 +1473,7 @@ bool CCSVLib::parseMatrixHeader(void)
 	}
 
 	// check columnLabels number according to dimension sizes
-	unsigned int matrixColumnCount = 1;
-	for (const unsigned int &columnNbr : m_DimensionSizes)
-	{
-		matrixColumnCount *= columnNbr;
-	}
+	unsigned int matrixColumnCount = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<unsigned int>());
 
 	if ((matrixColumnCount + m_PreDataColumnCount + m_PostDataColumnCount) != m_LineColumns.size())
 	{

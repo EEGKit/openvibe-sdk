@@ -190,26 +190,6 @@ namespace OpenViBE
 			virtual bool getFeatureVectorInformation(std::vector<std::string>& channelNames) = 0;
 
 			/**
-			 * \brief Set informations to read or write covariance matrix data
-			 *
-			 * \param channelNames all channels names for the matrix
-			 *
-			 * \retval true in case of success
-			 * \retval false in case of incorrect or incomplete parameters
-			 */
-			virtual bool setCovarianceMatrixInformation(const std::vector<std::string>& channelNames) = 0;
-
-			/**
-			 * \brief Get covariance matrix information in file
-			 *
-			 * \param channelNames reference to fill with file channel names
-			 *
-			 * \retval true in case of success
-			 * \retval false in case of failure
-			 */
-			virtual bool getCovarianceMatrixInformation(std::vector<std::string>& channelNames) = 0;
-
-			/**
 			 * \brief Set informations to read or write streamed matrix data
 			 *
 			 * \param dimensionSizes size of each dimension
