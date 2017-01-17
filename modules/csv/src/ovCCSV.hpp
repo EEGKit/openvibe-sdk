@@ -197,9 +197,6 @@ namespace OpenViBE
 			std::string m_LastStringError;
 
 			EStreamType m_InputTypeIdentifier;
-			const char m_Separator;
-			const char m_InternalDataSeparator;
-			const char m_DimensionSeparator;
 
 			unsigned int m_DimensionCount;
 			std::vector<unsigned int> m_DimensionSizes;
