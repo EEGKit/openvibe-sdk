@@ -252,7 +252,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 
 		// We need equal number of channels
 		OV_ERROR_UNLESS_KRF(
-			X[0].rows() != X[1].rows(),
+			X[0].rows() == X[1].rows(),
 			"Dimension mismatch, first input had " << uint32(X[0].rows()) << " channels while second input had " << uint32(X[1].rows()) << " channels\n",
 			OpenViBE::Kernel::ErrorType::BadValue
 			);
@@ -331,6 +331,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 		::fprintf(file, "</SettingValue>\n");
 		::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_FilterDimension);
 		::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", channelCount);
+		::fprintf(file, "\t<SettingValue></SettingValue>\n", channelCount);
 		::fprintf(file, "</OpenViBE-SettingsOverride>");
 
 		OV_WARNING_UNLESS_K(
