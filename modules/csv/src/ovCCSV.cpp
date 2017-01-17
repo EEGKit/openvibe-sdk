@@ -334,7 +334,7 @@ bool CCSVLib::setStreamedMatrixInformation(const std::vector<unsigned int>& dime
 		return false;
 	}
 
-	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix)
+	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix || m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
 	{
 		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
@@ -368,7 +368,7 @@ bool CCSVLib::setStreamedMatrixInformation(const std::vector<unsigned int>& dime
 
 bool CCSVLib::getStreamedMatrixInformation(std::vector<unsigned int>& dimensionSizes, std::vector<std::string>& labels)
 {
-	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix)
+	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix && m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
 	{
 		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
