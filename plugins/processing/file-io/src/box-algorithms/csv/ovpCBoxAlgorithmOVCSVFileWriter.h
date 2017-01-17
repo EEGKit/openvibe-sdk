@@ -107,6 +107,7 @@ namespace OpenViBEPlugins
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_FeatureVector);
+				boxAlgorithmPrototype.addInputSupport(OV_TypeId_CovarianceMatrix);
 
 				return true;
 			}

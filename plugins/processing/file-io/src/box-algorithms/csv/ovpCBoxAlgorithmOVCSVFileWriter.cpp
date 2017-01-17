@@ -33,7 +33,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 			ErrorType::Internal);
 		m_WriterLib->setFormatType(OpenViBE::CSV::EStreamType::Signal);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 	{
 		m_StreamDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder < CBoxAlgorithmOVCSVFileWriter >();
 		OV_ERROR_UNLESS_KRF(m_StreamDecoder->initialize(*this, 0),
@@ -165,7 +165,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 						ErrorType::Internal);
 				}
 			}
-			else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+			else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 			{
 				std::vector<std::string> dimensionLabels;
 				std::vector<unsigned int> dimensionSizes;
@@ -238,7 +238,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 						ErrorType::Internal);
 				}
 			}
-			else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+			else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 			{
 				double startTime = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkStartTime(0, index));
 				double endTime = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkEndTime(0, index));
