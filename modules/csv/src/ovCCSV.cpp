@@ -592,7 +592,7 @@ bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std:
 				}
 				else
 				{
-					// it means that their is no more data to read
+					// There is no more data to read
 					return true;
 				}
 			}
@@ -609,7 +609,7 @@ bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std:
 				}
 				else
 				{
-					// it means that their is no more chunk to read because we read all
+					// There is no unread chunk left
 					return true;
 				}
 			}
@@ -965,11 +965,23 @@ std::string CCSVLib::writeStimulations(const std::vector<SStimulationChunk>& sti
 
 bool CCSVLib::createHeaderString(void)
 {
+	auto addColumn = [&](const std::string columnLabel)
+	{
+		if (m_ColumnCount != 0)
+		{
+				m_Header += s_Separator + columnLabel;
+		}
+		else
+		{
+				m_Header = columnLabel;
+		}
+		m_ColumnCount++;
+	};
+
 	// add Time Header
-	m_Header = "Time";
 	switch (m_InputTypeIdentifier) {
 	case EStreamType::Signal :
-		m_Header += s_InternalDataSeparator + std::to_string(m_SamplingRate) + "Hz";
+		addColumn(std::string("Time") + s_InternalDataSeparator + std::to_string(m_SamplingRate) + "Hz");
 		break;
 	case EStreamType::Spectrum :
 		if (m_DimensionSizes.size() != 2)
@@ -977,59 +989,54 @@ bool CCSVLib::createHeaderString(void)
 			m_LastStringError = "Channel names and number of frequency are needed to write time column";
 			return false;
 		}
-
-		m_Header += s_InternalDataSeparator;
-		m_Header += std::to_string(m_DimensionSizes[0]);
-		m_Header += s_DimensionSeparator;
-		m_Header += std::to_string(m_DimensionSizes[1]);
-
-		m_Header += s_InternalDataSeparator;
-
-		//original number of samples or calculated one; to be reviewed
-		m_Header += std::to_string(m_OriginalSampleNumber != 0 ? m_OriginalSampleNumber : m_DimensionSizes[0] * m_DimensionSizes[1]);
+		addColumn(std::string("Time")
+				  + s_InternalDataSeparator
+				  + std::to_string(m_DimensionSizes[0])
+				  + s_DimensionSeparator
+				  + std::to_string(m_DimensionSizes[1])
+				  + s_InternalDataSeparator
+				  + std::to_string(m_OriginalSampleNumber != 0 //original number of samples or calculated one
+						? m_OriginalSampleNumber
+						: m_DimensionSizes[0] * m_DimensionSizes[1])
+		);
 		break;
 	case EStreamType::StreamedMatrix :
 	case EStreamType::FeatureVector :
-		m_Header += s_InternalDataSeparator;
 		if (m_DimensionCount == 0)
 		{
 			m_LastStringError.clear();
 			m_LogError = LogErrorCodes_DimensionCountZero;
 			return false;
 		}
-
-		for (unsigned int index = 0; index < m_DimensionCount; index++)
 		{
-			m_Header += std::to_string(m_DimensionSizes[index]);
-			if ((index + 1) < m_DimensionCount)
+			std::string timeColumn(std::string("Time") + s_InternalDataSeparator);
+			for (unsigned int index = 0; index < m_DimensionCount; index++)
 			{
-				m_Header += s_DimensionSeparator;
+				timeColumn += std::to_string(m_DimensionSizes[index]);
+				if ((index + 1) < m_DimensionCount)
+				{
+					timeColumn += s_DimensionSeparator;
+				}
 			}
+			addColumn(timeColumn);
 		}
 		break;
 	default:
 		break;
 	}
 
-	m_Header += s_Separator;
-	m_ColumnCount++;
-
 	// add Epoch Header to signal
 	switch (m_InputTypeIdentifier) {
 	case EStreamType::Signal :
 		// add Epoch Header
-		m_Header += "Epoch";
-		m_Header += s_Separator;
-		m_ColumnCount++;
+		addColumn("Epoch");
 		break;
 	case EStreamType::Spectrum :
 	case EStreamType::StreamedMatrix :
 	case EStreamType::CovarianceMatrix :
 	case EStreamType::FeatureVector :
 		//add End Time Header
-		m_Header += "End Time";
-		m_Header += s_Separator;
-		m_ColumnCount++;
+		addColumn("End Time");
 		break;
 	default:
 		break;
@@ -1049,25 +1056,23 @@ bool CCSVLib::createHeaderString(void)
 	case EStreamType::FeatureVector :
 		for (size_t labelIndex = 0; labelIndex < m_DimensionLabels.size(); labelIndex++)
 		{
-			m_Header += m_DimensionLabels[labelIndex] + s_Separator;
-			m_ColumnCount++;
+			addColumn(m_DimensionLabels[labelIndex]);
 		}
 		break;
 	case EStreamType::StreamedMatrix :
 		{
 			unsigned int matrixColumns = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<unsigned int>());
-			std::vector<unsigned int> position(m_DimensionCount, 0);
 			if (matrixColumns == 0)
 			{
 				m_LastStringError.clear();
 				m_LogError = LogErrorCodes_DimensionSizeZero;
 				return false;
 			}
-
+			std::vector<unsigned int> position(m_DimensionCount, 0);
 			m_ColumnCount += matrixColumns;
-
 			do
 			{
+				m_Header += s_Separator;
 				unsigned int previousDimensionsSize = 0;
 				for (size_t index = 0; index < position.size(); index++)
 				{
@@ -1078,17 +1083,15 @@ bool CCSVLib::createHeaderString(void)
 						m_Header += s_InternalDataSeparator;
 					}
 				}
-				m_Header += s_Separator;
 			} while (increasePositionIndexes(position));
+			break;
 		}
-		break;
 	case EStreamType::Spectrum :
 		for (size_t channel = 0; channel < m_DimensionLabels.size(); channel++)
 		{
 			for (unsigned int column = 0; column < m_FrequencyBands.size(); column++)
 			{
-				m_Header += m_DimensionLabels[channel] + s_InternalDataSeparator + std::to_string(m_FrequencyBands[column].front()) + s_Separator;
-				m_ColumnCount++;
+				addColumn(m_DimensionLabels[channel] + s_InternalDataSeparator + std::to_string(m_FrequencyBands[column].front()));
 			}
 		}
 		break;
@@ -1096,12 +1099,9 @@ bool CCSVLib::createHeaderString(void)
 		break;
 	}
 
-	m_Header += "Event Id";
-	m_Header += s_Separator;
-	m_Header += "Event Date";
-	m_Header += s_Separator;
-	m_Header += "Event Duration\n";
-	m_ColumnCount += m_PostDataColumnCount;
+	addColumn("Event Id");
+	addColumn("Event Date");
+	addColumn("Event Duration\n");
 	return true;
 }
 
