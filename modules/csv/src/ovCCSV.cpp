@@ -968,12 +968,11 @@ bool CCSVLib::createHeaderString(void)
 {
 	// add Time Header
 	m_Header = "Time";
-	if (m_InputTypeIdentifier == EStreamType::Signal)
-	{
+	switch (m_InputTypeIdentifier) {
+	case EStreamType::Signal :
 		m_Header += m_InternalDataSeparator + std::to_string(m_SamplingRate) + "Hz";
-	}
-	else if (m_InputTypeIdentifier == EStreamType::Spectrum)
-	{
+		break;
+	case EStreamType::Spectrum :
 		if (m_DimensionSizes.size() != 2)
 		{
 			m_LastStringError = "Channel names and number of frequency are needed to write time column";
@@ -990,10 +989,9 @@ bool CCSVLib::createHeaderString(void)
 		//original number of samples or calculated one; to be reviewed
 		int sampleCount = m_OriginalSampleNumber != 0 ? m_OriginalSampleNumber : m_DimensionSizes[0] * m_DimensionSizes[1];
 		m_Header += std::to_string(sampleCount);
-	}
-	else if (m_InputTypeIdentifier == EStreamType::StreamedMatrix
-			 || m_InputTypeIdentifier == EStreamType::FeatureVector)
-	{
+		break;
+	case EStreamType::StreamedMatrix :
+	case EStreamType::FeatureVector :
 		m_Header += m_InternalDataSeparator;
 		if (m_DimensionCount == 0)
 		{
@@ -1010,27 +1008,33 @@ bool CCSVLib::createHeaderString(void)
 				m_Header += m_DimensionSeparator;
 			}
 		}
+		break;
+	default:
+		break;
 	}
+
 	m_Header += m_Separator;
 	m_ColumnCount++;
 
 	// add Epoch Header to signal
-	if (m_InputTypeIdentifier == EStreamType::Signal)
-	{
+	switch (m_InputTypeIdentifier) {
+	case EStreamType::Signal :
+		// add Epoch Header
 		m_Header += "Epoch";
 		m_Header += m_Separator;
 		m_ColumnCount++;
-	}
-	// add End Time Header or not
-	if (m_InputTypeIdentifier == EStreamType::Spectrum
-		|| m_InputTypeIdentifier == EStreamType::StreamedMatrix
-		|| m_InputTypeIdentifier == EStreamType::CovarianceMatrix
-		|| m_InputTypeIdentifier == EStreamType::FeatureVector)
-	{
-
+		break;
+	case EStreamType::Spectrum :
+	case EStreamType::StreamedMatrix :
+	case EStreamType::CovarianceMatrix :
+	case EStreamType::FeatureVector :
+		//add End Time Header
 		m_Header += "End Time";
 		m_Header += m_Separator;
 		m_ColumnCount++;
+		break;
+	default:
+		break;
 	}
 
 	// add matrix columns names
@@ -1041,18 +1045,17 @@ bool CCSVLib::createHeaderString(void)
 		return false;
 	}
 
-	if (m_InputTypeIdentifier == EStreamType::Signal
-		|| m_InputTypeIdentifier == EStreamType::CovarianceMatrix
-		|| m_InputTypeIdentifier == EStreamType::FeatureVector)
-	{
+	switch (m_InputTypeIdentifier) {
+	case EStreamType::Signal :
+	case EStreamType::CovarianceMatrix :
+	case EStreamType::FeatureVector :
 		for (size_t labelIndex = 0; labelIndex < m_DimensionLabels.size(); labelIndex++)
 		{
 			m_Header += m_DimensionLabels[labelIndex] + m_Separator;
 			m_ColumnCount++;
 		}
-	}
-	else if (m_InputTypeIdentifier == EStreamType::StreamedMatrix)
-	{
+		break;
+	case EStreamType::StreamedMatrix :
 		unsigned int matrixColumns = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<unsigned int>());
 		if (matrixColumns == 0)
 		{
@@ -1077,9 +1080,8 @@ bool CCSVLib::createHeaderString(void)
 			}
 			m_Header += m_Separator;
 		} while (increasePositionIndexes(position));
-	}
-	else if (m_InputTypeIdentifier == EStreamType::Spectrum)
-	{
+		break;
+	case EStreamType::Spectrum :
 		for (size_t channel = 0; channel < m_DimensionLabels.size(); channel++)
 		{
 			for (unsigned int column = 0; column < m_FrequencyBands.size(); column++)
@@ -1088,7 +1090,11 @@ bool CCSVLib::createHeaderString(void)
 				m_ColumnCount++;
 			}
 		}
+		break;
+	default:
+		break;
 	}
+
 	m_Header += "Event Id";
 	m_Header += m_Separator;
 	m_Header += "Event Date";
