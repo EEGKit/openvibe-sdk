@@ -8,8 +8,8 @@ using namespace OpenViBE::Kernel;
 
 CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox)
 	:TKernelObject<IPlayerContext>(rKernelContext)
-	,m_rPluginManager(rKernelContext.getPluginManager())
 	,m_rSimulatedBox(*pSimulatedBox)
+	,m_rPluginManager(rKernelContext.getPluginManager())
 	,m_rAlgorithmManager(rKernelContext.getAlgorithmManager())
 	,m_rConfigurationManager(rKernelContext.getConfigurationManager())
 	,m_rLogManager(rKernelContext.getLogManager())

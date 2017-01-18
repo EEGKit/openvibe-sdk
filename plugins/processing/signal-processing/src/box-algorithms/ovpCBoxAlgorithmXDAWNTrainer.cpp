@@ -331,7 +331,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 		::fprintf(file, "</SettingValue>\n");
 		::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_FilterDimension);
 		::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", channelCount);
-		::fprintf(file, "\t<SettingValue></SettingValue>\n", channelCount);
+		::fprintf(file, "\t<SettingValue></SettingValue>\n");
 		::fprintf(file, "</OpenViBE-SettingsOverride>");
 
 		OV_WARNING_UNLESS_K(
