@@ -109,6 +109,20 @@ namespace OpenViBE
 		{
 		public:
 			/**
+			 * \brief Return the number of digit of float numbers in output file.
+			 *
+			 * \return unsigned int number of digits
+			 */
+			virtual unsigned int getOutputFloatPrecision() = 0;
+
+			/**
+			 * \brief Set the number of digits of float numbers in output file.
+			 *
+			 * \param precision number of digits
+			 */
+			virtual void setOutputFloatPrecision(unsigned int precision) = 0;
+
+			/**
 			 * \brief Set the format type that will be written or read.
 			 *
 			 * \param typeIdentifier Could be Streamed Matrix, Signal, Covariance Matrix, etc ...

@@ -61,6 +61,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 
 
 	const CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_WriterLib->setOutputFloatPrecision(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));
 	m_AppendData = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	if (!m_AppendData)

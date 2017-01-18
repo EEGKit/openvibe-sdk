@@ -42,6 +42,9 @@ namespace OpenViBE
 			 */
 			~CCSVLib(void);
 
+			unsigned int getOutputFloatPrecision() {return m_OutputFloatPrecision; }
+			void setOutputFloatPrecision(unsigned int precision) { m_OutputFloatPrecision = precision; }
+
 			void setFormatType(EStreamType typeIdentifier);
 
 			EStreamType getFormatType(void);
@@ -219,6 +222,7 @@ namespace OpenViBE
 			bool m_HasEpoch;
 
 			unsigned int m_OriginalSampleNumber;
+			unsigned int m_OutputFloatPrecision;
 		};
 	}
 }

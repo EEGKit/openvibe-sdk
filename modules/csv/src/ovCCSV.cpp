@@ -78,8 +78,8 @@ CCSVLib::CCSVLib(void)
 	m_IsFirstLineWritten(false),
 	m_IsHeaderRead(false),
 	m_IsSetInfoCalled(false),
-	m_HasEpoch(false)
-
+	m_HasEpoch(false),
+	m_OutputFloatPrecision(5)
 {
 }
 
@@ -718,12 +718,7 @@ bool CCSVLib::addSample(const SMatrixChunk& sample)
 	else if (m_InputTypeIdentifier != EStreamType::Signal
 		&& m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
-		unsigned int columnsToHave = 1;
-		for (size_t columnNbrToHave : m_DimensionSizes)
-		{
-			columnsToHave *= columnNbrToHave;
-		}
-
+		unsigned int columnsToHave = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<unsigned int>());
 		if (sample.matrix.size() != columnsToHave)
 		{
 			m_LastStringError = "Matrix size is " + std::to_string(sample.matrix.size()) + " and size to have is " + std::to_string(columnsToHave);
@@ -865,7 +860,7 @@ std::string CCSVLib::writeStimulations(const std::vector<SStimulationChunk>& sti
 	char buffer[1024];
 	for (size_t index = 0; index < stimulationToPrint.size(); index++)
 	{
-		sprintf(buffer, "%.10f", stimulationToPrint[index].stimulationDate);
+		sprintf(buffer, "%.*f", m_OutputFloatPrecision, stimulationToPrint[index].stimulationDate);
 		stimulations += buffer;
 		if ((index + 1) < stimulationToPrint.size())
 		{
@@ -876,7 +871,7 @@ std::string CCSVLib::writeStimulations(const std::vector<SStimulationChunk>& sti
 
 	for (size_t index = 0; index < stimulationToPrint.size(); index++)
 	{
-		sprintf(buffer, "%.10f", stimulationToPrint[index].stimulationDuration);
+		sprintf(buffer, "%.*f", m_OutputFloatPrecision, stimulationToPrint[index].stimulationDuration);
 		stimulations += buffer;
 		if ((index + 1) < stimulationToPrint.size())
 		{
@@ -1070,11 +1065,7 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 			|| m_InputTypeIdentifier == EStreamType::CovarianceMatrix
 			|| m_InputTypeIdentifier == EStreamType::StreamedMatrix)
 		{
-			unsigned int columnstoHave = 1;
-			for (unsigned int size : m_DimensionSizes)
-			{
-				columnstoHave *= size;
-			}
+			unsigned int columnstoHave = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<unsigned int>());
 			columnstoHave += m_PreDataColumnCount + m_PostDataColumnCount;
 			if (columnstoHave != m_ColumnCount)
 			{
@@ -1088,34 +1079,36 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 		std::pair<double, double> currentTime = { m_Chunks.front().startTime, m_Chunks.front().endTime };
 		char buffer[1024] = {};
 
-		sprintf(buffer, "%.10f", currentTime.first);
+		sprintf(buffer, "%.*f", m_OutputFloatPrecision, currentTime.first);
 		m_Buffer += buffer;
-		if (m_InputTypeIdentifier == EStreamType::Spectrum
-			|| m_InputTypeIdentifier == EStreamType::StreamedMatrix
-			|| m_InputTypeIdentifier == EStreamType::CovarianceMatrix
-			|| m_InputTypeIdentifier == EStreamType::FeatureVector)
+		switch(m_InputTypeIdentifier)
 		{
-			sprintf(buffer, "%.10f", currentTime.second);
+		case EStreamType::Spectrum :
+		case EStreamType::StreamedMatrix :
+		case EStreamType::CovarianceMatrix :
+		case EStreamType::FeatureVector :
+			sprintf(buffer, "%.*f", m_OutputFloatPrecision, currentTime.second);
 			m_Buffer += s_Separator;
 			m_Buffer += buffer;
-		}
-
-		m_Buffer += s_Separator;
-		if (m_InputTypeIdentifier == EStreamType::Signal
-			|| m_InputTypeIdentifier == EStreamType::Spectrum)
-		{
-			m_Buffer += std::to_string(m_Chunks.front().epoch) + s_Separator;
+			break;
+		case EStreamType::Signal :
+			m_Buffer += s_Separator;
+			m_Buffer += std::to_string(m_Chunks.front().epoch);
+			break;
+		default :
+			break;
 		}
 
 		// matrix
 		while (!m_Chunks.front().matrix.empty())
 		{
-			sprintf(buffer, "%.10f", m_Chunks.front().matrix.front());
-			m_Buffer += buffer;
 			m_Buffer += s_Separator;
+			sprintf(buffer, "%.*f", m_OutputFloatPrecision, m_Chunks.front().matrix.front());
+			m_Buffer += buffer;
 			m_Chunks.front().matrix.erase(m_Chunks.front().matrix.begin());
 		}
 
+		m_Buffer += s_Separator;
 		// stimulations
 		if (!m_Stimulations.empty())
 		{
@@ -1135,8 +1128,8 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 		}
 		else
 		{
-			m_Buffer.push_back(s_Separator);
-			m_Buffer.push_back(s_Separator);
+			m_Buffer += s_Separator;
+			m_Buffer += s_Separator;
 		}
 		m_Buffer += "\n";
 		linesWritten++;
