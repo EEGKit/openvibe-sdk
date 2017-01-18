@@ -31,22 +31,14 @@ using namespace OpenViBE::CSV;
 namespace {
 	static const int s_StimulationDateColumnNbr = 1;
 	static const int s_StimulationIdentifierColumnNbr = 2;
-	static const int s_StimulationDateColumn = 2;
 	static const unsigned int s_SignalEpochColumnIndex = 1;
 	static const unsigned int s_TimeColumnIndex = 0;
 	static const unsigned int s_EndTimeColumnIndex = 1;
 	// Number of columns before data (Time/Epoch)
-	static const unsigned int s_StreamedMatrixPreDataColumnCount = 2;
-	static const unsigned int s_SignalPreDataColumnCount = 2;
-	static const unsigned int s_SpectrumPreDataColumnCount = 2;
-	static const unsigned int s_CovarianceMatrixPreDataColumnCount = 2;
-	static const unsigned int s_FeatureVectorPreDataColumnCount = 2;
+	static const unsigned int s_PreDataColumnCount = 2;
 	// Number of columns after data (Events)
-	static const unsigned int s_StreamedMatrixPostDataColumnCount = 3;
-	static const unsigned int s_SignalPostDataColumnCount = 3;
-	static const unsigned int s_SpectrumPostDataColumnCount = 3;
-	static const unsigned int s_CovarianceMatrixPostDataColumnCount = 3;
-	static const unsigned int s_FeatureVectorPostDataColumnCount = 3;
+	static const unsigned int s_PostDataColumnCount = 3;
+
 	//Separators
 	static const char s_Separator(',');
 	static const char s_InternalDataSeparator(':');
@@ -101,24 +93,12 @@ void CCSVLib::setFormatType(EStreamType typeIdentifier)
 	m_InputTypeIdentifier = typeIdentifier;
 	switch (m_InputTypeIdentifier) {
 	case EStreamType::Signal :
-		m_PreDataColumnCount = s_SignalPreDataColumnCount;
-		m_PostDataColumnCount = s_SignalPostDataColumnCount;
-		break;
 	case EStreamType::Spectrum :
-		m_PreDataColumnCount = s_SpectrumPreDataColumnCount;
-		m_PostDataColumnCount = s_SpectrumPostDataColumnCount;
-		break;
 	case EStreamType::StreamedMatrix :
-		m_PreDataColumnCount = s_SpectrumPreDataColumnCount;
-		m_PostDataColumnCount = s_SpectrumPostDataColumnCount;
-		break;
 	case EStreamType::CovarianceMatrix :
-		m_PreDataColumnCount = s_CovarianceMatrixPreDataColumnCount;
-		m_PostDataColumnCount = s_CovarianceMatrixPostDataColumnCount;
-		break;
 	case EStreamType::FeatureVector :
-		m_PreDataColumnCount = s_FeatureVectorPreDataColumnCount;
-		m_PostDataColumnCount = s_FeatureVectorPostDataColumnCount;
+		m_PreDataColumnCount = s_PreDataColumnCount;
+		m_PostDataColumnCount = s_PostDataColumnCount;
 		break;
 	default:
 		break;
