@@ -18,6 +18,7 @@
 #include "box-algorithms/filters/ovpCBoxAlgorithmRegularizedCSPTrainer.h"
 #include "algorithms/basic/ovpCAlgorithmOnlineCovariance.h"
 
+#include "box-algorithms/spectral-analysis/ovpCBoxAlgorithmSpectralAnalysis.h"
 #include "box-algorithms/spectral-analysis/ovpCBoxAlgorithmFrequencyBandSelector.h"
 #include "box-algorithms/spectral-analysis/ovpCBoxAlgorithmSpectrumAverage.h"
 
@@ -26,7 +27,8 @@
 #include "box-algorithms/ovpCBoxAlgorithmTimeBasedEpoching.h"
 #include "box-algorithms/ovpCBoxAlgorithmSimpleDSP.h"
 #include "box-algorithms/ovpCBoxAlgorithmSignalAverage.h"
-
+#include "box-algorithms/ovpCBoxAlgorithmWindowing.h"
+#include "box-algorithms/ovpCBoxAlgorithmXDAWNTrainer.h"
 
 OVP_Declare_Begin()
 
@@ -108,4 +110,17 @@ OVP_Declare_Begin()
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Epoch block average", OVP_TypeId_EpochAverageMethod_BlockAverage.toUInteger());
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_EpochAverageMethod, "Cumulative average", OVP_TypeId_EpochAverageMethod_CumulativeAverage.toUInteger());
 	
+	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpectralAnalysisDesc);
+	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmWindowingDesc);
+	rPluginModuleContext.getTypeManager().registerEnumerationType(OVP_TypeId_WindowMethod, "Window method");
+	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "None", OVP_TypeId_WindowMethod_None.toUInteger());
+	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hamming", OVP_TypeId_WindowMethod_Hamming.toUInteger());
+	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hanning", OVP_TypeId_WindowMethod_Hanning.toUInteger());
+	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Hann", OVP_TypeId_WindowMethod_Hann.toUInteger());
+	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Blackman", OVP_TypeId_WindowMethod_Blackman.toUInteger());
+	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Triangular", OVP_TypeId_WindowMethod_Triangular.toUInteger());
+	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_WindowMethod, "Square root", OVP_TypeId_WindowMethod_SquareRoot.toUInteger());
+
+	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmXDAWNTrainerDesc);
+
 OVP_Declare_End()

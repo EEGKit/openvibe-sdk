@@ -271,7 +271,7 @@ while (0)
  * \def OV_ERROR_UNLESS_K(expression, description, type, returnValue)
  * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for contitional error macro launched by objects that have direct
+ * Shorthand for conditional error macro launched by objects that have direct
  * access to kernel logger and error managers through this->getLogManager()
  * and this->getErrorManager().
  *
@@ -283,7 +283,7 @@ while (0)
  * \def OV_ERROR_UNLESS_KRF(expression, description, type)
  * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for contitional error macro that returns false and
+ * Shorthand for conditional error macro that returns false and
  * launched by objects that have direct access to kernel logger and error
  * managers through this->getLogManager() and this->getErrorManager().
  *
@@ -295,7 +295,7 @@ while (0)
  * \def OV_ERROR_UNLESS_KRZ(expression, description, type)
  * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for contitional error macro that returns zero and
+ * Shorthand for conditional error macro that returns zero and
  * launched by objects that have direct access to kernel logger and error
  * managers through this->getLogManager() and this->getErrorManager().
  *
@@ -307,7 +307,7 @@ while (0)
  * \def OV_ERROR_UNLESS_KRU(expression, description, type)
  * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for contitional error macro that returns OV_UndefinedIdentifier and
+ * Shorthand for conditional error macro that returns OV_UndefinedIdentifier and
  * launched by objects that have direct access to kernel logger and error
  * managers through this->getLogManager() and this->getErrorManager().
  *
@@ -319,7 +319,7 @@ while (0)
  * \def OV_ERROR_UNLESS_KRV(expression, description, type)
  * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for contitional error macro that returns void() and
+ * Shorthand for conditional error macro that returns void() and
  * launched by objects that have direct access to kernel logger and error
  * managers through this->getLogManager() and this->getErrorManager().
  *
@@ -331,7 +331,7 @@ while (0)
  * \def OV_ERROR_UNLESS_KRN(expression, description, type)
  * \see OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
  *
- * Shorthand for contitional error macro that returns nullptr and
+ * Shorthand for conditional error macro that returns nullptr and
  * launched by objects that have direct access to kernel logger and error
  * managers through this->getLogManager() and this->getErrorManager().
  *
@@ -388,7 +388,7 @@ while (0)
  * \def OV_FATAL_UNLESS_K(description, type)
  * \see OV_FATAL(expression, description, type)
  *
- * Shorthand for fatal contitional macro launched by objects that have direct
+ * Shorthand for fatal conditional macro launched by objects that have direct
  * access to kernel logger through this->getLogManager().
  *
  * Suffix K stands for Kernel.
