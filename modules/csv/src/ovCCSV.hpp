@@ -197,8 +197,6 @@ namespace OpenViBE
 			std::string m_LastStringError;
 
 			EStreamType m_InputTypeIdentifier;
-			const char m_Separator;
-			const char m_InternalDataSeparator;
 
 			unsigned int m_DimensionCount;
 			std::vector<unsigned int> m_DimensionSizes;
@@ -214,12 +212,16 @@ namespace OpenViBE
 			unsigned int m_SamplingRate;
 			unsigned long long m_Epoch;
 			unsigned int m_ColumnCount;
+			unsigned int m_PreDataColumnCount;
+			unsigned int m_PostDataColumnCount;
 
 			bool m_IsSetInputType;
 			bool m_IsFirstLineWritten;
 			bool m_IsHeaderRead;
 			bool m_IsSetInfoCalled;
 			bool m_HasEpoch;
+
+			unsigned int m_OriginalSampleNumber;
 		};
 	}
 }
