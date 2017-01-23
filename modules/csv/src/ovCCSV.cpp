@@ -78,8 +78,8 @@ CCSVLib::CCSVLib(void)
 	m_IsFirstLineWritten(false),
 	m_IsHeaderRead(false),
 	m_IsSetInfoCalled(false),
-	m_HasEpoch(false)
-
+	m_HasEpoch(false),
+	m_OutputFloatPrecision(10)
 {
 }
 
@@ -325,63 +325,6 @@ bool CCSVLib::getFeatureVectorInformation(std::vector<std::string>& channelNames
 	return true;
 }
 
-bool CCSVLib::setCovarianceMatrixInformation(const std::vector<std::string>& channelNames)
-{
-	if (m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
-	{
-		m_LastStringError.clear();
-		m_LogError = LogErrorCodes_WrongInputType;
-		return false;
-	}
-	else if (m_IsSetInfoCalled)
-	{
-		m_LastStringError.clear();
-		m_LogError = LogErrorCodes_SetInfoOnce;
-		return false;
-	}
-
-	m_IsSetInfoCalled = true;
-	if (channelNames.empty())
-	{
-		m_LastStringError.clear();
-		m_LogError = LogErrorCodes_NoChannelsName;
-		return false;
-	}
-	m_DimensionLabels = channelNames;
-	return true;
-}
-
-bool CCSVLib::getCovarianceMatrixInformation(std::vector<std::string>& channelNames)
-{
-	if (m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
-	{
-		m_LastStringError.clear();
-		m_LogError = LogErrorCodes_WrongInputType;
-		return false;
-	}
-	else if (!m_IsHeaderRead)
-	{
-		m_LastStringError = "No header read yet";
-		m_LogError = LogErrorCodes_WrongHeader;
-		return false;
-	}
-	else if (!channelNames.empty())
-	{
-		m_LastStringError = "channelNames already filled";
-		m_LogError = LogErrorCodes_WrongParameters;
-		return false;
-	}
-	else if (m_DimensionLabels.empty())
-	{
-		m_LastStringError = "No dimension labels, header reading may have failed";
-		m_LogError = LogErrorCodes_WrongHeader;
-		return false;
-	}
-
-	channelNames = m_DimensionLabels;
-	return true;
-}
-
 bool CCSVLib::setStreamedMatrixInformation(const std::vector<unsigned int>& dimensionSizes, const std::vector<std::string>& labels)
 {
 	if (m_IsSetInfoCalled)
@@ -391,7 +334,7 @@ bool CCSVLib::setStreamedMatrixInformation(const std::vector<unsigned int>& dime
 		return false;
 	}
 
-	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix)
+	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix && m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
 	{
 		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
@@ -425,7 +368,7 @@ bool CCSVLib::setStreamedMatrixInformation(const std::vector<unsigned int>& dime
 
 bool CCSVLib::getStreamedMatrixInformation(std::vector<unsigned int>& dimensionSizes, std::vector<std::string>& labels)
 {
-	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix)
+	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix && m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
 	{
 		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongInputType;
@@ -775,12 +718,7 @@ bool CCSVLib::addSample(const SMatrixChunk& sample)
 	else if (m_InputTypeIdentifier != EStreamType::Signal
 		&& m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
-		unsigned int columnsToHave = 1;
-		for (size_t columnNbrToHave : m_DimensionSizes)
-		{
-			columnsToHave *= columnNbrToHave;
-		}
-
+		unsigned int columnsToHave = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<unsigned int>());
 		if (sample.matrix.size() != columnsToHave)
 		{
 			m_LastStringError = "Matrix size is " + std::to_string(sample.matrix.size()) + " and size to have is " + std::to_string(columnsToHave);
@@ -922,7 +860,7 @@ std::string CCSVLib::writeStimulations(const std::vector<SStimulationChunk>& sti
 	char buffer[1024];
 	for (size_t index = 0; index < stimulationToPrint.size(); index++)
 	{
-		sprintf(buffer, "%.10f", stimulationToPrint[index].stimulationDate);
+		sprintf(buffer, "%.*f", m_OutputFloatPrecision, stimulationToPrint[index].stimulationDate);
 		stimulations += buffer;
 		if ((index + 1) < stimulationToPrint.size())
 		{
@@ -933,7 +871,7 @@ std::string CCSVLib::writeStimulations(const std::vector<SStimulationChunk>& sti
 
 	for (size_t index = 0; index < stimulationToPrint.size(); index++)
 	{
-		sprintf(buffer, "%.10f", stimulationToPrint[index].stimulationDuration);
+		sprintf(buffer, "%.*f", m_OutputFloatPrecision, stimulationToPrint[index].stimulationDuration);
 		stimulations += buffer;
 		if ((index + 1) < stimulationToPrint.size())
 		{
@@ -1127,11 +1065,7 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 			|| m_InputTypeIdentifier == EStreamType::CovarianceMatrix
 			|| m_InputTypeIdentifier == EStreamType::StreamedMatrix)
 		{
-			unsigned int columnstoHave = 1;
-			for (unsigned int size : m_DimensionSizes)
-			{
-				columnstoHave *= size;
-			}
+			unsigned int columnstoHave = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<unsigned int>());
 			columnstoHave += m_PreDataColumnCount + m_PostDataColumnCount;
 			if (columnstoHave != m_ColumnCount)
 			{
@@ -1145,34 +1079,36 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 		std::pair<double, double> currentTime = { m_Chunks.front().startTime, m_Chunks.front().endTime };
 		char buffer[1024] = {};
 
-		sprintf(buffer, "%.10f", currentTime.first);
+		sprintf(buffer, "%.*f", m_OutputFloatPrecision, currentTime.first);
 		m_Buffer += buffer;
-		if (m_InputTypeIdentifier == EStreamType::Spectrum
-			|| m_InputTypeIdentifier == EStreamType::StreamedMatrix
-			|| m_InputTypeIdentifier == EStreamType::CovarianceMatrix
-			|| m_InputTypeIdentifier == EStreamType::FeatureVector)
+		switch(m_InputTypeIdentifier)
 		{
-			sprintf(buffer, "%.10f", currentTime.second);
+		case EStreamType::Spectrum :
+		case EStreamType::StreamedMatrix :
+		case EStreamType::CovarianceMatrix :
+		case EStreamType::FeatureVector :
+			sprintf(buffer, "%.*f", m_OutputFloatPrecision, currentTime.second);
 			m_Buffer += s_Separator;
 			m_Buffer += buffer;
-		}
-
-		m_Buffer += s_Separator;
-		if (m_InputTypeIdentifier == EStreamType::Signal
-			|| m_InputTypeIdentifier == EStreamType::Spectrum)
-		{
-			m_Buffer += std::to_string(m_Chunks.front().epoch) + s_Separator;
+			break;
+		case EStreamType::Signal :
+			m_Buffer += s_Separator;
+			m_Buffer += std::to_string(m_Chunks.front().epoch);
+			break;
+		default :
+			break;
 		}
 
 		// matrix
 		while (!m_Chunks.front().matrix.empty())
 		{
-			sprintf(buffer, "%.10f", m_Chunks.front().matrix.front());
-			m_Buffer += buffer;
 			m_Buffer += s_Separator;
+			sprintf(buffer, "%.*f", m_OutputFloatPrecision, m_Chunks.front().matrix.front());
+			m_Buffer += buffer;
 			m_Chunks.front().matrix.erase(m_Chunks.front().matrix.begin());
 		}
 
+		m_Buffer += s_Separator;
 		// stimulations
 		if (!m_Stimulations.empty())
 		{
@@ -1192,8 +1128,8 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 		}
 		else
 		{
-			m_Buffer.push_back(s_Separator);
-			m_Buffer.push_back(s_Separator);
+			m_Buffer += s_Separator;
+			m_Buffer += s_Separator;
 		}
 		m_Buffer += "\n";
 		linesWritten++;
@@ -1530,11 +1466,7 @@ bool CCSVLib::parseMatrixHeader(void)
 	}
 
 	// check columnLabels number according to dimension sizes
-	unsigned int matrixColumnCount = 1;
-	for (const unsigned int &columnNbr : m_DimensionSizes)
-	{
-		matrixColumnCount *= columnNbr;
-	}
+	unsigned int matrixColumnCount = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1, std::multiplies<unsigned int>());
 
 	if ((matrixColumnCount + m_PreDataColumnCount + m_PostDataColumnCount) != m_LineColumns.size())
 	{

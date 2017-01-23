@@ -42,6 +42,9 @@ namespace OpenViBE
 			 */
 			~CCSVLib(void);
 
+			unsigned int getOutputFloatPrecision() {return m_OutputFloatPrecision; }
+			void setOutputFloatPrecision(unsigned int precision) { m_OutputFloatPrecision = precision; }
+
 			void setFormatType(EStreamType typeIdentifier);
 
 			EStreamType getFormatType(void);
@@ -54,9 +57,6 @@ namespace OpenViBE
 
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames);
 			bool getFeatureVectorInformation(std::vector<std::string>& channelNames);
-
-			bool setCovarianceMatrixInformation(const std::vector<std::string>& channelNames);
-			bool getCovarianceMatrixInformation(std::vector<std::string>& channelNames);
 
 			bool setStreamedMatrixInformation(const std::vector<unsigned int>& dimensionSizes, const std::vector<std::string>& labels);
 			bool getStreamedMatrixInformation(std::vector<unsigned int>& dimensionSizes, std::vector<std::string>& labels);
@@ -222,6 +222,7 @@ namespace OpenViBE
 			bool m_HasEpoch;
 
 			unsigned int m_OriginalSampleNumber;
+			unsigned int m_OutputFloatPrecision;
 		};
 	}
 }

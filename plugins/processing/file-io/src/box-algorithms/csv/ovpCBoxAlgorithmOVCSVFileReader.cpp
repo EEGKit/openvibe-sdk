@@ -49,7 +49,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 		m_AlgorithmEncoder = new OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >(*this, 0);
 		m_ReaderLib->setFormatType(EStreamType::Signal);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 	{
 		m_AlgorithmEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >(*this, 0);
 		m_ReaderLib->setFormatType(EStreamType::StreamedMatrix);
@@ -79,7 +79,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 			(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
 			ErrorType::Internal);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->getStreamedMatrixInformation(m_DimensionSizes, m_ChannelNames),
 			(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
@@ -133,7 +133,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 			"Failed to get input matrix",
 			ErrorType::Internal);
 	}
-	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 	{
 		OV_ERROR_UNLESS_KRF(matrix = (dynamic_cast<OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
 			"Failed to get input matrix",
@@ -170,7 +170,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 
 			dynamic_cast<OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder)->getInputSamplingRate() = m_SamplingRate;
 		}
-		else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix)
+		else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 		{
 			OV_ERROR_UNLESS_KRF(matrix->setDimensionCount(static_cast<uint32>(m_DimensionSizes.size())),
 				"Failed to set dimension count",

@@ -109,6 +109,20 @@ namespace OpenViBE
 		{
 		public:
 			/**
+			 * \brief Return the number of digit of float numbers in output file.
+			 *
+			 * \return unsigned int number of digits
+			 */
+			virtual unsigned int getOutputFloatPrecision() = 0;
+
+			/**
+			 * \brief Set the number of digits of float numbers in output file.
+			 *
+			 * \param precision number of digits
+			 */
+			virtual void setOutputFloatPrecision(unsigned int precision) = 0;
+
+			/**
 			 * \brief Set the format type that will be written or read.
 			 *
 			 * \param typeIdentifier Could be Streamed Matrix, Signal, Covariance Matrix, etc ...
@@ -190,27 +204,7 @@ namespace OpenViBE
 			virtual bool getFeatureVectorInformation(std::vector<std::string>& channelNames) = 0;
 
 			/**
-			 * \brief Set informations to read or write covariance matrix data
-			 *
-			 * \param channelNames all channels names for the matrix
-			 *
-			 * \retval true in case of success
-			 * \retval false in case of incorrect or incomplete parameters
-			 */
-			virtual bool setCovarianceMatrixInformation(const std::vector<std::string>& channelNames) = 0;
-
-			/**
-			 * \brief Get covariance matrix information in file
-			 *
-			 * \param channelNames reference to fill with file channel names
-			 *
-			 * \retval true in case of success
-			 * \retval false in case of failure
-			 */
-			virtual bool getCovarianceMatrixInformation(std::vector<std::string>& channelNames) = 0;
-
-			/**
-			 * \brief Set informations to read or write streamed matrix data
+			 * \brief Set informations to read or write streamed or covariance matrix data
 			 *
 			 * \param dimensionSizes size of each dimension
 			 * \param labels all channels names for the matrix
@@ -221,7 +215,7 @@ namespace OpenViBE
 			virtual bool setStreamedMatrixInformation(const std::vector<unsigned int>& dimensionSizes, const std::vector<std::string>& labels) = 0;
 
 			/**
-			 * \brief Get streamed matrix information in file
+			 * \brief Get streamed or covariance matrix information in file
 			 *
 			 * \param labels reference to fill with file channel names
 			 *
