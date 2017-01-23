@@ -79,7 +79,7 @@ CCSVLib::CCSVLib(void)
 	m_IsHeaderRead(false),
 	m_IsSetInfoCalled(false),
 	m_HasEpoch(false),
-	m_OutputFloatPrecision(5)
+	m_OutputFloatPrecision(10)
 {
 }
 

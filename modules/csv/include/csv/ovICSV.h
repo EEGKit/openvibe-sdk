@@ -204,7 +204,7 @@ namespace OpenViBE
 			virtual bool getFeatureVectorInformation(std::vector<std::string>& channelNames) = 0;
 
 			/**
-			 * \brief Set informations to read or write streamed matrix data
+			 * \brief Set informations to read or write streamed or covariance matrix data
 			 *
 			 * \param dimensionSizes size of each dimension
 			 * \param labels all channels names for the matrix
@@ -215,7 +215,7 @@ namespace OpenViBE
 			virtual bool setStreamedMatrixInformation(const std::vector<unsigned int>& dimensionSizes, const std::vector<std::string>& labels) = 0;
 
 			/**
-			 * \brief Get streamed matrix information in file
+			 * \brief Get streamed or covariance matrix information in file
 			 *
 			 * \param labels reference to fill with file channel names
 			 *
