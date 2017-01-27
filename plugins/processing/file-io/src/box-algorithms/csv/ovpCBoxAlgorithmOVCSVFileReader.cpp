@@ -67,11 +67,6 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.initialize(*this, 1),
 		"Error during stimulation encoder initialize",
 		ErrorType::Internal);
-	std::vector<SMatrixChunk> matrixChunks;
-	std::vector<SStimulationChunk> stimulationChunks;
-	OV_ERROR_UNLESS_KRF(m_ReaderLib->readSamplesAndEventsFromFile(0, matrixChunks, stimulationChunks),
-		(ICSVLib::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
-		ErrorType::Internal);
 
 	if (m_TypeIdentifier == OV_TypeId_Signal)
 	{

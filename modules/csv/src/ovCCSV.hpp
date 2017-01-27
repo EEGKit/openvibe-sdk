@@ -103,7 +103,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of wrong informations sent
 			 */
-			bool createHeaderString(void);
+			std::string createHeaderString(void);
 
 			/**
 			 * \brief Set the buffer in function of data saved
@@ -189,7 +189,6 @@ namespace OpenViBE
 
 			std::fstream m_Fs;
 			std::string m_Filename;
-			std::string m_Header;
 			std::string m_Buffer;
 			std::vector<SMatrixChunk> m_Chunks;
 			std::vector<SStimulationChunk> m_Stimulations;
@@ -210,7 +209,6 @@ namespace OpenViBE
 			// columns between each separator (as : {Time, Epoch, O1, O2, O3, Event Id, Event date, Event Duration})
 			std::vector<std::string> m_LineColumns;
 			unsigned int m_SamplingRate;
-			unsigned long long m_Epoch;
 			unsigned int m_ColumnCount;
 			unsigned int m_PreDataColumnCount;
 			unsigned int m_PostDataColumnCount;
