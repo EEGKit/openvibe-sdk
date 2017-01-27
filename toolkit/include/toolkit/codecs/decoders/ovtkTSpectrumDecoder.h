@@ -15,7 +15,7 @@ namespace OpenViBEToolkit
 
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > m_pOutputBands;
+		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > m_pOutputFrequencyAbscissa;
 		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_pOutputSamplingRate;
 
 
@@ -29,7 +29,7 @@ namespace OpenViBEToolkit
 			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
 			m_pCodec->initialize();
 			m_pOutputMatrix.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_Matrix));
-			m_pOutputBands.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_CenterFrequencyBands));
+			m_pOutputFrequencyAbscissa.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
 			m_pOutputSamplingRate.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
 			m_pInputMemoryBuffer.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_InputParameterId_MemoryBufferToDecode));
 
@@ -47,7 +47,7 @@ namespace OpenViBEToolkit
 			}
 
 			m_pOutputMatrix.uninitialize();
-			m_pOutputBands.uninitialize();
+			m_pOutputFrequencyAbscissa.uninitialize();
 			m_pOutputSamplingRate.uninitialize();
 			m_pInputMemoryBuffer.uninitialize();
 			m_pCodec->uninitialize();
@@ -62,14 +62,14 @@ namespace OpenViBEToolkit
 			return m_pOutputSamplingRate;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getOutputCenterFrequencyBands()
+		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getOutputFrequencyAbscissa()
 		{
-			return m_pOutputBands;
+			return m_pOutputFrequencyAbscissa;
 		}
 
 		size_t getOutputCenterFrequencyBandsCount()
 		{
-			return m_pOutputBands->getDimensionSize(0);
+			return m_pOutputFrequencyAbscissa->getDimensionSize(0);
 		}
 
 		virtual OpenViBE::boolean isHeaderReceived()

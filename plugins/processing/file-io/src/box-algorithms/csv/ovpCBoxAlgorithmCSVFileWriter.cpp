@@ -249,7 +249,7 @@ boolean CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 					{
 						// This should not be supported anymore
 						// This is not the correct formula
-						const IMatrix* l_pCenterFrequencyBand =  ((OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmCSVFileWriter >*)m_pStreamDecoder)->getOutputCenterFrequencyBands();
+						const IMatrix* l_pCenterFrequencyBand =  ((OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmCSVFileWriter >*)m_pStreamDecoder)->getOutputFrequencyAbscissa();
 						double half = s > 0
 								? (l_pCenterFrequencyBand->getBuffer()[s] - l_pCenterFrequencyBand->getBuffer()[s-1])/2.
 								: (l_pCenterFrequencyBand->getBuffer()[s+1] - l_pCenterFrequencyBand->getBuffer()[s])/2.;

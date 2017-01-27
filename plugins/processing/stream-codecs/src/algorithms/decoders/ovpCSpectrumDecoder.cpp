@@ -14,7 +14,7 @@ boolean CSpectrumDecoder::initialize(void)
 {
 	CStreamedMatrixDecoder::initialize();
 
-	op_pCenterFrequencyBands.initialize(getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_CenterFrequencyBands));
+	op_pFrequencyAbscissa.initialize(getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
 	op_pSamplingRate.initialize(getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
 
 	return true;
@@ -22,7 +22,7 @@ boolean CSpectrumDecoder::initialize(void)
 
 boolean CSpectrumDecoder::uninitialize(void)
 {
-	op_pCenterFrequencyBands.uninitialize();
+	op_pFrequencyAbscissa.uninitialize();
 	op_pSamplingRate.uninitialize();
 
 	CStreamedMatrixDecoder::uninitialize();
@@ -39,7 +39,7 @@ EBML::boolean CSpectrumDecoder::isMasterChild(const EBML::CIdentifier& rIdentifi
 	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated)       { return true; }
 	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated) { return false; }
 	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)  { return false; }
-	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_CenterFrequencyBand)            { return false; }
+	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)            { return false; }
 	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_SamplingRate)                   { return false; }
 	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
 }
@@ -52,11 +52,11 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 
 	if(l_rTop==OVTK_NodeId_Header_Spectrum)
 	{
-		op_pCenterFrequencyBands->setDimensionCount(1);
-		op_pCenterFrequencyBands->setDimensionSize(0, op_pMatrix->getDimensionSize(1));
+		op_pFrequencyAbscissa->setDimensionCount(1);
+		op_pFrequencyAbscissa->setDimensionSize(0, op_pMatrix->getDimensionSize(1));
 		m_ui32FrequencyBandIndex=0;
 	}
-	else if(l_rTop==OVTK_NodeId_Header_Spectrum_CenterFrequencyBand)
+	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)
 	{
 	}
 	else
@@ -80,8 +80,8 @@ void CSpectrumDecoder::processChildData(const void* pBuffer, const EBML::uint64 
 	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)
 	{
 		double rightFreq = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
-		double band = leftFreq + m_ui32FrequencyBandIndex / op_pCenterFrequencyBands->getDimensionSize(0) * (rightFreq - leftFreq);
-		op_pCenterFrequencyBands->getBuffer()[m_ui32FrequencyBandIndex] = band;
+		double band = leftFreq + m_ui32FrequencyBandIndex / op_pFrequencyAbscissa->getDimensionSize(0) * (rightFreq - leftFreq);
+		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex] = band;
 		auto g = op_pMatrix->getDimensionLabel(1, m_ui32FrequencyBandIndex);
 		std::ostringstream s;
 		s << band;
@@ -90,11 +90,11 @@ void CSpectrumDecoder::processChildData(const void* pBuffer, const EBML::uint64 
 		// op_pMatrix->setDimensionLabel(1, m_ui32FrequencyBandIndex, std::to_string(band).c_str());
 
 		// Do we agree on this ?
-		op_pSamplingRate = (m_ui32FrequencyBandIndex + 1) * (rightFreq - op_pCenterFrequencyBands->getBuffer()[0]);
+		op_pSamplingRate = (m_ui32FrequencyBandIndex + 1) * (rightFreq - op_pFrequencyAbscissa->getBuffer()[0]);
 	}
-	else if(l_rTop==OVTK_NodeId_Header_Spectrum_CenterFrequencyBand)
+	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)
 	{
-		op_pCenterFrequencyBands->getBuffer()[m_ui32FrequencyBandIndex]=m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex]=m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
 	}
 	else if(l_rTop==OVTK_NodeId_Header_Spectrum_SamplingRate)
 	{
@@ -116,7 +116,7 @@ void CSpectrumDecoder::closeChild(void)
 	{
 	}
 	else if((l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated)
-		|| (l_rTop==OVTK_NodeId_Header_Spectrum_CenterFrequencyBand))
+		|| (l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyAbscissa))
 	{
 		m_ui32FrequencyBandIndex++;
 	}

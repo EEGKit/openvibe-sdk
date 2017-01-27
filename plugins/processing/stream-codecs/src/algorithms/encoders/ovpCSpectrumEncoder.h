@@ -5,7 +5,7 @@
 
 #define OVP_ClassId_Algorithm_SpectrumStreamEncoder                                                        OpenViBE::CIdentifier(0xB3E252DB, 0xC3214498)
 #define OVP_ClassId_Algorithm_SpectrumStreamEncoderDesc                                                    OpenViBE::CIdentifier(0xD6182973, 0x122CE114)
-#define OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_CenterFrequencyBands                          OpenViBE::CIdentifier(0x05C91BD6, 0x2D8C4083)
+#define OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa                          OpenViBE::CIdentifier(0x05C91BD6, 0x2D8C4083)
 #define OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate                                  OpenViBE::CIdentifier(0x02D25E1B, 0x76A1019B)
 
 namespace OpenViBEPlugins
@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_SpectrumStreamEncoder);
 
 		protected:
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pCenterFrenquencyBands;
+			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pFrequencyAbscissa;
 			OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_pSamplingRate;
 
 		};
@@ -52,7 +52,7 @@ namespace OpenViBEPlugins
 			{
 				OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_CenterFrequencyBands, "Center frequency bands", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa, "Center frequency bands", OpenViBE::Kernel::ParameterType_Matrix);
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
 
 				return true;

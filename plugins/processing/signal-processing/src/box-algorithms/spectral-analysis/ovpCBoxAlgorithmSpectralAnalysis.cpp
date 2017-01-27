@@ -49,7 +49,7 @@ boolean CBoxAlgorithmSpectralAnalysis::initialize()
 {
 	m_Decoder.initialize(*this, 0);
 
-	m_FrequencyBandDescription = new CMatrix();
+	m_FrequencyAbscissa = new CMatrix();
 
 	// Amplitude
 	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 0));
@@ -67,10 +67,10 @@ boolean CBoxAlgorithmSpectralAnalysis::initialize()
 	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 3));
 	m_IsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
 
-	for (unsigned int i = 0; i < 4; ++i)
+	for (auto& curEncoder : m_SpectrumEncoders)
 	{
-		m_SpectrumEncoders[i]->getInputCenterFrequencyBands().setReferenceTarget(m_FrequencyBandDescription);
-		m_SpectrumEncoders[i]->getInputSamplingRate().setReferenceTarget(m_Decoder.getOutputSamplingRate());
+		curEncoder->getInputFrequencyAbscissa().setReferenceTarget(m_FrequencyAbscissa);
+		curEncoder->getInputSamplingRate().setReferenceTarget(m_Decoder.getOutputSamplingRate());
 	}
 
 	this->getLogManager() << LogLevel_Trace << "Spectral components selected : [ "
@@ -132,14 +132,13 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 			m_FFTSize = m_SampleCount / 2 + 1;
 
 			// Constructing the frequency band description matrix, same for every possible output (and given through reference target mechanism)
-
-			m_FrequencyBandDescription->setDimensionCount(1);  // a list of (min,max) pairs
-			m_FrequencyBandDescription->setDimensionSize(0, m_FFTSize); // FFTSize bands
+			m_FrequencyAbscissa->setDimensionCount(1);  // a list of frequencies
+			m_FrequencyAbscissa->setDimensionSize(0, m_FFTSize); // FFTSize bands
 
 			// Center frequency band values
 			for (unsigned int j = 0; j < m_FFTSize; j++)
 			{
-				m_FrequencyBandDescription->getBuffer()[j] = j * (static_cast<double>(m_SamplingRate) / m_SampleCount);
+				m_FrequencyAbscissa->getBuffer()[j] = j * (static_cast<double>(m_SamplingRate) / m_SampleCount);
 			}
 
 			// All spectra share the same header structure
@@ -164,7 +163,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 					for (unsigned int j = 0; j < m_FFTSize; j++)
 					{
 						char frequencyBandName[1024];
-						sprintf(frequencyBandName, "%lg", m_FrequencyBandDescription->getBuffer()[j]);
+						sprintf(frequencyBandName, "%lg", m_FrequencyAbscissa->getBuffer()[j]);
 						spectrum->setDimensionLabel(1, j, frequencyBandName);
 					}
 

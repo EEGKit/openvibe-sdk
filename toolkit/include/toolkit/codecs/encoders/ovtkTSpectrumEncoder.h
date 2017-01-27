@@ -14,7 +14,7 @@ namespace OpenViBEToolkit
 
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > m_pInputBandsCenter;
+		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > m_pInputFrequencyAbscissa;
 		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_pInputSamplingRate;
 
 		using T::m_pCodec;
@@ -27,7 +27,7 @@ namespace OpenViBEToolkit
 			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
 			m_pCodec->initialize();
 			m_pInputMatrix.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Matrix));
-			m_pInputBandsCenter.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_CenterFrequencyBands));
+			m_pInputFrequencyAbscissa.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
 			m_pInputSamplingRate.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate));
 			m_pOutputMemoryBuffer.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
@@ -46,7 +46,7 @@ namespace OpenViBEToolkit
 			}
 
 			m_pInputMatrix.uninitialize();
-			m_pInputBandsCenter.uninitialize();
+			m_pInputFrequencyAbscissa.uninitialize();
 			m_pInputSamplingRate.uninitialize();
 			m_pOutputMemoryBuffer.uninitialize();
 			m_pCodec->uninitialize();
@@ -61,14 +61,14 @@ namespace OpenViBEToolkit
 			return m_pInputSamplingRate;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getInputCenterFrequencyBands()
+		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getInputFrequencyAbscissa()
 		{
-			return m_pInputBandsCenter;
+			return m_pInputFrequencyAbscissa;
 		}
 
 		size_t getInputCenterFrequencyBandsCount()
 		{
-			return m_pInputBandsCenter->getDimensionSize(0);
+			return m_pInputFrequencyAbscissa->getDimensionSize(0);
 		}
 
 

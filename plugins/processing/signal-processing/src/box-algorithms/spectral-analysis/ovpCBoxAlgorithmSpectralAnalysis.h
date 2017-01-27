@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 
 			unsigned int m_FFTSize;
 
-			OpenViBE::IMatrix * m_FrequencyBandDescription;
+			OpenViBE::IMatrix * m_FrequencyAbscissa;
 		};
 
 		class CBoxAlgorithmSpectralAnalysisDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

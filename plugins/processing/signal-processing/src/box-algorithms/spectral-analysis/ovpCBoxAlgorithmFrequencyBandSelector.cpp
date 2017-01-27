@@ -89,13 +89,13 @@ boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
 
 	ip_pMemoryBuffer.initialize(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_InputParameterId_MemoryBufferToDecode));
 	op_pMatrix.initialize(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_Matrix));
-	op_pBands.initialize(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_CenterFrequencyBands));
+	op_pBands.initialize(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
 
 	m_pStreamEncoder=&this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
 	m_pStreamEncoder->initialize();
 
 	ip_pMatrix.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Matrix));
-	ip_pBands.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_CenterFrequencyBands));
+	ip_pBands.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
 	op_pMemoryBuffer.initialize(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
 	ip_pBands.setReferenceTarget(op_pBands);
@@ -154,13 +154,13 @@ boolean CBoxAlgorithmFrequencyBandSelector::process(void)
 			m_vSelectionFactor.clear();
 			for(uint32 j=0; j<ip_pBands->getDimensionSize(0); j++)
 			{
-				float64 l_f64Center=ip_pBands->getBuffer()[j];
-				boolean l_bSelected = std::any_of(m_vSelected.begin(), m_vSelected.end(), [l_f64Center](const BandRange& l_CurrentBandRange)
+				float64 f64Center=ip_pBands->getBuffer()[j];
+				bool bSelected = std::any_of(m_vSelected.begin(), m_vSelected.end(), [f64Center](const BandRange& currentBandRange)
 					{
-						return l_CurrentBandRange.first <= l_f64Center
-								&& l_f64Center <= l_CurrentBandRange.second;
+						return currentBandRange.first <= f64Center
+								&& f64Center <= currentBandRange.second;
 					});
-				m_vSelectionFactor.push_back(l_bSelected ? 1. : 0.);
+				m_vSelectionFactor.push_back(bSelected ? 1. : 0.);
 			}
 
 			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeHeader);

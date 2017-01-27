@@ -105,7 +105,7 @@ boolean CBoxAlgorithmChannelSelector::initialize(void)
 		TSpectrumDecoder < CBoxAlgorithmChannelSelector >* l_pDecoder=new TSpectrumDecoder < CBoxAlgorithmChannelSelector >;
 		l_pEncoder->initialize(*this,0);
 		l_pDecoder->initialize(*this,0);
-		l_pEncoder->getInputCenterFrequencyBands().setReferenceTarget(l_pDecoder->getOutputCenterFrequencyBands());
+		l_pEncoder->getInputFrequencyAbscissa().setReferenceTarget(l_pDecoder->getOutputFrequencyAbscissa());
 		l_pEncoder->getInputSamplingRate().setReferenceTarget(l_pDecoder->getOutputSamplingRate());
 
 		m_pDecoder=l_pDecoder;
