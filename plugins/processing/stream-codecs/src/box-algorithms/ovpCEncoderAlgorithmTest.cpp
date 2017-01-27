@@ -36,9 +36,8 @@ boolean CEncoderAlgorithmTest::initialize(void)
 	OpenViBEToolkit::Tools::Matrix::clearContent(*m_pMatrix1);
 
 	m_pMatrix2=new CMatrix();
-	m_pMatrix2->setDimensionCount(2);
+	m_pMatrix2->setDimensionCount(1);
 	m_pMatrix2->setDimensionSize(0, 16);
-	m_pMatrix2->setDimensionSize(1, 2);
 	OpenViBEToolkit::Tools::Matrix::clearContent(*m_pMatrix2);
 
 	m_pMatrix3=new CMatrix();
@@ -62,7 +61,7 @@ boolean CEncoderAlgorithmTest::initialize(void)
 	m_pStreamEncoder[2]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix1);
 	m_pStreamEncoder[2]->getInputParameter(OVP_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate)->setValue(&m_ui64SamplingRate);
 	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix1);
-	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_MinMaxFrequencyBands)->setValue(&m_pMatrix2);
+	m_pStreamEncoder[3]->getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_CenterFrequencyBands)->setValue(&m_pMatrix2);
 	m_pStreamEncoder[4]->getInputParameter(OVP_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet)->setValue(&m_pStimulationSet);
 	m_pStreamEncoder[5]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix2);
 	m_pStreamEncoder[6]->getInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setValue(&m_pMatrix3);

@@ -67,11 +67,11 @@ boolean CBoxAlgorithmSpectralAnalysis::initialize()
 	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 3));
 	m_IsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
 
-	//All encoders share the same frequency band description
-	m_SpectrumEncoders[0]->getInputMinMaxFrequencyBands().setReferenceTarget(m_FrequencyBandDescription);
-	m_SpectrumEncoders[1]->getInputMinMaxFrequencyBands().setReferenceTarget(m_FrequencyBandDescription);
-	m_SpectrumEncoders[2]->getInputMinMaxFrequencyBands().setReferenceTarget(m_FrequencyBandDescription);
-	m_SpectrumEncoders[3]->getInputMinMaxFrequencyBands().setReferenceTarget(m_FrequencyBandDescription);
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		m_SpectrumEncoders[i]->getInputCenterFrequencyBands().setReferenceTarget(m_FrequencyBandDescription);
+		m_SpectrumEncoders[i]->getInputSamplingRate().setReferenceTarget(m_Decoder.getOutputSamplingRate());
+	}
 
 	this->getLogManager() << LogLevel_Trace << "Spectral components selected : [ "
 		<< (m_IsSpectrumEncoderActive[0] ? CString("AMP ") : "")
@@ -132,23 +132,14 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 			m_FFTSize = m_SampleCount / 2 + 1;
 
 			// Constructing the frequency band description matrix, same for every possible output (and given through reference target mechanism)
-			m_FrequencyBandDescription->setDimensionCount(2);  // a list of (min,max) pairs
-			m_FrequencyBandDescription->setDimensionSize(0, 2); // Min and Max
-			m_FrequencyBandDescription->setDimensionSize(1, m_FFTSize); // FFTSize bands 
 
-			// Min Max frequency band values
+			m_FrequencyBandDescription->setDimensionCount(1);  // a list of (min,max) pairs
+			m_FrequencyBandDescription->setDimensionSize(0, m_FFTSize); // FFTSize bands
+
+			// Center frequency band values
 			for (unsigned int j = 0; j < m_FFTSize; j++)
 			{
-				double bandStart = j * (static_cast<double>(m_SamplingRate / 2.) / m_FFTSize);
-				double bandStop = (j + 1) * (static_cast<double>(m_SamplingRate / 2.) / m_FFTSize);
-
-				if (bandStop < bandStart)
-				{
-					bandStop = bandStart;
-				}
-
-				m_FrequencyBandDescription->getBuffer()[j * 2] = bandStart;
-				m_FrequencyBandDescription->getBuffer()[j * 2 + 1] = bandStop;
+				m_FrequencyBandDescription->getBuffer()[j] = j * (static_cast<double>(m_SamplingRate) / m_SampleCount);
 			}
 
 			// All spectra share the same header structure
@@ -169,11 +160,11 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 						spectrum->setDimensionLabel(0, j, matrix->getDimensionLabel(0, j));
 					}
 
-					// We also name the spectrum bands "Min-Max"
+					// We also name the spectrum bands "Center"
 					for (unsigned int j = 0; j < m_FFTSize; j++)
 					{
 						char frequencyBandName[1024];
-						sprintf(frequencyBandName, "%lg-%lg", m_FrequencyBandDescription->getBuffer()[j * 2], m_FrequencyBandDescription->getBuffer()[j * 2 + 1]);
+						sprintf(frequencyBandName, "%lg", m_FrequencyBandDescription->getBuffer()[j]);
 						spectrum->setDimensionLabel(1, j, frequencyBandName);
 					}
 

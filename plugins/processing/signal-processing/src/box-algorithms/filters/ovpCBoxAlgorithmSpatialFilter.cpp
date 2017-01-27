@@ -145,8 +145,10 @@ boolean CBoxAlgorithmSpatialFilter::initialize(void)
 		m_pStreamDecoder=new OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmSpatialFilter >(*this, 0);
 		m_pStreamEncoder=new OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmSpatialFilter >(*this, 0);
 
-		((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputMinMaxFrequencyBands().setReferenceTarget(
-			((OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*)m_pStreamDecoder)->getOutputMinMaxFrequencyBands());
+		((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputCenterFrequencyBands().setReferenceTarget(
+			((OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*)m_pStreamDecoder)->getOutputCenterFrequencyBands());
+		((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputSamplingRate().setReferenceTarget(
+			((OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmSpatialFilter>*)m_pStreamDecoder)->getOutputSamplingRate());
 	}
 	else
 	{

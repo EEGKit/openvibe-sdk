@@ -757,10 +757,50 @@
  * ----------------------------------------------------------------- *
  */
 
+/*
+ * Spectrum stream description
+ * v2 january 27th 2017
+ *
+ * version 2 :
+ * ----------------------------------------------------------------- *
+ * OVTK_NodeId_Header
+ *   OVTK_NodeId_Header_StreamType (integer:)
+ *   OVTK_NodeId_Header_StreamVersion (integer:1)
+ *   OVTK_NodeId_Header_StreamedMatrix
+ *     OVTK_NodeId_Header_StreamedMatrix_DimensionCount (integer:2)
+ *     OVTK_NodeId_Header_StreamedMatrix_Dimension
+ *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Size (integer:channel count)
+ *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:channel 1 name)
+ *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:channel 2 name)
+ *       ...
+ *     OVTK_NodeId_Header_StreamedMatrix_Dimension
+ *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Size (integer:number of frequency band)
+ *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:frequency band 1 name)
+ *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:frequency band 2 name)
+ *       ...
+ *   OVTK_NodeId_Header_Spectrum
+ *       OVTK_NodeId_Header_Spectrum_SamplingRate (float64)
+ *		 OVTK_NodeId_Header_Spectrum_CenterFrequencyBand (float64)
+ *		 OVTK_NodeId_Header_Spectrum_CenterFrequencyBand (float64)
+ *		 ...
+ * OVTK_NodeId_Buffer
+ *   OVTK_NodeId_Buffer_StreamedMatrix
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ * OVTK_NodeId_Buffer
+ *   OVTK_NodeId_Buffer_StreamedMatrix
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ * ...
+ * OVTK_NodeId_End
+ * ----------------------------------------------------------------- *
+ */
 #define OVTK_NodeId_Header_Spectrum                                     EBML::CIdentifier(0x00CCFA4B, 0x14F37D4D)
-#define OVTK_NodeId_Header_Spectrum_FrequencyBand                       EBML::CIdentifier(0x0010983C, 0x21F8BDE5)
-#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Start                 EBML::CIdentifier(0x00AA5654, 0x2403A2CB)
-#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop                  EBML::CIdentifier(0x00A44C82, 0x05BE50D5)
+#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated            EBML::CIdentifier(0x0010983C, 0x21F8BDE5)
+#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated      EBML::CIdentifier(0x00AA5654, 0x2403A2CB)
+#define OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated       EBML::CIdentifier(0x00A44C82, 0x05BE50D5)
+// They do not start with 0x00 ... Should they ?
+#define OVTK_NodeId_Header_Spectrum_CenterFrequencyBand					EBML::CIdentifier(0x71D7287D, 0x622A2BF5)
+#define OVTK_NodeId_Header_Spectrum_SamplingRate                        EBML::CIdentifier(0x286876E9, 0x1DCB0CA1)
+
 
 //___________________________________________________________________//
 //                                                                   //

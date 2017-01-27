@@ -479,6 +479,7 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_signal(void)
 
 	return true;
 }
+
 OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_channelLocalisation(void)
 {
 	IMatrix* ip_pMatrix = ((OpenViBEToolkit::TChannelLocalisationEncoder < CBoxAlgorithmCSVFileReader >*)m_pAlgorithmEncoder)->getInputMatrix();
@@ -594,10 +595,11 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_featureVector(void)
 
 	return true;
 }
+
 OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_spectrum(void)
 {
 	IMatrix* ip_pMatrix = ((OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmCSVFileReader >*)m_pAlgorithmEncoder)->getInputMatrix();
-	IMatrix* ip_pMinMaxFrequencyBands = ((OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmCSVFileReader >*)m_pAlgorithmEncoder)->getInputMinMaxFrequencyBands();
+	IMatrix* ip_pCenterFrequencyBands = ((OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmCSVFileReader >*)m_pAlgorithmEncoder)->getInputCenterFrequencyBands();
 
 	//Header
 	if(!m_bHeaderSent)
@@ -610,21 +612,27 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_spectrum(void)
 		{
 			ip_pMatrix->setDimensionLabel(0,i-1,m_vHeaderFile[i].c_str());
 		}
-		ip_pMinMaxFrequencyBands->setDimensionCount(3);
-		ip_pMinMaxFrequencyBands->setDimensionSize(0,m_ui32NbColumn-1);
-		ip_pMinMaxFrequencyBands->setDimensionSize(1,m_vDataMatrix.size());
-		ip_pMinMaxFrequencyBands->setDimensionSize(2,2);
-		for(uint32 j=0;j<m_ui32NbColumn-1;j++)
+		ip_pCenterFrequencyBands->setDimensionCount(2);
+		ip_pCenterFrequencyBands->setDimensionSize(0, m_vDataMatrix.size());
+		ip_pCenterFrequencyBands->setDimensionSize(1, m_ui32NbColumn-1);
+		for(uint32 j=0;j<m_ui32NbColumn-1;j++) // Warning, these are CHANNELS
 		{
-			for(uint32 i=0;i<m_vDataMatrix.size();i++)
+			for(uint32 i=0;i<m_vDataMatrix.size();i++) // Frequency Bands
 			{
-				ip_pMinMaxFrequencyBands->getBuffer()[j*m_vDataMatrix.size()*2+i*2]=atof(m_vDataMatrix[i][m_ui32NbColumn].c_str());
-				ip_pMinMaxFrequencyBands->getBuffer()[j*m_vDataMatrix.size()*2+i*2+1]=atof(m_vDataMatrix[i][m_ui32NbColumn+1].c_str());
+				double bandCenter = atof(m_vDataMatrix[i][m_ui32NbColumn].c_str())
+						+ (double)i / m_vDataMatrix.size() * (atof(m_vDataMatrix[i][m_ui32NbColumn+1].c_str()) - atof(m_vDataMatrix[i][m_ui32NbColumn].c_str()));
+				ip_pCenterFrequencyBands->getBuffer()[j*m_vDataMatrix.size()+i] = bandCenter;
+
 				std::stringstream l_sLabel;
-				l_sLabel<<(16*i)<<"-"<<(16*(i+1));
-				ip_pMinMaxFrequencyBands->setDimensionLabel(1,i,l_sLabel.str().c_str());
+				l_sLabel<< bandCenter;
+				ip_pCenterFrequencyBands->setDimensionLabel(1,i,l_sLabel.str().c_str());
 			}
 		}
+		auto a = m_vDataMatrix.size();
+		auto b = atof(m_vDataMatrix[m_vDataMatrix.size()-1][m_ui32NbColumn].c_str());
+		auto c = atof(m_vDataMatrix[0][m_ui32NbColumn].c_str());
+		((OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmCSVFileReader >*)m_pAlgorithmEncoder)->getInputSamplingRate() = m_vDataMatrix.size() /
+				(atof(m_vDataMatrix[m_vDataMatrix.size()-1][m_ui32NbColumn].c_str()) - atof(m_vDataMatrix[0][m_ui32NbColumn].c_str()));
 		m_bHeaderSent = true;
 		m_pAlgorithmEncoder->encodeHeader();
 
