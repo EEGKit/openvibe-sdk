@@ -628,9 +628,7 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_spectrum(void)
 				ip_pCenterFrequencyBands->setDimensionLabel(1,i,l_sLabel.str().c_str());
 			}
 		}
-		auto a = m_vDataMatrix.size();
-		auto b = atof(m_vDataMatrix[m_vDataMatrix.size()-1][m_ui32NbColumn].c_str());
-		auto c = atof(m_vDataMatrix[0][m_ui32NbColumn].c_str());
+
 		((OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmCSVFileReader >*)m_pAlgorithmEncoder)->getInputSamplingRate() = m_vDataMatrix.size() /
 				(atof(m_vDataMatrix[m_vDataMatrix.size()-1][m_ui32NbColumn].c_str()) - atof(m_vDataMatrix[0][m_ui32NbColumn].c_str()));
 		m_bHeaderSent = true;
