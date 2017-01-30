@@ -1172,11 +1172,6 @@ bool CCSVHandler::parseHeader(void)
 			break;
 	}
 
-	if (m_LineColumns.back().back() == '\r')
-	{
-		printf("The file has CRLF endings\n");
-	}
-
 	// check stimulations
 	if (m_LineColumns[m_LineColumns.size() - m_PostDataColumnCount] != s_EventIdentifierColumn
 		|| m_LineColumns[m_LineColumns.size() - m_PreDataColumnCount] != s_EventDateColumn
