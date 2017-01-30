@@ -88,6 +88,8 @@ namespace OpenViBE
 			std::string getLastErrorString();
 
 		private:
+			void split(const std::string& string, char delimitor, std::vector<std::string>& element);
+
 			/**
 			 * \brief Create a string with stimulations to add in the buffer
 			 *
@@ -196,6 +198,8 @@ namespace OpenViBE
 			std::string m_LastStringError;
 
 			EStreamType m_InputTypeIdentifier;
+			typedef std::istream& GetLine(std::istream&, std::string&, const char delim);
+			GetLine* m_GetLineFunction;
 
 			unsigned int m_DimensionCount;
 			std::vector<unsigned int> m_DimensionSizes;
@@ -213,7 +217,7 @@ namespace OpenViBE
 			unsigned int m_PreDataColumnCount;
 			unsigned int m_PostDataColumnCount;
 
-			bool m_IsSetInputType;
+			bool m_HasInputType;
 			bool m_IsFirstLineWritten;
 			bool m_IsHeaderRead;
 			bool m_IsSetInfoCalled;
