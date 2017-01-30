@@ -29,18 +29,18 @@ namespace OpenViBE
 {
 	namespace CSV
 	{
-		class CCSVLib final : public ICSVLib
+		class CCSVHandler final : public ICSVHandler
 		{
 		public:
 			/**
 			 * \brief Set lib value to default
 			 */
-			CCSVLib(void);
+			CCSVHandler(void);
 
 			/**
 			 * \brief Close the file if it is open.
 			 */
-			~CCSVLib(void);
+			~CCSVHandler(void);
 
 			unsigned int getOutputFloatPrecision() {return m_OutputFloatPrecision; }
 			void setOutputFloatPrecision(unsigned int precision) { m_OutputFloatPrecision = precision; }

@@ -40,7 +40,7 @@ namespace {
 	};
 }
 
-std::string ICSVLib::getLogError(ELogErrorCodes code)
+std::string ICSVHandler::getLogError(ELogErrorCodes code)
 {
 	return s_ErrorMap.at(code);
 }

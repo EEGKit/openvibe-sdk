@@ -63,9 +63,10 @@ namespace {
 			element.push_back("");
 		}
 	}
+
 }
 
-CCSVLib::CCSVLib(void)
+CCSVHandler::CCSVHandler(void)
 	: m_LastStringError(""),
 	m_DimensionCount(0),
 	m_DimensionSizes({}),
@@ -83,12 +84,12 @@ CCSVLib::CCSVLib(void)
 {
 }
 
-CCSVLib::~CCSVLib(void)
+CCSVHandler::~CCSVHandler(void)
 {
 	closeFile();
 }
 
-void CCSVLib::setFormatType(EStreamType typeIdentifier)
+void CCSVHandler::setFormatType(EStreamType typeIdentifier)
 {
 	m_InputTypeIdentifier = typeIdentifier;
 	switch (m_InputTypeIdentifier) {
@@ -104,12 +105,12 @@ void CCSVLib::setFormatType(EStreamType typeIdentifier)
 	m_IsSetInputType = true;
 }
 
-EStreamType CCSVLib::getFormatType(void)
+EStreamType CCSVHandler::getFormatType(void)
 {
 	return m_InputTypeIdentifier;
 }
 
-bool CCSVLib::setSignalInformation(const std::vector<std::string>& channelNames, unsigned int samplingFrequency, unsigned int sampleCountPerBuffer)
+bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNames, unsigned int samplingFrequency, unsigned int sampleCountPerBuffer)
 {
 	if (m_InputTypeIdentifier != EStreamType::Signal)
 	{
@@ -139,7 +140,7 @@ bool CCSVLib::setSignalInformation(const std::vector<std::string>& channelNames,
 	return true;
 }
 
-bool CCSVLib::getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, unsigned int& sampleCountPerBuffer)
+bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, unsigned int& sampleCountPerBuffer)
 {
 	if (m_InputTypeIdentifier != EStreamType::Signal)
 	{
@@ -180,7 +181,7 @@ bool CCSVLib::getSignalInformation(std::vector<std::string>& channelNames, unsig
 	return true;
 }
 
-bool CCSVLib::setSpectrumInformation(const std::vector<std::string>& channelNames, std::vector<std::array<double, 2>> frequencyBands)
+bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, std::vector<std::array<double, 2>> frequencyBands)
 {
 	if (m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
@@ -210,7 +211,7 @@ bool CCSVLib::setSpectrumInformation(const std::vector<std::string>& channelName
 	return true;
 }
 
-bool CCSVLib::getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands, unsigned int& sampleCountPerBuffer)
+bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands, unsigned int& sampleCountPerBuffer)
 {
 	if (m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
@@ -251,7 +252,7 @@ bool CCSVLib::getSpectrumInformation(std::vector<std::string>& channelNames, std
 	return true;
 }
 
-bool CCSVLib::setFeatureVectorInformation(const std::vector<std::string>& channelNames)
+bool CCSVHandler::setFeatureVectorInformation(const std::vector<std::string>& channelNames)
 {
 	if (m_InputTypeIdentifier != EStreamType::FeatureVector)
 	{
@@ -278,7 +279,7 @@ bool CCSVLib::setFeatureVectorInformation(const std::vector<std::string>& channe
 	return true;
 }
 
-bool CCSVLib::getFeatureVectorInformation(std::vector<std::string>& channelNames)
+bool CCSVHandler::getFeatureVectorInformation(std::vector<std::string>& channelNames)
 {
 	if (m_InputTypeIdentifier != EStreamType::FeatureVector)
 	{
@@ -309,7 +310,7 @@ bool CCSVLib::getFeatureVectorInformation(std::vector<std::string>& channelNames
 	return true;
 }
 
-bool CCSVLib::setStreamedMatrixInformation(const std::vector<unsigned int>& dimensionSizes, const std::vector<std::string>& labels)
+bool CCSVHandler::setStreamedMatrixInformation(const std::vector<unsigned int>& dimensionSizes, const std::vector<std::string>& labels)
 {
 	if (m_IsSetInfoCalled)
 	{
@@ -350,7 +351,7 @@ bool CCSVLib::setStreamedMatrixInformation(const std::vector<unsigned int>& dime
 	return true;
 }
 
-bool CCSVLib::getStreamedMatrixInformation(std::vector<unsigned int>& dimensionSizes, std::vector<std::string>& labels)
+bool CCSVHandler::getStreamedMatrixInformation(std::vector<unsigned int>& dimensionSizes, std::vector<std::string>& labels)
 {
 	if (m_InputTypeIdentifier != EStreamType::StreamedMatrix && m_InputTypeIdentifier != EStreamType::CovarianceMatrix)
 	{
@@ -383,7 +384,7 @@ bool CCSVLib::getStreamedMatrixInformation(std::vector<unsigned int>& dimensionS
 	return true;
 }
 
-bool CCSVLib::openFile(const std::string& fileName, EFileAccessMode mode)
+bool CCSVHandler::openFile(const std::string& fileName, EFileAccessMode mode)
 {
 	if (m_Fs.is_open())
 	{
@@ -442,7 +443,7 @@ bool CCSVLib::openFile(const std::string& fileName, EFileAccessMode mode)
 	return true;
 }
 
-bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations)
+bool CCSVHandler::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations)
 {
 	if (!m_IsHeaderRead)
 	{
@@ -541,7 +542,7 @@ bool CCSVLib::readSamplesAndEventsFromFile(unsigned long long chunksToRead, std:
 	return true;
 }
 
-bool CCSVLib::writeHeaderToFile(void)
+bool CCSVHandler::writeHeaderToFile(void)
 {
 	if (!m_Fs.is_open())
 	{
@@ -577,7 +578,7 @@ bool CCSVLib::writeHeaderToFile(void)
 	return true;
 }
 
-bool CCSVLib::writeDataToFile(void)
+bool CCSVHandler::writeDataToFile(void)
 {
 	if (!m_Fs.is_open())
 	{
@@ -606,7 +607,7 @@ bool CCSVLib::writeDataToFile(void)
 	return true;
 }
 
-bool CCSVLib::writeAllDataToFile(void)
+bool CCSVHandler::writeAllDataToFile(void)
 {
 	// in case of error, logError set in the function
 	if (!createCSVStringFromData(true))
@@ -628,7 +629,7 @@ bool CCSVLib::writeAllDataToFile(void)
 	return true;
 }
 
-bool CCSVLib::closeFile()
+bool CCSVHandler::closeFile()
 {
 	m_Stimulations.clear();
 	m_Chunks.clear();
@@ -656,7 +657,7 @@ bool CCSVLib::closeFile()
 	return true;
 }
 
-bool CCSVLib::addSample(const SMatrixChunk& sample)
+bool CCSVHandler::addSample(const SMatrixChunk& sample)
 {
 	if (sample.matrix.empty())
 	{
@@ -704,7 +705,7 @@ bool CCSVLib::addSample(const SMatrixChunk& sample)
 	return true;
 }
 
-bool CCSVLib::addBuffer(const std::vector<SMatrixChunk>& samples)
+bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 {
 	if (samples.empty())
 	{
@@ -744,7 +745,7 @@ bool CCSVLib::addBuffer(const std::vector<SMatrixChunk>& samples)
 	return true;
 }
 
-bool CCSVLib::addEvent(unsigned long long code, double date, double duration)
+bool CCSVHandler::addEvent(unsigned long long code, double date, double duration)
 {
 	if (std::signbit(date))
 	{
@@ -764,7 +765,7 @@ bool CCSVLib::addEvent(unsigned long long code, double date, double duration)
 	return true;
 }
 
-bool CCSVLib::addEvent(const SStimulationChunk& stimulation)
+bool CCSVHandler::addEvent(const SStimulationChunk& stimulation)
 {
 	if (std::signbit(stimulation.stimulationDate))
 	{
@@ -783,7 +784,7 @@ bool CCSVLib::addEvent(const SStimulationChunk& stimulation)
 	return true;
 }
 
-bool CCSVLib::noEventsUntilDate(double date)
+bool CCSVHandler::noEventsUntilDate(double date)
 {
 	if (std::signbit(date))
 	{
@@ -797,17 +798,17 @@ bool CCSVLib::noEventsUntilDate(double date)
 	return true;
 }
 
-ELogErrorCodes CCSVLib::getLastLogError()
+ELogErrorCodes CCSVHandler::getLastLogError()
 {
 	return m_LogError;
 }
 
-std::string CCSVLib::getLastErrorString()
+std::string CCSVHandler::getLastErrorString()
 {
 	return m_LastStringError;
 }
 
-std::string CCSVLib::writeStimulations(const std::vector<SStimulationChunk>& stimulationToPrint)
+std::string CCSVHandler::writeStimulations(const std::vector<SStimulationChunk>& stimulationToPrint)
 {
 	std::string stimulations;
 	for (size_t index = 0; index < stimulationToPrint.size(); index++)
@@ -844,7 +845,7 @@ std::string CCSVLib::writeStimulations(const std::vector<SStimulationChunk>& sti
 	return stimulations;
 }
 
-std::string CCSVLib::createHeaderString(void)
+std::string CCSVHandler::createHeaderString(void)
 {
 	const std::string invalidHeader = "";
 	std::string header;
@@ -983,7 +984,7 @@ std::string CCSVLib::createHeaderString(void)
 	return header;
 }
 
-bool CCSVLib::createCSVStringFromData(bool canWriteAll)
+bool CCSVHandler::createCSVStringFromData(bool canWriteAll)
 {
 	std::vector<SStimulationChunk> stimulationsToWrite;
 	// if chunks is empty, their is no more lines to write
@@ -1098,7 +1099,7 @@ bool CCSVLib::createCSVStringFromData(bool canWriteAll)
 	return true;
 }
 
-bool CCSVLib::parseHeader(void)
+bool CCSVHandler::parseHeader(void)
 {
 	if (m_IsHeaderRead)
 	{
@@ -1191,7 +1192,7 @@ bool CCSVLib::parseHeader(void)
 	return true;
 }
 
-bool CCSVLib::parseSignalHeader(void)
+bool CCSVHandler::parseSignalHeader(void)
 {
 	//check time
 	if (m_LineColumns[s_TimeColumnIndex].substr(0, 5) != "Time:"
@@ -1235,7 +1236,7 @@ bool CCSVLib::parseSignalHeader(void)
 	return true;
 }
 
-bool CCSVLib::parseSpectrumHeader(void)
+bool CCSVHandler::parseSpectrumHeader(void)
 {
 	m_DimensionSizes.clear();
 	// check time column
@@ -1392,7 +1393,7 @@ bool CCSVLib::parseSpectrumHeader(void)
 	return true;
 }
 
-bool CCSVLib::parseMatrixHeader(void)
+bool CCSVHandler::parseMatrixHeader(void)
 {
 	// check time column
 	std::istringstream iss(m_LineColumns[s_TimeColumnIndex]);
@@ -1541,7 +1542,7 @@ bool CCSVLib::parseMatrixHeader(void)
 	return true;
 }
 
-bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
+bool CCSVHandler::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 {
 	double startTime;
 
@@ -1653,7 +1654,7 @@ bool CCSVLib::readSampleChunk(SMatrixChunk& sample, unsigned long long line)
 	return true;
 }
 
-bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations, unsigned long long line)
+bool CCSVHandler::readStimulationChunk(std::vector<SStimulationChunk>& stimulations, unsigned long long line)
 {
 	std::vector<unsigned long long> stimIdentifiers;
 	// pick all time identifiers for the actual time
@@ -1771,7 +1772,7 @@ bool CCSVLib::readStimulationChunk(std::vector<SStimulationChunk>& stimulations,
 	return true;
 }
 
-bool CCSVLib::increasePositionIndexes(std::vector<unsigned int>& position)
+bool CCSVHandler::increasePositionIndexes(std::vector<unsigned int>& position)
 {
 	position.back()++;
 	for (size_t counter = 1; counter <= position.size(); counter++)
@@ -1793,7 +1794,7 @@ bool CCSVLib::increasePositionIndexes(std::vector<unsigned int>& position)
 	return true;
 }
 
-bool CCSVLib::calculateSampleCountPerBuffer()
+bool CCSVHandler::calculateSampleCountPerBuffer()
 {
 	// get samples per buffer
 
@@ -1834,12 +1835,12 @@ bool CCSVLib::calculateSampleCountPerBuffer()
 	return true;
 }
 
-CSV_API ICSVLib* OpenViBE::CSV::createCSVLib()
+CSV_API ICSVHandler* OpenViBE::CSV::createCSVHandler()
 {
-	return new CCSVLib();
+	return new CCSVHandler();
 }
 
-CSV_API void OpenViBE::CSV::releaseCSVLib(ICSVLib* object)
+CSV_API void OpenViBE::CSV::releaseCSVHandler(ICSVHandler* object)
 {
-	delete dynamic_cast<CCSVLib*>(object);
+	delete dynamic_cast<CCSVHandler*>(object);
 }

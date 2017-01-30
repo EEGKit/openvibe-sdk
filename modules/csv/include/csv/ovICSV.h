@@ -105,7 +105,7 @@ namespace OpenViBE
 			Read
 		};
 
-		class CSV_API ICSVLib
+		class CSV_API ICSVHandler
 		{
 		public:
 			/**
@@ -353,11 +353,11 @@ namespace OpenViBE
 			 */
 			virtual std::string getLastErrorString() = 0;
 		protected:
-			virtual ~ICSVLib() {}
+			virtual ~ICSVHandler() {}
 		};
 
-		extern CSV_API ICSVLib* createCSVLib();
+		extern CSV_API ICSVHandler* createCSVHandler();
 
-		extern CSV_API void releaseCSVLib(ICSVLib* object);
+		extern CSV_API void releaseCSVHandler(ICSVHandler* object);
 	}
 }
