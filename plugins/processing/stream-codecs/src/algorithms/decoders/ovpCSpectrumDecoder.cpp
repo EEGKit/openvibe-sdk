@@ -82,15 +82,13 @@ void CSpectrumDecoder::processChildData(const void* pBuffer, const EBML::uint64 
 		double rightFreq = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
 		double band = leftFreq + m_ui32FrequencyBandIndex / op_pFrequencyAbscissa->getDimensionSize(0) * (rightFreq - leftFreq);
 		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex] = band;
-		auto g = op_pMatrix->getDimensionLabel(1, m_ui32FrequencyBandIndex);
 		std::ostringstream s;
+		s << std::setprecision(10);
 		s << band;
 		op_pMatrix->setDimensionLabel(1, m_ui32FrequencyBandIndex, s.str().c_str());
-		// shorter but produce unwanted 0
-		// op_pMatrix->setDimensionLabel(1, m_ui32FrequencyBandIndex, std::to_string(band).c_str());
 
 		// Do we agree on this ?
-		op_pSamplingRate = (m_ui32FrequencyBandIndex + 1) * (rightFreq - op_pFrequencyAbscissa->getBuffer()[0]);
+		op_pSamplingRate = static_cast<uint64>((m_ui32FrequencyBandIndex + 1) * (rightFreq - op_pFrequencyAbscissa->getBuffer()[0]));
 	}
 	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)
 	{

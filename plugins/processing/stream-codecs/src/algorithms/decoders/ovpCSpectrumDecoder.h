@@ -2,6 +2,7 @@
 #define __SamplePlugin_Algorithms_CSpectrumDecoder_H__
 
 #include "ovpCStreamedMatrixDecoder.h"
+#include <iomanip>
 
 #define OVP_ClassId_Algorithm_SpectrumStreamDecoder                                         OpenViBE::CIdentifier(0x128202DB, 0x449FC7A6)
 #define OVP_ClassId_Algorithm_SpectrumStreamDecoderDesc                                     OpenViBE::CIdentifier(0x54D18EE8, 0x5DBD913A)
