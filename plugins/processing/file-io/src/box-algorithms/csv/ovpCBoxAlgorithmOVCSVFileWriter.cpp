@@ -94,10 +94,14 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize(void)
 	{
 		OV_FATAL_K((OpenViBE::CSV::ICSVLib::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(), ErrorType::Internal);
 	}
-	OV_ERROR_UNLESS_KRF(m_StreamDecoder->uninitialize(),
-		"Error have been thrown error while stream decoder unitialize",
-		ErrorType::Internal);
-	delete m_StreamDecoder;
+	if (m_StreamDecoder)
+	{
+		OV_ERROR_UNLESS_KRF(m_StreamDecoder->uninitialize(),
+			"Error have been thrown error while stream decoder unitialize",
+			ErrorType::Internal);
+		delete m_StreamDecoder;
+		m_StreamDecoder = nullptr;
+	}
 	OV_ERROR_UNLESS_KRF(m_StimulationDecoder.uninitialize(),
 		"Error have been thrown error while stimulation decoder unitialize",
 		ErrorType::Internal);
