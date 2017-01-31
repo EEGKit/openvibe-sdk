@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			bool processStreamedMatrix(void);
 			bool processStimulation(void);
 
-			std::unique_ptr<OpenViBE::CSV::ICSVLib, decltype(&OpenViBE::CSV::releaseCSVLib)>m_WriterLib;
+			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)>m_WriterLib;
 
 			OpenViBE::CIdentifier m_TypeIdentifier;
 

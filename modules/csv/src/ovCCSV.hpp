@@ -29,18 +29,18 @@ namespace OpenViBE
 {
 	namespace CSV
 	{
-		class CCSVLib final : public ICSVLib
+		class CCSVHandler final : public ICSVHandler
 		{
 		public:
 			/**
 			 * \brief Set lib value to default
 			 */
-			CCSVLib(void);
+			CCSVHandler(void);
 
 			/**
 			 * \brief Close the file if it is open.
 			 */
-			~CCSVLib(void);
+			~CCSVHandler(void);
 
 			unsigned int getOutputFloatPrecision() {return m_OutputFloatPrecision; }
 			void setOutputFloatPrecision(unsigned int precision) { m_OutputFloatPrecision = precision; }
@@ -88,6 +88,8 @@ namespace OpenViBE
 			std::string getLastErrorString();
 
 		private:
+			void split(const std::string& string, char delimitor, std::vector<std::string>& element);
+
 			/**
 			 * \brief Create a string with stimulations to add in the buffer
 			 *
@@ -98,12 +100,12 @@ namespace OpenViBE
 			std::string writeStimulations(const std::vector<SStimulationChunk>& stimulationsToPrint);
 
 			/**
-			 * \brief Set the header string in function of the input type and the informations set
+			 * \brief Create a string representation of the header data
 			 *
-			 * \retval true in case of success
-			 * \retval false in case of wrong informations sent
+			 * \retval true Header data as it should be written in the file
+			 * \retval "" in case of error
 			 */
-			bool createHeaderString(void);
+			std::string createHeaderString(void);
 
 			/**
 			 * \brief Set the buffer in function of data saved
@@ -189,7 +191,6 @@ namespace OpenViBE
 
 			std::fstream m_Fs;
 			std::string m_Filename;
-			std::string m_Header;
 			std::string m_Buffer;
 			std::vector<SMatrixChunk> m_Chunks;
 			std::vector<SStimulationChunk> m_Stimulations;
@@ -197,6 +198,9 @@ namespace OpenViBE
 			std::string m_LastStringError;
 
 			EStreamType m_InputTypeIdentifier;
+
+			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, const char delimiter);
+			GetLine* m_GetLineFunction;
 
 			unsigned int m_DimensionCount;
 			std::vector<unsigned int> m_DimensionSizes;
@@ -210,12 +214,11 @@ namespace OpenViBE
 			// columns between each separator (as : {Time, Epoch, O1, O2, O3, Event Id, Event date, Event Duration})
 			std::vector<std::string> m_LineColumns;
 			unsigned int m_SamplingRate;
-			unsigned long long m_Epoch;
 			unsigned int m_ColumnCount;
 			unsigned int m_PreDataColumnCount;
 			unsigned int m_PostDataColumnCount;
 
-			bool m_IsSetInputType;
+			bool m_HasInputType;
 			bool m_IsFirstLineWritten;
 			bool m_IsHeaderRead;
 			bool m_IsSetInfoCalled;
