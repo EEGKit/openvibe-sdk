@@ -403,21 +403,24 @@ SchedulerInitializationCode CScheduler::initialize(void)
 			SchedulerInitialization_Failed
 		);
 
-		CSimulatedBox* l_pSimulatedBox=new CSimulatedBox(this->getKernelContext(), *this);
-		l_pSimulatedBox->setScenarioIdentifier(m_oScenarioIdentifier);
-		l_pSimulatedBox->setBoxIdentifier(l_oBoxIdentifier);
-
-		try
+		if(!l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
 		{
-			l_iPriority = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
-		}
-		catch(const std::exception&)
-		{
-			l_iPriority = 0;
-		}
+			CSimulatedBox* l_pSimulatedBox=new CSimulatedBox(this->getKernelContext(), *this);
+			l_pSimulatedBox->setScenarioIdentifier(m_oScenarioIdentifier);
+			l_pSimulatedBox->setBoxIdentifier(l_oBoxIdentifier);
 
-		m_vSimulatedBox[std::make_pair(-l_iPriority, l_oBoxIdentifier)]=l_pSimulatedBox;
-		m_vSimulatedBoxChrono[l_oBoxIdentifier].reset(static_cast<uint32>(m_ui64Frequency));
+			try
+			{
+				l_iPriority = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
+			}
+			catch(const std::exception&)
+			{
+				l_iPriority = 0;
+			}
+
+			m_vSimulatedBox[std::make_pair(-l_iPriority, l_oBoxIdentifier)]=l_pSimulatedBox;
+			m_vSimulatedBoxChrono[l_oBoxIdentifier].reset(static_cast<uint32>(m_ui64Frequency));
+		}
 	}
 
 	boolean l_bBoxInitialization = true;
@@ -570,7 +573,6 @@ boolean CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& b
 			"Process clock failed for box with id " << boxIdentifier.toString(),
 			ErrorType::Internal
 		);
-
 		if (simulatedBox->isReadyToProcess())
 		{
 			OV_ERROR_UNLESS_KRF(
@@ -620,7 +622,10 @@ boolean CScheduler::sendInput(
 	const uint32 ui32InputIndex)
 {
 	IBox* l_pBox=m_pScenario->getBoxDetails(rBoxIdentifier);
-
+	if(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
+	{
+		return true;
+	}
 	OV_ERROR_UNLESS_KRF(
 		l_pBox,
 		"Tried to send data chunk with invalid box identifier " << rBoxIdentifier.toString(),
