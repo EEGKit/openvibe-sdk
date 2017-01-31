@@ -100,10 +100,10 @@ namespace OpenViBE
 			std::string writeStimulations(const std::vector<SStimulationChunk>& stimulationsToPrint);
 
 			/**
-			 * \brief Set the header string in function of the input type and the informations set
+			 * \brief Create a string representation of the header data
 			 *
-			 * \retval true in case of success
-			 * \retval false in case of wrong informations sent
+			 * \retval true Header data as it should be written in the file
+			 * \retval "" in case of error
 			 */
 			std::string createHeaderString(void);
 
