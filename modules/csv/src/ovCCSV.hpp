@@ -198,7 +198,8 @@ namespace OpenViBE
 			std::string m_LastStringError;
 
 			EStreamType m_InputTypeIdentifier;
-			typedef std::istream& GetLine(std::istream&, std::string&, const char delim);
+
+			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, const char delimiter);
 			GetLine* m_GetLineFunction;
 
 			unsigned int m_DimensionCount;

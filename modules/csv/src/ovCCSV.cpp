@@ -50,9 +50,9 @@ namespace {
 
 	// Uses std::getline when the system and file EOF match, otherwise falls back to a
 	// custom solution wich supports all common endlines
-	std::istream& universalGetLine(std::istream& is, std::string& t, const char delim = '\n')
+	std::istream& universalGetLine(std::istream& inputStream, std::string& outputString, const char delimiter = '\n')
 	{
-		t.clear();
+		outputString.clear();
 
 		// The characters in the stream are read one-by-one using a std::streambuf.
 		// That is faster than reading them one-by-one using the std::istream.
@@ -60,50 +60,50 @@ namespace {
 		// The sentry object performs various tasks,
 		// such as thread synchronization and updating the stream state.
 
-		std::istream::sentry se(is, true);
-		std::streambuf* sb = is.rdbuf();
+		std::istream::sentry sentry(inputStream, true);
+		std::streambuf* buffer = inputStream.rdbuf();
 
 		// We need to read a character from the stream to initailize in_avail count,
 		// otherwise the next call would return 0
-		sb->sgetc();
+		buffer->sgetc();
 
-		if (sb->in_avail() == 0)
+		if (buffer->in_avail() == 0)
 		{
-			is.setstate(std::ios::failbit);
+			inputStream.setstate(std::ios::failbit);
 		}
 
 		while (true)
 		{
-			int c = sb->sbumpc();
+			int c = buffer->sbumpc();
 
 			if (c == '\n')
 			{
-				return is;
+				return inputStream;
 			}
 			else if (c == '\r')
 			{
-				if(sb->sgetc() == '\n')
+				if(buffer->sgetc() == '\n')
 				{
-					sb->sbumpc();
+					buffer->sbumpc();
 				}
-				return is;
+				return inputStream;
 			}
 			else if (c == std::istream::traits_type::eof())
 			{
 				// Also handle the case when the last line has no line ending
-				if (t.empty() || is.peek() == std::istream::traits_type::eof())
+				if (outputString.empty() || inputStream.peek() == std::istream::traits_type::eof())
 				{
-					is.setstate(std::ios::eofbit);
+					inputStream.setstate(std::ios::eofbit);
 				}
-				return is;
+				return inputStream;
 			}
-			else if (c == delim)
+			else if (c == delimiter)
 			{
-				return is;
+				return inputStream;
 			}
 			else
 			{
-				t += (char)c;
+				outputString += (char)c;
 			}
 		}
 	}
