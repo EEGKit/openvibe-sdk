@@ -622,7 +622,10 @@ boolean CScheduler::sendInput(
 	const uint32 ui32InputIndex)
 {
 	IBox* l_pBox=m_pScenario->getBoxDetails(rBoxIdentifier);
-
+	if(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
+	{
+		return true;
+	}
 	OV_ERROR_UNLESS_KRF(
 		l_pBox,
 		"Tried to send data chunk with invalid box identifier " << rBoxIdentifier.toString(),
