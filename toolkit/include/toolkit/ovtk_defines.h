@@ -797,7 +797,7 @@
 #define OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated            EBML::CIdentifier(0x0010983C, 0x21F8BDE5)
 #define OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated      EBML::CIdentifier(0x00AA5654, 0x2403A2CB)
 #define OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated       EBML::CIdentifier(0x00A44C82, 0x05BE50D5)
-#define OVTK_NodeId_Header_Spectrum_FrequencyAbscissa					EBML::CIdentifier(0x00D7287D, 0x622A2BF5)
+#define OVTK_NodeId_Header_Spectrum_FrequencyAbscissa                   EBML::CIdentifier(0x00D7287D, 0x622A2BF5)
 #define OVTK_NodeId_Header_Spectrum_SamplingRate                        EBML::CIdentifier(0x006876E9, 0x1DCB0CA1)
 
 

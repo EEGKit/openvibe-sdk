@@ -37,13 +37,13 @@ boolean CSpectrumEncoder::processHeader(void)
 	uint64 samplingRate = ip_pSamplingRate;
 	CStreamedMatrixEncoder::processHeader();
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum);
-		m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum_SamplingRate);
-			m_pEBMLWriterHelper->setUIntegerAsChildData(samplingRate);
-		m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum_SamplingRate);
+	m_pEBMLWriterHelper->setUIntegerAsChildData(samplingRate);
+	m_pEBMLWriterHelper->closeChild();
 	for(uint32 i=0; i<frequencyAbscissa->getDimensionSize(0); i++)
 	{
-		m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum_FrequencyAbscissa);;
-			m_pEBMLWriterHelper->setFloat64AsChildData(frequencyAbscissa->getBuffer()[i]);
+		m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum_FrequencyAbscissa);
+		m_pEBMLWriterHelper->setFloat64AsChildData(frequencyAbscissa->getBuffer()[i]);
 		m_pEBMLWriterHelper->closeChild();
 	}
 	m_pEBMLWriterHelper->closeChild();
