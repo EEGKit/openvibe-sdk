@@ -617,15 +617,22 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_spectrum(void)
 		ip_pFrequencyAbscissa->setDimensionSize(1, m_ui32NbColumn-1);
 		for(uint32 channelIndex=0;channelIndex<m_ui32NbColumn-1;channelIndex++)
 		{
-			for(uint32 frequencyBandIndex=0;frequencyBandIndex<m_vDataMatrix.size();frequencyBandIndex++)
+			if (m_vDataMatrix.size() > 1)
 			{
-				double bandCenter = std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32NbColumn].c_str())
-						+ static_cast<double>(frequencyBandIndex) / m_vDataMatrix.size() * (std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32NbColumn+1].c_str()) - std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32NbColumn].c_str()));
-				ip_pFrequencyAbscissa->getBuffer()[channelIndex*m_vDataMatrix.size()+frequencyBandIndex] = bandCenter;
+				for(uint32 frequencyBandIndex=0;frequencyBandIndex<m_vDataMatrix.size();frequencyBandIndex++)
+				{
+					double curFrequencyAbscissa = std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32NbColumn].c_str())
+							+ static_cast<double>(frequencyBandIndex) / (m_vDataMatrix.size() - 1) * (std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32NbColumn+1].c_str()) - std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32NbColumn].c_str()));
+					ip_pFrequencyAbscissa->getBuffer()[channelIndex*m_vDataMatrix.size()+frequencyBandIndex] = curFrequencyAbscissa;
 
-				std::stringstream l_sLabel;
-				l_sLabel<< bandCenter;
-				ip_pFrequencyAbscissa->setDimensionLabel(1, frequencyBandIndex, l_sLabel.str().c_str());
+					std::stringstream l_sLabel;
+					l_sLabel<< curFrequencyAbscissa;
+					ip_pFrequencyAbscissa->setDimensionLabel(1, frequencyBandIndex, l_sLabel.str().c_str());
+				}
+			}
+			else
+			{
+				ip_pFrequencyAbscissa->getBuffer()[channelIndex] = 0;
 			}
 		}
 

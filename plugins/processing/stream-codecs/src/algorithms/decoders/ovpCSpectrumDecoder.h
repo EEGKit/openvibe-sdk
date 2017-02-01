@@ -36,11 +36,15 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > op_pSamplingRate;
 
 
+
 		private:
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
 			OpenViBE::uint32 m_ui32FrequencyBandIndex;
+
+			// Value of the current lower frequency of the band. Only used to read old spectrum format.
+			double m_lowerFreq;
 		};
 
 		class CSpectrumDecoderDesc : public OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc

@@ -68,27 +68,29 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 void CSpectrumDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
 {
 	EBML::CIdentifier& l_rTop=m_vNodes.top();
-	static double leftFreq;
 	if((l_rTop==OVTK_NodeId_Header_Spectrum)
 		||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated))
 	{
 	}
 	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated)
 	{
-		leftFreq = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+		m_lowerFreq = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
 	}
 	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)
 	{
-		double rightFreq = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
-		double band = leftFreq + m_ui32FrequencyBandIndex / op_pFrequencyAbscissa->getDimensionSize(0) * (rightFreq - leftFreq);
-		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex] = band;
+		double upperFreq = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+		double curFrequencyAbscissa = 0;
+		if (op_pFrequencyAbscissa->getDimensionSize(0) > 1)
+		{
+			curFrequencyAbscissa = m_lowerFreq + m_ui32FrequencyBandIndex / (op_pFrequencyAbscissa->getDimensionSize(0) - 1) * (upperFreq - m_lowerFreq);
+		}
+		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex] = curFrequencyAbscissa;
 		std::ostringstream s;
 		s << std::setprecision(10);
-		s << band;
+		s << curFrequencyAbscissa;
 		op_pMatrix->setDimensionLabel(1, m_ui32FrequencyBandIndex, s.str().c_str());
 
-		// Do we agree on this ?
-		op_pSamplingRate = static_cast<uint64>((m_ui32FrequencyBandIndex + 1) * (rightFreq - op_pFrequencyAbscissa->getBuffer()[0]));
+		op_pSamplingRate = static_cast<uint64>((m_ui32FrequencyBandIndex + 1) * (upperFreq - op_pFrequencyAbscissa->getBuffer()[0]));
 	}
 	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)
 	{
