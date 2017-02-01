@@ -82,7 +82,7 @@ void CSpectrumDecoder::processChildData(const void* pBuffer, const EBML::uint64 
 		double curFrequencyAbscissa = 0;
 		if (op_pFrequencyAbscissa->getDimensionSize(0) > 1)
 		{
-			curFrequencyAbscissa = m_lowerFreq + m_ui32FrequencyBandIndex / (op_pFrequencyAbscissa->getDimensionSize(0) - 1) * (upperFreq - m_lowerFreq);
+			curFrequencyAbscissa = m_lowerFreq + static_cast<double>(m_ui32FrequencyBandIndex) / (op_pFrequencyAbscissa->getDimensionSize(0) - 1) * (upperFreq - m_lowerFreq);
 		}
 		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex] = curFrequencyAbscissa;
 		std::ostringstream s;
