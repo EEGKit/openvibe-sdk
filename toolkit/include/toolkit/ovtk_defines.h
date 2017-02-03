@@ -774,14 +774,14 @@
  *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:channel 2 name)
  *       ...
  *     OVTK_NodeId_Header_StreamedMatrix_Dimension
- *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Size (integer:number of frequency band)
- *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:frequency band 1 name)
- *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:frequency band 2 name)
+ *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Size (integer:number of frequency)
+ *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:frequency 1 name)
+ *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:frequency 2 name)
  *       ...
  *   OVTK_NodeId_Header_Spectrum
  *       OVTK_NodeId_Header_Spectrum_SamplingRate (float64)
- *		 OVTK_NodeId_Header_Spectrum_CenterFrequencyBand (float64)
- *		 OVTK_NodeId_Header_Spectrum_CenterFrequencyBand (float64)
+ *		 OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (float64)
+ *		 OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (float64)
  *		 ...
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix

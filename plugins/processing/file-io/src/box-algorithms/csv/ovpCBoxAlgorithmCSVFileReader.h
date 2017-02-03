@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString m_sFilename;
 
 			OpenViBE::CIdentifier m_oTypeIdentifier;
-			OpenViBE::uint32 m_ui32NbColumn;
+			OpenViBE::uint32 m_ui32ColumnCount;
 			OpenViBE::uint64 m_ui64SamplingRate;
 			OpenViBE::uint32 m_ui32SamplesPerBuffer;
 			OpenViBE::uint32 m_ui32ChannelNumberPerBuffer;

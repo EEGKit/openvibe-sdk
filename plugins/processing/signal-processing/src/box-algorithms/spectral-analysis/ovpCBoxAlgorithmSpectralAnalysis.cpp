@@ -133,12 +133,12 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 
 			// Constructing the frequency band description matrix, same for every possible output (and given through reference target mechanism)
 			m_FrequencyAbscissa->setDimensionCount(1);  // a list of frequencies
-			m_FrequencyAbscissa->setDimensionSize(0, m_FFTSize); // FFTSize bands
+			m_FrequencyAbscissa->setDimensionSize(0, m_FFTSize); // FFTSize frquency abscissa
 
-			// Center frequency band values
-			for (unsigned int j = 0; j < m_FFTSize; j++)
+			// Frequency values
+			for (unsigned int frequencyAbscissaIndex = 0; frequencyAbscissaIndex < m_FFTSize; frequencyAbscissaIndex++)
 			{
-				m_FrequencyAbscissa->getBuffer()[j] = j * (static_cast<double>(m_SamplingRate) / m_SampleCount);
+				m_FrequencyAbscissa->getBuffer()[frequencyAbscissaIndex] = frequencyAbscissaIndex * (static_cast<double>(m_SamplingRate) / m_SampleCount);
 			}
 
 			// All spectra share the same header structure
@@ -159,7 +159,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 						spectrum->setDimensionLabel(0, j, matrix->getDimensionLabel(0, j));
 					}
 
-					// We also name the spectrum bands "Center"
+					// We also name the spectrum bands "Abscissa"
 					for (unsigned int j = 0; j < m_FFTSize; j++)
 					{
 						char frequencyBandName[1024];

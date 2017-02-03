@@ -38,7 +38,7 @@ namespace OpenViBEPlugins
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
 			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pBands;
+			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pFrequencyAbscissa;
 			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pMemoryBuffer;
 
 			OpenViBE::CMatrix m_oMatrix;

@@ -95,10 +95,10 @@ boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
 	m_pStreamEncoder->initialize();
 
 	ip_pMatrix.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Matrix));
-	ip_pBands.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
+	ip_pFrequencyAbscissa.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
 	op_pMemoryBuffer.initialize(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
-	ip_pBands.setReferenceTarget(op_pBands);
+	ip_pFrequencyAbscissa.setReferenceTarget(op_pBands);
 	m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
 
 	ip_pMatrix=&m_oMatrix;
@@ -116,7 +116,7 @@ boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
 boolean CBoxAlgorithmFrequencyBandSelector::uninitialize(void)
 {
 	op_pMemoryBuffer.uninitialize();
-	ip_pBands.uninitialize();
+	ip_pFrequencyAbscissa.uninitialize();
 	ip_pMatrix.uninitialize();
 
 	m_pStreamEncoder->uninitialize();
@@ -152,13 +152,13 @@ boolean CBoxAlgorithmFrequencyBandSelector::process(void)
 		if(m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedHeader))
 		{
 			m_vSelectionFactor.clear();
-			for(uint32 j=0; j<ip_pBands->getDimensionSize(0); j++)
+			for(uint32 frequencyAbscissaIndex=0; frequencyAbscissaIndex<ip_pFrequencyAbscissa->getDimensionSize(0); frequencyAbscissaIndex++)
 			{
-				float64 f64Center=ip_pBands->getBuffer()[j];
-				bool bSelected = std::any_of(m_vSelected.begin(), m_vSelected.end(), [f64Center](const BandRange& currentBandRange)
+				float64 f64FrequencyAbscissa = ip_pFrequencyAbscissa->getBuffer()[frequencyAbscissaIndex];
+				bool bSelected = std::any_of(m_vSelected.begin(), m_vSelected.end(), [f64FrequencyAbscissa](const BandRange& currentBandRange)
 					{
-						return currentBandRange.first <= f64Center
-								&& f64Center <= currentBandRange.second;
+						return currentBandRange.first <= f64FrequencyAbscissa
+								&& f64FrequencyAbscissa <= currentBandRange.second;
 					});
 				m_vSelectionFactor.push_back(bSelected ? 1. : 0.);
 			}

@@ -67,11 +67,6 @@ namespace OpenViBEToolkit
 			return m_pOutputFrequencyAbscissa;
 		}
 
-		size_t getOutputCenterFrequencyBandsCount()
-		{
-			return m_pOutputFrequencyAbscissa->getDimensionSize(0);
-		}
-
 		virtual OpenViBE::boolean isHeaderReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedHeader);

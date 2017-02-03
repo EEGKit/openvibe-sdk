@@ -82,6 +82,9 @@ void CSpectrumDecoder::processChildData(const void* pBuffer, const EBML::uint64 
 		double curFrequencyAbscissa = 0;
 		if (op_pFrequencyAbscissa->getDimensionSize(0) > 1)
 		{
+			// In the old format, frequencies were separated into bins with lower and upper bounds.
+			// These were calculated as lowerFreq = frequencyIndex/frequencyCount, upperFreq = (frequencyIndex + 1)/frequencyCount, with 0 based indexes.
+			// This formula reverses the calculation and puts the 'middle' frequency into the right place
 			curFrequencyAbscissa = m_lowerFreq + static_cast<double>(m_ui32FrequencyBandIndex) / (op_pFrequencyAbscissa->getDimensionSize(0) - 1) * (upperFreq - m_lowerFreq);
 		}
 		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex] = curFrequencyAbscissa;

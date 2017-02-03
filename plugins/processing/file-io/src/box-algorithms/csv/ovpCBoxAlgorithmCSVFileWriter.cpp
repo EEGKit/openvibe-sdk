@@ -32,11 +32,11 @@ boolean CBoxAlgorithmCSVFileWriter::initialize(void)
 			m_pStreamDecoder=new OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmCSVFileWriter >();
 			m_pStreamDecoder->initialize(*this,0);
 		}
-		else if(m_oTypeIdentifier==OV_TypeId_Spectrum)
-		{
-			m_pStreamDecoder=new OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmCSVFileWriter >();
-			m_pStreamDecoder->initialize(*this,0);
-		}
+//		else if(m_oTypeIdentifier==OV_TypeId_Spectrum)
+//		{
+//			m_pStreamDecoder=new OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmCSVFileWriter >();
+//			m_pStreamDecoder->initialize(*this,0);
+//		}
 		else if(m_oTypeIdentifier==OV_TypeId_FeatureVector)
 		{
 			m_pStreamDecoder=new OpenViBEToolkit::TFeatureVectorDecoder  < CBoxAlgorithmCSVFileWriter >();
