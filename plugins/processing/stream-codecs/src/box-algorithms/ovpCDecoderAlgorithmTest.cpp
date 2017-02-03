@@ -112,8 +112,8 @@ boolean CDecoderAlgorithmTest::process(void)
 				}
 
 				{
-					TParameterHandler < IMatrix* > l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_MinMaxFrequencyBands));
-					if(l_oHandle.exists())
+					TParameterHandler < IMatrix* > l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
+					if(l_oHandle.exists())	
 					{
 						OV_WARNING_K(*l_oHandle);
 					}

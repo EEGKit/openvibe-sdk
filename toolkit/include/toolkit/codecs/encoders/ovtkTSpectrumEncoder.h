@@ -14,7 +14,8 @@ namespace OpenViBEToolkit
 
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > m_pInputBands;
+		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > m_pInputFrequencyAbscissa;
+		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_pInputSamplingRate;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
@@ -26,8 +27,10 @@ namespace OpenViBEToolkit
 			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamEncoder));
 			m_pCodec->initialize();
 			m_pInputMatrix.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_Matrix));
-			m_pInputBands.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_MinMaxFrequencyBands));
+			m_pInputFrequencyAbscissa.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
+			m_pInputSamplingRate.initialize(m_pCodec->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate));
 			m_pOutputMemoryBuffer.initialize(m_pCodec->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
+
 
 			return true;
 		}
@@ -43,7 +46,8 @@ namespace OpenViBEToolkit
 			}
 
 			m_pInputMatrix.uninitialize();
-			m_pInputBands.uninitialize();
+			m_pInputFrequencyAbscissa.uninitialize();
+			m_pInputSamplingRate.uninitialize();
 			m_pOutputMemoryBuffer.uninitialize();
 			m_pCodec->uninitialize();
 			m_pBoxAlgorithm->getAlgorithmManager().releaseAlgorithm(*m_pCodec);
@@ -52,10 +56,21 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getInputMinMaxFrequencyBands()
+		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getInputSamplingRate()
 		{
-			return m_pInputBands;
+			return m_pInputSamplingRate;
 		}
+
+		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getInputFrequencyAbscissa()
+		{
+			return m_pInputFrequencyAbscissa;
+		}
+
+		size_t getInputCenterFrequencyBandsCount()
+		{
+			return m_pInputFrequencyAbscissa->getDimensionSize(0);
+		}
+
 
 	protected:
 		OpenViBE::boolean encodeHeaderImpl(void)

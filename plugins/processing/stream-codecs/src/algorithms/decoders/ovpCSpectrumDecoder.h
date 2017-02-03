@@ -2,10 +2,12 @@
 #define __SamplePlugin_Algorithms_CSpectrumDecoder_H__
 
 #include "ovpCStreamedMatrixDecoder.h"
+#include <iomanip>
 
-#define OVP_ClassId_Algorithm_SpectrumStreamDecoder                                                        OpenViBE::CIdentifier(0x128202DB, 0x449FC7A6)
-#define OVP_ClassId_Algorithm_SpectrumStreamDecoderDesc                                                    OpenViBE::CIdentifier(0x54D18EE8, 0x5DBD913A)
-#define OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_MinMaxFrequencyBands                         OpenViBE::CIdentifier(0x375E55E9, 0x9B3666F6)
+#define OVP_ClassId_Algorithm_SpectrumStreamDecoder                                         OpenViBE::CIdentifier(0x128202DB, 0x449FC7A6)
+#define OVP_ClassId_Algorithm_SpectrumStreamDecoderDesc                                     OpenViBE::CIdentifier(0x54D18EE8, 0x5DBD913A)
+#define OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa             OpenViBE::CIdentifier(0x14A572E4, 0x5C405C8E)
+#define OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate                  OpenViBE::CIdentifier(0x68442C12, 0x0D9A46DE)
 
 namespace OpenViBEPlugins
 {
@@ -30,13 +32,19 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > op_pMinMaxFrequencyBands;
+			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > op_pFrequencyAbscissa;
+			OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > op_pSamplingRate;
+
+
 
 		private:
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
 			OpenViBE::uint32 m_ui32FrequencyBandIndex;
+
+			// Value of the current lower frequency of the band. Only used to read old spectrum format.
+			double m_lowerFreq;
 		};
 
 		class CSpectrumDecoderDesc : public OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc
@@ -61,7 +69,8 @@ namespace OpenViBEPlugins
 			{
 				OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_MinMaxFrequencyBands, "Min/Max frequency bands", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa, "Frequency abscissa", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate, "Sampling rate", OpenViBE::Kernel::ParameterType_UInteger);
 
 				return true;
 			}

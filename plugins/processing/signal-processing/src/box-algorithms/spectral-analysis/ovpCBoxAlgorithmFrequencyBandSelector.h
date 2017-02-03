@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <map>
+#include <algorithm>
 
 #define OVP_ClassId_BoxAlgorithm_FrequencyBandSelector     OpenViBE::CIdentifier(0x140C19C6, 0x4E6E187B)
 #define OVP_ClassId_BoxAlgorithm_FrequencyBandSelectorDesc OpenViBE::CIdentifier(0x13462C56, 0x794E3C07)
@@ -14,6 +15,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
+		typedef std::pair < OpenViBE::float64, OpenViBE::float64 > BandRange;
 		class CBoxAlgorithmFrequencyBandSelector : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
 		{
 		public:
@@ -36,11 +38,11 @@ namespace OpenViBEPlugins
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
 			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pBands;
+			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pFrequencyAbscissa;
 			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pMemoryBuffer;
 
 			OpenViBE::CMatrix m_oMatrix;
-			std::vector < std::pair < OpenViBE::float64, OpenViBE::float64 > > m_vSelected;
+			std::vector < BandRange > m_vSelected;
 			std::vector < OpenViBE::float64 > m_vSelectionFactor;
 		};
 

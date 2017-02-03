@@ -32,11 +32,11 @@ boolean CBoxAlgorithmCSVFileWriter::initialize(void)
 			m_pStreamDecoder=new OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmCSVFileWriter >();
 			m_pStreamDecoder->initialize(*this,0);
 		}
-		else if(m_oTypeIdentifier==OV_TypeId_Spectrum)
-		{
-			m_pStreamDecoder=new OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmCSVFileWriter >();
-			m_pStreamDecoder->initialize(*this,0);
-		}
+//		else if(m_oTypeIdentifier==OV_TypeId_Spectrum)
+//		{
+//			m_pStreamDecoder=new OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmCSVFileWriter >();
+//			m_pStreamDecoder->initialize(*this,0);
+//		}
 		else if(m_oTypeIdentifier==OV_TypeId_FeatureVector)
 		{
 			m_pStreamDecoder=new OpenViBEToolkit::TFeatureVectorDecoder  < CBoxAlgorithmCSVFileWriter >();
@@ -247,10 +247,14 @@ boolean CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 					}
 					else if(m_oTypeIdentifier==OV_TypeId_Spectrum)
 					{
-						const IMatrix* l_pMinMaxFrequencyBand =  ((OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmCSVFileWriter >*)m_pStreamDecoder)->getOutputMinMaxFrequencyBands();
-
-						m_oFileStream << m_sSeparator.toASCIIString() << l_pMinMaxFrequencyBand->getBuffer()[s*2+0];
-						m_oFileStream << m_sSeparator.toASCIIString() << l_pMinMaxFrequencyBand->getBuffer()[s*2+1];
+						// This should not be supported anymore
+						// This is not the correct formula
+						const IMatrix* l_pCenterFrequencyBand =  ((OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmCSVFileWriter >*)m_pStreamDecoder)->getOutputFrequencyAbscissa();
+						double half = s > 0
+								? (l_pCenterFrequencyBand->getBuffer()[s] - l_pCenterFrequencyBand->getBuffer()[s-1])/2.
+								: (l_pCenterFrequencyBand->getBuffer()[s+1] - l_pCenterFrequencyBand->getBuffer()[s])/2.;
+						m_oFileStream << m_sSeparator.toASCIIString() << (l_pCenterFrequencyBand->getBuffer()[s] - half);
+						m_oFileStream << m_sSeparator.toASCIIString() << (l_pCenterFrequencyBand->getBuffer()[s] + half);
 					}
 					else
 					{

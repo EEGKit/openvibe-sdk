@@ -12,6 +12,7 @@ boolean CBoxAlgorithmCrop::initialize(void)
 {
 	CIdentifier l_oInputTypeIdentifier;
 	getStaticBoxContext().getInputType(0, l_oInputTypeIdentifier);
+
 	if(l_oInputTypeIdentifier==OV_TypeId_StreamedMatrix)
 	{
 		m_pStreamDecoder=&getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder));
@@ -51,7 +52,9 @@ boolean CBoxAlgorithmCrop::initialize(void)
 	}
 	else if(l_oInputTypeIdentifier==OV_TypeId_Spectrum)
 	{
-		m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_MinMaxFrequencyBands)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_MinMaxFrequencyBands));
+		m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
+		m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
+
 	}
 
 	m_pMatrix=new CMatrix();

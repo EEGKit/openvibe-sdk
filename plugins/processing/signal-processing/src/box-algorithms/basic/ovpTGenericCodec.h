@@ -98,9 +98,9 @@ namespace OpenViBEPlugins
 			return m_pSignalDecoder->getOutputSamplingRate();
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getOutputMinMaxFrequencyBands()
+		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getOutputFrequencyAbcissa()
 		{
-			return m_pSpectrumDecoder->getOutputMinMaxFrequencyBands();
+			return m_pSpectrumDecoder->getOutputFrequencyAbscissa();
 		}
 
 		OpenViBE::boolean decode(OpenViBE::uint32 ui32ChunkIndex, OpenViBE::boolean bMarkInputAsDeprecated=true)
@@ -202,9 +202,9 @@ namespace OpenViBEPlugins
 			return m_pSignalEncoder->getInputSamplingRate();
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getInputMinMaxFrequencyBands()
+		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getInputFrequencyAbcissa()
 		{
-			return m_pSpectrumEncoder->getInputMinMaxFrequencyBands();
+			return m_pSpectrumEncoder->getInputFrequencyAbscissa();
 		}
 
 		OpenViBE::boolean encodeHeader()

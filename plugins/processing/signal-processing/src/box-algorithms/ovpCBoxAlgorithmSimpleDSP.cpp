@@ -105,9 +105,10 @@ boolean CBoxAlgorithmSimpleDSP::initialize(void)
 		{
 			IAlgorithmProxy* l_pStreamDecoder=&this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
 			l_pStreamDecoder->initialize();
-			TParameterHandler<IMatrix*> op_ui64MinMaxFrequencyBands(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_MinMaxFrequencyBands));
-			TParameterHandler<IMatrix*> ip_ui64MinMaxFrequencyBands(l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_MinMaxFrequencyBands));
-			ip_ui64MinMaxFrequencyBands.setReferenceTarget(op_ui64MinMaxFrequencyBands);
+			TParameterHandler<IMatrix*> op_ui64CenterFrequencyBands(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
+			TParameterHandler<IMatrix*> ip_ui64CenterFrequencyBands(l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
+			ip_ui64CenterFrequencyBands.setReferenceTarget(op_ui64CenterFrequencyBands);
+			l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate)->setReferenceTarget(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_SamplingRate));
 			m_vStreamDecoder.push_back(l_pStreamDecoder);
 		}
 	}

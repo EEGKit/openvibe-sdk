@@ -14,14 +14,16 @@ boolean CSpectrumDecoder::initialize(void)
 {
 	CStreamedMatrixDecoder::initialize();
 
-	op_pMinMaxFrequencyBands.initialize(getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_MinMaxFrequencyBands));
+	op_pFrequencyAbscissa.initialize(getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));
+	op_pSamplingRate.initialize(getOutputParameter(OVP_Algorithm_SpectrumStreamDecoder_OutputParameterId_SamplingRate));
 
 	return true;
 }
 
 boolean CSpectrumDecoder::uninitialize(void)
 {
-	op_pMinMaxFrequencyBands.uninitialize();
+	op_pFrequencyAbscissa.uninitialize();
+	op_pSamplingRate.uninitialize();
 
 	CStreamedMatrixDecoder::uninitialize();
 
@@ -33,10 +35,12 @@ boolean CSpectrumDecoder::uninitialize(void)
 
 EBML::boolean CSpectrumDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
-	     if(rIdentifier==OVTK_NodeId_Header_Spectrum)                              { return true; }
-	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyBand)                { return true; }
-	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyBand_Start)          { return false; }
-	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop)           { return false; }
+	if(rIdentifier==OVTK_NodeId_Header_Spectrum)                                     { return true; }
+	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated)       { return true; }
+	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated) { return false; }
+	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)  { return false; }
+	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)            { return false; }
+	else if(rIdentifier==OVTK_NodeId_Header_Spectrum_SamplingRate)                   { return false; }
 	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
 }
 
@@ -46,19 +50,14 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 
 	EBML::CIdentifier& l_rTop=m_vNodes.top();
 
-	if((l_rTop==OVTK_NodeId_Header_Spectrum)
-	 ||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand)
-	 ||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Start)
-	 ||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop))
+	if(l_rTop==OVTK_NodeId_Header_Spectrum)
 	{
-		if(l_rTop==OVTK_NodeId_Header_Spectrum)
-		{
-			op_pMinMaxFrequencyBands->setDimensionCount(2);
-			op_pMinMaxFrequencyBands->setDimensionSize(0, 2);
-			op_pMinMaxFrequencyBands->setDimensionSize(1, op_pMatrix->getDimensionSize(1));
-
-			m_ui32FrequencyBandIndex=0;
-		}
+		op_pFrequencyAbscissa->setDimensionCount(1);
+		op_pFrequencyAbscissa->setDimensionSize(0, op_pMatrix->getDimensionSize(1));
+		m_ui32FrequencyBandIndex=0;
+	}
+	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)
+	{
 	}
 	else
 	{
@@ -69,14 +68,40 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 void CSpectrumDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
 {
 	EBML::CIdentifier& l_rTop=m_vNodes.top();
-
 	if((l_rTop==OVTK_NodeId_Header_Spectrum)
-	 ||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand)
-	 ||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Start)
-	 ||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop))
+		||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated))
 	{
-		if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Start) op_pMinMaxFrequencyBands->getBuffer()[m_ui32FrequencyBandIndex*2  ]=m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
-		if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop)  op_pMinMaxFrequencyBands->getBuffer()[m_ui32FrequencyBandIndex*2+1]=m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+	}
+	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated)
+	{
+		m_lowerFreq = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+	}
+	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)
+	{
+		double upperFreq = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+		double curFrequencyAbscissa = 0;
+		if (op_pFrequencyAbscissa->getDimensionSize(0) > 1)
+		{
+			// In the old format, frequencies were separated into bins with lower and upper bounds.
+			// These were calculated as lowerFreq = frequencyIndex/frequencyCount, upperFreq = (frequencyIndex + 1)/frequencyCount, with 0 based indexes.
+			// This formula reverses the calculation and puts the 'middle' frequency into the right place
+			curFrequencyAbscissa = m_lowerFreq + static_cast<double>(m_ui32FrequencyBandIndex) / (op_pFrequencyAbscissa->getDimensionSize(0) - 1) * (upperFreq - m_lowerFreq);
+		}
+		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex] = curFrequencyAbscissa;
+		std::ostringstream s;
+		s << std::setprecision(10);
+		s << curFrequencyAbscissa;
+		op_pMatrix->setDimensionLabel(1, m_ui32FrequencyBandIndex, s.str().c_str());
+
+		op_pSamplingRate = static_cast<uint64>((m_ui32FrequencyBandIndex + 1) * (upperFreq - op_pFrequencyAbscissa->getBuffer()[0]));
+	}
+	else if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)
+	{
+		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex]=m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+	}
+	else if(l_rTop==OVTK_NodeId_Header_Spectrum_SamplingRate)
+	{
+		op_pSamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize);
 	}
 	else
 	{
@@ -89,14 +114,14 @@ void CSpectrumDecoder::closeChild(void)
 	EBML::CIdentifier& l_rTop=m_vNodes.top();
 
 	if((l_rTop==OVTK_NodeId_Header_Spectrum)
-	 ||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand)
-	 ||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Start)
-	 ||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop))
+		||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated)
+		||(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated))
 	{
-		if(l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand)
-		{
-			m_ui32FrequencyBandIndex++;
-		}
+	}
+	else if((l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated)
+		|| (l_rTop==OVTK_NodeId_Header_Spectrum_FrequencyAbscissa))
+	{
+		m_ui32FrequencyBandIndex++;
 	}
 	else
 	{
