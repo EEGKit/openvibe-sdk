@@ -4,8 +4,8 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include <vector>
-#include <map>
+#include <deque>
+#include <memory>
 
 #define OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching                              OpenViBE::CIdentifier(0x426163D1, 0x324237B0)
 #define OVP_ClassId_BoxAlgorithm_StimulationBasedEpochingDesc                          OpenViBE::CIdentifier(0x4F60616D, 0x468E0A8C)
@@ -27,61 +27,73 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching);
 
-		protected:
+//		Seems ok with private in my tests, it should break at compile time... Don't know if there is any side effect...
+//		protected:
+		private:
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmStimulationBasedEpoching> m_SignalDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_StimulationDecoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_SignalEncoder;
 
-			typedef struct
-			{
-				OpenViBE::Kernel::IAlgorithmProxy* m_pEpocher;
-				OpenViBE::uint64 m_ui64StimulationTime;
-				OpenViBE::uint64 m_ui64StartTime;
-				OpenViBE::uint64 m_ui64EndTime;
-				OpenViBE::boolean m_bNeedsReset;
-			} SStimulationBasedEpoching;
+			OpenViBE::uint64 m_StimulationId;
+			double m_EpochDurationInSeconds;
+			OpenViBE::uint64 m_EpochDuration;
+			OpenViBE::int64 m_EpochOffset;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStimulationStreamDecoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStimulationStreamEncoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pSignalStreamDecoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pSignalStreamEncoder;
-			std::vector < SStimulationBasedEpoching > m_vStimulationBasedEpoching;
+			// Input matrix parameters
+			OpenViBE::uint64 m_SamplingRate;
+			OpenViBE::uint32 m_SampleCountPerInputBuffer;
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > op_ui64SamplingRate;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IStimulationSet* > op_pStimulationSet;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IStimulationSet* > ip_pStimulationSet;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pSignal;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > op_pSignal;
+			// Output matrix dimensions
+			OpenViBE::uint32 m_ChannelCount;
+			OpenViBE::uint32 m_SampleCountPerOutputEpoch;
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pStimulationMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler < const OpenViBE::IMemoryBuffer* > ip_pStimulationMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_SignalMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler < const OpenViBE::IMemoryBuffer* > ip_SignalMemoryBuffer;
+			OpenViBE::uint64 m_LastSignalChunkEndTime;
+			OpenViBE::uint64 m_LastStimulationChunkStartTime;
 
-			OpenViBE::IMatrix* m_pOutputSignalDescription;
+			std::deque<OpenViBE::uint64> m_ReceivedStimulations;
 
-			std::map < OpenViBE::uint64, OpenViBE::boolean > m_vStimulationId;
-			OpenViBE::uint64 m_ui64EpochDuration;
-			OpenViBE::int64 m_i64EpochOffset;
-			OpenViBE::uint64 m_ui64LastStimulationInputStartTime;
-			OpenViBE::uint64 m_ui64LastStimulationInputEndTime;
-			OpenViBE::uint64 m_ui64LastStimulationOutputEndTime;
+			struct CachedChunk {
+				CachedChunk(OpenViBE::uint64 startTime, OpenViBE::uint64 endTime, OpenViBE::IMatrix* matrix)
+					: startTime(startTime)
+					, endTime(endTime)
+					, matrix(matrix)
+				{}
+
+				CachedChunk& operator=(CachedChunk&& other)
+				{
+					this->startTime = other.startTime;
+					this->endTime = other.endTime;
+					this->matrix = std::move(other.matrix);
+					return *this;
+				}
+
+				OpenViBE::uint64 startTime;
+				OpenViBE::uint64 endTime;
+				std::unique_ptr<OpenViBE::IMatrix> matrix;
+			};
+
+			std::deque<CachedChunk> m_CachedChunks;
 		};
 
 		class CBoxAlgorithmStimulationBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
-
 			virtual void release(void) { }
 
 			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Stimulation based epoching"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Performs epoching near a stimulation"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Performs epoching near a stimulation."); }
+			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Jozef Legeny"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("Mensia Technologies"); }
+			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
+			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Epoching"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("2.0"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("1.0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("2.6.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmStimulationBasedEpoching; }
-			
+			virtual OpenViBE::CString getStockItemName(void) const       { return "gtk-cut"; }
+
 			virtual OpenViBE::boolean getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
@@ -89,11 +101,10 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addInput("Input stimulations",          OV_TypeId_Stimulations);
 
 				rBoxAlgorithmPrototype.addOutput("Epoched signal",             OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Resynced stimulations",      OV_TypeId_Stimulations);
 
 				rBoxAlgorithmPrototype.addSetting("Epoch duration (in sec)",   OV_TypeId_Float,       "1");
 				rBoxAlgorithmPrototype.addSetting("Epoch offset (in sec)",     OV_TypeId_Float,       "0.5");
-				rBoxAlgorithmPrototype.addSetting("Stimulation to epoch from", OV_TypeId_Stimulation, "OVTK_GDF_VEP");
+				rBoxAlgorithmPrototype.addSetting("Stimulation to epoch from", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
 
 				return true;
 			}
