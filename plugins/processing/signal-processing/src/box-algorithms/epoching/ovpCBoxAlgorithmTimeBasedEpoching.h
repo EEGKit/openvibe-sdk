@@ -12,7 +12,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmTimeBasedEpoching : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmTimeBasedEpoching final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			virtual void release(void) { delete this; }
@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeBasedEpoching)
 
-		protected:
+		private:
 
 			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmTimeBasedEpoching > m_SignalDecoder;
 			OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmTimeBasedEpoching > m_SignalEncoder;
