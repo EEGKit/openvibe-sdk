@@ -1,6 +1,5 @@
 
 #include "algorithms/basic/ovpCAlgorithmMatrixAverage.h"
-#include "algorithms/epoching/ovpCAlgorithmStimulationBasedEpoching.h"
 
 #include "box-algorithms/basic/ovpCBoxAlgorithmIdentity.h"
 #include "box-algorithms/basic/ovpCBoxAlgorithmChannelRename.h"
@@ -11,6 +10,7 @@
 #include "box-algorithms/basic/ovpCBoxAlgorithmReferenceChannel.h"
 #include "box-algorithms/basic/ovpCBoxAlgorithmZeroCrossingDetector.h"
 #include "box-algorithms/epoching/ovpCBoxAlgorithmStimulationBasedEpoching.h"
+#include "box-algorithms/epoching/ovpCBoxAlgorithmTimeBasedEpoching.h"
 #include "box-algorithms/filters/ovpCBoxAlgorithmCommonAverageReference.h"
 #include "box-algorithms/filters/ovpCBoxAlgorithmSpatialFilter.h"
 #include "box-algorithms/filters/ovpCBoxAlgorithmTemporalFilter.h"
@@ -24,7 +24,6 @@
 
 #include "box-algorithms/resampling/ovpCBoxAlgorithmSignalResampling.h"
 
-#include "box-algorithms/ovpCBoxAlgorithmTimeBasedEpoching.h"
 #include "box-algorithms/ovpCBoxAlgorithmSimpleDSP.h"
 #include "box-algorithms/ovpCBoxAlgorithmSignalAverage.h"
 #include "box-algorithms/ovpCBoxAlgorithmWindowing.h"
@@ -67,7 +66,6 @@ OVP_Declare_Begin()
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_FilterType, "Band Stop", OVP_TypeId_FilterType_BandStop.toUInteger());
 
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CAlgorithmMatrixAverageDesc)
-	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CAlgorithmStimulationBasedEpochingDesc)
 
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmIdentityDesc);
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTimeBasedEpochingDesc);

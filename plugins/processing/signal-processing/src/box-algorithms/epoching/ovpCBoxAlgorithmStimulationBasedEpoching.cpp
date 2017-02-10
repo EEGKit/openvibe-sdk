@@ -1,8 +1,8 @@
-#include <cstdio>
+#include <cmath>
+#include <algorithm>
+#include <limits>
 
 #include <openvibe/ovITimeArithmetics.h>
-
-#include "../../algorithms/epoching/ovpCAlgorithmStimulationBasedEpoching.h"
 #include "ovpCBoxAlgorithmStimulationBasedEpoching.h"
 
 using namespace OpenViBE;
@@ -12,281 +12,266 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-using namespace std;
-
-boolean CBoxAlgorithmStimulationBasedEpoching::initialize(void)
+namespace
 {
-	m_pOutputSignalDescription = nullptr;
-	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
+	const int inputSignalIndex = 0;
+	const int inputStimulationsIndex = 1;
+	const int outputSignalIndex = 0;
+}
 
-	m_pStimulationStreamDecoder=&getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamDecoder));
-	m_pStimulationStreamEncoder=&getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamEncoder));
-	m_pSignalStreamDecoder=&getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
-	m_pSignalStreamEncoder=&getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamEncoder));
+bool CBoxAlgorithmStimulationBasedEpoching::initialize(void)
+{
+	m_EpochDurationInSeconds = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	double epochOffset = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_StimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
-	m_pStimulationStreamDecoder->initialize();
-	m_pStimulationStreamEncoder->initialize();
-	m_pSignalStreamDecoder->initialize();
-	m_pSignalStreamEncoder->initialize();
+	m_EpochDuration = ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds);
 
-	op_ui64SamplingRate.initialize(m_pSignalStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
-	op_pStimulationSet.initialize(m_pStimulationStreamDecoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
-	ip_pStimulationSet.initialize(m_pStimulationStreamEncoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
-	ip_pSignal.initialize(m_pSignalStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_Matrix));
-	op_pSignal.initialize(m_pSignalStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Matrix));
+	int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
+	m_EpochOffset = epochOffsetSign * static_cast<int64>(ITimeArithmetics::secondsToTime(std::fabs(epochOffset)));
 
-	op_pStimulationMemoryBuffer.initialize(m_pStimulationStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
-	ip_pStimulationMemoryBuffer.initialize(m_pStimulationStreamDecoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_InputParameterId_MemoryBufferToDecode));
-	op_SignalMemoryBuffer.initialize(m_pSignalStreamEncoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
-	ip_SignalMemoryBuffer.initialize(m_pSignalStreamDecoder->getInputParameter(OVP_GD_Algorithm_SignalStreamDecoder_InputParameterId_MemoryBufferToDecode));
+	m_LastStimulationChunkStartTime = 0;
+	m_LastSignalChunkEndTime = 0;
 
+	m_SignalDecoder.initialize(*this, 0);
+	m_StimulationDecoder.initialize(*this, 1);
 
-	m_pOutputSignalDescription = new CMatrix();
+	m_SignalEncoder.initialize(*this, 0);
 
-	float64 l_f64EpochDuration = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	this->getLogManager() << LogLevel_Debug << "Epoch duration : " << l_f64EpochDuration << "\n";
-	m_ui64EpochDuration=(int64)(l_f64EpochDuration*(1LL<<32)); // $$$ Casted in (int64) because of Ubuntu 7.10 crash !
+	m_SignalEncoder.getInputSamplingRate().setReferenceTarget(m_SignalDecoder.getOutputSamplingRate());
+	m_ChannelCount = 0;
+	m_SamplingRate = 0;
 
-	float64 l_f64EpochOffset = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	this->getLogManager() << LogLevel_Debug << "Epoch offset : " << l_f64EpochOffset << "\n";
-	m_i64EpochOffset = (int64)(l_f64EpochOffset*(1LL << 32));
+	m_CachedChunks.clear();
 
-	OV_ERROR_UNLESS_KRF(
-		l_f64EpochDuration > 0,
-		"Invalid epoch duration [" << l_f64EpochDuration << "] (expected value > 0)",
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
-
-	for(uint32 i=2; i<getStaticBoxContext().getSettingCount(); i++)
-	{
-		uint64 l_ui64StimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
-		CString l_sSettingValue;
-		this->getStaticBoxContext().getSettingValue(i, l_sSettingValue);
-		this->getLogManager() << LogLevel_Debug << "Stimulation Id : [" << l_ui64StimulationId << "] with name [" << l_sSettingValue.toASCIIString() << "].\n";
-		m_vStimulationId[l_ui64StimulationId]=true;
-	}
-
-	m_ui64LastStimulationInputStartTime=0;
-	m_ui64LastStimulationInputEndTime=0;
-	m_ui64LastStimulationOutputEndTime=0;
-
-	this->getLogManager() << LogLevel_Debug << "Parameters existence : " << op_ui64SamplingRate.exists() << ip_pStimulationSet.exists() << op_pStimulationSet.exists() << ip_pSignal.exists() << op_pSignal.exists() << "\n";
-
-	m_pOutputSignalDescription=new CMatrix();
-
-	m_pSignalStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(m_pSignalStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
-
-	op_pStimulationMemoryBuffer=l_rDynamicBoxContext.getOutputChunk(1);
-	m_pStimulationStreamEncoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeHeader);
-	l_rDynamicBoxContext.markOutputAsReadyToSend(1, 0, 0);
+	OV_ERROR_UNLESS_KRF(m_EpochDurationInSeconds > 0,
+		"Epocher setting is invalid. Duration (= " << m_EpochDurationInSeconds << ") must have a strictly positive value.",
+		ErrorType::Internal);
 
 	return true;
 }
 
-boolean CBoxAlgorithmStimulationBasedEpoching::uninitialize(void)
+bool CBoxAlgorithmStimulationBasedEpoching::uninitialize(void)
 {
-	delete m_pOutputSignalDescription;
-	m_pOutputSignalDescription = NULL;
+	m_SignalDecoder.uninitialize();
+	m_SignalEncoder.uninitialize();
+	m_StimulationDecoder.uninitialize();
+	m_CachedChunks.clear();
+	return true;
+}
 
-	m_pSignalStreamEncoder->uninitialize();
-	m_pSignalStreamDecoder->uninitialize();
-	m_pStimulationStreamEncoder->uninitialize();
-	m_pStimulationStreamDecoder->uninitialize();
+bool CBoxAlgorithmStimulationBasedEpoching::processInput(uint32 inputIndex)
+{
+	(void)inputIndex;
 
-	op_pStimulationSet.uninitialize();
-	op_ui64SamplingRate.uninitialize();
-	ip_pStimulationSet.uninitialize();
-	ip_pSignal.uninitialize();
-	op_pSignal.uninitialize();
-
-	op_pStimulationMemoryBuffer.uninitialize();
-	ip_pStimulationMemoryBuffer.uninitialize();
-	op_SignalMemoryBuffer.uninitialize();
-	ip_SignalMemoryBuffer.uninitialize();
-
-	getAlgorithmManager().releaseAlgorithm(*m_pSignalStreamEncoder);
-	getAlgorithmManager().releaseAlgorithm(*m_pSignalStreamDecoder);
-	getAlgorithmManager().releaseAlgorithm(*m_pStimulationStreamEncoder);
-	getAlgorithmManager().releaseAlgorithm(*m_pStimulationStreamDecoder);
-
-	m_vStimulationId.clear();
-
-	for (SStimulationBasedEpoching itStimulationBasedEpoching : m_vStimulationBasedEpoching)
-	{
-		getAlgorithmManager().releaseAlgorithm(*itStimulationBasedEpoching.m_pEpocher);
-	}
-	m_vStimulationBasedEpoching.clear();
+	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
 	return true;
 }
 
-boolean CBoxAlgorithmStimulationBasedEpoching::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmStimulationBasedEpoching::process()
 {
-	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
+	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	return true;
-}
-
-boolean CBoxAlgorithmStimulationBasedEpoching::process(void)
-{
-	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
-	uint32 i, j, k;
-
-	// Stimulation input parsing
-	for(i=0; i<l_rDynamicBoxContext.getInputChunkCount(1); i++)
+	for (uint32 chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(inputSignalIndex); ++chunk)
 	{
-		CStimulationSet l_oOutputStimulationSet;
-		ip_pStimulationSet=&l_oOutputStimulationSet;
+		OV_ERROR_UNLESS_KRF(m_SignalDecoder.decode(chunk),
+			"Failed to decode chunk",
+			ErrorType::Internal);
+		IMatrix* inputMatrix = m_SignalDecoder.getOutputMatrix();
+		uint64 inputChunkStartTime = dynamicBoxContext.getInputChunkStartTime(inputSignalIndex, chunk);
+		uint64 inputChunkEndTime = dynamicBoxContext.getInputChunkEndTime(inputSignalIndex, chunk);
 
-		op_pStimulationMemoryBuffer=l_rDynamicBoxContext.getOutputChunk(1);
-		ip_pStimulationMemoryBuffer=l_rDynamicBoxContext.getInputChunk(1, i);
-
-		m_pStimulationStreamDecoder->process();
-		if(m_pStimulationStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
+		if (m_SignalDecoder.isHeaderReceived())
 		{
-			for(j=0; j<op_pStimulationSet->getStimulationCount(); j++)
-			{
-				if(m_vStimulationId.find(op_pStimulationSet->getStimulationIdentifier(j))!=m_vStimulationId.end())
-				{
-					if((int64)op_pStimulationSet->getStimulationDate(j)+m_i64EpochOffset>=0)
-					{
-						SStimulationBasedEpoching l_oEpocher;
-						l_oEpocher.m_pEpocher=&getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_StimulationBasedEpoching));
-						l_oEpocher.m_pEpocher->initialize();
-						l_oEpocher.m_ui64StimulationTime=op_pStimulationSet->getStimulationDate(j);
-						l_oEpocher.m_ui64StartTime=op_pStimulationSet->getStimulationDate(j)+m_i64EpochOffset;
-						l_oEpocher.m_ui64EndTime=op_pStimulationSet->getStimulationDate(j)+m_i64EpochOffset+m_ui64EpochDuration;
-						l_oEpocher.m_bNeedsReset=true;
-						m_vStimulationBasedEpoching.push_back(l_oEpocher);
-						getLogManager() << LogLevel_Debug << "Created new epocher at time "
-							<< time64(l_oEpocher.m_ui64StimulationTime) << ":"
-							<< time64(l_oEpocher.m_ui64StartTime) << ":"
-							<< time64(l_oEpocher.m_ui64EndTime) << "\n";
+			IMatrix* outputMatrix = m_SignalEncoder.getInputMatrix();
 
-						ip_pStimulationSet->appendStimulation(
-							op_pStimulationSet->getStimulationIdentifier(j),
-							op_pStimulationSet->getStimulationDate(j)+m_i64EpochOffset,
-							m_ui64EpochDuration);
+			m_ChannelCount = inputMatrix->getDimensionSize(0);
+			m_SampleCountPerInputBuffer = inputMatrix->getDimensionSize(1);
+
+			m_SamplingRate = m_SignalDecoder.getOutputSamplingRate();
+			OV_ERROR_UNLESS_KRZ(m_SamplingRate,
+				LogLevel_Error << "Input sampling frequency is equal to 0. Plugin can not process.",
+				ErrorType::Internal);
+
+			m_SampleCountPerOutputEpoch =  static_cast<uint32>(ITimeArithmetics::timeToSampleCount(m_SamplingRate, ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds)));
+
+			outputMatrix->setDimensionCount(2);
+			outputMatrix->setDimensionSize(0, m_ChannelCount);
+			outputMatrix->setDimensionSize(1, m_SampleCountPerOutputEpoch);
+
+			for (uint32 channel = 0; channel < m_ChannelCount; ++channel)
+			{
+				outputMatrix->setDimensionLabel(0, channel, inputMatrix->getDimensionLabel(0, channel));
+			}
+			m_SignalEncoder.encodeHeader();
+			dynamicBoxContext.markOutputAsReadyToSend(outputSignalIndex, 0, 0);
+		}
+
+		if (m_SignalDecoder.isBufferReceived())
+		{
+			OV_ERROR_UNLESS_KRF((inputChunkStartTime >= m_LastSignalChunkEndTime),
+				"Stimulation Based Epoching can not work on overlapping signal",
+				ErrorType::Internal);
+			// Cache the signal data
+			m_CachedChunks.emplace_back(inputChunkStartTime, inputChunkEndTime, new CMatrix());
+			OpenViBEToolkit::Tools::Matrix::copy(*m_CachedChunks.back().matrix, *inputMatrix);
+
+			m_LastSignalChunkEndTime = inputChunkEndTime;
+		}
+
+		if (m_SignalDecoder.isEndReceived())
+		{
+			m_SignalEncoder.encodeEnd();
+			dynamicBoxContext.markOutputAsReadyToSend(outputSignalIndex, inputChunkStartTime, inputChunkEndTime);
+		}
+	}
+
+	for (uint32 chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(inputStimulationsIndex); ++chunk)
+	{
+		m_StimulationDecoder.decode(chunk);
+		// We only handle buffers and ignore stimulation headers and ends
+		if (m_StimulationDecoder.isBufferReceived())
+		{
+			for (uint64 stimulation = 0; stimulation < m_StimulationDecoder.getOutputStimulationSet()->getStimulationCount(); ++stimulation)
+			{
+				if (m_StimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(stimulation) == m_StimulationId)
+				{
+					// Stimulations are put into cache, we ignore stimulations that would produce output chunks with negative start date (after applying the offset)
+					uint64 stimulationDate = m_StimulationDecoder.getOutputStimulationSet()->getStimulationDate(stimulation);
+					if (static_cast<int64>(stimulationDate) + m_EpochOffset >= 0)
+					{
+						m_ReceivedStimulations.push_back(stimulationDate);
+					}
+				}
+				m_LastStimulationChunkStartTime = dynamicBoxContext.getInputChunkEndTime(inputStimulationsIndex, chunk);
+			}
+		}
+	}
+
+	// Process the received stimulations
+	uint64 lastProcessedStimulationDate = 0;
+
+	for (uint64 stimulationDate : m_ReceivedStimulations)
+	{
+		uint64 currentEpochStartTime = static_cast<uint64>(static_cast<int64>(stimulationDate) + m_EpochOffset);
+
+		// No cache available
+		if (m_CachedChunks.empty())
+		{
+			break;
+		}
+		// During normal functioning only chunks that will no longer be useful are deprecated, this is to avoid failure in case of a bug
+		if (m_CachedChunks.front().startTime > currentEpochStartTime)
+		{
+			OV_WARNING_K("Skipped creating an epoch on a timespan with no signal. The input signal probably contains non-contiguous chunks.");
+			break;
+		}
+
+		// We only process stimulations for which we have received enough signal to create an epoch
+		if (m_LastSignalChunkEndTime >= currentEpochStartTime + m_EpochDuration)
+		{
+			auto* outputBuffer = m_SignalEncoder.getInputMatrix()->getBuffer();
+			unsigned int currentSampleIndexInOutputBuffer = 0;
+			unsigned int cachedChunkIndex = 0;
+
+			auto chunkStartTime = m_CachedChunks[cachedChunkIndex].startTime;
+			auto chunkEndTime = m_CachedChunks[cachedChunkIndex].endTime;
+
+			// Find the first chunk that contains data interesting for the sent epoch
+			while (chunkStartTime > currentEpochStartTime || chunkEndTime < currentEpochStartTime)
+			{
+				cachedChunkIndex += 1;
+				if (cachedChunkIndex == m_CachedChunks.size())
+				{
+					break;
+				}
+				chunkStartTime = m_CachedChunks[cachedChunkIndex].startTime;
+				chunkEndTime = m_CachedChunks[cachedChunkIndex].endTime;
+			}
+
+			// If we have found a chunk that contains samples in the current epoch
+			if (cachedChunkIndex != m_CachedChunks.size())
+			{
+				uint64 currentSampleIndexInInputBuffer = ITimeArithmetics::timeToSampleCount(m_SamplingRate, currentEpochStartTime - chunkStartTime);
+
+				while (currentSampleIndexInOutputBuffer < m_SampleCountPerOutputEpoch)
+				{
+					auto currentOutputSampleTime = currentEpochStartTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, currentSampleIndexInOutputBuffer);
+
+					if (currentSampleIndexInInputBuffer == m_SampleCountPerInputBuffer)
+					{
+						// advance to beginning of the next cached chunk
+						cachedChunkIndex += 1;
+						if (cachedChunkIndex == m_CachedChunks.size())
+						{
+							break;
+						}
+						chunkStartTime = m_CachedChunks[cachedChunkIndex].startTime;
+						chunkEndTime = m_CachedChunks[cachedChunkIndex].endTime;
+						currentSampleIndexInInputBuffer = 0;
+
+						if (chunkStartTime > currentOutputSampleTime)
+						{
+							// Case of non-consecutive chunks
+							break;
+						}
+					}
+					else if (chunkStartTime <= currentOutputSampleTime && currentOutputSampleTime <= chunkEndTime)
+					{
+						const auto& inputBuffer = m_CachedChunks[cachedChunkIndex].matrix->getBuffer();
+						for (uint32 channel = 0; channel < m_ChannelCount; ++channel)
+						{
+							outputBuffer[channel * m_SampleCountPerOutputEpoch + currentSampleIndexInOutputBuffer] = inputBuffer[channel * m_SampleCountPerInputBuffer + currentSampleIndexInInputBuffer];
+						}
+						currentSampleIndexInOutputBuffer += 1;
+						currentSampleIndexInInputBuffer += 1;
 					}
 					else
 					{
-						OV_WARNING_K("Skipped epocher that should have started at a negative time");
+						OV_FATAL_K("Can not construct the output chunk due to internal error", ErrorType::Internal);
+						return false;
 					}
 				}
 			}
 
-			if((int64)l_rDynamicBoxContext.getInputChunkEndTime(1, i)+m_i64EpochOffset>=0)
+			// If the epoch is not complete (due to holes in signal)
+			if (currentSampleIndexInOutputBuffer == m_SampleCountPerOutputEpoch)
 			{
-				m_pStimulationStreamEncoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeBuffer);
-				l_rDynamicBoxContext.markOutputAsReadyToSend(1, m_ui64LastStimulationOutputEndTime, l_rDynamicBoxContext.getInputChunkEndTime(1, i)+m_i64EpochOffset);
-				m_ui64LastStimulationOutputEndTime=l_rDynamicBoxContext.getInputChunkEndTime(1, i)+m_i64EpochOffset;
+				m_SignalEncoder.encodeBuffer();
+				dynamicBoxContext.markOutputAsReadyToSend(outputSignalIndex, currentEpochStartTime, currentEpochStartTime + m_EpochDuration);
 			}
-		}
+			else
+			{
+				OV_WARNING_K("Skipped creating an epoch on a timespan with no signal. The input signal probably contains non-contiguous chunks.");
+			}
 
-		m_ui64LastStimulationInputStartTime=l_rDynamicBoxContext.getInputChunkStartTime(1, i);
-		m_ui64LastStimulationInputEndTime=l_rDynamicBoxContext.getInputChunkEndTime(1, i);
-		l_rDynamicBoxContext.markInputAsDeprecated(1, i);
+			lastProcessedStimulationDate = stimulationDate;
+		}
+		// We only process stimulations for which we have received enough signal to create an epoch
+		else
+		{
+			// No more complete epochs can be constructed
+			break;
+		}
 	}
 
-	// Signal input parsing
+	// Remove all stimulations for which the epochs have been constructed and sent
+	m_ReceivedStimulations.erase(std::remove_if(m_ReceivedStimulations.begin(), m_ReceivedStimulations.end(), [&lastProcessedStimulationDate](const uint64& stimulationDate){
+		return stimulationDate <= lastProcessedStimulationDate;
+	}), m_ReceivedStimulations.end());
 
-	boolean l_bLastChunkIsHeader = false;
+	// Deprecate cached chunks which will no longer be used because they are too far back in history compared to received stimulations
+	uint64 lastUsefulChunkEndTime = m_ReceivedStimulations.empty() ? m_LastStimulationChunkStartTime : m_ReceivedStimulations.front();
 
-	for(i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	auto cutoffTime = static_cast<int64>(lastUsefulChunkEndTime) + m_EpochOffset;
+	if (cutoffTime > 0)
 	{
-		ip_SignalMemoryBuffer=l_rDynamicBoxContext.getInputChunk(0, i);
-		op_SignalMemoryBuffer=l_rDynamicBoxContext.getOutputChunk(0);
-
-		m_pSignalStreamDecoder->process();
-
-		if(m_pSignalStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader))
-		{
-			// can only test after we have the header...
-			OV_ERROR_UNLESS_KRF(
-				op_ui64SamplingRate > 0,
-				"Invalid sampling rate [" << op_ui64SamplingRate << "] (expected value > 0)",
-				OpenViBE::Kernel::ErrorType::BadSetting
-			);
-
-			m_pOutputSignalDescription->setDimensionCount(2);
-			m_pOutputSignalDescription->setDimensionSize(0, ip_pSignal->getDimensionSize(0));
-			m_pOutputSignalDescription->setDimensionSize(1, (uint32)ITimeArithmetics::timeToSampleCount(op_ui64SamplingRate, m_ui64EpochDuration));
-
-			for(k=0; k<ip_pSignal->getDimensionSize(0); k++)
-			{
-				m_pOutputSignalDescription->setDimensionLabel(0, k, ip_pSignal->getDimensionLabel(0, k));
-			}
-			op_pSignal.setReferenceTarget(m_pOutputSignalDescription);
-			m_pSignalStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
-			l_bLastChunkIsHeader = true;
-		}
-
-		if(m_pSignalStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer))
-		{
-			vector < SStimulationBasedEpoching >::iterator j;
-			for(j=m_vStimulationBasedEpoching.begin(); j!=m_vStimulationBasedEpoching.end(); )
-			{
-				SStimulationBasedEpoching& l_oEpocher=*j;
-
-				TParameterHandler < IMatrix* > l_pEpocherInputSignal(l_oEpocher.m_pEpocher->getInputParameter(OVP_Algorithm_StimulationBasedEpoching_InputParameterId_InputSignal));
-				TParameterHandler < IMatrix* > l_pEpocherOutputSignal(l_oEpocher.m_pEpocher->getOutputParameter(OVP_Algorithm_StimulationBasedEpoching_OutputParameterId_OutputSignal));
-				l_pEpocherInputSignal.setReferenceTarget(ip_pSignal);
-				op_pSignal.setReferenceTarget(l_pEpocherOutputSignal);
-
-				/*
-				 * solving the negative offset bug: two lines of code added so that the epoching algorithm will not add signal chunks to its epoch that it has already added
-				 * this is necessary so that we can remove the first if statement (in the original code) in the for loop for signal chunk processing which in
-				 * turn enables us to output an epoch with negative offset without an additional delay
-				*/
-				TParameterHandler < uint64 > l_ui64TimeChunk(l_oEpocher.m_pEpocher->getInputParameter(OVP_Algorithm_StimulationBasedEpoching_InputParameterId_EndTimeChunkToProcess));
-				l_ui64TimeChunk = l_rDynamicBoxContext.getInputChunkEndTime(0, i);
-
-				if(l_oEpocher.m_bNeedsReset)
-				{
-					OpenViBEToolkit::Tools::Matrix::copyDescription(*l_pEpocherOutputSignal, *m_pOutputSignalDescription);
-					TParameterHandler < int64 > l_ui64OffsetSampleCount(l_oEpocher.m_pEpocher->getInputParameter(OVP_Algorithm_StimulationBasedEpoching_InputParameterId_OffsetSampleCount));
-					l_ui64OffsetSampleCount=(op_ui64SamplingRate*((l_oEpocher.m_ui64StartTime-l_rDynamicBoxContext.getInputChunkStartTime(0, i))>>16))>>16;
-					l_oEpocher.m_pEpocher->process(OVP_Algorithm_StimulationBasedEpoching_InputTriggerId_Reset);
-					l_oEpocher.m_bNeedsReset=false;
-				}
-
-				l_oEpocher.m_pEpocher->process(OVP_Algorithm_StimulationBasedEpoching_InputTriggerId_PerformEpoching);
-
-				if(l_oEpocher.m_pEpocher->isOutputTriggerActive(OVP_Algorithm_StimulationBasedEpoching_OutputTriggerId_EpochingDone))
-				{
-					m_pSignalStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
-					l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_oEpocher.m_ui64StartTime, l_oEpocher.m_ui64EndTime);
-
-					getAlgorithmManager().releaseAlgorithm(*l_oEpocher.m_pEpocher);
-					j=m_vStimulationBasedEpoching.erase(j);
-				}
-				else
-				{
-					++j;
-				}
-			}
-		}
-
-		if(m_pSignalStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedEnd))
-		{
-			m_pSignalStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
-		}
-
-		/*
-		 * solving the negative offset bug: the fact that this statement is not at the top means that all epochs in the waiting queue can already be used for completing an epoch
-		 * without waiting for the next input chunk. This enables the algorithm to output an epoch with negative offset without additional delay.
-		 * Nevertheless we still need to preserve some history and thus we can not mark all processed chunks as deprecated yet.
-		 * lbonnet 09.05.2012: added a clause to avoid saving the header chunk. We need to deprecate it so we don't send headers continuously on the output.
-		*/
-		if((int64)l_rDynamicBoxContext.getInputChunkEndTime(0, i) <= (int64)m_ui64LastStimulationInputEndTime + m_i64EpochOffset || l_bLastChunkIsHeader) // preserve enough history
-		{
-			l_rDynamicBoxContext.markInputAsDeprecated(0, i);
-		}
+		m_CachedChunks.erase(std::remove_if(m_CachedChunks.begin(), m_CachedChunks.end(), [cutoffTime](const CachedChunk& cachedChunk){
+			return cachedChunk.endTime < static_cast<uint64>(cutoffTime);
+		}), m_CachedChunks.end());
 	}
 
 	return true;
 }
+

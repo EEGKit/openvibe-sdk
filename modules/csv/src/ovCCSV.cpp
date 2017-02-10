@@ -714,7 +714,7 @@ bool CCSVHandler::writeAllDataToFile(void)
 	catch (std::ios_base::failure& fail)
 	{
 		m_LastStringError = "Error occured while writing: ";
-		m_LastStringError = fail.what();
+		m_LastStringError += fail.what();
 		m_LogError = LogErrorCodes_ErrorWhileWriting;
 		return false;
 	}
