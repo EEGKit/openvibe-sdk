@@ -16,7 +16,7 @@ using namespace OpenViBEPlugins::SignalProcessing;
 
 using namespace OpenViBEToolkit;
 
-boolean CBoxAlgorithmTimeBasedEpoching::initialize(void)
+bool CBoxAlgorithmTimeBasedEpoching::initialize(void)
 {
 	m_EpochDuration = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_EpochInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -33,7 +33,7 @@ boolean CBoxAlgorithmTimeBasedEpoching::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmTimeBasedEpoching::uninitialize(void)
+bool CBoxAlgorithmTimeBasedEpoching::uninitialize(void)
 {
 	m_SignalDecoder.uninitialize();
 	m_SignalEncoder.uninitialize();
@@ -41,14 +41,14 @@ boolean CBoxAlgorithmTimeBasedEpoching::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmTimeBasedEpoching::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmTimeBasedEpoching::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
 	return true;
 }
 
-boolean CBoxAlgorithmTimeBasedEpoching::process(void)
+bool CBoxAlgorithmTimeBasedEpoching::process(void)
 {
 	IDynamicBoxContext& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
