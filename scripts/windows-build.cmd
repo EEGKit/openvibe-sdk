@@ -5,7 +5,7 @@ setlocal enableextensions
 set BuildType=Release
 set PauseCommand=pause
 set RerunCmake=false
-set PackageOption=
+set PackageOption=FALSE
 
 goto parameter_parse
 
@@ -31,7 +31,7 @@ for %%A in (%*) DO (
 	) else if /i "%%A"=="--release" (
 		set BuildType=Release
 	) else if /i "%%A"=="--make-package" (
-		set PackageOption="-DOV_PACKAGE=TRUE"
+		set PackageOption=TRUE
 	) else if /i "%%A"=="--rerun-cmake" (
 		set RerunCmake="true"
 	)
@@ -54,7 +54,7 @@ set CallCmake=false
 if not exist "%build_dir%\CMakeCache.txt" set CallCmake="true"
 if %RerunCmake%=="true" set CallCmake="true"
 if %CallCmake%=="true" (
-	cmake %script_dir%\.. -G"Ninja" -DCMAKE_BUILD_TYPE=%BuildType% -DCMAKE_INSTALL_PREFIX=%install_dir% %PackageOption%
+	cmake %script_dir%\.. -G"Ninja" -DCMAKE_BUILD_TYPE=%BuildType% -DCMAKE_INSTALL_PREFIX=%install_dir% -DOV_PACKAGE=%PackageOption%
 )
 
 if not "!ERRORLEVEL!" == "0" goto terminate_error
@@ -64,7 +64,7 @@ ninja install
 if not "!ERRORLEVEL!" == "0" goto terminate_error
 
 
-if NOT [%PackageOption%] == [] (
+if %PackageOption% == TRUE (
 	cmake --build . --target package
 	REM For tester :
 	REM Is this equivalent to following command ?
