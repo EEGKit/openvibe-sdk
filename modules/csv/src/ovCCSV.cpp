@@ -242,6 +242,7 @@ bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, u
 	sampleCountPerBuffer = m_SampleCountPerBuffer;
 	return true;
 }
+
 bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const unsigned int samplingRate)
 {
 	if (m_InputTypeIdentifier != EStreamType::Spectrum)
@@ -273,7 +274,7 @@ bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channel
 	return true;
 }
 
-bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands, unsigned int& sampleCountPerBuffer)
+bool CCSVHandler::getSpectrumInformation(std::vector<std::string> &channelNames, std::vector<double> &frequencyAbscissa, unsigned int& samplingRate)
 {
 	if (m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
@@ -294,7 +295,7 @@ bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames,
 		return false;
 	}
 
-	if (m_FrequencyBandsBuffer.empty())
+	if (m_FrequencyAbscissa.empty())
 	{
 		m_LastStringError = "No dimension labels, header reading may have failed";
 		m_LogError = LogErrorCodes_WrongHeader;
@@ -309,8 +310,8 @@ bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames,
 	}
 
 	channelNames = m_DimensionLabels;
-	frequencyBands = m_FrequencyBandsBuffer;
-	sampleCountPerBuffer = m_SampleCountPerBuffer;
+	frequencyAbscissa = m_FrequencyAbscissa;
+	samplingRate = m_OriginalSampleNumber;
 	return true;
 }
 
@@ -1433,7 +1434,7 @@ bool CCSVHandler::parseSpectrumHeader(void)
 					return false;
 				}
 
-				m_FrequencyBandsBuffer.push_back(frequency);
+				m_FrequencyAbscissa.push_back(frequency);
 			}
 			else
 			{
@@ -1459,7 +1460,7 @@ bool CCSVHandler::parseSpectrumHeader(void)
 					return false;
 				}
 
-				if (!(std::fabs(frequency - m_FrequencyBandsBuffer[labelSizeCounter]) < std::numeric_limits<double>::epsilon()))
+				if (!(std::fabs(frequency - m_FrequencyAbscissa[labelSizeCounter]) < std::numeric_limits<double>::epsilon()))
 				{
 					m_LastStringError = "Channels must have the same frequency bands";
 					return false;

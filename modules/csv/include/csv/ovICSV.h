@@ -163,8 +163,9 @@ namespace OpenViBE
 			/**
 			 * \brief Set informations to read or write spectrum data
 			 *
-			 * \param channelNames all channels names for the matrix
-			 * \param frequencyBands two frequency (start and end) of the frequency range
+			 * \param channelNames Channels names of the matrix
+			 * \param frequencyAbscissa Frequencies abscissa of the measurements
+			 * \param samplingRate Sampling rate of the original measurements
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
@@ -175,14 +176,14 @@ namespace OpenViBE
 			/**
 			 * \brief get spectrum information in file
 			 *
-			 * \param channelNames reference to fill with file channel names
-			 * \param frequencyBands frequency bands
-			 * \param sampleCountPerBuffer number of sample per buffer
+			 * \param channelNames Channels names of the matrix
+			 * \param frequencyAbscissa Frequencies abscissa of the measurements
+			 * \param samplingRate Sampling rate of the original measurements
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands, unsigned int& sampleCountPerBuffer) = 0;
+			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, unsigned int& samplingRate) = 0;
 
 			/**
 			 * \brief Set informations to read or write vector data

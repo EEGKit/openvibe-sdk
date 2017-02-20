@@ -53,7 +53,7 @@ namespace OpenViBE
 			bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, unsigned int& sampleCountPerBuffer);
 
 			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const unsigned int samplingRate);
-			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands, unsigned int& sampleCountPerBuffer);
+			bool getSpectrumInformation(std::vector<std::string> &channelNames, std::vector<double> &frequencyAbscissa, unsigned int& samplingRate);
 
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames);
 			bool getFeatureVectorInformation(std::vector<std::string>& channelNames);
@@ -209,7 +209,6 @@ namespace OpenViBE
 			double m_NoEventSince;
 
 			std::vector<double> m_FrequencyAbscissa;
-			std::vector<double> m_FrequencyBandsBuffer;
 
 			// columns between each separator (as : {Time, Epoch, O1, O2, O3, Event Id, Event date, Event Duration})
 			std::vector<std::string> m_LineColumns;
