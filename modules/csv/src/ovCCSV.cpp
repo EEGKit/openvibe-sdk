@@ -242,8 +242,7 @@ bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, u
 	sampleCountPerBuffer = m_SampleCountPerBuffer;
 	return true;
 }
-
-bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, std::vector<std::array<double, 2>> frequencyBands)
+bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const unsigned int samplingRate)
 {
 	if (m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
@@ -268,8 +267,9 @@ bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channel
 	}
 
 	m_DimensionLabels = channelNames;
-	m_DimensionSizes = { static_cast<unsigned int>(channelNames.size()), static_cast<unsigned int>(frequencyBands.size()) };
-	m_FrequencyBands = frequencyBands;
+	m_DimensionSizes = { static_cast<unsigned int>(channelNames.size()), static_cast<unsigned int>(frequencyAbscissa.size()) };
+	m_FrequencyAbscissa = frequencyAbscissa;
+	m_OriginalSampleNumber = samplingRate;
 	return true;
 }
 
@@ -729,7 +729,7 @@ bool CCSVHandler::closeFile()
 	m_Buffer.clear();
 	m_DimensionSizes.clear();
 	m_DimensionLabels.clear();
-	m_FrequencyBands.clear();
+	m_FrequencyAbscissa.clear();
 	m_DimensionCount = 0;
 	m_ColumnCount = 0;
 	m_SamplingRate = 0;
@@ -766,7 +766,7 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 		return false;
 	}
 	else if (m_InputTypeIdentifier == EStreamType::Spectrum
-		&& sample.matrix.size() != (m_DimensionLabels.size() * m_FrequencyBands.size()))
+		&& sample.matrix.size() != (m_DimensionLabels.size() * m_FrequencyAbscissa.size()))
 	{
 		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongMatrixSize;
@@ -1059,9 +1059,9 @@ std::string CCSVHandler::createHeaderString(void)
 	case EStreamType::Spectrum :
 		for (size_t channel = 0; channel < m_DimensionLabels.size(); channel++)
 		{
-			for (unsigned int column = 0; column < m_FrequencyBands.size(); column++)
+			for (unsigned int column = 0; column < m_FrequencyAbscissa.size(); column++)
 			{
-				addColumn(m_DimensionLabels[channel] + s_InternalDataSeparator + std::to_string(m_FrequencyBands[column].front()));
+				addColumn(m_DimensionLabels[channel] + s_InternalDataSeparator + std::to_string(m_FrequencyAbscissa[column]));
 			}
 		}
 		break;

@@ -169,7 +169,8 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, std::vector<std::array<double, 2>> frequencyBands) = 0;
+			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const unsigned int samplingRate) = 0;
+
 
 			/**
 			 * \brief get spectrum information in file
