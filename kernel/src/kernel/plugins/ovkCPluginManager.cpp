@@ -164,7 +164,7 @@ CPluginManager::~CPluginManager(void)
 	m_vPluginModule.clear();
 }
 
-vector<string> split(string str, char delimiter) {
+vector<string> split(const string& str, char delimiter) {
   vector<string> internal;
   stringstream ss(str); // Turn the string into a stream.
   string tok;
@@ -185,7 +185,7 @@ boolean CPluginManager::addPluginsFromFiles(
 	CPluginManagerEntryEnumeratorCallBack l_rCB(this->getKernelContext(), m_vPluginModule, m_vPluginObjectDesc);
 	FS::IEntryEnumerator* l_pEntryEnumerator=FS::createEntryEnumerator(l_rCB);
 
-	for(string path : split(static_cast<string>(rFileNameWildCard), ';'))
+	for(const string path : split(static_cast<string>(rFileNameWildCard), ';'))
 	{
 		l_bResult &= l_pEntryEnumerator->enumerate(path.c_str());
 		if(!l_bResult)
