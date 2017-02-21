@@ -15,6 +15,7 @@ function usage()
 		echo "--build-dir=<dirname> : build directory"
 		echo "--install-dir=<dirname> : binaries deployment directory"
 		echo "--test-data-dir=<dirname> : test data directory"
+		echo "--make-package : a package will be created in build directory"
 }
 
 # Script starting point
@@ -29,6 +30,7 @@ ov_test_data_dir="${ov_script_dir}/../dependencies/test-data"
 verbose=0
 build_dir_set=0
 install_dir_set=0
+package_option="FALSE"
 
 # Parse arguments
 for i in "$@"
@@ -58,6 +60,10 @@ do
 			;;
 		--test-data-dir=*)
 			ov_test_data_dir="${i#*=}"
+			shift
+			;;
+		--make-package)
+			package_option="TRUE"
 			shift
 			;;
 		*)
@@ -115,7 +121,8 @@ cmake ${ov_script_dir}/.. \
 		-G Ninja \
 		-DCMAKE_BUILD_TYPE=${ov_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${ov_install_dir} \
-		-DOVT_TEST_DATA_DIR=${ov_test_data_dir}
+		-DOVT_TEST_DATA_DIR=${ov_test_data_dir} \
+		-DOV_PACKAGE=${package_option}
 
 
 if [[ $? == 0 ]]; then
@@ -138,6 +145,17 @@ if [[ $? == 0 ]]; then
 else
 	echo "ERROR: Build failed"
 	exit 1
+fi
+
+
+if [[ ${package_option} == "TRUE" ]]; then
+	cmake --build . --target package
+	if [[ $? == 0 ]]; then
+		echo "Package succeeded!"
+	else
+		echo "ERROR: Package failed"
+		exit 1
+	fi
 fi
 
 popd &> /dev/null
