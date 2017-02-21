@@ -136,47 +136,39 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 
 	if (m_TypeIdentifier == OV_TypeId_Signal)
 	{
-		OV_ERROR_UNLESS_KRF(matrix = (dynamic_cast<OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
-			"Failed to get input matrix",
-			ErrorType::Internal);
+		matrix = (dynamic_cast<OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix();
 	}
 	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 	{
-		OV_ERROR_UNLESS_KRF(matrix = (dynamic_cast<OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
-			"Failed to get input matrix",
-			ErrorType::Internal);
+		matrix = (dynamic_cast<OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix();
 	}
 	else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
 	{
-		OV_ERROR_UNLESS_KRF(matrix = (dynamic_cast<OpenViBEToolkit::TFeatureVectorEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
-			"Failed to get input matrix",
-			ErrorType::Internal);
+		matrix = (dynamic_cast<OpenViBEToolkit::TFeatureVectorEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix();
 	}
 	else if (m_TypeIdentifier == OV_TypeId_Spectrum)
 	{
-		OV_ERROR_UNLESS_KRF(matrix = (dynamic_cast<OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix(),
-			"Failed to get input matrix",
-			ErrorType::Internal);
+		matrix = (dynamic_cast<OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix();
 	}
 	// encode Header if not already encoded
 	if (!m_IsHeaderSent)
 	{
 		if (m_TypeIdentifier == OV_TypeId_Signal)
 		{
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionCount(2),
+			OV_FATAL_UNLESS_K(matrix->setDimensionCount(2),
 				"Failed to set dimension count",
 				ErrorType::Internal);
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(0, static_cast<unsigned int>(m_ChannelNames.size())),
+			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, static_cast<unsigned int>(m_ChannelNames.size())),
 				"Failed to set first dimension size",
 				ErrorType::Internal);
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(1, m_SampleCountPerBuffer),
+			OV_FATAL_UNLESS_K(matrix->setDimensionSize(1, m_SampleCountPerBuffer),
 				"Failed to set second dimension size",
 				ErrorType::Internal);
 
 			unsigned int index = 0;
 			for (const std::string& channelName : m_ChannelNames)
 			{
-				OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(0, index++, channelName.c_str()),
+				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()),
 					"Failed to set dimension label",
 					ErrorType::Internal);
 			}
@@ -185,18 +177,18 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 		}
 		else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 		{
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionCount(static_cast<uint32>(m_DimensionSizes.size())),
+			OV_FATAL_UNLESS_K(matrix->setDimensionCount(static_cast<uint32>(m_DimensionSizes.size())),
 				"Failed to set dimension count",
 				ErrorType::Internal);
 			unsigned int previousDimensionSize = 0;
 			for (size_t index = 0; index < m_DimensionSizes.size(); index++)
 			{
-				OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(static_cast<unsigned int>(index), m_DimensionSizes[index]),
+				OV_FATAL_UNLESS_K(matrix->setDimensionSize(static_cast<unsigned int>(index), m_DimensionSizes[index]),
 					"Failed to set dimension size " << static_cast<unsigned int>(index + 1),
 					ErrorType::Internal);
 				for (unsigned int labelIndex = 0; labelIndex < m_DimensionSizes[index]; labelIndex++)
 				{
-					OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(static_cast<unsigned int>(index), labelIndex, m_ChannelNames[previousDimensionSize + labelIndex].c_str()),
+					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(static_cast<unsigned int>(index), labelIndex, m_ChannelNames[previousDimensionSize + labelIndex].c_str()),
 						"Failed to set dimension label",
 						ErrorType::Internal);
 				}
@@ -206,17 +198,17 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 		}
 		else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
 		{
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionCount(1),
+			OV_FATAL_UNLESS_K(matrix->setDimensionCount(1),
 				"Failed to set dimension count",
 				ErrorType::Internal);
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(0, static_cast<unsigned int>(m_ChannelNames.size())),
+			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, static_cast<unsigned int>(m_ChannelNames.size())),
 				"Failed to set first dimension size",
 				ErrorType::Internal);
 
 			unsigned int index = 0;
 			for (const std::string& channelName : m_ChannelNames)
 			{
-				OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(0, index++, channelName.c_str()),
+				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()),
 					"Failed to set dimension label",
 					ErrorType::Internal);
 			}
@@ -225,25 +217,25 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 		{
 			IMatrix* frequencyAbscissaMatrix = (dynamic_cast<OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputFrequencyAbscissa();
 
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionCount(2),
+			OV_FATAL_UNLESS_K(matrix->setDimensionCount(2),
 				"Failed to set dimension count",
 				ErrorType::Internal);
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(0, static_cast<unsigned int>(m_ChannelNames.size())),
+			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, static_cast<unsigned int>(m_ChannelNames.size())),
 				"Failed to set first dimension size",
 				ErrorType::Internal);
-			OV_ERROR_UNLESS_KRF(matrix->setDimensionSize(1, static_cast<unsigned int>(m_FrequencyAbscissa.size())),
+			OV_FATAL_UNLESS_K(matrix->setDimensionSize(1, static_cast<unsigned int>(m_FrequencyAbscissa.size())),
 				"Failed to set first dimension size",
 				ErrorType::Internal);
-			OV_ERROR_UNLESS_KRF(frequencyAbscissaMatrix->setDimensionCount(1),
+			OV_FATAL_UNLESS_K(frequencyAbscissaMatrix->setDimensionCount(1),
 				"Failed to set dimension count",
 				ErrorType::Internal);
-			OV_ERROR_UNLESS_KRF(frequencyAbscissaMatrix->setDimensionSize(0, static_cast<unsigned int>(m_FrequencyAbscissa.size())),
+			OV_FATAL_UNLESS_K(frequencyAbscissaMatrix->setDimensionSize(0, static_cast<unsigned int>(m_FrequencyAbscissa.size())),
 				"Failed to set first dimension size",
 				ErrorType::Internal);
 			unsigned int index = 0;
 			for (const std::string& channelName : m_ChannelNames)
 			{
-				OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(0, index++, channelName.c_str()),
+				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()),
 					"Failed to set dimension label",
 					ErrorType::Internal);
 			}
@@ -251,7 +243,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 			for (const double& frequencyAbscissaValue : m_FrequencyAbscissa)
 			{
 				frequencyAbscissaMatrix->getBuffer()[index] = frequencyAbscissaValue;
-				OV_ERROR_UNLESS_KRF(matrix->setDimensionLabel(1, index++, std::to_string(frequencyAbscissaValue).c_str()),
+				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(1, index++, std::to_string(frequencyAbscissaValue).c_str()),
 					"Failed to set dimension label",
 					ErrorType::Internal);
 			}
