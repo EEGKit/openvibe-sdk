@@ -181,14 +181,11 @@ boolean CPluginManager::addPluginsFromFiles(
 {
 	this->getLogManager() << LogLevel_Info << "Adding plugins from [" << rFileNameWildCard << "]\n";
 
-	boolean l_bResult;
+	boolean l_bResult = true;
 	CPluginManagerEntryEnumeratorCallBack l_rCB(this->getKernelContext(), m_vPluginModule, m_vPluginObjectDesc);
 	FS::IEntryEnumerator* l_pEntryEnumerator=FS::createEntryEnumerator(l_rCB);
 
-	std::string joinedPaths = rFileNameWildCard;
-	std::vector<string> listPaths = split(joinedPaths, ';');
-	l_bResult = true;
-	for(string path : listPaths)
+	for(string path : split(static_cast<string>(rFileNameWildCard), ';'))
 	{
 		l_bResult &= l_pEntryEnumerator->enumerate(path.c_str());
 		if(!l_bResult)
