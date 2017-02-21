@@ -146,11 +146,7 @@ else
 	echo "ERROR: Build failed"
 	exit 1
 fi
-if [[ $verbose == 1 ]]; then
-	ninja -v install
-else
-	ninja install
-fi
+
 
 if [[ ${package_option} == "TRUE" ]]; then
 	cmake --build . --target package

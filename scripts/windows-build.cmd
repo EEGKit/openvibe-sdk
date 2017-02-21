@@ -66,9 +66,6 @@ if not "!ERRORLEVEL!" == "0" goto terminate_error
 
 if %PackageOption% == TRUE (
 	cmake --build . --target package
-	REM For tester :
-	REM Is this equivalent to following command ?
-	REM cpack
 )
 
 
