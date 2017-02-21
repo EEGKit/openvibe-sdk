@@ -164,6 +164,18 @@ CPluginManager::~CPluginManager(void)
 	m_vPluginModule.clear();
 }
 
+vector<string> split(string str, char delimiter) {
+  vector<string> internal;
+  stringstream ss(str); // Turn the string into a stream.
+  string tok;
+
+  while(getline(ss, tok, delimiter)) {
+	internal.push_back(tok);
+  }
+
+  return internal;
+}
+
 boolean CPluginManager::addPluginsFromFiles(
 	const CString& rFileNameWildCard)
 {
@@ -172,7 +184,18 @@ boolean CPluginManager::addPluginsFromFiles(
 	boolean l_bResult;
 	CPluginManagerEntryEnumeratorCallBack l_rCB(this->getKernelContext(), m_vPluginModule, m_vPluginObjectDesc);
 	FS::IEntryEnumerator* l_pEntryEnumerator=FS::createEntryEnumerator(l_rCB);
-	l_bResult=l_pEntryEnumerator->enumerate(rFileNameWildCard);
+
+	std::string joinedPaths = rFileNameWildCard;
+	std::vector<string> listPaths = split(joinedPaths, ';');
+	l_bResult = true;
+	for(string path : listPaths)
+	{
+		l_bResult &= l_pEntryEnumerator->enumerate(path.c_str());
+		if(!l_bResult)
+		{
+			break;
+		}
+	}
 	l_pEntryEnumerator->release();
 
 	// Just return l_bResult. Error handling is performed within CPluginManagerEntryEnumeratorCallBack.
