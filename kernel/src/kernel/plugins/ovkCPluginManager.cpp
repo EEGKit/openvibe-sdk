@@ -164,16 +164,16 @@ CPluginManager::~CPluginManager(void)
 	m_vPluginModule.clear();
 }
 
-vector<string> split(const string& str, char delimiter) {
-  vector<string> internal;
-  stringstream ss(str); // Turn the string into a stream.
-  string tok;
+inline vector<string> split(const string& str, char delimiter)
+{
+	vector<string> internal;
+	stringstream ss(str);
+	string tok;
 
-  while(getline(ss, tok, delimiter)) {
-	internal.push_back(tok);
-  }
-
-  return internal;
+	while(getline(ss, tok, delimiter)) {
+		internal.push_back(tok);
+	}
+	return internal;
 }
 
 boolean CPluginManager::addPluginsFromFiles(
