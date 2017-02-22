@@ -52,10 +52,10 @@ namespace OpenViBEPlugins
 			std::vector<unsigned int> m_DimensionSizes;
 			unsigned int m_SamplingRate;
 			unsigned int m_SampleCountPerBuffer;
-			unsigned int m_ColumnCount;
 
 			bool m_IsHeaderSent;
 			bool m_IsStimulationHeaderSent;
+			std::vector<double> m_FrequencyAbscissa;
 		};
 
 		class CBoxAlgorithmOVCSVFileReaderListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >

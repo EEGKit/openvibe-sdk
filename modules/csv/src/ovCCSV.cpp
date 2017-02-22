@@ -243,7 +243,7 @@ bool CCSVHandler::getSignalInformation(std::vector<std::string>& channelNames, u
 	return true;
 }
 
-bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, std::vector<std::array<double, 2>> frequencyBands)
+bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const unsigned int samplingRate)
 {
 	if (m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
@@ -268,12 +268,13 @@ bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channel
 	}
 
 	m_DimensionLabels = channelNames;
-	m_DimensionSizes = { static_cast<unsigned int>(channelNames.size()), static_cast<unsigned int>(frequencyBands.size()) };
-	m_FrequencyBands = frequencyBands;
+	m_DimensionSizes = { static_cast<unsigned int>(channelNames.size()), static_cast<unsigned int>(frequencyAbscissa.size()) };
+	m_FrequencyAbscissa = frequencyAbscissa;
+	m_OriginalSampleNumber = samplingRate;
 	return true;
 }
 
-bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyBands, unsigned int& sampleCountPerBuffer)
+bool CCSVHandler::getSpectrumInformation(std::vector<std::string> &channelNames, std::vector<double> &frequencyAbscissa, unsigned int& samplingRate)
 {
 	if (m_InputTypeIdentifier != EStreamType::Spectrum)
 	{
@@ -294,7 +295,7 @@ bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames,
 		return false;
 	}
 
-	if (m_FrequencyBandsBuffer.empty())
+	if (m_FrequencyAbscissa.empty())
 	{
 		m_LastStringError = "No dimension labels, header reading may have failed";
 		m_LogError = LogErrorCodes_WrongHeader;
@@ -309,8 +310,8 @@ bool CCSVHandler::getSpectrumInformation(std::vector<std::string>& channelNames,
 	}
 
 	channelNames = m_DimensionLabels;
-	frequencyBands = m_FrequencyBandsBuffer;
-	sampleCountPerBuffer = m_SampleCountPerBuffer;
+	frequencyAbscissa = m_FrequencyAbscissa;
+	samplingRate = m_OriginalSampleNumber;
 	return true;
 }
 
@@ -729,7 +730,7 @@ bool CCSVHandler::closeFile()
 	m_Buffer.clear();
 	m_DimensionSizes.clear();
 	m_DimensionLabels.clear();
-	m_FrequencyBands.clear();
+	m_FrequencyAbscissa.clear();
 	m_DimensionCount = 0;
 	m_ColumnCount = 0;
 	m_SamplingRate = 0;
@@ -766,7 +767,7 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 		return false;
 	}
 	else if (m_InputTypeIdentifier == EStreamType::Spectrum
-		&& sample.matrix.size() != (m_DimensionLabels.size() * m_FrequencyBands.size()))
+		&& sample.matrix.size() != (m_DimensionLabels.size() * m_FrequencyAbscissa.size()))
 	{
 		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_WrongMatrixSize;
@@ -1059,9 +1060,9 @@ std::string CCSVHandler::createHeaderString(void)
 	case EStreamType::Spectrum :
 		for (size_t channel = 0; channel < m_DimensionLabels.size(); channel++)
 		{
-			for (unsigned int column = 0; column < m_FrequencyBands.size(); column++)
+			for (unsigned int column = 0; column < m_FrequencyAbscissa.size(); column++)
 			{
-				addColumn(m_DimensionLabels[channel] + s_InternalDataSeparator + std::to_string(m_FrequencyBands[column].front()));
+				addColumn(m_DimensionLabels[channel] + s_InternalDataSeparator + std::to_string(m_FrequencyAbscissa[column]));
 			}
 		}
 		break;
@@ -1433,7 +1434,7 @@ bool CCSVHandler::parseSpectrumHeader(void)
 					return false;
 				}
 
-				m_FrequencyBandsBuffer.push_back(frequency);
+				m_FrequencyAbscissa.push_back(frequency);
 			}
 			else
 			{
@@ -1459,7 +1460,7 @@ bool CCSVHandler::parseSpectrumHeader(void)
 					return false;
 				}
 
-				if (!(std::fabs(frequency - m_FrequencyBandsBuffer[labelSizeCounter]) < std::numeric_limits<double>::epsilon()))
+				if (!(std::fabs(frequency - m_FrequencyAbscissa[labelSizeCounter]) < std::numeric_limits<double>::epsilon()))
 				{
 					m_LastStringError = "Channels must have the same frequency bands";
 					return false;
