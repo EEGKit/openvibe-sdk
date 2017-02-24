@@ -77,7 +77,7 @@ namespace OpenViBE
 					);
 				}
 
-				boolean l_bPluginObjectDescAdded=false;
+				bool l_bPluginObjectDescAdded=false;
 				uint32 l_ui32Index=0;
 				uint32 l_ui32Count=0;
 				IPluginObjectDesc* l_pPluginObjectDesc=NULL;
@@ -128,8 +128,8 @@ namespace OpenViBE
 			vector<IPluginModule*>& m_rPluginModule;
 			map<IPluginObjectDesc*, IPluginModule*>& m_rPluginObjectDesc;
 		};
-	};
-};
+	}
+}
 
 CPluginManager::CPluginManager(const IKernelContext& rKernelContext)
 	:TKernelObject<IPluginManager>(rKernelContext)
@@ -164,42 +164,33 @@ CPluginManager::~CPluginManager(void)
 	m_vPluginModule.clear();
 }
 
-inline vector<string> split(const string& str, char delimiter)
-{
-	vector<string> internal;
-	stringstream ss(str);
-	string tok;
-
-	while(getline(ss, tok, delimiter)) {
-		internal.push_back(tok);
-	}
-	return internal;
-}
-
-boolean CPluginManager::addPluginsFromFiles(
+bool CPluginManager::addPluginsFromFiles(
 	const CString& rFileNameWildCard)
 {
 	this->getLogManager() << LogLevel_Info << "Adding plugins from [" << rFileNameWildCard << "]\n";
 
-	boolean l_bResult = true;
+	bool l_bResult = true;
 	CPluginManagerEntryEnumeratorCallBack l_rCB(this->getKernelContext(), m_vPluginModule, m_vPluginObjectDesc);
 	FS::IEntryEnumerator* l_pEntryEnumerator=FS::createEntryEnumerator(l_rCB);
 
-	for(const string path : split(static_cast<string>(rFileNameWildCard), ';'))
-	{
+	stringstream ss(rFileNameWildCard.toASCIIString());
+	string path;
+
+	while(getline(ss, path, ';')) {
 		l_bResult &= l_pEntryEnumerator->enumerate(path.c_str());
 		if(!l_bResult)
 		{
 			break;
 		}
 	}
+
 	l_pEntryEnumerator->release();
 
 	// Just return l_bResult. Error handling is performed within CPluginManagerEntryEnumeratorCallBack.
 	return l_bResult;
 }
 
-boolean CPluginManager::registerPluginDesc(
+bool CPluginManager::registerPluginDesc(
 	const IPluginObjectDesc& rPluginObjectDesc)
 {
 	m_vPluginObjectDesc [ const_cast < IPluginObjectDesc * > (&rPluginObjectDesc) ] = NULL;
@@ -209,7 +200,7 @@ boolean CPluginManager::registerPluginDesc(
 CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(
 	const CIdentifier& rPreviousIdentifier) const
 {
-	boolean l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
+	bool l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
 	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
 	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
 	{
@@ -232,7 +223,7 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(
 	const CIdentifier& rPreviousIdentifier,
 	const CIdentifier& rBaseClassIdentifier) const
 {
-	boolean l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
+	bool l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
 	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
 	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
 	{
@@ -254,7 +245,7 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(
 	return OV_UndefinedIdentifier;
 }
 
-boolean CPluginManager::canCreatePluginObject(
+bool CPluginManager::canCreatePluginObject(
 	const CIdentifier& rClassIdentifier)
 {
 //	this->getLogManager() << LogLevel_Debug << "Searching if can build plugin object\n";
@@ -329,7 +320,7 @@ CIdentifier CPluginManager::getPluginObjectHashValue(const IBoxAlgorithmDesc& rB
 	return l_oBoxPrototype.m_oHash;
 }
 
-boolean CPluginManager::isPluginObjectFlaggedAsDeprecated(
+bool CPluginManager::isPluginObjectFlaggedAsDeprecated(
 	const CIdentifier& rClassIdentifier) const
 {
 	const IPluginObjectDesc* l_pPluginObjectDesc=this->getPluginObjectDescCreating(rClassIdentifier);
@@ -349,7 +340,7 @@ IPluginObject* CPluginManager::createPluginObject(
 	return createPluginObjectT<IPluginObject, IPluginObjectDesc>(rClassIdentifier, NULL);
 }
 
-boolean CPluginManager::releasePluginObject(
+bool CPluginManager::releasePluginObject(
 	IPluginObject* pPluginObject)
 {
 	this->getLogManager() << LogLevel_Debug << "Releasing plugin object\n";
