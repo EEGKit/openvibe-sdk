@@ -75,12 +75,6 @@ print "Installing dependencies for: $distribution\n";
 # Add additional repositories for newer packages
 
 if ($distribution eq 'Ubuntu 14.04') {
-  if ($assume_yes) {
-    system('sudo add-apt-repository ppa:george-edison55/cmake-3.x');
-  } else {
-    system('sudo add-apt-repository -y ppa:george-edison55/cmake-3.x');
-  }
-  ($CHILD_ERROR != 0) and die("Adding PPA repository for CMake failed [$CHILD_ERROR]");
   system('sudo add-apt-repository ppa:fkrull/deadsnakes');
   ($CHILD_ERROR != 0) and die("Adding PPA repository for Python 3.5 failed [$CHILD_ERROR]");
 }
@@ -92,7 +86,6 @@ my @packages = ();
 if ($distribution eq 'Ubuntu 14.04') {
   push @packages, "doxygen";
   push @packages, "make";
-  push @packages, "cmake";
   push @packages, "gcc";
   push @packages, "g++";
   push @packages, "libexpat1-dev";
@@ -180,6 +173,47 @@ if ($distribution eq 'Ubuntu 16.04') {
     system("sudo make install");
     ($CHILD_ERROR != 0) and die("Failed install Eigen [$CHILD_ERROR]");
 
+    # Go back to the scripts folder
+    chdir $FindBin::Bin;
+  }
+}
+if ($distribution eq 'Ubuntu 14.04') {
+  # Install cmake 3.5rm .1 from source if it is not already
+  # This is because Ubuntu 14.04 only has an old version of cmake
+  if (-e "/usr/local/bin/cmake") {
+    print STDERR "Warning: cmake is already installed in /usr/local\n";
+  } else {
+    my $dependencies_folder = $FindBin::Bin . "/../dependencies";
+    my $cmake_build_folder = $dependencies_folder . "/cmake-build";
+    my $cmake_extracted_folder = $cmake_build_folder . "/cmake-3.5.1";
+
+    if (! -e $dependencies_folder) {
+      mkdir($dependencies_folder) or die("Failed to create directory [$dependencies_folder]");
+    }
+    if (! -e $cmake_build_folder) {
+      mkdir($cmake_build_folder) or die("Failed to create directory [$cmake_build_folder]");
+    }
+
+    chdir $cmake_build_folder;
+
+    if (! -e "cmake-3.5.1.tar.gz") {
+      system('wget "http://www.cmake.org/files/v3.5/cmake-3.5.1.tar.gz"');
+      ($CHILD_ERROR != 0) and die ("Could not download the CMake sources [$CHILD_ERROR]");
+    }
+    if (! -e $cmake_extracted_folder) {
+      system('tar -xzf "cmake-3.5.1.tar.gz"');
+      ($CHILD_ERROR != 0) and die ("Could not extract the CMake archive");
+    }
+    chdir $cmake_extracted_folder;
+    system("./configure");
+    ($CHILD_ERROR != 0) and die("Failed to configure for cmake [$CHILD_ERROR]");
+
+    system("sudo make install");
+    ($CHILD_ERROR != 0) and die("Failed make install cmake [$CHILD_ERROR]");
+
+	system("sudo update-alternatives --install /usr/bin/cmake cmake /usr/local/bin/cmake 1 --force ");
+    ($CHILD_ERROR != 0) and die("Failed install cmake [$CHILD_ERROR]");
+	
     # Go back to the scripts folder
     chdir $FindBin::Bin;
   }
