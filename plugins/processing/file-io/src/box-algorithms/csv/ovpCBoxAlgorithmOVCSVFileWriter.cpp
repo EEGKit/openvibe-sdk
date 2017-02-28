@@ -72,6 +72,8 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 	const CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_WriterLib->setOutputFloatPrecision(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));
 	m_AppendData = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_OnlyLastMatrix = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_WriterLib->setLastMatrixOnlyMode(m_OnlyLastMatrix);
 
 	if (!m_AppendData)
 	{
@@ -135,10 +137,9 @@ bool CBoxAlgorithmOVCSVFileWriter::process(void)
 		ErrorType::Internal);
 
 	// write into the library
-	if (!m_WriterLib->writeDataToFile())
-	{
-		OV_ERROR_KRF((OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(), ErrorType::Internal);
-	}
+	OV_ERROR_UNLESS_KRF(m_WriterLib->writeDataToFile(),
+		(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+		ErrorType::Internal);
 
 	return true;
 }

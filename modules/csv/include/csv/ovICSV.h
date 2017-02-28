@@ -137,6 +137,20 @@ namespace OpenViBE
 			virtual EStreamType getFormatType(void) = 0;
 
 			/**
+			 * \brief Set the state of the LastMatrixOnly mode.
+			 *
+			 * \param bool setting it to true will activate the LastMatrixOnly mode, false will disable it.
+			 */
+			virtual void setLastMatrixOnlyMode(bool isActivated) = 0;
+
+			/**
+			 * \brief Return the state of the LastMatrixOnly mode
+			 *
+			 * \return bool true if LastMatrixOnly mode is activated
+			 */
+			virtual bool getLastMatrixOnlyMode(void) = 0;
+
+			/**
 			 * \brief Set informations to read or write signal data
 			 *
 			 * \param channelNames all channels names for the matrix

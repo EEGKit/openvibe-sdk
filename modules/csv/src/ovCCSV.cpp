@@ -124,7 +124,8 @@ CCSVHandler::CCSVHandler(void)
 	m_IsHeaderRead(false),
 	m_IsSetInfoCalled(false),
 	m_HasEpoch(false),
-	m_OutputFloatPrecision(10)
+	m_OutputFloatPrecision(10),
+	m_LastMatrixOnly(false)
 {
 }
 
@@ -673,6 +674,10 @@ bool CCSVHandler::writeHeaderToFile(void)
 
 bool CCSVHandler::writeDataToFile(void)
 {
+	if (m_LastMatrixOnly)
+	{
+		return true;
+	}
 	if (!m_Fs.is_open())
 	{
 		m_LastStringError.clear();
@@ -795,6 +800,10 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 			return false;
 		}
 	}
+	if (m_LastMatrixOnly)
+	{
+		m_Chunks.clear();
+	}
 	m_Chunks.push_back(sample);
 	return true;
 }
@@ -833,7 +842,15 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 			}
 		}
 	}
-	m_Chunks.insert(m_Chunks.end(), samples.begin(), samples.end());
+	if (m_LastMatrixOnly)
+	{
+		m_Chunks.clear();
+		m_Chunks.push_back(samples.back());
+	}
+	else
+	{
+		m_Chunks.insert(m_Chunks.end(), samples.begin(), samples.end());
+	}
 	return true;
 }
 

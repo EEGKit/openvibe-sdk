@@ -49,6 +49,7 @@ namespace OpenViBEPlugins
 			bool m_IsHeaderReceived;
 			bool m_IsFileOpen;
 			bool m_AppendData;
+			bool m_OnlyLastMatrix;
 
 		};
 
@@ -101,6 +102,7 @@ namespace OpenViBEPlugins
 				boxAlgorithmPrototype.addSetting("Filename",            OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
 				boxAlgorithmPrototype.addSetting("Precision",           OV_TypeId_Integer, "10");
 				boxAlgorithmPrototype.addSetting("Append data",         OV_TypeId_Boolean, "false");
+				boxAlgorithmPrototype.addSetting("Only last matrix",    OV_TypeId_Boolean, "false");
 				boxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
