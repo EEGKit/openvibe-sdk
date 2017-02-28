@@ -210,9 +210,6 @@ if ($distribution eq 'Ubuntu 14.04') {
 
     system("sudo make install");
     ($CHILD_ERROR != 0) and die("Failed make install cmake [$CHILD_ERROR]");
-
-	system("sudo update-alternatives --install /usr/bin/cmake cmake /usr/local/bin/cmake 1 --force ");
-    ($CHILD_ERROR != 0) and die("Failed install cmake [$CHILD_ERROR]");
 	
     # Go back to the scripts folder
     chdir $FindBin::Bin;

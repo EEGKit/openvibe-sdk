@@ -116,7 +116,7 @@ add_component(TOOLS "certivibe-plugins-tools")
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 
 # if we link with the module socket in Static, we must link the project with the dependency on win32
-if(WIN32 AND NOT DYNAMIC_LINK_CERTIVIBE)
+if(WIN32 AND SOCKET IN_LIST INCLUDED_CERTIVIBE_COMPONENTS AND NOT DYNAMIC_LINK_CERTIVIBE)
 	include("FindThirdPartyWinsock2")
 	include("FindThirdPartyFTDI")
 endif()
