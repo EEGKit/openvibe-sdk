@@ -50,6 +50,7 @@ namespace OpenViBEPlugins
 			bool m_IsFileOpen;
 			bool m_AppendData;
 			bool m_LastMatrixOnly;
+			bool m_WriteHeader;
 
 		};
 
