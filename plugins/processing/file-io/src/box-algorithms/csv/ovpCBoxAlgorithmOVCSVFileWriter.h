@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 			bool m_IsHeaderReceived;
 			bool m_IsFileOpen;
 			bool m_AppendData;
-			bool m_OnlyLastMatrix;
+			bool m_LastMatrixOnly;
 
 		};
 

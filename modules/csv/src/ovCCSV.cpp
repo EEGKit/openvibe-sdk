@@ -674,10 +674,6 @@ bool CCSVHandler::writeHeaderToFile(void)
 
 bool CCSVHandler::writeDataToFile(void)
 {
-	if (m_LastMatrixOnly)
-	{
-		return true;
-	}
 	if (!m_Fs.is_open())
 	{
 		m_LastStringError.clear();
@@ -800,10 +796,13 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 			return false;
 		}
 	}
-	if (m_LastMatrixOnly)
+	if (m_LastMatrixOnly &&
+			(m_InputTypeIdentifier != EStreamType::Signal
+			|| (!m_Chunks.empty() && sample.epoch != m_Chunks.back().epoch)))
 	{
 		m_Chunks.clear();
 	}
+
 	m_Chunks.push_back(sample);
 	return true;
 }
@@ -842,10 +841,20 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 			}
 		}
 	}
-	if (m_LastMatrixOnly)
+	if (m_LastMatrixOnly && m_InputTypeIdentifier != EStreamType::Signal)
 	{
 		m_Chunks.clear();
 		m_Chunks.push_back(samples.back());
+	}
+	else if (m_LastMatrixOnly && m_InputTypeIdentifier == EStreamType::Signal)
+	{
+		const unsigned long long lastEpoch = samples.back().epoch;
+		auto rangeStart = std::find_if(samples.begin(), samples.end(), [&lastEpoch](const SMatrixChunk& s) -> bool { return s.epoch == lastEpoch; });
+		if (!m_Chunks.empty() && m_Chunks.front().epoch != lastEpoch)
+		{
+			m_Chunks.clear();
+		}
+		m_Chunks.insert(m_Chunks.end(), rangeStart, samples.end());
 	}
 	else
 	{
