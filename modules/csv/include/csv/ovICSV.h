@@ -146,7 +146,8 @@ namespace OpenViBE
 			/**
 			 * \brief Return the state of the LastMatrixOnly mode
 			 *
-			 * \return bool true if LastMatrixOnly mode is activated
+			 * \retval true if LastMatrixOnly mode is activated
+			 * \retval false if this is not (normal mode)
 			 */
 			virtual bool getLastMatrixOnlyMode(void) = 0;
 

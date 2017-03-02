@@ -89,8 +89,9 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 		{
 			fseek(file, 0, SEEK_END);
 			m_WriteHeader = ftell(file) == 0;
+			fclose(file);
 		}
-		fclose(file);
+
 		OV_ERROR_UNLESS_KRF(m_WriterLib->openFile(filename.toASCIIString(), OpenViBE::CSV::EFileAccessMode::Append),
 			(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
 			ErrorType::Internal);

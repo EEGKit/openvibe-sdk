@@ -22,6 +22,7 @@
 
 #include <sstream>
 #include <numeric>
+#include <algorithm>
 
 #include "ovCCSV.hpp"
 
@@ -452,10 +453,10 @@ bool CCSVHandler::openFile(const std::string& fileName, EFileAccessMode mode)
 	}
 
 	m_Filename = fileName;
-
-	if (mode == EFileAccessMode::Write)
+	// This check that file can be written and create it if it does not exist
+	if (mode == EFileAccessMode::Write || mode == EFileAccessMode::Append)
 	{
-		FILE *file = fopen(m_Filename.c_str(), "w");
+		FILE *file = fopen(m_Filename.c_str(), "a");
 		if (!file)
 		{
 			m_LastStringError.clear();
@@ -473,7 +474,17 @@ bool CCSVHandler::openFile(const std::string& fileName, EFileAccessMode mode)
 
 	try
 	{
-		m_Fs.open(m_Filename, std::ios::in | std::ios::out);
+		switch (mode) {
+		case EFileAccessMode::Write:
+			m_Fs.open(m_Filename, std::ios::out | std::ios::trunc);
+			break;
+		case EFileAccessMode::Append:
+			m_Fs.open(m_Filename, std::ios::out | std::ios::app);
+			break;
+		case EFileAccessMode::Read:
+			m_Fs.open(m_Filename, std::ios::in);
+			break;
+		}
 	}
 	catch (const std::ios_base::failure& fail)
 	{
@@ -525,11 +536,6 @@ bool CCSVHandler::openFile(const std::string& fileName, EFileAccessMode mode)
 			}
 		}
 		m_Fs.seekg(0, m_Fs.beg);
-	}
-
-	if (mode == EFileAccessMode::Append)
-	{
-		m_Fs.seekg(0, m_Fs.end);
 	}
 
 	m_IsHeaderRead = false;
@@ -846,28 +852,31 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 			}
 		}
 	}
-	if (m_LastMatrixOnly && m_InputTypeIdentifier != EStreamType::Signal)
+	if (m_LastMatrixOnly)
 	{
-		m_Chunks.clear();
-		m_Chunks.push_back(samples.back());
-		const double curTime = m_Chunks.front().startTime;
-		m_Stimulations.erase(
-			std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk){ return chunk.stimulationDate < curTime; }),
-			m_Stimulations.end());
-	}
-	else if (m_LastMatrixOnly && m_InputTypeIdentifier == EStreamType::Signal)
-	{
-		const unsigned long long lastEpoch = samples.back().epoch;
-		auto rangeStart = std::find_if(samples.begin(), samples.end(), [&lastEpoch](const SMatrixChunk& s) -> bool { return s.epoch == lastEpoch; });
-		if (!m_Chunks.empty() && m_Chunks.front().epoch != lastEpoch)
+		if (m_InputTypeIdentifier == EStreamType::Signal)
+		{
+			const unsigned long long lastEpoch = samples.back().epoch;
+			auto rangeStart = std::find_if(samples.begin(), samples.end(), [&lastEpoch](const SMatrixChunk& s) -> bool { return s.epoch == lastEpoch; });
+			if (!m_Chunks.empty() && m_Chunks.front().epoch != lastEpoch)
+			{
+				m_Chunks.clear();
+			}
+			m_Chunks.insert(m_Chunks.end(), rangeStart, samples.end());
+			const double curTime = m_Chunks.front().startTime;
+			m_Stimulations.erase(
+				std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk){ return chunk.stimulationDate < curTime; }),
+				m_Stimulations.end());
+		}
+		else
 		{
 			m_Chunks.clear();
+			m_Chunks.push_back(samples.back());
+			const double curTime = m_Chunks.front().startTime;
+			m_Stimulations.erase(
+				std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk){ return chunk.stimulationDate < curTime; }),
+				m_Stimulations.end());
 		}
-		m_Chunks.insert(m_Chunks.end(), rangeStart, samples.end());
-		const double curTime = m_Chunks.front().startTime;
-		m_Stimulations.erase(
-			std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk){ return chunk.stimulationDate < curTime; }),
-			m_Stimulations.end());
 	}
 	else
 	{

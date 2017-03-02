@@ -23,8 +23,6 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <array>
-#include <algorithm>
 
 namespace OpenViBE
 {
