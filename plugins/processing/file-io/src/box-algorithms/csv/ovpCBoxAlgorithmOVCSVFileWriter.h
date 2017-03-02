@@ -49,6 +49,8 @@ namespace OpenViBEPlugins
 			bool m_IsHeaderReceived;
 			bool m_IsFileOpen;
 			bool m_AppendData;
+			bool m_LastMatrixOnly;
+			bool m_WriteHeader;
 
 		};
 
@@ -81,7 +83,7 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("New CSV File Writer"); }
+			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("CSV File Writer"); }
 			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Victor Herlin"); }
 			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("Mensia Technologies SA"); }
 			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Writes signal in a CSV (text based) file"); }
@@ -101,6 +103,7 @@ namespace OpenViBEPlugins
 				boxAlgorithmPrototype.addSetting("Filename",            OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
 				boxAlgorithmPrototype.addSetting("Precision",           OV_TypeId_Integer, "10");
 				boxAlgorithmPrototype.addSetting("Append data",         OV_TypeId_Boolean, "false");
+				boxAlgorithmPrototype.addSetting("Only last matrix",    OV_TypeId_Boolean, "false");
 				boxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 
 				boxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);

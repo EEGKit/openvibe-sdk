@@ -66,7 +66,7 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("CSV File Writer"); }
+			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("CSV File Writer (Deprecated)"); }
 			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
 			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA"); }
 			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Writes signal in a CSV (text based) file"); }

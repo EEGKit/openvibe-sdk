@@ -127,7 +127,7 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("CSV File Reader"); }
+			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("CSV File Reader (Deprecated)"); }
 			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Baptiste Payan"); }
 			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA"); }
 			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Read signal in a CSV (text based) file"); }

@@ -23,7 +23,6 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <array>
 
 namespace OpenViBE
 {
@@ -46,8 +45,10 @@ namespace OpenViBE
 			void setOutputFloatPrecision(unsigned int precision) { m_OutputFloatPrecision = precision; }
 
 			void setFormatType(EStreamType typeIdentifier);
-
 			EStreamType getFormatType(void);
+
+			void setLastMatrixOnlyMode(bool isActivated) { m_LastMatrixOnly = isActivated; }
+			bool getLastMatrixOnlyMode(void) { return m_LastMatrixOnly; }
 
 			bool setSignalInformation(const std::vector<std::string>& channelNames, unsigned int samplingFrequency, unsigned int sampleCountPerBuffer);
 			bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, unsigned int& sampleCountPerBuffer);
@@ -225,6 +226,8 @@ namespace OpenViBE
 
 			unsigned int m_OriginalSampleNumber;
 			unsigned int m_OutputFloatPrecision;
+
+			bool m_LastMatrixOnly;
 		};
 	}
 }
