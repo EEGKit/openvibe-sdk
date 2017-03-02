@@ -1,7 +1,15 @@
 # ---------------------------------
 # Finds Certivibe binary distribution
-# Adds library to target
-# Adds include path
+# Adds library to target, include path and execute install commands
+# Also add library specific compiler flags
+# This should be used with a defined INCLUDED_CERTIVIBE_COMPONENTS variable in scope
+# Value should be a list of libraries to include
+# They are organized into groups, and group name can also be used to add all members of said group
+# This include :
+# ALL : will include groups BASE, ALLPLUGINS and ALLMODULES
+# BASE : MAIN KERNEL
+# ALLPLUGINS : CLASSIFICATION DATA_GENERATION FEATURE_EXTRACTION FILE_IO SIGNAL_PROCESSING STIMULATION STREAM_CODECS STREAMING TOOLS
+# ALLMODULES : EBML SYSTEM FS SOCKET XML DATE CSV TOOLKIT
 # ---------------------------------
 option(DYNAMIC_LINK_CERTIVIBE "Dynamically link Certivibe" ON)
 
@@ -38,7 +46,7 @@ endif()
 
 if(ALLPLUGINS IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
 	list(REMOVE_ITEM INCLUDED_CERTIVIBE_COMPONENTS ALLPLUGINS)
-	list(APPEND INCLUDED_CERTIVIBE_COMPONENTS CLASSifICATION DATA_GENERATION FEATURE_EXTRACTION FILE_IO SIGNAL_PROCESSING STIMULATION STREAM_CODECS STREAMING TOOLS)
+	list(APPEND INCLUDED_CERTIVIBE_COMPONENTS CLASSIFICATION DATA_GENERATION FEATURE_EXTRACTION FILE_IO SIGNAL_PROCESSING STIMULATION STREAM_CODECS STREAMING TOOLS)
 endif()
 
 if(ALLMODULES IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
