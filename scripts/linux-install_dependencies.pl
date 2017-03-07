@@ -13,6 +13,7 @@ Currently supported Linux Distributions are:
 use strict;
 use English;
 use FindBin;
+use File::Copy;
 
 sub usage {
   print "$0 [-h][-y]\n";
@@ -220,18 +221,28 @@ if ($distribution eq 'Ubuntu 14.04') {
 if (1) {
 	my $dependencies_folder = $FindBin::Bin . "/../dependencies";
     my $gtest_build_folder = $dependencies_folder . "/gtest-build";	
+	my $gtest_lib_folder = $dependencies_folder . "/gtest/lib/";	
 	if (! -e $dependencies_folder) {
       mkdir($dependencies_folder) or die("Failed to create directory [$dependencies_folder]");
     }
     if (! -e $gtest_build_folder) {
       mkdir($gtest_build_folder) or die("Failed to create directory [$gtest_build_folder]");
     }
+	if (! -e $gtest_lib_folder) {
+      mkdir($gtest_lib_folder) or die("Failed to create directory [$gtest_lib_folder]");
+    }
 
 	# build gtest
-	pushd $gtest_build_folder
-	cmake -GNinja /usr/src/gtest
-	ninja all
-	rm CMakeCache.txt
-	popd
+	chdir $gtest_build_folder;
+	system("cmake -GNinja /usr/src/gtest");
+	system("ninja all");
+	system("rm CMakeCache.txt");
+	my @lib_files = glob "*.a";
+
+	foreach my $lib_cur (@lib_files) {
+		copy($lib_cur, $gtest_lib_folder) or die "Could not copy lib $lib_cur $!\n";
+	}
+	chdir $FindBin::Bin;
+	
 }
 print("CertiViBE dependencies were successfully installed\n");
