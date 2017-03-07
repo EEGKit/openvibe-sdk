@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Set path to OpenViBE shared libraries
+uname_string=$(uname)
+
+if [[ "$uname_string" == 'Darwin' ]]; then
+  export DYLD_LIBRARY_PATH="@OV_LIBRARY_DIR@/:$DYLD_LIBRARY_PATH"
+else
+  export LD_LIBRARY_PATH="@OV_LIBRARY_DIR@/:$LD_LIBRARY_PATH"
+fi
+
+# Execute ctest forwarding the arguments
+ctest $@
+

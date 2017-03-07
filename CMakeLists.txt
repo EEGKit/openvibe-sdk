@@ -232,4 +232,13 @@ FILE(GLOB_RECURSE script_files scripts/*.cmd scripts/*.sh scripts/*.nsi scripts/
 INSTALL(FILES scripts/AddCertivibeComponents.cmake DESTINATION ${DIST_DATADIR})
 ADD_CUSTOM_TARGET(openvibe-scripts SOURCES ${script_files})
 
+# Enable/Disable unit test
+SET(BUILD_UNIT_TEST true CACHE BOOL "Set this flag to true/false to enable/disable unit test building")
+SET(BUILD_VALIDATION_TEST true CACHE BOOL "Set this flag to true/false to enable/disable validation test building")
 
+SET(GTEST_ROOT ${OV_CUSTOM_DEPENDENCIES_PATH}/gtest)
+IF(BUILD_UNIT_TEST) 
+	INCLUDE("CMakeListsTests.txt")
+ELSEIF(BUILD_VALIDATION_TEST) 
+	INCLUDE("CMakeListsTests.txt")
+ENDIF()

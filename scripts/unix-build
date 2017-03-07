@@ -16,6 +16,14 @@ function usage()
 		echo "--install-dir=<dirname> : binaries deployment directory"
 		echo "--test-data-dir=<dirname> : test data directory"
 		echo "--make-package : a package will be created in build directory"
+		
+		# echo "--build-unit=<Debug|Release|RelWithDebInfo> : set the option to build unit test"
+		echo "--gtest-lib-dir=<dirname> : gtest libraries directory (default: ../dependencies/gtest/lib)"
+		echo "--gtest-include-dir=<dirname> : gtest include directory (default: ../dependencies/gtest/include)"
+		# echo "--root-dir=<dirname> : openvibe root directory"
+		# echo "--test-build-dir=<dirname> : test build directory"
+		# echo "--test-data-dir=<dirname> : test data directory"
+		echo "--test-output-dir=<dirname> : test output files directory"
 }
 
 # Script starting point
@@ -31,6 +39,19 @@ verbose=0
 build_dir_set=0
 install_dir_set=0
 package_option="FALSE"
+
+
+ov_build_unit=0
+ov_test_script_dir="${PWD}"
+ov_root_dir="${ov_test_script_dir}/../../certivibe-build/dist-Release/"
+ov_test_build_dir="${ov_test_script_dir}/../../certivibe-test-build/"
+ov_cmake_test_data=""
+ov_cmake_test_output=""
+test_data_set=0
+test_output_set=0
+gtest_lib_dir="${ov_test_script_dir}/../dependencies/gtest/lib"
+gtest_include_dir="${ov_test_script_dir}/../dependencies/gtest/include"
+
 
 # Parse arguments
 for i in "$@"
@@ -66,6 +87,38 @@ do
 			package_option="TRUE"
 			shift
 			;;
+		
+		
+		
+		--build-unit)
+			ov_build_unit=1
+			shift
+			;;
+		--build-validation)
+			ov_build_validation=1
+			shift
+			;;
+		--gtest-lib-dir=*)
+			gtest_lib_dir="${i#*=}"
+			shift
+			;;
+		--gtest-include-dir=*)
+			gtest_include_dir="${i#*=}"
+			shift
+			;;
+		--test-data-dir=*)
+			ov_cmake_test_data="${i#*=}"
+			test_data_set=1
+			shift
+			;;
+		--test-output-dir=*)
+			ov_cmake_test_output="${i#*=}"
+			test_output_set=1
+			shift
+			;;
+			
+			
+			
 		*)
 			echo "ERROR: Unknown parameter $i"
 			exit 1
@@ -97,6 +150,10 @@ echo "[build-type] = ${ov_build_type}"
 echo "[build-dir] = ${ov_build_dir}"
 echo "[install-dir] = ${ov_install_dir}"
 echo "[test-data-dir] = ${ov_test_data_dir}"
+
+echo "[test data directory] = ${ov_cmake_test_data}"
+echo "[test output files directory] = ${ov_cmake_test_output}"
+echo "[build unit] = ${ov_build_unit}"
 echo "**************************************"
 echo ""
 echo ""
@@ -122,7 +179,15 @@ cmake ${ov_script_dir}/.. \
 		-DCMAKE_BUILD_TYPE=${ov_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${ov_install_dir} \
 		-DOVT_TEST_DATA_DIR=${ov_test_data_dir} \
-		-DOV_PACKAGE=${package_option}
+		-DOV_PACKAGE=${package_option} \
+		-DBUILD_UNIT_TEST=${ov_build_unit} \
+		-DBUILD_VALIDATION_TEST=${ov_build_validation} \
+		-DGTEST_INCLUDE_DIR=${gtest_include_dir} \
+		-DGTEST_LIBRARY=${gtest_lib_dir}/libgtest.a \
+		-DGTEST_MAIN_LIBRARY=${gtest_lib_dir}/libgtest_main.a \
+		-DOVT_TEST_DATA_DIR=${ov_cmake_test_data} \
+		-DOVT_VALIDATION_TEST_OUTPUT_DIR=${ov_cmake_test_output} \
+		${ov_test_script_dir}/../
 
 
 if [[ $? == 0 ]]; then

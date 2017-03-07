@@ -1,0 +1,164 @@
+/*********************************************************************
+* INRIA and MENSIA TECHNOLOGIES SA, CONFIDENTIAL
+*
+* CertiViBE Test Software
+* Copyright Inria and Mensia Technologies SA, 2015-2017
+* All Rights Reserved
+*
+* NOTICE: All information contained herein is, and remains
+* the property of Mensia Technologies SA and Inria.
+* The intellectual and technical concepts contained
+* herein are proprietary to Mensia Technologies SA and Inria,
+* and are covered copyright law.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Mensia Technologies SA and Inria.
+*/
+
+#include <iostream>
+
+#include "gtest/gtest.h"
+
+#include "ovtAssert.h"
+#include "ovtTestFixtureCommon.h"
+
+using namespace OpenViBE;
+using namespace OpenViBE::Kernel;
+
+// DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> variable here
+// because it causes a bug due to plugins global descriptors beeing destroyed before
+// the kernel context.
+OpenViBE::Kernel::IKernelContext* g_context = nullptr;
+
+TEST(error_manager_test_case, test_init)
+{
+	// here we use assert because we want to fail directly
+	// in order to avoid a segfault
+	ASSERT_TRUE(g_context != nullptr);
+
+	auto& errorManager = g_context->getErrorManager();
+
+	// check manager is correctly initialized
+	EXPECT_FALSE(errorManager.hasError());
+	EXPECT_TRUE(errorManager.getLastError() == nullptr);
+	EXPECT_TRUE(std::string(errorManager.getLastErrorString()).empty());
+	EXPECT_EQ(errorManager.getLastErrorType(), ErrorType::NoErrorFound);
+
+	EXPECT_NO_THROW(errorManager.releaseErrors());
+}
+
+TEST(error_manager_test_case, test_push)
+{
+	// here we use assert because we want to fail directly
+	// in order to avoid a segfault
+	ASSERT_TRUE(g_context != nullptr);
+
+	auto& errorManager = g_context->getErrorManager();
+
+	// push an error
+	errorManager.pushError(ErrorType::Overflow, "An integer overflow error occurred");
+
+	EXPECT_TRUE(errorManager.hasError());
+	EXPECT_STREQ(errorManager.getLastErrorString(), "An integer overflow error occurred");
+	EXPECT_EQ(errorManager.getLastErrorType(), ErrorType::Overflow);
+
+	// test match error features returned direclty by manager match error features
+	auto error = errorManager.getLastError();
+
+	ASSERT_TRUE(error != nullptr);
+	EXPECT_STREQ(error->getErrorString(), "An integer overflow error occurred");
+	EXPECT_EQ(error->getErrorType(), ErrorType::Overflow);
+	EXPECT_STREQ(error->getErrorLocation(), "NoLocationInfo:0");
+	EXPECT_TRUE(error->getNestedError() == nullptr);
+
+	// push another error
+	errorManager.pushErrorAtLocation(ErrorType::BadAlloc, "Memory allocation failed", "urErrorManagerTest.cpp", 64);
+
+	// test top error has changed
+	EXPECT_STREQ(errorManager.getLastErrorString(), "Memory allocation failed");
+	EXPECT_EQ(errorManager.getLastErrorType(), ErrorType::BadAlloc);
+
+	error = errorManager.getLastError();
+	ASSERT_TRUE(error != nullptr);
+	EXPECT_STREQ(error->getErrorString(), "Memory allocation failed");
+	EXPECT_EQ(error->getErrorType(), ErrorType::BadAlloc);
+	EXPECT_STREQ(error->getErrorLocation(), "urErrorManagerTest.cpp:64");
+
+	auto nestedError = error->getNestedError();
+	ASSERT_TRUE(nestedError != nullptr);
+	EXPECT_STREQ(nestedError->getErrorString(), "An integer overflow error occurred");
+	EXPECT_EQ(nestedError->getErrorType(), ErrorType::Overflow);
+	EXPECT_STREQ(nestedError->getErrorLocation(), "NoLocationInfo:0");
+	EXPECT_TRUE(nestedError->getNestedError() == nullptr);
+}
+
+TEST(error_manager_test_case, test_release)
+{
+	// here we use assert because we want to fail directly
+	// in order to avoid a segfault
+	ASSERT_TRUE(g_context != nullptr);
+
+	auto& errorManager = g_context->getErrorManager();
+	errorManager.releaseErrors();
+
+	// check manager is correctly released
+	EXPECT_FALSE(errorManager.hasError());
+	EXPECT_TRUE(errorManager.getLastError() == nullptr);
+	EXPECT_TRUE(std::string(errorManager.getLastErrorString()).empty());
+	EXPECT_EQ(errorManager.getLastErrorType(), ErrorType::NoErrorFound);
+
+	// add an error after release
+	errorManager.pushErrorAtLocation(ErrorType::ResourceNotFound, "File not found on system", "urErrorManagerTest.cpp", 93);
+
+	EXPECT_TRUE(errorManager.hasError());
+	EXPECT_STREQ(errorManager.getLastErrorString(), "File not found on system");
+	EXPECT_EQ(errorManager.getLastErrorType(), ErrorType::ResourceNotFound);
+
+	auto error = errorManager.getLastError();
+
+	ASSERT_TRUE(error != nullptr);
+	EXPECT_STREQ(error->getErrorString(), "File not found on system");
+	EXPECT_EQ(error->getErrorType(), ErrorType::ResourceNotFound);
+	EXPECT_STREQ(error->getErrorLocation(), "urErrorManagerTest.cpp:93");
+	EXPECT_TRUE(error->getNestedError() == nullptr);
+}
+
+TEST(error_manager_test_case, test_stress_push)
+{
+	// here we use assert because we want to fail directly
+	// in order to avoid a segfault
+	ASSERT_TRUE(g_context != nullptr);
+
+	auto& errorManager = g_context->getErrorManager();
+
+	errorManager.releaseErrors();
+	unsigned int expectedErrorCount = 10;
+	for (unsigned int i = 0; i < expectedErrorCount; ++i)
+	{
+		errorManager.pushError(ErrorType::Unknown, "Error");
+	}
+
+	unsigned int errorCount = 0;
+	auto error = errorManager.getLastError();
+	while (error)
+	{
+		errorCount++;
+		error = error->getNestedError();
+	}
+
+	EXPECT_EQ(errorCount, expectedErrorCount);
+}
+
+int urErrorManagerTest(int argc, char* argv[])
+{
+	OVT_ASSERT(argc >= 2, "Failure retrieve test parameters");
+
+	OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> fixture;
+	fixture->setConfigurationFile(argv[1]);
+
+	g_context = fixture->context;
+
+	::testing::InitGoogleTest(&argc, argv);
+	::testing::GTEST_FLAG(filter) = "error_manager_test_case.*";
+	return RUN_ALL_TESTS();
+}

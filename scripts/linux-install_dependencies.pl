@@ -99,6 +99,7 @@ if ($distribution eq 'Ubuntu 14.04') {
   push @packages, "ninja-build";
   push @packages, "libzzip-dev";
   push @packages, "libxerces-c-dev";
+  push @packages, "libgtest-dev";
 } elsif ($distribution eq 'Ubuntu 16.04') {
   # common packages with certivibe
   push @packages, "doxygen";
@@ -116,6 +117,7 @@ if ($distribution eq 'Ubuntu 14.04') {
   push @packages, "ninja-build";
   push @packages, "libzzip-dev";
   push @packages, "libxerces-c-dev";
+  push @packages, "libgtest-dev";
 }
 
 # Update package list
@@ -215,5 +217,21 @@ if ($distribution eq 'Ubuntu 14.04') {
     chdir $FindBin::Bin;
   }
 }
+if (1) {
+	my $dependencies_folder = $FindBin::Bin . "/../dependencies";
+    my $gtest_build_folder = $dependencies_folder . "/gtest-build";	
+	if (! -e $dependencies_folder) {
+      mkdir($dependencies_folder) or die("Failed to create directory [$dependencies_folder]");
+    }
+    if (! -e $gtest_build_folder) {
+      mkdir($gtest_build_folder) or die("Failed to create directory [$gtest_build_folder]");
+    }
 
+	# build gtest
+	pushd $gtest_build_folder
+	cmake -GNinja /usr/src/gtest
+	ninja all
+	rm CMakeCache.txt
+	popd
+}
 print("CertiViBE dependencies were successfully installed\n");
