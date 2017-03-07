@@ -138,15 +138,4 @@ Just add data in the test directory and modify test CMakeLists.txt accordingly.
 #### Add New Test
 
 There should be no reason to add ctest validation tests. New validation tests use Robot Framework.
-Thus check next section for more details.
-
-### Adding Robot Framework Test
-
-#### Enhance Existing Test
-
-Just add data in the test directory and modify test *.robot accordingly
-
-#### Add New Test
-
-Create a new test directory with some data, a robot script and a all necessary keywords (just look at other tests to get details on tests structure).
-
+Check "Adding Robot Framework Test" section in certivibe-test repository for more details.

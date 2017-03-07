@@ -1,10 +1,10 @@
 @echo off
 
 REM Set path to OpenViBE dll
-set PATH=@OV_BINARY_DIR@\;%PATH%
+set PATH=@DIST_BINDIR@\;%PATH%
 
 REM Set OpenViBE environment
-call @OV_BINARY_DIR@/openvibe-set-env.cmd
+call @DIST_BINDIR@/openvibe-set-env.cmd
 
 
 

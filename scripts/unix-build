@@ -32,12 +32,8 @@ function usage()
 # variables
 ov_script_dir="${PWD}"
 ov_build_type=Release
-ov_build_dir=""
-ov_install_dir=""
 ov_test_data_dir="${ov_script_dir}/../dependencies/test-data"
 verbose=0
-build_dir_set=0
-install_dir_set=0
 package_option="FALSE"
 
 
@@ -45,10 +41,6 @@ ov_build_unit=0
 ov_test_script_dir="${PWD}"
 ov_root_dir="${ov_test_script_dir}/../../certivibe-build/dist-Release/"
 ov_test_build_dir="${ov_test_script_dir}/../../certivibe-test-build/"
-ov_cmake_test_data=""
-ov_cmake_test_output=""
-test_data_set=0
-test_output_set=0
 gtest_lib_dir="${ov_test_script_dir}/../dependencies/gtest/lib"
 gtest_include_dir="${ov_test_script_dir}/../dependencies/gtest/include"
 
@@ -71,12 +63,10 @@ do
 			;;
 		--build-dir=*)
 			ov_build_dir="${i#*=}"
-			build_dir_set=1
 			shift
 			;;
 		--install-dir=*)
 			ov_install_dir="${i#*=}"
-			install_dir_set=1
 			shift
 			;;
 		--test-data-dir=*)
@@ -108,12 +98,10 @@ do
 			;;
 		--test-data-dir=*)
 			ov_cmake_test_data="${i#*=}"
-			test_data_set=1
 			shift
 			;;
 		--test-output-dir=*)
 			ov_cmake_test_output="${i#*=}"
-			test_output_set=1
 			shift
 			;;
 			
@@ -136,12 +124,18 @@ then
 fi
 
 # Update directories only if they point to the default one
-if [[ $build_dir_set -eq 0 ]]; then
+if [[ ! -v $ov_build_dir ]]; then
 	ov_build_dir="${ov_script_dir}/../../certivibe-build/build-${ov_build_type}"
 fi
 
-if [[ $install_dir_set -eq 0 ]]; then
+if [[ ! -v $ov_install_dir ]]; then
 	ov_install_dir="${ov_script_dir}/../../certivibe-build/dist-${ov_build_type}"
+fi
+if [[ ! -v $ov_cmake_test_data ]]; then
+	ov_cmake_test_data="${ov_build_dir}/data/input/"
+fi
+if [[ ! -v $ov_cmake_test_output ]]; then
+	ov_cmake_test_output="${ov_build_dir}/validation-test-output/"
 fi
 
 echo "**************************************"

@@ -68,7 +68,7 @@ ENDIF()
 SET(OVT_SCRIPT_DIR ${CMAKE_CURRENT_BINARY_DIR}/scripts)
 IF(WIN32)
 	# Script set the environment variable needed by the tests
-	CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/scripts/windows-set-environment.cmd-base
+	CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/scripts/windows-set-test-environment.cmd-base
 				   ${OVT_SCRIPT_DIR}/openvibe-test-set-environment.cmd)
 	# Wrapper script that set the environment and launch ctest
 	# It is located at build directory root to be as close as possible as standard ctest use
