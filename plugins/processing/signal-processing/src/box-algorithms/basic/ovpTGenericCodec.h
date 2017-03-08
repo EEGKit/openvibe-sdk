@@ -103,6 +103,8 @@ namespace OpenViBEPlugins
 			return m_pSpectrumDecoder->getOutputFrequencyAbscissa();
 		}
 
+		OpenViBE::boolean decode(int, int) = delete;
+
 		OpenViBE::boolean decode(OpenViBE::uint32 ui32ChunkIndex, OpenViBE::boolean bMarkInputAsDeprecated=true)
 		{
 			decoder_return_impl(decode(ui32ChunkIndex, bMarkInputAsDeprecated));
