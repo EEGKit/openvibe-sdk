@@ -12,6 +12,7 @@ namespace FS
 	{
 	public:
 		static FILE* open(const char* sFile, const char* sMode);
+		static FILE* popen(const char* sFile, const char* sMode);
 		static void openOFStream(std::ofstream& rStream, const char* sFile, std::ios_base::openmode oMode = std::ios_base::out);
 		static void openIFStream(std::ifstream& rStream, const char* sFile, std::ios_base::openmode oMode = std::ios_base::in);
 		static void openFStream(std::fstream& rStream, const char* sFile, std::ios_base::openmode oMode);
