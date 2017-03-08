@@ -1,7 +1,9 @@
 #ifndef __OpenViBEPlugins_Algorithm_MatrixAverage_H__
 #define __OpenViBEPlugins_Algorithm_MatrixAverage_H__
 
+#include <vector>
 #include "../../ovp_defines.h"
+
 #include <openvibe/ov_all.h>
 
 #include <toolkit/ovtk_all.h>
@@ -44,7 +46,9 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pMatrix;
 			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > op_pAveragedMatrix;
 
-			std::deque < OpenViBE::CMatrix* > m_vHistory;
+			std::deque < OpenViBE::IMatrix* > m_vHistory;
+			std::vector<double> m_CumulativeAverageMatrix;
+			unsigned long long m_CumulativeAverageSampleCount;
 		};
 
 		class CAlgorithmMatrixAverageDesc : public OpenViBE::Plugins::IAlgorithmDesc
@@ -59,7 +63,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Averaging"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.1"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Algorithm_MatrixAverage; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CAlgorithmMatrixAverage(); }

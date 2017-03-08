@@ -95,6 +95,7 @@ namespace OpenViBEPlugins
 				rPrototype.addOutputSupport(OV_TypeId_Spectrum);
 				rPrototype.addOutputSupport(OV_TypeId_StreamedMatrix);
 				rPrototype.addOutputSupport(OV_TypeId_FeatureVector);
+				rPrototype.addOutputSupport(OV_TypeId_TimeFrequency);
 				return true;
 			}
 
