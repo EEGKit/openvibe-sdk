@@ -6,16 +6,38 @@
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 
+void CBoxAlgorithmLogManager::log(const OpenViBE::Kernel::ELogLevel logLevel) {
+	OpenViBE::CIdentifier boxId;
+	m_SimulatedBox.getBoxIdentifier(boxId);
+
+	m_LogManager
+	        << logLevel
+	        << "At time "
+	        << OpenViBE::time64(m_PlayerContext.getCurrentTime())
+	        << " <"
+	        << OpenViBE::Kernel::LogColor_PushStateBit
+	        << OpenViBE::Kernel::LogColor_ForegroundBlue
+	        << "Box algorithm"
+	        << OpenViBE::Kernel::LogColor_PopStateBit
+	        << "::"
+	        << boxId
+	        << " aka "
+	        << m_SimulatedBox.getName()
+	        << "> ";
+}
+
+
 CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox)
-	:TKernelObject<IPlayerContext>(rKernelContext)
-	,m_rSimulatedBox(*pSimulatedBox)
-	,m_rPluginManager(rKernelContext.getPluginManager())
-	,m_rAlgorithmManager(rKernelContext.getAlgorithmManager())
-	,m_rConfigurationManager(rKernelContext.getConfigurationManager())
-	,m_rLogManager(rKernelContext.getLogManager())
-	,m_rErrorManager(rKernelContext.getErrorManager())
-	,m_rScenarioManager(rKernelContext.getScenarioManager())
-	,m_rTypeManager(rKernelContext.getTypeManager())
+    :TKernelObject<IPlayerContext>(rKernelContext)
+    ,m_rSimulatedBox(*pSimulatedBox)
+    ,m_rPluginManager(rKernelContext.getPluginManager())
+    ,m_rAlgorithmManager(rKernelContext.getAlgorithmManager())
+    ,m_rConfigurationManager(rKernelContext.getConfigurationManager())
+    ,m_rLogManager(rKernelContext.getLogManager())
+    ,m_rErrorManager(rKernelContext.getErrorManager())
+    ,m_rScenarioManager(rKernelContext.getScenarioManager())
+    ,m_rTypeManager(rKernelContext.getTypeManager())
+    ,m_BoxLogManager(*this, m_rLogManager, m_rSimulatedBox)
 {
 }
 
@@ -107,7 +129,7 @@ IConfigurationManager& CPlayerContext::getConfigurationManager(void) const
 
 ILogManager& CPlayerContext::getLogManager(void) const
 {
-	return m_rLogManager;
+	return m_BoxLogManager;
 }
 
 IErrorManager& CPlayerContext::getErrorManager(void) const
