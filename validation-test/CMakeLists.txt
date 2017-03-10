@@ -22,7 +22,6 @@ SET(OVT_VALIDATION_TEST_OUTPUT_DIR ${PROJECT_BINARY_DIR}/validation-test-output/
 
 # Sort target into directories for better visualization in IDE
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
-SET(OVT_UNIT_TESTS_FOLDER unit-tests)
 SET(OVT_VALIDATION_TESTS_FOLDER validation-tests)
 SET(OVT_TOOLS_FOLDER tools)
 
@@ -55,30 +54,25 @@ IF(BUILD_VALIDATION_TEST)
 	FIND_PACKAGE(PythonInterp 3.4 REQUIRED)
 ENDIF()
 
-IF(BUILD_UNIT_TEST)
-	FIND_PACKAGE(GTest REQUIRED)
-	INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIRS})
-ENDIF()
-
 # --------------------
 # Test configuration
 # --------------------
 
 # On Windows and Linux, some environment setting scripts are needed to ease the testing process
-SET(OVT_SCRIPT_DIR ${CMAKE_CURRENT_BINARY_DIR}/scripts)
+SET(OVT_SCRIPT_DIR ${OV_BASE_BIN_DIR}/scripts)
 IF(WIN32)
 	# Script set the environment variable needed by the tests
-	CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/scripts/windows-set-test-environment.cmd-base
+	CONFIGURE_FILE(${OV_BASE_DIR}/scripts/windows-set-test-environment.cmd-base
 				   ${OVT_SCRIPT_DIR}/openvibe-test-set-environment.cmd)
 	# Wrapper script that set the environment and launch ctest
 	# It is located at build directory root to be as close as possible as standard ctest use
-	CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/scripts/windows-ctest-launcher.cmd-base
-				   ${CMAKE_CURRENT_BINARY_DIR}/ctest-launcher.cmd)
+	CONFIGURE_FILE(${OV_BASE_DIR}/scripts/windows-ctest-launcher.cmd-base
+				   ${OV_BASE_BIN_DIR}/ctest-launcher.cmd)
 ELSEIF(UNIX)
 	# Wrapper script that set the environment and launch ctest
 	# It is located at build directory root to be as close as possible as standard ctest use
-	CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/scripts/unix-ctest-launcher.sh-base
-				   ${CMAKE_CURRENT_BINARY_DIR}/ctest-launcher.sh)
+	CONFIGURE_FILE(${OV_BASE_DIR}/scripts/unix-ctest-launcher.sh-base
+				   ${OV_BASE_BIN_DIR}/ctest-launcher.sh)
 
 ENDIF()
 
@@ -108,7 +102,7 @@ INCLUDE(CTest)
 ENABLE_TESTING()
 
 # It might be useful to set some configuration token from cmake variable
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/data/openvibe/openvibe.conf.in ${CMAKE_CURRENT_BINARY_DIR}/data/openvibe/openvibe.conf @ONLY)
+CONFIGURE_FILE(${OV_BASE_DIR}/data/openvibe/openvibe.conf.in ${OV_BASE_BIN_DIR}/data/openvibe/openvibe.conf @ONLY)
 
 # Utility variable for subproject
 SET(OVT_OPENVIBE_DATA ${CMAKE_CURRENT_BINARY_DIR}/data/openvibe)
@@ -126,34 +120,10 @@ FILE(TO_CMAKE_PATH ${OVT_OPENVIBE_PLAYER_LOG_FILE} OVT_OPENVIBE_PLAYER_LOG_FILE)
 # CMake tree processing
 # ----------------------
 
-# Process tools first.
-# Some important variables are defined within tools projects for their use by other
-# projects as:
-# - OVT_UNIT_TOOLKIT_INCLUDE_DIR
-# - OVT_UNIT_TOOLKIT_TARGET_FILE
-# - OVT_ACCURACY_TARGET_FILE
-IF(BUILD_UNIT_TEST)
-	ADD_SUBDIRECTORY(tools/unit-toolkit)
-
-	INCLUDE_DIRECTORIES(${OVT_UNIT_TOOLKIT_INCLUDE_DIR})
-
-	# Process unit tests
-	# When adding a new test driver, driver directory must be added here
-	ADD_SUBDIRECTORY(unit-test/openvibe-module-csv)
-	ADD_SUBDIRECTORY(unit-test/openvibe-module-fs)
-	ADD_SUBDIRECTORY(unit-test/openvibe-module-ebml)
-	ADD_SUBDIRECTORY(unit-test/openvibe-module-xml)
-	ADD_SUBDIRECTORY(unit-test/openvibe-module-socket)
-	ADD_SUBDIRECTORY(unit-test/openvibe-module-system)
-	ADD_SUBDIRECTORY(unit-test/openvibe-base)
-	ADD_SUBDIRECTORY(unit-test/openvibe-toolkit)
-	ADD_SUBDIRECTORY(unit-test/openvibe-kernel)
-ENDIF()
-
 # Process validation tests
 # When adding a new set of validation tests, test directory must be added here
-ADD_SUBDIRECTORY(validation-test/openvibe-file-io-csv)
-ADD_SUBDIRECTORY(validation-test/openvibe-file-io-openvibe)
-ADD_SUBDIRECTORY(validation-test/openvibe-stimulation-timeout)
-ADD_SUBDIRECTORY(validation-test/openvibe-regularized-csp)
-ADD_SUBDIRECTORY(validation-test/openvibe-classification-lda)
+ADD_SUBDIRECTORY(openvibe-file-io-csv)
+ADD_SUBDIRECTORY(openvibe-file-io-openvibe)
+ADD_SUBDIRECTORY(openvibe-stimulation-timeout)
+ADD_SUBDIRECTORY(openvibe-regularized-csp)
+ADD_SUBDIRECTORY(openvibe-classification-lda)

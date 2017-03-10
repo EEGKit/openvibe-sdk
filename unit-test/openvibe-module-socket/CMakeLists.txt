@@ -19,7 +19,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-modules-socket-test)
+PROJECT(openvibe-module-socket-test)
 
 # ---------------------------------
 # Target macros

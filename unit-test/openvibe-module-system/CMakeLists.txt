@@ -19,7 +19,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-modules-system-test)
+PROJECT(openvibe-module-system-test)
 
 # ---------------------------------
 # Target macros

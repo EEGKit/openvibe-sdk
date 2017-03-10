@@ -5,9 +5,17 @@ SET PATH_BACKUP=%PATH%
 
 REM Set test environment
 call @OVT_SCRIPT_DIR@/openvibe-test-set-environment.cmd
-
-REM Execute ctest forwarding the arguments
-ctest %*
-
+IF EXIST unit-test\NUL (
+	PUSHD unit-test
+	REM Execute ctest forwarding the arguments
+	ctest %*
+	POPD
+)
+IF EXIST validation-test\NUL (
+	PUSHD validation-test
+	REM Execute ctest forwarding the arguments
+	ctest %*
+	POPD
+)
 REM Reset environment
 SET PATH=%PATH_BACKUP%

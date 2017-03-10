@@ -19,7 +19,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-modules-ebml-test)
+PROJECT(openvibe-module-ebml-test)
 
 # ---------------------------------
 # Target macros

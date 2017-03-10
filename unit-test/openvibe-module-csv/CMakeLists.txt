@@ -19,7 +19,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-modules-csv-test)
+PROJECT(openvibe-module-csv-test)
 
 # ---------------------------------
 # Target macros

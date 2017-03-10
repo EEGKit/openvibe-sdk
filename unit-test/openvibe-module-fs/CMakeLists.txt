@@ -19,7 +19,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 
-PROJECT(openvibe-modules-fs-test)
+PROJECT(openvibe-module-fs-test)
 
 # ---------------------------------
 # Target macros
