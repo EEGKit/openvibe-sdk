@@ -87,15 +87,6 @@ FILE(MAKE_DIRECTORY ${OVT_TEST_DATA_DIR})
 # Ctest custom options
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/CTestCustom.cmake @ONLY)
 
-# Memcheck configuration
-IF(UNIX)
-	FIND_PROGRAM(MEMORYCHECK_COMMAND valgrind /usr/bin/valgrind)
-	FILE(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/data/resources/valgrind.supp" MEMORYCHECK_SUPPRESSIONS_FILE)
-	SET(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full --run-libc-freeres=no --show-possibly-lost=no" )
-ELSEIF(WIN32)
-	FIND_PROGRAM(MEMORYCHECK_COMMAND purify "C:/Program Files (x86)/")
-ENDIF()
-
 # Timeout must be set first
 SET (DART_TESTING_TIMEOUT 72000 CACHE STRING "Maximum time allowed before CTest will kill the test." FORCE)
 INCLUDE(CTest)
