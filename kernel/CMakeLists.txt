@@ -21,7 +21,6 @@ INCLUDE("FindOpenViBEModuleFS")
 INCLUDE("FindOpenViBEModuleSystem")
 INCLUDE("FindOpenViBEModuleXML")
 INCLUDE("FindThirdPartyBoost")
-INCLUDE("FindThirdPartyBoost_Thread")
 
 
 # ---------------------------------
