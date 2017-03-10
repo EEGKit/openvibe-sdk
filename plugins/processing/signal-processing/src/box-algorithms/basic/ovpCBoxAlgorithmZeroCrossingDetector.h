@@ -22,8 +22,6 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include "ovpTGenericCodec.h"
-
 #include <string>
 #include <vector>
 #include <map>
@@ -50,8 +48,8 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEPlugins::TGenericDecoder < CBoxAlgorithmZeroCrossingDetector > m_oDecoder;
-			OpenViBEPlugins::TGenericEncoder < CBoxAlgorithmZeroCrossingDetector > m_oEncoder0;
+			OpenViBEToolkit::TGenericDecoder < CBoxAlgorithmZeroCrossingDetector > m_oDecoder;
+			OpenViBEToolkit::TGenericEncoder < CBoxAlgorithmZeroCrossingDetector > m_oEncoder0;
 			OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmZeroCrossingDetector > m_oEncoder1;
 			OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmZeroCrossingDetector > m_oEncoder2;
 			

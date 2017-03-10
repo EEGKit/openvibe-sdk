@@ -15,15 +15,21 @@
  * from Mensia Technologies SA.
  */
 
-#ifndef __OpenViBEPlugins_TGenericCodec_H__
-#define __OpenViBEPlugins_TGenericCodec_H__
+#pragma once
 
-//#include "ovp_common_defines.h"
-#include <openvibe/ov_all.h>
-#include <toolkit/ovtk_all.h>
 #include <map>
 
-namespace OpenViBEPlugins
+#include <openvibe/ov_all.h>
+
+#include "../ovtk_base.h"
+#include "decoders/ovtkTStreamedMatrixDecoder.h"
+#include "decoders/ovtkTSignalDecoder.h"
+#include "decoders/ovtkTSpectrumDecoder.h"
+#include "encoders/ovtkTStreamedMatrixEncoder.h"
+#include "encoders/ovtkTSignalEncoder.h"
+#include "encoders/ovtkTSpectrumEncoder.h"
+
+namespace OpenViBEToolkit
 {
 
 // ______________________________________________________________________________________________________________________________________________________________________________
@@ -104,6 +110,7 @@ namespace OpenViBEPlugins
 		}
 
 		OpenViBE::boolean decode(int, int) = delete;
+		OpenViBE::boolean decode(unsigned int, unsigned int) = delete;
 
 		OpenViBE::boolean decode(OpenViBE::uint32 ui32ChunkIndex, OpenViBE::boolean bMarkInputAsDeprecated=true)
 		{
@@ -310,4 +317,3 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_TGenericCodec_H__

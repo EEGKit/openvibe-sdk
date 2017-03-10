@@ -66,7 +66,7 @@ namespace OpenViBEToolkit
 			return m_pInputFrequencyAbscissa;
 		}
 
-		size_t getInputCenterFrequencyBandsCount()
+		size_t getInputFrequencyAbscissaCount()
 		{
 			return m_pInputFrequencyAbscissa->getDimensionSize(0);
 		}
