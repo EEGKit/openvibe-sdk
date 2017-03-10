@@ -79,7 +79,7 @@ ENDIF()
 # ${PROJECT_BINARY_DIR}/Testing/Temporary is automatically created by CTest for log files
 # We create a temporary subdir for our test that will be create before each test is run
 # and removed afterwards (see CTestCustom.cmake.in)
-SET(OVT_TEST_TEMPORARY_DIR ${PROJECT_BINARY_DIR}/Testing/Temporary/OVT/)
+SET(OVT_TEST_TEMPORARY_DIR ${OV_BASE_BIN_DIR}/Testing/Temporary/OVT/)
 
 # Create test data directory for big or binary files
 FILE(MAKE_DIRECTORY ${OVT_TEST_DATA_DIR})
