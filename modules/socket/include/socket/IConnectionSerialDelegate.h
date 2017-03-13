@@ -1,7 +1,7 @@
 #ifndef __Socket_IConnectionSerialDelegate_H__
 #define __Socket_IConnectionSerialDelegate_H__
 
-#include "TConnectionDelegate.hpp"
+#include "TConnectionDelegate.h"
 #include "IConnectionSerial.h"
 
 namespace Socket
