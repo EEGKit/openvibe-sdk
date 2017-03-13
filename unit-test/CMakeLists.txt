@@ -27,7 +27,7 @@ SET(OVT_TOOLS_FOLDER tools)
 # ---------------------
 
 # Add some search directory to module path
-SET(OVT_CMAKE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules)
+SET(OVT_CMAKE_DIR ${OV_BASE_DIR}/cmake-modules)
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${OVT_CMAKE_DIR})
 
 # Modify library prefixes and suffixes to comply to Windows or Linux naming
