@@ -93,9 +93,6 @@ SET (DART_TESTING_TIMEOUT 72000 CACHE STRING "Maximum time allowed before CTest 
 INCLUDE(CTest)
 ENABLE_TESTING()
 
-# It might be useful to set some configuration token from cmake variable
-CONFIGURE_FILE(${OV_BASE_DIR}/data/openvibe/openvibe.conf.in ${OV_BASE_BIN_DIR}/data/openvibe/openvibe.conf @ONLY)
-
 # Utility variable for subproject
 SET(OVT_OPENVIBE_DATA ${CMAKE_CURRENT_BINARY_DIR}/data/openvibe)
 

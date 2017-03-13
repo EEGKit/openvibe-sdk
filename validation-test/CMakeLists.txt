@@ -93,7 +93,7 @@ INCLUDE(CTest)
 ENABLE_TESTING()
 
 # It might be useful to set some configuration token from cmake variable
-CONFIGURE_FILE(${OV_BASE_DIR}/data/openvibe/openvibe.conf.in ${OV_BASE_BIN_DIR}/data/openvibe/openvibe.conf @ONLY)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/data/openvibe/openvibe.conf.in ${CMAKE_CURRENT_BINARY_DIR}/data/openvibe/openvibe.conf @ONLY)
 
 # Utility variable for subproject
 SET(OVT_OPENVIBE_DATA ${CMAKE_CURRENT_BINARY_DIR}/data/openvibe)
