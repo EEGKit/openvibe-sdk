@@ -107,6 +107,7 @@ ENDIF()
 
 FILE(TO_CMAKE_PATH ${OVT_OPENVIBE_PLAYER_LOG_FILE} OVT_OPENVIBE_PLAYER_LOG_FILE)
 
+SET(OVT_VALIDATION_TOOLKIT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/python-toolkit)
 # ----------------------
 # CMake tree processing
 # ----------------------
