@@ -26,7 +26,7 @@ SET(OVT_VALIDATION_TESTS_FOLDER validation-tests)
 SET(OVT_TOOLS_FOLDER tools)
 
 # Add python tools path
-SET(OVT_PYTHON_TOOL_DIR  ${PROJECT_SOURCE_DIR}/tools/python-toolkit/)
+SET(OVT_PYTHON_TOOL_DIR  ${PROJECT_SOURCE_DIR}/python-toolkit/)
 
 # ---------------------
 # Project dependencies
