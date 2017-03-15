@@ -268,24 +268,24 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 
 			if (m_TypeIdentifier == OV_TypeId_Signal)
 			{
-				const unsigned long long samplingFrequency = static_cast<OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmOVCSVFileWriter >*>(m_StreamDecoder)->getOutputSamplingRate();
-				const unsigned long long chunkStartTime = dynamicBoxContext.getInputChunkStartTime(0, index);
-				const unsigned int channelCount = matrix->getDimensionSize(0);
-				const unsigned int sampleCount = matrix->getDimensionSize(1);
+				const uint64_t samplingFrequency = static_cast<OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmOVCSVFileWriter >*>(m_StreamDecoder)->getOutputSamplingRate();
+				const uint64_t chunkStartTime = dynamicBoxContext.getInputChunkStartTime(0, index);
+				const uint32_t channelCount = matrix->getDimensionSize(0);
+				const uint32_t sampleCount = matrix->getDimensionSize(1);
 
-				for (unsigned int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
+				for (uint32_t sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
 				{
 					std::vector<double> matrixValues;
 					// get starting and ending time
 
-					unsigned long long timeOfNthSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex); // assuming chunk start is 0
-					unsigned long long sampleTime = chunkStartTime + timeOfNthSample;
-					double startTime = ITimeArithmetics::timeToSeconds(sampleTime);
-					unsigned long long timeOfNthAndOneSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex + 1);
-					double endTime = ITimeArithmetics::timeToSeconds(chunkStartTime + timeOfNthAndOneSample);
+					uint64_t timeOfNthSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex); // assuming chunk start is 0
+					uint64_t sampleTime = chunkStartTime + timeOfNthSample;
+					float64 startTime = ITimeArithmetics::timeToSeconds(sampleTime);
+					uint64_t timeOfNthAndOneSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex + 1);
+					float64 endTime = ITimeArithmetics::timeToSeconds(chunkStartTime + timeOfNthAndOneSample);
 
 					// get matrix values
-					for (unsigned int channelIndex = 0; channelIndex < channelCount; channelIndex++)
+					for (uint32_t channelIndex = 0; channelIndex < channelCount; channelIndex++)
 					{
 						matrixValues.push_back(imatrix->getBuffer()[channelIndex*sampleCount + sampleIndex]);
 					}
@@ -345,7 +345,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation(void)
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
 	// add every stimulation received
-	for (unsigned int index = 0; index < dynamicBoxContext.getInputChunkCount(1); index++)
+	for (uint32_t index = 0; index < dynamicBoxContext.getInputChunkCount(1); index++)
 	{
 		OV_ERROR_UNLESS_KRF(m_StimulationDecoder.decode(index),
 			"Failed to decode stimulation chunk",
@@ -355,7 +355,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation(void)
 			const IStimulationSet* stimulationSet = m_StimulationDecoder.getOutputStimulationSet();
 			// for each stimulation, get its informations
 
-			for (unsigned int stimulationIndex = 0; stimulationIndex < stimulationSet->getStimulationCount(); stimulationIndex++)
+			for (uint32_t stimulationIndex = 0; stimulationIndex < stimulationSet->getStimulationCount(); stimulationIndex++)
 			{
 				OV_ERROR_UNLESS_KRF(m_WriterLib->addEvent({ stimulationSet->getStimulationIdentifier(stimulationIndex),
 					ITimeArithmetics::timeToSeconds(stimulationSet->getStimulationDate(stimulationIndex)),

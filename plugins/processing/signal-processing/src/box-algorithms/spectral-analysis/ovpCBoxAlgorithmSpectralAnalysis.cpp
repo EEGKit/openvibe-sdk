@@ -110,8 +110,8 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 	// Process input data
 	for (unsigned int i = 0; i < dynamicBoxContext->getInputChunkCount(0); i++)
 	{
-		unsigned long long startTime = dynamicBoxContext->getInputChunkStartTime(0, i);
-		unsigned long long endTime = dynamicBoxContext->getInputChunkEndTime(0, i);
+		const uint64_t startTime = dynamicBoxContext->getInputChunkStartTime(0, i);
+		const uint64_t endTime = dynamicBoxContext->getInputChunkEndTime(0, i);
 
 		m_Decoder.decode(i);
 		IMatrix * matrix = m_Decoder.getOutputMatrix();

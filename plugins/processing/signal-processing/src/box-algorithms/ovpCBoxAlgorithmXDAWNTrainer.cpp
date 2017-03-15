@@ -111,9 +111,9 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 
 		if (m_StimDecoder.isBufferReceived())
 		{
-			for (unsigned int j = 0; j < m_StimDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
+			for (uint64_t j = 0; j < m_StimDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
 			{
-				unsigned long long stimulationId = m_StimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j);
+				uint64_t stimulationId = m_StimDecoder.getOutputStimulationSet()->getStimulationIdentifier(j);
 
 				if (stimulationId == m_TrainStimulationId)
 				{

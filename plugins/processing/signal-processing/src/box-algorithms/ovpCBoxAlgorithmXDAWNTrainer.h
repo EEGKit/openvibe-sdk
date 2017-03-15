@@ -31,9 +31,9 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmXDAWNTrainer > m_SignalDecoder[2];
 			OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmXDAWNTrainer > m_StimEncoder;
 
-			unsigned long long m_TrainStimulationId;
+			uint64_t m_TrainStimulationId;
 			OpenViBE::CString m_FilterFilename;
-			unsigned int m_FilterDimension;
+			uint32_t m_FilterDimension;
 		};
 
 		class CBoxAlgorithmXDAWNTrainerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc

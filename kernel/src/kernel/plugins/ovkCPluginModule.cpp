@@ -83,7 +83,7 @@ namespace OpenViBE
 	};
 };
 
-#define boolean OpenViBE::boolean
+#define boolean bool
 
 //___________________________________________________________________//
 //                                                                   //

@@ -25,7 +25,7 @@ using namespace FS;
 //                     windows platform SDK because it defines itself
 //                     a 'boolean' type. Thus the following define to
 //                     force the use of FS::boolean !
-#define boolean FS::boolean
+#define boolean bool
 
 // ________________________________________________________________________________________________________________
 //

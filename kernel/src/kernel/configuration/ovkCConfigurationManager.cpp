@@ -183,8 +183,6 @@ namespace OpenViBE
 	};
 };
 
-//#define boolean OpenViBE::boolean
-
 CConfigurationManager::CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager)
 	:TKernelObject<IConfigurationManager>(rKernelContext)
 	,m_pParentConfigurationManager(pParentConfigurationManager)
