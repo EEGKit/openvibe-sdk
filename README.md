@@ -29,15 +29,10 @@ The repository basically looks like this :
     + <openvibe> (configuration data)
     + <resources> (test resources)
  + <scripts>
- + <tools> (tools used by unit and validation tests)
-    + <unit-toolkit> (internal unit testing framework)
-    + <accuracy>
-    + <python-toolkit>
-        + <robot_lib> (Robot Framework keywords in python)
-    + <robot-toolkit>
-        + <keyword> (Robot Framework keywords in txt)
  + <unit-test> (code-level unit tests)
+    + <unit-toolkit> (internal unit testing framework)
  + <validation-test> (integration/validation tests)
+    + <python-toolkit>
 ```
 
 Each software module is organized as a UNIX-like tree (empty folders not
@@ -102,11 +97,6 @@ updated version, pleaser refer to Certivibe Coding Rules.
  - Test name: vo/vr + module identifier + test identifier + Test (e.g. *voClassificationLDATest*)
 	 - v = validation
 	 - o/r: see Unit Tests
-
-#### Robot Framework Test
- - OpenViBE tested module: module (e.g. *channel-rename*)
- - Validation test directory: module (e.g. *channel-rename*)
- - Robot Framework test name: Define in the Robot Framework script (e.g. *Channel-rename-without-space*)
 
 #### Headers
 
