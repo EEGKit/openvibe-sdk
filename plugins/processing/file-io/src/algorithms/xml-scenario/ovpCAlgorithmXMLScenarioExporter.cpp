@@ -169,7 +169,7 @@ boolean CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& rMemoryBuffer
 boolean CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const uint64 ui64Value)
 {
 	char l_sValue[1024];
-	sprintf(l_sValue, "%llu", ui64Value);
+	sprintf(l_sValue, "%lu", ui64Value);
 
 	m_pMemoryBuffer=&rMemoryBuffer;
 
