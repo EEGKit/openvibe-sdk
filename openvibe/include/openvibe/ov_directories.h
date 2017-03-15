@@ -45,9 +45,9 @@ namespace OpenViBE
 		static OpenViBE::CString getUserDataDir(void)
 		{
 #if defined TARGET_OS_Windows
-			return  pathFromEnv("APPDATA", "openvibe-user") + "/" + OV_PROJECT_NAME;
+			return  pathFromEnv("APPDATA", "openvibe-user") + "/" + OV_CONFIG_SUBDIR;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			return getUserHomeDir() + "/.config/" + OV_PROJECT_NAME;
+			return getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR;
 #endif
 		}
 		static OpenViBE::CString getLogDir(void)
