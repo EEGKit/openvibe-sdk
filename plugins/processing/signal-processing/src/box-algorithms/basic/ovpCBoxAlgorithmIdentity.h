@@ -120,8 +120,8 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::boolean getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{
-				rPrototype.addInput ("Input stream",  OV_UndefinedIdentifier);
-				rPrototype.addOutput("Output stream", OV_UndefinedIdentifier);
+				rPrototype.addInput ("Input stream",  OV_TypeId_Signal);
+				rPrototype.addOutput("Output stream", OV_TypeId_Signal);
 				rPrototype.addFlag  (OpenViBE::Kernel::BoxFlag_CanAddOutput);
 				rPrototype.addFlag  (OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 				rPrototype.addFlag  (OpenViBE::Kernel::BoxFlag_CanAddInput);

@@ -101,7 +101,7 @@ namespace OpenViBEPlugins
 			{
 				rPrototype.addInput  ("Spied EBML stream 1",                 OV_TypeId_EBMLStream);
 				rPrototype.addSetting("EBML nodes description",              OV_TypeId_Filename, "${Path_Data}/plugins/tools/config-ebml-stream-spy.txt");
-				rPrototype.addSetting("Log level to use",                    OV_TypeId_LogLevel, "Debug");
+				rPrototype.addSetting("Log level to use",                    OV_TypeId_LogLevel, "Information");
 				rPrototype.addSetting("Expand binary blocks",                OV_TypeId_Boolean,  "false");
 				rPrototype.addSetting("Number of values in expanded blocks", OV_TypeId_Integer,  "4");
 				rPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddInput);

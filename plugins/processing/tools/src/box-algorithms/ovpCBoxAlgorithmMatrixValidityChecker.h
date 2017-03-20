@@ -125,7 +125,7 @@ namespace OpenViBEPlugins
 			{
 				rBoxAlgorithmPrototype.addInput  ("Stream 1",            OV_TypeId_StreamedMatrix);
 				rBoxAlgorithmPrototype.addOutput ("Output stream 1",     OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addSetting("Log level",           OV_TypeId_LogLevel, "Important warning");
+				rBoxAlgorithmPrototype.addSetting("Log level",           OV_TypeId_LogLevel, "Warning");
 				rBoxAlgorithmPrototype.addSetting("Action to do",        OVP_TypeId_ValidityCheckerType, OVP_TypeId_ValidityCheckerType_LogWarning.toString());
 				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddInput);
 				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddOutput);

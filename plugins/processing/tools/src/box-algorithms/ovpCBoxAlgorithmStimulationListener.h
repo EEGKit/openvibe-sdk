@@ -82,7 +82,7 @@ namespace OpenViBEPlugins
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput  ("Stimulation stream 1", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addSetting("Log level to use",     OV_TypeId_LogLevel, "Debug");
+				rBoxAlgorithmPrototype.addSetting("Log level to use",     OV_TypeId_LogLevel, "Information");
 				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddInput);
 				return true;
 			}
