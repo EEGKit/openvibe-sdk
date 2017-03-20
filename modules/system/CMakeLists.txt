@@ -49,8 +49,6 @@ INCLUDE("FindOpenViBECommon")
 
 INCLUDE("FindThirdPartyBoost")
 INCLUDE("FindThirdPartyBoost_Chrono")
-INCLUDE("FindThirdPartyBoost_System")
-INCLUDE("FindThirdPartyBoost_Thread")
 
 # ---------------------------------
 # Finds standard library winmm

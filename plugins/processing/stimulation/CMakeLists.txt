@@ -20,8 +20,6 @@ INCLUDE("FindOpenViBEModuleEBML")
 INCLUDE("FindOpenViBEModuleSystem")
 INCLUDE("FindOpenViBEModuleFS")
 INCLUDE("FindThirdPartyBoost")
-INCLUDE("FindThirdPartyBoost_System")
-INCLUDE("FindThirdPartyBoost_Thread")
 
 # ---------------------------------
 # Finds standard library winmm

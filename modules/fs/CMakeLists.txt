@@ -25,7 +25,6 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES
 INCLUDE("FindOpenViBECommon")
 INCLUDE("FindThirdPartyBoost")
 INCLUDE("FindThirdPartyBoost_FileSystem")
-INCLUDE("FindThirdPartyBoost_System")	# Linux packaging ("lintian") complains if not linked to
 
 # ---------------------------------
 # Target macros
