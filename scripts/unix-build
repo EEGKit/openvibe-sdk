@@ -16,13 +16,11 @@ function usage()
 		echo "--install-dir=<dirname> : binaries deployment directory"
 		echo "--test-data-dir=<dirname> : test data directory"
 		echo "--make-package : a package will be created in build directory"
-		
-		# echo "--build-unit=<Debug|Release|RelWithDebInfo> : set the option to build unit test"
+		echo "--build-unit : if set, unit tests will be built"
+		echo "--build-validation : if set, validation tests will be builts"
 		echo "--gtest-lib-dir=<dirname> : gtest libraries directory (default: ../dependencies/gtest/lib)"
 		echo "--gtest-include-dir=<dirname> : gtest include directory (default: ../dependencies/gtest/include)"
-		# echo "--root-dir=<dirname> : openvibe root directory"
-		# echo "--test-build-dir=<dirname> : test build directory"
-		# echo "--test-data-dir=<dirname> : test data directory"
+		echo "--test-data-dir=<dirname> : test data directory"
 		echo "--test-output-dir=<dirname> : test output files directory"
 }
 
@@ -77,9 +75,6 @@ do
 			package_option="TRUE"
 			shift
 			;;
-		
-		
-		
 		--build-unit)
 			ov_build_unit=1
 			shift
@@ -104,9 +99,6 @@ do
 			ov_cmake_test_output="${i#*=}"
 			shift
 			;;
-			
-			
-			
 		*)
 			echo "ERROR: Unknown parameter $i"
 			exit 1

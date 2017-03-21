@@ -35,8 +35,8 @@ Linux Ubuntu (14.04)
 - Run unit tests
   - run all unit tests by running `sh ctest-launcher.sh -C Release|Debug -V` from the build directory
 
-Windows 8
----------
+Windows 7 and later
+-------------------
 
 - Configure and generate the project with CMake
   - set `${BUILD_UNIT_TEST}` to 1 and `${BUILD_ROBOT_TEST}` to 0
