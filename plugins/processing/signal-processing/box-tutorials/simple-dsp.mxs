@@ -1,4 +1,7 @@
 <OpenViBE-Scenario>
+	<FormatVersion>1</FormatVersion>
+	<Creator>OpenVIBE</Creator>
+	<CreatorVersion>0.0.0</CreatorVersion>
 	<Boxes>
 		<Box>
 			<Identifier>(0x0000007b, 0x00006015)</Identifier>
@@ -22,6 +25,7 @@
 					<Name>Equation</Name>
 					<DefaultValue>x</DefaultValue>
 					<Value>cos(x)/(x+1) * 20</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -43,7 +47,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0x7388a9c4, 0x111fe58d)</Value>
+					<Value>(0x21889dc4, 0x1126497e)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
@@ -93,6 +97,7 @@
 					<Name>Equation</Name>
 					<DefaultValue>x</DefaultValue>
 					<Value>cos(X)</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -114,7 +119,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0x7388a9c4, 0x111fe58d)</Value>
+					<Value>(0x21889dc4, 0x1126497e)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
@@ -164,6 +169,7 @@
 					<Name>Equation</Name>
 					<DefaultValue>x</DefaultValue>
 					<Value>sin(X)</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -185,7 +191,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0x7388a9c4, 0x111fe58d)</Value>
+					<Value>(0x21889dc4, 0x1126497e)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
@@ -229,12 +235,14 @@
 					<Name>Sampling frequency</Name>
 					<DefaultValue>512</DefaultValue>
 					<Value>512</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x007deef9, 0x2f3e95c6)</TypeIdentifier>
 					<Name>Generated epoch sample count</Name>
 					<DefaultValue>32</DefaultValue>
 					<Value>32</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -286,6 +294,7 @@
 					<Name>Equation</Name>
 					<DefaultValue>x</DefaultValue>
 					<Value>x</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -307,7 +316,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0x7388a9c4, 0x111fe58d)</Value>
+					<Value>(0x21889dc4, 0x1126497e)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
@@ -337,7 +346,7 @@
 		</Box>
 		<Box>
 			<Identifier>(0x0000183a, 0x00001fb5)</Identifier>
-			<Name>y = x³</Name>
+			<Name>y = x&#179;</Name>
 			<AlgorithmClassIdentifier>(0x00e26fa1, 0x1dbab1b2)</AlgorithmClassIdentifier>
 			<Inputs>
 				<Input>
@@ -357,6 +366,7 @@
 					<Name>Equation</Name>
 					<DefaultValue>x</DefaultValue>
 					<Value>pow(x,3)</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -378,7 +388,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0x7388a9c4, 0x111fe58d)</Value>
+					<Value>(0x21889dc4, 0x1126497e)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
@@ -432,6 +442,7 @@
 					<Name>Equation</Name>
 					<DefaultValue>x</DefaultValue>
 					<Value>b/a</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -453,7 +464,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0x7388a9c4, 0x111fe58d)</Value>
+					<Value>(0x21889dc4, 0x1126497e)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
@@ -501,54 +512,63 @@
 					<Name>Channel Localisation</Name>
 					<DefaultValue>${AdvancedViz_ChannelLocalisation}</DefaultValue>
 					<Value>${AdvancedViz_ChannelLocalisation}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x8f02e3f6, 0xffb00f4b)</TypeIdentifier>
 					<Name>Temporal Coherence</Name>
 					<DefaultValue>Time Locked</DefaultValue>
 					<Value>Time Locked</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Time Scale</Name>
 					<DefaultValue>20</DefaultValue>
 					<Value>20</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x007deef9, 0x2f3e95c6)</TypeIdentifier>
 					<Name>Matrix Count</Name>
 					<DefaultValue>50</DefaultValue>
 					<Value>50</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x2cdb2f0b, 0x12f231ea)</TypeIdentifier>
 					<Name>Positive Data Only ?</Name>
 					<DefaultValue>false</DefaultValue>
 					<Value>false</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Gain</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x79a9edeb, 0x245d83fc)</TypeIdentifier>
 					<Name>Caption</Name>
 					<DefaultValue></DefaultValue>
 					<Value></Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Translucency</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x7f45a2a9, 0x7db12219)</TypeIdentifier>
 					<Name>Color</Name>
 					<DefaultValue>${AdvancedViz_DefaultColor}</DefaultValue>
 					<Value>${AdvancedViz_DefaultColor}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -592,7 +612,7 @@
 		</Box>
 		<Box>
 			<Identifier>(0x00004ec9, 0x00005102)</Identifier>
-			<Name>Display: y = x³</Name>
+			<Name>Display: y = x&#179;</Name>
 			<AlgorithmClassIdentifier>(0x0842bcd1, 0xd53c1c89)</AlgorithmClassIdentifier>
 			<Inputs>
 				<Input>
@@ -610,54 +630,63 @@
 					<Name>Channel Localisation</Name>
 					<DefaultValue>${AdvancedViz_ChannelLocalisation}</DefaultValue>
 					<Value>${AdvancedViz_ChannelLocalisation}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x8f02e3f6, 0xffb00f4b)</TypeIdentifier>
 					<Name>Temporal Coherence</Name>
 					<DefaultValue>Time Locked</DefaultValue>
 					<Value>Time Locked</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Time Scale</Name>
 					<DefaultValue>20</DefaultValue>
 					<Value>20</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x007deef9, 0x2f3e95c6)</TypeIdentifier>
 					<Name>Matrix Count</Name>
 					<DefaultValue>50</DefaultValue>
 					<Value>50</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x2cdb2f0b, 0x12f231ea)</TypeIdentifier>
 					<Name>Positive Data Only ?</Name>
 					<DefaultValue>false</DefaultValue>
 					<Value>false</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Gain</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x79a9edeb, 0x245d83fc)</TypeIdentifier>
 					<Name>Caption</Name>
 					<DefaultValue></DefaultValue>
 					<Value></Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Translucency</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x7f45a2a9, 0x7db12219)</TypeIdentifier>
 					<Name>Color</Name>
 					<DefaultValue>${AdvancedViz_DefaultColor}</DefaultValue>
 					<Value>${AdvancedViz_DefaultColor}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -719,54 +748,63 @@
 					<Name>Channel Localisation</Name>
 					<DefaultValue>${AdvancedViz_ChannelLocalisation}</DefaultValue>
 					<Value>${AdvancedViz_ChannelLocalisation}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x8f02e3f6, 0xffb00f4b)</TypeIdentifier>
 					<Name>Temporal Coherence</Name>
 					<DefaultValue>Time Locked</DefaultValue>
 					<Value>Time Locked</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Time Scale</Name>
 					<DefaultValue>20</DefaultValue>
 					<Value>100</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x007deef9, 0x2f3e95c6)</TypeIdentifier>
 					<Name>Matrix Count</Name>
 					<DefaultValue>50</DefaultValue>
 					<Value>50</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x2cdb2f0b, 0x12f231ea)</TypeIdentifier>
 					<Name>Positive Data Only ?</Name>
 					<DefaultValue>false</DefaultValue>
 					<Value>false</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Gain</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x79a9edeb, 0x245d83fc)</TypeIdentifier>
 					<Name>Caption</Name>
 					<DefaultValue></DefaultValue>
 					<Value></Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Translucency</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x7f45a2a9, 0x7db12219)</TypeIdentifier>
 					<Name>Color</Name>
 					<DefaultValue>${AdvancedViz_DefaultColor}</DefaultValue>
 					<Value>${AdvancedViz_DefaultColor}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -828,54 +866,63 @@
 					<Name>Channel Localisation</Name>
 					<DefaultValue>${AdvancedViz_ChannelLocalisation}</DefaultValue>
 					<Value>${AdvancedViz_ChannelLocalisation}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x8f02e3f6, 0xffb00f4b)</TypeIdentifier>
 					<Name>Temporal Coherence</Name>
 					<DefaultValue>Time Locked</DefaultValue>
 					<Value>Time Locked</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Time Scale</Name>
 					<DefaultValue>20</DefaultValue>
 					<Value>20</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x007deef9, 0x2f3e95c6)</TypeIdentifier>
 					<Name>Matrix Count</Name>
 					<DefaultValue>50</DefaultValue>
 					<Value>50</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x2cdb2f0b, 0x12f231ea)</TypeIdentifier>
 					<Name>Positive Data Only ?</Name>
 					<DefaultValue>false</DefaultValue>
 					<Value>false</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Gain</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x79a9edeb, 0x245d83fc)</TypeIdentifier>
 					<Name>Caption</Name>
 					<DefaultValue></DefaultValue>
 					<Value></Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Translucency</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x7f45a2a9, 0x7db12219)</TypeIdentifier>
 					<Name>Color</Name>
 					<DefaultValue>${AdvancedViz_DefaultColor}</DefaultValue>
 					<Value>${AdvancedViz_DefaultColor}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -937,54 +984,63 @@
 					<Name>Channel Localisation</Name>
 					<DefaultValue>${AdvancedViz_ChannelLocalisation}</DefaultValue>
 					<Value>${AdvancedViz_ChannelLocalisation}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x8f02e3f6, 0xffb00f4b)</TypeIdentifier>
 					<Name>Temporal Coherence</Name>
 					<DefaultValue>Time Locked</DefaultValue>
 					<Value>Time Locked</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Time Scale</Name>
 					<DefaultValue>20</DefaultValue>
 					<Value>20</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x007deef9, 0x2f3e95c6)</TypeIdentifier>
 					<Name>Matrix Count</Name>
 					<DefaultValue>50</DefaultValue>
 					<Value>50</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x2cdb2f0b, 0x12f231ea)</TypeIdentifier>
 					<Name>Positive Data Only ?</Name>
 					<DefaultValue>false</DefaultValue>
 					<Value>false</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Gain</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x79a9edeb, 0x245d83fc)</TypeIdentifier>
 					<Name>Caption</Name>
 					<DefaultValue></DefaultValue>
 					<Value></Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Translucency</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x7f45a2a9, 0x7db12219)</TypeIdentifier>
 					<Name>Color</Name>
 					<DefaultValue>${AdvancedViz_DefaultColor}</DefaultValue>
 					<Value>${AdvancedViz_DefaultColor}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -1046,54 +1102,63 @@
 					<Name>Channel Localisation</Name>
 					<DefaultValue>${AdvancedViz_ChannelLocalisation}</DefaultValue>
 					<Value>${AdvancedViz_ChannelLocalisation}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x8f02e3f6, 0xffb00f4b)</TypeIdentifier>
 					<Name>Temporal Coherence</Name>
 					<DefaultValue>Time Locked</DefaultValue>
 					<Value>Time Locked</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Time Scale</Name>
 					<DefaultValue>20</DefaultValue>
 					<Value>20</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x007deef9, 0x2f3e95c6)</TypeIdentifier>
 					<Name>Matrix Count</Name>
 					<DefaultValue>50</DefaultValue>
 					<Value>50</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x2cdb2f0b, 0x12f231ea)</TypeIdentifier>
 					<Name>Positive Data Only ?</Name>
 					<DefaultValue>false</DefaultValue>
 					<Value>false</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Gain</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x79a9edeb, 0x245d83fc)</TypeIdentifier>
 					<Name>Caption</Name>
 					<DefaultValue></DefaultValue>
 					<Value></Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Translucency</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x7f45a2a9, 0x7db12219)</TypeIdentifier>
 					<Name>Color</Name>
 					<DefaultValue>${AdvancedViz_DefaultColor}</DefaultValue>
 					<Value>${AdvancedViz_DefaultColor}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -1155,54 +1220,63 @@
 					<Name>Channel Localisation</Name>
 					<DefaultValue>${AdvancedViz_ChannelLocalisation}</DefaultValue>
 					<Value>${AdvancedViz_ChannelLocalisation}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x8f02e3f6, 0xffb00f4b)</TypeIdentifier>
 					<Name>Temporal Coherence</Name>
 					<DefaultValue>Time Locked</DefaultValue>
 					<Value>Time Locked</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Time Scale</Name>
 					<DefaultValue>20</DefaultValue>
 					<Value>20</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x007deef9, 0x2f3e95c6)</TypeIdentifier>
 					<Name>Matrix Count</Name>
 					<DefaultValue>50</DefaultValue>
 					<Value>50</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x2cdb2f0b, 0x12f231ea)</TypeIdentifier>
 					<Name>Positive Data Only ?</Name>
 					<DefaultValue>false</DefaultValue>
 					<Value>false</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Gain</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x79a9edeb, 0x245d83fc)</TypeIdentifier>
 					<Name>Caption</Name>
 					<DefaultValue></DefaultValue>
 					<Value></Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Translucency</Name>
 					<DefaultValue>1</DefaultValue>
 					<Value>1</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x7f45a2a9, 0x7db12219)</TypeIdentifier>
 					<Name>Color</Name>
 					<DefaultValue>${AdvancedViz_DefaultColor}</DefaultValue>
 					<Value>${AdvancedViz_DefaultColor}</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -1270,6 +1344,7 @@
 					<Name>Equation</Name>
 					<DefaultValue>x</DefaultValue>
 					<Value>a&gt;b?a:b</Value>
+					<Modifiability>false</Modifiability>
 				</Setting>
 			</Settings>
 			<Attributes>
@@ -1291,7 +1366,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0x7388a9c4, 0x111fe58d)</Value>
+					<Value>(0x21889dc4, 0x1126497e)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
@@ -1786,7 +1861,6 @@
 			</Attributes>
 		</Link>
 	</Links>
-	<MessageLinks></MessageLinks>
 	<Comments>
 		<Comment>
 			<Identifier>(0x000008ff, 0x000031d9)</Identifier>
@@ -1886,183 +1960,11 @@ These computations can be &lt;b&gt;logical&lt;/b&gt; or
 			</Attributes>
 		</Comment>
 	</Comments>
-	<VisualisationTree>
-		<VisualisationWidget>
-			<Identifier>(0x000073b1, 0x00002780)</Identifier>
-			<Name>Simple DSP Tutorial</Name>
-			<Type>1</Type>
-			<ParentIdentifier>(0xffffffff, 0xffffffff)</ParentIdentifier>
-			<BoxIdentifier>(0xffffffff, 0xffffffff)</BoxIdentifier>
-			<NumChildren>3</NumChildren>
-			<Attributes>
-				<Attribute>
-					<Identifier>(0x4c90d4ad, 0x7a2554ec)</Identifier>
-					<Value>655</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x7b814cca, 0x271df6dd)</Identifier>
-					<Value>1115</Value>
-				</Attribute>
-			</Attributes>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x000031ad, 0x00004908)</Identifier>
-			<Name>Polynomial</Name>
-			<Type>2</Type>
-			<ParentIdentifier>(0x000073b1, 0x00002780)</ParentIdentifier>
-			<Index>0</Index>
-			<BoxIdentifier>(0xffffffff, 0xffffffff)</BoxIdentifier>
-			<NumChildren>1</NumChildren>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00007cf9, 0x0000288f)</Identifier>
-			<Name>Trigonometric</Name>
-			<Type>2</Type>
-			<ParentIdentifier>(0x000073b1, 0x00002780)</ParentIdentifier>
-			<Index>1</Index>
-			<BoxIdentifier>(0xffffffff, 0xffffffff)</BoxIdentifier>
-			<NumChildren>1</NumChildren>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00003001, 0x00004366)</Identifier>
-			<Name>Compound</Name>
-			<Type>2</Type>
-			<ParentIdentifier>(0x000073b1, 0x00002780)</ParentIdentifier>
-			<Index>2</Index>
-			<BoxIdentifier>(0xffffffff, 0xffffffff)</BoxIdentifier>
-			<NumChildren>1</NumChildren>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x0000037d, 0x0000518e)</Identifier>
-			<Name>Horizontal split</Name>
-			<Type>5</Type>
-			<ParentIdentifier>(0x000031ad, 0x00004908)</ParentIdentifier>
-			<Index>0</Index>
-			<BoxIdentifier>(0xffffffff, 0xffffffff)</BoxIdentifier>
-			<NumChildren>2</NumChildren>
-			<Attributes>
-				<Attribute>
-					<Identifier>(0x237e56d2, 0x10cd68ae)</Identifier>
-					<Value>1095</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x54e45f5b, 0x76c036e2)</Identifier>
-					<Value>545</Value>
-				</Attribute>
-			</Attributes>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00007871, 0x00002897)</Identifier>
-			<Name>Vertical split</Name>
-			<Type>4</Type>
-			<ParentIdentifier>(0x00007cf9, 0x0000288f)</ParentIdentifier>
-			<Index>0</Index>
-			<BoxIdentifier>(0xffffffff, 0xffffffff)</BoxIdentifier>
-			<NumChildren>2</NumChildren>
-			<Attributes>
-				<Attribute>
-					<Identifier>(0x237e56d2, 0x10cd68ae)</Identifier>
-					<Value>610</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x54e45f5b, 0x76c036e2)</Identifier>
-					<Value>399</Value>
-				</Attribute>
-			</Attributes>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00003022, 0x00005977)</Identifier>
-			<Name>Vertical split</Name>
-			<Type>4</Type>
-			<ParentIdentifier>(0x00003001, 0x00004366)</ParentIdentifier>
-			<Index>0</Index>
-			<BoxIdentifier>(0xffffffff, 0xffffffff)</BoxIdentifier>
-			<NumChildren>2</NumChildren>
-			<Attributes>
-				<Attribute>
-					<Identifier>(0x237e56d2, 0x10cd68ae)</Identifier>
-					<Value>610</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x54e45f5b, 0x76c036e2)</Identifier>
-					<Value>303</Value>
-				</Attribute>
-			</Attributes>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00006b56, 0x00004614)</Identifier>
-			<Type>3</Type>
-			<ParentIdentifier>(0x0000037d, 0x0000518e)</ParentIdentifier>
-			<Index>0</Index>
-			<BoxIdentifier>(0x00004ec9, 0x00005101)</BoxIdentifier>
-			<NumChildren>0</NumChildren>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00000cdd, 0x0000534a)</Identifier>
-			<Type>3</Type>
-			<ParentIdentifier>(0x0000037d, 0x0000518e)</ParentIdentifier>
-			<Index>1</Index>
-			<BoxIdentifier>(0x00004ec9, 0x00005102)</BoxIdentifier>
-			<NumChildren>0</NumChildren>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00005868, 0x00004ede)</Identifier>
-			<Name>Horizontal split</Name>
-			<Type>5</Type>
-			<ParentIdentifier>(0x00007871, 0x00002897)</ParentIdentifier>
-			<Index>0</Index>
-			<BoxIdentifier>(0xffffffff, 0xffffffff)</BoxIdentifier>
-			<NumChildren>2</NumChildren>
-			<Attributes>
-				<Attribute>
-					<Identifier>(0x237e56d2, 0x10cd68ae)</Identifier>
-					<Value>1079</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x54e45f5b, 0x76c036e2)</Identifier>
-					<Value>537</Value>
-				</Attribute>
-			</Attributes>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x0000335d, 0x00004277)</Identifier>
-			<Type>3</Type>
-			<ParentIdentifier>(0x00007871, 0x00002897)</ParentIdentifier>
-			<Index>1</Index>
-			<BoxIdentifier>(0x00004ec9, 0x00005103)</BoxIdentifier>
-			<NumChildren>0</NumChildren>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00004dcf, 0x00004355)</Identifier>
-			<Type>3</Type>
-			<ParentIdentifier>(0x00003022, 0x00005977)</ParentIdentifier>
-			<Index>0</Index>
-			<BoxIdentifier>(0x00004ec9, 0x00005106)</BoxIdentifier>
-			<NumChildren>0</NumChildren>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00005aa2, 0x00001c4e)</Identifier>
-			<Type>3</Type>
-			<ParentIdentifier>(0x00003022, 0x00005977)</ParentIdentifier>
-			<Index>1</Index>
-			<BoxIdentifier>(0x00004ec9, 0x00005107)</BoxIdentifier>
-			<NumChildren>0</NumChildren>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00005471, 0x000071ff)</Identifier>
-			<Type>3</Type>
-			<ParentIdentifier>(0x00005868, 0x00004ede)</ParentIdentifier>
-			<Index>0</Index>
-			<BoxIdentifier>(0x00004ec9, 0x00005105)</BoxIdentifier>
-			<NumChildren>0</NumChildren>
-		</VisualisationWidget>
-		<VisualisationWidget>
-			<Identifier>(0x00002641, 0x00002c3c)</Identifier>
-			<Type>3</Type>
-			<ParentIdentifier>(0x00005868, 0x00004ede)</ParentIdentifier>
-			<Index>1</Index>
-			<BoxIdentifier>(0x00004ec9, 0x00005104)</BoxIdentifier>
-			<NumChildren>0</NumChildren>
-		</VisualisationWidget>
-	</VisualisationTree>
+	<Metadata>
+		<Entry>
+			<Identifier>(0x0000775c, 0x000078ff)</Identifier>
+			<Type>(0x3bcce5d2, 0x43f2d968)</Type>
+			<Data>[{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":3,"height":655,"identifier":"(0x000073b1, 0x00002780)","index":0,"name":"Simple DSP Tutorial","parentIdentifier":"(0xffffffff, 0xffffffff)","type":1,"width":1115},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"identifier":"(0x000031ad, 0x00004908)","index":0,"name":"Polynomial","parentIdentifier":"(0x000073b1, 0x00002780)","type":2},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"identifier":"(0x00007cf9, 0x0000288f)","index":1,"name":"Trigonometric","parentIdentifier":"(0x000073b1, 0x00002780)","type":2},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"identifier":"(0x00003001, 0x00004366)","index":2,"name":"Compound","parentIdentifier":"(0x000073b1, 0x00002780)","type":2},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":2,"dividerPosition":545,"identifier":"(0x0000037d, 0x0000518e)","index":0,"maxDividerPosition":1095,"name":"Horizontal split","parentIdentifier":"(0x000031ad, 0x00004908)","type":5},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":2,"dividerPosition":399,"identifier":"(0x00007871, 0x00002897)","index":0,"maxDividerPosition":610,"name":"Vertical split","parentIdentifier":"(0x00007cf9, 0x0000288f)","type":4},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":2,"dividerPosition":303,"identifier":"(0x00003022, 0x00005977)","index":0,"maxDividerPosition":610,"name":"Vertical split","parentIdentifier":"(0x00003001, 0x00004366)","type":4},{"boxIdentifier":"(0x00004ec9, 0x00005101)","childCount":0,"identifier":"(0x00006b56, 0x00004614)","index":0,"parentIdentifier":"(0x0000037d, 0x0000518e)","type":3},{"boxIdentifier":"(0x00004ec9, 0x00005102)","childCount":0,"identifier":"(0x00000cdd, 0x0000534a)","index":1,"parentIdentifier":"(0x0000037d, 0x0000518e)","type":3},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":2,"dividerPosition":537,"identifier":"(0x00005868, 0x00004ede)","index":0,"maxDividerPosition":1079,"name":"Horizontal split","parentIdentifier":"(0x00007871, 0x00002897)","type":5},{"boxIdentifier":"(0x00004ec9, 0x00005103)","childCount":0,"identifier":"(0x0000335d, 0x00004277)","index":1,"parentIdentifier":"(0x00007871, 0x00002897)","type":3},{"boxIdentifier":"(0x00004ec9, 0x00005106)","childCount":0,"identifier":"(0x00004dcf, 0x00004355)","index":0,"parentIdentifier":"(0x00003022, 0x00005977)","type":3},{"boxIdentifier":"(0x00004ec9, 0x00005107)","childCount":0,"identifier":"(0x00005aa2, 0x00001c4e)","index":1,"parentIdentifier":"(0x00003022, 0x00005977)","type":3},{"boxIdentifier":"(0x00004ec9, 0x00005105)","childCount":0,"identifier":"(0x00005471, 0x000071ff)","index":0,"parentIdentifier":"(0x00005868, 0x00004ede)","type":3},{"boxIdentifier":"(0x00004ec9, 0x00005104)","childCount":0,"identifier":"(0x00002641, 0x00002c3c)","index":1,"parentIdentifier":"(0x00005868, 0x00004ede)","type":3}]</Data>
+		</Entry>
+	</Metadata>
 </OpenViBE-Scenario>
