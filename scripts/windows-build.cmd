@@ -6,6 +6,7 @@ set BuildType=Release
 set PauseCommand=pause
 set RerunCmake=false
 set PackageOption=FALSE
+set UserDataSubdir=OpenVIBE
 
 goto parameter_parse
 
@@ -18,6 +19,7 @@ goto parameter_parse
 	echo -r^|--release build in release mode
 	echo --make-package make packages at the end
 	echo --rerun-cmake force cmake rerun
+	echo --userdata-subdir [dirname] name of the userdata sub directory
 	echo --build-unit build unit tests
 	echo --build-validation build validation tests
 
@@ -62,6 +64,11 @@ for %%A in (%*) DO (
 		set next_is_test_data_dir=1
 	) else if /i "%%A" == "--test-output-dir" (
 		set next_is_test_output_dir=1
+	) else if /i "%%A"=="--userdata-subdir" (
+		set next=USERDATA_SUBDIR
+	) else if "!next!"=="USERDATA_SUBDIR" (
+		set UserDataSubdir=%%A
+		set next=
 	)
 )
 
@@ -94,7 +101,8 @@ if %CallCmake%=="true" (
 		-DBUILD_UNIT_TEST=%ov_build_unit% ^
 		-DBUILD_VALIDATION_TEST=%ov_build_validation% ^
 		%ov_cmake_test_data% ^
-		-DOVT_VALIDATION_TEST_OUTPUT_DIR=%ov_cmake_test_output%
+		-DOVT_VALIDATION_TEST_OUTPUT_DIR=%ov_cmake_test_output% ^
+		-DOV_CONFIG_SUBDIR=%UserDataSubdir%
 )
 
 if not "!ERRORLEVEL!" == "0" goto terminate_error
