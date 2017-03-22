@@ -21,22 +21,25 @@ sub usage {
   print "    Options:\n";
   print "      -h: this help\n";
   print "      -y: assume 'yes' to all prompts. Make it possible to run non-interactively.\n";
+  print "      --no-gtest: will not compile gtest if set.\n";
+  print "      --no-install: will not do any installation if set.\n";
 };
 
 
-if ($#ARGV > 0) {
-  usage();
-  exit(1);
-}
-
 my $assume_yes = 0;
+my $compile_gtest = 1;
+my $install_packages = 1;
 
-if ($#ARGV == 0) {
-  if ($ARGV[0] eq "-h") {
+foreach my $arg (@ARGV) {
+  if ($arg eq "-h") {
     usage();
     exit(0);
-  } elsif ($ARGV[0] eq "-y") {
-     $assume_yes = 1;
+  } elsif ($arg eq "-y") {
+    $assume_yes = 1;
+  } elsif ($arg eq "--no-gtest") {
+    $compile_gtest = 0;
+  } elsif ($arg eq "--no-install") {
+    $install_packages = 0;
   } else {
     usage();
     exit(1);
@@ -53,19 +56,19 @@ my $add_repository_command  = '';
 my $lsb_distributor = `lsb_release --id --short`;
 my $lsb_release = `lsb_release --release --short`;
 
-if ($lsb_distributor =~ 'Ubuntu') {
+if ($install_packages && $lsb_distributor =~ 'Ubuntu') {
   $update_packages_command = 'sudo apt-get update';
   if ($assume_yes) {
-    $package_install_command = 'sudo apt-get -y install';
-    $add_repository_command  = 'sudo add-apt-repository -y universe';
+	$package_install_command = 'sudo apt-get -y install';
+	$add_repository_command  = 'sudo add-apt-repository -y universe';
   } else {
-    $package_install_command = 'sudo apt-get install';
-    $add_repository_command  = 'sudo add-apt-repository universe';
+	$package_install_command = 'sudo apt-get install';
+	$add_repository_command  = 'sudo add-apt-repository universe';
   }
   if ($lsb_release =~ '14.04') {
-    $distribution = 'Ubuntu 14.04';
+	$distribution = 'Ubuntu 14.04';
   } elsif ($lsb_release =~ '16.04') {
-    $distribution = 'Ubuntu 16.04';
+	$distribution = 'Ubuntu 16.04';
   }
 }
 
@@ -75,7 +78,7 @@ print "Installing dependencies for: $distribution\n";
 
 # Add additional repositories for newer packages
 
-if ($distribution eq 'Ubuntu 14.04') {
+if ($install_packages && $distribution eq 'Ubuntu 14.04') {
   system('sudo add-apt-repository ppa:fkrull/deadsnakes');
   ($CHILD_ERROR != 0) and die("Adding PPA repository for Python 3.5 failed [$CHILD_ERROR]");
 }
@@ -121,23 +124,24 @@ if ($distribution eq 'Ubuntu 14.04') {
   push @packages, "libgtest-dev";
 }
 
-# Update package list
-print "Updating package database...\n";
-system($add_repository_command);
-($CHILD_ERROR != 0) and die('Failed to add additional repositories');
-system($update_packages_command);
-($CHILD_ERROR != 0) and die('Failed to update the package databases');
+if ($install_packages) {
+  # Update package list
+  print "Updating package database...\n";
+  system($add_repository_command);
+  ($CHILD_ERROR != 0) and die('Failed to add additional repositories');
+  system($update_packages_command);
+  ($CHILD_ERROR != 0) and die('Failed to update the package databases');
 
-# Install the packages
-print "Will install following packages:\n";
-print (join ' ', @packages), "\n";
+  # Install the packages
+  print "Will install following packages:\n";
+  print (join ' ', @packages), "\n";
 
-system("$package_install_command " . (join ' ', @packages));
-($CHILD_ERROR != 0) and die('Failed to install the required packages');
-
+  system("$package_install_command " . (join ' ', @packages));
+  ($CHILD_ERROR != 0) and die('Failed to install the required packages');
+}
 # Installation of packages not available in the apt database or PPA
 # Eigen installation
-if ($distribution eq 'Ubuntu 16.04') {
+if ($install_packages && $distribution eq 'Ubuntu 16.04') {
   # Install eigen 3.2.9 from source if it is not already
   # This is because Ubuntu 16.04 has a beta version of the Eigen package by default
   # and it does not work
@@ -180,8 +184,8 @@ if ($distribution eq 'Ubuntu 16.04') {
     chdir $FindBin::Bin;
   }
 }
-if ($distribution eq 'Ubuntu 14.04') {
-  # Install cmake 3.5rm .1 from source if it is not already
+if ($install_packages && $distribution eq 'Ubuntu 14.04') {
+  # Install cmake 3.5.1 from source if it is not already
   # This is because Ubuntu 14.04 only has an old version of cmake
   if (-e "/usr/local/bin/cmake") {
     print STDERR "Warning: cmake is already installed in /usr/local\n";
@@ -218,31 +222,31 @@ if ($distribution eq 'Ubuntu 14.04') {
     chdir $FindBin::Bin;
   }
 }
-if (1) {
-	my $dependencies_folder = $FindBin::Bin . "/../dependencies";
-    my $gtest_build_folder = $dependencies_folder . "/gtest-build";	
-	my $gtest_lib_folder = $dependencies_folder . "/gtest/lib/";	
-	if (! -e $dependencies_folder) {
-      mkdir($dependencies_folder) or die("Failed to create directory [$dependencies_folder]");
-    }
-    if (! -e $gtest_build_folder) {
-      mkdir($gtest_build_folder) or die("Failed to create directory [$gtest_build_folder]");
-    }
-	if (! -e $gtest_lib_folder) {
-      mkdir($gtest_lib_folder) or die("Failed to create directory [$gtest_lib_folder]");
-    }
 
-	# build gtest
-	chdir $gtest_build_folder;
-	system("cmake -GNinja /usr/src/gtest");
-	system("ninja all");
-	system("rm CMakeCache.txt");
-	my @lib_files = glob "*.a";
+if ($compile_gtest) {
+  my $dependencies_folder = $FindBin::Bin . "/../dependencies";
+  my $gtest_build_folder = $dependencies_folder . "/gtest-build";	
+  my $gtest_lib_folder = $dependencies_folder . "/gtest/lib/";	
+  if (! -e $dependencies_folder) {
+    mkdir($dependencies_folder) or die("Failed to create directory [$dependencies_folder]");
+  }
+  if (! -e $gtest_build_folder) {
+    mkdir($gtest_build_folder) or die("Failed to create directory [$gtest_build_folder]");
+  }
+  if (! -e $gtest_lib_folder) {
+    mkdir($gtest_lib_folder) or die("Failed to create directory [$gtest_lib_folder]");
+  }
 
-	foreach my $lib_cur (@lib_files) {
-		copy($lib_cur, $gtest_lib_folder) or die "Could not copy lib $lib_cur $!\n";
-	}
-	chdir $FindBin::Bin;
-	
+  # build gtest
+  chdir $gtest_build_folder;
+  system("cmake -GNinja /usr/src/gtest");
+  system("ninja all");
+  system("rm CMakeCache.txt");
+  my @lib_files = glob "*.a";
+
+  foreach my $lib_cur (@lib_files) {
+    copy($lib_cur, $gtest_lib_folder) or die "Could not copy lib $lib_cur $!\n";
+  }
+  chdir $FindBin::Bin;
 }
 print("CertiViBE dependencies were successfully installed\n");
