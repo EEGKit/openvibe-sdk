@@ -108,7 +108,7 @@ bool CBoxAlgorithmStimulationMultiplexer::process(void)
 							std::get<1>(stimulation->second),
 							std::get<2>(stimulation->second)
 							);
-				m_vStimulation.erase(stimulation++);
+				stimulation = m_vStimulation.erase(stimulation);
 			}
 			else
 			{

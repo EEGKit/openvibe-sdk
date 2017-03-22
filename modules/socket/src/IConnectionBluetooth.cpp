@@ -3,13 +3,12 @@
 #if defined TARGET_OS_Windows
 	#define WIN32_LEAN_AND_MEAN
 	#define UNICODE
-	#include <windows.h>
-	#include <commctrl.h>
+	#include <Windows.h>
+	#include <CommCtrl.h>
 	#include <codecvt>
-	#include <winsock2.h>
+	#include <WinSock2.h>
 	#include <ws2bth.h>
-	#include <BluetoothAPIs.h>
-	#define boolean Socket::boolean
+	#include <bluetoothapis.h>
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	#include <sys/time.h>
 	#include <sys/types.h>
@@ -44,7 +43,7 @@ namespace Socket
 		{
 		}
 
-		boolean initialize(void)
+		bool initialize(void)
 		{
 #if defined TARGET_OS_Windows
 			WSADATA l_oWSAData;
@@ -68,18 +67,16 @@ namespace Socket
 			return true;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-#endif
-
 			return false;
+#endif
 		}
 
-		boolean open(void)
+		bool open(void)
 		{
 			return false;
 		}
 
-		boolean close(void)
+		bool close(void)
 		{
 			if (!this->isConnected())
 			{
@@ -118,10 +115,8 @@ namespace Socket
 			return l_bIsSuccess;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-#endif
-
 			return false;
+#endif
 		}
 
 		boolean isReadyToSend(Socket::uint32 ui32TimeOut) const
@@ -154,10 +149,8 @@ namespace Socket
 			return l_ui32PendingBytesCount != 0;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-#endif
-
 			return false;
+#endif
 		}
 
 		uint32 getPendingByteCount()
@@ -181,9 +174,8 @@ namespace Socket
 			return l_ui32PendingBytesCount;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-#endif
 			return 0;
+#endif
 		}
 
 		uint32 sendBuffer(const void* pBuffer, const uint32 ui32BufferSize)
@@ -205,13 +197,11 @@ namespace Socket
 				return 0;
 			}
 
-			return l_i32BytesSentCount;
+			return static_cast<uint32>(l_i32BytesSentCount);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-#endif
-
 			return 0;
+#endif
 		}
 
 		uint32 receiveBuffer(void* pBuffer, const uint32 ui32BufferSize)
@@ -235,13 +225,11 @@ namespace Socket
 				return 0;
 			}
 
-			return l_i32BytesReceivedCount;
+			return static_cast<uint32>(l_i32BytesReceivedCount);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-#endif
-
 			return 0;
+#endif
 		}
 
 		boolean sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
@@ -299,9 +287,8 @@ namespace Socket
 			return m_oSocket != INVALID_SOCKET;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-#endif
 			return false;
+#endif
 		}
 
 		void release(void)
@@ -355,10 +342,8 @@ namespace Socket
 			return true;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-#endif
-
 			return false;
+#endif
 		}
 
 		bool isErrorRaised(void)
@@ -397,12 +382,8 @@ namespace Socket
 			return l_oConverter.to_bytes(l_sErrorMessage);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
 			return "";
-
 #endif
-
-			return "";
 		}
 
 		void clearError(void)

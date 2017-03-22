@@ -70,7 +70,7 @@ boolean CAlgorithmMatrixAverage::process(void)
 	{
 		if(ip_ui64AveragingMethod==OVP_TypeId_EpochAverageMethod_MovingAverage.toUInteger())
 		{
-			IMatrix* l_pSwapMatrix = NULL;
+			IMatrix* l_pSwapMatrix = nullptr;
 
 			if(m_vHistory.size()>=ip_ui64MatrixCount)
 			{
@@ -90,7 +90,7 @@ boolean CAlgorithmMatrixAverage::process(void)
 		}
 		else if(ip_ui64AveragingMethod==OVP_TypeId_EpochAverageMethod_MovingAverageImmediate.toUInteger())
 		{
-			IMatrix* l_pSwapMatrix=NULL;
+			IMatrix* l_pSwapMatrix = nullptr;
 
 			if(m_vHistory.size()>=ip_ui64MatrixCount)
 			{
