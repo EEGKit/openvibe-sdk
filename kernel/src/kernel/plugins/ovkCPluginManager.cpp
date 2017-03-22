@@ -27,11 +27,12 @@ namespace OpenViBE
 		{
 		public:
 
-			CPluginManagerEntryEnumeratorCallBack(const IKernelContext& rKernelContext, vector<IPluginModule*>& rPluginModule, map<IPluginObjectDesc*, IPluginModule*>& rPluginObjectDesc)
+			CPluginManagerEntryEnumeratorCallBack(const IKernelContext& rKernelContext, vector<IPluginModule*>& rPluginModule, map<IPluginObjectDesc*, IPluginModule*>& rPluginObjectDesc, bool& haveAllPluginsLoadedCorrectly)
 				:TKernelObject < IObject >(rKernelContext)
 				,m_rPluginManager(rKernelContext.getPluginManager())
 				,m_rPluginModule(rPluginModule)
 				,m_rPluginObjectDesc(rPluginObjectDesc)
+			    ,m_HaveAllPluginsLoadedCorrectly(haveAllPluginsLoadedCorrectly)
 			{
 			}
 
@@ -60,10 +61,8 @@ namespace OpenViBE
 				if(!l_pPluginModule->load(rEntry.getName(), &l_sLoadError))
 				{
 					delete l_pPluginModule;
-					OV_ERROR_KRF(
-						"File [" << CString(rEntry.getName()) << "] is not a plugin module (error:" << l_sLoadError << ")",
-						ErrorType::BadFileRead
-					);
+					OV_WARNING_K("File [" << CString(rEntry.getName()) << "] is not a plugin module (error:" << l_sLoadError << ")");
+					m_HaveAllPluginsLoadedCorrectly = false;
 				}
 
 				if(!l_pPluginModule->initialize())
@@ -71,10 +70,8 @@ namespace OpenViBE
 					l_pPluginModule->uninitialize();
 					l_pPluginModule->unload();
 					delete l_pPluginModule;
-					OV_ERROR_KRF(
-						"Module [" << CString(rEntry.getName()) << "] did not initialize correctly",
-						ErrorType::Internal
-					);
+					OV_WARNING_K("Module [" << CString(rEntry.getName()) << "] did not initialize correctly");
+					m_HaveAllPluginsLoadedCorrectly = false;
 				}
 
 				bool l_bPluginObjectDescAdded=false;
@@ -109,10 +106,9 @@ namespace OpenViBE
 					l_pPluginObjectDesc=NULL;
 				}
 
-				OV_ERROR_UNLESS_KRF(
+				OV_WARNING_UNLESS_K(
 					l_bPluginObjectDescAdded,
-					"No 'plugin object descriptor' found from [" << CString(rEntry.getName()) << "] even if it looked like a plugin module\n",
-					ErrorType::BadFileParsing
+					"No 'plugin object descriptor' found from [" << CString(rEntry.getName()) << "] even if it looked like a plugin module\n"
 				);
 
 				this->getLogManager() << LogLevel_Info << "Added " << l_ui32Count << " plugin object descriptor(s) from [" << CString(rEntry.getName()) << "]\n";
@@ -127,6 +123,7 @@ namespace OpenViBE
 			IPluginManager& m_rPluginManager;
 			vector<IPluginModule*>& m_rPluginModule;
 			map<IPluginObjectDesc*, IPluginModule*>& m_rPluginObjectDesc;
+			bool& m_HaveAllPluginsLoadedCorrectly;
 		};
 	}
 }
@@ -170,7 +167,8 @@ bool CPluginManager::addPluginsFromFiles(
 	this->getLogManager() << LogLevel_Info << "Adding plugins from [" << rFileNameWildCard << "]\n";
 
 	bool l_bResult = true;
-	CPluginManagerEntryEnumeratorCallBack l_rCB(this->getKernelContext(), m_vPluginModule, m_vPluginObjectDesc);
+	bool haveAllPluginsLoadedCorrectly = true;
+	CPluginManagerEntryEnumeratorCallBack l_rCB(this->getKernelContext(), m_vPluginModule, m_vPluginObjectDesc, haveAllPluginsLoadedCorrectly);
 	FS::IEntryEnumerator* l_pEntryEnumerator=FS::createEntryEnumerator(l_rCB);
 
 	stringstream ss(rFileNameWildCard.toASCIIString());
@@ -187,7 +185,7 @@ bool CPluginManager::addPluginsFromFiles(
 	l_pEntryEnumerator->release();
 
 	// Just return l_bResult. Error handling is performed within CPluginManagerEntryEnumeratorCallBack.
-	return l_bResult;
+	return l_bResult && haveAllPluginsLoadedCorrectly;
 }
 
 bool CPluginManager::registerPluginDesc(
