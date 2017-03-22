@@ -18,9 +18,8 @@ function usage()
 		echo "--make-package : a package will be created in build directory"
 		echo "--build-unit : if set, unit tests will be built"
 		echo "--build-validation : if set, validation tests will be builts"
-		echo "--gtest-lib-dir=<dirname> : gtest libraries directory (default: ../dependencies/gtest/lib)"
-		echo "--gtest-include-dir=<dirname> : gtest include directory (default: ../dependencies/gtest/include)"
-		echo "--test-data-dir=<dirname> : test data directory"
+		echo "--gtest-lib-dir=<dirname> : gtest libraries directory (default: ../dependencies/libgtest)"
+		echo "--gtest-include-dir=<dirname> : gtest include directory (default: /usr/src/gtest/src)"
 		echo "--test-output-dir=<dirname> : test output files directory"
 }
 
@@ -39,8 +38,9 @@ ov_build_unit=0
 ov_test_script_dir="${PWD}"
 ov_root_dir="${ov_test_script_dir}/../../certivibe-build/dist-Release/"
 ov_test_build_dir="${ov_test_script_dir}/../../certivibe-test-build/"
-gtest_lib_dir="${ov_test_script_dir}/../dependencies/gtest/lib"
-gtest_include_dir="${ov_test_script_dir}/../dependencies/gtest/include"
+gtest_lib_dir="${ov_test_script_dir}/../dependencies/libgtest"
+gtest_include_dir="/usr/src/gtest/src"
+
 
 
 # Parse arguments
@@ -91,10 +91,6 @@ do
 			gtest_include_dir="${i#*=}"
 			shift
 			;;
-		--test-data-dir=*)
-			ov_cmake_test_data="${i#*=}"
-			shift
-			;;
 		--test-output-dir=*)
 			ov_cmake_test_output="${i#*=}"
 			shift
@@ -123,9 +119,6 @@ fi
 if [[ ! -v $ov_install_dir ]]; then
 	ov_install_dir="${ov_script_dir}/../../certivibe-build/dist-${ov_build_type}"
 fi
-if [[ ! -v $ov_cmake_test_data ]]; then
-	ov_cmake_test_data="${ov_build_dir}/data/input/"
-fi
 if [[ ! -v $ov_cmake_test_output ]]; then
 	ov_cmake_test_output="${ov_build_dir}/validation-test-output/"
 fi
@@ -135,9 +128,7 @@ echo "Build with parameters:"
 echo "[build-type] = ${ov_build_type}"
 echo "[build-dir] = ${ov_build_dir}"
 echo "[install-dir] = ${ov_install_dir}"
-echo "[test-data-dir] = ${ov_test_data_dir}"
-
-echo "[test data directory] = ${ov_cmake_test_data}"
+echo "[test data directory] = ${ov_test_data_dir}"
 echo "[test output files directory] = ${ov_cmake_test_output}"
 echo "[build unit] = ${ov_build_unit}"
 echo "**************************************"
@@ -171,7 +162,6 @@ cmake ${ov_script_dir}/.. \
 		-DGTEST_INCLUDE_DIR=${gtest_include_dir} \
 		-DGTEST_LIBRARY=${gtest_lib_dir}/libgtest.a \
 		-DGTEST_MAIN_LIBRARY=${gtest_lib_dir}/libgtest_main.a \
-		-DOVT_TEST_DATA_DIR=${ov_cmake_test_data} \
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=${ov_cmake_test_output} \
 		${ov_test_script_dir}/../
 

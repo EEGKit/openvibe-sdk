@@ -56,19 +56,21 @@ my $add_repository_command  = '';
 my $lsb_distributor = `lsb_release --id --short`;
 my $lsb_release = `lsb_release --release --short`;
 
-if ($install_packages && $lsb_distributor =~ 'Ubuntu') {
-  $update_packages_command = 'sudo apt-get update';
-  if ($assume_yes) {
-	$package_install_command = 'sudo apt-get -y install';
-	$add_repository_command  = 'sudo add-apt-repository -y universe';
-  } else {
-	$package_install_command = 'sudo apt-get install';
-	$add_repository_command  = 'sudo add-apt-repository universe';
+if ($lsb_distributor =~ 'Ubuntu') {
+  if ($install_packages) {
+    $update_packages_command = 'sudo apt-get update';
+    if ($assume_yes) {
+      $package_install_command = 'sudo apt-get -y install';
+      $add_repository_command  = 'sudo add-apt-repository -y universe';
+    } else {
+      $package_install_command = 'sudo apt-get install';
+      $add_repository_command  = 'sudo add-apt-repository universe';
+    }
   }
   if ($lsb_release =~ '14.04') {
-	$distribution = 'Ubuntu 14.04';
+    $distribution = 'Ubuntu 14.04';
   } elsif ($lsb_release =~ '16.04') {
-	$distribution = 'Ubuntu 16.04';
+    $distribution = 'Ubuntu 16.04';
   }
 }
 
@@ -226,7 +228,7 @@ if ($install_packages && $distribution eq 'Ubuntu 14.04') {
 if ($compile_gtest) {
   my $dependencies_folder = $FindBin::Bin . "/../dependencies";
   my $gtest_build_folder = $dependencies_folder . "/gtest-build";	
-  my $gtest_lib_folder = $dependencies_folder . "/gtest/lib/";	
+  my $gtest_lib_folder = $dependencies_folder . "/libgtest/";	
   if (! -e $dependencies_folder) {
     mkdir($dependencies_folder) or die("Failed to create directory [$dependencies_folder]");
   }
