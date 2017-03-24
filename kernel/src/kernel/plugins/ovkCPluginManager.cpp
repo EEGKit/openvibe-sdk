@@ -63,6 +63,7 @@ namespace OpenViBE
 					delete l_pPluginModule;
 					OV_WARNING_K("File [" << CString(rEntry.getName()) << "] is not a plugin module (error:" << l_sLoadError << ")");
 					m_HaveAllPluginsLoadedCorrectly = false;
+					return true;
 				}
 
 				if(!l_pPluginModule->initialize())
@@ -72,6 +73,7 @@ namespace OpenViBE
 					delete l_pPluginModule;
 					OV_WARNING_K("Module [" << CString(rEntry.getName()) << "] did not initialize correctly");
 					m_HaveAllPluginsLoadedCorrectly = false;
+					return true;
 				}
 
 				bool l_bPluginObjectDescAdded=false;
