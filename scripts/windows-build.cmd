@@ -10,13 +10,33 @@ set PackageOption=FALSE
 goto parameter_parse
 
 :print_help
-	echo Usage: win32-build.cmd [-h ^| --help] [--no-pause] [-d^|--debug] [-r^|--release] [--make-package] [--rerun-cmake]
-	echo -- Build Type option can be : --release (-r) or --debug (-d). Default is Release.
+	echo Usage: %0 [options]
+    echo.
+	echo -h ^|--help usage
+	echo --no-pause will not pause during script execution
+	echo -d^|--debug build in debug mode
+	echo -r^|--release build in release mode
+	echo --make-package make packages at the end
+	echo --rerun-cmake force cmake rerun
+	echo --build-unit build unit tests
+	echo --build-validation build validation tests
+
+	echo --test-data-dir [dirname] test data directory
+	echo --test-output-dir [dirname] test output files directory
+	echo.
 	exit /b
+	
+	
 
 :parameter_parse
 for %%A in (%*) DO (
-	if /i "%%A"=="-h" (
+	if defined next_is_test_data_dir (
+		set ov_cmake_test_data="%%A"
+		set next_is_test_data_dir=
+	) else if defined next_is_test_output_dir (
+		set ov_cmake_test_output="%%A"
+		set next_is_test_output_dir=
+	) else if /i "%%A"=="-h" (
 		goto print_help
 	) else if /i "%%A"=="--help" (
 		goto print_help
@@ -34,6 +54,14 @@ for %%A in (%*) DO (
 		set PackageOption=TRUE
 	) else if /i "%%A"=="--rerun-cmake" (
 		set RerunCmake="true"
+	) else if /i "%%A" == "--build-unit" (
+		set ov_build_unit=true
+	) else if /i "%%A" == "--build-validation" (
+		set ov_build_validation=true
+	) else if /i "%%A" == "--test-data-dir" (
+		set next_is_test_data_dir=1
+	) else if /i "%%A" == "--test-output-dir" (
+		set next_is_test_output_dir=1
 	)
 )
 
@@ -46,6 +74,13 @@ call "windows-initialize-environment.cmd"
 set script_dir=%CD%
 set build_dir=%script_dir%\..\..\certivibe-build\build-%BuildType%
 set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
+if not defined ov_cmake_test_data (
+	set ov_cmake_test_data=%build_dir%\data\input
+)
+if not defined ov_cmake_test_output (
+	set ov_cmake_test_output=%build_dir%\validation-test-output\
+)
+
 
 mkdir %build_dir% 2>NUL
 pushd %build_dir%
@@ -54,7 +89,14 @@ set CallCmake=false
 if not exist "%build_dir%\CMakeCache.txt" set CallCmake="true"
 if %RerunCmake%=="true" set CallCmake="true"
 if %CallCmake%=="true" (
-	cmake %script_dir%\.. -G"Ninja" -DCMAKE_BUILD_TYPE=%BuildType% -DCMAKE_INSTALL_PREFIX=%install_dir% -DOV_PACKAGE=%PackageOption%
+	cmake %script_dir%\.. -G"Ninja" ^
+		-DCMAKE_BUILD_TYPE=%BuildType% ^
+		-DCMAKE_INSTALL_PREFIX=%install_dir% ^
+		-DOV_PACKAGE=%PackageOption% ^
+		-DBUILD_UNIT_TEST=%ov_build_unit% ^
+		-DBUILD_VALIDATION_TEST=%ov_build_validation% ^
+		-DOVT_TEST_DATA_DIR=%ov_cmake_test_data% ^
+		-DOVT_VALIDATION_TEST_OUTPUT_DIR=%ov_cmake_test_output%
 )
 
 if not "!ERRORLEVEL!" == "0" goto terminate_error

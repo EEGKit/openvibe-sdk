@@ -13,3 +13,9 @@ externals/*/
 .project
 .cproject
 certivibe-test-build
+
+
+#ignore python compile file .pyc
+# *.pyc
+# *.*~
+

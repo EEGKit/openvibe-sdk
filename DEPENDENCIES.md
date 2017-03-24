@@ -9,12 +9,7 @@ Use `linux-install_dependencies.pl` to install required dependencies on Linux.
 Unit test
 ---------
 
-- `libgtest-dev`
-  - required to build openvibe-test target
-  - use `sudo unix-dependencies --mode=install` from the `test/scripts` directory to install the package
-
-Install and unzip unit test data available on [Dropbox](https://www.dropbox.com/sh/ctb4g92hxxo9tyf/AAAQgM0KL5Vp8hYOLemUMayqa?dl=0)
-in `${root}/dependencies/test-data`.
+Use `linux-install_dependencies.pl` to install required dependencies on Linux.
 
 Windows 8
 =========
@@ -28,3 +23,4 @@ Unit test
 ---------
 
 Use windows-install-dependencies.ps1 available in the scripts directory
+

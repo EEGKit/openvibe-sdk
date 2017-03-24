@@ -132,7 +132,7 @@ SET_PROPERTY(GLOBAL PROPERTY OV_PROP_CURRENT_PROJECTS_BUILD_DIR "")
 # Used by the various Find* scripts to locate OpenViBE modules
 SET(OV_BASE_DIR ${CMAKE_SOURCE_DIR})
 SET(OV_BASE_BIN_DIR ${CMAKE_BINARY_DIR})
-
+SET(OV_LIBRARY_DIR  ${CMAKE_BINARY_DIR}/lib)
 # needed for making visual studio projects when this script is called without CMAKE_BUILD_TYPE
 SET_PROPERTY(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_DEBUG "TARGET_BUILDTYPE_Debug")
 SET_PROPERTY(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELEASE "TARGET_BUILDTYPE_Release")
@@ -217,8 +217,6 @@ OPTION(BUILD_TESTING "Include and build unit tests" ON)
 IF(BUILD_TESTING)
 	SET(OVT_LOG_DIR "${CMAKE_BINARY_DIR}/test/log" CACHE PATH "Path to directory containing test logs")
 	SET(OVT_TEST_DATA_DIR "${CMAKE_SOURCE_DIR}/dependencies/test-data" CACHE PATH "Path to test data files")
-
-	ADD_SUBDIRECTORY("test-runner/")
 ENDIF()
 
 # make a copy of the dependency script, this is done so we can use the same launch scripts both in win install and win devel situations.
@@ -232,4 +230,13 @@ FILE(GLOB_RECURSE script_files scripts/*.cmd scripts/*.sh scripts/*.nsi scripts/
 INSTALL(FILES scripts/AddCertivibeComponents.cmake DESTINATION ${DIST_DATADIR})
 ADD_CUSTOM_TARGET(openvibe-scripts SOURCES ${script_files})
 
+# Enable/Disable unit test
+SET(BUILD_UNIT_TEST true CACHE BOOL "Set this flag to true/false to enable/disable unit test building")
+SET(BUILD_VALIDATION_TEST true CACHE BOOL "Set this flag to true/false to enable/disable validation test building")
 
+IF(BUILD_UNIT_TEST) 
+	ADD_SUBDIRECTORY("unit-test/")
+ENDIF()
+IF(BUILD_VALIDATION_TEST) 
+	ADD_SUBDIRECTORY("validation-test/")
+ENDIF()

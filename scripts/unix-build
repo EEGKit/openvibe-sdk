@@ -16,6 +16,11 @@ function usage()
 		echo "--install-dir=<dirname> : binaries deployment directory"
 		echo "--test-data-dir=<dirname> : test data directory"
 		echo "--make-package : a package will be created in build directory"
+		echo "--build-unit : if set, unit tests will be built"
+		echo "--build-validation : if set, validation tests will be builts"
+		echo "--gtest-lib-dir=<dirname> : gtest libraries directory (default: ../dependencies/libgtest)"
+		echo "--gtest-include-dir=<dirname> : gtest include directory (default: /usr/src/gtest/src)"
+		echo "--test-output-dir=<dirname> : test output files directory"
 }
 
 # Script starting point
@@ -24,13 +29,19 @@ function usage()
 # variables
 ov_script_dir="${PWD}"
 ov_build_type=Release
-ov_build_dir=""
-ov_install_dir=""
 ov_test_data_dir="${ov_script_dir}/../dependencies/test-data"
 verbose=0
-build_dir_set=0
-install_dir_set=0
 package_option="FALSE"
+
+
+ov_build_unit=0
+ov_test_script_dir="${PWD}"
+ov_root_dir="${ov_test_script_dir}/../../certivibe-build/dist-Release/"
+ov_test_build_dir="${ov_test_script_dir}/../../certivibe-test-build/"
+gtest_lib_dir="${ov_test_script_dir}/../dependencies/libgtest"
+gtest_include_dir="/usr/src/gtest/src"
+
+
 
 # Parse arguments
 for i in "$@"
@@ -50,12 +61,10 @@ do
 			;;
 		--build-dir=*)
 			ov_build_dir="${i#*=}"
-			build_dir_set=1
 			shift
 			;;
 		--install-dir=*)
 			ov_install_dir="${i#*=}"
-			install_dir_set=1
 			shift
 			;;
 		--test-data-dir=*)
@@ -64,6 +73,26 @@ do
 			;;
 		--make-package)
 			package_option="TRUE"
+			shift
+			;;
+		--build-unit)
+			ov_build_unit=1
+			shift
+			;;
+		--build-validation)
+			ov_build_validation=1
+			shift
+			;;
+		--gtest-lib-dir=*)
+			gtest_lib_dir="${i#*=}"
+			shift
+			;;
+		--gtest-include-dir=*)
+			gtest_include_dir="${i#*=}"
+			shift
+			;;
+		--test-output-dir=*)
+			ov_cmake_test_output="${i#*=}"
 			shift
 			;;
 		*)
@@ -83,12 +112,15 @@ then
 fi
 
 # Update directories only if they point to the default one
-if [[ $build_dir_set -eq 0 ]]; then
+if [[ ! -v $ov_build_dir ]]; then
 	ov_build_dir="${ov_script_dir}/../../certivibe-build/build-${ov_build_type}"
 fi
 
-if [[ $install_dir_set -eq 0 ]]; then
+if [[ ! -v $ov_install_dir ]]; then
 	ov_install_dir="${ov_script_dir}/../../certivibe-build/dist-${ov_build_type}"
+fi
+if [[ ! -v $ov_cmake_test_output ]]; then
+	ov_cmake_test_output="${ov_build_dir}/validation-test-output/"
 fi
 
 echo "**************************************"
@@ -96,7 +128,9 @@ echo "Build with parameters:"
 echo "[build-type] = ${ov_build_type}"
 echo "[build-dir] = ${ov_build_dir}"
 echo "[install-dir] = ${ov_install_dir}"
-echo "[test-data-dir] = ${ov_test_data_dir}"
+echo "[test data directory] = ${ov_test_data_dir}"
+echo "[test output files directory] = ${ov_cmake_test_output}"
+echo "[build unit] = ${ov_build_unit}"
 echo "**************************************"
 echo ""
 echo ""
@@ -122,7 +156,14 @@ cmake ${ov_script_dir}/.. \
 		-DCMAKE_BUILD_TYPE=${ov_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${ov_install_dir} \
 		-DOVT_TEST_DATA_DIR=${ov_test_data_dir} \
-		-DOV_PACKAGE=${package_option}
+		-DOV_PACKAGE=${package_option} \
+		-DBUILD_UNIT_TEST=${ov_build_unit} \
+		-DBUILD_VALIDATION_TEST=${ov_build_validation} \
+		-DGTEST_INCLUDE_DIR=${gtest_include_dir} \
+		-DGTEST_LIBRARY=${gtest_lib_dir}/libgtest.a \
+		-DGTEST_MAIN_LIBRARY=${gtest_lib_dir}/libgtest_main.a \
+		-DOVT_VALIDATION_TEST_OUTPUT_DIR=${ov_cmake_test_output} \
+		${ov_test_script_dir}/../
 
 
 if [[ $? == 0 ]]; then

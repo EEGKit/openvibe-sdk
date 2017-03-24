@@ -34,6 +34,10 @@
 	is extracted in 'dest_dir\folder_to_unzip'.
 
 	Note that if no cache is found, archives are also downloaded in 'dest_dir\arch'.
+.PARAMETER cache_dir
+	Cache directory for extracted archives. Each archive found in the manifest file
+	is extracted from cache_dir to 'dest_dir\folder_to_unzip'.
+
 .NOTES
 	File Name      : windows-install-dependencies.ps1
 	Prerequisite   : Tested with PS v4.0 on windows 8.1 pro.
@@ -41,9 +45,9 @@
 	Detailed specifications:
 	https://jira.mensiatech.com/confluence/pages/viewpage.action?spaceKey=CT&title=Dependency+management
 .EXAMPLE
-	.\windows-install-dependencies.ps1 -dependencies_file \absolute\path\to\dep\dependencies.txt -data_type dependencies -dest_dir \absolute\path\to\dep\
+	.\windows-install-dependencies.ps1 -dependencies_file \absolute\path\to\dep\dependencies.txt -data_type dependencies -dest_dir \absolute\path\to\dep\ -cache_dir \absolute\path\to\cache\
 .EXAMPLE
-	powershell.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File \absolute\path\to\windows-install-dependencies.ps1 -dependencies_file \absolute\path\to\dep\dependencies.txt -data_type dependencies -dest_dir \absolute\path\to\dep\
+	powershell.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File \absolute\path\to\windows-install-dependencies.ps1 -dependencies_file \absolute\path\to\dep\dependencies.txt -data_type dependencies -dest_dir \absolute\path\to\dep\ -cache_dir \absolute\path\to\cache\
 #>
 
 #
@@ -53,14 +57,15 @@
 Param(
 [parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$dependencies_file,
 [parameter(Mandatory=$true)][ValidateSet('test','dependencies', ignorecase=$False)][string]$data_type,
-[parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$dest_dir
+[parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$dest_dir,
+[parameter(Mandatory=$false)][ValidateNotNullOrEmpty()][string]$cache_dir
 )
 
 #
 # header used to handle permission restrictions
 #
 
-If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator"))
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator"))
 {
 	# manually forward the parameters
 	# generic way of forwarding with parsing of $myinvocation.Line failed
@@ -68,6 +73,10 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 	$argumentList = (" -dependencies_file", "`"$dependencies_file`"")
 	$argumentList += (" -data_type", "`"$data_type`"")
 	$argumentList += (" -dest_dir", "`"$dest_dir`"")
+
+	if (-Not [string]::IsNullOrEmpty($cache_dir)) {
+		$argumentList += (" -cache_dir", "`"$cache_dir`"")
+	}
 
 	$command = $myinvocation.MyCommand.Definition + $argumentList
 	Start-Process powershell.exe "-NoExit -NoProfile -ExecutionPolicy Bypass -File $command" -Verb RunAs
@@ -80,19 +89,28 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 #
 
 Write-Host "===Input validation==="
-If (Test-Path $dependencies_file){
+if (Test-Path $dependencies_file) {
 	Write-Host "Dependencies file found"
-} Else {
+} else {
 	Throw New-Object System.IO.FileNotFoundException "$dependencies_file not found"
 }
 
-If (Test-Path $dest_dir){
+if (Test-Path $dest_dir){
 	Write-Host "Destination directory found"
 
-} Else {
+} else {
 	Write-Host "Destination directory not found"
 	New-Item $dest_dir -itemtype directory | Out-Null
 	Write-Host "Created destination directory: "  $dest_dir
+}
+
+if (-Not [string]::IsNullOrEmpty($cache_dir)) {
+	if (Test-Path $cache_dir) {
+		Write-Host "Cache directory found"
+	} else {
+		Throw New-Object System.IO.FileNotFoundException "$cache_dir not found"
+		Exit
+	}
 }
 Write-Host ""
 
@@ -109,7 +127,6 @@ Write-Host ""
 # we keep 2 different variables here because there are 2 different behaviors:
 # - cache archives shoud not be overwritten (It is the responsability of the system admin to keep it in sync with remote directories)
 # - destination directory archives must be overwritten to ensure a regular update
-$Script:cache_dir = ""
 $Script:arch_dir = ""
 
 # monitoring variables
@@ -137,11 +154,11 @@ function DownloadDeps($url, $dest)
 		 return $false
 	}
 
-	If($request.HaveResponse) {
+	if($request.HaveResponse) {
 		# retrieve total size of data to download
 		$total_len = $response.ContentLength
 
-		If($total_len -eq -1) {
+		if($total_len -eq -1) {
 			Write-Host "Failed to download resources: content length = -1"
 			return $false
 		}
@@ -172,7 +189,7 @@ function DownloadDeps($url, $dest)
 
 		$Script:download_count++
 
-	} Else {
+	} else {
 		Write-Host "Failed to retrieve response from the server"
 		return $false
 	}
@@ -186,7 +203,7 @@ function ExpandZipFile($zip, $dest)
 	$shell = New-Object -ComObject Shell.Application
 
 	# create dest if it does not exists
-	If(-Not (Test-Path $dest)) {
+	if(-Not (Test-Path $dest)) {
 		New-Item $dest -itemtype directory | Out-Null
 	}
 
@@ -227,7 +244,7 @@ function InstallDeps($arch, $dir, $url)
 
 	$do_extract = $true
 
-	If(($Script:cache_dir -and -Not (Test-Path $zip)) -or (-Not $Script:cache_dir)) {
+	if(($Script:cache_dir -and -Not (Test-Path $zip)) -or (-Not $Script:cache_dir)) {
 		$do_extract = DownloadDeps $url $zip
 	}
 
@@ -242,13 +259,13 @@ function InstallDeps($arch, $dir, $url)
 
 # check if a cache directory is available through CV_DEPENDENCY_CACHE env variable
 Write-Host "===Looking for cache==="
-If ((Test-Path env:\CV_DEPENDENCY_CACHE) -and (Test-Path $env:CV_DEPENDENCY_CACHE)) {
+if ((Test-Path env:\CV_DEPENDENCY_CACHE) -and (Test-Path $env:CV_DEPENDENCY_CACHE)) {
 
 	Write-Host "Found cache directory: "  ($env:CV_DEPENDENCY_CACHE)
 	$cache_dir = $env:CV_DEPENDENCY_CACHE + "\" + $data_type
 	$arch_dir = $cache_dir
 
-	If(-Not (Test-Path $cache_dir)) {
+	if(-Not (Test-Path $cache_dir)) {
 		New-Item $cache_dir -itemtype directory | Out-Null
 		Write-Host "Created archive directory in cache: "  $cache_dir
 	}
@@ -260,7 +277,7 @@ If ((Test-Path env:\CV_DEPENDENCY_CACHE) -and (Test-Path $env:CV_DEPENDENCY_CACH
 
 	$arch_dir = $dest_dir + "\arch"
 
-	If(-Not (Test-Path $arch_dir)) {
+	if(-Not (Test-Path $arch_dir)) {
 		New-Item $arch_dir -itemtype directory | Out-Null
 		Write-Host "Created archive directory in destination: "  $arch_dir
 	}
