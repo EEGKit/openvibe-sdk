@@ -280,9 +280,9 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 
 					uint64_t timeOfNthSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex); // assuming chunk start is 0
 					uint64_t sampleTime = chunkStartTime + timeOfNthSample;
-					float64 startTime = ITimeArithmetics::timeToSeconds(sampleTime);
+					double startTime = static_cast<double>(ITimeArithmetics::timeToSeconds(sampleTime));
 					uint64_t timeOfNthAndOneSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex + 1);
-					float64 endTime = ITimeArithmetics::timeToSeconds(chunkStartTime + timeOfNthAndOneSample);
+					double endTime = static_cast<double>(ITimeArithmetics::timeToSeconds(chunkStartTime + timeOfNthAndOneSample));
 
 					// get matrix values
 					for (uint32_t channelIndex = 0; channelIndex < channelCount; channelIndex++)
