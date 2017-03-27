@@ -585,21 +585,40 @@ OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValu
 				}
 				else
 				{
-					OV_ERROR_UNLESS_KRF(
-						m_vKeywordOverride.count(l_sLowerPrefix.c_str()),
-						"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
-						ErrorType::BadFileParsing
-					);
+					if (m_vKeywordOverride.count(l_sLowerPrefix.c_str()))
+					{
+						CString l_sOverridenValue("");
 
-					CString l_sOverridenValue("");
+						OV_ERROR_UNLESS_KRF(
+						            (m_vKeywordOverride.find(l_sLowerPrefix.c_str())->second)->expand(CString(l_sPostfix.c_str()), l_sOverridenValue),
+						            "Could not expand $" << l_sLowerPrefix.c_str() << "{" << l_sLowerPostfix.c_str() << "}",
+						            ErrorType::BadFileParsing
+						            );
 
-					OV_ERROR_UNLESS_KRF(
-						(m_vKeywordOverride.find(l_sLowerPrefix.c_str())->second)->expand(CString(l_sPostfix.c_str()), l_sOverridenValue),
-						"Could not expand $" << l_sLowerPrefix.c_str() << "{" << l_sLowerPostfix.c_str() << "}",
-						ErrorType::BadFileParsing
-					);
+						l_sValue = l_sOverridenValue;
+					}
+					else
+					{
+						OV_ERROR_UNLESS_KRF(
+						            m_pParentConfigurationManager,
+						            "Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
+						            ErrorType::BadFileParsing
+						            );
 
-					l_sValue = l_sOverridenValue;
+						std::string l_sKeyword = "$" + l_sLowerPrefix + "{" + l_sLowerPostfix + "}";
+
+						l_sValue = m_pParentConfigurationManager->expand(CString(l_sKeyword.c_str()));
+
+						if (l_sValue == sValue)
+						{
+							l_sValue = "";
+							OV_ERROR_KRF(
+							            "Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
+							            ErrorType::BadFileParsing
+							            );
+						}
+					}
+
 				}
 
 				if(l_bShouldExpand)
