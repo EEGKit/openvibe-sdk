@@ -6,6 +6,6 @@
 			<ChildNodeEmpty></ChildNodeEmpty>
 		</ChildNodeWithChildren>
 	</NodeWithChildren>
-	<NodeWithData status="hasData">node data with special characters &lt;&gt;,;:!?./&amp;&quot;'(-_)=~#{[|`\^@]}/*-+</NodeWithData>
+	<NodeWithData status="hasData">node data with special characters &lt;&gt;,;:!?./&amp;"'(-_)=~#{[|`\^@]}/*-+</NodeWithData>
 	<NodeEmptyWithNumber666 status="noData" ref="test"></NodeEmptyWithNumber666>
 </Document>
