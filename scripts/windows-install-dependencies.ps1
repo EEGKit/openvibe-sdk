@@ -24,11 +24,13 @@
 	archive_name;folder_to_unzip;archive_url
 	archive_name;folder_to_unzip;archive_url
 	...
-.PARAMETER data_type
-	The type of data to install. This parameter is mainly used to look at the right directory
-	in the cache.
+.PARAMETER test_dependencies_file
+	The manifest file containing the required archives to execute tests.
 
-	Expected value: 'dependencies' or 'test'.
+	Expected format is:
+	archive_name;folder_to_unzip;archive_url
+	archive_name;folder_to_unzip;archive_url
+	...
 .PARAMETER dest_dir
 	Destination directory for extracted archives. Each archive found in the manifest file
 	is extracted in 'dest_dir\folder_to_unzip'.
@@ -55,9 +57,9 @@
 #
 
 Param(
-[parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$dependencies_file,
-[parameter(Mandatory=$true)][ValidateSet('test','dependencies', ignorecase=$False)][string]$data_type,
-[parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$dest_dir,
+[parameter(Mandatory=$false)][ValidateNotNullOrEmpty()][string]$dependencies_file,
+[parameter(Mandatory=$false)][ValidateNotNullOrEmpty()][string]$test_dependencies_file,
+[parameter(Mandatory=$false)][ValidateNotNullOrEmpty()][string]$dest_dir = "$PSScriptRoot\..\dependencies",
 [parameter(Mandatory=$false)][ValidateNotNullOrEmpty()][string]$cache_dir
 )
 
@@ -65,15 +67,25 @@ Param(
 # header used to handle permission restrictions
 #
 
+if(-not($test_dependencies_file) -and -not($dependencies_file))
+{
+	$dependencies_file = "$PSScriptRoot\windows-dependencies.txt"
+	$test_dependencies_file = "$PSScriptRoot\tests-data.txt"
+}
+
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator"))
 {
 	# manually forward the parameters
 	# generic way of forwarding with parsing of $myinvocation.Line failed
 	# because $myinvocation.Line is empty when the script is called from command line with powershell.exe
-	$argumentList = (" -dependencies_file", "`"$dependencies_file`"")
-	$argumentList += (" -data_type", "`"$data_type`"")
 	$argumentList += (" -dest_dir", "`"$dest_dir`"")
 
+	if (-Not [string]::IsNullOrEmpty($dependencies_file)) {
+		$argumentList += (" -dependencies_file", "`"$dependencies_file`"")
+	}
+	if (-Not [string]::IsNullOrEmpty($test_dependencies_file)) {
+		$argumentList += (" -test_dependencies_file", "`"$test_dependencies_file`"")
+	}
 	if (-Not [string]::IsNullOrEmpty($cache_dir)) {
 		$argumentList += (" -cache_dir", "`"$cache_dir`"")
 	}
@@ -90,6 +102,11 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 Write-Host "===Input validation==="
 if (Test-Path $dependencies_file) {
+	Write-Host "Dependencies file found"
+} else {
+	Throw New-Object System.IO.FileNotFoundException "$dependencies_file not found"
+}
+if (Test-Path $test_dependencies_file) {
 	Write-Host "Dependencies file found"
 } else {
 	Throw New-Object System.IO.FileNotFoundException "$dependencies_file not found"
@@ -116,8 +133,8 @@ Write-Host ""
 
 Write-Host "===Parameters==="
 Write-Host "Dependencies file = $dependencies_file"
+Write-Host "Test Dependencies file = $test_dependencies_file"
 Write-Host "Destination directory = $dest_dir"
-Write-Host "Data type = $data_type"
 Write-Host ""
 
 #
@@ -259,39 +276,52 @@ function InstallDeps($arch, $dir, $url)
 
 # check if a cache directory is available through CV_DEPENDENCY_CACHE env variable
 Write-Host "===Looking for cache==="
-if ((Test-Path env:\CV_DEPENDENCY_CACHE) -and (Test-Path $env:CV_DEPENDENCY_CACHE)) {
-
-	Write-Host "Found cache directory: "  ($env:CV_DEPENDENCY_CACHE)
-	$cache_dir = $env:CV_DEPENDENCY_CACHE + "\" + $data_type
-	$arch_dir = $cache_dir
-
-	if(-Not (Test-Path $cache_dir)) {
-		New-Item $cache_dir -itemtype directory | Out-Null
-		Write-Host "Created archive directory in cache: "  $cache_dir
-	}
-
-	Write-Host "Missing archives will be transferred to " $arch_dir
-
-} else {
-	Write-Host "Found no cache directory"
-
-	$arch_dir = $dest_dir + "\arch"
-
-	if(-Not (Test-Path $arch_dir)) {
-		New-Item $arch_dir -itemtype directory | Out-Null
-		Write-Host "Created archive directory in destination: "  $arch_dir
-	}
-
-	Write-Host "All archives will be transferred to " $arch_dir
+# if -cache_dir is specified, use its value, otherwise check if an environment variable exists 
+if($cache_dir) {
+    Write-Host "Cache directory provided by parameter: $cache_dir"
+} elseif ((Test-Path env:\DEPENDENCY_CACHE) -and (Test-Path $env:DEPENDENCY_CACHE)) {
+    Write-Host "Found cache directory: "  ($env:DEPENDENCY_CACHE)
+    $cache_dir = $env:CV_DEPENDENCY_CACHE + "\" + $data_type
 }
 
-Write-Host ""
-Write-Host "===Installing dependencies==="
+if ($cache_dir) {
+# check if a cache directory was passed as parameters, and if it exists
+    $arch_dir = $cache_dir
+    if(-Not (Test-Path $arch_dir)) {
+        New-Item $arch_dir -itemtype directory | Out-Null
+        Write-Host "Created archive directory in cache: "  $arch_dir
+    }
+    Write-Host "Missing archives will be transferred to " $arch_dir
+} else {
+    Write-Host "Found no cache directory"
+    $arch_dir = $dest_dir + "\arch"
+    if(-Not (Test-Path $arch_dir)) {
+        New-Item $arch_dir -itemtype directory | Out-Null
+        Write-Host "Created archive directory in destination: "  $arch_dir
+    }
+    Write-Host "All archives will be transferred to " $arch_dir
+}
+
+
 
 $Script:timer = [System.Diagnostics.Stopwatch]::StartNew()
-ForEach ($dep in (Get-Content $dependencies_file)) {
-	$arch, $dir, $url = $dep.split(';',3)
-	InstallDeps $arch $dir $url
+if ($dependencies_file)
+{
+	Write-Host ""
+	Write-Host "===Installing compile dependencies==="
+	ForEach ($dep in (Get-Content $dependencies_file)) {
+		$arch, $dir, $url = $dep.split(';',3)
+		InstallDeps $arch $dir $url
+	}
+}
+if ($test_dependencies_file)
+{
+	Write-Host ""
+	Write-Host "===Installing test dependencies==="
+	ForEach ($dep in (Get-Content $test_dependencies_file)) {
+		$arch, $dir, $url = $dep.split(';',3)
+		InstallDeps $arch $dir $url
+	}
 }
 $timer.Stop()
 

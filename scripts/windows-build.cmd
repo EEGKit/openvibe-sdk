@@ -81,7 +81,6 @@ call "windows-initialize-environment.cmd"
 set script_dir=%CD%
 set build_dir=%script_dir%\..\..\certivibe-build\build-%BuildType%
 set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
-
 if not defined ov_cmake_test_output (
 	set ov_cmake_test_output=%build_dir%\validation-test-output\
 )
