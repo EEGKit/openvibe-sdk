@@ -11,16 +11,16 @@ function usage()
 		echo ""
 		echo "-h | --help : usage"
 		echo "-v | --verbose : verbose output at building step"
-		echo "--build-type=<Debug|Release|RelWithDebInfo> : build type"
-		echo "--build-dir=<dirname> : build directory"
-		echo "--install-dir=<dirname> : binaries deployment directory"
-		echo "--test-data-dir=<dirname> : test data directory"
+		echo "--build-type <Debug|Release|RelWithDebInfo> : build type"
+		echo "--build-dir <dirname> : build directory"
+		echo "--install-dir <dirname> : binaries deployment directory"
+		echo "--test-data-dir <dirname> : test data directory"
 		echo "--make-package : a package will be created in build directory"
 		echo "--build-unit : if set, unit tests will be built"
 		echo "--build-validation : if set, validation tests will be builts"
-		echo "--gtest-lib-dir=<dirname> : gtest libraries directory (default: ../dependencies/libgtest)"
-		echo "--gtest-include-dir=<dirname> : gtest include directory (default: /usr/src/gtest/src)"
-		echo "--test-output-dir=<dirname> : test output files directory"
+		echo "--gtest-lib-dir <dirname> : gtest libraries directory (default: ../dependencies/libgtest)"
+		echo "--gtest-include-dir <dirname> : gtest include directory (default: /usr/src/gtest/src)"
+		echo "--test-output-dir <dirname> : test output files directory"
 }
 
 # Script starting point
@@ -42,55 +42,52 @@ gtest_lib_dir="${ov_test_script_dir}/../dependencies/libgtest"
 gtest_include_dir="/usr/src/gtest/src"
 
 # Parse arguments
-for i in "$@"
-do
-	case $i in
+
+while [[ $# -gt 1 ]]; do
+	key="$1"
+	case $key in
 		-h | --help)
 			usage
 			exit
 			;;
 		-v | --verbose)
 			verbose=1
+			;;
+		--build-type)
+			ov_build_type="$2"
 			shift
 			;;
-		--build-type=*)
-			ov_build_type="${i#*=}"
+		--build-dir)
+			ov_build_dir="$2"
 			shift
 			;;
-		--build-dir=*)
-			ov_build_dir="${i#*=}"
+		--install-dir)
+			ov_install_dir="$2"
 			shift
 			;;
-		--install-dir=*)
-			ov_install_dir="${i#*=}"
-			shift
-			;;
-		--test-data-dir=*)
-			ov_test_data_dir="-DOVT_TEST_DATA_DIR=${i#*=}"
+		--test-data-dir)
+			ov_test_data_dir="-DOVT_TEST_DATA_DIR=$2"
 			shift
 			;;
 		--make-package)
 			package_option="TRUE"
-			shift
 			;;
 		--build-unit)
 			ov_build_unit=1
-			shift
 			;;
 		--build-validation)
 			ov_build_validation=1
+			;;
+		--gtest-lib-dir)
+			gtest_lib_dir="$2"
 			shift
 			;;
-		--gtest-lib-dir=*)
-			gtest_lib_dir="${i#*=}"
+		--gtest-include-dir)
+			gtest_include_dir="$2"
 			shift
 			;;
-		--gtest-include-dir=*)
-			gtest_include_dir="${i#*=}"
-			shift
-			;;
-		--test-output-dir=*)
-			ov_cmake_test_output="${i#*=}"
+		--test-output-dir)
+			ov_cmake_test_output="$2"
 			shift
 			;;
 		*)
@@ -98,6 +95,7 @@ do
 			exit 1
 			;;
 	esac
+	shift # past argument or value
 done
 
 # Check parameters validity
