@@ -20,18 +20,18 @@ namespace OpenViBE
 		}
 		static OpenViBE::CString getBinDir(void)
 		{
-			return pathFromEnv("OV_PATH_BIN", OV_CMAKE_PATH_BIN);
+			return pathFromEnvOrExtendedRoot("OV_PATH_BIN", "/bin", OV_CMAKE_PATH_BIN);
 		}
 		static OpenViBE::CString getDataDir(void)
 		{
-			return pathFromEnv("OV_PATH_DATA", OV_CMAKE_PATH_DATA);
+			return pathFromEnvOrExtendedRoot("OV_PATH_DATA", "/share/openvibe", OV_CMAKE_PATH_DATA);
 		}
 		static OpenViBE::CString getLibDir(void)
 		{
 #if defined TARGET_OS_Windows
-			return pathFromEnv("OV_PATH_LIB", OV_CMAKE_PATH_BIN);
+			return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/bin", OV_CMAKE_PATH_BIN);
 #else
-			return pathFromEnv("OV_PATH_LIB", OV_CMAKE_PATH_LIB);
+			return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/lib", OV_CMAKE_PATH_LIB);
 #endif
 		}
 		static OpenViBE::CString getUserHomeDir(void)
@@ -80,6 +80,19 @@ namespace OpenViBE
 			const char *l_sPathPtr = std::getenv(sEnvVar);
 			OpenViBE::CString l_sPath = (l_sPathPtr ? l_sPathPtr : sDefaultPath);
 			return convertPath(l_sPath);
+		}
+		// Returns ENV variable if it is defined, otherwise it extends the ROOT variable if it exists, finally returns a default path
+		static OpenViBE::CString pathFromEnvOrExtendedRoot(const char* envVar, const char* rootPostfix, const char* defaultPath)
+		{
+			if (const char* envPath = std::getenv(envVar))
+			{
+				return convertPath(envPath);
+			}
+			if (const char* ovPathRoot = std::getenv("OV_PATH_ROOT"))
+			{
+				return convertPath(CString(ovPathRoot) + rootPostfix);
+			}
+			return convertPath(defaultPath);
 		}
 	};
 }
