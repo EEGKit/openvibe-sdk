@@ -42,7 +42,7 @@ int uoTimeArithmeticTest(int argc, char* argv[])
 	5, 10, 50, 100, 123.456789, 128.0, 500, 1000, 2500, 5000 };
 
 	// time values to test in fixed point format
-	std::vector<unsigned long long> timesToTestInFixedPoint =
+	std::vector<uint64_t> timesToTestInFixedPoint =
 	{ 1LL << 8, 1LL << 16, 1L << 19, 1LL << 22, 1LL << 27, 1L << 30, 1LL << 32, 10LL << 32, 100LL << 32, 123LL << 32, 500LL << 32, 512LL << 32,
 	1000LL << 32, 1024LL << 32, 2001LL << 32, 5000LL << 32 };
 
@@ -50,7 +50,7 @@ int uoTimeArithmeticTest(int argc, char* argv[])
 	std::vector<unsigned int> samplingRatesToTest = { 100, 128, 512, 1000, 1024, 16000, 44100 };
 
 	// sample to test
-	std::vector<unsigned long long> samplesToTest = { 0, 1, 100, 128, 512, 1000, 1021, 1024, 5005, 12345, 59876, 100000, 717893, 1000001 };
+	std::vector<uint64_t> samplesToTest = { 0, 1, 100, 128, 512, 1000, 1021, 1024, 5005, 12345, 59876, 100000, 717893, 1000001 };
 
 	// epoch duration to test
 	std::vector<double> epochDurationsToTest = { 0.01, 0.1, 0.2, 0.25, 0.5, 1.0, 1.1, 1.5, 2, 5, 10, 50, 100 };
@@ -95,7 +95,7 @@ int uoTimeArithmeticTest(int argc, char* argv[])
 				ITimeArithmetics::timeToSampleCount(testSamplingRate, testTimeInFixedPoint)
 				);
 
-			unsigned long long timeDifference = std::abs(static_cast<long long>(computedTimeInFixedPoint) - static_cast<long long>(testTimeInFixedPoint));
+			uint64_t timeDifference = static_cast<uint64_t>(std::abs(static_cast<int64_t>(computedTimeInFixedPoint) - static_cast<int64_t>(testTimeInFixedPoint)));
 
 			OVT_ASSERT(ITimeArithmetics::timeToSeconds(timeDifference) < (1.0 / static_cast<double>(testSamplingRate)),
 				errorMessage << "Failure to convert [sample -> time -> sample] at sample rate " << testSamplingRate << 
