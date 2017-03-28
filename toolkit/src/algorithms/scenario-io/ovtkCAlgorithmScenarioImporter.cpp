@@ -5,6 +5,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <algorithm>
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -315,7 +316,14 @@ boolean CAlgorithmScenarioImporter::process(void)
 		l_pScenario->addInput(symbolicScenarioInput.m_sName, symbolicScenarioInput.m_oTypeIdentifier);
 		if (symbolicScenarioInput.m_oLinkedBoxIdentifier != OV_UndefinedIdentifier)
 		{
-			l_pScenario->setScenarioInputLink(l_ui32ScenarioInputIndex, symbolicScenarioInput.m_oLinkedBoxIdentifier, symbolicScenarioInput.m_ui32LinkedBoxInputIndex);
+			// Only try to set scenario output links from boxes that actually exist
+			// This enables the usage of header-only importers
+			if (l_rSymbolicScenario.m_vBox.end() != std::find_if(l_rSymbolicScenario.m_vBox.begin(), l_rSymbolicScenario.m_vBox.end(), [&symbolicScenarioInput](SBox box) {
+				return box.m_oIdentifier == symbolicScenarioInput.m_oLinkedBoxIdentifier;
+			}))
+			{
+				l_pScenario->setScenarioInputLink(l_ui32ScenarioInputIndex, symbolicScenarioInput.m_oLinkedBoxIdentifier, symbolicScenarioInput.m_ui32LinkedBoxInputIndex);
+			}
 		}
 		l_ui32ScenarioInputIndex++;
 	}
@@ -326,7 +334,14 @@ boolean CAlgorithmScenarioImporter::process(void)
 		l_pScenario->addOutput(symbolicScenarioOutput.m_sName, symbolicScenarioOutput.m_oTypeIdentifier);
 		if (symbolicScenarioOutput.m_oLinkedBoxIdentifier != OV_UndefinedIdentifier)
 		{
-			l_pScenario->setScenarioOutputLink(l_ui32ScenarioOutputIndex, symbolicScenarioOutput.m_oLinkedBoxIdentifier, symbolicScenarioOutput.m_ui32LinkedBoxOutputIndex);
+			// Only try to set scenario output links from boxes that actually exist
+			// This enables the usage of header-only importers
+			if (l_rSymbolicScenario.m_vBox.end() != std::find_if(l_rSymbolicScenario.m_vBox.begin(), l_rSymbolicScenario.m_vBox.end(), [&symbolicScenarioOutput](SBox box) {
+				return box.m_oIdentifier == symbolicScenarioOutput.m_oLinkedBoxIdentifier;
+			}))
+			{
+				l_pScenario->setScenarioOutputLink(l_ui32ScenarioOutputIndex, symbolicScenarioOutput.m_oLinkedBoxIdentifier, symbolicScenarioOutput.m_ui32LinkedBoxOutputIndex);
+			}
 		}
 		l_ui32ScenarioOutputIndex++;
 	}

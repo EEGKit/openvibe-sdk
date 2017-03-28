@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <fs/Files.h>
 #include <cassert>
+#include <algorithm>
 #include <openvibe/kernel/scenario/ovIAlgorithmScenarioImporter.h>
 #include <openvibe/kernel/scenario/ovIAlgorithmScenarioExporter.h>
 #include "../../tools/ovkSBoxProto.h"
@@ -23,6 +24,31 @@ CScenarioManager::~CScenarioManager(void)
 	{
 		delete i->second;
 	}
+}
+
+bool CScenarioManager::cloneScenarioImportersAndExporters(const IScenarioManager& scenarioManager)
+{
+	// Copy the registered importers from the parent Scenario Manager
+	for (uint32 contextIndex = 0; contextIndex < scenarioManager.getRegisteredScenarioImportContextsCount(); ++contextIndex)
+	{
+		CIdentifier importContextId;
+		OV_FATAL_UNLESS_K(scenarioManager.getRegisteredScenarioImportContextDetails(contextIndex, importContextId),
+		                  "Import context not found", ErrorType::Internal);
+
+		for (uint32 importerIndex = 0; importerIndex < scenarioManager.getRegisteredScenarioImportersCount(importContextId); ++importerIndex)
+		{
+			const char* fileNameExtension;
+			CIdentifier algorithmId;
+
+			OV_FATAL_UNLESS_K(scenarioManager.getRegisteredScenarioImporterDetails(importContextId, importerIndex, &fileNameExtension, algorithmId),
+			                  "Importer not found", ErrorType::Internal);
+
+			this->registerScenarioImporter(importContextId, fileNameExtension, algorithmId);
+
+		}
+	}
+
+	return true;
 }
 
 CIdentifier CScenarioManager::getNextScenarioIdentifier(
@@ -202,7 +228,120 @@ bool CScenarioManager::importScenarioFromFile(OpenViBE::CIdentifier& newScenario
 	return this->importScenario(newScenarioIdentifier, memoryBuffer, scenarioImporterAlgorithmIdentifier);
 }
 
-bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffer, const OpenViBE::CIdentifier& scenarioIdentifier, const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier)
+bool CScenarioManager::importScenarioFromFile(CIdentifier& newScenarioIdentifier, const CIdentifier& importContext, const char* fileName)
+{
+	OV_ERROR_UNLESS_KRF(m_ScenarioImporters.count(importContext),
+	                    "The import context " << importContext.toString() << " has no associated importers",
+	                    ErrorType::Internal);
+	char extension[255];
+	FS::Files::getFilenameExtension(fileName, extension);
+	OV_ERROR_UNLESS_KRF(m_ScenarioImporters[importContext].count(extension),
+	                    "The import context " << importContext.toString() << " has no associated importers for extension [" << extension << "]",
+	                    ErrorType::Internal);
+	return this->importScenarioFromFile(newScenarioIdentifier, fileName, m_ScenarioImporters[importContext][extension]);
+}
+
+bool CScenarioManager::registerScenarioImporter(const CIdentifier& importContext, const char* fileNameExtension, const CIdentifier& scenarioImporterAlgorithmIdentifier)
+{
+	if (!m_ScenarioImporters.count(importContext))
+	{
+		m_ScenarioImporters[importContext] = std::map<std::string, CIdentifier>();
+	}
+
+	OV_ERROR_UNLESS_KRF(!m_ScenarioImporters[importContext].count(fileNameExtension),
+	                    "The file name extension [" << fileNameExtension << "] already has an importer registered for context " << importContext.toString(),
+	                    ErrorType::Internal);
+
+	m_ScenarioImporters[importContext][fileNameExtension] = scenarioImporterAlgorithmIdentifier;
+
+	return true;
+}
+
+bool CScenarioManager::unregisterScenarioImporter(const OpenViBE::CIdentifier& importContext, const char* fileNameExtension)
+{
+	OV_ERROR_UNLESS_KRF(m_ScenarioImporters.count(importContext),
+	                    "The import context " << importContext.toString() << " has no associated importers",
+	                    ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_ScenarioImporters[importContext].count(fileNameExtension),
+	                    "The import context " << importContext.toString() << " has no associated importers for extension [" << fileNameExtension << "]",
+	                    ErrorType::Internal);
+
+	auto& contextImporters = m_ScenarioImporters[importContext];
+
+	for (auto it = contextImporters.begin(); it != contextImporters.end();)
+	{
+		if (it->first == fileNameExtension)
+		{
+			it = contextImporters.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	for (auto it = m_ScenarioImporters.begin(); it != m_ScenarioImporters.end();)
+	{
+		if (it->second.empty())
+		{
+			it = m_ScenarioImporters.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	return true;
+}
+
+OpenViBE::uint32 CScenarioManager::getRegisteredScenarioImportContextsCount() const
+{
+	return m_ScenarioImporters.size();
+}
+
+OpenViBE::uint32 CScenarioManager::getRegisteredScenarioImportersCount(const OpenViBE::CIdentifier& importContext) const
+{
+	if (!m_ScenarioImporters.count(importContext))
+	{
+		return 0;
+	}
+	return m_ScenarioImporters.at(importContext).size();
+}
+
+bool CScenarioManager::getRegisteredScenarioImportContextDetails(OpenViBE::uint32 index, OpenViBE::CIdentifier& importContext) const
+{
+	OV_ERROR_UNLESS_KRF(
+	            this->getRegisteredScenarioImportContextsCount() > index,
+	            "Scenario import context index out of range",
+	            ErrorType::OutOfBound);
+	// TODO: optimize this
+	auto it = m_ScenarioImporters.cbegin();
+	for (size_t i = 0; i < index; ++i)
+	{
+		++it;
+	}
+	importContext = it->first;
+	return true;
+}
+
+bool CScenarioManager::getRegisteredScenarioImporterDetails(const OpenViBE::CIdentifier& importContext, OpenViBE::uint32 index, const char** fileNameExtension, OpenViBE::CIdentifier& scenarioImporterAlgorithmIdentifier) const
+{
+	OV_ERROR_UNLESS_KRF(
+	            this->getRegisteredScenarioImportersCount(importContext) > index,
+	            "Scenario importer index out of range",
+	            ErrorType::OutOfBound);
+
+	// TODO: optimize this
+	auto it = m_ScenarioImporters.at(importContext).cbegin();
+	for (size_t i = 0; i < index; ++i)
+	{
+		++it;
+	}
+	*fileNameExtension = it->first.c_str();
+	scenarioImporterAlgorithmIdentifier = it->second;
+	return true;
+}
+
+bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffer, const OpenViBE::CIdentifier& scenarioIdentifier, const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier) const
 {
 	OV_ERROR_UNLESS_KRF(
 		m_vScenario.find(scenarioIdentifier) != m_vScenario.end(),
@@ -338,7 +477,7 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 	return true;
 }
 
-bool CScenarioManager::exportScenarioToFile(const char* fileName, const OpenViBE::CIdentifier& scenarioIdentifier, const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier)
+bool CScenarioManager::exportScenarioToFile(const char* fileName, const OpenViBE::CIdentifier& scenarioIdentifier, const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier) const
 {
 	CMemoryBuffer memoryBuffer;
 	this->exportScenario(memoryBuffer, scenarioIdentifier, scenarioExporterAlgorithmIdentifier);
@@ -355,6 +494,119 @@ bool CScenarioManager::exportScenarioToFile(const char* fileName, const OpenViBE
 	outputFileStream.write(reinterpret_cast<const char*>(memoryBuffer.getDirectPointer()), static_cast<long>(memoryBuffer.getSize()));
 	outputFileStream.close();
 
+	return true;
+}
+
+bool CScenarioManager::exportScenarioToFile(const CIdentifier& exportContext, const char* fileName, const OpenViBE::CIdentifier& scenarioIdentifier)
+{
+	OV_ERROR_UNLESS_KRF(m_ScenarioExporters.count(exportContext),
+	                    "The export context " << exportContext.toString() << " has no associated exporters",
+	                    ErrorType::Internal);
+	char extension[255];
+	FS::Files::getFilenameExtension(fileName, extension);
+	OV_ERROR_UNLESS_KRF(m_ScenarioExporters[exportContext].count(extension),
+	                    "The export context " << exportContext.toString() << " has no associated exporters for extension [" << extension << "]",
+	                    ErrorType::Internal);
+	return this->exportScenarioToFile(fileName, scenarioIdentifier, m_ScenarioExporters[exportContext][extension]);
+}
+
+bool CScenarioManager::registerScenarioExporter(const CIdentifier& exportContext, const char* fileNameExtension, const CIdentifier& scenarioExporterAlgorithmIdentifier)
+{
+	if (!m_ScenarioExporters.count(exportContext))
+	{
+		m_ScenarioExporters[exportContext] = std::map<std::string, CIdentifier>();
+	}
+
+	OV_ERROR_UNLESS_KRF(!m_ScenarioExporters[exportContext].count(fileNameExtension),
+	                    "The file name extension [" << fileNameExtension << "] already has an exporter registered for context " << exportContext.toString(),
+	                    ErrorType::Internal);
+
+	m_ScenarioExporters[exportContext][fileNameExtension] = scenarioExporterAlgorithmIdentifier;
+
+	return true;
+}
+
+bool CScenarioManager::unregisterScenarioExporter(const OpenViBE::CIdentifier& exportContext, const char* fileNameExtension)
+{
+	OV_ERROR_UNLESS_KRF(m_ScenarioExporters.count(exportContext),
+	                    "The export context " << exportContext.toString() << " has no associated exporters",
+	                    ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_ScenarioExporters[exportContext].count(fileNameExtension),
+	                    "The export context " << exportContext.toString() << " has no associated exporters for extension [" << fileNameExtension << "]",
+	                    ErrorType::Internal);
+
+	auto& contextExporters = m_ScenarioImporters[exportContext];
+
+	for (auto it = contextExporters.begin(); it != contextExporters.end();)
+	{
+		if (it->first == fileNameExtension)
+		{
+			it = contextExporters.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	for (auto it = m_ScenarioExporters.begin(); it != m_ScenarioImporters.end();)
+	{
+		if (it->second.empty())
+		{
+			it = m_ScenarioExporters.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	return true;
+}
+
+OpenViBE::uint32 CScenarioManager::getRegisteredScenarioExportContextsCount() const
+{
+	return m_ScenarioExporters.size();
+}
+
+OpenViBE::uint32 CScenarioManager::getRegisteredScenarioExportersCount(const OpenViBE::CIdentifier& exportContext) const
+{
+	if (!m_ScenarioExporters.count(exportContext))
+	{
+		return 0;
+	}
+	return m_ScenarioExporters.at(exportContext).size();
+}
+
+bool CScenarioManager::getRegisteredScenarioExportContextDetails(OpenViBE::uint32 index, OpenViBE::CIdentifier& exportContext) const
+{
+	OV_ERROR_UNLESS_KRF(
+	            this->getRegisteredScenarioExportContextsCount() > index,
+	            "Scenario export context index out of range",
+	            ErrorType::OutOfBound);
+	// TODO: optimize this
+	auto it = m_ScenarioExporters.cbegin();
+	for (size_t i = 0; i < index; ++i)
+	{
+		++it;
+	}
+	exportContext = it->first;
+	return true;
+}
+
+bool CScenarioManager::getRegisteredScenarioExporterDetails(const OpenViBE::CIdentifier& exportContext, OpenViBE::uint32 index, const char** fileNameExtension, OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier) const
+{
+	OV_ERROR_UNLESS_KRF(
+	            this->getRegisteredScenarioExportersCount(exportContext) > index,
+	            "Scenario exporter index out of range",
+	            ErrorType::OutOfBound);
+
+	// TODO: optimize this
+	auto it = m_ScenarioExporters.at(exportContext).cbegin();
+	for (size_t i = 0; i < index; ++i)
+	{
+		++it;
+	}
+	*fileNameExtension = it->first.c_str();
+	scenarioExporterAlgorithmIdentifier = it->second;
 	return true;
 }
 
@@ -392,6 +644,11 @@ IScenario& CScenarioManager::getScenario(
 	);
 
 	return *itScenario->second;
+}
+
+IScenario& CScenarioManager::getScenario(const CIdentifier& rScenarioIdentifier) const
+{
+	return const_cast<CScenarioManager*>(this)->getScenario(rScenarioIdentifier);
 }
 
 CIdentifier CScenarioManager::getUnusedIdentifier(void) const

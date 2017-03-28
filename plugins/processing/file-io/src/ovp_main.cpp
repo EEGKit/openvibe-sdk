@@ -37,4 +37,6 @@ OVP_Declare_Begin()
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmOVCSVFileWriterDesc)
 	OVP_Declare_New(OpenViBEPlugins::FileIO::CBoxAlgorithmOVCSVFileReaderDesc)
 
+	rPluginModuleContext.getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_SchedulerMetaboxImport, ".mxb", OVP_ClassId_Algorithm_XMLScenarioImporter);
+
 OVP_Declare_End()

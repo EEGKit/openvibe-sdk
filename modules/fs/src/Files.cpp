@@ -306,6 +306,18 @@ bool Files::getFilenameWithoutExtension(const char *sPath, char *sFilename)
 	return true;
 }
 
+bool Files::getFilenameExtension(const char* path, char* fileNameExtension)
+{
+	if (!path || !fileNameExtension)
+	{
+		return false;
+	}
+
+	strcpy(fileNameExtension, boost::filesystem::path(path).extension().string().c_str());
+
+	return true;
+}
+
 #if defined TARGET_OS_Windows
 bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
 {

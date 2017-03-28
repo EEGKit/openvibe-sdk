@@ -318,9 +318,7 @@ const IBox* CScenario::getBoxDetails(const CIdentifier& boxIdentifier) const
 bool CScenario::isBox(
 	const CIdentifier& identifier) const
 {
-	map<CIdentifier, CBox*>::const_iterator itBox;
-	itBox=m_Boxes.find(identifier);
-	return itBox!=m_Boxes.end();
+	return m_Boxes.count(identifier) == 1;
 }
 
 IBox* CScenario::getBoxDetails(
