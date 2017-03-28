@@ -40,8 +40,6 @@ ov_test_build_dir="${ov_test_script_dir}/../../certivibe-test-build/"
 gtest_lib_dir="${ov_test_script_dir}/../dependencies/libgtest"
 gtest_include_dir="/usr/src/gtest/src"
 
-
-
 # Parse arguments
 for i in "$@"
 do
