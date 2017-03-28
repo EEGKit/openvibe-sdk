@@ -5,7 +5,7 @@
 
 DEPENDENCIES="./tests-data.txt"
 CACHE_DIR="../dependencies/arch"
-if [-z $CV_DEPENDENCY_CACHE]; then
+if [ -z $CV_DEPENDENCY_CACHE ]; then
     CACHE_DIR=$CV_DEPENDENCY_CACHE
 fi
 OUTPUT_DIR="../dependencies"
