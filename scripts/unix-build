@@ -34,6 +34,7 @@ package_option="FALSE"
 
 
 ov_build_unit=0
+ov_build_validation=0
 ov_test_script_dir="${PWD}"
 ov_root_dir="${ov_test_script_dir}/../../certivibe-build/dist-Release/"
 ov_test_build_dir="${ov_test_script_dir}/../../certivibe-test-build/"

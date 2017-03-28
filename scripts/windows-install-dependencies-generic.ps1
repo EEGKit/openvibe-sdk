@@ -50,31 +50,8 @@ Param(
 [parameter(Mandatory=$false)][string]$proxy_pass
 )
 
-#
-# header used to handle permission restrictions
-#
 $manifest_file = [System.IO.Path]::GetFullPath($manifest_file)
-$dest_dir= [System.IO.Path]::GetFullPath($dest_dir)
-
-if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator"))
-{
-	# manually forward the parameters
-	# generic way of forwarding with parsing of $myinvocation.Line failed
-	# because $myinvocation.Line is empty when the script is called from command line with powershell.exe
-	# $argumentList = (" -manifest_file", "`"$manifest_file`"")
-	# $argumentList += (" -dest_dir", "`"$dest_dir`"")
-	# if (-Not [string]::IsNullOrEmpty($cache_dir)) {
-		# $argumentList += (" -cache_dir", "`"$cache_dir`"")
-	# }
-	# if (-Not [string]::IsNullOrEmpty($proxy_pass)) {
-		# $argumentList += (" -proxy_pass", "`"$proxy_pass`"")
-	# }
-
-	# $command = $myinvocation.MyCommand.Definition + $argumentList
-	# Start-Process powershell.exe "-Wait -NoExit -NoProfile -ExecutionPolicy Bypass -File $command" -Verb RunAs
-
-	# Exit
-}
+$dest_dir = [System.IO.Path]::GetFullPath($dest_dir)
 
 #
 # input validation
