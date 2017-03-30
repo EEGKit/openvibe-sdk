@@ -153,11 +153,7 @@ namespace OpenViBE
 									l_sTokenName != "Path_Tmp" &&
 									l_sTokenName != "Path_Lib" &&
 									l_sTokenName != "Path_Bin" &&
-									l_sTokenName != "OperatingSystem" &&
-									l_sTokenName != "Kernel_PluginsPatternMacOS" &&
-									l_sTokenName != "Kernel_PluginsPatternLinux" &&
-									l_sTokenName != "Kernel_PluginsPatternWindows" &&
-									l_sTokenName != "Kernel_Plugins",
+									l_sTokenName != "OperatingSystem",
 									"Overwriting critical token " << l_sTokenName.c_str(),
 									m_rLogManager
 								);
