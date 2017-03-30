@@ -10,6 +10,8 @@ namespace OpenViBE
 		class ILogManager;
 		class ITypeManager;
 		class IScenarioManager;
+		class IErrorManager;
+		class IConfigurationManager;
 
 		/**
 		 * \class IPluginModuleContext
@@ -44,6 +46,11 @@ namespace OpenViBE
 			 * \return a reference on the current error manager
 			 */
 			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const=0;
+			/**
+			 * \brief Gets the current configuration manager
+			 * \return a reference on the current configuration manager
+			 */
+			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const=0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginModuleContext)
 		};
