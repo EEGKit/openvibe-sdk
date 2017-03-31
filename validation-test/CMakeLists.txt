@@ -9,9 +9,9 @@ SET(OVT_GLOBAL_VERSION_MINOR 1)
 SET(OVT_GLOBAL_VERSION_PATCH 0)
 SET(OVT_GLOBAL_VERSION_STRING "${OVT_GLOBAL_VERSION_MAJOR}.${OVT_GLOBAL_VERSION_MINOR}.${OVT_GLOBAL_VERSION_PATCH}")
 
-# Set the test data directory for big test data or binary files
-# Those data won't be manage in classical configuration management system
-SET(OVT_TEST_DATA_DIR ${PROJECT_BINARY_DIR}/data/input/ CACHE PATH "Path to large test data file")
+IF(NOT DEFINED OVT_TEST_DATA_DIR)
+	MESSAGE(FATAL_ERROR "Path to tests input data files is not set")
+ENDIF()
 
 # Set the test ouptut directory for output tests files storage
 SET(OVT_VALIDATION_TEST_OUTPUT_DIR ${PROJECT_BINARY_DIR}/validation-test-output/ CACHE PATH "Path for the output result and configuration file create during test")
