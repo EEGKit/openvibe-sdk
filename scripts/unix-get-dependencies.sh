@@ -63,7 +63,7 @@ function install_dependency() {
     local _dep=$1 _dir=$2
     echo "Unzip ${_dep} to ${_dir}"
     if [! -f ${_dep}]; then
-        echo "Dependence ${_dep} does not exist in cache ${CACHE_DIR}"
+        echo "Dependency ${_dep} does not exist in cache ${CACHE_DIR}"
         exit 3
     fi
     unzip -o ${_dep} -d ${_dir}

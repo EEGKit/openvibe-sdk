@@ -1,7 +1,7 @@
-bci-motor-imagery.zip;input/.;https://www.dropbox.com/s/8ga9p4rt5xu9gff/bci-motor-imagery.zip?dl=1
-channel-rename.zip;input/.;https://www.dropbox.com/s/mdgbha0bnl76jgk/channel_rename.zip?dl=1
-openvibe-classification-lda.zip;input/.;https://www.dropbox.com/s/02ilsrn20dyzqmx/openvibe-classification-lda.zip?dl=1
-openvibe-regularized-csp.zip;input/.;https://www.dropbox.com/s/8mh63puywr0xuz9/openvibe-regularized-csp.zip?dl=1
-signal-average.zip;input/.;https://www.dropbox.com/s/e4lrxfcy2a4pqy0/signal-average.zip?dl=1
-signal-database.zip;input/.;https://www.dropbox.com/s/0ya89un6vyomxai/signal-database.zip?dl=1
-signal-oscillator-1s.zip;input/.;https://www.dropbox.com/s/qs1gg82vc7jo1m0/sinus-oscillator-1s.zip?dl=1
+bci-motor-imagery.zip;test-input/.;https://www.dropbox.com/s/8ga9p4rt5xu9gff/bci-motor-imagery.zip?dl=1
+channel-rename.zip;test-input/.;https://www.dropbox.com/s/mdgbha0bnl76jgk/channel_rename.zip?dl=1
+openvibe-classification-lda.zip;test-input/.;https://www.dropbox.com/s/02ilsrn20dyzqmx/openvibe-classification-lda.zip?dl=1
+openvibe-regularized-csp.zip;test-input/.;https://www.dropbox.com/s/8mh63puywr0xuz9/openvibe-regularized-csp.zip?dl=1
+signal-average.zip;test-input/.;https://www.dropbox.com/s/e4lrxfcy2a4pqy0/signal-average.zip?dl=1
+signal-database.zip;test-input/.;https://www.dropbox.com/s/0ya89un6vyomxai/signal-database.zip?dl=1
+signal-oscillator-1s.zip;test-input/.;https://www.dropbox.com/s/qs1gg82vc7jo1m0/sinus-oscillator-1s.zip?dl=1
