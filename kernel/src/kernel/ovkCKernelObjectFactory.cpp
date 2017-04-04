@@ -9,7 +9,7 @@
 
 using namespace std;
 using namespace OpenViBE;
-#define boolean OpenViBE::boolean
+#define boolean bool
 
 #define create(rcid,cid,sptr,cl) \
 	if(rcid==cid) \

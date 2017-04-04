@@ -24,7 +24,7 @@ CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader(void)
 {
 }
 
-unsigned long long CBoxAlgorithmOVCSVFileReader::getClockFrequency(void)
+uint64_t CBoxAlgorithmOVCSVFileReader::getClockFrequency(void)
 {
 	return 128LL << 32; // the box clock frequency
 }

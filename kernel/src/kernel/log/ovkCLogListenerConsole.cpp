@@ -5,7 +5,7 @@
 
 #if defined TARGET_OS_Windows
  #include <windows.h>
- #define boolean OpenViBE::boolean
+ #define boolean bool
 #endif
 
 #include <openvibe/ovITimeArithmetics.h>

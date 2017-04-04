@@ -4,7 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <commctrl.h>
-#define boolean Socket::boolean
+#define boolean bool
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #include <sys/time.h>
 #include <sys/types.h>

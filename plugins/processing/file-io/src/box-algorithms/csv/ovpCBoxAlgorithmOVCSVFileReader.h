@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual unsigned long long getClockFrequency(void);
+			virtual uint64_t getClockFrequency(void);
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
 			virtual bool processClock(OpenViBE::CMessageClock& messageClock);
