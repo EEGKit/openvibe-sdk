@@ -33,7 +33,7 @@ if len(sys.argv) < 3 :
 ref_filename=sys.argv[1]
 test_filename=sys.argv[2]
 
-#open files associated with the varaibles
+#open files associated with the variables
 
 with open(ref_filename, 'r') as fileReferenceData :
     ref_header = next(fileReferenceData)
