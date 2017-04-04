@@ -26,6 +26,9 @@ import sys
 # test script parameter arg2: test file csv
 
 # assign arguments to variable
+if len(sys.argv) != 3 :
+    print('incorrect args')
+    sys.exit(101)
 referenceData=sys.argv[1]
 testData=sys.argv[2]
 
@@ -47,7 +50,7 @@ def compareCells (file1,file2):
                 sys.exit(107)
 
 try:
-    #open files associated with the varaibles
+    #open files associated with the variables
     with open(referenceData, 'r') as fileReferenceData :
         readerReferenceData = csv.reader(fileReferenceData, delimiter=';')
         inputData = [row for row in readerReferenceData]

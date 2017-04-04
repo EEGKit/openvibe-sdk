@@ -23,13 +23,17 @@ import sys, os, re
 #arg 1 repository of the openvibe logs
 #arg 2 keyword to search in the log file to get the line where the measure was
 #arg 3 Threshold, the measure should be lower
+if len(sys.argv) < 4 :
+    print('incorrect args')
+    sys.exit(101)
 openvibeLogs=sys.argv[1]
 keyWord=sys.argv[2]
 threshold=float(sys.argv[3])
 
-#Function to select the line containing the keyword
-#the exception 103 is raised if file is missing
 def selectLineContainingWord (filename, searchingWord):
+    """ Function to select the line containing the keyword
+    the exception 103 is raised if file is missing 
+    """
     try:
         spaced_word = ' %s ' % searchingWord
         with open(filename) as file :

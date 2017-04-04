@@ -39,6 +39,9 @@ from itertools import islice
 #arg 1 csv file recorded from ov file before the classification
 #arg 2 csv file recorded after the classification
 #arg 3 reference classification result
+if len(sys.argv) < 4 :
+    print('incorrect args')
+    sys.exit(101)
 # open files associated with the varaibles
 with open(sys.argv[1], 'r') as fileReferenceData :
     readerReferenceData = csv.reader(fileReferenceData, delimiter=',')

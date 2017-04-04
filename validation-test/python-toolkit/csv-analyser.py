@@ -26,7 +26,9 @@ import numpy as np
 
 # test script parameter arg1: reference file csv 
 # test script parameter arg2: test file csv
-
+if len(sys.argv) < 3 :
+    print('incorrect args')
+    sys.exit(101)
 # assign arguments to variable
 ref_filename=sys.argv[1]
 test_filename=sys.argv[2]
