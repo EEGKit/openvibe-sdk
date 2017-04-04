@@ -77,7 +77,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Merges several stimulation streams into one."); }
 			OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("The stimulations are ordered according to their start date. Thus each time all the input have chunks covering a period of time, a new output chunk is sent. This box may eventually produce output chunk reflecting a different duration depending on the inputs."); }
 			OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Streaming"); }
-			OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.1"); }
 			OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-sort-ascending"); }
 
 			OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_StimulationMultiplexer; }
