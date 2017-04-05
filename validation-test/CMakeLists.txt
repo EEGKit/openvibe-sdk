@@ -61,9 +61,6 @@ ENDIF()
 # On Windows and Linux, some environment setting scripts are needed to ease the testing process
 SET(OVT_SCRIPT_DIR ${OV_BASE_BIN_DIR}/scripts)
 IF(WIN32)
-	# Script set the environment variable needed by the tests
-	CONFIGURE_FILE(${OV_BASE_DIR}/scripts/windows-set-test-environment.cmd-base
-				   ${OVT_SCRIPT_DIR}/openvibe-test-set-environment.cmd)
 	# Wrapper script that set the environment and launch ctest
 	# It is located at build directory root to be as close as possible as standard ctest use
 	CONFIGURE_FILE(${OV_BASE_DIR}/scripts/windows-ctest-launcher.cmd-base
@@ -100,9 +97,9 @@ SET(OVT_OPENVIBE_DATA ${CMAKE_CURRENT_BINARY_DIR}/data/openvibe)
 SET(OVT_OPENVIBE_PLAYER ${DIST_BINDIR}/openvibe-scenario-player${CMAKE_EXECUTABLE_SUFFIX})
 
 IF(UNIX)
-	SET(OVT_OPENVIBE_PLAYER_LOG_FILE "$ENV{HOME}/.config/OpenVIBE/log/openvibe-scenario-player.log")
+	SET(OVT_OPENVIBE_PLAYER_LOG_FILE "$ENV{HOME}/.config/${OV_CONFIG_SUBDIR}/log/openvibe-scenario-player.log")
 ELSEIF(WIN32)
-	SET(OVT_OPENVIBE_PLAYER_LOG_FILE "$ENV{APPDATA}/openvibe/log/openvibe-scenario-player.log")
+	SET(OVT_OPENVIBE_PLAYER_LOG_FILE "$ENV{APPDATA}/${OV_CONFIG_SUBDIR}/log/openvibe-scenario-player.log")
 ENDIF()
 
 FILE(TO_CMAKE_PATH ${OVT_OPENVIBE_PLAYER_LOG_FILE} OVT_OPENVIBE_PLAYER_LOG_FILE)

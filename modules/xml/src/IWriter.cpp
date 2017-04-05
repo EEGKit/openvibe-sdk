@@ -21,7 +21,7 @@ namespace XML
 		virtual void release(void);
 
 	private:
-		void sanitize(string& sString);
+		void sanitize(string& sString, bool escapeQuotes = true);
 
 	protected:
 		IWriterCallback& m_rWriterCallback;
@@ -87,7 +87,7 @@ boolean CWriter::setChildData(const char* sData)
 	}
 
 	string l_sData(sData);
-	this->sanitize(l_sData);
+	this->sanitize(l_sData, false);
 
 	m_rWriterCallback.write(l_sData.c_str());
 	m_bHasChild=false;
@@ -161,7 +161,7 @@ void CWriter::release(void)
 	delete this;
 }
 
-void CWriter::sanitize(string& sString)
+void CWriter::sanitize(string& sString, bool escapeQuotes)
 {
 	string::size_type i;
 	if(sString.length()!=0)
@@ -169,13 +169,19 @@ void CWriter::sanitize(string& sString)
 		// mandatory, this one should be the first because the other ones add & symbols
 		for(i=sString.find("&", 0); i!=string::npos; i=sString.find("&", i+1))
 			sString.replace(i, 1, "&amp;");
-		// other escape sequences
-		for(i=sString.find("\"", 0); i!=string::npos; i=sString.find("\"", i+1))
-			sString.replace(i, 1, "&quot;");
 		for(i=sString.find("<", 0); i!=string::npos; i=sString.find("<", i+1))
 			sString.replace(i, 1, "&lt;");
 		for(i=sString.find(">", 0); i!=string::npos; i=sString.find(">", i+1))
 			sString.replace(i, 1, "&gt;");
+
+		// Quotes need only be escaped in attributes
+		if (escapeQuotes)
+		{
+			for(i=sString.find("'", 0); i!=string::npos; i=sString.find("'", i+1))
+				sString.replace(i, 1, "&apos;");
+			for(i=sString.find("\"", 0); i!=string::npos; i=sString.find("\"", i+1))
+				sString.replace(i, 1, "&quot;");
+		}
 	}
 }
 

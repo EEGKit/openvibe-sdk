@@ -133,13 +133,15 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean setAlgorithmClassIdentifier(const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)
 			{
-				OV_ERROR_UNLESS_KRF(
-					rAlgorithmClassIdentifier == OVP_ClassId_BoxAlgorithm_Metabox || this->getKernelContext().getPluginManager().canCreatePluginObject(rAlgorithmClassIdentifier),
-					"Box algorithm descriptor not found " << rAlgorithmClassIdentifier.toString(),
-					ErrorType::ResourceNotFound
-				);
-
+				// We need to set the box algorithm identifier in any case. This is because OpenViBE should be able to load
+				// a scenario with non-existing boxes and save it without modifying them.
 				m_oAlgorithmClassIdentifier=rAlgorithmClassIdentifier;
+
+				if (!(rAlgorithmClassIdentifier == OVP_ClassId_BoxAlgorithm_Metabox || this->getKernelContext().getPluginManager().canCreatePluginObject(rAlgorithmClassIdentifier)))
+				{
+					OV_WARNING_K("Box algorithm descriptor not found " << rAlgorithmClassIdentifier.toString());
+					return true;
+				}
 
 				if(m_pBoxAlgorithmDescriptor && m_pBoxListener)
 				{

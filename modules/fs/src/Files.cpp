@@ -33,6 +33,13 @@ FILE* Files::open(const char* sFile, const char* sMode)
 	return fHandle;
 }
 
+FILE* Files::popen(const char* sFile, const char* sMode)
+{
+	FILE* fHandle = ::popen(sFile, sMode);
+
+	return fHandle;
+}
+
 void Files::openOFStream(std::ofstream& rStream, const char* sFile, std::ios_base::openmode oMode)
 {
 	rStream.open(sFile, oMode);
@@ -65,6 +72,25 @@ FILE* Files::open(const char* sFile, const char* sMode)
 	catch (const std::logic_error&)
 	{
 		fHandle = fopen(sFile, sMode);
+	}
+
+	return fHandle;
+}
+
+FILE* Files::popen(const char* sFile, const char* sMode)
+{
+	FILE* fHandle;
+
+	try
+	{
+		wstring l_sUTF16FileName = Common::Converter::utf8_to_utf16(sFile);
+		wstring l_sUTF16Mode = Common::Converter::utf8_to_utf16(sMode);
+
+		fHandle = _wpopen(l_sUTF16FileName.c_str(), l_sUTF16Mode.c_str());
+	}
+	catch (const std::logic_error&)
+	{
+		fHandle = popen(sFile, sMode);
 	}
 
 	return fHandle;
@@ -104,15 +130,15 @@ void Files::openFStream(std::fstream& rStream, const char* sFile, std::ios_base:
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-boolean Files::equals(const char* pFile1, const char* pFile2)
+bool Files::equals(const char* pFile1, const char* pFile2)
 {
 	bool l_bResult=true;
 	if(pFile1 && pFile2)
 	{
 		struct stat l_oStat1;
 		struct stat l_oStat2;
-		boolean l_bStat1=!stat(pFile1, &l_oStat1);
-		boolean l_bStat2=!stat(pFile2, &l_oStat2);
+		bool l_bStat1=!stat(pFile1, &l_oStat1);
+		bool l_bStat2=!stat(pFile2, &l_oStat2);
 
 		if(!l_bStat1 && !l_bStat2)
 		{
@@ -136,9 +162,9 @@ boolean Files::equals(const char* pFile1, const char* pFile2)
 
 #elif defined TARGET_OS_Windows
 
-FS::boolean Files::equals(const char* pFile1, const char* pFile2)
+bool Files::equals(const char* pFile1, const char* pFile2)
 {
-	boolean l_bResult=true;
+	bool l_bResult=true;
 	if(pFile1 && pFile2)
 	{
 		::HANDLE l_pHandle1=::CreateFile(pFile1, 0, FILE_SHARE_DELETE|FILE_SHARE_READ|FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
@@ -184,7 +210,7 @@ FS::boolean Files::equals(const char* pFile1, const char* pFile2)
 
 #endif
 
-FS::boolean Files::fileExists(const char *pathToCheck) {
+bool Files::fileExists(const char *pathToCheck) {
 	if(!pathToCheck) 
 	{
 		return false;
@@ -198,7 +224,7 @@ FS::boolean Files::fileExists(const char *pathToCheck) {
 	}
 }
 
-FS::boolean Files::directoryExists(const char *pathToCheck) {
+bool Files::directoryExists(const char *pathToCheck) {
 	if(!pathToCheck) 
 	{
 		return false;

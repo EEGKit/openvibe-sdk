@@ -1,7 +1,5 @@
 #include "ovpCBoxAlgorithmStimulationMultiplexer.h"
 
-#include <limits>
-
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
@@ -11,149 +9,119 @@ using namespace OpenViBEPlugins::Stimulation;
 
 using namespace std;
 
-/*
-uint64 CBoxAlgorithmStimulationMultiplexer::getClockFrequency(void)
+bool CBoxAlgorithmStimulationMultiplexer::initialize(void)
 {
-	return 0; // the box clock frequency
-}
-*/
+	const IBox& staticBoxContext=this->getStaticBoxContext();
 
-boolean CBoxAlgorithmStimulationMultiplexer::initialize(void)
-{
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-
-	m_vStreamDecoder.resize(getStaticBoxContext().getInputCount());
-	m_vStreamDecoderEndTime.resize(getStaticBoxContext().getInputCount());
-	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
+	m_StimulationDecoders.resize(staticBoxContext.getInputCount());
+	unsigned int inputIndex = 0;
+	for (auto& stimulationDecoder : m_StimulationDecoders)
 	{
-		m_vStreamDecoder[i]=&getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamDecoder));
-		m_vStreamDecoder[i]->initialize();
-		m_vStreamDecoderEndTime[i]=0;
+		stimulationDecoder.initialize(*this, inputIndex);
+		inputIndex += 1;
 	}
-	m_pStreamEncoder=&getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamEncoder));
-	m_pStreamEncoder->initialize();
 
-	m_ui64LastStartTime=0;
-	m_ui64LastEndTime=0;
-	m_bHasSentHeader=false;
+	m_StimulationEncoder.initialize(*this, 0);
+
+	m_StreamDecoderEndTimes = std::vector<uint64>(staticBoxContext.getInputCount(), 0ULL);
+
+	m_LastStartTime = 0;
+	m_LastEndTime = 0;
+	m_WasHeaderSent = false;
 
 	return true;
 }
 
-boolean CBoxAlgorithmStimulationMultiplexer::uninitialize(void)
+bool CBoxAlgorithmStimulationMultiplexer::uninitialize(void)
 {
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-
-	m_pStreamEncoder->uninitialize();
-	getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
-	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
+	for (auto& stimulationDecoder : m_StimulationDecoders)
 	{
-		m_vStreamDecoder[i]->uninitialize();
-		getAlgorithmManager().releaseAlgorithm(*m_vStreamDecoder[i]);
+		stimulationDecoder.uninitialize();
 	}
-	m_vStreamDecoder.clear();
+
+	m_StimulationEncoder.uninitialize();
 
 	return true;
 }
 
-boolean CBoxAlgorithmStimulationMultiplexer::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmStimulationMultiplexer::processInput(uint32)
 {
-	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
+	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmStimulationMultiplexer::process(void)
+bool CBoxAlgorithmStimulationMultiplexer::process(void)
 {
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
+	const IBox& staticBoxContext = this->getStaticBoxContext();
+	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	uint32 i,j,k;
-
-	TParameterHandler < IMemoryBuffer* > l_opMemoryBuffer(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
-
-	if(!m_bHasSentHeader)
+	if (!m_WasHeaderSent)
 	{
-		l_opMemoryBuffer=l_rDynamicBoxContext.getOutputChunk(0);
-		m_pStreamEncoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeHeader);
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, m_ui64LastEndTime);
-		m_bHasSentHeader=true;
+		m_StimulationEncoder.encodeHeader();
+		dynamicBoxContext.markOutputAsReadyToSend(0, m_LastEndTime, m_LastEndTime);
+		m_WasHeaderSent = true;
 	}
 
-	uint64 l_ui64ReadChunkMinEndTime = std::numeric_limits<uint64>::max();
-	for(i=0; i<l_rStaticBoxContext.getInputCount(); i++)
+	uint64 earliestReceivedChunkEndTime = 0xffffffffffffffffULL;
+
+	for (uint32 input = 0; input < staticBoxContext.getInputCount(); ++input)
 	{
-		for(j=0; j<l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32 chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(input); ++chunk)
 		{
-			TParameterHandler < const IMemoryBuffer* > l_ipMemoryBuffer(m_vStreamDecoder[i]->getInputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_InputParameterId_MemoryBufferToDecode));
-			l_ipMemoryBuffer=l_rDynamicBoxContext.getInputChunk(i, j);
-			m_vStreamDecoder[i]->process();
+			m_StimulationDecoders[input].decode(chunk);
 
-			if(m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader))
+			if (m_StimulationDecoders[input].isBufferReceived())
 			{
-			}
-
-			if(m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
-			{
-				TParameterHandler < IStimulationSet* > l_opStimulationSet(m_vStreamDecoder[i]->getOutputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_OutputParameterId_StimulationSet));
-				for(k=0; k<l_opStimulationSet->getStimulationCount(); k++)
+				for(uint32 stimulation = 0; stimulation < m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationCount(); ++stimulation)
 				{
-					SStimulation l_oStimulation;
-					l_oStimulation.m_ui64Identifier=l_opStimulationSet->getStimulationIdentifier(k);
-					l_oStimulation.m_ui64Date=l_opStimulationSet->getStimulationDate(k);
-					l_oStimulation.m_ui64Duration=l_opStimulationSet->getStimulationDuration(k);
-					m_vStimulation.insert(make_pair(l_oStimulation.m_ui64Date, l_oStimulation));
+					m_vStimulation.insert(std::make_pair(
+											  m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
+											  std::make_tuple(
+												  m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationIdentifier(stimulation),
+												  m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
+												  m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation)
+												  )));
+
 				}
+
 			}
 
-			if(m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedEnd))
-			{
-			}
-
-			m_vStreamDecoderEndTime[i]=l_rDynamicBoxContext.getInputChunkEndTime(i, j);
-			l_rDynamicBoxContext.markInputAsDeprecated(i, j);
+			m_StreamDecoderEndTimes[input] = dynamicBoxContext.getInputChunkEndTime(input, chunk);
 		}
 
-		if(l_ui64ReadChunkMinEndTime > m_vStreamDecoderEndTime[i])
+		if (earliestReceivedChunkEndTime > m_StreamDecoderEndTimes[input])
 		{
-			l_ui64ReadChunkMinEndTime=m_vStreamDecoderEndTime[i];
+			earliestReceivedChunkEndTime = m_StreamDecoderEndTimes[input];
 		}
 	}
 
-	if(l_ui64ReadChunkMinEndTime!=m_ui64LastEndTime)
+	if (earliestReceivedChunkEndTime >= m_LastEndTime)
 	{
-		multimap < uint64, SStimulation >::iterator it;
-		multimap < uint64, SStimulation >::iterator it_backup;
-		multimap < uint64, SStimulation > l_vStimulationToSend;
-		for(it=m_vStimulation.begin(); it!=m_vStimulation.end(); )
+		m_StimulationEncoder.getInputStimulationSet()->clear();
+
+		for (auto stimulation = m_vStimulation.begin(); stimulation != m_vStimulation.end();)
 		{
-			if(it->first < l_ui64ReadChunkMinEndTime)
+			if (stimulation->first < earliestReceivedChunkEndTime)
 			{
-				it_backup=it;
-				++it;
-				l_vStimulationToSend.insert(make_pair(it_backup->first, it_backup->second));
-				m_vStimulation.erase(it_backup);
+				m_StimulationEncoder.getInputStimulationSet()->appendStimulation(
+							std::get<0>(stimulation->second),
+							std::get<1>(stimulation->second),
+							std::get<2>(stimulation->second)
+							);
+				stimulation = m_vStimulation.erase(stimulation);
 			}
 			else
 			{
-				++it;
+				++stimulation;
 			}
 		}
 
-		TParameterHandler < IStimulationSet* > l_ipStimulationSet(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
-		l_ipStimulationSet->setStimulationCount(l_vStimulationToSend.size());
-		for(k=0, it=l_vStimulationToSend.begin(); it!=l_vStimulationToSend.end(); ++it, k++)
-		{
-			l_ipStimulationSet->setStimulationIdentifier(k, it->second.m_ui64Identifier);
-			l_ipStimulationSet->setStimulationDate(k, it->second.m_ui64Date);
-			l_ipStimulationSet->setStimulationDuration(k, it->second.m_ui64Duration);
-		}
+		m_StimulationEncoder.encodeBuffer();
 
-		l_opMemoryBuffer=l_rDynamicBoxContext.getOutputChunk(0);
-		m_pStreamEncoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeBuffer);
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, l_ui64ReadChunkMinEndTime);
+		dynamicBoxContext.markOutputAsReadyToSend(0, m_LastEndTime, earliestReceivedChunkEndTime);
 
-		m_ui64LastStartTime=m_ui64LastEndTime;
-		m_ui64LastEndTime=l_ui64ReadChunkMinEndTime;
+		m_LastStartTime = m_LastEndTime;
+		m_LastEndTime = earliestReceivedChunkEndTime;
 	}
 
 	return true;

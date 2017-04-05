@@ -369,7 +369,6 @@ SchedulerInitializationCode CScheduler::initialize(void)
 	CIdentifier l_oBoxIdentifier;
 	while((l_oBoxIdentifier = m_pScenario->getNextBoxIdentifier(l_oBoxIdentifier)) != OV_UndefinedIdentifier)
 	{
-		int l_iPriority;
 		const IBox* l_pBox = m_pScenario->getBoxDetails(l_oBoxIdentifier);
 
 		OV_ERROR_UNLESS_K(
@@ -389,13 +388,6 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		const IPluginObjectDesc* l_pBoxDesc=this->getPluginManager().getPluginObjectDescCreating(l_pBox->getAlgorithmClassIdentifier());
 
 		OV_ERROR_UNLESS_K(
-			l_pBoxDesc != nullptr,
-			"Failed to create runtime box [" << l_pBox->getName() << "] with class identifier [" << l_oBoxIdentifier.toString() << "]",
-			ErrorType::BadResourceCreation,
-			SchedulerInitialization_Failed
-		);
-
-		OV_ERROR_UNLESS_K(
 			!(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled) &&
 		      this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsDisabled}", false)),
 			"Disabled box [" << l_pBox->getName() << "] with class identifier [" << l_oBoxIdentifier.toString() << "] detected in the scenario",
@@ -405,13 +397,25 @@ SchedulerInitializationCode CScheduler::initialize(void)
 
 		if(!l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
 		{
+			OV_ERROR_UNLESS_K(
+			            l_pBoxDesc != nullptr,
+			            "Failed to create runtime box [" << l_pBox->getName() << "] with class identifier [" << l_oBoxIdentifier.toString() << "]",
+			            ErrorType::BadResourceCreation,
+			            SchedulerInitialization_Failed
+			            );
+
 			CSimulatedBox* l_pSimulatedBox=new CSimulatedBox(this->getKernelContext(), *this);
 			l_pSimulatedBox->setScenarioIdentifier(m_oScenarioIdentifier);
 			l_pSimulatedBox->setBoxIdentifier(l_oBoxIdentifier);
 
+
+			int l_iPriority = 0;
 			try
 			{
-				l_iPriority = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
+				if (l_pBox->hasAttribute(OV_AttributeId_Box_Priority))
+				{
+					l_iPriority = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
+				}
 			}
 			catch(const std::exception&)
 			{

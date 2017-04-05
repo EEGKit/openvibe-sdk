@@ -111,6 +111,21 @@ add_component(TOOLS "certivibe-plugins-tools")
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 
+# Install binary dependencies if requested
+if(DEPENDENCIES IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
+	if(WIN32)
+		INSTALL(
+			FILES
+			${PATH_CERTIVIBE}/bin/libexpat.dll
+			${PATH_CERTIVIBE}/bin/libexpatw.dll
+			${PATH_CERTIVIBE}/bin/xerces-c_3_1.dll
+			${PATH_CERTIVIBE}/bin/xerces-c_3_1D.dll
+			DESTINATION ${DEST_LIB_DIR})
+		INSTALL(DIRECTORY ${PATH_CERTIVIBE}/include/ DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+		INSTALL(DIRECTORY ${PATH_CERTIVIBE}/lib/ DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+	endif()
+endif()
+
 # if we link with the module socket in Static, we must link the project with the dependency on win32
 if(WIN32 AND SOCKET IN_LIST INCLUDED_CERTIVIBE_COMPONENTS AND NOT DYNAMIC_LINK_CERTIVIBE)
 	include("FindThirdPartyWinsock2")

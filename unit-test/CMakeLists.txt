@@ -53,9 +53,6 @@ INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIRS})
 # On Windows and Linux, some environment setting scripts are needed to ease the testing process
 SET(OVT_SCRIPT_DIR ${OV_BASE_BIN_DIR}/scripts)
 IF(WIN32)
-	# Script set the environment variable needed by the tests
-	CONFIGURE_FILE(${OV_BASE_DIR}/scripts/windows-set-test-environment.cmd-base
-				   ${OVT_SCRIPT_DIR}/openvibe-test-set-environment.cmd)
 	# Wrapper script that set the environment and launch ctest
 	# It is located at build directory root to be as close as possible as standard ctest use
 	CONFIGURE_FILE(${OV_BASE_DIR}/scripts/windows-ctest-launcher.cmd-base

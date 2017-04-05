@@ -87,6 +87,14 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
+			virtual OpenViBE::boolean onDefaultInitialized(OpenViBE::Kernel::IBox& rBox)
+			{
+				rBox.setOutputName(0, "Output Signal");
+				rBox.setOutputType(0, OV_TypeId_Signal);
+				rBox.addOutput("Output Stimulations", OV_TypeId_Stimulations);
+				return true;
+			}
+
 			virtual OpenViBE::boolean onOutputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
 				rBox.setOutputType(ui32Index, OV_TypeId_EBMLStream);

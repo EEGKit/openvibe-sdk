@@ -15,6 +15,7 @@ SET(OV_GLOBAL_VERSION_STRING "${OV_GLOBAL_VERSION_MAJOR}.${OV_GLOBAL_VERSION_MIN
 # Default is to build to dist/. If you wish a custom install, set your own MAKE_INSTALL_PREFIX when you call CMake. Safest to do under a fakeroot.
 MESSAGE(STATUS "Appending compilation flags...")
 
+SET(OV_CONFIG_SUBDIR "${PROJECT_NAME}" CACHE STRING "Subdirectory under user directory when configuration and logs will be saved")
 SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies")
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
@@ -26,6 +27,8 @@ IF(NOT(APPLE))
 	ENDIF(OPENMP_FOUND)
 ENDIF()
 
+
+ADD_DEFINITIONS("-DOV_CONFIG_SUBDIR=\"${OV_CONFIG_SUBDIR}\"")
 ADD_DEFINITIONS("-DOV_PROJECT_NAME=\"${PROJECT_NAME}\"")
 ADD_DEFINITIONS("-DOV_VERSION_MAJOR=\"${OV_GLOBAL_VERSION_MAJOR}\"")
 ADD_DEFINITIONS("-DOV_VERSION_MINOR=\"${OV_GLOBAL_VERSION_MINOR}\"")
@@ -167,6 +170,7 @@ IF(OV_PACKAGE)
 	SET(DIST_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
 	SET(DIST_DATADIR ${CMAKE_INSTALL_DATADIR})
 	SET(CPACK_GENERATOR "ZIP")
+	SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
 	SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "CertiViBE")
 	SET(CPACK_PACKAGE_VENDOR "Inria & Mensia Technologies")
 	SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
@@ -220,10 +224,10 @@ IF(BUILD_TESTING)
 ENDIF()
 
 # make a copy of the dependency script, this is done so we can use the same launch scripts both in win install and win devel situations.
-IF(WIN32)
-	SET(ABSOLUTE_PATH_DEPENDENCIES ${OV_CUSTOM_DEPENDENCIES_PATH})
-	CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/scripts/windows-set-environment.cmd-base "${DIST_BINDIR}/openvibe-set-env.cmd")
-ENDIF(WIN32)
+#IF(WIN32)
+#	SET(ABSOLUTE_PATH_DEPENDENCIES ${OV_CUSTOM_DEPENDENCIES_PATH})
+#	CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/scripts/windows-set-environment.cmd-base "${DIST_BINDIR}/openvibe-set-env.cmd")
+#ENDIF(WIN32)
 
 # add the scripts to the project so IDEs using the CMake file are aware of them
 FILE(GLOB_RECURSE script_files scripts/*.cmd scripts/*.sh scripts/*.nsi scripts/*.cmake)

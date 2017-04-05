@@ -4,7 +4,8 @@ REM Store path
 SET PATH_BACKUP=%PATH%
 
 REM Set test environment
-call @OVT_SCRIPT_DIR@/openvibe-test-set-environment.cmd
+set PATH=@OV_CUSTOM_DEPENDENCIES_PATH@\cmake\bin\;%PATH%
+set PATH=@DIST_BINDIR@\;%PATH%
 IF EXIST unit-test\NUL (
 	PUSHD unit-test
 	REM Execute ctest forwarding the arguments

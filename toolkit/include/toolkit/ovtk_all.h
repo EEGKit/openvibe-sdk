@@ -31,6 +31,7 @@
 //                                                                   //
 
 #include "codecs/ovtkTCodec.h"
+#include "codecs/ovtkTGenericCodec.h"
 #include "codecs/encoders/ovtkTEncoder.h"
 #include "codecs/decoders/ovtkTDecoder.h"
 

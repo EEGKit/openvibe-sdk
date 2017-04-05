@@ -15,7 +15,7 @@ boolean CBoxAlgorithmEpochAverage::initialize(void)
 {
 	CIdentifier l_oInputTypeIdentifier;
 	getStaticBoxContext().getInputType(0, l_oInputTypeIdentifier);
-	if(l_oInputTypeIdentifier==OV_TypeId_StreamedMatrix)
+	if(l_oInputTypeIdentifier==OV_TypeId_StreamedMatrix || l_oInputTypeIdentifier==OV_TypeId_TimeFrequency)
 	{
 		m_pStreamDecoder=&getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder));
 		m_pStreamEncoder=&getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamEncoder));
@@ -81,16 +81,21 @@ boolean CBoxAlgorithmEpochAverage::initialize(void)
 
 boolean CBoxAlgorithmEpochAverage::uninitialize(void)
 {
-	ip_ui64AveragingMethod.uninitialize();
-	ip_ui64MatrixCount.uninitialize();
+	CIdentifier l_oInputTypeIdentifier;
+	getStaticBoxContext().getInputType(0, l_oInputTypeIdentifier);
+	if(l_oInputTypeIdentifier==OV_TypeId_StreamedMatrix || l_oInputTypeIdentifier==OV_TypeId_FeatureVector || l_oInputTypeIdentifier==OV_TypeId_Signal || l_oInputTypeIdentifier==OV_TypeId_Spectrum)
+	{
+		ip_ui64AveragingMethod.uninitialize();
+		ip_ui64MatrixCount.uninitialize();
 
-	m_pMatrixAverage->uninitialize();
-	m_pStreamEncoder->uninitialize();
-	m_pStreamDecoder->uninitialize();
+		m_pMatrixAverage->uninitialize();
+		m_pStreamEncoder->uninitialize();
+		m_pStreamDecoder->uninitialize();
 
-	getAlgorithmManager().releaseAlgorithm(*m_pMatrixAverage);
-	getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
-	getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
+		getAlgorithmManager().releaseAlgorithm(*m_pMatrixAverage);
+		getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
+		getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
+	}
 
 	return true;
 }

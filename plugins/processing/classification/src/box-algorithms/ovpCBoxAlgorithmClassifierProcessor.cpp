@@ -230,10 +230,7 @@ boolean CBoxAlgorithmClassifierProcessor::process(void)
 			{
 				if(m_oStimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(i) == OVTK_StimulationId_TrainCompleted)
 				{
-					const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-
-					CString l_sConfigurationFilename;
-					l_rStaticBoxContext.getSettingValue(0, l_sConfigurationFilename);
+					CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
 					if(!loadClassifier(l_sConfigurationFilename.toASCIIString()))
 					{

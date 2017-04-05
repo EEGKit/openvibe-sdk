@@ -1,7 +1,9 @@
 #ifndef __OpenViBEKernel_Kernel_Player_CPlayerContext_H__
 #define __OpenViBEKernel_Kernel_Player_CPlayerContext_H__
 
+#include "ovkCBoxAlgorithmLogManager.h"
 #include "../ovkTKernelObject.h"
+#include <memory>
 
 namespace OpenViBE
 {
@@ -61,6 +63,7 @@ namespace OpenViBE
 			OpenViBE::Kernel::IErrorManager& m_rErrorManager;
 			OpenViBE::Kernel::IScenarioManager& m_rScenarioManager;
 			OpenViBE::Kernel::ITypeManager& m_rTypeManager;
+			mutable OpenViBE::Kernel::CBoxAlgorithmLogManager m_BoxLogManager;
 		};
 	};
 };

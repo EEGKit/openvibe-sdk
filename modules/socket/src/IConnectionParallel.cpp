@@ -106,6 +106,7 @@ namespace Socket
 				m_iFile = -1;
 			}*/
 #endif
+
 		}
 
 		bool isReadyToSend(Socket::uint32 ui32TimeOut = 0) const
@@ -223,6 +224,8 @@ namespace Socket
 			return m_iFile != 0;
 
 #endif
+
+			return false;
 		}
 
 		void release(void)

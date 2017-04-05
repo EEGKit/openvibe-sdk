@@ -1128,7 +1128,6 @@ CIdentifier CScenario::getUnusedIdentifier(const CIdentifier& suggestedIdentifie
 
 bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 {
-	// Use this once we stop using archeological compilers
 	for (auto box : m_Boxes)
 	{
 
