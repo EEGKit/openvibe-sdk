@@ -18,26 +18,30 @@
 # along with this program.
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
-import sys, os
+import sys, os, re
 
 #arg 1 repository of the openvibe logs
 #arg 2 keyword to search in the log file to get the line where the measure was
 #arg 3 Threshold, the measure should be lower
+if len(sys.argv) < 4 :
+    print('incorrect args')
+    sys.exit(101)
 openvibeLogs=sys.argv[1]
 keyWord=sys.argv[2]
 threshold=float(sys.argv[3])
 
-#Function to select the line containing the keyword
-#the exception 103 is raised if file is missing
-def selectLineContainingWord (file,searchingWord):
+def selectLineContainingWord (filename, searchingWord):
+    """ Function to select the line containing the keyword
+    the exception 103 is raised if file is missing 
+    """
     try:
-        for line in open(file):
-            for word in line.split():
-                if word ==searchingWord:
-                   selectedLine=line.split()
-                   return selectedLine
+        spaced_word = ' %s ' % searchingWord
+        with open(filename) as file :
+            for line in file:
+                if spaced_word in line :
+                    return line
 
-#Exception raised if the log file wasn't created        
+    #Exception raised if the log file wasn't created
     except FileNotFoundError:
         print('missing %s'%file)
         sys.exit(103)
@@ -45,12 +49,8 @@ def selectLineContainingWord (file,searchingWord):
 try:
     #Call the selectLineContainingWord function with the input parameter
     workingLine=selectLineContainingWord(openvibeLogs,keyWord)
-    
-    #Get the index of the word: is in the line 
-    getLineSize=workingLine.index('is')
-
-    #Get the measure and convert into float
-    getPercentageValue=float(workingLine[getLineSize+1].replace('%',''))
+	
+    getPercentageValue = float(re.search('accuracy\s+is\s+(\d+(?:\.\d+))\%', workingLine).group(1))
 
     #check if the measure is under the threshold excpected
     if getPercentageValue >= threshold:
@@ -74,10 +74,5 @@ except:
     raise
 
 sys.exit()
-
-
-
-
-
 
  

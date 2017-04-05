@@ -67,7 +67,7 @@ FOREACH(SCENARIO ${TEST_SCENARIOS})
 	# Launch the scenario with all boxes to test
 	-DCMD2="${OVT_OPENVIBE_PLAYER} --mode=x --play-mode=ff --max-time=2000 --config-file=${OVT_OPENVIBE_DATA}/openvibe.conf --scenario-file=${SCENARIO_TO_TEST}"
 	# Compare result with reference file
-	-DCMD3="${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/csv-analyser.py ${CMAKE_CURRENT_SOURCE_DIR}/reference.csv ${OVT_TEST_TEMPORARY_DIR}/test-timeout.csv"
+	-DCMD3="${PYTHON_EXECUTABLE} ${OVT_VALIDATION_TOOLKIT_PATH}/csv-analyser.py ${CMAKE_CURRENT_SOURCE_DIR}/reference.csv ${OVT_TEST_TEMPORARY_DIR}/test-timeout.csv"
 	-P ${OVT_CMAKE_DIR}/OvtRunMultipleCommand.cmake
 	)
 	

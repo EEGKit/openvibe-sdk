@@ -29,7 +29,6 @@ function usage()
 # variables
 ov_script_dir="${PWD}"
 ov_build_type=Release
-ov_test_data_dir="${ov_script_dir}/../dependencies/test-data"
 verbose=0
 package_option="FALSE"
 
@@ -68,7 +67,7 @@ do
 			shift
 			;;
 		--test-data-dir=*)
-			ov_test_data_dir="${i#*=}"
+			ov_test_data_dir="-DOVT_TEST_DATA_DIR=${i#*=}"
 			shift
 			;;
 		--make-package)
@@ -155,7 +154,7 @@ cmake ${ov_script_dir}/.. \
 		-G Ninja \
 		-DCMAKE_BUILD_TYPE=${ov_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${ov_install_dir} \
-		-DOVT_TEST_DATA_DIR=${ov_test_data_dir} \
+		${ov_test_data_dir} \
 		-DOV_PACKAGE=${package_option} \
 		-DBUILD_UNIT_TEST=${ov_build_unit} \
 		-DBUILD_VALIDATION_TEST=${ov_build_validation} \

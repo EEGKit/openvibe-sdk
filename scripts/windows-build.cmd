@@ -31,7 +31,7 @@ goto parameter_parse
 :parameter_parse
 for %%A in (%*) DO (
 	if defined next_is_test_data_dir (
-		set ov_cmake_test_data="%%A"
+		set ov_cmake_test_data="-DOVT_TEST_DATA_DIR=%%A"
 		set next_is_test_data_dir=
 	) else if defined next_is_test_output_dir (
 		set ov_cmake_test_output="%%A"
@@ -74,9 +74,7 @@ call "windows-initialize-environment.cmd"
 set script_dir=%CD%
 set build_dir=%script_dir%\..\..\certivibe-build\build-%BuildType%
 set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
-if not defined ov_cmake_test_data (
-	set ov_cmake_test_data=%build_dir%\data\input
-)
+
 if not defined ov_cmake_test_output (
 	set ov_cmake_test_output=%build_dir%\validation-test-output\
 )
@@ -95,7 +93,7 @@ if %CallCmake%=="true" (
 		-DOV_PACKAGE=%PackageOption% ^
 		-DBUILD_UNIT_TEST=%ov_build_unit% ^
 		-DBUILD_VALIDATION_TEST=%ov_build_validation% ^
-		-DOVT_TEST_DATA_DIR=%ov_cmake_test_data% ^
+		%ov_cmake_test_data% ^
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=%ov_cmake_test_output%
 )
 

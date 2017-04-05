@@ -78,13 +78,13 @@ FOREACH(SCENARIO ${TEST_SCENARIOS})
 	-DCMD2="${OVT_OPENVIBE_PLAYER} --mode=x --max-time=2000 --play-mode=ff --config-file=${OVT_OPENVIBE_DATA}/openvibe.conf --scenario-file=${LDA_TEST}-${SCENARIO}.xml"
 		
 	# Launch python checking module
-	-DCMD3="${PYTHON_EXECUTABLE} ${OVT_PYTHON_TOOL_DIR}/accuracy.py ${OVT_OPENVIBE_PLAYER_LOG_FILE} Cross-validation 55"
+	-DCMD3="${PYTHON_EXECUTABLE} ${OVT_VALIDATION_TOOLKIT_PATH}/accuracy.py ${OVT_OPENVIBE_PLAYER_LOG_FILE} Cross-validation 55"
 	
 	# Launch Classification scenario
 	-DCMD4="${OVT_OPENVIBE_PLAYER} --mode=x --max-time=2000 --play-mode=ff --config-file=${OVT_OPENVIBE_DATA}/openvibe.conf --scenario-file=${LDA_TEST}-Classification-${SCENARIO}.xml"
 	
 	# Launch python checking classification result
-	-DCMD5="${PYTHON_EXECUTABLE} ${OVT_PYTHON_TOOL_DIR}/classification.py ${OVT_TEST_TEMPORARY_DIR}/before-classification-${SCENARIO}.csv ${OVT_TEST_TEMPORARY_DIR}/after-classification-${SCENARIO}.csv ${OVT_TEST_DATA_DIR}/classificationreference-${SCENARIO}.txt"
+	-DCMD5="${PYTHON_EXECUTABLE} ${OVT_VALIDATION_TOOLKIT_PATH}/classification.py ${OVT_TEST_TEMPORARY_DIR}/before-classification-${SCENARIO}.csv ${OVT_TEST_TEMPORARY_DIR}/after-classification-${SCENARIO}.csv ${OVT_TEST_DATA_DIR}/classificationreference-${SCENARIO}.txt"
 	
 
 	
