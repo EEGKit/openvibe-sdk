@@ -336,9 +336,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 		{
 			// Only try to set scenario output links from boxes that actually exist
 			// This enables the usage of header-only importers
-			if (l_rSymbolicScenario.m_vBox.end() != std::find_if(l_rSymbolicScenario.m_vBox.begin(), l_rSymbolicScenario.m_vBox.end(), [&symbolicScenarioOutput](SBox box) {
-				return box.m_oIdentifier == symbolicScenarioOutput.m_oLinkedBoxIdentifier;
-			}))
+			if (std::any_of(l_rSymbolicScenario.m_vBox.begin(), l_rSymbolicScenario.m_vBox.end(), [&symbolicScenarioOutput](SBox box) { return box.m_oIdentifier == symbolicScenarioOutput.m_oLinkedBoxIdentifier; }))
 			{
 				l_pScenario->setScenarioOutputLink(l_ui32ScenarioOutputIndex, symbolicScenarioOutput.m_oLinkedBoxIdentifier, symbolicScenarioOutput.m_ui32LinkedBoxOutputIndex);
 			}
