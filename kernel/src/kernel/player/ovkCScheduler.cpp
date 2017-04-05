@@ -216,13 +216,13 @@ boolean CScheduler::flattenScenario()
 			CIdentifier l_oMetaboxScenarioTemplateIdentifier;
 
 			OV_ERROR_UNLESS_KRF(
-				m_rPlayer.getRuntimeScenarioManager().importScenarioFromFile(
-					l_oMetaboxScenarioTemplateIdentifier,
-					l_sMetaboxScenarioPath,
-					OVP_GD_ClassId_Algorithm_XMLScenarioImporter),
-				"Failed to import the scenario file",
-				ErrorType::Internal
-			);
+			            m_rPlayer.getRuntimeScenarioManager().importScenarioFromFile(
+			                l_oMetaboxScenarioTemplateIdentifier,
+			                OV_ScenarioImportContext_SchedulerMetaboxImport,
+			                l_sMetaboxScenarioPath),
+			            "Failed to import the scenario file",
+			            ErrorType::Internal
+			            );
 
 			IScenario& l_rMetaboxScenarioInstance = m_rPlayer.getRuntimeScenarioManager().getScenario(l_oMetaboxScenarioTemplateIdentifier);
 

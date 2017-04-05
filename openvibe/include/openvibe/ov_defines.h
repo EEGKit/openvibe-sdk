@@ -216,4 +216,8 @@
 #define OV_Value_EnumeratedStringSeparator                           ';'
 #define OV_Value_RangeStringSeparator                                ':'
 
+// Importer contexts
+
+#define OV_ScenarioImportContext_SchedulerMetaboxImport            OpenViBE::CIdentifier(0xDDBDD59F, 0xE8C76702)
+
 #endif // __OpenViBE_Defines_H__

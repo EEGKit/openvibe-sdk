@@ -67,7 +67,7 @@ namespace OpenViBE
 				{
 				}
 
-				virtual ILogManager& getLogManager(void) const { return m_rLogManager; };
+				virtual ILogManager& getLogManager(void) const { return m_rLogManager; }
 				virtual ITypeManager& getTypeManager(void) const { return m_rTypeManager; }
 				virtual IScenarioManager& getScenarioManager(void) const { return m_rScenarioManager; }
 

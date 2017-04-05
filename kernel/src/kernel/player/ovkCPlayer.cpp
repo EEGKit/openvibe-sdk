@@ -100,6 +100,7 @@ boolean CPlayer::setScenario(
 
 	delete m_pRuntimeScenarioManager;
 	m_pRuntimeScenarioManager = new CScenarioManager(this->getKernelContext());
+	m_pRuntimeScenarioManager->cloneScenarioImportersAndExporters(this->getKernelContext().getScenarioManager());
 
 	OV_ERROR_UNLESS_KRF(
 		m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier),

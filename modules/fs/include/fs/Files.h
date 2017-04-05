@@ -30,7 +30,9 @@ namespace FS
 		static FS::boolean getFilename(const char *sPath, char *sFilename);
 		// Returns a filename component of a path without the extension (essentially boost::filesystem::filename) Output sParentPath needs to be pre-allocated
 		static FS::boolean getFilenameWithoutExtension(const char *sPath, char *sFilename);
-		
+		// Returns the extension component of a path
+		static FS::boolean getFilenameExtension(const char* path, char* fileNameExtension);
+
 #if defined TARGET_OS_Windows
 		static::FS::boolean copyFile(const char* sSourceFile, const char* sDestination);
 #endif
