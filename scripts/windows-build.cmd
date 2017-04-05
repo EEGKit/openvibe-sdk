@@ -74,7 +74,7 @@ if /i "%1" == "-h" (
 	SHIFT
 	Goto parameter_parse
 ) else if /i "%1" == "--test-data-dir" (
-	set ov_cmake_test_data="%2"
+	set ov_cmake_test_data="-DOVT_TEST_DATA_DIR=%2"
 	SHIFT
 	SHIFT
 	Goto parameter_parse
