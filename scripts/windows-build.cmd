@@ -25,52 +25,79 @@ goto parameter_parse
 
 	echo --test-data-dir [dirname] test data directory
 	echo --test-output-dir [dirname] test output files directory
+	echo --python-exec [path] path to the python executable to use
+
 	echo.
 	exit /b
 	
 	
 
 :parameter_parse
-for %%A in (%*) DO (
-	if defined next_is_test_data_dir (
-		set ov_cmake_test_data="-DOVT_TEST_DATA_DIR=%%A"
-		set next_is_test_data_dir=
-	) else if defined next_is_test_output_dir (
-		set ov_cmake_test_output="%%A"
-		set next_is_test_output_dir=
-	) else if /i "%%A"=="-h" (
-		goto print_help
-	) else if /i "%%A"=="--help" (
-		goto print_help
-	) else if /i "%%A"=="--no-pause" (
-		set PauseCommand=echo ""
-	) else if /i "%%A"=="-d" (
-		set BuildType=Debug
-	) else if /i "%%A"=="--debug" (
-		set BuildType=Debug
-	) else if /i "%%A"=="-r" (
-		set BuildType=Release
-	) else if /i "%%A"=="--release" (
-		set BuildType=Release
-	) else if /i "%%A"=="--make-package" (
-		set PackageOption=TRUE
-	) else if /i "%%A"=="--rerun-cmake" (
-		set RerunCmake="true"
-	) else if /i "%%A" == "--build-unit" (
-		set ov_build_unit=true
-	) else if /i "%%A" == "--build-validation" (
-		set ov_build_validation=true
-	) else if /i "%%A" == "--test-data-dir" (
-		set next_is_test_data_dir=1
-	) else if /i "%%A" == "--test-output-dir" (
-		set next_is_test_output_dir=1
-	) else if /i "%%A"=="--userdata-subdir" (
-		set next=USERDATA_SUBDIR
-	) else if "!next!"=="USERDATA_SUBDIR" (
-		set UserDataSubdir=%%A
-		set next=
-	)
+if /i "%1" == "-h" (
+	goto print_help
+) else if /i "%1" == "--help" (
+	goto print_help
+) else if /i "%1" == "--no-pause" (
+	set PauseCommand=echo ""
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "-d" (
+	set BuildType=Debug
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--debug" (
+	set BuildType=Debug
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "-r" (
+	set BuildType=Release
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--release" (
+	set BuildType=Release
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--make-package" (
+	set PackageOption=TRUE
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--rerun-cmake" (
+	set RerunCmake="true"
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--build-unit" (
+	set ov_build_unit=true
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--build-validation" (
+	set ov_build_validation=true
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--test-data-dir" (
+	set ov_cmake_test_data="%2"
+	SHIFT
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--test-output-dir" (
+	set ov_cmake_test_output="%2"
+	SHIFT
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--python-exec" (
+	set python_exec="-DPYTHON_EXECUTABLE=%2"
+	SHIFT
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--userdata-subdir" (
+	set UserDataSubdir="%2"
+	SHIFT
+	SHIFT
+	Goto parameter_parse
+) else if not "%1" == "" (
+	echo unrecognized option [%1]
+	Goto terminate_error
 )
+
 
 echo Build type is set to: %BuildType%.
 
@@ -100,8 +127,9 @@ if %CallCmake%=="true" (
 		-DBUILD_UNIT_TEST=%ov_build_unit% ^
 		-DBUILD_VALIDATION_TEST=%ov_build_validation% ^
 		%ov_cmake_test_data% ^
+		-DOV_CONFIG_SUBDIR=%UserDataSubdir% ^
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=%ov_cmake_test_output% ^
-		-DOV_CONFIG_SUBDIR=%UserDataSubdir%
+		%python_exec%
 )
 
 if not "!ERRORLEVEL!" == "0" goto terminate_error

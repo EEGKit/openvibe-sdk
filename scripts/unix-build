@@ -21,23 +21,21 @@ function usage()
 		echo "--gtest-lib-dir <dirname> : gtest libraries directory (default: ../dependencies/libgtest)"
 		echo "--gtest-include-dir <dirname> : gtest include directory (default: /usr/src/gtest/src)"
 		echo "--test-output-dir <dirname> : test output files directory"
+		echo "--python-exec <path> : path to python executable to use"
 }
 
 # Script starting point
 
 # As options are not mandatory, set some default values for each target
 # variables
-ov_script_dir="${PWD}"
+ov_script_dir="$(dirname $0)"
 ov_build_type=Release
 verbose=0
 package_option="FALSE"
 
-
 ov_build_unit=0
 ov_build_validation=0
-ov_test_script_dir="${PWD}"
-ov_root_dir="${ov_test_script_dir}/../../certivibe-build/dist-Release/"
-gtest_lib_dir="${ov_test_script_dir}/../dependencies/libgtest"
+gtest_lib_dir="${ov_script_dir}/../dependencies/libgtest"
 gtest_include_dir="/usr/src/gtest/src"
 
 # Parse arguments
@@ -89,6 +87,9 @@ while [[ $# -gt 1 ]]; do
 			ov_cmake_test_output="$2"
 			shift
 			;;
+		--python-exec=*)
+			python_exec="-DPYTHON_EXECUTABLE=$2"
+			shift;;
 		*)
 			echo "ERROR: Unknown parameter $i"
 			exit 1
@@ -158,8 +159,7 @@ cmake ${ov_script_dir}/.. \
 		-DGTEST_LIBRARY=${gtest_lib_dir}/libgtest.a \
 		-DGTEST_MAIN_LIBRARY=${gtest_lib_dir}/libgtest_main.a \
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=${ov_cmake_test_output} \
-		${ov_test_script_dir}/../
-
+		${python_exec}
 
 if [[ $? == 0 ]]; then
 	echo "Generation succeeded!"
