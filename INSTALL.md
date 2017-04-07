@@ -5,7 +5,7 @@ Linux Ubuntu (14.04 and 16.04)
 -----------------------------
 - Install the dependencies
   - run `linux-install-dependencies.pl` script; you will require sudo rights
-  - run `unix-get-dependencies.sh` script with an existing CV_DEPENDENCIES_CACHE environment variable or with --cache parameter (OPTIONNAL - for tests)
+  - run `unix-get-dependencies.sh` script with an existing CV_DEPENDENCIES_CACHE environment variable or with --cache parameter (OPTIONAL - for tests)
 
 
 Windows 7 and later
