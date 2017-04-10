@@ -90,6 +90,16 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::boolean addFlag(
 				const OpenViBE::Kernel::EBoxFlag eBoxFlag)=0;
+
+			/**
+			 * \brief Adds a flag to the box
+			 * \param cStringFlag [in] : the flag to add to the box
+			 * \return \e true in case of success.
+			 * \return \e false in case of error.
+			 */
+			virtual OpenViBE::boolean addFlag(
+				const OpenViBE::CString& cStringFlag)=0;
+
 			/**
 			 * \brief Adds a new type supported by inputs of the box
 			  * \param rTypeIdentifier [in] : The type identifier

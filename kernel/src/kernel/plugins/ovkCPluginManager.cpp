@@ -306,7 +306,7 @@ CIdentifier CPluginManager::getPluginObjectHashValue(
 	const IBoxAlgorithmDesc* l_pBoxAlgorithmDesc=dynamic_cast<const IBoxAlgorithmDesc*>(l_pPluginObjectDesc);
 	if(l_pBoxAlgorithmDesc)
 	{
-		SBoxProto l_oBoxPrototype;
+		SBoxProto l_oBoxPrototype(getKernelContext().getTypeManager());
 		l_pBoxAlgorithmDesc->getBoxPrototype(l_oBoxPrototype);
 		return l_oBoxPrototype.m_oHash;
 	}
@@ -315,7 +315,7 @@ CIdentifier CPluginManager::getPluginObjectHashValue(
 
 CIdentifier CPluginManager::getPluginObjectHashValue(const IBoxAlgorithmDesc& rBoxAlgorithmDesc) const
 {
-	SBoxProto l_oBoxPrototype;
+	SBoxProto l_oBoxPrototype(getKernelContext().getTypeManager());
 	rBoxAlgorithmDesc.getBoxPrototype(l_oBoxPrototype);
 	return l_oBoxPrototype.m_oHash;
 }
@@ -327,7 +327,7 @@ bool CPluginManager::isPluginObjectFlaggedAsDeprecated(
 	const IBoxAlgorithmDesc* l_pBoxAlgorithmDesc=dynamic_cast<const IBoxAlgorithmDesc*>(l_pPluginObjectDesc);
 	if(l_pBoxAlgorithmDesc)
 	{
-		SBoxProto l_oBoxPrototype;
+		SBoxProto l_oBoxPrototype(getKernelContext().getTypeManager());
 		l_pBoxAlgorithmDesc->getBoxPrototype(l_oBoxPrototype);
 		return l_oBoxPrototype.m_bIsDeprecated;
 	}

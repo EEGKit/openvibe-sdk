@@ -36,6 +36,7 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean addFlag(
 				const OpenViBE::Kernel::EBoxFlag eBoxFlag);
+			virtual OpenViBE::boolean addFlag(const OpenViBE::CString& cStringFlag);
 			virtual OpenViBE::boolean addInputSupport(
 				const OpenViBE::CIdentifier &rTypeIdentifier);
 			virtual OpenViBE::boolean addOutputSupport(

@@ -100,7 +100,7 @@ uint32 CBoxProto::addSetting(
 }
 /*/
 
-boolean CBoxProto::addFlag(
+bool CBoxProto::addFlag(
 	const EBoxFlag eBoxFlag)
 {
 	switch (eBoxFlag)
@@ -116,6 +116,17 @@ boolean CBoxProto::addFlag(
 		default:
 			return false;
 	}
+	return true;
+}
+
+bool CBoxProto::addFlag(const OpenViBE::CString& cStringFlag)
+{
+	uint64_t flagValue = getKernelContext().getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Flag, cStringFlag);
+	if (flagValue == 0xffffffffffffffffLL)
+	{
+		return false;
+	}
+	m_rBox.addAttribute(OpenViBE::CIdentifier(flagValue), "");
 	return true;
 }
 

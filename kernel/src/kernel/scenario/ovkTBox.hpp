@@ -44,6 +44,10 @@ namespace{
 
 		virtual OpenViBE::boolean addFlag(
 			const OpenViBE::Kernel::EBoxFlag eBoxFlag){return true;}
+		virtual OpenViBE::boolean addFlag(const OpenViBE::CString& cStringFlag)
+		{
+			return false;
+		}
 	};
 }
 

@@ -12,11 +12,12 @@ namespace
 	{
 	public:
 
-		SBoxProto(void)
+		SBoxProto(OpenViBE::Kernel::ITypeManager& typeManager)
 			:m_bIsDeprecated(false)
 			,m_ui64InputCountHash  (0x64AC3CB54A35888CLL)
 			,m_ui64OutputCountHash (0x21E0FAAFE5CAF1E1LL)
 			,m_ui64SettingCountHash(0x6BDFB15B54B09F63LL)
+			,m_TypeManager(typeManager)
 		{
 		}
 
@@ -102,6 +103,18 @@ namespace
 			}
 			return true;
 		}
+
+		bool addFlag(const OpenViBE::CString& cStringFlag)
+		{
+			uint64_t flagValue = m_TypeManager.getEnumerationEntryValueFromName(OV_TypeId_Flag, cStringFlag);
+			if (flagValue == 0xffffffffffffffffLL)
+			{
+				return false;
+			}
+			m_oHash=m_oHash.toUInteger()^flagValue;
+			return true;
+		}
+
 		void swap_byte(uint64& v, const uint64 s)
 		{
 			uint8 t;
@@ -127,5 +140,7 @@ namespace
 		uint64 m_ui64InputCountHash;
 		uint64 m_ui64OutputCountHash;
 		uint64 m_ui64SettingCountHash;
+		OpenViBE::Kernel::ITypeManager& m_TypeManager;
+
 	};
 }
