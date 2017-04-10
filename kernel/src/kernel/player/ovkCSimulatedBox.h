@@ -169,10 +169,6 @@ namespace OpenViBE
 				return m_rScheduler;
 			}
 
-		private:
-
-			CIdentifier getUnusedIdentifier(void) const;
-
 		protected:
 
 			OpenViBE::boolean m_bReadyToProcess;
@@ -187,13 +183,6 @@ namespace OpenViBE
 			OpenViBE::uint64 m_ui64LastClockActivationDate;
 			OpenViBE::uint64 m_ui64ClockFrequency;
 			OpenViBE::uint64 m_ui64ClockActivationStep;
-
-		private:
-			OpenViBE::CIdentifier m_oSceneIdentifier;
-			OpenViBE::CString m_oSceneName;
-
-			/// maps object identifiers to object names
-			std::map<OpenViBE::CIdentifier, OpenViBE::CString> m_mSimulatedObjects;
 
 		public:
 
