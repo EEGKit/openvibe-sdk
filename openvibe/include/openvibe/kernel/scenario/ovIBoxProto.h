@@ -48,7 +48,7 @@ namespace OpenViBE
 			 * \param rTypeIdentifier [in] : the type of the input
 			 * \return true if successful
 			 */
-			virtual OpenViBE::boolean addInput(
+			virtual bool addInput(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier)=0;
 
@@ -58,7 +58,7 @@ namespace OpenViBE
 			 * \param rTypeIdentifier [in] : the type of the output
 			 * \return true if successful
 			 */
-			virtual OpenViBE::boolean addOutput(
+			virtual bool addOutput(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier)=0;
 			/**
@@ -71,34 +71,32 @@ namespace OpenViBE
 			 */
 
 			/*
-			virtual OpenViBE::boolean addSetting(
+			virtual bool addSetting(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sDefaultValue)=0;
 				//*/
 
-			virtual OpenViBE::boolean addSetting(
+			virtual bool addSetting(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sDefaultValue,
-				const OpenViBE::boolean bModifiable = false)=0;
+				const bool bModifiable = false)=0;
 			/**
 			 * \brief Adds a flag to the box
 			 * \param eBoxFlag [in] : the flag to add to the box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean addFlag(
-				const OpenViBE::Kernel::EBoxFlag eBoxFlag)=0;
+			virtual bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag)=0;
 
 			/**
 			 * \brief Adds a flag to the box
-			 * \param cStringFlag [in] : the flag to add to the box
+			 * \param cIdentifierFlag [in] : the flag to add to the box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean addFlag(
-				const OpenViBE::CString& cStringFlag)=0;
+			virtual bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag)=0;
 
 			/**
 			 * \brief Adds a new type supported by inputs of the box
@@ -106,16 +104,14 @@ namespace OpenViBE
 			  * \return \e true in case of success.
 			  * \return \e false in case of error.
 			  */
-			virtual OpenViBE::boolean addInputSupport(
-				const OpenViBE::CIdentifier &rTypeIdentifier)=0;
+			virtual bool addInputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)=0;
 			/**
 			 * \brief Adds a new type supported by outputs of the box
 			  * \param rTypeIdentifier [in] : The type identifier
 			  * \return \e true in case of success.
 			  * \return \e false in case of error.
 			  */
-			virtual OpenViBE::boolean addOutputSupport(
-				const OpenViBE::CIdentifier &rTypeIdentifier)=0;
+			virtual bool addOutputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)=0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxProto)
 		};

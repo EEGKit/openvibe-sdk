@@ -206,7 +206,7 @@
 
 #define OV_TypeId_MeasurementUnit                            OpenViBE::CIdentifier(0x2F3563A4, 0x571E194D)
 #define OV_TypeId_Factor                                     OpenViBE::CIdentifier(0x501F79FA, 0x7E1F6680)
-#define OV_TypeId_Flag                                       OpenViBE::CIdentifier(0xF1A6F1A6, 0xF1A6F1A6)
+#define OV_TypeId_BoxAlgorithmFlag                           OpenViBE::CIdentifier(0xF1A6F1A6, 0xF1A6F1A6)
 
 
 //___________________________________________________________________//

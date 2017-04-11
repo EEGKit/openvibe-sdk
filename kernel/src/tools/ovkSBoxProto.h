@@ -104,14 +104,15 @@ namespace
 			return true;
 		}
 
-		bool addFlag(const OpenViBE::CString& cStringFlag)
+		bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag)
 		{
-			uint64_t flagValue = m_TypeManager.getEnumerationEntryValueFromName(OV_TypeId_Flag, cStringFlag);
-			if (flagValue == 0xffffffffffffffffLL)
+			uint64_t flagValue = m_TypeManager.getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, cIdentifierFlag.toString());
+			if (flagValue == OV_UndefinedIdentifier)
 			{
 				return false;
 			}
-			m_oHash=m_oHash.toUInteger()^flagValue;
+			// Flags do not modify internal hash
+			//m_oHash=m_oHash.toUInteger() ^ cIdentifierFlag.toUInteger();
 			return true;
 		}
 
