@@ -21,7 +21,7 @@ using namespace OpenViBE::Plugins;
 // ________________________________________________________________________________________________________________
 //
 
-#define OV_IncorrectTime 0xffffffffffffffffll
+#define OV_IncorrectTime 0xffffffffffffffffULL
 static const CNameValuePairList s_oDummyNameValuePairList;
 
 CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& rScheduler)
@@ -36,29 +36,11 @@ CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& r
 	,m_ui64LastClockActivationDate(OV_IncorrectTime)
 	,m_ui64ClockFrequency(0)
 	,m_ui64ClockActivationStep(0)
-	,m_oSceneIdentifier(OV_UndefinedIdentifier)
 {
 }
 
 CSimulatedBox::~CSimulatedBox(void)
 {
-	m_mSimulatedObjects.clear();
-}
-
-CIdentifier CSimulatedBox::getUnusedIdentifier(void) const
-{
-	uint64 l_ui64Identifier=(((uint64)rand())<<32)+((uint64)rand());
-	CIdentifier l_oResult;
-	std::map<CIdentifier, CString>::const_iterator i;
-	do
-	{
-		l_ui64Identifier++;
-		l_oResult=CIdentifier(l_ui64Identifier);
-		i=m_mSimulatedObjects.find(l_oResult);
-	}
-	while(i!=m_mSimulatedObjects.end() || l_oResult==OV_UndefinedIdentifier);
-	//TODO : browse window and scene maps as well to guarantee ID unicity!
-	return l_oResult;
 }
 
 bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentifier)

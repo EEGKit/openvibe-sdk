@@ -267,26 +267,9 @@ BandStopTransform::BandStopTransform (double fc,
     //
     // Optimize out the calculations for conjugates for Release builds
     //
-#ifdef NDEBUG
     // trick to get the conjugate
     if (z.second == z.first)
       z.second = std::conj (z.first);
-
-#else
-    // Do the full calculation to verify correctness
-    ComplexPair pc = transform (analog[i].poles.second);
-    ComplexPair zc = transform (analog[i].zeros.second);
-
-    // get the conjugates into pc and zc
-    if (zc.first == z.first)
-      std::swap (zc.first, zc.second);
-
-    assert (pc.first  == std::conj (p.first));
-    assert (pc.second == std::conj (p.second));
-    assert (zc.first  == std::conj (z.first));
-    assert (zc.second == std::conj (z.second));
-
-#endif
 
     digital.addPoleZeroConjugatePairs (p.first, z.first);
     digital.addPoleZeroConjugatePairs (p.second, z.second);

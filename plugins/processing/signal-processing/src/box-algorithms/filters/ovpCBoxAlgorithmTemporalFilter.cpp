@@ -19,14 +19,14 @@ namespace
 	typedef Dsp::SmoothedFilterDesign < Dsp::Butterworth::Design::HighPass < 32 >, 1, Dsp::DirectFormII > CButterworthHighPass;
 	typedef Dsp::SmoothedFilterDesign < Dsp::Butterworth::Design::LowPass < 32 >, 1, Dsp::DirectFormII > CButterworthLowPass;
 
-	Dsp::Filter* createButterworthFilter(uint64 ui64FilterType, uint64 ui64SmoothingSampleCount)
+	std::shared_ptr < Dsp::Filter > createButterworthFilter(uint64 ui64FilterType, uint64 ui64SmoothingSampleCount)
 	{
 		switch(ui64FilterType)
 		{
-			case FilterType_BandPass: return new CButterworthBandPass(static_cast<int>(ui64SmoothingSampleCount));
-			case FilterType_BandStop: return new CButterworthBandStop(static_cast<int>(ui64SmoothingSampleCount));
-			case FilterType_HighPass: return new CButterworthHighPass(static_cast<int>(ui64SmoothingSampleCount));
-			case FilterType_LowPass: return new CButterworthLowPass(static_cast<int>(ui64SmoothingSampleCount));
+			case FilterType_BandPass: return std::shared_ptr < Dsp::Filter >(new CButterworthBandPass(static_cast<int>(ui64SmoothingSampleCount)));
+			case FilterType_BandStop: return std::shared_ptr < Dsp::Filter >(new CButterworthBandStop(static_cast<int>(ui64SmoothingSampleCount)));
+			case FilterType_HighPass: return std::shared_ptr < Dsp::Filter >(new CButterworthHighPass(static_cast<int>(ui64SmoothingSampleCount)));
+			case FilterType_LowPass: return std::shared_ptr < Dsp::Filter >(new CButterworthLowPass(static_cast<int>(ui64SmoothingSampleCount)));
 			default:
 				break;
 		}
@@ -60,16 +60,15 @@ namespace
 	typedef Dsp::SmoothedFilterDesign < Dsp::ChebyshevI::Design::BandStop < 4 >, 1, Dsp::DirectFormII > CChebyshevBandStop;
 	typedef Dsp::SmoothedFilterDesign < Dsp::ChebyshevI::Design::HighPass < 4 >, 1, Dsp::DirectFormII > CChebyshevHighPass;
 	typedef Dsp::SmoothedFilterDesign < Dsp::ChebyshevI::Design::LowPass < 4 >, 1, Dsp::DirectFormII > CChebyshevLowPass;
-
-	/*
-	Dsp::Filter* createChebishevFilter(uint64 ui64FilterType, uint64 ui64SmoothingSampleCount)
+/*
+	std::shared_ptr < Dsp::Filter > createChebishevFilter(uint64 ui64FilterType, uint64 ui64SmoothingSampleCount)
 	{
 		switch(ui64FilterType)
 		{
-			case FilterType_BandPass: return new CChebyshevBandPass(static_cast<int>(ui64SmoothingSampleCount));
-			case FilterType_BandStop: return new CChebyshevBandStop(static_cast<int>(ui64SmoothingSampleCount));
-			case FilterType_HighPass: return new CChebyshevHighPass(static_cast<int>(ui64SmoothingSampleCount));
-			case FilterType_LowPass: return new CChebyshevLowPass(static_cast<int>(ui64SmoothingSampleCount));
+			case FilterType_BandPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandPass(static_cast<int>(ui64SmoothingSampleCount)));
+			case FilterType_BandStop: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandStop(static_cast<int>(ui64SmoothingSampleCount)));
+			case FilterType_HighPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevHighPass(static_cast<int>(ui64SmoothingSampleCount)));
+			case FilterType_LowPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevLowPass(static_cast<int>(ui64SmoothingSampleCount)));
 			default:
 				break;
 		}
@@ -104,7 +103,7 @@ namespace
 	*/
 
 	typedef boolean (*fpGetParameters_t)(Dsp::Params& rParameters, uint64 ui64FilterType, uint64 ui64SamplingRate, uint64 ui64Order, float64 f64LowCutFrequency, float64 f64HighCutFrequency, float64 f64BandPassRipple);
-	typedef Dsp::Filter* (*fpCreateFilter_t)(uint64 ui64FilterType, uint64 ui64SmoothingSampleCount);
+	typedef std::shared_ptr < Dsp::Filter > (*fpCreateFilter_t)(uint64 ui64FilterType, uint64 ui64SmoothingSampleCount);
 }
 
 boolean CBoxAlgorithmTemporalFilter::initialize(void)
@@ -176,22 +175,6 @@ boolean CBoxAlgorithmTemporalFilter::initialize(void)
 
 boolean CBoxAlgorithmTemporalFilter::uninitialize(void)
 {
-	std::vector < Dsp::Filter* >::iterator it;
-
-	for(it=m_vFilter.begin(); it!=m_vFilter.end(); ++it)
-	{
-		delete *it;
-	}
-	m_vFilter.clear();
-
-	/*std::vector < Dsp::Filter* >::iterator it2;
-
-	for(it2=m_vFilter2.begin(); it2!=m_vFilter2.end(); it2++)
-	{
-		delete *it2;
-	}
-	m_vFilter2.clear();*/
-
 	m_oDecoder.uninitialize();
 	m_oEncoder.uninitialize();
 
@@ -206,20 +189,9 @@ boolean CBoxAlgorithmTemporalFilter::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmTemporalFilter::process(void)
 {
-	std::vector < Dsp::Filter* >::iterator it;
-	//std::vector < Dsp::Filter* >::iterator it2;
-
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 	uint32 i, j;
-
-	// l_rStaticBoxContext.getInputCount();
-	// l_rStaticBoxContext.getOutputCount();
-	// l_rStaticBoxContext.getSettingCount();
-
-	// l_rDynamicBoxContext.getInputChunkCount()
-	// l_rDynamicBoxContext.getInputChunk(i, )
-	// l_rDynamicBoxContext.getOutputChunk(i, )
 
 	for(i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
@@ -247,17 +219,8 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 				);
 			}
 
-			for(it=m_vFilter.begin(); it!=m_vFilter.end(); ++it)
-			{
-				delete *it;
-			}
 			m_vFilter.clear();
-
-			/*for(it2=m_vFilter2.begin(); it2!=m_vFilter2.end(); it2++)
-			{
-				delete *it2;
-			}
-			m_vFilter2.clear();*/
+			//m_vFilter2.clear();
 
 			fpGetParameters_t fpGetParameters=NULL;
 			fpCreateFilter_t fpCreateFilter=NULL;
@@ -306,10 +269,10 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 
 			for(j=0; j<l_ui32ChannelCount; j++)
 			{
-				Dsp::Filter* l_pFilter=(*fpCreateFilter)(m_ui64FilterType, l_ui64SmoothingSampleCount);
+				std::shared_ptr < Dsp::Filter > l_pFilter=(*fpCreateFilter)(m_ui64FilterType, l_ui64SmoothingSampleCount);
 				l_pFilter->setParams(l_oFilterParameters);
 				m_vFilter.push_back(l_pFilter);
-				/*Dsp::Filter* l_pFilter2=(*fpCreateFilter)(m_ui64FilterType, l_ui64SmoothingSampleCount);
+				/*std::shared_ptr < Dsp::Filter > l_pFilter2=(*fpCreateFilter)(m_ui64FilterType, l_ui64SmoothingSampleCount);
 				l_pFilter2->setParams(l_oFilterParameters);
 				m_vFilter2.push_back(l_pFilter2);*/
 			}
@@ -367,7 +330,7 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 
 #if 0
 //zero-phase filtering, with two different filters
-void CBoxAlgorithmTemporalFilter::filtfilt2 (Dsp::Filter* pFilter1, Dsp::Filter* pFilter2, OpenViBE::uint32 SampleCount, OpenViBE::float64* pBuffer)
+void CBoxAlgorithmTemporalFilter::filtfilt2(std::shared_ptr < Dsp::Filter > pFilter1, std::shared_ptr < Dsp::Filter > pFilter2, OpenViBE::uint32 SampleCount, OpenViBE::float64* pBuffer)
 {
 	uint32 j;
 

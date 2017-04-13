@@ -348,11 +348,15 @@ while (0)
 #define OV_FATAL(description, type, logManager) \
 do { \
 	logManager << OpenViBE::Kernel::LogLevel_Fatal \
-			   << "[Error description] = " \
+			   << "{Error description} : {" \
 			   << description \
-			   << "; [Error code] = " \
+			   << "}, {Error type} : {" \
+			   << convertErrorTypeToString(type) \
+			   << " (code " \
 			   << static_cast<unsigned int>((type)) \
-			   << "\n"; \
+			   << ")}, {Error location} : {" \
+			   << __FILE__ << "::" << __LINE__\
+			   << "}\n"; \
 	std::abort(); \
 } \
 while (0)

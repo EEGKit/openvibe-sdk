@@ -5,6 +5,7 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
+#include <memory>
 #include <dsp-filters/Dsp.h>
 
 #define OVP_ClassId_BoxAlgorithm_TemporalFilter     OpenViBE::CIdentifier(0xB4F9D042, 0x9D79F2E5)
@@ -24,10 +25,6 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::boolean uninitialize(void);
 			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
 			virtual OpenViBE::boolean process(void);
-#if 0
-			void filtfilt2 (Dsp::Filter* pFilter1, Dsp::Filter* pFilter2, OpenViBE::uint32 SampleCount, OpenViBE::float64* pBuffer);
-			void filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::Filter* pFilter2, OpenViBE::uint32 SampleCount, OpenViBE::float64* pBuffer);
-#endif
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_TemporalFilter);
 
@@ -44,8 +41,8 @@ namespace OpenViBEPlugins
 			OpenViBE::float64 m_f64HighCutFrequency;
 			OpenViBE::float64 m_f64BandPassRipple; // for Chebyshev
 
-			std::vector < Dsp::Filter* > m_vFilter;
-			//std::vector < Dsp::Filter* > m_vFilter2;
+			std::vector < std::shared_ptr < Dsp::Filter > > m_vFilter;
+			//std::vector < std::shared_ptr < Dsp::Filter > > m_vFilter2;
 
 			std::vector < double > m_vFirstSample;
 		};
