@@ -387,6 +387,7 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const { return m_pBoxListenerContext->getAlgorithmManager(); }
 		virtual OpenViBE::Kernel::IPlayerManager& getPlayerManager(void) const { return m_pBoxListenerContext->getPlayerManager(); }
 		virtual OpenViBE::Kernel::IPluginManager& getPluginManager(void) const { return m_pBoxListenerContext->getPluginManager(); }
+		virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager(void) const { return m_pBoxListenerContext->getMetaboxManager(); }
 		virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const { return m_pBoxListenerContext->getScenarioManager(); }
 		virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const { return m_pBoxListenerContext->getTypeManager(); }
 		virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const { return m_pBoxListenerContext->getLogManager(); }

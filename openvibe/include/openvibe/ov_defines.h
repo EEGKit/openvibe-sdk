@@ -54,6 +54,8 @@
 #define OV_ClassId_Kernel_Plugins_PluginModule               OpenViBE::CIdentifier(0x74EAC344, 0x375C88EC)
 #define OV_ClassId_Kernel_Plugins_PluginModuleContext        OpenViBE::CIdentifier(0x624A6E5B, 0x52228CEA)
 #define OV_ClassId_Kernel_Plugins_PluginManager              OpenViBE::CIdentifier(0x690ED3AC, 0x2D0702F0)
+#define OV_ClassId_Kernel_Metabox_MetaboxManager             OpenViBE::CIdentifier(0x1431A3AC, 0x2D01431A)
+
 
 #define OV_ClassId_Kernel_Scenario_Attributable              OpenViBE::CIdentifier(0x61B64E38, 0x0B36B4E8)
 #define OV_ClassId_Kernel_Scenario_Box                       OpenViBE::CIdentifier(0x41209015, 0x1183237A)

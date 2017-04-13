@@ -52,6 +52,11 @@ namespace OpenViBE
 				return m_rKernelContext.getPluginManager();
 			}
 
+			virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager(void) const
+			{
+				return m_rKernelContext.getMetaboxManager();
+			}
+
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const
 			{
 				return m_rKernelContext.getScenarioManager();

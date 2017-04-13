@@ -30,72 +30,6 @@
 #include "ovspCCommand.h"
 #include "ovsp_base.h"
 #include "ovspCKernelFacade.h"
-#include <fs/Files.h>
-#include <fs/IEntryEnumerator.h>
-
-
-namespace
-{
-	class CMetaboxEntryEnumeratorCallBack : public FS::IEntryEnumeratorCallBack
-	{
-	public:
-
-		CMetaboxEntryEnumeratorCallBack(const OpenViBE::Kernel::IKernelContext& rKernelContext) :
-			m_rKernelContext(rKernelContext)
-		{
-			m_ui32MetaBoxCount = 0;
-		}
-
-		bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes)
-		{
-			if(rAttributes.isFile())
-			{
-				// extract the filename from the path, without parent or extension
-				char l_sBuffer[1024];
-				std::string l_sFullFileName(rEntry.getName());
-				FS::Files::getParentPath(l_sFullFileName.c_str(), l_sBuffer);
-
-				std::size_t l_uiFilenameStartPos = strlen(l_sBuffer) + 1; // where the parent path ends
-				std::size_t l_uiFilenameDotPos = l_sFullFileName.rfind('.');
-				std::size_t l_uiFilenameLength = l_uiFilenameDotPos - l_uiFilenameStartPos;
-
-				std::string l_sMetaboxIdentifier = l_sFullFileName.substr(l_uiFilenameStartPos, l_uiFilenameLength);
-				std::transform(l_sMetaboxIdentifier.begin(), l_sMetaboxIdentifier.end(), l_sMetaboxIdentifier.begin(), ::tolower);
-				std::replace(l_sMetaboxIdentifier.begin(), l_sMetaboxIdentifier.end(), ' ', '_');
-
-				std::string l_sConfigurationTokenName = "Metabox_Scenario_Path_For_" + l_sMetaboxIdentifier;
-				m_rKernelContext.getConfigurationManager().createConfigurationToken(l_sConfigurationTokenName.c_str(), l_sFullFileName.c_str());
-
-				OpenViBE::CIdentifier l_oMetaboxScenarioId;
-				auto a = m_rKernelContext.getScenarioManager().importScenarioFromFile(l_oMetaboxScenarioId, OVP_ScenarioimportContext_OnLoadMetaboxImport, l_sFullFileName.c_str());
-				l_sConfigurationTokenName = "Metabox_Scenario_Hash_For_" + l_sMetaboxIdentifier;
-
-				OpenViBE::Kernel::IScenario& l_rMetaboxScenario = m_rKernelContext.getScenarioManager().getScenario(l_oMetaboxScenarioId);
-
-				OpenViBE::CIdentifier l_oHash;
-				l_oHash.fromString(l_rMetaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
-
-				m_rKernelContext.getConfigurationManager().createConfigurationToken(l_sConfigurationTokenName.c_str(), l_oHash.toString());
-				m_rKernelContext.getScenarioManager().releaseScenario(l_oMetaboxScenarioId);
-
-				m_ui32MetaBoxCount++;
-
-			}
-			return true;
-		}
-
-		uint32_t resetMetaboxCount(void)
-		{
-			uint32_t l_ui32ReturnValue = m_ui32MetaBoxCount;
-			m_ui32MetaBoxCount = 0;
-			return l_ui32ReturnValue;
-		}
-
-	protected:
-		const OpenViBE::Kernel::IKernelContext& m_rKernelContext;
-		uint32_t m_ui32MetaBoxCount;
-	};
-}
 
 namespace OpenViBE
 {
@@ -211,29 +145,9 @@ namespace OpenViBE
 		IConfigurationManager& configurationManager = kernelContext->getConfigurationManager();
 		kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
 
-		kernelContext->getScenarioManager().registerScenarioImporter(OVP_ScenarioimportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
+		kernelContext->getScenarioManager().registerScenarioImporter(OVP_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
+		kernelContext->getMetaboxManager().addMetaboxFromFiles(configurationManager.expand("${Kernel_Metabox}"));
 
-		::CMetaboxEntryEnumeratorCallBack l_rCallback(*kernelContext);
-		FS::IEntryEnumerator* entryEnumerator = FS::createEntryEnumerator(l_rCallback);
-
-		bool l_bResult = entryEnumerator->enumerate(configurationManager.expand("${Path_Data}/metaboxes/*.xml"));
-		l_bResult |= entryEnumerator->enumerate(configurationManager.expand("${Path_Data}/metaboxes/*.mxb"));
-		l_bResult |= entryEnumerator->enumerate(configurationManager.expand("${Path_Data}/metaboxes/*.mbb"));
-		if(l_bResult)
-		{
-			kernelContext->getLogManager() << LogLevel_Info << "Added " << l_rCallback.resetMetaboxCount() << " metaboxes from [" << configurationManager.expand("${Path_Data}/metaboxes") << "]\n";
-		}
-
-		l_bResult = entryEnumerator->enumerate(configurationManager.expand("${Path_UserData}/metaboxes/*.xml"));
-		l_bResult |= entryEnumerator->enumerate(configurationManager.expand("${Path_UserData}/metaboxes/*.mxb"));
-		l_bResult |= entryEnumerator->enumerate(configurationManager.expand("${Path_UserData}/metaboxes/*.mbb"));
-		if(l_bResult)
-		{
-			kernelContext->getLogManager() << LogLevel_Info << "Added " << l_rCallback.resetMetaboxCount() << " metaboxes from [" << configurationManager.expand("${Path_UserData}/metaboxes") << "]\n";
-		}
-
-		entryEnumerator->release();
-		entryEnumerator = NULL;
 		return PlayerReturnCode::Success;
 	}
 

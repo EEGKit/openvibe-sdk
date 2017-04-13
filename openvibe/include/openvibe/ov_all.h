@@ -79,6 +79,10 @@
 #include "kernel/plugins/ovIPluginModule.h"
 #include "kernel/plugins/ovIPluginModuleContext.h"
 
+#include "kernel/metabox/ovIMetaboxManager.h"
+//#include "kernel/plugins/ovIPluginModule.h"
+//#include "kernel/plugins/ovIPluginModuleContext.h"
+
 #include "kernel/scenario/ovIAttributable.h"
 #include "kernel/scenario/ovIBox.h"
 #include "kernel/scenario/ovIBoxIO.h"

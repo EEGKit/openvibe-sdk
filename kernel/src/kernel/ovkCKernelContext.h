@@ -27,6 +27,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IKernelObjectFactory& getKernelObjectFactory(void) const;
 			virtual OpenViBE::Kernel::IPlayerManager& getPlayerManager(void) const;
 			virtual OpenViBE::Kernel::IPluginManager& getPluginManager(void) const;
+			virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager(void) const;
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const;
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const;
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const;
@@ -47,6 +48,7 @@ namespace OpenViBE
 			std::unique_ptr<OpenViBE::Kernel::IKernelObjectFactory> m_pKernelObjectFactory;
 			std::unique_ptr<OpenViBE::Kernel::IPlayerManager> m_pPlayerManager;
 			std::unique_ptr<OpenViBE::Kernel::IPluginManager> m_pPluginManager;
+			std::unique_ptr<OpenViBE::Kernel::IMetaboxManager> m_pMetaboxManager;
 			std::unique_ptr<OpenViBE::Kernel::IScenarioManager> m_pScenarioManager;
 			std::unique_ptr<OpenViBE::Kernel::ITypeManager> m_pTypeManager;
 			std::unique_ptr<OpenViBE::Kernel::ILogManager> m_pLogManager;
@@ -74,6 +76,7 @@ namespace OpenViBE
 				,m_pKernelObjectFactory(NULL)
 				,m_pPlayerManager(NULL)
 				,m_pPluginManager(NULL)
+				,m_pMetaboxManager(NULL)
 				,m_pScenarioManager(NULL)
 				,m_pTypeManager(NULL)
 				,m_pLogManager(NULL)
@@ -89,6 +92,7 @@ namespace OpenViBE
 			void setKernelObjectFactory(OpenViBE::Kernel::IKernelObjectFactory* pKernelObjectFactory) { m_pKernelObjectFactory=pKernelObjectFactory; }
 			void setPlayerManager(OpenViBE::Kernel::IPlayerManager* pPlayerManager) { m_pPlayerManager=pPlayerManager; }
 			void setPluginManager(OpenViBE::Kernel::IPluginManager* pPluginManager) { m_pPluginManager=pPluginManager; }
+			void setMetaboxManager(OpenViBE::Kernel::IMetaboxManager* pMetaboxManager) { m_pMetaboxManager=pMetaboxManager; }
 			void setScenarioManager(OpenViBE::Kernel::IScenarioManager* pScenarioManager) { m_pScenarioManager=pScenarioManager; }
 			void setTypeManager(OpenViBE::Kernel::ITypeManager* pTypeManager) { m_pTypeManager=pTypeManager; }
 			void setLogManager(OpenViBE::Kernel::ILogManager* pLogManager) { m_pLogManager=pLogManager; }
@@ -99,6 +103,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IKernelObjectFactory& getKernelObjectFactory(void) const { return m_pKernelObjectFactory?*m_pKernelObjectFactory:m_rKernelContext.getKernelObjectFactory(); }
 			virtual OpenViBE::Kernel::IPlayerManager& getPlayerManager(void) const { return m_pPlayerManager?*m_pPlayerManager:m_rKernelContext.getPlayerManager(); }
 			virtual OpenViBE::Kernel::IPluginManager& getPluginManager(void) const { return m_pPluginManager?*m_pPluginManager:m_rKernelContext.getPluginManager(); }
+			virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager(void) const { return m_pMetaboxManager?*m_pMetaboxManager:m_rKernelContext.getMetaboxManager(); }
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const { return m_pScenarioManager?*m_pScenarioManager:m_rKernelContext.getScenarioManager(); }
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const { return m_pTypeManager?*m_pTypeManager:m_rKernelContext.getTypeManager(); }
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const { return m_pLogManager?*m_pLogManager:m_rKernelContext.getLogManager(); }
@@ -117,6 +122,7 @@ namespace OpenViBE
 			mutable OpenViBE::Kernel::IKernelObjectFactory* m_pKernelObjectFactory;
 			mutable OpenViBE::Kernel::IPlayerManager* m_pPlayerManager;
 			mutable OpenViBE::Kernel::IPluginManager* m_pPluginManager;
+			mutable OpenViBE::Kernel::IMetaboxManager* m_pMetaboxManager;
 			mutable OpenViBE::Kernel::IScenarioManager* m_pScenarioManager;
 			mutable OpenViBE::Kernel::ITypeManager* m_pTypeManager;
 			mutable OpenViBE::Kernel::ILogManager* m_pLogManager;

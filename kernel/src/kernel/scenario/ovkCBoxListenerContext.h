@@ -21,6 +21,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const { return this->getKernelContext().getAlgorithmManager(); }
 			virtual OpenViBE::Kernel::IPlayerManager& getPlayerManager(void) const { return this->getKernelContext().getPlayerManager(); }
 			virtual OpenViBE::Kernel::IPluginManager& getPluginManager(void) const { return this->getKernelContext().getPluginManager(); }
+			virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager(void) const { return this->getKernelContext().getMetaboxManager(); }
 			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const { return this->getKernelContext().getScenarioManager(); }
 			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const { return this->getKernelContext().getTypeManager(); }
 			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const { return this->getKernelContext().getLogManager(); }

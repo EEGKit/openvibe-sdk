@@ -25,7 +25,7 @@
 
 #include "ovsp_defines.h"
 
-#define OVP_ScenarioimportContext_OnLoadMetaboxImport OpenViBE::CIdentifier(0xED48480A, 0x9F6DBAA7)
+#define OVP_ScenarioImportContext_OnLoadMetaboxImport OpenViBE::CIdentifier(0xED48480A, 0x9F6DBAA7)
 
 namespace OpenViBE
 {

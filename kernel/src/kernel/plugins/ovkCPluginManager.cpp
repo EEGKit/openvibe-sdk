@@ -40,11 +40,10 @@ namespace OpenViBE
 				FS::IEntryEnumerator::IEntry& rEntry,
 				FS::IEntryEnumerator::IAttributes& rAttributes)
 			{
-				vector<IPluginModule*>::iterator i;
-				for(i=m_rPluginModule.begin(); i!=m_rPluginModule.end(); ++i)
+				for(auto& pluginModule : m_rPluginModule)
 				{
 					CString l_sPluginModuleName;
-					if(!(*i)->getFileName(l_sPluginModuleName))
+					if(!pluginModule->getFileName(l_sPluginModuleName))
 					{
 						return true;
 					}
