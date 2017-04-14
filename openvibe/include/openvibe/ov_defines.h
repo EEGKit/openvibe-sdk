@@ -172,6 +172,8 @@
 #define OVP_ClassId_BoxAlgorithm_Metabox                    OpenViBE::CIdentifier(0xFE420CB6, 0x5F2BA4C3)
 #define OVP_ClassId_BoxAlgorithm_MetaboxDesc                OpenViBE::CIdentifier(0xA87F133C, 0x1E6B6543)
 #define OVP_AttributeId_Metabox_Scenario                    OpenViBE::CIdentifier(0x198DD621, 0xAB7F153E)
+#define OVP_AttributeId_Metabox_Identifier                  OpenViBE::CIdentifier(0x198DD621, 0xAB7F153F)
+
 #define OV_AttributeId_ScenarioFilename                     OpenViBE::CIdentifier(0x4C536D0A, 0xB23DC545)
 
 //___________________________________________________________________//

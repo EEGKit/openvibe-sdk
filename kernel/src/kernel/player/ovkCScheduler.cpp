@@ -163,9 +163,10 @@ boolean CScheduler::flattenScenario()
 				else
 				{
 					// We verify that the box actually has a backend scenario
-					CString l_sMetaboxIdentifier = m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->getAttributeValue(OVP_AttributeId_Metabox_Scenario);
-					CString l_sMetaboxScenarioPath = this->getKernelContext().getConfigurationManager().lookUpConfigurationTokenValue(CString("Metabox_Scenario_Path_For_") + l_sMetaboxIdentifier);
-
+					CString l_sMetaboxIdentifier = m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
+					OpenViBE::CIdentifier metaboxId;
+					metaboxId.fromString(l_sMetaboxIdentifier);
+					CString l_sMetaboxScenarioPath(getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 					if (FS::Files::fileExists(l_sMetaboxScenarioPath.toASCIIString()))
 					{
@@ -202,8 +203,10 @@ boolean CScheduler::flattenScenario()
 			IBox* l_pBox = m_pScenario->getBoxDetails(l_oMetaboxIdentifier);
 
 			// The box has an attribute with the metabox ID and config manager has a path to each metabox scenario
-			CString l_sMetaboxIdentifier = l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Scenario);
-			CString l_sMetaboxScenarioPath = this->getKernelContext().getConfigurationManager().lookUpConfigurationTokenValue(CString("Metabox_Scenario_Path_For_") + l_sMetaboxIdentifier);
+			CString l_sMetaboxIdentifier = l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
+			OpenViBE::CIdentifier metaboxId;
+			metaboxId.fromString(l_sMetaboxIdentifier);
+			CString l_sMetaboxScenarioPath(getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 			OV_ERROR_UNLESS_KRF(
 					l_sMetaboxIdentifier != CString(""),
@@ -380,7 +383,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 
 		OV_ERROR_UNLESS_K(
 			l_pBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox,
-			"Not expanded metabox with id [" << l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Scenario) << "] detected in the scenario",
+			"Not expanded metabox with id [" << l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier) << "] detected in the scenario",
 			ErrorType::Internal,
 			SchedulerInitialization_Failed
 		);

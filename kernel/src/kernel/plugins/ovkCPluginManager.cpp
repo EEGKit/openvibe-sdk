@@ -266,12 +266,11 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(
 {
 //	this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
-	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
+	for(auto& pluginObject : m_vPluginObjectDesc)
 	{
-		if(i->first->getClassIdentifier()==rClassIdentifier)
+		if(pluginObject.first->getClassIdentifier()==rClassIdentifier)
 		{
-			return i->first;
+			return pluginObject.first;
 		}
 	}
 

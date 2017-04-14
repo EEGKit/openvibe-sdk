@@ -1194,8 +1194,9 @@ bool CScenario::checkNeedsUpdateBox()
 		CIdentifier boxHashCode2;
 		if (box.second->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 		{
-			CString metaboxIdentifier = box.second->getAttributeValue(OVP_AttributeId_Metabox_Scenario);
-			boxHashCode1.fromString(this->getKernelContext().getConfigurationManager().lookUpConfigurationTokenValue(CString("Metabox_Scenario_Hash_For_") + metaboxIdentifier));
+			CIdentifier metaboxId;
+			metaboxId.fromString(box.second->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+			boxHashCode1 = getKernelContext().getMetaboxManager().getMetaboxHash(metaboxId);
 		}
 		else
 		{
