@@ -14,7 +14,7 @@ CBoxProto::CBoxProto(const IKernelContext& rKernelContext, IBox& rBox)
 {
 }
 
-boolean CBoxProto::addInput(
+bool CBoxProto::addInput(
 	const CString& sName,
 	const CIdentifier& rTypeIdentifier)
 {
@@ -37,7 +37,7 @@ boolean CBoxProto::addInput(
 	return true;
 }
 
-boolean CBoxProto::addOutput(
+bool CBoxProto::addOutput(
 
 	const CString& sName,
 	const CIdentifier& rTypeIdentifier)
@@ -61,11 +61,11 @@ boolean CBoxProto::addOutput(
 	return true;
 }
 
-boolean CBoxProto::addSetting(
+bool CBoxProto::addSetting(
 	const CString& sName,
 	const CIdentifier& rTypeIdentifier,
 	const CString& sDefaultValue,
-	const OpenViBE::boolean bModifiable)
+	const bool bModifiable)
 {
 	if(!m_rBox.addSetting(sName, rTypeIdentifier, sDefaultValue, -1, bModifiable))
 	{
@@ -90,7 +90,7 @@ uint32 CBoxProto::addSetting(
 	const OpenViBE::CString& sName,
 	const OpenViBE::CIdentifier& rTypeIdentifier,
 	const OpenViBE::CString& sDefaultValue,
-	const OpenViBE::boolean bModifiable)
+	const bool bModifiable)
 {
 	addSetting(sName, rTypeIdentifier, sDefaultValue);
 	uint32 l_ui32LastSetting = m_rBox.getSettingCount();
@@ -100,8 +100,7 @@ uint32 CBoxProto::addSetting(
 }
 /*/
 
-boolean CBoxProto::addFlag(
-	const EBoxFlag eBoxFlag)
+bool CBoxProto::addFlag(const EBoxFlag eBoxFlag)
 {
 	switch (eBoxFlag)
 	{
@@ -119,12 +118,23 @@ boolean CBoxProto::addFlag(
 	return true;
 }
 
-boolean CBoxProto::addInputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)
+bool CBoxProto::addFlag(const OpenViBE::CIdentifier& cIdentifierFlag)
+{
+	uint64_t flagValue = getKernelContext().getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, cIdentifierFlag.toString());
+	if (flagValue == OV_UndefinedIdentifier)
+	{
+		return false;
+	}
+	m_rBox.addAttribute(cIdentifierFlag, "");
+	return true;
+}
+
+bool CBoxProto::addInputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)
 {
 	return m_rBox.addInputSupport(rTypeIdentifier);
 }
 
-boolean CBoxProto::addOutputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)
+bool CBoxProto::addOutputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)
 {
 	return m_rBox.addOutputSupport(rTypeIdentifier);
 }

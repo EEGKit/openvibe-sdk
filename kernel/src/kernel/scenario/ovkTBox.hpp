@@ -42,8 +42,8 @@ namespace{
 			const OpenViBE::CString& sDefaultValue,
 			const OpenViBE::boolean bModifiable = false){return true;}
 
-		virtual OpenViBE::boolean addFlag(
-			const OpenViBE::Kernel::EBoxFlag eBoxFlag){return true;}
+		virtual OpenViBE::boolean addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag){return true;}
+		virtual OpenViBE::boolean addFlag(const OpenViBE::CIdentifier& cIdentifierFlag){return true;}
 	};
 }
 

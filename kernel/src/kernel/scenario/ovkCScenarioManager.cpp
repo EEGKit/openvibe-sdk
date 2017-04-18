@@ -365,7 +365,7 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 
 	if (scenario.isMetabox())
 	{
-		SBoxProto l_oMetaboxProto;
+		SBoxProto l_oMetaboxProto(getKernelContext().getTypeManager());
 
 		for (uint32 l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < scenario.getInputCount(); l_ui32ScenarioInputIndex++)
 		{
