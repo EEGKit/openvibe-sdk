@@ -29,7 +29,7 @@ function usage()
 
 # As options are not mandatory, set some default values for each target
 # variables
-ov_script_dir="$(realpath $(dirname $0))"
+ov_script_dir="$(readlink -m $(dirname $0))"
 ov_build_type=Release
 verbose=0
 package_option="FALSE"
@@ -41,7 +41,7 @@ gtest_include_dir="/usr/src/gtest/src"
 
 # Parse arguments
 
-while [[ $# -gt 1 ]]; do
+while [[ $# -gt 0 ]]; do
 	key="$1"
 	case $key in
 		-h | --help)
