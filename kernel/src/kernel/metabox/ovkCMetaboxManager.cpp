@@ -54,7 +54,7 @@ namespace OpenViBE
 						m_MetaboxManager.setMetaboxFilePath(metaboxId, CString(l_sFullFileName.c_str()));
 						m_MetaboxManager.setMetaboxHash(metaboxId, l_oHash);
 
-						CBoxAlgorithmMetaboxDesc* metaboxDesc = new CBoxAlgorithmMetaboxDesc(l_sMetaboxIdentifier.toASCIIString(), metaboxScenario);
+						CMetaboxObjectDesc* metaboxDesc = new CMetaboxObjectDesc(l_sMetaboxIdentifier.toASCIIString(), metaboxScenario);
 
 						CIdentifier l_oMetaboxPrototypeHash = OV_UndefinedIdentifier;
 						if (metaboxScenario.hasAttribute(OV_AttributeId_Scenario_MetaboxHash))

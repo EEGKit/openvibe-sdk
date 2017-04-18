@@ -10,11 +10,11 @@
 
 namespace OpenViBE
 {
-	namespace Kernel
+	namespace Metabox
 	{
 
 		/**
-		 * @brief The CBoxAlgorithmMetaboxDesc virtual BoxAlgorithmDesc for metaboxes
+		 * @brief The CMetaboxObjectDesc virtual BoxAlgorithmDesc for metaboxes
 		 *
 		 * This class provides a virtual algorithm descriptor for metaboxes. Each metabox-scenario
 		 * will result in one of these descriptors. The prototype is created from scenario inputs,
@@ -22,14 +22,14 @@ namespace OpenViBE
 		 *
 		 * Variables such as name, author etc are pulled from scenario information.
 		 */
-		class CBoxAlgorithmMetaboxDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CMetaboxObjectDesc : virtual public OpenViBE::Metabox::IMetaboxObjectDesc
 		{
 		public:
-			CBoxAlgorithmMetaboxDesc()
+			CMetaboxObjectDesc()
 			{
 			}
 
-			CBoxAlgorithmMetaboxDesc(const OpenViBE::CString& rMetaboxDescriptor, OpenViBE::Kernel::IScenario& metaboxScenario)
+			CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescriptor, OpenViBE::Kernel::IScenario& metaboxScenario)
 				:	m_sMetaboxDescriptor(rMetaboxDescriptor)
 					, m_sName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name))
 					, m_sAuthorName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Author))
@@ -82,7 +82,7 @@ namespace OpenViBE
 
 			virtual void release(void) { }
 
-			OpenViBE::CString getMetaboxDescriptor(void) const              { return m_sMetaboxDescriptor; }
+			virtual OpenViBE::CString getMetaboxDescriptor(void) const              { return m_sMetaboxDescriptor; }
 
 			virtual OpenViBE::CString getName(void) const                   { return m_sName; }
 			virtual OpenViBE::CString getAuthorName(void) const             { return m_sAuthorName; }
@@ -183,6 +183,10 @@ namespace OpenViBE
 			std::vector<SSetting> m_vSetting;
 
 		};
+	};
+
+	namespace Kernel
+	{
 		class CMetaboxManager : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMetaboxManager>
 		{
 		public:
@@ -192,7 +196,7 @@ namespace OpenViBE
 				_SMetaboxScenario()
 				{}
 
-				_SMetaboxScenario(const OpenViBE::Kernel::CBoxAlgorithmMetaboxDesc& rMetaboxDesc,
+				_SMetaboxScenario(const OpenViBE::Metabox::CMetaboxObjectDesc& rMetaboxDesc,
 								  const char* sVirtualBoxIdentifier,
 								  const char* sMetaboxScenarioPath,
 								  const OpenViBE::CIdentifier& rHash)
@@ -202,7 +206,7 @@ namespace OpenViBE
 					, m_oHash(rHash)
 				{}
 
-				void assignMetaboxDesc(const OpenViBE::Kernel::CBoxAlgorithmMetaboxDesc& rMetaboxDesc)
+				void assignMetaboxDesc(const OpenViBE::Metabox::CMetaboxObjectDesc& rMetaboxDesc)
 				{
 					m_oMetaboxDesc = rMetaboxDesc;
 				}
@@ -224,7 +228,7 @@ namespace OpenViBE
 
 
 				/// The BoxAlgorithmDesc specific to a metabox
-				OpenViBE::Kernel::CBoxAlgorithmMetaboxDesc m_oMetaboxDesc;
+				OpenViBE::Metabox::CMetaboxObjectDesc m_oMetaboxDesc;
 
 				/// Identifier of the box inside designer tree-view Category/Name
 				std::string m_sVirtualBoxIdentifier;

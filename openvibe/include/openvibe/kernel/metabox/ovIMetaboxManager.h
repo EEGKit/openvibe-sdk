@@ -2,11 +2,29 @@
 #define __OpenViBE_Kernel_Metabox_IMetaboxManager_H__
 
 #include "../ovIKernelObject.h"
+#include "../../plugins/ovIBoxAlgorithmDesc.h"
 
 namespace OpenViBE
 {
+//	namespace Plugins
+//	{
+//	//		class IPluginObject;
+////		class IPluginObjectDesc;
+
+//	//		class IBoxAlgorithm;
+//		class IBoxAlgorithmDesc;
+
+//	//		class IAlgorithm;
+//	//		class IAlgorithmDesc;
+//	};
+
 	namespace Metabox
 	{
+		class OV_API IMetaboxObjectDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		{
+		public:
+			virtual OpenViBE::CString getMetaboxDescriptor(void) const = 0;
+		};
 //		class IPluginObject;
 //		class IPluginObjectDesc;
 
@@ -17,17 +35,7 @@ namespace OpenViBE
 //		class IAlgorithmDesc;
 	};
 
-	namespace Plugins
-	{
-//		class IPluginObject;
-		class IPluginObjectDesc;
 
-//		class IBoxAlgorithm;
-//		class IBoxAlgorithmDesc;
-
-//		class IAlgorithm;
-//		class IAlgorithmDesc;
-	};
 
 	namespace Kernel
 	{
