@@ -9,7 +9,7 @@ PROJECT(OpenVIBE)
 
 SET(OV_GLOBAL_VERSION_MAJOR 0)
 SET(OV_GLOBAL_VERSION_MINOR 0)
-SET(OV_GLOBAL_VERSION_PATCH 1)
+SET(OV_GLOBAL_VERSION_PATCH 2)
 SET(OV_GLOBAL_VERSION_STRING "${OV_GLOBAL_VERSION_MAJOR}.${OV_GLOBAL_VERSION_MINOR}.${OV_GLOBAL_VERSION_PATCH}")
 
 # Default is to build to dist/. If you wish a custom install, set your own MAKE_INSTALL_PREFIX when you call CMake. Safest to do under a fakeroot.
@@ -18,6 +18,8 @@ MESSAGE(STATUS "Appending compilation flags...")
 SET(OV_CONFIG_SUBDIR "${PROJECT_NAME}" CACHE STRING "Subdirectory under user directory when configuration and logs will be saved")
 SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies")
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
+
+OPTION(PUBLISH_DOC_ASSETS "Publish plugin documentation assets" ON)
 
 # If OpenMP is available, it will allow Eigen to use multiple cores in matrix math.
 IF(NOT(APPLE))
@@ -114,7 +116,7 @@ IF(EXISTS "${CMAKE_SOURCE_DIR}/CustomCMakeLists.txt")
 ENDIF()
 
 #################################################################
-SET(BRAND_NAME "CertiViBE")
+SET(BRAND_NAME "OpenViBE")
 string(TOLOWER ${BRAND_NAME} LOWER_BRAND_NAME)
 ADD_DEFINITIONS(-DBRAND_NAME="${BRAND_NAME}")
 #################################################################
@@ -124,8 +126,6 @@ SET(OV_LAUNCHER_SOURCE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules/launchers")
 # By setting SKIP[_FOLDER]* you can skip a subtree (example: SKIP_A_B_C skips folder a/b/c and all its subfolders if any)
 
 # Skip building documentation
-SET(SKIP_DOCUMENTATION "1")
-
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules")
 
 # a list of all project which will be filled by the directory traversal. This is needed to generate the documentation.
@@ -169,6 +169,7 @@ IF(OV_PACKAGE)
 	SET(DIST_LIBDIR ${CMAKE_INSTALL_LIBDIR})
 	SET(DIST_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
 	SET(DIST_DATADIR ${CMAKE_INSTALL_DATADIR})
+	SET(DIST_DOCDIR ${CMAKE_INSTALL_BINDIR}/../doc)
 	SET(CPACK_GENERATOR "ZIP")
 	SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
 	SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "CertiViBE")
@@ -185,6 +186,7 @@ ELSE()
 	SET(DIST_LIBDIR ${CMAKE_INSTALL_FULL_LIBDIR})
 	SET(DIST_INCLUDEDIR ${CMAKE_INSTALL_FULL_INCLUDEDIR})
 	SET(DIST_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
+	SET(DIST_DOCDIR ${CMAKE_INSTALL_FULL_BINDIR}/../doc)
 ENDIF()
 
 # Traverse these directories and build their components

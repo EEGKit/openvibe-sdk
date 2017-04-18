@@ -1,0 +1,73 @@
+# Doxyfile 1.5.8
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+DOXYFILE_ENCODING      = UTF-8
+
+PROJECT_NAME           = OpenViBE
+
+OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@
+
+STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@ \
+                         @PROJECT_BINARY_DIR@
+
+SOURCE_BROWSER = NO
+VERBATIM_HEADERS = NO
+OPTIMIZE_OUTPUT_FOR_C  = NO
+
+BUILTIN_STL_SUPPORT    = NO
+
+QUIET                  = YES
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = NO
+WARN_LOGFILE           = doxygen.log
+
+INPUT                  = @doxy_main_page@ \
+                         @PROJECT_SOURCE_DIR@ \
+                         @PROJECT_BINARY_DIR@
+
+GENERATE_TODOLIST      = NO
+GENERATE_TESTLIST      = NO
+GENERATE_BUGLIST       = NO
+
+INPUT_ENCODING         = UTF-8
+
+FILE_PATTERNS          = *.h \
+                         *.dox
+
+RECURSIVE              = YES
+
+EXCLUDE_PATTERNS       = */doc/?ain?age.dox \
+                         */plugins/*/src/*.h \
+						 */dependencies-source/*.h \
+						 */dependencies/*
+
+#EXAMPLE_PATH           = @ov_doxy_input@
+
+IGNORE_PREFIX          = I \
+                         C \
+                         T
+
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_FILE_EXTENSION    = .html
+
+HTML_HEADER            = @CMAKE_CURRENT_SOURCE_DIR@/src/header.html
+HTML_FOOTER            = @CMAKE_CURRENT_SOURCE_DIR@/src/footer.html
+
+
+GENERATE_LATEX          = NO

@@ -4,7 +4,7 @@
  * \date 2006-06
  * \brief Main OpenViBE namespace
  *
- * All the classes defined in the §OpenViBE§ platform are included in
+ * All the classes defined in the OpenViBE platform are included in
  * this namespace, including kernel and plugins.
  */
 
@@ -12,7 +12,7 @@
  * \namespace OpenViBE::Kernel
  * \author Yann Renard (INRIA/IRISA)
  * \date 2006-06
- * \brief Kernel specifications of the §OpenViBE§ platform
+ * \brief Kernel specifications of the OpenViBE platform
  *
  * This OpenViBE subnamespace contains the specifications of
  * the kernel classes. Those classes are overloaded by the kernel
@@ -23,7 +23,7 @@
  * \namespace OpenViBE::Plugins
  * \author Yann Renard (INRIA/IRISA)
  * \date 2006-06
- * \brief Plugins specifications of the §OpenViBE§ platform
+ * \brief Plugins specifications of the OpenViBE platform
  *
  * This OpenViBE subnamespace contains the specifications of
  * the plugin classes. Those classes should be used by the
