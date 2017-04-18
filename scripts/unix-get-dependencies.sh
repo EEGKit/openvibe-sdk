@@ -66,6 +66,7 @@ function install_dependency() {
         echo "Dependency ${_dep} does not exist in cache ${CACHE_DIR}"
         exit 3
     fi
+	mkdir -p ${_dir}
     unzip -o ${_dep} -d ${_dir}
 }
 
