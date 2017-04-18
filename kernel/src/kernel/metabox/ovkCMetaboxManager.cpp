@@ -54,10 +54,9 @@ namespace OpenViBE
 						m_MetaboxManager.setMetaboxFilePath(metaboxId, CString(l_sFullFileName.c_str()));
 						m_MetaboxManager.setMetaboxHash(metaboxId, l_oHash);
 
-						CBoxAlgorithmMetaboxDesc l_oMetaboxDesc(l_sMetaboxIdentifier.toASCIIString(), metaboxScenario);
+						CBoxAlgorithmMetaboxDesc* metaboxDesc = new CBoxAlgorithmMetaboxDesc(l_sMetaboxIdentifier.toASCIIString(), metaboxScenario);
 
 						CIdentifier l_oMetaboxPrototypeHash = OV_UndefinedIdentifier;
-
 						if (metaboxScenario.hasAttribute(OV_AttributeId_Scenario_MetaboxHash))
 						{
 							l_oMetaboxPrototypeHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
@@ -67,14 +66,10 @@ namespace OpenViBE
 							getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << l_sMetaboxIdentifier.toASCIIString() << " has no Hash in the scenario " << l_sFullFileName.c_str() << "\n";
 						}
 
-						std::string l_sVirtualBoxIdentifier = std::string(l_oMetaboxDesc.getCategory().toASCIIString()) + "/" + std::string(l_oMetaboxDesc.getName().toASCIIString());
-						m_MetaboxManager.getMetaboxInfo(l_sMetaboxIdentifier.toASCIIString()).assignMetaboxDesc(l_oMetaboxDesc);
-						m_MetaboxManager.getMetaboxInfo(l_sMetaboxIdentifier.toASCIIString()).assignVirtualBoxIdentifier(l_sVirtualBoxIdentifier.c_str());
-						m_MetaboxManager.getMetaboxInfo(l_sMetaboxIdentifier.toASCIIString()).assignMetaboxScenarioPath(l_sFullFileName.c_str());
-						m_MetaboxManager.getMetaboxInfo(l_sMetaboxIdentifier.toASCIIString()).assignMetaboxHash(l_oMetaboxPrototypeHash);
+						std::string l_sVirtualBoxIdentifier = std::string(metaboxDesc->getCategory().toASCIIString()) + "/" + std::string(metaboxDesc->getName().toASCIIString());
+						m_MetaboxManager.addMetaboxInfo(metaboxId, { *metaboxDesc, l_sVirtualBoxIdentifier.c_str(), l_sFullFileName.c_str(), l_oMetaboxPrototypeHash} );
 
-						m_MetaboxManager.getMetaboxObjectDescMap()[l_sVirtualBoxIdentifier] = &(m_MetaboxManager.getMetaboxInfo(l_sMetaboxIdentifier.toASCIIString()).m_oMetaboxDesc);
-
+						m_MetaboxManager.getMetaboxObjectDescMap()[metaboxId] = metaboxDesc;
 
 						getKernelContext().getScenarioManager().releaseScenario(l_oMetaboxScenarioId);
 
@@ -109,6 +104,10 @@ CMetaboxManager::CMetaboxManager(const IKernelContext& rKernelContext)
 
 CMetaboxManager::~CMetaboxManager(void)
 {
+	for (auto desc : m_MetaboxObjectDesc)
+	{
+		delete desc.second;
+	}
 }
 
 bool CMetaboxManager::addMetaboxFromFiles(const CString& rFileNameWildCard)
@@ -137,30 +136,29 @@ bool CMetaboxManager::addMetaboxFromFiles(const CString& rFileNameWildCard)
 	return true;
 }
 
-CIdentifier CMetaboxManager::getNextMetaboxObjectDescIdentifier(
-	const CIdentifier& rPreviousIdentifier) const
+CIdentifier CMetaboxManager::getNextMetaboxObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const
 {
-	if (rPreviousIdentifier == OV_UndefinedIdentifier)
-	{
-		CIdentifier res;
-		res.fromString(CString(m_mMetaboxObjectDesc.begin()->first.c_str()));
-		return res;
-	}
-
-	auto result = m_mMetaboxObjectDesc.find(rPreviousIdentifier.toString().toASCIIString());
-	if (result == m_mMetaboxObjectDesc.end() || std::next(result, 1) == m_mMetaboxObjectDesc.end())
+	if (!m_MetaboxObjectDesc.size())
 	{
 		return OV_UndefinedIdentifier;
 	}
-	CIdentifier res;
-	res.fromString(CString(std::next(result, 1)->first.c_str()));
-	return res;
+	if (rPreviousIdentifier == OV_UndefinedIdentifier)
+	{
+		return m_MetaboxObjectDesc.begin()->first;
+	}
+
+	auto result = m_MetaboxObjectDesc.find(rPreviousIdentifier);
+	if (result == m_MetaboxObjectDesc.end() || std::next(result, 1) == m_MetaboxObjectDesc.end())
+	{
+		return OV_UndefinedIdentifier;
+	}
+	return std::next(result, 1)->first;
 }
 
 const OpenViBE::Plugins::IPluginObjectDesc* CMetaboxManager::getMetaboxObjectDesc(const CIdentifier& rClassIdentifier) const
 {
-	auto result = m_mMetaboxObjectDesc.find(rClassIdentifier.toString().toASCIIString());
-	return result != m_mMetaboxObjectDesc.end() ? result->second : nullptr;
+	auto result = m_MetaboxObjectDesc.find(rClassIdentifier);
+	return result != m_MetaboxObjectDesc.end() ? result->second : nullptr;
 }
 
 OpenViBE::CString CMetaboxManager::getMetaboxFilePath(const OpenViBE::CIdentifier& rClassIdentifier) const
