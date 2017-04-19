@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cmath>
 #include <cstring>
+#include <random>
 
 using namespace OpenViBE;
 
@@ -111,11 +112,8 @@ uint64 CIdentifier::toUInteger(void) const
 
 CIdentifier CIdentifier::random(void)
 {
-	uint64 l_ui64Identifier=0;
-	for(uint32 i=0; i<4 || l_ui64Identifier==0xffffffffffffffffll; i++)
-	{
-		l_ui64Identifier<<=16;
-		l_ui64Identifier+=(rand()&0xffff);
-	}
-	return l_ui64Identifier;
+	std::random_device rd;
+	std::default_random_engine rng(rd());
+	std::uniform_int_distribution<uint64_t> uni(0, std::numeric_limits<uint64_t>::max() - 1); // This exclude OV_UndefinedIdentifier value
+	return CIdentifier(uni(rng));
 }

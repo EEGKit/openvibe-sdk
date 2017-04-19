@@ -12,8 +12,10 @@
 #include <iostream>
 #include <map>
 #include <algorithm>
+#include <random>
 
 #include "../../tools/ovkSBoxProto.h"
+#include "ovp_global_defines.h"
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -40,45 +42,40 @@ namespace OpenViBE
 				{
 					std::string l_sFullFileName(rEntry.getName());
 
-					OpenViBE::CIdentifier l_oMetaboxScenarioId;
-					getKernelContext().getScenarioManager().importScenarioFromFile(l_oMetaboxScenarioId, OVP_ScenarioImportContext_OnLoadMetaboxImport, l_sFullFileName.c_str());
-					if (l_oMetaboxScenarioId != OV_UndefinedIdentifier)
+					OpenViBE::CIdentifier scenarioId, metaboxId, metaboxHash, metaboxPrototypeHash;
+					getKernelContext().getScenarioManager().importScenarioFromFile(scenarioId, OVP_ScenarioImportContext_OnLoadMetaboxImport, l_sFullFileName.c_str());
+					if (scenarioId != OV_UndefinedIdentifier)
 					{
-						OpenViBE::Kernel::IScenario& metaboxScenario = getKernelContext().getScenarioManager().getScenario(l_oMetaboxScenarioId);
-						OpenViBE::CIdentifier l_oHash;
-						l_oHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
-
-						OpenViBE::CString l_sMetaboxIdentifier(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
-						OpenViBE::CIdentifier metaboxId;
-						metaboxId.fromString(l_sMetaboxIdentifier);
-						m_MetaboxManager.setMetaboxFilePath(metaboxId, CString(l_sFullFileName.c_str()));
-						m_MetaboxManager.setMetaboxHash(metaboxId, l_oHash);
-
-						CMetaboxObjectDesc* metaboxDesc = new CMetaboxObjectDesc(l_sMetaboxIdentifier.toASCIIString(), metaboxScenario);
-
-						CIdentifier l_oMetaboxPrototypeHash = OV_UndefinedIdentifier;
-						if (metaboxScenario.hasAttribute(OV_AttributeId_Scenario_MetaboxHash))
+						OpenViBE::Kernel::IScenario& metaboxScenario = getKernelContext().getScenarioManager().getScenario(scenarioId);
+						bool validId = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+						if (validId && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
 						{
-							l_oMetaboxPrototypeHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
+							metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
+							m_MetaboxManager.setMetaboxFilePath(metaboxId, CString(l_sFullFileName.c_str()));
+							m_MetaboxManager.setMetaboxHash(metaboxId, metaboxHash);
+
+							CMetaboxObjectDesc* metaboxDesc = new CMetaboxObjectDesc(metaboxId.toString().toASCIIString(), metaboxScenario);
+
+							CIdentifier metaboxPrototypeHash = OV_UndefinedIdentifier;
+							if (metaboxScenario.hasAttribute(OV_AttributeId_Scenario_MetaboxHash))
+							{
+								metaboxPrototypeHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
+							}
+							else
+							{
+								getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.toString().toASCIIString() << " has no Hash in the scenario " << l_sFullFileName.c_str() << "\n";
+							}
+
+							std::string l_sVirtualBoxIdentifier = std::string(metaboxDesc->getCategory().toASCIIString()) + "/" + std::string(metaboxDesc->getName().toASCIIString());
+							m_MetaboxManager.addMetaboxInfo(metaboxId, { *metaboxDesc, l_sVirtualBoxIdentifier.c_str(), l_sFullFileName.c_str(), metaboxPrototypeHash} );
+							m_MetaboxManager.getMetaboxObjectDescMap()[metaboxId] = metaboxDesc;
+
+							m_ui32MetaBoxCount++;
 						}
-						else
-						{
-							getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << l_sMetaboxIdentifier.toASCIIString() << " has no Hash in the scenario " << l_sFullFileName.c_str() << "\n";
-						}
-
-						std::string l_sVirtualBoxIdentifier = std::string(metaboxDesc->getCategory().toASCIIString()) + "/" + std::string(metaboxDesc->getName().toASCIIString());
-						m_MetaboxManager.addMetaboxInfo(metaboxId, { *metaboxDesc, l_sVirtualBoxIdentifier.c_str(), l_sFullFileName.c_str(), l_oMetaboxPrototypeHash} );
-
-						m_MetaboxManager.getMetaboxObjectDescMap()[metaboxId] = metaboxDesc;
-
-						getKernelContext().getScenarioManager().releaseScenario(l_oMetaboxScenarioId);
-
-						m_ui32MetaBoxCount++;
 					}
-
+					getKernelContext().getScenarioManager().releaseScenario(scenarioId);
 				}
 				return true;
-
 			}
 
 			uint32_t resetMetaboxCount(void)
@@ -100,6 +97,7 @@ namespace OpenViBE
 CMetaboxManager::CMetaboxManager(const IKernelContext& rKernelContext)
 	: TKernelObject<IMetaboxManager>(rKernelContext)
 {
+	getScenarioManager().registerScenarioImporter(OVP_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 }
 
 CMetaboxManager::~CMetaboxManager(void)

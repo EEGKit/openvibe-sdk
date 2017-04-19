@@ -144,8 +144,6 @@ namespace OpenViBE
 
 		IConfigurationManager& configurationManager = kernelContext->getConfigurationManager();
 		kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
-
-		kernelContext->getScenarioManager().registerScenarioImporter(OVP_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 		kernelContext->getMetaboxManager().addMetaboxFromFiles(configurationManager.expand("${Kernel_Metabox}"));
 
 		return PlayerReturnCode::Success;
