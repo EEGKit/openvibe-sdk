@@ -63,58 +63,67 @@ namespace OpenViBE
 
 			/**
 			 * \brief Loads new .mxb metabox module file(s)
-			 * \param rFileNameWildCard [in] : a wild card with the file(s) to search plugins in
+			 * \param rFileNameWildCard [in] : a wild card with the file(s) to search metaboxes in
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addMetaboxFromFiles(const OpenViBE::CString& rFileNameWildCard)=0;
+			virtual bool addMetaboxFromFiles(const OpenViBE::CString& fileNameWildCard) = 0;
 
 			/**
 			 * \brief Gets next metabox object descriptor identifier
-			 * \param rPreviousIdentifier [in] : The identifier
+			 * \param previousIdentifier [in] : The identifier
 			 *        for the preceeding metabox object descriptor
 			 * \return The identifier of the next metabox object descriptor in case of success.
 			 * \return \c OV_UndefinedIdentifier on error.
-			 * \note Giving \c OV_UndefinedIdentifier as \c rPreviousIdentifier
+			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier
 			 *       will cause this function to return the first metabox object
 			 *       descriptor identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextMetaboxObjectDescIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
+				const OpenViBE::CIdentifier& previousIdentifier) const = 0;
 
 			/**
 			 * \brief Gets details on a specific metabox object descriptor
-			 * \param rIdentifier [in] : the metabox object descriptor identifier which details should be returned
+			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier which details should be returned
 			 * \return the corresponding metabox object descriptor pointer.
 			 */
 			virtual const OpenViBE::Plugins::IPluginObjectDesc* getMetaboxObjectDesc(
-				const OpenViBE::CIdentifier& rIdentifier) const=0;
+				const OpenViBE::CIdentifier& metaboxIdentifier) const = 0;
+
+			/**
+			 * \brief Sets details on a specific metabox object descriptor
+			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier
+			 * \param metaboxDescriptor [in] : the metabox object descriptor
+			 */
+			virtual void setMetaboxObjectDesc(const OpenViBE::CIdentifier& metaboxIdentifier,
+						OpenViBE::Plugins::IPluginObjectDesc* metaboxDescriptor) = 0;
+
 
 			/**
 			 * \brief Gets the path of the scenario of a specific metabox
-			 * \param rIdentifier [in] : the metabox object descriptor identifier which path should be returned
+			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier which path should be returned
 			 * \return the path to the scenario file of the metabox.
 			 */
-			virtual OpenViBE::CString getMetaboxFilePath(const OpenViBE::CIdentifier& rClassIdentifier) const = 0;
+			virtual OpenViBE::CString getMetaboxFilePath(const OpenViBE::CIdentifier& metaboxIdentifier) const = 0;
 			/**
 			 * \brief Sets the path of the scenario of a specific metabox
-			 * \param rIdentifier [in] : the metabox object descriptor identifier
+			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier
 			 * \param filePath [in] : the metabox scenario path
 			 */
-			virtual void setMetaboxFilePath(const OpenViBE::CIdentifier& rClassIdentifier, const OpenViBE::CString& filePath) = 0;
+			virtual void setMetaboxFilePath(const OpenViBE::CIdentifier& metaboxIdentifier, const OpenViBE::CString& filePath) = 0;
 
 			/**
 			 * \brief Gets the hash of the metabox
-			 * \param rIdentifier [in] : the metabox object descriptor identifier which hash should be returned
+			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier which hash should be returned
 			 * \return the hash of the metabox.
 			 */
-			virtual OpenViBE::CIdentifier getMetaboxHash(const OpenViBE::CIdentifier& rClassIdentifier) const = 0;
+			virtual OpenViBE::CIdentifier getMetaboxHash(const OpenViBE::CIdentifier& metaboxIdentifier) const = 0;
 			/**
 			 * \brief Sets the hash of the metabox
-			 * \param rIdentifier [in] : the metabox object descriptor identifier
+			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier
 			 * \param hash [in] : the metabox hash
 			 */
-			virtual void setMetaboxHash(const OpenViBE::CIdentifier& rClassIdentifier, const OpenViBE::CIdentifier& hash) = 0;
+			virtual void setMetaboxHash(const OpenViBE::CIdentifier& metaboxIdentifier, const OpenViBE::CIdentifier& hash) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Metabox_MetaboxManager)
 

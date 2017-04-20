@@ -140,8 +140,7 @@ namespace OpenViBE
 
 			} SSetting;
 
-			virtual OpenViBE::boolean getBoxPrototype(
-					OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				for (auto& input : m_vInput)
 				{
@@ -190,91 +189,27 @@ namespace OpenViBE
 		class CMetaboxManager : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMetaboxManager>
 		{
 		public:
-
-			typedef struct _SMetaboxScenario
-			{
-				_SMetaboxScenario()
-				{}
-
-				_SMetaboxScenario(const OpenViBE::Metabox::CMetaboxObjectDesc& rMetaboxDesc,
-								  const char* sVirtualBoxIdentifier,
-								  const char* sMetaboxScenarioPath,
-								  const OpenViBE::CIdentifier& rHash)
-					: m_oMetaboxDesc(rMetaboxDesc)
-					, m_sVirtualBoxIdentifier(std::string(sVirtualBoxIdentifier))
-					, m_sMetaboxScenarioPath(std::string(sMetaboxScenarioPath))
-					, m_oHash(rHash)
-				{}
-
-				void assignMetaboxDesc(const OpenViBE::Metabox::CMetaboxObjectDesc& rMetaboxDesc)
-				{
-					m_oMetaboxDesc = rMetaboxDesc;
-				}
-
-				void assignVirtualBoxIdentifier(const char* sVirtualBoxIdentifier)
-				{
-					m_sVirtualBoxIdentifier = std::string(sVirtualBoxIdentifier);
-				}
-
-				void assignMetaboxScenarioPath(const char* sMetaboxScenarioPath)
-				{
-					m_sMetaboxScenarioPath = std::string(sMetaboxScenarioPath);
-				}
-
-				void assignMetaboxHash(const OpenViBE::CIdentifier& rHash)
-				{
-					m_oHash = rHash;
-				}
-
-
-				/// The BoxAlgorithmDesc specific to a metabox
-				OpenViBE::Metabox::CMetaboxObjectDesc m_oMetaboxDesc;
-
-				/// Identifier of the box inside designer tree-view Category/Name
-				std::string m_sVirtualBoxIdentifier;
-
-				/// path to the scenario containing the description of the metabox
-				std::string m_sMetaboxScenarioPath;
-				// TODO_JL add information about modification time etc
-
-				/// the hash of the metabox prototype
-				OpenViBE::CIdentifier m_oHash;
-			} SMetaboxScenario;
-
-			explicit CMetaboxManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CMetaboxManager(const OpenViBE::Kernel::IKernelContext& kernelContext);
 			virtual ~CMetaboxManager(void);
 
-			virtual bool addMetaboxFromFiles(const OpenViBE::CString& rFileNameWildCard);
+			virtual bool addMetaboxFromFiles(const OpenViBE::CString& fileNameWildCard);
+			virtual OpenViBE::CIdentifier getNextMetaboxObjectDescIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const;
 
-			virtual OpenViBE::CIdentifier getNextMetaboxObjectDescIdentifier(const OpenViBE::CIdentifier& rPreviousIdentifier) const;
+			virtual const OpenViBE::Plugins::IPluginObjectDesc* getMetaboxObjectDesc(const OpenViBE::CIdentifier& metaboxIdentifier) const;
+			virtual void setMetaboxObjectDesc(const OpenViBE::CIdentifier& metaboxIdentifier, OpenViBE::Plugins::IPluginObjectDesc* metaboxDescriptor);
 
-			virtual const OpenViBE::Plugins::IPluginObjectDesc* getMetaboxObjectDesc(const OpenViBE::CIdentifier& rClassIdentifier) const;
+			virtual OpenViBE::CString getMetaboxFilePath(const OpenViBE::CIdentifier& metaboxIdentifier) const;
+			virtual void setMetaboxFilePath(const OpenViBE::CIdentifier& metaboxIdentifier, const OpenViBE::CString& filePath);
 
-			virtual OpenViBE::CString getMetaboxFilePath(const OpenViBE::CIdentifier& rClassIdentifier) const;
-			virtual void setMetaboxFilePath(const OpenViBE::CIdentifier& rClassIdentifier, const OpenViBE::CString& filePath);
-
-			virtual OpenViBE::CIdentifier getMetaboxHash(const OpenViBE::CIdentifier& rClassIdentifier) const;
-			virtual void setMetaboxHash(const OpenViBE::CIdentifier& rClassIdentifier, const OpenViBE::CIdentifier& hash);
-
-			/// get information about one metabox using its identifier
-			SMetaboxScenario& getMetaboxInfo(const OpenViBE::CIdentifier& rMetaboxIdentifier) { return m_mMetaboxScenarioInfo[rMetaboxIdentifier]; }
-			void addMetaboxInfo(const OpenViBE::CIdentifier& rMetaboxIdentifier, SMetaboxScenario metaboxInfo)	{ m_mMetaboxScenarioInfo[rMetaboxIdentifier] = metaboxInfo; }
-
-			/// map of Category/Name -> IPluginObjectDesc
-			std::map<OpenViBE::CIdentifier, const OpenViBE::Plugins::IPluginObjectDesc*>& getMetaboxObjectDescMap() { return m_MetaboxObjectDesc; }
+			virtual OpenViBE::CIdentifier getMetaboxHash(const OpenViBE::CIdentifier& metaboxIdentifier) const;
+			virtual void setMetaboxHash(const OpenViBE::CIdentifier& metaboxIdentifier, const OpenViBE::CIdentifier& hash);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IMetaboxManager, OVK_ClassId_Kernel_Metabox_MetaboxManager)
 
-
 		protected:
-
 			std::map<OpenViBE::CIdentifier, const OpenViBE::Plugins::IPluginObjectDesc*> m_MetaboxObjectDesc;
 			std::map<OpenViBE::CIdentifier, OpenViBE::CString> m_MetaboxFilePath;
 			std::map<OpenViBE::CIdentifier, OpenViBE::CIdentifier> m_MetaboxHash;
-
-			/// contains scenario information indexed by filename
-			std::map<OpenViBE::CIdentifier, SMetaboxScenario> m_mMetaboxScenarioInfo;
-
 		};
 	};
 };
