@@ -131,4 +131,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Kernel_Plugins_IPluginManager_H__
+#endif // __OpenViBE_Kernel_Metabox_IMetaboxManager_H__

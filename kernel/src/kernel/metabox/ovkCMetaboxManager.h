@@ -14,7 +14,7 @@ namespace OpenViBE
 	{
 
 		/**
-		 * @brief The CMetaboxObjectDesc virtual BoxAlgorithmDesc for metaboxes
+		 * \brief The CMetaboxObjectDesc virtual BoxAlgorithmDesc for metaboxes
 		 *
 		 * This class provides a virtual algorithm descriptor for metaboxes. Each metabox-scenario
 		 * will result in one of these descriptors. The prototype is created from scenario inputs,
@@ -30,17 +30,17 @@ namespace OpenViBE
 			}
 
 			CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescriptor, OpenViBE::Kernel::IScenario& metaboxScenario)
-				:	m_sMetaboxDescriptor(rMetaboxDescriptor)
-					, m_sName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name))
-					, m_sAuthorName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Author))
-					, m_sAuthorCompanyName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Company))
-					, m_sShortDescription(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_ShortDescription))
-					, m_sDetailedDescription(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_DetailedDescription))
-					, m_sCategory( metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Category))
-					, m_sVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Version))
-					, m_sStockItemName("")
-					, m_sAddedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_AddedSoftwareVersion))
-					, m_sUpdatedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_UpdatedSoftwareVersion))
+				:	m_MetaboxDescriptor(rMetaboxDescriptor)
+					, m_Name(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name))
+					, m_AuthorName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Author))
+					, m_AuthorCompanyName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Company))
+					, m_ShortDescription(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_ShortDescription))
+					, m_DetailedDescription(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_DetailedDescription))
+					, m_Category( metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Category))
+					, m_Version(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Version))
+					, m_StockItemName("")
+					, m_AddedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_AddedSoftwareVersion))
+					, m_UpdatedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_UpdatedSoftwareVersion))
 					, m_MetaboxIdentifier(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier))
 			{
 
@@ -52,7 +52,7 @@ namespace OpenViBE
 					metaboxScenario.getInputType(l_ui32ScenarioInputIndex, l_oInputTypeIdentifier);
 					metaboxScenario.getInputName(l_ui32ScenarioInputIndex, l_sInputName);
 
-					m_vInput.push_back(SIOStream(l_sInputName, l_oInputTypeIdentifier));
+					m_Inputs.push_back(SIOStream(l_sInputName, l_oInputTypeIdentifier));
 				}
 
 				for (uint32 l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < metaboxScenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
@@ -63,7 +63,7 @@ namespace OpenViBE
 					metaboxScenario.getOutputType(l_ui32ScenarioOutputIndex, l_oOutputTypeIdentifier);
 					metaboxScenario.getOutputName(l_ui32ScenarioOutputIndex, l_sOutputName);
 
-					m_vOutput.push_back(SIOStream(l_sOutputName, l_oOutputTypeIdentifier));
+					m_Outputs.push_back(SIOStream(l_sOutputName, l_oOutputTypeIdentifier));
 				}
 
 				for (uint32 l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < metaboxScenario.getSettingCount(); l_ui32ScenarioSettingIndex++)
@@ -76,25 +76,25 @@ namespace OpenViBE
 					metaboxScenario.getSettingType(l_ui32ScenarioSettingIndex, l_oSettingTypeIdentifier);
 					metaboxScenario.getSettingDefaultValue(l_ui32ScenarioSettingIndex, l_sSettingDefaultValue);
 
-					m_vSetting.push_back(SSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sSettingDefaultValue));
+					m_Settings.push_back(SSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sSettingDefaultValue));
 				}
 			}
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getMetaboxDescriptor(void) const              { return m_sMetaboxDescriptor; }
+			virtual OpenViBE::CString getMetaboxDescriptor(void) const              { return m_MetaboxDescriptor; }
 
-			virtual OpenViBE::CString getName(void) const                   { return m_sName; }
-			virtual OpenViBE::CString getAuthorName(void) const             { return m_sAuthorName; }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const      { return m_sAuthorCompanyName; }
-			virtual OpenViBE::CString getShortDescription(void) const       { return m_sShortDescription; }
-			virtual OpenViBE::CString getDetailedDescription(void) const    { return m_sDetailedDescription; }
-			virtual OpenViBE::CString getCategory(void) const               { return m_sCategory; }
-			virtual OpenViBE::CString getVersion(void) const                { return m_sVersion; }
-			virtual OpenViBE::CString getStockItemName(void) const          { return m_sStockItemName; }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return m_sAddedSoftwareVersion; }
+			virtual OpenViBE::CString getName(void) const                   { return m_Name; }
+			virtual OpenViBE::CString getAuthorName(void) const             { return m_AuthorName; }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const      { return m_AuthorCompanyName; }
+			virtual OpenViBE::CString getShortDescription(void) const       { return m_ShortDescription; }
+			virtual OpenViBE::CString getDetailedDescription(void) const    { return m_DetailedDescription; }
+			virtual OpenViBE::CString getCategory(void) const               { return m_Category; }
+			virtual OpenViBE::CString getVersion(void) const                { return m_Version; }
+			virtual OpenViBE::CString getStockItemName(void) const          { return m_StockItemName; }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return m_AddedSoftwareVersion; }
 
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return m_sUpdatedSoftwareVersion; }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return m_UpdatedSoftwareVersion; }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_Metabox; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return NULL; }
@@ -142,17 +142,17 @@ namespace OpenViBE
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
-				for (auto& input : m_vInput)
+				for (auto& input : m_Inputs)
 				{
 					rBoxAlgorithmPrototype.addInput(input.m_sName, input.m_oTypeIdentifier);
 				}
 
-				for (auto& output : m_vOutput)
+				for (auto& output : m_Outputs)
 				{
 					rBoxAlgorithmPrototype.addOutput(output.m_sName, output.m_oTypeIdentifier);
 				}
 
-				for (auto& setting : m_vSetting)
+				for (auto& setting : m_Settings)
 				{
 					rBoxAlgorithmPrototype.addSetting(setting.m_sName, setting.m_oTypeIdentifier, setting.m_sDefaultValue);
 				}
@@ -163,23 +163,23 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc);
 		private:
-			OpenViBE::CString m_sMetaboxDescriptor;
+			OpenViBE::CString m_MetaboxDescriptor;
 
-			OpenViBE::CString m_sName;
-			OpenViBE::CString m_sAuthorName;
-			OpenViBE::CString m_sAuthorCompanyName;
-			OpenViBE::CString m_sShortDescription;
-			OpenViBE::CString m_sDetailedDescription;
-			OpenViBE::CString m_sCategory;
-			OpenViBE::CString m_sVersion;
-			OpenViBE::CString m_sStockItemName;
-			OpenViBE::CString m_sAddedSoftwareVersion;
-			OpenViBE::CString m_sUpdatedSoftwareVersion;
+			OpenViBE::CString m_Name;
+			OpenViBE::CString m_AuthorName;
+			OpenViBE::CString m_AuthorCompanyName;
+			OpenViBE::CString m_ShortDescription;
+			OpenViBE::CString m_DetailedDescription;
+			OpenViBE::CString m_Category;
+			OpenViBE::CString m_Version;
+			OpenViBE::CString m_StockItemName;
+			OpenViBE::CString m_AddedSoftwareVersion;
+			OpenViBE::CString m_UpdatedSoftwareVersion;
 			OpenViBE::CString m_MetaboxIdentifier;
 
-			std::vector<SIOStream> m_vInput;
-			std::vector<SIOStream> m_vOutput;
-			std::vector<SSetting> m_vSetting;
+			std::vector<SIOStream> m_Inputs;
+			std::vector<SIOStream> m_Outputs;
+			std::vector<SSetting> m_Settings;
 
 		};
 	};

@@ -56,7 +56,6 @@
 #define OV_ClassId_Kernel_Plugins_PluginManager              OpenViBE::CIdentifier(0x690ED3AC, 0x2D0702F0)
 #define OV_ClassId_Kernel_Metabox_MetaboxManager             OpenViBE::CIdentifier(0x1431A3AC, 0x2D01431A)
 
-
 #define OV_ClassId_Kernel_Scenario_Attributable              OpenViBE::CIdentifier(0x61B64E38, 0x0B36B4E8)
 #define OV_ClassId_Kernel_Scenario_Box                       OpenViBE::CIdentifier(0x41209015, 0x1183237A)
 #define OV_ClassId_Kernel_Scenario_BoxIO                     OpenViBE::CIdentifier(0x110AAB4F, 0x157CBEF1)
@@ -172,7 +171,6 @@
 #define OVP_ClassId_BoxAlgorithm_Metabox                    OpenViBE::CIdentifier(0xFE420CB6, 0x5F2BA4C3)
 #define OVP_ClassId_BoxAlgorithm_MetaboxDesc                OpenViBE::CIdentifier(0xA87F133C, 0x1E6B6543)
 #define OVP_AttributeId_Metabox_Identifier                  OpenViBE::CIdentifier(0x198DD621, 0xAB7F153F)
-
 #define OV_AttributeId_ScenarioFilename                     OpenViBE::CIdentifier(0x4C536D0A, 0xB23DC545)
 
 //___________________________________________________________________//
