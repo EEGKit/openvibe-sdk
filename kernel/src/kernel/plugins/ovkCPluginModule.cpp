@@ -25,26 +25,26 @@ namespace OpenViBE
 			explicit CPluginModuleBase(const IKernelContext& rKernelContext);
 			virtual ~CPluginModuleBase();
 
-			virtual boolean initialize(void);
-			virtual boolean getPluginObjectDescription(
+			virtual bool initialize(void);
+			virtual bool getPluginObjectDescription(
 				uint32 ui32Index,
 				IPluginObjectDesc*& rpPluginObjectDescription);
-			virtual boolean uninitialize(void);
-			virtual boolean getFileName(CString& rFileName) const;
+			virtual bool uninitialize(void);
+			virtual bool getFileName(CString& rFileName) const;
 
 			_IsDerivedFromClass_Final_(IPluginModule, OV_UndefinedIdentifier);
 
 		protected:
 
-			virtual boolean isOpen(void) const=0;
+			virtual bool isOpen(void) const=0;
 
 			vector<IPluginObjectDesc*> m_vPluginObjectDescriptor;
 			CString m_sFileName;
-			boolean m_bGotDescriptions;
+			bool m_bGotDescriptions;
 
-			boolean (*onInitializeCB)(const IPluginModuleContext&);
-			boolean (*onGetPluginObjectDescriptionCB)(const IPluginModuleContext&, uint32, Plugins::IPluginObjectDesc*&);
-			boolean (*onUninitializeCB)(const IPluginModuleContext&);
+			bool (*onInitializeCB)(const IPluginModuleContext&);
+			bool (*onGetPluginObjectDescriptionCB)(const IPluginModuleContext&, uint32, Plugins::IPluginObjectDesc*&);
+			bool (*onUninitializeCB)(const IPluginModuleContext&);
 		};
 	};
 };
@@ -83,8 +83,6 @@ namespace OpenViBE
 	};
 };
 
-#define boolean bool
-
 //___________________________________________________________________//
 //                                                                   //
 
@@ -99,7 +97,7 @@ CPluginModuleBase::CPluginModuleBase(const IKernelContext& rKernelContext)
 
 CPluginModuleBase::~CPluginModuleBase() { };
 
-boolean CPluginModuleBase::initialize(void)
+bool CPluginModuleBase::initialize(void)
 {
 	if(!isOpen())
 	{
@@ -112,7 +110,7 @@ boolean CPluginModuleBase::initialize(void)
 	return onInitializeCB(CPluginModuleContext(getKernelContext()));
 }
 
-boolean CPluginModuleBase::getPluginObjectDescription(
+bool CPluginModuleBase::getPluginObjectDescription(
 	uint32 ui32Index,
 	IPluginObjectDesc*& rpPluginObjectDescription)
 {
@@ -151,7 +149,7 @@ boolean CPluginModuleBase::getPluginObjectDescription(
 	return true;
 }
 
-boolean CPluginModuleBase::uninitialize(void)
+bool CPluginModuleBase::uninitialize(void)
 {
 	if(!isOpen())
 	{
@@ -164,7 +162,7 @@ boolean CPluginModuleBase::uninitialize(void)
 	return onUninitializeCB(CPluginModuleContext(getKernelContext()));
 }
 
-boolean CPluginModuleBase::getFileName(
+bool CPluginModuleBase::getFileName(
 	CString& rFileName) const
 {
 	if(!isOpen())
@@ -190,12 +188,12 @@ namespace OpenViBE
 
 			CPluginModuleLinux(const IKernelContext& rKernelContext);
 
-			virtual boolean load(
+			virtual bool load(
 				const CString& sFileName,
 				CString* pError);
-			virtual boolean unload(
+			virtual bool unload(
 				CString* pError);
-			virtual boolean isOpen(void) const;
+			virtual bool isOpen(void) const;
 
 		protected:
 
@@ -216,15 +214,15 @@ namespace OpenViBE
 
 			explicit CPluginModuleWindows(const IKernelContext& rKernelContext);
 
-			virtual boolean load(
+			virtual bool load(
 				const CString& sFileName,
 				CString* pError);
-			virtual boolean unload(
+			virtual bool unload(
 				CString* pError);
 
 		protected:
 
-			virtual boolean isOpen(void) const;
+			virtual bool isOpen(void) const;
 
 			HMODULE m_pFileHandle;
 
@@ -247,15 +245,15 @@ namespace OpenViBE
 
 			explicit CPluginModuleDummy(const IKernelContext& rKernelContext);
 
-			virtual boolean load(
+			virtual bool load(
 				const CString& sFileName,
 				CString* pError);
-			virtual boolean unload(
+			virtual bool unload(
 				CString* pError);
 
 		protected:
 
-			virtual boolean isOpen(void) const;
+			virtual bool isOpen(void) const;
 		};
 	};
 };
@@ -273,7 +271,7 @@ CPluginModuleLinux::CPluginModuleLinux(const IKernelContext& rKernelContext)
 {
 }
 
-boolean CPluginModuleLinux::load(
+bool CPluginModuleLinux::load(
 	const CString& sFileName,
 	CString* pError)
 {
@@ -291,9 +289,9 @@ boolean CPluginModuleLinux::load(
 		return false;
 	}
 
-	onInitializeCB=(boolean (*)(const IPluginModuleContext&))dlsym(m_pFileHandle, "onInitialize");
-	onUninitializeCB=(boolean (*)(const IPluginModuleContext&))dlsym(m_pFileHandle, "onUninitialize");
-	onGetPluginObjectDescriptionCB=(boolean (*)(const IPluginModuleContext&, uint32, Plugins::IPluginObjectDesc*&))dlsym(m_pFileHandle, "onGetPluginObjectDescription");
+	onInitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_pFileHandle, "onInitialize");
+	onUninitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_pFileHandle, "onUninitialize");
+	onGetPluginObjectDescriptionCB=(bool (*)(const IPluginModuleContext&, uint32, Plugins::IPluginObjectDesc*&))dlsym(m_pFileHandle, "onGetPluginObjectDescription");
 
 	if(!onGetPluginObjectDescriptionCB)
 	{
@@ -311,7 +309,7 @@ boolean CPluginModuleLinux::load(
 	return true;
 }
 
-boolean CPluginModuleLinux::unload(
+bool CPluginModuleLinux::unload(
 	CString* pError)
 {
 	if(!m_pFileHandle)
@@ -328,7 +326,7 @@ boolean CPluginModuleLinux::unload(
 	return true;
 }
 
-boolean CPluginModuleLinux::isOpen(void) const
+bool CPluginModuleLinux::isOpen(void) const
 {
 	return m_pFileHandle!=NULL;
 }
@@ -341,7 +339,7 @@ CPluginModuleWindows::CPluginModuleWindows(const IKernelContext& rKernelContext)
 {
 }
 
-boolean CPluginModuleWindows::load(
+bool CPluginModuleWindows::load(
 	const CString& sFileName,
 	CString* pError)
 {
@@ -361,9 +359,9 @@ boolean CPluginModuleWindows::load(
 		return false;
 	}
 
-	onInitializeCB=(boolean (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onInitialize");
-	onUninitializeCB=(boolean (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onUninitialize");
-	onGetPluginObjectDescriptionCB=(boolean (*)(const IPluginModuleContext&, uint32, Plugins::IPluginObjectDesc*&))GetProcAddress(m_pFileHandle, "onGetPluginObjectDescription");
+	onInitializeCB=(bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onInitialize");
+	onUninitializeCB=(bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onUninitialize");
+	onGetPluginObjectDescriptionCB=(bool (*)(const IPluginModuleContext&, uint32, Plugins::IPluginObjectDesc*&))GetProcAddress(m_pFileHandle, "onGetPluginObjectDescription");
 	if(!onGetPluginObjectDescriptionCB)
 	{
 		if(pError)
@@ -383,7 +381,7 @@ boolean CPluginModuleWindows::load(
 	return true;
 }
 
-boolean CPluginModuleWindows::unload(
+bool CPluginModuleWindows::unload(
 	CString* pError)
 {
 	if(!m_pFileHandle)
@@ -400,7 +398,7 @@ boolean CPluginModuleWindows::unload(
 	return true;
 }
 
-boolean CPluginModuleWindows::isOpen(void) const
+bool CPluginModuleWindows::isOpen(void) const
 {
 	return m_pFileHandle!=NULL;
 }
@@ -461,37 +459,37 @@ CPluginModule::~CPluginModule(void)
 	delete m_pImplementation;
 }
 
-boolean CPluginModule::load(
+bool CPluginModule::load(
 	const CString& sFileName,
 	CString* pError)
 {
 	return !m_pImplementation?false:m_pImplementation->load(sFileName, pError);
 }
 
-boolean CPluginModule::unload(
+bool CPluginModule::unload(
 	CString* pError)
 {
 	return !m_pImplementation?false:m_pImplementation->unload(pError);
 }
 
-boolean CPluginModule::initialize(void)
+bool CPluginModule::initialize(void)
 {
 	return !m_pImplementation?false:m_pImplementation->initialize();
 }
 
-boolean CPluginModule::getPluginObjectDescription(
+bool CPluginModule::getPluginObjectDescription(
 	uint32 ui32Index,
 	IPluginObjectDesc*& rpPluginObjectDescription)
 {
 	return !m_pImplementation?false:m_pImplementation->getPluginObjectDescription(ui32Index, rpPluginObjectDescription);
 }
 
-boolean CPluginModule::uninitialize(void)
+bool CPluginModule::uninitialize(void)
 {
 	return !m_pImplementation?false:m_pImplementation->uninitialize();
 }
 
-boolean CPluginModule::getFileName(
+bool CPluginModule::getFileName(
 	CString& rFileName) const
 {
 	return !m_pImplementation?false:m_pImplementation->getFileName(rFileName);

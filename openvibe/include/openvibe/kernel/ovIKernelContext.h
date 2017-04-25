@@ -12,6 +12,7 @@ namespace OpenViBE
 		class IKernelObjectFactory;
 		class IPlayerManager;
 		class IPluginManager;
+		class IMetaboxManager;
 		class IScenarioManager;
 		class ITypeManager;
 		class ILogManager;
@@ -66,6 +67,11 @@ namespace OpenViBE
 			 * \return a reference on the kernel's plugin manager
 			 */
 			virtual OpenViBE::Kernel::IPluginManager& getPluginManager(void) const=0;
+			/**
+			 * \brief Gets a reference on the kernel's metabox manager
+			 * \return a reference on the kernel's metabox manager
+			 */
+			virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager(void) const=0;
 			/**
 			 * \brief Gets a reference on the kernel's object factory
 			 * \return a reference on the kernel's object factory

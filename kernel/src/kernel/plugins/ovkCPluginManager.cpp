@@ -40,11 +40,10 @@ namespace OpenViBE
 				FS::IEntryEnumerator::IEntry& rEntry,
 				FS::IEntryEnumerator::IAttributes& rAttributes)
 			{
-				vector<IPluginModule*>::iterator i;
-				for(i=m_rPluginModule.begin(); i!=m_rPluginModule.end(); ++i)
+				for(auto& pluginModule : m_rPluginModule)
 				{
 					CString l_sPluginModuleName;
-					if(!(*i)->getFileName(l_sPluginModuleName))
+					if(!pluginModule->getFileName(l_sPluginModuleName))
 					{
 						return true;
 					}
@@ -267,12 +266,11 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(
 {
 //	this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
-	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
+	for(auto& pluginObject : m_vPluginObjectDesc)
 	{
-		if(i->first->getClassIdentifier()==rClassIdentifier)
+		if(pluginObject.first->getClassIdentifier()==rClassIdentifier)
 		{
-			return i->first;
+			return pluginObject.first;
 		}
 	}
 

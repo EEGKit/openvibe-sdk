@@ -40,6 +40,11 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::Kernel::IPluginManager& getPluginManager(void) const=0;
 			/**
+			 * \brief Gets a reference on the current metabox manager
+			 * \return a reference on the current metabox manager
+			 */
+			virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager(void) const=0;
+			/**
 			 * \brief Gets a reference on the current scenario manager
 			 * \return a reference on the current scenario manager
 			 */

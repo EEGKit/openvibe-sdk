@@ -8,6 +8,7 @@
 #include "configuration/ovkCConfigurationManager.h"
 #include "player/ovkCPlayerManager.h"
 #include "plugins/ovkCPluginManager.h"
+#include "metabox/ovkCMetaboxManager.h"
 #include "scenario/ovkCScenarioManager.h"
 #include "log/ovkCLogManager.h"
 #include "log/ovkCLogListenerConsole.h"
@@ -46,6 +47,7 @@ CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const
 	,m_pKernelObjectFactory(nullptr)
 	,m_pPlayerManager(nullptr)
 	,m_pPluginManager(nullptr)
+	,m_pMetaboxManager(nullptr)
 	,m_pScenarioManager(nullptr)
 	,m_pTypeManager(nullptr)
 	,m_pLogManager(nullptr)
@@ -100,6 +102,8 @@ boolean CKernelContext::initialize(void)
 	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternLinux",   "libcertivibe-plugins-*.so");
 	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternWindows", "certivibe-plugins-*.dll");
 	m_pConfigurationManager->createConfigurationToken("Kernel_Plugins", "${Path_Lib}/${Kernel_PluginsPattern${OperatingSystem}}");
+
+	m_pConfigurationManager->createConfigurationToken("Kernel_Metabox", "${Path_Data}/metaboxes/;${Path_UserData}/metaboxes/");
 
 	m_pConfigurationManager->createConfigurationToken("Kernel_MainLogLevel", "Debug");
 	m_pConfigurationManager->createConfigurationToken("Kernel_ConsoleLogLevel", "Information");
@@ -195,6 +199,8 @@ boolean CKernelContext::initialize(void)
 
 	m_pPluginManager.reset(new CPluginManager(m_rMasterKernelContext));
 
+	m_pMetaboxManager.reset(new CMetaboxManager(m_rMasterKernelContext));
+
 	return true;
 }
 
@@ -216,6 +222,7 @@ bool CKernelContext::uninitialize(void)
 	}
 
 	m_pPluginManager.reset();
+	m_pMetaboxManager.reset();
 	m_pScenarioManager.reset();
 	m_pTypeManager.reset();
 	m_pPlayerManager.reset();
@@ -270,6 +277,14 @@ IPluginManager& CKernelContext::getPluginManager(void) const
 
 	return *m_pPluginManager;
 }
+
+IMetaboxManager& CKernelContext::getMetaboxManager(void) const
+{
+	assert(m_pMetaboxManager);
+
+	return *m_pMetaboxManager;
+}
+
 
 IScenarioManager& CKernelContext::getScenarioManager(void) const
 {
