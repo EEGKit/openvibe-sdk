@@ -1,56 +1,23 @@
-#ifndef __OpenViBE_Kernel_Metabox_IMetaboxManager_H__
-#define __OpenViBE_Kernel_Metabox_IMetaboxManager_H__
+#pragma once
 
 #include "../ovIKernelObject.h"
-#include "../../plugins/ovIBoxAlgorithmDesc.h"
+#include "../../metaboxes/ovIMetaboxObjectDesc.h"
 
 namespace OpenViBE
 {
-//	namespace Plugins
-//	{
-//	//		class IPluginObject;
-////		class IPluginObjectDesc;
-
-//	//		class IBoxAlgorithm;
-//		class IBoxAlgorithmDesc;
-
-//	//		class IAlgorithm;
-//	//		class IAlgorithmDesc;
-//	};
-
-	namespace Metabox
-	{
-		class OV_API IMetaboxObjectDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
-		{
-		public:
-			virtual OpenViBE::CString getMetaboxDescriptor(void) const = 0;
-		};
-//		class IPluginObject;
-//		class IPluginObjectDesc;
-
-//		class IBoxAlgorithm;
-//		class IBoxAlgorithmDesc;
-
-//		class IAlgorithm;
-//		class IAlgorithmDesc;
-	};
-
-
-
 	namespace Kernel
 	{
-		// class IPluginModule;
-
 		/**
 		 * \class IMetaboxManager
 		 * \brief Metabox manager
-		 * \author Thierry Gaugry (INRIA/Mensia?)
+		 * \author Thierry Gaugry (INRIA/Mensia)
 		 * \date 2017-04-12
 		 * \ingroup Group_Metabox
 		 * \ingroup Group_Kernel
 		 *
 		 * The metabox manager is in charge of loading/unloading metaboxes
-		 * modules (ie .mxb files) containing OpenViBE metaboxess.
+		 * modules (defined in OVP_ScenarioImportContext_OnLoadMetaboxImport import context)
+		 * containing OpenViBE metaboxes.
 		 * It also provides functions in order to list metabox descriptors,
 		 * create or release metabox objects...
 		 */
@@ -62,19 +29,19 @@ namespace OpenViBE
 			//@{
 
 			/**
-			 * \brief Loads new .mxb metabox module file(s)
-			 * \param rFileNameWildCard [in] : a wild card with the file(s) to search metaboxes in
+			 * \brief Loads new metaboxes module file(s)
+			 * \param[in] rFileNameWildCard  : a wild card with the file(s) to search metaboxes in
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addMetaboxFromFiles(const OpenViBE::CString& fileNameWildCard) = 0;
+			virtual bool addMetaboxesFromFiles(const OpenViBE::CString& fileNameWildCard) = 0;
 
 			/**
 			 * \brief Gets next metabox object descriptor identifier
-			 * \param previousIdentifier [in] : The identifier
+			 * \param[in] previousIdentifier : The identifier
 			 *        for the preceeding metabox object descriptor
 			 * \return The identifier of the next metabox object descriptor in case of success.
-			 * \return \c OV_UndefinedIdentifier on error.
+			 * \retval \c OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier
 			 *       will cause this function to return the first metabox object
 			 *       descriptor identifier.
@@ -84,7 +51,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets details on a specific metabox object descriptor
-			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier which details should be returned
+			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier which details should be returned
 			 * \return the corresponding metabox object descriptor pointer.
 			 */
 			virtual const OpenViBE::Plugins::IPluginObjectDesc* getMetaboxObjectDesc(
@@ -92,8 +59,8 @@ namespace OpenViBE
 
 			/**
 			 * \brief Sets details on a specific metabox object descriptor
-			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier
-			 * \param metaboxDescriptor [in] : the metabox object descriptor
+			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier
+			 * \param[in] metaboxDescriptor : the metabox object descriptor
 			 */
 			virtual void setMetaboxObjectDesc(const OpenViBE::CIdentifier& metaboxIdentifier,
 						OpenViBE::Plugins::IPluginObjectDesc* metaboxDescriptor) = 0;
@@ -101,27 +68,27 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets the path of the scenario of a specific metabox
-			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier which path should be returned
+			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier which path should be returned
 			 * \return the path to the scenario file of the metabox.
 			 */
 			virtual OpenViBE::CString getMetaboxFilePath(const OpenViBE::CIdentifier& metaboxIdentifier) const = 0;
 			/**
 			 * \brief Sets the path of the scenario of a specific metabox
-			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier
-			 * \param filePath [in] : the metabox scenario path
+			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier
+			 * \param[in] filePath : the metabox scenario path
 			 */
 			virtual void setMetaboxFilePath(const OpenViBE::CIdentifier& metaboxIdentifier, const OpenViBE::CString& filePath) = 0;
 
 			/**
 			 * \brief Gets the hash of the metabox
-			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier which hash should be returned
+			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier which hash should be returned
 			 * \return the hash of the metabox.
 			 */
 			virtual OpenViBE::CIdentifier getMetaboxHash(const OpenViBE::CIdentifier& metaboxIdentifier) const = 0;
 			/**
 			 * \brief Sets the hash of the metabox
-			 * \param metaboxIdentifier [in] : the metabox object descriptor identifier
-			 * \param hash [in] : the metabox hash
+			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier
+			 * \param[in] hash : the metabox hash
 			 */
 			virtual void setMetaboxHash(const OpenViBE::CIdentifier& metaboxIdentifier, const OpenViBE::CIdentifier& hash) = 0;
 
@@ -130,5 +97,3 @@ namespace OpenViBE
 		};
 	};
 };
-
-#endif // __OpenViBE_Kernel_Metabox_IMetaboxManager_H__

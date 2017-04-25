@@ -10,6 +10,7 @@
 
 #include "../../tools/ovkSBoxProto.h"
 #include "ovp_global_defines.h"
+#include "ovkCMetaboxObjectDesc.h"
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -37,25 +38,29 @@ namespace OpenViBE
 					const char* fullFileName = rEntry.getName();
 
 					OpenViBE::CIdentifier scenarioId, metaboxId, metaboxHash;
-					getKernelContext().getScenarioManager().importScenarioFromFile(scenarioId, OVP_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
+					this->getKernelContext().getScenarioManager().importScenarioFromFile(scenarioId, OVP_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
 					if (scenarioId != OV_UndefinedIdentifier)
 					{
-						OpenViBE::Kernel::IScenario& metaboxScenario = getKernelContext().getScenarioManager().getScenario(scenarioId);
-						bool validId = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
-						if (validId && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
+						OpenViBE::Kernel::IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioId);
+						bool isValid = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+						if (isValid && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
 						{
 							bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
 							if (!hasHash)
 							{
-								getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.toString().toASCIIString() << " has no Hash in the scenario " << fullFileName << "\n";
+								this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox " << metaboxId.toString().toASCIIString() << " has no Hash in the scenario " << fullFileName << "\n";
 							}
 							m_MetaboxManager.setMetaboxFilePath(metaboxId, CString(fullFileName));
 							m_MetaboxManager.setMetaboxHash(metaboxId, metaboxHash);
 							m_MetaboxManager.setMetaboxObjectDesc(metaboxId, new CMetaboxObjectDesc(metaboxId.toString().toASCIIString(), metaboxScenario));
 							m_MetaBoxCount++;
 						}
+						else
+						{
+							this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox file " << fullFileName << " is missing elements. Please check it.\n";
+						}
 					}
-					getKernelContext().getScenarioManager().releaseScenario(scenarioId);
+					this->getKernelContext().getScenarioManager().releaseScenario(scenarioId);
 				}
 				return true;
 			}
@@ -79,7 +84,7 @@ namespace OpenViBE
 CMetaboxManager::CMetaboxManager(const IKernelContext& kernelContext)
 	: TKernelObject<IMetaboxManager>(kernelContext)
 {
-	getScenarioManager().registerScenarioImporter(OVP_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
+	this->getScenarioManager().registerScenarioImporter(OVP_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 }
 
 CMetaboxManager::~CMetaboxManager(void)
@@ -90,26 +95,25 @@ CMetaboxManager::~CMetaboxManager(void)
 	}
 }
 
-bool CMetaboxManager::addMetaboxFromFiles(const CString& fileNameWildCard)
+bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 {
-	getLogManager() << LogLevel_Info << "Adding metaboxes from [" << fileNameWildCard << "]\n";
+	this->getLogManager() << LogLevel_Info << "Adding metaboxes from [" << fileNameWildCard << "]\n";
 
 	CMetaboxManagerEntryEnumeratorCallBack l_rCallback(this->getKernelContext(), *this); //, m_vPluginModule, m_vPluginObjectDesc, haveAllPluginsLoadedCorrectly);
 	FS::IEntryEnumerator* entryEnumerator = FS::createEntryEnumerator(l_rCallback);
 	stringstream ss(fileNameWildCard.toASCIIString());
 	string path;
-
 	while(getline(ss, path, ';'))
 	{
-		std::vector<std::string> extList { "*.xml", "*.mxb", "*.mbb" };
-		bool result = true;
-		for (auto ext : extList)
+		bool result = false; // Used to output imported metabox count
+		CString ext("");
+		while((ext = this->getScenarioManager().getNextScenarioImporter(OVP_ScenarioImportContext_OnLoadMetaboxImport, ext)) != CString(""))
 		{
-			result |= entryEnumerator->enumerate((path + ext).c_str());
+			result |= entryEnumerator->enumerate((path + "*" + ext.toASCIIString()).c_str());
 		}
 		if(result)
 		{
-			getLogManager() << LogLevel_Info << "Added " << l_rCallback.resetMetaboxCount() << " metaboxes from [" << path.c_str() << "]\n";
+			this->getLogManager() << LogLevel_Info << "Added " << l_rCallback.resetMetaboxCount() << " metaboxes from [" << path.c_str() << "]\n";
 		}
 	}
 	entryEnumerator->release();

@@ -144,7 +144,7 @@ namespace OpenViBE
 
 		IConfigurationManager& configurationManager = kernelContext->getConfigurationManager();
 		kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
-		kernelContext->getMetaboxManager().addMetaboxFromFiles(configurationManager.expand("${Kernel_Metabox}"));
+		kernelContext->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
 
 		return PlayerReturnCode::Success;
 	}

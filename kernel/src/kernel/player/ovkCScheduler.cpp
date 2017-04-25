@@ -163,20 +163,28 @@ boolean CScheduler::flattenScenario()
 				else
 				{
 					// We verify that the box actually has a backend scenario
-					CString l_sMetaboxIdentifier = m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
-					OpenViBE::CIdentifier metaboxId;
-					metaboxId.fromString(l_sMetaboxIdentifier);
-					CString l_sMetaboxScenarioPath(getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
-
-					if (FS::Files::fileExists(l_sMetaboxScenarioPath.toASCIIString()))
+					if (m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->hasAttribute(OVP_AttributeId_Metabox_Identifier))
 					{
-						// If the scenario exists we will handle this metabox
-						l_vScenarioMetabox.push_back(l_oCurrentBoxIdentifier);
+						OpenViBE::CIdentifier metaboxId;
+						metaboxId.fromString(m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+						CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
+
+						if (FS::Files::fileExists(metaboxScenarioPath.toASCIIString()))
+						{
+							// If the scenario exists we will handle this metabox
+							l_vScenarioMetabox.push_back(l_oCurrentBoxIdentifier);
+						}
+						else
+						{
+							// Non-utilisable metaboxes can be easily removed
+							this->getKernelContext().getLogManager() << LogLevel_ImportantWarning << "The scenario for metabox [" << metaboxId.toString().toASCIIString() << "] is missing.\n";
+							m_pScenario->removeBox(l_oCurrentBoxIdentifier);
+							l_bCurrentBoxRemoved = true;
+						}
 					}
 					else
 					{
-						// Non-utilisable metaboxes can be easily removed
-						this->getKernelContext().getLogManager() << LogLevel_ImportantWarning << "The scenario for metabox [" << l_sMetaboxIdentifier << "] is missing.\n";
+						this->getKernelContext().getLogManager() << LogLevel_ImportantWarning << "The metabox [" << l_oCurrentBoxIdentifier << "] is missing its identifier field.\n";
 						m_pScenario->removeBox(l_oCurrentBoxIdentifier);
 						l_bCurrentBoxRemoved = true;
 					}
@@ -206,7 +214,7 @@ boolean CScheduler::flattenScenario()
 			CString l_sMetaboxIdentifier = l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
 			OpenViBE::CIdentifier metaboxId;
 			metaboxId.fromString(l_sMetaboxIdentifier);
-			CString l_sMetaboxScenarioPath(getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
+			CString l_sMetaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 			OV_ERROR_UNLESS_KRF(
 					l_sMetaboxIdentifier != CString(""),

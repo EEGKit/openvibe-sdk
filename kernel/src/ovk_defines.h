@@ -42,11 +42,8 @@
 #define OVK_ClassId_Kernel_Plugins_PluginObject               OpenViBE::CIdentifier(0x718F6C0B, 0x368B2E6C)
 #define OVK_ClassId_Kernel_Plugins_PluginObjectDesc           OpenViBE::CIdentifier(0x65853ECE, 0x6E203E71)
 
-#define OVK_ClassId_Kernel_Metabox_MetaboxManager             OpenViBE::CIdentifier(0x07DB34DA, 0xF67AD392)
-//#define OVK_ClassId_Kernel_Plugins_PluginModule               OpenViBE::CIdentifier(0x34883FDB, 0x78B6D1E6)
-//#define OVK_ClassId_Kernel_Plugins_PluginModuleContext        OpenViBE::CIdentifier(0x78071145, 0x308261A2)
-//#define OVK_ClassId_Kernel_Plugins_PluginObject               OpenViBE::CIdentifier(0x718F6C0B, 0x368B2E6C)
-//#define OVK_ClassId_Kernel_Plugins_PluginObjectDesc           OpenViBE::CIdentifier(0x65853ECE, 0x6E203E71)
+#define OVK_ClassId_Kernel_Metaboxes_MetaboxManager           OpenViBE::CIdentifier(0x07DB34DA, 0xF67AD392)
+#define OVK_ClassId_Kernel_Metaboxes_MetaboxObjectDesc        OpenViBE::CIdentifier(0x100E6855, 0xFF905FEA)
 
 #define OVK_ClassId_Kernel_Player_BoxAlgorithmContext         OpenViBE::CIdentifier(0x48078FB2, 0x1897AD5A)
 #define OVK_ClassId_Kernel_Player_DynamicBoxContext           OpenViBE::CIdentifier(0x18FC58E0, 0x505E97CD)
