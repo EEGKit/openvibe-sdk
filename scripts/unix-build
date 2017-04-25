@@ -17,6 +17,7 @@ function usage()
 		echo "--test-data-dir <dirname> : test data directory"
 		echo "--make-package : a package will be created in build directory"
 		echo "--userdata-subdir <dirname> name of the userdata sub directory"
+    echo "--brand-name <brand-name> name of the brand to prefix titles and documentation"
 		echo "--build-unit : if set, unit tests will be built"
 		echo "--build-validation : if set, validation tests will be builts"
 		echo "--gtest-lib-dir <dirname> : gtest libraries directory (default: ../dependencies/libgtest)"
@@ -34,6 +35,7 @@ ov_build_type=Release
 verbose=0
 package_option="FALSE"
 UserDataSubdir=OpenVIBE
+BrandName=OpenViBE
 ov_build_unit=0
 ov_build_validation=0
 gtest_lib_dir="${ov_script_dir}/../dependencies/libgtest"
@@ -72,6 +74,10 @@ while [[ $# -gt 0 ]]; do
 			;;
 		--userdata-subdir)
 			UserDataSubdir="$2"
+			shift
+			;;
+		--brand-name)
+			BrandName="$2"
 			shift
 			;;
 		--build-unit)
@@ -133,6 +139,8 @@ echo "[test data directory] = ${ov_test_data_dir}"
 echo "[test output files directory] = ${ov_cmake_test_output}"
 echo "[build unit] = ${ov_build_unit}"
 echo "[build validation] = ${ov_build_validation}"
+echo "[brand name] = ${BrandName}"
+echo "[user data subdirectory] = ${UserDataSubdir}"
 echo "**************************************"
 echo ""
 echo ""
@@ -166,6 +174,7 @@ cmake ${ov_script_dir}/.. \
 		-DGTEST_MAIN_LIBRARY=${gtest_lib_dir}/libgtest_main.a \
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=${ov_cmake_test_output} \
 		-DOV_CONFIG_SUBDIR=${UserDataSubdir} \
+    -DBRAND_NAME=${BrandName} \
 		${python_exec}
 
 if [[ $? == 0 ]]; then
