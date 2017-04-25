@@ -7,6 +7,7 @@ set PauseCommand=pause
 set RerunCmake=false
 set PackageOption=FALSE
 set UserDataSubdir=OpenVIBE
+set BrandName=OpenViBE
 
 goto parameter_parse
 
@@ -20,6 +21,7 @@ goto parameter_parse
 	echo --make-package make packages at the end
 	echo --rerun-cmake force cmake rerun
 	echo --userdata-subdir [dirname] name of the userdata sub directory
+	echo --brand-name [brand name] name of the brand to prefix titles and documentation
 	echo --build-unit build unit tests
 	echo --build-validation build validation tests
 
@@ -93,6 +95,11 @@ if /i "%1" == "-h" (
 	SHIFT
 	SHIFT
 	Goto parameter_parse
+) else if /i "%1" == "--brand-name" (
+	set BrandName="%2"
+	SHIFT
+	SHIFT
+	Goto parameter_parse
 ) else if not "%1" == "" (
 	echo unrecognized option [%1]
 	Goto terminate_error
@@ -127,6 +134,7 @@ if %CallCmake%=="true" (
 		-DBUILD_UNIT_TEST=%ov_build_unit% ^
 		-DBUILD_VALIDATION_TEST=%ov_build_validation% ^
 		%ov_cmake_test_data% ^
+		-DBRAND_NAME=%BrandName% ^
 		-DOV_CONFIG_SUBDIR=%UserDataSubdir% ^
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=%ov_cmake_test_output% ^
 		%python_exec%

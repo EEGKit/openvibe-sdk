@@ -19,6 +19,7 @@ SET(OV_CONFIG_SUBDIR "${PROJECT_NAME}" CACHE STRING "Subdirectory under user dir
 SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies")
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
+SET(BRAND_NAME "OpenViBE" CACHE STRING "Brand with which titles and documentation will be prefixed")
 OPTION(PUBLISH_DOC_ASSETS "Publish plugin documentation assets" ON)
 
 # If OpenMP is available, it will allow Eigen to use multiple cores in matrix math.
@@ -116,7 +117,6 @@ IF(EXISTS "${CMAKE_SOURCE_DIR}/CustomCMakeLists.txt")
 ENDIF()
 
 #################################################################
-SET(BRAND_NAME "OpenViBE")
 string(TOLOWER ${BRAND_NAME} LOWER_BRAND_NAME)
 ADD_DEFINITIONS(-DBRAND_NAME="${BRAND_NAME}")
 #################################################################
