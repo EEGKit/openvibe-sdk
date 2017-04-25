@@ -17,9 +17,9 @@ FUNCTION(OV_ADD_THIS_TO_PROJECT_LIST)
 ENDFUNCTION()
 
 FUNCTION(OV_SET_CUSTOM_DOCUMENTATION doc_project_name doc_product_name)
+	MESSAGE(STATUS "CUSTOM DOCUMENTATION ENABLED FOR ${doc_project_name}")
+	SET(HAS_CUSTOM_DOCUMENTATION_${doc_project_name} "1" PARENT_SCOPE)
 	IF(${BUILD_DOCUMENTATION})
-		MESSAGE(STATUS "CUSTOM DOCUMENTATION ENABLED FOR ${doc_project_name}")
-		SET(HAS_CUSTOM_DOCUMENTATION_${doc_project_name} "1" PARENT_SCOPE)
 		SET(CUSTOM_DOCUMENTATION_PRODUCT_NAME_${doc_project_name} "${doc_product_name}" PARENT_SCOPE)
 
 		# if we need also the sources (e.g. the API is documented with doxygen)
