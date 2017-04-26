@@ -6,11 +6,12 @@ Detailed description
 __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Description|
-This box allows to output some of the OpenViBE streams in a text file that is
-easy to read by the machine and easy to read by the human. CSV files are text files
-with different values separated by a special character such as a colon, a semicolon
-or a tabulation. This basic syntax makes them very easy to read for both machine and
-human. The purpose of this box is to quicly export some data to other softwares.
+This box writes incoming time series along with a stimulation stream into a text file using the
+Comma Separated Values format conforming to the RFC 4180 format.
+
+The header of the CSV file contains some additional information that enables additional features
+during subsequent reading. This format is described in the \ref Doc_BoxAlgorithm_CSVFileWriter_Miscellaneous
+section.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Description|
 __________________________________________________________________
 
@@ -21,13 +22,12 @@ __________________________________________________________________
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Inputs|
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Input1|
-This is input is used to know what data to dump in the considered file. The type of
-this input can be modified by the user and the format of the output will be adapted
-depending on this type. Supported inputs are : Signal, Spectrum, Streamed Matrix,
-Feature Vector, and Stimulations.
-Format specific to each of these stream types is detailed in section
-\ref Doc_BoxAlgorithm_CSVFileWriter_Miscellaneous.
+Time series input, this can be either a Signal, Streamed Matrix, Spectrum, Covariance Matrix or Feature Vector stream.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Input1|
+
+ * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Input2|
+Stimulations to be written alongside the signal. 
+ * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Input2|
 __________________________________________________________________
 
 Settings description
@@ -37,23 +37,33 @@ __________________________________________________________________
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Settings|
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Setting1|
-This setting contains the file where to store the data.
+Path of the CSV file to be written.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Setting1|
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Setting2|
-This setting contains the special character to use as a separation for the different
-fields. Typical examples are colon, semi colon and tabulations.
+Precision, in number of decimal digits, of the resulting data. For longer data the precision can significantly impact the file size.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Setting2|
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Setting3|
-This allows you to set std::precision, i.e. how many digits are used to represent each input value in the output.
+By default this box will overwrite data in the file if it exists. If this setting is set to true, the box will append data to the file instead. If the file is empty a header will be added as well. It is up to the user to ensure herself that the data written is of the same type and dimensions.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Setting3|
+
+ * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Setting4|
+If this setting is activated, only the last received matrix will be written to the file. This can be used, for example, with cumulative average box.
+ * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Setting4|
 __________________________________________________________________
 
 Examples description
 __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Examples|
+
+Example of writing a spectrum into a CSV file:
+
+ \image html csv-file-writer-example.png "Writing a CSV file"
+ \image latex csv-file-writer-example.png "Writing a CSV file" width=8cm
+
+
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Examples|
 __________________________________________________________________
 
@@ -61,66 +71,81 @@ Miscellaneous description
 __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileWriter_Miscellaneous|
-In this section, we detail the typical outputs that you will find in the output
-file depending on the type of the input connector.
 
-For the Signal stream, you will have something like this :
-\verbatim
-Time (s), Channel 1, Channel 2, ..., Channel n, Sampling Rate
-Time of measure 1, Measure 1 of channel 1, Measure 1 of channel 2, ..., Measure 1 of channel n, Value of the sampling rate
-Time of measure 2, Measure 2 of channel 1, Measure 2 of channel 2, ..., Measure 2 of channel n,
-...
-Time of measure t, Measure t of channel 1, Measure t of channel 2, ..., Measure t of channel n,
-\endverbatim
+The CSV Format 
 
-For the Streamed Matrix stream, you will have something like this :
-\verbatim
-Time (s), Column 1, Column 2, ..., Column n
-Time of matrix 1, slot [1,1] of 1, slot[1,2] of 1, ..., slot[1,n] of 1
-Time of matrix 1, slot [2,1] of 1, slot[2,2] of 1, ..., slot[2,n] of 1
-...
-Time of matrix 1, slot [m,1] of 1, slot[m,2] of 1, ..., slot[m,n] of 1
-...
-Time of matrix 2, slot [1,1] of 2, slot[1,2] of 2, ..., slot[1,n] of 2
-...
-\endverbatim
+## Example file containing Signal data and Stimulations
 
-For the Feature Vector stream, you will have something like this :
-\verbatim
-Time (s), Feature 1, Feature 2, ..., Feature n
-Time of vector 1, feature 1, feature 2, ..., feature n
-Time of vector 2, feature 1, feature 2, ..., feature n
-...
-Time of vector k, feature 1, feature 2, ..., feature n
-\endverbatim
+Signal file sampled at 8Hz, with epochs of 0.5s length. Note that the timestamps do not have an end time which is implicit.
 
-For the Spectrum stream, you will have something like this :
-\verbatim
-Time (s), Channel 1, Channel 2, ..., Channel n, Min frequency band, Max frequency band
-Time of measure 1, Freq band 1 of m. 1 of chan 1, Freq band 1 of m. 1 of chan 2, ..., Freq band 1 of m. 1 of chan n, Value Min Frequency Band of band 1, Value Max Frequency Band of band 1
-Time of measure 1, Freq band 2 of m. 1 of chan 1, Freq band 2 of m. 1 of chan 2, ..., Freq band 2 of m. 1 of chan n, Value Min Frequency Band of band 2, Value Max Frequency Band of band 2
-...
-Time of measure 1, Freq band f of m. 1 of chan 1, Freq band f of m. 1 of chan 2, ..., Freq band f of m. 1 of chan n, Value Min Frequency Band of band f, Value Max Frequency Band of band f
-Time of measure 2, Freq band 1 of m. 2 of chan 1, Freq band 1 of m. 2 of chan 2, ..., Freq band 1 of m. 2 of chan n
-Time of measure 2, Freq band 2 of m. 2 of chan 1, Freq band 2 of m. 2 of chan 2, ..., Freq band 2 of m. 2 of chan n
-...
-Time of measure 2, Freq band f of m. 2 of chan 1, Freq band f of m. 2 of chan 2, ..., Freq band f of m. 2 of chan n
-...
-...
-...
-Time of measure t, Freq band 1 of m. t of chan 1, Freq band 1 of m. t of chan 2, ..., Freq band 1 of m. t of chan n
-Time of measure t, Freq band 2 of m. t of chan 1, Freq band 2 of m. t of chan 2, ..., Freq band 2 of m. t of chan n
-...
-Time of measure t, Freq band f of m. t of chan 1, Freq band f of m. t of chan 2, ..., Freq band f of m. t of chan n
-\endverbatim
+In this example each x represents an arbitrary floating point value. The header contains the following rows:
 
-For the Stimulation stream, you will have something like this :
-\verbatim
-Time (s), Identifier, Duration
-Time of stim 1, Identifier of stim 1, Duration of stim 1
-Time of stim 2, Identifier of stim 2, Duration of stim 2
-...
-Time of stim n, Identifier of stim n, Duration of stim n
-\endverbatim
+- Time:8Hz - contains the timestamp of each sample, this label also encodes the original sampling rate
+- Epoch - contains the number of the epoch in which each sample is contained, this allows encoding even overlapping signal
+- O1, O2, Pz, P3, P4 - channels containing EEG data
+- Event Id - contains a colon separated list of StimulationIds
+- Event Date - contains the same number of timestamps 
+- Event Duration - is constructed in the same manner as Event Date
+
+\code{.unparsed}
+Time:8Hz,Epoch,O1,O2,Pz,P3,P4,Event Id,Event Date,Event Duration
+0.00000,0,x,x,x,x,x,,,
+0.12500,0,x,x,x,x,x,,,
+0.25000,0,x,x,x,x,x,32000:32010,0.25000:0.25000,0:0
+0.37500,0,x,x,x,x,x,,,
+0.50000,1,x,x,x,x,x,,,
+0.62500,1,x,x,x,x,x,,,
+0.75000,1,x,x,x,x,x,35000,0.75250,0
+0.87500,1,x,x,x,x,x,,,
+\endcode
+
+## Example file containing a three dimensional matrix
+
+This example file contains 2x2x2 matrices produced every 0.125 seconds and spanning one second.
+
+The labels for this matrix are:
+
+- for first dimension "LA", "LB"
+- for second dimension "1", "2"
+- for third dimension "X", "Y"
+
+\code{.unparsed}
+Time:2x2x2,End Time,LA:1:X,LA:1:Y,LA:2:X,LA:2:Y,LB:1:X,...,LB:2:Y,Event Id,Event Date,Event Duration
+0.00000,1.00000,x,x,x,x,x,...,x,,, 
+0.12500,1.12500,x,x,x,x,x,...,x,,, 
+0.25000,1.25000,x,x,x,x,x,...,x,,,
+0.37500,1.37500,x,x,x,x,x,...,x,,, 
+0.50000,1.50000,x,x,x,x,x,...,x,,, 
+0.62500,1.62500,x,x,x,x,x,...,x,,, 
+0.75000,1.75000,x,x,x,x,x,...,x,,,
+0.87500,1.62500,x,x,x,x,x,...,x,,, 
+1.00000,2.00000,x,x,x,x,x,...,x,,, 
+1.12500,2.12500,x,x,x,x,x,...,x,,, 
+\endcode
+
+\note
+A label can be an empty string. If second dimension had an empty label then the first column would have label "LA::X", if it were the third dimension the column would have label "LA:1:"
+
+
+## Example file containing a spectrum
+
+Spectrum file with 2 channels, 128Hz signal and spectra calculated on periods of 1 second every 0.125 seconds. The last element in the Time column (128) represents the original sampling rate.  
+
+\code{.unparsed}
+Time:2x64:128,End Time,O1:0,O1:1.015873,...,O1:64,O2:0,...,O2:64,Event Id,Event Date,Event Duration
+0.00000,1.00000,x,x,...,x,x,...,x,,,
+0.12500,1.12500,x,x,...,x,x,...,x,,,
+0.25000,1.25000,x,x,...,x,x,...,x,,,
+0.37500,1.37500,x,x,...,x,x,...,x,,,
+0.50000,1.50000,x,x,...,x,x,...,x,,,
+0.62500,1.62500,x,x,...,x,x,...,x,,,
+0.75000,1.75000,x,x,...,x,x,...,x,,,
+0.87500,1.87500,x,x,...,x,x,...,x,,,
+1.00000,2.00000,x,x,...,x,x,...,x,,,
+1.12500,2.12500,x,x,...,x,x,...,x,,,
+\endcode
+
+
+
  * |OVP_DocEnd_BoxAlgorithm_CSVFileWriter_Miscellaneous|
  */

@@ -6,14 +6,17 @@ body {
 }
 
 #sidebar {
-	width:200px;
-	float:left;
-	border-left:1px solid #C4CFE5;
-	border-right:1px solid #C4CFE5;
+	display: flex;
 	padding-bottom:10px;
+	width:100%;
+	flex-direction: row;
 }
 
-#sidebar ul:not(.tablist), #sidebar div:not(.tabs) {
+#sidebar > div {
+	flex: 1;
+}
+
+#sidebar ul {
 	padding-left:10px;
 }
 
@@ -23,18 +26,4 @@ body {
 
 #sidebar b {
 	font-weight:bold;
-}
-
-#search input {
-	border:1px solid black;
-	width:180px;
-
-}
-
-#content {
-	margin-left:200px;
-}
-
-hr.footer {
-	clear:both;
 }
