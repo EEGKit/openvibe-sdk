@@ -6,8 +6,8 @@ Detailed description
 __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_CSVFileReader_Description|
-This box reads a Comma Separated Values (CSV) text file. The file must be written with a specific,
-OpenViBE conventions. The format is described in detail in \ref Doc_BoxAlgorithm_CSVFileWriter
+This box reads a Comma Separated Values (CSV) text file. The file must be written using a specific
+OpenViBE convention. The format is described in detail in \ref Doc_BoxAlgorithm_CSVFileWriter
 
 The file can contain two streams, one for matrix-type data and one for stimulations.
  * |OVP_DocEnd_BoxAlgorithm_CSVFileReader_Description|
