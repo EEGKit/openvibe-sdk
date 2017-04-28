@@ -38,7 +38,7 @@ namespace OpenViBE
 					const char* fullFileName = rEntry.getName();
 
 					OpenViBE::CIdentifier scenarioId, metaboxId, metaboxHash;
-					this->getKernelContext().getScenarioManager().importScenarioFromFile(scenarioId, OVP_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
+					this->getKernelContext().getScenarioManager().importScenarioFromFile(scenarioId, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
 					if (scenarioId != OV_UndefinedIdentifier)
 					{
 						OpenViBE::Kernel::IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioId);
@@ -84,7 +84,7 @@ namespace OpenViBE
 CMetaboxManager::CMetaboxManager(const IKernelContext& kernelContext)
 	: TKernelObject<IMetaboxManager>(kernelContext)
 {
-	this->getScenarioManager().registerScenarioImporter(OVP_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
+	this->getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 }
 
 CMetaboxManager::~CMetaboxManager(void)
@@ -107,7 +107,7 @@ bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 	{
 		bool result = false; // Used to output imported metabox count
 		CString ext("");
-		while((ext = this->getScenarioManager().getNextScenarioImporter(OVP_ScenarioImportContext_OnLoadMetaboxImport, ext)) != CString(""))
+		while((ext = this->getScenarioManager().getNextScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ext)) != CString(""))
 		{
 			result |= entryEnumerator->enumerate((path + "*" + ext.toASCIIString()).c_str());
 		}

@@ -6,7 +6,6 @@
 #include <vector>
 #include <map>
 
-#define OVP_ScenarioImportContext_OnLoadMetaboxImport OpenViBE::CIdentifier(0xED48480A, 0x9F6DBAA7)
 
 namespace OpenViBE
 {

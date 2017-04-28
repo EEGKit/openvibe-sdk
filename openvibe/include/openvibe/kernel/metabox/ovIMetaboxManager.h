@@ -16,7 +16,7 @@ namespace OpenViBE
 		 * \ingroup Group_Kernel
 		 *
 		 * The metabox manager is in charge of loading/unloading metaboxes
-		 * modules (defined in OVP_ScenarioImportContext_OnLoadMetaboxImport import context)
+		 * modules (defined in OV_ScenarioImportContext_OnLoadMetaboxImport import context)
 		 * containing OpenViBE metaboxes.
 		 * It also provides functions in order to list metabox descriptors,
 		 * create or release metabox objects...
