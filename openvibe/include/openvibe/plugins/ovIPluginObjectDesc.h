@@ -185,6 +185,14 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::CString getVersion(void) const { return CString("unknown"); }
 			/**
+			 * \brief Gets the component in which the plugin is defined
+			 * This component can be used to determine if a plugin has been updated
+			 * \return a string identifier of the component
+			 *
+			 * Default implementation simply returns "unknown".
+			 */
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return CString("unknown"); }
+				/**
 			 * \brief Gets the version of the software in the one the plugin was added
 			 * \return the version of the software in the one the plugin was added.
 			 *

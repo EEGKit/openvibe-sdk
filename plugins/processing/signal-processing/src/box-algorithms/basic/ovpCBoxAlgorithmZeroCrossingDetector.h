@@ -147,8 +147,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const     { return OpenViBE::CString("Detects zero-crossings of the signal for each channel, with 1 for positive zero-crossings (negative-to-positive), -1 for negatives ones (positive-to-negative), 0 otherwise. For all channels, stimulations mark positive and negatives zero-crossings. For each channel, the rythm is computed in events per min."); }
 			virtual OpenViBE::CString getCategory(void) const                { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
 			virtual OpenViBE::CString getVersion(void) const                 { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const    { return OpenViBE::CString("2.1.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const  { return OpenViBE::CString("2.2.0.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const        { return OVP_ClassId_BoxAlgorithm_ZeroCrossingDetector; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)           { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmZeroCrossingDetector; }

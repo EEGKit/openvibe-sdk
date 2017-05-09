@@ -50,8 +50,10 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const   { return OpenViBE::CString("Performs a Spectral Analysis using FFT."); }
 			virtual OpenViBE::CString getCategory(void) const              { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
 			virtual OpenViBE::CString getVersion(void) const               { return OpenViBE::CString("1.2"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const  { return OpenViBE::CString("1.0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const{ return OpenViBE::CString("2.4.0.0"); }
+
+			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.1.0"); }
 			virtual OpenViBE::CString getStockItemName(void) const         { return OpenViBE::CString("gtk-execute"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_SpectralAnalysis; }
