@@ -85,6 +85,12 @@ function(add_component TOKEN MODULE_NAME)
 	endif()
 endfunction(add_component)
 
+function(add_plugin TOKEN MODULE_NAME)
+	if(${TOKEN} IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
+		install(DIRECTORY ${PATH_CERTIVIBE}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
+	endif()
+endfunction(add_plugin)
+
 add_component(MAIN "openvibe" "TARGET_HAS_OpenViBE")
 add_component(KERNEL "openvibe-kernel") #TODO TARGET_HAS_
 add_component(TOOLKIT "openvibe-toolkit" "TARGET_HAS_OpenViBEToolkit" "OVTK_${LINKING_SUFFIX}")
@@ -99,15 +105,15 @@ add_component(CSV "openvibe-module-csv" "TARGET_HAS_CSV" "CSV_${LINKING_SUFFIX}"
 add_component(DATE "openvibe-module-date" "TARGET_HAS_DATE" "DATE_${LINKING_SUFFIX}")
 
 #plugins
-add_component(CLASSIFICATION "certivibe-plugins-classification")
-add_component(DATA_GENERATION "certivibe-plugins-data-generation")
-add_component(FEATURE_EXTRACTION "certivibe-plugins-feature-extraction")
-add_component(FILE_IO "certivibe-plugins-file-io")
-add_component(SIGNAL_PROCESSING "certivibe-plugins-signal-processing")
-add_component(STIMULATION "certivibe-plugins-stimulation")
-add_component(STREAM_CODECS "certivibe-plugins-stream-codecs") 
-add_component(STREAMING "certivibe-plugins-streaming")
-add_component(TOOLS "certivibe-plugins-tools")
+add_plugin(CLASSIFICATION "certivibe-plugins-classification")
+add_plugin(DATA_GENERATION "certivibe-plugins-data-generation")
+add_plugin(FEATURE_EXTRACTION "certivibe-plugins-feature-extraction")
+add_plugin(FILE_IO "certivibe-plugins-file-io")
+add_plugin(SIGNAL_PROCESSING "certivibe-plugins-signal-processing")
+add_plugin(STIMULATION "certivibe-plugins-stimulation")
+add_plugin(STREAM_CODECS "certivibe-plugins-stream-codecs") 
+add_plugin(STREAMING "certivibe-plugins-streaming")
+add_plugin(TOOLS "certivibe-plugins-tools")
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 
