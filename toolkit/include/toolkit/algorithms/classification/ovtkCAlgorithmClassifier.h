@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Algorithm_Classifier_H__
-#define __OpenViBEToolkit_Algorithm_Classifier_H__
+#pragma once
 
 #include "../ovtkTAlgorithm.h"
 #include "../../ovtkIVector.h"
@@ -45,14 +44,14 @@ namespace OpenViBEToolkit
 
 		virtual OpenViBE::boolean process(void);
 
-		virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet)=0;
-		virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-										   , OpenViBE::float64& rf64Class
-										   , OpenViBEToolkit::IVector& rDistanceValue
-										   , OpenViBEToolkit::IVector& rProbabilityValue)=0;
+		virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) = 0;
+		virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& featureVector
+		                                   ,OpenViBE::float64& estimatedClass
+		                                   ,OpenViBEToolkit::IVector& distanceValue
+		                                   ,OpenViBEToolkit::IVector& probabilityValue) = 0;
 
 		virtual XML::IXMLNode* saveConfiguration(void)=0;
-		virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode * pConfigurationRoot)=0;
+		virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode * configurationRoot)=0;
 
 		virtual OpenViBE::uint32 getOutputProbabilityVectorLength(void) =0;
 		virtual OpenViBE::uint32 getOutputDistanceVectorLength(void) =0;
@@ -63,18 +62,19 @@ namespace OpenViBEToolkit
 		OpenViBE::boolean initializeExtraParameterMechanism();
 		OpenViBE::boolean uninitializeExtraParameterMechanism();
 
-		OpenViBE::int64 getInt64Parameter(const OpenViBE::CIdentifier& rParameterIdentifier);
-		OpenViBE::float64 getFloat64Parameter(const OpenViBE::CIdentifier& rParameterIdentifier);
-		OpenViBE::boolean getBooleanParameter(const OpenViBE::CIdentifier& rParameterIdentifier);
-		OpenViBE::CString* getCStringParameter(const OpenViBE::CIdentifier& rParameterIdentifier);
-		OpenViBE::int64 getEnumerationParameter(const OpenViBE::CIdentifier& rParameterIdentifier, const OpenViBE::CIdentifier& rEnumerationIdentifier);
+		OpenViBE::uint64 getUInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		OpenViBE::int64 getInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		OpenViBE::float64 getFloat64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		OpenViBE::boolean getBooleanParameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		OpenViBE::CString* getCStringParameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		OpenViBE::uint64 getEnumerationParameter(const OpenViBE::CIdentifier& parameterIdentifier, const OpenViBE::CIdentifier& enumerationIdentifier);
 
 	private:
-		OpenViBE::CString& getParameterValue(const OpenViBE::CIdentifier& rParameterIdentifier);
-		void setMatrixOutputDimension(OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > &rMatrix, OpenViBE::uint32 ui32Length);
+		OpenViBE::CString& getParameterValue(const OpenViBE::CIdentifier& parameterIdentifier);
+		void setMatrixOutputDimension(OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > &matrix, OpenViBE::uint32 length);
 
-		OpenViBE::Kernel::IAlgorithmProxy *m_pAlgorithmProxy;
-		void* m_pExtraParameter;
+		OpenViBE::Kernel::IAlgorithmProxy *m_AlgorithmProxy;
+		void* m_ExtraParametersMap;
 
 
 	};
@@ -84,26 +84,26 @@ namespace OpenViBEToolkit
 	public:
 
 		virtual OpenViBE::boolean getAlgorithmPrototype(
-			OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			OpenViBE::Kernel::IAlgorithmProto& algorithmPrototype) const
 		{
-			rAlgorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_FeatureVector,         "Feature vector",        OpenViBE::Kernel::ParameterType_Matrix);
-			rAlgorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet,      "Feature vector set",    OpenViBE::Kernel::ParameterType_Matrix);
-			rAlgorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_Configuration,         "Configuration",         OpenViBE::Kernel::ParameterType_Pointer);
-			rAlgorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses,       "Number of classes",     OpenViBE::Kernel::ParameterType_UInteger);
-			rAlgorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter,        "Extra parameter",       OpenViBE::Kernel::ParameterType_Pointer);
+			algorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_FeatureVector,         "Feature vector",        OpenViBE::Kernel::ParameterType_Matrix);
+			algorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet,      "Feature vector set",    OpenViBE::Kernel::ParameterType_Matrix);
+			algorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_Configuration,         "Configuration",         OpenViBE::Kernel::ParameterType_Pointer);
+			algorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses,       "Number of classes",     OpenViBE::Kernel::ParameterType_UInteger);
+			algorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter,        "Extra parameter",       OpenViBE::Kernel::ParameterType_Pointer);
 
-			rAlgorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class,                "Class",                 OpenViBE::Kernel::ParameterType_Float);
-			rAlgorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues, "Hyperplane distance",   OpenViBE::Kernel::ParameterType_Matrix);
-			rAlgorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues,    "Probability values",    OpenViBE::Kernel::ParameterType_Matrix);
-			rAlgorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration,        "Configuration",         OpenViBE::Kernel::ParameterType_Pointer);
+			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class,                "Class",                 OpenViBE::Kernel::ParameterType_Float);
+			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues, "Hyperplane distance",   OpenViBE::Kernel::ParameterType_Matrix);
+			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues,    "Probability values",    OpenViBE::Kernel::ParameterType_Matrix);
+			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration,        "Configuration",         OpenViBE::Kernel::ParameterType_Pointer);
 
-			rAlgorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_Train,                   "Train");
-			rAlgorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_Classify,                "Classify");
-			rAlgorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration,       "Load configuration");
-			rAlgorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration,       "Save configuration");
+			algorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_Train,                   "Train");
+			algorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_Classify,                "Classify");
+			algorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration,       "Load configuration");
+			algorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration,       "Save configuration");
 
-			rAlgorithmPrototype.addOutputTrigger  (OVTK_Algorithm_Classifier_OutputTriggerId_Success,                "Success");
-			rAlgorithmPrototype.addOutputTrigger  (OVTK_Algorithm_Classifier_OutputTriggerId_Failed,                 "Failed");
+			algorithmPrototype.addOutputTrigger  (OVTK_Algorithm_Classifier_OutputTriggerId_Success,                "Success");
+			algorithmPrototype.addOutputTrigger  (OVTK_Algorithm_Classifier_OutputTriggerId_Failed,                 "Failed");
 
 
 			return true;
@@ -113,4 +113,3 @@ namespace OpenViBEToolkit
 	};
 };
 
-#endif // __OpenViBEToolkit_Algorithm_Classifier_H__

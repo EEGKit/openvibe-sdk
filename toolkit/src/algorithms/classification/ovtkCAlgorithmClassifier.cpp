@@ -14,45 +14,45 @@ using namespace OpenViBEToolkit;
 
 boolean CAlgorithmClassifier::initialize()
 {
-	m_pAlgorithmProxy = NULL;
-	m_pExtraParameter = NULL;
+	m_AlgorithmProxy = NULL;
+	m_ExtraParametersMap = NULL;
 	return true;
 }
 
 boolean CAlgorithmClassifier::uninitialize()
 {
-	if(m_pAlgorithmProxy != NULL)
+	if(m_AlgorithmProxy != NULL)
 	{
-		m_pAlgorithmProxy->uninitialize();
-		this->getAlgorithmManager().releaseAlgorithm(*m_pAlgorithmProxy);
-		m_pAlgorithmProxy = NULL;
+		m_AlgorithmProxy->uninitialize();
+		this->getAlgorithmManager().releaseAlgorithm(*m_AlgorithmProxy);
+		m_AlgorithmProxy = NULL;
 	}
 	return true;
 }
 
 boolean CAlgorithmClassifier::process(void)
 {
-	TParameterHandler < IMatrix* > ip_pFeatureVector(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
-	TParameterHandler < IMatrix* > ip_pFeatureVectorSet(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
-	TParameterHandler < XML::IXMLNode* > ip_pConfiguration(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
+	TParameterHandler < IMatrix* > ip_FeatureVector(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
+	TParameterHandler < IMatrix* > ip_FeatureVectorSet(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
+	TParameterHandler < XML::IXMLNode* > ip_Configuration(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
 
-	TParameterHandler < float64 > op_pClass(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
-	TParameterHandler < IMatrix* > op_pClassificationValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
-	TParameterHandler < IMatrix* > op_pProbabilityValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
-	TParameterHandler < XML::IXMLNode* > op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
+	TParameterHandler < float64 > op_EstimatedClass(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
+	TParameterHandler < IMatrix* > op_ClassificationValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
+	TParameterHandler < IMatrix* > op_ProbabilityValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+	TParameterHandler < XML::IXMLNode* > op_Configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
 
 	if(this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_Train))
 	{
-		IMatrix* l_pFeatureVectorSet=ip_pFeatureVectorSet;
-		if(!l_pFeatureVectorSet)
+		IMatrix* featureVectorSet = ip_FeatureVectorSet;
+		if (!featureVectorSet)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Feature vector set is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
 		else
 		{
-			CFeatureVectorSet l_oFeatureVectorSetAdapter(*l_pFeatureVectorSet);
-			if(this->train(l_oFeatureVectorSetAdapter))
+			CFeatureVectorSet featureVectorSetAdapter(*featureVectorSet);
+			if (this->train(featureVectorSetAdapter))
 			{
 				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
 			}
@@ -66,34 +66,25 @@ boolean CAlgorithmClassifier::process(void)
 
 	if(this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_Classify))
 	{
-		IMatrix* l_pFeatureVector=ip_pFeatureVector;
-		IMatrix* l_pClassificationValues=op_pClassificationValues;
-		IMatrix* l_pProbabilityValues=op_pProbabilityValues;
+		IMatrix* featureVector=ip_FeatureVector;
+		IMatrix* classificationValues=op_ClassificationValues;
+		IMatrix* probabilityValues=op_ProbabilityValues;
 
-		if(!l_pFeatureVector || !l_pClassificationValues || !l_pProbabilityValues)
+		if (!featureVector || !classificationValues || !probabilityValues)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-			OV_ERROR_KRF("Classifying failed", (!l_pFeatureVector) ? OpenViBE::Kernel::ErrorType::BadInput : OpenViBE::Kernel::ErrorType::BadOutput);
+			OV_ERROR_KRF("Classifying failed", (!featureVector) ? OpenViBE::Kernel::ErrorType::BadInput : OpenViBE::Kernel::ErrorType::BadOutput);
 		}
 		else
 		{
-			float64 l_f64Class=0;
-			CFeatureVector l_oFeatureVectorAdapter(*l_pFeatureVector);
-			CVector l_oClassificationValuesAdapter(*l_pClassificationValues);
-			CVector l_oProbabilityValuesAdapter(*l_pProbabilityValues);
+			float64 estimatedClass = 0;
+			CFeatureVector featureVectorAdapter(*featureVector);
+			CVector classificationValuesAdapter(*classificationValues);
+			CVector probabilityValuesAdapter(*probabilityValues);
 
-			if(this->classify(l_oFeatureVectorAdapter, l_f64Class, l_oClassificationValuesAdapter, l_oProbabilityValuesAdapter))
+			if (this->classify(featureVectorAdapter, estimatedClass, classificationValuesAdapter, probabilityValuesAdapter))
 			{
-				op_pClass=l_f64Class;
-
-				/* --------------------------------------------------------------------------
-				this->getLogManager() << LogLevel_Trace << "Classified feature vector [ ";
-				for(i=0; i<l_oFeatureVectorAdapter.getSize(); i++) this->getLogManager() << l_oFeatureVectorAdapter[i] << " ";
-				this->getLogManager() << "] with class " << l_f64Class << " and status [ ";
-				for(i=0; i<l_oClassificationValuesAdapter.getSize(); i++) this->getLogManager() << l_oClassificationValuesAdapter[i] << " ";
-				this->getLogManager() << "]\n";
-				-------------------------------------------------------------------------- */
-
+				op_EstimatedClass = estimatedClass;
 				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
 			}
 			else
@@ -104,11 +95,11 @@ boolean CAlgorithmClassifier::process(void)
 		}
 	}
 
-	if(this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration))
+	if (this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration))
 	{
-		XML::IXMLNode *l_pNode = this->saveConfiguration();
-		op_pConfiguration = l_pNode;
-		if(l_pNode)
+		XML::IXMLNode *rootNode = this->saveConfiguration();
+		op_Configuration = rootNode;
+		if (rootNode)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
 		}
@@ -119,10 +110,10 @@ boolean CAlgorithmClassifier::process(void)
 		}
 	}
 
-	if(this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration))
+	if (this->isInputTriggerActive(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration))
 	{
-		XML::IXMLNode *l_pNode = ip_pConfiguration;
-		if(!l_pNode)
+		XML::IXMLNode *rootNode = ip_Configuration;
+		if (!rootNode)
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Configuration XML node is NULL", OpenViBE::Kernel::ErrorType::BadInput);
@@ -130,12 +121,12 @@ boolean CAlgorithmClassifier::process(void)
 		else
 		{
 
-			if(this->loadConfiguration(l_pNode))
+			if(this->loadConfiguration(rootNode))
 			{
 				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
 				//Now we need to parametrize the two output Matrix for values
-				setMatrixOutputDimension(op_pProbabilityValues, this->getOutputProbabilityVectorLength());
-				setMatrixOutputDimension(op_pClassificationValues, this->getOutputDistanceVectorLength());
+				setMatrixOutputDimension(op_ProbabilityValues, this->getOutputProbabilityVectorLength());
+				setMatrixOutputDimension(op_ClassificationValues, this->getOutputDistanceVectorLength());
 			}
 			else
 			{
@@ -150,13 +141,13 @@ boolean CAlgorithmClassifier::process(void)
 
 boolean CAlgorithmClassifier::initializeExtraParameterMechanism()
 {
-	TParameterHandler < std::map<CString, CString>* > ip_pExtraParameter(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
-	m_pExtraParameter = (std::map<CString, CString>*) ip_pExtraParameter;
+	TParameterHandler < std::map<CString, CString>* > ip_ExtraParameter(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
+	m_ExtraParametersMap = (std::map<CString, CString>*) ip_ExtraParameter;
 
-	m_pAlgorithmProxy = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(this->getClassIdentifier()));
+	m_AlgorithmProxy = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(this->getClassIdentifier()));
 
 	OV_ERROR_UNLESS_KRF(
-		m_pAlgorithmProxy->initialize(),
+		m_AlgorithmProxy->initialize(),
 		"Failed to initialize algorithm",
 		OpenViBE::Kernel::ErrorType::Internal
 	);
@@ -167,61 +158,68 @@ boolean CAlgorithmClassifier::initializeExtraParameterMechanism()
 boolean CAlgorithmClassifier::uninitializeExtraParameterMechanism()
 {
 	OV_ERROR_UNLESS_KRF(
-		m_pAlgorithmProxy->uninitialize(),
+		m_AlgorithmProxy->uninitialize(),
 		"Failed to uninitialize algorithm",
 		OpenViBE::Kernel::ErrorType::Internal
 	);
 
-	this->getAlgorithmManager().releaseAlgorithm(*m_pAlgorithmProxy);
+	this->getAlgorithmManager().releaseAlgorithm(*m_AlgorithmProxy);
 
-	m_pAlgorithmProxy = NULL;
-	m_pExtraParameter = NULL;
+	m_AlgorithmProxy = NULL;
+	m_ExtraParametersMap = NULL;
 	return true;
 }
 
-CString& CAlgorithmClassifier::getParameterValue(const CIdentifier &rParameterIdentifier)
+CString& CAlgorithmClassifier::getParameterValue(const CIdentifier &parameterIdentifier)
 {
-	CString l_pParameterName = m_pAlgorithmProxy->getInputParameterName(rParameterIdentifier);
-	return (*static_cast<std::map<CString, CString>* >(m_pExtraParameter))[l_pParameterName];
+	CString parameterName = m_AlgorithmProxy->getInputParameterName(parameterIdentifier);
+	return (*static_cast<std::map<CString, CString>* >(m_ExtraParametersMap))[parameterName];
 }
 
-void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<IMatrix*> &rMatrix, uint32 ui32Length)
+void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<IMatrix*> &matrix, uint32 length)
 {
-	rMatrix->setDimensionCount(1);
-	rMatrix->setDimensionSize(0, ui32Length);
+	matrix->setDimensionCount(1);
+	matrix->setDimensionSize(0, length);
 }
 
-int64 CAlgorithmClassifier::getInt64Parameter(const CIdentifier &rParameterIdentifier)
+uint64 CAlgorithmClassifier::getUInt64Parameter(const CIdentifier &parameterIdentifier)
 {
-	TParameterHandler < int64 > ip_i64Temp(getInputParameter(rParameterIdentifier));
-	ip_i64Temp = this->getAlgorithmContext().getConfigurationManager().expandAsInteger(getParameterValue(rParameterIdentifier));
-	return (int64)ip_i64Temp;
+	TParameterHandler < uint64 > temp(getInputParameter(parameterIdentifier));
+	temp = this->getAlgorithmContext().getConfigurationManager().expandAsUInteger(getParameterValue(parameterIdentifier));
+	return static_cast<uint64>(temp);
 }
 
-float64 CAlgorithmClassifier::getFloat64Parameter(const CIdentifier &rParameterIdentifier)
+int64 CAlgorithmClassifier::getInt64Parameter(const CIdentifier &parameterIdentifier)
 {
-	TParameterHandler < float64 > ip_f64Temp(getInputParameter(rParameterIdentifier));
-	ip_f64Temp = this->getAlgorithmContext().getConfigurationManager().expandAsFloat(getParameterValue(rParameterIdentifier));
-	return (float64)ip_f64Temp;
+	TParameterHandler < int64 > temp(getInputParameter(parameterIdentifier));
+	temp = this->getAlgorithmContext().getConfigurationManager().expandAsInteger(getParameterValue(parameterIdentifier));
+	return static_cast<int64>(temp);
 }
 
-boolean CAlgorithmClassifier::getBooleanParameter(const CIdentifier &rParameterIdentifier)
+float64 CAlgorithmClassifier::getFloat64Parameter(const CIdentifier &parameterIdentifier)
 {
-	TParameterHandler < boolean > ip_bTemp(getInputParameter(rParameterIdentifier));
-	ip_bTemp = this->getAlgorithmContext().getConfigurationManager().expandAsBoolean(getParameterValue(rParameterIdentifier));
-	return (boolean)ip_bTemp;
+	TParameterHandler < float64 > temp(getInputParameter(parameterIdentifier));
+	temp = this->getAlgorithmContext().getConfigurationManager().expandAsFloat(getParameterValue(parameterIdentifier));
+	return static_cast<float64>(temp);
 }
 
-CString *CAlgorithmClassifier::getCStringParameter(const CIdentifier &rParameterIdentifier)
+boolean CAlgorithmClassifier::getBooleanParameter(const CIdentifier &parameterIdentifier)
 {
-	TParameterHandler < CString* > ip_pTemp(getInputParameter(rParameterIdentifier));
-	ip_pTemp = &getParameterValue(rParameterIdentifier);
-	return (CString*)ip_pTemp;
+	TParameterHandler < boolean > temp(getInputParameter(parameterIdentifier));
+	temp = this->getAlgorithmContext().getConfigurationManager().expandAsBoolean(getParameterValue(parameterIdentifier));
+	return static_cast<boolean>(temp);
 }
 
-int64 CAlgorithmClassifier::getEnumerationParameter(const CIdentifier &rParameterIdentifier, const CIdentifier &rEnumerationIdentifier)
+CString *CAlgorithmClassifier::getCStringParameter(const CIdentifier &parameterIdentifier)
 {
-	TParameterHandler < int64 > ip_i64Temp(getInputParameter(rParameterIdentifier));
-	ip_i64Temp = this->getTypeManager().getEnumerationEntryValueFromName(rEnumerationIdentifier, getParameterValue(rParameterIdentifier));
-	return (int64) ip_i64Temp;
+	TParameterHandler < CString* > temp(getInputParameter(parameterIdentifier));
+	temp = &getParameterValue(parameterIdentifier);
+	return static_cast<CString*>(temp);
+}
+
+uint64 CAlgorithmClassifier::getEnumerationParameter(const CIdentifier &parameterIdentifier, const CIdentifier &enumerationIdentifier)
+{
+	TParameterHandler < uint64 > temp(getInputParameter(parameterIdentifier));
+	temp = this->getTypeManager().getEnumerationEntryValueFromName(enumerationIdentifier, getParameterValue(parameterIdentifier));
+	return static_cast<uint64>(temp);
 }

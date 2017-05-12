@@ -91,6 +91,11 @@ function(add_plugin TOKEN MODULE_NAME)
 	endif()
 endfunction(add_plugin)
 
+# Link to the classification plugin if requested
+if(LINK_CLASSIFICATION IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
+	target_link_libraries(${PROJECT_NAME} "${PATH_CERTIVIBE}/lib/${LIB_PREFIX}certivibe-plugins-classification${CERTIVIBE_LINKING}.${LIB_EXT}")
+endif()
+
 add_component(MAIN "openvibe" "TARGET_HAS_OpenViBE")
 add_component(KERNEL "openvibe-kernel") #TODO TARGET_HAS_
 add_component(TOOLKIT "openvibe-toolkit" "TARGET_HAS_OpenViBEToolkit" "OVTK_${LINKING_SUFFIX}")

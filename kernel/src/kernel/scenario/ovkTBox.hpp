@@ -1019,10 +1019,13 @@ namespace OpenViBE
 					ErrorType::OutOfBound
 				);
 
-				m_vSetting[ui32SettingIndex].m_sValue=rValue;
+				if (m_vSetting[ui32SettingIndex].m_sValue != rValue)
+				{
+					m_vSetting[ui32SettingIndex].m_sValue=rValue;
 
-				this->notify(BoxModification_SettingValueChanged, ui32SettingIndex);
-				this->notifySettingChange(SettingValueUpdate, ui32SettingIndex);
+					this->notify(BoxModification_SettingValueChanged, ui32SettingIndex);
+					this->notifySettingChange(SettingValueUpdate, ui32SettingIndex);
+				}
 
 				return true;
 			}

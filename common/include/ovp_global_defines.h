@@ -9,6 +9,11 @@
 #define OVP_GD_ClassId_Algorithm_XMLScenarioImporter                                                                            OpenViBE::CIdentifier(0xe80c3ea2, 0x149c4a05)
 #define OVP_GD_ClassId_Algorithm_XMLScenarioExporter                                                                            OpenViBE::CIdentifier(0x53693531, 0xb136cf3f)
 
+#define OVP_GD_TypeId_ClassificationPairwiseStrategy OpenViBE::CIdentifier(0x0DD51C74, 0x3C4E74C9)
+#define OVP_GD_ClassId_Algorithm_PairwiseStrategy_PKPD OpenViBE::CIdentifier(0x26EF6DDA, 0xF137053C)
+#define OVP_GD_ClassId_Algorithm_PairwiseDecision_Voting OpenViBE::CIdentifier(0xA111B830, 0x4679BAFD)
+#define OVP_GD_ClassId_Algorithm_PairwiseDecision_HT OpenViBE::CIdentifier(0xD24F7F19, 0xA744FAD2)
+
 // Algorithm OVMatrixFileReader
 
 #define OVP_GD_ClassId_Algorithm_OVMatrixFileReader                               OpenViBE::CIdentifier(0x10661A33, 0x0B0F44A7)
