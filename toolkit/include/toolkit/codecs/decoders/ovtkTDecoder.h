@@ -65,8 +65,10 @@ namespace OpenViBEToolkit
 
 		// We explicitly delete the decode function taking two integers as parameters
 		// in order to raise errors in plugins using the older API
+#ifndef TARGET_OS_MacOS // Current clang has a bug which fails to link these
 		virtual OpenViBE::boolean decode(int, int) = delete;
 		virtual OpenViBE::boolean decode(unsigned int, unsigned int) = delete;
+#endif
 
 		// The functions that need to be specified by the decoders (specific Trigger ID)
 		virtual OpenViBE::boolean isHeaderReceived(void) = 0;

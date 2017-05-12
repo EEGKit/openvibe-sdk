@@ -204,18 +204,29 @@ boolean CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVec
 		OpenViBE::Kernel::ErrorType::BadProcessing
 	);
 
-	//Now that we made the calculation, we send the corresponding data
+	// Now that we made the calculation, we send the corresponding data
+
+	// For distances we just send the distance vector of the winner
 	IAlgorithmProxy* l_pWinner = this->m_oSubClassifierList[static_cast<uint32>(rf64Class)];
 	TParameterHandler < IMatrix* > op_pClassificationWinnerValues(l_pWinner->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
-	TParameterHandler < IMatrix* > op_pProbabilityWinnerValues(l_pWinner->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
-
 	IMatrix* l_pTempMatrix = static_cast<IMatrix*>(op_pClassificationWinnerValues);
 	rClassificationValues.setSize(l_pTempMatrix->getBufferElementCount());
 	System::Memory::copy(rClassificationValues.getBuffer(), l_pTempMatrix->getBuffer(), l_pTempMatrix->getBufferElementCount()*sizeof(float64));
 
-	l_pTempMatrix = static_cast<IMatrix*>(op_pProbabilityWinnerValues);
-	rProbabilityValue.setSize(op_pProbabilityWinnerValues->getBufferElementCount());
-	System::Memory::copy(rProbabilityValue.getBuffer(), l_pTempMatrix->getBuffer(), l_pTempMatrix->getBufferElementCount()*sizeof(float64));
+	// We take the probabilities of the single class winning from each of the sub classifiers and normalize them
+	double subProbabilitySum = 0;
+	rProbabilityValue.setSize(static_cast<uint32>(m_oSubClassifierList.size()));
+	for (uint32 classIndex = 0; classIndex < m_oSubClassifierList.size(); ++classIndex)
+	{
+		TParameterHandler < IMatrix* > op_ProbabilityValues(m_oSubClassifierList[classIndex]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+		rProbabilityValue[classIndex] = op_ProbabilityValues->getBuffer()[0];
+		subProbabilitySum += rProbabilityValue[classIndex];
+	}
+
+	for (uint32 classIndex = 0; classIndex < rProbabilityValue.getSize(); ++classIndex)
+	{
+		rProbabilityValue[classIndex] /= subProbabilitySum;
+	}
 
 	return true;
 }
@@ -347,8 +358,7 @@ boolean CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode *pConfigur
 
 uint32 CAlgorithmClassifierOneVsAll::getOutputProbabilityVectorLength()
 {
-	TParameterHandler < IMatrix* > op_pProbabilityValues(m_oSubClassifierList[0]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
-	return op_pProbabilityValues->getDimensionSize(0);
+	return static_cast<uint32>(m_oSubClassifierList.size());
 }
 
 uint32 CAlgorithmClassifierOneVsAll::getOutputDistanceVectorLength()

@@ -23,6 +23,7 @@
 
 #include <sstream>
 #include <cassert>
+#include <csignal>
 
 #include "ov_common_types.h"
 #include "ovITimeArithmetics.h"

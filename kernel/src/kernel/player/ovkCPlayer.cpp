@@ -114,72 +114,69 @@ boolean CPlayer::setScenario(
 
 	IScenario* l_pScenario = &l_rRuntimeScenario;
 
-	if(l_pScenario)
+	if(l_rRuntimeScenario.hasAttribute(OV_AttributeId_ScenarioFilename))
 	{
-		if(l_pScenario->hasAttribute(OV_AttributeId_ScenarioFilename))
-		{
-			std::string l_sFilename = l_pScenario->getAttributeValue(OV_AttributeId_ScenarioFilename).toASCIIString();
-			std::string l_sDirectoryName = ".";
-			m_pRuntimeConfigurationManager->createConfigurationToken("Player_ScenarioFilename", l_sFilename.c_str());
+		std::string l_sFilename = l_rRuntimeScenario.getAttributeValue(OV_AttributeId_ScenarioFilename).toASCIIString();
+		std::string l_sDirectoryName = ".";
+		m_pRuntimeConfigurationManager->createConfigurationToken("Player_ScenarioFilename", l_sFilename.c_str());
 
-			size_t iDir=l_sFilename.rfind("/");
-			if(iDir!=std::string::npos)
-			{
-				l_sDirectoryName = l_sFilename.substr(0, iDir).c_str();
-			}
-			m_pRuntimeConfigurationManager->createConfigurationToken("Player_ScenarioDirectory", l_sDirectoryName.c_str());
-			m_pRuntimeConfigurationManager->createConfigurationToken("__volatile_ScenarioDir", l_sDirectoryName.c_str());
-			std::string l_sWorkspaceConfigurationFile = l_sDirectoryName + "/" + std::string("openvibe-workspace.conf");
-			this->getLogManager() << LogLevel_Trace << "Player adds workspace configuration file [" << CString(l_sWorkspaceConfigurationFile.c_str()) << "] to runtime configuration manager\n";
-			m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(l_sWorkspaceConfigurationFile.c_str()));
-			std::string l_sScenarioConfigurationFile = l_sDirectoryName + "/" + std::string("scenario.conf");
+		size_t iDir=l_sFilename.rfind("/");
+		if(iDir!=std::string::npos)
+		{
+			l_sDirectoryName = l_sFilename.substr(0, iDir).c_str();
+		}
+		m_pRuntimeConfigurationManager->createConfigurationToken("Player_ScenarioDirectory", l_sDirectoryName.c_str());
+		m_pRuntimeConfigurationManager->createConfigurationToken("__volatile_ScenarioDir", l_sDirectoryName.c_str());
+		std::string l_sWorkspaceConfigurationFile = l_sDirectoryName + "/" + std::string("openvibe-workspace.conf");
+		this->getLogManager() << LogLevel_Trace << "Player adds workspace configuration file [" << CString(l_sWorkspaceConfigurationFile.c_str()) << "] to runtime configuration manager\n";
+		m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(l_sWorkspaceConfigurationFile.c_str()));
+		std::string l_sScenarioConfigurationFile = l_sDirectoryName + "/" + std::string("scenario.conf");
+		this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(l_sScenarioConfigurationFile.c_str()) << "] to runtime configuration manager\n";
+		m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(l_sScenarioConfigurationFile.c_str()));
+
+		size_t iExt = l_sFilename.rfind(".");
+		if (iExt != std::string::npos)
+		{
+			std::string l_sScenarioConfigurationFile = l_sFilename.substr(0, iExt) + std::string(".conf");
 			this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(l_sScenarioConfigurationFile.c_str()) << "] to runtime configuration manager\n";
 			m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(l_sScenarioConfigurationFile.c_str()));
+		}
 
-			size_t iExt = l_sFilename.rfind(".");
-			if (iExt != std::string::npos)
+		// Sets configuration tokens for this player
+		// Once every token file, applies the configuration tokens coming from Mensia Player
+		if(pLocalConfigurationTokens != NULL)
+		{
+			this->getLogManager() << LogLevel_Trace << "Player setScenario: add local configuration token from map.\n";
+			for(unsigned int i=0; i < pLocalConfigurationTokens->getSize(); i++)
 			{
-				std::string l_sScenarioConfigurationFile = l_sFilename.substr(0, iExt) + std::string(".conf");
-				this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(l_sScenarioConfigurationFile.c_str()) << "] to runtime configuration manager\n";
-				m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(l_sScenarioConfigurationFile.c_str()));
-			}
-
-			// Sets configuration tokens for this player
-			// Once every token file, applies the configuration tokens coming from Mensia Player
-			if(pLocalConfigurationTokens != NULL)
-			{
-				this->getLogManager() << LogLevel_Trace << "Player setScenario: add local configuration token from map.\n";
-				for(unsigned int i=0; i < pLocalConfigurationTokens->getSize(); i++)
+				CString l_sName;
+				CString l_sValue;
+				if(pLocalConfigurationTokens->getValue(i, l_sName, l_sValue))
 				{
-					CString l_sName;
-					CString l_sValue;
-					if(pLocalConfigurationTokens->getValue(i, l_sName, l_sValue))
+					this->getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: ["<<l_sName<<"] = ["<<l_sValue<<"].\n";
+					CIdentifier l_oTokenIdentifier=m_pRuntimeConfigurationManager->lookUpConfigurationTokenIdentifier(l_sName);
+					if(l_oTokenIdentifier==OV_UndefinedIdentifier)
 					{
-						this->getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: ["<<l_sName<<"] = ["<<l_sValue<<"].\n";
-						CIdentifier l_oTokenIdentifier=m_pRuntimeConfigurationManager->lookUpConfigurationTokenIdentifier(l_sName);
-						if(l_oTokenIdentifier==OV_UndefinedIdentifier)
-						{
-							m_pRuntimeConfigurationManager->createConfigurationToken(l_sName, l_sValue);
-						}
-						else
-						{
-							m_pRuntimeConfigurationManager->setConfigurationTokenValue(l_oTokenIdentifier, l_sValue);
-						}
+						m_pRuntimeConfigurationManager->createConfigurationToken(l_sName, l_sValue);
 					}
-					// This should not happen
 					else
 					{
-						this->getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of pLocalConfigurationTokens at index "<< i <<".\n";
+						m_pRuntimeConfigurationManager->setConfigurationTokenValue(l_oTokenIdentifier, l_sValue);
 					}
 				}
+				// This should not happen
+				else
+				{
+					this->getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of pLocalConfigurationTokens at index "<< i <<".\n";
+				}
 			}
-
-			OV_ERROR_UNLESS_KRF(
-				l_pScenario->checkSettings(m_pRuntimeConfigurationManager),
-				"Checking settings failed for scenario duplicate instantiated for the current runtime session",
-				ErrorType::BadArgument
-			);
 		}
+
+		OV_ERROR_UNLESS_KRF(
+		            l_rRuntimeScenario.checkSettings(m_pRuntimeConfigurationManager),
+		            "Checking settings failed for scenario duplicate instantiated for the current runtime session",
+		            ErrorType::BadArgument
+		            );
 	}
 
 	return m_oScheduler.setScenario(m_oRuntimeScenarioIdentifier);

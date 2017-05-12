@@ -3,8 +3,13 @@
 # Adds library to target
 # Adds include path
 # ---------------------------------
-
-IF(UNIX)
+IF(APPLE)
+find_package(Boost 1.60.0 COMPONENTS filesystem system)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+endif()
+ELSEIF(UNIX)
 	FIND_LIBRARY(LIB_Boost_Filesystem NAMES "boost_filesystem-mt" PATHS ${OV_CUSTOM_DEPENDENCIES_PATH}/lib NO_DEFAULT_PATH)
 	FIND_LIBRARY(LIB_Boost_Filesystem NAMES "boost_filesystem-mt" PATHS ${OV_CUSTOM_DEPENDENCIES_PATH}/lib)
 	IF(LIB_Boost_Filesystem)
@@ -31,7 +36,7 @@ IF(UNIX)
 	ELSE(LIB_STANDARD_MODULE_PTHREAD)
 		MESSAGE(STATUS "  FAILED to find pthread...")
 	ENDIF(LIB_STANDARD_MODULE_PTHREAD)
-ENDIF(UNIX)
+ENDIF()
 
 IF(WIN32)
 	OV_LINK_BOOST_LIB("filesystem" ${OV_WIN32_BOOST_VERSION} )

@@ -8,6 +8,7 @@
 
 #include <system/ovCMemory.h>
 
+#include <cinttypes>
 #include <cstdio>
 #include <iostream>
 #include <map>
@@ -417,7 +418,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 	char l_sSubstitutionTokenName[1024];
 	uint64 l_ui64SourceClassIdentifier=rClassIdentifier.toUInteger();
 	uint64 l_ui64TargetClassIdentifier=l_ui64SourceClassIdentifier;
-	::sprintf(l_sSubstitutionTokenName, "Kernel_PluginSubstitution_%0lx", l_ui64SourceClassIdentifier);
+	::sprintf(l_sSubstitutionTokenName, "Kernel_PluginSubstitution_%0" PRIx64, l_ui64SourceClassIdentifier);
 	if((l_oSubstitutionTokenIdentifier=this->getConfigurationManager().lookUpConfigurationTokenIdentifier(l_sSubstitutionTokenName))!=OV_UndefinedIdentifier)
 	{
 		CString l_sSubstitutionTokenValue;
