@@ -59,6 +59,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("0.1"); }
 
+			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Algorithm_PairwiseDecision_HT; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Classification::CAlgorithmPairwiseDecisionHT; }
 

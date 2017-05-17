@@ -1,5 +1,3 @@
-
-
 #ifndef __OpenViBEPlugins_BoxAlgorithm_SpatialFilter_H__
 #define __OpenViBEPlugins_BoxAlgorithm_SpatialFilter_H__
 
@@ -77,6 +75,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("The applied coefficient matrix must be specified as a box parameter. The filter processes each sample independently of the past samples."); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Filtering"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.1"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.1.0"); }
 			
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_SpatialFilter; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpatialFilter; }

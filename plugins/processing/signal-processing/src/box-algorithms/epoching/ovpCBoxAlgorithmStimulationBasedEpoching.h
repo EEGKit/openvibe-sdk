@@ -85,8 +85,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Epoching"); }
 			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("2.0"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("1.0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("2.6.0.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.1.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmStimulationBasedEpoching; }

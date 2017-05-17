@@ -78,8 +78,9 @@ namespace OpenViBEPlugins
 				virtual OpenViBE::CString getDetailedDescription(void) const   { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection."); }
 				virtual OpenViBE::CString getCategory(void) const              { return OpenViBE::CString("Stimulation"); }
 				virtual OpenViBE::CString getVersion(void) const               { return OpenViBE::CString("1.1"); }
-				virtual OpenViBE::CString getAddedSoftwareVersion(void) const  { return OpenViBE::CString("1.0.0.0"); }
-				virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const{ return OpenViBE::CString("2.4.0.0"); }
+				virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
+				virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+				virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 				
 				virtual OpenViBE::CIdentifier getCreatedClass(void) const      { return OVP_ClassId_BoxAlgorithm_Timeout; }
 				virtual OpenViBE::Plugins::IPluginObject* create(void)         { return new OpenViBEPlugins::Stimulation::CBoxAlgorithmTimeout; }

@@ -79,6 +79,9 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Streaming"); }
 			OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.1"); }
 			OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-sort-ascending"); }
+			OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_StimulationMultiplexer; }
 			OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Stimulation::CBoxAlgorithmStimulationMultiplexer; }

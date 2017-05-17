@@ -14,7 +14,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-#if defined(TARGET_HAS_ThirdPartyEIGEN)
+#if defined TARGET_HAS_ThirdPartyEIGEN
 #include <Eigen/Dense>
 typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
 #endif
@@ -117,7 +117,7 @@ OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CS
 	return l_ui32currentIdx;
 }
 
-boolean CBoxAlgorithmSpatialFilter::initialize(void)
+bool CBoxAlgorithmSpatialFilter::initialize(void)
 {
 	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 
@@ -197,7 +197,7 @@ boolean CBoxAlgorithmSpatialFilter::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmSpatialFilter::uninitialize(void)
+bool CBoxAlgorithmSpatialFilter::uninitialize(void)
 {
 	if(m_pStreamDecoder)
 	{
@@ -216,13 +216,13 @@ boolean CBoxAlgorithmSpatialFilter::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmSpatialFilter::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSpatialFilter::processInput(uint32 ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmSpatialFilter::process(void)
+bool CBoxAlgorithmSpatialFilter::process(void)
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
@@ -280,7 +280,7 @@ boolean CBoxAlgorithmSpatialFilter::process(void)
 			const uint32 l_ui32OutputChannelCount=l_pOutputMatrix->getDimensionSize(0);
 			const uint32 l_ui32SampleCount=l_pInputMatrix->getDimensionSize(1);
 
-#if TARGET_HAS_ThirdPartyEIGEN
+#if defined TARGET_HAS_ThirdPartyEIGEN
 			const Eigen::Map<MatrixXdRowMajor> l_oInputMapper(const_cast<float64*>(l_pInput), l_ui32InputChannelCount, l_ui32SampleCount);
 			const Eigen::Map<MatrixXdRowMajor> l_oFilterMapper(const_cast<float64*>(m_oFilterBank.getBuffer()), m_oFilterBank.getDimensionSize(0),  m_oFilterBank.getDimensionSize(1));
 			Eigen::Map<MatrixXdRowMajor> l_oOutputMapper(l_pOutput, l_ui32OutputChannelCount, l_ui32SampleCount);
