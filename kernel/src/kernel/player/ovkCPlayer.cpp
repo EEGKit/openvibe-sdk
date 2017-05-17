@@ -77,21 +77,15 @@ boolean CPlayer::setScenario(
 	const OpenViBE::CNameValuePairList* pLocalConfigurationTokens)
 {
 	OV_ERROR_UNLESS_KRF(
-		!this->isHoldingResources(),
-		"Trying to configure a player with non-empty resources",
-		ErrorType::BadCall
-	);
+	            !this->isHoldingResources(),
+	            "Trying to configure a player with non-empty resources",
+	            ErrorType::BadCall
+	            );
 
 	this->getLogManager() << LogLevel_Debug << "Player setScenario\n";
 
-	/*
 	// Create a fresh runtime configuration manager which will handle scenario-specific
 	// configuration, such as the scenario settings and local settings (workspace)
-	if (m_pRuntimeConfigurationManager && m_pScenarioSettingKeywordParserCallback)
-	{
-		m_pRuntimeConfigurationManager->unregisterKeywordParser(*m_pScenarioSettingKeywordParserCallback);
-	}
-	*/
 
 	delete m_pRuntimeConfigurationManager;
 	m_pRuntimeConfigurationManager=new CConfigurationManager(this->getKernelContext(), &this->getKernelContext().getConfigurationManager());
@@ -103,16 +97,13 @@ boolean CPlayer::setScenario(
 	m_pRuntimeScenarioManager->cloneScenarioImportersAndExporters(this->getKernelContext().getScenarioManager());
 
 	OV_ERROR_UNLESS_KRF(
-		m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier),
-		"Fail to create a scenario duplicate for the current runtime session",
-		ErrorType::BadResourceCreation
-	);
+	            m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier),
+	            "Fail to create a scenario duplicate for the current runtime session",
+	            ErrorType::BadResourceCreation
+	            );
 
 	IScenario& l_rRuntimeScenario = m_pRuntimeScenarioManager->getScenario(m_oRuntimeScenarioIdentifier);
 	l_rRuntimeScenario.merge(l_rOriginalScenario, NULL, true, true);
-	// l_rRuntimeScenario.flatten();
-
-	IScenario* l_pScenario = &l_rRuntimeScenario;
 
 	if(l_rRuntimeScenario.hasAttribute(OV_AttributeId_ScenarioFilename))
 	{
@@ -141,43 +132,43 @@ boolean CPlayer::setScenario(
 			this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(l_sScenarioConfigurationFile.c_str()) << "] to runtime configuration manager\n";
 			m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(l_sScenarioConfigurationFile.c_str()));
 		}
+	}
 
-		// Sets configuration tokens for this player
-		// Once every token file, applies the configuration tokens coming from Mensia Player
-		if(pLocalConfigurationTokens != NULL)
+	// Sets configuration tokens for this player
+	// Once every token file, applies the configuration tokens coming from an external application defining its own scenario specific tokens
+	if(pLocalConfigurationTokens != NULL)
+	{
+		this->getLogManager() << LogLevel_Trace << "Player setScenario: add local configuration token from map.\n";
+		for(unsigned int i=0; i < pLocalConfigurationTokens->getSize(); i++)
 		{
-			this->getLogManager() << LogLevel_Trace << "Player setScenario: add local configuration token from map.\n";
-			for(unsigned int i=0; i < pLocalConfigurationTokens->getSize(); i++)
+			CString l_sName;
+			CString l_sValue;
+			if(pLocalConfigurationTokens->getValue(i, l_sName, l_sValue))
 			{
-				CString l_sName;
-				CString l_sValue;
-				if(pLocalConfigurationTokens->getValue(i, l_sName, l_sValue))
+				this->getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: ["<<l_sName<<"] = ["<<l_sValue<<"].\n";
+				CIdentifier l_oTokenIdentifier=m_pRuntimeConfigurationManager->lookUpConfigurationTokenIdentifier(l_sName);
+				if(l_oTokenIdentifier==OV_UndefinedIdentifier)
 				{
-					this->getLogManager() << LogLevel_Debug << "Player setScenario: add local configuration token: ["<<l_sName<<"] = ["<<l_sValue<<"].\n";
-					CIdentifier l_oTokenIdentifier=m_pRuntimeConfigurationManager->lookUpConfigurationTokenIdentifier(l_sName);
-					if(l_oTokenIdentifier==OV_UndefinedIdentifier)
-					{
-						m_pRuntimeConfigurationManager->createConfigurationToken(l_sName, l_sValue);
-					}
-					else
-					{
-						m_pRuntimeConfigurationManager->setConfigurationTokenValue(l_oTokenIdentifier, l_sValue);
-					}
+					m_pRuntimeConfigurationManager->createConfigurationToken(l_sName, l_sValue);
 				}
-				// This should not happen
 				else
 				{
-					this->getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of pLocalConfigurationTokens at index "<< i <<".\n";
+					m_pRuntimeConfigurationManager->setConfigurationTokenValue(l_oTokenIdentifier, l_sValue);
 				}
 			}
+			// This should not happen
+			else
+			{
+				this->getLogManager() << LogLevel_Trace << "Player setScenario: Could not acces to value of pLocalConfigurationTokens at index "<< i <<".\n";
+			}
 		}
-
-		OV_ERROR_UNLESS_KRF(
-		            l_rRuntimeScenario.checkSettings(m_pRuntimeConfigurationManager),
-		            "Checking settings failed for scenario duplicate instantiated for the current runtime session",
-		            ErrorType::BadArgument
-		            );
 	}
+
+	OV_ERROR_UNLESS_KRF(
+	            l_rRuntimeScenario.checkSettings(m_pRuntimeConfigurationManager),
+	            "Checking settings failed for scenario duplicate instantiated for the current runtime session",
+	            ErrorType::BadArgument
+	            );
 
 	return m_oScheduler.setScenario(m_oRuntimeScenarioIdentifier);
 }
