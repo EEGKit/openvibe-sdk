@@ -22,7 +22,7 @@ typedef OpenViBE::int32 (*fClassifierComparison)(OpenViBE::IMatrix&, OpenViBE::I
 
 namespace OpenViBEToolkit
 {
-	extern OVTK_API void registerClassificationComparisionFunction(const OpenViBE::CIdentifier& rClassIdentifier, fClassifierComparison pComparision);
+	extern OVTK_API void registerClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier, fClassifierComparison pComparision);
 	extern OVTK_API fClassifierComparison getClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier);
 
 

@@ -11,7 +11,7 @@ using namespace OpenViBEToolkit;
 
 static std::map<uint64, fClassifierComparison> mComparisionFunctionMap;
 
-void OpenViBEToolkit::registerClassificationComparisionFunction(const OpenViBE::CIdentifier& rClassIdentifier, fClassifierComparison pComparision)
+void OpenViBEToolkit::registerClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier, fClassifierComparison pComparision)
 {
 	mComparisionFunctionMap[rClassIdentifier.toUInteger()] = pComparision;
 }
