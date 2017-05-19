@@ -12,14 +12,14 @@ using namespace OpenViBE::Plugins;
 
 using namespace OpenViBEToolkit;
 
-boolean CAlgorithmClassifier::initialize()
+bool CAlgorithmClassifier::initialize()
 {
 	m_AlgorithmProxy = NULL;
 	m_ExtraParametersMap = NULL;
 	return true;
 }
 
-boolean CAlgorithmClassifier::uninitialize()
+bool CAlgorithmClassifier::uninitialize()
 {
 	if(m_AlgorithmProxy != NULL)
 	{
@@ -30,7 +30,7 @@ boolean CAlgorithmClassifier::uninitialize()
 	return true;
 }
 
-boolean CAlgorithmClassifier::process(void)
+bool CAlgorithmClassifier::process(void)
 {
 	TParameterHandler < IMatrix* > ip_FeatureVector(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 	TParameterHandler < IMatrix* > ip_FeatureVectorSet(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
@@ -139,10 +139,10 @@ boolean CAlgorithmClassifier::process(void)
 	return true;
 }
 
-boolean CAlgorithmClassifier::initializeExtraParameterMechanism()
+bool CAlgorithmClassifier::initializeExtraParameterMechanism()
 {
 	TParameterHandler < std::map<CString, CString>* > ip_ExtraParameter(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter));
-	m_ExtraParametersMap = (std::map<CString, CString>*) ip_ExtraParameter;
+	m_ExtraParametersMap = static_cast<std::map<CString, CString>*>(ip_ExtraParameter);
 
 	m_AlgorithmProxy = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(this->getClassIdentifier()));
 
@@ -155,7 +155,7 @@ boolean CAlgorithmClassifier::initializeExtraParameterMechanism()
 	return true;
 }
 
-boolean CAlgorithmClassifier::uninitializeExtraParameterMechanism()
+bool CAlgorithmClassifier::uninitializeExtraParameterMechanism()
 {
 	OV_ERROR_UNLESS_KRF(
 		m_AlgorithmProxy->uninitialize(),
@@ -203,11 +203,11 @@ float64 CAlgorithmClassifier::getFloat64Parameter(const CIdentifier &parameterId
 	return static_cast<float64>(temp);
 }
 
-boolean CAlgorithmClassifier::getBooleanParameter(const CIdentifier &parameterIdentifier)
+bool CAlgorithmClassifier::getBooleanParameter(const CIdentifier &parameterIdentifier)
 {
-	TParameterHandler < boolean > temp(getInputParameter(parameterIdentifier));
+	TParameterHandler < bool > temp(getInputParameter(parameterIdentifier));
 	temp = this->getAlgorithmContext().getConfigurationManager().expandAsBoolean(getParameterValue(parameterIdentifier));
-	return static_cast<boolean>(temp);
+	return static_cast<bool>(temp);
 }
 
 CString *CAlgorithmClassifier::getCStringParameter(const CIdentifier &parameterIdentifier)
