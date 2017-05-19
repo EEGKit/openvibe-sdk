@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <iostream>
 #include <map>
+#include <algorithm>
 
 #include "../../tools/ovkSBoxProto.h"
 
@@ -197,23 +198,21 @@ bool CPluginManager::registerPluginDesc(
 	return true;
 }
 
-CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(
-	const CIdentifier& rPreviousIdentifier) const
+CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const
 {
 	bool l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
-	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
+	for(auto& elem : m_vPluginObjectDesc)
 	{
 		if(!l_bFoundPrevious)
 		{
-			if(i->first->getClassIdentifier()==rPreviousIdentifier)
+			if(elem.first->getClassIdentifier()==rPreviousIdentifier)
 			{
 				l_bFoundPrevious=true;
 			}
 		}
 		else
 		{
-			return i->first->getClassIdentifier();
+			return elem.first->getClassIdentifier();
 		}
 	}
 	return OV_UndefinedIdentifier;
@@ -224,21 +223,20 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(
 	const CIdentifier& rBaseClassIdentifier) const
 {
 	bool l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
-	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
+	for(auto& elem : m_vPluginObjectDesc)
 	{
 		if(!l_bFoundPrevious)
 		{
-			if(i->first->getClassIdentifier()==rPreviousIdentifier)
+			if(elem.first->getClassIdentifier()==rPreviousIdentifier)
 			{
 				l_bFoundPrevious=true;
 			}
 		}
 		else
 		{
-			if(i->first->isDerivedFromClass(rBaseClassIdentifier))
+			if(elem.first->isDerivedFromClass(rBaseClassIdentifier))
 			{
-				return i->first->getClassIdentifier();
+				return elem.first->getClassIdentifier();
 			}
 		}
 	}
@@ -250,16 +248,8 @@ bool CPluginManager::canCreatePluginObject(
 {
 //	this->getLogManager() << LogLevel_Debug << "Searching if can build plugin object\n";
 
-	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
-	{
-		if(i->first->getCreatedClass()==rClassIdentifier)
-		{
-			return true;
-		}
-	}
-
-	return false;
+	return std::any_of(m_vPluginObjectDesc.begin(), m_vPluginObjectDesc.end(),
+		[rClassIdentifier](const std::pair<OpenViBE::Plugins::IPluginObjectDesc*, OpenViBE::Kernel::IPluginModule*>& v ) { return v.first->getCreatedClass()==rClassIdentifier;});
 }
 
 const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(
@@ -284,15 +274,12 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDescCreating(
 {
 //	this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
-	map < IPluginObjectDesc*, IPluginModule* >::const_iterator i;
-	for(i=m_vPluginObjectDesc.begin(); i!=m_vPluginObjectDesc.end(); ++i)
+	auto elem = std::find_if(m_vPluginObjectDesc.begin(), m_vPluginObjectDesc.end(),
+		[rClassIdentifier](const std::pair<OpenViBE::Plugins::IPluginObjectDesc*, OpenViBE::Kernel::IPluginModule*>& v ) { return v.first->getCreatedClass() == rClassIdentifier;});
+	if (elem != m_vPluginObjectDesc.end())
 	{
-		if(i->first->getCreatedClass()==rClassIdentifier)
-		{
-			return i->first;
-		}
+		return elem->first;
 	}
-
 	this->getLogManager() << LogLevel_Debug << "Plugin object descriptor class identifier " << rClassIdentifier << " not found\n";
 	return NULL;
 
@@ -339,23 +326,24 @@ IPluginObject* CPluginManager::createPluginObject(
 	return createPluginObjectT<IPluginObject, IPluginObjectDesc>(rClassIdentifier, NULL);
 }
 
-bool CPluginManager::releasePluginObject(
-	IPluginObject* pPluginObject)
+bool CPluginManager::releasePluginObject(IPluginObject* pPluginObject)
 {
 	this->getLogManager() << LogLevel_Debug << "Releasing plugin object\n";
 
-	map < IPluginObjectDesc*, vector < IPluginObject* > >::iterator i;
-	vector < IPluginObject* >::iterator j;
-	for(i=m_vPluginObject.begin(); i!=m_vPluginObject.end(); ++i)
+	if(pPluginObject)
 	{
-		for(j=i->second.begin(); j!=i->second.end(); ++j)
+		this->getLogManager() << LogLevel_Debug << "Plugin object value is null\n";
+		return false;
+	}
+
+	for(auto& elem : m_vPluginObject)
+	{
+		auto pluginObjectIt = std::find(elem.second.begin(), elem.second.end(), pPluginObject);
+		if (pluginObjectIt != elem.second.end())
 		{
-			if((*j)==pPluginObject)
-			{
-				i->second.erase(j);
-				pPluginObject->release();
-				return true;
-			}
+			elem.second.erase(pluginObjectIt);
+			pPluginObject->release();
+			return true;
 		}
 	}
 
