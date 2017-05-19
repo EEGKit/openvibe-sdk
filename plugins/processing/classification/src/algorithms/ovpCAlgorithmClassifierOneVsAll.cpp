@@ -87,17 +87,17 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVector
 	}
 
 	//And then we just change adapt the label for each feature vector but we don't copy them anymore
-	for(size_t l_iClassifierCounter = 0 ; l_iClassifierCounter < m_oSubClassifierList.size() ; ++l_iClassifierCounter )
+	for(uint32_t l_iClassifierCounter = 0 ; l_iClassifierCounter < m_oSubClassifierList.size() ; ++l_iClassifierCounter )
 	{
 		TParameterHandler < IMatrix* > ip_pFeatureVectorSet(m_oSubClassifierList[l_iClassifierCounter]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 		ip_pFeatureVectorSet = (IMatrix*)ip_pFeatureVectorSetReference;
 
 		float64* l_pFeatureVectorSetBuffer=ip_pFeatureVectorSet->getBuffer();
-		for(uint32 j=0; j<rFeatureVectorSet.getFeatureVectorCount(); j++)
+		for(uint32_t j=0; j<rFeatureVectorSet.getFeatureVectorCount(); j++)
 		{
 			//Modify the class of each featureVector
 			const float64 l_f64Class = rFeatureVectorSet[j].getLabel();
-			if(static_cast<uint32>(l_f64Class) == l_iClassifierCounter)
+			if(static_cast<uint32_t>(l_f64Class) == l_iClassifierCounter)
 			{
 				l_pFeatureVectorSetBuffer[l_ui32FeatureVectorSize]=0;
 			}
@@ -146,7 +146,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 		{
 			l_oClassificationVector.push_back(CClassifierOutput(static_cast<float64>(op_f64ClassificationStateClass), static_cast<IMatrix*>(op_pClassificationValues)));
 		}
-		this->getLogManager() << LogLevel_Debug << static_cast<uint64>(l_iClassifierCounter) << " " << (float64)op_f64ClassificationStateClass << " " << (float64)(*op_pProbabilityValues)[0] << " " << (float64)(*op_pProbabilityValues)[1] << "\n";
+		this->getLogManager() << LogLevel_Debug << static_cast<uint64>(l_iClassifierCounter) << " " << static_cast<float64>(op_f64ClassificationStateClass) << " " << static_cast<float64>((*op_pProbabilityValues)[0]) << " " << static_cast<float64>((*op_pProbabilityValues)[1]) << "\n";
 	}
 
 	//Now, we determine the best classification
