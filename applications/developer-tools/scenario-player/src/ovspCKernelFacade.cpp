@@ -198,6 +198,8 @@ namespace OpenViBE
 			return PlayerReturnCode::KernelInternalFailure;
 		}
 
+		scenarioManager.getScenario(scenarioIdentifier).addAttribute(OV_AttributeId_ScenarioFilename, scenarioFile.c_str());
+
 		auto scenarioToReleaseIt = m_Pimpl->scenarioMap.find(scenarioName);
 		if (scenarioToReleaseIt != m_Pimpl->scenarioMap.end())
 		{

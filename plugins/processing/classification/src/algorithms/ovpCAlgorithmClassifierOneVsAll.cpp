@@ -31,7 +31,7 @@ using namespace OpenViBEToolkit;
 typedef std::pair < IMatrix*, IMatrix* > CIMatrixPointerPair;
 typedef std::pair< float64, IMatrix* > CClassifierOutput;
 
-boolean CAlgorithmClassifierOneVsAll::initialize()
+bool CAlgorithmClassifierOneVsAll::initialize()
 {
 	TParameterHandler < XML::IXMLNode* > op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
 	op_pConfiguration=NULL;
@@ -39,7 +39,7 @@ boolean CAlgorithmClassifierOneVsAll::initialize()
 	return CAlgorithmPairingStrategy::initialize();
 }
 
-boolean CAlgorithmClassifierOneVsAll::uninitialize(void)
+bool CAlgorithmClassifierOneVsAll::uninitialize(void)
 {
 	while(!m_oSubClassifierList.empty())
 	{
@@ -48,7 +48,7 @@ boolean CAlgorithmClassifierOneVsAll::uninitialize(void)
 	return CAlgorithmPairingStrategy::uninitialize();
 }
 
-boolean CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVectorSet)
+bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVectorSet)
 {
 	const uint32 l_ui32ClassCount = static_cast<uint32>(m_oSubClassifierList.size());
 	std::map < float64, size_t > l_vClassLabels;
@@ -113,7 +113,7 @@ boolean CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVec
 	return true;
 }
 
-boolean CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector, float64& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
+bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector, float64& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
 {
 	std::vector< CClassifierOutput > l_oClassificationVector;
 
@@ -204,23 +204,34 @@ boolean CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVec
 		OpenViBE::Kernel::ErrorType::BadProcessing
 	);
 
-	//Now that we made the calculation, we send the corresponding data
+	// Now that we made the calculation, we send the corresponding data
+
+	// For distances we just send the distance vector of the winner
 	IAlgorithmProxy* l_pWinner = this->m_oSubClassifierList[static_cast<uint32>(rf64Class)];
 	TParameterHandler < IMatrix* > op_pClassificationWinnerValues(l_pWinner->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
-	TParameterHandler < IMatrix* > op_pProbabilityWinnerValues(l_pWinner->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
-
 	IMatrix* l_pTempMatrix = static_cast<IMatrix*>(op_pClassificationWinnerValues);
 	rClassificationValues.setSize(l_pTempMatrix->getBufferElementCount());
 	System::Memory::copy(rClassificationValues.getBuffer(), l_pTempMatrix->getBuffer(), l_pTempMatrix->getBufferElementCount()*sizeof(float64));
 
-	l_pTempMatrix = static_cast<IMatrix*>(op_pProbabilityWinnerValues);
-	rProbabilityValue.setSize(op_pProbabilityWinnerValues->getBufferElementCount());
-	System::Memory::copy(rProbabilityValue.getBuffer(), l_pTempMatrix->getBuffer(), l_pTempMatrix->getBufferElementCount()*sizeof(float64));
+	// We take the probabilities of the single class winning from each of the sub classifiers and normalize them
+	double subProbabilitySum = 0;
+	rProbabilityValue.setSize(static_cast<uint32>(m_oSubClassifierList.size()));
+	for (uint32_t classIndex = 0; classIndex < m_oSubClassifierList.size(); ++classIndex)
+	{
+		TParameterHandler < IMatrix* > op_ProbabilityValues(m_oSubClassifierList[classIndex]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
+		rProbabilityValue[classIndex] = op_ProbabilityValues->getBuffer()[0];
+		subProbabilitySum += rProbabilityValue[classIndex];
+	}
+
+	for (uint32_t classIndex = 0; classIndex < rProbabilityValue.getSize(); ++classIndex)
+	{
+		rProbabilityValue[classIndex] /= subProbabilitySum;
+	}
 
 	return true;
 }
 
-boolean CAlgorithmClassifierOneVsAll::addNewClassifierAtBack(void)
+bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack(void)
 {
 	const CIdentifier l_oSubClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_oSubClassifierAlgorithmIdentifier);
 
@@ -253,7 +264,7 @@ void CAlgorithmClassifierOneVsAll::removeClassifierAtBack(void)
 	this->m_oSubClassifierList.pop_back();
 }
 
-boolean CAlgorithmClassifierOneVsAll::designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount)
+bool CAlgorithmClassifierOneVsAll::designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount)
 {
 	if(!this->setSubClassifierIdentifier(rId))
 	{
@@ -305,7 +316,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsAll::saveConfiguration(void)
 	return l_pOneVsAllNode;
 }
 
-boolean CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode *pConfigurationNode)
+bool CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode *pConfigurationNode)
 {
 	XML::IXMLNode *l_pTempNode = pConfigurationNode->getChildByName(c_sSubClassifierIdentifierNodeName);
 	CIdentifier l_oIdentifier;
@@ -347,8 +358,7 @@ boolean CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode *pConfigur
 
 uint32 CAlgorithmClassifierOneVsAll::getOutputProbabilityVectorLength()
 {
-	TParameterHandler < IMatrix* > op_pProbabilityValues(m_oSubClassifierList[0]->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
-	return op_pProbabilityValues->getDimensionSize(0);
+	return static_cast<uint32>(m_oSubClassifierList.size());
 }
 
 uint32 CAlgorithmClassifierOneVsAll::getOutputDistanceVectorLength()
@@ -357,7 +367,7 @@ uint32 CAlgorithmClassifierOneVsAll::getOutputDistanceVectorLength()
 	return op_pDistanceValues->getDimensionSize(0);
 }
 
-boolean CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNode *pSubClassifiersNode)
+bool CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNode *pSubClassifiersNode)
 {
 	for( uint32 i = 0; i < pSubClassifiersNode->getChildCount() ; ++i)
 	{
@@ -379,7 +389,7 @@ uint32 CAlgorithmClassifierOneVsAll::getClassCount(void) const
 	return static_cast<uint32>(m_oSubClassifierList.size());
 }
 
-boolean CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const OpenViBE::CIdentifier &rId)
+bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const OpenViBE::CIdentifier &rId)
 {
 	m_oSubClassifierAlgorithmIdentifier = rId;
 	m_fAlgorithmComparison = getClassificationComparisonFunction(rId);

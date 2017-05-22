@@ -5,8 +5,10 @@
 #if defined TARGET_OS_Windows
 	#include <shlobj.h>
 	#include <Dbghelp.h>
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#elif defined TARGET_OS_Linux
 	#include <linux/limits.h>
+#elif defined TARGET_OS_MacOS
+	#include <sys/syslimits.h>
 #endif
 
 #include <string>
