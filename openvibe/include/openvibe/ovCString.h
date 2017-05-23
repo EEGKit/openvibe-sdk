@@ -72,6 +72,15 @@ namespace OpenViBE
 		 */
 		OpenViBE::CString& operator=(
 			const OpenViBE::CString& rString);
+
+		/**
+		 * \brief Addition assignment operator
+		 * \param rString [in] : The string to append
+		 * \return This string.
+		 */
+		OpenViBE::CString& operator+=(
+				const OpenViBE::CString& rString);
+
 		/**
 		 * \brief Addition operator
 		 * \param rString1 [in] : The first part of the resulting string

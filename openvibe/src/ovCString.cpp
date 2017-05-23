@@ -48,6 +48,12 @@ CString& CString::operator=(const CString& rString)
 	return *this;
 }
 
+CString& CString::operator+=(const CString& rString)
+{
+	m_pStringImpl->m_sValue += rString.m_pStringImpl->m_sValue;
+	return *this;
+}
+
 char &CString::operator[](unsigned int idx)
 {
 	return m_pStringImpl->m_sValue[idx];
