@@ -296,13 +296,14 @@ namespace OpenViBE
 			// player identifier is pushed here to ensure a correct cleanup event if player initialization fails
 			playerIdentifiersList.push_back(playerIdentifier);
 
-			// Scenario attachment with setup of local token
-			if (player->setScenario(scenarioPair.second))
+			OpenViBE::CNameValuePairList configurationTokensMap;
+			for (auto& token : m_Pimpl->scenarioTokenMap[scenarioName])
 			{
-				// set scenario specific token
-				setConfigurationTokenList(player->getRuntimeConfigurationManager(), m_Pimpl->scenarioTokenMap[scenarioName]);
+				configurationTokensMap.setValue(token.first.c_str(), token.second.c_str());
 			}
-			else
+
+			// Scenario attachment with setup of local token
+			if (!player->setScenario(scenarioPair.second, &configurationTokensMap))
 			{
 				std::cerr << "ERROR: impossible to set player scenario " << scenarioName << std::endl;
 				returnCode = PlayerReturnCode::KernelInternalFailure;
