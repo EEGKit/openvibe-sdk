@@ -38,9 +38,9 @@ SET(TEST_MODULE Classification-LDA)
 SET(TEST_SCENARIOS 
 Native
 Onevsall
-Onevsone-HT
+#Onevsone-HT
 Onevsone-PKPD
-Onevsone-Voting
+#Onevsone-Voting
 )
 
 # Templates xml.in files
