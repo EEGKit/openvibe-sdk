@@ -5,7 +5,7 @@ cmake_policy(SET CMP0043 OLD)
 cmake_policy(SET CMP0045 OLD)
 cmake_policy(SET CMP0048 OLD)
 
-PROJECT(CertiViBE)
+PROJECT(OpenViBE)
 
 SET(OV_GLOBAL_VERSION_MAJOR 0)
 SET(OV_GLOBAL_VERSION_MINOR 0)
@@ -19,7 +19,7 @@ SET(OV_CONFIG_SUBDIR "${PROJECT_NAME}" CACHE STRING "Subdirectory under user dir
 SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies")
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
-SET(BRAND_NAME "CertiViBE" CACHE STRING "Brand with which titles and documentation will be prefixed")
+SET(BRAND_NAME "OpenViBE" CACHE STRING "Brand with which titles and documentation will be prefixed")
 OPTION(PUBLISH_DOC_ASSETS "Publish plugin documentation assets" ON)
 
 # If OpenMP is available, it will allow Eigen to use multiple cores in matrix math.
@@ -132,7 +132,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules")
 SET_PROPERTY(GLOBAL PROPERTY OV_PROP_CURRENT_PROJECTS "")
 SET_PROPERTY(GLOBAL PROPERTY OV_PROP_CURRENT_PROJECTS_BUILD_DIR "")
 
-# Used by the various Find* scripts to locate CertiViBE modules
+# Used by the various Find* scripts to locate OpenViBE modules
 SET(OV_BASE_DIR ${CMAKE_SOURCE_DIR})
 SET(OV_BASE_BIN_DIR ${CMAKE_BINARY_DIR})
 SET(OV_LIBRARY_DIR  ${CMAKE_BINARY_DIR}/lib)
@@ -141,7 +141,7 @@ SET_PROPERTY(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_DEBUG "TARGET_BUILDTY
 SET_PROPERTY(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELEASE "TARGET_BUILDTYPE_Release")
 SET_PROPERTY(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELWITHDEBINFO "TARGET_BUILDTYPE_Release")
 
-# CertiViBE-specific helper functions that are used by the CMakeLists of the subprojects.
+# OpenViBE-specific helper functions that are used by the CMakeLists of the subprojects.
 INCLUDE("OvAddProjects")
 INCLUDE("OvInstallLaunchScript")
 INCLUDE("OvLinkBoostLib")
@@ -152,7 +152,7 @@ INCLUDE("SetProjectVersion")
 INCLUDE("GNUInstallDirs")
 SET(CMAKE_INSTALL_FULL_DOCDIR "${CMAKE_INSTALL_FULL_BINDIR}/../doc/html")
 
-# Add directories that CertiViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
+# Add directories that OpenViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
 # These defines should only be used in "openvibe/ov_directories.h".
 ADD_DEFINITIONS(-DOV_CMAKE_PATH_ROOT="${CMAKE_INSTALL_PREFIX}")
 ADD_DEFINITIONS(-DOV_CMAKE_PATH_BIN="${CMAKE_INSTALL_FULL_BINDIR}")
