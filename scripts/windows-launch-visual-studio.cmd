@@ -22,7 +22,7 @@ if not defined USE_EXPRESS (
 	SET USE_EXPRESS=0
 )
 
-set SolutionPath=%CD%\..\..\certivibe-build\vs-project-%BuildType%\OpenViBE.sln
+set SolutionPath=%CD%\..\..\certivibe-build\vs-project-%BuildType%\OpenVIBE.sln
 
 if %USE_EXPRESS% == 1 (
 	echo Use %VSCMake% Express Edition
