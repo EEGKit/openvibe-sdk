@@ -29,6 +29,8 @@ goto parameter_parse
 	echo --build-unit build unit tests
 	echo --build-validation build validation tests
 
+	echo --build-dir [dirname] build directory
+	echo --install-dir [dirname] binaries deployment directory
 	echo --test-data-dir [dirname] test data directory
 	echo --test-output-dir [dirname] test output files directory
 	echo --python-exec [path] path to the python executable to use
@@ -109,6 +111,16 @@ if /i "%1" == "-h" (
 	SHIFT
 	SHIFT
 	Goto parameter_parse
+) else if /i "%1"=="--build-dir" (
+	set build_dir=%2
+	SHIFT
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1"=="--install-dir" (
+	set install_dir=%2
+	SHIFT
+	SHIFT
+	Goto parameter_parse
 ) else if not "%1" == "" (
 	echo unrecognized option [%1]
 	Goto terminate_error
@@ -122,8 +134,12 @@ setlocal
 call "windows-initialize-environment.cmd"
 
 set script_dir=%CD%
-set build_dir=%script_dir%\..\..\certivibe-build\build-%BuildType%
-set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
+if not defined build_dir (
+	set build_dir=%script_dir%\..\..\certivibe-build\build-%BuildType%
+)
+if not defined install_dir (
+	set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
+)
 if not defined ov_cmake_test_output (
 	set ov_cmake_test_output=%build_dir%\validation-test-output\
 )
