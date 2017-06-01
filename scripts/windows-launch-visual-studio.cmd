@@ -19,7 +19,7 @@ SET "OV_PATH_LIB=%OV_PATH_ROOT%\bin"
 SET "PATH=%OV_PATH_ROOT%\bin;%PATH%"
 
 if not defined USE_EXPRESS (
-	SET USE_EXPRESS=0
+	SET USE_EXPRESS=1
 )
 
 set SolutionPath=%CD%\..\..\certivibe-build\vs-project-%BuildType%\OpenVIBE.sln
