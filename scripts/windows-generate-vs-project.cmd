@@ -9,14 +9,21 @@ setlocal
 
 call "windows-initialize-environment.cmd"
 
+for %%A in (%*) DO (
+	if /i "%%A"=="--debug" (
+		set BuildType=Debug
+		set next=
+	)
+)
+
 set script_dir=%CD%
-set build_dir=%script_dir%\..\..\certivibe-build\vs-project
-set install_dir=%script_dir%\..\..\certivibe-build\dist
+set build_dir=%script_dir%\..\..\certivibe-build\vs-project-%BuildType%
+set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
 
 mkdir %build_dir% 2>NUL
 pushd %build_dir%
 
-cmake %script_dir%\.. -G"%VSCMake%" -DCMAKE_BUILD_TYPE=%BuildType% -DCMAKE_INSTALL_PREFIX=%install_dir%
+cmake %script_dir%\.. -G"%VSCMake%" -T "v120" -DCMAKE_BUILD_TYPE=%BuildType% -DCMAKE_INSTALL_PREFIX=%install_dir%
 
 if not "!ERRORLEVEL!" == "0" goto terminate_error
 

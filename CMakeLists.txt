@@ -148,7 +148,6 @@ INCLUDE("OvLinkBoostLib")
 INCLUDE("OvDelayLoad")
 INCLUDE("SetProjectVersion")
 
-
 # Setup knowledge of GNU-style install path variables
 INCLUDE("GNUInstallDirs")
 SET(CMAKE_INSTALL_FULL_DOCDIR "${CMAKE_INSTALL_FULL_BINDIR}/../doc/html")

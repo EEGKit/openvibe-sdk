@@ -2,6 +2,8 @@
 setlocal EnableDelayedExpansion
 setlocal enableextensions 
 
+set SKIP_VS2017=1
+set SKIP_VS2015=1
 set BuildType=Release
 set PauseCommand=pause
 set RerunCmake=false
@@ -32,9 +34,9 @@ goto parameter_parse
 	echo.
 	exit /b
 	
-	
 
 :parameter_parse
+
 if /i "%1" == "-h" (
 	goto print_help
 ) else if /i "%1" == "--help" (
