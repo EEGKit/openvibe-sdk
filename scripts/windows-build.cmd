@@ -10,6 +10,7 @@ set RerunCmake=false
 set PackageOption=FALSE
 set UserDataSubdir=OpenVIBE
 set BrandName=OpenViBE
+set DisplayErrorLocation=ON
 
 goto parameter_parse
 
@@ -21,6 +22,7 @@ goto parameter_parse
 	echo -d^|--debug build in debug mode
 	echo -r^|--release build in release mode
 	echo --make-package make packages at the end
+	echo --hide-error-location do not display complete error locations
 	echo --rerun-cmake force cmake rerun
 	echo --userdata-subdir [dirname] name of the userdata sub directory
 	echo --brand-name [brand name] name of the brand to prefix titles and documentation
@@ -63,6 +65,11 @@ if /i "%1" == "-h" (
 	Goto parameter_parse
 ) else if /i "%1" == "--make-package" (
 	set PackageOption=TRUE
+	set DisplayErrorLocation=OFF
+	SHIFT
+	Goto parameter_parse
+) else if /i "%1" == "--hide-error-location" (
+	set DisplayErrorLocation=OFF
 	SHIFT
 	Goto parameter_parse
 ) else if /i "%1" == "--rerun-cmake" (
@@ -133,6 +140,7 @@ if %CallCmake%=="true" (
 		-DCMAKE_BUILD_TYPE=%BuildType% ^
 		-DCMAKE_INSTALL_PREFIX=%install_dir% ^
 		-DOV_PACKAGE=%PackageOption% ^
+		-DOV_DISPLAY_ERROR_LOCATION=%DisplayErrorLocation% ^
 		-DBUILD_UNIT_TEST=%ov_build_unit% ^
 		-DBUILD_VALIDATION_TEST=%ov_build_validation% ^
 		%ov_cmake_test_data% ^
