@@ -132,7 +132,11 @@ while (0)
  */
 #define OV_WARNING_UNLESS_K(expression, message) OV_WARNING_UNLESS(expression, message, this->getLogManager())
 
-
+#if defined OV_DISPLAY_ERROR_LOCATION
+#define OV_ERROR_LOG_LOCATION(file, line) ", {Error location} : {" << file << "::" << line << "}"
+#else
+#define OV_ERROR_LOG_LOCATION(file, line) ""
+#endif
 /**
  * \def OV_ERROR_LOG(description, type, file, line, logManager)
  *
@@ -148,9 +152,7 @@ do { \
 			   << convertErrorTypeToString(type) \
 			   << " (code " \
 			   << static_cast<unsigned int>((type)) \
-			   << ")}, {Error location} : {" \
-			   << file << "::" << line\
-			   << "}\n"; \
+			   << ")}" << OV_ERROR_LOG_LOCATION(file, line) << "\n"; \
 } \
 while (0)
 
@@ -340,6 +342,12 @@ while (0)
  */
 #define OV_ERROR_UNLESS_KRN(expression, description, type) OV_ERROR_UNLESS(expression, description, type, nullptr, this->getErrorManager(), this->getLogManager())
 
+#if defined OV_DISPLAY_ERROR_LOCATION
+#define OV_FATAL_LOG_LOCATION ", {Error location} : {" << __FILE__ << "::" << __LINE__ << "}"
+#else
+#define OV_FATAL_LOG_LOCATION ""
+#endif
+
 /**
  * \def OV_FATAL(description, type, logManager)
  *
@@ -355,9 +363,7 @@ do { \
 			   << convertErrorTypeToString(type) \
 			   << " (code " \
 			   << static_cast<unsigned int>((type)) \
-			   << ")}, {Error location} : {" \
-			   << __FILE__ << "::" << __LINE__\
-			   << "}\n"; \
+			   << ")}" << OV_FATAL_LOG_LOCATION << "\n"; \
 	std::abort(); \
 } \
 while (0)
