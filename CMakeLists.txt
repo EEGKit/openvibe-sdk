@@ -8,8 +8,8 @@ cmake_policy(SET CMP0048 OLD)
 PROJECT(OpenVIBE)
 
 SET(OV_GLOBAL_VERSION_MAJOR 0)
-SET(OV_GLOBAL_VERSION_MINOR 0)
-SET(OV_GLOBAL_VERSION_PATCH 6)
+SET(OV_GLOBAL_VERSION_MINOR 1)
+SET(OV_GLOBAL_VERSION_PATCH 99)
 SET(OV_GLOBAL_VERSION_STRING "${OV_GLOBAL_VERSION_MAJOR}.${OV_GLOBAL_VERSION_MINOR}.${OV_GLOBAL_VERSION_PATCH}")
 
 # Default is to build to dist/. If you wish a custom install, set your own MAKE_INSTALL_PREFIX when you call CMake. Safest to do under a fakeroot.
@@ -20,6 +20,7 @@ SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies")
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
 SET(BRAND_NAME "OpenViBE" CACHE STRING "Brand with which titles and documentation will be prefixed")
+OPTION(OV_DISPLAY_ERROR_LOCATION ON)
 OPTION(PUBLISH_DOC_ASSETS "Publish plugin documentation assets" ON)
 
 # If OpenMP is available, it will allow Eigen to use multiple cores in matrix math.
@@ -119,6 +120,10 @@ ENDIF()
 #################################################################
 string(TOLOWER ${BRAND_NAME} LOWER_BRAND_NAME)
 ADD_DEFINITIONS(-DBRAND_NAME="${BRAND_NAME}")
+
+IF(OV_DISPLAY_ERROR_LOCATION)
+	ADD_DEFINITIONS(-DOV_DISPLAY_ERROR_LOCATION)
+ENDIF()
 #################################################################
 
 SET(OV_LAUNCHER_SOURCE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules/launchers")
