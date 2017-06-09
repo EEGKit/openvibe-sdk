@@ -16,7 +16,7 @@ SET(OV_GLOBAL_VERSION_STRING "${OV_GLOBAL_VERSION_MAJOR}.${OV_GLOBAL_VERSION_MIN
 MESSAGE(STATUS "Appending compilation flags...")
 
 SET(OV_CONFIG_SUBDIR "${PROJECT_NAME}" CACHE STRING "Subdirectory under user directory when configuration and logs will be saved")
-SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies")
+SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies" CACHE STRING "Dependency directory")
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
 SET(BRAND_NAME "OpenViBE" CACHE STRING "Brand with which titles and documentation will be prefixed")
@@ -129,7 +129,7 @@ ENDIF()
 SET(OV_LAUNCHER_SOURCE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules/launchers")
 
 # By setting SKIP[_FOLDER]* you can skip a subtree (example: SKIP_A_B_C skips folder a/b/c and all its subfolders if any)
-
+MESSAGE(${CMAKE_SOURCE_DIR})
 # Skip building documentation
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules")
 

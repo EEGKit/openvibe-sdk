@@ -1,7 +1,13 @@
+@echo off
+
 set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin;%PATH%
 set "SCRIPT_PATH=%~dp0"
-set "PATH_DEPENDENCIES=%SCRIPT_PATH%\..\dependencies"
 
+if "%1"=="" (
+	set "PATH_DEPENDENCIES=%SCRIPT_PATH%\..\dependencies"
+) else (
+	set "PATH_DEPENDENCIES=%1"
+)
 set PATH=%PATH_DEPENDENCIES%\boost\bin;%PATH%
 set PATH=%PATH_DEPENDENCIES%\cmake\bin;%PATH%
 set PATH=%PATH_DEPENDENCIES%\expat\bin;%PATH%

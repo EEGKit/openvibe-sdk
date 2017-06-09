@@ -11,6 +11,8 @@ set PackageOption=FALSE
 set UserDataSubdir=OpenVIBE
 set BrandName=OpenViBE
 set DisplayErrorLocation=ON
+set dependencies_path=
+REM set init_env_cmd=windows-initialize-environment.cmd
 
 goto parameter_parse
 
@@ -31,6 +33,7 @@ goto parameter_parse
 
 	echo --build-dir [dirname] build directory
 	echo --install-dir [dirname] binaries deployment directory
+	echo --dependencies-dir [dirname] directory where dependencies are located
 	echo --test-data-dir [dirname] test data directory
 	echo --test-output-dir [dirname] test output files directory
 	echo --python-exec [path] path to the python executable to use
@@ -121,6 +124,13 @@ if /i "%1" == "-h" (
 	SHIFT
 	SHIFT
 	Goto parameter_parse
+) else if /i "%1"=="--dependencies-dir" (
+	set dependencies_path="-DOV_CUSTOM_DEPENDENCIES_PATH=%2"
+	set init_env_cmd=windows-initialize-environment.cmd %2
+	REM -DOV_SOURCE_DEPENDENCIES_PATH=%2\dependencies-source"
+	SHIFT
+	SHIFT
+	Goto parameter_parse
 ) else if not "%1" == "" (
 	echo unrecognized option [%1]
 	Goto terminate_error
@@ -131,7 +141,7 @@ echo Build type is set to: %BuildType%.
 
 setlocal
 
-call "windows-initialize-environment.cmd"
+call %init_env_cmd%
 
 set script_dir=%CD%
 if not defined build_dir (
@@ -163,7 +173,8 @@ if %CallCmake%=="true" (
 		-DBRAND_NAME=%BrandName% ^
 		-DOV_CONFIG_SUBDIR=%UserDataSubdir% ^
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=%ov_cmake_test_output% ^
-		%python_exec%
+		%python_exec% ^
+		%dependencies_path%
 )
 
 if not "!ERRORLEVEL!" == "0" goto terminate_error
