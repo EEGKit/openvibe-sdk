@@ -241,27 +241,17 @@ bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(uint32_t skipIndex, 
 	// Compute the total number of samples
 	for (uint32_t i = 0; i < m_NumClasses; i++)
 	{
-		if (i == skipIndex)
+		if (i != skipIndex)
 		{
-			continue;
+			totalOutclassSamples += m_IncCovarianceProxies[i].numSamples;
 		}
-		totalOutclassSamples += m_IncCovarianceProxies[i].numSamples;
-
 	}
 
 	// Compute weigths for averaging
 	classWeights.resize(m_NumClasses);
 	for (uint32_t i = 0; i < m_NumClasses; i++)
 	{
-		if (i == skipIndex)
-		{
-			// Ignore the in-class in the average
-			classWeights[i] = 0;
-		}
-		else
-		{
-			classWeights[i] = m_IncCovarianceProxies[i].numSamples / static_cast<float64>(totalOutclassSamples);
-		}
+		classWeights[i] = i == skipIndex ? 0 : m_IncCovarianceProxies[i].numSamples / static_cast<float64>(totalOutclassSamples);
 		this->getLogManager() << LogLevel_Debug << "Condition " << i + 1 << " averaging weight = " << classWeights[i] << "\n";
 	}
 
@@ -281,20 +271,15 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<Eigen::Mat
 	std::vector<Eigen::VectorXd>& sortedEigenValues)
 {
 	// We wouldn't need to store all this -- they are kept for debugging purposes
-	std::vector<VectorXd> eigenValues;
-	std::vector<MatrixXd> eigenVectors;
-	std::vector<MatrixXd> covInv;
-	std::vector<MatrixXd> covProd;
+	std::vector<VectorXd> eigenValues(m_NumClasses);
+	std::vector<MatrixXd> eigenVectors(m_NumClasses);
+	std::vector<MatrixXd> covInv(m_NumClasses);
+	std::vector<MatrixXd> covProd(m_NumClasses);
 	MatrixXd tikhonov;
 	MatrixXd outclassCov;
 	tikhonov.resizeLike(cov[0]);
 	tikhonov.setIdentity();
 	tikhonov *= m_Tikhonov;
-
-	eigenValues.resize(m_NumClasses);
-	eigenVectors.resize(m_NumClasses);
-	covInv.resize(m_NumClasses);
-	covProd.resize(m_NumClasses);
 
 	sortedEigenVectors.resize(m_NumClasses);
 	sortedEigenValues.resize(m_NumClasses);
@@ -308,51 +293,51 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<Eigen::Mat
 
 	EigenSolver<MatrixXd> eigenSolverGeneral;
 
-	for (uint32_t c = 0; c < m_NumClasses; c++)
+	for (uint32_t classIndex = 0; classIndex < m_NumClasses; classIndex++)
 	{
 		try {
-			covInv[c] = (cov[c] + tikhonov).inverse();
+			covInv[classIndex] = (cov[classIndex] + tikhonov).inverse();
 		}
 		catch (...) {
-			OV_ERROR_KRF("Inversion failed for condition [" << c+1 << "]", OpenViBE::Kernel::ErrorType::BadProcessing);
+			OV_ERROR_KRF("Inversion failed for condition [" << classIndex+1 << "]", OpenViBE::Kernel::ErrorType::BadProcessing);
 		}
 
-		// Compute covariance in all the classes except 'c'.
+		// Compute covariance in all the classes except 'classIndex'.
 		OV_ERROR_UNLESS_KRF(
-			outclassCovAverage(c, cov, outclassCov),
-			"Outclass cov computation failed for condition [" << c + 1 << "]",
+			outclassCovAverage(classIndex, cov, outclassCov),
+			"Outclass cov computation failed for condition [" << classIndex + 1 << "]",
 			 OpenViBE::Kernel::ErrorType::BadProcessing);
 
-		covProd[c] = covInv[c] * outclassCov;
+		covProd[classIndex] = covInv[classIndex] * outclassCov;
 
-		// std::stringstream fn; fn << "C:/jl/dump_covprod" << c << ".csv";
-		// dumpMatrixFile(l_oCovProd[c], fn.str().c_str());
+		// std::stringstream fn; fn << "C:/jl/dump_covprod" << classIndex << ".csv";
+		// dumpMatrixFile(l_oCovProd[classIndex], fn.str().c_str());
 
 		try {
-			eigenSolverGeneral.compute(covProd[c]);
+			eigenSolverGeneral.compute(covProd[classIndex]);
 		}
 		catch (...) {
-			OV_ERROR_KRF("EigenSolver failed for condition [" << c+1 << "]",OpenViBE::Kernel::ErrorType::BadProcessing);
+			OV_ERROR_KRF("EigenSolver failed for condition [" << classIndex + 1 << "]",OpenViBE::Kernel::ErrorType::BadProcessing);
 		}
 
-		eigenValues[c] = eigenSolverGeneral.eigenvalues().real();
-		eigenVectors[c] = eigenSolverGeneral.eigenvectors().real();
+		eigenValues[classIndex] = eigenSolverGeneral.eigenvalues().real();
+		eigenVectors[classIndex] = eigenSolverGeneral.eigenvectors().real();
 
 		// Sort the vectors -_-
 		std::vector< std::pair<float64, int> > indexes;
-		for (int i = 0; i < eigenValues[c].size(); i++)
+		for (int i = 0; i < eigenValues[classIndex].size(); i++)
 		{
-			indexes.push_back(std::make_pair((eigenValues[c])[i], i));
+			indexes.emplace_back(std::make_pair((eigenValues[classIndex])[i], i));
 		}
 		std::sort(indexes.begin(), indexes.end(), std::greater< std::pair<float64, int> >());
 
-		sortedEigenValues[c].resizeLike(eigenValues[c]);
-		sortedEigenVectors[c].resizeLike(eigenVectors[c]);
-		for (int i = 0; i < eigenValues[c].size(); i++)
+		sortedEigenValues[classIndex].resizeLike(eigenValues[classIndex]);
+		sortedEigenVectors[classIndex].resizeLike(eigenVectors[classIndex]);
+		for (int i = 0; i < eigenValues[classIndex].size(); i++)
 		{
-			(sortedEigenValues[c])[i]     = (eigenValues[c])[indexes[i].second];
-			sortedEigenVectors[c].col(i) = eigenVectors[c].col(indexes[i].second);
-			// this->getLogManager() << LogLevel_Info << "E " << i << " " << (l_oSortedEigenValues[c])[i] << "\n";
+			sortedEigenValues[classIndex][i] = eigenValues[classIndex][indexes[i].second];
+			sortedEigenVectors[classIndex].col(i) = eigenVectors[classIndex].col(indexes[i].second);
+			// this->getLogManager() << LogLevel_Info << "E " << i << " " << (l_oSortedEigenValues[classIndex])[i] << "\n";
 		}
 	}
 	return true;
@@ -452,7 +437,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process(void)
 		for (uint32_t i = 1; i < m_NumClasses; i++)
 		{
 			OV_ERROR_UNLESS_KRF(
-				cov[0].rows() == cov[1].rows() && cov[0].cols() == cov[1].cols(),
+				cov[i-1].rows() == cov[i].rows() && cov[i-1].cols() == cov[i].cols(),
 				"Mismatch between the number of channel in both input streams",
 				OpenViBE::Kernel::ErrorType::BadValue);
 		}
@@ -469,10 +454,10 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process(void)
 		// Compute the actual CSP using the obtained covariance matrices
 		std::vector<Eigen::MatrixXd> l_vSortedEigenVectors;
 		std::vector<Eigen::VectorXd> l_vSortedEigenValues;
-		if (!computeCSP(cov, l_vSortedEigenVectors, l_vSortedEigenValues))
-		{
-			return false;
-		}
+		OV_ERROR_UNLESS_KRF(
+			computeCSP(cov, l_vSortedEigenVectors, l_vSortedEigenValues),
+			"Failure when computing CSP",
+			OpenViBE::Kernel::ErrorType::BadProcessing);
 
 		// Create a CMatrix mapper that can spool the filters to a file
 		CMatrix selectedVectors;
@@ -519,7 +504,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process(void)
 		{
 			for (uint32_t i = 0; i < selectedVectors.getDimensionSize(0); i++) {
 				std::stringstream label;
-				label << "Cond " << static_cast<uint32_t>(i / m_FiltersPerClass) + 1
+				label << "Cond " << i / m_FiltersPerClass + 1
 					<< " filter " <<  i % m_FiltersPerClass + 1;
 
 				selectedVectors.setDimensionLabel(0, i, label.str().c_str());

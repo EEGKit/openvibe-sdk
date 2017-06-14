@@ -201,7 +201,7 @@ bool CPluginManager::registerPluginDesc(
 CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const
 {
 	bool l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
-	for(auto& elem : m_vPluginObjectDesc)
+	for(const auto& elem : m_vPluginObjectDesc)
 	{
 		if(!l_bFoundPrevious)
 		{
@@ -223,7 +223,7 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(
 	const CIdentifier& rBaseClassIdentifier) const
 {
 	bool l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
-	for(auto& elem : m_vPluginObjectDesc)
+	for(const auto& elem : m_vPluginObjectDesc)
 	{
 		if(!l_bFoundPrevious)
 		{
