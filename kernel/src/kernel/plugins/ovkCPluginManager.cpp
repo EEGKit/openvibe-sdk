@@ -249,7 +249,9 @@ bool CPluginManager::canCreatePluginObject(
 //	this->getLogManager() << LogLevel_Debug << "Searching if can build plugin object\n";
 
 	return std::any_of(m_vPluginObjectDesc.begin(), m_vPluginObjectDesc.end(),
-		[rClassIdentifier](const std::pair<OpenViBE::Plugins::IPluginObjectDesc*, OpenViBE::Kernel::IPluginModule*>& v ) { return v.first->getCreatedClass()==rClassIdentifier;});
+		[rClassIdentifier](const std::pair<OpenViBE::Plugins::IPluginObjectDesc*, OpenViBE::Kernel::IPluginModule*>& v ) { 
+			return v.first->getCreatedClass()==rClassIdentifier;
+		});
 }
 
 const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(
@@ -275,7 +277,9 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDescCreating(
 //	this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
 	auto elem = std::find_if(m_vPluginObjectDesc.begin(), m_vPluginObjectDesc.end(),
-		[rClassIdentifier](const std::pair<OpenViBE::Plugins::IPluginObjectDesc*, OpenViBE::Kernel::IPluginModule*>& v ) { return v.first->getCreatedClass() == rClassIdentifier;});
+		[rClassIdentifier](const std::pair<OpenViBE::Plugins::IPluginObjectDesc*, OpenViBE::Kernel::IPluginModule*>& v ) { 
+			return v.first->getCreatedClass() == rClassIdentifier;
+		});
 	if (elem != m_vPluginObjectDesc.end())
 	{
 		return elem->first;
@@ -330,11 +334,10 @@ bool CPluginManager::releasePluginObject(IPluginObject* pPluginObject)
 {
 	this->getLogManager() << LogLevel_Debug << "Releasing plugin object\n";
 
-	if(pPluginObject)
-	{
-		this->getLogManager() << LogLevel_Debug << "Plugin object value is null\n";
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		pPluginObject,
+		"Plugin object value is null",
+		OpenViBE::Kernel::ErrorType::BadProcessing);
 
 	for(auto& elem : m_vPluginObject)
 	{

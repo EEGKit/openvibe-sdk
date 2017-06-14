@@ -494,7 +494,7 @@ bool CAlgorithmClassifierOneVsOne::loadSubClassifierConfiguration(XML::IXMLNode 
 		std::stringstream l_sSecondClass(l_pSubClassifierNode->getAttribute(c_sSecondClassAttributeName));
 		l_sSecondClass >> l_f64SecondClass;
 
-		IAlgorithmProxy* l_pSubClassifier = m_oSubClassifiers[std::pair<uint32_t,uint32_t>((uint32_t)l_f64FirstClass,(uint32_t)l_f64SecondClass)];
+		IAlgorithmProxy* l_pSubClassifier = m_oSubClassifiers[std::make_pair(static_cast<uint32_t>(l_f64FirstClass),static_cast<uint32_t>(l_f64SecondClass))];
 
 		TParameterHandler < XML::IXMLNode* > ip_pConfiguration(l_pSubClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
 		ip_pConfiguration = l_pSubClassifierNode->getChild(0);
