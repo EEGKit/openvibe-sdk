@@ -61,10 +61,9 @@ bool CAlgorithmClassifierOneVsOne::uninitialize(void)
 		m_pDecisionStrategyAlgorithm = NULL;
 	}
 
-	std::map< std::pair<uint32_t, uint32_t>, IAlgorithmProxy* >::iterator it;
-	for(it = m_oSubClassifiers.begin(); it != m_oSubClassifiers.end(); ++it)
+	for(auto& kv : m_oSubClassifiers)
 	{
-		IAlgorithmProxy* l_pSubClassifier = (*it).second;
+		IAlgorithmProxy* l_pSubClassifier = kv.second;
 		l_pSubClassifier->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*l_pSubClassifier);
 	}
@@ -143,7 +142,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 
 	OV_ERROR_UNLESS_KRF(
 		l_vClassLabels.size() == m_ui32NumberOfClasses,
-		"There are samples for " << (uint32_t)l_vClassLabels.size() << " classes but expected samples for " << m_ui32NumberOfClasses << " classes.",
+		"There are samples for " << static_cast<uint32_t>(l_vClassLabels.size()) << " classes but expected samples for " << m_ui32NumberOfClasses << " classes.",
 		OpenViBE::Kernel::ErrorType::BadConfig
 	);
 
@@ -180,14 +179,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 								rFeatureVectorSet[j].getBuffer(),
 								l_iFeatureVectorSize*sizeof(float64));
 
-					if(static_cast<size_t>(l_f64TempClass) == l_iFirstClass )
-					{
-						l_pFeatureVectorSetBuffer[l_iFeatureVectorSize]=0;
-					}
-					else
-					{
-						l_pFeatureVectorSetBuffer[l_iFeatureVectorSize]=1;
-					}
+					l_pFeatureVectorSetBuffer[l_iFeatureVectorSize] = static_cast<size_t>(l_f64TempClass) == l_iFirstClass ? 0 : 1;
 					l_pFeatureVectorSetBuffer+=(l_iFeatureVectorSize+1);
 				}
 			}
@@ -296,10 +288,9 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector
 bool CAlgorithmClassifierOneVsOne::createSubClassifiers(void)
 {
 	// Clear any previous ones
-	std::map< std::pair<uint32_t, uint32_t>, IAlgorithmProxy* >::iterator it;
-	for(it = m_oSubClassifiers.begin(); it != m_oSubClassifiers.end(); ++it)
+	for(auto& kv : m_oSubClassifiers)
 	{
-		IAlgorithmProxy* l_pSubClassifier = (*it).second;
+		IAlgorithmProxy* l_pSubClassifier = kv.second;
 		l_pSubClassifier->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*l_pSubClassifier);
 	}
@@ -401,10 +392,9 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfiguration(void)
 
 	XML::IXMLNode *l_pSubClassifersNode = XML::createNode(c_sSubClassifiersNodeName);
 
-	std::map< std::pair<uint32_t, uint32_t>, IAlgorithmProxy* >::iterator it;
-	for(it = m_oSubClassifiers.begin(); it != m_oSubClassifiers.end(); ++it)
+	for(auto& kv : m_oSubClassifiers)
 	{
-		l_pSubClassifersNode->addChild(getClassifierConfiguration((*it).first.first, (*it).first.second, (*it).second));
+		l_pSubClassifersNode->addChild(getClassifierConfiguration(kv.first.first, kv.first.second, kv.second));
 	}
 	l_pOneVsOneNode->addChild(l_pSubClassifersNode);
 

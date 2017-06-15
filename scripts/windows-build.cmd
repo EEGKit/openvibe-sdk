@@ -11,14 +11,14 @@ set PackageOption=FALSE
 set UserDataSubdir=OpenVIBE
 set BrandName=OpenViBE
 set DisplayErrorLocation=ON
-set dependencies_path=
+set DependenciesPath=
 REM set init_env_cmd=windows-initialize-environment.cmd
 
 goto parameter_parse
 
 :print_help
-	echo Usage: %0 [options]
-    echo.
+        echo Usage: %0 [options]
+	echo.
 	echo -h ^|--help usage
 	echo --no-pause will not pause during script execution
 	echo -d^|--debug build in debug mode
@@ -125,7 +125,7 @@ if /i "%1" == "-h" (
 	SHIFT
 	Goto parameter_parse
 ) else if /i "%1"=="--dependencies-dir" (
-	set dependencies_path="-DOV_CUSTOM_DEPENDENCIES_PATH=%2"
+        set DependenciesPath="-DOV_CUSTOM_DEPENDENCIES_PATH=%2"
 	set init_env_cmd=windows-initialize-environment.cmd %2
 	REM -DOV_SOURCE_DEPENDENCIES_PATH=%2\dependencies-source"
 	SHIFT
@@ -174,7 +174,7 @@ if %CallCmake%=="true" (
 		-DOV_CONFIG_SUBDIR=%UserDataSubdir% ^
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=%ov_cmake_test_output% ^
 		%python_exec% ^
-		%dependencies_path%
+		%DependenciesPath%
 )
 
 if not "!ERRORLEVEL!" == "0" goto terminate_error
