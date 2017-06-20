@@ -17,6 +17,7 @@ function usage()
 		echo "--dependencies-dir <dirname> : directory where dependencies are located"
 		echo "--test-data-dir <dirname> : test data directory"
 		echo "--make-package : a package will be created in build directory"
+		echo "--hide-error-location : do not display complete error locations"
 		echo "--userdata-subdir <dirname> name of the userdata sub directory"
 		echo "--brand-name <brand-name> name of the brand to prefix titles and documentation"
 		echo "--build-unit : if set, unit tests will be built"
@@ -35,6 +36,7 @@ ov_script_dir="$(readlink -m $(dirname $0))"
 ov_build_type=Release
 verbose=0
 package_option="FALSE"
+display_error_location="ON"
 UserDataSubdir=OpenVIBE
 BrandName=OpenViBE
 ov_build_unit=0
@@ -76,7 +78,11 @@ while [[ $# -gt 0 ]]; do
 			;;
 		--make-package)
 			package_option="TRUE"
+      display_error_location="OFF"
 			;;
+    --hide-error-location)
+      display_error_location=OFF
+      ;;
 		--userdata-subdir)
 			UserDataSubdir="$2"
 			shift
@@ -146,6 +152,7 @@ echo "[build unit] = ${ov_build_unit}"
 echo "[build validation] = ${ov_build_validation}"
 echo "[brand name] = ${BrandName}"
 echo "[user data subdirectory] = ${UserDataSubdir}"
+echo "[display-error-location] = ${display_error_location}"
 echo "**************************************"
 echo ""
 echo ""
@@ -173,6 +180,7 @@ cmake ${ov_script_dir}/.. \
 		${ov_test_data_dir} \
 		${dependencies_dir} \
 		-DOV_PACKAGE=${package_option} \
+		-DOV_DISPLAY_ERROR_LOCATION=${display_error_location} \
 		-DBUILD_UNIT_TEST=${ov_build_unit} \
 		-DBUILD_VALIDATION_TEST=${ov_build_validation} \
 		-DGTEST_INCLUDE_DIR=${gtest_include_dir} \
