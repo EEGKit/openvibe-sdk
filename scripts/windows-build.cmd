@@ -12,7 +12,7 @@ set UserDataSubdir=OpenVIBE
 set BrandName=OpenViBE
 set DisplayErrorLocation=ON
 set DependenciesPath=
-REM set init_env_cmd=windows-initialize-environment.cmd
+set init_env_cmd=windows-initialize-environment.cmd
 
 goto parameter_parse
 
