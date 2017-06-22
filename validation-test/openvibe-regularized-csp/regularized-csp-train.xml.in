@@ -582,7 +582,7 @@
 				</Setting>
 				<Setting>
 					<TypeIdentifier>(0x007deef9, 0x2f3e95c6)</TypeIdentifier>
-					<Name>Filter dimension</Name>
+					<Name>Filters per condition</Name>
 					<DefaultValue>2</DefaultValue>
 					<Value>2</Value>
 					<Modifiability>false</Modifiability>
@@ -638,7 +638,7 @@
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
-					<Value>(0x909300b8, 0x57fbd631)</Value>
+					<Value>(0x97c37a70, 0xbc9fecff)</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0xad100179, 0xa3c984ab)</Identifier>

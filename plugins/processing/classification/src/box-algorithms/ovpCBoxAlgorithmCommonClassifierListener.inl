@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			explicit CBoxAlgorithmCommonClassifierListener(const OpenViBE::uint32 ui32CustomSettingBase)
+			explicit CBoxAlgorithmCommonClassifierListener(const uint32_t ui32CustomSettingBase)
 				:m_oClassifierClassIdentifier(OV_UndefinedIdentifier),
 				  m_oStrategyClassIdentifier(0x0),//OV_UndefinedIdentifier is already use for the native, We initialize to an unused identifier in the strategy list
 				  m_pClassifier(NULL),
@@ -104,7 +104,7 @@ namespace OpenViBEPlugins
 			{
 				rBox.setInputType(0, OV_TypeId_Stimulations);
 				rBox.setInputName(0, "Stimulations");
-				for(OpenViBE::uint32 i=1; i<rBox.getInputCount(); i++)
+				for(uint32_t i=1; i<rBox.getInputCount(); i++)
 				{
 					char l_sBuffer[1024];
 					sprintf(l_sBuffer, "Features for class %i", i);
@@ -114,7 +114,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				//ui32Index represent the number of the class (because of rejected offset)
 				char l_sBuffer[64];
@@ -127,13 +127,13 @@ namespace OpenViBEPlugins
 				return this->onInputAddedOrRemoved(rBox);
 			}
 
-			virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				//First remove the removed input from settings
 				rBox.removeSetting(3 - 1 + getStrategySettingsCount(rBox) + ui32Index);
 
 				//Then rename the remains inputs in settings
-				for(OpenViBE::uint32 i=1 ; i<rBox.getInputCount() ; ++i)
+				for(uint32_t i=1 ; i<rBox.getInputCount() ; ++i)
 				{
 					char l_sBuffer[64];
 					sprintf(l_sBuffer, "Class %d label", i);
@@ -156,7 +156,7 @@ namespace OpenViBEPlugins
 				if(l_sSettingName.find("Class ") == std::string::npos)//We haven't initialized the box so let's do it
 				{
 					//Now added Settings for classes
-					for(OpenViBE::uint32 i = 1 ; i< rBox.getInputCount() ; ++i)
+					for(uint32_t i = 1 ; i< rBox.getInputCount() ; ++i)
 					{
 						char l_sBuffer[64];
 						sprintf(l_sBuffer, "Class %d label", i);
@@ -175,18 +175,18 @@ namespace OpenViBEPlugins
 			}
 
 			//Return the index of the combo box used to select the strategy (native/ OnevsOne...)
-			virtual OpenViBE::uint32 getStrategyIndex()
+			virtual uint32_t getStrategyIndex()
 			{
 				return 2;
 			}
 
 			//Return the index of the combo box used to select the classification algorithm
-			virtual OpenViBE::uint32 getClassifierIndex(OpenViBE::Kernel::IBox& rBox)
+			virtual uint32_t getClassifierIndex(OpenViBE::Kernel::IBox& rBox)
 			{
 				return getStrategySettingsCount(rBox) + 3 + rBox.getInputCount() - 1;
 			}
 
-			virtual bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				if(ui32Index == getClassifierIndex(rBox)){
 					return this->onAlgorithmClassifierChanged(rBox);
@@ -200,27 +200,29 @@ namespace OpenViBEPlugins
 
 
 			virtual bool updateDecision(OpenViBE::Kernel::IBox& rBox){
-				OpenViBE::uint32 i=getStrategyIndex() + 1;
+				uint32_t i=getStrategyIndex() + 1;
 				if(m_oStrategyClassIdentifier == OVP_ClassId_Algorithm_ClassifierOneVsOne){
-					OpenViBE::CIdentifier l_oEnum = getAvailableDecisionEnumeration(m_oClassifierClassIdentifier);
+					OpenViBE::CString l_sClassifierName = "Unknown";
+					rBox.getSettingValue(getClassifierIndex(rBox), l_sClassifierName);
+					OpenViBE::CIdentifier l_oEnum = this->getTypeManager().getEnumerationEntryValueFromName(OVP_TypeId_OneVsOne_DecisionAlgorithms, l_sClassifierName);
 
 					OV_ERROR_UNLESS_KRF(
 						l_oEnum != OV_UndefinedIdentifier,
-						"Unable to find Pairwise Decision for the algorithm [" << m_oClassifierClassIdentifier.toString() << "]",
+						"Unable to find Pairwise Decision for the algorithm [" << m_oClassifierClassIdentifier.toString() << "] (" << l_sClassifierName.toASCIIString() << ")",
 						OpenViBE::Kernel::ErrorType::BadConfig
 					);
 
 					OpenViBE::Kernel::IParameter* l_pParameter=m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
-					OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64Parameter(l_pParameter);
+					OpenViBE::Kernel::TParameterHandler < uint64_t > ip_ui64Parameter(l_pParameter);
 
 					OpenViBE::CString l_sEnumTypeName=this->getTypeManager().getTypeName(l_oEnum);
-					OpenViBE::uint64 l_ui64EnumValue = ip_ui64Parameter;
-					OpenViBE::uint64 l_ui64EnumIndex;
+					uint64_t l_ui64EnumValue = ip_ui64Parameter;
+					uint64_t l_ui64EnumIndex;
 					OpenViBE::CString l_sEnumValue;
 
 					rBox.getSettingValue(i, l_sEnumValue);
 
-					OpenViBE::uint64 l_ui64OldId = this->getTypeManager().getEnumerationEntryValueFromName(l_oEnum, l_sEnumValue);
+					uint64_t l_ui64OldId = this->getTypeManager().getEnumerationEntryValueFromName(l_oEnum, l_sEnumValue);
 					if(l_ui64OldId == OV_UndefinedIdentifier)//The previous strategy does not exists in the new enum, let's switch to the default value (the first)
 					{
 						l_ui64EnumIndex = 0;
@@ -267,7 +269,7 @@ namespace OpenViBEPlugins
 					}
 
 					// std::cout << m_ui32StrategyAmountSettings << std::endl;
-					for(OpenViBE::uint32 i = getStrategyIndex() + getStrategySettingsCount(rBox) ; i > getStrategyIndex() ; --i)
+					for(uint32_t i = getStrategyIndex() + getStrategySettingsCount(rBox) ; i > getStrategyIndex() ; --i)
 					{
 						DEBUG_PRINT(std::cout << "Remove pairing strategy setting at idx " << i-1 << "\n";)
 						rBox.removeSetting(i);
@@ -283,12 +285,9 @@ namespace OpenViBEPlugins
 				{
 					OpenViBE::CString l_sClassifierName;
 					rBox.getSettingValue(getClassifierIndex(rBox), l_sClassifierName);
-					OpenViBE::CIdentifier l_oClassifierIdentifier=this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, l_sClassifierName);
-
-					OpenViBE::uint32 i=getStrategyIndex() + 1;
+					uint32_t i=getStrategyIndex() + 1;
 					if(m_oStrategyClassIdentifier == OVP_ClassId_Algorithm_ClassifierOneVsOne){
-						OpenViBE::CIdentifier l_oEnum = getAvailableDecisionEnumeration(l_oClassifierIdentifier);
-
+						OpenViBE::CIdentifier l_oEnum = this->getTypeManager().getEnumerationEntryValueFromName(OVP_TypeId_OneVsOne_DecisionAlgorithms, l_sClassifierName);
 						OV_ERROR_UNLESS_KRF(
 							l_oEnum != OV_UndefinedIdentifier,
 							"Unable to find Pairwise Decision for the algorithm [" << m_oClassifierClassIdentifier.toString() << "]",
@@ -297,8 +296,8 @@ namespace OpenViBEPlugins
 
 						//As we just switch to this strategy, we take the default value set in the strategy to initialize the value
 						OpenViBE::Kernel::IParameter* l_pParameter=m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
-						OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64Parameter(l_pParameter);
-						OpenViBE::uint64 l_ui64EnumValue = ip_ui64Parameter;
+						OpenViBE::Kernel::TParameterHandler < uint64_t > ip_ui64Parameter(l_pParameter);
+						uint64_t l_ui64EnumValue = ip_ui64Parameter;
 						OpenViBE::CString l_sEnumName;
 						l_sEnumName = this->getTypeManager().getEnumerationEntryNameFromValue(l_oEnum, l_ui64EnumValue);
 
@@ -363,8 +362,8 @@ namespace OpenViBEPlugins
 							OpenViBE::CIdentifier l_oTypeIdentifier;
 							OpenViBE::CString l_sParameterName=m_pClassifier->getInputParameterName(l_oIdentifier);
 							OpenViBE::Kernel::IParameter* l_pParameter=m_pClassifier->getInputParameter(l_oIdentifier);
-							OpenViBE::Kernel::TParameterHandler < OpenViBE::int64 > ip_i64Parameter(l_pParameter);
-							OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64Parameter(l_pParameter);
+							OpenViBE::Kernel::TParameterHandler < int64_t > ip_i64Parameter(l_pParameter);
+							OpenViBE::Kernel::TParameterHandler < uint64_t > ip_ui64Parameter(l_pParameter);
 							OpenViBE::Kernel::TParameterHandler < OpenViBE::float64 > ip_f64Parameter(l_pParameter);
 							OpenViBE::Kernel::TParameterHandler < OpenViBE::boolean > ip_bParameter(l_pParameter);
 							OpenViBE::Kernel::TParameterHandler < OpenViBE::CString* > ip_sParameter(l_pParameter);
@@ -404,8 +403,9 @@ namespace OpenViBEPlugins
 
 							if(l_bValid)
 							{
+								// @FIXME argh, the -2 is a hard coding that the classifier trainer has 2 settings after the classifier setting... ouch
+								DEBUG_PRINT(std::cout << "Adding setting (case A) " << l_sParameterName << " : " << l_sBuffer << " to slot " << rBox.getSettingCount()-2 << "\n";)
 								rBox.addSetting(l_sParameterName, l_oTypeIdentifier, l_sBuffer, rBox.getSettingCount()-2);
-								DEBUG_PRINT(std::cout << "Adding setting (case A) " << l_sParameterName << " : " << l_sBuffer << "\n";)
 								i++;
 							}
 						}

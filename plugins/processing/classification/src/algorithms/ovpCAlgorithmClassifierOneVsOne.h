@@ -19,9 +19,6 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		extern OVP_API void registerAvailableDecisionEnumeration(const OpenViBE::CIdentifier& rAlgorithmIdentifier, OpenViBE::CIdentifier pDecision);
-		extern OVP_API OpenViBE::CIdentifier getAvailableDecisionEnumeration(const OpenViBE::CIdentifier& rAlgorithmIdentifier);
-
 		//The aim of this structure is to record informations returned by the sub-classifier. They will be used by
 		// pairwise decision algorithms to compute probability vector.
 		// Should be use only by OneVsOne and pairwise decision algorithm
@@ -38,32 +35,32 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
-			virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
+			virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
 											   , OpenViBE::float64& rf64Class
 											   , OpenViBEToolkit::IVector& rDistanceValue
 											   , OpenViBEToolkit::IVector& rProbabilityValue);
-			virtual OpenViBE::boolean designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount);
+			virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount);
 
 			virtual XML::IXMLNode* saveConfiguration(void);
-			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode *pConfigurationNode);
+			virtual bool loadConfiguration(XML::IXMLNode *pConfigurationNode);
 
-			virtual OpenViBE::uint32 getOutputProbabilityVectorLength();
-			virtual OpenViBE::uint32 getOutputDistanceVectorLength();
+			virtual uint32_t getOutputProbabilityVectorLength();
+			virtual uint32_t getOutputDistanceVectorLength();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsOne)
 
 		protected:
 
-			virtual OpenViBE::boolean createSubClassifiers(void);
+			virtual bool createSubClassifiers(void);
 
 		private:
-			OpenViBE::uint32 m_ui32NumberOfClasses;
-			OpenViBE::uint32 m_ui32NumberOfSubClassifiers;
+			uint32_t m_ui32NumberOfClasses;
+			uint32_t m_ui32NumberOfSubClassifiers;
 
-			std::map< std::pair<OpenViBE::uint32,OpenViBE::uint32>, OpenViBE::Kernel::IAlgorithmProxy* > m_oSubClassifiers;
+			std::map< std::pair<uint32_t,uint32_t>, OpenViBE::Kernel::IAlgorithmProxy* > m_oSubClassifiers;
 			fClassifierComparison m_fAlgorithmComparison;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pDecisionStrategyAlgorithm;
@@ -72,12 +69,12 @@ namespace OpenViBEPlugins
 			XML::IXMLNode* getClassifierConfiguration(OpenViBE::float64 f64FirstClass, OpenViBE::float64 f64SecondClass, OpenViBE::Kernel::IAlgorithmProxy* pSubClassifier);
 			XML::IXMLNode* getPairwiseDecisionConfiguration(void);
 
-			// OpenViBE::uint32 getClassCount(void) const;
+			// uint32_t getClassCount(void) const;
 
-			OpenViBE::boolean loadSubClassifierConfiguration(XML::IXMLNode *pSubClassifiersNode);
+			bool loadSubClassifierConfiguration(XML::IXMLNode *pSubClassifiersNode);
 
-			// SSubClassifierDescriptor& getSubClassifierDescriptor(const OpenViBE::uint32 f64FirstClass, const OpenViBE::uint32 f64SecondClass);
-			OpenViBE::boolean setSubClassifierIdentifier(const OpenViBE::CIdentifier &rId);
+			// SSubClassifierDescriptor& getSubClassifierDescriptor(const uint32_t f64FirstClass, const uint32_t f64SecondClass);
+			bool setSubClassifierIdentifier(const OpenViBE::CIdentifier &rId);
 		};
 
 		class CAlgorithmClassifierOneVsOneDesc : public OpenViBEToolkit::CAlgorithmPairingStrategyDesc
@@ -100,7 +97,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Algorithm_ClassifierOneVsOne; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Classification::CAlgorithmClassifierOneVsOne; }
 
-			virtual OpenViBE::boolean getAlgorithmPrototype(
+			virtual bool getAlgorithmPrototype(
 					OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				CAlgorithmPairingStrategyDesc::getAlgorithmPrototype(rAlgorithmPrototype);

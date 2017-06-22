@@ -16,7 +16,7 @@ SET(OV_GLOBAL_VERSION_STRING "${OV_GLOBAL_VERSION_MAJOR}.${OV_GLOBAL_VERSION_MIN
 MESSAGE(STATUS "Appending compilation flags...")
 
 SET(OV_CONFIG_SUBDIR "${PROJECT_NAME}" CACHE STRING "Subdirectory under user directory when configuration and logs will be saved")
-SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies")
+SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies" CACHE STRING "Dependency directory")
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
 SET(BRAND_NAME "OpenViBE" CACHE STRING "Brand with which titles and documentation will be prefixed")
@@ -42,6 +42,8 @@ IF(NOT DEFINED OV_PACKAGE)
 	SET(OV_PACKAGE FALSE)
 ENDIF(NOT DEFINED OV_PACKAGE)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 IF(WIN32)
 	ADD_DEFINITIONS("-DNOMINMAX -DBOOST_ALL_NO_LIB")
 	# Switch /arch:SSE2 enables vectorization. Remove if your CPU/compiler doesn't support it.
@@ -50,11 +52,11 @@ IF(WIN32)
 	SET(OV_WIN32_BOOST_VERSION "1_55")
 ELSEIF(APPLE)
 	SET(OV_EIGEN_FLAGS "-msse2")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall ${OV_EIGEN_FLAGS}")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall ${OV_EIGEN_FLAGS}")
 ELSEIF(UNIX)
 	# Switch -msse2 enables vectorization. Remove if your CPU/compiler doesn't support it.
 	SET(OV_EIGEN_FLAGS "-msse2")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall ${OV_EIGEN_FLAGS}")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall ${OV_EIGEN_FLAGS}")
 ELSE()
 	MESSAGE(WARNING "Warning: unknown platform")
 ENDIF()
@@ -129,7 +131,6 @@ ENDIF()
 SET(OV_LAUNCHER_SOURCE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules/launchers")
 
 # By setting SKIP[_FOLDER]* you can skip a subtree (example: SKIP_A_B_C skips folder a/b/c and all its subfolders if any)
-
 # Skip building documentation
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules")
 

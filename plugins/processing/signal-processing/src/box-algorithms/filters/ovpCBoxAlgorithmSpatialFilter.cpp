@@ -19,11 +19,11 @@ using namespace OpenViBEPlugins::SignalProcessing;
 typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
 #endif
 
-OpenViBE::uint32 CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CString &rCoefficients, const char c1, const char c2, uint32 nRows, uint32 nCols)
+uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CString &rCoefficients, const char c1, const char c2, uint32_t nRows, uint32_t nCols)
 {
 	// Count the number of entries
 	// @Note To avoid doing a ton of subsequent memory allocations (very slow on Windows debug builds), we first count the number of entries in the vector. If the file format had specified the vector dimension, we wouldn't have to do this step.
-	uint32 l_u32count = 0;
+	uint32_t l_u32count = 0;
 	const char *l_sPtr = rCoefficients.toASCIIString();
 	while(*l_sPtr!=0)
 	{
@@ -227,7 +227,7 @@ bool CBoxAlgorithmSpatialFilter::process(void)
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
-	for(uint32 i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for(uint32_t i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 
 		m_pStreamDecoder->decode(i);
@@ -236,8 +236,8 @@ bool CBoxAlgorithmSpatialFilter::process(void)
 			// we can treat them all as matrix decoders as they all inherit from it
 			const IMatrix *l_pInputMatrix = (static_cast< OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>* >(m_pStreamDecoder))->getOutputMatrix();
 
-			const uint32 l_ui32InputChannelCount=l_pInputMatrix->getDimensionSize(0);
-			const uint32 l_ui32InputSamplesCount=l_pInputMatrix->getDimensionSize(1);
+			const uint32_t l_ui32InputChannelCount=l_pInputMatrix->getDimensionSize(0);
+			const uint32_t l_ui32InputSamplesCount=l_pInputMatrix->getDimensionSize(1);
 
 			OV_ERROR_UNLESS_KRF(
 				l_ui32InputChannelCount != 0 && l_ui32InputSamplesCount != 0,
@@ -245,8 +245,8 @@ bool CBoxAlgorithmSpatialFilter::process(void)
 				OpenViBE::Kernel::ErrorType::BadConfig
 			);
 
-			const uint32 l_ui32FilterInputChannelCount = m_oFilterBank.getDimensionSize(1);
-			const uint32 l_ui32FilterOutputChannelCount = m_oFilterBank.getDimensionSize(0);
+			const uint32_t l_ui32FilterInputChannelCount = m_oFilterBank.getDimensionSize(1);
+			const uint32_t l_ui32FilterOutputChannelCount = m_oFilterBank.getDimensionSize(0);
 
 			OV_ERROR_UNLESS_KRF(
 				l_ui32InputChannelCount == l_ui32FilterInputChannelCount,
@@ -260,7 +260,7 @@ bool CBoxAlgorithmSpatialFilter::process(void)
 			l_pOutputMatrix->setDimensionSize(1, l_ui32InputSamplesCount);
 
 			// Name channels
-			for(uint32 i=0;i<l_pOutputMatrix->getDimensionSize(0);i++)
+			for(uint32_t i=0;i<l_pOutputMatrix->getDimensionSize(0);i++)
 			{
 				char l_sBuffer[64];
 				sprintf(l_sBuffer, "sFiltered %d", i);
@@ -276,9 +276,9 @@ bool CBoxAlgorithmSpatialFilter::process(void)
 
 			const float64* l_pInput=l_pInputMatrix->getBuffer();
 			float64* l_pOutput=l_pOutputMatrix->getBuffer();
-			const uint32 l_ui32InputChannelCount=l_pInputMatrix->getDimensionSize(0);
-			const uint32 l_ui32OutputChannelCount=l_pOutputMatrix->getDimensionSize(0);
-			const uint32 l_ui32SampleCount=l_pInputMatrix->getDimensionSize(1);
+			const uint32_t l_ui32InputChannelCount=l_pInputMatrix->getDimensionSize(0);
+			const uint32_t l_ui32OutputChannelCount=l_pOutputMatrix->getDimensionSize(0);
+			const uint32_t l_ui32SampleCount=l_pInputMatrix->getDimensionSize(1);
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 			const Eigen::Map<MatrixXdRowMajor> l_oInputMapper(const_cast<float64*>(l_pInput), l_ui32InputChannelCount, l_ui32SampleCount);
@@ -291,11 +291,11 @@ bool CBoxAlgorithmSpatialFilter::process(void)
 
 			System::Memory::set(l_pOutput, l_ui32SampleCount*l_ui32OutputChannelCount*sizeof(float64), 0);
 
-			for(uint32 j=0; j<l_ui32OutputChannelCount; j++)
+			for(uint32_t j=0; j<l_ui32OutputChannelCount; j++)
 			{
-				for(uint32 k=0; k<l_ui32InputChannelCount; k++)
+				for(uint32_t k=0; k<l_ui32InputChannelCount; k++)
 				{
-					for(uint32 l=0; l<l_ui32SampleCount; l++)
+					for(uint32_t l=0; l<l_ui32SampleCount; l++)
 					{
 						l_pOutput[j*l_ui32SampleCount+l] += l_pFilter[j*l_ui32InputChannelCount+k]*l_pInput[k*l_ui32SampleCount+l];
 					}

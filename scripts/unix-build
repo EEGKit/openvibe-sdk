@@ -14,10 +14,12 @@ function usage()
 		echo "--build-type <Debug|Release|RelWithDebInfo> : build type"
 		echo "--build-dir <dirname> : build directory"
 		echo "--install-dir <dirname> : binaries deployment directory"
+		echo "--dependencies-dir <dirname> : directory where dependencies are located"
 		echo "--test-data-dir <dirname> : test data directory"
 		echo "--make-package : a package will be created in build directory"
+		echo "--hide-error-location : do not display complete error locations"
 		echo "--userdata-subdir <dirname> name of the userdata sub directory"
-    echo "--brand-name <brand-name> name of the brand to prefix titles and documentation"
+		echo "--brand-name <brand-name> name of the brand to prefix titles and documentation"
 		echo "--build-unit : if set, unit tests will be built"
 		echo "--build-validation : if set, validation tests will be builts"
 		echo "--gtest-lib-dir <dirname> : gtest libraries directory (default: ../dependencies/libgtest)"
@@ -34,6 +36,7 @@ ov_script_dir="$(readlink -m $(dirname $0))"
 ov_build_type=Release
 verbose=0
 package_option="FALSE"
+display_error_location="ON"
 UserDataSubdir=OpenVIBE
 BrandName=OpenViBE
 ov_build_unit=0
@@ -65,13 +68,21 @@ while [[ $# -gt 0 ]]; do
 			ov_install_dir="$2"
 			shift
 			;;
+		--dependencies-dir)
+			dependencies_dir="-DOV_CUSTOM_DEPENDENCIES_PATH=$2"
+			shift
+			;;
 		--test-data-dir)
 			ov_test_data_dir="-DOVT_TEST_DATA_DIR=$2"
 			shift
 			;;
 		--make-package)
 			package_option="TRUE"
+      display_error_location="OFF"
 			;;
+    --hide-error-location)
+      display_error_location=OFF
+      ;;
 		--userdata-subdir)
 			UserDataSubdir="$2"
 			shift
@@ -141,6 +152,7 @@ echo "[build unit] = ${ov_build_unit}"
 echo "[build validation] = ${ov_build_validation}"
 echo "[brand name] = ${BrandName}"
 echo "[user data subdirectory] = ${UserDataSubdir}"
+echo "[display-error-location] = ${display_error_location}"
 echo "**************************************"
 echo ""
 echo ""
@@ -166,7 +178,9 @@ cmake ${ov_script_dir}/.. \
 		-DCMAKE_BUILD_TYPE=${ov_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${ov_install_dir} \
 		${ov_test_data_dir} \
+		${dependencies_dir} \
 		-DOV_PACKAGE=${package_option} \
+		-DOV_DISPLAY_ERROR_LOCATION=${display_error_location} \
 		-DBUILD_UNIT_TEST=${ov_build_unit} \
 		-DBUILD_VALIDATION_TEST=${ov_build_validation} \
 		-DGTEST_INCLUDE_DIR=${gtest_include_dir} \
@@ -174,7 +188,7 @@ cmake ${ov_script_dir}/.. \
 		-DGTEST_MAIN_LIBRARY=${gtest_lib_dir}/libgtest_main.a \
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=${ov_cmake_test_output} \
 		-DOV_CONFIG_SUBDIR=${UserDataSubdir} \
-    -DBRAND_NAME=${BrandName} \
+		-DBRAND_NAME=${BrandName} \
 		${python_exec}
 
 if [[ $? == 0 ]]; then

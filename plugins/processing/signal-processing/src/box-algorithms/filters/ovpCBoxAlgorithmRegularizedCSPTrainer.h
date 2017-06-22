@@ -17,6 +17,7 @@
 
 typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
 
+
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
@@ -24,15 +25,14 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmRegularizedCSPTrainer : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
 		{
 		public:
-
 			CBoxAlgorithmRegularizedCSPTrainer(void);
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool processInput(uint32_t ui32InputIndex);
+			virtual bool process(void);
 
 		protected:
 
@@ -40,25 +40,56 @@ namespace OpenViBEPlugins
 			void dumpMatrixFile(const Eigen::MatrixXd &mat, const char *fn);
 			void dumpVector(OpenViBE::Kernel::ILogManager& rMgr, const Eigen::VectorXd& mat, const OpenViBE::CString& desc);
 
-			virtual OpenViBE::boolean updateCov(int index);
+			virtual bool updateCov(uint32_t index);
+			virtual bool outclassCovAverage(uint32_t skipIndex, const std::vector<Eigen::MatrixXd>& cov, Eigen::MatrixXd& covAvg);
+			virtual bool computeCSP(const std::vector<Eigen::MatrixXd>& vov, std::vector<Eigen::MatrixXd>& sortedEigenVectors,
+				std::vector<Eigen::VectorXd>& sortedEigenValues);
 
-			OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmRegularizedCSPTrainer > m_oStimulationDecoder;
-			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmRegularizedCSPTrainer > m_oSignalDecoders[2];
+			OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmRegularizedCSPTrainer > m_StimulationDecoder;
 
-			OpenViBEToolkit::TStimulationEncoder <CBoxAlgorithmRegularizedCSPTrainer > m_oStimulationEncoder;
+			std::vector< OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmRegularizedCSPTrainer > > m_SignalDecoders;
 
-			OpenViBE::uint64 m_ui64StimulationIdentifier;
-			OpenViBE::CString m_sSpatialFilterConfigurationFilename;
-			OpenViBE::uint32 m_ui32FilterDimension;
-			OpenViBE::boolean m_bSaveAsBoxConf;
+			OpenViBEToolkit::TStimulationEncoder <CBoxAlgorithmRegularizedCSPTrainer > m_StimulationEncoder;
 
-			OpenViBE::float64 m_f64Tikhonov;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pIncrementalCov[2];
+			uint64_t m_StimulationIdentifier;
+			OpenViBE::CString m_SpatialFilterConfigurationFilename;
+			uint32_t m_FiltersPerClass;
+			bool m_SaveAsBoxConf;
+			bool m_HasBeenInitialized;
 
-			OpenViBE::uint64 m_ui64nBuffers[2];
-			OpenViBE::uint64 m_ui64nSamples[2];
+			OpenViBE::float64 m_Tikhonov;
+
+			struct IncrementalCovarianceProxy
+			{
+				IncrementalCovarianceProxy() : incrementalCov(nullptr), numBuffers(0), numSamples(0) {}
+				OpenViBE::Kernel::IAlgorithmProxy* incrementalCov;
+				uint64_t numBuffers;
+				uint64_t numSamples;
+			};
+
+			std::vector<IncrementalCovarianceProxy> m_IncCovarianceProxies;
+
+			uint32_t m_NumClasses;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer)
+		};
+
+		class CBoxAlgorithmRegularizedCSPTrainerListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		{
+		public:
+
+			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
+			{
+				std::stringstream l_sName;
+
+				l_sName << "Signal condition " << ui32Index;
+
+				rBox.setInputName(ui32Index, l_sName.str().c_str());
+
+				return true;
+			};
+
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
 		};
 
 		class CBoxAlgorithmRegularizedCSPTrainerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -72,15 +103,16 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Computes Common Spatial Pattern filters with regularization"); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Filtering"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("0.5"); }
+			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
 			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmRegularizedCSPTrainer; }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmRegularizedCSPTrainerListener; }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput  ("Stimulations",                 OV_TypeId_Stimulations);
@@ -92,7 +124,7 @@ namespace OpenViBEPlugins
 
 				rBoxAlgorithmPrototype.addSetting("Train Trigger",                OV_TypeId_Stimulation, "OVTK_GDF_End_Of_Session");
 				rBoxAlgorithmPrototype.addSetting("Spatial filter configuration", OV_TypeId_Filename, "");
-				rBoxAlgorithmPrototype.addSetting("Filter dimension",             OV_TypeId_Integer, "2");
+				rBoxAlgorithmPrototype.addSetting("Filters per condition",        OV_TypeId_Integer, "2");
 				rBoxAlgorithmPrototype.addSetting("Save filters as box config",   OV_TypeId_Boolean, "false");
 
 				// Params of the cov algorithm; would be better to poll the params from the algorithm, however this is not straightforward to do
@@ -102,6 +134,8 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addSetting("Tikhonov coefficient",         OV_TypeId_Float,   "0.0");
 
 				rBoxAlgorithmPrototype.addOutput ("Train-completed Flag",         OV_TypeId_Stimulations);
+
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 
 				return true;
 			}
