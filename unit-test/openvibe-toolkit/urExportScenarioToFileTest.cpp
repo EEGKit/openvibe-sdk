@@ -1,20 +1,3 @@
-/*********************************************************************
-* INRIA and MENSIA TECHNOLOGIES SA, CONFIDENTIAL
-*
-* CertiViBE Test Software
-* Copyright Inria and Mensia Technologies SA, 2015-2017
-* All Rights Reserved
-*
-* NOTICE: All information contained herein is, and remains
-* the property of Mensia Technologies SA and Inria.
-* The intellectual and technical concepts contained
-* herein are proprietary to Mensia Technologies SA and Inria,
-* and are covered copyright law.
-* Dissemination of this information or reproduction of this material
-* is strictly forbidden unless prior written permission is obtained
-* from Mensia Technologies SA and Inria.
-*/
-
 #include <iostream>
 #include <vector>
 #include <tuple>
