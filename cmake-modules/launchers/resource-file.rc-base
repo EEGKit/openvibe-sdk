@@ -21,14 +21,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4"
         BEGIN
-            VALUE "CompanyName", "@BRAND_NAME@"
+            VALUE "CompanyName", "@COMPANY_NAME@"
             VALUE "FileDescription", "@FILE_DESCRIPTION@"
-            VALUE "FileVersion", "@FILEVERSION@"
+            VALUE "FileVersion", "@OV_GLOBAL_VERSION_STRING@"
             VALUE "InternalName", "@PROJECT_NAME@"
-            VALUE "LegalCopyright", "Copyright - @BRAND_NAME@ 2012-2017"
+            VALUE "LegalCopyright", "Copyright - @COMPANY_NAME@ 2012-2017"
             VALUE "OriginalFilename", "@PROJECT_NAME@"
             VALUE "ProductName", "@PROJECT_PRODUCT_NAME@"
-            VALUE "ProductVersion", "@PRODUCTVERSION@"
+            VALUE "ProductVersion", "@OV_GLOBAL_VERSION_STRING@"
         END
     END
     BLOCK "VarFileInfo"

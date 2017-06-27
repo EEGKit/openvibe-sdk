@@ -20,6 +20,7 @@ SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies" CACHE STRING 
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
 SET(BRAND_NAME "OpenViBE" CACHE STRING "Brand with which titles and documentation will be prefixed")
+SET(COMPANY_NAME "Inria" CACHE STRING "Name used inside copyrights")
 OPTION(OV_DISPLAY_ERROR_LOCATION ON)
 OPTION(PUBLISH_DOC_ASSETS "Publish plugin documentation assets" ON)
 
