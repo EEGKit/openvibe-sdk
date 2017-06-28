@@ -120,6 +120,11 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 		{
 			m_ChannelCount = matrix->getDimensionSize(0);
 			m_SampleCount = matrix->getDimensionSize(1);
+			
+			OV_ERROR_UNLESS_KRF(m_SampleCount > 1,
+					    "Input sample count lower or equal to 1 is not supported by the box.",
+					    OpenViBE::Kernel::ErrorType::BadInput);
+
 			m_SamplingRate = (unsigned int)m_Decoder.getOutputSamplingRate();
 
 			OV_ERROR_UNLESS_KRF(
