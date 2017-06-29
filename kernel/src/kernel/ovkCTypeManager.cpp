@@ -36,101 +36,126 @@ CIdentifier CTypeManager::getNextTypeIdentifier(
 	return getNextIdentifier< CString >(m_vName, rPreviousIdentifier);
 }
 
-boolean CTypeManager::registerType(
+bool CTypeManager::registerType(
 	const CIdentifier& rTypeIdentifier,
 	const CString& sTypeName)
 {
-	if(isRegistered(rTypeIdentifier))
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		!isRegistered(rTypeIdentifier),
+		"Trying to register type " << rTypeIdentifier.toString() << " that already exists.",
+		OpenViBE::Kernel::ErrorType::BadArgument);
+
+	OV_WARNING_UNLESS_K(
+		m_TakenNames.find(sTypeName) == m_TakenNames.end(),
+		"Trying to register type " << rTypeIdentifier << " with a name that already exists ( " << sTypeName << ")");
+
 	m_vName[rTypeIdentifier]=sTypeName;
 	this->getLogManager() << LogLevel_Trace << "Registered type id " << rTypeIdentifier << " - " << sTypeName << "\n";
 	return true;
 }
 
-boolean CTypeManager::registerStreamType(
+bool CTypeManager::registerStreamType(
 	const CIdentifier& rTypeIdentifier,
 	const CString& sTypeName,
 	const CIdentifier& rParentTypeIdentifier)
 {
-	if(isRegistered(rTypeIdentifier))
-	{
-		return false;
-	}
-	if(rParentTypeIdentifier!=OV_UndefinedIdentifier && !isStream(rParentTypeIdentifier))
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		!isRegistered(rTypeIdentifier),
+		"Trying to register stream type " << rTypeIdentifier.toString() << " that already exists.",
+		OpenViBE::Kernel::ErrorType::BadArgument);
+
+	OV_WARNING_UNLESS_K(
+		m_TakenNames.find(sTypeName) == m_TakenNames.end(),
+		"Trying to register stream type " << rTypeIdentifier << " with a name that already exists ( " << sTypeName << ")");
+
+	OV_ERROR_UNLESS_KRF(
+		rParentTypeIdentifier == OV_UndefinedIdentifier || isStream(rParentTypeIdentifier),
+		"Trying to register an invalid stream type [" << sTypeName << "] " << rTypeIdentifier.toString() << ", parent : " << rParentTypeIdentifier.toString() << ".",
+		OpenViBE::Kernel::ErrorType::BadArgument);
+
 	m_vName[rTypeIdentifier]=sTypeName;
+	m_TakenNames.insert(sTypeName);
 	m_vStream[rTypeIdentifier]=rParentTypeIdentifier;
 	this->getLogManager() << LogLevel_Trace << "Registered stream type id " << rTypeIdentifier << "::" << rParentTypeIdentifier << " - " << sTypeName << "\n";
 	return true;
 }
 
-boolean CTypeManager::registerEnumerationType(
+bool CTypeManager::registerEnumerationType(
 	const CIdentifier& rTypeIdentifier,
 	const CString& sTypeName)
 {
-	if(isRegistered(rTypeIdentifier))
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		!isRegistered(rTypeIdentifier),
+		"Trying to register enum type " << rTypeIdentifier.toString() << " that already exists.",
+		OpenViBE::Kernel::ErrorType::BadArgument);
+
+	OV_WARNING_UNLESS_K(
+		m_TakenNames.find(sTypeName) == m_TakenNames.end(),
+		"Trying to register enum type " << rTypeIdentifier << " with a name that already exists ( " << sTypeName << ")");
+
 	m_vName[rTypeIdentifier]=sTypeName;
+	m_TakenNames.insert(sTypeName);
 	m_vEnumeration[rTypeIdentifier];
 	this->getLogManager() << LogLevel_Trace << "Registered enumeration type id " << rTypeIdentifier << " - " << sTypeName << "\n";
 	return true;
 }
 
-boolean CTypeManager::registerEnumerationEntry(
+bool CTypeManager::registerEnumerationEntry(
 	const CIdentifier& rTypeIdentifier,
 	const CString& sEntryName,
-	const uint64 ui64EntryValue)
+	const uint64_t ui64EntryValue)
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::iterator itEnumeration=m_vEnumeration.find(rTypeIdentifier);
-	if(itEnumeration==m_vEnumeration.end())
-	{
-		return false;
-	}
-	std::map<uint64, CString>::iterator itEnumerationEntry=itEnumeration->second.find(ui64EntryValue);
-	if(itEnumerationEntry!=itEnumeration->second.end())
-	{
-		return false;
-	}
+	auto itEnumeration=m_vEnumeration.find(rTypeIdentifier);
+
+	OV_ERROR_UNLESS_KRF(
+		itEnumeration != m_vEnumeration.end(),
+		"Enumeration type [" << rTypeIdentifier.toString() << "] does not exist." << sEntryName,
+		OpenViBE::Kernel::ErrorType::BadArgument);
+
+	OV_WARNING_UNLESS_K(
+		itEnumeration->second.find(ui64EntryValue) == itEnumeration->second.end(),
+		"Enumeration type [" << rTypeIdentifier.toString() << "] already has element [" << ui64EntryValue << "]. Value will be overriden : " << itEnumeration->second[ui64EntryValue] << " => " << sEntryName);
+
 	itEnumeration->second[ui64EntryValue]=sEntryName;
 	return true;
 }
 
-boolean CTypeManager::registerBitMaskType(
+bool CTypeManager::registerBitMaskType(
 	const CIdentifier& rTypeIdentifier,
 	const CString& sTypeName)
 {
-	if(isRegistered(rTypeIdentifier))
-	{
-		return false;
-	}
+	OV_ERROR_UNLESS_KRF(
+		!isRegistered(rTypeIdentifier),
+		"Trying to register bitmask type " << rTypeIdentifier.toString() << " that already exists.",
+		OpenViBE::Kernel::ErrorType::BadArgument);
+
+	OV_WARNING_UNLESS_K(
+		m_TakenNames.find(sTypeName) == m_TakenNames.end(),
+		"Trying to register bitmask type " << rTypeIdentifier << " with a name that already exists ( " << sTypeName << ")");
+
 	m_vName[rTypeIdentifier]=sTypeName;
 	m_vBitMask[rTypeIdentifier];
 	this->getLogManager() << LogLevel_Trace << "Registered bitmask type id " << rTypeIdentifier << " - " << sTypeName << "\n";
 	return true;
 }
 
-boolean CTypeManager::registerBitMaskEntry(
+bool CTypeManager::registerBitMaskEntry(
 	const CIdentifier& rTypeIdentifier,
 	const CString& sEntryName,
-	const uint64 ui64EntryValue)
+	const uint64_t ui64EntryValue)
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::iterator itBitMask=m_vBitMask.find(rTypeIdentifier);
-	if(itBitMask==m_vBitMask.end())
-	{
-		return false;
-	}
-	std::map<uint64, CString>::iterator itBitMaskEntry=itBitMask->second.find(ui64EntryValue);
-	if(itBitMaskEntry!=itBitMask->second.end())
-	{
-		return false;
-	}
-	for(uint32 l_ui32BitCount=0, i=0; i<64; i++)
+	auto itBitMask = m_vBitMask.find(rTypeIdentifier);
+	OV_ERROR_UNLESS_KRF(
+		itBitMask != m_vBitMask.end(),
+		"Bitmask type [" << rTypeIdentifier.toString() << "] does not exist.",
+		OpenViBE::Kernel::ErrorType::BadArgument);
+
+	OV_ERROR_UNLESS_KRF(
+		itBitMask->second.find(ui64EntryValue) == itBitMask->second.end(),
+		"Bitmask type [" << rTypeIdentifier.toString() << "] already has element [" << ui64EntryValue << "].",
+		OpenViBE::Kernel::ErrorType::BadArgument);
+
+	for(uint32_t l_ui32BitCount=0, i=0; i<64; i++)
 	{
 		if(ui64EntryValue&(1LL<<i))
 		{
@@ -146,24 +171,24 @@ boolean CTypeManager::registerBitMaskEntry(
 	return true;
 }
 
-boolean CTypeManager::isRegistered(
+bool CTypeManager::isRegistered(
 	const CIdentifier& rTypeIdentifier) const
 {
-	return m_vName.find(rTypeIdentifier)!=m_vName.end()?true:false;
+	return m_vName.find(rTypeIdentifier) != m_vName.end();
 }
 
-boolean CTypeManager::isStream(
+bool CTypeManager::isStream(
 	const CIdentifier& rTypeIdentifier) const
 {
-	return m_vStream.find(rTypeIdentifier)!=m_vStream.end()?true:false;
+	return m_vStream.find(rTypeIdentifier) != m_vStream.end();
 }
 
-boolean CTypeManager::isDerivedFromStream(
+bool CTypeManager::isDerivedFromStream(
 	const CIdentifier& rTypeIdentifier,
 	const CIdentifier& rParentTypeIdentifier) const
 {
-	std::map < CIdentifier, CIdentifier >::const_iterator it=m_vStream.find(rTypeIdentifier);
-	std::map < CIdentifier, CIdentifier >::const_iterator itParent=m_vStream.find(rParentTypeIdentifier);
+	auto it=m_vStream.find(rTypeIdentifier);
+	const auto itParent=m_vStream.find(rParentTypeIdentifier);
 	if(it==m_vStream.end()) return false;
 	if(itParent==m_vStream.end()) return false;
 	while(it!=m_vStream.end())
@@ -177,16 +202,16 @@ boolean CTypeManager::isDerivedFromStream(
 	return false;
 }
 
-boolean CTypeManager::isEnumeration(
+bool CTypeManager::isEnumeration(
 	const CIdentifier& rTypeIdentifier) const
 {
-	return m_vEnumeration.find(rTypeIdentifier)!=m_vEnumeration.end()?true:false;
+	return m_vEnumeration.find(rTypeIdentifier) != m_vEnumeration.end();
 }
 
-boolean CTypeManager::isBitMask(
+bool CTypeManager::isBitMask(
 	const CIdentifier& rTypeIdentifier) const
 {
-	return m_vBitMask.find(rTypeIdentifier)!=m_vBitMask.end()?true:false;
+	return m_vBitMask.find(rTypeIdentifier) != m_vBitMask.end();
 }
 
 CString CTypeManager::getTypeName(
@@ -209,10 +234,10 @@ CIdentifier CTypeManager::getStreamParentType(
 	return m_vStream.find(rTypeIdentifier)->second;
 }
 
-uint64 CTypeManager::getEnumerationEntryCount(
+uint64_t CTypeManager::getEnumerationEntryCount(
 	const CIdentifier& rTypeIdentifier) const
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::const_iterator itEnumeration=m_vEnumeration.find(rTypeIdentifier);
+	const auto itEnumeration=m_vEnumeration.find(rTypeIdentifier);
 	if(itEnumeration==m_vEnumeration.end())
 	{
 		return 0;
@@ -220,13 +245,13 @@ uint64 CTypeManager::getEnumerationEntryCount(
 	return itEnumeration->second.size();
 }
 
-boolean CTypeManager::getEnumerationEntry(
+bool CTypeManager::getEnumerationEntry(
 	const CIdentifier& rTypeIdentifier,
-	const uint64 ui64EntryIndex,
+	const uint64_t ui64EntryIndex,
 	CString& sEntryName,
-	uint64& rEntryValue) const
+	uint64_t& rEntryValue) const
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::const_iterator itEnumeration=m_vEnumeration.find(rTypeIdentifier);
+	const auto itEnumeration=m_vEnumeration.find(rTypeIdentifier);
 	if(itEnumeration==m_vEnumeration.end())
 	{
 		return false;
@@ -237,8 +262,8 @@ boolean CTypeManager::getEnumerationEntry(
 		return false;
 	}
 
-	std::map<uint64, CString>::const_iterator itEnumerationEntry=itEnumeration->second.begin();
-	for(uint64 i=0; i<ui64EntryIndex && itEnumerationEntry!=itEnumeration->second.end(); i++, ++itEnumerationEntry)
+	auto itEnumerationEntry=itEnumeration->second.begin();
+	for(uint64_t i=0; i<ui64EntryIndex && itEnumerationEntry!=itEnumeration->second.end(); i++, ++itEnumerationEntry)
 	{
 	}
 
@@ -250,14 +275,14 @@ boolean CTypeManager::getEnumerationEntry(
 
 CString CTypeManager::getEnumerationEntryNameFromValue(
 	const CIdentifier& rTypeIdentifier,
-	const uint64 ui64EntryValue) const
+	const uint64_t ui64EntryValue) const
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::const_iterator itEnumeration=m_vEnumeration.find(rTypeIdentifier);
+	const auto itEnumeration=m_vEnumeration.find(rTypeIdentifier);
 	if(itEnumeration==m_vEnumeration.end())
 	{
 		return "";
 	}
-	std::map<uint64, CString>::const_iterator itEnumerationEntry=itEnumeration->second.find(ui64EntryValue);
+	const auto itEnumerationEntry=itEnumeration->second.find(ui64EntryValue);
 	if(itEnumerationEntry==itEnumeration->second.end())
 	{
 		return "";
@@ -265,43 +290,42 @@ CString CTypeManager::getEnumerationEntryNameFromValue(
 	return itEnumeration->second.find(ui64EntryValue)->second;
 }
 
-uint64 CTypeManager::getEnumerationEntryValueFromName(
+uint64_t CTypeManager::getEnumerationEntryValueFromName(
 	const CIdentifier& rTypeIdentifier,
 	const CString& rEntryName) const
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::const_iterator itEnumeration=m_vEnumeration.find(rTypeIdentifier);
-	std::map<uint64, CString>::const_iterator itEnumerationEntry;
+	const auto itEnumeration=m_vEnumeration.find(rTypeIdentifier);
 	if(itEnumeration==m_vEnumeration.end())
 	{
 		return 0xffffffffffffffffll;
 	}
 
 	// first looks at the exact std::string match
-	for(itEnumerationEntry=itEnumeration->second.begin(); itEnumerationEntry!=itEnumeration->second.end(); ++itEnumerationEntry)
+	for(const auto& entry : itEnumeration->second)
 	{
-		if(itEnumerationEntry->second==rEntryName)
+		if(entry.second == rEntryName)
 		{
-			return itEnumerationEntry->first;
+			return entry.first;
 		}
 	}
 
 	// then looks at the caseless std::string match
 	std::string l_sEntryNameLower=rEntryName.toASCIIString();
 	std::transform(l_sEntryNameLower.begin(), l_sEntryNameLower.end(), l_sEntryNameLower.begin(), ::to_lower<std::string::value_type>);
-	for(itEnumerationEntry=itEnumeration->second.begin(); itEnumerationEntry!=itEnumeration->second.end(); ++itEnumerationEntry)
+	for(const auto& entry : itEnumeration->second)
 	{
-		std::string l_sItEntryNameLower=itEnumerationEntry->second.toASCIIString();
+		std::string l_sItEntryNameLower = entry.second.toASCIIString();
 		std::transform(l_sItEntryNameLower.begin(), l_sItEntryNameLower.end(), l_sItEntryNameLower.begin(), ::to_lower<std::string::value_type>);
 		if(l_sItEntryNameLower==l_sEntryNameLower)
 		{
-			return itEnumerationEntry->first;
+			return entry.first;
 		}
 	}
 
 	// then looks at the std::string being the value itself
 	try
 	{
-		uint64 l_ui64Value = std::stoll((const char*)rEntryName);
+		uint64_t l_ui64Value = std::stoll((const char*)rEntryName);
 
 		if(itEnumeration->second.find(l_ui64Value)!=itEnumeration->second.end() || this->getConfigurationManager().expandAsBoolean("Kernel_AllowUnregisteredNumericalStimulationIdentifiers"))
 		{
@@ -316,10 +340,10 @@ uint64 CTypeManager::getEnumerationEntryValueFromName(
 	return 0xffffffffffffffffll;
 }
 
-uint64 CTypeManager::getBitMaskEntryCount(
+uint64_t CTypeManager::getBitMaskEntryCount(
 	const CIdentifier& rTypeIdentifier) const
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::const_iterator itBitMask=m_vBitMask.find(rTypeIdentifier);
+	const auto itBitMask=m_vBitMask.find(rTypeIdentifier);
 	if(itBitMask==m_vBitMask.end())
 	{
 		return 0;
@@ -327,13 +351,13 @@ uint64 CTypeManager::getBitMaskEntryCount(
 	return itBitMask->second.size();
 }
 
-boolean CTypeManager::getBitMaskEntry(
+bool CTypeManager::getBitMaskEntry(
 	const CIdentifier& rTypeIdentifier,
-	const uint64 ui64EntryIndex,
+	const uint64_t ui64EntryIndex,
 	CString& sEntryName,
-	uint64& rEntryValue) const
+	uint64_t& rEntryValue) const
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::const_iterator itBitMask=m_vBitMask.find(rTypeIdentifier);
+	const auto itBitMask=m_vBitMask.find(rTypeIdentifier);
 	if(itBitMask==m_vBitMask.end())
 	{
 		return false;
@@ -344,8 +368,8 @@ boolean CTypeManager::getBitMaskEntry(
 		return false;
 	}
 
-	std::map<uint64, CString>::const_iterator itBitMaskEntry=itBitMask->second.begin();
-	for(uint64 i=0; i<ui64EntryIndex && itBitMaskEntry!=itBitMask->second.end(); i++, ++itBitMaskEntry)
+	auto itBitMaskEntry=itBitMask->second.begin();
+	for(uint64_t i=0; i<ui64EntryIndex && itBitMaskEntry!=itBitMask->second.end(); i++, ++itBitMaskEntry)
 	{
 	}
 
@@ -357,14 +381,14 @@ boolean CTypeManager::getBitMaskEntry(
 
 CString CTypeManager::getBitMaskEntryNameFromValue(
 	const CIdentifier& rTypeIdentifier,
-	const uint64 ui64EntryValue) const
+	const uint64_t ui64EntryValue) const
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::const_iterator itBitMask=m_vBitMask.find(rTypeIdentifier);
+	const auto itBitMask=m_vBitMask.find(rTypeIdentifier);
 	if(itBitMask==m_vBitMask.end())
 	{
 		return "";
 	}
-	std::map<uint64, CString>::const_iterator itBitMaskEntry=itBitMask->second.find(ui64EntryValue);
+	const auto itBitMaskEntry=itBitMask->second.find(ui64EntryValue);
 	if(itBitMaskEntry==itBitMask->second.end())
 	{
 		return "";
@@ -372,43 +396,42 @@ CString CTypeManager::getBitMaskEntryNameFromValue(
 	return itBitMask->second.find(ui64EntryValue)->second;
 }
 
-uint64 CTypeManager::getBitMaskEntryValueFromName(
+uint64_t CTypeManager::getBitMaskEntryValueFromName(
 	const CIdentifier& rTypeIdentifier,
 	const CString& rEntryName) const
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::const_iterator itBitMask=m_vBitMask.find(rTypeIdentifier);
-	std::map<uint64, CString>::const_iterator itBitMaskEntry;
+	const auto itBitMask=m_vBitMask.find(rTypeIdentifier);
 	if(itBitMask==m_vBitMask.end())
 	{
 		return 0xffffffffffffffffll;
 	}
 
 	// first looks at the exact std::string match
-	for(itBitMaskEntry=itBitMask->second.begin(); itBitMaskEntry!=itBitMask->second.end(); ++itBitMaskEntry)
+	for(const auto& mask : itBitMask->second)
 	{
-		if(itBitMaskEntry->second==rEntryName)
+		if(mask.second==rEntryName)
 		{
-			return itBitMaskEntry->first;
+			return mask.first;
 		}
 	}
 
 	// then looks at the caseless std::string match
 	std::string l_sEntryNameLower=rEntryName.toASCIIString();
 	std::transform(l_sEntryNameLower.begin(), l_sEntryNameLower.end(), l_sEntryNameLower.begin(), ::to_lower<std::string::value_type>);
-	for(itBitMaskEntry=itBitMask->second.begin(); itBitMaskEntry!=itBitMask->second.end(); ++itBitMaskEntry)
+	for(const auto& mask : itBitMask->second)
 	{
-		std::string l_sItEntryNameLower=itBitMaskEntry->second.toASCIIString();
+		std::string l_sItEntryNameLower = mask.second.toASCIIString();
 		std::transform(l_sItEntryNameLower.begin(), l_sItEntryNameLower.end(), l_sItEntryNameLower.begin(), ::to_lower<std::string::value_type>);
 		if(l_sItEntryNameLower==l_sEntryNameLower)
 		{
-			return itBitMaskEntry->first;
+			return mask.first;
 		}
 	}
 
 	// then looks at the std::string being the value itself
 	try
 	{
-		uint64 l_ui64Value = std::stoll((const char*)rEntryName);
+		uint64_t l_ui64Value = std::stoll((const char*)rEntryName);
 
 		if(itBitMask->second.find(l_ui64Value)!=itBitMask->second.end())
 		{
@@ -425,20 +448,20 @@ uint64 CTypeManager::getBitMaskEntryValueFromName(
 
 CString CTypeManager::getBitMaskEntryCompositionNameFromValue(
 	const CIdentifier& rTypeIdentifier,
-	const uint64 ui64EntryCompositionValue) const
+	const uint64_t ui64EntryCompositionValue) const
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::const_iterator itBitMask=m_vBitMask.find(rTypeIdentifier);
+	const auto itBitMask=m_vBitMask.find(rTypeIdentifier);
 	if(itBitMask==m_vBitMask.end())
 	{
 		return "";
 	}
 
 	std::string l_sResult;
-	for(uint32 i=0; i<64; i++)
+	for(uint32_t i=0; i<64; i++)
 	{
 		if(ui64EntryCompositionValue&(1LL<<i))
 		{
-			std::map<uint64, CString>::const_iterator itBitMaskEntry=itBitMask->second.find(ui64EntryCompositionValue&(1LL<<i));
+			const auto itBitMaskEntry=itBitMask->second.find(ui64EntryCompositionValue&(1LL<<i));
 			if(itBitMaskEntry==itBitMask->second.end())
 			{
 				return "";
@@ -458,17 +481,17 @@ CString CTypeManager::getBitMaskEntryCompositionNameFromValue(
 	return CString(l_sResult.c_str());
 }
 
-uint64 CTypeManager::getBitMaskEntryCompositionValueFromName(
+uint64_t CTypeManager::getBitMaskEntryCompositionValueFromName(
 	const CIdentifier& rTypeIdentifier,
 	const CString& rEntryCompositionName) const
 {
-	std::map<CIdentifier, std::map<uint64, CString> >::const_iterator itBitMask=m_vBitMask.find(rTypeIdentifier);
+	const auto itBitMask=m_vBitMask.find(rTypeIdentifier);
 	if(itBitMask==m_vBitMask.end())
 	{
 		return 0;
 	}
 
-	uint64 l_ui64Result=0;
+	uint64_t l_ui64Result=0;
 	std::string l_sEntryCompositionName=rEntryCompositionName.toASCIIString();
 	std::string::size_type i=0;
 	std::string::size_type j=0;
@@ -485,13 +508,12 @@ uint64 CTypeManager::getBitMaskEntryCompositionValueFromName(
 			std::string l_sEntryName;
 			l_sEntryName.assign(l_sEntryCompositionName, j, i-j);
 
-			boolean l_bFound=false;
-			std::map<uint64, CString>::const_iterator itBitMaskEntry;
-			for(itBitMaskEntry=itBitMask->second.begin(); itBitMaskEntry!=itBitMask->second.end(); ++itBitMaskEntry)
+			bool l_bFound=false;
+			for(const auto& mask : itBitMask->second)
 			{
-				if(itBitMaskEntry->second==CString(l_sEntryName.c_str()))
+				if(mask.second==CString(l_sEntryName.c_str()))
 				{
-					l_ui64Result|=itBitMaskEntry->first;
+					l_ui64Result |= mask.first;
 					l_bFound=true;
 				}
 			}
