@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <cstdint>
 
 namespace OpenViBE
 {
@@ -37,25 +38,29 @@ namespace OpenViBE
 			double startTime;
 			double endTime;
 			std::vector<double> matrix;
-			unsigned long long epoch;
+			uint64_t epoch;
 
-			SMatrixChunk(double startTime, double endTime, const std::vector<double>& matrix, unsigned long long epoch)
-				: startTime(startTime),
-				endTime(endTime),
-				matrix(matrix),
-				epoch(epoch) {}
+			SMatrixChunk(double startTime, double endTime, const std::vector<double>& matrix, uint64_t epoch)
+				: startTime(startTime)
+				, endTime(endTime)
+				, matrix(matrix)
+				, epoch(epoch)
+			{
+			}
 		};
 
 		struct SStimulationChunk
 		{
-			unsigned long long stimulationIdentifier;
+			uint64_t stimulationIdentifier;
 			double stimulationDate;
 			double stimulationDuration;
 
-			SStimulationChunk(unsigned long long stimulationIdentifier, double stimulationDate, double stimulationDuration)
-				: stimulationIdentifier(stimulationIdentifier),
-				stimulationDate(stimulationDate),
-				stimulationDuration(stimulationDuration) {}
+			SStimulationChunk(uint64_t stimulationIdentifier, double stimulationDate, double stimulationDuration)
+				: stimulationIdentifier(stimulationIdentifier)
+				, stimulationDate(stimulationDate)
+				, stimulationDuration(stimulationDuration)
+			{
+			}
 		};
 
 		enum class EStreamType
@@ -69,6 +74,7 @@ namespace OpenViBE
 
 		enum ELogErrorCodes
 		{
+			LogErrorCodes_HeaderNotRead = -32,
 			LogErrorCodes_MissingData = -31,
 			LogErrorCodes_WrongParameters = -30,
 			LogErrorCodes_ErrorWhileWriting = -29,
@@ -143,7 +149,7 @@ namespace OpenViBE
 			/**
 			 * \brief Set the state of the LastMatrixOnly mode.
 			 *
-			 * \param bool setting it to true will activate the LastMatrixOnly mode, false will disable it.
+			 * \param isActivated bool setting it to true will activate the LastMatrixOnly mode, false will disable it.
 			 */
 			virtual void setLastMatrixOnlyMode(bool isActivated) = 0;
 
@@ -165,7 +171,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSignalInformation(const std::vector<std::string>& channelNames, unsigned int samplingFrequency, unsigned int sampleCountPerBuffer) = 0;
+			virtual bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer) = 0;
 
 			/**
 			 * \brief Get signal information in file
@@ -177,7 +183,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, unsigned int& sampleCountPerBuffer) = 0;
+			virtual bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, uint32_t& sampleCountPerBuffer) = 0;
 
 			/**
 			 * \brief Set informations to read or write spectrum data
@@ -189,8 +195,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const unsigned int samplingRate) = 0;
-
+			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const uint32_t samplingRate) = 0;
 
 			/**
 			 * \brief get spectrum information in file
@@ -202,7 +207,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of failure
 			 */
-			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, unsigned int& samplingRate) = 0;
+			virtual bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, uint32_t& samplingRate) = 0;
 
 			/**
 			 * \brief Set informations to read or write vector data
@@ -233,7 +238,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setStreamedMatrixInformation(const std::vector<unsigned int>& dimensionSizes, const std::vector<std::string>& labels) = 0;
+			virtual bool setStreamedMatrixInformation(const std::vector<uint32_t>& dimensionSizes, const std::vector<std::string>& labels) = 0;
 
 			/**
 			 * \brief Get streamed or covariance matrix information in file
@@ -243,7 +248,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error
 			 */
-			virtual bool getStreamedMatrixInformation(std::vector<unsigned int>& dimensionSizes, std::vector<std::string>& labels) = 0;
+			virtual bool getStreamedMatrixInformation(std::vector<uint32_t>& dimensionSizes, std::vector<std::string>& labels) = 0;
 
 			/**
 			 * \brief Write the header if available in the file
@@ -275,11 +280,11 @@ namespace OpenViBE
 			 * \param chunksToRead number of chunks to read
 			 * \param samples structures reference to put the data in
 			 * \param events reference to a vector of event structure to put the data in
-			 * \param chunksRead reference to read chunks during the function call
 			 *
-			 * \return number of read chunks
+			 * \retval true in case of sucess
+			 * \retval false in case of error while writing
 			 */
-			virtual bool readSamplesAndEventsFromFile(unsigned long long chunksToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events) = 0;
+			virtual bool readSamplesAndEventsFromFile(uint64_t chunksToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events) = 0;
 
 			/**
 			 * \brief Open file specified on parameter
@@ -329,7 +334,7 @@ namespace OpenViBE
 			 * \retval true in case of correct event
 			 * \retval false in case of incorrect param
 			 */
-			virtual bool addEvent(unsigned long long code, double date, double duration) = 0;
+			virtual bool addEvent(uint64_t code, double date, double duration) = 0;
 
 			/**
 			 * \brief Add an event

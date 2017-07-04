@@ -32,7 +32,6 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_OVCSVFileWriter);
 
-
 		private:
 			bool processStreamedMatrix(void);
 			bool processStimulation(void);
@@ -41,7 +40,7 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CIdentifier m_TypeIdentifier;
 
-			OpenViBEToolkit::TDecoder < CBoxAlgorithmOVCSVFileWriter >* m_StreamDecoder;
+			OpenViBEToolkit::TGenericDecoder < CBoxAlgorithmOVCSVFileWriter > m_StreamDecoder;
 			OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmOVCSVFileWriter > m_StimulationDecoder;
 
 			unsigned long long m_Epoch;
@@ -51,7 +50,6 @@ namespace OpenViBEPlugins
 			bool m_AppendData;
 			bool m_LastMatrixOnly;
 			bool m_WriteHeader;
-
 		};
 
 		class CBoxAlgorithmOVCSVFileWriterListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >

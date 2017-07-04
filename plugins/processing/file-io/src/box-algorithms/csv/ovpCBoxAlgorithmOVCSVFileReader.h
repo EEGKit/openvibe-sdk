@@ -39,19 +39,19 @@ namespace OpenViBEPlugins
 
 			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)>m_ReaderLib;
 
-			OpenViBEToolkit::TEncoder < CBoxAlgorithmOVCSVFileReader >* m_AlgorithmEncoder;
-			OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmOVCSVFileReader > m_StimulationEncoder;
+			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmOVCSVFileReader> m_AlgorithmEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmOVCSVFileReader> m_StimulationEncoder;
 
 			std::deque<OpenViBE::CSV::SMatrixChunk> m_SavedChunks;
 			std::deque<OpenViBE::CSV::SStimulationChunk> m_SavedStimulations;
 
-			unsigned long long m_lastStimulationDate;
+			uint64_t m_lastStimulationDate;
 
 			OpenViBE::CIdentifier m_TypeIdentifier;
 			std::vector<std::string> m_ChannelNames;
-			std::vector<unsigned int> m_DimensionSizes;
-			unsigned int m_SamplingRate;
-			unsigned int m_SampleCountPerBuffer;
+			std::vector<uint32_t> m_DimensionSizes;
+			uint32_t m_SamplingRate;
+			uint32_t m_SampleCountPerBuffer;
 
 			bool m_IsHeaderSent;
 			bool m_IsStimulationHeaderSent;
@@ -62,19 +62,18 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const unsigned int index)
+			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index)
 			{
 				OpenViBE::CIdentifier typeIdentifier;
 				box.getOutputType(index, typeIdentifier);
-				if (index == 0
-					&& typeIdentifier == OV_TypeId_Stimulations)
+
+				if (index == 0 && typeIdentifier == OV_TypeId_Stimulations)
 				{
 					OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Signal),
 						"Failed to reset input type to signal",
 						OpenViBE::Kernel::ErrorType::Internal);
 				}
-				else if (index == 1
-					&& typeIdentifier != OV_TypeId_Stimulations)
+				else if (index == 1 && typeIdentifier != OV_TypeId_Stimulations)
 				{
 					OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Stimulations),
 						"Failed to reset input type to signal",

@@ -29,9 +29,12 @@
 #include "decoders/ovtkTStreamedMatrixDecoder.h"
 #include "decoders/ovtkTSignalDecoder.h"
 #include "decoders/ovtkTSpectrumDecoder.h"
+#include "decoders/ovtkTFeatureVectorDecoder.h"
+
 #include "encoders/ovtkTStreamedMatrixEncoder.h"
 #include "encoders/ovtkTSignalEncoder.h"
 #include "encoders/ovtkTSpectrumEncoder.h"
+#include "encoders/ovtkTFeatureVectorEncoder.h"
 
 namespace OpenViBEToolkit
 {
@@ -49,7 +52,11 @@ namespace OpenViBEToolkit
 		{ \
 			return m_pSpectrumDecoder->what; \
 		} \
-		return m_pStreamedMatrixDecoder->what;
+		if(m_pFeatureVectorDecoder) \
+		{ \
+			return m_pFeatureVectorDecoder->what; \
+		} \
+		return m_pStreamedMatrixDecoder->what; \
 
 	template < class T >
 	class TGenericDecoder
@@ -58,16 +65,26 @@ namespace OpenViBEToolkit
 
 		void reset(void)
 		{
-			m_pStreamedMatrixDecoder=NULL;
-			m_pSignalDecoder=NULL;
-			m_pSpectrumDecoder=NULL;
+			m_pStreamedMatrixDecoder = nullptr;
+			m_pSignalDecoder = nullptr;
+			m_pSpectrumDecoder = nullptr;
+			m_pFeatureVectorDecoder = nullptr;
 		}
 
 	public:
 
 		TGenericDecoder(void)
+			: m_pStreamedMatrixDecoder(nullptr)
+			, m_pSignalDecoder(nullptr)
+			, m_pSpectrumDecoder(nullptr)
+			, m_pFeatureVectorDecoder(nullptr)
 		{
 			this->reset();
+		}
+
+		~TGenericDecoder(void)
+		{
+			this->uninitialize();
 		}
 
 		TGenericDecoder<T>& operator=(OpenViBEToolkit::TStreamedMatrixDecoder < T >* pDecoder)
@@ -91,11 +108,16 @@ namespace OpenViBEToolkit
 			return *this;
 		}
 
+		TGenericDecoder<T>& operator=(OpenViBEToolkit::TFeatureVectorDecoder < T >* pDecoder)
+		{
+			this->reset();
+			m_pFeatureVectorDecoder = pDecoder;
+			return *this;
+		}
+
 		void uninitialize(void)
 		{
-			delete m_pStreamedMatrixDecoder;
-			delete m_pSignalDecoder;
-			delete m_pSpectrumDecoder;
+			this->reset();
 		}
 
 		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getOutputMatrix()
@@ -141,6 +163,7 @@ namespace OpenViBEToolkit
 		OpenViBEToolkit::TStreamedMatrixDecoder < T >* m_pStreamedMatrixDecoder;
 		OpenViBEToolkit::TSignalDecoder < T >* m_pSignalDecoder;
 		OpenViBEToolkit::TSpectrumDecoder < T >* m_pSpectrumDecoder;
+		OpenViBEToolkit::TFeatureVectorDecoder < T >* m_pFeatureVectorDecoder;
 	};
 
 // ______________________________________________________________________________________________________________________________________________________________________________
@@ -156,7 +179,11 @@ namespace OpenViBEToolkit
 		{ \
 			return m_pSpectrumEncoder->what; \
 		} \
-		return m_pStreamedMatrixEncoder->what;
+		if(m_pFeatureVectorEncoder) \
+		{ \
+			return m_pFeatureVectorEncoder->what; \
+		} \
+		return m_pStreamedMatrixEncoder->what; \
 
 	template < class T >
 	class TGenericEncoder
@@ -165,16 +192,26 @@ namespace OpenViBEToolkit
 
 		void reset(void)
 		{
-			m_pStreamedMatrixEncoder=NULL;
-			m_pSignalEncoder=NULL;
-			m_pSpectrumEncoder=NULL;
+			m_pStreamedMatrixEncoder = nullptr;
+			m_pSignalEncoder = nullptr;
+			m_pSpectrumEncoder = nullptr;
+			m_pFeatureVectorEncoder = nullptr;
 		}
 
 	public:
 
 		TGenericEncoder(void)
+			: m_pStreamedMatrixEncoder(nullptr)
+			, m_pSignalEncoder(nullptr)
+			, m_pSpectrumEncoder(nullptr)
+			, m_pFeatureVectorEncoder(nullptr)
 		{
 			this->reset();
+		}
+
+		~TGenericEncoder(void)
+		{
+			this->uninitialize();
 		}
 
 		TGenericEncoder<T>& operator=(OpenViBEToolkit::TStreamedMatrixEncoder < T >* pEncoder)
@@ -198,11 +235,16 @@ namespace OpenViBEToolkit
 			return *this;
 		}
 
+		TGenericEncoder<T>& operator=(OpenViBEToolkit::TFeatureVectorEncoder < T >* pEncoder)
+		{
+			this->reset();
+			m_pFeatureVectorEncoder = pEncoder;
+			return *this;
+		}
+
 		void uninitialize(void)
 		{
-			delete m_pStreamedMatrixEncoder;
-			delete m_pSignalEncoder;
-			delete m_pSpectrumEncoder;
+			this->reset();
 		}
 
 		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getInputMatrix()
@@ -240,6 +282,7 @@ namespace OpenViBEToolkit
 		OpenViBEToolkit::TStreamedMatrixEncoder < T >* m_pStreamedMatrixEncoder;
 		OpenViBEToolkit::TSignalEncoder < T >* m_pSignalEncoder;
 		OpenViBEToolkit::TSpectrumEncoder < T >* m_pSpectrumEncoder;
+		OpenViBEToolkit::TFeatureVectorEncoder < T >* m_pFeatureVectorEncoder;
 	};
 
 // ______________________________________________________________________________________________________________________________________________________________________________
