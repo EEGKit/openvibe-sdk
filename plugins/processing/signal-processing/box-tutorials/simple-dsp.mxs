@@ -585,10 +585,6 @@
 					<Value>64</Value>
 				</Attribute>
 				<Attribute>
-					<Identifier>(0x3e470d64, 0x376e7860)</Identifier>
-					<Value>${Path_Root}/doc/Mensia Advanced Visualization Toolkit/Mensia Advanced Visualization Toolkit.chm::</Value>
-				</Attribute>
-				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
 					<Value>(0x35390ab5, 0x7b926078)</Value>
 				</Attribute>
@@ -701,10 +697,6 @@
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
 					<Value>192</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x3e470d64, 0x376e7860)</Identifier>
-					<Value>${Path_Root}/doc/Mensia Advanced Visualization Toolkit/Mensia Advanced Visualization Toolkit.chm::</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
@@ -821,10 +813,6 @@
 					<Value>336</Value>
 				</Attribute>
 				<Attribute>
-					<Identifier>(0x3e470d64, 0x376e7860)</Identifier>
-					<Value>${Path_Root}/doc/Mensia Advanced Visualization Toolkit/Mensia Advanced Visualization Toolkit.chm::</Value>
-				</Attribute>
-				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
 					<Value>(0x35390ab5, 0x7b926078)</Value>
 				</Attribute>
@@ -937,10 +925,6 @@
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
 					<Value>544</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x3e470d64, 0x376e7860)</Identifier>
-					<Value>${Path_Root}/doc/Mensia Advanced Visualization Toolkit/Mensia Advanced Visualization Toolkit.chm::</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
@@ -1057,10 +1041,6 @@
 					<Value>1056</Value>
 				</Attribute>
 				<Attribute>
-					<Identifier>(0x3e470d64, 0x376e7860)</Identifier>
-					<Value>${Path_Root}/doc/Mensia Advanced Visualization Toolkit/Mensia Advanced Visualization Toolkit.chm::</Value>
-				</Attribute>
-				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
 					<Value>(0x35390ab5, 0x7b926078)</Value>
 				</Attribute>
@@ -1175,10 +1155,6 @@
 					<Value>752</Value>
 				</Attribute>
 				<Attribute>
-					<Identifier>(0x3e470d64, 0x376e7860)</Identifier>
-					<Value>${Path_Root}/doc/Mensia Advanced Visualization Toolkit/Mensia Advanced Visualization Toolkit.chm::</Value>
-				</Attribute>
-				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
 					<Value>(0x35390ab5, 0x7b926078)</Value>
 				</Attribute>
@@ -1291,10 +1267,6 @@
 				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
 					<Value>928</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x3e470d64, 0x376e7860)</Identifier>
-					<Value>${Path_Root}/doc/Mensia Advanced Visualization Toolkit/Mensia Advanced Visualization Toolkit.chm::</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>

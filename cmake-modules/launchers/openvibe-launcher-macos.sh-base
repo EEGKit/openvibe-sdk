@@ -24,9 +24,6 @@ fi
 if [ "$OV_PATH_DATA" == "" ]; then
 	OV_PATH_DATA="@CMAKE_INSTALL_FULL_DATADIR@"
 fi
-# if [ "$MENSIA_PATH_DATA" == "" ]; then
-# 	MENSIA_PATH_DATA="@CMAKE_INSTALL_FULL_DATADIR@"
-# fi
 
 export DYLD_LIBRARY_PATH="$OV_PATH_LIB:@CMAKE_SOURCE_DIR@/dependencies/lib:$DYLD_LIBRARY_PATH"
 export LC_ALL=C
