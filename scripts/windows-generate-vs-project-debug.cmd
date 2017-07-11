@@ -1,3 +1,3 @@
 @echo off
 
-call windows-generate-vs-project.cmd --debug
+call windows-build.cmd --vsproject --debug %*

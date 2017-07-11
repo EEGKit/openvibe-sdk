@@ -1,5 +1,5 @@
 # ---------------------------------
-# Finds Certivibe binary distribution
+# Finds OpenViBE SDK binary distribution
 # Adds library to target, include path and execute install commands
 # Also add library specific compiler flags
 # This should be used with a defined INCLUDED_CERTIVIBE_COMPONENTS variable in scope
@@ -11,26 +11,24 @@
 # ALLPLUGINS : CLASSIFICATION DATA_GENERATION FEATURE_EXTRACTION FILE_IO SIGNAL_PROCESSING STIMULATION STREAM_CODECS STREAMING TOOLS
 # ALLMODULES : EBML SYSTEM FS SOCKET XML DATE CSV TOOLKIT
 # ---------------------------------
-option(DYNAMIC_LINK_CERTIVIBE "Dynamically link Certivibe" ON)
+option(DYNAMIC_LINK_OPENVIBE_SDK "Dynamically link Certivibe" ON)
 
-set(CERTIVIBE_DIRECTORY ${OPENVIBE_SDK_PATH})
-
-set(PATH_CERTIVIBE "PATH_CERTIVIBE-NOTFOUND")
-find_path(PATH_CERTIVIBE include/openvibe/ov_all.h PATHS ${CERTIVIBE_DIRECTORY} NO_DEFAULT_PATH)
-if(${PATH_CERTIVIBE} STREQUAL "PATH_CERTIVIBE-NOTFOUND")
-	message(FATAL_ERROR "  FAILED to find Certivibe [${PATH_CERTIVIBE}]")
+# set(OPENVIBE_SDK_PATH "OPENVIBE_SDK_PATH-NOTFOUND")
+find_path(${OPENVIBE_SDK_PATH} include/openvibe/ov_all.h PATHS ${LIST_DEPENDENCIES_PATH} NO_DEFAULT_PATH)
+if(${OPENVIBE_SDK_PATH} STREQUAL "OPENVIBE_SDK_PATH-NOTFOUND")
+	message(FATAL_ERROR "  FAILED to find OpenViBE SDK [${OPENVIBE_SDK_PATH}]")
 endif()
 
-debug_message( "  Found Certivibe... [${PATH_CERTIVIBE}]")
+debug_message( "  Found OpenViBE SDK... [${OPENVIBE_SDK_PATH}]")
 
-include_directories(${PATH_CERTIVIBE}/include/)# TODO ?
+include_directories(${OPENVIBE_SDK_PATH}/include/)# TODO ?
 
-if(DYNAMIC_LINK_CERTIVIBE)
-	set(CERTIVIBE_LINKING "")
+if(DYNAMIC_LINK_OPENVIBE_SDK)
+	set(OPENVIBE_SDK_LINKING "")
 	set(LINKING_SUFFIX Shared)
 	add_definitions(-DOV_Shared)
 else()
-	set(CERTIVIBE_LINKING "-static")
+	set(OPENVIBE_SDK_LINKING "-static")
 	set(LINKING_SUFFIX Static)
 endif()
 
@@ -60,12 +58,12 @@ if(WIN32)
 	set(DEST_LIB_DIR  ${CMAKE_INSTALL_FULL_BINDIR})
 	set(LIB_EXT lib)
 	set(DLL_EXT dll)
-	install(DIRECTORY ${PATH_CERTIVIBE}/bin/ DESTINATION ${CMAKE_INSTALL_FULL_BINDIR} FILES_MATCHING PATTERN "*cmd")
+	install(DIRECTORY ${OPENVIBE_SDK_PATH}/bin/ DESTINATION ${CMAKE_INSTALL_FULL_BINDIR} FILES_MATCHING PATTERN "*cmd")
 elseif(UNIX)
 	set(LIB_PREFIX lib)
 	set(ORIG_LIB_DIR lib)
 	set(DEST_LIB_DIR ${CMAKE_INSTALL_FULL_LIBDIR})
-	if(DYNAMIC_LINK_CERTIVIBE)
+	if(DYNAMIC_LINK_OPENVIBE_SDK)
 		set(LIB_EXT "so")
 		if(APPLE)
 			set(LIB_EXT "dylib")
@@ -78,8 +76,8 @@ endif()
 
 function(add_component TOKEN MODULE_NAME)
 	if(${TOKEN} IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
-		target_link_libraries(${PROJECT_NAME} "${PATH_CERTIVIBE}/lib/${LIB_PREFIX}${MODULE_NAME}${CERTIVIBE_LINKING}.${LIB_EXT}")
-		install(DIRECTORY ${PATH_CERTIVIBE}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
+		target_link_libraries(${PROJECT_NAME} "${OPENVIBE_SDK_PATH}/lib/${LIB_PREFIX}${MODULE_NAME}${CERTIVIBE_LINKING}.${LIB_EXT}")
+		install(DIRECTORY ${OPENVIBE_SDK_PATH}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
 		
 		set(FLAGS_LIST ${ARGV})
 		list(REMOVE_AT FLAGS_LIST 0 1) # Remove mandatory args to get only optional args
@@ -91,7 +89,7 @@ endfunction(add_component)
 
 function(add_plugin TOKEN MODULE_NAME)
 	if(${TOKEN} IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
-		install(DIRECTORY ${PATH_CERTIVIBE}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
+		install(DIRECTORY ${OPENVIBE_SDK_PATH}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
 	endif()
 endfunction(add_plugin)
 
@@ -126,21 +124,21 @@ if(DEPENDENCIES IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
 	if(WIN32)
 		install(
 			FILES
-			${PATH_CERTIVIBE}/bin/libexpat.dll
-			${PATH_CERTIVIBE}/bin/libexpatw.dll
-			${PATH_CERTIVIBE}/bin/xerces-c_3_1.dll
-			${PATH_CERTIVIBE}/bin/xerces-c_3_1D.dll
+			${OPENVIBE_SDK_PATH}/bin/libexpat.dll
+			${OPENVIBE_SDK_PATH}/bin/libexpatw.dll
+			${OPENVIBE_SDK_PATH}/bin/xerces-c_3_1.dll
+			${OPENVIBE_SDK_PATH}/bin/xerces-c_3_1D.dll
 			DESTINATION ${DEST_LIB_DIR})
-		install(DIRECTORY ${PATH_CERTIVIBE}/include/ DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
-		install(DIRECTORY ${PATH_CERTIVIBE}/lib/ DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+		install(DIRECTORY ${OPENVIBE_SDK_PATH}/include/ DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+		install(DIRECTORY ${OPENVIBE_SDK_PATH}/lib/ DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
 	endif()
 endif()
 
 # if we link with the module socket in Static, we must link the project with the dependency on win32
-if(WIN32 AND SOCKET IN_LIST INCLUDED_CERTIVIBE_COMPONENTS AND NOT DYNAMIC_LINK_CERTIVIBE)
+if(WIN32 AND SOCKET IN_LIST INCLUDED_CERTIVIBE_COMPONENTS AND NOT DYNAMIC_LINK_OPENVIBE_SDK)
 	include("FindThirdPartyWinsock2")
 	include("FindThirdPartyFTDI")
 endif()
 
-install(DIRECTORY ${PATH_CERTIVIBE}/share/ DESTINATION ${CMAKE_INSTALL_FULL_DATADIR})
+install(DIRECTORY ${OPENVIBE_SDK_PATH}/share/ DESTINATION ${CMAKE_INSTALL_FULL_DATADIR})
 
