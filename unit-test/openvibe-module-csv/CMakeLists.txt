@@ -60,7 +60,7 @@ INCLUDE("FindOpenViBE")
 INCLUDE("FindOpenViBEModuleCSV")
 
 SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY FOLDER ${OVT_UNIT_TESTS_FOLDER})
-# set(OV_MODULE_CSV "C:/gitdir/build/certivibe-debug/modules/csv/openvibe-module-csv")
+# set(OV_MODULE_CSV "C:/gitdir/build/openvibe-sdk-debug/modules/csv/openvibe-module-csv")
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${OVT_UNIT_TOOLKIT_LIB} ${GTEST_BOTH_LIBRARIES} ${OV_LIBS} ${OV_MODULE_CSV})
 
 # Add test without parameter to driver

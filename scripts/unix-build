@@ -130,12 +130,12 @@ then
 fi
 
 # Update directories only if they point to the default one
-if [[ ! -v ov_build_dir ]]; then
-	ov_build_dir="${ov_script_dir}/../../certivibe-build/build-${ov_build_type}"
+if [[ ! -v $ov_build_dir ]]; then
+	ov_build_dir="${ov_script_dir}/../../openvibe-sdk-build/build-${ov_build_type}"
 fi
 
-if [[ ! -v ov_install_dir ]]; then
-	ov_install_dir="${ov_script_dir}/../../certivibe-build/dist-${ov_build_type}"
+if [[ ! -v $ov_install_dir ]]; then
+	ov_install_dir="${ov_script_dir}/../../openvibe-sdk-build/dist-${ov_build_type}"
 fi
 if [[ ! -v ov_cmake_test_output ]]; then
 	ov_cmake_test_output="${ov_build_dir}/validation-test-output/"

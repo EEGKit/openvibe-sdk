@@ -1,4 +1,4 @@
-PROJECT(certivibe-plugins-stimulation)
+PROJECT(openvibe-plugins-base-stimulation)
 
 SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
 SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})

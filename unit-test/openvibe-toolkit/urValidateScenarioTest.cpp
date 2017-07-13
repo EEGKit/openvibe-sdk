@@ -307,17 +307,17 @@ int urValidateScenarioTest(int argc, char* argv[])
 	g_context = fixture->context;
 
 	#if defined TARGET_OS_Windows
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/certivibe-plugins-file-io*dll");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/certivibe-plugins-stimulation*dll");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/certivibe-plugins-tools*dll");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-base-file-io*dll");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-base-stimulation*dll");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-base-tools*dll");
 	#elif defined TARGET_OS_Linux
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libcertivibe-plugins-file-io*so");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libcertivibe-plugins-stimulation*so");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libcertivibe-plugins-tools*so");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-file-io*so");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-stimulation*so");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-tools*so");
 	#elif defined TARGET_OS_MacOS
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libcertivibe-plugins-file-io*dylib");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libcertivibe-plugins-stimulation*dylib");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libcertivibe-plugins-tools*dylib");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-file-io*dylib");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-stimulation*dylib");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-tools*dylib");
 	#endif
 
 	::testing::InitGoogleTest(&argc, argv);

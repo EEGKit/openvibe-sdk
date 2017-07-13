@@ -1,4 +1,4 @@
-PROJECT(certivibe-plugins-file-io)
+PROJECT(openvibe-plugins-base-file-io)
 
 SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
 SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})

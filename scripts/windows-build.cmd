@@ -169,10 +169,10 @@ if defined vsgenerate (
 )
 
 if not defined build_dir (
-	set build_dir=%script_dir%\..\..\certivibe-build\build-%BuildType%
+	set build_dir=%script_dir%\..\..\openvibe-sdk-build\build-%BuildType%
 )
 if not defined install_dir (
-	set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
+	set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist-%BuildType%
 )
 if not defined ov_cmake_test_output (
 	set ov_cmake_test_output=%build_dir%\validation-test-output\

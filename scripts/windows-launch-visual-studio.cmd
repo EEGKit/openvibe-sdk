@@ -12,7 +12,7 @@ for %%A in (%*) DO (
 	)
 )
 
-SET "OV_PATH_ROOT=%CD%\..\..\certivibe-build\dist-%BuildType%"
+SET "OV_PATH_ROOT=%CD%\..\..\openvibe-sdk-build\dist-%BuildType%"
 SET "OV_PATH_BIN=%OV_PATH_ROOT%\bin"
 SET "OV_PATH_DATA=%OV_PATH_ROOT%\share\openvibe"
 SET "OV_PATH_LIB=%OV_PATH_ROOT%\bin"
@@ -22,7 +22,7 @@ if not defined USE_EXPRESS (
 	SET USE_EXPRESS=1
 )
 
-set SolutionPath=%CD%\..\..\certivibe-build\vs-project-%BuildType%\OpenVIBE.sln
+set SolutionPath=%CD%\..\..\openvibe-sdk-build\vs-project-%BuildType%\OpenVIBE.sln
 
 if %USE_EXPRESS% == 1 (
 	echo Use %VSCMake% Express Edition
