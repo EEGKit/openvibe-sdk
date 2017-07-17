@@ -16,7 +16,6 @@ using namespace OpenViBEPlugins::FileIO;
 
 CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader(void)
 	: m_ReaderLib(createCSVHandler(), releaseCSVHandler)
-	, m_AlgorithmEncoder(nullptr)
 	, m_lastStimulationDate(0)
 	, m_SamplingRate(0)
 	, m_IsHeaderSent(false)
@@ -32,7 +31,6 @@ uint64_t CBoxAlgorithmOVCSVFileReader::getClockFrequency(void)
 bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 {
 	m_SamplingRate = 0;
-	m_AlgorithmEncoder = nullptr;
 	m_IsHeaderSent = false;
 	m_IsStimulationHeaderSent = false;
 
@@ -44,6 +42,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 		ErrorType::Internal);
 
 	m_SampleCountPerBuffer = 1;
+
 	if (m_TypeIdentifier == OV_TypeId_Signal)
 	{
 		m_AlgorithmEncoder = new OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >(*this, 0);
@@ -103,18 +102,12 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 
 bool CBoxAlgorithmOVCSVFileReader::uninitialize(void)
 {
-	if (m_AlgorithmEncoder)
-	{
-		OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->uninitialize(),
-			"Failed to uninitialize algorithm encoder",
-			ErrorType::Internal);
-		delete m_AlgorithmEncoder;
-		m_AlgorithmEncoder = nullptr;
-	}
-
 	m_ChannelNames.clear();
 	m_DimensionSizes.clear();
 	m_FrequencyAbscissa.clear();
+
+	m_AlgorithmEncoder.uninitialize();
+
 	OV_ERROR_UNLESS_KRF(m_StimulationEncoder.uninitialize(),
 		"Failed to uninitialize stimulation encoder",
 		ErrorType::Internal);
@@ -132,24 +125,8 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& rMessageClock)
 
 bool CBoxAlgorithmOVCSVFileReader::process(void)
 {
-	IMatrix* matrix(nullptr);
+	IMatrix* matrix = m_AlgorithmEncoder.getInputMatrix();;
 
-	if (m_TypeIdentifier == OV_TypeId_Signal)
-	{
-		matrix = (dynamic_cast<OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix();
-	}
-	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
-	{
-		matrix = (dynamic_cast<OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix();
-	}
-	else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
-	{
-		matrix = (dynamic_cast<OpenViBEToolkit::TFeatureVectorEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix();
-	}
-	else if (m_TypeIdentifier == OV_TypeId_Spectrum)
-	{
-		matrix = (dynamic_cast<OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputMatrix();
-	}
 	// encode Header if not already encoded
 	if (!m_IsHeaderSent)
 	{
@@ -158,14 +135,15 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 			OV_FATAL_UNLESS_K(matrix->setDimensionCount(2),
 				"Failed to set dimension count",
 				ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, static_cast<unsigned int>(m_ChannelNames.size())),
+			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, static_cast<uint32_t>(m_ChannelNames.size())),
 				"Failed to set first dimension size",
 				ErrorType::Internal);
 			OV_FATAL_UNLESS_K(matrix->setDimensionSize(1, m_SampleCountPerBuffer),
 				"Failed to set second dimension size",
 				ErrorType::Internal);
 
-			unsigned int index = 0;
+			uint32_t index = 0;
+
 			for (const std::string& channelName : m_ChannelNames)
 			{
 				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()),
@@ -173,22 +151,24 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 					ErrorType::Internal);
 			}
 
-			dynamic_cast<OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder)->getInputSamplingRate() = m_SamplingRate;
+			m_AlgorithmEncoder.getInputSamplingRate() = m_SamplingRate;
 		}
 		else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 		{
 			OV_FATAL_UNLESS_K(matrix->setDimensionCount(static_cast<uint32>(m_DimensionSizes.size())),
 				"Failed to set dimension count",
 				ErrorType::Internal);
-			unsigned int previousDimensionSize = 0;
+			uint32_t previousDimensionSize = 0;
+
 			for (size_t index = 0; index < m_DimensionSizes.size(); index++)
 			{
-				OV_FATAL_UNLESS_K(matrix->setDimensionSize(static_cast<unsigned int>(index), m_DimensionSizes[index]),
-					"Failed to set dimension size " << static_cast<unsigned int>(index + 1),
+				OV_FATAL_UNLESS_K(matrix->setDimensionSize(static_cast<uint32_t>(index), m_DimensionSizes[index]),
+					"Failed to set dimension size " << static_cast<uint32_t>(index + 1),
 					ErrorType::Internal);
-				for (unsigned int labelIndex = 0; labelIndex < m_DimensionSizes[index]; labelIndex++)
+
+				for (uint32_t labelIndex = 0; labelIndex < m_DimensionSizes[index]; labelIndex++)
 				{
-					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(static_cast<unsigned int>(index), labelIndex, m_ChannelNames[previousDimensionSize + labelIndex].c_str()),
+					OV_FATAL_UNLESS_K(matrix->setDimensionLabel(static_cast<uint32_t>(index), labelIndex, m_ChannelNames[previousDimensionSize + labelIndex].c_str()),
 						"Failed to set dimension label",
 						ErrorType::Internal);
 				}
@@ -201,11 +181,11 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 			OV_FATAL_UNLESS_K(matrix->setDimensionCount(1),
 				"Failed to set dimension count",
 				ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, static_cast<unsigned int>(m_ChannelNames.size())),
+			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, static_cast<uint32_t>(m_ChannelNames.size())),
 				"Failed to set first dimension size",
 				ErrorType::Internal);
 
-			unsigned int index = 0;
+			uint32_t index = 0;
 			for (const std::string& channelName : m_ChannelNames)
 			{
 				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()),
@@ -215,30 +195,32 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 		}
 		else if (m_TypeIdentifier == OV_TypeId_Spectrum)
 		{
-			IMatrix* frequencyAbscissaMatrix = (dynamic_cast<OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder))->getInputFrequencyAbscissa();
+			IMatrix* frequencyAbscissaMatrix = m_AlgorithmEncoder.getInputFrequencyAbcissa();
 
 			OV_FATAL_UNLESS_K(matrix->setDimensionCount(2),
 				"Failed to set dimension count",
 				ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, static_cast<unsigned int>(m_ChannelNames.size())),
+			OV_FATAL_UNLESS_K(matrix->setDimensionSize(0, static_cast<uint32_t>(m_ChannelNames.size())),
 				"Failed to set first dimension size",
 				ErrorType::Internal);
-			OV_FATAL_UNLESS_K(matrix->setDimensionSize(1, static_cast<unsigned int>(m_FrequencyAbscissa.size())),
+			OV_FATAL_UNLESS_K(matrix->setDimensionSize(1, static_cast<uint32_t>(m_FrequencyAbscissa.size())),
 				"Failed to set first dimension size",
 				ErrorType::Internal);
 			OV_FATAL_UNLESS_K(frequencyAbscissaMatrix->setDimensionCount(1),
 				"Failed to set dimension count",
 				ErrorType::Internal);
-			OV_FATAL_UNLESS_K(frequencyAbscissaMatrix->setDimensionSize(0, static_cast<unsigned int>(m_FrequencyAbscissa.size())),
+			OV_FATAL_UNLESS_K(frequencyAbscissaMatrix->setDimensionSize(0, static_cast<uint32_t>(m_FrequencyAbscissa.size())),
 				"Failed to set first dimension size",
 				ErrorType::Internal);
-			unsigned int index = 0;
+			
+			uint32_t index = 0;
 			for (const std::string& channelName : m_ChannelNames)
 			{
 				OV_FATAL_UNLESS_K(matrix->setDimensionLabel(0, index++, channelName.c_str()),
 					"Failed to set dimension label",
 					ErrorType::Internal);
 			}
+
 			index = 0;
 			for (const double& frequencyAbscissaValue : m_FrequencyAbscissa)
 			{
@@ -247,13 +229,14 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 					"Failed to set dimension label",
 					ErrorType::Internal);
 			}
-			dynamic_cast<OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmOVCSVFileReader >*>(m_AlgorithmEncoder)->getInputSamplingRate() = m_SamplingRate;
 
+			m_AlgorithmEncoder.getInputSamplingRate() = m_SamplingRate;
 		}
 
-		OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->encodeHeader(),
+		OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder.encodeHeader(),
 			"Failed to encode signal header",
 			ErrorType::Internal);
+
 		m_IsHeaderSent = true;
 		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0),
 			"Failed to mark signal header as ready to send",
@@ -262,20 +245,21 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 
 	std::vector<SMatrixChunk> matrixChunk;
 	std::vector<SStimulationChunk> stimulationChunk;
+
 	do
 	{
 		OV_ERROR_UNLESS_KRF(m_ReaderLib->readSamplesAndEventsFromFile(1, matrixChunk, stimulationChunk),
 			(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
 			ErrorType::Internal);
+
 		m_SavedChunks.insert(m_SavedChunks.end(), matrixChunk.begin(), matrixChunk.end());
 		m_SavedStimulations.insert(m_SavedStimulations.end(), stimulationChunk.begin(), stimulationChunk.end());
-	} while (!matrixChunk.empty()
-		&& matrixChunk.begin()->startTime < ITimeArithmetics::timeToSeconds(this->getPlayerContext().getCurrentTime()));
-
+	} while (!matrixChunk.empty() && matrixChunk.begin()->startTime < ITimeArithmetics::timeToSeconds(this->getPlayerContext().getCurrentTime()));
 
 	if (!m_SavedChunks.empty())
 	{
-		unsigned int chunksToRemove = 0;
+		uint32_t chunksToRemove = 0;
+
 		for (const SMatrixChunk& chunk : m_SavedChunks)
 		{
 			if (ITimeArithmetics::timeToSeconds(getPlayerContext().getCurrentTime()) > chunk.startTime)
@@ -283,9 +267,10 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 				// copy read matrix into buffer to encode
 				std::copy(chunk.matrix.begin(), chunk.matrix.end(), matrix->getBuffer());
 
-				OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder->encodeBuffer(),
+				OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder.encodeBuffer(),
 					"Failed to encode signal buffer",
 					ErrorType::Internal);
+
 				OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(0,
 					ITimeArithmetics::secondsToTime(chunk.startTime),
 					ITimeArithmetics::secondsToTime(chunk.endTime)),
@@ -300,6 +285,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 			m_SavedChunks.pop_front();
 			chunksToRemove--;
 		}
+
 		// send stimulations chunk even if there is no stimulations, chunks have to be continued
 		OV_ERROR_UNLESS_KRF(processStimulation(),
 			"Error during stimulation process",
@@ -326,8 +312,9 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation()
 	IStimulationSet* stimulationSet = m_StimulationEncoder.getInputStimulationSet();
 	stimulationSet->clear();
 
-	unsigned long long stimulationChunkStartTime = m_lastStimulationDate;
-	unsigned long long currentTime = getPlayerContext().getCurrentTime();
+	uint64_t stimulationChunkStartTime = m_lastStimulationDate;
+	uint64_t currentTime = getPlayerContext().getCurrentTime();
+
 	if (m_SavedStimulations.empty())
 	{
 		if (currentTime > m_lastStimulationDate)
@@ -336,6 +323,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation()
 			OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),
 				"Failed to encode stimulation buffer",
 				ErrorType::Internal);
+
 			OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
 				stimulationChunkStartTime,
 				currentTime),
@@ -345,7 +333,8 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation()
 	}
 	else
 	{
-		unsigned int chunksToRemove = 0;
+		uint32_t chunksToRemove = 0;
+
 		for (const SStimulationChunk& chunk : m_SavedStimulations)
 		{
 			if (currentTime > ITimeArithmetics::secondsToTime(chunk.stimulationDate))
@@ -364,9 +353,11 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation()
 		}
 
 		m_lastStimulationDate = currentTime;
+
 		OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),
 			"Failed to encode stimulation buffer",
 			ErrorType::Internal);
+
 		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
 			stimulationChunkStartTime,
 			currentTime),

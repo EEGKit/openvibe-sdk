@@ -45,8 +45,8 @@ namespace OpenViBE
 			 */
 			~CCSVHandler(void);
 
-			unsigned int getOutputFloatPrecision() {return m_OutputFloatPrecision; }
-			void setOutputFloatPrecision(unsigned int precision) { m_OutputFloatPrecision = precision; }
+			uint32_t getOutputFloatPrecision() { return m_OutputFloatPrecision; }
+			void setOutputFloatPrecision(uint32_t precision) { m_OutputFloatPrecision = precision; }
 
 			void setFormatType(EStreamType typeIdentifier);
 			EStreamType getFormatType(void);
@@ -54,17 +54,17 @@ namespace OpenViBE
 			void setLastMatrixOnlyMode(bool isActivated) { m_LastMatrixOnly = isActivated; }
 			bool getLastMatrixOnlyMode(void) { return m_LastMatrixOnly; }
 
-			bool setSignalInformation(const std::vector<std::string>& channelNames, unsigned int samplingFrequency, unsigned int sampleCountPerBuffer);
-			bool getSignalInformation(std::vector<std::string>& channelNames, unsigned int& samplingFrequency, unsigned int& sampleCountPerBuffer);
+			bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer);
+			bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer);
 
-			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const unsigned int samplingRate);
-			bool getSpectrumInformation(std::vector<std::string> &channelNames, std::vector<double> &frequencyAbscissa, unsigned int& samplingRate);
+			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const uint32_t samplingRate);
+			bool getSpectrumInformation(std::vector<std::string> &channelNames, std::vector<double> &frequencyAbscissa, uint32_t& samplingRate);
 
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames);
 			bool getFeatureVectorInformation(std::vector<std::string>& channelNames);
 
-			bool setStreamedMatrixInformation(const std::vector<unsigned int>& dimensionSizes, const std::vector<std::string>& labels);
-			bool getStreamedMatrixInformation(std::vector<unsigned int>& dimensionSizes, std::vector<std::string>& labels);
+			bool setStreamedMatrixInformation(const std::vector<uint32_t>& dimensionSizes, const std::vector<std::string>& labels);
+			bool getStreamedMatrixInformation(std::vector<uint32_t>& dimensionSizes, std::vector<std::string>& labels);
 
 			bool writeHeaderToFile(void);
 
@@ -72,7 +72,7 @@ namespace OpenViBE
 
 			bool writeAllDataToFile(void);
 
-			bool readSamplesAndEventsFromFile(unsigned long long linesToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events);
+			bool readSamplesAndEventsFromFile(uint64_t linesToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events);
 
 			bool openFile(const std::string& fileName, EFileAccessMode mode);
 
@@ -82,7 +82,7 @@ namespace OpenViBE
 
 			bool addBuffer(const std::vector<SMatrixChunk>& samples);
 
-			bool addEvent(unsigned long long code, double date, double duration);
+			bool addEvent(uint64_t code, double date, double duration);
 
 			bool addEvent(const SStimulationChunk& event);
 
@@ -163,7 +163,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readSampleChunk(SMatrixChunk& sample, unsigned long long line);
+			bool readSampleChunk(SMatrixChunk& sample, uint64_t line);
 
 			/**
 			 * \brief Read line data conerning stimulations
@@ -174,7 +174,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readStimulationChunk(std::vector<SStimulationChunk>& stimulations, unsigned long long line);
+			bool readStimulationChunk(std::vector<SStimulationChunk>& stimulations, uint64_t line);
 
 			/**
 			 * \brief Update position into the matrix while reading or writing
@@ -184,7 +184,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of browse matrix
 			 */
-			bool increasePositionIndexes(std::vector<unsigned int>& position);
+			bool increasePositionIndexes(std::vector<uint32_t>& position);
 
 			/**
 			 * \brief Read lines of the first epoch to found sample count per buffer
@@ -207,20 +207,20 @@ namespace OpenViBE
 			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, const char delimiter);
 			GetLine* m_GetLineFunction;
 
-			unsigned int m_DimensionCount;
-			std::vector<unsigned int> m_DimensionSizes;
+			uint32_t m_DimensionCount;
+			std::vector<uint32_t> m_DimensionSizes;
 			std::vector<std::string> m_DimensionLabels;
-			unsigned int m_SampleCountPerBuffer;
+			uint32_t m_SampleCountPerBuffer;
 			double m_NoEventSince;
 
 			std::vector<double> m_FrequencyAbscissa;
 
 			// columns between each separator (as : {Time, Epoch, O1, O2, O3, Event Id, Event date, Event Duration})
 			std::vector<std::string> m_LineColumns;
-			unsigned int m_SamplingRate;
-			unsigned int m_ColumnCount;
-			unsigned int m_PreDataColumnCount;
-			unsigned int m_PostDataColumnCount;
+			uint32_t m_SamplingRate;
+			uint32_t m_ColumnCount;
+			uint32_t m_PreDataColumnCount;
+			uint32_t m_PostDataColumnCount;
 
 			bool m_HasInputType;
 			bool m_IsFirstLineWritten;
@@ -228,8 +228,8 @@ namespace OpenViBE
 			bool m_IsSetInfoCalled;
 			bool m_HasEpoch;
 
-			unsigned int m_OriginalSampleNumber;
-			unsigned int m_OutputFloatPrecision;
+			uint32_t m_OriginalSampleNumber;
+			uint32_t m_OutputFloatPrecision;
 
 			bool m_LastMatrixOnly;
 		};

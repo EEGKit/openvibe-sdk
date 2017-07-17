@@ -632,8 +632,8 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_spectrum(void)
 			ip_pFrequencyAbscissa->getBuffer()[0] = 0;
 		}
 
-		((OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmCSVFileReader >*)m_pAlgorithmEncoder)->getInputSamplingRate() = m_vDataMatrix.size() /
-				(std::stod(m_vDataMatrix[m_vDataMatrix.size()-1][m_ui32ColumnCount].c_str()) - std::stod(m_vDataMatrix[0][m_ui32ColumnCount].c_str()));
+		((OpenViBEToolkit::TSpectrumEncoder < CBoxAlgorithmCSVFileReader >*)m_pAlgorithmEncoder)->getInputSamplingRate() = static_cast<uint64_t>(m_vDataMatrix.size() /
+				(std::stod(m_vDataMatrix[m_vDataMatrix.size()-1][m_ui32ColumnCount].c_str()) - std::stod(m_vDataMatrix[0][m_ui32ColumnCount].c_str())));
 		m_bHeaderSent = true;
 		m_pAlgorithmEncoder->encodeHeader();
 
