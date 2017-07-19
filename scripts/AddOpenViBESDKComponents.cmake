@@ -1,5 +1,5 @@
 # ---------------------------------
-# Finds Certivibe binary distribution
+# Finds OpenViBE SDK binary distribution
 # Adds library to target, include path and execute install commands
 # Also add library specific compiler flags
 # This should be used with a defined INCLUDED_OV_SDK_COMPONENTS variable in scope

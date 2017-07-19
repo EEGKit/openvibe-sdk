@@ -1,4 +1,4 @@
-PROJECT(CertiViBETest)
+PROJECT(OpenViBESDKTest)
 
 # ------------------
 # Project variables
