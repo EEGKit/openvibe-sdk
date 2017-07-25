@@ -255,7 +255,7 @@ ENDIF()
 
 # add the scripts to the project so IDEs using the CMake file are aware of them
 FILE(GLOB_RECURSE script_files scripts/*.cmd scripts/*.sh scripts/*.nsi scripts/*.cmake)
-CONFIGURE_FILE(scripts/AddCertivibeComponents.cmake ${DIST_DATADIR} COPYONLY)
+INSTALL(FILES scripts/AddCertivibeComponents.cmake DESTINATION ${DIST_DATADIR})
 ADD_CUSTOM_TARGET(openvibe-scripts SOURCES ${script_files})
 
 # Enable/Disable unit test

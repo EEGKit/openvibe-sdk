@@ -646,9 +646,18 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 		}
 	}
 
-	while(l_vChildren.top().first == NodeType_NamePrefix)
+	/* This will merge all NamePrefix Node on top of the pile into the first which isn't.
+	 * In case of handling an UNC path, pile should look like this, eventually with multiple NodeType_NamePrefix :
+	 * NodeType_NamePrefix, value2
+	 * NodeType_Value, value1
+	 * 
+	 * This will merge all of them into the Node below, like this :
+	 * NodeType_Value, value1 + '$' + value2 + ( '$' + value3 ...)
+	 * Using this method, tokens are not reinterpreted, which reduce risks introduced by introducing parser leniency.
+	 */	 
+	while(l_vChildren.top().first == NodeType_NamePrefix && l_vChildren.size() > 1)
 	{
-		std::string topVal = l_vChildren.top().second;
+		const std::string topVal = l_vChildren.top().second;
 		l_vChildren.pop();
 		l_vChildren.top().second += "$" + topVal;
 	}
