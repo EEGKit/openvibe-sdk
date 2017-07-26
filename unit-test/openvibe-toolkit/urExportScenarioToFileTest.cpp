@@ -30,17 +30,17 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 		auto& context = fixture->context;
 
 		#if defined TARGET_OS_Windows
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-base-file-io*dll");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-base-stimulation*dll");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-base-tools*dll");
+		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
+		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
+		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
 		#elif defined TARGET_OS_Linux
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-file-io*so");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-stimulation*so");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins--basetools*so");
+		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
+		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
+		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
 		#elif defined TARGET_OS_MacOS
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-file-io*dylib");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-stimulation*dylib");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-basetools*dylib");
+		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
+		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
+		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
 		#endif
 
 		CIdentifier emptyScenarioIdentifier;

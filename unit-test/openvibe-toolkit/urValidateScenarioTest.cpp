@@ -307,17 +307,17 @@ int urValidateScenarioTest(int argc, char* argv[])
 	g_context = fixture->context;
 
 	#if defined TARGET_OS_Windows
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-base-file-io*dll");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-base-stimulation*dll");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-base-tools*dll");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
 	#elif defined TARGET_OS_Linux
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-file-io*so");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-stimulation*so");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-tools*so");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
 	#elif defined TARGET_OS_MacOS
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-file-io*dylib");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-stimulation*dylib");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-base-tools*dylib");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
+	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
 	#endif
 
 	::testing::InitGoogleTest(&argc, argv);
