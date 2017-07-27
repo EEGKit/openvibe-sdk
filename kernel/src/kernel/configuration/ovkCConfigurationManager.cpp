@@ -77,7 +77,7 @@ namespace OpenViBE
 				return sValue.substr(i, j-i+1);
 			}
 
-			virtual FS::boolean callback(
+			virtual bool callback(
 				FS::IEntryEnumerator::IEntry& rEntry,
 				FS::IEntryEnumerator::IAttributes& rAttributes)
 			{
@@ -192,13 +192,13 @@ void CConfigurationManager::clear(void)
 	m_vConfigurationToken.clear();
 }
 
-OpenViBE::boolean CConfigurationManager::addConfigurationFromFile(
+bool CConfigurationManager::addConfigurationFromFile(
 	const CString& rFileNameWildCard)
 {
 	this->getLogManager() << LogLevel_Trace << "Adding configuration file(s) [" << rFileNameWildCard << "]\n";
 
 
-	boolean l_bResult;
+	bool l_bResult;
 	CConfigurationManagerEntryEnumeratorCallBack l_rCB(getKernelContext().getLogManager(), getKernelContext().getErrorManager(), *this);
 	FS::IEntryEnumerator* l_pEntryEnumerator=FS::createEntryEnumerator(l_rCB);
 	l_bResult=l_pEntryEnumerator->enumerate(rFileNameWildCard);
@@ -225,7 +225,7 @@ CIdentifier CConfigurationManager::createConfigurationToken(
 	return l_oIdentifier;
 }
 
-OpenViBE::boolean CConfigurationManager::releaseConfigurationToken(
+bool CConfigurationManager::releaseConfigurationToken(
 	const CIdentifier& rConfigurationTokenIdentifier)
 {
 	std::map < CIdentifier, SConfigurationToken >::iterator itConfigurationToken=m_vConfigurationToken.find(rConfigurationTokenIdentifier);
@@ -288,7 +288,7 @@ CString CConfigurationManager::getConfigurationTokenValue(
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-OpenViBE::boolean CConfigurationManager::setConfigurationTokenName(
+bool CConfigurationManager::setConfigurationTokenName(
 	const CIdentifier& rConfigurationTokenIdentifier,
 	const CString& rConfigurationTokenName)
 {
@@ -310,7 +310,7 @@ OpenViBE::boolean CConfigurationManager::setConfigurationTokenName(
 	return true;
 }
 
-OpenViBE::boolean CConfigurationManager::setConfigurationTokenValue(
+bool CConfigurationManager::setConfigurationTokenValue(
 	const CIdentifier& rConfigurationTokenIdentifier,
 	const CString& rConfigurationTokenValue)
 {
@@ -326,7 +326,7 @@ OpenViBE::boolean CConfigurationManager::setConfigurationTokenValue(
 	return true;
 }
 
-OpenViBE::boolean CConfigurationManager::addOrReplaceConfigurationToken(
+bool CConfigurationManager::addOrReplaceConfigurationToken(
 	const CString& rConfigurationTokenName,
 	const CString& rConfigurationTokenValue)
 {
@@ -345,7 +345,7 @@ OpenViBE::boolean CConfigurationManager::addOrReplaceConfigurationToken(
 
 CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(
 	const CString& rConfigurationTokenName,
-	const OpenViBE::boolean bRecursive) const
+	const bool bRecursive) const
 {
 	std::map < CIdentifier, SConfigurationToken >::const_iterator itConfigurationToken=m_vConfigurationToken.begin();
 	while(itConfigurationToken!=m_vConfigurationToken.end())
@@ -384,7 +384,7 @@ CString CConfigurationManager::lookUpConfigurationTokenValue(
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-OpenViBE::boolean CConfigurationManager::registerKeywordParser(const OpenViBE::CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback)
+bool CConfigurationManager::registerKeywordParser(const OpenViBE::CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback)
 {
 	OV_ERROR_UNLESS_KRF(
 		rKeyword != CString("") && rKeyword != CString("core") && rKeyword != CString("environment"),
@@ -397,7 +397,7 @@ OpenViBE::boolean CConfigurationManager::registerKeywordParser(const OpenViBE::C
 	return true;
 }
 
-OpenViBE::boolean CConfigurationManager::unregisterKeywordParser(const OpenViBE::CString& rKeyword)
+bool CConfigurationManager::unregisterKeywordParser(const OpenViBE::CString& rKeyword)
 {
 	OV_ERROR_UNLESS_KRF(
 		m_vKeywordOverride.count(rKeyword),
@@ -410,7 +410,7 @@ OpenViBE::boolean CConfigurationManager::unregisterKeywordParser(const OpenViBE:
 	return true;
 }
 
-OpenViBE::boolean CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordExpandCallback& rCallback)
+bool CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordExpandCallback& rCallback)
 {
 	std::map < OpenViBE::CString, const OpenViBE::Kernel::IConfigurationKeywordExpandCallback*>::iterator l_itOverrideIterator = m_vKeywordOverride.begin();
 
@@ -453,7 +453,7 @@ CString CConfigurationManager::expand(
 
 CIdentifier CConfigurationManager::getUnusedIdentifier(void) const
 {
-	uint64 l_ui64Identifier=(((uint64)rand())<<32)+((uint64)rand());
+	uint64_t l_ui64Identifier=(((uint64_t)rand())<<32)+((uint64_t)rand());
 	CIdentifier l_oResult;
 	std::map < CIdentifier, SConfigurationToken >::const_iterator i;
 	do
@@ -478,7 +478,7 @@ namespace
 	};
 };
 
-OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValue, std::string& sResult) const
+bool CConfigurationManager::internalExpand(const std::string& sValue, std::string& sResult) const
 {
 	std::stack < std::pair < ENodeType, std::string > > l_vChildren;
 	l_vChildren.push(std::make_pair(NodeType_Value, std::string()));
@@ -492,7 +492,7 @@ OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValu
 
 	for(std::string::size_type i=0; i<sValue.length(); i++)
 	{
-		boolean l_bShouldExpand;
+		bool l_bShouldExpand;
 
 		switch(sValue[i])
 		{
@@ -515,18 +515,17 @@ OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValu
 					"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
 					ErrorType::BadFileParsing
 				);
-				l_sPostfix=l_vChildren.top().second;
+				l_sPostfix = l_vChildren.top().second;
+				l_sLowerPostfix.resize(l_sPostfix.size());
+				std::transform(l_sPostfix.begin(), l_sPostfix.end(), l_sLowerPostfix.begin(), ::to_lower<std::string::value_type>);
 				l_vChildren.pop();
 
-				l_sPrefix=l_vChildren.top().second;
+				l_sPrefix = l_vChildren.top().second;
+				l_sLowerPrefix.resize(l_sPrefix.size());
+				std::transform(l_sPrefix.begin(), l_sPrefix.end(), l_sLowerPrefix.begin(), ::to_lower<std::string::value_type>);
 				l_vChildren.pop();
 
 				l_bShouldExpand=true;
-
-				l_sLowerPrefix=l_sPrefix;
-				l_sLowerPostfix=l_sPostfix;
-				std::transform(l_sLowerPrefix.begin(), l_sLowerPrefix.end(), l_sLowerPrefix.begin(), ::to_lower<std::string::value_type>);
-				std::transform(l_sLowerPostfix.begin(), l_sLowerPostfix.end(), l_sLowerPostfix.begin(), ::to_lower<std::string::value_type>);
 
 				if(l_sLowerPrefix=="")
 				{
@@ -647,6 +646,22 @@ OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValu
 		}
 	}
 
+	/* This will merge all NamePrefix Node on top of the pile into the first which isn't.
+	 * In case of handling an UNC path, pile should look like this, eventually with multiple NodeType_NamePrefix :
+	 * NodeType_NamePrefix, value2
+	 * NodeType_Value, value1
+	 * 
+	 * This will merge all of them into the Node below, like this :
+	 * NodeType_Value, value1 + '$' + value2 + ( '$' + value3 ...)
+	 * Using this method, tokens are not reinterpreted, which reduce risks introduced by introducing parser leniency.
+	 */	 
+	while(l_vChildren.top().first == NodeType_NamePrefix && l_vChildren.size() > 1)
+	{
+		const std::string topVal = l_vChildren.top().second;
+		l_vChildren.pop();
+		l_vChildren.top().second += "$" + topVal;
+	}
+
 	OV_ERROR_UNLESS_KRF(
 		l_vChildren.size() == 1,
 		"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
@@ -658,7 +673,7 @@ OpenViBE::boolean CConfigurationManager::internalExpand(const std::string& sValu
 	return true;
 }
 
-OpenViBE::boolean CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult) const
+bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult) const
 {
 	std::stack < std::pair < ENodeType, std::string > > l_vChildren;
 	l_vChildren.push(std::make_pair(NodeType_Value, std::string()));
@@ -672,7 +687,7 @@ OpenViBE::boolean CConfigurationManager::internalExpandOnlyKeyword(const std::st
 
 	for(std::string::size_type i=0; i<sValue.length(); i++)
 	{
-		boolean l_bShouldExpand;
+		bool l_bShouldExpand;
 
 		switch(sValue[i])
 		{
@@ -709,52 +724,6 @@ OpenViBE::boolean CConfigurationManager::internalExpandOnlyKeyword(const std::st
 				std::transform(l_sLowerPrefix.begin(), l_sLowerPrefix.end(), l_sLowerPrefix.begin(), ::to_lower<std::string::value_type>);
 				std::transform(l_sLowerPostfix.begin(), l_sLowerPostfix.end(), l_sLowerPostfix.begin(), ::to_lower<std::string::value_type>);
 
-
-			/*
-				else if(l_sLowerPrefix=="environment" || l_sLowerPrefix=="env")
-				{
-					char* l_sEnvValue=::getenv(l_sPostfix.c_str());
-					l_sValue=(l_sEnvValue?l_sEnvValue:"");
-					l_bShouldExpand=false;
-				}
-				else if(l_sLowerPrefix=="core")
-				{
-					char l_sLocalValue[1024];
-					if(l_sLowerPostfix=="random")
-					{
-						sprintf(l_sLocalValue, "%u", this->getRandom());
-						l_sValue=l_sLocalValue;
-					}
-					else if(l_sLowerPostfix=="index")
-					{
-						sprintf(l_sLocalValue, "%u", this->getIndex());
-						l_sValue=l_sLocalValue;
-					}
-					else if(l_sLowerPostfix=="time")
-					{
-						l_sValue=this->getTime();
-					}
-					else if(l_sLowerPostfix=="date")
-					{
-						l_sValue=this->getDate();
-					}
-					else if(l_sLowerPostfix=="real-time")
-					{
-						sprintf(l_sLocalValue, "%u", this->getRealTime());
-						l_sValue=l_sLocalValue;
-					}
-					else if(l_sLowerPostfix=="process-id")
-					{
-						sprintf(l_sLocalValue, "%u", this->getProcessId());
-						l_sValue=l_sLocalValue;
-					}
-					else
-					{
-						this->getLogManager() << LogLevel_Warning << "Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix and " << CString(l_sPostfix.c_str()) << " postfix while expanding " << CString(sValue.c_str()) << "\n";
-						return false;
-					}
-				}
-				else*/
 				if (l_sLowerPrefix == sKeyword)
 				{
 					OV_ERROR_UNLESS_KRF(
@@ -821,7 +790,7 @@ OpenViBE::boolean CConfigurationManager::internalExpandOnlyKeyword(const std::st
 	return true;
 }
 
-OpenViBE::boolean CConfigurationManager::internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const
+bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const
 {
 	CIdentifier l_oTokenIdentifier=this->lookUpConfigurationTokenIdentifier(sTokenName.c_str(), false);
 	if(l_oTokenIdentifier == OV_UndefinedIdentifier)
@@ -874,12 +843,12 @@ float64 CConfigurationManager::expandAsFloat(
 	return l_f64Result;
 }
 
-int64 CConfigurationManager::expandAsInteger(
+int64_t CConfigurationManager::expandAsInteger(
 	const CString& rExpression,
-	const int64 i64FallbackValue) const
+	const int64_t i64FallbackValue) const
 {
 	CString l_sResult=this->expand(rExpression);
-	int64 l_i64Result;
+	int64_t l_i64Result;
 
 	try
 	{
@@ -893,12 +862,12 @@ int64 CConfigurationManager::expandAsInteger(
 	return l_i64Result;
 }
 
-uint64 CConfigurationManager::expandAsUInteger(
+uint64_t CConfigurationManager::expandAsUInteger(
 	const CString& rExpression,
-	const uint64 ui64FallbackValue) const
+	const uint64_t ui64FallbackValue) const
 {
 	CString l_sResult=this->expand(rExpression);
-	uint64 l_ui64Result;
+	uint64_t l_ui64Result;
 
 	try
 	{
@@ -912,9 +881,9 @@ uint64 CConfigurationManager::expandAsUInteger(
 	return l_ui64Result;
 }
 
-OpenViBE::boolean CConfigurationManager::expandAsBoolean(
+bool CConfigurationManager::expandAsBoolean(
 	const CString& rExpression,
-	const OpenViBE::boolean bFallbackValue) const
+	const bool bFallbackValue) const
 {
 	std::string l_sResult=this->expand(rExpression).toASCIIString();
 	std::transform(l_sResult.begin(), l_sResult.end(), l_sResult.begin(), ::to_lower<std::string::value_type>);
@@ -930,13 +899,13 @@ OpenViBE::boolean CConfigurationManager::expandAsBoolean(
 	return bFallbackValue;
 }
 
-uint64 CConfigurationManager::expandAsEnumerationEntryValue(
+uint64_t CConfigurationManager::expandAsEnumerationEntryValue(
 	const CString& rExpression,
 	const CIdentifier& rEnumerationTypeIdentifier,
-	const uint64 ui64FallbackValue) const
+	const uint64_t ui64FallbackValue) const
 {
 	CString l_sResult=this->expand(rExpression);
-	uint64 l_ui64Result=this->getTypeManager().getEnumerationEntryValueFromName(rEnumerationTypeIdentifier, l_sResult);
+	uint64_t l_ui64Result=this->getTypeManager().getEnumerationEntryValueFromName(rEnumerationTypeIdentifier, l_sResult);
 	if(l_ui64Result!=0xffffffffffffffffll)
 	{
 		return l_ui64Result;
@@ -945,12 +914,12 @@ uint64 CConfigurationManager::expandAsEnumerationEntryValue(
 	return ui64FallbackValue;
 }
 
-uint32 CConfigurationManager::getRandom(void) const
+uint32_t CConfigurationManager::getRandom(void) const
 {
 	return System::Math::randomUInteger32();
 }
 
-uint32 CConfigurationManager::getIndex(void) const
+uint32_t CConfigurationManager::getIndex(void) const
 {
 	return m_ui32Index++;
 }
@@ -981,17 +950,17 @@ CString CConfigurationManager::getDate(void) const
 	return l_sResult;
 }
 
-uint32 CConfigurationManager::getRealTime(void) const
+uint32_t CConfigurationManager::getRealTime(void) const
 {
 	return System::Time::getTime()-m_ui32StartTime;
 }
 
-uint32 CConfigurationManager::getProcessId(void) const
+uint32_t CConfigurationManager::getProcessId(void) const
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-	return (uint32)getpid();
+	return (uint32_t)getpid();
 #elif defined TARGET_OS_Windows
-	return (uint32)GetCurrentProcessId();
+	return (uint32_t)GetCurrentProcessId();
 #else
 	#error TODO
 #endif

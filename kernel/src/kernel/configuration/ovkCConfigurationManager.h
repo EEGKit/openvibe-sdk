@@ -26,13 +26,13 @@ namespace OpenViBE
 
 			virtual void clear(void);
 
-			virtual OpenViBE::boolean addConfigurationFromFile(
+			virtual bool addConfigurationFromFile(
 				const OpenViBE::CString& rFileNameWildCard);
 
 			virtual OpenViBE::CIdentifier createConfigurationToken(
 				const OpenViBE::CString& rConfigurationTokenName,
 				const OpenViBE::CString& rConfigurationTokenValue);
-			virtual OpenViBE::boolean releaseConfigurationToken(
+			virtual bool releaseConfigurationToken(
 				const OpenViBE::CIdentifier& rConfigurationTokenIdentifier);
 			virtual OpenViBE::CIdentifier getNextConfigurationTokenIdentifier(
 				const OpenViBE::CIdentifier& rPreviousConfigurationTokenIdentifier) const;
@@ -42,30 +42,30 @@ namespace OpenViBE
 			virtual OpenViBE::CString getConfigurationTokenValue(
 				const OpenViBE::CIdentifier& rConfigurationTokenIdentifier) const;
 
-			virtual OpenViBE::boolean setConfigurationTokenName(
+			virtual bool setConfigurationTokenName(
 				const OpenViBE::CIdentifier& rConfigurationTokenIdentifier,
 				const OpenViBE::CString& rConfigurationTokenName);
-			virtual OpenViBE::boolean setConfigurationTokenValue(
+			virtual bool setConfigurationTokenValue(
 				const OpenViBE::CIdentifier& rConfigurationTokenIdentifier,
 				const OpenViBE::CString& rConfigurationTokenValue);
-			virtual OpenViBE::boolean addOrReplaceConfigurationToken(
+			virtual bool addOrReplaceConfigurationToken(
 				const OpenViBE::CString& rConfigurationTokenName,
 				const OpenViBE::CString& rConfigurationTokenValue);
 
 			virtual OpenViBE::CIdentifier lookUpConfigurationTokenIdentifier(
 				const OpenViBE::CString& rConfigurationTokenName,
-				const OpenViBE::boolean bRecursive) const;
+				const bool bRecursive) const;
 			virtual OpenViBE::CString lookUpConfigurationTokenValue(
 				const OpenViBE::CString& rConfigurationTokenName) const;
 
-			virtual OpenViBE::boolean registerKeywordParser(
+			virtual bool registerKeywordParser(
 			        const OpenViBE::CString& rKeyword,
 			        const IConfigurationKeywordExpandCallback& rCallback);
 
-			virtual OpenViBE::boolean unregisterKeywordParser(
+			virtual bool unregisterKeywordParser(
 			        const OpenViBE::CString& rKeyword);
 
-			virtual OpenViBE::boolean unregisterKeywordParser(
+			virtual bool unregisterKeywordParser(
 			        const IConfigurationKeywordExpandCallback& rCallback);
 
 			virtual OpenViBE::CString expand(
@@ -79,27 +79,27 @@ namespace OpenViBE
 			virtual OpenViBE::float64 expandAsFloat(
 				const OpenViBE::CString& rExpression,
 				const OpenViBE::float64 f64FallbackValue) const;
-			virtual OpenViBE::int64 expandAsInteger(
+			virtual int64_t expandAsInteger(
 				const OpenViBE::CString& rExpression,
-				const OpenViBE::int64 i64FallbackValue) const;
-			virtual OpenViBE::uint64 expandAsUInteger(
+				const int64_t i64FallbackValue) const;
+			virtual uint64_t expandAsUInteger(
 				const OpenViBE::CString& rExpression,
-				const OpenViBE::uint64 ui64FallbackValue) const;
-			virtual OpenViBE::boolean expandAsBoolean(
+				const uint64_t ui64FallbackValue) const;
+			virtual bool expandAsBoolean(
 				const OpenViBE::CString& rExpression,
-				const OpenViBE::boolean bFallbackValue) const;
-			virtual OpenViBE::uint64 expandAsEnumerationEntryValue(
+				const bool bFallbackValue) const;
+			virtual uint64_t expandAsEnumerationEntryValue(
 				const OpenViBE::CString& rExpression,
 				const OpenViBE::CIdentifier& rEnumerationTypeIdentifier,
-				const OpenViBE::uint64 ui64FallbackValue) const;
+				const uint64_t ui64FallbackValue) const;
 
 		protected:
 
 			virtual OpenViBE::CIdentifier getUnusedIdentifier(void) const;
 
-			OpenViBE::boolean internalExpand(const std::string& sValue, std::string& sResult) const;
-			OpenViBE::boolean internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult) const;
-			OpenViBE::boolean internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const;
+			bool internalExpand(const std::string& sValue, std::string& sResult) const;
+			bool internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult) const;
+			bool internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const;
 
 		protected:
 
@@ -107,15 +107,15 @@ namespace OpenViBE
 
 		protected:
 
-			mutable OpenViBE::uint32 m_ui32Index;
-			mutable OpenViBE::uint32 m_ui32StartTime;
+			mutable uint32_t m_ui32Index;
+			mutable uint32_t m_ui32StartTime;
 
-			OpenViBE::uint32 getRandom(void) const;
-			OpenViBE::uint32 getIndex(void) const;
+			uint32_t getRandom(void) const;
+			uint32_t getIndex(void) const;
 			OpenViBE::CString getTime(void) const;
 			OpenViBE::CString getDate(void) const;
-			OpenViBE::uint32 getRealTime(void) const;
-			OpenViBE::uint32 getProcessId(void) const;
+			uint32_t getRealTime(void) const;
+			uint32_t getProcessId(void) const;
 
 		protected:
 

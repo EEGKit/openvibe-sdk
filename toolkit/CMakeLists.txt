@@ -66,7 +66,6 @@ INCLUDE("FindOpenViBEModuleSystem")
 # ---------------------------------
 SET_BUILD_PLATFORM()
 
-
 # -----------------------------
 # Install files
 # -----------------------------
@@ -76,4 +75,5 @@ INSTALL(TARGETS ${PROJECT_NAME}
 	ARCHIVE DESTINATION ${DIST_LIBDIR})
 
 INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ ${CMAKE_CURRENT_BINARY_DIR}/include/   DESTINATION  ${DIST_INCLUDEDIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE)
+INSTALL(DIRECTORY share/ DESTINATION ${DIST_DATADIR}/openvibe/toolkit PATTERN ".svn" EXCLUDE PATTERN "*-base" EXCLUDE)
 
