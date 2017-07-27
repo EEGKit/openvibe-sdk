@@ -8,6 +8,18 @@
 #include <cctype>
 #include <cstdio>
 
+#define OV_TRACE_K(message) \
+this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << message << "\n";
+
+#define OV_DEBUG_K(message) \
+this->getLogManager() << OpenViBE::Kernel::LogLevel_Debug << message << "\n";
+
+#define OV_DEBUG_UNLESS_K(expression, message) \
+if (!(expression)) \
+{ \
+	 OV_DEBUG_K(message); \
+}
+
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 
@@ -27,6 +39,7 @@ CTypeManager::CTypeManager(const IKernelContext& rKernelContext)
 	:TKernelObject<ITypeManager>(rKernelContext)
 {
 	m_vName[OV_UndefinedIdentifier]="undefined";
+	this->registerEnumerationType(OV_TypeId_BoxAlgorithmFlag, "BoxFlags");
 }
 
 
@@ -45,12 +58,12 @@ bool CTypeManager::registerType(
 		"Trying to register type " << rTypeIdentifier.toString() << " that already exists.",
 		OpenViBE::Kernel::ErrorType::BadArgument);
 
-	OV_WARNING_UNLESS_K(
+	OV_DEBUG_UNLESS_K(
 		m_TakenNames.find(sTypeName) == m_TakenNames.end(),
 		"Trying to register type " << rTypeIdentifier << " with a name that already exists ( " << sTypeName << ")");
 
 	m_vName[rTypeIdentifier]=sTypeName;
-	this->getLogManager() << LogLevel_Trace << "Registered type id " << rTypeIdentifier << " - " << sTypeName << "\n";
+	OV_TRACE_K("Registered type id " << rTypeIdentifier << " - " << sTypeName);
 	return true;
 }
 
@@ -64,7 +77,7 @@ bool CTypeManager::registerStreamType(
 		"Trying to register stream type " << rTypeIdentifier.toString() << " that already exists.",
 		OpenViBE::Kernel::ErrorType::BadArgument);
 
-	OV_WARNING_UNLESS_K(
+	OV_DEBUG_UNLESS_K(
 		m_TakenNames.find(sTypeName) == m_TakenNames.end(),
 		"Trying to register stream type " << rTypeIdentifier << " with a name that already exists ( " << sTypeName << ")");
 
@@ -76,7 +89,7 @@ bool CTypeManager::registerStreamType(
 	m_vName[rTypeIdentifier]=sTypeName;
 	m_TakenNames.insert(sTypeName);
 	m_vStream[rTypeIdentifier]=rParentTypeIdentifier;
-	this->getLogManager() << LogLevel_Trace << "Registered stream type id " << rTypeIdentifier << "::" << rParentTypeIdentifier << " - " << sTypeName << "\n";
+	OV_TRACE_K("Registered stream type id " << rTypeIdentifier << "::" << rParentTypeIdentifier << " - " << sTypeName);
 	return true;
 }
 
@@ -84,19 +97,28 @@ bool CTypeManager::registerEnumerationType(
 	const CIdentifier& rTypeIdentifier,
 	const CString& sTypeName)
 {
-	OV_ERROR_UNLESS_KRF(
-		!isRegistered(rTypeIdentifier),
-		"Trying to register enum type " << rTypeIdentifier.toString() << " that already exists.",
-		OpenViBE::Kernel::ErrorType::BadArgument);
+	if (isRegistered(rTypeIdentifier))
+	{
+		if (m_vName[rTypeIdentifier] != sTypeName)
+		{
+			OV_ERROR_KRF(
+				"Trying to register enum type " << rTypeIdentifier.toString() << " that already exists with different value (" << m_vName[rTypeIdentifier] << " != " << sTypeName << ")",
+				OpenViBE::Kernel::ErrorType::BadArgument);
+		}
+		else
+		{
+			OV_DEBUG_K("Trying to register enum type " << rTypeIdentifier.toString() << " that already exists.");
+		}
+	}
 
-	OV_WARNING_UNLESS_K(
+	OV_DEBUG_UNLESS_K(
 		m_TakenNames.find(sTypeName) == m_TakenNames.end(),
 		"Trying to register enum type " << rTypeIdentifier << " with a name that already exists ( " << sTypeName << ")");
 
 	m_vName[rTypeIdentifier]=sTypeName;
 	m_TakenNames.insert(sTypeName);
 	m_vEnumeration[rTypeIdentifier];
-	this->getLogManager() << LogLevel_Trace << "Registered enumeration type id " << rTypeIdentifier << " - " << sTypeName << "\n";
+	OV_TRACE_K("Registered enumeration type id " << rTypeIdentifier << " - " << sTypeName);
 	return true;
 }
 
@@ -112,9 +134,18 @@ bool CTypeManager::registerEnumerationEntry(
 		"Enumeration type [" << rTypeIdentifier.toString() << "] does not exist." << sEntryName,
 		OpenViBE::Kernel::ErrorType::BadArgument);
 
-	OV_WARNING_UNLESS_K(
-		itEnumeration->second.find(ui64EntryValue) == itEnumeration->second.end(),
-		"Enumeration type [" << rTypeIdentifier.toString() << "] already has element [" << ui64EntryValue << "]. Value will be overriden : " << itEnumeration->second[ui64EntryValue] << " => " << sEntryName);
+	auto itElem = itEnumeration->second.find(ui64EntryValue);
+	if (itElem != itEnumeration->second.end())
+	{
+		if(std::string(itElem->second) != std::string(sEntryName))
+		{
+			OV_WARNING_K("Enumeration type [" << rTypeIdentifier.toString() << "] already has element [" << ui64EntryValue << "]. Value will be overriden : " << itElem->second << " => " << sEntryName);
+		}
+		else
+		{
+			OV_DEBUG_K("Enumeration type [" << rTypeIdentifier.toString() << "] already has element [" << ui64EntryValue << "].");
+		}
+	}
 
 	itEnumeration->second[ui64EntryValue]=sEntryName;
 	return true;
@@ -129,13 +160,13 @@ bool CTypeManager::registerBitMaskType(
 		"Trying to register bitmask type " << rTypeIdentifier.toString() << " that already exists.",
 		OpenViBE::Kernel::ErrorType::BadArgument);
 
-	OV_WARNING_UNLESS_K(
+	OV_DEBUG_UNLESS_K(
 		m_TakenNames.find(sTypeName) == m_TakenNames.end(),
 		"Trying to register bitmask type " << rTypeIdentifier << " with a name that already exists ( " << sTypeName << ")");
 
 	m_vName[rTypeIdentifier]=sTypeName;
 	m_vBitMask[rTypeIdentifier];
-	this->getLogManager() << LogLevel_Trace << "Registered bitmask type id " << rTypeIdentifier << " - " << sTypeName << "\n";
+	OV_TRACE_K("Registered bitmask type id " << rTypeIdentifier << " - " << sTypeName);
 	return true;
 }
 
@@ -150,10 +181,18 @@ bool CTypeManager::registerBitMaskEntry(
 		"Bitmask type [" << rTypeIdentifier.toString() << "] does not exist.",
 		OpenViBE::Kernel::ErrorType::BadArgument);
 
-	OV_ERROR_UNLESS_KRF(
-		itBitMask->second.find(ui64EntryValue) == itBitMask->second.end(),
-		"Bitmask type [" << rTypeIdentifier.toString() << "] already has element [" << ui64EntryValue << "].",
-		OpenViBE::Kernel::ErrorType::BadArgument);
+	auto itElem = itBitMask->second.find(ui64EntryValue);
+	if (itElem != itBitMask->second.end())
+	{
+		if(std::string(itElem->second) != std::string(sEntryName))
+		{
+			OV_WARNING_K("Bitmask type [" << rTypeIdentifier.toString() << "] already has element [" << ui64EntryValue << "]. Value will be overriden : " << itElem->second << " => " << sEntryName);
+		}
+		else
+		{
+			OV_DEBUG_K("Bitmask type [" << rTypeIdentifier.toString() << "] already has element [" << ui64EntryValue << "].");
+		}
+	}
 
 	for(uint32_t l_ui32BitCount=0, i=0; i<64; i++)
 	{

@@ -26,7 +26,11 @@
 .PARAMETER cache_dir
 	Cache directory for extracted archives. Each archive found in the manifest file
 	is extracted from cache_dir to 'dest_dir\folder_to_unzip'.
-
+.PARAMETER lazy
+	Switch. If archive is already present in cache, do not download or install. Default is off.
+.PARAMETER sleep
+	The number of seconds to sleep between downloads. This may help with hosts that do not accept
+	very rapid subsequent small downloads (e.g. Inria). Default is 0.
 .NOTES
 	File Name      : windows-get-dependencies.ps1
 	Prerequisite   : Tested with PS v4.0 on windows 8.1 pro.
@@ -44,7 +48,9 @@ Param(
 [parameter(Mandatory=$true)][ValidateScript({Test-Path $_ })][string]$manifest_file,
 [parameter(Mandatory=$false)][ValidateScript({Test-Path $_ })][string]$cache_dir,
 [parameter(Mandatory=$false)][ValidateNotNullOrEmpty()][string]$dest_dir = ".\..\dependencies",
-[parameter(Mandatory=$false)][string]$proxy_pass
+[parameter(Mandatory=$false)][string]$proxy_pass,
+[parameter(Mandatory=$false)][switch]$lazy = $false,
+[parameter(Mandatory=$false)][Int]$sleep = 0
 )
 
 $manifest_file = [System.IO.Path]::GetFullPath($manifest_file)
@@ -133,6 +139,10 @@ function InstallDeps($arch, $dir, $dropbox_url)
 	$zip = $Script:arch_dir + "\" + $arch
 
 	if(-Not (Test-Path $zip)) {
+		if(($sleep -gt 0) -and ($Script:download_count -gt 0)) {
+			Write-Host "- Sleeping $sleep secs before next download."
+			Start-Sleep -s $sleep
+		}
 		$WebClient = New-Object System.Net.WebClient
 		if($proxy_pass){
 			Write-Host "- Credentials are specified. Try to download from server with username [$Username]."
@@ -155,7 +165,12 @@ function InstallDeps($arch, $dir, $dropbox_url)
 		if(-Not (Test-Path $zip)) {
 			exit
 		}
-	}
+		
+		$Script:download_count++
+	} elseif($lazy) {
+		Write-Host "- Archive [" $zip "] exists, assuming installed, skipping."
+		return
+	}	
 
 	ExpandZipFile $zip ($Script:dest_dir + "\" + $dir)
 }
@@ -216,3 +231,4 @@ Write-Host "Number of archives downloaded = $download_count"
 Write-Host "Number of archives extracted = $extract_count"
 Write-Host "Installation time = "  $([string]::Format("{0:d2}h:{1:d2}mn:{2:d2}s", $timer.Elapsed.hours, $timer.Elapsed.minutes, $timer.Elapsed.seconds)) -nonewline
 Write-Host ""
+
