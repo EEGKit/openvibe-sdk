@@ -15,6 +15,7 @@ set DependenciesPath=
 set init_env_cmd=windows-initialize-environment.cmd
 set generator=-G"Ninja"
 set builder=Ninja
+set script_dir=%~dp0
 
 goto parameter_parse
 
@@ -159,9 +160,14 @@ call %init_env_cmd%
 
 if defined vsgenerate (
 	set generator=-G"%VSCMake%" -T "v120"
+	if not defined build_dir (
+		set build_dir=%script_dir%\..\..\certivibe-build\vs-project-%BuildType%
+	)
+	if not defined install_dir (
+		set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
+	)
 )
 
-set script_dir=%CD%
 if not defined build_dir (
 	set build_dir=%script_dir%\..\..\certivibe-build\build-%BuildType%
 )
