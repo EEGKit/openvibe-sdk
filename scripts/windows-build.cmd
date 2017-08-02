@@ -216,7 +216,7 @@ if !builder! == None (
 	cmake --build . --target install
 	if not "!ERRORLEVEL!" == "0" goto terminate_error
 )
-if PackageOption == TRUE (
+if %PackageOption% == TRUE (
 	cmake --build . --target package
 	if not "!ERRORLEVEL!" == "0" goto terminate_error
 )
