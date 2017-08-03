@@ -5,14 +5,24 @@
 #export OV_PATH_BIN="$OV_PATH_ROOT/bin"
 #export OV_PATH_LIB="$OV_PATH_ROOT/lib"
 #export OV_PATH_DATA="$OV_PATH_ROOT/share/openvibe"
+
+if [ "$OV_PATH_ROOT" == "" ]; then
+	SOURCE="${BASH_SOURCE[0]}"
+	while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+	  OV_PATH_ROOT="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+	  SOURCE="$(readlink "$SOURCE")"
+	  [[ $SOURCE != /* ]] && SOURCE="$OV_PATH_ROOT/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+	done
+	OV_PATH_ROOT="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+fi
 if [ "$OV_PATH_BIN" == "" ]; then
-	OV_PATH_BIN="@CMAKE_INSTALL_FULL_BINDIR@"
+	OV_PATH_BIN="$OV_PATH_ROOT/bin"
 fi
 if [ "$OV_PATH_LIB" == "" ]; then
-	OV_PATH_LIB="@CMAKE_INSTALL_FULL_LIBDIR@"
+	OV_PATH_LIB="$OV_PATH_ROOT/lib"
 fi
 if [ "$OV_PATH_DATA" == "" ]; then
-	OV_PATH_DATA="@CMAKE_INSTALL_FULL_DATADIR@/openvibe"
+	OV_PATH_DATA="$OV_PATH_ROOT/share/openvibe"
 fi
 
 export LD_LIBRARY_PATH="$OV_PATH_LIB:@CMAKE_SOURCE_DIR@/dependencies/lib:$LD_LIBRARY_PATH"

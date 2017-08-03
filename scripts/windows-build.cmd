@@ -139,6 +139,7 @@ if /i "%1" == "-h" (
 ) else if /i "%1"=="--vsproject" (
 	set vsgenerate=TRUE
 	set builder=None
+	set "BuildType="
 	SHIFT
 	Goto parameter_parse
 ) else if /i "%1"=="--vsbuild" (
@@ -161,11 +162,20 @@ call %init_env_cmd%
 if defined vsgenerate (
 	set generator=-G"%VSCMake%" -T "v120"
 	if not defined build_dir (
-		set build_dir=%script_dir%\..\..\certivibe-build\vs-project-%BuildType%
+		if !builder! == None (
+			set build_dir=%script_dir%\..\..\certivibe-build\vs-project
+		) else (
+			set build_dir=%script_dir%\..\..\certivibe-build\vs-project-%BuildType%
+		)
 	)
 	if not defined install_dir (
-		set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
+		if !builder! == None (
+			set install_dir=%script_dir%\..\..\certivibe-build\dist
+		) else (
+			set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
+		)
 	)
+	
 )
 
 if not defined build_dir (

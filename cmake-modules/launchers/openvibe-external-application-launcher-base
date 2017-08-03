@@ -12,19 +12,27 @@ if [ "$1" == "--run-bg" ]; then
 	shift
 fi
 
-# OV_PATH_BIN overrides the CMake specified folder, if given
-LOCAL_BIN_PATH="@CMAKE_INSTALL_FULL_BINDIR@"
-if [ "$OV_PATH_BIN" != "" ]; then
-	LOCAL_BIN_PATH="$OV_PATH_BIN"
+if [ "$OV_PATH_ROOT" == "" ]; then
+	SOURCE="${BASH_SOURCE[0]}"
+	while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+	  OV_PATH_ROOT="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+	  SOURCE="$(readlink "$SOURCE")"
+	  [[ $SOURCE != /* ]] && SOURCE="$OV_PATH_ROOT/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+	done
+	OV_PATH_ROOT="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 fi
+if [ "$OV_PATH_BIN" == "" ]; then
+	OV_PATH_BIN="$OV_PATH_ROOT/bin"
+fi
+
 
 ret_code=0
 
 if [ $ov_run_bg == 0 ]; then
-	eval "$LOCAL_BIN_PATH/$CALLCMD" @OV_CMD_ARGS@ $*
+	eval "$OV_PATH_BIN/$CALLCMD" @OV_CMD_ARGS@ $*
 	ret_code=$?
 else
-	"$LOCAL_BIN_PATH/$CALLCMD" @OV_CMD_ARGS@ $* &
+	"$OV_PATH_BIN/$CALLCMD" @OV_CMD_ARGS@ $* &
 fi
 
 exit $ret_code

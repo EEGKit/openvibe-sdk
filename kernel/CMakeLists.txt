@@ -72,8 +72,6 @@ INSTALL(TARGETS ${PROJECT_NAME}
 
 INSTALL(DIRECTORY share/ DESTINATION ${DIST_DATADIR}/openvibe/kernel   PATTERN ".svn" EXCLUDE PATTERN "*-base" EXCLUDE)
 
-#INSTALL(DIRECTORY src/   DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR} FILES_MATCHING PATTERN "*.h" PATTERN ".svn" EXCLUDE PATTERN "doc" EXCLUDE)
-
 # -----------------------------
 # Install and configure .conf
 # -----------------------------
