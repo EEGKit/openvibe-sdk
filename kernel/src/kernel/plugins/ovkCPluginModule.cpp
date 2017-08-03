@@ -282,7 +282,11 @@ bool CPluginModuleLinux::load(
 	}
 
 	// m_pFileHandle=dlopen(sFileName, RTLD_NOW|RTLD_LOCAL);
+#if defined OV_LOCAL_SYMBOLS
 	m_pFileHandle=dlopen(sFileName, RTLD_LAZY|RTLD_LOCAL);
+#else
+	m_pFileHandle=dlopen(sFileName, RTLD_LAZY|RTLD_GLOBAL);
+#endif
 	if(!m_pFileHandle)
 	{
 		if(pError) *pError=dlerror();
