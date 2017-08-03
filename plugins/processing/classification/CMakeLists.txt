@@ -1,4 +1,4 @@
-PROJECT(certivibe-plugins-classification)
+PROJECT(openvibe-plugins-sdk-classification)
 
 SET(PROJECT_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
 SET(PROJECT_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})

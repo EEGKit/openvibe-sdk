@@ -1,8 +1,8 @@
 Introduction
 ============
 
-Certivibe is a core software platform for the design, test and use of
-Brain-Computer Interfaces. It is a fork of OpenVIBE that aims to be used in
+OpenViBE SDK is a core software platform for the design, test and use of
+Brain-Computer Interfaces. It aims to have a certifiable kernel to be used in
 medical devices.
 
 Repository organisation
@@ -64,7 +64,7 @@ Naming rules
 ============
 
 WARNING: These are the initial naming rules of the project. For an
-updated version, pleaser refer to Certivibe Coding Rules.
+updated version, pleaser refer to OpenViBE Coding Rules.
 
 #### CMake
 
@@ -86,7 +86,7 @@ updated version, pleaser refer to Certivibe Coding Rules.
  - Test file name: uo/ur + test identifier + Test (e.g. *uoKernelContextTest.cpp*)
 	 - u = unit
 	 - o = open (used for public test transferred from open-source OpenViBE)
-	 - r = restricted (used for test implemented within CertiViBE project)
+	 - r = restricted (used for test implemented within OpenViBE SDK project)
  - Test name: identical to file name
 
 #### Validation Tests
@@ -128,4 +128,5 @@ Just add data in the test directory and modify test CMakeLists.txt accordingly.
 #### Add New Test
 
 There should be no reason to add ctest validation tests. New validation tests use Robot Framework.
+@FIXME CERT Rename repository ?
 Check "Adding Robot Framework Test" section in certivibe-test repository for more details.

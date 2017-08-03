@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 =pod
-This script will install dependencies for CertiViBE.
+This script will install dependencies for OpenViBE SDK.
 
 The installer uses the native package manager.
 
@@ -17,7 +17,7 @@ use File::Copy;
 
 sub usage {
   print "$0 [-h][-y]\n";
-  print "Install CertiViBE build dependencies\n";
+  print "Install OpenViBE SDK build dependencies\n";
   print "    Options:\n";
   print "      -h: this help\n";
   print "      -y: assume 'yes' to all prompts. Make it possible to run non-interactively.\n";
@@ -107,7 +107,7 @@ if ($distribution eq 'Ubuntu 14.04') {
   push @packages, "libxerces-c-dev";
   push @packages, "libgtest-dev";
 } elsif ($distribution eq 'Ubuntu 16.04') {
-  # common packages with certivibe
+  # common packages with OpenViBE SDK
   push @packages, "doxygen";
   push @packages, "make";
   push @packages, "cmake";
@@ -251,4 +251,4 @@ if ($compile_gtest) {
   }
   chdir $FindBin::Bin;
 }
-print("CertiViBE dependencies were successfully installed\n");
+print("OpenViBE SDK dependencies were successfully installed\n");

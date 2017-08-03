@@ -98,9 +98,9 @@ boolean CKernelContext::initialize(void)
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Unknown");
 #endif
 
-	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternMacOS",   "libcertivibe-plugins-*.dylib");
-	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternLinux",   "libcertivibe-plugins-*.so");
-	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternWindows", "certivibe-plugins-*.dll");
+	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternMacOS",   "libopenvibe-plugins-*.dylib");
+	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternLinux",   "libopenvibe-plugins-*.so");
+	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternWindows", "openvibe-plugins-*.dll");
 	m_pConfigurationManager->createConfigurationToken("Kernel_Plugins", "${Path_Lib}/${Kernel_PluginsPattern${OperatingSystem}}");
 
 	m_pConfigurationManager->createConfigurationToken("Kernel_Metabox", "${Path_Data}/metaboxes/;${Path_UserData}/metaboxes/");

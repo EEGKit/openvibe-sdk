@@ -8,7 +8,7 @@ cmake_policy(SET CMP0048 OLD)
 PROJECT(OpenVIBE)
 
 SET(OV_GLOBAL_VERSION_MAJOR 0)
-SET(OV_GLOBAL_VERSION_MINOR 1)
+SET(OV_GLOBAL_VERSION_MINOR 2)
 SET(OV_GLOBAL_VERSION_PATCH 99)
 SET(OV_GLOBAL_VERSION_STRING "${OV_GLOBAL_VERSION_MAJOR}.${OV_GLOBAL_VERSION_MINOR}.${OV_GLOBAL_VERSION_PATCH}")
 
@@ -77,7 +77,7 @@ IF(NOT CMAKE_BUILD_TYPE)
 ENDIF()
 
 IF(NOT CMAKE_INSTALL_PREFIX)
-	SET(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/../certivibe-build/dist-${CMAKE_BUILD_TYPE}")
+	SET(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/../openvibe-sdk-build/dist-${CMAKE_BUILD_TYPE}")
 ENDIF(NOT CMAKE_INSTALL_PREFIX)
 
 IF(OV_PACKAGE)
@@ -255,7 +255,7 @@ ENDIF()
 
 # add the scripts to the project so IDEs using the CMake file are aware of them
 FILE(GLOB_RECURSE script_files scripts/*.cmd scripts/*.sh scripts/*.nsi scripts/*.cmake)
-INSTALL(FILES scripts/AddCertivibeComponents.cmake DESTINATION ${DIST_DATADIR})
+INSTALL(FILES scripts/AddOpenViBESDKComponents.cmake DESTINATION ${DIST_DATADIR})
 ADD_CUSTOM_TARGET(openvibe-scripts SOURCES ${script_files})
 
 # Enable/Disable unit test

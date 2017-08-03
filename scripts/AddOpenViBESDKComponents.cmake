@@ -2,7 +2,7 @@
 # Finds OpenViBE SDK binary distribution
 # Adds library to target, include path and execute install commands
 # Also add library specific compiler flags
-# This should be used with a defined INCLUDED_CERTIVIBE_COMPONENTS variable in scope
+# This should be used with a defined INCLUDED_OV_SDK_COMPONENTS variable in scope
 # Value should be a list of libraries to include
 # They are organized into groups, and group name can also be used to add all members of said group
 # This include :
@@ -11,10 +11,11 @@
 # ALLPLUGINS : CLASSIFICATION DATA_GENERATION FEATURE_EXTRACTION FILE_IO SIGNAL_PROCESSING STIMULATION STREAM_CODECS STREAMING TOOLS
 # ALLMODULES : EBML SYSTEM FS SOCKET XML DATE CSV TOOLKIT
 # ---------------------------------
-option(DYNAMIC_LINK_OPENVIBE_SDK "Dynamically link Certivibe" ON)
+option(DYNAMIC_LINK_OPENVIBE_SDK "Dynamically link OpenViBE SDK" ON)
 
 # set(OPENVIBE_SDK_PATH "OPENVIBE_SDK_PATH-NOTFOUND")
-find_path(${OPENVIBE_SDK_PATH} include/openvibe/ov_all.h PATHS ${LIST_DEPENDENCIES_PATH} NO_DEFAULT_PATH)
+string(TOLOWER CMAKE_BUILD_TYPE OV_SDK_BUILD_TYPE)
+find_path(${OPENVIBE_SDK_PATH} include/openvibe/ov_all.h PATHS ${LIST_DEPENDENCIES_PATH} PATH_SUFFIXES openvibe-sdk-${OV_SDK_BUILD_TYPE} NO_DEFAULT_PATH)
 if(${OPENVIBE_SDK_PATH} STREQUAL "OPENVIBE_SDK_PATH-NOTFOUND")
 	message(FATAL_ERROR "  FAILED to find OpenViBE SDK [${OPENVIBE_SDK_PATH}]")
 endif()
@@ -32,24 +33,24 @@ else()
 	set(LINKING_SUFFIX Static)
 endif()
 
-if("${INCLUDED_CERTIVIBE_COMPONENTS}" STREQUAL "ALL")
-	list(REMOVE_ITEM INCLUDED_CERTIVIBE_COMPONENTS "ALL")
-	list(APPEND INCLUDED_CERTIVIBE_COMPONENTS BASE ALLPLUGINS ALLMODULES)
+if("${INCLUDED_OV_SDK_COMPONENTS}" STREQUAL "ALL")
+	list(REMOVE_ITEM INCLUDED_OV_SDK_COMPONENTS "ALL")
+	list(APPEND INCLUDED_OV_SDK_COMPONENTS BASE ALLPLUGINS ALLMODULES)
 endif()
 
-if(BASE IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
-	list(REMOVE_ITEM INCLUDED_CERTIVIBE_COMPONENTS BASE)
-	list(APPEND INCLUDED_CERTIVIBE_COMPONENTS MAIN KERNEL)	
+if(BASE IN_LIST INCLUDED_OV_SDK_COMPONENTS)
+	list(REMOVE_ITEM INCLUDED_OV_SDK_COMPONENTS BASE)
+	list(APPEND INCLUDED_OV_SDK_COMPONENTS MAIN KERNEL)	
 endif()
 
-if(ALLPLUGINS IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
-	list(REMOVE_ITEM INCLUDED_CERTIVIBE_COMPONENTS ALLPLUGINS)
-	list(APPEND INCLUDED_CERTIVIBE_COMPONENTS CLASSIFICATION DATA_GENERATION FEATURE_EXTRACTION FILE_IO SIGNAL_PROCESSING STIMULATION STREAM_CODECS STREAMING TOOLS)
+if(ALLPLUGINS IN_LIST INCLUDED_OV_SDK_COMPONENTS)
+	list(REMOVE_ITEM INCLUDED_OV_SDK_COMPONENTS ALLPLUGINS)
+	list(APPEND INCLUDED_OV_SDK_COMPONENTS CLASSIFICATION DATA_GENERATION FEATURE_EXTRACTION FILE_IO SIGNAL_PROCESSING STIMULATION STREAM_CODECS STREAMING TOOLS)
 endif()
 
-if(ALLMODULES IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
-	list(REMOVE_ITEM INCLUDED_CERTIVIBE_COMPONENTS ALLMODULES)
-	list(APPEND INCLUDED_CERTIVIBE_COMPONENTS EBML SYSTEM FS SOCKET XML DATE CSV TOOLKIT)
+if(ALLMODULES IN_LIST INCLUDED_OV_SDK_COMPONENTS)
+	list(REMOVE_ITEM INCLUDED_OV_SDK_COMPONENTS ALLMODULES)
+	list(APPEND INCLUDED_OV_SDK_COMPONENTS EBML SYSTEM FS SOCKET XML DATE CSV TOOLKIT)
 endif()
 
 if(WIN32)
@@ -75,8 +76,8 @@ elseif(UNIX)
 endif()
 
 function(add_component TOKEN MODULE_NAME)
-	if(${TOKEN} IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
-		target_link_libraries(${PROJECT_NAME} "${OPENVIBE_SDK_PATH}/lib/${LIB_PREFIX}${MODULE_NAME}${CERTIVIBE_LINKING}.${LIB_EXT}")
+	if(${TOKEN} IN_LIST INCLUDED_OV_SDK_COMPONENTS)
+		target_link_libraries(${PROJECT_NAME} "${OPENVIBE_SDK_PATH}/lib/${LIB_PREFIX}${MODULE_NAME}${OPENVIBE_SDK_LINKING}.${LIB_EXT}")
 		install(DIRECTORY ${OPENVIBE_SDK_PATH}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
 		
 		set(FLAGS_LIST ${ARGV})
@@ -88,7 +89,7 @@ function(add_component TOKEN MODULE_NAME)
 endfunction(add_component)
 
 function(add_plugin TOKEN MODULE_NAME)
-	if(${TOKEN} IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
+	if(${TOKEN} IN_LIST INCLUDED_OV_SDK_COMPONENTS)
 		install(DIRECTORY ${OPENVIBE_SDK_PATH}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
 	endif()
 endfunction(add_plugin)
@@ -107,20 +108,20 @@ add_component(CSV "openvibe-module-csv" "TARGET_HAS_CSV" "CSV_${LINKING_SUFFIX}"
 add_component(DATE "openvibe-module-date" "TARGET_HAS_DATE" "DATE_${LINKING_SUFFIX}")
 
 #plugins
-add_plugin(CLASSIFICATION "certivibe-plugins-classification")
-add_plugin(DATA_GENERATION "certivibe-plugins-data-generation")
-add_plugin(FEATURE_EXTRACTION "certivibe-plugins-feature-extraction")
-add_plugin(FILE_IO "certivibe-plugins-file-io")
-add_plugin(SIGNAL_PROCESSING "certivibe-plugins-signal-processing")
-add_plugin(STIMULATION "certivibe-plugins-stimulation")
-add_plugin(STREAM_CODECS "certivibe-plugins-stream-codecs") 
-add_plugin(STREAMING "certivibe-plugins-streaming")
-add_plugin(TOOLS "certivibe-plugins-tools")
+add_plugin(CLASSIFICATION "openvibe-plugins-base-classification")
+add_plugin(DATA_GENERATION "openvibe-plugins-base-data-generation")
+add_plugin(FEATURE_EXTRACTION "openvibe-plugins-base-feature-extraction")
+add_plugin(FILE_IO "openvibe-plugins-base-file-io")
+add_plugin(SIGNAL_PROCESSING "openvibe-plugins-base-signal-processing")
+add_plugin(STIMULATION "openvibe-plugins-base-stimulation")
+add_plugin(STREAM_CODECS "openvibe-plugins-base-stream-codecs") 
+add_plugin(STREAMING "openvibe-plugins-base-streaming")
+add_plugin(TOOLS "openvibe-plugins-base-tools")
 
 add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 
 # Install binary dependencies if requested
-if(DEPENDENCIES IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
+if(DEPENDENCIES IN_LIST INCLUDED_OV_SDK_COMPONENTS)
 	if(WIN32)
 		install(
 			FILES
@@ -135,7 +136,7 @@ if(DEPENDENCIES IN_LIST INCLUDED_CERTIVIBE_COMPONENTS)
 endif()
 
 # if we link with the module socket in Static, we must link the project with the dependency on win32
-if(WIN32 AND SOCKET IN_LIST INCLUDED_CERTIVIBE_COMPONENTS AND NOT DYNAMIC_LINK_OPENVIBE_SDK)
+if(WIN32 AND SOCKET IN_LIST INCLUDED_OV_SDK_COMPONENTS AND NOT DYNAMIC_LINK_OPENVIBE_SDK)
 	include("FindThirdPartyWinsock2")
 	include("FindThirdPartyFTDI")
 endif()

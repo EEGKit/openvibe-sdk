@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (AGPL-3 License)
  *
- * CertiViBE Test Software
+ * OpenViBE SDK Test Software
  * Based on OpenViBE V1.1.0, Copyright (C) Inria, 2006-2015
  * Copyright (C) Inria, 2015-2017,V1.0
  *
