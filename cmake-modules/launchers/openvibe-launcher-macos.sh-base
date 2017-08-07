@@ -24,15 +24,6 @@ if [ "$OV_PATH_ROOT" == "" ]; then
 	done
 	OV_PATH_ROOT="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 fi
-if [ "$OV_PATH_BIN" == "" ]; then
-	OV_PATH_BIN="$OV_PATH_ROOT/bin"
-fi
-if [ "$OV_PATH_LIB" == "" ]; then
-	OV_PATH_LIB="$OV_PATH_ROOT/lib"
-fi
-if [ "$OV_PATH_DATA" == "" ]; then
-	OV_PATH_DATA="$OV_PATH_ROOT/share/openvibe"
-fi
 
 export DYLD_LIBRARY_PATH="$OV_PATH_LIB:@CMAKE_SOURCE_DIR@/dependencies/lib:$DYLD_LIBRARY_PATH"
 export LC_ALL=C

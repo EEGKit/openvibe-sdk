@@ -163,16 +163,16 @@ if defined vsgenerate (
 	set generator=-G"%VSCMake%" -T "v120"
 	if not defined build_dir (
 		if !builder! == None (
-			set build_dir=%script_dir%\..\..\certivibe-build\vs-project
+			set build_dir=%script_dir%\..\..\openvibe-sdk-build\vs-project
 		) else (
-			set build_dir=%script_dir%\..\..\certivibe-build\vs-project-%BuildType%
+			set build_dir=%script_dir%\..\..\openvibe-sdk-build\vs-project-%BuildType%
 		)
 	)
 	if not defined install_dir (
 		if !builder! == None (
-			set install_dir=%script_dir%\..\..\certivibe-build\dist
+			set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist
 		) else (
-			set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
+			set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist-%BuildType%
 		)
 	)
 	
