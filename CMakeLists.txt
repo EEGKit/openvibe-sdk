@@ -79,10 +79,8 @@ ENDIF()
 # Setup knowledge of GNU-style install path variables
 INCLUDE("GNUInstallDirs")
 
-# if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_GENERATOR MATCHES "Visual Studio*")
-	# MESSAGE(STATUS "Setting default build type to Release")
-	# SET(CMAKE_BUILD_TYPE "Release")
 if(NOT CMAKE_BUILD_TYPE AND CMAKE_GENERATOR MATCHES "Visual Studio*")
+	set(MULTI_BUILD TRUE)
 	set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin" )
 	set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/lib" )
 	# set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/archive" )
@@ -140,7 +138,12 @@ elseif(CMAKE_BUILD_TYPE AND OV_PACKAGE)
 	set(CPACK_PACKAGE_NAME "OpenViBE-${CMAKE_BUILD_TYPE}")
 	include(CPack)
 elseif(CMAKE_BUILD_TYPE)
-
+	# Add directories that OpenViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
+	# These defines should only be used in "openvibe/ov_directories.h".
+	add_definitions(-DOV_CMAKE_PATH_ROOT="${CMAKE_INSTALL_PREFIX}")
+	add_definitions(-DOV_CMAKE_PATH_BIN="${CMAKE_INSTALL_PREFIX}/bin")
+	add_definitions(-DOV_CMAKE_PATH_LIB="${CMAKE_INSTALL_PREFIX}/lib")
+	add_definitions(-DOV_CMAKE_PATH_DATA="${CMAKE_INSTALL_PREFIX}/share/openvibe")
 	
 	set(DIST_ROOT ${CMAKE_INSTALL_PREFIX})
 	set(DIST_BINDIR ${CMAKE_INSTALL_FULL_BINDIR})
@@ -229,11 +232,6 @@ INCLUDE("OvAddProjects")
 INCLUDE("OvInstallLaunchScript")
 INCLUDE("OvLinkBoostLib")
 INCLUDE("OvDelayLoad")
-
-
-SET(CMAKE_INSTALL_FULL_DOCDIR "${CMAKE_INSTALL_FULL_BINDIR}/../doc/html")
-
-SET(DIST_ROOT ${CMAKE_INSTALL_PREFIX})
 
 # Sets the PROJECT_VERSION variable to something, depending on overriding OvSetProjectVersion.cmake files
 OV_SET_PROJECT_VERSION()
