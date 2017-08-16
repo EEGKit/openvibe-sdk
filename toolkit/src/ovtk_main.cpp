@@ -22,7 +22,7 @@ boolean OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "?", OVTK_UNIT_Unspecified);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "-", OVTK_UNIT_Dimensionless);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "%", OVTK_UNIT_10_2_Percent);
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "percent", OVTK_UNIT_10_2_Percent);
+//	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "percent", OVTK_UNIT_10_2_Percent);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "ppht", OVTK_UNIT_10_3_Parts_Per_Thousand);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "ppm", OVTK_UNIT_10_6_Parts_Per_Million);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "ppmd", OVTK_UNIT_10_9_Parts_Per_Milliard);
