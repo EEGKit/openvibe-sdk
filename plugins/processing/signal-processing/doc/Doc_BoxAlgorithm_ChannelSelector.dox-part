@@ -23,7 +23,7 @@ __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_ChannelSelector_Input1|
  * The input matrix which channels should be selected or rejected. The type of this input can be changed to
- * signal or spectrum depending on what kind of stream channel to select.
+ * Signal, Spectrum or Streamed matrix depending on what kind of stream channel to select.
  * |OVP_DocEnd_BoxAlgorithm_ChannelSelector_Input1|
 __________________________________________________________________
 
