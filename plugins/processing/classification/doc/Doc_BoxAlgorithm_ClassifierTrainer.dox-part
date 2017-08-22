@@ -72,7 +72,7 @@ parameters you will have available. This will depend on the classification algor
  * |OVP_DocEnd_BoxAlgorithm_ClassifierTrainer_Settings|
  * 
  *  * |OVP_DocBegin_BoxAlgorithm_ClassifierTrainer_Setting1|
-This is the stimulation to consider to trigger the training process and save the learned classifier to disk.
+The stimulation that triggers the training process and save the learned classifier to disk.
  * |OVP_DocEnd_BoxAlgorithm_ClassifierTrainer_Setting1|
  * 
  *  * |OVP_DocBegin_BoxAlgorithm_ClassifierTrainer_Setting2|
@@ -139,7 +139,7 @@ __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_ClassifierTrainer_Miscellaneous|
 
-The box supports various mtulticlass strategies and classifiers as plugins.
+The box supports various multiclass strategies and classifiers as plugins.
  
 \par Available strategy:
 Strategy refers to how feature vectors are routed to one or more classifiers, which possibly can handle only 2 classes themselves.
@@ -272,7 +272,7 @@ The box can also be used for simple incremental (online) learning. To achieve th
 stimulation and it will train a classifier with all the data it has received so far. You can give it more
 feature vectors later, and trigger the learning again by sending another stimulation. Likewise, the corresponding 
 classifier processor box can be made to load new classifiers during playback. With classifiers like LDA, 
-this practice is usually feasible when the data is reasonable sized (as in basic motor imagery).
+this practice is usually feasible when the data is reasonably sized (as in basic motor imagery).
 
  * |OVP_DocEnd_BoxAlgorithm_ClassifierTrainer_Miscellaneous|
  */
