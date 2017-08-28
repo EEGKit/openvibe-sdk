@@ -183,6 +183,12 @@ IScenarioManager& CPlayer::getRuntimeScenarioManager(void)
 	return *m_pRuntimeScenarioManager;
 }
 
+const CIdentifier CPlayer::getRuntimeScenarioIdentifier(void)
+{
+	return m_oRuntimeScenarioIdentifier;
+}
+
+
 EPlayerReturnCode CPlayer::initialize(void)
 {
 	OV_ERROR_UNLESS_K(
