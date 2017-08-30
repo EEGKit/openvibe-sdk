@@ -173,17 +173,17 @@ boolean CPlayer::setScenario(
 	return m_oScheduler.setScenario(m_oRuntimeScenarioIdentifier);
 }
 
-IConfigurationManager& CPlayer::getRuntimeConfigurationManager(void)
+IConfigurationManager& CPlayer::getRuntimeConfigurationManager(void) const
 {
 	return *m_pRuntimeConfigurationManager;
 }
 
-IScenarioManager& CPlayer::getRuntimeScenarioManager(void)
+IScenarioManager& CPlayer::getRuntimeScenarioManager(void) const
 {
 	return *m_pRuntimeScenarioManager;
 }
 
-const CIdentifier CPlayer::getRuntimeScenarioIdentifier(void)
+CIdentifier CPlayer::getRuntimeScenarioIdentifier(void) const
 {
 	return m_oRuntimeScenarioIdentifier;
 }

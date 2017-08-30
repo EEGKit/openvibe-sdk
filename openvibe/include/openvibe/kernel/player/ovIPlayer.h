@@ -74,7 +74,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IConfigurationManager
 			 */
-			virtual OpenViBE::Kernel::IConfigurationManager& getRuntimeConfigurationManager(void)=0;
+			virtual OpenViBE::Kernel::IConfigurationManager& getRuntimeConfigurationManager(void) const = 0;
 
 			/**
 			 * \brief returns a reference to the runtime scenario manager
@@ -86,7 +86,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IScenarioManager
 			 */
-			virtual OpenViBE::Kernel::IScenarioManager& getRuntimeScenarioManager(void) = 0;
+			virtual OpenViBE::Kernel::IScenarioManager& getRuntimeScenarioManager(void) const = 0;
 
 			/**
 			 * \brief returns the cidentifier of the associated runtime scenario
@@ -97,7 +97,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::CIdentifier
 			 */
-			virtual const OpenViBE::CIdentifier getRuntimeScenarioIdentifier(void) = 0;
+			virtual OpenViBE::CIdentifier getRuntimeScenarioIdentifier(void) const = 0;
 
 			/**
 			 * \brief Initializes this player
