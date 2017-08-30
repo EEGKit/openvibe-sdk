@@ -7,6 +7,7 @@ cmake_policy(SET CMP0048 OLD)
 
 PROJECT(OpenVIBE)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules")
+SET(CMAKE_INSTALL_LIBDIR lib) # Fix for non debian-based distrib, as it seeems to be a common occurence to name this folder lib32/lib64
 INCLUDE("Utilities")
 INCLUDE("SetProjectVersion")
 set_version()
@@ -85,11 +86,11 @@ if(NOT CMAKE_BUILD_TYPE AND CMAKE_GENERATOR MATCHES "Visual Studio*")
 	set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/lib" )
 	# set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/archive" )
 	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
-		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
-		set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/bin" )
-		set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/lib" )
+		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
+		set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIGU} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/bin" )
+		set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIGU} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/lib" )
 		# set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/archive" )
-		string(CONCAT DIST_ROOT ${DIST_ROOT} $<$<CONFIG:${OUTPUTCONFIG}>:${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}>)
+		string(CONCAT DIST_ROOT ${DIST_ROOT} $<$<CONFIG:${OUTPUTCONFIGU}>:${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}>)
 	endforeach()
 	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS "OV_CMAKE_PATH_ROOT=\"${DIST_ROOT}\"")
 	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS "OV_CMAKE_PATH_BIN=\"${DIST_ROOT}/bin\"")
@@ -103,6 +104,8 @@ if(NOT CMAKE_BUILD_TYPE AND CMAKE_GENERATOR MATCHES "Visual Studio*")
 	set(DIST_DOCTMP ${DIST_ROOT}/doc-tmp)
 	# Also install it on the base dir for convenience
 	install(FILES scripts/AddOpenViBESDKComponents.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/share)
+	# Install the .install file inside the dists folders
+	install(FILES ${CMAKE_BINARY_DIR}/.install DESTINATION ${DIST_ROOT})
 elseif(CMAKE_BUILD_TYPE AND OV_PACKAGE)
 	# Add directories that OpenViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
 	# These defines should only be used in "openvibe/ov_directories.h".
