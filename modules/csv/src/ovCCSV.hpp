@@ -45,7 +45,18 @@ namespace OpenViBE
 			 */
 			~CCSVHandler(void);
 
+			/**
+			 * \brief Get the floating point precision used to write float values.
+			 *
+			 * \return the Floating point precision.
+			 */
 			uint32_t getOutputFloatPrecision() { return m_OutputFloatPrecision; }
+
+			/**
+			 * \brief Set the floating point precision used to write float values.
+			 *
+			 * \param precision the floating point precision.
+			 */
 			void setOutputFloatPrecision(uint32_t precision) { m_OutputFloatPrecision = precision; }
 
 			void setFormatType(EStreamType typeIdentifier);
@@ -66,46 +77,136 @@ namespace OpenViBE
 			bool setStreamedMatrixInformation(const std::vector<uint32_t>& dimensionSizes, const std::vector<std::string>& labels);
 			bool getStreamedMatrixInformation(std::vector<uint32_t>& dimensionSizes, std::vector<std::string>& labels);
 
+			/**
+			 * \brief Write the header to the file
+			 *
+			 * \retval True in case of success.
+			 * \retval False in case of error.
+			 */
 			bool writeHeaderToFile(void);
 
+			/**
+			 * \brief Write current available data to the file until the last stimulation or if you set that it will not have new event before a date.
+			 *
+			 * \retval True in case of success.
+			 * \retval False in case of error.
+			 *
+			 * \sa noEventsUntilDate
+			 */
 			bool writeDataToFile(void);
 
+			/**
+			 * \brief Write current available data to the file.
+			 *
+			 * \retval True in case of success.
+			 * \retval False in case of error.
+			 */
 			bool writeAllDataToFile(void);
 
-			bool readSamplesAndEventsFromFile(uint64_t linesToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events);
+			/**
+			 * \brief Read samples and stimulations.
+			 *
+			 * \param linesToRead Maximum number of lines to read. If there is no more data in the file, the number of lines read can be lower.
+			 * \param chunks[out] Valid chunks read.
+			 * \param stimulations[out] Valid stimulations read.
+			 *
+			 * \retval True in case of success, even if the number of lines is different than the linesToRead parameter.
+			 * \retval False in case of error.
+			 */
+			bool readSamplesAndEventsFromFile(size_t linesToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations);
 
+			/**
+			 * \brief Open a OV CSV file.
+			 *
+			 * \retval True in case of success.
+			 * \retval False in case of error.
+			 */
 			bool openFile(const std::string& fileName, EFileAccessMode mode);
 
+			/**
+			 * \brief Close the opened file.
+			 *
+			 * \retval True in case of success.
+			 * \retval False in case of error.
+			 */
 			bool closeFile(void);
 
+			/**
+			 * \brief Add a single sample.
+			 *
+			 * \retval True in case of success.
+			 * \retval False in case of error.
+			 */
 			bool addSample(const SMatrixChunk& sample);
 
+			/**
+			 * \brief Add several samples.
+			 *
+			 * \retval True in case of success.
+			 * \retval False in case of error.
+			 */
 			bool addBuffer(const std::vector<SMatrixChunk>& samples);
 
+			/**
+			 * \brief Add a single stimulation.
+			 *
+			 * \retval True in case of success.
+			 * \retval False in case of error.
+			 */
 			bool addEvent(uint64_t code, double date, double duration);
 
+			/**
+			 * \brief Add several stimulations.
+			 *
+			 * \retval True in case of success.
+			 * \retval False in case of error.
+			 */
 			bool addEvent(const SStimulationChunk& event);
 
+			/**
+			 * \brief Guarantee that will not have new event before a date.
+			 * This information is used to allow the library to write all the chunks available, before this date, to a file.
+			 *
+			 * \retval True in case of success.
+			 * \retval False in case of error.
+			 *
+			 * \sa writeDataToFile
+			 */
 			bool noEventsUntilDate(double date);
 
 			ELogErrorCodes getLastLogError();
 
 			std::string getLastErrorString();
 
+			/**
+			 * \brief Check if there is still data to read in the file.
+			 *
+			 * \retval True if there is still data to read in the file.
+			 * \retval False if there is no more data to read in the file.
+			 */
+			bool hasDataToRead() const;
+
 		private:
-			void split(const std::string& string, char delimitor, std::vector<std::string>& element);
+			/**
+			 * \brief Split a string into a vector of strings.
+			 *
+			 * \param string String to split.
+			 * \param delimitor Delimitor.
+			 * \param elements[out] Vector of string.
+			 */
+			void split(const std::string& string, char delimitor, std::vector<std::string>& elements) const;
 
 			/**
-			 * \brief Create a string with stimulations to add in the buffer
+			 * \brief Create a string with stimulations to add in the buffer.
 			 *
 			 * \param stimulationsToPrint stimulations to put into the buffer
 			 *
 			 * \return string with stimulations to write
 			 */
-			std::string writeStimulations(const std::vector<SStimulationChunk>& stimulationsToPrint);
+			std::string stimulationsToString(const std::vector<SStimulationChunk>& stimulationsToPrint) const;
 
 			/**
-			 * \brief Create a string representation of the header data
+			 * \brief Create a string representation of the header data.
 			 *
 			 * \retval true Header data as it should be written in the file
 			 * \retval "" in case of error
@@ -113,17 +214,18 @@ namespace OpenViBE
 			std::string createHeaderString(void);
 
 			/**
-			 * \brief Set the buffer in function of data saved
+			 * \brief Set the buffer in function of data saved.
 			 *
 			 * \param canWriteAll true if it must write all lines, false if it write only the next buffer
+			 * \param csv The CSV string.
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of wrong data sent
 			 */
-			bool createCSVStringFromData(bool canWriteAll);
+			bool createCSVStringFromData(bool canWriteAll, std::string& csv);
 
 			/**
-			 * \brief Parsing header to read data
+			 * \brief Parsing header to read data.
 			 *
 			 * \retval true in case of correct header
 			 * \retval false in case of incorrect header
@@ -131,55 +233,63 @@ namespace OpenViBE
 			bool parseHeader(void);
 
 			/**
-			 * \brief Parsing header to read signal data
+			 * \brief Parsing header to read signal data.
+			 *
+			 * \param header[out]
 			 *
 			 * \retval true in case of correct header
 			 * \retval false in case of incorrect header
 			 */
-			bool parseSignalHeader(void);
+			bool parseSignalHeader(const std::vector<std::string>& header);
 
 			/**
-			* \brief Parsing header to read Spectrum data
+			* \brief Parsing header to read Spectrum data.
+			*
+			* \param header[out]
 			*
 			* \retval true in case of correct header
 			* \retval false in case of incorrect header
 			*/
-			bool parseSpectrumHeader(void);
+			bool parseSpectrumHeader(const std::vector<std::string>& header);
 
 			/**
-			* \brief Parsing header to read matrix data (Streamed Matrix, Covariance matrix and Feature Vector)
+			* \brief Parsing header to read matrix data (Streamed Matrix, Covariance matrix and Feature Vector).
+			*
+			* \param header[out]
 			*
 			* \retval true in case of correct header
 			* \retval false in case of incorrect header
 			*/
-			bool parseMatrixHeader(void);
+			bool parseMatrixHeader(const std::vector<std::string>& header);
 
 			/**
-			 * \brief Read line data concerning time, epoch and matrix
+			 * \brief Read line data concerning time, epoch and matrix.
 			 *
-			 * \param sample reference to stock data in
-			 * \param line index of the read line
+			 * \param line line to read
+			 * \param sample[out] reference to stock data in
+			 * \param lineNb index of the read line
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readSampleChunk(SMatrixChunk& sample, uint64_t line);
+			bool readSampleChunk(const std::string& line, SMatrixChunk& sample, const uint64_t lineNb);
 
 			/**
-			 * \brief Read line data conerning stimulations
+			 * \brief Read line data conerning stimulations.
 			 *
-			 * \param stimulations vector to stock stimulations in (identifier, date and duration)
-			 * \param line the line actually reading
+			 * \param line the line to read
+			 * \param stimulations[out] vector to stock stimulations in (identifier, date and duration)
+			 * \param lineNb the line actually reading
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readStimulationChunk(std::vector<SStimulationChunk>& stimulations, uint64_t line);
+			bool readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, const uint64_t lineNb);
 
 			/**
-			 * \brief Update position into the matrix while reading or writing
+			 * \brief Update position into the matrix while reading or writing.
 			 *
-			 * \param position is the position into the matrix
+			 * \param position[out] is the position into the matrix
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of browse matrix
@@ -187,26 +297,32 @@ namespace OpenViBE
 			bool increasePositionIndexes(std::vector<uint32_t>& position);
 
 			/**
-			 * \brief Read lines of the first epoch to found sample count per buffer
+			 * \brief Read lines of the first epoch to found sample count per buffer.
 			 *
 			 * \retval true in case of success
 			 * \retval false in case of error
 			 */
 			bool calculateSampleCountPerBuffer();
 
+			/**
+			 * \brief Read a stream until a delimiter and provide the string before the delimiter.
+			 *
+			 * \param inputStream The stream to read.
+			 * \param outputString The string before the next delimitor.
+			 * \param delimiter The delimiter .
+			 */
+			bool streamReader(std::istream& inputStream, std::string& outputString, const char delimiter, std::string& bufferHistory) const;
+
 			std::fstream m_Fs;
 			std::string m_Filename;
-			std::string m_Buffer;
-			std::vector<SMatrixChunk> m_Chunks;
-			std::vector<SStimulationChunk> m_Stimulations;
+			std::deque<SMatrixChunk> m_Chunks;
+			std::deque<SStimulationChunk> m_Stimulations;
 			ELogErrorCodes m_LogError;
 			std::string m_LastStringError;
 
 			EStreamType m_InputTypeIdentifier;
 
 			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, const char delimiter);
-			GetLine* m_GetLineFunction;
-
 			uint32_t m_DimensionCount;
 			std::vector<uint32_t> m_DimensionSizes;
 			std::vector<std::string> m_DimensionLabels;
@@ -215,12 +331,8 @@ namespace OpenViBE
 
 			std::vector<double> m_FrequencyAbscissa;
 
-			// columns between each separator (as : {Time, Epoch, O1, O2, O3, Event Id, Event date, Event Duration})
-			std::vector<std::string> m_LineColumns;
 			uint32_t m_SamplingRate;
 			uint32_t m_ColumnCount;
-			uint32_t m_PreDataColumnCount;
-			uint32_t m_PostDataColumnCount;
 
 			bool m_HasInputType;
 			bool m_IsFirstLineWritten;
@@ -232,6 +344,12 @@ namespace OpenViBE
 			uint32_t m_OutputFloatPrecision;
 
 			bool m_LastMatrixOnly;
+
+			std::string m_BufferReadFileLine; // Buffer used to store unused read chars.
+
+			bool m_HasDataToRead;
+
+			bool m_IsCRLFEOL; // Is a CRLF end of line
 		};
 	}
 }

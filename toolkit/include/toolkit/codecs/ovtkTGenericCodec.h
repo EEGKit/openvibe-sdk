@@ -127,7 +127,14 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getOutputSamplingRate()
 		{
-			return m_pSignalDecoder->getOutputSamplingRate();
+			if (m_pSignalDecoder)
+			{
+				return m_pSignalDecoder->getOutputSamplingRate();
+			}
+			else
+			{
+				return m_pSpectrumDecoder->getOutputSamplingRate();
+			}			
 		}
 
 		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getOutputFrequencyAbcissa()
@@ -254,7 +261,14 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getInputSamplingRate()
 		{
-			return m_pSignalEncoder->getInputSamplingRate();
+			if (m_pSignalEncoder)
+			{
+				return m_pSignalEncoder->getInputSamplingRate();
+			} 
+			else
+			{
+				return m_pSpectrumEncoder->getInputSamplingRate();
+			}
 		}
 
 		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getInputFrequencyAbcissa()
