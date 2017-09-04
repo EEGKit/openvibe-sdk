@@ -28,8 +28,10 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rScenarioIdentifier,
 				const OpenViBE::CNameValuePairList* pLocalConfigurationTokens);
 
-			virtual OpenViBE::Kernel::IConfigurationManager& getRuntimeConfigurationManager(void);
-			virtual OpenViBE::Kernel::IScenarioManager& getRuntimeScenarioManager(void);
+			virtual OpenViBE::Kernel::IConfigurationManager& getRuntimeConfigurationManager(void) const;
+			virtual OpenViBE::Kernel::IScenarioManager& getRuntimeScenarioManager(void) const;
+			virtual OpenViBE::CIdentifier getRuntimeScenarioIdentifier(void) const;
+
 
 			virtual OpenViBE::boolean isHoldingResources() const;
 

@@ -74,7 +74,30 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IConfigurationManager
 			 */
-			virtual OpenViBE::Kernel::IConfigurationManager& getRuntimeConfigurationManager(void)=0;
+			virtual OpenViBE::Kernel::IConfigurationManager& getRuntimeConfigurationManager(void) const = 0;
+
+			/**
+			 * \brief returns a reference to the runtime scenario manager
+			 * \return a reference to the runtime scenario manager
+			 *
+			 * When a scenario is loaded, a copy is made and stored in the 
+			 * runtime scenario manager. This function allows getting the 
+			 * runtime scenario manager that contains the current executed scenario.
+			 *
+			 * \sa OpenViBE::Kernel::IScenarioManager
+			 */
+			virtual OpenViBE::Kernel::IScenarioManager& getRuntimeScenarioManager(void) const = 0;
+
+			/**
+			 * \brief returns the cidentifier of the associated runtime scenario
+			 * \return the cidentifier of the associated runtime scenario
+			 *
+			 * When initialized, a player copy the scenario in the runtime configuration manager
+			 * this method allows getting the identifier of said copied scenario
+			 *
+			 * \sa OpenViBE::CIdentifier
+			 */
+			virtual OpenViBE::CIdentifier getRuntimeScenarioIdentifier(void) const = 0;
 
 			/**
 			 * \brief Initializes this player
