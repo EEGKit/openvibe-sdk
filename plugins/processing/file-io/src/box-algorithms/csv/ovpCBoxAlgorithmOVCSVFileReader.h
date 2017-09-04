@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 
 		private:
 			bool initializeFile();
-			bool processStimulation();
+			bool processStimulation(double startTime, double endTime);
 
 			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)>m_ReaderLib;
 

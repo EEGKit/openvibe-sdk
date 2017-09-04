@@ -3,6 +3,7 @@
 #include <sstream>
 #include <map>
 #include <cmath>  // std::ceil() on Linux
+#include <algorithm>
 
 #include <openvibe/ovITimeArithmetics.h>
 
@@ -268,8 +269,11 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 		} while (!m_SavedChunks.empty() && m_SavedChunks.back().startTime < currentTime && m_ReaderLib->hasDataToRead());
 	}
 
+	double chunkStartTime = m_SavedChunks.cbegin()->startTime;
+	double chunkEndTime = m_SavedChunks.back().endTime;
+
 	// send stimulations chunk even if there is no stimulations, chunks have to be continued
-	OV_ERROR_UNLESS_KRF(this->processStimulation(),
+	OV_ERROR_UNLESS_KRF(this->processStimulation(chunkStartTime, chunkEndTime),
 						"Error during stimulation process",
 						ErrorType::Internal);
 
@@ -325,7 +329,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileReader::processStimulation()
+bool CBoxAlgorithmOVCSVFileReader::processStimulation(double startTime, double endTime)
 {
 	if (!m_IsStimulationHeaderSent)
 	{
@@ -368,7 +372,9 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation()
 
 		for (stimulationIt = m_SavedStimulations.begin(); stimulationIt != m_SavedStimulations.end(); ++stimulationIt)
 		{
-			if (currentTime > ITimeArithmetics::secondsToTime(stimulationIt->stimulationDate))
+			const double stimulationDate = stimulationIt->stimulationDate;
+
+			if (startTime <= stimulationDate && stimulationDate <= endTime)
 			{
 				stimulationSet->appendStimulation(stimulationIt->stimulationIdentifier,
 												  ITimeArithmetics::secondsToTime(stimulationIt->stimulationDate),
@@ -376,7 +382,12 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation()
 			}
 			else
 			{
-				break;
+				const std::string message = "The stimulation is not synced with the stream and will be ignored:"
+					" [Value: " + std::to_string(stimulationIt->stimulationIdentifier) +
+					" | Date: " + std::to_string(stimulationIt->stimulationDate) +
+					" | Duration: " + std::to_string(stimulationIt->stimulationDuration) + "]";
+
+				OV_WARNING_K(message.c_str());
 			}
 		}
 
