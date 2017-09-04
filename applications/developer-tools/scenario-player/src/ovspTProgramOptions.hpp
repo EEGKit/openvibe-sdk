@@ -30,6 +30,12 @@
 
 #include "ovsp_defines.h"
 
+#if defined TARGET_OS_Windows
+#include <codecvt>
+#include <locale>
+#include <Windows.h>
+#endif
+
 namespace OpenViBE
 {
 	/**
@@ -390,9 +396,22 @@ namespace OpenViBE
 	template <typename First, typename... Types>
 	bool ProgramOptions<First, Types...>::parse(int argc, char** argv)
 	{
+		std::vector<std::string> args;
+#if defined TARGET_OS_Windows
+		int argCount;
+		LPWSTR* argListUtf16 = CommandLineToArgvW(GetCommandLineW(), &argCount);
+		std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+		for (int i = 0; i < argCount; i++)
+		{
+			args.push_back(converter.to_bytes(argListUtf16[i]));
+		}
+#else
+		args = std::vector<std::string>(argv, argv + argc);
+#endif
+
 		for (int i = 1; i < argc; ++i)
 		{
-			std::string arg = argv[i];
+			std::string arg = args[i];
 
 			auto argSplit = arg.find_first_of("="); // = is the separator for value option
 

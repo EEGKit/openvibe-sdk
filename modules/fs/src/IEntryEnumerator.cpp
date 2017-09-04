@@ -3,16 +3,17 @@
 #include <string>
 #include <cstring>
 #include <stack>
+#include <codecvt>
+#include <locale>
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
  #include <glob.h>
  #include <sys/stat.h>
 #elif defined TARGET_OS_Windows
- #include <windows.h>
-
  #ifndef UNICODE
  #define UNICODE
  #endif
+ #include <Windows.h>
 #else
 #endif
 
@@ -20,12 +21,6 @@
 
 using namespace std;
 using namespace FS;
-
-//  * 2006-08-30 YRD - Portability note : using namespace FS confuses
-//                     windows platform SDK because it defines itself
-//                     a 'boolean' type. Thus the following define to
-//                     force the use of FS::boolean !
-#define boolean bool
 
 // ________________________________________________________________________________________________________________
 //
@@ -37,6 +32,7 @@ namespace FS
 	public:
 
 		explicit CEntry(const string& sName);
+		explicit CEntry(const wstring& sName);
 
 		virtual const char* getName(void);
 
@@ -58,6 +54,13 @@ CEntry::CEntry(const string& sName)
 {
 }
 
+CEntry::CEntry(const wstring& sName)
+{
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+
+	m_sName = converter.to_bytes(sName);
+}
+
 const char* CEntry::getName(void)
 {
 	return m_sName.c_str();
@@ -75,28 +78,28 @@ namespace FS
 		CAttributes(void);
 		virtual ~CAttributes(void);
 
-		virtual boolean isFile(void);
-		virtual boolean isDirectory(void);
-		virtual boolean isSymbolicLink(void);
+		virtual bool isFile(void);
+		virtual bool isDirectory(void);
+		virtual bool isSymbolicLink(void);
 
-		virtual boolean isArchive(void);
-		virtual boolean isReadOnly(void);
-		virtual boolean isHidden(void);
-		virtual boolean isSystem(void);
-		virtual boolean isExecutable(void);
+		virtual bool isArchive(void);
+		virtual bool isReadOnly(void);
+		virtual bool isHidden(void);
+		virtual bool isSystem(void);
+		virtual bool isExecutable(void);
 
 		virtual uint64 getSize(void);
 
 	public:
 
-		boolean m_bIsFile;
-		boolean m_bIsDirectory;
-		boolean m_bIsSymbolicLink;
-		boolean m_bIsArchive;
-		boolean m_bIsReadOnly;
-		boolean m_bIsHidden;
-		boolean m_bIsSystem;
-		boolean m_bIsExecutable;
+		bool m_bIsFile;
+		bool m_bIsDirectory;
+		bool m_bIsSymbolicLink;
+		bool m_bIsArchive;
+		bool m_bIsReadOnly;
+		bool m_bIsHidden;
+		bool m_bIsSystem;
+		bool m_bIsExecutable;
 		uint64 m_ui64Size;
 	};
 };
@@ -128,42 +131,42 @@ CAttributes::~CAttributes(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CAttributes::isFile(void)
+bool CAttributes::isFile(void)
 {
 	return m_bIsFile;
 }
 
-boolean CAttributes::isDirectory(void)
+bool CAttributes::isDirectory(void)
 {
 	return m_bIsDirectory;
 }
 
-boolean CAttributes::isSymbolicLink(void)
+bool CAttributes::isSymbolicLink(void)
 {
 	return m_bIsSymbolicLink;
 }
 
-boolean CAttributes::isArchive(void)
+bool CAttributes::isArchive(void)
 {
 	return m_bIsArchive;
 }
 
-boolean CAttributes::isReadOnly(void)
+bool CAttributes::isReadOnly(void)
 {
 	return m_bIsReadOnly;
 }
 
-boolean CAttributes::isHidden(void)
+bool CAttributes::isHidden(void)
 {
 	return m_bIsHidden;
 }
 
-boolean CAttributes::isSystem(void)
+bool CAttributes::isSystem(void)
 {
 	return m_bIsSystem;
 }
 
-boolean CAttributes::isExecutable(void)
+bool CAttributes::isExecutable(void)
 {
 	return m_bIsExecutable;
 }
@@ -262,7 +265,7 @@ CEntryEnumeratorLinux::CEntryEnumeratorLinux(IEntryEnumeratorCallBack& rEntryEnu
 {
 }
 
-boolean CEntryEnumeratorLinux::enumerate(const char* sWildCard, boolean bRecursive)
+bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 {
 	if(!sWildCard)
 	{
@@ -293,7 +296,7 @@ boolean CEntryEnumeratorLinux::enumerate(const char* sWildCard, boolean bRecursi
 	}
 
 	size_t i=0;
-	boolean l_bFinished=false;
+	bool l_bFinished=false;
 	while(!l_bFinished)
 	{
 		if(i<l_oGlobStruc.gl_pathc)
@@ -342,12 +345,16 @@ CEntryEnumeratorWindows::CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntr
 {
 }
 
-boolean CEntryEnumeratorWindows::enumerate(const char* sWildCard, boolean bRecursive)
+bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 {
+
 	if(!sWildCard || strlen(sWildCard)==0)
 	{
 		return false;
 	}
+
+	wchar_t wildCardUtf16[1024];
+	MultiByteToWideChar(CP_UTF8, 0, sWildCard, -1, wildCardUtf16, 1024);
 
 	// $$$ TODO
 	// $$$ Find better method to enumerate files
@@ -355,20 +362,20 @@ boolean CEntryEnumeratorWindows::enumerate(const char* sWildCard, boolean bRecur
 	// $$$ (cFileName member of WIN32_FIND_DATA structure
 	// $$$ loses the initial path !!)
 	// $$$ TODO
-	char l_sExtendedWildCard[1024];
-	char* l_sExtendedWildCardFileName = NULL;
-	GetFullPathName(sWildCard, sizeof(l_sExtendedWildCard), l_sExtendedWildCard, &l_sExtendedWildCardFileName);
-	std::string l_sPath(sWildCard, strlen(sWildCard) - (l_sExtendedWildCardFileName ? strlen(l_sExtendedWildCardFileName) : 0));
+	wchar_t l_sExtendedWildCard[1024];
+	wchar_t* l_sExtendedWildCardFileName = NULL;
+	GetFullPathName(wildCardUtf16, 1024, l_sExtendedWildCard, &l_sExtendedWildCardFileName);
+	std::wstring l_sPath(wildCardUtf16, wcslen(wildCardUtf16) - (l_sExtendedWildCardFileName ? wcslen(l_sExtendedWildCardFileName) : 0));
 
-	std::stack<std::string> l_vFoldersToEnumerate;
-	l_vFoldersToEnumerate.push(std::string(l_sPath));
+	std::stack<std::wstring> l_vFoldersToEnumerate;
+	l_vFoldersToEnumerate.push(l_sPath);
 
 	// if we need to recurse over subfolders, let's fetch all subfolders in l_vFoldersToEnumerate
 	if(bRecursive)
 	{
-		std::stack<std::string> l_oTemporaryFolderSearchStack;
+		std::stack<std::wstring> l_oTemporaryFolderSearchStack;
 		l_oTemporaryFolderSearchStack.push(l_sPath);
-		std::string l_sCurrentSearchPath;
+		std::wstring l_sCurrentSearchPath;
 		while(! l_oTemporaryFolderSearchStack.empty())
 		{
 			l_sCurrentSearchPath = l_oTemporaryFolderSearchStack.top();
@@ -376,18 +383,18 @@ boolean CEntryEnumeratorWindows::enumerate(const char* sWildCard, boolean bRecur
 
 			WIN32_FIND_DATA l_oFindData;
 			HANDLE l_pFileHandle;
-			l_pFileHandle=FindFirstFile((l_sCurrentSearchPath+"*").c_str(), &l_oFindData);
+			l_pFileHandle=FindFirstFile((l_sCurrentSearchPath+L"*").c_str(), &l_oFindData);
 			if(l_pFileHandle != INVALID_HANDLE_VALUE)
 			{
 				boolean l_bFinished=false;
 				while(!l_bFinished)
 				{
-					if (std::string(l_oFindData.cFileName) != "." && std::string(l_oFindData.cFileName) != "..")
+					if (std::wstring(l_oFindData.cFileName) != L"." && std::wstring(l_oFindData.cFileName) != L"..")
 					{
 						if (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 						{
-							l_vFoldersToEnumerate.push(l_sCurrentSearchPath + l_oFindData.cFileName + "/");
-							l_oTemporaryFolderSearchStack.push(l_sCurrentSearchPath + l_oFindData.cFileName + "/");
+							l_vFoldersToEnumerate.push(l_sCurrentSearchPath + l_oFindData.cFileName + L"/");
+							l_oTemporaryFolderSearchStack.push(l_sCurrentSearchPath + l_oFindData.cFileName + L"/");
 						}
 					}
 
@@ -401,7 +408,7 @@ boolean CEntryEnumeratorWindows::enumerate(const char* sWildCard, boolean bRecur
 		}
 	}
 
-	std::string l_sCurrentPath;
+	std::wstring l_sCurrentPath;
 	while(! l_vFoldersToEnumerate.empty())
 	{
 		l_sCurrentPath = l_vFoldersToEnumerate.top();
@@ -410,12 +417,13 @@ boolean CEntryEnumeratorWindows::enumerate(const char* sWildCard, boolean bRecur
 		WIN32_FIND_DATA l_oFindData;
 		HANDLE l_pFileHandle;
 		l_pFileHandle = FindFirstFile((l_sCurrentPath + l_sExtendedWildCardFileName).c_str(), &l_oFindData);
+
 		if(l_pFileHandle!=INVALID_HANDLE_VALUE)
 		{
 			boolean l_bFinished=false;
 			while(!l_bFinished)
 			{
-				CEntry l_oEntry(std::string(l_sCurrentPath+l_oFindData.cFileName).c_str());
+				CEntry l_oEntry(std::wstring(l_sCurrentPath+l_oFindData.cFileName).c_str());
 				CAttributes l_oAttributes;
 
 				l_oAttributes.m_bIsDirectory=(l_oFindData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)?true:false;
