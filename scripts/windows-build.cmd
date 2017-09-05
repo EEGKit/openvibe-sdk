@@ -16,6 +16,7 @@ set init_env_cmd=windows-initialize-environment.cmd
 set generator=-G"Ninja"
 set builder=Ninja
 set script_dir=%~dp0
+set PLATFORMTARGET=x86
 
 goto parameter_parse
 
@@ -42,6 +43,7 @@ goto parameter_parse
 	echo --python-exec [path] path to the python executable to use
 	echo --vsproject Create visual studio project (.sln)
 	echo --vsbuild Create visual studio project (.sln) and compiles it
+	echo --platform-target [x86 or x64] Create a 32 or 64 bit. 32bit is the default
 
 	echo.
 	exit /b
@@ -131,8 +133,7 @@ if /i "%1" == "-h" (
 	Goto parameter_parse
 ) else if /i "%1"=="--dependencies-dir" (
 	set DependenciesPath="-DOV_CUSTOM_DEPENDENCIES_PATH=%2"
-	set init_env_cmd=windows-initialize-environment.cmd %2
-	REM -DOV_SOURCE_DEPENDENCIES_PATH=%2\dependencies-source"
+	set init_env_cmd=windows-initialize-environment.cmd --platform-target %PLATFORMTARGET% --dependencies-dir %2
 	SHIFT
 	SHIFT
 	Goto parameter_parse
@@ -146,7 +147,12 @@ if /i "%1" == "-h" (
 	set builder=Visual
 	SHIFT
 	Goto parameter_parse
-) else if not "%1" == "" (
+) else if /i "%1"=="--platform-target" (
+	set PLATFORMTARGET=%2
+	SHIFT
+	SHIFT
+	Goto parameter_parse
+)else if not "%1" == "" (
 	echo unrecognized option [%1]
 	Goto terminate_error
 )
@@ -160,7 +166,9 @@ if defined vsgenerate (
 
 setlocal
 
-call %init_env_cmd%
+call %init_env_cmd% --platform-target %PLATFORMTARGET% 
+
+echo Generator is: %VSCMake%
 
 if defined vsgenerate (
 	set generator=-G"%VSCMake%" -T "v120"

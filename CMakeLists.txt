@@ -59,9 +59,16 @@ IF(WIN32)
 	# Disable /MP if you don't like VS using all the cores for compilation
 	
 	# Switch /arch:SSE2 enables vectorization. Remove if your CPU/compiler doesn't support it.
-	SET(OV_EIGEN_FLAGS "/arch:SSE2")
+	# x64 build do not provide SSE2 option because 64bit processors always supports SSE vectorization.
+	# So the /arch:SSE2 is not recognized for x64 build we have to only activate it for x86.
+	IF("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+	ELSEIF("${CMAKE_SIZEOF_VOID_P}" EQUAL "4")
+		SET(OV_EIGEN_FLAGS "/arch:SSE2")
+	ENDIF()
+	
+	
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4355 /MP ${OV_EIGEN_FLAGS}")
-	SET(OV_WIN32_BOOST_VERSION "1_55")
+	SET(OV_WIN32_BOOST_VERSION "1_58")
 ELSEIF(APPLE)
 	SET(OV_EIGEN_FLAGS "-msse2")
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall ${OV_EIGEN_FLAGS}")
