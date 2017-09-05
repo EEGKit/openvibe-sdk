@@ -2,6 +2,7 @@
 #define __FS_IEntryEnumerator_H__
 
 #include "defines.h"
+#include <cinttypes>
 
 namespace FS
 {
@@ -24,7 +25,7 @@ namespace FS
 			virtual bool isSystem(void)=0;
 			virtual bool isExecutable(void)=0;
 
-			virtual FS::uint64 getSize(void)=0;
+			virtual uint64_t getSize(void)=0;
 		protected:
 			virtual ~IAttributes(void);
 		};

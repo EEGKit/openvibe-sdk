@@ -3,8 +3,6 @@
 #include <string>
 #include <cstring>
 #include <stack>
-#include <codecvt>
-#include <locale>
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
  #include <glob.h>
@@ -14,6 +12,8 @@
  #define UNICODE
  #endif
  #include <Windows.h>
+ #include <codecvt>
+ #include <locale>
 #else
 #endif
 
@@ -32,7 +32,6 @@ namespace FS
 	public:
 
 		explicit CEntry(const string& sName);
-		explicit CEntry(const wstring& sName);
 
 		virtual const char* getName(void);
 
@@ -52,13 +51,6 @@ IEntryEnumerator::IEntry::~IEntry(void)
 CEntry::CEntry(const string& sName)
 	:m_sName(sName)
 {
-}
-
-CEntry::CEntry(const wstring& sName)
-{
-	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-
-	m_sName = converter.to_bytes(sName);
 }
 
 const char* CEntry::getName(void)
@@ -88,7 +80,7 @@ namespace FS
 		virtual bool isSystem(void);
 		virtual bool isExecutable(void);
 
-		virtual uint64 getSize(void);
+		virtual uint64_t getSize(void);
 
 	public:
 
@@ -100,7 +92,7 @@ namespace FS
 		bool m_bIsHidden;
 		bool m_bIsSystem;
 		bool m_bIsExecutable;
-		uint64 m_ui64Size;
+		uint64_t m_ui64Size;
 	};
 };
 
@@ -174,7 +166,7 @@ bool CAttributes::isExecutable(void)
 // ________________________________________________________________________________________________________________
 //
 
-uint64 CAttributes::getSize(void)
+uint64_t CAttributes::getSize(void)
 {
 	return m_ui64Size;
 }
@@ -225,7 +217,7 @@ namespace FS
 	{
 	public:
 		CEntryEnumeratorLinux(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
-		virtual boolean enumerate(const char* sWildCard, boolean bRecursive=false);
+		virtual bool enumerate(const char* sWildCard, bool bRecursive=false);
 	};
 };
 
@@ -237,7 +229,7 @@ namespace FS
 	{
 	public:
 		explicit CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
-		virtual boolean enumerate(const char* sWildCard, boolean bRecursive=false);
+		virtual bool enumerate(const char* sWildCard, bool bRecursive=false);
 	};
 };
 
@@ -249,7 +241,7 @@ namespace FS
 	{
 	public:
 		explicit CEntryEnumeratorDummy(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
-		virtual boolean enumerate(const char* sWildCard, boolean bRecursive=false);
+		virtual bool enumerate(const char* sWildCard, bool bRecursive=false);
 	};
 };
 
@@ -386,7 +378,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 			l_pFileHandle=FindFirstFile((l_sCurrentSearchPath+L"*").c_str(), &l_oFindData);
 			if(l_pFileHandle != INVALID_HANDLE_VALUE)
 			{
-				boolean l_bFinished=false;
+				bool l_bFinished=false;
 				while(!l_bFinished)
 				{
 					if (std::wstring(l_oFindData.cFileName) != L"." && std::wstring(l_oFindData.cFileName) != L"..")
@@ -407,6 +399,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 			}
 		}
 	}
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 
 	std::wstring l_sCurrentPath;
 	while(! l_vFoldersToEnumerate.empty())
@@ -420,10 +413,11 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 
 		if(l_pFileHandle!=INVALID_HANDLE_VALUE)
 		{
-			boolean l_bFinished=false;
+			bool l_bFinished=false;
 			while(!l_bFinished)
 			{
-				CEntry l_oEntry(std::wstring(l_sCurrentPath+l_oFindData.cFileName).c_str());
+				std::string entryName = converter.to_bytes(l_sCurrentPath+l_oFindData.cFileName);
+				CEntry l_oEntry(entryName.c_str());
 				CAttributes l_oAttributes;
 
 				l_oAttributes.m_bIsDirectory=(l_oFindData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)?true:false;
@@ -463,7 +457,7 @@ CEntryEnumeratorDummy::CEntryEnumeratorDummy(IEntryEnumeratorCallBack& rEntryEnu
 {
 }
 
-boolean CEntryEnumeratorDummy::enumerate(const char* sWildCard, boolean bRecursive)
+bool CEntryEnumeratorDummy::enumerate(const char* sWildCard, bool bRecursive)
 {
 	if(!sWildCard)
 	{

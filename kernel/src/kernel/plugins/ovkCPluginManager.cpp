@@ -38,7 +38,7 @@ namespace OpenViBE
 			{
 			}
 
-			virtual FS::boolean callback(
+			virtual bool callback(
 				FS::IEntryEnumerator::IEntry& rEntry,
 				FS::IEntryEnumerator::IAttributes& rAttributes)
 			{

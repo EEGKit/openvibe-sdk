@@ -7,7 +7,7 @@
  #include <sys/types.h>  // For stat().
 #elif defined TARGET_OS_Windows
  #include "m_ConverterUtf8.h"
- #include <windows.h>
+ #include <Windows.h>
 #else
 #endif
 
