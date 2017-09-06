@@ -133,7 +133,7 @@ if /i "%1" == "-h" (
 	Goto parameter_parse
 ) else if /i "%1"=="--dependencies-dir" (
 	set DependenciesPath="-DOV_CUSTOM_DEPENDENCIES_PATH=%2"
-	set init_env_cmd=windows-initialize-environment.cmd --platform-target %PLATFORMTARGET% --dependencies-dir %2
+	set init_env_cmd=windows-initialize-environment.cmd --dependencies-dir %2
 	SHIFT
 	SHIFT
 	Goto parameter_parse
@@ -166,9 +166,9 @@ if defined vsgenerate (
 
 setlocal
 
-call %init_env_cmd% --platform-target %PLATFORMTARGET% 
+call %init_env_cmd% --platform-target %PLATFORMTARGET%
 
-echo Generator is: %VSCMake%
+echo Compiler is: %VSCMake%
 
 if defined vsgenerate (
 	set generator=-G"%VSCMake%" -T "v120"

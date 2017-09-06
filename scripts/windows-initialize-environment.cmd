@@ -4,8 +4,13 @@ set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin;%PATH%
 set "SCRIPT_PATH=%~dp0"
 set "PATH_DEPENDENCIES=%SCRIPT_PATH%\..\dependencies"
 
+:parameter_parse
+
 if /i "%1" == "--dependencies-dir" (
-	set "PATH_DEPENDENCIES=%1"
+	set "PATH_DEPENDENCIES=%2"
+	SHIFT
+	SHIFT
+	Goto parameter_parse
 ) else if /i "%1" == "--platform-target" (
 	if "%2"=="x64" (
 		set PLATFORM=x64
@@ -17,6 +22,13 @@ if /i "%1" == "--dependencies-dir" (
 		echo Unknown platform %2 target
 		Goto terminate
 	)
+	SHIFT
+	SHIFT
+
+	Goto parameter_parse
+) else if not "%1" == "" (
+	echo unrecognized option [%1]
+	Goto terminate_error
 )
 
 set PATH=%PATH_DEPENDENCIES%\boost\bin;%PATH%
@@ -85,5 +97,17 @@ if %SKIP_VS2013% == 1 (
 		goto terminate
 	)
 )
+
+goto terminate_success
+
+:terminate_error
+
+echo An error occured during environment initializing !
+
+goto terminate
+
+:terminate_success
+
+goto terminate
 
 :terminate
