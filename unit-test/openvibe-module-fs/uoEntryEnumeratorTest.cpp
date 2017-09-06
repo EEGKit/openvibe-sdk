@@ -31,7 +31,7 @@ class EntryEnumeratorCallBack : public FS::IEntryEnumeratorCallBack
 {
 public:
 
-	virtual FS::boolean callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
+	virtual bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
 	{
 		if (rAttributes.isFile())
 		{

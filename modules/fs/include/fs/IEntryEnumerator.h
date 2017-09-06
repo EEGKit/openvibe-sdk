@@ -2,6 +2,7 @@
 #define __FS_IEntryEnumerator_H__
 
 #include "defines.h"
+#include <cinttypes>
 
 namespace FS
 {
@@ -14,17 +15,17 @@ namespace FS
 		class FS_API IAttributes
 		{
 		public:
-			virtual FS::boolean isFile(void)=0;
-			virtual FS::boolean isDirectory(void)=0;
-			virtual FS::boolean isSymbolicLink(void)=0;
+			virtual bool isFile(void)=0;
+			virtual bool isDirectory(void)=0;
+			virtual bool isSymbolicLink(void)=0;
 
-			virtual FS::boolean isArchive(void)=0;
-			virtual FS::boolean isReadOnly(void)=0;
-			virtual FS::boolean isHidden(void)=0;
-			virtual FS::boolean isSystem(void)=0;
-			virtual FS::boolean isExecutable(void)=0;
+			virtual bool isArchive(void)=0;
+			virtual bool isReadOnly(void)=0;
+			virtual bool isHidden(void)=0;
+			virtual bool isSystem(void)=0;
+			virtual bool isExecutable(void)=0;
 
-			virtual FS::uint64 getSize(void)=0;
+			virtual uint64_t getSize(void)=0;
 		protected:
 			virtual ~IAttributes(void);
 		};
@@ -37,7 +38,7 @@ namespace FS
 			virtual ~IEntry(void);
 		};
 
-		virtual FS::boolean enumerate(const char* sWildcard, FS::boolean bRecursive=false)=0;
+		virtual bool enumerate(const char* sWildcard, bool bRecursive=false)=0;
 		virtual void release(void)=0;
 	protected:
 		virtual ~IEntryEnumerator(void);
@@ -46,7 +47,7 @@ namespace FS
 	class FS_API IEntryEnumeratorCallBack
 	{
 	public:
-		virtual FS::boolean callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes)=0;
+		virtual bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes)=0;
 		virtual ~IEntryEnumeratorCallBack(void) { }
 	};
 
