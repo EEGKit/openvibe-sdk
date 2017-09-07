@@ -16,7 +16,7 @@ set init_env_cmd=windows-initialize-environment.cmd
 set generator=-G"Ninja"
 set builder=Ninja
 set script_dir=%~dp0
-set PLATFORMTARGET=x86
+set PlatformTarget=x86
 
 goto parameter_parse
 
@@ -148,7 +148,7 @@ if /i "%1" == "-h" (
 	SHIFT
 	Goto parameter_parse
 ) else if /i "%1"=="--platform-target" (
-	set PLATFORMTARGET=%2
+	set PlatformTarget=%2
 	SHIFT
 	SHIFT
 	Goto parameter_parse
@@ -166,25 +166,25 @@ if defined vsgenerate (
 
 setlocal
 
-call %init_env_cmd% --platform-target %PLATFORMTARGET%
+call %init_env_cmd% --platform-target %PlatformTarget%
 
 echo Compiler is: %VSCMake%
 
 if defined vsgenerate (
 	set generator=-G"%VSCMake%" -T "v120"
 	if not defined build_dir (
-		set build_dir=%script_dir%\..\..\openvibe-sdk-build\vs-project
+		set build_dir=%script_dir%\..\..\openvibe-sdk-build\vs-project-%PlatformTarget%
 	)
 	if not defined install_dir (
-		set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist
+		set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist-%PlatformTarget%
 	)
 ) else (
 	set build_type="-DCMAKE_BUILD_TYPE=%BuildType%"
 	if not defined build_dir (
-		set build_dir=%script_dir%\..\..\openvibe-sdk-build\build-%BuildType%
+		set build_dir=%script_dir%\..\..\openvibe-sdk-build\build-%BuildType%-%PlatformTarget%
 	)
 	if not defined install_dir (
-		set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist-%BuildType%
+		set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist-%BuildType%-%PlatformTarget%
 	)
 )
 if not defined ov_cmake_test_output (

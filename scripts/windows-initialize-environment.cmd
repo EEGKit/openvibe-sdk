@@ -2,7 +2,6 @@
 
 set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin;%PATH%
 set "SCRIPT_PATH=%~dp0"
-set "PATH_DEPENDENCIES=%SCRIPT_PATH%\..\dependencies"
 
 :parameter_parse
 
@@ -31,14 +30,24 @@ if /i "%1" == "--dependencies-dir" (
 	Goto terminate_error
 )
 
-set PATH=%PATH_DEPENDENCIES%\boost\bin;%PATH%
-set PATH=%PATH_DEPENDENCIES%\cmake\bin;%PATH%
-set PATH=%PATH_DEPENDENCIES%\expat\bin;%PATH%
-set PATH=%PATH_DEPENDENCIES%\ninja;%PATH%
-set PATH=%PATH_DEPENDENCIES%\tvicport\bin;%PATH%
-set PATH=%PATH_DEPENDENCIES%\vcredist;%PATH%
-set PATH=%PATH_DEPENDENCIES%\zip;%PATH%
-set PATH=%PATH_DEPENDENCIES%\xerces-c\lib;%PATH%
+if not defined PATH_DEPENDENCIES (
+	if %PLATFORM%==x64 (
+		SET "PATH_DEPENDENCIES=%SCRIPT_PATH%../dependencies_x64"
+	) else (
+		SET "PATH_DEPENDENCIES=%SCRIPT_PATH%../dependencies_x86"
+	)
+)
+
+echo POUETTTT %PATH_DEPENDENCIES%
+
+set PATH=%PATH_DEPENDENCIES%/boost/bin;%PATH%
+set PATH=%PATH_DEPENDENCIES%/cmake/bin;%PATH%
+set PATH=%PATH_DEPENDENCIES%/expat/bin;%PATH%
+set PATH=%PATH_DEPENDENCIES%/ninja;%PATH%
+set PATH=%PATH_DEPENDENCIES%/tvicport/bin;%PATH%
+set PATH=%PATH_DEPENDENCIES%/vcredist;%PATH%
+set PATH=%PATH_DEPENDENCIES%/zip;%PATH%
+set PATH=%PATH_DEPENDENCIES%/xerces-c/lib;%PATH%
 
 REM # Set to 1 to skip new compilers.
 if not defined SKIP_VS2017 (

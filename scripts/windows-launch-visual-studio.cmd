@@ -12,14 +12,14 @@ for %%A in (%*) DO (
 	)
 )
 
-SET "OV_PATH_ROOT=%CD%\..\..\openvibe-sdk-build\dist\%BuildType%"
+SET "OV_PATH_ROOT=%CD%\..\..\openvibe-sdk-build\dist\%BuildType%"-%PlatformTarget%
 SET "PATH=%OV_PATH_ROOT%\bin;%PATH%"
 
 if not defined USE_EXPRESS (
 	SET USE_EXPRESS=1
 )
 
-set SolutionPath=%CD%\..\..\openvibe-sdk-build\vs-project\OpenVIBE.sln
+set SolutionPath=%CD%\..\..\openvibe-sdk-build\vs-project-%PlatformTarget%\OpenVIBE.sln
 
 if %USE_EXPRESS% == 1 (
 	echo Use %VSCMake% Express Edition
