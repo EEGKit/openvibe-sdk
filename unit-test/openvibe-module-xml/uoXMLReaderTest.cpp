@@ -27,8 +27,10 @@
 #include <memory>
 
 #include "xml/IReader.h"
+#include "xml/IXMLHandler.h"
+#include <fs/Files.h>
 
-#include "ovtAssert.h"
+#include <gtest/gtest.h>
 
 class CReaderCallBack : public XML::IReaderCallBack
 {
@@ -80,20 +82,16 @@ protected:
 	}
 };
 
-int uoXMLReaderTest(int argc, char* argv[])
-{  
-	OVT_ASSERT(argc == 2, "Failure to retrieve tests arguments. Expecting: data_dir");
-	
-	std::string dataFile = std::string(argv[1]) + "ref_data.xml";
-
-	// Parse reference data that are well-known
+TEST(XML_Reader_Test_Case, validateReader)
+{
+	std::string dataFile = std::string(DATA_DIR) + "/ref_data.xml";
 
 	CReaderCallBack readerCallback;
 	XML::IReader* xmlReader = XML::createReader(readerCallback);
 
 	FILE* inputTestDataFile = fopen(dataFile.c_str(), "r");
 
-	OVT_ASSERT(inputTestDataFile, "Failure to open data file");
+	ASSERT_NE(nullptr, inputTestDataFile);
 
 	char dataBuffer[1024];
 	while (!feof(inputTestDataFile))
@@ -110,49 +108,108 @@ int uoXMLReaderTest(int argc, char* argv[])
 	auto rootNode = readerCallback.currentNode;
 
 	// Root node check
-	OVT_ASSERT_STREQ(rootNode->name, std::string("Document"), "Failure to retrieve root node name");
-	OVT_ASSERT(rootNode->attributes.size() == 1, "Failure to retrieve root node attribute");
-	OVT_ASSERT_STREQ(rootNode->attributes["name"], std::string("test_reference"), "Failure to retrieve root node attribute");
+	ASSERT_EQ("Document", rootNode->name);
+	ASSERT_EQ(1, rootNode->attributes.size());
+	ASSERT_EQ("test_reference", rootNode->attributes["name"]);
 
-	OVT_ASSERT(rootNode->children.size() == 3, "Failure to retrieve root node children");
+	ASSERT_EQ(3, rootNode->children.size());
 
 	auto complexChild = rootNode->children[0];
 	auto dataChild = rootNode->children[1];
 	auto emptyChild = rootNode->children[2];
 
 	// Simple child with data check
-	OVT_ASSERT_STREQ(dataChild->name, std::string("NodeWithData"), "Failure to retrieve data dataChild node name");
-	OVT_ASSERT_STREQ(dataChild->data, std::string("node data with special characters <>,;:!?./&\"'(-_)=~#{[|`\\^@]}/*-+"), "Failure to retrieve dataChild node data");
-	OVT_ASSERT(dataChild->attributes.size() == 1, "Failure to retrieve dataChild node attribute");
-	OVT_ASSERT_STREQ(dataChild->attributes["status"], std::string("hasData"), "Failure to retrieve dataChild node attribute");
+	ASSERT_EQ("NodeWithData", dataChild->name);
+	ASSERT_EQ("node data with special characters <>,;:!?./&\"'(-_)=~#{[|`\\^@]}/*-+", dataChild->data);
+	ASSERT_EQ(1, dataChild->attributes.size());
+	ASSERT_EQ("hasData", dataChild->attributes["status"]);
 
 	// Simple child with no data and multiple attributes check
-	OVT_ASSERT_STREQ(emptyChild->name, std::string("NodeEmptyWithNumber666"), "Failure to retrieve emptyChild node name");
-	OVT_ASSERT(emptyChild->attributes.size() == 2, "Failure to retrieve emptyChild node attributes");
-	OVT_ASSERT_STREQ(emptyChild->attributes["status"], std::string("noData"), "Failure to retrieve emptyChild node status attribute");
-	OVT_ASSERT_STREQ(emptyChild->attributes["ref"], std::string("test"), "Failure to retrieve emptyChild node ref attribute");
+	ASSERT_EQ("NodeEmptyWithNumber666", emptyChild->name);
+	ASSERT_EQ(2, emptyChild->attributes.size());
+	ASSERT_EQ("noData", emptyChild->attributes["status"]);
+	ASSERT_EQ("test", emptyChild->attributes["ref"]);
 
 	// Complex child check
-	OVT_ASSERT_STREQ(complexChild->name, std::string("NodeWithChildren"), "Failure to retrieve complexChild node name");
-	OVT_ASSERT(complexChild->attributes.empty(), "Failure to retrieve complexChild node attribute");
+	ASSERT_EQ("NodeWithChildren", complexChild->name);
+	ASSERT_TRUE(complexChild->attributes.empty());
 
-	OVT_ASSERT(complexChild->children.size() == 3, "Failure to retrieve complexChild node children");
+	ASSERT_EQ(3, complexChild->children.size());
 
 	dataChild = complexChild->children[0];
 	emptyChild = complexChild->children[1];
 	complexChild = complexChild->children[2];
 
-	OVT_ASSERT_STREQ(dataChild->name, std::string("ChildNodeWithData"), "Failure to retrieve data dataChild node name");
-	OVT_ASSERT_STREQ(dataChild->data, std::string("child node data with more than 10 alphanumeric characters"), "Failure to retrieve dataChild node data");
-	OVT_ASSERT(dataChild->attributes.size() == 0, "Failure to retrieve dataChild node attribute");
+	ASSERT_EQ("ChildNodeWithData", dataChild->name);
+	ASSERT_EQ("child node data with more than 10 alphanumeric characters", dataChild->data);
+	ASSERT_EQ(0, dataChild->attributes.size());
 
-	OVT_ASSERT_STREQ(emptyChild->name, std::string("ChildNodeEmpty"), "Failure to retrieve emptyChild node name");
-	OVT_ASSERT(emptyChild->attributes.empty(), "Failure to retrieve emptyChild node attribute");
+	ASSERT_EQ("ChildNodeEmpty", emptyChild->name);
+	ASSERT_TRUE(emptyChild->attributes.empty());
 
-	OVT_ASSERT_STREQ(complexChild->name, std::string("ChildNodeWithChildren"), "Failure to retrieve complexChild node name");
-	OVT_ASSERT(complexChild->attributes.empty(), "Failure to retrieve complexChild node attribute");
-	OVT_ASSERT(complexChild->children.size() == 1, "Failure to retrieve complexChild node children");
-	
-	return EXIT_SUCCESS;
+	ASSERT_EQ("ChildNodeWithChildren", complexChild->name);
+	ASSERT_TRUE(complexChild->attributes.empty());
+	ASSERT_EQ(1, complexChild->children.size());
 }
 
+TEST(XML_Reader_Test_Case, validateHandlerReadJapanese)
+{
+	std::string dataFile = std::string(DATA_DIR) + "/日本語/ref_data_jp.xml";
+
+	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
+	XML::IXMLNode* rootNode = xmlHandler->parseFile(dataFile.c_str());
+
+	ASSERT_NE(nullptr, rootNode);
+	ASSERT_EQ(std::string("Document"), rootNode->getName());
+	ASSERT_TRUE(rootNode->hasAttribute("name"));
+	ASSERT_EQ(std::string("日本語"), rootNode->getAttribute("name"));
+	ASSERT_EQ(3, rootNode->getChildCount());
+
+	ASSERT_STREQ("日本語 1", rootNode->getChild(0)->getPCData());
+
+	xmlHandler->release();
+}
+
+TEST(XML_Reader_Test_Case, validateHandlerReadFrench)
+{
+	std::string dataFile = std::string(DATA_DIR) + "/Français/ref_data_fr.xml";
+
+	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
+	XML::IXMLNode* rootNode = xmlHandler->parseFile(dataFile.c_str());
+
+	ASSERT_NE(nullptr, rootNode);
+	ASSERT_EQ(std::string("Document"), rootNode->getName());
+	ASSERT_TRUE(rootNode->hasAttribute("name"));
+	ASSERT_EQ(std::string("Français"), rootNode->getAttribute("name"));
+	ASSERT_EQ(3, rootNode->getChildCount());
+
+	ASSERT_STREQ("Français 1 (àèáéîôïç)", rootNode->getChild(0)->getPCData());
+
+	xmlHandler->release();
+}
+
+TEST(XML_Reader_Test_Case, validateHandlerReadNBSP)
+{
+	std::string dataFile = std::string(DATA_DIR) + "/NB\xC2\xA0SP/ref_data_nbsp.xml";
+
+	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
+	XML::IXMLNode* rootNode = xmlHandler->parseFile(dataFile.c_str());
+
+	ASSERT_NE(nullptr, rootNode);
+	ASSERT_EQ(std::string("Document"), rootNode->getName());
+	ASSERT_TRUE(rootNode->hasAttribute("name"));
+	ASSERT_EQ(std::string("NB\xC2\xA0SP"), rootNode->getAttribute("name"));
+	ASSERT_EQ(3, rootNode->getChildCount());
+
+	ASSERT_STREQ("NB\xC2\xA0SP 1", rootNode->getChild(0)->getPCData());
+
+	xmlHandler->release();
+}
+
+int uoXMLReaderTest(int argc, char* argv[])
+{
+	::testing::InitGoogleTest(&argc, argv);
+
+	::testing::GTEST_FLAG(filter) = "XML_Reader_Test_Case.*";
+	return RUN_ALL_TESTS();
+}

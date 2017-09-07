@@ -24,10 +24,13 @@
 #include <fstream>
 #include <cstdio>
 
-#include "xml/IWriter.h"
+#include <xml/IWriter.h>
+#include <xml/IXMLHandler.h>
 
-#include "ovtAssert.h"
+#include <fs/Files.h>
 
+#include <gtest/gtest.h>
+#include <boost/filesystem.hpp>
 
 class CWriterCallBack : public XML::IWriterCallBack
 {
@@ -35,7 +38,7 @@ public:
 
 	CWriterCallBack(const char* filename)
 	{
-		m_File = std::fopen(filename, "wb");
+		m_File = FS::Files::open(filename, "wb");
 	}
 
 	virtual ~CWriterCallBack(void)
@@ -66,12 +69,16 @@ private:
 	std::FILE* m_File{ nullptr };
 };
 
-int uoXMLWriterTest(int argc, char* argv[])
+TEST(XML_Writer_Test_Case, validateWriter)
 {
-	OVT_ASSERT(argc == 3, "Failure to retrieve tests arguments. Expecting: data_dir output_dir");
+	std::string expectedFile = DATA_DIR "/ref_data.xml";
+	std::string outputFile = TEMP_DIR "/uoXMLWriterTest.xml";
 
-	std::string expectedFile = std::string(argv[1]) + "ref_data.xml";
-	std::string outputFile = std::string(argv[2]) + "uoXMLWriterTest.xml";
+	FS::Files::createPath(TEMP_DIR);
+	ASSERT_TRUE(FS::Files::directoryExists(TEMP_DIR));
+
+	FS::Files::removeAll(outputFile.c_str());
+	ASSERT_FALSE(FS::Files::fileExists(outputFile.c_str()));
 
 	// The test serializes a known xml sequence and compares the output
 	// to a reference.
@@ -116,11 +123,14 @@ int uoXMLWriterTest(int argc, char* argv[])
 	writerCallback.release();
 
 	// comparison part
-	std::ifstream generatedStream(outputFile);
-	std::ifstream expectedStream(expectedFile);
+	std::ifstream generatedStream;
+	std::ifstream expectedStream;
 
-	OVT_ASSERT(generatedStream.is_open(), "Failure to open generated xml stream for reading");
-	OVT_ASSERT(expectedStream.is_open(), "Failure to open reference stream for reading");
+	FS::Files::openIFStream(generatedStream, outputFile.c_str());
+	FS::Files::openIFStream(expectedStream, expectedFile.c_str());
+
+	ASSERT_TRUE(generatedStream.is_open());
+	ASSERT_TRUE(expectedStream.is_open());
 
 	std::string generatedString;
 	std::string expectedString;
@@ -128,13 +138,60 @@ int uoXMLWriterTest(int argc, char* argv[])
 	while (std::getline(expectedStream, expectedString))
 	{
 
-		OVT_ASSERT(std::getline(generatedStream, generatedString), "Failure to retrieve a line to match");
-		OVT_ASSERT_STREQ(expectedString, generatedString, "Failure to match expected line to generated line");
+		std::getline(generatedStream, generatedString);
+		ASSERT_EQ(expectedString, generatedString);
 	}
 
 	// last check to verify the expected file has no additional line
-	OVT_ASSERT(!std::getline(generatedStream, generatedString), "Failure to match expected file size and generated file size");
+	std::getline(generatedStream, generatedString);
 
-	return EXIT_SUCCESS;
 }
 
+TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
+{
+	std::string expectedFile = DATA_DIR "/日本語/ref_data_jp.xml";
+	std::string outputFile = TEMP_DIR "/オッペﾝヴィベ/日本語.xml";
+
+	FS::Files::createPath(TEMP_DIR);
+	ASSERT_TRUE(FS::Files::directoryExists(TEMP_DIR));
+
+	FS::Files::removeAll(outputFile.c_str());
+	ASSERT_FALSE(FS::Files::fileExists(outputFile.c_str()));
+
+	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
+	std::string testData ="<Document name=\"日本語\"><Node>日本語 1</Node><Node>日本語 2</Node><Node>日本語 3</Node></Document>";
+	XML::IXMLNode* rootNode = xmlHandler->parseString(testData.c_str(), testData.size());
+	xmlHandler->writeXMLInFile(*rootNode, outputFile.c_str());
+
+	// comparison part
+	std::ifstream generatedStream;
+	std::ifstream expectedStream;
+
+	FS::Files::openIFStream(generatedStream, outputFile.c_str());
+	FS::Files::openIFStream(expectedStream, expectedFile.c_str());
+
+	ASSERT_TRUE(generatedStream.is_open());
+	ASSERT_TRUE(expectedStream.is_open());
+
+	std::string generatedString;
+	std::string expectedString;
+
+	while (std::getline(expectedStream, expectedString))
+	{
+
+		std::getline(generatedStream, generatedString);
+		ASSERT_EQ(expectedString, generatedString);
+	}
+
+	// last check to verify the expected file has no additional line
+	std::getline(generatedStream, generatedString);
+
+}
+
+int uoXMLWriterTest(int argc, char* argv[])
+{
+	::testing::InitGoogleTest(&argc, argv);
+
+	::testing::GTEST_FLAG(filter) = "XML_Writer_Test_Case.*";
+	return RUN_ALL_TESTS();
+}
