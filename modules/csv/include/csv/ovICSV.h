@@ -105,7 +105,8 @@ namespace OpenViBE
 			LogErrorCodes_DurationError = -4,
 			LogErrorCodes_CantOpenFile = -3,
 			LogErrorCodes_NoFileDefined = -2,
-			LogErrorCodes_ErrorWhileClosing = -1
+			LogErrorCodes_ErrorWhileClosing = -1,
+			LogErrorCodes_NoError = 0
 		};
 
 		enum class EFileAccessMode
@@ -284,7 +285,7 @@ namespace OpenViBE
 			 * \retval true in case of sucess
 			 * \retval false in case of error while writing
 			 */
-			virtual bool readSamplesAndEventsFromFile(uint64_t chunksToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events) = 0;
+			virtual bool readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<SMatrixChunk>& samples, std::vector<SStimulationChunk>& events) = 0;
 
 			/**
 			 * \brief Open file specified on parameter
@@ -378,6 +379,8 @@ namespace OpenViBE
 			 * \return string additionnal information
 			 */
 			virtual std::string getLastErrorString() = 0;
+
+			virtual bool hasDataToRead() const = 0;
 		protected:
 			virtual ~ICSVHandler() {}
 		};

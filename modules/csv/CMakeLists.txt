@@ -25,6 +25,8 @@ IF(UNIX)
 	SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES COMPILE_FLAGS "-fPIC")
 ENDIF(UNIX)
 
+INCLUDE("FindThirdPartyBoost")
+
 # ---------------------------------
 # Target macros
 # Defines target operating system

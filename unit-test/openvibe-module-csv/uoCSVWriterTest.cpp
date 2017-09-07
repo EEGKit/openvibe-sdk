@@ -29,7 +29,8 @@
 
 using namespace OpenViBE::CSV;
 
-namespace{
+namespace
+{
 	std::string directoryPath = "";
 }
 
@@ -334,7 +335,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes)
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::StreamedMatrix);
 
-	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 1, 4}, { "L1", "A", "B", "C", "D" }));
+	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 1, 4 }, { "L1", "A", "B", "C", "D" }));
 
 	for (unsigned int i = 0; i < 50; i++)
 	{
@@ -448,7 +449,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterWithInvalidTime)
 	ASSERT_FALSE(matrixWriterTest->addSample({ 1.0, 0, { -20.20, -15.15, -10.10 }, 0 }));
 	ASSERT_FALSE(matrixWriterTest->addSample({ -1.0, 0, { -20.20, -15.15, -10.10 }, 1 }));
 	ASSERT_FALSE(matrixWriterTest->addSample({ -1.0, -0.5, { -20.20, -15.15, -10.10 }, 2 }));
-	ASSERT_FALSE(matrixWriterTest->addSample({ 1.0, -1.0, { -20.20, -15.15, -10.10 }, 3}));
+	ASSERT_FALSE(matrixWriterTest->addSample({ 1.0, -1.0, { -20.20, -15.15, -10.10 }, 3 }));
 
 	ASSERT_TRUE(matrixWriterTest->closeFile());
 
@@ -466,14 +467,15 @@ TEST(CSV_Writer_Test_Case, matrixWriterOnlyLastMatrix)
 
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 2, 2, 2 }, { "LA", "LB", "1", "2", "X", "Y" }));
 	ASSERT_TRUE(matrixWriterTest->writeHeaderToFile());
+	
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(matrixWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i)+1.0, { static_cast<double>(i), 1, 2, 3, 4, 5, 6, 7 }, epoch }));
+		ASSERT_TRUE(matrixWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i) + 1.0, { static_cast<double>(i), 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0 }, epoch }));
 
-		if (i == 5 || i == 3 || i == 7)
+		if (i == 3 || i == 5 || i == 7)
 		{
-			ASSERT_TRUE(matrixWriterTest->addEvent(35001, static_cast<double>(i)+3.5, 1.0));
+			ASSERT_TRUE(matrixWriterTest->addEvent(35001, static_cast<double>(i) + 3.5, 1.0));
 		}
 	}
 
@@ -630,6 +632,6 @@ int uoCSVWriterTest(int argc, char* argv[])
 		directoryPath = argv[1];
 	}
 	::testing::InitGoogleTest(&argc, argv);
-    ::testing::GTEST_FLAG(filter) = "CSV_Writer_Test_Case.*";
+	::testing::GTEST_FLAG(filter) = "CSV_Writer_Test_Case.*";
 	return RUN_ALL_TESTS();
 }

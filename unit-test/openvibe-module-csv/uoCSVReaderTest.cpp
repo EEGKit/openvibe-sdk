@@ -166,15 +166,12 @@ TEST(CSV_Reader_Test_Case, signalReaderNotEnoughChunk)
 
 	ASSERT_TRUE(signalReaderTest->getSignalInformation(channelNames, samplingFrequency, sampleCountPerBuffer));
 
-	ASSERT_TRUE(signalReaderTest->readSamplesAndEventsFromFile(4, chunks, stimulations));
-	ASSERT_NE(chunks.size(), 4);
-
-	ASSERT_TRUE(!chunks.empty());
-	ASSERT_TRUE(!stimulations.empty());
+	ASSERT_TRUE(signalReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations));
+	ASSERT_EQ(chunks.size(), (size_t)3);
+	ASSERT_EQ(stimulations.size(), (size_t)3);
 	ASSERT_EQ(channelNames, expectedChannels);
 	ASSERT_EQ(samplingFrequency, 8U);
 	ASSERT_EQ(sampleCountPerBuffer, 4);
-	ASSERT_NE(4, chunks.size());
 	ASSERT_TRUE(signalReaderTest->closeFile());
 	OpenViBE::CSV::releaseCSVHandler(signalReaderTest);
 }
@@ -183,14 +180,7 @@ TEST(CSV_Reader_Test_Case, SignalReaderEmptyFile)
 {
 	ICSVHandler* signalReaderTest = createCSVHandler();
 	std::string filepath = dataDirectory + "testCSVSignalEmptyFile.csv";
-	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
-	signalReaderTest->setFormatType(EStreamType::Signal);
-	std::vector<std::string> channelNames;
-	unsigned int samplingFrequency;
-	unsigned int sampleCountPerBuffer;
-	ASSERT_FALSE(signalReaderTest->getSignalInformation(channelNames, samplingFrequency, sampleCountPerBuffer));
-
-	ASSERT_TRUE(signalReaderTest->closeFile());
+	ASSERT_FALSE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
 	OpenViBE::CSV::releaseCSVHandler(signalReaderTest);
 }
 
@@ -380,7 +370,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderNormalGoodSignal)
 	std::vector<unsigned int> goodDimensionsSizes = { 2, 2, 5 };
 
 	ASSERT_TRUE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
-	ASSERT_TRUE(matrixReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations));
+	ASSERT_TRUE(matrixReaderTest->readSamplesAndEventsFromFile(3, chunks, stimulations)) << matrixReaderTest->getLastLogError() << ".Details: " << matrixReaderTest->getLastErrorString();
 	ASSERT_EQ(chunks.size(), 3);
 
 	ASSERT_EQ(dimensionSizes, goodDimensionsSizes);

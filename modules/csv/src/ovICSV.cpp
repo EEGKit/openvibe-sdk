@@ -42,5 +42,12 @@ namespace {
 
 std::string ICSVHandler::getLogError(ELogErrorCodes code)
 {
-	return s_ErrorMap.at(code);
+	if (s_ErrorMap.count(code) != 0)
+	{
+		return s_ErrorMap.at(code);
+	}
+	else
+	{
+		return "Unknow error";
+	}
 }

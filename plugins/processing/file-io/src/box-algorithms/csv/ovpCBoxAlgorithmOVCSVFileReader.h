@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 
 		private:
 			bool initializeFile();
-			bool processStimulation();
+			bool processStimulation(double startTime, double endTime);
 
 			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)>m_ReaderLib;
 
@@ -45,7 +45,7 @@ namespace OpenViBEPlugins
 			std::deque<OpenViBE::CSV::SMatrixChunk> m_SavedChunks;
 			std::deque<OpenViBE::CSV::SStimulationChunk> m_SavedStimulations;
 
-			uint64_t m_lastStimulationDate;
+			uint64_t m_LastStimulationDate;
 
 			OpenViBE::CIdentifier m_TypeIdentifier;
 			std::vector<std::string> m_ChannelNames;
