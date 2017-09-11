@@ -12,23 +12,12 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-namespace
+CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer(void) :
+		m_TrainStimulationId(0),
+		m_FilterDimension(0),
+		m_bSaveAsBoxConfig(false)
 {
-	Eigen::MatrixXd operator ^ (const Eigen::MatrixXd& A, const Eigen::MatrixXd& B)
-	{
-		if (A.rows() == 0 && A.cols() == 0)
-		{
-			return B;
-		}
-		else
-		{
-			Eigen::MatrixXd C(A.rows(), A.cols() + B.cols());
-			C.block(0, 0, A.rows(), A.cols()) = A;
-			C.block(0, A.cols(), B.rows(), B.cols()) = B;
-			return C;
-		}
-	}
-};
+}
 
 boolean CBoxAlgorithmXDAWNTrainer::initialize(void)
 {
@@ -63,6 +52,9 @@ boolean CBoxAlgorithmXDAWNTrainer::initialize(void)
 		);
 
 	m_FilterDimension = static_cast<unsigned int>(filterDimension);
+
+	m_bSaveAsBoxConfig = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+
 
 	m_StimDecoder.initialize(*this, 0);
 	m_SignalDecoder[0].initialize(*this, 1);
@@ -192,18 +184,25 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 						"The filter dimension must not be superior than the channel count.\n",
 						OpenViBE::Kernel::ErrorType::OutOfBound
 						);
-
-					X[j] = Eigen::MatrixXd::Zero(channelCount, sampleCount);
+					
+					if (!n[0])
+					{
+						X[j].resize(channelCount, (dynamicBoxContext.getInputChunkCount(j + 1) - 1) * sampleCount);
+					}
+					else
+					{
+						X[j] = Eigen::MatrixXd::Zero(channelCount, sampleCount);
+					}
 				}
 
 				if (m_rSignalDecoder.isBufferReceived())
 				{
 					A = Eigen::Map < Eigen::Matrix < double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor > >(matrix->getBuffer(), channelCount, sampleCount);
-
+					
 					switch (j)
 					{
-						case 0: // Session
-							X[j] = X[j] ^ A; // Builds up complete recording session
+						case 0: // Session							
+							X[j].block(0, n[j]*A.cols(), A.rows(), A.cols()) = A;
 							break;
 
 						case 1: // ERP
@@ -299,13 +298,27 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 				OpenViBE::Kernel::ErrorType::BadProcessing
 				);
 		}
+				
+		// Create a CMatrix mapper that can spool the filters to a file
 
-		// Gets filters
-
-		Eigen::MatrixXd W = eigenSolver.eigenvectors();
-		Eigen::VectorXd V = eigenSolver.eigenvalues();
-		Eigen::MatrixXd W_forward = W;
-
+		CMatrix eigenVectors;
+		eigenVectors.setDimensionCount(2);
+		eigenVectors.setDimensionSize(0, m_FilterDimension);
+		eigenVectors.setDimensionSize(1, channelCount);
+		
+		Eigen::Map<MatrixXdRowMajor> vectorsMapper(eigenVectors.getBuffer(), m_FilterDimension, channelCount);
+		
+		vectorsMapper.block(
+		            0, 0, 		            
+		            m_FilterDimension,
+		            channelCount
+		            ) =
+		        eigenSolver.eigenvectors().block(
+		            0, 0, 
+		            channelCount, 
+		            m_FilterDimension
+		            ).transpose();			
+					
 		// Saves filters
 
 		FILE* file = FS::Files::open(m_FilterFilename.toASCIIString(), "wt");
@@ -316,23 +329,30 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 			OpenViBE::Kernel::ErrorType::BadFileWrite
 			);
 
-		::fprintf(file, "<OpenViBE-SettingsOverride>\n");
-		::fprintf(file, "\t<SettingValue>");
-
-		for (unsigned int c = 0; c < m_FilterDimension; c++)
+		if(m_bSaveAsBoxConfig) 
 		{
-			for (unsigned int r = 0; r < channelCount; r++)
+			::fprintf(file, "<OpenViBE-SettingsOverride>\n");
+			::fprintf(file, "\t<SettingValue>");
+			
+			for (unsigned int i = 0; i < eigenVectors.getBufferElementCount(); i++)
 			{
-				const char* sep = (r == 0 && c == 0 ? "" : "; ");
-				::fprintf(file, "%s%g", sep, W_forward(r, c));
+				::fprintf(file, "%e ", eigenVectors.getBuffer()[i]);
+			}			
+			
+			::fprintf(file, "</SettingValue>\n");
+			::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_FilterDimension);
+			::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", channelCount);
+			::fprintf(file, "\t<SettingValue></SettingValue>\n");
+			::fprintf(file, "</OpenViBE-SettingsOverride>");
+		}
+		else
+		{
+			if(!OpenViBEToolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_FilterFilename))
+			{
+				this->getLogManager() << LogLevel_Error << "Unable to save to [" << m_FilterFilename << "\n";
+				return false;
 			}
 		}
-
-		::fprintf(file, "</SettingValue>\n");
-		::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_FilterDimension);
-		::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", channelCount);
-		::fprintf(file, "\t<SettingValue></SettingValue>\n");
-		::fprintf(file, "</OpenViBE-SettingsOverride>");
 
 		OV_WARNING_UNLESS_K(
 			::fclose(file) == 0,

@@ -8,6 +8,8 @@
 #define OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer                                        OpenViBE::CIdentifier(0x27542F6E, 0x14AA3548)
 #define OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainerDesc                                    OpenViBE::CIdentifier(0x128A6013, 0x370B5C2C)
 
+typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
+
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
@@ -15,6 +17,7 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmXDAWNTrainer : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
 		{
 		public:
+			CBoxAlgorithmXDAWNTrainer(void);
 
 			virtual void release(void) { delete this; }
 
@@ -34,6 +37,7 @@ namespace OpenViBEPlugins
 			uint64_t m_TrainStimulationId;
 			OpenViBE::CString m_FilterFilename;
 			uint32_t m_FilterDimension;
+			bool m_bSaveAsBoxConfig;			
 		};
 
 		class CBoxAlgorithmXDAWNTrainerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -68,6 +72,7 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addSetting("Train stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_Train");
 				rBoxAlgorithmPrototype.addSetting("Spatial filter configuration", OV_TypeId_Filename, "");
 				rBoxAlgorithmPrototype.addSetting("Filter dimension", OV_TypeId_Integer, "4");
+				rBoxAlgorithmPrototype.addSetting("Save as box config", OV_TypeId_Boolean, "true");
 				return true;
 			}
 
