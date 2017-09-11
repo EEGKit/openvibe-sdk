@@ -114,9 +114,16 @@ caveats about the cross-validation procedure.
 
  * |OVP_DocBegin_BoxAlgorithm_ClassifierTrainer_Setting11| 
 If the number of class labels is unbalanced, the classifiers tend to be biased towards the majority labels.
-This option can be used to resample the dataset to feature all classes equally. Doing this may make sense 
-if the box is used for incremental learning, where all classes may not be equally represented in the training data 
-obtained so far, even if the design itself is balanced. Note that enabling this will make the cross-validation 
+This option can be used to resample the dataset to feature all classes equally. 
+
+The algorithm first looks how many examples there are in the majority class. Lets say this is n. Then, if class k has m examples, 
+it will random sample n-m examples with replacement from class k, appending them to the dataset. This will be done for each class. 
+In the end, each class will have n examples and all except the majority class will have some duplicate training vectors. 
+This can be seen as a technique to weight the importance of examples for such classifiers that do not support setting example weights 
+or class weight prior, and can in general be attempted with arbitrary learning algorithms.
+
+Enabling this option may make sense if the box is used for incremental learning, where all classes may not be equally represented 
+in the training data obtained so far, even if the design itself is balanced. Note that enabling this will make the cross-validation 
 results optimistic. In most conditions, the feature should be disabled.
  * |OVP_DocEnd_BoxAlgorithm_ClassifierTrainer_Setting11|
 
