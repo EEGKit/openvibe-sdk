@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			uint64_t m_TrainStimulationId;
 			OpenViBE::CString m_FilterFilename;
 			uint32_t m_FilterDimension;
-			bool m_bSaveAsBoxConfig;			
+			bool m_SaveAsBoxConfig;			
 		};
 
 		class CBoxAlgorithmXDAWNTrainerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc

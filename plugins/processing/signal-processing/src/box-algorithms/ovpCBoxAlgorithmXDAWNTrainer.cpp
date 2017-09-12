@@ -15,7 +15,7 @@ using namespace OpenViBEPlugins::SignalProcessing;
 CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer(void) :
 		m_TrainStimulationId(0),
 		m_FilterDimension(0),
-		m_bSaveAsBoxConfig(false)
+		m_SaveAsBoxConfig(false)
 {
 }
 
@@ -53,7 +53,7 @@ boolean CBoxAlgorithmXDAWNTrainer::initialize(void)
 
 	m_FilterDimension = static_cast<unsigned int>(filterDimension);
 
-	m_bSaveAsBoxConfig = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_SaveAsBoxConfig = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
 
 	m_StimDecoder.initialize(*this, 0);
@@ -185,11 +185,11 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 						OpenViBE::Kernel::ErrorType::OutOfBound
 						);
 					
-					if (!n[0])
+					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
 						X[j].resize(channelCount, (dynamicBoxContext.getInputChunkCount(j + 1) - 1) * sampleCount);
 					}
-					else
+					else // otherwise, only ERP averaging buffer (X[1]) is reset
 					{
 						X[j] = Eigen::MatrixXd::Zero(channelCount, sampleCount);
 					}
@@ -329,7 +329,7 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 			OpenViBE::Kernel::ErrorType::BadFileWrite
 			);
 
-		if(m_bSaveAsBoxConfig) 
+		if(m_SaveAsBoxConfig) 
 		{
 			::fprintf(file, "<OpenViBE-SettingsOverride>\n");
 			::fprintf(file, "\t<SettingValue>");
@@ -347,11 +347,11 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 		}
 		else
 		{
-			if(!OpenViBEToolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_FilterFilename))
-			{
-				this->getLogManager() << LogLevel_Error << "Unable to save to [" << m_FilterFilename << "\n";
-				return false;
-			}
+			OV_ERROR_UNLESS_KRF(
+				OpenViBEToolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_FilterFilename),
+				"Unable to save to [" << m_FilterFilename << "]\n",
+				OpenViBE::Kernel::ErrorType::BadFileWrite
+				);			
 		}
 
 		OV_WARNING_UNLESS_K(

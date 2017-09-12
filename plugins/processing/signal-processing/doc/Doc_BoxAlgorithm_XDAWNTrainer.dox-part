@@ -75,6 +75,10 @@ __________________________________________________________________
  * |OVP_DocBegin_BoxAlgorithm_XDAWNTrainer_Setting3|
  * This setting tells how many dimension should be kept out of the spatial filter.
  * |OVP_DocEnd_BoxAlgorithm_XDAWNTrainer_Setting3|
+
+ * |OVP_DocBegin_BoxAlgorithm_XDAWNTrainer_Setting4|
+ * If true, the file written will be a box configuration override especially for a spatial filter box. Otherwise, it will be an ASCII matrix.
+ * |OVP_DocEnd_BoxAlgorithm_XDAWNTrainer_Setting4|
 __________________________________________________________________
 
 Examples description
