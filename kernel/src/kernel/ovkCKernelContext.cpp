@@ -26,20 +26,6 @@
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 
-namespace
-{
-	// because std::tolower has multiple signatures,
-	// it can not be easily used in std::transform
-	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
-	template <class charT>
-	charT to_lower(charT c)
-	{
-		return std::tolower(c);
-	}
-
-};
-
-
 CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFile)
 	:m_rMasterKernelContext(pMasterKernelContext?*pMasterKernelContext:*this)
 	,m_pAlgorithmManager(nullptr)
@@ -64,8 +50,9 @@ CKernelContext::~CKernelContext(void)
 	this->uninitialize();
 }
 
-boolean CKernelContext::initialize(void)
+bool CKernelContext::initialize(void)
 {
+
 	m_pErrorManager.reset(new CErrorManager(m_rMasterKernelContext));
 
 	m_pKernelObjectFactory.reset(new CKernelObjectFactory(m_rMasterKernelContext));
