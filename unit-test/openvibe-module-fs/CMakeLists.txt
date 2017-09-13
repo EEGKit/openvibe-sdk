@@ -18,6 +18,23 @@
 # along with this program.
 # If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
+PROJECT(openvibe-module-fs-test-utf)
+SET_BUILD_PLATFORM()
+
+ADD_EXECUTABLE(${PROJECT_NAME} uoFilesTestUTF.cpp)
+
+INCLUDE("FindOpenViBE")
+INCLUDE("FindOpenViBECommon")
+INCLUDE("FindOpenViBEModuleFS")
+INCLUDE("FindThirdPartyBoost")
+#INCLUDE("FindThirdPartyBoost_System")
+INCLUDE("FindThirdPartyBoost_FileSystem")
+
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${GTEST_BOTH_LIBRARIES})
+
+ADD_DEFINITIONS("-DDATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\"")
+ADD_DEFINITIONS("-DTMP_DIR=\"${OVT_TEST_TEMPORARY_DIR}\"")
+ADD_TEST(NAME uoFSTestUTF COMMAND ${PROJECT_NAME})
 
 PROJECT(openvibe-module-fs-test)
 
