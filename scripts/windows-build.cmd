@@ -151,8 +151,12 @@ if /i "%1" == "-h" (
 	Goto terminate_error
 )
 
+if defined vsgenerate (
+	echo Build type is set to: MultiType.
+) else (
+	echo Build type is set to: %BuildType%.
+)
 
-echo Build type is set to: %BuildType%.
 
 setlocal
 
@@ -161,23 +165,23 @@ call %init_env_cmd%
 if defined vsgenerate (
 	set generator=-G"%VSCMake%" -T "v120"
 	if not defined build_dir (
-		set build_dir=%script_dir%\..\..\certivibe-build\vs-project-%BuildType%
+		set build_dir=%script_dir%\..\..\openvibe-sdk-build\vs-project
 	)
 	if not defined install_dir (
-		set install_dir=%script_dir%\..\..\certivibe-build\dist-%BuildType%
+		set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist
 	)
-)
-
-if not defined build_dir (
-	set build_dir=%script_dir%\..\..\openvibe-sdk-build\build-%BuildType%
-)
-if not defined install_dir (
-	set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist-%BuildType%
+) else (
+	set build_type="-DCMAKE_BUILD_TYPE=%BuildType%"
+	if not defined build_dir (
+		set build_dir=%script_dir%\..\..\openvibe-sdk-build\build-%BuildType%
+	)
+	if not defined install_dir (
+		set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist-%BuildType%
+	)
 )
 if not defined ov_cmake_test_output (
 	set ov_cmake_test_output=%build_dir%\validation-test-output\
 )
-
 
 mkdir %build_dir% 2>NUL
 pushd %build_dir%
@@ -188,7 +192,7 @@ if not exist "%build_dir%\CMakeCache.txt" set CallCmake="true"
 if %RerunCmake%=="true" set CallCmake="true"
 if %CallCmake%=="true" (
 	cmake %script_dir%\.. %generator% ^
-		-DCMAKE_BUILD_TYPE=%BuildType% ^
+		%build_type% ^
 		-DCMAKE_INSTALL_PREFIX=%install_dir% ^
 		-DOV_PACKAGE=%PackageOption% ^
 		-DOV_DISPLAY_ERROR_LOCATION=%DisplayErrorLocation% ^
@@ -203,14 +207,13 @@ if %CallCmake%=="true" (
 )
 
 if not "!ERRORLEVEL!" == "0" goto terminate_error
-
 if !builder! == None (
 	goto terminate_success
 ) else if !builder! == Ninja (
 	ninja install
 	if not "!ERRORLEVEL!" == "0" goto terminate_error
 ) else if !builder! == Visual (
-	msbuild OpenVIBE.sln
+	msbuild OpenVIBE.sln /p:Configuration=%BuildType%
 	if not "!ERRORLEVEL!" == "0" goto terminate_error
 
 	cmake --build . --target install

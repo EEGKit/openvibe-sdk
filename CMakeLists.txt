@@ -7,6 +7,7 @@ cmake_policy(SET CMP0048 OLD)
 
 PROJECT(OpenVIBE)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules")
+SET(CMAKE_INSTALL_LIBDIR lib) # Fix for non debian-based distrib, as it seeems to be a common occurence to name this folder lib32/lib64
 INCLUDE("Utilities")
 INCLUDE("SetProjectVersion")
 set_version()
@@ -72,20 +73,91 @@ ELSE()
 	MESSAGE(WARNING "Warning: unknown platform")
 ENDIF()
 
-IF(NOT CMAKE_BUILD_TYPE)
-	MESSAGE(STATUS "Setting default build type to Release")
-	SET(CMAKE_BUILD_TYPE "Release")
-ENDIF()
-
 IF(NOT CMAKE_INSTALL_PREFIX)
 	SET(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/../openvibe-sdk-build/dist-${CMAKE_BUILD_TYPE}")
-ENDIF(NOT CMAKE_INSTALL_PREFIX)
-
-IF(OV_PACKAGE)
-  SET(CMAKE_INSTALL_PREFIX .)
 ENDIF()
 
-SET(DOCUMENTATION_TEMP_DIRECTORY "${CMAKE_INSTALL_PREFIX}/doc-tmp")
+# Setup knowledge of GNU-style install path variables
+INCLUDE("GNUInstallDirs")
+
+if(NOT CMAKE_BUILD_TYPE AND CMAKE_GENERATOR MATCHES "Visual Studio*")
+	set(MULTI_BUILD TRUE)
+	set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin" )
+	set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/lib" )
+	# set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/archive" )
+	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
+		set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIGU} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/bin" )
+		set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIGU} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/lib" )
+		# set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}/archive" )
+		string(CONCAT DIST_ROOT ${DIST_ROOT} $<$<CONFIG:${OUTPUTCONFIGU}>:${CMAKE_INSTALL_PREFIX}/${OUTPUTCONFIG}>)
+	endforeach()
+	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS "OV_CMAKE_PATH_ROOT=\"${DIST_ROOT}\"")
+	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS "OV_CMAKE_PATH_BIN=\"${DIST_ROOT}/bin\"")
+	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS "OV_CMAKE_PATH_LIB=\"${DIST_ROOT}/lib\"")
+	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS "OV_CMAKE_PATH_DATA=\"${DIST_ROOT}/share/openvibe\"")
+	set(DIST_BINDIR ${DIST_ROOT}/bin)
+	set(DIST_LIBDIR ${DIST_ROOT}/lib)
+	set(DIST_INCLUDEDIR ${DIST_ROOT}/include)
+	set(DIST_DATADIR ${DIST_ROOT}/share)
+	set(DIST_DOCDIR ${DIST_ROOT}/doc)
+	set(DIST_DOCTMP ${DIST_ROOT}/doc-tmp)
+	# Also install it on the base dir for convenience
+	install(FILES scripts/AddOpenViBESDKComponents.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/share)
+	# Install the .install file inside the dists folders
+	install(FILES ${CMAKE_BINARY_DIR}/.install DESTINATION ${DIST_ROOT})
+elseif(CMAKE_BUILD_TYPE AND OV_PACKAGE)
+	# Add directories that OpenViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
+	# These defines should only be used in "openvibe/ov_directories.h".
+	add_definitions(-DOV_CMAKE_PATH_ROOT="${CMAKE_INSTALL_PREFIX}")
+	add_definitions(-DOV_CMAKE_PATH_BIN="${CMAKE_INSTALL_PREFIX}/bin")
+	add_definitions(-DOV_CMAKE_PATH_LIB="${CMAKE_INSTALL_PREFIX}/lib")
+	add_definitions(-DOV_CMAKE_PATH_DATA="${CMAKE_INSTALL_PREFIX}/share/openvibe")
+	
+	set(CMAKE_INSTALL_PREFIX .)
+	set(DIST_ROOT ${CMAKE_INSTALL_PREFIX})
+	set(DIST_BINDIR ${CMAKE_INSTALL_BINDIR})
+	set(DIST_LIBDIR ${CMAKE_INSTALL_LIBDIR})
+	set(DIST_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
+	set(DIST_DATADIR ${CMAKE_INSTALL_DATADIR})
+	set(DIST_DOCDIR ${DIST_ROOT}/doc)
+	set(DIST_DOCTMP ${DIST_ROOT}/doc-tmp)
+	set(CPACK_GENERATOR "ZIP")
+	set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
+	set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${BRAND_NAME})
+	set(CPACK_PACKAGE_VENDOR "Inria & Mensia Technologies")
+	set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+	set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.md")
+	set(CPACK_PACKAGE_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
+	set(CPACK_PACKAGE_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
+	set(CPACK_PACKAGE_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
+
+	if(UNIX)
+		execute_process(
+			COMMAND bash -c "echo -n $(lsb_release -i -s)$(lsb_release -r -s)"
+			OUTPUT_VARIABLE CPACK_SYSTEM_NAME)
+	endif()
+
+	set(CPACK_PACKAGE_NAME "OpenViBE-${CMAKE_BUILD_TYPE}")
+	include(CPack)
+elseif(CMAKE_BUILD_TYPE)
+	# Add directories that OpenViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
+	# These defines should only be used in "openvibe/ov_directories.h".
+	add_definitions(-DOV_CMAKE_PATH_ROOT="${CMAKE_INSTALL_PREFIX}")
+	add_definitions(-DOV_CMAKE_PATH_BIN="${CMAKE_INSTALL_PREFIX}/bin")
+	add_definitions(-DOV_CMAKE_PATH_LIB="${CMAKE_INSTALL_PREFIX}/lib")
+	add_definitions(-DOV_CMAKE_PATH_DATA="${CMAKE_INSTALL_PREFIX}/share/openvibe")
+	
+	set(DIST_ROOT ${CMAKE_INSTALL_PREFIX})
+	set(DIST_BINDIR ${CMAKE_INSTALL_FULL_BINDIR})
+	set(DIST_LIBDIR ${CMAKE_INSTALL_FULL_LIBDIR})
+	set(DIST_INCLUDEDIR ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+	set(DIST_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
+	set(DIST_DOCDIR ${DIST_ROOT}/doc)
+	set(DIST_DOCTMP ${DIST_ROOT}/doc-tmp)
+else()
+	message(FATAL_ERROR "Build should specify a type or use a multi-type generator (like Visual Studio)")
+endif()
 
 # Print the used compilation parameters (for transparency)
 GET_DIRECTORY_PROPERTY(TMP_DEFINITIONS COMPILE_DEFINITIONS)
@@ -119,7 +191,6 @@ FUNCTION(SET_BUILD_PLATFORM)
 		ADD_DEFINITIONS(-DTARGET_OS_Linux)
 		ADD_DEFINITIONS(-DTARGET_COMPILER_GCC)
 	ENDIF()
-
 ENDFUNCTION()
 
 # Custom cmakelist can be used to overwrite the default compilation & packaging parameters
@@ -153,6 +224,7 @@ SET_PROPERTY(GLOBAL PROPERTY OV_PROP_CURRENT_PROJECTS_BUILD_DIR "")
 SET(OV_BASE_DIR ${CMAKE_SOURCE_DIR})
 SET(OV_BASE_BIN_DIR ${CMAKE_BINARY_DIR})
 SET(OV_LIBRARY_DIR  ${CMAKE_BINARY_DIR}/lib)
+
 # needed for making visual studio projects when this script is called without CMAKE_BUILD_TYPE
 SET_PROPERTY(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_DEBUG "TARGET_BUILDTYPE_Debug")
 SET_PROPERTY(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS_RELEASE "TARGET_BUILDTYPE_Release")
@@ -164,50 +236,8 @@ INCLUDE("OvInstallLaunchScript")
 INCLUDE("OvLinkBoostLib")
 INCLUDE("OvDelayLoad")
 
-# Setup knowledge of GNU-style install path variables
-INCLUDE("GNUInstallDirs")
-SET(CMAKE_INSTALL_FULL_DOCDIR "${CMAKE_INSTALL_FULL_BINDIR}/../doc/html")
-
-# Add directories that OpenViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
-# These defines should only be used in "openvibe/ov_directories.h".
-ADD_DEFINITIONS(-DOV_CMAKE_PATH_ROOT="${CMAKE_INSTALL_PREFIX}")
-ADD_DEFINITIONS(-DOV_CMAKE_PATH_BIN="${CMAKE_INSTALL_FULL_BINDIR}")
-ADD_DEFINITIONS(-DOV_CMAKE_PATH_LIB="${CMAKE_INSTALL_FULL_LIBDIR}")
-ADD_DEFINITIONS(-DOV_CMAKE_PATH_DATA="${CMAKE_INSTALL_FULL_DATADIR}/openvibe")
-
-SET(DIST_ROOT ${CMAKE_INSTALL_PREFIX})
-IF(OV_PACKAGE)
-	SET(DIST_BINDIR ${CMAKE_INSTALL_BINDIR})
-	SET(DIST_LIBDIR ${CMAKE_INSTALL_LIBDIR})
-	SET(DIST_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
-	SET(DIST_DATADIR ${CMAKE_INSTALL_DATADIR})
-	SET(DIST_DOCDIR ${CMAKE_INSTALL_BINDIR}/../doc)
-	SET(CPACK_GENERATOR "ZIP")
-	SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
-	SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${BRAND_NAME})
-	SET(CPACK_PACKAGE_VENDOR "Inria & Mensia Technologies")
-	SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-	SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.md")
-	SET(CPACK_PACKAGE_VERSION_MAJOR ${OV_GLOBAL_VERSION_MAJOR})
-	SET(CPACK_PACKAGE_VERSION_MINOR ${OV_GLOBAL_VERSION_MINOR})
-	SET(CPACK_PACKAGE_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
-	SET(CPACK_PACKAGE_VERSION_BUILD ${OV_GLOBAL_VERSION_BUILD})
-
-	if(UNIX)
-		execute_process(
-			COMMAND bash -c "echo -n $(lsb_release -i -s)$(lsb_release -r -s)"
-			OUTPUT_VARIABLE CPACK_SYSTEM_NAME)
-	endif()
-
-	SET(CPACK_PACKAGE_NAME "OpenViBE-${CMAKE_BUILD_TYPE}")
-	INCLUDE(CPack)
-ELSE()
-	SET(DIST_BINDIR ${CMAKE_INSTALL_FULL_BINDIR})
-	SET(DIST_LIBDIR ${CMAKE_INSTALL_FULL_LIBDIR})
-	SET(DIST_INCLUDEDIR ${CMAKE_INSTALL_FULL_INCLUDEDIR})
-	SET(DIST_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
-	SET(DIST_DOCDIR ${CMAKE_INSTALL_FULL_BINDIR}/../doc)
-ENDIF()
+# Sets the PROJECT_VERSION variable to something, depending on overriding OvSetProjectVersion.cmake files
+OV_SET_PROJECT_VERSION()
 
 # Traverse these directories and build their components
 ADD_SUBDIRECTORY("build-tool/")
@@ -246,12 +276,6 @@ IF(BUILD_TESTING)
 	SET(OVT_LOG_DIR "${CMAKE_BINARY_DIR}/test/log" CACHE PATH "Path to directory containing test logs")
 	SET(OVT_TEST_DATA_DIR "${CMAKE_SOURCE_DIR}/dependencies/test-input" CACHE PATH "Path to test input data files")
 ENDIF()
-
-# make a copy of the dependency script, this is done so we can use the same launch scripts both in win install and win devel situations.
-#IF(WIN32)
-#	SET(ABSOLUTE_PATH_DEPENDENCIES ${OV_CUSTOM_DEPENDENCIES_PATH})
-#	CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/scripts/windows-set-environment.cmd-base "${DIST_BINDIR}/openvibe-set-env.cmd")
-#ENDIF(WIN32)
 
 # add the scripts to the project so IDEs using the CMake file are aware of them
 FILE(GLOB_RECURSE script_files scripts/*.cmd scripts/*.sh scripts/*.nsi scripts/*.cmake)
