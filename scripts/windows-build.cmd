@@ -216,7 +216,7 @@ if !builder! == None (
 	msbuild OpenVIBE.sln /p:Configuration=%BuildType%
 	if not "!ERRORLEVEL!" == "0" goto terminate_error
 
-	cmake --build . --target install
+	cmake --build . --config %BuildType% --target install
 	if not "!ERRORLEVEL!" == "0" goto terminate_error
 )
 if %PackageOption% == TRUE (
