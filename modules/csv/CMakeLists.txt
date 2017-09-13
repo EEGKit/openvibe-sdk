@@ -25,7 +25,11 @@ IF(UNIX)
 	SET_TARGET_PROPERTIES(${PROJECT_NAME}-static PROPERTIES COMPILE_FLAGS "-fPIC")
 ENDIF(UNIX)
 
+SET(DYNAMIC_LINK_OPENVIBE_MODULE_FS OFF)
+INCLUDE("FindOpenViBECommon")
+INCLUDE("FindOpenViBEModuleFS")
 INCLUDE("FindThirdPartyBoost")
+INCLUDE("FindThirdPartyBoost_FileSystem")
 
 # ---------------------------------
 # Target macros
