@@ -5,6 +5,8 @@
 
 #include "ovpCBoxAlgorithmOVCSVFileWriter.h"
 
+#include <fs/Files.h>
+
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
@@ -76,7 +78,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 	}
 	else
 	{
-		FILE *file = fopen(filename, "r");
+		FILE *file = FS::Files::open(filename, "r");
 
 		if (file)
 		{
