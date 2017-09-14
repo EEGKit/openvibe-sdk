@@ -34,11 +34,9 @@ if not defined PATH_DEPENDENCIES (
 	if %PLATFORM%==x64 (
 		SET "PATH_DEPENDENCIES=%SCRIPT_PATH%../dependencies_x64"
 	) else (
-		SET "PATH_DEPENDENCIES=%SCRIPT_PATH%../dependencies_x86"
+		SET "PATH_DEPENDENCIES=%SCRIPT_PATH%../dependencies"
 	)
 )
-
-echo POUETTTT %PATH_DEPENDENCIES%
 
 set PATH=%PATH_DEPENDENCIES%/boost/bin;%PATH%
 set PATH=%PATH_DEPENDENCIES%/cmake/bin;%PATH%

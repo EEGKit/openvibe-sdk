@@ -7,3 +7,4 @@ gtest_1.7.0_x64_vc120_dev.zip;gtest;https://drive.google.com/uc?export=download&
 ninja-1.7.1.zip;ninja;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfLVpYTEdLRVVaRk0
 pthread_2.9.1_x64_vc120_dev.zip;pthread;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfM1lpclhLaW5TUlk
 xerces-c_3.1.3_x64_vc120_dev.zip;xerces-c;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfME1YSjJPSGFzMkk
+vcredist_x64_vc120.zip;vcredist;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfa2dGcl95ajB4UjQ
