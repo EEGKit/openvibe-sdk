@@ -6,6 +6,7 @@
 #include <cstdio>
 
 #include <Eigen/Eigenvalues>
+#include <fs/Files.h>
 
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
@@ -17,50 +18,6 @@ using namespace OpenViBEPlugins::SignalProcessing;
 using namespace Eigen;
 
 // typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
-
-#define CSP_DEBUG 0
-#if CSP_DEBUG
-void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrix(OpenViBE::Kernel::ILogManager &rMgr, const MatrixXdRowMajor &mat, const CString &desc)
-{
-	rMgr << LogLevel_Info << desc << "\n";
-	for(int i=0;i<mat.rows();i++) {
-		rMgr << LogLevel_Info << "Row " << i << ": ";
-		for(int j=0;j<mat.cols();j++) {
-			rMgr << mat(i,j) << " ";
-		}
-		rMgr << "\n";
-	}
-}
-void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrixFile(const MatrixXd& mat, const char* filename)
-{
-	FILE *fp = fopen(filename, "w");
-	OV_ERROR_UNLESS_KRV(
-		fp,
-		"Failed to open file located at [" << filename << "]",
-		OpenViBE::Kernel::ErrorType::BadFileRead);
-
-	for(int i=0;i<mat.rows();i++) {
-		for(int j=0;j<mat.cols();j++) {
-			fprintf(fp, "%s%e", (j>0 ? "," : ""), mat(i,j));
-		}
-		fprintf(fp, "\n");
-	}
-	fclose(fp);
-}
-
-void CBoxAlgorithmRegularizedCSPTrainer::dumpVector(OpenViBE::Kernel::ILogManager &rMgr, const VectorXd &mat, const CString &desc)
-{
-	rMgr << LogLevel_Info << desc << " : ";
-	for(int i=0;i<mat.size();i++) {
-		rMgr << mat(i) << " ";
-	}
-	rMgr << "\n";
-}
-#else
-void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrix(OpenViBE::Kernel::ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
-void CBoxAlgorithmRegularizedCSPTrainer::dumpVector(OpenViBE::Kernel::ILogManager &rMgr, const VectorXd &mat, const CString &desc) { }
-void CBoxAlgorithmRegularizedCSPTrainer::dumpMatrixFile(const MatrixXd& mat, const char *fn) { }
-#endif
 
 CBoxAlgorithmRegularizedCSPTrainer::CBoxAlgorithmRegularizedCSPTrainer(void) :
 		m_StimulationIdentifier(0),
@@ -310,9 +267,6 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<Eigen::Mat
 
 		covProd[classIndex] = covInv[classIndex] * outclassCov;
 
-		// std::stringstream fn; fn << "C:/jl/dump_covprod" << classIndex << ".csv";
-		// dumpMatrixFile(l_oCovProd[classIndex], fn.str().c_str());
-
 		try {
 			eigenSolverGeneral.compute(covProd[classIndex]);
 		}
@@ -335,7 +289,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<Eigen::Mat
 		sortedEigenVectors[classIndex].resizeLike(eigenVectors[classIndex]);
 		for (int i = 0; i < eigenValues[classIndex].size(); i++)
 		{
-			sortedEigenValues[classIndex][i] = eigenValues[classIndex][indexes[i].second];
+			sortedEigenValues[classIndex][i] = eigenValues[classIndex][indexes[static_cast<size_t>(i)].second];
 			sortedEigenVectors[classIndex].col(i) = eigenVectors[classIndex].col(indexes[i].second);
 			// this->getLogManager() << LogLevel_Info << "E " << i << " " << (l_oSortedEigenValues[classIndex])[i] << "\n";
 		}
@@ -421,10 +375,6 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process(void)
 			Map<MatrixXdRowMajor> l_oCovMapper(op_pCovarianceMatrix->getBuffer(), nChannels, nChannels);
 			cov[i] = l_oCovMapper;
 
-			// std::stringstream ss; ss << "C:/jl/dump_cov" << i << ".csv";
-			// CString tmp(ss.str().c_str());
-			// dumpMatrixFile(l_oCov[i], tmp);
-
 			// Get vanilla cov
 			m_IncCovarianceProxies[i].incrementalCov->activateInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCovRaw, true);
 			OV_ERROR_UNLESS_KRF(
@@ -477,7 +427,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process(void)
 
 		if(m_SaveAsBoxConf)
 		{
-			FILE* file=::fopen(m_SpatialFilterConfigurationFilename.toASCIIString(), "wb");
+			FILE* file= FS::Files::open(m_SpatialFilterConfigurationFilename.toASCIIString(), "wb");
 			OV_ERROR_UNLESS_KRF(
 				file,
 				"Failed to open file located at [" << m_SpatialFilterConfigurationFilename.toASCIIString() << "]",
