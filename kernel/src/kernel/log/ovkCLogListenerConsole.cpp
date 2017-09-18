@@ -4,8 +4,7 @@
 #include <sstream>
 
 #if defined TARGET_OS_Windows
- #include <windows.h>
- #define boolean bool
+ #include <Windows.h>
 #endif
 
 #include <openvibe/ovITimeArithmetics.h>
@@ -23,6 +22,9 @@ CLogListenerConsole::CLogListenerConsole(const IKernelContext& rKernelContext, c
 	,m_ui64TimePrecision(3)
 	,m_bUseColor(true)
 {
+#if defined TARGET_OS_Windows
+	SetConsoleOutputCP(CP_UTF8);
+#endif
 }
 
 void CLogListenerConsole::configure(const IConfigurationManager& rConfigurationManager)
@@ -34,7 +36,7 @@ void CLogListenerConsole::configure(const IConfigurationManager& rConfigurationM
 }
 
 
-boolean CLogListenerConsole::isActive(ELogLevel eLogLevel)
+bool CLogListenerConsole::isActive(ELogLevel eLogLevel)
 {
 	map<ELogLevel, boolean>::iterator itLogLevel=m_vActiveLevel.find(eLogLevel);
 	if(itLogLevel==m_vActiveLevel.end())
@@ -44,13 +46,13 @@ boolean CLogListenerConsole::isActive(ELogLevel eLogLevel)
 	return itLogLevel->second;
 }
 
-boolean CLogListenerConsole::activate(ELogLevel eLogLevel, boolean bActive)
+bool CLogListenerConsole::activate(ELogLevel eLogLevel, bool bActive)
 {
 	m_vActiveLevel[eLogLevel]=bActive;
 	return true;
 }
 
-boolean CLogListenerConsole::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, boolean bActive)
+bool CLogListenerConsole::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
 {
 	for(int i=eStartLogLevel; i<=eEndLogLevel; i++)
 	{
@@ -59,7 +61,7 @@ boolean CLogListenerConsole::activate(ELogLevel eStartLogLevel, ELogLevel eEndLo
 	return true;
 }
 
-boolean CLogListenerConsole::activate(boolean bActive)
+bool CLogListenerConsole::activate(bool bActive)
 {
 	return activate(LogLevel_First, LogLevel_Last, bActive);
 }
@@ -75,7 +77,7 @@ void CLogListenerConsole::log(const time64 time64Value)
 		uint64 l_ui64Precision = m_ui64TimePrecision;
 		float64 l_f64Time=ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
 		std::stringstream ss;
-		ss.precision(l_ui64Precision);
+		ss.precision(static_cast<long long>(l_ui64Precision));
 		ss.setf(std::ios::fixed,std::ios::floatfield);
 		ss << l_f64Time;
 		ss << " sec";
@@ -227,7 +229,7 @@ void CLogListenerConsole::log(const float32 f32Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const boolean bValue)
+void CLogListenerConsole::log(const bool bValue)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);

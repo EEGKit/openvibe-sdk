@@ -36,10 +36,6 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			void dumpMatrix(OpenViBE::Kernel::ILogManager& rMgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
-			void dumpMatrixFile(const Eigen::MatrixXd &mat, const char *fn);
-			void dumpVector(OpenViBE::Kernel::ILogManager& rMgr, const Eigen::VectorXd& mat, const OpenViBE::CString& desc);
-
 			virtual bool updateCov(uint32_t index);
 			virtual bool outclassCovAverage(uint32_t skipIndex, const std::vector<Eigen::MatrixXd>& cov, Eigen::MatrixXd& covAvg);
 			virtual bool computeCSP(const std::vector<Eigen::MatrixXd>& vov, std::vector<Eigen::MatrixXd>& sortedEigenVectors,

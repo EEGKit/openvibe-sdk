@@ -12,6 +12,7 @@
 #endif
 
 #include <boost/filesystem.hpp>
+#include <boost/version.hpp>
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -230,7 +231,8 @@ bool Files::directoryExists(const char *pathToCheck) {
 		return false;
 	}
 #if defined TARGET_OS_Windows
-	DWORD ftyp = GetFileAttributesA(pathToCheck);
+	wstring pathUTF16 = Common::Converter::utf8_to_utf16(pathToCheck);
+	DWORD ftyp = GetFileAttributesW(pathUTF16.c_str());
 	if (ftyp == INVALID_FILE_ATTRIBUTES) 
 	{
 		return false;
@@ -255,22 +257,32 @@ bool Files::directoryExists(const char *pathToCheck) {
 	return false;
 }
 
-bool Files::createPath(const char *sPath) 
+bool Files::createPath(const char *path)
 {
-	if (strcmp(sPath, "") == 0)
+	if (strcmp(path, "") == 0)
 	{
 		return false;
 	}
-	return boost::filesystem::create_directories(boost::filesystem::path(sPath));
+#if defined TARGET_OS_Windows
+	wstring pathUTF16 = Common::Converter::utf8_to_utf16(path);
+	return boost::filesystem::create_directories(boost::filesystem::wpath(pathUTF16));
+#else
+	return boost::filesystem::create_directories(boost::filesystem::path(path));
+#endif
 }
 
-bool Files::createParentPath(const char *sPath) 
+bool Files::createParentPath(const char *path)
 {
-	if (strcmp(sPath, "") == 0)
+	if (strcmp(path, "") == 0)
 	{
 		return false;
 	}
-	return boost::filesystem::create_directories(boost::filesystem::path(sPath).parent_path());
+#if defined TARGET_OS_Windows
+	wstring pathUTF16 = Common::Converter::utf8_to_utf16(path);
+	return boost::filesystem::create_directories(boost::filesystem::wpath(pathUTF16).parent_path());
+#else
+	return boost::filesystem::create_directories(boost::filesystem::path(path).parent_path());
+#endif
 }
 
 bool Files::getParentPath(const char *sPath, char *sParentPath) 
@@ -363,14 +375,50 @@ bool Files::getFilenameExtension(const char* path, char* fileNameExtension, size
 	return true;
 }
 
-#if defined TARGET_OS_Windows
+#if BOOST_VERSION / 100 % 1000 != 54
 bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
 {
 	if(!sSourceFile || !sDestinationPath)
 	{
 		return false;
 	}
+#if defined TARGET_OS_Windows
+	wstring pathSourceUTF16 = Common::Converter::utf8_to_utf16(sSourceFile);
+	wstring pathDestinationUTF16 = Common::Converter::utf8_to_utf16(sDestinationPath);
+	boost::filesystem::copy_file(pathSourceUTF16, pathDestinationUTF16);
+#else
 	boost::filesystem::copy_file(sSourceFile, sDestinationPath);
+#endif
 	return true;
 }
 #endif
+
+bool Files::remove(const char* path)
+{
+	if (FS::Files::fileExists(path) || FS::Files::directoryExists(path))
+	{
+#if defined TARGET_OS_Windows
+		std::wstring pathUTF16 = Common::Converter::utf8_to_utf16(path);
+		return boost::filesystem::remove(boost::filesystem::wpath(pathUTF16.c_str()));
+#else
+		return boost::filesystem::remove(boost::filesystem::path(path));
+#endif
+	}
+	return true;
+}
+
+bool Files::removeAll(const char* path)
+{
+	if (FS::Files::fileExists(path) || FS::Files::directoryExists(path))
+	{
+#if defined TARGET_OS_Windows
+		std::wstring pathUTF16 = Common::Converter::utf8_to_utf16(path);
+		return (boost::filesystem::remove_all(boost::filesystem::wpath(pathUTF16.c_str())) != 0);
+#else
+		return (boost::filesystem::remove_all(boost::filesystem::path(path)) != 0);
+#endif
+	}
+	return true;
+}
+
+

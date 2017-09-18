@@ -1,6 +1,7 @@
 #include "ovtkMatrix.h"
 
 #include <system/ovCMemory.h>
+#include <fs/Files.h>
 
 #include <cstring>
 #include <cmath>
@@ -644,7 +645,7 @@ boolean OpenViBEToolkit::Tools::Matrix::toString(const OpenViBE::IMatrix& rMatri
 boolean OpenViBEToolkit::Tools::Matrix::loadFromTextFile(OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename)
 {
 	std::ifstream m_oDataFile;
-	m_oDataFile.open(sFilename.toASCIIString(), std::ios_base::in);
+	FS::Files::openIFStream(m_oDataFile, sFilename.toASCIIString(), std::ios_base::in);
 	if(!m_oDataFile.is_open()) {
 		return false;
 	}
@@ -663,7 +664,7 @@ boolean OpenViBEToolkit::Tools::Matrix::loadFromTextFile(OpenViBE::IMatrix& rMat
 boolean OpenViBEToolkit::Tools::Matrix::saveToTextFile(const OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename, uint32 ui32Precision /* = 6 */)
 {
 	std::ofstream m_oDataFile;
-	m_oDataFile.open(sFilename.toASCIIString(), std::ios_base::out | std::ios_base::trunc);
+	FS::Files::openOFStream(m_oDataFile, sFilename.toASCIIString(), std::ios_base::out | std::ios_base::trunc);
 	if(!m_oDataFile.is_open()) {
 		return false;
 	}

@@ -38,9 +38,11 @@ namespace FS
 		static bool getFilenameExtension(const char* path, char* fileNameExtension);
 		static bool getFilenameExtension(const char* path, char* fileNameExtension, size_t size);
 
-#if defined TARGET_OS_Windows
+#if BOOST_VERSION / 100 % 1000 != 54
 		static bool copyFile(const char* sSourceFile, const char* sDestination);
 #endif
+		static bool remove(const char* path);
+		static bool removeAll(const char* path);
 	private:
 
 		Files(void);

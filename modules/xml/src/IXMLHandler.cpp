@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <fs/Files.h>
 
 namespace XML
 {
@@ -81,7 +82,8 @@ IXMLHandlerImpl::IXMLHandlerImpl():
 
 IXMLNode *IXMLHandlerImpl::parseFile(const char *sPath)
 {
-	ifstream l_oFile(sPath, ios::binary);
+	ifstream l_oFile;
+	FS::Files::openIFStream(l_oFile, sPath, ios::binary);
 	if(l_oFile.is_open())
 	{
 		char* l_sBuffer;
@@ -131,7 +133,8 @@ IXMLNode *IXMLHandlerImpl::parseString(const char *sString, const uint32& uiSize
 
 boolean IXMLHandlerImpl::writeXMLInFile(const IXMLNode &rNode, const char *sPath) const
 {
-	std::ofstream l_oFile(sPath, ios::binary);
+	std::ofstream l_oFile;
+	FS::Files::openOFStream(l_oFile, sPath, ios::binary);
 	if(l_oFile.is_open())
 	{
 		char* l_sXML = rNode.getXML();

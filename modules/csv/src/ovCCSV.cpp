@@ -43,6 +43,8 @@
 
 #include "ovCCSV.hpp"
 
+#include <fs/Files.h>
+
 using namespace OpenViBE;
 using namespace OpenViBE::CSV;
 
@@ -481,7 +483,7 @@ bool CCSVHandler::openFile(const std::string &fileName, EFileAccessMode mode)
 	// This check that file can be written and create it if it does not exist
 	if (mode == EFileAccessMode::Write || mode == EFileAccessMode::Append)
 	{
-		FILE *file = fopen(m_Filename.c_str(), "a");
+		FILE *file = FS::Files::open(m_Filename.c_str(), "a");
 
 		if (!file)
 		{
@@ -503,15 +505,15 @@ bool CCSVHandler::openFile(const std::string &fileName, EFileAccessMode mode)
 		switch (mode)
 		{
 			case EFileAccessMode::Write:
-				m_Fs.open(m_Filename, std::ios::out | std::ios::trunc);
+				FS::Files::openFStream(m_Fs, m_Filename.c_str(), std::ios::out | std::ios::trunc);
 				break;
 
 			case EFileAccessMode::Append:
-				m_Fs.open(m_Filename, std::ios::out | std::ios::app);
+				FS::Files::openFStream(m_Fs, m_Filename.c_str(), std::ios::out | std::ios::app);
 				break;
 
 			case EFileAccessMode::Read:
-				m_Fs.open(m_Filename, std::ios::in);
+				FS::Files::openFStream(m_Fs, m_Filename.c_str(), std::ios::in);
 				break;
 		}
 	}

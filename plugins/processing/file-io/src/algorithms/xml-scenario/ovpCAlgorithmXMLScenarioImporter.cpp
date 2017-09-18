@@ -1,7 +1,6 @@
 #include "ovpCAlgorithmXMLScenarioImporter.h"
 
 #include <iostream>
-#include <fstream>
 #include <cstdlib>
 #include <string>
 #include <memory>

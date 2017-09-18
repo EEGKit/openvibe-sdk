@@ -26,6 +26,7 @@ IF(UNIX)
 ENDIF(UNIX)
 
 INCLUDE("FindOpenViBECommon")
+INCLUDE("FindOpenViBEModuleFS")
 INCLUDE("FindThirdPartyBoost")
 INCLUDE("FindThirdPartyExpat")
 
