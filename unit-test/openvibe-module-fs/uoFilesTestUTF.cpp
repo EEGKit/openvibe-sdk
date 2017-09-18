@@ -1,5 +1,6 @@
 #include <fs/Files.h>
 #include <boost/filesystem.hpp>
+#include <boost/version.hpp>
 
 #include <gtest/gtest.h>
 
@@ -75,6 +76,7 @@ TEST(FS_Files_Test_Directories_UTF, validateCreateParentPath)
 	ASSERT_TRUE(FS::Files::directoryExists(TEMP_OUTPUT_DIR));
 }
 
+#if BOOST_VERSION / 100 % 1000 != 54
 TEST(FS_Files_Test_Directories_UTF, validateCopyFile)
 {
 	FS::Files::removeAll(TEMP_OUTPUT_ASCII_FILE_PATH);
@@ -83,6 +85,7 @@ TEST(FS_Files_Test_Directories_UTF, validateCopyFile)
 	ASSERT_TRUE(FS::Files::copyFile(TEST_ASCII_FILE_PATH, TEMP_OUTPUT_ASCII_FILE_PATH));
 	ASSERT_TRUE(FS::Files::fileExists(TEMP_OUTPUT_ASCII_FILE_PATH));
 }
+#endif
 
 int uoFSFilesTestUTF(int argc, char* argv[])
 {

@@ -12,6 +12,7 @@
 #endif
 
 #include <boost/filesystem.hpp>
+#include <boost/version.hpp>
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -374,6 +375,7 @@ bool Files::getFilenameExtension(const char* path, char* fileNameExtension, size
 	return true;
 }
 
+#if BOOST_VERSION / 100 % 1000 != 54
 bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
 {
 	if(!sSourceFile || !sDestinationPath)
@@ -389,6 +391,7 @@ bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
 #endif
 	return true;
 }
+#endif
 
 bool Files::remove(const char* path)
 {
