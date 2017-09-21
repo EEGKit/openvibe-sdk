@@ -1,6 +1,5 @@
 local-tmp
 dependencies
-dependencies_x86
 dependencies_x64
 scripts/win32-dependencies.cmd
 dist
