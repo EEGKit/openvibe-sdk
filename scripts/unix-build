@@ -22,7 +22,7 @@ function usage()
 		echo "--brand-name <brand-name> name of the brand to prefix titles and documentation"
 		echo "--build-unit : if set, unit tests will be built"
 		echo "--build-validation : if set, validation tests will be builts"
-		echo "--gtest-lib-dir <dirname> : gtest libraries directory (default: ../dependencies/libgtest)"
+		echo "--gtest-lib-dir <dirname> : gtest libraries directory (default: \$\{dependencies_dir\}/libgtest)"
 		echo "--gtest-include-dir <dirname> : gtest include directory (default: /usr/src/gtest/src)"
 		echo "--test-output-dir <dirname> : test output files directory"
 		echo "--python-exec <path> : path to python executable to use"
@@ -40,7 +40,8 @@ display_error_location="ON"
 BrandName=OpenViBE
 ov_build_unit=0
 ov_build_validation=0
-gtest_lib_dir="${ov_script_dir}/../dependencies/libgtest"
+# FIXME whats the default for this?
+ov_test_data_dir="."
 gtest_include_dir="/usr/src/gtest/src"
 
 # Parse arguments
@@ -68,11 +69,11 @@ while [[ $# -gt 0 ]]; do
 			shift
 			;;
 		--dependencies-dir)
-			dependencies_dir="-DOV_CUSTOM_DEPENDENCIES_PATH=$2"
+			dependencies_dir="$2"
 			shift
 			;;
 		--test-data-dir)
-			ov_test_data_dir="-DOVT_TEST_DATA_DIR=$2"
+			ov_test_data_dir="$2"
 			shift
 			;;
 		--make-package)
@@ -119,6 +120,10 @@ while [[ $# -gt 0 ]]; do
 	shift # past argument or value
 done
 
+if [[ ! -v gtest_lib_dir ]]; then
+	gtest_lib_dir="${dependencies_dir}/libgtest"
+fi
+
 # Check parameters validity
 if [[ ${ov_build_type} != "Debug" ]] \
 	&& [[ ${ov_build_type} != "Release" ]] \
@@ -144,6 +149,7 @@ echo "**************************************"
 echo "Build with parameters:"
 echo "[build-type] = ${ov_build_type}"
 echo "[build-dir] = ${ov_build_dir}"
+echo "[dependencies-dir] = ${dependencies_dir}"
 echo "[install-dir] = ${ov_install_dir}"
 echo "[test data directory] = ${ov_test_data_dir}"
 echo "[test output files directory] = ${ov_cmake_test_output}"
@@ -172,12 +178,14 @@ pushd "${ov_build_dir}" &> /dev/null
 
 echo "Generating build system files with cmake..."
 
+[[ -v dependencies_dir ]] && ov_dependencies_defined="-DOV_DEPENDENCIES_DIR=${dependencies_dir}"
+
 cmake ${ov_script_dir}/.. \
 		-G Ninja \
 		-DCMAKE_BUILD_TYPE=${ov_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${ov_install_dir} \
-		${ov_test_data_dir} \
-		${dependencies_dir} \
+                -DOVT_TEST_DATA_DIR=${ov_test_data_dir} \
+		${ov_dependencies_defined} \
 		-DOV_PACKAGE=${package_option} \
 		-DOV_DISPLAY_ERROR_LOCATION=${display_error_location} \
 		-DBUILD_UNIT_TEST=${ov_build_unit} \

@@ -36,6 +36,12 @@ ENDIF()
 SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/${OV_DEPENDENCIES_PLATFORM_FOLDER_NAME}" CACHE STRING "Dependency directory")
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
+IF(OV_DEPENDENCIES_DIR)
+	SET(OV_CUSTOM_DEPENDENCIES_PATH "${OV_DEPENDENCIES_DIR}" CACHE STRING "Dependency directory")
+ELSE()
+	SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies" CACHE STRING "Dependency directory")
+ENDIF()
+
 SET(BRAND_NAME "OpenViBE" CACHE STRING "Brand with which titles and documentation will be prefixed")
 string(TIMESTAMP COPYRIGHT_DATE "2012-%Y")
 IF(BRAND_NAME STREQUAL "NeuroRT")
@@ -303,7 +309,7 @@ OPTION(BUILD_TESTING "Include and build unit tests" ON)
 
 IF(BUILD_TESTING)
 	SET(OVT_LOG_DIR "${CMAKE_BINARY_DIR}/test/log" CACHE PATH "Path to directory containing test logs")
-	SET(OVT_TEST_DATA_DIR "${CMAKE_SOURCE_DIR}/dependencies/test-input" CACHE PATH "Path to test input data files")
+	SET(OVT_TEST_DATA_DIR "${OV_CUSTOM_DEPENDENCIES_PATH}/test-input" CACHE PATH "Path to test input data files")
 ENDIF()
 
 # add the scripts to the project so IDEs using the CMake file are aware of them
