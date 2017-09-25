@@ -36,21 +36,21 @@ namespace
 #if defined TARGET_OS_Windows
 	static const std::string s_LibPath = OV_CMAKE_PATH_LIB;
 
-	// Microsoft sepecific
+	// Microsoft specific
 	static const std::string s_ExistingModuleName = "NTDLL.dll";
-	static const std::string s_ExistingModulePath = "C:\\WINDOWS\\system32\\";
-	static const std::string s_ExistingModulePathName = s_ExistingModulePath + s_ExistingModuleName;
+
+	std::string s_ExistingModulePath;
+
+	#if defined _WIN64
+	#define CSIDL_SYSTEM_PLATFORM CSIDL_SYSTEM
+	#else
+	#define CSIDL_SYSTEM_PLATFORM CSIDL_SYSTEMX86
+	#endif
+
+	std::string s_ExistingModulePathName;
 	static const std::string s_NonExistingModuleName = "randomRandomRandom.dll";
 
 	static const std::string s_NonExistingSymbol = "nonExistingSymbol";
-
-	// OV variable
-	/*static const std::string s_ExistingOVCSVSymbol = "createCSVLib";
-	static const std::string s_NonOVCSVExistingSymbol = s_NonExistingSymbol;
-	static const std::string s_ExistingOVModuleName = "openvibe-module-csv.dll";
-	static const std::string s_ExistingOVModulePath = s_LibPath + "/";
-	static const std::string s_ExistingOVModulePathName = s_ExistingOVModulePath + s_ExistingOVModuleName;
-	*/
 
 	static const std::string s_ExistingEnvironmentPath = "PATH";
 	static const std::string s_NonExistingEnvironmentPath = "randomRandomRandom";
@@ -163,7 +163,7 @@ TEST(DynamicModule_Test_Case, loadFromKnownPathSuccessNoSymbolCheck)
 {
 	CDynamicModule dynamicModule;
 
-	ASSERT_TRUE(dynamicModule.loadFromKnownPath(CSIDL_SYSTEM, s_ExistingModuleName.c_str()));
+	ASSERT_TRUE(dynamicModule.loadFromKnownPath(CSIDL_SYSTEM_PLATFORM, s_ExistingModuleName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
 	std::string moduleName = dynamicModule.getFilename();
@@ -180,7 +180,7 @@ TEST(DynamicModule_Test_Case, loadFromKnownPathFailNoSymbolCheck)
 {
 	CDynamicModule dynamicModule;
 
-	ASSERT_FALSE(dynamicModule.loadFromKnownPath(CSIDL_SYSTEM, s_NonExistingModuleName.c_str()));
+	ASSERT_FALSE(dynamicModule.loadFromKnownPath(CSIDL_SYSTEM_PLATFORM, s_NonExistingModuleName.c_str()));
 	ASSERT_EQ(CDynamicModule::LogErrorCodes_FailToLoadModule, dynamicModule.getLastError());
 	ASSERT_FALSE(dynamicModule.isLoaded());
 }
@@ -193,7 +193,7 @@ TEST(DynamicModule_Test_Case, loadFromEnvironmentSuccessNoSymbolCheck)
 
 	ASSERT_TRUE(dynamicModule.loadFromEnvironment(s_ExistingEnvironmentPath.c_str(), s_ExistingModuleName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
-	std::string moduleNameExpected = s_ExistingModulePathName;
+	std::string moduleNameExpected = "C:\\WINDOWS\\system32\\ntdll.dll";
 	std::string moduleName = dynamicModule.getFilename();
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
@@ -303,9 +303,15 @@ TEST(DynamicModule_Test_Case, getSymbolFail)
 #if defined TARGET_OS_Windows
 TEST(DynamicModule_Test_Case, isModulecompatibleSuccess)
 {
+	#if defined _WIN64
+	ASSERT_FALSE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x014c)); // x86
+	ASSERT_TRUE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x8664)); // x64
+	ASSERT_FALSE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x0200)); // ia64
+	#else
 	ASSERT_TRUE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x014c)); // x86
 	ASSERT_FALSE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x8664)); // x64
 	ASSERT_FALSE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x0200)); // ia64
+	#endif
 }
 #endif
 
@@ -339,5 +345,18 @@ TEST(DynamicModule_Test_Case, unloadFail)
 int uoDynamicModuleTest(int argc, char* argv[])
 {
 	::testing::InitGoogleTest(&argc, argv);
+
+#if defined TARGET_OS_Windows
+	BOOL bIsWow64 = FALSE;
+
+	if (!::IsWow64Process(GetCurrentProcess(), &bIsWow64))
+	{
+		return false;
+	}
+
+	s_ExistingModulePath = bIsWow64 ? "C:\\WINDOWS\\SysWOW64\\" : "C:\\WINDOWS\\system32\\";
+	s_ExistingModulePathName = s_ExistingModulePath + s_ExistingModuleName;
+#endif
+
 	return RUN_ALL_TESTS();
 }
