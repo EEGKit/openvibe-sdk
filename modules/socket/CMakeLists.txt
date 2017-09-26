@@ -30,7 +30,8 @@ ELSEIF(WIN32)
 ENDIF()
 
 INCLUDE("FindOpenViBECommon")
-INCLUDE("FindThirdPartyTVicPort")
+
+#INCLUDE("FindThirdPartyTVicPort")
 	
 # ---------------------------------
 # Finds standard library winsock
