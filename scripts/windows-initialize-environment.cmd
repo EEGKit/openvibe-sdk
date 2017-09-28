@@ -108,11 +108,14 @@ if %SKIP_VS2013% == 1 (
 		echo Found VS120 tools at "%VS120COMNTOOLS%%VCVARSALLPATH%" ...
 		call "%VS120COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
 		set VSCMake=Visual Studio 12 2013
-		if exist “%VS120COMNTOOLS%/../../VC/bin/x64” (
-                call “%VS120COMNTOOLS%%VCVARSALLPATH%” %PLATFORM%
-            ) else (
-                call “%VS120COMNTOOLS%%VCVARSALLPATH%” x86_amd64
+		if %PLATFORM% == x64 (
+			if exist “%VS120COMNTOOLS%/../../VC/bin/x64” (
+				call “%VS120COMNTOOLS%%VCVARSALLPATH%” %PLATFORM%
+			) else (
+				call “%VS120COMNTOOLS%%VCVARSALLPATH%” x86_amd64
 			)
+			set VSCMake=!VSCMake! %VSPLATFORMGENERATOR%
+		)
 		goto terminate
 	)
 )
