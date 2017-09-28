@@ -69,7 +69,7 @@ if %SKIP_VS2017% == 1 (
 	if exist "%VS150COMNTOOLS%%VCVARSALLPATH%" (
 		echo Found VS150 tools at "%VS150COMNTOOLS%%VCVARSALLPATH%" ...
 		call "%VS150COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
-		set VSCMake=Visual Studio 15
+		set VSCMake=Visual Studio 15 2017
 		if %PLATFORM% == x64 (
 			set VSCMake=!VSCMake! %VSPLATFORMGENERATOR%
 		)
@@ -83,7 +83,7 @@ if %SKIP_VS2015% == 1 (
 	if exist "%VS140COMNTOOLS%%VCVARSALLPATH%" (
 		echo Found VS140 tools at "%VS140COMNTOOLS%%VCVARSALLPATH%" ...
 		call "%VS140COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
-		set VSCMake=Visual Studio 14
+		set VSCMake=Visual Studio 14 2015
 		if %PLATFORM% == x64 (
 			set VSCMake=!VSCMake! %VSPLATFORMGENERATOR%
 		)
@@ -97,7 +97,7 @@ if %SKIP_VS2013% == 1 (
 	if exist "%VS120COMNTOOLS%%VCVARSALLPATH%" (
 		echo Found VS120 tools at "%VS120COMNTOOLS%%VCVARSALLPATH%" ...
 		call "%VS120COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
-		set VSCMake=Visual Studio 12
+		set VSCMake=Visual Studio 12 2013
 		if %PLATFORM% == x64 (
 			set VSCMake=!VSCMake! %VSPLATFORMGENERATOR%
 		)
