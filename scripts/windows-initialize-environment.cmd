@@ -71,6 +71,11 @@ if %SKIP_VS2017% == 1 (
 		call "%VS150COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
 		set VSCMake=Visual Studio 15 2017
 		if %PLATFORM% == x64 (
+			if exist “%VS150COMNTOOLS%/../../VC/bin/x64” (
+                call “%VS150COMNTOOLS%%VCVARSALLPATH%” %PLATFORM%
+            ) else (
+                call “%VS150COMNTOOLS%%VCVARSALLPATH%” x86_amd64
+			)
 			set VSCMake=!VSCMake! %VSPLATFORMGENERATOR%
 		)
 		goto terminate
@@ -85,6 +90,11 @@ if %SKIP_VS2015% == 1 (
 		call "%VS140COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
 		set VSCMake=Visual Studio 14 2015
 		if %PLATFORM% == x64 (
+			if exist “%VS140COMNTOOLS%/../../VC/bin/x64” (
+                call “%VS140COMNTOOLS%%VCVARSALLPATH%” %PLATFORM%
+            ) else (
+                call “%VS140COMNTOOLS%%VCVARSALLPATH%” x86_amd64
+			)
 			set VSCMake=!VSCMake! %VSPLATFORMGENERATOR%
 		)
 		goto terminate
@@ -98,9 +108,11 @@ if %SKIP_VS2013% == 1 (
 		echo Found VS120 tools at "%VS120COMNTOOLS%%VCVARSALLPATH%" ...
 		call "%VS120COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
 		set VSCMake=Visual Studio 12 2013
-		if %PLATFORM% == x64 (
-			set VSCMake=!VSCMake! %VSPLATFORMGENERATOR%
-		)
+		if exist “%VS120COMNTOOLS%/../../VC/bin/x64” (
+                call “%VS120COMNTOOLS%%VCVARSALLPATH%” %PLATFORM%
+            ) else (
+                call “%VS120COMNTOOLS%%VCVARSALLPATH%” x86_amd64
+			)
 		goto terminate
 	)
 )
