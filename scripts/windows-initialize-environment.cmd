@@ -72,9 +72,9 @@ if %SKIP_VS2017% == 1 (
 		set VSCMake=Visual Studio 15 2017
 		if %PLATFORM% == x64 (
 			if exist "%VS150COMNTOOLS%../../VC/bin/x64" (
-                call "%VS150COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
-            ) else (
-                call "%VS150COMNTOOLS%%VCVARSALLPATH%" x86_amd64
+				call "%VS150COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
+			) else (
+				call "%VS150COMNTOOLS%%VCVARSALLPATH%" x86_amd64
 			)
 			set VSCMake=!VSCMake! %VSPLATFORMGENERATOR%
 		)
@@ -91,9 +91,9 @@ if %SKIP_VS2015% == 1 (
 		set VSCMake=Visual Studio 14 2015
 		if %PLATFORM% == x64 (
 			if exist "%VS140COMNTOOLS%../../VC/bin/x64" (
-                call "%VS140COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
-            ) else (
-                call "%VS140COMNTOOLS%%VCVARSALLPATH%" x86_amd64
+				call "%VS140COMNTOOLS%%VCVARSALLPATH%" %PLATFORM%
+			) else (
+				call "%VS140COMNTOOLS%%VCVARSALLPATH%" x86_amd64
 			)
 			set VSCMake=!VSCMake! %VSPLATFORMGENERATOR%
 		)
