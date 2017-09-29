@@ -1,22 +1,29 @@
 @echo off
 
-REM Store path
-SET PATH_BACKUP=%PATH%
+setlocal
 
 REM Set test environment
-set PATH=@OV_CUSTOM_DEPENDENCIES_PATH@\cmake\bin\;%PATH%
-set PATH=@DIST_BINDIR@\;%PATH%
+set "PATH=@DIST_BINDIR@\;@OV_CUSTOM_DEPENDENCIES_PATH@\cmake\bin\;%PATH%"
+
+if /i "%1" == "--python-dir" (
+	set "PYTHONHOME="
+	set "PYTHONPATH="
+	set "PATH=%2;%PATH%"
+	for /f "tokens=2,* delims= " %%a in ("%*") do set remaining_args=%%b
+) else (
+	set remaining_args=%*
+)
+
 IF EXIST unit-test\NUL (
 	PUSHD unit-test
 	REM Execute ctest forwarding the arguments
-	ctest %*
+	ctest %remaining_args%
 	POPD
 )
 IF EXIST validation-test\NUL (
 	PUSHD validation-test
 	REM Execute ctest forwarding the arguments
-	ctest %*
+	ctest %remaining_args%
 	POPD
 )
-REM Reset environment
-SET PATH=%PATH_BACKUP%
+

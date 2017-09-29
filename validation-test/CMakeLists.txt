@@ -49,10 +49,27 @@ ELSE()
 ENDIF()
 
 # Find main dependency
-IF(BUILD_VALIDATION_TEST)
+if(DEFINED PYTHON_EXECUTABLE AND NOT DEFINED PythonInterp_FOUND)
+	# Python exec was supplied through command line, just set it in the files and don't ask questions
+	set(PythonInterp_FOUND TRUE)
+else()
 	SET(Python_ADDITIONAL_VERSIONS 3.4)
-	FIND_PACKAGE(PythonInterp 3.4 REQUIRED)
-ENDIF()
+	FIND_PACKAGE(PythonInterp 3.4)
+endif()
+
+if(NOT ${PythonInterp_FOUND})
+	# This is likely a messed-up PYTHONPATH/HOME ISSUE
+	message(WARNING "Current PYTHONPATH likely not suitable for a Python 3 executable, \
+please check that the following values are plausible :\n\
+	\$ENV{PYTHONPATH} = $ENV{PYTHONPATH}\n\
+	\$ENV{PYTHONHOME} = $ENV{PYTHONHOME}\n\
+If the previous environement is inconsistent, please set it correctly \
+or directly give Python3 executable path at build time using \"--python-exec\"\n\
+These tests will be generated with a generic \"python\" call, please use the \"--python-dir\" \
+option of the launcher to set the path to a working python3 directory.")
+else()
+	message(STATUS "Found Python3 at ${PYTHON_EXECUTABLE}")
+endif()
 
 # --------------------
 # Test configuration
