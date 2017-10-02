@@ -130,14 +130,17 @@ if(NOT CMAKE_BUILD_TYPE AND CMAKE_GENERATOR MATCHES "Visual Studio*")
 elseif(CMAKE_BUILD_TYPE AND OV_PACKAGE)
 	# Add directories that OpenViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
 	# These defines should only be used in "openvibe/ov_directories.h".
-	get_filename_component(buildDirRelFilePath "." REALPATH BASE_DIR "${CMAKE_BINARY_DIR}")
 
-	set(CMAKE_INSTALL_PREFIX ${buildDirRelFilePath})
+	# We use absolute paths to avoid issue for unit and validation tests
+	get_filename_component(DIST_ROOT_ABSOLUTE "." REALPATH BASE_DIR "${CMAKE_BINARY_DIR}")
+	set(DIST_BINDIR_ABSOLUTE ${DIST_ROOT_ABSOLUTE}/bin)
 
-	add_definitions(-DOV_CMAKE_PATH_ROOT="${CMAKE_INSTALL_PREFIX}")
-	add_definitions(-DOV_CMAKE_PATH_BIN="${CMAKE_INSTALL_PREFIX}/bin")
-	add_definitions(-DOV_CMAKE_PATH_LIB="${CMAKE_INSTALL_PREFIX}/lib")
-	add_definitions(-DOV_CMAKE_PATH_DATA="${CMAKE_INSTALL_PREFIX}/share/openvibe")
+	set(CMAKE_INSTALL_PREFIX .)
+
+	add_definitions(-DOV_CMAKE_PATH_ROOT="${DIST_ROOT_ABSOLUTE}")
+	add_definitions(-DOV_CMAKE_PATH_BIN="${DIST_ROOT_ABSOLUTE}/bin")
+	add_definitions(-DOV_CMAKE_PATH_LIB="${DIST_ROOT_ABSOLUTE}/lib")
+	add_definitions(-DOV_CMAKE_PATH_DATA="${DIST_ROOT_ABSOLUTE}/share/openvibe")
 
 	set(DIST_ROOT ${CMAKE_INSTALL_PREFIX})
 	set(DIST_BINDIR ${CMAKE_INSTALL_BINDIR})
@@ -198,7 +201,6 @@ FUNCTION(SET_BUILD_PLATFORM)
 		ADD_DEFINITIONS(-DTARGET_ARCHITECTURE_i386)
 		SET(PLATFORM_TARGET "x86")
 	ELSE()
-		
 		ADD_DEFINITIONS(-DTARGET_ARCHITECTURE_Unknown)
 	ENDIF()
 
