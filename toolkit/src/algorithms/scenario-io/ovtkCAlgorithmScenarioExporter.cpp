@@ -68,6 +68,8 @@ void CAlgorithmScenarioExporterHelper::exportAttributes(const IAttributable& att
 	}
 }
 
+
+
 boolean CAlgorithmScenarioExporter::process(void)
 {
 	CAlgorithmScenarioExporterHelper l_oHelper(this->getAlgorithmContext(), *this);
@@ -101,11 +103,9 @@ boolean CAlgorithmScenarioExporter::process(void)
 
 	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion, CString("1"));
 
-	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Creator, CString(OV_PROJECT_NAME));
+	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Creator, this->getConfigurationManager().expand("${Application_Name}"));
 
-	std::stringstream l_sOpenViBEVersion;
-	l_sOpenViBEVersion << OV_VERSION_MAJOR << "." << OV_VERSION_MINOR << "." << OV_VERSION_PATCH;
-	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_CreatorVersion, CString(l_sOpenViBEVersion.str().c_str()));
+	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_CreatorVersion, this->getConfigurationManager().expand("${Application_Version}"));
 
 	this->exportStart(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Settings);
 	for(uint32 l_ui32SettingIndex = 0; l_ui32SettingIndex < l_pScenario->getSettingCount(); l_ui32SettingIndex++)

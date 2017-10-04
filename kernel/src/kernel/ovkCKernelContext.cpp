@@ -98,6 +98,8 @@ bool CKernelContext::initialize(void)
 	m_pConfigurationManager->createConfigurationToken("Kernel_PlayerFrequency", "128");
 	// Add this two tokens to be used to know what documentation should be loaded
 	m_pConfigurationManager->createConfigurationToken("Brand_Name", BRAND_NAME);
+	m_pConfigurationManager->createConfigurationToken("Application_Name", OV_PROJECT_NAME);
+	m_pConfigurationManager->createConfigurationToken("Application_Version", OV_VERSION_MAJOR "." OV_VERSION_MINOR "." OV_VERSION_PATCH);
 
 	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_sConfigurationFile << "]\n";
 
