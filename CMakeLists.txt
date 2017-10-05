@@ -18,7 +18,22 @@ MESSAGE(STATUS "BUILDING VERSION OpenViBE SDK: ${PROJECT_VERSION} Branch : ${OV_
 MESSAGE(STATUS "Appending compilation flags...")
 
 SET(OV_CONFIG_SUBDIR "${PROJECT_NAME}" CACHE STRING "Subdirectory under user directory when configuration and logs will be saved")
-SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies" CACHE STRING "Dependency directory")
+
+IF(NOT DEFINED OV_CUSTOM_DEPENDENCIES_PATH)
+	IF(WIN32)
+		IF("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+			SET(OV_DEPENDENCIES_PLATFORM_FOLDER_NAME "dependencies_x64")
+		ELSEIF("${CMAKE_SIZEOF_VOID_P}" EQUAL "4")
+			SET(OV_DEPENDENCIES_PLATFORM_FOLDER_NAME "dependencies")
+		ELSE()
+			SET(OV_DEPENDENCIES_PLATFORM_FOLDER_NAME "dependencies")
+		ENDIF()
+	ELSE()
+		SET(OV_DEPENDENCIES_PLATFORM_FOLDER_NAME "dependencies")
+	ENDIF()
+ENDIF()
+
+SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/${OV_DEPENDENCIES_PLATFORM_FOLDER_NAME}" CACHE STRING "Dependency directory")
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
 SET(BRAND_NAME "OpenViBE" CACHE STRING "Brand with which titles and documentation will be prefixed")
@@ -59,9 +74,15 @@ IF(WIN32)
 	# Disable /MP if you don't like VS using all the cores for compilation
 	
 	# Switch /arch:SSE2 enables vectorization. Remove if your CPU/compiler doesn't support it.
-	SET(OV_EIGEN_FLAGS "/arch:SSE2")
+	# x64 build do not provide SSE2 option because 64bit processors always supports SSE vectorization.
+	# So the /arch:SSE2 is not recognized for x64 build we have to only activate it for x86.
+	IF("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+	ELSEIF("${CMAKE_SIZEOF_VOID_P}" EQUAL "4")
+		SET(OV_EIGEN_FLAGS "/arch:SSE2")
+	ENDIF()
+	
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4355 /MP ${OV_EIGEN_FLAGS}")
-	SET(OV_WIN32_BOOST_VERSION "1_55")
+	SET(OV_WIN32_BOOST_VERSION "1_58")
 ELSEIF(APPLE)
 	SET(OV_EIGEN_FLAGS "-msse2")
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall ${OV_EIGEN_FLAGS}")
@@ -109,19 +130,25 @@ if(NOT CMAKE_BUILD_TYPE AND CMAKE_GENERATOR MATCHES "Visual Studio*")
 elseif(CMAKE_BUILD_TYPE AND OV_PACKAGE)
 	# Add directories that OpenViBE will use to look for its components runtime, unless overridden by environment variables in the launch scripts.
 	# These defines should only be used in "openvibe/ov_directories.h".
-	add_definitions(-DOV_CMAKE_PATH_ROOT="${CMAKE_INSTALL_PREFIX}")
-	add_definitions(-DOV_CMAKE_PATH_BIN="${CMAKE_INSTALL_PREFIX}/bin")
-	add_definitions(-DOV_CMAKE_PATH_LIB="${CMAKE_INSTALL_PREFIX}/lib")
-	add_definitions(-DOV_CMAKE_PATH_DATA="${CMAKE_INSTALL_PREFIX}/share/openvibe")
-	
+
+	# We use absolute paths to avoid issue for unit and validation tests
+	get_filename_component(DIST_ROOT_ABSOLUTE "." REALPATH BASE_DIR "${CMAKE_BINARY_DIR}")
+	set(DIST_BINDIR_ABSOLUTE ${DIST_ROOT_ABSOLUTE}/bin)
+
 	set(CMAKE_INSTALL_PREFIX .)
+
+	add_definitions(-DOV_CMAKE_PATH_ROOT="${DIST_ROOT_ABSOLUTE}")
+	add_definitions(-DOV_CMAKE_PATH_BIN="${DIST_ROOT_ABSOLUTE}/bin")
+	add_definitions(-DOV_CMAKE_PATH_LIB="${DIST_ROOT_ABSOLUTE}/lib")
+	add_definitions(-DOV_CMAKE_PATH_DATA="${DIST_ROOT_ABSOLUTE}/share/openvibe")
+
 	set(DIST_ROOT ${CMAKE_INSTALL_PREFIX})
 	set(DIST_BINDIR ${CMAKE_INSTALL_BINDIR})
 	set(DIST_LIBDIR ${CMAKE_INSTALL_LIBDIR})
 	set(DIST_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
 	set(DIST_DATADIR ${CMAKE_INSTALL_DATADIR})
-	set(DIST_DOCDIR ${DIST_ROOT}/doc)
-	set(DIST_DOCTMP ${DIST_ROOT}/doc-tmp)
+	set(DIST_DOCDIR doc)
+	set(DIST_DOCTMP doc-tmp)
 	set(CPACK_GENERATOR "ZIP")
 	set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
 	set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${BRAND_NAME})
@@ -172,6 +199,7 @@ FUNCTION(SET_BUILD_PLATFORM)
 		ADD_DEFINITIONS(-DTARGET_ARCHITECTURE_x64)
 	ELSEIF("${CMAKE_SIZEOF_VOID_P}" EQUAL "4")
 		ADD_DEFINITIONS(-DTARGET_ARCHITECTURE_i386)
+		SET(PLATFORM_TARGET "x86")
 	ELSE()
 		ADD_DEFINITIONS(-DTARGET_ARCHITECTURE_Unknown)
 	ENDIF()

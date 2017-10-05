@@ -1,0 +1,10 @@
+boost_1.58_x86_vc120_dev.zip;boost;https://www.dropbox.com/s/t0mxpiuqjlt59xq/boost_1.58_x86_vc120_dev.zip?dl=1
+cmake-3.4.0.zip;cmake;https://www.dropbox.com/s/bgdqi3k0p8aak4d/cmake-3.4.0.zip?dl=1
+curl_7.47.1_x86_vc120_dev.zip;curl;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfLXRqeWpHTnNQLW8
+eigen-3.2.0.zip;eigen;https://www.dropbox.com/s/7uso2oaaenkjerb/eigen-3.2.0.zip?dl=1
+expat_2.1.0.1_x86_vc120_dev.zip;expat;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfM0p5aEY4dFhWRm8
+gtest_1.7.0_x86_vc120_dev.zip;gtest;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfM1hBNU92Ulo3S2c
+ninja-1.7.1.zip;ninja;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfLVpYTEdLRVVaRk0
+pthread_2.9.1_x86_vc120_dev.zip;pthread;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfM21EU2pWZTlvOEE
+xerces-c_3.1.3_x86_vc120_dev.zip;xerces-c;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfMEFDQmt0WE1obnM
+vcredist_x86_vc120.zip;vcredist;https://drive.google.com/uc?export=download&id=0B3jtTn2U9IRfUkJYTW5mVXJzWXM

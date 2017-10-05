@@ -180,7 +180,7 @@ TEST(CSV_Reader_Test_Case, SignalReaderEmptyFile)
 {
 	ICSVHandler* signalReaderTest = createCSVHandler();
 	std::string filepath = dataDirectory + "testCSVSignalEmptyFile.csv";
-	ASSERT_FALSE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
+	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
 	OpenViBE::CSV::releaseCSVHandler(signalReaderTest);
 }
 

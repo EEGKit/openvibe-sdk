@@ -16,6 +16,7 @@ set init_env_cmd=windows-initialize-environment.cmd
 set generator=-G"Ninja"
 set builder=Ninja
 set script_dir=%~dp0
+set PlatformTarget=x86
 
 goto parameter_parse
 
@@ -42,6 +43,7 @@ goto parameter_parse
 	echo --python-exec [path] path to the python executable to use
 	echo --vsproject Create visual studio project (.sln)
 	echo --vsbuild Create visual studio project (.sln) and compiles it
+	echo --platform-target [x86 or x64] Create a 32 or 64 bit. 32bit is the default
 
 	echo.
 	exit /b
@@ -131,8 +133,7 @@ if /i "%1" == "-h" (
 	Goto parameter_parse
 ) else if /i "%1"=="--dependencies-dir" (
 	set DependenciesPath="-DOV_CUSTOM_DEPENDENCIES_PATH=%2"
-	set init_env_cmd=windows-initialize-environment.cmd %2
-	REM -DOV_SOURCE_DEPENDENCIES_PATH=%2\dependencies-source"
+	set init_env_cmd=windows-initialize-environment.cmd --dependencies-dir %2
 	SHIFT
 	SHIFT
 	Goto parameter_parse
@@ -146,7 +147,12 @@ if /i "%1" == "-h" (
 	set builder=Visual
 	SHIFT
 	Goto parameter_parse
-) else if not "%1" == "" (
+) else if /i "%1"=="--platform-target" (
+	set PlatformTarget=%2
+	SHIFT
+	SHIFT
+	Goto parameter_parse
+)else if not "%1" == "" (
 	echo unrecognized option [%1]
 	Goto terminate_error
 )
@@ -160,23 +166,25 @@ if defined vsgenerate (
 
 setlocal
 
-call %init_env_cmd%
+call %init_env_cmd% --platform-target %PlatformTarget%
+
+echo Compiler is: %VSCMake%
 
 if defined vsgenerate (
 	set generator=-G"%VSCMake%" -T "v120"
 	if not defined build_dir (
-		set build_dir=%script_dir%\..\..\openvibe-sdk-build\vs-project
+		set build_dir=%script_dir%\..\..\openvibe-sdk-build\vs-project-%PlatformTarget%
 	)
 	if not defined install_dir (
-		set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist
+		set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist-%PlatformTarget%
 	)
 ) else (
 	set build_type="-DCMAKE_BUILD_TYPE=%BuildType%"
 	if not defined build_dir (
-		set build_dir=%script_dir%\..\..\openvibe-sdk-build\build-%BuildType%
+		set build_dir=%script_dir%\..\..\openvibe-sdk-build\build-%BuildType%-%PlatformTarget%
 	)
 	if not defined install_dir (
-		set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist-%BuildType%
+		set install_dir=%script_dir%\..\..\openvibe-sdk-build\dist-%BuildType%-%PlatformTarget%
 	)
 )
 if not defined ov_cmake_test_output (
