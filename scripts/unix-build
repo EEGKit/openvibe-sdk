@@ -37,7 +37,6 @@ ov_build_type=Release
 verbose=0
 package_option="FALSE"
 display_error_location="ON"
-UserDataSubdir=OpenVIBE
 BrandName=OpenViBE
 ov_build_unit=0
 ov_build_validation=0
@@ -84,7 +83,7 @@ while [[ $# -gt 0 ]]; do
 			display_error_location=OFF
 			;;
 		--userdata-subdir)
-			UserDataSubdir="$2"
+			UserDataSubdir="-DOV_CONFIG_SUBDIR=$2"
 			shift
 			;;
 		--brand-name)
@@ -187,7 +186,7 @@ cmake ${ov_script_dir}/.. \
 		-DGTEST_LIBRARY=${gtest_lib_dir}/libgtest.a \
 		-DGTEST_MAIN_LIBRARY=${gtest_lib_dir}/libgtest_main.a \
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=${ov_cmake_test_output} \
-		-DOV_CONFIG_SUBDIR=${UserDataSubdir} \
+		${UserDataSubdir} \
 		-DBRAND_NAME=${BrandName} \
 		${python_exec}
 

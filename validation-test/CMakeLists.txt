@@ -111,7 +111,11 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/data/openvibe/openvibe.conf.in ${CMAK
 
 # Utility variable for subproject
 SET(OVT_OPENVIBE_DATA ${CMAKE_CURRENT_BINARY_DIR}/data/openvibe)
-SET(OVT_OPENVIBE_PLAYER ${DIST_BINDIR_ABSOLUTE}/openvibe-scenario-player${CMAKE_EXECUTABLE_SUFFIX})
+if(DEFINED DIST_BINDIR_ABSOLUTE)
+	set(OVT_OPENVIBE_PLAYER ${DIST_BINDIR_ABSOLUTE}/openvibe-scenario-player${CMAKE_EXECUTABLE_SUFFIX})
+else()
+	set(OVT_OPENVIBE_PLAYER ${DIST_BINDIR}/openvibe-scenario-player${CMAKE_EXECUTABLE_SUFFIX})
+endif()
 
 IF(UNIX)
 	SET(OVT_OPENVIBE_PLAYER_LOG_FILE "$ENV{HOME}/.config/${OV_CONFIG_SUBDIR}/log/openvibe-scenario-player.log")
