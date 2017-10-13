@@ -658,12 +658,8 @@ boolean CBoxAlgorithmClassifierTrainer::saveConfiguration(void)
 		l_sRoot->release();
 		op_pConfiguration=NULL;
 	};
-
-	l_sRoot->addAttribute(c_sCreatorAttributeName, OV_PROJECT_NAME);
-
-	std::stringstream l_sCreatorVersion;
-	l_sCreatorVersion << OV_VERSION_MAJOR << "." << OV_VERSION_MINOR << "." << OV_VERSION_PATCH;
-	l_sRoot->addAttribute(c_sCreatorVersionAttributeName, l_sCreatorVersion.str().c_str());
+	l_sRoot->addAttribute(c_sCreatorAttributeName, this->getConfigurationManager().expand("${Application_Name}"));
+	l_sRoot->addAttribute(c_sCreatorVersionAttributeName, this->getConfigurationManager().expand("${Application_Version}"));
 
 	XML::IXMLNode *l_pTempNode = XML::createNode(c_sStrategyNodeName);
 	l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[c_sMulticlassStrategySettingName]);

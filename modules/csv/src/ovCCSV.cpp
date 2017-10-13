@@ -539,17 +539,23 @@ bool CCSVHandler::openFile(const std::string &fileName, EFileAccessMode mode)
 		std::string stringHistory;
 
 		m_IsCRLFEOL = false;
-
-		if (!this->streamReader(m_Fs, stringBuffer, '\n', stringHistory))
+		if(m_Fs.peek() == std::ifstream::traits_type::eof())
 		{
-			this->closeFile();
-
-			m_LastStringError = "Error while opening file " + m_Filename + ": " + "Fail to determine the file line ending.";
-			m_LogError = LogErrorCodes_CantOpenFile;
-			return false;
+			m_IsCRLFEOL = true;
 		}
+		else 
+		{
+			if (!this->streamReader(m_Fs, stringBuffer, '\n', stringHistory))
+			{
+				this->closeFile();
 
-		m_IsCRLFEOL = *--stringBuffer.end() == '\r';
+				m_LastStringError = "Error while opening file " + m_Filename + ": " + "Fail to determine the file line ending.";
+				m_LogError = LogErrorCodes_CantOpenFile;
+				return false;
+			}
+
+			m_IsCRLFEOL = *--stringBuffer.end() == '\r';
+		}
 	}
 #endif
 
