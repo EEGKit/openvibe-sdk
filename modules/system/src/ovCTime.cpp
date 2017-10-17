@@ -12,9 +12,7 @@
 // time handling strategy selection
 // \note With officialy supported compilers and required boost version
 //       it should never fallback in a OV_USE_SYSTEM case
-#if (defined(_MSC_VER) && _MSC_VER <= 1800)
-
-#ifdef TARGET_HAS_Boost_Chrono
+#if (defined(_MSC_VER) && _MSC_VER <= 1800 && defined(TARGET_HAS_Boost_Chrono))
 
 #include <boost/chrono/config.hpp>
 
@@ -22,33 +20,26 @@
 
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
-using internal_clock = boost::chrono::steady_clock;
-using namespace std;
-#define FORCE_BOOST_CHRONO
+namespace timelib = boost;
+
+#else
+#error "Please use OpenViBE recommended version of Boost"
 #endif // BOOST_CHRONO_HAS_CLOCK_STEADY
 
-#endif // TARGET_HAS_Boost_Chrono
-
-#else // defined(_MSC_VER) && _MSC_VER <= 1800
+#else // defined(_MSC_VER) && _MSC_VER <= 1800 && defined(TARGET_HAS_Boost_Chrono)
 
 #include <chrono>
 #include <thread>
-using namespace std;
+namespace timelib = std;
 
-using internal_clock = chrono::steady_clock;
+#endif // defined(_MSC_VER) && _MSC_VER <= 1800 && defined(TARGET_HAS_Boost_Chrono)
+
+using internal_clock = timelib::chrono::steady_clock;
 // using internal_clock = chrono::high_resolution_clock;
-
-#endif // defined(_MSC_VER) && _MSC_VER <= 1800
 
 bool System::Time::sleep(const uint32_t ui32MilliSeconds)
 {
-
-#ifdef FORCE_BOOST_CHRONO
-	const boost::posix_time::time_duration l_oDuration = boost::posix_time::milliseconds(ui32MilliSeconds);
-	boost::this_thread::sleep(l_oDuration);
-#else
-	this_thread::sleep_for(chrono::milliseconds(ui32MilliSeconds));
-#endif
+	timelib::this_thread::sleep_for(timelib::chrono::milliseconds(ui32MilliSeconds));
 	return true;
 }
 
@@ -57,13 +48,10 @@ bool System::Time::zsleep(const uint64_t ui64Seconds)
 	const uint32_t l_ui32Seconds = static_cast<uint32_t>(ui64Seconds >> 32);
 	// zero the seconds with 0xFFFFFFFF, multiply to get the rest as fixed point microsec, then grab them (now in the 32 msbs)
 	const uint64_t l_ui64MicroSeconds = ((ui64Seconds & 0xFFFFFFFFLL) * 1000000LL) >> 32;
-#ifdef FORCE_BOOST_CHRONO
-	const boost::posix_time::time_duration l_oDuration = boost::posix_time::seconds(l_ui32Seconds) + boost::posix_time::microsec(l_ui64MicroSeconds);
-	boost::this_thread::sleep(l_oDuration);
-#else
-	chrono::microseconds l_oDuration = chrono::seconds(l_ui32Seconds) + chrono::microseconds(l_ui64MicroSeconds);
-	this_thread::sleep_for(l_oDuration);
-#endif
+
+	const timelib::chrono::microseconds l_oDuration =  timelib::chrono::seconds(l_ui32Seconds) + timelib::chrono::microseconds(l_ui64MicroSeconds);
+	timelib::this_thread::sleep_for(l_oDuration);
+
 	return true;
 }
 
@@ -88,11 +76,8 @@ uint64_t System::Time::zgetTime(void)
 	
 	const internal_clock::duration l_oElapsed = l_oTimeNow - l_oTimeStart;
 
-#ifdef FORCE_BOOST_CHRONO
-	const boost::chrono::microseconds l_oElapsedMs = boost::chrono::duration_cast<boost::chrono::microseconds>(l_oElapsed);
-#else
-	const chrono::microseconds l_oElapsedMs = chrono::duration_cast<chrono::microseconds>(l_oElapsed);
-#endif
+	const timelib::chrono::microseconds l_oElapsedMs = timelib::chrono::duration_cast<timelib::chrono::microseconds>(l_oElapsed);
+
 	const uint64_t l_ui64MicrosPerSecond = 1000ULL * 1000ULL;
 	const uint64_t l_ui64Seconds = static_cast<uint64_t>(l_oElapsedMs.count() / l_ui64MicrosPerSecond);
 	const uint64_t l_ui64Fraction = static_cast<uint64_t>(l_oElapsedMs.count() % l_ui64MicrosPerSecond);
