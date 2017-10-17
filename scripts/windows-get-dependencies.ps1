@@ -221,11 +221,14 @@ function InstallDeps($arch, $dir, $version)
 		Write-Host "No need to unzip dependency. Already at the good version: " $old_dep_version "."
 	} else {
 		Write-Host "Dependency version is not the good one: [" $old_dep_version "]. Should be " $version
+		if((Test-Path ($Script:dest_dir + "\" + $dir)) -and (-Not $Script:new_versions.ContainsKey($dir))) {
+			Remove-item ($Script:dest_dir + "\" + $dir) -Force -Recurse
+		}
 		ExpandZipFile $zip ($Script:dest_dir + "\" + $dir)
 	}
 	# Add new version to table 
 	if($Script:new_versions.ContainsKey($dir)) {
-		# If an archive was already extracted to this folder and its version is 
+		# If (during this install process) an archive was already extracted to this folder and its version is 
 		# not the same as new version, we raise an error
 		if($Script:new_versions[$dir] -ne $version) {
 			Write-Error "- Several dependencies are extracted in the same folder with different versions.
