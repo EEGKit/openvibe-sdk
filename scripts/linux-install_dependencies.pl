@@ -11,9 +11,14 @@ Currently supported Linux Distributions are:
   
 Operating on the specified manifest folder,
 
-  1) Carries out preliminary steps by running scripts matching ^linux-preinstall-.*pl
-  2) Installs packages from distro-specific files (like linux-dependencies-ubuntu1404.txt)
-  3) May compile/fetch packages with perl scripts matching ^linux-compile-.*pl
+  1) Carries out preliminary steps by running scripts matching 
+     ^linux-preinstall-.*pl from linux-dep-helpers/
+  2) Installs packages from distro-specific files 
+     (like linux-dependencies-ubuntu1404.txt)
+  3) May compile/fetch packages with perl scripts matching 
+     ^linux-compile-.*pl from linux-dep-helpers/
+
+n.b. The script globs all .pl scripts present that match the prefixes. If you don't want some dependency, remove the corresponding script.
 
 =cut
 
@@ -33,14 +38,14 @@ sub usage {
   print "      --no-gtest: will not compile gtest if set.\n";
   print "      --no-install: will not do any installation if set.\n";
   print "      --dependencies-dir [folder]: path to the dependencies\n";
-  print "      --manifest-dir     [folder]: path to the manifest files (default: scripts folder)\n";
+  print "      --manifest-dir     [folder]: path to the manifest files (default: scripts folder/linux-dep-helpers/)\n";
 };
 
 
 my $assume_yes = 0;
 my $no_gtest = 0;
 my $no_install = 0;
-my $manifest_dir = $FindBin::Bin;
+my $manifest_dir = "$FindBin::Bin";
 my $print_help = 0;
 my $dependencies_dir = "$FindBin::Bin/../dependencies/";
 
@@ -62,6 +67,7 @@ if($print_help) {
 
 $dependencies_dir = File::Spec->rel2abs($dependencies_dir);
 my $dependencies_arch_dir = "$dependencies_dir/arch";
+my $helper_script_dir = "$manifest_dir/linux-dep-helpers/";
 
 if (! -e $dependencies_dir) {
     mkdir($dependencies_dir) or die("Failed to create directory [$dependencies_dir]");
@@ -103,12 +109,12 @@ $distribution eq 'Unknown' and die('This distribution is unsupported');
 print "Installing dependencies for: $distribution\n";
 
 # Perform steps before installing packages
-opendir(my $dir_handle, $manifest_dir) or die("unable to open $manifest_dir");
+opendir(my $dir_handle, $helper_script_dir) or die("unable to open $helper_script_dir");
 while(my $filename = readdir($dir_handle)) {
   if($filename =~ /^linux-preinstall.*pl/) {
-	print "Running $manifest_dir/$filename ...\n";
-	open(my $pl_file_handle, '<', "$manifest_dir/$filename") 
-    		or die "Unable to open file, $manifest_dir/$filename";
+	print "Running $helper_script_dir/$filename ...\n";
+	open(my $pl_file_handle, '<', "$helper_script_dir/$filename") 
+    		or die "Unable to open file, $helper_script_dir/$filename";
 	undef $/;
 	my $program = <$pl_file_handle>;
 	eval " $program "; warn $@ if $@;
@@ -162,12 +168,12 @@ if (!$no_install) {
 }
 
 # Obtain specific dependencies that we dont get from packages
-opendir(my $dir_handle, $manifest_dir) or die("unable to open $manifest_dir");
+opendir(my $dir_handle, $helper_script_dir) or die("unable to open $helper_script_dir");
 while(my $filename = readdir($dir_handle)) {
   if($filename =~ /^linux-compile.*pl/) {
-	print "Running $manifest_dir/$filename ...\n";
-	open(my $pl_file_handle, '<', "$manifest_dir/$filename") 
-    		or die "Unable to open file, $manifest_dir/$filename";
+	print "Running $helper_script_dir/$filename ...\n";
+	open(my $pl_file_handle, '<', "$helper_script_dir/$filename") 
+    		or die "Unable to open file, $helper_script_dir/$filename";
 	undef $/;
 	my $program = <$pl_file_handle>;
 	eval " $program "; warn $@ if $@;
