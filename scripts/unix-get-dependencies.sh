@@ -98,7 +98,7 @@ function install_dependency() {
 
 mkdir -p ${OUTPUT_DIR}
 echo "Get and unzip dependencies. Read dependencies from manifest [$DEPENDENCIES]"
-sed 1d ${DEPENDENCIES} | while read d; do
+cat ${DEPENDENCIES} | while read d; do
     dep=`echo $d | cut -d ';' -f 1`
     dir=`echo $d | cut -d ';' -f 2`
 
