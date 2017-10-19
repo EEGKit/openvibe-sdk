@@ -11,13 +11,12 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-boolean CBoxAlgorithmSignalDecimation::initialize(void)
+bool CBoxAlgorithmSignalDecimation::initialize(void)
 {
 	m_pStreamDecoder=NULL;
 	m_pStreamEncoder=NULL;
 
 	m_i64DecimationFactor=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-
 	OV_ERROR_UNLESS_KRF(
 		m_i64DecimationFactor > 1,
 		"Invalid decimation factor [" << m_i64DecimationFactor << "] (expected value > 1)",
@@ -41,16 +40,19 @@ boolean CBoxAlgorithmSignalDecimation::initialize(void)
 	m_ui32ChannelCount=0;
 	m_ui32InputSampleIndex=0;
 	m_ui32InputSampleCountPerSentBlock=0;
+	m_ui64OutputSamplingFrequency = 0;
 	m_ui32OutputSampleIndex=0;
 	m_ui32OutputSampleCountPerSentBlock=0;
 
 	m_ui64TotalSampleCount=0;
+	m_ui64StartTimeBase = 0;
 	m_ui64LastStartTime=0;
+	m_ui64LastEndTime = 0;
 
 	return true;
 }
 
-boolean CBoxAlgorithmSignalDecimation::uninitialize(void)
+bool CBoxAlgorithmSignalDecimation::uninitialize(void)
 {
 	op_pMemoryBuffer.uninitialize();
 	ip_pMatrix.uninitialize();
@@ -77,25 +79,24 @@ boolean CBoxAlgorithmSignalDecimation::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmSignalDecimation::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSignalDecimation::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmSignalDecimation::process(void)
+bool CBoxAlgorithmSignalDecimation::process(void)
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
-	uint32 i, j, k;
 
-	for(i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for(uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		ip_pMemoryBuffer=l_rDynamicBoxContext.getInputChunk(0, i);
 		op_pMemoryBuffer=l_rDynamicBoxContext.getOutputChunk(0);
 
-		uint64 l_ui64StartTime=l_rDynamicBoxContext.getInputChunkStartTime(0, i);
-		uint64 l_ui64EndTime=l_rDynamicBoxContext.getInputChunkEndTime(0, i);
+		uint64_t l_ui64StartTime=l_rDynamicBoxContext.getInputChunkStartTime(0, i);
+		uint64_t l_ui64EndTime=l_rDynamicBoxContext.getInputChunkEndTime(0, i);
 
 		if(l_ui64StartTime!=m_ui64LastEndTime)
 		{
@@ -122,7 +123,7 @@ boolean CBoxAlgorithmSignalDecimation::process(void)
 			);
 
 			m_ui32OutputSampleIndex=0;
-			m_ui32OutputSampleCountPerSentBlock=(uint32)(m_ui32InputSampleCountPerSentBlock/m_i64DecimationFactor);
+			m_ui32OutputSampleCountPerSentBlock = static_cast<uint32_t>(m_ui32InputSampleCountPerSentBlock/m_i64DecimationFactor);
 			m_ui32OutputSampleCountPerSentBlock=(m_ui32OutputSampleCountPerSentBlock?m_ui32OutputSampleCountPerSentBlock:1);
 			m_ui64OutputSamplingFrequency=op_ui64SamplingRate/m_i64DecimationFactor;
 
@@ -148,11 +149,11 @@ boolean CBoxAlgorithmSignalDecimation::process(void)
 			float64* l_pInputBuffer=op_pMatrix->getBuffer();
 			float64* l_pOutputBuffer=ip_pMatrix->getBuffer()+m_ui32OutputSampleIndex;
 
-			for(j=0; j<m_ui32InputSampleCountPerSentBlock; j++)
+			for(uint32_t j = 0; j < m_ui32InputSampleCountPerSentBlock; j++)
 			{
 				float64* l_pInputBufferTmp=l_pInputBuffer;
 				float64* l_pOutputBufferTmp=l_pOutputBuffer;
-				for(k=0; k<m_ui32ChannelCount; k++)
+				for(uint32_t k = 0; k < m_ui32ChannelCount; k++)
 				{
 					*l_pOutputBufferTmp+=*l_pInputBufferTmp;
 					l_pOutputBufferTmp+=m_ui32OutputSampleCountPerSentBlock;
@@ -164,7 +165,7 @@ boolean CBoxAlgorithmSignalDecimation::process(void)
 				{
 					m_ui32InputSampleIndex=0;
 					float64* l_pOutputBufferTmp=l_pOutputBuffer;
-					for(k=0; k<m_ui32ChannelCount; k++)
+					for(uint32_t k = 0; k < m_ui32ChannelCount; k++)
 					{
 						*l_pOutputBufferTmp/=m_i64DecimationFactor;
 						l_pOutputBufferTmp+=m_ui32OutputSampleCountPerSentBlock;
@@ -178,8 +179,8 @@ boolean CBoxAlgorithmSignalDecimation::process(void)
 						l_pOutputBuffer=ip_pMatrix->getBuffer();
 						m_ui32OutputSampleIndex=0;
 						m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
-						uint64 l_ui64SampleStartTime = m_ui64StartTimeBase + ITimeArithmetics::sampleCountToTime(m_ui64OutputSamplingFrequency, m_ui64TotalSampleCount);
-						uint64 l_ui64SampleEndTime   = m_ui64StartTimeBase + ITimeArithmetics::sampleCountToTime(m_ui64OutputSamplingFrequency, m_ui64TotalSampleCount + m_ui32OutputSampleCountPerSentBlock);
+						uint64_t l_ui64SampleStartTime = m_ui64StartTimeBase + ITimeArithmetics::sampleCountToTime(m_ui64OutputSamplingFrequency, m_ui64TotalSampleCount);
+						uint64_t l_ui64SampleEndTime   = m_ui64StartTimeBase + ITimeArithmetics::sampleCountToTime(m_ui64OutputSamplingFrequency, m_ui64TotalSampleCount + m_ui32OutputSampleCountPerSentBlock);
 						l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64SampleStartTime, l_ui64SampleEndTime);
 						m_ui64TotalSampleCount+=m_ui32OutputSampleCountPerSentBlock;
 
