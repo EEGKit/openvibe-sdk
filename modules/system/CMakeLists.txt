@@ -47,8 +47,14 @@ ENDIF(UNIX)
 
 INCLUDE("FindOpenViBECommon")
 
-INCLUDE("FindThirdPartyBoost")
-INCLUDE("FindThirdPartyBoost_Chrono")
+IF(WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0")
+	INCLUDE("FindThirdPartyBoost")
+	OV_LINK_BOOST_LIB("system" ${OV_WIN32_BOOST_VERSION})
+	OV_LINK_BOOST_LIB("thread" ${OV_WIN32_BOOST_VERSION})
+	INCLUDE("FindThirdPartyBoost_Chrono")
+ENDIF(WIN32)
+
+
 
 # ---------------------------------
 # Finds standard library winmm

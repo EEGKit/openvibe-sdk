@@ -20,26 +20,26 @@ namespace System
 		 * \param ui32MilliSeconds : sleep duration in ms
 		 * \return Always true
 		 */
-		static bool sleep(const System::uint32 ui32MilliSeconds);
+		static bool sleep(const uint32_t ui32MilliSeconds);
 		
 		/**
 		 * \brief Make the calling thread sleep 
 		 * \param ui64Seconds : sleep duration in fixed point 32:32 seconds
 		 * \return Always true
 		 */
-		static bool zsleep(const System::uint64 ui64Seconds);
+		static bool zsleep(const uint64_t ui64Seconds);
 		
 		/**
 		 * \brief Retrieve time in ms 
 		 * \return Elpased time in ms since the first call to this function or zgetTime
 		 */
-		static System::uint32 getTime(void); 
+		static uint32_t getTime(void); 
 		
 		/**
 		 * \brief Retrieve time in fixed point 32:32 seconds 
 		 * \return Elpased time since the first call to the function or getTime
 		 */
-		static System::uint64 zgetTime(void);
+		static uint64_t zgetTime(void);
 		
 		/**
 		 * \brief Check if the internal clock used by the framework is steady
@@ -57,7 +57,7 @@ namespace System
 		 * \note This is a theoretical check that queries the internal
 		 *  	 clock implementation for available services
 		 */
-		 static bool checkResolution(const System::uint32 ui32MilliSeconds);
+		 static bool checkResolution(const uint32_t ui32MilliSeconds);
 		  
 	private:
 
