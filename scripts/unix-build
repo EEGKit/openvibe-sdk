@@ -40,8 +40,6 @@ display_error_location="ON"
 BrandName=OpenViBE
 ov_build_unit=0
 ov_build_validation=0
-# FIXME whats the default for this?
-ov_test_data_dir="."
 gtest_include_dir="/usr/src/gtest/src"
 
 # Parse arguments
@@ -73,7 +71,7 @@ while [[ $# -gt 0 ]]; do
 			shift
 			;;
 		--test-data-dir)
-			ov_test_data_dir="$2"
+			ov_test_data_dir_token="-DOVT_TEST_DATA_DIR=$2"
 			shift
 			;;
 		--make-package)
@@ -146,9 +144,9 @@ echo "**************************************"
 echo "Build with parameters:"
 echo "[build-type] = ${ov_build_type}"
 echo "[build-dir] = ${ov_build_dir}"
-echo "[dependencies-dir] = ${dependencies_dir_token}"
+echo "[dependencies-dir token] = ${dependencies_dir_token}"
 echo "[install-dir] = ${ov_install_dir}"
-echo "[test data directory] = ${ov_test_data_dir}"
+echo "[test data directory token] = ${ov_test_data_dir_token}"
 echo "[test output files directory] = ${ov_cmake_test_output}"
 echo "[build unit] = ${ov_build_unit}"
 echo "[build validation] = ${ov_build_validation}"
@@ -179,7 +177,7 @@ cmake ${ov_script_dir}/.. \
 		-G Ninja \
 		-DCMAKE_BUILD_TYPE=${ov_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${ov_install_dir} \
-                -DOVT_TEST_DATA_DIR=${ov_test_data_dir} \
+		${ov_test_data_dir_token} \
 		${dependencies_dir_token} \
 		-DOV_PACKAGE=${package_option} \
 		-DOV_DISPLAY_ERROR_LOCATION=${display_error_location} \
