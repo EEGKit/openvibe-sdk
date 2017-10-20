@@ -22,7 +22,7 @@ function usage()
 		echo "--brand-name <brand-name> name of the brand to prefix titles and documentation"
 		echo "--build-unit : if set, unit tests will be built"
 		echo "--build-validation : if set, validation tests will be builts"
-		echo "--gtest-lib-dir <dirname> : gtest libraries directory (default: ../dependencies/libgtest)"
+		echo "--gtest-lib-dir <dirname> : gtest libraries directory (default: \$\{dependencies_dir\}/libgtest)"
 		echo "--gtest-include-dir <dirname> : gtest include directory (default: /usr/src/gtest/src)"
 		echo "--test-output-dir <dirname> : test output files directory"
 		echo "--python-exec <path> : path to python executable to use"
@@ -40,7 +40,6 @@ display_error_location="ON"
 BrandName=OpenViBE
 ov_build_unit=0
 ov_build_validation=0
-gtest_lib_dir="${ov_script_dir}/../dependencies/libgtest"
 gtest_include_dir="/usr/src/gtest/src"
 
 # Parse arguments
@@ -68,11 +67,11 @@ while [[ $# -gt 0 ]]; do
 			shift
 			;;
 		--dependencies-dir)
-			dependencies_dir="-DOV_CUSTOM_DEPENDENCIES_PATH=$2"
+			dependencies_dir_token="-DOV_CUSTOM_DEPENDENCIES_PATH=$2"
 			shift
 			;;
 		--test-data-dir)
-			ov_test_data_dir="-DOVT_TEST_DATA_DIR=$2"
+			ov_test_data_dir_token="-DOVT_TEST_DATA_DIR=$2"
 			shift
 			;;
 		--make-package)
@@ -97,7 +96,8 @@ while [[ $# -gt 0 ]]; do
 			ov_build_validation=1
 			;;
 		--gtest-lib-dir)
-			gtest_lib_dir="$2"
+			gtest_lib_dir_token="-DGTEST_LIBRARY=$2/libgtest.a"
+			gtest_mainlib_dir_token="-DGTEST_MAIN_LIBRARY=$2/libgtest_main.a"
 			shift
 			;;
 		--gtest-include-dir)
@@ -144,8 +144,9 @@ echo "**************************************"
 echo "Build with parameters:"
 echo "[build-type] = ${ov_build_type}"
 echo "[build-dir] = ${ov_build_dir}"
+echo "[dependencies-dir token] = ${dependencies_dir_token}"
 echo "[install-dir] = ${ov_install_dir}"
-echo "[test data directory] = ${ov_test_data_dir}"
+echo "[test data directory token] = ${ov_test_data_dir_token}"
 echo "[test output files directory] = ${ov_cmake_test_output}"
 echo "[build unit] = ${ov_build_unit}"
 echo "[build validation] = ${ov_build_validation}"
@@ -176,15 +177,15 @@ cmake ${ov_script_dir}/.. \
 		-G Ninja \
 		-DCMAKE_BUILD_TYPE=${ov_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${ov_install_dir} \
-		${ov_test_data_dir} \
-		${dependencies_dir} \
+		${ov_test_data_dir_token} \
+		${dependencies_dir_token} \
 		-DOV_PACKAGE=${package_option} \
 		-DOV_DISPLAY_ERROR_LOCATION=${display_error_location} \
 		-DBUILD_UNIT_TEST=${ov_build_unit} \
 		-DBUILD_VALIDATION_TEST=${ov_build_validation} \
 		-DGTEST_INCLUDE_DIR=${gtest_include_dir} \
-		-DGTEST_LIBRARY=${gtest_lib_dir}/libgtest.a \
-		-DGTEST_MAIN_LIBRARY=${gtest_lib_dir}/libgtest_main.a \
+		${gtest_lib_dir_token} \
+		${gtest_mainlib_dir_token} \
 		-DOVT_VALIDATION_TEST_OUTPUT_DIR=${ov_cmake_test_output} \
 		${UserDataSubdir} \
 		-DBRAND_NAME=${BrandName} \

@@ -8,12 +8,26 @@ The installer uses the native package manager.
 Currently supported Linux Distributions are:
 - Ubuntu 14.04 LTS
 - Ubuntu 16.04 LTS
+  
+Operating on the specified manifest folder,
+
+  1) Carries out preliminary steps by running scripts matching 
+     ^linux-preinstall-.*pl from linux-dep-helpers/
+  2) Installs packages from distro-specific files 
+     (like linux-dependencies-ubuntu1404.txt)
+  3) May compile/fetch packages with perl scripts matching 
+     ^linux-compile-.*pl from linux-dep-helpers/
+
+n.b. The script globs all .pl scripts present that match the prefixes. If you don't want some dependency, remove the corresponding script.
+
 =cut
 
 use strict;
 use English;
 use FindBin;
 use File::Copy;
+use File::Spec;
+use Getopt::Long;
 
 sub usage {
   print "$0 [-h][-y]\n";
@@ -23,27 +37,43 @@ sub usage {
   print "      -y: assume 'yes' to all prompts. Make it possible to run non-interactively.\n";
   print "      --no-gtest: will not compile gtest if set.\n";
   print "      --no-install: will not do any installation if set.\n";
+  print "      --dependencies-dir [folder]: path to the dependencies\n";
+  print "      --manifest-dir     [folder]: path to the manifest files (default: scripts folder/linux-dep-helpers/)\n";
 };
 
 
 my $assume_yes = 0;
-my $compile_gtest = 1;
-my $install_packages = 1;
+my $no_gtest = 0;
+my $no_install = 0;
+my $manifest_dir = "$FindBin::Bin";
+my $print_help = 0;
+my $dependencies_dir = "$FindBin::Bin/../dependencies/";
 
-foreach my $arg (@ARGV) {
-  if ($arg eq "-h") {
-    usage();
-    exit(0);
-  } elsif ($arg eq "-y") {
-    $assume_yes = 1;
-  } elsif ($arg eq "--no-gtest") {
-    $compile_gtest = 0;
-  } elsif ($arg eq "--no-install") {
-    $install_packages = 0;
-  } else {
-    usage();
+GetOptions (
+            "assume-yes"         => \$assume_yes,
+            "y"                  => \$assume_yes,
+            "dependencies-dir=s" => \$dependencies_dir,
+            "manifest-dir=s"     => \$manifest_dir,
+            "h"                  => \$print_help,
+            "help"               => \$print_help,
+            "no-install"         => \$no_install, 
+            "no-gtest"           => \$no_gtest)  
+      or usage() and die("Error in command line arguments\n");
+
+if($print_help) {
+	usage();
     exit(1);
-  }
+}
+
+$dependencies_dir = File::Spec->rel2abs($dependencies_dir);
+my $dependencies_arch_dir = "$dependencies_dir/arch";
+my $helper_script_dir = "$manifest_dir/linux-dep-helpers/";
+
+if (! -e $dependencies_dir) {
+    mkdir($dependencies_dir) or die("Failed to create directory [$dependencies_dir]");
+}
+if (! -e $dependencies_arch_dir) {
+    mkdir($dependencies_arch_dir) or die("Failed to create directory [$dependencies_arch_dir]");
 }
 
 # Check for the release version and set the update and install commands
@@ -57,7 +87,7 @@ my $lsb_distributor = `lsb_release --id --short`;
 my $lsb_release = `lsb_release --release --short`;
 
 if ($lsb_distributor =~ 'Ubuntu') {
-  if ($install_packages) {
+  if (!$no_install) {
     $update_packages_command = 'sudo apt-get update';
     if ($assume_yes) {
       $package_install_command = 'sudo apt-get -y install';
@@ -78,55 +108,49 @@ $distribution eq 'Unknown' and die('This distribution is unsupported');
 
 print "Installing dependencies for: $distribution\n";
 
-# Add additional repositories for newer packages
-
-if ($install_packages && $distribution eq 'Ubuntu 14.04') {
-  system('sudo add-apt-repository ppa:fkrull/deadsnakes');
-  ($CHILD_ERROR != 0) and die("Adding PPA repository for Python 3.5 failed [$CHILD_ERROR]");
+# Perform steps before installing packages
+opendir(my $dir_handle, $helper_script_dir) or die("unable to open $helper_script_dir");
+while(my $filename = readdir($dir_handle)) {
+  if($filename =~ /^linux-preinstall.*pl/) {
+	print "Running $helper_script_dir/$filename ...\n";
+	open(my $pl_file_handle, '<', "$helper_script_dir/$filename") 
+    		or die "Unable to open file, $helper_script_dir/$filename";
+	undef $/;
+	my $program = <$pl_file_handle>;
+	eval " $program "; warn $@ if $@;
+  }
 }
+closedir($dir_handle);
 
 # Create the list of packages to install
 
-my @packages = ();
+my $pkg_file = "";
 
 if ($distribution eq 'Ubuntu 14.04') {
-  push @packages, "doxygen";
-  push @packages, "make";
-  push @packages, "gcc";
-  push @packages, "g++";
-  push @packages, "libexpat1-dev";
-  push @packages, "libncurses5-dev";
-  push @packages, "libeigen3-dev";
-  push @packages, "libboost-dev";
-  push @packages, "libboost-thread-dev";
-  push @packages, "libboost-regex-dev";
-  push @packages, "libboost-chrono-dev";
-  push @packages, "libboost-filesystem1.54-dev";
-  push @packages, "ninja-build";
-  push @packages, "libzzip-dev";
-  push @packages, "libxerces-c-dev";
-  push @packages, "libgtest-dev";
+  $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1404.txt";
 } elsif ($distribution eq 'Ubuntu 16.04') {
-  # common packages with OpenViBE SDK
-  push @packages, "doxygen";
-  push @packages, "make";
-  push @packages, "cmake";
-  push @packages, "gcc";
-  push @packages, "g++";
-  push @packages, "libexpat1-dev";
-  push @packages, "libncurses5-dev";
-  push @packages, "libboost-dev";
-  push @packages, "libboost-thread-dev";
-  push @packages, "libboost-regex-dev";
-  push @packages, "libboost-chrono-dev";
-  push @packages, "libboost-filesystem1.58-dev";
-  push @packages, "ninja-build";
-  push @packages, "libzzip-dev";
-  push @packages, "libxerces-c-dev";
-  push @packages, "libgtest-dev";
+  $pkg_file = "$manifest_dir/linux-dependencies-ubuntu1604.txt";
+} else {
+  die("Unknown distro\n");
 }
 
-if ($install_packages) {
+# Install actual packages
+print "Opening package manifest file $pkg_file ...\n";
+
+# read package list to memory
+open(my $pkg_file_handle, '<:encoding(UTF-8)', $pkg_file) 
+    or die "Unable to open file, $pkg_file";
+
+my @packages = ();
+local $INPUT_RECORD_SEPARATOR = "\n";
+for my $line (<$pkg_file_handle>) {
+    $line =~ s/\r?\n$//;
+    push @packages, $line; 
+}
+
+close($pkg_file_handle) or warn "Unable to close $pkg_file";
+
+if (!$no_install) {
   # Update package list
   print "Updating package database...\n";
   system($add_repository_command);
@@ -138,117 +162,24 @@ if ($install_packages) {
   print "Will install following packages:\n";
   print (join ' ', @packages), "\n";
 
+  my $pkgs = (join ' ', @packages);
   system("$package_install_command " . (join ' ', @packages));
   ($CHILD_ERROR != 0) and die('Failed to install the required packages');
 }
-# Installation of packages not available in the apt database or PPA
-# Eigen installation
-if ($install_packages && $distribution eq 'Ubuntu 16.04') {
-  # Install eigen 3.2.9 from source if it is not already
-  # This is because Ubuntu 16.04 has a beta version of the Eigen package by default
-  # and it does not work
-  if (-e "/usr/local/include/eigen3") {
-    print STDERR "Warning: eigen3 is already installed in /usr/local\n";
-  } else {
-    my $dependencies_folder = $FindBin::Bin . "/../dependencies";
-    my $eigen_build_folder = $dependencies_folder . "/eigen-build";
-    my $eigen_extracted_folder = $eigen_build_folder . "/eigen-eigen-dc6cfdf9bcec";
 
-    if (! -e $dependencies_folder) {
-      mkdir($dependencies_folder) or die("Failed to create directory [$dependencies_folder]");
-    }
-    if (! -e $eigen_build_folder) {
-      mkdir($eigen_build_folder) or die("Failed to create directory [$eigen_build_folder]");
-    }
-
-    chdir $eigen_build_folder;
-
-    if (! -e "3.2.9.tar.bz2") {
-      system('wget "http://bitbucket.org/eigen/eigen/get/3.2.9.tar.bz2"');
-      ($CHILD_ERROR != 0) and die ("Could not download the Eigen sources [$CHILD_ERROR]");
-    }
-    if (! -e $eigen_extracted_folder) {
-      system('tar -xjf "3.2.9.tar.bz2"');
-      ($CHILD_ERROR != 0) and die ("Could not extract the eigen archive");
-    }
-
-    chdir $eigen_extracted_folder;
-    mkdir $eigen_extracted_folder . "/build" or die ("Failed to create directory [$eigen_extracted_folder/build]");
-    chdir $eigen_extracted_folder . "/build";
-
-    system("cmake ..");
-    ($CHILD_ERROR != 0) and die("Failed to run CMake for Eigen [$CHILD_ERROR]");
-
-    system("sudo make install");
-    ($CHILD_ERROR != 0) and die("Failed install Eigen [$CHILD_ERROR]");
-
-    # Go back to the scripts folder
-    chdir $FindBin::Bin;
+# Obtain specific dependencies that we dont get from packages
+opendir(my $dir_handle, $helper_script_dir) or die("unable to open $helper_script_dir");
+while(my $filename = readdir($dir_handle)) {
+  if($filename =~ /^linux-compile.*pl/) {
+	print "Running $helper_script_dir/$filename ...\n";
+	open(my $pl_file_handle, '<', "$helper_script_dir/$filename") 
+    		or die "Unable to open file, $helper_script_dir/$filename";
+	undef $/;
+	my $program = <$pl_file_handle>;
+	eval " $program "; warn $@ if $@;
   }
 }
-if ($install_packages && $distribution eq 'Ubuntu 14.04') {
-  # Install cmake 3.5.1 from source if it is not already
-  # This is because Ubuntu 14.04 only has an old version of cmake
-  if (-e "/usr/local/bin/cmake") {
-    print STDERR "Warning: cmake is already installed in /usr/local\n";
-  } else {
-    my $dependencies_folder = $FindBin::Bin . "/../dependencies";
-    my $cmake_build_folder = $dependencies_folder . "/cmake-build";
-    my $cmake_extracted_folder = $cmake_build_folder . "/cmake-3.5.1";
+closedir($dir_handle);
 
-    if (! -e $dependencies_folder) {
-      mkdir($dependencies_folder) or die("Failed to create directory [$dependencies_folder]");
-    }
-    if (! -e $cmake_build_folder) {
-      mkdir($cmake_build_folder) or die("Failed to create directory [$cmake_build_folder]");
-    }
-
-    chdir $cmake_build_folder;
-
-    if (! -e "cmake-3.5.1.tar.gz") {
-      system('wget "http://www.cmake.org/files/v3.5/cmake-3.5.1.tar.gz"');
-      ($CHILD_ERROR != 0) and die ("Could not download the CMake sources [$CHILD_ERROR]");
-    }
-    if (! -e $cmake_extracted_folder) {
-      system('tar -xzf "cmake-3.5.1.tar.gz"');
-      ($CHILD_ERROR != 0) and die ("Could not extract the CMake archive");
-    }
-    chdir $cmake_extracted_folder;
-    system("./configure");
-    ($CHILD_ERROR != 0) and die("Failed to configure for cmake [$CHILD_ERROR]");
-
-    system("sudo make install");
-    ($CHILD_ERROR != 0) and die("Failed make install cmake [$CHILD_ERROR]");
-	
-    # Go back to the scripts folder
-    chdir $FindBin::Bin;
-  }
-}
-
-if ($compile_gtest) {
-  my $dependencies_folder = $FindBin::Bin . "/../dependencies";
-  my $gtest_build_folder = $dependencies_folder . "/gtest-build";	
-  my $gtest_lib_folder = $dependencies_folder . "/libgtest/";	
-  if (! -e $dependencies_folder) {
-    mkdir($dependencies_folder) or die("Failed to create directory [$dependencies_folder]");
-  }
-  if (! -e $gtest_build_folder) {
-    mkdir($gtest_build_folder) or die("Failed to create directory [$gtest_build_folder]");
-  }
-  if (! -e $gtest_lib_folder) {
-    mkdir($gtest_lib_folder) or die("Failed to create directory [$gtest_lib_folder]");
-  }
-
-  # build gtest
-  chdir $gtest_build_folder;
-  system("cmake -GNinja /usr/src/gtest");
-  system("ninja all");
-  system("rm CMakeCache.txt");
-  my @lib_files = glob "*.a";
-
-  foreach my $lib_cur (@lib_files) {
-    copy($lib_cur, $gtest_lib_folder) or die "Could not copy lib $lib_cur $!\n";
-  }
-  chdir $FindBin::Bin;
-}
 print("OpenViBE SDK dependencies were successfully installed\n");
+

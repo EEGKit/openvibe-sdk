@@ -303,7 +303,7 @@ OPTION(BUILD_TESTING "Include and build unit tests" ON)
 
 IF(BUILD_TESTING)
 	SET(OVT_LOG_DIR "${CMAKE_BINARY_DIR}/test/log" CACHE PATH "Path to directory containing test logs")
-	SET(OVT_TEST_DATA_DIR "${CMAKE_SOURCE_DIR}/dependencies/test-input" CACHE PATH "Path to test input data files")
+	SET(OVT_TEST_DATA_DIR "${OV_CUSTOM_DEPENDENCIES_PATH}/test-input" CACHE PATH "Path to test input data files")
 ENDIF()
 
 # add the scripts to the project so IDEs using the CMake file are aware of them
