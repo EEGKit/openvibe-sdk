@@ -367,7 +367,7 @@ stream of the NeuroRT platform.</Text>
 	<Attributes>
 		<Attribute>
 			<Identifier>(0x4c536d0a, 0xb23dc545)</Identifier>
-			<Value>/home/ceriou/workspace/certivibe/plugins/processing/file-io/box-tutorials/generic-stream-reader.mxs</Value>
+			<Value>generic-stream-reader.mxs</Value>
 		</Attribute>
 	</Attributes>
 </OpenViBE-Scenario>

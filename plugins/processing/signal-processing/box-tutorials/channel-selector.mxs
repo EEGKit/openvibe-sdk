@@ -466,7 +466,7 @@ a 4 channels sinusoidal signal</Text>
 	<Attributes>
 		<Attribute>
 			<Identifier>(0x4c536d0a, 0xb23dc545)</Identifier>
-			<Value>/home/ceriou/workspace/certivibe/plugins/processing/signal-processing/box-tutorials/channel-selector.mxs</Value>
+			<Value>channel-selector.mxs</Value>
 		</Attribute>
 	</Attributes>
 </OpenViBE-Scenario>
