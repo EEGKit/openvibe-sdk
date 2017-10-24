@@ -1,7 +1,10 @@
 <OpenViBE-Scenario>
 	<FormatVersion>1</FormatVersion>
 	<Creator>OpenVIBE</Creator>
-	<CreatorVersion>0.0.0</CreatorVersion>
+	<CreatorVersion>0.2.99</CreatorVersion>
+	<Settings></Settings>
+	<Inputs></Inputs>
+	<Outputs></Outputs>
 	<Boxes>
 		<Box>
 			<Identifier>(0x0000478e, 0x000023b0)</Identifier>
@@ -57,7 +60,7 @@
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Gain</Name>
 					<DefaultValue>1</DefaultValue>
-					<Value>1</Value>
+					<Value>0.1</Value>
 					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
@@ -88,10 +91,6 @@
 					<Value>192</Value>
 				</Attribute>
 				<Attribute>
-					<Identifier>(0x1fa963f5, 0x1a638cd4)</Identifier>
-					<Value>49</Value>
-				</Attribute>
-				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
 					<Value>176</Value>
 				</Attribute>
@@ -102,10 +101,6 @@
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
 					<Value></Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0xad100179, 0xa3c984ab)</Identifier>
-					<Value>220</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0xce18836a, 0x9c0eb403)</Identifier>
@@ -171,7 +166,7 @@
 					<TypeIdentifier>(0x512a166f, 0x5c3ef83f)</TypeIdentifier>
 					<Name>Gain</Name>
 					<DefaultValue>1</DefaultValue>
-					<Value>1</Value>
+					<Value>0.1</Value>
 					<Modifiability>false</Modifiability>
 				</Setting>
 				<Setting>
@@ -202,10 +197,6 @@
 					<Value>272</Value>
 				</Attribute>
 				<Attribute>
-					<Identifier>(0x1fa963f5, 0x1a638cd4)</Identifier>
-					<Value>49</Value>
-				</Attribute>
-				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
 					<Value>368</Value>
 				</Attribute>
@@ -216,10 +207,6 @@
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
 					<Value></Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0xad100179, 0xa3c984ab)</Identifier>
-					<Value>216</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0xce18836a, 0x9c0eb403)</Identifier>
@@ -270,20 +257,12 @@
 					<Value>32</Value>
 				</Attribute>
 				<Attribute>
-					<Identifier>(0x1fa963f5, 0x1a638cd4)</Identifier>
-					<Value>25</Value>
-				</Attribute>
-				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
 					<Value>304</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0x4e7b798a, 0x183beafb)</Identifier>
 					<Value>(0x0b214ed8, 0x1f9ad83a)</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0xad100179, 0xa3c984ab)</Identifier>
-					<Value>92</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0xc46b3d00, 0x3e0454e1)</Identifier>
@@ -336,10 +315,6 @@
 					<Value>192</Value>
 				</Attribute>
 				<Attribute>
-					<Identifier>(0x1fa963f5, 0x1a638cd4)</Identifier>
-					<Value>37</Value>
-				</Attribute>
-				<Attribute>
 					<Identifier>(0x207c9054, 0x3c841b63)</Identifier>
 					<Value>368</Value>
 				</Attribute>
@@ -354,10 +329,6 @@
 				<Attribute>
 					<Identifier>(0x527ad68d, 0x16d746a0)</Identifier>
 					<Value></Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0xad100179, 0xa3c984ab)</Identifier>
-					<Value>104</Value>
 				</Attribute>
 				<Attribute>
 					<Identifier>(0xc80ce8af, 0xf699f813)</Identifier>
@@ -385,24 +356,6 @@
 				<BoxIdentifier>(0x0000478e, 0x000023b0)</BoxIdentifier>
 				<BoxInputIndex>0</BoxInputIndex>
 			</Target>
-			<Attributes>
-				<Attribute>
-					<Identifier>(0x1b32c44c, 0x1905e0e9)</Identifier>
-					<Value>51</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x358ae8b5, 0x0f8bacd1)</Identifier>
-					<Value>304</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x3f0a3b27, 0x570913d2)</Identifier>
-					<Value>163</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x6267b5c5, 0x676e3e42)</Identifier>
-					<Value>168</Value>
-				</Attribute>
-			</Attributes>
 		</Link>
 		<Link>
 			<Identifier>(0x0000411f, 0x00002266)</Identifier>
@@ -414,24 +367,6 @@
 				<BoxIdentifier>(0x0000478e, 0x000023b1)</BoxIdentifier>
 				<BoxInputIndex>0</BoxInputIndex>
 			</Target>
-			<Attributes>
-				<Attribute>
-					<Identifier>(0x1b32c44c, 0x1905e0e9)</Identifier>
-					<Value>217</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x358ae8b5, 0x0f8bacd1)</Identifier>
-					<Value>368</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x3f0a3b27, 0x570913d2)</Identifier>
-					<Value>243</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x6267b5c5, 0x676e3e42)</Identifier>
-					<Value>360</Value>
-				</Attribute>
-			</Attributes>
 		</Link>
 		<Link>
 			<Identifier>(0x0aedc529, 0x0f063868)</Identifier>
@@ -443,24 +378,6 @@
 				<BoxIdentifier>(0x7f7581af, 0x105dc85a)</BoxIdentifier>
 				<BoxInputIndex>0</BoxInputIndex>
 			</Target>
-			<Attributes>
-				<Attribute>
-					<Identifier>(0x1b32c44c, 0x1905e0e9)</Identifier>
-					<Value>51</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x358ae8b5, 0x0f8bacd1)</Identifier>
-					<Value>304</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x3f0a3b27, 0x570913d2)</Identifier>
-					<Value>169</Value>
-				</Attribute>
-				<Attribute>
-					<Identifier>(0x6267b5c5, 0x676e3e42)</Identifier>
-					<Value>368</Value>
-				</Attribute>
-			</Attributes>
 		</Link>
 	</Links>
 	<Comments>
@@ -543,7 +460,13 @@ a 4 channels sinusoidal signal</Text>
 		<Entry>
 			<Identifier>(0x0000775c, 0x000078ff)</Identifier>
 			<Type>(0x3bcce5d2, 0x43f2d968)</Type>
-			<Data>[{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"height":678,"identifier":"(0x02b6d4f0, 0x103dc3fd)","index":0,"name":"Default window","parentIdentifier":"(0xffffffff, 0xffffffff)","type":1,"width":950},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"identifier":"(0x1722ecef, 0x1695d0b2)","index":0,"name":"Default tab","parentIdentifier":"(0x02b6d4f0, 0x103dc3fd)","type":2},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":2,"dividerPosition":463,"identifier":"(0x00004bd5, 0x00001389)","index":0,"maxDividerPosition":930,"name":"Horizontal split","parentIdentifier":"(0x1722ecef, 0x1695d0b2)","type":5},{"boxIdentifier":"(0x0000478e, 0x000023b0)","childCount":0,"identifier":"(0x00002c70, 0x000006ef)","index":0,"parentIdentifier":"(0x00004bd5, 0x00001389)","type":3},{"boxIdentifier":"(0x0000478e, 0x000023b1)","childCount":0,"identifier":"(0x000048d3, 0x0000443a)","index":1,"parentIdentifier":"(0x00004bd5, 0x00001389)","type":3}]</Data>
+			<Data>[{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"height":678,"identifier":"(0x02b6d4f0, 0x103dc3fd)","name":"Default window","parentIdentifier":"(0xffffffff, 0xffffffff)","type":1,"width":950},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":1,"identifier":"(0x1722ecef, 0x1695d0b2)","index":0,"name":"Default tab","parentIdentifier":"(0x02b6d4f0, 0x103dc3fd)","type":2},{"boxIdentifier":"(0xffffffff, 0xffffffff)","childCount":2,"dividerPosition":463,"identifier":"(0x00004bd5, 0x00001389)","index":0,"maxDividerPosition":930,"name":"Horizontal split","parentIdentifier":"(0x1722ecef, 0x1695d0b2)","type":5},{"boxIdentifier":"(0x0000478e, 0x000023b0)","childCount":0,"identifier":"(0x00002c70, 0x000006ef)","index":0,"parentIdentifier":"(0x00004bd5, 0x00001389)","type":3},{"boxIdentifier":"(0x0000478e, 0x000023b1)","childCount":0,"identifier":"(0x000048d3, 0x0000443a)","index":1,"parentIdentifier":"(0x00004bd5, 0x00001389)","type":3}]</Data>
 		</Entry>
 	</Metadata>
+	<Attributes>
+		<Attribute>
+			<Identifier>(0x4c536d0a, 0xb23dc545)</Identifier>
+			<Value>/home/ceriou/workspace/certivibe/plugins/processing/signal-processing/box-tutorials/channel-selector.mxs</Value>
+		</Attribute>
+	</Attributes>
 </OpenViBE-Scenario>
