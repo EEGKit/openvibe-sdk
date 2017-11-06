@@ -353,23 +353,26 @@ boolean CAlgorithmScenarioImporter::process(void)
 
 	if(l_pScenario->checkNeedsUpdateBox())
 	{
-		CIdentifier l_oBoxIdentifier;
-		while((l_oBoxIdentifier = l_pScenario->getNextNeedsUpdateBoxIdentifier(l_oBoxIdentifier)) != OV_UndefinedIdentifier)
+		CIdentifier* identifierList = nullptr;
+		size_t nbElems = 0;
+		l_pScenario->getNeedsUpdateBoxIdentifierList(&identifierList, &nbElems);
+		for (int i = 0; i < nbElems; ++i)
 		{
-			const IBox* l_pBox = l_pScenario->getBoxDetails(l_oBoxIdentifier);
+			const IBox* l_pBox = l_pScenario->getBoxDetails(identifierList[i]);
 
-			if(this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportWhenBoxNeedsUpdate}", true))
+			if (this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportWhenBoxNeedsUpdate}", true))
 			{
 				OV_ERROR_KRF(
 					"Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier().toString() << "] must be updated",
 					OpenViBE::Kernel::ErrorType::BadConfig
-				);
+					);
 			}
 			else
 			{
 				OV_WARNING_K("Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier().toString() << "] should be updated");
 			}
 		}
+		l_pScenario->releaseIdentifierList(identifierList);
 	}
 
 	return true;

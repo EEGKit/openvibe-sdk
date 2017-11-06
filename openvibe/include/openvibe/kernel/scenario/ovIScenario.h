@@ -459,7 +459,7 @@ namespace OpenViBE
 			virtual void getLinkIdentifierToBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputInex, OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-
+			virtual void releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const = 0;
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Scenario)

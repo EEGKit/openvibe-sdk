@@ -111,6 +111,8 @@ namespace OpenViBE
 			void getLinkIdentifierToBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const;
 			void getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputInex, OpenViBE::CIdentifier** identifierList, size_t* size) const;
 			void getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const;
+
 
 			bool acceptVisitor(OpenViBE::IObjectVisitor& objectVisitor);
 

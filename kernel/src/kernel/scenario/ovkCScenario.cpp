@@ -1227,13 +1227,11 @@ void getIdentifierList(
 	CIdentifier** identifierList,
 	size_t* size)
 {
-	//const TTest testFunctor;
 	*size = elementMap.size();
-	free(identifierList);
 	*identifierList = new OpenViBE::CIdentifier[*size];
 
 	size_t index = 0;
-	for (auto it = elementMap.begin(); it != elementMap.end() && index < *size; it++)
+	for (auto it = elementMap.begin(); it != elementMap.end(); it++)
 	{
 		if (testFunctor(it))
 		{
@@ -1277,4 +1275,9 @@ void CScenario::getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& box
 void CScenario::getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
 	getIdentifierList<CBox, TTestTrue<CBox> >(m_BoxesWhichNeedUpdate, TTestTrue<CBox>(), identifierList, size);
+}
+ 
+void CScenario::releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const
+{
+	delete[] identifierList;
 }

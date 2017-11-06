@@ -146,54 +146,52 @@ boolean CScheduler::flattenScenario()
 
 		CIdentifier l_oCurrentBoxIdentifier = OV_UndefinedIdentifier;
 		CIdentifier l_oPreviousBoxIdentifier = OV_UndefinedIdentifier;
-		while ((l_oCurrentBoxIdentifier = m_pScenario->getNextBoxIdentifier(l_oPreviousBoxIdentifier)) != OV_UndefinedIdentifier)
-		{
-			bool l_bCurrentBoxRemoved = false;
-			if (m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
-			{
-				// We only process this box if it is not disabled
-				bool l_bIsBoxDisabled = m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->hasAttribute(OV_AttributeId_Box_Disabled);
+		
 
-				if (l_bIsBoxDisabled)
+
+		{
+			CIdentifier* identifierList = nullptr;
+			size_t nbElems = 0;
+			m_pScenario->getBoxIdentifierList(&identifierList, &nbElems);
+			for (size_t i = 0; i < nbElems; ++i)
+			{
+				const CIdentifier boxIdentifier = identifierList[i];
+				const IBox* box = m_pScenario->getBoxDetails(boxIdentifier);
+
+				if (box->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 				{
-					m_pScenario->removeBox(l_oCurrentBoxIdentifier);
-					l_bCurrentBoxRemoved = true;
-				}
-				else
-				{
-					// We verify that the box actually has a backend scenario
-					if (m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->hasAttribute(OVP_AttributeId_Metabox_Identifier))
+					if (box->hasAttribute(OV_AttributeId_Box_Disabled))	// We only process this box if it is not disabled
+					{
+						m_pScenario->removeBox(boxIdentifier);
+					}
+					else if (box->hasAttribute(OVP_AttributeId_Metabox_Identifier)) // We verify that the box actually has a backend scenario
 					{
 						OpenViBE::CIdentifier metaboxId;
-						metaboxId.fromString(m_pScenario->getBoxDetails(l_oCurrentBoxIdentifier)->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+						metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
 						CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 						if (FS::Files::fileExists(metaboxScenarioPath.toASCIIString()))
 						{
 							// If the scenario exists we will handle this metabox
-							l_vScenarioMetabox.push_back(l_oCurrentBoxIdentifier);
+							l_vScenarioMetabox.push_back(boxIdentifier);
 						}
 						else
 						{
 							// Non-utilisable metaboxes can be easily removed
 							this->getKernelContext().getLogManager() << LogLevel_ImportantWarning << "The scenario for metabox [" << metaboxId.toString().toASCIIString() << "] is missing.\n";
-							m_pScenario->removeBox(l_oCurrentBoxIdentifier);
-							l_bCurrentBoxRemoved = true;
+							m_pScenario->removeBox(boxIdentifier);
 						}
 					}
 					else
 					{
-						this->getKernelContext().getLogManager() << LogLevel_ImportantWarning << "The metabox [" << l_oCurrentBoxIdentifier << "] is missing its identifier field.\n";
-						m_pScenario->removeBox(l_oCurrentBoxIdentifier);
-						l_bCurrentBoxRemoved = true;
+						this->getKernelContext().getLogManager() << LogLevel_ImportantWarning << "The metabox [" << boxIdentifier << "] is missing its identifier field.\n";
+						m_pScenario->removeBox(boxIdentifier);
 					}
 				}
 			}
-			if (!l_bCurrentBoxRemoved)
-			{
-				l_oPreviousBoxIdentifier = l_oCurrentBoxIdentifier;
-			}
+			m_pScenario->releaseIdentifierList(identifierList);
 		}
+
 		if (l_vScenarioMetabox.empty())
 		{
 			l_bHasFinishedHandlingMetaboxes = true;
@@ -300,32 +298,41 @@ boolean CScheduler::flattenScenario()
 			// Now reconnect all the pipes
 
 			// Connect metabox inputs
-			CIdentifier l_oLinkIdentifier;
-			while((l_oLinkIdentifier = m_pScenario->getNextLinkIdentifierToBox(l_oLinkIdentifier, l_pBox->getIdentifier())) != OV_UndefinedIdentifier)
 			{
-				ILink* l_rLink = m_pScenario->getLinkDetails(l_oLinkIdentifier);
+				CIdentifier* identifierList = nullptr;
+				size_t nbElems = 0;
+				m_pScenario->getLinkIdentifierToBoxList(l_pBox->getIdentifier(), &identifierList, &nbElems);
+				for (size_t i = 0; i < nbElems; ++i)
+				{
+					ILink* l_rLink = m_pScenario->getLinkDetails(identifierList[i]);
+					// Find out the target inside the metabox scenario
+					CIdentifier l_oTargetBoxIdentifier;
+					uint32_t l_ui32TargetBoxInputIdentifier = 0;
+					l_rMetaboxScenarioInstance.getScenarioInputLink(l_rLink->getTargetBoxInputIndex(), l_oTargetBoxIdentifier, l_ui32TargetBoxInputIdentifier);
 
-				// Find out the target inside the metabox scenario
-				CIdentifier l_oTargetBoxIdentifier;
-				uint32 l_ui32TargetBoxInputIdentifier = 0;
-				l_rMetaboxScenarioInstance.getScenarioInputLink(l_rLink->getTargetBoxInputIndex(), l_oTargetBoxIdentifier, l_ui32TargetBoxInputIdentifier);
-
-				// Now redirect the link to the newly created copy of the box in the scenario
-				l_rLink->setTarget(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier], l_ui32TargetBoxInputIdentifier);
+					// Now redirect the link to the newly created copy of the box in the scenario
+					l_rLink->setTarget(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier], l_ui32TargetBoxInputIdentifier);
+				}
+				m_pScenario->releaseIdentifierList(identifierList);
 			}
 
 			// Connect metabox outputs
-			l_oLinkIdentifier = OV_UndefinedIdentifier;
-			while((l_oLinkIdentifier = m_pScenario->getNextLinkIdentifierFromBox(l_oLinkIdentifier, l_pBox->getIdentifier())) != OV_UndefinedIdentifier)
 			{
-				ILink* l_rLink = m_pScenario->getLinkDetails(l_oLinkIdentifier);
-				// Find out from which box this link goes inside the metabox scenario
-				CIdentifier l_oSourceBoxIdentifier;
-				uint32 l_ui32SourceBoxOutputIdentifier = 0;
-				l_rMetaboxScenarioInstance.getScenarioOutputLink(l_rLink->getSourceBoxOutputIndex(), l_oSourceBoxIdentifier, l_ui32SourceBoxOutputIdentifier);
+				CIdentifier* identifierList = nullptr;
+				size_t nbElems = 0;
+				m_pScenario->getLinkIdentifierFromBoxList(l_pBox->getIdentifier(), &identifierList, &nbElems);
+				for (size_t i = 0; i < nbElems; ++i)
+				{
+					ILink* l_rLink = m_pScenario->getLinkDetails(identifierList[i]);
+					// Find out from which box this link goes inside the metabox scenario
+					CIdentifier l_oSourceBoxIdentifier;
+					uint32_t l_ui32SourceBoxOutputIdentifier = 0;
+					l_rMetaboxScenarioInstance.getScenarioOutputLink(l_rLink->getSourceBoxOutputIndex(), l_oSourceBoxIdentifier, l_ui32SourceBoxOutputIdentifier);
 
-				// Now redirect the link to the newly created copy of the box in the scenario
-				l_rLink->setSource(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier], l_ui32SourceBoxOutputIdentifier);
+					// Now redirect the link to the newly created copy of the box in the scenario
+					l_rLink->setSource(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier], l_ui32SourceBoxOutputIdentifier);
+				}
+				m_pScenario->releaseIdentifierList(identifierList);
 			}
 		}
 
@@ -376,68 +383,75 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		SchedulerInitialization_Failed
 	);
 
-	CIdentifier l_oBoxIdentifier;
-	while((l_oBoxIdentifier = m_pScenario->getNextBoxIdentifier(l_oBoxIdentifier)) != OV_UndefinedIdentifier)
+
 	{
-		const IBox* l_pBox = m_pScenario->getBoxDetails(l_oBoxIdentifier);
-
-		OV_ERROR_UNLESS_K(
-			!m_pScenario->hasNeedsUpdateBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxNeedsUpdate}", false),
-			"Box [" << l_pBox->getName() << "] with class identifier [" << l_oBoxIdentifier.toString() << "] should be updated",
-			ErrorType::Internal,
-			SchedulerInitialization_Failed
-		);
-
-		OV_ERROR_UNLESS_K(
-			l_pBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox,
-			"Not expanded metabox with id [" << l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier) << "] detected in the scenario",
-			ErrorType::Internal,
-			SchedulerInitialization_Failed
-		);
-
-		const IPluginObjectDesc* l_pBoxDesc=this->getPluginManager().getPluginObjectDescCreating(l_pBox->getAlgorithmClassIdentifier());
-
-		OV_ERROR_UNLESS_K(
-			!(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled) &&
-		      this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsDisabled}", false)),
-			"Disabled box [" << l_pBox->getName() << "] with class identifier [" << l_oBoxIdentifier.toString() << "] detected in the scenario",
-			ErrorType::Internal,
-			SchedulerInitialization_Failed
-		);
-
-		if(!l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
+		CIdentifier* identifierList = nullptr;
+		size_t nbElems = 0;
+		m_pScenario->getBoxIdentifierList(&identifierList, &nbElems);
+		for (size_t i = 0; i < nbElems; ++i)
 		{
+			const CIdentifier boxIdentifier = identifierList[i];
+			const IBox* l_pBox = m_pScenario->getBoxDetails(boxIdentifier);
 			OV_ERROR_UNLESS_K(
-			            l_pBoxDesc != nullptr,
-			            "Failed to create runtime box [" << l_pBox->getName() << "] with class identifier [" << l_oBoxIdentifier.toString() << "]",
-			            ErrorType::BadResourceCreation,
-			            SchedulerInitialization_Failed
-			            );
+				!m_pScenario->hasNeedsUpdateBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxNeedsUpdate}", false),
+				"Box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "] should be updated",
+				ErrorType::Internal,
+				SchedulerInitialization_Failed
+				);
 
-			CSimulatedBox* l_pSimulatedBox=new CSimulatedBox(this->getKernelContext(), *this);
-			l_pSimulatedBox->setScenarioIdentifier(m_oScenarioIdentifier);
-			l_pSimulatedBox->setBoxIdentifier(l_oBoxIdentifier);
+			OV_ERROR_UNLESS_K(
+				l_pBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox,
+				"Not expanded metabox with id [" << l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier) << "] detected in the scenario",
+				ErrorType::Internal,
+				SchedulerInitialization_Failed
+				);
 
+			const IPluginObjectDesc* l_pBoxDesc = this->getPluginManager().getPluginObjectDescCreating(l_pBox->getAlgorithmClassIdentifier());
 
-			int l_iPriority = 0;
-			try
+			OV_ERROR_UNLESS_K(
+				!(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled) &&
+				this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsDisabled}", false)),
+				"Disabled box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "] detected in the scenario",
+				ErrorType::Internal,
+				SchedulerInitialization_Failed
+				);
+
+			if (!l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
 			{
-				if (l_pBox->hasAttribute(OV_AttributeId_Box_Priority))
+				OV_ERROR_UNLESS_K(
+					l_pBoxDesc != nullptr,
+					"Failed to create runtime box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "]",
+					ErrorType::BadResourceCreation,
+					SchedulerInitialization_Failed
+					);
+
+				CSimulatedBox* l_pSimulatedBox = new CSimulatedBox(this->getKernelContext(), *this);
+				l_pSimulatedBox->setScenarioIdentifier(m_oScenarioIdentifier);
+				l_pSimulatedBox->setBoxIdentifier(boxIdentifier);
+
+
+				int l_iPriority = 0;
+				try
 				{
-					l_iPriority = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
+					if (l_pBox->hasAttribute(OV_AttributeId_Box_Priority))
+					{
+						l_iPriority = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
+					}
 				}
-			}
-			catch(const std::exception&)
-			{
-				l_iPriority = 0;
-			}
+				catch (const std::exception&)
+				{
+					l_iPriority = 0;
+				}
 
-			m_vSimulatedBox[std::make_pair(-l_iPriority, l_oBoxIdentifier)]=l_pSimulatedBox;
-			m_vSimulatedBoxChrono[l_oBoxIdentifier].reset(static_cast<uint32>(m_ui64Frequency));
+				m_vSimulatedBox[std::make_pair(-l_iPriority, boxIdentifier)] = l_pSimulatedBox;
+				m_vSimulatedBoxChrono[boxIdentifier].reset(static_cast<uint32>(m_ui64Frequency));
+			}
 		}
+		m_pScenario->releaseIdentifierList(identifierList);
 	}
 
-	boolean l_bBoxInitialization = true;
+
+	bool l_bBoxInitialization = true;
 	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
