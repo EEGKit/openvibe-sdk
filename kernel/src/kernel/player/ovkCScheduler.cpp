@@ -178,13 +178,13 @@ boolean CScheduler::flattenScenario()
 						else
 						{
 							// Non-utilisable metaboxes can be easily removed
-							this->getKernelContext().getLogManager() << LogLevel_ImportantWarning << "The scenario for metabox [" << metaboxId.toString().toASCIIString() << "] is missing.\n";
+							OV_WARNING_K("The scenario for metabox [" << metaboxId.toString().toASCIIString() << "] is missing.");
 							m_pScenario->removeBox(boxIdentifier);
 						}
 					}
 					else
 					{
-						this->getKernelContext().getLogManager() << LogLevel_ImportantWarning << "The metabox [" << boxIdentifier << "] is missing its identifier field.\n";
+						OV_WARNING_K("The metabox [" << boxIdentifier << "] is missing its identifier field.");
 						m_pScenario->removeBox(boxIdentifier);
 					}
 				}
