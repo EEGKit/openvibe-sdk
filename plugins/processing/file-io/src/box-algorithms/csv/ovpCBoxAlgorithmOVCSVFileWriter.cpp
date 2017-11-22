@@ -110,10 +110,9 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize(void)
 		(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
 		ErrorType::Internal);
 
-	if (!m_WriterLib->closeFile())
-	{
-		OV_FATAL_K((OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(), ErrorType::Internal);
-	}
+	OV_ERROR_UNLESS_KRF(m_WriterLib->closeFile(),
+	                    (OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+	                    ErrorType::Internal);
 
 	return true;
 }
@@ -371,11 +370,9 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation(void)
 				ErrorType::Internal);
 		}
 
-		if (!dynamicBoxContext.markInputAsDeprecated(1, index))
-		{
-			OV_FATAL_K("Fail to mark stimulations input as deprecated",
-				ErrorType::Internal);
-		}
+		OV_ERROR_UNLESS_KRF(dynamicBoxContext.markInputAsDeprecated(1, index),
+		                    "Failed to mark stimulations input as deprecated",
+		                    ErrorType::Internal);
 	}
 
 	return true;
