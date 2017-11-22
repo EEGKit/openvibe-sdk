@@ -210,53 +210,70 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 	map<CIdentifier, CIdentifier> oldToNewIdMap;
 
 	// Copy boxes
-	CIdentifier boxIdentifier;
-	while ((boxIdentifier = scenario.getNextBoxIdentifier(boxIdentifier)) != OV_UndefinedIdentifier)
 	{
-		CIdentifier newIdentifier;
-		const IBox* box = scenario.getBoxDetails(boxIdentifier);
-		CIdentifier suggestedNewIdentifier = shouldPreserveIdentifiers ? box->getIdentifier() : OV_UndefinedIdentifier;
-		this->addBox(newIdentifier, *box, suggestedNewIdentifier);
-		oldToNewIdMap[boxIdentifier] = newIdentifier;
-
-		if (scenarioMergeCallback)
+		CIdentifier* identifierList = nullptr;
+		size_t nbElems = 0;
+		scenario.getBoxIdentifierList(&identifierList, &nbElems);
+		for(size_t i = 0; i < nbElems; ++i)
 		{
-			scenarioMergeCallback->process(boxIdentifier, newIdentifier);
+			CIdentifier boxIdentifier = identifierList[i];
+			const IBox* box = scenario.getBoxDetails(boxIdentifier);
+			CIdentifier newIdentifier;
+			CIdentifier suggestedNewIdentifier = shouldPreserveIdentifiers ? box->getIdentifier() : OV_UndefinedIdentifier;
+			this->addBox(newIdentifier, *box, suggestedNewIdentifier);
+			oldToNewIdMap[boxIdentifier] = newIdentifier;
+
+			if (scenarioMergeCallback)
+			{
+				scenarioMergeCallback->process(boxIdentifier, newIdentifier);
+			}
 		}
-	}
+		scenario.releaseIdentifierList(identifierList);
+ 	}
 
 	// Copy links
-	CIdentifier linkIdentifier;
-	while ((linkIdentifier = scenario.getNextLinkIdentifier(linkIdentifier)) != OV_UndefinedIdentifier)
 	{
-		CIdentifier newIdentifier;
-		const ILink* link = scenario.getLinkDetails(linkIdentifier);
-		this->connect(newIdentifier,
-		              oldToNewIdMap[link->getSourceBoxIdentifier()],
-		        link->getSourceBoxOutputIndex(),
-		        oldToNewIdMap[link->getTargetBoxIdentifier()],
-		        link->getTargetBoxInputIndex(),
-		        OV_UndefinedIdentifier);
-
-		if (scenarioMergeCallback)
+		CIdentifier* identifierList = nullptr;
+		size_t nbElems = 0;
+		scenario.getLinkIdentifierList(&identifierList, &nbElems);
+		for(size_t i = 0; i < nbElems; ++i)
 		{
-			scenarioMergeCallback->process(linkIdentifier, newIdentifier);
-		}
-	}
+			CIdentifier linkIdentifier = identifierList[i];
+			const ILink* link = scenario.getLinkDetails(linkIdentifier);
+			CIdentifier newIdentifier;
+			this->connect(newIdentifier,
+				oldToNewIdMap[link->getSourceBoxIdentifier()],
+				link->getSourceBoxOutputIndex(),
+				oldToNewIdMap[link->getTargetBoxIdentifier()],
+				link->getTargetBoxInputIndex(),
+				OV_UndefinedIdentifier);
 
+			if (scenarioMergeCallback)
+			{
+				scenarioMergeCallback->process(linkIdentifier, newIdentifier);
+			}
+		}
+		scenario.releaseIdentifierList(identifierList);
+ 	}
 	// Copy comments
 
 	// Copy metadata
-	CIdentifier oldMetadataIdentifier;
-	while ((oldMetadataIdentifier = scenario.getNextMetadataIdentifier(oldMetadataIdentifier)) != OV_UndefinedIdentifier)
 	{
-		CIdentifier newIdentifier;
-		const IMetadata* oldMetadata = scenario.getMetadataDetails(oldMetadataIdentifier);
-		CIdentifier suggestedNewIdentifier = shouldPreserveIdentifiers ? oldMetadataIdentifier : OV_UndefinedIdentifier;
-		this->addMetadata(newIdentifier, suggestedNewIdentifier);
-		IMetadata* newMetadata = this->getMetadataDetails(newIdentifier);
-		newMetadata->initializeFromExistingMetadata(*oldMetadata);
-	}
+		CIdentifier* identifierList = nullptr;
+		size_t nbElems = 0;
+		scenario.getMetadataIdentifierList(&identifierList, &nbElems);
+		for(size_t i = 0; i < nbElems; ++i)
+		{
+			CIdentifier metadataIdentifier = identifierList[i];
+			const IMetadata* metadata = scenario.getMetadataDetails(metadataIdentifier);
+			CIdentifier newIdentifier;
+			CIdentifier suggestedNewIdentifier = shouldPreserveIdentifiers ? metadataIdentifier : OV_UndefinedIdentifier;
+			this->addMetadata(newIdentifier, suggestedNewIdentifier);
+			IMetadata* newMetadata = this->getMetadataDetails(newIdentifier);
+			newMetadata->initializeFromExistingMetadata(*metadata);
+		}
+		scenario.releaseIdentifierList(identifierList);
+ 	}
 
 	// Copy settings if requested
 
@@ -708,10 +725,14 @@ bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIde
 	}
 
 	// Remove any existing link to this input
-	CIdentifier linkIdentifier;
-	while ((linkIdentifier = this->getNextLinkIdentifierToBoxInput(linkIdentifier, boxIdentifier, boxInputIndex)) != OV_UndefinedIdentifier)
+	for (auto& kv : m_Links)
 	{
-		this->disconnect(linkIdentifier);
+		CIdentifier linkIdentifier = kv.first;
+		const CLink* link = kv.second;
+		if (link->getTargetBoxIdentifier() == boxIdentifier && link->getTargetBoxInputIndex() == boxInputIndex)
+		{
+			this->disconnect(linkIdentifier);
+		}
 	}
 
 	m_ScenarioInputLinks[scenarioInputIndex] = std::make_pair(boxIdentifier, boxInputIndex);
@@ -1213,4 +1234,66 @@ bool CScenario::checkNeedsUpdateBox()
 	}
 
 	return result;
+}
+
+template <class T, class TTest>
+void getIdentifierList(
+	const map<CIdentifier, T*>& elementMap,
+	const TTest& testFunctor,
+	CIdentifier** identifierList,
+	size_t* size)
+{
+	*identifierList = new OpenViBE::CIdentifier[elementMap.size()];
+
+	size_t index = 0;
+	for (auto it = elementMap.begin(); it != elementMap.end(); it++)
+	{
+		if (testFunctor(it))
+		{
+			(*identifierList)[index++] = it->first;
+		}
+	}
+	*size = index;
+}
+
+void CScenario::getBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+{
+	getIdentifierList<CBox, TTestTrue<CBox> >(m_Boxes, TTestTrue<CBox>(), identifierList, size);
+}
+void CScenario::getCommentIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+{
+	getIdentifierList<CComment, TTestTrue<CComment> >(m_Comments, TTestTrue<CComment>(), identifierList, size);
+}
+void CScenario::getMetadataIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+{
+	getIdentifierList<CMetadata, TTestTrue<CMetadata> >(m_Metadata, TTestTrue<CMetadata>(), identifierList, size);
+}
+void CScenario::getLinkIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+{
+	getIdentifierList<CLink, TTestTrue<CLink> >(m_Links, TTestTrue<CLink>(), identifierList, size);
+}
+void CScenario::getLinkIdentifierFromBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const
+{
+	getIdentifierList<CLink, TTestEqSourceBox >(m_Links, TTestEqSourceBox(boxIdentifier), identifierList, size);
+}
+void CScenario::getLinkIdentifierFromBoxOutputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t outputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const
+{
+	getIdentifierList<CLink, TTestEqSourceBoxOutput >(m_Links, TTestEqSourceBoxOutput(boxIdentifier, outputIndex), identifierList, size);
+}
+void CScenario::getLinkIdentifierToBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const
+{
+	getIdentifierList<CLink, TTestEqTargetBox >(m_Links, TTestEqTargetBox(boxIdentifier), identifierList, size);
+}
+void CScenario::getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const
+{
+	getIdentifierList<CLink, TTestEqTargetBoxInput >(m_Links, TTestEqTargetBoxInput(boxIdentifier, inputIndex), identifierList, size);
+}
+void CScenario::getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+{
+	getIdentifierList<CBox, TTestTrue<CBox> >(m_BoxesWhichNeedUpdate, TTestTrue<CBox>(), identifierList, size);
+}
+ 
+void CScenario::releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const
+{
+	delete[] identifierList;
 }

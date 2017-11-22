@@ -102,6 +102,18 @@ namespace OpenViBE
 
 			bool isMetabox(void);
 
+			void getBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void getCommentIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void getMetadataIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void getLinkIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void getLinkIdentifierFromBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void getLinkIdentifierFromBoxOutputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t outputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void getLinkIdentifierToBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputInex, OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const;
+
+
 			bool acceptVisitor(OpenViBE::IObjectVisitor& objectVisitor);
 
 			_IsDerivedFromClass_Final_(TBox< OpenViBE::Kernel::IScenario >, OVK_ClassId_Kernel_Scenario_Scenario)

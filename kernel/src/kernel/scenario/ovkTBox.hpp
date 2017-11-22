@@ -28,22 +28,24 @@ namespace{
 		CBoxProtoRestriction(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::IBox& rBox):
 			CBoxProto(rKernelContext, rBox){}
 
-		virtual OpenViBE::boolean addInput(
+		virtual bool addInput(
 			const OpenViBE::CString& sName,
 			const OpenViBE::CIdentifier& rTypeIdentifier){return true;}
 
-		virtual OpenViBE::boolean addOutput(
+		virtual bool addOutput(
 			const OpenViBE::CString& sName,
 			const OpenViBE::CIdentifier& rTypeIdentifier){return true;}
 
-		virtual OpenViBE::boolean addSetting(
+		virtual bool addSetting(
 			const OpenViBE::CString& sName,
 			const OpenViBE::CIdentifier& rTypeIdentifier,
 			const OpenViBE::CString& sDefaultValue,
-			const OpenViBE::boolean bModifiable = false){return true;}
+			const bool bModifiable = false){
+			return true;
+		}
 
-		virtual OpenViBE::boolean addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag){return true;}
-		virtual OpenViBE::boolean addFlag(const OpenViBE::CIdentifier& cIdentifierFlag){return true;}
+		virtual bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag){ return true; }
+		virtual bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag){ return true; }
 	};
 }
 
@@ -101,7 +103,7 @@ namespace OpenViBE
 				return m_oAlgorithmClassIdentifier;
 			}
 
-			virtual OpenViBE::boolean setIdentifier(const OpenViBE::CIdentifier& rIdentifier)
+			virtual bool setIdentifier(const OpenViBE::CIdentifier& rIdentifier)
 			{
 				OV_ERROR_UNLESS_KRF(
 					m_oIdentifier == OV_UndefinedIdentifier,
@@ -122,7 +124,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean setName(const OpenViBE::CString& sName)
+			virtual bool setName(const OpenViBE::CString& sName)
 			{
 				m_sName=sName;
 
@@ -131,7 +133,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean setAlgorithmClassIdentifier(const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)
+			virtual bool setAlgorithmClassIdentifier(const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)
 			{
 				// We need to set the box algorithm identifier in any case. This is because OpenViBE should be able to load
 				// a scenario with non-existing boxes and save it without modifying them.
@@ -175,7 +177,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean initializeFromAlgorithmClassIdentifier(const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)
+			virtual bool initializeFromAlgorithmClassIdentifier(const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)
 			{
 				this->disableNotification();
 
@@ -209,7 +211,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			OpenViBE::boolean initializeFromBoxAlgorithmDesc(const OpenViBE::Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc)
+			bool initializeFromBoxAlgorithmDesc(const OpenViBE::Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc)
 			{
 				this->clearBox();
 				this->setName(rBoxAlgorithmDesc.getName());
@@ -234,10 +236,8 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean initializeFromExistingBox(const OpenViBE::Kernel::IBox& rExistingBox)
+			virtual bool initializeFromExistingBox(const OpenViBE::Kernel::IBox& rExistingBox)
 			{
-				uint32 i;
-
 				this->disableNotification();
 				m_bIsObserverNotificationActive = false;
 
@@ -245,7 +245,7 @@ namespace OpenViBE
 				this->setName(rExistingBox.getName());
 				this->setAlgorithmClassIdentifier(rExistingBox.getAlgorithmClassIdentifier());
 
-				for(i=0; i<rExistingBox.getInputCount(); i++)
+				for(uint32_t i = 0; i < rExistingBox.getInputCount(); ++i)
 				{
 					CIdentifier l_oType;
 					CString l_sName;
@@ -254,7 +254,7 @@ namespace OpenViBE
 					addInput(l_sName, l_oType);
 				}
 
-				for(i=0; i<rExistingBox.getOutputCount(); i++)
+				for (uint32_t i = 0; i < rExistingBox.getOutputCount(); ++i)
 				{
 					CIdentifier l_oType;
 					CString l_sName;
@@ -263,7 +263,7 @@ namespace OpenViBE
 					addOutput(l_sName, l_oType);
 				}
 
-				for(i=0; i<rExistingBox.getSettingCount(); i++)
+				for (uint32_t i = 0; i < rExistingBox.getSettingCount(); ++i)
 				{
 					CIdentifier l_oType;
 					CString l_sName;
@@ -314,37 +314,38 @@ namespace OpenViBE
 //___________________________________________________________________//
 //                                                                   //
 
-			virtual OpenViBE::boolean addInput(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool addInput(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
 				OV_ERROR_UNLESS_KRF(
 					this->getTypeManager().isStream(rTypeIdentifier),
 					"While adding input '" << sName << "' to box '" << getName() << "', unknown stream type identifier " << rTypeIdentifier.toString(),
 					ErrorType::BadArgument
 				);
-
-				CInput i;
-				i.m_sName=sName;
-				i.m_oTypeIdentifier=rTypeIdentifier;
-				m_vInput.push_back(i);
+				m_vInput.push_back(CInput(sName, rTypeIdentifier));
 
 				this->notify(BoxModification_InputAdded, m_vInput.size()-1);
 
 				return true;
 			}
 
-			virtual OpenViBE::boolean removeInput(const OpenViBE::uint32 ui32InputIndex)
+			virtual bool removeInput(const uint32_t ui32InputIndex)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32InputIndex < m_vInput.size(),
-					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 					ErrorType::OutOfBound
-				);
+					);
 
-				CIdentifier l_oIdentifier;
 
-				while((l_oIdentifier=m_pOwnerScenario->getNextLinkIdentifierToBoxInput(l_oIdentifier, m_oIdentifier, ui32InputIndex))!=OV_UndefinedIdentifier)
 				{
-					m_pOwnerScenario->disconnect(l_oIdentifier);
+					CIdentifier* identifierList = nullptr;
+					size_t nbElems = 0;
+					m_pOwnerScenario->getLinkIdentifierToBoxInputList(m_oIdentifier, ui32InputIndex, &identifierList, &nbElems);
+					for (size_t i = 0; i < nbElems; ++i)
+					{
+						m_pOwnerScenario->disconnect(identifierList[i]);
+					}
+					m_pOwnerScenario->releaseIdentifierList(identifierList);
 				}
 
 				// $$$
@@ -354,54 +355,58 @@ namespace OpenViBE
 				// the box listener callback on box removal,
 				// the nextcoming links would potentially be
 				// invalid
-				std::vector < CIdentifier > l_vLinksToRemove;
-				std::vector < std::pair < std::pair < uint64, uint32 >, std::pair < uint64, uint32 > > > l_vLink;
-				while((l_oIdentifier=m_pOwnerScenario->getNextLinkIdentifierToBox(l_oIdentifier, m_oIdentifier))!=OV_UndefinedIdentifier)
+				std::vector < std::pair < std::pair < uint64_t, uint32_t >, std::pair < uint64_t, uint32_t > > > l_vLink;
+
 				{
-					ILink* l_pLink = m_pOwnerScenario->getLinkDetails(l_oIdentifier);
-					if (l_pLink->getTargetBoxInputIndex() > ui32InputIndex)
+					CIdentifier* identifierList = nullptr;
+					size_t nbElems = 0;
+					m_pOwnerScenario->getLinkIdentifierToBoxList(m_oIdentifier, &identifierList, &nbElems);
+					for (size_t i = 0; i < nbElems; ++i)
 					{
-						l_vLink.push_back({
-						                      {
-						                          l_pLink->getSourceBoxIdentifier().toUInteger(),
-						                          l_pLink->getSourceBoxOutputIndex()
-						                      },
-						                      {
-						                          l_pLink->getTargetBoxIdentifier().toUInteger(),
-						                          l_pLink->getTargetBoxInputIndex()
-						                      }
-						                  });
-						l_vLinksToRemove.push_back(l_oIdentifier);
+						CIdentifier l_oIdentifier = identifierList[i];
+						ILink* l_pLink = m_pOwnerScenario->getLinkDetails(l_oIdentifier);
+						if (l_pLink->getTargetBoxInputIndex() > ui32InputIndex)
+						{
+							l_vLink.push_back({
+								{
+									l_pLink->getSourceBoxIdentifier().toUInteger(),
+									l_pLink->getSourceBoxOutputIndex()
+								},
+								{
+									l_pLink->getTargetBoxIdentifier().toUInteger(),
+									l_pLink->getTargetBoxInputIndex()
+								}
+							});
+
+							if (m_pOwnerScenario->isLink(l_oIdentifier))
+							{
+								m_pOwnerScenario->disconnect(l_oIdentifier);
+							}
+						}
 					}
-				}
-				for (size_t i = 0; i < l_vLinksToRemove.size(); i++)
-				{
-					if (m_pOwnerScenario->isLink(l_vLinksToRemove[i]))
-					{
-						m_pOwnerScenario->disconnect(l_vLinksToRemove[i]);
-					}
+					m_pOwnerScenario->releaseIdentifierList(identifierList);
 				}
 
 				// This reorganizes the parent's scenario links if this box is not actually a scenario itself
 				if (m_oIdentifier != OV_UndefinedIdentifier)
 				{
-					std::vector < std::pair < uint32, std::pair < uint64, uint32 > > > l_vScenarioLink;
-					for(uint32 scenarioInputIndex = 0; scenarioInputIndex < m_pOwnerScenario->getInputCount(); scenarioInputIndex++)
+					std::vector < std::pair < uint32_t, std::pair < uint64_t, uint32_t > > > l_vScenarioLink;
+					for (uint32_t scenarioInputIndex = 0; scenarioInputIndex < m_pOwnerScenario->getInputCount(); scenarioInputIndex++)
 					{
 						CIdentifier l_oBoxIdentifier;
-						uint32 l_ui32BoxConnectorIndex = uint32(-1);
+						uint32_t l_ui32BoxConnectorIndex = uint32_t(-1);
 						m_pOwnerScenario->getScenarioInputLink(scenarioInputIndex, l_oBoxIdentifier, l_ui32BoxConnectorIndex);
 						if (l_oBoxIdentifier == m_oIdentifier)
 						{
 							if (l_ui32BoxConnectorIndex > ui32InputIndex)
 							{
 								l_vScenarioLink.push_back({
-								                              scenarioInputIndex,
-								                              {
-								                                  l_oBoxIdentifier.toUInteger(),
-								                                  l_ui32BoxConnectorIndex
-								                              }
-								                          });
+									scenarioInputIndex,
+									{
+										l_oBoxIdentifier.toUInteger(),
+										l_ui32BoxConnectorIndex
+									}
+								});
 							}
 							if (l_ui32BoxConnectorIndex >= ui32InputIndex)
 							{
@@ -411,47 +416,46 @@ namespace OpenViBE
 					}
 
 					// Reconnects scenario links
-					for(size_t i = 0; i < l_vScenarioLink.size(); i++)
+					for (const auto& link : l_vScenarioLink)
 					{
 						m_pOwnerScenario->setScenarioInputLink(
-						    l_vScenarioLink[i].first,
-						    l_vScenarioLink[i].second.first,
-						    l_vScenarioLink[i].second.second-1);
+							link.first,
+							link.second.first,
+							link.second.second - 1);
 					}
 				}
 
 				// Erases actual input
-				m_vInput.erase(m_vInput.begin()+ui32InputIndex);
+				m_vInput.erase(m_vInput.begin() + ui32InputIndex);
 
 				// Reconnects box links
-				for (size_t i = 0; i < l_vLink.size(); i++)
+				for (const auto& link : l_vLink)
 				{
+					CIdentifier newId;
 					m_pOwnerScenario->connect(
-					            l_oIdentifier,
-					            l_vLink[i].first.first,
-					            l_vLink[i].first.second,
-					            l_vLink[i].second.first,
-					            l_vLink[i].second.second-1,
-					            OV_UndefinedIdentifier);
+						newId,
+						link.first.first,
+						link.first.second,
+						link.second.first,
+						link.second.second - 1,
+						OV_UndefinedIdentifier);
 				}
-
-
 
 				this->notify(BoxModification_InputRemoved, ui32InputIndex);
 
 				return true;
 			}
 
-			virtual OpenViBE::uint32 getInputCount(void) const
+			virtual uint32_t getInputCount(void) const
 			{
 				return m_vInput.size();
 			}
 
-			virtual OpenViBE::boolean getInputType( const OpenViBE::uint32 ui32InputIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
+			virtual bool getInputType(const uint32_t ui32InputIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32InputIndex < m_vInput.size(),
-					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -459,11 +463,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean getInputName(const OpenViBE::uint32 ui32InputIndex, OpenViBE::CString& rName) const
+			virtual bool getInputName(const uint32_t ui32InputIndex, OpenViBE::CString& rName) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32InputIndex < m_vInput.size(),
-					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -471,7 +475,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean setInputType(const OpenViBE::uint32 ui32InputIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool setInputType(const uint32_t ui32InputIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
 				OV_ERROR_UNLESS_KRF(
 					this->getTypeManager().isStream(rTypeIdentifier),
@@ -481,7 +485,7 @@ namespace OpenViBE
 
 				OV_ERROR_UNLESS_KRF(
 					ui32InputIndex < m_vInput.size(),
-					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -492,11 +496,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean setInputName(const OpenViBE::uint32 ui32InputIndex, const OpenViBE::CString& rName)
+			virtual bool setInputName(const uint32_t ui32InputIndex, const OpenViBE::CString& rName)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32InputIndex < m_vInput.size(),
-					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -510,37 +514,37 @@ namespace OpenViBE
 			//___________________________________________________________________//
 			//                                                                   //
 
-			virtual OpenViBE::boolean addOutput(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool addOutput(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
 				OV_ERROR_UNLESS_KRF(
 					this->getTypeManager().isStream(rTypeIdentifier),
 					"While adding output '" << sName << "' to box '" << getName() << "', unknown stream type identifier " << rTypeIdentifier.toString(),
 					ErrorType::BadArgument
 				);
-
-				COutput o;
-				o.m_sName=sName;
-				o.m_oTypeIdentifier=rTypeIdentifier;
-				m_vOutput.push_back(o);
+				m_vOutput.push_back(COutput(sName, rTypeIdentifier));
 
 				this->notify(BoxModification_OutputAdded, m_vOutput.size()-1);
 
 				return true;
 			}
 
-			virtual OpenViBE::boolean removeOutput(const OpenViBE::uint32 ui32OutputIndex)
+			virtual bool removeOutput(const uint32_t ui32OutputIndex)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32OutputIndex < m_vOutput.size(),
-					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vOutput.size() - 1) << "])",
+					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vOutput.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
-				CIdentifier l_oIdentifier;
-
-				while((l_oIdentifier=m_pOwnerScenario->getNextLinkIdentifierFromBoxOutput(l_oIdentifier, m_oIdentifier, ui32OutputIndex))!=OV_UndefinedIdentifier)
 				{
-					m_pOwnerScenario->disconnect(l_oIdentifier);
+					CIdentifier* identifierList = nullptr;
+					size_t nbElems = 0;
+					m_pOwnerScenario->getLinkIdentifierFromBoxOutputList(m_oIdentifier, ui32OutputIndex, &identifierList, &nbElems);
+					for (size_t i = 0; i < nbElems; ++i)
+					{
+						m_pOwnerScenario->disconnect(identifierList[i]);
+					}
+					m_pOwnerScenario->releaseIdentifierList(identifierList);
 				}
 
 				// $$$
@@ -550,42 +554,45 @@ namespace OpenViBE
 				// the box listener callback on box removal,
 				// the nextcoming links would potentially be
 				// invalid
-				std::vector < CIdentifier > l_vLinksToRemove;
-				std::vector < std::pair < std::pair < uint64, uint32 >, std::pair < uint64, uint32 > > > l_vLink;
-				while((l_oIdentifier=m_pOwnerScenario->getNextLinkIdentifierFromBox(l_oIdentifier, m_oIdentifier))!=OV_UndefinedIdentifier)
+				std::vector < std::pair < std::pair < uint64_t, uint32_t >, std::pair < uint64_t, uint32_t > > > l_vLink;
+
 				{
-					ILink* l_pLink=m_pOwnerScenario->getLinkDetails(l_oIdentifier);
-					if(l_pLink->getSourceBoxOutputIndex()>ui32OutputIndex)
+					CIdentifier* identifierList = nullptr;
+					size_t nbElems = 0;
+					m_pOwnerScenario->getLinkIdentifierFromBoxOutputList(m_oIdentifier, ui32OutputIndex, &identifierList, &nbElems);
+					for (size_t i = 0; i < nbElems; ++i)
 					{
-						l_vLink.push_back({
-						                      {
-						                          l_pLink->getSourceBoxIdentifier().toUInteger(),
-						                          l_pLink->getSourceBoxOutputIndex()
-						                      },
-						                      {
-						                          l_pLink->getTargetBoxIdentifier().toUInteger(),
-						                          l_pLink->getTargetBoxInputIndex()
-						                      }
-						                  });
-						l_vLinksToRemove.push_back(l_oIdentifier);
+						const CIdentifier& cur_id = identifierList[i];
+						ILink* l_pLink = m_pOwnerScenario->getLinkDetails(cur_id);
+						if (l_pLink->getSourceBoxOutputIndex() > ui32OutputIndex)
+						{
+							l_vLink.push_back({
+								{
+									l_pLink->getSourceBoxIdentifier().toUInteger(),
+									l_pLink->getSourceBoxOutputIndex()
+								},
+								{
+									l_pLink->getTargetBoxIdentifier().toUInteger(),
+									l_pLink->getTargetBoxInputIndex()
+								}
+							});
+							if (m_pOwnerScenario->isLink(cur_id))
+							{
+								m_pOwnerScenario->disconnect(cur_id);
+							}
+						}
 					}
-				}
-				for(size_t i=0; i<l_vLinksToRemove.size(); i++)
-				{
-					if(m_pOwnerScenario->isLink(l_vLinksToRemove[i]))
-					{
-						m_pOwnerScenario->disconnect(l_vLinksToRemove[i]);
-					}
+					m_pOwnerScenario->releaseIdentifierList(identifierList);
 				}
 
 				// This reorganizes the parent's scenario links if this box is not actually a scenario
 				if (m_oIdentifier != OV_UndefinedIdentifier)
 				{
-					std::vector < std::pair < uint32, std::pair < uint64, uint32 > > > l_vScenarioLink;
-					for(uint32 scenarioOutputIndex = 0; scenarioOutputIndex < m_pOwnerScenario->getOutputCount(); scenarioOutputIndex++)
+					std::vector < std::pair < uint32_t, std::pair < uint64_t, uint32_t > > > l_vScenarioLink;
+					for(uint32_t scenarioOutputIndex = 0; scenarioOutputIndex < m_pOwnerScenario->getOutputCount(); scenarioOutputIndex++)
 					{
 						CIdentifier l_oBoxIdentier;
-						uint32 l_ui32BoxConnectorIndex = uint32(-1);
+						uint32_t l_ui32BoxConnectorIndex = uint32_t(-1);
 						m_pOwnerScenario->getScenarioOutputLink(scenarioOutputIndex, l_oBoxIdentier, l_ui32BoxConnectorIndex);
 						if (l_oBoxIdentier == m_oIdentifier)
 						{
@@ -607,12 +614,12 @@ namespace OpenViBE
 					}
 
 					// Reconnects scenario links
-					for(size_t i=0; i<l_vScenarioLink.size(); i++)
+					for(const auto& link : l_vScenarioLink)
 					{
 						m_pOwnerScenario->setScenarioOutputLink(
-						            l_vScenarioLink[i].first,
-						            l_vScenarioLink[i].second.first,
-						            l_vScenarioLink[i].second.second-1);
+							link.first,
+							link.second.first,
+							link.second.second - 1);
 					}
 				}
 
@@ -621,15 +628,16 @@ namespace OpenViBE
 				m_vOutput.erase(m_vOutput.begin()+ui32OutputIndex);
 
 				// Reconnects box links
-				for(size_t i=0; i<l_vLink.size(); i++)
+				for(const auto& link : l_vLink)
 				{
+					CIdentifier newId;
 					m_pOwnerScenario->connect(
-								l_oIdentifier,
-								l_vLink[i].first.first,
-								l_vLink[i].first.second-1,
-								l_vLink[i].second.first,
-								l_vLink[i].second.second,
-								OV_UndefinedIdentifier);
+						newId,
+						link.first.first,
+						link.first.second - 1,
+						link.second.first,
+						link.second.second,
+						OV_UndefinedIdentifier);
 				}
 
 
@@ -638,16 +646,16 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::uint32 getOutputCount(void) const
+			virtual uint32_t getOutputCount(void) const
 			{
 				return m_vOutput.size();
 			}
 
-			virtual OpenViBE::boolean getOutputType(const OpenViBE::uint32 ui32OutputIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
+			virtual bool getOutputType(const uint32_t ui32OutputIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32OutputIndex < m_vOutput.size(),
-					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vOutput.size() - 1) << "])",
+					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vOutput.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -655,11 +663,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean getOutputName(const OpenViBE::uint32 ui32OutputIndex, OpenViBE::CString& rName) const
+			virtual bool getOutputName(const uint32_t ui32OutputIndex, OpenViBE::CString& rName) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32OutputIndex < m_vOutput.size(),
-					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vOutput.size() - 1) << "])",
+					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vOutput.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -667,7 +675,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean setOutputType(const OpenViBE::uint32 ui32OutputIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool setOutputType(const uint32_t ui32OutputIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
 				OV_ERROR_UNLESS_KRF(
 					this->getTypeManager().isStream(rTypeIdentifier),
@@ -677,7 +685,7 @@ namespace OpenViBE
 
 				OV_ERROR_UNLESS_KRF(
 					ui32OutputIndex < m_vOutput.size(),
-					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vOutput.size() - 1) << "])",
+					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vOutput.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -688,11 +696,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean setOutputName(const OpenViBE::uint32 ui32OutputIndex, const OpenViBE::CString& rName)
+			virtual bool setOutputName(const uint32_t ui32OutputIndex, const OpenViBE::CString& rName)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32OutputIndex < m_vOutput.size(),
-					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vOutput.size() - 1) << "])",
+					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vOutput.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -705,13 +713,13 @@ namespace OpenViBE
 
 
 
-			virtual OpenViBE::boolean addInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool addInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
 				m_vSupportInputType.push_back(rTypeIdentifier);
 				return true;
 			}
 
-			virtual OpenViBE::boolean hasInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier) const
+			virtual bool hasInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier) const
 			{
 				//If there is no type specify, we allow all
 				if(m_vSupportInputType.empty())
@@ -725,13 +733,13 @@ namespace OpenViBE
 				return false;
 			}
 
-			virtual OpenViBE::boolean addOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool addOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
 				m_vSupportOutputType.push_back(rTypeIdentifier);
 				return true;
 			}
 
-			virtual OpenViBE::boolean hasOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier) const
+			virtual bool hasOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier) const
 			{
 				//If there is no type specify, we allow all
 				if(m_vSupportOutputType.empty())
@@ -745,7 +753,7 @@ namespace OpenViBE
 				return false;
 			}
 
-			virtual OpenViBE::boolean setSupportTypeFromAlgorithmIdentifier(const CIdentifier &rTypeIdentifier)
+			virtual bool setSupportTypeFromAlgorithmIdentifier(const CIdentifier &rTypeIdentifier)
 			{
 
 				const Plugins::IPluginObjectDesc* l_pPluginObjectDescriptor=this->getKernelContext().getPluginManager().getPluginObjectDescCreating(rTypeIdentifier);
@@ -763,12 +771,12 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean addSetting(
+			virtual bool addSetting(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sDefaultValue,
-				const int32 i32Index,
-				const OpenViBE::boolean bModifiability)
+				const int32_t i32Index,
+				const bool bModifiability)
 			{
 				CString l_sValue(sDefaultValue);
 				if(this->getTypeManager().isEnumeration(rTypeIdentifier))
@@ -779,7 +787,7 @@ namespace OpenViBE
 						{
 							// get value to the first enum entry
 							// and eventually correct this after
-							uint64 l_ui64Value=0;
+							uint64_t l_ui64Value=0;
 							this->getTypeManager().getEnumerationEntry(rTypeIdentifier, 0, l_sValue, l_ui64Value);
 
 							// Find if the default value string actually is an identifier, otherwise just keep the zero index name as default.
@@ -804,20 +812,20 @@ namespace OpenViBE
 				s.m_sValue=l_sValue;
 				s.m_bMod=bModifiability;
 
-				int32 l_i32Index = i32Index;
+				int32_t l_i32Index = i32Index;
 
 				OV_ERROR_UNLESS_KRF(
-					i32Index <= static_cast<int32>(m_vSetting.size()),
+					i32Index <= static_cast<int32_t>(m_vSetting.size()),
 					"Tried to push '" << sName << "' to slot " << i32Index << " with the array size being " << static_cast<int32>(m_vSetting.size()),
 					ErrorType::OutOfBound
 				);
 
-				int32 l_i32InsertLocation;
+				int32_t l_i32InsertLocation;
 
-				if(i32Index < 0 || i32Index == static_cast<int32>(m_vSetting.size()))
+				if(i32Index < 0 || i32Index == static_cast<int32_t>(m_vSetting.size()))
 				{
 					m_vSetting.push_back(s);
-					l_i32InsertLocation = (static_cast<int32>(m_vSetting.size()))-1;
+					l_i32InsertLocation = (static_cast<int32_t>(m_vSetting.size()))-1;
 				}
 				else
 				{
@@ -833,7 +841,7 @@ namespace OpenViBE
 					m_vModifiableSettingIndexes.push_back(l_i32Index);
 				}
 
-				this->getLogManager() << LogLevel_Debug << "Pushed '" << m_vSetting[l_i32InsertLocation].m_sName << "' : '" << m_vSetting[l_i32InsertLocation].m_sValue << "' to slot " << l_i32InsertLocation << " with the array size now " << static_cast<int32>(m_vSetting.size()) << "\n";
+				this->getLogManager() << LogLevel_Debug << "Pushed '" << m_vSetting[l_i32InsertLocation].m_sName << "' : '" << m_vSetting[l_i32InsertLocation].m_sValue << "' to slot " << l_i32InsertLocation << " with the array size now " << static_cast<int32_t>(m_vSetting.size()) << "\n";
 
 				this->notify(BoxModification_SettingAdded, l_i32InsertLocation);
 				this->notifySettingChange(SettingAdd, l_i32InsertLocation);
@@ -841,36 +849,28 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean removeSetting(const OpenViBE::uint32 ui32SettingIndex)
+			virtual bool removeSetting(const uint32_t ui32SettingIndex)
 			{
-				uint32 i=0;
-				typename std::vector<CSetting>::iterator it=m_vSetting.begin();
-				for(i=0; i<ui32SettingIndex && it!=m_vSetting.end(); i++)
-				{
-					++it;
-				}
-
+				auto it = m_vSetting.begin() + ui32SettingIndex;
 				OV_ERROR_UNLESS_KRF(
 					it != m_vSetting.end(),
 					"No setting found at index " << ui32SettingIndex,
 					ErrorType::ResourceNotFound
-				);
-
+					);
 				it=m_vSetting.erase(it);
 
 				//update the modifiable setting indexes
-				std::vector<uint32>::iterator it2=m_vModifiableSettingIndexes.begin();
-				for (i=0; i<m_vModifiableSettingIndexes.size(); i++)
+				for (auto it2 = m_vModifiableSettingIndexes.begin(); it2 != m_vModifiableSettingIndexes.end();)
 				{
-					if(m_vModifiableSettingIndexes[i]==ui32SettingIndex)
+					if (*it2 == ui32SettingIndex)
 					{
-						m_vModifiableSettingIndexes.erase(it2);
+						it2 = m_vModifiableSettingIndexes.erase(it2);
 					}
-					else if(m_vModifiableSettingIndexes[i]>ui32SettingIndex)
+					else if (*it2 > ui32SettingIndex)
 					{
-						m_vModifiableSettingIndexes[i]-=1;
+						*it2 -= 1;
+						++it2;
 					}
-					++it2;
 				}
 
 				this->notify(BoxModification_SettingRemoved, ui32SettingIndex);
@@ -879,42 +879,41 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::uint32 getSettingCount(void) const
+			virtual uint32_t getSettingCount(void) const
 			{
 				return m_vSetting.size();
 			}
 
-			virtual OpenViBE::boolean hasSettingWithName(const OpenViBE::CString& rName) const
+			virtual bool hasSettingWithName(const OpenViBE::CString& rName) const
 			{
-				for (uint32 l_ui32SettingIndex = 0; l_ui32SettingIndex < m_vSetting.size(); l_ui32SettingIndex++)
+				for (const auto& setting : m_vSetting)
 				{
-					if (m_vSetting[l_ui32SettingIndex].m_sName == rName)
+					if (setting.m_sName == rName)
 					{
 						return true;
 					}
 				}
-
 				return false;
 			}
 
-			virtual OpenViBE::int32 getSettingIndex(const OpenViBE::CString& rName) const
+			virtual int32_t getSettingIndex(const OpenViBE::CString& rName) const
 			{
-				for (uint32 l_ui32SettingIndex = 0; l_ui32SettingIndex < m_vSetting.size(); l_ui32SettingIndex++)
+				for (uint32_t l_ui32SettingIndex = 0; l_ui32SettingIndex < m_vSetting.size(); l_ui32SettingIndex++)
 				{
 					if (m_vSetting[l_ui32SettingIndex].m_sName == rName)
 					{
-						return static_cast<int32>(l_ui32SettingIndex);
+						return static_cast<int32_t>(l_ui32SettingIndex);
 					}
 				}
 
 				return -1;
 			}
 
-			virtual OpenViBE::boolean getSettingType(const OpenViBE::uint32 ui32SettingIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
+			virtual bool getSettingType(const uint32_t ui32SettingIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_vSetting.size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vSetting.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -922,11 +921,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean getSettingName(const OpenViBE::uint32 ui32SettingIndex, OpenViBE::CString& rName) const
+			virtual bool getSettingName(const uint32_t ui32SettingIndex, OpenViBE::CString& rName) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_vSetting.size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vSetting.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -934,11 +933,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean getSettingDefaultValue(const OpenViBE::uint32 ui32SettingIndex, OpenViBE::CString& rDefaultValue) const
+			virtual bool getSettingDefaultValue(const uint32_t ui32SettingIndex, OpenViBE::CString& rDefaultValue) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_vSetting.size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vSetting.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -946,11 +945,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean getSettingValue(const OpenViBE::uint32 ui32SettingIndex, OpenViBE::CString& rValue) const
+			virtual bool getSettingValue(const uint32_t ui32SettingIndex, OpenViBE::CString& rValue) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_vSetting.size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vSetting.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -958,11 +957,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean setSettingType(const OpenViBE::uint32 ui32SettingIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool setSettingType(const uint32_t ui32SettingIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_vSetting.size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vSetting.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -980,11 +979,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean setSettingName(const OpenViBE::uint32 ui32SettingIndex, const OpenViBE::CString& rName)
+			virtual bool setSettingName(const uint32_t ui32SettingIndex, const OpenViBE::CString& rName)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_vSetting.size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vSetting.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -996,11 +995,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean setSettingDefaultValue(const OpenViBE::uint32 ui32SettingIndex, const OpenViBE::CString& rDefaultValue)
+			virtual bool setSettingDefaultValue(const uint32_t ui32SettingIndex, const OpenViBE::CString& rDefaultValue)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_vSetting.size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vSetting.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -1011,11 +1010,11 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean setSettingValue(const OpenViBE::uint32 ui32SettingIndex, const OpenViBE::CString& rValue)
+			virtual bool setSettingValue(const uint32_t ui32SettingIndex, const OpenViBE::CString& rValue)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_vSetting.size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vSetting.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -1030,7 +1029,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual void notifySettingChange(BoxEventMessageType eType, int32 i32FirstIndex = -1, int32 i32SecondIndex = -1)
+			virtual void notifySettingChange(BoxEventMessageType eType, int32_t i32FirstIndex = -1, int32_t i32SecondIndex = -1)
 			{
 				if( m_bIsObserverNotificationActive)
 				{
@@ -1045,13 +1044,13 @@ namespace OpenViBE
 			}
 
 			//*
-			virtual OpenViBE::boolean getSettingMod(
-					const OpenViBE::uint32 ui32SettingIndex,
-					OpenViBE::boolean& rValue) const
+			virtual bool getSettingMod(
+					const uint32_t ui32SettingIndex,
+					bool& rValue) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_vSetting.size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vSetting.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -1060,13 +1059,13 @@ namespace OpenViBE
 			}
 
 
-			virtual OpenViBE::boolean setSettingMod(
-					const OpenViBE::uint32 ui32SettingIndex,
-					const OpenViBE::boolean rValue)
+			virtual bool setSettingMod(
+					const uint32_t ui32SettingIndex,
+					const bool rValue)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_vSetting.size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vSetting.size() - 1) << "])",
+					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vSetting.size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
 
@@ -1076,21 +1075,21 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean hasModifiableSettings(void)const
+			virtual bool hasModifiableSettings(void)const
 			{
-				uint32 i=0;
-				boolean rValue = false;
-				while((i<m_vSetting.size())&&(!rValue))
+				for (const auto& setting : m_vSetting)
 				{
-					rValue = m_vSetting[i].m_bMod;
-					i++;
+					if (setting.m_bMod)
+					{
+						return true;
+					}
 				}
-				return rValue;
+				return false;
 			}
 
-			virtual uint32* getModifiableSettings(uint32& rCount)const
+			virtual uint32_t* getModifiableSettings(uint32_t& rCount)const
 			{
-				uint32* l_pReturn = NULL;
+				uint32_t* l_pReturn = NULL;
 				rCount = m_vModifiableSettingIndexes.size();
 
 				return l_pReturn;
@@ -1100,7 +1099,7 @@ namespace OpenViBE
 
 //*/
 
-			virtual OpenViBE::boolean acceptVisitor(OpenViBE::IObjectVisitor& rObjectVisitor)
+			virtual bool acceptVisitor(OpenViBE::IObjectVisitor& rObjectVisitor)
 			{
 				CObjectVisitorContext l_oObjectVisitorContext(this->getKernelContext());
 				return rObjectVisitor.processBegin(l_oObjectVisitorContext, *this) && rObjectVisitor.processEnd(l_oObjectVisitorContext, *this);
@@ -1152,8 +1151,12 @@ namespace OpenViBE
 			public:
 				CInput(void) { }
 				CInput(const CInput& i)
-					:m_sName(i.m_sName)
-					,m_oTypeIdentifier(i.m_oTypeIdentifier) { }
+					: m_sName(i.m_sName)
+					, m_oTypeIdentifier(i.m_oTypeIdentifier) { }
+				CInput(const OpenViBE::CString& name, const OpenViBE::CIdentifier& id) 
+					: m_sName(name)
+					, m_oTypeIdentifier(id) { }
+
 				OpenViBE::CString m_sName;
 				OpenViBE::CIdentifier m_oTypeIdentifier;
 			};
@@ -1165,6 +1168,10 @@ namespace OpenViBE
 				COutput(const COutput& o)
 					:m_sName(o.m_sName)
 					,m_oTypeIdentifier(o.m_oTypeIdentifier) { }
+				COutput(const OpenViBE::CString& name, const OpenViBE::CIdentifier& id)
+					: m_sName(name)
+					, m_oTypeIdentifier(id) { }
+
 				OpenViBE::CString m_sName;
 				OpenViBE::CIdentifier m_oTypeIdentifier;
 			};
@@ -1183,7 +1190,7 @@ namespace OpenViBE
 				OpenViBE::CIdentifier m_oTypeIdentifier;
 				OpenViBE::CString m_sDefaultValue;
 				OpenViBE::CString m_sValue;
-				OpenViBE::boolean m_bMod;
+				bool m_bMod;
 			};
 
 			_IsDerivedFromClass_Final_(TAttributable< TKernelObject <T> >, OVK_ClassId_Kernel_Scenario_Box)
@@ -1193,9 +1200,9 @@ namespace OpenViBE
 			OpenViBE::Kernel::IScenario* m_pOwnerScenario;
 			const OpenViBE::Plugins::IBoxAlgorithmDesc* m_pBoxAlgorithmDescriptor;
 			OpenViBE::Plugins::IBoxListener* m_pBoxListener;
-			OpenViBE::boolean m_bIsNotifyingDescriptor;
-			OpenViBE::boolean m_bIsNotificationActive;
-			OpenViBE::boolean m_bIsObserverNotificationActive;
+			bool m_bIsNotifyingDescriptor;
+			bool m_bIsNotificationActive;
+			bool m_bIsObserverNotificationActive;
 
 			OpenViBE::CIdentifier m_oIdentifier;
 			OpenViBE::CIdentifier m_oAlgorithmClassIdentifier;
@@ -1206,7 +1213,7 @@ namespace OpenViBE
 			std::vector<CSetting> m_vSetting;
 			//to avoid having to recheck every setting every time
 			//careful to update at each setting modification
-			std::vector<OpenViBE::uint32> m_vModifiableSettingIndexes;
+			std::vector<uint32_t> m_vModifiableSettingIndexes;
 
 			std::vector<CIdentifier> m_vSupportInputType;
 			std::vector<CIdentifier> m_vSupportOutputType;

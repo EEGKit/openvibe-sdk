@@ -232,24 +232,26 @@ boolean CSimulatedBox::process(void)
 	}
 
 	// perform output sending
-	CIdentifier l_oLinkIdentifier=m_pScenario->getNextLinkIdentifierFromBox(OV_UndefinedIdentifier, m_pBox->getIdentifier());
-	while(l_oLinkIdentifier!=OV_UndefinedIdentifier)
 	{
-		const ILink* l_pLink=m_pScenario->getLinkDetails(l_oLinkIdentifier);
-		if(l_pLink)
+		CIdentifier* identifierList = nullptr;
+		size_t nbElems = 0;
+		m_pScenario->getLinkIdentifierFromBoxList(m_pBox->getIdentifier(), &identifierList, &nbElems);
+		for (size_t i = 0; i < nbElems; ++i)
 		{
-			CIdentifier l_oTargetBoxIdentifier=l_pLink->getTargetBoxIdentifier();
-			uint32 l_ui32TargetBoxInputIndex=l_pLink->getTargetBoxInputIndex();
-
-			uint32 l_ui32SourceOutputIndex=l_pLink->getSourceBoxOutputIndex();
-			deque < CChunk >::iterator i=m_vOutput[l_ui32SourceOutputIndex].begin();
-			while(i!=m_vOutput[l_ui32SourceOutputIndex].end())
+			const ILink* l_pLink = m_pScenario->getLinkDetails(identifierList[i]);
+			if (l_pLink)
 			{
-				m_rScheduler.sendInput(*i, l_oTargetBoxIdentifier, l_ui32TargetBoxInputIndex);
-				++i;
+				CIdentifier l_oTargetBoxIdentifier = l_pLink->getTargetBoxIdentifier();
+				uint32_t l_ui32TargetBoxInputIndex = l_pLink->getTargetBoxInputIndex();
+
+				uint32_t l_ui32SourceOutputIndex = l_pLink->getSourceBoxOutputIndex();
+				for (auto& chunk : m_vOutput[l_ui32SourceOutputIndex])
+				{
+					m_rScheduler.sendInput(chunk, l_oTargetBoxIdentifier, l_ui32TargetBoxInputIndex);
+				}
 			}
 		}
-		l_oLinkIdentifier=m_pScenario->getNextLinkIdentifierFromBox(l_oLinkIdentifier, m_pBox->getIdentifier());
+		m_pScenario->releaseIdentifierList(identifierList);
 	}
 
 	// iterators for input and output chunks
@@ -276,25 +278,19 @@ boolean CSimulatedBox::process(void)
 	}
 
 	// flushes sent output chunks
-	socketIterator=m_vOutput.begin();
-	while(socketIterator!=m_vOutput.end())
+	for (auto& socket : m_vOutput)
 	{
-		socketIterator->resize(0);
-		++socketIterator;
+		socket.resize(0);
 	}
 
-	vector < CChunk >::iterator outputChunkIterator;
 	// discards waiting output chunks
-	outputChunkIterator=m_vCurrentOutput.begin();
-	while(outputChunkIterator!=m_vCurrentOutput.end())
+	for (const auto& chunk : m_vCurrentOutput)
 	{
 		OV_FATAL_UNLESS_K(
-			outputChunkIterator->getBuffer().getSize() == 0,
+			chunk.getBuffer().getSize() == 0,
 			"Output buffer filled but not marked as ready to send. Possible loss of data.",
 			ErrorType::Internal
 		);
-
-		++outputChunkIterator;
 	}
 
 	m_bReadyToProcess=false;
