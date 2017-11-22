@@ -11,6 +11,7 @@
 #endif
 #include <Windows.h>
 #include "m_ConverterUtf8.h"
+#include <memory>
 #endif
 
 namespace OpenViBE
@@ -90,23 +91,21 @@ namespace OpenViBE
 			// as this seems to be the only place where we actually get UTF7, let's get it as UTF16 by default
 			size_t wideBufferSize = GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), nullptr, 0);
 			if (wideBufferSize == 0) {
-				return sDefaultPath;
+				return convertPath(sDefaultPath);
 			}
-			wchar_t* utf16value = new wchar_t[wideBufferSize];
-			GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), utf16value, wideBufferSize);
+			std::unique_ptr<wchar_t> utf16value(new wchar_t[wideBufferSize]);
+			GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), utf16value.get(), wideBufferSize);
 
-			size_t multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value, -1, nullptr, 0, nullptr, nullptr);
+			int multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, nullptr, 0, nullptr, nullptr);
 			if (multiByteSize == 0) {
-				delete[] utf16value;
-				return sDefaultPath;
+				return convertPath(sDefaultPath);
 			}
-			char* utf8Value = new char[multiByteSize];
-			WideCharToMultiByte(CP_UTF8, 0, utf16value, -1, utf8Value, multiByteSize, nullptr, nullptr);
+			std::unique_ptr<char> utf8Value(new char[static_cast<size_t>(multiByteSize)]);
+			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0) {
+				return convertPath(sDefaultPath);
+			}
 
-			delete[] utf16value;
-			std::string path(utf8Value ? utf8Value : sDefaultPath);
-			delete[] utf8Value;
-			const char* l_sPathPtr = path.c_str();
+			const char* l_sPathPtr = utf8Value.get();
 #else
 			const char *l_sPathPtr = std::getenv(sEnvVar);
 #endif
@@ -116,13 +115,14 @@ namespace OpenViBE
 		// Returns ENV variable if it is defined, otherwise it extends the ROOT variable if it exists, finally returns a default path
 		static OpenViBE::CString pathFromEnvOrExtendedRoot(const char* envVar, const char* rootPostfix, const char* defaultPath)
 		{
-			if (const char* envPath = std::getenv(envVar))
+			if (std::getenv(envVar))
 			{
-				return convertPath(envPath);
+				return pathFromEnv(envVar, defaultPath);
 			}
-			if (const char* ovPathRoot = std::getenv("OV_PATH_ROOT"))
+			if (std::getenv("OV_PATH_ROOT"))
 			{
-				return convertPath(CString(ovPathRoot) + rootPostfix);
+				// the default case for this one is wrong but it should never happen
+				return pathFromEnv("OV_PATH_ROOT", "") + rootPostfix;
 			}
 			return convertPath(defaultPath);
 		}
