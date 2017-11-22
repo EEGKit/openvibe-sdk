@@ -5,6 +5,14 @@
 
 #include "ovCString.h"
 
+#if defined TARGET_OS_Windows
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <Windows.h>
+#include "m_ConverterUtf8.h"
+#endif
+
 namespace OpenViBE
 {
 	class Directories
@@ -77,7 +85,31 @@ namespace OpenViBE
 		// Returns ENV variable value or sDefaultPath if the variable doesn't exist. The path is converted with each \ to /.
 		static OpenViBE::CString pathFromEnv(const char *sEnvVar, const char *sDefaultPath)
 		{
+#if defined TARGET_OS_Windows
+			// Using std::getenv on Windows yields UTF7 strings which do not work with the utf8_to_utf16 function
+			// as this seems to be the only place where we actually get UTF7, let's get it as UTF16 by default
+			size_t wideBufferSize = GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), nullptr, 0);
+			if (wideBufferSize == 0) {
+				return sDefaultPath;
+			}
+			wchar_t* utf16value = new wchar_t[wideBufferSize];
+			GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), utf16value, wideBufferSize);
+
+			size_t multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value, -1, nullptr, 0, nullptr, nullptr);
+			if (multiByteSize == 0) {
+				delete[] utf16value;
+				return sDefaultPath;
+			}
+			char* utf8Value = new char[multiByteSize];
+			WideCharToMultiByte(CP_UTF8, 0, utf16value, -1, utf8Value, multiByteSize, nullptr, nullptr);
+
+			delete[] utf16value;
+			std::string path(utf8Value ? utf8Value : sDefaultPath);
+			delete[] utf8Value;
+			const char* l_sPathPtr = path.c_str();
+#else
 			const char *l_sPathPtr = std::getenv(sEnvVar);
+#endif
 			OpenViBE::CString l_sPath = (l_sPathPtr ? l_sPathPtr : sDefaultPath);
 			return convertPath(l_sPath);
 		}
