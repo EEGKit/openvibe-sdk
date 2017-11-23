@@ -229,8 +229,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 					}
 					else
 					{
-						OV_FATAL_K("Can not construct the output chunk due to internal error", ErrorType::Internal);
-						return false;
+						OV_ERROR_KRF("Can not construct the output chunk due to internal error", ErrorType::Internal);
 					}
 				}
 			}
