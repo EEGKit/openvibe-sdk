@@ -265,7 +265,8 @@ bool Files::createPath(const char *path)
 	}
 #if defined TARGET_OS_Windows
 	wstring pathUTF16 = Common::Converter::utf8_to_utf16(path);
-	return boost::filesystem::create_directories(boost::filesystem::wpath(pathUTF16));
+	boost::filesystem::create_directories(boost::filesystem::wpath(pathUTF16));
+	return boost::filesystem::is_directory(boost::filesystem::wpath(pathUTF16));
 #else
 	return boost::filesystem::create_directories(boost::filesystem::path(path));
 #endif
