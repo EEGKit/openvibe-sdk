@@ -155,6 +155,7 @@ function ExpandZipFile($zip, $dest)
 			New-Item $dest -itemtype directory | Out-Null
 		}
 
+		$zip = $zip -replace "/", "\"
 		$folder = $shell.NameSpace("$zip")
 
 		# Progress based on count is pretty dumb. However
