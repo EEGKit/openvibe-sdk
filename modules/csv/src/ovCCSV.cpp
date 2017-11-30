@@ -585,7 +585,6 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<
 	}
 
 	chunks.clear();
-	chunks.reserve(chunksToRead);
 
 	// Calculate the size of the matrix depending of the stream type
 	size_t matrixSize = static_cast<size_t>(m_SampleCountPerBuffer);

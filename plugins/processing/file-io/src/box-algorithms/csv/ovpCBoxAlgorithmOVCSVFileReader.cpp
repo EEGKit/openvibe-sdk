@@ -231,9 +231,9 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 					"Failed to set dimension label",
 					ErrorType::Internal);
 			}
-		}
 
-		m_AlgorithmEncoder.getInputSamplingRate() = m_SamplingRate;
+			m_AlgorithmEncoder.getInputSamplingRate() = m_SamplingRate;
+		}
 
 		OV_ERROR_UNLESS_KRF(m_AlgorithmEncoder.encodeHeader(),
 			"Failed to encode signal header",
@@ -269,16 +269,16 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 		} while (!m_SavedChunks.empty() && m_SavedChunks.back().startTime < currentTime && m_ReaderLib->hasDataToRead());
 	}
 
-	double chunkStartTime = m_SavedChunks.cbegin()->startTime;
-	double chunkEndTime = m_SavedChunks.back().endTime;
-
-	// send stimulations chunk even if there is no stimulations, chunks have to be continued
-	OV_ERROR_UNLESS_KRF(this->processStimulation(chunkStartTime, chunkEndTime),
-						"Error during stimulation process",
-						ErrorType::Internal);
-
 	if (!m_SavedChunks.empty())
 	{
+		double chunkStartTime = m_SavedChunks.cbegin()->startTime;
+		double chunkEndTime = m_SavedChunks.back().endTime;
+
+		// send stimulations chunk even if there is no stimulations, chunks have to be continued
+		OV_ERROR_UNLESS_KRF(this->processStimulation(chunkStartTime, chunkEndTime),
+			"Error during stimulation process",
+			ErrorType::Internal);
+
 		uint32_t chunksToRemove = 0;
 
 		for (const SMatrixChunk& chunk : m_SavedChunks)
