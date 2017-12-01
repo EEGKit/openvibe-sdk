@@ -585,7 +585,6 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<
 	}
 
 	chunks.clear();
-	chunks.reserve(chunksToRead);
 
 	// Calculate the size of the matrix depending of the stream type
 	size_t matrixSize = static_cast<size_t>(m_SampleCountPerBuffer);
@@ -1020,11 +1019,11 @@ std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChun
 		stimulations.at(0) += std::string(1, s_InternalDataSeparator) + std::to_string(it->stimulationIdentifier);
 
 		buffer[0] = '\0';
-		snprintf(buffer, s_MaximumFloatDecimal, "%.*f", m_OutputFloatPrecision, itBegin->stimulationDate);
+		snprintf(buffer, s_MaximumFloatDecimal, "%.*f", m_OutputFloatPrecision, it->stimulationDate);
 		stimulations.at(1) += std::string(1, s_InternalDataSeparator) + buffer;
 
 		buffer[0] = '\0';
-		snprintf(buffer, s_MaximumFloatDecimal, "%.*f", m_OutputFloatPrecision, itBegin->stimulationDuration);
+		snprintf(buffer, s_MaximumFloatDecimal, "%.*f", m_OutputFloatPrecision, it->stimulationDuration);
 		stimulations.at(2) += std::string(1, s_InternalDataSeparator) + buffer;
 	}
 
