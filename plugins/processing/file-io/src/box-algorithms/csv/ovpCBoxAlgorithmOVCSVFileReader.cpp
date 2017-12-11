@@ -379,6 +379,8 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(double startTime, double e
 				stimulationSet->appendStimulation(stimulationIt->stimulationIdentifier,
 												  ITimeArithmetics::secondsToTime(stimulationIt->stimulationDate),
 												  ITimeArithmetics::secondsToTime(stimulationIt->stimulationDuration));
+
+				m_LastStimulationDate = OpenViBE::ITimeArithmetics::secondsToTime(stimulationIt->stimulationDate);
 			}
 			else
 			{
@@ -396,7 +398,6 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(double startTime, double e
 			m_SavedStimulations.erase(m_SavedStimulations.begin(), stimulationIt);
 		}
 
-		m_LastStimulationDate = currentTime;
 
 		OV_ERROR_UNLESS_KRF(m_StimulationEncoder.encodeBuffer(),
 			"Failed to encode stimulation buffer",
@@ -404,7 +405,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(double startTime, double e
 
 		OV_ERROR_UNLESS_KRF(this->getDynamicBoxContext().markOutputAsReadyToSend(1,
 			stimulationChunkStartTime,
-			currentTime),
+			m_LastStimulationDate),
 			"Failed to mark stimulation output as ready to send",
 			ErrorType::Internal);
 
