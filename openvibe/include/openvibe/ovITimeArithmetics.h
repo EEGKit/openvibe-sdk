@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_ITimeArithmetics_H__
-#define __OpenViBE_Kernel_ITimeArithmetics_H__
+#pragma once
 
 #include "ov_types.h"
 
@@ -40,7 +39,7 @@ namespace OpenViBE
 		 */
 		static uint64 timeToSampleCount(const uint64 ui64SamplingRate, const uint64 ui64Time)
 		{
-			return ((ui64Time+1)*ui64SamplingRate-1)>>32; 
+			return ((ui64Time+1)*ui64SamplingRate-1)>>32;
 		}
 		
 		/**
@@ -51,7 +50,7 @@ namespace OpenViBE
 		 */
 		static float64 timeToSeconds(const uint64 ui64Time)
 		{
-			return (ui64Time>>m_ui32Shift)/double(m_ui32Multiplier);
+			return ui64Time/static_cast<double>(1LL<<32);
 		}
 
 		/**
@@ -62,16 +61,8 @@ namespace OpenViBE
 		 */
 		static uint64 secondsToTime(const float64 f64Time)
 		{
-			return ((uint64)(f64Time*double(m_ui32Multiplier)))<<m_ui32Shift;
+			return static_cast<uint64>(f64Time*static_cast<double>(1LL<<32));
 		}
-
-		// Increase m_ui32DecimalPrecision to get more precision in decimals for timeToSeconds() and secondsToTime().
-		// The default value of 10 bits suffices for (1/2^10)s=(1/1024)s precision in time, i.e. a bit under 1ms. 
-		// Using higher sampling rates than 1024hz would require a correspondingly higher decimal precision.
-		static const uint32 m_ui32DecimalPrecision = 10;		// In bits
-
-		static const uint32 m_ui32Shift = 32-m_ui32DecimalPrecision;			// 22
-		static const uint32 m_ui32Multiplier = 1L << m_ui32DecimalPrecision;	// 1024
 
 	private:
 		// Static class, don't allow instances
@@ -87,4 +78,3 @@ namespace OpenViBE
 	};
 }
 
-#endif
