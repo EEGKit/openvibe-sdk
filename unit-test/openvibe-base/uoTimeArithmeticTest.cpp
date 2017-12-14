@@ -32,11 +32,22 @@
 using namespace OpenViBE;
 
 namespace {
+	const double d_hour = 60 * 60;
+	const double d_day = 24 * d_hour;
+	const double d_week = 7 * d_day;
+	const double d_month = 30 * d_day;
+	const double d_year = 365 * d_day;
+
 	// time values to test in seconds
 	std::vector<double> timesToTestInSecond =
 	{ 0, 0.001, 0.01, 0.1, 0.2, 0.25, 0.5, 1.0, 1.1, 1.5, 2,
+	  1.000001, 1.999, 1.999999,
 	  5, 10, 50, 100, 123.456789, 128.0, 500, 1000, 2500, 5000,
-	  24*60*60, 2*24*60*60+1, 7*24*60*60+1331};
+	  d_day, d_day + 0.03, d_day + 0.999, d_day + 1,
+	  d_week, d_week + 0.03, d_week + 0.999, d_week + 1,
+	  d_month, d_month + 0.03, d_month + 0.999, d_month + 1,
+	  d_year, d_year + 0.03, d_year + 0.999, d_year + 1,
+	};
 
 	// time values to test in fixed point format
 	std::vector<uint64_t> timesToTestInFixedPoint =
@@ -75,11 +86,7 @@ TEST(time_arithmetic_test_case, fixed_to_seconds_to_fixed)
 	for (auto testTimeInFixedPoint : timesToTestInFixedPoint)
 	{
 		auto computedTimeInFixedPoint = ITimeArithmetics::secondsToTime(ITimeArithmetics::timeToSeconds(testTimeInFixedPoint));
-
-		auto testSignificantBits = (testTimeInFixedPoint >> (32 - 32));
-		auto computedSignificantBits = (computedTimeInFixedPoint >> (32 - 32));
-
-		EXPECT_EQ(computedSignificantBits, testSignificantBits);
+		EXPECT_EQ(computedTimeInFixedPoint, testTimeInFixedPoint);
 	}
 }
 
@@ -146,10 +153,7 @@ TEST(time_arithmetic_test_case, legacy_epoching)
 		auto legacyTime = static_cast<unsigned long long>(testEpochDuration * (1LL << 32)); // Legacy code from stimulationBasedEpoching
 		auto computedTimeInFixedPoint = ITimeArithmetics::secondsToTime(testEpochDuration);
 
-		auto legacySignificantBits = (legacyTime >> (32 - 32));
-		auto computedSignificantBits = (computedTimeInFixedPoint >> (32 - 32));
-
-		EXPECT_EQ(computedSignificantBits, legacySignificantBits);
+		EXPECT_EQ(computedTimeInFixedPoint, legacyTime);
 	}
 }
 
