@@ -28,7 +28,7 @@ void CBoxAlgorithmTimeSignalGenerator::release(void)
 	delete this;
 }
 
-boolean CBoxAlgorithmTimeSignalGenerator::initialize(void)
+bool CBoxAlgorithmTimeSignalGenerator::initialize(void)
 {
 	m_oSignalEncoder.initialize(*this,0);
 
@@ -42,20 +42,20 @@ boolean CBoxAlgorithmTimeSignalGenerator::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmTimeSignalGenerator::uninitialize(void)
+bool CBoxAlgorithmTimeSignalGenerator::uninitialize(void)
 {
 	m_oSignalEncoder.uninitialize();
 
 	return true;
 }
 
-boolean CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& rMessageClock)
+bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& rMessageClock)
 {
-	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
+	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmTimeSignalGenerator::process(void)
+bool CBoxAlgorithmTimeSignalGenerator::process(void)
 {
 	IBoxIO* l_pDynamicBoxContext=getBoxAlgorithmContext()->getDynamicBoxContext();
 
@@ -78,23 +78,27 @@ boolean CBoxAlgorithmTimeSignalGenerator::process(void)
 	}
 	else
 	{
-		float64* l_pSampleBuffer = m_oSignalEncoder.getInputMatrix()->getBuffer();
 
-		uint32 l_ui32SentSampleCount=m_ui32SentSampleCount;
-		float64 l_f64SamplingFrequency=static_cast<float64>(m_ui32SamplingFrequency);
-		for(uint32 i=0; i<m_ui32GeneratedEpochSampleCount; i++)
+		// Create sample chunks up until the next step (current time + 1/128) but do not overshoot it
+		// This way we will always create the correct number of samples for frequencies that are above 128Hz
+		uint64_t nextStepDate = ITimeArithmetics::timeToSampleCount(static_cast<uint64_t>(m_ui32SamplingFrequency), static_cast<uint64_t>(this->getPlayerContext().getCurrentTime() + (1ULL << 25)));
+		while (m_ui32SentSampleCount + m_ui32GeneratedEpochSampleCount < nextStepDate)
 		{
-			l_pSampleBuffer[i]=(i+m_ui32SentSampleCount)/l_f64SamplingFrequency;
+			double* l_pSampleBuffer = m_oSignalEncoder.getInputMatrix()->getBuffer();
+
+			for (uint32_t i = 0; i < m_ui32GeneratedEpochSampleCount; i++)
+			{
+				l_pSampleBuffer[i] = (i+m_ui32SentSampleCount)/static_cast<double>(m_ui32SamplingFrequency);
+			}
+
+			m_oSignalEncoder.encodeBuffer();
+
+			uint64_t l_ui64StartTime = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
+			m_ui32SentSampleCount += m_ui32GeneratedEpochSampleCount;
+			uint64_t l_ui64EndTime = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
+
+			l_pDynamicBoxContext->markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
 		}
-
-		m_oSignalEncoder.encodeBuffer();
-
-		m_ui32SentSampleCount+=m_ui32GeneratedEpochSampleCount;
-
-		uint64 l_ui64StartTime = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, l_ui32SentSampleCount);
-		uint64 l_ui64EndTime = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
-
-		l_pDynamicBoxContext->markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
 	}
 
 	return true;
@@ -102,6 +106,5 @@ boolean CBoxAlgorithmTimeSignalGenerator::process(void)
 
 OpenViBE::uint64 CBoxAlgorithmTimeSignalGenerator::getClockFrequency(void)
 {
-	// Intentional parameter swap to get the frequency
-	return ITimeArithmetics::sampleCountToTime(m_ui32GeneratedEpochSampleCount, m_ui32SamplingFrequency);
+	return 128LL<<32;
 }

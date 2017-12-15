@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_TimeSignalGenerator_H__
-#define __OpenViBEPlugins_BoxAlgorithm_TimeSignalGenerator_H__
+#pragma once
 
 #include "../ovp_defines.h"
 
@@ -13,21 +12,21 @@ namespace OpenViBEPlugins
 {
 	namespace DataGeneration
 	{
-		class CBoxAlgorithmTimeSignalGenerator : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmTimeSignalGenerator final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
 			CBoxAlgorithmTimeSignalGenerator(void);
 
-			virtual void release(void);
+			void release(void);
 
-			virtual OpenViBE::uint64 getClockFrequency(void);
+			OpenViBE::uint64 getClockFrequency(void);
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
+			bool initialize(void);
+			bool uninitialize(void);
 
-			virtual OpenViBE::boolean processClock(OpenViBE::Kernel::IMessageClock& rMessageClock);
-			virtual OpenViBE::boolean process(void);
+			bool processClock(OpenViBE::Kernel::IMessageClock& rMessageClock);
+			bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeSignalGenerator)
 
@@ -35,32 +34,32 @@ namespace OpenViBEPlugins
 
 			OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmTimeSignalGenerator > m_oSignalEncoder;
 
-			OpenViBE::boolean m_bHeaderSent;
+			bool m_bHeaderSent;
 			OpenViBE::uint32 m_ui32SamplingFrequency;
 			OpenViBE::uint32 m_ui32GeneratedEpochSampleCount;
 			OpenViBE::uint32 m_ui32SentSampleCount;
 		};
 
-		class CBoxAlgorithmTimeSignalGeneratorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmTimeSignalGeneratorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Time signal"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Simple time signal generator (for use with DSP)"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Data generation"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			void release(void) { }
+			OpenViBE::CString getName(void) const                { return OpenViBE::CString("Time signal"); }
+			OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Simple time signal generator (for use with DSP)"); }
+			OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
+			OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Data generation"); }
+			OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.1"); }
+			OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.4.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::DataGeneration::CBoxAlgorithmTimeSignalGenerator(); }
+			OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
+			OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::DataGeneration::CBoxAlgorithmTimeSignalGenerator(); }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{
 				rPrototype.addOutput("Generated signal",              OV_TypeId_Signal);
@@ -76,4 +75,3 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_TimeSignalGenerator_H__

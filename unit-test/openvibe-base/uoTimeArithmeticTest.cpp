@@ -25,21 +25,29 @@
 #include <algorithm>
 #include <sstream>
 #include <cmath>
-
-#include "ovtAssert.h"
-#include "ovtTestFixtureCommon.h"
+#include <gtest/gtest.h>
 
 #include "openvibe/ovITimeArithmetics.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
 
-int uoTimeArithmeticTest(int argc, char* argv[])
-{
+namespace {
+	const double d_hour = 60 * 60;
+	const double d_day = 24 * d_hour;
+	const double d_week = 7 * d_day;
+	const double d_month = 30 * d_day;
+	const double d_year = 365 * d_day;
+
 	// time values to test in seconds
-	std::vector<double> timesToTestInSecond = 
-	{ 0, 0.001, 0.01, 0.1, 0.2, 0.25, 0.5, 1.0, 1.1, 1.5, 2, 
-	5, 10, 50, 100, 123.456789, 128.0, 500, 1000, 2500, 5000 };
+	std::vector<double> timesToTestInSecond =
+	{ 0, 0.001, 0.01, 0.1, 0.2, 0.25, 0.5, 1.0, 1.1, 1.5, 2,
+	  1.000001, 1.999, 1.999999,
+	  5, 10, 50, 100, 123.456789, 128.0, 500, 1000, 2500, 5000,
+	  d_day, d_day + 0.03, d_day + 0.999, d_day + 1,
+	  d_week, d_week + 0.03, d_week + 0.999, d_week + 1,
+	  d_month, d_month + 0.03, d_month + 0.999, d_month + 1,
+	  d_year, d_year + 0.03, d_year + 0.999, d_year + 1,
+	};
 
 	// time values to test in fixed point format
 	std::vector<uint64_t> timesToTestInFixedPoint =
@@ -55,55 +63,61 @@ int uoTimeArithmeticTest(int argc, char* argv[])
 	// epoch duration to test
 	std::vector<double> epochDurationsToTest = { 0.01, 0.1, 0.2, 0.25, 0.5, 1.0, 1.1, 1.5, 2, 5, 10, 50, 100 };
 
-	const double timeTolerance = 1LL << ITimeArithmetics::m_ui32DecimalPrecision;
+	// We require at least a millisecond precision
+	const double timeTolerance = 0.001;
+}
 
-	std::stringstream  errorMessage;
 
+TEST(time_arithmetic_test_case, seconds_to_fixed_to_seconds)
+{
 	// test conversion second -> fixed point -> second
 	for (auto testTimeInSecond : timesToTestInSecond)
 	{
 		auto computedTimeInSecond = ITimeArithmetics::timeToSeconds(ITimeArithmetics::secondsToTime(testTimeInSecond));
 
-		OVT_ASSERT(std::abs(computedTimeInSecond - testTimeInSecond) < timeTolerance,
-			errorMessage << "Failure to convert [second -> fixed point -> second]: test time = "
-			<< testTimeInSecond << " VS computed time = " << computedTimeInSecond << std::endl
-			);
+		EXPECT_LT(std::abs(computedTimeInSecond - testTimeInSecond), timeTolerance);
 	}
+}
 
 
+TEST(time_arithmetic_test_case, fixed_to_seconds_to_fixed)
+{
 	// test conversion fixed point -> second -> fixed point
 	for (auto testTimeInFixedPoint : timesToTestInFixedPoint)
 	{
 		auto computedTimeInFixedPoint = ITimeArithmetics::secondsToTime(ITimeArithmetics::timeToSeconds(testTimeInFixedPoint));
-
-		auto testSignificantBits = (testTimeInFixedPoint >> (32 - ITimeArithmetics::m_ui32DecimalPrecision));
-		auto computedSignificantBits = (computedTimeInFixedPoint >> (32 - ITimeArithmetics::m_ui32DecimalPrecision));
-
-		OVT_ASSERT(computedSignificantBits == testSignificantBits, 
-			errorMessage << "Failure to convert [fixed point -> second -> fixed point]: test time = "
-			<< testTimeInFixedPoint << " VS computed time = " << computedTimeInFixedPoint << std::endl);
+		EXPECT_EQ(computedTimeInFixedPoint, testTimeInFixedPoint);
 	}
+}
 
+TEST(time_arithmetic_test_case, time_to_fixed_to_samples_to_fixed)
+{
 	// test conversion time -> sample -> time
 	for (auto testSamplingRate : samplingRatesToTest)
 	{
 		for (auto testTimeInSecond : timesToTestInSecond)
 		{
 			auto testTimeInFixedPoint = ITimeArithmetics::secondsToTime(testTimeInSecond);
+			// If the sample count would overflow an uint64 we skip the test
+			if (std::log2(testSamplingRate) + std::log2(testTimeInFixedPoint) >= 64)
+			{
+				continue;
+			}
 			auto computedTimeInFixedPoint = ITimeArithmetics::sampleCountToTime(
 				testSamplingRate, 
 				ITimeArithmetics::timeToSampleCount(testSamplingRate, testTimeInFixedPoint)
 				);
 
 			uint64_t timeDifference = static_cast<uint64_t>(std::abs(static_cast<int64_t>(computedTimeInFixedPoint) - static_cast<int64_t>(testTimeInFixedPoint)));
-
-			OVT_ASSERT(ITimeArithmetics::timeToSeconds(timeDifference) < (1.0 / static_cast<double>(testSamplingRate)),
-				errorMessage << "Failure to convert [sample -> time -> sample] at sample rate " << testSamplingRate << 
-				": test time = " << testTimeInFixedPoint << " VS computed time = " << computedTimeInFixedPoint << std::endl
-				);
+			EXPECT_LT(ITimeArithmetics::timeToSeconds(timeDifference), (1.0 / static_cast<double>(testSamplingRate)))
+			        << "Time difference too large between OV(" << testTimeInSecond << ") and "
+			        << "SCtoOV(" << testSamplingRate << ", OVtoSC("<< testSamplingRate << ","<< testTimeInFixedPoint << "))";
 		}
 	}
+}
 
+TEST(time_arithmetic_test_case, samples_to_time_to_samples)
+{
 	// test conversion sample -> time -> sample
 	for (auto testSamplingRate : samplingRatesToTest)
 	{
@@ -114,41 +128,39 @@ int uoTimeArithmeticTest(int argc, char* argv[])
 				ITimeArithmetics::sampleCountToTime(testSamplingRate, testSample)
 				);
 
-			OVT_ASSERT(computedSampleCount == testSample,
-				errorMessage << "Failure to convert [time -> sample -> time] at sample rate " << testSamplingRate <<
-				": test sample count = " << testSample << " VS computed sample count = " << computedSampleCount << std::endl
-				);
+			EXPECT_EQ(testSample, computedSampleCount);
 		}
 	}
+}
 
+
+TEST(time_arithmetic_test_case, 1s_samples_to_samplig_rate)
+{
 	// test time -> sample count for 1 second signal duration at given rates
 	for (auto testSamplingRate : samplingRatesToTest)
 	{
 		auto sampleCount = ITimeArithmetics::timeToSampleCount(testSamplingRate, ITimeArithmetics::secondsToTime(1.0));
 		
-		OVT_ASSERT(sampleCount == testSamplingRate,
-			errorMessage << "Failure to retrieve sample count for 1 second signal duration at sample rate " << testSamplingRate <<
-			": computed sample count = " << sampleCount << std::endl
-			);
+		EXPECT_EQ(sampleCount, testSamplingRate);
 	}
+}
 
+TEST(time_arithmetic_test_case, legacy_epoching)
+{
 	// compare second -> time conversion to legacy method
 	for (auto testEpochDuration : epochDurationsToTest)
 	{
 		auto legacyTime = static_cast<unsigned long long>(testEpochDuration * (1LL << 32)); // Legacy code from stimulationBasedEpoching
 		auto computedTimeInFixedPoint = ITimeArithmetics::secondsToTime(testEpochDuration);
 
-		auto legacySignificantBits = (legacyTime >> (32 - ITimeArithmetics::m_ui32DecimalPrecision));
-		auto computedSignificantBits = (computedTimeInFixedPoint >> (32 - ITimeArithmetics::m_ui32DecimalPrecision));
-
-		OVT_ASSERT(computedSignificantBits == legacySignificantBits,
-			errorMessage << "Failure to convert [second -> time] as with legacy method: test time = "
-			<< legacyTime << " VS computed time = " << computedTimeInFixedPoint << std::endl
-			);
-
+		EXPECT_EQ(computedTimeInFixedPoint, legacyTime);
 	}
-	
-	return EXIT_SUCCESS;
 }
 
-//==========================End OF File==============================
+int uoTimeArithmeticTest(int argc, char* argv[])
+{
+	::testing::InitGoogleTest(&argc, argv);
+	::testing::GTEST_FLAG(filter) = "time_aritmetic_test_case.*";
+	return RUN_ALL_TESTS();
+}
+
