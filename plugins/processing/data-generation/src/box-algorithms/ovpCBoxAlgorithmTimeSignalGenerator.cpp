@@ -79,7 +79,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process(void)
 	else
 	{
 
-		while (m_ui32SentSampleCount + m_ui32GeneratedEpochSampleCount <= ITimeArithmetics::timeToSampleCount(m_ui32SamplingFrequency, this->getPlayerContext().getCurrentTime()))
+		while (m_ui32SentSampleCount + m_ui32GeneratedEpochSampleCount < ITimeArithmetics::timeToSampleCount(m_ui32SamplingFrequency, this->getPlayerContext().getCurrentTime() + (1LL<<25)))
 		{
 			double* l_pSampleBuffer = m_oSignalEncoder.getInputMatrix()->getBuffer();
 
