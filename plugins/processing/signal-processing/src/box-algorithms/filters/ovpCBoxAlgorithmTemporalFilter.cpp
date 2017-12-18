@@ -291,12 +291,7 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 				{
 					for(j=0; j<l_ui32ChannelCount; j++)
 					{
-						//m_vFirstSample[j] = l_pBuffer[j*l_ui32SampleCount+0]; //first value of the signal = DC offset
-						for(uint32 k=0; k<l_ui32SampleCount; k++)
-						{
-							m_vFirstSample[j] += l_pBuffer[j*l_ui32SampleCount+k];
-						}
-						m_vFirstSample[j] /= l_ui32SampleCount; //average of first values of the signal = DC offset
+						m_vFirstSample[j] = l_pBuffer[j*l_ui32SampleCount]; //first value of the signal = DC offset
 					}
 				}
 			}
