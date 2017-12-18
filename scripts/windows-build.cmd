@@ -2,8 +2,6 @@
 setlocal EnableDelayedExpansion
 setlocal enableextensions 
 
-set SKIP_VS2017=1
-set SKIP_VS2015=1
 set BuildType=Release
 set PauseCommand=pause
 set RerunCmake=false
