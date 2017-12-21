@@ -98,6 +98,25 @@ namespace Socket
 			}
 			return new TConnection<IConnection>(l_i32ClientSocket);
 		}
+
+		bool getSocketPort(uint32_t& port)
+		{
+			struct sockaddr_in socketInfo;
+
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+			socklen_t socketInfoLength = sizeof(socketInfo);
+#elif defined TARGET_OS_Windows
+			int socketInfoLength = sizeof(socketInfo);
+#endif
+			
+			if (getsockname(m_i32Socket, (sockaddr*)&socketInfo, &socketInfoLength) == -1)
+			{
+				return false;
+			}
+
+			port = static_cast<uint32_t>(ntohs(socketInfo.sin_port));
+			return true;
+		}
 	};
 
 	IConnectionServer* createConnectionServer(void)

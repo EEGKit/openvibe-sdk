@@ -23,8 +23,6 @@ namespace Socket
 		virtual std::string getLastError() = 0;
 
 	protected:
-		unsigned short m_ui16PortNumber;
-		std::string m_sLastError;
 
 #if defined TARGET_OS_Windows
 		typedef bool (CALLBACK * LPFNTVICPORTOPEN)();

@@ -26,6 +26,9 @@ namespace Socket
 {
 	class CConnectionParallel : public Socket::IConnectionParallel
 	{
+	protected:
+		unsigned short m_ui16PortNumber;
+		std::string m_sLastError;
 	public:
 
 		CConnectionParallel(void)

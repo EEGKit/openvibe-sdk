@@ -66,7 +66,21 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 
 	OVT_ASSERT(client->close() && !client->isConnected(),"Failure to disconnect");
 
+	// Test method getSocketPort
+
+	uint32_t guessedPort;
+	OVT_ASSERT(server->getSocketPort(guessedPort), "Failure to get socket informations");
+	// If port number is 0, guessedPort should be set to an available port found by OS
+	if (portNumber != 0)
+	{
+		OVT_ASSERT(guessedPort == portNumber, "Get Socket information should return server port.");
+	}
+
+	OVT_ASSERT(client->connect(serverName.c_str(), guessedPort) && client->isConnected(), "Failure to connect to server");
+	OVT_ASSERT(client->close() && !client->isConnected(), "Failure to disconnect");
+
 	OVT_ASSERT(server->close() && !server->isConnected(), "Failure to close connection");
+
 	
 	server->release();
 	client->release();
