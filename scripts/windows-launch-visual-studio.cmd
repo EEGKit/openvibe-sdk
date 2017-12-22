@@ -40,7 +40,7 @@ if /i "%1" == "--dependencies-dir" (
 
 call "windows-initialize-environment.cmd" --platform-target %PlatformTarget%
 
-SET "OV_PATH_ROOT=%root_dir%\..\openvibe-sdk-build\dist-%PlatformTarget%/%BuildType%/"
+SET "OV_PATH_ROOT=%root_dir%\..\openvibe-sdk-build\dist-%PlatformTarget%"
 SET "PATH=%OV_PATH_ROOT%\bin;%PATH%"
 
 REM for visual studio express...
