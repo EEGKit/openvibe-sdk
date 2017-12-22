@@ -53,7 +53,7 @@ set SolutionPath=%root_dir%\..\openvibe-sdk-build\vs-project-%PlatformTarget%\Op
 if %USE_EXPRESS% == 1 (
 	echo Use %VSCMake% Express Edition
 	
-	if "%VSCMake%"=="Visual Studio 12" (
+	if "%VSCMake%"=="Visual Studio 12 2013" (
 		start /b "%VSINSTALLDIR%\Common7\IDE\WDExpress.exe" %SolutionPath%
 	) else (
 		"%VSINSTALLDIR%\Common7\IDE\VCExpress.exe" %SolutionPath%
