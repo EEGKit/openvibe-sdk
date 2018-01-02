@@ -393,27 +393,28 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		{
 			const IBox* box = m_pScenario->getBoxDetails(identifierList[i]);
 
-			int x, y;
 			if (box->hasAttribute(OV_AttributeId_Box_YCenterPosition))
 			{
 				try
 				{
-					y = std::stoi(box->getAttributeValue(OV_AttributeId_Box_YCenterPosition).toASCIIString());
+					int y = std::stoi(box->getAttributeValue(OV_AttributeId_Box_YCenterPosition).toASCIIString());
 					ypositions.insert(y);
 				}
 				catch (const std::exception&)
 				{
+					OV_WARNING_K("The Y position (" << box->getAttributeValue(OV_AttributeId_Box_YCenterPosition) << ") " << " in the Box " << identifierList[i] << " is corrupted");
 				}
 			}
 			if (box->hasAttribute(OV_AttributeId_Box_XCenterPosition))
 			{
 				try
 				{
-					x = std::stoi(box->getAttributeValue(OV_AttributeId_Box_XCenterPosition).toASCIIString());
+					int x = std::stoi(box->getAttributeValue(OV_AttributeId_Box_XCenterPosition).toASCIIString());
 					xpositions.insert(x);
 				}
 				catch (const std::exception&)
 				{
+					OV_WARNING_K("The X position (" << box->getAttributeValue(OV_AttributeId_Box_XCenterPosition) << ") " << " in the Box " << identifierList[i] << " is corrupted");
 				}
 			}
 		}
