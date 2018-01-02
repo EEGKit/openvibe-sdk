@@ -79,6 +79,11 @@ bool CBoxAlgorithmTimeBasedEpoching::process(void)
 			m_OutputSampleCount = static_cast<uint32>(m_EpochDuration*m_SamplingRate); // sample count per output epoch
 			m_OutputSampleCountBetweenEpoch = static_cast<uint32>(m_EpochInterval*m_SamplingRate);
 
+			OV_ERROR_UNLESS_KRF(m_OutputSampleCount>0 && m_OutputSampleCountBetweenEpoch>0,
+				"Input sampling frequency is [" << m_SamplingRate << "]. This is too low in order to produce epochs of [" << m_EpochDuration 
+				<< "] seconds with an interval of [" << m_EpochInterval << "] seconds.",
+				ErrorType::Internal);
+
 			l_pOutputMatrix->setDimensionCount(2);
 			l_pOutputMatrix->setDimensionSize(0, l_ui32ChannelCount);
 			l_pOutputMatrix->setDimensionSize(1, m_OutputSampleCount);
