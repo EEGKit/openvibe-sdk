@@ -22,11 +22,11 @@
 
 namespace Socket
 {
-	class CConnectionClient : public TConnection<IConnectionClient>
+	class CConnectionClient final : public TConnection<IConnectionClient>
 	{
 	public:
 
-		virtual boolean connect(
+		bool connect(
 			const char* sServerName,
 			uint32_t ui32ServerPort,
 			uint32_t ui32TimeOut)

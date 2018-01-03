@@ -9,9 +9,6 @@
 # Uncomment the following to build documentation
 # both the global project and the specific projects are affected by this token
 #SET(SKIP_DOCUMENTATION OFF)
-#SET(SKIP_LOG_PACKAGER ON)
-
-#SET(SKIP_GUSBampCAPI ON)
 
 # ----------------------------------
 # OPENVIBE

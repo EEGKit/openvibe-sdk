@@ -9,32 +9,32 @@ namespace Socket
 	{
 	protected:
 
-		virtual Socket::boolean open(void)=0;
+		virtual bool open(void)=0;
 
 	public:
 
-		virtual Socket::boolean close(void)=0;
+		virtual bool close(void)=0;
 
-		virtual Socket::boolean isReadyToSend(
-			Socket::uint32 ui32TimeOut=0) const=0;
-		virtual Socket::boolean isReadyToReceive(
-			Socket::uint32 ui32TimeOut=0) const=0;
+		virtual bool isReadyToSend(
+			uint32_t ui32TimeOut=0) const=0;
+		virtual bool isReadyToReceive(
+			uint32_t ui32TimeOut=0) const=0;
 
-		virtual Socket::uint32 sendBuffer(
+		virtual uint32_t sendBuffer(
 			const void* pBuffer,
-			const Socket::uint32 ui32BufferSize)=0;
-		virtual Socket::uint32 receiveBuffer(
+			const uint32_t ui32BufferSize)=0;
+		virtual uint32_t receiveBuffer(
 			void* pBuffer,
-			const Socket::uint32 ui32BufferSize)=0;
+			const uint32_t ui32BufferSize)=0;
 
-		virtual Socket::boolean sendBufferBlocking(
+		virtual bool sendBufferBlocking(
 			const void* pBuffer,
-			const Socket::uint32 ui32BufferSize)=0;
-		virtual Socket::boolean receiveBufferBlocking(
+			const uint32_t ui32BufferSize)=0;
+		virtual bool receiveBufferBlocking(
 			void* pBuffer,
-			const Socket::uint32 ui32BufferSize)=0;
+			const uint32_t ui32BufferSize)=0;
 
-		virtual Socket::boolean isConnected(void) const=0;
+		virtual bool isConnected(void) const=0;
 
 		virtual void release(void)=0;
 

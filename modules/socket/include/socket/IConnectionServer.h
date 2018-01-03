@@ -15,8 +15,8 @@ namespace Socket
 		*                       when set to '0', the socket wil start on 
 		*                       an available port.
 		*/
-		virtual Socket::boolean listen(
-			Socket::uint32 ui32Port)=0;
+		virtual bool listen(
+			uint32_t ui32Port)=0;
 
 		virtual Socket::IConnection* accept(void)=0;
 

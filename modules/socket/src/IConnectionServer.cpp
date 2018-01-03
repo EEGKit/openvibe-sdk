@@ -16,12 +16,12 @@
 
 namespace Socket
 {
-	class CConnectionServer : public TConnection<IConnectionServer>
+	class CConnectionServer final : public TConnection<IConnectionServer>
 	{
 	public:
 
-		virtual boolean listen(
-			uint32 ui32Port)
+		bool listen(
+			uint32_t ui32Port)
 		{
 			if(!open())
 			{
@@ -82,7 +82,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual IConnection* accept(void)
+		IConnection* accept(void)
 		{
 			struct sockaddr_in l_oClientAddress;
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS

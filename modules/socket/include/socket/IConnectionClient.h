@@ -9,10 +9,10 @@ namespace Socket
 	{
 	public:
 
-		virtual Socket::boolean connect(
+		virtual bool connect(
 			const char* sServerName,
-			Socket::uint32 ui32ServerPort,
-			Socket::uint32 ui32TimeOut=0xffffffff)=0;
+			uint32_t ui32ServerPort,
+			uint32_t ui32TimeOut = 0xffffffff) = 0;
 
 	};
 

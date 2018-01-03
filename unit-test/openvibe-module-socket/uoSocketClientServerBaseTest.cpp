@@ -31,7 +31,7 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 	OVT_ASSERT(argc == 3, "Failure to retrieve tests arguments. Expecting: server_name port_number");
 
 	std::string serverName = argv[1];
-	int portNumber = std::atoi(argv[2]);
+	uint32_t portNumber = std::atoi(argv[2]);
 	
 	// basic tests on server and clients
 
