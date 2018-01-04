@@ -19,6 +19,7 @@
 #include <limits>
 #include <algorithm>
 #include <cstring>
+#include <set>
 
 #if defined TARGET_OS_Windows
  #define stricmp _stricmp
@@ -143,11 +144,6 @@ boolean CScheduler::flattenScenario()
 	{
 		// First find all the metaboxes in the scenario
 		std::vector<CIdentifier> l_vScenarioMetabox;
-
-		CIdentifier l_oCurrentBoxIdentifier = OV_UndefinedIdentifier;
-		CIdentifier l_oPreviousBoxIdentifier = OV_UndefinedIdentifier;
-		
-
 
 		{
 			CIdentifier* identifierList = nullptr;
@@ -388,6 +384,41 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		CIdentifier* identifierList = nullptr;
 		size_t nbElems = 0;
 		m_pScenario->getBoxIdentifierList(&identifierList, &nbElems);
+
+		// Create sets of x and y positions, note that C++ sets are always ordered
+		// We work with indexes rather than just positions because the positions are not bounded and can overflow
+		std::set<int> xpositions;
+		std::set<int> ypositions;
+		for (size_t i = 0; i < nbElems; ++i)
+		{
+			const IBox* box = m_pScenario->getBoxDetails(identifierList[i]);
+
+			if (box->hasAttribute(OV_AttributeId_Box_YCenterPosition))
+			{
+				try
+				{
+					int y = std::stoi(box->getAttributeValue(OV_AttributeId_Box_YCenterPosition).toASCIIString());
+					ypositions.insert(y);
+				}
+				catch (const std::exception&)
+				{
+					OV_WARNING_K("The Y position (" << box->getAttributeValue(OV_AttributeId_Box_YCenterPosition) << ") " << " in the Box " << identifierList[i] << " is corrupted");
+				}
+			}
+			if (box->hasAttribute(OV_AttributeId_Box_XCenterPosition))
+			{
+				try
+				{
+					int x = std::stoi(box->getAttributeValue(OV_AttributeId_Box_XCenterPosition).toASCIIString());
+					xpositions.insert(x);
+				}
+				catch (const std::exception&)
+				{
+					OV_WARNING_K("The X position (" << box->getAttributeValue(OV_AttributeId_Box_XCenterPosition) << ") " << " in the Box " << identifierList[i] << " is corrupted");
+				}
+			}
+		}
+
 		for (size_t i = 0; i < nbElems; ++i)
 		{
 			const CIdentifier boxIdentifier = identifierList[i];
@@ -430,12 +461,34 @@ SchedulerInitializationCode CScheduler::initialize(void)
 				l_pSimulatedBox->setBoxIdentifier(boxIdentifier);
 
 
+				// Set priority so boxes execute in this order
+				// - boxes with positive priority attribute set in descending order
+				// - boxes in scenario from left to right and from top to bottom
+				// - boxes with negative priority set in descending order
 				int l_iPriority = 0;
 				try
 				{
 					if (l_pBox->hasAttribute(OV_AttributeId_Box_Priority))
 					{
-						l_iPriority = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
+						int p = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_Priority).toASCIIString());
+
+						if (p < 0)
+						{
+							l_iPriority = -static_cast<int>((ypositions.size() << 15) + xpositions.size()) + p;
+						}
+						else
+						{
+							l_iPriority = p;
+						}
+					}
+					else if (l_pBox->hasAttribute(OV_AttributeId_Box_YCenterPosition) && l_pBox->hasAttribute(OV_AttributeId_Box_XCenterPosition))
+					{
+						int x = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_XCenterPosition).toASCIIString());
+						int y = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_YCenterPosition).toASCIIString());
+
+						int xindex = static_cast<int>(std::distance(xpositions.begin(), xpositions.find(x)));
+						int yindex = static_cast<int>(std::distance(ypositions.begin(), ypositions.find(y)));
+						l_iPriority = - ((yindex << 15) + xindex);
 					}
 				}
 				catch (const std::exception&)
