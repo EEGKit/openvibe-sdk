@@ -16,12 +16,12 @@
 
 namespace Socket
 {
-	class CConnectionServer : public TConnection<IConnectionServer>
+	class CConnectionServer final : public TConnection<IConnectionServer>
 	{
 	public:
 
-		virtual boolean listen(
-			uint32 ui32Port)
+		bool listen(
+			uint32_t ui32Port)
 		{
 			if(!open())
 			{
@@ -82,7 +82,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual IConnection* accept(void)
+		IConnection* accept(void)
 		{
 			struct sockaddr_in l_oClientAddress;
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
@@ -97,6 +97,25 @@ namespace Socket
 				return NULL;
 			}
 			return new TConnection<IConnection>(l_i32ClientSocket);
+		}
+
+		bool getSocketPort(uint32_t& port)
+		{
+			struct sockaddr_in socketInfo;
+
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+			socklen_t socketInfoLength = sizeof(socketInfo);
+#elif defined TARGET_OS_Windows
+			int socketInfoLength = sizeof(socketInfo);
+#endif
+			
+			if (getsockname(m_i32Socket, (sockaddr*)&socketInfo, &socketInfoLength) == -1)
+			{
+				return false;
+			}
+
+			port = static_cast<uint32_t>(ntohs(socketInfo.sin_port));
+			return true;
 		}
 	};
 

@@ -31,7 +31,7 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 	OVT_ASSERT(argc == 3, "Failure to retrieve tests arguments. Expecting: server_name port_number");
 
 	std::string serverName = argv[1];
-	int portNumber = std::atoi(argv[2]);
+	uint32_t portNumber = std::atoi(argv[2]);
 	
 	// basic tests on server and clients
 
@@ -66,8 +66,30 @@ int uoSocketClientServerBaseTest(int argc, char* argv[])
 
 	OVT_ASSERT(client->close() && !client->isConnected(),"Failure to disconnect");
 
+	// Test method getSocketPort
+
+	uint32_t guessedPort;
+	OVT_ASSERT(server->getSocketPort(guessedPort), "Failure to get socket informations");
+	OVT_ASSERT(guessedPort == portNumber, "Get Socket information should return server port.");
+	
+	OVT_ASSERT(client->connect(serverName.c_str(), guessedPort) && client->isConnected(), "Failure to connect to server");
+	OVT_ASSERT(client->close() && !client->isConnected(), "Failure to disconnect");
+
+	OVT_ASSERT(server->close() && !server->isConnected(), "Failure to close connection");
+
+	// Test to connect using port 0
+
+	OVT_ASSERT(server->listen(0) && server->isConnected(), "Failure to make socket listening for input connections");
+	OVT_ASSERT(server->getSocketPort(guessedPort), "Failure to get socket informations");
+
+	OVT_ASSERT(client->connect(serverName.c_str(), guessedPort) && client->isConnected(), "Failure to connect to server");
+
+	OVT_ASSERT(client->close() && !client->isConnected(), "Failure to disconnect");
+
 	OVT_ASSERT(server->close() && !server->isConnected(), "Failure to close connection");
 	
+	// Release ressources
+
 	server->release();
 	client->release();
 

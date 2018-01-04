@@ -15,45 +15,29 @@
 #elif defined TARGET_OS_Windows
  #include <fcntl.h>
  #include <cerrno>
+
+ #include <Ws2tcpip.h>
 #else
 #endif
 
 namespace Socket
 {
-	class CConnectionClient : public TConnection<IConnectionClient>
+	class CConnectionClient final : public TConnection<IConnectionClient>
 	{
 	public:
 
-		virtual boolean connect(
+		bool connect(
 			const char* sServerName,
-			uint32 ui32ServerPort,
-			uint32 ui32TimeOut)
+			uint32_t ui32ServerPort,
+			uint32_t ui32TimeOut)
 		{
-#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-			long l_iValue;
-
-#elif defined TARGET_OS_Windows
-
-			unsigned long l_uiMode;
-
-#endif
-
 			if(!open())
 			{
 				return false;
 			}
 
-			// Looks up host name
-			struct hostent* l_pServerHostEntry=gethostbyname(sServerName);
-			if(!l_pServerHostEntry)
-			{
-				close();
-				return false;
-			}
-
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
+			long l_iValue;
 			// Sets non blocking
 			if((l_iValue=::fcntl(m_i32Socket, F_GETFL, NULL))<0)
 			{
@@ -67,10 +51,18 @@ namespace Socket
 				return false;
 			}
 
+			// Looks up host name
+			struct hostent* l_pServerHostEntry=gethostbyname(sServerName);
+			if(!l_pServerHostEntry)
+			{
+				close();
+				return false;
+			}
+
 #elif defined TARGET_OS_Windows
 
 			// Sets non blocking
-			l_uiMode=1;
+			unsigned long l_uiMode = 1;
 			::ioctlsocket(m_i32Socket, FIONBIO, &l_uiMode);
 
 #endif
@@ -80,7 +72,11 @@ namespace Socket
 			memset(&l_oServerAddress, 0, sizeof(l_oServerAddress));
 			l_oServerAddress.sin_family=AF_INET;
 			l_oServerAddress.sin_port=htons((unsigned short)ui32ServerPort);
+#if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			l_oServerAddress.sin_addr=*((struct in_addr*)l_pServerHostEntry->h_addr);
+#elif defined TARGET_OS_Windows
+			inet_pton(AF_INET, sServerName, &l_oServerAddress.sin_addr.s_addr);
+#endif
 			errno = 0;
 			if(::connect(m_i32Socket, (struct sockaddr*)&l_oServerAddress, sizeof(struct sockaddr_in))<0)
 			{

@@ -491,27 +491,4 @@ namespace Socket
 		return new CConnectionBluetooth();
 	}
 
-	static bool string2BluetoothAddress(const std::string& straddr, unsigned long long& btaddr)
-	{
-		unsigned int aaddr[6];
-
-		int value = sscanf(straddr.c_str(), "%02x:%02x:%02x:%02x:%02x:%02x",
-			&aaddr[0], &aaddr[1], &aaddr[2],
-			&aaddr[3], &aaddr[4], &aaddr[5]);
-
-		if (value != 6)
-		{
-			return false;
-		}
-
-		btaddr = 0;
-
-		for (size_t i = 0; i < 6; i++)
-		{
-			unsigned long long tmpaddr = static_cast<unsigned long long>(aaddr[i] & 0xff);
-			btaddr = (btaddr << 8) + tmpaddr;
-		}
-
-		return true;
-	}
 };
