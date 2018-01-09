@@ -31,16 +31,24 @@ namespace System
 		
 		/**
 		 * \brief Retrieve time in ms 
-		 * \return Elpased time in ms since the first call to this function or zgetTime
+		 * \return Elapsed time in ms since the first call to this function or zgetTime functions
 		 */
 		static uint32_t getTime(void); 
-		
+
 		/**
 		 * \brief Retrieve time in fixed point 32:32 seconds 
-		 * \return Elpased time since the first call to the function or getTime
+		 * \return Elapsed time since the first call to the zgetTime functions or getTime.
 		 */
 		static uint64_t zgetTime(void);
-		
+
+		/**
+		 * \brief Retrieve time in fixed point 32:32 seconds 
+		 * \param If sinceFirstCall is true, returns the time since the first call to the zgetTime function or getTime. 
+		 *        Otherwise, returns time since epoch of the clock.
+		 * \return Elapsed time 
+		 */
+		static uint64_t zgetTimeRaw(bool sinceFirstCall = true);
+
 		/**
 		 * \brief Check if the internal clock used by the framework is steady
 		 * \return True if the clock is steady, false otherwise

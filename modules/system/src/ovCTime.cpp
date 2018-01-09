@@ -63,6 +63,11 @@ uint32_t System::Time::getTime(void)
 
 uint64_t System::Time::zgetTime(void)
 {
+	return zgetTimeRaw(true);
+}
+
+uint64_t System::Time::zgetTimeRaw(bool sinceFirstCall)
+{
 	static bool l_bInitialized = false;
 	static internal_clock::time_point l_oTimeStart;
 
@@ -74,7 +79,7 @@ uint64_t System::Time::zgetTime(void)
 
 	const internal_clock::time_point l_oTimeNow = internal_clock::now();
 	
-	const internal_clock::duration l_oElapsed = l_oTimeNow - l_oTimeStart;
+	const internal_clock::duration l_oElapsed = (sinceFirstCall ?  l_oTimeNow - l_oTimeStart : l_oTimeNow.time_since_epoch() );
 
 	const timelib::chrono::microseconds l_oElapsedMs = timelib::chrono::duration_cast<timelib::chrono::microseconds>(l_oElapsed);
 
