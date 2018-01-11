@@ -16,7 +16,7 @@
  #include <fcntl.h>
  #include <cerrno>
 
- #include <Ws2tcpip.h>
+ #include <WS2tcpip.h>
 #else
 #endif
 
@@ -65,6 +65,17 @@ namespace Socket
 			unsigned long l_uiMode = 1;
 			::ioctlsocket(m_i32Socket, FIONBIO, &l_uiMode);
 
+			struct addrinfo hints;
+			ZeroMemory( &hints, sizeof(hints) );
+			hints.ai_family = AF_INET;
+			PADDRINFOA addr;
+			if (auto errorcode = getaddrinfo(sServerName, NULL, &hints, &addr) != 0)
+			{
+				close();
+				return false;
+			}
+			auto sockaddr_ipv4 = reinterpret_cast<sockaddr_in*>(addr->ai_addr);
+
 #endif
 
 			// Connects
@@ -75,7 +86,8 @@ namespace Socket
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			l_oServerAddress.sin_addr=*((struct in_addr*)l_pServerHostEntry->h_addr);
 #elif defined TARGET_OS_Windows
-			inet_pton(AF_INET, sServerName, &l_oServerAddress.sin_addr.s_addr);
+			l_oServerAddress.sin_addr = sockaddr_ipv4->sin_addr;
+			freeaddrinfo(addr);
 #endif
 			errno = 0;
 			if(::connect(m_i32Socket, (struct sockaddr*)&l_oServerAddress, sizeof(struct sockaddr_in))<0)
