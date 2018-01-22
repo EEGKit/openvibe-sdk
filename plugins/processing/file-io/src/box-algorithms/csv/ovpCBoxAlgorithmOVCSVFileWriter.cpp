@@ -167,6 +167,8 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 
 			if (m_TypeIdentifier == OV_TypeId_Signal)
 			{
+				OV_ERROR_UNLESS_KRF(m_StreamDecoder.getOutputSamplingRate() != 0,
+				                "Sampling rate can not be 0", ErrorType::BadInput);
 				std::vector<std::string> dimensionLabels;
 
 				for (uint32_t j = 0; j < matrix->getDimensionSize(0); j++)
