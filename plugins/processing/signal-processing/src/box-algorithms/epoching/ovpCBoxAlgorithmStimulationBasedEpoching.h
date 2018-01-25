@@ -47,6 +47,7 @@ namespace OpenViBEPlugins
 
 			OpenViBE::uint64 m_LastSignalChunkEndTime;
 			OpenViBE::uint64 m_LastStimulationChunkStartTime;
+			uint64_t m_LastReceivedStimulationDate;
 
 			std::deque<OpenViBE::uint64> m_ReceivedStimulations;
 

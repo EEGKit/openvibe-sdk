@@ -30,6 +30,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::initialize(void)
 	int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
 	m_EpochOffset = epochOffsetSign * static_cast<int64>(ITimeArithmetics::secondsToTime(std::fabs(epochOffset)));
 
+	m_LastReceivedStimulationDate = 0;
 	m_LastStimulationChunkStartTime = 0;
 	m_LastSignalChunkEndTime = 0;
 
@@ -139,9 +140,14 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 				{
 					// Stimulations are put into cache, we ignore stimulations that would produce output chunks with negative start date (after applying the offset)
 					uint64 stimulationDate = m_StimulationDecoder.getOutputStimulationSet()->getStimulationDate(stimulation);
-					if (static_cast<int64>(stimulationDate) + m_EpochOffset >= 0)
+					if (stimulationDate < m_LastReceivedStimulationDate)
+					{
+						OV_WARNING_K("Skipping stimulation (received at date " << time64(stimulationDate) << ") that predates an already received stimulation (at date " << time64(m_LastReceivedStimulationDate) << ")");
+					}
+					else if (static_cast<int64>(stimulationDate) + m_EpochOffset >= 0)
 					{
 						m_ReceivedStimulations.push_back(stimulationDate);
+						m_LastReceivedStimulationDate = stimulationDate;
 					}
 				}
 				m_LastStimulationChunkStartTime = dynamicBoxContext.getInputChunkEndTime(inputStimulationsIndex, chunk);
