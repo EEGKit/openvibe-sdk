@@ -30,9 +30,11 @@ namespace OpenViBEPlugins
 
 			OpenViBEToolkit::TStimulationEncoder< CBoxAlgorithmClockStimulator > m_oStimulationEncoder;
 			OpenViBE::uint64 m_ui64StimulationId;
-			OpenViBE::uint64 m_ui64InterstimulationInterval;
 			OpenViBE::uint64 m_ui64LastStimulationDate;
 			OpenViBE::uint64 m_ui64LastEndTime;
+
+			uint64_t m_SentStimulationCount;
+			double m_StimulationInterval;
 		};
 
 		class CBoxAlgorithmClockStimulatorDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
