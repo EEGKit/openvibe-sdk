@@ -24,7 +24,8 @@ boolean CBoxAlgorithmClockStimulator::initialize(void)
 		OpenViBE::Kernel::ErrorType::BadSetting
 	);
 
-	m_ui64InterstimulationInterval=(uint64)(l_f64InterstimulationInterval*(1LL<<32));
+	m_StimulationInterval = l_f64InterstimulationInterval;
+	m_SentStimulationCount = 0;
 
 	m_ui64StimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
@@ -59,9 +60,10 @@ boolean CBoxAlgorithmClockStimulator::process(void)
 	CStimulationSet l_oStimulationSet;
 	l_oStimulationSet.setStimulationCount(0);
 
-	while(m_ui64LastStimulationDate+m_ui64InterstimulationInterval<l_ui64CurrentTime)
+	while (ITimeArithmetics::secondsToTime((m_SentStimulationCount + 1) * m_StimulationInterval) < l_ui64CurrentTime)
 	{
-		m_ui64LastStimulationDate+=m_ui64InterstimulationInterval;
+		m_SentStimulationCount += 1;
+		m_ui64LastStimulationDate = ITimeArithmetics::secondsToTime(m_SentStimulationCount * m_StimulationInterval);
 		l_oStimulationSet.appendStimulation(m_ui64StimulationId, m_ui64LastStimulationDate, 0);
 	}
 
@@ -70,7 +72,6 @@ boolean CBoxAlgorithmClockStimulator::process(void)
 		m_oStimulationEncoder.encodeHeader();
 		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, m_ui64LastEndTime);
 	}
-
 	m_oStimulationEncoder.getInputStimulationSet() = &l_oStimulationSet;
 
 	m_oStimulationEncoder.encodeBuffer();

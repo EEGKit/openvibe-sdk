@@ -30,6 +30,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::initialize(void)
 	int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
 	m_EpochOffset = epochOffsetSign * static_cast<int64>(ITimeArithmetics::secondsToTime(std::fabs(epochOffset)));
 
+	m_LastReceivedStimulationDate = 0;
 	m_LastStimulationChunkStartTime = 0;
 	m_LastSignalChunkEndTime = 0;
 
@@ -139,9 +140,14 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 				{
 					// Stimulations are put into cache, we ignore stimulations that would produce output chunks with negative start date (after applying the offset)
 					uint64 stimulationDate = m_StimulationDecoder.getOutputStimulationSet()->getStimulationDate(stimulation);
-					if (static_cast<int64>(stimulationDate) + m_EpochOffset >= 0)
+					if (stimulationDate < m_LastReceivedStimulationDate)
+					{
+						OV_WARNING_K("Skipping stimulation (received at date " << time64(stimulationDate) << ") that predates an already received stimulation (at date " << time64(m_LastReceivedStimulationDate) << ")");
+					}
+					else if (static_cast<int64>(stimulationDate) + m_EpochOffset >= 0)
 					{
 						m_ReceivedStimulations.push_back(stimulationDate);
+						m_LastReceivedStimulationDate = stimulationDate;
 					}
 				}
 				m_LastStimulationChunkStartTime = dynamicBoxContext.getInputChunkEndTime(inputStimulationsIndex, chunk);
@@ -199,6 +205,11 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 				{
 					auto currentOutputSampleTime = currentEpochStartTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, currentSampleIndexInOutputBuffer);
 
+					// If we handle non-dyadic sampling rates then we do not have a guarantee that all chunks will be
+					// dated with exact values. We add a bit of wiggle room around the incoming chunks to consider
+					// whether a sample is in them or not. This wiggle room will be of half of the sample duration
+					// on each side.
+					uint64 chunkTimeTolerance = ITimeArithmetics::sampleCountToTime(m_SamplingRate, 1) / 2;
 					if (currentSampleIndexInInputBuffer == m_SampleCountPerInputBuffer)
 					{
 						// advance to beginning of the next cached chunk
@@ -211,13 +222,13 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 						chunkEndTime = m_CachedChunks[cachedChunkIndex].endTime;
 						currentSampleIndexInInputBuffer = 0;
 
-						if (chunkStartTime > currentOutputSampleTime)
+						if (chunkStartTime > currentOutputSampleTime + chunkTimeTolerance)
 						{
 							// Case of non-consecutive chunks
 							break;
 						}
 					}
-					else if (chunkStartTime <= currentOutputSampleTime && currentOutputSampleTime <= chunkEndTime)
+					else if (chunkStartTime <= currentOutputSampleTime + chunkTimeTolerance && currentOutputSampleTime <= chunkEndTime + chunkTimeTolerance)
 					{
 						const auto& inputBuffer = m_CachedChunks[cachedChunkIndex].matrix->getBuffer();
 						for (uint32 channel = 0; channel < m_ChannelCount; ++channel)
