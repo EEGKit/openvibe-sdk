@@ -113,7 +113,10 @@ boolean CSimulatedBox::uninitialize(void)
 {
 	bool l_bResult = true;
 
-	OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm, "Simulated box not initialized", ErrorType::BadCall);
+	if (!m_pBoxAlgorithm)
+	{
+		return true;
+	}
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
