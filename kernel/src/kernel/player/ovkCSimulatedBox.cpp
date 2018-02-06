@@ -111,8 +111,6 @@ bool CSimulatedBox::initialize(void)
 
 boolean CSimulatedBox::uninitialize(void)
 {
-	bool l_bResult = true;
-
 	if (!m_pBoxAlgorithm)
 	{
 		return true;
@@ -132,7 +130,7 @@ boolean CSimulatedBox::uninitialize(void)
 	getPluginManager().releasePluginObject(m_pBoxAlgorithm);
 	m_pBoxAlgorithm=NULL;
 
-	return l_bResult ;
+	return true;
 }
 
 boolean CSimulatedBox::processClock(void)
