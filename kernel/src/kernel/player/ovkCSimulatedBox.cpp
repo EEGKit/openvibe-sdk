@@ -111,9 +111,10 @@ bool CSimulatedBox::initialize(void)
 
 boolean CSimulatedBox::uninitialize(void)
 {
-	bool l_bResult = true;
-
-	OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm, "Simulated box not initialized", ErrorType::BadCall);
+	if (!m_pBoxAlgorithm)
+	{
+		return true;
+	}
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
@@ -129,7 +130,7 @@ boolean CSimulatedBox::uninitialize(void)
 	getPluginManager().releasePluginObject(m_pBoxAlgorithm);
 	m_pBoxAlgorithm=NULL;
 
-	return l_bResult ;
+	return true;
 }
 
 boolean CSimulatedBox::processClock(void)
