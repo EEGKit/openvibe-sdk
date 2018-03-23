@@ -356,7 +356,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 		CIdentifier* identifierList = nullptr;
 		size_t nbElems = 0;
 		l_pScenario->getNeedsUpdateBoxIdentifierList(&identifierList, &nbElems);
-		for (int i = 0; i < nbElems; ++i)
+		for (size_t i = 0; i < nbElems; ++i)
 		{
 			const IBox* l_pBox = l_pScenario->getBoxDetails(identifierList[i]);
 
