@@ -3,6 +3,8 @@
 
 #include "ov_base.h"
 
+#include <cstddef>
+
 namespace OpenViBE
 {
 	typedef struct CStringImpl CStringImpl;
@@ -118,7 +120,7 @@ namespace OpenViBE
 		 * \param idx [in] : Index in the array
 		 */
 		char &operator[](
-			size_t idx);
+			std::size_t idx);
 
 		/**
 		 * \brief Order comparison operator (necessary to use CString as a key in a stl map)
@@ -159,7 +161,7 @@ namespace OpenViBE
 		 * \brief Returns length of the string
 		 * \return Length of the string
 		 */
-		virtual size_t length(void) const;
+		virtual std::size_t length(void) const;
 
 	protected:
 
