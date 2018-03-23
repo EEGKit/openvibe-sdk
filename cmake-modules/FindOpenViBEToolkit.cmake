@@ -19,7 +19,7 @@ SET(SRC_DIR ${OV_BASE_DIR}/toolkit/include)
 FIND_PATH(PATH_OPENVIBE_TOOLKIT toolkit/ovtk_all.h PATHS ${SRC_DIR} NO_DEFAULT_PATH)
 
 IF(PATH_OPENVIBE_TOOLKIT)
-	MESSAGE(STATUS "  Found openvibe-toolkit...  ${PATH_OPENVIBE_TOOLKIT} ${PATH_OPENVIBE_TOOLKIT_BIN}")
+	debug_message( "  Found openvibe-toolkit...  ${PATH_OPENVIBE_TOOLKIT} ${PATH_OPENVIBE_TOOLKIT_BIN}")
 	INCLUDE_DIRECTORIES(${PATH_OPENVIBE_TOOLKIT})
 	
 	# No find path for this directory as content is not generated yet

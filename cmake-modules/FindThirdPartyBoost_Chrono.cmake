@@ -7,10 +7,10 @@ FIND_PATH(PATH_BOOST_CHRONO "include/boost/chrono.hpp" PATHS ${OV_CUSTOM_DEPENDE
 FIND_PATH(PATH_BOOST_CHRONO "include/boost/chrono.hpp" PATHS ${OV_CUSTOM_DEPENDENCIES_PATH}/boost)
 
 IF(PATH_BOOST_CHRONO)
-	MESSAGE(STATUS "  Found boost chrono includes...")
+	debug_message( "  Found boost chrono includes...")
 	ADD_DEFINITIONS(-DTARGET_HAS_Boost_Chrono)
 ELSE(PATH_BOOST_CHRONO)
-	MESSAGE(STATUS "  FAILED to find boost chrono includes...")
+	MESSAGE(WARNING "  FAILED to find boost chrono includes...")
 ENDIF(PATH_BOOST_CHRONO)
 
 IF(UNIX)
@@ -18,11 +18,11 @@ IF(UNIX)
 	FIND_LIBRARY(LIB_Boost_Chrono NAMES "boost_chrono-mt" "boost_chrono" PATHS ${OV_CUSTOM_DEPENDENCIES_PATH}/lib)
 	
 	IF(LIB_Boost_Chrono)
-		MESSAGE(STATUS "    [  OK  ] lib ${LIB_Boost_Chrono}")
+		debug_message( "    [  OK  ] lib ${LIB_Boost_Chrono}")
 		TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${LIB_Boost_Chrono} )
 	ELSE(LIB_Boost_Chrono)
-		MESSAGE(STATUS "    [FAILED] lib boost_chrono-mt")	
-		MESSAGE(STATUS "    [FAILED] lib boost_chrono")
+		MESSAGE(WARNING "    [FAILED] lib boost_chrono-mt")	
+		MESSAGE(WARNING "    [FAILED] lib boost_chrono")
 	ENDIF(LIB_Boost_Chrono)
 ENDIF(UNIX)
 

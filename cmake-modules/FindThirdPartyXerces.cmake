@@ -16,7 +16,7 @@ ENDIF()
 FIND_PACKAGE(XercesC REQUIRED)
 
 IF(XercesC_FOUND)
-	MESSAGE(STATUS "  Found xerces...")
+	debug_message( "  Found xerces...")
 
 	INCLUDE_DIRECTORIES(${XercesC_INCLUDE_DIRS})
 
@@ -24,7 +24,7 @@ IF(XercesC_FOUND)
 	ADD_DEFINITIONS(-DTARGET_HAS_ThirdPartyXERCES)
 
 ELSE()
-	MESSAGE(STATUS "  FAILED to find xerces...")
+	MESSAGE(WARNING "  FAILED to find xerces...")
 ENDIF()
 
 
