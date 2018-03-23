@@ -23,6 +23,7 @@ function(set_version)
 			OUTPUT_VARIABLE  PROJECT_VERSION
 			ERROR_VARIABLE  ERROR)
 		if(ERROR)
+			set(PROJECT_VERSION "0.0.0")
 			message(WARNING "No tags found, set version to 0.0.0")
 		else()
 			# codename = the name of the current branch
