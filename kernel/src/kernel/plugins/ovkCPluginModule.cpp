@@ -424,8 +424,8 @@ CString CPluginModuleWindows::getLastErrorMessageString(void)
 		NULL);
 	if(l_pMessageBuffer)
 	{
-		int l_iMessageLength=::strlen(l_pMessageBuffer);
-		for(int i=0; i<l_iMessageLength; i++)
+		size_t l_iMessageLength=::strlen(l_pMessageBuffer);
+		for (size_t i = 0; i<l_iMessageLength; i++)
 		{
 			if(l_pMessageBuffer[i]=='\n' || l_pMessageBuffer[i]=='\r')
 			{

@@ -65,7 +65,7 @@ CMatrixImpl::~CMatrixImpl(void)
 
 const uint32 CMatrixImpl::getDimensionCount(void) const
 {
-	return m_vDimensionSize.size();
+	return static_cast<uint32>(m_vDimensionSize.size());
 }
 
 const uint32 CMatrixImpl::getDimensionSize(const uint32 ui32DimensionIndex) const

@@ -54,7 +54,7 @@ CString& CString::operator+=(const CString& rString)
 	return *this;
 }
 
-char &CString::operator[](unsigned int idx)
+char &CString::operator[](size_t idx)
 {
 	return m_pStringImpl->m_sValue[idx];
 }
@@ -110,7 +110,7 @@ const char* CString::toASCIIString(void) const
 	return m_pStringImpl->m_sValue.c_str();
 }
 
-unsigned int CString::length(void) const
+size_t CString::length(void) const
 {
 	return m_pStringImpl->m_sValue.length();
 }

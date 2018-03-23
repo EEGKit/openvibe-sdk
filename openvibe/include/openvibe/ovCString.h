@@ -118,7 +118,7 @@ namespace OpenViBE
 		 * \param idx [in] : Index in the array
 		 */
 		char &operator[](
-			unsigned int idx);
+			size_t idx);
 
 		/**
 		 * \brief Order comparison operator (necessary to use CString as a key in a stl map)
@@ -159,7 +159,7 @@ namespace OpenViBE
 		 * \brief Returns length of the string
 		 * \return Length of the string
 		 */
-		virtual unsigned int length(void) const;
+		virtual size_t length(void) const;
 
 	protected:
 

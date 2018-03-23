@@ -136,5 +136,5 @@ boolean CNameValuePairList::getValue(const uint32 rIndex, OpenViBE::CString& rNa
 
 uint32 CNameValuePairList::getSize() const
 {
-	return m_pNameValuePairListImpl->m_oMap.size();
+	return static_cast<uint32>(m_pNameValuePairListImpl->m_oMap.size());
 }
