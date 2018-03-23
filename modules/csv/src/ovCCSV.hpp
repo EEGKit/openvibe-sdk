@@ -332,7 +332,7 @@ namespace OpenViBE
 			std::vector<double> m_FrequencyAbscissa;
 
 			uint32_t m_SamplingRate;
-			uint32_t m_ColumnCount;
+			size_t m_ColumnCount;
 
 			bool m_HasInputType;
 			bool m_IsFirstLineWritten;

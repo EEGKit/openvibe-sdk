@@ -87,7 +87,7 @@ namespace Socket
 				return false;
 			}
 
-			m_i32Socket=::socket(AF_INET, SOCK_STREAM, 0);
+			m_i32Socket=static_cast<int32>(::socket(AF_INET, SOCK_STREAM, 0));
 			if(m_i32Socket==-1)
 			{
 				return false;

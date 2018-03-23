@@ -74,7 +74,7 @@ namespace XML
 		 * @param iChildIndex [in] : index of the child.
 		 * @return The ith child of the node.
 		 */
-		virtual XML::IXMLNode* getChild(const XML::uint32 iChildIndex) const =0;
+		virtual XML::IXMLNode* getChild(const size_t iChildIndex) const = 0;
 
 		/**
 		 * @brief Return the first child with the name sName.
@@ -87,7 +87,7 @@ namespace XML
 		 * @brief Return the amount of child the node has.
 		 * @return Amount of child.
 		 */
-		virtual XML::uint32 getChildCount(void) const =0;
+		virtual size_t getChildCount(void) const = 0;
 
 		//XML generation
 		/**
