@@ -503,6 +503,13 @@ SchedulerInitializationCode CScheduler::initialize(void)
 		m_pScenario->releaseIdentifierList(identifierList);
 	}
 
+	OV_ERROR_UNLESS_K(
+		!m_vSimulatedBox.empty(),
+		"Cannot initialize scheduler with an empty scenario",
+		ErrorType::BadCall,
+		SchedulerInitialization_Failed
+		);
+
 
 	bool l_bBoxInitialization = true;
 	for (map < pair < int32, CIdentifier >, CSimulatedBox* >::iterator itSimulatedBox=m_vSimulatedBox.begin(); itSimulatedBox!=m_vSimulatedBox.end(); ++itSimulatedBox)
