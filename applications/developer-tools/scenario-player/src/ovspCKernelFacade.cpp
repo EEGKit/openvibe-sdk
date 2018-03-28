@@ -362,7 +362,10 @@ namespace OpenViBE
 				{
 					if(p->getStatus() != EPlayerStatus::PlayerStatus_Stop)
 					{
-						p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint);
+						if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint))
+						{
+							returnCode = PlayerReturnCode::KernelInternalFailure;
+						}
 					}
 
 					if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint)
