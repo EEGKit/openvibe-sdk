@@ -437,6 +437,7 @@ boolean CPlayer::loop(
 			if(!m_oScheduler.loop())
 			{
 				m_eStatus=PlayerStatus_Stop;
+				this->getLogManager() << LogLevel_Error << "Scheduler loop failed.\n";
 				return false;
 			}
 

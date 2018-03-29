@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <algorithm>
 
+#define OV_AttributeId_Box_Disabled                         OpenViBE::CIdentifier(0x341D3912, 0x1478DE86)
 #define OVD_AttributeId_SettingOverrideFilename             OpenViBE::CIdentifier(0x8D21FF41, 0xDF6AFE7E)
 
 using namespace std;
@@ -1149,44 +1150,46 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 {
 	for (auto box : m_Boxes)
 	{
-
-		this->applyLocalSettings();
-		// Expand all the variables inside the newly created scenario by replacing only the $var variables
-		CScenarioSettingKeywordParserCallback scenarioSettingKeywordParserCallback(*this);
-		this->getConfigurationManager().registerKeywordParser("var", scenarioSettingKeywordParserCallback);
-
-		for (uint32 settingIndex = 0; settingIndex < box.second->getSettingCount(); settingIndex++)
+		if (!box.second->hasAttribute(OV_AttributeId_Box_Disabled))
 		{
-			CString settingName = "";
-			CString rawSettingValue = "";
-			CIdentifier typeIdentifier;
+			this->applyLocalSettings();
+			// Expand all the variables inside the newly created scenario by replacing only the $var variables
+			CScenarioSettingKeywordParserCallback scenarioSettingKeywordParserCallback(*this);
+			this->getConfigurationManager().registerKeywordParser("var", scenarioSettingKeywordParserCallback);
 
-			if (box.second->hasAttribute(OVD_AttributeId_SettingOverrideFilename))
+			for (uint32 settingIndex = 0; settingIndex < box.second->getSettingCount(); settingIndex++)
 			{
-				return true;
-			}
-			box.second->getSettingName(settingIndex, settingName);
-			box.second->getSettingValue(settingIndex, rawSettingValue);
-			box.second->getSettingType(settingIndex, typeIdentifier);
+				CString settingName = "";
+				CString rawSettingValue = "";
+				CIdentifier typeIdentifier;
 
-			CString settingValue = rawSettingValue;
-			if (configurationManager != NULL)
-			{
-				settingValue = configurationManager->expand(settingValue);
-			}
-			else
-			{
-				settingValue = this->getConfigurationManager().expandOnlyKeyword("var", settingValue);
+				if (box.second->hasAttribute(OVD_AttributeId_SettingOverrideFilename))
+				{
+					return true;
+				}
+				box.second->getSettingName(settingIndex, settingName);
+				box.second->getSettingValue(settingIndex, rawSettingValue);
+				box.second->getSettingType(settingIndex, typeIdentifier);
+
+				CString settingValue = rawSettingValue;
+				if (configurationManager != NULL)
+				{
+					settingValue = configurationManager->expand(settingValue);
+				}
+				else
+				{
+					settingValue = this->getConfigurationManager().expandOnlyKeyword("var", settingValue);
+				}
+
+				OV_ERROR_UNLESS_KRF(
+					::checkSettingValue(settingValue, typeIdentifier),
+					"<" << box.second->getName() << "> The following value: ["<< rawSettingValue <<"] expanded as ["<< settingValue <<"] given as setting is not valid.",
+					ErrorType::BadValue
+				);
 			}
 
-			OV_ERROR_UNLESS_KRF(
-				::checkSettingValue(settingValue, typeIdentifier),
-				"<" << box.second->getName() << "> The following value: ["<< rawSettingValue <<"] expanded as ["<< settingValue <<"] given as setting is not valid.",
-				ErrorType::BadValue
-			);
+			this->getConfigurationManager().unregisterKeywordParser("var");
 		}
-
-		this->getConfigurationManager().unregisterKeywordParser("var");
 	}
 	return true;
 }
