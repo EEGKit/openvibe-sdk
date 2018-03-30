@@ -119,7 +119,7 @@ bool CCSVHandler::streamReader(std::istream &inputStream, std::string &outputStr
 	buffer.back().erase(lineBreakPos, buffer.back().size());
 
 	outputString.clear();
-	outputString.reserve(std::accumulate(buffer.cbegin(), buffer.cend(), 0,
+	outputString.reserve(std::accumulate(buffer.cbegin(), buffer.cend(), (size_t)0,
 		[](size_t sumSize, const std::string &str) {
 		return sumSize + str.size();
 	}));
@@ -628,7 +628,7 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<
 				}
 			}
 
-			const uint32_t columnCount = std::count(lineValue.cbegin(), lineValue.cend(), ',') + 1;
+			const int64_t columnCount = std::count(lineValue.cbegin(), lineValue.cend(), ',') + 1;
 
 			if (columnCount != m_ColumnCount)
 			{

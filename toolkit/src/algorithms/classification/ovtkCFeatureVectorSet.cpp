@@ -112,5 +112,5 @@ uint32 CFeatureVectorSet::getLabelCount(void) const
 	{
 		l_vLabel[itFeatureVector->second.getLabel()]=true;
 	}
-	return l_vLabel.size();
+	return static_cast<uint32>(l_vLabel.size());
 }

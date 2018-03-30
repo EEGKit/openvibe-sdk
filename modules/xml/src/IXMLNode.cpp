@@ -35,9 +35,9 @@ namespace XML
 
 		//Child
 		virtual void addChild(XML::IXMLNode* pChildNode);
-		virtual XML::IXMLNode* getChild(const XML::uint32 iChildIndex) const;
+		virtual XML::IXMLNode* getChild(const size_t iChildIndex) const;
 		virtual XML::IXMLNode* getChildByName(const char* sName) const;
-		virtual XML::uint32 getChildCount(void) const;
+		virtual size_t getChildCount(void) const;
 
 		//XMl generation
 		virtual char* getXML(const XML::uint32 depth=0) const;
@@ -63,7 +63,7 @@ using namespace XML;
 
 IXMLNodeImpl::~IXMLNodeImpl(void)
 {
-	for(uint32 i =0; i < getChildCount() ; ++i)
+	for(size_t i =0; i < getChildCount() ; ++i)
 	{
 		getChild(i)->release();
 	}
@@ -133,7 +133,7 @@ void IXMLNodeImpl::addChild(IXMLNode *pChildNode)
 	m_oNodeVector.push_back(pChildNode);
 }
 
-IXMLNode *IXMLNodeImpl::getChild(const XML::uint32 iChildIndex) const
+IXMLNode *IXMLNodeImpl::getChild(const size_t iChildIndex) const
 {
 	return m_oNodeVector[iChildIndex];
 }
@@ -149,7 +149,7 @@ IXMLNode *IXMLNodeImpl::getChildByName(const char *sName) const
 	return NULL;
 }
 
-XML::uint32 IXMLNodeImpl::getChildCount(void) const
+size_t IXMLNodeImpl::getChildCount(void) const
 {
 	return m_oNodeVector.size();
 }

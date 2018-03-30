@@ -457,10 +457,10 @@ namespace Socket
 				return false;
 			}
 
-			*pairedBluetoothDevicesCount = bluetoothDevicesAddress.size();
+			*pairedBluetoothDevicesCount = static_cast<unsigned int>(bluetoothDevicesAddress.size());
 			strarray = new char*[*pairedBluetoothDevicesCount];
 
-			for (size_t i = 0; i < *pairedBluetoothDevicesCount; ++i)
+			for (unsigned int i = 0; i < *pairedBluetoothDevicesCount; ++i)
 			{
 				strarray[i] = new char[bluetoothDevicesName[i].size() + 1];
 				std::strcpy(strarray[i], bluetoothDevicesName[i].c_str());

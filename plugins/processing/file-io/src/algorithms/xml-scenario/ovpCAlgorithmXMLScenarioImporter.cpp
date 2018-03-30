@@ -308,7 +308,7 @@ bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char *validat
 {
 	this->getLogManager() << LogLevel_Trace << "Validating XML against schema [" << validationSchema << "]\n";
 
-	unsigned int errorCount = 0;
+	size_t errorCount = 0;
 
 	XMLPlatformUtils::Initialize();
 

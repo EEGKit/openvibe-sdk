@@ -323,7 +323,7 @@ namespace OpenViBE
 				);
 				m_vInput.push_back(CInput(sName, rTypeIdentifier));
 
-				this->notify(BoxModification_InputAdded, m_vInput.size()-1);
+				this->notify(BoxModification_InputAdded, this->getInputCount() - 1);
 
 				return true;
 			}
@@ -448,7 +448,7 @@ namespace OpenViBE
 
 			virtual uint32_t getInputCount(void) const
 			{
-				return m_vInput.size();
+				return static_cast<uint32_t>(m_vInput.size());
 			}
 
 			virtual bool getInputType(const uint32_t ui32InputIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
@@ -523,7 +523,7 @@ namespace OpenViBE
 				);
 				m_vOutput.push_back(COutput(sName, rTypeIdentifier));
 
-				this->notify(BoxModification_OutputAdded, m_vOutput.size()-1);
+				this->notify(BoxModification_OutputAdded, this->getOutputCount() - 1);
 
 				return true;
 			}
@@ -648,7 +648,7 @@ namespace OpenViBE
 
 			virtual uint32_t getOutputCount(void) const
 			{
-				return m_vOutput.size();
+				return static_cast<uint32_t>(m_vOutput.size());
 			}
 
 			virtual bool getOutputType(const uint32_t ui32OutputIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
@@ -881,7 +881,7 @@ namespace OpenViBE
 
 			virtual uint32_t getSettingCount(void) const
 			{
-				return m_vSetting.size();
+				return static_cast<uint32_t>(m_vSetting.size());
 			}
 
 			virtual bool hasSettingWithName(const OpenViBE::CString& rName) const
@@ -1090,7 +1090,7 @@ namespace OpenViBE
 			virtual uint32_t* getModifiableSettings(uint32_t& rCount)const
 			{
 				uint32_t* l_pReturn = NULL;
-				rCount = m_vModifiableSettingIndexes.size();
+				rCount = static_cast<uint32_t>(m_vModifiableSettingIndexes.size());
 
 				return l_pReturn;
 

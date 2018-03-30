@@ -71,8 +71,8 @@ namespace OpenViBE
 		static OpenViBE::CString convertPath(const OpenViBE::CString &strIn)
 		{
 			OpenViBE::CString l_sOut(strIn);
-			unsigned int l_sLen = strIn.length();
-			for(unsigned int i=0; i<l_sLen; i++)
+			size_t l_sLen = strIn.length();
+			for (size_t i = 0; i<l_sLen; i++)
 			{
 				if(strIn[i]=='\\')
 				{
@@ -92,7 +92,7 @@ namespace OpenViBE
 #if defined TARGET_OS_Windows
 			// Using std::getenv on Windows yields UTF7 strings which do not work with the utf8_to_utf16 function
 			// as this seems to be the only place where we actually get UTF7, let's get it as UTF16 by default
-			size_t wideBufferSize = GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), nullptr, 0);
+			DWORD wideBufferSize = GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), nullptr, 0);
 			if (wideBufferSize == 0) {
 				return convertPath(sDefaultPath);
 			}

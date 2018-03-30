@@ -18,7 +18,7 @@ boolean CSignalTrialSet::clear(void)
 
 uint32 CSignalTrialSet::getSignalTrialCount(void) const
 {
-	return m_vSignalTrial.size();
+	return static_cast<uint32>(m_vSignalTrial.size());
 }
 
 ISignalTrial& CSignalTrialSet::getSignalTrial(uint32 ui32Index) const

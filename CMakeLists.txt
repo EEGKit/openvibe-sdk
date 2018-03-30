@@ -36,6 +36,9 @@ ENDIF()
 SET(OV_CUSTOM_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/${OV_DEPENDENCIES_PLATFORM_FOLDER_NAME}" CACHE STRING "Dependency directory")
 SET(OV_SOURCE_DEPENDENCIES_PATH "${CMAKE_SOURCE_DIR}/dependencies-source")
 
+# ----------------------
+# Build CMake flags
+# ----------------------
 SET(BRAND_NAME "OpenViBE" CACHE STRING "Brand with which titles and documentation will be prefixed")
 string(TIMESTAMP COPYRIGHT_DATE "2012-%Y")
 IF(BRAND_NAME STREQUAL "NeuroRT")
@@ -44,8 +47,13 @@ ELSE()
 	SET(COMPANY_NAME "Inria")
 ENDIF()
 
+OPTION(Flag_VerboseOutput "Verbose CMake output" OFF)
 OPTION(OV_DISPLAY_ERROR_LOCATION ON)
 OPTION(PUBLISH_DOC_ASSETS "Publish plugin documentation assets" ON)
+
+if(NOT(${Flag_VerboseOutput}))
+	set(CMAKE_INSTALL_MESSAGE LAZY)
+endif()
 
 # If OpenMP is available, using it will allow Eigen to use multiple cores in matrix math.
 IF(NOT(APPLE))
@@ -123,6 +131,8 @@ if(NOT CMAKE_BUILD_TYPE AND CMAKE_GENERATOR MATCHES "Visual Studio*")
 	set(DIST_DATADIR ${DIST_ROOT}/share)
 	set(DIST_DOCDIR ${DIST_ROOT}/doc)
 	set(DIST_DOCTMP ${DIST_ROOT}/doc-tmp)
+	
+	set(DIST_BINDIR_ABSOLUTE ${DIST_BINDIR})
 	# Also install it on the base dir for convenience
 	install(FILES scripts/AddOpenViBESDKComponents.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/share)
 	# Install the .install file inside the dists folders
@@ -183,6 +193,8 @@ elseif(CMAKE_BUILD_TYPE)
 	set(DIST_DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
 	set(DIST_DOCDIR ${DIST_ROOT}/doc)
 	set(DIST_DOCTMP ${DIST_ROOT}/doc-tmp)
+	
+	set(DIST_BINDIR_ABSOLUTE ${DIST_BINDIR})
 else()
 	message(FATAL_ERROR "Build should specify a type or use a multi-type generator (like Visual Studio)")
 endif()

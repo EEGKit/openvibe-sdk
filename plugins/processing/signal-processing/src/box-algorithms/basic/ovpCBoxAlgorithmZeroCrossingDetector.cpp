@@ -200,7 +200,7 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 				int compt = 0;
 
 				// supression of peaks older than m_ui32WindowTime by decreasing indices, to avoid overflow
-				for (int kk=m_vMemoryChunk[j].size()-1; kk>=0; kk--)
+				for (size_t kk=m_vMemoryChunk[j].size()-1; kk>=0; kk--)
 				{
 					if (((m_ui64ChunkCount+1)*l_ui32SampleCount - (m_vMemorySample[j][kk] + m_vMemoryChunk[j][kk]*l_ui32SampleCount)) < m_ui32WindowTime)
 					{

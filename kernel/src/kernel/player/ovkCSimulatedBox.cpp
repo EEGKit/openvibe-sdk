@@ -330,7 +330,7 @@ uint32 CSimulatedBox::getInputChunkCount(
 		ErrorType::OutOfBound
 	);
 
-	return m_vInput[ui32InputIndex].size();
+	return static_cast<uint32>(m_vInput[ui32InputIndex].size());
 }
 
 boolean CSimulatedBox::getInputChunk(

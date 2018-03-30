@@ -258,8 +258,8 @@ boolean CBoxAlgorithmXDAWNTrainer::process(void)
 
 		// Grabs usefull values
 
-		unsigned int sampleCountSession = X[0].cols();
-		unsigned int sampleCountERP = X[1].cols();
+		size_t sampleCountSession = X[0].cols();
+		size_t sampleCountERP = X[1].cols();
 
 		// Now we compute matrix D
 

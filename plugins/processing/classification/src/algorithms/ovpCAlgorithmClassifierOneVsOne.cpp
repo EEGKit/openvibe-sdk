@@ -130,7 +130,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 	);
 
 	//Calculate the amount of sample for each class
-	std::map < float64, size_t > l_vClassLabels;
+	std::map < float64, uint32_t > l_vClassLabels;
 	for(uint32_t i=0; i<rFeatureVectorSet.getFeatureVectorCount(); i++)
 	{
 		if(!l_vClassLabels.count(rFeatureVectorSet[i].getLabel()))
@@ -151,15 +151,15 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 	ip_pRepartitionSet->setDimensionCount(1);
 	ip_pRepartitionSet->setDimensionSize(0, m_ui32NumberOfClasses);
 
-	const size_t l_iFeatureVectorSize=rFeatureVectorSet[0].getSize();
+	const uint32_t l_iFeatureVectorSize = rFeatureVectorSet[0].getSize();
 	//Now let's train each classifier
-	for(size_t l_iFirstClass=0 ; l_iFirstClass < m_ui32NumberOfClasses; ++l_iFirstClass)
+	for(uint32_t l_iFirstClass=0 ; l_iFirstClass < m_ui32NumberOfClasses; ++l_iFirstClass)
 	{
-		ip_pRepartitionSet->getBuffer()[l_iFirstClass] = l_vClassLabels[static_cast<float64>(l_iFirstClass)];
+		ip_pRepartitionSet->getBuffer()[l_iFirstClass] = static_cast<float64>(l_vClassLabels[static_cast<float64>(l_iFirstClass)]);
 
-		for(size_t l_iSecondClass = l_iFirstClass+1 ; l_iSecondClass < m_ui32NumberOfClasses ; ++l_iSecondClass)
+		for (uint32_t l_iSecondClass = l_iFirstClass + 1; l_iSecondClass < m_ui32NumberOfClasses; ++l_iSecondClass)
 		{
-			size_t l_iFeatureCount = l_vClassLabels[(float64)l_iFirstClass] + l_vClassLabels[static_cast<float64>(l_iSecondClass)];
+			uint32_t l_iFeatureCount = l_vClassLabels[static_cast<float64>(l_iFirstClass)] + l_vClassLabels[static_cast<float64>(l_iSecondClass)];
 
 			IAlgorithmProxy* l_pSubClassifier = m_oSubClassifiers[std::pair<uint32_t,uint32_t>(l_iFirstClass, l_iSecondClass)];
 
@@ -169,7 +169,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 			ip_pFeatureVectorSet->setDimensionSize(1, l_iFeatureVectorSize+1);
 
 			float64* l_pFeatureVectorSetBuffer=ip_pFeatureVectorSet->getBuffer();
-			for(size_t j=0; j<rFeatureVectorSet.getFeatureVectorCount(); j++)
+			for (uint32_t j = 0; j<rFeatureVectorSet.getFeatureVectorCount(); j++)
 			{
 				const float64 l_f64TempClass = rFeatureVectorSet[j].getLabel();
 				if(l_f64TempClass == static_cast<float64>(l_iFirstClass) || l_f64TempClass == static_cast<float64>(l_iSecondClass))
@@ -297,9 +297,9 @@ bool CAlgorithmClassifierOneVsOne::createSubClassifiers(void)
 	this->m_oSubClassifiers.clear();
 
 	//Now let's instantiate all the sub classifiers
-	for(size_t l_iFirstClass=0 ; l_iFirstClass < m_ui32NumberOfClasses; ++l_iFirstClass)
+	for (uint32_t l_iFirstClass = 0; l_iFirstClass < m_ui32NumberOfClasses; ++l_iFirstClass)
 	{
-		for(size_t l_iSecondClass = l_iFirstClass+1 ; l_iSecondClass < m_ui32NumberOfClasses ; ++l_iSecondClass)
+		for (uint32_t l_iSecondClass = l_iFirstClass + 1; l_iSecondClass < m_ui32NumberOfClasses; ++l_iSecondClass)
 		{
 			const CIdentifier l_oSubClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_oSubClassifierAlgorithmIdentifier);
 
@@ -473,7 +473,7 @@ bool CAlgorithmClassifierOneVsOne::loadSubClassifierConfiguration(XML::IXMLNode 
 {
 	createSubClassifiers();
 
-	for(size_t i = 0; i < pSubClassifiersNode->getChildCount() ; ++i)
+	for(uint32_t i = 0; i < pSubClassifiersNode->getChildCount() ; ++i)
 	{
 		float64 l_f64FirstClass, l_f64SecondClass;
 

@@ -132,7 +132,7 @@ int uoEBMLReaderTest(int argc, char* argv[])
 		OVT_ASSERT(file != nullptr, "Failure to open data file for reading");
 
 		unsigned char* c = new unsigned char[n];
-		int i = 0;
+		size_t i = 0;
 		while (!feof(file))
 		{
 			i = fread(c, 1, n*sizeof(unsigned char), file);

@@ -87,11 +87,11 @@ IXMLNode *IXMLHandlerImpl::parseFile(const char *sPath)
 	if(l_oFile.is_open())
 	{
 		char* l_sBuffer;
-		size_t l_iFileLen;
+		uint32 l_iFileLen;
 
 		//Compute size
 		l_oFile.seekg(0, ios::end);
-		l_iFileLen=(size_t)l_oFile.tellg();
+		l_iFileLen = static_cast<uint32>(l_oFile.tellg());
 		l_oFile.seekg(0, ios::beg);
 
 		//Read the file
