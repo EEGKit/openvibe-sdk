@@ -29,6 +29,12 @@
 #define OVP_TypeId_EpochAverageMethod_BlockAverage                                     OpenViBE::CIdentifier(0x2E4ACA75, 0x7E02B507)
 #define OVP_TypeId_EpochAverageMethod_CumulativeAverage                                OpenViBE::CIdentifier(0xC18311B7, 0x001C1953)
 
+// Wavelet type
+#define OVP_TypeId_ContinuousWaveletType                                               OpenViBE::CIdentifier(0x09177469, 0x52404583)
+#define OVP_TypeId_ContinuousWaveletType_Morlet                                        OpenViBE::CIdentifier(0x40D21D50, 0x738A68ED)
+#define OVP_TypeId_ContinuousWaveletType_Paul                                          OpenViBE::CIdentifier(0x2F007EC1, 0x2B870B4A)
+#define OVP_TypeId_ContinuousWaveletType_DOG                                           OpenViBE::CIdentifier(0x4B2E79A5, 0x40C95CF5)
+
 #define OVP_TypeId_CropMethod                                                          OpenViBE::CIdentifier(0xD0643F9E, 0x8E35FE0A)
 #define OVP_TypeId_CropMethod_Min                                                      OpenViBE::CIdentifier(0x0CCC9DE4, 0x93F495D2)
 #define OVP_TypeId_CropMethod_Max                                                      OpenViBE::CIdentifier(0x2FFEB29C, 0xD8F21FB4)

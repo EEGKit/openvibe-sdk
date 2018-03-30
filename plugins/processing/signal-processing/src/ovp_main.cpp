@@ -18,6 +18,7 @@
 #include "box-algorithms/filters/ovpCBoxAlgorithmRegularizedCSPTrainer.h"
 #include "algorithms/basic/ovpCAlgorithmOnlineCovariance.h"
 
+#include "box-algorithms/spectral-analysis/ovpCBoxAlgorithmContinuousWaveletAnalysis.h"
 #include "box-algorithms/spectral-analysis/ovpCBoxAlgorithmSpectralAnalysis.h"
 #include "box-algorithms/spectral-analysis/ovpCBoxAlgorithmFrequencyBandSelector.h"
 #include "box-algorithms/spectral-analysis/ovpCBoxAlgorithmSpectrumAverage.h"
@@ -98,6 +99,14 @@ OVP_Declare_Begin()
 
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSimpleDSPDesc)
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CSignalAverageDesc)
+
+	// Wavelet Type
+	rPluginModuleContext.getTypeManager().registerEnumerationType(OVP_TypeId_ContinuousWaveletType, "Continuous Wavelet Type");
+	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Morlet wavelet", OVP_TypeId_ContinuousWaveletType_Morlet.toUInteger());
+	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Paul wavelet", OVP_TypeId_ContinuousWaveletType_Paul.toUInteger());
+	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_ContinuousWaveletType, "Derivative of Gaussian wavelet", OVP_TypeId_ContinuousWaveletType_DOG.toUInteger());
+
+	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmContinuousWaveletAnalysisDesc);
 
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmFrequencyBandSelectorDesc)
 	OVP_Declare_New(OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpectrumAverageDesc)
