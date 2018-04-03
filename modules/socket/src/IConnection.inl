@@ -21,8 +21,8 @@
   #define Socket_ReceiveFlags MSG_NOSIGNAL
  #endif
 #elif defined TARGET_OS_Windows
- #include <winsock2.h>
- #include <windows.h>
+ #include <WinSock2.h>
+ #include <Windows.h>
 
  #define Socket_SendFlags    0
  #define Socket_ReceiveFlags 0
