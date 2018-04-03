@@ -52,7 +52,7 @@ endif()
 
 if(ALLMODULES IN_LIST INCLUDED_OV_SDK_COMPONENTS)
 	list(REMOVE_ITEM INCLUDED_OV_SDK_COMPONENTS ALLMODULES)
-	list(APPEND INCLUDED_OV_SDK_COMPONENTS EBML SYSTEM FS SOCKET XML DATE CSV TOOLKIT)
+	list(APPEND INCLUDED_OV_SDK_COMPONENTS EBML SYSTEM FS SOCKET XML DATE CSV TOOLKIT COMMUNICATION)
 endif()
 
 if(WIN32)
@@ -129,6 +129,7 @@ add_component(SOCKET "openvibe-module-socket" "TARGET_HAS_Socket" "Socket_${LINK
 add_component(XML "openvibe-module-xml" "TARGET_HAS_XML" "XML_${LINKING_SUFFIX}")
 add_component(CSV "openvibe-module-csv" "TARGET_HAS_CSV" "CSV_${LINKING_SUFFIX}")
 add_component(DATE "openvibe-module-date" "TARGET_HAS_DATE" "DATE_${LINKING_SUFFIX}")
+add_component(COMMUNICATION "openvibe-module-communication" "TARGET_HAS_COMMUNICATION" "COMMUNICATION_${LINKING_SUFFIX}")
 
 #plugins
 add_plugin(CLASSIFICATION "openvibe-plugins-base-classification")
