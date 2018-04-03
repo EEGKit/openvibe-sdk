@@ -42,7 +42,7 @@ endif()
 
 if(BASE IN_LIST INCLUDED_OV_SDK_COMPONENTS)
 	list(REMOVE_ITEM INCLUDED_OV_SDK_COMPONENTS BASE)
-	list(APPEND INCLUDED_OV_SDK_COMPONENTS MAIN KERNEL)	
+	list(APPEND INCLUDED_OV_SDK_COMPONENTS MAIN KERNEL)
 endif()
 
 if(ALLPLUGINS IN_LIST INCLUDED_OV_SDK_COMPONENTS)
@@ -88,7 +88,7 @@ function(add_component TOKEN MODULE_NAME)
 	if(${TOKEN} IN_LIST INCLUDED_OV_SDK_COMPONENTS)
 		target_link_libraries(${PROJECT_NAME} "${OPENVIBE_SDK_PATH}/lib/${LIB_PREFIX}${MODULE_NAME}${OPENVIBE_SDK_LINKING}.${LIB_EXT}")
 		if(MULTI_BUILD) # Replace with generator expression in CMake 3.5+
-			foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} ) 
+			foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 				string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
 				install(DIRECTORY ${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} CONFIGURATIONS ${OUTPUTCONFIG} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
 			endforeach()
@@ -107,7 +107,7 @@ endfunction(add_component)
 function(add_plugin TOKEN MODULE_NAME)
 	if(${TOKEN} IN_LIST INCLUDED_OV_SDK_COMPONENTS)
 		if(MULTI_BUILD) # Replace with generator expression in CMake 3.5+
-			foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} ) 
+			foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 				string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
 				install(DIRECTORY ${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/${ORIG_LIB_DIR}/ DESTINATION ${DEST_LIB_DIR} CONFIGURATIONS ${OUTPUTCONFIG} FILES_MATCHING PATTERN "*${MODULE_NAME}*${DLL_EXT}")
 			endforeach()
@@ -138,7 +138,7 @@ add_plugin(FEATURE_EXTRACTION "openvibe-plugins-base-feature-extraction")
 add_plugin(FILE_IO "openvibe-plugins-base-file-io")
 add_plugin(SIGNAL_PROCESSING "openvibe-plugins-base-signal-processing")
 add_plugin(STIMULATION "openvibe-plugins-base-stimulation")
-add_plugin(STREAM_CODECS "openvibe-plugins-base-stream-codecs") 
+add_plugin(STREAM_CODECS "openvibe-plugins-base-stream-codecs")
 add_plugin(STREAMING "openvibe-plugins-base-streaming")
 add_plugin(TOOLS "openvibe-plugins-base-tools")
 
@@ -148,7 +148,7 @@ add_definitions(-DTARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines)
 if(DEPENDENCIES IN_LIST INCLUDED_OV_SDK_COMPONENTS)
 	if(WIN32)
 		if(MULTI_BUILD) # Replace with generator expression in CMake 3.5+
-			foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} ) 
+			foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 				string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
 				install(FILES
 					${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/bin/libexpat.dll
@@ -180,7 +180,16 @@ if(MULTI_BUILD) # Replace with generator expression in CMake 3.5+
 	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
 		install(DIRECTORY ${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/share/ DESTINATION ${DIST_DATADIR} CONFIGURATIONS ${OUTPUTCONFIG})
+		install(DIRECTORY ${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/bin/
+			USE_SOURCE_PERMISSIONS
+			DESTINATION ${DIST_BINDIR}
+			CONFIGURATIONS ${OUTPUTCONFIG}
+			FILES_MATCHING PATTERN "*example*")
 	endforeach()
 else()
 	install(DIRECTORY ${OPENVIBE_SDK_PATH}/share/ DESTINATION ${DIST_DATADIR})
+	install(DIRECTORY ${OPENVIBE_SDK_PATH}/bin/
+		USE_SOURCE_PERMISSIONS
+		DESTINATION ${DIST_BINDIR}
+		FILES_MATCHING PATTERN "*example*")
 endif()
