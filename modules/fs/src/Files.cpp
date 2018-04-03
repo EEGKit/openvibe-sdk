@@ -13,6 +13,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/version.hpp>
+#include <boost/algorithm/string/replace.hpp>
 #include <iostream>
 #include <cstdio>
 #include <cstring>
@@ -25,7 +26,61 @@ using namespace std;
 //                     a 'boolean' type. Thus the following define to
 //                     force the use of FS::boolean !
 
+#if BOOST_VERSION / 100 % 1000 != 54
+/**
+ * \brief Makes a recursive copy of source folder to target folder.
+ *        Operation can fail in several cases:
+ *			- target path exists
+ *			- bad permission rights 
+ * \param source	the source folder path
+ * \param target	the destination folder path
+ * \return true if succeeded
+ * \return false if failed
+ */
+bool recursiveCopy(const boost::filesystem::path &source, const boost::filesystem::path &target)
+{
+	if (boost::filesystem::exists(target))
+	{
+		return false;
+	}
+	
+	if (boost::filesystem::is_directory(source))
+	{	
+		if (!boost::filesystem::create_directories(target))
+		{
+			return false;
+		}
+		for (boost::filesystem::directory_entry& item : boost::filesystem::directory_iterator(source))
+		{
+			// boost::filesystem::path overlods '/' operator !
+			if(!recursiveCopy(item.path(), target / item.path().filename()))
+			{
+				return false;
+			}
+		}
+	}
+	else if (boost::filesystem::is_regular_file(source))
+	{
+		try
+		{
+			boost::filesystem::copy(source, target);
+		}
+		catch(...)
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
+	return true;
+}
+#endif
+
+
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+
 
 FILE* Files::open(const char* sFile, const char* sMode)
 {
@@ -392,7 +447,23 @@ bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
 #endif
 	return true;
 }
+
+bool Files::copyDirectory(const char* sourceDir, const char* targetDir)
+{
+#if defined TARGET_OS_Windows
+	wstring pathSourceUTF16 = Common::Converter::utf8_to_utf16(sourceDir);
+	wstring pathTargetUTF16 = Common::Converter::utf8_to_utf16(targetDir);
+	boost::filesystem::path source = boost::filesystem::wpath(pathSourceUTF16.c_str());
+	boost::filesystem::path target = boost::filesystem::wpath(pathTargetUTF16.c_str());	
+#else
+	boost::filesystem::path source = sourceDir;
+	boost::filesystem::path target = targetDir;
+#endif	
+	return recursiveCopy(source, target);
+}
+
 #endif
+
 
 bool Files::remove(const char* path)
 {

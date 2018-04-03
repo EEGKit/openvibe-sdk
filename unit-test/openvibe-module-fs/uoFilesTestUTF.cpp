@@ -7,10 +7,17 @@
 #include <m_ConverterUtf8.h>
 
 #define TEMP_OUTPUT_DIR TMP_DIR "/オッペﾝヴィベ"
+#define TEMP_OUTPUT_DIR_COPY TMP_DIR "/オッペﾝヴィベ_Copy"
 #define TEMP_OUTPUT_ASCII_FILE_PATH TEMP_OUTPUT_DIR "/file.txt"
 #define TEMP_OUTPUT_UTF_FILE_PATH TEMP_OUTPUT_DIR "/日本語.txt"
+#define TEMP_OUTPUT_UTF_FILE_PATH_COPY TEMP_OUTPUT_DIR_COPY "/日本語.txt"
+#define TEMP_OUTPUT_ASCII_FILE_PATH_COPY TEMP_OUTPUT_DIR_COPY "/file.txt"
+
+
 #define TEST_ASCII_FILE_PATH DATA_DIR "/オッペﾝヴィベ/file.txt"
 #define TEST_UTF_FILE_PATH DATA_DIR "/オッペﾝヴィベ/日本語.txt"
+#define TEST_ASCII_DIR DATA_DIR "/オッペﾝヴィベ"
+
 
 TEST(FS_Files_Test_Directories_UTF, validateFileExists)
 {
@@ -85,6 +92,14 @@ TEST(FS_Files_Test_Directories_UTF, validateCopyFile)
 	ASSERT_TRUE(FS::Files::copyFile(TEST_ASCII_FILE_PATH, TEMP_OUTPUT_ASCII_FILE_PATH));
 	ASSERT_TRUE(FS::Files::fileExists(TEMP_OUTPUT_ASCII_FILE_PATH));
 }
+
+TEST(FS_Files_Test_Directories_UTF, validateCopyDirectory)
+{
+	ASSERT_TRUE(FS::Files::copyDirectory(TEST_ASCII_DIR, TEMP_OUTPUT_DIR_COPY));	
+	ASSERT_TRUE(FS::Files::fileExists(TEMP_OUTPUT_UTF_FILE_PATH_COPY));
+	ASSERT_TRUE(FS::Files::fileExists(TEMP_OUTPUT_ASCII_FILE_PATH_COPY));
+}
+
 #endif
 
 int uoFSFilesTestUTF(int argc, char* argv[])

@@ -40,6 +40,7 @@ namespace FS
 
 #if BOOST_VERSION / 100 % 1000 != 54
 		static bool copyFile(const char* sSourceFile, const char* sDestination);
+		static bool copyDirectory(const char* sourceDir, const char* targetDir);
 #endif
 		static bool remove(const char* path);
 		static bool removeAll(const char* path);

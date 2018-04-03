@@ -100,6 +100,28 @@ int uoFilesTest(int argc, char* argv[])
 	OVT_ASSERT(FS::Files::equals(testFile.c_str(), testFile.c_str()), "Failure to compare same files");
 
 
+	// test folder copy
+	
+	std::string testFile2 = outputDirectory + "uoFilesTest" + "/uoFilesTestChild/uoFilesTest.txt";
+	std::string testTargetDir = outputDirectory + "uoFilesTestCopy";
+	std::string testTargetFile1 = testTargetDir + "/uoFilesTest.txt";
+	std::string testTargetFile2 = testTargetDir + "/uoFilesTestChild/uoFilesTest.txt";
+	// create a subfolder with file
+	FS::Files::createParentPath(testFile2.c_str());	
+	std::ofstream ostream2;
+	FS::Files::openOFStream(ostream2, testFile2.c_str());
+	OVT_ASSERT(FS::Files::fileExists(testFile2.c_str()), "Failure to create file in subfolder");
+	OVT_ASSERT(ostream2.is_open(), "Failure to open file");
+	ostream2.close();	
+	// copy folder
+	testDir = outputDirectory + "uoFilesTest";
+	FS::Files::copyDirectory(testDir.c_str(), testTargetDir.c_str());
+	OVT_ASSERT(FS::Files::directoryExists(testTargetDir.c_str()),"Failure in copying folder");
+	OVT_ASSERT(FS::Files::fileExists(testTargetFile1.c_str()),"Failure in copying child files of the folder");
+	OVT_ASSERT(FS::Files::fileExists(testTargetFile2.c_str()),"Failure in copying subfolder");
+	// test folder copy on existing folder
+	OVT_ASSERT(!FS::Files::copyDirectory(testDir.c_str(), testTargetDir.c_str()),"Failure: Copy should not have been done if folder exits");
+		
 	return EXIT_SUCCESS;
 }
 
