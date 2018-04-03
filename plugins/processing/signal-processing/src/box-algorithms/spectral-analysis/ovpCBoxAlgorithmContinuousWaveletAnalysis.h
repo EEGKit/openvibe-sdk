@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getShortDescription(void) const      { return OpenViBE::CString("Performs a Time-Frequency Analysis using CWT."); }
 			virtual OpenViBE::CString getDetailedDescription(void) const   { return OpenViBE::CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform."); }
 			virtual OpenViBE::CString getCategory(void) const              { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
-			virtual OpenViBE::CString getVersion(void) const               { return OpenViBE::CString("2.1"); }
+			virtual OpenViBE::CString getVersion(void) const               { return OpenViBE::CString("1.0"); }
 			virtual OpenViBE::CString getSoftwareComponent(void) const     { return OpenViBE::CString("openvibe-sdk"); }
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const  { return OpenViBE::CString("1.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const{ return OpenViBE::CString("1.0.0"); }
