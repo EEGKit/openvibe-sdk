@@ -1,20 +1,3 @@
-/*
- * MENSIA TECHNOLOGIES CONFIDENTIAL
- * ________________________________
- *
- *  [2012] - [2016] Mensia Technologies SA
- *  Copyright, All Rights Reserved.
- *
- * NOTICE: All information contained herein is, and remains
- * the property of Mensia Technologies SA.
- * The intellectual and technical concepts contained
- * herein are proprietary to Mensia Technologies SA
- * and are covered copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Mensia Technologies SA.
- */
-
 #ifndef __CBoxAlgorithmContinuousWaveletAnalysis_H__
 #define __CBoxAlgorithmContinuousWaveletAnalysis_H__
 
@@ -71,8 +54,8 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getShortDescription(void) const      { return OpenViBE::CString("Performs a Time-Frequency Analysis using CWT."); }
 			virtual OpenViBE::CString getDetailedDescription(void) const   { return OpenViBE::CString("Performs a Time-Frequency Analysis using Continuous Wavelet Transform."); }
 			virtual OpenViBE::CString getCategory(void) const              { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
-			virtual OpenViBE::CString getVersion(void) const               { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const     { return OpenViBE::CString("neurort"); }
+			virtual OpenViBE::CString getVersion(void) const               { return OpenViBE::CString("2.1"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const     { return OpenViBE::CString("openvibe-sdk"); }
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const  { return OpenViBE::CString("1.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const{ return OpenViBE::CString("1.0.0"); }
 			virtual OpenViBE::CString getStockItemName(void) const         { return OpenViBE::CString("gtk-execute"); }
