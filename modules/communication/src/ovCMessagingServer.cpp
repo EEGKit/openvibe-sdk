@@ -1,4 +1,5 @@
 #include "ovCMessagingServer.h"
+#include "ovCMessagingImpl.hpp"
 
 #include <array>
 #include <algorithm>
@@ -53,7 +54,7 @@ bool MessagingServer::accept()
 
 	this->startSyncing();
 
-	if (!m_ConnectionID.empty())
+	if (!impl->m_ConnectionID.empty())
 	{
 		// The server has to verify that the client is the one that is waited. So the server wait the authentication packet.
 		const std::chrono::time_point<std::chrono::system_clock> startClock = std::chrono::system_clock::now();
@@ -68,7 +69,7 @@ bool MessagingServer::accept()
 			{
 				isAuthReceived = true;
 
-				if (connectionID != m_ConnectionID)
+				if (connectionID != impl->m_ConnectionID)
 				{
 					this->pushError(Error_AuthenticationFail, id);
 					this->close();
@@ -98,7 +99,7 @@ bool MessagingServer::accept()
 		return false;
 	}
 
-	if (!this->pushMessage(m_BoxDescription))
+	if (!this->pushMessage(impl->m_BoxDescription))
 	{
 		// Error set in the function
 		ELibraryError error = this->getLastError();
@@ -146,17 +147,17 @@ bool MessagingServer::close()
 
 bool MessagingServer::addParameter(const uint32_t id, const uint64_t type, const std::string& name, const std::string& value)
 {
-	return m_BoxDescription.addParameter(id, type, name, value);
+	return impl->m_BoxDescription.addParameter(id, type, name, value);
 }
 
 bool MessagingServer::addInput(const uint32_t id, const uint64_t type, const std::string& name)
 {
-	return m_BoxDescription.addInput(id, type, name);
+	return impl->m_BoxDescription.addInput(id, type, name);
 }
 
 bool MessagingServer::addOutput(const uint32_t id, const uint64_t type, const std::string& name)
 {
-	return m_BoxDescription.addOutput(id, type, name);
+	return impl->m_BoxDescription.addOutput(id, type, name);
 }
 
 bool MessagingServer::popLog(uint64_t& packetId, ELogLevel& type, std::string& message)

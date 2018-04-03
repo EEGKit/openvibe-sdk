@@ -7,6 +7,7 @@
 #include <iostream>
 #include <thread>
 #include <cmath>
+#include <map>
 
 #include <ebml/IWriterHelper.h>
 #include <ebml/IWriter.h>

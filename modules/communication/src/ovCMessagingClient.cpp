@@ -1,4 +1,5 @@
 ﻿#include "ovCMessagingClient.h"
+#include "ovCMessagingImpl.hpp"
 
 #include <array>
 #include <algorithm>
@@ -32,7 +33,7 @@ bool MessagingClient::connect(const std::string& URI, const unsigned int port)
 	this->setConnection(m_Client);
 
 	// Once the connection is done, the client push an authentication message to the server
-	if (!this->pushAuthentication(m_ConnectionID))
+	if (!this->pushAuthentication(impl->m_ConnectionID))
 	{
 		// Error set in the function
 		ELibraryError error = this->getLastError();
@@ -54,7 +55,7 @@ bool MessagingClient::connect(const std::string& URI, const unsigned int port)
 
 	while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - startClock).count() < 10)
 	{
-		if (this->popBoxDescriptions(packetId, m_BoxDescription))
+		if (this->popBoxDescriptions(packetId, impl->m_BoxDescription))
 		{
 			m_BoxDescriptionReceived = true;
 			break;
@@ -97,7 +98,7 @@ uint32_t MessagingClient::getParameterCount() const
 		return 0;
 	}
 
-	return static_cast<uint32_t>(m_BoxDescription.getParameters()->size());
+	return static_cast<uint32_t>(impl->m_BoxDescription.getParameters()->size());
 }
 
 uint32_t MessagingClient::getInputCount() const
@@ -107,7 +108,7 @@ uint32_t MessagingClient::getInputCount() const
 		return 0;
 	}
 
-	return static_cast<uint32_t>(m_BoxDescription.getInputs()->size());
+	return static_cast<uint32_t>(impl->m_BoxDescription.getInputs()->size());
 }
 
 uint32_t MessagingClient::getOutputCount() const
@@ -117,7 +118,7 @@ uint32_t MessagingClient::getOutputCount() const
 		return 0;
 	}
 
-	return static_cast<uint32_t>(m_BoxDescription.getOutputs()->size());
+	return static_cast<uint32_t>(impl->m_BoxDescription.getOutputs()->size());
 }
 
 bool MessagingClient::getParameter(const size_t i, uint32_t& id, uint64_t& type, std::string& name, std::string& value) const
@@ -127,7 +128,7 @@ bool MessagingClient::getParameter(const size_t i, uint32_t& id, uint64_t& type,
 		return false;
 	}
 
-	const std::vector<Parameter>* parameters = m_BoxDescription.getParameters();
+	const std::vector<Parameter>* parameters = impl->m_BoxDescription.getParameters();
 
 	if (parameters->size() <= i)
 	{
@@ -149,7 +150,7 @@ bool MessagingClient::getInput(const size_t i, uint32_t& id, uint64_t& type, std
 		return false;
 	}
 
-	const std::vector<InputOutput>* inputs = m_BoxDescription.getInputs();
+	const std::vector<InputOutput>* inputs = impl->m_BoxDescription.getInputs();
 
 	if (inputs->size() <= i)
 	{
@@ -171,7 +172,7 @@ bool MessagingClient::getOutput(const size_t i, uint32_t& id, uint64_t& type, st
 		return false;
 	}
 
-	const std::vector<InputOutput>* outputs = m_BoxDescription.getOutputs();
+	const std::vector<InputOutput>* outputs = impl->m_BoxDescription.getOutputs();
 
 	if (outputs->size() <= i)
 	{

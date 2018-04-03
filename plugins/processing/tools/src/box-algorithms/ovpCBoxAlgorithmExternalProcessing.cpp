@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <cstring>
 #include <random>
+#include <thread>
 
 #ifdef TARGET_OS_Windows
 #include <process.h>
