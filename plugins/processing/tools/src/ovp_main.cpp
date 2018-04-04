@@ -5,6 +5,8 @@
 
 #include "box-algorithms/ovpCBoxAlgorithmMatrixValidityChecker.h"
 
+#include "box-algorithms/ovpCBoxAlgorithmExternalProcessing.h"
+
 OVP_Declare_Begin();
 
 	// ValidityCheckerType: this type registration enables the choice between different action to do on an invalid stream
@@ -16,5 +18,6 @@ OVP_Declare_Begin();
 	OVP_Declare_New(OpenViBEPlugins::Tools::CBoxAlgorithmStimulationListenerDesc);
 	OVP_Declare_New(OpenViBEPlugins::Tools::CBoxAlgorithmEBMLStreamSpyDesc);
 	OVP_Declare_New(OpenViBEPlugins::Tools::CBoxAlgorithmMatrixValidityCheckerDesc);
+	OVP_Declare_New(OpenViBEPlugins::Tools::CBoxAlgorithmExternalProcessingDesc);
 
 OVP_Declare_End();

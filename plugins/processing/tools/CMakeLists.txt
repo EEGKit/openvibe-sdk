@@ -19,6 +19,8 @@ INCLUDE("FindOpenViBEToolkit")
 INCLUDE("FindOpenViBEModuleEBML")
 INCLUDE("FindOpenViBEModuleSystem")
 INCLUDE("FindOpenViBEModuleFS")
+INCLUDE("FindOpenViBEModuleSocket")
+INCLUDE("FindOpenViBEModuleCommunication")
 
 # ---------------------------------
 # Target macros
@@ -38,4 +40,5 @@ INSTALL(TARGETS ${PROJECT_NAME}
 	ARCHIVE DESTINATION ${DIST_LIBDIR})
 
 INSTALL(DIRECTORY share/ DESTINATION ${DIST_DATADIR}/openvibe/plugins/tools)
+INSTALL(DIRECTORY box-tutorials DESTINATION ${DIST_DATADIR}/openvibe/scenarios/)
 

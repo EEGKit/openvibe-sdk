@@ -1,0 +1,96 @@
+/**
+ * \page BoxAlgorithm_ExternalProcessing External Processing
+__________________________________________________________________
+
+Detailed description
+__________________________________________________________________
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Description|
+ This box allows to externalize data processing into an external program. It sends EBML data in chunks
+ according to a specified protocol, the external application must respond with an EBML response following
+ this same protocol.
+
+ A SDK for C++ and Python (Python NeuroRT Box) are provided in order to simplify the development of
+ external boxes.
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Description|
+
+__________________________________________________________________
+
+Settings description
+__________________________________________________________________
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Settings|
+ The External Processing box has several own settings. The first seven parameters are reserved for the
+ box functionality and additional parameters will be passed to the external program.
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Settings|
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Setting1|
+ The first setting is the boolean check box that allows the author to launch, or not, a program when the pipeline starts.
+ By default, it is activated. But it can be deactivated to launch the client program manually for debug purposes.
+ In this case, you have some seconds to launch manually the client program before the timeout, according to the setting n°7.
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Setting1|
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Setting2|
+ The second parameter is the path to the third party program to run.
+ This parameter is only used if the first parameter is activated.
+ This parameter must be an executable.
+ 
+ Example: In the case you want to run a Python script on Windows, the parameter must be the python.exe file's path: C:/Python/python.exe
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Setting2|
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Setting3|
+ The third parameter is the arguments passed to the third party program.
+ This parameter is only used if the first parameter is activated.
+ This parameter will be given to the third party program as a list of arguments. These arguments are the first given to the third party program.
+ 
+ Example: In the case you want to run a Python script on Windows, the parameter must be the python script's path that you want to run: C:/MyProject/myprogram.py
+ If you want to use a Python module or module you should type: -m mylibrary.mymodule.mybox
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Setting3|
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Setting4|
+ The TCP port that the box is listening. It must be in the range 49152-65535.
+ This plugin works on a TCP-IP stack, so, different boxes must work on different ports if they are running at the same time.
+ The client must connect to this port.
+ An argument, with the value of the port, will be given to the third party program (after the Arguments parameter ) as: --port PORT
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Setting4|
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Setting5|
+ Activate or not the generation of a connection identifier that the client must communicate to the box.
+ When checked a connection identifier will automatically generated, otherwise the connection identifier will be the one set in the custom connection identifier setting.
+ We advise you to always uncheck in runtime mode, and choose your custom connection identifier while testing your script.
+ An argument, with the value of the connection id (custom or not), will be given to the third party program (at the end of the argument list) as: --connection-id CONNECTIONID
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Setting5|
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Setting6|
+ Define a custom connection identifier. Only used in the connection identifier generation is deactivated.
+
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Setting6|
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Setting7|
+ Define a timeout, in seconds, for the incoming connection acceptance.
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Setting7|
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Setting8|
+ This setting should be set to true if the external box generates data without the need to receive some.
+ By default, this setting is false and the box works as a filter. That is, each time it sends data, it will
+ wait for a response, otherwise it will proceed and let the scenario advance.
+
+ If the box is a generator, then it will wait for the external program on each step. If the scenario is
+ played in real-time, then the box will poll the external program at 16Hz. If the scenario is in fast-forward
+ the refresh frequency of this box is 1Hz.
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Setting8|
+__________________________________________________________________
+
+Miscellaneous description
+__________________________________________________________________
+
+ * |OVP_DocBegin_BoxAlgorithm_ExternalProcessing_Miscellaneous|
+This box requires synchronization with the external program in order to process data correctly and in order.
+As the synchronization is a relatively slow process with regards to the duration of one update cycle (62ms) it
+is better to try to limit the number of chunks that are send between the box and the client application.
+
+If you find that your scenario is too slow, try using time based epoching in front of it to make chunks of data
+larger.
+ * |OVP_DocEnd_BoxAlgorithm_ExternalProcessing_Miscellaneous|
+
+*/

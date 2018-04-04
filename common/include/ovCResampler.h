@@ -4,6 +4,7 @@
 #include <cmath>
 #include <algorithm>
 #include <cassert>
+#include <cstdint>
 
 #include <r8brain/CDSPResampler.h>
 
@@ -339,9 +340,9 @@ namespace Common
 				std::vector < double > l_vInputBuffer(ui32InputSampleCount);
 				std::vector < TFloat > l_vOutputBuffer;
 
-				for (int j = 0; j < m_ui32ChannelCount; j++)
+				for (uint32_t j = 0; j < m_ui32ChannelCount; j++)
 				{
-					for (int k = 0; k < ui32InputSampleCount; k++)
+					for (uint32_t k = 0; k < ui32InputSampleCount; k++)
 					{
 						l_vInputBuffer[k] = static_cast<double>(pInputSample[k*m_ui32ChannelCount + j]);
 					}
