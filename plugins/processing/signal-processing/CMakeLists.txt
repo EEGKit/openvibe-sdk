@@ -6,6 +6,7 @@ SET(PROJECT_VERSION_PATCH ${OV_GLOBAL_VERSION_PATCH})
 SET(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
 FILE(GLOB_RECURSE source_files src/*.cpp src/*.h src/*.hpp src/*.inl)
+INCLUDE("FindSourceDependencyWavelib")
 INCLUDE("FindSourceRCProperties")
 INCLUDE("FindSourceDependencyDSPFilters")
 INCLUDE("FindSourceDependencyR8Brain")
