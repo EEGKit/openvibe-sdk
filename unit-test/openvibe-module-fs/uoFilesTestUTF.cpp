@@ -83,7 +83,7 @@ TEST(FS_Files_Test_Directories_UTF, validateCreateParentPath)
 	ASSERT_TRUE(FS::Files::directoryExists(TEMP_OUTPUT_DIR));
 }
 
-#if BOOST_VERSION / 100 % 1000 != 54
+#if BOOST_VERSION / 100 % 1000 >= 55
 TEST(FS_Files_Test_Directories_UTF, validateCopyFile)
 {
 	FS::Files::removeAll(TEMP_OUTPUT_ASCII_FILE_PATH);

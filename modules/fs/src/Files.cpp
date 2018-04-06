@@ -5,6 +5,7 @@
  #include <unistd.h>  //For access().
  #include <sys/stat.h>
  #include <sys/types.h>  // For stat().
+ #include <cstdlib>
 #elif defined TARGET_OS_Windows
  #include "m_ConverterUtf8.h"
  #include <Windows.h>
@@ -26,7 +27,7 @@ using namespace std;
 //                     a 'boolean' type. Thus the following define to
 //                     force the use of FS::boolean !
 
-#if BOOST_VERSION / 100 % 1000 != 54
+#if defined TARGET_HAS_Boost && BOOST_VERSION / 100 % 1000 >= 55
 /**
  * \brief Makes a recursive copy of source folder to target folder.
  *        Operation can fail in several cases:
@@ -431,40 +432,6 @@ bool Files::getFilenameExtension(const char* path, char* fileNameExtension, size
 	return true;
 }
 
-#if BOOST_VERSION / 100 % 1000 != 54
-bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
-{
-	if(!sSourceFile || !sDestinationPath)
-	{
-		return false;
-	}
-#if defined TARGET_OS_Windows
-	wstring pathSourceUTF16 = Common::Converter::utf8_to_utf16(sSourceFile);
-	wstring pathDestinationUTF16 = Common::Converter::utf8_to_utf16(sDestinationPath);
-	boost::filesystem::copy_file(pathSourceUTF16, pathDestinationUTF16);
-#else
-	boost::filesystem::copy_file(sSourceFile, sDestinationPath);
-#endif
-	return true;
-}
-
-bool Files::copyDirectory(const char* sourceDir, const char* targetDir)
-{
-#if defined TARGET_OS_Windows
-	wstring pathSourceUTF16 = Common::Converter::utf8_to_utf16(sourceDir);
-	wstring pathTargetUTF16 = Common::Converter::utf8_to_utf16(targetDir);
-	boost::filesystem::path source = boost::filesystem::wpath(pathSourceUTF16.c_str());
-	boost::filesystem::path target = boost::filesystem::wpath(pathTargetUTF16.c_str());	
-#else
-	boost::filesystem::path source = sourceDir;
-	boost::filesystem::path target = targetDir;
-#endif	
-	return recursiveCopy(source, target);
-}
-
-#endif
-
-
 bool Files::remove(const char* path)
 {
 	if (FS::Files::fileExists(path) || FS::Files::directoryExists(path))
@@ -493,4 +460,75 @@ bool Files::removeAll(const char* path)
 	return true;
 }
 
+
+
+// Due to Ubuntu 14.0 compliance, BOOST could not be available
+// manage all cases here
+
+#if defined TARGET_HAS_Boost && BOOST_VERSION / 100 % 1000 >= 55
+
+bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
+{
+	if(!sSourceFile || !sDestinationPath)
+	{
+		return false;
+	}
+#if defined TARGET_OS_Windows
+	wstring pathSourceUTF16 = Common::Converter::utf8_to_utf16(sSourceFile);
+	wstring pathDestinationUTF16 = Common::Converter::utf8_to_utf16(sDestinationPath);
+	boost::filesystem::copy_file(pathSourceUTF16, pathDestinationUTF16);
+#else
+	boost::filesystem::copy_file(sSourceFile, sDestinationPath);
+#endif
+	return true;
+}
+
+bool Files::copyDirectory(const char* sourceDir, const char* targetDir)
+{
+	if(!sourceDir || !targetDir)
+	{
+		return false;
+	}
+#if defined TARGET_OS_Windows
+	wstring pathSourceUTF16 = Common::Converter::utf8_to_utf16(sourceDir);
+	wstring pathTargetUTF16 = Common::Converter::utf8_to_utf16(targetDir);
+	boost::filesystem::path source = boost::filesystem::wpath(pathSourceUTF16.c_str());
+	boost::filesystem::path target = boost::filesystem::wpath(pathTargetUTF16.c_str());	
+#else
+	boost::filesystem::path source = sourceDir;
+	boost::filesystem::path target = targetDir;
+#endif	
+	return recursiveCopy(source, target);
+}
+
+#elif defined TARGET_OS_Windows
+
+#error OpenViBE requires at least boost 1.55 to compile on Windows
+
+#else
+// hugly hack in case of no boost on linux ...
+bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
+{
+	if(!sSourceFile || !sDestinationPath)
+	{
+		return false;
+	}
+	
+	std::string command = std::string("cp ") + sSourceFile + " " + sDestinationPath;	
+	
+	return (std::system(command.c_str()) != -1);
+}
+
+bool Files::copyDirectory(const char* sourceDir, const char* targetDir)
+{
+
+	if(!sourceDir || !sourceDir)
+	{
+		return false;
+	}
+	
+	std::string command = std::string("cp -r ") + sourceDir + " " + targetDir+"";		
+	return (std::system(command.c_str()) != -1);	
+}
+#endif
 
