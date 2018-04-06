@@ -563,10 +563,10 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 			if (WIFEXITED(childStatus))
 			{
 				// If the exit status is 0 this means that maybe we will actually succeed in launching the program
-				if (WEXITSTATUS(stat) != 0)
+				if (WEXITSTATUS(childStatus) != 0)
 				{
 					m_ThirdPartyProgramProcessId = 0;
-					status = WEXITSTATUS(stat);
+					status = WEXITSTATUS(childStatus);
 				}
 			}
 			else
