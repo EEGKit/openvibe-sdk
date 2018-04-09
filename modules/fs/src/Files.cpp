@@ -462,8 +462,8 @@ bool Files::removeAll(const char* path)
 
 
 
-// Due to Ubuntu 14.0 compliance, BOOST could not be available
-// manage all cases here
+// old boost compliance
+// manage cases here
 
 #if defined TARGET_HAS_Boost && BOOST_VERSION / 100 % 1000 >= 55
 
@@ -506,7 +506,7 @@ bool Files::copyDirectory(const char* sourceDir, const char* targetDir)
 #error OpenViBE requires at least boost 1.55 to compile on Windows
 
 #else
-// hugly hack in case of no boost on linux ...
+// ugly hack for old boost on linux ...
 bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
 {
 	if(!sSourceFile || !sDestinationPath)
@@ -514,7 +514,12 @@ bool Files::copyFile(const char* sSourceFile, const char* sDestinationPath)
 		return false;
 	}
 	
-	std::string command = std::string("cp ") + sSourceFile + " " + sDestinationPath;	
+	if (FS::Files::fileExists(sDestinationPath))
+	{
+		return false;
+	}
+	
+	std::string command = std::string("cp '") + sSourceFile + "' '" + sDestinationPath+"'";	
 	
 	return (std::system(command.c_str()) != -1);
 }
@@ -527,7 +532,12 @@ bool Files::copyDirectory(const char* sourceDir, const char* targetDir)
 		return false;
 	}
 	
-	std::string command = std::string("cp -r ") + sourceDir + " " + targetDir+"";		
+	if (FS::Files::directoryExists(targetDir))
+	{
+		return false;
+	}
+	
+	std::string command = std::string("cp -r '") + sourceDir + "' '" + targetDir+"'";		
 	return (std::system(command.c_str()) != -1);	
 }
 #endif
