@@ -113,8 +113,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Launches an external program which can then processes data. This box and the program communicate using TCP connection and a defined protocol."); }
 			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Scripting"); }
 			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getAddedVersion(void) const { return OpenViBE::CString("2.6.0.0"); }
-			virtual OpenViBE::CString getUpdatedVersion(void) const { return OpenViBE::CString("2.6.0.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const     { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const  { return OpenViBE::CString("1.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const{ return OpenViBE::CString("1.0.0"); }
 			virtual OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-edit"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ExternalProcessing; }
