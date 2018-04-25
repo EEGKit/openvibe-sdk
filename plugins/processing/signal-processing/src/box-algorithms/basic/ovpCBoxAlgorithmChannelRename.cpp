@@ -51,6 +51,12 @@ bool CBoxAlgorithmChannelRename::initialize(void)
 		m_StreamEncoder.getInputSamplingRate().setReferenceTarget(m_StreamDecoder.getOutputSamplingRate());
 	}
 
+	if (m_TypeIdentifier == OV_TypeId_Spectrum)
+	{
+		m_StreamEncoder.getInputSamplingRate().setReferenceTarget(m_StreamDecoder.getOutputSamplingRate());
+		m_StreamEncoder.getInputFrequencyAbcissa().setReferenceTarget(m_StreamDecoder.getOutputFrequencyAbcissa());
+	}
+
 	return true;
 }
 
