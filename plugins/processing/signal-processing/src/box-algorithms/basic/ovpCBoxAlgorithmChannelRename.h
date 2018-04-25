@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_ChannelRename_H__
-#define __OpenViBEPlugins_BoxAlgorithm_ChannelRename_H__
+#pragma once
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
@@ -29,51 +28,39 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
+			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmChannelRename> m_StreamDecoder;
+			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmChannelRename> m_StreamEncoder;
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > op_pMatrix;
+			OpenViBE::CIdentifier m_TypeIdentifier;
 
-			OpenViBE::Kernel::TParameterHandler < const OpenViBE::IMemoryBuffer* > ip_pMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_Matrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_Matrix;
 
-			std::vector < std::string > m_vChannelName;
+			std::vector<std::string> m_ChannelNames;
 		};
 
-/*
 		class CBoxAlgorithmChannelRenameListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
 		{
 		public:
+			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			{
+				OpenViBE::CIdentifier l_oTypeIdentifier;
+				rBox.getInputType(ui32Index, l_oTypeIdentifier);
+				rBox.setOutputType(ui32Index, l_oTypeIdentifier);
+				return true;
+			}
 
-			virtual OpenViBE::boolean initialize(void) { return true; }
-			virtual OpenViBE::boolean uninitialize(void) { return true; }
-			virtual OpenViBE::boolean onInitialized(OpenViBE::Kernel::IBox& rBox) { return true; };
-			virtual OpenViBE::boolean onNameChanged(OpenViBE::Kernel::IBox& rBox) { return true; };
-			virtual OpenViBE::boolean onIdentifierChanged(OpenViBE::Kernel::IBox& rBox) { return true; };
-			virtual OpenViBE::boolean onAlgorithmClassIdentifierChanged(OpenViBE::Kernel::IBox& rBox) { return true; };
-			virtual OpenViBE::boolean onInputConnected(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onInputDisconnected(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onInputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onInputNameChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onOutputConnected(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onOutputDisconnected(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onOutputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onOutputNameChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onSettingAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onSettingRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onSettingTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onSettingNameChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onSettingDefaultValueChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-			virtual OpenViBE::boolean onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
+			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			{
+				OpenViBE::CIdentifier l_oTypeIdentifier;
+				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
+				rBox.setInputType(ui32Index, l_oTypeIdentifier);
+				return true;
+			}
+
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
 		};
-*/
 
 		class CBoxAlgorithmChannelRenameDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
@@ -87,23 +74,36 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Renames channels of different types of streamed matrices"); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Channels"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.1"); }
 			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("1.1.0"); }
 			
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_ChannelRename; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmChannelRename; }
-			// virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmChannelRenameListener; }
-			// virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmChannelRenameListener; }
+			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* boxListener) const { delete boxListener; }
 
 			virtual OpenViBE::boolean getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+				OpenViBE::Kernel::IBoxProto& prototype) const
 			{
-				rBoxAlgorithmPrototype.addInput  ("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput ("Output signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("New channel names", OV_TypeId_String, "Channel 1;Channel 2");
-				// rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addInput  ("Input matrix", OV_TypeId_Signal);
+				prototype.addOutput ("Output matrix", OV_TypeId_Signal);
+				prototype.addSetting("New channel names", OV_TypeId_String, "Channel 1;Channel 2");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+
+				prototype.addInputSupport(OV_TypeId_Signal);
+				prototype.addInputSupport(OV_TypeId_Spectrum);
+				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addInputSupport(OV_TypeId_TimeFrequency);
+				prototype.addInputSupport(OV_TypeId_CovarianceMatrix);
+
+				prototype.addOutputSupport(OV_TypeId_Signal);
+				prototype.addOutputSupport(OV_TypeId_Spectrum);
+				prototype.addOutputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addOutputSupport(OV_TypeId_TimeFrequency);
+				prototype.addOutputSupport(OV_TypeId_CovarianceMatrix);
 
 				return true;
 			}
@@ -113,4 +113,3 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_ChannelRename_H__

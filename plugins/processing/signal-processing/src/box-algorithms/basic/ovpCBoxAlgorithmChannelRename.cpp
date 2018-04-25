@@ -7,88 +7,100 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-boolean CBoxAlgorithmChannelRename::initialize(void)
+bool CBoxAlgorithmChannelRename::initialize(void)
 {
-	std::vector < CString > l_sToken;
-	CString l_sSettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	uint32 l_ui32TokenCount=OpenViBEToolkit::Tools::String::split(l_sSettingValue, OpenViBEToolkit::Tools::String::TSplitCallback < std::vector < CString > > (l_sToken), OV_Value_EnumeratedStringSeparator);
+	std::vector<CString> tokens;
+	CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	uint32 tokenCount = OpenViBEToolkit::Tools::String::split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback < std::vector < CString > > (tokens), OV_Value_EnumeratedStringSeparator);
 
-	m_vChannelName.clear();
-	for(uint32 i=0; i<l_ui32TokenCount; i++)
+	m_ChannelNames.clear();
+	for (uint32_t i = 0; i < tokenCount; i++)
 	{
-		m_vChannelName.push_back(l_sToken[i].toASCIIString());
+		m_ChannelNames.push_back(tokens[i].toASCIIString());
 	}
 
-	m_pStreamDecoder=&this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
-	m_pStreamDecoder->initialize();
+	this->getStaticBoxContext().getOutputType(0, m_TypeIdentifier);
 
-	m_pStreamEncoder=&this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamEncoder));
-	m_pStreamEncoder->initialize();
+	if (m_TypeIdentifier == OV_TypeId_Signal)
+	{
+		m_StreamDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmChannelRename>(*this, 0);
+		m_StreamEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmChannelRename>(*this, 0);
+	}
+	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix || m_TypeIdentifier == OV_TypeId_TimeFrequency)
+	{
+		m_StreamDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmChannelRename>(*this, 0);
+		m_StreamEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmChannelRename>(*this, 0);
+	}
+	else if (m_TypeIdentifier == OV_TypeId_Spectrum)
+	{
+		m_StreamDecoder = new OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmChannelRename>(*this, 0);
+		m_StreamEncoder = new OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmChannelRename>(*this, 0);
+	}
+	else
+	{
+		OV_ERROR_KRF("Incompatible stream type", ErrorType::BadConfig);
+	}
 
-	ip_pMemoryBuffer.initialize(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_SignalStreamDecoder_InputParameterId_MemoryBufferToDecode));
-	op_pMemoryBuffer.initialize(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
-	ip_pMatrix.initialize(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_Matrix));
-	op_pMatrix.initialize(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_Matrix));
+	ip_Matrix = m_StreamEncoder.getInputMatrix();
+	op_Matrix = m_StreamDecoder.getOutputMatrix();
 
-	m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+	m_StreamEncoder.getInputMatrix().setReferenceTarget(m_StreamDecoder.getOutputMatrix());
+
+	if (m_TypeIdentifier == OV_TypeId_Signal)
+	{
+		m_StreamEncoder.getInputSamplingRate().setReferenceTarget(m_StreamDecoder.getOutputSamplingRate());
+	}
+
+	if (m_TypeIdentifier == OV_TypeId_Spectrum)
+	{
+		m_StreamEncoder.getInputSamplingRate().setReferenceTarget(m_StreamDecoder.getOutputSamplingRate());
+		m_StreamEncoder.getInputFrequencyAbcissa().setReferenceTarget(m_StreamDecoder.getOutputFrequencyAbcissa());
+	}
 
 	return true;
 }
 
-boolean CBoxAlgorithmChannelRename::uninitialize(void)
+bool CBoxAlgorithmChannelRename::uninitialize(void)
 {
-	op_pMatrix.uninitialize();
-	ip_pMatrix.uninitialize();
-	op_pMemoryBuffer.uninitialize();
-	ip_pMemoryBuffer.uninitialize();
-
-	m_pStreamEncoder->uninitialize();
-	this->getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
-	m_pStreamEncoder=NULL;
-
-	m_pStreamDecoder->uninitialize();
-	this->getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
-	m_pStreamDecoder=NULL;
+	m_StreamDecoder.uninitialize();
+	m_StreamEncoder.uninitialize();
 
 	return true;
 }
 
-boolean CBoxAlgorithmChannelRename::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmChannelRename::processInput(uint32 ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmChannelRename::process(void)
+bool CBoxAlgorithmChannelRename::process(void)
 {
-	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
+	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	for(uint32 i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for(uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(0); chunk++)
 	{
-		ip_pMemoryBuffer=l_rDynamicBoxContext.getInputChunk(0, i);
-		op_pMemoryBuffer=l_rDynamicBoxContext.getOutputChunk(0);
-		m_pStreamDecoder->process();
-		if(m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader))
+		m_StreamDecoder.decode(chunk);
+		if(m_StreamDecoder.isHeaderReceived())
 		{
-			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_pMatrix, *op_pMatrix);
-			for(uint32 j=0; j<ip_pMatrix->getDimensionSize(0) && j<m_vChannelName.size(); j++)
+			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
+			for (uint32_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_ChannelNames.size(); channel++)
 			{
-				ip_pMatrix->setDimensionLabel(0, j, m_vChannelName[j].c_str());
+				ip_Matrix->setDimensionLabel(0, channel, m_ChannelNames[channel].c_str());
 			}
-			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader);
+			m_StreamEncoder.encodeHeader();
 		}
-		if(m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer))
+		if(m_StreamDecoder.isBufferReceived())
 		{
-			OpenViBEToolkit::Tools::Matrix::copyContent(*ip_pMatrix, *op_pMatrix);
-			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
+			m_StreamEncoder.encodeBuffer();
 		}
-		if(m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedEnd))
+		if (m_StreamDecoder.isEndReceived())
 		{
-			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd);
+			m_StreamEncoder.encodeEnd();
 		}
 
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
-		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
+		dynamicBoxContext.markOutputAsReadyToSend(0, dynamicBoxContext.getInputChunkStartTime(0, chunk), dynamicBoxContext.getInputChunkEndTime(0, chunk));
+		dynamicBoxContext.markInputAsDeprecated(0, chunk);
 	}
 
 	return true;
