@@ -217,7 +217,7 @@
 #define OV_TypeId_Factor                                     OpenViBE::CIdentifier(0x501F79FA, 0x7E1F6680)
 #define OV_TypeId_BoxAlgorithmFlag                           OpenViBE::CIdentifier(0xF1A6F1A6, 0xF1A6F1A6)
 
-#define OV_IncorrectStimulation 0xffffffffffffffffll
+#define OV_IncorrectStimulation 0xffffffffffffffffull
 
 //___________________________________________________________________//
 //                                                                   //

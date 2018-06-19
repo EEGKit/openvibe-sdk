@@ -1185,8 +1185,12 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 
 				if (this->getTypeManager().isEnumeration(typeIdentifier))
 				{
+					auto enumerationEntryValue = this->getTypeManager().getEnumerationEntryValueFromName(typeIdentifier, settingValue);
+					auto enumerationEntryReversedName = this->getTypeManager().getEnumerationEntryNameFromValue(typeIdentifier, enumerationEntryValue);
+					// We need to compare the reversed name of the enumerations because some enumeration values actually use max int
+					// which is the same value as the guard value for incorrect stimulations
 					OV_ERROR_UNLESS_KRF(
-					            this->getTypeManager().getEnumerationEntryValueFromName(typeIdentifier, settingValue) != OV_IncorrectStimulation,
+					            enumerationEntryValue != OV_IncorrectStimulation || enumerationEntryReversedName == settingValue,
 					            "<" << box.second->getName() << "> The following value: [" << rawSettingValue << "] expanded as [" << settingValue << "] given as setting is not a valid [" << settingTypeName << "] value.",
 					            ErrorType::BadValue);
 				}
