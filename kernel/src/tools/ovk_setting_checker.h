@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <string>
 #include <functional>
+#include <cctype>
 
 namespace
 {
