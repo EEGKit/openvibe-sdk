@@ -494,6 +494,15 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 
 bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioIdentifier, const CIdentifier& scenarioExporterAlgorithmIdentifier) const
 {
+	IScenario& scenario = this->getScenario(scenarioIdentifier);
+	if (scenario.hasPendingMissings())
+	{
+		OV_WARNING_K(
+		            "Cannot export a scenario with pending missing I/O or Settings.Please remove missing I/O/S using Designer."
+		            );
+		return false;
+	}
+	
 	CMemoryBuffer memoryBuffer;
 	this->exportScenario(memoryBuffer, scenarioIdentifier, scenarioExporterAlgorithmIdentifier);
 

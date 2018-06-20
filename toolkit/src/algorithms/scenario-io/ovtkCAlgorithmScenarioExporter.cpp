@@ -59,10 +59,14 @@ void CAlgorithmScenarioExporterHelper::exportAttributes(const IAttributable& att
 		m_rParent.exportStart(memoryBuffer, idAttributes);
 		while ((attributeIdentifier = attributable.getNextAttributeIdentifier(attributeIdentifier)) != OV_UndefinedIdentifier)
 		{
-			m_rParent.exportStart(memoryBuffer, idAttribute);
-			m_rParent.exportIdentifier(memoryBuffer, idAttributeIdentifier, attributeIdentifier);
-			m_rParent.exportString(memoryBuffer, idAttributeValue, attributable.getAttributeValue(attributeIdentifier));
-			m_rParent.exportStop(memoryBuffer);
+			// do not export "to be updated" nor "pending missing" attribute
+			if ((attributeIdentifier != OV_AttributeId_Box_ToBeUpdated) && (attributeIdentifier != OV_AttributeId_Box_PendingMissings))
+			{
+				m_rParent.exportStart(memoryBuffer, idAttribute);
+				m_rParent.exportIdentifier(memoryBuffer, idAttributeIdentifier, attributeIdentifier);
+				m_rParent.exportString(memoryBuffer, idAttributeValue, attributable.getAttributeValue(attributeIdentifier));
+				m_rParent.exportStop(memoryBuffer);
+			}			
 		}
 		m_rParent.exportStop(memoryBuffer);
 	}

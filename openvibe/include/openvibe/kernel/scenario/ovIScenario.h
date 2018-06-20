@@ -530,11 +530,11 @@ namespace OpenViBE
 			virtual bool checkSettings(IConfigurationManager* configurationManager) = 0;
 
 			/**
-			 * \brief Check if boxes in scenario need to be updated. Feed an array with the identifiers
-			 * of boxes that need to be updated
+			 * \brief Check if boxes in scenario need to be updated. Feed an map of updates boxes instances with the identifiers
+			 * of boxes that need to be updated.
 			 * \return true if at least one box needs to updated
 			 */
-			virtual bool checkNeedsUpdateBox() = 0;
+			virtual bool checkNeedsUpdateBoxes() = 0;
 			
 			/**
 			* \brief Gets identifier of next box that needs to be updated
@@ -552,6 +552,29 @@ namespace OpenViBE
 			 * \note Warning: You need to call at least once the function "checkNeedsUpdateBox", before calling this function
 			 */
 			virtual bool hasNeedsUpdateBox() = 0;
+			
+			/**
+			 * \brief Update the prototypes of the box identified by the given identifier.
+			 * \param boxIdentifier
+			 * \retval true in case of success
+			 * \retval false in case of error
+			 */
+			virtual bool updateBox(const CIdentifier& boxIdentifier) = 0;
+			
+			/**
+			 * \brief Remove missing inputs, outputs or settings from the box identified by the given identifier.
+			 * \param boxIdentifier
+			 * \retval true in case of success
+			 * \retval false in case of error
+			 */
+			virtual bool removeBoxMissings(const CIdentifier &boxIdentifier) = 0;
+			
+			/**
+			 * \brief Tells if pending missing I/O or Setting still exists (due to a previous update try)
+			 * \return true if missing I/O or Setting exist
+			 * \return false if no missing I/O or Setting exist
+			 */
+			virtual bool hasPendingMissings() const = 0;
 
 			/**
 			 * \return true if the scenario is actually a metabox

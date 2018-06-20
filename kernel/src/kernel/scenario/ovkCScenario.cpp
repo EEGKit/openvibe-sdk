@@ -2,6 +2,7 @@
 #include "ovkCScenarioSettingKeywordParserCallback.h"
 
 #include "ovkTBox.hpp"
+#include "ovkCBoxUpdater.h"
 #include "ovkCComment.h"
 #include "ovkCMetadata.h"
 #include "ovkCLink.h"
@@ -149,6 +150,18 @@ bool CScenario::clear(void)
 		delete link.second;
 	}
 	m_Links.clear();
+	
+	for (auto &it: m_BoxesWhichNeedUpdate)
+	{
+		delete it.second;
+	}
+	m_BoxesWhichNeedUpdate.clear();
+	
+	for (auto &it: m_LinksWhichNeedUpdate)
+	{
+		delete it.second;
+	}
+	m_LinksWhichNeedUpdate.clear();
 
 	while (this->getSettingCount())
 	{
@@ -1332,7 +1345,12 @@ CIdentifier CScenario::getNextNeedsUpdateBoxIdentifier(const CIdentifier& previo
 
 bool CScenario::hasNeedsUpdateBox()
 {
-	return !m_BoxesWhichNeedUpdate.empty();
+	for (auto &box : m_Boxes)
+	{
+		if (box.second->hasAttribute(OV_AttributeId_Box_ToBeUpdated))
+			return true;
+	}
+	return false;
 }
 
 bool CScenario::checkNeedsUpdateBox()
@@ -1365,6 +1383,140 @@ bool CScenario::checkNeedsUpdateBox()
 
 	return result;
 }
+
+bool CScenario::checkNeedsUpdateBox(const CIdentifier& rBoxIdentifier)
+{
+	IBox* box = getBoxDetails(rBoxIdentifier);
+	if (!box)
+	{
+		return false;
+	}
+	CIdentifier boxHashCode1;
+	CIdentifier boxHashCode2;
+	if (box->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
+	{
+		CIdentifier metaboxId;
+		metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+		boxHashCode1 = getKernelContext().getMetaboxManager().getMetaboxHash(metaboxId);
+	}
+	else
+	{
+		boxHashCode1 = this->getKernelContext().getPluginManager().getPluginObjectHashValue(box->getAlgorithmClassIdentifier());
+	}
+	
+	boxHashCode2.fromString(box->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue));
+	
+	if(!(boxHashCode1 == OV_UndefinedIdentifier || boxHashCode1 == boxHashCode2))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool CScenario::checkNeedsUpdateBoxes()
+{
+	bool result = false;
+	
+	for (auto &it: m_BoxesWhichNeedUpdate)
+	{
+		delete it.second;
+	}
+	m_BoxesWhichNeedUpdate.clear();
+	
+	for (auto &it: m_LinksWhichNeedUpdate)
+	{
+		delete it.second;
+	}
+	m_LinksWhichNeedUpdate.clear();
+	
+	for (auto box : m_Boxes)
+	{						
+		// Box Updater instance which is in charge of create updated boxes and links
+		CBoxUpdater boxUpdater(*this, box.second);
+				
+		if (!boxUpdater.isInitialized())
+		{
+			OV_WARNING_K("Could not check for update the box with id " << box.second->getIdentifier());
+			continue;
+		}
+		
+		// exception for boxes that could not be automatically updated
+		if (boxUpdater.getKernelBox().hasAttribute(OV_AttributeId_Box_FlagManualUpdate))
+		{
+			 if (checkNeedsUpdateBox(box.second->getIdentifier()))
+			 {
+				CBox * toBeUpdatedBox = new CBox(getKernelContext());	
+				toBeUpdatedBox->initializeFromAlgorithmClassIdentifierNoInit(box.second->getAlgorithmClassIdentifier());
+				m_BoxesWhichNeedUpdate[box.second->getIdentifier()] = toBeUpdatedBox;
+				m_Boxes[box.first]->setAttributeValue(OV_AttributeId_Box_ToBeUpdated,"");
+				result = true;
+			 }
+			 continue;
+		}
+		
+		// other boxes check		
+		
+		// check for inputs 
+		bool inputstoBeUpdated = false;
+		std::map<CIdentifier,OpenViBE::Kernel::CLink*> inputLinksWhichNeedUpdate;		
+		boxUpdater.processInputsRequests(inputstoBeUpdated, inputLinksWhichNeedUpdate);
+				
+		// check for outputs 
+		bool outputstoBeUpdated = false;
+		std::map<CIdentifier,OpenViBE::Kernel::CLink*> outputLinksWhichNeedUpdate;		
+		boxUpdater.processOutputsRequests(outputstoBeUpdated, outputLinksWhichNeedUpdate);
+		
+		// check for settings		
+		bool settingstoBeUpdated = false;
+		boxUpdater.processSettingsRequests(settingstoBeUpdated);
+		
+		// check for supported inputs/outputs diff
+		bool ioSupportedTypesToBeUpdated = boxUpdater.checkForSupportedTypesToBeUpdated();
+		
+		// check for inputs/outputs/settings attributes diff
+		bool iosAttributesToBeUpdated = boxUpdater.checkForSupportedIOSAttributesToBeUpdated();
+		
+		// collect updated boxes		
+		if (inputstoBeUpdated || outputstoBeUpdated || settingstoBeUpdated || ioSupportedTypesToBeUpdated || iosAttributesToBeUpdated)
+		{
+			for (auto& it: inputLinksWhichNeedUpdate)
+			{
+				m_LinksWhichNeedUpdate[it.first] = it.second;
+			}
+			for (auto& it: outputLinksWhichNeedUpdate)
+			{
+				m_LinksWhichNeedUpdate[it.first] = it.second;
+			}
+			// it is important to set box algorithm at
+			// last so the box listener is never called
+			boxUpdater.getUpdatedBox().setAlgorithmClassIdentifier(box.second->getAlgorithmClassIdentifier());
+			// copy requested box into a new instance managed in scenario
+			CBox *newBox = new CBox(this->getKernelContext());
+			newBox->initializeFromExistingBox(boxUpdater.getUpdatedBox());								
+			m_BoxesWhichNeedUpdate[box.second->getIdentifier()] = newBox;			
+			m_Boxes[box.first]->setAttributeValue(OV_AttributeId_Box_ToBeUpdated,"");				
+			result = true;
+		}
+		else
+		{
+			// destroy links which have been created
+			for (auto& it: inputLinksWhichNeedUpdate)
+			{
+				delete it.second;
+			}
+			for (auto& it: outputLinksWhichNeedUpdate)
+			{
+				delete it.second;
+			}
+		}
+		
+	}
+	
+	return result;
+}
+
+
 
 template <class T, class TTest>
 void getIdentifierList(
@@ -1486,4 +1638,299 @@ bool CScenario::getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifi
 	m_Boxes[targetBoxIdentifier]->getInputIdentifier(targetBoxInputIndex, targetBoxInputIdentifier);
 	
 	return true;
+}
+/**
+ * \brief Process to the update of the identified box. 
+ *		It consists in recreate the prototype of the box according to the updated reference box which is the box
+ *		resulting of the add/pull requests to the kernel prototype. 
+ * \param boxIdentifier		the identifier of the box to be updated
+ * \return   true when update has been done successfully
+ * \return   false in case of failure
+ */
+bool CScenario::updateBox(const CIdentifier &boxIdentifier)
+{
+	bool somethingIsMissing = false;
+	// Check if box must be updated
+	const auto itSourceBox = m_Boxes.find(boxIdentifier);
+	OV_ERROR_UNLESS_KRF(
+	            itSourceBox != m_Boxes.end(),
+	            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+	            ErrorType::ResourceNotFound
+	            );
+	            
+	const auto itUpdateBox = m_BoxesWhichNeedUpdate.find(boxIdentifier);
+	if (itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagManualUpdate))
+	{
+		this->getLogManager() << LogLevel_Warning << m_Boxes[boxIdentifier]->getName() 
+		                      << " must be manually updated because of a too complex prototype management\n";
+		return false;
+	}
+	OV_ERROR_UNLESS_KRF(
+	            itUpdateBox != m_BoxesWhichNeedUpdate.end(),
+	            "Box [" << boxIdentifier.toString() << "] does not have to be updated",
+	            ErrorType::ResourceNotFound
+	            );
+	
+	// Synchronize IOS attributes with updated box
+	std::vector<CIdentifier> attributes = {
+	    OV_AttributeId_Box_FlagCanAddInput,
+	    OV_AttributeId_Box_FlagCanModifyInput,
+	    OV_AttributeId_Box_FlagCanAddOutput,
+	    OV_AttributeId_Box_FlagCanModifyOutput,
+	    OV_AttributeId_Box_FlagCanAddSetting,
+	    OV_AttributeId_Box_FlagCanModifySetting
+	};
+	
+	for (auto attr: attributes)
+	{
+		if (!itUpdateBox->second->hasAttribute(attr) && itSourceBox->second->hasAttribute(attr))
+		{
+			itSourceBox->second->removeAttribute(attr);
+		}
+		if (itUpdateBox->second->hasAttribute(attr) && !itSourceBox->second->hasAttribute(attr))
+		{
+			itSourceBox->second->addAttribute(attr,"");
+		}
+	}
+	
+	// Synchronize IO supported types with updated box
+	itSourceBox->second->clearInputSupportTypes();
+	for (auto type: itUpdateBox->second->getInputSupportTypes())
+	{
+		itSourceBox->second->addInputSupport(type);
+	}
+	itSourceBox->second->clearOutputSupportTypes();
+	for (auto type: itUpdateBox->second->getOutputSupportTypes())
+	{
+		itSourceBox->second->addOutputSupport(type);
+	}
+	
+	          
+	// Remove, add  and reconnect inputs	
+	while(itSourceBox->second->getInputCount())
+	{
+		itSourceBox->second->removeInput(itSourceBox->second->getInputCount()-1, false);
+	}
+	for (uint i=0; i < itUpdateBox->second->getInputCountWithMissing(); i++)
+	{
+		CString name;
+		CIdentifier typeIdentifier;
+		CIdentifier identifier;
+		bool missing;
+		
+		itUpdateBox->second->getInputName(i,name);
+		itUpdateBox->second->getInputType(i,typeIdentifier);
+		itUpdateBox->second->getInputIdentifier(i,identifier);		
+		itUpdateBox->second->getInputMissingStatus(i, missing);		
+		itSourceBox->second->addInput(name,typeIdentifier,identifier, false);
+		itSourceBox->second->setInputMissingStatus(i, missing);	
+		somethingIsMissing |= missing;
+		for (auto& link: m_LinksWhichNeedUpdate)
+		{
+			if ((link.second->getTargetBoxIdentifier() == boxIdentifier)
+			        &&
+			        (link.second->getTargetBoxInputIndex() == i)
+			        )
+			{
+				CIdentifier suggestedLinkIdentifier;
+				connect(suggestedLinkIdentifier,
+				        link.second->getSourceBoxIdentifier(),
+				        link.second->getSourceBoxOutputIndex(),
+				        link.second->getTargetBoxIdentifier(),
+				        link.second->getTargetBoxInputIndex(),
+				        link.second->getIdentifier());
+				if (link.second->hasAttribute(OV_AttributeId_Link_Invalid))
+				{
+					getLinkDetails(suggestedLinkIdentifier)->setAttributeValue(OV_AttributeId_Link_Invalid,"");			
+				}
+			}
+		}
+	}
+	
+	// Remove, add  and reconnect output	
+	while(itSourceBox->second->getOutputCount())
+	{
+		itSourceBox->second->removeOutput(itSourceBox->second->getOutputCount()-1, false);
+	}
+	for (uint i=0; i < itUpdateBox->second->getOutputCountWithMissing(); i++)
+	{
+		CString name;
+		CIdentifier typeIdentifier;
+		CIdentifier identifier;
+		bool missing;
+		
+		itUpdateBox->second->getOutputName(i,name);
+		itUpdateBox->second->getOutputType(i,typeIdentifier);
+		itUpdateBox->second->getOutputIdentifier(i,identifier);		
+		itUpdateBox->second->getOutputMissingStatus(i, missing);		
+		itSourceBox->second->addOutput(name,typeIdentifier,identifier, false);
+		itSourceBox->second->setOutputMissingStatus(i, missing);
+		somethingIsMissing |= missing;
+		for (auto& link: m_LinksWhichNeedUpdate)
+		{
+			if ((link.second->getSourceBoxIdentifier() == boxIdentifier)
+			        &&
+			        (link.second->getSourceBoxOutputIndex() == i)
+			        )
+			{
+				CIdentifier suggestedLinkIdentifier;
+				connect(suggestedLinkIdentifier,
+				        link.second->getSourceBoxIdentifier(),
+				        link.second->getSourceBoxOutputIndex(),
+				        link.second->getTargetBoxIdentifier(),
+				        link.second->getTargetBoxInputIndex(),
+				        link.second->getIdentifier());
+				if (link.second->hasAttribute(OV_AttributeId_Link_Invalid))
+				{
+					getLinkDetails(suggestedLinkIdentifier)->setAttributeValue(OV_AttributeId_Link_Invalid,"");			
+				}
+			}
+		}
+	}
+	
+	// Remove and add settings
+	while(itSourceBox->second->getSettingCount())
+	{
+		itSourceBox->second->removeSetting(itSourceBox->second->getSettingCount()-1, false);
+	}
+	for (uint i=0; i < itUpdateBox->second->getSettingCountWithMissing(); i++)
+	{
+		CString name;
+		CIdentifier typeIdentifier;
+		CIdentifier identifier;
+		CString defaultValue;
+		CString value;
+		bool modifiability;
+		bool missing;
+		
+		itUpdateBox->second->getSettingName(i,name);
+		itUpdateBox->second->getSettingType(i,typeIdentifier);
+		itUpdateBox->second->getSettingIdentifier(i,identifier);		
+		itUpdateBox->second->getSettingDefaultValue(i, defaultValue);
+		itUpdateBox->second->getSettingMod(i, modifiability);
+		itUpdateBox->second->getSettingValue(i, value);
+		itUpdateBox->second->getSettingMissingStatus(i, missing);
+		somethingIsMissing |= missing;
+		itSourceBox->second->addSetting(name,
+		                                typeIdentifier,
+		                                defaultValue,
+		                                OV_Value_UndefinedIndexUInt,
+		                                modifiability,
+		                                identifier,
+		                                false);
+		itSourceBox->second->setSettingValue(i, value, false);
+		itSourceBox->second->setSettingMissingStatus(i, missing);
+		                                
+	}
+		
+	
+		
+	itSourceBox->second->removeAttribute(OV_AttributeId_Box_ToBeUpdated);
+	if (somethingIsMissing)
+	{
+		this->getLogManager() << LogLevel_Info << m_Boxes[boxIdentifier]->getName() 
+	                      << " box has not been fully updated\n";
+		itSourceBox->second->setAttributeValue(OV_AttributeId_Box_PendingMissings,"");
+		this->getLogManager() << LogLevel_Info << "Missing Inputs, Outputs or Settings are pending\n";
+		this->getLogManager() << LogLevel_Info << "Please remove missing I/O/S before exporting scenario\n";
+	}
+	else
+	{
+		this->getLogManager() << LogLevel_Info << m_Boxes[boxIdentifier]->getName() 
+	                      << " box has been updated successfully\n";
+		// update hash
+		CString updatedHash = itUpdateBox->second->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue);
+		itSourceBox->second->setAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue,updatedHash);
+	}
+		
+	return  true;
+}
+/**
+ * \brief Remove inputs, outputs and settings tagged as missing, which the result of an unsucessfull automatic update.
+ * \param boxIdentifier		the box identifier
+ * \return true
+ */
+bool CScenario::removeBoxMissings(const CIdentifier &boxIdentifier)
+{
+	// Check if box must be updated
+	IBox* box = getBoxDetails(boxIdentifier);
+	if (!box)
+	{
+		return false;
+	}            
+	// Remove missing inputs
+	bool missing = false;	
+	for(unsigned int index = 0;index < box->getInputCountWithMissing();)
+	{
+		box->getInputMissingStatus(index, missing);
+		if (missing)
+		{
+			box->removeInput(index);
+		}
+		else
+		{
+			index++;
+		}
+	}
+	
+	// Remove missing Outputs
+	for(unsigned int index = 0;index < box->getOutputCountWithMissing();)
+	{
+		box->getOutputMissingStatus(index, missing);
+		if (missing)
+		{
+			box->removeOutput(index);
+		}
+		else
+		{
+			index++;
+		}
+	}
+	
+	// Remove missing Settings	
+	for(unsigned int index = 0;index < box->getSettingCountWithMissing();)
+	{
+		box->getSettingMissingStatus(index, missing);
+		if (missing)
+		{
+			box->removeSetting(index);
+		}
+		else
+		{
+			index++;
+		}
+	}
+	
+	this->getLogManager() << LogLevel_Info << m_Boxes[boxIdentifier]->getName() 
+	                      << " Missing I/O and settings have been removed successfully\n";
+		
+	box->removeAttribute(OV_AttributeId_Box_PendingMissings);
+	
+	return  true;
+}
+
+/**
+ * \brief Tells if the box contains intput, outputs or settings tagged as missing.
+ * \return true  when the box contains intput, outputs or settings tagged as missing.
+ * \return false if not
+ */
+bool CScenario::hasPendingMissings() const
+{	
+	for (auto box : m_Boxes)
+	{
+		
+		if(box.second->getInputCountWithMissing() > box.second->getInputCount())
+		{
+			return true;
+		}
+		if(box.second->getOutputCountWithMissing() > box.second->getOutputCount())
+		{
+			return true;
+		}
+		if(box.second->getSettingCountWithMissing() > box.second->getSettingCount())
+		{
+			return true;
+		}		
+	}
+	return false;
 }

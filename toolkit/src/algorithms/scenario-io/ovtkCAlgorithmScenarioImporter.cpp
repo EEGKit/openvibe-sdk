@@ -440,7 +440,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 			a->m_sValue);
 	}
 
-	if(l_pScenario->checkNeedsUpdateBox())
+	if(l_pScenario->checkNeedsUpdateBoxes())
 	{
 		CIdentifier* identifierList = nullptr;
 		size_t nbElems = 0;

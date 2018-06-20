@@ -133,7 +133,10 @@ namespace OpenViBE
 			bool checkSettings(IConfigurationManager* configurationManager);
 
 			bool checkNeedsUpdateBox();
-			bool hasNeedsUpdateBox();
+			bool checkNeedsUpdateBox(const CIdentifier& rBoxIdentifier);
+			bool checkNeedsUpdateBoxes();
+			bool hasNeedsUpdateBox();			
+			
 			OpenViBE::CIdentifier getNextNeedsUpdateBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const;
 
 			bool isMetabox(void);
@@ -151,6 +154,12 @@ namespace OpenViBE
 
 
 			bool acceptVisitor(OpenViBE::IObjectVisitor& objectVisitor);
+			
+			bool updateBox(const CIdentifier &boxIdentifier);
+			
+			bool hasPendingMissings() const;
+			
+			bool removeBoxMissings(const CIdentifier &boxIdentifier);
 
 			_IsDerivedFromClass_Final_(TBox< OpenViBE::Kernel::IScenario >, OVK_ClassId_Kernel_Scenario_Scenario)
 
@@ -162,6 +171,7 @@ namespace OpenViBE
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CMetadata*> m_Metadata;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CLink*> m_Links;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CBox*> m_BoxesWhichNeedUpdate;
+			std::map<CIdentifier,OpenViBE::Kernel::CLink*> m_LinksWhichNeedUpdate;
 
 			bool m_HasIO;
 
