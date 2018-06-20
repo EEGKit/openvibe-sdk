@@ -177,14 +177,15 @@ bool CScenario::removeScenarioInput(const uint32 inputIndex)
 		"Input index = [" << inputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
 		ErrorType::OutOfBound
 	);
-
+	
+	this->removeInput(inputIndex);
+	
 	// Remove the link within the scenario to this input
 	if (inputIndex < m_ScenarioInputLinks.size())
 	{
 		m_ScenarioInputLinks.erase(m_ScenarioInputLinks.begin() + inputIndex);
 	}
-	this->removeInput(inputIndex);
-
+	
 	return true;
 }
 
@@ -196,12 +197,13 @@ bool CScenario::removeScenarioOutput(const uint32 outputIndex)
 		ErrorType::OutOfBound
 	);
 
+	this->removeOutput(outputIndex);
+
 	// Remove the link within the scenario to this output
 	if (outputIndex < m_ScenarioOutputLinks.size())
 	{
 		m_ScenarioOutputLinks.erase(m_ScenarioOutputLinks.begin() + outputIndex);
 	}
-	this->removeOutput(outputIndex);
 
 	return true;
 }
@@ -289,13 +291,15 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 			CString defaultValue;
 			CString value;
 			bool isModifiable;
+			CIdentifier l_oIdentifier;
 			scenario.getSettingType(settingIndex, settingTypeIdentifier);
 			scenario.getSettingName(settingIndex, settingName);
 			scenario.getSettingDefaultValue(settingIndex, defaultValue);
 			scenario.getSettingValue(settingIndex, value);
 			scenario.getSettingMod(settingIndex, isModifiable);
+			scenario.getSettingIdentifier(settingIndex, l_oIdentifier);
 
-			this->addSetting(settingName, settingTypeIdentifier, defaultValue, -1, isModifiable);
+			this->addSetting(settingName, settingTypeIdentifier, defaultValue, OV_Value_UndefinedIndexUInt, isModifiable, l_oIdentifier, true);
 			this->setSettingValue(previousSettingCount + settingIndex, value);
 
 		}
@@ -689,30 +693,33 @@ bool CScenario::hasIO() const
 
 bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32 boxInputIndex)
 {
-	OV_ERROR_UNLESS_KRF(
-		scenarioInputIndex < this->getInputCount(),
-		"Scenario Input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
-
-	OV_ERROR_UNLESS_KRF(
-		this->isBox(boxIdentifier),
-		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
-
-	OV_ERROR_UNLESS_KRF(
-		boxInputIndex < this->getBoxDetails(boxIdentifier)->getInputCount(),
-		"Box Input index = [" << boxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		OV_ERROR_UNLESS_KRF(
+		            scenarioInputIndex < this->getInputCount(),
+		            "Scenario Input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+		
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
+		
+		OV_ERROR_UNLESS_KRF(
+		            boxInputIndex < this->getBoxDetails(boxIdentifier)->getInputCount(),
+		            "Box Input index = [" << boxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getInputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+	}
 
 	if (scenarioInputIndex >= m_ScenarioInputLinks.size())
 	{
 		m_ScenarioInputLinks.resize(this->getInputCount());
 	}
 
-	// Remove any existing inputs connected to the
+	// Remove any existing inputs connected to the target
 	for (size_t inputLinkIndex = 0; inputLinkIndex < m_ScenarioInputLinks.size(); inputLinkIndex++)
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
@@ -740,32 +747,51 @@ bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIde
 	return true;
 }
 
+bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier)
+{
+	uint32 boxInputIndex = OV_Value_UndefinedIndexUInt;
+	
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );		
+		this->getBoxDetails(boxIdentifier)->getInputIndex(boxInputIdentifier, boxInputIndex);		
+	}
+	return this->setScenarioInputLink(scenarioInputIndex, boxIdentifier, boxInputIndex);
+}
+
 bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32 boxOutputIndex)
 {
-	OV_ERROR_UNLESS_KRF(
-		scenarioOutputIndex < this->getOutputCount(),
-		"Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
-
-	OV_ERROR_UNLESS_KRF(
-		this->isBox(boxIdentifier),
-		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
-
-	OV_ERROR_UNLESS_KRF(
-		boxOutputIndex < this->getBoxDetails(boxIdentifier)->getOutputCount(),
-		"Box output index = [" << boxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{		
+		OV_ERROR_UNLESS_KRF(
+		            scenarioOutputIndex < this->getOutputCount(),
+		            "Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+		
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
+		
+		OV_ERROR_UNLESS_KRF(
+		            boxOutputIndex < this->getBoxDetails(boxIdentifier)->getOutputCount(),
+		            "Box output index = [" << boxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getOutputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+	}
 
 	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size())
 	{
 		m_ScenarioOutputLinks.resize(this->getOutputCount());
 	}
 
-	// Remove any existing outputs connected to the
+	// Remove any existing outputs connected to the target
 	for (size_t outputLinkIndex = 0; outputLinkIndex < m_ScenarioOutputLinks.size(); outputLinkIndex++)
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
@@ -783,6 +809,24 @@ bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CI
 	return true;
 }
 
+bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier)
+{
+	uint32 boxOutputIndex = OV_Value_UndefinedIndexUInt;
+	
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
+		
+		this->getBoxDetails(boxIdentifier)->getOutputIndex(boxOutputIdentifier, boxOutputIndex);
+	}
+	return this->setScenarioOutputLink(scenarioOutputIndex, boxIdentifier, boxOutputIndex);
+}
+
 bool CScenario::getScenarioInputLink(const uint32 scenarioInputIndex, CIdentifier& boxIdentifier, uint32& boxInputIndex) const
 {
 	OV_ERROR_UNLESS_KRF(
@@ -798,6 +842,24 @@ bool CScenario::getScenarioInputLink(const uint32 scenarioInputIndex, CIdentifie
 
 	boxIdentifier = m_ScenarioInputLinks[scenarioInputIndex].first;
 	boxInputIndex = m_ScenarioInputLinks[scenarioInputIndex].second;
+
+	return true;
+}
+
+bool CScenario::getScenarioInputLink(const uint32 scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const
+{
+	uint32 boxInputIndex;
+	boxOutputIdentifier = OV_UndefinedIdentifier;
+	
+	this->getScenarioInputLink(scenarioInputIndex, boxIdentifier, boxInputIndex);	
+	
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		if (m_Boxes.find(boxIdentifier) != m_Boxes.end())
+		{
+			this->getBoxDetails(boxIdentifier)->getInputIdentifier(boxInputIndex, boxOutputIdentifier);
+		}
+	}
 
 	return true;
 }
@@ -821,27 +883,48 @@ bool CScenario::getScenarioOutputLink(const uint32 scenarioOutputIndex, CIdentif
 	return true;
 }
 
+bool CScenario::getScenarioOutputLink(const uint32 scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const
+{
+	uint32 boxOutputIndex;
+	boxOutputIdentifier = OV_UndefinedIdentifier;
+	
+	this->getScenarioOutputLink(scenarioOutputIndex, boxIdentifier, boxOutputIndex);	
+	
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		if (m_Boxes.find(boxIdentifier) != m_Boxes.end())
+		{
+			this->getBoxDetails(boxIdentifier)->getOutputIdentifier(boxOutputIndex, boxOutputIdentifier);
+		}
+	}
+
+	return true;
+}
+
 // Note: In current implementation only the scenarioInputIndex is necessary as it can only be connected to one input
 // but to keep things simpler we give it all the info
 bool CScenario::removeScenarioInputLink(const uint32 scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32 boxInputIndex)
 {
-	OV_ERROR_UNLESS_KRF(
-		scenarioInputIndex < this->getInputCount(),
-		"Scenario Input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
-
-	OV_ERROR_UNLESS_KRF(
-		this->isBox(boxIdentifier),
-		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
-
-	OV_ERROR_UNLESS_KRF(
-		boxInputIndex < this->getBoxDetails(boxIdentifier)->getInputCount(),
-		"Box Input index = [" << boxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		OV_ERROR_UNLESS_KRF(
+		            scenarioInputIndex < this->getInputCount(),
+		            "Scenario Input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+		
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
+		
+		OV_ERROR_UNLESS_KRF(
+		            boxInputIndex < this->getBoxDetails(boxIdentifier)->getInputCount(),
+		            "Box Input index = [" << boxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getInputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+	}
 
 	// This should not happen either
 	if (scenarioInputIndex >= m_ScenarioInputLinks.size())
@@ -857,23 +940,26 @@ bool CScenario::removeScenarioInputLink(const uint32 scenarioInputIndex, const C
 // but to keep things simpler we give it all the info
 bool CScenario::removeScenarioOutputLink(const uint32 scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32 boxOutputIndex)
 {
-	OV_ERROR_UNLESS_KRF(
-		scenarioOutputIndex < this->getOutputCount(),
-		"Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
-
-	OV_ERROR_UNLESS_KRF(
-		this->isBox(boxIdentifier),
-		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
-
-	OV_ERROR_UNLESS_KRF(
-		boxOutputIndex < this->getBoxDetails(boxIdentifier)->getOutputCount(),
-		"Box output index = [" << boxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		OV_ERROR_UNLESS_KRF(
+		            scenarioOutputIndex < this->getOutputCount(),
+		            "Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+		
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
+		
+		OV_ERROR_UNLESS_KRF(
+		            boxOutputIndex < this->getBoxDetails(boxIdentifier)->getOutputCount(),
+		            "Box output index = [" << boxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getOutputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+	}
 
 	// This should not happen either
 	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size())
@@ -938,13 +1024,13 @@ bool CScenario::connect(
 	CBox* targetBox = itBox2->second;
 
 	OV_ERROR_UNLESS_KRF(
-		targetBoxInputIndex < targetBox->getInputCount(),
+		targetBoxInputIndex < targetBox->getInputCountWithMissing(),
 		"Target box input index = [" << targetBoxInputIndex << "] is out of range (max index = [" << (targetBox->getInputCount() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
 	OV_ERROR_UNLESS_KRF(
-		sourceBoxOutputIndex < sourceBox->getOutputCount(),
+		sourceBoxOutputIndex < sourceBox->getOutputCountWithMissing(),
 		"Source box output index = [" << sourceBoxOutputIndex << "] is out of range (max index = [" << (sourceBox->getOutputCount() - 1) << "])",
 		ErrorType::OutOfBound
 	);
@@ -970,14 +1056,38 @@ bool CScenario::connect(
 	linkIdentifier = getUnusedIdentifier(suggestedLinkIdentifier);
 
 	CLink* link = new CLink(this->getKernelContext(), *this);
+	CIdentifier sourceBoxOutputIdentifier;
+	CIdentifier targetBoxInputIdentifier;
+	
+	this->getSourceBoxOutputIdentifier(sourceBoxIdentifier, sourceBoxOutputIndex, sourceBoxOutputIdentifier);
+	this->getTargetBoxInputIdentifier(targetBoxIdentifier, targetBoxInputIndex, targetBoxInputIdentifier);
+	
 	link->setIdentifier(linkIdentifier);
-	link->setSource(sourceBoxIdentifier, sourceBoxOutputIndex);
-	link->setTarget(targetBoxIdentifier, targetBoxInputIndex);
+	link->setSource(sourceBoxIdentifier, sourceBoxOutputIndex, sourceBoxOutputIdentifier);
+	link->setTarget(targetBoxIdentifier, targetBoxInputIndex, targetBoxInputIdentifier);
 
 	m_Links[link->getIdentifier()] = link;
 
 	return true;
 }
+
+bool CScenario::connect(
+	CIdentifier& linkIdentifier,
+	const CIdentifier& sourceBoxIdentifier,
+	const CIdentifier& sourceBoxOutputIdentifier,
+	const CIdentifier& targetBoxIdentifier,
+	const CIdentifier& targetBoxInputIdentifier,
+	const CIdentifier& suggestedLinkIdentifier)
+{
+	uint32 sourceBoxOutputIndex;
+	uint32 targetBoxInputIndex;
+	
+	this->getSourceBoxOutputIndex(sourceBoxIdentifier, sourceBoxOutputIdentifier, sourceBoxOutputIndex);
+	this->getTargetBoxInputIndex(targetBoxIdentifier, targetBoxInputIdentifier, targetBoxInputIndex);
+	
+	return this->connect(linkIdentifier, sourceBoxIdentifier, sourceBoxOutputIndex, targetBoxIdentifier, targetBoxInputIndex, suggestedLinkIdentifier);
+}
+
 
 bool CScenario::disconnect(const CIdentifier& sourceBoxIdentifier, const uint32 sourceBoxOutputIndex, const CIdentifier& targetBoxIdentifier, const uint32 targetBoxInputIndex)
 {
@@ -1005,6 +1115,21 @@ bool CScenario::disconnect(const CIdentifier& sourceBoxIdentifier, const uint32 
 		"Link is not part of the scenario",
 		ErrorType::ResourceNotFound
 	);
+}
+
+bool CScenario::disconnect(
+	const CIdentifier& sourceBoxIdentifier, 
+        const CIdentifier& sourceBoxOutputIdentifier, 
+        const CIdentifier& targetBoxIdentifier, 
+        const CIdentifier& targetBoxInputIdentifier)
+{
+	uint32 sourceBoxOutputIndex;
+	uint32 targetBoxInputIndex;
+	
+	this->getSourceBoxOutputIndex(sourceBoxIdentifier, sourceBoxOutputIdentifier, sourceBoxOutputIndex);
+	this->getTargetBoxInputIndex(targetBoxIdentifier, targetBoxInputIdentifier, targetBoxInputIndex);
+	
+	return this->disconnect(sourceBoxIdentifier, sourceBoxOutputIndex, targetBoxIdentifier, targetBoxInputIndex );
 }
 
 bool CScenario::disconnect(const CIdentifier& linkIdentifier)
@@ -1122,7 +1247,7 @@ bool CScenario::acceptVisitor(IObjectVisitor& objectVisitor)
 //___________________________________________________________________//
 //                                                                   //
 
-CIdentifier CScenario::getUnusedIdentifier(const CIdentifier& suggestedIdentifier) const
+CIdentifier CScenario::getUnusedIdentifier(const CIdentifier suggestedIdentifier) const
 {
 	uint64 newIdentifier = (((uint64)rand())<<32)+((uint64)rand());
 	if (suggestedIdentifier != OV_UndefinedIdentifier)
@@ -1301,4 +1426,64 @@ void CScenario::getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifi
 void CScenario::releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const
 {
 	delete[] identifierList;
+}
+
+bool CScenario::getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, uint32& sourceBoxOutputIndex)
+{
+	const auto itSourceBox = m_Boxes.find(sourceBoxIdentifier);
+		
+	OV_ERROR_UNLESS_KRF(
+	            itSourceBox != m_Boxes.end(),
+	            "Source Box [" << sourceBoxIdentifier.toString() << "] is not part of the scenario",
+	            ErrorType::ResourceNotFound
+	            );
+	
+	m_Boxes[sourceBoxIdentifier]->getOutputIndex(sourceBoxOutputIdentifier, sourceBoxOutputIndex);
+	
+	return true;
+}
+
+bool CScenario::getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, uint32& targetBoxInputIndex)
+{	
+	const auto itTargetBox = m_Boxes.find(targetBoxIdentifier);
+	
+	OV_ERROR_UNLESS_KRF(
+	            itTargetBox != m_Boxes.end(),
+	            "Target Box [" << targetBoxIdentifier.toString() << "] is not part of the scenario",
+	            ErrorType::ResourceNotFound
+	            );	
+	
+	m_Boxes[targetBoxIdentifier]->getInputIndex(targetBoxInputIdentifier, targetBoxInputIndex);
+	
+	return true;
+}
+
+bool CScenario::getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentifier, const uint32& sourceBoxOutputIndex, CIdentifier& sourceBoxOutputIdentifier)
+{
+	const auto itSourceBox = m_Boxes.find(sourceBoxIdentifier);
+		
+	OV_ERROR_UNLESS_KRF(
+	            itSourceBox != m_Boxes.end(),
+	            "Source Box [" << sourceBoxIdentifier.toString() << "] is not part of the scenario",
+	            ErrorType::ResourceNotFound
+	            );
+	
+	m_Boxes[sourceBoxIdentifier]->getOutputIdentifier(sourceBoxOutputIndex, sourceBoxOutputIdentifier);
+	
+	return true;
+}
+
+bool CScenario::getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifier, const uint32& targetBoxInputIndex, CIdentifier& targetBoxInputIdentifier)
+{
+	const auto itTargetBox = m_Boxes.find(targetBoxIdentifier);
+		
+	OV_ERROR_UNLESS_KRF(
+	            itTargetBox != m_Boxes.end(),
+	            "Target Box [" << targetBoxIdentifier.toString() << "] is not part of the scenario",
+	            ErrorType::ResourceNotFound
+	            );
+	
+	m_Boxes[targetBoxIdentifier]->getInputIdentifier(targetBoxInputIndex, targetBoxInputIdentifier);
+	
+	return true;
 }

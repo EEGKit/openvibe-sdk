@@ -63,8 +63,14 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::initialize(void)
 	m_oDecoder.initialize(*this, 0);
 	m_oEncoder.initialize(*this, 0);
 
-	int64 l_i64OutputSamplingRate = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	int64 l_i64OutputSampleCount = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	int64 l_i64OutputSamplingRate = FSettingValueAutoCast(
+	            *this->getBoxAlgorithmContext(),
+	            OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency
+	            );
+	int64 l_i64OutputSampleCount = FSettingValueAutoCast(
+	            *this->getBoxAlgorithmContext(), 
+	            OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer
+	            );
 
 	OV_ERROR_UNLESS_KRF(
 		l_i64OutputSamplingRate > 0,

@@ -130,6 +130,8 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addSetting(c_sBalanceSettingName,              OV_TypeId_Boolean,                   "false");
 
 				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddInput);
+				
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_ManualUpdate);
 				return true;
 			}
 

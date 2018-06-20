@@ -16,9 +16,11 @@ CBoxProto::CBoxProto(const IKernelContext& rKernelContext, IBox& rBox)
 
 bool CBoxProto::addInput(
 	const CString& sName,
-	const CIdentifier& rTypeIdentifier)
+	const CIdentifier& rTypeIdentifier,
+	const OpenViBE::CIdentifier& oIdentifier,
+	const bool bNotify)
 {
-	if(!m_rBox.addInput(sName, rTypeIdentifier))
+	if(!m_rBox.addInput(sName, rTypeIdentifier, oIdentifier, bNotify))
 	{
 		return false;
 	}
@@ -40,9 +42,11 @@ bool CBoxProto::addInput(
 bool CBoxProto::addOutput(
 
 	const CString& sName,
-	const CIdentifier& rTypeIdentifier)
+	const CIdentifier& rTypeIdentifier,
+	const OpenViBE::CIdentifier& rIdentifier,
+	const bool bNotify)
 {
-	if(!m_rBox.addOutput(sName, rTypeIdentifier))
+	if(!m_rBox.addOutput(sName, rTypeIdentifier, rIdentifier, bNotify))
 	{
 		return false;
 	}
@@ -65,9 +69,11 @@ bool CBoxProto::addSetting(
 	const CString& sName,
 	const CIdentifier& rTypeIdentifier,
 	const CString& sDefaultValue,
-	const bool bModifiable)
+	const bool bModifiable,
+	const OpenViBE::CIdentifier& rIdentifier,
+	const bool bNotify)
 {
-	if(!m_rBox.addSetting(sName, rTypeIdentifier, sDefaultValue, -1, bModifiable))
+	if(!m_rBox.addSetting(sName, rTypeIdentifier, sDefaultValue, OV_Value_UndefinedIndexUInt, bModifiable, rIdentifier, bNotify))
 	{
 		return false;
 	}

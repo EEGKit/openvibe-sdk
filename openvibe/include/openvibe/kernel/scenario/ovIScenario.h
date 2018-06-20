@@ -71,8 +71,8 @@ namespace OpenViBE
 
 			//@}
 			/** \name Box management */
-			//@{
-
+			//@{		
+			
 			/**
 			 * \brief Gets next box identifier
 			 * \param previousIdentifier The identifier
@@ -248,6 +248,27 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& targetBoxIdentifier,
 				const OpenViBE::uint32 targetBoxInputIndex,
 				const OpenViBE::CIdentifier& suggestedLinkIdentifier) = 0;
+				
+			/**
+			 * \brief Creates a connection between two boxes
+			 * \param[out] linkIdentifier The created link identifier.
+			 * \param sourceBoxIdentifier The source box identifier
+			 * \param sourceBoxOutputIdentifier The output identifier for the given source box
+			 * \param targetBoxIdentifier The target box identifier
+			 * \param targetBoxInputIdentifier The input identifier for the given target box
+			 * \param suggestedLinkIdentifier a suggestion for the new link identifier. If this specific identifier is not
+			 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
+			 *        then a random unused identifier will be used.
+			 * \retval true In case of success.
+			 * \retval false In case of error. In such case, \c linkIdentifier remains unchanged.
+			 */
+			virtual bool connect(
+				OpenViBE::CIdentifier& linkIdentifier,
+				const OpenViBE::CIdentifier& sourceBoxIdentifier,
+				const OpenViBE::CIdentifier& sourceBoxOutputIdentifier,
+				const OpenViBE::CIdentifier& targetBoxIdentifier,
+				const OpenViBE::CIdentifier& targetBoxInputIdentifier,
+				const OpenViBE::CIdentifier& suggestedLinkIdentifier) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -263,6 +284,22 @@ namespace OpenViBE
 				const OpenViBE::uint32 sourceBoxOutputIndex,
 				const OpenViBE::CIdentifier& targetBoxIdentifier,
 				const OpenViBE::uint32 targetBoxInputIndex) = 0;
+				
+			/**
+			 * \brief Deletes a connection between two boxes
+			 * \param sourceBoxIdentifier The source box identifier
+			 * \param sourceBoxOutputIdentifier The output identifier for the given source box
+			 * \param targetBoxIdentifier The target box identifier
+			 * \param targetBoxInputIdentifier The input identifier for the given target box
+			 * \retval true In case of success.
+			 * \retval false In case of error.
+			 */
+			virtual bool disconnect(
+				const OpenViBE::CIdentifier& sourceBoxIdentifier,
+				const OpenViBE::CIdentifier& sourceBoxOutputIdentifier,
+				const OpenViBE::CIdentifier& targetBoxIdentifier,
+				const OpenViBE::CIdentifier& targetBoxInputIdentifier) = 0;
+
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -271,6 +308,54 @@ namespace OpenViBE
 			 * \retval false In case of error.
 			 */
 			virtual bool disconnect(const OpenViBE::CIdentifier& linkIdentifier) = 0;
+			
+			/**
+			 * \brief Get the output index of a source, for a specific box
+			 * \param[in] sourceBoxIdentifier The source box identifier
+			 * \param[in] sourceBoxOutputIdentifier The output identifier for the given source box
+			 * \param[out] sourceBoxOutputIndex The output index for the given source box
+			 * \retval true in case of success. 
+			 */
+			virtual bool getSourceBoxOutputIndex(
+				const CIdentifier& sourceBoxIdentifier,
+				const CIdentifier& sourceBoxOutputIdentifier, 
+				unsigned int& sourceBoxOutputIndex) = 0;
+				
+			/**
+			 * \brief Get the input index of a target, for a specific box
+			 * \param[in] sourceBoxIdentifier The target box identifier
+			 * \param[in] sourceBoxOutputIdentifier The input identifier for the given target box
+			 * \param[out] sourceBoxOutputIndex The input index for the given target box
+			 * \retval true in case of success. 
+			 */
+			virtual bool getTargetBoxInputIndex(
+				const CIdentifier& targetBoxIdentifier,
+				const CIdentifier& targetBoxInputIdentifier, 
+				unsigned int& targetBoxInputIndex) = 0;
+				
+			/**
+			 * \brief  Get the output identifier of a source, for a specific box
+			 * \param sourceBoxIdentifier The source box identifier
+			 * \param sourceBoxOutputIndex The output index for the given source box
+			 * \param sourceBoxOutputIdentifier The output identifier for the given source box
+			 * \retval true in case of success.
+			 */	
+			virtual bool getSourceBoxOutputIdentifier(
+				const CIdentifier& sourceBoxIdentifier,
+				const unsigned int& sourceBoxOutputIndex,
+				CIdentifier& sourceBoxOutputIdentifier) = 0;
+				
+			/**
+			 * \brief  Get the input identifier of a target, for a specific box
+			 * \param targetBoxIdentifier The target box identifier
+			 * \param targetBoxInputIndex The input index for the given target box
+			 * \param targetBoxInputIdentifier The input identifier for the given target box
+			 * \retval true in case of success.
+			 */	
+			virtual bool getTargetBoxInputIdentifier(
+				const CIdentifier& targetBoxIdentifier,
+				const unsigned int& targetBoxOutputIndex,
+				CIdentifier& targetBoxOutputIdentifier) = 0;
 
 			//@}
 			/** \name Scenario Input/Output and MetaBox management */
@@ -279,14 +364,38 @@ namespace OpenViBE
 			virtual bool setHasIO(const bool hasIO) = 0;
 			virtual bool hasIO() const = 0;
 
-			virtual bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex) = 0;
-
-			virtual bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxOutputIndex) = 0;
-
-			virtual bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::uint32& boxInputIndex) const = 0;
-
-			virtual bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::uint32& boxOutputIndex) const = 0;
-
+			virtual bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, 
+							const OpenViBE::CIdentifier& boxIdentifier, 
+							const OpenViBE::uint32 boxInputIndex) = 0;
+			
+			virtual bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, 
+							const OpenViBE::CIdentifier& boxIdentifier,
+							const OpenViBE::CIdentifier& boxInputIdentifier) = 0;
+							
+			virtual bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, 							
+							const OpenViBE::CIdentifier& boxIdentifier, 
+							const OpenViBE::uint32 boxOutputIndex) = 0;
+							
+			virtual bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, 							
+							const OpenViBE::CIdentifier& boxIdentifier, 
+							const OpenViBE::CIdentifier& boxOutputIdentifier) = 0;
+										
+			virtual bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, 
+							OpenViBE::CIdentifier& boxIdentifier, 
+							OpenViBE::uint32& boxInputIndex) const = 0;
+							
+			virtual bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, 
+							OpenViBE::CIdentifier& boxIdentifier,
+							OpenViBE::CIdentifier& boxInputIdentifier) const = 0;
+							
+			virtual bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, 
+							OpenViBE::CIdentifier& boxIdentifier, 
+							OpenViBE::uint32& boxOutputIndex) const = 0;
+							
+			virtual bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, 
+							OpenViBE::CIdentifier& boxIdentifier,
+							OpenViBE::CIdentifier& boxOutputIdentifier) const = 0;
+							
 			virtual bool removeScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex) = 0;
 
 			virtual bool removeScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxOutputIndex) = 0;
@@ -448,7 +557,6 @@ namespace OpenViBE
 			 * \return true if the scenario is actually a metabox
 			 */
 			virtual bool isMetabox(void) = 0;
-
 
 			virtual void getBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getCommentIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;

@@ -7,6 +7,7 @@
 #include <functional>
 #include <cctype>
 #include <cstdio>
+#include <algorithm>
 
 #define OV_TRACE_K(message) \
 this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << message << "\n";
@@ -33,6 +34,14 @@ namespace
 	{
 		return std::tolower(c);
 	}
+	
+	struct a_inf_b
+	{
+		inline bool operator() (std::pair<CIdentifier, CString> a ,std::pair<CIdentifier, CString> b)
+		{
+			return a.second < b.second;
+		}
+	};
 };
 
 CTypeManager::CTypeManager(const IKernelContext& rKernelContext)
@@ -42,11 +51,23 @@ CTypeManager::CTypeManager(const IKernelContext& rKernelContext)
 	this->registerEnumerationType(OV_TypeId_BoxAlgorithmFlag, "BoxFlags");
 }
 
-
 CIdentifier CTypeManager::getNextTypeIdentifier(
 	const CIdentifier& rPreviousIdentifier) const
 {
 	return getNextIdentifier< CString >(m_vName, rPreviousIdentifier);
+}
+
+std::vector<std::pair<CIdentifier, CString> > CTypeManager::getSortedTypes() const
+{
+	std::vector<std::pair<CIdentifier, CString> > l_oSorted;
+		
+	for (auto element : m_vName)
+	{
+		l_oSorted.push_back(std::pair<CIdentifier, CString>(element.first,element.second));
+	}
+	std::sort(l_oSorted.begin(), l_oSorted.end(), ::a_inf_b());
+	
+	return l_oSorted;
 }
 
 bool CTypeManager::registerType(

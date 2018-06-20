@@ -175,6 +175,7 @@
 #define OV_AttributeId_Link_YSourcePosition                  OpenViBE::CIdentifier(0x1B32C44C, 0x1905E0E9)
 #define OV_AttributeId_Link_XTargetPosition                  OpenViBE::CIdentifier(0x6267B5C5, 0x676E3E42)
 #define OV_AttributeId_Link_YTargetPosition                  OpenViBE::CIdentifier(0x3F0A3B27, 0x570913D2)
+#define OV_AttributeId_Link_Invalid						     OpenViBE::CIdentifier(0x5699FEAA, 0xF45DC988)
 
 #define OVP_ClassId_BoxAlgorithm_Metabox                    OpenViBE::CIdentifier(0xFE420CB6, 0x5F2BA4C3)
 #define OVP_ClassId_BoxAlgorithm_MetaboxDesc                OpenViBE::CIdentifier(0xA87F133C, 0x1E6B6543)
@@ -227,7 +228,7 @@
 
 #define OV_Value_EnumeratedStringSeparator                           ';'
 #define OV_Value_RangeStringSeparator                                ':'
-
+#define OV_Value_UndefinedIndexUInt									 0xFFFFFFFF
 // Importer contexts
 
 #define OV_ScenarioImportContext_SchedulerMetaboxImport            OpenViBE::CIdentifier(0xDDBDD59F, 0xE8C76702)

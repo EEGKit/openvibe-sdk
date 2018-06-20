@@ -86,7 +86,7 @@ boolean CAlgorithmScenarioExporter::process(void)
 		"Input scenario is NULL",
 		OpenViBE::Kernel::ErrorType::BadInput
 	);
-
+	
 	TParameterHandler < IMemoryBuffer* > op_pMemoryBuffer(this->getOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer));
 	IMemoryBuffer* l_pMemoryBuffer=op_pMemoryBuffer;
 
@@ -98,7 +98,7 @@ boolean CAlgorithmScenarioExporter::process(void)
 
 	this->exportStart(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario);
 
-	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion, CString("1"));
+	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion, CString("2"));
 
 	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Creator, this->getConfigurationManager().expand("${Application_Name}"));
 
@@ -145,7 +145,12 @@ boolean CAlgorithmScenarioExporter::process(void)
 		l_pScenario->getLinkIdentifierList(&identifierList, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			l_oHelper.exportLink(l_oTemporaryMemoryBuffer, *l_pScenario->getLinkDetails(identifierList[i]));
+			const ILink* l_pLink = l_pScenario->getLinkDetails(identifierList[i]);
+			// do not export invalid links
+			if (!l_pLink->hasAttribute(OV_AttributeId_Link_Invalid))
+			{
+				l_oHelper.exportLink(l_oTemporaryMemoryBuffer, *l_pLink);
+			}
 		}
 		l_pScenario->releaseIdentifierList(identifierList);
 	}
@@ -205,11 +210,18 @@ boolean CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& rMemoryBuffer
 		m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Inputs);
 		for(uint32 i=0; i<rBox.getInputCount(); i++)
 		{
+			CIdentifier l_oInputIdentifier;
 			CIdentifier l_oInputTypeIdentifier;
 			CString l_sInputName;
 			rBox.getInputType(i, l_oInputTypeIdentifier);
 			rBox.getInputName(i, l_sInputName);
+			rBox.getInputIdentifier(i, l_oInputIdentifier);
+			
 			m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input);
+			 if (l_oInputIdentifier != OV_UndefinedIdentifier)
+			 {
+				m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Identifier, l_oInputIdentifier);
+			 }
 			 m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_TypeIdentifier, l_oInputTypeIdentifier);
 			 m_rParent.exportString(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Name, l_sInputName);
 			m_rParent.exportStop(rMemoryBuffer);
@@ -222,11 +234,18 @@ boolean CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& rMemoryBuffer
 		m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Outputs);
 		for(uint32 i=0; i<rBox.getOutputCount(); i++)
 		{
+			CIdentifier l_oOutputIdentifier;
 			CIdentifier l_oOutputTypeIdentifier;
 			CString l_sOutputName;
 			rBox.getOutputType(i, l_oOutputTypeIdentifier);
 			rBox.getOutputName(i, l_sOutputName);
+			rBox.getOutputIdentifier(i, l_oOutputIdentifier);
+			
 			m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output);
+			 if (l_oOutputIdentifier != OV_UndefinedIdentifier)
+			 {
+				m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Identifier, l_oOutputIdentifier);
+			 }
 			 m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_TypeIdentifier, l_oOutputTypeIdentifier);
 			 m_rParent.exportString(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Name, l_sOutputName);
 			m_rParent.exportStop(rMemoryBuffer);
@@ -239,11 +258,13 @@ boolean CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& rMemoryBuffer
 		m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Settings);
 		for(uint32 i=0; i<rBox.getSettingCount(); i++)
 		{
+			CIdentifier l_oSettingIdentifier;
 			CIdentifier l_oSettingTypeIdentifier;
 			CString l_sSettingName;
 			CString l_sDefaultValue;
 			CString l_sValue;
 			boolean l_bModifiability;
+			rBox.getSettingIdentifier(i, l_oSettingIdentifier);
 			rBox.getSettingType(i, l_oSettingTypeIdentifier);
 			rBox.getSettingName(i, l_sSettingName);
 			rBox.getSettingDefaultValue(i, l_sDefaultValue);
@@ -255,6 +276,10 @@ boolean CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& rMemoryBuffer
 			else
 				l_sModifiability = CString("false");
 			m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting);
+			 if (l_oSettingIdentifier != OV_UndefinedIdentifier) // do not export identifier if not defined
+			 {
+				m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Identifier, l_oSettingIdentifier);
+			 }
 			 m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_TypeIdentifier, l_oSettingTypeIdentifier);
 			 m_rParent.exportString(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Name, l_sSettingName);
 			 m_rParent.exportString(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_DefaultValue, l_sDefaultValue);
@@ -301,21 +326,37 @@ boolean CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& rMemoryBuffe
 {
 	CIdentifier l_oSourceBoxIdentifier;
 	CIdentifier l_oTargetBoxIdentifier;
-	uint32 l_ui32SourceBoxOutputIndex=0xffffffff;
-	uint32 l_ui32TargetBoxInputIndex=0xffffffff;
+	uint32 l_ui32SourceBoxOutputIndex=OV_Value_UndefinedIndexUInt;
+	uint32 l_ui32TargetBoxInputIndex=OV_Value_UndefinedIndexUInt;
+	CIdentifier l_oSourceBoxOutputIdentifier;
+	CIdentifier l_oTargetBoxInputIdentifier;
 
-	rLink.getSource(l_oSourceBoxIdentifier, l_ui32SourceBoxOutputIndex);
-	rLink.getTarget(l_oTargetBoxIdentifier, l_ui32TargetBoxInputIndex);
+	rLink.getSource(l_oSourceBoxIdentifier, l_ui32SourceBoxOutputIndex, l_oSourceBoxOutputIdentifier);
+	rLink.getTarget(l_oTargetBoxIdentifier, l_ui32TargetBoxInputIndex, l_oTargetBoxInputIdentifier);
 
 	m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link);
 	 m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Identifier, rLink.getIdentifier());
 	 m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source);
 	  m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxIdentifier, l_oSourceBoxIdentifier);
-	  m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex, l_ui32SourceBoxOutputIndex);
+	  if (l_oSourceBoxOutputIdentifier != OV_UndefinedIdentifier)
+	  {
+		m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdentifier, l_oSourceBoxOutputIdentifier);
+	  }
+	  else
+	  {
+		m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex, l_ui32SourceBoxOutputIndex);
+	  }
 	 m_rParent.exportStop(rMemoryBuffer);
 	 m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target);
 	  m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxIdentifier, l_oTargetBoxIdentifier);
-	  m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIndex, l_ui32TargetBoxInputIndex);
+	  if (l_oTargetBoxInputIdentifier != OV_UndefinedIdentifier)
+	  {
+		m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdentifier, l_oTargetBoxInputIdentifier);
+	  }
+	  else
+	  {
+		m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIndex, l_ui32TargetBoxInputIndex);
+	  }
 	 m_rParent.exportStop(rMemoryBuffer);
 
 	exportAttributesMacro((*this), rLink, rMemoryBuffer, Link);
@@ -327,17 +368,21 @@ boolean CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& rMemoryBuffe
 
 boolean CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32 ui32SettingIndex)
 {
+	CIdentifier l_oSettingIdentifier;
 	CIdentifier l_oSettingTypeIdentifier;
 	CString l_sSettingName;
 	CString l_sDefaultValue;
 	CString l_sValue;
+	
 
 	rScenario.getSettingName(ui32SettingIndex, l_sSettingName);
+	rScenario.getSettingIdentifier(ui32SettingIndex, l_oSettingIdentifier);
 	rScenario.getSettingType(ui32SettingIndex, l_oSettingTypeIdentifier);
 	rScenario.getSettingValue(ui32SettingIndex, l_sValue);
 	rScenario.getSettingDefaultValue(ui32SettingIndex, l_sDefaultValue);
 
 	m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting);
+	 m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Identifier, l_oSettingIdentifier);
 	 m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_TypeIdentifier, l_oSettingTypeIdentifier);
 	 m_rParent.exportString(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Name, l_sSettingName);
 	 m_rParent.exportString(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_DefaultValue, l_sDefaultValue);
@@ -349,21 +394,33 @@ boolean CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& rMemoryBu
 
 boolean CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32 ui32InputIndex)
 {
+	CIdentifier l_oInputIdentifier;
 	CIdentifier l_oInputTypeIdentifier;
 	CString l_sInputName;
 	CIdentifier l_oLinkedBoxIdentifier;
 	uint32 l_ui32LinkedBoxInputIndex;
+	CIdentifier l_oLinkedBoxInputIdentifier;
 
+	rScenario.getInputIdentifier(ui32InputIndex, l_oInputIdentifier);
 	rScenario.getInputType(ui32InputIndex, l_oInputTypeIdentifier);
 	rScenario.getInputName(ui32InputIndex, l_sInputName);
 	rScenario.getScenarioInputLink(ui32InputIndex, l_oLinkedBoxIdentifier, l_ui32LinkedBoxInputIndex);
+	rScenario.getScenarioInputLink(ui32InputIndex, l_oLinkedBoxIdentifier, l_oLinkedBoxInputIdentifier);
 
 	m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input);
-
+	
+	m_rParent.exportIdentifier(rMemoryBuffer,OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Identifier, l_oInputIdentifier);
 	m_rParent.exportIdentifier(rMemoryBuffer,OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeIdentifier, l_oInputTypeIdentifier);
 	m_rParent.exportString(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Name, l_sInputName);
 	m_rParent.exportIdentifier(rMemoryBuffer,OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxIdentifier, l_oLinkedBoxIdentifier);
-	m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIndex, (uint64)l_ui32LinkedBoxInputIndex);
+	if (l_oLinkedBoxInputIdentifier != OV_UndefinedIdentifier)
+	{
+		m_rParent.exportIdentifier(rMemoryBuffer,OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdentifier, l_oLinkedBoxInputIdentifier);
+	}
+	else
+	{
+		m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIndex, (uint64)l_ui32LinkedBoxInputIndex);
+	}
 
 	m_rParent.exportStop(rMemoryBuffer);
 
@@ -372,22 +429,34 @@ boolean CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& rMemoryBuff
 
 boolean CAlgorithmScenarioExporterHelper::exportOutput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32 ui32OutputIndex)
 {
+	CIdentifier l_oOutputIdentifier;
 	CIdentifier l_oOutputTypeIdentifier;
 	CString l_sOutputName;
 	CIdentifier l_oLinkedBoxIdentifier;
 	uint32 l_ui32LinkedBoxOutputIndex;
+	CIdentifier l_oLinkedBoxOutputIdentifier;
 
+	rScenario.getOutputIdentifier(ui32OutputIndex, l_oOutputIdentifier);
 	rScenario.getOutputType(ui32OutputIndex, l_oOutputTypeIdentifier);
 	rScenario.getOutputName(ui32OutputIndex, l_sOutputName);
 	rScenario.getScenarioOutputLink(ui32OutputIndex, l_oLinkedBoxIdentifier, l_ui32LinkedBoxOutputIndex);
+	rScenario.getScenarioOutputLink(ui32OutputIndex, l_oLinkedBoxIdentifier, l_oLinkedBoxOutputIdentifier);
 
 	m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output);
-
+	
+	m_rParent.exportIdentifier(rMemoryBuffer,OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Identifier, l_oOutputIdentifier);
 	m_rParent.exportIdentifier(rMemoryBuffer,OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier, l_oOutputTypeIdentifier);
 	m_rParent.exportString(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name, l_sOutputName);
-	m_rParent.exportIdentifier(rMemoryBuffer,OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier, l_oLinkedBoxIdentifier);
-	m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex, (uint64)l_ui32LinkedBoxOutputIndex);
-
+	m_rParent.exportIdentifier(rMemoryBuffer,OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier, l_oLinkedBoxIdentifier);	
+	if (l_oLinkedBoxOutputIdentifier != OV_UndefinedIdentifier)
+	{
+		m_rParent.exportIdentifier(rMemoryBuffer,OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdentifier, l_oLinkedBoxOutputIdentifier);
+	}
+	else
+	{
+		m_rParent.exportUInteger(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex, (uint64)l_ui32LinkedBoxOutputIndex);
+	}
+	
 	m_rParent.exportStop(rMemoryBuffer);
 
 	return true;
