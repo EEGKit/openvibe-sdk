@@ -210,6 +210,45 @@ namespace OpenViBE
 
 		return PlayerReturnCode::Success;
 	}
+	
+	PlayerReturnCode KernelFacade::updateScenario(const UpdateScenarioCommand& command)
+	{
+		assert(command.scenarioFile && command.scenarioName);
+		
+		auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
+		
+		auto scenarioName = command.scenarioName.get();
+		auto scenarioFile = command.scenarioFile.get();
+
+		if (m_Pimpl->scenarioMap.find(scenarioName) == m_Pimpl->scenarioMap.end())
+		{
+			std::cerr << "ERROR: Trying to update a not loaded scenario " << scenarioName << std::endl;
+			return PlayerReturnCode::ScenarioNotLoaded;
+		}
+		
+		auto &scenario = scenarioManager.getScenario(m_Pimpl->scenarioMap[scenarioName]);
+		
+		// check for boxes to be updated
+		scenario.checkNeedsUpdateBoxes();
+		
+		// update boxes to be updated
+		CIdentifier* identifierList = nullptr;
+		size_t nbElems = 0;
+		scenario.getNeedsUpdateBoxIdentifierList(&identifierList, &nbElems);
+		for (size_t i = 0; i < nbElems; ++i)
+		{
+			scenario.updateBox(identifierList[i]);
+		}
+		
+		// export scenario to the destination file		
+		if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(),m_Pimpl->scenarioMap[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
+		{
+			std::cerr << "ERROR: failed to create scenario " << std::endl;
+			return PlayerReturnCode::KernelInternalFailure;
+		}
+
+		return PlayerReturnCode::Success;
+	}
 
 	PlayerReturnCode KernelFacade::setupScenario(const SetupScenarioCommand& command)
 	{

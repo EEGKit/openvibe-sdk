@@ -104,6 +104,31 @@ namespace OpenViBE
 
 		virtual void doPrint(std::ostream& os) const override;
 	};
+	
+	/**
+	* \struct UpdateScenarioCommand
+	* \author criou (INRIA)
+	* \date 2018-04-16
+	* \brief Command that drives scenario update and export
+	* \ingroup ScenarioPlayer
+	*
+	* UpdateScenarioCommand contains the following properties:
+	* - ScenarioFile: Path to xml scenario file (mandatory)
+	* .
+	*
+	*/
+	struct UpdateScenarioCommand : ICommand
+	{
+		// List of properties
+		boost::optional<std::string> scenarioFile;
+		boost::optional<std::string> scenarioName;	
+
+		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+
+	protected:
+
+		virtual void doPrint(std::ostream& os) const override;
+	};
 
 	/**
 	* \struct ResetCommand

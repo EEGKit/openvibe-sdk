@@ -49,6 +49,7 @@ Program can be run in command mode to execute list of commands from a file
 	// express mode options
 	optionParser.addValueOption<ProgramOptionsTraits::String>("config-file", { "", "Path to configuration file (express mode only)" });
 	optionParser.addValueOption<ProgramOptionsTraits::String>("scenario-file", { "", "Path to scenario file (express mode only) [mandatory]" });
+	optionParser.addValueOption<ProgramOptionsTraits::String>("updated-scenario-file", { "", "Enable update process instead of playing scenario. Path to the updated scenario file (express mode only)." });
 	optionParser.addValueOption<ProgramOptionsTraits::String>("play-mode", { "", "Play mode: std for standard and ff for fast-foward (express mode only) [default=std]" });
 	optionParser.addValueOption<ProgramOptionsTraits::Float>("max-time", { "", "Scenarios playing execution time limit (express mode only)" });
 
@@ -85,7 +86,7 @@ int main(int argc, char** argv)
 		else
 		{
 		
-			if (optionParser.hasOption("mode"))
+			if (optionParser.hasOption("mode") || optionParser.hasOption("updated-scenario-file"))
 			{
 				// command parser type is selected from mode
 				std::unique_ptr<ICommandParser> commandParser{ nullptr };
@@ -104,7 +105,7 @@ int main(int argc, char** argv)
 						return static_cast<int>(PlayerReturnCode::MissingMandatoryArgument);
 					}
 				}
-				else if (mode == "x")
+				else if ((mode == "x") || optionParser.hasOption("updated-scenario-file"))
 				{
 					commandParser.reset(new CommandLineOptionParser(optionParser));
 				}

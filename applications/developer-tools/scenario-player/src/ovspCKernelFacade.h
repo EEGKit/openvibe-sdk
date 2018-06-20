@@ -31,6 +31,7 @@ namespace OpenViBE
 	struct ResetCommand;
 	struct LoadKernelCommand;
 	struct LoadScenarioCommand;
+	struct UpdateScenarioCommand;
 	struct SetupScenarioCommand;
 	struct RunScenarioCommand;
 
@@ -81,6 +82,12 @@ namespace OpenViBE
 		* \param[in] command command containing all mandatory properties
 		*/
 		PlayerReturnCode loadScenario(const LoadScenarioCommand& command);
+		
+		/**
+		* \brief Update scenario
+		* \param[in] command command containing all mandatory properties
+		*/
+		PlayerReturnCode updateScenario(const UpdateScenarioCommand& command);
 
 		/**
 		* \brief Configure scenario
