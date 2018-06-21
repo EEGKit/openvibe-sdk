@@ -1181,9 +1181,11 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 					settingValue = this->getConfigurationManager().expandOnlyKeyword("var", settingValue);
 				}
 
+				auto settingTypeName = this->getTypeManager().getTypeName(typeIdentifier);
+
 				OV_ERROR_UNLESS_KRF(
 					::checkSettingValue(settingValue, typeIdentifier),
-					"<" << box.second->getName() << "> The following value: ["<< rawSettingValue <<"] expanded as ["<< settingValue <<"] given as setting is not valid.",
+					"<" << box.second->getName() << "> The following value: ["<< rawSettingValue <<"] expanded as ["<< settingValue <<"] given as setting is not a valid [" << settingTypeName << "] value.",
 					ErrorType::BadValue
 				);
 			}

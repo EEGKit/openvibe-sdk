@@ -149,9 +149,10 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 					rBox.getSettingType(i, settingType);
 					if (!::checkSettingValue(l_sSettingValue, settingType))
 					{
+						auto settingTypeName = rObjectVisitorContext.getTypeManager().getTypeName(settingType);
 						cleanup();
 						OV_ERROR(
-							"<" << rBox.getName() << "> The following value: [" << l_sRawSettingValue << "] expanded as [" << l_sSettingValue << "] given as setting is not a numeric value.",
+							"<" << rBox.getName() << "> The following value: [" << l_sRawSettingValue << "] expanded as [" << l_sSettingValue << "] given as setting is not a valid [" << settingTypeName << "] value.",
 							ErrorType::BadArgument,
 							false,
 							m_pObjectVisitorContext->getErrorManager(),
