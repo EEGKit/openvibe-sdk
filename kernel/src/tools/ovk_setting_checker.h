@@ -3,6 +3,7 @@
 #include "lepton/Lepton.h"
 #include "../ovk_base.h"
 
+#include <openvibe/kernel/ovITypeManager.h>
 #include <iostream>
 #include <algorithm>
 #include <string>
@@ -30,11 +31,22 @@ namespace
 	* \return \e false in case of error. In such case,
 	*         \c rValue remains unchanged.
 	*/
-	bool checkSettingValue(const OpenViBE::CString value, const OpenViBE::CIdentifier typeIdentifier)
+	bool checkSettingValue(const OpenViBE::CString& value, const OpenViBE::CIdentifier& typeIdentifier, const OpenViBE::Kernel::ITypeManager& typeManager)
 	{
-		// If the token is a numeric value, it may be an arithmetic operation
-		if (typeIdentifier == OV_TypeId_Float || typeIdentifier == OV_TypeId_Integer)
+		if (typeManager.isEnumeration(typeIdentifier))
 		{
+			auto enumerationEntryValue = typeManager.getEnumerationEntryValueFromName(typeIdentifier, value);
+			auto enumerationEntryReversedName = typeManager.getEnumerationEntryNameFromValue(typeIdentifier, enumerationEntryValue);
+			// We need to compare the reversed name of the enumerations because some enumeration values actually use max int
+			// which is the same value as the guard value for incorrect stimulations
+			if (enumerationEntryValue == OV_IncorrectStimulation && enumerationEntryReversedName != value)
+			{
+				return false;
+			}
+		}
+		else if (typeIdentifier == OV_TypeId_Float || typeIdentifier == OV_TypeId_Integer)
+		{
+			// If the token is a numeric value, it may be an arithmetic operation
 			// parse and expression with no variables or functions
 			try
 			{
