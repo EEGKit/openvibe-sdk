@@ -336,7 +336,7 @@ uint64_t CTypeManager::getEnumerationEntryValueFromName(
 	const auto itEnumeration=m_vEnumeration.find(rTypeIdentifier);
 	if(itEnumeration==m_vEnumeration.end())
 	{
-		return 0xffffffffffffffffll;
+		return OV_IncorrectStimulation;
 	}
 
 	// first looks at the exact std::string match
@@ -364,19 +364,20 @@ uint64_t CTypeManager::getEnumerationEntryValueFromName(
 	// then looks at the std::string being the value itself
 	try
 	{
-		uint64_t l_ui64Value = std::stoll((const char*)rEntryName);
+		uint64_t l_ui64Value = std::stoull((const char*)rEntryName);
 
-		if(itEnumeration->second.find(l_ui64Value)!=itEnumeration->second.end() || this->getConfigurationManager().expandAsBoolean("Kernel_AllowUnregisteredNumericalStimulationIdentifiers"))
+		if ((itEnumeration->second.find(l_ui64Value) != itEnumeration->second.end()) ||
+		        (rTypeIdentifier == OV_TypeId_Stimulation && this->getConfigurationManager().expandAsBoolean("Kernel_AllowUnregisteredNumericalStimulationIdentifiers")))
 		{
 			return l_ui64Value;
 		}
 	}
 	catch(const std::exception&)
 	{
-		return 0xffffffffffffffffll;
+		return OV_IncorrectStimulation;
 	}
 
-	return 0xffffffffffffffffll;
+	return OV_IncorrectStimulation;
 }
 
 uint64_t CTypeManager::getBitMaskEntryCount(

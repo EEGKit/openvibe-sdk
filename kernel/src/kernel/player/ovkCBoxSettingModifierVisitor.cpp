@@ -147,7 +147,7 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 					l_sSettingValue = m_pConfigurationManager->expand(l_sSettingValue);
 					CIdentifier settingType;
 					rBox.getSettingType(i, settingType);
-					if (!::checkSettingValue(l_sSettingValue, settingType))
+					if (!::checkSettingValue(l_sSettingValue, settingType, rObjectVisitorContext.getTypeManager()))
 					{
 						auto settingTypeName = rObjectVisitorContext.getTypeManager().getTypeName(settingType);
 						cleanup();

@@ -1172,7 +1172,7 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 				box.second->getSettingType(settingIndex, typeIdentifier);
 
 				CString settingValue = rawSettingValue;
-				if (configurationManager != NULL)
+				if (configurationManager)
 				{
 					settingValue = configurationManager->expand(settingValue);
 				}
@@ -1184,7 +1184,7 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 				auto settingTypeName = this->getTypeManager().getTypeName(typeIdentifier);
 
 				OV_ERROR_UNLESS_KRF(
-					::checkSettingValue(settingValue, typeIdentifier),
+					::checkSettingValue(settingValue, typeIdentifier, this->getTypeManager()),
 					"<" << box.second->getName() << "> The following value: ["<< rawSettingValue <<"] expanded as ["<< settingValue <<"] given as setting is not a valid [" << settingTypeName << "] value.",
 					ErrorType::BadValue
 				);
