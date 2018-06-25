@@ -35,8 +35,8 @@
 #define     OVTK_TypeId_FeatureVector                                  OpenViBE::CIdentifier(0x17341935, 0x152FF448)
 #define     OVTK_TypeId_Signal                                         OpenViBE::CIdentifier(0x5BA36127, 0x195FEAE1)
 #define     OVTK_TypeId_Spectrum                                       OpenViBE::CIdentifier(0x1F261C0A, 0x593BF6BD)
-#define     OVTK_TypeId_ChannelLocalisation                            OpenViBE::CIdentifier(0x1E4C0D6E, 0x5204EEB2)
-#define     OVTK_TypeId_ChannelUnits                                   OpenViBE::CIdentifier(0x5E330216, 0x2C09724C)
+#define     OVTK_TypeId_ChannelLocalisation                            OpenViBE::CIdentifier(0x013DF452, 0xA3A8879A)
+#define     OVTK_TypeId_ChannelUnits                                   OpenViBE::CIdentifier(0x6AB26B81, 0x0F8C02F3)
 
 
 //___________________________________________________________________//
