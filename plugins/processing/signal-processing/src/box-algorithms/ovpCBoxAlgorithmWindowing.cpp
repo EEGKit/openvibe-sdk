@@ -79,14 +79,7 @@ boolean CBoxAlgorithmWindowing::process()
 					m_WindowCoefficients[k] = 0.54 - 0.46 * cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n)-1.));
 				}
 			}
-			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Hanning)
-			{
-				for (size_t k = 0; k < n; k++)
-				{
-					m_WindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * (static_cast<double>(k)+1.) / (static_cast<double>(n)+1.)));
-				}
-			}
-			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Hann)
+			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Hann || m_WindowMethod == OVP_TypeId_WindowMethod_Hanning)
 			{
 				for (size_t k = 0; k < n; k++)
 				{
