@@ -210,13 +210,13 @@ namespace OpenViBE
 
 		return PlayerReturnCode::Success;
 	}
-	
+
 	PlayerReturnCode KernelFacade::updateScenario(const UpdateScenarioCommand& command)
 	{
 		assert(command.scenarioFile && command.scenarioName);
-		
+
 		auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
-		
+
 		auto scenarioName = command.scenarioName.get();
 		auto scenarioFile = command.scenarioFile.get();
 
@@ -225,22 +225,22 @@ namespace OpenViBE
 			std::cerr << "ERROR: Trying to update a not loaded scenario " << scenarioName << std::endl;
 			return PlayerReturnCode::ScenarioNotLoaded;
 		}
-		
+
 		auto &scenario = scenarioManager.getScenario(m_Pimpl->scenarioMap[scenarioName]);
-		
+
 		// check for boxes to be updated
-		scenario.checkNeedsUpdateBoxes();
-		
+//		scenario.checkBoxesRequiringUpdate();
+
 		// update boxes to be updated
 		CIdentifier* identifierList = nullptr;
-		size_t nbElems = 0;
-		scenario.getNeedsUpdateBoxIdentifierList(&identifierList, &nbElems);
-		for (size_t i = 0; i < nbElems; ++i)
+		size_t elemCount = 0;
+		scenario.getNeedsUpdateBoxIdentifierList(&identifierList, &elemCount);
+		for (size_t i = 0; i < elemCount; ++i)
 		{
 			scenario.updateBox(identifierList[i]);
 		}
-		
-		// export scenario to the destination file		
+
+		// export scenario to the destination file
 		if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(),m_Pimpl->scenarioMap[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
 		{
 			std::cerr << "ERROR: failed to create scenario " << std::endl;

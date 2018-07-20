@@ -373,7 +373,7 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 			CString l_sInputName;
 			CIdentifier l_oInputTypeIdentifier;
 
-			scenario.getInputIdentifier(l_ui32ScenarioInputIndex, l_oInputputIdentifier);
+			scenario.getInterfacorIdentifier(Input, l_ui32ScenarioInputIndex, l_oInputputIdentifier);
 			scenario.getInputType(l_ui32ScenarioInputIndex, l_oInputTypeIdentifier);
 			scenario.getInputName(l_ui32ScenarioInputIndex, l_sInputName);
 
@@ -386,10 +386,10 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 			CString l_sOutputName;
 			CIdentifier l_oOutputTypeIdentifier;
 
-			scenario.getOutputIdentifier(l_ui32ScenarioOutputIndex, l_oOutputIdentifier);
+			scenario.getInterfacorIdentifier(Output, l_ui32ScenarioOutputIndex, l_oOutputIdentifier);
 			scenario.getOutputType(l_ui32ScenarioOutputIndex, l_oOutputTypeIdentifier);
 			scenario.getOutputName(l_ui32ScenarioOutputIndex, l_sOutputName);
-			
+
 			l_oMetaboxProto.addOutput(l_sOutputName, l_oOutputTypeIdentifier, l_oOutputIdentifier, true);
 		}
 
@@ -399,12 +399,12 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 			CIdentifier l_oSettingTypeIdentifier;
 			CString l_sSettingDefaultValue;
 			CIdentifier l_oSettingIdentifier;
-			
+
 			scenario.getSettingName(l_ui32ScenarioSettingIndex, l_sSettingName);
 			scenario.getSettingType(l_ui32ScenarioSettingIndex, l_oSettingTypeIdentifier);
 			scenario.getSettingDefaultValue(l_ui32ScenarioSettingIndex, l_sSettingDefaultValue);
-			scenario.getSettingIdentifier(l_ui32ScenarioSettingIndex, l_oSettingIdentifier);
-			
+			scenario.getInterfacorIdentifier(Setting, l_ui32ScenarioSettingIndex, l_oSettingIdentifier);
+
 			l_oMetaboxProto.addSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sSettingDefaultValue, false, l_oSettingIdentifier, true);
 		}
 
@@ -495,14 +495,14 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioIdentifier, const CIdentifier& scenarioExporterAlgorithmIdentifier) const
 {
 	IScenario& scenario = this->getScenario(scenarioIdentifier);
-	if (scenario.hasPendingMissings())
+	if (scenario.containsBoxWithDeprecatedInterfacors())
 	{
 		OV_WARNING_K(
-		            "Cannot export a scenario with pending missing I/O or Settings.Please remove missing I/O/S using Designer."
+		            "Cannot export a scenario with pending deprecated I/O or Settings. Please remove them using the Designer."
 		            );
 		return false;
 	}
-	
+
 	CMemoryBuffer memoryBuffer;
 	this->exportScenario(memoryBuffer, scenarioIdentifier, scenarioExporterAlgorithmIdentifier);
 

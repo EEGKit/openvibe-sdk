@@ -21,10 +21,12 @@ CLink::CLink(const IKernelContext& rKernelContext, CScenario& rOwnerScenario)
 }
 
 bool CLink::InitializeFromExistingLink(const ILink& l)
-{	
+{
 	m_oIdentifier = l.getIdentifier();
 	m_oSourceBoxIdentifier = l.getSourceBoxIdentifier();
-	m_oTargetBoxIdentifier = l.getTargetBoxInputIdentifier();
+	m_oTargetBoxIdentifier = l.getTargetBoxIdentifier();
+	m_oSourceBoxOutputIdentifier = l.getSourceBoxOutputIdentifier();
+	m_oTargetBoxInputIdentifier = l.getTargetBoxInputIdentifier();
 	m_ui32SourceOutputIndex = l.getSourceBoxOutputIndex();
 	m_ui32TargetInputIndex = l.getTargetBoxInputIndex();
 	return true;

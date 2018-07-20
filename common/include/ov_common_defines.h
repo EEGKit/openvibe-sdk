@@ -2,7 +2,7 @@
 #define OV_COMMON_DEFINES_H
 
 //
-// This file checks the presence of several defines that are supposed to 
+// This file checks the presence of several defines that are supposed to
 // be set by the build system. In addition, it defines some additional ones.
 //
 
@@ -135,6 +135,16 @@
 #define NULL 0
 #endif
 
+#if defined(__cplusplus) && (__cplusplus >= 201402L)
+  #define OV_DEPRECATED(since) [[deprecated("Since " #since)]]
+  #define OV_DEPRECATED_FOR(since, replacement) [[deprecated("Since " #since "; use " #replacement)]]
+#elif defined(_MSC_VER)
+  #define OV_DEPRECATED(since) __declspec(deprecated("Since " # since))
+  #define OV_DEPRECATED_FOR(since, replacement) __declspec(deprecated("Since " #since "; use " #replacement))
+#else
+  #define OV_DEPRECATED(since) __attribute__((__deprecated__))
+  #define OV_DEPRECATED_FOR(since, replacement) __attribute__((__deprecated__))
+#endif
 
 #endif
 

@@ -116,7 +116,7 @@ bool CBoxProto::addFlag(const EBoxFlag eBoxFlag)
 		case BoxFlag_CanModifyOutput:  m_rBox.addAttribute(OV_AttributeId_Box_FlagCanModifyOutput,  ""); break;
 		case BoxFlag_CanAddSetting:    m_rBox.addAttribute(OV_AttributeId_Box_FlagCanAddSetting,    ""); break;
 		case BoxFlag_CanModifySetting: m_rBox.addAttribute(OV_AttributeId_Box_FlagCanModifySetting, ""); break;
-		case BoxFlag_ManualUpdate:	   m_rBox.addAttribute(OV_AttributeId_Box_FlagManualUpdate, ""); break;
+		case BoxFlag_ManualUpdate:	   m_rBox.addAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate, ""); break;
 		case BoxFlag_IsDeprecated:
 			break;
 		default:

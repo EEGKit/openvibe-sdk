@@ -25,7 +25,7 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescript
 
 		metaboxScenario.getInputType(l_ui32ScenarioInputIndex, l_oInputTypeIdentifier);
 		metaboxScenario.getInputName(l_ui32ScenarioInputIndex, l_sInputName);
-		metaboxScenario.getInputIdentifier(l_ui32ScenarioInputIndex, l_oInputIdentifier);
+		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Input, l_ui32ScenarioInputIndex, l_oInputIdentifier);
 
 		m_Inputs.push_back(SIOStream(l_sInputName, l_oInputTypeIdentifier, l_oInputIdentifier));
 	}
@@ -38,7 +38,7 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescript
 
 		metaboxScenario.getOutputType(l_ui32ScenarioOutputIndex, l_oOutputTypeIdentifier);
 		metaboxScenario.getOutputName(l_ui32ScenarioOutputIndex, l_sOutputName);
-		metaboxScenario.getOutputIdentifier(l_ui32ScenarioOutputIndex, l_oOutputIdentifier);
+		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Output, l_ui32ScenarioOutputIndex, l_oOutputIdentifier);
 
 		m_Outputs.push_back(SIOStream(l_sOutputName, l_oOutputTypeIdentifier, l_oOutputIdentifier));
 	}
@@ -53,8 +53,8 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescript
 		metaboxScenario.getSettingName(l_ui32ScenarioSettingIndex, l_sSettingName);
 		metaboxScenario.getSettingType(l_ui32ScenarioSettingIndex, l_oSettingTypeIdentifier);
 		metaboxScenario.getSettingDefaultValue(l_ui32ScenarioSettingIndex, l_sSettingDefaultValue);
-		metaboxScenario.getSettingIdentifier(l_ui32ScenarioSettingIndex, l_oSettingIdentifier);
-		
+		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Setting, l_ui32ScenarioSettingIndex, l_oSettingIdentifier);
+
 
 		m_Settings.push_back(SSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sSettingDefaultValue,l_oSettingIdentifier));
 	}

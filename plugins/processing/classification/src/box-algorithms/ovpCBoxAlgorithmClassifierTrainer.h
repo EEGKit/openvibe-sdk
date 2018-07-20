@@ -54,15 +54,15 @@ namespace OpenViBEPlugins
 				OpenViBE::uint32 m_ui32InputIndex;
 			} SFeatureVector;
 
-			virtual OpenViBE::boolean train( const std::vector < CBoxAlgorithmClassifierTrainer::SFeatureVector >& rDataset, 
+			virtual OpenViBE::boolean train( const std::vector < CBoxAlgorithmClassifierTrainer::SFeatureVector >& rDataset,
 				const std::vector< size_t >& rPermutation,
 				const size_t uiStartIndex, const size_t uiStopIndex);
-			virtual OpenViBE::float64 getAccuracy( const std::vector < CBoxAlgorithmClassifierTrainer::SFeatureVector >& rDataset, 
+			virtual OpenViBE::float64 getAccuracy( const std::vector < CBoxAlgorithmClassifierTrainer::SFeatureVector >& rDataset,
 				const std::vector< size_t >& rPermutation,
 				const size_t uiStartIndex, const size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
 			virtual OpenViBE::boolean printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
 			virtual OpenViBE::boolean balanceDataset(void);
-			
+
 		private:
 			OpenViBE::boolean saveConfiguration(void);
 
@@ -130,8 +130,8 @@ namespace OpenViBEPlugins
 				rBoxAlgorithmPrototype.addSetting(c_sBalanceSettingName,              OV_TypeId_Boolean,                   "false");
 
 				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddInput);
-				
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_ManualUpdate);
+
+//				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_ManualUpdate);
 				return true;
 			}
 

@@ -247,10 +247,10 @@ boolean CScheduler::flattenScenario()
 			{
 				CString l_sSettingValue;
 				CIdentifier l_oSettingIdentifier;
-				
+
 				l_pBox->getSettingValue(l_ui32SettingIndex, l_sSettingValue);
-				l_pBox->getSettingIdentifier(l_ui32SettingIndex, l_oSettingIdentifier);
-				
+				l_pBox->getInterfacorIdentifier(Setting, l_ui32SettingIndex, l_oSettingIdentifier);
+
 				if (l_oSettingIdentifier != OV_UndefinedIdentifier)
 				{
 					l_rMetaboxScenarioInstance.setSettingValue(l_oSettingIdentifier, l_sSettingValue);
@@ -316,24 +316,24 @@ boolean CScheduler::flattenScenario()
 					uint32_t l_ui32TargetBoxInputIndex = 0;
 					CIdentifier l_oMetaBoxInputIdentifier = l_rLink->getTargetBoxInputIdentifier();
 					uint32_t l_ui32MetaBoxInputIndex = l_rLink->getTargetBoxInputIndex();
-					
+
 					if (l_oMetaBoxInputIdentifier != OV_UndefinedIdentifier)
-					{						
-						l_rMetaboxScenarioInstance.getInputIndex(l_oMetaBoxInputIdentifier,l_ui32MetaBoxInputIndex);
-					}	
+					{
+						l_rMetaboxScenarioInstance.getInterfacorIndex(Input, l_oMetaBoxInputIdentifier,l_ui32MetaBoxInputIndex);
+					}
 					OV_ERROR_UNLESS_KRF(
 					            l_ui32MetaBoxInputIndex != OV_Value_UndefinedIndexUInt,
 					            "Failed to find metabox input with identifier " << l_oMetaBoxInputIdentifier.toString(),
 					            ErrorType::ResourceNotFound
 					            );
 					l_rMetaboxScenarioInstance.getScenarioInputLink(l_ui32MetaBoxInputIndex, l_oTargetBoxIdentifier, l_ui32TargetBoxInputIndex);
-					
+
 					// Now redirect the link to the newly created copy of the box in the scenario
 					CIdentifier l_oTargetBoxInputIdentifier = OV_UndefinedIdentifier;
 					if (l_oTargetBoxIdentifier != OV_UndefinedIdentifier)
 					{
-						m_pScenario->getBoxDetails(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier])->getInputIdentifier(l_ui32TargetBoxInputIndex,l_oTargetBoxInputIdentifier);
-						
+						m_pScenario->getBoxDetails(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier])->getInterfacorIdentifier(Input, l_ui32TargetBoxInputIndex,l_oTargetBoxInputIdentifier);
+
 						l_rLink->setTarget(
 						            l_mIdentifierCorrespondence[l_oTargetBoxIdentifier],
 						            l_ui32TargetBoxInputIndex,
@@ -356,10 +356,10 @@ boolean CScheduler::flattenScenario()
 					uint32_t l_ui32SourceBoxOutputIndex = 0;
 					CIdentifier l_oMetaBoxOutputIdentifier = l_rLink->getSourceBoxOutputIdentifier();
 					uint32_t l_ui32MetaBoxOutputIndex = l_rLink->getSourceBoxOutputIndex();
-					
+
 					if (l_oMetaBoxOutputIdentifier != OV_UndefinedIdentifier)
-					{						
-						l_rMetaboxScenarioInstance.getOutputIndex(l_oMetaBoxOutputIdentifier,l_ui32MetaBoxOutputIndex);
+					{
+						l_rMetaboxScenarioInstance.getInterfacorIndex(Output, l_oMetaBoxOutputIdentifier,l_ui32MetaBoxOutputIndex);
 					}
 					OV_ERROR_UNLESS_KRF(
 					            l_ui32MetaBoxOutputIndex != OV_Value_UndefinedIndexUInt,
@@ -367,13 +367,13 @@ boolean CScheduler::flattenScenario()
 					            ErrorType::ResourceNotFound
 					            );
 					l_rMetaboxScenarioInstance.getScenarioOutputLink(l_ui32MetaBoxOutputIndex, l_oSourceBoxIdentifier, l_ui32SourceBoxOutputIndex);
-					
+
 					// Now redirect the link to the newly created copy of the box in the scenario
 					CIdentifier l_oSourceBoxOutputIdentifier = OV_UndefinedIdentifier;
 					if (l_oSourceBoxIdentifier != OV_UndefinedIdentifier)
 					{
-						m_pScenario->getBoxDetails(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier])->getOutputIdentifier(l_ui32SourceBoxOutputIndex,l_oSourceBoxOutputIdentifier);
-						
+						m_pScenario->getBoxDetails(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier])->getInterfacorIdentifier(Output, l_ui32SourceBoxOutputIndex,l_oSourceBoxOutputIdentifier);
+
 						l_rLink->setSource(
 						            l_mIdentifierCorrespondence[l_oSourceBoxIdentifier],
 						            l_ui32SourceBoxOutputIndex,
@@ -622,7 +622,7 @@ boolean CScheduler::uninitialize(void)
 	}
 	m_vSimulatedBox.clear();
 
-	m_pScenario=NULL;
+	m_pScenario=nullptr;
 
 	return l_bBoxUninitialization;
 }
