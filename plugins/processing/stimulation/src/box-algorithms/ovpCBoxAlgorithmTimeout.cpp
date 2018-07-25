@@ -1,5 +1,7 @@
 #include "ovpCBoxAlgorithmTimeout.h"
 
+#include <cmath>
+
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
@@ -15,6 +17,13 @@ boolean CBoxAlgorithmTimeout::initialize(void)
 	
 	m_ui64Timeout = static_cast<uint64>(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0)) << 32;
 	m_ui64StimulationToSend = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	double timeout = static_cast<double>(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
+	OV_ERROR_UNLESS_KRF(timeout > 0,
+	                    "Timeout delay value must be positive and non-zero",
+	                    ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(timeout == std::floor(timeout),
+	                    "Timeout delay value is not an integer",
+	                    ErrorType::BadSetting);
 
 	m_ui64LastTimePolled = 0;
 	m_ui64PreviousTime = 0;
