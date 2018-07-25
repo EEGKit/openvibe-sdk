@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_Timeout_H__
-#define __OpenViBEPlugins_BoxAlgorithm_Timeout_H__
+#pragma once
 
 #include "../ovp_defines.h"
 
@@ -25,20 +24,20 @@ namespace OpenViBEPlugins
 			public:
 				virtual void release(void) { delete this; }
 
-				virtual OpenViBE::boolean initialize(void);
-				virtual OpenViBE::boolean uninitialize(void);
+				virtual bool initialize(void);
+				virtual bool uninitialize(void);
 
-				virtual OpenViBE::boolean processClock(OpenViBE::CMessageClock& rMessageClock);
-				virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
+				virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
+				virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
 
-				virtual OpenViBE::uint64 getClockFrequency(void);
+				virtual uint64_t getClockFrequency(void);
 
-				virtual OpenViBE::boolean process(void);
+				virtual bool process(void);
 
-				_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout);
+				_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
 
 			protected:
-				OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmTimeout > m_oStimulationEncoder;
+				OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmTimeout > m_StimulationEncoder;
 
 			private:
 				enum ETimeoutState
@@ -48,13 +47,13 @@ namespace OpenViBEPlugins
 					ETimeout_Sent
 				};
 
-				ETimeoutState m_oTimeoutState;		
-				bool m_bIsHeaderSent;
+				ETimeoutState m_TimeoutState;
+				bool m_IsHeaderSent;
 
-				OpenViBE::uint64 m_ui64Timeout;
-				OpenViBE::uint64 m_ui64LastTimePolled;
-				OpenViBE::uint64 m_ui64PreviousTime;
-				OpenViBE::uint64 m_ui64StimulationToSend;
+				uint64_t m_Timeout;
+				uint64_t m_LastTimePolled;
+				uint64_t m_PreviousTime;
+				uint64_t m_StimulationToSend;
 
 		};
 
@@ -85,8 +84,7 @@ namespace OpenViBEPlugins
 				virtual OpenViBE::CIdentifier getCreatedClass(void) const      { return OVP_ClassId_BoxAlgorithm_Timeout; }
 				virtual OpenViBE::Plugins::IPluginObject* create(void)         { return new OpenViBEPlugins::Stimulation::CBoxAlgorithmTimeout; }
 
-				virtual OpenViBE::boolean getBoxPrototype(
-						OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+				virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 				{
 					rBoxAlgorithmPrototype.addInput("Input Stream",OV_TypeId_StreamedMatrix);
 
@@ -102,4 +100,3 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_Timeout_H__
