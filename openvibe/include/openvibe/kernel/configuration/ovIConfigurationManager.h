@@ -226,7 +226,8 @@ namespace OpenViBE
 
 			virtual OpenViBE::CString expandOnlyKeyword(
 			        const OpenViBE::CString& rKeyword,
-			        const OpenViBE::CString& rExpression) const = 0;
+			        const OpenViBE::CString& rExpression,
+			        bool preserveBackslashes = false) const = 0;
 			/**
 			 * \brief Expands a string to a floating point value based on its use of configuration tokens
 			 * \param rExpression [in] : the string that you want to expand
