@@ -31,6 +31,11 @@ namespace OpenViBE
 		 * This constructor builds the internal implementation of this matrix.
 		 */
 		CMatrix(void);
+
+
+		CMatrix(const CMatrix& other);
+
+		CMatrix& operator=(const CMatrix& other);
 		/**
 		 * \brief Destructor
 		 *

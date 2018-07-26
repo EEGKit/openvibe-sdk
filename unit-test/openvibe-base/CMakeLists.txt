@@ -34,3 +34,9 @@ ADD_EXECUTABLE(${PROJECT_NAME} uoTimeArithmeticTest.cpp)
 SETUP_TEST()
 ADD_TEST(NAME uoTimeArithmeticTest COMMAND ${PROJECT_NAME})
 
+# Tests for the CMatrix class
+PROJECT(openvibe-base-cmatrix-test)
+ADD_EXECUTABLE(${PROJECT_NAME} uoCMatrixTest.cpp)
+SETUP_TEST()
+ADD_TEST(NAME uoCMatrixTest COMMAND ${PROJECT_NAME})
+

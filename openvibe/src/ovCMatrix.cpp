@@ -15,6 +15,8 @@ namespace OpenViBE
 		public:
 
 			CMatrixImpl(void);
+			CMatrixImpl(const CMatrixImpl& other);
+			CMatrixImpl& operator=(const CMatrixImpl& other);
 			virtual ~CMatrixImpl(void);
 
 			virtual const uint32 getDimensionCount(void) const;
@@ -23,16 +25,16 @@ namespace OpenViBE
 			virtual const float64* getBuffer(void) const;
 			virtual const uint32 getBufferElementCount(void) const;
 
-			virtual boolean setDimensionCount(const uint32 ui32DimensionCount);
-			virtual boolean setDimensionSize(const uint32 ui32DimensionIndex, const uint32 ui32DimensionSize);
-			virtual boolean setDimensionLabel(const uint32 ui32DimensionIndex, const uint32 ui32DimensionEntryIndex, const char* sDimensionLabel);
+			virtual bool setDimensionCount(const uint32 ui32DimensionCount);
+			virtual bool setDimensionSize(const uint32 ui32DimensionIndex, const uint32 ui32DimensionSize);
+			virtual bool setDimensionLabel(const uint32 ui32DimensionIndex, const uint32 ui32DimensionEntryIndex, const char* sDimensionLabel);
 			virtual float64* getBuffer(void);
 
 			_IsDerivedFromClass_Final_(IMatrix, OV_ClassId_MatrixImpl);
 
 		private:
 
-			boolean refreshInternalBuffer(void) const;
+			bool refreshInternalBuffer(void) const;
 
 		protected:
 
@@ -49,9 +51,36 @@ namespace OpenViBE
 //
 
 CMatrixImpl::CMatrixImpl(void)
-	:m_pBuffer(NULL)
-	,m_ui32BufferElementCount(0)
+    :m_pBuffer(NULL)
+    ,m_ui32BufferElementCount(0)
 {
+}
+
+CMatrixImpl::CMatrixImpl(const CMatrixImpl& other)
+    : m_pBuffer(nullptr),
+      m_ui32BufferElementCount(0)
+{
+	m_vDimensionSize = other.m_vDimensionSize;
+	m_vDimensionLabel = other.m_vDimensionLabel;
+	this->refreshInternalBuffer();
+	std::memcpy(this->getBuffer(), other.getBuffer(), other.getBufferElementCount() * sizeof(double));
+}
+
+CMatrixImpl& CMatrixImpl::operator=(const CMatrixImpl& other)
+{
+	if (this != &other)
+	{
+		if (m_pBuffer)
+		{
+			delete[] m_pBuffer;
+			m_pBuffer = nullptr;
+		}
+		this->m_vDimensionSize = other.m_vDimensionSize;
+		this->m_vDimensionLabel = other.m_vDimensionLabel;
+		this->refreshInternalBuffer();
+		std::memcpy(this->getBuffer(), other.getBuffer(), other.getBufferElementCount() * sizeof(double));
+	}
+	return *this;
 }
 
 CMatrixImpl::~CMatrixImpl(void)
@@ -59,7 +88,7 @@ CMatrixImpl::~CMatrixImpl(void)
 	if(m_pBuffer) 
 	{
 		delete [] m_pBuffer;
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 	}
 }
 
@@ -212,8 +241,25 @@ boolean CMatrixImpl::refreshInternalBuffer(void) const
 //
 
 CMatrix::CMatrix(void)
+    : m_pMatrixImpl(nullptr)
 {
 	m_pMatrixImpl=new CMatrixImpl();
+}
+
+CMatrix::CMatrix(const CMatrix& other)
+    : m_pMatrixImpl(nullptr)
+{
+	m_pMatrixImpl = new CMatrixImpl(*dynamic_cast<CMatrixImpl*>(other.m_pMatrixImpl));
+}
+
+CMatrix& CMatrix::operator=(const CMatrix& other)
+{
+	if (m_pMatrixImpl)
+	{
+		delete m_pMatrixImpl;
+	}
+	m_pMatrixImpl = new CMatrixImpl(*dynamic_cast<CMatrixImpl*>(other.m_pMatrixImpl));
+	return *this;
 }
 
 CMatrix::~CMatrix(void)
