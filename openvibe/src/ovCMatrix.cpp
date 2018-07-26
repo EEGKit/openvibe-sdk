@@ -38,8 +38,8 @@ namespace OpenViBE
 
 		protected:
 
-			mutable float64* m_pBuffer;
-			mutable uint32 m_ui32BufferElementCount;
+			mutable float64* m_pBuffer = nullptr;
+			mutable uint32 m_ui32BufferElementCount = 0;
 
 			std::vector < uint32 > m_vDimensionSize;
 			std::vector < std::vector < std::string > > m_vDimensionLabel;
@@ -51,14 +51,10 @@ namespace OpenViBE
 //
 
 CMatrixImpl::CMatrixImpl(void)
-    :m_pBuffer(NULL)
-    ,m_ui32BufferElementCount(0)
 {
 }
 
 CMatrixImpl::CMatrixImpl(const CMatrixImpl& other)
-    : m_pBuffer(nullptr),
-      m_ui32BufferElementCount(0)
 {
 	m_vDimensionSize = other.m_vDimensionSize;
 	m_vDimensionLabel = other.m_vDimensionLabel;
@@ -241,13 +237,11 @@ boolean CMatrixImpl::refreshInternalBuffer(void) const
 //
 
 CMatrix::CMatrix(void)
-    : m_pMatrixImpl(nullptr)
 {
 	m_pMatrixImpl=new CMatrixImpl();
 }
 
 CMatrix::CMatrix(const CMatrix& other)
-    : m_pMatrixImpl(nullptr)
 {
 	m_pMatrixImpl = new CMatrixImpl(*dynamic_cast<CMatrixImpl*>(other.m_pMatrixImpl));
 }

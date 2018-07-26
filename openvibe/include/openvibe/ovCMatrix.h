@@ -69,7 +69,7 @@ namespace OpenViBE
 
 	private:
 
-		OpenViBE::IMatrix* m_pMatrixImpl; //!< Internal implementation
+		OpenViBE::IMatrix* m_pMatrixImpl = nullptr; //!< Internal implementation
 	};
 };
 
