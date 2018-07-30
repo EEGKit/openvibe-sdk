@@ -776,8 +776,10 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 				            "Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
 				            ErrorType::BadFileParsing
 				            );
+				l_vChildren.top().second+=sValue[i];
+				break;
 
-			[[clang::fallthrough]]; default:
+			default:
 				l_vChildren.top().second+=sValue[i];
 				break;
 		}
