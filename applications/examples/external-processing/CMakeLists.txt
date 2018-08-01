@@ -3,6 +3,7 @@ PROJECT(sdk-examples-communication-client-generator)
 SET(source_files src/main-generator.cpp)
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${source_files})
+ADD_DEPENDENCIES(${PROJECT_NAME} openvibe-toolkit)
 
 INCLUDE("FindOpenViBECommon")
 INCLUDE("FindOpenViBEModuleEBML")
