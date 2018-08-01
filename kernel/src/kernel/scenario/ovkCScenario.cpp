@@ -1046,13 +1046,13 @@ bool CScenario::applyLocalSettings()
 			box.second->getSettingName(settingIndex, settingName);
 			box.second->getSettingValue(settingIndex, settingValue);
 
-			box.second->setSettingValue(settingIndex, this->getConfigurationManager().expandOnlyKeyword("var", settingValue));
+			box.second->setSettingValue(settingIndex, this->getConfigurationManager().expandOnlyKeyword("var", settingValue, true));
 			box.second->getSettingValue(settingIndex, settingValue);
 
 			if(box.second->hasAttribute(OVD_AttributeId_SettingOverrideFilename))
 			{
 				settingValue = box.second->getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
-				box.second->setAttributeValue(OVD_AttributeId_SettingOverrideFilename, this->getConfigurationManager().expandOnlyKeyword("var", settingValue));
+				box.second->setAttributeValue(OVD_AttributeId_SettingOverrideFilename, this->getConfigurationManager().expandOnlyKeyword("var", settingValue, true));
 			}
 		}
 

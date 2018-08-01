@@ -673,7 +673,7 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 	return true;
 }
 
-bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult) const
+bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult, bool preserveBackslashes = false) const
 {
 	std::stack < std::pair < ENodeType, std::string > > l_vChildren;
 	l_vChildren.push(std::make_pair(NodeType_Value, std::string()));
@@ -766,12 +766,18 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 				break;
 
 			case '\\':
+				if (preserveBackslashes)
+				{
+					l_vChildren.top().second+=sValue[i];
+				}
 				i++;
 				OV_ERROR_UNLESS_KRF(
-					i < sValue.length(),
-					"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
-					ErrorType::BadFileParsing
-				);
+				            i < sValue.length(),
+				            "Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
+				            ErrorType::BadFileParsing
+				            );
+				l_vChildren.top().second+=sValue[i];
+				break;
 
 			default:
 				l_vChildren.top().second+=sValue[i];
@@ -813,11 +819,12 @@ bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std
 
 CString CConfigurationManager::expandOnlyKeyword(
         const CString& rKeyword,
-        const CString& rExpression) const
+        const CString& rExpression,
+        bool preserveBackshlashes) const
 {
 	std::string l_sValue(rExpression.toASCIIString());
 	std::string l_sResult;
-	if(this->internalExpandOnlyKeyword(rKeyword.toASCIIString(), l_sValue, l_sResult))
+	if(this->internalExpandOnlyKeyword(rKeyword.toASCIIString(), l_sValue, l_sResult, preserveBackshlashes))
 	{
 		return l_sResult.c_str();
 	}

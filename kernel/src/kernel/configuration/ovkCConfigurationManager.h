@@ -75,7 +75,8 @@ namespace OpenViBE
 
 			virtual OpenViBE::CString expandOnlyKeyword(
 			        const OpenViBE::CString& rKeyword,
-			        const OpenViBE::CString& rExpression) const;
+			        const OpenViBE::CString& rExpression,
+			        bool preserveBackslashes) const;
 			virtual OpenViBE::float64 expandAsFloat(
 				const OpenViBE::CString& rExpression,
 				const OpenViBE::float64 f64FallbackValue) const;
@@ -98,7 +99,7 @@ namespace OpenViBE
 			virtual OpenViBE::CIdentifier getUnusedIdentifier(void) const;
 
 			bool internalExpand(const std::string& sValue, std::string& sResult) const;
-			bool internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult) const;
+			bool internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult, bool preserveBackslashes) const;
 			bool internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const;
 
 		protected:
