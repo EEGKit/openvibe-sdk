@@ -170,6 +170,30 @@ if(DEPENDENCIES IN_LIST INCLUDED_OV_SDK_COMPONENTS)
 	endif()
 endif()
 
+# Install applications if required
+if(DEVELOPER_TOOLS IN_LIST INCLUDED_OV_SDK_COMPONENTS)
+	if(WIN32)
+		if(MULTI_BUILD) # Replace with generator expression in CMake 3.5+
+			foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+				string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIGU )
+				install(FILES
+					${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/bin/openvibe-id-generator.exe
+					${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/bin/openvibe-plugin-inspector.exe
+					DESTINATION ${DEST_LIB_DIR} CONFIGURATIONS ${OUTPUTCONFIG})
+				install(DIRECTORY ${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/include/ DESTINATION ${DIST_INCLUDEDIR} CONFIGURATIONS ${OUTPUTCONFIG})
+				install(DIRECTORY ${OPENVIBE_SDK_PATH_${OUTPUTCONFIGU}}/lib/ DESTINATION ${DIST_LIBDIR} CONFIGURATIONS ${OUTPUTCONFIG})
+			endforeach()
+		else()
+			install(FILES
+				${OPENVIBE_SDK_PATH}/bin/openvibe-id-generator.exe
+				${OPENVIBE_SDK_PATH}/bin/openvibe-plugin-inspector.exe
+				DESTINATION ${DEST_LIB_DIR})
+			install(DIRECTORY ${OPENVIBE_SDK_PATH}/include/ DESTINATION ${DIST_INCLUDEDIR})
+			install(DIRECTORY ${OPENVIBE_SDK_PATH}/lib/ DESTINATION ${DIST_LIBDIR})
+		endif()
+	endif()
+endif()
+
 # if we link with the module socket in Static, we must link the project with the dependency on win32
 if(WIN32 AND SOCKET IN_LIST INCLUDED_OV_SDK_COMPONENTS AND NOT DYNAMIC_LINK_OPENVIBE_SDK)
 	include("FindThirdPartyWinsock2")
