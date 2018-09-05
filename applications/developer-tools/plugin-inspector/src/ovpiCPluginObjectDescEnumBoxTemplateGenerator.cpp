@@ -256,7 +256,6 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector <
 {
 	string res = "";
 
-	uint32_t level = 0;
 	string lastCategoryName;
 	vector < string > lastSplittedCategories;
 	std::sort(categories.begin(), categories.end());
@@ -265,6 +264,7 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector <
 	{
 		string categoryName = category.first;
 		string name = category.second;
+		size_t level = 0;
 
 		if (lastCategoryName != categoryName)
 		{
