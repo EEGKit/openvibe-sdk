@@ -59,11 +59,11 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize(void)
 	}
 
 	ofBoxIndex
-		<< " .. _Doc_BoxAlgorithms:\n"
+		<< ".. _Doc_BoxAlgorithms:\n"
 		<< "\n"
 		<< ::generateRstTitle("Boxes list", 0)
 		<< "\n"
-		<< " Available box algorithms are :\n"
+		<< "Available box algorithms are :\n"
 		<< "\n";
 
 	ofBoxIndex << generateRstIndex(m_Categories);
@@ -71,8 +71,10 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize(void)
 
 	if (!m_DeprecatedBoxesCategories.empty())
 	{
-		ofBoxIndex << "\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n";
-		ofBoxIndex << " The following boxes are deprecated, they are hidden in Studio and will be removed soon or later, so you should consider not using them:\n\n";
+		ofBoxIndex << "\n\n"
+				   << ::generateRstTitle("Deprecated boxes list", 0)
+				   << "\n"
+				   << "The following boxes are deprecated, they are hidden in Studio and will be removed soon or later, so you should consider not using them:\n";
 
 		ofBoxIndex << generateRstIndex(m_DeprecatedBoxesCategories);
 	ofBoxIndex << " \n";
