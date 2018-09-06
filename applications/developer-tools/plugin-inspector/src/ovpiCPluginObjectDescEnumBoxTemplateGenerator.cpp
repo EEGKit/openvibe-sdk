@@ -16,7 +16,7 @@ using namespace OpenViBE::Plugins;
 
 namespace
 {
-	std::map<int, char> indentCharacters = { { 0, '=' }, { 1, '-' }, { 2, '~' } };
+	std::map<int, char> indentCharacters = { { 0, '*' }, { 1, '=' }, { 2, '-' }, { 3, '+' } };
 	std::string generateRstTitle(std::string title, int level)
 	{
 		return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n";
@@ -50,28 +50,32 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize(void)
 	}
 
 	std::ofstream ofBoxIndex;
-	FS::Files::openOFStream(ofBoxIndex, (m_DocTemplateDirectory + "/Doc_BoxAlgorithms.dox").c_str());
+	FS::Files::openOFStream(ofBoxIndex, (m_DocTemplateDirectory + "/index-boxes.rst").c_str());
 
 	if (!ofBoxIndex.good())
 	{
-		m_KernelContext.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_DocTemplateDirectory + "/Doc_BoxAlgorithms.dox").c_str() << "]\n";
+		m_KernelContext.getLogManager() << LogLevel_Error << "Error while trying to open file [" << (m_DocTemplateDirectory + "/index-boxes.rst").c_str() << "]\n";
 		return false;
 	}
 
 	ofBoxIndex
 		<< " .. _Doc_BoxAlgorithms:\n"
+		<< "\n"
 		<< ::generateRstTitle("Boxes list", 0)
 		<< "\n"
-		<< " Available box algorithms are :\n";
+		<< " Available box algorithms are :\n"
+		<< "\n";
 
 	ofBoxIndex << generateRstIndex(m_Categories);
+	ofBoxIndex << " \n";
 
 	if (!m_DeprecatedBoxesCategories.empty())
 	{
 		ofBoxIndex << "\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n";
-		ofBoxIndex << " The following boxes are deprecated, they are hidden in Studio and will be removed soon or later, so you should consider not using them:\n";
+		ofBoxIndex << " The following boxes are deprecated, they are hidden in Studio and will be removed soon or later, so you should consider not using them:\n\n";
 
 		ofBoxIndex << generateRstIndex(m_DeprecatedBoxesCategories);
+	ofBoxIndex << " \n";
 	}
 
 	ofBoxIndex << " \n";
@@ -264,7 +268,6 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector <
 	{
 		string categoryName = category.first;
 		string name = category.second;
-		size_t level = 0;
 
 		if (lastCategoryName != categoryName)
 		{
@@ -288,7 +291,6 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector <
 					i = j;
 				}
 			}
-			level = splittedCategories.size();
 
 			for (itLastSplittedCategory = lastSplittedCategories.begin(), itSplittedCategory1 = splittedCategories.begin();
 				itLastSplittedCategory != lastSplittedCategories.end() && itSplittedCategory1 != splittedCategories.end() && *itLastSplittedCategory == *itSplittedCategory1;
@@ -296,19 +298,24 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector <
 
 			for (; itSplittedCategory1 != splittedCategories.end(); ++itSplittedCategory1)
 			{
+				size_t level = 1;
 				for (itSplittedCategory2 = splittedCategories.begin(); itSplittedCategory2 != itSplittedCategory1; ++itSplittedCategory2)
 				{
-					res += "   ";
+					level++;
 				}
-				res += " - " + *itSplittedCategory1 + " : \n";
+				res += "\n\n"
+					+ ::generateRstTitle(*itSplittedCategory1, level)
+					+ "\n"
+					+ ".. toctree::\n"
+					+ "   :maxdepth: 1\n"
+					+ "\n";
 			}
 
 			lastCategoryName = categoryName;
 			lastSplittedCategories = splittedCategories;
 		}
 
-		res += std::string(level * 3, ' ');
-		res += " - :ref:`_Doc_BoxAlgorithm_" + this->transform(name) + "`\n";
+		res += "   Doc_BoxAlgorithm_" + this->transform(name) + "\n";
 	}
 	return res;
 }
