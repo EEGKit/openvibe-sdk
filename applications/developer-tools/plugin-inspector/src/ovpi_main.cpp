@@ -65,9 +65,9 @@ int main(int argc, char ** argv)
 #if defined TARGET_OS_Windows
 	CString kernelFile = OpenViBE::Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
-	CString l_sKernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
+	CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
-	CString l_sKernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
+	CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.dylib";
 #endif
 
 	if (!kernelLoader.load(kernelFile, &errorMsg))
