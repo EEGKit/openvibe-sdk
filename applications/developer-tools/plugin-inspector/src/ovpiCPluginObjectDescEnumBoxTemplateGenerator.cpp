@@ -16,7 +16,7 @@ using namespace OpenViBE::Plugins;
 
 namespace
 {
-	std::map<int, char> indentCharacters = { { 0, '*' }, { 1, '=' }, { 2, '-' }, { 3, '+' } };
+	std::map<int, char> indentCharacters = { { 0, '=' }, { 1, '-' }, { 2, '~' }, { 3, '+' } };
 	std::string generateRstTitle(std::string title, int level)
 	{
 		return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n";
@@ -124,9 +124,12 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	
 	ofBoxTemplate
 		<< ".. _Doc_" << fileName << ":\n"
+		<< "\n"
 		<< ::generateRstTitle(rPluginObjectDesc.getName().toASCIIString(), 0)
 		<< "\n"
+		<< "\n"
 		<< "//TODO: Write general box description...\n"
+		<< "\n"
 		<< "\n";
 
 
@@ -134,11 +137,12 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	{
 		ofBoxTemplate
 			<< ".. _Doc_" << fileName.c_str() << "_Inputs:\n"
+			<< "\n"
 			<< ::generateRstTitle("Inputs", 1).c_str()
 			<< "//TODO: Write general input description...\n"
 			<< "\n"
-			<< "..csv - table::\n"
-			<< ":header : \"Input Name\", \"Stream Type\"\n"
+			<< ".. csv-table::\n"
+			<< "   :header: \"Input Name\", \"Stream Type\"\n"
 			<< "\n";
 
 		std::vector<CString> inputNames(box.getInputCount());
@@ -150,27 +154,35 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			CString typeName = m_KernelContext.getTypeManager().getTypeName(typeIdentifier);
 
 			ofBoxTemplate
-				<< "\"" << inputNames[i] << "\", " << typeName << "\"\n";
+				<< "   \"" << inputNames[i] << "\", " << typeName << "\"\n";
 		}
+		uint32_t index = 1;
 		for (CString inputName : inputNames)
 		{
 			ofBoxTemplate
 				<< "\n"
+				<< ".. _Doc_" << fileName << "_Input_" << index << ":\n"
+				<< "\n"
 				<< ::generateRstTitle(inputName.toASCIIString(), 2)
+				<< "\n"
 				<< "//TODO: Write input description...\n"
+				<< "\n"
 				<< "\n";
+			index++;
 		}
 	}
 
 	if (box.getOutputCount())
 	{
 		ofBoxTemplate
-			<< ".. _Doc_" << fileName.c_str() << "_Outputs:\n"
+			<< ".. _Doc_" << fileName << "_Outputs:\n"
+			<< "\n"
 			<< ::generateRstTitle("Outputs", 1)
+			<< "\n"
 			<< "//TODO: Write general output description...\n"
 			<< "\n"
-			<< "..csv - table::\n"
-			<< ":header : \"Output Name\", \"Stream Type\"\n"
+			<< ".. csv-table::\n"
+			<< "   :header: \"Output Name\", \"Stream Type\"\n"
 			<< "\n";
 
 		std::vector<CString> outputNames(box.getOutputCount());
@@ -182,15 +194,21 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			CString typeName = m_KernelContext.getTypeManager().getTypeName(typeIdentifier);
 
 			ofBoxTemplate
-				<< "\"" << outputNames[i] << "\", " << typeName << "\"\n";
+				<< "   \"" << outputNames[i] << "\", " << typeName << "\"\n";
 		}
+		uint32_t index = 1;
 		for (CString outputName : outputNames)
 		{
 			ofBoxTemplate
 				<< "\n"
+				<< ".. _Doc_" << fileName << "_Output_" << index << ":\n"
+				<< "\n"
 				<< ::generateRstTitle(outputName.toASCIIString(), 2)
+				<< "\n"
 				<< "//TODO: Write output description...\n"
+				<< "\n"
 				<< "\n";
+			index++;
 		}
 	}
 
@@ -198,11 +216,13 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	{
 		ofBoxTemplate
 			<< ".. _Doc_" << fileName.c_str() << "_Settings:\n"
+			<< "\n"
 			<< ::generateRstTitle("Settings", 1)
+			<< "\n"
 			<< "//TODO: Write settings general description...\n"
 			<< "\n"
-			<< "..csv - table::\n"
-			<< ":header : \"Setting Name\", \"Type\", \"Default Value\"\n"
+			<< ".. csv-table::\n"
+			<< "   :header: \"Setting Name\", \"Type\", \"Default Value\"\n"
 			<< "\n";
 
 		std::vector<CString> settingsNames(box.getSettingCount());
@@ -216,30 +236,40 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			CString typeName = m_KernelContext.getTypeManager().getTypeName(typeIdentifier);
 
 			ofBoxTemplate
-				<< "\"" << settingsNames[i] << "\", " << typeName << "\", \"" << defaultValue << "\"\n";
+				<< "   \"" << settingsNames[i] << "\", " << typeName << "\", \"" << defaultValue << "\"\n";
 		}
+		uint32_t index = 1;
 		for (CString settingName : settingsNames)
 		{
 			ofBoxTemplate
 				<< "\n"
+				<< ".. _Doc_" << fileName << "_Setting_" << index << ":\n"
+				<< "\n"
 				<< ::generateRstTitle(settingName.toASCIIString(), 2)
+				<< "\n"
 				<< "//TODO: Write setting description... \n"
+				<< "\n"
 				<< "\n";
+			index++;
 		}
 	}
 
 	ofBoxTemplate
 		<< ".. _Doc_" << fileName << "_Examples:\n"
+		<< "\n"
 		<< ::generateRstTitle("Examples", 1)
 		<< "\n"
 		<< "//TODO: Write example of use...\n"
+		<< "\n"
 		<< "\n";
 
 	ofBoxTemplate
 		<< ".. _Doc_" << fileName << "_Miscellaneous:\n"
+		<< "\n"
 		<< ::generateRstTitle("Miscellaneous", 1)
 		<< "\n"
 		<< "//TODO: Write any miscellaneous information...\n"
+		<< "\n"
 		<< "\n";
 
 	ofBoxTemplate.close();
