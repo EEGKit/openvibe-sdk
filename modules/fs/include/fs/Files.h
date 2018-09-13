@@ -28,11 +28,27 @@ namespace FS
 		// Returns a path omitting the last part of it (essentially boost::filesystem::parent_path). Output sParentPath needs to be pre-allocated.
 		static bool getParentPath(const char *sPath, char *sParentPath);
 		static bool getParentPath(const char *path, char *parentPath, size_t size);
-		// Returns a filename component of a path (essentially boost::filesystem::filename) Output sParentPath needs to be pre-allocated
+
+		/**
+		* \brief Fills filename as a component of a path
+		* \param path [in]: input path
+		* \param filename [out]: file name, needs to be pre-allocated
+		*
+		* (essentially boost::filesystem::filename)
+		* \return Success status
+		*/
 		static bool getFilename(const char *sPath, char *sFilename);
 		static bool getFilename(const char *path, char *filename, size_t size);
-		// Returns a filename component of a path without the extension (essentially boost::filesystem::filename) Output sParentPath needs to be pre-allocated
-		static bool getFilenameWithoutExtension(const char *sPath, char *sFilename);
+
+		/**
+		* \brief Fills filename as a component of a path without the extension
+		* \param path [in]: input path
+		* \param filename [out]: file name without extension, needs to be pre-allocated
+		*
+		* (essentially boost::filesystem::filename)
+		* \return Success status
+		*/
+		static bool getFilenameWithoutExtension(const char *path, char *filename);
 		static bool getFilenameWithoutExtension(const char *path, char *filename, size_t size);
 		// Returns the extension component of a path
 		static bool getFilenameExtension(const char* path, char* fileNameExtension);
