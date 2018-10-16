@@ -476,7 +476,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 			const CIdentifier boxIdentifier = identifierList[i];
 			const IBox* l_pBox = m_pScenario->getBoxDetails(boxIdentifier);
 			OV_ERROR_UNLESS_K(
-				!m_pScenario->hasNeedsUpdateBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxNeedsUpdate}", false),
+				!m_pScenario->hasOutdatedBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsOutdated}", false),
 				"Box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "] should be updated",
 				ErrorType::Internal,
 				SchedulerInitialization_Failed

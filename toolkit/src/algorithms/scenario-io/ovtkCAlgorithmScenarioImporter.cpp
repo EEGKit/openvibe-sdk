@@ -440,26 +440,15 @@ boolean CAlgorithmScenarioImporter::process(void)
 			a->m_sValue);
 	}
 
-	if(l_pScenario->checkBoxesRequiringUpdate())
+	if(l_pScenario->checkOutdatedBoxes())
 	{
 		CIdentifier* identifierList = nullptr;
 		size_t nbElems = 0;
-		l_pScenario->getNeedsUpdateBoxIdentifierList(&identifierList, &nbElems);
+		l_pScenario->getOutdatedBoxIdentifierList(&identifierList, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
 			const IBox* l_pBox = l_pScenario->getBoxDetails(identifierList[i]);
-
-			if (this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportWhenBoxNeedsUpdate}", true))
-			{
-				OV_ERROR_KRF(
-					"Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier().toString() << "] must be updated",
-					OpenViBE::Kernel::ErrorType::BadConfig
-					);
-			}
-			else
-			{
-				OV_WARNING_K("Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier().toString() << "] should be updated");
-			}
+			OV_WARNING_K("Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier().toString() << "] should be updated");
 		}
 		l_pScenario->releaseIdentifierList(identifierList);
 	}

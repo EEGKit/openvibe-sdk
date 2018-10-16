@@ -234,7 +234,7 @@ namespace OpenViBE
 		// update boxes to be updated
 		CIdentifier* identifierList = nullptr;
 		size_t elemCount = 0;
-		scenario.getNeedsUpdateBoxIdentifierList(&identifierList, &elemCount);
+		scenario.getOutdatedBoxIdentifierList(&identifierList, &elemCount);
 		for (size_t i = 0; i < elemCount; ++i)
 		{
 			scenario.updateBox(identifierList[i]);

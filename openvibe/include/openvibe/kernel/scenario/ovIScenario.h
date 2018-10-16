@@ -531,27 +531,27 @@ namespace OpenViBE
 
 			/**
 			 * \brief Check if boxes in scenario need to be updated. Feed an map of updates boxes instances with the identifiers
-			 * of boxes that need to be updated.
+			 * of outdated boxes
 			 * \return true if at least one box needs to updated
 			 */
-			virtual bool checkBoxesRequiringUpdate() = 0;
+			virtual bool checkOutdatedBoxes() = 0;
 
 			/**
-			* \brief Gets identifier of next box that needs to be updated
-			 * \param previousIdentifier The identifier for the preceeding box that needs updates
+			* \brief Gets identifier of next outdated box
+			 * \param previousIdentifier The identifier for the preceeding outdated box
 			 * \return The identifier of the next box that needs updates in case of success.
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first processing unit identifier.
-			 * \note Warning: You need to call at least once the function "checkNeedsUpdateBox", before calling this function
+			 * \note Warning: You need to call at least once the function "checkOutdatedBoxes", before calling this function
 			 */
-			virtual OpenViBE::CIdentifier getNextNeedsUpdateBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
+			virtual OpenViBE::CIdentifier getNextOutdatedBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
 
 			/**
 			 * \brief Indicates if at least one box in scenario need to be updated.
 			 * \return true if at least one box needs to updated
-			 * \note Warning: You need to call at least once the function "checkNeedsUpdateBox", before calling this function
+			 * \note Warning: You need to call at least once the function "checkOutdatedBoxes", before calling this function
 			 */
-			virtual bool hasNeedsUpdateBox() = 0;
+			virtual bool hasOutdatedBox() = 0;
 
 			/**
 			 * \brief Update the prototypes of the box identified by the given identifier.
@@ -589,7 +589,7 @@ namespace OpenViBE
 			virtual void getLinkIdentifierFromBoxOutputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t outputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getLinkIdentifierToBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputInex, OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getOutdatedBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const = 0;
 			//@}
 

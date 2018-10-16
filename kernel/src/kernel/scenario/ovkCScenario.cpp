@@ -188,7 +188,7 @@ bool CScenario::clear(void)
 	}
 	m_Links.clear();
 
-	m_BoxesWhichNeedUpdate.clear();
+	m_OutdatedBoxes.clear();
 
 	while (this->getSettingCount())
 	{
@@ -1365,12 +1365,12 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 //___________________________________________________________________//
 //                                                                   //
 
-CIdentifier CScenario::getNextNeedsUpdateBoxIdentifier(const CIdentifier& previousIdentifier) const
+CIdentifier CScenario::getNextOutdatedBoxIdentifier(const CIdentifier& previousIdentifier) const
 {
-	return getNextTIdentifier<std::shared_ptr<CBox>, TTestTrue<std::shared_ptr<CBox>> >(m_BoxesWhichNeedUpdate, previousIdentifier, TTestTrue<std::shared_ptr<CBox>>());
+	return getNextTIdentifier<std::shared_ptr<CBox>, TTestTrue<std::shared_ptr<CBox>> >(m_OutdatedBoxes, previousIdentifier, TTestTrue<std::shared_ptr<CBox>>());
 }
 
-bool CScenario::hasNeedsUpdateBox()
+bool CScenario::hasOutdatedBox()
 {
 	for (auto &box : m_Boxes)
 	{
@@ -1380,7 +1380,7 @@ bool CScenario::hasNeedsUpdateBox()
 	return false;
 }
 
-bool CScenario::doesBoxRequireUpdate(const CIdentifier& rBoxIdentifier)
+bool CScenario::isBoxOutdated(const CIdentifier& rBoxIdentifier)
 {
 	IBox* box = getBoxDetails(rBoxIdentifier);
 	if (!box)
@@ -1410,11 +1410,11 @@ bool CScenario::doesBoxRequireUpdate(const CIdentifier& rBoxIdentifier)
 	return false;
 }
 
-bool CScenario::checkBoxesRequiringUpdate()
+bool CScenario::checkOutdatedBoxes()
 {
 	bool result = false;
 
-	m_BoxesWhichNeedUpdate.clear();
+	m_OutdatedBoxes.clear();
 	m_UpdatedBoxIOCorrespondence[Input] = std::map<CIdentifier, std::map<uint32_t, uint32_t>>();
 	m_UpdatedBoxIOCorrespondence[Output] = std::map<CIdentifier, std::map<uint32_t, uint32_t>>();
 
@@ -1432,11 +1432,11 @@ bool CScenario::checkBoxesRequiringUpdate()
 		// exception for boxes that could not be automatically updated
 		if (boxUpdater.flaggedForManualUpdate())
 		{
-			 if (this->doesBoxRequireUpdate(box.second->getIdentifier()))
+			 if (this->isBoxOutdated(box.second->getIdentifier()))
 			 {
 				auto toBeUpdatedBox = std::shared_ptr<CBox>(new CBox(getKernelContext()));
 				toBeUpdatedBox->initializeFromAlgorithmClassIdentifierNoInit(box.second->getAlgorithmClassIdentifier());
-				m_BoxesWhichNeedUpdate[box.second->getIdentifier()] = toBeUpdatedBox;
+				m_OutdatedBoxes[box.second->getIdentifier()] = toBeUpdatedBox;
 				m_Boxes[box.first]->setAttributeValue(OV_AttributeId_Box_ToBeUpdated,"");
 				result = true;
 			 }
@@ -1455,7 +1455,7 @@ bool CScenario::checkBoxesRequiringUpdate()
 			// copy requested box into a new instance managed in scenario
 			auto newBox = std::shared_ptr<CBox>(new CBox(this->getKernelContext()));
 			newBox->initializeFromExistingBox(boxUpdater.getUpdatedBox());
-			m_BoxesWhichNeedUpdate[box.second->getIdentifier()] = newBox;
+			m_OutdatedBoxes[box.second->getIdentifier()] = newBox;
 			m_Boxes[box.first]->setAttributeValue(OV_AttributeId_Box_ToBeUpdated,"");
 			result = true;
 		}
@@ -1517,9 +1517,9 @@ void CScenario::getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& box
 {
 	getIdentifierList<CLink*, TTestEqTargetBoxInput >(m_Links, TTestEqTargetBoxInput(boxIdentifier, inputIndex), identifierList, size);
 }
-void CScenario::getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getOutdatedBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<std::shared_ptr<CBox>, TTestTrue<std::shared_ptr<CBox>>>(m_BoxesWhichNeedUpdate, TTestTrue<std::shared_ptr<CBox>>(), identifierList, size);
+	getIdentifierList<std::shared_ptr<CBox>, TTestTrue<std::shared_ptr<CBox>>>(m_OutdatedBoxes, TTestTrue<std::shared_ptr<CBox>>(), identifierList, size);
 }
 
 void CScenario::releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const
@@ -1604,16 +1604,16 @@ bool CScenario::updateBox(const CIdentifier &boxIdentifier)
 	            ErrorType::ResourceNotFound
 	            );
 
-	auto itUpdateBox = m_BoxesWhichNeedUpdate.find(boxIdentifier);
+	auto itUpdateBox = m_OutdatedBoxes.find(boxIdentifier);
 
-	if (itUpdateBox == m_BoxesWhichNeedUpdate.end())
+	if (itUpdateBox == m_OutdatedBoxes.end())
 	{
-		this->checkBoxesRequiringUpdate();
-		itUpdateBox = m_BoxesWhichNeedUpdate.find(boxIdentifier);
+		this->checkOutdatedBoxes();
+		itUpdateBox = m_OutdatedBoxes.find(boxIdentifier);
 	}
 
 	OV_ERROR_UNLESS_KRF(
-	            itUpdateBox != m_BoxesWhichNeedUpdate.end(),
+	            itUpdateBox != m_OutdatedBoxes.end(),
 	            "Box [" << boxIdentifier.toString() << "] misses an updated version",
 	            ErrorType::ResourceNotFound
 	            );
@@ -1626,7 +1626,7 @@ bool CScenario::updateBox(const CIdentifier &boxIdentifier)
 		return false;
 	}
 	OV_ERROR_UNLESS_KRF(
-	            itUpdateBox != m_BoxesWhichNeedUpdate.end(),
+	            itUpdateBox != m_OutdatedBoxes.end(),
 	            "Box [" << boxIdentifier.toString() << "] does not have to be updated",
 	            ErrorType::ResourceNotFound
 	            );

@@ -118,7 +118,7 @@ bool CBoxUpdater::initialize()
 
 	if (this->flaggedForManualUpdate())
 	{
-		m_IsUpdateRequired = m_Scenario->doesBoxRequireUpdate(m_SourceBox->getIdentifier());
+		m_IsUpdateRequired = m_Scenario->isBoxOutdated(m_SourceBox->getIdentifier());
 		return true;
 	}
 

@@ -133,11 +133,11 @@ namespace OpenViBE
 			bool applyLocalSettings(void);
 			bool checkSettings(IConfigurationManager* configurationManager);
 
-			bool doesBoxRequireUpdate(const CIdentifier& rBoxIdentifier);
-			bool checkBoxesRequiringUpdate();
-			bool hasNeedsUpdateBox();
+			bool isBoxOutdated(const CIdentifier& rBoxIdentifier);
+			bool checkOutdatedBoxes();
+			bool hasOutdatedBox();
 
-			OpenViBE::CIdentifier getNextNeedsUpdateBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const;
+			OpenViBE::CIdentifier getNextOutdatedBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const;
 
 			bool isMetabox(void);
 
@@ -149,7 +149,7 @@ namespace OpenViBE
 			void getLinkIdentifierFromBoxOutputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t outputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const;
 			void getLinkIdentifierToBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const;
 			void getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputInex, OpenViBE::CIdentifier** identifierList, size_t* size) const;
-			void getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void getOutdatedBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const;
 			void releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const;
 
 
@@ -170,7 +170,7 @@ namespace OpenViBE
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CComment*> m_Comments;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CMetadata*> m_Metadata;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CLink*> m_Links;
-			std::map<OpenViBE::CIdentifier, std::shared_ptr<OpenViBE::Kernel::CBox>> m_BoxesWhichNeedUpdate;
+			std::map<OpenViBE::CIdentifier, std::shared_ptr<OpenViBE::Kernel::CBox>> m_OutdatedBoxes;
 			std::map<BoxInterfacorType, std::map<CIdentifier, std::map<uint32_t, uint32_t>>> m_UpdatedBoxIOCorrespondence;
 
 
