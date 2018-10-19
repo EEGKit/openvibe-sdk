@@ -128,7 +128,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 		<< ::generateRstTitle(rPluginObjectDesc.getName().toASCIIString(), 0)
 		<< "\n"
 		<< "\n"
-		<< "//TODO: Write general box description...\n"
+		<< ".. todo::  Write general box description...\n"
 		<< "\n"
 		<< "\n";
 
@@ -139,7 +139,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			<< ".. _Doc_" << fileName.c_str() << "_Inputs:\n"
 			<< "\n"
 			<< ::generateRstTitle("Inputs", 1).c_str()
-			<< "//TODO: Write general input description...\n"
+			<< ".. todo::  Write general input description...\n"
 			<< "\n"
 			<< ".. csv-table::\n"
 			<< "   :header: \"Input Name\", \"Stream Type\"\n"
@@ -154,7 +154,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			CString typeName = m_KernelContext.getTypeManager().getTypeName(typeIdentifier);
 
 			ofBoxTemplate
-				<< "   \"" << inputNames[i] << "\", " << typeName << "\"\n";
+				<< "   \"" << inputNames[i] << "\", \"" << typeName << "\"\n";
 		}
 		uint32_t index = 1;
 		for (CString inputName : inputNames)
@@ -165,7 +165,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 				<< "\n"
 				<< ::generateRstTitle(inputName.toASCIIString(), 2)
 				<< "\n"
-				<< "//TODO: Write input description...\n"
+				<< ".. todo::  Write input description...\n"
 				<< "\n"
 				<< "\n";
 			index++;
@@ -179,7 +179,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			<< "\n"
 			<< ::generateRstTitle("Outputs", 1)
 			<< "\n"
-			<< "//TODO: Write general output description...\n"
+			<< ".. todo::  Write general output description...\n"
 			<< "\n"
 			<< ".. csv-table::\n"
 			<< "   :header: \"Output Name\", \"Stream Type\"\n"
@@ -194,7 +194,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			CString typeName = m_KernelContext.getTypeManager().getTypeName(typeIdentifier);
 
 			ofBoxTemplate
-				<< "   \"" << outputNames[i] << "\", " << typeName << "\"\n";
+				<< "   \"" << outputNames[i] << "\", \"" << typeName << "\"\n";
 		}
 		uint32_t index = 1;
 		for (CString outputName : outputNames)
@@ -205,7 +205,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 				<< "\n"
 				<< ::generateRstTitle(outputName.toASCIIString(), 2)
 				<< "\n"
-				<< "//TODO: Write output description...\n"
+				<< ".. todo::  Write output description...\n"
 				<< "\n"
 				<< "\n";
 			index++;
@@ -219,7 +219,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			<< "\n"
 			<< ::generateRstTitle("Settings", 1)
 			<< "\n"
-			<< "//TODO: Write settings general description...\n"
+			<< ".. todo::  Write settings general description...\n"
 			<< "\n"
 			<< ".. csv-table::\n"
 			<< "   :header: \"Setting Name\", \"Type\", \"Default Value\"\n"
@@ -236,7 +236,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 			CString typeName = m_KernelContext.getTypeManager().getTypeName(typeIdentifier);
 
 			ofBoxTemplate
-				<< "   \"" << settingsNames[i] << "\", " << typeName << "\", \"" << defaultValue << "\"\n";
+				<< "   \"" << settingsNames[i] << "\", \"" << typeName << "\", \"" << defaultValue << "\"\n";
 		}
 		uint32_t index = 1;
 		for (CString settingName : settingsNames)
@@ -247,7 +247,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 				<< "\n"
 				<< ::generateRstTitle(settingName.toASCIIString(), 2)
 				<< "\n"
-				<< "//TODO: Write setting description... \n"
+				<< ".. todo:: Write setting description... \n"
 				<< "\n"
 				<< "\n";
 			index++;
@@ -259,7 +259,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 		<< "\n"
 		<< ::generateRstTitle("Examples", 1)
 		<< "\n"
-		<< "//TODO: Write example of use...\n"
+		<< ".. todo::  Write example of use...\n"
 		<< "\n"
 		<< "\n";
 
@@ -268,7 +268,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 		<< "\n"
 		<< ::generateRstTitle("Miscellaneous", 1)
 		<< "\n"
-		<< "//TODO: Write any miscellaneous information...\n"
+		<< ".. todo::  Write any miscellaneous information...\n"
 		<< "\n"
 		<< "\n";
 
