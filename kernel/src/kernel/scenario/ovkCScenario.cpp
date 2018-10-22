@@ -1715,7 +1715,6 @@ bool CScenario::updateBox(const CIdentifier &boxIdentifier)
 	for (auto& link : links[Input])
 	{
 		CIdentifier newLinkIdentifier;
-		OV_WARNING_K("Connecting " << link->getSourceBoxOutputIndex() << " to " << m_UpdatedBoxIOCorrespondence.at(Input).at(boxIdentifier).at(link->getTargetBoxInputIndex()) << " originally " << link->getTargetBoxInputIndex());
 		auto inputIndex = m_UpdatedBoxIOCorrespondence.at(Input).at(boxIdentifier).at(link->getTargetBoxInputIndex());
 		this->connect(newLinkIdentifier,
 		              link->getSourceBoxIdentifier(),

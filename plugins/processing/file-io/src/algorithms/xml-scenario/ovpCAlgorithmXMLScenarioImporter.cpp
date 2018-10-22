@@ -297,14 +297,14 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, 
 		// this is not a validation error thus we return directly
 		return false;
 	}
-	
+
 	if(this->validateXMLAgainstSchema((OpenViBE::Directories::getDataDir() + "/kernel/openvibe-scenario-v1.xsd"), xmlBuffer, xmlBufferSize)) {
-		OV_WARNING_K("Importing scenario with legacy format: v1 scenario might be deprecated in the future so upgrade to v2 format when possible");
+		this->getLogManager() << LogLevel_Trace << "Importing scenario with legacy format: v1 scenario might be deprecated in the future so upgrade to v2 format when possible\n";
 		return true;
 	}
 	else if(this->getErrorManager().hasError())
-	{	
-		// this is not a validation error thus we return directly	
+	{
+		// this is not a validation error thus we return directly
 		return false;
 	}
 
