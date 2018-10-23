@@ -221,10 +221,9 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 			CString value;
 			bool modifiable;
 			m_KernelBox->getSettingDefaultValue(index, defaultValue);
-			m_KernelBox->getSettingValue(index, value);
 			m_KernelBox->getSettingMod(index, modifiable);
 			request.defaultValue = defaultValue;
-			request.value = value;
+			request.value = defaultValue;
 			request.modifiability = modifiable;
 		}
 
@@ -238,15 +237,23 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 			m_SourceBox->getInterfacorName(interfacorType, indexInBox, name);
 			updated |= (identifier == kIdentifier && name != kName) || (identifier != kIdentifier && name == kName);
 
-			interfacors.push_back(request);
 			m_OriginalToUpdatedCorrespondence[interfacorType][indexInBox] = index;
+
+			// For settings, we need to give them the value from the original box
+			if (interfacorType == Setting)
+			{
+				CString valueInBox;
+				m_SourceBox->getSettingValue(indexInBox, valueInBox);
+				request.value = valueInBox;
+			}
 		}
 		else
 		{
-			interfacors.push_back(request);
 			// try to modify the type in the kernel proto to adjust to the inputs
 			updated = true;
 		}
+
+		interfacors.push_back(request);
 
 		++index;
 	}
