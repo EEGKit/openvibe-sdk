@@ -12,7 +12,10 @@ using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 
 
-const std::array<CIdentifier, 6> CBoxUpdater::updatableAttributes = {
+const std::array<CIdentifier, 9> CBoxUpdater::updatableAttributes = {
+    OV_AttributeId_Box_InitialInputCount,
+    OV_AttributeId_Box_InitialOutputCount,
+    OV_AttributeId_Box_InitialSettingCount,
     OV_AttributeId_Box_FlagCanAddInput,
     OV_AttributeId_Box_FlagCanModifyInput,
     OV_AttributeId_Box_FlagCanAddOutput,
@@ -126,11 +129,11 @@ bool CBoxUpdater::initialize()
 
 	if (isHashDifferent)
 	{
-	m_IsUpdateRequired |= this->updateInterfacors(Input);
-	m_IsUpdateRequired |= this->updateInterfacors(Output);
-	m_IsUpdateRequired |= this->updateInterfacors(Setting);
-	m_IsUpdateRequired |= this->checkForSupportedTypesToBeUpdated();
-	m_IsUpdateRequired |= this->checkForSupportedIOSAttributesToBeUpdated();
+		m_IsUpdateRequired |= this->updateInterfacors(Input);
+		m_IsUpdateRequired |= this->updateInterfacors(Output);
+		m_IsUpdateRequired |= this->updateInterfacors(Setting);
+		m_IsUpdateRequired |= this->checkForSupportedTypesToBeUpdated();
+		m_IsUpdateRequired |= this->checkForSupportedIOSAttributesToBeUpdated();
 	}
 
 	return true;
