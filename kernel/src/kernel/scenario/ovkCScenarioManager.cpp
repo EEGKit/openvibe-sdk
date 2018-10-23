@@ -110,6 +110,7 @@ bool CScenarioManager::importScenario(OpenViBE::CIdentifier& newScenarioIdentifi
 			"Releasing just created scenario failed for " << newScenarioIdentifier.toString(),
 			ErrorType::Internal
 		);
+		newScenarioIdentifier = OV_UndefinedIdentifier;
 	};
 
 	IScenario& newScenarioInstance = this->getScenario(newScenarioIdentifier);
