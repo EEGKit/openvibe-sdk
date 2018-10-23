@@ -153,8 +153,8 @@
 #define OV_AttributeId_Box_InitialInputCount                 OpenViBE::CIdentifier(0xCFAD85B0, 0x7C6D841C)
 #define OV_AttributeId_Box_InitialOutputCount                OpenViBE::CIdentifier(0xC80CE8AF, 0xF699F813)
 #define OV_AttributeId_Box_InitialSettingCount               OpenViBE::CIdentifier(0xCE18836A, 0x9C0EB403)
-#define OV_AttributeId_Box_ToBeUpdated						 OpenViBE::CIdentifier(0xC9526A77, 0x5EAF81A6)
-#define OV_AttributeId_Box_PendingDeprecatedInterfacors      			 OpenViBE::CIdentifier(0xAB422730, 0x56414F32)
+#define OV_AttributeId_Box_ToBeUpdated                       OpenViBE::CIdentifier(0xC9526A77, 0x5EAF81A6)
+#define OV_AttributeId_Box_PendingDeprecatedInterfacors      OpenViBE::CIdentifier(0xAB422730, 0x56414F32)
 
 #define OV_AttributeId_Box_FlagCanAddInput                   OpenViBE::CIdentifier(0xFBA64161, 0x65304E21)
 #define OV_AttributeId_Box_FlagCanModifyInput                OpenViBE::CIdentifier(0x527AD68D, 0x16D746A0)

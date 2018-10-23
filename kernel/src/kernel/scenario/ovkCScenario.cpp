@@ -1716,6 +1716,7 @@ bool CScenario::updateBox(const CIdentifier &boxIdentifier)
 		}
 	}
 
+	// Reconnect links
 	std::map<BoxInterfacorType, std::set<uint32_t>> isInterfacorConnected;
 	isInterfacorConnected[Input] = std::set<uint32_t>();
 	isInterfacorConnected[Output] = std::set<uint32_t>();
