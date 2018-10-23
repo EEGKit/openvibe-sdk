@@ -228,7 +228,7 @@ namespace OpenViBE
 
 				if (!(rAlgorithmClassIdentifier == OVP_ClassId_BoxAlgorithm_Metabox || this->getKernelContext().getPluginManager().canCreatePluginObject(rAlgorithmClassIdentifier)))
 				{
-					OV_WARNING_K("Box algorithm descriptor not found " << rAlgorithmClassIdentifier.toString());
+//					OV_WARNING_K("Box algorithm descriptor not found " << rAlgorithmClassIdentifier.toString());
 					return true;
 				}
 

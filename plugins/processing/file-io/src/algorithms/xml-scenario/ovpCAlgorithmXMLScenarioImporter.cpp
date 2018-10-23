@@ -83,13 +83,14 @@ namespace
 
 		void error(const xercesc::SAXParseException& exception) override
 		{
-			// we just issue a warning here because the calling method
+			// we just issue a trace here because the calling method
 			// implements a fallback mechanism and we don't want to populate
 			// the error manager if the importer returns gracefully.
-			OV_WARNING(
-				"Failed to validate xml: error [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << static_cast<uint64>(exception.getLineNumber()) << "]",
-				m_rAlgorithmContext.getLogManager()
-			);
+            m_rAlgorithmContext.getLogManager() << LogLevel_Trace
+                                                << "Failed to validate xml: error ["
+                                                << xercesToString(exception.getMessage()).c_str()
+                                                << "], line number [" << static_cast<uint64>(exception.getLineNumber()) << "]"
+                                                << "\n";
 		}
 
 		void warning(const xercesc::SAXParseException& exception) override
