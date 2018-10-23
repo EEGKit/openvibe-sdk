@@ -116,17 +116,22 @@ bool CBoxUpdater::initialize()
 
 	m_IsUpdateRequired = false;
 
+	bool isHashDifferent = m_Scenario->isBoxOutdated(m_SourceBox->getIdentifier());
+
 	if (this->flaggedForManualUpdate())
 	{
-		m_IsUpdateRequired = m_Scenario->isBoxOutdated(m_SourceBox->getIdentifier());
+		m_IsUpdateRequired = isHashDifferent;
 		return true;
 	}
 
+	if (isHashDifferent)
+	{
 	m_IsUpdateRequired |= this->updateInterfacors(Input);
 	m_IsUpdateRequired |= this->updateInterfacors(Output);
 	m_IsUpdateRequired |= this->updateInterfacors(Setting);
 	m_IsUpdateRequired |= this->checkForSupportedTypesToBeUpdated();
 	m_IsUpdateRequired |= this->checkForSupportedIOSAttributesToBeUpdated();
+	}
 
 	return true;
 }

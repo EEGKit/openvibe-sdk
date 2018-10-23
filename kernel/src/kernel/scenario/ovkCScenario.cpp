@@ -1420,6 +1420,13 @@ bool CScenario::checkOutdatedBoxes()
 
 	for (auto box : m_Boxes)
 	{
+		// Do not attempt to update boxes which do not have existing box algorithm identifiers
+		if (!dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(box.second->getAlgorithmClassIdentifier())))
+		{
+			continue;
+		}
+
+
 		// Box Updater instance which is in charge of create updated boxes and links
 		CBoxUpdater boxUpdater(*this, box.second);
 
