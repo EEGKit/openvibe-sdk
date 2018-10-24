@@ -1421,11 +1421,12 @@ bool CScenario::checkOutdatedBoxes()
 	for (auto box : m_Boxes)
 	{
 		// Do not attempt to update boxes which do not have existing box algorithm identifiers
-		if (!dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(box.second->getAlgorithmClassIdentifier())))
+		auto boxAlgorithmClassIdentifier = box.second->getAlgorithmClassIdentifier();
+		if (boxAlgorithmClassIdentifier != OVP_ClassId_BoxAlgorithm_Metabox
+		        && !dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(boxAlgorithmClassIdentifier)))
 		{
 			continue;
 		}
-
 
 		// Box Updater instance which is in charge of create updated boxes and links
 		CBoxUpdater boxUpdater(*this, box.second);
@@ -1442,7 +1443,7 @@ bool CScenario::checkOutdatedBoxes()
 			 if (this->isBoxOutdated(box.second->getIdentifier()))
 			 {
 				auto toBeUpdatedBox = std::shared_ptr<CBox>(new CBox(getKernelContext()));
-				toBeUpdatedBox->initializeFromAlgorithmClassIdentifierNoInit(box.second->getAlgorithmClassIdentifier());
+				toBeUpdatedBox->initializeFromAlgorithmClassIdentifierNoInit(boxAlgorithmClassIdentifier);
 				m_OutdatedBoxes[box.second->getIdentifier()] = toBeUpdatedBox;
 				m_Boxes[box.first]->setAttributeValue(OV_AttributeId_Box_ToBeUpdated,"");
 				result = true;
@@ -1458,7 +1459,7 @@ bool CScenario::checkOutdatedBoxes()
 			m_UpdatedBoxIOCorrespondence[Output][box.second->getIdentifier()] = boxUpdater.getOriginalToUpdatedInterfacorCorrespondence(Output);
 			// it is important to set box algorithm at
 			// last so the box listener is never called
-			boxUpdater.getUpdatedBox().setAlgorithmClassIdentifier(box.second->getAlgorithmClassIdentifier());
+			boxUpdater.getUpdatedBox().setAlgorithmClassIdentifier(boxAlgorithmClassIdentifier);
 			// copy requested box into a new instance managed in scenario
 			auto newBox = std::shared_ptr<CBox>(new CBox(this->getKernelContext()));
 			newBox->initializeFromExistingBox(boxUpdater.getUpdatedBox());
