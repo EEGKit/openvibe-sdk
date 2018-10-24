@@ -1627,7 +1627,14 @@ bool CScenario::updateBox(const CIdentifier &boxIdentifier)
 	            );
 
 
-	if (itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate))
+	if (itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanAddInput)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanAddOutput)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanAddSetting)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanModifyInput)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanModifyOutput)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting)
+	        )
 	{
 		this->getLogManager() << LogLevel_Warning << m_Boxes[boxIdentifier]->getName()
 		                      << " must be manually updated because of a too complex prototype management\n";
