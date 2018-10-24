@@ -368,6 +368,10 @@ namespace OpenViBE
 							this->setSettingDefaultValue(i, defaultValue);
 							this->setSettingValue(i, value);
 							this->setSettingMod(i, isModifiable);
+							if (isModifiable)
+							{
+								m_vModifiableSettingIndexes.push_back(i);
+							}
 						}
 					}
 				}
@@ -432,7 +436,6 @@ namespace OpenViBE
 						break;
 					case Setting:
 						m_Interfacors[interfacorType].push_back(std::shared_ptr<CSetting>(new CSetting(newName, typeIdentifier, identifier, "", false)));
-						return false;
 						break;
 				}
 
@@ -1422,12 +1425,12 @@ namespace OpenViBE
 				if (s.m_oIdentifier != OV_UndefinedIdentifier)
 				{
 					// add access by CIdentifier key if defined so that size differs from m_vSetting
-					m_InterfacorIdentifierToIndex.at(Setting)[s.m_oIdentifier] = l_ui32InsertLocation;
+					m_InterfacorIdentifierToIndex[Setting][s.m_oIdentifier] = l_ui32InsertLocation;
 				}
 				// add access by name key (always done so that synchronized with m_vSetting
 				OpenViBE::CString newName = this->getUnusedName(m_InterfacorNameToIndex.at(Setting),s.m_sName);
 				m_Interfacors[Setting][l_ui32InsertLocation]->m_sName = newName;
-				m_InterfacorNameToIndex.at(Setting)[newName] = l_ui32InsertLocation;
+				m_InterfacorNameToIndex[Setting][newName] = l_ui32InsertLocation;
 
 				OV_ERROR_UNLESS_KRF(
 				            m_InterfacorNameToIndex.at(Setting).size() == m_Interfacors[Setting].size(),

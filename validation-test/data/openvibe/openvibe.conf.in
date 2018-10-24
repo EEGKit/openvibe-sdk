@@ -71,7 +71,6 @@ Kernel_AllowUnregisteredNumericalStimulationIdentifiers = false
 Kernel_ExtendedStimulationLabels = true
 
 Kernel_AbortPlayerWhenBoxIsOutdated = false
-Kernel_AbortScenarioImportWhenBoxIsOutdated = true
 Kernel_AbortScenarioImportOnUnknownSetting = true
 
 #####################################################################################

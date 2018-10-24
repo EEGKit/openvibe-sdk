@@ -1636,9 +1636,9 @@ bool CScenario::updateBox(const CIdentifier &boxIdentifier)
 	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting)
 	        )
 	{
-		this->getLogManager() << LogLevel_Warning << m_Boxes[boxIdentifier]->getName()
-		                      << " must be manually updated because of a too complex prototype management\n";
-		return false;
+		OV_ERROR_KRF(m_Boxes[boxIdentifier]->getName()
+		             << " must be manually updated. Its prototype is too complex.",
+		             ErrorType::NotImplemented);
 	}
 	OV_ERROR_UNLESS_KRF(
 	            itUpdateBox != m_OutdatedBoxes.end(),
