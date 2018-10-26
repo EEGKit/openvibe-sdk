@@ -15,7 +15,7 @@ using namespace OpenViBEPlugins::StreamCodecs;
 namespace
 {
 	// removes pre and post spaces, tabs and carriage returns
-	const char* sanitize(char* dst, const char* src1, const char* src2)
+	const char* trim(char* dst, const char* src1, const char* src2)
 	{
 		if(src1==NULL || *src1=='\0')
 		{
@@ -140,12 +140,20 @@ void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const EBML::u
 				if(l_rTop==OVTK_NodeId_Header_StreamedMatrix_Dimension_Label)
 				{
 					char l_sDimensionLabel[1024];
-					op_pMatrix->setDimensionLabel(m_ui32DimensionIndex, m_ui32DimensionEntryIndex++, ::sanitize(l_sDimensionLabel, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), NULL));
+					if (pBuffer)
+					{
+						::trim(l_sDimensionLabel, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), NULL);
+					}
+					else
+					{
+						l_sDimensionLabel[0] = '\0';
+					}
+					op_pMatrix->setDimensionLabel(m_ui32DimensionIndex, m_ui32DimensionEntryIndex++, l_sDimensionLabel);
 				}
 				break;
 
 			case Status_ParsingBuffer:
-				if(l_rTop==OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer)        { System::Memory::copy(op_pMatrix->getBuffer(), pBuffer, m_ui64MatrixBufferSize*sizeof(float64)); }
+				if(l_rTop==OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer && pBuffer)        { System::Memory::copy(op_pMatrix->getBuffer(), pBuffer, m_ui64MatrixBufferSize*sizeof(float64)); }
 				break;
 		}
 	}
