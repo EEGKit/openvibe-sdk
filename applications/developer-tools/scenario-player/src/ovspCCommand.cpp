@@ -74,6 +74,27 @@ namespace OpenViBE
 		os << "ScenarioName: " << (this->scenarioName ? this->scenarioName.get() : "not set") << std::endl;
 		os << "ScenarioFile: " << (this->scenarioFile ? this->scenarioFile.get() : "not set") << std::endl;
 	}
+	
+	PlayerReturnCode UpdateScenarioCommand::execute(KernelFacade& kernelFacade) const
+	{
+		std::cout << "About to execute:" << std::endl;
+		std::cout << *this << std::endl;
+
+		if (!this->scenarioName || !this->scenarioFile)
+		{
+			std::cerr << "Missing required arguments for command" << std::endl;
+			return PlayerReturnCode::MissingMandatoryArgument;
+		}
+
+		return kernelFacade.updateScenario(*this);
+	}
+
+	void UpdateScenarioCommand::doPrint(std::ostream& os) const
+	{
+		os << "command name: UpdateScenarioCommand" << std::endl;
+		os << "ScenarioName: " << (this->scenarioName ? this->scenarioName.get() : "not set") << std::endl;
+		os << "ScenarioFile: " << (this->scenarioFile ? this->scenarioFile.get() : "not set") << std::endl;
+	}
 
 	PlayerReturnCode ResetCommand::execute(KernelFacade& kernelFacade) const
 	{

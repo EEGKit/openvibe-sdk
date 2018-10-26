@@ -19,7 +19,8 @@ namespace OpenViBE
 			BoxFlag_CanModifyOutput,
 			BoxFlag_CanAddSetting,
 			BoxFlag_CanModifySetting,
-			BoxFlag_IsDeprecated
+			BoxFlag_IsDeprecated,
+			BoxFlag_ManualUpdate
 		};
 
 		/**
@@ -46,42 +47,48 @@ namespace OpenViBE
 			 * \brief Adds an input to the box
 			 * \param sName [in] : the name of the input to add
 			 * \param rTypeIdentifier [in] : the type of the input
+			 * \param oIdentifier [in] : The input identifier
+			 * \param bNotify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
 			virtual bool addInput(
 				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier)=0;
+				const OpenViBE::CIdentifier& rTypeIdentifier,
+				const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier,
+				const OpenViBE::boolean bNotify=true)=0;
 
 			/**
 			 * \brief Adds an output to the box
 			 * \param sName [in] : the name of the output to add
 			 * \param rTypeIdentifier [in] : the type of the output
+			 * \param oIdentifier [in] : The output identifier
+			 * \param bNotify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
 			virtual bool addOutput(
 				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier)=0;
+				const OpenViBE::CIdentifier& rTypeIdentifier,
+				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
+				const OpenViBE::boolean bNotify=true)=0;
+				
 			/**
-			 * \brief Adds an setting to the box
+			 * \brief Add an setting to the box
 			 * \param sName [in] : the name of the setting to add
 			 * \param rTypeIdentifier [in] : the type of the setting
 			 * \param sDefaultValue [in] : the default value of this
 			 *        setting (used to initialize the box itself)
+			 * \param bModifiability [in] : true if modifiable setting 
+			 * \param oIdentifier [in] : The setting identifier
+			 * \param bNotify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-
-			/*
-			virtual bool addSetting(
-				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sDefaultValue)=0;
-				//*/
-
 			virtual bool addSetting(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sDefaultValue,
-				const bool bModifiable = false)=0;
+				const bool bModifiable = false,
+				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
+				const OpenViBE::boolean bNotify=true)=0;
 			/**
 			 * \brief Adds a flag to the box
 			 * \param eBoxFlag [in] : the flag to add to the box

@@ -149,6 +149,26 @@ namespace OpenViBEToolkit
 				rBoxAlgorithmContext.getStaticBoxContext()->getSettingType(ui32Index, m_oSettingType);
 			}
 
+			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const OpenViBE::CString& rsName)
+				:m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
+				,m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
+				,m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
+				,m_rConfigurationManager(rBoxAlgorithmContext.getPlayerContext()->getConfigurationManager())
+			{
+				rBoxAlgorithmContext.getStaticBoxContext()->getSettingValue(rsName, m_sSettingValue);
+				rBoxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, rsName, m_oSettingType);
+			}
+
+			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const OpenViBE::CIdentifier& rIdentifier)
+				:m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
+				,m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
+				,m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
+				,m_rConfigurationManager(rBoxAlgorithmContext.getPlayerContext()->getConfigurationManager())
+			{
+				rBoxAlgorithmContext.getStaticBoxContext()->getSettingValue(rIdentifier, m_sSettingValue);
+				rBoxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, rIdentifier, m_oSettingType);
+			}
+
 			operator OpenViBE::uint32 (void)
 			{
 				double l_dResult;

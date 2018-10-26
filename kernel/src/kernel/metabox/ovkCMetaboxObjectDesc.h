@@ -54,16 +54,19 @@ namespace OpenViBE
 			{
 				_SIOStream()
 					: m_sName(""),
-					  m_oTypeIdentifier(OV_UndefinedIdentifier)
+					  m_oTypeIdentifier(OV_UndefinedIdentifier),
+					  m_oIdentifier(OV_UndefinedIdentifier)
 				{}
 
-				_SIOStream(const OpenViBE::CString& rName, const OpenViBE::CIdentifier& rTypeIdentifier)
+				_SIOStream(const OpenViBE::CString& rName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier)
 					: m_sName(rName),
-					  m_oTypeIdentifier(rTypeIdentifier)
+					  m_oTypeIdentifier(rTypeIdentifier),
+					  m_oIdentifier(rIdentifier)					  
 				{}
 
 				OpenViBE::CString m_sName;
 				OpenViBE::CIdentifier m_oTypeIdentifier;
+				OpenViBE::CIdentifier m_oIdentifier;
 
 			} SIOStream;
 
@@ -72,18 +75,21 @@ namespace OpenViBE
 				_SSetting()
 					: m_sName(""),
 					  m_oTypeIdentifier(OV_UndefinedIdentifier),
-					  m_sDefaultValue("")
+					  m_sDefaultValue(""),
+					  m_oIdentifier(OV_UndefinedIdentifier)
 				{}
 
-				_SSetting(const OpenViBE::CString& rName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& rDefaultValue)
+				_SSetting(const OpenViBE::CString& rName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& rDefaultValue, const OpenViBE::CIdentifier& rIdentifier)
 					: m_sName(rName),
 					  m_oTypeIdentifier(rTypeIdentifier),
-					  m_sDefaultValue(rDefaultValue)
+					  m_sDefaultValue(rDefaultValue),
+					  m_oIdentifier(rIdentifier)
 				{}
 
 				OpenViBE::CString m_sName;
 				OpenViBE::CIdentifier m_oTypeIdentifier;
 				OpenViBE::CString m_sDefaultValue;
+				OpenViBE::CIdentifier m_oIdentifier;
 
 			} SSetting;
 

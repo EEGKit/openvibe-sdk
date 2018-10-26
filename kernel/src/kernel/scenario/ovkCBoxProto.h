@@ -15,11 +15,15 @@ namespace OpenViBE
 
 			virtual bool addInput(
 				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier);
+				const OpenViBE::CIdentifier& rTypeIdentifier,
+				const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier,
+				const OpenViBE::boolean bNotify = true);
 
 			virtual bool addOutput(
 				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier);
+				const OpenViBE::CIdentifier& rTypeIdentifier,
+				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
+				const OpenViBE::boolean bNotify = true);
 
 			/*
 			virtual bool addSetting(
@@ -32,7 +36,9 @@ namespace OpenViBE
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sDefaultValue,
-				const bool bModifiable = false);
+				const bool bModifiable = false,
+				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
+				const OpenViBE::boolean bNotify = true);
 
 			virtual bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag);
 			virtual bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag);

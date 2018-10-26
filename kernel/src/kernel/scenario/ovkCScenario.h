@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <map>
+#include <memory>
 
 namespace OpenViBE
 {
@@ -67,14 +68,18 @@ namespace OpenViBE
 			bool setHasIO(const bool hasIO);
 			bool hasIO() const;
 			bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex);
+			bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::CIdentifier& boxInputIdentifier);
 			bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxOutputIndex);
+			bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::CIdentifier& boxOutputIdentifier);
 			bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::uint32& boxInputIndex) const;
+			bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier& boxOutputIdentifier) const;
 			bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::uint32& boxOutputIndex) const;
+			bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier& boxOutputIdentifier) const;
 			bool removeScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex);
 			bool removeScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxOutputIndex);
 
-			bool removeScenarioInput(const uint32 inputIndex);
-			bool removeScenarioOutput(const uint32 outputIndex);
+			bool removeScenarioInput(const uint32_t inputIndex);
+			bool removeScenarioOutput(const uint32_t outputIndex);
 
 			const OpenViBE::Kernel::ILink* getLinkDetails(const OpenViBE::CIdentifier& linkIdentifier) const;
 			OpenViBE::Kernel::ILink* getLinkDetails(const OpenViBE::CIdentifier& linkIdentifier);
@@ -86,19 +91,53 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& targetBoxIdentifier,
 				const OpenViBE::uint32 targetBoxInputIndex,
 				const OpenViBE::CIdentifier& suggestedLinkIdentifier);
+			bool connect(
+				OpenViBE::CIdentifier& linkIdentifier,
+				const OpenViBE::CIdentifier& sourceBoxIdentifier,
+				const OpenViBE::CIdentifier& sourceBoxOutputIdentifier,
+				const OpenViBE::CIdentifier& targetBoxIdentifier,
+				const OpenViBE::CIdentifier& targetBoxInputIdentifier,
+				const OpenViBE::CIdentifier& suggestedLinkIdentifier);
 			bool disconnect(
 				const OpenViBE::CIdentifier& sourceBoxIdentifier,
 				const OpenViBE::uint32 sourceBoxOutputIndex,
 				const OpenViBE::CIdentifier& targetBoxIdentifier,
 				const OpenViBE::uint32 targetBoxInputIndex);
+			bool disconnect(
+				const OpenViBE::CIdentifier& sourceBoxIdentifier,
+				const OpenViBE::CIdentifier& sourceBoxOutputIdentifier,
+				const OpenViBE::CIdentifier& targetBoxIdentifier,
+				const OpenViBE::CIdentifier& targetBoxInputIdentifier);
 			bool disconnect(const OpenViBE::CIdentifier& linkIdentifier);
+
+			bool getSourceBoxOutputIndex(
+				const OpenViBE::CIdentifier& sourceBoxIdentifier,
+				const OpenViBE::CIdentifier& sourceBoxOutputIdentifier,
+				uint32_t& sourceBoxOutputIndex);
+
+			bool getTargetBoxInputIndex(
+				const OpenViBE::CIdentifier& targetBoxIdentifier,
+				const OpenViBE::CIdentifier& targetBoxInputIdentifier,
+				uint32_t& targetBoxInputIndex);
+
+			bool getSourceBoxOutputIdentifier(
+				const OpenViBE::CIdentifier& sourceBoxIdentifier,
+				const uint32_t& sourceBoxOutputIndex,
+				OpenViBE::CIdentifier& sourceBoxOutputIdentifier);
+
+			bool getTargetBoxInputIdentifier(
+				const OpenViBE::CIdentifier& targetBoxIdentifier,
+				const uint32_t& targetBoxInputIndex,
+				OpenViBE::CIdentifier& targetBoxInputIdentifier);
 
 			bool applyLocalSettings(void);
 			bool checkSettings(IConfigurationManager* configurationManager);
 
-			bool checkNeedsUpdateBox();
-			bool hasNeedsUpdateBox();
-			OpenViBE::CIdentifier getNextNeedsUpdateBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const;
+			bool isBoxOutdated(const CIdentifier& rBoxIdentifier);
+			bool checkOutdatedBoxes();
+			bool hasOutdatedBox();
+
+			OpenViBE::CIdentifier getNextOutdatedBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const;
 
 			bool isMetabox(void);
 
@@ -110,11 +149,17 @@ namespace OpenViBE
 			void getLinkIdentifierFromBoxOutputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t outputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const;
 			void getLinkIdentifierToBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const;
 			void getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputInex, OpenViBE::CIdentifier** identifierList, size_t* size) const;
-			void getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const;
+			void getOutdatedBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const;
 			void releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const;
 
 
 			bool acceptVisitor(OpenViBE::IObjectVisitor& objectVisitor);
+
+			bool updateBox(const CIdentifier &boxIdentifier);
+
+			bool containsBoxWithDeprecatedInterfacors() const;
+
+			bool removeDeprecatedInterfacorsFromBox(const CIdentifier &boxIdentifier);
 
 			_IsDerivedFromClass_Final_(TBox< OpenViBE::Kernel::IScenario >, OVK_ClassId_Kernel_Scenario_Scenario)
 
@@ -125,12 +170,14 @@ namespace OpenViBE
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CComment*> m_Comments;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CMetadata*> m_Metadata;
 			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CLink*> m_Links;
-			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CBox*> m_BoxesWhichNeedUpdate;
+			std::map<OpenViBE::CIdentifier, std::shared_ptr<OpenViBE::Kernel::CBox>> m_OutdatedBoxes;
+			std::map<BoxInterfacorType, std::map<CIdentifier, std::map<uint32_t, uint32_t>>> m_UpdatedBoxIOCorrespondence;
+
 
 			bool m_HasIO;
 
-			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32> > m_ScenarioInputLinks;
-			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32> > m_ScenarioOutputLinks;
+			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32 > > m_ScenarioInputLinks;
+			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32 > > m_ScenarioOutputLinks;
 
 			// Helper members. These are used for quick lookup of next identifiers for the purpose
 			// of the getNextMetadataIdentifier function.

@@ -2,6 +2,7 @@
 #define __OpenViBE_Kernel_ITypeManager_H__
 
 #include "ovIKernelObject.h"
+#include <vector>
 
 namespace OpenViBE
 {
@@ -39,6 +40,14 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::CIdentifier getNextTypeIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
+			
+			/**
+			 * \brief Get a sorted vector of pairs of registered types identifiers associated to types names, 
+			 * sorted by type name in increasing alphabetical order.
+			 * \return the sorted vector
+			 */	
+			virtual std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::CString> > getSortedTypes() const=0;
+			
 			/**
 			 * \brief Registers a new simple type of data
 			 * \param rTypeIdentifier [in] : the identifier for this type

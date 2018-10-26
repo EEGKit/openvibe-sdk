@@ -19,28 +19,34 @@ namespace OpenViBEToolkit
 	{
 		typedef struct _SScenarioInput
 		{
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			CIdentifier m_oTypeIdentifier;
 			CString m_sName;
 			CIdentifier m_oLinkedBoxIdentifier;
-			uint32 m_ui32LinkedBoxInputIndex;
+			uint32 m_ui32LinkedBoxInputIndex = OV_Value_UndefinedIndexUInt;
+			CIdentifier m_oLinkedBoxInputIdentifier = OV_UndefinedIdentifier;
 		} SScenarioInput;
 
 		typedef struct _SScenarioOutput
 		{
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			CIdentifier m_oTypeIdentifier;
 			CString m_sName;
 			CIdentifier m_oLinkedBoxIdentifier;
-			uint32 m_ui32LinkedBoxOutputIndex;
+			uint32 m_ui32LinkedBoxOutputIndex = OV_Value_UndefinedIndexUInt;
+			CIdentifier m_oLinkedBoxOutputIdentifier = OV_UndefinedIdentifier;
 		} SScenarioOutput;
 
 		typedef struct _SInput
 		{
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			CIdentifier m_oTypeIdentifier;
 			CString m_sName;
 		} SInput;
 
 		typedef struct _SOutput
 		{
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			CIdentifier m_oTypeIdentifier;
 			CString m_sName;
 		} SOutput;
@@ -52,6 +58,7 @@ namespace OpenViBEToolkit
 			CString m_sDefaultValue;
 			CString m_sValue;
 			boolean m_bModifiability = false;
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 		} SSetting;
 		typedef struct _SAttribute
 		{
@@ -83,12 +90,14 @@ namespace OpenViBEToolkit
 		typedef struct _SLinkSource
 		{
 			CIdentifier m_oBoxIdentifier;
-			uint32 m_ui32BoxOutputIndex;
+			uint32 m_ui32BoxOutputIndex = OV_Value_UndefinedIndexUInt;
+			CIdentifier m_oBoxOutputIdentifier = OV_UndefinedIdentifier;
 		} SLinkSource;
 		typedef struct _SLinkTarget
 		{
 			CIdentifier m_oBoxIdentifier;
-			uint32 m_ui32BoxInputIndex;
+			uint32 m_ui32BoxInputIndex = OV_Value_UndefinedIndexUInt;
+			CIdentifier m_oBoxInputIdentifier = OV_UndefinedIdentifier;
 		} SLinkTarget;
 		typedef struct _SLink
 		{
@@ -177,10 +186,19 @@ boolean CAlgorithmScenarioImporter::process(void)
 
 	for(s=l_rSymbolicScenario.m_vSetting.begin(); s!=l_rSymbolicScenario.m_vSetting.end(); ++s)
 	{
+		CIdentifier l_oSettingIdentifier = s->m_oIdentifier;
+		// compute identifier only if it does not exists
+		if (l_oSettingIdentifier == OV_UndefinedIdentifier)
+		{
+			l_oSettingIdentifier = l_pScenario->getUnusedSettingIdentifier();
+		}
 		l_pScenario->addSetting(
 			s->m_sName,
 			s->m_oTypeIdentifier,
-			s->m_sDefaultValue);
+			s->m_sDefaultValue,
+			OV_Value_UndefinedIndexUInt,
+			false,
+			l_oSettingIdentifier);
 		l_pScenario->setSettingValue(
 			l_pScenario->getSettingCount()-1,
 			s->m_sValue);
@@ -202,14 +220,16 @@ boolean CAlgorithmScenarioImporter::process(void)
 			{
 				l_pBox->addInput(
 					i->m_sName,
-					i->m_oTypeIdentifier);
+					i->m_oTypeIdentifier,
+					i->m_oIdentifier);
 			}
 
 			for(o=b->m_vOutput.begin(); o!=b->m_vOutput.end(); ++o)
 			{
 				l_pBox->addOutput(
 					o->m_sName,
-					o->m_oTypeIdentifier);
+					o->m_oTypeIdentifier,
+					o->m_oIdentifier);
 			}
 			for(s=b->m_vSetting.begin(); s!=b->m_vSetting.end(); ++s)
 			{
@@ -233,8 +253,9 @@ boolean CAlgorithmScenarioImporter::process(void)
 					s->m_sName,
 					s->m_oTypeIdentifier,
 					s->m_sDefaultValue,
-					-1,
-					s->m_bModifiability);
+					OV_Value_UndefinedIndexUInt,
+					s->m_bModifiability,
+					s->m_oIdentifier);
 				l_pBox->setSettingValue(
 					l_pBox->getSettingCount()-1,
 					s->m_sValue);
@@ -291,13 +312,42 @@ boolean CAlgorithmScenarioImporter::process(void)
 		ILink* l_pLink=NULL;
 		CIdentifier l_oNewLinkIdentifier;
 
+		uint32_t l_ui32SourceBoxOutputIndex = l->m_oLinkSource.m_ui32BoxOutputIndex;
+		uint32_t l_ui32TargetBoxInputIndex = l->m_oLinkTarget.m_ui32BoxInputIndex;
+
+		CIdentifier l_oSourceBoxOutputIdentifier = l->m_oLinkSource.m_oBoxOutputIdentifier;
+		CIdentifier l_oTargetBoxInputIdentifier = l->m_oLinkTarget.m_oBoxInputIdentifier;
+
+		if (l_oSourceBoxOutputIdentifier != OV_UndefinedIdentifier)
+		{
+			l_pScenario->getSourceBoxOutputIndex(l_vBoxIdMapping[l->m_oLinkSource.m_oBoxIdentifier], l_oSourceBoxOutputIdentifier, l_ui32SourceBoxOutputIndex);
+		}
+
+		OV_ERROR_UNLESS_KRF(
+		            l_ui32SourceBoxOutputIndex != OV_Value_UndefinedIndexUInt,
+		            "Output index of the source box could not be found",
+		            OpenViBE::Kernel::ErrorType::BadOutput
+		            );
+
+		if (l_oTargetBoxInputIdentifier != OV_UndefinedIdentifier)
+		{
+			l_pScenario->getTargetBoxInputIndex(l_vBoxIdMapping[l->m_oLinkTarget.m_oBoxIdentifier], l_oTargetBoxInputIdentifier, l_ui32TargetBoxInputIndex);
+		}
+
+		OV_ERROR_UNLESS_KRF(
+		            l_ui32TargetBoxInputIndex != OV_Value_UndefinedIndexUInt,
+		            "Input index of the target box could not be found",
+		            OpenViBE::Kernel::ErrorType::BadOutput
+		            );
+
 		l_pScenario->connect(
 			l_oNewLinkIdentifier,
 			l_vBoxIdMapping[l->m_oLinkSource.m_oBoxIdentifier],
-			l->m_oLinkSource.m_ui32BoxOutputIndex,
+			l_ui32SourceBoxOutputIndex,
 			l_vBoxIdMapping[l->m_oLinkTarget.m_oBoxIdentifier],
-			l->m_oLinkTarget.m_ui32BoxInputIndex,
+			l_ui32TargetBoxInputIndex,
 			l->m_oIdentifier);
+
 		l_pLink=l_pScenario->getLinkDetails(l_oNewLinkIdentifier);
 		if(l_pLink)
 		{
@@ -313,7 +363,13 @@ boolean CAlgorithmScenarioImporter::process(void)
 	uint32 l_ui32ScenarioInputIndex = 0;
 	for(auto symbolicScenarioInput : l_rSymbolicScenario.m_vScenarioInput)
 	{
-		l_pScenario->addInput(symbolicScenarioInput.m_sName, symbolicScenarioInput.m_oTypeIdentifier);
+		CIdentifier l_oScenarioInputIdentifier = symbolicScenarioInput.m_oIdentifier;
+		// compute identifier only if it does not exists
+		if (l_oScenarioInputIdentifier == OV_UndefinedIdentifier)
+		{
+			l_oScenarioInputIdentifier = l_pScenario->getUnusedInputIdentifier();
+		}
+		l_pScenario->addInput(symbolicScenarioInput.m_sName, symbolicScenarioInput.m_oTypeIdentifier, l_oScenarioInputIdentifier);
 		if (symbolicScenarioInput.m_oLinkedBoxIdentifier != OV_UndefinedIdentifier)
 		{
 			// Only try to set scenario output links from boxes that actually exist
@@ -322,7 +378,21 @@ boolean CAlgorithmScenarioImporter::process(void)
 				return box.m_oIdentifier == symbolicScenarioInput.m_oLinkedBoxIdentifier;
 			}))
 			{
-				l_pScenario->setScenarioInputLink(l_ui32ScenarioInputIndex, symbolicScenarioInput.m_oLinkedBoxIdentifier, symbolicScenarioInput.m_ui32LinkedBoxInputIndex);
+				CIdentifier linkedBoxInputIdentifier = symbolicScenarioInput.m_oLinkedBoxInputIdentifier;
+				unsigned int linkedBoxInputIndex = symbolicScenarioInput.m_ui32LinkedBoxInputIndex;
+
+				if (linkedBoxInputIdentifier != OV_UndefinedIdentifier)
+				{
+					l_pScenario->getTargetBoxInputIndex(symbolicScenarioInput.m_oLinkedBoxIdentifier, linkedBoxInputIdentifier, linkedBoxInputIndex);
+				}
+
+				OV_ERROR_UNLESS_KRF(
+				            linkedBoxInputIndex != OV_Value_UndefinedIndexUInt,
+				            "Input index of the target box could not be found",
+				            OpenViBE::Kernel::ErrorType::BadOutput
+				            );
+
+				l_pScenario->setScenarioInputLink(l_ui32ScenarioInputIndex, symbolicScenarioInput.m_oLinkedBoxIdentifier, linkedBoxInputIndex);
 			}
 		}
 		l_ui32ScenarioInputIndex++;
@@ -331,14 +401,33 @@ boolean CAlgorithmScenarioImporter::process(void)
 	uint32 l_ui32ScenarioOutputIndex = 0;
 	for(auto symbolicScenarioOutput : l_rSymbolicScenario.m_vScenarioOutput)
 	{
-		l_pScenario->addOutput(symbolicScenarioOutput.m_sName, symbolicScenarioOutput.m_oTypeIdentifier);
+		CIdentifier l_oScenarioOutputIdentifier = symbolicScenarioOutput.m_oIdentifier;
+		// compute identifier only if it does not exists
+		if (l_oScenarioOutputIdentifier == OV_UndefinedIdentifier)
+		{
+			l_oScenarioOutputIdentifier = l_pScenario->getUnusedOutputIdentifier();
+		}
+		l_pScenario->addOutput(symbolicScenarioOutput.m_sName, symbolicScenarioOutput.m_oTypeIdentifier, l_oScenarioOutputIdentifier);
 		if (symbolicScenarioOutput.m_oLinkedBoxIdentifier != OV_UndefinedIdentifier)
 		{
 			// Only try to set scenario output links from boxes that actually exist
 			// This enables the usage of header-only importers
 			if (std::any_of(l_rSymbolicScenario.m_vBox.begin(), l_rSymbolicScenario.m_vBox.end(), [&symbolicScenarioOutput](SBox box) { return box.m_oIdentifier == symbolicScenarioOutput.m_oLinkedBoxIdentifier; }))
 			{
-				l_pScenario->setScenarioOutputLink(l_ui32ScenarioOutputIndex, symbolicScenarioOutput.m_oLinkedBoxIdentifier, symbolicScenarioOutput.m_ui32LinkedBoxOutputIndex);
+				CIdentifier linkedBoxOutputIdentifier = symbolicScenarioOutput.m_oLinkedBoxOutputIdentifier;
+				unsigned int linkedBoxOutputIndex = symbolicScenarioOutput.m_ui32LinkedBoxOutputIndex;
+
+				if (linkedBoxOutputIdentifier != OV_UndefinedIdentifier)
+				{
+					l_pScenario->getSourceBoxOutputIndex(symbolicScenarioOutput.m_oLinkedBoxIdentifier, linkedBoxOutputIdentifier, linkedBoxOutputIndex);
+				}
+
+				OV_ERROR_UNLESS_KRF(
+				            linkedBoxOutputIndex != OV_Value_UndefinedIndexUInt,
+				            "Output index of the target box could not be found",
+				            OpenViBE::Kernel::ErrorType::BadOutput
+				            );
+				l_pScenario->setScenarioOutputLink(l_ui32ScenarioOutputIndex, symbolicScenarioOutput.m_oLinkedBoxIdentifier, linkedBoxOutputIndex);
 			}
 		}
 		l_ui32ScenarioOutputIndex++;
@@ -351,26 +440,15 @@ boolean CAlgorithmScenarioImporter::process(void)
 			a->m_sValue);
 	}
 
-	if(l_pScenario->checkNeedsUpdateBox())
+	if(l_pScenario->checkOutdatedBoxes())
 	{
 		CIdentifier* identifierList = nullptr;
 		size_t nbElems = 0;
-		l_pScenario->getNeedsUpdateBoxIdentifierList(&identifierList, &nbElems);
+		l_pScenario->getOutdatedBoxIdentifierList(&identifierList, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
 			const IBox* l_pBox = l_pScenario->getBoxDetails(identifierList[i]);
-
-			if (this->getConfigurationManager().expandAsBoolean("${Kernel_AbortScenarioImportWhenBoxNeedsUpdate}", true))
-			{
-				OV_ERROR_KRF(
-					"Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier().toString() << "] must be updated",
-					OpenViBE::Kernel::ErrorType::BadConfig
-					);
-			}
-			else
-			{
-				OV_WARNING_K("Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier().toString() << "] should be updated");
-			}
+			OV_WARNING_K("Box " << l_pBox->getName() << " [" << l_pBox->getAlgorithmClassIdentifier().toString() << "] should be updated");
 		}
 		l_pScenario->releaseIdentifierList(identifierList);
 	}
@@ -424,18 +502,26 @@ boolean CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& 
 {
 	if(false) { }
 
+    else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Identifier)		      { m_oSymbolicScenario.m_vSetting.back().m_oIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_TypeIdentifier)          { m_oSymbolicScenario.m_vSetting.back().m_oTypeIdentifier=rValue; }
 
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeIdentifier)            { m_oSymbolicScenario.m_vScenarioInput.back().m_oTypeIdentifier=rValue; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxIdentifier)       { m_oSymbolicScenario.m_vScenarioInput.back().m_oLinkedBoxIdentifier=rValue; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier)           { m_oSymbolicScenario.m_vScenarioOutput.back().m_oTypeIdentifier=rValue; }
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier)      { m_oSymbolicScenario.m_vScenarioOutput.back().m_oLinkedBoxIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Identifier)                 { m_oSymbolicScenario.m_vScenarioInput.back().m_oIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeIdentifier)             { m_oSymbolicScenario.m_vScenarioInput.back().m_oTypeIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxIdentifier)        { m_oSymbolicScenario.m_vScenarioInput.back().m_oLinkedBoxIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdentifier)   { m_oSymbolicScenario.m_vScenarioInput.back().m_oLinkedBoxInputIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Identifier)                { m_oSymbolicScenario.m_vScenarioOutput.back().m_oIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier)            { m_oSymbolicScenario.m_vScenarioOutput.back().m_oTypeIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier)       { m_oSymbolicScenario.m_vScenarioOutput.back().m_oLinkedBoxIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdentifier) { m_oSymbolicScenario.m_vScenarioOutput.back().m_oLinkedBoxOutputIdentifier=rValue; }
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute_Identifier)                 { m_oSymbolicScenario.m_vBox.back().m_vAttribute.back().m_oIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Identifier)                           { m_oSymbolicScenario.m_vBox.back().m_oIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_AlgorithmClassIdentifier)             { m_oSymbolicScenario.m_vBox.back().m_oAlgorithmClassIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Identifier)                     { m_oSymbolicScenario.m_vBox.back().m_vInput.back().m_oIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_TypeIdentifier)                 { m_oSymbolicScenario.m_vBox.back().m_vInput.back().m_oTypeIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Identifier)                    { m_oSymbolicScenario.m_vBox.back().m_vOutput.back().m_oIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_TypeIdentifier)                { m_oSymbolicScenario.m_vBox.back().m_vOutput.back().m_oTypeIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Identifier)                   { m_oSymbolicScenario.m_vBox.back().m_vSetting.back().m_oIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_TypeIdentifier)               { m_oSymbolicScenario.m_vBox.back().m_vSetting.back().m_oTypeIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Identifier)                       { m_oSymbolicScenario.m_vComment.back().m_oIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Attribute_Identifier)             { m_oSymbolicScenario.m_vComment.back().m_vAttribute.back().m_oIdentifier=rValue; }
@@ -444,7 +530,10 @@ boolean CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Identifier)                { m_oSymbolicScenario.m_vLink.back().m_vAttribute.back().m_oIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Identifier)                          { m_oSymbolicScenario.m_vLink.back().m_oIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxIdentifier)                { m_oSymbolicScenario.m_vLink.back().m_oLinkSource.m_oBoxIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdentifier)		  { m_oSymbolicScenario.m_vLink.back().m_oLinkSource.m_oBoxOutputIdentifier=rValue; }
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxIdentifier)                { m_oSymbolicScenario.m_vLink.back().m_oLinkTarget.m_oBoxIdentifier=rValue; }
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdentifier)		      { m_oSymbolicScenario.m_vLink.back().m_oLinkTarget.m_oBoxInputIdentifier=rValue; }
+
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier)            { m_oSymbolicScenario.m_vAttribute.back().m_oIdentifier=rValue; }
 	else OV_ERROR("(id) Unexpected node identifier " << rIdentifier.toString(), OpenViBE::Kernel::ErrorType::BadArgument, false, m_rAlgorithmContext.getErrorManager(), m_rAlgorithmContext.getLogManager());

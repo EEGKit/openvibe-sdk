@@ -71,7 +71,7 @@ namespace OpenViBE
 				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
 				if(itAttribute==m_vAttribute.end())
 				{
-					this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << "Automatically added unexisting attribute identifier " << rAttributeIdentifier << " while setting its value\n";
+//					this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << "Automatically added unexisting attribute identifier " << rAttributeIdentifier << " while setting its value\n";
 					m_vAttribute[rAttributeIdentifier]=sAttributeValue;
 					return true;
 				}

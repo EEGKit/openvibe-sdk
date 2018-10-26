@@ -53,7 +53,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::boolean onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
 				rBox.setInputType(ui32Index, OV_TypeId_Signal);
-				rBox.addOutput("", OV_TypeId_Signal);
+				rBox.addOutput("", OV_TypeId_Signal,rBox.getUnusedInputIdentifier());
 				this->check(rBox);
 				return true;
 			}
@@ -76,7 +76,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::boolean onOutputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
 				rBox.setOutputType(ui32Index, OV_TypeId_Signal);
-				rBox.addInput("", OV_TypeId_Signal);
+				rBox.addInput("", OV_TypeId_Signal, rBox.getUnusedOutputIdentifier());
 				this->check(rBox);
 				return true;
 			}

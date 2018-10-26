@@ -58,6 +58,7 @@
 
 #define OV_ClassId_Kernel_Scenario_Attributable              OpenViBE::CIdentifier(0x61B64E38, 0x0B36B4E8)
 #define OV_ClassId_Kernel_Scenario_Box                       OpenViBE::CIdentifier(0x41209015, 0x1183237A)
+#define OV_ClassId_Kernel_Scenario_BoxUpdater                OpenViBE::CIdentifier(0xA58236FA, 0x12337FAE)
 #define OV_ClassId_Kernel_Scenario_BoxIO                     OpenViBE::CIdentifier(0x110AAB4F, 0x157CBEF1)
 #define OV_ClassId_Kernel_Scenario_BoxListenerContext        OpenViBE::CIdentifier(0xB4344A89, 0xC5044324)
 #define OV_ClassId_Kernel_Scenario_BoxProto                  OpenViBE::CIdentifier(0x169ED1C1, 0x639C5957)
@@ -152,6 +153,8 @@
 #define OV_AttributeId_Box_InitialInputCount                 OpenViBE::CIdentifier(0xCFAD85B0, 0x7C6D841C)
 #define OV_AttributeId_Box_InitialOutputCount                OpenViBE::CIdentifier(0xC80CE8AF, 0xF699F813)
 #define OV_AttributeId_Box_InitialSettingCount               OpenViBE::CIdentifier(0xCE18836A, 0x9C0EB403)
+#define OV_AttributeId_Box_ToBeUpdated                       OpenViBE::CIdentifier(0xC9526A77, 0x5EAF81A6)
+#define OV_AttributeId_Box_PendingDeprecatedInterfacors      OpenViBE::CIdentifier(0xAB422730, 0x56414F32)
 
 #define OV_AttributeId_Box_FlagCanAddInput                   OpenViBE::CIdentifier(0xFBA64161, 0x65304E21)
 #define OV_AttributeId_Box_FlagCanModifyInput                OpenViBE::CIdentifier(0x527AD68D, 0x16D746A0)
@@ -159,6 +162,7 @@
 #define OV_AttributeId_Box_FlagCanModifyOutput               OpenViBE::CIdentifier(0x30A4E5C9, 0x83502953)
 #define OV_AttributeId_Box_FlagCanAddSetting                 OpenViBE::CIdentifier(0x61D11811, 0x71E65362)
 #define OV_AttributeId_Box_FlagCanModifySetting              OpenViBE::CIdentifier(0xF191C1C8, 0xA0123976)
+#define OV_AttributeId_Box_FlagNeedsManualUpdate             OpenViBE::CIdentifier(0xA456EFD1, 0x27661FCB)
 
 #define OV_AttributeId_Box_DocumentationCommand              OpenViBE::CIdentifier(0x7BEC744D, 0x227C19EC)
 #define OV_AttributeId_Box_DocumentationURLBase              OpenViBE::CIdentifier(0x3E470D64, 0x376E7860)
@@ -175,6 +179,7 @@
 #define OV_AttributeId_Link_YSourcePosition                  OpenViBE::CIdentifier(0x1B32C44C, 0x1905E0E9)
 #define OV_AttributeId_Link_XTargetPosition                  OpenViBE::CIdentifier(0x6267B5C5, 0x676E3E42)
 #define OV_AttributeId_Link_YTargetPosition                  OpenViBE::CIdentifier(0x3F0A3B27, 0x570913D2)
+#define OV_AttributeId_Link_Invalid						     OpenViBE::CIdentifier(0x5699FEAA, 0xF45DC988)
 
 #define OVP_ClassId_BoxAlgorithm_Metabox                    OpenViBE::CIdentifier(0xFE420CB6, 0x5F2BA4C3)
 #define OVP_ClassId_BoxAlgorithm_MetaboxDesc                OpenViBE::CIdentifier(0xA87F133C, 0x1E6B6543)
@@ -227,7 +232,7 @@
 
 #define OV_Value_EnumeratedStringSeparator                           ';'
 #define OV_Value_RangeStringSeparator                                ':'
-
+#define OV_Value_UndefinedIndexUInt									 0xFFFFFFFF
 // Importer contexts
 
 #define OV_ScenarioImportContext_SchedulerMetaboxImport            OpenViBE::CIdentifier(0xDDBDD59F, 0xE8C76702)

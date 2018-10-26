@@ -32,6 +32,10 @@
 #define OVP_ClassId_BoxAlgorithm_SignalResampling     OpenViBE::CIdentifier(0x0E923A5E, 0xDA474058)
 #define OVP_ClassId_BoxAlgorithm_SignalResamplingDesc OpenViBE::CIdentifier(0xA675A433, 0xC6690920)
 
+#define OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency	OpenViBE::CIdentifier(0x158A8EFD, 0xAA894F86)
+#define OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer	OpenViBE::CIdentifier(0x588783F3, 0x8E8DCF86)
+#define OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_LowPassFilterSignalFlag	OpenViBE::CIdentifier(0xAFDD8EFD, 0x23EF94F6)
+
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
@@ -97,9 +101,13 @@ namespace OpenViBEPlugins
 			{
 				rBoxAlgorithmPrototype.addInput  ("Input signal",                               OV_TypeId_Signal);
 				rBoxAlgorithmPrototype.addOutput ("Output signal",                              OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("New Sampling Frequency",                     OV_TypeId_Integer, "128");
-				rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer",                    OV_TypeId_Integer, "8");
-				rBoxAlgorithmPrototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true"); // displayed for backward compatibility, but never used
+				rBoxAlgorithmPrototype.addSetting("New Sampling Frequency",                     OV_TypeId_Integer, "128", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency);
+				rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer",                    OV_TypeId_Integer, "8", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
+				rBoxAlgorithmPrototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_LowPassFilterSignalFlag); // displayed for backward compatibility, but never used
+				
+				//rBoxAlgorithmPrototype.addSetting("New Sampling Frequency",OV_TypeId_Integer,"128");
+				//rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer",OV_TypeId_Integer,"8");
+				//rBoxAlgorithmPrototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true"); // displayed for backward compatibility, but never used
 
 				return true;
 			}

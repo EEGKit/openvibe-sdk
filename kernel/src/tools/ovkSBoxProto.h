@@ -21,7 +21,7 @@ namespace
 		{
 		}
 
-		bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier)
+		bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::boolean bNotify)
 		{
 			uint64 v=rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64InputCountHash);
@@ -30,7 +30,7 @@ namespace
 			return true;
 		}
 
-		bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier)
+		bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::boolean bNotify)
 		{
 			uint64 v=rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
@@ -48,7 +48,7 @@ namespace
 			return true;
 		}
 
-		bool addSetting(const CString& sName,const CIdentifier& rTypeIdentifier,const CString& sDefaultValue, const bool bModifiable)
+		bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::boolean bNotify)
 		{
 			return addSetting(sName, rTypeIdentifier, sDefaultValue);
 		}

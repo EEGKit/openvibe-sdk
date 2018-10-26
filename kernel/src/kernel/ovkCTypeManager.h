@@ -5,6 +5,7 @@
 
 #include <map>
 #include <set>
+#include <vector>
 
 namespace OpenViBE
 {
@@ -18,6 +19,8 @@ namespace OpenViBE
 
 			virtual OpenViBE::CIdentifier getNextTypeIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
+				
+			virtual std::vector<std::pair<CIdentifier, CString> > getSortedTypes() const;
 
 			virtual bool registerType(
 				const OpenViBE::CIdentifier& rTypeIdentifier,

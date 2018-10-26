@@ -86,46 +86,65 @@ namespace OpenViBE
 
 		m_CommandList.push_back(scenarioCmd);
 
-		// check if some scenario setup information has been set
-		if (m_OptionParser.hasOption("ds"))
-		{
-			std::shared_ptr<SetupScenarioCommand> setupCmd = std::make_shared<SetupScenarioCommand>();
-			setupCmd->scenarioName = scenarioName;
-			setupCmd->tokenList = m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("ds");
-
-			m_CommandList.push_back(setupCmd);
-		}
-
-		// last command in the workflow is the run command
-		std::shared_ptr<RunScenarioCommand> runCmd = std::make_shared<RunScenarioCommand>();
-		runCmd->scenarioList = std::vector<std::string>{ scenarioName };
 		
-		if (m_OptionParser.hasOption("play-mode"))
+		// scenario update option
+		std::shared_ptr<UpdateScenarioCommand> updateScenarioCmd = std::make_shared<UpdateScenarioCommand>();
+		
+		if (m_OptionParser.hasOption("updated-scenario-file"))
 		{
-			auto playMode = m_OptionParser.getOptionValue<std::string>("play-mode");
-
-			if (playMode != "ff" && playMode != "std")
+			// do not play scenario, just update it.
+			updateScenarioCmd->scenarioFile = m_OptionParser.getOptionValue<std::string>("updated-scenario-file");			
+			
+			// set dumb name as it used to recognize scenario in the application
+			updateScenarioCmd->scenarioName = scenarioName;
+			
+			m_CommandList.push_back(updateScenarioCmd);
+		}
+		else
+		{
+			// check if some scenario setup information has been set
+			if (m_OptionParser.hasOption("ds"))
 			{
-				std::cerr << "ERROR: option 'play-mode' must be ff or std" << std::endl;
-				return PlayerReturnCode::BadArg;
+				std::shared_ptr<SetupScenarioCommand> setupCmd = std::make_shared<SetupScenarioCommand>();
+				setupCmd->scenarioName = scenarioName;
+				setupCmd->tokenList = m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("ds");
+				
+				m_CommandList.push_back(setupCmd);
 			}
-
-			// permissive code here
-			// any other entry than ff leads to standard mode...
-			runCmd->playMode = ((playMode == "ff") ? PlayerPlayMode::Fastfoward : PlayerPlayMode::Standard);
+			
+			// last command in the workflow is the run command
+			std::shared_ptr<RunScenarioCommand> runCmd = std::make_shared<RunScenarioCommand>();
+			runCmd->scenarioList = std::vector<std::string>{ scenarioName };
+			
+			if (m_OptionParser.hasOption("play-mode"))
+			{
+				auto playMode = m_OptionParser.getOptionValue<std::string>("play-mode");
+				
+				if (playMode != "ff" && playMode != "std")
+				{
+					std::cerr << "ERROR: option 'play-mode' must be ff or std" << std::endl;
+					return PlayerReturnCode::BadArg;
+				}
+				
+				// permissive code here
+				// any other entry than ff leads to standard mode...
+				runCmd->playMode = ((playMode == "ff") ? PlayerPlayMode::Fastfoward : PlayerPlayMode::Standard);
+			}
+			
+			if (m_OptionParser.hasOption("max-time"))
+			{
+				runCmd->maximumExecutionTime = m_OptionParser.getOptionValue<double>("max-time");
+			}
+			
+			if (m_OptionParser.hasOption("dg"))
+			{
+				runCmd->tokenList = m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("dg");
+			}
+			
+			m_CommandList.push_back(runCmd);
+			
+			
 		}
-
-		if (m_OptionParser.hasOption("max-time"))
-		{
-			runCmd->maximumExecutionTime = m_OptionParser.getOptionValue<double>("max-time");
-		}
-
-		if (m_OptionParser.hasOption("dg"))
-		{
-			runCmd->tokenList = m_OptionParser.getOptionValue<std::vector<SetupScenarioCommand::Token>>("dg");
-		}
-
-		m_CommandList.push_back(runCmd);
 
 		return PlayerReturnCode::Success;
 	}

@@ -15,28 +15,37 @@ namespace OpenViBE
 		{
 		public:
 
-			CLink(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CScenario& rOwnerScenario);
+			CLink(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CScenario& rOwnerScenario);			
 
+			virtual bool InitializeFromExistingLink(const ILink& link);
+			
 			virtual OpenViBE::boolean setIdentifier(
 				const OpenViBE::CIdentifier& rIdentifier);
 			virtual OpenViBE::CIdentifier getIdentifier(void) const;
 
 			virtual OpenViBE::boolean setSource(
 				const OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::uint32 ui32BoxOutputIndex);
+				const OpenViBE::uint32 ui32BoxOutputIndex,
+				const OpenViBE::CIdentifier rBoxOutputIdentifier);
 			virtual OpenViBE::boolean setTarget(
 				const OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::uint32 ui32BoxInputIndex);
+				const OpenViBE::uint32 ui32BoxInputIndex,
+				const OpenViBE::CIdentifier rBoxInputIdentifier);
 			virtual OpenViBE::boolean getSource(
 				OpenViBE::CIdentifier& rBoxIdentifier,
-				OpenViBE::uint32& ui32BoxOutputIndex) const;
+				OpenViBE::uint32& ui32BoxOutputIndex,
+				OpenViBE::CIdentifier& rBoxOutputIdentifier) const;
 			virtual OpenViBE::CIdentifier getSourceBoxIdentifier(void) const;
 			virtual OpenViBE::uint32 getSourceBoxOutputIndex(void) const;
+			virtual OpenViBE::CIdentifier getSourceBoxOutputIdentifier(void) const;
 			virtual OpenViBE::boolean getTarget(
 				OpenViBE::CIdentifier& rTargetBoxIdentifier,
-				OpenViBE::uint32& ui32BoxInputIndex) const;
+				OpenViBE::uint32& ui32BoxInputIndex,
+				OpenViBE::CIdentifier& rTargetBoxInputIdentifier) const;
 			virtual OpenViBE::CIdentifier getTargetBoxIdentifier(void) const;
 			virtual OpenViBE::uint32 getTargetBoxInputIndex(void) const;
+			virtual OpenViBE::CIdentifier getTargetBoxInputIdentifier(void) const;
+			
 
 			virtual OpenViBE::boolean acceptVisitor(
 				OpenViBE::IObjectVisitor& rObjectVisitor);
@@ -50,7 +59,9 @@ namespace OpenViBE
 			OpenViBE::CIdentifier m_oSourceBoxIdentifier;
 			OpenViBE::CIdentifier m_oTargetBoxIdentifier;
 			OpenViBE::uint32 m_ui32SourceOutputIndex;
+			OpenViBE::CIdentifier m_oSourceBoxOutputIdentifier;
 			OpenViBE::uint32 m_ui32TargetInputIndex;
+			OpenViBE::CIdentifier m_oTargetBoxInputIdentifier;
 		};
 	};
 };

@@ -246,9 +246,19 @@ boolean CScheduler::flattenScenario()
 			for (uint32 l_ui32SettingIndex = 0; l_ui32SettingIndex < l_pBox->getSettingCount(); l_ui32SettingIndex++)
 			{
 				CString l_sSettingValue;
-				l_pBox->getSettingValue(l_ui32SettingIndex, l_sSettingValue);
+				CIdentifier l_oSettingIdentifier;
 
-				l_rMetaboxScenarioInstance.setSettingValue(l_ui32SettingIndex, l_sSettingValue);
+				l_pBox->getSettingValue(l_ui32SettingIndex, l_sSettingValue);
+				l_pBox->getInterfacorIdentifier(Setting, l_ui32SettingIndex, l_oSettingIdentifier);
+
+				if (l_oSettingIdentifier != OV_UndefinedIdentifier)
+				{
+					l_rMetaboxScenarioInstance.setSettingValue(l_oSettingIdentifier, l_sSettingValue);
+				}
+				else
+				{
+					l_rMetaboxScenarioInstance.setSettingValue(l_ui32SettingIndex, l_sSettingValue);
+				}
 			}
 
 			// Create settings with the path to the Metabox,
@@ -303,11 +313,32 @@ boolean CScheduler::flattenScenario()
 					ILink* l_rLink = m_pScenario->getLinkDetails(identifierList[i]);
 					// Find out the target inside the metabox scenario
 					CIdentifier l_oTargetBoxIdentifier;
-					uint32_t l_ui32TargetBoxInputIdentifier = 0;
-					l_rMetaboxScenarioInstance.getScenarioInputLink(l_rLink->getTargetBoxInputIndex(), l_oTargetBoxIdentifier, l_ui32TargetBoxInputIdentifier);
+					uint32_t l_ui32TargetBoxInputIndex = 0;
+					CIdentifier l_oMetaBoxInputIdentifier = l_rLink->getTargetBoxInputIdentifier();
+					uint32_t l_ui32MetaBoxInputIndex = l_rLink->getTargetBoxInputIndex();
+
+					if (l_oMetaBoxInputIdentifier != OV_UndefinedIdentifier)
+					{
+						l_rMetaboxScenarioInstance.getInterfacorIndex(Input, l_oMetaBoxInputIdentifier,l_ui32MetaBoxInputIndex);
+					}
+					OV_ERROR_UNLESS_KRF(
+					            l_ui32MetaBoxInputIndex != OV_Value_UndefinedIndexUInt,
+					            "Failed to find metabox input with identifier " << l_oMetaBoxInputIdentifier.toString(),
+					            ErrorType::ResourceNotFound
+					            );
+					l_rMetaboxScenarioInstance.getScenarioInputLink(l_ui32MetaBoxInputIndex, l_oTargetBoxIdentifier, l_ui32TargetBoxInputIndex);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
-					l_rLink->setTarget(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier], l_ui32TargetBoxInputIdentifier);
+					CIdentifier l_oTargetBoxInputIdentifier = OV_UndefinedIdentifier;
+					if (l_oTargetBoxIdentifier != OV_UndefinedIdentifier)
+					{
+						m_pScenario->getBoxDetails(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier])->getInterfacorIdentifier(Input, l_ui32TargetBoxInputIndex,l_oTargetBoxInputIdentifier);
+
+						l_rLink->setTarget(
+						            l_mIdentifierCorrespondence[l_oTargetBoxIdentifier],
+						            l_ui32TargetBoxInputIndex,
+						            l_oTargetBoxInputIdentifier);
+					}
 				}
 				m_pScenario->releaseIdentifierList(identifierList);
 			}
@@ -320,13 +351,34 @@ boolean CScheduler::flattenScenario()
 				for (size_t i = 0; i < nbElems; ++i)
 				{
 					ILink* l_rLink = m_pScenario->getLinkDetails(identifierList[i]);
-					// Find out from which box this link goes inside the metabox scenario
+					// Find out the Source inside the metabox scenario
 					CIdentifier l_oSourceBoxIdentifier;
-					uint32_t l_ui32SourceBoxOutputIdentifier = 0;
-					l_rMetaboxScenarioInstance.getScenarioOutputLink(l_rLink->getSourceBoxOutputIndex(), l_oSourceBoxIdentifier, l_ui32SourceBoxOutputIdentifier);
+					uint32_t l_ui32SourceBoxOutputIndex = 0;
+					CIdentifier l_oMetaBoxOutputIdentifier = l_rLink->getSourceBoxOutputIdentifier();
+					uint32_t l_ui32MetaBoxOutputIndex = l_rLink->getSourceBoxOutputIndex();
+
+					if (l_oMetaBoxOutputIdentifier != OV_UndefinedIdentifier)
+					{
+						l_rMetaboxScenarioInstance.getInterfacorIndex(Output, l_oMetaBoxOutputIdentifier,l_ui32MetaBoxOutputIndex);
+					}
+					OV_ERROR_UNLESS_KRF(
+					            l_ui32MetaBoxOutputIndex != OV_Value_UndefinedIndexUInt,
+					            "Failed to find metabox input with identifier " << l_oMetaBoxOutputIdentifier.toString(),
+					            ErrorType::ResourceNotFound
+					            );
+					l_rMetaboxScenarioInstance.getScenarioOutputLink(l_ui32MetaBoxOutputIndex, l_oSourceBoxIdentifier, l_ui32SourceBoxOutputIndex);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
-					l_rLink->setSource(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier], l_ui32SourceBoxOutputIdentifier);
+					CIdentifier l_oSourceBoxOutputIdentifier = OV_UndefinedIdentifier;
+					if (l_oSourceBoxIdentifier != OV_UndefinedIdentifier)
+					{
+						m_pScenario->getBoxDetails(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier])->getInterfacorIdentifier(Output, l_ui32SourceBoxOutputIndex,l_oSourceBoxOutputIdentifier);
+
+						l_rLink->setSource(
+						            l_mIdentifierCorrespondence[l_oSourceBoxIdentifier],
+						            l_ui32SourceBoxOutputIndex,
+						            l_oSourceBoxOutputIdentifier);
+					}
 				}
 				m_pScenario->releaseIdentifierList(identifierList);
 			}
@@ -424,7 +476,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 			const CIdentifier boxIdentifier = identifierList[i];
 			const IBox* l_pBox = m_pScenario->getBoxDetails(boxIdentifier);
 			OV_ERROR_UNLESS_K(
-				!m_pScenario->hasNeedsUpdateBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxNeedsUpdate}", false),
+				!m_pScenario->hasOutdatedBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsOutdated}", false),
 				"Box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "] should be updated",
 				ErrorType::Internal,
 				SchedulerInitialization_Failed
@@ -570,7 +622,7 @@ boolean CScheduler::uninitialize(void)
 	}
 	m_vSimulatedBox.clear();
 
-	m_pScenario=NULL;
+	m_pScenario=nullptr;
 
 	return l_bBoxUninitialization;
 }

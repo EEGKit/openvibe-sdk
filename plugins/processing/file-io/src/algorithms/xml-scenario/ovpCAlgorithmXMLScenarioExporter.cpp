@@ -44,6 +44,7 @@ boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer,
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Settings                        ) l_sNodeName="Settings";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting                         ) l_sNodeName="Setting";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Identifier              ) l_sNodeName="Identifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_TypeIdentifier          ) l_sNodeName="TypeIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_Name                    ) l_sNodeName="Name";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting_DefaultValue            ) l_sNodeName="DefaultValue";
@@ -51,17 +52,21 @@ boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer,
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Inputs                          ) l_sNodeName="Inputs";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input                           ) l_sNodeName="Input";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Identifier                ) l_sNodeName="Identifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_TypeIdentifier            ) l_sNodeName="TypeIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_Name                      ) l_sNodeName="Name";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxIdentifier       ) l_sNodeName="LinkedBoxIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIndex       ) l_sNodeName="LinkedBoxInputIndex";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Input_LinkedBoxInputIdentifier  ) l_sNodeName="LinkedBoxInputIdentifier";
 
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Outputs                         ) l_sNodeName="Outputs";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output                          ) l_sNodeName="Output";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier           ) l_sNodeName="TypeIdentifier";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name                     ) l_sNodeName="Name";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier      ) l_sNodeName="LinkedBoxIdentifier";
-	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex     ) l_sNodeName="LinkedBoxOutputIndex";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Outputs                          ) l_sNodeName="Outputs";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output                           ) l_sNodeName="Output";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Identifier                ) l_sNodeName="Identifier";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_TypeIdentifier            ) l_sNodeName="TypeIdentifier";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_Name                      ) l_sNodeName="Name";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxIdentifier       ) l_sNodeName="LinkedBoxIdentifier";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIndex      ) l_sNodeName="LinkedBoxOutputIndex";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Output_LinkedBoxOutputIdentifier ) l_sNodeName="LinkedBoxOutputIdentifier";
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion                            ) l_sNodeName="FormatVersion";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Creator                                  ) l_sNodeName="Creator";
@@ -74,15 +79,18 @@ boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer,
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_AlgorithmClassIdentifier             ) l_sNodeName="AlgorithmClassIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Inputs                               ) l_sNodeName="Inputs";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input                                ) l_sNodeName="Input";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Identifier                     ) l_sNodeName="Identifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_TypeIdentifier                 ) l_sNodeName="TypeIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Input_Name                           ) l_sNodeName="Name";
 
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Outputs                              ) l_sNodeName="Outputs";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output                               ) l_sNodeName="Output";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Identifier                    ) l_sNodeName="Identifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_TypeIdentifier                ) l_sNodeName="TypeIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Output_Name                          ) l_sNodeName="Name";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Settings                             ) l_sNodeName="Settings";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting                              ) l_sNodeName="Setting";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Identifier                   ) l_sNodeName="Identifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_TypeIdentifier               ) l_sNodeName="TypeIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_Name                         ) l_sNodeName="Name";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting_DefaultValue                 ) l_sNodeName="DefaultValue";
@@ -114,9 +122,11 @@ boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer,
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source                              ) l_sNodeName="Source";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxIdentifier                ) l_sNodeName="BoxIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex               ) l_sNodeName="BoxOutputIndex";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIdentifier          ) l_sNodeName="BoxOutputIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target                              ) l_sNodeName="Target";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxIdentifier                ) l_sNodeName="BoxIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIndex                ) l_sNodeName="BoxInputIndex";
+	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Target_BoxInputIdentifier           ) l_sNodeName="BoxInputIdentifier";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attributes                          ) l_sNodeName="Attributes";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute                           ) l_sNodeName="Attribute";
 	else if(rIdentifier==OVTK_Algorithm_ScenarioExporter_NodeId_Link_Attribute_Identifier                ) l_sNodeName="Identifier";

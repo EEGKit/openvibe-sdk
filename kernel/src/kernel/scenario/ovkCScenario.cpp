@@ -2,6 +2,7 @@
 #include "ovkCScenarioSettingKeywordParserCallback.h"
 
 #include "ovkTBox.hpp"
+#include "ovkCBoxUpdater.h"
 #include "ovkCComment.h"
 #include "ovkCMetadata.h"
 #include "ovkCLink.h"
@@ -31,7 +32,7 @@ namespace
 	template <class T>
 	struct TTestTrue
 	{
-		bool operator()(typename map<CIdentifier, T*>::const_iterator it) const { return true; }
+		bool operator()(typename map<CIdentifier, T>::const_iterator it) const { return true; }
 	};
 
 	struct TTestEqSourceBox
@@ -66,6 +67,42 @@ namespace
 
 	template <class T, class TTest>
 	CIdentifier getNextTIdentifier(
+	        const map<CIdentifier, T>& elementMap,
+	        const CIdentifier& previousIdentifier,
+	        const TTest& testFunctor)
+	{
+		typename map<CIdentifier, T>::const_iterator it;
+
+		if(previousIdentifier==OV_UndefinedIdentifier)
+		{
+			it=elementMap.begin();
+		}
+		else
+		{
+			it=elementMap.find(previousIdentifier);
+			if(it==elementMap.end())
+			{
+				return OV_UndefinedIdentifier;
+			}
+			++it;
+		}
+
+		while(it!=elementMap.end())
+		{
+			if(testFunctor(it))
+			{
+				return it->first;
+			}
+			++it;
+		}
+
+		return OV_UndefinedIdentifier;
+
+	}
+
+	/*
+	template <class T, class TTest>
+	CIdentifier getNextTIdentifier(
 		const map<CIdentifier, T*>& elementMap,
 		const CIdentifier& previousIdentifier,
 		const TTest& testFunctor)
@@ -97,6 +134,7 @@ namespace
 
 		return OV_UndefinedIdentifier;
 	}
+	*/
 };
 
 //___________________________________________________________________//
@@ -150,6 +188,8 @@ bool CScenario::clear(void)
 	}
 	m_Links.clear();
 
+	m_OutdatedBoxes.clear();
+
 	while (this->getSettingCount())
 	{
 		this->removeSetting(0);
@@ -178,12 +218,13 @@ bool CScenario::removeScenarioInput(const uint32 inputIndex)
 		ErrorType::OutOfBound
 	);
 
+	this->removeInput(inputIndex);
+
 	// Remove the link within the scenario to this input
 	if (inputIndex < m_ScenarioInputLinks.size())
 	{
 		m_ScenarioInputLinks.erase(m_ScenarioInputLinks.begin() + inputIndex);
 	}
-	this->removeInput(inputIndex);
 
 	return true;
 }
@@ -196,12 +237,13 @@ bool CScenario::removeScenarioOutput(const uint32 outputIndex)
 		ErrorType::OutOfBound
 	);
 
+	this->removeOutput(outputIndex);
+
 	// Remove the link within the scenario to this output
 	if (outputIndex < m_ScenarioOutputLinks.size())
 	{
 		m_ScenarioOutputLinks.erase(m_ScenarioOutputLinks.begin() + outputIndex);
 	}
-	this->removeOutput(outputIndex);
 
 	return true;
 }
@@ -289,13 +331,15 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 			CString defaultValue;
 			CString value;
 			bool isModifiable;
+			CIdentifier l_oIdentifier;
 			scenario.getSettingType(settingIndex, settingTypeIdentifier);
 			scenario.getSettingName(settingIndex, settingName);
 			scenario.getSettingDefaultValue(settingIndex, defaultValue);
 			scenario.getSettingValue(settingIndex, value);
 			scenario.getSettingMod(settingIndex, isModifiable);
+			scenario.getInterfacorIdentifier(Setting, settingIndex, l_oIdentifier);
 
-			this->addSetting(settingName, settingTypeIdentifier, defaultValue, -1, isModifiable);
+			this->addSetting(settingName, settingTypeIdentifier, defaultValue, OV_Value_UndefinedIndexUInt, isModifiable, l_oIdentifier, true);
 			this->setSettingValue(previousSettingCount + settingIndex, value);
 
 		}
@@ -317,7 +361,7 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 
 CIdentifier CScenario::getNextBoxIdentifier(const CIdentifier& previousIdentifier) const
 {
-	return getNextTIdentifier<CBox, TTestTrue<CBox> >(m_Boxes, previousIdentifier, TTestTrue<CBox>());
+	return getNextTIdentifier<CBox*, TTestTrue<CBox*> >(m_Boxes, previousIdentifier, TTestTrue<CBox*>());
 }
 
 const IBox* CScenario::getBoxDetails(const CIdentifier& boxIdentifier) const
@@ -462,7 +506,7 @@ bool CScenario::removeBox(const CIdentifier& boxIdentifier)
 
 CIdentifier CScenario::getNextCommentIdentifier(const CIdentifier& previousIdentifier) const
 {
-	return getNextTIdentifier<CComment, TTestTrue<CComment>>(m_Comments, previousIdentifier, TTestTrue<CComment>());
+	return getNextTIdentifier<CComment*, TTestTrue<CComment*>>(m_Comments, previousIdentifier, TTestTrue<CComment*>());
 }
 
 const IComment* CScenario::getCommentDetails(const CIdentifier& commentIdentifier) const
@@ -647,27 +691,27 @@ bool CScenario::removeMetadata(const CIdentifier& metadataIdentifier)
 
 CIdentifier CScenario::getNextLinkIdentifier(const CIdentifier& previousIdentifier) const
 {
-	return getNextTIdentifier<CLink, TTestTrue<CLink> >(m_Links, previousIdentifier, TTestTrue<CLink>());
+	return getNextTIdentifier<CLink*, TTestTrue<CLink*> >(m_Links, previousIdentifier, TTestTrue<CLink*>());
 }
 
 CIdentifier CScenario::getNextLinkIdentifierFromBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const
 {
-	return getNextTIdentifier<CLink, TTestEqSourceBox>(m_Links, previousIdentifier, TTestEqSourceBox(boxIdentifier));
+	return getNextTIdentifier<CLink*, TTestEqSourceBox>(m_Links, previousIdentifier, TTestEqSourceBox(boxIdentifier));
 }
 
 CIdentifier CScenario::getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32 outputIndex) const
 {
-	return getNextTIdentifier<CLink, TTestEqSourceBoxOutput>(m_Links, previousIdentifier, TTestEqSourceBoxOutput(boxIdentifier, outputIndex));
+	return getNextTIdentifier<CLink*, TTestEqSourceBoxOutput>(m_Links, previousIdentifier, TTestEqSourceBoxOutput(boxIdentifier, outputIndex));
 }
 
 CIdentifier CScenario::getNextLinkIdentifierToBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const
 {
-	return getNextTIdentifier<CLink, TTestEqTargetBox>(m_Links, previousIdentifier, TTestEqTargetBox(boxIdentifier));
+	return getNextTIdentifier<CLink*, TTestEqTargetBox>(m_Links, previousIdentifier, TTestEqTargetBox(boxIdentifier));
 }
 
 CIdentifier CScenario::getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32 inputIndex) const
 {
-	return getNextTIdentifier<CLink, TTestEqTargetBoxInput>(m_Links, previousIdentifier, TTestEqTargetBoxInput(boxIdentifier, inputIndex));
+	return getNextTIdentifier<CLink*, TTestEqTargetBoxInput>(m_Links, previousIdentifier, TTestEqTargetBoxInput(boxIdentifier, inputIndex));
 }
 
 bool CScenario::isLink(const CIdentifier& identifier) const
@@ -689,30 +733,33 @@ bool CScenario::hasIO() const
 
 bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32 boxInputIndex)
 {
-	OV_ERROR_UNLESS_KRF(
-		scenarioInputIndex < this->getInputCount(),
-		"Scenario Input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		OV_ERROR_UNLESS_KRF(
+		            scenarioInputIndex < this->getInputCount(),
+		            "Scenario Input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
 
-	OV_ERROR_UNLESS_KRF(
-		this->isBox(boxIdentifier),
-		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
 
-	OV_ERROR_UNLESS_KRF(
-		boxInputIndex < this->getBoxDetails(boxIdentifier)->getInputCount(),
-		"Box Input index = [" << boxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		OV_ERROR_UNLESS_KRF(
+		            boxInputIndex < this->getBoxDetails(boxIdentifier)->getInputCount(),
+		            "Box Input index = [" << boxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getInputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+	}
 
 	if (scenarioInputIndex >= m_ScenarioInputLinks.size())
 	{
 		m_ScenarioInputLinks.resize(this->getInputCount());
 	}
 
-	// Remove any existing inputs connected to the
+	// Remove any existing inputs connected to the target
 	for (size_t inputLinkIndex = 0; inputLinkIndex < m_ScenarioInputLinks.size(); inputLinkIndex++)
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
@@ -740,32 +787,51 @@ bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIde
 	return true;
 }
 
+bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier)
+{
+	uint32 boxInputIndex = OV_Value_UndefinedIndexUInt;
+
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
+		this->getBoxDetails(boxIdentifier)->getInterfacorIndex(Input, boxInputIdentifier, boxInputIndex);
+	}
+	return this->setScenarioInputLink(scenarioInputIndex, boxIdentifier, boxInputIndex);
+}
+
 bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32 boxOutputIndex)
 {
-	OV_ERROR_UNLESS_KRF(
-		scenarioOutputIndex < this->getOutputCount(),
-		"Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		OV_ERROR_UNLESS_KRF(
+		            scenarioOutputIndex < this->getOutputCount(),
+		            "Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
 
-	OV_ERROR_UNLESS_KRF(
-		this->isBox(boxIdentifier),
-		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
 
-	OV_ERROR_UNLESS_KRF(
-		boxOutputIndex < this->getBoxDetails(boxIdentifier)->getOutputCount(),
-		"Box output index = [" << boxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		OV_ERROR_UNLESS_KRF(
+		            boxOutputIndex < this->getBoxDetails(boxIdentifier)->getOutputCount(),
+		            "Box output index = [" << boxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getOutputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+	}
 
 	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size())
 	{
 		m_ScenarioOutputLinks.resize(this->getOutputCount());
 	}
 
-	// Remove any existing outputs connected to the
+	// Remove any existing outputs connected to the target
 	for (size_t outputLinkIndex = 0; outputLinkIndex < m_ScenarioOutputLinks.size(); outputLinkIndex++)
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
@@ -783,6 +849,24 @@ bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CI
 	return true;
 }
 
+bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier)
+{
+	uint32 boxOutputIndex = OV_Value_UndefinedIndexUInt;
+
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
+
+		this->getBoxDetails(boxIdentifier)->getInterfacorIndex(Output, boxOutputIdentifier, boxOutputIndex);
+	}
+	return this->setScenarioOutputLink(scenarioOutputIndex, boxIdentifier, boxOutputIndex);
+}
+
 bool CScenario::getScenarioInputLink(const uint32 scenarioInputIndex, CIdentifier& boxIdentifier, uint32& boxInputIndex) const
 {
 	OV_ERROR_UNLESS_KRF(
@@ -798,6 +882,24 @@ bool CScenario::getScenarioInputLink(const uint32 scenarioInputIndex, CIdentifie
 
 	boxIdentifier = m_ScenarioInputLinks[scenarioInputIndex].first;
 	boxInputIndex = m_ScenarioInputLinks[scenarioInputIndex].second;
+
+	return true;
+}
+
+bool CScenario::getScenarioInputLink(const uint32 scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const
+{
+	uint32 boxInputIndex;
+	boxOutputIdentifier = OV_UndefinedIdentifier;
+
+	this->getScenarioInputLink(scenarioInputIndex, boxIdentifier, boxInputIndex);
+
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		if (m_Boxes.find(boxIdentifier) != m_Boxes.end())
+		{
+			this->getBoxDetails(boxIdentifier)->getInterfacorIdentifier(Input, boxInputIndex, boxOutputIdentifier);
+		}
+	}
 
 	return true;
 }
@@ -821,27 +923,48 @@ bool CScenario::getScenarioOutputLink(const uint32 scenarioOutputIndex, CIdentif
 	return true;
 }
 
+bool CScenario::getScenarioOutputLink(const uint32 scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const
+{
+	uint32 boxOutputIndex;
+	boxOutputIdentifier = OV_UndefinedIdentifier;
+
+	this->getScenarioOutputLink(scenarioOutputIndex, boxIdentifier, boxOutputIndex);
+
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		if (m_Boxes.find(boxIdentifier) != m_Boxes.end())
+		{
+			this->getBoxDetails(boxIdentifier)->getInterfacorIdentifier(Output, boxOutputIndex, boxOutputIdentifier);
+		}
+	}
+
+	return true;
+}
+
 // Note: In current implementation only the scenarioInputIndex is necessary as it can only be connected to one input
 // but to keep things simpler we give it all the info
 bool CScenario::removeScenarioInputLink(const uint32 scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32 boxInputIndex)
 {
-	OV_ERROR_UNLESS_KRF(
-		scenarioInputIndex < this->getInputCount(),
-		"Scenario Input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		OV_ERROR_UNLESS_KRF(
+		            scenarioInputIndex < this->getInputCount(),
+		            "Scenario Input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
 
-	OV_ERROR_UNLESS_KRF(
-		this->isBox(boxIdentifier),
-		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
 
-	OV_ERROR_UNLESS_KRF(
-		boxInputIndex < this->getBoxDetails(boxIdentifier)->getInputCount(),
-		"Box Input index = [" << boxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		OV_ERROR_UNLESS_KRF(
+		            boxInputIndex < this->getBoxDetails(boxIdentifier)->getInputCount(),
+		            "Box Input index = [" << boxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getInputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+	}
 
 	// This should not happen either
 	if (scenarioInputIndex >= m_ScenarioInputLinks.size())
@@ -857,23 +980,26 @@ bool CScenario::removeScenarioInputLink(const uint32 scenarioInputIndex, const C
 // but to keep things simpler we give it all the info
 bool CScenario::removeScenarioOutputLink(const uint32 scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32 boxOutputIndex)
 {
-	OV_ERROR_UNLESS_KRF(
-		scenarioOutputIndex < this->getOutputCount(),
-		"Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+	if (boxIdentifier != OV_UndefinedIdentifier)
+	{
+		OV_ERROR_UNLESS_KRF(
+		            scenarioOutputIndex < this->getOutputCount(),
+		            "Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
 
-	OV_ERROR_UNLESS_KRF(
-		this->isBox(boxIdentifier),
-		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		OV_ERROR_UNLESS_KRF(
+		            this->isBox(boxIdentifier),
+		            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+		            ErrorType::ResourceNotFound
+		            );
 
-	OV_ERROR_UNLESS_KRF(
-		boxOutputIndex < this->getBoxDetails(boxIdentifier)->getOutputCount(),
-		"Box output index = [" << boxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		OV_ERROR_UNLESS_KRF(
+		            boxOutputIndex < this->getBoxDetails(boxIdentifier)->getOutputCount(),
+		            "Box output index = [" << boxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getOutputCount() - 1) << "])",
+		            ErrorType::OutOfBound
+		            );
+	}
 
 	// This should not happen either
 	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size())
@@ -938,13 +1064,13 @@ bool CScenario::connect(
 	CBox* targetBox = itBox2->second;
 
 	OV_ERROR_UNLESS_KRF(
-		targetBoxInputIndex < targetBox->getInputCount(),
+		targetBoxInputIndex < targetBox->getInterfacorCountIncludingDeprecated(Input),
 		"Target box input index = [" << targetBoxInputIndex << "] is out of range (max index = [" << (targetBox->getInputCount() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
 	OV_ERROR_UNLESS_KRF(
-		sourceBoxOutputIndex < sourceBox->getOutputCount(),
+		sourceBoxOutputIndex < sourceBox->getInterfacorCountIncludingDeprecated(Output),
 		"Source box output index = [" << sourceBoxOutputIndex << "] is out of range (max index = [" << (sourceBox->getOutputCount() - 1) << "])",
 		ErrorType::OutOfBound
 	);
@@ -970,14 +1096,38 @@ bool CScenario::connect(
 	linkIdentifier = getUnusedIdentifier(suggestedLinkIdentifier);
 
 	CLink* link = new CLink(this->getKernelContext(), *this);
+	CIdentifier sourceBoxOutputIdentifier;
+	CIdentifier targetBoxInputIdentifier;
+
+	this->getSourceBoxOutputIdentifier(sourceBoxIdentifier, sourceBoxOutputIndex, sourceBoxOutputIdentifier);
+	this->getTargetBoxInputIdentifier(targetBoxIdentifier, targetBoxInputIndex, targetBoxInputIdentifier);
+
 	link->setIdentifier(linkIdentifier);
-	link->setSource(sourceBoxIdentifier, sourceBoxOutputIndex);
-	link->setTarget(targetBoxIdentifier, targetBoxInputIndex);
+	link->setSource(sourceBoxIdentifier, sourceBoxOutputIndex, sourceBoxOutputIdentifier);
+	link->setTarget(targetBoxIdentifier, targetBoxInputIndex, targetBoxInputIdentifier);
 
 	m_Links[link->getIdentifier()] = link;
 
 	return true;
 }
+
+bool CScenario::connect(
+	CIdentifier& linkIdentifier,
+	const CIdentifier& sourceBoxIdentifier,
+	const CIdentifier& sourceBoxOutputIdentifier,
+	const CIdentifier& targetBoxIdentifier,
+	const CIdentifier& targetBoxInputIdentifier,
+	const CIdentifier& suggestedLinkIdentifier)
+{
+	uint32 sourceBoxOutputIndex;
+	uint32 targetBoxInputIndex;
+
+	this->getSourceBoxOutputIndex(sourceBoxIdentifier, sourceBoxOutputIdentifier, sourceBoxOutputIndex);
+	this->getTargetBoxInputIndex(targetBoxIdentifier, targetBoxInputIdentifier, targetBoxInputIndex);
+
+	return this->connect(linkIdentifier, sourceBoxIdentifier, sourceBoxOutputIndex, targetBoxIdentifier, targetBoxInputIndex, suggestedLinkIdentifier);
+}
+
 
 bool CScenario::disconnect(const CIdentifier& sourceBoxIdentifier, const uint32 sourceBoxOutputIndex, const CIdentifier& targetBoxIdentifier, const uint32 targetBoxInputIndex)
 {
@@ -1005,6 +1155,21 @@ bool CScenario::disconnect(const CIdentifier& sourceBoxIdentifier, const uint32 
 		"Link is not part of the scenario",
 		ErrorType::ResourceNotFound
 	);
+}
+
+bool CScenario::disconnect(
+	const CIdentifier& sourceBoxIdentifier,
+        const CIdentifier& sourceBoxOutputIdentifier,
+        const CIdentifier& targetBoxIdentifier,
+        const CIdentifier& targetBoxInputIdentifier)
+{
+	uint32 sourceBoxOutputIndex;
+	uint32 targetBoxInputIndex;
+
+	this->getSourceBoxOutputIndex(sourceBoxIdentifier, sourceBoxOutputIdentifier, sourceBoxOutputIndex);
+	this->getTargetBoxInputIndex(targetBoxIdentifier, targetBoxInputIdentifier, targetBoxInputIndex);
+
+	return this->disconnect(sourceBoxIdentifier, sourceBoxOutputIndex, targetBoxIdentifier, targetBoxInputIndex );
 }
 
 bool CScenario::disconnect(const CIdentifier& linkIdentifier)
@@ -1200,50 +1365,117 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 //___________________________________________________________________//
 //                                                                   //
 
-CIdentifier CScenario::getNextNeedsUpdateBoxIdentifier(const CIdentifier& previousIdentifier) const
+CIdentifier CScenario::getNextOutdatedBoxIdentifier(const CIdentifier& previousIdentifier) const
 {
-	return getNextTIdentifier<CBox, TTestTrue<CBox> >(m_BoxesWhichNeedUpdate, previousIdentifier, TTestTrue<CBox>());
+	return getNextTIdentifier<std::shared_ptr<CBox>, TTestTrue<std::shared_ptr<CBox>> >(m_OutdatedBoxes, previousIdentifier, TTestTrue<std::shared_ptr<CBox>>());
 }
 
-bool CScenario::hasNeedsUpdateBox()
+bool CScenario::hasOutdatedBox()
 {
-	return !m_BoxesWhichNeedUpdate.empty();
+	for (auto &box : m_Boxes)
+	{
+		if (box.second->hasAttribute(OV_AttributeId_Box_ToBeUpdated))
+			return true;
+	}
+	return false;
 }
 
-bool CScenario::checkNeedsUpdateBox()
+bool CScenario::isBoxOutdated(const CIdentifier& rBoxIdentifier)
+{
+	IBox* box = getBoxDetails(rBoxIdentifier);
+	if (!box)
+	{
+		return false;
+	}
+	CIdentifier boxHashCode1;
+	CIdentifier boxHashCode2;
+	if (box->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
+	{
+		CIdentifier metaboxId;
+		metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+		boxHashCode1 = getKernelContext().getMetaboxManager().getMetaboxHash(metaboxId);
+	}
+	else
+	{
+		boxHashCode1 = this->getKernelContext().getPluginManager().getPluginObjectHashValue(box->getAlgorithmClassIdentifier());
+	}
+
+	boxHashCode2.fromString(box->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue));
+
+	if(!(boxHashCode1 == OV_UndefinedIdentifier || boxHashCode1 == boxHashCode2))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool CScenario::checkOutdatedBoxes()
 {
 	bool result = false;
-	m_BoxesWhichNeedUpdate.clear();
+
+	m_OutdatedBoxes.clear();
+	m_UpdatedBoxIOCorrespondence[Input] = std::map<CIdentifier, std::map<uint32_t, uint32_t>>();
+	m_UpdatedBoxIOCorrespondence[Output] = std::map<CIdentifier, std::map<uint32_t, uint32_t>>();
+
 	for (auto box : m_Boxes)
 	{
-		CIdentifier boxHashCode1;
-		CIdentifier boxHashCode2;
-		if (box.second->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
+		// Do not attempt to update boxes which do not have existing box algorithm identifiers
+		auto boxAlgorithmClassIdentifier = box.second->getAlgorithmClassIdentifier();
+		if (boxAlgorithmClassIdentifier != OVP_ClassId_BoxAlgorithm_Metabox
+		        && !dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(boxAlgorithmClassIdentifier)))
 		{
-			CIdentifier metaboxId;
-			metaboxId.fromString(box.second->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
-			boxHashCode1 = getKernelContext().getMetaboxManager().getMetaboxHash(metaboxId);
-		}
-		else
-		{
-			boxHashCode1 = this->getKernelContext().getPluginManager().getPluginObjectHashValue(box.second->getAlgorithmClassIdentifier());
+			continue;
 		}
 
-		boxHashCode2.fromString(box.second->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue));
+		// Box Updater instance which is in charge of create updated boxes and links
+		CBoxUpdater boxUpdater(*this, box.second);
 
-		if(!(boxHashCode1 == OV_UndefinedIdentifier || boxHashCode1 == boxHashCode2))
+		if (!boxUpdater.initialize())
 		{
+			OV_WARNING_K("Could not check for update the box with id " << box.second->getIdentifier());
+			continue;
+		}
+
+		// exception for boxes that could not be automatically updated
+		if (boxUpdater.flaggedForManualUpdate())
+		{
+			 if (this->isBoxOutdated(box.second->getIdentifier()))
+			 {
+				auto toBeUpdatedBox = std::shared_ptr<CBox>(new CBox(getKernelContext()));
+				toBeUpdatedBox->initializeFromAlgorithmClassIdentifierNoInit(boxAlgorithmClassIdentifier);
+				m_OutdatedBoxes[box.second->getIdentifier()] = toBeUpdatedBox;
+				m_Boxes[box.first]->setAttributeValue(OV_AttributeId_Box_ToBeUpdated,"");
+				result = true;
+			 }
+			 continue;
+		}
+
+		// collect updated boxes
+		if (boxUpdater.isUpdateRequired())
+		{
+
+			m_UpdatedBoxIOCorrespondence[Input][box.second->getIdentifier()] = boxUpdater.getOriginalToUpdatedInterfacorCorrespondence(Input);
+			m_UpdatedBoxIOCorrespondence[Output][box.second->getIdentifier()] = boxUpdater.getOriginalToUpdatedInterfacorCorrespondence(Output);
+			// it is important to set box algorithm at
+			// last so the box listener is never called
+			boxUpdater.getUpdatedBox().setAlgorithmClassIdentifier(boxAlgorithmClassIdentifier);
+			// copy requested box into a new instance managed in scenario
+			auto newBox = std::shared_ptr<CBox>(new CBox(this->getKernelContext()));
+			newBox->initializeFromExistingBox(boxUpdater.getUpdatedBox());
+			m_OutdatedBoxes[box.second->getIdentifier()] = newBox;
+			m_Boxes[box.first]->setAttributeValue(OV_AttributeId_Box_ToBeUpdated,"");
 			result = true;
-			m_BoxesWhichNeedUpdate.insert(box);
 		}
 	}
 
 	return result;
 }
 
+
 template <class T, class TTest>
 void getIdentifierList(
-	const map<CIdentifier, T*>& elementMap,
+	const map<CIdentifier, T>& elementMap,
 	const TTest& testFunctor,
 	CIdentifier** identifierList,
 	size_t* size)
@@ -1263,42 +1495,374 @@ void getIdentifierList(
 
 void CScenario::getBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<CBox, TTestTrue<CBox> >(m_Boxes, TTestTrue<CBox>(), identifierList, size);
+	getIdentifierList<CBox*, TTestTrue<CBox*> >(m_Boxes, TTestTrue<CBox*>(), identifierList, size);
 }
 void CScenario::getCommentIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<CComment, TTestTrue<CComment> >(m_Comments, TTestTrue<CComment>(), identifierList, size);
+	getIdentifierList<CComment*, TTestTrue<CComment*> >(m_Comments, TTestTrue<CComment*>(), identifierList, size);
 }
 void CScenario::getMetadataIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<CMetadata, TTestTrue<CMetadata> >(m_Metadata, TTestTrue<CMetadata>(), identifierList, size);
+	getIdentifierList<CMetadata*, TTestTrue<CMetadata*> >(m_Metadata, TTestTrue<CMetadata*>(), identifierList, size);
 }
 void CScenario::getLinkIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<CLink, TTestTrue<CLink> >(m_Links, TTestTrue<CLink>(), identifierList, size);
+	getIdentifierList<CLink*, TTestTrue<CLink*> >(m_Links, TTestTrue<CLink*>(), identifierList, size);
 }
 void CScenario::getLinkIdentifierFromBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<CLink, TTestEqSourceBox >(m_Links, TTestEqSourceBox(boxIdentifier), identifierList, size);
+	getIdentifierList<CLink*, TTestEqSourceBox >(m_Links, TTestEqSourceBox(boxIdentifier), identifierList, size);
 }
 void CScenario::getLinkIdentifierFromBoxOutputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t outputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<CLink, TTestEqSourceBoxOutput >(m_Links, TTestEqSourceBoxOutput(boxIdentifier, outputIndex), identifierList, size);
+	getIdentifierList<CLink*, TTestEqSourceBoxOutput >(m_Links, TTestEqSourceBoxOutput(boxIdentifier, outputIndex), identifierList, size);
 }
 void CScenario::getLinkIdentifierToBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<CLink, TTestEqTargetBox >(m_Links, TTestEqTargetBox(boxIdentifier), identifierList, size);
+	getIdentifierList<CLink*, TTestEqTargetBox >(m_Links, TTestEqTargetBox(boxIdentifier), identifierList, size);
 }
 void CScenario::getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<CLink, TTestEqTargetBoxInput >(m_Links, TTestEqTargetBoxInput(boxIdentifier, inputIndex), identifierList, size);
+	getIdentifierList<CLink*, TTestEqTargetBoxInput >(m_Links, TTestEqTargetBoxInput(boxIdentifier, inputIndex), identifierList, size);
 }
-void CScenario::getNeedsUpdateBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getOutdatedBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<CBox, TTestTrue<CBox> >(m_BoxesWhichNeedUpdate, TTestTrue<CBox>(), identifierList, size);
+	getIdentifierList<std::shared_ptr<CBox>, TTestTrue<std::shared_ptr<CBox>>>(m_OutdatedBoxes, TTestTrue<std::shared_ptr<CBox>>(), identifierList, size);
 }
- 
+
 void CScenario::releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const
 {
 	delete[] identifierList;
+}
+
+bool CScenario::getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, uint32& sourceBoxOutputIndex)
+{
+	const auto itSourceBox = m_Boxes.find(sourceBoxIdentifier);
+
+	OV_ERROR_UNLESS_KRF(
+	            itSourceBox != m_Boxes.end(),
+	            "Source Box [" << sourceBoxIdentifier.toString() << "] is not part of the scenario",
+	            ErrorType::ResourceNotFound
+	            );
+
+	m_Boxes[sourceBoxIdentifier]->getInterfacorIndex(Output, sourceBoxOutputIdentifier, sourceBoxOutputIndex);
+
+	return true;
+}
+
+bool CScenario::getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, uint32& targetBoxInputIndex)
+{
+	const auto itTargetBox = m_Boxes.find(targetBoxIdentifier);
+
+	OV_ERROR_UNLESS_KRF(
+	            itTargetBox != m_Boxes.end(),
+	            "Target Box [" << targetBoxIdentifier.toString() << "] is not part of the scenario",
+	            ErrorType::ResourceNotFound
+	            );
+
+	m_Boxes[targetBoxIdentifier]->getInterfacorIndex(Input, targetBoxInputIdentifier, targetBoxInputIndex);
+
+	return true;
+}
+
+bool CScenario::getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentifier, const uint32& sourceBoxOutputIndex, CIdentifier& sourceBoxOutputIdentifier)
+{
+	const auto itSourceBox = m_Boxes.find(sourceBoxIdentifier);
+
+	OV_ERROR_UNLESS_KRF(
+	            itSourceBox != m_Boxes.end(),
+	            "Source Box [" << sourceBoxIdentifier.toString() << "] is not part of the scenario",
+	            ErrorType::ResourceNotFound
+	            );
+
+	m_Boxes[sourceBoxIdentifier]->getInterfacorIdentifier(Output, sourceBoxOutputIndex, sourceBoxOutputIdentifier);
+
+	return true;
+}
+
+bool CScenario::getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifier, const uint32& targetBoxInputIndex, CIdentifier& targetBoxInputIdentifier)
+{
+	const auto itTargetBox = m_Boxes.find(targetBoxIdentifier);
+
+	OV_ERROR_UNLESS_KRF(
+	            itTargetBox != m_Boxes.end(),
+	            "Target Box [" << targetBoxIdentifier.toString() << "] is not part of the scenario",
+	            ErrorType::ResourceNotFound
+	            );
+
+	m_Boxes[targetBoxIdentifier]->getInterfacorIdentifier(Input, targetBoxInputIndex, targetBoxInputIdentifier);
+
+	return true;
+}
+/**
+ * \brief Process to the update of the identified box.
+ *		It consists in recreate the prototype of the box according to the updated reference box which is the box
+ *		resulting of the add/pull requests to the kernel prototype.
+ * \param boxIdentifier		the identifier of the box to be updated
+ * \return   true when update has been done successfully
+ * \return   false in case of failure
+ */
+bool CScenario::updateBox(const CIdentifier &boxIdentifier)
+{
+	// Check if box must be updated
+	const auto itSourceBox = m_Boxes.find(boxIdentifier);
+	OV_ERROR_UNLESS_KRF(
+	            itSourceBox != m_Boxes.end(),
+	            "Box [" << boxIdentifier.toString() << "] is not part of the scenario",
+	            ErrorType::ResourceNotFound
+	            );
+
+	auto itUpdateBox = m_OutdatedBoxes.find(boxIdentifier);
+
+	if (itUpdateBox == m_OutdatedBoxes.end())
+	{
+		this->checkOutdatedBoxes();
+		itUpdateBox = m_OutdatedBoxes.find(boxIdentifier);
+	}
+
+	OV_ERROR_UNLESS_KRF(
+	            itUpdateBox != m_OutdatedBoxes.end(),
+	            "Box [" << boxIdentifier.toString() << "] misses an updated version",
+	            ErrorType::ResourceNotFound
+	            );
+
+
+	if (itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanAddInput)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanAddOutput)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanAddSetting)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanModifyInput)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanModifyOutput)
+	        || itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting)
+	        )
+	{
+		OV_ERROR_KRF(m_Boxes[boxIdentifier]->getName()
+		             << " must be manually updated. Its prototype is too complex.",
+		             ErrorType::NotImplemented);
+	}
+	OV_ERROR_UNLESS_KRF(
+	            itUpdateBox != m_OutdatedBoxes.end(),
+	            "Box [" << boxIdentifier.toString() << "] does not have to be updated",
+	            ErrorType::ResourceNotFound
+	            );
+
+	// get all non-updatable attributes from the source box
+	std::map<CIdentifier, CString> nonUpdatableAttributes;
+	{
+		CIdentifier attributeId = OV_UndefinedIdentifier;
+		while ((attributeId = itSourceBox->second->getNextAttributeIdentifier(attributeId)) != OV_UndefinedIdentifier)
+		{
+			const auto& updatableAttrs = CBoxUpdater::updatableAttributes;
+			if (std::find(updatableAttrs.cbegin(), updatableAttrs.cend(), attributeId) == updatableAttrs.cend())
+			{
+				nonUpdatableAttributes[attributeId] = itSourceBox->second->getAttributeValue(attributeId);
+			}
+		}
+	}
+
+	// gather links coming to and from the box
+	std::map<BoxInterfacorType, std::vector<shared_ptr<CLink>>> links;
+	for (auto interfacorType : { Input, Output })
+	{
+		links[interfacorType] = std::vector<shared_ptr<CLink>>();
+		for (uint32_t index = 0; index < itUpdateBox->second->getInterfacorCountIncludingDeprecated(interfacorType); ++index)
+		{
+			CIdentifier* linkIdentifierList = nullptr;
+			size_t linkCount = 0;
+			if (interfacorType == Input)
+			{
+				this->getLinkIdentifierToBoxInputList(boxIdentifier, index, &linkIdentifierList, &linkCount);
+			}
+			else if (interfacorType == Output)
+			{
+				this->getLinkIdentifierFromBoxOutputList(boxIdentifier, index, &linkIdentifierList, &linkCount);
+			}
+
+			for (size_t i = 0; i < linkCount; ++i)
+			{
+				auto link = shared_ptr<CLink>(new CLink(this->getKernelContext(), *this));
+				link->InitializeFromExistingLink(*this->getLinkDetails(linkIdentifierList[i]));
+				if (this->getLinkDetails(linkIdentifierList[i])->hasAttribute(OV_AttributeId_Link_Invalid))
+				{
+					link->addAttribute(OV_AttributeId_Link_Invalid, "");
+				}
+				links[interfacorType].emplace_back(link);
+			}
+
+			this->releaseIdentifierList(linkIdentifierList);
+		}
+	}
+
+	OV_FATAL_UNLESS_K(this->removeBox(boxIdentifier),
+	                  "Failed to remove redundant box",
+	                  ErrorType::Internal);
+
+	CIdentifier updatedBoxIdentifier;
+	OV_FATAL_UNLESS_K(this->addBox(updatedBoxIdentifier, *(itUpdateBox->second.get()), boxIdentifier),
+	                  "Failed to add box to the scenario",
+	                  ErrorType::Internal);
+
+	OV_FATAL_UNLESS_K(updatedBoxIdentifier == boxIdentifier,
+	                  "Updated box failed to initialize with same identifier",
+	                  ErrorType::Internal);
+
+	auto updatedBox = this->getBoxDetails(boxIdentifier);
+
+	for (const auto& attr : nonUpdatableAttributes)
+	{
+		if (attr.first == OV_AttributeId_Box_ToBeUpdated)
+		{
+			continue;
+		}
+		if (updatedBox->hasAttribute(attr.first))
+		{
+			updatedBox->setAttributeValue(attr.first, attr.second);
+		}
+		else
+		{
+			updatedBox->addAttribute(attr.first, attr.second);
+		}
+	}
+
+	// Reconnect links
+	std::map<BoxInterfacorType, std::set<uint32_t>> isInterfacorConnected;
+	isInterfacorConnected[Input] = std::set<uint32_t>();
+	isInterfacorConnected[Output] = std::set<uint32_t>();
+	for (auto& link : links[Input])
+	{
+		CIdentifier newLinkIdentifier;
+		auto inputIndex = m_UpdatedBoxIOCorrespondence.at(Input).at(boxIdentifier).at(link->getTargetBoxInputIndex());
+		this->connect(newLinkIdentifier,
+		              link->getSourceBoxIdentifier(),
+		              link->getSourceBoxOutputIndex(),
+		              boxIdentifier,
+		              inputIndex,
+		              link->getIdentifier());
+		isInterfacorConnected[Input].insert(inputIndex);
+		if (link->hasAttribute(OV_AttributeId_Link_Invalid))
+		{
+			this->getLinkDetails(newLinkIdentifier)->setAttributeValue(OV_AttributeId_Link_Invalid, "");
+		}
+	}
+	for (const auto& link : links[Output])
+	{
+		CIdentifier newLinkIdentifier;
+		auto outputIndex = m_UpdatedBoxIOCorrespondence.at(Output).at(boxIdentifier).at(link->getSourceBoxOutputIndex());
+		this->connect(newLinkIdentifier,
+		              boxIdentifier,
+		              outputIndex,
+		              link->getTargetBoxIdentifier(),
+		              link->getTargetBoxInputIndex(),
+		              link->getIdentifier());
+		isInterfacorConnected[Output].insert(outputIndex);
+		if (link->hasAttribute(OV_AttributeId_Link_Invalid))
+		{
+			this->getLinkDetails(newLinkIdentifier)->setAttributeValue(OV_AttributeId_Link_Invalid, "");
+		}
+	}
+
+	// Cleanup the i/o that are redundant and disconnected
+	for (auto t : { Input, Output })
+	{
+		uint32_t i = updatedBox->getInterfacorCountIncludingDeprecated(t);
+		while (i > 0)
+		{
+			--i;
+			bool isDeprecated;
+			updatedBox->getInterfacorDeprecatedStatus(t, i, isDeprecated);
+			if (isDeprecated && isInterfacorConnected.at(t).find(i) == isInterfacorConnected.at(t).end())
+			{
+				updatedBox->removeInterfacor(t, i, true);
+			}
+		}
+	}
+
+	// Cleanup the settings that are redundant and have the same value as default
+	uint32_t settingIndex = updatedBox->getInterfacorCountIncludingDeprecated(Setting);
+	while (settingIndex > 0)
+	{
+		settingIndex--;
+		bool isDeprecated;
+		CString value;
+		CString defaultValue;
+		updatedBox->getInterfacorDeprecatedStatus(Setting, settingIndex, isDeprecated);
+		updatedBox->getSettingValue(settingIndex, value);
+		updatedBox->getSettingDefaultValue(settingIndex, defaultValue);
+		if (isDeprecated && value == defaultValue)
+		{
+			updatedBox->removeInterfacor(Setting, settingIndex, true);
+		}
+	}
+
+
+	bool hasDeprecatedInterfacor = false;
+	for (auto t : { Setting, Input, Output })
+	{
+		hasDeprecatedInterfacor |= (updatedBox->getInterfacorCount(t) != updatedBox->getInterfacorCountIncludingDeprecated(t));
+	}
+
+	if (hasDeprecatedInterfacor)
+	{
+		OV_WARNING_K(m_Boxes[boxIdentifier]->getName()
+		             << " box has not been fully updated. Deprecated Inputs, Outputs or Settings are pending.\n"
+		             << " Please remove them before exporting scenario\n");
+		this->getBoxDetails(boxIdentifier)->setAttributeValue(OV_AttributeId_Box_PendingDeprecatedInterfacors, "");
+	}
+	else
+	{
+		this->getLogManager() << LogLevel_Info << m_Boxes[boxIdentifier]->getName()
+		                      << " box has been updated successfully\n";
+	}
+
+	return true;
+}
+
+bool CScenario::removeDeprecatedInterfacorsFromBox(const CIdentifier &boxIdentifier)
+{
+	// Check if box must be updated
+	IBox* box = getBoxDetails(boxIdentifier);
+	if (!box)
+	{
+		return false;
+	}
+
+	for (auto interfacorType : { Input, Output, Setting })
+	{
+		auto interfacorCount = box->getInterfacorCountIncludingDeprecated(interfacorType);
+		if (interfacorCount == 0) {
+			continue;
+		}
+		auto index = interfacorCount;
+		do {
+			index--;
+			bool isDeprecated = false;
+			box->getInterfacorDeprecatedStatus(interfacorType, index, isDeprecated);
+			if (isDeprecated)
+			{
+				box->removeInterfacor(interfacorType, index);
+			}
+		} while (index != 0);
+	}
+
+	this->getLogManager() << LogLevel_Info << m_Boxes[boxIdentifier]->getName()
+	                      << " Deprecated I/O and settings have been removed successfully\n";
+
+	box->removeAttribute(OV_AttributeId_Box_PendingDeprecatedInterfacors);
+
+	return  true;
+}
+
+bool CScenario::containsBoxWithDeprecatedInterfacors() const
+{
+	for (auto box : m_Boxes)
+	{
+		for (const auto interfacorType : { Input, Output, Setting })
+		{
+			if(box.second->getInterfacorCountIncludingDeprecated(interfacorType) > box.second->getInterfacorCount(interfacorType))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
