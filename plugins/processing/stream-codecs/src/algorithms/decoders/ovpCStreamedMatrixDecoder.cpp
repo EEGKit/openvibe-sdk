@@ -15,13 +15,13 @@ using namespace OpenViBEPlugins::StreamCodecs;
 namespace
 {
 	// removes pre and post spaces, tabs and carriage returns
-	const char* trim(char* dst, const char* src1, const char* src2)
+	void trim(char* dst, const char* src1, const char* src2)
 	{
-		if(src1==NULL || *src1=='\0')
+		if(!src1 || *src1=='\0')
 		{
-			return "";
+			dst[0] = '\0';
 		}
-		if(src2==NULL)
+		if(!src2)
 		{
 			src2=src1+strlen(src1)-1;
 		}
@@ -36,7 +36,6 @@ namespace
 		src2++;
 		::strncpy(dst, src1, src2-src1);
 		dst[src2-src1]='\0';
-		return dst;
 	}
 }
 
