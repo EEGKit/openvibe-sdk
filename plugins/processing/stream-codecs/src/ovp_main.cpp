@@ -1,4 +1,5 @@
 #include "algorithms/decoders/ovpCAcquisitionDecoder.h"
+#include "algorithms/decoders/ovpCStreamStructureDecoder.h"
 #include "algorithms/decoders/ovpCExperimentInformationDecoder.h"
 #include "algorithms/decoders/ovpCChannelLocalisationDecoder.h"
 #include "algorithms/decoders/ovpCChannelUnitsDecoder.h"
@@ -23,6 +24,7 @@
 
 OVP_Declare_Begin()
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CAcquisitionDecoderDesc)
+	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CStreamStructureDecoderDesc);
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CExperimentInformationDecoderDesc)
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CChannelLocalisationDecoderDesc)
 	OVP_Declare_New(OpenViBEPlugins::StreamCodecs::CChannelUnitsDecoderDesc)
