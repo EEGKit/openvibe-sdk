@@ -7,7 +7,7 @@
 #include "box-algorithms/ovpCBoxAlgorithmStimulationMultiplexer.h"
 #include "box-algorithms/ovpCBoxAlgorithmStimulationVoter.h"
 
-
+#include "box-algorithms/ovpCBoxAlgorithmStreamEndDetector.h"
 #include "box-algorithms/ovpCBoxAlgorithmTimeout.h"
 
 OVP_Declare_Begin();
@@ -22,6 +22,7 @@ OVP_Declare_Begin();
 	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmPlayerControllerDesc);
 	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmStimulationMultiplexerDesc);
 
+	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmStreamEndDetectorDesc);
 	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmTimeoutDesc);
 
 	OVP_Declare_New(OpenViBEPlugins::Stimulation::CBoxAlgorithmStimulationVoterDesc);

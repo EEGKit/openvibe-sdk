@@ -27,6 +27,12 @@ namespace
 			swap_byte(v, m_ui64InputCountHash);
 			swap_byte(m_ui64InputCountHash, 0x7936A0F3BD12D936LL);
 			m_oHash=m_oHash.toUInteger()^v;
+			if (rIdentifier != OV_UndefinedIdentifier)
+			{
+				v=rIdentifier.toUInteger();
+				swap_byte(v, 0x2BD1D158F340014D);
+				m_oHash=m_oHash.toUInteger()^v;
+			}
 			return true;
 		}
 
@@ -36,21 +42,28 @@ namespace
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash=m_oHash.toUInteger()^v;
-			return true;
-		}
-
-		bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue)
-		{
-			uint64 v=rTypeIdentifier.toUInteger();
-			swap_byte(v, m_ui64SettingCountHash);
-			swap_byte(m_ui64SettingCountHash, 0x3C87F3AAE9F8303BLL);
-			m_oHash=m_oHash.toUInteger()^v;
+			if (rIdentifier != OV_UndefinedIdentifier)
+			{
+				v=rIdentifier.toUInteger();
+				swap_byte(v, 0x87CA0F5EFC4FAC68);
+				m_oHash=m_oHash.toUInteger()^v;
+			}
 			return true;
 		}
 
 		bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::boolean bNotify)
 		{
-			return addSetting(sName, rTypeIdentifier, sDefaultValue);
+			uint64 v=rTypeIdentifier.toUInteger();
+			swap_byte(v, m_ui64SettingCountHash);
+			swap_byte(m_ui64SettingCountHash, 0x3C87F3AAE9F8303BLL);
+			m_oHash=m_oHash.toUInteger()^v;
+			if (rIdentifier != OV_UndefinedIdentifier)
+			{
+				v=rIdentifier.toUInteger();
+				swap_byte(v, 0x17185F7CDA63A9FA);
+				m_oHash=m_oHash.toUInteger()^v;
+			}
+			return true;
 		}
 
 		bool addInputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)

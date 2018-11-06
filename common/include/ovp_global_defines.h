@@ -29,6 +29,17 @@
 #define OVP_GD_Algorithm_OVMatrixFileReader_OutputTriggerId_DataProduced          OpenViBE::CIdentifier(0x76F46051, 0x003B6FE8)
 
 // -----------------------------------------------------
+// EBML stream encoder
+// -----------------------------------------------------
+#define OVP_GD_ClassId_Algorithm_StreamStructureDecoder     OpenViBE::CIdentifier(0xA7EF3E8B, 0x4CF70B74)
+#define OVP_GD_ClassId_Algorithm_StreamStructureDecoderDesc OpenViBE::CIdentifier(0x2E361099, 0xCBE828A7)
+
+#define OVP_GD_Algorithm_StreamStructureDecoder_InputParameterId_MemoryBufferToDecode                              OpenViBE::CIdentifier(0x2F98EA3C, 0xFB0BE096)
+#define OVP_GD_Algorithm_StreamStructureDecoder_OutputTriggerId_ReceivedHeader                                     OpenViBE::CIdentifier(0x815234BF, 0xAABAE5F2)
+#define OVP_GD_Algorithm_StreamStructureDecoder_OutputTriggerId_ReceivedBuffer                                     OpenViBE::CIdentifier(0xAA2738BF, 0xF7FE9FC3)
+#define OVP_GD_Algorithm_StreamStructureDecoder_OutputTriggerId_ReceivedEnd                                        OpenViBE::CIdentifier(0xC4AA114C, 0x628C2D77)
+
+// -----------------------------------------------------
 // Streamed matrix stream encoder
 // -----------------------------------------------------
 

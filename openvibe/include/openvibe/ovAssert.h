@@ -25,6 +25,7 @@
 #include <cassert>
 #include <csignal>
 
+#include "ovCIdentifier.h"
 #include "ov_common_types.h"
 #include "ovITimeArithmetics.h"
 
@@ -72,6 +73,15 @@ namespace OpenViBE
 
 		return os;
 	}
+
+#define HAS_ImbuedOStreamWithCIdentifier
+	inline std::ostream& operator<<(std::ostream& os, const OpenViBE::CIdentifier id)
+	{
+		os << id.toString();
+
+		return os;
+	}
+
 }
 
 /**
