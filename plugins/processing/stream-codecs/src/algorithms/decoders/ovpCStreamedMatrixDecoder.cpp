@@ -139,20 +139,13 @@ void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const EBML::u
 				if(l_rTop==OVTK_NodeId_Header_StreamedMatrix_Dimension_Label)
 				{
 					char l_sDimensionLabel[1024];
-					if (pBuffer)
-					{
-						::trim(l_sDimensionLabel, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), NULL);
-					}
-					else
-					{
-						l_sDimensionLabel[0] = '\0';
-					}
+					::trim(l_sDimensionLabel, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), NULL);
 					op_pMatrix->setDimensionLabel(m_ui32DimensionIndex, m_ui32DimensionEntryIndex++, l_sDimensionLabel);
 				}
 				break;
 
 			case Status_ParsingBuffer:
-				if(l_rTop==OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer && pBuffer)        { System::Memory::copy(op_pMatrix->getBuffer(), pBuffer, m_ui64MatrixBufferSize*sizeof(float64)); }
+				if(l_rTop==OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer)        { System::Memory::copy(op_pMatrix->getBuffer(), pBuffer, m_ui64MatrixBufferSize*sizeof(float64)); }
 				break;
 		}
 	}
