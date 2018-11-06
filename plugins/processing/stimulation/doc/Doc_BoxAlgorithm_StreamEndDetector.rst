@@ -26,7 +26,9 @@ not do any specific decoding.
 Outputs
 -------
 
-.. todo::  Write general output description...
+This box will output a single stimulation after receiving the End chunk. Before
+outputting the stimulation, the stream will contain empty chunks in sync with
+the input stream.
 
 .. csv-table::
    :header: "Output Name", "Stream Type"
