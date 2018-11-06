@@ -118,4 +118,4 @@ ADD_SUBDIRECTORY(openvibe-module-system)
 ADD_SUBDIRECTORY(openvibe-base)
 ADD_SUBDIRECTORY(openvibe-toolkit)
 ADD_SUBDIRECTORY(openvibe-kernel)
-
+ADD_SUBDIRECTORY(openvibe-plugin-stream-codecs)
