@@ -22,17 +22,17 @@ namespace {
 		StreamedMatrixTest()
 		    : m_KernelContext()
 		{
-			m_KernelContext.initialize();
-			m_KernelContext->getPluginManager().addPluginsFromFiles(
-			            m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
 		}
 
 
 		~StreamedMatrixTest() override {
-			m_KernelContext.uninitialize();
 		}
 
 		void SetUp() override {
+			m_KernelContext.initialize();
+			m_KernelContext->getPluginManager().addPluginsFromFiles(
+			            m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
+
 			m_DecoderId = OV_UndefinedIdentifier;
 			m_DecoderId = m_KernelContext->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder);
 			ASSERT_NE(OV_UndefinedIdentifier, m_DecoderId);
@@ -47,6 +47,7 @@ namespace {
 			m_DecoderId = OV_UndefinedIdentifier;
 			ASSERT_TRUE(m_KernelContext->getAlgorithmManager().releaseAlgorithm(m_EncoderId));
 			m_EncoderId = OV_UndefinedIdentifier;
+			m_KernelContext.uninitialize();
 		}
 
 		OpenViBE::CIdentifier m_DecoderId;
