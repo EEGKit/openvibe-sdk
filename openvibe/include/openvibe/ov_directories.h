@@ -16,6 +16,9 @@
 #include <Windows.h>
 #include "m_ConverterUtf8.h"
 #include <memory>
+#elif defined TARGET_OS_Linux
+#include <unistd.h>
+#include <cstring>
 #elif defined TARGET_OS_MacOS
 #include <mach-o/dyld.h>
 #endif
@@ -116,6 +119,11 @@ namespace OpenViBE
 			}
 
 			fullpath = convertPath(utf8Value.get());
+#elif defined TARGET_OS_Linux
+			char path[2048];
+			memset(path, 0, sizeof(path)); // readlink does not produce 0 terminated strings
+			readlink("/proc/self/exe", path, sizeof(path));
+			fullpath = std::string(path);
 #elif defined TARGET_OS_MacOS
 			uint32_t size = 0;
 			_NSGetExecutablePath(nullptr, &size);
