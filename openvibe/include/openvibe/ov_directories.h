@@ -28,36 +28,40 @@ namespace OpenViBE
 	public:
 		static OpenViBE::CString getDistRootDir(void)
 		{
-			return pathFromEnv("OV_PATH_ROOT", OV_CMAKE_PATH_ROOT);
+#ifdef OV_USE_CMAKE_DEFAULT_PATHS
+			return pathFromEnv("OV_PATH_ROOT", OV_CMAKE_PATH_ROOT).c_str();
+#else
+			return pathFromEnv("OV_PATH_ROOT", guessRootDir().c_str()).c_str();
+#endif
 		}
 		static OpenViBE::CString getBinDir(void)
 		{
-			return pathFromEnvOrExtendedRoot("OV_PATH_BIN", "/bin", OV_CMAKE_PATH_BIN);
+			return pathFromEnvOrExtendedRoot("OV_PATH_BIN", "/bin", OV_CMAKE_PATH_BIN).c_str();
 		}
 		static OpenViBE::CString getDataDir(void)
 		{
-			return pathFromEnvOrExtendedRoot("OV_PATH_DATA", "/share/openvibe", OV_CMAKE_PATH_DATA);
+			return pathFromEnvOrExtendedRoot("OV_PATH_DATA", "/share/openvibe", OV_CMAKE_PATH_DATA).c_str();
 		}
 		static OpenViBE::CString getLibDir(void)
 		{
 #if defined TARGET_OS_Windows
-			return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/bin", OV_CMAKE_PATH_BIN);
+			return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/bin", OV_CMAKE_PATH_BIN).c_str();
 #else
-			return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/lib", OV_CMAKE_PATH_LIB);
+			return pathFromEnvOrExtendedRoot("OV_PATH_LIB", "/lib", OV_CMAKE_PATH_LIB).c_str();
 #endif
 		}
 		static OpenViBE::CString getUserHomeDir(void)
 		{
 #if defined TARGET_OS_Windows
-			return pathFromEnv("USERPROFILE", "openvibe-user");
+			return pathFromEnv("USERPROFILE", "openvibe-user").c_str();
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			return pathFromEnv("HOME", "openvibe-user");
+			return pathFromEnv("HOME", "openvibe-user").c_str();
 #endif
 		}
 		static OpenViBE::CString getUserDataDir(void)
 		{
 #if defined TARGET_OS_Windows
-			return  pathFromEnv("APPDATA", "openvibe-user") + "/" + OV_CONFIG_SUBDIR;
+			return  (pathFromEnv("APPDATA", "openvibe-user") + "/" + OV_CONFIG_SUBDIR).c_str();
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return getUserHomeDir() + "/.config/" + OV_CONFIG_SUBDIR;
 #endif
@@ -68,9 +72,9 @@ namespace OpenViBE
 		}
 
 		// Used to convert \ in paths to /, we need this because \ is a special character for .conf token parsing
-		static OpenViBE::CString convertPath(const OpenViBE::CString &strIn)
+		static std::string convertPath(const std::string &strIn)
 		{
-			OpenViBE::CString l_sOut(strIn);
+			std::string l_sOut(strIn);
 			size_t l_sLen = strIn.length();
 			for (size_t i = 0; i<l_sLen; i++)
 			{
@@ -82,12 +86,39 @@ namespace OpenViBE
 			return l_sOut;
 		}
 
+		/// Try to guess the root directory by assuming that any program that uses the kernel is in the bin
+		/// subdirectory of the dist folder.
+		static std::string guessRootDir()
+		{
+#if defined TARGET_OS_Windows
+			// Unlike GetEnvironmentVariableW, this function can not return the length of the actual path
+			std::unique_ptr<wchar_t> utf16value(new wchar_t[1024]);
+			GetModuleFileNameW(nullptr, utf16value.get(), 1024);
+			int multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, nullptr, 0, nullptr, nullptr);
+			if (multiByteSize == 0) {
+				// There are no sensible values to return if the above call fails and the program will not be
+				// able to run in any case.
+				std::abort();
+			}
+			std::unique_ptr<char> utf8Value(new char[static_cast<size_t>(multiByteSize)]);
+			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0) {
+				std::abort();
+			}
+
+			std::string fullpath = convertPath(utf8Value.get());
+#else
+			return "";
+#endif
+			auto slash_before_last = fullpath.find_last_of('/', fullpath.find_last_of('/') - 1);
+			return fullpath.substr(0, slash_before_last);
+		}
+
 	private:
 		// Static class, don't allow instances
 		Directories() { }
 
 		// Returns ENV variable value or sDefaultPath if the variable doesn't exist. The path is converted with each \ to /.
-		static OpenViBE::CString pathFromEnv(const char *sEnvVar, const char *sDefaultPath)
+		static std::string pathFromEnv(const char *sEnvVar, const char *sDefaultPath)
 		{
 #if defined TARGET_OS_Windows
 			// Using std::getenv on Windows yields UTF7 strings which do not work with the utf8_to_utf16 function
@@ -112,11 +143,11 @@ namespace OpenViBE
 #else
 			const char *l_sPathPtr = std::getenv(sEnvVar);
 #endif
-			OpenViBE::CString l_sPath = (l_sPathPtr ? l_sPathPtr : sDefaultPath);
+			std::string l_sPath = (l_sPathPtr ? l_sPathPtr : sDefaultPath);
 			return convertPath(l_sPath);
 		}
 		// Returns ENV variable if it is defined, otherwise it extends the ROOT variable if it exists, finally returns a default path
-		static OpenViBE::CString pathFromEnvOrExtendedRoot(const char* envVar, const char* rootPostfix, const char* defaultPath)
+		static std::string pathFromEnvOrExtendedRoot(const char* envVar, const char* rootPostfix, const char* defaultPath)
 		{
 			if (std::getenv(envVar))
 			{
@@ -127,7 +158,11 @@ namespace OpenViBE
 				// the default case for this one is wrong but it should never happen
 				return pathFromEnv("OV_PATH_ROOT", "") + rootPostfix;
 			}
+#ifdef OV_USE_CMAKE_DEFAULT_PATHS
 			return convertPath(defaultPath);
+#else
+			return guessRootDir() + rootPostfix;
+#endif
 		}
 	};
 }
