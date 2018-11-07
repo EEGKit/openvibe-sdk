@@ -2,6 +2,7 @@
 #define __OpenViBE_Directories_H__
 
 #include <cstdlib>	 // For getenv()
+#include <string>
 
 #include "ovCString.h"
 
@@ -15,6 +16,8 @@
 #include <Windows.h>
 #include "m_ConverterUtf8.h"
 #include <memory>
+#elif defined TARGET_OS_MacOS
+#include <mach-o/dyld.h>
 #endif
 
 namespace OpenViBE
@@ -90,6 +93,13 @@ namespace OpenViBE
 		/// subdirectory of the dist folder.
 		static std::string guessRootDir()
 		{
+			static std::string rootDir;
+			if (!rootDir.empty())
+			{
+				return rootDir;
+			}
+
+			std::string fullpath;
 #if defined TARGET_OS_Windows
 			// Unlike GetEnvironmentVariableW, this function can not return the length of the actual path
 			std::unique_ptr<wchar_t> utf16value(new wchar_t[1024]);
@@ -105,12 +115,22 @@ namespace OpenViBE
 				std::abort();
 			}
 
-			std::string fullpath = convertPath(utf8Value.get());
-#else
-			return "";
+			fullpath = convertPath(utf8Value.get());
+#elif defined TARGET_OS_MacOS
+			uint32_t size = 0;
+			_NSGetExecutablePath(nullptr, &size);
+			std::unique_ptr<char> path(new char[size + 1]);
+
+			if (_NSGetExecutablePath(path.get(), &size) != 0)
+			{
+				std::abort();
+			}
+
+			fullpath = std::string(path.get());
 #endif
 			auto slash_before_last = fullpath.find_last_of('/', fullpath.find_last_of('/') - 1);
-			return fullpath.substr(0, slash_before_last);
+			rootDir = fullpath.substr(0, slash_before_last);
+			return rootDir;
 		}
 
 	private:
