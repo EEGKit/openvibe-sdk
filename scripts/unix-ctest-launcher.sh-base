@@ -3,6 +3,8 @@
 # Set path to OpenViBE shared libraries
 uname_string=$(uname)
 
+export OV_PATH_ROOT="@DIST_BINDIR@/.."
+
 if [[ "$uname_string" == 'Darwin' ]]; then
   export DYLD_LIBRARY_PATH="@DIST_LIBDIR@/:$DYLD_LIBRARY_PATH"
 else
