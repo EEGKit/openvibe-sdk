@@ -15,13 +15,13 @@ using namespace OpenViBEPlugins::StreamCodecs;
 namespace
 {
 	// removes pre and post spaces, tabs and carriage returns
-	const char* sanitize(char* dst, const char* src1, const char* src2)
+	void trim(char* dst, const char* src1, const char* src2)
 	{
-		if(src1==NULL || *src1=='\0')
+		if(!src1 || *src1=='\0')
 		{
-			return "";
+			dst[0] = '\0';
 		}
-		if(src2==NULL)
+		if(!src2)
 		{
 			src2=src1+strlen(src1)-1;
 		}
@@ -36,7 +36,6 @@ namespace
 		src2++;
 		::strncpy(dst, src1, src2-src1);
 		dst[src2-src1]='\0';
-		return dst;
 	}
 }
 
@@ -140,7 +139,8 @@ void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const EBML::u
 				if(l_rTop==OVTK_NodeId_Header_StreamedMatrix_Dimension_Label)
 				{
 					char l_sDimensionLabel[1024];
-					op_pMatrix->setDimensionLabel(m_ui32DimensionIndex, m_ui32DimensionEntryIndex++, ::sanitize(l_sDimensionLabel, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), NULL));
+					::trim(l_sDimensionLabel, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), NULL);
+					op_pMatrix->setDimensionLabel(m_ui32DimensionIndex, m_ui32DimensionEntryIndex++, l_sDimensionLabel);
 				}
 				break;
 

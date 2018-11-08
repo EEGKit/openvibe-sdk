@@ -127,7 +127,6 @@ namespace OpenViBE
 
 #define OVP_Declare_Begin() \
 	static std::vector<OpenViBE::Plugins::IPluginObjectDesc*> g_descriptors; \
-	static std::vector<OpenViBE::Plugins::IPluginObjectDesc*>::iterator l_itDescriptors; \
 	extern "C" \
 	{ \
 		OVP_API OpenViBE::boolean onInitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
@@ -139,9 +138,9 @@ namespace OpenViBE
 #define OVP_Declare_End() \
 			return true; \
 		} \
-		OpenViBE::boolean onUninitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
+		OVP_API OpenViBE::boolean onUninitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
 		{ \
-			for(l_itDescriptors=g_descriptors.begin(); l_itDescriptors!=g_descriptors.end(); l_itDescriptors++) \
+			for(auto l_itDescriptors=g_descriptors.begin(); l_itDescriptors!=g_descriptors.end(); l_itDescriptors++) \
 				delete *l_itDescriptors; \
 			g_descriptors.clear(); \
 			return true; \
