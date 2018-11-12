@@ -58,7 +58,7 @@ Name or identifier of the stimulation to be sent by this box.
 Examples
 --------
 
-It can be combined with :ref:`Doc_BoxAlgorithm_PlayerController`_ to stop a
+It can be combined with :ref:`Doc_BoxAlgorithm_PlayerController` to stop a
 scenario on file end.
 
 
