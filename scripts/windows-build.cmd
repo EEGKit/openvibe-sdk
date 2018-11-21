@@ -168,7 +168,11 @@ call %init_env_cmd% --platform-target %PlatformTarget%
 echo Compiler is: %VSCMake%
 
 if defined vsgenerate (
-	set generator=-G"%VSCMake%" -T "v120"
+	if /i "%PlatformTarget%" == "x64" (
+		set generator=-G"%VSCMake% Win64" -T "v120"
+	) else (
+		set generator=-G"%VSCMake%" -T "v120"	
+	)
 	if not defined build_dir (
 		set build_dir=%script_dir%\..\..\openvibe-sdk-build\vs-project-%PlatformTarget%
 	)
@@ -192,7 +196,7 @@ mkdir %build_dir% 2>NUL
 pushd %build_dir%
 
 set CallCmake=false
-
+		
 if not exist "%build_dir%\CMakeCache.txt" set CallCmake="true"
 if %RerunCmake%=="true" set CallCmake="true"
 if %CallCmake%=="true" (
@@ -228,6 +232,7 @@ if !builder! == None (
 
 	cmake --build . --config %BuildType% --target install
 	if not "!ERRORLEVEL!" == "0" goto terminate_error
+	
 )
 if %PackageOption% == TRUE (
 	cmake --build . --target package
