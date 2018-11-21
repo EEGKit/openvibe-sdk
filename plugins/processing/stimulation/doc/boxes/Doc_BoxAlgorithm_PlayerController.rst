@@ -3,6 +3,13 @@
 Player Controller
 =================
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard
+   :Company:
+      INRIA
+
 
 .. image:: images/Doc_BoxAlgorithm_PlayerController.png
 

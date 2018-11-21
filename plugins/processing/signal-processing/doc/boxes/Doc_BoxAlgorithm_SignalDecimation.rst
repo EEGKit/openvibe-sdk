@@ -3,6 +3,12 @@
 Signal Decimation
 =================
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard
+   :Company:
+      INRIA
 
 .. image:: images/Doc_BoxAlgorithm_SignalDecimation.png
 

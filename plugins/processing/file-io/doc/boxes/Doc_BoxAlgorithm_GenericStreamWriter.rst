@@ -3,6 +3,12 @@
 Generic stream writer
 =====================
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard
+   :Company:
+      INRIA
 
 .. image:: images/Doc_BoxAlgorithm_GenericStreamWriter.png
 

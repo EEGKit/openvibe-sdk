@@ -3,6 +3,13 @@
 Channel Rename
 ==============
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard
+   :Company:
+      INRIA
+
 .. image:: images/Doc_BoxAlgorithm_ChannelRename.png
 
 This box renames the input channels with whatever name the author wants. The names

@@ -3,6 +3,12 @@
 Matrix validity checker
 =======================
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard
+   :Company:
+      INRIA/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_MatrixValidityChecker.png
 

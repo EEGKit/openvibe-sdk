@@ -3,6 +3,12 @@
 Classifier processor
 ====================
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard, Guillaume Serriere
+   :Company:
+      INRIA/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_ClassifierProcessor.png
 

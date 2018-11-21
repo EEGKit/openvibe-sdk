@@ -3,6 +3,12 @@
 Temporal Filter
 ===============
 
+.. container:: attribution
+
+   :Author:
+     Yann Renard & Laurent Bonnet 
+   :Company:
+     Mensia Technologies SA
 
 .. image:: images/Doc_BoxAlgorithm_TemporalFilter.png
 

@@ -3,6 +3,12 @@
 Classifier trainer
 ==================
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard, Guillaume Serriere
+   :Company:
+      INRIA/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_ClassifierTrainer.png
 

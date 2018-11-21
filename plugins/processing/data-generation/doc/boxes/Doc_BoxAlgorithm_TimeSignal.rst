@@ -3,6 +3,12 @@
 Time signal
 ===========
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard
+   :Company:
+      INRIA/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_TimeSignal.png
 

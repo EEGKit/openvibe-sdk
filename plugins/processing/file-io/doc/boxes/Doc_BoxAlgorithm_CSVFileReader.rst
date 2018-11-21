@@ -3,6 +3,12 @@
 CSV File Reader
 ===============
 
+.. container:: attribution
+
+   :Author:
+      Victor Herlin
+   :Company:
+      Mensia Technologies SA
 
 .. image:: images/Doc_BoxAlgorithm_CSVFileReader.png
 

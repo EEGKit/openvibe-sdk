@@ -3,6 +3,12 @@
 Electrode localisation file reader
 ==================================
 
+.. container:: attribution
+
+   :Author:
+      Vincent Delannoy
+   :Company:
+      INRIA/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_ElectrodeLocalisationFileReader.png
 

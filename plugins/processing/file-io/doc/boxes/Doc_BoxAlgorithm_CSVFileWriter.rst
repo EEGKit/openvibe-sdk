@@ -3,6 +3,13 @@
 CSV File Writer
 ===============
 
+.. container:: attribution
+
+   :Author:
+      Victor Herlin
+   :Company:
+      Mensia Technologies SA
+
 
 .. image:: images/Doc_BoxAlgorithm_CSVFileWriter.png
 

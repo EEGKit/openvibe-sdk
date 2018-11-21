@@ -3,6 +3,12 @@
 Spatial Filter
 ==============
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard, Jussi T. Lindgren
+   :Company:
+      Inria
 
 .. image:: images/Doc_BoxAlgorithm_SpatialFilter.png
 

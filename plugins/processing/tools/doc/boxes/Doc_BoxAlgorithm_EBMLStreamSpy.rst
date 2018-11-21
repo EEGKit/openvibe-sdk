@@ -3,6 +3,12 @@
 EBML stream spy
 ===============
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard
+   :Company:
+      INRIA/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_EBMLStreamSpy.png
 

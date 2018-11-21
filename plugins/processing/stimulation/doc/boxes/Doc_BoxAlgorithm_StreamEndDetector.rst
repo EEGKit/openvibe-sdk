@@ -3,6 +3,14 @@
 Stream End Detector
 ===================
 
+.. container:: attribution
+
+   :Author:
+      Jozef Legeny
+   :Company:
+      Mensia Technologies
+
+
 This box waits until it receives an End chunk in the incoming stream and sends
 a stimulation once it receives it.
 

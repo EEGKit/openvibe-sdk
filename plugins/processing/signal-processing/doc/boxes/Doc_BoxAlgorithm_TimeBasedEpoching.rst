@@ -3,6 +3,12 @@
 Time based epoching
 ===================
 
+.. container:: attribution
+
+   :Author:
+      Quentin Barthelemy
+   :Company:
+      Mensia Technologies SA
 
 .. image:: images/Doc_BoxAlgorithm_TimeBasedEpoching.png
 

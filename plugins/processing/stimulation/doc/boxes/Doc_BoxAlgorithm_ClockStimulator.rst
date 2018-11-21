@@ -3,6 +3,12 @@
 Clock stimulator
 ================
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard
+   :Company:
+      INRIA/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_ClockStimulator.png
 

@@ -3,6 +3,12 @@
 Signal average
 ==============
 
+.. container:: attribution
+
+   :Author:
+      Bruno Renier
+   :Company:
+      INRIA/IRISA
 
 .. image:: images/Doc_BoxAlgorithm_SignalAverage.png
 

@@ -3,6 +3,12 @@
 Stimulation Voter
 =================
 
+.. container:: attribution
+
+   :Author:
+      Jussi T. Lindgren
+   :Company:
+      Inria
 
 .. image:: images/Doc_BoxAlgorithm_StimulationVoter.png
 

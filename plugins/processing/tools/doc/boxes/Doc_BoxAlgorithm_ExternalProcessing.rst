@@ -3,6 +3,12 @@
 External Processing
 ===================
 
+.. container:: attribution
+
+   :Author:
+      Alexis Placet
+   :Company:
+      Mensia Technologies SA
 
 .. image:: images/Doc_BoxAlgorithm_ExternalProcessing.png
 

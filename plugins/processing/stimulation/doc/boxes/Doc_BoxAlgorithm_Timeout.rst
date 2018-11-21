@@ -3,6 +3,12 @@
 Timeout
 =======
 
+.. container:: attribution
+
+   :Author:
+      Jozef Legény
+   :Company:
+      Inria
 
 .. image:: images/Doc_BoxAlgorithm_Timeout.png
 

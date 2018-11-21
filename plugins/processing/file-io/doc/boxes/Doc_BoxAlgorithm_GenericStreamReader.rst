@@ -3,6 +3,12 @@
 Generic stream reader
 =====================
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard
+   :Company:
+      INRIA
 
 .. image:: images/Doc_BoxAlgorithm_GenericStreamReader.png
 

@@ -3,6 +3,13 @@
 Windowing
 =========
 
+.. container:: attribution
+
+   :Author:
+      Laurent Bonnet
+   :Company:
+      Mensia Technologies SA
+
 
 .. image:: images/Doc_BoxAlgorithm_Windowing.png
 

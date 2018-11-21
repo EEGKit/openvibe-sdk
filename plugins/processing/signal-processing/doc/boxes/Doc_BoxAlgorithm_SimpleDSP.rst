@@ -3,6 +3,12 @@
 Simple DSP
 ==========
 
+.. container:: attribution
+
+   :Author:
+      Bruno Renier / Yann Renard
+   :Company:
+      INRIA / IRISA
 
 .. image:: images/Doc_BoxAlgorithm_SimpleDSP.png
 

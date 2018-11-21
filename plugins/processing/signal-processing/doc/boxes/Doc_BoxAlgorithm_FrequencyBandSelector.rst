@@ -3,6 +3,12 @@
 Frequency Band Selector
 =======================
 
+.. container:: attribution
+
+   :Author:
+      Yann Renard
+   :Company:
+      INRIA
 
 .. image:: images/Doc_BoxAlgorithm_FrequencyBandSelector.png
 

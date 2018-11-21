@@ -3,6 +3,12 @@
 Stimulation based epoching
 ==========================
 
+.. container:: attribution
+
+   :Author:
+      Jozef Legeny
+   :Company:
+      Mensia Technologies
 
 .. image:: images/Doc_BoxAlgorithm_StimulationBasedEpoching.png
 
