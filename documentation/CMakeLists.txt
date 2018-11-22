@@ -41,38 +41,6 @@ endforeach()
 INSTALL(DIRECTORY sphinx/source DESTINATION ${DIST_DOCTMP}/sphinx)
 INSTALL(FILES sphinx/make.bat DESTINATION ${DIST_DOCTMP}/sphinx)
 INSTALL(FILES sphinx/Makefile DESTINATION ${DIST_DOCTMP}/sphinx)
+INSTALL(FILES sphinx/build-documentation.cmd DESTINATION ${DIST_DOCTMP})
+INSTALL(FILES sphinx/build-documentation.sh DESTINATION ${DIST_DOCTMP})
 
-FILE(WRITE "${DIST_DOCTMP}/build-documentation.sh" "\
-export OV_PATH_ROOT=\"\${PWD}/..\"\n\
-export LD_LIBRARY_PATH=\"\${OV_PATH_ROOT}/lib\"\n\
-export DYLD_LIBRARY_PATH=\"\${OV_PATH_ROOT}/lib\"\n\
-mkdir -p sphinx/templates
-\"\${OV_PATH_ROOT}/bin/openvibe-plugin-inspector\" --box-doc-directory sphinx/templates\n\
-mv sphinx/templates/index-boxes.rst sphinx/source/boxes\n\
-\n\
-pushd sphinx\n\
-make html\n\
-popd\n\
-rm -fr \"../doc/NeuroRT Manual\"\n\
-mkdir -p ../doc\n\
-mv sphinx/build/html \"../doc/NeuroRT Manual\"\n\
-\n")
-
-
-FILE(WRITE "${DIST_DOCTMP}/build-documentation.cmd" "\
-setlocal\n\
-setlocal enableextensions\n\
-\n\
-set \"OV_PATH_ROOT=%~dp0\..\"\n\
-set \"PATH=%OV_PATH_ROOT%/bin;%PATH%\"\n\
-set \"TEMPLATE_DIR=sphinx\templates\"\n\
-if not exist %TEMPLATE_DIR% (md %TEMPLATE_DIR%)\n\
-call openvibe-plugin-inspector --box-doc-directory sphinx/templates\n\
-move sphinx\\templates\\index-boxes.rst sphinx\\source\\boxes\n\
-pushd sphinx\n\
-call make.bat html\n\
-popd\n\
-endlocal\n\
-mkdir ..\\doc\n\
-move sphinx\\build\\html \"..\\doc\\NeuroRT Manual\"\n\
-\n")
