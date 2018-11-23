@@ -3,6 +3,14 @@
 Stream End Detector
 ===================
 
+.. container:: attribution
+
+   :Author:
+      Jozef Legeny
+   :Company:
+      Mensia Technologies
+
+
 This box waits until it receives an End chunk in the incoming stream and sends
 a stimulation once it receives it.
 
@@ -58,7 +66,7 @@ Name or identifier of the stimulation to be sent by this box.
 Examples
 --------
 
-It can be combined with :ref:`Doc_BoxAlgorithm_PlayerController`_ to stop a
+It can be combined with :ref:`Doc_BoxAlgorithm_PlayerController` to stop a
 scenario on file end.
 
 

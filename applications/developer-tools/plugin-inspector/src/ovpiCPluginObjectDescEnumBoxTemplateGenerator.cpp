@@ -107,25 +107,32 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 
 
 	IBox& box=*m_Scenario->getBoxDetails(boxIdentifier);
-	
+
 	m_KernelContext.getLogManager() << LogLevel_Trace << "Working on [" << CString(fileName.c_str()) << "]\n";
-	 
+
 	// --------------------------------------------------------------------------------------------------------------------
 	std::ofstream ofBoxTemplate;
 	FS::Files::openOFStream(ofBoxTemplate, (m_DocTemplateDirectory + "/Doc_" + fileName + ".rst-template").c_str());
-	
+
 	if (!ofBoxTemplate.good())
 	{
-		m_KernelContext.getLogManager() << LogLevel_Error << "Error while trying to open file [" 
-			<< (m_DocTemplateDirectory+"/Doc_"+fileName+".rst-template").c_str() 
+		m_KernelContext.getLogManager() << LogLevel_Error << "Error while trying to open file ["
+			<< (m_DocTemplateDirectory+"/Doc_"+fileName+".rst-template").c_str()
 			<< "]\n";
 		return false;
 	}
-	
+
 	ofBoxTemplate
 		<< ".. _Doc_" << fileName << ":\n"
 		<< "\n"
 		<< ::generateRstTitle(rPluginObjectDesc.getName().toASCIIString(), 0)
+	    << "\n"
+	    << ".. container:: attribution\n"
+		<< "\n"
+		<< "   :Author:\n"
+	    << "      " << rPluginObjectDesc.getAuthorName().toASCIIString() << "\n"
+	    << "   :Company:\n"
+	    << "      " << rPluginObjectDesc.getAuthorCompanyName().toASCIIString() <<"\n"
 		<< "\n"
 		<< "\n"
 		<< ".. todo::  Write general box description...\n"

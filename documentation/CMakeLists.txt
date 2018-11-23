@@ -21,4 +21,26 @@ if(BUILD_DOCUMENTATION)
 
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION ${DIST_DOCDIR})
     install(DIRECTORY doc/ DESTINATION ${DIST_DOCDIR}/html)
+
 endif()
+
+# Sphinx Documentation
+
+FILE(MAKE_DIRECTORY "${DIST_DOCTMP}/sphinx")
+FILE(MAKE_DIRECTORY "${DIST_DOCTMP}/sphinx/templates")
+
+# Collect all sphinx documentation files from all projects
+
+file(GLOB SPHINX_DOC_DIRS LIST_DIRECTORIES true LIST_FILES false "${PROJECT_SOURCE_DIR}/plugins/processing/*")
+foreach(DOCDIR ${SPHINX_DOC_DIRS})
+	if(IS_DIRECTORY "${DOCDIR}/doc/boxes")
+		INSTALL(DIRECTORY "${DOCDIR}/doc/boxes" DESTINATION ${DIST_DOCTMP}/sphinx/source)
+	endif()
+endforeach()
+
+INSTALL(DIRECTORY sphinx/source DESTINATION ${DIST_DOCTMP}/sphinx)
+INSTALL(FILES sphinx/make.bat DESTINATION ${DIST_DOCTMP}/sphinx)
+INSTALL(FILES sphinx/Makefile DESTINATION ${DIST_DOCTMP}/sphinx)
+INSTALL(FILES sphinx/build-documentation.cmd DESTINATION ${DIST_DOCTMP})
+INSTALL(FILES sphinx/build-documentation.sh DESTINATION ${DIST_DOCTMP})
+
