@@ -4,6 +4,7 @@
 #include "ovkTKernelObject.h"
 
 #include <vector>
+#include <mutex>
 
 namespace OpenViBE
 {
@@ -25,6 +26,8 @@ namespace OpenViBE
 		protected:
 
 			std::vector<OpenViBE::IObject*> m_oCreatedObjects;
+
+			std::mutex m_oMutex;
 		};
 	};
 };

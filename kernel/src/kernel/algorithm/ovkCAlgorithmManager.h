@@ -4,6 +4,7 @@
 #include "../ovkTKernelObject.h"
 
 #include <map>
+#include <mutex>
 
 namespace OpenViBE
 {
@@ -41,6 +42,9 @@ namespace OpenViBE
 
 			using AlgorithmMap = std::map < OpenViBE::CIdentifier, OpenViBE::Kernel::CAlgorithmProxy* >;
 			AlgorithmMap m_vAlgorithms;
+	
+			mutable std::mutex m_oMutex;
+
 		};
 	};
 };

@@ -5,6 +5,7 @@
 
 #include <map>
 #include <string>
+#include <mutex>
 
 namespace OpenViBE
 {
@@ -122,6 +123,8 @@ namespace OpenViBE
 
 			std::map < OpenViBE::CIdentifier, OpenViBE::Kernel::SConfigurationToken > m_vConfigurationToken;
 			std::map < OpenViBE::CString, const OpenViBE::Kernel::IConfigurationKeywordExpandCallback*> m_vKeywordOverride;
+
+			mutable std::recursive_mutex m_oMutex;
 		};
 	}
 }

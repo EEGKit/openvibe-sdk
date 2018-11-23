@@ -109,17 +109,34 @@ void CLogManager::log(const CIdentifier& rValue)
 
 void CLogManager::log(const CString& rValue)
 {
-	logForEach<const CString&>(rValue);
+	log(rValue.toASCIIString());
 }
 
 void CLogManager::log(const char* rValue)
 {
 	logForEach<const char*>(rValue);
+
+	{
+		GRAB_OWNERSHIP;
+
+		std::string l_sCopy(rValue);
+		if(l_sCopy.length()>0 && l_sCopy[l_sCopy.length()-1]=='\n')
+		{
+			// we are done, release
+			m_oOwner = std::thread::id();
+			m_oCondition.notify_one();
+		}
+	}
 }
 
 void CLogManager::log(const ELogLevel eLogLevel)
 {
-	m_eCurrentLogLevel=eLogLevel;
+	{
+		GRAB_OWNERSHIP;
+
+		m_eCurrentLogLevel=eLogLevel;
+	}
+
 	logForEach<ELogLevel>(eLogLevel);
 }
 
@@ -130,6 +147,8 @@ void CLogManager::log(const ELogColor eLogColor)
 
 boolean CLogManager::addListener(ILogListener* pListener)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	if(pListener==NULL)
 	{
 		return false;
@@ -151,6 +170,8 @@ boolean CLogManager::addListener(ILogListener* pListener)
 
 boolean CLogManager::removeListener(ILogListener* pListener)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	vector<ILogListener*>::iterator itLogListener=m_vListener.begin();
 	while(itLogListener!=m_vListener.end())
 	{

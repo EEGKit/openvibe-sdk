@@ -29,6 +29,8 @@ Kernel::CKernelObjectFactory::CKernelObjectFactory(const Kernel::IKernelContext&
 IObject* Kernel::CKernelObjectFactory::createObject(
 	const CIdentifier& rClassIdentifier)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	IObject* l_pResult=NULL;
 
 	create(rClassIdentifier, OV_ClassId_Kernel_Plugins_PluginModule,              l_pResult, Kernel::CPluginModule);
@@ -47,6 +49,8 @@ IObject* Kernel::CKernelObjectFactory::createObject(
 boolean Kernel::CKernelObjectFactory::releaseObject(
 	IObject* pObject)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	if(!pObject)
 	{
 		return true;

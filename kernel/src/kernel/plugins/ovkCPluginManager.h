@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <map>
+#include <mutex>
 
 namespace OpenViBE
 {
@@ -70,6 +71,8 @@ namespace OpenViBE
 			std::vector < OpenViBE::Kernel::IPluginModule* > m_vPluginModule;
 			std::map < OpenViBE::Plugins::IPluginObjectDesc*, OpenViBE::Kernel::IPluginModule* > m_vPluginObjectDesc;
 			std::map < OpenViBE::Plugins::IPluginObjectDesc*, std::vector<OpenViBE::Plugins::IPluginObject* > > m_vPluginObject;
+
+			mutable std::mutex m_oMutex;
 		};
 	};
 };

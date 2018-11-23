@@ -15,6 +15,8 @@ CAlgorithmManager::CAlgorithmManager(const IKernelContext& rKernelContext)
 
 CAlgorithmManager::~CAlgorithmManager(void)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	for(auto& algorithm : m_vAlgorithms)
 	{
 		CAlgorithmProxy* l_pAlgorithmProxy = algorithm.second;
@@ -44,13 +46,20 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	CIdentifier l_oAlgorithmIdentifier=getUnusedIdentifier();
 	CAlgorithmProxy* l_pAlgorithmProxy=new CAlgorithmProxy(getKernelContext(), *l_pAlgorithm, *l_pAlgorithmDesc);
 
-	m_vAlgorithms[l_oAlgorithmIdentifier]=l_pAlgorithmProxy;
+	{
+		std::unique_lock<std::mutex> lock(m_oMutex);
+
+		m_vAlgorithms[l_oAlgorithmIdentifier]=l_pAlgorithmProxy;
+	}
+
 	return l_oAlgorithmIdentifier;
 }
 
 CIdentifier CAlgorithmManager::createAlgorithm(
 		const IAlgorithmDesc& rAlgorithmDesc)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	IAlgorithm* l_pAlgorithm=getKernelContext().getPluginManager().createAlgorithm(rAlgorithmDesc);
 
 	OV_ERROR_UNLESS_KRU(
@@ -71,6 +80,8 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 boolean CAlgorithmManager::releaseAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	AlgorithmMap::iterator itAlgorithm = m_vAlgorithms.find(rAlgorithmIdentifier);
 
 	OV_ERROR_UNLESS_KRF(
@@ -98,6 +109,8 @@ boolean CAlgorithmManager::releaseAlgorithm(
 boolean CAlgorithmManager::releaseAlgorithm(
 	IAlgorithmProxy& rAlgorithm)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	bool l_bResult = false;
 	for(auto& algorithm : m_vAlgorithms)
 	{
@@ -129,6 +142,8 @@ boolean CAlgorithmManager::releaseAlgorithm(
 IAlgorithmProxy& CAlgorithmManager::getAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	AlgorithmMap::const_iterator itAlgorithm = m_vAlgorithms.find(rAlgorithmIdentifier);
 
 	OV_FATAL_UNLESS_K(
@@ -143,6 +158,8 @@ IAlgorithmProxy& CAlgorithmManager::getAlgorithm(
 CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(
 	const CIdentifier& rPreviousIdentifier) const
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	AlgorithmMap::const_iterator itAlgorithm=m_vAlgorithms.begin();
 
 	if(rPreviousIdentifier==OV_UndefinedIdentifier)
@@ -158,14 +175,16 @@ CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(
 		}
 		++itAlgorithm;
 	}
-
-	return itAlgorithm!=m_vAlgorithms.end()?itAlgorithm->first:OV_UndefinedIdentifier;
+	return ( itAlgorithm!=m_vAlgorithms.end()?itAlgorithm->first:OV_UndefinedIdentifier );
 }
 
 CIdentifier CAlgorithmManager::getUnusedIdentifier(void) const
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	uint64 l_ui64Identifier=System::Math::randomUInteger64();
 	CIdentifier l_oResult;
+
 	AlgorithmMap::const_iterator i;
 	do
 	{
@@ -174,5 +193,6 @@ CIdentifier CAlgorithmManager::getUnusedIdentifier(void) const
 		i=m_vAlgorithms.find(l_oResult);
 	}
 	while(i!=m_vAlgorithms.end() || l_oResult==OV_UndefinedIdentifier);
+
 	return l_oResult;
 }
