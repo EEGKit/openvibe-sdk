@@ -189,12 +189,16 @@ CConfigurationManager::CConfigurationManager(const IKernelContext& rKernelContex
 
 void CConfigurationManager::clear(void)
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	m_vConfigurationToken.clear();
 }
 
 bool CConfigurationManager::addConfigurationFromFile(
 	const CString& rFileNameWildCard)
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	this->getLogManager() << LogLevel_Trace << "Adding configuration file(s) [" << rFileNameWildCard << "]\n";
 
 
@@ -213,6 +217,8 @@ CIdentifier CConfigurationManager::createConfigurationToken(
 	const CString& rConfigurationTokenName,
 	const CString& rConfigurationTokenValue)
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	OV_ERROR_UNLESS_KRF(
 		this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false) == OV_UndefinedIdentifier,
 		"Configuration token name " << rConfigurationTokenName << " already exists",
@@ -228,6 +234,8 @@ CIdentifier CConfigurationManager::createConfigurationToken(
 bool CConfigurationManager::releaseConfigurationToken(
 	const CIdentifier& rConfigurationTokenIdentifier)
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	std::map < CIdentifier, SConfigurationToken >::iterator itConfigurationToken=m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 
 	OV_ERROR_UNLESS_KRF(
@@ -243,6 +251,8 @@ bool CConfigurationManager::releaseConfigurationToken(
 CIdentifier CConfigurationManager::getNextConfigurationTokenIdentifier(
 	const CIdentifier& rPreviousConfigurationTokenIdentifier) const
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	std::map < CIdentifier, SConfigurationToken >::const_iterator itConfigurationToken;
 
 	if(rPreviousConfigurationTokenIdentifier==OV_UndefinedIdentifier)
@@ -267,6 +277,8 @@ CIdentifier CConfigurationManager::getNextConfigurationTokenIdentifier(
 CString CConfigurationManager::getConfigurationTokenName(
 	const CIdentifier& rConfigurationTokenIdentifier) const
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	std::map < CIdentifier, SConfigurationToken >::const_iterator itConfigurationToken=m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 	if(itConfigurationToken!=m_vConfigurationToken.end())
 	{
@@ -278,6 +290,8 @@ CString CConfigurationManager::getConfigurationTokenName(
 CString CConfigurationManager::getConfigurationTokenValue(
 	const CIdentifier& rConfigurationTokenIdentifier) const
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	std::map < CIdentifier, SConfigurationToken >::const_iterator itConfigurationToken=m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 	if(itConfigurationToken!=m_vConfigurationToken.end())
 	{
@@ -292,6 +306,8 @@ bool CConfigurationManager::setConfigurationTokenName(
 	const CIdentifier& rConfigurationTokenIdentifier,
 	const CString& rConfigurationTokenName)
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	OV_ERROR_UNLESS_KRF(
 		this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false) == OV_UndefinedIdentifier,
 		"Configuration token name " << rConfigurationTokenName << " already exists",
@@ -314,6 +330,8 @@ bool CConfigurationManager::setConfigurationTokenValue(
 	const CIdentifier& rConfigurationTokenIdentifier,
 	const CString& rConfigurationTokenValue)
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	std::map < CIdentifier, SConfigurationToken >::iterator itConfigurationToken=m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 
 	OV_ERROR_UNLESS_KRF(
@@ -347,6 +365,8 @@ CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(
 	const CString& rConfigurationTokenName,
 	const bool bRecursive) const
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	std::map < CIdentifier, SConfigurationToken >::const_iterator itConfigurationToken=m_vConfigurationToken.begin();
 	while(itConfigurationToken!=m_vConfigurationToken.end())
 	{
@@ -366,6 +386,8 @@ CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(
 CString CConfigurationManager::lookUpConfigurationTokenValue(
 	const CString& rConfigurationTokenName) const
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	std::map < CIdentifier, SConfigurationToken >::const_iterator itConfigurationToken=m_vConfigurationToken.begin();
 	while(itConfigurationToken!=m_vConfigurationToken.end())
 	{
@@ -386,6 +408,8 @@ CString CConfigurationManager::lookUpConfigurationTokenValue(
 
 bool CConfigurationManager::registerKeywordParser(const OpenViBE::CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback)
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	OV_ERROR_UNLESS_KRF(
 		rKeyword != CString("") && rKeyword != CString("core") && rKeyword != CString("environment"),
 		"Trying to overwrite internal keyword " << rKeyword,
@@ -399,6 +423,8 @@ bool CConfigurationManager::registerKeywordParser(const OpenViBE::CString& rKeyw
 
 bool CConfigurationManager::unregisterKeywordParser(const OpenViBE::CString& rKeyword)
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	OV_ERROR_UNLESS_KRF(
 		m_vKeywordOverride.count(rKeyword),
 		"Override for keyword [" << rKeyword << "] was not found",
@@ -412,6 +438,8 @@ bool CConfigurationManager::unregisterKeywordParser(const OpenViBE::CString& rKe
 
 bool CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordExpandCallback& rCallback)
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	std::map < OpenViBE::CString, const OpenViBE::Kernel::IConfigurationKeywordExpandCallback*>::iterator l_itOverrideIterator = m_vKeywordOverride.begin();
 
 	bool l_bResult = false;
@@ -453,6 +481,8 @@ CString CConfigurationManager::expand(
 
 CIdentifier CConfigurationManager::getUnusedIdentifier(void) const
 {
+	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
+
 	uint64_t l_ui64Identifier=(((uint64_t)rand())<<32)+((uint64_t)rand());
 	CIdentifier l_oResult;
 	std::map < CIdentifier, SConfigurationToken >::const_iterator i;

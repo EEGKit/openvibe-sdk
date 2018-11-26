@@ -6,6 +6,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include <mutex>
 
 namespace OpenViBE
 {
@@ -19,7 +20,7 @@ namespace OpenViBE
 
 			virtual OpenViBE::CIdentifier getNextTypeIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
-				
+
 			virtual std::vector<std::pair<CIdentifier, CString> > getSortedTypes() const;
 
 			virtual bool registerType(
@@ -100,7 +101,7 @@ namespace OpenViBE
 				const OpenViBE::CString& rEntryCompositionName) const;
 
 			virtual bool evaluateSettingValue(
-				const CString settingValue, 
+				const CString settingValue,
 				float64& numericResult) const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ITypeManager>, OVK_ClassId_Kernel_TypeManager);
@@ -112,6 +113,8 @@ namespace OpenViBE
 			std::map<OpenViBE::CIdentifier, std::map<uint64_t, OpenViBE::CString> > m_vEnumeration;
 			std::map<OpenViBE::CIdentifier, std::map<uint64_t, OpenViBE::CString> > m_vBitMask;
 			std::map<OpenViBE::CIdentifier, OpenViBE::CIdentifier> m_vStream;
+
+			mutable std::recursive_mutex m_oMutex;
 		};
 	};
 };

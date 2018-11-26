@@ -138,6 +138,8 @@ CPluginManager::CPluginManager(const IKernelContext& rKernelContext)
 
 CPluginManager::~CPluginManager(void)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	for (auto& pluginObjectVector : m_vPluginObject)
 	{
 		for (auto& pluginObject : pluginObjectVector.second)
@@ -167,6 +169,8 @@ CPluginManager::~CPluginManager(void)
 bool CPluginManager::addPluginsFromFiles(
 	const CString& rFileNameWildCard)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	this->getLogManager() << LogLevel_Info << "Adding plugins from [" << rFileNameWildCard << "]\n";
 
 	bool l_bResult = true;
@@ -194,12 +198,16 @@ bool CPluginManager::addPluginsFromFiles(
 bool CPluginManager::registerPluginDesc(
 	const IPluginObjectDesc& rPluginObjectDesc)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	m_vPluginObjectDesc [ const_cast < IPluginObjectDesc * > (&rPluginObjectDesc) ] = NULL;
 	return true;
 }
 
 CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	bool l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
 	for(const auto& elem : m_vPluginObjectDesc)
 	{
@@ -222,6 +230,8 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(
 	const CIdentifier& rPreviousIdentifier,
 	const CIdentifier& rBaseClassIdentifier) const
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	bool l_bFoundPrevious=(rPreviousIdentifier==OV_UndefinedIdentifier);
 	for(const auto& elem : m_vPluginObjectDesc)
 	{
@@ -246,6 +256,8 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(
 bool CPluginManager::canCreatePluginObject(
 	const CIdentifier& rClassIdentifier)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 //	this->getLogManager() << LogLevel_Debug << "Searching if can build plugin object\n";
 
 	return std::any_of(m_vPluginObjectDesc.begin(), m_vPluginObjectDesc.end(),
@@ -257,6 +269,8 @@ bool CPluginManager::canCreatePluginObject(
 const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(
 	const CIdentifier& rClassIdentifier) const
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 //	this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
 	for(auto& pluginObject : m_vPluginObjectDesc)
@@ -274,6 +288,8 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(
 const IPluginObjectDesc* CPluginManager::getPluginObjectDescCreating(
 	const CIdentifier& rClassIdentifier) const
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 //	this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
 	auto elem = std::find_if(m_vPluginObjectDesc.begin(), m_vPluginObjectDesc.end(),
@@ -292,6 +308,8 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDescCreating(
 CIdentifier CPluginManager::getPluginObjectHashValue(
 	const CIdentifier& rClassIdentifier) const
 {
+//	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	const IPluginObjectDesc* l_pPluginObjectDesc=this->getPluginObjectDescCreating(rClassIdentifier);
 	const IBoxAlgorithmDesc* l_pBoxAlgorithmDesc=dynamic_cast<const IBoxAlgorithmDesc*>(l_pPluginObjectDesc);
 	if(l_pBoxAlgorithmDesc)
@@ -305,6 +323,8 @@ CIdentifier CPluginManager::getPluginObjectHashValue(
 
 CIdentifier CPluginManager::getPluginObjectHashValue(const IBoxAlgorithmDesc& rBoxAlgorithmDesc) const
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	SBoxProto l_oBoxPrototype(getKernelContext().getTypeManager());
 	rBoxAlgorithmDesc.getBoxPrototype(l_oBoxPrototype);
 	return l_oBoxPrototype.m_oHash;
@@ -313,6 +333,8 @@ CIdentifier CPluginManager::getPluginObjectHashValue(const IBoxAlgorithmDesc& rB
 bool CPluginManager::isPluginObjectFlaggedAsDeprecated(
 	const CIdentifier& rClassIdentifier) const
 {
+//	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	const IPluginObjectDesc* l_pPluginObjectDesc=this->getPluginObjectDescCreating(rClassIdentifier);
 	const IBoxAlgorithmDesc* l_pBoxAlgorithmDesc=dynamic_cast<const IBoxAlgorithmDesc*>(l_pPluginObjectDesc);
 	if(l_pBoxAlgorithmDesc)
@@ -339,14 +361,18 @@ bool CPluginManager::releasePluginObject(IPluginObject* pPluginObject)
 		"Plugin object value is null",
 		OpenViBE::Kernel::ErrorType::BadProcessing);
 
-	for(auto& elem : m_vPluginObject)
 	{
-		auto pluginObjectIt = std::find(elem.second.begin(), elem.second.end(), pPluginObject);
-		if (pluginObjectIt != elem.second.end())
+		std::unique_lock<std::mutex> lock(m_oMutex);
+
+		for(auto& elem : m_vPluginObject)
 		{
-			elem.second.erase(pluginObjectIt);
-			pPluginObject->release();
-			return true;
+			auto pluginObjectIt = std::find(elem.second.begin(), elem.second.end(), pPluginObject);
+			if (pluginObjectIt != elem.second.end())
+			{
+				elem.second.erase(pluginObjectIt);
+				pPluginObject->release();
+				return true;
+			}
 		}
 	}
 
@@ -384,7 +410,11 @@ IAlgorithm* CPluginManager::createAlgorithm(
 		ErrorType::BadResourceCreation
 	);
 
-	m_vPluginObject[l_pPluginObjectDescT].push_back(l_pPluginObjectT);
+	{
+		std::unique_lock<std::mutex> lock(m_oMutex);
+		m_vPluginObject[l_pPluginObjectDescT].push_back(l_pPluginObjectT);
+	}
+
 	return l_pPluginObjectT;
 }
 
@@ -400,6 +430,8 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 	const CIdentifier& rClassIdentifier,
 	const IPluginObjectDescT** ppPluginObjectDescT)
 {
+	std::unique_lock<std::mutex> lock(m_oMutex);
+
 	if(ppPluginObjectDescT)
 	{
 		*ppPluginObjectDescT=NULL;
@@ -483,5 +515,6 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 	}
 
 	m_vPluginObject[l_pPluginObjectDescT].push_back(l_pPluginObjectT);
+
 	return l_pPluginObjectT;
 }

@@ -25,9 +25,8 @@ if(BUILD_DOCUMENTATION)
 endif()
 
 # Sphinx Documentation
-
-FILE(MAKE_DIRECTORY "${DIST_DOCTMP}/sphinx")
-FILE(MAKE_DIRECTORY "${DIST_DOCTMP}/sphinx/templates")
+install(DIRECTORY DESTINATION "${DIST_DOCTMP}/sphinx")
+install(DIRECTORY DESTINATION "${DIST_DOCTMP}/sphinx/templates")
 
 # Collect all sphinx documentation files from all projects
 
