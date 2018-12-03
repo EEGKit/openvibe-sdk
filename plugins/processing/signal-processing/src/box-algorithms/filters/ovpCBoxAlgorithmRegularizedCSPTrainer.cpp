@@ -289,7 +289,9 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<Eigen::Mat
 		sortedEigenVectors[classIndex].resizeLike(eigenVectors[classIndex]);
 		for (int i = 0; i < eigenValues[classIndex].size(); i++)
 		{
-			sortedEigenValues[classIndex][i] = eigenValues[classIndex][indexes[static_cast<size_t>(i)].second];
+			sortedEigenValues[classIndex][i] = std::max<double>(eigenValues[classIndex][indexes[static_cast<size_t>(i)].second],0);
+			
+			//sortedEigenValues[classIndex][i] = eigenValues[classIndex][indexes[static_cast<size_t>(i)].second];
 			sortedEigenVectors[classIndex].col(i) = eigenVectors[classIndex].col(indexes[i].second);
 			// this->getLogManager() << LogLevel_Info << "E " << i << " " << (l_oSortedEigenValues[classIndex])[i] << "\n";
 		}
