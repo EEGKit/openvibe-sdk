@@ -61,7 +61,7 @@ namespace OpenViBE
 				_SIOStream(const OpenViBE::CString& rName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier)
 					: m_sName(rName),
 					  m_oTypeIdentifier(rTypeIdentifier),
-					  m_oIdentifier(rIdentifier)					  
+					  m_oIdentifier(rIdentifier)
 				{}
 
 				OpenViBE::CString m_sName;
