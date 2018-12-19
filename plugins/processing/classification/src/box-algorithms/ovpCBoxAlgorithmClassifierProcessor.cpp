@@ -226,9 +226,9 @@ boolean CBoxAlgorithmClassifierProcessor::process(void)
 		}
 		if(m_oStimulationDecoder.isBufferReceived())
 		{
-			for(uint64 i=0;i<m_oStimulationDecoder.getOutputStimulationSet()->getStimulationCount();i++)
+			for(uint64 j=0;j<m_oStimulationDecoder.getOutputStimulationSet()->getStimulationCount();j++)
 			{
-				if(m_oStimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(i) == OVTK_StimulationId_TrainCompleted)
+				if(m_oStimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(j) == OVTK_StimulationId_TrainCompleted)
 				{
 					CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
