@@ -46,7 +46,7 @@ __________________________________________________________________
 
  * |OVP_DocBegin_BoxAlgorithm_ZeroCrossingDetector_Output3|
  
-  For each channel, the rythm of zero-crossings is computed in events per min.
+  For each channel, the rythm of negative-to-positive zero-crossings is computed in events per min.
  
  * |OVP_DocEnd_BoxAlgorithm_ZeroCrossingDetector_Output3|
 __________________________________________________________________
