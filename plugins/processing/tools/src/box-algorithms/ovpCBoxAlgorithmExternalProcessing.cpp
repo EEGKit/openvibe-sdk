@@ -222,14 +222,28 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 	if (!m_HasReceivedEndMessage)
 	{
 		bool result = m_Messaging.close();
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
 #ifdef TARGET_OS_Windows
 		if (m_ShouldLaunchProgram && m_ThirdPartyProgramProcessId > 0)
 		{
 			DWORD exitCode;
-			GetExitCodeProcess((HANDLE)m_ThirdPartyProgramProcessId, &exitCode);
 
-			if ((DWORD)exitCode == STILL_ACTIVE)
+			// Wait for external process to stop by himself, terminate it if necessary
+			const std::chrono::time_point<std::chrono::system_clock> startClock = std::chrono::system_clock::now();
+			while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - startClock).count() < 10)
+			{
+				GetExitCodeProcess((HANDLE)m_ThirdPartyProgramProcessId, &exitCode);
+
+				if (exitCode != STILL_ACTIVE)
+				{
+					break;
+				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			}
+
+
+			if (exitCode == STILL_ACTIVE)
 			{
 				OV_ERROR_UNLESS_KRF(::TerminateProcess((HANDLE)m_ThirdPartyProgramProcessId, EXIT_FAILURE),
 				                    "Failed to kill third party program.", ErrorType::Unknown);
@@ -243,8 +257,21 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 		if (m_ShouldLaunchProgram && m_ThirdPartyProgramProcessId != 0)
 		{
 			int status;
-			// Check if the program has hung itself
 			pid_t pid = waitpid(m_ThirdPartyProgramProcessId, &status, WNOHANG);
+			
+			// Wait for external process to stop by himself, terminate it after 10s
+			const std::chrono::time_point<std::chrono::system_clock> startClock = std::chrono::system_clock::now();
+			while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - startClock).count() < 10)
+			{
+				// Check if the program has hung itself
+				pid_t pid = waitpid(m_ThirdPartyProgramProcessId, &status, WNOHANG);
+				if (pid != 0)
+				{
+					break;
+				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			}
+
 			if (pid != 0)
 			{
 				if (WIFEXITED(status))
