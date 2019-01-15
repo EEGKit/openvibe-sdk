@@ -12,7 +12,7 @@ External Processing
 
 .. image:: images/Doc_BoxAlgorithm_ExternalProcessing.png
 
-Launches an external program which can then processes data. This box and the program communicate using TCP connection and a defined protocol.
+Launches an external program which can then process data. This box and the program communicate using TCP connection and a defined protocol.
 
 This box allows to externalize data processing into an external program. It sends EBML data in chunks
 according to a specified protocol, the external application must respond with an EBML response following
