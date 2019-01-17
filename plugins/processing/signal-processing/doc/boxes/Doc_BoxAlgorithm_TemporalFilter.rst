@@ -71,6 +71,7 @@ Filter Type
 Select the kind of filter between low-pass, high-pass, band-pass, band-stop.
 
 The Temporal Filter applies a DC removal for Band-Pass and High-Pass filters.
+This DC is estimated as the first value of the first chunk.
 
 Filter Order
 ~~~~~~~~~~~~
