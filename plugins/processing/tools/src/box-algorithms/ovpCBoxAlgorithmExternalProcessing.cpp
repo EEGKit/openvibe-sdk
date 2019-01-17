@@ -261,7 +261,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 			
 			// Wait for external process to stop by himself, terminate it after 10s
 			const std::chrono::time_point<std::chrono::system_clock> startClock = std::chrono::system_clock::now();
-			while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - startClock).count() < 10)
+			while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - startClock).count() < m_AcceptTimeout)
 			{
 				// Check if the program has hung itself
 				pid_t pid = waitpid(m_ThirdPartyProgramProcessId, &status, WNOHANG);
