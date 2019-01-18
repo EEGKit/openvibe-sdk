@@ -263,7 +263,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 			while (pid == 0 && System::Time::zgetTime() - startTime < m_AcceptTimeout)
 			{
 				// Check if the program has hung itself
-				pid_t pid = waitpid(m_ThirdPartyProgramProcessId, &status, WNOHANG);
+				pid = waitpid(m_ThirdPartyProgramProcessId, &status, WNOHANG);
 				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			}
 
