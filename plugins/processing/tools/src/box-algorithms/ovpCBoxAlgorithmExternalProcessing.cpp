@@ -222,7 +222,6 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 	if (!m_HasReceivedEndMessage)
 	{
 		bool result = m_Messaging.close();
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
 #ifdef TARGET_OS_Windows
 		if (m_ShouldLaunchProgram && m_ThirdPartyProgramProcessId > 0)
