@@ -51,7 +51,6 @@ We advise to use this mode in production.
 
 If this setting is false, then the box will stop 
 during the initialize step and wait for the external program to connect during the time speficied by the Connection Timeout setting.
-
 This mode is useful during development, since it allows to run the program manually and check the console.
  
 
