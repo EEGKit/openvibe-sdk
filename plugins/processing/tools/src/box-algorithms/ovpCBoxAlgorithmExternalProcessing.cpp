@@ -229,8 +229,8 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 			DWORD exitCode;
 
 			// Wait for external process to stop by himself, terminate it if necessary
-			const std::chrono::time_point<std::chrono::system_clock> startClock = std::chrono::system_clock::now();
-			while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - startClock).count() < m_AcceptTimeout)
+			auto startTime = System::Time::zgetTime();
+			while (System::Time::zgetTime() - startTime < m_AcceptTimeout)
 			{
 				GetExitCodeProcess((HANDLE)m_ThirdPartyProgramProcessId, &exitCode);
 
@@ -259,15 +259,11 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 			pid_t pid = waitpid(m_ThirdPartyProgramProcessId, &status, WNOHANG);
 			
 			// Wait for external process to stop by himself, terminate it after 10s
-			const std::chrono::time_point<std::chrono::system_clock> startClock = std::chrono::system_clock::now();
-			while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - startClock).count() < m_AcceptTimeout)
+			auto startTime = System::Time::zgetTime();
+			while (pid == 0 && System::Time::zgetTime() - startTime < m_AcceptTimeout)
 			{
 				// Check if the program has hung itself
 				pid_t pid = waitpid(m_ThirdPartyProgramProcessId, &status, WNOHANG);
-				if (pid != 0)
-				{
-					break;
-				}
 				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			}
 
