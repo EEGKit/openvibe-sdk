@@ -206,7 +206,7 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 			{
 				OV_ERROR_UNLESS_KRF(
 					m_f64LowCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
-					"Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value must meet nyquist criteria for samplign rate " <<  m_oDecoder.getOutputSamplingRate() << ")",
+					"Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value must meet nyquist criteria for sampling rate " <<  m_oDecoder.getOutputSamplingRate() << ")",
 					OpenViBE::Kernel::ErrorType::BadConfig
 				);
 			}
@@ -214,7 +214,7 @@ boolean CBoxAlgorithmTemporalFilter::process(void)
 			{
 				OV_ERROR_UNLESS_KRF(
 					m_f64HighCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
-					"Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value must meet nyquist criteria for samplign rate " <<  m_oDecoder.getOutputSamplingRate() << ")",
+					"Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value must meet nyquist criteria for sampling rate " <<  m_oDecoder.getOutputSamplingRate() << ")",
 					OpenViBE::Kernel::ErrorType::BadConfig
 				);
 			}
