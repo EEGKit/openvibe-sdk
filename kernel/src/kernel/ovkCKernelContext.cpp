@@ -50,8 +50,17 @@ CKernelContext::~CKernelContext(void)
 	this->uninitialize();
 }
 
-bool CKernelContext::initialize(void)
+bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 {
+	std::map<std::string, std::string> initializationTokens;
+	auto token = tokenList;
+	while (token && tokenCount > 0)
+	{
+		auto key = tokenList++;
+		auto value = tokenList++;
+		tokenCount--;
+		initializationTokens[*key] = *value;
+	}
 
 	m_pErrorManager.reset(new CErrorManager(m_rMasterKernelContext));
 
@@ -60,12 +69,21 @@ bool CKernelContext::initialize(void)
 	m_pLogManager.reset(new CLogManager(m_rMasterKernelContext));
 	m_pLogManager->activate(true);
 
-	m_pLogListenerConsole.reset(new CLogListenerConsole(m_rMasterKernelContext, m_sApplicationName));
-	m_pLogListenerConsole->activate(false);
-	m_pLogListenerConsole->activate(LogLevel_Info, LogLevel_Last, true);
-	this->getLogManager().addListener(m_pLogListenerConsole.get());
-
 	m_pConfigurationManager.reset(new CConfigurationManager(m_rMasterKernelContext));
+	// We create the configuration manager very soon to be able to deactivate the console log listener
+	if (initializationTokens.count("Kernel_SilentConsole"))
+	{
+		m_pConfigurationManager->createConfigurationToken("Kernel_SilentConsole", initializationTokens.at("Kernel_SilentConsole").c_str());
+	}
+
+	if (!m_pConfigurationManager->expandAsBoolean("${Kernel_SilentConsole}", false))
+	{
+		m_pLogListenerConsole.reset(new CLogListenerConsole(m_rMasterKernelContext, m_sApplicationName));
+		m_pLogListenerConsole->activate(false);
+		m_pLogListenerConsole->activate(LogLevel_Info, LogLevel_Last, true);
+		this->getLogManager().addListener(m_pLogListenerConsole.get());
+	}
+
 
 	m_pConfigurationManager->createConfigurationToken("ApplicationName", m_sApplicationName);
 	m_pConfigurationManager->createConfigurationToken("Path_UserData", OpenViBE::Directories::getUserDataDir());
@@ -101,6 +119,11 @@ bool CKernelContext::initialize(void)
 	m_pConfigurationManager->createConfigurationToken("Application_Name", OV_PROJECT_NAME);
 	m_pConfigurationManager->createConfigurationToken("Application_Version", OV_VERSION_MAJOR "." OV_VERSION_MINOR "." OV_VERSION_PATCH);
 
+	for (auto& token : initializationTokens)
+	{
+		m_pConfigurationManager->createConfigurationToken(token.first.c_str(), token.second.c_str());
+	}
+
 	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_sConfigurationFile << "]\n";
 
 	OV_ERROR_UNLESS_KRF(
@@ -134,11 +157,14 @@ bool CKernelContext::initialize(void)
 	m_pLogListenerFile->activate(false);
 	m_pLogListenerFile->activate(l_eFileLogLevel, LogLevel_Last, true);
 	m_pLogListenerFile->configure(*m_pConfigurationManager);
-	m_pLogListenerConsole->activate(false);
-	m_pLogListenerConsole->activate(l_eConsoleLogLevel, LogLevel_Last, true);
-
 	m_pLogListenerFile->configure(*m_pConfigurationManager);
-	m_pLogListenerConsole->configure(*m_pConfigurationManager);
+
+	if (m_pLogListenerConsole.get())
+	{
+		m_pLogListenerConsole->activate(false);
+		m_pLogListenerConsole->activate(l_eConsoleLogLevel, LogLevel_Last, true);
+		m_pLogListenerConsole->configure(*m_pConfigurationManager);
+	}
 
 	m_pAlgorithmManager.reset(new CAlgorithmManager(m_rMasterKernelContext));
 

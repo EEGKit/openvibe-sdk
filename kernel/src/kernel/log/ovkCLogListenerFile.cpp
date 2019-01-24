@@ -32,7 +32,7 @@ CLogListenerFile::CLogListenerFile(const IKernelContext& rKernelContext, const C
 		return;
 	}
 	m_fsFileStream << flush;
-	std::cout << "[  INF  ] Logging to '" << sLogFilename << "'" << std::endl;
+//	std::cout << "[  INF  ] Logging to '" << sLogFilename << "'" << std::endl;
 }
 
 CLogListenerFile::~CLogListenerFile()

@@ -19,7 +19,7 @@ namespace OpenViBE
 			CKernelContext(const OpenViBE::Kernel::IKernelContext* pMasterKernelContext, const OpenViBE::CString& rApplicationName, const OpenViBE::CString& rConfigurationFile);
 			virtual ~CKernelContext(void);
 
-			virtual OpenViBE::boolean initialize(void);
+			virtual OpenViBE::boolean initialize(const char*const * tokenList, size_t tokenCount);
 			virtual OpenViBE::boolean uninitialize(void);
 
 			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const;
