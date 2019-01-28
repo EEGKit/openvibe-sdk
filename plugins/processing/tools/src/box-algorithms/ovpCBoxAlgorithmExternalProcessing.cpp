@@ -38,7 +38,9 @@ CBoxAlgorithmExternalProcessing::CBoxAlgorithmExternalProcessing()
     , m_ThirdPartyProgramProcessId(0)
     , m_AcceptTimeout(10ULL<<32)
     , m_ShouldLaunchProgram(false)
-    , m_HasReceivedEndMessage(false)
+	, m_HasReceivedEndMessage(false)
+	, m_SyncTimeout(0)
+	, m_LastSyncTime(0)
 {
 }
 
@@ -161,7 +163,6 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 	}
 
 	auto startTime = System::Time::zgetTime();
-//	const std::chrono::time_point<std::chrono::system_clock> startClock = std::chrono::system_clock::now();
 
 	bool clientConnected = false;
 	m_HasReceivedEndMessage = false;
@@ -209,6 +210,8 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 		}
 	}
 
+	m_SyncTimeout = ITimeArithmetics::secondsToTime(0.0625);
+	m_LastSyncTime = System::Time::zgetTime();
 	return true;
 }
 
@@ -247,7 +250,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 				OV_ERROR_UNLESS_KRF(::TerminateProcess((HANDLE)m_ThirdPartyProgramProcessId, EXIT_FAILURE),
 				                    "Failed to kill third party program.", ErrorType::Unknown);
 			}
-			else
+			else if (exitCode != 0)
 			{
 				OV_WARNING_K("Third party program [" << m_ThirdPartyProgramProcessId << "] has terminated with exit code [" << static_cast<int>(exitCode) << "]");
 			}
@@ -381,8 +384,9 @@ bool CBoxAlgorithmExternalProcessing::process(void)
 		}
 	}
 
-	if (hasSentDataToClient || m_IsGenerator)
+	if (hasSentDataToClient || m_IsGenerator || System::Time::zgetTime() - m_LastSyncTime > m_SyncTimeout)
 	{
+		m_LastSyncTime = System::Time::zgetTime();
 		// Here, we send a sync message to tell to the client that we have no more data to send.
 		// Generators do not have input data, so the box never has to send data to the external program
 		// and thus needs to perform syncing on each tick.
