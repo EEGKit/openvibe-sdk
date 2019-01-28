@@ -163,23 +163,32 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 
 				for (k=0; k<l_ui32SampleCount; k++)
 				{
+					uint64_t stimulationDate;
+					if (m_ui32SamplingRate > 0)
+					{
+						stimulationDate = l_rDynamicBoxContext.getInputChunkStartTime(0, i) + ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, k);
+					}
+					else if (l_ui32SampleCount == 1)
+					{
+						stimulationDate = l_rDynamicBoxContext.getInputChunkEndTime(0, i);
+					}
+					else
+					{
+						OV_ERROR_KRF("Can only process chunks with sampling rate larger or equal to 1 or chunks with exactly one sample.", ErrorType::OutOfBound);
+					}
 
 					if ((m_vStateHistory[j] == 1) && (l_vSignal[k] > -m_f64HysteresisThreshold) && (l_vSignal[k + 1] < -m_f64HysteresisThreshold))
 					{
 						// negative ZC : positive-to-negative
 						l_pOutputBuffer0[k + j*l_ui32SampleCount] = -1;
-						m_oEncoder1.getInputStimulationSet()->appendStimulation(m_ui64StimulationId2,
-							l_rDynamicBoxContext.getInputChunkStartTime(0, i) + ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, k),
-							0);
+						m_oEncoder1.getInputStimulationSet()->appendStimulation(m_ui64StimulationId2, stimulationDate, 0);
 						m_vStateHistory[j] = -1;
 					}
 					else if ((m_vStateHistory[j] == -1) && (l_vSignal[k] < m_f64HysteresisThreshold) && (l_vSignal[k + 1] > m_f64HysteresisThreshold))
 					{
 						// positive ZC : negative-to-positive
 						l_pOutputBuffer0[k + j*l_ui32SampleCount] = 1;
-						m_oEncoder1.getInputStimulationSet()->appendStimulation(m_ui64StimulationId1,
-							l_rDynamicBoxContext.getInputChunkStartTime(0, i) + ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, k),
-							0);
+						m_oEncoder1.getInputStimulationSet()->appendStimulation(m_ui64StimulationId1, stimulationDate, 0);
 						m_vStateHistory[j] = 1;
 
 						// for the rythm estimation
