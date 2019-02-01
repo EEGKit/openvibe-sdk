@@ -121,7 +121,7 @@ bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 
 	for (auto& token : initializationTokens)
 	{
-		m_pConfigurationManager->createConfigurationToken(token.first.c_str(), token.second.c_str());
+		m_pConfigurationManager->addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str());
 	}
 
 	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_sConfigurationFile << "]\n";
