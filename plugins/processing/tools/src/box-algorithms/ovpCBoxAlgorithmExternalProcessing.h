@@ -89,6 +89,9 @@ namespace OpenViBEPlugins
 			uint64_t m_AcceptTimeout;
 			bool m_ShouldLaunchProgram;
 			bool m_HasReceivedEndMessage;
+			// Synchronization timeout, and save time of last synchronization
+			uint64_t m_SyncTimeout;
+			uint64_t m_LastSyncTime;
 
 			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmExternalProcessing >> m_StimulationDecoders;
 			std::queue<Packet> m_PacketHistory;
