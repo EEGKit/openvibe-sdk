@@ -664,7 +664,6 @@ namespace OpenViBE
 					            );
 						break;
 					case Setting:
-						return false;
 						break;
 				}
 
@@ -673,6 +672,11 @@ namespace OpenViBE
 					g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
 					ErrorType::OutOfBound
 				);
+
+				if (m_Interfacors[interfacorType][index]->m_oTypeIdentifier == typeIdentifier)
+				{
+					return true;
+				}
 
 				m_Interfacors[interfacorType][index]->m_oTypeIdentifier = typeIdentifier;
 
@@ -685,6 +689,7 @@ namespace OpenViBE
 						break;
 					case Setting:
 						this->notify(BoxModification_SettingTypeChanged, index);
+						this->notifySettingChange(SettingChange, index);
 						break;
 				}
 
@@ -700,7 +705,7 @@ namespace OpenViBE
 				            ErrorType::ResourceNotFound
 				            );
 
-				return this->setInterfacorType(Input, it->second, typeIdentifier);
+				return this->setInterfacorType(interfacorType, it->second, typeIdentifier);
 			}
 
 			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CString& name, const OpenViBE::CIdentifier& typeIdentifier)
@@ -712,7 +717,7 @@ namespace OpenViBE
 				            ErrorType::ResourceNotFound
 				            );
 
-				return this->setInterfacorType(Input, it->second, typeIdentifier);
+				return this->setInterfacorType(interfacorType, it->second, typeIdentifier);
 
 			}
 
@@ -741,7 +746,7 @@ namespace OpenViBE
 				m_InterfacorNameToIndex[interfacorType].erase(it);
 
 				// check for duplicated name key and update if necessary
-				OpenViBE::CString uniqueName = this->getUnusedName(m_InterfacorNameToIndex[Input], newName);
+				OpenViBE::CString uniqueName = this->getUnusedName(m_InterfacorNameToIndex[interfacorType], newName);
 				m_InterfacorNameToIndex[interfacorType][uniqueName] = index;
 				m_Interfacors[interfacorType][index]->m_sName = uniqueName;
 
@@ -1286,71 +1291,41 @@ namespace OpenViBE
 				m_vSupportInputType.clear();
 			}
 
+		private:
+			OpenViBE::CIdentifier getUnusedInterfacorIdentifier(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
+			{
+				uint64_t identifier = System::Math::randomUInteger64();
+				if (suggestedIdentifier != OV_UndefinedIdentifier)
+				{
+					identifier = suggestedIdentifier.toUInteger();
+				}
+
+				CIdentifier resultIdentifier;
+				std::map<CIdentifier, uint32_t>::const_iterator it;
+				do
+				{
+					resultIdentifier = CIdentifier(identifier);
+					it = m_InterfacorIdentifierToIndex.at(interfacorType).find(resultIdentifier);
+					identifier++;
+				}
+				while (it != m_InterfacorIdentifierToIndex.at(interfacorType).end() || resultIdentifier == OV_UndefinedIdentifier);
+				return resultIdentifier;
+			}
+		public:
 
 			OpenViBE::CIdentifier getUnusedSettingIdentifier(const OpenViBE::CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
 			{
-				uint64 l_ui64Identifier=System::Math::randomUInteger64();
-				if (suggestedIdentifier != OV_UndefinedIdentifier)
-				{
-					l_ui64Identifier = suggestedIdentifier.toUInteger();
-				}
-
-				CIdentifier l_oResult;
-				std::map<CIdentifier, uint32_t>::const_iterator itSettings;
-				do
-				{
-					l_oResult=CIdentifier(l_ui64Identifier);
-					itSettings=m_InterfacorIdentifierToIndex.at(Setting).find(l_oResult);
-					l_ui64Identifier++;
-				}
-				while(itSettings != m_InterfacorIdentifierToIndex.at(Setting).end()
-					|| l_oResult==OV_UndefinedIdentifier
-					);
-				return l_oResult;
+				return this->getUnusedInterfacorIdentifier(Setting);
 			}
 
 			OpenViBE::CIdentifier getUnusedInputIdentifier(const OpenViBE::CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
 			{
-				uint64 l_ui64Identifier=System::Math::randomUInteger64();
-				if (suggestedIdentifier != OV_UndefinedIdentifier)
-				{
-					l_ui64Identifier = suggestedIdentifier.toUInteger();
-				}
-
-				CIdentifier l_oResult;
-				std::map<CIdentifier, uint32_t>::const_iterator itInputs;
-				do
-				{
-					l_oResult=CIdentifier(l_ui64Identifier);
-					itInputs=m_InterfacorIdentifierToIndex.at(Input).find(l_oResult);
-					l_ui64Identifier++;
-				}
-				while(itInputs != m_InterfacorIdentifierToIndex.at(Input).end()
-					|| l_oResult==OV_UndefinedIdentifier
-					);
-				return l_oResult;
+				return this->getUnusedInterfacorIdentifier(Input);
 			}
 
 			OpenViBE::CIdentifier getUnusedOutputIdentifier(const OpenViBE::CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
 			{
-				uint64 l_ui64Identifier=System::Math::randomUInteger64();
-				if (suggestedIdentifier != OV_UndefinedIdentifier)
-				{
-					l_ui64Identifier = suggestedIdentifier.toUInteger();
-				}
-
-				CIdentifier l_oResult;
-				std::map<CIdentifier, uint32_t>::const_iterator itOutputs;
-				do
-				{
-					l_oResult=CIdentifier(l_ui64Identifier);
-					itOutputs=m_InterfacorIdentifierToIndex.at(Output).find(l_oResult);
-					l_ui64Identifier++;
-				}
-				while(itOutputs != m_InterfacorIdentifierToIndex.at(Output).end()
-					|| l_oResult==OV_UndefinedIdentifier
-					);
-				return l_oResult;
+				return this->getUnusedInterfacorIdentifier(Output);
 			}
 
 			virtual bool addSetting(

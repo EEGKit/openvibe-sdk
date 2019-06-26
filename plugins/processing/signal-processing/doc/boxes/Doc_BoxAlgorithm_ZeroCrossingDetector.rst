@@ -53,7 +53,7 @@ For all channels, stimulations mark positive and negatives zero-crossings.
 Events rythm (per min)
 ~~~~~~~~~~~~~~~~~~~~~~
 
-For each channel, the rythm of zero-crossings is computed in events per min.
+For each channel, the rythm of negative-to-positive zero-crossings is computed in events per min.
 
 .. _Doc_BoxAlgorithm_ZeroCrossingDetector_Settings:
 

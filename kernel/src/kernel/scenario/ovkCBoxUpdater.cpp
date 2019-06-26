@@ -12,7 +12,8 @@ using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 
 
-const std::array<CIdentifier, 9> CBoxUpdater::updatableAttributes = {
+const std::array<CIdentifier, 10> CBoxUpdater::updatableAttributes = {
+    OV_AttributeId_Box_InitialPrototypeHashValue,
     OV_AttributeId_Box_InitialInputCount,
     OV_AttributeId_Box_InitialOutputCount,
     OV_AttributeId_Box_InitialSettingCount,
@@ -100,6 +101,11 @@ bool CBoxUpdater::initialize()
 	m_UpdatedBox->setIdentifier(m_SourceBox->getIdentifier());
 	m_UpdatedBox->setName(m_SourceBox->getName());
 
+	if (m_SourceBox->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
+	{
+		m_UpdatedBox->setAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue, m_KernelBox->getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
+	}
+
 	// initialize updated box attribute to kernel ones
 	CIdentifier attributeIdentifier;
 	while ((attributeIdentifier = m_KernelBox->getNextAttributeIdentifier(attributeIdentifier)) != OV_UndefinedIdentifier)
@@ -134,6 +140,11 @@ bool CBoxUpdater::initialize()
 		m_IsUpdateRequired |= this->updateInterfacors(Setting);
 		m_IsUpdateRequired |= this->checkForSupportedTypesToBeUpdated();
 		m_IsUpdateRequired |= this->checkForSupportedIOSAttributesToBeUpdated();
+	}
+
+	if (m_SourceBox->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
+	{
+		m_IsUpdateRequired |= isHashDifferent;
 	}
 
 	return true;

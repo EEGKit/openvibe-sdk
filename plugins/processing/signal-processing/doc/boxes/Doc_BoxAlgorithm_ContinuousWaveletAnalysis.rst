@@ -19,11 +19,15 @@ The Continuous Wavelet Transform (CWT) provides a Time-Frequency representation 
 Considering an input signal :math:`X \in \mathbb{R}^{C \times N}`, composed of :math:`C` channels and :math:`N` temporal samples, 
 this plugin computes the CWT of this signal :math:`\Phi \in \mathbb{C}^{C \times F \times N}`, composed of :math:`C` channels, :math:`F` scales and :math:`N` temporal samples.
 For the :math:`c^{ \text{th} }` channel, the :math:`f^{ \text{th} }` scale :math:`s_f` and the :math:`n^{ \text{th} }` sample, the Time-Frequency representation is defined as:
-:math:`\Phi (c,f,n) = \sum_{n'=0}^{N-1} X(c,n') \ \psi^{\*} \left( \frac{(n-n') \delta t}{s_f} \right) \ ,`
-where :math:`\psi` is the normalized wavelet, :math:`(.)^{\*}` is the complex conjugate and :math:`\delta t` is the sampling period.
+
+:math:`\Phi (c,f,n) = \sum_{n'=0}^{N-1} X(c,n') \ \psi^{*} \left( \frac{(n-n') \delta t}{s_f} \right)`,
+
+where :math:`\psi` is the normalized wavelet, :math:`(.)^{*}` is the complex conjugate and :math:`\delta t` is the sampling period.
 
 Using the inverse relation between wavelet scale :math:`s_f` and Fourier frequency :math:`\text{freq}_f`, output is finally defined as:
-:math:`\Phi(c,f,n) = \Phi_r(c,f,n) + \mathsf{i} \times \Phi_i(c,f,n) = \left| \Phi(c,f,n) \right| \times e^{\mathsf{i} \arg(\Phi(c,f,n))} \ ,`
+
+:math:`\Phi(c,f,n) = \Phi_r(c,f,n) + \mathsf{i} \times \Phi_i(c,f,n) = \left| \Phi(c,f,n) \right| \times e^{\mathsf{i} \arg(\Phi(c,f,n))}`,
+
 with :math:`\mathsf{i}` being the imaginary unit.
 
 Output can be visualized with a :ref:`Doc_BoxAlgorithm_InstantBitmap3DStream`.
@@ -95,21 +99,20 @@ This setting defines the type of the wavelet:
 - Morlet:
 
 
-:math:`\psi_0 (n) = \pi^{1/4} e^{\mathsf{i} \omega_0 n} e^{-n^2 / 2} \ ,`
+:math:`\psi_0 (n) = \pi^{1/4} e^{\mathsf{i} \omega_0 n} e^{-n^2 / 2}`
 
 
 - Paul:
 
 
-:math:`\psi_0 (n) = \frac{2^m \mathsf{i}^m m!}{\sqrt{\pi(2m)!}} (1-\mathsf{i} n)^{-(m+1)} \ ,`
+:math:`\psi_0 (n) = \frac{2^m \mathsf{i}^m m!}{\sqrt{\pi(2m)!}} (1-\mathsf{i} n)^{-(m+1)}`
 
 
 - derivative of Gaussian:
 
 
-:math:`\psi_0 (n) = \frac{(-1)^{m+1}}{\sqrt{\Gamma(m+\frac{1}{2})}} \frac{d^m}{d n^m} (e^{-n^2 / 2}) \ .`
+:math:`\psi_0 (n) = \frac{(-1)^{m+1}}{\sqrt{\Gamma(m+\frac{1}{2})}} \frac{d^m}{d n^m} (e^{-n^2 / 2})`
 
-\n
 
 Wavelet parameter
 ~~~~~~~~~~~~~~~~~

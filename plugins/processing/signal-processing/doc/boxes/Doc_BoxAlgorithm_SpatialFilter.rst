@@ -16,12 +16,14 @@ The applied coefficient matrix must be specified as a box parameter. The filter 
 
 The spatial filter generates a number of output channels from another number of input
 channels, each output channel being a linear combination of the input channels.
-For example, lets say *ICj* is the *j</em>th input channel, <em>OCk* is the
-*k</em>th output channel, and <em>Sjk* is the coefficient for the <em>j</em>th input
-channel and *k</em>th output channel in the <em>Spatial filter* matrix.
 
+For example, lets say :math:`IC_j` is the :math:`j` th input channel, :math:`OC_k` is the
+:math:`k` th output channel, and :math:`S_{jk}` is the coefficient for the :math:`j` th input
+channel and :math:`k` th output channel in the Spatial filter matrix.
+ 
 Then the output channels are computed this way :
-*OCk* <b>=</b> Sum on *j</em> ( <em>Sjk* \* *ICj* )
+:math:`OC_k = \sum_j S_{jk} * IC_j`.
+
 
 Inputs
 ------
@@ -101,11 +103,11 @@ The output channels becomes :
 
 .. code::
 
-   OC1 = 4 \* C3 + 0 \* C4 + (-1) \* FC3 + 0 \* FC4 + (-1) \* C5 + (-1) \* C1 + 0 \* C2 + 0 \* C6 + (-1) \* CP3 + 0 \* CP4
-   = 4 \* C3 - FC3 - C5 - C1 - CP3
+   OC1 = 4 * C3 + 0 * C4 + (-1) * FC3 + 0 * FC4 + (-1) * C5 + (-1) * C1 + 0 * C2 + 0 * C6 + (-1) * CP3 + 0 * CP4
+   = 4 * C3 - FC3 - C5 - C1 - CP3
    
-   OC2 = 0 \* C3 + 4 \* C4 + 0 \* FC3 + (-1) \* FC4 + 0 \* C5 + 0 \* C1 + (-1) \* C2 + (-1) \* C6 + 0 \* CP3 + (-1) \* CP4
-   = 4 \* C4 - FC4 - C2 - C6 - CP4
+   OC2 = 0 * C3 + 4 * C4 + 0 * FC3 + (-1) * FC4 + 0 * C5 + 0 * C1 + (-1) * C2 + (-1) * C6 + 0 * CP3 + (-1) * CP4
+   = 4 * C4 - FC4 - C2 - C6 - CP4
 
 This is basically a Surface Laplacian around C4 and C5.
 
@@ -122,8 +124,8 @@ To provide the filter matrix as a file, the format is the same as is used for st
 
 .. code::
 
-   [ ;  \*       [ "row1" "row2" "row3" ] ;  \*       [ "col1" "col2" "col3" ] ;  \* ]
-   [ ;  \* [ 1 0 0 ] ;  \* ]
-   [ ;  \* [ 0 1 0 ] ;  \* ]
-   [ ;  \* [ 0 0 1 ] ;  \* ]
+   [ [ "row1" "row2" "row3" ] [ "col1" "col2" "col3" ] ]
+   [ [ 1 0 0 ] ]
+   [ [ 0 1 0 ] ]
+   [ [ 0 0 1 ] ]
 

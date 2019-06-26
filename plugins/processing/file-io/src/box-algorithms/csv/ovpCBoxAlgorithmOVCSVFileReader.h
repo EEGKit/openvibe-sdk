@@ -69,14 +69,14 @@ namespace OpenViBEPlugins
 
 				if (index == 0 && typeIdentifier == OV_TypeId_Stimulations)
 				{
-					OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Signal),
-						"Failed to reset input type to signal",
+					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Signal),
+						"Failed to reset output type to signal",
 						OpenViBE::Kernel::ErrorType::Internal);
 				}
 				else if (index == 1 && typeIdentifier != OV_TypeId_Stimulations)
 				{
-					OV_ERROR_UNLESS_KRF(box.setInputType(index, OV_TypeId_Stimulations),
-						"Failed to reset input type to signal",
+					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Stimulations),
+						"Failed to reset output type to stimulations",
 						OpenViBE::Kernel::ErrorType::Internal);
 				}
 				else if (index > 1)

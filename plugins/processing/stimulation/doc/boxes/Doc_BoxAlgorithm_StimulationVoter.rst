@@ -102,5 +102,6 @@ Possible usages include aggregating classifier outputs by making a majority vote
 Miscellaneous
 -------------
 
-This algorithm is similar to the Voting Classifier but it allows more parameters. Also, all stimulus available at time step *t</em> are used to carry out the vote at time step <em>t*. On the other hand, Stimulation Voter only supports input streams of type Stimulus.
+This algorithm is similar to the Voting Classifier but it allows more parameters. Also, all stimulus available at 
+time step *t* are used to carry out the vote at time step *t*. On the other hand, Stimulation Voter only supports input streams of type Stimulus.
 

@@ -1428,6 +1428,24 @@ bool CScenario::checkOutdatedBoxes()
 			continue;
 		}
 
+		// Do not attempt to update metaboxes which do not have an associated scenario
+		if (boxAlgorithmClassIdentifier == OVP_ClassId_BoxAlgorithm_Metabox)
+		{
+			CString metaboxIdentifier = box.second->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
+			if (metaboxIdentifier == CString("")) {
+				continue;
+			}
+
+			OpenViBE::CIdentifier metaboxId;
+			metaboxId.fromString(metaboxIdentifier);
+			CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
+
+			if (metaboxScenarioPath == CString(""))
+			{
+				continue;
+			}
+		}
+
 		// Box Updater instance which is in charge of create updated boxes and links
 		CBoxUpdater boxUpdater(*this, box.second);
 

@@ -97,87 +97,78 @@ The variable names are the 16 first letters of the alphabet, i.e. 'a' (or 'A') t
 Here is a list of supported functions/operators :
 
 
-- Operators
-- +
-- -
-- \*
-- /
-
-
+- Operators:
+    - ``+``
+    - ``-``
+    - ``*``
+    - ``/``
 
 - Unary functions
-- abs
-- acos
-- asin
-- atan
-- ceil
-- cos
-- exp
-- floor
-- log
-- log10
-- sin
-- sqrt
-- tan
-
-
+    - ``abs`` (absolute value)
+    - ``acos`` (arc cosinus, requires n in the range [-1:1], result ranged in [0:M_PI]) 
+    - ``asin`` (arc sinus, requires n in the range [-1:1], result ranged in [-M_PI_2:M_PI_2])
+    - ``atan`` (arc tangent, requires n in the range [-1:1], result ranged in [-M_PI_2:M_PI_2])
+    - ``ceil`` (upper-bound rounding)
+    - ``cos`` (cosinus, n in radians, result ranged in [-1:1]) 
+    - ``exp`` (exponential) 
+    - ``floor`` (lower-bound rounding) 
+    - ``log`` (natural logarithm, requires n>0)
+    - ``log10`` (decimal logarithm, requires n>0) 
+    - ``rand`` (pseudo-random, result ranged in [0:n]) 
+    - ``sin`` (sinus, n in radians, result ranged in [-1:1]) 
+    - ``sqrt`` (square root, requires n>=0) 
+    - ``tan`` (tangent, n in radians, result ranged in [-1:1]) 
 
 - Binary function
-- pow
-
-
+    - ``pow`` (power)
 
 - Comparison operators
-- >
-- >=
-- <
-- <=
-- ==
-- = (equivalent to ==)
-- !=
-- <> (equivalent to !=)
-
-
+    - ``>``
+    - ``>=``
+    - ``<``
+    - ``<=``
+    - ``==``
+    - ``=`` (equivalent to ==)
+    - ``!=``
+    - ``<>`` (equivalent to !=)
 
 - Boolean operators
-- & as \e and
-- && also as \e and
-- | as \e or
-- || also as \e or
-- ! as \e not
-- ~ as \e xor
-- ^ also as \e xor
-
-
+    - ``&`` as \e and
+    - ``&&`` also as \e and
+    - ``|`` as \e or
+    - ``||`` also as \e or
+    - ``!`` as \e not
+    - ``~`` as \e xor
+    - ``^`` also as \e xor
 
 - ternary operator
-- ? :
+    - ``? :``
 
 
 There are also a few defined constants :
 
 
-- M_PI
-- M_PI_2
-- M_PI_4
-- M_1_PI
-- M_2_PI
-- M_2_SQRTPI
-- M_SQRT2
-- M_SQRT1_2
-- M_E
-- M_LOG2E
-- M_LOG10E
-- M_LN2
-- M_LN10
+- ``M_PI``
+- ``M_PI_2``
+- ``M_PI_4``
+- ``M_1_PI``
+- ``M_2_PI``
+- ``M_2_SQRTPI``
+- ``M_SQRT2``
+- ``M_SQRT1_2``
+- ``M_E``
+- ``M_LOG2E``
+- ``M_LOG10E``
+- ``M_LN2``
+- ``M_LN10``
 
 
 (note : their meaning is the same as the constants of the same name in math.c)
 
-Furthermore, the equation parser is totally case-insensitive. So you can write "COS(m_pi+x)" or "cos(M_PI+X)", it doesn't matter.
+Furthermore, the equation parser is totally case-insensitive. So you can write ``COS(m_pi+x)`` or ``cos(M_PI+X)``, it doesn't matter.
 
 Don't worry about the whitespaces and blank characters, they are automatically skipped by the equation parser.
-That means, for instance, that both "X+1" and "X      + 1" work.
+That means, for instance, that both ``X+1`` and ``X      + 1`` work.
 
 This plugin implements basic constant folding. That means that when the plugin analyses the equation,
 if it can compute some parts of it before compilation, it will. For now, it does not support rational

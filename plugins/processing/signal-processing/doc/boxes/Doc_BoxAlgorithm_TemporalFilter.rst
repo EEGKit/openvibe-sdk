@@ -17,6 +17,8 @@ Applies a temporal filter, based on various one-way IIR filter designs, to the i
 This plugin is used to filter the input signal. This plugin allows the selection of the kinf of filter (Butterworth, Chebychev, Yule-Walker),
 the kind of filter (low-pass, high-pass, band-pass, band-stop), the low or/and the high edge of the filter, and the passband ripple for the Chebychev filter.
 
+The algorithm used for this filter comes from an external library dsp-filters (https://github.com/vinniefalco/DSPFilters).
+
 Inputs
 ------
 
@@ -68,6 +70,9 @@ Filter Type
 
 Select the kind of filter between low-pass, high-pass, band-pass, band-stop.
 
+The Temporal Filter applies a DC removal for Band-Pass and High-Pass filters.
+This DC is estimated as the first value of the first chunk.
+
 Filter Order
 ~~~~~~~~~~~~
 
@@ -98,3 +103,8 @@ Examples
 Let's consider our input signal is very noisy (50 Hz).
 To filter this signal, select a Low pass Butterworth filter of 4th order and High Edge equal to 30 Hz for example.
 
+Miscellaneous
+-------------
+
+The Temporal Filter bow does not behave properly on some limit cases: when using a low cut frequency or with a high 
+filter order, in these cases we advise to remove the first seconds of the processed signal from your process.
