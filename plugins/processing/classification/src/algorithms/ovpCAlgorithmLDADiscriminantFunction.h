@@ -21,11 +21,11 @@ namespace OpenViBEPlugins
 		public:
 			CAlgorithmLDADiscriminantFunction();
 
-			void setWeight(const Eigen::VectorXd &rWeigth);
+			void setWeight(const Eigen::VectorXd& rWeigth);
 			void setBias(OpenViBE::float64 f64Bias);
 
 			//Return the class membership of the feature vector
-			OpenViBE::float64 getValue(const Eigen::VectorXd &rFeatureVector);
+			OpenViBE::float64 getValue(const Eigen::VectorXd& rFeatureVector);
 			OpenViBE::uint32 getWeightVectorSize(void);
 
 			OpenViBE::boolean loadConfiguration(const XML::IXMLNode* pConfiguration);
@@ -36,8 +36,7 @@ namespace OpenViBEPlugins
 
 		private:
 			OpenViBE::float64 m_f64Bias;
-			Eigen::VectorXd   m_oWeight;
-
+			Eigen::VectorXd m_oWeight;
 		};
 	}
 }

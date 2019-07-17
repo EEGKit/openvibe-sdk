@@ -17,11 +17,11 @@ namespace Common
 			{
 				unsigned long uni;
 				size_t todo;
-				bool error = false;
+				bool error       = false;
 				unsigned char ch = utf8[i++];
 				if (ch <= 0x7F)
 				{
-					uni = ch;
+					uni  = ch;
 					todo = 0;
 				}
 				else if (ch <= 0xBF)
@@ -30,17 +30,17 @@ namespace Common
 				}
 				else if (ch <= 0xDF)
 				{
-					uni = ch&0x1F;
+					uni  = ch & 0x1F;
 					todo = 1;
 				}
 				else if (ch <= 0xEF)
 				{
-					uni = ch&0x0F;
+					uni  = ch & 0x0F;
 					todo = 2;
 				}
 				else if (ch <= 0xF7)
 				{
-					uni = ch&0x07;
+					uni  = ch & 0x07;
 					todo = 3;
 				}
 				else
@@ -81,6 +81,5 @@ namespace Common
 			return utf16;
 		}
 #endif // TARGET_OS_Windows
-
 	};
 };

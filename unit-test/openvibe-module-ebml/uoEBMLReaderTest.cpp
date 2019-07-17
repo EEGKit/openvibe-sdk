@@ -36,13 +36,9 @@ class CReaderCallBack : public EBML::IReaderCallBack
 {
 public:
 	CReaderCallBack(void)
-		: m_Depth(0)
-	{
-	}
+		: m_Depth(0) { }
 
-	virtual ~CReaderCallBack(void)
-	{
-	}
+	virtual ~CReaderCallBack(void) { }
 
 	virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier) override
 	{
@@ -56,14 +52,14 @@ public:
 	{
 		m_CurrentIdentifier = rIdentifier;
 
-		for (int i = 0; i<m_Depth; i++) g_OutputStream << "   ";
+		for (int i = 0; i < m_Depth; i++) g_OutputStream << "   ";
 		g_OutputStream << "Opening child node [0x" << std::setw(16) << std::setfill('0') << std::hex << m_CurrentIdentifier << std::dec << "]\n";
 		m_Depth++;
 	}
 
 	virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize) override
 	{
-		for (int i = 0; i<m_Depth; i++) g_OutputStream << "   ";
+		for (int i = 0; i < m_Depth; i++) g_OutputStream << "   ";
 		if (m_CurrentIdentifier == EBML_Identifier_DocType)
 			g_OutputStream << "Got doc type : [" << m_ReaderHelper.getASCIIStringFromChildData(pBuffer, ui64BufferSize) << "]\n";
 		else if (m_CurrentIdentifier == EBML_Identifier_EBMLVersion)
@@ -89,7 +85,7 @@ public:
 	virtual void closeChild(void) override
 	{
 		m_Depth--;
-		for (int i = 0; i<m_Depth; i++) g_OutputStream << "   ";
+		for (int i = 0; i < m_Depth; i++) g_OutputStream << "   ";
 		g_OutputStream << "Node closed\n";
 	}
 
@@ -102,12 +98,12 @@ private:
 };
 
 int uoEBMLReaderTest(int argc, char* argv[])
-{  
+{
 	OVT_ASSERT(argc == 3, "Failure to retrieve tests arguments. Expecting: data_dir output_dir");
-	
-	std::string dataFile = std::string(argv[1]) + "ref_data.ebml";
+
+	std::string dataFile     = std::string(argv[1]) + "ref_data.ebml";
 	std::string expectedFile = std::string(argv[1]) + "ref_result.txt";
-	std::string outputFile = std::string(argv[2]) + "uoEBMLReaderTest.txt";
+	std::string outputFile   = std::string(argv[2]) + "uoEBMLReaderTest.txt";
 
 	// The test parses a known ebml file,
 	// writes the results into a text file and compares the output
@@ -128,14 +124,14 @@ int uoEBMLReaderTest(int argc, char* argv[])
 
 
 		FILE* file = fopen(dataFile.c_str(), "rb");
-		
+
 		OVT_ASSERT(file != nullptr, "Failure to open data file for reading");
 
 		unsigned char* c = new unsigned char[n];
-		size_t i = 0;
+		size_t i         = 0;
 		while (!feof(file))
 		{
-			i = fread(c, 1, n*sizeof(unsigned char), file);
+			i = fread(c, 1, n * sizeof(unsigned char), file);
 			reader.processData(c, i);
 		}
 		delete[] c;
@@ -154,9 +150,8 @@ int uoEBMLReaderTest(int argc, char* argv[])
 	std::string generatedString;
 	std::string expectedString;
 
-	while (std::getline(expectedStream, expectedString)) 
+	while (std::getline(expectedStream, expectedString))
 	{
-
 		OVT_ASSERT(std::getline(generatedStream, generatedString), "Failure to retrieve a line to match");
 		OVT_ASSERT_STREQ(expectedString, generatedString, "Failure to match expected line to generated line");
 	}
@@ -164,7 +159,6 @@ int uoEBMLReaderTest(int argc, char* argv[])
 	// last check to verify the expected file has no additional line
 	OVT_ASSERT(!std::getline(generatedStream, generatedString), "Failure to match expected file size and generated file size");
 
-	
+
 	return EXIT_SUCCESS;
 }
-

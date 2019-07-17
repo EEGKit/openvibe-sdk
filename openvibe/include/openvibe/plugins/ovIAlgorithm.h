@@ -65,7 +65,7 @@ namespace OpenViBE
 			 * and finally produce "output" parameters.
 			 */
 			virtual OpenViBE::boolean process(
-				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)=0;
+				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext) =0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_Algorithm)
 		};

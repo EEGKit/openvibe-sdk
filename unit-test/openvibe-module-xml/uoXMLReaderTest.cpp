@@ -59,10 +59,10 @@ protected:
 			currentNode->children.push_back(node);
 		}
 
-		currentNode = node;
+		currentNode       = node;
 		currentNode->name = name;
 
-		for (XML::uint64 i = 0; i<attributeCount; i++)
+		for (XML::uint64 i = 0; i < attributeCount; i++)
 		{
 			currentNode->attributes[attributeName[i]] = attributeValue[i];
 		}
@@ -115,8 +115,8 @@ TEST(XML_Reader_Test_Case, validateReader)
 	ASSERT_EQ(3, rootNode->children.size());
 
 	auto complexChild = rootNode->children[0];
-	auto dataChild = rootNode->children[1];
-	auto emptyChild = rootNode->children[2];
+	auto dataChild    = rootNode->children[1];
+	auto emptyChild   = rootNode->children[2];
 
 	// Simple child with data check
 	ASSERT_EQ("NodeWithData", dataChild->name);
@@ -136,8 +136,8 @@ TEST(XML_Reader_Test_Case, validateReader)
 
 	ASSERT_EQ(3, complexChild->children.size());
 
-	dataChild = complexChild->children[0];
-	emptyChild = complexChild->children[1];
+	dataChild    = complexChild->children[0];
+	emptyChild   = complexChild->children[1];
 	complexChild = complexChild->children[2];
 
 	ASSERT_EQ("ChildNodeWithData", dataChild->name);
@@ -157,7 +157,7 @@ TEST(XML_Reader_Test_Case, validateHandlerReadJapanese)
 	std::string dataFile = std::string(DATA_DIR) + "/日本語/ref_data_jp.xml";
 
 	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
-	XML::IXMLNode* rootNode = xmlHandler->parseFile(dataFile.c_str());
+	XML::IXMLNode* rootNode      = xmlHandler->parseFile(dataFile.c_str());
 
 	ASSERT_NE(nullptr, rootNode);
 	ASSERT_EQ(std::string("Document"), rootNode->getName());
@@ -175,7 +175,7 @@ TEST(XML_Reader_Test_Case, validateHandlerReadFrench)
 	std::string dataFile = std::string(DATA_DIR) + "/Français/ref_data_fr.xml";
 
 	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
-	XML::IXMLNode* rootNode = xmlHandler->parseFile(dataFile.c_str());
+	XML::IXMLNode* rootNode      = xmlHandler->parseFile(dataFile.c_str());
 
 	ASSERT_NE(nullptr, rootNode);
 	ASSERT_EQ(std::string("Document"), rootNode->getName());
@@ -193,7 +193,7 @@ TEST(XML_Reader_Test_Case, validateHandlerReadNBSP)
 	std::string dataFile = std::string(DATA_DIR) + "/NB\xC2\xA0SP/ref_data_nbsp.xml";
 
 	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
-	XML::IXMLNode* rootNode = xmlHandler->parseFile(dataFile.c_str());
+	XML::IXMLNode* rootNode      = xmlHandler->parseFile(dataFile.c_str());
 
 	ASSERT_NE(nullptr, rootNode);
 	ASSERT_EQ(std::string("Document"), rootNode->getName());

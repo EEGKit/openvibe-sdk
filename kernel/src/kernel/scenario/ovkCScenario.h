@@ -13,12 +13,12 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		typedef TBox< OpenViBE::Kernel::IBox > CBox;
+		typedef TBox<OpenViBE::Kernel::IBox> CBox;
 		class CComment;
 		class CMetadata;
 		class CLink;
 
-		class CScenario final : public TBox< OpenViBE::Kernel::IScenario >
+		class CScenario final : public TBox<OpenViBE::Kernel::IScenario>
 		{
 		public:
 
@@ -27,10 +27,10 @@ namespace OpenViBE
 
 			bool clear(void);
 			bool merge(
-			        const OpenViBE::Kernel::IScenario& scenario,
-			        OpenViBE::Kernel::IScenario::IScenarioMergeCallback* scenarioMergeCallback,
-			        bool mergeSettings,
-			        bool shouldPreserveIdentifies);
+				const OpenViBE::Kernel::IScenario& scenario,
+				OpenViBE::Kernel::IScenario::IScenarioMergeCallback* scenarioMergeCallback,
+				bool mergeSettings,
+				bool shouldPreserveIdentifies);
 
 			OpenViBE::CIdentifier getNextBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const;
 			bool isBox(const OpenViBE::CIdentifier& boxIdentifier) const;
@@ -155,11 +155,11 @@ namespace OpenViBE
 
 			bool acceptVisitor(OpenViBE::IObjectVisitor& objectVisitor);
 
-			bool updateBox(const CIdentifier &boxIdentifier);
+			bool updateBox(const CIdentifier& boxIdentifier);
 
 			bool containsBoxWithDeprecatedInterfacors() const;
 
-			bool removeDeprecatedInterfacorsFromBox(const CIdentifier &boxIdentifier);
+			bool removeDeprecatedInterfacorsFromBox(const CIdentifier& boxIdentifier);
 
 			_IsDerivedFromClass_Final_(TBox< OpenViBE::Kernel::IScenario >, OVK_ClassId_Kernel_Scenario_Scenario)
 
@@ -176,15 +176,13 @@ namespace OpenViBE
 
 			bool m_HasIO;
 
-			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32 > > m_ScenarioInputLinks;
-			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32 > > m_ScenarioOutputLinks;
+			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32>> m_ScenarioInputLinks;
+			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32>> m_ScenarioOutputLinks;
 
 			// Helper members. These are used for quick lookup of next identifiers for the purpose
 			// of the getNextMetadataIdentifier function.
 			std::map<OpenViBE::CIdentifier, OpenViBE::CIdentifier> m_NextMetadataIdentifier;
 			OpenViBE::CIdentifier m_FirstMetadataIdentifier;
-
 		};
 	}
 }
-

@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > op_pMatrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
 
 		private:
 
@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 			OpenViBE::uint32 m_ui32Status;
 			OpenViBE::uint32 m_ui32DimensionIndex;
 			OpenViBE::uint32 m_ui32DimensionEntryIndex;
-//			OpenViBE::uint32 m_ui32DimensionEntryIndexUnit;
+			//			OpenViBE::uint32 m_ui32DimensionEntryIndexUnit;
 			OpenViBE::uint64 m_ui64MatrixBufferSize;
 		};
 
@@ -59,19 +59,19 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Streamed matrix stream decoder"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Streamed matrix stream decoder"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Stream codecs/Decoders"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Stream codecs/Decoders"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
 
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Algorithm_StreamedMatrixStreamDecoder; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder(); }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_StreamedMatrixStreamDecoder; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder(); }
 
 			virtual OpenViBE::boolean getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const

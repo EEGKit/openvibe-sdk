@@ -11,14 +11,14 @@ namespace OpenViBE
 	{
 		class CScenario;
 
-		class CLink : public OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::ILink > >
+		class CLink : public OpenViBE::Kernel::TAttributable<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILink>>
 		{
 		public:
 
-			CLink(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CScenario& rOwnerScenario);			
+			CLink(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CScenario& rOwnerScenario);
 
 			virtual bool InitializeFromExistingLink(const ILink& link);
-			
+
 			virtual OpenViBE::boolean setIdentifier(
 				const OpenViBE::CIdentifier& rIdentifier);
 			virtual OpenViBE::CIdentifier getIdentifier(void) const;
@@ -45,7 +45,7 @@ namespace OpenViBE
 			virtual OpenViBE::CIdentifier getTargetBoxIdentifier(void) const;
 			virtual OpenViBE::uint32 getTargetBoxInputIndex(void) const;
 			virtual OpenViBE::CIdentifier getTargetBoxInputIdentifier(void) const;
-			
+
 
 			virtual OpenViBE::boolean acceptVisitor(
 				OpenViBE::IObjectVisitor& rObjectVisitor);

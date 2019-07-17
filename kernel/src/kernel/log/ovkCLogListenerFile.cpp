@@ -13,12 +13,12 @@ using namespace OpenViBE::Kernel;
 using namespace std;
 
 CLogListenerFile::CLogListenerFile(const IKernelContext& rKernelContext, const CString& sApplicationName, const CString& sLogFilename)
-	:TKernelObject<ILogListener>(rKernelContext)
-	,m_sApplicationName(sApplicationName)
-	,m_sLogFilename(sLogFilename)
-	,m_bTimeInSeconds(true)
-	,m_bLogWithHexa(false)
-	,m_ui64TimePrecision(3)
+	: TKernelObject<ILogListener>(rKernelContext)
+	  , m_sApplicationName(sApplicationName)
+	  , m_sLogFilename(sLogFilename)
+	  , m_bTimeInSeconds(true)
+	  , m_bLogWithHexa(false)
+	  , m_ui64TimePrecision(3)
 {
 
 	// Create the path to the log file
@@ -41,32 +41,29 @@ CLogListenerFile::~CLogListenerFile()
 
 void CLogListenerFile::configure(const IConfigurationManager& rConfigurationManager)
 {
-	m_bTimeInSeconds = rConfigurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}",false);
-	m_bLogWithHexa = rConfigurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}",true);
-	m_ui64TimePrecision = rConfigurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}",3);
+	m_bTimeInSeconds    = rConfigurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
+	m_bLogWithHexa      = rConfigurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
+	m_ui64TimePrecision = rConfigurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
 }
 
 boolean CLogListenerFile::isActive(ELogLevel eLogLevel)
 {
-	map<ELogLevel, boolean>::iterator itLogLevel=m_vActiveLevel.find(eLogLevel);
-	if(itLogLevel==m_vActiveLevel.end())
-	{
-		return true;
-	}
+	map<ELogLevel, boolean>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
+	if (itLogLevel == m_vActiveLevel.end()) { return true; }
 	return itLogLevel->second;
 }
 
 boolean CLogListenerFile::activate(ELogLevel eLogLevel, boolean bActive)
 {
-	m_vActiveLevel[eLogLevel]=bActive;
+	m_vActiveLevel[eLogLevel] = bActive;
 	return true;
 }
 
 boolean CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, boolean bActive)
 {
-	for(int i=eStartLogLevel; i<=eEndLogLevel; i++)
+	for (int i = eStartLogLevel; i <= eEndLogLevel; i++)
 	{
-		m_vActiveLevel[ELogLevel(i)]=bActive;
+		m_vActiveLevel[ELogLevel(i)] = bActive;
 	}
 	return true;
 }
@@ -78,16 +75,16 @@ boolean CLogListenerFile::activate(boolean bActive)
 
 void CLogListenerFile::log(const time64 time64Value)
 {
-	if(m_bTimeInSeconds)
+	if (m_bTimeInSeconds)
 	{
-		float64 l_f64Time=ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
+		float64 l_f64Time = ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
 		std::stringstream ss;
 		ss.precision(m_ui64TimePrecision);
-		ss.setf(std::ios::fixed,std::ios::floatfield);
+		ss.setf(std::ios::fixed, std::ios::floatfield);
 		ss << l_f64Time;
 		ss << " sec";
 
-		if(m_bLogWithHexa)
+		if (m_bLogWithHexa)
 		{
 			ss << " (0x" << hex << time64Value.m_ui64TimeValue << ")";
 		}
@@ -174,7 +171,7 @@ void CLogListenerFile::log(const char* pValue)
 
 void CLogListenerFile::log(const ELogLevel eLogLevel)
 {
-	switch(eLogLevel)
+	switch (eLogLevel)
 	{
 		case LogLevel_Debug:
 			m_fsFileStream << "[ DEBUG ] ";
@@ -214,6 +211,4 @@ void CLogListenerFile::log(const ELogLevel eLogLevel)
 	}
 }
 
-void CLogListenerFile::log(const ELogColor eLogColor)
-{
-}
+void CLogListenerFile::log(const ELogColor eLogColor) {}

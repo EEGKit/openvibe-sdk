@@ -17,13 +17,13 @@ namespace OpenViBE
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier,
-				const OpenViBE::boolean bNotify = true);
+				const OpenViBE::boolean bNotify          = true);
 
 			virtual bool addOutput(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-				const OpenViBE::boolean bNotify = true);
+				const OpenViBE::boolean bNotify          = true);
 
 			/*
 			virtual bool addSetting(
@@ -36,14 +36,14 @@ namespace OpenViBE
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sDefaultValue,
-				const bool bModifiable = false,
+				const bool bModifiable                   = false,
 				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-				const OpenViBE::boolean bNotify = true);
+				const OpenViBE::boolean bNotify          = true);
 
 			virtual bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag);
 			virtual bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag);
-			virtual bool addInputSupport(const OpenViBE::CIdentifier &rTypeIdentifier);
-			virtual bool addOutputSupport(const OpenViBE::CIdentifier &rTypeIdentifier);
+			virtual bool addInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier);
+			virtual bool addOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IBoxProto, OVK_ClassId_Kernel_Scenario_BoxProto)
 

@@ -6,7 +6,7 @@ using namespace OpenViBE::Kernel;
 
 #include <iostream>
 
-boolean CScenarioSettingKeywordParserCallback::expand(const CString &rStringToExpand, CString &rExpandedString) const
+boolean CScenarioSettingKeywordParserCallback::expand(const CString& rStringToExpand, CString& rExpandedString) const
 {
 	// In the case there is no value present we return an empty string
 	rExpandedString = "";
@@ -14,8 +14,7 @@ boolean CScenarioSettingKeywordParserCallback::expand(const CString &rStringToEx
 	// Expand the scenario directory
 	if (rStringToExpand == CString("ScenarioDirectory"))
 	{
-
-		if(m_rScenario.hasAttribute(OV_AttributeId_ScenarioFilename))
+		if (m_rScenario.hasAttribute(OV_AttributeId_ScenarioFilename))
 		{
 			std::string l_sFilename = m_rScenario.getAttributeValue(OV_AttributeId_ScenarioFilename).toASCIIString();
 
@@ -27,10 +26,10 @@ boolean CScenarioSettingKeywordParserCallback::expand(const CString &rStringToEx
 		}
 		return true;
 	}
-	// Expand settings from the scenario
+		// Expand settings from the scenario
 	else if (m_rScenario.hasSettingWithName(rStringToExpand))
-	{		
-		m_rScenario.getSettingValue(rStringToExpand, rExpandedString);		
+	{
+		m_rScenario.getSettingValue(rStringToExpand, rExpandedString);
 		return true;
 	}
 

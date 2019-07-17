@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::uint64 getClockFrequency(void) { return 1LL<<32; }
+			virtual OpenViBE::uint64 getClockFrequency(void) { return 1LL << 32; }
 
 			virtual OpenViBE::boolean initialize(void);
 			virtual OpenViBE::boolean uininitialize(void);
@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder[7];
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pMemoryBuffer[7];
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer[7];
 
 			OpenViBE::boolean m_bHasSentHeader;
 			OpenViBE::uint64 m_ui64StartTime;
@@ -46,16 +46,16 @@ namespace OpenViBEPlugins
 		public:
 
 			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Encoder algorithm test"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Setups various streams and outputs them"); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Encoder algorithm test"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Setups various streams and outputs them"); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Note: Data sent in the streams does not change over time"); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Tests/Algorithms"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::StreamCodecs::CEncoderAlgorithmTest(); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Tests/Algorithms"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
+
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CEncoderAlgorithmTest(); }
 
 			virtual OpenViBE::boolean getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rPrototype) const

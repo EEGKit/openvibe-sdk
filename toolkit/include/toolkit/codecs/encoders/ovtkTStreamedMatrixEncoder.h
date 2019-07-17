@@ -12,10 +12,9 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TStreamedMatrixEncoderLocal : public T
 	{
-
 	protected:
 		//specific attribute : a matrix handler
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > m_pInputMatrix;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> m_pInputMatrix;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
@@ -37,10 +36,7 @@ namespace OpenViBEToolkit
 
 		OpenViBE::boolean uninitialize(void)
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
 			m_pInputMatrix.uninitialize();
 			m_pOutputMemoryBuffer.uninitialize();
@@ -51,7 +47,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getInputMatrix()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputMatrix()
 		{
 			return m_pInputMatrix;
 		}
@@ -82,21 +78,21 @@ namespace OpenViBEToolkit
 	It makes a lot easier the declaration of a Streamed Matrix encoder, as you don't have to specify any more template than the Box class (T).
 	*/
 	template <class T>
-	class TStreamedMatrixEncoder : public TStreamedMatrixEncoderLocal < TEncoder < T > >
+	class TStreamedMatrixEncoder : public TStreamedMatrixEncoderLocal<TEncoder<T>>
 	{
 	private:
-		using TStreamedMatrixEncoderLocal < TEncoder < T > >::m_pBoxAlgorithm;
+		using TStreamedMatrixEncoderLocal<TEncoder<T>>::m_pBoxAlgorithm;
 	public:
-		using TStreamedMatrixEncoderLocal < TEncoder < T > >::uninitialize;
+		using TStreamedMatrixEncoderLocal<TEncoder<T>>::uninitialize;
 
-		TStreamedMatrixEncoder()
-		{
-		}
+		TStreamedMatrixEncoder() { }
+
 		TStreamedMatrixEncoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
+
 		virtual ~TStreamedMatrixEncoder()
 		{
 			this->uninitialize();

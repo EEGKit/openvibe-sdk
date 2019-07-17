@@ -35,14 +35,11 @@ namespace
 	{
 		if (typeManager.isEnumeration(typeIdentifier))
 		{
-			auto enumerationEntryValue = typeManager.getEnumerationEntryValueFromName(typeIdentifier, value);
+			auto enumerationEntryValue        = typeManager.getEnumerationEntryValueFromName(typeIdentifier, value);
 			auto enumerationEntryReversedName = typeManager.getEnumerationEntryNameFromValue(typeIdentifier, enumerationEntryValue);
 			// We need to compare the reversed name of the enumerations because some enumeration values actually use max int
 			// which is the same value as the guard value for incorrect stimulations
-			if (enumerationEntryValue == OV_IncorrectStimulation && enumerationEntryReversedName != value)
-			{
-				return false;
-			}
+			if (enumerationEntryValue == OV_IncorrectStimulation && enumerationEntryReversedName != value) { return false; }
 		}
 		else if (typeIdentifier == OV_TypeId_Float || typeIdentifier == OV_TypeId_Integer)
 		{
@@ -52,24 +49,16 @@ namespace
 			{
 				Lepton::Parser::parse(value.toASCIIString()).evaluate();
 			}
-			catch (...)
-			{
-				return false;
-			}
+			catch (...) { return false; }
 		}
 		else if (typeIdentifier == OV_TypeId_Boolean)
 		{
 			std::string val = value.toASCIIString();
 			std::transform(val.begin(), val.end(), val.begin(), ::to_lower<std::string::value_type>);
 
-			if (!(val == "true" || val == "on" || val == "1" || val == "false" || val == "off" || val == "0"))
-			{
-				return false;
-			}
+			if (!(val == "true" || val == "on" || val == "1" || val == "false" || val == "off" || val == "0")) { return false; }
 		}
 		//TODO: else
 		return true;
 	}
-
 };
-

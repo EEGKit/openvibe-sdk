@@ -12,10 +12,9 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TSignalDecoderLocal : public T
 	{
-
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_pOutputSamplingRate;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_pOutputSamplingRate;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
@@ -38,10 +37,7 @@ namespace OpenViBEToolkit
 
 		OpenViBE::boolean uninitialize(void)
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
 			m_pOutputSamplingRate.uninitialize();
 			m_pOutputMatrix.uninitialize();
@@ -53,7 +49,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getOutputSamplingRate()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getOutputSamplingRate()
 		{
 			return m_pOutputSamplingRate;
 		}
@@ -75,22 +71,21 @@ namespace OpenViBEToolkit
 	};
 
 	template <class T>
-	class TSignalDecoder : public TSignalDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >
+	class TSignalDecoder : public TSignalDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
 	{
 	private:
-		using TSignalDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >::m_pBoxAlgorithm;
+		using TSignalDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_pBoxAlgorithm;
 	public:
-		using TSignalDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >::uninitialize;
+		using TSignalDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
 
-		TSignalDecoder()
-		{
+		TSignalDecoder() { }
 
-		}
 		TSignalDecoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
+
 		virtual ~TSignalDecoder()
 		{
 			this->uninitialize();

@@ -14,18 +14,14 @@ namespace OpenViBE
 		public:
 
 			CStimulation(void)
-				:m_ui64Identifier(0)
-				,m_ui64Date(0)
-				,m_ui64Duration(0)
-			{
-			}
+				: m_ui64Identifier(0)
+				  , m_ui64Date(0)
+				  , m_ui64Duration(0) { }
 
 			CStimulation(const uint64 ui64Identifier, const uint64 ui64Date, const uint64 ui64Duration)
-				:m_ui64Identifier(ui64Identifier)
-				,m_ui64Date(ui64Date)
-				,m_ui64Duration(ui64Duration)
-			{
-			}
+				: m_ui64Identifier(ui64Identifier)
+				  , m_ui64Date(ui64Date)
+				  , m_ui64Duration(ui64Duration) { }
 
 			uint64 m_ui64Identifier;
 			uint64 m_ui64Date;
@@ -56,7 +52,7 @@ namespace OpenViBE
 
 		private:
 
-			vector < CStimulation > m_vStimulation;
+			vector<CStimulation> m_vStimulation;
 		};
 	};
 };
@@ -64,15 +60,9 @@ namespace OpenViBE
 // ________________________________________________________________________________________________________________
 //
 
-void CStimulationSetImpl::clear(void)
-{
-	m_vStimulation.clear();
-}
+void CStimulationSetImpl::clear(void) { m_vStimulation.clear(); }
 
-const uint64 CStimulationSetImpl::getStimulationCount(void) const
-{
-	return m_vStimulation.size();
-}
+const uint64 CStimulationSetImpl::getStimulationCount(void) const { return m_vStimulation.size(); }
 
 const uint64 CStimulationSetImpl::getStimulationIdentifier(const uint64 ui64StimulationIndex) const
 {
@@ -97,73 +87,57 @@ boolean CStimulationSetImpl::setStimulationCount(const uint64 ui64StimulationCou
 
 boolean CStimulationSetImpl::setStimulationIdentifier(const uint64 ui64StimulationIndex, const uint64 ui64StimulationIdentifier)
 {
-	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Identifier=ui64StimulationIdentifier;
+	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Identifier = ui64StimulationIdentifier;
 	return true;
 }
 
 boolean CStimulationSetImpl::setStimulationDate(const uint64 ui64StimulationIndex, const uint64 ui64StimulationDate)
 {
-	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Date=ui64StimulationDate;
+	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Date = ui64StimulationDate;
 	return true;
 }
 
 boolean CStimulationSetImpl::setStimulationDuration(const uint64 ui64StimulationIndex, const uint64 ui64StimulationDuration)
 {
-	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Duration=ui64StimulationDuration;
+	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Duration = ui64StimulationDuration;
 	return true;
 }
 
 uint64 CStimulationSetImpl::appendStimulation(const uint64 ui64StimulationIdentifier, const uint64 ui64StimulationDate, const uint64 ui64StimulationDuration)
 {
 	m_vStimulation.push_back(CStimulation(ui64StimulationIdentifier, ui64StimulationDate, ui64StimulationDuration));
-	return m_vStimulation.size()-1;
+	return m_vStimulation.size() - 1;
 }
 
 uint64 CStimulationSetImpl::insertStimulation(const uint64 ui64StimulationIndex, const uint64 ui64StimulationIdentifier, const uint64 ui64StimulationDate, const uint64 ui64StimulationDuration)
 {
-	if(ui64StimulationIndex>m_vStimulation.size())
-	{
-		return false;
-	}
-	if(ui64StimulationIndex==m_vStimulation.size())
+	if (ui64StimulationIndex > m_vStimulation.size()) { return false; }
+	if (ui64StimulationIndex == m_vStimulation.size())
 	{
 		m_vStimulation.push_back(CStimulation(ui64StimulationIdentifier, ui64StimulationDate, ui64StimulationDuration));
 	}
 	else
 	{
-		m_vStimulation.insert(m_vStimulation.begin()+static_cast<size_t>(ui64StimulationIndex), CStimulation(ui64StimulationIdentifier, ui64StimulationDate, ui64StimulationDuration));
+		m_vStimulation.insert(m_vStimulation.begin() + static_cast<size_t>(ui64StimulationIndex), CStimulation(ui64StimulationIdentifier, ui64StimulationDate, ui64StimulationDuration));
 	}
 	return true;
 }
 
 boolean CStimulationSetImpl::removeStimulation(const uint64 ui64StimulationIndex)
 {
-	if(ui64StimulationIndex>=m_vStimulation.size())
-	{
-		return false;
-	}
-	m_vStimulation.erase(m_vStimulation.begin()+static_cast<size_t>(ui64StimulationIndex));
+	if (ui64StimulationIndex >= m_vStimulation.size()) { return false; }
+	m_vStimulation.erase(m_vStimulation.begin() + static_cast<size_t>(ui64StimulationIndex));
 	return true;
 }
 
 // ________________________________________________________________________________________________________________
 //
 
-CStimulationSet::CStimulationSet(void)
-	:m_pStimulationSetImpl(NULL)
-{
-	m_pStimulationSetImpl=new CStimulationSetImpl();
-}
+CStimulationSet::CStimulationSet(void) : m_pStimulationSetImpl(NULL) { m_pStimulationSetImpl = new CStimulationSetImpl(); }
 
-CStimulationSet::~CStimulationSet(void)
-{
-	delete m_pStimulationSetImpl;
-}
+CStimulationSet::~CStimulationSet(void) { delete m_pStimulationSetImpl; }
 
-void CStimulationSet::clear(void)
-{
-	m_pStimulationSetImpl->clear();
-}
+void CStimulationSet::clear(void) { m_pStimulationSetImpl->clear(); }
 
 const uint64 CStimulationSet::getStimulationCount(void) const
 {

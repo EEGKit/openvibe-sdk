@@ -40,14 +40,14 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 			m_ui16PortNumber = 0;
-			m_hmodTVicPort = LoadLibrary(TEXT("TVicPort.dll"));
+			m_hmodTVicPort   = LoadLibrary(TEXT("TVicPort.dll"));
 
 			if (m_hmodTVicPort != NULL)
 			{
 				m_lpfnTVicIsDriverOpened = (LPFNTVICPORTISDRIVEROPENED)GetProcAddress(m_hmodTVicPort, "IsDriverOpened");
-				m_lpfnTVicPortOpen = (LPFNTVICPORTOPEN)GetProcAddress(m_hmodTVicPort, "OpenTVicPort");
-				m_lpfnTVicPortClose = (LPFNTVICPORTCLOSE)GetProcAddress(m_hmodTVicPort, "CloseTVicPort");
-				m_lpfnTVicPortWrite = (LPFNTVICPORTWRITE)GetProcAddress(m_hmodTVicPort, "WritePort");
+				m_lpfnTVicPortOpen       = (LPFNTVICPORTOPEN)GetProcAddress(m_hmodTVicPort, "OpenTVicPort");
+				m_lpfnTVicPortClose      = (LPFNTVICPORTCLOSE)GetProcAddress(m_hmodTVicPort, "CloseTVicPort");
+				m_lpfnTVicPortWrite      = (LPFNTVICPORTWRITE)GetProcAddress(m_hmodTVicPort, "WritePort");
 
 				if (!m_lpfnTVicIsDriverOpened || !m_lpfnTVicPortOpen || !m_lpfnTVicPortClose || !m_lpfnTVicPortWrite)
 				{
@@ -86,30 +86,20 @@ namespace Socket
 					return false;
 				}
 			}
-			else
-			{
-				return false;
-			}
+			else { return false; }
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			return false;
 
-			/*if (ioctl(fd, PPRELEASE) < 0) 
-			{
-				return false;
-			}
+			/*if (ioctl(fd, PPRELEASE) < 0)  { return false; }
 
-			if (close(m_iFile) < 0)
-			{
-				return false;
-			}
+			if (close(m_iFile) < 0) { return false; }
 			else
 			{
 				m_iFile = -1;
 			}*/
 #endif
-
 		}
 
 		bool isReadyToSend(Socket::uint32 ui32TimeOut = 0) const
@@ -141,20 +131,14 @@ namespace Socket
 
 			return 0;
 
-			/*if (ioctl(m_iFile, PPWDATA, &l_ui8Value) < 0) 
-			{
-				return ui32BufferSize;
-			}*/
+			/*if (ioctl(m_iFile, PPWDATA, &l_ui8Value) < 0) { return ui32BufferSize; }*/
 
 #endif
 		}
 
 		uint32 receiveBuffer(void* pBuffer, const uint32 ui32BufferSize = 8)
 		{
-			if (!this->isConnected())
-			{
-				return 0;
-			}
+			if (!this->isConnected()) { return 0; }
 
 #if defined TARGET_OS_Windows
 
@@ -187,7 +171,6 @@ namespace Socket
 #endif
 
 			return 0;
-
 		}
 
 		bool sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
@@ -205,7 +188,7 @@ namespace Socket
 
 		bool receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
 		{
-			char* l_pPointer = reinterpret_cast<char*>(pBuffer);
+			char* l_pPointer       = reinterpret_cast<char*>(pBuffer);
 			uint32 l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -255,13 +238,13 @@ namespace Socket
 			{
 				if (m_lpfnTVicPortOpen())
 				{
-					m_sLastError = "No error";
+					m_sLastError     = "No error";
 					m_ui16PortNumber = ui16PortNumber;
 					return true;
 				}
 				else
 				{
-					m_sLastError = "Cannot open the TVic library";
+					m_sLastError     = "Cannot open the TVic library";
 					m_ui16PortNumber = 0;
 					return false;
 				}
@@ -317,7 +300,7 @@ namespace Socket
 				(LPTSTR)&l_sErrorText,						// output 
 				0,											// minimum size for output buffer
 				NULL
-				);											// arguments - see note
+			);											// arguments - see note
 
 			return l_sErrorText + std::to_string(static_cast<unsigned long long>(l_ui64Error));
 
@@ -331,7 +314,6 @@ namespace Socket
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	int m_iFile;
 #endif
-
 	};
 
 	IConnectionParallel* createConnectionParallel(void)

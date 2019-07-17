@@ -12,9 +12,7 @@ namespace OpenViBEToolkit
 	public:
 
 		explicit TVector(OpenViBE::IMatrix& rMatrix)
-			:m_rMatrix(rMatrix)
-		{
-		}
+			: m_rMatrix(rMatrix) { }
 
 		virtual OpenViBE::uint32 getSize(void) const
 		{
@@ -56,7 +54,7 @@ namespace OpenViBEToolkit
 		OpenViBE::IMatrix& m_rMatrix;
 	};
 
-	typedef OpenViBEToolkit::TVector < OpenViBEToolkit::IVector > CVector;
+	typedef OpenViBEToolkit::TVector<OpenViBEToolkit::IVector> CVector;
 };
 
 #endif // __OpenViBEToolkit_CVector_H__

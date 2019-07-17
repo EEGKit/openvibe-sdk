@@ -69,7 +69,7 @@ namespace OpenViBE
 			bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer);
 
 			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const uint32_t samplingRate);
-			bool getSpectrumInformation(std::vector<std::string> &channelNames, std::vector<double> &frequencyAbscissa, uint32_t& samplingRate);
+			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, uint32_t& samplingRate);
 
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames);
 			bool getFeatureVectorInformation(std::vector<std::string>& channelNames);

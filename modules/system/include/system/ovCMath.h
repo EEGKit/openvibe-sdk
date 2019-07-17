@@ -3,7 +3,7 @@
 #include "defines.h"
 
 #if defined TARGET_OS_Windows
- #include <float.h>
+#include <float.h>
 #elif defined System_OS_Linux
  #include <cmath>
 #else
@@ -49,4 +49,3 @@ namespace System
 		Math(void);
 	};
 };
-

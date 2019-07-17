@@ -10,14 +10,12 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CMessageClock : public OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >
+		class CMessageClock : public OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock>>
 		{
 		public:
 
 			explicit CMessageClock(const OpenViBE::Kernel::IKernelContext& rKernelContext)
-				:OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >(rKernelContext)
-			{
-			}
+				: OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock>>(rKernelContext) { }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >, OVK_ClassId_Kernel_Player_MessageClock);
 		};

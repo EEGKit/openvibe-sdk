@@ -14,15 +14,15 @@ using namespace Plugins;
 using namespace std;
 
 CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& rKernelContext, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
-	:TKernelObject < IAlgorithmProxy >(rKernelContext)
-	,m_pInputConfigurable(nullptr)
-	,m_pOutputConfigurable(nullptr)
-	,m_rAlgorithmDesc(rAlgorithmDesc)
-	,m_rAlgorithm(rAlgorithm)
-	,m_bIsInitialized(false)
+	: TKernelObject<IAlgorithmProxy>(rKernelContext)
+	  , m_pInputConfigurable(nullptr)
+	  , m_pOutputConfigurable(nullptr)
+	  , m_rAlgorithmDesc(rAlgorithmDesc)
+	  , m_rAlgorithm(rAlgorithm)
+	  , m_bIsInitialized(false)
 {
-	m_pInputConfigurable=dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
-	m_pOutputConfigurable=dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
+	m_pInputConfigurable  = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
+	m_pOutputConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
 
 	// FIXME
 	CAlgorithmProto l_oProto(rKernelContext, *this);
@@ -63,7 +63,7 @@ boolean CAlgorithmProxy::addInputParameter(
 	);
 
 	m_pInputConfigurable->createParameter(rInputParameterIdentifier, eParameterType, rSubTypeIdentifier);
-	m_vInputParameterName[rInputParameterIdentifier]=sInputName;
+	m_vInputParameterName[rInputParameterIdentifier] = sInputName;
 	return true;
 }
 
@@ -76,7 +76,7 @@ CIdentifier CAlgorithmProxy::getNextInputParameterIdentifier(
 IParameter* CAlgorithmProxy::getInputParameter(
 	const CIdentifier& rInputParameterIdentifier)
 {
-	IParameter* l_pParameter=m_pInputConfigurable->getParameter(rInputParameterIdentifier);
+	IParameter* l_pParameter = m_pInputConfigurable->getParameter(rInputParameterIdentifier);
 
 	OV_ERROR_UNLESS_KRN(
 		l_pParameter,
@@ -90,7 +90,7 @@ IParameter* CAlgorithmProxy::getInputParameter(
 EParameterType CAlgorithmProxy::getInputParameterType(
 	const CIdentifier& rInputParameterIdentifier) const
 {
-	IParameter* l_pParameter=m_pInputConfigurable->getParameter(rInputParameterIdentifier);
+	IParameter* l_pParameter = m_pInputConfigurable->getParameter(rInputParameterIdentifier);
 	if (!l_pParameter)
 	{
 		return ParameterType_None;
@@ -101,8 +101,8 @@ EParameterType CAlgorithmProxy::getInputParameterType(
 CString CAlgorithmProxy::getInputParameterName(
 	const CIdentifier& rInputParameterIdentifier) const
 {
-	map<CIdentifier, CString>::const_iterator itName=m_vInputParameterName.find(rInputParameterIdentifier);
-	if (itName==m_vInputParameterName.end())
+	map<CIdentifier, CString>::const_iterator itName = m_vInputParameterName.find(rInputParameterIdentifier);
+	if (itName == m_vInputParameterName.end())
 	{
 		return "";
 	}
@@ -112,10 +112,7 @@ CString CAlgorithmProxy::getInputParameterName(
 boolean CAlgorithmProxy::removeInputParameter(
 	const CIdentifier& rInputParameterIdentifier)
 {
-	if (!m_pInputConfigurable->removeParameter(rInputParameterIdentifier))
-	{
-		return false;
-	}
+	if (!m_pInputConfigurable->removeParameter(rInputParameterIdentifier)) { return false; }
 	m_vInputParameterName.erase(m_vInputParameterName.find(rInputParameterIdentifier));
 	return true;
 }
@@ -133,7 +130,7 @@ boolean CAlgorithmProxy::addOutputParameter(
 	);
 
 	m_pOutputConfigurable->createParameter(rOutputParameterIdentifier, eParameterType, rSubTypeIdentifier);
-	m_vOutputParameterName[rOutputParameterIdentifier]=sOutputName;
+	m_vOutputParameterName[rOutputParameterIdentifier] = sOutputName;
 	return true;
 }
 
@@ -146,7 +143,7 @@ CIdentifier CAlgorithmProxy::getNextOutputParameterIdentifier(
 IParameter* CAlgorithmProxy::getOutputParameter(
 	const CIdentifier& rOutputParameterIdentifier)
 {
-	IParameter* l_pParameter=m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
+	IParameter* l_pParameter = m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
 
 	OV_ERROR_UNLESS_KRN(
 		l_pParameter,
@@ -160,7 +157,7 @@ IParameter* CAlgorithmProxy::getOutputParameter(
 EParameterType CAlgorithmProxy::getOutputParameterType(
 	const CIdentifier& rOutputParameterIdentifier) const
 {
-	IParameter* l_pParameter=m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
+	IParameter* l_pParameter = m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
 	if (!l_pParameter)
 	{
 		return ParameterType_None;
@@ -171,8 +168,8 @@ EParameterType CAlgorithmProxy::getOutputParameterType(
 CString CAlgorithmProxy::getOutputParameterName(
 	const CIdentifier& rOutputParameterIdentifier) const
 {
-	map<CIdentifier, CString>::const_iterator itName=m_vOutputParameterName.find(rOutputParameterIdentifier);
-	if (itName==m_vOutputParameterName.end())
+	map<CIdentifier, CString>::const_iterator itName = m_vOutputParameterName.find(rOutputParameterIdentifier);
+	if (itName == m_vOutputParameterName.end())
 	{
 		return "";
 	}
@@ -182,10 +179,7 @@ CString CAlgorithmProxy::getOutputParameterName(
 boolean CAlgorithmProxy::removeOutputParameter(
 	const CIdentifier& rOutputParameterIdentifier)
 {
-	if (!m_pOutputConfigurable->removeParameter(rOutputParameterIdentifier))
-	{
-		return false;
-	}
+	if (!m_pOutputConfigurable->removeParameter(rOutputParameterIdentifier)) { return false; }
 	m_vOutputParameterName.erase(m_vOutputParameterName.find(rOutputParameterIdentifier));
 	return true;
 }
@@ -194,26 +188,23 @@ boolean CAlgorithmProxy::addInputTrigger(
 	const CIdentifier& rInputTriggerIdentifier,
 	const CString& rInputTriggerName)
 {
-	if (m_vInputTrigger.find(rInputTriggerIdentifier)!=m_vInputTrigger.end())
-	{
-		return false;
-	}
-	m_vInputTrigger[rInputTriggerIdentifier].first=rInputTriggerName;
-	m_vInputTrigger[rInputTriggerIdentifier].second=false;
+	if (m_vInputTrigger.find(rInputTriggerIdentifier) != m_vInputTrigger.end()) { return false; }
+	m_vInputTrigger[rInputTriggerIdentifier].first  = rInputTriggerName;
+	m_vInputTrigger[rInputTriggerIdentifier].second = false;
 	return true;
 }
 
 CIdentifier CAlgorithmProxy::getNextInputTriggerIdentifier(
 	const CIdentifier& rPreviousInputTriggerIdentifier) const
 {
-	return getNextIdentifier< pair<CString, boolean> >(m_vInputTrigger, rPreviousInputTriggerIdentifier);
+	return getNextIdentifier<pair<CString, boolean>>(m_vInputTrigger, rPreviousInputTriggerIdentifier);
 }
 
 CString CAlgorithmProxy::getInputTriggerName(
 	const CIdentifier& rInputTriggerIdentifier) const
 {
-	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
-	if (itTrigger==m_vInputTrigger.end())
+	map<CIdentifier, pair<CString, boolean>>::const_iterator itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
+	if (itTrigger == m_vInputTrigger.end())
 	{
 		return "";
 	}
@@ -223,11 +214,8 @@ CString CAlgorithmProxy::getInputTriggerName(
 boolean CAlgorithmProxy::isInputTriggerActive(
 	const CIdentifier& rInputTriggerIdentifier) const
 {
-	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
-	if (itTrigger==m_vInputTrigger.end())
-	{
-		return false;
-	}
+	map<CIdentifier, pair<CString, boolean>>::const_iterator itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
+	if (itTrigger == m_vInputTrigger.end()) { return false; }
 	return itTrigger->second.second;
 }
 
@@ -235,23 +223,17 @@ boolean CAlgorithmProxy::activateInputTrigger(
 	const CIdentifier& rInputTriggerIdentifier,
 	const boolean bTriggerState)
 {
-	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
-	if (itTrigger==m_vInputTrigger.end())
-	{
-		return false;
-	}
-	itTrigger->second.second=true;
+	map<CIdentifier, pair<CString, boolean>>::iterator itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
+	if (itTrigger == m_vInputTrigger.end()) { return false; }
+	itTrigger->second.second = true;
 	return true;
 }
 
 boolean CAlgorithmProxy::removeInputTrigger(
 	const CIdentifier& rInputTriggerIdentifier)
 {
-	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger=m_vInputTrigger.find(rInputTriggerIdentifier);
-	if (itTrigger==m_vInputTrigger.end())
-	{
-		return false;
-	}
+	map<CIdentifier, pair<CString, boolean>>::iterator itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
+	if (itTrigger == m_vInputTrigger.end()) { return false; }
 	m_vInputTrigger.erase(itTrigger);
 	return true;
 }
@@ -260,26 +242,23 @@ boolean CAlgorithmProxy::addOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier,
 	const CString& rOutputTriggerName)
 {
-	if (m_vOutputTrigger.find(rOutputTriggerIdentifier)!=m_vOutputTrigger.end())
-	{
-		return false;
-	}
-	m_vOutputTrigger[rOutputTriggerIdentifier].first=rOutputTriggerName;
-	m_vOutputTrigger[rOutputTriggerIdentifier].second=false;
+	if (m_vOutputTrigger.find(rOutputTriggerIdentifier) != m_vOutputTrigger.end()) { return false; }
+	m_vOutputTrigger[rOutputTriggerIdentifier].first  = rOutputTriggerName;
+	m_vOutputTrigger[rOutputTriggerIdentifier].second = false;
 	return true;
 }
 
 CIdentifier CAlgorithmProxy::getNextOutputTriggerIdentifier(
 	const CIdentifier& rPreviousOutputTriggerIdentifier) const
 {
-	return getNextIdentifier< pair<CString, boolean> >(m_vOutputTrigger, rPreviousOutputTriggerIdentifier);
+	return getNextIdentifier<pair<CString, boolean>>(m_vOutputTrigger, rPreviousOutputTriggerIdentifier);
 }
 
 CString CAlgorithmProxy::getOutputTriggerName(
 	const CIdentifier& rOutputTriggerIdentifier) const
 {
-	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
-	if (itTrigger==m_vOutputTrigger.end())
+	map<CIdentifier, pair<CString, boolean>>::const_iterator itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
+	if (itTrigger == m_vOutputTrigger.end())
 	{
 		return "";
 	}
@@ -289,11 +268,8 @@ CString CAlgorithmProxy::getOutputTriggerName(
 boolean CAlgorithmProxy::isOutputTriggerActive(
 	const CIdentifier& rOutputTriggerIdentifier) const
 {
-	map<CIdentifier, pair<CString, boolean> >::const_iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
-	if (itTrigger==m_vOutputTrigger.end())
-	{
-		return false;
-	}
+	map<CIdentifier, pair<CString, boolean>>::const_iterator itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
+	if (itTrigger == m_vOutputTrigger.end()) { return false; }
 	return itTrigger->second.second;
 }
 
@@ -301,23 +277,17 @@ boolean CAlgorithmProxy::activateOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier,
 	const boolean bTriggerState)
 {
-	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
-	if (itTrigger==m_vOutputTrigger.end())
-	{
-		return false;
-	}
-	itTrigger->second.second=true;
+	map<CIdentifier, pair<CString, boolean>>::iterator itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
+	if (itTrigger == m_vOutputTrigger.end()) { return false; }
+	itTrigger->second.second = true;
 	return true;
 }
 
 boolean CAlgorithmProxy::removeOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier)
 {
-	map<CIdentifier, pair<CString, boolean> >::iterator itTrigger=m_vOutputTrigger.find(rOutputTriggerIdentifier);
-	if (itTrigger==m_vOutputTrigger.end())
-	{
-		return false;
-	}
+	map<CIdentifier, pair<CString, boolean>>::iterator itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
+	if (itTrigger == m_vOutputTrigger.end()) { return false; }
 	m_vOutputTrigger.erase(itTrigger);
 	return true;
 }
@@ -328,7 +298,8 @@ boolean CAlgorithmProxy::initialize(void)
 	assert(!m_bIsInitialized);
 
 	return translateException(
-		[&]() {
+		[&]()
+		{
 			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
 			// The dual state initialized or not does not take into account
 			// a partially initialized state. Thus, we have to trust algorithms to implement
@@ -345,7 +316,8 @@ boolean CAlgorithmProxy::uninitialize(void)
 	assert(m_bIsInitialized);
 
 	return translateException(
-		[&]() {
+		[&]()
+		{
 			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
 			return m_rAlgorithm.uninitialize(l_oAlgorithmContext);
 		},
@@ -358,8 +330,8 @@ boolean CAlgorithmProxy::process(void)
 	assert(m_bIsInitialized);
 
 	return translateException(
-		[&]() {
-
+		[&]()
+		{
 			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
 
 			this->setAllOutputTriggers(false);
@@ -379,27 +351,24 @@ boolean CAlgorithmProxy::process(
 {
 	assert(m_bIsInitialized);
 
-	if (!this->activateInputTrigger(rTriggerIdentifier, true))
-	{
-		return false;
-	}
+	if (!this->activateInputTrigger(rTriggerIdentifier, true)) { return false; }
 
 	return this->process();
 }
 
 void CAlgorithmProxy::setAllInputTriggers(const boolean bTriggerStatus)
 {
-	for(auto& trigger : m_vInputTrigger)
+	for (auto& trigger : m_vInputTrigger)
 	{
-		trigger.second.second=bTriggerStatus;
+		trigger.second.second = bTriggerStatus;
 	}
 }
 
 void CAlgorithmProxy::setAllOutputTriggers(const boolean bTriggerStatus)
 {
-	for(auto& trigger : m_vOutputTrigger)
+	for (auto& trigger : m_vOutputTrigger)
 	{
-		trigger.second.second=bTriggerStatus;
+		trigger.second.second = bTriggerStatus;
 	}
 }
 

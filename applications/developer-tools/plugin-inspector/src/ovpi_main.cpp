@@ -11,10 +11,10 @@ using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
 using namespace std;
 
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
-//___________________________________________________________________//
-//                                                                   //
+	//___________________________________________________________________//
+	//                                                                   //
 	/*
 	USAGE:
 	plugin-inspector <plugin1 plugin2 ...>
@@ -27,9 +27,9 @@ int main(int argc, char ** argv)
 	bool ignoreMetaboxes = false;
 	vector<string> metaboxExtensionsToLoad;
 
-	for(int32_t i = 1; i < argc; i++)
+	for (int32_t i = 1; i < argc; i++)
 	{
-		if(::strcmp(argv[i], "--help") == 0 || ::strcmp(argv[i], "-h") == 0)
+		if (::strcmp(argv[i], "--help") == 0 || ::strcmp(argv[i], "-h") == 0)
 		{
 			::cout << "[ USAGE ]\n"
 					<< "plugin-inspector <plugin1 plugin2 ...>\n"
@@ -38,29 +38,29 @@ int main(int argc, char ** argv)
 		}
 		::cout << "Analyze parameter: [" << i << " : " << argv[i] << "]." << endl;
 
-		if(::strcmp(argv[i], "--ignore-metaboxes") == 0)
+		if (::strcmp(argv[i], "--ignore-metaboxes") == 0)
 		{
 			ignoreMetaboxes = true;
 		}
-		else if(i < argc && ::strcmp(argv[i], "--box-doc-directory") == 0)
+		else if (i < argc && ::strcmp(argv[i], "--box-doc-directory") == 0)
 		{
-			if(++i >= argc)
+			if (++i >= argc)
 			{
-				::cout << "[ FAILED ] Error while parsing arguments: --box-doc-directory flag found but no path specified afterwards."<<endl;
+				::cout << "[ FAILED ] Error while parsing arguments: --box-doc-directory flag found but no path specified afterwards." << endl;
 				return 0;
 			}
 			boxAlgorithmDocTemplateDirectory = argv[i];
 			::cout << "Templates will be generated in folder: [" << boxAlgorithmDocTemplateDirectory.toASCIIString() << "]." << endl;
 		}
-		else if(i < argc)
+		else if (i < argc)
 		{
 			pluginFilestoLoad.push_back(string(argv[i]));
 		}
 	}
-	
+
 	CKernelLoader kernelLoader;
 
-	::cout<<"[  INF  ] Created kernel loader, trying to load kernel module"<<endl;
+	::cout << "[  INF  ] Created kernel loader, trying to load kernel module" << endl;
 	CString errorMsg;
 #if defined TARGET_OS_Windows
 	CString kernelFile = OpenViBE::Directories::getLibDir() + "/openvibe-kernel.dll";
@@ -76,45 +76,45 @@ int main(int argc, char ** argv)
 	}
 	else
 	{
-		cout<<"[  INF  ] Kernel module loaded, trying to get kernel descriptor"<<endl;
-		IKernelDesc* kernelDesc = nullptr;
+		cout << "[  INF  ] Kernel module loaded, trying to get kernel descriptor" << endl;
+		IKernelDesc* kernelDesc       = nullptr;
 		IKernelContext* kernelContext = nullptr;
 		kernelLoader.initialize();
 		kernelLoader.getKernelDesc(kernelDesc);
-		if(!kernelDesc)
+		if (!kernelDesc)
 		{
-			::cout<<"[ FAILED ] No kernel descriptor"<<endl;
+			::cout << "[ FAILED ] No kernel descriptor" << endl;
 		}
 		else
 		{
-			::cout<<"[  INF  ] Got kernel descriptor, trying to create kernel"<<endl;
+			::cout << "[  INF  ] Got kernel descriptor, trying to create kernel" << endl;
 
 			kernelContext = kernelDesc->createKernel("plugin-inspector", OpenViBE::Directories::getDataDir() + "/kernel/openvibe.conf");
-			if(!kernelContext)
+			if (!kernelContext)
 			{
-				::cout<<"[ FAILED ] No kernel created by kernel descriptor"<<endl;
+				::cout << "[ FAILED ] No kernel created by kernel descriptor" << endl;
 			}
 			else
 			{
 				kernelContext->initialize();
 				OpenViBEToolkit::initialize(*kernelContext);
 
-				IConfigurationManager& configurationManager=kernelContext->getConfigurationManager();
+				IConfigurationManager& configurationManager = kernelContext->getConfigurationManager();
 
-				if(pluginFilestoLoad.empty())
+				if (pluginFilestoLoad.empty())
 				{
 					kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand("${Kernel_Plugins}"));
 				}
 				else
 				{
-					for(string pluginFiletoLoad : pluginFilestoLoad)
+					for (string pluginFiletoLoad : pluginFilestoLoad)
 					{
 						kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand(CString(pluginFiletoLoad.c_str())));
 					}
 				}
 
 				kernelContext->getLogManager() << LogLevel_Info << "[  INF  ] Generate boxes templates in [" << boxAlgorithmDocTemplateDirectory << "]\n";
-				
+
 				CPluginObjectDescEnumBoxTemplateGenerator boxTemplateGenerator(*kernelContext, boxAlgorithmDocTemplateDirectory);
 				if (!boxTemplateGenerator.initialize())
 				{

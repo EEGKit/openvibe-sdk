@@ -5,35 +5,31 @@ using namespace Kernel;
 using namespace Plugins;
 
 CObjectVisitorContext::CObjectVisitorContext(const IKernelContext& rKernelContext)
-	:TKernelObject < IObjectVisitorContext >(rKernelContext)
-{
-}
+	: TKernelObject<IObjectVisitorContext>(rKernelContext) {}
 
-CObjectVisitorContext::~CObjectVisitorContext(void)
-{
-}
+CObjectVisitorContext::~CObjectVisitorContext(void) {}
 
 IAlgorithmManager& CObjectVisitorContext::getAlgorithmManager(void) const
 {
-	return TKernelObject < IObjectVisitorContext >::getAlgorithmManager();
+	return TKernelObject<IObjectVisitorContext>::getAlgorithmManager();
 }
 
 IConfigurationManager& CObjectVisitorContext::getConfigurationManager(void) const
 {
-	return TKernelObject < IObjectVisitorContext >::getConfigurationManager();
+	return TKernelObject<IObjectVisitorContext>::getConfigurationManager();
 }
 
 ITypeManager& CObjectVisitorContext::getTypeManager(void) const
 {
-	return TKernelObject < IObjectVisitorContext >::getTypeManager();
+	return TKernelObject<IObjectVisitorContext>::getTypeManager();
 }
 
 ILogManager& CObjectVisitorContext::getLogManager(void) const
 {
-	return TKernelObject < IObjectVisitorContext >::getLogManager();
+	return TKernelObject<IObjectVisitorContext>::getLogManager();
 }
 
 IErrorManager& CObjectVisitorContext::getErrorManager(void) const
 {
-	return TKernelObject < IObjectVisitorContext >::getErrorManager();
+	return TKernelObject<IObjectVisitorContext>::getErrorManager();
 }

@@ -7,22 +7,18 @@ using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 
 CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox)
-    :TKernelObject<IPlayerContext>(rKernelContext)
-    ,m_rSimulatedBox(*pSimulatedBox)
-    ,m_rPluginManager(rKernelContext.getPluginManager())
-    ,m_rAlgorithmManager(rKernelContext.getAlgorithmManager())
-    ,m_rConfigurationManager(rKernelContext.getConfigurationManager())
-    ,m_rLogManager(rKernelContext.getLogManager())
-    ,m_rErrorManager(rKernelContext.getErrorManager())
-    ,m_rScenarioManager(rKernelContext.getScenarioManager())
-    ,m_rTypeManager(rKernelContext.getTypeManager())
-    ,m_BoxLogManager(*this, m_rLogManager, m_rSimulatedBox)
-{
-}
+	: TKernelObject<IPlayerContext>(rKernelContext)
+	  , m_rSimulatedBox(*pSimulatedBox)
+	  , m_rPluginManager(rKernelContext.getPluginManager())
+	  , m_rAlgorithmManager(rKernelContext.getAlgorithmManager())
+	  , m_rConfigurationManager(rKernelContext.getConfigurationManager())
+	  , m_rLogManager(rKernelContext.getLogManager())
+	  , m_rErrorManager(rKernelContext.getErrorManager())
+	  , m_rScenarioManager(rKernelContext.getScenarioManager())
+	  , m_rTypeManager(rKernelContext.getTypeManager())
+	  , m_BoxLogManager(*this, m_rLogManager, m_rSimulatedBox) {}
 
-CPlayerContext::~CPlayerContext(void)
-{
-}
+CPlayerContext::~CPlayerContext(void) {}
 
 boolean CPlayerContext::sendSignal(
 	const CMessageSignal& rMessageSignal)

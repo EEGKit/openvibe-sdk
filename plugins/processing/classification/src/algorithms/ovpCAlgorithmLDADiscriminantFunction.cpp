@@ -15,17 +15,16 @@ using namespace OpenViBEToolkit;
 using namespace Eigen;
 
 
-namespace{
-	const char* const c_sBaseNodeName     = "Class-config";
-	const char* const c_sWeightNodeName   = "Weights";
-	const char* const c_sBiasNodeName     = "Bias";
-}
-
-CAlgorithmLDADiscriminantFunction::CAlgorithmLDADiscriminantFunction():m_f64Bias(0)
+namespace
 {
+	const char* const c_sBaseNodeName   = "Class-config";
+	const char* const c_sWeightNodeName = "Weights";
+	const char* const c_sBiasNodeName   = "Bias";
 }
 
-void CAlgorithmLDADiscriminantFunction::setWeight(const VectorXd &rWeigth)
+CAlgorithmLDADiscriminantFunction::CAlgorithmLDADiscriminantFunction(): m_f64Bias(0) {}
+
+void CAlgorithmLDADiscriminantFunction::setWeight(const VectorXd& rWeigth)
 {
 	m_oWeight = rWeigth;
 }
@@ -35,7 +34,7 @@ void CAlgorithmLDADiscriminantFunction::setBias(float64 f64Bias)
 	m_f64Bias = f64Bias;
 }
 
-float64 CAlgorithmLDADiscriminantFunction::getValue(const VectorXd &rFeatureVector)
+float64 CAlgorithmLDADiscriminantFunction::getValue(const VectorXd& rFeatureVector)
 {
 	return (m_oWeight.transpose() * rFeatureVector)(0) + m_f64Bias;
 }
@@ -45,14 +44,14 @@ uint32 CAlgorithmLDADiscriminantFunction::getWeightVectorSize()
 	return m_oWeight.size();
 }
 
-boolean CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode *pConfiguration)
+boolean CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode* pConfiguration)
 {
 	std::stringstream l_sBias(pConfiguration->getChildByName(c_sBiasNodeName)->getPCData());
 	l_sBias >> m_f64Bias;
 
 	std::stringstream l_sData(pConfiguration->getChildByName(c_sWeightNodeName)->getPCData());
-	std::vector < float64 > l_vCoefficients;
-	while(!l_sData.eof())
+	std::vector<float64> l_vCoefficients;
+	while (!l_sData.eof())
 	{
 		float64 l_f64Value;
 		l_sData >> l_f64Value;
@@ -60,14 +59,14 @@ boolean CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode
 	}
 
 	m_oWeight.resize(l_vCoefficients.size());
-	for(size_t i=0; i<l_vCoefficients.size(); i++)
+	for (size_t i = 0; i < l_vCoefficients.size(); i++)
 	{
-		m_oWeight(i,0)=l_vCoefficients[i];
+		m_oWeight(i, 0) = l_vCoefficients[i];
 	}
 	return true;
 }
 
-XML::IXMLNode *CAlgorithmLDADiscriminantFunction::getConfiguration(void)
+XML::IXMLNode* CAlgorithmLDADiscriminantFunction::getConfiguration(void)
 {
 	XML::IXMLNode* l_pRootNode = XML::createNode(c_sBaseNodeName);
 
@@ -76,9 +75,9 @@ XML::IXMLNode *CAlgorithmLDADiscriminantFunction::getConfiguration(void)
 
 
 	l_sWeigths << std::scientific;
-	for(int32 i=0; i<m_oWeight.size(); i++)
+	for (int32 i = 0; i < m_oWeight.size(); i++)
 	{
-		l_sWeigths << " " << m_oWeight(i,0);
+		l_sWeigths << " " << m_oWeight(i, 0);
 	}
 
 	l_sBias << m_f64Bias;

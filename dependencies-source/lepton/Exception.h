@@ -35,25 +35,27 @@
 #include <exception>
 #include <string>
 
-namespace Lepton {
+namespace Lepton
+{
 
 	/**
 	 * This class is used for all exceptions thrown by Lepton.
 	 */
 
-	class Exception : public std::exception {
+	class Exception : public std::exception
+	{
 	public:
-		Exception(const std::string& message) : message(message) {
-		}
-		~Exception() throw() {
-		}
-		const char* what() const throw() {
+		Exception(const std::string& message) : message(message) { }
+		~Exception() throw() { }
+
+		const char* what() const throw()
+		{
 			return message.c_str();
 		}
+
 	private:
 		std::string message;
 	};
-
 } // namespace Lepton
 
 #endif /*LEPTON_EXCEPTION_H_*/

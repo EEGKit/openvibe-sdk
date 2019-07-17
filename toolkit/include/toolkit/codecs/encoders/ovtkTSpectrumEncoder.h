@@ -11,11 +11,10 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TSpectrumEncoderLocal : public T
 	{
-
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > m_pInputFrequencyAbscissa;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_pInputSamplingRate;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> m_pInputFrequencyAbscissa;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_pInputSamplingRate;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
@@ -40,10 +39,7 @@ namespace OpenViBEToolkit
 
 		OpenViBE::boolean uninitialize(void)
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
 			m_pInputMatrix.uninitialize();
 			m_pInputFrequencyAbscissa.uninitialize();
@@ -56,12 +52,12 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getInputSamplingRate()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getInputSamplingRate()
 		{
 			return m_pInputSamplingRate;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getInputFrequencyAbscissa()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbscissa()
 		{
 			return m_pInputFrequencyAbscissa;
 		}
@@ -90,21 +86,21 @@ namespace OpenViBEToolkit
 	};
 
 	template <class T>
-	class TSpectrumEncoder : public TSpectrumEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >
+	class TSpectrumEncoder : public TSpectrumEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>
 	{
 	private:
-		using TSpectrumEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >::m_pBoxAlgorithm;
+		using TSpectrumEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_pBoxAlgorithm;
 	public:
-		using TSpectrumEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >::uninitialize;
+		using TSpectrumEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::uninitialize;
 
-		TSpectrumEncoder()
-		{
-		}
+		TSpectrumEncoder() { }
+
 		TSpectrumEncoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
+
 		virtual ~TSpectrumEncoder()
 		{
 			this->uninitialize();

@@ -43,11 +43,10 @@ namespace OpenViBE
 	*/
 	struct ICommand
 	{
-
-		ICommand() = default;
+		ICommand()          = default;
 		virtual ~ICommand() = default;
 
-		friend std::ostream& operator<< (std::ostream& os, const ICommand& cmd);
+		friend std::ostream& operator<<(std::ostream& os, const ICommand& cmd);
 
 		/**
 		* \brief Execute the command
@@ -64,8 +63,8 @@ namespace OpenViBE
 
 		// disable copy and assignment because it is not meant to used
 		// as a value class
-		ICommand(const ICommand&) = delete;
-		ICommand &operator=(const ICommand&) = delete;
+		ICommand(const ICommand&)            = delete;
+		ICommand& operator=(const ICommand&) = delete;
 	};
 
 	inline std::ostream& operator<<(std::ostream& os, const ICommand& cmd)

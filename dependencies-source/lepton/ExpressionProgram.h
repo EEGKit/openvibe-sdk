@@ -38,58 +38,58 @@
 #include <string>
 #include <vector>
 
-namespace Lepton {
+namespace Lepton
+{
+	class ParsedExpression;
 
-class ParsedExpression;
+	/**
+	 * An ExpressionProgram is a linear sequence of Operations for evaluating an expression.  The evaluation
+	 * is done with a stack.  The arguments to each Operation are first taken off the stack in order, then it is
+	 * evaluated and the result is pushed back onto the stack.  At the end, the stack contains a single value,
+	 * which is the value of the expression.
+	 *
+	 * An ExpressionProgram is created by calling createProgram() on a ParsedExpression.
+	 */
 
-/**
- * An ExpressionProgram is a linear sequence of Operations for evaluating an expression.  The evaluation
- * is done with a stack.  The arguments to each Operation are first taken off the stack in order, then it is
- * evaluated and the result is pushed back onto the stack.  At the end, the stack contains a single value,
- * which is the value of the expression.
- *
- * An ExpressionProgram is created by calling createProgram() on a ParsedExpression.
- */
-
-class LEPTON_EXPORT ExpressionProgram {
-public:
-    ExpressionProgram();
-    ExpressionProgram(const ExpressionProgram& program);
-    ~ExpressionProgram();
-    ExpressionProgram& operator=(const ExpressionProgram& program);
-    /**
-     * Get the number of Operations that make up this program.
-     */
-    int getNumOperations() const;
-    /**
-     * Get an Operation in this program.
-     */
-    const Operation& getOperation(int index) const;
-    /**
-     * Get the size of the stack needed to execute this program.  This is the largest number of elements present
-     * on the stack at any point during evaluation.
-     */
-    int getStackSize() const;
-    /**
-     * Evaluate the expression.  If the expression involves any variables, this method will throw an exception.
-     */
-    double evaluate() const;
-    /**
-     * Evaluate the expression.
-     *
-     * @param variables    a map specifying the values of all variables that appear in the expression.  If any
-     *                     variable appears in the expression but is not included in this map, an exception
-     *                     will be thrown.
-     */
-    double evaluate(const std::map<std::string, double>& variables) const;
-private:
-    friend class ParsedExpression;
-    ExpressionProgram(const ParsedExpression& expression);
-    void buildProgram(const ExpressionTreeNode& node);
-    std::vector<Operation*> operations;
-    int maxArgs, stackSize;
-};
-
+	class LEPTON_EXPORT ExpressionProgram
+	{
+	public:
+		ExpressionProgram();
+		ExpressionProgram(const ExpressionProgram& program);
+		~ExpressionProgram();
+		ExpressionProgram& operator=(const ExpressionProgram& program);
+		/**
+		 * Get the number of Operations that make up this program.
+		 */
+		int getNumOperations() const;
+		/**
+		 * Get an Operation in this program.
+		 */
+		const Operation& getOperation(int index) const;
+		/**
+		 * Get the size of the stack needed to execute this program.  This is the largest number of elements present
+		 * on the stack at any point during evaluation.
+		 */
+		int getStackSize() const;
+		/**
+		 * Evaluate the expression.  If the expression involves any variables, this method will throw an exception.
+		 */
+		double evaluate() const;
+		/**
+		 * Evaluate the expression.
+		 *
+		 * @param variables    a map specifying the values of all variables that appear in the expression.  If any
+		 *                     variable appears in the expression but is not included in this map, an exception
+		 *                     will be thrown.
+		 */
+		double evaluate(const std::map<std::string, double>& variables) const;
+	private:
+		friend class ParsedExpression;
+		ExpressionProgram(const ParsedExpression& expression);
+		void buildProgram(const ExpressionTreeNode& node);
+		std::vector<Operation*> operations;
+		int maxArgs, stackSize;
+	};
 } // namespace Lepton
 
 #endif /*LEPTON_EXPRESSION_PROGRAM_H_*/

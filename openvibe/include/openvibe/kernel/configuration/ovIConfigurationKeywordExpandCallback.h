@@ -22,13 +22,11 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual ~IConfigurationKeywordExpandCallback()
-			{}
+			virtual ~IConfigurationKeywordExpandCallback() {}
 
 			virtual OpenViBE::boolean expand(
-			        const OpenViBE::CString& rStringToExpand,
-			        OpenViBE::CString& rExpandedString) const = 0;
-
+				const OpenViBE::CString& rStringToExpand,
+				OpenViBE::CString& rExpandedString) const = 0;
 		};
 	}
 }

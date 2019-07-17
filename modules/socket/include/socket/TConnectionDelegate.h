@@ -5,7 +5,8 @@
 
 namespace Socket
 {
-	struct SConnectionDelegate {
+	struct SConnectionDelegate
+	{
 		void* pUserData;
 		bool (*fpOpen)(void*);
 		bool (*fpClose)(void*);
@@ -23,10 +24,7 @@ namespace Socket
 	class Socket_API TConnectionDelegate : public T
 	{
 	public:
-		TConnectionDelegate(SConnectionDelegate oConnectionDelegate) :
-			m_oConnectionDelegate(oConnectionDelegate)
-		{
-		}
+		TConnectionDelegate(SConnectionDelegate oConnectionDelegate) : m_oConnectionDelegate(oConnectionDelegate) { }
 
 		virtual Socket::boolean close(void)
 		{
@@ -74,12 +72,10 @@ namespace Socket
 		}
 
 	public:
-		virtual ~TConnectionDelegate(void)
-		{
-
-		}
+		virtual ~TConnectionDelegate(void) { }
 	protected:
-		virtual Socket::boolean open(void) {
+		virtual Socket::boolean open(void)
+		{
 			return m_oConnectionDelegate.fpOpen(m_oConnectionDelegate.pUserData);
 		}
 

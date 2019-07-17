@@ -14,7 +14,7 @@ using namespace OpenViBEToolkit;
 
 boolean OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 {
-	ITypeManager& l_rTypeManager=rKernelContext.getTypeManager();
+	ITypeManager& l_rTypeManager = rKernelContext.getTypeManager();
 
 	initializeStimulationList(rKernelContext);
 
@@ -22,7 +22,7 @@ boolean OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "?", OVTK_UNIT_Unspecified);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "-", OVTK_UNIT_Dimensionless);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "%", OVTK_UNIT_10_2_Percent);
-//	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "percent", OVTK_UNIT_10_2_Percent);
+	//	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "percent", OVTK_UNIT_10_2_Percent);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "ppht", OVTK_UNIT_10_3_Parts_Per_Thousand);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "ppm", OVTK_UNIT_10_6_Parts_Per_Million);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "ppmd", OVTK_UNIT_10_9_Parts_Per_Milliard);
@@ -205,7 +205,7 @@ boolean OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "dyne s m-2 cm-5", OVTK_UNIT_Dyne_Seconds_Per_Square_Meter_Per_Centimetre_To_The_Power_Of_5);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "mmHg %-1", OVTK_UNIT_Millimetres_Of_Mercury_Per_Percent);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "Pa %-1", OVTK_UNIT_Pascal_Per_Percent);
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "B", OVTK_UNIT_Relative_Power_Decibel	);
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "B", OVTK_UNIT_Relative_Power_Decibel);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "m s-2", OVTK_UNIT_Meter_Per_Second_Squared);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "rad s2-2", OVTK_UNIT_Radians_Per_Second_Squared);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_MeasurementUnit, "ft min-1", OVTK_UNIT_Foot_Per_Minute);
@@ -231,22 +231,22 @@ boolean OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+21", OVTK_FACTOR_Zetta);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+18", OVTK_FACTOR_Exa);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+15", OVTK_FACTOR_Peta);
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+12", OVTK_FACTOR_Tera); 
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+12", OVTK_FACTOR_Tera);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+09", OVTK_FACTOR_Giga);
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+06", OVTK_FACTOR_Mega);  
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+06", OVTK_FACTOR_Mega);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+03", OVTK_FACTOR_Kilo);
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+02", OVTK_FACTOR_Hecto);    
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+02", OVTK_FACTOR_Hecto);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+01", OVTK_FACTOR_Deca);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e+00", OVTK_FACTOR_Base);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-01", OVTK_FACTOR_Deci);
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-02", OVTK_FACTOR_Centi);     
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-03", OVTK_FACTOR_Milli);   
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-06", OVTK_FACTOR_Micro);  
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-09", OVTK_FACTOR_Nano);   
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-12", OVTK_FACTOR_Pico);            
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-15", OVTK_FACTOR_Femto);  
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-18", OVTK_FACTOR_Atto);    
-	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-21", OVTK_FACTOR_Zepto); 
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-02", OVTK_FACTOR_Centi);
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-03", OVTK_FACTOR_Milli);
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-06", OVTK_FACTOR_Micro);
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-09", OVTK_FACTOR_Nano);
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-12", OVTK_FACTOR_Pico);
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-15", OVTK_FACTOR_Femto);
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-18", OVTK_FACTOR_Atto);
+	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-21", OVTK_FACTOR_Zepto);
 	l_rTypeManager.registerEnumerationEntry(OV_TypeId_Factor, "1e-24", OVTK_FACTOR_Yocto);
 
 	l_rTypeManager.registerEnumerationType(OVTK_TypeId_ClassificationAlgorithm, "Classification algorithm");
@@ -255,9 +255,4 @@ boolean OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 	return true;
 }
 
-boolean OpenViBEToolkit::uninitialize(const IKernelContext& rKernelContext)
-{
-	return true;
-}
-
-
+boolean OpenViBEToolkit::uninitialize(const IKernelContext& rKernelContext) { return true; }

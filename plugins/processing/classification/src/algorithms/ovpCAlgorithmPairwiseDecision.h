@@ -37,19 +37,18 @@ namespace OpenViBEPlugins
 		 * @brief The CAlgorithmPairwiseDecision class
 		 * This is the default class for every decision usable with the One Vs One pairwise strategy.
 		 */
-		class CAlgorithmPairwiseDecision : virtual public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >
+		class CAlgorithmPairwiseDecision : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
-
 		public:
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::boolean initialize(void)=0;
-			virtual OpenViBE::boolean uninitialize(void)=0;
+			virtual OpenViBE::boolean initialize(void) =0;
+			virtual OpenViBE::boolean uninitialize(void) =0;
 
-			virtual OpenViBE::boolean parameterize(void)=0;
+			virtual OpenViBE::boolean parameterize(void) =0;
 
-			virtual OpenViBE::boolean compute(std::vector< SClassificationInfo >& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) =0;
+			virtual OpenViBE::boolean compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) =0;
 			virtual XML::IXMLNode* saveConfiguration(void) = 0;
 			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode& rNode) = 0;
 
@@ -88,7 +87,6 @@ namespace OpenViBEPlugins
 		};
 	}
 }
-
 
 
 #endif // __OpenViBEPlugins_Algorithm_PairwiseStrategy_PKPD_H__

@@ -11,9 +11,7 @@ namespace OpenViBEToolkit
 	public:
 
 		TAlgorithm(void)
-			:m_pAlgorithmContext(NULL)
-		{
-		}
+			: m_pAlgorithmContext(NULL) { }
 
 		virtual OpenViBE::boolean initialize(OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)
 		{
@@ -33,15 +31,15 @@ namespace OpenViBEToolkit
 			return process();
 		}
 
-// ====================================================================================================================================
+		// ====================================================================================================================================
 
 	public:
 
-		virtual OpenViBE::boolean initialize(void)   { return true; }
+		virtual OpenViBE::boolean initialize(void) { return true; }
 		virtual OpenViBE::boolean uninitialize(void) { return true; }
-		virtual OpenViBE::boolean process(void)=0;
+		virtual OpenViBE::boolean process(void) =0;
 
-// ====================================================================================================================================
+		// ====================================================================================================================================
 
 		virtual OpenViBE::Kernel::IAlgorithmContext& getAlgorithmContext(void)
 		{
@@ -112,7 +110,7 @@ namespace OpenViBEToolkit
 			return m_pAlgorithmContext->activateOutputTrigger(rOutputTriggerIdentifier, bTriggerState);
 		}
 
-// ====================================================================================================================================
+		// ====================================================================================================================================
 
 		_IsDerivedFromClass_(CAlgorithmParentClass, OVTK_ClassId_);
 
@@ -123,14 +121,14 @@ namespace OpenViBEToolkit
 		public:
 
 			CScopedAlgorithm(OpenViBE::Kernel::IAlgorithmContext*& rpAlgorithmContext, OpenViBE::Kernel::IAlgorithmContext* pAlgorithmContext)
-				:m_rpAlgorithmContext(rpAlgorithmContext)
+				: m_rpAlgorithmContext(rpAlgorithmContext)
 			{
-				m_rpAlgorithmContext=pAlgorithmContext;
+				m_rpAlgorithmContext = pAlgorithmContext;
 			}
 
 			virtual ~CScopedAlgorithm(void)
 			{
-				m_rpAlgorithmContext=NULL;
+				m_rpAlgorithmContext = NULL;
 			}
 
 		protected:

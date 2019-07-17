@@ -12,11 +12,9 @@ namespace OpenViBEToolkit
 	public:
 
 		TBoxAlgorithm(void)
-			:m_pBoxAlgorithmContext(NULL)
-		{
-		}
+			: m_pBoxAlgorithmContext(NULL) { }
 
-// ====================================================================================================================================
+		// ====================================================================================================================================
 
 	private:
 
@@ -68,20 +66,20 @@ namespace OpenViBEToolkit
 			return process();
 		}
 
-// ====================================================================================================================================
+		// ====================================================================================================================================
 
 	public:
 
-		virtual OpenViBE::uint64 getClockFrequency(void)                                  { return 0; }
-		virtual OpenViBE::boolean initialize(void)                                        { return true; }
-		virtual OpenViBE::boolean uninitialize(void)                                      { return true; }
-		virtual OpenViBE::boolean processEvent(OpenViBE::CMessageEvent& rMessageEvent)    { return false; }
+		virtual OpenViBE::uint64 getClockFrequency(void) { return 0; }
+		virtual OpenViBE::boolean initialize(void) { return true; }
+		virtual OpenViBE::boolean uninitialize(void) { return true; }
+		virtual OpenViBE::boolean processEvent(OpenViBE::CMessageEvent& rMessageEvent) { return false; }
 		virtual OpenViBE::boolean processSignal(OpenViBE::CMessageSignal& rMessageSignal) { return false; }
-		virtual OpenViBE::boolean processClock(OpenViBE::CMessageClock& rMessageClock)    { return false; }
-		virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex)           { return false; }
-		virtual OpenViBE::boolean process(void)=0;
+		virtual OpenViBE::boolean processClock(OpenViBE::CMessageClock& rMessageClock) { return false; }
+		virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex) { return false; }
+		virtual OpenViBE::boolean process(void) =0;
 
-// ====================================================================================================================================
+		// ====================================================================================================================================
 
 		virtual OpenViBE::Kernel::IBoxAlgorithmContext* getBoxAlgorithmContext(void) { return m_pBoxAlgorithmContext; }
 		// virtual OpenViBE::Kernel::IBoxAlgorithmContext& getBoxAlgorithmContext(void) { return *m_pBoxAlgorithmContext; } this one should replace !
@@ -111,15 +109,15 @@ namespace OpenViBEToolkit
 			return getPlayerContext().releasePluginObject(pluginObject);
 		}
 
-// ====================================================================================================================================
+		// ====================================================================================================================================
 
 		virtual void appendOutputChunkData(const OpenViBE::uint32 ui32OutputIndex, const void* pBuffer, const OpenViBE::uint64 ui64BufferSize)
 		{
-			OpenViBE::Kernel::IBoxAlgorithmContext* l_pBoxAlgorithmContext=this->getBoxAlgorithmContext();
-			if(l_pBoxAlgorithmContext)
+			OpenViBE::Kernel::IBoxAlgorithmContext* l_pBoxAlgorithmContext = this->getBoxAlgorithmContext();
+			if (l_pBoxAlgorithmContext)
 			{
-				OpenViBE::Kernel::IBoxIO* l_pDynamicBoxContext=l_pBoxAlgorithmContext->getDynamicBoxContext();
-				if(l_pDynamicBoxContext)
+				OpenViBE::Kernel::IBoxIO* l_pDynamicBoxContext = l_pBoxAlgorithmContext->getDynamicBoxContext();
+				if (l_pDynamicBoxContext)
 				{
 					l_pDynamicBoxContext->appendOutputChunkData(ui32OutputIndex, static_cast<const OpenViBE::uint8*>(pBuffer), ui64BufferSize);
 				}
@@ -140,36 +138,36 @@ namespace OpenViBEToolkit
 		{
 		public:
 			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const OpenViBE::uint32 ui32Index)
-				:m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
-				,m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
-				,m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
-				,m_rConfigurationManager(rBoxAlgorithmContext.getPlayerContext()->getConfigurationManager())
+				: m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
+				  , m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
+				  , m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
+				  , m_rConfigurationManager(rBoxAlgorithmContext.getPlayerContext()->getConfigurationManager())
 			{
 				rBoxAlgorithmContext.getStaticBoxContext()->getSettingValue(ui32Index, m_sSettingValue);
 				rBoxAlgorithmContext.getStaticBoxContext()->getSettingType(ui32Index, m_oSettingType);
 			}
 
 			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const OpenViBE::CString& rsName)
-				:m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
-				,m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
-				,m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
-				,m_rConfigurationManager(rBoxAlgorithmContext.getPlayerContext()->getConfigurationManager())
+				: m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
+				  , m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
+				  , m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
+				  , m_rConfigurationManager(rBoxAlgorithmContext.getPlayerContext()->getConfigurationManager())
 			{
 				rBoxAlgorithmContext.getStaticBoxContext()->getSettingValue(rsName, m_sSettingValue);
 				rBoxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, rsName, m_oSettingType);
 			}
 
 			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const OpenViBE::CIdentifier& rIdentifier)
-				:m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
-				,m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
-				,m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
-				,m_rConfigurationManager(rBoxAlgorithmContext.getPlayerContext()->getConfigurationManager())
+				: m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
+				  , m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
+				  , m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
+				  , m_rConfigurationManager(rBoxAlgorithmContext.getPlayerContext()->getConfigurationManager())
 			{
 				rBoxAlgorithmContext.getStaticBoxContext()->getSettingValue(rIdentifier, m_sSettingValue);
 				rBoxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, rIdentifier, m_oSettingType);
 			}
 
-			operator OpenViBE::uint32 (void)
+			operator OpenViBE::uint32(void)
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
@@ -186,12 +184,12 @@ namespace OpenViBEToolkit
 				return static_cast<OpenViBE::uint32>(l_dResult);
 			}
 
-			operator OpenViBE::uint64 (void)
+			operator OpenViBE::uint64(void)
 			{
-				OpenViBE::uint64 l_ui64StimId = std::numeric_limits<OpenViBE::uint64>::max();
+				OpenViBE::uint64 l_ui64StimId     = std::numeric_limits<OpenViBE::uint64>::max();
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 				double l_dResult;
-				if(m_rTypeManager.isEnumeration(m_oSettingType))
+				if (m_rTypeManager.isEnumeration(m_oSettingType))
 				{
 					l_ui64StimId = m_rTypeManager.getEnumerationEntryValueFromName(m_oSettingType, l_sSettingValue);
 
@@ -224,7 +222,7 @@ namespace OpenViBEToolkit
 				return l_ui64StimId;
 			}
 
-			operator OpenViBE::int32 (void)
+			operator OpenViBE::int32(void)
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
@@ -241,7 +239,7 @@ namespace OpenViBEToolkit
 				return static_cast<OpenViBE::int32>(l_dResult);
 			}
 
-			operator OpenViBE::int64 (void)
+			operator OpenViBE::int64(void)
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
@@ -257,7 +255,8 @@ namespace OpenViBEToolkit
 
 				return static_cast<OpenViBE::int64>(l_dResult);;
 			}
-			operator OpenViBE::float64 (void)
+
+			operator OpenViBE::float64(void)
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
@@ -273,14 +272,17 @@ namespace OpenViBEToolkit
 
 				return static_cast<OpenViBE::float64>(l_dResult);
 			}
-			operator OpenViBE::boolean (void)
+
+			operator OpenViBE::boolean(void)
 			{
 				return m_rConfigurationManager.expandAsBoolean(m_sSettingValue);
 			}
-			operator OpenViBE::CString (void)
+
+			operator OpenViBE::CString(void)
 			{
 				return m_rConfigurationManager.expand(m_sSettingValue);
 			}
+
 		private:
 			OpenViBE::Kernel::ILogManager& m_rLogManager;
 			OpenViBE::Kernel::IErrorManager& m_rErrorManager;
@@ -296,14 +298,16 @@ namespace OpenViBEToolkit
 		{
 		public:
 			CScopedBoxAlgorithm(OpenViBE::Kernel::IBoxAlgorithmContext*& rpBoxAlgorithmContext, OpenViBE::Kernel::IBoxAlgorithmContext* pBoxAlgorithmContext)
-				:m_rpBoxAlgorithmContext(rpBoxAlgorithmContext)
+				: m_rpBoxAlgorithmContext(rpBoxAlgorithmContext)
 			{
-				m_rpBoxAlgorithmContext=pBoxAlgorithmContext;
+				m_rpBoxAlgorithmContext = pBoxAlgorithmContext;
 			}
+
 			virtual ~CScopedBoxAlgorithm(void)
 			{
-				m_rpBoxAlgorithmContext=NULL;
+				m_rpBoxAlgorithmContext = NULL;
 			}
+
 		protected:
 			OpenViBE::Kernel::IBoxAlgorithmContext*& m_rpBoxAlgorithmContext;
 		};
@@ -317,9 +321,7 @@ namespace OpenViBEToolkit
 	public:
 
 		TBoxListener(void)
-			:m_pBoxListenerContext(NULL)
-		{
-		}
+			: m_pBoxListenerContext(NULL) { }
 
 	private:
 
@@ -342,7 +344,7 @@ namespace OpenViBEToolkit
 			const OpenViBE::Kernel::EBoxModification eBoxModificationType)
 		{
 			CScopedBoxListener l_oScopedBoxListener(m_pBoxListenerContext, &rBoxListenerContext);
-			switch(eBoxModificationType)
+			switch (eBoxModificationType)
 			{
 				case OpenViBE::Kernel::BoxModification_Initialized: return this->onInitialized(m_pBoxListenerContext->getBox());
 				case OpenViBE::Kernel::BoxModification_DefaultInitialized: return this->onDefaultInitialized(m_pBoxListenerContext->getBox());
@@ -372,7 +374,7 @@ namespace OpenViBEToolkit
 			return false;
 		}
 
-// ====================================================================================================================================
+		// ====================================================================================================================================
 
 	public:
 
@@ -402,7 +404,7 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::boolean onSettingDefaultValueChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
 		virtual OpenViBE::boolean onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
 
-// ====================================================================================================================================
+		// ====================================================================================================================================
 
 		virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const { return m_pBoxListenerContext->getAlgorithmManager(); }
 		virtual OpenViBE::Kernel::IPlayerManager& getPlayerManager(void) const { return m_pBoxListenerContext->getPlayerManager(); }
@@ -416,7 +418,7 @@ namespace OpenViBEToolkit
 
 		virtual OpenViBE::Kernel::IScenario& getScenario(void) const { return m_pBoxListenerContext->getScenario(); }
 
-// ====================================================================================================================================
+		// ====================================================================================================================================
 
 		_IsDerivedFromClass_(CBoxListenerParentClass, OVTK_ClassId_);
 
@@ -426,14 +428,16 @@ namespace OpenViBEToolkit
 		{
 		public:
 			CScopedBoxListener(OpenViBE::Kernel::IBoxListenerContext*& rpBoxListenerContext, OpenViBE::Kernel::IBoxListenerContext* pBoxListenerContext)
-				:m_rpBoxListenerContext(rpBoxListenerContext)
+				: m_rpBoxListenerContext(rpBoxListenerContext)
 			{
-				m_rpBoxListenerContext=pBoxListenerContext;
+				m_rpBoxListenerContext = pBoxListenerContext;
 			}
+
 			virtual ~CScopedBoxListener(void)
 			{
-				m_rpBoxListenerContext=NULL;
+				m_rpBoxListenerContext = NULL;
 			}
+
 		protected:
 			OpenViBE::Kernel::IBoxListenerContext*& m_rpBoxListenerContext;
 		};

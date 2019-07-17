@@ -8,17 +8,13 @@ using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 
 CBoxAlgorithmContext::CBoxAlgorithmContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox, const IBox* pBox)
-	:TKernelObject<IBoxAlgorithmContext>(rKernelContext)
-	,m_pStaticBoxContext(pBox)
-	,m_pDynamicBoxContext(pSimulatedBox)
-	,m_oPlayerContext(rKernelContext, pSimulatedBox)
-	,m_bReadyToProcess(false)
-{
-}
+	: TKernelObject<IBoxAlgorithmContext>(rKernelContext)
+	  , m_pStaticBoxContext(pBox)
+	  , m_pDynamicBoxContext(pSimulatedBox)
+	  , m_oPlayerContext(rKernelContext, pSimulatedBox)
+	  , m_bReadyToProcess(false) {}
 
-CBoxAlgorithmContext::~CBoxAlgorithmContext(void)
-{
-}
+CBoxAlgorithmContext::~CBoxAlgorithmContext(void) {}
 
 const IBox* CBoxAlgorithmContext::getStaticBoxContext(void)
 {
@@ -37,7 +33,7 @@ IPlayerContext* CBoxAlgorithmContext::getPlayerContext(void)
 
 boolean CBoxAlgorithmContext::markAlgorithmAsReadyToProcess(void)
 {
-	m_bReadyToProcess=true;
+	m_bReadyToProcess = true;
 	return true;
 }
 

@@ -10,7 +10,7 @@
 
 namespace XML
 {
-	class IXMLHandlerImpl: public IXMLHandler
+	class IXMLHandlerImpl : public IXMLHandler
 	{
 	public:
 		virtual void release(void);
@@ -21,7 +21,7 @@ namespace XML
 		virtual XML::IXMLNode* parseString(const char* sString, const uint32& uiSize);
 
 		//XML extraction
-		virtual XML::boolean writeXMLInFile(const IXMLNode &rNode, const char* sPath) const;
+		virtual XML::boolean writeXMLInFile(const IXMLNode& rNode, const char* sPath) const;
 
 		//Error handling
 		virtual std::string getLastErrorString() const;
@@ -56,9 +56,9 @@ using namespace XML;
 IXMLHandlerImpl::~IXMLHandlerImpl()
 {
 	XML_ParserFree(m_pXMLParser);
-	while(!m_oNodeStack.empty())
+	while (!m_oNodeStack.empty())
 	{
-		IXMLNode * l_pNode = m_oNodeStack.top();
+		IXMLNode* l_pNode = m_oNodeStack.top();
 		l_pNode->release();
 		m_oNodeStack.pop();
 	}
@@ -70,21 +70,20 @@ void IXMLHandlerImpl::release(void)
 }
 
 
-IXMLHandlerImpl::IXMLHandlerImpl():
-	m_pXMLParser(NULL),
-	m_pRootNode(NULL)
+IXMLHandlerImpl::IXMLHandlerImpl(): m_pXMLParser(NULL),
+									m_pRootNode(NULL)
 {
-	m_pXMLParser=XML_ParserCreate(NULL);
+	m_pXMLParser = XML_ParserCreate(NULL);
 	XML_SetElementHandler(m_pXMLParser, expat_xml_start, expat_xml_end);
 	XML_SetCharacterDataHandler(m_pXMLParser, expat_xml_data);
 	XML_SetUserData(m_pXMLParser, this);
 }
 
-IXMLNode *IXMLHandlerImpl::parseFile(const char *sPath)
+IXMLNode* IXMLHandlerImpl::parseFile(const char* sPath)
 {
 	ifstream l_oFile;
 	FS::Files::openIFStream(l_oFile, sPath, ios::binary);
-	if(l_oFile.is_open())
+	if (l_oFile.is_open())
 	{
 		char* l_sBuffer;
 		uint32 l_iFileLen;
@@ -100,7 +99,7 @@ IXMLNode *IXMLHandlerImpl::parseFile(const char *sPath)
 		l_oFile.close();
 
 		//Start the parsing with the other function
-		IXMLNode *l_pRes = parseString(l_sBuffer, l_iFileLen);
+		IXMLNode* l_pRes = parseString(l_sBuffer, l_iFileLen);
 
 		delete[] l_sBuffer;
 		return l_pRes;
@@ -109,20 +108,21 @@ IXMLNode *IXMLHandlerImpl::parseFile(const char *sPath)
 	return NULL;
 }
 
-IXMLNode *IXMLHandlerImpl::parseString(const char *sString, const uint32& uiSize)
+IXMLNode* IXMLHandlerImpl::parseString(const char* sString, const uint32& uiSize)
 {
-	m_pRootNode = NULL;
-	XML_Status l_eStatus=XML_Parse(m_pXMLParser, sString, uiSize, false);
+	m_pRootNode          = NULL;
+	XML_Status l_eStatus = XML_Parse(m_pXMLParser, sString, uiSize, false);
 
 	//We delete what is still in the stack
-	while(!m_oNodeStack.empty())
+	while (!m_oNodeStack.empty())
 	{
-//		std::cout << "Warning : the file has been parsed but some tags are not closed. The file is probably not well-formed." << std::endl;
-		IXMLNode * l_pNode = m_oNodeStack.top();
+		//		std::cout << "Warning : the file has been parsed but some tags are not closed. The file is probably not well-formed." << std::endl;
+		IXMLNode* l_pNode = m_oNodeStack.top();
 		l_pNode->release();
 		m_oNodeStack.pop();
 	}
-	if(l_eStatus!=XML_STATUS_OK) {
+	if (l_eStatus != XML_STATUS_OK)
+	{
 		XML_Error l_oErrorCode = XML_GetErrorCode(m_pXMLParser);
 		// Although printf() is not too elegant, this component has no context to use e.g. LogManager -> printf() is better than a silent fail.
 		this->getErrorStringStream() << "processData(): expat error " << l_oErrorCode << " on the line " << XML_GetCurrentLineNumber(m_pXMLParser) << " of the input .xml\n";
@@ -131,11 +131,11 @@ IXMLNode *IXMLHandlerImpl::parseString(const char *sString, const uint32& uiSize
 	return m_pRootNode;
 }
 
-boolean IXMLHandlerImpl::writeXMLInFile(const IXMLNode &rNode, const char *sPath) const
+boolean IXMLHandlerImpl::writeXMLInFile(const IXMLNode& rNode, const char* sPath) const
 {
 	std::ofstream l_oFile;
 	FS::Files::openOFStream(l_oFile, sPath, ios::binary);
-	if(l_oFile.is_open())
+	if (l_oFile.is_open())
 	{
 		char* l_sXML = rNode.getXML();
 		l_oFile.write(l_sXML, ::strlen(l_sXML));
@@ -147,36 +147,36 @@ boolean IXMLHandlerImpl::writeXMLInFile(const IXMLNode &rNode, const char *sPath
 	return false;
 }
 
-void IXMLHandlerImpl::openChild(const char *sName, const char **sAttributeName, const char **sAttributeValue, uint64 ui64AttributeCount)
+void IXMLHandlerImpl::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64 ui64AttributeCount)
 {
-	IXMLNode * l_pNode = createNode(sName);
-	for(uint32 i =0 ; i < ui64AttributeCount ; ++i)
+	IXMLNode* l_pNode = createNode(sName);
+	for (uint32 i = 0; i < ui64AttributeCount; ++i)
 	{
 		l_pNode->addAttribute(sAttributeName[i], sAttributeValue[i]);
 	}
 	m_oNodeStack.push(l_pNode);
 }
 
-void IXMLHandlerImpl::processChildData(const char *sData)
+void IXMLHandlerImpl::processChildData(const char* sData)
 {
-	IXMLNode * l_pNode = m_oNodeStack.top();
+	IXMLNode* l_pNode = m_oNodeStack.top();
 	l_pNode->appendPCData(sData);
 }
 
 void IXMLHandlerImpl::closeChild()
 {
-	IXMLNode * l_pNode = m_oNodeStack.top();
+	IXMLNode* l_pNode = m_oNodeStack.top();
 	m_oNodeStack.pop();
 	//If the stack is empty this means that l_pNode is the root
-	if(m_oNodeStack.empty())
+	if (m_oNodeStack.empty())
 	{
 		m_pRootNode = l_pNode;
 	}
-	else{//If node, that means that the l_pNode if
-		IXMLNode *l_pParentNode = m_oNodeStack.top();
+	else
+	{//If node, that means that the l_pNode if
+		IXMLNode* l_pParentNode = m_oNodeStack.top();
 		l_pParentNode->addChild(l_pNode);
 	}
-
 }
 
 std::stringstream& IXMLHandlerImpl::getErrorStringStream() const
@@ -194,18 +194,18 @@ std::string IXMLHandlerImpl::getLastErrorString() const
 
 static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, const char** ppAttribute)
 {
-	uint64 l_ui64AttributeCount=0;
-	while(ppAttribute[l_ui64AttributeCount++]);
-	l_ui64AttributeCount>>=1;
+	uint64 l_ui64AttributeCount = 0;
+	while (ppAttribute[l_ui64AttributeCount++]);
+	l_ui64AttributeCount >>= 1;
 
 	// $$$ TODO take 64bits size into consideration
-	const char** l_pAttributeName=new const char*[static_cast<size_t>(l_ui64AttributeCount)];
-	const char** l_pAttributeValue=new const char*[static_cast<size_t>(l_ui64AttributeCount)];
+	const char** l_pAttributeName  = new const char*[static_cast<size_t>(l_ui64AttributeCount)];
+	const char** l_pAttributeValue = new const char*[static_cast<size_t>(l_ui64AttributeCount)];
 
-	for(uint64 i=0; i<l_ui64AttributeCount; i++)
+	for (uint64 i = 0; i < l_ui64AttributeCount; i++)
 	{
-		l_pAttributeName[i]=ppAttribute[(i<<1)];
-		l_pAttributeValue[i]=ppAttribute[(i<<1)+1];
+		l_pAttributeName[i]  = ppAttribute[(i << 1)];
+		l_pAttributeValue[i] = ppAttribute[(i << 1) + 1];
 	}
 
 	static_cast<IXMLHandlerImpl*>(pData)->openChild(pElement, l_pAttributeName, l_pAttributeValue, l_ui64AttributeCount);
@@ -229,4 +229,3 @@ OV_API IXMLHandler* XML::createXMLHandler(void)
 {
 	return new IXMLHandlerImpl();
 }
-

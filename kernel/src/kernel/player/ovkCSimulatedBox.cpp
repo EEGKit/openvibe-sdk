@@ -25,23 +25,19 @@ using namespace OpenViBE::Plugins;
 static const CNameValuePairList s_oDummyNameValuePairList;
 
 CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& rScheduler)
-	:TKernelObject<IBoxIO>(rKernelContext)
-	,m_bReadyToProcess(false)
-	,m_bChunkConsistencyChecking(false)
-	,m_eChunkConsistencyCheckingLogLevel(LogLevel_Warning)
-	,m_pBoxAlgorithm(nullptr)
-	,m_pScenario(nullptr)
-	,m_pBox(nullptr)
-	,m_rScheduler(rScheduler)
-	,m_ui64LastClockActivationDate(OV_IncorrectTime)
-	,m_ui64ClockFrequency(0)
-	,m_ui64ClockActivationStep(0)
-{
-}
+	: TKernelObject<IBoxIO>(rKernelContext)
+	  , m_bReadyToProcess(false)
+	  , m_bChunkConsistencyChecking(false)
+	  , m_eChunkConsistencyCheckingLogLevel(LogLevel_Warning)
+	  , m_pBoxAlgorithm(nullptr)
+	  , m_pScenario(nullptr)
+	  , m_pBox(nullptr)
+	  , m_rScheduler(rScheduler)
+	  , m_ui64LastClockActivationDate(OV_IncorrectTime)
+	  , m_ui64ClockFrequency(0)
+	  , m_ui64ClockActivationStep(0) {}
 
-CSimulatedBox::~CSimulatedBox(void)
-{
-}
+CSimulatedBox::~CSimulatedBox(void) {}
 
 bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentifier)
 {
@@ -51,7 +47,7 @@ bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentifier
 		ErrorType::ResourceNotFound
 	);
 
-	m_pScenario=&m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(rScenarioIdentifier);
+	m_pScenario = &m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(rScenarioIdentifier);
 	return true;
 }
 
@@ -68,7 +64,7 @@ bool CSimulatedBox::setBoxIdentifier(const CIdentifier& rBoxIdentifier)
 	OV_ERROR_UNLESS_KRF(m_pScenario, "No scenario set", ErrorType::BadCall);
 
 	m_pBox = m_pScenario->getBoxDetails(rBoxIdentifier);
-	return m_pBox!=NULL;
+	return m_pBox != NULL;
 }
 
 bool CSimulatedBox::initialize(void)
@@ -83,11 +79,11 @@ bool CSimulatedBox::initialize(void)
 	m_vLastOutputStartTime.resize(m_pBox->getOutputCount(), 0);
 	m_vLastOutputEndTime.resize(m_pBox->getOutputCount(), 0);
 
-	m_ui64LastClockActivationDate=OV_IncorrectTime;
-	m_ui64ClockFrequency=0;
-	m_ui64ClockActivationStep=0;
+	m_ui64LastClockActivationDate = OV_IncorrectTime;
+	m_ui64ClockFrequency          = 0;
+	m_ui64ClockActivationStep     = 0;
 
-	m_pBoxAlgorithm=getPluginManager().createBoxAlgorithm(m_pBox->getAlgorithmClassIdentifier(), NULL);
+	m_pBoxAlgorithm = getPluginManager().createBoxAlgorithm(m_pBox->getAlgorithmClassIdentifier(), NULL);
 
 	OV_ERROR_UNLESS_KRF(
 		m_pBoxAlgorithm,
@@ -106,15 +102,12 @@ bool CSimulatedBox::initialize(void)
 		}
 	}
 
-	return true ;
+	return true;
 }
 
 boolean CSimulatedBox::uninitialize(void)
 {
-	if (!m_pBoxAlgorithm)
-	{
-		return true;
-	}
+	if (!m_pBoxAlgorithm) { return true; }
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
@@ -128,7 +121,7 @@ boolean CSimulatedBox::uninitialize(void)
 	}
 
 	getPluginManager().releasePluginObject(m_pBoxAlgorithm);
-	m_pBoxAlgorithm=NULL;
+	m_pBoxAlgorithm = NULL;
 
 	return true;
 }
@@ -138,21 +131,21 @@ boolean CSimulatedBox::processClock(void)
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-			uint64 l_ui64NewClockFrequency=m_pBoxAlgorithm->getClockFrequency(l_oBoxAlgorithmContext);
-			if(l_ui64NewClockFrequency==0)
+			uint64 l_ui64NewClockFrequency = m_pBoxAlgorithm->getClockFrequency(l_oBoxAlgorithmContext);
+			if (l_ui64NewClockFrequency == 0)
 			{
-				m_ui64ClockActivationStep=OV_IncorrectTime;
-				m_ui64LastClockActivationDate=OV_IncorrectTime;
+				m_ui64ClockActivationStep     = OV_IncorrectTime;
+				m_ui64LastClockActivationDate = OV_IncorrectTime;
 			}
 			else
 			{
 				OV_ERROR_UNLESS_KRF(
 					l_ui64NewClockFrequency <= m_rScheduler.getFrequency()<<32,
 					"Box " << m_pBox->getName()
-						   << " requested higher clock frequency (" << l_ui64NewClockFrequency << " == "
-						   << ITimeArithmetics::timeToSeconds(l_ui64NewClockFrequency) << "hz) "
-						   << "than what the scheduler can handle (" << (m_rScheduler.getFrequency()<<32) << " == "
-						   << ITimeArithmetics::timeToSeconds(m_rScheduler.getFrequency()<<32) << "hz)",
+					<< " requested higher clock frequency (" << l_ui64NewClockFrequency << " == "
+					<< ITimeArithmetics::timeToSeconds(l_ui64NewClockFrequency) << "hz) "
+					<< "than what the scheduler can handle (" << (m_rScheduler.getFrequency()<<32) << " == "
+					<< ITimeArithmetics::timeToSeconds(m_rScheduler.getFrequency()<<32) << "hz)",
 					ErrorType::BadConfig
 				);
 
@@ -160,23 +153,23 @@ boolean CSimulatedBox::processClock(void)
 				//       would result in an integer over shift (the one
 				//       would exit). Thus the left shift of 63 bits
 				//       and the left shift of 1 bit after the division
-				m_ui64ClockActivationStep=((1ULL<<63)/l_ui64NewClockFrequency)<<1;
+				m_ui64ClockActivationStep = ((1ULL << 63) / l_ui64NewClockFrequency) << 1;
 			}
-			m_ui64ClockFrequency=l_ui64NewClockFrequency;
+			m_ui64ClockFrequency = l_ui64NewClockFrequency;
 		}
 	}
 
-	if((m_ui64ClockFrequency!=0) && (m_ui64LastClockActivationDate==OV_IncorrectTime || m_rScheduler.getCurrentTime()-m_ui64LastClockActivationDate>=m_ui64ClockActivationStep))
+	if ((m_ui64ClockFrequency != 0) && (m_ui64LastClockActivationDate == OV_IncorrectTime || m_rScheduler.getCurrentTime() - m_ui64LastClockActivationDate >= m_ui64ClockActivationStep))
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-			if(m_ui64LastClockActivationDate==OV_IncorrectTime)
+			if (m_ui64LastClockActivationDate == OV_IncorrectTime)
 			{
-				m_ui64LastClockActivationDate=m_rScheduler.getCurrentTime();
+				m_ui64LastClockActivationDate = m_rScheduler.getCurrentTime();
 			}
 			else
 			{
-				m_ui64LastClockActivationDate=m_ui64LastClockActivationDate+m_ui64ClockActivationStep;
+				m_ui64LastClockActivationDate = m_ui64LastClockActivationDate + m_ui64ClockActivationStep;
 			}
 
 			CMessageClock l_oClockMessage(this->getKernelContext());
@@ -188,7 +181,7 @@ boolean CSimulatedBox::processClock(void)
 				ErrorType::Internal
 			);
 
-			m_bReadyToProcess|=l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
+			m_bReadyToProcess |= l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 		}
 	}
 
@@ -208,7 +201,7 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 				ErrorType::Internal
 			);
 		}
-		m_bReadyToProcess|=l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
+		m_bReadyToProcess |= l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 	}
 
 	return true;
@@ -216,10 +209,7 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 
 boolean CSimulatedBox::process(void)
 {
-	if (!m_bReadyToProcess)
-	{
-		return true;
-	}
+	if (!m_bReadyToProcess) { return true; }
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
@@ -235,7 +225,7 @@ boolean CSimulatedBox::process(void)
 	// perform output sending
 	{
 		CIdentifier* identifierList = nullptr;
-		size_t nbElems = 0;
+		size_t nbElems              = 0;
 		m_pScenario->getLinkIdentifierFromBoxList(m_pBox->getIdentifier(), &identifierList, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
@@ -256,19 +246,19 @@ boolean CSimulatedBox::process(void)
 	}
 
 	// iterators for input and output chunks
-	vector < deque< CChunk > >::iterator socketIterator;
-	deque < CChunk >::iterator inputChunkIterator;
+	vector<deque<CChunk>>::iterator socketIterator;
+	deque<CChunk>::iterator inputChunkIterator;
 
 	// perform input cleaning
-	socketIterator=m_vInput.begin();
-	while(socketIterator!=m_vInput.end())
+	socketIterator = m_vInput.begin();
+	while (socketIterator != m_vInput.end())
 	{
-		inputChunkIterator=socketIterator->begin();
-		while(inputChunkIterator!=socketIterator->end())
+		inputChunkIterator = socketIterator->begin();
+		while (inputChunkIterator != socketIterator->end())
 		{
-			if(inputChunkIterator->isDeprecated())
+			if (inputChunkIterator->isDeprecated())
 			{
-				inputChunkIterator=socketIterator->erase(inputChunkIterator);
+				inputChunkIterator = socketIterator->erase(inputChunkIterator);
 			}
 			else
 			{
@@ -294,7 +284,7 @@ boolean CSimulatedBox::process(void)
 		);
 	}
 
-	m_bReadyToProcess=false;
+	m_bReadyToProcess = false;
 
 	return true;
 }
@@ -354,10 +344,10 @@ boolean CSimulatedBox::getInputChunk(
 	);
 
 	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
-	rStartTime=l_rChunk.getStartTime();
-	rEndTime=l_rChunk.getEndTime();
-	rChunkSize=l_rChunk.getBuffer().getSize();
-	rpChunkBuffer=l_rChunk.getBuffer().getDirectPointer();
+	rStartTime             = l_rChunk.getStartTime();
+	rEndTime               = l_rChunk.getEndTime();
+	rChunkSize             = l_rChunk.getBuffer().getSize();
+	rpChunkBuffer          = l_rChunk.getBuffer().getDirectPointer();
 	return true;
 }
 
@@ -518,47 +508,47 @@ boolean CSimulatedBox::markOutputAsReadyToSend(
 		ErrorType::OutOfBound
 	);
 
-	if(m_bChunkConsistencyChecking)
+	if (m_bChunkConsistencyChecking)
 	{
-		boolean l_bIsConsistent = true;
+		boolean l_bIsConsistent        = true;
 		const char* l_sSpecificMessage = NULL;
 
 		// checks chunks consistency
 		CIdentifier l_oType;
 		m_pBox->getOutputType(ui32OutputIndex, l_oType);
-		if(l_oType == OV_TypeId_Stimulations)
+		if (l_oType == OV_TypeId_Stimulations)
 		{
-			if(m_vLastOutputEndTime[ui32OutputIndex] != ui64StartTime)
+			if (m_vLastOutputEndTime[ui32OutputIndex] != ui64StartTime)
 			{
-				l_bIsConsistent = false;
+				l_bIsConsistent    = false;
 				l_sSpecificMessage = "'Stimulations' streams should have continuously dated chunks";
 			}
 		}
 
-		if(m_vLastOutputEndTime[ui32OutputIndex] > ui64EndTime)
+		if (m_vLastOutputEndTime[ui32OutputIndex] > ui64EndTime)
 		{
-			l_bIsConsistent = false;
+			l_bIsConsistent    = false;
 			l_sSpecificMessage = "Current 'end time' can not be earlier than previous 'end time'";
 		}
 
-		if(m_vLastOutputStartTime[ui32OutputIndex] > ui64StartTime)
+		if (m_vLastOutputStartTime[ui32OutputIndex] > ui64StartTime)
 		{
-			l_bIsConsistent = false;
+			l_bIsConsistent    = false;
 			l_sSpecificMessage = "Current 'start time' can not be earlier than previous 'start time'";
 		}
 
-		if(!l_bIsConsistent)
+		if (!l_bIsConsistent)
 		{
 			this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << "Box <" << m_pBox->getName() << "> sends inconsistent chunk dates on output [" << ui32OutputIndex << "] (current chunk dates are [" << ui64StartTime << "," << ui64EndTime << "] whereas previous chunk dates were [" << m_vLastOutputStartTime[ui32OutputIndex] << "," << m_vLastOutputEndTime[ui32OutputIndex] << "])\n";
-			if(l_sSpecificMessage) this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << l_sSpecificMessage << "\n";
+			if (l_sSpecificMessage) this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << l_sSpecificMessage << "\n";
 			this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << "Please report to box author and attach your scenario\n";
-			this->getLogManager() << LogLevel_Trace                      << "Previous warning can be disabled setting Kernel_CheckChunkConsistency to false\n";
+			this->getLogManager() << LogLevel_Trace << "Previous warning can be disabled setting Kernel_CheckChunkConsistency to false\n";
 			m_eChunkConsistencyCheckingLogLevel = LogLevel_Trace;
 		}
 
 		// sets last times
 		m_vLastOutputStartTime[ui32OutputIndex] = ui64StartTime;
-		m_vLastOutputEndTime[ui32OutputIndex] = ui64EndTime;
+		m_vLastOutputEndTime[ui32OutputIndex]   = ui64EndTime;
 	}
 
 	// sets start and end time

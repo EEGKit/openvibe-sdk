@@ -66,7 +66,7 @@ namespace OpenViBE
 		 *
 		 * The implementation simply calls \c c_str().
 		 */
-		operator const char* (void) const;
+		operator const char*(void) const;
 		/**
 		 * \brief Affectation operator (copy)
 		 * \param rString [in] : The string to copy
@@ -81,7 +81,7 @@ namespace OpenViBE
 		 * \return This string.
 		 */
 		OpenViBE::CString& operator+=(
-				const OpenViBE::CString& rString);
+			const OpenViBE::CString& rString);
 
 		/**
 		 * \brief Addition operator
@@ -119,7 +119,7 @@ namespace OpenViBE
 		 * \brief Array subscription operator
 		 * \param idx [in] : Index in the array
 		 */
-		char &operator[](
+		char& operator[](
 			std::size_t idx);
 
 		/**

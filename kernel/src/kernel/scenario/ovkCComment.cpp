@@ -12,16 +12,12 @@ using namespace OpenViBE::Plugins;
 //                                                                   //
 
 CComment::CComment(const IKernelContext& rKernelContext, CScenario& rOwnerScenario)
-	:TAttributable < TKernelObject < IComment > >(rKernelContext)
-	,m_rOwnerScenario(rOwnerScenario)
-	,m_oIdentifier(OV_UndefinedIdentifier)
-	,m_sText("")
-{
-}
+	: TAttributable<TKernelObject<IComment>>(rKernelContext)
+	  , m_rOwnerScenario(rOwnerScenario)
+	  , m_oIdentifier(OV_UndefinedIdentifier)
+	  , m_sText("") {}
 
-CComment::~CComment(void)
-{
-}
+CComment::~CComment(void) {}
 
 //___________________________________________________________________//
 //                                                                   //
@@ -39,15 +35,9 @@ CString CComment::getText(void) const
 boolean CComment::setIdentifier(
 	const CIdentifier& rIdentifier)
 {
-	if(m_oIdentifier!=OV_UndefinedIdentifier)
-	{
-		return false;
-	}
-	if(rIdentifier==OV_UndefinedIdentifier)
-	{
-		return false;
-	}
-	m_oIdentifier=rIdentifier;
+	if (m_oIdentifier != OV_UndefinedIdentifier) { return false; }
+	if (rIdentifier == OV_UndefinedIdentifier) { return false; }
+	m_oIdentifier = rIdentifier;
 
 	return true;
 }
@@ -55,7 +45,7 @@ boolean CComment::setIdentifier(
 boolean CComment::setText(
 	const CString& sText)
 {
-	m_sText=sText;
+	m_sText = sText;
 
 	return true;
 }
@@ -66,13 +56,13 @@ boolean CComment::setText(
 boolean CComment::initializeFromExistingComment(
 	const IComment& rExisitingComment)
 {
-	m_sText=rExisitingComment.getText();
+	m_sText = rExisitingComment.getText();
 
-	CIdentifier l_oIdentifier=rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
-	while(l_oIdentifier!=OV_UndefinedIdentifier)
+	CIdentifier l_oIdentifier = rExisitingComment.getNextAttributeIdentifier(OV_UndefinedIdentifier);
+	while (l_oIdentifier != OV_UndefinedIdentifier)
 	{
 		addAttribute(l_oIdentifier, rExisitingComment.getAttributeValue(l_oIdentifier));
-		l_oIdentifier=rExisitingComment.getNextAttributeIdentifier(l_oIdentifier);
+		l_oIdentifier = rExisitingComment.getNextAttributeIdentifier(l_oIdentifier);
 	}
 
 	return true;

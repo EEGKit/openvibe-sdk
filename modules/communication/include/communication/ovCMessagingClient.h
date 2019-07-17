@@ -217,4 +217,3 @@ namespace Communication
 		bool m_BoxDescriptionReceived;
 	};
 }
-

@@ -58,7 +58,6 @@ namespace OpenViBE
 	*/
 	class CommandFileParser : public ICommandParser
 	{
-
 	public:
 
 		/**

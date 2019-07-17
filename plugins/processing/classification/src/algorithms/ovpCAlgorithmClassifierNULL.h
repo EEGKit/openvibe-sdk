@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 											   , OpenViBEToolkit::IVector& rProbabilityValue);
 
 			virtual XML::IXMLNode* saveConfiguration(void);
-			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode *pConfigurationNode);
+			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode* pConfigurationNode);
 
 			virtual OpenViBE::uint32 getOutputProbabilityVectorLength();
 			virtual OpenViBE::uint32 getOutputDistanceVectorLength();
@@ -41,8 +41,6 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierNULL);
 
 		protected:
-
-
 		};
 
 		class CAlgorithmClassifierNULLDesc : public OpenViBEToolkit::CAlgorithmClassifierDesc
@@ -51,27 +49,27 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("NULL Classifier (does nothing)"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("NULL Classifier (does nothing)"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Samples"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Samples"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Algorithm_ClassifierNULL; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Classification::CAlgorithmClassifierNULL; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ClassifierNULL; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CAlgorithmClassifierNULL; }
 
 			virtual OpenViBE::boolean getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);
-				rAlgorithmPrototype.addInputParameter (OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1, "Parameter 1", OpenViBE::Kernel::ParameterType_Boolean);
-				rAlgorithmPrototype.addInputParameter (OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2, "Parameter 2", OpenViBE::Kernel::ParameterType_Float);
-				rAlgorithmPrototype.addInputParameter (OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3, "Parameter 3", OpenViBE::Kernel::ParameterType_Enumeration, OV_TypeId_Stimulation);
+				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1, "Parameter 1", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2, "Parameter 2", OpenViBE::Kernel::ParameterType_Float);
+				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3, "Parameter 3", OpenViBE::Kernel::ParameterType_Enumeration, OV_TypeId_Stimulation);
 				return true;
 			}
 

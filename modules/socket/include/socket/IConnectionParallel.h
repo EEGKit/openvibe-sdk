@@ -5,7 +5,7 @@
 #include <string>
 
 #if defined TARGET_OS_Windows
-	#include <windows.h> 
+#include <windows.h>
 #endif
 
 namespace Socket

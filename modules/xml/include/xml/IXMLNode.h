@@ -15,7 +15,7 @@ namespace XML
 	class XML_API IXMLNode
 	{
 	public:
-		virtual void release(void)=0;
+		virtual void release(void) =0;
 
 		virtual const char* getName() const =0;
 
@@ -27,7 +27,7 @@ namespace XML
 		 * @param sAttributeValue [in] : Value of the attribute
 		 * @return true in success, false otherwise
 		 */
-		virtual XML::boolean addAttribute(const char* sAttributeName, const char* sAttributeValue)=0;
+		virtual XML::boolean addAttribute(const char* sAttributeName, const char* sAttributeValue) =0;
 
 		/**
 		 * @brief Indicate if an attribute exists or not.
@@ -48,7 +48,7 @@ namespace XML
 		 * @brief Set the PCDATA of the node.
 		 * @param childData [in] : Value of the PCDATA
 		 */
-		virtual void setPCData(const char* childData)=0;
+		virtual void setPCData(const char* childData) =0;
 
 		/**
 		 * @brief Apppend a string to the current PCDATA of the node
@@ -67,7 +67,7 @@ namespace XML
 		 * @brief Add a node child of the
 		 * @param ChildNode [in] : The Node that will became the new child
 		 */
-		virtual void addChild(XML::IXMLNode* ChildNode)=0;
+		virtual void addChild(XML::IXMLNode* ChildNode) =0;
 
 		/**
 		 * @brief Return the ith child of the node.
@@ -96,7 +96,7 @@ namespace XML
 		 * @param depth [in] : Amount of indentation
 		 * @return XML string describing the node and its childs.
 		 */
-		virtual char* getXML(const XML::uint32 depth=0) const =0;
+		virtual char* getXML(const XML::uint32 depth = 0) const =0;
 
 	protected:
 		virtual ~IXMLNode(void) {}
@@ -108,7 +108,6 @@ namespace XML
 	 * @return New node
 	 */
 	extern XML_API XML::IXMLNode* createNode(const char* sName);
-
 }
 
 #endif // IXMLNODE_H

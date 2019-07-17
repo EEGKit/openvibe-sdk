@@ -21,7 +21,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CEBMLBaseEncoder : public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >
+		class CEBMLBaseEncoder : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 		public:
 
@@ -34,7 +34,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::boolean process(void);
 			virtual OpenViBE::boolean processHeader(void) { return true; }
 			virtual OpenViBE::boolean processBuffer(void) { return true; }
-			virtual OpenViBE::boolean processEnd(void)    { return true; }
+			virtual OpenViBE::boolean processEnd(void) { return true; }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseStreamEncoder);
 
@@ -43,11 +43,11 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
 
 			EBML::IWriterHelper* m_pEBMLWriterHelper;
 			EBML::IWriter* m_pEBMLWriter;
-			EBML::TWriterCallbackProxy1 < OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder > m_oEBMLWriterCallbackProxy;
+			EBML::TWriterCallbackProxy1<OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder> m_oEBMLWriterCallbackProxy;
 		};
 
 		class CEBMLBaseEncoderDesc : public OpenViBE::Plugins::IAlgorithmDesc

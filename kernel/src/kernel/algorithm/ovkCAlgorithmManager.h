@@ -12,7 +12,7 @@ namespace OpenViBE
 	{
 		class CAlgorithmProxy;
 
-		class CAlgorithmManager : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmManager >
+		class CAlgorithmManager : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IAlgorithmManager>
 		{
 		public:
 
@@ -40,11 +40,10 @@ namespace OpenViBE
 
 		protected:
 
-			using AlgorithmMap = std::map < OpenViBE::CIdentifier, OpenViBE::Kernel::CAlgorithmProxy* >;
+			using AlgorithmMap = std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CAlgorithmProxy*>;
 			AlgorithmMap m_vAlgorithms;
-	
-			mutable std::mutex m_oMutex;
 
+			mutable std::mutex m_oMutex;
 		};
 	};
 };

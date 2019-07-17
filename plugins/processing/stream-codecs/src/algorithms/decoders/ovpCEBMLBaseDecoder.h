@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CEBMLBaseDecoder : public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >
+		class CEBMLBaseDecoder : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 		public:
 
@@ -48,9 +48,9 @@ namespace OpenViBEPlugins
 
 			EBML::IReaderHelper* m_pEBMLReaderHelper;
 			EBML::IReader* m_pEBMLReader;
-			EBML::TReaderCallbackProxy1 < OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoder > m_oEBMLReaderCallbackProxy;
+			EBML::TReaderCallbackProxy1<OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoder> m_oEBMLReaderCallbackProxy;
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > ip_pMemoryBufferToDecode;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pMemoryBufferToDecode;
 		};
 
 		class CEBMLBaseDecoderDesc : public OpenViBE::Plugins::IAlgorithmDesc

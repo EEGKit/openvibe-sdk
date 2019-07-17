@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CAlgorithmMatrixAverage : public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >
+		class CAlgorithmMatrixAverage : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 		public:
 
@@ -41,12 +41,12 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64AveragingMethod;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64MatrixCount;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > op_pAveragedMatrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> ip_ui64AveragingMethod;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> ip_ui64MatrixCount;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pAveragedMatrix;
 
-			std::deque < OpenViBE::IMatrix* > m_vHistory;
+			std::deque<OpenViBE::IMatrix*> m_vHistory;
 			std::vector<double> m_CumulativeAverageMatrix;
 			unsigned long long m_CumulativeAverageSampleCount;
 		};
@@ -57,34 +57,34 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Matrix average"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Matrix average"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString(""); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Averaging"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.1"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Signal processing/Averaging"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.1"); }
 
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Algorithm_MatrixAverage; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CAlgorithmMatrixAverage(); }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_MatrixAverage; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CAlgorithmMatrixAverage(); }
 
 			virtual OpenViBE::boolean getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmProto) const
 			{
-				rAlgorithmProto.addInputParameter (OVP_Algorithm_MatrixAverage_InputParameterId_Matrix,                    "Matrix",              OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmProto.addInputParameter (OVP_Algorithm_MatrixAverage_InputParameterId_MatrixCount,               "Matrix count",        OpenViBE::Kernel::ParameterType_UInteger);
-				rAlgorithmProto.addInputParameter (OVP_Algorithm_MatrixAverage_InputParameterId_AveragingMethod,           "Averaging Method",    OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmProto.addInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmProto.addInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_MatrixCount, "Matrix count", OpenViBE::Kernel::ParameterType_UInteger);
+				rAlgorithmProto.addInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_AveragingMethod, "Averaging Method", OpenViBE::Kernel::ParameterType_UInteger);
 
-				rAlgorithmProto.addOutputParameter(OVP_Algorithm_MatrixAverage_OutputParameterId_AveragedMatrix,           "Averaged matrix",     OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmProto.addOutputParameter(OVP_Algorithm_MatrixAverage_OutputParameterId_AveragedMatrix, "Averaged matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
-				rAlgorithmProto.addInputTrigger   (OVP_Algorithm_MatrixAverage_InputTriggerId_Reset,                       "Reset");
-				rAlgorithmProto.addInputTrigger   (OVP_Algorithm_MatrixAverage_InputTriggerId_FeedMatrix,                  "Feed matrix");
-				rAlgorithmProto.addInputTrigger   (OVP_Algorithm_MatrixAverage_InputTriggerId_ForceAverage,                "Force average");
+				rAlgorithmProto.addInputTrigger(OVP_Algorithm_MatrixAverage_InputTriggerId_Reset, "Reset");
+				rAlgorithmProto.addInputTrigger(OVP_Algorithm_MatrixAverage_InputTriggerId_FeedMatrix, "Feed matrix");
+				rAlgorithmProto.addInputTrigger(OVP_Algorithm_MatrixAverage_InputTriggerId_ForceAverage, "Force average");
 
-				rAlgorithmProto.addOutputTrigger  (OVP_Algorithm_MatrixAverage_OutputTriggerId_AveragePerformed,           "Average performed");
+				rAlgorithmProto.addOutputTrigger(OVP_Algorithm_MatrixAverage_OutputTriggerId_AveragePerformed, "Average performed");
 
 				return true;
 			}

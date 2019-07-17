@@ -7,7 +7,7 @@
 
 namespace Socket
 {
-	class Socket_API IConnectionBluetooth: public Socket::IConnection
+	class Socket_API IConnectionBluetooth : public Socket::IConnection
 	{
 	public:
 	
@@ -44,7 +44,7 @@ namespace Socket
 		 *
 		 * \return  If the function succeeds, the return value is true, else false.
 		 */
-		virtual bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** bluetoothNames, unsigned long long ** bluetoothAddresses) = 0;
+		virtual bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** bluetoothNames, unsigned long long** bluetoothAddresses) = 0;
 
 		/**
 		 * \brief Convert string MAC Bluetooth address to hexadecimal.
@@ -61,36 +61,32 @@ namespace Socket
 							   &aaddr[0], &aaddr[1], &aaddr[2],
 							   &aaddr[3], &aaddr[4], &aaddr[5]);
 
-			if (value != 6)
-			{
-				return false;
-			}
+			if (value != 6) { return false; }
 
 			*btaddr = 0;
 
 			for (size_t i = 0; i < 6; i++)
 			{
 				unsigned long long tmpaddr = static_cast<unsigned long long>(aaddr[i] & 0xff);
-				*btaddr = (*btaddr << 8) + tmpaddr;
+				*btaddr                    = (*btaddr << 8) + tmpaddr;
 			}
 
 			return true;
 		}
 
-		
+
 	protected:
 
-	#if defined TARGET_OS_Windows
+#if defined TARGET_OS_Windows
 
 		static const unsigned char m_ui8WinSocketMajorVersion = 2; // Winsock major version to use
 		static const unsigned char m_ui8WinSocketMinorVersion = 2; // Winsock minor version to use
 
 		static bool b_IsWinsockInitialized;
 
-	#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-	#endif
-
+#endif
 	};
 
 	extern Socket_API Socket::IConnectionBluetooth* createConnectionBluetooth(void);

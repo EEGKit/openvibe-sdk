@@ -7,7 +7,8 @@
 #include <xml/IXMLNode.h>
 #include <xml/IXMLHandler.h>
 
-namespace{
+namespace
+{
 	const char* const c_sTypeNodeName = "PairwiseDecision_Voting";
 }
 
@@ -20,19 +21,13 @@ using namespace OpenViBEPlugins::Classification;
 
 using namespace OpenViBEToolkit;
 
-boolean CAlgorithmPairwiseDecisionVoting::initialize()
-{
-	return true;
-}
+boolean CAlgorithmPairwiseDecisionVoting::initialize() { return true; }
 
-boolean CAlgorithmPairwiseDecisionVoting::uninitialize()
-{
-	return true;
-}
+boolean CAlgorithmPairwiseDecisionVoting::uninitialize() { return true; }
 
 boolean CAlgorithmPairwiseDecisionVoting::parameterize()
 {
-	TParameterHandler < uint64 > ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	TParameterHandler<uint64> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_ui32ClassCount = static_cast<uint32>(ip_pClassCount);
 
 	OV_ERROR_UNLESS_KRF(
@@ -44,7 +39,7 @@ boolean CAlgorithmPairwiseDecisionVoting::parameterize()
 	return true;
 }
 
-boolean CAlgorithmPairwiseDecisionVoting::compute(std::vector< SClassificationInfo >& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector)
+boolean CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector)
 {
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
@@ -63,15 +58,15 @@ boolean CAlgorithmPairwiseDecisionVoting::compute(std::vector< SClassificationIn
 #endif
 
 	uint32* l_pWinCount = new uint32[m_ui32ClassCount];
-	for(size_t i = 0 ; i < m_ui32ClassCount ; ++i)
+	for (size_t i = 0; i < m_ui32ClassCount; ++i)
 	{
 		l_pWinCount[i] = 0;
 	}
 
-	for(uint32 i =0 ; i < pClassificationValueList.size() ; ++i)
+	for (uint32 i = 0; i < pClassificationValueList.size(); ++i)
 	{
-		SClassificationInfo & l_rTemp = pClassificationValueList[i];
-		if(l_rTemp.m_f64ClassLabel == 0)
+		SClassificationInfo& l_rTemp = pClassificationValueList[i];
+		if (l_rTemp.m_f64ClassLabel == 0)
 		{
 			++(l_pWinCount[(uint32)(l_rTemp.m_f64FirstClass)]);
 		}
@@ -79,7 +74,6 @@ boolean CAlgorithmPairwiseDecisionVoting::compute(std::vector< SClassificationIn
 		{
 			++(l_pWinCount[(uint32)(l_rTemp.m_f64SecondClass)]);
 		}
-
 	}
 
 #if VOTING_DEBUG
@@ -91,11 +85,11 @@ boolean CAlgorithmPairwiseDecisionVoting::compute(std::vector< SClassificationIn
 #endif
 
 	pProbabilityVector->setDimensionCount(1);
-	pProbabilityVector->setDimensionSize(0,m_ui32ClassCount);
+	pProbabilityVector->setDimensionSize(0, m_ui32ClassCount);
 
-	for(OpenViBE::uint32 i = 0 ; i<m_ui32ClassCount ; ++i)
+	for (OpenViBE::uint32 i = 0; i < m_ui32ClassCount; ++i)
 	{
-		pProbabilityVector->getBuffer()[i] = ((float64)l_pWinCount[i])/pClassificationValueList.size();
+		pProbabilityVector->getBuffer()[i] = ((float64)l_pWinCount[i]) / pClassificationValueList.size();
 	}
 
 	delete[] l_pWinCount;
@@ -108,7 +102,4 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionVoting::saveConfiguration()
 	return l_pRootNode;
 }
 
-boolean CAlgorithmPairwiseDecisionVoting::loadConfiguration(XML::IXMLNode& rNode)
-{
-	return true;
-}
+boolean CAlgorithmPairwiseDecisionVoting::loadConfiguration(XML::IXMLNode& rNode) { return true; }

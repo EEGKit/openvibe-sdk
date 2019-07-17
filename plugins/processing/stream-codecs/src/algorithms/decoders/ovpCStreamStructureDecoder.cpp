@@ -10,9 +10,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::StreamCodecs;
 
-CStreamStructureDecoder::CStreamStructureDecoder(void)
-{
-}
+CStreamStructureDecoder::CStreamStructureDecoder(void) {}
 
 // ________________________________________________________________________________________________________________
 //

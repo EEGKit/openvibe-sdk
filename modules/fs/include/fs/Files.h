@@ -26,8 +26,8 @@ namespace FS
 		// Creates all components of a path to the filesystem except the last part (i.e. for paths including a filename in the end)
 		static bool createParentPath(const char* sPath);
 		// Returns a path omitting the last part of it (essentially boost::filesystem::parent_path). Output sParentPath needs to be pre-allocated.
-		static bool getParentPath(const char *sPath, char *sParentPath);
-		static bool getParentPath(const char *path, char *parentPath, size_t size);
+		static bool getParentPath(const char* sPath, char* sParentPath);
+		static bool getParentPath(const char* path, char* parentPath, size_t size);
 
 		/**
 		* \brief Fills filename as a component of a path
@@ -37,8 +37,8 @@ namespace FS
 		* (essentially boost::filesystem::filename)
 		* \return Success status
 		*/
-		static bool getFilename(const char *sPath, char *sFilename);
-		static bool getFilename(const char *path, char *filename, size_t size);
+		static bool getFilename(const char* sPath, char* sFilename);
+		static bool getFilename(const char* path, char* filename, size_t size);
 
 		/**
 		* \brief Fills filename as a component of a path without the extension
@@ -48,8 +48,8 @@ namespace FS
 		* (essentially boost::filesystem::filename)
 		* \return Success status
 		*/
-		static bool getFilenameWithoutExtension(const char *path, char *filename);
-		static bool getFilenameWithoutExtension(const char *path, char *filename, size_t size);
+		static bool getFilenameWithoutExtension(const char* path, char* filename);
+		static bool getFilenameWithoutExtension(const char* path, char* filename, size_t size);
 		// Returns the extension component of a path
 		static bool getFilenameExtension(const char* path, char* fileNameExtension);
 		static bool getFilenameExtension(const char* path, char* fileNameExtension, size_t size);

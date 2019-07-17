@@ -18,7 +18,7 @@
  * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #pragma once
 
 #include "defines.h"
@@ -42,11 +42,9 @@ namespace OpenViBE
 
 			SMatrixChunk(double startTime, double endTime, const std::vector<double>& matrix, uint64_t epoch)
 				: startTime(startTime)
-				, endTime(endTime)
-				, matrix(matrix)
-				, epoch(epoch)
-			{
-			}
+				  , endTime(endTime)
+				  , matrix(matrix)
+				  , epoch(epoch) { }
 		};
 
 		struct SStimulationChunk
@@ -57,10 +55,8 @@ namespace OpenViBE
 
 			SStimulationChunk(uint64_t stimulationIdentifier, double stimulationDate, double stimulationDuration)
 				: stimulationIdentifier(stimulationIdentifier)
-				, stimulationDate(stimulationDate)
-				, stimulationDuration(stimulationDuration)
-			{
-			}
+				  , stimulationDate(stimulationDate)
+				  , stimulationDuration(stimulationDuration) { }
 		};
 
 		enum class EStreamType

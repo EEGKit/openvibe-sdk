@@ -52,7 +52,7 @@ namespace OpenViBEToolkit
 	protected:
 
 		const OpenViBE::IMatrix& m_rMatrix;
-		std::map < OpenViBE::uint32, CInternalFeatureVector > m_vFeatureVector;
+		std::map<OpenViBE::uint32, CInternalFeatureVector> m_vFeatureVector;
 	};
 };
 

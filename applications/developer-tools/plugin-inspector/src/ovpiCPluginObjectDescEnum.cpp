@@ -6,13 +6,9 @@ using namespace OpenViBE::Plugins;
 using namespace std;
 
 CPluginObjectDescEnum::CPluginObjectDescEnum(const IKernelContext& rKernelContext)
-	:m_KernelContext(rKernelContext)
-{
-}
+	: m_KernelContext(rKernelContext) {}
 
-CPluginObjectDescEnum::~CPluginObjectDescEnum(void)
-{
-}
+CPluginObjectDescEnum::~CPluginObjectDescEnum(void) {}
 
 // Enumerate plugins by iterating over a user defined list of descriptors, used for metaboxes
 bool CPluginObjectDescEnum::enumeratePluginObjectDesc(std::vector<const IPluginObjectDesc*>& pluginDescriptors)
@@ -38,39 +34,39 @@ std::string CPluginObjectDescEnum::transform(const std::string& sInput, const bo
 {
 	std::string input(sInput);
 	std::string output;
-	bool wasLastASeparator=true;
+	bool wasLastASeparator = true;
 
-	for(std::string::size_type i=0; i<input.length(); i++)
+	for (std::string::size_type i = 0; i < input.length(); i++)
 	{
-		if((input[i]>='a' && input[i]<='z') || (input[i]>='A' && input[i]<='Z') || (input[i]>='0' && input[i]<='9') || (!bRemoveSlash && input[i]=='/'))
+		if ((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z') || (input[i] >= '0' && input[i] <= '9') || (!bRemoveSlash && input[i] == '/'))
 		{
-			if(input[i]=='/')
+			if (input[i] == '/')
 			{
-				output+="_";
+				output += "_";
 			}
 			else
 			{
-				if(wasLastASeparator)
+				if (wasLastASeparator)
 				{
-					if('a' <= input[i] && input[i] <= 'z')
+					if ('a' <= input[i] && input[i] <= 'z')
 					{
-						output+=input[i]+'A'-'a';
+						output += input[i] + 'A' - 'a';
 					}
 					else
 					{
-						output+=input[i];
+						output += input[i];
 					}
 				}
 				else
 				{
-					output+=input[i];
+					output += input[i];
 				}
 			}
-			wasLastASeparator=false;
+			wasLastASeparator = false;
 		}
 		else
 		{
-			wasLastASeparator=true;
+			wasLastASeparator = true;
 		}
 	}
 	return output;

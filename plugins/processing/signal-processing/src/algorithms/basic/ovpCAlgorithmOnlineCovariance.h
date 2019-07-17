@@ -12,12 +12,12 @@
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
 
-#include <Eigen/Dense> 
+#include <Eigen/Dense>
 
 #define OVP_ClassId_Algorithm_OnlineCovariance                                            OpenViBE::CIdentifier(0x5ADD4F8E, 0x005D29C1)
 #define OVP_ClassId_Algorithm_OnlineCovarianceDesc                                        OpenViBE::CIdentifier(0x00CD2DEA, 0x4C000CEB)
 
-#define OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage                         OpenViBE::CIdentifier(0x16577C7B, 0x4E056BF7) 
+#define OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage                         OpenViBE::CIdentifier(0x16577C7B, 0x4E056BF7)
 #define OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors                      OpenViBE::CIdentifier(0x47E55F81, 0x27A519C4)
 #define OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod                      OpenViBE::CIdentifier(0x1C4F444F, 0x3CA213E2)
 #define OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization                OpenViBE::CIdentifier(0x269D5E63, 0x3B6D486E)
@@ -34,9 +34,9 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CAlgorithmOnlineCovariance : virtual public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >
+		class CAlgorithmOnlineCovariance : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
-		typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
+			typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
 		public:
 
@@ -58,7 +58,6 @@ namespace OpenViBEPlugins
 
 			// The divisor for the above estimates to do the normalization
 			OpenViBE::uint64 m_ui64Count;
-
 		};
 
 		class CAlgorithmOnlineCovarianceDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc
@@ -67,35 +66,35 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Online Covariance"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Jussi T. Lindgren"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("Inria"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Incrementally computes covariance with shrinkage."); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Online Covariance"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Jussi T. Lindgren"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Inria"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Incrementally computes covariance with shrinkage."); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Regularized covariance output is computed as (diag*shrink + cov)"); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("0.5"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("0.5"); }
 
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Algorithm_OnlineCovariance; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CAlgorithmOnlineCovariance; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_OnlineCovariance; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CAlgorithmOnlineCovariance; }
 
 			virtual OpenViBE::boolean getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage,          "Shrinkage",           OpenViBE::Kernel::ParameterType_Float);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors,       "Input vectors",       OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod,       "Cov update method",   OpenViBE::Kernel::ParameterType_Enumeration, OVP_TypeId_OnlineCovariance_UpdateMethod);
+				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage, "Shrinkage", OpenViBE::Kernel::ParameterType_Float);
+				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors, "Input vectors", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod, "Cov update method", OpenViBE::Kernel::ParameterType_Enumeration, OVP_TypeId_OnlineCovariance_UpdateMethod);
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization, "Trace normalization", OpenViBE::Kernel::ParameterType_Boolean);
 
 				// The algorithm returns these outputs
-				rAlgorithmPrototype.addOutputParameter (OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean,             "Mean vector",        OpenViBE::Kernel::ParameterType_Matrix);
-				rAlgorithmPrototype.addOutputParameter (OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix, "Covariance matrix",  OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean, "Mean vector", OpenViBE::Kernel::ParameterType_Matrix);
+				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix, "Covariance matrix", OpenViBE::Kernel::ParameterType_Matrix);
 
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Reset,     "Reset the algorithm");
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Update,    "Append a chunk of data");
-				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCov,    "Get the current regularized covariance matrix & mean");
+				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Reset, "Reset the algorithm");
+				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Update, "Append a chunk of data");
+				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCov, "Get the current regularized covariance matrix & mean");
 				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCovRaw, "Get the current covariance matrix & mean");
 
 				return true;
@@ -109,4 +108,3 @@ namespace OpenViBEPlugins
 #endif // __OpenViBEPlugins_Algorithm_OnlineCovariance_H__
 
 #endif // TARGET_HAS_ThirdPartyEIGEN
-

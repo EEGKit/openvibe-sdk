@@ -8,13 +8,13 @@
 #define OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer                                        OpenViBE::CIdentifier(0x27542F6E, 0x14AA3548)
 #define OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainerDesc                                    OpenViBE::CIdentifier(0x128A6013, 0x370B5C2C)
 
-typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
+typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
 namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmXDAWNTrainer : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmXDAWNTrainer : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			CBoxAlgorithmXDAWNTrainer(void);
@@ -30,14 +30,14 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmXDAWNTrainer > m_StimDecoder;
-			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmXDAWNTrainer > m_SignalDecoder[2];
-			OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmXDAWNTrainer > m_StimEncoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmXDAWNTrainer> m_StimDecoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer> m_SignalDecoder[2];
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmXDAWNTrainer> m_StimEncoder;
 
 			uint64_t m_TrainStimulationId;
 			OpenViBE::CString m_FilterFilename;
 			uint32_t m_FilterDimension;
-			bool m_SaveAsBoxConfig;			
+			bool m_SaveAsBoxConfig;
 		};
 
 		class CBoxAlgorithmXDAWNTrainerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -46,20 +46,20 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) {}
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("xDAWN Trainer"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("Mensia Technologies SA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Trains spatial filters that best highlight Evoked Response Potentials (ERP) such as P300"); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("xDAWN Trainer"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Mensia Technologies SA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Trains spatial filters that best highlight Evoked Response Potentials (ERP) such as P300"); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Trains spatial filters that best highlight Evoked Response Potentials (ERP) such as P300"); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Spatial Filtering"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Signal processing/Spatial Filtering"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-zoom-100"); }
+			virtual OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-zoom-100"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmXDAWNTrainer; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmXDAWNTrainer; }
 
 			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{

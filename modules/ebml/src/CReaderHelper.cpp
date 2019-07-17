@@ -3,9 +3,9 @@
 using namespace EBML;
 
 CReaderHelper::CReaderHelper(void)
-	:m_pReaderHelperImplementation(NULL)
+	: m_pReaderHelperImplementation(NULL)
 {
-	m_pReaderHelperImplementation=createReaderHelper();
+	m_pReaderHelperImplementation = createReaderHelper();
 }
 
 CReaderHelper::~CReaderHelper(void)
@@ -33,6 +33,4 @@ const char* CReaderHelper::getASCIIStringFromChildData(const void* pBuffer, cons
 	return m_pReaderHelperImplementation->getASCIIStringFromChildData(pBuffer, ui64BufferSize);
 }
 
-void CReaderHelper::release(void)
-{
-}
+void CReaderHelper::release(void) {}

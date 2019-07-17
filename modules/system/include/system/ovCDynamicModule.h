@@ -3,8 +3,8 @@
 #include "defines.h"
 
 #if defined TARGET_OS_Windows
-	#include <shlobj.h>
-	#include <Dbghelp.h>
+#include <shlobj.h>
+#include <Dbghelp.h>
 #elif defined TARGET_OS_Linux
 	#include <linux/limits.h>
 #elif defined TARGET_OS_MacOS
@@ -20,7 +20,7 @@ namespace System
 	class System_API CDynamicModule
 	{
 	public:
-		enum ELogErrorCodes :unsigned int
+		enum ELogErrorCodes : unsigned int
 		{
 			LogErrorCodes_NoError = 0,
 			LogErrorCodes_ModuleAlreadyLoaded = 1,
@@ -211,11 +211,11 @@ namespace System
 
 		unsigned int m_ErrorMode;
 		bool m_ShouldFreeModule;
-		typedef void(*symbol_t)(void);
+		typedef void (*symbol_t)(void);
 
 		char m_ErrorDetails[1024];
 		mutable ELogErrorCodes m_ErrorCode;
-		
+
 		static const unsigned int m_ErrorModeNull = 0xffffffff;
 
 	private:
@@ -249,7 +249,6 @@ namespace System
 		 */
 		static bool getImageFileHeaders(const char* filePath, IMAGE_NT_HEADERS& headers);
 #endif
-
 	};
 
 	class CDynamicModuleSymbolLoader

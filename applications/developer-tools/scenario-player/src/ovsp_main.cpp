@@ -53,7 +53,7 @@ Program can be run in command mode to execute list of commands from a file
 	optionParser.addValueOption<ProgramOptionsTraits::String>("play-mode", { "", "Play mode: std for standard and ff for fast-foward (express mode only) [default=std]" });
 	optionParser.addValueOption<ProgramOptionsTraits::Float>("max-time", { "", "Scenarios playing execution time limit (express mode only)" });
 
-	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("dg", { "", "Global user-defined token: -dg=\"(token:value)\" (express mode only)"});
+	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("dg", { "", "Global user-defined token: -dg=\"(token:value)\" (express mode only)" });
 	optionParser.addValueOption<ProgramOptionsTraits::TokenPairList>("ds", { "", "Scenario user-defined token: -ds=\"(token:value)\" (express mode only)" });
 
 	// command mode options
@@ -85,7 +85,6 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-		
 			if (optionParser.hasOption("mode") || optionParser.hasOption("updated-scenario-file"))
 			{
 				// command parser type is selected from mode
@@ -118,8 +117,8 @@ int main(int argc, char** argv)
 
 				commandParser->initialize();
 
-				try {
-
+				try
+				{
 					auto returnCode = commandParser->parse();
 
 					if (returnCode == PlayerReturnCode::Success)
@@ -157,4 +156,3 @@ int main(int argc, char** argv)
 
 	return static_cast<int>(PlayerReturnCode::Success);
 }
-

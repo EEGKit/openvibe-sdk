@@ -23,17 +23,17 @@ boolean CBoxAlgorithmIdentity::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmIdentity::process(void)
 {
-	const IBox* l_pStaticBoxContext=getBoxAlgorithmContext()->getStaticBoxContext();
-	IBoxIO* l_pDynamicBoxContext=getBoxAlgorithmContext()->getDynamicBoxContext();
+	const IBox* l_pStaticBoxContext = getBoxAlgorithmContext()->getStaticBoxContext();
+	IBoxIO* l_pDynamicBoxContext    = getBoxAlgorithmContext()->getDynamicBoxContext();
 
-	uint64 l_ui64StartTime=0;
-	uint64 l_ui64EndTime=0;
-	uint64 l_ui64ChunkSize=0;
-	const uint8* l_pChunkBuffer=NULL;
+	uint64 l_ui64StartTime      = 0;
+	uint64 l_ui64EndTime        = 0;
+	uint64 l_ui64ChunkSize      = 0;
+	const uint8* l_pChunkBuffer = NULL;
 
-	for(uint32 i=0; i<l_pStaticBoxContext->getInputCount(); i++)
+	for (uint32 i = 0; i < l_pStaticBoxContext->getInputCount(); i++)
 	{
-		for(uint32 j=0; j<l_pDynamicBoxContext->getInputChunkCount(i); j++)
+		for (uint32 j = 0; j < l_pDynamicBoxContext->getInputChunkCount(i); j++)
 		{
 			l_pDynamicBoxContext->getInputChunk(i, j, l_ui64StartTime, l_ui64EndTime, l_ui64ChunkSize, l_pChunkBuffer);
 			l_pDynamicBoxContext->appendOutputChunkData(i, l_pChunkBuffer, l_ui64ChunkSize);

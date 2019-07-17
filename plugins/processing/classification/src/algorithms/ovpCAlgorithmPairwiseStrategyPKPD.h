@@ -22,7 +22,6 @@ namespace OpenViBEPlugins
 		 */
 		class CAlgorithmPairwiseStrategyPKPD : virtual public OpenViBEPlugins::Classification::CAlgorithmPairwiseDecision
 		{
-
 		public:
 
 			CAlgorithmPairwiseStrategyPKPD() : m_ui32ClassCount(0) { };
@@ -34,7 +33,7 @@ namespace OpenViBEPlugins
 
 			virtual OpenViBE::boolean parameterize(void);
 
-			virtual OpenViBE::boolean compute(std::vector< SClassificationInfo >& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector);
+			virtual OpenViBE::boolean compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector);
 			virtual XML::IXMLNode* saveConfiguration(void);
 			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode& rNode);
 
@@ -50,23 +49,28 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Pairwise decision strategy based on PKPD"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Serrière Guillaume"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("Inria"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("."); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Price, S. Knerr, L. Personnaz, and G. Dreyfus."
-																									"Pairwise neural network classifiers with probabilistic outputs."
-																									" In G. Tesauro, D. Touretzky, and T. Leen (eds.)"
-																									"Advances in Neural Information Processing Systems 7 (NIPS-94), pp."
-																									" 1109-1116. MIT Press, 1995."); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("0.1"); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Pairwise decision strategy based on PKPD"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Serrière Guillaume"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Inria"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("."); }
 
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getDetailedDescription(void) const
+			{
+				return OpenViBE::CString("Price, S. Knerr, L. Personnaz, and G. Dreyfus."
+					"Pairwise neural network classifiers with probabilistic outputs."
+					" In G. Tesauro, D. Touretzky, and T. Leen (eds.)"
+					"Advances in Neural Information Processing Systems 7 (NIPS-94), pp."
+					" 1109-1116. MIT Press, 1995.");
+			}
+
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("0.1"); }
+
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Algorithm_PairwiseStrategy_PKPD; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Classification::CAlgorithmPairwiseStrategyPKPD; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_PairwiseStrategy_PKPD; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CAlgorithmPairwiseStrategyPKPD; }
 
 			virtual OpenViBE::boolean getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const

@@ -6,15 +6,11 @@ using namespace Kernel;
 using namespace Plugins;
 
 CAlgorithmContext::CAlgorithmContext(const IKernelContext& rKernelContext, CAlgorithmProxy& rAlgorithmProxy, const IPluginObjectDesc& rPluginObjectDesc)
-	:TKernelObject < IAlgorithmContext >(rKernelContext)
-	,m_rLogManager(rKernelContext.getLogManager())
-	,m_rAlgorithmProxy(rAlgorithmProxy)
-{
-}
+	: TKernelObject<IAlgorithmContext>(rKernelContext)
+	  , m_rLogManager(rKernelContext.getLogManager())
+	  , m_rAlgorithmProxy(rAlgorithmProxy) {}
 
-CAlgorithmContext::~CAlgorithmContext(void)
-{
-}
+CAlgorithmContext::~CAlgorithmContext(void) {}
 
 IConfigurationManager& CAlgorithmContext::getConfigurationManager(void) const
 {

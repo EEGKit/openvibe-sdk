@@ -32,10 +32,11 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-namespace SigProSTD {
-	template<typename T,
-	         typename std::enable_if<std::is_integral<T>::value>::type* = nullptr,
-	         typename std::enable_if<std::is_unsigned<T>::value>::type* = nullptr>
+namespace SigProSTD
+{
+	template <typename T,
+			  typename std::enable_if<std::is_integral<T>::value>::type* = nullptr,
+			  typename std::enable_if<std::is_unsigned<T>::value>::type* = nullptr>
 	T gcd(T a, T b)
 	{
 		T t;
@@ -64,13 +65,13 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::initialize(void)
 	m_oEncoder.initialize(*this, 0);
 
 	int64 l_i64OutputSamplingRate = FSettingValueAutoCast(
-	            *this->getBoxAlgorithmContext(),
-	            OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency
-	            );
+		*this->getBoxAlgorithmContext(),
+		OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency
+	);
 	int64 l_i64OutputSampleCount = FSettingValueAutoCast(
-	            *this->getBoxAlgorithmContext(), 
-	            OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer
-	            );
+		*this->getBoxAlgorithmContext(),
+		OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer
+	);
 
 	OV_ERROR_UNLESS_KRF(
 		l_i64OutputSamplingRate > 0,
@@ -85,11 +86,11 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::initialize(void)
 	);
 
 	m_ui32OutputSamplingRate = static_cast<uint32>(l_i64OutputSamplingRate);
-	m_ui32OutputSampleCount = static_cast<uint32>(l_i64OutputSampleCount);
+	m_ui32OutputSampleCount  = static_cast<uint32>(l_i64OutputSampleCount);
 
 	m_iFractionalDelayFilterSampleCount = 6;
-	m_f64TransitionBandInPercent = 45;
-	m_f64StopBandAttenuation = 49;
+	m_f64TransitionBandInPercent        = 45;
+	m_f64StopBandAttenuation            = 49;
 
 	m_ui32InputSamplingRate = 0;
 
@@ -116,17 +117,17 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 	m_pDynamicBoxContext = &this->getDynamicBoxContext();
 	uint32 i;
 
-	for(i=0; i<m_pDynamicBoxContext->getInputChunkCount(0); i++)
+	for (i = 0; i < m_pDynamicBoxContext->getInputChunkCount(0); i++)
 	{
 		m_oDecoder.decode(i);
 
-		IMatrix* l_pInputMatrix=m_oDecoder.getOutputMatrix();
-		IMatrix* l_pOutputMatrix=m_oEncoder.getInputMatrix();
+		IMatrix* l_pInputMatrix  = m_oDecoder.getOutputMatrix();
+		IMatrix* l_pOutputMatrix = m_oEncoder.getInputMatrix();
 
 		uint32 l_ui32ChannelCount = l_pInputMatrix->getDimensionSize(0);
-		uint32 l_ui32SampleCount = l_pInputMatrix->getDimensionSize(1);
+		uint32 l_ui32SampleCount  = l_pInputMatrix->getDimensionSize(1);
 
-		if(m_oDecoder.isHeaderReceived())
+		if (m_oDecoder.isHeaderReceived())
 		{
 			m_ui32InputSamplingRate = static_cast<uint32>(m_oDecoder.getOutputSamplingRate());
 
@@ -136,19 +137,19 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 				OpenViBE::Kernel::ErrorType::BadInput
 			);
 
-			this->getLogManager() << LogLevel_Info << "Resampling from [" << m_ui32InputSamplingRate <<  "] Hz to [" << m_ui32OutputSamplingRate <<  "] Hz.\n";
+			this->getLogManager() << LogLevel_Info << "Resampling from [" << m_ui32InputSamplingRate << "] Hz to [" << m_ui32OutputSamplingRate << "] Hz.\n";
 
-			float64 l_f64SRC = 1.0 * m_ui32OutputSamplingRate / m_ui32InputSamplingRate;
+			float64 l_f64SRC                   = 1.0 * m_ui32OutputSamplingRate / m_ui32InputSamplingRate;
 			uint32 l_ui32GreatestCommonDivisor = static_cast<uint32>(SigProSTD::gcd(m_ui32InputSamplingRate, m_ui32OutputSamplingRate));
-			uint32 l_ui32FactorUpsampling = m_ui32OutputSamplingRate/l_ui32GreatestCommonDivisor;
-			uint32 l_ui32FactorDownsampling = m_ui32InputSamplingRate/l_ui32GreatestCommonDivisor;
-			if(l_f64SRC<=0.5 || l_f64SRC>1.0)
+			uint32 l_ui32FactorUpsampling      = m_ui32OutputSamplingRate / l_ui32GreatestCommonDivisor;
+			uint32 l_ui32FactorDownsampling    = m_ui32InputSamplingRate / l_ui32GreatestCommonDivisor;
+			if (l_f64SRC <= 0.5 || l_f64SRC > 1.0)
 			{
-				this->getLogManager() << LogLevel_Info << "Sampling rate conversion [" << l_f64SRC << "] : upsampling by a factor of [" << l_ui32FactorUpsampling <<  "], low-pass filtering, and downsampling by a factor of [" << l_ui32FactorDownsampling << "].\n";
+				this->getLogManager() << LogLevel_Info << "Sampling rate conversion [" << l_f64SRC << "] : upsampling by a factor of [" << l_ui32FactorUpsampling << "], low-pass filtering, and downsampling by a factor of [" << l_ui32FactorDownsampling << "].\n";
 			}
 			else
 			{
-				OV_WARNING_K("Sampling rate conversion [" << l_f64SRC << "] : upsampling by a factor of [" << l_ui32FactorUpsampling <<  "], low-pass filtering, and downsampling by a factor of [" << l_ui32FactorDownsampling << "]");
+				OV_WARNING_K("Sampling rate conversion [" << l_f64SRC << "] : upsampling by a factor of [" << l_ui32FactorUpsampling << "], low-pass filtering, and downsampling by a factor of [" << l_ui32FactorDownsampling << "]");
 			}
 
 			m_oResampler.setFractionalDelayFilterSampleCount(m_iFractionalDelayFilterSampleCount);
@@ -157,15 +158,15 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 			m_oResampler.reset(l_ui32ChannelCount, m_ui32InputSamplingRate, m_ui32OutputSamplingRate);
 
 			float l_f32BuiltInLatency = m_oResampler.getBuiltInLatency();
-			if(l_f32BuiltInLatency <= 0.15)
+			if (l_f32BuiltInLatency <= 0.15)
 			{
 				this->getLogManager() << LogLevel_Trace << "Latency induced by the resampling is [" << l_f32BuiltInLatency << "] s.\n";
 			}
-			else if(0.15 < l_f32BuiltInLatency && l_f32BuiltInLatency <= 0.5)
+			else if (0.15 < l_f32BuiltInLatency && l_f32BuiltInLatency <= 0.5)
 			{
 				this->getLogManager() << LogLevel_Info << "Latency induced by the resampling is [" << l_f32BuiltInLatency << "] s.\n";
 			}
-			else if(0.5 < l_f32BuiltInLatency)
+			else if (0.5 < l_f32BuiltInLatency)
 			{
 				OV_WARNING_K("Latency induced by the resampling is [" << l_f32BuiltInLatency << "] s.");
 			}
@@ -178,7 +179,7 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 			m_oEncoder.encodeHeader();
 			m_pDynamicBoxContext->markOutputAsReadyToSend(0, 0, 0);
 		}
-		if(m_oDecoder.isBufferReceived())
+		if (m_oDecoder.isBufferReceived())
 		{
 			// re-sampling sample-wise via a callback
 			size_t l_ui32Count = m_oResampler.resample(*this, l_pInputMatrix->getBuffer(), l_ui32SampleCount);
@@ -187,12 +188,12 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 
 			// encoding made in the callback (see next function)
 		}
-		if(m_oDecoder.isEndReceived())
+		if (m_oDecoder.isEndReceived())
 		{
 			m_oEncoder.encodeEnd();
 			m_pDynamicBoxContext->markOutputAsReadyToSend(0,
-				(uint64((m_ui64TotalOutputSampleCount%m_ui32OutputSampleCount) << 32) / m_ui32OutputSamplingRate),
-				(uint64((m_ui64TotalOutputSampleCount%m_ui32OutputSampleCount) << 32) / m_ui32OutputSamplingRate));
+														  (uint64((m_ui64TotalOutputSampleCount % m_ui32OutputSampleCount) << 32) / m_ui32OutputSamplingRate),
+														  (uint64((m_ui64TotalOutputSampleCount % m_ui32OutputSampleCount) << 32) / m_ui32OutputSamplingRate));
 		}
 	}
 
@@ -201,20 +202,20 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 
 void CBoxAlgorithmSignalResampling::processResampler(const float64* pSample, size_t ui32ChannelCount) const
 {
-	float64* l_pBuffer = m_oEncoder.getInputMatrix()->getBuffer();
-	uint64 l_ui64OutputSampleIndex = m_ui64TotalOutputSampleCount%m_ui32OutputSampleCount;
+	float64* l_pBuffer             = m_oEncoder.getInputMatrix()->getBuffer();
+	uint64 l_ui64OutputSampleIndex = m_ui64TotalOutputSampleCount % m_ui32OutputSampleCount;
 
-	for(uint32 j=0; j<ui32ChannelCount; j++)
+	for (uint32 j = 0; j < ui32ChannelCount; j++)
 	{
-		l_pBuffer[j*m_ui32OutputSampleCount + l_ui64OutputSampleIndex] = pSample[j];
+		l_pBuffer[j * m_ui32OutputSampleCount + l_ui64OutputSampleIndex] = pSample[j];
 	}
 	m_ui64TotalOutputSampleCount++;
 
-	if ((m_ui64TotalOutputSampleCount%m_ui32OutputSampleCount) == 0)
+	if ((m_ui64TotalOutputSampleCount % m_ui32OutputSampleCount) == 0)
 	{
 		m_oEncoder.encodeBuffer();
 		m_pDynamicBoxContext->markOutputAsReadyToSend(0,
-			(uint64((m_ui64TotalOutputSampleCount - m_ui32OutputSampleCount) << 32) / m_ui32OutputSamplingRate),
-			(uint64((m_ui64TotalOutputSampleCount) << 32) / m_ui32OutputSamplingRate));
+													  (uint64((m_ui64TotalOutputSampleCount - m_ui32OutputSampleCount) << 32) / m_ui32OutputSamplingRate),
+													  (uint64((m_ui64TotalOutputSampleCount) << 32) / m_ui32OutputSamplingRate));
 	}
 }

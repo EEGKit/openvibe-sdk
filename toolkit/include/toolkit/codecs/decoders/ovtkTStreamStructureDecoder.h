@@ -9,7 +9,6 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TStreamStructureDecoderLocal : public T
 	{
-
 	protected:
 
 		using T::m_pCodec;
@@ -30,10 +29,7 @@ namespace OpenViBEToolkit
 
 		bool uninitialize(void)
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
 			m_pInputMemoryBuffer.uninitialize();
 			m_pCodec->uninitialize();
@@ -67,15 +63,14 @@ namespace OpenViBEToolkit
 	public:
 		using TStreamStructureDecoderLocal<TDecoder<T>>::uninitialize;
 
-		TStreamStructureDecoder()
-		{
+		TStreamStructureDecoder() { }
 
-		}
 		TStreamStructureDecoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
+
 		virtual ~TStreamStructureDecoder()
 		{
 			this->uninitialize();
@@ -84,4 +79,3 @@ namespace OpenViBEToolkit
 };
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-

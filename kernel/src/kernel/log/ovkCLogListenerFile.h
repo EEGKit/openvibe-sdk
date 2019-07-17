@@ -63,7 +63,7 @@ namespace OpenViBE
 			OpenViBE::uint64 m_ui64TimePrecision;
 
 		private:
-			template<typename T>
+			template <typename T>
 			void logInteger(T value)
 			{
 				m_fsFileStream << value << " ";

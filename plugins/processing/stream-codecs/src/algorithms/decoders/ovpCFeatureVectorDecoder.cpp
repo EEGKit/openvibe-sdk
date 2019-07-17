@@ -18,7 +18,7 @@ void CFeatureVectorDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 void CFeatureVectorDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
 {
 	// Check for conforming dimension count, then pass to matrix decoder
-	if(m_oTop==OVTK_NodeId_Header_StreamedMatrix_DimensionCount)
+	if (m_oTop == OVTK_NodeId_Header_StreamedMatrix_DimensionCount)
 	{
 		const uint32 l_ui32DimensionCount = (uint32)m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize);
 

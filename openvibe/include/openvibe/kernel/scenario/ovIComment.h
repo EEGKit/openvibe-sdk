@@ -30,12 +30,12 @@ namespace OpenViBE
 			 * \brief Gets the identifier of this comment
 			 * \return The identifier of this OpenViBE comment.
 			 */
-			virtual OpenViBE::CIdentifier getIdentifier(void) const=0;
+			virtual OpenViBE::CIdentifier getIdentifier(void) const =0;
 			/**
 			 * \brief Gets the display name of this comment
 			 * \return The name of this OpenViBE comment.
 			 */
-			virtual OpenViBE::CString getText(void) const=0;
+			virtual OpenViBE::CString getText(void) const =0;
 			/**
 			 * \brief Changes the identifier of this comment
 			 * \param rIdentifier [in] : The new identifier
@@ -44,7 +44,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean setIdentifier(
-				const OpenViBE::CIdentifier& rIdentifier)=0;
+				const OpenViBE::CIdentifier& rIdentifier) =0;
 			/**
 			 * \brief Changes the text of this comment
 			 * \param sText [in] : The text this comment should contain
@@ -52,7 +52,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean setText(
-				const OpenViBE::CString& sText)=0;
+				const OpenViBE::CString& sText) =0;
 
 			//@}
 			/** \name Initialisation from prototypes etc... */
@@ -68,7 +68,7 @@ namespace OpenViBE
 			 * according to the existing comment.
 			 */
 			virtual OpenViBE::boolean initializeFromExistingComment(
-				const OpenViBE::Kernel::IComment& rExisitingComment)=0;
+				const OpenViBE::Kernel::IComment& rExisitingComment) =0;
 
 			//@}
 

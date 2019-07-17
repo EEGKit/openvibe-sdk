@@ -17,21 +17,21 @@ namespace EBML
 
 namespace OpenViBEToolkit
 {
-	template<class CHandledType>
+	template <class CHandledType>
 	class TScopeHandle
 	{
 	public:
 
 		TScopeHandle(CHandledType& rHandler, CHandledType& rHandledValue)
-			:m_oLastHandledValue(rHandler)
-			,m_rHandler(rHandler)
+			: m_oLastHandledValue(rHandler)
+			  , m_rHandler(rHandler)
 		{
-			m_rHandler=rHandledValue;
+			m_rHandler = rHandledValue;
 		}
 
 		~TScopeHandle(void)
 		{
-			m_rHandler=m_oLastHandledValue;
+			m_rHandler = m_oLastHandledValue;
 		}
 
 	private:

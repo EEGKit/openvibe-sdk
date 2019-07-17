@@ -19,11 +19,11 @@ namespace OpenViBE
 			OpenViBE::CString m_sConfigurationValue;
 		} SConfigurationToken;
 
-		class CConfigurationManager : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IConfigurationManager >
+		class CConfigurationManager : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IConfigurationManager>
 		{
 		public:
 
-			CConfigurationManager(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::IConfigurationManager* pParentConfigurationManager=NULL);
+			CConfigurationManager(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::IConfigurationManager* pParentConfigurationManager = NULL);
 
 			virtual void clear(void);
 
@@ -60,14 +60,14 @@ namespace OpenViBE
 				const OpenViBE::CString& rConfigurationTokenName) const;
 
 			virtual bool registerKeywordParser(
-			        const OpenViBE::CString& rKeyword,
-			        const IConfigurationKeywordExpandCallback& rCallback);
+				const OpenViBE::CString& rKeyword,
+				const IConfigurationKeywordExpandCallback& rCallback);
 
 			virtual bool unregisterKeywordParser(
-			        const OpenViBE::CString& rKeyword);
+				const OpenViBE::CString& rKeyword);
 
 			virtual bool unregisterKeywordParser(
-			        const IConfigurationKeywordExpandCallback& rCallback);
+				const IConfigurationKeywordExpandCallback& rCallback);
 
 			virtual OpenViBE::CString expand(
 				const OpenViBE::CString& rExpression) const;
@@ -75,9 +75,9 @@ namespace OpenViBE
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IConfigurationManager >, OVK_ClassId_Kernel_Configuration_ConfigurationManager);
 
 			virtual OpenViBE::CString expandOnlyKeyword(
-			        const OpenViBE::CString& rKeyword,
-			        const OpenViBE::CString& rExpression,
-			        bool preserveBackslashes) const;
+				const OpenViBE::CString& rKeyword,
+				const OpenViBE::CString& rExpression,
+				bool preserveBackslashes) const;
 			virtual OpenViBE::float64 expandAsFloat(
 				const OpenViBE::CString& rExpression,
 				const OpenViBE::float64 f64FallbackValue) const;
@@ -121,8 +121,8 @@ namespace OpenViBE
 
 		protected:
 
-			std::map < OpenViBE::CIdentifier, OpenViBE::Kernel::SConfigurationToken > m_vConfigurationToken;
-			std::map < OpenViBE::CString, const OpenViBE::Kernel::IConfigurationKeywordExpandCallback*> m_vKeywordOverride;
+			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::SConfigurationToken> m_vConfigurationToken;
+			std::map<OpenViBE::CString, const OpenViBE::Kernel::IConfigurationKeywordExpandCallback*> m_vKeywordOverride;
 
 			mutable std::recursive_mutex m_oMutex;
 		};

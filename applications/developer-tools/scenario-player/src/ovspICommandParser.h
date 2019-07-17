@@ -42,11 +42,10 @@ namespace OpenViBE
 	*/
 	class ICommandParser
 	{
-
 	public:
 
 		virtual ~ICommandParser() = default;
-		ICommandParser() = default;
+		ICommandParser()          = default;
 
 		/**
 		* \brief Initialize parser
@@ -80,7 +79,7 @@ namespace OpenViBE
 
 		// disable copy and assignment because it is not meant to used
 		// as a value class
-		ICommandParser(const ICommandParser&) = delete;
-		ICommandParser &operator=(const ICommandParser&) = delete;
+		ICommandParser(const ICommandParser&)            = delete;
+		ICommandParser& operator=(const ICommandParser&) = delete;
 	};
 }

@@ -8,7 +8,7 @@ using namespace std;
 bool CCppCodeGenerator::openFile(const char* sFilename)
 {
 	m_oFile.open(sFilename, ios::out | ios::trunc);
-	if(!m_oFile.is_open())
+	if (!m_oFile.is_open())
 		return false;
 	m_oFile << "#include \"toolkit/ovtk_all.h\"" << endl << endl;
 
@@ -24,7 +24,7 @@ bool CCppCodeGenerator::openFile(const char* sFilename)
 }
 
 
-bool CCppCodeGenerator::appendStimulation(SStimulation &rStim)
+bool CCppCodeGenerator::appendStimulation(SStimulation& rStim)
 {
 	m_oFile << "\tl_rTypeManager.registerEnumerationEntry(OV_TypeId_Stimulation, \""
 			<< rStim.m_sName

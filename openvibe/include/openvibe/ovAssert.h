@@ -55,8 +55,8 @@ namespace OpenViBE
  * the system occurs and it is impossible to recover from it.
  */
 
- // internal use
- #define convertErrorTypeToString(type) #type
+// internal use
+#define convertErrorTypeToString(type) #type
 
 namespace OpenViBE
 {
@@ -65,7 +65,7 @@ namespace OpenViBE
 	{
 		std::stringstream ss;
 		ss.precision(3);
-		ss.setf(std::ios::fixed,std::ios::floatfield);
+		ss.setf(std::ios::fixed, std::ios::floatfield);
 		ss << OpenViBE::ITimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
 		ss << " sec";
 
@@ -75,13 +75,13 @@ namespace OpenViBE
 	}
 
 #define HAS_ImbuedOStreamWithCIdentifier
+
 	inline std::ostream& operator<<(std::ostream& os, const OpenViBE::CIdentifier id)
 	{
 		os << id.toString();
 
 		return os;
 	}
-
 }
 
 /**

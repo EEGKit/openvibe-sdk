@@ -24,7 +24,7 @@
 #include "system/ovCDynamicModule.h"
 
 #if defined TARGET_OS_Windows
-    #include <winreg.h>
+#include <winreg.h>
 #endif
 
 #include <algorithm>
@@ -41,28 +41,28 @@ namespace
 
 	std::string s_ExistingModulePath;
 
-	#if defined _WIN64
-	#define CSIDL_SYSTEM_PLATFORM CSIDL_SYSTEM
-	#else
+#if defined _WIN64
+#define CSIDL_SYSTEM_PLATFORM CSIDL_SYSTEM
+#else
 	#define CSIDL_SYSTEM_PLATFORM CSIDL_SYSTEMX86
-	#endif
+#endif
 
 	std::string s_ExistingModulePathName;
 	static const std::string s_NonExistingModuleName = "randomRandomRandom.dll";
 
 	static const std::string s_NonExistingSymbol = "nonExistingSymbol";
 
-	static const std::string s_ExistingEnvironmentPath = "PATH";
+	static const std::string s_ExistingEnvironmentPath    = "PATH";
 	static const std::string s_NonExistingEnvironmentPath = "randomRandomRandom";
 
 	static const std::string s_ExistingRegistryModuleName = s_ExistingModuleName;
-	static const std::string s_SymbolNameNTDLL = "toupper";
+	static const std::string s_SymbolNameNTDLL            = "toupper";
 
-	static const HKEY s_ExistingRegistryKey = HKEY_LOCAL_MACHINE; // 0x80000002
+	static const HKEY s_ExistingRegistryKey    = HKEY_LOCAL_MACHINE; // 0x80000002
 	static const HKEY s_NonExistingRegistryKey = (HKEY)(ULONG_PTR)((LONG)0x800000FF);
 
-	static const std::string s_ExistingRegistryPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"; // Present on all Windows versions
-	static const char* s_ExistingRegistryKeyName = "InstallerLocation";
+	static const std::string s_ExistingRegistryPath    = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"; // Present on all Windows versions
+	static const char* s_ExistingRegistryKeyName       = "InstallerLocation";
 	static const std::string s_NonExistingRegistryPath = "SOFTWARE\\Random\\Random\\Random";
 
 	int (*toupperSymbol)(int c);
@@ -88,7 +88,7 @@ TEST(DynamicModule_Test_Case, loadFromExistingSuccessNoSymbolCheck)
 	ASSERT_TRUE(dynamicModule.loadFromExisting(s_ExistingModuleName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModuleName;
-	std::string moduleName = dynamicModule.getFilename();
+	std::string moduleName         = dynamicModule.getFilename();
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
@@ -115,7 +115,7 @@ TEST(DynamicModule_Test_Case, loadFromPathSuccessNoSymbolCheck)
 	ASSERT_TRUE(dynamicModule.loadFromPath(s_ExistingModulePathName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
-	std::string moduleName = dynamicModule.getFilename();
+	std::string moduleName         = dynamicModule.getFilename();
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
@@ -140,7 +140,7 @@ TEST(DynamicModule_Test_Case, loadFromPathSuccessSymbolCheck)
 	ASSERT_TRUE(dynamicModule.loadFromPath(s_ExistingModulePathName.c_str(), s_SymbolNameNTDLL.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
-	std::string moduleName = dynamicModule.getFilename();
+	std::string moduleName         = dynamicModule.getFilename();
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
@@ -166,7 +166,7 @@ TEST(DynamicModule_Test_Case, loadFromKnownPathSuccessNoSymbolCheck)
 	ASSERT_TRUE(dynamicModule.loadFromKnownPath(CSIDL_SYSTEM_PLATFORM, s_ExistingModuleName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
-	std::string moduleName = dynamicModule.getFilename();
+	std::string moduleName         = dynamicModule.getFilename();
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
@@ -194,7 +194,7 @@ TEST(DynamicModule_Test_Case, loadFromEnvironmentSuccessNoSymbolCheck)
 	ASSERT_TRUE(dynamicModule.loadFromEnvironment(s_ExistingEnvironmentPath.c_str(), s_ExistingModuleName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = "C:\\WINDOWS\\system32\\ntdll.dll";
-	std::string moduleName = dynamicModule.getFilename();
+	std::string moduleName         = dynamicModule.getFilename();
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
@@ -221,7 +221,7 @@ TEST(DynamicModule_Test_Case, loadFromRegistrySuccessNoSymbolCheck)
 	ASSERT_TRUE(dynamicModule.loadFromRegistry(s_ExistingRegistryKey, s_ExistingRegistryPath.c_str(), NULL, KEY_READ | KEY_WOW64_64KEY, s_ExistingRegistryModuleName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModuleName;
-	std::string moduleName = dynamicModule.getFilename();
+	std::string moduleName         = dynamicModule.getFilename();
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
@@ -238,7 +238,7 @@ TEST(DynamicModule_Test_Case, loadFromRegistrySuccessSymbolCheck)
 	ASSERT_TRUE(dynamicModule.loadFromRegistry(s_ExistingRegistryKey, s_ExistingRegistryPath.c_str(), NULL, KEY_READ | KEY_WOW64_64KEY, s_ExistingRegistryModuleName.c_str(), s_SymbolNameNTDLL.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModuleName;
-	std::string moduleName = dynamicModule.getFilename();
+	std::string moduleName         = dynamicModule.getFilename();
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
@@ -271,7 +271,7 @@ TEST(DynamicModule_Test_Case, getSymbolSuccess)
 	ASSERT_TRUE(dynamicModule.loadFromPath(s_ExistingModulePathName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
-	std::string moduleName = dynamicModule.getFilename();
+	std::string moduleName         = dynamicModule.getFilename();
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
@@ -292,7 +292,7 @@ TEST(DynamicModule_Test_Case, getSymbolFail)
 	ASSERT_TRUE(dynamicModule.loadFromPath(s_ExistingModulePathName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
-	std::string moduleName = dynamicModule.getFilename();
+	std::string moduleName         = dynamicModule.getFilename();
 	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
 	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
@@ -303,15 +303,15 @@ TEST(DynamicModule_Test_Case, getSymbolFail)
 #if defined TARGET_OS_Windows
 TEST(DynamicModule_Test_Case, isModulecompatibleSuccess)
 {
-	#if defined _WIN64
+#if defined _WIN64
 	ASSERT_FALSE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x014c)); // x86
 	ASSERT_TRUE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x8664)); // x64
 	ASSERT_FALSE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x0200)); // ia64
-	#else
+#else
 	ASSERT_TRUE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x014c)); // x86
 	ASSERT_FALSE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x8664)); // x64
 	ASSERT_FALSE(CDynamicModule::isModuleCompatible(s_ExistingModulePathName.c_str(), 0x0200)); // ia64
-	#endif
+#endif
 }
 #endif
 
@@ -349,12 +349,9 @@ int uoDynamicModuleTest(int argc, char* argv[])
 #if defined TARGET_OS_Windows
 	BOOL bIsWow64 = FALSE;
 
-	if (!::IsWow64Process(GetCurrentProcess(), &bIsWow64))
-	{
-		return false;
-	}
+	if (!::IsWow64Process(GetCurrentProcess(), &bIsWow64)) { return false; }
 
-	s_ExistingModulePath = bIsWow64 ? "C:\\WINDOWS\\SysWOW64\\" : "C:\\WINDOWS\\system32\\";
+	s_ExistingModulePath     = bIsWow64 ? "C:\\WINDOWS\\SysWOW64\\" : "C:\\WINDOWS\\system32\\";
 	s_ExistingModulePathName = s_ExistingModulePath + s_ExistingModuleName;
 #endif
 

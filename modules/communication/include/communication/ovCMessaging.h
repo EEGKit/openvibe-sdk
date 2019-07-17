@@ -327,6 +327,5 @@ namespace Communication
 	protected:
 		struct MessagingImplementation;
 		MessagingImplementation* impl;
-
 	};
 }

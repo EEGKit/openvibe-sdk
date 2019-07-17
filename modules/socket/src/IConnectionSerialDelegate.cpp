@@ -2,29 +2,21 @@
 
 namespace Socket
 {
-	IConnectionSerialDelegate::IConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) :
-		TConnectionDelegate<IConnectionSerial>(oConnectionSerialDelegate.oConnectionDelegate)
-	{
-	}
+	IConnectionSerialDelegate::IConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) : TConnectionDelegate<IConnectionSerial>(oConnectionSerialDelegate.oConnectionDelegate) { }
 
-	IConnectionSerialDelegate::~IConnectionSerialDelegate()
-	{
-	}
+	IConnectionSerialDelegate::~IConnectionSerialDelegate() { }
 
 	class CConnectionSerialDelegate : public Socket::IConnectionSerialDelegate
 	{
 	public:
-		explicit CConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) :
-			IConnectionSerialDelegate(oConnectionSerialDelegate)
+		explicit CConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) : IConnectionSerialDelegate(oConnectionSerialDelegate)
 		{
 			m_oConnectionSerialDelegate = oConnectionSerialDelegate;
 		}
 
-		virtual ~CConnectionSerialDelegate()
-		{
-		}
+		virtual ~CConnectionSerialDelegate() { }
 
-		bool connect(const char *sURL, unsigned long ui32BaudRate)
+		bool connect(const char* sURL, unsigned long ui32BaudRate)
 		{
 			return m_oConnectionSerialDelegate.fpConnect(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData, sURL, ui32BaudRate);
 		}
@@ -67,5 +59,4 @@ namespace Socket
 	{
 		return new CConnectionSerialDelegate(oConnectionSerialDelegate);
 	}
-
 }

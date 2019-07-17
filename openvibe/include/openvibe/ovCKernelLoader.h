@@ -12,8 +12,8 @@ namespace OpenViBE
 		CKernelLoader(void);
 		virtual ~CKernelLoader(void);
 
-		virtual OpenViBE::boolean load(const OpenViBE::CString& sFileName, OpenViBE::CString* pError=NULL);
-		virtual OpenViBE::boolean unload(OpenViBE::CString* pError=NULL);
+		virtual OpenViBE::boolean load(const OpenViBE::CString& sFileName, OpenViBE::CString* pError = NULL);
+		virtual OpenViBE::boolean unload(OpenViBE::CString* pError = NULL);
 
 		virtual OpenViBE::boolean initialize(void);
 		virtual OpenViBE::boolean getKernelDesc(OpenViBE::Kernel::IKernelDesc*& rpKernelDesc);

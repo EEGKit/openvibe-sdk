@@ -71,111 +71,98 @@ namespace OpenViBE
 		// template meta-programming features
 
 		/* Base type that represents a true value at compile-time */
-		struct TrueType {
+		struct TrueType
+		{
 			static const bool value = true;
 		};
 
 		/* Base type that represents a false value at compile-time */
-		struct FalseType {
+		struct FalseType
+		{
 			static const bool value = false;
 		};
 
 		/* IsCompliant is used to statically check if a type is compliant with the handled types */
 		template <typename T>
-		struct IsCompliant : FalseType
-		{
-		};
+		struct IsCompliant : FalseType { };
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::TokenPair> : TrueType
-		{};
+		struct IsCompliant<ProgramOptionsTraits::TokenPair> : TrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::TokenPairList> : TrueType
-		{};
+		struct IsCompliant<ProgramOptionsTraits::TokenPairList> : TrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::String> : TrueType
-		{};
+		struct IsCompliant<ProgramOptionsTraits::String> : TrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::StringList> : TrueType
-		{};
+		struct IsCompliant<ProgramOptionsTraits::StringList> : TrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::Integer> : TrueType
-		{};
+		struct IsCompliant<ProgramOptionsTraits::Integer> : TrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::IntegerList> : TrueType
-		{};
+		struct IsCompliant<ProgramOptionsTraits::IntegerList> : TrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::Float> : TrueType
-		{};
+		struct IsCompliant<ProgramOptionsTraits::Float> : TrueType {};
 
 		/* Specialization of the template for compliant types */
 		template <>
-		struct IsCompliant<ProgramOptionsTraits::FloatList> : TrueType
-		{};
+		struct IsCompliant<ProgramOptionsTraits::FloatList> : TrueType {};
 
 		/* IsSignatureCompliant is used to statically checked a list of type is compliant with handled type */
-		template<typename... List>
+		template <typename... List>
 		struct IsSignatureCompliant;
 
 		/* Specialization for empty list */
-		template<>
-		struct IsSignatureCompliant<> : TrueType{};
+		template <>
+		struct IsSignatureCompliant<> : TrueType {};
 
 		/* Specialization for non-empty list */
 		template <typename Head, typename... Tail>
 		struct IsSignatureCompliant<Head, Tail...> :
-			std::conditional<IsCompliant<Head>::value, IsSignatureCompliant<Tail...>, FalseType>::type
-		{
-		};
+				std::conditional<IsCompliant<Head>::value, IsSignatureCompliant<Tail...>, FalseType>::type { };
 
 		/* IsIn is used to statically check if a type T is in a list of types List*/
 		template <typename T, typename... List>
 		struct IsIn; // interface
 
 		/* Specialization for empty list */
-		template<typename T>
-		struct IsIn<T> : FalseType{};
+		template <typename T>
+		struct IsIn<T> : FalseType {};
 
 		/* Specialization for list where 1st element is a match */
 		template <typename T, typename... Tail>
-		struct IsIn<T, T, Tail...> : TrueType
-		{};
+		struct IsIn<T, T, Tail...> : TrueType {};
 
 		/* Specialization for list of many elements */
 		template <typename T, typename Head, typename... Tail>
-		struct IsIn<T, Head, Tail...> : IsIn<T, Tail...>{};
+		struct IsIn<T, Head, Tail...> : IsIn<T, Tail...> {};
 
 		/* HasDuplicate is used to statically check if a list of types has duplicates*/
-		template<typename... List>
+		template <typename... List>
 		struct HasDuplicate;
 
 		/* Specialization for empty list */
-		template<>
-		struct HasDuplicate<> : FalseType{};
+		template <>
+		struct HasDuplicate<> : FalseType {};
 
 		/* Specialization for 1-element list */
 		template <typename T>
-		struct HasDuplicate<T> : FalseType{};
+		struct HasDuplicate<T> : FalseType {};
 
 		/* Specialization for list of many elements */
 		template <typename Head, typename... Tail>
 		struct HasDuplicate<Head, Tail...> :
-			std::conditional<IsIn<Head, Tail...>::value, TrueType, HasDuplicate<Tail...>>::type
-		{
-		};
+				std::conditional<IsIn<Head, Tail...>::value, TrueType, HasDuplicate<Tail...>>::type { };
 	}
 
 	/**
@@ -210,7 +197,6 @@ namespace OpenViBE
 	template <typename First, typename... Types>
 	class ProgramOptions final
 	{
-
 	public:
 
 		// static assert are used to raise understandable errors at compile time
@@ -304,9 +290,7 @@ namespace OpenViBE
 		{
 		public:
 
-			OptionVisitor(std::string& value) : m_Value(value)
-			{
-			}
+			OptionVisitor(std::string& value) : m_Value(value) { }
 
 			void operator()(ProgramOptionsTraits::Integer& operand) const;
 
@@ -389,7 +373,7 @@ namespace OpenViBE
 		{
 			std::cerr << "ERROR: Caught exception during option value retrieval: " << e.what() << std::endl;
 		}
-	
+
 		return value;
 	}
 
@@ -413,28 +397,19 @@ namespace OpenViBE
 		{
 			std::string arg = args[i];
 
-			auto argSplit = arg.find_first_of("="); // = is the separator for value option
+			auto argSplit = arg.find_first_of("=");				// = is the separator for value option
 
 			std::string key;
 
-			if (argSplit == std::string::npos) // simple option
-			{
-				key = arg;
-			}
-			else // value option
-			{
-				key = arg.substr(0, argSplit);
-			}
+			if (argSplit == std::string::npos) { key = arg; }	// simple option
+			else { key = arg.substr(0, argSplit); }				// value option
 
 			// first check if the key exists
-			auto keyMatch = std::find_if(
-				m_DescMap.begin(),
-				m_DescMap.end(),
-				[&](const std::pair<std::string, FullOptionDesc>& p)
-			{
-				auto desc = p.second.second;
-				return (("-" + p.first) == key) || (("--" + p.first) == key) || (("-" + desc.m_ShortName) == key) || (("--" + desc.m_ShortName) == key);
-			}
+			auto keyMatch = std::find_if(m_DescMap.begin(), m_DescMap.end(), [&](const std::pair<std::string, FullOptionDesc>& p)
+										 {
+											 auto desc = p.second.second;
+											 return (("-" + p.first) == key) || (("--" + p.first) == key) || (("-" + desc.m_ShortName) == key) || (("--" + desc.m_ShortName) == key);
+										 }
 			);
 
 			if (keyMatch == m_DescMap.end())
@@ -462,7 +437,7 @@ namespace OpenViBE
 				}
 				catch (const std::exception& e)
 				{
-					std::cerr << "ERROR: Caught exception during option parsing: "<< e.what() << std::endl;
+					std::cerr << "ERROR: Caught exception during option parsing: " << e.what() << std::endl;
 					std::cerr << "Could not parse option with key = " << key << " and value = " << val << std::endl;
 					return false;
 				}
@@ -557,7 +532,7 @@ namespace OpenViBE
 	ProgramOptionsTraits::TokenPair ProgramOptions<First, Types...>::OptionVisitor::parsePair(const std::string& str) const
 	{
 		auto split = str.find_first_of(":");
-		auto size = str.size();
+		auto size  = str.size();
 
 		// (a:b) pattern expected
 		// minimal regex std::regex("\\(.+:.+\\)")

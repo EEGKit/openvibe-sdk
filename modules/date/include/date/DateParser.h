@@ -21,5 +21,4 @@ namespace DateParser
 	private:
 		CDateParser(void);
 	};
-
 }

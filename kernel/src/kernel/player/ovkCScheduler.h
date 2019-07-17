@@ -12,7 +12,8 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		enum SchedulerInitializationCode{
+		enum SchedulerInitializationCode
+		{
 			SchedulerInitialization_Success,
 			SchedulerInitialization_BoxInitializationFailed,
 			SchedulerInitialization_Failed
@@ -22,7 +23,7 @@ namespace OpenViBE
 		class CChunk;
 		class CPlayer;
 
-		class CScheduler : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >
+		class CScheduler : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IKernelObject>
 		{
 		public:
 
@@ -65,9 +66,9 @@ namespace OpenViBE
 			OpenViBE::uint64 m_ui64StepDuration;
 			OpenViBE::uint64 m_ui64CurrentTime;
 
-			std::map < std::pair < OpenViBE::int32, OpenViBE::CIdentifier>, OpenViBE::Kernel::CSimulatedBox* > m_vSimulatedBox;
-			std::map < OpenViBE::CIdentifier, System::CChrono > m_vSimulatedBoxChrono;
-			std::map < OpenViBE::CIdentifier, std::map < OpenViBE::uint32, std::list < OpenViBE::Kernel::CChunk > > > m_vSimulatedBoxInput;
+			std::map<std::pair<OpenViBE::int32, OpenViBE::CIdentifier>, OpenViBE::Kernel::CSimulatedBox*> m_vSimulatedBox;
+			std::map<OpenViBE::CIdentifier, System::CChrono> m_vSimulatedBoxChrono;
+			std::map<OpenViBE::CIdentifier, std::map<OpenViBE::uint32, std::list<OpenViBE::Kernel::CChunk>>> m_vSimulatedBoxInput;
 
 		private:
 

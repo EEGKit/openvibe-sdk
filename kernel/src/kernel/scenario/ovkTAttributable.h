@@ -13,36 +13,29 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		template <class T> class TAttributable : public T
+		template <class T>
+		class TAttributable : public T
 		{
 		public:
 
 			explicit TAttributable(const OpenViBE::Kernel::IKernelContext& rKernelContext)
-				:T(rKernelContext)
-			{
-			}
+				: T(rKernelContext) { }
 
 			virtual OpenViBE::boolean addAttribute(
 				const OpenViBE::CIdentifier& rAttributeIdentifier,
 				const OpenViBE::CString& sAttributeValue)
 			{
-				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
-				if(itAttribute!=m_vAttribute.end())
-				{
-					return false;
-				}
-				m_vAttribute[rAttributeIdentifier]=sAttributeValue;
+				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				if (itAttribute != m_vAttribute.end()) { return false; }
+				m_vAttribute[rAttributeIdentifier] = sAttributeValue;
 				return true;
 			}
 
 			virtual OpenViBE::boolean removeAttribute(
 				const OpenViBE::CIdentifier& rAttributeIdentifier)
 			{
-				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
-				if(itAttribute==m_vAttribute.end())
-				{
-					return false;
-				}
+				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				if (itAttribute == m_vAttribute.end()) { return false; }
 				m_vAttribute.erase(itAttribute);
 				return true;
 			}
@@ -56,8 +49,8 @@ namespace OpenViBE
 			virtual OpenViBE::CString getAttributeValue(
 				const OpenViBE::CIdentifier& rAttributeIdentifier) const
 			{
-				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::const_iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
-				if(itAttribute==m_vAttribute.end())
+				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				if (itAttribute == m_vAttribute.end())
 				{
 					return OpenViBE::CString("");
 				}
@@ -68,25 +61,22 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rAttributeIdentifier,
 				const OpenViBE::CString& sAttributeValue)
 			{
-				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
-				if(itAttribute==m_vAttribute.end())
+				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				if (itAttribute == m_vAttribute.end())
 				{
-//					this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << "Automatically added unexisting attribute identifier " << rAttributeIdentifier << " while setting its value\n";
-					m_vAttribute[rAttributeIdentifier]=sAttributeValue;
+					//					this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << "Automatically added unexisting attribute identifier " << rAttributeIdentifier << " while setting its value\n";
+					m_vAttribute[rAttributeIdentifier] = sAttributeValue;
 					return true;
 				}
-				itAttribute->second=sAttributeValue;
+				itAttribute->second = sAttributeValue;
 				return true;
 			}
 
 			virtual OpenViBE::boolean hasAttribute(
 				const OpenViBE::CIdentifier& rAttributeIdentifier) const
 			{
-				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::const_iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
-				if(itAttribute==m_vAttribute.end())
-				{
-					return false;
-				}
+				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				if (itAttribute == m_vAttribute.end()) { return false; }
 				return true;
 			}
 
@@ -98,7 +88,7 @@ namespace OpenViBE
 			virtual OpenViBE::CIdentifier getNextAttributeIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const
 			{
-				return getNextIdentifier < OpenViBE::CString >(m_vAttribute, rPreviousIdentifier);
+				return getNextIdentifier<OpenViBE::CString>(m_vAttribute, rPreviousIdentifier);
 			}
 
 			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_Scenario_AttributableT);

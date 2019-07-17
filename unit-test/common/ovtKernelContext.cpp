@@ -51,7 +51,7 @@ namespace OpenViBETest
 
 		m_KernelLoader.initialize();
 
-		IKernelDesc* kernelDesc{nullptr};
+		IKernelDesc* kernelDesc{ nullptr };
 		m_KernelLoader.getKernelDesc(kernelDesc);
 
 		if (!kernelDesc)

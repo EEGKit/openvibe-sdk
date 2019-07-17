@@ -20,7 +20,6 @@ namespace OpenViBE
 		public:
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IMessage, OV_ClassId_Kernel_Player_MessageClock)
-
 		};
 	};
 };

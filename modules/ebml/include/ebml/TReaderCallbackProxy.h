@@ -6,8 +6,8 @@
 namespace EBML
 {
 
-// ________________________________________________________________________________________________________________
-//
+	// ________________________________________________________________________________________________________________
+	//
 
 	template <class COwnerClass>
 	class TReaderCallbackProxy1 : public EBML::IReaderCallback
@@ -19,42 +19,45 @@ namespace EBML
 			void (COwnerClass::*mfpOpenChild)(const EBML::CIdentifier& rIdentifier),
 			void (COwnerClass::*mfpProcessChildData)(const void* pBuffer, const EBML::uint64 ui64BufferSize),
 			void (COwnerClass::*mfpCloseChild)(void))
-			:m_rOwnerObject(rOwnerObject)
-			,m_mfpIsMasterChild(mfpIsMasterChild)
-			,m_mfpOpenChild(mfpOpenChild)
-			,m_mfpProcessChildData(mfpProcessChildData)
-			,m_mfpCloseChild(mfpCloseChild)
-		{
-		}
+			: m_rOwnerObject(rOwnerObject)
+			  , m_mfpIsMasterChild(mfpIsMasterChild)
+			  , m_mfpOpenChild(mfpOpenChild)
+			  , m_mfpProcessChildData(mfpProcessChildData)
+			  , m_mfpCloseChild(mfpCloseChild) { }
+
 		virtual EBML::boolean isMasterChild(const EBML::CIdentifier& rIdentifier)
 		{
-			if(m_mfpIsMasterChild)
+			if (m_mfpIsMasterChild)
 			{
 				return (m_rOwnerObject.*m_mfpIsMasterChild)(rIdentifier);
 			}
 			return false;
 		}
+
 		virtual void openChild(const EBML::CIdentifier& rIdentifier)
 		{
-			if(m_mfpOpenChild)
+			if (m_mfpOpenChild)
 			{
 				(m_rOwnerObject.*m_mfpOpenChild)(rIdentifier);
 			}
 		}
+
 		virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
 		{
-			if(m_mfpProcessChildData)
+			if (m_mfpProcessChildData)
 			{
 				(m_rOwnerObject.*m_mfpProcessChildData)(pBuffer, ui64BufferSize);
 			}
 		}
+
 		virtual void closeChild(void)
 		{
-			if(m_mfpCloseChild)
+			if (m_mfpCloseChild)
 			{
 				(m_rOwnerObject.*m_mfpCloseChild)();
 			}
 		}
+
 	protected:
 		COwnerClass& m_rOwnerObject;
 		EBML::boolean (COwnerClass::*m_mfpIsMasterChild)(const EBML::CIdentifier& rIdentifier);
@@ -63,8 +66,8 @@ namespace EBML
 		void (COwnerClass::*m_mfpCloseChild)(void);
 	};
 
-// ________________________________________________________________________________________________________________
-//
+	// ________________________________________________________________________________________________________________
+	//
 
 	template <class COwnerClass, EBML::boolean (COwnerClass::*mfpIsMasterChild)(const EBML::CIdentifier& rIdentifier), void (COwnerClass::*mfpOpenChild)(const EBML::CIdentifier& rIdentifier), void (COwnerClass::*mfpProcessChildData)(const void* pBuffer, const EBML::uint64 ui64BufferSize), void (COwnerClass::*mfpCloseChild)(void)>
 	class TReaderCallbackProxy2 : public EBML::IReaderCallback
@@ -72,42 +75,45 @@ namespace EBML
 	public:
 		TReaderCallbackProxy2(
 			COwnerClass& rOwnerObject)
-			:m_rOwnerObject(rOwnerObject)
-			,m_mfpIsMasterChild(mfpIsMasterChild)
-			,m_mfpOpenChild(mfpOpenChild)
-			,m_mfpProcessChildData(mfpProcessChildData)
-			,m_mfpCloseChild(mfpCloseChild)
-		{
-		}
+			: m_rOwnerObject(rOwnerObject)
+			  , m_mfpIsMasterChild(mfpIsMasterChild)
+			  , m_mfpOpenChild(mfpOpenChild)
+			  , m_mfpProcessChildData(mfpProcessChildData)
+			  , m_mfpCloseChild(mfpCloseChild) { }
+
 		virtual EBML::boolean isMasterChild(const EBML::CIdentifier& rIdentifier)
 		{
-			if(m_mfpIsMasterChild)
+			if (m_mfpIsMasterChild)
 			{
 				return (m_rOwnerObject.*m_mfpIsMasterChild)(rIdentifier);
 			}
 			return false;
 		}
+
 		virtual void openChild(const EBML::CIdentifier& rIdentifier)
 		{
-			if(m_mfpOpenChild)
+			if (m_mfpOpenChild)
 			{
 				(m_rOwnerObject.*m_mfpOpenChild)(rIdentifier);
 			}
 		}
+
 		virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
 		{
-			if(m_mfpProcessChildData)
+			if (m_mfpProcessChildData)
 			{
 				(m_rOwnerObject.*m_mfpProcessChildData)(pBuffer, ui64BufferSize);
 			}
 		}
+
 		virtual void closeChild(void)
 		{
-			if(m_mfpCloseChild)
+			if (m_mfpCloseChild)
 			{
 				(m_rOwnerObject.*m_mfpCloseChild)();
 			}
 		}
+
 	protected:
 		COwnerClass& m_rOwnerObject;
 		EBML::boolean (COwnerClass::*m_mfpIsMasterChild)(const EBML::CIdentifier& rIdentifier);
@@ -116,9 +122,8 @@ namespace EBML
 		void (COwnerClass::*m_mfpCloseChild)(void);
 	};
 
-// ________________________________________________________________________________________________________________
-//
-
+	// ________________________________________________________________________________________________________________
+	//
 };
 
 #endif // __EBML_TReaderCallbackProxy__

@@ -97,4 +97,3 @@ do {                                   \
 	OVT_ASSERT_PRIV(hasTrown, (msg));  \
 }                                      \
 while (0)
-

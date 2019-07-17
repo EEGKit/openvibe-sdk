@@ -1,4 +1,3 @@
-
 /**
  *
  * @fixme This class could benefit from a serious overhaul, e.g. using randomness from some established library or C11.
@@ -29,7 +28,7 @@ private:
 public:
 	static const uint32 l_ui32RandMax = 0x7FFFFFFF; // (2^32)/2-1 == 2147483647
 
-	explicit RandomGenerator(uint32 seed = 1) : l_ui32NextValue( seed ) {}
+	explicit RandomGenerator(uint32 seed = 1) : l_ui32NextValue(seed) {}
 
 	int32 rand(void)
 	{
@@ -79,11 +78,11 @@ uint32 Math::randomUInteger32(void)
 
 uint64 Math::randomUInteger64(void)
 {
-	const uint64 r1=g_oRandomGenerator.rand();
-	const uint64 r2=g_oRandomGenerator.rand();
-	const uint64 r3=g_oRandomGenerator.rand();
-	const uint64 r4=g_oRandomGenerator.rand();
-	return (r1<<24)^(r2<<16)^(r3<<8)^(r4);
+	const uint64 r1 = g_oRandomGenerator.rand();
+	const uint64 r2 = g_oRandomGenerator.rand();
+	const uint64 r3 = g_oRandomGenerator.rand();
+	const uint64 r4 = g_oRandomGenerator.rand();
+	return (r1 << 24) ^ (r2 << 16) ^ (r3 << 8) ^ (r4);
 }
 
 uint32 Math::randomUInteger32WithCeiling(uint32 ui32upperLimit)
@@ -92,7 +91,7 @@ uint32 Math::randomUInteger32WithCeiling(uint32 ui32upperLimit)
 	const float64 l_f64Temp = g_oRandomGenerator.rand() / static_cast<float64>(g_oRandomGenerator.l_ui32RandMax);
 
 	// static_cast is effectively floor(), so below we get output range [0,upperLimit-1], without explicit subtraction of 1
-	const uint32 l_ui32ReturnValue = static_cast<uint32>( ui32upperLimit * l_f64Temp );
+	const uint32 l_ui32ReturnValue = static_cast<uint32>(ui32upperLimit * l_f64Temp);
 
 	return l_ui32ReturnValue;
 }
@@ -119,20 +118,21 @@ int64 Math::randomSInteger64(void)
 
 float32 Math::randomFloat32(void)
 {
-	const uint32 r=randomUInteger32();
+	const uint32 r = randomUInteger32();
 	float32 fr;
 	::memcpy(&fr, &r, sizeof(fr));
 	return fr;
 }
 
-float32 Math::randomFloat32BetweenZeroAndOne(void) {
+float32 Math::randomFloat32BetweenZeroAndOne(void)
+{
 	const float32 fr = static_cast<float32>(g_oRandomGenerator.rand()) / static_cast<float32>(g_oRandomGenerator.l_ui32RandMax);
 	return fr;
 }
 
 float64 Math::randomFloat64(void)
 {
-	const uint64 r=randomUInteger64();
+	const uint64 r = randomUInteger64();
 	float64 fr;
 	::memcpy(&fr, &r, sizeof(fr));
 	return fr;

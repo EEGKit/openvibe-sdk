@@ -47,11 +47,10 @@ public:
 	}
 
 	std::vector<std::string> files;
-
 };
 
 int uoEntryEnumeratorTest(int argc, char* argv[])
-{  
+{
 	std::string dataDirectory = argv[1];
 
 	EntryEnumeratorCallBack cb;
@@ -103,4 +102,3 @@ int uoEntryEnumeratorTest(int argc, char* argv[])
 
 	return EXIT_SUCCESS;
 }
-

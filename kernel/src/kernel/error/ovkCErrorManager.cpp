@@ -35,17 +35,12 @@ namespace OpenViBE
 		{
 		public:
 
-			CError(ErrorType type, const char* description,IError* nestedError, const char* filename, unsigned int line) :
-				m_ErrorType(type),
-				m_NestedError(nestedError),
-				m_Description(description),
-				m_Location(std::string(filename) + ":" + std::to_string(line))
-			{
-			}
+			CError(ErrorType type, const char* description, IError* nestedError, const char* filename, unsigned int line) : m_ErrorType(type),
+																															m_NestedError(nestedError),
+																															m_Description(description),
+																															m_Location(std::string(filename) + ":" + std::to_string(line)) { }
 
-			~CError()
-			{
-			}
+			~CError() { }
 
 			const char* getErrorString() const override
 			{
@@ -84,10 +79,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		CErrorManager::CErrorManager(const IKernelContext& context) :
-			TKernelObject<IErrorManager>(context), m_TopError(nullptr)
-		{
-		}
+		CErrorManager::CErrorManager(const IKernelContext& context) : TKernelObject<IErrorManager>(context), m_TopError(nullptr) { }
 
 		CErrorManager::~CErrorManager()
 		{

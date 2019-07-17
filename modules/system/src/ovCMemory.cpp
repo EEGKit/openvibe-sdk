@@ -10,10 +10,7 @@ boolean Memory::copy(
 	const uint64 ui64BufferSize)
 {
 	// TODO take 64bits size into consideration
-	if(ui64BufferSize==0)
-	{
-		return true;
-	}
+	if (ui64BufferSize == 0) { return true; }
 
 	::memcpy(pTargetBuffer, pSourceBuffer, static_cast<size_t>(ui64BufferSize));
 
@@ -26,10 +23,7 @@ boolean Memory::move(
 	const uint64 ui64BufferSize)
 {
 	// $$$ TODO take 64bits size into consideration
-	if(ui64BufferSize==0)
-	{
-		return true;
-	}
+	if (ui64BufferSize == 0) { return true; }
 
 	::memmove(pTargetBuffer, pSourceBuffer, static_cast<size_t>(ui64BufferSize));
 
@@ -41,10 +35,7 @@ boolean Memory::set(
 	const uint64 ui64BufferSize,
 	const uint8 ui8Value)
 {
-	if(ui64BufferSize==0)
-	{
-		return true;
-	}
+	if (ui64BufferSize == 0) { return true; }
 	// $$$ TODO take 64bits size into consideration
 	::memset(pTargetBuffer, ui8Value, static_cast<size_t>(ui64BufferSize));
 	return true;
@@ -52,58 +43,59 @@ boolean Memory::set(
 
 boolean Memory::compare(const void* pSourceBuffer1, const void* pSourceBuffer2, const uint64 ui64BufferSize)
 {
-	if(ui64BufferSize==0)
-	{
-		return true;
-	}
+	if (ui64BufferSize == 0) { return true; }
 	// $$$ TODO take 64bits size into consideration
-	return ::memcmp(pSourceBuffer1, pSourceBuffer2, static_cast<size_t>(ui64BufferSize))==0;
+	return ::memcmp(pSourceBuffer1, pSourceBuffer2, static_cast<size_t>(ui64BufferSize)) == 0;
 }
 
 // ________________________________________________________________________________________________________________
 //
 
-template <typename T> boolean __bigEndianToHost(const uint8* pBuffer, T* pValue)
+template <typename T>
+boolean __bigEndianToHost(const uint8* pBuffer, T* pValue)
 {
-	if(!pBuffer) return false;
-	if(!pValue) return false;
+	if (!pBuffer) return false;
+	if (!pValue) return false;
 	memset(pValue, 0, sizeof(T));
-	for(unsigned int i=0; i<sizeof(T); i++)
+	for (unsigned int i = 0; i < sizeof(T); i++)
 	{
-		((uint8*)pValue)[i]=pBuffer[sizeof(T)-1-i];
+		((uint8*)pValue)[i] = pBuffer[sizeof(T) - 1 - i];
 	}
 	return true;
 }
 
-template <typename T> boolean __littleEndianToHost(const uint8* pBuffer, T* pValue)
+template <typename T>
+boolean __littleEndianToHost(const uint8* pBuffer, T* pValue)
 {
-	if(!pBuffer) return false;
-	if(!pValue) return false;
+	if (!pBuffer) return false;
+	if (!pValue) return false;
 	memset(pValue, 0, sizeof(T));
-	for(unsigned int i=0; i<sizeof(T); i++)
+	for (unsigned int i = 0; i < sizeof(T); i++)
 	{
-		((uint8*)pValue)[i]=pBuffer[i];
+		((uint8*)pValue)[i] = pBuffer[i];
 	}
 	return true;
 }
 
-template <typename T> boolean __hostToBigEndian(const T& rValue, uint8* pBuffer)
+template <typename T>
+boolean __hostToBigEndian(const T& rValue, uint8* pBuffer)
 {
-	if(!pBuffer) return false;
+	if (!pBuffer) return false;
 	memset(pBuffer, 0, sizeof(T));
-	for(unsigned int i=0; i<sizeof(T); i++)
+	for (unsigned int i = 0; i < sizeof(T); i++)
 	{
-		pBuffer[i]=((uint8*)&rValue)[sizeof(T)-1-i];
+		pBuffer[i] = ((uint8*)&rValue)[sizeof(T) - 1 - i];
 	}
 	return true;
 }
 
-template <typename T> boolean __hostToLittleEndian(const T& rValue, uint8* pBuffer)
+template <typename T>
+boolean __hostToLittleEndian(const T& rValue, uint8* pBuffer)
 {
-	if(!pBuffer) return false;
-	for(unsigned int i=0; i<sizeof(T); i++)
+	if (!pBuffer) return false;
+	for (unsigned int i = 0; i < sizeof(T); i++)
 	{
-		pBuffer[i]=static_cast<uint8>((rValue>>(i*8))&0xff);
+		pBuffer[i] = static_cast<uint8>((rValue >> (i * 8)) & 0xff);
 	}
 	return true;
 }
@@ -301,7 +293,7 @@ boolean Memory::littleEndianToHost(
 	float32* pValue)
 {
 	uint32 ui32Value;
-	boolean b=__littleEndianToHost<uint32>(pBuffer, &ui32Value);
+	boolean b = __littleEndianToHost<uint32>(pBuffer, &ui32Value);
 	::memcpy(pValue, &ui32Value, sizeof(float32));
 	return b;
 }
@@ -311,7 +303,7 @@ boolean Memory::littleEndianToHost(
 	float64* pValue)
 {
 	uint64 ui64Value;
-	boolean b=__littleEndianToHost<uint64>(pBuffer, &ui64Value);
+	boolean b = __littleEndianToHost<uint64>(pBuffer, &ui64Value);
 	::memcpy(pValue, &ui64Value, sizeof(float64));
 	return b;
 }
@@ -374,7 +366,7 @@ boolean Memory::bigEndianToHost(
 	float32* pValue)
 {
 	uint32 ui32Value;
-	boolean b=__bigEndianToHost<uint32>(pBuffer, &ui32Value);
+	boolean b = __bigEndianToHost<uint32>(pBuffer, &ui32Value);
 	::memcpy(pValue, &ui32Value, sizeof(float32));
 	return b;
 }
@@ -384,7 +376,7 @@ boolean Memory::bigEndianToHost(
 	float64* pValue)
 {
 	uint64 ui64Value;
-	boolean b=__bigEndianToHost<uint64>(pBuffer, &ui64Value);
+	boolean b = __bigEndianToHost<uint64>(pBuffer, &ui64Value);
 	::memcpy(pValue, &ui64Value, sizeof(float64));
 	return b;
 }

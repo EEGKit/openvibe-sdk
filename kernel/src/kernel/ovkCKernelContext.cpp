@@ -27,36 +27,34 @@ using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 
 CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFile)
-	:m_rMasterKernelContext(pMasterKernelContext?*pMasterKernelContext:*this)
-	,m_pAlgorithmManager(nullptr)
-	,m_pConfigurationManager(nullptr)
-	,m_pKernelObjectFactory(nullptr)
-	,m_pPlayerManager(nullptr)
-	,m_pPluginManager(nullptr)
-	,m_pMetaboxManager(nullptr)
-	,m_pScenarioManager(nullptr)
-	,m_pTypeManager(nullptr)
-	,m_pLogManager(nullptr)
-	,m_pErrorManager(nullptr)
-	,m_sApplicationName(rApplicationName)
-	,m_sConfigurationFile(rConfigurationFile)
-	,m_pLogListenerConsole(nullptr)
-	,m_pLogListenerFile(nullptr)
-{
-}
+	: m_rMasterKernelContext(pMasterKernelContext ? *pMasterKernelContext : *this)
+	  , m_pAlgorithmManager(nullptr)
+	  , m_pConfigurationManager(nullptr)
+	  , m_pKernelObjectFactory(nullptr)
+	  , m_pPlayerManager(nullptr)
+	  , m_pPluginManager(nullptr)
+	  , m_pMetaboxManager(nullptr)
+	  , m_pScenarioManager(nullptr)
+	  , m_pTypeManager(nullptr)
+	  , m_pLogManager(nullptr)
+	  , m_pErrorManager(nullptr)
+	  , m_sApplicationName(rApplicationName)
+	  , m_sConfigurationFile(rConfigurationFile)
+	  , m_pLogListenerConsole(nullptr)
+	  , m_pLogListenerFile(nullptr) {}
 
 CKernelContext::~CKernelContext(void)
 {
 	this->uninitialize();
 }
 
-bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
+bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 {
 	std::map<std::string, std::string> initializationTokens;
 	auto token = tokenList;
 	while (token && tokenCount > 0)
 	{
-		auto key = tokenList++;
+		auto key   = tokenList++;
 		auto value = tokenList++;
 		tokenCount--;
 		initializationTokens[*key] = *value;
@@ -103,8 +101,8 @@ bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Unknown");
 #endif
 
-	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternMacOS",   "libopenvibe-plugins-*.dylib");
-	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternLinux",   "libopenvibe-plugins-*.so");
+	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternMacOS", "libopenvibe-plugins-*.dylib");
+	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternLinux", "libopenvibe-plugins-*.so");
 	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternWindows", "openvibe-plugins-*.dll");
 	m_pConfigurationManager->createConfigurationToken("Kernel_Plugins", "${Path_Lib}/${Kernel_PluginsPattern${OperatingSystem}}");
 
@@ -148,9 +146,9 @@ bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 	m_pLogListenerFile->activate(true);
 	this->getLogManager().addListener(m_pLogListenerFile.get());
 
-	ELogLevel l_eMainLogLevel   =this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_MainLogLevel}"));
-	ELogLevel l_eConsoleLogLevel=this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_ConsoleLogLevel}"));
-	ELogLevel l_eFileLogLevel   =this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_FileLogLevel}"));
+	ELogLevel l_eMainLogLevel    = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_MainLogLevel}"));
+	ELogLevel l_eConsoleLogLevel = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_ConsoleLogLevel}"));
+	ELogLevel l_eFileLogLevel    = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_FileLogLevel}"));
 
 	m_pLogManager->activate(false);
 	m_pLogManager->activate(l_eMainLogLevel, LogLevel_Last, true);
@@ -208,7 +206,7 @@ bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 	m_pTypeManager->registerStreamType(OV_TypeId_CovarianceMatrix, "Covariance Matrix", OV_TypeId_StreamedMatrix);
 
 
-	m_pTypeManager->registerType(OV_TypeId_Message,  "Message");
+	m_pTypeManager->registerType(OV_TypeId_Message, "Message");
 
 	m_pScenarioManager.reset(new CScenarioManager(m_rMasterKernelContext));
 
@@ -334,19 +332,20 @@ ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)
 	assert(m_pLogManager);
 
 	std::string l_sValue(rLogLevelName.toASCIIString());
-	std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), [](char c){
+	std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), [](char c)
+	{
 		return static_cast<char>(std::tolower(c));
 	});
 
-	if(l_sValue=="none")                     return LogLevel_None;
-	if(l_sValue=="debug")                    return LogLevel_Debug;
-	if(l_sValue=="benchmarking / profiling") return LogLevel_Benchmark;
-	if(l_sValue=="trace")                    return LogLevel_Trace;
-	if(l_sValue=="information")              return LogLevel_Info;
-	if(l_sValue=="warning")                  return LogLevel_Warning;
-	if(l_sValue=="important warning")        return LogLevel_ImportantWarning;
-	if(l_sValue=="error")                    return LogLevel_Error;
-	if(l_sValue=="fatal error")              return LogLevel_Fatal;
+	if (l_sValue == "none") return LogLevel_None;
+	if (l_sValue == "debug") return LogLevel_Debug;
+	if (l_sValue == "benchmarking / profiling") return LogLevel_Benchmark;
+	if (l_sValue == "trace") return LogLevel_Trace;
+	if (l_sValue == "information") return LogLevel_Info;
+	if (l_sValue == "warning") return LogLevel_Warning;
+	if (l_sValue == "important warning") return LogLevel_ImportantWarning;
+	if (l_sValue == "error") return LogLevel_Error;
+	if (l_sValue == "fatal error") return LogLevel_Fatal;
 
 	OV_WARNING(
 		"Invalid log level " << rLogLevelName << " specified in configuration file, falling back to " << CString("Debug"),

@@ -30,7 +30,7 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const=0;
+			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const =0;
 			/**
 			 * \brief Gets a reference on the current algorithm manager
 			 * \return a reference on the algorithm manager
@@ -38,7 +38,7 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const=0;
+			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const =0;
 			/**
 			 * \brief Gets a reference on the current log manager
 			 * \return a reference on the current log manager
@@ -46,7 +46,7 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const=0;
+			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const =0;
 			/**
 			 * \brief Gets a reference on the current error manager
 			 * \return a reference on the current error manager
@@ -54,12 +54,12 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const=0;
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const =0;
 			/**
 			 * \brief Gets a reference on the current type manager
 			 * \return a reference on the current type manager
 			 */
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const=0;
+			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const =0;
 
 			/** \name Input parameters */
 			//@{
@@ -73,7 +73,7 @@ namespace OpenViBE
 			 *       cause this function to return the firs input parameter identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextInputParameterIdentifier(
-				const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const=0;
+				const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const =0;
 			/**
 			 * \brief Gets the parameter details of a specific input parameter
 			 * \param rInputParameterIdentifier [in] : the identifier of the parameter which details should be returned
@@ -81,7 +81,7 @@ namespace OpenViBE
 			 * \return \c NULL in case of error.
 			 */
 			virtual OpenViBE::Kernel::IParameter* getInputParameter(
-				const OpenViBE::CIdentifier& rInputParameterIdentifier)=0;
+				const OpenViBE::CIdentifier& rInputParameterIdentifier) =0;
 
 			//@}
 			/** \name Output parameters */
@@ -96,7 +96,7 @@ namespace OpenViBE
 			 *       cause this function to return the firs output parameter identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextOutputParameterIdentifier(
-				const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const=0;
+				const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const =0;
 			/**
 			 * \brief Gets the parameter details of a specific output parameter
 			 * \param rOutputParameterIdentifier [in] : the identifier of the parameter which details should be returned
@@ -104,7 +104,7 @@ namespace OpenViBE
 			 * \return \c NULL in case of error.
 			 */
 			virtual OpenViBE::Kernel::IParameter* getOutputParameter(
-				const OpenViBE::CIdentifier& rOutputParameterIdentifier)=0;
+				const OpenViBE::CIdentifier& rOutputParameterIdentifier) =0;
 
 			//@}
 			/** \name Trigger management */
@@ -117,7 +117,7 @@ namespace OpenViBE
 			 * \return \e false if the provided trigger is not currently active or does not exist.
 			 */
 			virtual OpenViBE::boolean isInputTriggerActive(
-				const OpenViBE::CIdentifier& rInputTriggerIdentifier) const=0;
+				const OpenViBE::CIdentifier& rInputTriggerIdentifier) const =0;
 			/**
 			 * \brief Activates an output trigger before calling the processing function.
 			 * \param rOutputTriggerIdentifier [in] : the identifier of the output to activate
@@ -128,7 +128,7 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::boolean activateOutputTrigger(
 				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
-				const OpenViBE::boolean bTriggerState)=0;
+				const OpenViBE::boolean bTriggerState) =0;
 
 			//@}
 

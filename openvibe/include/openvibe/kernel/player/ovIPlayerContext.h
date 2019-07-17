@@ -77,23 +77,23 @@ namespace OpenViBE
 			 * \return the current player time.
 			 * \note The time value is fixed point 32:32 representated in seconds
 			 */
-			virtual OpenViBE::uint64 getCurrentTime(void) const=0;
+			virtual OpenViBE::uint64 getCurrentTime(void) const =0;
 			/**
 			 * \brief Gets the current player lateness
 			 * \return the current player lateness
 			 * \note The lateness is fixed point 32:32 representated in seconds
 			 */
-			virtual OpenViBE::uint64 getCurrentLateness(void) const=0;
+			virtual OpenViBE::uint64 getCurrentLateness(void) const =0;
 			/**
 			 * \brief Gets the current CPU use for the running processing unit
 			 * \return the current CPU use
 			 */
-			virtual OpenViBE::float64 getCurrentCPUUsage(void) const=0;
+			virtual OpenViBE::float64 getCurrentCPUUsage(void) const =0;
 			/**
 			 * \brief Gets the current fast forward factor to be used when the getStatus states the player runs in fast forward mode
 			 * \return the current fast forward factor
 			 */
-			virtual OpenViBE::float64 getCurrentFastForwardMaximumFactor(void) const=0;
+			virtual OpenViBE::float64 getCurrentFastForwardMaximumFactor(void) const =0;
 
 			//@}
 			/** \name Player control */
@@ -105,30 +105,30 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \warning Once the player is stopped, there's no way to restart it
 			 */
-			virtual OpenViBE::boolean stop(void)=0;
+			virtual OpenViBE::boolean stop(void) =0;
 			/**
 			 * \brief Pauses player execution
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean pause(void)=0;
+			virtual OpenViBE::boolean pause(void) =0;
 			/**
 			 * \brief Makes player run normal speed
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean play(void)=0;
+			virtual OpenViBE::boolean play(void) =0;
 			/**
 			 * \brief Makes player run as fast as possible
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean forward(void)=0;
+			virtual OpenViBE::boolean forward(void) =0;
 			/**
 			 * \brief Gets current player status
 			 * \return current player status
 			 */
-			virtual OpenViBE::Kernel::EPlayerStatus getStatus(void) const=0;
+			virtual OpenViBE::Kernel::EPlayerStatus getStatus(void) const =0;
 
 			//@}
 			/** \name Give access to some managers */
@@ -141,7 +141,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const=0;
+			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const =0;
 			/**
 			 * \brief Gets the current player's algorithm manager
 			 * \return The current player's algorithm manager
@@ -149,7 +149,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const=0;
+			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const =0;
 			/**
 			 * \brief Gets the current player's log manager
 			 * \return The current player's log manager
@@ -157,7 +157,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const=0;
+			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const =0;
 			/**
 			 * \brief Gets the current player's error manager
 			 * \return The current player's error manager
@@ -165,7 +165,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const=0;
+			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const =0;
 
 			/**
 			 * \brief Gets the current player's scenario manager
@@ -174,7 +174,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const=0;
+			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const =0;
 			/**
 			 * \brief Gets the current player's type manager
 			 * \return The current player's type manager
@@ -182,7 +182,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const=0;
+			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const =0;
 
 			virtual bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const = 0;
 			virtual OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const = 0;

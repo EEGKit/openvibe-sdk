@@ -9,7 +9,7 @@
 
 namespace OpenViBEToolkit
 {
-	class OVTK_API CAlgorithmScenarioImporter : public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithmScenarioImporter >
+	class OVTK_API CAlgorithmScenarioImporter : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithmScenarioImporter>
 	{
 	public:
 
@@ -27,4 +27,3 @@ namespace OpenViBEToolkit
 		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmScenarioImporterDesc, OVP_ClassId_Algorithm_ScenarioImporterDesc)
 	};
 };
-

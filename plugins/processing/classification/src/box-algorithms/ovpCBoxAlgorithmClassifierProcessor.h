@@ -14,7 +14,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CBoxAlgorithmClassifierProcessor : virtual public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmClassifierProcessor : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -28,20 +28,20 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierProcessor)
 
 		protected:
-			virtual OpenViBE::boolean loadClassifier(const char *sFilename);
+			virtual OpenViBE::boolean loadClassifier(const char* sFilename);
 
 		private:
 
-			OpenViBEToolkit::TFeatureVectorDecoder < CBoxAlgorithmClassifierProcessor > m_oFeatureVectorDecoder;
-			OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmClassifierProcessor > m_oStimulationDecoder;
+			OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierProcessor> m_oFeatureVectorDecoder;
+			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierProcessor> m_oStimulationDecoder;
 
-			OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmClassifierProcessor > m_oLabelsEncoder;
-			OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmClassifierProcessor > m_oHyperplaneValuesEncoder;
-			OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmClassifierProcessor > m_oProbabilityValuesEncoder;
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierProcessor> m_oLabelsEncoder;
+			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_oHyperplaneValuesEncoder;
+			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_oProbabilityValuesEncoder;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier;
 
-			std::map < OpenViBE::float64, OpenViBE::uint64 > m_vStimulation;
+			std::map<OpenViBE::float64, OpenViBE::uint64> m_vStimulation;
 		};
 
 		class CBoxAlgorithmClassifierProcessorDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -50,31 +50,31 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Classifier processor"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard, Guillaume Serriere"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Generic classification, relying on several box algorithms"); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Classifier processor"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard, Guillaume Serriere"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Generic classification, relying on several box algorithms"); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Classifies incoming feature vectors using a previously learned classifier."); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Classification"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("2.1"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Classification"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("2.1"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.1.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_ClassifierProcessor; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Classification::CBoxAlgorithmClassifierProcessor; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ClassifierProcessor; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CBoxAlgorithmClassifierProcessor; }
 
 			virtual OpenViBE::boolean getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
-				rBoxAlgorithmPrototype.addInput  ("Features",                            OV_TypeId_FeatureVector);
-				rBoxAlgorithmPrototype.addInput  ("Commands",                            OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addOutput ("Labels",                              OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addOutput ("Hyperplane distance",                 OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addOutput ("Probability values",                  OV_TypeId_StreamedMatrix);
+				rBoxAlgorithmPrototype.addInput("Features", OV_TypeId_FeatureVector);
+				rBoxAlgorithmPrototype.addInput("Commands", OV_TypeId_Stimulations);
+				rBoxAlgorithmPrototype.addOutput("Labels", OV_TypeId_Stimulations);
+				rBoxAlgorithmPrototype.addOutput("Hyperplane distance", OV_TypeId_StreamedMatrix);
+				rBoxAlgorithmPrototype.addOutput("Probability values", OV_TypeId_StreamedMatrix);
 
 				//We load everything in the save filed
-				rBoxAlgorithmPrototype.addSetting("Filename to load configuration from", OV_TypeId_Filename,    "");
+				rBoxAlgorithmPrototype.addSetting("Filename to load configuration from", OV_TypeId_Filename, "");
 				return true;
 			}
 

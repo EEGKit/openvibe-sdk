@@ -21,7 +21,7 @@ namespace OpenViBE
 			virtual OpenViBE::CIdentifier getNextTypeIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
 
-			virtual std::vector<std::pair<CIdentifier, CString> > getSortedTypes() const;
+			virtual std::vector<std::pair<CIdentifier, CString>> getSortedTypes() const;
 
 			virtual bool registerType(
 				const OpenViBE::CIdentifier& rTypeIdentifier,
@@ -110,8 +110,8 @@ namespace OpenViBE
 
 			std::map<OpenViBE::CIdentifier, OpenViBE::CString> m_vName;
 			std::set<OpenViBE::CString> m_TakenNames;
-			std::map<OpenViBE::CIdentifier, std::map<uint64_t, OpenViBE::CString> > m_vEnumeration;
-			std::map<OpenViBE::CIdentifier, std::map<uint64_t, OpenViBE::CString> > m_vBitMask;
+			std::map<OpenViBE::CIdentifier, std::map<uint64_t, OpenViBE::CString>> m_vEnumeration;
+			std::map<OpenViBE::CIdentifier, std::map<uint64_t, OpenViBE::CString>> m_vBitMask;
 			std::map<OpenViBE::CIdentifier, OpenViBE::CIdentifier> m_vStream;
 
 			mutable std::recursive_mutex m_oMutex;

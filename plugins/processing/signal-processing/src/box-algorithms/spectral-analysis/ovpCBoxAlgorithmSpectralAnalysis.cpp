@@ -18,7 +18,8 @@ using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 using namespace OpenViBEToolkit;
 
-namespace {
+namespace
+{
 	double amplitude(unsigned int channelIndex, unsigned int FFTIndex, const Eigen::MatrixXcd& matrix)
 	{
 		return sqrt(
@@ -26,7 +27,7 @@ namespace {
 			* matrix(channelIndex, FFTIndex).real()
 			+ matrix(channelIndex, FFTIndex).imag()
 			* matrix(channelIndex, FFTIndex).imag()
-			);
+		);
 	}
 
 	double phase(unsigned int channelIndex, unsigned int FFTIndex, const Eigen::MatrixXcd& matrix)
@@ -52,19 +53,19 @@ boolean CBoxAlgorithmSpectralAnalysis::initialize()
 	m_FrequencyAbscissa = new CMatrix();
 
 	// Amplitude
-	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 0));
+	m_SpectrumEncoders.push_back(new TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 0));
 	m_IsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
 
 	// Phase
-	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 1));
+	m_SpectrumEncoders.push_back(new TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 1));
 	m_IsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));
 
 	//Real Part
-	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 2));
+	m_SpectrumEncoders.push_back(new TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 2));
 	m_IsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
 
 	// Imaginary part
-	m_SpectrumEncoders.push_back(new TSpectrumEncoder < CBoxAlgorithmSpectralAnalysis >(*this, 3));
+	m_SpectrumEncoders.push_back(new TSpectrumEncoder<CBoxAlgorithmSpectralAnalysis>(*this, 3));
 	m_IsSpectrumEncoderActive.push_back(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
 
 	for (auto& curEncoder : m_SpectrumEncoders)
@@ -74,11 +75,11 @@ boolean CBoxAlgorithmSpectralAnalysis::initialize()
 	}
 
 	this->getLogManager() << LogLevel_Trace << "Spectral components selected : [ "
-		<< (m_IsSpectrumEncoderActive[0] ? CString("AMP ") : "")
-		<< (m_IsSpectrumEncoderActive[1] ? CString("PHASE ") : "")
-		<< (m_IsSpectrumEncoderActive[2] ? CString("REAL ") : "")
-		<< (m_IsSpectrumEncoderActive[3] ? CString("IMG ") : "")
-		<< "]\n";
+			<< (m_IsSpectrumEncoderActive[0] ? CString("AMP ") : "")
+			<< (m_IsSpectrumEncoderActive[1] ? CString("PHASE ") : "")
+			<< (m_IsSpectrumEncoderActive[2] ? CString("REAL ") : "")
+			<< (m_IsSpectrumEncoderActive[3] ? CString("IMG ") : "")
+			<< "]\n";
 
 	return true;
 }
@@ -111,19 +112,19 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 	for (unsigned int i = 0; i < dynamicBoxContext->getInputChunkCount(0); i++)
 	{
 		const uint64_t startTime = dynamicBoxContext->getInputChunkStartTime(0, i);
-		const uint64_t endTime = dynamicBoxContext->getInputChunkEndTime(0, i);
+		const uint64_t endTime   = dynamicBoxContext->getInputChunkEndTime(0, i);
 
 		m_Decoder.decode(i);
-		IMatrix * matrix = m_Decoder.getOutputMatrix();
+		IMatrix* matrix = m_Decoder.getOutputMatrix();
 
 		if (m_Decoder.isHeaderReceived())
 		{
 			m_ChannelCount = matrix->getDimensionSize(0);
-			m_SampleCount = matrix->getDimensionSize(1);
-			
+			m_SampleCount  = matrix->getDimensionSize(1);
+
 			OV_ERROR_UNLESS_KRF(m_SampleCount > 1,
-					    "Input sample count lower or equal to 1 is not supported by the box.",
-					    OpenViBE::Kernel::ErrorType::BadInput);
+								"Input sample count lower or equal to 1 is not supported by the box.",
+								OpenViBE::Kernel::ErrorType::BadInput);
 
 			m_SamplingRate = (unsigned int)m_Decoder.getOutputSamplingRate();
 
@@ -131,7 +132,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 				m_SamplingRate > 0,
 				"Invalid sampling rate [" << m_SamplingRate << "] (expected value > 0)",
 				OpenViBE::Kernel::ErrorType::BadInput
-				);
+			);
 
 			// size of the spectrum
 			m_FFTSize = m_SampleCount / 2 + 1;
@@ -153,7 +154,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 				if (m_IsSpectrumEncoderActive[encoderIndex])
 				{
 					// Spectrum matrix
-					IMatrix * spectrum = m_SpectrumEncoders[encoderIndex]->getInputMatrix();
+					IMatrix* spectrum = m_SpectrumEncoders[encoderIndex]->getInputMatrix();
 					spectrum->setDimensionCount(2);
 					spectrum->setDimensionSize(0, m_ChannelCount);
 					spectrum->setDimensionSize(1, m_FFTSize);
@@ -246,7 +247,7 @@ boolean CBoxAlgorithmSpectralAnalysis::process()
 							OV_ERROR_KRF(
 								"Invalid decoder output.\n",
 								OpenViBE::Kernel::ErrorType::BadProcessing
-								);
+							);
 					}
 
 					IMatrix* spectrum = m_SpectrumEncoders[encoderIndex]->getInputMatrix();

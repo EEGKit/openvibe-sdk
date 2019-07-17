@@ -33,9 +33,9 @@ boolean CChannelLocalisationEncoder::processHeader(void)
 	CStreamedMatrixEncoder::processHeader();
 
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ChannelLocalisation);
-	 m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ChannelLocalisation_Dynamic);
-	  m_pEBMLWriterHelper->setUIntegerAsChildData(ip_bDynamic?1:0);
-	 m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ChannelLocalisation_Dynamic);
+	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_bDynamic ? 1 : 0);
+	m_pEBMLWriterHelper->closeChild();
 	m_pEBMLWriterHelper->closeChild();
 
 	return true;

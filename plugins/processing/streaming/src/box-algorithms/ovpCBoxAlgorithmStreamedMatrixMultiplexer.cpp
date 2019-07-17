@@ -12,16 +12,13 @@ using namespace OpenViBEPlugins::Streaming;
 bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize(void)
 {
 	m_ui64LastStartTime = 0;
-	m_ui64LastEndTime = 0;
-	m_bHeaderSent = false;
+	m_ui64LastEndTime   = 0;
+	m_bHeaderSent       = false;
 
 	return true;
 }
 
-bool CBoxAlgorithmStreamedMatrixMultiplexer::uninitialize(void)
-{
-	return true;
-}
+bool CBoxAlgorithmStreamedMatrixMultiplexer::uninitialize(void) { return true; }
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(uint32 ui32InputIndex)
 {
@@ -32,15 +29,15 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(uint32 ui32InputIndex)
 bool CBoxAlgorithmStreamedMatrixMultiplexer::process(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
 	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		for (uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
 			const IMemoryBuffer* l_pInputMemoryBuffer = l_rDynamicBoxContext.getInputChunk(i, j);
-			uint64 l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(i, j);
-			uint64 l_ui64EndTime = l_rDynamicBoxContext.getInputChunkEndTime(i, j);
+			uint64 l_ui64StartTime                    = l_rDynamicBoxContext.getInputChunkStartTime(i, j);
+			uint64 l_ui64EndTime                      = l_rDynamicBoxContext.getInputChunkEndTime(i, j);
 
 			if ((!m_bHeaderSent && l_ui64StartTime == l_ui64EndTime) || (m_bHeaderSent && l_ui64StartTime != l_ui64EndTime))
 			{
@@ -60,7 +57,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process(void)
 				);
 
 				m_ui64LastStartTime = l_ui64StartTime;
-				m_ui64LastEndTime = l_ui64EndTime;
+				m_ui64LastEndTime   = l_ui64EndTime;
 
 				l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
 				m_bHeaderSent = true;

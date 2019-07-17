@@ -63,7 +63,7 @@ namespace OpenViBE
 			 * \param[in] metaboxDescriptor : the metabox object descriptor
 			 */
 			virtual void setMetaboxObjectDesc(const OpenViBE::CIdentifier& metaboxIdentifier,
-						OpenViBE::Plugins::IPluginObjectDesc* metaboxDescriptor) = 0;
+											  OpenViBE::Plugins::IPluginObjectDesc* metaboxDescriptor) = 0;
 
 
 			/**
@@ -93,7 +93,6 @@ namespace OpenViBE
 			virtual void setMetaboxHash(const OpenViBE::CIdentifier& metaboxIdentifier, const OpenViBE::CIdentifier& hash) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Metabox_MetaboxManager)
-
 		};
 	};
 };

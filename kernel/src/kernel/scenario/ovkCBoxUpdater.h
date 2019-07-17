@@ -16,8 +16,8 @@ namespace OpenViBE
 	{
 		typedef struct _InterfacorRequest
 		{
-			uint32_t index = OV_Value_UndefinedIndexUInt;
-			CIdentifier identifier = OV_UndefinedIdentifier;
+			uint32_t index             = OV_Value_UndefinedIndexUInt;
+			CIdentifier identifier     = OV_UndefinedIdentifier;
 			CIdentifier typeIdentifier = OV_UndefinedIdentifier;
 			CString name;
 			bool toBeRemoved;
@@ -32,7 +32,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxUpdater(CScenario& scenario, IBox *requestedBox);
+			CBoxUpdater(CScenario& scenario, IBox* requestedBox);
 
 			virtual ~CBoxUpdater(void);
 
@@ -53,12 +53,12 @@ namespace OpenViBE
 				OV_FATAL_UNLESS_K(m_Initialized, "Box Updater is not initialized", ErrorType::BadCall);
 
 				return m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddInput)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyInput)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddOutput)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyOutput)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddSetting)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting);
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddInput)
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyInput)
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddOutput)
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyOutput)
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddSetting)
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting);
 			}
 
 			bool isUpdateRequired()
@@ -100,9 +100,6 @@ namespace OpenViBE
 
 			std::map<BoxInterfacorType, std::map<uint32_t, uint32_t>> m_OriginalToUpdatedCorrespondence;
 			bool m_IsUpdateRequired;
-
-
 		};
 	};
 };
-

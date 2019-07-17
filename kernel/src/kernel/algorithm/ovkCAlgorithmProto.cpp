@@ -5,10 +5,8 @@ using namespace OpenViBE;
 using namespace Kernel;
 
 CAlgorithmProto::CAlgorithmProto(const IKernelContext& rKernelContext, CAlgorithmProxy& rAlgorithmProxy)
-	:TKernelObject < IAlgorithmProto >(rKernelContext)
-	,m_rAlgorithmProxy(rAlgorithmProxy)
-{
-}
+	: TKernelObject<IAlgorithmProto>(rKernelContext)
+	  , m_rAlgorithmProxy(rAlgorithmProxy) {}
 
 boolean CAlgorithmProto::addInputParameter(
 	const CIdentifier& rInputParameterIdentifier,

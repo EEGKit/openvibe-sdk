@@ -11,7 +11,7 @@ bool CBoxAlgorithmChannelRename::initialize(void)
 {
 	std::vector<CString> tokens;
 	CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	uint32 tokenCount = OpenViBEToolkit::Tools::String::split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback < std::vector < CString > > (tokens), OV_Value_EnumeratedStringSeparator);
+	uint32 tokenCount    = OpenViBEToolkit::Tools::String::split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
 
 	m_ChannelNames.clear();
 	for (uint32_t i = 0; i < tokenCount; i++)
@@ -78,10 +78,10 @@ bool CBoxAlgorithmChannelRename::process(void)
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	for(uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(0); chunk++)
+	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(0); chunk++)
 	{
 		m_StreamDecoder.decode(chunk);
-		if(m_StreamDecoder.isHeaderReceived())
+		if (m_StreamDecoder.isHeaderReceived())
 		{
 			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
 			for (uint32_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_ChannelNames.size(); channel++)
@@ -90,7 +90,7 @@ bool CBoxAlgorithmChannelRename::process(void)
 			}
 			m_StreamEncoder.encodeHeader();
 		}
-		if(m_StreamDecoder.isBufferReceived())
+		if (m_StreamDecoder.isBufferReceived())
 		{
 			m_StreamEncoder.encodeBuffer();
 		}

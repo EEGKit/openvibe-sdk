@@ -40,197 +40,197 @@ THE SOFTWARE.
 #include "MathSupplement.h"
 #include "Types.h"
 
-namespace Dsp {
-
-struct BiquadPoleState;
-
-/*
- * Holds coefficients for a second order Infinite Impulse Response
- * digital filter. This is the building block for all IIR filters.
- *
- */
-
-// Factored interface to prevent outsiders from fiddling
-class BiquadBase
+namespace Dsp
 {
-public:
-  template <class StateType>
-  struct State : StateType, private DenormalPrevention
-  {
-    template <typename Sample>
-    inline Sample process (const Sample in, const BiquadBase& b)
-    {
-      return static_cast<Sample> (StateType::process1 (in, b, ac()));
-    }
-  };
+	struct BiquadPoleState;
 
-public:
-  // Calculate filter response at the given normalized frequency.
-  complex_t response (double normalizedFrequency) const;
+	/*
+	 * Holds coefficients for a second order Infinite Impulse Response
+	 * digital filter. This is the building block for all IIR filters.
+	 *
+	 */
 
-  std::vector<PoleZeroPair> getPoleZeros () const;
+	// Factored interface to prevent outsiders from fiddling
+	class BiquadBase
+	{
+	public:
+		template <class StateType>
+		struct State : StateType, private DenormalPrevention
+		{
+			template <typename Sample>
+			inline Sample process(const Sample in, const BiquadBase& b)
+			{
+				return static_cast<Sample>(StateType::process1(in, b, ac()));
+			}
+		};
 
-  double getA0 () const { return m_a0; }
-  double getA1 () const { return m_a1*m_a0; }
-  double getA2 () const { return m_a2*m_a0; }
-  double getB0 () const { return m_b0*m_a0; }
-  double getB1 () const { return m_b1*m_a0; }
-  double getB2 () const { return m_b2*m_a0; }
+	public:
+		// Calculate filter response at the given normalized frequency.
+		complex_t response(double normalizedFrequency) const;
 
-  // Process a block of samples in the given form
-  template <class StateType, typename Sample>
-  void process (int numSamples, Sample* dest, StateType& state) const
-  {
-    while (--numSamples >= 0) {
-      *dest = state.process (*dest, *this);
-      dest++;
-    }
-  }
+		std::vector<PoleZeroPair> getPoleZeros() const;
 
-protected:
-  //
-  // These are protected so you can't mess with RBJ biquads
-  //
+		double getA0() const { return m_a0; }
+		double getA1() const { return m_a1 * m_a0; }
+		double getA2() const { return m_a2 * m_a0; }
+		double getB0() const { return m_b0 * m_a0; }
+		double getB1() const { return m_b1 * m_a0; }
+		double getB2() const { return m_b2 * m_a0; }
 
-  void setCoefficients (double a0, double a1, double a2,
-                        double b0, double b1, double b2);
+		// Process a block of samples in the given form
+		template <class StateType, typename Sample>
+		void process(int numSamples, Sample* dest, StateType& state) const
+		{
+			while (--numSamples >= 0)
+			{
+				*dest = state.process(*dest, *this);
+				dest++;
+			}
+		}
 
-  void setOnePole (complex_t pole, complex_t zero);
+	protected:
+		//
+		// These are protected so you can't mess with RBJ biquads
+		//
 
-  void setTwoPole (complex_t pole1, complex_t zero1,
-                   complex_t pole2, complex_t zero2);
+		void setCoefficients(double a0, double a1, double a2,
+							 double b0, double b1, double b2);
 
-  void setPoleZeroPair (const PoleZeroPair& pair)
-  {
-    if (pair.isSinglePole ())
-      setOnePole (pair.poles.first, pair.zeros.first);
-    else
-      setTwoPole (pair.poles.first, pair.zeros.first,
-                  pair.poles.second, pair.zeros.second);
-  }
+		void setOnePole(complex_t pole, complex_t zero);
 
-  void setPoleZeroForm (const BiquadPoleState& bps);
+		void setTwoPole(complex_t pole1, complex_t zero1,
+						complex_t pole2, complex_t zero2);
 
-  void setIdentity ();
+		void setPoleZeroPair(const PoleZeroPair& pair)
+		{
+			if (pair.isSinglePole())
+				setOnePole(pair.poles.first, pair.zeros.first);
+			else
+				setTwoPole(pair.poles.first, pair.zeros.first,
+						   pair.poles.second, pair.zeros.second);
+		}
 
-  void applyScale (double scale);
+		void setPoleZeroForm(const BiquadPoleState& bps);
 
-public:
-  double m_a0;
-  double m_a1;
-  double m_a2;
-  double m_b1;
-  double m_b2;
-  double m_b0;
-};
+		void setIdentity();
 
-//------------------------------------------------------------------------------
+		void applyScale(double scale);
 
-// Expresses a biquad as a pair of pole/zeros, with gain
-// values so that the coefficients can be reconstructed precisely.
-struct BiquadPoleState : PoleZeroPair
-{
-  BiquadPoleState () { }
+	public:
+		double m_a0;
+		double m_a1;
+		double m_a2;
+		double m_b1;
+		double m_b2;
+		double m_b0;
+	};
 
-  explicit BiquadPoleState (const BiquadBase& s);
+	//------------------------------------------------------------------------------
 
-  double gain;
-};
+	// Expresses a biquad as a pair of pole/zeros, with gain
+	// values so that the coefficients can be reconstructed precisely.
+	struct BiquadPoleState : PoleZeroPair
+	{
+		BiquadPoleState() { }
 
-// More permissive interface for fooling around
-class Biquad : public BiquadBase
-{
-public:
-  Biquad ();
+		explicit BiquadPoleState(const BiquadBase& s);
 
-  explicit Biquad (const BiquadPoleState& bps);
+		double gain;
+	};
 
-public:
-  // Process a block of samples, interpolating from the old section's coefficients
-  // to this section's coefficients, over numSamples. This implements smooth
-  // parameter changes.
+	// More permissive interface for fooling around
+	class Biquad : public BiquadBase
+	{
+	public:
+		Biquad();
 
-  template <class StateType, typename Sample>
-  void smoothProcess1 (int numSamples,
-                       Sample* dest,
-                       StateType& state,
-                       Biquad sectionPrev) const 
-  {
-    double t = 1. / numSamples;
-    double da1 = (m_a1 - sectionPrev.m_a1) * t;
-    double da2 = (m_a2 - sectionPrev.m_a2) * t;
-    double db0 = (m_b0 - sectionPrev.m_b0) * t;
-    double db1 = (m_b1 - sectionPrev.m_b1) * t;
-    double db2 = (m_b2 - sectionPrev.m_b2) * t;
+		explicit Biquad(const BiquadPoleState& bps);
 
-    while (--numSamples >= 0)
-    {
-      sectionPrev.m_a1 += da1;
-      sectionPrev.m_a2 += da2;
-      sectionPrev.m_b0 += db0;
-      sectionPrev.m_b1 += db1;
-      sectionPrev.m_b2 += db2;
+	public:
+		// Process a block of samples, interpolating from the old section's coefficients
+		// to this section's coefficients, over numSamples. This implements smooth
+		// parameter changes.
 
-      *dest = state.process (*dest, sectionPrev);
-      dest++;
-    }
-  }
+		template <class StateType, typename Sample>
+		void smoothProcess1(int numSamples,
+							Sample* dest,
+							StateType& state,
+							Biquad sectionPrev) const
+		{
+			double t   = 1. / numSamples;
+			double da1 = (m_a1 - sectionPrev.m_a1) * t;
+			double da2 = (m_a2 - sectionPrev.m_a2) * t;
+			double db0 = (m_b0 - sectionPrev.m_b0) * t;
+			double db1 = (m_b1 - sectionPrev.m_b1) * t;
+			double db2 = (m_b2 - sectionPrev.m_b2) * t;
 
-  // Process a block of samples, interpolating from the old section's pole/zeros
-  // to this section's pole/zeros, over numSamples. The interpolation is done
-  // in the z-plane using polar coordinates.
-  template <class StateType, typename Sample>
-  void smoothProcess2 (int numSamples,
-                       Sample* dest,
-                       StateType& state,
-                       BiquadPoleState zPrev) const 
-  {
-    BiquadPoleState z (*this);
-    double t = 1. / numSamples;
-    complex_t dp0 = (z.poles.first  - zPrev.poles.first) * t;
-    complex_t dp1 = (z.poles.second - zPrev.poles.second) * t;
-    complex_t dz0 = (z.zeros.first  - zPrev.zeros.first) * t;
-    complex_t dz1 = (z.zeros.second - zPrev.zeros.second) * t;
-    double dg = (z.gain - zPrev.gain) * t;
+			while (--numSamples >= 0)
+			{
+				sectionPrev.m_a1 += da1;
+				sectionPrev.m_a2 += da2;
+				sectionPrev.m_b0 += db0;
+				sectionPrev.m_b1 += db1;
+				sectionPrev.m_b2 += db2;
 
-    while (--numSamples >= 0)
-    {
-      zPrev.poles.first += dp0;
-      zPrev.poles.second += dp1;
-      zPrev.zeros.first += dz0;
-      zPrev.zeros.second += dz1;
-      zPrev.gain += dg;
+				*dest = state.process(*dest, sectionPrev);
+				dest++;
+			}
+		}
 
-      *dest = state.process (*dest, Biquad (zPrev));
-      dest++;
-    }
-  }
+		// Process a block of samples, interpolating from the old section's pole/zeros
+		// to this section's pole/zeros, over numSamples. The interpolation is done
+		// in the z-plane using polar coordinates.
+		template <class StateType, typename Sample>
+		void smoothProcess2(int numSamples,
+							Sample* dest,
+							StateType& state,
+							BiquadPoleState zPrev) const
+		{
+			BiquadPoleState z(*this);
+			double t      = 1. / numSamples;
+			complex_t dp0 = (z.poles.first - zPrev.poles.first) * t;
+			complex_t dp1 = (z.poles.second - zPrev.poles.second) * t;
+			complex_t dz0 = (z.zeros.first - zPrev.zeros.first) * t;
+			complex_t dz1 = (z.zeros.second - zPrev.zeros.second) * t;
+			double dg     = (z.gain - zPrev.gain) * t;
 
-public:
-  // Export these as public
+			while (--numSamples >= 0)
+			{
+				zPrev.poles.first += dp0;
+				zPrev.poles.second += dp1;
+				zPrev.zeros.first += dz0;
+				zPrev.zeros.second += dz1;
+				zPrev.gain += dg;
 
-  void setOnePole (complex_t pole, complex_t zero)
-  {
-    BiquadBase::setOnePole (pole, zero);
-  }
+				*dest = state.process(*dest, Biquad(zPrev));
+				dest++;
+			}
+		}
 
-  void setTwoPole (complex_t pole1, complex_t zero1,
-                   complex_t pole2, complex_t zero2)
-  {
-    BiquadBase::setTwoPole (pole1, zero1, pole2, zero2);
-  }
+	public:
+		// Export these as public
 
-  void setPoleZeroPair (const PoleZeroPair& pair)
-  {
-    BiquadBase::setPoleZeroPair (pair);
-  }
+		void setOnePole(complex_t pole, complex_t zero)
+		{
+			BiquadBase::setOnePole(pole, zero);
+		}
 
-  void applyScale (double scale)
-  {
-    BiquadBase::applyScale (scale);
-  }
-};
+		void setTwoPole(complex_t pole1, complex_t zero1,
+						complex_t pole2, complex_t zero2)
+		{
+			BiquadBase::setTwoPole(pole1, zero1, pole2, zero2);
+		}
 
+		void setPoleZeroPair(const PoleZeroPair& pair)
+		{
+			BiquadBase::setPoleZeroPair(pair);
+		}
+
+		void applyScale(double scale)
+		{
+			BiquadBase::applyScale(scale);
+		}
+	};
 }
 
 #endif

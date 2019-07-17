@@ -8,7 +8,6 @@ using namespace std;
 
 namespace XML
 {
-
 	class CWriter : public IWriter
 	{
 	public:
@@ -33,128 +32,96 @@ namespace XML
 };
 
 CWriter::CWriter(IWriterCallback& rWriterCallback)
-	:m_rWriterCallback(rWriterCallback)
-	,m_bHasChild(false)
-	,m_bHasData(false)
-	,m_bHasClosedOpeningNode(true)
-{
-}
+	: m_rWriterCallback(rWriterCallback)
+	  , m_bHasChild(false)
+	  , m_bHasData(false)
+	  , m_bHasClosedOpeningNode(true) {}
 
 boolean CWriter::openChild(const char* sName)
 {
-	if(sName==NULL)
-	{
-		return false;
-	}
+	if (sName == NULL) { return false; }
 
-	if(m_bHasData)
-	{
-		return false;
-	}
+	if (m_bHasData) { return false; }
 
-	if(!m_bHasClosedOpeningNode)
+	if (!m_bHasClosedOpeningNode)
 	{
 		m_rWriterCallback.write(">");
-		m_bHasClosedOpeningNode=true;
+		m_bHasClosedOpeningNode = true;
 	}
 
 	string l_sIndent(m_vNodes.size(), '\t');
-	string l_sResult=(!m_vNodes.empty()?string("\n"):string(""))+l_sIndent+string("<")+string(sName);
+	string l_sResult = (!m_vNodes.empty() ? string("\n") : string("")) + l_sIndent + string("<") + string(sName);
 	m_rWriterCallback.write(l_sResult.c_str());
 	m_vNodes.push(sName);
-	m_bHasChild=false;
-	m_bHasData=false;
-	m_bHasClosedOpeningNode=false;
+	m_bHasChild             = false;
+	m_bHasData              = false;
+	m_bHasClosedOpeningNode = false;
 	return true;
 }
 
 boolean CWriter::setChildData(const char* sData)
 {
-	if(sData==NULL)
-	{
-		return false;
-	}
+	if (sData == NULL) { return false; }
 
-	if(m_bHasChild)
-	{
-		return false;
-	}
+	if (m_bHasChild) { return false; }
 
-	if(!m_bHasClosedOpeningNode)
+	if (!m_bHasClosedOpeningNode)
 	{
 		m_rWriterCallback.write(">");
-		m_bHasClosedOpeningNode=true;
+		m_bHasClosedOpeningNode = true;
 	}
 
 	string l_sData(sData);
 	this->sanitize(l_sData, false);
 
 	m_rWriterCallback.write(l_sData.c_str());
-	m_bHasChild=false;
-	m_bHasData=true;
+	m_bHasChild = false;
+	m_bHasData  = true;
 	return true;
 }
 
 boolean CWriter::setAttribute(const char* sAttributeName, const char* sAttributeValue)
 {
-	if(sAttributeName==NULL)
-	{
-		return false;
-	}
+	if (sAttributeName == NULL) { return false; }
 
-	if(sAttributeValue==NULL)
-	{
-		return false;
-	}
+	if (sAttributeValue == NULL) { return false; }
 
-	if(m_bHasChild)
-	{
-		return false;
-	}
+	if (m_bHasChild) { return false; }
 
-	if(m_bHasData)
-	{
-		return false;
-	}
+	if (m_bHasData) { return false; }
 
-	if(m_bHasClosedOpeningNode)
-	{
-		return false;
-	}
+	if (m_bHasClosedOpeningNode) { return false; }
 
 	string l_sAttributeValue(sAttributeValue);
 	this->sanitize(l_sAttributeValue);
 
-	string l_sResult=string(" ")+string(sAttributeName)+string("=\"")+string(l_sAttributeValue)+string("\"");
+	string l_sResult = string(" ") + string(sAttributeName) + string("=\"") + string(l_sAttributeValue) + string("\"");
 	m_rWriterCallback.write(l_sResult.c_str());
 	return true;
 }
 
 boolean CWriter::closeChild(void)
 {
-	if(m_vNodes.empty())
-	{
-		return false;
-	}
+	if (m_vNodes.empty()) { return false; }
 
-	if(!m_bHasClosedOpeningNode)
+	if (!m_bHasClosedOpeningNode)
 	{
 		m_rWriterCallback.write(">");
-		m_bHasClosedOpeningNode=true;
+		m_bHasClosedOpeningNode = true;
 	}
 
-	string l_sIndent(m_vNodes.size()-1, '\t');
-	string l_sResult=((m_bHasData||!m_bHasChild)?string(""):string("\n")+l_sIndent)+string("</")+m_vNodes.top()+string(">");
+	string l_sIndent(m_vNodes.size() - 1, '\t');
+	string l_sResult = ((m_bHasData || !m_bHasChild) ? string("") : string("\n") + l_sIndent) + string("</") + m_vNodes.top() + string(">");
 	m_rWriterCallback.write(l_sResult.c_str());
 	m_vNodes.pop();
-	m_bHasChild=true;
-	m_bHasData=false;
+	m_bHasChild = true;
+	m_bHasData  = false;
 	return true;
 }
 
 void CWriter::release(void)
 {
-	while(!m_vNodes.empty())
+	while (!m_vNodes.empty())
 	{
 		closeChild();
 	}
@@ -164,22 +131,22 @@ void CWriter::release(void)
 void CWriter::sanitize(string& sString, bool escapeQuotes)
 {
 	string::size_type i;
-	if(sString.length()!=0)
+	if (sString.length() != 0)
 	{
 		// mandatory, this one should be the first because the other ones add & symbols
-		for(i=sString.find("&", 0); i!=string::npos; i=sString.find("&", i+1))
+		for (i = sString.find("&", 0); i != string::npos; i = sString.find("&", i + 1))
 			sString.replace(i, 1, "&amp;");
-		for(i=sString.find("<", 0); i!=string::npos; i=sString.find("<", i+1))
+		for (i = sString.find("<", 0); i != string::npos; i = sString.find("<", i + 1))
 			sString.replace(i, 1, "&lt;");
-		for(i=sString.find(">", 0); i!=string::npos; i=sString.find(">", i+1))
+		for (i = sString.find(">", 0); i != string::npos; i = sString.find(">", i + 1))
 			sString.replace(i, 1, "&gt;");
 
 		// Quotes need only be escaped in attributes
 		if (escapeQuotes)
 		{
-			for(i=sString.find("'", 0); i!=string::npos; i=sString.find("'", i+1))
+			for (i = sString.find("'", 0); i != string::npos; i = sString.find("'", i + 1))
 				sString.replace(i, 1, "&apos;");
-			for(i=sString.find("\"", 0); i!=string::npos; i=sString.find("\"", i+1))
+			for (i = sString.find("\"", 0); i != string::npos; i = sString.find("\"", i + 1))
 				sString.replace(i, 1, "&quot;");
 		}
 	}

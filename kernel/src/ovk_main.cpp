@@ -28,12 +28,12 @@ namespace OpenViBE
 				delete pKernelContext;
 			}
 
-			virtual CString getName(void) const                { return CString("OpenViBE Kernel Implementation"); }
-			virtual CString getAuthorName(void) const          { return CString("Yann Renard"); }
-			virtual CString getAuthorCompanyName(void) const   { return CString("INRIA/IRISA"); }
-			virtual CString getShortDescription(void) const    { return CString("OpenViBE Kernel Implementation"); }
+			virtual CString getName(void) const { return CString("OpenViBE Kernel Implementation"); }
+			virtual CString getAuthorName(void) const { return CString("Yann Renard"); }
+			virtual CString getAuthorCompanyName(void) const { return CString("INRIA/IRISA"); }
+			virtual CString getShortDescription(void) const { return CString("OpenViBE Kernel Implementation"); }
 			virtual CString getDetailedDescription(void) const { return CString("OpenViBE Kernel Implementation"); }
-			virtual CString getVersion(void) const             { return CString("0.5"); }
+			virtual CString getVersion(void) const { return CString("0.5"); }
 
 			_IsDerivedFromClass_Final_(IKernelDesc, OVK_ClassId_KernelDesc);
 		};
@@ -44,23 +44,16 @@ static CKernelDesc gst_oKernelDesc;
 
 #include <system/ovCTime.h>
 
-extern "C"
-{
+extern "C" {
 
-OVK_API boolean onInitialize(void)
-{
-	return true;
-}
+OVK_API boolean onInitialize(void) { return true; }
 
 OVK_API boolean onGetKernelDesc(IKernelDesc*& rpKernelDesc)
 {
-	rpKernelDesc=&gst_oKernelDesc;
+	rpKernelDesc = &gst_oKernelDesc;
 	return true;
 }
 
-OVK_API boolean onUninitialize(void)
-{
-	return true;
-}
+OVK_API boolean onUninitialize(void) { return true; }
 
 };

@@ -13,10 +13,10 @@
  #include <netdb.h>
  #include <unistd.h>
 #elif defined TARGET_OS_Windows
- #include <fcntl.h>
- #include <cerrno>
+#include <fcntl.h>
+#include <cerrno>
 
- #include <WS2tcpip.h>
+#include <WS2tcpip.h>
 #else
 #endif
 
@@ -31,10 +31,7 @@ namespace Socket
 			uint32_t ui32ServerPort,
 			uint32_t ui32TimeOut)
 		{
-			if(!open())
-			{
-				return false;
-			}
+			if (!open()) { return false; }
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			long l_iValue;
@@ -66,7 +63,7 @@ namespace Socket
 			::ioctlsocket(m_i32Socket, FIONBIO, &l_uiMode);
 
 			struct addrinfo hints;
-			ZeroMemory( &hints, sizeof(hints) );
+			ZeroMemory(&hints, sizeof(hints));
 			hints.ai_family = AF_INET;
 			PADDRINFOA addr;
 			if (auto errorcode = getaddrinfo(sServerName, NULL, &hints, &addr) != 0)
@@ -81,8 +78,8 @@ namespace Socket
 			// Connects
 			struct sockaddr_in l_oServerAddress;
 			memset(&l_oServerAddress, 0, sizeof(l_oServerAddress));
-			l_oServerAddress.sin_family=AF_INET;
-			l_oServerAddress.sin_port=htons((unsigned short)ui32ServerPort);
+			l_oServerAddress.sin_family = AF_INET;
+			l_oServerAddress.sin_port   = htons((unsigned short)ui32ServerPort);
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			l_oServerAddress.sin_addr=*((struct in_addr*)l_pServerHostEntry->h_addr);
 #elif defined TARGET_OS_Windows
@@ -90,7 +87,7 @@ namespace Socket
 			freeaddrinfo(addr);
 #endif
 			errno = 0;
-			if(::connect(m_i32Socket, (struct sockaddr*)&l_oServerAddress, sizeof(struct sockaddr_in))<0)
+			if (::connect(m_i32Socket, (struct sockaddr*)&l_oServerAddress, sizeof(struct sockaddr_in)) < 0)
 			{
 				boolean l_bInProgress;
 
@@ -100,48 +97,48 @@ namespace Socket
 
 #elif defined TARGET_OS_Windows
 
-				l_bInProgress=(WSAGetLastError()==WSAEINPROGRESS || WSAGetLastError()==WSAEWOULDBLOCK);
+				l_bInProgress = (WSAGetLastError() == WSAEINPROGRESS || WSAGetLastError() == WSAEWOULDBLOCK);
 #else
 				l_bInProgress = false;
 #endif
 
-				if(l_bInProgress)
+				if (l_bInProgress)
 				{
 					// Performs time out
-					if(ui32TimeOut==0xffffffff)
+					if (ui32TimeOut == 0xffffffff)
 					{
-						ui32TimeOut=125;
+						ui32TimeOut = 125;
 					}
 
 					struct timeval l_oTimeVal;
-					l_oTimeVal.tv_sec=(ui32TimeOut/1000);
-					l_oTimeVal.tv_usec=((ui32TimeOut-l_oTimeVal.tv_sec*1000)*1000);
+					l_oTimeVal.tv_sec  = (ui32TimeOut / 1000);
+					l_oTimeVal.tv_usec = ((ui32TimeOut - l_oTimeVal.tv_sec * 1000) * 1000);
 
 					fd_set l_oWriteFileDescriptors;
 					FD_ZERO(&l_oWriteFileDescriptors);
 					FD_SET(m_i32Socket, &l_oWriteFileDescriptors);
 
-					if(::select(m_i32Socket+1, NULL, &l_oWriteFileDescriptors, NULL, &l_oTimeVal)<0)
+					if (::select(m_i32Socket + 1, NULL, &l_oWriteFileDescriptors, NULL, &l_oTimeVal) < 0)
 					{
 						close();
 						return false;
 					}
-					if(!FD_ISSET_PROXY(m_i32Socket, &l_oWriteFileDescriptors))
+					if (!FD_ISSET_PROXY(m_i32Socket, &l_oWriteFileDescriptors))
 					{
 						close();
 						return false;
 					}
 
 					// Checks error status
-					int l_iOption=0;
+					int l_iOption = 0;
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 					socklen_t l_iOptionLength=sizeof(l_iOption);
 					::getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, (void*)(&l_iOption), &l_iOptionLength);
 #elif defined TARGET_OS_Windows
-					int l_iOptionLength=sizeof(l_iOption);
+					int l_iOptionLength = sizeof(l_iOption);
 					::getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, (char*)(&l_iOption), &l_iOptionLength);
 #endif
-					if(l_iOption!=0)
+					if (l_iOption != 0)
 					{
 						close();
 						return false;
@@ -172,7 +169,7 @@ namespace Socket
 #elif defined TARGET_OS_Windows
 
 			// Sets back to blocking
-			l_uiMode=0;
+			l_uiMode = 0;
 			::ioctlsocket(m_i32Socket, FIONBIO, &l_uiMode);
 
 #endif

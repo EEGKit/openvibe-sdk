@@ -122,7 +122,7 @@ TEST(error_manager_test_case, test_stress_push)
 	}
 
 	unsigned int errorCount = 0;
-	auto error = errorManager.getLastError();
+	auto error              = errorManager.getLastError();
 	while (error)
 	{
 		errorCount++;

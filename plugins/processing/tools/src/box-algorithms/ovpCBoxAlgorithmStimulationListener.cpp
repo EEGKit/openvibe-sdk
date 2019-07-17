@@ -10,10 +10,10 @@ using namespace OpenViBEPlugins::Tools;
 
 boolean CBoxAlgorithmStimulationListener::initialize(void)
 {
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
+	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		m_vStimulationDecoder.push_back(new OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmStimulationListener >(*this,i));
+		m_vStimulationDecoder.push_back(new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>(*this, i));
 	}
 
 	m_eLogLevel = static_cast<ELogLevel>((uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
@@ -23,8 +23,8 @@ boolean CBoxAlgorithmStimulationListener::initialize(void)
 
 boolean CBoxAlgorithmStimulationListener::uninitialize(void)
 {
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
+	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		m_vStimulationDecoder[i]->uninitialize();
 		delete m_vStimulationDecoder[i];
@@ -42,32 +42,30 @@ boolean CBoxAlgorithmStimulationListener::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmStimulationListener::process(void)
 {
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
+	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
-	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		for(uint32 j=0; j<l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
 			m_vStimulationDecoder[i]->decode(j);
-			if(m_vStimulationDecoder[i]->isHeaderReceived())
-			{
-			}
-			if(m_vStimulationDecoder[i]->isBufferReceived())
+			if (m_vStimulationDecoder[i]->isHeaderReceived()) { }
+			if (m_vStimulationDecoder[i]->isBufferReceived())
 			{
 				const IStimulationSet* op_pStimulationSet = m_vStimulationDecoder[i]->getOutputStimulationSet();
 
 				CString l_sInputName;
 				l_rStaticBoxContext.getInputName(i, l_sInputName);
-				for(uint64 k=0; k<op_pStimulationSet->getStimulationCount(); k++)
+				for (uint64 k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
 				{
 					this->getLogManager() << m_eLogLevel
-						<< "For input " << i << " with name " << l_sInputName
-						<< " got stimulation " << op_pStimulationSet->getStimulationIdentifier(k)
-						<< "[" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, op_pStimulationSet->getStimulationIdentifier(k)) << "]"
-						<< " at date " << time64(op_pStimulationSet->getStimulationDate(k))
-						<< " and duration " << time64(op_pStimulationSet->getStimulationDuration(k))
-						<< "\n";
+							<< "For input " << i << " with name " << l_sInputName
+							<< " got stimulation " << op_pStimulationSet->getStimulationIdentifier(k)
+							<< "[" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, op_pStimulationSet->getStimulationIdentifier(k)) << "]"
+							<< " at date " << time64(op_pStimulationSet->getStimulationDate(k))
+							<< " and duration " << time64(op_pStimulationSet->getStimulationDuration(k))
+							<< "\n";
 
 					OV_WARNING_UNLESS_K(
 						op_pStimulationSet->getStimulationDate(k) >= l_rDynamicBoxContext.getInputChunkStartTime(i, j) && op_pStimulationSet->getStimulationDate(k) <= l_rDynamicBoxContext.getInputChunkEndTime(i, j),
@@ -83,9 +81,7 @@ boolean CBoxAlgorithmStimulationListener::process(void)
 				}
 				*/
 			}
-			if(m_vStimulationDecoder[i]->isEndReceived())
-			{
-			}
+			if (m_vStimulationDecoder[i]->isEndReceived()) { }
 			l_rDynamicBoxContext.markInputAsDeprecated(i, j);
 		}
 	}

@@ -146,13 +146,13 @@ namespace Communication
 
 	private:
 		static const size_t s_TypeIndex = 0;
-		static const size_t s_TypeSize = sizeof(EMessageType);
+		static const size_t s_TypeSize  = sizeof(EMessageType);
 
 		static const size_t s_IdIndex = s_TypeIndex + s_TypeSize;
-		static const size_t s_IdSize = sizeof(uint64_t);
+		static const size_t s_IdSize  = sizeof(uint64_t);
 
 		static const size_t s_SizeIndex = s_IdIndex + s_IdSize;
-		static const size_t s_SizeSize = sizeof(uint64_t);
+		static const size_t s_SizeSize  = sizeof(uint64_t);
 
 		static const size_t s_MinimumSize = s_TypeSize + s_IdSize + s_SizeSize;
 	};
@@ -176,10 +176,10 @@ namespace Communication
 		std::string getConnectionID();
 
 	private:
-		static const size_t s_SizeIndex = 0;
-		static const size_t s_SizeSize = sizeof(uint64_t);
+		static const size_t s_SizeIndex         = 0;
+		static const size_t s_SizeSize          = sizeof(uint64_t);
 		static const size_t s_ConnectionIDIndex = s_SizeIndex + s_SizeSize;
-		static const size_t s_MinimumSize = s_SizeSize;
+		static const size_t s_MinimumSize       = s_SizeSize;
 
 		std::string m_ConnectionID;
 	};
@@ -217,10 +217,10 @@ namespace Communication
 
 	private:
 		static const size_t s_MajorIndex = 0;
-		static const size_t s_MajorSize = sizeof(uint8_t);
+		static const size_t s_MajorSize  = sizeof(uint8_t);
 
 		static const size_t s_MinorIndex = s_MajorIndex + s_MajorSize;
-		static const size_t s_MinorSize = sizeof(uint8_t);
+		static const size_t s_MinorSize  = sizeof(uint8_t);
 
 		static const size_t s_MinimumSize = s_MajorSize + s_MinorSize;
 	};
@@ -251,13 +251,13 @@ namespace Communication
 		std::string m_Name;
 
 	private:
-		static const size_t s_IdIndex = 0;
-		static const size_t s_IdSize = sizeof(uint32_t);
-		static const size_t s_TypeIndex = s_IdIndex + s_IdSize;
-		static const size_t s_TypeSize = sizeof(uint64_t);
+		static const size_t s_IdIndex       = 0;
+		static const size_t s_IdSize        = sizeof(uint32_t);
+		static const size_t s_TypeIndex     = s_IdIndex + s_IdSize;
+		static const size_t s_TypeSize      = sizeof(uint64_t);
 		static const size_t s_NameSizeIndex = s_TypeIndex + s_TypeSize;
-		static const size_t s_NameSizeSize = sizeof(uint32_t);
-		static const size_t s_NameIndex = s_NameSizeIndex + s_NameSizeSize;
+		static const size_t s_NameSizeSize  = sizeof(uint32_t);
+		static const size_t s_NameIndex     = s_NameSizeIndex + s_NameSizeSize;
 
 		static const size_t s_MinimumSize = s_IdSize + s_TypeSize + s_NameSizeSize;
 	};
@@ -287,15 +287,15 @@ namespace Communication
 		std::string m_Value;
 
 	private:
-		static const size_t s_IdIndex = 0;
-		static const size_t s_IdSize = sizeof(uint32_t);
-		static const size_t s_TypeIndex = s_IdIndex + s_IdSize;
-		static const size_t s_TypeSize = sizeof(uint64_t);
-		static const size_t s_NameSizeIndex = s_TypeIndex + s_TypeSize;
-		static const size_t s_NameSizeSize = sizeof(uint32_t);
+		static const size_t s_IdIndex        = 0;
+		static const size_t s_IdSize         = sizeof(uint32_t);
+		static const size_t s_TypeIndex      = s_IdIndex + s_IdSize;
+		static const size_t s_TypeSize       = sizeof(uint64_t);
+		static const size_t s_NameSizeIndex  = s_TypeIndex + s_TypeSize;
+		static const size_t s_NameSizeSize   = sizeof(uint32_t);
 		static const size_t s_ValueSizeIndex = s_NameSizeIndex + s_NameSizeSize;
-		static const size_t s_ValueSizeSize = sizeof(uint32_t);
-		static const size_t s_NameIndex = s_ValueSizeIndex + s_ValueSizeSize;
+		static const size_t s_ValueSizeSize  = sizeof(uint32_t);
+		static const size_t s_NameIndex      = s_ValueSizeIndex + s_ValueSizeSize;
 
 		static const size_t s_MinimumSize = s_IdSize + s_TypeSize + s_NameSizeSize + s_ValueSizeSize;
 	};
@@ -332,13 +332,13 @@ namespace Communication
 
 	private:
 		static const size_t s_InputCountIndex = 0;
-		static const size_t s_InputCountSize = sizeof(uint32_t);
+		static const size_t s_InputCountSize  = sizeof(uint32_t);
 
 		static const size_t s_OutputCountIndex = s_InputCountIndex + s_InputCountSize;
-		static const size_t s_OutputCountSize = sizeof(uint32_t);
+		static const size_t s_OutputCountSize  = sizeof(uint32_t);
 
 		static const size_t s_ParameterCountIndex = s_OutputCountIndex + s_OutputCountSize;
-		static const size_t s_ParameterCountSize = sizeof(uint32_t);
+		static const size_t s_ParameterCountSize  = sizeof(uint32_t);
 
 		static const size_t s_MinimumSize = s_InputCountSize + s_OutputCountSize + s_ParameterCountSize;
 	};
@@ -369,9 +369,9 @@ namespace Communication
 
 	private:
 		static const size_t s_TypeIndex = 0;
-		static const size_t s_TypeSize = sizeof(ELogLevel);
+		static const size_t s_TypeSize  = sizeof(ELogLevel);
 		static const size_t s_SizeIndex = s_TypeIndex + s_TypeSize;
-		static const size_t s_SizeSize = sizeof(uint32_t);
+		static const size_t s_SizeSize  = sizeof(uint32_t);
 		static const size_t s_NameIndex = s_SizeIndex + s_SizeSize;
 
 		static const size_t s_MinimumSize = s_TypeSize + s_SizeSize;
@@ -386,9 +386,9 @@ namespace Communication
 		EBMLMessage();
 
 		EBMLMessage(uint32_t index,
-		            uint64_t startTime,
-		            uint64_t endTime,
-		            std::shared_ptr<const std::vector<uint8_t>> ebml);
+					uint64_t startTime,
+					uint64_t endTime,
+					std::shared_ptr<const std::vector<uint8_t>> ebml);
 
 		std::vector<uint8_t> toBytes() const override;
 
@@ -412,16 +412,16 @@ namespace Communication
 
 	private:
 		static const size_t s_IOIndexIndex = 0;
-		static const size_t s_IOIndexSize = sizeof(uint32_t);
+		static const size_t s_IOIndexSize  = sizeof(uint32_t);
 
 		static const size_t s_StartTimeIndex = s_IOIndexIndex + s_IOIndexSize;
-		static const size_t s_StartTimeSize = sizeof(uint64_t);
+		static const size_t s_StartTimeSize  = sizeof(uint64_t);
 
 		static const size_t s_EndTimeIndex = s_StartTimeIndex + s_StartTimeSize;
-		static const size_t s_EndTimeSize = sizeof(uint64_t);
+		static const size_t s_EndTimeSize  = sizeof(uint64_t);
 
 		static const size_t s_SizeIndex = s_EndTimeIndex + s_EndTimeSize;
-		static const size_t s_SizeSize = sizeof(uint32_t);
+		static const size_t s_SizeSize  = sizeof(uint32_t);
 
 		static const size_t s_EBMLIndex = s_SizeIndex + s_SizeSize;
 
@@ -454,10 +454,10 @@ namespace Communication
 
 	private:
 		static const size_t s_TypeIndex = 0;
-		static const size_t s_TypeSize = sizeof(EError);
+		static const size_t s_TypeSize  = sizeof(EError);
 
 		static const size_t s_GuiltyIdIndex = s_TypeIndex + s_TypeSize;
-		static const size_t s_GuiltyIdSize = sizeof(uint64_t);
+		static const size_t s_GuiltyIdSize  = sizeof(uint64_t);
 
 		static const size_t s_MinimumSize = s_GuiltyIdSize + s_TypeSize;
 	};
@@ -492,7 +492,7 @@ namespace Communication
 
 	private:
 		static const size_t s_TimeIndex = 0;
-		static const size_t s_TimeSize = sizeof(uint64_t);
+		static const size_t s_TimeSize  = sizeof(uint64_t);
 
 		static const size_t s_MinimumSize = s_TimeSize;
 	};

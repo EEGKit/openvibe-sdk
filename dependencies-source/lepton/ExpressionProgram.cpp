@@ -36,70 +36,81 @@
 using namespace Lepton;
 using namespace std;
 
-ExpressionProgram::ExpressionProgram() : maxArgs(0), stackSize(0) {
+ExpressionProgram::ExpressionProgram() : maxArgs(0), stackSize(0) {}
+
+ExpressionProgram::ExpressionProgram(const ParsedExpression& expression) : maxArgs(0), stackSize(0)
+{
+	buildProgram(expression.getRootNode());
+	int currentStackSize = 0;
+	for (int i = 0; i < (int)operations.size(); i++)
+	{
+		int args = operations[i]->getNumArguments();
+		if (args > maxArgs)
+			maxArgs = args;
+		currentStackSize += 1 - args;
+		if (currentStackSize > stackSize)
+			stackSize = currentStackSize;
+	}
 }
 
-ExpressionProgram::ExpressionProgram(const ParsedExpression& expression) : maxArgs(0), stackSize(0) {
-    buildProgram(expression.getRootNode());
-    int currentStackSize = 0;
-    for (int i = 0; i < (int) operations.size(); i++) {
-        int args = operations[i]->getNumArguments();
-        if (args > maxArgs)
-            maxArgs = args;
-        currentStackSize += 1-args;
-        if (currentStackSize > stackSize)
-            stackSize = currentStackSize;
-    }
+ExpressionProgram::~ExpressionProgram()
+{
+	for (int i = 0; i < (int)operations.size(); i++)
+		delete operations[i];
 }
 
-ExpressionProgram::~ExpressionProgram() {
-    for (int i = 0; i < (int) operations.size(); i++)
-        delete operations[i];
+ExpressionProgram::ExpressionProgram(const ExpressionProgram& program)
+{
+	*this = program;
 }
 
-ExpressionProgram::ExpressionProgram(const ExpressionProgram& program) {
-    *this = program;
+ExpressionProgram& ExpressionProgram::operator=(const ExpressionProgram& program)
+{
+	maxArgs   = program.maxArgs;
+	stackSize = program.stackSize;
+	operations.resize(program.operations.size());
+	for (int i = 0; i < (int)operations.size(); i++)
+		operations[i] = program.operations[i]->clone();
+	return *this;
 }
 
-ExpressionProgram& ExpressionProgram::operator=(const ExpressionProgram& program) {
-    maxArgs = program.maxArgs;
-    stackSize = program.stackSize;
-    operations.resize(program.operations.size());
-    for (int i = 0; i < (int) operations.size(); i++)
-        operations[i] = program.operations[i]->clone();
-    return *this;
+void ExpressionProgram::buildProgram(const ExpressionTreeNode& node)
+{
+	for (int i = (int)node.getChildren().size() - 1; i >= 0; i--)
+		buildProgram(node.getChildren()[i]);
+	operations.push_back(node.getOperation().clone());
 }
 
-void ExpressionProgram::buildProgram(const ExpressionTreeNode& node) {
-    for (int i = (int) node.getChildren().size()-1; i >= 0; i--)
-        buildProgram(node.getChildren()[i]);
-    operations.push_back(node.getOperation().clone());
+int ExpressionProgram::getNumOperations() const
+{
+	return (int)operations.size();
 }
 
-int ExpressionProgram::getNumOperations() const {
-    return (int) operations.size();
+const Operation& ExpressionProgram::getOperation(int index) const
+{
+	return *operations[index];
 }
 
-const Operation& ExpressionProgram::getOperation(int index) const {
-    return *operations[index];
+int ExpressionProgram::getStackSize() const
+{
+	return stackSize;
 }
 
-int ExpressionProgram::getStackSize() const {
-    return stackSize;
+double ExpressionProgram::evaluate() const
+{
+	return evaluate(map<string, double>());
 }
 
-double ExpressionProgram::evaluate() const {
-    return evaluate(map<string, double>());
-}
-
-double ExpressionProgram::evaluate(const std::map<std::string, double>& variables) const {
-    vector<double> stack(stackSize+1);
-    int stackPointer = stackSize;
-    for (int i = 0; i < (int) operations.size(); i++) {
-        int numArgs = operations[i]->getNumArguments();
-        double result = operations[i]->evaluate(&stack[stackPointer], variables);
-        stackPointer += numArgs-1;
-        stack[stackPointer] = result;
-    }
-    return stack[stackSize-1];
+double ExpressionProgram::evaluate(const std::map<std::string, double>& variables) const
+{
+	vector<double> stack(stackSize + 1);
+	int stackPointer = stackSize;
+	for (int i = 0; i < (int)operations.size(); i++)
+	{
+		int numArgs   = operations[i]->getNumArguments();
+		double result = operations[i]->evaluate(&stack[stackPointer], variables);
+		stackPointer += numArgs - 1;
+		stack[stackPointer] = result;
+	}
+	return stack[stackSize - 1];
 }

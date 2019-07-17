@@ -15,15 +15,15 @@
 
 namespace OpenViBEToolkit
 {
-	class OVTK_API CAlgorithmClassifierTrainer : public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >
+	class OVTK_API CAlgorithmClassifierTrainer : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 	{
 	public:
 
 		virtual void release(void) { delete this; }
 
 		virtual OpenViBE::boolean process(void);
-		virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet)=0;
-		virtual OpenViBE::boolean saveConfiguration(OpenViBE::IMemoryBuffer& rMemoryBuffer)=0;
+		virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) =0;
+		virtual OpenViBE::boolean saveConfiguration(OpenViBE::IMemoryBuffer& rMemoryBuffer) =0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_ClassifierTrainer);
 
@@ -37,12 +37,12 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::boolean getAlgorithmPrototype(
 			OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 		{
-			rAlgorithmPrototype.addInputParameter (OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet, "Feature vector set", OpenViBE::Kernel::ParameterType_Matrix);
-			rAlgorithmPrototype.addOutputParameter(OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Configuration,   "Configuration",      OpenViBE::Kernel::ParameterType_MemoryBuffer);
-			rAlgorithmPrototype.addInputTrigger   (OVTK_Algorithm_ClassifierTrainer_InputTriggerId_Train,              "Train");
-			rAlgorithmPrototype.addInputTrigger   (OVTK_Algorithm_ClassifierTrainer_InputTriggerId_SaveConfiguration,  "Save configuration");
-			rAlgorithmPrototype.addOutputTrigger  (OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success,           "Success");
-			rAlgorithmPrototype.addOutputTrigger  (OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed,            "Failed");
+			rAlgorithmPrototype.addInputParameter(OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet, "Feature vector set", OpenViBE::Kernel::ParameterType_Matrix);
+			rAlgorithmPrototype.addOutputParameter(OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Configuration, "Configuration", OpenViBE::Kernel::ParameterType_MemoryBuffer);
+			rAlgorithmPrototype.addInputTrigger(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_Train, "Train");
+			rAlgorithmPrototype.addInputTrigger(OVTK_Algorithm_ClassifierTrainer_InputTriggerId_SaveConfiguration, "Save configuration");
+			rAlgorithmPrototype.addOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, "Success");
+			rAlgorithmPrototype.addOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, "Failed");
 			return true;
 		}
 

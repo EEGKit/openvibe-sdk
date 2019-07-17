@@ -3,9 +3,9 @@
 using namespace EBML;
 
 CReader::CReader(IReaderCallback& rReaderCallback)
-	:m_pReaderImplementation(NULL)
+	: m_pReaderImplementation(NULL)
 {
-	m_pReaderImplementation=createReader(rReaderCallback);
+	m_pReaderImplementation = createReader(rReaderCallback);
 }
 
 CReader::~CReader(void)
@@ -28,6 +28,4 @@ uint64 CReader::getCurrentNodeSize(void) const
 	return m_pReaderImplementation->getCurrentNodeSize();
 }
 
-void CReader::release(void)
-{
-}
+void CReader::release(void) {}

@@ -28,7 +28,6 @@ namespace Socket
 
 	protected:
 		SConnectionSerialDelegate m_oConnectionSerialDelegate;
-
 	};
 
 	extern Socket_API IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate);

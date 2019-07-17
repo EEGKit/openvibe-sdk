@@ -3,9 +3,9 @@
 using namespace EBML;
 
 CWriter::CWriter(IWriterCallback& rWriterCallback)
-	:m_pWriterImplementation(NULL)
+	: m_pWriterImplementation(NULL)
 {
-	m_pWriterImplementation=createWriter(rWriterCallback);
+	m_pWriterImplementation = createWriter(rWriterCallback);
 }
 
 CWriter::~CWriter(void)
@@ -28,6 +28,4 @@ boolean CWriter::closeChild(void)
 	return m_pWriterImplementation->closeChild();
 }
 
-void CWriter::release(void)
-{
-}
+void CWriter::release(void) {}

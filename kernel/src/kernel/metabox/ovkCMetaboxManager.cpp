@@ -21,19 +21,19 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CMetaboxManagerEntryEnumeratorCallBack : public TKernelObject < IObject >, public FS::IEntryEnumeratorCallBack
+		class CMetaboxManagerEntryEnumeratorCallBack : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
 		{
 		public:
 
 			CMetaboxManagerEntryEnumeratorCallBack(const OpenViBE::Kernel::IKernelContext& kernelContext, CMetaboxManager& metaboxManager)
-				: TKernelObject < IObject >(kernelContext), m_MetaboxManager(metaboxManager)
+				: TKernelObject<IObject>(kernelContext), m_MetaboxManager(metaboxManager)
 			{
 				m_MetaBoxCount = 0;
 			}
 
 			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes)
 			{
-				if(rAttributes.isFile())
+				if (rAttributes.isFile())
 				{
 					const char* fullFileName = rEntry.getName();
 
@@ -42,7 +42,7 @@ namespace OpenViBE
 					if (scenarioId != OV_UndefinedIdentifier)
 					{
 						OpenViBE::Kernel::IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioId);
-						bool isValid = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+						bool isValid                                 = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
 						if (isValid && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
 						{
 							bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
@@ -68,7 +68,7 @@ namespace OpenViBE
 			uint32_t resetMetaboxCount(void)
 			{
 				uint32_t returnValue = m_MetaBoxCount;
-				m_MetaBoxCount = 0;
+				m_MetaBoxCount       = 0;
 				return returnValue;
 			}
 
@@ -76,7 +76,6 @@ namespace OpenViBE
 		protected:
 			CMetaboxManager& m_MetaboxManager;
 			uint32_t m_MetaBoxCount;
-
 		};
 	}
 }
@@ -103,15 +102,15 @@ bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 	FS::IEntryEnumerator* entryEnumerator = FS::createEntryEnumerator(l_rCallback);
 	stringstream ss(fileNameWildCard.toASCIIString());
 	string path;
-	while(getline(ss, path, ';'))
+	while (getline(ss, path, ';'))
 	{
 		bool result = false; // Used to output imported metabox count
 		CString ext("");
-		while((ext = this->getScenarioManager().getNextScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ext)) != CString(""))
+		while ((ext = this->getScenarioManager().getNextScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ext)) != CString(""))
 		{
 			result |= entryEnumerator->enumerate((path + "*" + ext.toASCIIString()).c_str());
 		}
-		if(result)
+		if (result)
 		{
 			this->getLogManager() << LogLevel_Info << "Added " << l_rCallback.resetMetaboxCount() << " metaboxes from [" << path.c_str() << "]\n";
 		}
@@ -157,7 +156,7 @@ OpenViBE::CString CMetaboxManager::getMetaboxFilePath(const OpenViBE::CIdentifie
 	return resultIt != m_MetaboxFilePath.end() ? resultIt->second : OpenViBE::CString();
 }
 
-void CMetaboxManager::setMetaboxFilePath(const OpenViBE::CIdentifier& metaboxIdentifier, const CString &filePath)
+void CMetaboxManager::setMetaboxFilePath(const OpenViBE::CIdentifier& metaboxIdentifier, const CString& filePath)
 {
 	m_MetaboxFilePath[metaboxIdentifier] = filePath;
 }

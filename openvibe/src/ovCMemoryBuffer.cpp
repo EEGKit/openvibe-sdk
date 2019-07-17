@@ -40,51 +40,50 @@ namespace OpenViBE
 //
 
 CMemoryBufferImpl::CMemoryBufferImpl(void)
-	:m_pBuffer(NULL)
-	,m_ui64BufferSize(0)
-	,m_ui64AllocatedSize(0)
-{
-}
+	: m_pBuffer(NULL)
+	  , m_ui64BufferSize(0)
+	  , m_ui64AllocatedSize(0) {}
 
 CMemoryBufferImpl::CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer)
-	:m_pBuffer(NULL)
-	,m_ui64BufferSize(0)
-	,m_ui64AllocatedSize(0)
+	: m_pBuffer(NULL)
+	  , m_ui64BufferSize(0)
+	  , m_ui64AllocatedSize(0)
 {
-	m_pBuffer=new uint8[static_cast<size_t>(rMemoryBuffer.getSize()+1)]; // $$$
-	if(m_pBuffer)
+	m_pBuffer = new uint8[static_cast<size_t>(rMemoryBuffer.getSize() + 1)]; // $$$
+	if (m_pBuffer)
 	{
-		m_ui64BufferSize=rMemoryBuffer.getSize();
-		m_ui64AllocatedSize=rMemoryBuffer.getSize();
-		if(rMemoryBuffer.getDirectPointer())
+		m_ui64BufferSize    = rMemoryBuffer.getSize();
+		m_ui64AllocatedSize = rMemoryBuffer.getSize();
+		if (rMemoryBuffer.getDirectPointer())
 		{
 			::memcpy(m_pBuffer, rMemoryBuffer.getDirectPointer(), static_cast<size_t>(m_ui64BufferSize)); // $$$
 		}
-		m_pBuffer[m_ui64AllocatedSize]=0;
+		m_pBuffer[m_ui64AllocatedSize] = 0;
 	}
 }
 
 CMemoryBufferImpl::CMemoryBufferImpl(const uint8* pMemoryBuffer, const uint64 ui64BufferSize)
-	:m_pBuffer(NULL)
-	,m_ui64BufferSize(0)
-	,m_ui64AllocatedSize(0)
+	: m_pBuffer(NULL)
+	  , m_ui64BufferSize(0)
+	  , m_ui64AllocatedSize(0)
 {
-	m_pBuffer=new uint8[static_cast<size_t>(ui64BufferSize+1)]; // $$$
-	if(m_pBuffer)
+	m_pBuffer = new uint8[static_cast<size_t>(ui64BufferSize + 1)]; // $$$
+	if (m_pBuffer)
 	{
-		m_ui64BufferSize=ui64BufferSize;
-		m_ui64AllocatedSize=ui64BufferSize;
-		if(pMemoryBuffer)
+		m_ui64BufferSize    = ui64BufferSize;
+		m_ui64AllocatedSize = ui64BufferSize;
+		if (pMemoryBuffer)
 		{
 			::memcpy(m_pBuffer, pMemoryBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
 		}
-		m_pBuffer[m_ui64AllocatedSize]=0;
+		m_pBuffer[m_ui64AllocatedSize] = 0;
 	}
 }
 
 CMemoryBufferImpl::~CMemoryBufferImpl(void)
 {
-	if(m_pBuffer) {
+	if (m_pBuffer)
+	{
 		delete [] m_pBuffer;
 		m_pBuffer = NULL;
 	}
@@ -107,19 +106,16 @@ uint64 CMemoryBufferImpl::getSize(void) const
 
 boolean CMemoryBufferImpl::reserve(const uint64 ui64Size)
 {
-	if(ui64Size>m_ui64AllocatedSize)
+	if (ui64Size > m_ui64AllocatedSize)
 	{
-		uint8* l_pSavedBuffer=m_pBuffer;
-		m_pBuffer=new uint8[static_cast<size_t>(ui64Size+1)]; // $$$
-		if(!m_pBuffer)
-		{
-			return false;
-		}
+		uint8* l_pSavedBuffer = m_pBuffer;
+		m_pBuffer             = new uint8[static_cast<size_t>(ui64Size + 1)]; // $$$
+		if (!m_pBuffer) { return false; }
 		::memcpy(m_pBuffer, l_pSavedBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
 
 		delete [] l_pSavedBuffer;
-		m_ui64AllocatedSize=ui64Size;
-		m_pBuffer[m_ui64AllocatedSize]=0;
+		m_ui64AllocatedSize            = ui64Size;
+		m_pBuffer[m_ui64AllocatedSize] = 0;
 	}
 	return true;
 }
@@ -128,53 +124,44 @@ boolean CMemoryBufferImpl::setSize(
 	const uint64 ui64Size,
 	const boolean bDiscard)
 {
-	if(ui64Size>m_ui64AllocatedSize)
+	if (ui64Size > m_ui64AllocatedSize)
 	{
-		uint8* l_pSavedBuffer=m_pBuffer;
-		m_pBuffer=new uint8[static_cast<size_t>(ui64Size+1)]; // $$$
-		if(!m_pBuffer)
-		{
-			return false;
-		}
-		if(!bDiscard)
+		uint8* l_pSavedBuffer = m_pBuffer;
+		m_pBuffer             = new uint8[static_cast<size_t>(ui64Size + 1)]; // $$$
+		if (!m_pBuffer) { return false; }
+		if (!bDiscard)
 		{
 			::memcpy(m_pBuffer, l_pSavedBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
 		}
-		if(l_pSavedBuffer) 
+		if (l_pSavedBuffer)
 		{
 			delete [] l_pSavedBuffer;
 		}
-		m_ui64AllocatedSize=ui64Size;
-		m_pBuffer[m_ui64AllocatedSize]=0;
+		m_ui64AllocatedSize            = ui64Size;
+		m_pBuffer[m_ui64AllocatedSize] = 0;
 	}
-	m_ui64BufferSize=ui64Size;
+	m_ui64BufferSize = ui64Size;
 	return true;
 }
 
 boolean CMemoryBufferImpl::append(const uint8* pBuffer, const uint64 ui64BufferSize)
 {
-	if(ui64BufferSize!=0)
+	if (ui64BufferSize != 0)
 	{
-		uint64 l_ui64BufferSizeBackup=m_ui64BufferSize;
-		if(!this->setSize(m_ui64BufferSize+ui64BufferSize, false))
-		{
-			return false;
-		}
-		::memcpy(m_pBuffer+l_ui64BufferSizeBackup, pBuffer, static_cast<size_t>(ui64BufferSize));
+		uint64 l_ui64BufferSizeBackup = m_ui64BufferSize;
+		if (!this->setSize(m_ui64BufferSize + ui64BufferSize, false)) { return false; }
+		::memcpy(m_pBuffer + l_ui64BufferSizeBackup, pBuffer, static_cast<size_t>(ui64BufferSize));
 	}
 	return true;
 }
 
 boolean CMemoryBufferImpl::append(const IMemoryBuffer& rMemoryBuffer)
 {
-	if(rMemoryBuffer.getSize()!=0)
+	if (rMemoryBuffer.getSize() != 0)
 	{
-		uint64 l_ui64BufferSizeBackup=m_ui64BufferSize;
-		if(!this->setSize(m_ui64BufferSize+rMemoryBuffer.getSize(), false))
-		{
-			return false;
-		}
-		::memcpy(m_pBuffer+l_ui64BufferSizeBackup, rMemoryBuffer.getDirectPointer(), static_cast<size_t>(rMemoryBuffer.getSize()));
+		uint64 l_ui64BufferSizeBackup = m_ui64BufferSize;
+		if (!this->setSize(m_ui64BufferSize + rMemoryBuffer.getSize(), false)) { return false; }
+		::memcpy(m_pBuffer + l_ui64BufferSizeBackup, rMemoryBuffer.getDirectPointer(), static_cast<size_t>(rMemoryBuffer.getSize()));
 	}
 	return true;
 }
@@ -183,21 +170,21 @@ boolean CMemoryBufferImpl::append(const IMemoryBuffer& rMemoryBuffer)
 //
 
 CMemoryBuffer::CMemoryBuffer(void)
-	:m_pMemoryBufferImpl(NULL)
+	: m_pMemoryBufferImpl(NULL)
 {
-	m_pMemoryBufferImpl=new CMemoryBufferImpl();
+	m_pMemoryBufferImpl = new CMemoryBufferImpl();
 }
 
 CMemoryBuffer::CMemoryBuffer(const IMemoryBuffer& rMemoryBuffer)
-	:m_pMemoryBufferImpl(NULL)
+	: m_pMemoryBufferImpl(NULL)
 {
-	m_pMemoryBufferImpl=new CMemoryBufferImpl(rMemoryBuffer);
+	m_pMemoryBufferImpl = new CMemoryBufferImpl(rMemoryBuffer);
 }
 
 CMemoryBuffer::CMemoryBuffer(const uint8* pMemoryBuffer, const uint64 ui64BufferSize)
-	:m_pMemoryBufferImpl(NULL)
+	: m_pMemoryBufferImpl(NULL)
 {
-	m_pMemoryBufferImpl=new CMemoryBufferImpl(pMemoryBuffer, ui64BufferSize);
+	m_pMemoryBufferImpl = new CMemoryBufferImpl(pMemoryBuffer, ui64BufferSize);
 }
 
 CMemoryBuffer::~CMemoryBuffer(void)

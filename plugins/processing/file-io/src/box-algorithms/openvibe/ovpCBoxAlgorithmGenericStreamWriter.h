@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CBoxAlgorithmGenericStreamWriter : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, public EBML::IWriterCallback
+		class CBoxAlgorithmGenericStreamWriter : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, public EBML::IWriterCallback
 		{
 		public:
 
@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 			std::ofstream m_oFile;
 		};
 
-		class CBoxAlgorithmGenericStreamWriterListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmGenericStreamWriterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -67,9 +67,9 @@ namespace OpenViBEPlugins
 			OpenViBE::boolean check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
-				OpenViBE::uint32 i = rBox.getInputCount()-1;
+				OpenViBE::uint32 i = rBox.getInputCount() - 1;
 				//only check last input (we assume previous inputs have benn named, how could they not?)
-				sprintf(l_sName, "Input stream %u", i+1);
+				sprintf(l_sName, "Input stream %u", i + 1);
 				rBox.setInputName(i, l_sName);
 				/*
 				for(i=0; i<rBox.getInputCount(); i++)
@@ -117,30 +117,30 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Generic stream writer"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Writes any number of streams into an .ov file"); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Generic stream writer"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Writes any number of streams into an .ov file"); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("File reading and writing/OpenViBE"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("File reading and writing/OpenViBE"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_GenericStreamWriter; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::FileIO::CBoxAlgorithmGenericStreamWriter; }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmGenericStreamWriterListener; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_GenericStreamWriter; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::FileIO::CBoxAlgorithmGenericStreamWriter; }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmGenericStreamWriterListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual OpenViBE::boolean getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
-				rBoxAlgorithmPrototype.addInput  ("Input stream 1",  OV_TypeId_EBMLStream);
-				rBoxAlgorithmPrototype.addSetting("Filename",        OV_TypeId_Filename, "record-[$core{date}-$core{time}].ov");
+				rBoxAlgorithmPrototype.addInput("Input stream 1", OV_TypeId_EBMLStream);
+				rBoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].ov");
 				rBoxAlgorithmPrototype.addSetting("Use compression", OV_TypeId_Boolean, "false");
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddInput);
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 				return true;
 			}
 

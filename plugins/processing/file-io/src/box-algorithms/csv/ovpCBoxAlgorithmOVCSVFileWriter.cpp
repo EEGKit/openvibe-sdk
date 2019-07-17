@@ -16,42 +16,40 @@ using namespace OpenViBEPlugins::FileIO;
 
 CBoxAlgorithmOVCSVFileWriter::CBoxAlgorithmOVCSVFileWriter(void)
 	: m_WriterLib(OpenViBE::CSV::createCSVHandler(), OpenViBE::CSV::releaseCSVHandler)
-	, m_Epoch(0)
-	, m_IsHeaderReceived(false)
-	, m_IsFileOpen(false)
-	, m_AppendData(false)
-	, m_LastMatrixOnly(false)
-	, m_WriteHeader(true)
-{
-}
+	  , m_Epoch(0)
+	  , m_IsHeaderReceived(false)
+	  , m_IsFileOpen(false)
+	  , m_AppendData(false)
+	  , m_LastMatrixOnly(false)
+	  , m_WriteHeader(true) {}
 
 bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 {
 	m_IsFileOpen = false;
-	m_Epoch = 0;
+	m_Epoch      = 0;
 	OV_ERROR_UNLESS_KRF(this->getStaticBoxContext().getInputType(0, m_TypeIdentifier),
-		"Error while getting input type",
-		ErrorType::Internal);
+						"Error while getting input type",
+						ErrorType::Internal);
 
 	if (m_TypeIdentifier == OV_TypeId_Signal)
 	{
 		m_WriterLib->setFormatType(OpenViBE::CSV::EStreamType::Signal);
-		m_StreamDecoder = new OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmOVCSVFileWriter >(*this, 0);
+		m_StreamDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
 	}
 	else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 	{
 		m_WriterLib->setFormatType(OpenViBE::CSV::EStreamType::StreamedMatrix);
-		m_StreamDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder < CBoxAlgorithmOVCSVFileWriter >(*this, 0);
+		m_StreamDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
 	}
 	else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
 	{
 		m_WriterLib->setFormatType(OpenViBE::CSV::EStreamType::FeatureVector);
-		m_StreamDecoder = new OpenViBEToolkit::TFeatureVectorDecoder < CBoxAlgorithmOVCSVFileWriter >(*this, 0);
+		m_StreamDecoder = new OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
 	}
 	else if (m_TypeIdentifier == OV_TypeId_Spectrum)
 	{
 		m_WriterLib->setFormatType(OpenViBE::CSV::EStreamType::Spectrum);
-		m_StreamDecoder = new OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmOVCSVFileWriter >(*this, 0);
+		m_StreamDecoder = new OpenViBEToolkit::TSpectrumDecoder<CBoxAlgorithmOVCSVFileWriter>(*this, 0);
 	}
 	else
 	{
@@ -59,26 +57,26 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 	}
 
 	OV_ERROR_UNLESS_KRF(m_StimulationDecoder.initialize(*this, 1),
-		"Error while stimulation decoder initialization",
-		ErrorType::Internal);
+						"Error while stimulation decoder initialization",
+						ErrorType::Internal);
 
 
 	const CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_WriterLib->setOutputFloatPrecision(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));
-	m_AppendData = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_AppendData     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_LastMatrixOnly = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	m_WriterLib->setLastMatrixOnlyMode(m_LastMatrixOnly);
 
 	if (!m_AppendData)
 	{
 		OV_ERROR_UNLESS_KRF(m_WriterLib->openFile(filename.toASCIIString(), OpenViBE::CSV::EFileAccessMode::Write),
-			(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-			ErrorType::Internal);
+							(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+							ErrorType::Internal);
 		m_WriteHeader = true;
 	}
 	else
 	{
-		FILE *file = FS::Files::open(filename, "r");
+		FILE* file = FS::Files::open(filename, "r");
 
 		if (file)
 		{
@@ -88,8 +86,8 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 		}
 
 		OV_ERROR_UNLESS_KRF(m_WriterLib->openFile(filename.toASCIIString(), OpenViBE::CSV::EFileAccessMode::Append),
-			(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-			ErrorType::Internal);
+							(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+							ErrorType::Internal);
 	}
 
 	m_IsHeaderReceived = false;
@@ -103,16 +101,16 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize(void)
 	m_StimulationDecoder.uninitialize();
 
 	OV_ERROR_UNLESS_KRF(m_WriterLib->noEventsUntilDate(std::numeric_limits<double>::max()),
-		(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-		ErrorType::Internal);
+						(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+						ErrorType::Internal);
 
 	OV_ERROR_UNLESS_KRF(m_WriterLib->writeAllDataToFile(),
-		(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-		ErrorType::Internal);
+						(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+						ErrorType::Internal);
 
 	OV_ERROR_UNLESS_KRF(m_WriterLib->closeFile(),
-	                    (OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-	                    ErrorType::Internal);
+						(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+						ErrorType::Internal);
 
 	return true;
 }
@@ -120,26 +118,26 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize(void)
 bool CBoxAlgorithmOVCSVFileWriter::processInput(uint32_t inputIndex)
 {
 	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(),
-		"Error while marking algorithm as ready to process",
-		ErrorType::Internal);
+						"Error while marking algorithm as ready to process",
+						ErrorType::Internal);
 	return true;
 }
 
 bool CBoxAlgorithmOVCSVFileWriter::process(void)
 {
 	OV_ERROR_UNLESS_KRF(this->processStreamedMatrix(),
-		"Error have been thrown during streamed matrix process",
-		ErrorType::Internal);
+						"Error have been thrown during streamed matrix process",
+						ErrorType::Internal);
 	OV_ERROR_UNLESS_KRF(this->processStimulation(),
-		"Error have been thrown during stimulation process",
-		ErrorType::Internal);
+						"Error have been thrown during stimulation process",
+						ErrorType::Internal);
 
 	// write into the library
 	if (!m_LastMatrixOnly)
 	{
 		OV_ERROR_UNLESS_KRF(m_WriterLib->writeDataToFile(),
-			(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-			ErrorType::Internal);
+							(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+							ErrorType::Internal);
 	}
 
 	return true;
@@ -152,8 +150,8 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 	for (uint32_t index = 0; index < dynamicBoxContext.getInputChunkCount(0); index++)
 	{
 		OV_ERROR_UNLESS_KRF(m_StreamDecoder.decode(index),
-			"Failed to decode chunk",
-			ErrorType::Internal);
+							"Failed to decode chunk",
+							ErrorType::Internal);
 
 		// represents the properties of the input, no data
 		const IMatrix* matrix = m_StreamDecoder.getOutputMatrix();
@@ -161,14 +159,14 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 		if (m_StreamDecoder.isHeaderReceived())
 		{
 			OV_ERROR_UNLESS_KRF(!m_IsHeaderReceived,
-				"Multiple streamed matrix headers received",
-				ErrorType::BadInput);
+								"Multiple streamed matrix headers received",
+								ErrorType::BadInput);
 			m_IsHeaderReceived = true;
 
 			if (m_TypeIdentifier == OV_TypeId_Signal)
 			{
 				OV_ERROR_UNLESS_KRF(m_StreamDecoder.getOutputSamplingRate() != 0,
-				                "Sampling rate can not be 0", ErrorType::BadInput);
+									"Sampling rate can not be 0", ErrorType::BadInput);
 				std::vector<std::string> dimensionLabels;
 
 				for (uint32_t j = 0; j < matrix->getDimensionSize(0); j++)
@@ -177,25 +175,25 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 				}
 
 				OV_ERROR_UNLESS_KRF(m_WriterLib->setSignalInformation(dimensionLabels, static_cast<uint32_t>(m_StreamDecoder.getOutputSamplingRate()), matrix->getDimensionSize(1)),
-					(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-					ErrorType::Internal);
+									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+									ErrorType::Internal);
 
 				if (m_WriteHeader)
 				{
 					OV_ERROR_UNLESS_KRF(m_WriterLib->writeHeaderToFile(),
-						(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-						ErrorType::Internal);
+										(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+										ErrorType::Internal);
 				}
 			}
 			else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 			{
 				std::vector<std::string> dimensionLabels;
 				std::vector<uint32_t> dimensionSizes;
-				
+
 				for (uint32_t dimensionIndex = 0; dimensionIndex < matrix->getDimensionCount(); dimensionIndex++)
 				{
 					dimensionSizes.push_back(matrix->getDimensionSize(dimensionIndex));
-					
+
 					for (uint32_t j = 0; j < matrix->getDimensionSize(dimensionIndex); j++)
 					{
 						dimensionLabels.push_back(matrix->getDimensionLabel(dimensionIndex, j));
@@ -203,43 +201,42 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 				}
 
 				OV_ERROR_UNLESS_KRF(m_WriterLib->setStreamedMatrixInformation(dimensionSizes, dimensionLabels),
-					(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-					ErrorType::Internal);
+									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+									ErrorType::Internal);
 
 				if (m_WriteHeader)
 				{
 					OV_ERROR_UNLESS_KRF(m_WriterLib->writeHeaderToFile(),
-						(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-						ErrorType::Internal);
+										(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+										ErrorType::Internal);
 				}
 			}
 			else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
 			{
 				std::vector<std::string> channelsLabels;
-				
+
 				for (uint32_t j = 0; j < matrix->getDimensionSize(0); j++)
 				{
 					channelsLabels.push_back(matrix->getDimensionLabel(0, j));
 				}
 
 				OV_ERROR_UNLESS_KRF(m_WriterLib->setFeatureVectorInformation(channelsLabels),
-					(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-					ErrorType::Internal);
-				
+									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+									ErrorType::Internal);
+
 				if (m_WriteHeader)
 				{
 					OV_ERROR_UNLESS_KRF(m_WriterLib->writeHeaderToFile(),
-						(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-						ErrorType::Internal);
+										(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+										ErrorType::Internal);
 				}
-
 			}
 			else if (m_TypeIdentifier == OV_TypeId_Spectrum)
 			{
 				const IMatrix* frequencyAbscissaMatrix = m_StreamDecoder.getOutputFrequencyAbcissa();
 				std::vector<std::string> channelsLabels;
 				std::vector<double> frequencyAbscissa;
-				
+
 				for (uint32_t j = 0; j < matrix->getDimensionSize(0); j++)
 				{
 					channelsLabels.push_back(matrix->getDimensionLabel(0, j));
@@ -251,14 +248,14 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 				}
 
 				OV_ERROR_UNLESS_KRF(m_WriterLib->setSpectrumInformation(channelsLabels, frequencyAbscissa, static_cast<uint32_t>(m_StreamDecoder.getOutputSamplingRate())),
-					(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-					ErrorType::Internal);
-				
+									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+									ErrorType::Internal);
+
 				if (m_WriteHeader)
 				{
 					OV_ERROR_UNLESS_KRF(m_WriterLib->writeHeaderToFile(),
-						(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-						ErrorType::Internal);
+										(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+										ErrorType::Internal);
 				}
 			}
 		}
@@ -270,72 +267,72 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 			if (m_TypeIdentifier == OV_TypeId_Signal)
 			{
 				const uint64_t samplingFrequency = m_StreamDecoder.getOutputSamplingRate();
-				const uint64_t chunkStartTime = dynamicBoxContext.getInputChunkStartTime(0, index);
-				const uint32_t channelCount = matrix->getDimensionSize(0);
-				const uint32_t sampleCount = matrix->getDimensionSize(1);
+				const uint64_t chunkStartTime    = dynamicBoxContext.getInputChunkStartTime(0, index);
+				const uint32_t channelCount      = matrix->getDimensionSize(0);
+				const uint32_t sampleCount       = matrix->getDimensionSize(1);
 
 				for (uint32_t sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
 				{
 					std::vector<double> matrixValues;
 					// get starting and ending time
 
-					const uint64_t timeOfNthSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex); // assuming chunk start is 0
-					const uint64_t sampleTime = chunkStartTime + timeOfNthSample;
-					const double startTime = static_cast<double>(ITimeArithmetics::timeToSeconds(sampleTime));
+					const uint64_t timeOfNthSample       = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex); // assuming chunk start is 0
+					const uint64_t sampleTime            = chunkStartTime + timeOfNthSample;
+					const double startTime               = static_cast<double>(ITimeArithmetics::timeToSeconds(sampleTime));
 					const uint64_t timeOfNthAndOneSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex + 1);
-					const double endTime = static_cast<double>(ITimeArithmetics::timeToSeconds(chunkStartTime + timeOfNthAndOneSample));
+					const double endTime                 = static_cast<double>(ITimeArithmetics::timeToSeconds(chunkStartTime + timeOfNthAndOneSample));
 
 					// get matrix values
 					for (uint32_t channelIndex = 0; channelIndex < channelCount; channelIndex++)
 					{
-						matrixValues.push_back(imatrix->getBuffer()[channelIndex*sampleCount + sampleIndex]);
+						matrixValues.push_back(imatrix->getBuffer()[channelIndex * sampleCount + sampleIndex]);
 					}
 
 					// add sample to the library
 					OV_ERROR_UNLESS_KRF(m_WriterLib->addSample({ startTime, endTime, matrixValues, m_Epoch }),
-						(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-						ErrorType::Internal);
+										(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+										ErrorType::Internal);
 				}
 			}
 			else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 			{
 				const double startTime = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkStartTime(0, index));
-				const double endTime = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkEndTime(0, index));
+				const double endTime   = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkEndTime(0, index));
 				const std::vector<double> streamedMatrixValues(matrix->getBuffer(), matrix->getBuffer() + matrix->getBufferElementCount());
 
 				OV_ERROR_UNLESS_KRF(m_WriterLib->addSample({ startTime, endTime, streamedMatrixValues, m_Epoch }),
-					(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-					ErrorType::Internal);
+									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+									ErrorType::Internal);
 			}
 			else if (m_TypeIdentifier == OV_TypeId_FeatureVector)
 			{
 				const double startTime = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkStartTime(0, index));
-				const double endTime = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkEndTime(0, index));
+				const double endTime   = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkEndTime(0, index));
 				const IMatrix* zmatrix = m_StreamDecoder.getOutputMatrix();
 
 				const std::vector<double> streamedMatrixValues(zmatrix->getBuffer(), zmatrix->getBuffer() + zmatrix->getBufferElementCount());
 
 				OV_ERROR_UNLESS_KRF(m_WriterLib->addSample({ startTime, endTime, streamedMatrixValues, m_Epoch }),
-					(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-					ErrorType::Internal);
+									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+									ErrorType::Internal);
 			}
 			else if (m_TypeIdentifier == OV_TypeId_Spectrum)
 			{
 				const double startTime = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkStartTime(0, index));
-				const double endTime = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkEndTime(0, index));
+				const double endTime   = ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkEndTime(0, index));
 				const std::vector<double> streamedMatrixValues(matrix->getBuffer(), matrix->getBuffer() + matrix->getBufferElementCount());
 
 				OV_ERROR_UNLESS_KRF(m_WriterLib->addSample({ startTime, endTime, streamedMatrixValues, m_Epoch }),
-					(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-					ErrorType::Internal);
+									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+									ErrorType::Internal);
 			}
 
 			m_Epoch++;
 		}
 
 		OV_ERROR_UNLESS_KRF(dynamicBoxContext.markInputAsDeprecated(0, index),
-			"Fail to mark input as deprecated",
-			ErrorType::Internal);
+							"Fail to mark input as deprecated",
+							ErrorType::Internal);
 	}
 
 	return true;
@@ -349,9 +346,9 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation(void)
 	for (uint32_t index = 0; index < dynamicBoxContext.getInputChunkCount(1); index++)
 	{
 		OV_ERROR_UNLESS_KRF(m_StimulationDecoder.decode(index),
-			"Failed to decode stimulation chunk",
-			ErrorType::Internal);
-		
+							"Failed to decode stimulation chunk",
+							ErrorType::Internal);
+
 		if (m_StimulationDecoder.isBufferReceived())
 		{
 			const IStimulationSet* stimulationSet = m_StimulationDecoder.getOutputStimulationSet();
@@ -360,21 +357,21 @@ bool CBoxAlgorithmOVCSVFileWriter::processStimulation(void)
 			for (uint64_t stimulationIndex = 0; stimulationIndex < stimulationSet->getStimulationCount(); stimulationIndex++)
 			{
 				OV_ERROR_UNLESS_KRF(m_WriterLib->addEvent({ stimulationSet->getStimulationIdentifier(stimulationIndex),
-					ITimeArithmetics::timeToSeconds(stimulationSet->getStimulationDate(stimulationIndex)),
-					ITimeArithmetics::timeToSeconds(stimulationSet->getStimulationDuration(stimulationIndex)) }),
-					(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-					ErrorType::Internal);
+										ITimeArithmetics::timeToSeconds(stimulationSet->getStimulationDate(stimulationIndex)),
+										ITimeArithmetics::timeToSeconds(stimulationSet->getStimulationDuration(stimulationIndex)) }),
+									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+									ErrorType::Internal);
 			}
 			
 			// set NoEventUntilDate to prevent time that will be empty of stimulations until the end of the last chunk
 			OV_ERROR_UNLESS_KRF(m_WriterLib->noEventsUntilDate(ITimeArithmetics::timeToSeconds(dynamicBoxContext.getInputChunkEndTime(1, (dynamicBoxContext.getInputChunkCount(1) - 1)))),
-				(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
-				ErrorType::Internal);
+								(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
+								ErrorType::Internal);
 		}
 
 		OV_ERROR_UNLESS_KRF(dynamicBoxContext.markInputAsDeprecated(1, index),
-		                    "Failed to mark stimulations input as deprecated",
-		                    ErrorType::Internal);
+							"Failed to mark stimulations input as deprecated",
+							ErrorType::Internal);
 	}
 
 	return true;

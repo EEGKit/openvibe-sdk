@@ -36,11 +36,11 @@ namespace OpenViBEPlugins
 
 		public:
 
-			std::vector < OpenViBE::IMatrix* > m_vMatrix;
-			std::vector < OpenViBE::Kernel::IAlgorithmProxy* > m_vStreamDecoder;
+			std::vector<OpenViBE::IMatrix*> m_vMatrix;
+			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_vStreamDecoder;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
 
-			CEquationParser * m_pEquationParser;
+			CEquationParser* m_pEquationParser;
 
 			OpenViBE::uint64 m_ui64EquationType;
 			OpenViBE::float64 m_f64SpecialEquationParameter;
@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 			OpenViBE::boolean m_bCheckChunkDates;
 		};
 
-		class CBoxAlgorithmSimpleDSPListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmSimpleDSPListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -70,7 +70,7 @@ namespace OpenViBEPlugins
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getInputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(0, l_oTypeIdentifier);
-				for(i=0; i<rBox.getInputCount(); i++)
+				for (i = 0; i < rBox.getInputCount(); i++)
 				{
 					rBox.setInputType(i, l_oTypeIdentifier);
 				}
@@ -83,7 +83,7 @@ namespace OpenViBEPlugins
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(0, l_oTypeIdentifier);
-				for(i=0; i<rBox.getInputCount(); i++)
+				for (i = 0; i < rBox.getInputCount(); i++)
 				{
 					rBox.setInputType(i, l_oTypeIdentifier);
 				}
@@ -98,20 +98,20 @@ namespace OpenViBEPlugins
 		public:
 
 			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Simple DSP"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Bruno Renier / Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA / IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Apply mathematical formulaes to matrices."); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Simple DSP"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Bruno Renier / Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA / IRISA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Apply mathematical formulaes to matrices."); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Basic"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Signal processing/Basic"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_SimpleDSP; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSimpleDSP(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmSimpleDSPListener; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_SimpleDSP; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSimpleDSP(); }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmSimpleDSPListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const

@@ -28,13 +28,8 @@ namespace OpenViBE
 				const OpenViBE::CString& sDefaultValue) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Server_ServerExtensionProto)
-
 		};
-
 	}
-
 }
 
 #endif // __OpenViBE_Kernel_Server_IServerExtensionProto_H_
-
-

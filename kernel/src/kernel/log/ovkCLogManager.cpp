@@ -7,32 +7,27 @@ using namespace OpenViBE::Kernel;
 using namespace std;
 
 CLogManager::CLogManager(const IKernelContext& rKernelContext)
-	:TKernelObject<ILogManager>(rKernelContext)
-	,m_eCurrentLogLevel(LogLevel_Info)
-{
-}
+	: TKernelObject<ILogManager>(rKernelContext)
+	  , m_eCurrentLogLevel(LogLevel_Info) {}
 
 boolean CLogManager::isActive(ELogLevel eLogLevel)
 {
-	map<ELogLevel, boolean>::iterator itLogLevel=m_vActiveLevel.find(eLogLevel);
-	if(itLogLevel==m_vActiveLevel.end())
-	{
-		return true;
-	}
+	map<ELogLevel, boolean>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
+	if (itLogLevel == m_vActiveLevel.end()) { return true; }
 	return itLogLevel->second;
 }
 
 boolean CLogManager::activate(ELogLevel eLogLevel, boolean bActive)
 {
-	m_vActiveLevel[eLogLevel]=bActive;
+	m_vActiveLevel[eLogLevel] = bActive;
 	return true;
 }
 
 boolean CLogManager::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, boolean bActive)
 {
-	for(int i=eStartLogLevel; i<=eEndLogLevel; i++)
+	for (int i = eStartLogLevel; i <= eEndLogLevel; i++)
 	{
-		m_vActiveLevel[ELogLevel(i)]=bActive;
+		m_vActiveLevel[ELogLevel(i)] = bActive;
 	}
 	return true;
 }
@@ -120,7 +115,7 @@ void CLogManager::log(const char* rValue)
 		GRAB_OWNERSHIP;
 
 		std::string l_sCopy(rValue);
-		if(l_sCopy.length()>0 && l_sCopy[l_sCopy.length()-1]=='\n')
+		if (l_sCopy.length() > 0 && l_sCopy[l_sCopy.length() - 1] == '\n')
 		{
 			// we are done, release
 			m_oOwner = std::thread::id();
@@ -134,7 +129,7 @@ void CLogManager::log(const ELogLevel eLogLevel)
 	{
 		GRAB_OWNERSHIP;
 
-		m_eCurrentLogLevel=eLogLevel;
+		m_eCurrentLogLevel = eLogLevel;
 	}
 
 	logForEach<ELogLevel>(eLogLevel);
@@ -149,18 +144,12 @@ boolean CLogManager::addListener(ILogListener* pListener)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	if(pListener==NULL)
-	{
-		return false;
-	}
+	if (pListener == NULL) { return false; }
 
-	vector<ILogListener*>::iterator itLogListener=m_vListener.begin();
-	while(itLogListener!=m_vListener.end())
+	vector<ILogListener*>::iterator itLogListener = m_vListener.begin();
+	while (itLogListener != m_vListener.end())
 	{
-		if((*itLogListener)==pListener)
-		{
-			return false;
-		}
+		if ((*itLogListener) == pListener) { return false; }
 		++itLogListener;
 	}
 
@@ -172,10 +161,10 @@ boolean CLogManager::removeListener(ILogListener* pListener)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	vector<ILogListener*>::iterator itLogListener=m_vListener.begin();
-	while(itLogListener!=m_vListener.end())
+	vector<ILogListener*>::iterator itLogListener = m_vListener.begin();
+	while (itLogListener != m_vListener.end())
 	{
-		if((*itLogListener)==pListener)
+		if ((*itLogListener) == pListener)
 		{
 			m_vListener.erase(itLogListener);
 			return true;	// due to constraint in addListener(), pListener can be in the array only once, so we can return

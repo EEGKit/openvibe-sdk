@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CBoxAlgorithmVotingClassifier : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmVotingClassifier : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -46,10 +46,10 @@ namespace OpenViBEPlugins
 				OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_pStimulationSet;
 				OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
 				OpenViBE::boolean m_bTwoValueInput;
-				std::vector < std::pair < OpenViBE::float64, OpenViBE::uint64 > > m_vScore;
+				std::vector<std::pair<OpenViBE::float64, OpenViBE::uint64>> m_vScore;
 			} SInput;
 
-			std::map < OpenViBE::uint32, CBoxAlgorithmVotingClassifier::SInput > m_vClassificationResults;
+			std::map<OpenViBE::uint32, CBoxAlgorithmVotingClassifier::SInput> m_vClassificationResults;
 
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_oClassificationChoiceEncoder;
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IStimulationSet*> ip_pClassificationChoiceStimulationSet;
@@ -59,23 +59,21 @@ namespace OpenViBEPlugins
 		};
 
 
-		class CBoxAlgorithmVotingClassifierListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmVotingClassifierListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
 			CBoxAlgorithmVotingClassifierListener(void)
-				:m_oInputTypeIdentifier(OV_TypeId_Stimulations)
-			{
-			}
+				: m_oInputTypeIdentifier(OV_TypeId_Stimulations) { }
 
 			virtual OpenViBE::boolean onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
 				OpenViBE::CIdentifier l_oInputTypeIdentifier;
 				rBox.getInputType(ui32Index, l_oInputTypeIdentifier);
-				if(l_oInputTypeIdentifier==OV_TypeId_Stimulations || l_oInputTypeIdentifier==OV_TypeId_StreamedMatrix)
+				if (l_oInputTypeIdentifier == OV_TypeId_Stimulations || l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix)
 				{
-					m_oInputTypeIdentifier=l_oInputTypeIdentifier;
-					for(OpenViBE::uint32 i=0; i<rBox.getInputCount(); i++)
+					m_oInputTypeIdentifier = l_oInputTypeIdentifier;
+					for (OpenViBE::uint32 i = 0; i < rBox.getInputCount(); i++)
 					{
 						rBox.setInputType(i, m_oInputTypeIdentifier);
 					}
@@ -89,7 +87,7 @@ namespace OpenViBEPlugins
 
 			virtual OpenViBE::boolean onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
-				for(OpenViBE::uint32 i=0; i<rBox.getInputCount(); i++)
+				for (OpenViBE::uint32 i = 0; i < rBox.getInputCount(); i++)
 				{
 					char l_sBuffer[1024];
 					sprintf(l_sBuffer, "Classification result %i", i);
@@ -112,34 +110,34 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Voting Classifier"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Majority voting classifier. Returns the chosen class."); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Voting Classifier"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Majority voting classifier. Returns the chosen class."); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Each classifier used as input is assumed to have its own two-class output stream. Mainly designed for P300 scenario use."); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Classification"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Classification"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_VotingClassifier; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Classification::CBoxAlgorithmVotingClassifier; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_VotingClassifier; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CBoxAlgorithmVotingClassifier; }
 
 			virtual OpenViBE::boolean getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
-				rBoxAlgorithmPrototype.addInput  ("Classification result 1", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addInput  ("Classification result 2", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addOutput ("Classification choice",   OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addSetting("Number of repetitions",   OV_TypeId_Integer,     "12");
-				rBoxAlgorithmPrototype.addSetting("Target class label",      OV_TypeId_Stimulation, "OVTK_StimulationId_Target");
-				rBoxAlgorithmPrototype.addSetting("Non target class label",  OV_TypeId_Stimulation, "OVTK_StimulationId_NonTarget");
-				rBoxAlgorithmPrototype.addSetting("Reject class label",      OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+				rBoxAlgorithmPrototype.addInput("Classification result 1", OV_TypeId_Stimulations);
+				rBoxAlgorithmPrototype.addInput("Classification result 2", OV_TypeId_Stimulations);
+				rBoxAlgorithmPrototype.addOutput("Classification choice", OV_TypeId_Stimulations);
+				rBoxAlgorithmPrototype.addSetting("Number of repetitions", OV_TypeId_Integer, "12");
+				rBoxAlgorithmPrototype.addSetting("Target class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Target");
+				rBoxAlgorithmPrototype.addSetting("Non target class label", OV_TypeId_Stimulation, "OVTK_StimulationId_NonTarget");
+				rBoxAlgorithmPrototype.addSetting("Reject class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
 				rBoxAlgorithmPrototype.addSetting("Result class label base", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_01");
-				rBoxAlgorithmPrototype.addSetting("Choose one if ex-aequo",  OV_TypeId_Boolean,     "false");
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddInput);
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				rBoxAlgorithmPrototype.addSetting("Choose one if ex-aequo", OV_TypeId_Boolean, "false");
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 				return true;
 			}
 

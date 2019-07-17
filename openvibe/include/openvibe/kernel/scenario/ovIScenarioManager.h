@@ -37,7 +37,7 @@ namespace OpenViBE
 			 *       identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextScenarioIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
+				const OpenViBE::CIdentifier& rPreviousIdentifier) const =0;
 
 			virtual bool isScenario(const OpenViBE::CIdentifier& scenarioIdentifier) const = 0;
 			/**
@@ -48,7 +48,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean createScenario(
-				OpenViBE::CIdentifier& rScenarioIdentifier)=0;
+				OpenViBE::CIdentifier& rScenarioIdentifier) =0;
 
 			/**
 			 * @brief Import a scenario from a memory buffer and insert it in the scenario manager
@@ -59,10 +59,10 @@ namespace OpenViBE
 			 * @retval false In case of failure
 			 */
 			virtual bool importScenario(
-			        OpenViBE::CIdentifier& newScenarioIdentifier,
-			        const OpenViBE::IMemoryBuffer& inputMemoryBuffer,
-			        const OpenViBE::CIdentifier& scenarioImporterAlgorithmIdentifier
-			        ) = 0;
+				OpenViBE::CIdentifier& newScenarioIdentifier,
+				const OpenViBE::IMemoryBuffer& inputMemoryBuffer,
+				const OpenViBE::CIdentifier& scenarioImporterAlgorithmIdentifier
+			) = 0;
 
 			/**
 			 * @brief Import a scenario from a file and insert it in the scenario manager
@@ -73,10 +73,10 @@ namespace OpenViBE
 			 * @retval false In case of failure
 			 */
 			virtual bool importScenarioFromFile(
-			        OpenViBE::CIdentifier& newScenarioIdentifier,
-			        const CString& fileName,
-			        const OpenViBE::CIdentifier& scenarioImporterAlgorithmIdentifier
-			        ) = 0;
+				OpenViBE::CIdentifier& newScenarioIdentifier,
+				const CString& fileName,
+				const OpenViBE::CIdentifier& scenarioImporterAlgorithmIdentifier
+			) = 0;
 
 			/**
 			 * @brief Export a scenario to a memory buffer
@@ -87,10 +87,10 @@ namespace OpenViBE
 			 * @retval false In case of failure
 			 */
 			virtual bool exportScenario(
-			        OpenViBE::IMemoryBuffer& outputMemoryBuffer,
-			        const OpenViBE::CIdentifier& scenarioIdentifier,
-			        const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier
-			        ) const = 0;
+				OpenViBE::IMemoryBuffer& outputMemoryBuffer,
+				const OpenViBE::CIdentifier& scenarioIdentifier,
+				const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier
+			) const = 0;
 
 			/**
 			 * @brief Export a scenario to a file
@@ -101,10 +101,10 @@ namespace OpenViBE
 			 * @retval false In case of failure
 			 */
 			virtual bool exportScenarioToFile(
-			        const OpenViBE::CString& fileName,
-			        const OpenViBE::CIdentifier& scenarioIdentifier,
-			        const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier
-			        ) const = 0;
+				const OpenViBE::CString& fileName,
+				const OpenViBE::CIdentifier& scenarioIdentifier,
+				const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier
+			) const = 0;
 
 			/**
 			 * \brief Releases an existing scenario
@@ -113,7 +113,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean releaseScenario(
-				const OpenViBE::CIdentifier& rScenarioIdentifier)=0;
+				const OpenViBE::CIdentifier& rScenarioIdentifier) =0;
 			/**
 			 * \brief Gets details on a specific scenario
 			 * \param rScenarioIdentifier [in] : the scenario identifier which details should be returned
@@ -121,7 +121,7 @@ namespace OpenViBE
 			 * \warning Calling this function with a bad identifier causes a crash
 			 */
 			virtual OpenViBE::Kernel::IScenario& getScenario(
-				const OpenViBE::CIdentifier& rScenarioIdentifier)=0;
+				const OpenViBE::CIdentifier& rScenarioIdentifier) =0;
 
 
 			/** @{
@@ -147,41 +147,41 @@ namespace OpenViBE
 			virtual void cloneScenarioImportersAndExporters(const IScenarioManager& scenarioManager) = 0;
 
 			virtual bool importScenarioFromFile(
-			        OpenViBE::CIdentifier& newScenarioIdentifier,
-			        const OpenViBE::CIdentifier& importContext,
-			        const OpenViBE::CString& fileName) = 0;
+				OpenViBE::CIdentifier& newScenarioIdentifier,
+				const OpenViBE::CIdentifier& importContext,
+				const OpenViBE::CString& fileName) = 0;
 
 			virtual bool registerScenarioImporter(
-			        const OpenViBE::CIdentifier& importContext,
-			        const OpenViBE::CString& fileNameExtension,
-			        const OpenViBE::CIdentifier& scenarioImporterAlgorithmIdentifier
-			        ) = 0;
+				const OpenViBE::CIdentifier& importContext,
+				const OpenViBE::CString& fileNameExtension,
+				const OpenViBE::CIdentifier& scenarioImporterAlgorithmIdentifier
+			) = 0;
 
 			virtual bool unregisterScenarioImporter(
-			        const OpenViBE::CIdentifier& importContext,
-			        const OpenViBE::CString& fileNameExtension
-			        ) = 0;
+				const OpenViBE::CIdentifier& importContext,
+				const OpenViBE::CString& fileNameExtension
+			) = 0;
 
 			virtual OpenViBE::CIdentifier getNextScenarioImportContext(const CIdentifier& importContext) const = 0;
 			virtual OpenViBE::CString getNextScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension) const = 0;
 			virtual OpenViBE::CIdentifier getScenarioImporterAlgorithmIdentifier(const CIdentifier& importContext, const CString& fileNameExtension) const = 0;
 
 			virtual bool exportScenarioToFile(
-			        const OpenViBE::CIdentifier& exportContext,
-			        const CString& fileName,
-			        const OpenViBE::CIdentifier& scenarioIdentifier
-			        ) = 0;
+				const OpenViBE::CIdentifier& exportContext,
+				const CString& fileName,
+				const OpenViBE::CIdentifier& scenarioIdentifier
+			) = 0;
 
 			virtual bool registerScenarioExporter(
-			        const OpenViBE::CIdentifier& exportContext,
-			        const CString& fileNameExtension,
-			        const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier
-			        ) = 0;
+				const OpenViBE::CIdentifier& exportContext,
+				const CString& fileNameExtension,
+				const OpenViBE::CIdentifier& scenarioExporterAlgorithmIdentifier
+			) = 0;
 
 			virtual bool unregisterScenarioExporter(
-			        const OpenViBE::CIdentifier& exportContext,
-			        const CString& fileNameExtension
-			        ) = 0;
+				const OpenViBE::CIdentifier& exportContext,
+				const CString& fileNameExtension
+			) = 0;
 
 			virtual OpenViBE::CIdentifier getNextScenarioExportContext(const CIdentifier& exportContext) const = 0;
 			virtual OpenViBE::CString getNextScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension) const = 0;

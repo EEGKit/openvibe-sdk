@@ -64,10 +64,10 @@ namespace OpenViBE
 			 * to true when cloning a scenario.
 			 */
 			virtual bool merge(
-			        const OpenViBE::Kernel::IScenario& scenario,
-			        OpenViBE::Kernel::IScenario::IScenarioMergeCallback* scenarioMergeCallback,
-			        bool mergeSettings,
-			        bool preserveIdentifiers) = 0;
+				const OpenViBE::Kernel::IScenario& scenario,
+				OpenViBE::Kernel::IScenario::IScenarioMergeCallback* scenarioMergeCallback,
+				bool mergeSettings,
+				bool preserveIdentifiers) = 0;
 
 			//@}
 			/** \name Box management */
@@ -365,36 +365,36 @@ namespace OpenViBE
 			virtual bool hasIO() const = 0;
 
 			virtual bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
-							const OpenViBE::CIdentifier& boxIdentifier,
-							const OpenViBE::uint32 boxInputIndex) = 0;
+											  const OpenViBE::CIdentifier& boxIdentifier,
+											  const OpenViBE::uint32 boxInputIndex) = 0;
 
 			virtual bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
-							const OpenViBE::CIdentifier& boxIdentifier,
-							const OpenViBE::CIdentifier& boxInputIdentifier) = 0;
+											  const OpenViBE::CIdentifier& boxIdentifier,
+											  const OpenViBE::CIdentifier& boxInputIdentifier) = 0;
 
 			virtual bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
-							const OpenViBE::CIdentifier& boxIdentifier,
-							const OpenViBE::uint32 boxOutputIndex) = 0;
+											   const OpenViBE::CIdentifier& boxIdentifier,
+											   const OpenViBE::uint32 boxOutputIndex) = 0;
 
 			virtual bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
-							const OpenViBE::CIdentifier& boxIdentifier,
-							const OpenViBE::CIdentifier& boxOutputIdentifier) = 0;
+											   const OpenViBE::CIdentifier& boxIdentifier,
+											   const OpenViBE::CIdentifier& boxOutputIdentifier) = 0;
 
 			virtual bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
-							OpenViBE::CIdentifier& boxIdentifier,
-							OpenViBE::uint32& boxInputIndex) const = 0;
+											  OpenViBE::CIdentifier& boxIdentifier,
+											  OpenViBE::uint32& boxInputIndex) const = 0;
 
 			virtual bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
-							OpenViBE::CIdentifier& boxIdentifier,
-							OpenViBE::CIdentifier& boxInputIdentifier) const = 0;
+											  OpenViBE::CIdentifier& boxIdentifier,
+											  OpenViBE::CIdentifier& boxInputIdentifier) const = 0;
 
 			virtual bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
-							OpenViBE::CIdentifier& boxIdentifier,
-							OpenViBE::uint32& boxOutputIndex) const = 0;
+											   OpenViBE::CIdentifier& boxIdentifier,
+											   OpenViBE::uint32& boxOutputIndex) const = 0;
 
 			virtual bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
-							OpenViBE::CIdentifier& boxIdentifier,
-							OpenViBE::CIdentifier& boxOutputIdentifier) const = 0;
+											   OpenViBE::CIdentifier& boxIdentifier,
+											   OpenViBE::CIdentifier& boxOutputIdentifier) const = 0;
 
 			virtual bool removeScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex) = 0;
 
@@ -567,7 +567,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false if the box does not exist
 			 */
-			virtual bool removeDeprecatedInterfacorsFromBox(const CIdentifier &boxIdentifier) = 0;
+			virtual bool removeDeprecatedInterfacorsFromBox(const CIdentifier& boxIdentifier) = 0;
 
 			/**
 			 * \brief Check if scenario contains a box with a deprecated interfacor due to an incomplete update
@@ -597,4 +597,3 @@ namespace OpenViBE
 		};
 	}
 }
-

@@ -37,7 +37,7 @@ namespace OpenViBETest
 		printErrorCore(expression, file, line);
 		std::cerr << "Error message: " << message << std::endl;
 	}
-	
+
 	void printError(const char* expression, const std::string& message, const char* file, int line)
 	{
 		printError(expression, message.c_str(), file, line);

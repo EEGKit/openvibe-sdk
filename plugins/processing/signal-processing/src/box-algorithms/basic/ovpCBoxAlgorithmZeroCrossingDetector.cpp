@@ -42,7 +42,7 @@ boolean CBoxAlgorithmZeroCrossingDetector::initialize(void)
 	m_oEncoder2.initialize(*this, 2);
 
 	m_f64HysteresisThreshold = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_f64WindowTime = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_f64WindowTime          = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	OV_ERROR_UNLESS_KRF(
 		m_f64WindowTime > 0,
@@ -56,20 +56,20 @@ boolean CBoxAlgorithmZeroCrossingDetector::initialize(void)
 	CIdentifier l_oTypeIdentifier;
 	this->getStaticBoxContext().getInputType(0, l_oTypeIdentifier);
 
-	if(l_oTypeIdentifier==OV_TypeId_Signal)
+	if (l_oTypeIdentifier == OV_TypeId_Signal)
 	{
-		OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmZeroCrossingDetector >* l_pDecoder=new OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmZeroCrossingDetector >(*this, 0);
-		OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmZeroCrossingDetector >* l_pEncoder=new OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmZeroCrossingDetector >(*this, 0);
+		OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>* l_pDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
+		OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>* l_pEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
 		l_pEncoder->getInputSamplingRate().setReferenceTarget(l_pDecoder->getOutputSamplingRate());
-		m_oDecoder=l_pDecoder;
-		m_oEncoder0=l_pEncoder;
+		m_oDecoder  = l_pDecoder;
+		m_oEncoder0 = l_pEncoder;
 	}
-	else if(l_oTypeIdentifier==OV_TypeId_StreamedMatrix)
+	else if (l_oTypeIdentifier == OV_TypeId_StreamedMatrix)
 	{
-		OpenViBEToolkit::TStreamedMatrixDecoder < CBoxAlgorithmZeroCrossingDetector >* l_pDecoder=new OpenViBEToolkit::TStreamedMatrixDecoder < CBoxAlgorithmZeroCrossingDetector >(*this, 0);
-		OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmZeroCrossingDetector >* l_pEncoder=new OpenViBEToolkit::TStreamedMatrixEncoder < CBoxAlgorithmZeroCrossingDetector >(*this, 0);
-		m_oDecoder=l_pDecoder;
-		m_oEncoder0=l_pEncoder;
+		OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>* l_pDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
+		OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>* l_pEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
+		m_oDecoder                                                                             = l_pDecoder;
+		m_oEncoder0                                                                            = l_pEncoder;
 	}
 	else
 	{
@@ -96,27 +96,27 @@ boolean CBoxAlgorithmZeroCrossingDetector::processInput(uint32 ui32InputIndex)
 
 boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 {
-	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
+	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 	uint32 i, j, k;
 
-	for(i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		m_oDecoder.decode(i);
 		m_oEncoder1.getInputStimulationSet()->clear();
 
-		uint32 l_ui32ChannelCount=m_oDecoder.getOutputMatrix()->getDimensionSize(0);
-		uint32 l_ui32SampleCount=m_oDecoder.getOutputMatrix()->getDimensionSize(1);
+		uint32 l_ui32ChannelCount = m_oDecoder.getOutputMatrix()->getDimensionSize(0);
+		uint32 l_ui32SampleCount  = m_oDecoder.getOutputMatrix()->getDimensionSize(1);
 
-		if(m_oDecoder.isHeaderReceived())
+		if (m_oDecoder.isHeaderReceived())
 		{
 			OpenViBEToolkit::Tools::Matrix::copyDescription(*m_oEncoder0.getInputMatrix(), *m_oDecoder.getOutputMatrix());
-			IMatrix* l_pOutputMatrix2=m_oEncoder2.getInputMatrix();
+			IMatrix* l_pOutputMatrix2 = m_oEncoder2.getInputMatrix();
 			l_pOutputMatrix2->setDimensionCount(2);
 			l_pOutputMatrix2->setDimensionSize(0, l_ui32ChannelCount);
 			l_pOutputMatrix2->setDimensionSize(1, l_ui32SampleCount);
 
 			m_vSignalHistory.clear();
-			m_vSignalHistory.resize(l_ui32ChannelCount,0);
+			m_vSignalHistory.resize(l_ui32ChannelCount, 0);
 			m_vStateHistory.clear();
 			m_vStateHistory.resize(l_ui32ChannelCount);
 
@@ -135,24 +135,24 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 		{
 			if (m_ui64ChunkCount == 0)
 			{
-				m_ui32SamplingRate = l_ui32SampleCount * static_cast<uint32>( (1LL<<32) / (l_rDynamicBoxContext.getInputChunkEndTime(0, i)-l_rDynamicBoxContext.getInputChunkStartTime(0, i)) );
-				m_ui32WindowTime = static_cast<uint32>(m_f64WindowTime*m_ui32SamplingRate);
+				m_ui32SamplingRate = l_ui32SampleCount * static_cast<uint32>((1LL << 32) / (l_rDynamicBoxContext.getInputChunkEndTime(0, i) - l_rDynamicBoxContext.getInputChunkStartTime(0, i)));
+				m_ui32WindowTime   = static_cast<uint32>(m_f64WindowTime * m_ui32SamplingRate);
 			}
 
-			float64* l_pInputBuffer = m_oDecoder.getOutputMatrix()->getBuffer();
+			float64* l_pInputBuffer   = m_oDecoder.getOutputMatrix()->getBuffer();
 			float64* l_pOutputBuffer0 = m_oEncoder0.getInputMatrix()->getBuffer();
 			float64* l_pOutputBuffer2 = m_oEncoder2.getInputMatrix()->getBuffer();
 
 			// ZC detector, with hysteresis
-			std::vector < float64 > l_vSignal(l_ui32SampleCount + 1, 0);
+			std::vector<float64> l_vSignal(l_ui32SampleCount + 1, 0);
 
-			for (j=0; j<l_ui32ChannelCount; j++)
+			for (j = 0; j < l_ui32ChannelCount; j++)
 			{
 				// signal, with the last sample of the previous chunk
 				l_vSignal[0] = m_vSignalHistory[j];
-				for (k=0; k<l_ui32SampleCount; k++)
+				for (k = 0; k < l_ui32SampleCount; k++)
 				{
-					l_vSignal[k + 1] = l_pInputBuffer[k + j*l_ui32SampleCount];
+					l_vSignal[k + 1] = l_pInputBuffer[k + j * l_ui32SampleCount];
 				}
 				m_vSignalHistory[j] = l_vSignal.back();
 
@@ -161,7 +161,7 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 					m_vStateHistory[j] = (l_vSignal[1] >= 0) ? 1 : -1;
 				}
 
-				for (k=0; k<l_ui32SampleCount; k++)
+				for (k = 0; k < l_ui32SampleCount; k++)
 				{
 					uint64_t stimulationDate;
 					if (m_ui32SamplingRate > 0)
@@ -180,14 +180,14 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 					if ((m_vStateHistory[j] == 1) && (l_vSignal[k] > -m_f64HysteresisThreshold) && (l_vSignal[k + 1] < -m_f64HysteresisThreshold))
 					{
 						// negative ZC : positive-to-negative
-						l_pOutputBuffer0[k + j*l_ui32SampleCount] = -1;
+						l_pOutputBuffer0[k + j * l_ui32SampleCount] = -1;
 						m_oEncoder1.getInputStimulationSet()->appendStimulation(m_ui64StimulationId2, stimulationDate, 0);
 						m_vStateHistory[j] = -1;
 					}
 					else if ((m_vStateHistory[j] == -1) && (l_vSignal[k] < m_f64HysteresisThreshold) && (l_vSignal[k + 1] > m_f64HysteresisThreshold))
 					{
 						// positive ZC : negative-to-positive
-						l_pOutputBuffer0[k + j*l_ui32SampleCount] = 1;
+						l_pOutputBuffer0[k + j * l_ui32SampleCount] = 1;
 						m_oEncoder1.getInputStimulationSet()->appendStimulation(m_ui64StimulationId1, stimulationDate, 0);
 						m_vStateHistory[j] = 1;
 
@@ -197,22 +197,21 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 					}
 					else
 					{
-						l_pOutputBuffer0[k + j*l_ui32SampleCount] = 0;
+						l_pOutputBuffer0[k + j * l_ui32SampleCount] = 0;
 					}
-
 				}
 			}
 
 			// rythm estimation, in events per min
-			for (j=0; j<l_ui32ChannelCount; j++)
+			for (j = 0; j < l_ui32ChannelCount; j++)
 			{
 				int compt = 0;
 
 				// supression of peaks older than m_ui32WindowTime by decreasing indices, to avoid overflow
-				for (size_t index=m_vMemoryChunk[j].size(); index>=1; index--)
+				for (size_t index = m_vMemoryChunk[j].size(); index >= 1; index--)
 				{
 					size_t kk = index - 1;
-					if (((m_ui64ChunkCount+1)*l_ui32SampleCount - (m_vMemorySample[j][kk] + m_vMemoryChunk[j][kk]*l_ui32SampleCount)) < m_ui32WindowTime)
+					if (((m_ui64ChunkCount + 1) * l_ui32SampleCount - (m_vMemorySample[j][kk] + m_vMemoryChunk[j][kk] * l_ui32SampleCount)) < m_ui32WindowTime)
 					{
 						compt += 1;
 					}
@@ -223,9 +222,9 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 					}
 				}
 
-				for (k=0; k<l_ui32SampleCount; k++)
+				for (k = 0; k < l_ui32SampleCount; k++)
 				{
-					l_pOutputBuffer2[k + j*l_ui32SampleCount] = 60.0*compt/m_f64WindowTime;
+					l_pOutputBuffer2[k + j * l_ui32SampleCount] = 60.0 * compt / m_f64WindowTime;
 				}
 			}
 
@@ -235,7 +234,7 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 			m_oEncoder1.encodeBuffer();
 			m_oEncoder2.encodeBuffer();
 		}
-		if(m_oDecoder.isEndReceived())
+		if (m_oDecoder.isEndReceived())
 		{
 			m_oEncoder0.encodeEnd();
 			m_oEncoder1.encodeEnd();

@@ -50,7 +50,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Plugins::IBoxProto
 			 */
 			virtual OpenViBE::boolean getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const=0;
+				OpenViBE::Kernel::IBoxProto& rPrototype) const =0;
 			/**
 			 * \brief Gets the stock item to display with this algorithm
 			 * \return The stock item to display with this algorithm.
@@ -102,9 +102,7 @@ namespace OpenViBE
 			 * can be freed safely, no more call will be done on this
 			 * box listener.
 			 */
-			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const
-			{
-			}
+			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { }
 
 			//@}
 

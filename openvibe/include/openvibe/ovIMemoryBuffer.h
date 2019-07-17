@@ -36,7 +36,7 @@ namespace OpenViBE
 		 *       then \e true is returned and nothing is done.
 		 */
 		virtual OpenViBE::boolean reserve(
-			const OpenViBE::uint64 ui64Size)=0;
+			const OpenViBE::uint64 ui64Size) =0;
 		/**
 		 * \brief Changes the size of this memory buffer
 		 * \param ui64Size [in] : the new size to give to the buffer
@@ -50,25 +50,25 @@ namespace OpenViBE
 		 */
 		virtual OpenViBE::boolean setSize(
 			const OpenViBE::uint64 ui64Size,
-			const OpenViBE::boolean bDiscard)=0;
+			const OpenViBE::boolean bDiscard) =0;
 		/**
 		 * \brief Gets the current size of this memory buffer
 		 * \return the current size of this memory buffer
 		 * \sa setSize
 		 */
-		virtual OpenViBE::uint64 getSize(void) const=0;
+		virtual OpenViBE::uint64 getSize(void) const =0;
 		/**
 		 * \brief Gets a direct pointer to the byte array for read/write access
 		 * \return a direct pointer to the byte array for read/write access
 		 * \sa getSize
 		 */
-		virtual OpenViBE::uint8* getDirectPointer(void)=0;
+		virtual OpenViBE::uint8* getDirectPointer(void) =0;
 		/**
 		 * \brief Gets a direct pointer to the byte array for read access
 		 * \return a direct pointer to the byte array for read access
 		 * \sa getSize
 		 */
-		virtual const OpenViBE::uint8* getDirectPointer(void) const=0;
+		virtual const OpenViBE::uint8* getDirectPointer(void) const =0;
 		/**
 		 * \brief Appends data to this memory buffer
 		 * \param pBuffer [in] : the buffer containing data that should be appended
@@ -78,7 +78,7 @@ namespace OpenViBE
 		 */
 		virtual OpenViBE::boolean append(
 			const OpenViBE::uint8* pBuffer,
-			const OpenViBE::uint64 ui64BufferSize)=0;
+			const OpenViBE::uint64 ui64BufferSize) =0;
 		/**
 		 * \brief Appends data to this memory buffer
 		 * \param rMemoryBuffer [in] : the memory buffer containing data that should be appended
@@ -93,12 +93,12 @@ namespace OpenViBE
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_MemoryBuffer);
 
-		const OpenViBE::uint8& operator [] (const OpenViBE::uint64 ui64Index) const
+		const OpenViBE::uint8& operator [](const OpenViBE::uint64 ui64Index) const
 		{
 			return this->getDirectPointer()[ui64Index];
 		}
 
-		OpenViBE::uint8& operator [] (const OpenViBE::uint64 ui64Index)
+		OpenViBE::uint8& operator [](const OpenViBE::uint64 ui64Index)
 		{
 			return this->getDirectPointer()[ui64Index];
 		}

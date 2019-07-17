@@ -121,7 +121,7 @@ namespace OpenViBE
 	{
 		// List of properties
 		boost::optional<std::string> scenarioFile;
-		boost::optional<std::string> scenarioName;	
+		boost::optional<std::string> scenarioName;
 
 		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
@@ -139,7 +139,6 @@ namespace OpenViBE
 	*/
 	struct ResetCommand : ICommand
 	{
-
 		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
@@ -164,7 +163,6 @@ namespace OpenViBE
 	*/
 	struct RunScenarioCommand : ICommand
 	{
-
 	public:
 
 		using Token = std::pair<std::string, std::string>;
@@ -200,7 +198,6 @@ namespace OpenViBE
 	*/
 	struct SetupScenarioCommand : ICommand
 	{
-
 		using Token = std::pair<std::string, std::string>;
 
 		// List of properties

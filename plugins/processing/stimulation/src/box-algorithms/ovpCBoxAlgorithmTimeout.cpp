@@ -13,22 +13,22 @@ bool CBoxAlgorithmTimeout::initialize(void)
 {
 	m_TimeoutState = ETimeout_No;
 
-	m_StimulationEncoder.initialize(*this,0);
-	
+	m_StimulationEncoder.initialize(*this, 0);
+
 	double timeout = static_cast<double>(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
 	OV_ERROR_UNLESS_KRF(timeout > 0,
-	                    "Timeout delay value must be positive and non-zero",
-	                    ErrorType::BadSetting);
+						"Timeout delay value must be positive and non-zero",
+						ErrorType::BadSetting);
 	OV_ERROR_UNLESS_KRF(timeout == std::floor(timeout),
-	                    "Timeout delay value is not an integer",
-	                    ErrorType::BadSetting);
+						"Timeout delay value is not an integer",
+						ErrorType::BadSetting);
 
-	m_Timeout = static_cast<uint64_t>(timeout) << 32;
+	m_Timeout           = static_cast<uint64_t>(timeout) << 32;
 	m_StimulationToSend = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	m_LastTimePolled = 0;
-	m_PreviousTime = 0;
-	m_IsHeaderSent = false;
+	m_PreviousTime   = 0;
+	m_IsHeaderSent   = false;
 
 	return true;
 }
@@ -62,7 +62,7 @@ bool CBoxAlgorithmTimeout::processClock(IMessageClock& rMessageClock)
 
 uint64 CBoxAlgorithmTimeout::getClockFrequency(void)
 {
-	return 16LL<<32; // the box clock frequency
+	return 16LL << 32; // the box clock frequency
 }
 /*******************************************************************************/
 
@@ -83,13 +83,13 @@ bool CBoxAlgorithmTimeout::process(void)
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
 	// Discard input data
-	for(uint32_t i=0; i<dynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		dynamicBoxContext.markInputAsDeprecated(0, i);
 	}
 
 	// Encoding the header
-	if(!m_IsHeaderSent)
+	if (!m_IsHeaderSent)
 	{
 		m_StimulationEncoder.encodeHeader();
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);

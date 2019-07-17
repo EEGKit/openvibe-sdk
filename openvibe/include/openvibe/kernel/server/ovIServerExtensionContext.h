@@ -19,7 +19,7 @@ namespace OpenViBE
 		  */
 		class OV_API IServerExtensionContext : public OpenViBE::Kernel::IKernelObject
 		{
-			public:
+		public:
 
 			/**
 			 * \brief Gets a reference on the current log manager

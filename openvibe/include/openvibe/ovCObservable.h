@@ -28,14 +28,14 @@ namespace OpenViBE
 		 * \param o [in] : the observer to add
 		 * \note A same observer can be add multiple time.
 		 */
-		virtual void addObserver(IObserver *o);
+		virtual void addObserver(IObserver* o);
 
 		/**
 		 * \brief Remove the observer give in parameter from the list of observers of the object. Only the first
 		 * occurence of the observer will be remove from the list.
 		 * \param o [in] : the observer to remove
 		 */
-		virtual void deleteObserver(IObserver *o);
+		virtual void deleteObserver(IObserver* o);
 
 	protected:
 		/**

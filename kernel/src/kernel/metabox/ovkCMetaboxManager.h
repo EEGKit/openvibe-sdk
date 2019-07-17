@@ -40,5 +40,4 @@ namespace OpenViBE
 };
 
 
-
 #endif // __OpenViBEKernel_Kernel_Metabox_CMetaboxManager_H__

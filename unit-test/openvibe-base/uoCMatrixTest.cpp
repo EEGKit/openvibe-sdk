@@ -9,13 +9,12 @@
 using namespace OpenViBE;
 
 
-
 TEST(CMatrix_Test_Case, test_copy_constructor)
 {
 	OpenViBE::CMatrix matA;
 	matA.setDimensionCount(2);
-	matA.setDimensionSize(0,1);
-	matA.setDimensionSize(1,2);
+	matA.setDimensionSize(0, 1);
+	matA.setDimensionSize(1, 2);
 	matA.getBuffer()[0] = 10;
 	matA.getBuffer()[1] = 20;
 	matA.setDimensionLabel(0, 0, "dim0e0");
@@ -49,8 +48,8 @@ TEST(CMatrix_Test_Case, test_copy_constructor_in_array_push)
 {
 	OpenViBE::CMatrix tmpMatrix;
 	tmpMatrix.setDimensionCount(2);
-	tmpMatrix.setDimensionSize(0,10);
-	tmpMatrix.setDimensionSize(1,20);
+	tmpMatrix.setDimensionSize(0, 10);
+	tmpMatrix.setDimensionSize(1, 20);
 	std::vector<OpenViBE::CMatrix> list;
 	list.push_back(tmpMatrix);
 	list.push_back(tmpMatrix);
@@ -60,8 +59,8 @@ TEST(CMatrix_Test_Case, test_copy_assignment_operator)
 {
 	OpenViBE::CMatrix matA;
 	matA.setDimensionCount(2);
-	matA.setDimensionSize(0,1);
-	matA.setDimensionSize(1,2);
+	matA.setDimensionSize(0, 1);
+	matA.setDimensionSize(1, 2);
 	matA.getBuffer()[0] = 10;
 	matA.getBuffer()[1] = 20;
 	matA.setDimensionLabel(0, 0, "dim0e0");

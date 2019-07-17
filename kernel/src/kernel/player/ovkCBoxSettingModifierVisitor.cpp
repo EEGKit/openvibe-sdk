@@ -1,4 +1,3 @@
-
 #include "ovkCBoxSettingModifierVisitor.h"
 
 #include "ovkCSimulatedBox.h"
@@ -29,26 +28,26 @@ using namespace OpenViBE::Plugins;
 
 void CBoxSettingModifierVisitor::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount)
 {
-	if(!m_bIsParsingSettingOverride)
+	if (!m_bIsParsingSettingOverride)
 	{
-		if(string(sName)==string("OpenViBE-SettingsOverride"))
+		if (string(sName) == string("OpenViBE-SettingsOverride"))
 		{
-			m_bIsParsingSettingOverride=true;
+			m_bIsParsingSettingOverride = true;
 		}
 	}
-	else if(string(sName)==string("SettingValue"))
+	else if (string(sName) == string("SettingValue"))
 	{
-		m_bIsParsingSettingValue=true;
+		m_bIsParsingSettingValue = true;
 	}
 	else
 	{
-		m_bIsParsingSettingValue=false;
+		m_bIsParsingSettingValue = false;
 	}
 }
 
 void CBoxSettingModifierVisitor::processChildData(const char* sData)
 {
-	if(m_bIsParsingSettingValue)
+	if (m_bIsParsingSettingValue)
 	{
 		m_pObjectVisitorContext->getLogManager() << LogLevel_Debug << "Using [" << CString(sData) << "] as setting " << m_ui32SettingIndex << "...\n";
 		m_pBox->setSettingValue(m_ui32SettingIndex, sData);
@@ -58,25 +57,26 @@ void CBoxSettingModifierVisitor::processChildData(const char* sData)
 void CBoxSettingModifierVisitor::closeChild(void)
 {
 	//We need to count it here because we need to take in account the empty value
-	if(m_bIsParsingSettingValue){
+	if (m_bIsParsingSettingValue)
+	{
 		m_ui32SettingIndex++;
 	}
-	m_bIsParsingSettingValue=false;
+	m_bIsParsingSettingValue = false;
 }
 
 OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
 {
-	m_pObjectVisitorContext=&rObjectVisitorContext;
+	m_pObjectVisitorContext = &rObjectVisitorContext;
 
 	// checks if this box should override
 	// settings from external file
-	if(rBox.hasAttribute(OVD_AttributeId_SettingOverrideFilename))
+	if (rBox.hasAttribute(OVD_AttributeId_SettingOverrideFilename))
 	{
-		CString l_sSettingOverrideFilename=rBox.getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
+		CString l_sSettingOverrideFilename = rBox.getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
 		CString l_sSettingOverrideFilenameFinal;
 		if (m_pConfigurationManager == NULL)
 		{
-			l_sSettingOverrideFilenameFinal=rObjectVisitorContext.getConfigurationManager().expand(l_sSettingOverrideFilename);
+			l_sSettingOverrideFilenameFinal = rObjectVisitorContext.getConfigurationManager().expand(l_sSettingOverrideFilename);
 		}
 		else
 		{
@@ -87,19 +87,20 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 		rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Trying to override [" << rBox.getName() << "] box settings with file [" << l_sSettingOverrideFilename << " which expands to " << l_sSettingOverrideFilenameFinal << "] !\n";
 
 		// creates XML reader
-		XML::IReader* l_pReader=XML::createReader(*this);
+		XML::IReader* l_pReader = XML::createReader(*this);
 
 		// adds new box settings
-		m_pBox=&rBox;
-		m_ui32SettingIndex=0;
-		m_bIsParsingSettingValue=false;
-		m_bIsParsingSettingOverride=false;
+		m_pBox                      = &rBox;
+		m_ui32SettingIndex          = 0;
+		m_bIsParsingSettingValue    = false;
+		m_bIsParsingSettingOverride = false;
 
-		auto cleanup = [&](){
+		auto cleanup = [&]()
+		{
 			// cleans up internal state
-			m_pBox = nullptr;
-			m_ui32SettingIndex = 0;
-			m_bIsParsingSettingValue = false;
+			m_pBox                      = nullptr;
+			m_ui32SettingIndex          = 0;
+			m_bIsParsingSettingValue    = false;
 			m_bIsParsingSettingOverride = false;
 
 			// releases XML reader
@@ -113,38 +114,38 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 		// 3. Close the settings file
 		ifstream l_oFile;
 		FS::Files::openIFStream(l_oFile, l_sSettingOverrideFilenameFinal.toASCIIString(), ios::binary);
-		if(l_oFile.is_open())
+		if (l_oFile.is_open())
 		{
 			char l_sBuffer[1024];
-			std::streamoff l_iBufferLen=0;
-			bool l_bStatusOk=true;
+			std::streamoff l_iBufferLen = 0;
+			bool l_bStatusOk            = true;
 			l_oFile.seekg(0, ios::end);
-			std::streamoff l_iFileLen=l_oFile.tellg();
+			std::streamoff l_iFileLen = l_oFile.tellg();
 			l_oFile.seekg(0, ios::beg);
-			while(l_iFileLen && l_bStatusOk)
+			while (l_iFileLen && l_bStatusOk)
 			{
 				// File length is always positive so this is safe
-				l_iBufferLen=(unsigned(l_iFileLen)>sizeof(l_sBuffer)?sizeof(l_sBuffer):l_iFileLen);
+				l_iBufferLen = (unsigned(l_iFileLen) > sizeof(l_sBuffer) ? sizeof(l_sBuffer) : l_iFileLen);
 				l_oFile.read(l_sBuffer, l_iBufferLen);
-				l_iFileLen-=l_iBufferLen;
-				l_bStatusOk=l_pReader->processData(l_sBuffer, l_iBufferLen);
+				l_iFileLen -= l_iBufferLen;
+				l_bStatusOk = l_pReader->processData(l_sBuffer, l_iBufferLen);
 			}
 			l_oFile.close();
 
 			// message
-			if(m_ui32SettingIndex == rBox.getSettingCount())
+			if (m_ui32SettingIndex == rBox.getSettingCount())
 			{
 				rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Overrode " << m_ui32SettingIndex << " setting(s) with this configuration file...\n";
 
-				for(uint32 i = 0; i<m_ui32SettingIndex; i++)
+				for (uint32 i = 0; i < m_ui32SettingIndex; i++)
 				{
-					CString l_sSettingName = "";
+					CString l_sSettingName     = "";
 					CString l_sRawSettingValue = "";
 
 					rBox.getSettingName(i, l_sSettingName);
 					rBox.getSettingValue(i, l_sRawSettingValue);
 					CString l_sSettingValue = l_sRawSettingValue;
-					l_sSettingValue = m_pConfigurationManager->expand(l_sSettingValue);
+					l_sSettingValue         = m_pConfigurationManager->expand(l_sSettingValue);
 					CIdentifier settingType;
 					rBox.getSettingType(i, settingType);
 					if (!::checkSettingValue(l_sSettingValue, settingType, rObjectVisitorContext.getTypeManager()))
@@ -200,8 +201,6 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 
 boolean CBoxSettingModifierVisitor::processEnd(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
 {
-	m_pObjectVisitorContext=&rObjectVisitorContext;
+	m_pObjectVisitorContext = &rObjectVisitorContext;
 	return true;
 }
-
-

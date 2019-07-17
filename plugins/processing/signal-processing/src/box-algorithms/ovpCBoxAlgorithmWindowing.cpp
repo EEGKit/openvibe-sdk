@@ -25,7 +25,7 @@ boolean CBoxAlgorithmWindowing::initialize()
 		OV_ERROR_KRF(
 			"No valid windowing method set.\n",
 			OpenViBE::Kernel::ErrorType::BadSetting
-			);
+		);
 	}
 
 	m_Decoder.initialize(*this, 0);
@@ -58,10 +58,10 @@ boolean CBoxAlgorithmWindowing::process()
 	for (unsigned int i = 0; i < dynamicBoxContext->getInputChunkCount(0); i++)
 	{
 		const uint64_t startTime = dynamicBoxContext->getInputChunkStartTime(0, i);
-		const uint64_t endTime = dynamicBoxContext->getInputChunkEndTime(0, i);
+		const uint64_t endTime   = dynamicBoxContext->getInputChunkEndTime(0, i);
 
 		m_Decoder.decode(i);
-		IMatrix * matrix = m_Decoder.getOutputMatrix();
+		IMatrix* matrix = m_Decoder.getOutputMatrix();
 
 		if (m_Decoder.isHeaderReceived())
 		{
@@ -76,21 +76,21 @@ boolean CBoxAlgorithmWindowing::process()
 			{
 				for (size_t k = 0; k < n; k++)
 				{
-					m_WindowCoefficients[k] = 0.54 - 0.46 * cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n)-1.));
+					m_WindowCoefficients[k] = 0.54 - 0.46 * cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n) - 1.));
 				}
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Hann || m_WindowMethod == OVP_TypeId_WindowMethod_Hanning)
 			{
 				for (size_t k = 0; k < n; k++)
 				{
-					m_WindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n)-1.)));
+					m_WindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n) - 1.)));
 				}
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Blackman)
 			{
 				for (size_t k = 0; k < n; k++)
 				{
-					m_WindowCoefficients[k] = 0.42 - 0.5 * cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n)-1.)) + 0.08 * cos(4. * M_PI * static_cast<double>(k) / (static_cast<double>(n)-1.));
+					m_WindowCoefficients[k] = 0.42 - 0.5 * cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n) - 1.)) + 0.08 * cos(4. * M_PI * static_cast<double>(k) / (static_cast<double>(n) - 1.));
 				}
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Triangular)
@@ -100,11 +100,11 @@ boolean CBoxAlgorithmWindowing::process()
 				{
 					if (n % 2 == 1)
 					{
-						m_WindowCoefficients[k - 1] = static_cast<double>((2. * static_cast<double>(k)) / (static_cast<double>(n)+1.));
+						m_WindowCoefficients[k - 1] = static_cast<double>((2. * static_cast<double>(k)) / (static_cast<double>(n) + 1.));
 					}
 					else
 					{
-						m_WindowCoefficients[k - 1] = static_cast<double>((2. * static_cast<double>(k)-1.) / static_cast<double>(n));
+						m_WindowCoefficients[k - 1] = static_cast<double>((2. * static_cast<double>(k) - 1.) / static_cast<double>(n));
 					}
 				}
 
@@ -112,11 +112,11 @@ boolean CBoxAlgorithmWindowing::process()
 				{
 					if (n % 2 == 1)
 					{
-						m_WindowCoefficients[k - 1] = static_cast<double>(2. - (2. * static_cast<double>(k)) / (static_cast<double>(n)+1.));
+						m_WindowCoefficients[k - 1] = static_cast<double>(2. - (2. * static_cast<double>(k)) / (static_cast<double>(n) + 1.));
 					}
 					else
 					{
-						m_WindowCoefficients[k - 1] = static_cast<double>(2. - (2. * static_cast<double>(k)-1.) / static_cast<double>(n));
+						m_WindowCoefficients[k - 1] = static_cast<double>(2. - (2. * static_cast<double>(k) - 1.) / static_cast<double>(n));
 					}
 				}
 			}
@@ -126,11 +126,11 @@ boolean CBoxAlgorithmWindowing::process()
 				{
 					if (n % 2 == 1)
 					{
-						m_WindowCoefficients[k - 1] = sqrt(2. * static_cast<double>(k) / (static_cast<double>(n)+1.));
+						m_WindowCoefficients[k - 1] = sqrt(2. * static_cast<double>(k) / (static_cast<double>(n) + 1.));
 					}
 					else
 					{
-						m_WindowCoefficients[k - 1] = sqrt((2. * static_cast<double>(k)-1.) / static_cast<double>(n));
+						m_WindowCoefficients[k - 1] = sqrt((2. * static_cast<double>(k) - 1.) / static_cast<double>(n));
 					}
 				}
 
@@ -138,11 +138,11 @@ boolean CBoxAlgorithmWindowing::process()
 				{
 					if (n % 2 == 1)
 					{
-						m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k)) / (static_cast<double>(n)+1.));
+						m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k)) / (static_cast<double>(n) + 1.));
 					}
 					else
 					{
-						m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k)-1.) / static_cast<double>(n));
+						m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k) - 1.) / static_cast<double>(n));
 					}
 				}
 			}
@@ -158,7 +158,7 @@ boolean CBoxAlgorithmWindowing::process()
 				OV_ERROR_KRF(
 					"The windows method chosen is not supported.\n",
 					OpenViBE::Kernel::ErrorType::BadSetting
-					);
+				);
 			}
 
 			m_Encoder.encodeHeader();

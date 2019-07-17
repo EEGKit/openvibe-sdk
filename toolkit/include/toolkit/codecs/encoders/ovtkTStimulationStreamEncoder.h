@@ -12,10 +12,9 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TStimulationEncoderLocal : public T
 	{
-
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IStimulationSet* > m_pInputStimulationSet;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> m_pInputStimulationSet;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
@@ -36,10 +35,7 @@ namespace OpenViBEToolkit
 
 		OpenViBE::boolean uninitialize(void)
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
 			m_pInputStimulationSet.uninitialize();
 			m_pOutputMemoryBuffer.uninitialize();
@@ -50,7 +46,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IStimulationSet* >& getInputStimulationSet()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*>& getInputStimulationSet()
 		{
 			return m_pInputStimulationSet;
 		}
@@ -73,21 +69,21 @@ namespace OpenViBEToolkit
 	};
 
 	template <class T>
-	class TStimulationEncoder : public TStimulationEncoderLocal < TEncoder < T > >
+	class TStimulationEncoder : public TStimulationEncoderLocal<TEncoder<T>>
 	{
 	private:
-		using TStimulationEncoderLocal < TEncoder < T > >::m_pBoxAlgorithm;
+		using TStimulationEncoderLocal<TEncoder<T>>::m_pBoxAlgorithm;
 	public:
-		using TStimulationEncoderLocal < TEncoder < T > >::uninitialize;
+		using TStimulationEncoderLocal<TEncoder<T>>::uninitialize;
 
-		TStimulationEncoder()
-		{
-		}
+		TStimulationEncoder() { }
+
 		TStimulationEncoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
+
 		virtual ~TStimulationEncoder()
 		{
 			this->uninitialize();

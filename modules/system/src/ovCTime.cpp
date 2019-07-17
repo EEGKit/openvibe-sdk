@@ -49,7 +49,7 @@ bool System::Time::zsleep(const uint64_t ui64Seconds)
 	// zero the seconds with 0xFFFFFFFF, multiply to get the rest as fixed point microsec, then grab them (now in the 32 msbs)
 	const uint64_t l_ui64MicroSeconds = ((ui64Seconds & 0xFFFFFFFFLL) * 1000000LL) >> 32;
 
-	const timelib::chrono::microseconds l_oDuration =  timelib::chrono::seconds(l_ui32Seconds) + timelib::chrono::microseconds(l_ui64MicroSeconds);
+	const timelib::chrono::microseconds l_oDuration = timelib::chrono::seconds(l_ui32Seconds) + timelib::chrono::microseconds(l_ui64MicroSeconds);
 	timelib::this_thread::sleep_for(l_oDuration);
 
 	return true;
@@ -73,22 +73,22 @@ uint64_t System::Time::zgetTimeRaw(bool sinceFirstCall)
 
 	if (!l_bInitialized)
 	{
-		l_oTimeStart = internal_clock::now();
+		l_oTimeStart   = internal_clock::now();
 		l_bInitialized = true;
 	}
 
 	const internal_clock::time_point l_oTimeNow = internal_clock::now();
-	
-	const internal_clock::duration l_oElapsed = (sinceFirstCall ?  l_oTimeNow - l_oTimeStart : l_oTimeNow.time_since_epoch() );
+
+	const internal_clock::duration l_oElapsed = (sinceFirstCall ? l_oTimeNow - l_oTimeStart : l_oTimeNow.time_since_epoch());
 
 	const timelib::chrono::microseconds l_oElapsedMs = timelib::chrono::duration_cast<timelib::chrono::microseconds>(l_oElapsed);
 
 	const uint64_t l_ui64MicrosPerSecond = 1000ULL * 1000ULL;
-	const uint64_t l_ui64Seconds = static_cast<uint64_t>(l_oElapsedMs.count() / l_ui64MicrosPerSecond);
-	const uint64_t l_ui64Fraction = static_cast<uint64_t>(l_oElapsedMs.count() % l_ui64MicrosPerSecond);
+	const uint64_t l_ui64Seconds         = static_cast<uint64_t>(l_oElapsedMs.count() / l_ui64MicrosPerSecond);
+	const uint64_t l_ui64Fraction        = static_cast<uint64_t>(l_oElapsedMs.count() % l_ui64MicrosPerSecond);
 
 	// below in fraction part, scale [0,l_ui64MicrosPerSecond-1] to 32bit integer range
-	const uint64_t l_ui64ReturnValue = (l_ui64Seconds<<32) + l_ui64Fraction*(0xFFFFFFFFLL / (l_ui64MicrosPerSecond-1));
+	const uint64_t l_ui64ReturnValue = (l_ui64Seconds << 32) + l_ui64Fraction * (0xFFFFFFFFLL / (l_ui64MicrosPerSecond - 1));
 
 	return l_ui64ReturnValue;
 }

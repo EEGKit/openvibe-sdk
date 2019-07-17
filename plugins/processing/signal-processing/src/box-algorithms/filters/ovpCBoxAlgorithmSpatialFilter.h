@@ -13,7 +13,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSpatialFilter : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmSpatialFilter : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -28,18 +28,17 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TDecoder < CBoxAlgorithmSpatialFilter >* m_pStreamDecoder;
-			OpenViBEToolkit::TEncoder < CBoxAlgorithmSpatialFilter >* m_pStreamEncoder;
+			OpenViBEToolkit::TDecoder<CBoxAlgorithmSpatialFilter>* m_pStreamDecoder;
+			OpenViBEToolkit::TEncoder<CBoxAlgorithmSpatialFilter>* m_pStreamEncoder;
 
 			OpenViBE::CMatrix m_oFilterBank;
 
 		private:
 			// Loads the m_vCoefficient vector (representing a matrix) from the given string. c1 and c2 are separator characters between floats.
-			OpenViBE::uint32 loadCoefficients(const OpenViBE::CString &rCoefficients, const char c1, const char c2,  OpenViBE::uint32 nRows, OpenViBE::uint32 nCols);
-
+			OpenViBE::uint32 loadCoefficients(const OpenViBE::CString& rCoefficients, const char c1, const char c2, OpenViBE::uint32 nRows, OpenViBE::uint32 nCols);
 		};
 
-		class CBoxAlgorithmSpatialFilterListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmSpatialFilterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -68,33 +67,33 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Spatial Filter"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard, Jussi T. Lindgren"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("Inria"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Maps M inputs to N outputs by multiplying the each input vector with a matrix"); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Spatial Filter"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard, Jussi T. Lindgren"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Inria"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Maps M inputs to N outputs by multiplying the each input vector with a matrix"); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("The applied coefficient matrix must be specified as a box parameter. The filter processes each sample independently of the past samples."); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Filtering"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.1"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Signal processing/Filtering"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.1"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.1.0"); }
-			
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_SpatialFilter; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpatialFilter; }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmSpatialFilterListener; }
+
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_SpatialFilter; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpatialFilter; }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmSpatialFilterListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual OpenViBE::boolean getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
-				rBoxAlgorithmPrototype.addInput  ("Input Signal",                OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput ("Output Signal",               OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("Spatial Filter Coefficients", OV_TypeId_String,  "1;0;0;0;0;1;0;0;0;0;1;0;0;0;0;1");
-				rBoxAlgorithmPrototype.addSetting("Number of Output Channels",   OV_TypeId_Integer, "4");
-				rBoxAlgorithmPrototype.addSetting("Number of Input Channels",    OV_TypeId_Integer, "4");
-				rBoxAlgorithmPrototype.addSetting("Filter matrix file",          OV_TypeId_Filename,  "");
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				rBoxAlgorithmPrototype.addInput("Input Signal", OV_TypeId_Signal);
+				rBoxAlgorithmPrototype.addOutput("Output Signal", OV_TypeId_Signal);
+				rBoxAlgorithmPrototype.addSetting("Spatial Filter Coefficients", OV_TypeId_String, "1;0;0;0;0;1;0;0;0;0;1;0;0;0;0;1");
+				rBoxAlgorithmPrototype.addSetting("Number of Output Channels", OV_TypeId_Integer, "4");
+				rBoxAlgorithmPrototype.addSetting("Number of Input Channels", OV_TypeId_Integer, "4");
+				rBoxAlgorithmPrototype.addSetting("Filter matrix file", OV_TypeId_Filename, "");
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 
 				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
 				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);

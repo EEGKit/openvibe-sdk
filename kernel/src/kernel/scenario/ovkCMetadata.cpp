@@ -16,16 +16,12 @@ using namespace OpenViBE::Plugins;
 
 CMetadata::CMetadata(const IKernelContext& kernelContext, CScenario& ownerScenario)
 	: TKernelObject<IMetadata>(kernelContext)
-	, m_OwnerScenario(ownerScenario)
-	, m_Identifier(OV_UndefinedIdentifier)
-    , m_Type(OV_UndefinedIdentifier)
-	, m_Data("")
-{
-}
+	  , m_OwnerScenario(ownerScenario)
+	  , m_Identifier(OV_UndefinedIdentifier)
+	  , m_Type(OV_UndefinedIdentifier)
+	  , m_Data("") {}
 
-CMetadata::~CMetadata(void)
-{
-}
+CMetadata::~CMetadata(void) {}
 
 CIdentifier CMetadata::getIdentifier(void) const
 {

@@ -34,17 +34,17 @@ union functionContext
 {
 	OpenViBE::float64 m_f64DirectValue;//if the parameter if a value (push_val)
 	OpenViBE::float64** m_ppIndirectValue;//if it is a pointer to a value (push_var)
-} ;
+};
 
 //! Type of the functions in the function stack generated from the equation.
-typedef void (*functionPointer)(OpenViBE::float64 *& pStack, functionContext& oContext);
+typedef void (*functionPointer)(OpenViBE::float64*& pStack, functionContext& oContext);
 
 class CEquationParser
 {
 protected:
 
 	//! The AST produced by the parsing of the equation
-	CAbstractTree * m_pTree;
+	CAbstractTree* m_pTree;
 
 	//! Grammar to use
 	CEquationGrammar m_oGrammar;
@@ -57,21 +57,21 @@ protected:
 	//! Size of the "function stack" (where the sucessive function pointers are stored)
 	const OpenViBE::uint32 m_ui32FunctionStackSize;
 	//! Pointer to the top of the function stack
-	functionPointer * m_pFunctionList;
+	functionPointer* m_pFunctionList;
 	//! Pointer to the base of the function stack
-	functionPointer * m_pFunctionListBase;
+	functionPointer* m_pFunctionListBase;
 
 	//! Size of the "function context stack" (where the sucessive function context are stored)
 	const OpenViBE::uint64 m_ui64FunctionContextStackSize;
 	//! Pointer to the top of the function context stack
-	functionContext * m_pFunctionContextList;
+	functionContext* m_pFunctionContextList;
 	//! Pointer to the base of the function context stack
-	functionContext * m_pFunctionContextListBase;
+	functionContext* m_pFunctionContextListBase;
 
 	//! Size of the "local" stack
 	const OpenViBE::uint64 m_ui64StackSize;
 	//! Pointer to the top of the "local" stack
-	OpenViBE::float64 * m_pStack;
+	OpenViBE::float64* m_pStack;
 
 	//! Number of pointers/contexts in the function/context stacks (same for both)
 	OpenViBE::uint64 m_ui64NumberOfOperations;
@@ -107,7 +107,7 @@ public:
 	* same result if needed (depends on m_ui64TreeCategory).
 	* \param pEquation The equation to use.
 	*/
-	OpenViBE::boolean compileEquation(const char * pEquation);
+	OpenViBE::boolean compileEquation(const char* pEquation);
 
 	void push_op(OpenViBE::uint64 ui64Operator);
 	void push_value(OpenViBE::float64 f64Value);
@@ -132,13 +132,13 @@ public:
 	*/
 	OpenViBE::float64 executeEquation()
 	{
-		functionPointer * l_pCurrentFunction = m_pFunctionList - 1;
-		functionPointer * l_pLastFunctionPointer = l_pCurrentFunction - m_ui64NumberOfOperations;
+		functionPointer* l_pCurrentFunction     = m_pFunctionList - 1;
+		functionPointer* l_pLastFunctionPointer = l_pCurrentFunction - m_ui64NumberOfOperations;
 
-		functionContext * l_pCurrentFunctionContext = m_pFunctionContextList - 1;
+		functionContext* l_pCurrentFunctionContext = m_pFunctionContextList - 1;
 
 		//while there are function pointers
-		while(l_pCurrentFunction != l_pLastFunctionPointer)
+		while (l_pCurrentFunction != l_pLastFunctionPointer)
 		{
 			//calls the function with the current function context
 			(*l_pCurrentFunction)(m_pStack, *l_pCurrentFunctionContext);
@@ -155,7 +155,7 @@ public:
 private:
 
 	void createAbstractTree(tree_parse_info<> oInfo);
-	CAbstractTreeNode * createNode(iter_t const& i);
+	CAbstractTreeNode* createNode(iter_t const& i);
 
 public:
 
@@ -199,8 +199,6 @@ public:
 	static void op_loadVal(OpenViBE::float64*& pStack, functionContext& pContext);
 	static void op_loadVar(OpenViBE::float64*& pStack, functionContext& pContext);
 };
-
-
 
 
 #endif

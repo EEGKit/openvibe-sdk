@@ -180,7 +180,7 @@ namespace OpenViBE
 			const OpenViBE::CIdentifier& rIdentifier1,
 			const OpenViBE::CIdentifier& rIdentifier2)
 		{
-			return !(rIdentifier1>rIdentifier2);
+			return !(rIdentifier1 > rIdentifier2);
 		}
 		/**
 		 * \brief Order test operator
@@ -198,7 +198,7 @@ namespace OpenViBE
 			const OpenViBE::CIdentifier& rIdentifier1,
 			const OpenViBE::CIdentifier& rIdentifier2)
 		{
-			return !(rIdentifier1<rIdentifier2);
+			return !(rIdentifier1 < rIdentifier2);
 		}
 
 		//@}

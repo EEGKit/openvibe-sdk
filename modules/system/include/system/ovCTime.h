@@ -55,7 +55,7 @@ namespace System
 		 * \note This is a theoretical check that queries the internal
 		 *       clock implementation for available services
 		 */
-		 static bool isClockSteady();
+		static bool isClockSteady();
 		 
 		/**
 		 * \brief Check if the internal clock used by the framework has
@@ -65,11 +65,10 @@ namespace System
 		 * \note This is a theoretical check that queries the internal
 		 *  	 clock implementation for available services
 		 */
-		 static bool checkResolution(const uint32_t ui32MilliSeconds);
-		  
+		static bool checkResolution(const uint32_t ui32MilliSeconds);
+
 	private:
 
 		Time(void);
 	};
 };
-

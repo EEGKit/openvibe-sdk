@@ -30,12 +30,12 @@ namespace OpenViBE
 			/**
 			 * \return The type of this scenario metadata
 			 */
-			virtual OpenViBE::CIdentifier getType(void) const=0;
+			virtual OpenViBE::CIdentifier getType(void) const =0;
 
 			/**
 			 * \return The enclosed metadata
 			 */
-			virtual OpenViBE::CString getData(void) const=0;
+			virtual OpenViBE::CString getData(void) const =0;
 
 			/**
 			 * \brief Change the identifier of this metadata
@@ -73,7 +73,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_Metadata)
 		};
-
 	}
 }
-

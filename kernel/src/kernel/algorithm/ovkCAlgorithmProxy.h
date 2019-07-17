@@ -9,7 +9,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CAlgorithmProxy : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >
+		class CAlgorithmProxy : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IAlgorithmProxy>
 		{
 		public:
 
@@ -91,7 +91,7 @@ namespace OpenViBE
 			virtual OpenViBE::boolean isAlgorithmDerivedFrom(
 				const OpenViBE::CIdentifier& rClassIdentifier);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >, OVK_ClassId_Kernel_Algorithm_AlgorithmProxy )
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >, OVK_ClassId_Kernel_Algorithm_AlgorithmProxy)
 
 		protected:
 
@@ -99,8 +99,8 @@ namespace OpenViBE
 			OpenViBE::Kernel::IConfigurable* m_pOutputConfigurable;
 			std::map<OpenViBE::CIdentifier, OpenViBE::CString> m_vInputParameterName;
 			std::map<OpenViBE::CIdentifier, OpenViBE::CString> m_vOutputParameterName;
-			std::map<OpenViBE::CIdentifier, std::pair<OpenViBE::CString, OpenViBE::boolean> > m_vInputTrigger;
-			std::map<OpenViBE::CIdentifier, std::pair<OpenViBE::CString, OpenViBE::boolean> > m_vOutputTrigger;
+			std::map<OpenViBE::CIdentifier, std::pair<OpenViBE::CString, OpenViBE::boolean>> m_vInputTrigger;
+			std::map<OpenViBE::CIdentifier, std::pair<OpenViBE::CString, OpenViBE::boolean>> m_vOutputTrigger;
 
 		protected:
 

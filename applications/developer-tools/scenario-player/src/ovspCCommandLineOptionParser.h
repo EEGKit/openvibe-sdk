@@ -39,7 +39,6 @@ namespace OpenViBE
 	*/
 	class CommandLineOptionParser : public ICommandParser
 	{
-
 	public:
 
 		/**

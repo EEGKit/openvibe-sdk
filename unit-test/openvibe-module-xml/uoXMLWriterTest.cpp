@@ -72,7 +72,7 @@ private:
 TEST(XML_Writer_Test_Case, validateWriter)
 {
 	std::string expectedFile = DATA_DIR "/ref_data.xml";
-	std::string outputFile = TEMP_DIR "/uoXMLWriterTest.xml";
+	std::string outputFile   = TEMP_DIR "/uoXMLWriterTest.xml";
 
 	FS::Files::createPath(TEMP_DIR);
 	ASSERT_TRUE(FS::Files::directoryExists(TEMP_DIR));
@@ -87,7 +87,7 @@ TEST(XML_Writer_Test_Case, validateWriter)
 	CWriterCallBack writerCallback(outputFile.c_str());
 
 	XML::IWriter* writer = XML::createWriter(writerCallback);
-	
+
 	writer->openChild("Document"); //!< Document Node
 	writer->setAttribute("name", "test_reference");
 
@@ -107,7 +107,7 @@ TEST(XML_Writer_Test_Case, validateWriter)
 
 	writer->closeChild(); //!< NodeWithChildren END
 
-	writer->openChild("NodeWithData"); 
+	writer->openChild("NodeWithData");
 	writer->setAttribute("status", "hasData");
 	writer->setChildData("node data with special characters <>,;:!?./&\"'(-_)=~#{[|`\\^@]}/*-+");
 	writer->closeChild();
@@ -137,20 +137,18 @@ TEST(XML_Writer_Test_Case, validateWriter)
 
 	while (std::getline(expectedStream, expectedString))
 	{
-
 		std::getline(generatedStream, generatedString);
 		ASSERT_EQ(expectedString, generatedString);
 	}
 
 	// last check to verify the expected file has no additional line
 	std::getline(generatedStream, generatedString);
-
 }
 
 TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
 {
 	std::string expectedFile = DATA_DIR "/日本語/ref_data_jp.xml";
-	std::string outputFile = TEMP_DIR "/オッペﾝヴィベ/日本語.xml";
+	std::string outputFile   = TEMP_DIR "/オッペﾝヴィベ/日本語.xml";
 
 	FS::Files::createPath(TEMP_DIR);
 	ASSERT_TRUE(FS::Files::directoryExists(TEMP_DIR));
@@ -159,8 +157,8 @@ TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
 	ASSERT_FALSE(FS::Files::fileExists(outputFile.c_str()));
 
 	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
-	std::string testData ="<Document name=\"日本語\"><Node>日本語 1</Node><Node>日本語 2</Node><Node>日本語 3</Node></Document>";
-	XML::IXMLNode* rootNode = xmlHandler->parseString(testData.c_str(), static_cast<uint32_t>(testData.size()));
+	std::string testData         = "<Document name=\"日本語\"><Node>日本語 1</Node><Node>日本語 2</Node><Node>日本語 3</Node></Document>";
+	XML::IXMLNode* rootNode      = xmlHandler->parseString(testData.c_str(), static_cast<uint32_t>(testData.size()));
 	xmlHandler->writeXMLInFile(*rootNode, outputFile.c_str());
 
 	// comparison part
@@ -178,14 +176,12 @@ TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
 
 	while (std::getline(expectedStream, expectedString))
 	{
-
 		std::getline(generatedStream, generatedString);
 		ASSERT_EQ(expectedString, generatedString);
 	}
 
 	// last check to verify the expected file has no additional line
 	std::getline(generatedStream, generatedString);
-
 }
 
 int uoXMLWriterTest(int argc, char* argv[])

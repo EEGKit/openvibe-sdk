@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmTimeSignalGenerator > m_oSignalEncoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeSignalGenerator> m_oSignalEncoder;
 
 			bool m_bHeaderSent;
 			OpenViBE::uint32 m_ui32SamplingFrequency;
@@ -45,26 +45,26 @@ namespace OpenViBEPlugins
 		public:
 
 			void release(void) { }
-			OpenViBE::CString getName(void) const                { return OpenViBE::CString("Time signal"); }
-			OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Simple time signal generator (for use with DSP)"); }
+			OpenViBE::CString getName(void) const { return OpenViBE::CString("Time signal"); }
+			OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Simple time signal generator (for use with DSP)"); }
 			OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Data generation"); }
-			OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.1"); }
-			OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Data generation"); }
+			OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.1"); }
+			OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.4.0"); }
 
-			OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
-			OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::DataGeneration::CBoxAlgorithmTimeSignalGenerator(); }
+			OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
+			OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::DataGeneration::CBoxAlgorithmTimeSignalGenerator(); }
 
 			bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{
-				rPrototype.addOutput("Generated signal",              OV_TypeId_Signal);
+				rPrototype.addOutput("Generated signal", OV_TypeId_Signal);
 
-				rPrototype.addSetting("Sampling frequency",           OV_TypeId_Integer, "512");
+				rPrototype.addSetting("Sampling frequency", OV_TypeId_Integer, "512");
 				rPrototype.addSetting("Generated epoch sample count", OV_TypeId_Integer, "32");
 
 				return true;
@@ -74,4 +74,3 @@ namespace OpenViBEPlugins
 		};
 	};
 };
-

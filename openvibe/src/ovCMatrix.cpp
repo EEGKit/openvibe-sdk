@@ -39,11 +39,11 @@ namespace OpenViBE
 
 		protected:
 
-			mutable float64* m_pBuffer = nullptr;
+			mutable float64* m_pBuffer              = nullptr;
 			mutable uint32 m_ui32BufferElementCount = 0;
 
-			std::vector < uint32 > m_vDimensionSize;
-			std::vector < std::vector < std::string > > m_vDimensionLabel;
+			std::vector<uint32> m_vDimensionSize;
+			std::vector<std::vector<std::string>> m_vDimensionLabel;
 		};
 	};
 };
@@ -51,13 +51,11 @@ namespace OpenViBE
 // ________________________________________________________________________________________________________________
 //
 
-CMatrixImpl::CMatrixImpl(void)
-{
-}
+CMatrixImpl::CMatrixImpl(void) {}
 
 CMatrixImpl::CMatrixImpl(const CMatrixImpl& other)
 {
-	m_vDimensionSize = other.m_vDimensionSize;
+	m_vDimensionSize  = other.m_vDimensionSize;
 	m_vDimensionLabel = other.m_vDimensionLabel;
 	this->refreshInternalBuffer();
 	std::memcpy(this->getBuffer(), other.getBuffer(), other.getBufferElementCount() * sizeof(double));
@@ -72,7 +70,7 @@ CMatrixImpl& CMatrixImpl::operator=(const CMatrixImpl& other)
 			delete[] m_pBuffer;
 			m_pBuffer = nullptr;
 		}
-		this->m_vDimensionSize = other.m_vDimensionSize;
+		this->m_vDimensionSize  = other.m_vDimensionSize;
 		this->m_vDimensionLabel = other.m_vDimensionLabel;
 		this->refreshInternalBuffer();
 		std::memcpy(this->getBuffer(), other.getBuffer(), other.getBufferElementCount() * sizeof(double));
@@ -82,7 +80,7 @@ CMatrixImpl& CMatrixImpl::operator=(const CMatrixImpl& other)
 
 CMatrixImpl::~CMatrixImpl(void)
 {
-	if(m_pBuffer) 
+	if (m_pBuffer)
 	{
 		delete [] m_pBuffer;
 		m_pBuffer = nullptr;
@@ -96,20 +94,17 @@ const uint32 CMatrixImpl::getDimensionCount(void) const
 
 const uint32 CMatrixImpl::getDimensionSize(const uint32 ui32DimensionIndex) const
 {
-	if(ui32DimensionIndex>=m_vDimensionSize.size())
-	{
-		return 0;
-	}
+	if (ui32DimensionIndex >= m_vDimensionSize.size()) { return 0; }
 	return m_vDimensionSize[ui32DimensionIndex];
 }
 
 const char* CMatrixImpl::getDimensionLabel(const uint32 ui32DimensionIndex, const uint32 ui32DimensionEntryIndex) const
 {
-	if(ui32DimensionIndex>=m_vDimensionSize.size())
+	if (ui32DimensionIndex >= m_vDimensionSize.size())
 	{
 		return "";
 	}
-	if(ui32DimensionEntryIndex>=m_vDimensionSize[ui32DimensionIndex])
+	if (ui32DimensionEntryIndex >= m_vDimensionSize[ui32DimensionIndex])
 	{
 		return "";
 	}
@@ -118,7 +113,7 @@ const char* CMatrixImpl::getDimensionLabel(const uint32 ui32DimensionIndex, cons
 
 const float64* CMatrixImpl::getBuffer(void) const
 {
-	if(!m_pBuffer)
+	if (!m_pBuffer)
 	{
 		this->refreshInternalBuffer();
 	}
@@ -128,7 +123,7 @@ const float64* CMatrixImpl::getBuffer(void) const
 
 const uint32 CMatrixImpl::getBufferElementCount(void) const
 {
-	if(!m_pBuffer || !m_ui32BufferElementCount)
+	if (!m_pBuffer || !m_ui32BufferElementCount)
 	{
 		this->refreshInternalBuffer();
 	}
@@ -138,15 +133,12 @@ const uint32 CMatrixImpl::getBufferElementCount(void) const
 
 boolean CMatrixImpl::setDimensionCount(const uint32 ui32DimensionCount)
 {
-	if(ui32DimensionCount==0)
-	{
-		return false;
-	}
+	if (ui32DimensionCount == 0) { return false; }
 
-	if(m_pBuffer) 
+	if (m_pBuffer)
 	{
 		delete [] m_pBuffer;
-		m_pBuffer=NULL;
+		m_pBuffer = NULL;
 	}
 
 	m_vDimensionSize.clear();
@@ -160,18 +152,15 @@ boolean CMatrixImpl::setDimensionCount(const uint32 ui32DimensionCount)
 
 boolean CMatrixImpl::setDimensionSize(const uint32 ui32DimensionIndex, const uint32 ui32DimensionSize)
 {
-	if(ui32DimensionIndex>=m_vDimensionSize.size())
-	{
-		return false;
-	}
+	if (ui32DimensionIndex >= m_vDimensionSize.size()) { return false; }
 
-	if(m_pBuffer) 
+	if (m_pBuffer)
 	{
 		delete [] m_pBuffer;
-		m_pBuffer=NULL;
+		m_pBuffer = NULL;
 	}
 
-	m_vDimensionSize[ui32DimensionIndex]=ui32DimensionSize;
+	m_vDimensionSize[ui32DimensionIndex] = ui32DimensionSize;
 	m_vDimensionLabel[ui32DimensionIndex].clear();
 	m_vDimensionLabel[ui32DimensionIndex].resize(ui32DimensionSize);
 	return true;
@@ -179,21 +168,15 @@ boolean CMatrixImpl::setDimensionSize(const uint32 ui32DimensionIndex, const uin
 
 boolean CMatrixImpl::setDimensionLabel(const uint32 ui32DimensionIndex, const uint32 ui32DimensionEntryIndex, const char* sDimensionLabel)
 {
-	if(ui32DimensionIndex>=m_vDimensionSize.size())
-	{
-		return false;
-	}
-	if(ui32DimensionEntryIndex>=m_vDimensionSize[ui32DimensionIndex])
-	{
-		return false;
-	}
-	m_vDimensionLabel[ui32DimensionIndex][ui32DimensionEntryIndex]=sDimensionLabel;
+	if (ui32DimensionIndex >= m_vDimensionSize.size()) { return false; }
+	if (ui32DimensionEntryIndex >= m_vDimensionSize[ui32DimensionIndex]) { return false; }
+	m_vDimensionLabel[ui32DimensionIndex][ui32DimensionEntryIndex] = sDimensionLabel;
 	return true;
 }
 
 float64* CMatrixImpl::getBuffer(void)
 {
-	if(!m_pBuffer)
+	if (!m_pBuffer)
 	{
 		this->refreshInternalBuffer();
 	}
@@ -203,31 +186,22 @@ float64* CMatrixImpl::getBuffer(void)
 
 boolean CMatrixImpl::refreshInternalBuffer(void) const
 {
-	if(m_pBuffer)
+	if (m_pBuffer) { return false; }
+
+	if (m_vDimensionSize.size() == 0) { return false; }
+
+	m_ui32BufferElementCount = 1;
+	for (size_t i = 0; i < m_vDimensionSize.size(); i++)
 	{
-		return false;
+		m_ui32BufferElementCount *= m_vDimensionSize[i];
 	}
 
-	if(m_vDimensionSize.size()==0)
-	{
-		return false;
-	}
+	if (m_ui32BufferElementCount == 0) { return false; }
 
-	m_ui32BufferElementCount=1;
-	for(size_t i=0; i<m_vDimensionSize.size(); i++)
+	m_pBuffer = new float64[m_ui32BufferElementCount];
+	if (!m_pBuffer)
 	{
-		m_ui32BufferElementCount*=m_vDimensionSize[i];
-	}
-
-	if(m_ui32BufferElementCount==0)
-	{
-		return false;
-	}
-
-	m_pBuffer=new float64[m_ui32BufferElementCount];
-	if(!m_pBuffer)
-	{
-		m_ui32BufferElementCount=0;
+		m_ui32BufferElementCount = 0;
 		return false;
 	}
 
@@ -239,7 +213,7 @@ boolean CMatrixImpl::refreshInternalBuffer(void) const
 
 CMatrix::CMatrix(void)
 {
-	m_pMatrixImpl=new CMatrixImpl();
+	m_pMatrixImpl = new CMatrixImpl();
 }
 
 CMatrix::CMatrix(const CMatrix& other)

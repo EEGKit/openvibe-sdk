@@ -12,20 +12,18 @@ namespace OpenViBE
 	{
 		template <
 			class IBase,
-			class IType >
+			class IType>
 		class TBaseParameter : public IBase
 		{
 		public:
 
-			TBaseParameter(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::EParameterType eParameterType, const OpenViBE::CIdentifier& rSubTypeIdentifier=OV_UndefinedIdentifier)
-				:IBase(rKernelContext)
-				,m_pParameterRef(0)
-				,m_pValueRef(0)
-				,m_Value(0)
-				,m_eParameterType(eParameterType)
-				,m_oSubTypeIdentifier(rSubTypeIdentifier)
-			{
-			}
+			TBaseParameter(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::EParameterType eParameterType, const OpenViBE::CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier)
+				: IBase(rKernelContext)
+				  , m_pParameterRef(0)
+				  , m_pValueRef(0)
+				  , m_Value(0)
+				  , m_eParameterType(eParameterType)
+				  , m_oSubTypeIdentifier(rSubTypeIdentifier) { }
 
 			virtual OpenViBE::uint64 getParameterSize(void) const
 			{
@@ -44,24 +42,24 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean clearReferenceTarget(void)
 			{
-				m_pValueRef=NULL;
-				m_pParameterRef=NULL;
+				m_pValueRef     = NULL;
+				m_pParameterRef = NULL;
 				return true;
 			}
 
 			virtual OpenViBE::boolean getReferenceTarget(OpenViBE::Kernel::IParameter*& pParameterRef) const
 			{
-				pParameterRef=m_pParameterRef;
+				pParameterRef = m_pParameterRef;
 				return true;
 			}
 
 			virtual OpenViBE::boolean setReferenceTarget(OpenViBE::Kernel::IParameter* pParameterRef)
 			{
-				if(m_pValueRef)
+				if (m_pValueRef)
 				{
-					m_pValueRef=NULL;
+					m_pValueRef = NULL;
 				}
-				m_pParameterRef=pParameterRef;
+				m_pParameterRef = pParameterRef;
 				return true;
 			}
 
@@ -73,9 +71,9 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean setReferenceTarget(const void* pValue)
 			{
-				if(m_pParameterRef)
+				if (m_pParameterRef)
 				{
-					m_pParameterRef=NULL;
+					m_pParameterRef = NULL;
 				}
 				memcpy(&m_pValueRef, &pValue, sizeof(IType*));
 				return true;
@@ -83,11 +81,11 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean getValue(void* pValue) const
 			{
-				if(m_pParameterRef)
+				if (m_pParameterRef)
 				{
 					return m_pParameterRef->getValue(pValue);
 				}
-				if(m_pValueRef)
+				if (m_pValueRef)
 				{
 					memcpy(pValue, m_pValueRef, sizeof(IType));
 				}
@@ -100,11 +98,11 @@ namespace OpenViBE
 
 			virtual OpenViBE::boolean setValue(const void* pValue)
 			{
-				if(m_pParameterRef)
+				if (m_pParameterRef)
 				{
 					return m_pParameterRef->setValue(pValue);
 				}
-				if(m_pValueRef)
+				if (m_pValueRef)
 				{
 					memcpy(m_pValueRef, pValue, sizeof(IType));
 				}

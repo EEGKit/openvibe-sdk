@@ -38,17 +38,17 @@ namespace OpenViBE
 			 * \brief Gets the size of this parameter's content
 			 * \return the size of this parameter's content.
 			 */
-			virtual OpenViBE::uint64 getParameterSize(void) const                                        { return 0; }
+			virtual OpenViBE::uint64 getParameterSize(void) const { return 0; }
 			/**
 			 * \brief Gets the type of this parameter's content
 			 * \return the type of this parameter's content.
 			 */
-			virtual OpenViBE::Kernel::EParameterType getType(void) const                                 { return ParameterType_None; }
+			virtual OpenViBE::Kernel::EParameterType getType(void) const { return ParameterType_None; }
 			/**
 			 * \brief Gets the sub type of this parameter's content (e.g. for enumeration)
 			 * \return the sub type of this parameter's content (e.g. for enumeration).
 			 */
-			virtual OpenViBE::CIdentifier getSubTypeIdentifier(void) const                               { return OV_UndefinedIdentifier; }
+			virtual OpenViBE::CIdentifier getSubTypeIdentifier(void) const { return OV_UndefinedIdentifier; }
 
 			//@}
 			/** \name Reinitialization */
@@ -61,7 +61,7 @@ namespace OpenViBE
 			 * \sa getReferenceTarget
 			 * \sa setReferenceTarget
 			 */
-			virtual OpenViBE::boolean clearReferenceTarget(void)                                         { return false; }
+			virtual OpenViBE::boolean clearReferenceTarget(void) { return false; }
 
 			//@}
 			/** \name Reference target management */
@@ -74,7 +74,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean getReferenceTarget(
-				OpenViBE::Kernel::IParameter*& value) const                                              { return false; }
+				OpenViBE::Kernel::IParameter*& value) const { return false; }
 			/**
 			 * \brief Sets the parameter reference target for this parameter
 			 * \param value [in] : the new reference target to use
@@ -89,7 +89,7 @@ namespace OpenViBE
 			 * cleared.
 			 */
 			virtual OpenViBE::boolean setReferenceTarget(
-				OpenViBE::Kernel::IParameter* value)                                                     { return false; }
+				OpenViBE::Kernel::IParameter* value) { return false; }
 			/**
 			 * \brief Gets the value reference target
 			 * \param value [out] : a pointer to the value target parameter if existing, \c NULL if not
@@ -97,7 +97,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean getReferenceTarget(
-				void* value) const                                                                       { return false; }
+				void* value) const { return false; }
 			/**
 			 * \brief Sets the value reference target for this parameter
 			 * \param value [in] : the new reference target to use
@@ -112,7 +112,7 @@ namespace OpenViBE
 			 * cleared.
 			 */
 			virtual OpenViBE::boolean setReferenceTarget(
-				const void* value)                                                                       { return false; }
+				const void* value) { return false; }
 
 			//@}
 			/** \name Value access */
@@ -131,7 +131,7 @@ namespace OpenViBE
 			 * \sa getParameterSize
 			 */
 			virtual OpenViBE::boolean getValue(
-				void* value) const                                                                       { return false; }
+				void* value) const { return false; }
 			/**
 			 * \brief Sets the value for this parameter
 			 * \param value [in] : a pointer from where the value should be copied
@@ -140,7 +140,7 @@ namespace OpenViBE
 			 * \sa getParameterSize
 			 */
 			virtual OpenViBE::boolean setValue(
-				const void* value)                                                                       { return false; }
+				const void* value) { return false; }
 
 			//@}
 

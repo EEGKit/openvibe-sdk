@@ -16,8 +16,8 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEToolkit;
 
 #if 1
- #define _EQ_PARSER_DEBUG_LOG_(level, message) m_oParentPlugin.getLogManager() << level << message << "\n";
- #define _EQ_PARSER_DEBUG_PRINT_TREE_(level) { m_oParentPlugin.getLogManager() << level; m_pTree->printTree(m_oParentPlugin.getLogManager()); m_oParentPlugin.getLogManager() << "\n"; }
+#define _EQ_PARSER_DEBUG_LOG_(level, message) m_oParentPlugin.getLogManager() << level << message << "\n";
+#define _EQ_PARSER_DEBUG_PRINT_TREE_(level) { m_oParentPlugin.getLogManager() << level; m_pTree->printTree(m_oParentPlugin.getLogManager()); m_oParentPlugin.getLogManager() << "\n"; }
 #else
  #define _EQ_PARSER_DEBUG_LOG_(level, message)
  #define _EQ_PARSER_DEBUG_PRINT_TREE_(level)
@@ -41,16 +41,15 @@ namespace
 	static std::string find_and_replace(std::string s, const std::string& f, const std::string& r)
 	{
 		size_t i;
-		while((i=s.find(f))!=std::string::npos)
+		while ((i = s.find(f)) != std::string::npos)
 		{
 			s.replace(i, f.length(), r);
 		}
 		return s;
 	}
-
 };
 
-functionPointer CEquationParser::m_pFunctionTable[]=
+functionPointer CEquationParser::m_pFunctionTable[] =
 {
 	&op_neg, &op_add, &op_sub, &op_mul, &op_div,
 	&op_abs, &op_acos, &op_asin, &op_atan,
@@ -71,22 +70,20 @@ functionPointer CEquationParser::m_pFunctionTable[]=
 };
 
 CEquationParser::CEquationParser(TBoxAlgorithm<IBoxAlgorithm>& oPlugin, float64** ppVariable, uint32 ui32VariableCount)
-	:m_pTree(NULL)
-	,m_ppVariable(ppVariable)
-	,m_ui32VariableCount(ui32VariableCount)
-	,m_ui32FunctionStackSize(1024)
-	,m_pFunctionList(NULL)
-	,m_pFunctionListBase(NULL)
-	,m_ui64FunctionContextStackSize(1024)
-	,m_pFunctionContextList(NULL)
-	,m_pFunctionContextListBase(NULL)
-	,m_ui64StackSize(1024)
-	,m_pStack(NULL)
-	,m_ui64TreeCategory(OP_USERDEF)
-	,m_f64TreeParameter(0)
-	,m_oParentPlugin(oPlugin)
-{
-}
+	: m_pTree(NULL)
+	  , m_ppVariable(ppVariable)
+	  , m_ui32VariableCount(ui32VariableCount)
+	  , m_ui32FunctionStackSize(1024)
+	  , m_pFunctionList(NULL)
+	  , m_pFunctionListBase(NULL)
+	  , m_ui64FunctionContextStackSize(1024)
+	  , m_pFunctionContextList(NULL)
+	  , m_pFunctionContextListBase(NULL)
+	  , m_ui64StackSize(1024)
+	  , m_pStack(NULL)
+	  , m_ui64TreeCategory(OP_USERDEF)
+	  , m_f64TreeParameter(0)
+	  , m_oParentPlugin(oPlugin) {}
 
 CEquationParser::~CEquationParser()
 {
@@ -96,16 +93,16 @@ CEquationParser::~CEquationParser()
 	delete m_pTree;
 }
 
-boolean CEquationParser::compileEquation(const char * pEquation)
+boolean CEquationParser::compileEquation(const char* pEquation)
 {
 	// BOOST::Ast should be able to remove spaces / tabs etc but
 	// unfortunately, it seems it does not work correcly in some
 	// cases so I add this sanitizer function to clear the Simple DSP
 	// equation before sending it to BOOST::Ast
 	std::string l_sEquation(pEquation);
-	l_sEquation=::find_and_replace(l_sEquation, " ", "");
-	l_sEquation=::find_and_replace(l_sEquation, "\t", "");
-	l_sEquation=::find_and_replace(l_sEquation, "\n", "");
+	l_sEquation = ::find_and_replace(l_sEquation, " ", "");
+	l_sEquation = ::find_and_replace(l_sEquation, "\t", "");
+	l_sEquation = ::find_and_replace(l_sEquation, "\n", "");
 
 	//parses the equation
 	_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Parsing equation [" << CString(l_sEquation.c_str()) << "]...");
@@ -150,16 +147,16 @@ boolean CEquationParser::compileEquation(const char * pEquation)
 #endif
 
 		//If it is not a special tree, we need to generate some code to reach the result
-		if(m_ui64TreeCategory == OP_USERDEF)
+		if (m_ui64TreeCategory == OP_USERDEF)
 		{
 			//allocates the function stack
-			m_pFunctionList = new functionPointer[m_ui32FunctionStackSize];
+			m_pFunctionList     = new functionPointer[m_ui32FunctionStackSize];
 			m_pFunctionListBase = m_pFunctionList;
 
 			//Allocates the function context stack
-			m_pFunctionContextList = new functionContext[(size_t)m_ui64FunctionContextStackSize];
+			m_pFunctionContextList     = new functionContext[(size_t)m_ui64FunctionContextStackSize];
 			m_pFunctionContextListBase = m_pFunctionContextList;
-			m_pStack = new float64[(size_t)m_ui64StackSize];
+			m_pStack                   = new float64[(size_t)m_ui64StackSize];
 
 			//generates the code
 			m_pTree->generateCode(*this);
@@ -179,13 +176,13 @@ boolean CEquationParser::compileEquation(const char * pEquation)
 		{
 			for (size_t i = 0; i < errorPosition; i++)
 			{
-				l_oErrorString+=" ";
+				l_oErrorString += " ";
 			}
-			l_oErrorString+="^--Here\n";
+			l_oErrorString += "^--Here\n";
 		}
 
 		OV_ERROR(
-			"Failed parsing equation \n[" << pEquation << "]\n " <<  l_oErrorString.c_str(),
+			"Failed parsing equation \n[" << pEquation << "]\n " << l_oErrorString.c_str(),
 			OpenViBE::Kernel::ErrorType::BadParsing,
 			false,
 			m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
@@ -199,38 +196,38 @@ void CEquationParser::createAbstractTree(tree_parse_info<> oInfo)
 	m_pTree = new CAbstractTree(createNode(oInfo.trees.begin()));
 }
 
-CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
+CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 {
 	if (i->value.id() == CEquationGrammar::expressionID)
 	{
 		if (*i->value.begin() == '+')
 		{
-			return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()), createNode(i->children.begin()+1), true);
+			return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()), createNode(i->children.begin() + 1), true);
 		}
 		//replaces (- X Y) by (+ X (-Y)) (in fact (+ X (* -1 Y)) )
 		if (*i->value.begin() == '-')
 		{
 			return new CAbstractTreeParentNode(OP_ADD,
-				createNode(i->children.begin()),
-				new CAbstractTreeParentNode(OP_MUL,
-					new CAbstractTreeValueNode(-1),
-					createNode(i->children.begin()+1),
-					true),
-				true);
+											   createNode(i->children.begin()),
+											   new CAbstractTreeParentNode(OP_MUL,
+																		   new CAbstractTreeValueNode(-1),
+																		   createNode(i->children.begin() + 1),
+																		   true),
+											   true);
 		}
 	}
-	else if(i->value.id() == CEquationGrammar::termID)
+	else if (i->value.id() == CEquationGrammar::termID)
 	{
 		if (*i->value.begin() == '*')
 		{
-			return new CAbstractTreeParentNode(OP_MUL, createNode(i->children.begin()), createNode(i->children.begin()+1), true);
+			return new CAbstractTreeParentNode(OP_MUL, createNode(i->children.begin()), createNode(i->children.begin() + 1), true);
 		}
 		if (*i->value.begin() == '/')
 		{
-			return new CAbstractTreeParentNode(OP_DIV, createNode(i->children.begin()), createNode(i->children.begin()+1));
+			return new CAbstractTreeParentNode(OP_DIV, createNode(i->children.begin()), createNode(i->children.begin() + 1));
 		}
 	}
-	else if(i->value.id() == CEquationGrammar::factorID)
+	else if (i->value.id() == CEquationGrammar::factorID)
 	{
 		if (*i->value.begin() == '-')
 		{
@@ -252,15 +249,15 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 	}
 	else if (i->value.id() == CEquationGrammar::variableID)
 	{
-		uint32 l_ui32Index=0;
+		uint32 l_ui32Index = 0;
 		std::string l_sValue(i->value.begin(), i->value.end());
-		if(l_sValue!="x" && l_sValue!="X")
+		if (l_sValue != "x" && l_sValue != "X")
 		{
-			if(l_sValue[0] >= 'a' && l_sValue[0] <= 'z') l_ui32Index=l_sValue[0]-'a';
-			if(l_sValue[0] >= 'A' && l_sValue[0] <= 'Z') l_ui32Index=l_sValue[0]-'A';
+			if (l_sValue[0] >= 'a' && l_sValue[0] <= 'z') l_ui32Index = l_sValue[0] - 'a';
+			if (l_sValue[0] >= 'A' && l_sValue[0] <= 'Z') l_ui32Index = l_sValue[0] - 'A';
 		}
 
-		if(l_ui32Index>=m_ui32VariableCount)
+		if (l_ui32Index >= m_ui32VariableCount)
 		{
 			OV_WARNING(
 				"Missing input " << l_ui32Index+1 << " (referenced with variable [" << CString(l_sValue.c_str()) << "])",
@@ -283,26 +280,26 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 	else if (i->value.id() == CEquationGrammar::functionID)
 	{
 		std::string l_sValue(i->value.begin(), i->value.end());
-		uint64 * l_ui64FunctionIdentifier;
+		uint64* l_ui64FunctionIdentifier;
 
 		//converts the string to lowercase
 		std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
 
 		//gets the function's Id from the unary function's symbols table
-		if( (l_ui64FunctionIdentifier = find(unaryFunction_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(unaryFunction_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
 				false);
 		}
-		//gets the function's Id from the binary function's symbols table
-		else if( (l_ui64FunctionIdentifier = find(binaryFunction_p, l_sValue.c_str())) != NULL)
+			//gets the function's Id from the binary function's symbols table
+		else if ((l_ui64FunctionIdentifier = find(binaryFunction_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
-				createNode(i->children.begin()+1),
+				createNode(i->children.begin() + 1),
 				false);
 		}
 	}
@@ -311,74 +308,74 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 		return new CAbstractTreeParentNode(
 			OP_IF_THEN_ELSE,
 			createNode(i->children.begin()),
-			createNode(i->children.begin()+1),
-			createNode(i->children.begin()+2),
+			createNode(i->children.begin() + 1),
+			createNode(i->children.begin() + 2),
 			false);
 	}
 	else if (i->value.id() == CEquationGrammar::comparisonID)
 	{
 		std::string l_sValue(i->value.begin(), i->value.end());
-		uint64 * l_ui64FunctionIdentifier;
+		uint64* l_ui64FunctionIdentifier;
 
 		//converts the string to lowercase
 		std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
 
 		//gets the function's Id from the comparison function's symbols table
-		if( (l_ui64FunctionIdentifier = find(comparison1Function_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(comparison1Function_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
-				createNode(i->children.begin()+1),
+				createNode(i->children.begin() + 1),
 				false);
 		}
-		//gets the function's Id from the comparison function's symbols table
-		else if( (l_ui64FunctionIdentifier = find(comparison2Function_p, l_sValue.c_str())) != NULL)
+			//gets the function's Id from the comparison function's symbols table
+		else if ((l_ui64FunctionIdentifier = find(comparison2Function_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
-				createNode(i->children.begin()+1),
+				createNode(i->children.begin() + 1),
 				false);
 		}
 	}
 	else if (i->value.id() == CEquationGrammar::booleanID)
 	{
 		std::string l_sValue(i->value.begin(), i->value.end());
-		uint64 * l_ui64FunctionIdentifier;
+		uint64* l_ui64FunctionIdentifier;
 
 		//converts the string to lowercase
 		std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
 
 		//gets the function's Id from the binary boolean function's symbols table
-		if( (l_ui64FunctionIdentifier = find(binaryBoolean1Function_p, l_sValue.c_str()))!= NULL)
+		if ((l_ui64FunctionIdentifier = find(binaryBoolean1Function_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
-				createNode(i->children.begin()+1),
+				createNode(i->children.begin() + 1),
 				false);
 		}
-		//gets the function's Id from the binary boolean function's symbols table
-		else if( (l_ui64FunctionIdentifier = find(binaryBoolean2Function_p, l_sValue.c_str()))!= NULL)
+			//gets the function's Id from the binary boolean function's symbols table
+		else if ((l_ui64FunctionIdentifier = find(binaryBoolean2Function_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
-				createNode(i->children.begin()+1),
+				createNode(i->children.begin() + 1),
 				false);
 		}
-		//gets the function's Id from the binary boolean function's symbols table
-		else if( (l_ui64FunctionIdentifier = find(binaryBoolean3Function_p, l_sValue.c_str()))!= NULL)
+			//gets the function's Id from the binary boolean function's symbols table
+		else if ((l_ui64FunctionIdentifier = find(binaryBoolean3Function_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
 				createNode(i->children.begin()),
-				createNode(i->children.begin()+1),
+				createNode(i->children.begin() + 1),
 				false);
 		}
-		//gets the function's Id from the binary boolean function's symbols table
-		else if( (l_ui64FunctionIdentifier = find(unaryBooleanFunction_p, l_sValue.c_str()))!= NULL)
+			//gets the function's Id from the binary boolean function's symbols table
+		else if ((l_ui64FunctionIdentifier = find(unaryBooleanFunction_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
@@ -392,20 +389,20 @@ CAbstractTreeNode * CEquationParser::createNode(iter_t const& i)
 
 void CEquationParser::push_value(float64 f64Value)
 {
-	*(m_pFunctionList++) = op_loadVal;
+	*(m_pFunctionList++)                           = op_loadVal;
 	(*(m_pFunctionContextList++)).m_f64DirectValue = f64Value;
 }
 
 void CEquationParser::push_var(uint32 ui32Index)
 {
-	*(m_pFunctionList++) = op_loadVar;
+	*(m_pFunctionList++)                            = op_loadVar;
 	(*(m_pFunctionContextList++)).m_ppIndirectValue = &m_ppVariable[ui32Index];
 }
 
 void CEquationParser::push_op(uint64 ui64Operator)
 {
-	*(m_pFunctionList++) = m_pFunctionTable[ui64Operator];
-	(*(m_pFunctionContextList++)).m_ppIndirectValue=NULL;
+	*(m_pFunctionList++)                            = m_pFunctionTable[ui64Operator];
+	(*(m_pFunctionContextList++)).m_ppIndirectValue = NULL;
 }
 
 // Functions called by our "pseudo - VM"
@@ -421,62 +418,62 @@ void CEquationParser::op_neg(float64*& pStack, functionContext& pContext)
 #endif
 }
 
-void CEquationParser::op_add(float64 *& pStack, functionContext& pContext)
+void CEquationParser::op_add(float64*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "add : " << *(pStack) << " + " << *(pStack-1);
 #endif
 	pStack--;
-	*(pStack) = *(pStack+1) + *(pStack);
+	*(pStack) = *(pStack + 1) + *(pStack);
 #ifdef EQ_PARSER_DEBUG
 	std::cout << " = " << *pStack << std::endl;
 #endif
 }
 
-void CEquationParser::op_sub(float64 *& pStack, functionContext& pContext)
+void CEquationParser::op_sub(float64*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "sub : " << *(pStack) << " - " << *(pStack-1);
 #endif
 	pStack--;
-	*(pStack) = *(pStack+1) - *(pStack);
+	*(pStack) = *(pStack + 1) - *(pStack);
 #ifdef EQ_PARSER_DEBUG
 	std::cout << " = " << *pStack << std::endl;
 #endif
 }
 
-void CEquationParser::op_mul(float64 *& pStack, functionContext& pContext)
+void CEquationParser::op_mul(float64*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "mult : " << *(pStack) << " * " << *(pStack-1);
 #endif
 	pStack--;
-	*(pStack) = *(pStack+1) * *(pStack);
+	*(pStack) = *(pStack + 1) * *(pStack);
 #ifdef EQ_PARSER_DEBUG
 	std::cout << " = " << *pStack << std::endl;
 #endif
 }
 
-void CEquationParser::op_div(float64 *& pStack, functionContext& pContext)
+void CEquationParser::op_div(float64*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "divi : " << *(pStack) << " / " << *(pStack-1);
 #endif
 	pStack--;
-	*(pStack) = *(pStack+1) / *(pStack);
+	*(pStack) = *(pStack + 1) / *(pStack);
 
 #ifdef EQ_PARSER_DEBUG
 	std::cout << " = " << *pStack << std::endl;
 #endif
 }
 
-void CEquationParser::op_power(float64 *& pStack, functionContext& pContext)
+void CEquationParser::op_power(float64*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "pow: " << *(pStack) << " " << *(pStack-1) << std::endl;
 #endif
 	pStack--;
-	*pStack = pow(*(pStack+1), *(pStack));
+	*pStack = pow(*(pStack + 1), *(pStack));
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "Pow Result: " << *pStack << std::endl;
 #endif
@@ -522,7 +519,7 @@ void CEquationParser::op_floor(float64*& pStack, functionContext& pContext)
 	*pStack = floor(*(pStack));
 }
 
-void CEquationParser::op_log(float64 *& pStack, functionContext& pContext)
+void CEquationParser::op_log(float64*& pStack, functionContext& pContext)
 {
 	*pStack = log(*(pStack));
 }
@@ -542,7 +539,7 @@ void CEquationParser::op_sin(float64*& pStack, functionContext& pContext)
 	*pStack = sin(*(pStack));
 }
 
-void CEquationParser::op_sqrt(float64 *& pStack, functionContext& pContext)
+void CEquationParser::op_sqrt(float64*& pStack, functionContext& pContext)
 {
 	*pStack = sqrt(*(pStack));
 }
@@ -556,9 +553,9 @@ void CEquationParser::op_if_then_else(float64*& pStack, functionContext& pContex
 {
 	pStack--;
 	pStack--;
-	if(*(pStack+2))
+	if (*(pStack + 2))
 	{
-		*pStack = *(pStack+1);
+		*pStack = *(pStack + 1);
 	}
 	else
 	{
@@ -569,63 +566,63 @@ void CEquationParser::op_if_then_else(float64*& pStack, functionContext& pContex
 void CEquationParser::op_cmp_lower(float64*& pStack, functionContext& pContext)
 {
 	pStack--;
-	pStack[0] = (pStack[1]<pStack[0]?1:0);
+	pStack[0] = (pStack[1] < pStack[0] ? 1 : 0);
 }
 
 void CEquationParser::op_cmp_greater(float64*& pStack, functionContext& pContext)
 {
 	pStack--;
-	pStack[0] = (pStack[1]>pStack[0]?1:0);
+	pStack[0] = (pStack[1] > pStack[0] ? 1 : 0);
 }
 
 void CEquationParser::op_cmp_lower_equal(float64*& pStack, functionContext& pContext)
 {
 	pStack--;
-	pStack[0] = (pStack[1]<=pStack[0]?1:0);
+	pStack[0] = (pStack[1] <= pStack[0] ? 1 : 0);
 }
 
 void CEquationParser::op_cmp_greater_equal(float64*& pStack, functionContext& pContext)
 {
 	pStack--;
-	pStack[0] = (pStack[1]>=pStack[0]?1:0);
+	pStack[0] = (pStack[1] >= pStack[0] ? 1 : 0);
 }
 
 void CEquationParser::op_cmp_equal(float64*& pStack, functionContext& pContext)
 {
 	pStack--;
-	pStack[0] = (pStack[1]==pStack[0]?1:0);
+	pStack[0] = (pStack[1] == pStack[0] ? 1 : 0);
 }
 
 void CEquationParser::op_cmp_not_equal(float64*& pStack, functionContext& pContext)
 {
 	pStack--;
-	pStack[0] = (pStack[1]!=pStack[0]?1:0);
+	pStack[0] = (pStack[1] != pStack[0] ? 1 : 0);
 }
 
 void CEquationParser::op_bool_and(float64*& pStack, functionContext& pContext)
 {
 	pStack--;
-	pStack[0] = (pStack[1]!=0 && pStack[0]!=0?1:0);
+	pStack[0] = (pStack[1] != 0 && pStack[0] != 0 ? 1 : 0);
 }
 
 void CEquationParser::op_bool_or(float64*& pStack, functionContext& pContext)
 {
 	pStack--;
-	pStack[0] = (pStack[1]!=0 || pStack[0]!=0?1:0);
+	pStack[0] = (pStack[1] != 0 || pStack[0] != 0 ? 1 : 0);
 }
 
 void CEquationParser::op_bool_not(float64*& pStack, functionContext& pContext)
 {
-	pStack[0] = pStack[0]!=0?0:1;
+	pStack[0] = pStack[0] != 0 ? 0 : 1;
 }
 
 void CEquationParser::op_bool_xor(float64*& pStack, functionContext& pContext)
 {
 	pStack--;
-	pStack[0] = (pStack[1]!=pStack[0]?1:0);
+	pStack[0] = (pStack[1] != pStack[0] ? 1 : 0);
 }
 
-void CEquationParser::op_loadVal(float64 *& pStack, functionContext& pContext)
+void CEquationParser::op_loadVal(float64*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "loadVal : " << pContext.m_f64DirectValue << std::endl;
@@ -633,7 +630,7 @@ void CEquationParser::op_loadVal(float64 *& pStack, functionContext& pContext)
 	*(++pStack) = pContext.m_f64DirectValue;
 }
 
-void CEquationParser::op_loadVar(float64 *& pStack, functionContext& pContext)
+void CEquationParser::op_loadVar(float64*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "loadVar : " << **(pContext.m_ppIndirectValue) << std::endl;

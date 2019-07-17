@@ -56,21 +56,22 @@ namespace OpenViBE
 
 		protected:
 
-// This macro waits until m_oHolder is either the current thread id or unassigned
+			// This macro waits until m_oHolder is either the current thread id or unassigned
 #define GRAB_OWNERSHIP std::unique_lock<std::mutex> lock(m_oMutex); \
 	m_oCondition.wait(lock, [this](void) { return (this->m_oOwner == std::thread::id() || this->m_oOwner == std::this_thread::get_id() ); } ); \
 	m_oOwner = std::this_thread::get_id();
 
-			template <class T> void logForEach(T tValue)
+			template <class T>
+			void logForEach(T tValue)
 			{
 				GRAB_OWNERSHIP;
 
-				if(m_eCurrentLogLevel!=LogLevel_None && this->isActive(m_eCurrentLogLevel))
+				if (m_eCurrentLogLevel != LogLevel_None && this->isActive(m_eCurrentLogLevel))
 				{
 					std::vector<OpenViBE::Kernel::ILogListener*>::iterator i;
-					for(i=m_vListener.begin(); i!=m_vListener.end(); ++i)
+					for (i = m_vListener.begin(); i != m_vListener.end(); ++i)
 					{
-						if((*i)->isActive(m_eCurrentLogLevel))
+						if ((*i)->isActive(m_eCurrentLogLevel))
 						{
 							(*i)->log(tValue);
 						}

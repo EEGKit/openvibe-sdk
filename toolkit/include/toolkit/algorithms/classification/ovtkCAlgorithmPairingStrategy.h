@@ -35,14 +35,14 @@ namespace OpenViBEToolkit
 
 		virtual OpenViBE::boolean designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount) = 0;
 
-		virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet)=0;
+		virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) =0;
 		virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
 										   , OpenViBE::float64& rf64Class
 										   , OpenViBEToolkit::IVector& rDistanceValue
-										   , OpenViBEToolkit::IVector& rProbabilityValue)=0;
+										   , OpenViBEToolkit::IVector& rProbabilityValue) =0;
 
-		virtual XML::IXMLNode* saveConfiguration(void)=0;
-		virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode* pConfiguratioNode)=0;
+		virtual XML::IXMLNode* saveConfiguration(void) =0;
+		virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode* pConfiguratioNode) =0;
 		_IsDerivedFromClass_(CAlgorithmClassifier, OVTK_ClassId_Algorithm_PairingStrategy)
 
 		virtual OpenViBE::uint32 getOutputProbabilityVectorLength(void) =0;
@@ -55,18 +55,18 @@ namespace OpenViBEToolkit
 		OpenViBE::CIdentifier m_oSubClassifierAlgorithmIdentifier;
 	};
 
-	class OVTK_API CAlgorithmPairingStrategyDesc: public OpenViBEToolkit::CAlgorithmClassifierDesc
+	class OVTK_API CAlgorithmPairingStrategyDesc : public OpenViBEToolkit::CAlgorithmClassifierDesc
 	{
 	public:
 
 		virtual OpenViBE::boolean getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 		{
 			CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
-			rAlgorithmPrototype.addInputParameter (OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm,        "Algorithm Identifier",        OpenViBE::Kernel::ParameterType_Identifier);
+			rAlgorithmPrototype.addInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm, "Algorithm Identifier", OpenViBE::Kernel::ParameterType_Identifier);
 
-			rAlgorithmPrototype.addInputTrigger   (OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture,              "Design Architecture");
+			rAlgorithmPrototype.addInputTrigger(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture, "Design Architecture");
 			return true;
 		}
 

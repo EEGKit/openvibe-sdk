@@ -10,25 +10,23 @@ using namespace OpenViBE::Kernel;
 //                                                                   //
 
 CLink::CLink(const IKernelContext& rKernelContext, CScenario& rOwnerScenario)
-	:TAttributable < TKernelObject < ILink > >(rKernelContext)
-	,m_rOwnerScenario(rOwnerScenario)
-	,m_oIdentifier(OV_UndefinedIdentifier)
-	,m_oSourceBoxIdentifier(OV_UndefinedIdentifier)
-	,m_oTargetBoxIdentifier(OV_UndefinedIdentifier)
-	,m_ui32SourceOutputIndex(0)
-	,m_ui32TargetInputIndex(0)
-{
-}
+	: TAttributable<TKernelObject<ILink>>(rKernelContext)
+	  , m_rOwnerScenario(rOwnerScenario)
+	  , m_oIdentifier(OV_UndefinedIdentifier)
+	  , m_oSourceBoxIdentifier(OV_UndefinedIdentifier)
+	  , m_oTargetBoxIdentifier(OV_UndefinedIdentifier)
+	  , m_ui32SourceOutputIndex(0)
+	  , m_ui32TargetInputIndex(0) {}
 
 bool CLink::InitializeFromExistingLink(const ILink& l)
 {
-	m_oIdentifier = l.getIdentifier();
-	m_oSourceBoxIdentifier = l.getSourceBoxIdentifier();
-	m_oTargetBoxIdentifier = l.getTargetBoxIdentifier();
+	m_oIdentifier                = l.getIdentifier();
+	m_oSourceBoxIdentifier       = l.getSourceBoxIdentifier();
+	m_oTargetBoxIdentifier       = l.getTargetBoxIdentifier();
 	m_oSourceBoxOutputIdentifier = l.getSourceBoxOutputIdentifier();
-	m_oTargetBoxInputIdentifier = l.getTargetBoxInputIdentifier();
-	m_ui32SourceOutputIndex = l.getSourceBoxOutputIndex();
-	m_ui32TargetInputIndex = l.getTargetBoxInputIndex();
+	m_oTargetBoxInputIdentifier  = l.getTargetBoxInputIdentifier();
+	m_ui32SourceOutputIndex      = l.getSourceBoxOutputIndex();
+	m_ui32TargetInputIndex       = l.getTargetBoxInputIndex();
 	return true;
 }
 
@@ -39,7 +37,7 @@ bool CLink::InitializeFromExistingLink(const ILink& l)
 boolean CLink::setIdentifier(
 	const CIdentifier& rIdentifier)
 {
-	m_oIdentifier=rIdentifier;
+	m_oIdentifier = rIdentifier;
 	return true;
 }
 
@@ -56,9 +54,9 @@ boolean CLink::setSource(
 	const uint32 ui32BoxOutputIndex,
 	const CIdentifier rBoxOutputIdentifier)
 {
-	m_oSourceBoxIdentifier=rBoxIdentifier;
-	m_ui32SourceOutputIndex=ui32BoxOutputIndex;
-	m_oSourceBoxOutputIdentifier=rBoxOutputIdentifier;
+	m_oSourceBoxIdentifier       = rBoxIdentifier;
+	m_ui32SourceOutputIndex      = ui32BoxOutputIndex;
+	m_oSourceBoxOutputIdentifier = rBoxOutputIdentifier;
 	return true;
 }
 
@@ -67,9 +65,9 @@ boolean CLink::setTarget(
 	const uint32 ui32BoxInputIndex,
 	const CIdentifier rBoxInputIdentifier)
 {
-	m_oTargetBoxIdentifier=rBoxIdentifier;
-	m_ui32TargetInputIndex=ui32BoxInputIndex;
-	m_oTargetBoxInputIdentifier=rBoxInputIdentifier;
+	m_oTargetBoxIdentifier      = rBoxIdentifier;
+	m_ui32TargetInputIndex      = ui32BoxInputIndex;
+	m_oTargetBoxInputIdentifier = rBoxInputIdentifier;
 	return true;
 }
 
@@ -78,9 +76,9 @@ boolean CLink::getSource(
 	uint32& ui32BoxOutputIndex,
 	CIdentifier& rBoxOuputIdentifier) const
 {
-	rBoxIdentifier=m_oSourceBoxIdentifier;
-	ui32BoxOutputIndex=m_ui32SourceOutputIndex;
-	rBoxOuputIdentifier=m_oSourceBoxOutputIdentifier;
+	rBoxIdentifier      = m_oSourceBoxIdentifier;
+	ui32BoxOutputIndex  = m_ui32SourceOutputIndex;
+	rBoxOuputIdentifier = m_oSourceBoxOutputIdentifier;
 	return true;
 }
 
@@ -104,9 +102,9 @@ boolean CLink::getTarget(
 	uint32& ui32BoxInputIndex,
 	CIdentifier& rTargetBoxInputIdentifier) const
 {
-	rTargetBoxIdentifier=m_oTargetBoxIdentifier;
-	ui32BoxInputIndex=m_ui32TargetInputIndex;
-	rTargetBoxInputIdentifier=m_oTargetBoxInputIdentifier;
+	rTargetBoxIdentifier      = m_oTargetBoxIdentifier;
+	ui32BoxInputIndex         = m_ui32TargetInputIndex;
+	rTargetBoxInputIdentifier = m_oTargetBoxInputIdentifier;
 	return true;
 }
 

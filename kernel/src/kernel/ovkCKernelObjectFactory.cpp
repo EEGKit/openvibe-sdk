@@ -22,20 +22,18 @@ using namespace OpenViBE;
 	}
 
 Kernel::CKernelObjectFactory::CKernelObjectFactory(const Kernel::IKernelContext& rKernelContext)
-	:TKernelObject<IKernelObjectFactory>(rKernelContext)
-{
-}
+	: TKernelObject<IKernelObjectFactory>(rKernelContext) {}
 
 IObject* Kernel::CKernelObjectFactory::createObject(
 	const CIdentifier& rClassIdentifier)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	IObject* l_pResult=NULL;
+	IObject* l_pResult = NULL;
 
-	create(rClassIdentifier, OV_ClassId_Kernel_Plugins_PluginModule,              l_pResult, Kernel::CPluginModule);
+	create(rClassIdentifier, OV_ClassId_Kernel_Plugins_PluginModule, l_pResult, Kernel::CPluginModule);
 
-	create(rClassIdentifier, OV_ClassId_Kernel_Configurable,                      l_pResult, Kernel::CConfigurable);
+	create(rClassIdentifier, OV_ClassId_Kernel_Configurable, l_pResult, Kernel::CConfigurable);
 
 	OV_ERROR_UNLESS_KRN(
 		l_pResult,
@@ -51,16 +49,13 @@ boolean Kernel::CKernelObjectFactory::releaseObject(
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	if(!pObject)
-	{
-		return true;
-	}
+	if (!pObject) { return true; }
 
 	CIdentifier l_rClassIdentifier;
-	l_rClassIdentifier=pObject->getClassIdentifier();
+	l_rClassIdentifier = pObject->getClassIdentifier();
 
 	vector<IObject*>::iterator i;
-	i=find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
+	i = find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
 
 	OV_ERROR_UNLESS_KRF(
 		i != m_oCreatedObjects.end(),

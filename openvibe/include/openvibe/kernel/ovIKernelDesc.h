@@ -36,7 +36,7 @@ namespace OpenViBE
 			 *
 			 * This method creates the kernel itself and returns it.
 			 */
-			virtual OpenViBE::Kernel::IKernelContext* createKernel(const OpenViBE::CString& rApplicationName, const OpenViBE::CString& rConfigurationFilename)=0;
+			virtual OpenViBE::Kernel::IKernelContext* createKernel(const OpenViBE::CString& rApplicationName, const OpenViBE::CString& rConfigurationFilename) =0;
 			/**
 			 * \brief Creates the kernel itself and make it sub kernel of a master kernel
 			 * \param rMasterKernel [in] : the master kernel
@@ -48,14 +48,14 @@ namespace OpenViBE
 			 *
 			 * This method creates the kernel itself and returns it.
 			 */
-			virtual OpenViBE::Kernel::IKernelContext* createKernel(const OpenViBE::Kernel::IKernelContext& rMasterKernel, const OpenViBE::CString& rApplicationName, const OpenViBE::CString& rConfigurationFilename)=0;
+			virtual OpenViBE::Kernel::IKernelContext* createKernel(const OpenViBE::Kernel::IKernelContext& rMasterKernel, const OpenViBE::CString& rApplicationName, const OpenViBE::CString& rConfigurationFilename) =0;
 			/**
 			 * \brief Releases the kernel itself
 			 * \param pKernel [in] : the kernel to release
 			 *
 			 * This method releases an existing kernel.
 			 */
-			virtual void releaseKernel(OpenViBE::Kernel::IKernelContext* pKernel)=0;
+			virtual void releaseKernel(OpenViBE::Kernel::IKernelContext* pKernel) =0;
 
 			//@}
 			/** \name Textual plugin object description and information */

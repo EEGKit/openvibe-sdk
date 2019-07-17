@@ -12,26 +12,25 @@
 using namespace OpenViBE;
 using namespace OpenViBE::Kernel;
 
-namespace {
-
+namespace
+{
 	const char* kernelConfig = nullptr;
 
-	class StreamedMatrixTest : public ::testing::Test {
+	class StreamedMatrixTest : public ::testing::Test
+	{
 	protected:
 
 		StreamedMatrixTest()
-		    : m_KernelContext()
+			: m_KernelContext() { }
+
+
+		~StreamedMatrixTest() override { }
+
+		void SetUp() override
 		{
-		}
-
-
-		~StreamedMatrixTest() override {
-		}
-
-		void SetUp() override {
 			m_KernelContext.initialize();
 			m_KernelContext->getPluginManager().addPluginsFromFiles(
-			            m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
+				m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
 
 			m_DecoderId = OV_UndefinedIdentifier;
 			m_DecoderId = m_KernelContext->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder);
@@ -42,7 +41,8 @@ namespace {
 			ASSERT_NE(OV_UndefinedIdentifier, m_EncoderId);
 		}
 
-		void TearDown() override {
+		void TearDown() override
+		{
 			ASSERT_TRUE(m_KernelContext->getAlgorithmManager().releaseAlgorithm(m_DecoderId));
 			m_DecoderId = OV_UndefinedIdentifier;
 			ASSERT_TRUE(m_KernelContext->getAlgorithmManager().releaseAlgorithm(m_EncoderId));
@@ -142,7 +142,8 @@ namespace {
 
 int uoStreamedMatrixTest(int argc, char* argv[])
 {
-	if (argc > 1) {
+	if (argc > 1)
+	{
 		kernelConfig = argv[1];
 	}
 	::testing::InitGoogleTest(&argc, argv);

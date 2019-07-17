@@ -66,8 +66,5 @@ namespace Communication
 		std::atomic<bool> m_IsEndMessageReceived;
 
 		std::atomic<bool> m_WasSyncMessageReceived;
-
 	};
-
 }
-

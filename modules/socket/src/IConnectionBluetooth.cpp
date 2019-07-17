@@ -1,14 +1,14 @@
 #include "IConnectionBluetooth.h"
 
 #if defined TARGET_OS_Windows
-	#define WIN32_LEAN_AND_MEAN
-	#define UNICODE
-	#include <Windows.h>
-	#include <CommCtrl.h>
-	#include <codecvt>
-	#include <WinSock2.h>
-	#include <ws2bth.h>
-	#include <bluetoothapis.h>
+#define WIN32_LEAN_AND_MEAN
+#define UNICODE
+#include <Windows.h>
+#include <CommCtrl.h>
+#include <codecvt>
+#include <WinSock2.h>
+#include <ws2bth.h>
+#include <bluetoothapis.h>
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	#include <sys/time.h>
 	#include <sys/types.h>
@@ -34,14 +34,12 @@ namespace Socket
 	{
 	public:
 
-		CConnectionBluetooth(void) : 
-			m_sLastError()
+		CConnectionBluetooth(void) : m_sLastError()
 #if defined TARGET_OS_Windows
-			,m_oSocket(INVALID_SOCKET)
+									 , m_oSocket(INVALID_SOCKET)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #endif
-		{
-		}
+		{ }
 
 		bool initialize(void)
 		{
@@ -71,10 +69,7 @@ namespace Socket
 #endif
 		}
 
-		bool open(void)
-		{
-			return false;
-		}
+		bool open(void) { return false; }
 
 		bool close(void)
 		{
@@ -121,20 +116,14 @@ namespace Socket
 
 		boolean isReadyToSend(Socket::uint32 ui32TimeOut) const
 		{
-			if (!this->isConnected())
-			{
-				return false;
-			}
+			if (!this->isConnected()) { return false; }
 
 			return true;
 		}
 
 		boolean isReadyToReceive(Socket::uint32 ui32TimeOut) const
 		{
-			if (!this->isConnected())
-			{
-				return false;
-			}
+			if (!this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
 
@@ -247,10 +236,7 @@ namespace Socket
 			{
 				l_ui32BytesLeft -= this->sendBuffer(l_pPointer + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
 
-				if (this->isErrorRaised())
-				{
-					return false;
-				}
+				if (this->isErrorRaised()) { return false; }
 			}
 
 			return l_ui32BytesLeft == 0;
@@ -264,17 +250,14 @@ namespace Socket
 				return 0;
 			}
 
-			char* l_pPointer = reinterpret_cast<char*>(pBuffer);
+			char* l_pPointer       = reinterpret_cast<char*>(pBuffer);
 			uint32 l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
 				l_ui32BytesLeft -= this->receiveBuffer(l_pPointer + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
 
-				if (this->isErrorRaised())
-				{
-					return false;
-				}
+				if (this->isErrorRaised()) { return false; }
 			}
 
 			return l_ui32BytesLeft == 0;
@@ -308,10 +291,7 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-			if (!this->initialize())
-			{
-				return false;
-			}
+			if (!this->initialize()) { return false; }
 
 			m_oSocket = _WINSOCK2API_::socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
 
@@ -323,10 +303,10 @@ namespace Socket
 			}
 
 			SOCKADDR_BTH l_oSockAddressBlutoothServer;
-			l_oSockAddressBlutoothServer.btAddr = u64BluetoothAddress;
-			l_oSockAddressBlutoothServer.addressFamily = AF_BTH;
+			l_oSockAddressBlutoothServer.btAddr         = u64BluetoothAddress;
+			l_oSockAddressBlutoothServer.addressFamily  = AF_BTH;
 			l_oSockAddressBlutoothServer.serviceClassId = RFCOMM_PROTOCOL_UUID;
-			l_oSockAddressBlutoothServer.port = BT_PORT_ANY;
+			l_oSockAddressBlutoothServer.port           = BT_PORT_ANY;
 
 			if (_WINSOCK2API_::connect(m_oSocket, (SOCKADDR*)&l_oSockAddressBlutoothServer, sizeof(SOCKADDR_BTH)) == SOCKET_ERROR)
 			{
@@ -346,15 +326,9 @@ namespace Socket
 #endif
 		}
 
-		bool isErrorRaised(void)
-		{
-			return !m_sLastError.empty();
-		}
+		bool isErrorRaised(void) { return !m_sLastError.empty(); }
 
-		const char* getLastError(void) const
-		{
-			return m_sLastError.c_str();
-		}
+		const char* getLastError(void) const { return m_sLastError.c_str(); }
 
 		std::string getLastErrorFormated(void)
 		{
@@ -373,7 +347,7 @@ namespace Socket
 				(LPTSTR)&l_sErrorText, // output
 				0, // minimum size for output buffer
 				NULL
-				);
+			);
 
 			// Converts std::wstring to std::string and returns it. 
 			std::wstring l_sErrorMessage(l_sErrorText, ui32Size);
@@ -386,12 +360,9 @@ namespace Socket
 #endif
 		}
 
-		void clearError(void)
-		{
-			m_sLastError.clear();
-		}
+		void clearError(void) { m_sLastError.clear(); }
 
-		bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** strarray, unsigned long long ** bluetoothAddresses)
+		bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** strarray, unsigned long long** bluetoothAddresses)
 		{
 			std::vector<std::string> bluetoothDevicesName;
 			std::vector<unsigned long long> bluetoothDevicesAddress;
@@ -402,7 +373,7 @@ namespace Socket
 			WSAQUERYSET l_oWSAQuerySet;
 
 			::memset((void *)&l_oWSAQuerySet, 0, sizeof(l_oWSAQuerySet));
-			l_oWSAQuerySet.dwSize = sizeof(l_oWSAQuerySet);
+			l_oWSAQuerySet.dwSize      = sizeof(l_oWSAQuerySet);
 			l_oWSAQuerySet.dwNameSpace = NS_BTH;
 			l_oWSAQuerySet.lpcsaBuffer = nullptr;
 
@@ -414,12 +385,12 @@ namespace Socket
 
 			char l_vBuffer[5000];
 			LPWSAQUERYSET l_sWSAQuerySet = (LPWSAQUERYSET)l_vBuffer;
-			DWORD l_ui32dwSize = sizeof(l_vBuffer);
+			DWORD l_ui32dwSize           = sizeof(l_vBuffer);
 
 			memset((void *)l_sWSAQuerySet, 0, sizeof(WSAQUERYSET));
-			l_sWSAQuerySet->dwSize = sizeof(WSAQUERYSET);
+			l_sWSAQuerySet->dwSize      = sizeof(WSAQUERYSET);
 			l_sWSAQuerySet->dwNameSpace = NS_BTH;
-			l_sWSAQuerySet->lpBlob = nullptr;
+			l_sWSAQuerySet->lpBlob      = nullptr;
 
 			bool l_bLookup = true;
 
@@ -445,8 +416,8 @@ namespace Socket
 				{
 					// Get bluetooth MAC address and name
 					bluetoothDevicesAddress.push_back(((SOCKADDR_BTH *)l_sWSAQuerySet->lpcsaBuffer->RemoteAddr.lpSockaddr)->btAddr);
-					
-					std::wstring_convert< std::codecvt_utf8<wchar_t>, wchar_t> converterX;
+
+					std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converterX;
 					bluetoothDevicesName.push_back(converterX.to_bytes(l_sWSAQuerySet->lpszServiceInstanceName));
 				}
 			}
@@ -458,7 +429,7 @@ namespace Socket
 			}
 
 			*pairedBluetoothDevicesCount = static_cast<unsigned int>(bluetoothDevicesAddress.size());
-			strarray = new char*[*pairedBluetoothDevicesCount];
+			strarray                     = new char*[*pairedBluetoothDevicesCount];
 
 			for (unsigned int i = 0; i < *pairedBluetoothDevicesCount; ++i)
 			{
@@ -486,9 +457,5 @@ namespace Socket
 #endif
 	};
 
-	IConnectionBluetooth* createConnectionBluetooth(void)
-	{
-		return new CConnectionBluetooth();
-	}
-
+	IConnectionBluetooth* createConnectionBluetooth(void) { return new CConnectionBluetooth(); }
 };

@@ -11,11 +11,9 @@ namespace OpenViBE
 		{
 		public:
 			explicit CScenarioSettingKeywordParserCallback(const IScenario& rScenario)
-			    : m_rScenario(rScenario)
-			{}
+				: m_rScenario(rScenario) {}
 
-			virtual ~CScenarioSettingKeywordParserCallback()
-			{}
+			virtual ~CScenarioSettingKeywordParserCallback() {}
 
 			virtual OpenViBE::boolean expand(const CString& rStringToExpand, CString& rExpandedString) const;
 

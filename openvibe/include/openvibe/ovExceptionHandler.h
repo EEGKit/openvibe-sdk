@@ -43,24 +43,24 @@ namespace OpenViBE
 	  * 		 the provided exception handler.
 	  */
 	template <
-			  typename Callback,
-			  typename std::enable_if<std::is_same<bool, typename std::result_of<Callback()>::type >::value>::type* = nullptr
-			  >
+		typename Callback,
+		typename std::enable_if<std::is_same<bool, typename std::result_of<Callback()>::type>::value>::type* = nullptr
+	>
 	bool translateException(Callback&& callable, ExceptionHandlerType exceptionHandler)
 	{
 		try
 		{
 			return callable();
 		}
-		catch(const std::exception& exception)
+		catch (const std::exception& exception)
 		{
 			exceptionHandler(exception);
 			return false;
 		}
-		catch(...)
+		catch (...)
 		{
 			exceptionHandler(std::runtime_error("unknown exception"));
 			return false;
-   		}
+		}
 	}
 }

@@ -8,7 +8,7 @@ using namespace std;
 bool CCppDefineGenerator::openFile(const char* sFilename)
 {
 	m_oFile.open(sFilename, ios::out | ios::trunc);
-	if(!m_oFile.is_open())
+	if (!m_oFile.is_open())
 		return false;
 	m_oFile << "#ifndef __OpenViBEToolkit_Stimulations_Defines_H__" << endl;
 	m_oFile << "#define __OpenViBEToolkit_Stimulations_Defines_H__" << endl << endl;
@@ -17,7 +17,7 @@ bool CCppDefineGenerator::openFile(const char* sFilename)
 }
 
 
-bool CCppDefineGenerator::appendStimulation(SStimulation &rStim)
+bool CCppDefineGenerator::appendStimulation(SStimulation& rStim)
 {
 	m_oFile << "#define " << rStim.m_sId << "  " << rStim.m_sHexaCode << endl;
 	return true;

@@ -28,7 +28,7 @@ namespace OpenViBE
 		{
 			// Note that if samplingRate is 0, this will crash. Its preferable to silent fail, the caller should check the argument.
 			// FIXME: assert or something
-			return (ui64SampleCount<<32)/ui64SamplingRate;
+			return (ui64SampleCount << 32) / ui64SamplingRate;
 		}
 
 		/**
@@ -39,7 +39,7 @@ namespace OpenViBE
 		 */
 		static uint64 timeToSampleCount(const uint64 ui64SamplingRate, const uint64 ui64Time)
 		{
-			return ((ui64Time+1)*ui64SamplingRate-1)>>32;
+			return ((ui64Time + 1) * ui64SamplingRate - 1) >> 32;
 		}
 		
 		/**
@@ -50,7 +50,7 @@ namespace OpenViBE
 		 */
 		static float64 timeToSeconds(const uint64 ui64Time)
 		{
-			return ui64Time/static_cast<double>(1LL<<32);
+			return ui64Time / static_cast<double>(1LL << 32);
 		}
 
 		/**
@@ -61,7 +61,7 @@ namespace OpenViBE
 		 */
 		static uint64 secondsToTime(const float64 f64Time)
 		{
-			return static_cast<uint64>(f64Time*static_cast<double>(1LL<<32));
+			return static_cast<uint64>(f64Time * static_cast<double>(1LL << 32));
 		}
 
 	private:
@@ -77,4 +77,3 @@ namespace OpenViBE
 		uint64 secondsToTime(const uint64 ui64Time);
 	};
 }
-

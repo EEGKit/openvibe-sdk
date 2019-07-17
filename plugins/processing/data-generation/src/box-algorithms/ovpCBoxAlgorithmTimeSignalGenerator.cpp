@@ -16,12 +16,9 @@ using namespace std;
 
 CBoxAlgorithmTimeSignalGenerator::CBoxAlgorithmTimeSignalGenerator(void)
 	: m_bHeaderSent(false)
-	,m_ui32SamplingFrequency(0)
-	,m_ui32GeneratedEpochSampleCount(0)
-	,m_ui32SentSampleCount(0)
-{
-
-}
+	  , m_ui32SamplingFrequency(0)
+	  , m_ui32GeneratedEpochSampleCount(0)
+	  , m_ui32SentSampleCount(0) {}
 
 void CBoxAlgorithmTimeSignalGenerator::release(void)
 {
@@ -30,14 +27,14 @@ void CBoxAlgorithmTimeSignalGenerator::release(void)
 
 bool CBoxAlgorithmTimeSignalGenerator::initialize(void)
 {
-	m_oSignalEncoder.initialize(*this,0);
+	m_oSignalEncoder.initialize(*this, 0);
 
 	// Parses box settings to try connecting to server
-	m_ui32SamplingFrequency = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_ui32SamplingFrequency         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_ui32GeneratedEpochSampleCount = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_bHeaderSent=false;
+	m_bHeaderSent                   = false;
 
-	m_ui32SentSampleCount=0;
+	m_ui32SentSampleCount = 0;
 
 	return true;
 }
@@ -57,13 +54,13 @@ bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& rMessageClock
 
 bool CBoxAlgorithmTimeSignalGenerator::process(void)
 {
-	IBoxIO* l_pDynamicBoxContext=getBoxAlgorithmContext()->getDynamicBoxContext();
+	IBoxIO* l_pDynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
-	if(!m_bHeaderSent)
+	if (!m_bHeaderSent)
 	{
 		m_oSignalEncoder.getInputSamplingRate() = m_ui32SamplingFrequency;
 
-		IMatrix* l_pMatrix=m_oSignalEncoder.getInputMatrix();
+		IMatrix* l_pMatrix = m_oSignalEncoder.getInputMatrix();
 
 		l_pMatrix->setDimensionCount(2);
 		l_pMatrix->setDimensionSize(0, 1);
@@ -72,7 +69,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process(void)
 
 		m_oSignalEncoder.encodeHeader();
 
-		m_bHeaderSent=true;
+		m_bHeaderSent = true;
 
 		l_pDynamicBoxContext->markOutputAsReadyToSend(0, 0, 0);
 	}
@@ -88,7 +85,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process(void)
 
 			for (uint32_t i = 0; i < m_ui32GeneratedEpochSampleCount; i++)
 			{
-				l_pSampleBuffer[i] = (i+m_ui32SentSampleCount)/static_cast<double>(m_ui32SamplingFrequency);
+				l_pSampleBuffer[i] = (i + m_ui32SentSampleCount) / static_cast<double>(m_ui32SamplingFrequency);
 			}
 
 			m_oSignalEncoder.encodeBuffer();
@@ -106,5 +103,5 @@ bool CBoxAlgorithmTimeSignalGenerator::process(void)
 
 OpenViBE::uint64 CBoxAlgorithmTimeSignalGenerator::getClockFrequency(void)
 {
-	return 128LL<<32;
+	return 128LL << 32;
 }

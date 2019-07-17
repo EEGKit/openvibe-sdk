@@ -20,19 +20,15 @@ namespace OpenViBE
 		public:
 
 			CChunk(void)
-				:m_ui64StartTime(0)
-				,m_ui64EndTime(0)
-				,m_bIsDeprecated(false)
-			{
-			}
+				: m_ui64StartTime(0)
+				  , m_ui64EndTime(0)
+				  , m_bIsDeprecated(false) { }
 
 			explicit CChunk(const OpenViBE::Kernel::CChunk& rChunk)
-				:m_oBuffer(rChunk.m_oBuffer)
-				,m_ui64StartTime(rChunk.m_ui64StartTime)
-				,m_ui64EndTime(rChunk.m_ui64EndTime)
-				,m_bIsDeprecated(false)
-			{
-			}
+				: m_oBuffer(rChunk.m_oBuffer)
+				  , m_ui64StartTime(rChunk.m_ui64StartTime)
+				  , m_ui64EndTime(rChunk.m_ui64EndTime)
+				  , m_bIsDeprecated(false) { }
 
 			const OpenViBE::Kernel::CBuffer& getBuffer(void) const
 			{
@@ -61,19 +57,19 @@ namespace OpenViBE
 
 			OpenViBE::boolean setStartTime(OpenViBE::uint64 ui64StartTime)
 			{
-				m_ui64StartTime=ui64StartTime;
+				m_ui64StartTime = ui64StartTime;
 				return true;
 			}
 
 			OpenViBE::boolean setEndTime(OpenViBE::uint64 ui64EndTime)
 			{
-				m_ui64EndTime=ui64EndTime;
+				m_ui64EndTime = ui64EndTime;
 				return true;
 			}
 
 			OpenViBE::boolean markAsDeprecated(OpenViBE::boolean bIsDeprecated)
 			{
-				m_bIsDeprecated=bIsDeprecated;
+				m_bIsDeprecated = bIsDeprecated;
 				return true;
 			}
 
@@ -85,7 +81,7 @@ namespace OpenViBE
 			OpenViBE::boolean m_bIsDeprecated;
 		};
 
-		class CSimulatedBox : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >
+		class CSimulatedBox : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxIO>
 		{
 		public:
 
@@ -93,7 +89,7 @@ namespace OpenViBE
 				const OpenViBE::Kernel::IKernelContext& rKernelContext,
 				OpenViBE::Kernel::CScheduler& rScheduler);
 
-			virtual ~CSimulatedBox() ;
+			virtual ~CSimulatedBox();
 
 			virtual OpenViBE::boolean setScenarioIdentifier(
 				const OpenViBE::CIdentifier& rScenarioIdentifier);
@@ -147,7 +143,7 @@ namespace OpenViBE
 			virtual OpenViBE::boolean setOutputChunkSize(
 				const OpenViBE::uint32 ui32OutputIndex,
 				const OpenViBE::uint64 ui64Size,
-				const OpenViBE::boolean bDiscard=true);
+				const OpenViBE::boolean bDiscard = true);
 			virtual OpenViBE::uint8* getOutputChunkBuffer(
 				const OpenViBE::uint32 ui32OutputIndex);
 			virtual OpenViBE::boolean appendOutputChunkData(
@@ -186,11 +182,11 @@ namespace OpenViBE
 
 		public:
 
-			std::vector < std::deque < OpenViBE::Kernel::CChunk > > m_vInput;
-			std::vector < std::deque < OpenViBE::Kernel::CChunk > > m_vOutput;
-			std::vector < OpenViBE::Kernel::CChunk > m_vCurrentOutput;
-			std::vector < OpenViBE::uint64 > m_vLastOutputStartTime;
-			std::vector < OpenViBE::uint64 > m_vLastOutputEndTime;
+			std::vector<std::deque<OpenViBE::Kernel::CChunk>> m_vInput;
+			std::vector<std::deque<OpenViBE::Kernel::CChunk>> m_vOutput;
+			std::vector<OpenViBE::Kernel::CChunk> m_vCurrentOutput;
+			std::vector<OpenViBE::uint64> m_vLastOutputStartTime;
+			std::vector<OpenViBE::uint64> m_vLastOutputEndTime;
 		};
 	};
 };

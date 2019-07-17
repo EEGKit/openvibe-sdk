@@ -9,10 +9,8 @@ using namespace Communication;
 
 MessagingClient::MessagingClient()
 	: CMessaging()
-	, m_Client(Socket::createConnectionClient())
-	, m_BoxDescriptionReceived(false)
-{
-}
+	  , m_Client(Socket::createConnectionClient())
+	  , m_BoxDescriptionReceived(false) {}
 
 MessagingClient::~MessagingClient()
 {
@@ -93,51 +91,36 @@ bool MessagingClient::close()
 
 uint32_t MessagingClient::getParameterCount() const
 {
-	if (!m_BoxDescriptionReceived)
-	{
-		return 0;
-	}
+	if (!m_BoxDescriptionReceived) { return 0; }
 
 	return static_cast<uint32_t>(impl->m_BoxDescription.getParameters()->size());
 }
 
 uint32_t MessagingClient::getInputCount() const
 {
-	if (!m_BoxDescriptionReceived)
-	{
-		return 0;
-	}
+	if (!m_BoxDescriptionReceived) { return 0; }
 
 	return static_cast<uint32_t>(impl->m_BoxDescription.getInputs()->size());
 }
 
 uint32_t MessagingClient::getOutputCount() const
 {
-	if (!m_BoxDescriptionReceived)
-	{
-		return 0;
-	}
+	if (!m_BoxDescriptionReceived) { return 0; }
 
 	return static_cast<uint32_t>(impl->m_BoxDescription.getOutputs()->size());
 }
 
 bool MessagingClient::getParameter(const size_t i, uint32_t& id, uint64_t& type, std::string& name, std::string& value) const
 {
-	if (!m_BoxDescriptionReceived)
-	{
-		return false;
-	}
+	if (!m_BoxDescriptionReceived) { return false; }
 
 	const std::vector<Parameter>* parameters = impl->m_BoxDescription.getParameters();
 
-	if (parameters->size() <= i)
-	{
-		return false;
-	}
+	if (parameters->size() <= i) { return false; }
 
-	id = parameters->at(i).getId();
-	type = parameters->at(i).getType();
-	name = parameters->at(i).getName();
+	id    = parameters->at(i).getId();
+	type  = parameters->at(i).getType();
+	name  = parameters->at(i).getName();
 	value = parameters->at(i).getValue();
 
 	return true;
@@ -145,19 +128,13 @@ bool MessagingClient::getParameter(const size_t i, uint32_t& id, uint64_t& type,
 
 bool MessagingClient::getInput(const size_t i, uint32_t& id, uint64_t& type, std::string& name) const
 {
-	if (!m_BoxDescriptionReceived)
-	{
-		return false;
-	}
+	if (!m_BoxDescriptionReceived) { return false; }
 
 	const std::vector<InputOutput>* inputs = impl->m_BoxDescription.getInputs();
 
-	if (inputs->size() <= i)
-	{
-		return false;
-	}
+	if (inputs->size() <= i) { return false; }
 
-	id = inputs->at(i).getId();
+	id   = inputs->at(i).getId();
 	type = inputs->at(i).getType();
 	name = inputs->at(i).getName();
 
@@ -174,12 +151,9 @@ bool MessagingClient::getOutput(const size_t i, uint32_t& id, uint64_t& type, st
 
 	const std::vector<InputOutput>* outputs = impl->m_BoxDescription.getOutputs();
 
-	if (outputs->size() <= i)
-	{
-		return false;
-	}
+	if (outputs->size() <= i) { return false; }
 
-	id = outputs->at(i).getId();
+	id   = outputs->at(i).getId();
 	type = outputs->at(i).getType();
 	name = outputs->at(i).getName();
 
@@ -220,4 +194,3 @@ bool MessagingClient::waitForSyncMessage()
 {
 	return CMessaging::waitForSyncMessage();
 }
-

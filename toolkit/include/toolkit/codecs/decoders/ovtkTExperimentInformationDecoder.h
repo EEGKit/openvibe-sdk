@@ -12,21 +12,20 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TExperimentInformationDecoderLocal : public T
 	{
-
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_ui64OutputExperimentIdentifier;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::CString* > m_pOutputpExperimentDate;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_ui64OutputExperimentIdentifier;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_pOutputpExperimentDate;
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_ui64OutputSubjectIdentifier;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::CString* > m_pOutputpSubjectName;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_ui64OutputSubjectAge;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_ui64OutputSubjectGender;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_ui64OutputSubjectIdentifier;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_pOutputpSubjectName;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_ui64OutputSubjectAge;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_ui64OutputSubjectGender;
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_ui64OutputLaboratoryIdentifier;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::CString* > m_pOutputpLaboratoryName;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_ui64OutputTechnicianIdentifier;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::CString* > m_pOutputpTechnicianName;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_ui64OutputLaboratoryIdentifier;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_pOutputpLaboratoryName;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_ui64OutputTechnicianIdentifier;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> m_pOutputpTechnicianName;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
@@ -60,10 +59,7 @@ namespace OpenViBEToolkit
 
 		OpenViBE::boolean uninitialize(void)
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
 			m_ui64OutputExperimentIdentifier.uninitialize();
 			m_pOutputpExperimentDate.uninitialize();
@@ -84,52 +80,52 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getOutputExperimentIdentifier()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getOutputExperimentIdentifier()
 		{
 			return m_ui64OutputExperimentIdentifier;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::CString* >& getOutputExperimentDate()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputExperimentDate()
 		{
 			return m_pOutputpExperimentDate;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getOutputSubjectIdentifier()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getOutputSubjectIdentifier()
 		{
 			return m_ui64OutputSubjectIdentifier;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::CString* >& getOutputSubjectName()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputSubjectName()
 		{
 			return m_pOutputpSubjectName;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getOutputSubjectAge()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getOutputSubjectAge()
 		{
 			return m_ui64OutputSubjectAge;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getOutputSubjectGender()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getOutputSubjectGender()
 		{
 			return m_ui64OutputSubjectGender;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getOutputLaboratoryIdentifier()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getOutputLaboratoryIdentifier()
 		{
 			return m_ui64OutputLaboratoryIdentifier;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::CString* >& getOutputLaboratoryName()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputLaboratoryName()
 		{
 			return m_pOutputpLaboratoryName;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getOutputTechnicianIdentifier()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getOutputTechnicianIdentifier()
 		{
 			return m_ui64OutputTechnicianIdentifier;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::CString* >& getOutputTechnicianName()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputTechnicianName()
 		{
 			return m_pOutputpTechnicianName;
 		}
@@ -151,21 +147,21 @@ namespace OpenViBEToolkit
 	};
 
 	template <class T>
-	class TExperimentInformationDecoder : public TExperimentInformationDecoderLocal < TDecoder < T > >
+	class TExperimentInformationDecoder : public TExperimentInformationDecoderLocal<TDecoder<T>>
 	{
 	private:
-		using TExperimentInformationDecoderLocal < TDecoder < T > >::m_pBoxAlgorithm;
+		using TExperimentInformationDecoderLocal<TDecoder<T>>::m_pBoxAlgorithm;
 	public:
-		using TExperimentInformationDecoderLocal < TDecoder < T > >::uninitialize;
+		using TExperimentInformationDecoderLocal<TDecoder<T>>::uninitialize;
 
-		TExperimentInformationDecoder()
-		{
-		}
+		TExperimentInformationDecoder() { }
+
 		TExperimentInformationDecoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
+
 		virtual ~TExperimentInformationDecoder()
 		{
 			this->uninitialize();

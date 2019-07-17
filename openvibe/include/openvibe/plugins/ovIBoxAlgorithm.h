@@ -257,7 +257,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
 			virtual OpenViBE::boolean process(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext)=0;
+				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) =0;
 
 			//@}
 
@@ -268,25 +268,15 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual ~IBoxListener(void)
-			{
-			}
+			virtual ~IBoxListener(void) { }
 
-			virtual void release(void)
-			{
-			}
+			virtual void release(void) { }
 
 			virtual OpenViBE::boolean initialize(
-				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext)
-			{
-				return true;
-			}
+				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
 
 			virtual OpenViBE::boolean uninitialize(
-				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext)
-			{
-				return true;
-			}
+				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
 
 			/** \name Box modifications callbacks */
 			//@{
@@ -311,7 +301,7 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::boolean process(
 				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext,
-				const OpenViBE::Kernel::EBoxModification eBoxModificationType)=0;
+				const OpenViBE::Kernel::EBoxModification eBoxModificationType) =0;
 
 			//@}
 

@@ -31,7 +31,7 @@ namespace OpenViBE
 			virtual OpenViBE::boolean getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
-				rAlgorithmPrototype.addInputParameter (OV_Algorithm_ScenarioExporter_InputParameterId_Scenario,      "Scenario",      OpenViBE::Kernel::ParameterType_Object);
+				rAlgorithmPrototype.addInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario, "Scenario", OpenViBE::Kernel::ParameterType_Object);
 				rAlgorithmPrototype.addOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer, "Memory buffer", OpenViBE::Kernel::ParameterType_MemoryBuffer);
 				return true;
 			}

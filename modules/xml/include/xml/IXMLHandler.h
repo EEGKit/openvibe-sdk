@@ -18,7 +18,7 @@ namespace XML
 		/**
 		 * @brief Release the handler.
 		 */
-		virtual void release(void)=0;
+		virtual void release(void) =0;
 
 		//Parsing
 		/**
@@ -26,7 +26,7 @@ namespace XML
 		 * @param sPath [in] : Path to the File
 		 * @return The root node of the document, or NULL if there is an error.
 		 */
-		virtual XML::IXMLNode* parseFile(const char* sPath)=0;
+		virtual XML::IXMLNode* parseFile(const char* sPath) =0;
 
 		/**
 		 * @brief Parse the string sString on uiSize caracters and return the root name of the document.
@@ -34,7 +34,7 @@ namespace XML
 		 * @param uiSize [in] : Size of the part to analyze
 		 * @return The root node of the parse part, or NULL if there is an error.
 		 */
-		virtual XML::IXMLNode* parseString(const char* sString, const uint32& uiSize)=0;
+		virtual XML::IXMLNode* parseString(const char* sString, const uint32& uiSize) =0;
 
 		//XML extraction
 		/**
@@ -44,7 +44,7 @@ namespace XML
 		 * @param sPath [in] : The path to the file.
 		 * @return True on success, false otherwise.
 		 */
-		virtual XML::boolean writeXMLInFile(const IXMLNode &rNode, const char* sPath) const =0;
+		virtual XML::boolean writeXMLInFile(const IXMLNode& rNode, const char* sPath) const =0;
 
 		/**
 		 * @brief Get the description of the last error that ocurred

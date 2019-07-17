@@ -14,7 +14,7 @@ namespace OpenViBEPlugins
 {
 	namespace Tools
 	{
-		class CBoxAlgorithmStimulationListener : virtual public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmStimulationListener : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -30,11 +30,10 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBE::Kernel::ELogLevel m_eLogLevel;
-			std::vector < OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmStimulationListener >* > m_vStimulationDecoder;
-
+			std::vector<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>*> m_vStimulationDecoder;
 		};
 
-		class CBoxAlgorithmStimulationListenerListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmStimulationListenerListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -43,9 +42,9 @@ namespace OpenViBEPlugins
 				char l_sName[1024];
 				OpenViBE::uint32 i;
 
-				for(i=0; i<rBox.getInputCount(); i++)
+				for (i = 0; i < rBox.getInputCount(); i++)
 				{
-					sprintf(l_sName, "Stimulation stream %u", i+1);
+					sprintf(l_sName, "Stimulation stream %u", i + 1);
 					rBox.setInputName(i, l_sName);
 					rBox.setInputType(i, OV_TypeId_Stimulations);
 				}
@@ -65,28 +64,28 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Stimulation listener"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Prints stimulation codes in the log manager"); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Stimulation listener"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Prints stimulation codes in the log manager"); }
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Prints each received stimulationto the log using the log level specified in the box config."); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Tools"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Tools"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_StimulationListener; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Tools::CBoxAlgorithmStimulationListener; }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmStimulationListenerListener; }
+
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StimulationListener; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Tools::CBoxAlgorithmStimulationListener; }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmStimulationListenerListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual OpenViBE::boolean getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
-				rBoxAlgorithmPrototype.addInput  ("Stimulation stream 1", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addSetting("Log level to use",     OV_TypeId_LogLevel, "Information");
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddInput);
+				rBoxAlgorithmPrototype.addInput("Stimulation stream 1", OV_TypeId_Stimulations);
+				rBoxAlgorithmPrototype.addSetting("Log level to use", OV_TypeId_LogLevel, "Information");
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 				return true;
 			}
 

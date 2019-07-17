@@ -15,7 +15,7 @@ namespace OpenViBE
 	{
 		class CScenario;
 
-		class CComment : public OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IComment > >
+		class CComment : public OpenViBE::Kernel::TAttributable<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IComment>>
 		{
 		public:
 

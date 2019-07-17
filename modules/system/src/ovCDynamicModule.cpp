@@ -1,7 +1,7 @@
 #include "system/ovCDynamicModule.h"
 
 #if defined TARGET_OS_Windows
-	#include <system/WindowsUtilities.h> // Allowed to use utf8_to_utf16 function for os that use utf16
+#include <system/WindowsUtilities.h> // Allowed to use utf8_to_utf16 function for os that use utf16
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	#include <dlfcn.h>
 #endif
@@ -57,7 +57,7 @@ namespace
 			(LPTSTR)&l_ErrorText,                        // output
 			0,                                           // minimum size for output buffer
 			NULL
-			);                                           // arguments - see note
+		);                                           // arguments - see note
 
 		return std::string(l_ErrorText);
 	}
@@ -88,17 +88,15 @@ unsigned int CDynamicModule::getLastError(void) const
 
 CDynamicModule::CDynamicModule(void)
 	: m_Handle(NULL)
-	, m_ErrorMode(m_ErrorModeNull)
-	, m_ShouldFreeModule(true)
-	, m_ErrorCode(LogErrorCodes_NoError)
+	  , m_ErrorMode(m_ErrorModeNull)
+	  , m_ShouldFreeModule(true)
+	  , m_ErrorCode(LogErrorCodes_NoError)
 {
 	::strcpy(m_ErrorDetails, "");
 	::strcpy(m_Filename, "");
 }
 
-CDynamicModule::~CDynamicModule(void)
-{
-}
+CDynamicModule::~CDynamicModule(void) {}
 
 // --------------------------------------
 
@@ -131,7 +129,7 @@ bool CDynamicModule::loadFromExisting(const char* modulePath, const char* symbol
 
 	::strcpy(m_Filename, modulePath);
 
-	return true ;
+	return true;
 }
 #endif
 
@@ -163,7 +161,7 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 	}
 
 	m_Handle = System::WindowsUtilities::utf16CompliantLoadLibrary(modulePath, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
-		
+
 	if (m_Handle == NULL)
 	{
 		this->setError(LogErrorCodes_FailToLoadModule, "Fail to load [" + std::string(modulePath) + "]. Windows error:" + ::formatWindowsError(::GetLastError()));
@@ -265,10 +263,7 @@ bool CDynamicModule::loadFromEnvironment(const char* environmentPath, const char
 		char l_DLLPath[MAX_PATH];
 		::sprintf(l_DLLPath, "%s\\%s", path.c_str(), modulePath);
 
-		if (CDynamicModule::loadFromPath(l_DLLPath, symbolNameCheck))
-		{
-			return true;
-		}
+		if (CDynamicModule::loadFromPath(l_DLLPath, symbolNameCheck)) { return true; }
 	}
 
 	this->setError(LogErrorCodes_ModuleNotFound);
@@ -336,12 +331,9 @@ bool CDynamicModule::unload(void)
 	// If the flag m_bShouldFreeModule, set to true per default, is set to false,
 	// the module is not unloaded.
 	// This flag was first set for Enobio3G driver which dll freezes when unloaded
-	if (!m_ShouldFreeModule)
-	{
-		return true;
-	}
+	if (!m_ShouldFreeModule) { return true; }
 
-#if defined TARGET_OS_Windows		
+#if defined TARGET_OS_Windows
 	if (::FreeModule(reinterpret_cast<HMODULE>(m_Handle)) == 0)
 	{
 		this->setError(LogErrorCodes_UnloadModuleFailed, "Windows error code: " + ::formatWindowsError(::GetLastError()));
@@ -401,7 +393,7 @@ CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName
 		m_ErrorCode = LogErrorCodes_NoModuleLoaded;
 		return l_Result;
 	}
-	
+
 	if (m_Handle)
 	{
 #if defined TARGET_OS_Windows
@@ -439,12 +431,9 @@ bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS&
 		OPEN_EXISTING,
 		FILE_ATTRIBUTE_NORMAL,
 		0
-		);
+	);
 
-	if (l_FileHandle == INVALID_HANDLE_VALUE)
-	{
-		return false;
-	}
+	if (l_FileHandle == INVALID_HANDLE_VALUE) { return false; }
 
 	HANDLE l_ImageHandle = CreateFileMapping(
 		l_FileHandle,
@@ -453,7 +442,7 @@ bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS&
 		0,
 		0,
 		NULL
-		);
+	);
 
 	if (l_ImageHandle == 0)
 	{
@@ -467,7 +456,7 @@ bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS&
 		0,
 		0,
 		0
-		);
+	);
 
 	if (l_ImagePtr == NULL)
 	{

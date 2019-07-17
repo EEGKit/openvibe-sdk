@@ -12,10 +12,9 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TSignalEncoderLocal : public T
 	{
-
 	protected:
 		//The signal stream is a streamed matrix plus a sampling rate
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_pInputSamplingRate;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_pInputSamplingRate;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
@@ -39,10 +38,7 @@ namespace OpenViBEToolkit
 
 		OpenViBE::boolean uninitialize(void)
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
 			m_pInputMatrix.uninitialize();
 			m_pInputSamplingRate.uninitialize();
@@ -54,7 +50,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getInputSamplingRate()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getInputSamplingRate()
 		{
 			return m_pInputSamplingRate;
 		}
@@ -85,21 +81,21 @@ namespace OpenViBEToolkit
 	You just need one template class : the box (T).
 	*/
 	template <class T>
-	class TSignalEncoder : public TSignalEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >
+	class TSignalEncoder : public TSignalEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>
 	{
 	private:
-		using TSignalEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >::m_pBoxAlgorithm;
+		using TSignalEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_pBoxAlgorithm;
 	public:
-		using TSignalEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >::uninitialize;
+		using TSignalEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::uninitialize;
 
-		TSignalEncoder()
-		{
-		}
+		TSignalEncoder() { }
+
 		TSignalEncoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
+
 		virtual ~TSignalEncoder()
 		{
 			this->uninitialize();

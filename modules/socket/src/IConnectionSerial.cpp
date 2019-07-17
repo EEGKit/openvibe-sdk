@@ -35,12 +35,11 @@ namespace Socket
 		CConnectionSerial(void)
 			: m_sLastError(),
 #if defined TARGET_OS_Windows
-			m_pFile(NULL)
+			  m_pFile(NULL)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			m_iFile(0)
 #endif
-		{
-		}
+		{ }
 
 		boolean open(void)
 		{
@@ -57,7 +56,7 @@ namespace Socket
 				if (!::CloseHandle(m_pFile))
 				{
 					m_sLastError = "Failed to close the serial port:" + this->getLastErrorFormated();
-					m_pFile = NULL;
+					m_pFile      = NULL;
 					return false;
 				}
 
@@ -79,10 +78,7 @@ namespace Socket
 
 		boolean isReadyToSend(Socket::uint32 ui32TimeOut) const
 		{
-			if (!this->isConnected())
-			{
-				return false;
-			}
+			if (!this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
 
@@ -98,15 +94,9 @@ namespace Socket
 			FD_ZERO(&l_oOutputFileDescriptorSet);
 			FD_SET(m_iFile, &l_oOutputFileDescriptorSet);
 
-			if(!::select(m_iFile+1, NULL, &l_oOutputFileDescriptorSet, NULL, &l_oTimeout))
-			{
-				return false;
-			}
+			if(!::select(m_iFile+1, NULL, &l_oOutputFileDescriptorSet, NULL, &l_oTimeout)) { return false; }
 
-			if(FD_ISSET(m_iFile, &l_oOutputFileDescriptorSet))
-			{
-				return true;
-			}
+			if(FD_ISSET(m_iFile, &l_oOutputFileDescriptorSet)) { return true; }
 
 #endif
 
@@ -115,10 +105,7 @@ namespace Socket
 
 		boolean isReadyToReceive(Socket::uint32 ui32TimeOut) const
 		{
-			if (!this->isConnected())
-			{
-				return false;
-			}
+			if (!this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
 
@@ -129,10 +116,7 @@ namespace Socket
 			{
 				return l_oStatus.cbInQue != 0;
 			}
-			else
-			{
-				return false;
-			}
+			else { return false; }
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
@@ -144,15 +128,9 @@ namespace Socket
 			FD_ZERO(&l_oInputFileDescriptorSet);
 			FD_SET(m_iFile, &l_oInputFileDescriptorSet);
 
-			if(!::select(m_iFile+1, &l_oInputFileDescriptorSet, NULL, NULL, &l_oTimeout))
-			{
-				return false;
-			}
+			if(!::select(m_iFile+1, &l_oInputFileDescriptorSet, NULL, NULL, &l_oTimeout)) { return false; }
 
-			if(FD_ISSET(m_iFile, &l_oInputFileDescriptorSet))
-			{
-				return true;
-			}
+			if(FD_ISSET(m_iFile, &l_oInputFileDescriptorSet)) { return true; }
 
 #endif
 
@@ -322,11 +300,8 @@ namespace Socket
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
 				l_ui32BytesLeft -= this->sendBuffer(l_pPointer + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
-				
-				if (this->isErrorRaised())
-				{
-					return false;
-				}
+
+				if (this->isErrorRaised()) { return false; }
 			}
 
 			return l_ui32BytesLeft == 0;
@@ -334,17 +309,14 @@ namespace Socket
 
 		boolean receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
 		{
-			char* l_pPointer = reinterpret_cast<char*>(pBuffer);
+			char* l_pPointer       = reinterpret_cast<char*>(pBuffer);
 			uint32 l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
 				l_ui32BytesLeft -= this->receiveBuffer(l_pPointer + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
-				
-				if (this->isErrorRaised())
-				{
-					return false;
-				}
+
+				if (this->isErrorRaised()) { return false; }
 			}
 
 			return l_ui32BytesLeft == 0;
@@ -361,7 +333,7 @@ namespace Socket
 			return m_iFile != 0;
 
 #endif
-	}
+		}
 
 		void release(void)
 		{
@@ -392,7 +364,7 @@ namespace Socket
 			if (m_pFile == INVALID_HANDLE_VALUE || m_pFile == NULL)
 			{
 				m_sLastError = "Failed to open serial port: " + this->getLastErrorFormated();
-				m_pFile = NULL;
+				m_pFile      = NULL;
 				return false;
 			}
 
@@ -406,10 +378,10 @@ namespace Socket
 			}
 
 			l_oDCB.DCBlength = sizeof(l_oDCB);
-			l_oDCB.BaudRate = ul32BaudRate;
-			l_oDCB.ByteSize = 8;
-			l_oDCB.Parity = NOPARITY;
-			l_oDCB.StopBits = ONESTOPBIT;
+			l_oDCB.BaudRate  = ul32BaudRate;
+			l_oDCB.ByteSize  = 8;
+			l_oDCB.Parity    = NOPARITY;
+			l_oDCB.StopBits  = ONESTOPBIT;
 
 			ClearCommError(m_pFile, NULL, NULL);
 
@@ -470,7 +442,7 @@ namespace Socket
 				return false;
 			}
 
-			l_Timeouts.ReadTotalTimeoutConstant = ui32DecisecondsTimeout * 100; // Deciseconds to milliseconds
+			l_Timeouts.ReadTotalTimeoutConstant  = ui32DecisecondsTimeout * 100; // Deciseconds to milliseconds
 			l_Timeouts.WriteTotalTimeoutConstant = ui32DecisecondsTimeout * 100; // Deciseconds to milliseconds
 
 			if (!SetCommTimeouts(m_pFile, &l_Timeouts))
@@ -523,7 +495,7 @@ namespace Socket
 				(LPTSTR)&l_sErrorText,                       // output
 				0,                                           // minimum size for output buffer
 				NULL
-				);                                           // arguments - see note
+			);                                           // arguments - see note
 			return l_sErrorText;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return ""; // TODO
@@ -547,7 +519,7 @@ namespace Socket
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 		int m_iFile;
 #endif
-};
+	};
 
 	IConnectionSerial* createConnectionSerial(void)
 	{

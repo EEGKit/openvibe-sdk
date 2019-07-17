@@ -41,295 +41,282 @@ THE SOFTWARE.
 #include "Design.h"
 #include "Filter.h"
 
-namespace Dsp {
-
-/*
- * Filter realizations based on Robert Bristol-Johnson formulae:
- *
- * http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt
- *
- */
-
-namespace RBJ {
-
-//
-// Raw filters
-//
-
-struct LowPass : BiquadBase
+namespace Dsp
 {
-  void setup (double sampleRate,
-              double cutoffFrequency,
-              double q);
-};
 
-struct HighPass : BiquadBase
-{
-  void setup (double sampleRate,
-              double cutoffFrequency,
-              double q);
-};
+	/*
+	 * Filter realizations based on Robert Bristol-Johnson formulae:
+	 *
+	 * http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt
+	 *
+	 */
 
-struct BandPass1 : BiquadBase
-{
-  // (constant skirt gain, peak gain = Q)
-  void setup (double sampleRate,
-              double centerFrequency,
-              double bandWidth);
-};
+	namespace RBJ
+	{
 
-struct BandPass2 : BiquadBase
-{
-  // (constant 0 dB peak gain)
-  void setup (double sampleRate,
-              double centerFrequency,
-              double bandWidth);
-};
+		//
+		// Raw filters
+		//
 
-struct BandStop : BiquadBase
-{
-  void setup (double sampleRate,
-              double centerFrequency,
-              double bandWidth);
-};
+		struct LowPass : BiquadBase
+		{
+			void setup(double sampleRate,
+					   double cutoffFrequency,
+					   double q);
+		};
 
-struct LowShelf : BiquadBase
-{
-  void setup (double sampleRate,
-              double cutoffFrequency,
-              double gainDb,
-              double shelfSlope);
-};
+		struct HighPass : BiquadBase
+		{
+			void setup(double sampleRate,
+					   double cutoffFrequency,
+					   double q);
+		};
 
-struct HighShelf : BiquadBase
-{
-  void setup (double sampleRate,
-              double cutoffFrequency,
-              double gainDb,
-              double shelfSlope);
-};
+		struct BandPass1 : BiquadBase
+		{
+			// (constant skirt gain, peak gain = Q)
+			void setup(double sampleRate,
+					   double centerFrequency,
+					   double bandWidth);
+		};
 
-struct BandShelf : BiquadBase
-{
-  void setup (double sampleRate,
-              double centerFrequency,
-              double gainDb,
-              double bandWidth);
-};
+		struct BandPass2 : BiquadBase
+		{
+			// (constant 0 dB peak gain)
+			void setup(double sampleRate,
+					   double centerFrequency,
+					   double bandWidth);
+		};
 
-struct AllPass : BiquadBase
-{
-  void setup (double sampleRate,
-              double phaseFrequency,
-              double q);
-};
+		struct BandStop : BiquadBase
+		{
+			void setup(double sampleRate,
+					   double centerFrequency,
+					   double bandWidth);
+		};
 
-//------------------------------------------------------------------------------
+		struct LowShelf : BiquadBase
+		{
+			void setup(double sampleRate,
+					   double cutoffFrequency,
+					   double gainDb,
+					   double shelfSlope);
+		};
 
-//
-// Gui-friendly Design layer
-//
+		struct HighShelf : BiquadBase
+		{
+			void setup(double sampleRate,
+					   double cutoffFrequency,
+					   double gainDb,
+					   double shelfSlope);
+		};
 
-namespace Design {
+		struct BandShelf : BiquadBase
+		{
+			void setup(double sampleRate,
+					   double centerFrequency,
+					   double gainDb,
+					   double bandWidth);
+		};
 
-struct TypeIBase : DesignBase
-{
-  enum
-  {
-    NumParams = 3
-  };
+		struct AllPass : BiquadBase
+		{
+			void setup(double sampleRate,
+					   double phaseFrequency,
+					   double q);
+		};
 
-  static int getNumParams ()
-  {
-    return 3;
-  }
+		//------------------------------------------------------------------------------
 
-  static const ParamInfo getParamInfo_1 ()
-  {
-    return ParamInfo::defaultCutoffFrequencyParam ();
-  }
+		//
+		// Gui-friendly Design layer
+		//
 
-  static const ParamInfo getParamInfo_2 ()
-  {
-    return ParamInfo::defaultQParam ();
-  }
-};
+		namespace Design
+		{
+			struct TypeIBase : DesignBase
+			{
+				enum
+				{
+					NumParams = 3
+				};
 
-template <class FilterClass>
-struct TypeI : TypeIBase, FilterClass
-{
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (params[0], params[1], params[2]);
-  }
-};
+				static int getNumParams() { return 3; }
 
-struct TypeIIBase : DesignBase
-{
-  enum
-  {
-    NumParams = 3
-  };
+				static const ParamInfo getParamInfo_1()
+				{
+					return ParamInfo::defaultCutoffFrequencyParam();
+				}
 
-  static int getNumParams ()
-  {
-    return 3;
-  }
+				static const ParamInfo getParamInfo_2()
+				{
+					return ParamInfo::defaultQParam();
+				}
+			};
 
-  static const ParamInfo getParamInfo_1 ()
-  {
-    return ParamInfo::defaultCenterFrequencyParam ();
-  }
+			template <class FilterClass>
+			struct TypeI : TypeIBase, FilterClass
+			{
+				void setParams(const Params& params)
+				{
+					FilterClass::setup(params[0], params[1], params[2]);
+				}
+			};
 
-  static const ParamInfo getParamInfo_2 ()
-  {
-    return ParamInfo::defaultBandwidthParam ();
-  }
-};
+			struct TypeIIBase : DesignBase
+			{
+				enum
+				{
+					NumParams = 3
+				};
 
-template <class FilterClass>
-struct TypeII : TypeIIBase, FilterClass
-{
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (params[0], params[1], params[2]);
-  }
-};
+				static int getNumParams() { return 3; }
 
-struct TypeIIIBase : DesignBase
-{
-  enum
-  {
-    NumParams = 4
-  };
+				static const ParamInfo getParamInfo_1()
+				{
+					return ParamInfo::defaultCenterFrequencyParam();
+				}
 
-  static int getNumParams ()
-  {
-    return 4;
-  }
+				static const ParamInfo getParamInfo_2()
+				{
+					return ParamInfo::defaultBandwidthParam();
+				}
+			};
 
-  static const ParamInfo getParamInfo_1 ()
-  {
-    return ParamInfo::defaultCutoffFrequencyParam ();
-  }
+			template <class FilterClass>
+			struct TypeII : TypeIIBase, FilterClass
+			{
+				void setParams(const Params& params)
+				{
+					FilterClass::setup(params[0], params[1], params[2]);
+				}
+			};
 
-  static const ParamInfo getParamInfo_2 ()
-  {
-    return ParamInfo::defaultGainParam ();
-  }
+			struct TypeIIIBase : DesignBase
+			{
+				enum
+				{
+					NumParams = 4
+				};
 
-  static const ParamInfo getParamInfo_3 ()
-  {
-    return ParamInfo::defaultSlopeParam ();
-  }
-};
+				static int getNumParams() { return 4; }
 
-template <class FilterClass>
-struct TypeIII : TypeIIIBase, FilterClass
-{
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (params[0], params[1], params[2], params[3]);
-  }
-};
+				static const ParamInfo getParamInfo_1()
+				{
+					return ParamInfo::defaultCutoffFrequencyParam();
+				}
 
-struct TypeIVBase : DesignBase
-{
-  enum
-  {
-    NumParams = 4
-  };
+				static const ParamInfo getParamInfo_2()
+				{
+					return ParamInfo::defaultGainParam();
+				}
 
-  static int getNumParams ()
-  {
-    return 4;
-  }
+				static const ParamInfo getParamInfo_3()
+				{
+					return ParamInfo::defaultSlopeParam();
+				}
+			};
 
-  static const ParamInfo getParamInfo_1 ()
-  {
-    return ParamInfo::defaultCenterFrequencyParam ();
-  }
+			template <class FilterClass>
+			struct TypeIII : TypeIIIBase, FilterClass
+			{
+				void setParams(const Params& params)
+				{
+					FilterClass::setup(params[0], params[1], params[2], params[3]);
+				}
+			};
 
-  static const ParamInfo getParamInfo_2 ()
-  {
-    return ParamInfo::defaultGainParam ();
-  }
+			struct TypeIVBase : DesignBase
+			{
+				enum
+				{
+					NumParams = 4
+				};
 
-  static const ParamInfo getParamInfo_3 ()
-  {
-    return ParamInfo::defaultBandwidthParam ();
-  }
-};
+				static int getNumParams() { return 4; }
 
-template <class FilterClass>
-struct TypeIV : TypeIVBase , FilterClass
-{
-  void setParams (const Params& params)
-  {
-    FilterClass::setup (params[0], params[1], params[2], params[3]);
-  }
-};
+				static const ParamInfo getParamInfo_1()
+				{
+					return ParamInfo::defaultCenterFrequencyParam();
+				}
 
-//------------------------------------------------------------------------------
+				static const ParamInfo getParamInfo_2()
+				{
+					return ParamInfo::defaultGainParam();
+				}
 
-struct LowPass : TypeI <RBJ::LowPass>
-{
-  static Kind getKind () { return kindLowPass; }
-  static const char* getName() { return "RBJ Low Pass"; }
-};
+				static const ParamInfo getParamInfo_3()
+				{
+					return ParamInfo::defaultBandwidthParam();
+				}
+			};
 
-struct HighPass : TypeI <RBJ::HighPass>
-{
-  static Kind getKind () { return kindHighPass; }
-  static const char* getName() { return "RBJ High Pass"; }
-};
+			template <class FilterClass>
+			struct TypeIV : TypeIVBase, FilterClass
+			{
+				void setParams(const Params& params)
+				{
+					FilterClass::setup(params[0], params[1], params[2], params[3]);
+				}
+			};
 
-struct BandPass1 : TypeII <RBJ::BandPass1>
-{
-  static Kind getKind () { return kindBandPass; }
-  static const char* getName() { return "RBJ Band Pass 1"; }
-};
+			//------------------------------------------------------------------------------
 
-struct BandPass2 : TypeII <RBJ::BandPass2>
-{
-  static Kind getKind () { return kindBandPass; }
-  static const char* getName() { return "RBJ Band Pass 2"; }
-};
+			struct LowPass : TypeI<RBJ::LowPass>
+			{
+				static Kind getKind() { return kindLowPass; }
+				static const char* getName() { return "RBJ Low Pass"; }
+			};
 
-struct BandStop : TypeII <RBJ::BandStop>
-{
-  static Kind getKind () { return kindBandStop; }
-  static const char* getName() { return "RBJ Band Stop"; }
-};
+			struct HighPass : TypeI<RBJ::HighPass>
+			{
+				static Kind getKind() { return kindHighPass; }
+				static const char* getName() { return "RBJ High Pass"; }
+			};
 
-struct LowShelf : TypeIII <RBJ::LowShelf>
-{
-  static Kind getKind () { return kindLowShelf; }
-  static const char* getName() { return "RBJ Low Shelf"; }
-};
+			struct BandPass1 : TypeII<RBJ::BandPass1>
+			{
+				static Kind getKind() { return kindBandPass; }
+				static const char* getName() { return "RBJ Band Pass 1"; }
+			};
 
-struct HighShelf : TypeIII <RBJ::HighShelf>
-{
-  static Kind getKind () { return kindHighShelf; }
-  static const char* getName() { return "RBJ High Shelf"; }
-};
+			struct BandPass2 : TypeII<RBJ::BandPass2>
+			{
+				static Kind getKind() { return kindBandPass; }
+				static const char* getName() { return "RBJ Band Pass 2"; }
+			};
 
-struct BandShelf : TypeIV <RBJ::BandShelf>
-{
-  static Kind getKind () { return kindBandShelf; }
-  static const char* getName() { return "RBJ Band Shelf"; }
-};
+			struct BandStop : TypeII<RBJ::BandStop>
+			{
+				static Kind getKind() { return kindBandStop; }
+				static const char* getName() { return "RBJ Band Stop"; }
+			};
 
-struct AllPass : TypeI <RBJ::AllPass>
-{
-  static Kind getKind () { return kindOther; }
-  static const char* getName() { return "RBJ All Pass"; }
-};
+			struct LowShelf : TypeIII<RBJ::LowShelf>
+			{
+				static Kind getKind() { return kindLowShelf; }
+				static const char* getName() { return "RBJ Low Shelf"; }
+			};
 
-}
+			struct HighShelf : TypeIII<RBJ::HighShelf>
+			{
+				static Kind getKind() { return kindHighShelf; }
+				static const char* getName() { return "RBJ High Shelf"; }
+			};
 
-}
+			struct BandShelf : TypeIV<RBJ::BandShelf>
+			{
+				static Kind getKind() { return kindBandShelf; }
+				static const char* getName() { return "RBJ Band Shelf"; }
+			};
 
+			struct AllPass : TypeI<RBJ::AllPass>
+			{
+				static Kind getKind() { return kindOther; }
+				static const char* getName() { return "RBJ All Pass"; }
+			};
+		}
+	}
 }
 
 #endif

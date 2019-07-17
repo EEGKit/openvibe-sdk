@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 {
 	namespace Tools
 	{
-		class CBoxAlgorithmExternalProcessing : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmExternalProcessing : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			CBoxAlgorithmExternalProcessing();
@@ -46,11 +46,9 @@ namespace OpenViBEPlugins
 
 				Packet(uint64_t startTime, uint64_t endTime, uint32_t inputIndex, ::std::shared_ptr<::std::vector<uint8_t>> EBML)
 					: startTime(startTime)
-					, endTime(endTime)
-					, inputIndex(inputIndex)
-					, EBML(EBML)
-				{
-				}
+					  , endTime(endTime)
+					  , inputIndex(inputIndex)
+					  , EBML(EBML) { }
 			};
 
 			/**
@@ -93,11 +91,11 @@ namespace OpenViBEPlugins
 			uint64_t m_SyncTimeout;
 			uint64_t m_LastSyncTime;
 
-			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmExternalProcessing >> m_StimulationDecoders;
+			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmExternalProcessing>> m_StimulationDecoders;
 			std::queue<Packet> m_PacketHistory;
 		};
 
-		class CBoxAlgorithmExternalProcessingListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmExternalProcessingListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
@@ -116,9 +114,9 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Launches an external program which can then processes data. This box and the program communicate using TCP connection and a defined protocol."); }
 			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Scripting"); }
 			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const     { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const  { return OpenViBE::CString("1.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const{ return OpenViBE::CString("1.0.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("1.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("1.0.0"); }
 			virtual OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-edit"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ExternalProcessing; }

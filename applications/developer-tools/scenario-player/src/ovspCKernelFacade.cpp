@@ -56,9 +56,7 @@ namespace OpenViBE
 		std::map<std::string, TokenList> scenarioTokenMap;
 	};
 
-	KernelFacade::KernelFacade() : m_Pimpl(new KernelFacadeImpl())
-	{
-	}
+	KernelFacade::KernelFacade() : m_Pimpl(new KernelFacadeImpl()) { }
 
 	// The destructor is needed in the .cpp file to implement pimpl idiom
 	// with unique_ptr. This is due to the fact that Kernel facade dtor
@@ -156,7 +154,7 @@ namespace OpenViBE
 			// not releasing the scenario before releasing the kernel
 			// causes a segfault on linux
 			auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
-			for (auto scenarioPair : m_Pimpl->scenarioMap)
+			for (auto& scenarioPair : m_Pimpl->scenarioMap)
 			{
 				scenarioManager.releaseScenario(scenarioPair.second);
 			}
@@ -226,14 +224,14 @@ namespace OpenViBE
 			return PlayerReturnCode::ScenarioNotLoaded;
 		}
 
-		auto &scenario = scenarioManager.getScenario(m_Pimpl->scenarioMap[scenarioName]);
+		auto& scenario = scenarioManager.getScenario(m_Pimpl->scenarioMap[scenarioName]);
 
 		// check for boxes to be updated
-//		scenario.checkBoxesRequiringUpdate();
+		//		scenario.checkBoxesRequiringUpdate();
 
 		// update boxes to be updated
 		CIdentifier* identifierList = nullptr;
-		size_t elemCount = 0;
+		size_t elemCount            = 0;
 		scenario.getOutdatedBoxIdentifierList(&identifierList, &elemCount);
 		for (size_t i = 0; i < elemCount; ++i)
 		{
@@ -241,7 +239,7 @@ namespace OpenViBE
 		}
 
 		// export scenario to the destination file
-		if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(),m_Pimpl->scenarioMap[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
+		if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(), m_Pimpl->scenarioMap[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
 		{
 			std::cerr << "ERROR: failed to create scenario " << std::endl;
 			return PlayerReturnCode::KernelInternalFailure;
@@ -373,7 +371,7 @@ namespace OpenViBE
 		if (returnCode == PlayerReturnCode::Success)
 		{
 			// loop until timeout
-			uint64 startTime = System::Time::zgetTime();
+			uint64 startTime    = System::Time::zgetTime();
 			uint64 lastLoopTime = startTime;
 
 			// cannot directly feed secondsToTime with parameters.m_MaximumExecutionTime
@@ -396,10 +394,10 @@ namespace OpenViBE
 			while (!allStopped) // negative condition here because it is easier to reason about it
 			{
 				uint64 currentTime = System::Time::zgetTime();
-				allStopped = true;
+				allStopped         = true;
 				for (auto p : playerList)
 				{
-					if(p->getStatus() != EPlayerStatus::PlayerStatus_Stop)
+					if (p->getStatus() != EPlayerStatus::PlayerStatus_Stop)
 					{
 						if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint))
 						{
@@ -417,7 +415,6 @@ namespace OpenViBE
 
 				lastLoopTime = currentTime;
 			}
-
 		}
 
 		// release players

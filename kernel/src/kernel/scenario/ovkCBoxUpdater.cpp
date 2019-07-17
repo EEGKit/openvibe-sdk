@@ -13,28 +13,28 @@ using namespace OpenViBE::Kernel;
 
 
 const std::array<CIdentifier, 10> CBoxUpdater::updatableAttributes = {
-    OV_AttributeId_Box_InitialPrototypeHashValue,
-    OV_AttributeId_Box_InitialInputCount,
-    OV_AttributeId_Box_InitialOutputCount,
-    OV_AttributeId_Box_InitialSettingCount,
-    OV_AttributeId_Box_FlagCanAddInput,
-    OV_AttributeId_Box_FlagCanModifyInput,
-    OV_AttributeId_Box_FlagCanAddOutput,
-    OV_AttributeId_Box_FlagCanModifyOutput,
-    OV_AttributeId_Box_FlagCanAddSetting,
-    OV_AttributeId_Box_FlagCanModifySetting
+	OV_AttributeId_Box_InitialPrototypeHashValue,
+	OV_AttributeId_Box_InitialInputCount,
+	OV_AttributeId_Box_InitialOutputCount,
+	OV_AttributeId_Box_InitialSettingCount,
+	OV_AttributeId_Box_FlagCanAddInput,
+	OV_AttributeId_Box_FlagCanModifyInput,
+	OV_AttributeId_Box_FlagCanAddOutput,
+	OV_AttributeId_Box_FlagCanModifyOutput,
+	OV_AttributeId_Box_FlagCanAddSetting,
+	OV_AttributeId_Box_FlagCanModifySetting
 };
 
 CBoxUpdater::CBoxUpdater(CScenario& scenario, IBox* sourceBox)
-    : TKernelObject<IKernelObject>(scenario.getKernelContext())
-    , m_Scenario(&scenario)
-    , m_SourceBox(sourceBox)
-    , m_KernelBox(nullptr)
-    , m_UpdatedBox(nullptr)
-    , m_Initialized(false)
+	: TKernelObject<IKernelObject>(scenario.getKernelContext())
+	  , m_Scenario(&scenario)
+	  , m_SourceBox(sourceBox)
+	  , m_KernelBox(nullptr)
+	  , m_UpdatedBox(nullptr)
+	  , m_Initialized(false)
 {
-	m_OriginalToUpdatedCorrespondence[Input] = std::map<uint32_t, uint32_t>();
-	m_OriginalToUpdatedCorrespondence[Output] = std::map<uint32_t, uint32_t>();
+	m_OriginalToUpdatedCorrespondence[Input]   = std::map<uint32_t, uint32_t>();
+	m_OriginalToUpdatedCorrespondence[Output]  = std::map<uint32_t, uint32_t>();
 	m_OriginalToUpdatedCorrespondence[Setting] = std::map<uint32_t, uint32_t>();
 }
 
@@ -52,7 +52,6 @@ CBoxUpdater::~CBoxUpdater(void)
 	}
 
 	delete m_UpdatedBox;
-
 }
 
 bool CBoxUpdater::initialize()
@@ -60,33 +59,33 @@ bool CBoxUpdater::initialize()
 	// initialize kernel box reference
 	if (m_SourceBox->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
-			CString metaboxIdentifier = m_SourceBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
-			OV_ERROR_UNLESS_KRF(metaboxIdentifier != CString(""),
-			                    "Failed to find metabox with id " << metaboxIdentifier,
-			                    ErrorType::BadCall
-			                    );
+		CString metaboxIdentifier = m_SourceBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
+		OV_ERROR_UNLESS_KRF(metaboxIdentifier != CString(""),
+							"Failed to find metabox with id " << metaboxIdentifier,
+							ErrorType::BadCall
+		);
 
-			OpenViBE::CIdentifier metaboxId;
-			metaboxId.fromString(metaboxIdentifier);
-			CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
+		OpenViBE::CIdentifier metaboxId;
+		metaboxId.fromString(metaboxIdentifier);
+		CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
-			OV_ERROR_UNLESS_KRF(metaboxScenarioPath != CString(""),
-			                    "Metabox scenario is not available for " << m_SourceBox->getName(),
-			                    ErrorType::BadCall);
+		OV_ERROR_UNLESS_KRF(metaboxScenarioPath != CString(""),
+							"Metabox scenario is not available for " << m_SourceBox->getName(),
+							ErrorType::BadCall);
 
 
-			// We are going to copy the template scenario, flatten it and then copy all
-			// Note that copy constructor for IScenario does not exist
-			CIdentifier metaboxScenarioTemplateIdentifier;
+		// We are going to copy the template scenario, flatten it and then copy all
+		// Note that copy constructor for IScenario does not exist
+		CIdentifier metaboxScenarioTemplateIdentifier;
 
-			this->getKernelContext().getScenarioManager().importScenarioFromFile(
-			            metaboxScenarioTemplateIdentifier,
-			            OV_ScenarioImportContext_SchedulerMetaboxImport,
-			            metaboxScenarioPath);
+		this->getKernelContext().getScenarioManager().importScenarioFromFile(
+			metaboxScenarioTemplateIdentifier,
+			OV_ScenarioImportContext_SchedulerMetaboxImport,
+			metaboxScenarioPath);
 
-			CScenario* metaboxScenarioInstance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(metaboxScenarioTemplateIdentifier)));
-			metaboxScenarioInstance->setAlgorithmClassIdentifier(OVP_ClassId_BoxAlgorithm_Metabox);
-			m_KernelBox = metaboxScenarioInstance;
+		CScenario* metaboxScenarioInstance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(metaboxScenarioTemplateIdentifier)));
+		metaboxScenarioInstance->setAlgorithmClassIdentifier(OVP_ClassId_BoxAlgorithm_Metabox);
+		m_KernelBox = metaboxScenarioInstance;
 	}
 	else
 	{
@@ -154,35 +153,23 @@ bool CBoxUpdater::initialize()
 bool CBoxUpdater::checkForSupportedTypesToBeUpdated()
 {
 	//check for supported inputs diff
-	for (auto& type: m_SourceBox->getInputSupportTypes())
+	for (auto& type : m_SourceBox->getInputSupportTypes())
 	{
-		if (!m_KernelBox->hasInputSupport(type))
-		{
-			return true;
-		}
+		if (!m_KernelBox->hasInputSupport(type)) { return true; }
 	}
-	for (auto& type: m_KernelBox->getInputSupportTypes())
+	for (auto& type : m_KernelBox->getInputSupportTypes())
 	{
-		if (!m_SourceBox->hasInputSupport(type))
-		{
-			return true;
-		}
+		if (!m_SourceBox->hasInputSupport(type)) { return true; }
 	}
 
 	//check for supported outputs diff
-	for (auto& type: m_SourceBox->getOutputSupportTypes())
+	for (auto& type : m_SourceBox->getOutputSupportTypes())
 	{
-		if (!m_KernelBox->hasOutputSupport(type))
-		{
-			return true;
-		}
+		if (!m_KernelBox->hasOutputSupport(type)) { return true; }
 	}
-	for (auto& type: m_KernelBox->getOutputSupportTypes())
+	for (auto& type : m_KernelBox->getOutputSupportTypes())
 	{
-		if (!m_SourceBox->hasOutputSupport(type))
-		{
-			return true;
-		}
+		if (!m_SourceBox->hasOutputSupport(type)) { return true; }
 	}
 	return false;
 }
@@ -190,14 +177,10 @@ bool CBoxUpdater::checkForSupportedTypesToBeUpdated()
 bool CBoxUpdater::checkForSupportedIOSAttributesToBeUpdated()
 {
 	// check for attributes
-	for(auto &attr : CBoxUpdater::updatableAttributes)
+	for (auto& attr : CBoxUpdater::updatableAttributes)
 	{
 		if ((m_SourceBox->hasAttribute(attr) && !m_KernelBox->hasAttribute(attr))
-		        || (!m_SourceBox->hasAttribute(attr) && m_KernelBox->hasAttribute(attr)))
-		{
-
-			return true;
-		}
+			|| (!m_SourceBox->hasAttribute(attr) && m_KernelBox->hasAttribute(attr))) { return true; }
 	}
 	return false;
 }
@@ -221,20 +204,21 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 
 
 		InterfacorRequest request;
-		request.index = index;
-		request.identifier = kIdentifier;
-		request.name = kName;
+		request.index          = index;
+		request.identifier     = kIdentifier;
+		request.name           = kName;
 		request.typeIdentifier = kTypeIdentifier;
-		request.toBeRemoved = false;
+		request.toBeRemoved    = false;
 
-		if (interfacorType == Setting) {
+		if (interfacorType == Setting)
+		{
 			CString defaultValue;
 			CString value;
 			bool modifiable;
 			m_KernelBox->getSettingDefaultValue(index, defaultValue);
 			m_KernelBox->getSettingMod(index, modifiable);
-			request.defaultValue = defaultValue;
-			request.value = defaultValue;
+			request.defaultValue  = defaultValue;
+			request.value         = defaultValue;
 			request.modifiability = modifiable;
 		}
 
@@ -290,21 +274,22 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 		m_SourceBox->getInterfacorName(interfacorType, index, sName);
 
 		InterfacorRequest request;
-		request.index = index;
-		request.identifier = sIdentifier;
-		request.name = sName;
+		request.index          = index;
+		request.identifier     = sIdentifier;
+		request.name           = sName;
 		request.typeIdentifier = sTypeIdentifier;
-		request.toBeRemoved = true;
+		request.toBeRemoved    = true;
 
-		if (interfacorType == Setting) {
+		if (interfacorType == Setting)
+		{
 			CString defaultValue;
 			CString value;
 			bool modifiable;
 			m_SourceBox->getSettingDefaultValue(index, defaultValue);
 			m_SourceBox->getSettingValue(index, value);
 			m_SourceBox->getSettingMod(index, modifiable);
-			request.defaultValue = defaultValue;
-			request.value = value;
+			request.defaultValue  = defaultValue;
+			request.value         = value;
 			request.modifiability = modifiable;
 		}
 
@@ -350,4 +335,3 @@ uint32_t CBoxUpdater::getInterfacorIndex(BoxInterfacorType interfacorType, const
 
 	return index;
 }
-

@@ -48,7 +48,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean addPluginsFromFiles(
-				const OpenViBE::CString& rFileNameWildCard)=0;
+				const OpenViBE::CString& rFileNameWildCard) =0;
 			/**
 			 * \brief Registers a plugin object descriptor
 			 * \param rPreviousIdentifier [in] : the actual plugin object descriptor to register
@@ -56,7 +56,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean registerPluginDesc(
-				const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc)=0;
+				const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc) =0;
 			/**
 			 * \brief Gets next plugin object descriptor identifier
 			 * \param rPreviousIdentifier [in] : The identifier
@@ -68,7 +68,7 @@ namespace OpenViBE
 			 *       descriptor identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextPluginObjectDescIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const=0;
+				const OpenViBE::CIdentifier& rPreviousIdentifier) const =0;
 			/**
 			 * \brief Gets next plugin object descriptor identifier given a base class identifier
 			 * \param rPreviousIdentifier [in] : The identifier
@@ -82,7 +82,7 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::CIdentifier getNextPluginObjectDescIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rBaseClassIdentifier) const=0;
+				const OpenViBE::CIdentifier& rBaseClassIdentifier) const =0;
 			/**
 			 * \brief Checks if a plugin object can be created or not
 			 * \param rClassIdentifier [in] : the class identifier a descriptor should be able to create
@@ -90,7 +90,7 @@ namespace OpenViBE
 			 * \return \e false in other case.
 			 */
 			virtual OpenViBE::boolean canCreatePluginObject(
-				const OpenViBE::CIdentifier& rClassIdentifier)=0;
+				const OpenViBE::CIdentifier& rClassIdentifier) =0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor
 			 * \param rIdentifier [in] : the plugin object descriptor identifier which details should be returned
@@ -98,7 +98,7 @@ namespace OpenViBE
 			 * \sa getNextPluginObjectDescIdentifier
 			 */
 			virtual const OpenViBE::Plugins::IPluginObjectDesc* getPluginObjectDesc(
-				const OpenViBE::CIdentifier& rIdentifier) const=0;
+				const OpenViBE::CIdentifier& rIdentifier) const =0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor given the class identifier it should create
 			 * \param rClassIdentifier [in] : the plugin object class identifier of the descriptor which details should be returned
@@ -106,7 +106,7 @@ namespace OpenViBE
 			 * \sa canCreatePluginObject
 			 */
 			virtual const OpenViBE::Plugins::IPluginObjectDesc* getPluginObjectDescCreating(
-				const OpenViBE::CIdentifier& rClassIdentifier) const=0;
+				const OpenViBE::CIdentifier& rClassIdentifier) const =0;
 
 			//@}
 			/** \name Plugin lifetime management */
@@ -128,10 +128,10 @@ namespace OpenViBE
 			 *       description stage)
 			 */
 			virtual OpenViBE::CIdentifier getPluginObjectHashValue(
-				const OpenViBE::CIdentifier& rClassIdentifier) const=0;
+				const OpenViBE::CIdentifier& rClassIdentifier) const =0;
 
 			virtual OpenViBE::CIdentifier getPluginObjectHashValue(
-			        const OpenViBE::Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const = 0;
+				const OpenViBE::Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const = 0;
 			/**
 			 * \brief Gets a hint whether a plugin is deprecated or not
 			 * \param rClassIdentifier [in] : the class identifier of the plugin which deprecation should be returned
@@ -144,9 +144,9 @@ namespace OpenViBE
 			 * should consider any alternative available to avoid future problems.
 			 */
 			virtual OpenViBE::boolean isPluginObjectFlaggedAsDeprecated(
-				const OpenViBE::CIdentifier& rClassIdentifier) const=0;
+				const OpenViBE::CIdentifier& rClassIdentifier) const =0;
 				
-				//@}
+			//@}
 			/** \name Plugin creation and destruction */
 			//@{
 
@@ -158,7 +158,7 @@ namespace OpenViBE
 			 * \sa releasePluginObject
 			 */
 			virtual OpenViBE::Plugins::IPluginObject* createPluginObject(
-				const OpenViBE::CIdentifier& rClassIdentifier)=0;
+				const OpenViBE::CIdentifier& rClassIdentifier) =0;
 			/**
 			 * \brief Tells the plugin manager a plugin object won't be ever used
 			 * \param pPluginObject [in] : the plugin object to release
@@ -170,7 +170,7 @@ namespace OpenViBE
 			 * and resources for this plugin object.
 			 */
 			virtual OpenViBE::boolean releasePluginObject(
-				OpenViBE::Plugins::IPluginObject* pPluginObject)=0;
+				OpenViBE::Plugins::IPluginObject* pPluginObject) =0;
 
 			//@{
 			/**\name Helpers */
@@ -187,7 +187,7 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::Plugins::IAlgorithm* createAlgorithm(
 				const OpenViBE::CIdentifier& rClassIdentifier,
-				const OpenViBE::Plugins::IAlgorithmDesc** ppAlgorithmDesc)=0;
+				const OpenViBE::Plugins::IAlgorithmDesc** ppAlgorithmDesc) =0;
 			/**
 			 * \brief Creates a new algorithm given a descriptor
 			 * \param rAlgorithmDesc [in] : the class descriptor of the algorithm to create
@@ -197,7 +197,7 @@ namespace OpenViBE
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
 			virtual OpenViBE::Plugins::IAlgorithm* createAlgorithm(
-				const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc)=0;
+				const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc) =0;
 			/**
 			 * \brief Creates a new box algorithm given its class identifier and eventually returns the associated descriptor
 			 * \param rClassIdentifier [in] : the class identifier of the box algorithm to create
@@ -209,12 +209,11 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::Plugins::IBoxAlgorithm* createBoxAlgorithm(
 				const OpenViBE::CIdentifier& rClassIdentifier,
-				const OpenViBE::Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc)=0;
+				const OpenViBE::Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc) =0;
 
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginManager)
-
 		};
 	};
 };

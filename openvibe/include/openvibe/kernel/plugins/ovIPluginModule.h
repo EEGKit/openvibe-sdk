@@ -38,7 +38,7 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::boolean load(
 				const OpenViBE::CString& sName,
-				OpenViBE::CString* pError=NULL)=0;
+				OpenViBE::CString* pError = NULL) =0;
 			/**
 			 * \brief Tries to unload the loaded OpenViBE module
 			 * \param pError [out] : an optional output string containing the error on unload failure
@@ -46,7 +46,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean unload(
-				OpenViBE::CString* pError=NULL)=0;
+				OpenViBE::CString* pError = NULL) =0;
 			/**
 			 * \brief Gets the current filename associated with this plugin module
 			 * \param rFileName [out] : the filename of this plugin module
@@ -54,7 +54,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean getFileName(
-				OpenViBE::CString& rFileName) const=0;
+				OpenViBE::CString& rFileName) const =0;
 			/**
 			 * \brief Initializes this plugin module
 			 * \return \e true in case of success.
@@ -62,7 +62,7 @@ namespace OpenViBE
 			 *
 			 * This function calls the onInitialize main function of the plugin module.
 			 */
-			virtual OpenViBE::boolean initialize(void)=0;
+			virtual OpenViBE::boolean initialize(void) =0;
 			/**
 			 * \brief Gets a specific plugin object descriptor
 			 * \param ui32Index [in] : the index of the plugin object descriptor to get
@@ -83,7 +83,7 @@ namespace OpenViBE
 			 */
 			virtual OpenViBE::boolean getPluginObjectDescription(
 				OpenViBE::uint32 ui32Index,
-				OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription)=0;
+				OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) =0;
 			/**
 			 * \brief Uninitializes this plugin module
 			 * \return \e true in case of success.
@@ -91,7 +91,7 @@ namespace OpenViBE
 			 *
 			 * This function calls the onUninitialize main function of the plugin module.
 			 */
-			virtual OpenViBE::boolean uninitialize(void)=0;
+			virtual OpenViBE::boolean uninitialize(void) =0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginModule)
 		};

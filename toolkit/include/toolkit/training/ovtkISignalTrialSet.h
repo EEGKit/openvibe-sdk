@@ -11,11 +11,11 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual OpenViBE::boolean addSignalTrial(OpenViBEToolkit::ISignalTrial& rSignalTrial)=0;
-		virtual OpenViBE::boolean clear(void)=0;
+		virtual OpenViBE::boolean addSignalTrial(OpenViBEToolkit::ISignalTrial& rSignalTrial) =0;
+		virtual OpenViBE::boolean clear(void) =0;
 
-		virtual OpenViBE::uint32 getSignalTrialCount(void) const=0;
-		virtual OpenViBEToolkit::ISignalTrial& getSignalTrial(OpenViBE::uint32 ui32Index) const=0;
+		virtual OpenViBE::uint32 getSignalTrialCount(void) const =0;
+		virtual OpenViBEToolkit::ISignalTrial& getSignalTrial(OpenViBE::uint32 ui32Index) const =0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_);
 	};

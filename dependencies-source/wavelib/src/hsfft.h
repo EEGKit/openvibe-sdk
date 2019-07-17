@@ -23,9 +23,10 @@ extern "C" {
 #endif
 
 
-typedef struct fft_t {
-  fft_type re;
-  fft_type im;
+typedef struct fft_t
+{
+	fft_type re;
+	fft_type im;
 } fft_data;
 /*
 #define SADD(a,b) ((a)+(b))
@@ -39,7 +40,8 @@ typedef struct fft_set* fft_object;
 
 fft_object fft_init(int N, int sgn);
 
-struct fft_set{
+struct fft_set
+{
 	int N;
 	int sgn;
 	int factors[64];
@@ -48,9 +50,9 @@ struct fft_set{
 	fft_data twiddle[1];
 };
 
-void fft_exec(fft_object obj,fft_data *inp,fft_data *oup);
+void fft_exec(fft_object obj, fft_data* inp, fft_data* oup);
 
-int divideby(int M,int d);
+int divideby(int M, int d);
 
 int dividebyN(int N);
 
@@ -58,17 +60,15 @@ int dividebyN(int N);
 
 int factors(int M, int* arr);
 
-void twiddle(fft_data *sig,int N, int radix);
+void twiddle(fft_data* sig, int N, int radix);
 
-void longvectorN(fft_data *sig,int N, int *array, int M);
+void longvectorN(fft_data* sig, int N, int* array, int M);
 
 void free_fft(fft_object object);
 
 #ifdef __cplusplus
 }
 #endif
-
-
 
 
 #endif /* HSFFT_H_ */

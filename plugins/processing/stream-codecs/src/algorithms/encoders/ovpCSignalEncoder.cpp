@@ -31,9 +31,9 @@ boolean CSignalEncoder::uninitialize(void)
 boolean CSignalEncoder::processHeader(void)
 {
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Signal);
-	 m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Signal_SamplingRate);
-	  m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64SamplingRate);
-	 m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Signal_SamplingRate);
+	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64SamplingRate);
+	m_pEBMLWriterHelper->closeChild();
 	m_pEBMLWriterHelper->closeChild();
 
 	CStreamedMatrixEncoder::processHeader();

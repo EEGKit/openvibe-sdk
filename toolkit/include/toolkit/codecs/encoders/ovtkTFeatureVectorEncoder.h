@@ -12,7 +12,6 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TFeatureVectorEncoderLocal : public T
 	{
-
 	protected:
 		// the feature vector stream is just a streamed matrix with some constraint (dimension = 2).
 		// no specific parameter.
@@ -48,27 +47,28 @@ namespace OpenViBEToolkit
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeEnd);
 		}
+
 	public:
 		using T::initialize;
 		using T::uninitialize;
 	};
 
 	template <class T>
-	class TFeatureVectorEncoder : public TFeatureVectorEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >
+	class TFeatureVectorEncoder : public TFeatureVectorEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>
 	{
 	private:
-		using TFeatureVectorEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >::m_pBoxAlgorithm;
+		using TFeatureVectorEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_pBoxAlgorithm;
 	public:
-		using TFeatureVectorEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >::uninitialize;
+		using TFeatureVectorEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::uninitialize;
 
-		TFeatureVectorEncoder()
-		{
-		}
+		TFeatureVectorEncoder() { }
+
 		TFeatureVectorEncoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
+
 		virtual ~TFeatureVectorEncoder()
 		{
 			this->uninitialize();

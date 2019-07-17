@@ -3,9 +3,9 @@
 using namespace EBML;
 
 CWriterHelper::CWriterHelper(void)
-	:m_pWriterHelperImplementation(NULL)
+	: m_pWriterHelperImplementation(NULL)
 {
-	m_pWriterHelperImplementation=createWriterHelper();
+	m_pWriterHelperImplementation = createWriterHelper();
 }
 
 CWriterHelper::~CWriterHelper(void)
@@ -63,6 +63,4 @@ boolean CWriterHelper::setASCIIStringAsChildData(const char* sValue)
 	return m_pWriterHelperImplementation->setASCIIStringAsChildData(sValue);
 }
 
-void CWriterHelper::release(void)
-{
-}
+void CWriterHelper::release(void) {}

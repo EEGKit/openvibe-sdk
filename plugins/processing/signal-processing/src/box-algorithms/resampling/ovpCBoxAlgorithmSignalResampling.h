@@ -42,7 +42,7 @@ namespace OpenViBEPlugins
 	{
 		typedef ::Common::Resampler::CResamplerSd CResampler;
 
-		class CBoxAlgorithmSignalResampling : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, CResampler::ICallback
+		class CBoxAlgorithmSignalResampling : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, CResampler::ICallback
 		{
 		public:
 
@@ -60,8 +60,8 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmSignalResampling > m_oDecoder;
-			mutable OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmSignalResampling > m_oEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalResampling> m_oDecoder;
+			mutable OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_oEncoder;
 
 			OpenViBE::uint32 m_ui32OutputSamplingRate;
 			OpenViBE::uint32 m_ui32OutputSampleCount;
@@ -82,29 +82,29 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::CString getName(void) const                    { return OpenViBE::CString("Signal Resampling"); }
-			virtual OpenViBE::CString getAuthorName(void) const              { return OpenViBE::CString("Quentin Barthelemy"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const       { return OpenViBE::CString("Mensia Technologies SA"); }
-			virtual OpenViBE::CString getShortDescription(void) const        { return OpenViBE::CString("Resamples and re-epochs input signal to chosen sampling frequency"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const     { return OpenViBE::CString("The input signal is resampled, down-sampled or up-sampled, at a chosen sampling frequency and then re-epoched."); }
-			virtual OpenViBE::CString getCategory(void) const                { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
-			virtual OpenViBE::CString getVersion(void) const                 { return OpenViBE::CString("2.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Signal Resampling"); }
+			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Quentin Barthelemy"); }
+			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Mensia Technologies SA"); }
+			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Resamples and re-epochs input signal to chosen sampling frequency"); }
+			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("The input signal is resampled, down-sampled or up-sampled, at a chosen sampling frequency and then re-epoched."); }
+			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
+			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("2.0"); }
+			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const        { return OVP_ClassId_BoxAlgorithm_SignalResampling; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)           { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalResampling; }
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_SignalResampling; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalResampling; }
 
 			virtual OpenViBE::boolean getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
-				rBoxAlgorithmPrototype.addInput  ("Input signal",                               OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput ("Output signal",                              OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("New Sampling Frequency",                     OV_TypeId_Integer, "128", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency);
-				rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer",                    OV_TypeId_Integer, "8", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
+				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
+				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);
+				rBoxAlgorithmPrototype.addSetting("New Sampling Frequency", OV_TypeId_Integer, "128", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency);
+				rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer", OV_TypeId_Integer, "8", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
 				rBoxAlgorithmPrototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_LowPassFilterSignalFlag); // displayed for backward compatibility, but never used
-				
+
 				//rBoxAlgorithmPrototype.addSetting("New Sampling Frequency",OV_TypeId_Integer,"128");
 				//rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer",OV_TypeId_Integer,"8");
 				//rBoxAlgorithmPrototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true"); // displayed for backward compatibility, but never used

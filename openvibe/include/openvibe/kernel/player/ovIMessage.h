@@ -23,12 +23,12 @@ namespace OpenViBE
 			 * \brief Gets the message identifier
 			 * \return The identifier of the message.
 			 */
-			virtual OpenViBE::CIdentifier getIdentifier(void) const=0;
+			virtual OpenViBE::CIdentifier getIdentifier(void) const =0;
 			/**
 			 * \brief Gets the timestamp of the message
 			 * \return the timestamp of the message.
 			 */
-			virtual OpenViBE::uint64 getTime(void) const=0;
+			virtual OpenViBE::uint64 getTime(void) const =0;
 			/**
 			 * \brief Sets the message identifier for this message
 			 * \param rIdentifier [in] : the new identifier of the message
@@ -36,7 +36,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean setIdentifier(
-				const OpenViBE::CIdentifier& rIdentifier)=0;
+				const OpenViBE::CIdentifier& rIdentifier) =0;
 			/**
 			 * \brief Sets the message timestamp
 			 * \param ui64Time [in] : the new timestamp of the message
@@ -44,10 +44,9 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual OpenViBE::boolean setTime(
-				const OpenViBE::uint64 ui64Time)=0;
+				const OpenViBE::uint64 ui64Time) =0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Message)
-
 		};
 	};
 };
