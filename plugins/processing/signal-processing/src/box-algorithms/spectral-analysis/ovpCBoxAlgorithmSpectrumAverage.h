@@ -19,19 +19,19 @@ namespace OpenViBEPlugins
 			virtual void release(void) { delete this; }
 
 			// virtual OpenViBE::uint64 getClockFrequency(void);
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			// virtual OpenViBE::boolean processEvent(OpenViBE::CMessageEvent& rMessageEvent);
-			// virtual OpenViBE::boolean processSignal(OpenViBE::CMessageSignal& rMessageSignal);
-			// virtual OpenViBE::boolean processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			// virtual bool processEvent(OpenViBE::CMessageEvent& rMessageEvent);
+			// virtual bool processSignal(OpenViBE::CMessageSignal& rMessageSignal);
+			// virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
+			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SpectrumAverage);
 
 		protected:
 
-			OpenViBE::boolean m_bZeroCare;
+			bool m_bZeroCare;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
@@ -65,7 +65,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_SpectrumAverage; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpectrumAverage; }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Spectrum", OV_TypeId_Spectrum);

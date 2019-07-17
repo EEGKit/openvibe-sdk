@@ -44,7 +44,7 @@ namespace XML
 		 * @param sPath [in] : The path to the file.
 		 * @return True on success, false otherwise.
 		 */
-		virtual XML::boolean writeXMLInFile(const IXMLNode& rNode, const char* sPath) const =0;
+		virtual bool writeXMLInFile(const IXMLNode& rNode, const char* sPath) const =0;
 
 		/**
 		 * @brief Get the description of the last error that ocurred

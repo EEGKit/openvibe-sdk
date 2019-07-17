@@ -40,7 +40,7 @@ using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::Classification;
 using namespace std;
 
-boolean CBoxAlgorithmClassifierTrainer::initialize(void)
+bool CBoxAlgorithmClassifierTrainer::initialize(void)
 {
 	m_pClassifier = NULL;
 	m_pParameter  = NULL;
@@ -56,7 +56,7 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 		(*m_pParameter)[l_pInputName] = l_pInputValue;
 	}
 
-	boolean l_bIsPairing = false;
+	bool l_bIsPairing = false;
 
 	CString l_sConfigurationFilename(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
 
@@ -145,7 +145,7 @@ boolean CBoxAlgorithmClassifierTrainer::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmClassifierTrainer::uninitialize(void)
+bool CBoxAlgorithmClassifierTrainer::uninitialize(void)
 {
 	m_oStimulationDecoder.uninitialize();
 	m_oStimulationEncoder.uninitialize();
@@ -192,14 +192,14 @@ boolean CBoxAlgorithmClassifierTrainer::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmClassifierTrainer::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmClassifierTrainer::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
 // Find the most likely class and resample the dataset so that each class is as likely
-boolean CBoxAlgorithmClassifierTrainer::balanceDataset()
+bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -259,13 +259,13 @@ boolean CBoxAlgorithmClassifierTrainer::balanceDataset()
 }
 
 
-boolean CBoxAlgorithmClassifierTrainer::process(void)
+bool CBoxAlgorithmClassifierTrainer::process(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
 	uint32 i, j;
-	boolean l_bTrainStimulationReceived = false;
+	bool l_bTrainStimulationReceived = false;
 
 	// Parses stimulations
 	for (i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
@@ -353,7 +353,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 			this->getLogManager() << LogLevel_Info << "For information, we have " << m_vFeatureCount[i] << " feature vector(s) for input " << i << "\n";
 		}
 
-		const boolean l_bBalanceDataset = this->getConfigurationManager().expandAsBoolean((*m_pParameter)[c_sBalanceSettingName]);
+		const bool l_bBalanceDataset = this->getConfigurationManager().expandAsBoolean((*m_pParameter)[c_sBalanceSettingName]);
 		if (l_bBalanceDataset)
 		{
 			balanceDataset();
@@ -361,7 +361,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 
 		const std::vector<SFeatureVector>& l_rActualDataset = (l_bBalanceDataset ? m_vBalancedDataset : m_vDataset);
 
-		vector<float64> l_vPartitionAccuracies((unsigned int)m_ui64PartitionCount);
+		vector<double> l_vPartitionAccuracies((unsigned int)m_ui64PartitionCount);
 
 		const bool l_bRandomizeVectorOrder = this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_RandomizeKFoldTestData}", false);
 
@@ -387,8 +387,8 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 
 		if (m_ui64PartitionCount >= 2)
 		{
-			float64 l_f64PartitionAccuracy = 0;
-			float64 l_f64FinalAccuracy     = 0;
+			double l_f64PartitionAccuracy = 0;
+			double l_f64FinalAccuracy     = 0;
 
 			OpenViBEToolkit::Tools::Matrix::clearContent(l_oConfusion);
 
@@ -413,12 +413,12 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 				this->getLogManager() << LogLevel_Info << "Finished with partition " << i + 1 << " / " << m_ui64PartitionCount << " (performance : " << l_f64PartitionAccuracy << "%)\n";
 			}
 
-			const float64 l_fMean = l_f64FinalAccuracy / m_ui64PartitionCount;
-			float64 l_fDeviation  = 0;
+			const double l_fMean = l_f64FinalAccuracy / m_ui64PartitionCount;
+			double l_fDeviation  = 0;
 
 			for (uint64 i = 0; i < m_ui64PartitionCount; i++)
 			{
-				const float64 l_fDiff = l_vPartitionAccuracies[(unsigned int)i] - l_fMean;
+				const double l_fDiff = l_vPartitionAccuracies[(unsigned int)i] - l_fMean;
 				l_fDeviation += l_fDiff * l_fDiff;
 			}
 			l_fDeviation = sqrt(l_fDeviation / m_ui64PartitionCount);
@@ -443,7 +443,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 		);
 
 		OpenViBEToolkit::Tools::Matrix::clearContent(l_oConfusion);
-		const float64 l_f64TrainAccuracy = this->getAccuracy(l_rActualDataset, l_vFeaturePermutation, 0, l_rActualDataset.size(), l_oConfusion);
+		const double l_f64TrainAccuracy = this->getAccuracy(l_rActualDataset, l_vFeaturePermutation, 0, l_rActualDataset.size(), l_oConfusion);
 
 		this->getLogManager() << LogLevel_Info << "Training set accuracy is " << l_f64TrainAccuracy << "% (optimistic)\n";
 
@@ -459,7 +459,7 @@ boolean CBoxAlgorithmClassifierTrainer::process(void)
 	return true;
 }
 
-boolean CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rDataset,
+bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rDataset,
 											  const std::vector<size_t>& rPermutation, const size_t uiStartIndex, const size_t uiStopIndex)
 {
 	OV_ERROR_UNLESS_KRF(
@@ -477,15 +477,15 @@ boolean CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>&
 	ip_pFeatureVectorSet->setDimensionSize(0, l_ui32FeatureVectorCount);
 	ip_pFeatureVectorSet->setDimensionSize(1, l_ui32FeatureVectorSize + 1);
 
-	float64* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
+	double* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
 	for (size_t j = 0; j < rDataset.size() - (uiStopIndex - uiStartIndex); j++)
 	{
 		size_t k           = rPermutation[(j < uiStartIndex ? j : j + (uiStopIndex - uiStartIndex))];
-		float64 l_f64Class = (float64)rDataset[k].m_ui32InputIndex;
+		double l_f64Class = (double)rDataset[k].m_ui32InputIndex;
 		System::Memory::copy(
 			l_pFeatureVectorSetBuffer,
 			rDataset[k].m_pFeatureVectorMatrix->getBuffer(),
-			l_ui32FeatureVectorSize * sizeof(float64));
+			l_ui32FeatureVectorSize * sizeof(double));
 
 		l_pFeatureVectorSetBuffer[l_ui32FeatureVectorSize] = l_f64Class;
 		l_pFeatureVectorSetBuffer += (l_ui32FeatureVectorSize + 1);
@@ -512,7 +512,7 @@ boolean CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>&
 }
 
 // Note that this function is incremental for oConfusionMatrix and can be called many times; so we don't clear the matrix
-float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector>& rDataset,
+double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector>& rDataset,
 													const std::vector<size_t>& rPermutation, const size_t uiStartIndex, const size_t uiStopIndex, CMatrix& oConfusionMatrix)
 {
 	OV_ERROR_UNLESS_KRF(
@@ -531,7 +531,7 @@ float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<CBoxAlgori
 	m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration);
 
 	TParameterHandler<IMatrix*> ip_pFeatureVector(m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
-	TParameterHandler<float64> op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
+	TParameterHandler<double> op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 	ip_pFeatureVector->setDimensionCount(1);
 	ip_pFeatureVector->setDimensionSize(0, l_ui32FeatureVectorSize);
 
@@ -541,19 +541,19 @@ float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<CBoxAlgori
 	{
 		const size_t k = rPermutation[j];
 
-		float64* l_pFeatureVectorBuffer = ip_pFeatureVector->getBuffer();
-		const float64 l_f64CorrectValue = (float64)rDataset[k].m_ui32InputIndex;
+		double* l_pFeatureVectorBuffer = ip_pFeatureVector->getBuffer();
+		const double l_f64CorrectValue = (double)rDataset[k].m_ui32InputIndex;
 
 		this->getLogManager() << LogLevel_Debug << "Try to recognize " << l_f64CorrectValue << "\n";
 
 		System::Memory::copy(
 			l_pFeatureVectorBuffer,
 			rDataset[k].m_pFeatureVectorMatrix->getBuffer(),
-			l_ui32FeatureVectorSize * sizeof(float64));
+			l_ui32FeatureVectorSize * sizeof(double));
 
 		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
-		const float64 l_f64PredictedValue = op_f64ClassificationStateClass;
+		const double l_f64PredictedValue = op_f64ClassificationStateClass;
 
 		this->getLogManager() << LogLevel_Debug << "Recognize " << l_f64PredictedValue << "\n";
 
@@ -564,7 +564,7 @@ float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<CBoxAlgori
 
 		if (l_f64PredictedValue < oConfusionMatrix.getDimensionSize(0) && l_f64CorrectValue < oConfusionMatrix.getDimensionSize(0))
 		{
-			float64* buf = oConfusionMatrix.getBuffer();
+			double* buf = oConfusionMatrix.getBuffer();
 			buf[static_cast<uint32>(l_f64CorrectValue) * oConfusionMatrix.getDimensionSize(1) +
 				static_cast<uint32>(l_f64PredictedValue)] += 1.0;
 		}
@@ -574,10 +574,10 @@ float64 CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<CBoxAlgori
 		}
 	}
 
-	return static_cast<float64>((l_iSuccessCount * 100.0) / (uiStopIndex - uiStartIndex));
+	return static_cast<double>((l_iSuccessCount * 100.0) / (uiStopIndex - uiStartIndex));
 }
 
-boolean CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix)
+bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix)
 {
 	OV_ERROR_UNLESS_KRF(
 		oMatrix.getDimensionCount() == 2 && oMatrix.getDimensionSize(0) == oMatrix.getDimensionSize(1),
@@ -638,7 +638,7 @@ boolean CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMat
 	return true;
 }
 
-boolean CBoxAlgorithmClassifierTrainer::saveConfiguration(void)
+bool CBoxAlgorithmClassifierTrainer::saveConfiguration(void)
 {
 	CIdentifier l_oStrategyClassIdentifier, l_oClassifierAlgorithmClassIdentifier;
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();

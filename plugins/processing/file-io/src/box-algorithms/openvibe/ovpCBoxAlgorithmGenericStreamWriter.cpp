@@ -13,7 +13,7 @@ CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter(void)
 	: m_bIsHeaderGenerate(false)
 	  , m_oWriter(*this) {}
 
-boolean CBoxAlgorithmGenericStreamWriter::initialize(void)
+bool CBoxAlgorithmGenericStreamWriter::initialize(void)
 {
 	m_sFilename            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	bool l_bUseCompression = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -26,7 +26,7 @@ boolean CBoxAlgorithmGenericStreamWriter::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmGenericStreamWriter::uninitialize(void)
+bool CBoxAlgorithmGenericStreamWriter::uninitialize(void)
 {
 	if (m_oFile.is_open())
 	{
@@ -35,7 +35,7 @@ boolean CBoxAlgorithmGenericStreamWriter::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmGenericStreamWriter::generateFileHeader()
+bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -87,13 +87,13 @@ boolean CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 	return true;
 }
 
-boolean CBoxAlgorithmGenericStreamWriter::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmGenericStreamWriter::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmGenericStreamWriter::process(void)
+bool CBoxAlgorithmGenericStreamWriter::process(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();

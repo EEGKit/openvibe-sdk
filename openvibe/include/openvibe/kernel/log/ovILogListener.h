@@ -118,7 +118,7 @@ namespace OpenViBE
 			 * \return \e true if this log level is active.
 			 * \return \e false if this log level is not active.
 			 */
-			virtual OpenViBE::boolean isActive(OpenViBE::Kernel::ELogLevel eLogLevel) =0;
+			virtual bool isActive(OpenViBE::Kernel::ELogLevel eLogLevel) =0;
 			/**
 			 * \brief Changes the activation status of a specific log level
 			 * \param eLogLevel [in] : the log level which status has to be changed
@@ -126,7 +126,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eLogLevel, OpenViBE::boolean bActive) =0;
+			virtual bool activate(OpenViBE::Kernel::ELogLevel eLogLevel, bool bActive) =0;
 			/**
 			 * \brief Changes the activation status of a specific range of log level
 			 * \param eStartLogLevel [in] : the first log level which status has to be changed
@@ -135,14 +135,14 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eStartLogLevel, OpenViBE::Kernel::ELogLevel eEndLogLevel, OpenViBE::boolean bActive) =0;
+			virtual bool activate(OpenViBE::Kernel::ELogLevel eStartLogLevel, OpenViBE::Kernel::ELogLevel eEndLogLevel, bool bActive) =0;
 			/**
 			 * \brief Changes the activation status of all log levels at once
 			 * \param bActive [in] : a boolean telling whether the levels should be active or not
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean activate(OpenViBE::boolean bActive) =0;
+			virtual bool activate(bool bActive) =0;
 
 			//@}
 			/** \name Logging function */
@@ -198,17 +198,17 @@ namespace OpenViBE
 			 * \brief Logs a 64 bits floating point value
 			 * \param f64Value [in] : the value that should be logged
 			 */
-			virtual void log(const OpenViBE::float64 f64Value) =0;
+			virtual void log(const double f64Value) =0;
 			/**
 			 * \brief Logs a 32 bits floating point value
 			 * \param f32Value [in] : the value that should be logged
 			 */
-			virtual void log(const OpenViBE::float32 f32Value) =0;
+			virtual void log(const float f32Value) =0;
 			/**
 			 * \brief Logs a boolean value
 			 * \param bValue [in] : the value that should be logged
 			 */
-			virtual void log(const OpenViBE::boolean bValue) =0;
+			virtual void log(const bool bValue) =0;
 			/**
 			 * \brief Logs an identifier value
 			 * \param rValue [in] : the value that should be logged

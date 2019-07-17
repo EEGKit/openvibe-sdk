@@ -37,21 +37,21 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual OpenViBE::boolean initialize();
-		virtual OpenViBE::boolean uninitialize();
+		virtual bool initialize();
+		virtual bool uninitialize();
 
 		virtual void release(void) { delete this; }
 
-		virtual OpenViBE::boolean process(void);
+		virtual bool process(void);
 
-		virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) = 0;
-		virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& featureVector
-										   , OpenViBE::float64& estimatedClass
+		virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) = 0;
+		virtual bool classify(const OpenViBEToolkit::IFeatureVector& featureVector
+										   , double& estimatedClass
 										   , OpenViBEToolkit::IVector& distanceValue
 										   , OpenViBEToolkit::IVector& probabilityValue) = 0;
 
 		virtual XML::IXMLNode* saveConfiguration(void) =0;
-		virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode* configurationRoot) =0;
+		virtual bool loadConfiguration(XML::IXMLNode* configurationRoot) =0;
 
 		virtual OpenViBE::uint32 getOutputProbabilityVectorLength(void) =0;
 		virtual OpenViBE::uint32 getOutputDistanceVectorLength(void) =0;
@@ -59,13 +59,13 @@ namespace OpenViBEToolkit
 		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_Classifier);
 
 	protected:
-		OpenViBE::boolean initializeExtraParameterMechanism();
-		OpenViBE::boolean uninitializeExtraParameterMechanism();
+		bool initializeExtraParameterMechanism();
+		bool uninitializeExtraParameterMechanism();
 
 		OpenViBE::uint64 getUInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
 		OpenViBE::int64 getInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		OpenViBE::float64 getFloat64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		OpenViBE::boolean getBooleanParameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		double getFloat64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		bool getBooleanParameter(const OpenViBE::CIdentifier& parameterIdentifier);
 		OpenViBE::CString* getCStringParameter(const OpenViBE::CIdentifier& parameterIdentifier);
 		OpenViBE::uint64 getEnumerationParameter(const OpenViBE::CIdentifier& parameterIdentifier, const OpenViBE::CIdentifier& enumerationIdentifier);
 
@@ -81,7 +81,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual OpenViBE::boolean getAlgorithmPrototype(
+		virtual bool getAlgorithmPrototype(
 			OpenViBE::Kernel::IAlgorithmProto& algorithmPrototype) const
 		{
 			algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector, "Feature vector", OpenViBE::Kernel::ParameterType_Matrix);

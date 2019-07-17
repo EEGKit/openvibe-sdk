@@ -52,7 +52,7 @@ namespace OpenViBEPlugins
 			bool m_SaveAsBoxConf;
 			bool m_HasBeenInitialized;
 
-			OpenViBE::float64 m_Tikhonov;
+			double m_Tikhonov;
 
 			struct IncrementalCovarianceProxy
 			{

@@ -24,28 +24,28 @@ namespace OpenViBEPlugins
 			virtual void release(void) { delete this; }
 
 			virtual OpenViBE::uint64 getClockFrequency(void);
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual OpenViBE::boolean process(void);
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
+			virtual bool process(void);
 
-			OpenViBE::boolean process_streamedMatrix(void);
-			OpenViBE::boolean process_stimulation(void);
-			OpenViBE::boolean process_signal(void);
-			OpenViBE::boolean process_channelLocalisation(void);
-			OpenViBE::boolean process_featureVector(void);
-			OpenViBE::boolean process_spectrum(void);
-			OpenViBE::boolean convertVectorDataToMatrix(OpenViBE::IMatrix* matrix);
+			bool process_streamedMatrix(void);
+			bool process_stimulation(void);
+			bool process_signal(void);
+			bool process_channelLocalisation(void);
+			bool process_featureVector(void);
+			bool process_spectrum(void);
+			bool convertVectorDataToMatrix(OpenViBE::IMatrix* matrix);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileReader);
 
 
 		protected:
-			OpenViBE::boolean initializeFile();
+			bool initializeFile();
 
 			::FILE* m_pFile;
 			std::string m_sSeparator;
-			OpenViBE::boolean m_bDoNotUseFileTime;
+			bool m_bDoNotUseFileTime;
 			OpenViBE::CString m_sFilename;
 
 			OpenViBE::CIdentifier m_oTypeIdentifier;
@@ -54,16 +54,16 @@ namespace OpenViBEPlugins
 			OpenViBE::uint32 m_ui32SamplesPerBuffer;
 			OpenViBE::uint32 m_ui32ChannelNumberPerBuffer;
 
-			OpenViBE::boolean (OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileReader::*m_fpRealProcess)(void);
+			bool (OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileReader::*m_fpRealProcess)(void);
 
 			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_pAlgorithmEncoder;
 
-			OpenViBE::boolean m_bHeaderSent;
+			bool m_bHeaderSent;
 			std::vector<std::string> m_vLastLineSplit;
 			std::vector<std::string> m_vHeaderFile;
 			std::vector<std::vector<std::string>> m_vDataMatrix;
 
-			OpenViBE::float64 m_f64NextTime;
+			double m_f64NextTime;
 
 			OpenViBE::uint64 m_ui64ChunkStartTime;
 			OpenViBE::uint64 m_ui64ChunkEndTime;
@@ -75,7 +75,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual OpenViBE::boolean onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
@@ -143,7 +143,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmCSVFileReaderListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addOutput("Output stream", OV_TypeId_Signal);

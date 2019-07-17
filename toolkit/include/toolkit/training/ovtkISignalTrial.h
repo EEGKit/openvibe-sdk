@@ -9,11 +9,11 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual OpenViBE::boolean setSamplingRate(const OpenViBE::uint32 ui32SamplingFrequency) =0;
-		virtual OpenViBE::boolean setChannelCount(const OpenViBE::uint32 ui32ChannelCount) =0;
-		virtual OpenViBE::boolean setChannelName(const OpenViBE::uint32 ui32ChannelIndex, const char* sChannelName) =0;
-		virtual OpenViBE::boolean setLabelIdentifier(const OpenViBE::CIdentifier& rLabelIdentifier) =0;
-		virtual OpenViBE::boolean setSampleCount(const OpenViBE::uint32 ui32SampleCount, const OpenViBE::boolean bPreserve) =0;
+		virtual bool setSamplingRate(const OpenViBE::uint32 ui32SamplingFrequency) =0;
+		virtual bool setChannelCount(const OpenViBE::uint32 ui32ChannelCount) =0;
+		virtual bool setChannelName(const OpenViBE::uint32 ui32ChannelIndex, const char* sChannelName) =0;
+		virtual bool setLabelIdentifier(const OpenViBE::CIdentifier& rLabelIdentifier) =0;
+		virtual bool setSampleCount(const OpenViBE::uint32 ui32SampleCount, const bool bPreserve) =0;
 
 		virtual OpenViBE::uint32 getSamplingRate(void) const =0;
 		virtual OpenViBE::uint32 getChannelCount(void) const =0;
@@ -21,7 +21,7 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::CIdentifier getLabelIdentifier(void) const =0;
 		virtual OpenViBE::uint32 getSampleCount(void) const =0;
 		virtual OpenViBE::uint64 getDuration(void) const =0;
-		virtual OpenViBE::float64* getChannelSampleBuffer(const OpenViBE::uint32 ui32ChannelIndex) const =0;
+		virtual double* getChannelSampleBuffer(const OpenViBE::uint32 ui32ChannelIndex) const =0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_);
 	};
@@ -60,13 +60,13 @@ namespace OpenViBEToolkit
 		OpenViBEToolkit::ISignalTrial& rSignalTrial,
 		const OpenViBE::uint32 ui32SampleStart,
 		const OpenViBE::uint32 ui32SampleCount,
-		const OpenViBE::float64* pBuffer,
+		const double* pBuffer,
 		const OpenViBEToolkit::ISignalTrial* pSourceSignalTrial = NULL);
 	extern OVTK_API OpenViBEToolkit::ISignalTrial& insertBufferTime(
 		OpenViBEToolkit::ISignalTrial& rSignalTrial,
 		const OpenViBE::uint64 ui64TimeStart,
 		const OpenViBE::uint32 ui32SampleCount,
-		const OpenViBE::float64* pBuffer,
+		const double* pBuffer,
 		const OpenViBEToolkit::ISignalTrial* pSourceSignalTrial = NULL);
 };
 

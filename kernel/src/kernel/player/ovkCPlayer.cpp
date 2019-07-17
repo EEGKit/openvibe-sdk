@@ -71,7 +71,7 @@ CPlayer::~CPlayer(void)
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CPlayer::setScenario(
+bool CPlayer::setScenario(
 	const CIdentifier& rScenarioIdentifier,
 	const OpenViBE::CNameValuePairList* pLocalConfigurationTokens)
 {
@@ -225,7 +225,7 @@ EPlayerReturnCode CPlayer::initialize(void)
 	return PlayerReturnCode_Sucess;
 }
 
-boolean CPlayer::uninitialize(void)
+bool CPlayer::uninitialize(void)
 {
 	this->getLogManager() << LogLevel_Trace << "Player uninitialize\n";
 
@@ -244,7 +244,7 @@ boolean CPlayer::uninitialize(void)
 	return true;
 }
 
-boolean CPlayer::stop(void)
+bool CPlayer::stop(void)
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -259,7 +259,7 @@ boolean CPlayer::stop(void)
 	return true;
 }
 
-boolean CPlayer::pause(void)
+bool CPlayer::pause(void)
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -274,7 +274,7 @@ boolean CPlayer::pause(void)
 	return true;
 }
 
-boolean CPlayer::step(void)
+bool CPlayer::step(void)
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -289,7 +289,7 @@ boolean CPlayer::step(void)
 	return true;
 }
 
-boolean CPlayer::play(void)
+bool CPlayer::play(void)
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -304,7 +304,7 @@ boolean CPlayer::play(void)
 	return true;
 }
 
-boolean CPlayer::forward(void)
+bool CPlayer::forward(void)
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -319,45 +319,27 @@ boolean CPlayer::forward(void)
 	return true;
 }
 
-EPlayerStatus CPlayer::getStatus(void) const
-{
-	return m_eStatus;
-}
+EPlayerStatus CPlayer::getStatus(void) const { return m_eStatus; }
 
-boolean CPlayer::setFastForwardMaximumFactor(const float64 f64FastForwardFactor)
+bool CPlayer::setFastForwardMaximumFactor(const double f64FastForwardFactor)
 {
 	m_f64FastForwardMaximumFactor = (f64FastForwardFactor < 0 ? 0 : f64FastForwardFactor);
 	return true;
 }
 
-float64 CPlayer::getFastForwardMaximumFactor(void) const
-{
-	return m_f64FastForwardMaximumFactor;
-}
+double CPlayer::getFastForwardMaximumFactor(void) const { return m_f64FastForwardMaximumFactor; }
 
-float64 CPlayer::getCPUUsage() const
-{
-	return m_oScheduler.getCPUUsage();
-}
+double CPlayer::getCPUUsage() const { return m_oScheduler.getCPUUsage(); }
 
-OpenViBE::boolean CPlayer::isHoldingResources() const
-{
-	return m_oScheduler.isHoldingResources();
-}
+bool CPlayer::isHoldingResources() const { return m_oScheduler.isHoldingResources(); }
 
-boolean CPlayer::loop(
-	const uint64 ui64ElapsedTime,
-	const uint64 ui64MaximumTimeToReach)
+bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTimeToReach)
 {
-	OV_ERROR_UNLESS_KRF(
-		this->isHoldingResources(),
-		"Trying to use an uninitialized player",
-		ErrorType::BadCall
-	);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 
 	if (m_eStatus == PlayerStatus_Stop) { return true; }
 
-	boolean l_bHasTimeToReach = false;
+	bool l_bHasTimeToReach = false;
 	switch (m_eStatus)
 	{
 			// Calls a single controller loop and goes back to pause state
@@ -374,7 +356,7 @@ boolean CPlayer::loop(
 			// g_ui64Scheduler_Maximum_Loops_Duration_ seconds elapsed
 			if (m_f64FastForwardMaximumFactor != 0)
 			{
-				m_ui64CurrentTimeToReach += static_cast<uint64>(m_f64FastForwardMaximumFactor * ui64ElapsedTime);
+				m_ui64CurrentTimeToReach += static_cast<uint64_t>(m_f64FastForwardMaximumFactor * ui64ElapsedTime);
 				l_bHasTimeToReach = true;
 			}
 			break;
@@ -399,7 +381,7 @@ boolean CPlayer::loop(
 
 	uint64 l_ui64SchedulerStepDuration = m_oScheduler.getStepDuration();
 	uint64 l_ui64StartTime             = System::Time::zgetTime();
-	boolean l_bFinished                = false;
+	bool l_bFinished                = false;
 	while (!l_bFinished)
 	{
 		uint64 l_ui64NextSchedulerTime = m_oScheduler.getCurrentTime() + l_ui64SchedulerStepDuration;
@@ -421,14 +403,8 @@ boolean CPlayer::loop(
 		}
 		else
 		{
-			if (l_bHasTimeToReach)
-			{
-				m_ui64InnerLateness = (m_ui64CurrentTimeToReach > l_ui64NextSchedulerTime ? m_ui64CurrentTimeToReach - l_ui64NextSchedulerTime : 0);
-			}
-			else
-			{
-				m_ui64InnerLateness = 0;
-			}
+			if (l_bHasTimeToReach) { m_ui64InnerLateness = (m_ui64CurrentTimeToReach > l_ui64NextSchedulerTime ? m_ui64CurrentTimeToReach - l_ui64NextSchedulerTime : 0); }
+			else { m_ui64InnerLateness = 0; }
 
 			if (!m_oScheduler.loop())
 			{

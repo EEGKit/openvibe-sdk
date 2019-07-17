@@ -4,7 +4,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <commctrl.h>
-#define boolean bool
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #include <sys/time.h>
 #include <sys/types.h>
@@ -41,13 +40,13 @@ namespace Socket
 #endif
 		{ }
 
-		boolean open(void)
+		bool open(void)
 		{
 			// Should never be used
 			return false;
 		}
 
-		boolean close(void)
+		bool close(void)
 		{
 #if defined TARGET_OS_Windows
 
@@ -76,7 +75,7 @@ namespace Socket
 			return true;
 		}
 
-		boolean isReadyToSend(Socket::uint32 ui32TimeOut) const
+		bool isReadyToSend(Socket::uint32 ui32TimeOut) const
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -103,7 +102,7 @@ namespace Socket
 			return false;
 		}
 
-		boolean isReadyToReceive(Socket::uint32 ui32TimeOut) const
+		bool isReadyToReceive(Socket::uint32 ui32TimeOut) const
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -292,7 +291,7 @@ namespace Socket
 			return 0;
 		}
 
-		boolean sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
+		bool sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
 		{
 			const char* l_pPointer = reinterpret_cast<const char*>(pBuffer);
 			uint32 l_ui32BytesLeft = ui32BufferSize;
@@ -307,7 +306,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		boolean receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
+		bool receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
 		{
 			char* l_pPointer       = reinterpret_cast<char*>(pBuffer);
 			uint32 l_ui32BytesLeft = ui32BufferSize;
@@ -322,7 +321,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		boolean isConnected(void) const
+		bool isConnected(void) const
 		{
 #if defined TARGET_OS_Windows
 
@@ -340,7 +339,7 @@ namespace Socket
 			delete this;
 		}
 
-		boolean connect(const char* sURL, unsigned long ul32BaudRate)
+		bool connect(const char* sURL, unsigned long ul32BaudRate)
 		{
 			m_sLastError.clear();
 
@@ -427,7 +426,7 @@ namespace Socket
 			return true;
 		}
 
-		boolean setTimeouts(unsigned long ui32DecisecondsTimeout)
+		bool setTimeouts(unsigned long ui32DecisecondsTimeout)
 		{
 			if (!this->isConnected()) { return false; }
 

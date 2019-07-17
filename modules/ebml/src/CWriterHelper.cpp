@@ -13,52 +13,52 @@ CWriterHelper::~CWriterHelper(void)
 	m_pWriterHelperImplementation->release();
 }
 
-boolean CWriterHelper::connect(IWriter* pWriter)
+bool CWriterHelper::connect(IWriter* pWriter)
 {
 	return m_pWriterHelperImplementation->connect(pWriter);
 }
 
-boolean CWriterHelper::disconnect(void)
+bool CWriterHelper::disconnect(void)
 {
 	return m_pWriterHelperImplementation->disconnect();
 }
 
-boolean CWriterHelper::openChild(const CIdentifier& rIdentifier)
+bool CWriterHelper::openChild(const CIdentifier& rIdentifier)
 {
 	return m_pWriterHelperImplementation->openChild(rIdentifier);
 }
 
-boolean CWriterHelper::closeChild(void)
+bool CWriterHelper::closeChild(void)
 {
 	return m_pWriterHelperImplementation->closeChild();
 }
 
-boolean CWriterHelper::setSIntegerAsChildData(const int64 iValue)
+bool CWriterHelper::setSIntegerAsChildData(const int64 iValue)
 {
 	return m_pWriterHelperImplementation->setSIntegerAsChildData(iValue);
 }
 
-boolean CWriterHelper::setUIntegerAsChildData(const uint64 uiValue)
+bool CWriterHelper::setUIntegerAsChildData(const uint64 uiValue)
 {
 	return m_pWriterHelperImplementation->setUIntegerAsChildData(uiValue);
 }
 
-boolean CWriterHelper::setFloat32AsChildData(const float32 fValue)
+bool CWriterHelper::setFloat32AsChildData(const float fValue)
 {
 	return m_pWriterHelperImplementation->setFloat32AsChildData(fValue);
 }
 
-boolean CWriterHelper::setFloat64AsChildData(const float64 fValue)
+bool CWriterHelper::setFloat64AsChildData(const double fValue)
 {
 	return m_pWriterHelperImplementation->setFloat64AsChildData(fValue);
 }
 
-boolean CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64 ui64BufferLength)
+bool CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64 ui64BufferLength)
 {
 	return m_pWriterHelperImplementation->setBinaryAsChildData(pBuffer, ui64BufferLength);
 }
 
-boolean CWriterHelper::setASCIIStringAsChildData(const char* sValue)
+bool CWriterHelper::setASCIIStringAsChildData(const char* sValue)
 {
 	return m_pWriterHelperImplementation->setASCIIStringAsChildData(sValue);
 }

@@ -21,20 +21,11 @@ namespace Socket
 			return m_oConnectionSerialDelegate.fpConnect(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData, sURL, ui32BaudRate);
 		}
 
-		uint32 getPendingByteCount()
-		{
-			return m_oConnectionSerialDelegate.fpGetPendingByteCount(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
-		}
+		uint32 getPendingByteCount() { return m_oConnectionSerialDelegate.fpGetPendingByteCount(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData); }
 
-		boolean flush()
-		{
-			return m_oConnectionSerialDelegate.fpFlush(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
-		}
+		bool flush() { return m_oConnectionSerialDelegate.fpFlush(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData); }
 
-		const char* getLastError()
-		{
-			return m_oConnectionSerialDelegate.fpGetLastError(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
-		}
+		const char* getLastError() { return m_oConnectionSerialDelegate.fpGetLastError(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData); }
 
 		bool isErrorRaised()
 		{

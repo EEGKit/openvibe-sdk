@@ -13,7 +13,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::StreamCodecs;
 
-boolean CEncoderAlgorithmTest::initialize(void)
+bool CEncoderAlgorithmTest::initialize(void)
 {
 	m_pStreamEncoder[0] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ExperimentInformationStreamEncoder));
 	m_pStreamEncoder[1] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_FeatureVectorStreamEncoder));
@@ -73,7 +73,7 @@ boolean CEncoderAlgorithmTest::initialize(void)
 	return true;
 }
 
-boolean CEncoderAlgorithmTest::uininitialize(void)
+bool CEncoderAlgorithmTest::uininitialize(void)
 {
 	delete m_pStimulationSet;
 	delete m_pMatrix3;
@@ -91,13 +91,13 @@ boolean CEncoderAlgorithmTest::uininitialize(void)
 	return true;
 }
 
-boolean CEncoderAlgorithmTest::processClock(IMessageClock& rMessageClock)
+bool CEncoderAlgorithmTest::processClock(IMessageClock& rMessageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CEncoderAlgorithmTest::process(void)
+bool CEncoderAlgorithmTest::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext     = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext  = getStaticBoxContext();

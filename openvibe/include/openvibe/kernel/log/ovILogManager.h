@@ -34,14 +34,14 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean addListener(OpenViBE::Kernel::ILogListener* pListener) =0;
+			virtual bool addListener(OpenViBE::Kernel::ILogListener* pListener) =0;
 			/**
 			 * \brief Removes a registered listener
 			 * \param pListener [in] : the listener to unregister
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean removeListener(OpenViBE::Kernel::ILogListener* pListener) =0;
+			virtual bool removeListener(OpenViBE::Kernel::ILogListener* pListener) =0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Log_LogManager);
 		};

@@ -33,13 +33,13 @@ class CAbstractTreeNode
 protected:
 
 	//! True if this is a terminal node
-	OpenViBE::boolean m_bIsTerminal;
+	bool m_bIsTerminal;
 	//! True if this node contains a constant value
-	OpenViBE::boolean m_bIsConstant;
+	bool m_bIsConstant;
 
 public:
 
-	CAbstractTreeNode(const OpenViBE::boolean bTerminal, const OpenViBE::boolean bIsConstant)
+	CAbstractTreeNode(const bool bTerminal, const bool bIsConstant)
 		: m_bIsTerminal(bTerminal)
 		  , m_bIsConstant(bIsConstant) { }
 
@@ -50,7 +50,7 @@ public:
 	* Used to know if this node is a leaf.
 	* \return True if the node is a leaf.
 	*/
-	virtual OpenViBE::boolean isTerminal() const
+	virtual bool isTerminal() const
 	{
 		return m_bIsTerminal;
 	}
@@ -59,7 +59,7 @@ public:
 	 * Used to know if this node is a constant value node.
 	 * \return True if the node is a constant value node.
 	 */
-	virtual OpenViBE::boolean isConstant() const
+	virtual bool isConstant() const
 	{
 		return m_bIsConstant;
 	}
@@ -73,7 +73,7 @@ public:
 	* current node object is to be destroyed and replaced. This pointer
 	* will contain the address of the new node.
 	*/
-	virtual OpenViBE::boolean simplify(CAbstractTreeNode*& pModifiedNode) = 0;
+	virtual bool simplify(CAbstractTreeNode*& pModifiedNode) = 0;
 
 	/**
 	* Part of the process of simplification.
@@ -109,17 +109,17 @@ public:
 	OpenViBE::uint64 m_ui64Identifier;
 
 	//! True if the node is "associative"
-	OpenViBE::boolean m_bIsAssociative;
+	bool m_bIsAssociative;
 
 public:
 
 	//Constructors
-	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, OpenViBE::boolean bIsAssociative = false)
+	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, bool bIsAssociative = false)
 		: CAbstractTreeNode(false, false)
 		  , m_ui64Identifier(ui64NodeIdentifier)
 		  , m_bIsAssociative(bIsAssociative) { }
 
-	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, CAbstractTreeNode* pChild, OpenViBE::boolean bIsAssociative = false)
+	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, CAbstractTreeNode* pChild, bool bIsAssociative = false)
 		: CAbstractTreeNode(false, false)
 		  , m_ui64Identifier(ui64NodeIdentifier)
 		  , m_bIsAssociative(bIsAssociative)
@@ -127,7 +127,7 @@ public:
 		m_oChildren.push_back(pChild);
 	}
 
-	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, CAbstractTreeNode* pLeftChild, CAbstractTreeNode* pRightChild, OpenViBE::boolean bIsAssociative = false)
+	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, CAbstractTreeNode* pLeftChild, CAbstractTreeNode* pRightChild, bool bIsAssociative = false)
 		: CAbstractTreeNode(false, false)
 		  , m_ui64Identifier(ui64NodeIdentifier)
 		  , m_bIsAssociative(bIsAssociative)
@@ -136,7 +136,7 @@ public:
 		m_oChildren.push_back(pRightChild);
 	}
 
-	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, CAbstractTreeNode* pTestChild, CAbstractTreeNode* pIfChild, CAbstractTreeNode* pThenChild, OpenViBE::boolean bIsAssociative = false)
+	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, CAbstractTreeNode* pTestChild, CAbstractTreeNode* pIfChild, CAbstractTreeNode* pThenChild, bool bIsAssociative = false)
 		: CAbstractTreeNode(false, false)
 		  , m_ui64Identifier(ui64NodeIdentifier)
 		  , m_bIsAssociative(bIsAssociative)
@@ -156,7 +156,7 @@ public:
 	 * Used to know if the node is an associative node.
 	 * \return True if the node is an associative one.
 	 */
-	OpenViBE::boolean isAssociative() { return m_bIsAssociative; }
+	bool isAssociative() { return m_bIsAssociative; }
 
 	/**
 	 * Returns the vector of children of the node.
@@ -270,7 +270,7 @@ public:
 		rLogManager << ")";
 	}
 
-	virtual OpenViBE::boolean simplify(CAbstractTreeNode*& pModifiedNode);
+	virtual bool simplify(CAbstractTreeNode*& pModifiedNode);
 	virtual void levelOperators();
 	virtual void useNegationOperator();
 	virtual void generateCode(CEquationParser& oParser);
@@ -285,11 +285,11 @@ class CAbstractTreeValueNode : public CAbstractTreeNode
 protected:
 
 	//! Value associated with the node.
-	OpenViBE::float64 m_f64Value;
+	double m_f64Value;
 
 public:
 
-	explicit CAbstractTreeValueNode(OpenViBE::float64 f64Value) : CAbstractTreeNode(true, true), m_f64Value(f64Value) {}
+	explicit CAbstractTreeValueNode(double f64Value) : CAbstractTreeNode(true, true), m_f64Value(f64Value) {}
 
 	//! Destructor
 	virtual ~CAbstractTreeValueNode() { }
@@ -298,20 +298,20 @@ public:
 	* Used to set the value of the node.
 	* \param f64NewValue The node's new value.
 	*/
-	void setValue(OpenViBE::float64 f64NewValue) { m_f64Value = f64NewValue; }
+	void setValue(double f64NewValue) { m_f64Value = f64NewValue; }
 
 	/**
 	 * Used to know the value of the node.
 	 * \return The node's value.
 	 */
-	OpenViBE::float64 getValue() { return m_f64Value; }
+	double getValue() { return m_f64Value; }
 
 	virtual void print(OpenViBE::Kernel::ILogManager& rLogManager)
 	{
 		rLogManager << m_f64Value;
 	}
 
-	virtual OpenViBE::boolean simplify(CAbstractTreeNode*& pModifiedNode)
+	virtual bool simplify(CAbstractTreeNode*& pModifiedNode)
 	{
 		pModifiedNode = this;
 		return false;
@@ -345,7 +345,7 @@ public:
 		rLogManager << l_sName;
 	}
 
-	virtual OpenViBE::boolean simplify(CAbstractTreeNode*& pModifiedNode)
+	virtual bool simplify(CAbstractTreeNode*& pModifiedNode)
 	{
 		pModifiedNode = this;
 		return false;
@@ -422,7 +422,7 @@ public:
 	* \param ui64TreeIdentifier The identifier of the tree (OP_USERDEF for non special tree).
 	* \param f64Parameter The optional parameter if it is a special tree.
 	*/
-	void recognizeSpecialTree(OpenViBE::uint64& ui64TreeIdentifier, OpenViBE::float64& f64Parameter);
+	void recognizeSpecialTree(OpenViBE::uint64& ui64TreeIdentifier, double& f64Parameter);
 };
 
 /**

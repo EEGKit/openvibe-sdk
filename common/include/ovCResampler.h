@@ -414,8 +414,8 @@ namespace Common
 					for (size_t i = 0; i < ui32ChannelCount; i++)
 					{
 						*m_pOutputSample = *pSample;
-						m_pOutputSample++;
-						pSample++;
+						++m_pOutputSample;
+						++pSample;
 					}
 				}
 

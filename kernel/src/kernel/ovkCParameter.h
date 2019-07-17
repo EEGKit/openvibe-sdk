@@ -67,9 +67,9 @@ namespace OpenViBE
 
 		_parameter_template_instance_simple_type_(CEnumerationParameter, OpenViBE::uint64, OpenViBE::uint64, OVK_ClassId_Kernel_EnumerationParameter);
 
-		_parameter_template_instance_simple_type_(CBooleanParameter, OpenViBE::boolean, OpenViBE::boolean, OVK_ClassId_Kernel_BooleanParameter);
+		_parameter_template_instance_simple_type_(CBooleanParameter, bool, bool, OVK_ClassId_Kernel_BooleanParameter);
 
-		_parameter_template_instance_simple_type_(CFloatParameter, OpenViBE::float64, OpenViBE::float64, OVK_ClassId_Kernel_FloatParameter);
+		_parameter_template_instance_simple_type_(CFloatParameter, double, double, OVK_ClassId_Kernel_FloatParameter);
 
 		_parameter_template_instance_object_(CStringParameter, OpenViBE::CString, OpenViBE::CString*, OVK_ClassId_Kernel_StringParameter);
 

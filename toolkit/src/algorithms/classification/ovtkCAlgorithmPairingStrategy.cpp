@@ -24,7 +24,7 @@ fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const
 		return mComparisionFunctionMap[rClassIdentifier.toUInteger()];
 }
 
-boolean CAlgorithmPairingStrategy::process(void)
+bool CAlgorithmPairingStrategy::process(void)
 {
 	if (this->isInputTriggerActive(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture))
 	{

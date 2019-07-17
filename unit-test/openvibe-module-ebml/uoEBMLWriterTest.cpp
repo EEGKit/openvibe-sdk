@@ -127,7 +127,7 @@ int uoEBMLWriterTest(int argc, char* argv[])
 	writerHelper.closeChild();
 
 	writerHelper.openChild(0x8765);
-	writerHelper.setFloat32AsChildData(static_cast<EBML::float32>(M_PI));
+	writerHelper.setFloat32AsChildData(static_cast<float>(M_PI));
 	writerHelper.closeChild();
 	writer->release();
 	writerCallback.release();

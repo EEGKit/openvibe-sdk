@@ -16,7 +16,7 @@ namespace System
 	{
 	public:
 
-		static System::boolean initializeRandomMachine(const System::uint64 ui64RandomSeed);
+		static bool initializeRandomMachine(const System::uint64 ui64RandomSeed);
 
 		static System::uint8 randomUInteger8(void);
 		static System::uint16 randomUInteger16(void);
@@ -31,19 +31,19 @@ namespace System
 		static System::int32 randomSInteger32(void);
 		static System::int64 randomSInteger64(void);
 
-		static System::float32 randomFloat32(void);
-		static System::float32 randomFloat32BetweenZeroAndOne(void);
-		static System::float64 randomFloat64(void);
+		static float randomFloat32(void);
+		static float randomFloat32BetweenZeroAndOne(void);
+		static double randomFloat64(void);
 
 		// Numerical check
 		// Checks if the value is normal, subnormal or zero, but not infinite or NAN.
-		static System::boolean isfinite(System::float64 f64Value);
+		static bool isfinite(double f64Value);
 		// Checks if the value is positive or negative infinity.
-		static System::boolean isinf(System::float64 f64Value);
+		static bool isinf(double f64Value);
 		// Checks if the value is Not a Number
-		static System::boolean isnan(System::float64 f64Value);
+		static bool isnan(double f64Value);
 		// Checks if the value is normal, i.e. is neither zero, subnormal, infinite, nor NaN.
-		static System::boolean isnormal(System::float64 f64Value);
+		static bool isnormal(double f64Value);
 	private:
 
 		Math(void);

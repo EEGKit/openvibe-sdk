@@ -32,7 +32,7 @@ namespace OpenViBE
 
 			virtual OpenViBE::uint32 getSampleCountPerSentBlock() = 0;
 
-			virtual OpenViBE::float64* getBuffer() = 0;
+			virtual double* getBuffer() = 0;
 
 			virtual OpenViBE::uint64 getStimulationSetStartTime() = 0;
 

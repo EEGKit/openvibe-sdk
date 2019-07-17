@@ -51,7 +51,7 @@ void CObservable::clearChanged()
 	m_bHasChanged = false;
 }
 
-boolean CObservable::hasChanged()
+bool CObservable::hasChanged()
 {
 	return m_bHasChanged;
 }

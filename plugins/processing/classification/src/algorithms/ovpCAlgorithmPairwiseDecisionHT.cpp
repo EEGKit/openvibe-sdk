@@ -26,11 +26,11 @@ using namespace OpenViBEPlugins::Classification;
 
 using namespace OpenViBEToolkit;
 
-boolean CAlgorithmPairwiseDecisionHT::initialize() { return true; }
+bool CAlgorithmPairwiseDecisionHT::initialize() { return true; }
 
-boolean CAlgorithmPairwiseDecisionHT::uninitialize() { return true; }
+bool CAlgorithmPairwiseDecisionHT::uninitialize() { return true; }
 
-boolean CAlgorithmPairwiseDecisionHT::parameterize()
+bool CAlgorithmPairwiseDecisionHT::parameterize()
 {
 	TParameterHandler<uint64> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_ui32ClassCount = static_cast<uint32>(ip_pClassCount);
@@ -45,7 +45,7 @@ boolean CAlgorithmPairwiseDecisionHT::parameterize()
 }
 
 
-boolean CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector)
+bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector)
 {
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
@@ -54,7 +54,7 @@ boolean CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& 
 	);
 
 	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
-	float64* l_pProbabilityMatrix                        = new float64[m_ui32ClassCount * m_ui32ClassCount];
+	double* l_pProbabilityMatrix                        = new double[m_ui32ClassCount * m_ui32ClassCount];
 
 	//First we set the diagonal to 0
 	for (size_t i = 0; i < m_ui32ClassCount; ++i)
@@ -77,18 +77,18 @@ boolean CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& 
 		SClassificationInfo& l_rTemp                                                = pClassificationValueList[i];
 		const uint32 l_f64FirstIndex                                                = static_cast<uint32>(l_rTemp.m_f64FirstClass);
 		const uint32 l_f64SecondIndex                                               = static_cast<uint32>(l_rTemp.m_f64SecondClass);
-		const float64* l_pValues                                                    = l_rTemp.m_pClassificationValue->getBuffer();
+		const double* l_pValues                                                    = l_rTemp.m_pClassificationValue->getBuffer();
 		l_pProbabilityMatrix[l_f64FirstIndex * m_ui32ClassCount + l_f64SecondIndex] = l_pValues[0];
 		l_pProbabilityMatrix[l_f64SecondIndex * m_ui32ClassCount + l_f64FirstIndex] = 1 - l_pValues[0];
 	}
 
-	float64* l_pP             = new float64[m_ui32ClassCount];
-	float64** l_pMu           = new float64*[m_ui32ClassCount];
+	double* l_pP             = new double[m_ui32ClassCount];
+	double** l_pMu           = new double*[m_ui32ClassCount];
 	uint32 l_ui32AmountSample = 0;
 
 	for (size_t i = 0; i < m_ui32ClassCount; ++i)
 	{
-		l_pMu[i] = new float64[m_ui32ClassCount];
+		l_pMu[i] = new double[m_ui32ClassCount];
 	}
 
 	for (size_t i = 0; i < m_ui32ClassCount; ++i)
@@ -138,9 +138,9 @@ boolean CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& 
 	uint32 l_ui32Index            = 0;
 	while (l_ui32ConsecutiveAlpha != m_ui32ClassCount)
 	{
-		float64 l_f64FirstSum  = 0.0;
-		float64 l_f64SecondSum = 0.0;
-		float64 l_f64Alpha     = 0.0;
+		double l_f64FirstSum  = 0.0;
+		double l_f64SecondSum = 0.0;
+		double l_f64Alpha     = 0.0;
 
 		for (size_t j = 0; j < m_ui32ClassCount; ++j)
 		{
@@ -247,13 +247,13 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfiguration()
 	return l_pRootNode;
 }
 
-boolean CAlgorithmPairwiseDecisionHT::loadConfiguration(XML::IXMLNode& rNode)
+bool CAlgorithmPairwiseDecisionHT::loadConfiguration(XML::IXMLNode& rNode)
 {
 	std::stringstream l_sData(rNode.getChildByName(c_sRepartitionNodeName)->getPCData());
 	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 
 
-	std::vector<float64> l_vRepartition;
+	std::vector<double> l_vRepartition;
 	while (!l_sData.eof())
 	{
 		uint32 l_ui32Value;

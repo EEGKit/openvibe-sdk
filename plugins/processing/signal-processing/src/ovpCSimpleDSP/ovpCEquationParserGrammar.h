@@ -216,7 +216,7 @@ struct CComparison2FunctionSymbols : symbols<OpenViBE::uint64>
 * Symbols table for mathematical constants.
 *
 */
-struct CMathConstantSymbols : symbols<OpenViBE::float64>
+struct CMathConstantSymbols : symbols<double>
 {
 	CMathConstantSymbols()
 	{
@@ -314,32 +314,23 @@ struct CEquationGrammar : public grammar<CEquationGrammar>
 					 | (root_node_d[ch_p('-')] >> factor)
 					 | (root_node_d[ch_p('+')] >> factor);
 
-			boolean =
-					(root_node_d[unaryBooleanFunction_p] >> factor) | factor;
+			boolean = (root_node_d[unaryBooleanFunction_p] >> factor) | factor;
 
-			term =
-					boolean >> *((root_node_d[ch_p('*')] >> boolean) | (root_node_d[ch_p('/')] >> boolean));
+			term = boolean >> *((root_node_d[ch_p('*')] >> boolean) | (root_node_d[ch_p('/')] >> boolean));
 
-			expression =
-					term >> *((root_node_d[ch_p('+')] >> term) | (root_node_d[ch_p('-')] >> term));
+			expression = term >> *((root_node_d[ch_p('+')] >> term) | (root_node_d[ch_p('-')] >> term));
 
-			comparison1 =
-					(expression >> root_node_d[comparison1Function_p] >> expression) | expression;
+			comparison1 = (expression >> root_node_d[comparison1Function_p] >> expression) | expression;
 
-			comparison2 =
-					(comparison1 >> root_node_d[comparison2Function_p] >> comparison1) | comparison1;
+			comparison2 = (comparison1 >> root_node_d[comparison2Function_p] >> comparison1) | comparison1;
 
-			boolean1 =
-					(comparison2 >> root_node_d[binaryBoolean1Function_p] >> comparison2) | comparison2;
+			boolean1 = (comparison2 >> root_node_d[binaryBoolean1Function_p] >> comparison2) | comparison2;
 
-			boolean2 =
-					(boolean1 >> root_node_d[binaryBoolean2Function_p] >> boolean1) | boolean1;
+			boolean2 = (boolean1 >> root_node_d[binaryBoolean2Function_p] >> boolean1) | boolean1;
 
-			boolean3 =
-					(boolean2 >> root_node_d[binaryBoolean3Function_p] >> boolean2) | boolean2;
+			boolean3 = (boolean2 >> root_node_d[binaryBoolean3Function_p] >> boolean2) | boolean2;
 
-			ifthen =
-					(boolean3 >> root_node_d[ch_p('?')] >> boolean3 >> no_node_d[ch_p(':')] >> boolean3) | boolean3;
+			ifthen = (boolean3 >> root_node_d[ch_p('?')] >> boolean3 >> no_node_d[ch_p(':')] >> boolean3) | boolean3;
 		}
 
 		rule<ScannerT, parser_context<>, parser_tag<booleanID>> boolean;

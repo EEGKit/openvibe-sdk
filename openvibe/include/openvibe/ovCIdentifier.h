@@ -116,7 +116,7 @@ namespace OpenViBE
 		 *
 		 * \sa operator!=
 		 */
-		friend OV_API OpenViBE::boolean operator==(
+		friend OV_API bool operator==(
 			const OpenViBE::CIdentifier& rIdentifier1,
 			const OpenViBE::CIdentifier& rIdentifier2);
 		/**
@@ -131,7 +131,7 @@ namespace OpenViBE
 		 *
 		 * \sa operator==
 		 */
-		friend OV_API OpenViBE::boolean operator!=(
+		friend OV_API bool operator!=(
 			const OpenViBE::CIdentifier& rIdentifier1,
 			const OpenViBE::CIdentifier& rIdentifier2);
 		/**
@@ -146,7 +146,7 @@ namespace OpenViBE
 		 * \sa operator>
 		 * \sa operator==
 		 */
-		friend OV_API OpenViBE::boolean operator<(
+		friend OV_API bool operator<(
 			const OpenViBE::CIdentifier& rIdentifier1,
 			const OpenViBE::CIdentifier& rIdentifier2);
 		/**
@@ -161,7 +161,7 @@ namespace OpenViBE
 		 * \sa operator<
 		 * \sa operator==
 		 */
-		friend OV_API OpenViBE::boolean operator>(
+		friend OV_API bool operator>(
 			const OpenViBE::CIdentifier& rIdentifier1,
 			const OpenViBE::CIdentifier& rIdentifier2);
 		/**
@@ -176,7 +176,7 @@ namespace OpenViBE
 		 * \sa operator>
 		 * \sa operator==
 		 */
-		friend OV_API OpenViBE::boolean operator<=(
+		friend OV_API bool operator<=(
 			const OpenViBE::CIdentifier& rIdentifier1,
 			const OpenViBE::CIdentifier& rIdentifier2)
 		{
@@ -194,7 +194,7 @@ namespace OpenViBE
 		 * \sa operator<
 		 * \sa operator==
 		 */
-		friend OV_API OpenViBE::boolean operator>=(
+		friend OV_API bool operator>=(
 			const OpenViBE::CIdentifier& rIdentifier1,
 			const OpenViBE::CIdentifier& rIdentifier2)
 		{
@@ -214,7 +214,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		OpenViBE::boolean fromString(
+		bool fromString(
 			const OpenViBE::CString& rString);
 		/**
 		 * \brief Converts this identifier into an unsigned 64 bits integer

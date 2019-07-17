@@ -29,12 +29,12 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean process(void);
-			virtual OpenViBE::boolean processHeader(void) { return true; }
-			virtual OpenViBE::boolean processBuffer(void) { return true; }
-			virtual OpenViBE::boolean processEnd(void) { return true; }
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool process(void);
+			virtual bool processHeader(void) { return true; }
+			virtual bool processBuffer(void) { return true; }
+			virtual bool processEnd(void) { return true; }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseStreamEncoder);
 
@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual OpenViBE::boolean getAlgorithmPrototype(
+			virtual bool getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer, "Encoded memory buffer", OpenViBE::Kernel::ParameterType_MemoryBuffer);

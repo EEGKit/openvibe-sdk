@@ -18,7 +18,7 @@ namespace Socket
 	{
 	public:
 
-		virtual boolean connect(unsigned short ui16PortNumber) = 0;
+		virtual bool connect(unsigned short ui16PortNumber) = 0;
 
 		virtual std::string getLastError() = 0;
 

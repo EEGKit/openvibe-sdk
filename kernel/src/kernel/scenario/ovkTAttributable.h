@@ -21,7 +21,7 @@ namespace OpenViBE
 			explicit TAttributable(const OpenViBE::Kernel::IKernelContext& rKernelContext)
 				: T(rKernelContext) { }
 
-			virtual OpenViBE::boolean addAttribute(
+			virtual bool addAttribute(
 				const OpenViBE::CIdentifier& rAttributeIdentifier,
 				const OpenViBE::CString& sAttributeValue)
 			{
@@ -31,7 +31,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean removeAttribute(
+			virtual bool removeAttribute(
 				const OpenViBE::CIdentifier& rAttributeIdentifier)
 			{
 				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
@@ -40,7 +40,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean removeAllAttributes(void)
+			virtual bool removeAllAttributes(void)
 			{
 				m_vAttribute.clear();
 				return true;
@@ -57,7 +57,7 @@ namespace OpenViBE
 				return itAttribute->second;
 			}
 
-			virtual OpenViBE::boolean setAttributeValue(
+			virtual bool setAttributeValue(
 				const OpenViBE::CIdentifier& rAttributeIdentifier,
 				const OpenViBE::CString& sAttributeValue)
 			{
@@ -72,7 +72,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean hasAttribute(
+			virtual bool hasAttribute(
 				const OpenViBE::CIdentifier& rAttributeIdentifier) const
 			{
 				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
@@ -80,7 +80,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual OpenViBE::boolean hasAttributes(void) const
+			virtual bool hasAttributes(void) const
 			{
 				return !m_vAttribute.empty();
 			}

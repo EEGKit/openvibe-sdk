@@ -116,8 +116,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process(void)
 			//
 			// **********************************
 
-			float64* l_pInputBuffer  = l_pInputMatrix->getBuffer();
-			float64* l_pOutputBuffer = l_pOutputMatrix->getBuffer();
+			double* l_pInputBuffer  = l_pInputMatrix->getBuffer();
+			double* l_pOutputBuffer = l_pOutputMatrix->getBuffer();
 
 			uint32 l_ui32SampleProcessed = 0;
 
@@ -133,7 +133,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process(void)
 						System::Memory::copy(
 							l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount + m_OutputSampleIndex,
 							l_pInputBuffer + l_ui32ChannelIndex * l_ui32InputSampleCount + l_ui32SampleProcessed,
-							l_ui32SampleToFill * sizeof(float64));
+							l_ui32SampleToFill * sizeof(double));
 					}
 					m_OutputSampleIndex += l_ui32SampleToFill;
 					l_ui32SampleProcessed += l_ui32SampleToFill;
@@ -158,7 +158,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process(void)
 								System::Memory::move(
 									l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount,
 									l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount + m_OutputSampleCount - l_ui32SamplesToSave,
-									l_ui32SamplesToSave * sizeof(float64));
+									l_ui32SamplesToSave * sizeof(double));
 							}
 
 							// The counter can be reset

@@ -18,25 +18,25 @@ namespace OpenViBE
 			CPlayerContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CSimulatedBox* pSimulatedBox);
 			virtual ~CPlayerContext();
 
-			virtual OpenViBE::boolean sendSignal(
+			virtual bool sendSignal(
 				const OpenViBE::CMessageSignal& rMessageSignal);
-			virtual OpenViBE::boolean sendMessage(
+			virtual bool sendMessage(
 				const OpenViBE::CMessageEvent& rMessageEvent,
 				const OpenViBE::CIdentifier& rTargetIdentifier);
-			virtual OpenViBE::boolean sendMessage(
+			virtual bool sendMessage(
 				const OpenViBE::CMessageEvent& rMessageEvent,
 				const OpenViBE::CIdentifier* pTargetIdentifier,
 				const OpenViBE::uint32 ui32TargetIdentifierCount);
 
 			virtual OpenViBE::uint64 getCurrentTime(void) const;
 			virtual OpenViBE::uint64 getCurrentLateness(void) const;
-			virtual OpenViBE::float64 getCurrentCPUUsage(void) const;
-			virtual OpenViBE::float64 getCurrentFastForwardMaximumFactor(void) const;
+			virtual double getCurrentCPUUsage(void) const;
+			virtual double getCurrentFastForwardMaximumFactor(void) const;
 
-			virtual OpenViBE::boolean stop(void);
-			virtual OpenViBE::boolean pause(void);
-			virtual OpenViBE::boolean play(void);
-			virtual OpenViBE::boolean forward(void);
+			virtual bool stop(void);
+			virtual bool pause(void);
+			virtual bool play(void);
+			virtual bool forward(void);
 			virtual OpenViBE::Kernel::EPlayerStatus getStatus(void) const;
 
 			//@}

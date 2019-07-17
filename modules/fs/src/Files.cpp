@@ -22,10 +22,7 @@
 using namespace FS;
 using namespace std;
 
-//  * 2006-08-30 YRD - Portability note : using namespace FS confuses
-//                     windows platform SDK because it defines itself
-//                     a 'boolean' type. Thus the following define to
-//                     force the use of FS::boolean !
+//  * 2006-08-30 YRD - Portability note : using namespace FS confuses windows platform SDK because it defines itself a 'boolean' type. Thus the following define to force the use of FS::boolean !
 
 #if defined TARGET_HAS_Boost && BOOST_VERSION / 100 % 1000 >= 55
 /**

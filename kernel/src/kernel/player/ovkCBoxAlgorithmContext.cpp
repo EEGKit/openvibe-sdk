@@ -31,13 +31,13 @@ IPlayerContext* CBoxAlgorithmContext::getPlayerContext(void)
 	return &m_oPlayerContext;
 }
 
-boolean CBoxAlgorithmContext::markAlgorithmAsReadyToProcess(void)
+bool CBoxAlgorithmContext::markAlgorithmAsReadyToProcess(void)
 {
 	m_bReadyToProcess = true;
 	return true;
 }
 
-boolean CBoxAlgorithmContext::isAlgorithmReadyToProcess(void)
+bool CBoxAlgorithmContext::isAlgorithmReadyToProcess(void)
 {
 	return m_bReadyToProcess;
 }

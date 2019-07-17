@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		typedef std::pair<OpenViBE::float64, OpenViBE::float64> BandRange;
+		typedef std::pair<double, double> BandRange;
 
 		class CBoxAlgorithmFrequencyBandSelector : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
@@ -23,10 +23,10 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_FrequencyBandSelector);
 
@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CMatrix m_oMatrix;
 			std::vector<BandRange> m_vSelected;
-			std::vector<OpenViBE::float64> m_vSelectionFactor;
+			std::vector<double> m_vSelectionFactor;
 		};
 
 		class CBoxAlgorithmFrequencyBandSelectorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -67,7 +67,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_FrequencyBandSelector; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmFrequencyBandSelector; }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Input spectrum", OV_TypeId_Spectrum);

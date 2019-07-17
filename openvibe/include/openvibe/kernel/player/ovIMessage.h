@@ -35,7 +35,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean setIdentifier(
+			virtual bool setIdentifier(
 				const OpenViBE::CIdentifier& rIdentifier) =0;
 			/**
 			 * \brief Sets the message timestamp
@@ -43,7 +43,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean setTime(
+			virtual bool setTime(
 				const OpenViBE::uint64 ui64Time) =0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Message)

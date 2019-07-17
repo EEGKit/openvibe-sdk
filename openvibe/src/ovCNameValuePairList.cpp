@@ -37,20 +37,20 @@ CNameValuePairList& CNameValuePairList::operator=(const CNameValuePairList& rNam
 	return *this;
 }
 
-boolean CNameValuePairList::setValue(const CString& rName, const CString& rValue)
+bool CNameValuePairList::setValue(const CString& rName, const CString& rValue)
 {
 	m_pNameValuePairListImpl->m_oMap[rName] = rValue;
 	return true;
 }
 
-boolean CNameValuePairList::setValue(const CString& rName, const char* pValue)
+bool CNameValuePairList::setValue(const CString& rName, const char* pValue)
 {
 	if (pValue == NULL) { return false; }
 	m_pNameValuePairListImpl->m_oMap[rName] = pValue;
 	return true;
 }
 
-boolean CNameValuePairList::setValue(const CString& rName, const float64& rValue)
+bool CNameValuePairList::setValue(const CString& rName, const double& rValue)
 {
 	char s_pBuffer[1024];
 	sprintf(s_pBuffer, "%lf", rValue);
@@ -58,23 +58,23 @@ boolean CNameValuePairList::setValue(const CString& rName, const float64& rValue
 	return true;
 }
 
-boolean CNameValuePairList::setValue(const CString& rName, boolean bValue)
+bool CNameValuePairList::setValue(const CString& rName, bool bValue)
 {
 	m_pNameValuePairListImpl->m_oMap[rName] = bValue ? "1" : "0";
 	return true;
 }
 
-boolean CNameValuePairList::getValue(const CString& rName, CString& rValue) const
+bool CNameValuePairList::getValue(const CString& rName, CString& rValue) const
 {
 	if (m_pNameValuePairListImpl->m_oMap.find(rName) == m_pNameValuePairListImpl->m_oMap.end()) { return false; }
 	rValue = m_pNameValuePairListImpl->m_oMap[rName];
 	return true;
 }
 
-boolean CNameValuePairList::getValue(const CString& rName, float64& rValue) const
+bool CNameValuePairList::getValue(const CString& rName, double& rValue) const
 {
 	if (m_pNameValuePairListImpl->m_oMap.find(rName) == m_pNameValuePairListImpl->m_oMap.end()) { return false; }
-	float64 temp;
+	double temp;
 
 	try
 	{
@@ -86,7 +86,7 @@ boolean CNameValuePairList::getValue(const CString& rName, float64& rValue) cons
 	return true;
 }
 
-boolean CNameValuePairList::getValue(const CString& rName, boolean& rValue) const
+bool CNameValuePairList::getValue(const CString& rName, bool& rValue) const
 {
 	if (m_pNameValuePairListImpl->m_oMap.find(rName) == m_pNameValuePairListImpl->m_oMap.end()) { return false; }
 	CString l_sValue = m_pNameValuePairListImpl->m_oMap[rName];
@@ -103,7 +103,7 @@ boolean CNameValuePairList::getValue(const CString& rName, boolean& rValue) cons
 	else { return false; }
 }
 
-boolean CNameValuePairList::getValue(const uint32 rIndex, OpenViBE::CString& rName, OpenViBE::CString& rValue) const
+bool CNameValuePairList::getValue(const uint32 rIndex, OpenViBE::CString& rName, OpenViBE::CString& rValue) const
 {
 	if (rIndex >= this->getSize()) { return false; }
 	std::map<CString, CString>::const_iterator it = m_pNameValuePairListImpl->m_oMap.begin();

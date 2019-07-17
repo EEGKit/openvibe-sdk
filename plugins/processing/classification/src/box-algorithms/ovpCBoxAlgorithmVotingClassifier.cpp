@@ -14,7 +14,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::Classification;
 
-boolean CBoxAlgorithmVotingClassifier::initialize(void)
+bool CBoxAlgorithmVotingClassifier::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -64,7 +64,7 @@ boolean CBoxAlgorithmVotingClassifier::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmVotingClassifier::uninitialize(void)
+bool CBoxAlgorithmVotingClassifier::uninitialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	// IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
@@ -82,20 +82,20 @@ boolean CBoxAlgorithmVotingClassifier::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmVotingClassifier::processInput(uint32 ui32Index)
+bool CBoxAlgorithmVotingClassifier::processInput(uint32 ui32Index)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
 	return true;
 }
 
-boolean CBoxAlgorithmVotingClassifier::process(void)
+bool CBoxAlgorithmVotingClassifier::process(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 	uint32 i, j, k;
 
-	boolean l_bCanChoose = true;
+	bool l_bCanChoose = true;
 
 	for (i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
@@ -125,7 +125,7 @@ boolean CBoxAlgorithmVotingClassifier::process(void)
 			{
 				if (m_bMatrixBased)
 				{
-					float64 l_f64Value;
+					double l_f64Value;
 					if (l_rInput.m_bTwoValueInput)
 					{
 						l_f64Value = l_rInput.op_pMatrix->getBuffer()[1] - l_rInput.op_pMatrix->getBuffer()[0];
@@ -134,7 +134,7 @@ boolean CBoxAlgorithmVotingClassifier::process(void)
 					{
 						l_f64Value = l_rInput.op_pMatrix->getBuffer()[0];
 					}
-					l_rInput.m_vScore.push_back(std::pair<float64, uint64>(-l_f64Value, l_rDynamicBoxContext.getInputChunkEndTime(i, j)));
+					l_rInput.m_vScore.push_back(std::pair<double, uint64>(-l_f64Value, l_rDynamicBoxContext.getInputChunkEndTime(i, j)));
 				}
 				else
 				{
@@ -143,7 +143,7 @@ boolean CBoxAlgorithmVotingClassifier::process(void)
 						uint64 l_ui64StimulationIdentifier = l_rInput.op_pStimulationSet->getStimulationIdentifier(k);
 						if (l_ui64StimulationIdentifier == m_ui64TargetClassLabel || l_ui64StimulationIdentifier == m_ui64NonTargetClassLabel || l_ui64StimulationIdentifier == m_ui64RejectClassLabel)
 						{
-							l_rInput.m_vScore.push_back(std::pair<float64, uint64>(l_ui64StimulationIdentifier == m_ui64TargetClassLabel ? 1 : 0, l_rInput.op_pStimulationSet->getStimulationDate(k)));
+							l_rInput.m_vScore.push_back(std::pair<double, uint64>(l_ui64StimulationIdentifier == m_ui64TargetClassLabel ? 1 : 0, l_rInput.op_pStimulationSet->getStimulationDate(k)));
 						}
 					}
 				}
@@ -163,11 +163,11 @@ boolean CBoxAlgorithmVotingClassifier::process(void)
 
 	if (l_bCanChoose)
 	{
-		float64 l_f64ResultScore      = -1E100;
+		double l_f64ResultScore      = -1E100;
 		uint64 l_ui64ResultClassLabel = m_ui64RejectClassLabel;
 		uint64 l_ui64Time             = 0;
 
-		std::map<uint32, float64> l_vScore;
+		std::map<uint32, double> l_vScore;
 		for (i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 		{
 			SInput& l_rInput = m_vClassificationResults[i];

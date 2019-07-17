@@ -14,7 +14,7 @@ namespace EBML
 
 		virtual EBML::uint64 getUIntegerFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
 		virtual EBML::int64 getSIntegerFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-		virtual EBML::float64 getFloatFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
+		virtual double getFloatFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
 		virtual const char* getASCIIStringFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
 		virtual void release(void);
 

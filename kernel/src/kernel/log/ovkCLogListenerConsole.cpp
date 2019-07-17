@@ -38,7 +38,7 @@ void CLogListenerConsole::configure(const IConfigurationManager& rConfigurationM
 
 bool CLogListenerConsole::isActive(ELogLevel eLogLevel)
 {
-	map<ELogLevel, boolean>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
+	map<ELogLevel, bool>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
 	if (itLogLevel == m_vActiveLevel.end()) { return true; }
 	return itLogLevel->second;
 }
@@ -72,7 +72,7 @@ void CLogListenerConsole::log(const time64 time64Value)
 	if (m_bTimeInSeconds)
 	{
 		uint64 l_ui64Precision = m_ui64TimePrecision;
-		float64 l_f64Time      = ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
+		double l_f64Time      = ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
 		std::stringstream ss;
 		ss.precision(static_cast<long long>(l_ui64Precision));
 		ss.setf(std::ios::fixed, std::ios::floatfield);
@@ -211,7 +211,7 @@ void CLogListenerConsole::log(const int8 i8Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const float64 f64Value)
+void CLogListenerConsole::log(const double f64Value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -219,7 +219,7 @@ void CLogListenerConsole::log(const float64 f64Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const float32 f32Value)
+void CLogListenerConsole::log(const float f32Value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);

@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 			CAlgorithmXMLScenarioImporter(void);
 			virtual ~CAlgorithmXMLScenarioImporter(void);
 
-			virtual OpenViBE::boolean import(OpenViBE::Plugins::IAlgorithmScenarioImporterContext& rContext, const OpenViBE::IMemoryBuffer& rMemoryBuffer);
+			virtual bool import(OpenViBE::Plugins::IAlgorithmScenarioImporterContext& rContext, const OpenViBE::IMemoryBuffer& rMemoryBuffer);
 
 			virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount); // XML::IReaderCallback
 			virtual void processChildData(const char* sData); // XML::IReaderCallback

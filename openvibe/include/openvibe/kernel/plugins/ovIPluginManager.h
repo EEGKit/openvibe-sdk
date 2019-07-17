@@ -47,7 +47,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean addPluginsFromFiles(
+			virtual bool addPluginsFromFiles(
 				const OpenViBE::CString& rFileNameWildCard) =0;
 			/**
 			 * \brief Registers a plugin object descriptor
@@ -55,7 +55,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean registerPluginDesc(
+			virtual bool registerPluginDesc(
 				const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc) =0;
 			/**
 			 * \brief Gets next plugin object descriptor identifier
@@ -89,7 +89,7 @@ namespace OpenViBE
 			 * \return \e true in case this manager is able to create a plugin object with the provided class identifier.
 			 * \return \e false in other case.
 			 */
-			virtual OpenViBE::boolean canCreatePluginObject(
+			virtual bool canCreatePluginObject(
 				const OpenViBE::CIdentifier& rClassIdentifier) =0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor
@@ -143,7 +143,7 @@ namespace OpenViBE
 			 * be removed soon or later. Code relying on this plugin
 			 * should consider any alternative available to avoid future problems.
 			 */
-			virtual OpenViBE::boolean isPluginObjectFlaggedAsDeprecated(
+			virtual bool isPluginObjectFlaggedAsDeprecated(
 				const OpenViBE::CIdentifier& rClassIdentifier) const =0;
 				
 			//@}
@@ -169,7 +169,7 @@ namespace OpenViBE
 			 * call has been made. However, the plugin manager is free to release allocated memory
 			 * and resources for this plugin object.
 			 */
-			virtual OpenViBE::boolean releasePluginObject(
+			virtual bool releasePluginObject(
 				OpenViBE::Plugins::IPluginObject* pPluginObject) =0;
 
 			//@{

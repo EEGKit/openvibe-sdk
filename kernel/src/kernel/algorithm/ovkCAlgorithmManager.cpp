@@ -75,7 +75,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 }
 
 
-boolean CAlgorithmManager::releaseAlgorithm(
+bool CAlgorithmManager::releaseAlgorithm(
 	const CIdentifier& rAlgorithmIdentifier)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
@@ -104,7 +104,7 @@ boolean CAlgorithmManager::releaseAlgorithm(
 	return true;
 }
 
-boolean CAlgorithmManager::releaseAlgorithm(
+bool CAlgorithmManager::releaseAlgorithm(
 	IAlgorithmProxy& rAlgorithm)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);

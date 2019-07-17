@@ -55,7 +55,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean registerType(
+			virtual bool registerType(
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sTypeName) =0;
 			/**
@@ -72,7 +72,7 @@ namespace OpenViBE
 			 * to determine what stream is compatible with what other stream and
 			 * to allow box connections or not.
 			 */
-			virtual OpenViBE::boolean registerStreamType(
+			virtual bool registerStreamType(
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sTypeName,
 				const OpenViBE::CIdentifier& rParentTypeIdentifier) =0;
@@ -87,7 +87,7 @@ namespace OpenViBE
 			 * An enumeration should have several possible values.
 			 * This values have to be created thanks to \c registerEnumerationEntry
 			 */
-			virtual OpenViBE::boolean registerEnumerationType(
+			virtual bool registerEnumerationType(
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sTypeName) =0;
 			/**
@@ -100,7 +100,7 @@ namespace OpenViBE
 			 * \note the enumeration has to be registered
 			 * \sa registerEnumerationType
 			 */
-			virtual OpenViBE::boolean registerEnumerationEntry(
+			virtual bool registerEnumerationEntry(
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sEntryName,
 				const OpenViBE::uint64 ui64EntryValue) =0;
@@ -115,7 +115,7 @@ namespace OpenViBE
 			 * A bitmask should have several possible values.
 			 * This values have to be created thanks to \c registerBitMaskEntry
 			 */
-			virtual OpenViBE::boolean registerBitMaskType(
+			virtual bool registerBitMaskType(
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sTypeName) =0;
 			/**
@@ -128,7 +128,7 @@ namespace OpenViBE
 			 * \note the bitmask has to be registered
 			 * \sa registerBitMaskType
 			 */
-			virtual OpenViBE::boolean registerBitMaskEntry(
+			virtual bool registerBitMaskEntry(
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sEntryName,
 				const OpenViBE::uint64 ui64EntryValue) =0;
@@ -143,7 +143,7 @@ namespace OpenViBE
 			 * \return \e true if the specified type has been registered.
 			 * \return \e false if the specified type has not been registered.
 			 */
-			virtual OpenViBE::boolean isRegistered(
+			virtual bool isRegistered(
 				const OpenViBE::CIdentifier& rTypeIdentifier) const =0;
 			/**
 			 * \brief Tests if a specific type has been registered and is a stream
@@ -151,7 +151,7 @@ namespace OpenViBE
 			 * \return \e true if the specified type has been registered is a stream.
 			 * \return \e false if the specified type has not been registered or is not a stream.
 			 */
-			virtual OpenViBE::boolean isStream(
+			virtual bool isStream(
 				const OpenViBE::CIdentifier& rTypeIdentifier) const =0;
 			/**
 			 * \brief Tests is a specific type has been registered, is a stream and is derived from another registered stream type
@@ -166,7 +166,7 @@ namespace OpenViBE
 			 * \note The derivation can be indirect (\c rTypeIdentifier can derive an
 			 *       intermediate stream type which derives \c rParentTypeIdentifier)
 			 */
-			virtual OpenViBE::boolean isDerivedFromStream(
+			virtual bool isDerivedFromStream(
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CIdentifier& rParentTypeIdentifier) const =0;
 			/**
@@ -175,7 +175,7 @@ namespace OpenViBE
 			 * \return \e true if the specified type has been registered and is an enumeration.
 			 * \return \e false if the specified type has not been registered or is not an enumeration.
 			 */
-			virtual OpenViBE::boolean isEnumeration(
+			virtual bool isEnumeration(
 				const OpenViBE::CIdentifier& rTypeIdentifier) const =0;
 			/**
 			 * \brief Tests if a specific type has been registered and is a bitmask
@@ -183,7 +183,7 @@ namespace OpenViBE
 			 * \return \e true if the specified type has been registered and is a bitmask.
 			 * \return \e false if the specified type has not been registered or is not a bitmask.
 			 */
-			virtual OpenViBE::boolean isBitMask(
+			virtual bool isBitMask(
 				const OpenViBE::CIdentifier& rTypeIdentifier) const =0;
 
 			//@}
@@ -227,7 +227,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean getEnumerationEntry(
+			virtual bool getEnumerationEntry(
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::uint64 ui64EntryIndex,
 				OpenViBE::CString& sEntryName,
@@ -273,7 +273,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean getBitMaskEntry(
+			virtual bool getBitMaskEntry(
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::uint64 ui64EntryIndex,
 				OpenViBE::CString& sEntryName,
@@ -327,9 +327,9 @@ namespace OpenViBE
 			* \return true if the arithmetic evaluation succeeded, 
 			* \return false if the arithmetic expression is incorrect
 			*/
-			virtual boolean evaluateSettingValue(
+			virtual bool evaluateSettingValue(
 				const OpenViBE::CString settingValue,
-				OpenViBE::float64& numericResult) const = 0;
+				double& numericResult) const = 0;
 
 			//@}
 

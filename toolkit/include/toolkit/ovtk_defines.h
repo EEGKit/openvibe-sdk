@@ -92,7 +92,7 @@
 // @TODO it would be better to read these from a database file (along with the symbols now specified in ovtk_main.cpp), 
 // however we still need the defines if we wish to provide compile-time token support.
 // 
-// Note: Since these will be stored as float64 when transmitted by OpenViBE, they should not exceed the floats integer precision
+// Note: Since these will be stored as double when transmitted by OpenViBE, they should not exceed the floats integer precision
 //
 
 #define OVTK_UNIT_Unspecified                            0
@@ -316,7 +316,7 @@
 //
 // OpenViBE enums are unsigned integers. Here we use the convention of ORring with 0x00010000 to denote the negative exponents.
 //
-// Note: Since these will be stored as float64 when transmitted by OpenViBE, they should not exceed the floats integer precision
+// Note: Since these will be stored as double when transmitted by OpenViBE, they should not exceed the floats integer precision
 //
 
 #define OVTK_FACTOR_Yotta                                            24
@@ -500,10 +500,10 @@
  *       ...
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * ...
  * OVTK_NodeId_End
  * ----------------------------------------------------------------- *
@@ -528,7 +528,7 @@
  *   OVTK_NodeId_Header_StreamType (integer:)
  *   OVTK_NodeId_Header_StreamVersion (integer:2)
  *   OVTK_NodeId_Header_ChannelLocalisation
- *     OVTK_NodeId_Header_ChannelLocalisation_Dynamic (boolean)
+ *     OVTK_NodeId_Header_ChannelLocalisation_Dynamic (bool)
  *   OVTK_NodeId_Header_StreamedMatrix
  *     OVTK_NodeId_Header_StreamedMatrix_DimensionCount (integer:2)
  *     OVTK_NodeId_Header_StreamedMatrix_Dimension
@@ -543,10 +543,10 @@
  *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:z)
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * ...
  * OVTK_NodeId_End
  * ----------------------------------------------------------------- *
@@ -579,10 +579,10 @@
  *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:factor)
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * ...
  * OVTK_NodeId_End
  * ----------------------------------------------------------------- *
@@ -702,10 +702,10 @@
  *       ...
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * ...
  * OVTK_NodeId_End
  * ----------------------------------------------------------------- *
@@ -740,18 +740,18 @@
  *       ...
  *   OVTK_NodeId_Header_Spectrum
  *     OVTK_NodeId_Header_Spectrum_FrequencyBand
- *       OVTK_NodeId_Header_Spectrum_FrequencyBand_Start (float64)
- *       OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop (float64)
+ *       OVTK_NodeId_Header_Spectrum_FrequencyBand_Start (double)
+ *       OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop (double)
  *     OVTK_NodeId_Header_Spectrum_FrequencyBand
- *       OVTK_NodeId_Header_Spectrum_FrequencyBand_Start (float64)
- *       OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop (float64)
+ *       OVTK_NodeId_Header_Spectrum_FrequencyBand_Start (double)
+ *       OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop (double)
  *     ...
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * ...
  * OVTK_NodeId_End
  * ----------------------------------------------------------------- *
@@ -779,16 +779,16 @@
  *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:frequency 2 name)
  *       ...
  *   OVTK_NodeId_Header_Spectrum
- *       OVTK_NodeId_Header_Spectrum_SamplingRate (float64)
- *		 OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (float64)
- *		 OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (float64)
+ *       OVTK_NodeId_Header_Spectrum_SamplingRate (double)
+ *		 OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (double)
+ *		 OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (double)
  *		 ...
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * OVTK_NodeId_Buffer
  *   OVTK_NodeId_Buffer_StreamedMatrix
- *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+ *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
  * ...
  * OVTK_NodeId_End
  * ----------------------------------------------------------------- *

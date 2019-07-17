@@ -6,7 +6,7 @@ using namespace OpenViBE::Kernel;
 
 #include <iostream>
 
-boolean CScenarioSettingKeywordParserCallback::expand(const CString& rStringToExpand, CString& rExpandedString) const
+bool CScenarioSettingKeywordParserCallback::expand(const CString& rStringToExpand, CString& rExpandedString) const
 {
 	// In the case there is no value present we return an empty string
 	rExpandedString = "";

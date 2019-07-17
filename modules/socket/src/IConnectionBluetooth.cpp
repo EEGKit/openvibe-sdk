@@ -114,14 +114,14 @@ namespace Socket
 #endif
 		}
 
-		boolean isReadyToSend(Socket::uint32 ui32TimeOut) const
+		bool isReadyToSend(Socket::uint32 ui32TimeOut) const
 		{
 			if (!this->isConnected()) { return false; }
 
 			return true;
 		}
 
-		boolean isReadyToReceive(Socket::uint32 ui32TimeOut) const
+		bool isReadyToReceive(Socket::uint32 ui32TimeOut) const
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -221,7 +221,7 @@ namespace Socket
 #endif
 		}
 
-		boolean sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
+		bool sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
 		{
 			if (!this->isConnected())
 			{
@@ -242,7 +242,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		boolean receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
+		bool receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
 		{
 			if (!this->isConnected())
 			{
@@ -263,7 +263,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		boolean isConnected(void) const
+		bool isConnected(void) const
 		{
 #if defined TARGET_OS_Windows
 
@@ -279,7 +279,7 @@ namespace Socket
 			delete this;
 		}
 
-		boolean connect(unsigned long long u64BluetoothAddress)
+		bool connect(unsigned long long u64BluetoothAddress)
 		{
 			m_sLastError.clear();
 

@@ -12,7 +12,7 @@ using namespace OpenViBEPlugins::StreamCodecs;
 // ________________________________________________________________________________________________________________
 //
 
-boolean CChannelUnitsDecoder::initialize(void)
+bool CChannelUnitsDecoder::initialize(void)
 {
 	CStreamedMatrixDecoder::initialize();
 
@@ -21,7 +21,7 @@ boolean CChannelUnitsDecoder::initialize(void)
 	return true;
 }
 
-boolean CChannelUnitsDecoder::uninitialize(void)
+bool CChannelUnitsDecoder::uninitialize(void)
 {
 	op_bDynamic.uninitialize();
 
@@ -33,7 +33,7 @@ boolean CChannelUnitsDecoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-EBML::boolean CChannelUnitsDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CChannelUnitsDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_ChannelUnits) { return true; }
 	else if (rIdentifier == OVTK_NodeId_Header_ChannelUnits_Dynamic) { return false; }

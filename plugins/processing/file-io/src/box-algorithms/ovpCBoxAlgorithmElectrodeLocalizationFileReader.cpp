@@ -14,7 +14,7 @@ uint64 CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency(void)
 	return ((uint64)1LL) << 32;
 }
 
-boolean CBoxAlgorithmElectrodeLocalisationFileReader::initialize(void)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize(void)
 {
 	m_bHeaderSent = false;
 	m_bBufferSent = false;
@@ -31,8 +31,8 @@ boolean CBoxAlgorithmElectrodeLocalisationFileReader::initialize(void)
 	TParameterHandler<IMatrix*> op_pMatrix(m_pOVMatrixFileReader->getOutputParameter(OVP_Algorithm_OVMatrixFileReader_OutputParameterId_Matrix));
 	/*
 		// Channel localisation parameters
-		TParameterHandler < boolean > ip_bDynamic(m_pChannelLocalisationStreamEncoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputParameterId_Dynamic));
-		TParameterHandler < IMatrix* > ip_pMatrix(m_pChannelLocalisationStreamEncoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputParameterId_Matrix));
+		TParameterHandler<bool> ip_bDynamic(m_pChannelLocalisationStreamEncoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputParameterId_Dynamic));
+		TParameterHandler<IMatrix*> ip_pMatrix(m_pChannelLocalisationStreamEncoder->getInputParameter(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputParameterId_Matrix));
 	
 		// Configure parameters
 	
@@ -49,7 +49,7 @@ boolean CBoxAlgorithmElectrodeLocalisationFileReader::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmElectrodeLocalisationFileReader::uninitialize(void)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::uninitialize(void)
 {
 	//m_pOVMatrixFileReader->process(OVP_Algorithm_OVMatrixFileReader_InputTriggerId_Close);
 
@@ -66,13 +66,13 @@ boolean CBoxAlgorithmElectrodeLocalisationFileReader::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmElectrodeLocalisationFileReader::processClock(OpenViBE::CMessageClock& rMessageClock)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(OpenViBE::CMessageClock& rMessageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmElectrodeLocalisationFileReader::process(void)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::process(void)
 {
 	if (m_bHeaderSent == true && m_bBufferSent == true) { return true; }
 

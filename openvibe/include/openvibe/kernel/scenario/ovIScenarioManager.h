@@ -47,7 +47,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean createScenario(
+			virtual bool createScenario(
 				OpenViBE::CIdentifier& rScenarioIdentifier) =0;
 
 			/**
@@ -112,7 +112,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean releaseScenario(
+			virtual bool releaseScenario(
 				const OpenViBE::CIdentifier& rScenarioIdentifier) =0;
 			/**
 			 * \brief Gets details on a specific scenario

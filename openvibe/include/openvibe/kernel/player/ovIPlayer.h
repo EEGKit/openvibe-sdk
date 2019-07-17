@@ -59,7 +59,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean setScenario(
+			virtual bool setScenario(
 				const OpenViBE::CIdentifier& rScenarioIdentifier,
 				const OpenViBE::CNameValuePairList* pLocalConfigurationTokens = NULL) =0;
 
@@ -110,38 +110,38 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean uninitialize(void) =0;
+			virtual bool uninitialize(void) =0;
 
 			/**
 			 * \brief Stops player execution
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean stop(void) =0;
+			virtual bool stop(void) =0;
 			/**
 			 * \brief Pauses player execution
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean pause(void) =0;
+			virtual bool pause(void) =0;
 			/**
 			 * \brief Executes one more step and pauses
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean step(void) =0;
+			virtual bool step(void) =0;
 			/**
 			 * \brief Makes player run normal speed
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean play(void) =0;
+			virtual bool play(void) =0;
 			/**
 			 * \brief Makes player run as fast as possible
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean forward(void) =0;
+			virtual bool forward(void) =0;
 			/**
 			 * \brief Gets current player status
 			 * \return current player status
@@ -157,18 +157,18 @@ namespace OpenViBE
 			 * \note If a negative value is passed, it is turned back to 0
 			 * \note It the fast forward factor is 0, it tells the player to go as fast as possible
 			 */
-			virtual OpenViBE::boolean setFastForwardMaximumFactor(const OpenViBE::float64 f64FastForwardFactor) =0;
+			virtual bool setFastForwardMaximumFactor(const double f64FastForwardFactor) =0;
 			/**
 			 * \brief Gets the maximum fast forward factor coefficient
 			 * \return The maximum fast forward factor coefficient.
 			 */
-			virtual OpenViBE::float64 getFastForwardMaximumFactor(void) const =0;
+			virtual double getFastForwardMaximumFactor(void) const =0;
 
 			/**
 			 * \brief Gets an estimate of the actual time ratio spent in the player's loop
 			 * \return the amount of time spent in the player's loop (given in percentage)
 			 */
-			virtual OpenViBE::float64 getCPUUsage() const =0;
+			virtual double getCPUUsage() const =0;
 
 			/**
 			 * \brief "short time" function to be called repeatedly by the outstide application
@@ -181,7 +181,7 @@ namespace OpenViBE
 			 * run beyond the specified time when ran in fast forward mode. It defaults
 			 * to \c uint64(-1) which represents the largest OpenViBE time.
 			 */
-			virtual OpenViBE::boolean loop(
+			virtual bool loop(
 				const OpenViBE::uint64 ui64ElapsedTime,
 				const OpenViBE::uint64 ui64MaximumTimeToReach = OpenViBE::uint64(-1)) =0;
 

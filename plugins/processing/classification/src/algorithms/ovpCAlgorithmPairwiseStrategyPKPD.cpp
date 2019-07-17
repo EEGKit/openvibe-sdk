@@ -22,11 +22,11 @@ using namespace OpenViBEPlugins::Classification;
 
 using namespace OpenViBEToolkit;
 
-boolean CAlgorithmPairwiseStrategyPKPD::initialize() { return true; }
+bool CAlgorithmPairwiseStrategyPKPD::initialize() { return true; }
 
-boolean CAlgorithmPairwiseStrategyPKPD::uninitialize() { return true; }
+bool CAlgorithmPairwiseStrategyPKPD::uninitialize() { return true; }
 
-boolean CAlgorithmPairwiseStrategyPKPD::parameterize()
+bool CAlgorithmPairwiseStrategyPKPD::parameterize()
 {
 	TParameterHandler<uint64> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_ui32ClassCount = static_cast<uint32>(ip_pClassCount);
@@ -40,7 +40,7 @@ boolean CAlgorithmPairwiseStrategyPKPD::parameterize()
 	return true;
 }
 
-boolean CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector)
+bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector)
 {
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
@@ -48,7 +48,7 @@ boolean CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>
 		OpenViBE::Kernel::ErrorType::BadInput
 	);
 
-	float64* l_pProbabilityMatrix = new float64[m_ui32ClassCount * m_ui32ClassCount];
+	double* l_pProbabilityMatrix = new double[m_ui32ClassCount * m_ui32ClassCount];
 
 	//First we set the diagonal to 0
 	for (size_t i = 0; i < m_ui32ClassCount; ++i)
@@ -61,7 +61,7 @@ boolean CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>
 		SClassificationInfo& l_rTemp                                                = pClassificationValueList[i];
 		const uint32 l_f64FirstIndex                                                = static_cast<uint32>(l_rTemp.m_f64FirstClass);
 		const uint32 l_f64SecondIndex                                               = static_cast<uint32>(l_rTemp.m_f64SecondClass);
-		const float64* l_pValues                                                    = l_rTemp.m_pClassificationValue->getBuffer();
+		const double* l_pValues                                                    = l_rTemp.m_pClassificationValue->getBuffer();
 		l_pProbabilityMatrix[l_f64FirstIndex * m_ui32ClassCount + l_f64SecondIndex] = l_pValues[0];
 		l_pProbabilityMatrix[l_f64SecondIndex * m_ui32ClassCount + l_f64FirstIndex] = 1 - l_pValues[0];
 	}
@@ -76,11 +76,11 @@ boolean CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>
 	}
 #endif
 
-	float64* l_pProbVector   = new float64[m_ui32ClassCount];
-	float64 l_pProbVectorSum = 0;
+	double* l_pProbVector   = new double[m_ui32ClassCount];
+	double l_pProbVectorSum = 0;
 	for (OpenViBE::uint32 l_ui32ClassIndex = 0; l_ui32ClassIndex < m_ui32ClassCount; ++l_ui32ClassIndex)
 	{
-		float64 l_pTempSum = 0;
+		double l_pTempSum = 0;
 		for (OpenViBE::uint32 l_ui32SecondClass = 0; l_ui32SecondClass < m_ui32ClassCount; ++l_ui32SecondClass)
 		{
 			if (l_ui32SecondClass != l_ui32ClassIndex)
@@ -124,4 +124,4 @@ XML::IXMLNode* CAlgorithmPairwiseStrategyPKPD::saveConfiguration()
 	return l_pRootNode;
 }
 
-boolean CAlgorithmPairwiseStrategyPKPD::loadConfiguration(XML::IXMLNode& rNode) { return true; }
+bool CAlgorithmPairwiseStrategyPKPD::loadConfiguration(XML::IXMLNode& rNode) { return true; }

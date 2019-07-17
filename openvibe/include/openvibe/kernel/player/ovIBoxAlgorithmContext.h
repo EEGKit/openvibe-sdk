@@ -81,7 +81,7 @@ namespace OpenViBE
 			 * is called so the algorithm does its work and produces
 			 * its outputs.
 			 */
-			virtual OpenViBE::boolean markAlgorithmAsReadyToProcess(void) =0;
+			virtual bool markAlgorithmAsReadyToProcess(void) =0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_BoxAlgorithmContext)
 		};

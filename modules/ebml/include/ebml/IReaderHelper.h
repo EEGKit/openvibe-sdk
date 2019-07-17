@@ -50,7 +50,7 @@ namespace EBML
 		/**
 		 * \brief Gets a float from the given buffer
 		 */
-		virtual EBML::float64 getFloatFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize) =0;
+		virtual double getFloatFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize) =0;
 		// virtual ??? getFloat80FromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)=0;
 		// virtual ??? getDateFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)=0;
 		/**

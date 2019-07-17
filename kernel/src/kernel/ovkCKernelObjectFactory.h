@@ -18,7 +18,7 @@ namespace OpenViBE
 
 			virtual OpenViBE::IObject* createObject(
 				const OpenViBE::CIdentifier& rClassIdentifier);
-			virtual OpenViBE::boolean releaseObject(
+			virtual bool releaseObject(
 				OpenViBE::IObject* pObject);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelObjectFactory, OVK_ClassId_Kernel_KernelObjectFactory)

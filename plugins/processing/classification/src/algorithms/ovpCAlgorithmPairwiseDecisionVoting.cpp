@@ -21,11 +21,11 @@ using namespace OpenViBEPlugins::Classification;
 
 using namespace OpenViBEToolkit;
 
-boolean CAlgorithmPairwiseDecisionVoting::initialize() { return true; }
+bool CAlgorithmPairwiseDecisionVoting::initialize() { return true; }
 
-boolean CAlgorithmPairwiseDecisionVoting::uninitialize() { return true; }
+bool CAlgorithmPairwiseDecisionVoting::uninitialize() { return true; }
 
-boolean CAlgorithmPairwiseDecisionVoting::parameterize()
+bool CAlgorithmPairwiseDecisionVoting::parameterize()
 {
 	TParameterHandler<uint64> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_ui32ClassCount = static_cast<uint32>(ip_pClassCount);
@@ -39,7 +39,7 @@ boolean CAlgorithmPairwiseDecisionVoting::parameterize()
 	return true;
 }
 
-boolean CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector)
+bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector)
 {
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
@@ -79,7 +79,7 @@ boolean CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInf
 #if VOTING_DEBUG
 	for(size_t i = 0; i < m_ui32ClassCount ;  ++i)
 	{
-		std::cout << ((float64)l_pWinCount[i])/pClassificationValueList.size() <<  " ";
+		std::cout << ((double)l_pWinCount[i])/pClassificationValueList.size() <<  " ";
 	}
 	std::cout << std::endl;
 #endif
@@ -89,7 +89,7 @@ boolean CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInf
 
 	for (OpenViBE::uint32 i = 0; i < m_ui32ClassCount; ++i)
 	{
-		pProbabilityVector->getBuffer()[i] = ((float64)l_pWinCount[i]) / pClassificationValueList.size();
+		pProbabilityVector->getBuffer()[i] = ((double)l_pWinCount[i]) / pClassificationValueList.size();
 	}
 
 	delete[] l_pWinCount;
@@ -102,4 +102,4 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionVoting::saveConfiguration()
 	return l_pRootNode;
 }
 
-boolean CAlgorithmPairwiseDecisionVoting::loadConfiguration(XML::IXMLNode& rNode) { return true; }
+bool CAlgorithmPairwiseDecisionVoting::loadConfiguration(XML::IXMLNode& rNode) { return true; }

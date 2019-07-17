@@ -16,10 +16,10 @@ namespace OpenViBE
 
 			CLogListenerConsole(const OpenViBE::Kernel::IKernelContext& rKernelContext, const CString& sApplicationName);
 
-			virtual OpenViBE::boolean isActive(OpenViBE::Kernel::ELogLevel eLogLevel);
-			virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eLogLevel, OpenViBE::boolean bActive);
-			virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eStartLogLevel, OpenViBE::Kernel::ELogLevel eEndLogLevel, OpenViBE::boolean bActive);
-			virtual OpenViBE::boolean activate(OpenViBE::boolean bActive);
+			virtual bool isActive(OpenViBE::Kernel::ELogLevel eLogLevel);
+			virtual bool activate(OpenViBE::Kernel::ELogLevel eLogLevel, bool bActive);
+			virtual bool activate(OpenViBE::Kernel::ELogLevel eStartLogLevel, OpenViBE::Kernel::ELogLevel eEndLogLevel, bool bActive);
+			virtual bool activate(bool bActive);
 
 			void configure(const OpenViBE::Kernel::IConfigurationManager& rConfigurationManager);
 
@@ -35,10 +35,10 @@ namespace OpenViBE
 			virtual void log(const OpenViBE::int16 i16Value);
 			virtual void log(const OpenViBE::int8 i8Value);
 
-			virtual void log(const OpenViBE::float64 f64Value);
-			virtual void log(const OpenViBE::float32 f32Value);
+			virtual void log(const double f64Value);
+			virtual void log(const float f32Value);
 
-			virtual void log(const OpenViBE::boolean bValue);
+			virtual void log(const bool bValue);
 
 			virtual void log(const OpenViBE::CIdentifier& rValue);
 			virtual void log(const OpenViBE::CString& rValue);
@@ -55,15 +55,15 @@ namespace OpenViBE
 
 		protected:
 
-			std::map<OpenViBE::Kernel::ELogLevel, OpenViBE::boolean> m_vActiveLevel;
+			std::map<OpenViBE::Kernel::ELogLevel, bool> m_vActiveLevel;
 			std::stack<OpenViBE::Kernel::ELogColor> m_vLogColor;
 			OpenViBE::Kernel::ELogColor m_eLogColor;
 			OpenViBE::CString m_sApplicationName;
 
-			OpenViBE::boolean m_bLogWithHexa;
-			OpenViBE::boolean m_bTimeInSeconds;
+			bool m_bLogWithHexa;
+			bool m_bTimeInSeconds;
 			OpenViBE::uint64 m_ui64TimePrecision;
-			OpenViBE::boolean m_bUseColor;
+			bool m_bUseColor;
 		};
 	};
 };

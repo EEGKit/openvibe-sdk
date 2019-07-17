@@ -10,7 +10,7 @@ using namespace OpenViBEPlugins::StreamCodecs;
 // ________________________________________________________________________________________________________________
 //
 
-boolean CChannelLocalisationDecoder::initialize(void)
+bool CChannelLocalisationDecoder::initialize(void)
 {
 	CStreamedMatrixDecoder::initialize();
 
@@ -19,7 +19,7 @@ boolean CChannelLocalisationDecoder::initialize(void)
 	return true;
 }
 
-boolean CChannelLocalisationDecoder::uninitialize(void)
+bool CChannelLocalisationDecoder::uninitialize(void)
 {
 	op_bDynamic.uninitialize();
 
@@ -31,7 +31,7 @@ boolean CChannelLocalisationDecoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-EBML::boolean CChannelLocalisationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CChannelLocalisationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_ChannelLocalisation) { return true; }
 	else if (rIdentifier == OVTK_NodeId_Header_ChannelLocalisation_Dynamic) { return false; }

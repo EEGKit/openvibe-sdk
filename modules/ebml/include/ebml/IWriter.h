@@ -93,7 +93,7 @@ namespace EBML
 		 * Once the node has been opened, it should be closed
 		 * calling \c closeChild.
 		 */
-		virtual EBML::boolean openChild(const EBML::CIdentifier& rIdentifier) =0;
+		virtual bool openChild(const EBML::CIdentifier& rIdentifier) =0;
 		/**
 		 * \brief Sets data for simple child node
 		 * \param pBuffer [in] : The buffer to set as child data
@@ -109,7 +109,7 @@ namespace EBML
 		 * it the currently opened node already has data,
 		 * it returns \e false too.
 		 */
-		virtual EBML::boolean setChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize) =0;
+		virtual bool setChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize) =0;
 		/**
 		 * \brief Closes currently opened child node
 		 * \return \e true on success.
@@ -120,7 +120,7 @@ namespace EBML
 		 * either child nodes or data depending if it is
 		 * a master node or a simple child node.
 		 */
-		virtual EBML::boolean closeChild(void) =0;
+		virtual bool closeChild(void) =0;
 		/**
 		 * \brief Tells this object it won't be used anymore
 		 *

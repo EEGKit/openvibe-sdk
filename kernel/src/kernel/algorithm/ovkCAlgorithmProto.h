@@ -15,23 +15,23 @@ namespace OpenViBE
 
 			CAlgorithmProto(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CAlgorithmProxy& rAlgorithmProxy);
 
-			virtual OpenViBE::boolean addInputParameter(
+			virtual bool addInputParameter(
 				const OpenViBE::CIdentifier& rInputParameterIdentifier,
 				const OpenViBE::CString& sInputName,
 				const OpenViBE::Kernel::EParameterType eParameterType,
 				const OpenViBE::CIdentifier& rSubTypeIdentifier);
 
-			virtual OpenViBE::boolean addOutputParameter(
+			virtual bool addOutputParameter(
 				const OpenViBE::CIdentifier& rOutputParameterIdentifier,
 				const OpenViBE::CString& sOutputName,
 				const OpenViBE::Kernel::EParameterType eParameterType,
 				const OpenViBE::CIdentifier& rSubTypeIdentifier);
 
-			virtual OpenViBE::boolean addInputTrigger(
+			virtual bool addInputTrigger(
 				const OpenViBE::CIdentifier& rInputTriggerIdentifier,
 				const OpenViBE::CString& rInputTriggerName);
 
-			virtual OpenViBE::boolean addOutputTrigger(
+			virtual bool addOutputTrigger(
 				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
 				const OpenViBE::CString& rOutputTriggerName);
 

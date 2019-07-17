@@ -68,29 +68,29 @@ namespace OpenViBE
 		return l_oResult.c_str();
 	}
 
-	boolean operator==(const CString& rString1, const CString& rString2)
+	bool operator==(const CString& rString1, const CString& rString2)
 	{
 		return (rString1.m_pStringImpl->m_sValue) == (rString2.m_pStringImpl->m_sValue);
 	}
 
-	boolean operator!=(const CString& rString1, const CString& rString2)
+	bool operator!=(const CString& rString1, const CString& rString2)
 	{
 		return (rString1.m_pStringImpl->m_sValue) != (rString2.m_pStringImpl->m_sValue);
 	}
 
-	boolean operator<(const CString& rString1, const CString& rString2)
+	bool operator<(const CString& rString1, const CString& rString2)
 	{
 		return (rString1.m_pStringImpl->m_sValue) < (rString2.m_pStringImpl->m_sValue);
 	}
 };
 
-boolean CString::set(const CString& rString)
+bool CString::set(const CString& rString)
 {
 	m_pStringImpl->m_sValue = rString.m_pStringImpl->m_sValue;
 	return true;
 }
 
-boolean CString::set(const char* pString)
+bool CString::set(const char* pString)
 {
 	if (pString)
 	{

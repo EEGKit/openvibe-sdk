@@ -120,7 +120,7 @@ namespace Dsp
 			while (--numSamples >= 0)
 			{
 				*dest = state.process(*dest, *this);
-				dest++;
+				++dest;
 			}
 		}
 

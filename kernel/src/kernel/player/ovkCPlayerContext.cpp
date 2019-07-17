@@ -20,7 +20,7 @@ CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedB
 
 CPlayerContext::~CPlayerContext(void) {}
 
-boolean CPlayerContext::sendSignal(
+bool CPlayerContext::sendSignal(
 	const CMessageSignal& rMessageSignal)
 {
 	// TODO
@@ -28,7 +28,7 @@ boolean CPlayerContext::sendSignal(
 	return false;
 }
 
-boolean CPlayerContext::sendMessage(
+bool CPlayerContext::sendMessage(
 	const CMessageEvent& rMessageEvent,
 	const CIdentifier& rTargetIdentifier)
 {
@@ -37,7 +37,7 @@ boolean CPlayerContext::sendMessage(
 	return false;
 }
 
-boolean CPlayerContext::sendMessage(
+bool CPlayerContext::sendMessage(
 	const CMessageEvent& rMessageEvent,
 	const CIdentifier* pTargetIdentifier,
 	const uint32 ui32TargetIdentifierCount)
@@ -57,32 +57,32 @@ uint64 CPlayerContext::getCurrentLateness(void) const
 	return m_rSimulatedBox.getScheduler().getCurrentLateness();
 }
 
-float64 CPlayerContext::getCurrentCPUUsage(void) const
+double CPlayerContext::getCurrentCPUUsage(void) const
 {
 	return m_rSimulatedBox.getScheduler().getCPUUsage();
 }
 
-float64 CPlayerContext::getCurrentFastForwardMaximumFactor(void) const
+double CPlayerContext::getCurrentFastForwardMaximumFactor(void) const
 {
 	return m_rSimulatedBox.getScheduler().getFastForwardMaximumFactor();
 }
 
-boolean CPlayerContext::stop(void)
+bool CPlayerContext::stop(void)
 {
 	return m_rSimulatedBox.getScheduler().getPlayer().stop();
 }
 
-boolean CPlayerContext::pause(void)
+bool CPlayerContext::pause(void)
 {
 	return m_rSimulatedBox.getScheduler().getPlayer().pause();
 }
 
-boolean CPlayerContext::play(void)
+bool CPlayerContext::play(void)
 {
 	return m_rSimulatedBox.getScheduler().getPlayer().play();
 }
 
-boolean CPlayerContext::forward(void)
+bool CPlayerContext::forward(void)
 {
 	return m_rSimulatedBox.getScheduler().getPlayer().forward();
 }

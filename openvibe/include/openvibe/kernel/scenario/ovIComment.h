@@ -43,7 +43,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean setIdentifier(
+			virtual bool setIdentifier(
 				const OpenViBE::CIdentifier& rIdentifier) =0;
 			/**
 			 * \brief Changes the text of this comment
@@ -51,7 +51,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean setText(
+			virtual bool setText(
 				const OpenViBE::CString& sText) =0;
 
 			//@}
@@ -67,7 +67,7 @@ namespace OpenViBE
 			 * Resets the comment and initializes its text/attributes
 			 * according to the existing comment.
 			 */
-			virtual OpenViBE::boolean initializeFromExistingComment(
+			virtual bool initializeFromExistingComment(
 				const OpenViBE::Kernel::IComment& rExisitingComment) =0;
 
 			//@}

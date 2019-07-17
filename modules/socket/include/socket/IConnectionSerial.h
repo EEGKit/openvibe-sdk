@@ -10,7 +10,7 @@ namespace Socket
 	{
 	public:
 
-		virtual boolean connect(const char* sURL, unsigned long ui32BaudRate) = 0;
+		virtual bool connect(const char* sURL, unsigned long ui32BaudRate) = 0;
 		
 		/**
 		 * \brief Return the input serial pending byte count.
@@ -22,7 +22,7 @@ namespace Socket
 		 * \brief Flush the input serial buffer.
 		 * \return If the function succeeds, the return value is true, else false.
 		 */
-		virtual boolean flush() = 0;
+		virtual bool flush() = 0;
 
 		/**
 		 * \brief Flush the input serial buffer.

@@ -2,7 +2,7 @@
 
 using namespace OpenViBE;
 
-boolean OpenViBEToolkit::Tools::StimulationSet::shift(IStimulationSet& rStimulationSet, const uint64 ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::shift(IStimulationSet& rStimulationSet, const uint64 ui64TimeShift)
 {
 	uint64 l_ui64StimulationCount = rStimulationSet.getStimulationCount();
 	for (uint64 i = 0; i < l_ui64StimulationCount; i++)
@@ -12,13 +12,13 @@ boolean OpenViBEToolkit::Tools::StimulationSet::shift(IStimulationSet& rStimulat
 	return true;
 }
 
-boolean OpenViBEToolkit::Tools::StimulationSet::copy(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64 ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::copy(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64 ui64TimeShift)
 {
 	rDestinationStimulationSet.clear();
 	return append(rDestinationStimulationSet, rSourceStimulationSet, ui64TimeShift);
 }
 
-boolean OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64 ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64 ui64TimeShift)
 {
 	uint64 l_ui64StimulationCount = rSourceStimulationSet.getStimulationCount();
 	for (uint64 i = 0; i < l_ui64StimulationCount; i++)
@@ -31,7 +31,7 @@ boolean OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& rDestina
 	return true;
 }
 
-boolean OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64 ui64SourceStartTime, const uint64 ui64SourceEndTime, const uint64 ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64 ui64SourceStartTime, const uint64 ui64SourceEndTime, const uint64 ui64TimeShift)
 {
 	uint64 l_ui64StimulationCount = rSourceStimulationSet.getStimulationCount();
 	for (uint64 i = 0; i < l_ui64StimulationCount; i++)
@@ -48,7 +48,7 @@ boolean OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& rDe
 	return true;
 }
 
-boolean OpenViBEToolkit::Tools::StimulationSet::removeRange(IStimulationSet& rStimulationSet, const uint64 ui64StartTime, const uint64 ui64EndTime)
+bool OpenViBEToolkit::Tools::StimulationSet::removeRange(IStimulationSet& rStimulationSet, const uint64 ui64StartTime, const uint64 ui64EndTime)
 {
 	for (uint64 i = 0; i < rStimulationSet.getStimulationCount(); i++)
 	{

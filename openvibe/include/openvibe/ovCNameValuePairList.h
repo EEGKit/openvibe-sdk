@@ -66,7 +66,7 @@ namespace OpenViBE
 		 * \param [in] rValue Value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		OpenViBE::boolean setValue(
+		bool setValue(
 			const OpenViBE::CString& rName,
 			const OpenViBE::CString& rValue);
 
@@ -76,19 +76,19 @@ namespace OpenViBE
 		 * \param [in] pValue Value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		OpenViBE::boolean setValue(
+		bool setValue(
 			const OpenViBE::CString& rName,
 			const char* pValue);
 
 		/**
-		 * \brief Insert a name/value pair where value is a float64
+		 * \brief Insert a name/value pair where value is a double
 		 * \param [in] rName Name to add to the list
 		 * \param [in] rValue Float64 value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		OpenViBE::boolean setValue(
+		bool setValue(
 			const OpenViBE::CString& rName,
-			const OpenViBE::float64& rValue);
+			const double& rValue);
 
 		/**
 		 * \brief Insert a name/value pair where value is a boolean
@@ -96,9 +96,9 @@ namespace OpenViBE
 		 * \param [in] bValue Boolean value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		OpenViBE::boolean setValue(
+		bool setValue(
 			const OpenViBE::CString& rName,
-			OpenViBE::boolean bValue);
+			bool bValue);
 
 		/**
 		 * \brief Retrieve a value from the list
@@ -106,19 +106,19 @@ namespace OpenViBE
 		 * \param [out] rValue Value to be retrieved from the list
 		 * \return True if value could be retrieved, false otherwise
 		 */
-		OpenViBE::boolean getValue(
+		bool getValue(
 			const OpenViBE::CString& rName,
 			OpenViBE::CString& rValue) const;
 
 		/**
-		 * \brief Retrieve a float64 value from the list
+		 * \brief Retrieve a double value from the list
 		 * \param [in] rName Name whose value is to be retrieved
 		 * \param [out] rValue Float64 value to be retrieved
-		 * \return True if a float64 value could be retrieved, false otherwise
+		 * \return True if a double value could be retrieved, false otherwise
 		 */
-		OpenViBE::boolean getValue(
+		bool getValue(
 			const OpenViBE::CString& rName,
-			OpenViBE::float64& rValue) const;
+			double& rValue) const;
 
 		/**
 		 * \brief Retrieve a boolean value from the list
@@ -127,9 +127,9 @@ namespace OpenViBE
 		 * \param rValue String to evaluate
 		 * \return True if string evaluates to a boolean, false otherwise
 		 */
-		OpenViBE::boolean getValue(
+		bool getValue(
 			const OpenViBE::CString& rName,
-			OpenViBE::boolean& rValue) const;
+			bool& rValue) const;
 
 		/**
 		 * \brief Retrieve a value from the list
@@ -138,7 +138,7 @@ namespace OpenViBE
 		 * \param [out] rValue Value stored in rIndex
 		 * \return True if value could be retrieved, false otherwise
 		 */
-		OpenViBE::boolean getValue(
+		bool getValue(
 			const uint32 rIndex,
 			OpenViBE::CString& rName,
 			OpenViBE::CString& rValue) const;

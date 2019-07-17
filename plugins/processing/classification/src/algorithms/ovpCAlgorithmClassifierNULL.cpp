@@ -17,10 +17,10 @@ using namespace OpenViBEToolkit;
 CAlgorithmClassifierNULL::CAlgorithmClassifierNULL(void) {}
 
 
-boolean CAlgorithmClassifierNULL::initialize(void)
+bool CAlgorithmClassifierNULL::initialize(void)
 {
-	TParameterHandler<boolean> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
-	TParameterHandler<float64> ip_f64Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
+	TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
+	TParameterHandler<double> ip_f64Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
 	TParameterHandler<uint64> ip_ui64Parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
 
 	ip_bParameter1    = true;
@@ -33,10 +33,10 @@ boolean CAlgorithmClassifierNULL::initialize(void)
 	return CAlgorithmClassifier::initialize();
 }
 
-boolean CAlgorithmClassifierNULL::train(const IFeatureVectorSet& rFeatureVectorSet)
+bool CAlgorithmClassifierNULL::train(const IFeatureVectorSet& rFeatureVectorSet)
 {
-	TParameterHandler<boolean> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
-	TParameterHandler<float64> ip_f64Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
+	TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
+	TParameterHandler<double> ip_f64Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
 	TParameterHandler<uint64> ip_ui64Parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
 
 	OV_WARNING_K("Parameter 1 : " << ip_bParameter1);
@@ -46,7 +46,7 @@ boolean CAlgorithmClassifierNULL::train(const IFeatureVectorSet& rFeatureVectorS
 	return true;
 }
 
-boolean CAlgorithmClassifierNULL::classify(const IFeatureVector& rFeatureVector, float64& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
+bool CAlgorithmClassifierNULL::classify(const IFeatureVector& rFeatureVector, double& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
 {
 	rf64Class = 1 + (::rand() % 3);
 
@@ -70,7 +70,7 @@ XML::IXMLNode* CAlgorithmClassifierNULL::saveConfiguration(void)
 	return NULL;
 }
 
-boolean CAlgorithmClassifierNULL::loadConfiguration(XML::IXMLNode* pConfigurationNode) { return true; }
+bool CAlgorithmClassifierNULL::loadConfiguration(XML::IXMLNode* pConfigurationNode) { return true; }
 
 uint32 CAlgorithmClassifierNULL::getOutputProbabilityVectorLength() { return 1; }
 

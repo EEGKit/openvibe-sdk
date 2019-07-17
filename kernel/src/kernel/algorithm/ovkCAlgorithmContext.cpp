@@ -61,15 +61,15 @@ IParameter* CAlgorithmContext::getOutputParameter(
 	return m_rAlgorithmProxy.getOutputParameter(rOutputParameterIdentifier);
 }
 
-boolean CAlgorithmContext::isInputTriggerActive(
+bool CAlgorithmContext::isInputTriggerActive(
 	const CIdentifier& rInputTriggerIdentifier) const
 {
 	return m_rAlgorithmProxy.isInputTriggerActive(rInputTriggerIdentifier);
 }
 
-boolean CAlgorithmContext::activateOutputTrigger(
+bool CAlgorithmContext::activateOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier,
-	const boolean bTriggerState)
+	const bool bTriggerState)
 {
 	return m_rAlgorithmProxy.activateOutputTrigger(rOutputTriggerIdentifier, bTriggerState);
 }

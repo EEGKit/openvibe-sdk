@@ -314,8 +314,8 @@ namespace r8b
 				{
 					const double v = (*this.*wfunc)();
 
-					op++;
-					op2--;
+					++op;
+					--op2;
 					*op  = v;
 					*op2 = v;
 					l--;
@@ -329,8 +329,8 @@ namespace r8b
 				{
 					const double v = pows((*this.*wfunc)(), Power);
 
-					op++;
-					op2--;
+					++op;
+					--op2;
 					*op  = v;
 					*op2 = v;
 					l--;
@@ -365,8 +365,8 @@ namespace r8b
 					const double v = (f2.generate() - f1.generate()) *
 									 (*this.*wfunc)() / t / M_PI;
 
-					op++;
-					op2--;
+					++op;
+					--op2;
 					*op  = v;
 					*op2 = v;
 					t++;
@@ -381,8 +381,8 @@ namespace r8b
 					const double v = (f2.generate() - f1.generate()) *
 									 pows((*this.*wfunc)(), Power) / t / M_PI;
 
-					op++;
-					op2--;
+					++op;
+					--op2;
 					*op  = v;
 					*op2 = v;
 					t++;
@@ -417,8 +417,8 @@ namespace r8b
 					const double v = fvalues[t & 1] *
 									 (*this.*wfunc)() / t / M_PI;
 
-					op++;
-					op2--;
+					++op;
+					--op2;
 					*op  = v;
 					*op2 = -v;
 					t++;
@@ -431,8 +431,8 @@ namespace r8b
 					const double v = fvalues[t & 1] *
 									 pows((*this.*wfunc)(), Power) / t / M_PI;
 
-					op++;
-					op2--;
+					++op;
+					--op2;
 					*op  = v;
 					*op2 = -v;
 					t++;

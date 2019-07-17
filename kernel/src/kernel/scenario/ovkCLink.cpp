@@ -34,7 +34,7 @@ bool CLink::InitializeFromExistingLink(const ILink& l)
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CLink::setIdentifier(
+bool CLink::setIdentifier(
 	const CIdentifier& rIdentifier)
 {
 	m_oIdentifier = rIdentifier;
@@ -49,7 +49,7 @@ CIdentifier CLink::getIdentifier(void) const
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CLink::setSource(
+bool CLink::setSource(
 	const CIdentifier& rBoxIdentifier,
 	const uint32 ui32BoxOutputIndex,
 	const CIdentifier rBoxOutputIdentifier)
@@ -60,7 +60,7 @@ boolean CLink::setSource(
 	return true;
 }
 
-boolean CLink::setTarget(
+bool CLink::setTarget(
 	const CIdentifier& rBoxIdentifier,
 	const uint32 ui32BoxInputIndex,
 	const CIdentifier rBoxInputIdentifier)
@@ -71,7 +71,7 @@ boolean CLink::setTarget(
 	return true;
 }
 
-boolean CLink::getSource(
+bool CLink::getSource(
 	CIdentifier& rBoxIdentifier,
 	uint32& ui32BoxOutputIndex,
 	CIdentifier& rBoxOuputIdentifier) const
@@ -97,7 +97,7 @@ CIdentifier CLink::getSourceBoxOutputIdentifier(void) const
 	return m_oSourceBoxOutputIdentifier;
 }
 
-boolean CLink::getTarget(
+bool CLink::getTarget(
 	CIdentifier& rTargetBoxIdentifier,
 	uint32& ui32BoxInputIndex,
 	CIdentifier& rTargetBoxInputIdentifier) const
@@ -126,7 +126,7 @@ CIdentifier CLink::getTargetBoxInputIdentifier(void) const
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CLink::acceptVisitor(
+bool CLink::acceptVisitor(
 	IObjectVisitor& rObjectVisitor)
 {
 	CObjectVisitorContext l_oObjectVisitorContext(getKernelContext());

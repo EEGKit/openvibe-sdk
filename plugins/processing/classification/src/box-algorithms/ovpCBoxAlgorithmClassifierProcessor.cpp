@@ -13,7 +13,7 @@ using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::Classification;
 using namespace std;
 
-boolean CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
+bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 {
 	if (m_pClassifier)
 	{
@@ -115,7 +115,7 @@ boolean CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 		CString l_sStimulationName(l_pTempNode->getPCData());
 
-		OpenViBE::float64 l_f64ClassId;
+		double l_f64ClassId;
 		const char* l_sAttributeData = l_pTempNode->getAttribute(c_sIdentifierAttributeName);
 
 		OV_ERROR_UNLESS_KRF(
@@ -164,7 +164,7 @@ boolean CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	return true;
 }
 
-boolean CBoxAlgorithmClassifierProcessor::initialize(void)
+bool CBoxAlgorithmClassifierProcessor::initialize(void)
 {
 	m_pClassifier = NULL;
 
@@ -187,7 +187,7 @@ boolean CBoxAlgorithmClassifierProcessor::initialize(void)
 	return loadClassifier(l_sConfigurationFilename.toASCIIString());
 }
 
-boolean CBoxAlgorithmClassifierProcessor::uninitialize(void)
+bool CBoxAlgorithmClassifierProcessor::uninitialize(void)
 {
 	if (m_pClassifier)
 	{
@@ -206,14 +206,14 @@ boolean CBoxAlgorithmClassifierProcessor::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmClassifierProcessor::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmClassifierProcessor::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
 	return true;
 }
 
-boolean CBoxAlgorithmClassifierProcessor::process(void)
+bool CBoxAlgorithmClassifierProcessor::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
@@ -263,7 +263,7 @@ boolean CBoxAlgorithmClassifierProcessor::process(void)
 				OpenViBE::Kernel::ErrorType::Internal
 			);
 
-			TParameterHandler<float64> op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
+			TParameterHandler<double> op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 
 			IStimulationSet* l_pSet = m_oLabelsEncoder.getInputStimulationSet();
 

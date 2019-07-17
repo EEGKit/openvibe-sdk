@@ -19,7 +19,7 @@ namespace
 			  , m_ui64SettingCountHash(0x6BDFB15B54B09F63LL)
 			  , m_TypeManager(typeManager) { }
 
-		bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::boolean bNotify)
+		bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
 		{
 			uint64 v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64InputCountHash);
@@ -34,7 +34,7 @@ namespace
 			return true;
 		}
 
-		bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::boolean bNotify)
+		bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
 		{
 			uint64 v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
@@ -49,7 +49,7 @@ namespace
 			return true;
 		}
 
-		bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::boolean bNotify)
+		bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
 		{
 			uint64 v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64SettingCountHash);

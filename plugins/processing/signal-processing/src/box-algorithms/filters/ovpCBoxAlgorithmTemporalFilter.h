@@ -21,10 +21,10 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_TemporalFilter);
 
@@ -37,9 +37,9 @@ namespace OpenViBEPlugins
 			OpenViBE::uint64 m_ui64FilterType;
 			OpenViBE::uint64 m_ui64FilterOrder;
 
-			OpenViBE::float64 m_f64LowCutFrequency;
-			OpenViBE::float64 m_f64HighCutFrequency;
-			OpenViBE::float64 m_f64BandPassRipple; // for Chebyshev
+			double m_f64LowCutFrequency;
+			double m_f64HighCutFrequency;
+			double m_f64BandPassRipple; // for Chebyshev
 
 			std::vector<std::shared_ptr<Dsp::Filter>> m_vFilter;
 			//std::vector < std::shared_ptr < Dsp::Filter > > m_vFilter2;
@@ -67,7 +67,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_TemporalFilter; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTemporalFilter; }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);

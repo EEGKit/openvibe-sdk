@@ -14,7 +14,7 @@ CAcquisitionDecoder::CAcquisitionDecoder(void) {}
 // ________________________________________________________________________________________________________________
 //
 
-boolean CAcquisitionDecoder::initialize(void)
+bool CAcquisitionDecoder::initialize(void)
 {
 	CEBMLBaseDecoder::initialize();
 
@@ -28,7 +28,7 @@ boolean CAcquisitionDecoder::initialize(void)
 	return true;
 }
 
-boolean CAcquisitionDecoder::uninitialize(void)
+bool CAcquisitionDecoder::uninitialize(void)
 {
 	op_pChannelUnitsStream.uninitialize();
 	op_pChannelLocalisationStream.uninitialize();
@@ -45,7 +45,7 @@ boolean CAcquisitionDecoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-EBML::boolean CAcquisitionDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CAcquisitionDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Acquisition_Header_BufferDuration) return false;
 	else if (rIdentifier == OVTK_NodeId_Acquisition_Header_ExperimentInformation) return false;

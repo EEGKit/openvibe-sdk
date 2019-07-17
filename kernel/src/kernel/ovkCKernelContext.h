@@ -19,8 +19,8 @@ namespace OpenViBE
 			CKernelContext(const OpenViBE::Kernel::IKernelContext* pMasterKernelContext, const OpenViBE::CString& rApplicationName, const OpenViBE::CString& rConfigurationFile);
 			virtual ~CKernelContext(void);
 
-			virtual OpenViBE::boolean initialize(const char* const * tokenList, size_t tokenCount);
-			virtual OpenViBE::boolean uninitialize(void);
+			virtual bool initialize(const char* const * tokenList, size_t tokenCount);
+			virtual bool uninitialize(void);
 
 			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const;
 			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const;
@@ -82,8 +82,8 @@ namespace OpenViBE
 				  , m_pLogManager(NULL)
 				  , m_pErrorManager(NULL) { }
 
-			virtual OpenViBE::boolean initialize(void) { return true; }
-			virtual OpenViBE::boolean uninitialize(void) { return true; }
+			virtual bool initialize(void) { return true; }
+			virtual bool uninitialize(void) { return true; }
 
 			void setAlgorithmManager(OpenViBE::Kernel::IAlgorithmManager* pAlgorithmManager) { m_pAlgorithmManager = pAlgorithmManager; }
 			void setConfigurationManager(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager) { m_pConfigurationManager = pConfigurationManager; }

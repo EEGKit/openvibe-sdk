@@ -16,7 +16,7 @@ CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer(void) : m_TrainStimulationI
 															 m_FilterDimension(0),
 															 m_SaveAsBoxConfig(false) {}
 
-boolean CBoxAlgorithmXDAWNTrainer::initialize(void)
+bool CBoxAlgorithmXDAWNTrainer::initialize(void)
 {
 	m_TrainStimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_FilterFilename     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -61,7 +61,7 @@ boolean CBoxAlgorithmXDAWNTrainer::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmXDAWNTrainer::uninitialize(void)
+bool CBoxAlgorithmXDAWNTrainer::uninitialize(void)
 {
 	m_StimDecoder.uninitialize();
 	m_SignalDecoder[0].uninitialize();
@@ -71,7 +71,7 @@ boolean CBoxAlgorithmXDAWNTrainer::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmXDAWNTrainer::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmXDAWNTrainer::processInput(uint32 ui32InputIndex)
 {
 	if (ui32InputIndex == 0)
 	{
@@ -81,11 +81,11 @@ boolean CBoxAlgorithmXDAWNTrainer::processInput(uint32 ui32InputIndex)
 	return true;
 }
 
-boolean CBoxAlgorithmXDAWNTrainer::process(void)
+bool CBoxAlgorithmXDAWNTrainer::process(void)
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	boolean train = false;
+	bool train = false;
 
 	for (unsigned int i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
 	{

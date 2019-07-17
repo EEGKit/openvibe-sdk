@@ -23,33 +23,33 @@ namespace OpenViBEPlugins
 			CBoxAlgorithmCSVFileWriter(void);
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool process(void);
 
-			OpenViBE::boolean process_streamedMatrix(void);
-			OpenViBE::boolean process_stimulation(void);
+			bool process_streamedMatrix(void);
+			bool process_stimulation(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileWriter);
 
 
 		protected:
-			OpenViBE::boolean initializeFile();
+			bool initializeFile();
 
 			std::ofstream m_oFileStream;
 
 			OpenViBE::CString m_sSeparator;
 			OpenViBE::CIdentifier m_oTypeIdentifier;
-			OpenViBE::boolean m_bFirstBuffer;
-			OpenViBE::boolean (OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileWriter::*m_fpRealProcess)(void);
+			bool m_bFirstBuffer;
+			bool (OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileWriter::*m_fpRealProcess)(void);
 
 			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_pStreamDecoder;
 			OpenViBE::CMatrix m_oMatrix;		// This represents the properties of the input, no data
 
 			OpenViBE::uint64 m_ui64SampleCount;
 
-			OpenViBE::boolean m_bHeaderReceived;
+			bool m_bHeaderReceived;
 		};
 
 		class CBoxAlgorithmCSVFileWriterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
@@ -81,7 +81,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmCSVFileWriterListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Input stream", OV_TypeId_Signal);

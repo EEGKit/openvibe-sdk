@@ -71,7 +71,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::initialize(void)
 		// Set the params of the cov algorithm
 		OpenViBE::Kernel::TParameterHandler<uint64_t> updateMethod(m_IncCovarianceProxies[i].incrementalCov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod));
 		OpenViBE::Kernel::TParameterHandler<bool> traceNormalization(m_IncCovarianceProxies[i].incrementalCov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization));
-		OpenViBE::Kernel::TParameterHandler<float64> shrinkage(m_IncCovarianceProxies[i].incrementalCov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage));
+		OpenViBE::Kernel::TParameterHandler<double> shrinkage(m_IncCovarianceProxies[i].incrementalCov->getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage));
 
 		updateMethod       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 		traceNormalization = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
@@ -154,7 +154,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(uint32_t index)
 			const uint32_t nChannels = inputSignal->getDimensionSize(0);
 			const uint32_t nSamples  = inputSignal->getDimensionSize(1);
 
-			const Map<MatrixXdRowMajor> l_oInputMapper(const_cast<float64*>(inputSignal->getBuffer()), nChannels, nSamples);
+			const Map<MatrixXdRowMajor> l_oInputMapper(const_cast<double*>(inputSignal->getBuffer()), nChannels, nSamples);
 			Map<MatrixXdRowMajor> outputMapper(ip_pFeatureVectorSet->getBuffer(), nSamples, nChannels);
 			outputMapper = l_oInputMapper.transpose();
 
@@ -185,7 +185,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(uint32_t skipIndex, 
 {
 	if (cov.size() == 0 || skipIndex >= cov.size()) { return false; }
 
-	std::vector<float64> classWeights;
+	std::vector<double> classWeights;
 	uint64_t totalOutclassSamples = 0;
 
 	// Compute the total number of samples
@@ -201,7 +201,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(uint32_t skipIndex, 
 	classWeights.resize(m_NumClasses);
 	for (uint32_t i = 0; i < m_NumClasses; i++)
 	{
-		classWeights[i] = i == skipIndex ? 0 : m_IncCovarianceProxies[i].numSamples / static_cast<float64>(totalOutclassSamples);
+		classWeights[i] = i == skipIndex ? 0 : m_IncCovarianceProxies[i].numSamples / static_cast<double>(totalOutclassSamples);
 		this->getLogManager() << LogLevel_Debug << "Condition " << i + 1 << " averaging weight = " << classWeights[i] << "\n";
 	}
 
@@ -274,12 +274,12 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<Eigen::Mat
 		eigenVectors[classIndex] = eigenSolverGeneral.eigenvectors().real();
 
 		// Sort the vectors -_-
-		std::vector<std::pair<float64, int>> indexes;
+		std::vector<std::pair<double, int>> indexes;
 		for (int i = 0; i < eigenValues[classIndex].size(); i++)
 		{
 			indexes.emplace_back(std::make_pair((eigenValues[classIndex])[i], i));
 		}
-		std::sort(indexes.begin(), indexes.end(), std::greater<std::pair<float64, int>>());
+		std::sort(indexes.begin(), indexes.end(), std::greater<std::pair<double, int>>());
 
 		sortedEigenValues[classIndex].resizeLike(eigenValues[classIndex]);
 		sortedEigenVectors[classIndex].resizeLike(eigenVectors[classIndex]);

@@ -13,11 +13,11 @@ uint64 CBoxAlgorithmClockStimulator::getClockFrequency(void)
 	return (1LL << 32) * 32;
 }
 
-boolean CBoxAlgorithmClockStimulator::initialize(void)
+bool CBoxAlgorithmClockStimulator::initialize(void)
 {
-	float64 l_f64InterstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	double l_f64InterstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-	const float64 l_f64MinInterstimulationInterval = 0.0001;
+	const double l_f64MinInterstimulationInterval = 0.0001;
 	OV_ERROR_UNLESS_KRF(
 		!(l_f64InterstimulationInterval < l_f64MinInterstimulationInterval),
 		"Invalid stimulation interval [" << l_f64InterstimulationInterval << "] (expected value > " << l_f64MinInterstimulationInterval << ")",
@@ -37,21 +37,21 @@ boolean CBoxAlgorithmClockStimulator::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmClockStimulator::uninitialize(void)
+bool CBoxAlgorithmClockStimulator::uninitialize(void)
 {
 	m_oStimulationEncoder.uninitialize();
 
 	return true;
 }
 
-boolean CBoxAlgorithmClockStimulator::processClock(IMessageClock& rMessageClock)
+bool CBoxAlgorithmClockStimulator::processClock(IMessageClock& rMessageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
 	return true;
 }
 
-boolean CBoxAlgorithmClockStimulator::process(void)
+bool CBoxAlgorithmClockStimulator::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 

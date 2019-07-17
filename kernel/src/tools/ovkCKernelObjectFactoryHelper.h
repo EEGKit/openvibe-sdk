@@ -29,7 +29,7 @@ namespace OpenViBE
 			}
 
 			template <class T>
-			OpenViBE::boolean releaseObject(T tObject)
+			bool releaseObject(T tObject)
 			{
 				return m_rKernelObjectFactory.releaseObject(tObject);
 			}

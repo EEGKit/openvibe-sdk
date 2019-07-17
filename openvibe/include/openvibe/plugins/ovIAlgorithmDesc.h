@@ -39,7 +39,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Plugins::IAlgorithmProto
 			 */
-			virtual OpenViBE::boolean getAlgorithmPrototype(
+			virtual bool getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const =0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObjectDesc, OV_ClassId_Plugins_AlgorithmDesc)

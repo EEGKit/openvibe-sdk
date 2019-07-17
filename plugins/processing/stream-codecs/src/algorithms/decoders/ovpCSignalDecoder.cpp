@@ -10,7 +10,7 @@ using namespace OpenViBEPlugins::StreamCodecs;
 // ________________________________________________________________________________________________________________
 //
 
-boolean CSignalDecoder::initialize(void)
+bool CSignalDecoder::initialize(void)
 {
 	CStreamedMatrixDecoder::initialize();
 
@@ -19,7 +19,7 @@ boolean CSignalDecoder::initialize(void)
 	return true;
 }
 
-boolean CSignalDecoder::uninitialize(void)
+bool CSignalDecoder::uninitialize(void)
 {
 	op_ui64SamplingRate.uninitialize();
 
@@ -31,7 +31,7 @@ boolean CSignalDecoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-EBML::boolean CSignalDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CSignalDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_Signal) { return true; }
 	else if (rIdentifier == OVTK_NodeId_Header_Signal_SamplingRate) { return false; }

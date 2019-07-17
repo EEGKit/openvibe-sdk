@@ -44,7 +44,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean initialize(
+			virtual bool initialize(
 				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
 			/**
 			 * \brief Unitializes this algorithm
@@ -53,7 +53,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \exception this method must be noexcept
 			 */
-			virtual OpenViBE::boolean uninitialize(
+			virtual bool uninitialize(
 				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
 			/**
 			 * \brief Effectively executes this algorithm
@@ -64,7 +64,7 @@ namespace OpenViBE
 			 * When called, this function should get its "input" parameters, do stuffs with them
 			 * and finally produce "output" parameters.
 			 */
-			virtual OpenViBE::boolean process(
+			virtual bool process(
 				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext) =0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_Algorithm)

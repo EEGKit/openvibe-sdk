@@ -21,11 +21,11 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IBoxIO* getDynamicBoxContext(void);
 			virtual OpenViBE::Kernel::IPlayerContext* getPlayerContext(void);
 
-			virtual OpenViBE::boolean markAlgorithmAsReadyToProcess(void);
+			virtual bool markAlgorithmAsReadyToProcess(void);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxAlgorithmContext>, OVK_ClassId_Kernel_Player_BoxAlgorithmContext)
 
-			virtual OpenViBE::boolean isAlgorithmReadyToProcess(void);
+			virtual bool isAlgorithmReadyToProcess(void);
 
 		protected:
 
@@ -34,7 +34,7 @@ namespace OpenViBE
 			// here we prefer value type over reference/pointer
 			// in order to improve performance at runtime (no heap allocation)
 			OpenViBE::Kernel::CPlayerContext m_oPlayerContext;
-			OpenViBE::boolean m_bReadyToProcess;
+			bool m_bReadyToProcess;
 		};
 	};
 };

@@ -30,24 +30,24 @@ namespace OpenViBE
 			CScheduler(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CPlayer& rPlayer);
 			virtual ~CScheduler(void);
 
-			virtual OpenViBE::boolean setScenario(
+			virtual bool setScenario(
 				const OpenViBE::CIdentifier& rScenarioIdentifier);
-			virtual OpenViBE::boolean setFrequency(
+			virtual bool setFrequency(
 				const OpenViBE::uint64 ui64Frequency);
 
-			virtual OpenViBE::boolean isHoldingResources() const;
+			virtual bool isHoldingResources() const;
 
 			virtual SchedulerInitializationCode initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean loop(void);
+			virtual bool uninitialize(void);
+			virtual bool loop(void);
 
-			virtual OpenViBE::boolean sendInput(const OpenViBE::Kernel::CChunk& rChunk, const OpenViBE::CIdentifier& rBoxIdentifier, const OpenViBE::uint32 ui32InputIndex);
+			virtual bool sendInput(const OpenViBE::Kernel::CChunk& rChunk, const OpenViBE::CIdentifier& rBoxIdentifier, const OpenViBE::uint32 ui32InputIndex);
 			virtual OpenViBE::uint64 getCurrentTime(void) const;
 			virtual OpenViBE::uint64 getCurrentLateness(void) const;
 			virtual OpenViBE::uint64 getFrequency(void) const;
 			virtual OpenViBE::uint64 getStepDuration(void) const;
-			virtual OpenViBE::float64 getCPUUsage(void) const;
-			virtual OpenViBE::float64 getFastForwardMaximumFactor(void) const;
+			virtual double getCPUUsage(void) const;
+			virtual double getFastForwardMaximumFactor(void) const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler);
 
@@ -73,8 +73,8 @@ namespace OpenViBE
 		private:
 
 			void handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception);
-			boolean processBox(CSimulatedBox* simulatedBox, const OpenViBE::CIdentifier& boxIdentifier);
-			OpenViBE::boolean flattenScenario(void);
+			bool processBox(CSimulatedBox* simulatedBox, const OpenViBE::CIdentifier& boxIdentifier);
+			bool flattenScenario(void);
 			System::CChrono m_oBenchmarkChrono;
 		};
 	};

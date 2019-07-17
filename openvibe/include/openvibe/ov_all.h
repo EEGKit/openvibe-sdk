@@ -131,7 +131,7 @@ namespace OpenViBE
 	static std::vector<std::unique_ptr<OpenViBE::Plugins::IPluginObjectDesc>> g_descriptors; \
 	extern "C" \
 	{ \
-		OVP_API OpenViBE::boolean onInitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
+		OVP_API bool onInitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
 		{
 
 #define OVP_Declare_New(Class) \
@@ -140,11 +140,11 @@ namespace OpenViBE
 #define OVP_Declare_End() \
 			return true; \
 		} \
-		OVP_API OpenViBE::boolean onUninitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
+		OVP_API bool onUninitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
 		{ \
 			return true; \
 		} \
-		OVP_API OpenViBE::boolean onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext, OpenViBE::uint32 ui32Index, OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) \
+		OVP_API bool onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext, OpenViBE::uint32 ui32Index, OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) \
 		{ \
 			if(ui32Index>=g_descriptors.size()) \
 			{ \

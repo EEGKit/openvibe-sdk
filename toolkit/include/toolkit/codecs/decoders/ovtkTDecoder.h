@@ -31,17 +31,17 @@ namespace OpenViBEToolkit
 			return m_pInputMemoryBuffer;
 		}
 
-		virtual OpenViBE::boolean isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
+		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
 		{
 			return m_pCodec->isOutputTriggerActive(oTrigger);
 		}
 
-		virtual OpenViBE::boolean process(const OpenViBE::CIdentifier& oTrigger)
+		virtual bool process(const OpenViBE::CIdentifier& oTrigger)
 		{
 			return m_pCodec->process(oTrigger);
 		}
 
-		virtual OpenViBE::boolean process(void)
+		virtual bool process(void)
 		{
 			return m_pCodec->process();
 		}
@@ -56,7 +56,7 @@ namespace OpenViBEToolkit
 		- decode it (specific for each decoder)
 		- mark input as deprecated
 		*/
-		virtual OpenViBE::boolean decode(OpenViBE::uint32 ui32ChunkIndex, OpenViBE::boolean bMarkInputAsDeprecated = true)
+		virtual bool decode(OpenViBE::uint32 ui32ChunkIndex, bool bMarkInputAsDeprecated = true)
 		{
 			this->setInputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getInputChunk(m_ui32ConnectorIndex, ui32ChunkIndex));
 			if (! m_pCodec->process()) return false;
@@ -67,14 +67,14 @@ namespace OpenViBEToolkit
 		// We explicitly delete the decode function taking two integers as parameters
 		// in order to raise errors in plugins using the older API
 #ifndef TARGET_OS_MacOS // Current clang has a bug which fails to link these
-		virtual OpenViBE::boolean decode(int, int)                   = delete;
-		virtual OpenViBE::boolean decode(unsigned int, unsigned int) = delete;
+		virtual bool decode(int, int)                   = delete;
+		virtual bool decode(unsigned int, unsigned int) = delete;
 #endif
 
 		// The functions that need to be specified by the decoders (specific Trigger ID)
-		virtual OpenViBE::boolean isHeaderReceived(void) = 0;
-		virtual OpenViBE::boolean isBufferReceived(void) = 0;
-		virtual OpenViBE::boolean isEndReceived(void) = 0;
+		virtual bool isHeaderReceived(void) = 0;
+		virtual bool isBufferReceived(void) = 0;
+		virtual bool isEndReceived(void) = 0;
 	};
 
 	/*

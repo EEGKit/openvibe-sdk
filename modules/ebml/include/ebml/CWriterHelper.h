@@ -12,18 +12,18 @@ namespace EBML
 		CWriterHelper(void);
 		virtual ~CWriterHelper(void);
 
-		virtual EBML::boolean connect(EBML::IWriter* pWriter);
-		virtual EBML::boolean disconnect(void);
+		virtual bool connect(EBML::IWriter* pWriter);
+		virtual bool disconnect(void);
 
-		virtual EBML::boolean openChild(const EBML::CIdentifier& rIdentifier);
-		virtual EBML::boolean closeChild(void);
+		virtual bool openChild(const EBML::CIdentifier& rIdentifier);
+		virtual bool closeChild(void);
 
-		virtual EBML::boolean setSIntegerAsChildData(const EBML::int64 iValue);
-		virtual EBML::boolean setUIntegerAsChildData(const EBML::uint64 uiValue);
-		virtual EBML::boolean setFloat32AsChildData(const EBML::float32 fValue);
-		virtual EBML::boolean setFloat64AsChildData(const EBML::float64 fValue);
-		virtual EBML::boolean setBinaryAsChildData(const void* pBuffer, const EBML::uint64 ui64BufferLength);
-		virtual EBML::boolean setASCIIStringAsChildData(const char* sValue);
+		virtual bool setSIntegerAsChildData(const EBML::int64 iValue);
+		virtual bool setUIntegerAsChildData(const EBML::uint64 uiValue);
+		virtual bool setFloat32AsChildData(const float fValue);
+		virtual bool setFloat64AsChildData(const double fValue);
+		virtual bool setBinaryAsChildData(const void* pBuffer, const EBML::uint64 ui64BufferLength);
+		virtual bool setASCIIStringAsChildData(const char* sValue);
 
 		virtual void release(void);
 

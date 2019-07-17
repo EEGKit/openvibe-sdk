@@ -30,8 +30,7 @@ namespace OpenViBE
 		}
 
 		template <class T>
-		boolean TMessage<T>::setIdentifier(
-			const CIdentifier& rIdentifier)
+		bool TMessage<T>::setIdentifier(const CIdentifier& rIdentifier)
 		{
 			if (m_oIdentifier != OV_UndefinedIdentifier) { return false; }
 			if (rIdentifier == OV_UndefinedIdentifier) { return false; }
@@ -40,8 +39,7 @@ namespace OpenViBE
 		}
 
 		template <class T>
-		boolean TMessage<T>::setTime(
-			const uint64 ui64Time)
+		bool TMessage<T>::setTime(const uint64 ui64Time)
 		{
 			m_ui64Time = ui64Time;
 			return true;

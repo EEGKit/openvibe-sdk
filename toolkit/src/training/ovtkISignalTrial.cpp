@@ -49,7 +49,7 @@ ISignalTrial& OpenViBEToolkit::copy(
 			System::Memory::copy(
 				rSignalTrial.getChannelSampleBuffer(i),
 				pSourceSignalTrial->getChannelSampleBuffer(i),
-				l_ui32SampleCount * sizeof(float64));
+				l_ui32SampleCount * sizeof(double));
 		}
 	}
 
@@ -84,7 +84,7 @@ ISignalTrial& OpenViBEToolkit::selectSamples(
 		System::Memory::copy(
 			rSignalTrial.getChannelSampleBuffer(i),
 			pSourceSignalTrial->getChannelSampleBuffer(i) + ui32SampleStart,
-			l_ui32SampleCount * sizeof(float64));
+			l_ui32SampleCount * sizeof(double));
 	}
 
 	return rSignalTrial;
@@ -140,11 +140,11 @@ ISignalTrial& OpenViBEToolkit::removeSamples(
 		System::Memory::copy(
 			rSignalTrial.getChannelSampleBuffer(i),
 			pSourceSignalTrial->getChannelSampleBuffer(i),
-			ui32SampleStart * sizeof(float64));
+			ui32SampleStart * sizeof(double));
 		System::Memory::copy(
 			rSignalTrial.getChannelSampleBuffer(i) + ui32SampleStart,
 			pSourceSignalTrial->getChannelSampleBuffer(i) + ui32SampleEnd,
-			(l_ui32SampleCount - ui32SampleStart) * sizeof(float64));
+			(l_ui32SampleCount - ui32SampleStart) * sizeof(double));
 	}
 
 	return rSignalTrial;
@@ -176,7 +176,7 @@ ISignalTrial& OpenViBEToolkit::insertBufferSamples(
 	ISignalTrial& rSignalTrial,
 	const uint32 ui32SampleStart,
 	const uint32 ui32SampleCount,
-	const float64* pBuffer,
+	const double* pBuffer,
 	const ISignalTrial* pSourceSignalTrial)
 {
 	if (pSourceSignalTrial == NULL)
@@ -197,18 +197,18 @@ ISignalTrial& OpenViBEToolkit::insertBufferSamples(
 			System::Memory::copy(
 				rSignalTrial.getChannelSampleBuffer(i),
 				pSourceSignalTrial->getChannelSampleBuffer(i),
-				ui32SampleStart * sizeof(float64));
+				ui32SampleStart * sizeof(double));
 		}
 
 		System::Memory::copy(
 			rSignalTrial.getChannelSampleBuffer(i) + ui32SampleStart + ui32SampleCount,
 			pSourceSignalTrial->getChannelSampleBuffer(i),
-			(l_ui32SampleCount - ui32SampleStart) * sizeof(float64));
+			(l_ui32SampleCount - ui32SampleStart) * sizeof(double));
 
 		System::Memory::copy(
 			rSignalTrial.getChannelSampleBuffer(i) + ui32SampleStart,
 			pBuffer + ui32SampleCount * i,
-			ui32SampleCount * sizeof(float64));
+			ui32SampleCount * sizeof(double));
 	}
 
 	return rSignalTrial;
@@ -218,7 +218,7 @@ ISignalTrial& OpenViBEToolkit::insertBufferTime(
 	ISignalTrial& rSignalTrial,
 	const uint64 ui64TimeStart,
 	const uint32 ui32SampleCount,
-	const float64* pBuffer,
+	const double* pBuffer,
 	const ISignalTrial* pSourceSignalTrial)
 {
 	if (pSourceSignalTrial == NULL)

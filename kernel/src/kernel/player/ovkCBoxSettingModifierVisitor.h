@@ -27,15 +27,15 @@ public:
 
 	virtual void closeChild(void);
 
-	virtual OpenViBE::boolean processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox);
+	virtual bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox);
 
-	virtual OpenViBE::boolean processEnd(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox);
+	virtual bool processEnd(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox);
 
 	OpenViBE::Kernel::IObjectVisitorContext* m_pObjectVisitorContext;
 	OpenViBE::Kernel::IBox* m_pBox;
 	OpenViBE::uint32 m_ui32SettingIndex;
-	OpenViBE::boolean m_bIsParsingSettingValue;
-	OpenViBE::boolean m_bIsParsingSettingOverride;
+	bool m_bIsParsingSettingValue;
+	bool m_bIsParsingSettingOverride;
 	OpenViBE::Kernel::IConfigurationManager* m_pConfigurationManager;
 
 	_IsDerivedFromClass_Final_(OpenViBE::IObjectVisitor, OV_UndefinedIdentifier);

@@ -76,7 +76,7 @@ namespace OpenViBEToolkit
 
 		//The initialization need a reference to the underlying box
 		//it will certainly be called in the box in such manner : m_oCodec.initialize(*this);
-		OpenViBE::boolean initialize(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		bool initialize(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
 		{
 			if (m_pBoxAlgorithm == NULL)
 			{
@@ -89,27 +89,27 @@ namespace OpenViBEToolkit
 		}
 		
 		// As we need to properly uninit parameter handlers before anything else, we can't design a common uninit behavior
-		virtual OpenViBE::boolean uninitialize(void) = 0;
+		virtual bool uninitialize(void) = 0;
 
 	protected:
 
 		// Note that this method is NOT public.
-		virtual OpenViBE::boolean initializeImpl() = 0;
+		virtual bool initializeImpl() = 0;
 
 
 		// for easier access to algorithm functionnality, we redefine some functions:
 
-		virtual OpenViBE::boolean isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
+		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
 		{
 			return m_pCodec->isOutputTriggerActive(oTrigger);
 		}
 
-		virtual OpenViBE::boolean process(const OpenViBE::CIdentifier& oTrigger)
+		virtual bool process(const OpenViBE::CIdentifier& oTrigger)
 		{
 			return m_pCodec->process(oTrigger);
 		}
 
-		virtual OpenViBE::boolean process(void)
+		virtual bool process(void)
 		{
 			return m_pCodec->process();
 		}

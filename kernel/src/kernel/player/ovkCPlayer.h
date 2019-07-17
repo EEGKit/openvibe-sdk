@@ -24,7 +24,7 @@ namespace OpenViBE
 			explicit CPlayer(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 			virtual ~CPlayer(void);
 
-			virtual OpenViBE::boolean setScenario(
+			virtual bool setScenario(
 				const OpenViBE::CIdentifier& rScenarioIdentifier,
 				const OpenViBE::CNameValuePairList* pLocalConfigurationTokens);
 
@@ -33,25 +33,25 @@ namespace OpenViBE
 			virtual OpenViBE::CIdentifier getRuntimeScenarioIdentifier(void) const;
 
 
-			virtual OpenViBE::boolean isHoldingResources() const;
+			virtual bool isHoldingResources() const;
 
 			virtual OpenViBE::Kernel::EPlayerReturnCode initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
+			virtual bool uninitialize(void);
 
-			virtual OpenViBE::boolean stop(void);
-			virtual OpenViBE::boolean pause(void);
-			virtual OpenViBE::boolean step(void);
-			virtual OpenViBE::boolean play(void);
-			virtual OpenViBE::boolean forward(void);
+			virtual bool stop(void);
+			virtual bool pause(void);
+			virtual bool step(void);
+			virtual bool play(void);
+			virtual bool forward(void);
 
 			virtual OpenViBE::Kernel::EPlayerStatus getStatus(void) const;
 
-			virtual OpenViBE::boolean setFastForwardMaximumFactor(const OpenViBE::float64 f64FastForwardFactor);
-			virtual OpenViBE::float64 getFastForwardMaximumFactor(void) const;
+			virtual bool setFastForwardMaximumFactor(const double f64FastForwardFactor);
+			virtual double getFastForwardMaximumFactor(void) const;
 
-			virtual OpenViBE::float64 getCPUUsage() const;
+			virtual double getCPUUsage() const;
 
-			virtual OpenViBE::boolean loop(
+			virtual bool loop(
 				const OpenViBE::uint64 ui64ElapsedTime,
 				const OpenViBE::uint64 ui64MaximumTimeToReach);
 
@@ -74,8 +74,8 @@ namespace OpenViBE
 			OpenViBE::uint64 m_ui64Lateness;
 			OpenViBE::uint64 m_ui64InnerLateness;
 			OpenViBE::Kernel::EPlayerStatus m_eStatus;
-			OpenViBE::boolean m_bIsInitializing;
-			OpenViBE::float64 m_f64FastForwardMaximumFactor;
+			bool m_bIsInitializing;
+			double m_f64FastForwardMaximumFactor;
 
 			std::string m_sScenarioConfigurationFile;
 			std::string m_sWorkspaceConfigurationFile;

@@ -77,7 +77,7 @@ namespace
 	}
 };
 
-boolean CBoxAlgorithmChannelSelector::initialize(void)
+bool CBoxAlgorithmChannelSelector::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -133,7 +133,7 @@ boolean CBoxAlgorithmChannelSelector::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmChannelSelector::uninitialize(void)
+bool CBoxAlgorithmChannelSelector::uninitialize(void)
 {
 	if (m_pDecoder)
 	{
@@ -149,13 +149,13 @@ boolean CBoxAlgorithmChannelSelector::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmChannelSelector::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmChannelSelector::processInput(uint32 ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmChannelSelector::process(void)
+bool CBoxAlgorithmChannelSelector::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
@@ -267,7 +267,7 @@ boolean CBoxAlgorithmChannelSelector::process(void)
 					std::vector<uint32> l_vInversedLookup;
 					for (uint32 j = 0; j < m_pInputMatrix->getDimensionSize(0); j++)
 					{
-						boolean l_bSelected = false;
+						bool l_bSelected = false;
 						for (uint32 k = 0; k < m_vLookup.size(); k++)
 						{
 							l_bSelected |= (m_vLookup[k] == j);
@@ -332,7 +332,7 @@ boolean CBoxAlgorithmChannelSelector::process(void)
 					System::Memory::copy(
 						m_pOutputMatrix->getBuffer() + j * l_ui32SampleCount,
 						m_pInputMatrix->getBuffer() + m_vLookup[j] * l_ui32SampleCount,
-						l_ui32SampleCount * sizeof(float64));
+						l_ui32SampleCount * sizeof(double));
 				}
 			}
 			m_pEncoder->encodeBuffer();

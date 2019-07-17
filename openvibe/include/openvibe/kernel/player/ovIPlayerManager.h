@@ -31,7 +31,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean createPlayer(
+			virtual bool createPlayer(
 				OpenViBE::CIdentifier& rPlayerIdentifier) =0;
 			/**
 			 * \brief Releases a specific player
@@ -43,7 +43,7 @@ namespace OpenViBE
 			 * thus the player manager can release any allocated resource / memory
 			 * for this player.
 			 */
-			virtual OpenViBE::boolean releasePlayer(
+			virtual bool releasePlayer(
 				const OpenViBE::CIdentifier& rPlayerIdentifier) =0;
 			/**
 			 * \brief Gets a specific player instance, provided its identifier

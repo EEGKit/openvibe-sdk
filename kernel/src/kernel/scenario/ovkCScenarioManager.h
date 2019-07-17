@@ -24,7 +24,7 @@ namespace OpenViBE
 
 			virtual bool isScenario(const OpenViBE::CIdentifier& scenarioIdentifier) const;
 
-			virtual OpenViBE::boolean createScenario(
+			virtual bool createScenario(
 				OpenViBE::CIdentifier& rScenarioIdentifier);
 
 			virtual bool importScenario(
@@ -88,7 +88,7 @@ namespace OpenViBE
 			virtual OpenViBE::CString getNextScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension) const;
 			virtual OpenViBE::CIdentifier getScenarioExporterAlgorithmIdentifier(const CIdentifier& exportContext, const CString& fileNameExtension) const;
 
-			virtual OpenViBE::boolean releaseScenario(
+			virtual bool releaseScenario(
 				const OpenViBE::CIdentifier& rScenarioIdentifier);
 			virtual OpenViBE::Kernel::IScenario& getScenario(
 				const OpenViBE::CIdentifier& rScenarioIdentifier);

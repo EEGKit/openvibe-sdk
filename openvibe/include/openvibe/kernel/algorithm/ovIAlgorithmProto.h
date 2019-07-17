@@ -32,7 +32,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \sa IParameter
 			 */
-			virtual OpenViBE::boolean addInputParameter(
+			virtual bool addInputParameter(
 				const OpenViBE::CIdentifier& rInputParameterIdentifier,
 				const OpenViBE::CString& sInputName,
 				const OpenViBE::Kernel::EParameterType eParameterType,
@@ -47,7 +47,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \sa IParameter
 			 */
-			virtual OpenViBE::boolean addOutputParameter(
+			virtual bool addOutputParameter(
 				const OpenViBE::CIdentifier& rOutputParameterIdentifier,
 				const OpenViBE::CString& sOutputName,
 				const OpenViBE::Kernel::EParameterType eParameterType,
@@ -59,7 +59,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean addInputTrigger(
+			virtual bool addInputTrigger(
 				const OpenViBE::CIdentifier& rInputTriggerIdentifier,
 				const OpenViBE::CString& rInputTriggerName) =0;
 			/**
@@ -69,7 +69,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean addOutputTrigger(
+			virtual bool addOutputTrigger(
 				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
 				const OpenViBE::CString& rOutputTriggerName) =0;
 

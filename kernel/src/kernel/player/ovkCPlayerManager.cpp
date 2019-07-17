@@ -12,7 +12,7 @@ using namespace std;
 CPlayerManager::CPlayerManager(const IKernelContext& rKernelContext)
 	: TKernelObject<IPlayerManager>(rKernelContext) {}
 
-boolean CPlayerManager::createPlayer(
+bool CPlayerManager::createPlayer(
 	CIdentifier& rPlayerIdentifier)
 {
 	rPlayerIdentifier            = getUnusedIdentifier();
@@ -20,7 +20,7 @@ boolean CPlayerManager::createPlayer(
 	return true;
 }
 
-boolean CPlayerManager::releasePlayer(
+bool CPlayerManager::releasePlayer(
 	const CIdentifier& rPlayerIdentifier)
 {
 	map<CIdentifier, CPlayer*>::iterator itPlayer;

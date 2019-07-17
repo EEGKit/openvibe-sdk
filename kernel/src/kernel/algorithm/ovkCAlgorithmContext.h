@@ -32,12 +32,12 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IParameter* getOutputParameter(
 				const OpenViBE::CIdentifier& rOutputParameterIdentifier);
 
-			virtual OpenViBE::boolean isInputTriggerActive(
+			virtual bool isInputTriggerActive(
 				const OpenViBE::CIdentifier& rInputTriggerIdentifier) const;
 
-			virtual OpenViBE::boolean activateOutputTrigger(
+			virtual bool activateOutputTrigger(
 				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
-				const OpenViBE::boolean bTriggerState);
+				const bool bTriggerState);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmContext >, OVK_ClassId_Kernel_Algorithm_AlgorithmContext)
 

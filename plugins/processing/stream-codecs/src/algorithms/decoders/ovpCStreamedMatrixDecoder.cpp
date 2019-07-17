@@ -46,7 +46,7 @@ CStreamedMatrixDecoder::CStreamedMatrixDecoder(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CStreamedMatrixDecoder::initialize(void)
+bool CStreamedMatrixDecoder::initialize(void)
 {
 	CEBMLBaseDecoder::initialize();
 
@@ -55,7 +55,7 @@ boolean CStreamedMatrixDecoder::initialize(void)
 	return true;
 }
 
-boolean CStreamedMatrixDecoder::uninitialize(void)
+bool CStreamedMatrixDecoder::uninitialize(void)
 {
 	op_pMatrix.uninitialize();
 
@@ -67,7 +67,7 @@ boolean CStreamedMatrixDecoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-EBML::boolean CStreamedMatrixDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CStreamedMatrixDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix) return true;
 	else if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_Dimension) return true;
@@ -143,7 +143,7 @@ void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const EBML::u
 				break;
 
 			case Status_ParsingBuffer:
-				if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { System::Memory::copy(op_pMatrix->getBuffer(), pBuffer, m_ui64MatrixBufferSize * sizeof(float64)); }
+				if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { System::Memory::copy(op_pMatrix->getBuffer(), pBuffer, m_ui64MatrixBufferSize * sizeof(double)); }
 				break;
 		}
 	}

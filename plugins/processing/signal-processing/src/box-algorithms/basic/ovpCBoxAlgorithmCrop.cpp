@@ -8,7 +8,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-boolean CBoxAlgorithmCrop::initialize(void)
+bool CBoxAlgorithmCrop::initialize(void)
 {
 	CIdentifier l_oInputTypeIdentifier;
 	getStaticBoxContext().getInputType(0, l_oInputTypeIdentifier);
@@ -66,7 +66,7 @@ boolean CBoxAlgorithmCrop::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmCrop::uninitialize(void)
+bool CBoxAlgorithmCrop::uninitialize(void)
 {
 	delete m_pMatrix;
 
@@ -79,13 +79,13 @@ boolean CBoxAlgorithmCrop::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmCrop::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmCrop::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmCrop::process(void)
+bool CBoxAlgorithmCrop::process(void)
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
@@ -105,7 +105,7 @@ boolean CBoxAlgorithmCrop::process(void)
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			float64* l_pBuffer = m_pMatrix->getBuffer();
+			double* l_pBuffer = m_pMatrix->getBuffer();
 			for (uint32 j = 0; j < m_pMatrix->getBufferElementCount(); j++, l_pBuffer++)
 			{
 				if (*l_pBuffer < m_f64MinCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Min || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) *l_pBuffer = m_f64MinCropValue;

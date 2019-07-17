@@ -23,7 +23,7 @@ namespace OpenViBE
 
 			virtual ~TBaseConfigurable(void)
 			{
-				std::map<OpenViBE::CIdentifier, std::pair<OpenViBE::boolean, OpenViBE::Kernel::IParameter*>>::iterator itParameter = m_vParameter.begin();
+				std::map<OpenViBE::CIdentifier, std::pair<bool, OpenViBE::Kernel::IParameter*>>::iterator itParameter = m_vParameter.begin();
 				while (itParameter != m_vParameter.end())
 				{
 					// @FIXME is this really as intended, test the first, delete the second?
@@ -38,12 +38,12 @@ namespace OpenViBE
 
 			virtual OpenViBE::CIdentifier getNextParameterIdentifier(const OpenViBE::CIdentifier& rPreviousIdentifier) const
 			{
-				return getNextIdentifier<std::pair<OpenViBE::boolean, OpenViBE::Kernel::IParameter*>>(m_vParameter, rPreviousIdentifier);
+				return getNextIdentifier<std::pair<bool, OpenViBE::Kernel::IParameter*>>(m_vParameter, rPreviousIdentifier);
 			}
 
 			virtual OpenViBE::Kernel::IParameter* getParameter(const OpenViBE::CIdentifier& rParameterIdentifier)
 			{
-				std::map<OpenViBE::CIdentifier, std::pair<OpenViBE::boolean, OpenViBE::Kernel::IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
+				std::map<OpenViBE::CIdentifier, std::pair<bool, OpenViBE::Kernel::IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
 				if (itParameter == m_vParameter.end())
 				{
 					return NULL;
@@ -51,18 +51,18 @@ namespace OpenViBE
 				return itParameter->second.second;
 			}
 
-			virtual OpenViBE::boolean setParameter(const OpenViBE::CIdentifier& rParameterIdentifier, OpenViBE::Kernel::IParameter& rpParameter)
+			virtual bool setParameter(const OpenViBE::CIdentifier& rParameterIdentifier, OpenViBE::Kernel::IParameter& rpParameter)
 			{
 				this->removeParameter(rParameterIdentifier);
 
-				m_vParameter[rParameterIdentifier] = std::pair<OpenViBE::boolean, OpenViBE::Kernel::IParameter*>(false, &rpParameter);
+				m_vParameter[rParameterIdentifier] = std::pair<bool, OpenViBE::Kernel::IParameter*>(false, &rpParameter);
 
 				return true;
 			}
 
 			virtual OpenViBE::Kernel::IParameter* createParameter(const OpenViBE::CIdentifier& rParameterIdentifier, const EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier)
 			{
-				std::map<OpenViBE::CIdentifier, std::pair<OpenViBE::boolean, OpenViBE::Kernel::IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
+				std::map<OpenViBE::CIdentifier, std::pair<bool, OpenViBE::Kernel::IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
 				if (itParameter != m_vParameter.end())
 				{
 					return NULL;
@@ -100,15 +100,15 @@ namespace OpenViBE
 
 				if (l_pParameter != NULL)
 				{
-					m_vParameter[rParameterIdentifier] = std::pair<OpenViBE::boolean, OpenViBE::Kernel::IParameter*>(true, l_pParameter);
+					m_vParameter[rParameterIdentifier] = std::pair<bool, OpenViBE::Kernel::IParameter*>(true, l_pParameter);
 				}
 
 				return l_pParameter;
 			}
 
-			virtual OpenViBE::boolean removeParameter(const OpenViBE::CIdentifier& rParameterIdentifier)
+			virtual bool removeParameter(const OpenViBE::CIdentifier& rParameterIdentifier)
 			{
-				std::map<OpenViBE::CIdentifier, std::pair<OpenViBE::boolean, OpenViBE::Kernel::IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
+				std::map<OpenViBE::CIdentifier, std::pair<bool, OpenViBE::Kernel::IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
 				if (itParameter == m_vParameter.end()) { return false; }
 
 				if (itParameter->second.first)
@@ -124,7 +124,7 @@ namespace OpenViBE
 
 		private:
 
-			std::map<OpenViBE::CIdentifier, std::pair<OpenViBE::boolean, OpenViBE::Kernel::IParameter*>> m_vParameter;
+			std::map<OpenViBE::CIdentifier, std::pair<bool, OpenViBE::Kernel::IParameter*>> m_vParameter;
 		};
 	};
 };

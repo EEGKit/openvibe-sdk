@@ -78,9 +78,9 @@ namespace OpenViBE
 				const OpenViBE::CString& rKeyword,
 				const OpenViBE::CString& rExpression,
 				bool preserveBackslashes) const;
-			virtual OpenViBE::float64 expandAsFloat(
+			virtual double expandAsFloat(
 				const OpenViBE::CString& rExpression,
-				const OpenViBE::float64 f64FallbackValue) const;
+				const double f64FallbackValue) const;
 			virtual int64_t expandAsInteger(
 				const OpenViBE::CString& rExpression,
 				const int64_t i64FallbackValue) const;

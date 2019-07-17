@@ -19,19 +19,19 @@ namespace OpenViBEToolkit
 			return m_rMatrix.getBufferElementCount();
 		}
 
-		virtual OpenViBE::boolean setSize(const OpenViBE::uint32 ui32Size)
+		virtual bool setSize(const OpenViBE::uint32 ui32Size)
 		{
 			m_rMatrix.setDimensionCount(1);
 			m_rMatrix.setDimensionSize(0, ui32Size);
 			return true;
 		}
 
-		virtual OpenViBE::float64* getBuffer(void)
+		virtual double* getBuffer(void)
 		{
 			return m_rMatrix.getBuffer();
 		}
 
-		virtual const OpenViBE::float64* getBuffer(void) const
+		virtual const double* getBuffer(void) const
 		{
 			return m_rMatrix.getBuffer();
 		}
@@ -41,7 +41,7 @@ namespace OpenViBEToolkit
 			return m_rMatrix.getDimensionLabel(0, ui32Index);
 		}
 
-		virtual OpenViBE::boolean setElementLabel(const OpenViBE::uint32 ui32Index, const char* sElementLabel)
+		virtual bool setElementLabel(const OpenViBE::uint32 ui32Index, const char* sElementLabel)
 		{
 			m_rMatrix.setDimensionLabel(0, ui32Index, sElementLabel);
 			return true;

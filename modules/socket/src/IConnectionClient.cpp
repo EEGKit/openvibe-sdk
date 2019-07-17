@@ -89,7 +89,7 @@ namespace Socket
 			errno = 0;
 			if (::connect(m_i32Socket, (struct sockaddr*)&l_oServerAddress, sizeof(struct sockaddr_in)) < 0)
 			{
-				boolean l_bInProgress;
+				bool l_bInProgress;
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 

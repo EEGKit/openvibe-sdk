@@ -14,7 +14,7 @@ namespace XML
 	public:
 		explicit CReader(IReaderCallback& rReaderCallback);
 
-		virtual boolean processData(const void* pBuffer, const uint64 ui64BufferSize);
+		virtual bool processData(const void* pBuffer, const uint64 ui64BufferSize);
 		virtual void release(void);
 
 		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64 ui64AttributeCount);
@@ -43,7 +43,7 @@ CReader::CReader(IReaderCallback& rReaderCallback)
 	XML_SetUserData(m_pXMLParser, this);
 }
 
-boolean CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
+bool CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
 {
 	// $$$ TODO take 64bits size into consideration
 	XML_Status l_eStatus = XML_Parse(

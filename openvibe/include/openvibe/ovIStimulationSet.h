@@ -61,7 +61,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean setStimulationCount(
+		virtual bool setStimulationCount(
 			const OpenViBE::uint64 ui64StimulationCount) =0;
 		/**
 		 * \brief Changes the identifier of a specific stimulation in this stimulation set
@@ -70,7 +70,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean setStimulationIdentifier(
+		virtual bool setStimulationIdentifier(
 			const OpenViBE::uint64 ui64StimulationIndex,
 			const OpenViBE::uint64 ui64StimulationIdentifier) =0;
 		/**
@@ -81,7 +81,7 @@ namespace OpenViBE
 		 * \return \e false in case of error.
 		 * \note dates and durations are returned in seconds fixed point 32:32. Refer to \Doc_TimeManagement for more details
 		 */
-		virtual OpenViBE::boolean setStimulationDate(
+		virtual bool setStimulationDate(
 			const OpenViBE::uint64 ui64StimulationIndex,
 			const OpenViBE::uint64 ui64StimulationDate) =0;
 		/**
@@ -93,7 +93,7 @@ namespace OpenViBE
 		 * \note the returned date is relative to the beginning of this stimulation set
 		 * \note dates and durations are returned in seconds fixed point 32:32. Refer to \Doc_TimeManagement for more details
 		 */
-		virtual OpenViBE::boolean setStimulationDuration(
+		virtual bool setStimulationDuration(
 			const OpenViBE::uint64 ui64StimulationIndex,
 			const OpenViBE::uint64 ui64StimulationDuration) =0;
 		/**
@@ -131,7 +131,7 @@ namespace OpenViBE
 		 * \warning stimulation indexing change after call to this function :
 		 *          following stimulation(s) get one less indexed.
 		 */
-		virtual OpenViBE::boolean removeStimulation(
+		virtual bool removeStimulation(
 			const OpenViBE::uint64 ui64StimulationIndex) =0;
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_StimulationSet);

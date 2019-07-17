@@ -283,7 +283,7 @@ namespace Dsp
 		while (--samples >= 0)
 		{
 			*dest = static_cast<Td>(*dest + t * (*src++ - *dest));
-			dest++;
+			++dest;
 			t += dt;
 		}
 	}
@@ -403,7 +403,7 @@ namespace Dsp
 			while (--samples >= 0)
 			{
 				*dest = static_cast<Td>(*dest * factor);
-				dest++;
+				++dest;
 			}
 		}
 	}

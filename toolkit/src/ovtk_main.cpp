@@ -12,7 +12,7 @@ using namespace OpenViBEToolkit;
 //                                                                                                                    *
 // ********************************************************************************************************************
 
-boolean OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
+bool OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 {
 	ITypeManager& l_rTypeManager = rKernelContext.getTypeManager();
 
@@ -255,4 +255,4 @@ boolean OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 	return true;
 }
 
-boolean OpenViBEToolkit::uninitialize(const IKernelContext& rKernelContext) { return true; }
+bool OpenViBEToolkit::uninitialize(const IKernelContext& rKernelContext) { return true; }

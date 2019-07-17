@@ -38,25 +38,25 @@ namespace
 	}
 };
 
-boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
+bool CBoxAlgorithmFrequencyBandSelector::initialize(void)
 {
 	CString l_sSettingValue             = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	std::vector<std::string> l_vSetting = ::split(l_sSettingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
 	std::vector<std::string> l_vSettingRange;
 	std::vector<std::string>::const_iterator it;
-	boolean l_bHadError = false;
+	bool l_bHadError = false;
 	CString l_sErrorMessage;
 	m_vSelected.clear();
 	for (it = l_vSetting.begin(); it != l_vSetting.end(); ++it)
 	{
-		boolean l_bGood = true;
+		bool l_bGood = true;
 		l_vSettingRange = ::split(*it, OV_Value_RangeStringSeparator);
 		if (l_vSettingRange.size() == 1)
 		{
 			try
 			{
 				double l_dValue = std::stod(l_vSettingRange[0].c_str());
-				m_vSelected.push_back(std::pair<float64, float64>(l_dValue, l_dValue));
+				m_vSelected.push_back(std::pair<double, double>(l_dValue, l_dValue));
 			}
 			catch (const std::exception&)
 			{
@@ -69,7 +69,7 @@ boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
 			{
 				double l_dLowValue  = std::stod(l_vSettingRange[0].c_str());
 				double l_dHighValue = std::stod(l_vSettingRange[1].c_str());
-				m_vSelected.push_back(std::pair<float64, float64>(min(l_dLowValue, l_dHighValue), max(l_dLowValue, l_dHighValue)));
+				m_vSelected.push_back(std::pair<double, double>(min(l_dLowValue, l_dHighValue), max(l_dLowValue, l_dHighValue)));
 			}
 			catch (const std::exception&)
 			{
@@ -113,7 +113,7 @@ boolean CBoxAlgorithmFrequencyBandSelector::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmFrequencyBandSelector::uninitialize(void)
+bool CBoxAlgorithmFrequencyBandSelector::uninitialize(void)
 {
 	op_pMemoryBuffer.uninitialize();
 	ip_pFrequencyAbscissa.uninitialize();
@@ -134,13 +134,13 @@ boolean CBoxAlgorithmFrequencyBandSelector::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmFrequencyBandSelector::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmFrequencyBandSelector::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmFrequencyBandSelector::process(void)
+bool CBoxAlgorithmFrequencyBandSelector::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
@@ -154,7 +154,7 @@ boolean CBoxAlgorithmFrequencyBandSelector::process(void)
 			m_vSelectionFactor.clear();
 			for (uint32 frequencyAbscissaIndex = 0; frequencyAbscissaIndex < ip_pFrequencyAbscissa->getDimensionSize(0); frequencyAbscissaIndex++)
 			{
-				float64 f64FrequencyAbscissa = ip_pFrequencyAbscissa->getBuffer()[frequencyAbscissaIndex];
+				double f64FrequencyAbscissa = ip_pFrequencyAbscissa->getBuffer()[frequencyAbscissaIndex];
 				bool bSelected               = std::any_of(m_vSelected.begin(), m_vSelected.end(), [f64FrequencyAbscissa](const BandRange& currentBandRange)
 				{
 					return currentBandRange.first <= f64FrequencyAbscissa

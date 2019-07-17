@@ -49,15 +49,15 @@ namespace OpenViBE
 		virtual const OpenViBE::uint64 getStimulationDuration(
 			const OpenViBE::uint64 ui64StimulationIndex) const;
 
-		virtual OpenViBE::boolean setStimulationCount(
+		virtual bool setStimulationCount(
 			const OpenViBE::uint64 ui64StimulationCount);
-		virtual OpenViBE::boolean setStimulationIdentifier(
+		virtual bool setStimulationIdentifier(
 			const OpenViBE::uint64 ui64StimulationIndex,
 			const OpenViBE::uint64 ui64StimulationIdentifier);
-		virtual OpenViBE::boolean setStimulationDate(
+		virtual bool setStimulationDate(
 			const OpenViBE::uint64 ui64StimulationIndex,
 			const OpenViBE::uint64 ui64StimulationDate);
-		virtual OpenViBE::boolean setStimulationDuration(
+		virtual bool setStimulationDuration(
 			const OpenViBE::uint64 ui64StimulationIndex,
 			const OpenViBE::uint64 ui64StimulationDuration);
 
@@ -70,7 +70,7 @@ namespace OpenViBE
 			const OpenViBE::uint64 ui64StimulationIdentifier,
 			const OpenViBE::uint64 ui64StimulationDate,
 			const OpenViBE::uint64 ui64StimulationDuration);
-		virtual OpenViBE::boolean removeStimulation(
+		virtual bool removeStimulation(
 			const OpenViBE::uint64 ui64StimulationIndex);
 
 		_IsDerivedFromClass_Final_(OpenViBE::IStimulationSet, OV_ClassId_StimulationSetBridge);

@@ -31,25 +31,25 @@ namespace OpenViBEToolkit
 			return m_pOutputMemoryBuffer;
 		}
 
-		virtual OpenViBE::boolean isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
+		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
 		{
 			return m_pCodec->isOutputTriggerActive(oTrigger);
 		}
 
-		virtual OpenViBE::boolean process(const OpenViBE::CIdentifier& oTrigger)
+		virtual bool process(const OpenViBE::CIdentifier& oTrigger)
 		{
 			return m_pCodec->process(oTrigger);
 		}
 
-		virtual OpenViBE::boolean process(void)
+		virtual bool process(void)
 		{
 			return m_pCodec->process();
 		}
 
 		// The functions that need to be specified by the encoders (specific Trigger ID)
-		virtual OpenViBE::boolean encodeHeaderImpl() = 0;
-		virtual OpenViBE::boolean encodeBufferImpl() = 0;
-		virtual OpenViBE::boolean encodeEndImpl() = 0;
+		virtual bool encodeHeaderImpl() = 0;
+		virtual bool encodeBufferImpl() = 0;
+		virtual bool encodeEndImpl() = 0;
 
 	public:
 
@@ -60,21 +60,21 @@ namespace OpenViBEToolkit
 		- mark output as ready to be sent has to be done manually, for accurate timing.
 		*/
 
-		OpenViBE::boolean encodeHeader()
+		bool encodeHeader()
 		{
 			this->setOutputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getOutputChunk(m_ui32ConnectorIndex));
 			if (!this->encodeHeaderImpl()) return false;
 			return true;
 		}
 
-		OpenViBE::boolean encodeBuffer()
+		bool encodeBuffer()
 		{
 			this->setOutputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getOutputChunk(m_ui32ConnectorIndex));
 			if (!this->encodeBufferImpl()) return false;
 			return true;
 		}
 
-		OpenViBE::boolean encodeEnd()
+		bool encodeEnd()
 		{
 			this->setOutputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getOutputChunk(m_ui32ConnectorIndex));
 			if (!this->encodeEndImpl()) return false;

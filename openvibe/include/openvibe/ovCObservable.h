@@ -56,7 +56,7 @@ namespace OpenViBE
 		 * \return \e true if setChanged have been called this the last clearChanged/notifyObservers call.
 		 * \return \e false in other case.
 		 */
-		virtual OpenViBE::boolean hasChanged();
+		virtual bool hasChanged();
 
 		/**
 		 * \brief Notify all registered observers.
@@ -67,7 +67,7 @@ namespace OpenViBE
 	private:
 		struct ObserverList;
 		ObserverList* m_pObserverList;
-		OpenViBE::boolean m_bHasChanged;
+		bool m_bHasChanged;
 	};
 }
 

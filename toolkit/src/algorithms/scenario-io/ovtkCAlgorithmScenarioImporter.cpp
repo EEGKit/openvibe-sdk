@@ -57,7 +57,7 @@ namespace OpenViBEToolkit
 			CString m_sName;
 			CString m_sDefaultValue;
 			CString m_sValue;
-			boolean m_bModifiability  = false;
+			bool m_bModifiability  = false;
 			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 		} SSetting;
 
@@ -134,11 +134,11 @@ namespace OpenViBEToolkit
 		explicit CAlgorithmScenarioImporterContext(IAlgorithmContext& rAlgorithmContext)
 			: m_rAlgorithmContext(rAlgorithmContext) { }
 
-		virtual boolean processStart(const CIdentifier& rIdentifier);
-		virtual boolean processIdentifier(const CIdentifier& rIdentifier, const CIdentifier& rValue);
-		virtual boolean processString(const CIdentifier& rIdentifier, const CString& rValue);
-		virtual boolean processUInteger(const CIdentifier& rIdentifier, const uint64 ui64Value);
-		virtual boolean processStop(void);
+		virtual bool processStart(const CIdentifier& rIdentifier);
+		virtual bool processIdentifier(const CIdentifier& rIdentifier, const CIdentifier& rValue);
+		virtual bool processString(const CIdentifier& rIdentifier, const CString& rValue);
+		virtual bool processUInteger(const CIdentifier& rIdentifier, const uint64 ui64Value);
+		virtual bool processStop(void);
 
 		_IsDerivedFromClass_Final_(IAlgorithmScenarioImporterContext, OV_UndefinedIdentifier);
 
@@ -149,7 +149,7 @@ namespace OpenViBEToolkit
 	};
 }
 
-boolean CAlgorithmScenarioImporter::process(void)
+bool CAlgorithmScenarioImporter::process(void)
 {
 	TParameterHandler<IScenario*> op_pScenario(this->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
 	IScenario* l_pScenario = op_pScenario;
@@ -462,7 +462,7 @@ boolean CAlgorithmScenarioImporter::process(void)
 	return true;
 }
 
-boolean CAlgorithmScenarioImporterContext::processStart(const CIdentifier& rIdentifier)
+bool CAlgorithmScenarioImporterContext::processStart(const CIdentifier& rIdentifier)
 {
 	if (false) { }
 	else if (rIdentifier == OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario) { }
@@ -505,7 +505,7 @@ boolean CAlgorithmScenarioImporterContext::processStart(const CIdentifier& rIden
 	return true;
 }
 
-boolean CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& rIdentifier, const CIdentifier& rValue)
+bool CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& rIdentifier, const CIdentifier& rValue)
 {
 	if (false) { }
 
@@ -549,7 +549,7 @@ boolean CAlgorithmScenarioImporterContext::processIdentifier(const CIdentifier& 
 	return true;
 }
 
-boolean CAlgorithmScenarioImporterContext::processString(const CIdentifier& rIdentifier, const CString& rValue)
+bool CAlgorithmScenarioImporterContext::processString(const CIdentifier& rIdentifier, const CString& rValue)
 {
 	if (false) { }
 	else if (rIdentifier == OVTK_Algorithm_ScenarioExporter_NodeId_Box_Attribute_Value) { m_oSymbolicScenario.m_vBox.back().m_vAttribute.back().m_sValue = rValue; }
@@ -580,7 +580,7 @@ boolean CAlgorithmScenarioImporterContext::processString(const CIdentifier& rIde
 	return true;
 }
 
-boolean CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& rIdentifier, const uint64 ui64Value)
+bool CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& rIdentifier, const uint64 ui64Value)
 {
 	if (false) { }
 	else if (rIdentifier == OVTK_Algorithm_ScenarioExporter_NodeId_Link_Source_BoxOutputIndex) { m_oSymbolicScenario.m_vLink.back().m_oLinkSource.m_ui32BoxOutputIndex = (uint32)ui64Value; }
@@ -595,4 +595,4 @@ boolean CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& rI
 	return true;
 }
 
-boolean CAlgorithmScenarioImporterContext::processStop(void) { return true; }
+bool CAlgorithmScenarioImporterContext::processStop(void) { return true; }

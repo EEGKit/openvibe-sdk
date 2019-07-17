@@ -8,7 +8,7 @@ using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::StreamCodecs;
 
 
-boolean CFeatureVectorEncoder::processHeader(void)
+bool CFeatureVectorEncoder::processHeader(void)
 {
 	OV_ERROR_UNLESS_KRF(
 		ip_pMatrix->getDimensionCount() == 1,

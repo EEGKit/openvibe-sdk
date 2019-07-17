@@ -24,8 +24,8 @@ namespace XML
 		virtual void release(void);
 
 		//Attribute
-		virtual XML::boolean addAttribute(const char* sAttributeName, const char* sAttributeValue);
-		virtual XML::boolean hasAttribute(const char* sAttributeName) const;
+		virtual bool addAttribute(const char* sAttributeName, const char* sAttributeValue);
+		virtual bool hasAttribute(const char* sAttributeName) const;
 		virtual const char* getAttribute(const char* sAttributeName) const;
 
 		//PCDATA
@@ -54,7 +54,7 @@ namespace XML
 		std::map<std::string, std::string> m_mAttibuteMap;
 		std::string m_sNodeName;
 		std::string m_sPCData;
-		XML::boolean m_bHasPCData;
+		bool m_bHasPCData;
 	};
 }
 
@@ -83,13 +83,13 @@ const char* IXMLNodeImpl::getName() const
 	return m_sNodeName.c_str();
 }
 
-boolean IXMLNodeImpl::addAttribute(const char* sAttributeName, const char* sAttributeValue)
+bool IXMLNodeImpl::addAttribute(const char* sAttributeName, const char* sAttributeValue)
 {
 	m_mAttibuteMap[sAttributeName] = sAttributeValue;
 	return true;
 }
 
-XML::boolean IXMLNodeImpl::hasAttribute(const char* sAttributeName) const
+bool IXMLNodeImpl::hasAttribute(const char* sAttributeName) const
 {
 	return m_mAttibuteMap.count(sAttributeName) != 0;
 }

@@ -14,7 +14,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::Stimulation;
 
-boolean CBoxAlgorithmStimulationVoter::initialize(void)
+bool CBoxAlgorithmStimulationVoter::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -59,7 +59,7 @@ boolean CBoxAlgorithmStimulationVoter::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmStimulationVoter::uninitialize(void)
+bool CBoxAlgorithmStimulationVoter::uninitialize(void)
 {
 	m_pDecoder->uninitialize();
 	this->getAlgorithmManager().releaseAlgorithm(*m_pDecoder);
@@ -70,13 +70,13 @@ boolean CBoxAlgorithmStimulationVoter::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmStimulationVoter::processInput(uint32 ui32Index)
+bool CBoxAlgorithmStimulationVoter::processInput(uint32 ui32Index)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmStimulationVoter::process(void)
+bool CBoxAlgorithmStimulationVoter::process(void)
 {
 	//	this->getLogManager() << LogLevel_Info << "Process called\n";
 
@@ -87,7 +87,7 @@ boolean CBoxAlgorithmStimulationVoter::process(void)
 	op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
 
 	// Push the stimulations to a queue
-	boolean l_bNewStimulus = false;
+	bool l_bNewStimulus = false;
 	for (uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(0); j++)
 	{
 		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, j);

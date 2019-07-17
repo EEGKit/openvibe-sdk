@@ -36,7 +36,7 @@ bool CAlgorithmClassifier::process(void)
 	TParameterHandler<IMatrix*> ip_FeatureVectorSet(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 	TParameterHandler<XML::IXMLNode*> ip_Configuration(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
 
-	TParameterHandler<float64> op_EstimatedClass(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
+	TParameterHandler<double> op_EstimatedClass(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 	TParameterHandler<IMatrix*> op_ClassificationValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 	TParameterHandler<IMatrix*> op_ProbabilityValues(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 	TParameterHandler<XML::IXMLNode*> op_Configuration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
@@ -77,7 +77,7 @@ bool CAlgorithmClassifier::process(void)
 		}
 		else
 		{
-			float64 estimatedClass = 0;
+			double estimatedClass = 0;
 			CFeatureVector featureVectorAdapter(*featureVector);
 			CVector classificationValuesAdapter(*classificationValues);
 			CVector probabilityValuesAdapter(*probabilityValues);
@@ -195,11 +195,11 @@ int64 CAlgorithmClassifier::getInt64Parameter(const CIdentifier& parameterIdenti
 	return static_cast<int64>(temp);
 }
 
-float64 CAlgorithmClassifier::getFloat64Parameter(const CIdentifier& parameterIdentifier)
+double CAlgorithmClassifier::getFloat64Parameter(const CIdentifier& parameterIdentifier)
 {
-	TParameterHandler<float64> temp(getInputParameter(parameterIdentifier));
+	TParameterHandler<double> temp(getInputParameter(parameterIdentifier));
 	temp = this->getAlgorithmContext().getConfigurationManager().expandAsFloat(getParameterValue(parameterIdentifier));
-	return static_cast<float64>(temp);
+	return static_cast<double>(temp);
 }
 
 bool CAlgorithmClassifier::getBooleanParameter(const CIdentifier& parameterIdentifier)

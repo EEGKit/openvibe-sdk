@@ -21,7 +21,7 @@ namespace XML
 		virtual XML::IXMLNode* parseString(const char* sString, const uint32& uiSize);
 
 		//XML extraction
-		virtual XML::boolean writeXMLInFile(const IXMLNode& rNode, const char* sPath) const;
+		virtual bool writeXMLInFile(const IXMLNode& rNode, const char* sPath) const;
 
 		//Error handling
 		virtual std::string getLastErrorString() const;
@@ -131,7 +131,7 @@ IXMLNode* IXMLHandlerImpl::parseString(const char* sString, const uint32& uiSize
 	return m_pRootNode;
 }
 
-boolean IXMLHandlerImpl::writeXMLInFile(const IXMLNode& rNode, const char* sPath) const
+bool IXMLHandlerImpl::writeXMLInFile(const IXMLNode& rNode, const char* sPath) const
 {
 	std::ofstream l_oFile;
 	FS::Files::openOFStream(l_oFile, sPath, ios::binary);

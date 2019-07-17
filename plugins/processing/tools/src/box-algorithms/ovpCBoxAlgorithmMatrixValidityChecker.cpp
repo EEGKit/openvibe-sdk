@@ -9,7 +9,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::Tools;
 
-boolean CBoxAlgorithmMatrixValidityChecker::initialize(void)
+bool CBoxAlgorithmMatrixValidityChecker::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -43,7 +43,7 @@ boolean CBoxAlgorithmMatrixValidityChecker::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmMatrixValidityChecker::uninitialize(void)
+bool CBoxAlgorithmMatrixValidityChecker::uninitialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
@@ -57,13 +57,13 @@ boolean CBoxAlgorithmMatrixValidityChecker::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmMatrixValidityChecker::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmMatrixValidityChecker::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmMatrixValidityChecker::process(void)
+bool CBoxAlgorithmMatrixValidityChecker::process(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
@@ -114,7 +114,7 @@ boolean CBoxAlgorithmMatrixValidityChecker::process(void)
 				{
 					uint32 l_ui32ChannelCount            = l_pMatrix->getDimensionSize(0);
 					uint32 l_ui32SampleCount             = l_pMatrix->getDimensionSize(1);
-					float64* l_pBuffer                   = l_pMatrix->getBuffer();
+					double* l_pBuffer                   = l_pMatrix->getBuffer();
 					uint32 l_ui32InterpolatedSampleCount = 0;
 
 					for (uint32 k = 0; k < l_ui32ChannelCount; k++)

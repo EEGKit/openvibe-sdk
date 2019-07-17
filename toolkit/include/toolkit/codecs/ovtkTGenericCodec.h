@@ -142,25 +142,25 @@ namespace OpenViBEToolkit
 			return m_pSpectrumDecoder->getOutputFrequencyAbscissa();
 		}
 
-		OpenViBE::boolean decode(int, int)                   = delete;
-		OpenViBE::boolean decode(unsigned int, unsigned int) = delete;
+		bool decode(int, int)                   = delete;
+		bool decode(unsigned int, unsigned int) = delete;
 
-		OpenViBE::boolean decode(OpenViBE::uint32 ui32ChunkIndex, OpenViBE::boolean bMarkInputAsDeprecated = true)
+		bool decode(OpenViBE::uint32 ui32ChunkIndex, bool bMarkInputAsDeprecated = true)
 		{
 			decoder_return_impl(decode(ui32ChunkIndex, bMarkInputAsDeprecated));
 		}
 
-		OpenViBE::boolean isHeaderReceived(void)
+		bool isHeaderReceived(void)
 		{
 			decoder_return_impl(isHeaderReceived());
 		}
 
-		OpenViBE::boolean isBufferReceived(void)
+		bool isBufferReceived(void)
 		{
 			decoder_return_impl(isBufferReceived());
 		}
 
-		OpenViBE::boolean isEndReceived(void)
+		bool isEndReceived(void)
 		{
 			decoder_return_impl(isEndReceived());
 		}
@@ -276,17 +276,17 @@ namespace OpenViBEToolkit
 			return m_pSpectrumEncoder->getInputFrequencyAbscissa();
 		}
 
-		OpenViBE::boolean encodeHeader()
+		bool encodeHeader()
 		{
 			encoder_return_impl(encodeHeader());
 		}
 
-		OpenViBE::boolean encodeBuffer()
+		bool encodeBuffer()
 		{
 			encoder_return_impl(encodeBuffer());
 		}
 
-		OpenViBE::boolean encodeEnd()
+		bool encodeEnd()
 		{
 			encoder_return_impl(encodeEnd());
 		}
@@ -326,13 +326,13 @@ namespace OpenViBEToolkit
 			if (ui32ValidTypeFlag & Type_Covariance) m_vAllowedTypeIdentifier[OV_TypeId_CovarianceMatrix] = true;
 		}
 
-		OpenViBE::boolean isValidInputType(const OpenViBE::CIdentifier& rTypeIdentifier, OpenViBE::uint32 ui32Index)
+		bool isValidInputType(const OpenViBE::CIdentifier& rTypeIdentifier, OpenViBE::uint32 ui32Index)
 		{
 			return m_vAllowedTypeIdentifier[rTypeIdentifier];
 			//			return (rTypeIdentifier==OV_TypeId_Signal || rTypeIdentifier==OV_TypeId_Spectrum);
 		}
 
-		virtual OpenViBE::boolean onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 		{
 			OpenViBE::CIdentifier l_oTypeIdentifier;
 			rBox.getInputType(ui32Index, l_oTypeIdentifier);
@@ -348,13 +348,13 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::boolean isValidOutputType(const OpenViBE::CIdentifier& rTypeIdentifier, OpenViBE::uint32 ui32Index)
+		bool isValidOutputType(const OpenViBE::CIdentifier& rTypeIdentifier, OpenViBE::uint32 ui32Index)
 		{
 			return m_vAllowedTypeIdentifier[rTypeIdentifier];
 			//			return (rTypeIdentifier==OV_TypeId_Signal || rTypeIdentifier==OV_TypeId_Spectrum);
 		}
 
-		virtual OpenViBE::boolean onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 		{
 			OpenViBE::CIdentifier l_oTypeIdentifier;
 			rBox.getOutputType(ui32Index, l_oTypeIdentifier);
@@ -374,6 +374,6 @@ namespace OpenViBEToolkit
 
 	private:
 
-		std::map<OpenViBE::CIdentifier, OpenViBE::boolean> m_vAllowedTypeIdentifier;
+		std::map<OpenViBE::CIdentifier, bool> m_vAllowedTypeIdentifier;
 	};
 };

@@ -36,7 +36,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-boolean CBoxAlgorithmZeroCrossingDetector::initialize(void)
+bool CBoxAlgorithmZeroCrossingDetector::initialize(void)
 {
 	m_oEncoder1.initialize(*this, 1);
 	m_oEncoder2.initialize(*this, 2);
@@ -79,7 +79,7 @@ boolean CBoxAlgorithmZeroCrossingDetector::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmZeroCrossingDetector::uninitialize(void)
+bool CBoxAlgorithmZeroCrossingDetector::uninitialize(void)
 {
 	m_oEncoder0.uninitialize();
 	m_oEncoder1.uninitialize();
@@ -88,13 +88,13 @@ boolean CBoxAlgorithmZeroCrossingDetector::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmZeroCrossingDetector::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmZeroCrossingDetector::processInput(uint32 ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmZeroCrossingDetector::process(void)
+bool CBoxAlgorithmZeroCrossingDetector::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 	uint32 i, j, k;
@@ -139,12 +139,12 @@ boolean CBoxAlgorithmZeroCrossingDetector::process(void)
 				m_ui32WindowTime   = static_cast<uint32>(m_f64WindowTime * m_ui32SamplingRate);
 			}
 
-			float64* l_pInputBuffer   = m_oDecoder.getOutputMatrix()->getBuffer();
-			float64* l_pOutputBuffer0 = m_oEncoder0.getInputMatrix()->getBuffer();
-			float64* l_pOutputBuffer2 = m_oEncoder2.getInputMatrix()->getBuffer();
+			double* l_pInputBuffer   = m_oDecoder.getOutputMatrix()->getBuffer();
+			double* l_pOutputBuffer0 = m_oEncoder0.getInputMatrix()->getBuffer();
+			double* l_pOutputBuffer2 = m_oEncoder2.getInputMatrix()->getBuffer();
 
 			// ZC detector, with hysteresis
-			std::vector<float64> l_vSignal(l_ui32SampleCount + 1, 0);
+			std::vector<double> l_vSignal(l_ui32SampleCount + 1, 0);
 
 			for (j = 0; j < l_ui32ChannelCount; j++)
 			{

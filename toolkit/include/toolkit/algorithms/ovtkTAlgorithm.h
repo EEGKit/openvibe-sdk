@@ -13,19 +13,19 @@ namespace OpenViBEToolkit
 		TAlgorithm(void)
 			: m_pAlgorithmContext(NULL) { }
 
-		virtual OpenViBE::boolean initialize(OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)
+		virtual bool initialize(OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)
 		{
 			CScopedAlgorithm l_oScopedAlgorithm(m_pAlgorithmContext, &rAlgorithmContext);
 			return initialize();
 		}
 
-		virtual OpenViBE::boolean uninitialize(OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)
+		virtual bool uninitialize(OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)
 		{
 			CScopedAlgorithm l_oScopedAlgorithm(m_pAlgorithmContext, &rAlgorithmContext);
 			return uninitialize();
 		}
 
-		virtual OpenViBE::boolean process(OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)
+		virtual bool process(OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)
 		{
 			CScopedAlgorithm l_oScopedAlgorithm(m_pAlgorithmContext, &rAlgorithmContext);
 			return process();
@@ -35,9 +35,9 @@ namespace OpenViBEToolkit
 
 	public:
 
-		virtual OpenViBE::boolean initialize(void) { return true; }
-		virtual OpenViBE::boolean uninitialize(void) { return true; }
-		virtual OpenViBE::boolean process(void) =0;
+		virtual bool initialize(void) { return true; }
+		virtual bool uninitialize(void) { return true; }
+		virtual bool process(void) =0;
 
 		// ====================================================================================================================================
 
@@ -97,15 +97,15 @@ namespace OpenViBEToolkit
 			return m_pAlgorithmContext->getOutputParameter(rOutputParameterIdentifier);
 		}
 
-		virtual OpenViBE::boolean isInputTriggerActive(
+		virtual bool isInputTriggerActive(
 			const OpenViBE::CIdentifier& rInputTriggerIdentifier) const
 		{
 			return m_pAlgorithmContext->isInputTriggerActive(rInputTriggerIdentifier);
 		}
 
-		virtual OpenViBE::boolean activateOutputTrigger(
+		virtual bool activateOutputTrigger(
 			const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
-			const OpenViBE::boolean bTriggerState)
+			const bool bTriggerState)
 		{
 			return m_pAlgorithmContext->activateOutputTrigger(rOutputTriggerIdentifier, bTriggerState);
 		}

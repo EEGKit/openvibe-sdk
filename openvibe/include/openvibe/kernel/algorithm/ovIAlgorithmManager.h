@@ -52,7 +52,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean releaseAlgorithm(
+			virtual bool releaseAlgorithm(
 				const OpenViBE::CIdentifier& rAlgorithmIdentifier) =0;
 			/**
 			 * \brief Releases an existing algorithm
@@ -60,7 +60,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean releaseAlgorithm(
+			virtual bool releaseAlgorithm(
 				OpenViBE::Kernel::IAlgorithmProxy& rAlgorithm) =0;
 			/**
 			 * \brief Gets details on a specific algorithm

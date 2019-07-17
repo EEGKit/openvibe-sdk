@@ -19,7 +19,7 @@ CEBMLBaseEncoder::CEBMLBaseEncoder(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CEBMLBaseEncoder::initialize(void)
+bool CEBMLBaseEncoder::initialize(void)
 {
 	op_pMemoryBuffer.initialize(getOutputParameter(OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
@@ -30,7 +30,7 @@ boolean CEBMLBaseEncoder::initialize(void)
 	return true;
 }
 
-boolean CEBMLBaseEncoder::uninitialize(void)
+bool CEBMLBaseEncoder::uninitialize(void)
 {
 	m_pEBMLWriterHelper->disconnect();
 	m_pEBMLWriterHelper->release();
@@ -47,7 +47,7 @@ boolean CEBMLBaseEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CEBMLBaseEncoder::process(void)
+bool CEBMLBaseEncoder::process(void)
 {
 	if (isInputTriggerActive(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeHeader))
 	{

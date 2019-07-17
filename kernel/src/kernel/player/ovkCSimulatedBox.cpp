@@ -105,7 +105,7 @@ bool CSimulatedBox::initialize(void)
 	return true;
 }
 
-boolean CSimulatedBox::uninitialize(void)
+bool CSimulatedBox::uninitialize(void)
 {
 	if (!m_pBoxAlgorithm) { return true; }
 
@@ -126,7 +126,7 @@ boolean CSimulatedBox::uninitialize(void)
 	return true;
 }
 
-boolean CSimulatedBox::processClock(void)
+bool CSimulatedBox::processClock(void)
 {
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
@@ -188,7 +188,7 @@ boolean CSimulatedBox::processClock(void)
 	return true;
 }
 
-boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& rChunk)
+bool CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& rChunk)
 {
 	m_vInput[ui32InputIndex].push_back(rChunk);
 
@@ -207,7 +207,7 @@ boolean CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& r
 	return true;
 }
 
-boolean CSimulatedBox::process(void)
+bool CSimulatedBox::process(void)
 {
 	if (!m_bReadyToProcess) { return true; }
 
@@ -289,7 +289,7 @@ boolean CSimulatedBox::process(void)
 	return true;
 }
 
-boolean CSimulatedBox::isReadyToProcess(void) const
+bool CSimulatedBox::isReadyToProcess(void) const
 {
 	return m_bReadyToProcess;
 }
@@ -323,7 +323,7 @@ uint32 CSimulatedBox::getInputChunkCount(
 	return static_cast<uint32>(m_vInput[ui32InputIndex].size());
 }
 
-boolean CSimulatedBox::getInputChunk(
+bool CSimulatedBox::getInputChunk(
 	const uint32 ui32InputIndex,
 	const uint32 ui32ChunkIndex,
 	uint64& rStartTime,
@@ -410,7 +410,7 @@ uint64 CSimulatedBox::getInputChunkEndTime(
 	return l_rChunk.getEndTime();
 }
 
-boolean CSimulatedBox::markInputAsDeprecated(
+bool CSimulatedBox::markInputAsDeprecated(
 	const uint32 ui32InputIndex,
 	const uint32 ui32ChunkIndex)
 {
@@ -445,10 +445,10 @@ uint64 CSimulatedBox::getOutputChunkSize(
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getSize();
 }
 
-boolean CSimulatedBox::setOutputChunkSize(
+bool CSimulatedBox::setOutputChunkSize(
 	const uint32 ui32OutputIndex,
 	const uint64 ui64Size,
-	const boolean bDiscard)
+	const bool bDiscard)
 {
 	OV_ERROR_UNLESS_KRF(
 		ui32OutputIndex < m_vCurrentOutput.size(),
@@ -471,7 +471,7 @@ uint8* CSimulatedBox::getOutputChunkBuffer(
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getDirectPointer();
 }
 
-boolean CSimulatedBox::appendOutputChunkData(
+bool CSimulatedBox::appendOutputChunkData(
 	const uint32 ui32OutputIndex,
 	const uint8* pBuffer,
 	const uint64 ui64BufferSize)
@@ -497,7 +497,7 @@ IMemoryBuffer* CSimulatedBox::getOutputChunk(
 	return &m_vCurrentOutput[ui32OutputIndex].getBuffer();
 }
 
-boolean CSimulatedBox::markOutputAsReadyToSend(
+bool CSimulatedBox::markOutputAsReadyToSend(
 	const uint32 ui32OutputIndex,
 	const uint64 ui64StartTime,
 	const uint64 ui64EndTime)
@@ -510,7 +510,7 @@ boolean CSimulatedBox::markOutputAsReadyToSend(
 
 	if (m_bChunkConsistencyChecking)
 	{
-		boolean l_bIsConsistent        = true;
+		bool l_bIsConsistent        = true;
 		const char* l_sSpecificMessage = NULL;
 
 		// checks chunks consistency

@@ -7,7 +7,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::StreamCodecs;
 
-boolean CSpectrumEncoder::initialize(void)
+bool CSpectrumEncoder::initialize(void)
 {
 	CStreamedMatrixEncoder::initialize();
 	ip_pFrequencyAbscissa.initialize(getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
@@ -15,7 +15,7 @@ boolean CSpectrumEncoder::initialize(void)
 	return true;
 }
 
-boolean CSpectrumEncoder::uninitialize(void)
+bool CSpectrumEncoder::uninitialize(void)
 {
 	ip_pFrequencyAbscissa.uninitialize();
 	ip_pSamplingRate.uninitialize();
@@ -28,7 +28,7 @@ boolean CSpectrumEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CSpectrumEncoder::processHeader(void)
+bool CSpectrumEncoder::processHeader(void)
 {
 	// ip_pFrequencyAbscissa dimension count should be 1
 	// ip_pFrequencyAbscissa dimension size 0 should be the same as streamed matrix dimension size 1

@@ -51,7 +51,7 @@ public:
 // Should be only accessed via Math:: calls defined below
 static RandomGenerator g_oRandomGenerator;
 
-boolean Math::initializeRandomMachine(const uint64 ui64RandomSeed)
+bool Math::initializeRandomMachine(const uint64 ui64RandomSeed)
 {
 	g_oRandomGenerator.setSeed(static_cast<uint32>(ui64RandomSeed));
 
@@ -88,7 +88,7 @@ uint64 Math::randomUInteger64(void)
 uint32 Math::randomUInteger32WithCeiling(uint32 ui32upperLimit)
 {
 	// float in range [0,1]
-	const float64 l_f64Temp = g_oRandomGenerator.rand() / static_cast<float64>(g_oRandomGenerator.l_ui32RandMax);
+	const double l_f64Temp = g_oRandomGenerator.rand() / static_cast<double>(g_oRandomGenerator.l_ui32RandMax);
 
 	// static_cast is effectively floor(), so below we get output range [0,upperLimit-1], without explicit subtraction of 1
 	const uint32 l_ui32ReturnValue = static_cast<uint32>(ui32upperLimit * l_f64Temp);
@@ -116,29 +116,29 @@ int64 Math::randomSInteger64(void)
 	return static_cast<int64>(randomUInteger64());
 }
 
-float32 Math::randomFloat32(void)
+float Math::randomFloat32(void)
 {
 	const uint32 r = randomUInteger32();
-	float32 fr;
+	float fr;
 	::memcpy(&fr, &r, sizeof(fr));
 	return fr;
 }
 
-float32 Math::randomFloat32BetweenZeroAndOne(void)
+float Math::randomFloat32BetweenZeroAndOne(void)
 {
-	const float32 fr = static_cast<float32>(g_oRandomGenerator.rand()) / static_cast<float32>(g_oRandomGenerator.l_ui32RandMax);
+	const float fr = static_cast<float>(g_oRandomGenerator.rand()) / static_cast<float>(g_oRandomGenerator.l_ui32RandMax);
 	return fr;
 }
 
-float64 Math::randomFloat64(void)
+double Math::randomFloat64(void)
 {
 	const uint64 r = randomUInteger64();
-	float64 fr;
+	double fr;
 	::memcpy(&fr, &r, sizeof(fr));
 	return fr;
 }
 
-boolean Math::isfinite(float64 f64Value)
+bool Math::isfinite(double f64Value)
 {
 #ifdef TARGET_OS_Windows
 	return (_finite(f64Value) != 0 || f64Value == 0.);
@@ -149,7 +149,7 @@ boolean Math::isfinite(float64 f64Value)
 #endif
 }
 
-boolean Math::isinf(float64 f64Value)
+bool Math::isinf(double f64Value)
 {
 #ifdef TARGET_OS_Windows
 	int32 l_i32Class = _fpclass(f64Value);
@@ -161,7 +161,7 @@ boolean Math::isinf(float64 f64Value)
 #endif
 }
 
-boolean Math::isnan(float64 f64Value)
+bool Math::isnan(double f64Value)
 {
 #ifdef TARGET_OS_Windows
 	return (_isnan(f64Value) != 0);
@@ -172,7 +172,7 @@ boolean Math::isnan(float64 f64Value)
 #endif
 }
 
-boolean Math::isnormal(float64 f64Value)
+bool Math::isnormal(double f64Value)
 {
 #ifdef TARGET_OS_Windows
 	int32 l_i32Class = _fpclass(f64Value);

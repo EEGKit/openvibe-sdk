@@ -7,11 +7,11 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-boolean CBoxAlgorithmCommonAverageReference::initialize(void)
+bool CBoxAlgorithmCommonAverageReference::initialize(void)
 {
 	// CString   l_sSettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	// uint64 l_ui64SettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	// float64 l_f64SettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	// double l_f64SettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	// ...
 
 	m_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
@@ -35,7 +35,7 @@ boolean CBoxAlgorithmCommonAverageReference::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmCommonAverageReference::uninitialize(void)
+bool CBoxAlgorithmCommonAverageReference::uninitialize(void)
 {
 	op_pMemoryBuffer.uninitialize();
 	ip_ui64SamplingRate.uninitialize();
@@ -52,13 +52,13 @@ boolean CBoxAlgorithmCommonAverageReference::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmCommonAverageReference::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmCommonAverageReference::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmCommonAverageReference::process(void)
+bool CBoxAlgorithmCommonAverageReference::process(void)
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
@@ -80,9 +80,9 @@ boolean CBoxAlgorithmCommonAverageReference::process(void)
 			uint32 l_ui32SampleCount  = m_oMatrix.getDimensionSize(1);
 			for (i = 0; i < l_ui32SampleCount; i++)
 			{
-				float64* l_pBufferBase = m_oMatrix.getBuffer() + i;
-				float64 l_f64Sum       = 0;
-				float64 l_f64Mean      = 0;
+				double* l_pBufferBase = m_oMatrix.getBuffer() + i;
+				double l_f64Sum       = 0;
+				double l_f64Mean      = 0;
 				for (j = l_ui32ChannelCount; j != 0; j--)
 				{
 					l_f64Sum += *l_pBufferBase;

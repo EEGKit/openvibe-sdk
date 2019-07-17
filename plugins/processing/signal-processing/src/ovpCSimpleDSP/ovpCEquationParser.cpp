@@ -69,7 +69,7 @@ functionPointer CEquationParser::m_pFunctionTable[] =
 	&op_bool_xor,
 };
 
-CEquationParser::CEquationParser(TBoxAlgorithm<IBoxAlgorithm>& oPlugin, float64** ppVariable, uint32 ui32VariableCount)
+CEquationParser::CEquationParser(TBoxAlgorithm<IBoxAlgorithm>& oPlugin, double** ppVariable, uint32 ui32VariableCount)
 	: m_pTree(NULL)
 	  , m_ppVariable(ppVariable)
 	  , m_ui32VariableCount(ui32VariableCount)
@@ -93,7 +93,7 @@ CEquationParser::~CEquationParser()
 	delete m_pTree;
 }
 
-boolean CEquationParser::compileEquation(const char* pEquation)
+bool CEquationParser::compileEquation(const char* pEquation)
 {
 	// BOOST::Ast should be able to remove spaces / tabs etc but
 	// unfortunately, it seems it does not work correcly in some
@@ -156,7 +156,7 @@ boolean CEquationParser::compileEquation(const char* pEquation)
 			//Allocates the function context stack
 			m_pFunctionContextList     = new functionContext[(size_t)m_ui64FunctionContextStackSize];
 			m_pFunctionContextListBase = m_pFunctionContextList;
-			m_pStack                   = new float64[(size_t)m_ui64StackSize];
+			m_pStack                   = new double[(size_t)m_ui64StackSize];
 
 			//generates the code
 			m_pTree->generateCode(*this);
@@ -387,7 +387,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	return NULL;
 }
 
-void CEquationParser::push_value(float64 f64Value)
+void CEquationParser::push_value(double f64Value)
 {
 	*(m_pFunctionList++)                           = op_loadVal;
 	(*(m_pFunctionContextList++)).m_f64DirectValue = f64Value;
@@ -407,7 +407,7 @@ void CEquationParser::push_op(uint64 ui64Operator)
 
 // Functions called by our "pseudo - VM"
 
-void CEquationParser::op_neg(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_neg(double*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "neg : " << *(pStack);
@@ -418,7 +418,7 @@ void CEquationParser::op_neg(float64*& pStack, functionContext& pContext)
 #endif
 }
 
-void CEquationParser::op_add(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_add(double*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "add : " << *(pStack) << " + " << *(pStack-1);
@@ -430,7 +430,7 @@ void CEquationParser::op_add(float64*& pStack, functionContext& pContext)
 #endif
 }
 
-void CEquationParser::op_sub(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_sub(double*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "sub : " << *(pStack) << " - " << *(pStack-1);
@@ -442,7 +442,7 @@ void CEquationParser::op_sub(float64*& pStack, functionContext& pContext)
 #endif
 }
 
-void CEquationParser::op_mul(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_mul(double*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "mult : " << *(pStack) << " * " << *(pStack-1);
@@ -454,7 +454,7 @@ void CEquationParser::op_mul(float64*& pStack, functionContext& pContext)
 #endif
 }
 
-void CEquationParser::op_div(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_div(double*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "divi : " << *(pStack) << " / " << *(pStack-1);
@@ -467,7 +467,7 @@ void CEquationParser::op_div(float64*& pStack, functionContext& pContext)
 #endif
 }
 
-void CEquationParser::op_power(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_power(double*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "pow: " << *(pStack) << " " << *(pStack-1) << std::endl;
@@ -479,77 +479,77 @@ void CEquationParser::op_power(float64*& pStack, functionContext& pContext)
 #endif
 }
 
-void CEquationParser::op_abs(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_abs(double*& pStack, functionContext& pContext)
 {
 	*pStack = fabs(*(pStack));
 }
 
-void CEquationParser::op_acos(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_acos(double*& pStack, functionContext& pContext)
 {
 	*pStack = acos(*(pStack));
 }
 
-void CEquationParser::op_asin(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_asin(double*& pStack, functionContext& pContext)
 {
 	*pStack = asin(*(pStack));
 }
 
-void CEquationParser::op_atan(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_atan(double*& pStack, functionContext& pContext)
 {
 	*pStack = atan(*(pStack));
 }
 
-void CEquationParser::op_ceil(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_ceil(double*& pStack, functionContext& pContext)
 {
 	*pStack = ceil(*(pStack));
 }
 
-void CEquationParser::op_cos(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_cos(double*& pStack, functionContext& pContext)
 {
 	*pStack = cos(*(pStack));
 }
 
-void CEquationParser::op_exp(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_exp(double*& pStack, functionContext& pContext)
 {
 	*pStack = exp(*(pStack));
 }
 
-void CEquationParser::op_floor(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_floor(double*& pStack, functionContext& pContext)
 {
 	*pStack = floor(*(pStack));
 }
 
-void CEquationParser::op_log(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_log(double*& pStack, functionContext& pContext)
 {
 	*pStack = log(*(pStack));
 }
 
-void CEquationParser::op_log10(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_log10(double*& pStack, functionContext& pContext)
 {
 	*pStack = log10(*(pStack));
 }
 
-void CEquationParser::op_rand(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_rand(double*& pStack, functionContext& pContext)
 {
 	*pStack = rand() * *(pStack) / RAND_MAX;
 }
 
-void CEquationParser::op_sin(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_sin(double*& pStack, functionContext& pContext)
 {
 	*pStack = sin(*(pStack));
 }
 
-void CEquationParser::op_sqrt(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_sqrt(double*& pStack, functionContext& pContext)
 {
 	*pStack = sqrt(*(pStack));
 }
 
-void CEquationParser::op_tan(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_tan(double*& pStack, functionContext& pContext)
 {
 	*pStack = tan(*(pStack));
 }
 
-void CEquationParser::op_if_then_else(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_if_then_else(double*& pStack, functionContext& pContext)
 {
 	pStack--;
 	pStack--;
@@ -563,66 +563,66 @@ void CEquationParser::op_if_then_else(float64*& pStack, functionContext& pContex
 	}
 }
 
-void CEquationParser::op_cmp_lower(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_cmp_lower(double*& pStack, functionContext& pContext)
 {
 	pStack--;
 	pStack[0] = (pStack[1] < pStack[0] ? 1 : 0);
 }
 
-void CEquationParser::op_cmp_greater(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_cmp_greater(double*& pStack, functionContext& pContext)
 {
 	pStack--;
 	pStack[0] = (pStack[1] > pStack[0] ? 1 : 0);
 }
 
-void CEquationParser::op_cmp_lower_equal(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_cmp_lower_equal(double*& pStack, functionContext& pContext)
 {
 	pStack--;
 	pStack[0] = (pStack[1] <= pStack[0] ? 1 : 0);
 }
 
-void CEquationParser::op_cmp_greater_equal(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_cmp_greater_equal(double*& pStack, functionContext& pContext)
 {
 	pStack--;
 	pStack[0] = (pStack[1] >= pStack[0] ? 1 : 0);
 }
 
-void CEquationParser::op_cmp_equal(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_cmp_equal(double*& pStack, functionContext& pContext)
 {
 	pStack--;
 	pStack[0] = (pStack[1] == pStack[0] ? 1 : 0);
 }
 
-void CEquationParser::op_cmp_not_equal(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_cmp_not_equal(double*& pStack, functionContext& pContext)
 {
 	pStack--;
 	pStack[0] = (pStack[1] != pStack[0] ? 1 : 0);
 }
 
-void CEquationParser::op_bool_and(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_bool_and(double*& pStack, functionContext& pContext)
 {
 	pStack--;
 	pStack[0] = (pStack[1] != 0 && pStack[0] != 0 ? 1 : 0);
 }
 
-void CEquationParser::op_bool_or(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_bool_or(double*& pStack, functionContext& pContext)
 {
 	pStack--;
 	pStack[0] = (pStack[1] != 0 || pStack[0] != 0 ? 1 : 0);
 }
 
-void CEquationParser::op_bool_not(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_bool_not(double*& pStack, functionContext& pContext)
 {
 	pStack[0] = pStack[0] != 0 ? 0 : 1;
 }
 
-void CEquationParser::op_bool_xor(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_bool_xor(double*& pStack, functionContext& pContext)
 {
 	pStack--;
 	pStack[0] = (pStack[1] != pStack[0] ? 1 : 0);
 }
 
-void CEquationParser::op_loadVal(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_loadVal(double*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "loadVal : " << pContext.m_f64DirectValue << std::endl;
@@ -630,7 +630,7 @@ void CEquationParser::op_loadVal(float64*& pStack, functionContext& pContext)
 	*(++pStack) = pContext.m_f64DirectValue;
 }
 
-void CEquationParser::op_loadVar(float64*& pStack, functionContext& pContext)
+void CEquationParser::op_loadVar(double*& pStack, functionContext& pContext)
 {
 #ifdef EQ_PARSER_DEBUG
 	std::cout << "loadVar : " << **(pContext.m_ppIndirectValue) << std::endl;

@@ -18,7 +18,7 @@ namespace EBML
 
 			virtual uint64 getUIntegerFromChildData(const void* pBuffer, const uint64 ui64BufferSize);
 			virtual int64 getSIntegerFromChildData(const void* pBuffer, const uint64 ui64BufferSize);
-			virtual float64 getFloatFromChildData(const void* pBuffer, const uint64 ui64BufferSize);
+			virtual double getFloatFromChildData(const void* pBuffer, const uint64 ui64BufferSize);
 			virtual const char* getASCIIStringFromChildData(const void* pBuffer, const uint64 ui64BufferSize);
 
 			virtual void release(void);
@@ -60,10 +60,10 @@ int64 CReaderHelper::getSIntegerFromChildData(const void* pBuffer, const uint64 
 	return l_i64Result;
 }
 
-float64 CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64 ui64BufferSize)
+double CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64 ui64BufferSize)
 {
-	float32 l_f32Result;
-	float64 l_f64Result;
+	float l_f32Result;
+	double l_f64Result;
 	int32 l_ui32Result;
 	int64 l_ui64Result;
 

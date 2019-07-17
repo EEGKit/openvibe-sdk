@@ -14,7 +14,7 @@ namespace OpenViBE
 	};
 
 #define _IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
-	virtual OpenViBE::boolean isDerivedFromClass( \
+	virtual bool isDerivedFromClass( \
 		const OpenViBE::CIdentifier& rClassIdentifier) const \
 	{ \
 		return ((rClassIdentifier==_ClassIdentifier_) \
@@ -80,7 +80,7 @@ namespace OpenViBE
 		 * plugin functions are implemented and so on... see
 		 * OpenViBE::Plugins::IPluginObject for an example...
 		 */
-		virtual OpenViBE::boolean isDerivedFromClass(
+		virtual bool isDerivedFromClass(
 			const OpenViBE::CIdentifier& rClassIdentifier) const
 		{
 			return (rClassIdentifier == OV_ClassId_Object);
@@ -96,7 +96,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean acceptVisitor(OpenViBE::IObjectVisitor& rObjectVisitor) { return true; }
+		virtual bool acceptVisitor(OpenViBE::IObjectVisitor& rObjectVisitor) { return true; }
 
 		//@}
 

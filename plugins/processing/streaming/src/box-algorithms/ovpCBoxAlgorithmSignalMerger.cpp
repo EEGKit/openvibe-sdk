@@ -9,7 +9,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::Streaming;
 
-boolean CBoxAlgorithmSignalMerger::initialize(void)
+bool CBoxAlgorithmSignalMerger::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -23,7 +23,7 @@ boolean CBoxAlgorithmSignalMerger::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmSignalMerger::uninitialize(void)
+bool CBoxAlgorithmSignalMerger::uninitialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -40,7 +40,7 @@ boolean CBoxAlgorithmSignalMerger::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmSignalMerger::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSignalMerger::processInput(uint32 ui32InputIndex)
 {
 	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();
@@ -85,7 +85,7 @@ boolean CBoxAlgorithmSignalMerger::processInput(uint32 ui32InputIndex)
 	return true;
 }
 
-boolean CBoxAlgorithmSignalMerger::process(void)
+bool CBoxAlgorithmSignalMerger::process(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
@@ -207,7 +207,7 @@ boolean CBoxAlgorithmSignalMerger::process(void)
 				IMatrix* op_pMatrix = m_vStreamDecoder[i]->getOutputMatrix();
 				for (uint32 j = 0; j < op_pMatrix->getDimensionSize(0); j++, k++)
 				{
-					System::Memory::copy(ip_pMatrix->getBuffer() + k * l_ui32SampleCountPerSentBlock, op_pMatrix->getBuffer() + j * l_ui32SampleCountPerSentBlock, l_ui32SampleCountPerSentBlock * sizeof(float64));
+					System::Memory::copy(ip_pMatrix->getBuffer() + k * l_ui32SampleCountPerSentBlock, op_pMatrix->getBuffer() + j * l_ui32SampleCountPerSentBlock, l_ui32SampleCountPerSentBlock * sizeof(double));
 				}
 			}
 			m_pStreamEncoder->encodeBuffer();

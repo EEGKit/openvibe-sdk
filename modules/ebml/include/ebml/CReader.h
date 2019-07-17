@@ -12,7 +12,7 @@ namespace EBML
 		explicit CReader(EBML::IReaderCallback& rReaderCallback);
 		virtual ~CReader(void);
 
-		virtual EBML::boolean processData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
+		virtual bool processData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
 		virtual EBML::CIdentifier getCurrentNodeIdentifier(void) const;
 		virtual EBML::uint64 getCurrentNodeSize(void) const;
 		virtual void release(void);

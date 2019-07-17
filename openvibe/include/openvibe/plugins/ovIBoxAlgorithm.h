@@ -126,7 +126,7 @@ namespace OpenViBE
 			 *
 			 * \sa uninitialize
 			 */
-			virtual OpenViBE::boolean initialize(
+			virtual bool initialize(
 				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
 			/**
 			 * \brief Unprepares the object so it can be deleted
@@ -145,7 +145,7 @@ namespace OpenViBE
 			 *
 			 * \sa initialize
 			 */
-			virtual OpenViBE::boolean uninitialize(
+			virtual bool uninitialize(
 				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
 
 			//@}
@@ -168,7 +168,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::IBoxAlgorithmContext
 			 */
-			virtual OpenViBE::boolean processEvent(
+			virtual bool processEvent(
 				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
 				OpenViBE::Kernel::IMessageEvent& rMessageEvent) { return false; }
 			/**
@@ -188,7 +188,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual OpenViBE::boolean processSignal(
+			virtual bool processSignal(
 				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
 				OpenViBE::Kernel::IMessageSignal& rMessageSignal) { return false; }
 			/**
@@ -211,7 +211,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 * \sa getClockFrequency
 			 */
-			virtual OpenViBE::boolean processClock(
+			virtual bool processClock(
 				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
 				OpenViBE::Kernel::IMessageClock& rMessageClock) { return false; }
 			/**
@@ -229,7 +229,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual OpenViBE::boolean processInput(
+			virtual bool processInput(
 				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
 				OpenViBE::uint32 ui32InputIndex) { return false; }
 
@@ -256,7 +256,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual OpenViBE::boolean process(
+			virtual bool process(
 				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) =0;
 
 			//@}
@@ -272,10 +272,10 @@ namespace OpenViBE
 
 			virtual void release(void) { }
 
-			virtual OpenViBE::boolean initialize(
+			virtual bool initialize(
 				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
 
-			virtual OpenViBE::boolean uninitialize(
+			virtual bool uninitialize(
 				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
 
 			/** \name Box modifications callbacks */
@@ -299,7 +299,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Plugins::IBoxListenerContext
 			 * \sa OpenViBE::Plugins::EBoxModification
 			 */
-			virtual OpenViBE::boolean process(
+			virtual bool process(
 				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext,
 				const OpenViBE::Kernel::EBoxModification eBoxModificationType) =0;
 

@@ -23,7 +23,7 @@ int64 CReaderHelper::getSIntegerFromChildData(const void* pBuffer, const uint64 
 	return m_pReaderHelperImplementation->getSIntegerFromChildData(pBuffer, ui64BufferSize);
 }
 
-float64 CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64 ui64BufferSize)
+double CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64 ui64BufferSize)
 {
 	return m_pReaderHelperImplementation->getFloatFromChildData(pBuffer, ui64BufferSize);
 }

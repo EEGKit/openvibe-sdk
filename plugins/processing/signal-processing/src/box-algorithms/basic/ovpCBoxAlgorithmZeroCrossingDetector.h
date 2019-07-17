@@ -42,10 +42,10 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ZeroCrossingDetector);
 
@@ -56,13 +56,13 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmZeroCrossingDetector> m_oEncoder1;
 			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector> m_oEncoder2;
 
-			std::vector<OpenViBE::float64> m_vSignalHistory;
+			std::vector<double> m_vSignalHistory;
 			std::vector<int> m_vStateHistory;
-			OpenViBE::float64 m_f64HysteresisThreshold;
+			double m_f64HysteresisThreshold;
 			OpenViBE::uint64 m_ui64ChunkCount;
 
 			OpenViBE::uint32 m_ui32SamplingRate;
-			OpenViBE::float64 m_f64WindowTime;
+			double m_f64WindowTime;
 			OpenViBE::uint32 m_ui32WindowTime;
 			std::vector<std::vector<OpenViBE::uint64>> m_vMemoryChunk;
 			std::vector<std::vector<OpenViBE::uint32>> m_vMemorySample;
@@ -75,21 +75,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual OpenViBE::boolean onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getInputType(ui32Index, l_oTypeIdentifier);
 				return this->onConnectorTypeChanged(rBox, ui32Index, l_oTypeIdentifier, false);
 			}
 
-			virtual OpenViBE::boolean onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				return this->onConnectorTypeChanged(rBox, ui32Index, l_oTypeIdentifier, true);
 			}
 
-			virtual OpenViBE::boolean onConnectorTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index, const OpenViBE::CIdentifier& rTypeIdentifier, bool bOutputChanged)
+			virtual bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index, const OpenViBE::CIdentifier& rTypeIdentifier, bool bOutputChanged)
 			{
 				if (ui32Index == 0)
 				{
@@ -158,7 +158,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmZeroCrossingDetectorListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);

@@ -18,13 +18,13 @@ namespace OpenViBEToolkit
 		public:
 
 			CAlgorithmScenarioExporterHelper(IAlgorithmContext& rKernelContext, CAlgorithmScenarioExporter& rParent);
-			boolean exportBox(IMemoryBuffer& rMemoryBuffer, const IBox& rBox);
-			boolean exportComment(IMemoryBuffer& rMemoryBuffer, const IComment& rComment);
-			boolean exportMetadata(IMemoryBuffer& rMemoryBuffer, const IMetadata& rMetadata);
-			boolean exportSetting(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32SettingIndex);
-			boolean exportInput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32InputIndex);
-			boolean exportOutput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32OutputIndex);
-			boolean exportLink(IMemoryBuffer& rMemoryBuffer, const ILink& rLink);
+			bool exportBox(IMemoryBuffer& rMemoryBuffer, const IBox& rBox);
+			bool exportComment(IMemoryBuffer& rMemoryBuffer, const IComment& rComment);
+			bool exportMetadata(IMemoryBuffer& rMemoryBuffer, const IMetadata& rMetadata);
+			bool exportSetting(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32SettingIndex);
+			bool exportInput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32InputIndex);
+			bool exportOutput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, OpenViBE::uint32 ui32OutputIndex);
+			bool exportLink(IMemoryBuffer& rMemoryBuffer, const ILink& rLink);
 			void exportAttributes(
 				const OpenViBE::Kernel::IAttributable& attributable,
 				OpenViBE::IMemoryBuffer& memoryBuffer,
@@ -73,7 +73,7 @@ void CAlgorithmScenarioExporterHelper::exportAttributes(const IAttributable& att
 }
 
 
-boolean CAlgorithmScenarioExporter::process(void)
+bool CAlgorithmScenarioExporter::process(void)
 {
 	CAlgorithmScenarioExporterHelper l_oHelper(this->getAlgorithmContext(), *this);
 	CMemoryBuffer l_oTemporaryMemoryBuffer;
@@ -199,7 +199,7 @@ CAlgorithmScenarioExporterHelper::CAlgorithmScenarioExporterHelper(IAlgorithmCon
 	: m_rAlgorithmContext(rAlgorithmContext)
 	  , m_rParent(rParent) {}
 
-boolean CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& rMemoryBuffer, const IBox& rBox)
+bool CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& rMemoryBuffer, const IBox& rBox)
 {
 	m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box);
 	m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Identifier, rBox.getIdentifier());
@@ -264,7 +264,7 @@ boolean CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& rMemoryBuffer
 			CString l_sSettingName;
 			CString l_sDefaultValue;
 			CString l_sValue;
-			boolean l_bModifiability;
+			bool l_bModifiability;
 			rBox.getInterfacorIdentifier(Setting, i, l_oSettingIdentifier);
 			rBox.getSettingType(i, l_oSettingTypeIdentifier);
 			rBox.getSettingName(i, l_sSettingName);
@@ -298,7 +298,7 @@ boolean CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& rMemoryBuffer
 	return true;
 }
 
-boolean CAlgorithmScenarioExporterHelper::exportComment(IMemoryBuffer& rMemoryBuffer, const IComment& rComment)
+bool CAlgorithmScenarioExporterHelper::exportComment(IMemoryBuffer& rMemoryBuffer, const IComment& rComment)
 {
 	m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Comment);
 	m_rParent.exportIdentifier(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Comment_Identifier, rComment.getIdentifier());
@@ -323,7 +323,7 @@ bool CAlgorithmScenarioExporterHelper::exportMetadata(IMemoryBuffer& memoryBuffe
 	return true;
 }
 
-boolean CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& rMemoryBuffer, const ILink& rLink)
+bool CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& rMemoryBuffer, const ILink& rLink)
 {
 	CIdentifier l_oSourceBoxIdentifier;
 	CIdentifier l_oTargetBoxIdentifier;
@@ -367,7 +367,7 @@ boolean CAlgorithmScenarioExporterHelper::exportLink(IMemoryBuffer& rMemoryBuffe
 	return true;
 }
 
-boolean CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32 ui32SettingIndex)
+bool CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32 ui32SettingIndex)
 {
 	CIdentifier l_oSettingIdentifier;
 	CIdentifier l_oSettingTypeIdentifier;
@@ -393,7 +393,7 @@ boolean CAlgorithmScenarioExporterHelper::exportSetting(IMemoryBuffer& rMemoryBu
 	return true;
 }
 
-boolean CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32 ui32InputIndex)
+bool CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32 ui32InputIndex)
 {
 	CIdentifier l_oInputIdentifier;
 	CIdentifier l_oInputTypeIdentifier;
@@ -428,7 +428,7 @@ boolean CAlgorithmScenarioExporterHelper::exportInput(IMemoryBuffer& rMemoryBuff
 	return true;
 }
 
-boolean CAlgorithmScenarioExporterHelper::exportOutput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32 ui32OutputIndex)
+bool CAlgorithmScenarioExporterHelper::exportOutput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32 ui32OutputIndex)
 {
 	CIdentifier l_oOutputIdentifier;
 	CIdentifier l_oOutputTypeIdentifier;

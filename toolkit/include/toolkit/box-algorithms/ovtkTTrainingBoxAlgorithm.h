@@ -28,7 +28,7 @@ namespace OpenViBEToolkit
 		virtual void setChannelName(const OpenViBE::uint32 ui32ChannelIndex, const char* sChannelName);
 		virtual void setSampleCountPerBuffer(const OpenViBE::uint32 ui32SampleCountPerBuffer);
 		virtual void setSamplingRate(const OpenViBE::uint32 ui32SamplingFrequency);
-		virtual void setSampleBuffer(const OpenViBE::float64* pBuffer);
+		virtual void setSampleBuffer(const double* pBuffer);
 
 		// Stimulation input reader callback
 		virtual void setStimulationCount(const OpenViBE::uint32 ui32StimulationCount);
@@ -40,7 +40,7 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialLabelRangeStart(void) =0;
 		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialLabelRangeEnd(void) =0;
 		virtual OpenViBE::CIdentifier getStimulationIdentifierTrain(void) =0;
-		virtual OpenViBE::boolean train(OpenViBEToolkit::ISignalTrialSet& rTrialSet) =0;
+		virtual bool train(OpenViBEToolkit::ISignalTrialSet& rTrialSet) =0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TBoxAlgorithm<CBoxAlgorithmParentClass>, OVTK_ClassId_);
 
@@ -83,7 +83,7 @@ namespace OpenViBEToolkit
 	{
 		std::vector<OpenViBEToolkit::ISignalTrial*>::iterator itSignalTrial;
 		OpenViBEToolkit::releaseSignalTrial(m_pPendingSignal);
-		for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); itSignalTrial++)
+		for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
 		{
 			OpenViBEToolkit::releaseSignalTrial(*itSignalTrial);
 		}
@@ -120,7 +120,7 @@ namespace OpenViBEToolkit
 	}
 
 	template <class CBoxAlgorithmParentClass>
-	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSampleBuffer(const OpenViBE::float64* pBuffer)
+	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSampleBuffer(const double* pBuffer)
 	{
 		OpenViBEToolkit::insertBufferSamples(*m_pPendingSignal, m_pPendingSignal->getSampleCount(), m_ui32SampleCountPerBuffer, pBuffer, m_pPendingSignal);
 
@@ -154,7 +154,7 @@ namespace OpenViBEToolkit
 					<< "Constituting a signal trial set based on previous signal trials...\n";
 
 			ISignalTrialSet* l_pSignalTrialSet = OpenViBEToolkit::createSignalTrialSet();
-			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); itSignalTrial++)
+			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
 			{
 				l_pSignalTrialSet->addSignalTrial(**itSignalTrial);
 			}
@@ -191,7 +191,7 @@ namespace OpenViBEToolkit
 					<< OpenViBE::Kernel::LogLevel_Trace
 					<< "Training done... will clear signal trials and signal trial set now...\n";
 
-			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); itSignalTrial++)
+			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
 			{
 				OpenViBEToolkit::releaseSignalTrial(*itSignalTrial);
 			}

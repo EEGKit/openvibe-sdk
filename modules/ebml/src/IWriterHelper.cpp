@@ -19,18 +19,18 @@ namespace EBML
 
 			CWriterHelper(void);
 
-			virtual boolean connect(IWriter* pWriter);
-			virtual boolean disconnect(void);
+			virtual bool connect(IWriter* pWriter);
+			virtual bool disconnect(void);
 
-			virtual boolean openChild(const CIdentifier& rIdentifier);
-			virtual boolean closeChild(void);
+			virtual bool openChild(const CIdentifier& rIdentifier);
+			virtual bool closeChild(void);
 
-			virtual boolean setSIntegerAsChildData(const int64 iValue);
-			virtual boolean setUIntegerAsChildData(const uint64 uiValue);
-			virtual boolean setFloat32AsChildData(const float32 fValue);
-			virtual boolean setFloat64AsChildData(const float64 fValue);
-			virtual boolean setBinaryAsChildData(const void* pBuffer, const uint64 ui64BufferLength);
-			virtual boolean setASCIIStringAsChildData(const char* sValue);
+			virtual bool setSIntegerAsChildData(const int64 iValue);
+			virtual bool setUIntegerAsChildData(const uint64 uiValue);
+			virtual bool setFloat32AsChildData(const float fValue);
+			virtual bool setFloat64AsChildData(const double fValue);
+			virtual bool setBinaryAsChildData(const void* pBuffer, const uint64 ui64BufferLength);
+			virtual bool setASCIIStringAsChildData(const char* sValue);
 
 			virtual void release(void);
 
@@ -44,19 +44,18 @@ namespace EBML
 // ________________________________________________________________________________________________________________
 //
 
-CWriterHelper::CWriterHelper(void)
-	: m_pWriter(0) {}
+CWriterHelper::CWriterHelper(void) : m_pWriter(0) {}
 
 // ________________________________________________________________________________________________________________
 //
 
-boolean CWriterHelper::connect(IWriter* pWriter)
+bool CWriterHelper::connect(IWriter* pWriter)
 {
 	m_pWriter = pWriter;
 	return m_pWriter ? true : false;
 }
 
-boolean CWriterHelper::disconnect(void)
+bool CWriterHelper::disconnect(void)
 {
 	if (!m_pWriter) { return false; }
 	m_pWriter = 0;
@@ -66,12 +65,12 @@ boolean CWriterHelper::disconnect(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CWriterHelper::openChild(const CIdentifier& rIdentifier)
+bool CWriterHelper::openChild(const CIdentifier& rIdentifier)
 {
 	return m_pWriter ? m_pWriter->openChild(rIdentifier) : false;
 }
 
-boolean CWriterHelper::closeChild(void)
+bool CWriterHelper::closeChild(void)
 {
 	return m_pWriter ? m_pWriter->closeChild() : false;
 }
@@ -79,7 +78,7 @@ boolean CWriterHelper::closeChild(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CWriterHelper::setSIntegerAsChildData(const int64 iValue)
+bool CWriterHelper::setSIntegerAsChildData(const int64 iValue)
 {
 	uint64 i;
 	uint64 l_ui64BufferSize = 0;
@@ -112,7 +111,7 @@ boolean CWriterHelper::setSIntegerAsChildData(const int64 iValue)
 	return m_pWriter->setChildData(l_pBuffer, l_ui64BufferSize);
 }
 
-boolean CWriterHelper::setUIntegerAsChildData(const uint64 uiValue)
+bool CWriterHelper::setUIntegerAsChildData(const uint64 uiValue)
 {
 	uint64 i;
 	uint64 l_ui64BufferSize = 0;
@@ -145,7 +144,7 @@ boolean CWriterHelper::setUIntegerAsChildData(const uint64 uiValue)
 	return m_pWriter->setChildData(l_pBuffer, l_ui64BufferSize);
 }
 
-boolean CWriterHelper::setFloat32AsChildData(const float32 fValue)
+bool CWriterHelper::setFloat32AsChildData(const float fValue)
 {
 	uint32 l_uiValue;
 	uint64 i;
@@ -161,7 +160,7 @@ boolean CWriterHelper::setFloat32AsChildData(const float32 fValue)
 	return m_pWriter->setChildData(l_pBuffer, l_ui64BufferSize);
 }
 
-boolean CWriterHelper::setFloat64AsChildData(const float64 fValue)
+bool CWriterHelper::setFloat64AsChildData(const double fValue)
 {
 	uint64 l_uiValue;
 	uint64 i;
@@ -177,12 +176,12 @@ boolean CWriterHelper::setFloat64AsChildData(const float64 fValue)
 	return m_pWriter->setChildData(l_pBuffer, l_ui64BufferSize);
 }
 
-boolean CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64 ui64BufferLength)
+bool CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64 ui64BufferLength)
 {
 	return m_pWriter->setChildData(pBuffer, ui64BufferLength);
 }
 
-boolean CWriterHelper::setASCIIStringAsChildData(const char* sValue)
+bool CWriterHelper::setASCIIStringAsChildData(const char* sValue)
 {
 	return m_pWriter->setChildData(sValue, strlen(sValue));
 }

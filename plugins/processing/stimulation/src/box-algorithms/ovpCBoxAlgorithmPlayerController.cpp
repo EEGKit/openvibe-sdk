@@ -7,7 +7,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::Stimulation;
 
-boolean CBoxAlgorithmPlayerController::initialize(void)
+bool CBoxAlgorithmPlayerController::initialize(void)
 {
 	m_ui64StimulationIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_ui64ActionIdentifier      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -21,7 +21,7 @@ boolean CBoxAlgorithmPlayerController::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmPlayerController::uninitialize(void)
+bool CBoxAlgorithmPlayerController::uninitialize(void)
 {
 	op_pStimulationSet.uninitialize();
 	ip_pMemoryBuffer.uninitialize();
@@ -36,13 +36,13 @@ boolean CBoxAlgorithmPlayerController::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmPlayerController::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmPlayerController::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmPlayerController::process(void)
+bool CBoxAlgorithmPlayerController::process(void)
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
@@ -64,7 +64,7 @@ boolean CBoxAlgorithmPlayerController::process(void)
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_ui64StimulationIdentifier) << "] causing action ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]\n";
 
-					boolean l_bResult = false;
+					bool l_bResult = false;
 					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Play)
 					{
 						l_bResult = this->getPlayerContext().play();

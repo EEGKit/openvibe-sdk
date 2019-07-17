@@ -100,7 +100,7 @@ namespace OpenViBE
 		 * \return \e false in other case.
 		 * \note This is case sensitive !
 		 */
-		friend OV_API OpenViBE::boolean operator==(
+		friend OV_API bool operator==(
 			const OpenViBE::CString& rString1,
 			const OpenViBE::CString& rString2);
 		/**
@@ -111,7 +111,7 @@ namespace OpenViBE
 		 * \return \e true in other case.
 		 * \note This is case sensitive !
 		 */
-		friend OV_API OpenViBE::boolean operator!=(
+		friend OV_API bool operator!=(
 			const OpenViBE::CString& rString1,
 			const OpenViBE::CString& rString2);
 
@@ -130,7 +130,7 @@ namespace OpenViBE
 		 * \return \e true in other case.
 		 * \note This is case sensitive !
 		 */
-		friend OV_API OpenViBE::boolean operator<(
+		friend OV_API bool operator<(
 			const OpenViBE::CString& rString1,
 			const OpenViBE::CString& rString2);
 		//@}
@@ -141,7 +141,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean set(
+		virtual bool set(
 			const OpenViBE::CString& rString);
 		/**
 		 * \brief Initializes this string from an ANSI/ASCII string
@@ -149,7 +149,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean set(
+		virtual bool set(
 			const char* pString);
 		/**
 		 * \brief Converts this string to an ANSI/ASCII string

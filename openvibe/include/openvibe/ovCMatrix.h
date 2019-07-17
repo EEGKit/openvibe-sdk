@@ -51,19 +51,19 @@ namespace OpenViBE
 		virtual const char* getDimensionLabel(
 			const OpenViBE::uint32 ui32DimensionIndex,
 			const OpenViBE::uint32 ui32DimensionEntryIndex) const;
-		virtual const OpenViBE::float64* getBuffer(void) const;
+		virtual const double* getBuffer(void) const;
 		virtual const OpenViBE::uint32 getBufferElementCount(void) const;
 
-		virtual OpenViBE::boolean setDimensionCount(
+		virtual bool setDimensionCount(
 			const OpenViBE::uint32 ui32DimensionCount);
-		virtual OpenViBE::boolean setDimensionSize(
+		virtual bool setDimensionSize(
 			const OpenViBE::uint32 ui32DimensionIndex,
 			const OpenViBE::uint32 ui32DimensionSize);
-		virtual OpenViBE::boolean setDimensionLabel(
+		virtual bool setDimensionLabel(
 			const OpenViBE::uint32 ui32DimensionIndex,
 			const OpenViBE::uint32 ui32DimensionEntryIndex,
 			const char* sDimensionLabel);
-		virtual OpenViBE::float64* getBuffer(void);
+		virtual double* getBuffer(void);
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMatrix, OV_ClassId_MatrixBridge);
 

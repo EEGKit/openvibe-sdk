@@ -48,7 +48,7 @@ namespace OpenViBE
 		 * \return Regular floating point time in seconds
 		 *
 		 */
-		static float64 timeToSeconds(const uint64 ui64Time)
+		static double timeToSeconds(const uint64 ui64Time)
 		{
 			return ui64Time / static_cast<double>(1LL << 32);
 		}
@@ -59,7 +59,7 @@ namespace OpenViBE
 		 * \return Time in fixed point format
 		 *
 		 */
-		static uint64 secondsToTime(const float64 f64Time)
+		static uint64 secondsToTime(const double f64Time)
 		{
 			return static_cast<uint64>(f64Time * static_cast<double>(1LL << 32));
 		}
@@ -70,9 +70,9 @@ namespace OpenViBE
 
 		// These calls are probably mistakes and prohibited. Use explicit casts if you're certain of your intention.
 		uint64 timeToSampleCount(const uint64 ui64SamplingRate, const uint32 ui32Time);
-		uint64 timeToSampleCount(const uint64 ui64SamplingRate, const float64 f64Time);
-		float64 timeToSeconds(const uint32 ui32Time);
-		float64 timeToSeconds(const float64 f64Time);
+		uint64 timeToSampleCount(const uint64 ui64SamplingRate, const double f64Time);
+		double timeToSeconds(const uint32 ui32Time);
+		double timeToSeconds(const double f64Time);
 		uint64 secondsToTime(const uint32 ui32Time);
 		uint64 secondsToTime(const uint64 ui64Time);
 	};

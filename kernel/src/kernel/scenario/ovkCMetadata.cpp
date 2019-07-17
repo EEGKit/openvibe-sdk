@@ -87,7 +87,7 @@ bool CMetadata::initializeFromExistingMetadata(const IMetadata& existingMetadata
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CMetadata::acceptVisitor(IObjectVisitor& objectVisitor)
+bool CMetadata::acceptVisitor(IObjectVisitor& objectVisitor)
 {
 	CObjectVisitorContext objectVisitorContext(this->getKernelContext());
 	return objectVisitor.processBegin(objectVisitorContext, *this) && objectVisitor.processEnd(objectVisitorContext, *this);

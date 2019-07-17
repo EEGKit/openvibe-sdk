@@ -55,7 +55,7 @@ namespace OpenViBE
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier,
-				const OpenViBE::boolean bNotify          = true) =0;
+				const bool bNotify          = true) =0;
 
 			/**
 			 * \brief Adds an output to the box
@@ -69,7 +69,7 @@ namespace OpenViBE
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-				const OpenViBE::boolean bNotify          = true) =0;
+				const bool bNotify          = true) =0;
 				
 			/**
 			 * \brief Add an setting to the box
@@ -88,7 +88,7 @@ namespace OpenViBE
 				const OpenViBE::CString& sDefaultValue,
 				const bool bModifiable                   = false,
 				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-				const OpenViBE::boolean bNotify          = true) =0;
+				const bool bNotify          = true) =0;
 			/**
 			 * \brief Adds a flag to the box
 			 * \param eBoxFlag [in] : the flag to add to the box

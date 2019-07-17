@@ -39,7 +39,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean setIdentifier(
+			virtual bool setIdentifier(
 				const OpenViBE::CIdentifier& rIdentifier) =0;
 			/**
 			 * \brief Gets the identifier of this link
@@ -62,7 +62,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean setSource(
+			virtual bool setSource(
 				const OpenViBE::CIdentifier& rBoxIdentifier,
 				const OpenViBE::uint32 ui32BoxOutputIndex,
 				const OpenViBE::CIdentifier rBoxOutputIdentifier) =0;
@@ -77,7 +77,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean setTarget(
+			virtual bool setTarget(
 				const OpenViBE::CIdentifier& rBoxIdentifier,
 				const OpenViBE::uint32 ui32BoxInputIndex,
 				const OpenViBE::CIdentifier rBoxInputIdentifier) =0;
@@ -92,7 +92,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean getSource(
+			virtual bool getSource(
 				OpenViBE::CIdentifier& rBoxIdentifier,
 				OpenViBE::uint32& ui32BoxOutputIndex,
 				OpenViBE::CIdentifier& rBoxOutputIdentifier) const =0;
@@ -122,7 +122,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean getTarget(
+			virtual bool getTarget(
 				OpenViBE::CIdentifier& rTargetBoxIdentifier,
 				OpenViBE::uint32& ui32BoxInputIndex,
 				OpenViBE::CIdentifier& rBoxInputIdentifier) const =0;

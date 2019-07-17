@@ -13,7 +13,7 @@ CReader::~CReader(void)
 	m_pReaderImplementation->release();
 }
 
-boolean CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
+bool CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
 {
 	return m_pReaderImplementation->processData(pBuffer, ui64BufferSize);
 }

@@ -13,8 +13,8 @@ using namespace std;
 
 void CBoxAlgorithmSignalAverage::computeAverage(void)
 {
-	const float64* l_pInput = m_oSignalDecoder.getOutputMatrix()->getBuffer();
-	float64* l_pOutput      = m_oSignalEncoder.getInputMatrix()->getBuffer();
+	const double* l_pInput = m_oSignalDecoder.getOutputMatrix()->getBuffer();
+	double* l_pOutput      = m_oSignalEncoder.getInputMatrix()->getBuffer();
 
 	const uint32 l_ui32ChannelCount = m_oSignalDecoder.getOutputMatrix()->getDimensionSize(0);
 	const uint32 l_ui32SampleCount  = m_oSignalDecoder.getOutputMatrix()->getDimensionSize(1);
@@ -22,7 +22,7 @@ void CBoxAlgorithmSignalAverage::computeAverage(void)
 	//for each channel
 	for (uint32 c = 0; c < l_ui32ChannelCount; c++)
 	{
-		float64 l_f64SamplesSum = 0;
+		double l_f64SamplesSum = 0;
 
 		//sum its samples
 		for (uint32 i = 0; i < l_ui32SampleCount; i++)
@@ -40,7 +40,7 @@ CBoxAlgorithmSignalAverage::CBoxAlgorithmSignalAverage(void) {}
 
 void CBoxAlgorithmSignalAverage::release(void) {}
 
-boolean CBoxAlgorithmSignalAverage::initialize()
+bool CBoxAlgorithmSignalAverage::initialize()
 {
 	m_oSignalDecoder.initialize(*this, 0);
 	m_oSignalEncoder.initialize(*this, 0);
@@ -48,7 +48,7 @@ boolean CBoxAlgorithmSignalAverage::initialize()
 	return true;
 }
 
-boolean CBoxAlgorithmSignalAverage::uninitialize()
+bool CBoxAlgorithmSignalAverage::uninitialize()
 {
 	m_oSignalEncoder.uninitialize();
 	m_oSignalDecoder.uninitialize();
@@ -56,13 +56,13 @@ boolean CBoxAlgorithmSignalAverage::uninitialize()
 	return true;
 }
 
-boolean CBoxAlgorithmSignalAverage::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSignalAverage::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmSignalAverage::process()
+bool CBoxAlgorithmSignalAverage::process()
 {
 	IDynamicBoxContext* l_pDynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
@@ -80,7 +80,7 @@ boolean CBoxAlgorithmSignalAverage::process()
 			// Sampling rate will be decimated in the output
 			const uint64 l_ui64InputSamplingRate = m_oSignalDecoder.getOutputSamplingRate();
 			const uint32 l_ui32InputSampleCount  = l_pInputMatrix->getDimensionSize(1);
-			const uint64 l_ui64NewSamplingRate   = static_cast<uint64>(ceil((float64)l_ui64InputSamplingRate / (float64)l_ui32InputSampleCount));
+			const uint64 l_ui64NewSamplingRate   = static_cast<uint64>(ceil((double)l_ui64InputSamplingRate / (double)l_ui32InputSampleCount));
 
 			m_oSignalEncoder.getInputSamplingRate() = l_ui64NewSamplingRate;
 

@@ -10,7 +10,7 @@ using namespace OpenViBEPlugins::StreamCodecs;
 // ________________________________________________________________________________________________________________
 //
 
-boolean CStimulationDecoder::initialize(void)
+bool CStimulationDecoder::initialize(void)
 {
 	CEBMLBaseDecoder::initialize();
 
@@ -19,7 +19,7 @@ boolean CStimulationDecoder::initialize(void)
 	return true;
 }
 
-boolean CStimulationDecoder::uninitialize(void)
+bool CStimulationDecoder::uninitialize(void)
 {
 	op_pStimulationSet.uninitialize();
 
@@ -31,7 +31,7 @@ boolean CStimulationDecoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-EBML::boolean CStimulationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CStimulationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation) { return true; }
 	else if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations) { return false; }

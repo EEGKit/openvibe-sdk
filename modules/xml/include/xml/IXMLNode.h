@@ -27,14 +27,14 @@ namespace XML
 		 * @param sAttributeValue [in] : Value of the attribute
 		 * @return true in success, false otherwise
 		 */
-		virtual XML::boolean addAttribute(const char* sAttributeName, const char* sAttributeValue) =0;
+		virtual bool addAttribute(const char* sAttributeName, const char* sAttributeValue) =0;
 
 		/**
 		 * @brief Indicate if an attribute exists or not.
 		 * @param sAttributeName [in] : Name of the attribute
 		 * @return true if attribute exists, false otherwise
 		 */
-		virtual XML::boolean hasAttribute(const char* sAttributeName) const =0;
+		virtual bool hasAttribute(const char* sAttributeName) const =0;
 
 		/**
 		 * @brief Return the value of an attribute.

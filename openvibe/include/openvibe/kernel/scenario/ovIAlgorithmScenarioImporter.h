@@ -34,7 +34,7 @@ namespace OpenViBE
 
 		class OV_API IAlgorithmScenarioImporterDesc : public OpenViBE::Plugins::IAlgorithmDesc
 		{
-			virtual OpenViBE::boolean getAlgorithmPrototype(
+			virtual bool getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				rAlgorithmPrototype.addOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario, "Scenario", OpenViBE::Kernel::ParameterType_Object);

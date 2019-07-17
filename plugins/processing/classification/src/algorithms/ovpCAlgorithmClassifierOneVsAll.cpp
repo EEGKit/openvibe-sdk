@@ -30,7 +30,7 @@ using namespace OpenViBEPlugins::Classification;
 using namespace OpenViBEToolkit;
 
 typedef std::pair<IMatrix*, IMatrix*> CIMatrixPointerPair;
-typedef std::pair<float64, IMatrix*> CClassifierOutput;
+typedef std::pair<double, IMatrix*> CClassifierOutput;
 
 bool CAlgorithmClassifierOneVsAll::initialize()
 {
@@ -52,7 +52,7 @@ bool CAlgorithmClassifierOneVsAll::uninitialize(void)
 bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVectorSet)
 {
 	const uint32 l_ui32ClassCount = static_cast<uint32>(m_oSubClassifierList.size());
-	std::map<float64, size_t> l_vClassLabels;
+	std::map<double, size_t> l_vClassLabels;
 
 	for (uint32 i = 0; i < rFeatureVectorSet.getFeatureVectorCount(); i++)
 	{
@@ -76,13 +76,13 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVector
 	ip_pFeatureVectorSetReference->setDimensionSize(0, rFeatureVectorSet.getFeatureVectorCount());
 	ip_pFeatureVectorSetReference->setDimensionSize(1, l_ui32FeatureVectorSize + 1);
 
-	float64* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSetReference->getBuffer();
+	double* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSetReference->getBuffer();
 	for (uint32 j = 0; j < rFeatureVectorSet.getFeatureVectorCount(); j++)
 	{
 		System::Memory::copy(
 			l_pFeatureVectorSetBuffer,
 			rFeatureVectorSet[j].getBuffer(),
-			l_ui32FeatureVectorSize * sizeof(float64));
+			l_ui32FeatureVectorSize * sizeof(double));
 		//We let the space for the label
 		l_pFeatureVectorSetBuffer += (l_ui32FeatureVectorSize + 1);
 	}
@@ -93,11 +93,11 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVector
 		TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_oSubClassifierList[l_iClassifierCounter]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 		ip_pFeatureVectorSet = (IMatrix*)ip_pFeatureVectorSetReference;
 
-		float64* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
+		double* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
 		for (uint32_t j = 0; j < rFeatureVectorSet.getFeatureVectorCount(); j++)
 		{
 			//Modify the class of each featureVector
-			const float64 l_f64Class = rFeatureVectorSet[j].getLabel();
+			const double l_f64Class = rFeatureVectorSet[j].getLabel();
 			if (static_cast<size_t>(l_f64Class) == l_iClassifierCounter)
 			{
 				l_pFeatureVectorSetBuffer[l_ui32FeatureVectorSize] = 0;
@@ -114,7 +114,7 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVector
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector, float64& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
+bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector, double& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
 {
 	std::vector<CClassifierOutput> l_oClassificationVector;
 
@@ -124,30 +124,30 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 	{
 		IAlgorithmProxy* l_pSubClassifier = this->m_oSubClassifierList[l_iClassifierCounter];
 		TParameterHandler<IMatrix*> ip_pFeatureVector(l_pSubClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
-		TParameterHandler<float64> op_f64ClassificationStateClass(l_pSubClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
+		TParameterHandler<double> op_f64ClassificationStateClass(l_pSubClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 		TParameterHandler<IMatrix*> op_pClassificationValues(l_pSubClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 		TParameterHandler<IMatrix*> op_pProbabilityValues(l_pSubClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
 		ip_pFeatureVector->setDimensionCount(1);
 		ip_pFeatureVector->setDimensionSize(0, l_ui32FeatureVectorSize);
 
-		float64* l_pFeatureVectorBuffer = ip_pFeatureVector->getBuffer();
+		double* l_pFeatureVectorBuffer = ip_pFeatureVector->getBuffer();
 		System::Memory::copy(
 			l_pFeatureVectorBuffer,
 			rFeatureVector.getBuffer(),
-			l_ui32FeatureVectorSize * sizeof(float64));
+			l_ui32FeatureVectorSize * sizeof(double));
 		l_pSubClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
 		IMatrix* l_pProbabilityValue = static_cast<IMatrix*>(op_pProbabilityValues);
 		//If the algorithm give a probability we take it, instead we take the first value
 		if (l_pProbabilityValue->getDimensionCount() != 0)
 		{
-			l_oClassificationVector.push_back(CClassifierOutput(static_cast<float64>(op_f64ClassificationStateClass), l_pProbabilityValue));
+			l_oClassificationVector.push_back(CClassifierOutput(static_cast<double>(op_f64ClassificationStateClass), l_pProbabilityValue));
 		}
 		else
 		{
-			l_oClassificationVector.push_back(CClassifierOutput(static_cast<float64>(op_f64ClassificationStateClass), static_cast<IMatrix*>(op_pClassificationValues)));
+			l_oClassificationVector.push_back(CClassifierOutput(static_cast<double>(op_f64ClassificationStateClass), static_cast<IMatrix*>(op_pClassificationValues)));
 		}
-		this->getLogManager() << LogLevel_Debug << static_cast<uint64>(l_iClassifierCounter) << " " << static_cast<float64>(op_f64ClassificationStateClass) << " " << static_cast<float64>((*op_pProbabilityValues)[0]) << " " << static_cast<float64>((*op_pProbabilityValues)[1]) << "\n";
+		this->getLogManager() << LogLevel_Debug << static_cast<uint64>(l_iClassifierCounter) << " " << static_cast<double>(op_f64ClassificationStateClass) << " " << static_cast<double>((*op_pProbabilityValues)[0]) << " " << static_cast<double>((*op_pProbabilityValues)[1]) << "\n";
 	}
 
 	//Now, we determine the best classification
@@ -185,7 +185,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 			if (l_oBest.second == NULL)
 			{
 				l_oBest   = l_pTemp;
-				rf64Class = (static_cast<float64>(l_iClassificationCount));
+				rf64Class = (static_cast<double>(l_iClassificationCount));
 			}
 			else
 			{
@@ -212,7 +212,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 	TParameterHandler<IMatrix*> op_pClassificationWinnerValues(l_pWinner->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 	IMatrix* l_pTempMatrix = static_cast<IMatrix*>(op_pClassificationWinnerValues);
 	rClassificationValues.setSize(l_pTempMatrix->getBufferElementCount());
-	System::Memory::copy(rClassificationValues.getBuffer(), l_pTempMatrix->getBuffer(), l_pTempMatrix->getBufferElementCount() * sizeof(float64));
+	System::Memory::copy(rClassificationValues.getBuffer(), l_pTempMatrix->getBuffer(), l_pTempMatrix->getBufferElementCount() * sizeof(double));
 
 	// We take the probabilities of the single class winning from each of the sub classifiers and normalize them
 	double subProbabilitySum = 0;

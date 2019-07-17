@@ -47,7 +47,7 @@ CDecoderAlgorithmTest::CDecoderAlgorithmTest(void) {}
 
 CDecoderAlgorithmTest::~CDecoderAlgorithmTest(void) {}
 
-boolean CDecoderAlgorithmTest::initialize(void)
+bool CDecoderAlgorithmTest::initialize(void)
 {
 	m_pStreamDecoder[0] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ExperimentInformationStreamDecoder));
 	m_pStreamDecoder[1] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_FeatureVectorStreamDecoder));
@@ -66,7 +66,7 @@ boolean CDecoderAlgorithmTest::initialize(void)
 	return true;
 }
 
-boolean CDecoderAlgorithmTest::uininitialize(void)
+bool CDecoderAlgorithmTest::uininitialize(void)
 {
 	for (uint32 i = 0; i < 7; i++)
 	{
@@ -79,13 +79,13 @@ boolean CDecoderAlgorithmTest::uininitialize(void)
 	return true;
 }
 
-boolean CDecoderAlgorithmTest::processInput(uint32 ui32InputIndex)
+bool CDecoderAlgorithmTest::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CDecoderAlgorithmTest::process(void)
+bool CDecoderAlgorithmTest::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();

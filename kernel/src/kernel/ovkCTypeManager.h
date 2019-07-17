@@ -102,7 +102,7 @@ namespace OpenViBE
 
 			virtual bool evaluateSettingValue(
 				const CString settingValue,
-				float64& numericResult) const;
+				double& numericResult) const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ITypeManager>, OVK_ClassId_Kernel_TypeManager);
 

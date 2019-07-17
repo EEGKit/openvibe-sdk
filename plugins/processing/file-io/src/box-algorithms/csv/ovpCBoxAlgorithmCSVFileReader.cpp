@@ -53,7 +53,7 @@ uint64 CBoxAlgorithmCSVFileReader::getClockFrequency(void)
 	return 128LL << 32; // the box clock frequency
 }
 
-boolean CBoxAlgorithmCSVFileReader::initialize(void)
+bool CBoxAlgorithmCSVFileReader::initialize(void)
 {
 	m_ui64SamplingRate  = 0;
 	m_pAlgorithmEncoder = NULL;
@@ -83,7 +83,7 @@ boolean CBoxAlgorithmCSVFileReader::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmCSVFileReader::uninitialize(void)
+bool CBoxAlgorithmCSVFileReader::uninitialize(void)
 {
 	if (m_pFile)
 	{
@@ -99,7 +99,7 @@ boolean CBoxAlgorithmCSVFileReader::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmCSVFileReader::initializeFile()
+bool CBoxAlgorithmCSVFileReader::initializeFile()
 {
 	//open file
 	m_pFile = ::fopen(m_sFilename.toASCIIString(), "r"); // we don't open as binary as that gives us \r\n on Windows as line-endings and leaves a dangling char after split. CSV files should be text.
@@ -172,7 +172,7 @@ boolean CBoxAlgorithmCSVFileReader::initializeFile()
 			OV_ERROR_KRF("Error reading columns (not enough columns found) from file", ErrorType::BadParsing);
 		}
 
-		const float64 l_f64SamplingRate = static_cast<float64>(atof(l_vParsed[m_ui32ColumnCount - 1].c_str()));
+		const double l_f64SamplingRate = static_cast<double>(atof(l_vParsed[m_ui32ColumnCount - 1].c_str()));
 		if (std::ceil(l_f64SamplingRate) != l_f64SamplingRate)
 		{
 			releaseResources();
@@ -225,13 +225,13 @@ boolean CBoxAlgorithmCSVFileReader::initializeFile()
 	return true;
 }
 
-boolean CBoxAlgorithmCSVFileReader::processClock(IMessageClock& rMessageClock)
+bool CBoxAlgorithmCSVFileReader::processClock(IMessageClock& rMessageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmCSVFileReader::process(void)
+bool CBoxAlgorithmCSVFileReader::process(void)
 {
 	if (m_pFile == NULL)
 	{
@@ -243,7 +243,7 @@ boolean CBoxAlgorithmCSVFileReader::process(void)
 	}
 	//line buffer
 	char l_pLine[m_ui32bufferLen];
-	const float64 l_f64currentTime = ITimeArithmetics::timeToSeconds(getPlayerContext().getCurrentTime());
+	const double l_f64currentTime = ITimeArithmetics::timeToSeconds(getPlayerContext().getCurrentTime());
 	//IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
 
 	//if no line was read, read the first data line.
@@ -323,7 +323,7 @@ boolean CBoxAlgorithmCSVFileReader::process(void)
 	return true;
 }
 
-boolean CBoxAlgorithmCSVFileReader::process_streamedMatrix(void)
+bool CBoxAlgorithmCSVFileReader::process_streamedMatrix(void)
 {
 	IMatrix* ip_pMatrix = ((OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputMatrix();
 
@@ -369,7 +369,7 @@ boolean CBoxAlgorithmCSVFileReader::process_streamedMatrix(void)
 	return true;
 }
 
-OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_stimulation(void)
+bool CBoxAlgorithmCSVFileReader::process_stimulation(void)
 {
 	//Header
 	if (!m_bHeaderSent)
@@ -414,7 +414,7 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_stimulation(void)
 	return true;
 }
 
-OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_signal(void)
+bool CBoxAlgorithmCSVFileReader::process_signal(void)
 {
 	IMatrix* ip_pMatrix = ((OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputMatrix();
 
@@ -475,7 +475,7 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_signal(void)
 	return true;
 }
 
-OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_channelLocalisation(void)
+bool CBoxAlgorithmCSVFileReader::process_channelLocalisation(void)
 {
 	IMatrix* ip_pMatrix = ((OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputMatrix();
 
@@ -537,7 +537,7 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_channelLocalisation(void)
 	return true;
 }
 
-OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_featureVector(void)
+bool CBoxAlgorithmCSVFileReader::process_featureVector(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 	IMatrix* l_pMatrix           = ((OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputMatrix();
@@ -588,7 +588,7 @@ OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_featureVector(void)
 	return true;
 }
 
-OpenViBE::boolean CBoxAlgorithmCSVFileReader::process_spectrum(void)
+bool CBoxAlgorithmCSVFileReader::process_spectrum(void)
 {
 	IMatrix* ip_pMatrix            = ((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputMatrix();
 	IMatrix* ip_pFrequencyAbscissa = ((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputFrequencyAbscissa();

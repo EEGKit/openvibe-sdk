@@ -46,20 +46,20 @@ void CLogListenerFile::configure(const IConfigurationManager& rConfigurationMana
 	m_ui64TimePrecision = rConfigurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
 }
 
-boolean CLogListenerFile::isActive(ELogLevel eLogLevel)
+bool CLogListenerFile::isActive(ELogLevel eLogLevel)
 {
-	map<ELogLevel, boolean>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
+	map<ELogLevel, bool>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
 	if (itLogLevel == m_vActiveLevel.end()) { return true; }
 	return itLogLevel->second;
 }
 
-boolean CLogListenerFile::activate(ELogLevel eLogLevel, boolean bActive)
+bool CLogListenerFile::activate(ELogLevel eLogLevel, bool bActive)
 {
 	m_vActiveLevel[eLogLevel] = bActive;
 	return true;
 }
 
-boolean CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, boolean bActive)
+bool CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
 {
 	for (int i = eStartLogLevel; i <= eEndLogLevel; i++)
 	{
@@ -68,7 +68,7 @@ boolean CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLe
 	return true;
 }
 
-boolean CLogListenerFile::activate(boolean bActive)
+bool CLogListenerFile::activate(bool bActive)
 {
 	return activate(LogLevel_First, LogLevel_Last, bActive);
 }
@@ -77,7 +77,7 @@ void CLogListenerFile::log(const time64 time64Value)
 {
 	if (m_bTimeInSeconds)
 	{
-		float64 l_f64Time = ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
+		double l_f64Time = ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
 		std::stringstream ss;
 		ss.precision(m_ui64TimePrecision);
 		ss.setf(std::ios::fixed, std::ios::floatfield);
@@ -137,17 +137,17 @@ void CLogListenerFile::log(const int8 i8Value)
 	logInteger(i8Value);
 }
 
-void CLogListenerFile::log(const float32 f32Value)
+void CLogListenerFile::log(const float f32Value)
 {
 	m_fsFileStream << f32Value;
 }
 
-void CLogListenerFile::log(const float64 f64Value)
+void CLogListenerFile::log(const double f64Value)
 {
 	m_fsFileStream << f64Value;
 }
 
-void CLogListenerFile::log(const boolean bValue)
+void CLogListenerFile::log(const bool bValue)
 {
 	m_fsFileStream << (bValue ? "true" : "false");
 }

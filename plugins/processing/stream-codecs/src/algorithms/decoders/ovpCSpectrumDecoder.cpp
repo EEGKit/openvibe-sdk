@@ -10,7 +10,7 @@ using namespace OpenViBEPlugins::StreamCodecs;
 // ________________________________________________________________________________________________________________
 //
 
-boolean CSpectrumDecoder::initialize(void)
+bool CSpectrumDecoder::initialize(void)
 {
 	CStreamedMatrixDecoder::initialize();
 
@@ -20,7 +20,7 @@ boolean CSpectrumDecoder::initialize(void)
 	return true;
 }
 
-boolean CSpectrumDecoder::uninitialize(void)
+bool CSpectrumDecoder::uninitialize(void)
 {
 	op_pFrequencyAbscissa.uninitialize();
 	op_pSamplingRate.uninitialize();
@@ -33,7 +33,7 @@ boolean CSpectrumDecoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-EBML::boolean CSpectrumDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CSpectrumDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_Spectrum) { return true; }
 	else if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated) { return true; }

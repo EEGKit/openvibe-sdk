@@ -46,7 +46,7 @@ namespace
 	}
 }
 
-boolean CBoxAlgorithmSpectralAnalysis::initialize()
+bool CBoxAlgorithmSpectralAnalysis::initialize()
 {
 	m_Decoder.initialize(*this, 0);
 
@@ -84,7 +84,7 @@ boolean CBoxAlgorithmSpectralAnalysis::initialize()
 	return true;
 }
 
-boolean CBoxAlgorithmSpectralAnalysis::uninitialize()
+bool CBoxAlgorithmSpectralAnalysis::uninitialize()
 {
 	for (size_t i = 0; i < m_SpectrumEncoders.size(); i++)
 	{
@@ -98,13 +98,13 @@ boolean CBoxAlgorithmSpectralAnalysis::uninitialize()
 	return true;
 }
 
-boolean CBoxAlgorithmSpectralAnalysis::processInput(unsigned int ui32InputIndex)
+bool CBoxAlgorithmSpectralAnalysis::processInput(unsigned int ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmSpectralAnalysis::process()
+bool CBoxAlgorithmSpectralAnalysis::process()
 {
 	IBoxIO* dynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 

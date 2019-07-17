@@ -19,22 +19,22 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual OpenViBE::boolean addAttribute(
+			virtual bool addAttribute(
 				const OpenViBE::CIdentifier& rAttributeIdentifier,
 				const OpenViBE::CString& sAttributeValue) =0;
-			virtual OpenViBE::boolean removeAttribute(
+			virtual bool removeAttribute(
 				const OpenViBE::CIdentifier& rAttributeIdentifier) =0;
-			virtual OpenViBE::boolean removeAllAttributes(void) =0;
+			virtual bool removeAllAttributes(void) =0;
 
 			virtual OpenViBE::CString getAttributeValue(
 				const OpenViBE::CIdentifier& rAttributeIdentifier) const =0;
-			virtual OpenViBE::boolean setAttributeValue(
+			virtual bool setAttributeValue(
 				const OpenViBE::CIdentifier& rAttributeIdentifier,
 				const OpenViBE::CString& sAttributeValue) =0;
 
-			virtual OpenViBE::boolean hasAttribute(
+			virtual bool hasAttribute(
 				const OpenViBE::CIdentifier& rAttributeIdentifier) const =0;
-			virtual OpenViBE::boolean hasAttributes(void) const =0;
+			virtual bool hasAttributes(void) const =0;
 
 			virtual OpenViBE::CIdentifier getNextAttributeIdentifier(
 				const OpenViBE::CIdentifier& rPreviousIdentifier) const =0;

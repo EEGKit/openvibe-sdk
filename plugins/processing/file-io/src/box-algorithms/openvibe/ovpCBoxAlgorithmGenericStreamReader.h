@@ -34,10 +34,10 @@ namespace OpenViBEPlugins
 			virtual void release(void) { delete this; }
 
 			virtual OpenViBE::uint64 getClockFrequency(void);
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual OpenViBE::boolean process(void);
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
+			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_GenericStreamReader);
 
@@ -54,8 +54,8 @@ namespace OpenViBEPlugins
 			OpenViBE::uint64 m_ui64StartTime;
 			OpenViBE::uint64 m_ui64EndTime;
 			OpenViBE::uint32 m_ui32OutputIndex;
-			OpenViBE::boolean m_bPending;
-			OpenViBE::boolean m_bHasEBMLHeader;
+			bool m_bPending;
+			bool m_bHasEBMLHeader;
 
 			::FILE* m_pFile;
 			std::stack<EBML::CIdentifier> m_vNodes;
@@ -63,9 +63,9 @@ namespace OpenViBEPlugins
 			std::map<OpenViBE::uint32, OpenViBE::CIdentifier> m_vStreamIndexToTypeIdentifier;
 
 		private:
-			OpenViBE::boolean initializeFile();
+			bool initializeFile();
 
-			virtual EBML::boolean isMasterChild(const EBML::CIdentifier& rIdentifier);
+			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
 			virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
 			virtual void closeChild(void);
@@ -75,7 +75,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			OpenViBE::boolean check(OpenViBE::Kernel::IBox& rBox)
+			bool check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
 				OpenViBE::uint32 i;
@@ -87,7 +87,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual OpenViBE::boolean onDefaultInitialized(OpenViBE::Kernel::IBox& rBox)
+			virtual bool onDefaultInitialized(OpenViBE::Kernel::IBox& rBox)
 			{
 				rBox.setOutputName(0, "Output Signal");
 				rBox.setOutputType(0, OV_TypeId_Signal);
@@ -95,20 +95,20 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
 				rBox.setOutputType(ui32Index, OV_TypeId_EBMLStream);
 				this->check(rBox);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
 				this->check(rBox);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
 			{
 				this->check(rBox);
 				return true;
@@ -139,7 +139,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmGenericStreamReaderListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addOutput("Output stream 1", OV_TypeId_EBMLStream);

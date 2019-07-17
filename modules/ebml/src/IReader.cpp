@@ -104,7 +104,7 @@ namespace EBML
 			uint64 m_ui64ContentSize;
 			uint64 m_ui64ReadContentSize;
 			unsigned char* m_pBuffer;
-			//			boolean m_bBufferShouldBeDeleted;
+			//			bool m_bBufferShouldBeDeleted;
 		};
 	};
 };
@@ -130,7 +130,7 @@ namespace EBML
 			explicit CReader(IReaderCallback& rReaderCallback);
 			virtual ~CReader(void);
 
-			virtual boolean processData(const void* pBuffer, const uint64 ui64BufferSize);
+			virtual bool processData(const void* pBuffer, const uint64 ui64BufferSize);
 			virtual CIdentifier getCurrentNodeIdentifier(void) const;
 			virtual uint64 getCurrentNodeSize(void) const;
 
@@ -185,7 +185,7 @@ CReader::~CReader(void)
 	}
 }
 
-boolean CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
+bool CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
 {
 	m_ui64TotalBytes += ui64BufferSize;
 
@@ -201,7 +201,7 @@ boolean CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
 
 	unsigned char* l_pBuffer = (unsigned char*)pBuffer;
 	uint64 l_ui64BufferSize  = ui64BufferSize;
-	boolean l_bFinished      = false;
+	bool l_bFinished      = false;
 	while (!l_bFinished)
 	{
 		uint64 l_ui64ProcessedPendingBytes = 0;

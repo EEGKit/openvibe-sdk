@@ -19,7 +19,7 @@ namespace XML
 	class XML_API IReader
 	{
 	public:
-		virtual XML::boolean processData(const void* pBuffer, const XML::uint64 ui64BufferSize) =0;
+		virtual bool processData(const void* pBuffer, const XML::uint64 ui64BufferSize) =0;
 		virtual void release(void) =0;
 	protected:
 		virtual ~IReader(void) { }

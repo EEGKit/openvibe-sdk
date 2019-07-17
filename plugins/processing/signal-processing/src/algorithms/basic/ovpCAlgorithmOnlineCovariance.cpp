@@ -32,20 +32,20 @@ void CAlgorithmOnlineCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager &rMgr,
 void CAlgorithmOnlineCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 #endif
 
-OpenViBE::boolean CAlgorithmOnlineCovariance::initialize(void)
+bool CAlgorithmOnlineCovariance::initialize(void)
 {
 	m_ui64Count = 0;
 
 	return true;
 }
 
-OpenViBE::boolean CAlgorithmOnlineCovariance::uninitialize(void) { return true; }
+bool CAlgorithmOnlineCovariance::uninitialize(void) { return true; }
 
-OpenViBE::boolean CAlgorithmOnlineCovariance::process(void)
+bool CAlgorithmOnlineCovariance::process(void)
 {
 	// Note: The input parameters must have been set by the caller by now
-	const TParameterHandler<float64> ip_f64Shrinkage(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage));
-	const TParameterHandler<boolean> ip_bTraceNormalization(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization));
+	const TParameterHandler<double> ip_f64Shrinkage(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage));
+	const TParameterHandler<bool> ip_bTraceNormalization(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization));
 	const TParameterHandler<uint64> ip_ui64UpdateMethod(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod));
 	const TParameterHandler<IMatrix*> ip_pFeatureVectorSet(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
 	TParameterHandler<IMatrix*> op_pMean(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean));
@@ -100,7 +100,7 @@ OpenViBE::boolean CAlgorithmOnlineCovariance::process(void)
 		const uint32 l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
 		const uint32 l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
-		const float64* l_pBuffer = ip_pFeatureVectorSet->getBuffer();
+		const double* l_pBuffer = ip_pFeatureVectorSet->getBuffer();
 
 		OV_ERROR_UNLESS_KRF(
 			l_pBuffer,
@@ -108,8 +108,8 @@ OpenViBE::boolean CAlgorithmOnlineCovariance::process(void)
 			OpenViBE::Kernel::ErrorType::BadInput
 		);
 
-		// Cast our data into an Eigen matrix. As Eigen doesn't have const float64* constructor, we cast away the const.
-		const Map<MatrixXdRowMajor> l_oSampleChunk(const_cast<float64*>(l_pBuffer), l_ui32nRows, l_ui32nCols);
+		// Cast our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
+		const Map<MatrixXdRowMajor> l_oSampleChunk(const_cast<double*>(l_pBuffer), l_ui32nRows, l_ui32nCols);
 
 		// Update the mean & cov estimates
 
@@ -121,7 +121,7 @@ OpenViBE::boolean CAlgorithmOnlineCovariance::process(void)
 			const MatrixXd l_oChunkMean     = l_oSampleChunk.colwise().mean();
 			const MatrixXd l_oChunkCentered = l_oSampleChunk.rowwise() - l_oChunkMean.row(0);
 
-			MatrixXd l_oChunkCov = (1.0 / float64(l_ui32nRows)) * l_oChunkCentered.transpose() * l_oChunkCentered;
+			MatrixXd l_oChunkCov = (1.0 / double(l_ui32nRows)) * l_oChunkCentered.transpose() * l_oChunkCentered;
 
 			if (ip_bTraceNormalization)
 			{
@@ -191,7 +191,7 @@ OpenViBE::boolean CAlgorithmOnlineCovariance::process(void)
 			const MatrixXd l_oSampleSum = l_oSampleChunk.colwise().sum();
 
 			// Center the chunk
-			const MatrixXd l_oSampleCentered = l_oSampleChunk.rowwise() - l_oSampleSum.row(0)*(1.0/(float64)l_ui64CountChunk);
+			const MatrixXd l_oSampleCentered = l_oSampleChunk.rowwise() - l_oSampleSum.row(0)*(1.0/(double)l_ui64CountChunk);
 
 			const MatrixXd l_oSampleCoMoment = (l_oSampleCentered.transpose() * l_oSampleCentered);
 
@@ -199,7 +199,7 @@ OpenViBE::boolean CAlgorithmOnlineCovariance::process(void)
 
 			if(l_ui64CountBefore>0)
 			{
-				const MatrixXd l_oMeanDifference = (l_ui64CountChunk/(float64)l_ui64CountBefore) * m_oIncrementalMean - l_oSampleSum;
+				const MatrixXd l_oMeanDifference = (l_ui64CountChunk/(double)l_ui64CountBefore) * m_oIncrementalMean - l_oSampleSum;
 				const MatrixXd l_oMeanDiffOuterProduct =  l_oMeanDifference.transpose()*l_oMeanDifference;
 
 				m_oIncrementalCov += l_oMeanDiffOuterProduct*l_ui64CountBefore/(l_ui64CountChunk*l_ui64CountAfter);
@@ -216,8 +216,8 @@ OpenViBE::boolean CAlgorithmOnlineCovariance::process(void)
 			const uint64 l_ui64CountChunk = l_ui32nRows;
 			const uint64 l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
 
-			// Insert our data into an Eigen matrix. As Eigen doesn't have const float64* constructor, we cast away the const.
-			const Map<MatrixXdRowMajor> l_oDataMatrix(const_cast<float64*>(l_pBuffer),l_ui32nRows,l_ui32nCols);
+			// Insert our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
+			const Map<MatrixXdRowMajor> l_oDataMatrix(const_cast<double*>(l_pBuffer),l_ui32nRows,l_ui32nCols);
 
 			// Estimate the current sample means
 			const MatrixXdRowMajor l_oSampleMean = l_oDataMatrix.colwise().mean();
@@ -233,8 +233,8 @@ OpenViBE::boolean CAlgorithmOnlineCovariance::process(void)
 			// Update the global mean and cov
 			if(l_ui64CountBefore>0)
 			{
-				m_oIncrementalMean = ( m_oIncrementalMean*l_ui64CountBefore + l_oSampleMean*l_ui32nRows) / (float64)l_ui64CountAfter;
-				m_oIncrementalCov = ( m_oIncrementalCov*l_ui64CountBefore + l_oSampleCov*(l_ui64CountBefore/(float64)l_ui64CountAfter) ) / (float64)l_ui64CountAfter;
+				m_oIncrementalMean = ( m_oIncrementalMean*l_ui64CountBefore + l_oSampleMean*l_ui32nRows) / (double)l_ui64CountAfter;
+				m_oIncrementalCov = ( m_oIncrementalCov*l_ui64CountBefore + l_oSampleCov*(l_ui64CountBefore/(double)l_ui64CountAfter) ) / (double)l_ui64CountAfter;
 			}
 			else
 			{
@@ -273,12 +273,12 @@ OpenViBE::boolean CAlgorithmOnlineCovariance::process(void)
 		l_oPriorCov.setIdentity();
 
 		// Mix the prior and the sample estimates according to the shrinkage parameter. We scale by 1/n to normalize
-		l_oOutputMean = m_oIncrementalMean / (float64)m_ui64Count;
-		l_oOutputCov  = ip_f64Shrinkage * l_oPriorCov + (1.0 - ip_f64Shrinkage) * (m_oIncrementalCov / (float64)m_ui64Count);
+		l_oOutputMean = m_oIncrementalMean / (double)m_ui64Count;
+		l_oOutputCov  = ip_f64Shrinkage * l_oPriorCov + (1.0 - ip_f64Shrinkage) * (m_oIncrementalCov / (double)m_ui64Count);
 
 		// Debug block
 		dumpMatrix(this->getLogManager(), l_oOutputMean, "Data mean");
-		dumpMatrix(this->getLogManager(), m_oIncrementalCov / (float64)m_ui64Count, "Data cov");
+		dumpMatrix(this->getLogManager(), m_oIncrementalCov / (double)m_ui64Count, "Data cov");
 		dumpMatrix(this->getLogManager(), ip_f64Shrinkage * l_oPriorCov, "Prior cov");
 		dumpMatrix(this->getLogManager(), l_oOutputCov, "Output cov");
 	}
@@ -299,8 +299,8 @@ OpenViBE::boolean CAlgorithmOnlineCovariance::process(void)
 		Map<MatrixXdRowMajor> l_oOutputCov(op_pCovarianceMatrix->getBuffer(), l_ui32nCols, l_ui32nCols);
 
 		// We scale by 1/n to normalize
-		l_oOutputMean = m_oIncrementalMean / (float64)m_ui64Count;
-		l_oOutputCov  = m_oIncrementalCov / (float64)m_ui64Count;
+		l_oOutputMean = m_oIncrementalMean / (double)m_ui64Count;
+		l_oOutputCov  = m_oIncrementalCov / (double)m_ui64Count;
 
 		// Debug block
 		dumpMatrix(this->getLogManager(), l_oOutputMean, "Data mean");

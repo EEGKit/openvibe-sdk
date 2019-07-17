@@ -16,7 +16,7 @@ CBoxAlgorithmCSVFileWriter::CBoxAlgorithmCSVFileWriter(void)
 	: m_fpRealProcess(NULL)
 	  , m_pStreamDecoder(NULL) {}
 
-boolean CBoxAlgorithmCSVFileWriter::initialize(void)
+bool CBoxAlgorithmCSVFileWriter::initialize(void)
 {
 	this->getStaticBoxContext().getInputType(0, m_oTypeIdentifier);
 
@@ -72,7 +72,7 @@ boolean CBoxAlgorithmCSVFileWriter::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmCSVFileWriter::uninitialize(void)
+bool CBoxAlgorithmCSVFileWriter::uninitialize(void)
 {
 	if (m_oFileStream.is_open())
 	{
@@ -88,7 +88,7 @@ boolean CBoxAlgorithmCSVFileWriter::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmCSVFileWriter::initializeFile()
+bool CBoxAlgorithmCSVFileWriter::initializeFile()
 {
 	const CString l_sFilename    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	const uint64 l_ui64Precision = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
@@ -107,13 +107,13 @@ boolean CBoxAlgorithmCSVFileWriter::initializeFile()
 	return true;
 }
 
-boolean CBoxAlgorithmCSVFileWriter::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmCSVFileWriter::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmCSVFileWriter::process(void)
+bool CBoxAlgorithmCSVFileWriter::process(void)
 {
 	if (!m_oFileStream.is_open())
 	{
@@ -122,7 +122,7 @@ boolean CBoxAlgorithmCSVFileWriter::process(void)
 	return (this->*m_fpRealProcess)();
 }
 
-boolean CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
+bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
@@ -276,7 +276,7 @@ boolean CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 	return true;
 }
 
-boolean CBoxAlgorithmCSVFileWriter::process_stimulation(void)
+bool CBoxAlgorithmCSVFileWriter::process_stimulation(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 

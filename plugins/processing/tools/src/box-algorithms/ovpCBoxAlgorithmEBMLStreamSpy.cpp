@@ -23,14 +23,14 @@ void CBoxAlgorithmEBMLStreamSpy::release(void)
 	delete this;
 }
 
-boolean CBoxAlgorithmEBMLStreamSpy::initialize(void)
+bool CBoxAlgorithmEBMLStreamSpy::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();
 
 	m_pReader       = EBML::createReader(*this);
 	m_pReaderHelper = EBML::createReaderHelper();
 
-	boolean l_bExpand;
+	bool l_bExpand;
 	CString l_sFileName   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	uint64 l_ui64LogLevel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
@@ -69,8 +69,8 @@ boolean CBoxAlgorithmEBMLStreamSpy::initialize(void)
 		if (!l_bExpand)
 		{
 			if ((l_sType == "binary(float80)")
-				|| (l_sType == "binary(float64)")
-				|| (l_sType == "binary(float32)")
+				|| (l_sType == "binary(double)")
+				|| (l_sType == "binary(float)")
 				|| (l_sType == "binary(integer8)")
 				|| (l_sType == "binary(integer16)")
 				|| (l_sType == "binary(integer32)")
@@ -95,7 +95,7 @@ boolean CBoxAlgorithmEBMLStreamSpy::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmEBMLStreamSpy::uninitialize(void)
+bool CBoxAlgorithmEBMLStreamSpy::uninitialize(void)
 {
 	m_pReaderHelper->release();
 	m_pReaderHelper = NULL;
@@ -106,7 +106,7 @@ boolean CBoxAlgorithmEBMLStreamSpy::uninitialize(void)
 	return true;
 }
 
-EBML::boolean CBoxAlgorithmEBMLStreamSpy::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CBoxAlgorithmEBMLStreamSpy::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	map<EBML::CIdentifier, string>::iterator n;
 	map<EBML::CIdentifier, string>::iterator t;
@@ -178,16 +178,16 @@ void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const EBM
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[value:" << m_pReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize) << "]";
 		else if (t->second == "binary")
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[bytes:" << ui64BufferSize << "]";
-		else if (t->second == "binary(float64)")
+		else if (t->second == "binary(double)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<float64>(pBuffer, ui64BufferSize);
+			processBinaryBlock<double>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
-		else if (t->second == "binary(float32)")
+		else if (t->second == "binary(float)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<float32>(pBuffer, ui64BufferSize);
+			processBinaryBlock<float>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(integer8)")
@@ -249,13 +249,13 @@ void CBoxAlgorithmEBMLStreamSpy::closeChild(void)
 	m_vNodes.pop();
 }
 
-boolean CBoxAlgorithmEBMLStreamSpy::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmEBMLStreamSpy::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmEBMLStreamSpy::process(void)
+bool CBoxAlgorithmEBMLStreamSpy::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();

@@ -102,6 +102,6 @@ bool System::Time::checkResolution(const uint32_t ui32MilliSeconds)
 {
 	assert(ui32MilliSeconds != 0);
 
-	auto l_ui32Resolution = static_cast<System::float64>(internal_clock::period::num) / internal_clock::period::den;
+	auto l_ui32Resolution = static_cast<double>(internal_clock::period::num) / internal_clock::period::den;
 	return (static_cast<uint32_t>(std::ceil(l_ui32Resolution * 1000)) <= ui32MilliSeconds);
 }

@@ -37,7 +37,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \note The factory should have created the object in order to release it.
 			 */
-			virtual OpenViBE::boolean releaseObject(
+			virtual bool releaseObject(
 				OpenViBE::IObject* pObject) =0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_KernelObjectFactory)

@@ -61,7 +61,7 @@ namespace OpenViBE
 			 * \sa getReferenceTarget
 			 * \sa setReferenceTarget
 			 */
-			virtual OpenViBE::boolean clearReferenceTarget(void) { return false; }
+			virtual bool clearReferenceTarget(void) { return false; }
 
 			//@}
 			/** \name Reference target management */
@@ -73,7 +73,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean getReferenceTarget(
+			virtual bool getReferenceTarget(
 				OpenViBE::Kernel::IParameter*& value) const { return false; }
 			/**
 			 * \brief Sets the parameter reference target for this parameter
@@ -88,7 +88,7 @@ namespace OpenViBE
 			 * handled by this parameter won't be affected anymore until the reference target is
 			 * cleared.
 			 */
-			virtual OpenViBE::boolean setReferenceTarget(
+			virtual bool setReferenceTarget(
 				OpenViBE::Kernel::IParameter* value) { return false; }
 			/**
 			 * \brief Gets the value reference target
@@ -96,7 +96,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean getReferenceTarget(
+			virtual bool getReferenceTarget(
 				void* value) const { return false; }
 			/**
 			 * \brief Sets the value reference target for this parameter
@@ -111,7 +111,7 @@ namespace OpenViBE
 			 * handled by this parameter won't be affected anymore until the reference target is
 			 * cleared.
 			 */
-			virtual OpenViBE::boolean setReferenceTarget(
+			virtual bool setReferenceTarget(
 				const void* value) { return false; }
 
 			//@}
@@ -130,7 +130,7 @@ namespace OpenViBE
 			 *       the value target is directly copied
 			 * \sa getParameterSize
 			 */
-			virtual OpenViBE::boolean getValue(
+			virtual bool getValue(
 				void* value) const { return false; }
 			/**
 			 * \brief Sets the value for this parameter
@@ -139,7 +139,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \sa getParameterSize
 			 */
-			virtual OpenViBE::boolean setValue(
+			virtual bool setValue(
 				const void* value) { return false; }
 
 			//@}

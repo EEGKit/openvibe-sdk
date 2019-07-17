@@ -42,7 +42,7 @@ namespace OpenViBE
 			* \param rMessageSignal [in] : the signal message to send
 			* \return \e true in case of success, \e false in other cases.
 			*/
-			virtual OpenViBE::boolean sendSignal(
+			virtual bool sendSignal(
 				const OpenViBE::Kernel::IMessageSignal& rMessageSignal) = 0;
 			/**
 			* \brief Sends a message to another box
@@ -50,7 +50,7 @@ namespace OpenViBE
 			* \param rTargetIdentifier [in] : the identifier of the other box
 			* \return \e true in case of success, \e false in other cases.
 			*/
-			virtual OpenViBE::boolean sendMessage(
+			virtual bool sendMessage(
 				const OpenViBE::Kernel::IMessageEvent& rMessageEvent,
 				const OpenViBE::CIdentifier& rTargetIdentifier) = 0;
 			/**
@@ -62,7 +62,7 @@ namespace OpenViBE
 			*        targets contained in the \c pTargetIdentifier array.
 			* \return \e true in case of success, \e false in other cases.
 			*/
-			virtual OpenViBE::boolean sendMessage(
+			virtual bool sendMessage(
 				const OpenViBE::Kernel::IMessageEvent& rMessageEvent,
 				const OpenViBE::CIdentifier* pTargetIdentifier,
 				const OpenViBE::uint32 ui32TargetIdentifierCount) = 0;
@@ -88,12 +88,12 @@ namespace OpenViBE
 			 * \brief Gets the current CPU use for the running processing unit
 			 * \return the current CPU use
 			 */
-			virtual OpenViBE::float64 getCurrentCPUUsage(void) const =0;
+			virtual double getCurrentCPUUsage(void) const =0;
 			/**
 			 * \brief Gets the current fast forward factor to be used when the getStatus states the player runs in fast forward mode
 			 * \return the current fast forward factor
 			 */
-			virtual OpenViBE::float64 getCurrentFastForwardMaximumFactor(void) const =0;
+			virtual double getCurrentFastForwardMaximumFactor(void) const =0;
 
 			//@}
 			/** \name Player control */
@@ -105,25 +105,25 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \warning Once the player is stopped, there's no way to restart it
 			 */
-			virtual OpenViBE::boolean stop(void) =0;
+			virtual bool stop(void) =0;
 			/**
 			 * \brief Pauses player execution
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean pause(void) =0;
+			virtual bool pause(void) =0;
 			/**
 			 * \brief Makes player run normal speed
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean play(void) =0;
+			virtual bool play(void) =0;
 			/**
 			 * \brief Makes player run as fast as possible
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean forward(void) =0;
+			virtual bool forward(void) =0;
 			/**
 			 * \brief Gets current player status
 			 * \return current player status

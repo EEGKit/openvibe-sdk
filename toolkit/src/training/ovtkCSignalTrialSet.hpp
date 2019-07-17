@@ -11,8 +11,8 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual OpenViBE::boolean addSignalTrial(OpenViBEToolkit::ISignalTrial& rSignalTrial);
-		virtual OpenViBE::boolean clear(void);
+		virtual bool addSignalTrial(OpenViBEToolkit::ISignalTrial& rSignalTrial);
+		virtual bool clear(void);
 
 		virtual OpenViBE::uint32 getSignalTrialCount(void) const;
 		virtual OpenViBEToolkit::ISignalTrial& getSignalTrial(OpenViBE::uint32 ui32Index) const;

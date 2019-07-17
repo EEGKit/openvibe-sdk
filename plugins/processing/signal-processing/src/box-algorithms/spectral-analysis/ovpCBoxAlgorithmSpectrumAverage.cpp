@@ -7,7 +7,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-boolean CBoxAlgorithmSpectrumAverage::initialize(void)
+bool CBoxAlgorithmSpectrumAverage::initialize(void)
 {
 	m_bZeroCare = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
@@ -25,7 +25,7 @@ boolean CBoxAlgorithmSpectrumAverage::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmSpectrumAverage::uninitialize(void)
+bool CBoxAlgorithmSpectrumAverage::uninitialize(void)
 {
 	ip_pMatrix.uninitialize();
 	op_pMatrix.uninitialize();
@@ -47,13 +47,13 @@ boolean CBoxAlgorithmSpectrumAverage::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmSpectrumAverage::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSpectrumAverage::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmSpectrumAverage::process(void)
+bool CBoxAlgorithmSpectrumAverage::process(void)
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
@@ -73,13 +73,13 @@ boolean CBoxAlgorithmSpectrumAverage::process(void)
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			float64* l_pInputMatrix   = ip_pMatrix->getBuffer();
-			float64* l_pOutputMatrix  = op_pMatrix->getBuffer();
+			double* l_pInputMatrix   = ip_pMatrix->getBuffer();
+			double* l_pOutputMatrix  = op_pMatrix->getBuffer();
 			uint32 l_ui32ChannelCount = op_pMatrix->getDimensionSize(0);
 			uint32 l_ui32BandCount    = op_pMatrix->getDimensionSize(1);
 			for (uint32 j = 0; j < l_ui32ChannelCount; j++)
 			{
-				float64 l_f64Mean  = 0;
+				double l_f64Mean  = 0;
 				uint32 l_ui32Count = 0;
 				for (uint32 k = 0; k < l_ui32BandCount; k++)
 				{

@@ -16,7 +16,7 @@ namespace OpenViBEToolkit
 
 		virtual void release(void) { delete this; }
 
-		virtual OpenViBE::boolean process(void);
+		virtual bool process(void);
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithmScenarioExporter >, OVTK_ClassId_Algorithm_ScenarioExporter)
 	};

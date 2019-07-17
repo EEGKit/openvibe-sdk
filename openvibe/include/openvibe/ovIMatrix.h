@@ -67,7 +67,7 @@ namespace OpenViBE
 		 * l_pMatrix->setDimensionSize(0, 2);
 		 * l_pMatrix->setDimensionSize(1, 3);
 		 *
-		 * float64* l_pMatrixRawBuffer=l_pMatrix->getBuffer();
+		 * double* l_pMatrixRawBuffer=l_pMatrix->getBuffer();
 		 *
 		 * l_pMatrixRawBuffer[0]; // this is l_pMatrixRawBuffer[0*3 + 0];
 		 * l_pMatrixRawBuffer[1]; // this is l_pMatrixRawBuffer[0*3 + 1];
@@ -81,7 +81,7 @@ namespace OpenViBE
 		 * \endcode
 		 * \sa getBufferElementCount
 		 */
-		virtual const OpenViBE::float64* getBuffer(void) const =0;
+		virtual const double* getBuffer(void) const =0;
 		/**
 		 * \brief Gets the total number of elements in the matrix
 		 * \return the total number of elements in the matrix
@@ -99,7 +99,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean setDimensionCount(
+		virtual bool setDimensionCount(
 			const OpenViBE::uint32 ui32DimensionCount) =0;
 		/**
 		 * \brief Sets the dimension size for this matrix on a given dimension index
@@ -108,7 +108,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean setDimensionSize(
+		virtual bool setDimensionSize(
 			const OpenViBE::uint32 ui32DimensionIndex,
 			const OpenViBE::uint32 ui32DimensionSize) =0;
 		/**
@@ -119,7 +119,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean setDimensionLabel(
+		virtual bool setDimensionLabel(
 			const OpenViBE::uint32 ui32DimensionIndex,
 			const OpenViBE::uint32 ui32DimensionEntryIndex,
 			const char* sDimensionLabel) =0;
@@ -132,18 +132,18 @@ namespace OpenViBE
 		 * \sa IMatrix::getBufferElementCount
 		 * \sa IMatrix::getBuffer const
 		 */
-		virtual OpenViBE::float64* getBuffer(void) =0;
+		virtual double* getBuffer(void) =0;
 
 		//@}
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Matrix);
 
-		const OpenViBE::float64& operator [](const OpenViBE::uint32 ui32Index) const
+		const double& operator [](const OpenViBE::uint32 ui32Index) const
 		{
 			return this->getBuffer()[ui32Index];
 		}
 
-		OpenViBE::float64& operator [](const OpenViBE::uint32 ui32Index)
+		double& operator [](const OpenViBE::uint32 ui32Index)
 		{
 			return this->getBuffer()[ui32Index];
 		}

@@ -8,7 +8,7 @@ CAlgorithmProto::CAlgorithmProto(const IKernelContext& rKernelContext, CAlgorith
 	: TKernelObject<IAlgorithmProto>(rKernelContext)
 	  , m_rAlgorithmProxy(rAlgorithmProxy) {}
 
-boolean CAlgorithmProto::addInputParameter(
+bool CAlgorithmProto::addInputParameter(
 	const CIdentifier& rInputParameterIdentifier,
 	const CString& sInputName,
 	const EParameterType eParameterType,
@@ -17,7 +17,7 @@ boolean CAlgorithmProto::addInputParameter(
 	return m_rAlgorithmProxy.addInputParameter(rInputParameterIdentifier, sInputName, eParameterType, rSubTypeIdentifier);
 }
 
-boolean CAlgorithmProto::addOutputParameter(
+bool CAlgorithmProto::addOutputParameter(
 	const CIdentifier& rOutputParameterIdentifier,
 	const CString& sOutputName,
 	const EParameterType eParameterType,
@@ -26,14 +26,14 @@ boolean CAlgorithmProto::addOutputParameter(
 	return m_rAlgorithmProxy.addOutputParameter(rOutputParameterIdentifier, sOutputName, eParameterType, rSubTypeIdentifier);
 }
 
-boolean CAlgorithmProto::addInputTrigger(
+bool CAlgorithmProto::addInputTrigger(
 	const CIdentifier& rInputTriggerIdentifier,
 	const CString& rInputTriggerName)
 {
 	return m_rAlgorithmProxy.addInputTrigger(rInputTriggerIdentifier, rInputTriggerName);
 }
 
-boolean CAlgorithmProto::addOutputTrigger(
+bool CAlgorithmProto::addOutputTrigger(
 	const CIdentifier& rOutputTriggerIdentifier,
 	const CString& rOutputTriggerName)
 {

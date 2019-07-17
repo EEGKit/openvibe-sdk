@@ -7,7 +7,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::StreamCodecs;
 
-boolean CStreamedMatrixEncoder::initialize(void)
+bool CStreamedMatrixEncoder::initialize(void)
 {
 	CEBMLBaseEncoder::initialize();
 
@@ -18,7 +18,7 @@ boolean CStreamedMatrixEncoder::initialize(void)
 	return true;
 }
 
-boolean CStreamedMatrixEncoder::uninitialize(void)
+bool CStreamedMatrixEncoder::uninitialize(void)
 {
 	ip_pMatrix.uninitialize();
 
@@ -30,10 +30,10 @@ boolean CStreamedMatrixEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CStreamedMatrixEncoder::processHeader(void)
+bool CStreamedMatrixEncoder::processHeader(void)
 {
 	IMatrix* l_pMatrix = ip_pMatrix;
-	boolean l_bShouldSendLabels;
+	bool l_bShouldSendLabels;
 	uint32 i, j;
 
 	m_ui64MatrixBufferSize = (l_pMatrix->getDimensionCount() == 0 ? 0 : 1);
@@ -73,13 +73,13 @@ boolean CStreamedMatrixEncoder::processHeader(void)
 	return true;
 }
 
-boolean CStreamedMatrixEncoder::processBuffer(void)
+bool CStreamedMatrixEncoder::processBuffer(void)
 {
 	IMatrix* l_pMatrix = ip_pMatrix;
 
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix);
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer);
-	m_pEBMLWriterHelper->setBinaryAsChildData(l_pMatrix->getBuffer(), m_ui64MatrixBufferSize * sizeof(float64));
+	m_pEBMLWriterHelper->setBinaryAsChildData(l_pMatrix->getBuffer(), m_ui64MatrixBufferSize * sizeof(double));
 	m_pEBMLWriterHelper->closeChild();
 	m_pEBMLWriterHelper->closeChild();
 

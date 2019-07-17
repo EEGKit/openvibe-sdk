@@ -20,14 +20,14 @@ uint32 CInternalFeatureVector::getSize(void) const
 	return m_ui32BufferElementCount;
 }
 
-boolean CInternalFeatureVector::setSize(const uint32 ui32Size) { return false; }
+bool CInternalFeatureVector::setSize(const uint32 ui32Size) { return false; }
 
-float64* CInternalFeatureVector::getBuffer(void)
+double* CInternalFeatureVector::getBuffer(void)
 {
 	return NULL;
 }
 
-const float64* CInternalFeatureVector::getBuffer(void) const
+const double* CInternalFeatureVector::getBuffer(void) const
 {
 	return m_pBuffer;
 }
@@ -37,14 +37,14 @@ const char* CInternalFeatureVector::getElementLabel(const uint32 ui32Index) cons
 	return m_pMatrix->getDimensionLabel(m_ui32DimensionIndex, ui32Index);
 }
 
-boolean CInternalFeatureVector::setElementLabel(const uint32 ui32Index, const char* sElementLabel) { return false; }
+bool CInternalFeatureVector::setElementLabel(const uint32 ui32Index, const char* sElementLabel) { return false; }
 
-float64 CInternalFeatureVector::getLabel(void) const
+double CInternalFeatureVector::getLabel(void) const
 {
 	return m_pBuffer[m_ui32BufferElementCount];
 }
 
-boolean CInternalFeatureVector::setLabel(const float64 f64Label) { return false; }
+bool CInternalFeatureVector::setLabel(const double f64Label) { return false; }
 
 // ____________________________________________________________________________________________________________________________________
 //
@@ -71,9 +71,9 @@ uint32 CFeatureVectorSet::getFeatureVectorCount(void) const
 	return m_rMatrix.getDimensionSize(0);
 }
 
-boolean CFeatureVectorSet::setFeatureVectorCount(const uint32 ui32FeatureVectorCount) { return false; }
+bool CFeatureVectorSet::setFeatureVectorCount(const uint32 ui32FeatureVectorCount) { return false; }
 
-boolean CFeatureVectorSet::addFeatureVector(const IFeatureVector& rFeatureVector) { return false; }
+bool CFeatureVectorSet::addFeatureVector(const IFeatureVector& rFeatureVector) { return false; }
 
 IFeatureVector& CFeatureVectorSet::getFeatureVector(const uint32 ui32Index)
 {
@@ -89,7 +89,7 @@ const IFeatureVector& CFeatureVectorSet::getFeatureVector(const uint32 ui32Index
 
 uint32 CFeatureVectorSet::getLabelCount(void) const
 {
-	std::map<float64, boolean> l_vLabel;
+	std::map<double, bool> l_vLabel;
 	std::map<uint32, CInternalFeatureVector>::const_iterator itFeatureVector;
 	for (itFeatureVector = m_vFeatureVector.begin(); itFeatureVector != m_vFeatureVector.end(); ++itFeatureVector)
 	{

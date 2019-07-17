@@ -24,16 +24,16 @@ namespace OpenViBEPlugins
 
 			CAlgorithmClassifierNULL(void);
 
-			virtual OpenViBE::boolean initialize(void);
+			virtual bool initialize(void);
 
-			virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
-			virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-											   , OpenViBE::float64& rf64Class
+			virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
+			virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
+											   , double& rf64Class
 											   , OpenViBEToolkit::IVector& rDistanceValue
 											   , OpenViBEToolkit::IVector& rProbabilityValue);
 
 			virtual XML::IXMLNode* saveConfiguration(void);
-			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode* pConfigurationNode);
+			virtual bool loadConfiguration(XML::IXMLNode* pConfigurationNode);
 
 			virtual OpenViBE::uint32 getOutputProbabilityVectorLength();
 			virtual OpenViBE::uint32 getOutputDistanceVectorLength();
@@ -63,7 +63,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ClassifierNULL; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CAlgorithmClassifierNULL; }
 
-			virtual OpenViBE::boolean getAlgorithmPrototype(
+			virtual bool getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);

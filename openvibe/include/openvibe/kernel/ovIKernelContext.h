@@ -39,13 +39,13 @@ namespace OpenViBE
 			 * \return \e true in case of success
 			 * \return \e false in case of error
 			 */
-			virtual OpenViBE::boolean initialize(const char* const* tokenList = nullptr, size_t tokenCount = 0) { return true; }
+			virtual bool initialize(const char* const* tokenList = nullptr, size_t tokenCount = 0) { return true; }
 			/**
 			 * \brief Uninitializes the kernel context
 			 * \return \e true in case of success
 			 * \return \e false in case of error
 			 */
-			virtual OpenViBE::boolean uninitialize(void) { return true; }
+			virtual bool uninitialize(void) { return true; }
 
 			/**
 			 * \brief Gets a reference on the kernel's algorithm manager

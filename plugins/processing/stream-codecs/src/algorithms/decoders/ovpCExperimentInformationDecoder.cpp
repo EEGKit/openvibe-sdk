@@ -12,7 +12,7 @@ CExperimentInformationDecoder::CExperimentInformationDecoder(void) {}
 // ________________________________________________________________________________________________________________
 //
 
-boolean CExperimentInformationDecoder::initialize(void)
+bool CExperimentInformationDecoder::initialize(void)
 {
 	CEBMLBaseDecoder::initialize();
 
@@ -30,7 +30,7 @@ boolean CExperimentInformationDecoder::initialize(void)
 	return true;
 }
 
-boolean CExperimentInformationDecoder::uninitialize(void)
+bool CExperimentInformationDecoder::uninitialize(void)
 {
 	op_pTechnicianName.uninitialize();
 	op_ui64TechnicianIdentifier.uninitialize();
@@ -51,7 +51,7 @@ boolean CExperimentInformationDecoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-EBML::boolean CExperimentInformationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CExperimentInformationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation) { return true; }
 	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Experiment) { return true; }

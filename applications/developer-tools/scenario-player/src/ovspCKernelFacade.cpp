@@ -376,7 +376,7 @@ namespace OpenViBE
 
 			// cannot directly feed secondsToTime with parameters.m_MaximumExecutionTime
 			// because it could overflow
-			float64 boundedMaxExecutionTimeInS = ITimeArithmetics::timeToSeconds(std::numeric_limits<uint64>::max());
+			double boundedMaxExecutionTimeInS = ITimeArithmetics::timeToSeconds(std::numeric_limits<uint64>::max());
 
 			uint64 maxExecutionTimeInFixedPoint;
 			if (command.maximumExecutionTime &&

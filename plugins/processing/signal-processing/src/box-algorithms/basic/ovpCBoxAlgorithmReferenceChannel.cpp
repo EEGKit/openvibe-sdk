@@ -53,7 +53,7 @@ namespace
 	}
 };
 
-boolean CBoxAlgorithmReferenceChannel::initialize(void)
+bool CBoxAlgorithmReferenceChannel::initialize(void)
 {
 	m_oDecoder.initialize(*this, 0);
 	m_oEncoder.initialize(*this, 0);
@@ -61,14 +61,14 @@ boolean CBoxAlgorithmReferenceChannel::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmReferenceChannel::uninitialize(void)
+bool CBoxAlgorithmReferenceChannel::uninitialize(void)
 {
 	m_oDecoder.uninitialize();
 	m_oEncoder.uninitialize();
 	return true;
 }
 
-boolean CBoxAlgorithmReferenceChannel::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmReferenceChannel::processInput(uint32 ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -76,7 +76,7 @@ boolean CBoxAlgorithmReferenceChannel::processInput(uint32 ui32InputIndex)
 
 #include <cstdio>
 
-boolean CBoxAlgorithmReferenceChannel::process(void)
+bool CBoxAlgorithmReferenceChannel::process(void)
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
@@ -129,9 +129,9 @@ boolean CBoxAlgorithmReferenceChannel::process(void)
 		{
 			IMatrix& l_rInputMatrix     = *m_oDecoder.getOutputMatrix();
 			IMatrix& l_rOutputMatrix    = *m_oEncoder.getInputMatrix();
-			float64* l_pInputBuffer     = l_rInputMatrix.getBuffer();
-			float64* l_pOutputBuffer    = l_rOutputMatrix.getBuffer();
-			float64* l_pReferenceBuffer = l_rInputMatrix.getBuffer() + m_ui32ReferenceChannelIndex * l_rInputMatrix.getDimensionSize(1);
+			double* l_pInputBuffer     = l_rInputMatrix.getBuffer();
+			double* l_pOutputBuffer    = l_rOutputMatrix.getBuffer();
+			double* l_pReferenceBuffer = l_rInputMatrix.getBuffer() + m_ui32ReferenceChannelIndex * l_rInputMatrix.getDimensionSize(1);
 			uint32 l_ui32ChannelCount   = l_rInputMatrix.getDimensionSize(0);
 			uint32 l_ui32SampleCount    = l_rInputMatrix.getDimensionSize(1);
 			for (j = 0; j < l_ui32ChannelCount; j++)

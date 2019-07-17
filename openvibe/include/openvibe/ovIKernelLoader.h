@@ -37,7 +37,7 @@ namespace OpenViBE
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 */
-		virtual OpenViBE::boolean load(
+		virtual bool load(
 			const OpenViBE::CString& sFileName,
 			OpenViBE::CString* pError = NULL) =0;
 		/**
@@ -46,7 +46,7 @@ namespace OpenViBE
 		 * \return \e false on error.
 		 * \warning \c load must have been called successfully before calling \c unload
 		 */
-		virtual OpenViBE::boolean unload(
+		virtual bool unload(
 			OpenViBE::CString* pError = NULL) =0;
 		/**
 		 * \brief Requests the kernel DLL/so file to self initialize
@@ -58,7 +58,7 @@ namespace OpenViBE
 		 * the kernel DLL/so file. See section \ref Doc_CreatingNewKernel to get a full description
 		 * of how a kernel is loaded / used.
 		 */
-		virtual OpenViBE::boolean initialize(void) =0;
+		virtual bool initialize(void) =0;
 		/**
 		 * \brief Gets the kernel description of the loaded kernel DLL/so file
 		 * \param rpKernelDesc [out] : a pointer to the kernel description
@@ -66,7 +66,7 @@ namespace OpenViBE
 		 * \return \e false on error.
 		 * \warning both \c load and \c initialize must have been called successfully before calling \c getKernelDesc
 		 */
-		virtual OpenViBE::boolean getKernelDesc(
+		virtual bool getKernelDesc(
 			OpenViBE::Kernel::IKernelDesc*& rpKernelDesc) =0;
 		/**
 		 * \brief Uninitializes a loaded and initialized kernel DLL/so file
@@ -74,7 +74,7 @@ namespace OpenViBE
 		 * \return \e false on error.
 		 * \warning both \c load and \c initialize must have been called successfully before calling \c getKernelDesc
 		 */
-		virtual OpenViBE::boolean uninitialize(void) =0;
+		virtual bool uninitialize(void) =0;
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_KernelLoader)
 	};

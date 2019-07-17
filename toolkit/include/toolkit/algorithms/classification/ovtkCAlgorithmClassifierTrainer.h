@@ -21,9 +21,9 @@ namespace OpenViBEToolkit
 
 		virtual void release(void) { delete this; }
 
-		virtual OpenViBE::boolean process(void);
-		virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) =0;
-		virtual OpenViBE::boolean saveConfiguration(OpenViBE::IMemoryBuffer& rMemoryBuffer) =0;
+		virtual bool process(void);
+		virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) =0;
+		virtual bool saveConfiguration(OpenViBE::IMemoryBuffer& rMemoryBuffer) =0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_ClassifierTrainer);
 
@@ -34,7 +34,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual OpenViBE::boolean getAlgorithmPrototype(
+		virtual bool getAlgorithmPrototype(
 			OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 		{
 			rAlgorithmPrototype.addInputParameter(OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet, "Feature vector set", OpenViBE::Kernel::ParameterType_Matrix);

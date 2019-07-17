@@ -13,10 +13,10 @@ namespace XML
 	public:
 		explicit CWriter(IWriterCallback& rWriterCallback);
 
-		virtual boolean openChild(const char* sName);
-		virtual boolean setChildData(const char* sData);
-		virtual boolean setAttribute(const char* sAttributeName, const char* sAttributeValue);
-		virtual boolean closeChild(void);
+		virtual bool openChild(const char* sName);
+		virtual bool setChildData(const char* sData);
+		virtual bool setAttribute(const char* sAttributeName, const char* sAttributeValue);
+		virtual bool closeChild(void);
 		virtual void release(void);
 
 	private:
@@ -25,9 +25,9 @@ namespace XML
 	protected:
 		IWriterCallback& m_rWriterCallback;
 		stack<string> m_vNodes;
-		boolean m_bHasChild;
-		boolean m_bHasData;
-		boolean m_bHasClosedOpeningNode;
+		bool m_bHasChild;
+		bool m_bHasData;
+		bool m_bHasClosedOpeningNode;
 	};
 };
 
@@ -37,7 +37,7 @@ CWriter::CWriter(IWriterCallback& rWriterCallback)
 	  , m_bHasData(false)
 	  , m_bHasClosedOpeningNode(true) {}
 
-boolean CWriter::openChild(const char* sName)
+bool CWriter::openChild(const char* sName)
 {
 	if (sName == NULL) { return false; }
 
@@ -59,7 +59,7 @@ boolean CWriter::openChild(const char* sName)
 	return true;
 }
 
-boolean CWriter::setChildData(const char* sData)
+bool CWriter::setChildData(const char* sData)
 {
 	if (sData == NULL) { return false; }
 
@@ -80,7 +80,7 @@ boolean CWriter::setChildData(const char* sData)
 	return true;
 }
 
-boolean CWriter::setAttribute(const char* sAttributeName, const char* sAttributeValue)
+bool CWriter::setAttribute(const char* sAttributeName, const char* sAttributeValue)
 {
 	if (sAttributeName == NULL) { return false; }
 
@@ -100,7 +100,7 @@ boolean CWriter::setAttribute(const char* sAttributeName, const char* sAttribute
 	return true;
 }
 
-boolean CWriter::closeChild(void)
+bool CWriter::closeChild(void)
 {
 	if (m_vNodes.empty()) { return false; }
 

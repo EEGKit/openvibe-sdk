@@ -83,7 +83,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			//			virtual OpenViBE::boolean onAlgorithmClassIdentifierChanged(OpenViBE::Kernel::IBox &rBox)
+			//			virtual bool onAlgorithmClassIdentifierChanged(OpenViBE::Kernel::IBox &rBox)
 			//			{
 			//				this->initializedStrategy(rBox);
 			//				return true;
@@ -353,8 +353,8 @@ namespace OpenViBEPlugins
 							OpenViBE::Kernel::IParameter* l_pParameter = m_pClassifier->getInputParameter(l_oIdentifier);
 							OpenViBE::Kernel::TParameterHandler<int64_t> ip_i64Parameter(l_pParameter);
 							OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64Parameter(l_pParameter);
-							OpenViBE::Kernel::TParameterHandler<OpenViBE::float64> ip_f64Parameter(l_pParameter);
-							OpenViBE::Kernel::TParameterHandler<OpenViBE::boolean> ip_bParameter(l_pParameter);
+							OpenViBE::Kernel::TParameterHandler<double> ip_f64Parameter(l_pParameter);
+							OpenViBE::Kernel::TParameterHandler<bool> ip_bParameter(l_pParameter);
 							OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_sParameter(l_pParameter);
 							char l_sBuffer[1024];
 							bool l_bValid = true;
@@ -377,7 +377,7 @@ namespace OpenViBEPlugins
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Float:
-									::sprintf(l_sBuffer, "%lf", static_cast<OpenViBE::float64>(ip_f64Parameter));
+									::sprintf(l_sBuffer, "%lf", static_cast<double>(ip_f64Parameter));
 									l_oTypeIdentifier = OV_TypeId_Float;
 									break;
 								case OpenViBE::Kernel::ParameterType_String:

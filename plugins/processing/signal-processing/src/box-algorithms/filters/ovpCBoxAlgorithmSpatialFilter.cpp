@@ -52,7 +52,7 @@ uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CString& r
 	m_oFilterBank.setDimensionSize(0, nRows);
 	m_oFilterBank.setDimensionSize(1, nCols);
 
-	float64* l_pFilter = m_oFilterBank.getBuffer();
+	double* l_pFilter = m_oFilterBank.getBuffer();
 
 	// Ok, convert to floats
 	l_sPtr                  = rCoefficients.toASCIIString();
@@ -264,22 +264,22 @@ bool CBoxAlgorithmSpatialFilter::process(void)
 			const IMatrix* l_pInputMatrix = ((OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmSpatialFilter>*)m_pStreamDecoder)->getOutputMatrix();
 			IMatrix* l_pOutputMatrix      = ((OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmSpatialFilter>*)m_pStreamEncoder)->getInputMatrix();
 
-			const float64* l_pInput                 = l_pInputMatrix->getBuffer();
-			float64* l_pOutput                      = l_pOutputMatrix->getBuffer();
+			const double* l_pInput                 = l_pInputMatrix->getBuffer();
+			double* l_pOutput                      = l_pOutputMatrix->getBuffer();
 			const uint32_t l_ui32InputChannelCount  = l_pInputMatrix->getDimensionSize(0);
 			const uint32_t l_ui32OutputChannelCount = l_pOutputMatrix->getDimensionSize(0);
 			const uint32_t l_ui32SampleCount        = l_pInputMatrix->getDimensionSize(1);
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
-			const Eigen::Map<MatrixXdRowMajor> l_oInputMapper(const_cast<float64*>(l_pInput), l_ui32InputChannelCount, l_ui32SampleCount);
-			const Eigen::Map<MatrixXdRowMajor> l_oFilterMapper(const_cast<float64*>(m_oFilterBank.getBuffer()), m_oFilterBank.getDimensionSize(0), m_oFilterBank.getDimensionSize(1));
+			const Eigen::Map<MatrixXdRowMajor> l_oInputMapper(const_cast<double*>(l_pInput), l_ui32InputChannelCount, l_ui32SampleCount);
+			const Eigen::Map<MatrixXdRowMajor> l_oFilterMapper(const_cast<double*>(m_oFilterBank.getBuffer()), m_oFilterBank.getDimensionSize(0), m_oFilterBank.getDimensionSize(1));
 			Eigen::Map<MatrixXdRowMajor> l_oOutputMapper(l_pOutput, l_ui32OutputChannelCount, l_ui32SampleCount);
 
 			l_oOutputMapper = l_oFilterMapper * l_oInputMapper;
 #else
-			const float64* l_pFilter = m_oFilterBank.getBuffer();
+			const double* l_pFilter = m_oFilterBank.getBuffer();
 
-			System::Memory::set(l_pOutput, l_ui32SampleCount*l_ui32OutputChannelCount*sizeof(float64), 0);
+			System::Memory::set(l_pOutput, l_ui32SampleCount*l_ui32OutputChannelCount*sizeof(double), 0);
 
 			for(uint32_t j=0; j<l_ui32OutputChannelCount; j++)
 			{

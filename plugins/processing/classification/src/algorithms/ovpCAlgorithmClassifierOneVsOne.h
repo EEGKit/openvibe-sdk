@@ -24,9 +24,9 @@ namespace OpenViBEPlugins
 		// Should be use only by OneVsOne and pairwise decision algorithm
 		typedef struct
 		{
-			OpenViBE::float64 m_f64FirstClass;
-			OpenViBE::float64 m_f64SecondClass;
-			OpenViBE::float64 m_f64ClassLabel;
+			double m_f64FirstClass;
+			double m_f64SecondClass;
+			double m_f64ClassLabel;
 			//This output is probabilist
 			OpenViBE::IMatrix* m_pClassificationValue;
 		} SClassificationInfo;
@@ -40,7 +40,7 @@ namespace OpenViBEPlugins
 			virtual bool uninitialize(void);
 			virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
 			virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-								  , OpenViBE::float64& rf64Class
+								  , double& rf64Class
 								  , OpenViBEToolkit::IVector& rDistanceValue
 								  , OpenViBEToolkit::IVector& rProbabilityValue);
 			virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount);
@@ -67,7 +67,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::IAlgorithmProxy* m_pDecisionStrategyAlgorithm;
 			OpenViBE::CIdentifier m_oPairwiseDecisionIdentifier;
 
-			XML::IXMLNode* getClassifierConfiguration(OpenViBE::float64 f64FirstClass, OpenViBE::float64 f64SecondClass, OpenViBE::Kernel::IAlgorithmProxy* pSubClassifier);
+			XML::IXMLNode* getClassifierConfiguration(double f64FirstClass, double f64SecondClass, OpenViBE::Kernel::IAlgorithmProxy* pSubClassifier);
 			XML::IXMLNode* getPairwiseDecisionConfiguration(void);
 
 			// uint32_t getClassCount(void) const;

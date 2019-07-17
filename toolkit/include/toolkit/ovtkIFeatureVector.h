@@ -9,8 +9,8 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual OpenViBE::float64 getLabel(void) const =0;
-		virtual OpenViBE::boolean setLabel(const OpenViBE::float64 f64Label) =0;
+		virtual double getLabel(void) const =0;
+		virtual bool setLabel(const double f64Label) =0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_FeatureVector);
 	};

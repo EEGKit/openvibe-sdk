@@ -15,7 +15,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::StreamCodecs;
 
-boolean CMasterAcquisitionEncoder::initialize(void)
+bool CMasterAcquisitionEncoder::initialize(void)
 {	
 	// Manages sub-algorithms
 
@@ -113,7 +113,7 @@ boolean CMasterAcquisitionEncoder::initialize(void)
 	return true;
 }
 
-boolean CMasterAcquisitionEncoder::uninitialize(void)
+bool CMasterAcquisitionEncoder::uninitialize(void)
 {
 	m_pChannelUnitsStreamEncoder->uninitialize();
 	m_pChannelLocalisationStreamEncoder->uninitialize();
@@ -132,7 +132,7 @@ boolean CMasterAcquisitionEncoder::uninitialize(void)
 	return true;
 }
 
-boolean CMasterAcquisitionEncoder::process(void)
+bool CMasterAcquisitionEncoder::process(void)
 {
 	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelUnitsMemoryBuffer(m_pAcquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ChannelUnitsStream));
 	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelLocalisationMemoryBuffer(m_pAcquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ChannelLocalisationStream));
@@ -167,14 +167,14 @@ boolean CMasterAcquisitionEncoder::process(void)
 		// op_pAcquisitionMemoryBuffer->setSize(0, true);
 
 		// For these streams, we only send the buffer if there is something to send
-		const TParameterHandler<boolean> ip_bEncodeUnitData(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelUnitData));
+		const TParameterHandler<bool> ip_bEncodeUnitData(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelUnitData));
 		if (ip_bEncodeUnitData)
 		{
 			// this->getLogManager() << LogLevel_Info << "Encoding units " << ip_pUnits->getBufferElementCount() << "\n";
 			m_pChannelUnitsStreamEncoder->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
 
-		const TParameterHandler<boolean> ip_bEncodeChannelLocalisationData(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelLocalisationData));
+		const TParameterHandler<bool> ip_bEncodeChannelLocalisationData(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelLocalisationData));
 		if (ip_bEncodeChannelLocalisationData)
 		{
 			m_pChannelLocalisationStreamEncoder->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeBuffer);

@@ -10,7 +10,7 @@ using namespace OpenViBEPlugins::Classification;
 
 using namespace OpenViBEToolkit;
 
-boolean CAlgorithmPairwiseDecision::process()
+bool CAlgorithmPairwiseDecision::process()
 {
 	// @note there is essentially no test that these are called in correct order. Caller be careful!
 	if (this->isInputTriggerActive(OVP_Algorithm_Classifier_Pairwise_InputTriggerId_Compute))

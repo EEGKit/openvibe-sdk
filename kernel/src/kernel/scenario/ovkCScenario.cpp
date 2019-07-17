@@ -1470,7 +1470,7 @@ void getIdentifierList(
 	*identifierList = new OpenViBE::CIdentifier[elementMap.size()];
 
 	size_t index = 0;
-	for (auto it = elementMap.begin(); it != elementMap.end(); it++)
+	for (auto it = elementMap.begin(); it != elementMap.end(); ++it)
 	{
 		if (testFunctor(it))
 		{

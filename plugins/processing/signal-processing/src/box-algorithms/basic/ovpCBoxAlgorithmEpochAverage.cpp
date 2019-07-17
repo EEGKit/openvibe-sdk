@@ -11,7 +11,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 
-boolean CBoxAlgorithmEpochAverage::initialize(void)
+bool CBoxAlgorithmEpochAverage::initialize(void)
 {
 	CIdentifier l_oInputTypeIdentifier;
 	getStaticBoxContext().getInputType(0, l_oInputTypeIdentifier);
@@ -72,7 +72,7 @@ boolean CBoxAlgorithmEpochAverage::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmEpochAverage::uninitialize(void)
+bool CBoxAlgorithmEpochAverage::uninitialize(void)
 {
 	CIdentifier l_oInputTypeIdentifier;
 	getStaticBoxContext().getInputType(0, l_oInputTypeIdentifier);
@@ -93,13 +93,13 @@ boolean CBoxAlgorithmEpochAverage::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmEpochAverage::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmEpochAverage::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmEpochAverage::process(void)
+bool CBoxAlgorithmEpochAverage::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();

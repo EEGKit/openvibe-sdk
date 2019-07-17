@@ -54,22 +54,22 @@ CIdentifier& CIdentifier::operator--(void)
 
 namespace OpenViBE
 {
-	boolean operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
+	bool operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
 	{
 		return rIdentifier1.m_ui64Identifier == rIdentifier2.m_ui64Identifier;
 	}
 
-	boolean operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
+	bool operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
 	{
 		return !(rIdentifier1 == rIdentifier2);
 	}
 
-	boolean operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
+	bool operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
 	{
 		return rIdentifier1.m_ui64Identifier < rIdentifier2.m_ui64Identifier;
 	}
 
-	boolean operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
+	bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
 	{
 		return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier;
 	}
@@ -84,7 +84,7 @@ CString CIdentifier::toString(void) const
 	return CString(l_sBuffer);
 }
 
-boolean CIdentifier::fromString(const CString& rString)
+bool CIdentifier::fromString(const CString& rString)
 {
 	const char* l_sBuffer = rString;
 	unsigned int l_uiIdentifier1;

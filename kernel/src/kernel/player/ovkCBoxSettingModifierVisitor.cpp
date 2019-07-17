@@ -64,7 +64,7 @@ void CBoxSettingModifierVisitor::closeChild(void)
 	m_bIsParsingSettingValue = false;
 }
 
-OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
+bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
 {
 	m_pObjectVisitorContext = &rObjectVisitorContext;
 
@@ -199,7 +199,7 @@ OpenViBE::boolean CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext
 	return true;
 }
 
-boolean CBoxSettingModifierVisitor::processEnd(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
+bool CBoxSettingModifierVisitor::processEnd(IObjectVisitorContext& rObjectVisitorContext, IBox& rBox)
 {
 	m_pObjectVisitorContext = &rObjectVisitorContext;
 	return true;

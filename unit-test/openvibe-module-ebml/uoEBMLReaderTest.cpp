@@ -75,9 +75,9 @@ public:
 		else if (m_CurrentIdentifier == EBML::CIdentifier(0xffffffffffffffffLL))
 			g_OutputStream << "Got uinteger : [0x" << std::setw(16) << std::setfill('0') << std::hex << m_ReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) << std::dec << "]\n";
 		else if (m_CurrentIdentifier == EBML::CIdentifier(0x4321))
-			g_OutputStream << "Got float64 : [" << m_ReaderHelper.getFloatFromChildData(pBuffer, ui64BufferSize) << "]\n";
+			g_OutputStream << "Got double : [" << m_ReaderHelper.getFloatFromChildData(pBuffer, ui64BufferSize) << "]\n";
 		else if (m_CurrentIdentifier == EBML::CIdentifier(0x8765))
-			g_OutputStream << "Got float32 : [" << m_ReaderHelper.getFloatFromChildData(pBuffer, ui64BufferSize) << "]\n";
+			g_OutputStream << "Got float : [" << m_ReaderHelper.getFloatFromChildData(pBuffer, ui64BufferSize) << "]\n";
 		else
 			g_OutputStream << "Got " << ui64BufferSize << " data bytes, node id not known\n";
 	}

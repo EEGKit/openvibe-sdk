@@ -124,7 +124,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmExternalProcessingListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* boxListener) const { delete boxListener; }
 
-			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& boxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& boxAlgorithmPrototype) const
 			{
 				boxAlgorithmPrototype.addSetting("Launch third party program", OV_TypeId_Boolean, "true");     // 0
 				boxAlgorithmPrototype.addSetting("Executable path", OV_TypeId_Filename, "");                   // 1

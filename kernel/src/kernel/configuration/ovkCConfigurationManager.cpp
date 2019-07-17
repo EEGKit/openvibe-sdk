@@ -854,12 +854,12 @@ CString CConfigurationManager::expandOnlyKeyword(
 	return l_sValue.c_str();
 }
 
-float64 CConfigurationManager::expandAsFloat(
+double CConfigurationManager::expandAsFloat(
 	const CString& rExpression,
-	const float64 f64FallbackValue) const
+	const double f64FallbackValue) const
 {
 	CString l_sResult = this->expand(rExpression);
-	float64 l_f64Result;
+	double l_f64Result;
 
 	try
 	{

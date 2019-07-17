@@ -26,17 +26,17 @@ namespace Socket
 	public:
 		TConnectionDelegate(SConnectionDelegate oConnectionDelegate) : m_oConnectionDelegate(oConnectionDelegate) { }
 
-		virtual Socket::boolean close(void)
+		virtual bool close(void)
 		{
 			return m_oConnectionDelegate.fpClose(m_oConnectionDelegate.pUserData);
 		}
 
-		virtual Socket::boolean isReadyToSend(Socket::uint32 ui32TimeOut) const
+		virtual bool isReadyToSend(Socket::uint32 ui32TimeOut) const
 		{
 			return m_oConnectionDelegate.fpIsReadyToSend(m_oConnectionDelegate.pUserData, ui32TimeOut);
 		}
 
-		virtual Socket::boolean isReadyToReceive(Socket::uint32 ui32TimeOut) const
+		virtual bool isReadyToReceive(Socket::uint32 ui32TimeOut) const
 		{
 			return m_oConnectionDelegate.fpIsReadyToReceive(m_oConnectionDelegate.pUserData, ui32TimeOut);
 		}
@@ -51,17 +51,17 @@ namespace Socket
 			return m_oConnectionDelegate.fpReceiveBuffer(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
 		}
 
-		virtual Socket::boolean sendBufferBlocking(const void* pBuffer, const Socket::uint32 ui32BufferSize)
+		virtual bool sendBufferBlocking(const void* pBuffer, const Socket::uint32 ui32BufferSize)
 		{
 			return m_oConnectionDelegate.fpSendBufferBlocking(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
 		}
 
-		virtual Socket::boolean receiveBufferBlocking(void* pBuffer, const Socket::uint32 ui32BufferSize)
+		virtual bool receiveBufferBlocking(void* pBuffer, const Socket::uint32 ui32BufferSize)
 		{
 			return m_oConnectionDelegate.fpReceiveBufferBlocking(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
 		}
 
-		virtual Socket::boolean isConnected(void) const
+		virtual bool isConnected(void) const
 		{
 			return m_oConnectionDelegate.fpIsConnected(m_oConnectionDelegate.pUserData);
 		}
@@ -74,7 +74,7 @@ namespace Socket
 	public:
 		virtual ~TConnectionDelegate(void) { }
 	protected:
-		virtual Socket::boolean open(void)
+		virtual bool open(void)
 		{
 			return m_oConnectionDelegate.fpOpen(m_oConnectionDelegate.pUserData);
 		}

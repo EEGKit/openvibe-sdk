@@ -24,8 +24,8 @@ namespace OpenViBE
 		 * The template argument is the handled data type :
 		 *  - for \c ParameterType_Integer : \c OpenViBE::int64
 		 *  - for \c ParameterType_UInteger : \c OpenViBE::uint64
-		 *  - for \c ParameterType_Boolean : \c OpenViBE::boolean
-		 *  - for \c ParameterType_Float : \c OpenViBE::float64
+		 *  - for \c ParameterType_Boolean : \c bool
+		 *  - for \c ParameterType_Float : \c double
 		 *  - for \c ParameterType_String : \c OpenViBE::CString
 		 *  - for \c ParameterType_Identifier : \c OpenViBE::CIdentifier
 		 *  - for \c ParameterType_Matrix : \c OpenViBE::IMatrix*
@@ -79,7 +79,7 @@ namespace OpenViBE
 			 * Future calls to this handler will be redirected to the
 			 * concrete parameter object.
 			 */
-			OpenViBE::boolean initialize(OpenViBE::Kernel::IParameter* pParameter)
+			bool initialize(OpenViBE::Kernel::IParameter* pParameter)
 			{
 				if (m_pParameter) { return false; }
 
@@ -96,7 +96,7 @@ namespace OpenViBE
 			 *
 			 * This handler won't be usable until \c initialize is called successfully again.
 			 */
-			OpenViBE::boolean uninitialize(void)
+			bool uninitialize(void)
 			{
 				if (!m_pParameter) { return false; }
 
@@ -108,7 +108,7 @@ namespace OpenViBE
 			 * \brief Checks whether this handler is connected to a concrete IParameter or not
 			 * \return \e true if this handler is connected to a concrete IParameter, \e false if not
 			 */
-			OpenViBE::boolean exists(void) const { return m_pParameter != NULL; }
+			bool exists(void) const { return m_pParameter != NULL; }
 
 			//@{
 			/** \name Transparent operators */
@@ -187,7 +187,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			OpenViBE::boolean clearReferenceTarget(void)
+			bool clearReferenceTarget(void)
 			{
 				return m_pParameter ? m_pParameter->clearReferenceTarget() : false;
 			}
@@ -197,7 +197,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			OpenViBE::boolean setReferenceTarget(OpenViBE::Kernel::TParameterHandler<T>& rParameterHandler)
+			bool setReferenceTarget(OpenViBE::Kernel::TParameterHandler<T>& rParameterHandler)
 			{
 				return m_pParameter && rParameterHandler.m_pParameter ? m_pParameter->setReferenceTarget(rParameterHandler.m_pParameter) : false;
 			}
@@ -207,7 +207,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			OpenViBE::boolean setReferenceTarget(OpenViBE::Kernel::IParameter* pParameter)
+			bool setReferenceTarget(OpenViBE::Kernel::IParameter* pParameter)
 			{
 				return m_pParameter && pParameter ? m_pParameter->setReferenceTarget(pParameter) : false;
 			}
@@ -217,7 +217,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			OpenViBE::boolean setReferenceTarget(T& t)
+			bool setReferenceTarget(T& t)
 			{
 				return m_pParameter ? m_pParameter->setReferenceTarget(&t) : false;
 			}

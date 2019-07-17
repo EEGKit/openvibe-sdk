@@ -32,7 +32,7 @@ CString CComment::getText(void) const
 	return m_sText;
 }
 
-boolean CComment::setIdentifier(
+bool CComment::setIdentifier(
 	const CIdentifier& rIdentifier)
 {
 	if (m_oIdentifier != OV_UndefinedIdentifier) { return false; }
@@ -42,7 +42,7 @@ boolean CComment::setIdentifier(
 	return true;
 }
 
-boolean CComment::setText(
+bool CComment::setText(
 	const CString& sText)
 {
 	m_sText = sText;
@@ -53,7 +53,7 @@ boolean CComment::setText(
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CComment::initializeFromExistingComment(
+bool CComment::initializeFromExistingComment(
 	const IComment& rExisitingComment)
 {
 	m_sText = rExisitingComment.getText();
@@ -71,7 +71,7 @@ boolean CComment::initializeFromExistingComment(
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CComment::acceptVisitor(
+bool CComment::acceptVisitor(
 	IObjectVisitor& rObjectVisitor)
 {
 	CObjectVisitorContext l_oObjectVisitorContext(getKernelContext());

@@ -8,7 +8,7 @@ using namespace OpenViBE;
 
 void CAbstractTree::simplifyTree()
 {
-	boolean l_bHasChanged = true;
+	bool l_bHasChanged = true;
 
 	//while stability hasn't been reached
 	while (l_bHasChanged)
@@ -117,13 +117,13 @@ void CAbstractTreeParentNode::levelOperators()
 	}
 }
 
-boolean CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
+bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 {
 	//result boolean, true if a child has changed
-	boolean l_bHasChanged = false;
+	bool l_bHasChanged = false;
 
 	//true if a child has changed
-	boolean l_bChildrenChanged = true;
+	bool l_bChildrenChanged = true;
 
 	//number of children of this node
 	uint64 l_ui64NumberOfChildren = m_oChildren.size();
@@ -158,7 +158,7 @@ boolean CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 		//if we can already compute the result
 		if (m_oChildren[0]->isConstant())
 		{
-			float64 l_f64ChildValue = reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[0])->getValue();
+			double l_f64ChildValue = reinterpret_cast<CAbstractTreeValueNode*>(m_oChildren[0])->getValue();
 			switch (m_ui64Identifier)
 			{
 				case OP_NEG: pModifiedNode = new CAbstractTreeValueNode(-l_f64ChildValue);
@@ -198,7 +198,7 @@ boolean CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 		//binary operator not associative
 	else if (l_ui64NumberOfChildren == 2 && !isAssociative())
 	{
-		float64 l_f64TotalValue = 0;
+		double l_f64TotalValue = 0;
 
 		//if we can already compute the result
 		if (m_oChildren[0]->isConstant() && m_oChildren[1]->isConstant())
@@ -261,7 +261,7 @@ boolean CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 
 		//iterator on the children
 		size_t i                = 0;
-		float64 l_f64TotalValue = 0;
+		double l_f64TotalValue = 0;
 
 		switch (m_ui64Identifier)
 		{
@@ -463,7 +463,7 @@ void CAbstractTreeVariableNode::generateCode(CEquationParser& oParser)
 	oParser.push_var(m_ui32Index);
 }
 
-void CAbstractTree::recognizeSpecialTree(uint64& ui64TreeIdentifier, float64& f64Parameter)
+void CAbstractTree::recognizeSpecialTree(uint64& ui64TreeIdentifier, double& f64Parameter)
 {
 	//default
 	ui64TreeIdentifier = OP_USERDEF;
@@ -497,7 +497,7 @@ void CAbstractTree::recognizeSpecialTree(uint64& ui64TreeIdentifier, float64& f6
 		//binary
 	else if (l_ui64NumberOfChildren == 2)
 	{
-		boolean l_bIsVariable[2];
+		bool l_bIsVariable[2];
 		l_bIsVariable[0] = l_oChildren[0]->isTerminal() && !l_oChildren[0]->isConstant();
 		l_bIsVariable[1] = l_oChildren[1]->isTerminal() && !l_oChildren[1]->isConstant();
 

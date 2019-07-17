@@ -37,7 +37,7 @@ inline unsigned long getCodedSizeLength(const uint64 uiValue)
 	return l_ulCodedSizeLength;
 }
 
-inline boolean getCodedBuffer(const uint64 uiValue, unsigned char* pBuffer, uint64* pBufferLength)
+inline bool getCodedBuffer(const uint64 uiValue, unsigned char* pBuffer, uint64* pBufferLength)
 {
 	unsigned long i;
 	unsigned long l_ulCodedSizeLength = getCodedSizeLength(uiValue);
@@ -76,7 +76,7 @@ namespace EBML
 
 		protected:
 
-			uint64 getTotalContentSize(boolean bCountIdentifierAndSize);
+			uint64 getTotalContentSize(bool bCountIdentifierAndSize);
 
 		private:
 
@@ -88,7 +88,7 @@ namespace EBML
 			CWriterNode* m_pParentNode;
 			uint64 m_ui64BufferLength;
 			unsigned char* m_pBuffer;
-			boolean m_bBuffered;
+			bool m_bBuffered;
 			vector<CWriterNode*> m_vChildren;
 		};
 	};
@@ -154,7 +154,7 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	}
 }
 
-uint64 CWriterNode::getTotalContentSize(boolean bCountIdentifierAndSize)
+uint64 CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
 {
 	uint64 l_ui64ContentSize = 0;
 	if (m_vChildren.size() == 0)
@@ -193,9 +193,9 @@ namespace EBML
 
 			explicit CWriter(IWriterCallback& rWriterCallback);
 
-			virtual boolean openChild(const CIdentifier& rIdentifier);
-			virtual boolean setChildData(const void* pBuffer, const uint64 ui64BufferSize);
-			virtual boolean closeChild(void);
+			virtual bool openChild(const CIdentifier& rIdentifier);
+			virtual bool setChildData(const void* pBuffer, const uint64 ui64BufferSize);
+			virtual bool closeChild(void);
 
 			virtual void release(void);
 
@@ -218,7 +218,7 @@ CWriter::CWriter(IWriterCallback& rWriterCallback)
 	: m_pCurrentNode(NULL)
 	  , m_rWriterCallback(rWriterCallback) {}
 
-boolean CWriter::openChild(const CIdentifier& rIdentifier)
+bool CWriter::openChild(const CIdentifier& rIdentifier)
 {
 	if (m_pCurrentNode)
 	{
@@ -234,7 +234,7 @@ boolean CWriter::openChild(const CIdentifier& rIdentifier)
 	return true;
 }
 
-boolean CWriter::setChildData(const void* pBuffer, const uint64 ui64BufferSize)
+bool CWriter::setChildData(const void* pBuffer, const uint64 ui64BufferSize)
 {
 	if (!m_pCurrentNode) { return false; }
 
@@ -260,7 +260,7 @@ boolean CWriter::setChildData(const void* pBuffer, const uint64 ui64BufferSize)
 	return true;
 }
 
-boolean CWriter::closeChild(void)
+bool CWriter::closeChild(void)
 {
 	if (!m_pCurrentNode) { return false; }
 

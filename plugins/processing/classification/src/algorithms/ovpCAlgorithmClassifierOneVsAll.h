@@ -20,17 +20,17 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
-			virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-											   , OpenViBE::float64& rf64Class
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
+			virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
+											   , double& rf64Class
 											   , OpenViBEToolkit::IVector& rDistanceValue
 											   , OpenViBEToolkit::IVector& rProbabilityValue);
-			virtual OpenViBE::boolean designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount);
+			virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount);
 
 			virtual XML::IXMLNode* saveConfiguration(void);
-			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode* pConfigurationNode);
+			virtual bool loadConfiguration(XML::IXMLNode* pConfigurationNode);
 
 			virtual OpenViBE::uint32 getOutputProbabilityVectorLength();
 			virtual OpenViBE::uint32 getOutputDistanceVectorLength();
@@ -42,12 +42,12 @@ namespace OpenViBEPlugins
 
 		private:
 			XML::IXMLNode* getClassifierConfiguration(OpenViBE::Kernel::IAlgorithmProxy* classifier);
-			OpenViBE::boolean addNewClassifierAtBack(void);
+			bool addNewClassifierAtBack(void);
 			void removeClassifierAtBack(void);
-			OpenViBE::boolean setSubClassifierIdentifier(const OpenViBE::CIdentifier& rId);
+			bool setSubClassifierIdentifier(const OpenViBE::CIdentifier& rId);
 			OpenViBE::uint32 getClassCount(void) const;
 
-			OpenViBE::boolean loadSubClassifierConfiguration(XML::IXMLNode* pSubClassifiersNode);
+			bool loadSubClassifierConfiguration(XML::IXMLNode* pSubClassifiersNode);
 
 			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_oSubClassifierList;
 			fClassifierComparison m_fAlgorithmComparison;
@@ -73,7 +73,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ClassifierOneVsAll; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CAlgorithmClassifierOneVsAll; }
 
-			virtual OpenViBE::boolean getAlgorithmPrototype(
+			virtual bool getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				CAlgorithmPairingStrategyDesc::getAlgorithmPrototype(rAlgorithmPrototype);

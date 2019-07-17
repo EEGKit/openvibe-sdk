@@ -15,13 +15,13 @@ void CBoxAlgorithmIdentity::release(void)
 	delete this;
 }
 
-boolean CBoxAlgorithmIdentity::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmIdentity::processInput(uint32 ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmIdentity::process(void)
+bool CBoxAlgorithmIdentity::process(void)
 {
 	const IBox* l_pStaticBoxContext = getBoxAlgorithmContext()->getStaticBoxContext();
 	IBoxIO* l_pDynamicBoxContext    = getBoxAlgorithmContext()->getDynamicBoxContext();

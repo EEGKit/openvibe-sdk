@@ -9,7 +9,6 @@
 
 using namespace std;
 using namespace OpenViBE;
-#define boolean bool
 
 #define create(rcid,cid,sptr,cl) \
 	if(rcid==cid) \
@@ -24,8 +23,7 @@ using namespace OpenViBE;
 Kernel::CKernelObjectFactory::CKernelObjectFactory(const Kernel::IKernelContext& rKernelContext)
 	: TKernelObject<IKernelObjectFactory>(rKernelContext) {}
 
-IObject* Kernel::CKernelObjectFactory::createObject(
-	const CIdentifier& rClassIdentifier)
+IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& rClassIdentifier)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
@@ -44,7 +42,7 @@ IObject* Kernel::CKernelObjectFactory::createObject(
 	return l_pResult;
 }
 
-boolean Kernel::CKernelObjectFactory::releaseObject(
+bool Kernel::CKernelObjectFactory::releaseObject(
 	IObject* pObject)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
@@ -54,14 +52,9 @@ boolean Kernel::CKernelObjectFactory::releaseObject(
 	CIdentifier l_rClassIdentifier;
 	l_rClassIdentifier = pObject->getClassIdentifier();
 
-	vector<IObject*>::iterator i;
-	i = find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
+	vector<IObject*>::iterator i = find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
 
-	OV_ERROR_UNLESS_KRF(
-		i != m_oCreatedObjects.end(),
-		"Can not release object with final class id " << l_rClassIdentifier.toString() << " - it is not owned by this fatory",
-		ErrorType::ResourceNotFound
-	);
+	OV_ERROR_UNLESS_KRF(i != m_oCreatedObjects.end(), "Can not release object with final class id " << l_rClassIdentifier.toString() << " - it is not owned by this fatory", ErrorType::ResourceNotFound);
 
 	m_oCreatedObjects.erase(i);
 	delete pObject;

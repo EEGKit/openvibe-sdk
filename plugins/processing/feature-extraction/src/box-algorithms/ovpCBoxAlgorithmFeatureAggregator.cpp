@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 																			   m_ui32VectorSize(0),
 																			   m_bHeaderSent(false) { }
 
-		OpenViBE::boolean CBoxAlgorithmFeatureAggregator::initialize()
+		bool CBoxAlgorithmFeatureAggregator::initialize()
 		{
 			m_ui32NumberOfInput = getBoxAlgorithmContext()->getStaticBoxContext()->getInputCount();
 
@@ -51,7 +51,7 @@ namespace OpenViBEPlugins
 			return true;
 		}
 
-		OpenViBE::boolean CBoxAlgorithmFeatureAggregator::uninitialize()
+		bool CBoxAlgorithmFeatureAggregator::uninitialize()
 		{
 			for (uint32 i = 0; i < m_ui32NumberOfInput; i++)
 			{
@@ -72,7 +72,7 @@ namespace OpenViBEPlugins
 			return true;
 		}
 
-		boolean CBoxAlgorithmFeatureAggregator::processInput(uint32 ui32InputIndex)
+		bool CBoxAlgorithmFeatureAggregator::processInput(uint32 ui32InputIndex)
 		{
 			IBoxIO* l_pBoxIO = getBoxAlgorithmContext()->getDynamicBoxContext();
 
@@ -88,7 +88,7 @@ namespace OpenViBEPlugins
 			uint64 l_ui64StartTime = 0;
 			uint64 l_ui64EndTime   = 0;
 
-			boolean l_bReadyToProcess = true;
+			bool l_bReadyToProcess = true;
 
 			//checks every input's first chunk's dates
 			for (uint32 i = 0; i < m_ui32NumberOfInput && l_bReadyToProcess; i++)
@@ -137,15 +137,15 @@ namespace OpenViBEPlugins
 			return true;
 		}
 
-		OpenViBE::boolean CBoxAlgorithmFeatureAggregator::process()
+		bool CBoxAlgorithmFeatureAggregator::process()
 		{
 			const IBox* l_pStaticBoxContext = getBoxAlgorithmContext()->getStaticBoxContext();
 			IBoxIO* l_pBoxIO                = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 			IMatrix* l_pOutputMatrix = m_pFeatureVectorEncoder->getInputMatrix();
-			std::vector<float64> l_vBufferElements;
+			std::vector<double> l_vBufferElements;
 			uint64 l_ui64TotalBufferSize = 0;
-			boolean l_bBufferReceived    = false;
+			bool l_bBufferReceived    = false;
 
 			for (uint32 input = 0; input < l_pStaticBoxContext->getInputCount(); input++)
 			{
@@ -180,7 +180,7 @@ namespace OpenViBEPlugins
 					IMatrix* l_pInputMatrix = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
 					uint32 l_ui32BufferSize = l_pInputMatrix->getBufferElementCount();
 
-					float64* l_pBuffer = l_pInputMatrix->getBuffer();
+					double* l_pBuffer = l_pInputMatrix->getBuffer();
 					for (uint32 i = 0; i < l_ui32BufferSize; i++)
 					{
 						l_vBufferElements.push_back(l_pBuffer[i]);
@@ -190,7 +190,7 @@ namespace OpenViBEPlugins
 
 			if (m_bHeaderSent && l_bBufferReceived)
 			{
-				float64* l_pOutputBuffer = l_pOutputMatrix->getBuffer();
+				double* l_pOutputBuffer = l_pOutputMatrix->getBuffer();
 				for (uint32 i = 0; i < l_vBufferElements.size(); i++)
 				{
 					l_pOutputBuffer[i] = l_vBufferElements[i];

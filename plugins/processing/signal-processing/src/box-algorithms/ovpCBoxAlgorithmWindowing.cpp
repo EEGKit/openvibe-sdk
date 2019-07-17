@@ -9,7 +9,7 @@ using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::SignalProcessing;
 using namespace OpenViBEToolkit;
 
-boolean CBoxAlgorithmWindowing::initialize()
+bool CBoxAlgorithmWindowing::initialize()
 {
 	//reads the plugin settings
 	m_WindowMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
@@ -36,7 +36,7 @@ boolean CBoxAlgorithmWindowing::initialize()
 	return true;
 }
 
-boolean CBoxAlgorithmWindowing::uninitialize()
+bool CBoxAlgorithmWindowing::uninitialize()
 {
 	m_Decoder.uninitialize();
 	m_Encoder.uninitialize();
@@ -44,13 +44,13 @@ boolean CBoxAlgorithmWindowing::uninitialize()
 	return true;
 }
 
-boolean CBoxAlgorithmWindowing::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmWindowing::processInput(uint32 ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmWindowing::process()
+bool CBoxAlgorithmWindowing::process()
 {
 	IBoxIO* dynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 

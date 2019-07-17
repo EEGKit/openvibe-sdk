@@ -146,13 +146,13 @@ bool CBoxAlgorithmSignalDecimation::process(void)
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			float64* l_pInputBuffer  = op_pMatrix->getBuffer();
-			float64* l_pOutputBuffer = ip_pMatrix->getBuffer() + m_ui32OutputSampleIndex;
+			double* l_pInputBuffer  = op_pMatrix->getBuffer();
+			double* l_pOutputBuffer = ip_pMatrix->getBuffer() + m_ui32OutputSampleIndex;
 
 			for (uint32_t j = 0; j < m_ui32InputSampleCountPerSentBlock; j++)
 			{
-				float64* l_pInputBufferTmp  = l_pInputBuffer;
-				float64* l_pOutputBufferTmp = l_pOutputBuffer;
+				double* l_pInputBufferTmp  = l_pInputBuffer;
+				double* l_pOutputBufferTmp = l_pOutputBuffer;
 				for (uint32_t k = 0; k < m_ui32ChannelCount; k++)
 				{
 					*l_pOutputBufferTmp += *l_pInputBufferTmp;
@@ -164,7 +164,7 @@ bool CBoxAlgorithmSignalDecimation::process(void)
 				if (m_ui32InputSampleIndex == m_i64DecimationFactor)
 				{
 					m_ui32InputSampleIndex      = 0;
-					float64* l_pOutputBufferTmp = l_pOutputBuffer;
+					double* l_pOutputBufferTmp = l_pOutputBuffer;
 					for (uint32_t k = 0; k < m_ui32ChannelCount; k++)
 					{
 						*l_pOutputBufferTmp /= m_i64DecimationFactor;

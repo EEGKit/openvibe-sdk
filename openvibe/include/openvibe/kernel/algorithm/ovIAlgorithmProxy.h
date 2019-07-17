@@ -115,7 +115,7 @@ namespace OpenViBE
 			 * \return \e true if the provided trigger is currently active.
 			 * \return \e false if the provided trigger is not currently active or does not exist.
 			 */
-			virtual OpenViBE::boolean isOutputTriggerActive(
+			virtual bool isOutputTriggerActive(
 				const OpenViBE::CIdentifier& rOutputTriggerIdentifier) const =0;
 
 			/**
@@ -144,9 +144,9 @@ namespace OpenViBE
 			 * \return \e true in case the state was correctly changed.
 			 * \return \e false in case the state was not changed or the provided trigger identifier does not exist.
 			 */
-			virtual OpenViBE::boolean activateInputTrigger(
+			virtual bool activateInputTrigger(
 				const OpenViBE::CIdentifier& rInputTriggerIdentifier,
-				const OpenViBE::boolean bTriggerState) =0;
+				const bool bTriggerState) =0;
 
 			//@}
 			/** \name Algorithm functions */
@@ -159,7 +159,7 @@ namespace OpenViBE
 			 * \note The algorithm context is managed internally
 			 * \pre The algorithm is not yet initialized
 			 */
-			virtual OpenViBE::boolean initialize(void) =0;
+			virtual bool initialize(void) =0;
 			/**
 			 * \brief Uninitializes the algorithm
 			 * \return \e true in case of success.
@@ -167,7 +167,7 @@ namespace OpenViBE
 			 * \note The algorithm context is managed internally
 			 * \pre The algorithm is initialized
 			 */
-			virtual OpenViBE::boolean uninitialize(void) =0;
+			virtual bool uninitialize(void) =0;
 			/**
 			 * \brief Calls the processing method of the algorithm
 			 * \return \e true in case of success.
@@ -175,7 +175,7 @@ namespace OpenViBE
 			 * \note The algorithm context is managed internally
 			 * \pre The algorithm is initialized
 			 */
-			virtual OpenViBE::boolean process(void) =0;
+			virtual bool process(void) =0;
 			/**
 			 * \brief Activates an input trigger and immediatly calls the processing method
 			 * \param rTriggerIdentifier [in] : the identifier of the input trigger to activate
@@ -184,11 +184,11 @@ namespace OpenViBE
 			 * \note The algorithm context is managed internally
 			 * \pre The algorithm is initialized
 			 */
-			virtual OpenViBE::boolean process(
+			virtual bool process(
 				const OpenViBE::CIdentifier& rTriggerIdentifier) =0;
 
 
-			virtual OpenViBE::boolean isAlgorithmDerivedFrom(
+			virtual bool isAlgorithmDerivedFrom(
 				const OpenViBE::CIdentifier& rClassIdentifier) =0;
 
 			//@}

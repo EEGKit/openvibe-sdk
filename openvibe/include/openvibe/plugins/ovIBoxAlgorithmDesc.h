@@ -49,7 +49,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Plugins::IBoxProto
 			 */
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rPrototype) const =0;
 			/**
 			 * \brief Gets the stock item to display with this algorithm

@@ -497,7 +497,7 @@ bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validat
 	return (errorCount == 0);
 }
 
-boolean CAlgorithmXMLScenarioImporter::import(IAlgorithmScenarioImporterContext& rContext, const IMemoryBuffer& rMemoryBuffer)
+bool CAlgorithmXMLScenarioImporter::import(IAlgorithmScenarioImporterContext& rContext, const IMemoryBuffer& rMemoryBuffer)
 {
 	m_pContext = &rContext;
 

@@ -18,9 +18,9 @@ namespace OpenViBE
 			explicit CPluginManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 			virtual ~CPluginManager(void);
 
-			virtual OpenViBE::boolean addPluginsFromFiles(
+			virtual bool addPluginsFromFiles(
 				const OpenViBE::CString& rFileNameWildCard);
-			virtual OpenViBE::boolean registerPluginDesc(
+			virtual bool registerPluginDesc(
 				const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc);
 
 			virtual OpenViBE::CIdentifier getNextPluginObjectDescIdentifier(
@@ -29,7 +29,7 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rPreviousIdentifier,
 				const OpenViBE::CIdentifier& rBaseClassIdentifier) const;
 
-			virtual OpenViBE::boolean canCreatePluginObject(
+			virtual bool canCreatePluginObject(
 				const OpenViBE::CIdentifier& rClassIdentifier);
 			virtual const OpenViBE::Plugins::IPluginObjectDesc* getPluginObjectDesc(
 				const OpenViBE::CIdentifier& rClassIdentifier) const;
@@ -40,12 +40,12 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rClassIdentifier) const;
 			virtual OpenViBE::CIdentifier getPluginObjectHashValue(
 				const OpenViBE::Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const;
-			virtual OpenViBE::boolean isPluginObjectFlaggedAsDeprecated(
+			virtual bool isPluginObjectFlaggedAsDeprecated(
 				const OpenViBE::CIdentifier& rClassIdentifier) const;
 
 			virtual OpenViBE::Plugins::IPluginObject* createPluginObject(
 				const OpenViBE::CIdentifier& rClassIdentifier);
-			virtual OpenViBE::boolean releasePluginObject(
+			virtual bool releasePluginObject(
 				OpenViBE::Plugins::IPluginObject* pPluginObject);
 
 			virtual OpenViBE::Plugins::IAlgorithm* createAlgorithm(

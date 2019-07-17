@@ -130,7 +130,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 	);
 
 	//Calculate the amount of sample for each class
-	std::map<float64, uint32_t> l_vClassLabels;
+	std::map<double, uint32_t> l_vClassLabels;
 	for (uint32_t i = 0; i < rFeatureVectorSet.getFeatureVectorCount(); i++)
 	{
 		if (!l_vClassLabels.count(rFeatureVectorSet[i].getLabel()))
@@ -155,11 +155,11 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 	//Now let's train each classifier
 	for (uint32_t l_iFirstClass = 0; l_iFirstClass < m_ui32NumberOfClasses; ++l_iFirstClass)
 	{
-		ip_pRepartitionSet->getBuffer()[l_iFirstClass] = static_cast<float64>(l_vClassLabels[static_cast<float64>(l_iFirstClass)]);
+		ip_pRepartitionSet->getBuffer()[l_iFirstClass] = static_cast<double>(l_vClassLabels[static_cast<double>(l_iFirstClass)]);
 
 		for (uint32_t l_iSecondClass = l_iFirstClass + 1; l_iSecondClass < m_ui32NumberOfClasses; ++l_iSecondClass)
 		{
-			uint32_t l_iFeatureCount = l_vClassLabels[static_cast<float64>(l_iFirstClass)] + l_vClassLabels[static_cast<float64>(l_iSecondClass)];
+			uint32_t l_iFeatureCount = l_vClassLabels[static_cast<double>(l_iFirstClass)] + l_vClassLabels[static_cast<double>(l_iSecondClass)];
 
 			IAlgorithmProxy* l_pSubClassifier = m_oSubClassifiers[std::pair<uint32_t, uint32_t>(l_iFirstClass, l_iSecondClass)];
 
@@ -168,16 +168,16 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 			ip_pFeatureVectorSet->setDimensionSize(0, l_iFeatureCount);
 			ip_pFeatureVectorSet->setDimensionSize(1, l_iFeatureVectorSize + 1);
 
-			float64* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
+			double* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
 			for (uint32_t j = 0; j < rFeatureVectorSet.getFeatureVectorCount(); j++)
 			{
-				const float64 l_f64TempClass = rFeatureVectorSet[j].getLabel();
-				if (l_f64TempClass == static_cast<float64>(l_iFirstClass) || l_f64TempClass == static_cast<float64>(l_iSecondClass))
+				const double l_f64TempClass = rFeatureVectorSet[j].getLabel();
+				if (l_f64TempClass == static_cast<double>(l_iFirstClass) || l_f64TempClass == static_cast<double>(l_iSecondClass))
 				{
 					System::Memory::copy(
 						l_pFeatureVectorSetBuffer,
 						rFeatureVectorSet[j].getBuffer(),
-						l_iFeatureVectorSize * sizeof(float64));
+						l_iFeatureVectorSize * sizeof(double));
 
 					l_pFeatureVectorSetBuffer[l_iFeatureVectorSize] = static_cast<size_t>(l_f64TempClass) == l_iFirstClass ? 0 : 1;
 					l_pFeatureVectorSetBuffer += (l_iFeatureVectorSize + 1);
@@ -194,7 +194,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector, float64& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
+bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector, double& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
 {
 	OV_ERROR_UNLESS_KRF(
 		m_pDecisionStrategyAlgorithm,
@@ -225,18 +225,18 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector
 			IAlgorithmProxy* l_pTempProxy = m_oSubClassifiers[std::pair<uint32_t, uint32_t>(i, j)];
 			TParameterHandler<IMatrix*> ip_pFeatureVector(l_pTempProxy->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 			TParameterHandler<IMatrix*> op_pClassificationValues(l_pTempProxy->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues));
-			TParameterHandler<float64> op_pClassificationLabel(l_pTempProxy->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
+			TParameterHandler<double> op_pClassificationLabel(l_pTempProxy->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 			ip_pFeatureVector->setDimensionCount(1);
 			ip_pFeatureVector->setDimensionSize(0, l_ui32FeatureVectorSize);
 
-			float64* l_pFeatureVectorBuffer = ip_pFeatureVector->getBuffer();
+			double* l_pFeatureVectorBuffer = ip_pFeatureVector->getBuffer();
 			System::Memory::copy(
 				l_pFeatureVectorBuffer,
 				rFeatureVector.getBuffer(),
-				l_ui32FeatureVectorSize * sizeof(float64));
+				l_ui32FeatureVectorSize * sizeof(double));
 			l_pTempProxy->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify);
 
-			SClassificationInfo l_oClassificationInfo = { (float64)i, (float64)j, op_pClassificationLabel, op_pClassificationValues };
+			SClassificationInfo l_oClassificationInfo = { (double)i, (double)j, op_pClassificationLabel, op_pClassificationValues };
 			l_oClassificationList.push_back(l_oClassificationInfo);
 		}
 	}
@@ -263,7 +263,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector
 	);
 
 	TParameterHandler<IMatrix*> op_pProbabilityVector = m_pDecisionStrategyAlgorithm->getOutputParameter(OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector);
-	float64 l_f64MaxProb                              = -1;
+	double l_f64MaxProb                              = -1;
 	int32 l_i32IndexSelectedClass                     = -1;
 
 	rClassificationValues.setSize(0);
@@ -272,7 +272,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector
 	//We just have to take the most relevant now.
 	for (uint32_t i = 0; i < m_ui32NumberOfClasses; ++i)
 	{
-		const float64 l_f64TempProb = op_pProbabilityVector->getBuffer()[i];
+		const double l_f64TempProb = op_pProbabilityVector->getBuffer()[i];
 		if (l_f64TempProb > l_f64MaxProb)
 		{
 			l_i32IndexSelectedClass = i;
@@ -281,7 +281,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector
 		rProbabilityValue[i] = l_f64TempProb;
 	}
 
-	rf64Class = static_cast<float64>(l_i32IndexSelectedClass);
+	rf64Class = static_cast<double>(l_i32IndexSelectedClass);
 	return true;
 }
 
@@ -335,7 +335,7 @@ bool CAlgorithmClassifierOneVsOne::designArchitecture(const OpenViBE::CIdentifie
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmClassifierOneVsOne::getClassifierConfiguration(float64 f64FirstClass, float64 f64SecondClass, IAlgorithmProxy* pSubClassifier)
+XML::IXMLNode* CAlgorithmClassifierOneVsOne::getClassifierConfiguration(double f64FirstClass, double f64SecondClass, IAlgorithmProxy* pSubClassifier)
 {
 	XML::IXMLNode* l_pRes = XML::createNode(c_sSubClassifierNodeName);
 
@@ -472,7 +472,7 @@ bool CAlgorithmClassifierOneVsOne::loadSubClassifierConfiguration(XML::IXMLNode*
 
 	for (uint32_t i = 0; i < pSubClassifiersNode->getChildCount(); ++i)
 	{
-		float64 l_f64FirstClass, l_f64SecondClass;
+		double l_f64FirstClass, l_f64SecondClass;
 
 		//Now we have to restore class indexes
 		XML::IXMLNode* l_pSubClassifierNode = pSubClassifiersNode->getChild(i);

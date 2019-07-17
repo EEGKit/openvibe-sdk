@@ -38,10 +38,10 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
+			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierTrainer)
 
@@ -55,17 +55,17 @@ namespace OpenViBEPlugins
 				OpenViBE::uint32 m_ui32InputIndex;
 			} SFeatureVector;
 
-			virtual OpenViBE::boolean train(const std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector>& rDataset,
+			virtual bool train(const std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector>& rDataset,
 											const std::vector<size_t>& rPermutation,
 											const size_t uiStartIndex, const size_t uiStopIndex);
-			virtual OpenViBE::float64 getAccuracy(const std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector>& rDataset,
+			virtual double getAccuracy(const std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector>& rDataset,
 												  const std::vector<size_t>& rPermutation,
 												  const size_t uiStartIndex, const size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
-			virtual OpenViBE::boolean printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
-			virtual OpenViBE::boolean balanceDataset(void);
+			virtual bool printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
+			virtual bool balanceDataset(void);
 
 		private:
-			OpenViBE::boolean saveConfiguration(void);
+			bool saveConfiguration(void);
 
 		protected:
 
@@ -107,7 +107,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ClassifierTrainer; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CBoxAlgorithmClassifierTrainer; }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Stimulations", OV_TypeId_Stimulations);

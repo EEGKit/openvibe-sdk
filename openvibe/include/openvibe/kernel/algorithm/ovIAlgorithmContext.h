@@ -116,7 +116,7 @@ namespace OpenViBE
 			 * \return \e true if the provided trigger is currently active.
 			 * \return \e false if the provided trigger is not currently active or does not exist.
 			 */
-			virtual OpenViBE::boolean isInputTriggerActive(
+			virtual bool isInputTriggerActive(
 				const OpenViBE::CIdentifier& rInputTriggerIdentifier) const =0;
 			/**
 			 * \brief Activates an output trigger before calling the processing function.
@@ -126,9 +126,9 @@ namespace OpenViBE
 			 * \return \e true in case the state was correctly changed.
 			 * \return \e false in case the state was not changed or the provided trigger identifier does not exist.
 			 */
-			virtual OpenViBE::boolean activateOutputTrigger(
+			virtual bool activateOutputTrigger(
 				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
-				const OpenViBE::boolean bTriggerState) =0;
+				const bool bTriggerState) =0;
 
 			//@}
 

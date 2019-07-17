@@ -12,8 +12,8 @@ namespace OpenViBEToolkit
 	public:
 
 		virtual OpenViBE::uint32 getFeatureVectorCount(void) const =0;
-		virtual OpenViBE::boolean setFeatureVectorCount(const OpenViBE::uint32 ui32FeatureVectorCount) =0;
-		virtual OpenViBE::boolean addFeatureVector(const OpenViBEToolkit::IFeatureVector& rFeatureVector) =0;
+		virtual bool setFeatureVectorCount(const OpenViBE::uint32 ui32FeatureVectorCount) =0;
+		virtual bool addFeatureVector(const OpenViBEToolkit::IFeatureVector& rFeatureVector) =0;
 
 		virtual OpenViBEToolkit::IFeatureVector& getFeatureVector(const OpenViBE::uint32 ui32Index) =0;
 		virtual const OpenViBEToolkit::IFeatureVector& getFeatureVector(const OpenViBE::uint32 ui32Index) const =0;

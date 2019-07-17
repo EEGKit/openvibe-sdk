@@ -12,9 +12,9 @@ namespace EBML
 		explicit CWriter(EBML::IWriterCallback& rWriterCallback);
 		virtual ~CWriter(void);
 
-		virtual EBML::boolean openChild(const EBML::CIdentifier& rIdentifier);
-		virtual EBML::boolean setChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-		virtual EBML::boolean closeChild(void);
+		virtual bool openChild(const EBML::CIdentifier& rIdentifier);
+		virtual bool setChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
+		virtual bool closeChild(void);
 		virtual void release(void);
 
 	protected:

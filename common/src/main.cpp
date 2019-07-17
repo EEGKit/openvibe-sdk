@@ -23,9 +23,9 @@ int main(void)
 #if defined(LINUX)
 	static_assert(sizeof(float80)>=10, "float80 is not at least 10 bytes");
 #endif
-	// Float80 seems to be the same size as float64 on Win at the time of writing, but its not widely used in openvibe.	
-	static_assert(sizeof(float64) >= 8, "float64 is not at least 8 bytes");
-	static_assert(sizeof(float32) >= 4, "float32 is not at least 4 bytes");
+	// Float80 seems to be the same size as double on Win at the time of writing, but its not widely used in openvibe.	
+	static_assert(sizeof(double) >= 8, "double is not at least 8 bytes");
+	static_assert(sizeof(float) >= 4, "float is not at least 4 bytes");
 #endif
 
 	return 0;

@@ -4,13 +4,13 @@ using namespace OpenViBE;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-boolean CSignalTrialSet::addSignalTrial(ISignalTrial& rSignalTrial)
+bool CSignalTrialSet::addSignalTrial(ISignalTrial& rSignalTrial)
 {
 	m_vSignalTrial.push_back(&rSignalTrial);
 	return true;
 }
 
-boolean CSignalTrialSet::clear(void)
+bool CSignalTrialSet::clear(void)
 {
 	m_vSignalTrial.clear();
 	return true;

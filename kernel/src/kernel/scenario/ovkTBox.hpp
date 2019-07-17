@@ -40,13 +40,13 @@ namespace
 			const OpenViBE::CString& rsName,
 			const OpenViBE::CIdentifier& rTypeIdentifier,
 			const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier,
-			const OpenViBE::boolean bNotify          = true) { return true; }
+			const bool bNotify          = true) { return true; }
 
 		virtual bool addOutput(
 			const OpenViBE::CString& rsName,
 			const OpenViBE::CIdentifier& rTypeIdentifier,
 			const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-			const OpenViBE::boolean bNotify          = true) { return true; }
+			const bool bNotify          = true) { return true; }
 
 		virtual bool addSetting(
 			const OpenViBE::CString& rsName,
@@ -54,7 +54,7 @@ namespace
 			const OpenViBE::CString& sDefaultValue,
 			const bool bModifiable                   = false,
 			const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-			const OpenViBE::boolean bNotify          = true) { return true; }
+			const bool bNotify          = true) { return true; }
 
 		virtual bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag) { return true; }
 		virtual bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag) { return true; }

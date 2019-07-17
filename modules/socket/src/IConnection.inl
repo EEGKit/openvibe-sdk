@@ -32,7 +32,7 @@
 
 namespace Socket
 {
-	static boolean FD_ISSET_PROXY(int fd, fd_set* set)
+	static bool FD_ISSET_PROXY(int fd, fd_set* set)
 	{
 		return FD_ISSET(fd, set) ? true : false;
 	}
@@ -42,8 +42,7 @@ namespace Socket
 	{
 	public:
 
-		TConnection(void)
-			: m_i32Socket(-1)
+		TConnection(void) : m_i32Socket(-1)
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
@@ -56,8 +55,7 @@ namespace Socket
 #endif
 		}
 
-		explicit TConnection(int32 i32Socket)
-			: m_i32Socket(i32Socket)
+		explicit TConnection(int32 i32Socket) : m_i32Socket(i32Socket)
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
@@ -81,7 +79,7 @@ namespace Socket
 
 	protected:
 
-		virtual boolean open(void)
+		virtual bool open(void)
 		{
 			if (isConnected()) { return false; }
 
@@ -93,7 +91,7 @@ namespace Socket
 
 	public:
 
-		virtual boolean close(void)
+		virtual bool close(void)
 		{
 			if (!isConnected()) { return false; }
 
@@ -110,7 +108,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual boolean isReadyToSend(
+		virtual bool isReadyToSend(
 			uint32 ui32TimeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
@@ -128,7 +126,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual boolean isReadyToReceive(
+		virtual bool isReadyToReceive(
 			uint32 ui32TimeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
@@ -180,7 +178,7 @@ namespace Socket
 			return l_iResult <= 0 ? 0 : (uint32)l_iResult;
 		}
 
-		virtual boolean sendBufferBlocking(
+		virtual bool sendBufferBlocking(
 			const void* pBuffer,
 			const uint32 ui32BufferSize)
 		{
@@ -194,7 +192,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual boolean receiveBufferBlocking(
+		virtual bool receiveBufferBlocking(
 			void* pBuffer,
 			const uint32 ui32BufferSize)
 		{
@@ -208,7 +206,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual boolean isConnected(void) const
+		virtual bool isConnected(void) const
 		{
 			return m_i32Socket != -1;
 		}

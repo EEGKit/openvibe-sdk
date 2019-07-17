@@ -84,7 +84,7 @@ namespace Dsp
 			while (--numSamples >= 0)
 			{
 				*dest = state.process(*dest, *this);
-				dest++;
+				++dest;
 			}
 		}
 
@@ -173,7 +173,7 @@ namespace Dsp
 				sectionPrev.m_b2 += db2;
 
 				*dest = state.process(*dest, sectionPrev);
-				dest++;
+				++dest;
 			}
 		}
 
@@ -203,7 +203,7 @@ namespace Dsp
 				zPrev.gain += dg;
 
 				*dest = state.process(*dest, Biquad(zPrev));
-				dest++;
+				++dest;
 			}
 		}
 

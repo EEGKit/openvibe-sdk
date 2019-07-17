@@ -38,7 +38,7 @@ namespace EBML
 		 * return \e true when the node should have children, and
 		 * \e false in other cases.
 		 */
-		virtual EBML::boolean isMasterChild(const EBML::CIdentifier& rIdentifier) =0;
+		virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier) =0;
 		/**
 		 * \brief Informs the callback object a new node parsing is starting
 		 * \param rIdentifier [in] : The idenfier of the newly parsing node
@@ -119,7 +119,7 @@ namespace EBML
 		 * EBML::IReaderCallback for more details on the
 		 * callback object.
 		 */
-		virtual EBML::boolean processData(const void* pBuffer, const EBML::uint64 ui64BufferSize) =0;
+		virtual bool processData(const void* pBuffer, const EBML::uint64 ui64BufferSize) =0;
 		/**
 		 * \brief Gets the identifier of the current node
 		 * \return the identifier of the current node

@@ -18,11 +18,11 @@ namespace OpenViBEPlugins
 
 			virtual OpenViBE::uint64 getClockFrequency(void) { return 1LL << 32; }
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uininitialize(void);
+			virtual bool initialize(void);
+			virtual bool uininitialize(void);
 
-			virtual OpenViBE::boolean processClock(OpenViBE::Kernel::IMessageClock& rMessageClock);
-			virtual OpenViBE::boolean process(void);
+			virtual bool processClock(OpenViBE::Kernel::IMessageClock& rMessageClock);
+			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest)
 
@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder[7];
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer[7];
 
-			OpenViBE::boolean m_bHasSentHeader;
+			bool m_bHasSentHeader;
 			OpenViBE::uint64 m_ui64StartTime;
 			OpenViBE::uint64 m_ui64EndTime;
 
@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CEncoderAlgorithmTest(); }
 
-			virtual OpenViBE::boolean getBoxPrototype(
+			virtual bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{
 				rPrototype.addOutput("Experiment information", OV_TypeId_ExperimentInformation);

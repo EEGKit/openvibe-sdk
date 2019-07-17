@@ -59,7 +59,7 @@ namespace SigProSTD
 	}
 }
 
-OpenViBE::boolean CBoxAlgorithmSignalResampling::initialize(void)
+bool CBoxAlgorithmSignalResampling::initialize(void)
 {
 	m_oDecoder.initialize(*this, 0);
 	m_oEncoder.initialize(*this, 0);
@@ -99,20 +99,20 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::initialize(void)
 	return true;
 }
 
-OpenViBE::boolean CBoxAlgorithmSignalResampling::uninitialize(void)
+bool CBoxAlgorithmSignalResampling::uninitialize(void)
 {
 	m_oDecoder.uninitialize();
 	m_oEncoder.uninitialize();
 	return true;
 }
 
-OpenViBE::boolean CBoxAlgorithmSignalResampling::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSignalResampling::processInput(uint32 ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
+bool CBoxAlgorithmSignalResampling::process(void)
 {
 	m_pDynamicBoxContext = &this->getDynamicBoxContext();
 	uint32 i;
@@ -139,7 +139,7 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 
 			this->getLogManager() << LogLevel_Info << "Resampling from [" << m_ui32InputSamplingRate << "] Hz to [" << m_ui32OutputSamplingRate << "] Hz.\n";
 
-			float64 l_f64SRC                   = 1.0 * m_ui32OutputSamplingRate / m_ui32InputSamplingRate;
+			double l_f64SRC                   = 1.0 * m_ui32OutputSamplingRate / m_ui32InputSamplingRate;
 			uint32 l_ui32GreatestCommonDivisor = static_cast<uint32>(SigProSTD::gcd(m_ui32InputSamplingRate, m_ui32OutputSamplingRate));
 			uint32 l_ui32FactorUpsampling      = m_ui32OutputSamplingRate / l_ui32GreatestCommonDivisor;
 			uint32 l_ui32FactorDownsampling    = m_ui32InputSamplingRate / l_ui32GreatestCommonDivisor;
@@ -200,9 +200,9 @@ OpenViBE::boolean CBoxAlgorithmSignalResampling::process(void)
 	return true;
 }
 
-void CBoxAlgorithmSignalResampling::processResampler(const float64* pSample, size_t ui32ChannelCount) const
+void CBoxAlgorithmSignalResampling::processResampler(const double* pSample, size_t ui32ChannelCount) const
 {
-	float64* l_pBuffer             = m_oEncoder.getInputMatrix()->getBuffer();
+	double* l_pBuffer             = m_oEncoder.getInputMatrix()->getBuffer();
 	uint64 l_ui64OutputSampleIndex = m_ui64TotalOutputSampleCount % m_ui32OutputSampleCount;
 
 	for (uint32 j = 0; j < ui32ChannelCount; j++)

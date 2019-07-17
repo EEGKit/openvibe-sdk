@@ -90,7 +90,7 @@ namespace OpenViBE
 			 *       none of \c removeParameter nor configurable destruction will release
 			 *       this parameter object. The caller should take care of this when needed.
 			 */
-			virtual OpenViBE::boolean setParameter(
+			virtual bool setParameter(
 				const OpenViBE::CIdentifier& rParameterIdentifier,
 				OpenViBE::Kernel::IParameter& rpParameter) =0;
 			/**
@@ -115,7 +115,7 @@ namespace OpenViBE
 			 * \note if the parameter object is not released if it was replaced by a custom
 			 *       parameter object thanks to \c setParameter function.
 			 */
-			virtual OpenViBE::boolean removeParameter(
+			virtual bool removeParameter(
 				const OpenViBE::CIdentifier& rParameterIdentifier) =0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Configurable);

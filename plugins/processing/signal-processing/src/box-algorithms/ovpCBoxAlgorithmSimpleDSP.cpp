@@ -19,12 +19,12 @@ CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP(void)
 	  , m_f64SpecialEquationParameter(0)
 	  , m_ppVariable(nullptr) {}
 
-boolean CBoxAlgorithmSimpleDSP::initialize(void)
+bool CBoxAlgorithmSimpleDSP::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	uint32 i;
 
-	m_ppVariable = new float64*[l_rStaticBoxContext.getInputCount()];
+	m_ppVariable = new double*[l_rStaticBoxContext.getInputCount()];
 
 	OV_ERROR_UNLESS_KRF(
 		m_ppVariable,
@@ -124,7 +124,7 @@ boolean CBoxAlgorithmSimpleDSP::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmSimpleDSP::uninitialize(void)
+bool CBoxAlgorithmSimpleDSP::uninitialize(void)
 {
 	std::vector<IAlgorithmProxy*>::iterator it;
 	for (it = m_vStreamDecoder.begin(); it != m_vStreamDecoder.end(); ++it)
@@ -150,7 +150,7 @@ boolean CBoxAlgorithmSimpleDSP::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmSimpleDSP::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSimpleDSP::processInput(uint32 ui32InputIndex)
 {
 	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();
@@ -178,7 +178,7 @@ boolean CBoxAlgorithmSimpleDSP::processInput(uint32 ui32InputIndex)
 	return true;
 }
 
-boolean CBoxAlgorithmSimpleDSP::process(void)
+bool CBoxAlgorithmSimpleDSP::process(void)
 {
 	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();
@@ -265,8 +265,8 @@ void CBoxAlgorithmSimpleDSP::evaluate(void)
 	}
 
 	TParameterHandler<IMatrix*> ip_pMatrix(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
-	float64* l_pBuffer    = ip_pMatrix->getBuffer();
-	float64* l_pBufferEnd = ip_pMatrix->getBuffer() + ip_pMatrix->getBufferElementCount();
+	double* l_pBuffer    = ip_pMatrix->getBuffer();
+	double* l_pBufferEnd = ip_pMatrix->getBuffer() + ip_pMatrix->getBufferElementCount();
 
 	while (l_pBuffer != l_pBufferEnd)
 	{
@@ -301,7 +301,7 @@ void CBoxAlgorithmSimpleDSP::evaluate(void)
 			break;
 
 		case OP_NONE:
-			System::Memory::copy(m_pMatrixBuffer, pBuffer, m_ui64MatrixBufferSize*sizeof(float64));
+			System::Memory::copy(m_pMatrixBuffer, pBuffer, m_ui64MatrixBufferSize*sizeof(double));
 			break;
 
 		case OP_ABS:

@@ -36,17 +36,17 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
+			virtual bool initialize(void);
+			virtual bool uninitialize(void);
 
-			virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
-			virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-											   , OpenViBE::float64& rf64Class
+			virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
+			virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
+											   , double& rf64Class
 											   , OpenViBEToolkit::IVector& rDistanceValue
 											   , OpenViBEToolkit::IVector& rProbabilityValue);
 
 			virtual XML::IXMLNode* saveConfiguration(void);
-			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode* pConfigurationNode);
+			virtual bool loadConfiguration(XML::IXMLNode* pConfigurationNode);
 
 			virtual OpenViBE::uint32 getOutputProbabilityVectorLength();
 			virtual OpenViBE::uint32 getOutputDistanceVectorLength();
@@ -57,13 +57,13 @@ namespace OpenViBEPlugins
 			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
 			void dumpMatrix(OpenViBE::Kernel::ILogManager& pMgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
 
-			std::vector<OpenViBE::float64> m_vLabelList;
+			std::vector<double> m_vLabelList;
 			std::vector<CAlgorithmLDADiscriminantFunction> m_vDiscriminantFunctions;
 
 			Eigen::MatrixXd m_oCoefficients;
 			Eigen::MatrixXd m_oWeights;
-			OpenViBE::float64 m_f64BiasDistance;
-			OpenViBE::float64 m_f64w0;
+			double m_f64BiasDistance;
+			double m_f64w0;
 
 			OpenViBE::uint32 m_ui32NumCols;
 			OpenViBE::uint32 m_ui32NumClasses;
@@ -97,7 +97,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ClassifierLDA; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CAlgorithmClassifierLDA; }
 
-			virtual OpenViBE::boolean getAlgorithmPrototype(
+			virtual bool getAlgorithmPrototype(
 				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", OpenViBE::Kernel::ParameterType_Boolean);

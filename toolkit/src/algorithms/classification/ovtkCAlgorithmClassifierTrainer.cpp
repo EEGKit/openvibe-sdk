@@ -6,7 +6,7 @@ using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
 using namespace OpenViBEToolkit;
 
-boolean CAlgorithmClassifierTrainer::process(void)
+bool CAlgorithmClassifierTrainer::process(void)
 {
 	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(this->getInputParameter(OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet));
 	TParameterHandler<IMemoryBuffer*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Configuration));

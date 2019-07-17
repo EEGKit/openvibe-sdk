@@ -30,19 +30,19 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual OpenViBE::boolean process(void);
+		virtual bool process(void);
 		virtual void release(void) { delete this; }
 
-		virtual OpenViBE::boolean designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount) = 0;
+		virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount) = 0;
 
-		virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) =0;
-		virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-										   , OpenViBE::float64& rf64Class
+		virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) =0;
+		virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
+										   , double& rf64Class
 										   , OpenViBEToolkit::IVector& rDistanceValue
 										   , OpenViBEToolkit::IVector& rProbabilityValue) =0;
 
 		virtual XML::IXMLNode* saveConfiguration(void) =0;
-		virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode* pConfiguratioNode) =0;
+		virtual bool loadConfiguration(XML::IXMLNode* pConfiguratioNode) =0;
 		_IsDerivedFromClass_(CAlgorithmClassifier, OVTK_ClassId_Algorithm_PairingStrategy)
 
 		virtual OpenViBE::uint32 getOutputProbabilityVectorLength(void) =0;
@@ -50,7 +50,7 @@ namespace OpenViBEToolkit
 
 
 	protected:
-		//  std::vector <OpenViBE::float64> m_fClasses;
+		//  std::vector <double> m_fClasses;
 		//The vector will be use when the user will be able to specify class label
 		OpenViBE::CIdentifier m_oSubClassifierAlgorithmIdentifier;
 	};
@@ -59,7 +59,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual OpenViBE::boolean getAlgorithmPrototype(
+		virtual bool getAlgorithmPrototype(
 			OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 		{
 			CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);

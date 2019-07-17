@@ -32,7 +32,7 @@ void CAlgorithmXMLScenarioExporter::write(const char* sString)
 	m_pMemoryBuffer->append(reinterpret_cast<const uint8*>(sString), ::strlen(sString));
 }
 
-boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier)
+bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier)
 {
 	m_pMemoryBuffer = &rMemoryBuffer;
 
@@ -145,7 +145,7 @@ boolean CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer,
 	return true;
 }
 
-boolean CAlgorithmXMLScenarioExporter::exportIdentifier(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const CIdentifier& rValue)
+bool CAlgorithmXMLScenarioExporter::exportIdentifier(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const CIdentifier& rValue)
 {
 	m_pMemoryBuffer = &rMemoryBuffer;
 
@@ -161,7 +161,7 @@ boolean CAlgorithmXMLScenarioExporter::exportIdentifier(IMemoryBuffer& rMemoryBu
 	return true;
 }
 
-boolean CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const CString& rValue)
+bool CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const CString& rValue)
 {
 	m_pMemoryBuffer = &rMemoryBuffer;
 
@@ -177,7 +177,7 @@ boolean CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& rMemoryBuffer
 	return true;
 }
 
-boolean CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const uint64 ui64Value)
+bool CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const uint64 ui64Value)
 {
 	char l_sValue[1024];
 	sprintf(l_sValue, "%lu", ui64Value);
@@ -196,7 +196,7 @@ boolean CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& rMemoryBuff
 	return true;
 }
 
-boolean CAlgorithmXMLScenarioExporter::exportStop(IMemoryBuffer& rMemoryBuffer)
+bool CAlgorithmXMLScenarioExporter::exportStop(IMemoryBuffer& rMemoryBuffer)
 {
 	m_pMemoryBuffer = &rMemoryBuffer;
 

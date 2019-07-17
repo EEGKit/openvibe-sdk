@@ -29,8 +29,8 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTimeBasedEpoching> m_SignalDecoder;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeBasedEpoching> m_SignalEncoder;
 
-			OpenViBE::float64 m_EpochDuration;
-			OpenViBE::float64 m_EpochInterval;
+			double m_EpochDuration;
+			double m_EpochInterval;
 
 			OpenViBE::uint64 m_SamplingRate;
 			OpenViBE::uint32 m_OutputSampleCount;

@@ -18,7 +18,7 @@ OV_APPEND_TO_NAMESPACE
 	//___________________________________________________________________//
 	//                                                                   //
 
-	typedef bool boolean;                   ///< Boolean
+	//typedef bool boolean;                   ///< Boolean
 
 	//___________________________________________________________________//
 	//                                                                   //
@@ -51,8 +51,8 @@ OV_APPEND_TO_NAMESPACE
 	//___________________________________________________________________//
 	//                                                                   //
 
-	typedef float float32;                  ///< 32 bits floating point
-	typedef double float64;                 ///< 64 bits floating point
+	//typedef float float32;                  ///< 32 bits floating point
+	//typedef double float64;                 ///< 64 bits floating point
 	typedef long double float80;            ///< 80 bits floating point
 
 	//___________________________________________________________________//

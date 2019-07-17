@@ -68,7 +68,7 @@ CScheduler::~CScheduler(void)
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CScheduler::setScenario(
+bool CScheduler::setScenario(
 	const CIdentifier& rScenarioIdentifier)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setScenario\n";
@@ -97,7 +97,7 @@ boolean CScheduler::setScenario(
 	return true;
 }
 
-boolean CScheduler::setFrequency(
+bool CScheduler::setFrequency(
 	const uint64 ui64Frequency)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setFrequency\n";
@@ -116,7 +116,7 @@ boolean CScheduler::setFrequency(
 //___________________________________________________________________//
 //                                                                   //
 
-OpenViBE::boolean CScheduler::isHoldingResources() const
+bool CScheduler::isHoldingResources() const
 {
 	return !m_vSimulatedBox.empty();
 }
@@ -124,7 +124,7 @@ OpenViBE::boolean CScheduler::isHoldingResources() const
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CScheduler::flattenScenario()
+bool CScheduler::flattenScenario()
 {
 	OV_ERROR_UNLESS_KRF(
 		m_pScenario->applyLocalSettings(),
@@ -588,7 +588,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 	return (l_bBoxInitialization ? SchedulerInitialization_Success : SchedulerInitialization_Failed);
 }
 
-boolean CScheduler::uninitialize(void)
+bool CScheduler::uninitialize(void)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler uninitialize\n";
 
@@ -626,7 +626,7 @@ boolean CScheduler::uninitialize(void)
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CScheduler::loop(void)
+bool CScheduler::loop(void)
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -701,7 +701,7 @@ boolean CScheduler::loop(void)
 	return l_bBoxProcessing;
 }
 
-boolean CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxIdentifier)
+bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxIdentifier)
 {
 	if (simulatedBox)
 	{
@@ -753,7 +753,7 @@ boolean CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& b
 //___________________________________________________________________//
 //                                                                   //
 
-boolean CScheduler::sendInput(
+bool CScheduler::sendInput(
 	const CChunk& rChunk,
 	const CIdentifier& rBoxIdentifier,
 	const uint32 ui32InputIndex)
@@ -820,12 +820,12 @@ uint64 CScheduler::getStepDuration(void) const
 	return m_ui64StepDuration;
 }
 
-float64 CScheduler::getCPUUsage(void) const
+double CScheduler::getCPUUsage(void) const
 {
 	return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage();
 }
 
-float64 CScheduler::getFastForwardMaximumFactor(void) const
+double CScheduler::getFastForwardMaximumFactor(void) const
 {
 	return m_rPlayer.getFastForwardMaximumFactor();
 }

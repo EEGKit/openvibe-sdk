@@ -21,7 +21,7 @@ uint64 CBoxAlgorithmGenericStreamReader::getClockFrequency(void)
 	return 128LL << 32; // the box clock frequency
 }
 
-boolean CBoxAlgorithmGenericStreamReader::initialize(void)
+bool CBoxAlgorithmGenericStreamReader::initialize(void)
 {
 	m_sFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
@@ -33,7 +33,7 @@ boolean CBoxAlgorithmGenericStreamReader::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmGenericStreamReader::uninitialize(void)
+bool CBoxAlgorithmGenericStreamReader::uninitialize(void)
 {
 	if (m_pFile)
 	{
@@ -44,7 +44,7 @@ boolean CBoxAlgorithmGenericStreamReader::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmGenericStreamReader::initializeFile()
+bool CBoxAlgorithmGenericStreamReader::initializeFile()
 {
 	m_pFile = FS::Files::open(m_sFilename.toASCIIString(), "rb");
 
@@ -57,14 +57,14 @@ boolean CBoxAlgorithmGenericStreamReader::initializeFile()
 	return true;
 }
 
-boolean CBoxAlgorithmGenericStreamReader::processClock(IMessageClock& rMessageClock)
+bool CBoxAlgorithmGenericStreamReader::processClock(IMessageClock& rMessageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
 	return true;
 }
 
-boolean CBoxAlgorithmGenericStreamReader::process(void)
+bool CBoxAlgorithmGenericStreamReader::process(void)
 {
 	if (m_pFile == NULL)
 	{
@@ -74,7 +74,7 @@ boolean CBoxAlgorithmGenericStreamReader::process(void)
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
 	uint64 l_ui64Time   = this->getPlayerContext().getCurrentTime();
-	boolean l_bFinished = false;
+	bool l_bFinished = false;
 
 	while (!l_bFinished && (!::feof(m_pFile) || m_bPending))
 	{
@@ -99,7 +99,7 @@ boolean CBoxAlgorithmGenericStreamReader::process(void)
 		}
 		else
 		{
-			boolean l_bJustStarted = true;
+			bool l_bJustStarted = true;
 			while (!::feof(m_pFile) && m_oReader.getCurrentNodeIdentifier() == EBML::CIdentifier())
 			{
 				uint8 l_ui8Byte;
@@ -138,7 +138,7 @@ boolean CBoxAlgorithmGenericStreamReader::process(void)
 	return true;
 }
 
-EBML::boolean CBoxAlgorithmGenericStreamReader::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CBoxAlgorithmGenericStreamReader::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == EBML_Identifier_Header) return true;
 	if (rIdentifier == OVP_NodeId_OpenViBEStream_Header) return true;
@@ -232,8 +232,8 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 		std::map<uint32, CIdentifier>::const_iterator it;
 		std::map<uint32, uint32> l_vOutputIndexToStreamIndex;
 
-		boolean l_bLostStreams = false;
-		boolean l_bLastOutputs = false;
+		bool l_bLostStreams = false;
+		bool l_bLastOutputs = false;
 
 		// Go on each stream of the file
 		for (it = m_vStreamIndexToTypeIdentifier.begin(); it != m_vStreamIndexToTypeIdentifier.end(); ++it)
