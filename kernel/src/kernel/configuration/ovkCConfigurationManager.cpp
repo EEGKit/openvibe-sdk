@@ -29,8 +29,8 @@
 #endif
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 namespace
 {
@@ -199,7 +199,7 @@ bool CConfigurationManager::addConfigurationFromFile(
 
 	bool l_bResult;
 	CConfigurationManagerEntryEnumeratorCallBack l_rCB(getKernelContext().getLogManager(), getKernelContext().getErrorManager(), *this);
-	FS::IEntryEnumerator* l_pEntryEnumerator = FS::createEntryEnumerator(l_rCB);
+	FS::IEntryEnumerator* l_pEntryEnumerator = createEntryEnumerator(l_rCB);
 	l_bResult                                = l_pEntryEnumerator->enumerate(rFileNameWildCard);
 	l_pEntryEnumerator->release();
 	return l_bResult;
@@ -401,7 +401,7 @@ CString CConfigurationManager::lookUpConfigurationTokenValue(
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-bool CConfigurationManager::registerKeywordParser(const OpenViBE::CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback)
+bool CConfigurationManager::registerKeywordParser(const CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback)
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
@@ -416,7 +416,7 @@ bool CConfigurationManager::registerKeywordParser(const OpenViBE::CString& rKeyw
 	return true;
 }
 
-bool CConfigurationManager::unregisterKeywordParser(const OpenViBE::CString& rKeyword)
+bool CConfigurationManager::unregisterKeywordParser(const CString& rKeyword)
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
@@ -435,7 +435,7 @@ bool CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordE
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	std::map<OpenViBE::CString, const OpenViBE::Kernel::IConfigurationKeywordExpandCallback*>::iterator l_itOverrideIterator = m_vKeywordOverride.begin();
+	std::map<CString, const IConfigurationKeywordExpandCallback*>::iterator l_itOverrideIterator = m_vKeywordOverride.begin();
 
 	bool l_bResult = false;
 	while (l_itOverrideIterator != m_vKeywordOverride.end())
@@ -559,7 +559,7 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 				}
 				else if (l_sLowerPrefix == "environment" || l_sLowerPrefix == "env")
 				{
-					char* l_sEnvValue = ::getenv(l_sPostfix.c_str());
+					char* l_sEnvValue = getenv(l_sPostfix.c_str());
 					l_sValue          = (l_sEnvValue ? l_sEnvValue : "");
 					l_bShouldExpand   = false;
 				}
@@ -957,11 +957,11 @@ uint32_t CConfigurationManager::getIndex(void) const
 CString CConfigurationManager::getTime(void) const
 {
 	char l_sResult[1024];
-	::time_t l_oRawTime;
+	time_t l_oRawTime;
 	struct tm* l_pTimeInfo;
 
-	::time(&l_oRawTime);
-	l_pTimeInfo = ::localtime(&l_oRawTime);
+	time(&l_oRawTime);
+	l_pTimeInfo = localtime(&l_oRawTime);
 
 	sprintf(l_sResult, "%02i.%02i.%02i", l_pTimeInfo->tm_hour, l_pTimeInfo->tm_min, l_pTimeInfo->tm_sec);
 	return l_sResult;
@@ -970,11 +970,11 @@ CString CConfigurationManager::getTime(void) const
 CString CConfigurationManager::getDate(void) const
 {
 	char l_sResult[1024];
-	::time_t l_oRawTime;
+	time_t l_oRawTime;
 	struct tm* l_pTimeInfo;
 
-	::time(&l_oRawTime);
-	l_pTimeInfo = ::localtime(&l_oRawTime);
+	time(&l_oRawTime);
+	l_pTimeInfo = localtime(&l_oRawTime);
 
 	sprintf(l_sResult, "%04i.%02i.%02i", l_pTimeInfo->tm_year + 1900, l_pTimeInfo->tm_mon + 1, l_pTimeInfo->tm_mday);
 	return l_sResult;

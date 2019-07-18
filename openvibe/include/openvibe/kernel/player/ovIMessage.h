@@ -15,7 +15,7 @@ namespace OpenViBE
 		 * \ingroup Group_Player
 		 * \ingroup Group_Kernel
 		 */
-		class OV_API IMessage : public OpenViBE::Kernel::IKernelObject
+		class OV_API IMessage : public IKernelObject
 		{
 		public:
 
@@ -23,7 +23,7 @@ namespace OpenViBE
 			 * \brief Gets the message identifier
 			 * \return The identifier of the message.
 			 */
-			virtual OpenViBE::CIdentifier getIdentifier(void) const = 0;
+			virtual CIdentifier getIdentifier(void) const = 0;
 			/**
 			 * \brief Gets the timestamp of the message
 			 * \return the timestamp of the message.
@@ -36,7 +36,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool setIdentifier(
-				const OpenViBE::CIdentifier& rIdentifier) = 0;
+				const CIdentifier& rIdentifier) = 0;
 			/**
 			 * \brief Sets the message timestamp
 			 * \param ui64Time [in] : the new timestamp of the message

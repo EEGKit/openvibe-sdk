@@ -28,22 +28,22 @@ namespace OpenViBEToolkit
 		{
 			inline bool copy(OpenViBE::IMatrix& rDestinationMatrix, const OpenViBE::IMatrix& rSourceMatrix)
 			{
-				return OpenViBEToolkit::Tools::Matrix::copy(rDestinationMatrix, rSourceMatrix);
+				return Matrix::copy(rDestinationMatrix, rSourceMatrix);
 			}
 
 			inline bool copyDescription(OpenViBE::IMatrix& rDestinationMatrix, const OpenViBE::IMatrix& rSourceMatrix)
 			{
-				return OpenViBEToolkit::Tools::Matrix::copyDescription(rDestinationMatrix, rSourceMatrix);
+				return Matrix::copyDescription(rDestinationMatrix, rSourceMatrix);
 			}
 
 			inline bool copyContent(OpenViBE::IMatrix& rDestinationMatrix, const OpenViBE::IMatrix& rSourceMatrix)
 			{
-				return OpenViBEToolkit::Tools::Matrix::copyContent(rDestinationMatrix, rSourceMatrix);
+				return Matrix::copyContent(rDestinationMatrix, rSourceMatrix);
 			}
 
 			inline bool clearContent(OpenViBE::IMatrix& rMatrix)
 			{
-				return OpenViBEToolkit::Tools::Matrix::clearContent(rMatrix);
+				return Matrix::clearContent(rMatrix);
 			}
 		};
 	};

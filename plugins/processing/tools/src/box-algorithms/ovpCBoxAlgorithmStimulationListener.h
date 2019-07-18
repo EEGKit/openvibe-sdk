@@ -76,7 +76,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StimulationListener; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Tools::CBoxAlgorithmStimulationListener; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmStimulationListener; }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmStimulationListenerListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 

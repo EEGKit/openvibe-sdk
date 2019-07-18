@@ -18,24 +18,24 @@ namespace OpenViBE
 		 * \ingroup Group_Scenario
 		 * \ingroup Group_Kernel
 		 */
-		class OV_API IMetadata : public OpenViBE::Kernel::IKernelObject
+		class OV_API IMetadata : public IKernelObject
 		{
 		public:
 
 			/**
 			 * \return The identifier of this scenario metadata.
 			 */
-			virtual OpenViBE::CIdentifier getIdentifier(void) const = 0;
+			virtual CIdentifier getIdentifier(void) const = 0;
 
 			/**
 			 * \return The type of this scenario metadata
 			 */
-			virtual OpenViBE::CIdentifier getType(void) const = 0;
+			virtual CIdentifier getType(void) const = 0;
 
 			/**
 			 * \return The enclosed metadata
 			 */
-			virtual OpenViBE::CString getData(void) const = 0;
+			virtual CString getData(void) const = 0;
 
 			/**
 			 * \brief Change the identifier of this metadata
@@ -43,7 +43,7 @@ namespace OpenViBE
 			 * \retval true in case of success.
 			 * \retval false in case of error.
 			 */
-			virtual bool setIdentifier(const OpenViBE::CIdentifier& identifier) = 0;
+			virtual bool setIdentifier(const CIdentifier& identifier) = 0;
 
 			/**
 			 * \brief Change the identifier of this metadata
@@ -51,7 +51,7 @@ namespace OpenViBE
 			 * \retval true in case of success.
 			 * \retval false in case of error.
 			 */
-			virtual bool setType(const OpenViBE::CIdentifier& identifier) = 0;
+			virtual bool setType(const CIdentifier& identifier) = 0;
 
 			/**
 			 * \brief Change the enclosed data
@@ -59,7 +59,7 @@ namespace OpenViBE
 			 * \retval true in case of success.
 			 * \retval false in case of error.
 			 */
-			virtual bool setData(const OpenViBE::CString& data) = 0;
+			virtual bool setData(const CString& data) = 0;
 
 			/**
 			 * \brief Initializes the metadata from an already existing metadata
@@ -69,7 +69,7 @@ namespace OpenViBE
 			 *
 			 * Resets the metadata and initializes its text/attributes according to the existing object.
 			 */
-			virtual bool initializeFromExistingMetadata(const OpenViBE::Kernel::IMetadata& existingMetadata) = 0;
+			virtual bool initializeFromExistingMetadata(const IMetadata& existingMetadata) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_Metadata)
 		};

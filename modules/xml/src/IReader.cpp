@@ -24,7 +24,7 @@ namespace XML
 	protected:
 
 		IReaderCallback& m_rReaderCallback;
-		::XML_Parser m_pXMLParser;
+		XML_Parser m_pXMLParser;
 		std::string m_sData;
 	};
 

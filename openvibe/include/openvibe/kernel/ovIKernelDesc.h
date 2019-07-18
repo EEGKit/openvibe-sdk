@@ -19,7 +19,7 @@ namespace OpenViBE
 		 * This interface is implemented to provide information on a specific kernel
 		 * implementation and to create instances of this specific kernel implementation.
 		 */
-		class OV_API IKernelDesc : public OpenViBE::Kernel::IKernelObject
+		class OV_API IKernelDesc : public IKernelObject
 		{
 		public:
 
@@ -36,7 +36,7 @@ namespace OpenViBE
 			 *
 			 * This method creates the kernel itself and returns it.
 			 */
-			virtual OpenViBE::Kernel::IKernelContext* createKernel(const OpenViBE::CString& rApplicationName, const OpenViBE::CString& rConfigurationFilename) = 0;
+			virtual IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename) = 0;
 			/**
 			 * \brief Creates the kernel itself and make it sub kernel of a master kernel
 			 * \param rMasterKernel [in] : the master kernel
@@ -48,14 +48,14 @@ namespace OpenViBE
 			 *
 			 * This method creates the kernel itself and returns it.
 			 */
-			virtual OpenViBE::Kernel::IKernelContext* createKernel(const OpenViBE::Kernel::IKernelContext& rMasterKernel, const OpenViBE::CString& rApplicationName, const OpenViBE::CString& rConfigurationFilename) = 0;
+			virtual IKernelContext* createKernel(const IKernelContext& rMasterKernel, const CString& rApplicationName, const CString& rConfigurationFilename) = 0;
 			/**
 			 * \brief Releases the kernel itself
 			 * \param pKernel [in] : the kernel to release
 			 *
 			 * This method releases an existing kernel.
 			 */
-			virtual void releaseKernel(OpenViBE::Kernel::IKernelContext* pKernel) = 0;
+			virtual void releaseKernel(IKernelContext* pKernel) = 0;
 
 			//@}
 			/** \name Textual plugin object description and information */
@@ -67,28 +67,28 @@ namespace OpenViBE
 			 *
 			 * Default implementation simply returns empty string.
 			 */
-			virtual OpenViBE::CString getName(void) const { return CString("no name"); }
+			virtual CString getName(void) const { return CString("no name"); }
 			/**
 			 * \brief Gets the author name for this plugin
 			 * \return The author name for this plugin.
 			 *
 			 * Default implementation simply returns empty string.
 			 */
-			virtual OpenViBE::CString getAuthorName(void) const { return CString("unknown"); }
+			virtual CString getAuthorName(void) const { return CString("unknown"); }
 			/**
 			 * \brief Gets the author company name for this plugin
 			 * \return The author company name for this plugin.
 			 *
 			 * Default implementation simply returns empty string.
 			 */
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return CString("unknown"); }
+			virtual CString getAuthorCompanyName(void) const { return CString("unknown"); }
 			/**
 			 * \brief Gets a short description of the plugin
 			 * \return A short description of the plugin.
 			 *
 			 * Default implementation simply returns empty string.
 			 */
-			virtual OpenViBE::CString getShortDescription(void) const { return CString(""); }
+			virtual CString getShortDescription(void) const { return CString(""); }
 			/**
 			 * \brief Gets a detailed description of the plugin
 			 * \return A detailed description of the plugin.
@@ -98,14 +98,14 @@ namespace OpenViBE
 			 * \note You can use std::endl to have the description
 			 *       on several lines when needed.
 			 */
-			virtual OpenViBE::CString getDetailedDescription(void) const { return CString(""); }
+			virtual CString getDetailedDescription(void) const { return CString(""); }
 			/**
 			 * \brief Gets the version of the plugin
 			 * \return the version of the plugin.
 			 *
 			 * Default implementation simply returns empty string.
 			 */
-			virtual OpenViBE::CString getVersion(void) const { return CString("unknown"); }
+			virtual CString getVersion(void) const { return CString("unknown"); }
 
 			//@}
 

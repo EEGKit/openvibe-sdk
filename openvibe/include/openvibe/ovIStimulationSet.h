@@ -18,7 +18,7 @@ namespace OpenViBE
 	 * OpenViBE provides an standalone implementation of this interface in OpenViBE::CStimulationSet
 	 */
 
-	class OV_API IStimulationSet : public OpenViBE::IObject
+	class OV_API IStimulationSet : public IObject
 	{
 	public:
 

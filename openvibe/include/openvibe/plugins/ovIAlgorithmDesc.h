@@ -22,7 +22,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IAlgorithmDesc : public OpenViBE::Plugins::IPluginObjectDesc
+		class OV_API IAlgorithmDesc : public IPluginObjectDesc
 		{
 		public:
 
@@ -39,7 +39,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Plugins::IAlgorithmProto
 			 */
-			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const = 0;
+			virtual bool getAlgorithmPrototype(Kernel::IAlgorithmProto& rAlgorithmPrototype) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObjectDesc, OV_ClassId_Plugins_AlgorithmDesc)
 		};

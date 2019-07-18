@@ -33,11 +33,11 @@ const char* const c_sClassStimulationNodeName = "Class-Stimulation";
 const char* const c_sClassificationBoxRoot = "OpenViBE-Classifier-Box";
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Classification;
+using namespace Classification;
 using namespace std;
 
 bool CBoxAlgorithmClassifierTrainer::initialize(void)
@@ -317,7 +317,7 @@ bool CBoxAlgorithmClassifierTrainer::process(void)
 			{
 				const IMatrix* pFeatureVectorMatrix = m_vFeatureVectorDecoder[i - 1]->getOutputMatrix();
 
-				CBoxAlgorithmClassifierTrainer::SFeatureVector l_oFeatureVector;
+				SFeatureVector l_oFeatureVector;
 				l_oFeatureVector.m_pFeatureVectorMatrix = new CMatrix();
 				l_oFeatureVector.m_ui64StartTime        = l_rDynamicBoxContext.getInputChunkStartTime(i, j);
 				l_oFeatureVector.m_ui64EndTime          = l_rDynamicBoxContext.getInputChunkEndTime(i, j);
@@ -512,7 +512,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rD
 }
 
 // Note that this function is incremental for oConfusionMatrix and can be called many times; so we don't clear the matrix
-double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector>& rDataset,
+double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVector>& rDataset,
 													const std::vector<size_t>& rPermutation, const size_t uiStartIndex, const size_t uiStopIndex, CMatrix& oConfusionMatrix)
 {
 	OV_ERROR_UNLESS_KRF(

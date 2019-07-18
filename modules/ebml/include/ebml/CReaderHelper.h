@@ -5,7 +5,7 @@
 
 namespace EBML
 {
-	class EBML_API CReaderHelper : public EBML::IReaderHelper
+	class EBML_API CReaderHelper : public IReaderHelper
 	{
 	public:
 
@@ -20,7 +20,7 @@ namespace EBML
 
 	protected:
 
-		EBML::IReaderHelper* m_pReaderHelperImplementation;
+		IReaderHelper* m_pReaderHelperImplementation;
 	};
 };
 

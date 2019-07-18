@@ -63,7 +63,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_SpectrumAverage; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpectrumAverage; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmSpectrumAverage; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{

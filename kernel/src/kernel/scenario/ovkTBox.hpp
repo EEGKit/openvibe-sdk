@@ -142,7 +142,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit TBox(const OpenViBE::Kernel::IKernelContext& rKernelContext)
+			explicit TBox(const IKernelContext& rKernelContext)
 				: TAttributable<TKernelObject<T>>(rKernelContext)
 				  , m_pOwnerScenario(nullptr)
 				  , m_pBoxAlgorithmDescriptor(nullptr)
@@ -157,8 +157,8 @@ namespace OpenViBE
 				for (auto i : { Input, Output, Setting })
 				{
 					m_Interfacors[i]                 = std::vector<std::shared_ptr<CInterfacor>>();
-					m_InterfacorIdentifierToIndex[i] = std::map<OpenViBE::CIdentifier, uint32_t>();
-					m_InterfacorNameToIndex[i]       = std::map<OpenViBE::CString, uint32_t>();
+					m_InterfacorIdentifierToIndex[i] = std::map<CIdentifier, uint32_t>();
+					m_InterfacorNameToIndex[i]       = std::map<CString, uint32_t>();
 				}
 			}
 
@@ -172,27 +172,27 @@ namespace OpenViBE
 				}
 			}
 
-			virtual void setOwnerScenario(OpenViBE::Kernel::IScenario* pOwnerScenario)
+			virtual void setOwnerScenario(IScenario* pOwnerScenario)
 			{
 				m_pOwnerScenario = pOwnerScenario;
 			}
 
-			virtual OpenViBE::CIdentifier getIdentifier(void) const
+			virtual CIdentifier getIdentifier(void) const
 			{
 				return m_oIdentifier;
 			}
 
-			virtual OpenViBE::CString getName(void) const
+			virtual CString getName(void) const
 			{
 				return m_sName;
 			}
 
-			virtual OpenViBE::CIdentifier getAlgorithmClassIdentifier(void) const
+			virtual CIdentifier getAlgorithmClassIdentifier(void) const
 			{
 				return m_oAlgorithmClassIdentifier;
 			}
 
-			virtual bool setIdentifier(const OpenViBE::CIdentifier& rIdentifier)
+			virtual bool setIdentifier(const CIdentifier& rIdentifier)
 			{
 				OV_ERROR_UNLESS_KRF(
 					m_oIdentifier == OV_UndefinedIdentifier,
@@ -213,7 +213,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool setName(const OpenViBE::CString& rsName)
+			virtual bool setName(const CString& rsName)
 			{
 				m_sName = rsName;
 
@@ -222,7 +222,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool setAlgorithmClassIdentifier(const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)
+			virtual bool setAlgorithmClassIdentifier(const CIdentifier& rAlgorithmClassIdentifier)
 			{
 				// We need to set the box algorithm identifier in any case. This is because OpenViBE should be able to load
 				// a scenario with non-existing boxes and save it without modifying them.
@@ -266,7 +266,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool initializeFromAlgorithmClassIdentifier(const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)
+			virtual bool initializeFromAlgorithmClassIdentifier(const CIdentifier& rAlgorithmClassIdentifier)
 			{
 				if (!this->initializeFromAlgorithmClassIdentifierNoInit(rAlgorithmClassIdentifier)) { return false; }
 
@@ -275,7 +275,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool initializeFromAlgorithmClassIdentifierNoInit(const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)
+			virtual bool initializeFromAlgorithmClassIdentifierNoInit(const CIdentifier& rAlgorithmClassIdentifier)
 			{
 				this->disableNotification();
 
@@ -307,7 +307,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			bool initializeFromBoxAlgorithmDesc(const OpenViBE::Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc)
+			bool initializeFromBoxAlgorithmDesc(const Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc)
 			{
 				this->clearBox();
 				this->setName(rBoxAlgorithmDesc.getName());
@@ -332,7 +332,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool initializeFromExistingBox(const OpenViBE::Kernel::IBox& rExistingBox)
+			virtual bool initializeFromExistingBox(const IBox& rExistingBox)
 			{
 				this->disableNotification();
 				m_bIsObserverNotificationActive = false;
@@ -410,7 +410,7 @@ namespace OpenViBE
 			//                                                                   //
 
 
-			virtual bool addInterfacor(BoxInterfacorType interfacorType, const OpenViBE::CString& newName, const OpenViBE::CIdentifier& typeIdentifier, const OpenViBE::CIdentifier& identifier, bool shouldNotify)
+			virtual bool addInterfacor(BoxInterfacorType interfacorType, const CString& newName, const CIdentifier& typeIdentifier, const CIdentifier& identifier, bool shouldNotify)
 			{
 				switch (interfacorType)
 				{
@@ -443,7 +443,7 @@ namespace OpenViBE
 					m_InterfacorIdentifierToIndex[interfacorType][identifier] = position;
 				}
 
-				OpenViBE::CString uniqueName = this->getUnusedName(m_InterfacorNameToIndex[interfacorType], newName);
+				CString uniqueName = this->getUnusedName(m_InterfacorNameToIndex[interfacorType], newName);
 
 				m_Interfacors[interfacorType][position]->m_sName    = uniqueName;
 				m_InterfacorNameToIndex[interfacorType][uniqueName] = position;
@@ -502,7 +502,7 @@ namespace OpenViBE
 			}
 
 
-			virtual bool getInterfacorIdentifier(BoxInterfacorType interfacorType, uint32_t index, OpenViBE::CIdentifier& identifier) const
+			virtual bool getInterfacorIdentifier(BoxInterfacorType interfacorType, uint32_t index, CIdentifier& identifier) const
 			{
 				identifier = OV_UndefinedIdentifier;
 				OV_ERROR_UNLESS_KRF(
@@ -515,7 +515,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool getInterfacorIndex(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, uint32_t& index) const
+			virtual bool getInterfacorIndex(BoxInterfacorType interfacorType, const CIdentifier& identifier, uint32_t& index) const
 			{
 				index   = OV_Value_UndefinedIndexUInt;
 				auto it = m_InterfacorIdentifierToIndex.at(interfacorType).find(identifier);
@@ -529,7 +529,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool getInterfacorIndex(BoxInterfacorType interfacorType, const OpenViBE::CString& name, uint32_t& index) const
+			virtual bool getInterfacorIndex(BoxInterfacorType interfacorType, const CString& name, uint32_t& index) const
 			{
 				index   = OV_Value_UndefinedIndexUInt;
 				auto it = m_InterfacorNameToIndex.at(interfacorType).find(name);
@@ -544,7 +544,7 @@ namespace OpenViBE
 			}
 
 
-			virtual bool getInterfacorType(BoxInterfacorType interfacorType, uint32_t index, OpenViBE::CIdentifier& typeIdentifier) const
+			virtual bool getInterfacorType(BoxInterfacorType interfacorType, uint32_t index, CIdentifier& typeIdentifier) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					index < m_Interfacors.at(interfacorType).size(),
@@ -555,7 +555,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, OpenViBE::CIdentifier& typeIdentifier) const
+			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const CIdentifier& identifier, CIdentifier& typeIdentifier) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(
@@ -567,7 +567,7 @@ namespace OpenViBE
 				return this->getInterfacorType(interfacorType, it->second, typeIdentifier);
 			}
 
-			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const CString& name, OpenViBE::CIdentifier& typeIdentifier) const
+			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const CString& name, CIdentifier& typeIdentifier) const
 			{
 				auto it = m_InterfacorNameToIndex.at(interfacorType).find(name);
 				OV_ERROR_UNLESS_KRF(
@@ -580,7 +580,7 @@ namespace OpenViBE
 			}
 
 
-			virtual bool getInterfacorName(BoxInterfacorType interfacorType, uint32_t index, OpenViBE::CString& name) const
+			virtual bool getInterfacorName(BoxInterfacorType interfacorType, uint32_t index, CString& name) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					index < m_Interfacors.at(interfacorType).size(),
@@ -592,7 +592,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool getInterfacorName(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, OpenViBE::CString& name) const
+			virtual bool getInterfacorName(BoxInterfacorType interfacorType, const CIdentifier& identifier, CString& name) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(
@@ -620,7 +620,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool getInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, bool& value) const
+			virtual bool getInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const CIdentifier& identifier, bool& value) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(interfacorType).find(identifier);
 				OV_ERROR_UNLESS_KRF(
@@ -632,17 +632,17 @@ namespace OpenViBE
 				return this->getInterfacorDeprecatedStatus(interfacorType, it->second, value);
 			}
 
-			virtual bool hasInterfacorWithIdentifier(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier) const
+			virtual bool hasInterfacorWithIdentifier(BoxInterfacorType interfacorType, const CIdentifier& identifier) const
 			{
 				return m_InterfacorIdentifierToIndex.at(interfacorType).find(identifier) != m_InterfacorIdentifierToIndex.at(interfacorType).end();
 			}
 
-			virtual bool hasInterfacorWithNameAndType(BoxInterfacorType interfacorType, const CString& name, const OpenViBE::CIdentifier& typeIdentifier) const
+			virtual bool hasInterfacorWithNameAndType(BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeIdentifier) const
 			{
 				return m_InterfacorNameToIndex.at(interfacorType).find(name) != m_InterfacorNameToIndex.at(interfacorType).end();
 			}
 
-			virtual bool hasInterfacorWithType(BoxInterfacorType interfacorType, const uint32_t index, const OpenViBE::CIdentifier& typeIdentifier) const
+			virtual bool hasInterfacorWithType(BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeIdentifier) const
 			{
 				if (index < this->getInterfacorCount(interfacorType))
 				{
@@ -653,7 +653,7 @@ namespace OpenViBE
 				return false;
 			}
 
-			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const uint32_t index, const OpenViBE::CIdentifier& typeIdentifier)
+			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeIdentifier)
 			{
 				switch (interfacorType)
 				{
@@ -696,7 +696,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, const OpenViBE::CIdentifier& typeIdentifier)
+			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CIdentifier& identifier, const CIdentifier& typeIdentifier)
 			{
 				auto it = m_InterfacorIdentifierToIndex[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(
@@ -708,7 +708,7 @@ namespace OpenViBE
 				return this->setInterfacorType(interfacorType, it->second, typeIdentifier);
 			}
 
-			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CString& name, const OpenViBE::CIdentifier& typeIdentifier)
+			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeIdentifier)
 			{
 				auto it = m_InterfacorNameToIndex[interfacorType].find(name);
 				OV_ERROR_UNLESS_KRF(
@@ -721,7 +721,7 @@ namespace OpenViBE
 			}
 
 
-			virtual bool setInterfacorName(BoxInterfacorType interfacorType, uint32_t index, const OpenViBE::CString& newName)
+			virtual bool setInterfacorName(BoxInterfacorType interfacorType, uint32_t index, const CString& newName)
 			{
 				OV_ERROR_UNLESS_KRF(
 					index < m_Interfacors[interfacorType].size(),
@@ -745,7 +745,7 @@ namespace OpenViBE
 				m_InterfacorNameToIndex[interfacorType].erase(it);
 
 				// check for duplicated name key and update if necessary
-				OpenViBE::CString uniqueName                        = this->getUnusedName(m_InterfacorNameToIndex[interfacorType], newName);
+				CString uniqueName                        = this->getUnusedName(m_InterfacorNameToIndex[interfacorType], newName);
 				m_InterfacorNameToIndex[interfacorType][uniqueName] = index;
 				m_Interfacors[interfacorType][index]->m_sName       = uniqueName;
 
@@ -770,7 +770,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool setInterfacorName(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, const OpenViBE::CString& newName)
+			virtual bool setInterfacorName(BoxInterfacorType interfacorType, const CIdentifier& identifier, const CString& newName)
 			{
 				auto it = m_InterfacorIdentifierToIndex[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(
@@ -795,7 +795,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, bool newValue)
+			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const CIdentifier& identifier, bool newValue)
 			{
 				auto it = m_InterfacorIdentifierToIndex[interfacorType].find(identifier);
 				OV_ERROR_UNLESS_KRF(
@@ -810,7 +810,7 @@ namespace OpenViBE
 			//___________________________________________________________________//
 			//                                                                   //
 
-			virtual bool addInput(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
+			virtual bool addInput(const CString& rsName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify)
 			{
 				return this->addInterfacor(Input, rsName, rTypeIdentifier, rIdentifier, bNotify);
 			}
@@ -912,8 +912,8 @@ namespace OpenViBE
 					}
 				}
 
-				OpenViBE::CIdentifier toBeRemovedId = m_Interfacors[Input][ui32InputIndex]->m_oIdentifier;
-				OpenViBE::CString toBeRemovedName   = m_Interfacors[Input][ui32InputIndex]->m_sName;
+				CIdentifier toBeRemovedId = m_Interfacors[Input][ui32InputIndex]->m_oIdentifier;
+				CString toBeRemovedName   = m_Interfacors[Input][ui32InputIndex]->m_sName;
 
 				// Erases actual input
 				m_Interfacors[Input].erase(m_Interfacors[Input].begin() + ui32InputIndex);
@@ -965,27 +965,27 @@ namespace OpenViBE
 				return this->getInterfacorCount(Input);
 			}
 
-			virtual bool getInputType(const uint32_t ui32InputIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
+			virtual bool getInputType(const uint32_t ui32InputIndex, CIdentifier& rTypeIdentifier) const
 			{
 				return this->getInterfacorType(Input, ui32InputIndex, rTypeIdentifier);
 			}
 
-			virtual bool getInputName(const uint32_t ui32InputIndex, OpenViBE::CString& rName) const
+			virtual bool getInputName(const uint32_t ui32InputIndex, CString& rName) const
 			{
 				return this->getInterfacorName(Input, ui32InputIndex, rName);
 			}
 
-			virtual bool getInputName(const OpenViBE::CIdentifier& rInputIdentifier, OpenViBE::CString& rName) const
+			virtual bool getInputName(const CIdentifier& rInputIdentifier, CString& rName) const
 			{
 				return this->getInterfacorName(Input, rInputIdentifier, rName);
 			}
 
-			virtual bool setInputType(const uint32_t ui32InputIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool setInputType(const uint32_t ui32InputIndex, const CIdentifier& rTypeIdentifier)
 			{
 				return this->setInterfacorType(Input, ui32InputIndex, rTypeIdentifier);
 			}
 
-			virtual bool setInputName(const uint32_t ui32InputIndex, const OpenViBE::CString& rName)
+			virtual bool setInputName(const uint32_t ui32InputIndex, const CString& rName)
 			{
 				return this->setInterfacorName(Input, ui32InputIndex, rName);
 			}
@@ -993,7 +993,7 @@ namespace OpenViBE
 			//___________________________________________________________________//
 			//                                                                   //
 
-			virtual bool addOutput(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
+			virtual bool addOutput(const CString& rsName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify)
 			{
 				return this->addInterfacor(Output, rsName, rTypeIdentifier, rIdentifier, bNotify);
 			}
@@ -1037,7 +1037,7 @@ namespace OpenViBE
 						m_pOwnerScenario->getLinkIdentifierFromBoxOutputList(m_oIdentifier, ui32OutputIndex, &identifierList, &nbElems);
 						for (size_t i = 0; i < nbElems; ++i)
 						{
-							const OpenViBE::CIdentifier& cur_id = identifierList[i];
+							const CIdentifier& cur_id = identifierList[i];
 							ILink* l_pLink                      = m_pOwnerScenario->getLinkDetails(cur_id);
 							if (l_pLink->getSourceBoxOutputIndex() > ui32OutputIndex)
 							{
@@ -1098,8 +1098,8 @@ namespace OpenViBE
 						}
 					}
 				}
-				OpenViBE::CIdentifier toBeRemovedId = m_Interfacors.at(Output)[ui32OutputIndex]->m_oIdentifier;
-				OpenViBE::CString toBeRemovedName   = m_Interfacors.at(Output)[ui32OutputIndex]->m_sName;
+				CIdentifier toBeRemovedId = m_Interfacors.at(Output)[ui32OutputIndex]->m_oIdentifier;
+				CString toBeRemovedName   = m_Interfacors.at(Output)[ui32OutputIndex]->m_sName;
 
 				// Erases actual output
 				m_Interfacors[Output].erase(m_Interfacors.at(Output).begin() + ui32OutputIndex);
@@ -1156,27 +1156,27 @@ namespace OpenViBE
 				return this->getInterfacorCount(Output);
 			}
 
-			virtual bool getOutputType(const uint32_t ui32OutputIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
+			virtual bool getOutputType(const uint32_t ui32OutputIndex, CIdentifier& rTypeIdentifier) const
 			{
 				return this->getInterfacorType(Output, ui32OutputIndex, rTypeIdentifier);
 			}
 
-			virtual bool getOutputName(const uint32_t ui32OutputIndex, OpenViBE::CString& rName) const
+			virtual bool getOutputName(const uint32_t ui32OutputIndex, CString& rName) const
 			{
 				return this->getInterfacorName(Output, ui32OutputIndex, rName);
 			}
 
-			virtual bool setOutputType(const uint32_t ui32OutputIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool setOutputType(const uint32_t ui32OutputIndex, const CIdentifier& rTypeIdentifier)
 			{
 				return this->setInterfacorType(Output, ui32OutputIndex, rTypeIdentifier);
 			}
 
-			virtual bool setOutputName(const uint32_t ui32OutputIndex, const OpenViBE::CString& rName)
+			virtual bool setOutputName(const uint32_t ui32OutputIndex, const CString& rName)
 			{
 				return this->setInterfacorName(Output, ui32OutputIndex, rName);
 			}
 
-			virtual bool addInterfacorTypeSupport(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& typeIdentifier)
+			virtual bool addInterfacorTypeSupport(BoxInterfacorType interfacorType, const CIdentifier& typeIdentifier)
 			{
 				if (interfacorType == Input)
 				{
@@ -1190,7 +1190,7 @@ namespace OpenViBE
 				return false;
 			}
 
-			virtual bool hasInterfacorTypeSupport(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& typeIdentifier) const
+			virtual bool hasInterfacorTypeSupport(BoxInterfacorType interfacorType, const CIdentifier& typeIdentifier) const
 			{
 				if (interfacorType == Input)
 				{
@@ -1220,27 +1220,27 @@ namespace OpenViBE
 				return false;
 			}
 
-			virtual bool addInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool addInputSupport(const CIdentifier& rTypeIdentifier)
 			{
 				return this->addInterfacorTypeSupport(Input, rTypeIdentifier);
 			}
 
-			virtual bool hasInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier) const
+			virtual bool hasInputSupport(const CIdentifier& rTypeIdentifier) const
 			{
 				return this->hasInterfacorTypeSupport(Input, rTypeIdentifier);
 			}
 
-			virtual bool addOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool addOutputSupport(const CIdentifier& rTypeIdentifier)
 			{
 				return this->addInterfacorTypeSupport(Output, rTypeIdentifier);
 			}
 
-			virtual bool hasOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier) const
+			virtual bool hasOutputSupport(const CIdentifier& rTypeIdentifier) const
 			{
 				return this->hasInterfacorTypeSupport(Output, rTypeIdentifier);
 			}
 
-			virtual bool setSupportTypeFromAlgorithmIdentifier(const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool setSupportTypeFromAlgorithmIdentifier(const CIdentifier& rTypeIdentifier)
 			{
 				const Plugins::IPluginObjectDesc* l_pPluginObjectDescriptor = this->getKernelContext().getPluginManager().getPluginObjectDescCreating(rTypeIdentifier);
 				const Plugins::IBoxAlgorithmDesc* l_pBoxAlgorithmDescriptor = dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(l_pPluginObjectDescriptor);
@@ -1278,7 +1278,7 @@ namespace OpenViBE
 			}
 
 		private:
-			OpenViBE::CIdentifier getUnusedInterfacorIdentifier(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
+			CIdentifier getUnusedInterfacorIdentifier(BoxInterfacorType interfacorType, const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
 			{
 				uint64_t identifier = System::Math::randomUInteger64();
 				if (suggestedIdentifier != OV_UndefinedIdentifier)
@@ -1299,28 +1299,28 @@ namespace OpenViBE
 
 		public:
 
-			OpenViBE::CIdentifier getUnusedSettingIdentifier(const OpenViBE::CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
+			CIdentifier getUnusedSettingIdentifier(const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
 			{
 				return this->getUnusedInterfacorIdentifier(Setting);
 			}
 
-			OpenViBE::CIdentifier getUnusedInputIdentifier(const OpenViBE::CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
+			CIdentifier getUnusedInputIdentifier(const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
 			{
 				return this->getUnusedInterfacorIdentifier(Input);
 			}
 
-			OpenViBE::CIdentifier getUnusedOutputIdentifier(const OpenViBE::CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
+			CIdentifier getUnusedOutputIdentifier(const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
 			{
 				return this->getUnusedInterfacorIdentifier(Output);
 			}
 
 			virtual bool addSetting(
-				const OpenViBE::CString& rsName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sDefaultValue,
+				const CString& rsName,
+				const CIdentifier& rTypeIdentifier,
+				const CString& sDefaultValue,
 				const uint32_t ui32Index,
 				const bool bModifiability,
-				const OpenViBE::CIdentifier& rIdentifier,
+				const CIdentifier& rIdentifier,
 				const bool bNotify)
 			{
 				CString l_sValue(sDefaultValue);
@@ -1388,7 +1388,7 @@ namespace OpenViBE
 					m_InterfacorIdentifierToIndex[Setting][s.m_oIdentifier] = l_ui32InsertLocation;
 				}
 				// add access by name key (always done so that synchronized with m_vSetting
-				OpenViBE::CString newName                             = this->getUnusedName(m_InterfacorNameToIndex.at(Setting), s.m_sName);
+				CString newName                             = this->getUnusedName(m_InterfacorNameToIndex.at(Setting), s.m_sName);
 				m_Interfacors[Setting][l_ui32InsertLocation]->m_sName = newName;
 				m_InterfacorNameToIndex[Setting][newName]             = l_ui32InsertLocation;
 
@@ -1427,8 +1427,8 @@ namespace OpenViBE
 					ErrorType::ResourceNotFound
 				);
 
-				OpenViBE::CIdentifier toBeRemovedId = m_Interfacors[Setting][ui32SettingIndex]->m_oIdentifier;
-				OpenViBE::CString toBeRemovedName   = m_Interfacors[Setting][ui32SettingIndex]->m_sName;
+				CIdentifier toBeRemovedId = m_Interfacors[Setting][ui32SettingIndex]->m_oIdentifier;
+				CString toBeRemovedName   = m_Interfacors[Setting][ui32SettingIndex]->m_sName;
 
 				it = m_Interfacors[Setting].erase(it);
 
@@ -1481,22 +1481,22 @@ namespace OpenViBE
 				return this->getInterfacorCount(Setting);
 			}
 
-			virtual bool hasSettingWithName(const OpenViBE::CString& rName) const
+			virtual bool hasSettingWithName(const CString& rName) const
 			{
 				return m_InterfacorNameToIndex.at(Setting).find(rName) != m_InterfacorNameToIndex.at(Setting).end();
 			}
 
-			virtual bool getSettingType(const uint32_t ui32SettingIndex, OpenViBE::CIdentifier& rTypeIdentifier) const
+			virtual bool getSettingType(const uint32_t ui32SettingIndex, CIdentifier& rTypeIdentifier) const
 			{
 				return this - getInterfacorType(Setting, ui32SettingIndex, rTypeIdentifier);
 			}
 
-			virtual bool getSettingName(const uint32_t ui32SettingIndex, OpenViBE::CString& rName) const
+			virtual bool getSettingName(const uint32_t ui32SettingIndex, CString& rName) const
 			{
 				return this->getInterfacorName(Setting, ui32SettingIndex, rName);
 			}
 
-			virtual bool getSettingDefaultValue(const uint32_t ui32SettingIndex, OpenViBE::CString& rDefaultValue) const
+			virtual bool getSettingDefaultValue(const uint32_t ui32SettingIndex, CString& rDefaultValue) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_Interfacors.at(Setting).size(),
@@ -1508,7 +1508,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool getSettingDefaultValue(const OpenViBE::CIdentifier& rIdentifier, OpenViBE::CString& rDefaultValue) const
+			virtual bool getSettingDefaultValue(const CIdentifier& rIdentifier, CString& rDefaultValue) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
 				OV_ERROR_UNLESS_KRF(
@@ -1520,7 +1520,7 @@ namespace OpenViBE
 				return this->getSettingDefaultValue(it->second, rDefaultValue);
 			}
 
-			virtual bool getSettingDefaultValue(const OpenViBE::CString& rsName, OpenViBE::CString& rDefaultValue) const
+			virtual bool getSettingDefaultValue(const CString& rsName, CString& rDefaultValue) const
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
 				OV_ERROR_UNLESS_KRF(
@@ -1532,7 +1532,7 @@ namespace OpenViBE
 				return this->getSettingDefaultValue(it->second, rDefaultValue);
 			}
 
-			virtual bool getSettingValue(const uint32_t ui32SettingIndex, OpenViBE::CString& rValue) const
+			virtual bool getSettingValue(const uint32_t ui32SettingIndex, CString& rValue) const
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_Interfacors.at(Setting).size(),
@@ -1544,7 +1544,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool getSettingValue(const OpenViBE::CIdentifier& rIdentifier, OpenViBE::CString& rValue) const
+			virtual bool getSettingValue(const CIdentifier& rIdentifier, CString& rValue) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
 				OV_ERROR_UNLESS_KRF(
@@ -1556,7 +1556,7 @@ namespace OpenViBE
 				return this->getSettingValue(it->second, rValue);
 			}
 
-			virtual bool getSettingValue(const OpenViBE::CString& rsName, OpenViBE::CString& rValue) const
+			virtual bool getSettingValue(const CString& rsName, CString& rValue) const
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
 				OV_ERROR_UNLESS_KRF(
@@ -1580,7 +1580,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool getSettingMod(const OpenViBE::CIdentifier& rIdentifier, bool& rValue) const
+			virtual bool getSettingMod(const CIdentifier& rIdentifier, bool& rValue) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
 				OV_ERROR_UNLESS_KRF(
@@ -1592,7 +1592,7 @@ namespace OpenViBE
 				return this->getSettingMod(it->second, rValue);
 			}
 
-			virtual bool getSettingMod(const OpenViBE::CString& rsName, bool& rValue) const
+			virtual bool getSettingMod(const CString& rsName, bool& rValue) const
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
 				OV_ERROR_UNLESS_KRF(
@@ -1604,17 +1604,17 @@ namespace OpenViBE
 				return this->getSettingMod(it->second, rValue);
 			}
 
-			virtual bool setSettingType(const uint32_t ui32SettingIndex, const OpenViBE::CIdentifier& rTypeIdentifier)
+			virtual bool setSettingType(const uint32_t ui32SettingIndex, const CIdentifier& rTypeIdentifier)
 			{
 				return this->setInterfacorType(Setting, ui32SettingIndex, rTypeIdentifier);
 			}
 
-			virtual bool setSettingName(const uint32_t ui32SettingIndex, const OpenViBE::CString& rName)
+			virtual bool setSettingName(const uint32_t ui32SettingIndex, const CString& rName)
 			{
 				return this->setInterfacorName(Setting, ui32SettingIndex, rName);
 			}
 
-			virtual bool setSettingDefaultValue(const uint32_t ui32SettingIndex, const OpenViBE::CString& rDefaultValue)
+			virtual bool setSettingDefaultValue(const uint32_t ui32SettingIndex, const CString& rDefaultValue)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_Interfacors.at(Setting).size(),
@@ -1629,7 +1629,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool setSettingDefaultValue(const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::CString& rDefaultValue)
+			virtual bool setSettingDefaultValue(const CIdentifier& rIdentifier, const CString& rDefaultValue)
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
 				OV_ERROR_UNLESS_KRF(
@@ -1641,7 +1641,7 @@ namespace OpenViBE
 				return this->setSettingDefaultValue(it->second, rDefaultValue);
 			}
 
-			virtual bool setSettingDefaultValue(const OpenViBE::CString& rsName, const OpenViBE::CString& rDefaultValue)
+			virtual bool setSettingDefaultValue(const CString& rsName, const CString& rDefaultValue)
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
 				OV_ERROR_UNLESS_KRF(
@@ -1652,7 +1652,7 @@ namespace OpenViBE
 				return this->setSettingDefaultValue(it->second, rDefaultValue);
 			}
 
-			virtual bool setSettingValue(const uint32_t ui32SettingIndex, const OpenViBE::CString& rValue, const bool bNotify = true)
+			virtual bool setSettingValue(const uint32_t ui32SettingIndex, const CString& rValue, const bool bNotify = true)
 			{
 				OV_ERROR_UNLESS_KRF(
 					ui32SettingIndex < m_Interfacors.at(Setting).size(),
@@ -1675,7 +1675,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool setSettingValue(const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::CString& rValue)
+			virtual bool setSettingValue(const CIdentifier& rIdentifier, const CString& rValue)
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
 				OV_ERROR_UNLESS_KRF(
@@ -1687,7 +1687,7 @@ namespace OpenViBE
 				return this->setSettingValue(it->second, rValue);
 			}
 
-			virtual bool setSettingValue(const OpenViBE::CString& rsName, const OpenViBE::CString& rValue)
+			virtual bool setSettingValue(const CString& rsName, const CString& rValue)
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
 				OV_ERROR_UNLESS_KRF(
@@ -1713,7 +1713,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool setSettingMod(const OpenViBE::CString& rsName, const bool rValue)
+			virtual bool setSettingMod(const CString& rsName, const bool rValue)
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
 				OV_ERROR_UNLESS_KRF(
@@ -1725,7 +1725,7 @@ namespace OpenViBE
 				return this->setSettingMod(it->second, rValue);
 			}
 
-			virtual bool setSettingMod(const OpenViBE::CIdentifier& rIdentifier, const bool rValue)
+			virtual bool setSettingMod(const CIdentifier& rIdentifier, const bool rValue)
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
 				OV_ERROR_UNLESS_KRF(
@@ -1833,7 +1833,7 @@ namespace OpenViBE
 					ErrorType::BadArgument
 				);
 
-				OpenViBE::CIdentifier oldIdentifier;
+				CIdentifier oldIdentifier;
 				this->getInterfacorIdentifier(interfacorType, index, oldIdentifier);
 
 				if (oldIdentifier != newIdentifier)
@@ -1859,7 +1859,7 @@ namespace OpenViBE
 
 			//*/
 
-			virtual bool acceptVisitor(OpenViBE::IObjectVisitor& rObjectVisitor)
+			virtual bool acceptVisitor(IObjectVisitor& rObjectVisitor)
 			{
 				CObjectVisitorContext l_oObjectVisitorContext(this->getKernelContext());
 				return rObjectVisitor.processBegin(l_oObjectVisitorContext, *this) && rObjectVisitor.processEnd(l_oObjectVisitorContext, *this);
@@ -1895,7 +1895,7 @@ namespace OpenViBE
 				m_bIsNotificationActive = false;
 			}
 
-			virtual void notify(const OpenViBE::Kernel::EBoxModification eBoxModificationType, const uint32_t ui32Index)
+			virtual void notify(const EBoxModification eBoxModificationType, const uint32_t ui32Index)
 			{
 				if (m_pBoxListener && !m_bIsNotifyingDescriptor && m_bIsNotificationActive)
 				{
@@ -1906,7 +1906,7 @@ namespace OpenViBE
 				}
 			}
 
-			virtual void notify(const OpenViBE::Kernel::EBoxModification eBoxModificationType)
+			virtual void notify(const EBoxModification eBoxModificationType)
 			{
 				this->notify(eBoxModificationType, 0xffffffff);
 			}
@@ -1918,17 +1918,17 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::CString getUnusedName(const std::map<OpenViBE::CString, uint32_t>& nameToIndex, const OpenViBE::CString& suggestedName) const
+			CString getUnusedName(const std::map<CString, uint32_t>& nameToIndex, const CString& suggestedName) const
 			{
 				uint32_t idx = 1;
-				OpenViBE::CString newName;
+				CString newName;
 				auto it = nameToIndex.find(suggestedName);
 				do
 				{
 					newName = suggestedName;
 					if (it != nameToIndex.end())
 					{
-						newName += "(" + OpenViBE::CString(std::to_string(idx).c_str()) + ")";
+						newName += "(" + CString(std::to_string(idx).c_str()) + ")";
 						it = nameToIndex.find(newName);
 						idx++;
 					}
@@ -1936,19 +1936,19 @@ namespace OpenViBE
 				return newName;
 			}
 
-			OpenViBE::Kernel::IScenario* m_pOwnerScenario;
-			const OpenViBE::Plugins::IBoxAlgorithmDesc* m_pBoxAlgorithmDescriptor;
-			OpenViBE::Plugins::IBoxListener* m_pBoxListener;
+			IScenario* m_pOwnerScenario;
+			const Plugins::IBoxAlgorithmDesc* m_pBoxAlgorithmDescriptor;
+			Plugins::IBoxListener* m_pBoxListener;
 			bool m_bIsNotifyingDescriptor;
 			bool m_bIsNotificationActive;
 			bool m_bIsObserverNotificationActive;
 
-			OpenViBE::CIdentifier m_oIdentifier;
-			OpenViBE::CIdentifier m_oAlgorithmClassIdentifier;
-			OpenViBE::CString m_sName;
+			CIdentifier m_oIdentifier;
+			CIdentifier m_oAlgorithmClassIdentifier;
+			CString m_sName;
 
-			std::map<BoxInterfacorType, std::map<OpenViBE::CIdentifier, uint32_t>> m_InterfacorIdentifierToIndex;
-			std::map<BoxInterfacorType, std::map<OpenViBE::CString, uint32_t>> m_InterfacorNameToIndex;
+			std::map<BoxInterfacorType, std::map<CIdentifier, uint32_t>> m_InterfacorIdentifierToIndex;
+			std::map<BoxInterfacorType, std::map<CString, uint32_t>> m_InterfacorNameToIndex;
 
 			//to avoid having to recheck every setting every time
 			//careful to update at each setting modification

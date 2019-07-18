@@ -35,11 +35,11 @@ namespace OpenViBEToolkit
 
 		virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) = 0;
 
-		virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) = 0;
-		virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
+		virtual bool train(const IFeatureVectorSet& rFeatureVectorSet) = 0;
+		virtual bool classify(const IFeatureVector& rFeatureVector
 										   , double& rf64Class
-										   , OpenViBEToolkit::IVector& rDistanceValue
-										   , OpenViBEToolkit::IVector& rProbabilityValue) = 0;
+										   , IVector& rDistanceValue
+										   , IVector& rProbabilityValue) = 0;
 
 		virtual XML::IXMLNode* saveConfiguration(void) = 0;
 		virtual bool loadConfiguration(XML::IXMLNode* pConfiguratioNode) = 0;
@@ -55,7 +55,7 @@ namespace OpenViBEToolkit
 		OpenViBE::CIdentifier m_oSubClassifierAlgorithmIdentifier;
 	};
 
-	class OVTK_API CAlgorithmPairingStrategyDesc : public OpenViBEToolkit::CAlgorithmClassifierDesc
+	class OVTK_API CAlgorithmPairingStrategyDesc : public CAlgorithmClassifierDesc
 	{
 	public:
 

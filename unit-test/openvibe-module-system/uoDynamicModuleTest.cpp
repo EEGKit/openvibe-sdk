@@ -89,8 +89,8 @@ TEST(DynamicModule_Test_Case, loadFromExistingSuccessNoSymbolCheck)
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModuleName;
 	std::string moduleName         = dynamicModule.getFilename();
-	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
-	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
+	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
+	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 
 	ASSERT_TRUE(dynamicModule.unload());
@@ -116,8 +116,8 @@ TEST(DynamicModule_Test_Case, loadFromPathSuccessNoSymbolCheck)
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
 	std::string moduleName         = dynamicModule.getFilename();
-	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
-	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
+	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
+	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 
 	ASSERT_TRUE(dynamicModule.unload());
@@ -141,8 +141,8 @@ TEST(DynamicModule_Test_Case, loadFromPathSuccessSymbolCheck)
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
 	std::string moduleName         = dynamicModule.getFilename();
-	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
-	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
+	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
+	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 
 	ASSERT_TRUE(dynamicModule.unload());
@@ -167,8 +167,8 @@ TEST(DynamicModule_Test_Case, loadFromKnownPathSuccessNoSymbolCheck)
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
 	std::string moduleName         = dynamicModule.getFilename();
-	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
-	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
+	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
+	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 
 	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, s_SymbolNameNTDLL.c_str(), &toupperSymbol));
@@ -195,8 +195,8 @@ TEST(DynamicModule_Test_Case, loadFromEnvironmentSuccessNoSymbolCheck)
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = "C:\\WINDOWS\\system32\\ntdll.dll";
 	std::string moduleName         = dynamicModule.getFilename();
-	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
-	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
+	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
+	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, s_SymbolNameNTDLL.c_str(), &toupperSymbol));
 
@@ -222,8 +222,8 @@ TEST(DynamicModule_Test_Case, loadFromRegistrySuccessNoSymbolCheck)
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModuleName;
 	std::string moduleName         = dynamicModule.getFilename();
-	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
-	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
+	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
+	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 
 	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, s_SymbolNameNTDLL.c_str(), &toupperSymbol));
@@ -239,8 +239,8 @@ TEST(DynamicModule_Test_Case, loadFromRegistrySuccessSymbolCheck)
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModuleName;
 	std::string moduleName         = dynamicModule.getFilename();
-	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
-	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
+	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
+	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 
 	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, s_SymbolNameNTDLL.c_str(), &toupperSymbol));
@@ -272,8 +272,8 @@ TEST(DynamicModule_Test_Case, getSymbolSuccess)
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
 	std::string moduleName         = dynamicModule.getFilename();
-	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
-	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
+	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
+	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, s_SymbolNameNTDLL.c_str(), &toupperSymbol));
 
@@ -293,8 +293,8 @@ TEST(DynamicModule_Test_Case, getSymbolFail)
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModulePathName;
 	std::string moduleName         = dynamicModule.getFilename();
-	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), ::tolower);
-	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), ::tolower);
+	std::transform(moduleNameExpected.begin(), moduleNameExpected.end(), moduleNameExpected.begin(), tolower);
+	std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), tolower);
 	ASSERT_STREQ(moduleNameExpected.c_str(), moduleName.c_str());
 	ASSERT_FALSE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, s_NonExistingSymbol.c_str(), &randomRandomRandomSymbol));
 }
@@ -344,12 +344,12 @@ TEST(DynamicModule_Test_Case, unloadFail)
 
 int uoDynamicModuleTest(int argc, char* argv[])
 {
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 
 #if defined TARGET_OS_Windows
 	BOOL bIsWow64 = FALSE;
 
-	if (!::IsWow64Process(GetCurrentProcess(), &bIsWow64)) { return false; }
+	if (!IsWow64Process(GetCurrentProcess(), &bIsWow64)) { return false; }
 
 	s_ExistingModulePath     = bIsWow64 ? "C:\\WINDOWS\\SysWOW64\\" : "C:\\WINDOWS\\system32\\";
 	s_ExistingModulePathName = s_ExistingModulePath + s_ExistingModuleName;

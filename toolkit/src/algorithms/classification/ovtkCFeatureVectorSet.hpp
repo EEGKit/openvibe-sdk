@@ -8,7 +8,7 @@
 
 namespace OpenViBEToolkit
 {
-	class CInternalFeatureVector : public OpenViBEToolkit::IFeatureVector
+	class CInternalFeatureVector : public IFeatureVector
 	{
 	public:
 
@@ -34,7 +34,7 @@ namespace OpenViBEToolkit
 		const double* m_pBuffer;
 	};
 
-	class CFeatureVectorSet : public OpenViBEToolkit::IFeatureVectorSet
+	class CFeatureVectorSet : public IFeatureVectorSet
 	{
 	public:
 
@@ -42,9 +42,9 @@ namespace OpenViBEToolkit
 
 		virtual uint32_t getFeatureVectorCount(void) const;
 		virtual bool setFeatureVectorCount(const uint32_t ui32FeatureVectorCount);
-		virtual bool addFeatureVector(const OpenViBEToolkit::IFeatureVector& rFeatureVector);
-		virtual OpenViBEToolkit::IFeatureVector& getFeatureVector(const uint32_t ui32Index);
-		virtual const OpenViBEToolkit::IFeatureVector& getFeatureVector(const uint32_t ui32Index) const;
+		virtual bool addFeatureVector(const IFeatureVector& rFeatureVector);
+		virtual IFeatureVector& getFeatureVector(const uint32_t ui32Index);
+		virtual const IFeatureVector& getFeatureVector(const uint32_t ui32Index) const;
 		virtual uint32_t getLabelCount(void) const;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVectorSet, OV_UndefinedIdentifier);

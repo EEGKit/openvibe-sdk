@@ -39,7 +39,7 @@ namespace OpenViBE
 		 *
 		 * Copies the contents of \c rNameValuePairList into the new list.
 		 */
-		CNameValuePairList(const OpenViBE::CNameValuePairList& rNameValuePairList);
+		CNameValuePairList(const CNameValuePairList& rNameValuePairList);
 		/**
 		 * \brief Destructor
 		 *
@@ -56,8 +56,8 @@ namespace OpenViBE
 		 * \param rNameValuePairList [in] : The list to copy
 		 * \return This list.
 		 */
-		OpenViBE::CNameValuePairList& operator=(
-			const OpenViBE::CNameValuePairList& rNameValuePairList);
+		CNameValuePairList& operator=(
+			const CNameValuePairList& rNameValuePairList);
 		//@}
 
 		/**
@@ -67,8 +67,8 @@ namespace OpenViBE
 		 * \return True if pair could be inserted, false otherwise
 		 */
 		bool setValue(
-			const OpenViBE::CString& rName,
-			const OpenViBE::CString& rValue);
+			const CString& rName,
+			const CString& rValue);
 
 		/**
 		 * \brief Insert a name/value pair
@@ -77,7 +77,7 @@ namespace OpenViBE
 		 * \return True if pair could be inserted, false otherwise
 		 */
 		bool setValue(
-			const OpenViBE::CString& rName,
+			const CString& rName,
 			const char* pValue);
 
 		/**
@@ -87,7 +87,7 @@ namespace OpenViBE
 		 * \return True if pair could be inserted, false otherwise
 		 */
 		bool setValue(
-			const OpenViBE::CString& rName,
+			const CString& rName,
 			const double& rValue);
 
 		/**
@@ -97,7 +97,7 @@ namespace OpenViBE
 		 * \return True if pair could be inserted, false otherwise
 		 */
 		bool setValue(
-			const OpenViBE::CString& rName,
+			const CString& rName,
 			bool bValue);
 
 		/**
@@ -107,8 +107,8 @@ namespace OpenViBE
 		 * \return True if value could be retrieved, false otherwise
 		 */
 		bool getValue(
-			const OpenViBE::CString& rName,
-			OpenViBE::CString& rValue) const;
+			const CString& rName,
+			CString& rValue) const;
 
 		/**
 		 * \brief Retrieve a double value from the list
@@ -117,7 +117,7 @@ namespace OpenViBE
 		 * \return True if a double value could be retrieved, false otherwise
 		 */
 		bool getValue(
-			const OpenViBE::CString& rName,
+			const CString& rName,
 			double& rValue) const;
 
 		/**
@@ -128,7 +128,7 @@ namespace OpenViBE
 		 * \return True if string evaluates to a boolean, false otherwise
 		 */
 		bool getValue(
-			const OpenViBE::CString& rName,
+			const CString& rName,
 			bool& rValue) const;
 
 		/**
@@ -140,8 +140,8 @@ namespace OpenViBE
 		 */
 		bool getValue(
 			const uint32_t rIndex,
-			OpenViBE::CString& rName,
-			OpenViBE::CString& rValue) const;
+			CString& rName,
+			CString& rValue) const;
 
 		
 		/**
@@ -152,7 +152,7 @@ namespace OpenViBE
 
 	protected:
 
-		OpenViBE::CNameValuePairListImpl* m_pNameValuePairListImpl; ///< The list implementation
+		CNameValuePairListImpl* m_pNameValuePairListImpl; ///< The list implementation
 	};
 };
 

@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-execute"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_SpectralAnalysis; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpectralAnalysis(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmSpectralAnalysis(); }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{

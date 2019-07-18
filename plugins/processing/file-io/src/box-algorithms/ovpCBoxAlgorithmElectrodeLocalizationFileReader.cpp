@@ -3,11 +3,11 @@
 #include "../algorithms/ovpCAlgorithmOVMatrixFileReader.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::FileIO;
+using namespace FileIO;
 
 uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency(void)
 {
@@ -66,7 +66,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(OpenViBE::CMessageClock& rMessageClock)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(CMessageClock& rMessageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

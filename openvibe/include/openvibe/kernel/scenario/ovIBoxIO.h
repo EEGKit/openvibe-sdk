@@ -19,7 +19,7 @@ namespace OpenViBE
 		 * inputs states, read them, write outputs while being
 		 * in a dynamic context (used by player).
 		 */
-		class OV_API IBoxIO : public OpenViBE::Kernel::IKernelObject
+		class OV_API IBoxIO : public IKernelObject
 		{
 		public:
 
@@ -76,7 +76,7 @@ namespace OpenViBE
 			 * \sa getInputChunkCount
 			 * \sa markInputAsDeprecated
 			 */
-			virtual const OpenViBE::IMemoryBuffer* getInputChunk(
+			virtual const IMemoryBuffer* getInputChunk(
 				const uint32_t ui32InputIndex,
 				const uint32_t ui32ChunkIndex) const = 0;
 			/**
@@ -185,7 +185,7 @@ namespace OpenViBE
 			 * \return \c NULL in case of error.
 			 * \sa markOutputAsReadyToSend
 			 */
-			virtual OpenViBE::IMemoryBuffer* getOutputChunk(
+			virtual IMemoryBuffer* getOutputChunk(
 				const uint32_t ui32OutputIndex) = 0;
 			/**
 			 * \brief Marks output buffer as 'ready to send'

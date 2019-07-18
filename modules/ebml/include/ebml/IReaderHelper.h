@@ -91,7 +91,7 @@ namespace EBML
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API EBML::IReaderHelper* createReaderHelper(void);
+	extern EBML_API IReaderHelper* createReaderHelper(void);
 };
 
 #endif // __EBML_IReaderHelper_H__

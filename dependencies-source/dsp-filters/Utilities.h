@@ -606,8 +606,8 @@ void zero (int samples,
 	)
 	{
 		double d, e, m, p, q, r, tol, t2, u, v, w, fu, fv, fw, fx;
-		static const double c                = 0.5 * (3.0 - ::std::sqrt(5.0));
-		static const double SQRT_DBL_EPSILON = ::std::sqrt(DBL_EPSILON);
+		static const double c                = 0.5 * (3.0 - std::sqrt(5.0));
+		static const double SQRT_DBL_EPSILON = std::sqrt(DBL_EPSILON);
 
 		double& a = leftEnd;
 		double& b = rightEnd;
@@ -620,13 +620,13 @@ void zero (int samples,
 	loop:
 		counter++;
 		m   = 0.5 * (a + b);
-		tol = SQRT_DBL_EPSILON * ::fabs(x) + epsilon;
+		tol = SQRT_DBL_EPSILON * fabs(x) + epsilon;
 		t2  = 2.0 * tol;
 		// Check stopping criteria
-		if (::fabs(x - m) > t2 - 0.5 * (b - a))
+		if (fabs(x - m) > t2 - 0.5 * (b - a))
 		{
 			p = q = r = 0.0;
-			if (::fabs(e) > tol)
+			if (fabs(e) > tol)
 			{
 				// fit parabola
 				r             = (x - w) * (fx - fv);
@@ -637,7 +637,7 @@ void zero (int samples,
 				r             = e;
 				e             = d;
 			}
-			if (::fabs(p) < ::fabs(0.5 * q * r) && p < q * (a - x) && p < q * (b - x))
+			if (fabs(p) < fabs(0.5 * q * r) && p < q * (a - x) && p < q * (b - x))
 			{
 				// A parabolic interpolation step
 				d = p / q;
@@ -654,7 +654,7 @@ void zero (int samples,
 				d = c * e;
 			}
 			// f must not be evaluated too close to x
-			if (::fabs(d) >= tol)
+			if (fabs(d) >= tol)
 				u = x + d;
 			else if (d > 0.0)
 				u = x + tol;

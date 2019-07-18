@@ -16,7 +16,7 @@ class CBoxSettingModifierVisitor : public OpenViBE::IObjectVisitor, public XML::
 public:
 
 
-	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = NULL) : OpenViBE::IObjectVisitor(),
+	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = NULL) : IObjectVisitor(),
 																												 m_pObjectVisitorContext(nullptr),
 																												 m_pBox(nullptr),
 																												 m_pConfigurationManager(pConfigurationManager) {}

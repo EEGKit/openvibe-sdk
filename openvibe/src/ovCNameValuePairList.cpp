@@ -103,7 +103,7 @@ bool CNameValuePairList::getValue(const CString& rName, bool& rValue) const
 	else { return false; }
 }
 
-bool CNameValuePairList::getValue(const uint32_t rIndex, OpenViBE::CString& rName, OpenViBE::CString& rValue) const
+bool CNameValuePairList::getValue(const uint32_t rIndex, CString& rName, CString& rValue) const
 {
 	if (rIndex >= this->getSize()) { return false; }
 	std::map<CString, CString>::const_iterator it = m_pNameValuePairListImpl->m_oMap.begin();

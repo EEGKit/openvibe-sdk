@@ -80,7 +80,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("1.1.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ChannelRename; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmChannelRename; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmChannelRename; }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmChannelRenameListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* boxListener) const { delete boxListener; }
 

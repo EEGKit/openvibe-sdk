@@ -9,7 +9,7 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 
 const std::array<CIdentifier, 10> CBoxUpdater::updatableAttributes = {
@@ -65,7 +65,7 @@ bool CBoxUpdater::initialize()
 							ErrorType::BadCall
 		);
 
-		OpenViBE::CIdentifier metaboxId;
+		CIdentifier metaboxId;
 		metaboxId.fromString(metaboxIdentifier);
 		CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
@@ -177,7 +177,7 @@ bool CBoxUpdater::checkForSupportedTypesToBeUpdated()
 bool CBoxUpdater::checkForSupportedIOSAttributesToBeUpdated()
 {
 	// check for attributes
-	for (auto& attr : CBoxUpdater::updatableAttributes)
+	for (auto& attr : updatableAttributes)
 	{
 		if ((m_SourceBox->hasAttribute(attr) && !m_KernelBox->hasAttribute(attr))
 			|| (!m_SourceBox->hasAttribute(attr) && m_KernelBox->hasAttribute(attr))) { return true; }

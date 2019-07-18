@@ -37,18 +37,18 @@ using namespace std;
  */
 bool recursiveCopy(const boost::filesystem::path& source, const boost::filesystem::path& target)
 {
-	if (boost::filesystem::exists(target)) { return false; }
+	if (exists(target)) { return false; }
 
-	if (boost::filesystem::is_directory(source))
+	if (is_directory(source))
 	{
-		if (!boost::filesystem::create_directories(target)) { return false; }
+		if (!create_directories(target)) { return false; }
 		for (boost::filesystem::directory_entry& item : boost::filesystem::directory_iterator(source))
 		{
 			// boost::filesystem::path overlods '/' operator !
 			if (!recursiveCopy(item.path(), target / item.path().filename())) { return false; }
 		}
 	}
-	else if (boost::filesystem::is_regular_file(source))
+	else if (is_regular_file(source))
 	{
 		try
 		{
@@ -206,14 +206,14 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 	bool l_bResult = true;
 	if (pFile1 && pFile2)
 	{
-		::HANDLE l_pHandle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
-		::HANDLE l_pHandle2 = ::CreateFile(pFile2, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
+		HANDLE l_pHandle1 = ::CreateFile(pFile1, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
+		HANDLE l_pHandle2 = ::CreateFile(pFile2, 0, FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
 		if (l_pHandle1 && l_pHandle2)
 		{
-			::BY_HANDLE_FILE_INFORMATION l_oStat1;
-			::BY_HANDLE_FILE_INFORMATION l_oStat2;
-			::BOOL l_bStat1 = ::GetFileInformationByHandle(l_pHandle1, &l_oStat1);
-			::BOOL l_bStat2 = ::GetFileInformationByHandle(l_pHandle2, &l_oStat2);
+			BY_HANDLE_FILE_INFORMATION l_oStat1;
+			BY_HANDLE_FILE_INFORMATION l_oStat2;
+			BOOL l_bStat1 = GetFileInformationByHandle(l_pHandle1, &l_oStat1);
+			BOOL l_bStat2 = GetFileInformationByHandle(l_pHandle2, &l_oStat2);
 			if (!l_bStat1 && !l_bStat2)
 			{
 				l_bResult = true;
@@ -233,13 +233,13 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 			{
 				l_bResult = false;
 			}
-			::CloseHandle(l_pHandle1);
-			::CloseHandle(l_pHandle2);
+			CloseHandle(l_pHandle1);
+			CloseHandle(l_pHandle2);
 		}
 		else
 		{
-			if (l_pHandle1) ::CloseHandle(l_pHandle1);
-			if (l_pHandle2) ::CloseHandle(l_pHandle2);
+			if (l_pHandle1) CloseHandle(l_pHandle1);
+			if (l_pHandle2) CloseHandle(l_pHandle2);
 		}
 	}
 	return l_bResult;
@@ -252,7 +252,7 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 bool Files::fileExists(const char* pathToCheck)
 {
 	if (!pathToCheck) { return false; }
-	FILE* fp = Files::open(pathToCheck, "r");
+	FILE* fp = open(pathToCheck, "r");
 	if (!fp) { return false; }
 	else
 	{
@@ -287,8 +287,8 @@ bool Files::createPath(const char* path)
 	if (strcmp(path, "") == 0) { return false; }
 #if defined TARGET_OS_Windows
 	wstring pathUTF16 = Common::Converter::utf8_to_utf16(path);
-	boost::filesystem::create_directories(boost::filesystem::wpath(pathUTF16));
-	return boost::filesystem::is_directory(boost::filesystem::wpath(pathUTF16));
+	create_directories(boost::filesystem::wpath(pathUTF16));
+	return is_directory(boost::filesystem::wpath(pathUTF16));
 #else
 	return boost::filesystem::create_directories(boost::filesystem::path(path));
 #endif
@@ -299,7 +299,7 @@ bool Files::createParentPath(const char* path)
 	if (strcmp(path, "") == 0) { return false; }
 #if defined TARGET_OS_Windows
 	wstring pathUTF16 = Common::Converter::utf8_to_utf16(path);
-	return boost::filesystem::create_directories(boost::filesystem::wpath(pathUTF16).parent_path());
+	return create_directories(boost::filesystem::wpath(pathUTF16).parent_path());
 #else
 	return boost::filesystem::create_directories(boost::filesystem::path(path).parent_path());
 #endif
@@ -379,7 +379,7 @@ bool Files::getFilenameExtension(const char* path, char* fileNameExtension, size
 
 bool Files::remove(const char* path)
 {
-	if (FS::Files::fileExists(path) || FS::Files::directoryExists(path))
+	if (fileExists(path) || directoryExists(path))
 	{
 #if defined TARGET_OS_Windows
 		std::wstring pathUTF16 = Common::Converter::utf8_to_utf16(path);
@@ -393,11 +393,11 @@ bool Files::remove(const char* path)
 
 bool Files::removeAll(const char* path)
 {
-	if (FS::Files::fileExists(path) || FS::Files::directoryExists(path))
+	if (fileExists(path) || directoryExists(path))
 	{
 #if defined TARGET_OS_Windows
 		std::wstring pathUTF16 = Common::Converter::utf8_to_utf16(path);
-		return (boost::filesystem::remove_all(boost::filesystem::wpath(pathUTF16.c_str())) != 0);
+		return (remove_all(boost::filesystem::wpath(pathUTF16.c_str())) != 0);
 #else
 		return (boost::filesystem::remove_all(boost::filesystem::path(path)) != 0);
 #endif

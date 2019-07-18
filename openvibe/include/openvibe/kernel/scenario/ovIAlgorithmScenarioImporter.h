@@ -12,32 +12,32 @@ namespace OpenViBE
 {
 	namespace Plugins
 	{
-		class OV_API IAlgorithmScenarioImporterContext : public OpenViBE::IObject
+		class OV_API IAlgorithmScenarioImporterContext : public IObject
 		{
 		public:
 
-			virtual bool processStart(const OpenViBE::CIdentifier& rIdentifier) = 0;
-			virtual bool processIdentifier(const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::CIdentifier& rValue) = 0;
-			virtual bool processString(const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::CString& rValue) = 0;
-			virtual bool processUInteger(const OpenViBE::CIdentifier& rIdentifier, const uint64_t ui64Value) = 0;
+			virtual bool processStart(const CIdentifier& rIdentifier) = 0;
+			virtual bool processIdentifier(const CIdentifier& rIdentifier, const CIdentifier& rValue) = 0;
+			virtual bool processString(const CIdentifier& rIdentifier, const CString& rValue) = 0;
+			virtual bool processUInteger(const CIdentifier& rIdentifier, const uint64_t ui64Value) = 0;
 			virtual bool processStop(void) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::IObject, OV_UndefinedIdentifier)
 		};
 
-		class OV_API IAlgorithmScenarioImporter : public OpenViBE::Plugins::IAlgorithm
+		class OV_API IAlgorithmScenarioImporter : public IAlgorithm
 		{
 		public:
-			virtual bool import(OpenViBE::Plugins::IAlgorithmScenarioImporterContext& rContext, const OpenViBE::IMemoryBuffer& rMemoryBuffer) = 0;
+			virtual bool import(IAlgorithmScenarioImporterContext& rContext, const IMemoryBuffer& rMemoryBuffer) = 0;
 		};
 
 
-		class OV_API IAlgorithmScenarioImporterDesc : public OpenViBE::Plugins::IAlgorithmDesc
+		class OV_API IAlgorithmScenarioImporterDesc : public IAlgorithmDesc
 		{
-			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			virtual bool getAlgorithmPrototype(Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
-				rAlgorithmPrototype.addOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario, "Scenario", OpenViBE::Kernel::ParameterType_Object);
-				rAlgorithmPrototype.addInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer, "Memory buffer", OpenViBE::Kernel::ParameterType_MemoryBuffer);
+				rAlgorithmPrototype.addOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario, "Scenario", Kernel::ParameterType_Object);
+				rAlgorithmPrototype.addInputParameter(OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer, "Memory buffer", Kernel::ParameterType_MemoryBuffer);
 				return true;
 			}
 		};

@@ -7,7 +7,7 @@
 
 namespace Socket
 {
-	class Socket_API IConnectionBluetooth : public Socket::IConnection
+	class Socket_API IConnectionBluetooth : public IConnection
 	{
 	public:
 	
@@ -89,5 +89,5 @@ namespace Socket
 #endif
 	};
 
-	extern Socket_API Socket::IConnectionBluetooth* createConnectionBluetooth(void);
+	extern Socket_API IConnectionBluetooth* createConnectionBluetooth(void);
 };

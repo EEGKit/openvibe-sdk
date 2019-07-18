@@ -55,7 +55,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ClockStimulator; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Stimulation::CBoxAlgorithmClockStimulator; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmClockStimulator; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{

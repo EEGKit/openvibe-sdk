@@ -50,7 +50,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_OVMatrixFileWriter; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::FileIO::CAlgorithmOVMatrixFileWriter; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CAlgorithmOVMatrixFileWriter; }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{

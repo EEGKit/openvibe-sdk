@@ -27,7 +27,7 @@ namespace Socket
 
 			int l_iReuseAddress = 1;
 #if defined TARGET_OS_Windows
-			::setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&l_iReuseAddress), sizeof(l_iReuseAddress));
+			setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&l_iReuseAddress), sizeof(l_iReuseAddress));
 #else
 			::setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, &l_iReuseAddress, sizeof(l_iReuseAddress));
 #endif
@@ -38,7 +38,7 @@ namespace Socket
 			l_oLocalHostAddress.sin_port        = htons((unsigned short)ui32Port);
 			l_oLocalHostAddress.sin_addr.s_addr = htonl(INADDR_ANY);
 
-			if (::bind(m_i32Socket, (struct sockaddr*)&l_oLocalHostAddress, sizeof(l_oLocalHostAddress)) == -1)
+			if (bind(m_i32Socket, (struct sockaddr*)&l_oLocalHostAddress, sizeof(l_oLocalHostAddress)) == -1)
 			{
 				/*
 								switch(errno)

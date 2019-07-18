@@ -1,8 +1,9 @@
 #include "ovkCMetaboxObjectDesc.h"
 
-using namespace OpenViBE::Metabox;
+using namespace OpenViBE;
+using namespace Metabox;
 
-CMetaboxObjectDesc::CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescriptor, OpenViBE::Kernel::IScenario& metaboxScenario)
+CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel::IScenario& metaboxScenario)
 	: m_MetaboxDescriptor(rMetaboxDescriptor)
 	  , m_Name(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name))
 	  , m_AuthorName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Author))
@@ -59,7 +60,7 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescript
 	}
 }
 
-bool CMetaboxObjectDesc::getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+bool CMetaboxObjectDesc::getBoxPrototype(Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 {
 	for (auto& input : m_Inputs)
 	{

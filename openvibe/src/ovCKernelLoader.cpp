@@ -11,7 +11,7 @@
 #include <string>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 //___________________________________________________________________//
 //                                                                   //

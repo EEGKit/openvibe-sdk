@@ -7,11 +7,11 @@
 #include <openvibe/ovITimeArithmetics.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::FileIO;
+using namespace FileIO;
 
 namespace
 {
@@ -87,7 +87,7 @@ bool CBoxAlgorithmCSVFileReader::uninitialize(void)
 {
 	if (m_pFile)
 	{
-		::fclose(m_pFile);
+		fclose(m_pFile);
 		m_pFile = NULL;
 	}
 	if (m_pAlgorithmEncoder)
@@ -102,7 +102,7 @@ bool CBoxAlgorithmCSVFileReader::uninitialize(void)
 bool CBoxAlgorithmCSVFileReader::initializeFile()
 {
 	//open file
-	m_pFile = ::fopen(m_sFilename.toASCIIString(), "r"); // we don't open as binary as that gives us \r\n on Windows as line-endings and leaves a dangling char after split. CSV files should be text.
+	m_pFile = fopen(m_sFilename.toASCIIString(), "r"); // we don't open as binary as that gives us \r\n on Windows as line-endings and leaves a dangling char after split. CSV files should be text.
 
 	OV_ERROR_UNLESS_KRF(
 		m_pFile,
@@ -119,7 +119,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 
 	//read the header
 	char l_pLine[m_ui32bufferLen];
-	char* l_pResult = ::fgets(l_pLine, m_ui32bufferLen, m_pFile);
+	char* l_pResult = fgets(l_pLine, m_ui32bufferLen, m_pFile);
 	if (NULL == l_pResult)
 	{
 		releaseResources();
@@ -156,7 +156,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		m_fpRealProcess     = &CBoxAlgorithmCSVFileReader::process_signal;
 
 		//find the sampling rate
-		l_pResult = ::fgets(l_pLine, m_ui32bufferLen, m_pFile);
+		l_pResult = fgets(l_pLine, m_ui32bufferLen, m_pFile);
 
 		if (NULL == l_pResult)
 		{
@@ -192,8 +192,8 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		}
 
 		// Skip the header
-		::rewind(m_pFile);
-		l_pResult = ::fgets(l_pLine, m_ui32bufferLen, m_pFile);
+		rewind(m_pFile);
+		l_pResult = fgets(l_pLine, m_ui32bufferLen, m_pFile);
 		if (NULL == l_pResult)
 		{
 			releaseResources();

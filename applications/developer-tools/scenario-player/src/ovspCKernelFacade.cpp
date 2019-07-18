@@ -33,8 +33,8 @@
 
 namespace OpenViBE
 {
-	using namespace OpenViBE::Kernel;
-	using namespace OpenViBE::Plugins;
+	using namespace Kernel;
+	using namespace Plugins;
 	using TokenList = std::vector<std::pair<std::string, std::string>>;
 
 	namespace
@@ -89,7 +89,7 @@ namespace OpenViBE
 		CString kernelFile;
 
 #if defined TARGET_OS_Windows
-		kernelFile = OpenViBE::Directories::getLibDir() + "/openvibe-kernel.dll";
+		kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
 		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
@@ -124,7 +124,7 @@ namespace OpenViBE
 		}
 		else
 		{
-			configurationFile = CString(OpenViBE::Directories::getDataDir() + "/kernel/openvibe.conf");
+			configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
 		}
 
 
@@ -333,7 +333,7 @@ namespace OpenViBE
 			// player identifier is pushed here to ensure a correct cleanup event if player initialization fails
 			playerIdentifiersList.push_back(playerIdentifier);
 
-			OpenViBE::CNameValuePairList configurationTokensMap;
+			CNameValuePairList configurationTokensMap;
 			for (auto& token : m_Pimpl->scenarioTokenMap[scenarioName])
 			{
 				configurationTokensMap.setValue(token.first.c_str(), token.second.c_str());
@@ -397,7 +397,7 @@ namespace OpenViBE
 				allStopped         = true;
 				for (auto p : playerList)
 				{
-					if (p->getStatus() != EPlayerStatus::PlayerStatus_Stop)
+					if (p->getStatus() != PlayerStatus_Stop)
 					{
 						if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint))
 						{
@@ -410,7 +410,7 @@ namespace OpenViBE
 						p->stop();
 					}
 
-					allStopped &= (p->getStatus() == EPlayerStatus::PlayerStatus_Stop);
+					allStopped &= (p->getStatus() == PlayerStatus_Stop);
 				}
 
 				lastLoopTime = currentTime;

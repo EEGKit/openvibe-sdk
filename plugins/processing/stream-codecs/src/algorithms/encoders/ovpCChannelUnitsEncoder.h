@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CChannelUnitsEncoder : public OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder
+		class CChannelUnitsEncoder : public CStreamedMatrixEncoder
 		{
 		public:
 
@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 		};
 
 
-		class CChannelUnitsEncoderDesc : public OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc
+		class CChannelUnitsEncoderDesc : public CStreamedMatrixEncoderDesc
 		{
 		public:
 
@@ -47,11 +47,11 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ChannelUnitsStreamEncoder; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CChannelUnitsEncoder(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CChannelUnitsEncoder(); }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
-				OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CStreamedMatrixEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ChannelUnitsStreamEncoder_InputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
 				// rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ChannelUnitsStreamEncoder_InputParameterId_MeasurementUnits, "Measurement units", OpenViBE::Kernel::ParameterType_Matrix);

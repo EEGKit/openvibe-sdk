@@ -93,7 +93,7 @@ namespace EBML
 		 * Once the node has been opened, it should be closed
 		 * calling \c closeChild.
 		 */
-		virtual bool openChild(const EBML::CIdentifier& rIdentifier) = 0;
+		virtual bool openChild(const CIdentifier& rIdentifier) = 0;
 		/**
 		 * \brief Sets data for simple child node
 		 * \param pBuffer [in] : The buffer to set as child data
@@ -151,7 +151,7 @@ namespace EBML
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API EBML::IWriter* createWriter(EBML::IWriterCallback& rWriterCallback);
+	extern EBML_API IWriter* createWriter(IWriterCallback& rWriterCallback);
 };
 
 #endif // __EBML_IWriter_H__

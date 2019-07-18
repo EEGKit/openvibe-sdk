@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CStreamedMatrixEncoder : public OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder
+		class CStreamedMatrixEncoder : public CEBMLBaseEncoder
 		{
 		public:
 
@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 			uint64_t m_ui64MatrixBufferSize;
 		};
 
-		class CStreamedMatrixEncoderDesc : public OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc
+		class CStreamedMatrixEncoderDesc : public CEBMLBaseEncoderDesc
 		{
 		public:
 
@@ -51,11 +51,11 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_StreamedMatrixStreamEncoder; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CStreamedMatrixEncoder(); }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
-				OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CEBMLBaseEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix, "Matrix", OpenViBE::Kernel::ParameterType_Matrix);
 

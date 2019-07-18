@@ -34,9 +34,9 @@ namespace XML
 		virtual const char* getPCData(void) const;
 
 		//Child
-		virtual void addChild(XML::IXMLNode* pChildNode);
-		virtual XML::IXMLNode* getChild(const size_t iChildIndex) const;
-		virtual XML::IXMLNode* getChildByName(const char* sName) const;
+		virtual void addChild(IXMLNode* pChildNode);
+		virtual IXMLNode* getChild(const size_t iChildIndex) const;
+		virtual IXMLNode* getChildByName(const char* sName) const;
 		virtual size_t getChildCount(void) const;
 
 		//XMl generation
@@ -50,7 +50,7 @@ namespace XML
 		void applyIndentation(std::string& sString, uint32_t depth) const;
 
 
-		std::vector<XML::IXMLNode *> m_oNodeVector;
+		std::vector<IXMLNode *> m_oNodeVector;
 		std::map<std::string, std::string> m_mAttibuteMap;
 		std::string m_sNodeName;
 		std::string m_sPCData;
@@ -140,7 +140,7 @@ IXMLNode* IXMLNodeImpl::getChildByName(const char* sName) const
 	for (vector<IXMLNode*>::const_iterator it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
 	{
 		IXMLNode* l_sTempNode = static_cast<IXMLNode*>(*it);
-		if (::strcmp(l_sTempNode->getName(), sName) == 0)
+		if (strcmp(l_sTempNode->getName(), sName) == 0)
 			return l_sTempNode;
 	}
 	return NULL;
@@ -206,7 +206,7 @@ char* IXMLNodeImpl::getXML(const uint32_t depth) const
 		l_sRes = l_sRes + sanitize(m_sPCData);
 	}
 
-	for (vector<XML::IXMLNode*>::const_iterator it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
+	for (vector<IXMLNode*>::const_iterator it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
 	{
 		IXMLNode* l_sTempNode = static_cast<IXMLNode *>(*it);
 		l_sRes                = l_sRes + string("\n") + l_sTempNode->getXML(depth + 1);

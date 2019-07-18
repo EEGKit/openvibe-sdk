@@ -34,7 +34,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IAlgorithm : public OpenViBE::Plugins::IPluginObject
+		class OV_API IAlgorithm : public IPluginObject
 		{
 		public:
 
@@ -45,7 +45,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool initialize(
-				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
+				Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
 			/**
 			 * \brief Unitializes this algorithm
 			 * \param rAlgorithmContext [in] : the extecution context for this algorithm
@@ -54,7 +54,7 @@ namespace OpenViBE
 			 * \exception this method must be noexcept
 			 */
 			virtual bool uninitialize(
-				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
+				Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
 			/**
 			 * \brief Effectively executes this algorithm
 			 * \param rAlgorithmContext [in] : the extecution context for this algorithm
@@ -65,7 +65,7 @@ namespace OpenViBE
 			 * and finally produce "output" parameters.
 			 */
 			virtual bool process(
-				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext) = 0;
+				Kernel::IAlgorithmContext& rAlgorithmContext) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_Algorithm)
 		};

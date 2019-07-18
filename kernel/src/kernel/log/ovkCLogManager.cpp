@@ -3,7 +3,7 @@
 #include <iostream>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 using namespace std;
 
 CLogManager::CLogManager(const IKernelContext& rKernelContext)

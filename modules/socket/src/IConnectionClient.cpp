@@ -60,7 +60,7 @@ namespace Socket
 
 			// Sets non blocking
 			unsigned long l_uiMode = 1;
-			::ioctlsocket(m_i32Socket, FIONBIO, &l_uiMode);
+			ioctlsocket(m_i32Socket, FIONBIO, &l_uiMode);
 
 			struct addrinfo hints;
 			ZeroMemory(&hints, sizeof(hints));
@@ -118,7 +118,7 @@ namespace Socket
 					FD_ZERO(&l_oWriteFileDescriptors);
 					FD_SET(m_i32Socket, &l_oWriteFileDescriptors);
 
-					if (::select(m_i32Socket + 1, NULL, &l_oWriteFileDescriptors, NULL, &l_oTimeVal) < 0)
+					if (select(m_i32Socket + 1, NULL, &l_oWriteFileDescriptors, NULL, &l_oTimeVal) < 0)
 					{
 						close();
 						return false;
@@ -136,7 +136,7 @@ namespace Socket
 					::getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, (void*)(&l_iOption), &l_iOptionLength);
 #elif defined TARGET_OS_Windows
 					int l_iOptionLength = sizeof(l_iOption);
-					::getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, (char*)(&l_iOption), &l_iOptionLength);
+					getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, (char*)(&l_iOption), &l_iOptionLength);
 #endif
 					if (l_iOption != 0)
 					{
@@ -170,7 +170,7 @@ namespace Socket
 
 			// Sets back to blocking
 			l_uiMode = 0;
-			::ioctlsocket(m_i32Socket, FIONBIO, &l_uiMode);
+			ioctlsocket(m_i32Socket, FIONBIO, &l_uiMode);
 
 #endif
 

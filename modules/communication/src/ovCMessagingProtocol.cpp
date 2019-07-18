@@ -150,7 +150,7 @@ bool Header::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 
 	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, typeInt)) return false;
 
-	if (typeInt >= EMessageType::MessageType_MAX) { return false; }
+	if (typeInt >= MessageType_MAX) { return false; }
 
 	m_Type = static_cast<EMessageType>(typeInt);
 
@@ -613,7 +613,7 @@ bool LogMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInd
 
 	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, typeInt)) return false;
 
-	if (typeInt >= ELogLevel::LogLevel_MAX) { return false; }
+	if (typeInt >= LogLevel_MAX) { return false; }
 
 	m_Type = static_cast<ELogLevel>(typeInt);
 
@@ -818,7 +818,7 @@ bool EndMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInd
 
 EMessageType EndMessage::getMessageType() const
 {
-	return EMessageType::MessageType_End;
+	return MessageType_End;
 }
 
 /******************************************************************************
@@ -885,5 +885,5 @@ bool SyncMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 
 EMessageType SyncMessage::getMessageType() const
 {
-	return EMessageType::MessageType_Sync;
+	return MessageType_Sync;
 }

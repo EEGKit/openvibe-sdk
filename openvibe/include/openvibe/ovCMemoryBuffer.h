@@ -19,7 +19,7 @@ namespace OpenViBE
 	 * interface and redirect their calls to this implementation.
 	 */
 
-	class OV_API CMemoryBuffer : public OpenViBE::IMemoryBuffer
+	class OV_API CMemoryBuffer : public IMemoryBuffer
 	{
 	public:
 
@@ -38,7 +38,7 @@ namespace OpenViBE
 		 * This constructor builds the internal implementation of this memory buffer and initializes it
 		 * with the actual parameter of the constructor as a copy.
 		 */
-		CMemoryBuffer(const OpenViBE::IMemoryBuffer& rMemoryBuffer);
+		CMemoryBuffer(const IMemoryBuffer& rMemoryBuffer);
 		/**
 		 * \brief Copy constructor
 		 *
@@ -67,13 +67,13 @@ namespace OpenViBE
 			const uint8_t* pBuffer,
 			const uint64_t ui64BufferSize);
 		virtual bool append(
-			const OpenViBE::IMemoryBuffer& rMemoryBuffer);
+			const IMemoryBuffer& rMemoryBuffer);
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge);
 
 	protected:
 
-		OpenViBE::IMemoryBuffer* m_pMemoryBufferImpl; //!< Internal implementation
+		IMemoryBuffer* m_pMemoryBufferImpl; //!< Internal implementation
 	};
 };
 

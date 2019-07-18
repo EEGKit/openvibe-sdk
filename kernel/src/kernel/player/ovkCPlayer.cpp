@@ -21,9 +21,9 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Kernel;
+using namespace Plugins;
 
 
 const uint64_t g_ui64Scheduler_Default_Frequency_      = 128;
@@ -73,7 +73,7 @@ CPlayer::~CPlayer(void)
 
 bool CPlayer::setScenario(
 	const CIdentifier& rScenarioIdentifier,
-	const OpenViBE::CNameValuePairList* pLocalConfigurationTokens)
+	const CNameValuePairList* pLocalConfigurationTokens)
 {
 	OV_ERROR_UNLESS_KRF(
 		!this->isHoldingResources(),

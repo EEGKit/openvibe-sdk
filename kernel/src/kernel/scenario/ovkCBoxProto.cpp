@@ -5,8 +5,8 @@
 #include <cstdio>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 CBoxProto::CBoxProto(const IKernelContext& rKernelContext, IBox& rBox)
 	: TKernelObject<IBoxProto>(rKernelContext)
@@ -15,13 +15,13 @@ CBoxProto::CBoxProto(const IKernelContext& rKernelContext, IBox& rBox)
 bool CBoxProto::addInput(
 	const CString& sName,
 	const CIdentifier& rTypeIdentifier,
-	const OpenViBE::CIdentifier& oIdentifier,
+	const CIdentifier& oIdentifier,
 	const bool bNotify)
 {
 	if (!m_rBox.addInput(sName, rTypeIdentifier, oIdentifier, bNotify)) { return false; }
 
 	char l_sBuffer[1024];
-	::sprintf(l_sBuffer, "%d", m_rBox.getInputCount());
+	sprintf(l_sBuffer, "%d", m_rBox.getInputCount());
 	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialInputCount))
 	{
 		m_rBox.setAttributeValue(OV_AttributeId_Box_InitialInputCount, l_sBuffer);
@@ -38,13 +38,13 @@ bool CBoxProto::addOutput(
 
 	const CString& sName,
 	const CIdentifier& rTypeIdentifier,
-	const OpenViBE::CIdentifier& rIdentifier,
+	const CIdentifier& rIdentifier,
 	const bool bNotify)
 {
 	if (!m_rBox.addOutput(sName, rTypeIdentifier, rIdentifier, bNotify)) { return false; }
 
 	char l_sBuffer[1024];
-	::sprintf(l_sBuffer, "%d", m_rBox.getOutputCount());
+	sprintf(l_sBuffer, "%d", m_rBox.getOutputCount());
 	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialOutputCount))
 	{
 		m_rBox.setAttributeValue(OV_AttributeId_Box_InitialOutputCount, l_sBuffer);
@@ -62,13 +62,13 @@ bool CBoxProto::addSetting(
 	const CIdentifier& rTypeIdentifier,
 	const CString& sDefaultValue,
 	const bool bModifiable,
-	const OpenViBE::CIdentifier& rIdentifier,
+	const CIdentifier& rIdentifier,
 	const bool bNotify)
 {
 	if (!m_rBox.addSetting(sName, rTypeIdentifier, sDefaultValue, OV_Value_UndefinedIndexUInt, bModifiable, rIdentifier, bNotify)) { return false; }
 
 	char l_sBuffer[1024];
-	::sprintf(l_sBuffer, "%d", m_rBox.getSettingCount());
+	sprintf(l_sBuffer, "%d", m_rBox.getSettingCount());
 	if (m_rBox.hasAttribute(OV_AttributeId_Box_InitialSettingCount))
 	{
 		m_rBox.setAttributeValue(OV_AttributeId_Box_InitialSettingCount, l_sBuffer);
@@ -121,7 +121,7 @@ bool CBoxProto::addFlag(const EBoxFlag eBoxFlag)
 	return true;
 }
 
-bool CBoxProto::addFlag(const OpenViBE::CIdentifier& cIdentifierFlag)
+bool CBoxProto::addFlag(const CIdentifier& cIdentifierFlag)
 {
 	uint64_t flagValue = getKernelContext().getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, cIdentifierFlag.toString());
 	if (flagValue == OV_UndefinedIdentifier) { return false; }
@@ -129,12 +129,12 @@ bool CBoxProto::addFlag(const OpenViBE::CIdentifier& cIdentifierFlag)
 	return true;
 }
 
-bool CBoxProto::addInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
+bool CBoxProto::addInputSupport(const CIdentifier& rTypeIdentifier)
 {
 	return m_rBox.addInputSupport(rTypeIdentifier);
 }
 
-bool CBoxProto::addOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
+bool CBoxProto::addOutputSupport(const CIdentifier& rTypeIdentifier)
 {
 	return m_rBox.addOutputSupport(rTypeIdentifier);
 }

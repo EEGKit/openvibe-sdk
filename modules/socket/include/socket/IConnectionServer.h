@@ -5,7 +5,7 @@
 
 namespace Socket
 {
-	class Socket_API IConnectionServer : public Socket::IConnection
+	class Socket_API IConnectionServer : public IConnection
 	{
 	public:
 
@@ -18,7 +18,7 @@ namespace Socket
 		virtual bool listen(
 			uint32_t ui32Port) = 0;
 
-		virtual Socket::IConnection* accept(void) = 0;
+		virtual IConnection* accept(void) = 0;
 
 		/*
 		 * \brief Returns the port on the one the server is listening.
@@ -28,7 +28,7 @@ namespace Socket
 		virtual bool getSocketPort(uint32_t& port) = 0;
 	};
 
-	extern Socket_API Socket::IConnectionServer* createConnectionServer(void);
+	extern Socket_API IConnectionServer* createConnectionServer(void);
 };
 
 #endif // __Socket_IConnectionServer_H__

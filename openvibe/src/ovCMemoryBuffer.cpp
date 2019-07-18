@@ -56,7 +56,7 @@ CMemoryBufferImpl::CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer)
 		m_ui64AllocatedSize = rMemoryBuffer.getSize();
 		if (rMemoryBuffer.getDirectPointer())
 		{
-			::memcpy(m_pBuffer, rMemoryBuffer.getDirectPointer(), static_cast<size_t>(m_ui64BufferSize)); // $$$
+			memcpy(m_pBuffer, rMemoryBuffer.getDirectPointer(), static_cast<size_t>(m_ui64BufferSize)); // $$$
 		}
 		m_pBuffer[m_ui64AllocatedSize] = 0;
 	}
@@ -74,7 +74,7 @@ CMemoryBufferImpl::CMemoryBufferImpl(const uint8_t* pMemoryBuffer, const uint64_
 		m_ui64AllocatedSize = ui64BufferSize;
 		if (pMemoryBuffer)
 		{
-			::memcpy(m_pBuffer, pMemoryBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
+			memcpy(m_pBuffer, pMemoryBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
 		}
 		m_pBuffer[m_ui64AllocatedSize] = 0;
 	}
@@ -111,7 +111,7 @@ bool CMemoryBufferImpl::reserve(const uint64_t ui64Size)
 		uint8_t* l_pSavedBuffer = m_pBuffer;
 		m_pBuffer             = new uint8_t[static_cast<size_t>(ui64Size + 1)]; // $$$
 		if (!m_pBuffer) { return false; }
-		::memcpy(m_pBuffer, l_pSavedBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
+		memcpy(m_pBuffer, l_pSavedBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
 
 		delete [] l_pSavedBuffer;
 		m_ui64AllocatedSize            = ui64Size;
@@ -131,7 +131,7 @@ bool CMemoryBufferImpl::setSize(
 		if (!m_pBuffer) { return false; }
 		if (!bDiscard)
 		{
-			::memcpy(m_pBuffer, l_pSavedBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
+			memcpy(m_pBuffer, l_pSavedBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
 		}
 		if (l_pSavedBuffer)
 		{
@@ -150,7 +150,7 @@ bool CMemoryBufferImpl::append(const uint8_t* pBuffer, const uint64_t ui64Buffer
 	{
 		uint64_t l_ui64BufferSizeBackup = m_ui64BufferSize;
 		if (!this->setSize(m_ui64BufferSize + ui64BufferSize, false)) { return false; }
-		::memcpy(m_pBuffer + l_ui64BufferSizeBackup, pBuffer, static_cast<size_t>(ui64BufferSize));
+		memcpy(m_pBuffer + l_ui64BufferSizeBackup, pBuffer, static_cast<size_t>(ui64BufferSize));
 	}
 	return true;
 }
@@ -161,7 +161,7 @@ bool CMemoryBufferImpl::append(const IMemoryBuffer& rMemoryBuffer)
 	{
 		uint64_t l_ui64BufferSizeBackup = m_ui64BufferSize;
 		if (!this->setSize(m_ui64BufferSize + rMemoryBuffer.getSize(), false)) { return false; }
-		::memcpy(m_pBuffer + l_ui64BufferSizeBackup, rMemoryBuffer.getDirectPointer(), static_cast<size_t>(rMemoryBuffer.getSize()));
+		memcpy(m_pBuffer + l_ui64BufferSizeBackup, rMemoryBuffer.getDirectPointer(), static_cast<size_t>(rMemoryBuffer.getSize()));
 	}
 	return true;
 }

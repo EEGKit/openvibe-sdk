@@ -26,7 +26,7 @@ namespace OpenViBE
 	 * \sa OpenViBE::Kernel::IKernelDesc
 	 *
 	 */
-	class OV_API IKernelLoader : public OpenViBE::IObject
+	class OV_API IKernelLoader : public IObject
 	{
 	public:
 
@@ -38,8 +38,8 @@ namespace OpenViBE
 		 * \return \e false on error.
 		 */
 		virtual bool load(
-			const OpenViBE::CString& sFileName,
-			OpenViBE::CString* pError = NULL) = 0;
+			const CString& sFileName,
+			CString* pError = NULL) = 0;
 		/**
 		 * \brief Unloads a loaded kernel DLL/so file
 		 * \return \e true on success.
@@ -47,7 +47,7 @@ namespace OpenViBE
 		 * \warning \c load must have been called successfully before calling \c unload
 		 */
 		virtual bool unload(
-			OpenViBE::CString* pError = NULL) = 0;
+			CString* pError = NULL) = 0;
 		/**
 		 * \brief Requests the kernel DLL/so file to self initialize
 		 * \return \e true on success.
@@ -67,7 +67,7 @@ namespace OpenViBE
 		 * \warning both \c load and \c initialize must have been called successfully before calling \c getKernelDesc
 		 */
 		virtual bool getKernelDesc(
-			OpenViBE::Kernel::IKernelDesc*& rpKernelDesc) = 0;
+			Kernel::IKernelDesc*& rpKernelDesc) = 0;
 		/**
 		 * \brief Uninitializes a loaded and initialized kernel DLL/so file
 		 * \return \e true on success.

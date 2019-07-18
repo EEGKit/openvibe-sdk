@@ -30,7 +30,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IPluginObject : public OpenViBE::IObject
+		class OV_API IPluginObject : public IObject
 		{
 		public:
 

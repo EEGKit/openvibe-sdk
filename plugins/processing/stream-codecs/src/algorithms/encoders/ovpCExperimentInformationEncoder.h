@@ -20,7 +20,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CExperimentInformationEncoder : public OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder
+		class CExperimentInformationEncoder : public CEBMLBaseEncoder
 		{
 		public:
 
@@ -48,7 +48,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pTechnicianName;
 		};
 
-		class CExperimentInformationEncoderDesc : public OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc
+		class CExperimentInformationEncoderDesc : public CEBMLBaseEncoderDesc
 		{
 		public:
 
@@ -66,11 +66,11 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ExperimentInformationStreamEncoder; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CExperimentInformationEncoder(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CExperimentInformationEncoder(); }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
-				OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CEBMLBaseEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_ExperimentIdentifier, "Experiment identifier", OpenViBE::Kernel::ParameterType_UInteger);
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ExperimentInformationStreamEncoder_InputParameterId_ExperimentDate, "Experiment date", OpenViBE::Kernel::ParameterType_String);

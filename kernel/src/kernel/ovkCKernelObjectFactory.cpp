@@ -20,7 +20,7 @@ using namespace OpenViBE;
 		} \
 	}
 
-Kernel::CKernelObjectFactory::CKernelObjectFactory(const Kernel::IKernelContext& rKernelContext)
+Kernel::CKernelObjectFactory::CKernelObjectFactory(const IKernelContext& rKernelContext)
 	: TKernelObject<IKernelObjectFactory>(rKernelContext) {}
 
 IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& rClassIdentifier)

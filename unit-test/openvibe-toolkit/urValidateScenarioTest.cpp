@@ -9,12 +9,12 @@
 #include <ovp_global_defines.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 // DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> variable here
 // because it causes a bug due to plugins global descriptors beeing destroyed before
 // the kernel context.
-OpenViBE::Kernel::IKernelContext* g_context = nullptr;
+IKernelContext* g_context = nullptr;
 std::string g_dataDirectory;
 
 
@@ -43,7 +43,7 @@ bool checkForSchemaValidationError()
 
 	while (error)
 	{
-		if (error->getErrorType() == OpenViBE::Kernel::ErrorType::BadXMLSchemaValidation) { return true; }
+		if (error->getErrorType() == ErrorType::BadXMLSchemaValidation) { return true; }
 
 		error = error->getNestedError();
 	}
@@ -304,9 +304,9 @@ int urValidateScenarioTest(int argc, char* argv[])
 	g_context       = fixture->context;
 
 #if defined TARGET_OS_Windows
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
+	g_context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
+	g_context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
+	g_context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
 #elif defined TARGET_OS_Linux
 	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
 	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
@@ -317,7 +317,7 @@ int urValidateScenarioTest(int argc, char* argv[])
 	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
 #endif
 
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "validate_scenario_test_case.*";
 	return RUN_ALL_TESTS();
 }

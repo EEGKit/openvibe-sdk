@@ -134,7 +134,7 @@ namespace Dsp
 			double w0 = 2 * doublePi * cutoffFrequency / sampleRate;
 			double cs = cos(w0);
 			double sn = sin(w0);
-			double AL = sn / 2 * ::std::sqrt((A + 1 / A) * (1 / shelfSlope - 1) + 2);
+			double AL = sn / 2 * std::sqrt((A + 1 / A) * (1 / shelfSlope - 1) + 2);
 			double sq = 2 * sqrt(A) * AL;
 			double b0 = A * ((A + 1) - (A - 1) * cs + sq);
 			double b1 = 2 * A * ((A - 1) - (A + 1) * cs);
@@ -154,7 +154,7 @@ namespace Dsp
 			double w0 = 2 * doublePi * cutoffFrequency / sampleRate;
 			double cs = cos(w0);
 			double sn = sin(w0);
-			double AL = sn / 2 * ::std::sqrt((A + 1 / A) * (1 / shelfSlope - 1) + 2);
+			double AL = sn / 2 * std::sqrt((A + 1 / A) * (1 / shelfSlope - 1) + 2);
 			double sq = 2 * sqrt(A) * AL;
 			double b0 = A * ((A + 1) + (A - 1) * cs + sq);
 			double b1 = -2 * A * ((A - 1) + (A + 1) * cs);

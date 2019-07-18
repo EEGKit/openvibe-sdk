@@ -5,17 +5,17 @@
 
 namespace EBML
 {
-	class EBML_API CWriterHelper : public EBML::IWriterHelper
+	class EBML_API CWriterHelper : public IWriterHelper
 	{
 	public:
 
 		CWriterHelper(void);
 		virtual ~CWriterHelper(void);
 
-		virtual bool connect(EBML::IWriter* pWriter);
+		virtual bool connect(IWriter* pWriter);
 		virtual bool disconnect(void);
 
-		virtual bool openChild(const EBML::CIdentifier& rIdentifier);
+		virtual bool openChild(const CIdentifier& rIdentifier);
 		virtual bool closeChild(void);
 
 		virtual bool setSIntegerAsChildData(const int64_t iValue);
@@ -29,7 +29,7 @@ namespace EBML
 
 	protected:
 
-		EBML::IWriterHelper* m_pWriterHelperImplementation;
+		IWriterHelper* m_pWriterHelperImplementation;
 	};
 };
 

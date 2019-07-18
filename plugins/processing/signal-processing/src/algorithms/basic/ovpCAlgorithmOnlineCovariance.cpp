@@ -5,11 +5,11 @@
 #include <iostream>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 
 using namespace OpenViBEToolkit;
 
@@ -29,7 +29,7 @@ void CAlgorithmOnlineCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager &rMgr,
 	}
 }
 #else
-void CAlgorithmOnlineCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
+void CAlgorithmOnlineCovariance::dumpMatrix(ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 #endif
 
 bool CAlgorithmOnlineCovariance::initialize(void)

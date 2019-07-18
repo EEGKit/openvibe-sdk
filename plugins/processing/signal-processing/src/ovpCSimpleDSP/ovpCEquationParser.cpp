@@ -9,10 +9,10 @@
 #include <cctype>
 
 using namespace boost;
-using namespace boost::spirit;
+using namespace spirit;
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 using namespace OpenViBEToolkit;
 
 #if 1
@@ -100,9 +100,9 @@ bool CEquationParser::compileEquation(const char* pEquation)
 	// cases so I add this sanitizer function to clear the Simple DSP
 	// equation before sending it to BOOST::Ast
 	std::string l_sEquation(pEquation);
-	l_sEquation = ::find_and_replace(l_sEquation, " ", "");
-	l_sEquation = ::find_and_replace(l_sEquation, "\t", "");
-	l_sEquation = ::find_and_replace(l_sEquation, "\n", "");
+	l_sEquation = find_and_replace(l_sEquation, " ", "");
+	l_sEquation = find_and_replace(l_sEquation, "\t", "");
+	l_sEquation = find_and_replace(l_sEquation, "\n", "");
 
 	//parses the equation
 	_EQ_PARSER_DEBUG_LOG_(LogLevel_Trace, "Parsing equation [" << CString(l_sEquation.c_str()) << "]...");

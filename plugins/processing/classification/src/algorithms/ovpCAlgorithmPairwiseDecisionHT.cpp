@@ -18,11 +18,11 @@ namespace
 
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Classification;
+using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
@@ -45,7 +45,7 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 }
 
 
-bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector)
+bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* pProbabilityVector)
 {
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,

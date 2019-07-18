@@ -67,21 +67,21 @@ namespace XML
 		 * @brief Add a node child of the
 		 * @param ChildNode [in] : The Node that will became the new child
 		 */
-		virtual void addChild(XML::IXMLNode* ChildNode) = 0;
+		virtual void addChild(IXMLNode* ChildNode) = 0;
 
 		/**
 		 * @brief Return the ith child of the node.
 		 * @param iChildIndex [in] : index of the child.
 		 * @return The ith child of the node.
 		 */
-		virtual XML::IXMLNode* getChild(const size_t iChildIndex) const = 0;
+		virtual IXMLNode* getChild(const size_t iChildIndex) const = 0;
 
 		/**
 		 * @brief Return the first child with the name sName.
 		 * @param sName [in]] : Name of th child
 		 * @return The first child of the node which name is sName.
 		 */
-		virtual XML::IXMLNode* getChildByName(const char* sName) const = 0;
+		virtual IXMLNode* getChildByName(const char* sName) const = 0;
 
 		/**
 		 * @brief Return the amount of child the node has.
@@ -107,7 +107,7 @@ namespace XML
 	 * @param sName [in] : Name of the node
 	 * @return New node
 	 */
-	extern XML_API XML::IXMLNode* createNode(const char* sName);
+	extern XML_API IXMLNode* createNode(const char* sName);
 }
 
 #endif // IXMLNODE_H

@@ -18,7 +18,7 @@ namespace OpenViBE
 	 * Instances of this class use an internal implementation of the OpenViBE::IMatrix
 	 * interface and redirect their calls to this implementation.
 	 */
-	class OV_API CMatrix : public OpenViBE::IMatrix
+	class OV_API CMatrix : public IMatrix
 	{
 	public:
 
@@ -69,7 +69,7 @@ namespace OpenViBE
 
 	private:
 
-		OpenViBE::IMatrix* m_pMatrixImpl = nullptr; //!< Internal implementation
+		IMatrix* m_pMatrixImpl = nullptr; //!< Internal implementation
 	};
 };
 

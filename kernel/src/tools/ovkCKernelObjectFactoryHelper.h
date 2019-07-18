@@ -9,17 +9,17 @@ namespace OpenViBE
 {
 	namespace Tools
 	{
-		class CKernelObjectFactoryHelper : public OpenViBE::IObject
+		class CKernelObjectFactoryHelper : public IObject
 		{
 		public:
 
-			explicit CKernelObjectFactoryHelper(OpenViBE::Kernel::IKernelObjectFactory& rKernelObjectFactory)
+			explicit CKernelObjectFactoryHelper(Kernel::IKernelObjectFactory& rKernelObjectFactory)
 				: m_rKernelObjectFactory(rKernelObjectFactory) { }
 
 			template <class T>
-			T createObject(const OpenViBE::CIdentifier& rClassIdentifier)
+			T createObject(const CIdentifier& rClassIdentifier)
 			{
-				OpenViBE::IObject* l_pObject = m_rKernelObjectFactory.createObject(rClassIdentifier);
+				IObject* l_pObject = m_rKernelObjectFactory.createObject(rClassIdentifier);
 				T l_tResult                  = dynamic_cast<T>(l_pObject);
 				if (l_pObject && !l_tResult)
 				{
@@ -38,7 +38,7 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::Kernel::IKernelObjectFactory& m_rKernelObjectFactory;
+			Kernel::IKernelObjectFactory& m_rKernelObjectFactory;
 
 		private:
 

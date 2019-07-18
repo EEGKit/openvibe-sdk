@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CFeatureVectorEncoder : public OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder
+		class CFeatureVectorEncoder : public CStreamedMatrixEncoder
 		{
 		public:
 
@@ -21,7 +21,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_FeatureVectorStreamEncoder);
 		};
 
-		class CFeatureVectorEncoderDesc : public OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc
+		class CFeatureVectorEncoderDesc : public CStreamedMatrixEncoderDesc
 		{
 		public:
 
@@ -39,11 +39,11 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_FeatureVectorStreamEncoder; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CFeatureVectorEncoder(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CFeatureVectorEncoder(); }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
-				OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CStreamedMatrixEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
 				return true;
 			}

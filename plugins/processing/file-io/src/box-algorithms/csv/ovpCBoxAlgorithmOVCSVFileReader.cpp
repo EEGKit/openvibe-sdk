@@ -8,12 +8,12 @@
 #include <openvibe/ovITimeArithmetics.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::CSV;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace CSV;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::FileIO;
+using namespace FileIO;
 
 CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader(void)
 	: m_ReaderLib(createCSVHandler(), releaseCSVHandler)
@@ -36,7 +36,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 
 	this->getStaticBoxContext().getOutputType(0, m_TypeIdentifier);
 
-	const OpenViBE::CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	const CString filename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	OV_ERROR_UNLESS_KRF(m_ReaderLib->openFile(filename.toASCIIString(), EFileAccessMode::Read),
 						(ICSVHandler::getLogError(m_ReaderLib->getLastLogError()) + (m_ReaderLib->getLastErrorString().empty() ? "" : ". Details: " + m_ReaderLib->getLastErrorString())).c_str(),
 						ErrorType::Internal);
@@ -360,7 +360,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(double startTime, double e
 	}
 	else
 	{
-		std::deque<OpenViBE::CSV::SStimulationChunk>::iterator stimulationIt;
+		std::deque<SStimulationChunk>::iterator stimulationIt;
 
 		for (stimulationIt = m_SavedStimulations.begin(); stimulationIt != m_SavedStimulations.end(); ++stimulationIt)
 		{
@@ -372,7 +372,7 @@ bool CBoxAlgorithmOVCSVFileReader::processStimulation(double startTime, double e
 												  ITimeArithmetics::secondsToTime(stimulationIt->stimulationDate),
 												  ITimeArithmetics::secondsToTime(stimulationIt->stimulationDuration));
 
-				m_LastStimulationDate = OpenViBE::ITimeArithmetics::secondsToTime(stimulationIt->stimulationDate);
+				m_LastStimulationDate = ITimeArithmetics::secondsToTime(stimulationIt->stimulationDate);
 			}
 			else
 			{

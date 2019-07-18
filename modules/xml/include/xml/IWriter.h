@@ -26,7 +26,7 @@ namespace XML
 		virtual ~IWriter(void) { }
 	};
 
-	extern XML_API XML::IWriter* createWriter(XML::IWriterCallback& rWriterCallback);
+	extern XML_API IWriter* createWriter(IWriterCallback& rWriterCallback);
 };
 
 #endif // __XML_IWriter_H__

@@ -24,7 +24,7 @@
 
 namespace Socket
 {
-	class CConnectionParallel : public Socket::IConnectionParallel
+	class CConnectionParallel : public IConnectionParallel
 	{
 	protected:
 		unsigned short m_ui16PortNumber;

@@ -6,7 +6,7 @@
 
 namespace Socket
 {
-	class Socket_API IConnectionSerial : public Socket::IConnection
+	class Socket_API IConnectionSerial : public IConnection
 	{
 	public:
 
@@ -52,7 +52,7 @@ namespace Socket
 		void saveLastError();
 	};
 
-	extern Socket_API Socket::IConnectionSerial* createConnectionSerial(void);
+	extern Socket_API IConnectionSerial* createConnectionSerial(void);
 };
 
 #endif // __Socket_IConnectionSerial_H__

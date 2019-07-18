@@ -9,12 +9,12 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CBuffer : public OpenViBE::CMemoryBuffer
+		class CBuffer : public CMemoryBuffer
 		{
 		public:
 
 			CBuffer(void) { }
-			explicit CBuffer(const OpenViBE::Kernel::CBuffer& rBuffer);
+			explicit CBuffer(const CBuffer& rBuffer);
 
 			CBuffer& operator=(const CBuffer& rBuffer);
 		};

@@ -361,27 +361,27 @@ namespace OpenViBEPlugins
 							switch (l_pParameter->getType())
 							{
 								case OpenViBE::Kernel::ParameterType_Enumeration:
-									::strcpy(l_sBuffer, this->getTypeManager().getEnumerationEntryNameFromValue(l_pParameter->getSubTypeIdentifier(), ip_ui64Parameter).toASCIIString());
+									strcpy(l_sBuffer, this->getTypeManager().getEnumerationEntryNameFromValue(l_pParameter->getSubTypeIdentifier(), ip_ui64Parameter).toASCIIString());
 									l_oTypeIdentifier = l_pParameter->getSubTypeIdentifier();
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Integer:
 								case OpenViBE::Kernel::ParameterType_UInteger:
-									::sprintf(l_sBuffer, "%li", static_cast<int64_t>(ip_i64Parameter));
+									sprintf(l_sBuffer, "%li", static_cast<int64_t>(ip_i64Parameter));
 									l_oTypeIdentifier = OV_TypeId_Integer;
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Boolean:
-									::sprintf(l_sBuffer, "%s", (static_cast<bool>(ip_bParameter)) ? "true" : "false");
+									sprintf(l_sBuffer, "%s", (static_cast<bool>(ip_bParameter)) ? "true" : "false");
 									l_oTypeIdentifier = OV_TypeId_Boolean;
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Float:
-									::sprintf(l_sBuffer, "%lf", static_cast<double>(ip_f64Parameter));
+									sprintf(l_sBuffer, "%lf", static_cast<double>(ip_f64Parameter));
 									l_oTypeIdentifier = OV_TypeId_Float;
 									break;
 								case OpenViBE::Kernel::ParameterType_String:
-									::sprintf(l_sBuffer, "%s", (static_cast<OpenViBE::CString*>(ip_sParameter))->toASCIIString());
+									sprintf(l_sBuffer, "%s", (static_cast<OpenViBE::CString*>(ip_sParameter))->toASCIIString());
 									l_oTypeIdentifier = OV_TypeId_String;
 									break;
 								default:

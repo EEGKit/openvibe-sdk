@@ -13,14 +13,14 @@
 using namespace Eigen;
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 using namespace OpenViBEToolkit;
 
 namespace
 {
-	double amplitude(unsigned int channelIndex, unsigned int FFTIndex, const Eigen::MatrixXcd& matrix)
+	double amplitude(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix)
 	{
 		return sqrt(
 			matrix(channelIndex, FFTIndex).real()
@@ -30,17 +30,17 @@ namespace
 		);
 	}
 
-	double phase(unsigned int channelIndex, unsigned int FFTIndex, const Eigen::MatrixXcd& matrix)
+	double phase(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix)
 	{
-		return ::atan2(matrix(channelIndex, FFTIndex).imag(), matrix(channelIndex, FFTIndex).real());
+		return atan2(matrix(channelIndex, FFTIndex).imag(), matrix(channelIndex, FFTIndex).real());
 	}
 
-	double realPart(unsigned int channelIndex, unsigned int FFTIndex, const Eigen::MatrixXcd& matrix)
+	double realPart(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix)
 	{
 		return matrix(channelIndex, FFTIndex).real();
 	}
 
-	double imaginaryPart(unsigned int channelIndex, unsigned int FFTIndex, const Eigen::MatrixXcd& matrix)
+	double imaginaryPart(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix)
 	{
 		return matrix(channelIndex, FFTIndex).imag();
 	}
@@ -182,22 +182,22 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 		if (m_Decoder.isBufferReceived())
 		{
 			// Compute the FFT
-			Eigen::FFT<double> eigenFFT;
+			FFT<double> eigenFFT;
 			eigenFFT.SetFlag(eigenFFT.HalfSpectrum); // REAL signal => spectrum with conjugate symmetry
 
 			// This matrix will contain the channels spectra (COMPLEX values, RowMajor for copy into openvibe matrix)
-			Eigen::MatrixXcd spectra = Eigen::MatrixXcd::Zero(m_ChannelCount, m_FFTSize);
+			MatrixXcd spectra = MatrixXcd::Zero(m_ChannelCount, m_FFTSize);
 
 			for (unsigned int j = 0; j < m_ChannelCount; j++)
 			{
-				Eigen::VectorXd samples = Eigen::VectorXd::Zero(m_SampleCount);
+				VectorXd samples = VectorXd::Zero(m_SampleCount);
 
 				for (unsigned int k = 0; k < m_SampleCount; k++)
 				{
 					samples(k) = matrix->getBuffer()[j * m_SampleCount + k];
 				}
 
-				Eigen::VectorXcd spectrum; // initialization useless: EigenFFT resizes spectrum in function .fwd()
+				VectorXcd spectrum; // initialization useless: EigenFFT resizes spectrum in function .fwd()
 
 				// EigenFFT
 				eigenFFT.fwd(spectrum, samples);
@@ -223,7 +223,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 				// We build the chunk only if the encoder is activated
 				if (m_IsSpectrumEncoderActive[encoderIndex])
 				{
-					std::function<double(unsigned int, unsigned int, const Eigen::MatrixXcd&)> processResult;
+					std::function<double(unsigned int, unsigned int, const MatrixXcd&)> processResult;
 
 					switch (encoderIndex)
 					{

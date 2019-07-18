@@ -2,11 +2,11 @@
 #include <cstdlib>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Stimulation;
+using namespace Stimulation;
 
 uint64_t CBoxAlgorithmClockStimulator::getClockFrequency(void)
 {

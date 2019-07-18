@@ -46,7 +46,7 @@ namespace OpenViBEToolkit
 
 uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t ui8Separator)
 {
-	return OpenViBEToolkit::Tools::String::split(rString, rSplitCallback, &ui8Separator, 1);
+	return split(rString, rSplitCallback, &ui8Separator, 1);
 }
 
 uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
@@ -60,7 +60,7 @@ uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISp
 	while (i < l_sString.length())
 	{
 		j = i;
-		while (j < l_sString.length() && !OpenViBEToolkit::Tools::String::isSeparator(l_sString[j], pSeparator, ui32SeparatorCount))
+		while (j < l_sString.length() && !isSeparator(l_sString[j], pSeparator, ui32SeparatorCount))
 		{
 			j++;
 		}
@@ -71,7 +71,7 @@ uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISp
 		}
 		i = j + 1;
 	}
-	if (l_sString.length() != 0 && OpenViBEToolkit::Tools::String::isSeparator(l_sString[l_sString.length() - 1], pSeparator, ui32SeparatorCount))
+	if (l_sString.length() != 0 && isSeparator(l_sString[l_sString.length() - 1], pSeparator, ui32SeparatorCount))
 	{
 		rSplitCallback.setToken("");
 		l_ui32Count++;
@@ -84,10 +84,10 @@ uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISp
 bool OpenViBEToolkit::Tools::String::isAlmostEqual(const CString& rString1, const CString& rString2, const bool bCaseSensitive, const bool bRemoveStartSpaces, const bool bRemoveEndSpaces)
 {
 	const char* l_pString1_start = rString1.toASCIIString();
-	const char* l_pString1_end   = l_pString1_start + ::strlen(l_pString1_start) - 1;
+	const char* l_pString1_end   = l_pString1_start + strlen(l_pString1_start) - 1;
 
 	const char* l_pString2_start = rString2.toASCIIString();
-	const char* l_pString2_end   = l_pString2_start + ::strlen(l_pString2_start) - 1;
+	const char* l_pString2_end   = l_pString2_start + strlen(l_pString2_start) - 1;
 
 	if (bRemoveStartSpaces)
 	{

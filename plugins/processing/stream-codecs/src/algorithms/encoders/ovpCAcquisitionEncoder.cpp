@@ -1,11 +1,11 @@
 #include "ovpCAcquisitionEncoder.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::StreamCodecs;
+using namespace StreamCodecs;
 
 bool CAcquisitionEncoder::initialize(void)
 {

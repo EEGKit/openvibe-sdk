@@ -133,43 +133,43 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				*/
 			case 'c':	/* Date and time, using the locale's format. */
 			LEGAL_ALT(ALT_E);
-				if (!(bp = DateParser::windowsStrptime(bp, "%x %X", tmParsed)))
+				if (!(bp = windowsStrptime(bp, "%x %X", tmParsed)))
 					return (0);
 				break;
 
 			case 'D':	/* The date as "%m/%d/%y". */
 			LEGAL_ALT(0);
-				if (!(bp = DateParser::windowsStrptime(bp, "%m/%d/%y", tmParsed)))
+				if (!(bp = windowsStrptime(bp, "%m/%d/%y", tmParsed)))
 					return (0);
 				break;
 
 			case 'R':	/* The time as "%H:%M". */
 			LEGAL_ALT(0);
-				if (!(bp = DateParser::windowsStrptime(bp, "%H:%M", tmParsed)))
+				if (!(bp = windowsStrptime(bp, "%H:%M", tmParsed)))
 					return (0);
 				break;
 
 			case 'r':	/* The time in 12-hour clock representation. */
 			LEGAL_ALT(0);
-				if (!(bp = DateParser::windowsStrptime(bp, "%I:%M:%S %p", tmParsed)))
+				if (!(bp = windowsStrptime(bp, "%I:%M:%S %p", tmParsed)))
 					return (0);
 				break;
 
 			case 'T':	/* The time as "%H:%M:%S". */
 			LEGAL_ALT(0);
-				if (!(bp = DateParser::windowsStrptime(bp, "%H:%M:%S", tmParsed)))
+				if (!(bp = windowsStrptime(bp, "%H:%M:%S", tmParsed)))
 					return (0);
 				break;
 
 			case 'X':	/* The time, using the locale's format. */
 			LEGAL_ALT(ALT_E);
-				if (!(bp = DateParser::windowsStrptime(bp, "%H:%M:%S", tmParsed)))
+				if (!(bp = windowsStrptime(bp, "%H:%M:%S", tmParsed)))
 					return (0);
 				break;
 
 			case 'x':	/* The date, using the locale's format. */
 			LEGAL_ALT(ALT_E);
-				if (!(bp = DateParser::windowsStrptime(bp, "%m/%d/%y", tmParsed)))
+				if (!(bp = windowsStrptime(bp, "%m/%d/%y", tmParsed)))
 					return (0);
 				break;
 

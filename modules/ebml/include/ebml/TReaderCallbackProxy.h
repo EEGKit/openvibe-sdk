@@ -10,13 +10,13 @@ namespace EBML
 	//
 
 	template <class COwnerClass>
-	class TReaderCallbackProxy1 : public EBML::IReaderCallback
+	class TReaderCallbackProxy1 : public IReaderCallback
 	{
 	public:
 		TReaderCallbackProxy1(
 			COwnerClass& rOwnerObject,
-			bool (COwnerClass::*mfpIsMasterChild)(const EBML::CIdentifier& rIdentifier),
-			void (COwnerClass::*mfpOpenChild)(const EBML::CIdentifier& rIdentifier),
+			bool (COwnerClass::*mfpIsMasterChild)(const CIdentifier& rIdentifier),
+			void (COwnerClass::*mfpOpenChild)(const CIdentifier& rIdentifier),
 			void (COwnerClass::*mfpProcessChildData)(const void* pBuffer, const uint64_t ui64BufferSize),
 			void (COwnerClass::*mfpCloseChild)(void))
 			: m_rOwnerObject(rOwnerObject)
@@ -25,7 +25,7 @@ namespace EBML
 			  , m_mfpProcessChildData(mfpProcessChildData)
 			  , m_mfpCloseChild(mfpCloseChild) { }
 
-		virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier)
+		virtual bool isMasterChild(const CIdentifier& rIdentifier)
 		{
 			if (m_mfpIsMasterChild)
 			{
@@ -34,7 +34,7 @@ namespace EBML
 			return false;
 		}
 
-		virtual void openChild(const EBML::CIdentifier& rIdentifier)
+		virtual void openChild(const CIdentifier& rIdentifier)
 		{
 			if (m_mfpOpenChild)
 			{
@@ -60,8 +60,8 @@ namespace EBML
 
 	protected:
 		COwnerClass& m_rOwnerObject;
-		bool (COwnerClass::*m_mfpIsMasterChild)(const EBML::CIdentifier& rIdentifier);
-		void (COwnerClass::*m_mfpOpenChild)(const EBML::CIdentifier& rIdentifier);
+		bool (COwnerClass::*m_mfpIsMasterChild)(const CIdentifier& rIdentifier);
+		void (COwnerClass::*m_mfpOpenChild)(const CIdentifier& rIdentifier);
 		void (COwnerClass::*m_mfpProcessChildData)(const void* pBuffer, const uint64_t ui64BufferSize);
 		void (COwnerClass::*m_mfpCloseChild)(void);
 	};
@@ -69,8 +69,8 @@ namespace EBML
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass, bool (COwnerClass::*mfpIsMasterChild)(const EBML::CIdentifier& rIdentifier), void (COwnerClass::*mfpOpenChild)(const EBML::CIdentifier& rIdentifier), void (COwnerClass::*mfpProcessChildData)(const void* pBuffer, const uint64_t ui64BufferSize), void (COwnerClass::*mfpCloseChild)(void)>
-	class TReaderCallbackProxy2 : public EBML::IReaderCallback
+	template <class COwnerClass, bool (COwnerClass::*mfpIsMasterChild)(const CIdentifier& rIdentifier), void (COwnerClass::*mfpOpenChild)(const CIdentifier& rIdentifier), void (COwnerClass::*mfpProcessChildData)(const void* pBuffer, const uint64_t ui64BufferSize), void (COwnerClass::*mfpCloseChild)(void)>
+	class TReaderCallbackProxy2 : public IReaderCallback
 	{
 	public:
 		TReaderCallbackProxy2(
@@ -81,7 +81,7 @@ namespace EBML
 			  , m_mfpProcessChildData(mfpProcessChildData)
 			  , m_mfpCloseChild(mfpCloseChild) { }
 
-		virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier)
+		virtual bool isMasterChild(const CIdentifier& rIdentifier)
 		{
 			if (m_mfpIsMasterChild)
 			{
@@ -90,7 +90,7 @@ namespace EBML
 			return false;
 		}
 
-		virtual void openChild(const EBML::CIdentifier& rIdentifier)
+		virtual void openChild(const CIdentifier& rIdentifier)
 		{
 			if (m_mfpOpenChild)
 			{
@@ -116,8 +116,8 @@ namespace EBML
 
 	protected:
 		COwnerClass& m_rOwnerObject;
-		bool (COwnerClass::*m_mfpIsMasterChild)(const EBML::CIdentifier& rIdentifier);
-		void (COwnerClass::*m_mfpOpenChild)(const EBML::CIdentifier& rIdentifier);
+		bool (COwnerClass::*m_mfpIsMasterChild)(const CIdentifier& rIdentifier);
+		void (COwnerClass::*m_mfpOpenChild)(const CIdentifier& rIdentifier);
 		void (COwnerClass::*m_mfpProcessChildData)(const void* pBuffer, const uint64_t ui64BufferSize);
 		void (COwnerClass::*m_mfpCloseChild)(void);
 	};

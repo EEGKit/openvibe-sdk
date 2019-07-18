@@ -59,7 +59,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-zoom-100"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmXDAWNTrainer; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmXDAWNTrainer; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{

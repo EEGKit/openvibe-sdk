@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 		 *
 		 * Probability required
 		 */
-		class CAlgorithmPairwiseDecisionHT : virtual public OpenViBEPlugins::Classification::CAlgorithmPairwiseDecision
+		class CAlgorithmPairwiseDecisionHT : virtual public CAlgorithmPairwiseDecision
 		{
 		public:
 
@@ -42,7 +42,7 @@ namespace OpenViBEPlugins
 			uint32_t m_ui32ClassCount;
 		};
 
-		class CAlgorithmPairwiseDecisionHTDesc : virtual public OpenViBEPlugins::Classification::CAlgorithmPairwiseDecisionDesc
+		class CAlgorithmPairwiseDecisionHTDesc : virtual public CAlgorithmPairwiseDecisionDesc
 		{
 		public:
 
@@ -67,7 +67,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_PairwiseDecision_HT; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CAlgorithmPairwiseDecisionHT; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CAlgorithmPairwiseDecisionHT; }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{

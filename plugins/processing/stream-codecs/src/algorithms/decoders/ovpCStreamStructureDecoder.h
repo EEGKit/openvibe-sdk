@@ -9,7 +9,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CStreamStructureDecoder : public OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoder
+		class CStreamStructureDecoder : public CEBMLBaseDecoder
 		{
 		public:
 
@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 			virtual void closeChild(void);
 		};
 
-		class CStreamStructureDecoderDesc : public OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoderDesc
+		class CStreamStructureDecoderDesc : public CEBMLBaseDecoderDesc
 		{
 		public:
 
@@ -47,11 +47,11 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("2.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_StreamStructureStreamDecoder; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CStreamStructureDecoder(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CStreamStructureDecoder(); }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
-				OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 				return true;
 			}
 

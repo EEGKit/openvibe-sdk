@@ -11,8 +11,8 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 namespace
 {
@@ -55,7 +55,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize(void)
 	ofBoxIndex
 			<< ".. _Doc_BoxAlgorithms:\n"
 			<< "\n"
-			<< ::generateRstTitle("Boxes list", 0)
+			<< generateRstTitle("Boxes list", 0)
 			<< "\n"
 			<< "Available box algorithms are :\n"
 			<< "\n";
@@ -66,7 +66,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize(void)
 	if (!m_DeprecatedBoxesCategories.empty())
 	{
 		ofBoxIndex << "\n\n"
-				<< ::generateRstTitle("Deprecated boxes list", 0)
+				<< generateRstTitle("Deprecated boxes list", 0)
 				<< "\n"
 				<< "The following boxes are deprecated, they are hidden in Studio and will be removed soon or later, so you should consider not using them:\n";
 
@@ -87,7 +87,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	if (rPluginObjectDesc.getCreatedClass() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
 		// insert a box into the scenario, initialize it from the proxy-descriptor from the metabox loader
-		if (!m_Scenario->addBox(boxIdentifier, static_cast<const OpenViBE::Plugins::IBoxAlgorithmDesc&>(rPluginObjectDesc), OV_UndefinedIdentifier))
+		if (!m_Scenario->addBox(boxIdentifier, static_cast<const IBoxAlgorithmDesc&>(rPluginObjectDesc), OV_UndefinedIdentifier))
 		{
 			m_KernelContext.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
 			return true;
@@ -119,7 +119,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	ofBoxTemplate
 			<< ".. _Doc_" << fileName << ":\n"
 			<< "\n"
-			<< ::generateRstTitle(rPluginObjectDesc.getName().toASCIIString(), 0)
+			<< generateRstTitle(rPluginObjectDesc.getName().toASCIIString(), 0)
 			<< "\n"
 			<< ".. container:: attribution\n"
 			<< "\n"
@@ -139,7 +139,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 		ofBoxTemplate
 				<< ".. _Doc_" << fileName.c_str() << "_Inputs:\n"
 				<< "\n"
-				<< ::generateRstTitle("Inputs", 1).c_str()
+				<< generateRstTitle("Inputs", 1).c_str()
 				<< ".. todo::  Write general input description...\n"
 				<< "\n"
 				<< ".. csv-table::\n"
@@ -164,7 +164,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 					<< "\n"
 					<< ".. _Doc_" << fileName << "_Input_" << index << ":\n"
 					<< "\n"
-					<< ::generateRstTitle(inputName.toASCIIString(), 2)
+					<< generateRstTitle(inputName.toASCIIString(), 2)
 					<< "\n"
 					<< ".. todo::  Write input description...\n"
 					<< "\n"
@@ -178,7 +178,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 		ofBoxTemplate
 				<< ".. _Doc_" << fileName << "_Outputs:\n"
 				<< "\n"
-				<< ::generateRstTitle("Outputs", 1)
+				<< generateRstTitle("Outputs", 1)
 				<< "\n"
 				<< ".. todo::  Write general output description...\n"
 				<< "\n"
@@ -204,7 +204,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 					<< "\n"
 					<< ".. _Doc_" << fileName << "_Output_" << index << ":\n"
 					<< "\n"
-					<< ::generateRstTitle(outputName.toASCIIString(), 2)
+					<< generateRstTitle(outputName.toASCIIString(), 2)
 					<< "\n"
 					<< ".. todo::  Write output description...\n"
 					<< "\n"
@@ -218,7 +218,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 		ofBoxTemplate
 				<< ".. _Doc_" << fileName.c_str() << "_Settings:\n"
 				<< "\n"
-				<< ::generateRstTitle("Settings", 1)
+				<< generateRstTitle("Settings", 1)
 				<< "\n"
 				<< ".. todo::  Write settings general description...\n"
 				<< "\n"
@@ -246,7 +246,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 					<< "\n"
 					<< ".. _Doc_" << fileName << "_Setting_" << index << ":\n"
 					<< "\n"
-					<< ::generateRstTitle(settingName.toASCIIString(), 2)
+					<< generateRstTitle(settingName.toASCIIString(), 2)
 					<< "\n"
 					<< ".. todo:: Write setting description... \n"
 					<< "\n"
@@ -258,7 +258,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	ofBoxTemplate
 			<< ".. _Doc_" << fileName << "_Examples:\n"
 			<< "\n"
-			<< ::generateRstTitle("Examples", 1)
+			<< generateRstTitle("Examples", 1)
 			<< "\n"
 			<< ".. todo::  Write example of use...\n"
 			<< "\n"
@@ -267,7 +267,7 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc
 	ofBoxTemplate
 			<< ".. _Doc_" << fileName << "_Miscellaneous:\n"
 			<< "\n"
-			<< ::generateRstTitle("Miscellaneous", 1)
+			<< generateRstTitle("Miscellaneous", 1)
 			<< "\n"
 			<< ".. todo::  Write any miscellaneous information...\n"
 			<< "\n"
@@ -337,7 +337,7 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<s
 					level++;
 				}
 				res += "\n\n"
-						+ ::generateRstTitle(*itSplittedCategory1, level)
+						+ generateRstTitle(*itSplittedCategory1, level)
 						+ "\n"
 						+ ".. toctree::\n"
 						+ "   :maxdepth: 1\n"

@@ -7,18 +7,18 @@
 #include <cstdio>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 #include <Eigen/Dense>
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 #endif
 
-uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CString& rCoefficients, const char c1, const char c2, uint32_t nRows, uint32_t nCols)
+uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const CString& rCoefficients, const char c1, const char c2, uint32_t nRows, uint32_t nCols)
 {
 	// Count the number of entries
 	// @Note To avoid doing a ton of subsequent memory allocations (very slow on Windows debug builds), we first count the number of entries in the vector. If the file format had specified the vector dimension, we wouldn't have to do this step.

@@ -18,7 +18,7 @@ namespace Common
 			ResamplerStoreMode_SampleWise,
 		} EResamplerStoreMode;
 
-		template <class TFloat, Common::Resampler::EResamplerStoreMode eStoreMode>
+		template <class TFloat, EResamplerStoreMode eStoreMode>
 		class TResampler
 		{
 		public:

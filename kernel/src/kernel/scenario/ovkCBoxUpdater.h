@@ -28,7 +28,7 @@ namespace OpenViBE
 			CString value;
 		} InterfacorRequest;
 
-		class CBoxUpdater : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IKernelObject>
+		class CBoxUpdater : public TKernelObject<IKernelObject>
 		{
 		public:
 

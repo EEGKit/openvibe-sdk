@@ -3,8 +3,8 @@
 #include <sstream>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEToolkit;
 
@@ -26,12 +26,12 @@ namespace OpenViBEToolkit
 			bool exportOutput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32_t ui32OutputIndex);
 			bool exportLink(IMemoryBuffer& rMemoryBuffer, const ILink& rLink);
 			void exportAttributes(
-				const OpenViBE::Kernel::IAttributable& attributable,
-				OpenViBE::IMemoryBuffer& memoryBuffer,
-				const OpenViBE::CIdentifier& idAttributes,
-				const OpenViBE::CIdentifier& idAttribute,
-				const OpenViBE::CIdentifier& idAttributeIdentifier,
-				const OpenViBE::CIdentifier& idAttributeValue);
+				const IAttributable& attributable,
+				IMemoryBuffer& memoryBuffer,
+				const CIdentifier& idAttributes,
+				const CIdentifier& idAttribute,
+				const CIdentifier& idAttributeIdentifier,
+				const CIdentifier& idAttributeValue);
 
 
 		protected:

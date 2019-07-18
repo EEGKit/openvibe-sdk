@@ -6,11 +6,11 @@
 #include <limits>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 
 using namespace OpenViBEToolkit;
 
@@ -26,7 +26,7 @@ namespace
 		{
 			for (i = uiStart; i < rMatrix.getDimensionSize(0); i++)
 			{
-				if (OpenViBEToolkit::Tools::String::isAlmostEqual(rMatrix.getDimensionLabel(0, i), rChannel, false))
+				if (Tools::String::isAlmostEqual(rMatrix.getDimensionLabel(0, i), rChannel, false))
 				{
 					l_ui32Result = i;
 				}
@@ -178,13 +178,13 @@ bool CBoxAlgorithmChannelSelector::process(void)
 				CString l_sEEGChannelNames = this->getConfigurationManager().expand("${Box_ChannelSelector_EEGChannelNames}");
 
 				std::vector<CString> l_sToken;
-				uint32_t l_ui32TokenCount = OpenViBEToolkit::Tools::String::split(l_sEEGChannelNames, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(l_sToken), OV_Value_EnumeratedStringSeparator);
+				uint32_t l_ui32TokenCount = split(l_sEEGChannelNames, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(l_sToken), OV_Value_EnumeratedStringSeparator);
 
 				for (uint32_t j = 0; j < m_pInputMatrix->getDimensionSize(0); j++)
 				{
 					for (uint32_t k = 0; k < l_ui32TokenCount; k++)
 					{
-						if (OpenViBEToolkit::Tools::String::isAlmostEqual(m_pInputMatrix->getDimensionLabel(0, j), l_sToken[k], false))
+						if (Tools::String::isAlmostEqual(m_pInputMatrix->getDimensionLabel(0, j), l_sToken[k], false))
 						{
 							m_vLookup.push_back(j);
 						}
@@ -202,17 +202,17 @@ bool CBoxAlgorithmChannelSelector::process(void)
 				//
 
 				std::vector<CString> l_sToken;
-				uint32_t l_ui32TokenCount = OpenViBEToolkit::Tools::String::split(l_sSettingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(l_sToken), OV_Value_EnumeratedStringSeparator);
+				uint32_t l_ui32TokenCount = split(l_sSettingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(l_sToken), OV_Value_EnumeratedStringSeparator);
 				for (uint32_t j = 0; j < l_ui32TokenCount; j++)
 				{
 					std::vector<CString> l_sSubToken;
 
 					// Checks if the token is a range
-					if (OpenViBEToolkit::Tools::String::split(l_sToken[j], OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(l_sSubToken), OV_Value_RangeStringSeparator) == 2)
+					if (split(l_sToken[j], OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(l_sSubToken), OV_Value_RangeStringSeparator) == 2)
 					{
 						// Finds the first & second part of the range (only index based)
-						uint32_t l_ui32RangeStartIndex = ::_find_channel_(*m_pInputMatrix, l_sSubToken[0], OVP_TypeId_MatchMethod_Index);
-						uint32_t l_ui32RangeEndIndex   = ::_find_channel_(*m_pInputMatrix, l_sSubToken[1], OVP_TypeId_MatchMethod_Index);
+						uint32_t l_ui32RangeStartIndex = _find_channel_(*m_pInputMatrix, l_sSubToken[0], OVP_TypeId_MatchMethod_Index);
+						uint32_t l_ui32RangeEndIndex   = _find_channel_(*m_pInputMatrix, l_sSubToken[1], OVP_TypeId_MatchMethod_Index);
 
 						// When first or second part is not found but associated token is empty, don't consider this as an error
 						if (l_ui32RangeStartIndex == std::numeric_limits<uint32_t>::max() && l_sSubToken[0] == CString("")) l_ui32RangeStartIndex = 0;
@@ -240,7 +240,7 @@ bool CBoxAlgorithmChannelSelector::process(void)
 						uint32_t l_ui32Index = std::numeric_limits<uint32_t>::max();
 
 						// Looks for all the channels with this name
-						while ((l_ui32Index = ::_find_channel_(*m_pInputMatrix, l_sToken[j], l_ui64MatchMethodIdentifier, l_ui32Index + 1)) != std::numeric_limits<uint32_t>::max())
+						while ((l_ui32Index = _find_channel_(*m_pInputMatrix, l_sToken[j], l_ui64MatchMethodIdentifier, l_ui32Index + 1)) != std::numeric_limits<uint32_t>::max())
 						{
 							l_bFound = true;
 							m_vLookup.push_back(l_ui32Index);

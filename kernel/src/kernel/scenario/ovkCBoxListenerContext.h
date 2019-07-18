@@ -7,27 +7,27 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CBoxListenerContext : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxListenerContext>
+		class CBoxListenerContext : public TKernelObject<IBoxListenerContext>
 		{
 		public:
 
-			CBoxListenerContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::IBox& rBox, uint32_t ui32Index) : TKernelObject<IBoxListenerContext>(rKernelContext),
+			CBoxListenerContext(const IKernelContext& rKernelContext, IBox& rBox, uint32_t ui32Index) : TKernelObject<IBoxListenerContext>(rKernelContext),
 																																					m_rBox(rBox),
 																																					m_ui32Index(ui32Index) { }
 
-			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const { return this->getKernelContext().getAlgorithmManager(); }
-			virtual OpenViBE::Kernel::IPlayerManager& getPlayerManager(void) const { return this->getKernelContext().getPlayerManager(); }
-			virtual OpenViBE::Kernel::IPluginManager& getPluginManager(void) const { return this->getKernelContext().getPluginManager(); }
-			virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager(void) const { return this->getKernelContext().getMetaboxManager(); }
-			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const { return this->getKernelContext().getScenarioManager(); }
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const { return this->getKernelContext().getTypeManager(); }
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const { return this->getKernelContext().getLogManager(); }
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const { return this->getKernelContext().getErrorManager(); }
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const { return this->getKernelContext().getConfigurationManager(); }
+			virtual IAlgorithmManager& getAlgorithmManager(void) const { return this->getKernelContext().getAlgorithmManager(); }
+			virtual IPlayerManager& getPlayerManager(void) const { return this->getKernelContext().getPlayerManager(); }
+			virtual IPluginManager& getPluginManager(void) const { return this->getKernelContext().getPluginManager(); }
+			virtual IMetaboxManager& getMetaboxManager(void) const { return this->getKernelContext().getMetaboxManager(); }
+			virtual IScenarioManager& getScenarioManager(void) const { return this->getKernelContext().getScenarioManager(); }
+			virtual ITypeManager& getTypeManager(void) const { return this->getKernelContext().getTypeManager(); }
+			virtual ILogManager& getLogManager(void) const { return this->getKernelContext().getLogManager(); }
+			virtual IErrorManager& getErrorManager(void) const { return this->getKernelContext().getErrorManager(); }
+			virtual IConfigurationManager& getConfigurationManager(void) const { return this->getKernelContext().getConfigurationManager(); }
 
-			virtual OpenViBE::Kernel::IBox& getBox(void) const { return m_rBox; }
+			virtual IBox& getBox(void) const { return m_rBox; }
 
-			virtual OpenViBE::Kernel::IScenario& getScenario(void) const
+			virtual IScenario& getScenario(void) const
 			{
 				OV_FATAL(
 					"Getting scenario from box listener context is not yet implemented",
@@ -42,7 +42,7 @@ namespace OpenViBE
 
 		private:
 
-			OpenViBE::Kernel::IBox& m_rBox;
+			IBox& m_rBox;
 			uint32_t m_ui32Index;
 		};
 	};

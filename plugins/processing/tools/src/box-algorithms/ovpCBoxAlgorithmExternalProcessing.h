@@ -42,9 +42,9 @@ namespace OpenViBEPlugins
 				uint64_t startTime;
 				uint64_t endTime;
 				uint32_t inputIndex;
-				::std::shared_ptr<::std::vector<uint8_t>> EBML;
+				std::shared_ptr<std::vector<uint8_t>> EBML;
 
-				Packet(uint64_t startTime, uint64_t endTime, uint32_t inputIndex, ::std::shared_ptr<::std::vector<uint8_t>> EBML)
+				Packet(uint64_t startTime, uint64_t endTime, uint32_t inputIndex, std::shared_ptr<std::vector<uint8_t>> EBML)
 					: startTime(startTime)
 					  , endTime(endTime)
 					  , inputIndex(inputIndex)

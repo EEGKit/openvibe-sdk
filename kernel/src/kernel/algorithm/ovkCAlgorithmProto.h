@@ -9,37 +9,37 @@ namespace OpenViBE
 	{
 		class CAlgorithmProxy;
 
-		class CAlgorithmProto : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IAlgorithmProto>
+		class CAlgorithmProto : public TKernelObject<IAlgorithmProto>
 		{
 		public:
 
-			CAlgorithmProto(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CAlgorithmProxy& rAlgorithmProxy);
+			CAlgorithmProto(const IKernelContext& rKernelContext, CAlgorithmProxy& rAlgorithmProxy);
 
 			virtual bool addInputParameter(
-				const OpenViBE::CIdentifier& rInputParameterIdentifier,
-				const OpenViBE::CString& sInputName,
-				const OpenViBE::Kernel::EParameterType eParameterType,
-				const OpenViBE::CIdentifier& rSubTypeIdentifier);
+				const CIdentifier& rInputParameterIdentifier,
+				const CString& sInputName,
+				const EParameterType eParameterType,
+				const CIdentifier& rSubTypeIdentifier);
 
 			virtual bool addOutputParameter(
-				const OpenViBE::CIdentifier& rOutputParameterIdentifier,
-				const OpenViBE::CString& sOutputName,
-				const OpenViBE::Kernel::EParameterType eParameterType,
-				const OpenViBE::CIdentifier& rSubTypeIdentifier);
+				const CIdentifier& rOutputParameterIdentifier,
+				const CString& sOutputName,
+				const EParameterType eParameterType,
+				const CIdentifier& rSubTypeIdentifier);
 
 			virtual bool addInputTrigger(
-				const OpenViBE::CIdentifier& rInputTriggerIdentifier,
-				const OpenViBE::CString& rInputTriggerName);
+				const CIdentifier& rInputTriggerIdentifier,
+				const CString& rInputTriggerName);
 
 			virtual bool addOutputTrigger(
-				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
-				const OpenViBE::CString& rOutputTriggerName);
+				const CIdentifier& rOutputTriggerIdentifier,
+				const CString& rOutputTriggerName);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProto >, OVK_ClassId_Kernel_Algorithm_AlgorithmProto)
 
 		protected:
 
-			OpenViBE::Kernel::CAlgorithmProxy& m_rAlgorithmProxy;
+			CAlgorithmProxy& m_rAlgorithmProxy;
 		};
 	};
 };

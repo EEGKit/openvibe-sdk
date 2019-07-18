@@ -15,29 +15,29 @@ namespace OpenViBE
 		 * \ingroup Group_Scenario
 		 * \ingroup Group_Kernel
 		 */
-		class OV_API IAttributable : public OpenViBE::Kernel::IKernelObject
+		class OV_API IAttributable : public IKernelObject
 		{
 		public:
 
 			virtual bool addAttribute(
-				const OpenViBE::CIdentifier& rAttributeIdentifier,
-				const OpenViBE::CString& sAttributeValue) = 0;
+				const CIdentifier& rAttributeIdentifier,
+				const CString& sAttributeValue) = 0;
 			virtual bool removeAttribute(
-				const OpenViBE::CIdentifier& rAttributeIdentifier) = 0;
+				const CIdentifier& rAttributeIdentifier) = 0;
 			virtual bool removeAllAttributes(void) = 0;
 
-			virtual OpenViBE::CString getAttributeValue(
-				const OpenViBE::CIdentifier& rAttributeIdentifier) const = 0;
+			virtual CString getAttributeValue(
+				const CIdentifier& rAttributeIdentifier) const = 0;
 			virtual bool setAttributeValue(
-				const OpenViBE::CIdentifier& rAttributeIdentifier,
-				const OpenViBE::CString& sAttributeValue) = 0;
+				const CIdentifier& rAttributeIdentifier,
+				const CString& sAttributeValue) = 0;
 
 			virtual bool hasAttribute(
-				const OpenViBE::CIdentifier& rAttributeIdentifier) const = 0;
+				const CIdentifier& rAttributeIdentifier) const = 0;
 			virtual bool hasAttributes(void) const = 0;
 
-			virtual OpenViBE::CIdentifier getNextAttributeIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const = 0;
+			virtual CIdentifier getNextAttributeIdentifier(
+				const CIdentifier& rPreviousIdentifier) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_Attributable);
 		};

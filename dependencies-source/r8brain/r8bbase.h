@@ -281,7 +281,7 @@ namespace r8b
 
 		void* operator new(size_t n)
 		{
-			return (::malloc(n));
+			return (malloc(n));
 		}
 
 		/**
@@ -291,7 +291,7 @@ namespace r8b
 
 		void* operator new[](size_t n)
 		{
-			return (::malloc(n));
+			return (malloc(n));
 		}
 
 		/**
@@ -302,7 +302,7 @@ namespace r8b
 
 		void operator delete(void* p)
 		{
-			::free(p);
+			free(p);
 		}
 
 		/**
@@ -313,7 +313,7 @@ namespace r8b
 
 		void operator delete[](void* p)
 		{
-			::free(p);
+			free(p);
 		}
 	};
 
@@ -335,7 +335,7 @@ namespace r8b
 
 		static void* allocmem(const size_t Size)
 		{
-			return (::malloc(Size));
+			return (malloc(Size));
 		}
 
 		/**
@@ -348,7 +348,7 @@ namespace r8b
 
 		static void* reallocmem(void* p, const size_t Size)
 		{
-			return (::realloc(p, Size));
+			return (realloc(p, Size));
 		}
 
 		/**
@@ -359,7 +359,7 @@ namespace r8b
 
 		static void freemem(void* p)
 		{
-			::free(p);
+			free(p);
 		}
 	};
 

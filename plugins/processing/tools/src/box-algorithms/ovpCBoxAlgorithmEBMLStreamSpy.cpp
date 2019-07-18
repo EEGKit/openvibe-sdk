@@ -7,10 +7,10 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Tools;
+using namespace Tools;
 using namespace OpenViBEToolkit;
 using namespace std;
 
@@ -27,7 +27,7 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();
 
-	m_pReader       = EBML::createReader(*this);
+	m_pReader       = createReader(*this);
 	m_pReaderHelper = EBML::createReaderHelper();
 
 	bool l_bExpand;

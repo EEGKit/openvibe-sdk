@@ -4,7 +4,7 @@
 #include "ovkCPlayer.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox)
 	: TKernelObject<IPlayerContext>(rKernelContext)
@@ -122,17 +122,17 @@ ITypeManager& CPlayerContext::getTypeManager(void) const
 	return m_rTypeManager;
 }
 
-bool CPlayerContext::canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const
+bool CPlayerContext::canCreatePluginObject(const CIdentifier& pluginIdentifier) const
 {
 	return m_rPluginManager.canCreatePluginObject(pluginIdentifier);
 }
 
-OpenViBE::Plugins::IPluginObject* CPlayerContext::createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const
+Plugins::IPluginObject* CPlayerContext::createPluginObject(const CIdentifier& pluginIdentifier) const
 {
 	return m_rPluginManager.createPluginObject(pluginIdentifier);
 }
 
-bool CPlayerContext::releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject) const
+bool CPlayerContext::releasePluginObject(Plugins::IPluginObject* pluginObject) const
 {
 	return m_rPluginManager.releasePluginObject(pluginObject);
 }

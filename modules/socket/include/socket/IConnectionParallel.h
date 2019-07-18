@@ -14,7 +14,7 @@ namespace Socket
 	 * \brief The IConnectionParallel class provides the possibility to communicate with a parallel port.
 	 * On Windows, you must have TVicPort library installed (available for free: http://entechtaiwan.com/dev/port/index.shtm).
 	 */
-	class Socket_API IConnectionParallel : public Socket::IConnection
+	class Socket_API IConnectionParallel : public IConnection
 	{
 	public:
 
@@ -39,7 +39,7 @@ namespace Socket
 #endif
 	};
 
-	extern Socket_API Socket::IConnectionParallel* createConnectionParallel(void);
+	extern Socket_API IConnectionParallel* createConnectionParallel(void);
 };
 
 #endif // __Socket_IConnectionParallel_H__

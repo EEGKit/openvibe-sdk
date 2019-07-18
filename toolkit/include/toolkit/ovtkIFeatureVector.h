@@ -5,7 +5,7 @@
 
 namespace OpenViBEToolkit
 {
-	class OVTK_API IFeatureVector : public OpenViBEToolkit::IVector
+	class OVTK_API IFeatureVector : public IVector
 	{
 	public:
 

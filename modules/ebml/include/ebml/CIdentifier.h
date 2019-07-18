@@ -54,7 +54,7 @@ namespace EBML
 		 * Initializes this identifier to the same value as
 		 * the given source identifier.
 		 */
-		CIdentifier(const EBML::CIdentifier& rIdentifier);
+		CIdentifier(const CIdentifier& rIdentifier);
 
 		//@}
 		/** \name Operators */
@@ -68,7 +68,7 @@ namespace EBML
 		 * Initializes this identifier to the same value as
 		 * the given source identifier.
 		 */
-		const EBML::CIdentifier& operator=(const EBML::CIdentifier& rIdentifier);
+		const CIdentifier& operator=(const CIdentifier& rIdentifier);
 		/**
 		 * \brief Equality comparison operator
 		 * \param rIdentifier1 [in] : The first identifier to compare
@@ -78,7 +78,7 @@ namespace EBML
 		 *
 		 * This function compares the two 64 bits values.
 		 */
-		friend EBML_API bool operator==(const EBML::CIdentifier& rIdentifier1, const EBML::CIdentifier& rIdentifier2);
+		friend EBML_API bool operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
 		/**
 		 * \brief Difference comparison operator
 		 * \param rIdentifier1 [in] : The first identifier to compare
@@ -88,7 +88,7 @@ namespace EBML
 		 *
 		 * This function compares the two 64 bits values.
 		 */
-		friend EBML_API bool operator!=(const EBML::CIdentifier& rIdentifier1, const EBML::CIdentifier& rIdentifier2);
+		friend EBML_API bool operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
 		/**
 		 * \brief Ordering comparison operator
 		 * \param rIdentifier1 [in] : The first identifier to compare
@@ -98,7 +98,7 @@ namespace EBML
 		 *
 		 * This function compares the two 64 bits values.
 		 */
-		friend EBML_API bool operator<=(const EBML::CIdentifier& rIdentifier1, const EBML::CIdentifier& rIdentifier2);
+		friend EBML_API bool operator<=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
 		/**
 		 * \brief Ordering comparison operator
 		 * \param rIdentifier1 [in] : The first identifier to compare
@@ -108,7 +108,7 @@ namespace EBML
 		 *
 		 * This function compares the two 64 bits values.
 		 */
-		friend EBML_API bool operator>=(const EBML::CIdentifier& rIdentifier1, const EBML::CIdentifier& rIdentifier2);
+		friend EBML_API bool operator>=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
 		/**
 		 * \brief Ordering comparison operator
 		 * \param rIdentifier1 [in] : The first identifier to compare
@@ -118,7 +118,7 @@ namespace EBML
 		 *
 		 * This function compares the two 64 bits values.
 		 */
-		friend EBML_API bool operator<(const EBML::CIdentifier& rIdentifier1, const EBML::CIdentifier& rIdentifier2);
+		friend EBML_API bool operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
 		/**
 		 * \brief Ordering comparison operator
 		 * \param rIdentifier1 [in] : The first identifier to compare
@@ -128,7 +128,7 @@ namespace EBML
 		 *
 		 * This function compares the two 64 bits values.
 		 */
-		friend EBML_API bool operator>(const EBML::CIdentifier& rIdentifier1, const EBML::CIdentifier& rIdentifier2);
+		friend EBML_API bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
 		/**
 		 * \brief Cast operator
 		 * \return \e the 64 bits value contained by this identifier.

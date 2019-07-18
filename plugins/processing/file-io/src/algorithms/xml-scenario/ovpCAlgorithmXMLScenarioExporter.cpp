@@ -6,10 +6,10 @@
 //                                                                   //
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::FileIO;
+using namespace FileIO;
 using namespace std;
 
 //___________________________________________________________________//
@@ -19,7 +19,7 @@ CAlgorithmXMLScenarioExporter::CAlgorithmXMLScenarioExporter(void)
 	: m_pWriter(NULL)
 	  , m_pMemoryBuffer(NULL)
 {
-	m_pWriter = XML::createWriter(*this);
+	m_pWriter = createWriter(*this);
 }
 
 CAlgorithmXMLScenarioExporter::~CAlgorithmXMLScenarioExporter(void)
@@ -29,7 +29,7 @@ CAlgorithmXMLScenarioExporter::~CAlgorithmXMLScenarioExporter(void)
 
 void CAlgorithmXMLScenarioExporter::write(const char* sString)
 {
-	m_pMemoryBuffer->append(reinterpret_cast<const uint8_t*>(sString), ::strlen(sString));
+	m_pMemoryBuffer->append(reinterpret_cast<const uint8_t*>(sString), strlen(sString));
 }
 
 bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier)

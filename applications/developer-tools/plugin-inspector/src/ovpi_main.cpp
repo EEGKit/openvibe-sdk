@@ -7,8 +7,8 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 using namespace std;
 
 int main(int argc, char** argv)
@@ -29,28 +29,28 @@ int main(int argc, char** argv)
 
 	for (int32_t i = 1; i < argc; i++)
 	{
-		if (::strcmp(argv[i], "--help") == 0 || ::strcmp(argv[i], "-h") == 0)
+		if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
-			::cout << "[ USAGE ]\n"
+			cout << "[ USAGE ]\n"
 					<< "plugin-inspector <plugin1 plugin2 ...>\n"
 					<< "  <--box-doc-directory dir>\n";
 			return 0;
 		}
-		::cout << "Analyze parameter: [" << i << " : " << argv[i] << "]." << endl;
+		cout << "Analyze parameter: [" << i << " : " << argv[i] << "]." << endl;
 
-		if (::strcmp(argv[i], "--ignore-metaboxes") == 0)
+		if (strcmp(argv[i], "--ignore-metaboxes") == 0)
 		{
 			ignoreMetaboxes = true;
 		}
-		else if (i < argc && ::strcmp(argv[i], "--box-doc-directory") == 0)
+		else if (i < argc && strcmp(argv[i], "--box-doc-directory") == 0)
 		{
 			if (++i >= argc)
 			{
-				::cout << "[ FAILED ] Error while parsing arguments: --box-doc-directory flag found but no path specified afterwards." << endl;
+				cout << "[ FAILED ] Error while parsing arguments: --box-doc-directory flag found but no path specified afterwards." << endl;
 				return 0;
 			}
 			boxAlgorithmDocTemplateDirectory = argv[i];
-			::cout << "Templates will be generated in folder: [" << boxAlgorithmDocTemplateDirectory.toASCIIString() << "]." << endl;
+			cout << "Templates will be generated in folder: [" << boxAlgorithmDocTemplateDirectory.toASCIIString() << "]." << endl;
 		}
 		else if (i < argc)
 		{
@@ -60,10 +60,10 @@ int main(int argc, char** argv)
 
 	CKernelLoader kernelLoader;
 
-	::cout << "[  INF  ] Created kernel loader, trying to load kernel module" << endl;
+	cout << "[  INF  ] Created kernel loader, trying to load kernel module" << endl;
 	CString errorMsg;
 #if defined TARGET_OS_Windows
-	CString kernelFile = OpenViBE::Directories::getLibDir() + "/openvibe-kernel.dll";
+	CString kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
 	CString kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
@@ -83,16 +83,16 @@ int main(int argc, char** argv)
 		kernelLoader.getKernelDesc(kernelDesc);
 		if (!kernelDesc)
 		{
-			::cout << "[ FAILED ] No kernel descriptor" << endl;
+			cout << "[ FAILED ] No kernel descriptor" << endl;
 		}
 		else
 		{
-			::cout << "[  INF  ] Got kernel descriptor, trying to create kernel" << endl;
+			cout << "[  INF  ] Got kernel descriptor, trying to create kernel" << endl;
 
-			kernelContext = kernelDesc->createKernel("plugin-inspector", OpenViBE::Directories::getDataDir() + "/kernel/openvibe.conf");
+			kernelContext = kernelDesc->createKernel("plugin-inspector", Directories::getDataDir() + "/kernel/openvibe.conf");
 			if (!kernelContext)
 			{
-				::cout << "[ FAILED ] No kernel created by kernel descriptor" << endl;
+				cout << "[ FAILED ] No kernel created by kernel descriptor" << endl;
 			}
 			else
 			{
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 				CPluginObjectDescEnumBoxTemplateGenerator boxTemplateGenerator(*kernelContext, boxAlgorithmDocTemplateDirectory);
 				if (!boxTemplateGenerator.initialize())
 				{
-					::cout << "[ FAILED ] Could not initialize boxTemplateGenerator" << endl;
+					cout << "[ FAILED ] Could not initialize boxTemplateGenerator" << endl;
 					return 0;
 				}
 				boxTemplateGenerator.enumeratePluginObjectDesc(OV_ClassId_Plugins_BoxAlgorithmDesc);
@@ -133,7 +133,7 @@ int main(int argc, char** argv)
 					kernelContext->getMetaboxManager().addMetaboxesFromFiles(configurationManager.expand("${Kernel_Metabox}"));
 
 					// Create a list of metabox descriptors from the Map provided by the MetaboxLoader and enumerate all algorithms within
-					std::vector<const OpenViBE::Plugins::IPluginObjectDesc*> metaboxPluginObjectDescriptors;
+					std::vector<const IPluginObjectDesc*> metaboxPluginObjectDescriptors;
 					CIdentifier metaboxDescIdentifier;
 					while ((metaboxDescIdentifier = kernelContext->getMetaboxManager().getNextMetaboxObjectDescIdentifier(metaboxDescIdentifier)) != OV_UndefinedIdentifier)
 					{
@@ -144,7 +144,7 @@ int main(int argc, char** argv)
 
 				if (!boxTemplateGenerator.uninitialize())
 				{
-					::cout << "[ FAILED ] Could not uninitialize boxTemplateGenerator" << endl;
+					cout << "[ FAILED ] Could not uninitialize boxTemplateGenerator" << endl;
 					return 0;
 				}
 				kernelContext->getLogManager() << LogLevel_Info << "Application terminated, releasing allocated objects \n";

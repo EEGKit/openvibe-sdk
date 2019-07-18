@@ -120,7 +120,7 @@ float Math::randomFloat32(void)
 {
 	const uint32_t r = randomUInteger32();
 	float fr;
-	::memcpy(&fr, &r, sizeof(fr));
+	memcpy(&fr, &r, sizeof(fr));
 	return fr;
 }
 
@@ -134,7 +134,7 @@ double Math::randomFloat64(void)
 {
 	const uint64_t r = randomUInteger64();
 	double fr;
-	::memcpy(&fr, &r, sizeof(fr));
+	memcpy(&fr, &r, sizeof(fr));
 	return fr;
 }
 

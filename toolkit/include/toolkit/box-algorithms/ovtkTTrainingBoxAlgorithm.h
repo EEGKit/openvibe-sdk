@@ -16,7 +16,7 @@
 namespace OpenViBEToolkit
 {
 	template <class CBoxAlgorithmParentClass>
-	class TTrainingBoxAlgorithm : public OpenViBEToolkit::TBoxAlgorithm<CBoxAlgorithmParentClass>
+	class TTrainingBoxAlgorithm : public TBoxAlgorithm<CBoxAlgorithmParentClass>
 	{
 	public:
 
@@ -40,20 +40,20 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialLabelRangeStart(void) = 0;
 		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialLabelRangeEnd(void) = 0;
 		virtual OpenViBE::CIdentifier getStimulationIdentifierTrain(void) = 0;
-		virtual bool train(OpenViBEToolkit::ISignalTrialSet& rTrialSet) = 0;
+		virtual bool train(ISignalTrialSet& rTrialSet) = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TBoxAlgorithm<CBoxAlgorithmParentClass>, OVTK_ClassId_);
 
 	private:
 
-		OpenViBEToolkit::ISignalTrial* m_pPendingSignal;
+		ISignalTrial* m_pPendingSignal;
 
 		uint64_t m_ui64TrialStartTime;
 		uint64_t m_ui64TrialEndTime;
 		uint32_t m_ui32SampleCountPerBuffer;
 		OpenViBE::CIdentifier m_oTrialLabel;
 
-		std::vector<OpenViBEToolkit::ISignalTrial*> m_vSignalTrial;
+		std::vector<ISignalTrial*> m_vSignalTrial;
 	};
 };
 
@@ -75,17 +75,17 @@ namespace OpenViBEToolkit
 		  , m_ui64TrialEndTime(_no_time_)
 		  , m_ui32SampleCountPerBuffer(0)
 	{
-		m_pPendingSignal = OpenViBEToolkit::createSignalTrial();
+		m_pPendingSignal = createSignalTrial();
 	}
 
 	template <class CBoxAlgorithmParentClass>
 	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::~TTrainingBoxAlgorithm(void)
 	{
-		std::vector<OpenViBEToolkit::ISignalTrial*>::iterator itSignalTrial;
-		OpenViBEToolkit::releaseSignalTrial(m_pPendingSignal);
+		std::vector<ISignalTrial*>::iterator itSignalTrial;
+		releaseSignalTrial(m_pPendingSignal);
 		for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
 		{
-			OpenViBEToolkit::releaseSignalTrial(*itSignalTrial);
+			releaseSignalTrial(*itSignalTrial);
 		}
 	}
 
@@ -122,7 +122,7 @@ namespace OpenViBEToolkit
 	template <class CBoxAlgorithmParentClass>
 	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSampleBuffer(const double* pBuffer)
 	{
-		OpenViBEToolkit::insertBufferSamples(*m_pPendingSignal, m_pPendingSignal->getSampleCount(), m_ui32SampleCountPerBuffer, pBuffer, m_pPendingSignal);
+		insertBufferSamples(*m_pPendingSignal, m_pPendingSignal->getSampleCount(), m_ui32SampleCountPerBuffer, pBuffer, m_pPendingSignal);
 
 		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
 				<< OpenViBE::Kernel::LogLevel_Debug
@@ -153,7 +153,7 @@ namespace OpenViBEToolkit
 					<< OpenViBE::Kernel::LogLevel_Trace
 					<< "Constituting a signal trial set based on previous signal trials...\n";
 
-			ISignalTrialSet* l_pSignalTrialSet = OpenViBEToolkit::createSignalTrialSet();
+			ISignalTrialSet* l_pSignalTrialSet = createSignalTrialSet();
 			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
 			{
 				l_pSignalTrialSet->addSignalTrial(**itSignalTrial);
@@ -193,9 +193,9 @@ namespace OpenViBEToolkit
 
 			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
 			{
-				OpenViBEToolkit::releaseSignalTrial(*itSignalTrial);
+				releaseSignalTrial(*itSignalTrial);
 			}
-			OpenViBEToolkit::releaseSignalTrialSet(l_pSignalTrialSet);
+			releaseSignalTrialSet(l_pSignalTrialSet);
 			m_vSignalTrial.clear();
 
 			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
@@ -254,9 +254,9 @@ namespace OpenViBEToolkit
 					<< l_ui32SampleCount
 					<< " samples\n";
 
-			OpenViBEToolkit::ISignalTrial* l_pSignalTrial = OpenViBEToolkit::createSignalTrial();
-			OpenViBEToolkit::copyHeader(*l_pSignalTrial, m_pPendingSignal);
-			OpenViBEToolkit::selectTime(*l_pSignalTrial, m_ui64TrialStartTime, m_ui64TrialEndTime, m_pPendingSignal);
+			ISignalTrial* l_pSignalTrial = createSignalTrial();
+			copyHeader(*l_pSignalTrial, m_pPendingSignal);
+			selectTime(*l_pSignalTrial, m_ui64TrialStartTime, m_ui64TrialEndTime, m_pPendingSignal);
 			l_pSignalTrial->setLabelIdentifier(m_oTrialLabel);
 
 			m_vSignalTrial.push_back(l_pSignalTrial);

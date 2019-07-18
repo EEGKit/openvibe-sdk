@@ -25,8 +25,8 @@ namespace OpenViBE
 			virtual ~IConfigurationKeywordExpandCallback() {}
 
 			virtual bool expand(
-				const OpenViBE::CString& rStringToExpand,
-				OpenViBE::CString& rExpandedString) const = 0;
+				const CString& rStringToExpand,
+				CString& rExpandedString) const = 0;
 		};
 	}
 }

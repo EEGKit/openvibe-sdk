@@ -1,17 +1,17 @@
 #include "ovpCBoxAlgorithmChannelRename.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 
 bool CBoxAlgorithmChannelRename::initialize(void)
 {
 	std::vector<CString> tokens;
 	CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	uint32_t tokenCount    = OpenViBEToolkit::Tools::String::split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
+	uint32_t tokenCount    = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
 
 	m_ChannelNames.clear();
 	for (uint32_t i = 0; i < tokenCount; i++)

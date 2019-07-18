@@ -80,7 +80,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IPluginObjectDesc : public OpenViBE::IObject
+		class OV_API IPluginObjectDesc : public IObject
 		{
 		public:
 			/** \name Memory management */
@@ -111,8 +111,8 @@ namespace OpenViBE
 			 * descriptor. It should return the concrete class
 			 * identifier of the plugin object itself.
 			 */
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const = 0;
-			virtual OpenViBE::CIdentifier getCreatedClassIdentifier(void) const { return this->getCreatedClass(); }
+			virtual CIdentifier getCreatedClass(void) const = 0;
+			virtual CIdentifier getCreatedClassIdentifier(void) const { return this->getCreatedClass(); }
 			/**
 			 * \brief Creates the plugin object itself
 			 * \return the created object.
@@ -122,7 +122,7 @@ namespace OpenViBE
 			 * platform then uses the IObject::isDerivedFromClass
 			 * method to use the plugin correctly.
 			 */
-			virtual OpenViBE::Plugins::IPluginObject* create(void) = 0;
+			virtual IPluginObject* create(void) = 0;
 
 			//@}
 			/** \name Textual plugin object description and information */
@@ -134,28 +134,28 @@ namespace OpenViBE
 			 *
 			 * Default implementation simply returns empty string.
 			 */
-			virtual OpenViBE::CString getName(void) const { return CString("no name"); }
+			virtual CString getName(void) const { return CString("no name"); }
 			/**
 			 * \brief Gets the author name for this plugin
 			 * \return The author name for this plugin.
 			 *
 			 * Default implementation simply returns "no name".
 			 */
-			virtual OpenViBE::CString getAuthorName(void) const { return CString("unknown"); }
+			virtual CString getAuthorName(void) const { return CString("unknown"); }
 			/**
 			 * \brief Gets the author company name for this plugin
 			 * \return The author company name for this plugin.
 			 *
 			 * Default implementation simply returns "unknown".
 			 */
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return CString("unknown"); }
+			virtual CString getAuthorCompanyName(void) const { return CString("unknown"); }
 			/**
 			 * \brief Gets a short description of the plugin
 			 * \return A short description of the plugin.
 			 *
 			 * Default implementation simply returns "unknown".
 			 */
-			virtual OpenViBE::CString getShortDescription(void) const { return CString(""); }
+			virtual CString getShortDescription(void) const { return CString(""); }
 			/**
 			 * \brief Gets a detailed description of the plugin
 			 * \return A detailed description of the plugin.
@@ -165,7 +165,7 @@ namespace OpenViBE
 			 * \note You can use std::endl to have the description
 			 *       on several lines when needed.
 			 */
-			virtual OpenViBE::CString getDetailedDescription(void) const { return CString(""); }
+			virtual CString getDetailedDescription(void) const { return CString(""); }
 			/**
 			 * \brief Gets a basic category of the plugin
 			 * \return the category tokens of the plugin
@@ -175,14 +175,14 @@ namespace OpenViBE
 			 *
 			 * Default implementation returns "unknown".
 			 */
-			virtual OpenViBE::CString getCategory(void) const { return CString("unknown"); }
+			virtual CString getCategory(void) const { return CString("unknown"); }
 			/**
 			 * \brief Gets the version of the plugin
 			 * \return the version of the plugin.
 			 *
 			 * Default implementation simply returns "unknown".
 			 */
-			virtual OpenViBE::CString getVersion(void) const { return CString("unknown"); }
+			virtual CString getVersion(void) const { return CString("unknown"); }
 			/**
 			 * \brief Gets the component in which the plugin is defined
 			 *
@@ -194,7 +194,7 @@ namespace OpenViBE
 			 * \return a string identifier of the component
 			 * \retval "unknown" if not redefined
 			 */
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return CString("unknown"); }
+			virtual CString getSoftwareComponent(void) const { return CString("unknown"); }
 			/**
 			 * \brief Gets the version of the software in the one the plugin was added
 			 * \return the version of the software in the one the plugin was added.
@@ -202,7 +202,7 @@ namespace OpenViBE
 			 *
 			 * \sa getSoftwareComponent
 			 */
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return CString("unknown"); }
+			virtual CString getAddedSoftwareVersion(void) const { return CString("unknown"); }
 			/**
 			 * \brief Gets the version of the software in the one the plugin was last updated
 			 * \return the version of the software in the one the plugin was last updated
@@ -210,14 +210,14 @@ namespace OpenViBE
 			 *
 			 *  \sa getSoftwareComponent
 			 */
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return CString("unknown"); }
+			virtual CString getUpdatedSoftwareVersion(void) const { return CString("unknown"); }
 			/**
 			 * \brief Tests whether the plugin has a given functionality
 			 * \param ePF [in] : functionality of interest
 			 * \return \e true in case plugin has this functionality.
 			 * \return \e false otherwise.
 			 */
-			virtual bool hasFunctionality(OpenViBE::Kernel::EPluginFunctionality ePF) const { return false; }
+			virtual bool hasFunctionality(Kernel::EPluginFunctionality ePF) const { return false; }
 
 			/**
 			 * \brief Tests whether the plugin has a specific functionality identified by a CIdentifier
@@ -225,7 +225,7 @@ namespace OpenViBE
 			 * \retval true If the plugin has the demanded functionality.
 			 * \retval false If the plugin does not have the demanded functionality.
 			 */
-			virtual bool hasFunctionality(OpenViBE::CIdentifier functionalityIdentifier) const { return false; }
+			virtual bool hasFunctionality(CIdentifier functionalityIdentifier) const { return false; }
 			/**
 			 * \brief Tests the licence type for this plugin
 			 * \param eLT [in] : the licence type that this plugin may have
@@ -245,7 +245,7 @@ namespace OpenViBE
 			 * the OpenViBE kernel will loop on this function for each
 			 * licence type to request.
 			 */
-			virtual bool hasLicenceType(OpenViBE::Kernel::ELicenseType eLT) const { return false; }
+			virtual bool hasLicenceType(Kernel::ELicenseType eLT) const { return false; }
 
 			//@}
 

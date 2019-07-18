@@ -46,9 +46,9 @@ namespace OpenViBE
 	};
 
 	// for backward compatibility
-	typedef OpenViBE::Kernel::IMessageClock CMessageClock;
-	typedef OpenViBE::Kernel::IMessageEvent CMessageEvent;
-	typedef OpenViBE::Kernel::IMessageSignal CMessageSignal;
+	typedef Kernel::IMessageClock CMessageClock;
+	typedef Kernel::IMessageEvent CMessageEvent;
+	typedef Kernel::IMessageSignal CMessageSignal;
 
 	namespace Kernel
 	{
@@ -80,7 +80,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IBoxAlgorithm : public OpenViBE::Plugins::IPluginObject
+		class OV_API IBoxAlgorithm : public IPluginObject
 		{
 		public:
 
@@ -107,7 +107,7 @@ namespace OpenViBE
 			 * \sa processClock
 			 */
 			virtual uint64_t getClockFrequency(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return 0; }
+				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return 0; }
 
 			//@}
 			/** \name Initialization / Uninitialization */
@@ -127,7 +127,7 @@ namespace OpenViBE
 			 * \sa uninitialize
 			 */
 			virtual bool initialize(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
+				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
 			/**
 			 * \brief Unprepares the object so it can be deleted
 			 * \param rBoxAlgorithmContext [in] : the plugin object context
@@ -146,7 +146,7 @@ namespace OpenViBE
 			 * \sa initialize
 			 */
 			virtual bool uninitialize(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
+				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
 
 			//@}
 			/** \name Several event processing callbacks */
@@ -169,8 +169,8 @@ namespace OpenViBE
 			 * \sa OpenViBE::IBoxAlgorithmContext
 			 */
 			virtual bool processEvent(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
-				OpenViBE::Kernel::IMessageEvent& rMessageEvent) { return false; }
+				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
+				Kernel::IMessageEvent& rMessageEvent) { return false; }
 			/**
 			 * \brief Reaction to a signal
 			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
@@ -189,8 +189,8 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
 			virtual bool processSignal(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
-				OpenViBE::Kernel::IMessageSignal& rMessageSignal) { return false; }
+				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
+				Kernel::IMessageSignal& rMessageSignal) { return false; }
 			/**
 			 * \brief Reaction to a clock tick
 			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
@@ -212,8 +212,8 @@ namespace OpenViBE
 			 * \sa getClockFrequency
 			 */
 			virtual bool processClock(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
-				OpenViBE::Kernel::IMessageClock& rMessageClock) { return false; }
+				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
+				Kernel::IMessageClock& rMessageClock) { return false; }
 			/**
 			 * \brief Reaction to an input update
 			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
@@ -230,7 +230,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
 			virtual bool processInput(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
+				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
 				uint32_t ui32InputIndex) { return false; }
 
 			//@}
@@ -257,14 +257,14 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
 			virtual bool process(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) = 0;
+				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) = 0;
 
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_BoxAlgorithm)
 		};
 
-		class OV_API IBoxListener : public OpenViBE::Plugins::IPluginObject
+		class OV_API IBoxListener : public IPluginObject
 		{
 		public:
 
@@ -273,10 +273,10 @@ namespace OpenViBE
 			virtual void release(void) { }
 
 			virtual bool initialize(
-				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
+				Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
 
 			virtual bool uninitialize(
-				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
+				Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
 
 			/** \name Box modifications callbacks */
 			//@{
@@ -300,8 +300,8 @@ namespace OpenViBE
 			 * \sa OpenViBE::Plugins::EBoxModification
 			 */
 			virtual bool process(
-				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext,
-				const OpenViBE::Kernel::EBoxModification eBoxModificationType) = 0;
+				Kernel::IBoxListenerContext& rBoxListenerContext,
+				const Kernel::EBoxModification eBoxModificationType) = 0;
 
 			//@}
 

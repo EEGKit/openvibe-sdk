@@ -6,20 +6,20 @@
 namespace
 {
 	using namespace OpenViBE;
-	using namespace OpenViBE::Kernel;
+	using namespace Kernel;
 
 	struct SBoxProto : public IBoxProto
 	{
 	public:
 
-		SBoxProto(OpenViBE::Kernel::ITypeManager& typeManager)
+		SBoxProto(ITypeManager& typeManager)
 			: m_bIsDeprecated(false)
 			  , m_ui64InputCountHash(0x64AC3CB54A35888CLL)
 			  , m_ui64OutputCountHash(0x21E0FAAFE5CAF1E1LL)
 			  , m_ui64SettingCountHash(0x6BDFB15B54B09F63LL)
 			  , m_TypeManager(typeManager) { }
 
-		bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
+		bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify)
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64InputCountHash);
@@ -34,7 +34,7 @@ namespace
 			return true;
 		}
 
-		bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
+		bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify)
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
@@ -49,7 +49,7 @@ namespace
 			return true;
 		}
 
-		bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
+		bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const CIdentifier& rIdentifier, const bool bNotify)
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64SettingCountHash);
@@ -64,7 +64,7 @@ namespace
 			return true;
 		}
 
-		bool addInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
+		bool addInputSupport(const CIdentifier& rTypeIdentifier)
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
@@ -73,7 +73,7 @@ namespace
 			return true;
 		}
 
-		bool addInputAndDerivedSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
+		bool addInputAndDerivedSupport(const CIdentifier& rTypeIdentifier)
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
@@ -82,7 +82,7 @@ namespace
 			return true;
 		}
 
-		bool addOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
+		bool addOutputSupport(const CIdentifier& rTypeIdentifier)
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
@@ -91,7 +91,7 @@ namespace
 			return true;
 		}
 
-		bool addOutputAndDerivedSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
+		bool addOutputAndDerivedSupport(const CIdentifier& rTypeIdentifier)
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
@@ -104,17 +104,17 @@ namespace
 		{
 			switch (eBoxFlag)
 			{
-				case BoxFlag_CanAddInput: m_oHash = m_oHash.toUInteger() ^ OpenViBE::CIdentifier(0x07507AC8, 0xEB643ACE).toUInteger();
+				case BoxFlag_CanAddInput: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0x07507AC8, 0xEB643ACE).toUInteger();
 					break;
-				case BoxFlag_CanModifyInput: m_oHash = m_oHash.toUInteger() ^ OpenViBE::CIdentifier(0x5C985376, 0x8D74CDB8).toUInteger();
+				case BoxFlag_CanModifyInput: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0x5C985376, 0x8D74CDB8).toUInteger();
 					break;
-				case BoxFlag_CanAddOutput: m_oHash = m_oHash.toUInteger() ^ OpenViBE::CIdentifier(0x58DEA69B, 0x12411365).toUInteger();
+				case BoxFlag_CanAddOutput: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0x58DEA69B, 0x12411365).toUInteger();
 					break;
-				case BoxFlag_CanModifyOutput: m_oHash = m_oHash.toUInteger() ^ OpenViBE::CIdentifier(0x6E162C01, 0xAC979F22).toUInteger();
+				case BoxFlag_CanModifyOutput: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0x6E162C01, 0xAC979F22).toUInteger();
 					break;
-				case BoxFlag_CanAddSetting: m_oHash = m_oHash.toUInteger() ^ OpenViBE::CIdentifier(0xFA7A50DC, 0x2140C013).toUInteger();
+				case BoxFlag_CanAddSetting: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0xFA7A50DC, 0x2140C013).toUInteger();
 					break;
-				case BoxFlag_CanModifySetting: m_oHash = m_oHash.toUInteger() ^ OpenViBE::CIdentifier(0x624D7661, 0xD8DDEA0A).toUInteger();
+				case BoxFlag_CanModifySetting: m_oHash = m_oHash.toUInteger() ^ CIdentifier(0x624D7661, 0xD8DDEA0A).toUInteger();
 					break;
 				case BoxFlag_IsDeprecated: m_bIsDeprecated = true;
 					break;
@@ -125,7 +125,7 @@ namespace
 			return true;
 		}
 
-		bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag)
+		bool addFlag(const CIdentifier& cIdentifierFlag)
 		{
 			uint64_t flagValue = m_TypeManager.getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, cIdentifierFlag.toString());
 			if (flagValue == OV_UndefinedIdentifier) { return false; }
@@ -159,6 +159,6 @@ namespace
 		uint64_t m_ui64InputCountHash;
 		uint64_t m_ui64OutputCountHash;
 		uint64_t m_ui64SettingCountHash;
-		OpenViBE::Kernel::ITypeManager& m_TypeManager;
+		ITypeManager& m_TypeManager;
 	};
 }

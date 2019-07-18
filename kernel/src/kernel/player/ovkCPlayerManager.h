@@ -11,30 +11,30 @@ namespace OpenViBE
 	{
 		class CPlayer;
 
-		class CPlayerManager : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>
+		class CPlayerManager : public TKernelObject<IPlayerManager>
 		{
 		public:
 
-			explicit CPlayerManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CPlayerManager(const IKernelContext& rKernelContext);
 
 			virtual bool createPlayer(
-				OpenViBE::CIdentifier& rPlayerIdentifier);
+				CIdentifier& rPlayerIdentifier);
 			virtual bool releasePlayer(
-				const OpenViBE::CIdentifier& rPlayerIdentifier);
-			virtual OpenViBE::Kernel::IPlayer& getPlayer(
-				const OpenViBE::CIdentifier& rPlayerIdentifier);
-			virtual OpenViBE::CIdentifier getNextPlayerIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
+				const CIdentifier& rPlayerIdentifier);
+			virtual IPlayer& getPlayer(
+				const CIdentifier& rPlayerIdentifier);
+			virtual CIdentifier getNextPlayerIdentifier(
+				const CIdentifier& rPreviousIdentifier) const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>, OVK_ClassId_Kernel_Player_PlayerManager);
 
 		protected:
 
-			virtual OpenViBE::CIdentifier getUnusedIdentifier(void) const;
+			virtual CIdentifier getUnusedIdentifier(void) const;
 
 		protected:
 
-			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CPlayer*> m_vPlayer;
+			std::map<CIdentifier, CPlayer*> m_vPlayer;
 		};
 	};
 };

@@ -17,8 +17,8 @@
 #include "../../tools/ovkSBoxProto.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 using namespace std;
 
 namespace OpenViBE
@@ -169,7 +169,7 @@ bool CPluginManager::addPluginsFromFiles(
 	bool l_bResult                     = true;
 	bool haveAllPluginsLoadedCorrectly = true;
 	CPluginManagerEntryEnumeratorCallBack l_rCB(this->getKernelContext(), m_vPluginModule, m_vPluginObjectDesc, haveAllPluginsLoadedCorrectly);
-	FS::IEntryEnumerator* l_pEntryEnumerator = FS::createEntryEnumerator(l_rCB);
+	FS::IEntryEnumerator* l_pEntryEnumerator = createEntryEnumerator(l_rCB);
 
 	stringstream ss(rFileNameWildCard.toASCIIString());
 	string path;
@@ -252,7 +252,7 @@ bool CPluginManager::canCreatePluginObject(
 	//	this->getLogManager() << LogLevel_Debug << "Searching if can build plugin object\n";
 
 	return std::any_of(m_vPluginObjectDesc.begin(), m_vPluginObjectDesc.end(),
-					   [rClassIdentifier](const std::pair<OpenViBE::Plugins::IPluginObjectDesc*, OpenViBE::Kernel::IPluginModule*>& v)
+					   [rClassIdentifier](const std::pair<IPluginObjectDesc*, IPluginModule*>& v)
 					   {
 						   return v.first->getCreatedClass() == rClassIdentifier;
 					   });
@@ -285,7 +285,7 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDescCreating(
 	//	this->getLogManager() << LogLevel_Debug << "Searching plugin object descriptor\n";
 
 	auto elem = std::find_if(m_vPluginObjectDesc.begin(), m_vPluginObjectDesc.end(),
-							 [rClassIdentifier](const std::pair<OpenViBE::Plugins::IPluginObjectDesc*, OpenViBE::Kernel::IPluginModule*>& v)
+							 [rClassIdentifier](const std::pair<IPluginObjectDesc*, IPluginModule*>& v)
 							 {
 								 return v.first->getCreatedClass() == rClassIdentifier;
 							 });
@@ -433,7 +433,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 	char l_sSubstitutionTokenName[1024];
 	uint64_t l_ui64SourceClassIdentifier = rClassIdentifier.toUInteger();
 	uint64_t l_ui64TargetClassIdentifier = l_ui64SourceClassIdentifier;
-	::sprintf(l_sSubstitutionTokenName, "Kernel_PluginSubstitution_%0" PRIx64, l_ui64SourceClassIdentifier);
+	sprintf(l_sSubstitutionTokenName, "Kernel_PluginSubstitution_%0" PRIx64, l_ui64SourceClassIdentifier);
 	if ((l_oSubstitutionTokenIdentifier = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(l_sSubstitutionTokenName)) != OV_UndefinedIdentifier)
 	{
 		CString l_sSubstitutionTokenValue;

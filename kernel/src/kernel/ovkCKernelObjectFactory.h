@@ -10,22 +10,22 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CKernelObjectFactory : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IKernelObjectFactory>
+		class CKernelObjectFactory : public TKernelObject<IKernelObjectFactory>
 		{
 		public:
 
-			explicit CKernelObjectFactory(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CKernelObjectFactory(const IKernelContext& rKernelContext);
 
-			virtual OpenViBE::IObject* createObject(
-				const OpenViBE::CIdentifier& rClassIdentifier);
+			virtual IObject* createObject(
+				const CIdentifier& rClassIdentifier);
 			virtual bool releaseObject(
-				OpenViBE::IObject* pObject);
+				IObject* pObject);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelObjectFactory, OVK_ClassId_Kernel_KernelObjectFactory)
 
 		protected:
 
-			std::vector<OpenViBE::IObject*> m_oCreatedObjects;
+			std::vector<IObject*> m_oCreatedObjects;
 
 			std::mutex m_oMutex;
 		};

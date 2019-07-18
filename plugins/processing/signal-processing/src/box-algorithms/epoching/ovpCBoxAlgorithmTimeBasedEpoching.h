@@ -59,7 +59,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-cut"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_TimeBasedEpoching; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTimeBasedEpoching(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmTimeBasedEpoching(); }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{

@@ -155,7 +155,7 @@ TEST(time_arithmetic_test_case, legacy_epoching)
 
 int uoTimeArithmeticTest(int argc, char* argv[])
 {
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "time_aritmetic_test_case.*";
 	return RUN_ALL_TESTS();
 }

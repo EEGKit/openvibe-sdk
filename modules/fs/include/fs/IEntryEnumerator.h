@@ -47,11 +47,11 @@ namespace FS
 	class FS_API IEntryEnumeratorCallBack
 	{
 	public:
-		virtual bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) = 0;
+		virtual bool callback(IEntryEnumerator::IEntry& rEntry, IEntryEnumerator::IAttributes& rAttributes) = 0;
 		virtual ~IEntryEnumeratorCallBack(void) { }
 	};
 
-	extern FS_API FS::IEntryEnumerator* createEntryEnumerator(FS::IEntryEnumeratorCallBack& rCallBack);
+	extern FS_API IEntryEnumerator* createEntryEnumerator(IEntryEnumeratorCallBack& rCallBack);
 };
 
 #endif // __FS_IEntryEnumerator_H__

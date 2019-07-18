@@ -84,7 +84,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StimulationMultiplexer; }
-			OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Stimulation::CBoxAlgorithmStimulationMultiplexer; }
+			OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmStimulationMultiplexer; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmStimulationMultiplexerListener; }
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 

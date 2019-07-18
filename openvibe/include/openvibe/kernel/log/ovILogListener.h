@@ -105,7 +105,7 @@ namespace OpenViBE
 		 * Objects to log are sent to it thanks to the log manager
 		 * after a listener has been registered to it.
 		 */
-		class OV_API ILogListener : public OpenViBE::Kernel::IKernelObject
+		class OV_API ILogListener : public IKernelObject
 		{
 		public:
 
@@ -118,7 +118,7 @@ namespace OpenViBE
 			 * \return \e true if this log level is active.
 			 * \return \e false if this log level is not active.
 			 */
-			virtual bool isActive(OpenViBE::Kernel::ELogLevel eLogLevel) = 0;
+			virtual bool isActive(ELogLevel eLogLevel) = 0;
 			/**
 			 * \brief Changes the activation status of a specific log level
 			 * \param eLogLevel [in] : the log level which status has to be changed
@@ -126,7 +126,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool activate(OpenViBE::Kernel::ELogLevel eLogLevel, bool bActive) = 0;
+			virtual bool activate(ELogLevel eLogLevel, bool bActive) = 0;
 			/**
 			 * \brief Changes the activation status of a specific range of log level
 			 * \param eStartLogLevel [in] : the first log level which status has to be changed
@@ -135,7 +135,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool activate(OpenViBE::Kernel::ELogLevel eStartLogLevel, OpenViBE::Kernel::ELogLevel eEndLogLevel, bool bActive) = 0;
+			virtual bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) = 0;
 			/**
 			 * \brief Changes the activation status of all log levels at once
 			 * \param bActive [in] : a boolean telling whether the levels should be active or not
@@ -152,7 +152,7 @@ namespace OpenViBE
 			 * \brief Logs a formatted time value (64 bits unsigned integer)
 			 * \param ui64Value [in] : the value that should be logged
 			 */
-			virtual void log(const OpenViBE::time64 time64Value) = 0;
+			virtual void log(const time64 time64Value) = 0;
 			/**
 			 * \brief Logs a 64 bits unsigned integer
 			 * \param ui64Value [in] : the value that should be logged
@@ -213,12 +213,12 @@ namespace OpenViBE
 			 * \brief Logs an identifier value
 			 * \param rValue [in] : the value that should be logged
 			 */
-			virtual void log(const OpenViBE::CIdentifier& rValue) = 0;
+			virtual void log(const CIdentifier& rValue) = 0;
 			/**
 			 * \brief Logs an OpenViBE string value
 			 * \param rValue [in] : the value that should be logged
 			 */
-			virtual void log(const OpenViBE::CString& rValue) = 0;
+			virtual void log(const CString& rValue) = 0;
 			/**
 			 * \brief Logs an ASCII string value
 			 * \param rValue [in] : the value that should be logged
@@ -233,12 +233,12 @@ namespace OpenViBE
 			 * \brief Changes the log level
 			 * \param eLogLevel [in] : the new log level
 			 */
-			virtual void log(const OpenViBE::Kernel::ELogLevel eLogLevel) = 0;
+			virtual void log(const ELogLevel eLogLevel) = 0;
 			/**
 			 * \brief Changes the log color
 			 * \param eLogColor [in] : the new log color
 			 */
-			virtual void log(const OpenViBE::Kernel::ELogColor eLogColor) = 0;
+			virtual void log(const ELogColor eLogColor) = 0;
 
 			//@}
 

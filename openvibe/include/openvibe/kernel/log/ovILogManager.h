@@ -24,7 +24,7 @@ namespace OpenViBE
 		 * (be it a status window, a console, a file, whatever). See ILogListener
 		 * for more details.
 		 */
-		class OV_API ILogManager : public OpenViBE::Kernel::ILogListener
+		class OV_API ILogManager : public ILogListener
 		{
 		public:
 
@@ -34,14 +34,14 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addListener(OpenViBE::Kernel::ILogListener* pListener) = 0;
+			virtual bool addListener(ILogListener* pListener) = 0;
 			/**
 			 * \brief Removes a registered listener
 			 * \param pListener [in] : the listener to unregister
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool removeListener(OpenViBE::Kernel::ILogListener* pListener) = 0;
+			virtual bool removeListener(ILogListener* pListener) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Log_LogManager);
 		};
@@ -58,7 +58,7 @@ namespace OpenViBE
 		 * ostream object.
 		 */
 		template <class T>
-		OpenViBE::Kernel::ILogManager& operator <<(OpenViBE::Kernel::ILogManager& rLogManager, const T& rObject)
+		ILogManager& operator <<(ILogManager& rLogManager, const T& rObject)
 		{
 			rLogManager.log(rObject);
 			return rLogManager;

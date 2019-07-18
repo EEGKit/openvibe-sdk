@@ -5,7 +5,7 @@
 
 namespace Socket
 {
-	class Socket_API IConnectionClient : public Socket::IConnection
+	class Socket_API IConnectionClient : public IConnection
 	{
 	public:
 
@@ -15,7 +15,7 @@ namespace Socket
 			uint32_t ui32TimeOut = 0xffffffff) = 0;
 	};
 
-	extern Socket_API Socket::IConnectionClient* createConnectionClient(void);
+	extern Socket_API IConnectionClient* createConnectionClient(void);
 };
 
 #endif // __Socket_IConnectionClient_H__

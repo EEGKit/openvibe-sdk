@@ -57,7 +57,7 @@ namespace Communication
 
 		Socket::IConnection* m_Connection;
 
-		mutable std::atomic<CMessaging::ELibraryError> m_LastLibraryError;
+		mutable std::atomic<ELibraryError> m_LastLibraryError;
 
 		std::thread m_SyncThread;
 

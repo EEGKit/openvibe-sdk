@@ -1,11 +1,11 @@
 #include "ovpCBoxAlgorithmFrequencyBandSelector.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 
 #include <vector>
 #include <string>
@@ -41,7 +41,7 @@ namespace
 bool CBoxAlgorithmFrequencyBandSelector::initialize(void)
 {
 	CString l_sSettingValue             = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	std::vector<std::string> l_vSetting = ::split(l_sSettingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
+	std::vector<std::string> l_vSetting = split(l_sSettingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
 	std::vector<std::string> l_vSettingRange;
 	std::vector<std::string>::const_iterator it;
 	bool l_bHadError = false;
@@ -50,7 +50,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize(void)
 	for (it = l_vSetting.begin(); it != l_vSetting.end(); ++it)
 	{
 		bool l_bGood = true;
-		l_vSettingRange = ::split(*it, OV_Value_RangeStringSeparator);
+		l_vSettingRange = split(*it, OV_Value_RangeStringSeparator);
 		if (l_vSettingRange.size() == 1)
 		{
 			try

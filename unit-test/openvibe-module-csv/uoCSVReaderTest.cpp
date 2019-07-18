@@ -95,7 +95,7 @@ TEST(CSV_Reader_Test_Case, signalReaderUNIXEndlines)
 	compareChunks(simpleSignalFile.data[2], chunks[1]);
 
 	ASSERT_TRUE(csv->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(csv);
+	releaseCSVHandler(csv);
 }
 
 TEST(CSV_Reader_Test_Case, signalReaderWindowsEndlines)
@@ -121,7 +121,7 @@ TEST(CSV_Reader_Test_Case, signalReaderWindowsEndlines)
 	compareChunks(simpleSignalFile.data[2], chunks[1]);
 
 	ASSERT_TRUE(csv->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(csv);
+	releaseCSVHandler(csv);
 }
 
 TEST(CSV_Reader_Test_Case, signalReaderNormalGoodSignal)
@@ -148,7 +148,7 @@ TEST(CSV_Reader_Test_Case, signalReaderNormalGoodSignal)
 	ASSERT_EQ(samplingFrequency, 8U);
 	ASSERT_EQ(sampleCountPerBuffer, 4);
 	ASSERT_TRUE(signalReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(signalReaderTest);
+	releaseCSVHandler(signalReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, signalReaderNotEnoughChunk)
@@ -174,7 +174,7 @@ TEST(CSV_Reader_Test_Case, signalReaderNotEnoughChunk)
 	ASSERT_EQ(samplingFrequency, 8U);
 	ASSERT_EQ(sampleCountPerBuffer, 4);
 	ASSERT_TRUE(signalReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(signalReaderTest);
+	releaseCSVHandler(signalReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, SignalReaderEmptyFile)
@@ -182,7 +182,7 @@ TEST(CSV_Reader_Test_Case, SignalReaderEmptyFile)
 	ICSVHandler* signalReaderTest = createCSVHandler();
 	std::string filepath          = dataDirectory + "testCSVSignalEmptyFile.csv";
 	ASSERT_TRUE(signalReaderTest->openFile(filepath, EFileAccessMode::Read));
-	OpenViBE::CSV::releaseCSVHandler(signalReaderTest);
+	releaseCSVHandler(signalReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, SignalReaderWrongHeader)
@@ -197,7 +197,7 @@ TEST(CSV_Reader_Test_Case, SignalReaderWrongHeader)
 	ASSERT_FALSE(signalReaderTest->getSignalInformation(channelNames, samplingFrequency, sampleCountPerBuffer));
 
 	ASSERT_TRUE(signalReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(signalReaderTest);
+	releaseCSVHandler(signalReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, spectrumReaderNormalGoodSignal)
@@ -235,7 +235,7 @@ TEST(CSV_Reader_Test_Case, spectrumReaderNormalGoodSignal)
 	ASSERT_EQ(channelNames, expectedChannels);
 	ASSERT_EQ(originalSampleRate, 128);
 	ASSERT_TRUE(spectrumReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(spectrumReaderTest);
+	releaseCSVHandler(spectrumReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, spectrumReaderNotEnoughChunk)
@@ -261,7 +261,7 @@ TEST(CSV_Reader_Test_Case, spectrumReaderNotEnoughChunk)
 	ASSERT_EQ(originalSampleRate, 128);
 	ASSERT_NE(4, chunks.size());
 	ASSERT_TRUE(spectrumReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(spectrumReaderTest);
+	releaseCSVHandler(spectrumReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, spectrumReaderWrongHeader)
@@ -276,7 +276,7 @@ TEST(CSV_Reader_Test_Case, spectrumReaderWrongHeader)
 	ASSERT_FALSE(spectrumReaderTest->getSpectrumInformation(channelNames, frequencyAbscissa, originalSampleRate));
 
 	ASSERT_TRUE(spectrumReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(spectrumReaderTest);
+	releaseCSVHandler(spectrumReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, matrixReaderNormalGoodSignal)
@@ -301,7 +301,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderNormalGoodSignal)
 	ASSERT_EQ(labels, expectedLabels);
 
 	ASSERT_TRUE(matrixReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(matrixReaderTest);
+	releaseCSVHandler(matrixReaderTest);
 }
 
 
@@ -317,7 +317,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderWrongHeader)
 	ASSERT_FALSE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 
 	ASSERT_TRUE(matrixReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(matrixReaderTest);
+	releaseCSVHandler(matrixReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, matrixReaderTooManyLabels)
@@ -332,7 +332,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderTooManyLabels)
 	ASSERT_FALSE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 
 	ASSERT_TRUE(matrixReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(matrixReaderTest);
+	releaseCSVHandler(matrixReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, matrixReaderWrongStimulation)
@@ -352,7 +352,7 @@ TEST(CSV_Reader_Test_Case, matrixReaderWrongStimulation)
 	ASSERT_FALSE(matrixReaderTest->readSamplesAndEventsFromFile(1, chunks, stimulations));
 
 	ASSERT_TRUE(matrixReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(matrixReaderTest);
+	releaseCSVHandler(matrixReaderTest);
 }
 
 
@@ -378,7 +378,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderNormalGoodSignal)
 	ASSERT_EQ(labels, expectedLabels);
 
 	ASSERT_TRUE(matrixReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(matrixReaderTest);
+	releaseCSVHandler(matrixReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, covarianceMatrixReaderWrongHeader)
@@ -394,7 +394,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderWrongHeader)
 	ASSERT_FALSE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 
 	ASSERT_TRUE(matrixReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(matrixReaderTest);
+	releaseCSVHandler(matrixReaderTest);
 }
 
 TEST(CSV_Reader_Test_Case, covarianceMatrixReaderTooManyLabels)
@@ -409,7 +409,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderTooManyLabels)
 	ASSERT_FALSE(matrixReaderTest->getStreamedMatrixInformation(dimensionSizes, labels));
 
 	ASSERT_TRUE(matrixReaderTest->closeFile());
-	OpenViBE::CSV::releaseCSVHandler(matrixReaderTest);
+	releaseCSVHandler(matrixReaderTest);
 }
 
 int uoCSVReaderTest(int argc, char* argv[])
@@ -418,7 +418,7 @@ int uoCSVReaderTest(int argc, char* argv[])
 	{
 		dataDirectory = argv[1];
 	}
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "CSV_Reader_Test_Case.*";
 	return RUN_ALL_TESTS();
 }

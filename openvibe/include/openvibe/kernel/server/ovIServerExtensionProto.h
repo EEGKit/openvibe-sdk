@@ -18,14 +18,14 @@ namespace OpenViBE
 		  * \sa OpenViBE::Plugins::IServerExtensionDesc
 		  */
 
-		class OV_API IServerExtensionProto : public OpenViBE::Kernel::IKernelObject
+		class OV_API IServerExtensionProto : public IKernelObject
 		{
 		public:
 
 			virtual uint32_t addSetting(
-				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sDefaultValue) = 0;
+				const CString& sName,
+				const CIdentifier& rTypeIdentifier,
+				const CString& sDefaultValue) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Server_ServerExtensionProto)
 		};

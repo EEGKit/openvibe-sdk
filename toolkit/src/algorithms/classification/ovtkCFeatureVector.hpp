@@ -7,12 +7,12 @@
 namespace OpenViBEToolkit
 {
 	template <class CParent>
-	class TFeatureVector : public OpenViBEToolkit::TVector<CParent>
+	class TFeatureVector : public TVector<CParent>
 	{
 	public:
 
 		explicit TFeatureVector(OpenViBE::IMatrix& rMatrix)
-			: OpenViBEToolkit::TVector<CParent>(rMatrix) { }
+			: TVector<CParent>(rMatrix) { }
 
 		virtual double getLabel(void) const { return 0; }
 
@@ -21,7 +21,7 @@ namespace OpenViBEToolkit
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::TVector < CParent >, OV_UndefinedIdentifier);
 	};
 
-	typedef OpenViBEToolkit::TFeatureVector<OpenViBEToolkit::IFeatureVector> CFeatureVector;
+	typedef TFeatureVector<IFeatureVector> CFeatureVector;
 };
 
 #endif // __OpenViBEToolkit_CFeatureVector_H__

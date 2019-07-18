@@ -26,11 +26,11 @@ extern char **environ;
 #include <system/ovCTime.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Tools;
+using namespace Tools;
 
 CBoxAlgorithmExternalProcessing::CBoxAlgorithmExternalProcessing()
 	: m_Port(0)
@@ -48,7 +48,7 @@ uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency(void)
 	{
 		// We slow down the generator type boxes by default, in order to limit syncing
 		// In fast forward we limit the syncing even more by setting the frequency to 1Hz
-		if (this->getPlayerContext().getStatus() == EPlayerStatus::PlayerStatus_Forward) { return 1LL << 32; }
+		if (this->getPlayerContext().getStatus() == PlayerStatus_Forward) { return 1LL << 32; }
 		return 16LL << 32;
 	}
 	return 128LL << 32;
@@ -69,7 +69,7 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 		CString name;
 		staticBoxContext->getSettingName(i, name);
 
-		OpenViBE::CIdentifier type;
+		CIdentifier type;
 		staticBoxContext->getSettingType(i, type);
 
 		const CString value = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
@@ -81,7 +81,7 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 	// Inputs
 	for (unsigned int i = 0; i < staticBoxContext->getInputCount(); ++i)
 	{
-		OpenViBE::CIdentifier type;
+		CIdentifier type;
 		staticBoxContext->getInputType(i, type);
 
 		if (type == OV_TypeId_Stimulations)
@@ -99,7 +99,7 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 	// Outputs
 	for (unsigned int i = 0; i < staticBoxContext->getOutputCount(); ++i)
 	{
-		OpenViBE::CIdentifier type;
+		CIdentifier type;
 		staticBoxContext->getOutputType(i, type);
 
 		CString name;
@@ -279,7 +279,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::processClock(OpenViBE::CMessageClock& rMessageClock)
+bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& rMessageClock)
 {
 	(void)rMessageClock;
 	return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
@@ -295,7 +295,7 @@ bool CBoxAlgorithmExternalProcessing::process(void)
 {
 	if (m_Messaging.isInErrorState())
 	{
-		std::string errorString = ::Communication::MessagingServer::getErrorString(m_Messaging.getLastError());
+		std::string errorString = Communication::MessagingServer::getErrorString(m_Messaging.getLastError());
 		OV_ERROR_KRF("Error state connection: " << errorString.c_str() << ".\n This may be due to a broken client connection.", ErrorType::BadNetworkConnection);
 	}
 
@@ -646,7 +646,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 
 void CBoxAlgorithmExternalProcessing::log()
 {
-	::Communication::ELogLevel logLevel;
+	Communication::ELogLevel logLevel;
 	std::string logMessage;
 	uint64_t packetId;
 
@@ -656,25 +656,25 @@ void CBoxAlgorithmExternalProcessing::log()
 
 		switch (logLevel)
 		{
-			case ::Communication::LogLevel_Info:
+			case Communication::LogLevel_Info:
 				loglevel = LogLevel_Info;
 				break;
 
-			case ::Communication::LogLevel_Warning:
+			case Communication::LogLevel_Warning:
 				loglevel = LogLevel_Warning;
 				break;
 
-			case ::Communication::LogLevel_Error:
+			case Communication::LogLevel_Error:
 				loglevel = LogLevel_Error;
 				break;
 
-			case ::Communication::LogLevel_Fatal:
+			case Communication::LogLevel_Fatal:
 				loglevel = LogLevel_Fatal;
 
 				break;
 
-			case ::Communication::LogLevel_Unknown:
-			case ::Communication::LogLevel_MAX:
+			case Communication::LogLevel_Unknown:
+			case Communication::LogLevel_MAX:
 				break;
 		}
 

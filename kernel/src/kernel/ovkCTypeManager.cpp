@@ -22,7 +22,7 @@ if (!(expression)) \
 }
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 namespace
 {
@@ -67,7 +67,7 @@ std::vector<std::pair<CIdentifier, CString>> CTypeManager::getSortedTypes() cons
 	{
 		l_oSorted.push_back(std::pair<CIdentifier, CString>(element.first, element.second));
 	}
-	std::sort(l_oSorted.begin(), l_oSorted.end(), ::a_inf_b());
+	std::sort(l_oSorted.begin(), l_oSorted.end(), a_inf_b());
 
 	return l_oSorted;
 }

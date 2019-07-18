@@ -25,7 +25,7 @@ namespace OpenViBE
 		 * able to load/unload this file and to enumerate each of
 		 * its plugin object descriptor.
 		 */
-		class OV_API IPluginModule : public OpenViBE::Kernel::IKernelObject
+		class OV_API IPluginModule : public IKernelObject
 		{
 		public:
 
@@ -37,8 +37,8 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool load(
-				const OpenViBE::CString& sName,
-				OpenViBE::CString* pError = NULL) = 0;
+				const CString& sName,
+				CString* pError = NULL) = 0;
 			/**
 			 * \brief Tries to unload the loaded OpenViBE module
 			 * \param pError [out] : an optional output string containing the error on unload failure
@@ -46,7 +46,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool unload(
-				OpenViBE::CString* pError = NULL) = 0;
+				CString* pError = NULL) = 0;
 			/**
 			 * \brief Gets the current filename associated with this plugin module
 			 * \param rFileName [out] : the filename of this plugin module
@@ -54,7 +54,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool getFileName(
-				OpenViBE::CString& rFileName) const = 0;
+				CString& rFileName) const = 0;
 			/**
 			 * \brief Initializes this plugin module
 			 * \return \e true in case of success.
@@ -83,7 +83,7 @@ namespace OpenViBE
 			 */
 			virtual bool getPluginObjectDescription(
 				uint32_t ui32Index,
-				OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) = 0;
+				Plugins::IPluginObjectDesc*& rpPluginObjectDescription) = 0;
 			/**
 			 * \brief Uninitializes this plugin module
 			 * \return \e true in case of success.

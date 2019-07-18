@@ -628,7 +628,7 @@ int uoCSVWriterTest(int argc, char* argv[])
 	{
 		directoryPath = argv[1];
 	}
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "CSV_Writer_Test_Case.*";
 	return RUN_ALL_TESTS();
 }

@@ -104,7 +104,7 @@ TEST(FS_Files_Test_Directories_UTF, validateCopyDirectory)
 
 int uoFSFilesTestUTF(int argc, char* argv[])
 {
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 
 	::testing::GTEST_FLAG(filter) = "FS_Files_Test_Directories_UTF.*";
 	return RUN_ALL_TESTS();

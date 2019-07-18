@@ -15,14 +15,14 @@
 
 namespace OpenViBEToolkit
 {
-	class OVTK_API CAlgorithmClassifierTrainer : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+	class OVTK_API CAlgorithmClassifierTrainer : public TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 	{
 	public:
 
 		virtual void release(void) { delete this; }
 
 		virtual bool process(void);
-		virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) = 0;
+		virtual bool train(const IFeatureVectorSet& rFeatureVectorSet) = 0;
 		virtual bool saveConfiguration(OpenViBE::IMemoryBuffer& rMemoryBuffer) = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_ClassifierTrainer);

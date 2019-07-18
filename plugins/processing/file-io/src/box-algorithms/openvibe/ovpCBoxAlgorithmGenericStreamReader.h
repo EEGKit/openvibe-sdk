@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 			bool m_bPending;
 			bool m_bHasEBMLHeader;
 
-			::FILE* m_pFile;
+			FILE* m_pFile;
 			std::stack<EBML::CIdentifier> m_vNodes;
 			std::map<uint32_t, uint32_t> m_vStreamIndexToOutputIndex;
 			std::map<uint32_t, OpenViBE::CIdentifier> m_vStreamIndexToTypeIdentifier;
@@ -135,7 +135,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_GenericStreamReader; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::FileIO::CBoxAlgorithmGenericStreamReader; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmGenericStreamReader; }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmGenericStreamReaderListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 

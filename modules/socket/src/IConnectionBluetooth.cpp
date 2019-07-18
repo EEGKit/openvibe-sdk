@@ -30,7 +30,7 @@
 
 namespace Socket
 {
-	class CConnectionBluetooth : public Socket::IConnectionBluetooth
+	class CConnectionBluetooth : public IConnectionBluetooth
 	{
 	public:
 
@@ -335,7 +335,7 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 			LPTSTR l_sErrorText;
-			DWORD l_ui64Error = ::GetLastError();
+			DWORD l_ui64Error = GetLastError();
 
 			size_t ui32Size = FormatMessage(
 				FORMAT_MESSAGE_FROM_SYSTEM | // use system message tables to retrieve error text
@@ -351,7 +351,7 @@ namespace Socket
 
 			// Converts std::wstring to std::string and returns it. 
 			std::wstring l_sErrorMessage(l_sErrorText, ui32Size);
-			::LocalFree(l_sErrorText);
+			LocalFree(l_sErrorText);
 			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> l_oConverter;
 			return l_oConverter.to_bytes(l_sErrorMessage);
 
@@ -372,7 +372,7 @@ namespace Socket
 			HANDLE l_pHandle;
 			WSAQUERYSET l_oWSAQuerySet;
 
-			::memset((void *)&l_oWSAQuerySet, 0, sizeof(l_oWSAQuerySet));
+			memset((void *)&l_oWSAQuerySet, 0, sizeof(l_oWSAQuerySet));
 			l_oWSAQuerySet.dwSize      = sizeof(l_oWSAQuerySet);
 			l_oWSAQuerySet.dwNameSpace = NS_BTH;
 			l_oWSAQuerySet.lpcsaBuffer = nullptr;

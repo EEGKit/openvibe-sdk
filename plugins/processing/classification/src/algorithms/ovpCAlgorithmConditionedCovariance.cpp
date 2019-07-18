@@ -10,11 +10,11 @@
 #include <iostream>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Classification;
+using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
@@ -34,13 +34,13 @@ void CAlgorithmConditionedCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager &
 	}
 }
 #else
-void CAlgorithmConditionedCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
+void CAlgorithmConditionedCovariance::dumpMatrix(ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 #endif
 
 bool CAlgorithmConditionedCovariance::initialize(void)
 {
 	// Default value setting
-	OpenViBE::Kernel::TParameterHandler<double> ip_f64Shrinkage(getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage));
+	TParameterHandler<double> ip_f64Shrinkage(getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage));
 	ip_f64Shrinkage = -1.0;
 
 	return true;

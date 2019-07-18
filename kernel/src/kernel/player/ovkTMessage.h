@@ -14,13 +14,13 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit TMessage(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit TMessage(const IKernelContext& rKernelContext);
 
-			virtual OpenViBE::CIdentifier getIdentifier(void) const;
+			virtual CIdentifier getIdentifier(void) const;
 			virtual uint64_t getTime(void) const;
 
 			virtual bool setIdentifier(
-				const OpenViBE::CIdentifier& rIdentifier);
+				const CIdentifier& rIdentifier);
 			virtual bool setTime(
 				const uint64_t ui64Time);
 
@@ -28,7 +28,7 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::CIdentifier m_oIdentifier;
+			CIdentifier m_oIdentifier;
 			uint64_t m_ui64Time;
 		};
 	};

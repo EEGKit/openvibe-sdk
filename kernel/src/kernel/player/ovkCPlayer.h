@@ -17,25 +17,25 @@ namespace OpenViBE
 	{
 		class CScenarioSettingKeywordParserCallback;
 
-		class CPlayer : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayer>
+		class CPlayer : public TKernelObject<IPlayer>
 		{
 		public:
 
-			explicit CPlayer(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CPlayer(const IKernelContext& rKernelContext);
 			virtual ~CPlayer(void);
 
 			virtual bool setScenario(
-				const OpenViBE::CIdentifier& rScenarioIdentifier,
-				const OpenViBE::CNameValuePairList* pLocalConfigurationTokens);
+				const CIdentifier& rScenarioIdentifier,
+				const CNameValuePairList* pLocalConfigurationTokens);
 
-			virtual OpenViBE::Kernel::IConfigurationManager& getRuntimeConfigurationManager(void) const;
-			virtual OpenViBE::Kernel::IScenarioManager& getRuntimeScenarioManager(void) const;
-			virtual OpenViBE::CIdentifier getRuntimeScenarioIdentifier(void) const;
+			virtual IConfigurationManager& getRuntimeConfigurationManager(void) const;
+			virtual IScenarioManager& getRuntimeScenarioManager(void) const;
+			virtual CIdentifier getRuntimeScenarioIdentifier(void) const;
 
 
 			virtual bool isHoldingResources() const;
 
-			virtual OpenViBE::Kernel::EPlayerReturnCode initialize(void);
+			virtual EPlayerReturnCode initialize(void);
 			virtual bool uninitialize(void);
 
 			virtual bool stop(void);
@@ -44,7 +44,7 @@ namespace OpenViBE
 			virtual bool play(void);
 			virtual bool forward(void);
 
-			virtual OpenViBE::Kernel::EPlayerStatus getStatus(void) const;
+			virtual EPlayerStatus getStatus(void) const;
 
 			virtual bool setFastForwardMaximumFactor(const double f64FastForwardFactor);
 			virtual double getFastForwardMaximumFactor(void) const;
@@ -63,17 +63,17 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::Kernel::CKernelContextBridge m_oKernelContextBridge;
-			OpenViBE::Kernel::IConfigurationManager* m_pRuntimeConfigurationManager;
-			OpenViBE::Kernel::IScenarioManager* m_pRuntimeScenarioManager;
+			CKernelContextBridge m_oKernelContextBridge;
+			IConfigurationManager* m_pRuntimeConfigurationManager;
+			IScenarioManager* m_pRuntimeScenarioManager;
 			CScenarioSettingKeywordParserCallback* m_pScenarioSettingKeywordParserCallback;
 
-			OpenViBE::Kernel::CScheduler m_oScheduler;
+			CScheduler m_oScheduler;
 
 			uint64_t m_ui64CurrentTimeToReach;
 			uint64_t m_ui64Lateness;
 			uint64_t m_ui64InnerLateness;
-			OpenViBE::Kernel::EPlayerStatus m_eStatus;
+			EPlayerStatus m_eStatus;
 			bool m_bIsInitializing;
 			double m_f64FastForwardMaximumFactor;
 
@@ -81,7 +81,7 @@ namespace OpenViBE
 			std::string m_sWorkspaceConfigurationFile;
 
 			// Stores the identifier of the scenario that is being played
-			OpenViBE::CIdentifier m_oScenarioIdentifier;
+			CIdentifier m_oScenarioIdentifier;
 
 		private:
 			CIdentifier m_oRuntimeScenarioIdentifier;

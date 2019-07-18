@@ -6,11 +6,11 @@
 #include <cstdlib>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::StreamCodecs;
+using namespace StreamCodecs;
 
 namespace
 {
@@ -34,7 +34,7 @@ namespace
 			src2--;
 		}
 		src2++;
-		::strncpy(dst, src1, src2 - src1);
+		strncpy(dst, src1, src2 - src1);
 		dst[src2 - src1] = '\0';
 	}
 }
@@ -137,7 +137,7 @@ void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const uint64_
 				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label)
 				{
 					char l_sDimensionLabel[1024];
-					::trim(l_sDimensionLabel, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), NULL);
+					trim(l_sDimensionLabel, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), NULL);
 					op_pMatrix->setDimensionLabel(m_ui32DimensionIndex, m_ui32DimensionEntryIndex++, l_sDimensionLabel);
 				}
 				break;

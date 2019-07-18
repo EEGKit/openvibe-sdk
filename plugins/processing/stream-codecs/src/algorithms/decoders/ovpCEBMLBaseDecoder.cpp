@@ -1,11 +1,11 @@
 #include "ovpCEBMLBaseDecoder.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::StreamCodecs;
+using namespace StreamCodecs;
 
 CEBMLBaseDecoder::CEBMLBaseDecoder(void)
 	: m_pEBMLReaderHelper(NULL)
@@ -26,7 +26,7 @@ bool CEBMLBaseDecoder::initialize(void)
 
 	m_pEBMLReaderHelper = EBML::createReaderHelper();
 
-	m_pEBMLReader = EBML::createReader(m_oEBMLReaderCallbackProxy);
+	m_pEBMLReader = createReader(m_oEBMLReaderCallbackProxy);
 
 	return true;
 }

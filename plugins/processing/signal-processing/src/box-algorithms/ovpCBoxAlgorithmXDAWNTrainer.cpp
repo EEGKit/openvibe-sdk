@@ -6,11 +6,11 @@
 #include <iostream>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 
 CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer(void) : m_TrainStimulationId(0),
 															 m_FilterDimension(0),
@@ -37,7 +37,7 @@ bool CBoxAlgorithmXDAWNTrainer::initialize(void)
 			OpenViBE::Kernel::ErrorType::BadFileRead
 		);
 
-		::fclose(file);
+		fclose(file);
 	}
 
 	int filterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
@@ -330,19 +330,19 @@ bool CBoxAlgorithmXDAWNTrainer::process(void)
 
 		if (m_SaveAsBoxConfig)
 		{
-			::fprintf(file, "<OpenViBE-SettingsOverride>\n");
-			::fprintf(file, "\t<SettingValue>");
+			fprintf(file, "<OpenViBE-SettingsOverride>\n");
+			fprintf(file, "\t<SettingValue>");
 
 			for (unsigned int i = 0; i < eigenVectors.getBufferElementCount(); i++)
 			{
-				::fprintf(file, "%e ", eigenVectors.getBuffer()[i]);
+				fprintf(file, "%e ", eigenVectors.getBuffer()[i]);
 			}
 
-			::fprintf(file, "</SettingValue>\n");
-			::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_FilterDimension);
-			::fprintf(file, "\t<SettingValue>%u</SettingValue>\n", channelCount);
-			::fprintf(file, "\t<SettingValue></SettingValue>\n");
-			::fprintf(file, "</OpenViBE-SettingsOverride>");
+			fprintf(file, "</SettingValue>\n");
+			fprintf(file, "\t<SettingValue>%u</SettingValue>\n", m_FilterDimension);
+			fprintf(file, "\t<SettingValue>%u</SettingValue>\n", channelCount);
+			fprintf(file, "\t<SettingValue></SettingValue>\n");
+			fprintf(file, "</OpenViBE-SettingsOverride>");
 		}
 		else
 		{

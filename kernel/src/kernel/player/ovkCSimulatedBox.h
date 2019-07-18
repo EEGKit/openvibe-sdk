@@ -24,13 +24,13 @@ namespace OpenViBE
 				  , m_ui64EndTime(0)
 				  , m_bIsDeprecated(false) { }
 
-			explicit CChunk(const OpenViBE::Kernel::CChunk& rChunk)
+			explicit CChunk(const CChunk& rChunk)
 				: m_oBuffer(rChunk.m_oBuffer)
 				  , m_ui64StartTime(rChunk.m_ui64StartTime)
 				  , m_ui64EndTime(rChunk.m_ui64EndTime)
 				  , m_bIsDeprecated(false) { }
 
-			const OpenViBE::Kernel::CBuffer& getBuffer(void) const
+			const CBuffer& getBuffer(void) const
 			{
 				return m_oBuffer;
 			}
@@ -50,7 +50,7 @@ namespace OpenViBE
 				return m_bIsDeprecated;
 			}
 
-			OpenViBE::Kernel::CBuffer& getBuffer(void)
+			CBuffer& getBuffer(void)
 			{
 				return m_oBuffer;
 			}
@@ -75,41 +75,41 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::Kernel::CBuffer m_oBuffer;
+			CBuffer m_oBuffer;
 			uint64_t m_ui64StartTime;
 			uint64_t m_ui64EndTime;
 			bool m_bIsDeprecated;
 		};
 
-		class CSimulatedBox : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxIO>
+		class CSimulatedBox : public TKernelObject<IBoxIO>
 		{
 		public:
 
 			CSimulatedBox(
-				const OpenViBE::Kernel::IKernelContext& rKernelContext,
-				OpenViBE::Kernel::CScheduler& rScheduler);
+				const IKernelContext& rKernelContext,
+				CScheduler& rScheduler);
 
 			virtual ~CSimulatedBox();
 
 			virtual bool setScenarioIdentifier(
-				const OpenViBE::CIdentifier& rScenarioIdentifier);
+				const CIdentifier& rScenarioIdentifier);
 
 			virtual bool getBoxIdentifier(
-				OpenViBE::CIdentifier& rBoxIdentifier) const;
+				CIdentifier& rBoxIdentifier) const;
 
 			virtual bool setBoxIdentifier(
-				const OpenViBE::CIdentifier& rBoxIdentifier);
+				const CIdentifier& rBoxIdentifier);
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
 
 			virtual bool processClock(void);
-			virtual bool processInput(const uint32_t ui32InputIndex, const OpenViBE::Kernel::CChunk& rChunk);
+			virtual bool processInput(const uint32_t ui32InputIndex, const CChunk& rChunk);
 			virtual bool process(void);
 			virtual bool isReadyToProcess(void) const;
 
-			virtual OpenViBE::CString getName(void) const;
-			virtual const OpenViBE::Kernel::IScenario& getScenario(void) const;
+			virtual CString getName(void) const;
+			virtual const IScenario& getScenario(void) const;
 
 			/** \name IBoxIO inputs handling */
 			//@{
@@ -122,7 +122,7 @@ namespace OpenViBE
 				uint64_t& rEndTime,
 				uint64_t& rChunkSize,
 				const uint8_t*& rpChunkBuffer) const;
-			virtual const OpenViBE::IMemoryBuffer* getInputChunk(
+			virtual const IMemoryBuffer* getInputChunk(
 				const uint32_t ui32InputIndex,
 				const uint32_t ui32ChunkIndex) const;
 			virtual uint64_t getInputChunkStartTime(
@@ -150,7 +150,7 @@ namespace OpenViBE
 				const uint32_t ui32OutputIndex,
 				const uint8_t* pBuffer,
 				const uint64_t ui64BufferSize);
-			virtual OpenViBE::IMemoryBuffer* getOutputChunk(
+			virtual IMemoryBuffer* getOutputChunk(
 				const uint32_t ui32OutputIndex);
 			virtual bool markOutputAsReadyToSend(
 				const uint32_t ui32OutputIndex,
@@ -160,7 +160,7 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >, OVK_ClassId_Kernel_Player_SimulatedBox);
 
-			OpenViBE::Kernel::CScheduler& getScheduler(void)
+			CScheduler& getScheduler(void)
 			{
 				return m_rScheduler;
 			}
@@ -169,12 +169,12 @@ namespace OpenViBE
 
 			bool m_bReadyToProcess;
 			bool m_bChunkConsistencyChecking;
-			OpenViBE::Kernel::ELogLevel m_eChunkConsistencyCheckingLogLevel;
+			ELogLevel m_eChunkConsistencyCheckingLogLevel;
 
-			OpenViBE::Plugins::IBoxAlgorithm* m_pBoxAlgorithm;
-			const OpenViBE::Kernel::IScenario* m_pScenario;
-			const OpenViBE::Kernel::IBox* m_pBox;
-			OpenViBE::Kernel::CScheduler& m_rScheduler;
+			Plugins::IBoxAlgorithm* m_pBoxAlgorithm;
+			const IScenario* m_pScenario;
+			const IBox* m_pBox;
+			CScheduler& m_rScheduler;
 
 			uint64_t m_ui64LastClockActivationDate;
 			uint64_t m_ui64ClockFrequency;
@@ -182,9 +182,9 @@ namespace OpenViBE
 
 		public:
 
-			std::vector<std::deque<OpenViBE::Kernel::CChunk>> m_vInput;
-			std::vector<std::deque<OpenViBE::Kernel::CChunk>> m_vOutput;
-			std::vector<OpenViBE::Kernel::CChunk> m_vCurrentOutput;
+			std::vector<std::deque<CChunk>> m_vInput;
+			std::vector<std::deque<CChunk>> m_vOutput;
+			std::vector<CChunk> m_vCurrentOutput;
 			std::vector<uint64_t> m_vLastOutputStartTime;
 			std::vector<uint64_t> m_vLastOutputEndTime;
 		};

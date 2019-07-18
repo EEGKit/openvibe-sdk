@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.4.0"); }
 
 			OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
-			OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::DataGeneration::CBoxAlgorithmTimeSignalGenerator(); }
+			OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmTimeSignalGenerator(); }
 
 			bool getBoxPrototype(
 				OpenViBE::Kernel::IBoxProto& rPrototype) const

@@ -20,7 +20,7 @@ namespace OpenViBEPlugins
 		 * Pairwise neural network classifiers with probabilistic outputs. In G. Tesauro, D. Touretzky, and T. Leen (eds.)
 		 * Advances in Neural Information Processing Systems 7 (NIPS-94), pp. 1109-1116. MIT Press, 1995.
 		 */
-		class CAlgorithmPairwiseStrategyPKPD : virtual public OpenViBEPlugins::Classification::CAlgorithmPairwiseDecision
+		class CAlgorithmPairwiseStrategyPKPD : virtual public CAlgorithmPairwiseDecision
 		{
 		public:
 
@@ -43,7 +43,7 @@ namespace OpenViBEPlugins
 			uint32_t m_ui32ClassCount;
 		};
 
-		class CAlgorithmPairwiseStrategyPKPDDesc : virtual public OpenViBEPlugins::Classification::CAlgorithmPairwiseDecisionDesc
+		class CAlgorithmPairwiseStrategyPKPDDesc : virtual public CAlgorithmPairwiseDecisionDesc
 		{
 		public:
 
@@ -70,7 +70,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_PairwiseStrategy_PKPD; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CAlgorithmPairwiseStrategyPKPD; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CAlgorithmPairwiseStrategyPKPD; }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{

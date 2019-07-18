@@ -73,5 +73,5 @@ OVP_Declare_End();
 bool ov_float_equal(double f64First, double f64Second)
 {
 	const double c_f64Epsilon = 0.000001;
-	return c_f64Epsilon > ::fabs(f64First - f64Second);
+	return c_f64Epsilon > fabs(f64First - f64Second);
 }

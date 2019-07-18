@@ -3,7 +3,7 @@
 #include <system/ovCMemory.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 CBuffer::CBuffer(const CBuffer& rBuffer)
 {

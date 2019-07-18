@@ -18,7 +18,7 @@ namespace OpenViBE
 		 * \sa OpenViBE::Plugins::IAlgorithm
 		 * \sa OpenViBE::Plugins::IAlgorithmDesc
 		 */
-		class OV_API IAlgorithmProto : public OpenViBE::Kernel::IKernelObject
+		class OV_API IAlgorithmProto : public IKernelObject
 		{
 		public:
 
@@ -33,10 +33,10 @@ namespace OpenViBE
 			 * \sa IParameter
 			 */
 			virtual bool addInputParameter(
-				const OpenViBE::CIdentifier& rInputParameterIdentifier,
-				const OpenViBE::CString& sInputName,
-				const OpenViBE::Kernel::EParameterType eParameterType,
-				const OpenViBE::CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
+				const CIdentifier& rInputParameterIdentifier,
+				const CString& sInputName,
+				const EParameterType eParameterType,
+				const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an output parameter
 			 * \param rOutputParameterIdentifier [in] : the identifier for this parameter
@@ -48,10 +48,10 @@ namespace OpenViBE
 			 * \sa IParameter
 			 */
 			virtual bool addOutputParameter(
-				const OpenViBE::CIdentifier& rOutputParameterIdentifier,
-				const OpenViBE::CString& sOutputName,
-				const OpenViBE::Kernel::EParameterType eParameterType,
-				const OpenViBE::CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
+				const CIdentifier& rOutputParameterIdentifier,
+				const CString& sOutputName,
+				const EParameterType eParameterType,
+				const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an input trigger
 			 * \param rInputTriggerIdentifier [in] : the identifier for this trigger
@@ -60,8 +60,8 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool addInputTrigger(
-				const OpenViBE::CIdentifier& rInputTriggerIdentifier,
-				const OpenViBE::CString& rInputTriggerName) = 0;
+				const CIdentifier& rInputTriggerIdentifier,
+				const CString& rInputTriggerName) = 0;
 			/**
 			 * \brief Adds an output trigger
 			 * \param rOutputTriggerIdentifier [in] : the identifier for this trigger
@@ -70,8 +70,8 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool addOutputTrigger(
-				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
-				const OpenViBE::CString& rOutputTriggerName) = 0;
+				const CIdentifier& rOutputTriggerIdentifier,
+				const CString& rOutputTriggerName) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmProto)
 		};

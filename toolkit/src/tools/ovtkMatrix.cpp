@@ -18,9 +18,9 @@
 
 using namespace OpenViBE;
 using namespace OpenViBEToolkit;
-using namespace OpenViBEToolkit::Tools;
+using namespace Tools;
 
-bool OpenViBEToolkit::Tools::Matrix::copy(IMatrix& rDestinationMatrix, const IMatrix& rSourceMatrix)
+bool Matrix::copy(IMatrix& rDestinationMatrix, const IMatrix& rSourceMatrix)
 {
 	if (&rDestinationMatrix == &rSourceMatrix) { return true; }
 
@@ -29,7 +29,7 @@ bool OpenViBEToolkit::Tools::Matrix::copy(IMatrix& rDestinationMatrix, const IMa
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::copyDescription(IMatrix& rDestinationMatrix, const IMatrix& rSourceMatrix)
+bool Matrix::copyDescription(IMatrix& rDestinationMatrix, const IMatrix& rSourceMatrix)
 {
 	if (&rDestinationMatrix == &rSourceMatrix) { return true; }
 
@@ -48,7 +48,7 @@ bool OpenViBEToolkit::Tools::Matrix::copyDescription(IMatrix& rDestinationMatrix
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::copyContent(IMatrix& rDestinationMatrix, const IMatrix& rSourceMatrix)
+bool Matrix::copyContent(IMatrix& rDestinationMatrix, const IMatrix& rSourceMatrix)
 {
 	if (&rDestinationMatrix == &rSourceMatrix) { return true; }
 
@@ -61,13 +61,13 @@ bool OpenViBEToolkit::Tools::Matrix::copyContent(IMatrix& rDestinationMatrix, co
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::clearContent(IMatrix& rMatrix)
+bool Matrix::clearContent(IMatrix& rMatrix)
 {
 	System::Memory::set(rMatrix.getBuffer(), rMatrix.getBufferElementCount() * sizeof(double), 0);
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::isDescriptionSimilar(const IMatrix& rSourceMatrix1, const IMatrix& rSourceMatrix2, const bool bCheckLabels)
+bool Matrix::isDescriptionSimilar(const IMatrix& rSourceMatrix1, const IMatrix& rSourceMatrix2, const bool bCheckLabels)
 {
 	if (&rSourceMatrix1 == &rSourceMatrix2) { return true; }
 
@@ -92,16 +92,16 @@ bool OpenViBEToolkit::Tools::Matrix::isDescriptionSimilar(const IMatrix& rSource
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::isContentSimilar(const IMatrix& rSourceMatrix1, const IMatrix& rSourceMatrix2)
+bool Matrix::isContentSimilar(const IMatrix& rSourceMatrix1, const IMatrix& rSourceMatrix2)
 {
 	if (&rSourceMatrix1 == &rSourceMatrix2) { return true; }
 
 	if (rSourceMatrix1.getBufferElementCount() != rSourceMatrix2.getBufferElementCount()) { return false; }
 
-	return ::memcmp(rSourceMatrix1.getBuffer(), rSourceMatrix2.getBuffer(), rSourceMatrix1.getBufferElementCount() * sizeof(double)) == 0;
+	return memcmp(rSourceMatrix1.getBuffer(), rSourceMatrix2.getBuffer(), rSourceMatrix1.getBufferElementCount() * sizeof(double)) == 0;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::isContentValid(const IMatrix& rSourceMatrix, const bool bCheckNotANumber, const bool bCheckInfinity)
+bool Matrix::isContentValid(const IMatrix& rSourceMatrix, const bool bCheckNotANumber, const bool bCheckInfinity)
 {
 	const double* l_pBuffer    = rSourceMatrix.getBuffer();
 	const double* l_pBufferEnd = rSourceMatrix.getBuffer() + rSourceMatrix.getBufferElementCount();
@@ -134,7 +134,7 @@ const char CONSTANT_CARRIAGE_RETURN      = '\r';
 const char CONSTANT_EOL                  = '\n';
 const char CONSTANT_SPACE                = ' ';
 
-bool OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sString)
+bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 {
 	std::stringstream l_oBuffer;
 
@@ -507,7 +507,7 @@ bool OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, cons
 }
 
 // A recursive helper function to spool matrix contents to a txt stringstream.
-bool dumpMatrixBuffer(const OpenViBE::IMatrix& rMatrix, std::stringstream& buffer, uint32_t ui32DimensionIndex, uint32_t& ui32ElementIndex)
+bool dumpMatrixBuffer(const IMatrix& rMatrix, std::stringstream& buffer, uint32_t ui32DimensionIndex, uint32_t& ui32ElementIndex)
 {
 	//are we in innermost dimension?
 	if (ui32DimensionIndex == rMatrix.getDimensionCount() - 1)
@@ -554,7 +554,7 @@ bool dumpMatrixBuffer(const OpenViBE::IMatrix& rMatrix, std::stringstream& buffe
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::toString(const OpenViBE::IMatrix& rMatrix, OpenViBE::CString& sString, uint32_t ui32Precision /* = 6 */)
+bool Matrix::toString(const IMatrix& rMatrix, CString& sString, uint32_t ui32Precision /* = 6 */)
 {
 	std::stringstream l_oBuffer;
 
@@ -591,7 +591,7 @@ bool OpenViBEToolkit::Tools::Matrix::toString(const OpenViBE::IMatrix& rMatrix, 
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::loadFromTextFile(OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename)
+bool Matrix::loadFromTextFile(IMatrix& rMatrix, const CString& sFilename)
 {
 	std::ifstream m_oDataFile;
 	FS::Files::openIFStream(m_oDataFile, sFilename.toASCIIString(), std::ios_base::in);
@@ -601,14 +601,14 @@ bool OpenViBEToolkit::Tools::Matrix::loadFromTextFile(OpenViBE::IMatrix& rMatrix
 
 	l_oBuffer << m_oDataFile.rdbuf();
 
-	const bool l_bReturnValue = OpenViBEToolkit::Tools::Matrix::fromString(rMatrix, CString(l_oBuffer.str().c_str()));
+	const bool l_bReturnValue = fromString(rMatrix, CString(l_oBuffer.str().c_str()));
 
 	m_oDataFile.close();
 
 	return l_bReturnValue;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::saveToTextFile(const OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename, uint32_t ui32Precision /* = 6 */)
+bool Matrix::saveToTextFile(const IMatrix& rMatrix, const CString& sFilename, uint32_t ui32Precision /* = 6 */)
 {
 	std::ofstream m_oDataFile;
 	FS::Files::openOFStream(m_oDataFile, sFilename.toASCIIString(), std::ios_base::out | std::ios_base::trunc);
@@ -616,7 +616,7 @@ bool OpenViBEToolkit::Tools::Matrix::saveToTextFile(const OpenViBE::IMatrix& rMa
 
 	CString l_sMatrix;
 
-	if (!OpenViBEToolkit::Tools::Matrix::toString(rMatrix, l_sMatrix, ui32Precision)) { return false; }
+	if (!toString(rMatrix, l_sMatrix, ui32Precision)) { return false; }
 
 	m_oDataFile << l_sMatrix.toASCIIString();
 

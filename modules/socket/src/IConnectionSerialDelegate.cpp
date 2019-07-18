@@ -6,7 +6,7 @@ namespace Socket
 
 	IConnectionSerialDelegate::~IConnectionSerialDelegate() { }
 
-	class CConnectionSerialDelegate : public Socket::IConnectionSerialDelegate
+	class CConnectionSerialDelegate : public IConnectionSerialDelegate
 	{
 	public:
 		explicit CConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) : IConnectionSerialDelegate(oConnectionSerialDelegate)

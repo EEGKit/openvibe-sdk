@@ -41,7 +41,7 @@ namespace OpenViBE
 		 *
 		 * Copies the content of \c rString into the new string.
 		 */
-		CString(const OpenViBE::CString& rString);
+		CString(const CString& rString);
 		/**
 		 * \brief Constructor based on ASCII strings
 		 * \param pString [in] : The string to copy
@@ -72,16 +72,16 @@ namespace OpenViBE
 		 * \param rString [in] : The string to copy
 		 * \return This string.
 		 */
-		OpenViBE::CString& operator=(
-			const OpenViBE::CString& rString);
+		CString& operator=(
+			const CString& rString);
 
 		/**
 		 * \brief Addition assignment operator
 		 * \param rString [in] : The string to append
 		 * \return This string.
 		 */
-		OpenViBE::CString& operator+=(
-			const OpenViBE::CString& rString);
+		CString& operator+=(
+			const CString& rString);
 
 		/**
 		 * \brief Addition operator
@@ -89,9 +89,9 @@ namespace OpenViBE
 		 * \param rString2 [in] : The second part of the resulting string
 		 * \return The concatenation of \c rString1 and \c rString2.
 		 */
-		friend OV_API const OpenViBE::CString operator+(
-			const OpenViBE::CString& rString1,
-			const OpenViBE::CString& rString2);
+		friend OV_API const CString operator+(
+			const CString& rString1,
+			const CString& rString2);
 		/**
 		 * \brief Equality comparison operator
 		 * \param rString1 [in] : The first part of the resulting string
@@ -101,8 +101,8 @@ namespace OpenViBE
 		 * \note This is case sensitive !
 		 */
 		friend OV_API bool operator==(
-			const OpenViBE::CString& rString1,
-			const OpenViBE::CString& rString2);
+			const CString& rString1,
+			const CString& rString2);
 		/**
 		 * \brief Inequality comparison operator
 		 * \param rString1 [in] : The first part of the resulting string
@@ -112,8 +112,8 @@ namespace OpenViBE
 		 * \note This is case sensitive !
 		 */
 		friend OV_API bool operator!=(
-			const OpenViBE::CString& rString1,
-			const OpenViBE::CString& rString2);
+			const CString& rString1,
+			const CString& rString2);
 
 		/**
 		 * \brief Array subscription operator
@@ -131,8 +131,8 @@ namespace OpenViBE
 		 * \note This is case sensitive !
 		 */
 		friend OV_API bool operator<(
-			const OpenViBE::CString& rString1,
-			const OpenViBE::CString& rString2);
+			const CString& rString1,
+			const CString& rString2);
 		//@}
 
 		/**
@@ -142,7 +142,7 @@ namespace OpenViBE
 		 * \return \e false in case of error.
 		 */
 		virtual bool set(
-			const OpenViBE::CString& rString);
+			const CString& rString);
 		/**
 		 * \brief Initializes this string from an ANSI/ASCII string
 		 * \param pString [in] : the ANSI/ASCII string to initialize this string from
@@ -165,7 +165,7 @@ namespace OpenViBE
 
 	protected:
 
-		OpenViBE::CStringImpl* m_pStringImpl; ///< The string implementation
+		CStringImpl* m_pStringImpl; ///< The string implementation
 	};
 };
 

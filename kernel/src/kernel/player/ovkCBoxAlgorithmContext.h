@@ -10,16 +10,16 @@ namespace OpenViBE
 	{
 		class CSimulatedBox;
 
-		class CBoxAlgorithmContext : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxAlgorithmContext>
+		class CBoxAlgorithmContext : public TKernelObject<IBoxAlgorithmContext>
 		{
 		public:
 
-			CBoxAlgorithmContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CSimulatedBox* pSimulatedBox, const OpenViBE::Kernel::IBox* pBox);
+			CBoxAlgorithmContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox, const IBox* pBox);
 			virtual ~CBoxAlgorithmContext(void);
 
-			virtual const OpenViBE::Kernel::IBox* getStaticBoxContext(void);
-			virtual OpenViBE::Kernel::IBoxIO* getDynamicBoxContext(void);
-			virtual OpenViBE::Kernel::IPlayerContext* getPlayerContext(void);
+			virtual const IBox* getStaticBoxContext(void);
+			virtual IBoxIO* getDynamicBoxContext(void);
+			virtual IPlayerContext* getPlayerContext(void);
 
 			virtual bool markAlgorithmAsReadyToProcess(void);
 
@@ -29,11 +29,11 @@ namespace OpenViBE
 
 		protected:
 
-			const OpenViBE::Kernel::IBox* m_pStaticBoxContext;
-			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext;
+			const IBox* m_pStaticBoxContext;
+			IBoxIO* m_pDynamicBoxContext;
 			// here we prefer value type over reference/pointer
 			// in order to improve performance at runtime (no heap allocation)
-			OpenViBE::Kernel::CPlayerContext m_oPlayerContext;
+			CPlayerContext m_oPlayerContext;
 			bool m_bReadyToProcess;
 		};
 	};

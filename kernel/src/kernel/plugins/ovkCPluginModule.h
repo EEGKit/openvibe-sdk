@@ -9,32 +9,32 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CPluginModule : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPluginModule>
+		class CPluginModule : public TKernelObject<IPluginModule>
 		{
 		public:
 
-			explicit CPluginModule(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CPluginModule(const IKernelContext& rKernelContext);
 			virtual ~CPluginModule(void);
 
 			virtual bool load(
-				const OpenViBE::CString& sName,
-				OpenViBE::CString* pError);
+				const CString& sName,
+				CString* pError);
 			virtual bool unload(
-				OpenViBE::CString* pError);
+				CString* pError);
 			virtual bool getFileName(
-				OpenViBE::CString& rFileName) const;
+				CString& rFileName) const;
 
 			virtual bool initialize(void);
 			virtual bool getPluginObjectDescription(
 				uint32_t ui32Index,
-				OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription);
+				Plugins::IPluginObjectDesc*& rpPluginObjectDescription);
 			virtual bool uninitialize(void);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IPluginModule, OVK_ClassId_Kernel_Plugins_PluginModule)
 
 		protected:
 
-			OpenViBE::Kernel::IPluginModule* m_pImplementation;
+			IPluginModule* m_pImplementation;
 		};
 	};
 };

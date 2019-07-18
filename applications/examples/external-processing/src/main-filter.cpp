@@ -115,10 +115,10 @@ int main(int argc, char** argv)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-	client.pushLog(ELogLevel::LogLevel_Info, "Received Ping");
+	client.pushLog(LogLevel_Info, "Received Ping");
 
 	client.pushSync();
-	client.pushLog(ELogLevel::LogLevel_Info, "Sent Pong");
+	client.pushLog(LogLevel_Info, "Sent Pong");
 
 	// Process
 

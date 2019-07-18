@@ -55,7 +55,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CEncoderAlgorithmTest(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CEncoderAlgorithmTest(); }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{

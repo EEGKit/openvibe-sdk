@@ -27,7 +27,7 @@
 
 namespace Socket
 {
-	class CConnectionSerial : public Socket::IConnectionSerial
+	class CConnectionSerial : public IConnectionSerial
 	{
 	public:
 
@@ -52,7 +52,7 @@ namespace Socket
 
 			if (m_pFile != NULL)
 			{
-				if (!::CloseHandle(m_pFile))
+				if (!CloseHandle(m_pFile))
 				{
 					m_sLastError = "Failed to close the serial port:" + this->getLastErrorFormated();
 					m_pFile      = NULL;
@@ -109,9 +109,9 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 			struct _COMSTAT l_oStatus;
-			::DWORD l_dwState;
+			DWORD l_dwState;
 
-			if (::ClearCommError(m_pFile, &l_dwState, &l_oStatus) != 0)
+			if (ClearCommError(m_pFile, &l_dwState, &l_oStatus) != 0)
 			{
 				return l_oStatus.cbInQue != 0;
 			}
@@ -147,9 +147,9 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 			struct _COMSTAT l_oStatus;
-			::DWORD l_dwState;
+			DWORD l_dwState;
 
-			if (::ClearCommError(m_pFile, &l_dwState, &l_oStatus) == 0)
+			if (ClearCommError(m_pFile, &l_dwState, &l_oStatus) == 0)
 			{
 				m_sLastError = "Failed to clear the serial port communication error: " + this->getLastErrorFormated();
 				return 0;
@@ -213,7 +213,7 @@ namespace Socket
 #if defined TARGET_OS_Windows
 			DWORD l_dwWritten = 0;
 
-			if (!::WriteFile(m_pFile, pBuffer, ui32BufferSize, &l_dwWritten, NULL))
+			if (!WriteFile(m_pFile, pBuffer, ui32BufferSize, &l_dwWritten, NULL))
 			{
 				m_sLastError = "Failed to write on serial port: " + this->getLastErrorFormated();
 				this->close();
@@ -258,7 +258,7 @@ namespace Socket
 
 			DWORD l_dwRead = 0;
 
-			if (!::ReadFile(m_pFile, pBuffer, ui32BufferSize, &l_dwRead, NULL))
+			if (!ReadFile(m_pFile, pBuffer, ui32BufferSize, &l_dwRead, NULL))
 			{
 				m_sLastError = "Failed to read on serial port: " + this->getLastErrorFormated();
 				this->close();
@@ -369,7 +369,7 @@ namespace Socket
 
 			DCB l_oDCB = { 0 };
 
-			if (!::GetCommState(m_pFile, &l_oDCB))
+			if (!GetCommState(m_pFile, &l_oDCB))
 			{
 				m_sLastError = "Failed to get communication state: " + this->getLastErrorFormated();
 				this->close();

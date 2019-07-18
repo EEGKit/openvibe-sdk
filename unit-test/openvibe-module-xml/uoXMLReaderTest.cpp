@@ -87,7 +87,7 @@ TEST(XML_Reader_Test_Case, validateReader)
 	std::string dataFile = std::string(DATA_DIR) + "/ref_data.xml";
 
 	CReaderCallBack readerCallback;
-	XML::IReader* xmlReader = XML::createReader(readerCallback);
+	XML::IReader* xmlReader = createReader(readerCallback);
 
 	FILE* inputTestDataFile = fopen(dataFile.c_str(), "r");
 
@@ -208,7 +208,7 @@ TEST(XML_Reader_Test_Case, validateHandlerReadNBSP)
 
 int uoXMLReaderTest(int argc, char* argv[])
 {
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 
 	::testing::GTEST_FLAG(filter) = "XML_Reader_Test_Case.*";
 	return RUN_ALL_TESTS();

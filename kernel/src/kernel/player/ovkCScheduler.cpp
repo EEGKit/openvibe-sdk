@@ -35,8 +35,8 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 #include <ovp_global_defines.h>
 #define OVTK_Algorithm_ScenarioImporter_OutputParameterId_Scenario    OpenViBE::CIdentifier(0x29574C87, 0x7BA77780)
@@ -159,7 +159,7 @@ bool CScheduler::flattenScenario()
 					}
 					else if (box->hasAttribute(OVP_AttributeId_Metabox_Identifier)) // We verify that the box actually has a backend scenario
 					{
-						OpenViBE::CIdentifier metaboxId;
+						CIdentifier metaboxId;
 						metaboxId.fromString(box->getAttributeValue(OVP_AttributeId_Metabox_Identifier));
 						CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
@@ -202,7 +202,7 @@ bool CScheduler::flattenScenario()
 
 			// The box has an attribute with the metabox ID and config manager has a path to each metabox scenario
 			CString l_sMetaboxIdentifier = l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
-			OpenViBE::CIdentifier metaboxId;
+			CIdentifier metaboxId;
 			metaboxId.fromString(l_sMetaboxIdentifier);
 			CString l_sMetaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 

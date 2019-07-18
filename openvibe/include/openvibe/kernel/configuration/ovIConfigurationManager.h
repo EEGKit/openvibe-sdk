@@ -17,7 +17,7 @@ namespace OpenViBE
 		 * \ingroup Group_Configuration
 		 * \ingroup Group_Kernel
 		 */
-		class OV_API IConfigurationManager : public OpenViBE::Kernel::IKernelObject
+		class OV_API IConfigurationManager : public IKernelObject
 		{
 		public:
 
@@ -36,7 +36,7 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::createConfigurationToken
 			 */
 			virtual bool addConfigurationFromFile(
-				const OpenViBE::CString& rFileNameWildCard) = 0;
+				const CString& rFileNameWildCard) = 0;
 
 			/**
 			 * \brief Creates a new configuration token in this configuration manager
@@ -47,9 +47,9 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::releaseConfigurationToken
 			 * \sa IConfigurationManager::createConfigurationToken
 			 */
-			virtual OpenViBE::CIdentifier createConfigurationToken(
-				const OpenViBE::CString& rConfigurationTokenName,
-				const OpenViBE::CString& rConfigurationTokenValue) = 0;
+			virtual CIdentifier createConfigurationToken(
+				const CString& rConfigurationTokenName,
+				const CString& rConfigurationTokenValue) = 0;
 			/**
 			 * \brief Removes an existing configuration token
 			 * \param rConfigurationTokenIdentifier [in] : the identifier of the token to remove
@@ -59,7 +59,7 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::createConfigurationToken
 			 */
 			virtual bool releaseConfigurationToken(
-				const OpenViBE::CIdentifier& rConfigurationTokenIdentifier) = 0;
+				const CIdentifier& rConfigurationTokenIdentifier) = 0;
 			/**
 			 * \brief Iterates on the existing configuration tokens of this configuration manager
 			 * \param rPreviousConfigurationTokenIdentifier [in] : the identifier of the token to start the iteration from
@@ -75,8 +75,8 @@ namespace OpenViBE
 			 * }
 			 * \endcode
 			 */
-			virtual OpenViBE::CIdentifier getNextConfigurationTokenIdentifier(
-				const OpenViBE::CIdentifier& rPreviousConfigurationTokenIdentifier) const = 0;
+			virtual CIdentifier getNextConfigurationTokenIdentifier(
+				const CIdentifier& rPreviousConfigurationTokenIdentifier) const = 0;
 
 			/**
 			 * \brief Gets a token's name from its identifier
@@ -85,8 +85,8 @@ namespace OpenViBE
 			 * \return an empty string in case of error
 			 * \sa IConfigurationManager::getConfigurationTokenValue
 			 */
-			virtual OpenViBE::CString getConfigurationTokenName(
-				const OpenViBE::CIdentifier& rConfigurationTokenIdentifier) const = 0;
+			virtual CString getConfigurationTokenName(
+				const CIdentifier& rConfigurationTokenIdentifier) const = 0;
 			/**
 			 * \brief Gets a token's value from its identifier
 			 * \param rConfigurationTokenIdentifier [in] : the token identifier which value should be returned
@@ -98,8 +98,8 @@ namespace OpenViBE
 			 *       value that was passed at creation time is returned. If you want to expand
 			 *       things, please use IConfigurationManager::expand
 			 */
-			virtual OpenViBE::CString getConfigurationTokenValue(
-				const OpenViBE::CIdentifier& rConfigurationTokenIdentifier) const = 0;
+			virtual CString getConfigurationTokenValue(
+				const CIdentifier& rConfigurationTokenIdentifier) const = 0;
 
 			/**
 			 * \brief Changes the name of an exisiting token
@@ -113,8 +113,8 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::setConfigurationTokenValue
 			 */
 			virtual bool setConfigurationTokenName(
-				const OpenViBE::CIdentifier& rConfigurationTokenIdentifier,
-				const OpenViBE::CString& rConfigurationTokenName) = 0;
+				const CIdentifier& rConfigurationTokenIdentifier,
+				const CString& rConfigurationTokenName) = 0;
 			/**
 			 * \brief Changes the value of an exisiting token
 			 * \param rConfigurationTokenIdentifier [in] : the identifier of the token which value should be changed
@@ -127,8 +127,8 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::setConfigurationTokenName
 			 */
 			virtual bool setConfigurationTokenValue(
-				const OpenViBE::CIdentifier& rConfigurationTokenIdentifier,
-				const OpenViBE::CString& rConfigurationTokenValue) = 0;
+				const CIdentifier& rConfigurationTokenIdentifier,
+				const CString& rConfigurationTokenValue) = 0;
 
 			/**
 			 * \brief Adds a token or replaces the value of a token.
@@ -143,8 +143,8 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::setConfigurationTokenName
 			 */
 			virtual bool addOrReplaceConfigurationToken(
-				const OpenViBE::CString& rConfigurationTokenName,
-				const OpenViBE::CString& rConfigurationTokenValue) = 0;
+				const CString& rConfigurationTokenName,
+				const CString& rConfigurationTokenValue) = 0;
 
 			/**
 			 * \brief Searches the identifier of a token with a given name
@@ -159,8 +159,8 @@ namespace OpenViBE
 			 *       the returned identifier as a kind of boolean value : such token actually exists or such
 			 *       token does not exist.
 			 */
-			virtual OpenViBE::CIdentifier lookUpConfigurationTokenIdentifier(
-				const OpenViBE::CString& rConfigurationTokenName,
+			virtual CIdentifier lookUpConfigurationTokenIdentifier(
+				const CString& rConfigurationTokenName,
 				const bool bRecursive = false) const = 0;
 			/**
 			 * \brief Searches the value of a token with a given name
@@ -171,8 +171,8 @@ namespace OpenViBE
 			 *       finds one (if any). It also differs from the \c expand function in the sense that
 			 *       it takes a token name as input but does not expand its value when it finds it.
 			 */
-			virtual OpenViBE::CString lookUpConfigurationTokenValue(
-				const OpenViBE::CString& rConfigurationTokenName) const = 0;
+			virtual CString lookUpConfigurationTokenValue(
+				const CString& rConfigurationTokenName) const = 0;
 
 
 			/**
@@ -185,7 +185,7 @@ namespace OpenViBE
 			  *       callback;
 			  */
 			virtual bool registerKeywordParser(
-				const OpenViBE::CString& rKeyword,
+				const CString& rKeyword,
 				const IConfigurationKeywordExpandCallback& rCallback) = 0;
 
 			/**
@@ -194,7 +194,7 @@ namespace OpenViBE
 			  * \return true in case of success
 			  */
 			virtual bool unregisterKeywordParser(
-				const OpenViBE::CString& rKeyword) = 0;
+				const CString& rKeyword) = 0;
 
 			/**
 			  * \brief Removes the keyword parser for a given keyword
@@ -219,14 +219,14 @@ namespace OpenViBE
 			 * l_pConfigurationManager->expand("${TokenName}")
 			 * \endcode
 			 */
-			virtual OpenViBE::CString expand(
-				const OpenViBE::CString& rExpression) const = 0;
+			virtual CString expand(
+				const CString& rExpression) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Configuration_ConfigurationManager);
 
-			virtual OpenViBE::CString expandOnlyKeyword(
-				const OpenViBE::CString& rKeyword,
-				const OpenViBE::CString& rExpression,
+			virtual CString expandOnlyKeyword(
+				const CString& rKeyword,
+				const CString& rExpression,
 				bool preserveBackslashes = false) const = 0;
 			/**
 			 * \brief Expands a string to a floating point value based on its use of configuration tokens
@@ -237,7 +237,7 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::expand
 			 */
 			virtual double expandAsFloat(
-				const OpenViBE::CString& rExpression,
+				const CString& rExpression,
 				const double f64FallbackValue = 0) const = 0;
 			/**
 			 * \brief Expands a string to an integer value based on its use of configuration tokens
@@ -248,7 +248,7 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::expand
 			 */
 			virtual int64_t expandAsInteger(
-				const OpenViBE::CString& rExpression,
+				const CString& rExpression,
 				const int64_t i64FallbackValue = 0) const = 0;
 			/**
 			 * \brief Expands a string to an unsigned integer value based on its use of configuration tokens
@@ -259,7 +259,7 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::expand
 			 */
 			virtual uint64_t expandAsUInteger(
-				const OpenViBE::CString& rExpression,
+				const CString& rExpression,
 				const uint64_t ui64FallbackValue = 0) const = 0;
 			/**
 			 * \brief Expands a string to a boolean value based on its use of configuration tokens
@@ -270,7 +270,7 @@ namespace OpenViBE
 			 * \sa IConfigurationManager::expand
 			 */
 			virtual bool expandAsBoolean(
-				const OpenViBE::CString& rExpression,
+				const CString& rExpression,
 				const bool bFallbackValue = true) const = 0;
 			/**
 			 * \brief Expands a string to an enumeration entry value based on its use of configuration tokens
@@ -283,8 +283,8 @@ namespace OpenViBE
 			 * \sa ITypeManager
 			 */
 			virtual uint64_t expandAsEnumerationEntryValue(
-				const OpenViBE::CString& rExpression,
-				const OpenViBE::CIdentifier& rEnumerationTypeIdentifier,
+				const CString& rExpression,
+				const CIdentifier& rEnumerationTypeIdentifier,
 				const uint64_t ui64FallbackValue = 0) const = 0;
 		};
 	};

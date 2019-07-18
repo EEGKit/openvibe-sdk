@@ -5,21 +5,21 @@
 
 namespace EBML
 {
-	class EBML_API CWriter : public EBML::IWriter
+	class EBML_API CWriter : public IWriter
 	{
 	public:
 
-		explicit CWriter(EBML::IWriterCallback& rWriterCallback);
+		explicit CWriter(IWriterCallback& rWriterCallback);
 		virtual ~CWriter(void);
 
-		virtual bool openChild(const EBML::CIdentifier& rIdentifier);
+		virtual bool openChild(const CIdentifier& rIdentifier);
 		virtual bool setChildData(const void* pBuffer, const uint64_t ui64BufferSize);
 		virtual bool closeChild(void);
 		virtual void release(void);
 
 	protected:
 
-		EBML::IWriter* m_pWriterImplementation;
+		IWriter* m_pWriterImplementation;
 
 	private:
 

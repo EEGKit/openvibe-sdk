@@ -42,7 +42,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CString m_sSeparator;
 			OpenViBE::CIdentifier m_oTypeIdentifier;
 			bool m_bFirstBuffer;
-			bool (OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileWriter::*m_fpRealProcess)(void);
+			bool (CBoxAlgorithmCSVFileWriter::*m_fpRealProcess)(void);
 
 			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_pStreamDecoder;
 			OpenViBE::CMatrix m_oMatrix;		// This represents the properties of the input, no data
@@ -77,7 +77,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_CSVFileWriter; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileWriter; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmCSVFileWriter; }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmCSVFileWriterListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 

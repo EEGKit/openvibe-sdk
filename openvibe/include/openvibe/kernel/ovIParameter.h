@@ -27,7 +27,7 @@ namespace OpenViBE
 		 * the use of the TParameterHandler object which dramatically eases the use
 		 * of the IParameter interface.
 		 */
-		class OV_API IParameter : public OpenViBE::Kernel::IKernelObject
+		class OV_API IParameter : public IKernelObject
 		{
 		public:
 
@@ -43,12 +43,12 @@ namespace OpenViBE
 			 * \brief Gets the type of this parameter's content
 			 * \return the type of this parameter's content.
 			 */
-			virtual OpenViBE::Kernel::EParameterType getType(void) const { return ParameterType_None; }
+			virtual EParameterType getType(void) const { return ParameterType_None; }
 			/**
 			 * \brief Gets the sub type of this parameter's content (e.g. for enumeration)
 			 * \return the sub type of this parameter's content (e.g. for enumeration).
 			 */
-			virtual OpenViBE::CIdentifier getSubTypeIdentifier(void) const { return OV_UndefinedIdentifier; }
+			virtual CIdentifier getSubTypeIdentifier(void) const { return OV_UndefinedIdentifier; }
 
 			//@}
 			/** \name Reinitialization */
@@ -74,7 +74,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool getReferenceTarget(
-				OpenViBE::Kernel::IParameter*& value) const { return false; }
+				IParameter*& value) const { return false; }
 			/**
 			 * \brief Sets the parameter reference target for this parameter
 			 * \param value [in] : the new reference target to use
@@ -89,7 +89,7 @@ namespace OpenViBE
 			 * cleared.
 			 */
 			virtual bool setReferenceTarget(
-				OpenViBE::Kernel::IParameter* value) { return false; }
+				IParameter* value) { return false; }
 			/**
 			 * \brief Gets the value reference target
 			 * \param value [out] : a pointer to the value target parameter if existing, \c NULL if not

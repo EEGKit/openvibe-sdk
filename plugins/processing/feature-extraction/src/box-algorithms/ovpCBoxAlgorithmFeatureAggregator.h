@@ -116,7 +116,7 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_FeatureAggregator; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::FeatureExtraction::CBoxAlgorithmFeatureAggregator(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmFeatureAggregator(); }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmFeatureAggregatorListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 

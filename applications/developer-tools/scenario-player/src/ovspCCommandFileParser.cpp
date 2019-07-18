@@ -105,7 +105,7 @@ namespace OpenViBE
 
 		std::string lowerStr;
 		lowerStr.reserve(str.size());
-		std::transform(str.begin(), str.end(), lowerStr.begin(), ::tolower);
+		std::transform(str.begin(), str.end(), lowerStr.begin(), tolower);
 
 		bool result;
 		if (str == "false" || str == "0")

@@ -9,10 +9,10 @@
 #include <iomanip>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 
 using namespace OpenViBEToolkit;
 
@@ -38,21 +38,21 @@ namespace SigProSTD
 
 	double wavelet_scale2period(char* pWaveletType, double dWaveletParameter, double dScale)
 	{
-		double l_FourierFactor = SigProSTD::wavelet_FourierFactor(pWaveletType, dWaveletParameter);
+		double l_FourierFactor = wavelet_FourierFactor(pWaveletType, dWaveletParameter);
 
 		return l_FourierFactor * dScale;
 	}
 
 	double wavelet_scale2freq(char* pWaveletType, double dWaveletParameter, double dScale)
 	{
-		double l_FourierFactor = SigProSTD::wavelet_FourierFactor(pWaveletType, dWaveletParameter);
+		double l_FourierFactor = wavelet_FourierFactor(pWaveletType, dWaveletParameter);
 
 		return 1.0 / (l_FourierFactor * dScale);
 	}
 
 	double wavelet_freq2scale(char* pWaveletType, double dWaveletParameter, double dFrequency)
 	{
-		double l_FourierFactor = SigProSTD::wavelet_FourierFactor(pWaveletType, dWaveletParameter);
+		double l_FourierFactor = wavelet_FourierFactor(pWaveletType, dWaveletParameter);
 
 		return 1.0 / (l_FourierFactor * dFrequency);
 	}

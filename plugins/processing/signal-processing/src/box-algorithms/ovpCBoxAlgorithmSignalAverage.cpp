@@ -5,9 +5,9 @@
 #include <sstream>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Plugins;
+using namespace Plugins;
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 using namespace OpenViBEToolkit;
 using namespace std;
 

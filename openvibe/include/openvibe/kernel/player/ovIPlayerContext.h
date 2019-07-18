@@ -30,7 +30,7 @@ namespace OpenViBE
 		 * so they can communicate with the platform kernel,
 		 * providing services such as message sending etc...
 		 */
-		class OV_API IPlayerContext : public OpenViBE::Kernel::IKernelObject
+		class OV_API IPlayerContext : public IKernelObject
 		{
 		public:
 
@@ -43,7 +43,7 @@ namespace OpenViBE
 			* \return \e true in case of success, \e false in other cases.
 			*/
 			virtual bool sendSignal(
-				const OpenViBE::Kernel::IMessageSignal& rMessageSignal) = 0;
+				const IMessageSignal& rMessageSignal) = 0;
 			/**
 			* \brief Sends a message to another box
 			* \param rMessageEvent [in] : the message to send to the other box
@@ -51,8 +51,8 @@ namespace OpenViBE
 			* \return \e true in case of success, \e false in other cases.
 			*/
 			virtual bool sendMessage(
-				const OpenViBE::Kernel::IMessageEvent& rMessageEvent,
-				const OpenViBE::CIdentifier& rTargetIdentifier) = 0;
+				const IMessageEvent& rMessageEvent,
+				const CIdentifier& rTargetIdentifier) = 0;
 			/**
 			* \brief Broadcasts a message to several other boxes
 			* \param rMessageEvent [in] : the message to send
@@ -63,8 +63,8 @@ namespace OpenViBE
 			* \return \e true in case of success, \e false in other cases.
 			*/
 			virtual bool sendMessage(
-				const OpenViBE::Kernel::IMessageEvent& rMessageEvent,
-				const OpenViBE::CIdentifier* pTargetIdentifier,
+				const IMessageEvent& rMessageEvent,
+				const CIdentifier* pTargetIdentifier,
 				const uint32_t ui32TargetIdentifierCount) = 0;
 
 			//}@
@@ -128,7 +128,7 @@ namespace OpenViBE
 			 * \brief Gets current player status
 			 * \return current player status
 			 */
-			virtual OpenViBE::Kernel::EPlayerStatus getStatus(void) const = 0;
+			virtual EPlayerStatus getStatus(void) const = 0;
 
 			//@}
 			/** \name Give access to some managers */
@@ -141,7 +141,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const = 0;
+			virtual IConfigurationManager& getConfigurationManager(void) const = 0;
 			/**
 			 * \brief Gets the current player's algorithm manager
 			 * \return The current player's algorithm manager
@@ -149,7 +149,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const = 0;
+			virtual IAlgorithmManager& getAlgorithmManager(void) const = 0;
 			/**
 			 * \brief Gets the current player's log manager
 			 * \return The current player's log manager
@@ -157,7 +157,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const = 0;
+			virtual ILogManager& getLogManager(void) const = 0;
 			/**
 			 * \brief Gets the current player's error manager
 			 * \return The current player's error manager
@@ -165,7 +165,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const = 0;
+			virtual IErrorManager& getErrorManager(void) const = 0;
 
 			/**
 			 * \brief Gets the current player's scenario manager
@@ -174,7 +174,7 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const = 0;
+			virtual IScenarioManager& getScenarioManager(void) const = 0;
 			/**
 			 * \brief Gets the current player's type manager
 			 * \return The current player's type manager
@@ -182,11 +182,11 @@ namespace OpenViBE
 			 * \warning The plugin object should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const = 0;
+			virtual ITypeManager& getTypeManager(void) const = 0;
 
-			virtual bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const = 0;
-			virtual OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const = 0;
-			virtual bool releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject) const = 0;
+			virtual bool canCreatePluginObject(const CIdentifier& pluginIdentifier) const = 0;
+			virtual Plugins::IPluginObject* createPluginObject(const CIdentifier& pluginIdentifier) const = 0;
+			virtual bool releasePluginObject(Plugins::IPluginObject* pluginObject) const = 0;
 
 			//@}
 

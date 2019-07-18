@@ -22,9 +22,9 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Kernel;
+using namespace Plugins;
 
 void CBoxSettingModifierVisitor::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
 {
@@ -87,7 +87,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 		rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Trying to override [" << rBox.getName() << "] box settings with file [" << l_sSettingOverrideFilename << " which expands to " << l_sSettingOverrideFilenameFinal << "] !\n";
 
 		// creates XML reader
-		XML::IReader* l_pReader = XML::createReader(*this);
+		XML::IReader* l_pReader = createReader(*this);
 
 		// adds new box settings
 		m_pBox                      = &rBox;
@@ -148,7 +148,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 					l_sSettingValue         = m_pConfigurationManager->expand(l_sSettingValue);
 					CIdentifier settingType;
 					rBox.getSettingType(i, settingType);
-					if (!::checkSettingValue(l_sSettingValue, settingType, rObjectVisitorContext.getTypeManager()))
+					if (!checkSettingValue(l_sSettingValue, settingType, rObjectVisitorContext.getTypeManager()))
 					{
 						auto settingTypeName = rObjectVisitorContext.getTypeManager().getTypeName(settingType);
 						cleanup();

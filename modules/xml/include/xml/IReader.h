@@ -25,7 +25,7 @@ namespace XML
 		virtual ~IReader(void) { }
 	};
 
-	extern XML_API XML::IReader* createReader(XML::IReaderCallback& rReaderCallback);
+	extern XML_API IReader* createReader(IReaderCallback& rReaderCallback);
 };
 
 #endif // __XML_IReader_H__

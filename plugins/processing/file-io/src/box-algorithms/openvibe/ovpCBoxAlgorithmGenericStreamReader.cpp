@@ -5,11 +5,11 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::FileIO;
+using namespace FileIO;
 
 CBoxAlgorithmGenericStreamReader::CBoxAlgorithmGenericStreamReader(void)
 	: m_oReader(*this)
@@ -37,7 +37,7 @@ bool CBoxAlgorithmGenericStreamReader::uninitialize(void)
 {
 	if (m_pFile)
 	{
-		::fclose(m_pFile);
+		fclose(m_pFile);
 		m_pFile = NULL;
 	}
 
@@ -76,7 +76,7 @@ bool CBoxAlgorithmGenericStreamReader::process(void)
 	uint64_t l_ui64Time   = this->getPlayerContext().getCurrentTime();
 	bool l_bFinished = false;
 
-	while (!l_bFinished && (!::feof(m_pFile) || m_bPending))
+	while (!l_bFinished && (!feof(m_pFile) || m_bPending))
 	{
 		if (m_bPending)
 		{
@@ -100,10 +100,10 @@ bool CBoxAlgorithmGenericStreamReader::process(void)
 		else
 		{
 			bool l_bJustStarted = true;
-			while (!::feof(m_pFile) && m_oReader.getCurrentNodeIdentifier() == EBML::CIdentifier())
+			while (!feof(m_pFile) && m_oReader.getCurrentNodeIdentifier() == EBML::CIdentifier())
 			{
 				uint8_t l_ui8Byte;
-				size_t s = ::fread(&l_ui8Byte, sizeof(uint8_t), 1, m_pFile);
+				size_t s = fread(&l_ui8Byte, sizeof(uint8_t), 1, m_pFile);
 
 				OV_ERROR_UNLESS_KRF(
 					s == 1 || l_bJustStarted,
@@ -114,10 +114,10 @@ bool CBoxAlgorithmGenericStreamReader::process(void)
 				m_oReader.processData(&l_ui8Byte, sizeof(l_ui8Byte));
 				l_bJustStarted = false;
 			}
-			if (!::feof(m_pFile) && m_oReader.getCurrentNodeSize() != 0)
+			if (!feof(m_pFile) && m_oReader.getCurrentNodeSize() != 0)
 			{
 				m_oSwap.setSize(m_oReader.getCurrentNodeSize(), true);
-				size_t s = (size_t)::fread(m_oSwap.getDirectPointer(), sizeof(uint8_t), (size_t)m_oSwap.getSize(), m_pFile);
+				size_t s = (size_t)fread(m_oSwap.getDirectPointer(), sizeof(uint8_t), (size_t)m_oSwap.getSize(), m_pFile);
 
 				OV_ERROR_UNLESS_KRF(
 					s == m_oSwap.getSize(),

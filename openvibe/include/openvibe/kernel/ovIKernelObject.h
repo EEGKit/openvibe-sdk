@@ -14,7 +14,7 @@ namespace OpenViBE
 		 * \date 2006-09-26
 		 * \ingroup Group_Kernel
 		 */
-		class OV_API IKernelObject : public OpenViBE::IObject
+		class OV_API IKernelObject : public IObject
 		{
 		public:
 

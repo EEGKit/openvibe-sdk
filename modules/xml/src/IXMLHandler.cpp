@@ -17,8 +17,8 @@ namespace XML
 		IXMLHandlerImpl();
 
 		//Parsing
-		virtual XML::IXMLNode* parseFile(const char* sPath);
-		virtual XML::IXMLNode* parseString(const char* sString, const uint32_t& uiSize);
+		virtual IXMLNode* parseFile(const char* sPath);
+		virtual IXMLNode* parseString(const char* sString, const uint32_t& uiSize);
 
 		//XML extraction
 		virtual bool writeXMLInFile(const IXMLNode& rNode, const char* sPath) const;
@@ -37,9 +37,9 @@ namespace XML
 		virtual ~IXMLHandlerImpl();
 
 	private:
-		::XML_Parser m_pXMLParser;
-		std::stack<XML::IXMLNode *> m_oNodeStack;
-		XML::IXMLNode* m_pRootNode;
+		XML_Parser m_pXMLParser;
+		std::stack<IXMLNode *> m_oNodeStack;
+		IXMLNode* m_pRootNode;
 		mutable std::stringstream m_ssErrorStringStream;
 	};
 
@@ -138,7 +138,7 @@ bool IXMLHandlerImpl::writeXMLInFile(const IXMLNode& rNode, const char* sPath) c
 	if (l_oFile.is_open())
 	{
 		char* l_sXML = rNode.getXML();
-		l_oFile.write(l_sXML, ::strlen(l_sXML));
+		l_oFile.write(l_sXML, strlen(l_sXML));
 		l_oFile.close();
 		free(l_sXML);
 		return true;

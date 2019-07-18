@@ -38,7 +38,7 @@ namespace EBML
 		 * return \e true when the node should have children, and
 		 * \e false in other cases.
 		 */
-		virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier) = 0;
+		virtual bool isMasterChild(const CIdentifier& rIdentifier) = 0;
 		/**
 		 * \brief Informs the callback object a new node parsing is starting
 		 * \param rIdentifier [in] : The idenfier of the newly parsing node
@@ -50,7 +50,7 @@ namespace EBML
 		 * a master one, whher a processData if this node is a
 		 * simple child one.
 		 */
-		virtual void openChild(const EBML::CIdentifier& rIdentifier) = 0;
+		virtual void openChild(const CIdentifier& rIdentifier) = 0;
 		/**
 		 * \brief Gives the callback object the data associated with the currently opened child node
 		 * \param pBuffer [in] : The buffer corresponding to the current simple child node
@@ -124,7 +124,7 @@ namespace EBML
 		 * \brief Gets the identifier of the current node
 		 * \return the identifier of the current node
 		 */
-		virtual EBML::CIdentifier getCurrentNodeIdentifier(void) const = 0;
+		virtual CIdentifier getCurrentNodeIdentifier(void) const = 0;
 		/**
 		 * \brief Gets the size of the current node
 		 * \return the size of the current node
@@ -160,7 +160,7 @@ namespace EBML
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API EBML::IReader* createReader(EBML::IReaderCallback& rReaderCallback);
+	extern EBML_API IReader* createReader(IReaderCallback& rReaderCallback);
 };
 
 #endif // __EBML_IReader_H__

@@ -15,34 +15,34 @@ namespace OpenViBE
 	{
 		class CScenario;
 
-		class CComment : public OpenViBE::Kernel::TAttributable<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IComment>>
+		class CComment : public TAttributable<TKernelObject<IComment>>
 		{
 		public:
 
-			CComment(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CScenario& rOwnerScenario);
+			CComment(const IKernelContext& rKernelContext, CScenario& rOwnerScenario);
 			virtual ~CComment(void);
 
-			virtual OpenViBE::CIdentifier getIdentifier(void) const;
-			virtual OpenViBE::CString getText(void) const;
+			virtual CIdentifier getIdentifier(void) const;
+			virtual CString getText(void) const;
 			virtual bool setIdentifier(
-				const OpenViBE::CIdentifier& rIdentifier);
+				const CIdentifier& rIdentifier);
 			virtual bool setText(
-				const OpenViBE::CString& sText);
+				const CString& sText);
 
 			virtual bool initializeFromExistingComment(
-				const OpenViBE::Kernel::IComment& rExisitingComment);
+				const IComment& rExisitingComment);
 
 			virtual bool acceptVisitor(
-				OpenViBE::IObjectVisitor& rObjectVisitor);
+				IObjectVisitor& rObjectVisitor);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IComment > >, OVK_ClassId_Kernel_Scenario_Comment)
 
 		protected:
 
-			OpenViBE::Kernel::CScenario& m_rOwnerScenario;
+			CScenario& m_rOwnerScenario;
 
-			OpenViBE::CIdentifier m_oIdentifier;
-			OpenViBE::CString m_sText;
+			CIdentifier m_oIdentifier;
+			CString m_sText;
 		};
 	};
 };

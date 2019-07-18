@@ -18,7 +18,7 @@ namespace OpenViBE
 	 *
 	 * OpenViBE provides an standalone implementation of this interface in OpenViBE::CMemoryBuffer
 	 */
-	class OV_API IMemoryBuffer : public OpenViBE::IObject
+	class OV_API IMemoryBuffer : public IObject
 	{
 	public:
 
@@ -86,7 +86,7 @@ namespace OpenViBE
 		 * \return \e false in case of error.
 		 */
 		virtual bool append(
-			const OpenViBE::IMemoryBuffer& rMemoryBuffer)
+			const IMemoryBuffer& rMemoryBuffer)
 		{
 			return this->append(rMemoryBuffer.getDirectPointer(), rMemoryBuffer.getSize());
 		}

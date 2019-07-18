@@ -10,20 +10,20 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CLogListenerConsole : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>
+		class CLogListenerConsole : public TKernelObject<ILogListener>
 		{
 		public:
 
-			CLogListenerConsole(const OpenViBE::Kernel::IKernelContext& rKernelContext, const CString& sApplicationName);
+			CLogListenerConsole(const IKernelContext& rKernelContext, const CString& sApplicationName);
 
-			virtual bool isActive(OpenViBE::Kernel::ELogLevel eLogLevel);
-			virtual bool activate(OpenViBE::Kernel::ELogLevel eLogLevel, bool bActive);
-			virtual bool activate(OpenViBE::Kernel::ELogLevel eStartLogLevel, OpenViBE::Kernel::ELogLevel eEndLogLevel, bool bActive);
+			virtual bool isActive(ELogLevel eLogLevel);
+			virtual bool activate(ELogLevel eLogLevel, bool bActive);
+			virtual bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive);
 			virtual bool activate(bool bActive);
 
-			void configure(const OpenViBE::Kernel::IConfigurationManager& rConfigurationManager);
+			void configure(const IConfigurationManager& rConfigurationManager);
 
-			virtual void log(const OpenViBE::time64 time64Value);
+			virtual void log(const time64 time64Value);
 
 			virtual void log(const uint64_t ui64Value);
 			virtual void log(const uint32_t ui32Value);
@@ -40,12 +40,12 @@ namespace OpenViBE
 
 			virtual void log(const bool bValue);
 
-			virtual void log(const OpenViBE::CIdentifier& rValue);
-			virtual void log(const OpenViBE::CString& rValue);
+			virtual void log(const CIdentifier& rValue);
+			virtual void log(const CString& rValue);
 			virtual void log(const char* pValue);
 
-			virtual void log(const OpenViBE::Kernel::ELogLevel eLogLevel);
-			virtual void log(const OpenViBE::Kernel::ELogColor eLogColor);
+			virtual void log(const ELogLevel eLogLevel);
+			virtual void log(const ELogColor eLogColor);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>, OVK_ClassId_Kernel_Log_LogListenerConsole);
 
@@ -55,10 +55,10 @@ namespace OpenViBE
 
 		protected:
 
-			std::map<OpenViBE::Kernel::ELogLevel, bool> m_vActiveLevel;
-			std::stack<OpenViBE::Kernel::ELogColor> m_vLogColor;
-			OpenViBE::Kernel::ELogColor m_eLogColor;
-			OpenViBE::CString m_sApplicationName;
+			std::map<ELogLevel, bool> m_vActiveLevel;
+			std::stack<ELogColor> m_vLogColor;
+			ELogColor m_eLogColor;
+			CString m_sApplicationName;
 
 			bool m_bLogWithHexa;
 			bool m_bTimeInSeconds;

@@ -156,7 +156,7 @@ namespace Dsp
 							 m_digitalProto,
 							 m_analogProto);
 
-			Cascade::setLayout(m_digitalProto);
+			setLayout(m_digitalProto);
 		}
 
 		void HighPassBase::setup(int order,
@@ -170,7 +170,7 @@ namespace Dsp
 							  m_digitalProto,
 							  m_analogProto);
 
-			Cascade::setLayout(m_digitalProto);
+			setLayout(m_digitalProto);
 		}
 
 		void BandPassBase::setup(int order,
@@ -186,7 +186,7 @@ namespace Dsp
 							  m_digitalProto,
 							  m_analogProto);
 
-			Cascade::setLayout(m_digitalProto);
+			setLayout(m_digitalProto);
 		}
 
 		void BandStopBase::setup(int order,
@@ -202,7 +202,7 @@ namespace Dsp
 							  m_digitalProto,
 							  m_analogProto);
 
-			Cascade::setLayout(m_digitalProto);
+			setLayout(m_digitalProto);
 		}
 
 		void LowShelfBase::setup(int order,
@@ -217,7 +217,7 @@ namespace Dsp
 							 m_digitalProto,
 							 m_analogProto);
 
-			Cascade::setLayout(m_digitalProto);
+			setLayout(m_digitalProto);
 		}
 	}
 }

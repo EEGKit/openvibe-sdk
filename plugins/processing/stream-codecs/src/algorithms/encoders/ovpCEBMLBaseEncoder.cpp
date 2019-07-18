@@ -3,11 +3,11 @@
 #include <system/ovCMemory.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::StreamCodecs;
+using namespace StreamCodecs;
 
 CEBMLBaseEncoder::CEBMLBaseEncoder(void): m_pEBMLWriterHelper(NULL), m_pEBMLWriter(NULL), m_oEBMLWriterCallbackProxy(*this, &CEBMLBaseEncoder::write) {}
 
@@ -18,7 +18,7 @@ bool CEBMLBaseEncoder::initialize(void)
 {
 	op_pMemoryBuffer.initialize(getOutputParameter(OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
-	m_pEBMLWriter       = EBML::createWriter(m_oEBMLWriterCallbackProxy);
+	m_pEBMLWriter       = createWriter(m_oEBMLWriterCallbackProxy);
 	m_pEBMLWriterHelper = EBML::createWriterHelper();
 	m_pEBMLWriterHelper->connect(m_pEBMLWriter);
 

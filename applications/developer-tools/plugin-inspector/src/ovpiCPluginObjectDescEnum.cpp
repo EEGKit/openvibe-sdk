@@ -1,8 +1,8 @@
 #include "ovpiCPluginObjectDescEnum.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 using namespace std;
 
 CPluginObjectDescEnum::CPluginObjectDescEnum(const IKernelContext& rKernelContext)

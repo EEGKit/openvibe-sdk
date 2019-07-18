@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 				std::vector<std::pair<double, uint64_t>> m_vScore;
 			} SInput;
 
-			std::map<uint32_t, CBoxAlgorithmVotingClassifier::SInput> m_vClassificationResults;
+			std::map<uint32_t, SInput> m_vClassificationResults;
 
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_oClassificationChoiceEncoder;
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IStimulationSet*> ip_pClassificationChoiceStimulationSet;
@@ -122,7 +122,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_VotingClassifier; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CBoxAlgorithmVotingClassifier; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmVotingClassifier; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{

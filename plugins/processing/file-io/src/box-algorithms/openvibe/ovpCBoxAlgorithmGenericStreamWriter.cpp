@@ -3,11 +3,11 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::FileIO;
+using namespace FileIO;
 
 CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter(void)
 	: m_bIsHeaderGenerate(false)

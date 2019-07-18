@@ -15,7 +15,7 @@ namespace OpenViBE
 		 * \ingroup Group_Player
 		 * \ingroup Group_Kernel
 		 */
-		class OV_API IMessageEvent : public OpenViBE::Kernel::IMessage
+		class OV_API IMessageEvent : public IMessage
 		{
 		public:
 

@@ -6,11 +6,11 @@
 #include <cstring>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Classification;
+using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
@@ -48,7 +48,7 @@ bool CAlgorithmClassifierNULL::train(const IFeatureVectorSet& rFeatureVectorSet)
 
 bool CAlgorithmClassifierNULL::classify(const IFeatureVector& rFeatureVector, double& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
 {
-	rf64Class = 1 + (::rand() % 3);
+	rf64Class = 1 + (rand() % 3);
 
 	rClassificationValues.setSize(1);
 	rProbabilityValue.setSize(1);

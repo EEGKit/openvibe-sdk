@@ -22,7 +22,7 @@ namespace OpenViBE
 		 * \ingroup Group_Kernel
 		 * \ingroup Group_Extend
 		 */
-		class OV_API IPluginModuleContext : public OpenViBE::Kernel::IKernelObject
+		class OV_API IPluginModuleContext : public IKernelObject
 		{
 		public:
 
@@ -30,27 +30,27 @@ namespace OpenViBE
 			 * \brief Gets the current scenario manager
 			 * \return a reference on the current scenario manager
 			 */
-			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const = 0;
+			virtual IScenarioManager& getScenarioManager(void) const = 0;
 			/**
 			 * \brief Gets the current type manager
 			 * \return a reference on the current type manager
 			 */
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const = 0;
+			virtual ITypeManager& getTypeManager(void) const = 0;
 			/**
 			 * \brief Gets the current log manager
 			 * \return a reference on the current log manager
 			 */
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const = 0;
+			virtual ILogManager& getLogManager(void) const = 0;
 			/**
 			 * \brief Gets the current error manager
 			 * \return a reference on the current error manager
 			 */
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const = 0;
+			virtual IErrorManager& getErrorManager(void) const = 0;
 			/**
 			 * \brief Gets the current configuration manager
 			 * \return a reference on the current configuration manager
 			 */
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const = 0;
+			virtual IConfigurationManager& getConfigurationManager(void) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginModuleContext)
 		};

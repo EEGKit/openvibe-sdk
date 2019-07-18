@@ -43,7 +43,7 @@ namespace OpenViBEPlugins
 		protected:
 			bool initializeFile();
 
-			::FILE* m_pFile;
+			FILE* m_pFile;
 			std::string m_sSeparator;
 			bool m_bDoNotUseFileTime;
 			OpenViBE::CString m_sFilename;
@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 			uint32_t m_ui32SamplesPerBuffer;
 			uint32_t m_ui32ChannelNumberPerBuffer;
 
-			bool (OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileReader::*m_fpRealProcess)(void);
+			bool (CBoxAlgorithmCSVFileReader::*m_fpRealProcess)(void);
 
 			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_pAlgorithmEncoder;
 
@@ -139,7 +139,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_CSVFileReader; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileReader; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmCSVFileReader; }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmCSVFileReaderListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 

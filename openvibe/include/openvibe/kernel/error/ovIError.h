@@ -42,7 +42,7 @@ namespace OpenViBE
 		 * of rethrowing it directy unchanged. In this case, we say
 		 * the level n-1 error is nested into the level n error.
 		 */
-		class OV_API IError : public OpenViBE::Kernel::IKernelObject
+		class OV_API IError : public IKernelObject
 		{
 		public:
 
@@ -65,7 +65,7 @@ namespace OpenViBE
 			/**
 			 * \brief Retrieve error type
 			 */
-			virtual OpenViBE::Kernel::ErrorType getErrorType() const = 0;
+			virtual ErrorType getErrorType() const = 0;
 
 			/**
 			 * \brief Retrieve nested error
@@ -75,7 +75,7 @@ namespace OpenViBE
 			 *          Therefore the API consumer is not responsible for its
 			 *          life cycle/management
 			 */
-			virtual const OpenViBE::Kernel::IError* getNestedError() const = 0;
+			virtual const IError* getNestedError() const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Error_Error);
 		};

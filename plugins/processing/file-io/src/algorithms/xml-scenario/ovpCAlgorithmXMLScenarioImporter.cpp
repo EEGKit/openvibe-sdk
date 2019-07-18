@@ -15,10 +15,10 @@
 XERCES_CPP_NAMESPACE_USE
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::FileIO;
+using namespace FileIO;
 using namespace OpenViBEToolkit;
 
 enum
@@ -74,19 +74,19 @@ namespace
 		return std::string(charArray.get());
 	}
 
-	class CErrorHandler final : public xercesc::HandlerBase
+	class CErrorHandler final : public HandlerBase
 	{
 	public:
 
 		explicit CErrorHandler(IAlgorithmContext& rAlgorithmContext)
 			: m_rAlgorithmContext(rAlgorithmContext) { }
 
-		void fatalError(const xercesc::SAXParseException& exception) override
+		void fatalError(const SAXParseException& exception) override
 		{
 			this->error(exception);
 		}
 
-		void error(const xercesc::SAXParseException& exception) override
+		void error(const SAXParseException& exception) override
 		{
 			// we just issue a trace here because the calling method
 			// implements a fallback mechanism and we don't want to populate
@@ -98,7 +98,7 @@ namespace
 					<< "\n";
 		}
 
-		void warning(const xercesc::SAXParseException& exception) override
+		void warning(const SAXParseException& exception) override
 		{
 			OV_WARNING(
 				"Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << static_cast<uint64_t>(exception.getLineNumber()) << "]",
@@ -116,7 +116,7 @@ CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter(void)
 	  , m_ui32Status(Status_ParsingNothing)
 	  , m_pReader(NULL)
 {
-	m_pReader = XML::createReader(*this);
+	m_pReader = createReader(*this);
 }
 
 CAlgorithmXMLScenarioImporter::~CAlgorithmXMLScenarioImporter(void)
@@ -431,14 +431,14 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, 
 	// error manager is used to differentiate errors from invalid xml
 	this->getErrorManager().releaseErrors();
 
-	if (this->validateXMLAgainstSchema((OpenViBE::Directories::getDataDir() + "/kernel/openvibe-scenario-v2.xsd"), xmlBuffer, xmlBufferSize)) { return true; }
+	if (this->validateXMLAgainstSchema((Directories::getDataDir() + "/kernel/openvibe-scenario-v2.xsd"), xmlBuffer, xmlBufferSize)) { return true; }
 	else if (this->getErrorManager().hasError())
 	{
 		// this is not a validation error thus we return directly
 		return false;
 	}
 
-	if (this->validateXMLAgainstSchema((OpenViBE::Directories::getDataDir() + "/kernel/openvibe-scenario-v1.xsd"), xmlBuffer, xmlBufferSize))
+	if (this->validateXMLAgainstSchema((Directories::getDataDir() + "/kernel/openvibe-scenario-v1.xsd"), xmlBuffer, xmlBufferSize))
 	{
 		this->getLogManager() << LogLevel_Trace << "Importing scenario with legacy format: v1 scenario might be deprecated in the future so upgrade to v2 format when possible\n";
 		return true;
@@ -449,7 +449,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, 
 		return false;
 	}
 
-	if (this->validateXMLAgainstSchema((OpenViBE::Directories::getDataDir() + "/kernel/openvibe-scenario-legacy.xsd"), xmlBuffer, xmlBufferSize))
+	if (this->validateXMLAgainstSchema((Directories::getDataDir() + "/kernel/openvibe-scenario-legacy.xsd"), xmlBuffer, xmlBufferSize))
 	{
 		OV_WARNING_K("Importing scenario with legacy format: legacy scenario might be deprecated in the future so upgrade to v2 format when possible");
 		return true;

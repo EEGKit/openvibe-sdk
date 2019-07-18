@@ -29,7 +29,7 @@ namespace OpenViBE
 		 * \sa OpenViBE::Kernel::IBoxAlgorithm
 		 * \sa OpenViBE::Kernel::IPlayerContext
 		 */
-		class OV_API IBoxAlgorithmContext : public OpenViBE::Kernel::IKernelObject
+		class OV_API IBoxAlgorithmContext : public IKernelObject
 		{
 		public:
 
@@ -44,7 +44,7 @@ namespace OpenViBE
 			 *          has finished its work, it could be deprecated.
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext::getDynamicBoxContext
 			 */
-			virtual const OpenViBE::Kernel::IBox* getStaticBoxContext(void) = 0;
+			virtual const IBox* getStaticBoxContext(void) = 0;
 			/**
 			 * \brief Gets the dynamic context of the box corresponding to the algorithm
 			 * \return A pointer on the corresponding context
@@ -56,7 +56,7 @@ namespace OpenViBE
 			 *          has finished its work, it could be deprecated.
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext::getStaticBoxContext
 			 */
-			virtual OpenViBE::Kernel::IBoxIO* getDynamicBoxContext(void) = 0;
+			virtual IBoxIO* getDynamicBoxContext(void) = 0;
 			/**
 			 * \brief Gets the player context
 			 * \return A pointer on the player context
@@ -67,7 +67,7 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IPlayerContext* getPlayerContext(void) = 0;
+			virtual IPlayerContext* getPlayerContext(void) = 0;
 
 			/**
 			 * \brief Marks the algorithm as 'ready to process' so its process function is called by the kernel

@@ -25,7 +25,7 @@ namespace OpenViBE
 		  * \sa OpenViBE::Plugins::IServerExtension
 		  */
 
-		class OV_API IServerExtensionDynamicContext : public OpenViBE::Kernel::IKernelObject
+		class OV_API IServerExtensionDynamicContext : public IKernelObject
 		{
 		public:
 			virtual uint32_t getChannelCount() = 0;
@@ -38,7 +38,7 @@ namespace OpenViBE
 
 			virtual uint64_t getStimulationSetEndTime() = 0;
 
-			virtual OpenViBE::IStimulationSet& getStimulationSet() = 0;
+			virtual IStimulationSet& getStimulationSet() = 0;
 		};
 	}
 }

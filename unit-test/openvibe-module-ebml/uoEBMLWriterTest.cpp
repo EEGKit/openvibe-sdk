@@ -93,7 +93,7 @@ int uoEBMLWriterTest(int argc, char* argv[])
 	// serializing
 	CWriterCallBack writerCallback(outputFile.c_str());
 
-	EBML::IWriter* writer = EBML::createWriter(writerCallback);
+	EBML::IWriter* writer = createWriter(writerCallback);
 	EBML::CWriterHelper writerHelper;
 
 	writerHelper.connect(writer);

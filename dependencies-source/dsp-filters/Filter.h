@@ -101,7 +101,7 @@ namespace Dsp
 		// This makes a best-effort to pick up the values
 		// of matching parameters from another set. It uses
 		// the ParamID information to make the match.
-		void copyParamsFrom(Dsp::Filter const* other);
+		void copyParamsFrom(Filter const* other);
 
 		virtual std::vector<PoleZeroPair> getPoleZeros() const = 0;
 

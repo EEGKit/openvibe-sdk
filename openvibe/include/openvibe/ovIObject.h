@@ -52,7 +52,7 @@ namespace OpenViBE
 	{
 	public:
 
-		friend class OpenViBE::Kernel::CKernelObjectFactory;
+		friend class Kernel::CKernelObjectFactory;
 
 		/** \name Class identification */
 		//@{
@@ -64,7 +64,7 @@ namespace OpenViBE
 		 * This method should return the class identifier of the
 		 * concrete instanciated class.
 		 */
-		virtual OpenViBE::CIdentifier getClassIdentifier(void) const = 0;
+		virtual CIdentifier getClassIdentifier(void) const = 0;
 		/**
 		 * \brief Checks if this object is compatible with a class identifier
 		 * \param rClassIdentifier [in] : the class identifier you want
@@ -81,7 +81,7 @@ namespace OpenViBE
 		 * OpenViBE::Plugins::IPluginObject for an example...
 		 */
 		virtual bool isDerivedFromClass(
-			const OpenViBE::CIdentifier& rClassIdentifier) const
+			const CIdentifier& rClassIdentifier) const
 		{
 			return (rClassIdentifier == OV_ClassId_Object);
 		}
@@ -96,7 +96,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool acceptVisitor(OpenViBE::IObjectVisitor& rObjectVisitor) { return true; }
+		virtual bool acceptVisitor(IObjectVisitor& rObjectVisitor) { return true; }
 
 		//@}
 
@@ -108,7 +108,7 @@ namespace OpenViBE
 
 namespace OpenViBE
 {
-	class CNullObject : public OpenViBE::IObject
+	class CNullObject : public IObject
 	{
 	public:
 

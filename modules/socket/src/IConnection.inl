@@ -50,7 +50,7 @@ namespace Socket
 			int32_t l_i32VersionLow  = 0;
 			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
-			::WSAStartup(l_oWinsockVersion, &l_oWSAData);
+			WSAStartup(l_oWinsockVersion, &l_oWSAData);
 #else
 #endif
 		}
@@ -63,7 +63,7 @@ namespace Socket
 			int32_t l_i32VersionLow  = 0;
 			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
-			::WSAStartup(l_oWinsockVersion, &l_oWSAData);
+			WSAStartup(l_oWinsockVersion, &l_oWSAData);
 #else
 #endif
 		}
@@ -72,7 +72,7 @@ namespace Socket
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			::WSACleanup();
+			WSACleanup();
 #else
 #endif
 		}
@@ -83,7 +83,7 @@ namespace Socket
 		{
 			if (isConnected()) { return false; }
 
-			m_i32Socket = static_cast<int32_t>(::socket(AF_INET, SOCK_STREAM, 0));
+			m_i32Socket = static_cast<int32_t>(socket(AF_INET, SOCK_STREAM, 0));
 			if (m_i32Socket == -1) { return false; }
 
 			return true;
@@ -99,8 +99,8 @@ namespace Socket
 			::shutdown(m_i32Socket, SHUT_RDWR);
 			::close(m_i32Socket);
 #elif defined TARGET_OS_Windows
-			::shutdown(m_i32Socket, SD_BOTH);
-			::closesocket(m_i32Socket);
+			shutdown(m_i32Socket, SD_BOTH);
+			closesocket(m_i32Socket);
 #else
 #endif
 
@@ -121,7 +121,7 @@ namespace Socket
 			FD_ZERO(&l_oWriteFileDescriptors);
 			FD_SET(m_i32Socket, &l_oWriteFileDescriptors);
 
-			if (::select(m_i32Socket + 1, NULL, &l_oWriteFileDescriptors, NULL, &l_oTimeVal) < 0) { return false; }
+			if (select(m_i32Socket + 1, NULL, &l_oWriteFileDescriptors, NULL, &l_oTimeVal) < 0) { return false; }
 			if (!FD_ISSET_PROXY(m_i32Socket, &l_oWriteFileDescriptors)) { return false; }
 			return true;
 		}
@@ -139,7 +139,7 @@ namespace Socket
 			FD_ZERO(&l_oReadFileDescriptors);
 			FD_SET(m_i32Socket, &l_oReadFileDescriptors);
 
-			if (::select(m_i32Socket + 1, &l_oReadFileDescriptors, NULL, NULL, &l_oTimeVal) < 0) { return false; }
+			if (select(m_i32Socket + 1, &l_oReadFileDescriptors, NULL, NULL, &l_oTimeVal) < 0) { return false; }
 			if (!(FD_ISSET_PROXY(m_i32Socket, &l_oReadFileDescriptors))) { return false; }
 			return true;
 		}
@@ -153,7 +153,7 @@ namespace Socket
 			int l_iTrue=1;
 			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
-			int l_iResult = ::send(m_i32Socket, static_cast<const char*>(pBuffer), ui32BufferSize, Socket_SendFlags);
+			int l_iResult = send(m_i32Socket, static_cast<const char*>(pBuffer), ui32BufferSize, Socket_SendFlags);
 			if (ui32BufferSize != 0 && l_iResult <= 0)
 			{
 				close();
@@ -170,7 +170,7 @@ namespace Socket
 			int l_iTrue=1;
 			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
-			int l_iResult = ::recv(m_i32Socket, static_cast<char *>(pBuffer), ui32BufferSize, Socket_ReceiveFlags);
+			int l_iResult = recv(m_i32Socket, static_cast<char *>(pBuffer), ui32BufferSize, Socket_ReceiveFlags);
 			if (ui32BufferSize != 0 && l_iResult <= 0)
 			{
 				close();

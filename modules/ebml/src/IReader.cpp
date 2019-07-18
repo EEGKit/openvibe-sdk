@@ -253,8 +253,8 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 				{
 					unsigned char* l_pEncodedBuffer = new unsigned char[l_ulCodedSizeLength];
 					uint64_t l_ui64PendingBytesToCopy = (l_ulCodedSizeLength > m_ui64PendingCount ? m_ui64PendingCount : l_ulCodedSizeLength);
-					::memcpy(l_pEncodedBuffer, m_pPending, (size_t)(l_ui64PendingBytesToCopy));
-					::memcpy(l_pEncodedBuffer + l_ui64PendingBytesToCopy, l_pBuffer, (size_t)(l_ulCodedSizeLength - l_ui64PendingBytesToCopy));
+					memcpy(l_pEncodedBuffer, m_pPending, (size_t)(l_ui64PendingBytesToCopy));
+					memcpy(l_pEncodedBuffer + l_ui64PendingBytesToCopy, l_pBuffer, (size_t)(l_ulCodedSizeLength - l_ui64PendingBytesToCopy));
 					uint64_t l_ui64DecodedValue = getValue(l_pEncodedBuffer, l_ulCodedSizeLength);
 					delete [] l_pEncodedBuffer;
 					l_ui64ProcessedPendingBytes = l_ui64PendingBytesToCopy;
@@ -331,13 +331,13 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 					{
 						if (m_pCurrentNode->m_ui64ContentSize - m_pCurrentNode->m_ui64ReadContentSize > l_ui64BufferSize)
 						{
-							::memcpy(m_pCurrentNode->m_pBuffer + m_pCurrentNode->m_ui64ReadContentSize, l_pBuffer, (size_t)(l_ui64BufferSize));
+							memcpy(m_pCurrentNode->m_pBuffer + m_pCurrentNode->m_ui64ReadContentSize, l_pBuffer, (size_t)(l_ui64BufferSize));
 							l_ui64ProcessedBytes = l_ui64BufferSize;
 							l_bFinished          = true;
 						}
 						else
 						{
-							::memcpy(m_pCurrentNode->m_pBuffer + m_pCurrentNode->m_ui64ReadContentSize, l_pBuffer, (size_t)(m_pCurrentNode->m_ui64ContentSize - m_pCurrentNode->m_ui64ReadContentSize));
+							memcpy(m_pCurrentNode->m_pBuffer + m_pCurrentNode->m_ui64ReadContentSize, l_pBuffer, (size_t)(m_pCurrentNode->m_ui64ContentSize - m_pCurrentNode->m_ui64ReadContentSize));
 							l_ui64ProcessedBytes = m_pCurrentNode->m_ui64ContentSize - m_pCurrentNode->m_ui64ReadContentSize;
 
 							m_eStatus = FillingIdentifier;
@@ -393,12 +393,12 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 	if (m_ui64PendingCount + l_ui64BufferSize > m_ui64PendingSize)
 	{
 		unsigned char* l_pPending = new unsigned char[(unsigned int)(m_ui64PendingCount + l_ui64BufferSize + 1)]; // Ugly hack, reserve 1 more byte on pending data so we are sure we can insert this additional pending byte when only one byte is pending and two bytes are needed for decoding identifier and/or buffer size
-		::memcpy(l_pPending, m_pPending, (size_t)(m_ui64PendingCount));
+		memcpy(l_pPending, m_pPending, (size_t)(m_ui64PendingCount));
 		delete [] m_pPending;
 		m_pPending        = l_pPending;
 		m_ui64PendingSize = m_ui64PendingCount + l_ui64BufferSize;
 	}
-	::memcpy(m_pPending + m_ui64PendingCount, l_pBuffer, (size_t)(l_ui64BufferSize));
+	memcpy(m_pPending + m_ui64PendingCount, l_pBuffer, (size_t)(l_ui64BufferSize));
 	m_ui64PendingCount += l_ui64BufferSize;
 
 	if (_Debug_)

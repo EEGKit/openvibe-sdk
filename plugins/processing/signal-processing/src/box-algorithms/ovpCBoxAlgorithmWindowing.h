@@ -60,7 +60,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-execute"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Windowing; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmWindowing(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmWindowing(); }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{

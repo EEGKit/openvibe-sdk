@@ -12,8 +12,8 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 namespace OpenViBE
 {
@@ -43,7 +43,7 @@ namespace OpenViBE
 			bool m_bGotDescriptions;
 
 			bool (*onInitializeCB)(const IPluginModuleContext&);
-			bool (*onGetPluginObjectDescriptionCB)(const IPluginModuleContext&, uint32_t, Plugins::IPluginObjectDesc*&);
+			bool (*onGetPluginObjectDescriptionCB)(const IPluginModuleContext&, uint32_t, IPluginObjectDesc*&);
 			bool (*onUninitializeCB)(const IPluginModuleContext&);
 		};
 	};
@@ -338,7 +338,7 @@ bool CPluginModuleWindows::load(
 
 	onInitializeCB                 = (bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onInitialize");
 	onUninitializeCB               = (bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onUninitialize");
-	onGetPluginObjectDescriptionCB = (bool (*)(const IPluginModuleContext&, uint32_t, Plugins::IPluginObjectDesc*&))GetProcAddress(m_pFileHandle, "onGetPluginObjectDescription");
+	onGetPluginObjectDescriptionCB = (bool (*)(const IPluginModuleContext&, uint32_t, IPluginObjectDesc*&))GetProcAddress(m_pFileHandle, "onGetPluginObjectDescription");
 	if (!onGetPluginObjectDescriptionCB)
 	{
 		if (pError)
@@ -397,7 +397,7 @@ CString CPluginModuleWindows::getLastErrorMessageString(void)
 		NULL);
 	if (l_pMessageBuffer)
 	{
-		size_t l_iMessageLength = ::strlen(l_pMessageBuffer);
+		size_t l_iMessageLength = strlen(l_pMessageBuffer);
 		for (size_t i = 0; i < l_iMessageLength; i++)
 		{
 			if (l_pMessageBuffer[i] == '\n' || l_pMessageBuffer[i] == '\r')

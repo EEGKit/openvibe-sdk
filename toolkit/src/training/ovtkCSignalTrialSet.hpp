@@ -7,24 +7,24 @@
 
 namespace OpenViBEToolkit
 {
-	class CSignalTrialSet : public OpenViBEToolkit::ISignalTrialSet
+	class CSignalTrialSet : public ISignalTrialSet
 	{
 	public:
 
-		virtual bool addSignalTrial(OpenViBEToolkit::ISignalTrial& rSignalTrial);
+		virtual bool addSignalTrial(ISignalTrial& rSignalTrial);
 		virtual bool clear(void);
 
 		virtual uint32_t getSignalTrialCount(void) const;
-		virtual OpenViBEToolkit::ISignalTrial& getSignalTrial(uint32_t ui32Index) const;
+		virtual ISignalTrial& getSignalTrial(uint32_t ui32Index) const;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_);
 
 	protected:
 
-		mutable std::vector<OpenViBEToolkit::ISignalTrial*> m_vSignalTrial;
+		mutable std::vector<ISignalTrial*> m_vSignalTrial;
 	};
 
-	extern OVTK_API OpenViBEToolkit::ISignalTrialSet* createSignalTrialSet(void);
+	extern OVTK_API ISignalTrialSet* createSignalTrialSet(void);
 };
 
 #endif // __OpenViBEToolkit_Offline_CSignalTrialSet_HPP__

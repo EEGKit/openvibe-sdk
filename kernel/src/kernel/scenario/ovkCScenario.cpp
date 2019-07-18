@@ -19,8 +19,8 @@
 
 using namespace std;
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 // The following is a hack, can be removed once there is a copy constructor for scenarios, boxes, etc
 #include <ovp_global_defines.h>
@@ -1392,7 +1392,7 @@ bool CScenario::checkOutdatedBoxes()
 		// Do not attempt to update boxes which do not have existing box algorithm identifiers
 		auto boxAlgorithmClassIdentifier = box.second->getAlgorithmClassIdentifier();
 		if (boxAlgorithmClassIdentifier != OVP_ClassId_BoxAlgorithm_Metabox
-			&& !dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(boxAlgorithmClassIdentifier)))
+			&& !dynamic_cast<const IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(boxAlgorithmClassIdentifier)))
 		{
 			continue;
 		}
@@ -1406,7 +1406,7 @@ bool CScenario::checkOutdatedBoxes()
 				continue;
 			}
 
-			OpenViBE::CIdentifier metaboxId;
+			CIdentifier metaboxId;
 			metaboxId.fromString(metaboxIdentifier);
 			CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
@@ -1467,7 +1467,7 @@ void getIdentifierList(
 	CIdentifier** identifierList,
 	size_t* size)
 {
-	*identifierList = new OpenViBE::CIdentifier[elementMap.size()];
+	*identifierList = new CIdentifier[elementMap.size()];
 
 	size_t index = 0;
 	for (auto it = elementMap.begin(); it != elementMap.end(); ++it)
@@ -1480,52 +1480,52 @@ void getIdentifierList(
 	*size = index;
 }
 
-void CScenario::getBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getBoxIdentifierList(CIdentifier** identifierList, size_t* size) const
 {
 	getIdentifierList<CBox*, TTestTrue<CBox*>>(m_Boxes, TTestTrue<CBox*>(), identifierList, size);
 }
 
-void CScenario::getCommentIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getCommentIdentifierList(CIdentifier** identifierList, size_t* size) const
 {
 	getIdentifierList<CComment*, TTestTrue<CComment*>>(m_Comments, TTestTrue<CComment*>(), identifierList, size);
 }
 
-void CScenario::getMetadataIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getMetadataIdentifierList(CIdentifier** identifierList, size_t* size) const
 {
 	getIdentifierList<CMetadata*, TTestTrue<CMetadata*>>(m_Metadata, TTestTrue<CMetadata*>(), identifierList, size);
 }
 
-void CScenario::getLinkIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getLinkIdentifierList(CIdentifier** identifierList, size_t* size) const
 {
 	getIdentifierList<CLink*, TTestTrue<CLink*>>(m_Links, TTestTrue<CLink*>(), identifierList, size);
 }
 
-void CScenario::getLinkIdentifierFromBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getLinkIdentifierFromBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const
 {
 	getIdentifierList<CLink*, TTestEqSourceBox>(m_Links, TTestEqSourceBox(boxIdentifier), identifierList, size);
 }
 
-void CScenario::getLinkIdentifierFromBoxOutputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t outputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getLinkIdentifierFromBoxOutputList(const CIdentifier& boxIdentifier, const uint32_t outputIndex, CIdentifier** identifierList, size_t* size) const
 {
 	getIdentifierList<CLink*, TTestEqSourceBoxOutput>(m_Links, TTestEqSourceBoxOutput(boxIdentifier, outputIndex), identifierList, size);
 }
 
-void CScenario::getLinkIdentifierToBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getLinkIdentifierToBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const
 {
 	getIdentifierList<CLink*, TTestEqTargetBox>(m_Links, TTestEqTargetBox(boxIdentifier), identifierList, size);
 }
 
-void CScenario::getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, const uint32_t inputIndex, CIdentifier** identifierList, size_t* size) const
 {
 	getIdentifierList<CLink*, TTestEqTargetBoxInput>(m_Links, TTestEqTargetBoxInput(boxIdentifier, inputIndex), identifierList, size);
 }
 
-void CScenario::getOutdatedBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const
+void CScenario::getOutdatedBoxIdentifierList(CIdentifier** identifierList, size_t* size) const
 {
 	getIdentifierList<std::shared_ptr<CBox>, TTestTrue<std::shared_ptr<CBox>>>(m_OutdatedBoxes, TTestTrue<std::shared_ptr<CBox>>(), identifierList, size);
 }
 
-void CScenario::releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const
+void CScenario::releaseIdentifierList(CIdentifier* identifierList) const
 {
 	delete[] identifierList;
 }

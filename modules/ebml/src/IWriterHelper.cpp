@@ -150,7 +150,7 @@ bool CWriterHelper::setFloat32AsChildData(const float fValue)
 	uint64_t i;
 	uint64_t l_ui64BufferSize = 0;
 	unsigned char l_pBuffer[8];
-	::memcpy(&l_uiValue, &fValue, sizeof(fValue));
+	memcpy(&l_uiValue, &fValue, sizeof(fValue));
 
 	l_ui64BufferSize = (fValue != 0 ? 4 : 0);
 	for (i = 0; i < l_ui64BufferSize; i++)
@@ -166,7 +166,7 @@ bool CWriterHelper::setFloat64AsChildData(const double fValue)
 	uint64_t i;
 	uint64_t l_ui64BufferSize = 0;
 	unsigned char l_pBuffer[8];
-	::memcpy(&l_uiValue, &fValue, sizeof(fValue));
+	memcpy(&l_uiValue, &fValue, sizeof(fValue));
 
 	l_ui64BufferSize = (fValue != 0 ? 8 : 0);
 	for (i = 0; i < l_ui64BufferSize; i++)

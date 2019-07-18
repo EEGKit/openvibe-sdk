@@ -31,11 +31,11 @@ namespace
 extern const char* const c_sClassifierRoot;
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Classification;
+using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
@@ -325,7 +325,7 @@ bool CAlgorithmClassifierOneVsOne::createSubClassifiers(void)
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsOne::designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount)
+bool CAlgorithmClassifierOneVsOne::designArchitecture(const CIdentifier& rId, uint32_t rClassCount)
 {
 	if (!setSubClassifierIdentifier(rId)) { return false; }
 
@@ -439,7 +439,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfiguration(XML::IXMLNode* pConfigurati
 
 	// Invert the class count from subCls = numClass*(numClass-1)/2.
 	const uint32_t l_ui32DeltaCarre = 1 + 8 * m_ui32NumberOfSubClassifiers;
-	m_ui32NumberOfClasses           = static_cast<uint32_t>((1 + ::sqrt(static_cast<double>(l_ui32DeltaCarre))) / 2);
+	m_ui32NumberOfClasses           = static_cast<uint32_t>((1 + sqrt(static_cast<double>(l_ui32DeltaCarre))) / 2);
 
 	TParameterHandler<uint64_t> ip_pClassCount(m_pDecisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	ip_pClassCount = m_ui32NumberOfClasses;
@@ -502,7 +502,7 @@ bool CAlgorithmClassifierOneVsOne::loadSubClassifierConfiguration(XML::IXMLNode*
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsOne::setSubClassifierIdentifier(const OpenViBE::CIdentifier& rId)
+bool CAlgorithmClassifierOneVsOne::setSubClassifierIdentifier(const CIdentifier& rId)
 {
 	m_oSubClassifierAlgorithmIdentifier = rId;
 	m_fAlgorithmComparison              = getClassificationComparisonFunction(rId);

@@ -39,7 +39,7 @@ namespace OpenViBE
 		 *
 		 * \sa OpenViBE::Kernel::IBoxAlgorithmDesc
 		 */
-		class OV_API IBoxProto : public OpenViBE::Kernel::IKernelObject
+		class OV_API IBoxProto : public IKernelObject
 		{
 		public:
 
@@ -52,9 +52,9 @@ namespace OpenViBE
 			 * \return true if successful
 			 */
 			virtual bool addInput(
-				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier,
+				const CString& sName,
+				const CIdentifier& rTypeIdentifier,
+				const CIdentifier& oIdentifier = OV_UndefinedIdentifier,
 				const bool bNotify          = true) = 0;
 
 			/**
@@ -66,9 +66,9 @@ namespace OpenViBE
 			 * \return true if successful
 			 */
 			virtual bool addOutput(
-				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
+				const CString& sName,
+				const CIdentifier& rTypeIdentifier,
+				const CIdentifier& rIdentifier = OV_UndefinedIdentifier,
 				const bool bNotify          = true) = 0;
 				
 			/**
@@ -83,11 +83,11 @@ namespace OpenViBE
 			 * \return true if successful
 			 */
 			virtual bool addSetting(
-				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sDefaultValue,
+				const CString& sName,
+				const CIdentifier& rTypeIdentifier,
+				const CString& sDefaultValue,
 				const bool bModifiable                   = false,
-				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
+				const CIdentifier& rIdentifier = OV_UndefinedIdentifier,
 				const bool bNotify          = true) = 0;
 			/**
 			 * \brief Adds a flag to the box
@@ -95,7 +95,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag) = 0;
+			virtual bool addFlag(const EBoxFlag eBoxFlag) = 0;
 
 			/**
 			 * \brief Adds a flag to the box
@@ -103,7 +103,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag) = 0;
+			virtual bool addFlag(const CIdentifier& cIdentifierFlag) = 0;
 
 			/**
 			 * \brief Adds a new type supported by inputs of the box
@@ -111,14 +111,14 @@ namespace OpenViBE
 			  * \return \e true in case of success.
 			  * \return \e false in case of error.
 			  */
-			virtual bool addInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier) = 0;
+			virtual bool addInputSupport(const CIdentifier& rTypeIdentifier) = 0;
 			/**
 			 * \brief Adds a new type supported by outputs of the box
 			  * \param rTypeIdentifier [in] : The type identifier
 			  * \return \e true in case of success.
 			  * \return \e false in case of error.
 			  */
-			virtual bool addOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier) = 0;
+			virtual bool addOutputSupport(const CIdentifier& rTypeIdentifier) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxProto)
 		};

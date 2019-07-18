@@ -14,18 +14,18 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CLogManager : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogManager>
+		class CLogManager : public TKernelObject<ILogManager>
 		{
 		public:
 
-			explicit CLogManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CLogManager(const IKernelContext& rKernelContext);
 
-			virtual bool isActive(OpenViBE::Kernel::ELogLevel eLogLevel);
-			virtual bool activate(OpenViBE::Kernel::ELogLevel eLogLevel, bool bActive);
-			virtual bool activate(OpenViBE::Kernel::ELogLevel eStartLogLevel, OpenViBE::Kernel::ELogLevel eEndLogLevel, bool bActive);
+			virtual bool isActive(ELogLevel eLogLevel);
+			virtual bool activate(ELogLevel eLogLevel, bool bActive);
+			virtual bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive);
 			virtual bool activate(bool bActive);
 
-			virtual void log(const OpenViBE::time64 time64Value);
+			virtual void log(const time64 time64Value);
 
 			virtual void log(const uint64_t ui64Value);
 			virtual void log(const uint32_t ui32Value);
@@ -42,15 +42,15 @@ namespace OpenViBE
 
 			virtual void log(const bool bValue);
 
-			virtual void log(const OpenViBE::CIdentifier& rValue);
-			virtual void log(const OpenViBE::CString& rValue);
+			virtual void log(const CIdentifier& rValue);
+			virtual void log(const CString& rValue);
 			virtual void log(const char* pValue);
 
-			virtual void log(const OpenViBE::Kernel::ELogLevel eLogLevel);
-			virtual void log(const OpenViBE::Kernel::ELogColor eLogColor);
+			virtual void log(const ELogLevel eLogLevel);
+			virtual void log(const ELogColor eLogColor);
 
-			virtual bool addListener(OpenViBE::Kernel::ILogListener* pListener);
-			virtual bool removeListener(OpenViBE::Kernel::ILogListener* pListener);
+			virtual bool addListener(ILogListener* pListener);
+			virtual bool removeListener(ILogListener* pListener);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogManager>, OVK_ClassId_Kernel_Log_LogManager);
 
@@ -68,7 +68,7 @@ namespace OpenViBE
 
 				if (m_eCurrentLogLevel != LogLevel_None && this->isActive(m_eCurrentLogLevel))
 				{
-					std::vector<OpenViBE::Kernel::ILogListener*>::iterator i;
+					std::vector<ILogListener*>::iterator i;
 					for (i = m_vListener.begin(); i != m_vListener.end(); ++i)
 					{
 						if ((*i)->isActive(m_eCurrentLogLevel))
@@ -81,8 +81,8 @@ namespace OpenViBE
 
 		protected:
 
-			std::vector<OpenViBE::Kernel::ILogListener*> m_vListener;
-			std::map<OpenViBE::Kernel::ELogLevel, bool> m_vActiveLevel;
+			std::vector<ILogListener*> m_vListener;
+			std::map<ELogLevel, bool> m_vActiveLevel;
 			ELogLevel m_eCurrentLogLevel;
 
 			// Variables to make sure only one thread writes to the LogManager at a time.

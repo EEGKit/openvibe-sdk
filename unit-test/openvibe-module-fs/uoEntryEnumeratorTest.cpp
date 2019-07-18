@@ -54,7 +54,7 @@ int uoEntryEnumeratorTest(int argc, char* argv[])
 	std::string dataDirectory = argv[1];
 
 	EntryEnumeratorCallBack cb;
-	FS::IEntryEnumerator* enumerator = FS::createEntryEnumerator(cb);
+	FS::IEntryEnumerator* enumerator = createEntryEnumerator(cb);
 	enumerator->enumerate((dataDirectory + "*.txt").c_str());
 
 	OVT_ASSERT(cb.files.size() == 2, "Failure to enumerate with wildcard prefix");

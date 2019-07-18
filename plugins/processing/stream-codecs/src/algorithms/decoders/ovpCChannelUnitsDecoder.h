@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CChannelUnitsDecoder : public OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder
+		class CChannelUnitsDecoder : public CStreamedMatrixDecoder
 		{
 		public:
 
@@ -38,7 +38,7 @@ namespace OpenViBEPlugins
 			//			uint32_t m_ui32UnitIndex;
 		};
 
-		class CChannelUnitsDecoderDesc : public OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc
+		class CChannelUnitsDecoderDesc : public CStreamedMatrixDecoderDesc
 		{
 		public:
 
@@ -56,11 +56,11 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ChannelUnitsStreamDecoder; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CChannelUnitsDecoder(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CChannelUnitsDecoder(); }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
-				OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CStreamedMatrixDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
 				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_ChannelUnitsStreamDecoder_OutputParameterId_Dynamic, "Dynamic", OpenViBE::Kernel::ParameterType_Boolean);
 

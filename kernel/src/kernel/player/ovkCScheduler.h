@@ -23,15 +23,15 @@ namespace OpenViBE
 		class CChunk;
 		class CPlayer;
 
-		class CScheduler : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IKernelObject>
+		class CScheduler : public TKernelObject<IKernelObject>
 		{
 		public:
 
-			CScheduler(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CPlayer& rPlayer);
+			CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer);
 			virtual ~CScheduler(void);
 
 			virtual bool setScenario(
-				const OpenViBE::CIdentifier& rScenarioIdentifier);
+				const CIdentifier& rScenarioIdentifier);
 			virtual bool setFrequency(
 				const uint64_t ui64Frequency);
 
@@ -41,7 +41,7 @@ namespace OpenViBE
 			virtual bool uninitialize(void);
 			virtual bool loop(void);
 
-			virtual bool sendInput(const OpenViBE::Kernel::CChunk& rChunk, const OpenViBE::CIdentifier& rBoxIdentifier, const uint32_t ui32InputIndex);
+			virtual bool sendInput(const CChunk& rChunk, const CIdentifier& rBoxIdentifier, const uint32_t ui32InputIndex);
 			virtual uint64_t getCurrentTime(void) const;
 			virtual uint64_t getCurrentLateness(void) const;
 			virtual uint64_t getFrequency(void) const;
@@ -58,22 +58,22 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::Kernel::CPlayer& m_rPlayer;
-			OpenViBE::CIdentifier m_oScenarioIdentifier;
-			OpenViBE::Kernel::IScenario* m_pScenario;
+			CPlayer& m_rPlayer;
+			CIdentifier m_oScenarioIdentifier;
+			IScenario* m_pScenario;
 			uint64_t m_ui64Steps;
 			uint64_t m_ui64Frequency;
 			uint64_t m_ui64StepDuration;
 			uint64_t m_ui64CurrentTime;
 
-			std::map<std::pair<int32_t, OpenViBE::CIdentifier>, OpenViBE::Kernel::CSimulatedBox*> m_vSimulatedBox;
-			std::map<OpenViBE::CIdentifier, System::CChrono> m_vSimulatedBoxChrono;
-			std::map<OpenViBE::CIdentifier, std::map<uint32_t, std::list<OpenViBE::Kernel::CChunk>>> m_vSimulatedBoxInput;
+			std::map<std::pair<int32_t, CIdentifier>, CSimulatedBox*> m_vSimulatedBox;
+			std::map<CIdentifier, System::CChrono> m_vSimulatedBoxChrono;
+			std::map<CIdentifier, std::map<uint32_t, std::list<CChunk>>> m_vSimulatedBoxInput;
 
 		private:
 
 			void handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception);
-			bool processBox(CSimulatedBox* simulatedBox, const OpenViBE::CIdentifier& boxIdentifier);
+			bool processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxIdentifier);
 			bool flattenScenario(void);
 			System::CChrono m_oBenchmarkChrono;
 		};

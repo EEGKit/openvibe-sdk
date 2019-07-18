@@ -47,7 +47,7 @@ namespace OpenViBEPlugins
 
 			EBML::IWriterHelper* m_pEBMLWriterHelper;
 			EBML::IWriter* m_pEBMLWriter;
-			EBML::TWriterCallbackProxy1<OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder> m_oEBMLWriterCallbackProxy;
+			EBML::TWriterCallbackProxy1<CEBMLBaseEncoder> m_oEBMLWriterCallbackProxy;
 		};
 
 		class CEBMLBaseEncoderDesc : public OpenViBE::Plugins::IAlgorithmDesc

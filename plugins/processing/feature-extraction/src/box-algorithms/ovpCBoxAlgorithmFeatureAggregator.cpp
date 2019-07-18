@@ -6,10 +6,10 @@
 #include <cstdio>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Plugins;
-using namespace OpenViBE::Kernel;
+using namespace Plugins;
+using namespace Kernel;
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::FeatureExtraction;
+using namespace FeatureExtraction;
 
 using namespace OpenViBEToolkit;
 

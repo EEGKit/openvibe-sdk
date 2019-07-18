@@ -9,33 +9,33 @@ namespace OpenViBE
 	{
 		class CScenario;
 
-		class CMetadata final : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMetadata>
+		class CMetadata final : public TKernelObject<IMetadata>
 		{
 		public:
 
-			CMetadata(const OpenViBE::Kernel::IKernelContext& kernelContext, OpenViBE::Kernel::CScenario& ownerScenario);
+			CMetadata(const IKernelContext& kernelContext, CScenario& ownerScenario);
 			~CMetadata(void);
 
-			OpenViBE::CIdentifier getIdentifier(void) const override;
-			OpenViBE::CIdentifier getType(void) const override;
-			OpenViBE::CString getData(void) const override;
-			bool setIdentifier(const OpenViBE::CIdentifier& identifier) override;
-			bool setType(const OpenViBE::CIdentifier& identifier) override;
-			bool setData(const OpenViBE::CString& data) override;
+			CIdentifier getIdentifier(void) const override;
+			CIdentifier getType(void) const override;
+			CString getData(void) const override;
+			bool setIdentifier(const CIdentifier& identifier) override;
+			bool setType(const CIdentifier& identifier) override;
+			bool setData(const CString& data) override;
 
-			bool initializeFromExistingMetadata(const OpenViBE::Kernel::IMetadata& exisitingMetadata) override;
+			bool initializeFromExistingMetadata(const IMetadata& exisitingMetadata) override;
 
-			bool acceptVisitor(OpenViBE::IObjectVisitor& objectVisitor) override;
+			bool acceptVisitor(IObjectVisitor& objectVisitor) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMetadata>, OVK_ClassId_Kernel_Scenario_Metadata)
 
 		private:
 
-			OpenViBE::Kernel::CScenario& m_OwnerScenario;
+			CScenario& m_OwnerScenario;
 
-			OpenViBE::CIdentifier m_Identifier;
-			OpenViBE::CIdentifier m_Type;
-			OpenViBE::CString m_Data;
+			CIdentifier m_Identifier;
+			CIdentifier m_Type;
+			CString m_Data;
 		};
 	}
 }

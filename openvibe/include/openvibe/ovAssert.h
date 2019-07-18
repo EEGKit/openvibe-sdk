@@ -61,12 +61,12 @@ namespace OpenViBE
 namespace OpenViBE
 {
 	// overload needed to enable streaming time data in error description
-	inline std::ostream& operator<<(std::ostream& os, const OpenViBE::time64 time)
+	inline std::ostream& operator<<(std::ostream& os, const time64 time)
 	{
 		std::stringstream ss;
 		ss.precision(3);
 		ss.setf(std::ios::fixed, std::ios::floatfield);
-		ss << OpenViBE::ITimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
+		ss << ITimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
 		ss << " sec";
 
 		os << ss.str();
@@ -76,7 +76,7 @@ namespace OpenViBE
 
 #define HAS_ImbuedOStreamWithCIdentifier
 
-	inline std::ostream& operator<<(std::ostream& os, const OpenViBE::CIdentifier id)
+	inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
 	{
 		os << id.toString();
 

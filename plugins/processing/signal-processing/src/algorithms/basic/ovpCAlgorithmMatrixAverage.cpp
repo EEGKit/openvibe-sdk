@@ -4,11 +4,11 @@
 #include <cmath>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 
 // ________________________________________________________________________________________________________________
 //
@@ -27,7 +27,7 @@ bool CAlgorithmMatrixAverage::initialize(void)
 
 bool CAlgorithmMatrixAverage::uninitialize(void)
 {
-	std::deque<OpenViBE::IMatrix*>::iterator it;
+	std::deque<IMatrix*>::iterator it;
 	for (it = m_vHistory.begin(); it != m_vHistory.end(); ++it)
 	{
 		delete *it;
@@ -142,7 +142,7 @@ bool CAlgorithmMatrixAverage::process(void)
 
 		if (ip_ui64AveragingMethod == OVP_TypeId_EpochAverageMethod_CumulativeAverage.toUInteger())
 		{
-			OpenViBE::IMatrix* l_Matrix = m_vHistory.at(0);
+			IMatrix* l_Matrix = m_vHistory.at(0);
 
 			m_CumulativeAverageSampleCount++;
 
@@ -188,7 +188,7 @@ bool CAlgorithmMatrixAverage::process(void)
 			uint32_t l_ui32Count = l_pOutputMatrix->getBufferElementCount();
 			double l_f64Scale = 1. / m_vHistory.size();
 
-			for (OpenViBE::IMatrix* matrix : m_vHistory)
+			for (IMatrix* matrix : m_vHistory)
 			{
 				double* l_pOutputMatrixBuffer = l_pOutputMatrix->getBuffer();
 				double* l_pInputMatrixBuffer  = matrix->getBuffer();

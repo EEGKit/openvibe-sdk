@@ -10,13 +10,13 @@
 #include <ovp_global_defines.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 namespace
 {
 	const char* kernelConfig = nullptr;
 
-	class StreamedMatrixTest : public ::testing::Test
+	class StreamedMatrixTest : public testing::Test
 	{
 	protected:
 
@@ -49,8 +49,8 @@ namespace
 			m_KernelContext.uninitialize();
 		}
 
-		OpenViBE::CIdentifier m_DecoderId;
-		OpenViBE::CIdentifier m_EncoderId;
+		CIdentifier m_DecoderId;
+		CIdentifier m_EncoderId;
 		OpenViBETest::KernelContext m_KernelContext;
 	};
 
@@ -145,7 +145,7 @@ int uoStreamedMatrixTest(int argc, char* argv[])
 	{
 		kernelConfig = argv[1];
 	}
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "StreamedMatrixTest.*";
 	return RUN_ALL_TESTS();
 }

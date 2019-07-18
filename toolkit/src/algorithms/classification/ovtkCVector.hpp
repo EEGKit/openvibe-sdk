@@ -54,7 +54,7 @@ namespace OpenViBEToolkit
 		OpenViBE::IMatrix& m_rMatrix;
 	};
 
-	typedef OpenViBEToolkit::TVector<OpenViBEToolkit::IVector> CVector;
+	typedef TVector<IVector> CVector;
 };
 
 #endif // __OpenViBEToolkit_CVector_H__

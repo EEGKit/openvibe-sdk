@@ -24,7 +24,7 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFile)
 	: m_rMasterKernelContext(pMasterKernelContext ? *pMasterKernelContext : *this)
@@ -84,12 +84,12 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 
 
 	m_pConfigurationManager->createConfigurationToken("ApplicationName", m_sApplicationName);
-	m_pConfigurationManager->createConfigurationToken("Path_UserData", OpenViBE::Directories::getUserDataDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Log", OpenViBE::Directories::getLogDir());
+	m_pConfigurationManager->createConfigurationToken("Path_UserData", Directories::getUserDataDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Log", Directories::getLogDir());
 	m_pConfigurationManager->createConfigurationToken("Path_Tmp", "${Path_UserData}/tmp");
-	m_pConfigurationManager->createConfigurationToken("Path_Lib", OpenViBE::Directories::getLibDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Bin", OpenViBE::Directories::getBinDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Data", OpenViBE::Directories::getDataDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Lib", Directories::getLibDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Bin", Directories::getBinDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Data", Directories::getDataDir());
 
 #if defined TARGET_OS_Windows
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Windows");

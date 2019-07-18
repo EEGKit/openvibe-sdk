@@ -20,7 +20,7 @@ namespace Socket
 		//bool(*fSetTimeouts)(void*, unsigned long ui32DecisecondsTimeout);
 	};
 
-	class Socket_API IConnectionSerialDelegate : public Socket::TConnectionDelegate<Socket::IConnectionSerial>
+	class Socket_API IConnectionSerialDelegate : public TConnectionDelegate<IConnectionSerial>
 	{
 	public:
 		IConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate);

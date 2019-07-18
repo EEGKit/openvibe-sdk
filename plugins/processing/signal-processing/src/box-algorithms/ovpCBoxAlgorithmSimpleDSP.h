@@ -56,7 +56,7 @@ namespace OpenViBEPlugins
 			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				char l_sName[1024];
-				::sprintf(l_sName, "Input - %c", 'A' + ui32Index);
+				sprintf(l_sName, "Input - %c", 'A' + ui32Index);
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getOutputType(0, l_oTypeIdentifier);
 				rBox.setInputType(ui32Index, l_oTypeIdentifier);
@@ -110,7 +110,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_SimpleDSP; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSimpleDSP(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmSimpleDSP(); }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmSimpleDSPListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 

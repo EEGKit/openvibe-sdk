@@ -21,11 +21,11 @@ namespace
 extern const char* const c_sClassifierRoot;
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Classification;
+using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
@@ -265,7 +265,7 @@ void CAlgorithmClassifierOneVsAll::removeClassifierAtBack(void)
 	this->m_oSubClassifierList.pop_back();
 }
 
-bool CAlgorithmClassifierOneVsAll::designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount)
+bool CAlgorithmClassifierOneVsAll::designArchitecture(const CIdentifier& rId, uint32_t rClassCount)
 {
 	if (!this->setSubClassifierIdentifier(rId)) { return false; }
 	for (size_t i = 0; i < rClassCount; ++i)
@@ -382,7 +382,7 @@ uint32_t CAlgorithmClassifierOneVsAll::getClassCount(void) const
 	return static_cast<uint32_t>(m_oSubClassifierList.size());
 }
 
-bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const OpenViBE::CIdentifier& rId)
+bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const CIdentifier& rId)
 {
 	m_oSubClassifierAlgorithmIdentifier = rId;
 	m_fAlgorithmComparison              = getClassificationComparisonFunction(rId);

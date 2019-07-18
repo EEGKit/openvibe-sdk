@@ -17,39 +17,39 @@ namespace OpenViBE
 	public:
 		Directories() = delete;
 
-		static OpenViBE::CString getDistRootDir(void)
+		static CString getDistRootDir(void)
 		{
-			return OpenViBE::StringDirectories::getDistRootDir().c_str();
+			return StringDirectories::getDistRootDir().c_str();
 		}
 
-		static OpenViBE::CString getBinDir(void)
+		static CString getBinDir(void)
 		{
-			return OpenViBE::StringDirectories::getBinDir().c_str();
+			return StringDirectories::getBinDir().c_str();
 		}
 
-		static OpenViBE::CString getDataDir(void)
+		static CString getDataDir(void)
 		{
-			return OpenViBE::StringDirectories::getDataDir().c_str();
+			return StringDirectories::getDataDir().c_str();
 		}
 
-		static OpenViBE::CString getLibDir(void)
+		static CString getLibDir(void)
 		{
-			return OpenViBE::StringDirectories::getLibDir().c_str();
+			return StringDirectories::getLibDir().c_str();
 		}
 
-		static OpenViBE::CString getUserHomeDir(void)
+		static CString getUserHomeDir(void)
 		{
-			return OpenViBE::StringDirectories::getUserHomeDir().c_str();
+			return StringDirectories::getUserHomeDir().c_str();
 		}
 
-		static OpenViBE::CString getUserDataDir(void)
+		static CString getUserDataDir(void)
 		{
-			return OpenViBE::StringDirectories::getUserDataDir().c_str();
+			return StringDirectories::getUserDataDir().c_str();
 		}
 
-		static OpenViBE::CString getLogDir(void)
+		static CString getLogDir(void)
 		{
-			return OpenViBE::StringDirectories::getLogDir().c_str();
+			return StringDirectories::getLogDir().c_str();
 		}
 	};
 }

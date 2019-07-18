@@ -6,11 +6,11 @@
 #include <xml/IXMLNode.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Classification;
+using namespace Classification;
 using namespace std;
 
 bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
@@ -142,7 +142,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 	// Connect the params to the new classifier
 
-	TParameterHandler<OpenViBE::IMatrix*> ip_oFeatureVector = m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector);
+	TParameterHandler<IMatrix*> ip_oFeatureVector = m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector);
 	ip_oFeatureVector.setReferenceTarget(m_oFeatureVectorDecoder.getOutputMatrix());
 
 	m_oHyperplaneValuesEncoder.getInputMatrix().setReferenceTarget(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));

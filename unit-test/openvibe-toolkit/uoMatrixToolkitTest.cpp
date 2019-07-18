@@ -60,7 +60,7 @@ bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, unsigned i
 		return false;
 	}
 
-	OpenViBE::CMatrix resultMatrix;
+	CMatrix resultMatrix;
 
 	if (!OpenViBEToolkit::Tools::Matrix::loadFromTextFile(resultMatrix, textFile.c_str()))
 	{
@@ -95,7 +95,7 @@ int uoMatrixToolkitTest(int argc, char* argv[])
 	std::string outputMatrixFile = std::string(argv[1]) + "uoMatrixToolkitTest.txt";
 
 	System::Math::initializeRandomMachine(777);
-	OpenViBE::CMatrix source;
+	CMatrix source;
 
 	source.setDimensionCount(1);
 	source.setDimensionSize(0, 1);
@@ -173,7 +173,7 @@ int uoMatrixToolkitTest(int argc, char* argv[])
 
 	OVT_ASSERT(testMatrix(source, outputMatrixFile), "Failed to test matrix with parameters [dimension_count; dimension_size] = [2; {0,0},{1,0}]");
 
-	OpenViBE::CMatrix emptySource;
+	CMatrix emptySource;
 	OVT_ASSERT(!testMatrix(emptySource, outputMatrixFile), "Failed to test matrix with no parameter");
 
 	return EXIT_SUCCESS;

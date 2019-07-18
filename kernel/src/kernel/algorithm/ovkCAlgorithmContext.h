@@ -9,42 +9,42 @@ namespace OpenViBE
 	{
 		class CAlgorithmProxy;
 
-		class CAlgorithmContext : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IAlgorithmContext>
+		class CAlgorithmContext : public TKernelObject<IAlgorithmContext>
 		{
 		public:
 
-			CAlgorithmContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CAlgorithmProxy& rAlgorithmProxy, const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc);
+			CAlgorithmContext(const IKernelContext& rKernelContext, CAlgorithmProxy& rAlgorithmProxy, const Plugins::IPluginObjectDesc& rPluginObjectDesc);
 			virtual ~CAlgorithmContext(void);
 
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const;
-			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const;
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const;
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const;
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const;
+			virtual IConfigurationManager& getConfigurationManager(void) const;
+			virtual IAlgorithmManager& getAlgorithmManager(void) const;
+			virtual ILogManager& getLogManager(void) const;
+			virtual IErrorManager& getErrorManager(void) const;
+			virtual ITypeManager& getTypeManager(void) const;
 
-			virtual OpenViBE::CIdentifier getNextInputParameterIdentifier(
-				const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const;
-			virtual OpenViBE::Kernel::IParameter* getInputParameter(
-				const OpenViBE::CIdentifier& rInputParameterIdentifier);
+			virtual CIdentifier getNextInputParameterIdentifier(
+				const CIdentifier& rPreviousInputParameterIdentifier) const;
+			virtual IParameter* getInputParameter(
+				const CIdentifier& rInputParameterIdentifier);
 
-			virtual OpenViBE::CIdentifier getNextOutputParameterIdentifier(
-				const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const;
-			virtual OpenViBE::Kernel::IParameter* getOutputParameter(
-				const OpenViBE::CIdentifier& rOutputParameterIdentifier);
+			virtual CIdentifier getNextOutputParameterIdentifier(
+				const CIdentifier& rPreviousOutputParameterIdentifier) const;
+			virtual IParameter* getOutputParameter(
+				const CIdentifier& rOutputParameterIdentifier);
 
 			virtual bool isInputTriggerActive(
-				const OpenViBE::CIdentifier& rInputTriggerIdentifier) const;
+				const CIdentifier& rInputTriggerIdentifier) const;
 
 			virtual bool activateOutputTrigger(
-				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
+				const CIdentifier& rOutputTriggerIdentifier,
 				const bool bTriggerState);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmContext >, OVK_ClassId_Kernel_Algorithm_AlgorithmContext)
 
 		protected:
 
-			OpenViBE::Kernel::ILogManager& m_rLogManager;
-			OpenViBE::Kernel::CAlgorithmProxy& m_rAlgorithmProxy;
+			ILogManager& m_rLogManager;
+			CAlgorithmProxy& m_rAlgorithmProxy;
 		};
 	};
 };

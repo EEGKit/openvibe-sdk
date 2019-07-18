@@ -46,7 +46,7 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::CSV;
+using namespace CSV;
 
 namespace
 {
@@ -138,7 +138,7 @@ bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputStr
 }
 
 CCSVHandler::CCSVHandler(void)
-	: m_LogError(ELogErrorCodes::LogErrorCodes_NoError)
+	: m_LogError(LogErrorCodes_NoError)
 	  , m_LastStringError("")
 	  , m_InputTypeIdentifier(EStreamType::StreamedMatrix)
 	  , m_DimensionCount(0)
@@ -823,7 +823,7 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 		return false;
 	}
 
-	CSV::ELogErrorCodes error;
+	ELogErrorCodes error;
 	const size_t dimensionCount = m_DimensionLabels.size();
 
 	if (!std::all_of(samples.cbegin(), samples.cend(), [&error, dimensionCount](const SMatrixChunk& sample)
@@ -1924,12 +1924,12 @@ bool CCSVHandler::hasDataToRead() const
 	return m_HasDataToRead;
 }
 
-CSV_API ICSVHandler* OpenViBE::CSV::createCSVHandler()
+CSV_API ICSVHandler* CSV::createCSVHandler()
 {
 	return new CCSVHandler();
 }
 
-CSV_API void OpenViBE::CSV::releaseCSVHandler(ICSVHandler* object)
+CSV_API void CSV::releaseCSVHandler(ICSVHandler* object)
 {
 	delete dynamic_cast<CCSVHandler *>(object);
 }

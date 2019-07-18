@@ -97,7 +97,7 @@ namespace EBML
 // ________________________________________________________________________________________________________________
 //
 
-CWriterNode::CWriterNode(const CIdentifier& rIdentifier, EBML::CWriterNode* pParentNode)
+CWriterNode::CWriterNode(const CIdentifier& rIdentifier, CWriterNode* pParentNode)
 	: m_oIdentifier(rIdentifier)
 	  , m_pParentNode(pParentNode)
 	  , m_ui64BufferLength(0)

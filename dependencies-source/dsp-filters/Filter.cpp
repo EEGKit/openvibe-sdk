@@ -82,7 +82,7 @@ namespace Dsp
 		assert(0);
 	}
 
-	void Filter::copyParamsFrom(Dsp::Filter const* other)
+	void Filter::copyParamsFrom(Filter const* other)
 	{
 		// first, set reasonable defaults
 		m_params = getDefaultParams();

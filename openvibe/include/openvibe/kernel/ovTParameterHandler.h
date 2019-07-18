@@ -63,7 +63,7 @@ namespace OpenViBE
 			 * using the default constructor and call the initialize function
 			 * with the provided IParameter pointer.
 			 */
-			TParameterHandler(OpenViBE::Kernel::IParameter* pParameter)
+			TParameterHandler(IParameter* pParameter)
 				: m_pParameter(pParameter) { }
 
 			//@}
@@ -79,7 +79,7 @@ namespace OpenViBE
 			 * Future calls to this handler will be redirected to the
 			 * concrete parameter object.
 			 */
-			bool initialize(OpenViBE::Kernel::IParameter* pParameter)
+			bool initialize(IParameter* pParameter)
 			{
 				if (m_pParameter) { return false; }
 
@@ -197,7 +197,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			bool setReferenceTarget(OpenViBE::Kernel::TParameterHandler<T>& rParameterHandler)
+			bool setReferenceTarget(TParameterHandler<T>& rParameterHandler)
 			{
 				return m_pParameter && rParameterHandler.m_pParameter ? m_pParameter->setReferenceTarget(rParameterHandler.m_pParameter) : false;
 			}
@@ -207,7 +207,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			bool setReferenceTarget(OpenViBE::Kernel::IParameter* pParameter)
+			bool setReferenceTarget(IParameter* pParameter)
 			{
 				return m_pParameter && pParameter ? m_pParameter->setReferenceTarget(pParameter) : false;
 			}
@@ -226,7 +226,7 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::Kernel::IParameter* m_pParameter; //!< Handled parameter
+			IParameter* m_pParameter; //!< Handled parameter
 		};
 	};
 };

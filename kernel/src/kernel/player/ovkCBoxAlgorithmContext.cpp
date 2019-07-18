@@ -5,7 +5,7 @@
 #include "lepton/Lepton.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 CBoxAlgorithmContext::CBoxAlgorithmContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox, const IBox* pBox)
 	: TKernelObject<IBoxAlgorithmContext>(rKernelContext)

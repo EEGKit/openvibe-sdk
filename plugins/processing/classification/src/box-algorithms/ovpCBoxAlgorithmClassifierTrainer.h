@@ -55,10 +55,10 @@ namespace OpenViBEPlugins
 				uint32_t m_ui32InputIndex;
 			} SFeatureVector;
 
-			virtual bool train(const std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector>& rDataset,
+			virtual bool train(const std::vector<SFeatureVector>& rDataset,
 											const std::vector<size_t>& rPermutation,
 											const size_t uiStartIndex, const size_t uiStopIndex);
-			virtual double getAccuracy(const std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector>& rDataset,
+			virtual double getAccuracy(const std::vector<SFeatureVector>& rDataset,
 												  const std::vector<size_t>& rPermutation,
 												  const size_t uiStartIndex, const size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
 			virtual bool printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
@@ -82,9 +82,9 @@ namespace OpenViBEPlugins
 
 			std::map<OpenViBE::CString, OpenViBE::CString>* m_pParameter;
 
-			std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector> m_vDataset;
+			std::vector<SFeatureVector> m_vDataset;
 
-			std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector> m_vBalancedDataset;
+			std::vector<SFeatureVector> m_vBalancedDataset;
 		};
 
 		class CBoxAlgorithmClassifierTrainerDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -105,7 +105,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.1.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ClassifierTrainer; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CBoxAlgorithmClassifierTrainer; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmClassifierTrainer; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{

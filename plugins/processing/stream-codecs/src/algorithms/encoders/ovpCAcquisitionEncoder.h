@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CAcquisitionEncoder : public OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoder
+		class CAcquisitionEncoder : public CEBMLBaseEncoder
 		{
 		public:
 
@@ -41,7 +41,7 @@ namespace OpenViBEPlugins
 		private:
 		};
 
-		class CAcquisitionEncoderDesc : public OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc
+		class CAcquisitionEncoderDesc : public CEBMLBaseEncoderDesc
 		{
 		public:
 
@@ -59,11 +59,11 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_AcquisitionStreamEncoder; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CAcquisitionEncoder(); }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CAcquisitionEncoder(); }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
-				OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
+				CEBMLBaseEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_BufferDuration, "Buffer duration", OpenViBE::Kernel::ParameterType_UInteger);
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ExperimentInformationStream, "Experiment information stream", OpenViBE::Kernel::ParameterType_MemoryBuffer);

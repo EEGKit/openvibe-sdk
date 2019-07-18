@@ -17,7 +17,7 @@ namespace OpenViBE
 		{
 		public:
 
-			TBaseParameter(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::EParameterType eParameterType, const OpenViBE::CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier)
+			TBaseParameter(const IKernelContext& rKernelContext, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier)
 				: IBase(rKernelContext)
 				  , m_pParameterRef(0)
 				  , m_pValueRef(0)
@@ -30,12 +30,12 @@ namespace OpenViBE
 				return sizeof(IType);
 			}
 
-			virtual OpenViBE::Kernel::EParameterType getType(void) const
+			virtual EParameterType getType(void) const
 			{
 				return m_eParameterType;
 			}
 
-			virtual OpenViBE::CIdentifier getSubTypeIdentifier(void) const
+			virtual CIdentifier getSubTypeIdentifier(void) const
 			{
 				return m_oSubTypeIdentifier;
 			}
@@ -47,13 +47,13 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool getReferenceTarget(OpenViBE::Kernel::IParameter*& pParameterRef) const
+			virtual bool getReferenceTarget(IParameter*& pParameterRef) const
 			{
 				pParameterRef = m_pParameterRef;
 				return true;
 			}
 
-			virtual bool setReferenceTarget(OpenViBE::Kernel::IParameter* pParameterRef)
+			virtual bool setReferenceTarget(IParameter* pParameterRef)
 			{
 				if (m_pValueRef)
 				{
@@ -117,11 +117,11 @@ namespace OpenViBE
 
 		protected:
 
-			OpenViBE::Kernel::IParameter* m_pParameterRef;
+			IParameter* m_pParameterRef;
 			IType* m_pValueRef;
 			IType m_Value;
-			OpenViBE::Kernel::EParameterType m_eParameterType;
-			OpenViBE::CIdentifier m_oSubTypeIdentifier;
+			EParameterType m_eParameterType;
+			CIdentifier m_oSubTypeIdentifier;
 		};
 	};
 };

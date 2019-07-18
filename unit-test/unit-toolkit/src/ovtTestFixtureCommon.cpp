@@ -28,8 +28,8 @@
 namespace OpenViBETest
 {
 	using namespace OpenViBE;
-	using namespace OpenViBE::Kernel;
-	using namespace OpenViBE::Plugins;
+	using namespace Kernel;
+	using namespace Plugins;
 
 	KernelFixture::KernelFixture(const std::string& configFile) : m_ConfigurationFile(configFile) { }
 
@@ -43,7 +43,7 @@ namespace OpenViBETest
 		CString kernelFile;
 
 #if defined TARGET_OS_Windows
-		kernelFile = OpenViBE::Directories::getLibDir() + "/openvibe-kernel.dll";
+		kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
 		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
@@ -77,7 +77,7 @@ namespace OpenViBETest
 		}
 		else
 		{
-			configurationFile = CString(OpenViBE::Directories::getDataDir() + "/kernel/openvibe.conf");
+			configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
 		}
 
 

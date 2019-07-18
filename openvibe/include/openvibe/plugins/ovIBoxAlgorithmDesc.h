@@ -29,7 +29,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IBoxAlgorithmDesc : public OpenViBE::Plugins::IPluginObjectDesc
+		class OV_API IBoxAlgorithmDesc : public IPluginObjectDesc
 		{
 		public:
 
@@ -49,7 +49,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Plugins::IBoxProto
 			 */
-			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const = 0;
+			virtual bool getBoxPrototype(Kernel::IBoxProto& rPrototype) const = 0;
 			/**
 			 * \brief Gets the stock item to display with this algorithm
 			 * \return The stock item to display with this algorithm.
@@ -67,9 +67,9 @@ namespace OpenViBE
 			 * should now be handled at application level.
 			 *
 			 */
-			virtual OpenViBE::CString getStockItemName(void) const
+			virtual CString getStockItemName(void) const
 			{
-				return OpenViBE::CString("");
+				return CString("");
 			}
 
 			//@{
@@ -87,7 +87,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxProto
 			 * \sa OpenViBE::Plugins::IBoxListener
 			 */
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const
+			virtual IBoxListener* createBoxListener(void) const
 			{
 				return NULL;
 			}
@@ -101,7 +101,7 @@ namespace OpenViBE
 			 * can be freed safely, no more call will be done on this
 			 * box listener.
 			 */
-			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { }
+			virtual void releaseBoxListener(IBoxListener* pBoxListener) const { }
 
 			//@}
 

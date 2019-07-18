@@ -54,7 +54,7 @@ CMessaging::CMessaging()
 	impl                         = new MessagingImplementation();
 	impl->m_MessageCount         = 0;
 	impl->m_Connection           = nullptr;
-	impl->m_LastLibraryError     = CMessaging::ELibraryError::NoError;
+	impl->m_LastLibraryError     = NoError;
 	impl->m_IsStopRequested      = false;
 	impl->m_IsInErrorState       = false;
 	impl->m_IsEndMessageReceived = false;
@@ -73,7 +73,7 @@ void CMessaging::reset()
 	impl->m_MessageCount     = 0;
 	impl->m_IsInErrorState   = false;
 	impl->m_IsStopRequested  = false;
-	impl->m_LastLibraryError = CMessaging::ELibraryError::NoError;
+	impl->m_LastLibraryError = NoError;
 
 	std::queue<std::pair<uint64_t, AuthenticationMessage>>().swap(impl->m_IncomingAuthentications);
 	std::queue<std::pair<uint64_t, CommunicationProtocolVersionMessage>>().swap(impl->m_IncomingCommunicationProtocolVersions);
@@ -94,7 +94,7 @@ CMessaging::ELibraryError CMessaging::getLastError() const
 	return impl->m_LastLibraryError;
 }
 
-void CMessaging::setLastError(const CMessaging::ELibraryError libraryError)
+void CMessaging::setLastError(const ELibraryError libraryError)
 {
 	impl->m_LastLibraryError = libraryError;
 }
@@ -195,13 +195,13 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 	// Try to unpack the object according to the type given by the header.
 	switch (header.getType())
 	{
-		case EMessageType::MessageType_Authentication:
+		case MessageType_Authentication:
 		{
 			AuthenticationMessage authentication;
 
 			if (!authentication.fromBytes(buffer, byteRead))
 			{
-				this->pushMessage(ErrorMessage(EError::Error_BadMessage, header.getId()));
+				this->pushMessage(ErrorMessage(Error_BadMessage, header.getId()));
 				this->setLastError(Deserialize_AuthenticationMessage);
 				return false;
 			}
@@ -211,13 +211,13 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		}
 		break;
 
-		case EMessageType::MessageType_ProtocolVersion:
+		case MessageType_ProtocolVersion:
 		{
 			CommunicationProtocolVersionMessage communicationProtocolVersion;
 
 			if (!communicationProtocolVersion.fromBytes(buffer, byteRead))
 			{
-				this->pushMessage(ErrorMessage(EError::Error_BadMessage, header.getId()));
+				this->pushMessage(ErrorMessage(Error_BadMessage, header.getId()));
 				this->setLastError(Deserialize_ProtocolVersionMessage);
 				return false;
 			}
@@ -227,13 +227,13 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		}
 		break;
 
-		case EMessageType::MessageType_BoxInformation:
+		case MessageType_BoxInformation:
 		{
 			BoxDescriptionMessage boxDescription;
 
 			if (!boxDescription.fromBytes(buffer, byteRead))
 			{
-				this->pushMessage(ErrorMessage(EError::Error_BadMessage, header.getId()));
+				this->pushMessage(ErrorMessage(Error_BadMessage, header.getId()));
 				this->setLastError(Deserialize_BoxDescriptionMessage);
 				return false;
 			}
@@ -243,20 +243,20 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		}
 		break;
 
-		case EMessageType::MessageType_EBML:
+		case MessageType_EBML:
 		{
 			EBMLMessage ebml;
 
 			if (!ebml.fromBytes(buffer, byteRead))
 			{
-				this->pushMessage(ErrorMessage(EError::Error_BadMessage, header.getId()));
+				this->pushMessage(ErrorMessage(Error_BadMessage, header.getId()));
 				this->setLastError(Deserialize_EBMLMessage);
 				return false;
 			}
 
 			if (ebml.getIndex() >= impl->m_BoxDescription.getOutputs()->size())
 			{
-				this->pushMessage(ErrorMessage(EError::Error_InvalidOutputIndex, header.getId()));
+				this->pushMessage(ErrorMessage(Error_InvalidOutputIndex, header.getId()));
 			}
 
 			std::lock_guard<std::mutex> lock(impl->m_IncEBMLMutex);
@@ -264,13 +264,13 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		}
 		break;
 
-		case EMessageType::MessageType_Log:
+		case MessageType_Log:
 		{
 			LogMessage log;
 
 			if (!log.fromBytes(buffer, byteRead))
 			{
-				this->pushMessage(ErrorMessage(EError::Error_BadMessage, header.getId()));
+				this->pushMessage(ErrorMessage(Error_BadMessage, header.getId()));
 				this->setLastError(Deserialize_LogMessage);
 				return false;
 			}
@@ -280,19 +280,19 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		}
 		break;
 
-		case EMessageType::MessageType_End:
+		case MessageType_End:
 		{
 			impl->m_IsEndMessageReceived = true;
 		}
 		break;
 
-		case EMessageType::MessageType_Error:
+		case MessageType_Error:
 		{
 			ErrorMessage error;
 
 			if (!error.fromBytes(buffer, byteRead))
 			{
-				this->pushMessage(ErrorMessage(EError::Error_BadMessage, header.getId()));
+				this->pushMessage(ErrorMessage(Error_BadMessage, header.getId()));
 				this->setLastError(Deserialize_ErrorMessage);
 				return false;
 			}
@@ -302,13 +302,13 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		}
 		break;
 
-		case EMessageType::MessageType_Time:
+		case MessageType_Time:
 		{
 			TimeMessage timeMessage;
 
 			if (!timeMessage.fromBytes(buffer, byteRead))
 			{
-				this->pushMessage(ErrorMessage(EError::Error_BadMessage, header.getId()));
+				this->pushMessage(ErrorMessage(Error_BadMessage, header.getId()));
 				this->setLastError(Deserialize_ErrorMessage);
 				return false;
 			}
@@ -317,15 +317,15 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 		}
 		break;
 
-		case EMessageType::MessageType_Sync:
+		case MessageType_Sync:
 		{
 			impl->m_WasSyncMessageReceived = true;
 		}
 		break;
 
-		case EMessageType::MessageType_Unknown:
-		case EMessageType::MessageType_MAX:
-			this->pushMessage(ErrorMessage(EError::Error_InvalidMessageType, header.getId()));
+		case MessageType_Unknown:
+		case MessageType_MAX:
+			this->pushMessage(ErrorMessage(Error_InvalidMessageType, header.getId()));
 			this->setLastError(Deserialize_MessageTypeNotSupported);
 			return false;
 	}

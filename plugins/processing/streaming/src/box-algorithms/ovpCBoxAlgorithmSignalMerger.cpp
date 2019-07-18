@@ -3,11 +3,11 @@
 #include <system/ovCMemory.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Streaming;
+using namespace Streaming;
 
 bool CBoxAlgorithmSignalMerger::initialize(void)
 {

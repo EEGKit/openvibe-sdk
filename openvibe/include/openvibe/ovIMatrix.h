@@ -18,7 +18,7 @@ namespace OpenViBE
 	 *
 	 * OpenViBE provides an standalone implementation of this interface in OpenViBE::CMatrix
 	 */
-	class OV_API IMatrix : public OpenViBE::IObject
+	class OV_API IMatrix : public IObject
 	{
 	public:
 

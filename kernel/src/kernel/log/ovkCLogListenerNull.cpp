@@ -1,7 +1,7 @@
 #include "ovkCLogListenerNull.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 using namespace std;
 
 CLogListenerNull::CLogListenerNull(const IKernelContext& rKernelContext)

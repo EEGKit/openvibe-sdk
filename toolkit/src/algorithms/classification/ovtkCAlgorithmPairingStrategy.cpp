@@ -4,19 +4,19 @@
 #include <map>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEToolkit;
 
 static std::map<uint64_t, fClassifierComparison> mComparisionFunctionMap;
 
-void OpenViBEToolkit::registerClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier, fClassifierComparison pComparision)
+void OpenViBEToolkit::registerClassificationComparisonFunction(const CIdentifier& rClassIdentifier, fClassifierComparison pComparision)
 {
 	mComparisionFunctionMap[rClassIdentifier.toUInteger()] = pComparision;
 }
 
-fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier)
+fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const CIdentifier& rClassIdentifier)
 {
 	if (mComparisionFunctionMap.count(rClassIdentifier.toUInteger()) == 0)
 		return NULL;

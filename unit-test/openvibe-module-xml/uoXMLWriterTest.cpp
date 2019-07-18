@@ -86,7 +86,7 @@ TEST(XML_Writer_Test_Case, validateWriter)
 	// serializing
 	CWriterCallBack writerCallback(outputFile.c_str());
 
-	XML::IWriter* writer = XML::createWriter(writerCallback);
+	XML::IWriter* writer = createWriter(writerCallback);
 
 	writer->openChild("Document"); //!< Document Node
 	writer->setAttribute("name", "test_reference");
@@ -186,7 +186,7 @@ TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
 
 int uoXMLWriterTest(int argc, char* argv[])
 {
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 
 	::testing::GTEST_FLAG(filter) = "XML_Writer_Test_Case.*";
 	return RUN_ALL_TESTS();

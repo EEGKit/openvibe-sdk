@@ -33,7 +33,7 @@
 
 namespace OpenViBEToolkit
 {
-	class OVTK_API CAlgorithmClassifier : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+	class OVTK_API CAlgorithmClassifier : public TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 	{
 	public:
 
@@ -44,11 +44,11 @@ namespace OpenViBEToolkit
 
 		virtual bool process(void);
 
-		virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) = 0;
-		virtual bool classify(const OpenViBEToolkit::IFeatureVector& featureVector
+		virtual bool train(const IFeatureVectorSet& featureVectorSet) = 0;
+		virtual bool classify(const IFeatureVector& featureVector
 										   , double& estimatedClass
-										   , OpenViBEToolkit::IVector& distanceValue
-										   , OpenViBEToolkit::IVector& probabilityValue) = 0;
+										   , IVector& distanceValue
+										   , IVector& probabilityValue) = 0;
 
 		virtual XML::IXMLNode* saveConfiguration(void) = 0;
 		virtual bool loadConfiguration(XML::IXMLNode* configurationRoot) = 0;

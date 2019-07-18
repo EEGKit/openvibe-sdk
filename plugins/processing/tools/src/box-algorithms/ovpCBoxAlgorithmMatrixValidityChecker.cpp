@@ -3,11 +3,11 @@
 #include <cmath>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Tools;
+using namespace Tools;
 
 bool CBoxAlgorithmMatrixValidityChecker::initialize(void)
 {

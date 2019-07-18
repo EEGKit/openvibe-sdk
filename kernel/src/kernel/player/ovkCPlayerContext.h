@@ -11,21 +11,21 @@ namespace OpenViBE
 	{
 		class CSimulatedBox;
 
-		class CPlayerContext : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerContext>
+		class CPlayerContext : public TKernelObject<IPlayerContext>
 		{
 		public:
 
-			CPlayerContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CSimulatedBox* pSimulatedBox);
+			CPlayerContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox);
 			virtual ~CPlayerContext();
 
 			virtual bool sendSignal(
-				const OpenViBE::CMessageSignal& rMessageSignal);
+				const CMessageSignal& rMessageSignal);
 			virtual bool sendMessage(
-				const OpenViBE::CMessageEvent& rMessageEvent,
-				const OpenViBE::CIdentifier& rTargetIdentifier);
+				const CMessageEvent& rMessageEvent,
+				const CIdentifier& rTargetIdentifier);
 			virtual bool sendMessage(
-				const OpenViBE::CMessageEvent& rMessageEvent,
-				const OpenViBE::CIdentifier* pTargetIdentifier,
+				const CMessageEvent& rMessageEvent,
+				const CIdentifier* pTargetIdentifier,
 				const uint32_t ui32TargetIdentifierCount);
 
 			virtual uint64_t getCurrentTime(void) const;
@@ -37,33 +37,33 @@ namespace OpenViBE
 			virtual bool pause(void);
 			virtual bool play(void);
 			virtual bool forward(void);
-			virtual OpenViBE::Kernel::EPlayerStatus getStatus(void) const;
+			virtual EPlayerStatus getStatus(void) const;
 
 			//@}
 
-			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const;
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const;
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const;
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const;
-			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const;
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const;
-			bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const;
-			OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier) const;
-			bool releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject) const;
+			virtual IAlgorithmManager& getAlgorithmManager(void) const;
+			virtual IConfigurationManager& getConfigurationManager(void) const;
+			virtual ILogManager& getLogManager(void) const;
+			virtual IErrorManager& getErrorManager(void) const;
+			virtual IScenarioManager& getScenarioManager(void) const;
+			virtual ITypeManager& getTypeManager(void) const;
+			bool canCreatePluginObject(const CIdentifier& pluginIdentifier) const;
+			Plugins::IPluginObject* createPluginObject(const CIdentifier& pluginIdentifier) const;
+			bool releasePluginObject(Plugins::IPluginObject* pluginObject) const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerContext>, OVK_ClassId_Kernel_Player_PlayerContext)
 
 		private:
 
-			OpenViBE::Kernel::CSimulatedBox& m_rSimulatedBox;
-			OpenViBE::Kernel::IPluginManager& m_rPluginManager;
-			OpenViBE::Kernel::IAlgorithmManager& m_rAlgorithmManager;
-			OpenViBE::Kernel::IConfigurationManager& m_rConfigurationManager;
-			OpenViBE::Kernel::ILogManager& m_rLogManager;
-			OpenViBE::Kernel::IErrorManager& m_rErrorManager;
-			OpenViBE::Kernel::IScenarioManager& m_rScenarioManager;
-			OpenViBE::Kernel::ITypeManager& m_rTypeManager;
-			mutable OpenViBE::Kernel::CBoxAlgorithmLogManager m_BoxLogManager;
+			CSimulatedBox& m_rSimulatedBox;
+			IPluginManager& m_rPluginManager;
+			IAlgorithmManager& m_rAlgorithmManager;
+			IConfigurationManager& m_rConfigurationManager;
+			ILogManager& m_rLogManager;
+			IErrorManager& m_rErrorManager;
+			IScenarioManager& m_rScenarioManager;
+			ITypeManager& m_rTypeManager;
+			mutable CBoxAlgorithmLogManager m_BoxLogManager;
 		};
 	};
 };

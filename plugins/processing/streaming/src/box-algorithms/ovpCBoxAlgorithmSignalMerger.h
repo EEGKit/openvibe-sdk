@@ -47,7 +47,7 @@ namespace OpenViBEPlugins
 			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				char l_sInputName[1024];
-				::sprintf(l_sInputName, "Input %i", ui32Index + 1);
+				sprintf(l_sInputName, "Input %i", ui32Index + 1);
 				rBox.setInputName(ui32Index, l_sInputName);
 				rBox.setInputType(ui32Index, OV_TypeId_Signal);
 				return true;
@@ -89,7 +89,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
 
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_SignalMerger; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Streaming::CBoxAlgorithmSignalMerger; }
+			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmSignalMerger; }
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmSignalMergerListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 

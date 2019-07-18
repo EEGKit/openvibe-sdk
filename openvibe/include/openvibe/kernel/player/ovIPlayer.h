@@ -47,7 +47,7 @@ namespace OpenViBE
 		 *       more OpenViBE compliant (use IDs, intialize/unitialize
 		 *       pairs etc...)
 		 */
-		class OV_API IPlayer : public OpenViBE::Kernel::IKernelObject
+		class OV_API IPlayer : public IKernelObject
 		{
 		public:
 
@@ -60,8 +60,8 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool setScenario(
-				const OpenViBE::CIdentifier& rScenarioIdentifier,
-				const OpenViBE::CNameValuePairList* pLocalConfigurationTokens = NULL) = 0;
+				const CIdentifier& rScenarioIdentifier,
+				const CNameValuePairList* pLocalConfigurationTokens = NULL) = 0;
 
 			/**
 			 * \brief returns a reference to the runtime configuration manager
@@ -74,7 +74,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IConfigurationManager
 			 */
-			virtual OpenViBE::Kernel::IConfigurationManager& getRuntimeConfigurationManager(void) const = 0;
+			virtual IConfigurationManager& getRuntimeConfigurationManager(void) const = 0;
 
 			/**
 			 * \brief returns a reference to the runtime scenario manager
@@ -86,7 +86,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IScenarioManager
 			 */
-			virtual OpenViBE::Kernel::IScenarioManager& getRuntimeScenarioManager(void) const = 0;
+			virtual IScenarioManager& getRuntimeScenarioManager(void) const = 0;
 
 			/**
 			 * \brief returns the cidentifier of the associated runtime scenario
@@ -97,7 +97,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::CIdentifier
 			 */
-			virtual OpenViBE::CIdentifier getRuntimeScenarioIdentifier(void) const = 0;
+			virtual CIdentifier getRuntimeScenarioIdentifier(void) const = 0;
 
 			/**
 			 * \brief Initializes this player
@@ -146,7 +146,7 @@ namespace OpenViBE
 			 * \brief Gets current player status
 			 * \return current player status
 			 */
-			virtual OpenViBE::Kernel::EPlayerStatus getStatus(void) const = 0;
+			virtual EPlayerStatus getStatus(void) const = 0;
 
 			/**
 			 * \brief Sets maximum fast forward factor coefficient

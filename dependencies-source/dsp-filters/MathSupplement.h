@@ -111,7 +111,7 @@ namespace Dsp
 	template <>
 	inline bool is_nan<complex_t>(complex_t v)
 	{
-		return Dsp::is_nan(v.real()) || Dsp::is_nan(v.imag());
+		return is_nan(v.real()) || is_nan(v.imag());
 	}
 
 	//------------------------------------------------------------------------------

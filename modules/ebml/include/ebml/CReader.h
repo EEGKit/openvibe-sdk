@@ -5,21 +5,21 @@
 
 namespace EBML
 {
-	class EBML_API CReader : public EBML::IReader
+	class EBML_API CReader : public IReader
 	{
 	public:
 
-		explicit CReader(EBML::IReaderCallback& rReaderCallback);
+		explicit CReader(IReaderCallback& rReaderCallback);
 		virtual ~CReader(void);
 
 		virtual bool processData(const void* pBuffer, const uint64_t ui64BufferSize);
-		virtual EBML::CIdentifier getCurrentNodeIdentifier(void) const;
+		virtual CIdentifier getCurrentNodeIdentifier(void) const;
 		virtual uint64_t getCurrentNodeSize(void) const;
 		virtual void release(void);
 
 	protected:
 
-		EBML::IReader* m_pReaderImplementation;
+		IReader* m_pReaderImplementation;
 
 	private:
 

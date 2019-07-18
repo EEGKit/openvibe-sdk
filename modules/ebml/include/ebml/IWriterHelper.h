@@ -50,7 +50,7 @@ namespace EBML
 		 * thanks to the \c disconnect function. It must be done
 		 * before calling \c connect again.
 		 */
-		virtual bool connect(EBML::IWriter* pWriter) = 0;
+		virtual bool connect(IWriter* pWriter) = 0;
 		/**
 		 * \brief Disconnects the currently connected EBML writer
 		 * \return \e true on success.
@@ -76,7 +76,7 @@ namespace EBML
 		 * corresponding EBML::IWriter function. See
 		 * EBML::IWriter::openChild for more details.
 		 */
-		virtual bool openChild(const EBML::CIdentifier& rIdentifier) = 0;
+		virtual bool openChild(const CIdentifier& rIdentifier) = 0;
 		/**
 		 * \brief Child closing binding
 		 * \return \e true on success.
@@ -174,7 +174,7 @@ namespace EBML
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API EBML::IWriterHelper* createWriterHelper(void);
+	extern EBML_API IWriterHelper* createWriterHelper(void);
 };
 
 #endif // __EBML_IEnhancedWriter_H__

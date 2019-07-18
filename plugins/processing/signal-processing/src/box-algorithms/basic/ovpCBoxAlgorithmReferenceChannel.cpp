@@ -4,11 +4,11 @@
 #include <limits>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 
 namespace
 {
@@ -99,7 +99,7 @@ bool CBoxAlgorithmReferenceChannel::process(void)
 			CString l_sChannel       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			uint64_t l_ui64MatchMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-			m_ui32ReferenceChannelIndex = ::_find_channel_(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
+			m_ui32ReferenceChannelIndex = _find_channel_(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
 
 			OV_ERROR_UNLESS_KRF(
 				m_ui32ReferenceChannelIndex != std::numeric_limits<uint32_t>::max(),
@@ -107,7 +107,7 @@ bool CBoxAlgorithmReferenceChannel::process(void)
 				OpenViBE::Kernel::ErrorType::BadSetting
 			);
 
-			if (::_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::max())
+			if (_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::max())
 			{
 				OV_WARNING_K("Multiple channels match for setting [" << l_sChannel << "]. Selecting [" << m_ui32ReferenceChannelIndex << "]");
 			}
