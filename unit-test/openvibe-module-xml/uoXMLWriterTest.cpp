@@ -49,7 +49,7 @@ public:
 		}
 	}
 
-	virtual void write(const char* outputData) override
+	void write(const char* outputData) override
 	{
 		if (m_File)
 		{

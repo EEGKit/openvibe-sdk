@@ -49,13 +49,13 @@ namespace Dsp
 	typedef std::pair<complex_t, complex_t> complex_pair_t;
 
 	template <typename Real>
-	inline std::complex<Real> solve_quadratic_1(Real a, Real b, Real c)
+	std::complex<Real> solve_quadratic_1(Real a, Real b, Real c)
 	{
 		return (-b + sqrt(std::complex<Real>(b * b - 4 * a * c, 0))) / (2. * a);
 	}
 
 	template <typename Real>
-	inline std::complex<Real> solve_quadratic_2(Real a, Real b, Real c)
+	std::complex<Real> solve_quadratic_2(Real a, Real b, Real c)
 	{
 		return (-b - sqrt(std::complex<Real>(b * b - 4 * a * c, 0))) / (2. * a);
 	}
@@ -67,23 +67,18 @@ namespace Dsp
 
 	inline const complex_t adjust_imag(const complex_t& c)
 	{
-		if (fabs(c.imag()) < 1e-30)
-			return complex_t(c.real(), 0);
-		else
-			return c;
+		if (fabs(c.imag()) < 1e-30) { return complex_t(c.real(), 0); }
+		return c;
 	}
 
 	template <typename Ty, typename To>
-	inline std::complex<Ty> addmul(const std::complex<Ty>& c,
-								   Ty v,
-								   const std::complex<To>& c1)
+	std::complex<Ty> addmul(const std::complex<Ty>& c, Ty v, const std::complex<To>& c1)
 	{
-		return std::complex<Ty>(
-			c.real() + v * c1.real(), c.imag() + v * c1.imag());
+		return std::complex<Ty>(c.real() + v * c1.real(), c.imag() + v * c1.imag());
 	}
 
 	template <typename Ty>
-	inline std::complex<Ty> recip(const std::complex<Ty>& c)
+	std::complex<Ty> recip(const std::complex<Ty>& c)
 	{
 		Ty n = 1.0 / std::norm(c);
 
@@ -91,28 +86,16 @@ namespace Dsp
 	}
 
 	template <typename Ty>
-	inline Ty asinh(Ty x)
-	{
-		return log(x + std::sqrt(x * x + 1));
-	}
+	Ty asinh(Ty x) { return log(x + std::sqrt(x * x + 1)); }
 
 	template <typename Ty>
-	inline Ty acosh(Ty x)
-	{
-		return log(x + std::sqrt(x * x - 1));
-	}
+	Ty acosh(Ty x) { return log(x + std::sqrt(x * x - 1)); }
 
 	template <typename Ty>
-	inline bool is_nan(Ty v)
-	{
-		return !(v == v);
-	}
+	bool is_nan(Ty v) { return !(v == v); }
 
 	template <>
-	inline bool is_nan<complex_t>(complex_t v)
-	{
-		return is_nan(v.real()) || is_nan(v.imag());
-	}
+	inline bool is_nan<complex_t>(complex_t v) { return is_nan(v.real()) || is_nan(v.imag()); }
 
 	//------------------------------------------------------------------------------
 
@@ -128,20 +111,13 @@ namespace Dsp
 	class DenormalPrevention
 	{
 	public:
-		DenormalPrevention()
-			: m_v(anti_denormal_vsa) { }
+		DenormalPrevention() : m_v(anti_denormal_vsa) { }
 
 		// small alternating current
-		inline double ac()
-		{
-			return m_v = -m_v;
-		}
+		double ac() { return m_v = -m_v; }
 
 		// small direct current
-		static inline double dc()
-		{
-			return anti_denormal_vsa;
-		}
+		static double dc() { return anti_denormal_vsa; }
 
 	private:
 		double m_v;

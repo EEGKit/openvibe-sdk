@@ -63,10 +63,7 @@ namespace Dsp
 	class DirectFormI
 	{
 	public:
-		DirectFormI()
-		{
-			reset();
-		}
+		DirectFormI() { reset(); }
 
 		void reset()
 		{
@@ -77,13 +74,9 @@ namespace Dsp
 		}
 
 		template <typename Sample>
-		inline Sample process1(const Sample in,
-							   const BiquadBase& s,
-							   const double vsa) // very small amount
+		Sample process1(const Sample in, const BiquadBase& s, const double vsa) // very small amount
 		{
-			double out = s.m_b0 * in + s.m_b1 * m_x1 + s.m_b2 * m_x2
-						 - s.m_a1 * m_y1 - s.m_a2 * m_y2
-						 + vsa;
+			double out = s.m_b0 * in + s.m_b1 * m_x1 + s.m_b2 * m_x2 - s.m_a1 * m_y1 - s.m_a2 * m_y2 + vsa;
 			m_x2 = m_x1;
 			m_y2 = m_y1;
 			m_x1 = in;
@@ -113,10 +106,7 @@ namespace Dsp
 	class DirectFormII
 	{
 	public:
-		DirectFormII()
-		{
-			reset();
-		}
+		DirectFormII() { reset(); }
 
 		void reset()
 		{
@@ -125,9 +115,7 @@ namespace Dsp
 		}
 
 		template <typename Sample>
-		Sample process1(const Sample in,
-						const BiquadBase& s,
-						const double vsa)
+		Sample process1(const Sample in, const BiquadBase& s, const double vsa)
 		{
 			double w   = in - s.m_a1 * m_v1 - s.m_a2 * m_v2 + vsa;
 			double out = s.m_b0 * w + s.m_b1 * m_v1 + s.m_b2 * m_v2;
@@ -158,10 +146,7 @@ namespace Dsp
 	class TransposedDirectFormI
 	{
 	public:
-		TransposedDirectFormI()
-		{
-			reset();
-		}
+		TransposedDirectFormI() { reset(); }
 
 		void reset()
 		{
@@ -177,9 +162,7 @@ namespace Dsp
 		}
 
 		template <typename Sample>
-		inline Sample process1(const Sample in,
-							   const BiquadBase& s,
-							   const double vsa)
+		Sample process1(const Sample in, const BiquadBase& s, const double vsa)
 		{
 			double out;
 
@@ -216,10 +199,7 @@ namespace Dsp
 	class TransposedDirectFormII
 	{
 	public:
-		TransposedDirectFormII()
-		{
-			reset();
-		}
+		TransposedDirectFormII() { reset(); }
 
 		void reset()
 		{
@@ -230,9 +210,7 @@ namespace Dsp
 		}
 
 		template <typename Sample>
-		inline Sample process1(const Sample in,
-							   const BiquadBase& s,
-							   const double vsa)
+		Sample process1(const Sample in, const BiquadBase& s, const double vsa)
 		{
 			double out;
 
@@ -261,15 +239,11 @@ namespace Dsp
 	public:
 		ChannelsState() { }
 
-		const int getNumChannels() const
-		{
-			return Channels;
-		}
+		const int getNumChannels() const { return Channels; }
 
 		void reset()
 		{
-			for (int i = 0; i < Channels; ++i)
-				m_state[i].reset();
+			for (int i = 0; i < Channels; ++i) { m_state[i].reset(); }
 		}
 
 		StateType& operator[](int index)
@@ -279,12 +253,9 @@ namespace Dsp
 		}
 
 		template <class Filter, typename Sample>
-		void process(int numSamples,
-					 Sample* const* arrayOfChannels,
-					 Filter& filter)
+		void process(int numSamples, Sample* const* arrayOfChannels, Filter& filter)
 		{
-			for (int i = 0; i < Channels; ++i)
-				filter.process(numSamples, arrayOfChannels[i], m_state[i]);
+			for (int i = 0; i < Channels; ++i) { filter.process(numSamples, arrayOfChannels[i], m_state[i]); }
 		}
 
 	private:
@@ -304,9 +275,7 @@ namespace Dsp
 		}
 
 		template <class FilterDesign, typename Sample>
-		void process(int numSamples,
-					 Sample* const* arrayOfChannels,
-					 FilterDesign& filter)
+		void process(int numSamples, Sample* const* arrayOfChannels, FilterDesign& filter)
 		{
 			throw std::logic_error("attempt to process empty ChannelState");
 		}

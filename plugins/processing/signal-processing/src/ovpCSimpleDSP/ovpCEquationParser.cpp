@@ -38,7 +38,7 @@ namespace
 	// unfortunately, it seems it does not work correcly in some
 	// cases so I add this sanitizer function to clear the Simple DSP
 	// equation before sending it to BOOST::Ast
-	static std::string find_and_replace(std::string s, const std::string& f, const std::string& r)
+	std::string find_and_replace(std::string s, const std::string& f, const std::string& r)
 	{
 		size_t i;
 		while ((i = s.find(f)) != std::string::npos)

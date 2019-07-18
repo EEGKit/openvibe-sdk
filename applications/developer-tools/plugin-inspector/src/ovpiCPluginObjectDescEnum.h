@@ -18,7 +18,7 @@ public:
 
 	virtual bool callback(const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc) = 0;
 
-	static std::string transform(const std::string& sInput, const bool bRemoveSlash = false);
+	static std::string transform(const std::string& sInput, bool bRemoveSlash = false);
 
 protected:
 

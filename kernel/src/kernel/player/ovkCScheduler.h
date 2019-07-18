@@ -33,7 +33,7 @@ namespace OpenViBE
 			virtual bool setScenario(
 				const CIdentifier& rScenarioIdentifier);
 			virtual bool setFrequency(
-				const uint64_t ui64Frequency);
+				uint64_t ui64Frequency);
 
 			virtual bool isHoldingResources() const;
 
@@ -41,7 +41,7 @@ namespace OpenViBE
 			virtual bool uninitialize(void);
 			virtual bool loop(void);
 
-			virtual bool sendInput(const CChunk& rChunk, const CIdentifier& rBoxIdentifier, const uint32_t ui32InputIndex);
+			virtual bool sendInput(const CChunk& rChunk, const CIdentifier& rBoxIdentifier, uint32_t ui32InputIndex);
 			virtual uint64_t getCurrentTime(void) const;
 			virtual uint64_t getCurrentLateness(void) const;
 			virtual uint64_t getFrequency(void) const;

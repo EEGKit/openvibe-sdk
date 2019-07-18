@@ -49,7 +49,7 @@ public:
 
 protected:
 
-	virtual void openChild(const char* name, const char** attributeName, const char** attributeValue, uint64_t attributeCount) override
+	void openChild(const char* name, const char** attributeName, const char** attributeValue, uint64_t attributeCount) override
 	{
 		auto node = std::make_shared<Node>();
 
@@ -68,12 +68,12 @@ protected:
 		}
 	}
 
-	virtual void processChildData(const char* data) override
+	void processChildData(const char* data) override
 	{
 		currentNode->data = data;
 	}
 
-	virtual void closeChild(void) override
+	void closeChild(void) override
 	{
 		if (currentNode->parent)
 		{

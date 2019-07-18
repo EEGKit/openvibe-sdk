@@ -40,7 +40,7 @@ public:
 
 	virtual ~CReaderCallBack(void) { }
 
-	virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier) override
+	bool isMasterChild(const EBML::CIdentifier& rIdentifier) override
 	{
 		if (rIdentifier == EBML_Identifier_Header) return true;
 		if (rIdentifier == EBML::CIdentifier(0xffff)) return true;
@@ -48,7 +48,7 @@ public:
 		return false;
 	}
 
-	virtual void openChild(const EBML::CIdentifier& rIdentifier) override
+	void openChild(const EBML::CIdentifier& rIdentifier) override
 	{
 		m_CurrentIdentifier = rIdentifier;
 
@@ -57,7 +57,7 @@ public:
 		m_Depth++;
 	}
 
-	virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override
+	void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override
 	{
 		for (int i = 0; i < m_Depth; i++) g_OutputStream << "   ";
 		if (m_CurrentIdentifier == EBML_Identifier_DocType)
@@ -82,7 +82,7 @@ public:
 			g_OutputStream << "Got " << ui64BufferSize << " data bytes, node id not known\n";
 	}
 
-	virtual void closeChild(void) override
+	void closeChild(void) override
 	{
 		m_Depth--;
 		for (int i = 0; i < m_Depth; i++) g_OutputStream << "   ";

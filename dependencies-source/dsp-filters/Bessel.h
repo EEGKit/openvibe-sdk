@@ -87,7 +87,7 @@ namespace Dsp
 		public:
 			AnalogLowPass();
 
-			void design(const int numPoles,
+			void design(int numPoles,
 						WorkspaceBase* w);
 
 		private:

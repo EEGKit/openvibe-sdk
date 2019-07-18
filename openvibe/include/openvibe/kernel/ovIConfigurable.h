@@ -105,7 +105,7 @@ namespace OpenViBE
 			 */
 			virtual IParameter* createParameter(
 				const CIdentifier& rParameterIdentifier,
-				const EParameterType eParameterType,
+				EParameterType eParameterType,
 				const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Removes an existing parameter

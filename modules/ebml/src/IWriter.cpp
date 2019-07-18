@@ -194,7 +194,7 @@ namespace EBML
 			explicit CWriter(IWriterCallback& rWriterCallback);
 
 			virtual bool openChild(const CIdentifier& rIdentifier);
-			virtual bool setChildData(const void* pBuffer, const uint64_t ui64BufferSize);
+			virtual bool setChildData(const void* pBuffer, uint64_t ui64BufferSize);
 			virtual bool closeChild(void);
 
 			virtual void release(void);

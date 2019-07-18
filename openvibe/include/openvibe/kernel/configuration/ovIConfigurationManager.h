@@ -161,7 +161,7 @@ namespace OpenViBE
 			 */
 			virtual CIdentifier lookUpConfigurationTokenIdentifier(
 				const CString& rConfigurationTokenName,
-				const bool bRecursive = false) const = 0;
+				bool bRecursive = false) const = 0;
 			/**
 			 * \brief Searches the value of a token with a given name
 			 * \param rConfigurationTokenName [in] : the name of the token which value should be found
@@ -238,7 +238,7 @@ namespace OpenViBE
 			 */
 			virtual double expandAsFloat(
 				const CString& rExpression,
-				const double f64FallbackValue = 0) const = 0;
+				double f64FallbackValue = 0) const = 0;
 			/**
 			 * \brief Expands a string to an integer value based on its use of configuration tokens
 			 * \param rExpression [in] : the string that you want to expand
@@ -249,7 +249,7 @@ namespace OpenViBE
 			 */
 			virtual int64_t expandAsInteger(
 				const CString& rExpression,
-				const int64_t i64FallbackValue = 0) const = 0;
+				int64_t i64FallbackValue = 0) const = 0;
 			/**
 			 * \brief Expands a string to an unsigned integer value based on its use of configuration tokens
 			 * \param rExpression [in] : the string that you want to expand
@@ -260,7 +260,7 @@ namespace OpenViBE
 			 */
 			virtual uint64_t expandAsUInteger(
 				const CString& rExpression,
-				const uint64_t ui64FallbackValue = 0) const = 0;
+				uint64_t ui64FallbackValue = 0) const = 0;
 			/**
 			 * \brief Expands a string to a boolean value based on its use of configuration tokens
 			 * \param rExpression [in] : the string that you want to expand
@@ -271,7 +271,7 @@ namespace OpenViBE
 			 */
 			virtual bool expandAsBoolean(
 				const CString& rExpression,
-				const bool bFallbackValue = true) const = 0;
+				bool bFallbackValue = true) const = 0;
 			/**
 			 * \brief Expands a string to an enumeration entry value based on its use of configuration tokens
 			 * \param rExpression [in] : the string that you want to expand
@@ -285,7 +285,7 @@ namespace OpenViBE
 			virtual uint64_t expandAsEnumerationEntryValue(
 				const CString& rExpression,
 				const CIdentifier& rEnumerationTypeIdentifier,
-				const uint64_t ui64FallbackValue = 0) const = 0;
+				uint64_t ui64FallbackValue = 0) const = 0;
 		};
 	};
 };

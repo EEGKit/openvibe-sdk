@@ -18,13 +18,13 @@ namespace OpenViBE
 			virtual bool addInputParameter(
 				const CIdentifier& rInputParameterIdentifier,
 				const CString& sInputName,
-				const EParameterType eParameterType,
+				EParameterType eParameterType,
 				const CIdentifier& rSubTypeIdentifier);
 
 			virtual bool addOutputParameter(
 				const CIdentifier& rOutputParameterIdentifier,
 				const CString& sOutputName,
-				const EParameterType eParameterType,
+				EParameterType eParameterType,
 				const CIdentifier& rSubTypeIdentifier);
 
 			virtual bool addInputTrigger(

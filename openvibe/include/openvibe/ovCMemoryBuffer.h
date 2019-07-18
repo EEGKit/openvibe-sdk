@@ -45,7 +45,7 @@ namespace OpenViBE
 		 * This constructor builds the internal implementation of this memory buffer and initializes it
 		 * with the actual parameter of the constructor as a copy.
 		 */
-		CMemoryBuffer(const uint8_t* pMemoryBuffer, const uint64_t ui64BufferSize);
+		CMemoryBuffer(const uint8_t* pMemoryBuffer, uint64_t ui64BufferSize);
 		/**
 		 * \brief Destructor
 		 *
@@ -56,16 +56,16 @@ namespace OpenViBE
 		//@}
 
 		virtual bool reserve(
-			const uint64_t ui64Size);
+			uint64_t ui64Size);
 		virtual bool setSize(
-			const uint64_t ui64Size,
-			const bool bDiscard);
+			uint64_t ui64Size,
+			bool bDiscard);
 		virtual uint64_t getSize(void) const;
 		virtual uint8_t* getDirectPointer(void);
 		virtual const uint8_t* getDirectPointer(void) const;
 		virtual bool append(
 			const uint8_t* pBuffer,
-			const uint64_t ui64BufferSize);
+			uint64_t ui64BufferSize);
 		virtual bool append(
 			const IMemoryBuffer& rMemoryBuffer);
 

@@ -60,26 +60,26 @@ namespace OpenViBE
 			CIdentifier getNextLinkIdentifier(const CIdentifier& previousIdentifier) const;
 
 			CIdentifier getNextLinkIdentifierFromBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const;
-			CIdentifier getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32_t outputIndex) const;
+			CIdentifier getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t outputIndex) const;
 			CIdentifier getNextLinkIdentifierToBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const;
-			CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32_t inputInex) const;
+			CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t inputInex) const;
 			bool isLink(const CIdentifier& boxIdentifier) const;
 
-			bool setHasIO(const bool hasIO);
+			bool setHasIO(bool hasIO);
 			bool hasIO() const;
-			bool setScenarioInputLink(const uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32_t boxInputIndex);
-			bool setScenarioInputLink(const uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier);
-			bool setScenarioOutputLink(const uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32_t boxOutputIndex);
-			bool setScenarioOutputLink(const uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier);
-			bool getScenarioInputLink(const uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, uint32_t& boxInputIndex) const;
-			bool getScenarioInputLink(const uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const;
-			bool getScenarioOutputLink(const uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, uint32_t& boxOutputIndex) const;
-			bool getScenarioOutputLink(const uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const;
-			bool removeScenarioInputLink(const uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32_t boxInputIndex);
-			bool removeScenarioOutputLink(const uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32_t boxOutputIndex);
+			bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex);
+			bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier);
+			bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex);
+			bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier);
+			bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, uint32_t& boxInputIndex) const;
+			bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const;
+			bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, uint32_t& boxOutputIndex) const;
+			bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const;
+			bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex);
+			bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex);
 
-			bool removeScenarioInput(const uint32_t inputIndex);
-			bool removeScenarioOutput(const uint32_t outputIndex);
+			bool removeScenarioInput(uint32_t inputIndex);
+			bool removeScenarioOutput(uint32_t outputIndex);
 
 			const ILink* getLinkDetails(const CIdentifier& linkIdentifier) const;
 			ILink* getLinkDetails(const CIdentifier& linkIdentifier);
@@ -87,9 +87,9 @@ namespace OpenViBE
 			bool connect(
 				CIdentifier& linkIdentifier,
 				const CIdentifier& sourceBoxIdentifier,
-				const uint32_t sourceBoxOutputIndex,
+				uint32_t sourceBoxOutputIndex,
 				const CIdentifier& targetBoxIdentifier,
-				const uint32_t targetBoxInputIndex,
+				uint32_t targetBoxInputIndex,
 				const CIdentifier& suggestedLinkIdentifier);
 			bool connect(
 				CIdentifier& linkIdentifier,
@@ -100,9 +100,9 @@ namespace OpenViBE
 				const CIdentifier& suggestedLinkIdentifier);
 			bool disconnect(
 				const CIdentifier& sourceBoxIdentifier,
-				const uint32_t sourceBoxOutputIndex,
+				uint32_t sourceBoxOutputIndex,
 				const CIdentifier& targetBoxIdentifier,
-				const uint32_t targetBoxInputIndex);
+				uint32_t targetBoxInputIndex);
 			bool disconnect(
 				const CIdentifier& sourceBoxIdentifier,
 				const CIdentifier& sourceBoxOutputIdentifier,
@@ -146,9 +146,9 @@ namespace OpenViBE
 			void getMetadataIdentifierList(CIdentifier** identifierList, size_t* size) const;
 			void getLinkIdentifierList(CIdentifier** identifierList, size_t* size) const;
 			void getLinkIdentifierFromBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const;
-			void getLinkIdentifierFromBoxOutputList(const CIdentifier& boxIdentifier, const uint32_t outputIndex, CIdentifier** identifierList, size_t* size) const;
+			void getLinkIdentifierFromBoxOutputList(const CIdentifier& boxIdentifier, uint32_t outputIndex, CIdentifier** identifierList, size_t* size) const;
 			void getLinkIdentifierToBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const;
-			void getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, const uint32_t inputInex, CIdentifier** identifierList, size_t* size) const;
+			void getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, uint32_t inputInex, CIdentifier** identifierList, size_t* size) const;
 			void getOutdatedBoxIdentifierList(CIdentifier** identifierList, size_t* size) const;
 			void releaseIdentifierList(CIdentifier* identifierList) const;
 

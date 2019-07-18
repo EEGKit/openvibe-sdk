@@ -16,7 +16,7 @@ namespace System
 	{
 	public:
 
-		static bool initializeRandomMachine(const uint64_t ui64RandomSeed);
+		static bool initializeRandomMachine(uint64_t ui64RandomSeed);
 
 		static uint8_t randomUInteger8(void);
 		static uint16_t randomUInteger16(void);

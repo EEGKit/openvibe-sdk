@@ -34,10 +34,10 @@ using namespace System;
 namespace
 {
 #if defined TARGET_OS_Windows
-	static const std::string s_LibPath = OV_CMAKE_PATH_LIB;
+	const std::string s_LibPath = OV_CMAKE_PATH_LIB;
 
 	// Microsoft specific
-	static const std::string s_ExistingModuleName = "NTDLL.dll";
+	const std::string s_ExistingModuleName = "NTDLL.dll";
 
 	std::string s_ExistingModulePath;
 
@@ -48,22 +48,22 @@ namespace
 #endif
 
 	std::string s_ExistingModulePathName;
-	static const std::string s_NonExistingModuleName = "randomRandomRandom.dll";
+	const std::string s_NonExistingModuleName = "randomRandomRandom.dll";
 
-	static const std::string s_NonExistingSymbol = "nonExistingSymbol";
+	const std::string s_NonExistingSymbol = "nonExistingSymbol";
 
-	static const std::string s_ExistingEnvironmentPath    = "PATH";
-	static const std::string s_NonExistingEnvironmentPath = "randomRandomRandom";
+	const std::string s_ExistingEnvironmentPath    = "PATH";
+	const std::string s_NonExistingEnvironmentPath = "randomRandomRandom";
 
-	static const std::string s_ExistingRegistryModuleName = s_ExistingModuleName;
-	static const std::string s_SymbolNameNTDLL            = "toupper";
+	const std::string s_ExistingRegistryModuleName = s_ExistingModuleName;
+	const std::string s_SymbolNameNTDLL            = "toupper";
 
-	static const HKEY s_ExistingRegistryKey    = HKEY_LOCAL_MACHINE; // 0x80000002
-	static const HKEY s_NonExistingRegistryKey = (HKEY)(ULONG_PTR)((LONG)0x800000FF);
+	const HKEY s_ExistingRegistryKey    = HKEY_LOCAL_MACHINE; // 0x80000002
+	const HKEY s_NonExistingRegistryKey = (HKEY)(ULONG_PTR)((LONG)0x800000FF);
 
-	static const std::string s_ExistingRegistryPath    = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"; // Present on all Windows versions
-	static const char* s_ExistingRegistryKeyName       = "InstallerLocation";
-	static const std::string s_NonExistingRegistryPath = "SOFTWARE\\Random\\Random\\Random";
+	const std::string s_ExistingRegistryPath    = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"; // Present on all Windows versions
+	const char* s_ExistingRegistryKeyName       = "InstallerLocation";
+	const std::string s_NonExistingRegistryPath = "SOFTWARE\\Random\\Random\\Random";
 
 	int (*toupperSymbol)(int c);
 	bool (*randomRandomRandomSymbol)(int number);

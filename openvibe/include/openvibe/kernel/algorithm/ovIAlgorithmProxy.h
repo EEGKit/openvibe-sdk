@@ -146,7 +146,7 @@ namespace OpenViBE
 			 */
 			virtual bool activateInputTrigger(
 				const CIdentifier& rInputTriggerIdentifier,
-				const bool bTriggerState) = 0;
+				bool bTriggerState) = 0;
 
 			//@}
 			/** \name Algorithm functions */

@@ -26,7 +26,7 @@ namespace OpenViBE
 			virtual bool sendMessage(
 				const CMessageEvent& rMessageEvent,
 				const CIdentifier* pTargetIdentifier,
-				const uint32_t ui32TargetIdentifierCount);
+				uint32_t ui32TargetIdentifierCount);
 
 			virtual uint64_t getCurrentTime(void) const;
 			virtual uint64_t getCurrentLateness(void) const;

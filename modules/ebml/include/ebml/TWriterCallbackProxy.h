@@ -15,7 +15,7 @@ namespace EBML
 	public:
 		TWriterCallbackProxy1(
 			COwnerClass& rOwnerObject,
-			void (COwnerClass::*mfpWrite)(const void* pBuffer, const uint64_t ui64BufferSize))
+			void (COwnerClass::*mfpWrite)(const void* pBuffer, uint64_t ui64BufferSize))
 			: m_rOwnerObject(rOwnerObject)
 			  , m_mfpWrite(mfpWrite) { }
 
@@ -29,13 +29,13 @@ namespace EBML
 
 	protected:
 		COwnerClass& m_rOwnerObject;
-		void (COwnerClass::*m_mfpWrite)(const void* pBuffer, const uint64_t ui64BufferSize);
+		void (COwnerClass::*m_mfpWrite)(const void* pBuffer, uint64_t ui64BufferSize);
 	};
 
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass, void (COwnerClass::*mfpWrite)(const void* pBuffer, const uint64_t ui64BufferSize)>
+	template <class COwnerClass, void (COwnerClass::*mfpWrite)(const void* pBuffer, uint64_t ui64BufferSize)>
 	class TWriterCallbackProxy2 : public IWriterCallback
 	{
 	public:
@@ -54,7 +54,7 @@ namespace EBML
 
 	protected:
 		COwnerClass& m_rOwnerObject;
-		void (COwnerClass::*m_mfpWrite)(const void* pBuffer, const uint64_t ui64BufferSize);
+		void (COwnerClass::*m_mfpWrite)(const void* pBuffer, uint64_t ui64BufferSize);
 	};
 
 	// ________________________________________________________________________________________________________________

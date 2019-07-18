@@ -37,7 +37,7 @@ namespace
 
 	struct a_inf_b
 	{
-		inline bool operator()(std::pair<CIdentifier, CString> a, std::pair<CIdentifier, CString> b)
+		bool operator()(std::pair<CIdentifier, CString> a, std::pair<CIdentifier, CString> b)
 		{
 			return a.second < b.second;
 		}

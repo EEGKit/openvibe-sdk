@@ -22,17 +22,17 @@ namespace Socket
 
 		virtual uint32_t sendBuffer(
 			const void* pBuffer,
-			const uint32_t ui32BufferSize) = 0;
+			uint32_t ui32BufferSize) = 0;
 		virtual uint32_t receiveBuffer(
 			void* pBuffer,
-			const uint32_t ui32BufferSize) = 0;
+			uint32_t ui32BufferSize) = 0;
 
 		virtual bool sendBufferBlocking(
 			const void* pBuffer,
-			const uint32_t ui32BufferSize) = 0;
+			uint32_t ui32BufferSize) = 0;
 		virtual bool receiveBufferBlocking(
 			void* pBuffer,
-			const uint32_t ui32BufferSize) = 0;
+			uint32_t ui32BufferSize) = 0;
 
 		virtual bool isConnected(void) const = 0;
 

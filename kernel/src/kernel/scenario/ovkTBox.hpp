@@ -21,7 +21,7 @@
 
 namespace
 {
-	static std::map<OpenViBE::Kernel::BoxInterfacorType, OpenViBE::CString> g_InterfacorTypeToName = {
+	std::map<OpenViBE::Kernel::BoxInterfacorType, OpenViBE::CString> g_InterfacorTypeToName = {
 		{ OpenViBE::Kernel::BoxInterfacorType::Setting, "Setting" },
 		{ OpenViBE::Kernel::BoxInterfacorType::Input, "Input" },
 		{ OpenViBE::Kernel::BoxInterfacorType::Output, "Output" }

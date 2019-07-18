@@ -37,7 +37,7 @@ namespace OpenViBE
 		 * \return the identifier for the specified stimulation.
 		 */
 		virtual const uint64_t getStimulationIdentifier(
-			const uint64_t ui64StimulationIndex) const = 0;
+			uint64_t ui64StimulationIndex) const = 0;
 		/**
 		 * \brief Gets the date of a specific stimulation in this stimulation set
 		 * \param ui64StimulationIndex [in] : the index of the stimulation which date has to be returned
@@ -46,7 +46,7 @@ namespace OpenViBE
 		 * \note dates and durations are returned in seconds fixed point 32:32. Refer to \Doc_TimeManagement for more details
 		 */
 		virtual const uint64_t getStimulationDate(
-			const uint64_t ui64StimulationIndex) const = 0;
+			uint64_t ui64StimulationIndex) const = 0;
 		/**
 		 * \brief Gets the duration of a specific stimulation in this stimulation set
 		 * \param ui64StimulationIndex [in] : the index of the stimulation which duration has to be returned
@@ -54,7 +54,7 @@ namespace OpenViBE
 		 * \note dates and durations are returned in seconds fixed point 32:32. Refer to \Doc_TimeManagement for more details
 		 */
 		virtual const uint64_t getStimulationDuration(
-			const uint64_t ui64StimulationIndex) const = 0;
+			uint64_t ui64StimulationIndex) const = 0;
 		/**
 		 * \brief Changes the stimulation count in this stimulation set
 		 * \param ui64StimulationCount [in] : the new number of stimulations
@@ -62,7 +62,7 @@ namespace OpenViBE
 		 * \return \e false in case of error.
 		 */
 		virtual bool setStimulationCount(
-			const uint64_t ui64StimulationCount) = 0;
+			uint64_t ui64StimulationCount) = 0;
 		/**
 		 * \brief Changes the identifier of a specific stimulation in this stimulation set
 		 * \param ui64StimulationIndex [in] : the index of the stimulation which identifier should be changed
@@ -71,8 +71,8 @@ namespace OpenViBE
 		 * \return \e false in case of error.
 		 */
 		virtual bool setStimulationIdentifier(
-			const uint64_t ui64StimulationIndex,
-			const uint64_t ui64StimulationIdentifier) = 0;
+			uint64_t ui64StimulationIndex,
+			uint64_t ui64StimulationIdentifier) = 0;
 		/**
 		 * \brief Changes the date of a specific stimulation in this stimulation set
 		 * \param ui64StimulationIndex [in] : the index of the stimulation which date should be changed
@@ -82,8 +82,8 @@ namespace OpenViBE
 		 * \note dates and durations are returned in seconds fixed point 32:32. Refer to \Doc_TimeManagement for more details
 		 */
 		virtual bool setStimulationDate(
-			const uint64_t ui64StimulationIndex,
-			const uint64_t ui64StimulationDate) = 0;
+			uint64_t ui64StimulationIndex,
+			uint64_t ui64StimulationDate) = 0;
 		/**
 		 * \brief Changes the duration of a specific stimulation in this stimulation set
 		 * \param ui64StimulationIndex [in] : the index of the stimulation which duration should be changed
@@ -94,8 +94,8 @@ namespace OpenViBE
 		 * \note dates and durations are returned in seconds fixed point 32:32. Refer to \Doc_TimeManagement for more details
 		 */
 		virtual bool setStimulationDuration(
-			const uint64_t ui64StimulationIndex,
-			const uint64_t ui64StimulationDuration) = 0;
+			uint64_t ui64StimulationIndex,
+			uint64_t ui64StimulationDuration) = 0;
 		/**
 		 * \brief Appends a stimulation to this stimulation set
 		 * \param ui64StimulationIdentifier [in] : the identifier of the stimulation to append
@@ -104,9 +104,9 @@ namespace OpenViBE
 		 * \return the index of the appended stimulation in this stimulation set
 		 */
 		virtual uint64_t appendStimulation(
-			const uint64_t ui64StimulationIdentifier,
-			const uint64_t ui64StimulationDate,
-			const uint64_t ui64StimulationDuration) = 0;
+			uint64_t ui64StimulationIdentifier,
+			uint64_t ui64StimulationDate,
+			uint64_t ui64StimulationDuration) = 0;
 		/**
 		 * \brief Inserts a stimulation to this stimulation set
 		 * \param ui64StimulationIndex [in] : the index of the stimulation to insert
@@ -119,10 +119,10 @@ namespace OpenViBE
 		 *          following stimulation(s) get one more indexed.
 		 */
 		virtual uint64_t insertStimulation(
-			const uint64_t ui64StimulationIndex,
-			const uint64_t ui64StimulationIdentifier,
-			const uint64_t ui64StimulationDate,
-			const uint64_t ui64StimulationDuration) = 0;
+			uint64_t ui64StimulationIndex,
+			uint64_t ui64StimulationIdentifier,
+			uint64_t ui64StimulationDate,
+			uint64_t ui64StimulationDuration) = 0;
 		/**
 		 * \brief Removes a stimulation from this stimulation set
 		 * \param ui64StimulationIndex [in] : the index of the stimulation to remove
@@ -132,7 +132,7 @@ namespace OpenViBE
 		 *          following stimulation(s) get one less indexed.
 		 */
 		virtual bool removeStimulation(
-			const uint64_t ui64StimulationIndex) = 0;
+			uint64_t ui64StimulationIndex) = 0;
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_StimulationSet);
 

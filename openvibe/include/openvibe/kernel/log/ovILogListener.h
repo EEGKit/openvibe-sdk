@@ -152,63 +152,63 @@ namespace OpenViBE
 			 * \brief Logs a formatted time value (64 bits unsigned integer)
 			 * \param ui64Value [in] : the value that should be logged
 			 */
-			virtual void log(const time64 time64Value) = 0;
+			virtual void log(time64 time64Value) = 0;
 			/**
 			 * \brief Logs a 64 bits unsigned integer
 			 * \param ui64Value [in] : the value that should be logged
 			 */
-			virtual void log(const uint64_t ui64Value) = 0;
+			virtual void log(uint64_t ui64Value) = 0;
 			/**
 			 * \brief Logs a 32 bits unsigned integer
 			 * \param ui32Value [in] : the value that should be logged
 			 */
-			virtual void log(const uint32_t ui32Value) = 0;
+			virtual void log(uint32_t ui32Value) = 0;
 			/**
 			 * \brief Logs a 16 bits unsigned integer
 			 * \param ui16Value [in] : the value that should be logged
 			 */
-			virtual void log(const uint16_t ui16Value) = 0;
+			virtual void log(uint16_t ui16Value) = 0;
 			/**
 			 * \brief Logs a 8 bits unsigned integer
 			 * \param ui8Value [in] : the value that should be logged
 			 */
-			virtual void log(const uint8_t ui8Value) = 0;
+			virtual void log(uint8_t ui8Value) = 0;
 			/**
 			 * \brief Logs a 64 bits signed integer
 			 * \param i64Value [in] : the value that should be logged
 			 */
-			virtual void log(const int64_t i64Value) = 0;
+			virtual void log(int64_t i64Value) = 0;
 			/**
 			 * \brief Logs a 32 bits signed integer
 			 * \param i32Value [in] : the value that should be logged
 			 */
-			virtual void log(const int32_t i32Value) = 0;
+			virtual void log(int32_t i32Value) = 0;
 			/**
 			 * \brief Logs a 16 bits signed integer
 			 * \param i16Value [in] : the value that should be logged
 			 */
-			virtual void log(const int16_t i16Value) = 0;
+			virtual void log(int16_t i16Value) = 0;
 			/**
 			 * \brief Logs a 8 bits signed integer
 			 * \param i8Value [in] : the value that should be logged
 			 */
-			virtual void log(const int8_t i8Value) = 0;
+			virtual void log(int8_t i8Value) = 0;
 
 			/**
 			 * \brief Logs a 64 bits floating point value
 			 * \param f64Value [in] : the value that should be logged
 			 */
-			virtual void log(const double f64Value) = 0;
+			virtual void log(double f64Value) = 0;
 			/**
 			 * \brief Logs a 32 bits floating point value
 			 * \param f32Value [in] : the value that should be logged
 			 */
-			virtual void log(const float f32Value) = 0;
+			virtual void log(float f32Value) = 0;
 			/**
 			 * \brief Logs a boolean value
 			 * \param bValue [in] : the value that should be logged
 			 */
-			virtual void log(const bool bValue) = 0;
+			virtual void log(bool bValue) = 0;
 			/**
 			 * \brief Logs an identifier value
 			 * \param rValue [in] : the value that should be logged
@@ -233,12 +233,12 @@ namespace OpenViBE
 			 * \brief Changes the log level
 			 * \param eLogLevel [in] : the new log level
 			 */
-			virtual void log(const ELogLevel eLogLevel) = 0;
+			virtual void log(ELogLevel eLogLevel) = 0;
 			/**
 			 * \brief Changes the log color
 			 * \param eLogColor [in] : the new log color
 			 */
-			virtual void log(const ELogColor eLogColor) = 0;
+			virtual void log(ELogColor eLogColor) = 0;
 
 			//@}
 

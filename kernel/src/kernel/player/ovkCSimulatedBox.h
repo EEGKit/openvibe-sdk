@@ -104,7 +104,7 @@ namespace OpenViBE
 			virtual bool uninitialize(void);
 
 			virtual bool processClock(void);
-			virtual bool processInput(const uint32_t ui32InputIndex, const CChunk& rChunk);
+			virtual bool processInput(uint32_t ui32InputIndex, const CChunk& rChunk);
 			virtual bool process(void);
 			virtual bool isReadyToProcess(void) const;
 
@@ -114,48 +114,48 @@ namespace OpenViBE
 			/** \name IBoxIO inputs handling */
 			//@{
 			virtual uint32_t getInputChunkCount(
-				const uint32_t ui32InputIndex) const;
+				uint32_t ui32InputIndex) const;
 			virtual bool getInputChunk(
-				const uint32_t ui32InputIndex,
-				const uint32_t ui32ChunkIndex,
+				uint32_t ui32InputIndex,
+				uint32_t ui32ChunkIndex,
 				uint64_t& rStartTime,
 				uint64_t& rEndTime,
 				uint64_t& rChunkSize,
 				const uint8_t*& rpChunkBuffer) const;
 			virtual const IMemoryBuffer* getInputChunk(
-				const uint32_t ui32InputIndex,
-				const uint32_t ui32ChunkIndex) const;
+				uint32_t ui32InputIndex,
+				uint32_t ui32ChunkIndex) const;
 			virtual uint64_t getInputChunkStartTime(
-				const uint32_t ui32InputIndex,
-				const uint32_t ui32ChunkIndex) const;
+				uint32_t ui32InputIndex,
+				uint32_t ui32ChunkIndex) const;
 			virtual uint64_t getInputChunkEndTime(
-				const uint32_t ui32InputIndex,
-				const uint32_t ui32ChunkIndex) const;
+				uint32_t ui32InputIndex,
+				uint32_t ui32ChunkIndex) const;
 			virtual bool markInputAsDeprecated(
-				const uint32_t ui32InputIndex,
-				const uint32_t ui32ChunkIndex);
+				uint32_t ui32InputIndex,
+				uint32_t ui32ChunkIndex);
 			//@}
 
 			/** \name IBoxIO outputs handling */
 			//@{
 			virtual uint64_t getOutputChunkSize(
-				const uint32_t ui32OutputIndex) const;
+				uint32_t ui32OutputIndex) const;
 			virtual bool setOutputChunkSize(
-				const uint32_t ui32OutputIndex,
-				const uint64_t ui64Size,
-				const bool bDiscard = true);
+				uint32_t ui32OutputIndex,
+				uint64_t ui64Size,
+				bool bDiscard = true);
 			virtual uint8_t* getOutputChunkBuffer(
-				const uint32_t ui32OutputIndex);
+				uint32_t ui32OutputIndex);
 			virtual bool appendOutputChunkData(
-				const uint32_t ui32OutputIndex,
+				uint32_t ui32OutputIndex,
 				const uint8_t* pBuffer,
-				const uint64_t ui64BufferSize);
+				uint64_t ui64BufferSize);
 			virtual IMemoryBuffer* getOutputChunk(
-				const uint32_t ui32OutputIndex);
+				uint32_t ui32OutputIndex);
 			virtual bool markOutputAsReadyToSend(
-				const uint32_t ui32OutputIndex,
-				const uint64_t ui64StartTime,
-				const uint64_t ui64EndTime);
+				uint32_t ui32OutputIndex,
+				uint64_t ui64StartTime,
+				uint64_t ui64EndTime);
 			//@}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >, OVK_ClassId_Kernel_Player_SimulatedBox);

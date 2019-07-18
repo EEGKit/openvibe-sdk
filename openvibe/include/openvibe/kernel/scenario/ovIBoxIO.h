@@ -32,7 +32,7 @@ namespace OpenViBE
 			 * \return The number of pending chunks for an input
 			 */
 			virtual uint32_t getInputChunkCount(
-				const uint32_t ui32InputIndex) const = 0;
+				uint32_t ui32InputIndex) const = 0;
 			/**
 			 * \brief Gets an input chunk and its time validity.
 			 * \param ui32InputIndex [in] : the index of the desired input.
@@ -56,8 +56,8 @@ namespace OpenViBE
 			 * \sa markInputAsDeprecated
 			 */
 			virtual bool getInputChunk(
-				const uint32_t ui32InputIndex,
-				const uint32_t ui32ChunkIndex,
+				uint32_t ui32InputIndex,
+				uint32_t ui32ChunkIndex,
 				uint64_t& rStartTime,
 				uint64_t& rEndTime,
 				uint64_t& rChunkSize,
@@ -77,8 +77,8 @@ namespace OpenViBE
 			 * \sa markInputAsDeprecated
 			 */
 			virtual const IMemoryBuffer* getInputChunk(
-				const uint32_t ui32InputIndex,
-				const uint32_t ui32ChunkIndex) const = 0;
+				uint32_t ui32InputIndex,
+				uint32_t ui32ChunkIndex) const = 0;
 			/**
 			 * \brief Gets an input chunk start time.
 			 * \param ui32InputIndex [in] : the index of the desired input.
@@ -91,8 +91,8 @@ namespace OpenViBE
 			 * \sa markInputAsDeprecated
 			 */
 			virtual uint64_t getInputChunkStartTime(
-				const uint32_t ui32InputIndex,
-				const uint32_t ui32ChunkIndex) const = 0;
+				uint32_t ui32InputIndex,
+				uint32_t ui32ChunkIndex) const = 0;
 			/**
 			 * \brief Gets an input chunk end time.
 			 * \param ui32InputIndex [in] : the index of the desired input.
@@ -105,8 +105,8 @@ namespace OpenViBE
 			 * \sa markInputAsDeprecated
 			 */
 			virtual uint64_t getInputChunkEndTime(
-				const uint32_t ui32InputIndex,
-				const uint32_t ui32ChunkIndex) const = 0;
+				uint32_t ui32InputIndex,
+				uint32_t ui32ChunkIndex) const = 0;
 			/**
 			 * \brief Marks an input chunk as deprecated
 			 * \param ui32InputIndex [in] : the index of the desired input.
@@ -127,8 +127,8 @@ namespace OpenViBE
 			 * \sa releaseChunk
 			 */
 			virtual bool markInputAsDeprecated(
-				const uint32_t ui32InputIndex,
-				const uint32_t ui32ChunkIndex) = 0;
+				uint32_t ui32InputIndex,
+				uint32_t ui32ChunkIndex) = 0;
 
 			//@}
 			/** \name Accessing the output chunks information */
@@ -140,7 +140,7 @@ namespace OpenViBE
 			 * \return The output chunk size in bytes
 			 */
 			virtual uint64_t getOutputChunkSize(
-				const uint32_t ui32OutputIndex) const = 0;
+				uint32_t ui32OutputIndex) const = 0;
 			/**
 			 * \brief Sets an output chunk size
 			 * \param ui32OutputIndex [in] : the index of the output to work on
@@ -150,9 +150,9 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool setOutputChunkSize(
-				const uint32_t ui32OutputIndex,
-				const uint64_t ui64Size,
-				const bool bDiscard = true) = 0;
+				uint32_t ui32OutputIndex,
+				uint64_t ui64Size,
+				bool bDiscard = true) = 0;
 			/**
 			 * \brief Gets a pointer to the current output chunk buffer
 			 * \param ui32OutputIndex [in] : the index of the output to work on
@@ -162,7 +162,7 @@ namespace OpenViBE
 			 *          using \c setChunkSize !
 			 */
 			virtual uint8_t* getOutputChunkBuffer(
-				const uint32_t ui32OutputIndex) = 0;
+				uint32_t ui32OutputIndex) = 0;
 			/**
 			 * \brief Appends data to the output chunk
 			 * \param ui32OutputIndex [in] : the index of the output to work on
@@ -175,9 +175,9 @@ namespace OpenViBE
 			 *          appends data doing a copy.
 			 */
 			virtual bool appendOutputChunkData(
-				const uint32_t ui32OutputIndex,
+				uint32_t ui32OutputIndex,
 				const uint8_t* pBuffer,
-				const uint64_t ui64BufferSize) = 0;
+				uint64_t ui64BufferSize) = 0;
 			/**
 			 * \brief Gets an output chunk.
 			 * \param ui32OutputIndex [in] : the index of the desired output.
@@ -186,7 +186,7 @@ namespace OpenViBE
 			 * \sa markOutputAsReadyToSend
 			 */
 			virtual IMemoryBuffer* getOutputChunk(
-				const uint32_t ui32OutputIndex) = 0;
+				uint32_t ui32OutputIndex) = 0;
 			/**
 			 * \brief Marks output buffer as 'ready to send'
 			 * \param ui32OutputIndex [in] : the index of the output to work on
@@ -212,9 +212,9 @@ namespace OpenViBE
 			 * \sa getChunk
 			 */
 			virtual bool markOutputAsReadyToSend(
-				const uint32_t ui32OutputIndex,
-				const uint64_t ui64StartTime,
-				const uint64_t ui64EndTime) = 0;
+				uint32_t ui32OutputIndex,
+				uint64_t ui64StartTime,
+				uint64_t ui64EndTime) = 0;
 
 			//@}
 

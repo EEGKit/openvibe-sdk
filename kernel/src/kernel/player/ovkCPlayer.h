@@ -46,14 +46,14 @@ namespace OpenViBE
 
 			virtual EPlayerStatus getStatus(void) const;
 
-			virtual bool setFastForwardMaximumFactor(const double f64FastForwardFactor);
+			virtual bool setFastForwardMaximumFactor(double f64FastForwardFactor);
 			virtual double getFastForwardMaximumFactor(void) const;
 
 			virtual double getCPUUsage() const;
 
 			virtual bool loop(
-				const uint64_t ui64ElapsedTime,
-				const uint64_t ui64MaximumTimeToReach);
+				uint64_t ui64ElapsedTime,
+				uint64_t ui64MaximumTimeToReach);
 
 			virtual uint64_t getCurrentSimulatedTime(void) const;
 			virtual uint64_t getCurrentSimulatedLateness(void) const;

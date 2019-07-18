@@ -39,7 +39,7 @@ namespace OpenViBE
 			virtual bool registerEnumerationEntry(
 				const CIdentifier& rTypeIdentifier,
 				const CString& sEntryName,
-				const uint64_t ui64EntryValue);
+				uint64_t ui64EntryValue);
 
 			virtual bool registerBitMaskType(
 				const CIdentifier& rTypeIdentifier,
@@ -47,7 +47,7 @@ namespace OpenViBE
 			virtual bool registerBitMaskEntry(
 				const CIdentifier& rTypeIdentifier,
 				const CString& sEntryName,
-				const uint64_t ui64EntryValue);
+				uint64_t ui64EntryValue);
 
 			virtual bool isRegistered(
 				const CIdentifier& rTypeIdentifier) const;
@@ -70,12 +70,12 @@ namespace OpenViBE
 				const CIdentifier& rTypeIdentifier) const;
 			virtual bool getEnumerationEntry(
 				const CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryIndex,
+				uint64_t ui64EntryIndex,
 				CString& sEntryName,
 				uint64_t& rEntryValue) const;
 			virtual CString getEnumerationEntryNameFromValue(
 				const CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryValue) const;
+				uint64_t ui64EntryValue) const;
 			virtual uint64_t getEnumerationEntryValueFromName(
 				const CIdentifier& rTypeIdentifier,
 				const CString& rEntryName) const;
@@ -84,24 +84,24 @@ namespace OpenViBE
 				const CIdentifier& rTypeIdentifier) const;
 			virtual bool getBitMaskEntry(
 				const CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryIndex,
+				uint64_t ui64EntryIndex,
 				CString& sEntryName,
 				uint64_t& rEntryValue) const;
 			virtual CString getBitMaskEntryNameFromValue(
 				const CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryValue) const;
+				uint64_t ui64EntryValue) const;
 			virtual uint64_t getBitMaskEntryValueFromName(
 				const CIdentifier& rTypeIdentifier,
 				const CString& rEntryName) const;
 			virtual CString getBitMaskEntryCompositionNameFromValue(
 				const CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryCompositionValue) const;
+				uint64_t ui64EntryCompositionValue) const;
 			virtual uint64_t getBitMaskEntryCompositionValueFromName(
 				const CIdentifier& rTypeIdentifier,
 				const CString& rEntryCompositionName) const;
 
 			virtual bool evaluateSettingValue(
-				const CString settingValue,
+				CString settingValue,
 				double& numericResult) const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ITypeManager>, OVK_ClassId_Kernel_TypeManager);

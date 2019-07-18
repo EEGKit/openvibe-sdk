@@ -1148,7 +1148,7 @@ namespace r8b
 	 */
 
 	template <class T>
-	inline T min(const T& v1, const T& v2)
+	T min(const T& v1, const T& v2)
 	{
 		return (v1 < v2 ? v1 : v2);
 	}
@@ -1164,7 +1164,7 @@ namespace r8b
 	 */
 
 	template <class T>
-	inline T max(const T& v1, const T& v2)
+	T max(const T& v1, const T& v2)
 	{
 		return (v1 > v2 ? v1 : v2);
 	}

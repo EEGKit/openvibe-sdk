@@ -301,7 +301,7 @@ namespace OpenViBE
 			 */
 			virtual bool process(
 				Kernel::IBoxListenerContext& rBoxListenerContext,
-				const Kernel::EBoxModification eBoxModificationType) = 0;
+				Kernel::EBoxModification eBoxModificationType) = 0;
 
 			//@}
 

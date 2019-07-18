@@ -64,8 +64,8 @@ namespace OpenViBE
 			 */
 			virtual bool setSource(
 				const CIdentifier& rBoxIdentifier,
-				const uint32_t ui32BoxOutputIndex,
-				const CIdentifier rBoxOutputIdentifier) = 0;
+				uint32_t ui32BoxOutputIndex,
+				CIdentifier rBoxOutputIdentifier) = 0;
 			/**
 			 * \brief Sets the target of this link
 			 * \param rBoxIdentifier [in] : The identifier of the
@@ -79,8 +79,8 @@ namespace OpenViBE
 			 */
 			virtual bool setTarget(
 				const CIdentifier& rBoxIdentifier,
-				const uint32_t ui32BoxInputIndex,
-				const CIdentifier rBoxInputIdentifier) = 0;
+				uint32_t ui32BoxInputIndex,
+				CIdentifier rBoxInputIdentifier) = 0;
 			/**
 			 * \brief Gets the source information for this link
 			 * \param rBoxIdentifier [out] : The identifier of

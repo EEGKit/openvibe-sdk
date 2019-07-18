@@ -37,7 +37,7 @@ namespace EBML
 		 * may be called while the user sends data to the
 		 * writer.
 		 */
-		virtual void write(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
+		virtual void write(const void* pBuffer, uint64_t ui64BufferSize) = 0;
 	};
 
 	class EBML_API IWriterCallBack : public IWriterCallback { };
@@ -109,7 +109,7 @@ namespace EBML
 		 * it the currently opened node already has data,
 		 * it returns \e false too.
 		 */
-		virtual bool setChildData(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
+		virtual bool setChildData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Closes currently opened child node
 		 * \return \e true on success.

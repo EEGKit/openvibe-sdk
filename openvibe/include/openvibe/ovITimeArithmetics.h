@@ -69,11 +69,11 @@ namespace OpenViBE
 		ITimeArithmetics();
 
 		// These calls are probably mistakes and prohibited. Use explicit casts if you're certain of your intention.
-		uint64_t timeToSampleCount(const uint64_t ui64SamplingRate, const uint32_t ui32Time);
-		uint64_t timeToSampleCount(const uint64_t ui64SamplingRate, const double f64Time);
-		double timeToSeconds(const uint32_t ui32Time);
-		double timeToSeconds(const double f64Time);
-		uint64_t secondsToTime(const uint32_t ui32Time);
-		uint64_t secondsToTime(const uint64_t ui64Time);
+		uint64_t timeToSampleCount(uint64_t ui64SamplingRate, uint32_t ui32Time);
+		uint64_t timeToSampleCount(uint64_t ui64SamplingRate, double f64Time);
+		double timeToSeconds(uint32_t ui32Time);
+		double timeToSeconds(double f64Time);
+		uint64_t secondsToTime(uint32_t ui32Time);
+		uint64_t secondsToTime(uint64_t ui64Time);
 	};
 }

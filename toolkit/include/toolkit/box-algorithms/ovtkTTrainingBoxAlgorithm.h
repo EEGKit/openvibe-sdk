@@ -24,15 +24,15 @@ namespace OpenViBEToolkit
 		virtual ~TTrainingBoxAlgorithm(void);
 
 		// Signal input reader callback
-		virtual void setChannelCount(const uint32_t ui32ChannelCount);
-		virtual void setChannelName(const uint32_t ui32ChannelIndex, const char* sChannelName);
-		virtual void setSampleCountPerBuffer(const uint32_t ui32SampleCountPerBuffer);
-		virtual void setSamplingRate(const uint32_t ui32SamplingFrequency);
+		virtual void setChannelCount(uint32_t ui32ChannelCount);
+		virtual void setChannelName(uint32_t ui32ChannelIndex, const char* sChannelName);
+		virtual void setSampleCountPerBuffer(uint32_t ui32SampleCountPerBuffer);
+		virtual void setSamplingRate(uint32_t ui32SamplingFrequency);
 		virtual void setSampleBuffer(const double* pBuffer);
 
 		// Stimulation input reader callback
-		virtual void setStimulationCount(const uint32_t ui32StimulationCount);
-		virtual void setStimulation(const uint32_t ui32StimulationIndex, const uint64_t ui64StimulationIdentifier, const uint64_t ui64StimulationDate);
+		virtual void setStimulationCount(uint32_t ui32StimulationCount);
+		virtual void setStimulation(uint32_t ui32StimulationIndex, uint64_t ui64StimulationIdentifier, uint64_t ui64StimulationDate);
 
 		// What should be implemented by the derived class
 		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialStart(void) = 0;

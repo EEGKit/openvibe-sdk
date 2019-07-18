@@ -63,7 +63,7 @@ namespace EBML
 		 * a reader helper object to do the work... See
 		 * EBML::IReaderHelper for more details on that subject.
 		 */
-		virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
+		virtual void processChildData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Informs the callback object the current node parsing is terminated
 		 *
@@ -119,7 +119,7 @@ namespace EBML
 		 * EBML::IReaderCallback for more details on the
 		 * callback object.
 		 */
-		virtual bool processData(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
+		virtual bool processData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Gets the identifier of the current node
 		 * \return the identifier of the current node

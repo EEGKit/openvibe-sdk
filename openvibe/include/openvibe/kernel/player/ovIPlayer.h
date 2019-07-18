@@ -157,7 +157,7 @@ namespace OpenViBE
 			 * \note If a negative value is passed, it is turned back to 0
 			 * \note It the fast forward factor is 0, it tells the player to go as fast as possible
 			 */
-			virtual bool setFastForwardMaximumFactor(const double f64FastForwardFactor) = 0;
+			virtual bool setFastForwardMaximumFactor(double f64FastForwardFactor) = 0;
 			/**
 			 * \brief Gets the maximum fast forward factor coefficient
 			 * \return The maximum fast forward factor coefficient.
@@ -182,8 +182,8 @@ namespace OpenViBE
 			 * to \c uint64_t(-1) which represents the largest OpenViBE time.
 			 */
 			virtual bool loop(
-				const uint64_t ui64ElapsedTime,
-				const uint64_t ui64MaximumTimeToReach = uint64_t(-1)) = 0;
+				uint64_t ui64ElapsedTime,
+				uint64_t ui64MaximumTimeToReach = uint64_t(-1)) = 0;
 
 			virtual uint64_t getCurrentSimulatedTime(void) const = 0;
 

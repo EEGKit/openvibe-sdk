@@ -37,7 +37,7 @@ namespace EBML
 		 *
 		 * Initializes the identifier to the given 64 bits value.
 		 */
-		CIdentifier(const uint64_t ui64Identifier);
+		CIdentifier(uint64_t ui64Identifier);
 		/**
 		 * \brief 32 bits integer based constructor
 		 * \param ui32Identifier1 [in] : the first part of the identifier
@@ -46,7 +46,7 @@ namespace EBML
 		 * Builds up the 64 bits identifier given its two 32 bits
 		 * components.
 		 */
-		CIdentifier(const uint32_t ui32Identifier1, const uint32_t ui32Identifier2);
+		CIdentifier(uint32_t ui32Identifier1, uint32_t ui32Identifier2);
 		/**
 		 * \brief Copy constructor
 		 * \param rIdentifier [in] : The source identifier to use

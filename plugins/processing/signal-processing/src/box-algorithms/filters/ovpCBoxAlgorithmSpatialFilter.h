@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 
 		private:
 			// Loads the m_vCoefficient vector (representing a matrix) from the given string. c1 and c2 are separator characters between floats.
-			uint32_t loadCoefficients(const OpenViBE::CString& rCoefficients, const char c1, const char c2, uint32_t nRows, uint32_t nCols);
+			uint32_t loadCoefficients(const OpenViBE::CString& rCoefficients, char c1, char c2, uint32_t nRows, uint32_t nCols);
 		};
 
 		class CBoxAlgorithmSpatialFilterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

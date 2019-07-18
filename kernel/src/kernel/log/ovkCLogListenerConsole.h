@@ -23,29 +23,29 @@ namespace OpenViBE
 
 			void configure(const IConfigurationManager& rConfigurationManager);
 
-			virtual void log(const time64 time64Value);
+			virtual void log(time64 time64Value);
 
-			virtual void log(const uint64_t ui64Value);
-			virtual void log(const uint32_t ui32Value);
-			virtual void log(const uint16_t ui16Value);
-			virtual void log(const uint8_t ui8Value);
+			virtual void log(uint64_t ui64Value);
+			virtual void log(uint32_t ui32Value);
+			virtual void log(uint16_t ui16Value);
+			virtual void log(uint8_t ui8Value);
 
-			virtual void log(const int64_t i64Value);
-			virtual void log(const int32_t i32Value);
-			virtual void log(const int16_t i16Value);
-			virtual void log(const int8_t i8Value);
+			virtual void log(int64_t i64Value);
+			virtual void log(int32_t i32Value);
+			virtual void log(int16_t i16Value);
+			virtual void log(int8_t i8Value);
 
-			virtual void log(const double f64Value);
-			virtual void log(const float f32Value);
+			virtual void log(double f64Value);
+			virtual void log(float f32Value);
 
-			virtual void log(const bool bValue);
+			virtual void log(bool bValue);
 
 			virtual void log(const CIdentifier& rValue);
 			virtual void log(const CString& rValue);
 			virtual void log(const char* pValue);
 
-			virtual void log(const ELogLevel eLogLevel);
-			virtual void log(const ELogColor eLogColor);
+			virtual void log(ELogLevel eLogLevel);
+			virtual void log(ELogColor eLogColor);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>, OVK_ClassId_Kernel_Log_LogListenerConsole);
 

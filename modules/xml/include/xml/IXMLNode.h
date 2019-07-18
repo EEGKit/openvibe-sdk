@@ -74,7 +74,7 @@ namespace XML
 		 * @param iChildIndex [in] : index of the child.
 		 * @return The ith child of the node.
 		 */
-		virtual IXMLNode* getChild(const size_t iChildIndex) const = 0;
+		virtual IXMLNode* getChild(size_t iChildIndex) const = 0;
 
 		/**
 		 * @brief Return the first child with the name sName.
@@ -96,7 +96,7 @@ namespace XML
 		 * @param depth [in] : Amount of indentation
 		 * @return XML string describing the node and its childs.
 		 */
-		virtual char* getXML(const uint32_t depth = 0) const = 0;
+		virtual char* getXML(uint32_t depth = 0) const = 0;
 
 	protected:
 		virtual ~IXMLNode(void) {}

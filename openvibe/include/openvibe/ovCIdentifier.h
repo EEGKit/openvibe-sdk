@@ -56,14 +56,14 @@ namespace OpenViBE
 		 * components.
 		 */
 		CIdentifier(
-			const uint32_t ui32Identifier1,
-			const uint32_t ui32Identifier2);
+			uint32_t ui32Identifier1,
+			uint32_t ui32Identifier2);
 		/**
 		 * \brief 64 bits integer based constructor
 		 * \param ui64Identifier [in] : The identifier
 		 */
 		CIdentifier(
-			const uint64_t ui64Identifier);
+			uint64_t ui64Identifier);
 		/**
 		 * \brief Copy constructor
 		 * \param rIdentifier [in] : the identifier to initialize

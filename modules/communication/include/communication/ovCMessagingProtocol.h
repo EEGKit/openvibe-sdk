@@ -122,7 +122,7 @@ namespace Communication
 
 		Header();
 
-		Header(const EMessageType type, const uint64_t id, const uint64_t size);
+		Header(EMessageType type, uint64_t id, uint64_t size);
 
 		std::vector<uint8_t> toBytes() const override;
 
@@ -233,7 +233,7 @@ namespace Communication
 	public:
 		InputOutput();
 
-		InputOutput(const uint32_t id, const uint64_t type, const std::string& name);
+		InputOutput(uint32_t id, uint64_t type, const std::string& name);
 
 		std::vector<uint8_t> toBytes() const override;
 
@@ -266,7 +266,7 @@ namespace Communication
 	{
 	public:
 		Parameter();
-		Parameter(const uint32_t id, const uint64_t type, const std::string& name, const std::string& value);
+		Parameter(uint32_t id, uint64_t type, const std::string& name, const std::string& value);
 
 		std::vector<uint8_t> toBytes() const override;
 
@@ -313,11 +313,11 @@ namespace Communication
 
 		EMessageType getMessageType() const override;
 
-		bool addInput(const uint32_t id, const uint64_t type, const std::string& name);
+		bool addInput(uint32_t id, uint64_t type, const std::string& name);
 
-		bool addOutput(const uint32_t id, const uint64_t type, const std::string& name);
+		bool addOutput(uint32_t id, uint64_t type, const std::string& name);
 
-		bool addParameter(const uint32_t id, const uint64_t type, const std::string& name, const std::string& value);
+		bool addParameter(uint32_t id, uint64_t type, const std::string& name, const std::string& value);
 
 		const std::vector<InputOutput>* getInputs() const;
 
@@ -351,7 +351,7 @@ namespace Communication
 	public:
 		LogMessage();
 
-		LogMessage(const ELogLevel type, const std::string& message);
+		LogMessage(ELogLevel type, const std::string& message);
 
 		std::vector<uint8_t> toBytes() const override;
 
@@ -436,7 +436,7 @@ namespace Communication
 	public:
 		ErrorMessage();
 
-		ErrorMessage(const EError error, const uint64_t guiltyId);
+		ErrorMessage(EError error, uint64_t guiltyId);
 
 		std::vector<uint8_t> toBytes() const override;
 

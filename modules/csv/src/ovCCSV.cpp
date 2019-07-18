@@ -50,30 +50,30 @@ using namespace CSV;
 
 namespace
 {
-	static const uint32_t s_StimulationDateColumnNbr       = 1;
-	static const uint32_t s_StimulationIdentifierColumnNbr = 2;
-	static const uint32_t s_SignalEpochColumnIndex         = 1;
-	static const uint32_t s_TimeColumnIndex                = 0;
-	static const uint32_t s_EndTimeColumnIndex             = 1;
+	const uint32_t s_StimulationDateColumnNbr       = 1;
+	const uint32_t s_StimulationIdentifierColumnNbr = 2;
+	const uint32_t s_SignalEpochColumnIndex         = 1;
+	const uint32_t s_TimeColumnIndex                = 0;
+	const uint32_t s_EndTimeColumnIndex             = 1;
 	// Number of columns before data (Time/Epoch)
-	static const uint32_t s_PreDataColumnCount = 2;
+	const uint32_t s_PreDataColumnCount = 2;
 	// Number of columns after data (Events)
-	static const uint32_t s_PostDataColumnCount = 3;
+	const uint32_t s_PostDataColumnCount = 3;
 
 	//Separators
-	static const char s_Separator(',');
-	static const char s_InternalDataSeparator(':');
-	static const char s_DimensionSeparator('x');
+	const char s_Separator(',');
+	const char s_InternalDataSeparator(':');
+	const char s_DimensionSeparator('x');
 
 	// Columns Names
-	static const std::string s_EventIdentifierColumn = "Event Id";
-	static const std::string s_EventDateColumn       = "Event Date";
-	static const std::string s_EventDurationColumn   = "Event Duration";
+	const std::string s_EventIdentifierColumn = "Event Id";
+	const std::string s_EventDateColumn       = "Event Date";
+	const std::string s_EventDurationColumn   = "Event Duration";
 
-	static const uint32_t s_CharToRead          = 1000;
-	static const uint32_t s_MaximumFloatDecimal = 32;
+	const uint32_t s_CharToRead          = 1000;
+	const uint32_t s_MaximumFloatDecimal = 32;
 
-	static const char s_EndOfLineChar('\n');
+	const char s_EndOfLineChar('\n');
 }
 
 bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputString, const char delimiter, std::string& bufferHistory) const

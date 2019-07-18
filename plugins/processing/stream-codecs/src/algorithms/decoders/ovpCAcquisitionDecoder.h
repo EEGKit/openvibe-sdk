@@ -32,12 +32,12 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize);
+			virtual void processChildData(const void* pBuffer, uint64_t ui64BufferSize);
 			virtual void closeChild(void);
 
 		protected:
 
-			void appendMemoryBuffer(OpenViBE::IMemoryBuffer* pMemoryBuffer, const void* pBuffer, const uint64_t ui64BufferSize);
+			void appendMemoryBuffer(OpenViBE::IMemoryBuffer* pMemoryBuffer, const void* pBuffer, uint64_t ui64BufferSize);
 
 			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64BufferDuration;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pExperimentInformationStream;

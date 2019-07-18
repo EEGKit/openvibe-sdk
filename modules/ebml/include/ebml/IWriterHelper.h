@@ -107,22 +107,22 @@ namespace EBML
 		 * \brief Sets a signed integer as child data
 		 * \param iValue [in] : The integer value to set
 		 */
-		virtual bool setSIntegerAsChildData(const int64_t iValue) = 0;
+		virtual bool setSIntegerAsChildData(int64_t iValue) = 0;
 		/**
 		 * \brief Sets an unsigned integer as child data
 		 * \param uiValue [in] : The integer value to set
 		 */
-		virtual bool setUIntegerAsChildData(const uint64_t uiValue) = 0;
+		virtual bool setUIntegerAsChildData(uint64_t uiValue) = 0;
 		/**
 		 * \brief Sets a 32 bits float value as child data
 		 * \param fValue [in] : The 32 bits float value to set
 		 */
-		virtual bool setFloat32AsChildData(const float fValue) = 0;
+		virtual bool setFloat32AsChildData(float fValue) = 0;
 		/**
 		 * \brief Sets a 64 bits float value as child data
 		 * \param fValue [in] : The 64 bits float value to set
 		 */
-		virtual bool setFloat64AsChildData(const double fValue) = 0;
+		virtual bool setFloat64AsChildData(double fValue) = 0;
 		// virtual bool setFloat80AsChildData( ??? value)=0;
 		// virtual bool setDateAsChildData( ??? value)=0;
 		/**
@@ -133,7 +133,7 @@ namespace EBML
 		 *       EBML::IWriter::setChildData function with the
 		 *       same two parameters.
 		 */
-		virtual bool setBinaryAsChildData(const void* pBuffer, const uint64_t ui64BufferLength) = 0;
+		virtual bool setBinaryAsChildData(const void* pBuffer, uint64_t ui64BufferLength) = 0;
 		/**
 		 * \brief Sets an ASCII string as child data
 		 * \param sValue [in] : The ASCII string value to set

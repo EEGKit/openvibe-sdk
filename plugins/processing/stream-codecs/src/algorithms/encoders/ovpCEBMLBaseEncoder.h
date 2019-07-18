@@ -39,7 +39,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseStreamEncoder);
 
 			// ebml callbacks
-			virtual void write(const void* pBuffer, const uint64_t ui64BufferSize);
+			virtual void write(const void* pBuffer, uint64_t ui64BufferSize);
 
 		protected:
 

@@ -42,7 +42,7 @@ namespace OpenViBE
 			void log(const CIdentifier& value) override { m_LogManager.log(value); }
 			void log(const ELogColor value) override { m_LogManager.log(value); }
 
-			void log(const ELogLevel logLevel) override;
+			void log(ELogLevel logLevel) override;
 
 			CIdentifier getClassIdentifier(void) const override { return CIdentifier(); }
 

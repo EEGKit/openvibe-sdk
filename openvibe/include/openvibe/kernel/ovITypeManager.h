@@ -103,7 +103,7 @@ namespace OpenViBE
 			virtual bool registerEnumerationEntry(
 				const CIdentifier& rTypeIdentifier,
 				const CString& sEntryName,
-				const uint64_t ui64EntryValue) = 0;
+				uint64_t ui64EntryValue) = 0;
 			/**
 			 * \brief Registers a new bitmask type
 			 * \param rTypeIdentifier [in] : the type identifier for this type
@@ -131,7 +131,7 @@ namespace OpenViBE
 			virtual bool registerBitMaskEntry(
 				const CIdentifier& rTypeIdentifier,
 				const CString& sEntryName,
-				const uint64_t ui64EntryValue) = 0;
+				uint64_t ui64EntryValue) = 0;
 
 			//@}
 			/** \name Registration verification */
@@ -229,7 +229,7 @@ namespace OpenViBE
 			 */
 			virtual bool getEnumerationEntry(
 				const CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryIndex,
+				uint64_t ui64EntryIndex,
 				CString& sEntryName,
 				uint64_t& rEntryValue) const = 0;
 			/**
@@ -241,7 +241,7 @@ namespace OpenViBE
 			 */
 			virtual CString getEnumerationEntryNameFromValue(
 				const CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryValue) const = 0;
+				uint64_t ui64EntryValue) const = 0;
 			/**
 			 * \brief Converts an enumeration entry name to an enumeration entry value
 			 * \param rTypeIdentifier [in] : the enumeration type identifier
@@ -275,7 +275,7 @@ namespace OpenViBE
 			 */
 			virtual bool getBitMaskEntry(
 				const CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryIndex,
+				uint64_t ui64EntryIndex,
 				CString& sEntryName,
 				uint64_t& rEntryValue) const = 0;
 			/**
@@ -287,7 +287,7 @@ namespace OpenViBE
 			 */
 			virtual CString getBitMaskEntryNameFromValue(
 				const CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryValue) const = 0;
+				uint64_t ui64EntryValue) const = 0;
 			/**
 			 * \brief Converts a bitmask entry name to a bitmask entry value
 			 * \param rTypeIdentifier [in] : the bitmask type identifier
@@ -307,7 +307,7 @@ namespace OpenViBE
 			 */
 			virtual CString getBitMaskEntryCompositionNameFromValue(
 				const CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryCompositionValue) const = 0;
+				uint64_t ui64EntryCompositionValue) const = 0;
 			/**
 			 * \brief Computes the integer value of a composition of textual entries
 			 * \param rTypeIdentifier [in] : the bitmask type identifier
@@ -328,7 +328,7 @@ namespace OpenViBE
 			* \return false if the arithmetic expression is incorrect
 			*/
 			virtual bool evaluateSettingValue(
-				const CString settingValue,
+				CString settingValue,
 				double& numericResult) const = 0;
 
 			//@}

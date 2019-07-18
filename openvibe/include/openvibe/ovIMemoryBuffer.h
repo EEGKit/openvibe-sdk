@@ -36,7 +36,7 @@ namespace OpenViBE
 		 *       then \e true is returned and nothing is done.
 		 */
 		virtual bool reserve(
-			const uint64_t ui64Size) = 0;
+			uint64_t ui64Size) = 0;
 		/**
 		 * \brief Changes the size of this memory buffer
 		 * \param ui64Size [in] : the new size to give to the buffer
@@ -49,8 +49,8 @@ namespace OpenViBE
 		 * \sa getSize
 		 */
 		virtual bool setSize(
-			const uint64_t ui64Size,
-			const bool bDiscard) = 0;
+			uint64_t ui64Size,
+			bool bDiscard) = 0;
 		/**
 		 * \brief Gets the current size of this memory buffer
 		 * \return the current size of this memory buffer
@@ -78,7 +78,7 @@ namespace OpenViBE
 		 */
 		virtual bool append(
 			const uint8_t* pBuffer,
-			const uint64_t ui64BufferSize) = 0;
+			uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Appends data to this memory buffer
 		 * \param rMemoryBuffer [in] : the memory buffer containing data that should be appended

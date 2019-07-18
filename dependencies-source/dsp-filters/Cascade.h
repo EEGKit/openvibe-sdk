@@ -59,7 +59,7 @@ namespace Dsp
 		{
 		public:
 			template <typename Sample>
-			inline Sample process(const Sample in, const Cascade& c)
+			Sample process(const Sample in, const Cascade& c)
 			{
 				double out          = in;
 				StateType* state    = m_stateArray;

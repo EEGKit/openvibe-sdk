@@ -25,12 +25,12 @@ namespace OpenViBE
 
 			virtual bool setSource(
 				const CIdentifier& rBoxIdentifier,
-				const uint32_t ui32BoxOutputIndex,
-				const CIdentifier rBoxOutputIdentifier);
+				uint32_t ui32BoxOutputIndex,
+				CIdentifier rBoxOutputIdentifier);
 			virtual bool setTarget(
 				const CIdentifier& rBoxIdentifier,
-				const uint32_t ui32BoxInputIndex,
-				const CIdentifier rBoxInputIdentifier);
+				uint32_t ui32BoxInputIndex,
+				CIdentifier rBoxInputIdentifier);
 			virtual bool getSource(
 				CIdentifier& rBoxIdentifier,
 				uint32_t& ui32BoxOutputIndex,

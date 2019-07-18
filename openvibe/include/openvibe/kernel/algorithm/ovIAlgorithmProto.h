@@ -35,7 +35,7 @@ namespace OpenViBE
 			virtual bool addInputParameter(
 				const CIdentifier& rInputParameterIdentifier,
 				const CString& sInputName,
-				const EParameterType eParameterType,
+				EParameterType eParameterType,
 				const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an output parameter
@@ -50,7 +50,7 @@ namespace OpenViBE
 			virtual bool addOutputParameter(
 				const CIdentifier& rOutputParameterIdentifier,
 				const CString& sOutputName,
-				const EParameterType eParameterType,
+				EParameterType eParameterType,
 				const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an input trigger

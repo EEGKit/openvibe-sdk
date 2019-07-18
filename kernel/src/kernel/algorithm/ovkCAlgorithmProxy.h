@@ -23,7 +23,7 @@ namespace OpenViBE
 			virtual bool addInputParameter(
 				const CIdentifier& rInputParameterIdentifier,
 				const CString& sInputName,
-				const EParameterType eParameterType,
+				EParameterType eParameterType,
 				const CIdentifier& rSubTypeIdentifier);
 			virtual CIdentifier getNextInputParameterIdentifier(
 				const CIdentifier& rPreviousInputParameterIdentifier) const;
@@ -39,7 +39,7 @@ namespace OpenViBE
 			virtual bool addOutputParameter(
 				const CIdentifier& rOutputParameterIdentifier,
 				const CString& sOutputName,
-				const EParameterType eParameterType,
+				EParameterType eParameterType,
 				const CIdentifier& rSubTypeIdentifier);
 			virtual CIdentifier getNextOutputParameterIdentifier(
 				const CIdentifier& rPreviousOutputParameterIdentifier) const;
@@ -63,7 +63,7 @@ namespace OpenViBE
 				const CIdentifier& rInputTriggerIdentifier) const;
 			virtual bool activateInputTrigger(
 				const CIdentifier& rInputTriggerIdentifier,
-				const bool bTriggerState);
+				bool bTriggerState);
 			virtual bool removeInputTrigger(
 				const CIdentifier& rInputTriggerIdentifier);
 
@@ -78,7 +78,7 @@ namespace OpenViBE
 				const CIdentifier& rOutputTriggerIdentifier) const;
 			virtual bool activateOutputTrigger(
 				const CIdentifier& rOutputTriggerIdentifier,
-				const bool bTriggerState);
+				bool bTriggerState);
 			virtual bool removeOutputTrigger(
 				const CIdentifier& rOutputTriggerIdentifier);
 
@@ -104,8 +104,8 @@ namespace OpenViBE
 
 		protected:
 
-			void setAllInputTriggers(const bool bTriggerStatus);
-			void setAllOutputTriggers(const bool bTriggerStatus);
+			void setAllInputTriggers(bool bTriggerStatus);
+			void setAllOutputTriggers(bool bTriggerStatus);
 
 		private:
 

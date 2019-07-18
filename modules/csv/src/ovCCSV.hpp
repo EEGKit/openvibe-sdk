@@ -68,7 +68,7 @@ namespace OpenViBE
 			bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer);
 			bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer);
 
-			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const uint32_t samplingRate);
+			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, uint32_t samplingRate);
 			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, uint32_t& samplingRate);
 
 			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames);
@@ -272,7 +272,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readSampleChunk(const std::string& line, SMatrixChunk& sample, const uint64_t lineNb);
+			bool readSampleChunk(const std::string& line, SMatrixChunk& sample, uint64_t lineNb);
 
 			/**
 			 * \brief Read line data conerning stimulations.
@@ -284,7 +284,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, const uint64_t lineNb);
+			bool readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, uint64_t lineNb);
 
 			/**
 			 * \brief Update position into the matrix while reading or writing.
@@ -311,7 +311,7 @@ namespace OpenViBE
 			 * \param outputString The string before the next delimitor.
 			 * \param delimiter The delimiter .
 			 */
-			bool streamReader(std::istream& inputStream, std::string& outputString, const char delimiter, std::string& bufferHistory) const;
+			bool streamReader(std::istream& inputStream, std::string& outputString, char delimiter, std::string& bufferHistory) const;
 
 			std::fstream m_Fs;
 			std::string m_Filename;
@@ -322,7 +322,7 @@ namespace OpenViBE
 
 			EStreamType m_InputTypeIdentifier;
 
-			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, const char delimiter);
+			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, char delimiter);
 			uint32_t m_DimensionCount;
 			std::vector<uint32_t> m_DimensionSizes;
 			std::vector<std::string> m_DimensionLabels;

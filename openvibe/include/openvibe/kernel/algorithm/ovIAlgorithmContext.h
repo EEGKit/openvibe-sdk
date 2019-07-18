@@ -128,7 +128,7 @@ namespace OpenViBE
 			 */
 			virtual bool activateOutputTrigger(
 				const CIdentifier& rOutputTriggerIdentifier,
-				const bool bTriggerState) = 0;
+				bool bTriggerState) = 0;
 
 			//@}
 

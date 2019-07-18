@@ -55,7 +55,7 @@ namespace OpenViBE
 				const CString& sName,
 				const CIdentifier& rTypeIdentifier,
 				const CIdentifier& oIdentifier = OV_UndefinedIdentifier,
-				const bool bNotify          = true) = 0;
+				bool bNotify          = true) = 0;
 
 			/**
 			 * \brief Adds an output to the box
@@ -69,7 +69,7 @@ namespace OpenViBE
 				const CString& sName,
 				const CIdentifier& rTypeIdentifier,
 				const CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-				const bool bNotify          = true) = 0;
+				bool bNotify          = true) = 0;
 				
 			/**
 			 * \brief Add an setting to the box
@@ -86,16 +86,16 @@ namespace OpenViBE
 				const CString& sName,
 				const CIdentifier& rTypeIdentifier,
 				const CString& sDefaultValue,
-				const bool bModifiable                   = false,
+				bool bModifiable                   = false,
 				const CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-				const bool bNotify          = true) = 0;
+				bool bNotify          = true) = 0;
 			/**
 			 * \brief Adds a flag to the box
 			 * \param eBoxFlag [in] : the flag to add to the box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addFlag(const EBoxFlag eBoxFlag) = 0;
+			virtual bool addFlag(EBoxFlag eBoxFlag) = 0;
 
 			/**
 			 * \brief Adds a flag to the box

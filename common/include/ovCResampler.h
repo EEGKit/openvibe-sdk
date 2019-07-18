@@ -483,8 +483,8 @@ namespace Common
 
 			std::vector<r8b::CDSPProcessor*> m_vResampler;
 
-			size_t (TResampler<TFloat, eStoreMode>::*m_fpResample)(const ICallback& rCallback, const TFloat* pInputSample, const size_t ui32InputSampleCount);
-			size_t (TResampler<TFloat, eStoreMode>::*m_fpResampleDirect)(TFloat* pOutputSample, const TFloat* pInputSample, const size_t ui32InputSampleCount, size_t ui32OutputSampleCount);
+			size_t (TResampler<TFloat, eStoreMode>::*m_fpResample)(const ICallback& rCallback, const TFloat* pInputSample, size_t ui32InputSampleCount);
+			size_t (TResampler<TFloat, eStoreMode>::*m_fpResampleDirect)(TFloat* pOutputSample, const TFloat* pInputSample, size_t ui32InputSampleCount, size_t ui32OutputSampleCount);
 		};
 
 		typedef TResampler<float, ResamplerStoreMode_SampleWise> CResamplerSf;

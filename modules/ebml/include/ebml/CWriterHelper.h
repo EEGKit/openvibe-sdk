@@ -18,11 +18,11 @@ namespace EBML
 		virtual bool openChild(const CIdentifier& rIdentifier);
 		virtual bool closeChild(void);
 
-		virtual bool setSIntegerAsChildData(const int64_t iValue);
-		virtual bool setUIntegerAsChildData(const uint64_t uiValue);
-		virtual bool setFloat32AsChildData(const float fValue);
-		virtual bool setFloat64AsChildData(const double fValue);
-		virtual bool setBinaryAsChildData(const void* pBuffer, const uint64_t ui64BufferLength);
+		virtual bool setSIntegerAsChildData(int64_t iValue);
+		virtual bool setUIntegerAsChildData(uint64_t uiValue);
+		virtual bool setFloat32AsChildData(float fValue);
+		virtual bool setFloat64AsChildData(double fValue);
+		virtual bool setBinaryAsChildData(const void* pBuffer, uint64_t ui64BufferLength);
 		virtual bool setASCIIStringAsChildData(const char* sValue);
 
 		virtual void release(void);

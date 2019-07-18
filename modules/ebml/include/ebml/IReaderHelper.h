@@ -42,15 +42,15 @@ namespace EBML
 		/**
 		 * \brief Gets an unsigned integer from the given buffer
 		 */
-		virtual uint64_t getUIntegerFromChildData(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
+		virtual uint64_t getUIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Gets a signed integer from the given buffer
 		 */
-		virtual int64_t getSIntegerFromChildData(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
+		virtual int64_t getSIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Gets a float from the given buffer
 		 */
-		virtual double getFloatFromChildData(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
+		virtual double getFloatFromChildData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
 		// virtual ??? getFloat80FromChildData(const void* pBuffer, const uint64_t ui64BufferSize)=0;
 		// virtual ??? getDateFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)=0;
 		/**
@@ -58,7 +58,7 @@ namespace EBML
 		 * \warning The returned value is not permanent. It should be
 		 *          copied immediatly somewhere else by the caller.
 		 */
-		virtual const char* getASCIIStringFromChildData(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
+		virtual const char* getASCIIStringFromChildData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
 		// virtual ??? getUTF8StringFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)=0;
 		//@}
 

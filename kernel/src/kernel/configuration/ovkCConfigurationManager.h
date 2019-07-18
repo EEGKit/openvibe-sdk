@@ -55,7 +55,7 @@ namespace OpenViBE
 
 			virtual CIdentifier lookUpConfigurationTokenIdentifier(
 				const CString& rConfigurationTokenName,
-				const bool bRecursive) const;
+				bool bRecursive) const;
 			virtual CString lookUpConfigurationTokenValue(
 				const CString& rConfigurationTokenName) const;
 
@@ -80,20 +80,20 @@ namespace OpenViBE
 				bool preserveBackslashes) const;
 			virtual double expandAsFloat(
 				const CString& rExpression,
-				const double f64FallbackValue) const;
+				double f64FallbackValue) const;
 			virtual int64_t expandAsInteger(
 				const CString& rExpression,
-				const int64_t i64FallbackValue) const;
+				int64_t i64FallbackValue) const;
 			virtual uint64_t expandAsUInteger(
 				const CString& rExpression,
-				const uint64_t ui64FallbackValue) const;
+				uint64_t ui64FallbackValue) const;
 			virtual bool expandAsBoolean(
 				const CString& rExpression,
-				const bool bFallbackValue) const;
+				bool bFallbackValue) const;
 			virtual uint64_t expandAsEnumerationEntryValue(
 				const CString& rExpression,
 				const CIdentifier& rEnumerationTypeIdentifier,
-				const uint64_t ui64FallbackValue) const;
+				uint64_t ui64FallbackValue) const;
 
 		protected:
 

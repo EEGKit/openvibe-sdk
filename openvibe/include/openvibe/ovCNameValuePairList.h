@@ -139,7 +139,7 @@ namespace OpenViBE
 		 * \return True if value could be retrieved, false otherwise
 		 */
 		bool getValue(
-			const uint32_t rIndex,
+			uint32_t rIndex,
 			CString& rName,
 			CString& rValue) const;
 

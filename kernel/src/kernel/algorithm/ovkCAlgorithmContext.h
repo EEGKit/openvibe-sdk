@@ -37,7 +37,7 @@ namespace OpenViBE
 
 			virtual bool activateOutputTrigger(
 				const CIdentifier& rOutputTriggerIdentifier,
-				const bool bTriggerState);
+				bool bTriggerState);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmContext >, OVK_ClassId_Kernel_Algorithm_AlgorithmContext)
 

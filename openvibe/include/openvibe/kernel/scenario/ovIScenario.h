@@ -186,7 +186,7 @@ namespace OpenViBE
 			virtual CIdentifier getNextLinkIdentifierFromBoxOutput(
 				const CIdentifier& previousIdentifier,
 				const CIdentifier& boxIdentifier,
-				const uint32_t outputIndex) const = 0;
+				uint32_t outputIndex) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box
@@ -207,7 +207,7 @@ namespace OpenViBE
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32_t inputIndex) const = 0;
+			virtual CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t inputIndex) const = 0;
 
 			/**
 			 * \brief Tests whether a given identifier is a link or not
@@ -244,9 +244,9 @@ namespace OpenViBE
 			virtual bool connect(
 				CIdentifier& linkIdentifier,
 				const CIdentifier& sourceBoxIdentifier,
-				const uint32_t sourceBoxOutputIndex,
+				uint32_t sourceBoxOutputIndex,
 				const CIdentifier& targetBoxIdentifier,
-				const uint32_t targetBoxInputIndex,
+				uint32_t targetBoxInputIndex,
 				const CIdentifier& suggestedLinkIdentifier) = 0;
 
 			/**
@@ -281,9 +281,9 @@ namespace OpenViBE
 			 */
 			virtual bool disconnect(
 				const CIdentifier& sourceBoxIdentifier,
-				const uint32_t sourceBoxOutputIndex,
+				uint32_t sourceBoxOutputIndex,
 				const CIdentifier& targetBoxIdentifier,
-				const uint32_t targetBoxInputIndex) = 0;
+				uint32_t targetBoxInputIndex) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -361,47 +361,47 @@ namespace OpenViBE
 			/** \name Scenario Input/Output and MetaBox management */
 			//@{
 
-			virtual bool setHasIO(const bool hasIO) = 0;
+			virtual bool setHasIO(bool hasIO) = 0;
 			virtual bool hasIO() const = 0;
 
-			virtual bool setScenarioInputLink(const uint32_t scenarioInputIndex,
+			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex,
 											  const CIdentifier& boxIdentifier,
-											  const uint32_t boxInputIndex) = 0;
+											  uint32_t boxInputIndex) = 0;
 
-			virtual bool setScenarioInputLink(const uint32_t scenarioInputIndex,
+			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex,
 											  const CIdentifier& boxIdentifier,
 											  const CIdentifier& boxInputIdentifier) = 0;
 
-			virtual bool setScenarioOutputLink(const uint32_t scenarioOutputIndex,
+			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex,
 											   const CIdentifier& boxIdentifier,
-											   const uint32_t boxOutputIndex) = 0;
+											   uint32_t boxOutputIndex) = 0;
 
-			virtual bool setScenarioOutputLink(const uint32_t scenarioOutputIndex,
+			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex,
 											   const CIdentifier& boxIdentifier,
 											   const CIdentifier& boxOutputIdentifier) = 0;
 
-			virtual bool getScenarioInputLink(const uint32_t scenarioInputIndex,
+			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex,
 											  CIdentifier& boxIdentifier,
 											  uint32_t& boxInputIndex) const = 0;
 
-			virtual bool getScenarioInputLink(const uint32_t scenarioInputIndex,
+			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex,
 											  CIdentifier& boxIdentifier,
 											  CIdentifier& boxInputIdentifier) const = 0;
 
-			virtual bool getScenarioOutputLink(const uint32_t scenarioOutputIndex,
+			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex,
 											   CIdentifier& boxIdentifier,
 											   uint32_t& boxOutputIndex) const = 0;
 
-			virtual bool getScenarioOutputLink(const uint32_t scenarioOutputIndex,
+			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex,
 											   CIdentifier& boxIdentifier,
 											   CIdentifier& boxOutputIdentifier) const = 0;
 
-			virtual bool removeScenarioInputLink(const uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32_t boxInputIndex) = 0;
+			virtual bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) = 0;
 
-			virtual bool removeScenarioOutputLink(const uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32_t boxOutputIndex) = 0;
+			virtual bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) = 0;
 
-			virtual bool removeScenarioInput(const uint32_t inputIndex) = 0;
-			virtual bool removeScenarioOutput(const uint32_t outputIndex) = 0;
+			virtual bool removeScenarioInput(uint32_t inputIndex) = 0;
+			virtual bool removeScenarioOutput(uint32_t outputIndex) = 0;
 
 			//@}
 			/** \name Comment management */
@@ -586,9 +586,9 @@ namespace OpenViBE
 			virtual void getMetadataIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getLinkIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getLinkIdentifierFromBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierFromBoxOutputList(const CIdentifier& boxIdentifier, const uint32_t outputIndex, CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierFromBoxOutputList(const CIdentifier& boxIdentifier, uint32_t outputIndex, CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getLinkIdentifierToBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, const uint32_t inputInex, CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, uint32_t inputInex, CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getOutdatedBoxIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void releaseIdentifierList(CIdentifier* identifierList) const = 0;
 			//@}

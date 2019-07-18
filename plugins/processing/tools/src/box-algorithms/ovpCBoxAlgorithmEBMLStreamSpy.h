@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 
 			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize);
+			virtual void processChildData(const void* pBuffer, uint64_t ui64BufferSize);
 			virtual void closeChild(void);
 
 			virtual bool processInput(uint32_t ui32InputIndex);
@@ -42,7 +42,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			template <class T>
-			void processBinaryBlock(const void* pBuffer, const uint64_t ui64BufferSize);
+			void processBinaryBlock(const void* pBuffer, uint64_t ui64BufferSize);
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 			std::map<EBML::CIdentifier, std::string> m_vName;

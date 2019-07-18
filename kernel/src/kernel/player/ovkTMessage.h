@@ -22,7 +22,7 @@ namespace OpenViBE
 			virtual bool setIdentifier(
 				const CIdentifier& rIdentifier);
 			virtual bool setTime(
-				const uint64_t ui64Time);
+				uint64_t ui64Time);
 
 			_IsDerivedFromClass_Final_(T, OVK_ClassId_Kernel_Player_MessageT);
 

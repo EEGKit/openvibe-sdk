@@ -35,12 +35,12 @@ namespace XML
 
 		//Child
 		virtual void addChild(IXMLNode* pChildNode);
-		virtual IXMLNode* getChild(const size_t iChildIndex) const;
+		virtual IXMLNode* getChild(size_t iChildIndex) const;
 		virtual IXMLNode* getChildByName(const char* sName) const;
 		virtual size_t getChildCount(void) const;
 
 		//XMl generation
-		virtual char* getXML(const uint32_t depth = 0) const;
+		virtual char* getXML(uint32_t depth = 0) const;
 
 	protected:
 		virtual ~IXMLNodeImpl(void);

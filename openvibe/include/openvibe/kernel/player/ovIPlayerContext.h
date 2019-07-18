@@ -65,7 +65,7 @@ namespace OpenViBE
 			virtual bool sendMessage(
 				const IMessageEvent& rMessageEvent,
 				const CIdentifier* pTargetIdentifier,
-				const uint32_t ui32TargetIdentifierCount) = 0;
+				uint32_t ui32TargetIdentifierCount) = 0;
 
 			//}@
 

@@ -44,7 +44,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool setTime(
-				const uint64_t ui64Time) = 0;
+				uint64_t ui64Time) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Message)
 		};

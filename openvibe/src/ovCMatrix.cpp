@@ -21,14 +21,14 @@ namespace OpenViBE
 			virtual ~CMatrixImpl(void);
 
 			virtual const uint32_t getDimensionCount(void) const;
-			virtual const uint32_t getDimensionSize(const uint32_t ui32DimensionIndex) const;
-			virtual const char* getDimensionLabel(const uint32_t ui32DimensionIndex, const uint32_t ui32DimensionEntryIndex) const;
+			virtual const uint32_t getDimensionSize(uint32_t ui32DimensionIndex) const;
+			virtual const char* getDimensionLabel(uint32_t ui32DimensionIndex, uint32_t ui32DimensionEntryIndex) const;
 			virtual const double* getBuffer(void) const;
 			virtual const uint32_t getBufferElementCount(void) const;
 
-			virtual bool setDimensionCount(const uint32_t ui32DimensionCount);
-			virtual bool setDimensionSize(const uint32_t ui32DimensionIndex, const uint32_t ui32DimensionSize);
-			virtual bool setDimensionLabel(const uint32_t ui32DimensionIndex, const uint32_t ui32DimensionEntryIndex, const char* sDimensionLabel);
+			virtual bool setDimensionCount(uint32_t ui32DimensionCount);
+			virtual bool setDimensionSize(uint32_t ui32DimensionIndex, uint32_t ui32DimensionSize);
+			virtual bool setDimensionLabel(uint32_t ui32DimensionIndex, uint32_t ui32DimensionEntryIndex, const char* sDimensionLabel);
 			virtual double* getBuffer(void);
 
 			_IsDerivedFromClass_Final_(IMatrix, OV_ClassId_MatrixImpl);

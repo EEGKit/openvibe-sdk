@@ -14,15 +14,15 @@ namespace OpenViBE
 
 			CMemoryBufferImpl(void);
 			explicit CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer);
-			CMemoryBufferImpl(const uint8_t* pMemoryBuffer, const uint64_t ui64BufferSize);
+			CMemoryBufferImpl(const uint8_t* pMemoryBuffer, uint64_t ui64BufferSize);
 			virtual ~CMemoryBufferImpl(void);
 
-			virtual bool reserve(const uint64_t ui64Size);
-			virtual bool setSize(const uint64_t ui64Size, const bool bDiscard);
+			virtual bool reserve(uint64_t ui64Size);
+			virtual bool setSize(uint64_t ui64Size, bool bDiscard);
 			virtual uint64_t getSize(void) const;
 			virtual uint8_t* getDirectPointer(void);
 			virtual const uint8_t* getDirectPointer(void) const;
-			virtual bool append(const uint8_t* pBuffer, const uint64_t ui64BufferSize);
+			virtual bool append(const uint8_t* pBuffer, uint64_t ui64BufferSize);
 			virtual bool append(const IMemoryBuffer& rMemoryBuffer);
 
 			_IsDerivedFromClass_Final_(IMemoryBuffer, OV_ClassId_MemoryBufferImpl);
