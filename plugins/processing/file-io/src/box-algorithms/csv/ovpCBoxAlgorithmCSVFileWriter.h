@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			bool process_streamedMatrix(void);
@@ -47,7 +47,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_pStreamDecoder;
 			OpenViBE::CMatrix m_oMatrix;		// This represents the properties of the input, no data
 
-			OpenViBE::uint64 m_ui64SampleCount;
+			uint64_t m_ui64SampleCount;
 
 			bool m_bHeaderReceived;
 		};
@@ -81,8 +81,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmCSVFileWriterListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Input stream", OV_TypeId_Signal);
 				rBoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");

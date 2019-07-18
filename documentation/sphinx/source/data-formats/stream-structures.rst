@@ -130,10 +130,10 @@ EBML description & identifiers
    *       ...
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * ...
    * OVTK_NodeId_End
    *
@@ -205,10 +205,10 @@ EBML description & identifiers
    *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:z)
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * ...
    * OVTK_NodeId_End
    *
@@ -267,10 +267,10 @@ EBML description & identifiers
    *       OVTK_NodeId_Header_StreamedMatrix_Dimension_Label (string:factor)
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * ...
    * OVTK_NodeId_End
    *
@@ -322,10 +322,10 @@ EBML description & identifiers
    *       ...
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * ...
    * OVTK_NodeId_End
    *
@@ -375,16 +375,16 @@ EBML description & identifiers
    *       ...
    *   OVTK_NodeId_Header_Spectrum
    *     OVTK_NodeId_Header_Spectrum_SamplingRate
-   *     OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (float64)
-   *     OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (float64)
-   *     OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (float64)
+   *     OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (double)
+   *     OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (double)
+   *     OVTK_NodeId_Header_Spectrum_FrequencyAbscissa (double)
    *      ...
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * ...
    * OVTK_NodeId_End
    *
@@ -451,10 +451,10 @@ EBML description & identifiers
    *       ...
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * OVTK_NodeId_Buffer
    *   OVTK_NodeId_Buffer_StreamedMatrix
-   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of float64)
+   *     OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer (array of double)
    * ...
    * OVTK_NodeId_End
    *

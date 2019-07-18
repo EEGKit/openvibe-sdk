@@ -19,7 +19,7 @@ CSignalTrial::CSignalTrial(void)
 
 CSignalTrial::~CSignalTrial(void)
 {
-	map<uint32, double*>::iterator itChannel;
+	map<uint32_t, double*>::iterator itChannel;
 	for (itChannel = m_vChannelSample.begin(); itChannel != m_vChannelSample.end(); ++itChannel)
 	{
 		delete [] itChannel->second;
@@ -29,15 +29,15 @@ CSignalTrial::~CSignalTrial(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CSignalTrial::setSamplingRate(const uint32 ui32SamplingFrequency)
+bool CSignalTrial::setSamplingRate(const uint32_t ui32SamplingFrequency)
 {
 	m_ui32SamplingRate = ui32SamplingFrequency;
 	return m_ui32SamplingRate != 0;
 }
 
-bool CSignalTrial::setChannelCount(const uint32 ui32ChannelCount)
+bool CSignalTrial::setChannelCount(const uint32_t ui32ChannelCount)
 {
-	uint32 i;
+	uint32_t i;
 	for (i = 0; i < ui32ChannelCount; i++)
 	{
 		if (m_vChannelSample.find(i) == m_vChannelSample.end())
@@ -57,7 +57,7 @@ bool CSignalTrial::setChannelCount(const uint32 ui32ChannelCount)
 	return m_ui32ChannelCount != 0;
 }
 
-bool CSignalTrial::setChannelName(const uint32 ui32ChannelIndex, const char* sChannelName)
+bool CSignalTrial::setChannelName(const uint32_t ui32ChannelIndex, const char* sChannelName)
 {
 	if (ui32ChannelIndex < m_ui32ChannelCount)
 	{
@@ -73,14 +73,14 @@ bool CSignalTrial::setLabelIdentifier(const CIdentifier& rLabelIdentifier)
 	return true;
 }
 
-bool CSignalTrial::setSampleCount(const uint32 ui32SampleCount, const bool bPreserve)
+bool CSignalTrial::setSampleCount(const uint32_t ui32SampleCount, const bool bPreserve)
 {
-	const uint32 l_ui32SampleCountRounding = 0x00000fff;
+	const uint32_t l_ui32SampleCountRounding = 0x00000fff;
 
 	if (ui32SampleCount > m_ui32SampleCountReserved)
 	{
-		uint32 l_ui32SampleCountReserved = (ui32SampleCount + l_ui32SampleCountRounding + 1) & (~l_ui32SampleCountRounding);
-		map<uint32, double*>::iterator itChannelSample;
+		uint32_t l_ui32SampleCountReserved = (ui32SampleCount + l_ui32SampleCountRounding + 1) & (~l_ui32SampleCountRounding);
+		map<uint32_t, double*>::iterator itChannelSample;
 		for (itChannelSample = m_vChannelSample.begin(); itChannelSample != m_vChannelSample.end(); ++itChannelSample)
 		{
 			double* l_pSample = new double[l_ui32SampleCountReserved];
@@ -100,19 +100,19 @@ bool CSignalTrial::setSampleCount(const uint32 ui32SampleCount, const bool bPres
 // ________________________________________________________________________________________________________________
 //
 
-uint32 CSignalTrial::getSamplingRate(void) const
+uint32_t CSignalTrial::getSamplingRate(void) const
 {
 	return m_ui32SamplingRate;
 }
 
-uint32 CSignalTrial::getChannelCount(void) const
+uint32_t CSignalTrial::getChannelCount(void) const
 {
 	return m_ui32ChannelCount;
 }
 
-const char* CSignalTrial::getChannelName(const uint32 ui32ChannelIndex) const
+const char* CSignalTrial::getChannelName(const uint32_t ui32ChannelIndex) const
 {
-	map<uint32, string>::const_iterator itChannelName;
+	map<uint32_t, string>::const_iterator itChannelName;
 	itChannelName = m_vChannelName.find(ui32ChannelIndex);
 	if (itChannelName != m_vChannelName.end())
 	{
@@ -126,19 +126,19 @@ CIdentifier CSignalTrial::getLabelIdentifier(void) const
 	return m_oLabelIdentifier;
 }
 
-uint32 CSignalTrial::getSampleCount(void) const
+uint32_t CSignalTrial::getSampleCount(void) const
 {
 	return m_ui32SampleCount;
 }
 
-uint64 CSignalTrial::getDuration(void) const
+uint64_t CSignalTrial::getDuration(void) const
 {
 	return (m_ui32SamplingRate ? ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, m_ui32SampleCount) : 0);
 }
 
-double* CSignalTrial::getChannelSampleBuffer(const uint32 ui32ChannelIndex) const
+double* CSignalTrial::getChannelSampleBuffer(const uint32_t ui32ChannelIndex) const
 {
-	map<uint32, double*>::const_iterator itChannelSample;
+	map<uint32_t, double*>::const_iterator itChannelSample;
 	itChannelSample = m_vChannelSample.find(ui32ChannelIndex);
 	if (itChannelSample != m_vChannelSample.end())
 	{
@@ -155,7 +155,7 @@ ISignalTrial* OpenViBEToolkit::createSignalTrial(void)
 	return new CSignalTrial();
 }
 
-void OpenViBEToolkit::releaseSignalTrial(ISignalTrial* pSignalTrial)
+void OpenViBEToolkit::releaseSignalTrial(ISignalTrial* trial)
 {
-	delete pSignalTrial;
+	delete trial;
 }

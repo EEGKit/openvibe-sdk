@@ -71,7 +71,7 @@ bool CBoxAlgorithmXDAWNTrainer::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmXDAWNTrainer::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmXDAWNTrainer::processInput(uint32_t ui32InputIndex)
 {
 	if (ui32InputIndex == 0)
 	{
@@ -154,7 +154,7 @@ bool CBoxAlgorithmXDAWNTrainer::process(void)
 				IMatrix* matrix = m_rSignalDecoder.getOutputMatrix();
 				channelCount    = matrix->getDimensionSize(0);
 				sampleCount     = matrix->getDimensionSize(1);
-				samplingRate    = static_cast<uint32>(m_rSignalDecoder.getOutputSamplingRate());
+				samplingRate    = static_cast<uint32_t>(m_rSignalDecoder.getOutputSamplingRate());
 
 				if (m_rSignalDecoder.isHeaderReceived())
 				{
@@ -249,7 +249,7 @@ bool CBoxAlgorithmXDAWNTrainer::process(void)
 		// We need equal number of channels
 		OV_ERROR_UNLESS_KRF(
 			X[0].rows() == X[1].rows(),
-			"Dimension mismatch, first input had " << uint32(X[0].rows()) << " channels while second input had " << uint32(X[1].rows()) << " channels\n",
+			"Dimension mismatch, first input had " << uint32_t(X[0].rows()) << " channels while second input had " << uint32_t(X[1].rows()) << " channels\n",
 			OpenViBE::Kernel::ErrorType::BadValue
 		);
 

@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 			virtual bool initialize(void);
 			virtual bool uininitialize(void);
 
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTest)
@@ -51,8 +51,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTest; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CDecoderAlgorithmTest(); }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{
 				rPrototype.addInput("Experiment information", OV_TypeId_ExperimentInformation);
 				rPrototype.addInput("Feature vector", OV_TypeId_FeatureVector);

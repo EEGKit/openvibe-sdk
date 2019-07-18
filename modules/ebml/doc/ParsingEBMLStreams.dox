@@ -91,7 +91,7 @@
  *   {
  *     m_oCurrent=rIdentifier;
  *   }
- *   virtual void processChildData(cosnt void* pBuffer, const EBML::uint64 ui64BufferSize)
+ *   virtual void processChildData(cosnt void* pBuffer, const uint64_t ui64BufferSize)
  *   {
  *     if(m_oCurrent==EBML_Identifier_DocType)
  *       std::cout << "Doc type:" << m_pReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize) << std::endl;

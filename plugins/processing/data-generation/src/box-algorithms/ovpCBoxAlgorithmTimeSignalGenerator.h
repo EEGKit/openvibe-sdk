@@ -20,7 +20,7 @@ namespace OpenViBEPlugins
 
 			void release(void);
 
-			OpenViBE::uint64 getClockFrequency(void);
+			uint64_t getClockFrequency(void);
 
 			bool initialize(void);
 			bool uninitialize(void);
@@ -35,9 +35,9 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeSignalGenerator> m_oSignalEncoder;
 
 			bool m_bHeaderSent;
-			OpenViBE::uint32 m_ui32SamplingFrequency;
-			OpenViBE::uint32 m_ui32GeneratedEpochSampleCount;
-			OpenViBE::uint32 m_ui32SentSampleCount;
+			uint32_t m_ui32SamplingFrequency;
+			uint32_t m_ui32GeneratedEpochSampleCount;
+			uint32_t m_ui32SentSampleCount;
 		};
 
 		class CBoxAlgorithmTimeSignalGeneratorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

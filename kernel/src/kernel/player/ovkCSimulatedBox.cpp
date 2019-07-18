@@ -131,7 +131,7 @@ bool CSimulatedBox::processClock(void)
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-			uint64 l_ui64NewClockFrequency = m_pBoxAlgorithm->getClockFrequency(l_oBoxAlgorithmContext);
+			uint64_t l_ui64NewClockFrequency = m_pBoxAlgorithm->getClockFrequency(l_oBoxAlgorithmContext);
 			if (l_ui64NewClockFrequency == 0)
 			{
 				m_ui64ClockActivationStep     = OV_IncorrectTime;
@@ -188,7 +188,7 @@ bool CSimulatedBox::processClock(void)
 	return true;
 }
 
-bool CSimulatedBox::processInput(const uint32 ui32InputIndex, const CChunk& rChunk)
+bool CSimulatedBox::processInput(const uint32_t ui32InputIndex, const CChunk& rChunk)
 {
 	m_vInput[ui32InputIndex].push_back(rChunk);
 
@@ -311,35 +311,35 @@ const IScenario& CSimulatedBox::getScenario(void) const
 // ________________________________________________________________________________________________________________
 //
 
-uint32 CSimulatedBox::getInputChunkCount(
-	const uint32 ui32InputIndex) const
+uint32_t CSimulatedBox::getInputChunkCount(
+	const uint32_t ui32InputIndex) const
 {
 	OV_ERROR_UNLESS_KRF(
 		ui32InputIndex < m_vInput.size(),
-		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
-	return static_cast<uint32>(m_vInput[ui32InputIndex].size());
+	return static_cast<uint32_t>(m_vInput[ui32InputIndex].size());
 }
 
 bool CSimulatedBox::getInputChunk(
-	const uint32 ui32InputIndex,
-	const uint32 ui32ChunkIndex,
-	uint64& rStartTime,
-	uint64& rEndTime,
-	uint64& rChunkSize,
-	const uint8*& rpChunkBuffer) const
+	const uint32_t ui32InputIndex,
+	const uint32_t ui32ChunkIndex,
+	uint64_t& rStartTime,
+	uint64_t& rEndTime,
+	uint64_t& rChunkSize,
+	const uint8_t*& rpChunkBuffer) const
 {
 	OV_ERROR_UNLESS_KRF(
 		ui32InputIndex < m_vInput.size(),
-		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
 	OV_ERROR_UNLESS_KRF(
 		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
-		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput[ui32InputIndex].size() - 1) << "])",
+		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput[ui32InputIndex].size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
@@ -352,37 +352,37 @@ bool CSimulatedBox::getInputChunk(
 }
 
 const IMemoryBuffer* CSimulatedBox::getInputChunk(
-	const uint32 ui32InputIndex,
-	const uint32 ui32ChunkIndex) const
+	const uint32_t ui32InputIndex,
+	const uint32_t ui32ChunkIndex) const
 {
 	OV_ERROR_UNLESS_KRN(
 		ui32InputIndex < m_vInput.size(),
-		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
 	OV_ERROR_UNLESS_KRN(
 		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
-		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput[ui32InputIndex].size() - 1) << "])",
+		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput[ui32InputIndex].size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
 	return &(m_vInput[ui32InputIndex][ui32ChunkIndex]).getBuffer();
 }
 
-uint64 CSimulatedBox::getInputChunkStartTime(
-	const uint32 ui32InputIndex,
-	const uint32 ui32ChunkIndex) const
+uint64_t CSimulatedBox::getInputChunkStartTime(
+	const uint32_t ui32InputIndex,
+	const uint32_t ui32ChunkIndex) const
 {
 	OV_ERROR_UNLESS_KRZ(
 		ui32InputIndex < m_vInput.size(),
-		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
 	OV_ERROR_UNLESS_KRZ(
 		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
-		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput[ui32InputIndex].size() - 1) << "])",
+		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput[ui32InputIndex].size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
@@ -390,19 +390,19 @@ uint64 CSimulatedBox::getInputChunkStartTime(
 	return l_rChunk.getStartTime();
 }
 
-uint64 CSimulatedBox::getInputChunkEndTime(
-	const uint32 ui32InputIndex,
-	const uint32 ui32ChunkIndex) const
+uint64_t CSimulatedBox::getInputChunkEndTime(
+	const uint32_t ui32InputIndex,
+	const uint32_t ui32ChunkIndex) const
 {
 	OV_ERROR_UNLESS_KRZ(
 		ui32InputIndex < m_vInput.size(),
-		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
 	OV_ERROR_UNLESS_KRZ(
 		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
-		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput[ui32InputIndex].size() - 1) << "])",
+		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput[ui32InputIndex].size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
@@ -411,18 +411,18 @@ uint64 CSimulatedBox::getInputChunkEndTime(
 }
 
 bool CSimulatedBox::markInputAsDeprecated(
-	const uint32 ui32InputIndex,
-	const uint32 ui32ChunkIndex)
+	const uint32_t ui32InputIndex,
+	const uint32_t ui32ChunkIndex)
 {
 	OV_ERROR_UNLESS_KRZ(
 		ui32InputIndex < m_vInput.size(),
-		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput.size() - 1) << "])",
+		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
 	OV_ERROR_UNLESS_KRZ(
 		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
-		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vInput[ui32InputIndex].size() - 1) << "])",
+		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput[ui32InputIndex].size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
@@ -433,12 +433,12 @@ bool CSimulatedBox::markInputAsDeprecated(
 // ________________________________________________________________________________________________________________
 //
 
-uint64 CSimulatedBox::getOutputChunkSize(
-	const uint32 ui32OutputIndex) const
+uint64_t CSimulatedBox::getOutputChunkSize(
+	const uint32_t ui32OutputIndex) const
 {
 	OV_ERROR_UNLESS_KRZ(
 		ui32OutputIndex < m_vCurrentOutput.size(),
-		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
@@ -446,25 +446,25 @@ uint64 CSimulatedBox::getOutputChunkSize(
 }
 
 bool CSimulatedBox::setOutputChunkSize(
-	const uint32 ui32OutputIndex,
-	const uint64 ui64Size,
+	const uint32_t ui32OutputIndex,
+	const uint64_t ui64Size,
 	const bool bDiscard)
 {
 	OV_ERROR_UNLESS_KRF(
 		ui32OutputIndex < m_vCurrentOutput.size(),
-		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().setSize(ui64Size, bDiscard);
 }
 
-uint8* CSimulatedBox::getOutputChunkBuffer(
-	const uint32 ui32OutputIndex)
+uint8_t* CSimulatedBox::getOutputChunkBuffer(
+	const uint32_t ui32OutputIndex)
 {
 	OV_ERROR_UNLESS_KRN(
 		ui32OutputIndex < m_vCurrentOutput.size(),
-		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
@@ -472,13 +472,13 @@ uint8* CSimulatedBox::getOutputChunkBuffer(
 }
 
 bool CSimulatedBox::appendOutputChunkData(
-	const uint32 ui32OutputIndex,
-	const uint8* pBuffer,
-	const uint64 ui64BufferSize)
+	const uint32_t ui32OutputIndex,
+	const uint8_t* pBuffer,
+	const uint64_t ui64BufferSize)
 {
 	OV_ERROR_UNLESS_KRF(
 		ui32OutputIndex < m_vCurrentOutput.size(),
-		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
@@ -486,11 +486,11 @@ bool CSimulatedBox::appendOutputChunkData(
 }
 
 IMemoryBuffer* CSimulatedBox::getOutputChunk(
-	const uint32 ui32OutputIndex)
+	const uint32_t ui32OutputIndex)
 {
 	OV_ERROR_UNLESS_KRN(
 		ui32OutputIndex < m_vCurrentOutput.size(),
-		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 
@@ -498,13 +498,13 @@ IMemoryBuffer* CSimulatedBox::getOutputChunk(
 }
 
 bool CSimulatedBox::markOutputAsReadyToSend(
-	const uint32 ui32OutputIndex,
-	const uint64 ui64StartTime,
-	const uint64 ui64EndTime)
+	const uint32_t ui32OutputIndex,
+	const uint64_t ui64StartTime,
+	const uint64_t ui64EndTime)
 {
 	OV_ERROR_UNLESS_KRF(
 		ui32OutputIndex < m_vCurrentOutput.size(),
-		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<OpenViBE::uint32>(m_vCurrentOutput.size() - 1) << "])",
+		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
 		ErrorType::OutOfBound
 	);
 

@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierProcessor)
@@ -41,7 +41,7 @@ namespace OpenViBEPlugins
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier;
 
-			std::map<double, OpenViBE::uint64> m_vStimulation;
+			std::map<double, uint64_t> m_vStimulation;
 		};
 
 		class CBoxAlgorithmClassifierProcessorDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -64,8 +64,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ClassifierProcessor; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CBoxAlgorithmClassifierProcessor; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Features", OV_TypeId_FeatureVector);
 				rBoxAlgorithmPrototype.addInput("Commands", OV_TypeId_Stimulations);

@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
+			virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize);
 			virtual void closeChild(void);
 
 		protected:
@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
-			OpenViBE::uint64 m_ui64StimulationIndex;
+			uint64_t m_ui64StimulationIndex;
 			OpenViBE::CStimulationSet m_oStimulationSet;
 		};
 
@@ -60,8 +60,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_StimulationStreamDecoder; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CStimulationDecoder(); }
 
-			virtual bool getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 

@@ -11,8 +11,8 @@ using namespace OpenViBEPlugins::Streaming;
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize(void)
 {
-	m_ui64LastStartTime = 0;
-	m_ui64LastEndTime   = 0;
+	m_lastStartTime = 0;
+	m_lastEndTime   = 0;
 	m_bHeaderSent       = false;
 
 	return true;
@@ -20,7 +20,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize(void)
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::uninitialize(void) { return true; }
 
-bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -31,35 +31,29 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process(void)
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		for (uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
 			const IMemoryBuffer* l_pInputMemoryBuffer = l_rDynamicBoxContext.getInputChunk(i, j);
-			uint64 l_ui64StartTime                    = l_rDynamicBoxContext.getInputChunkStartTime(i, j);
-			uint64 l_ui64EndTime                      = l_rDynamicBoxContext.getInputChunkEndTime(i, j);
+			uint64_t startTime                    = l_rDynamicBoxContext.getInputChunkStartTime(i, j);
+			uint64_t endTime                      = l_rDynamicBoxContext.getInputChunkEndTime(i, j);
 
-			if ((!m_bHeaderSent && l_ui64StartTime == l_ui64EndTime) || (m_bHeaderSent && l_ui64StartTime != l_ui64EndTime))
+			if ((!m_bHeaderSent && startTime == endTime) || (m_bHeaderSent && startTime != endTime))
 			{
 				IMemoryBuffer* l_pOutputMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
 				l_pOutputMemoryBuffer->setSize(l_pInputMemoryBuffer->getSize(), true);
 
-				System::Memory::copy(
-					l_pOutputMemoryBuffer->getDirectPointer(),
-					l_pInputMemoryBuffer->getDirectPointer(),
-					l_pInputMemoryBuffer->getSize());
+				System::Memory::copy(l_pOutputMemoryBuffer->getDirectPointer(), l_pInputMemoryBuffer->getDirectPointer(), l_pInputMemoryBuffer->getSize());
 
-				OV_ERROR_UNLESS_KRF(
-					l_ui64StartTime >= m_ui64LastStartTime && l_ui64EndTime >= m_ui64LastEndTime,
-					"Invalid chunk times with start = [" << l_ui64StartTime << "] and end = [" << l_ui64EndTime
-					<< "] while last chunk has start = [" << m_ui64LastStartTime << "] and end = [" << m_ui64LastEndTime << "]",
-					OpenViBE::Kernel::ErrorType::BadInput
-				);
+				OV_ERROR_UNLESS_KRF(startTime >= m_lastStartTime && endTime >= m_lastEndTime,
+									"Invalid chunk times with start = [" << startTime << "] and end = [" << endTime << "] while last chunk has start = [" << m_lastStartTime << "] and end = [" << m_lastEndTime << "]",
+									OpenViBE::Kernel::ErrorType::BadInput);
 
-				m_ui64LastStartTime = l_ui64StartTime;
-				m_ui64LastEndTime   = l_ui64EndTime;
+				m_lastStartTime = startTime;
+				m_lastEndTime   = endTime;
 
-				l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
+				l_rDynamicBoxContext.markOutputAsReadyToSend(0, startTime, endTime);
 				m_bHeaderSent = true;
 			}
 

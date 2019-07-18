@@ -52,35 +52,35 @@ protected:
 	//! Pointer to the data referenced by X in the equation
 	double** m_ppVariable;
 	//! Number of accessible variables
-	OpenViBE::uint32 m_ui32VariableCount;
+	uint32_t m_ui32VariableCount;
 
 	//! Size of the "function stack" (where the sucessive function pointers are stored)
-	const OpenViBE::uint32 m_ui32FunctionStackSize;
+	const uint32_t m_ui32FunctionStackSize;
 	//! Pointer to the top of the function stack
 	functionPointer* m_pFunctionList;
 	//! Pointer to the base of the function stack
 	functionPointer* m_pFunctionListBase;
 
 	//! Size of the "function context stack" (where the sucessive function context are stored)
-	const OpenViBE::uint64 m_ui64FunctionContextStackSize;
+	const uint64_t m_ui64FunctionContextStackSize;
 	//! Pointer to the top of the function context stack
 	functionContext* m_pFunctionContextList;
 	//! Pointer to the base of the function context stack
 	functionContext* m_pFunctionContextListBase;
 
 	//! Size of the "local" stack
-	const OpenViBE::uint64 m_ui64StackSize;
+	const uint64_t m_ui64StackSize;
 	//! Pointer to the top of the "local" stack
 	double* m_pStack;
 
 	//! Number of pointers/contexts in the function/context stacks (same for both)
-	OpenViBE::uint64 m_ui64NumberOfOperations;
+	uint64_t m_ui64NumberOfOperations;
 
 	//! Table of function pointers
 	static functionPointer m_pFunctionTable[32];
 
 	//! Category of the tree (OP_USERDEF or Special tree)
-	OpenViBE::uint64 m_ui64TreeCategory;
+	uint64_t m_ui64TreeCategory;
 	//! Optional parameter in case of a special tree
 	double m_f64TreeParameter;
 
@@ -92,7 +92,7 @@ public:
 	* Constructor.
 	* \param pVariable Pointer to the data known as X in the equation.
 	*/
-	CEquationParser(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& oPlugin, double** ppVarialbe, OpenViBE::uint32 ui32VariableCount);
+	CEquationParser(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& oPlugin, double** ppVarialbe, uint32_t ui32VariableCount);
 
 	//! Destructor.
 	~CEquationParser();
@@ -109,15 +109,15 @@ public:
 	*/
 	bool compileEquation(const char* pEquation);
 
-	void push_op(OpenViBE::uint64 ui64Operator);
+	void push_op(uint64_t ui64Operator);
 	void push_value(double f64Value);
-	void push_var(OpenViBE::uint32 ui32Index);
+	void push_var(uint32_t ui32Index);
 
 	/**
 	* Returns the tree's category.
 	* \return The tree's category.
 	*/
-	OpenViBE::uint64 getTreeCategory() const { return m_ui64TreeCategory; }
+	uint64_t getTreeCategory() const { return m_ui64TreeCategory; }
 
 	/**
 	 * Returns the optional parameter.

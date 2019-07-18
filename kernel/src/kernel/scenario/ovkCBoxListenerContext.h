@@ -11,7 +11,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxListenerContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::IBox& rBox, OpenViBE::uint32 ui32Index) : TKernelObject<IBoxListenerContext>(rKernelContext),
+			CBoxListenerContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::IBox& rBox, uint32_t ui32Index) : TKernelObject<IBoxListenerContext>(rKernelContext),
 																																					m_rBox(rBox),
 																																					m_ui32Index(ui32Index) { }
 
@@ -36,14 +36,14 @@ namespace OpenViBE
 				);
 			}
 
-			virtual OpenViBE::uint32 getIndex(void) const { return m_ui32Index; }
+			virtual uint32_t getIndex(void) const { return m_ui32Index; }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelObject, OVK_ClassId_Kernel_Scenario_BoxListenerContext)
 
 		private:
 
 			OpenViBE::Kernel::IBox& m_rBox;
-			OpenViBE::uint32 m_ui32Index;
+			uint32_t m_ui32Index;
 		};
 	};
 };

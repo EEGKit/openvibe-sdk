@@ -18,7 +18,7 @@ bool CWriter::openChild(const CIdentifier& rIdentifier)
 	return m_pWriterImplementation->openChild(rIdentifier);
 }
 
-bool CWriter::setChildData(const void* pBuffer, const uint64 ui64BufferSize)
+bool CWriter::setChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	return m_pWriterImplementation->setChildData(pBuffer, ui64BufferSize);
 }

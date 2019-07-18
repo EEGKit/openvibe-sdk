@@ -139,7 +139,7 @@ namespace OpenViBE
 		 * \return True if value could be retrieved, false otherwise
 		 */
 		bool getValue(
-			const uint32 rIndex,
+			const uint32_t rIndex,
 			OpenViBE::CString& rName,
 			OpenViBE::CString& rValue) const;
 
@@ -148,7 +148,7 @@ namespace OpenViBE
 		 * \brief Retrieve the number of stored elements 
 		 * \return the number of stored elements
 		 */
-		OpenViBE::uint32 getSize() const;
+		uint32_t getSize() const;
 
 	protected:
 

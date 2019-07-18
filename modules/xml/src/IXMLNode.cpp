@@ -40,14 +40,14 @@ namespace XML
 		virtual size_t getChildCount(void) const;
 
 		//XMl generation
-		virtual char* getXML(const XML::uint32 depth = 0) const;
+		virtual char* getXML(const uint32_t depth = 0) const;
 
 	protected:
 		virtual ~IXMLNodeImpl(void);
 
 	private:
 		std::string sanitize(const std::string& sString) const;
-		void applyIndentation(std::string& sString, XML::uint32 depth) const;
+		void applyIndentation(std::string& sString, uint32_t depth) const;
 
 
 		std::vector<XML::IXMLNode *> m_oNodeVector;
@@ -171,13 +171,13 @@ std::string IXMLNodeImpl::sanitize(const string& sString) const
 	return l_sRes;
 }
 
-void IXMLNodeImpl::applyIndentation(string& sString, XML::uint32 depth) const
+void IXMLNodeImpl::applyIndentation(string& sString, uint32_t depth) const
 {
 	string l_sIndent(depth, '\t');
 	sString.append(l_sIndent);
 }
 
-char* IXMLNodeImpl::getXML(const XML::uint32 depth) const
+char* IXMLNodeImpl::getXML(const uint32_t depth) const
 {
 	string l_sRes;
 	applyIndentation(l_sRes, depth);

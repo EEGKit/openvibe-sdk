@@ -9,9 +9,9 @@ namespace XML
 	{
 	public:
 		virtual ~IReaderCallback(void) { }
-		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount) =0;
-		virtual void processChildData(const char* sData) =0;
-		virtual void closeChild(void) =0;
+		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount) = 0;
+		virtual void processChildData(const char* sData) = 0;
+		virtual void closeChild(void) = 0;
 	};
 
 	class XML_API IReaderCallBack : public IReaderCallback { };
@@ -19,8 +19,8 @@ namespace XML
 	class XML_API IReader
 	{
 	public:
-		virtual bool processData(const void* pBuffer, const XML::uint64 ui64BufferSize) =0;
-		virtual void release(void) =0;
+		virtual bool processData(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
+		virtual void release(void) = 0;
 	protected:
 		virtual ~IReader(void) { }
 	};

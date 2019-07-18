@@ -85,7 +85,7 @@ void CAcquisitionDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	}
 }
 
-void CAcquisitionDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CAcquisitionDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -144,11 +144,11 @@ void CAcquisitionDecoder::closeChild(void)
 	m_vNodes.pop();
 }
 
-void CAcquisitionDecoder::appendMemoryBuffer(IMemoryBuffer* pMemoryBuffer, const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CAcquisitionDecoder::appendMemoryBuffer(IMemoryBuffer* pMemoryBuffer, const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	if (pMemoryBuffer)
 	{
-		uint64 l_ui64CurrentBufferSize = pMemoryBuffer->getSize();
+		uint64_t l_ui64CurrentBufferSize = pMemoryBuffer->getSize();
 		pMemoryBuffer->setSize(l_ui64CurrentBufferSize + ui64BufferSize, false);
 		System::Memory::copy(pMemoryBuffer->getDirectPointer() + l_ui64CurrentBufferSize, pBuffer, ui64BufferSize);
 	}

@@ -106,7 +106,7 @@ namespace OpenViBE
 			 *
 			 * \sa processClock
 			 */
-			virtual OpenViBE::uint64 getClockFrequency(
+			virtual uint64_t getClockFrequency(
 				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return 0; }
 
 			//@}
@@ -231,7 +231,7 @@ namespace OpenViBE
 			 */
 			virtual bool processInput(
 				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
-				OpenViBE::uint32 ui32InputIndex) { return false; }
+				uint32_t ui32InputIndex) { return false; }
 
 			//@}
 			/** \name Algorithm processing */
@@ -257,7 +257,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
 			virtual bool process(
-				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) =0;
+				OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) = 0;
 
 			//@}
 
@@ -301,7 +301,7 @@ namespace OpenViBE
 			 */
 			virtual bool process(
 				OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext,
-				const OpenViBE::Kernel::EBoxModification eBoxModificationType) =0;
+				const OpenViBE::Kernel::EBoxModification eBoxModificationType) = 0;
 
 			//@}
 

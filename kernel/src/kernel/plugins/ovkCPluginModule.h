@@ -26,7 +26,7 @@ namespace OpenViBE
 
 			virtual bool initialize(void);
 			virtual bool getPluginObjectDescription(
-				OpenViBE::uint32 ui32Index,
+				uint32_t ui32Index,
 				OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription);
 			virtual bool uninitialize(void);
 

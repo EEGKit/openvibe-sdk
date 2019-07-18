@@ -134,7 +134,7 @@ bool CBoxAlgorithmFrequencyBandSelector::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmFrequencyBandSelector::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmFrequencyBandSelector::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -144,7 +144,7 @@ bool CBoxAlgorithmFrequencyBandSelector::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, i);
 		op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
@@ -152,7 +152,7 @@ bool CBoxAlgorithmFrequencyBandSelector::process(void)
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedHeader))
 		{
 			m_vSelectionFactor.clear();
-			for (uint32 frequencyAbscissaIndex = 0; frequencyAbscissaIndex < ip_pFrequencyAbscissa->getDimensionSize(0); frequencyAbscissaIndex++)
+			for (uint32_t frequencyAbscissaIndex = 0; frequencyAbscissaIndex < ip_pFrequencyAbscissa->getDimensionSize(0); frequencyAbscissaIndex++)
 			{
 				double f64FrequencyAbscissa = ip_pFrequencyAbscissa->getBuffer()[frequencyAbscissaIndex];
 				bool bSelected               = std::any_of(m_vSelected.begin(), m_vSelected.end(), [f64FrequencyAbscissa](const BandRange& currentBandRange)
@@ -167,10 +167,10 @@ bool CBoxAlgorithmFrequencyBandSelector::process(void)
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			uint32 l_ui32Offset = 0;
-			for (uint32 j = 0; j < m_oMatrix.getDimensionSize(0); j++)
+			uint32_t l_ui32Offset = 0;
+			for (uint32_t j = 0; j < m_oMatrix.getDimensionSize(0); j++)
 			{
-				for (uint32 k = 0; k < m_oMatrix.getDimensionSize(1); k++)
+				for (uint32_t k = 0; k < m_oMatrix.getDimensionSize(1); k++)
 				{
 					m_oMatrix.getBuffer()[l_ui32Offset] = m_vSelectionFactor[k] * m_oMatrix.getBuffer()[l_ui32Offset];
 					l_ui32Offset++;

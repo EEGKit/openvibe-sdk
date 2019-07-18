@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeBasedEpoching)
@@ -32,13 +32,13 @@ namespace OpenViBEPlugins
 			double m_EpochDuration;
 			double m_EpochInterval;
 
-			OpenViBE::uint64 m_SamplingRate;
-			OpenViBE::uint32 m_OutputSampleCount;
-			OpenViBE::uint32 m_OutputSampleCountBetweenEpoch;
-			OpenViBE::uint64 m_LastInputEndTime;
-			OpenViBE::uint32 m_OutputSampleIndex;
-			OpenViBE::uint32 m_OutputChunkIndex;
-			OpenViBE::uint64 m_ReferenceTime;
+			uint64_t m_SamplingRate;
+			uint32_t m_OutputSampleCount;
+			uint32_t m_OutputSampleCountBetweenEpoch;
+			uint64_t m_LastInputEndTime;
+			uint32_t m_OutputSampleIndex;
+			uint32_t m_OutputChunkIndex;
+			uint64_t m_ReferenceTime;
 		};
 
 		class CBoxAlgorithmTimeBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -61,8 +61,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_TimeBasedEpoching; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTimeBasedEpoching(); }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{
 				rPrototype.addInput("Input signal", OV_TypeId_Signal);
 				rPrototype.addOutput("Epoched signal", OV_TypeId_Signal);

@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_MatrixValidityChecker);
@@ -36,10 +36,10 @@ namespace OpenViBEPlugins
 			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_vStreamDecoder;
 			std::vector<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmMatrixValidityChecker>> m_vStreamEncoder;
 			OpenViBE::Kernel::ELogLevel m_eLogLevel;
-			OpenViBE::uint64 m_ui64ValidityCheckerType;
+			uint64_t m_ui64ValidityCheckerType;
 
-			std::vector<OpenViBE::uint32> m_ui32TotalInterpolatedSampleCount;
-			std::vector<OpenViBE::uint32> m_ui32TotalInterpolatedChunkCount;
+			std::vector<uint32_t> m_ui32TotalInterpolatedSampleCount;
+			std::vector<uint32_t> m_ui32TotalInterpolatedChunkCount;
 			std::vector<std::vector<double>> m_vLastValidSample;
 		};
 
@@ -50,7 +50,7 @@ namespace OpenViBEPlugins
 			bool check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
-				OpenViBE::uint32 i;
+				uint32_t i;
 
 				for (i = 0; i < rBox.getInputCount(); i++)
 				{
@@ -68,7 +68,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				rBox.setInputType(ui32Index, OV_TypeId_StreamedMatrix);
 				if (rBox.getSettingCount() > 1) rBox.addOutput("", OV_TypeId_StreamedMatrix);
@@ -76,14 +76,14 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				rBox.removeOutput(ui32Index);
 				this->check(rBox);
 				return true;
 			}
 
-			virtual bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				rBox.setOutputType(ui32Index, OV_TypeId_StreamedMatrix);
 				rBox.addInput("", OV_TypeId_StreamedMatrix);
@@ -91,7 +91,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				rBox.removeInput(ui32Index);
 				this->check(rBox);
@@ -123,8 +123,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmMatrixValidityCheckerListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Stream 1", OV_TypeId_StreamedMatrix);
 				rBoxAlgorithmPrototype.addOutput("Output stream 1", OV_TypeId_StreamedMatrix);

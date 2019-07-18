@@ -25,16 +25,16 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32Index);
+			virtual bool processInput(uint32_t ui32Index);
 			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationVoter);
 
 		protected:
 
-			OpenViBE::uint64 m_ui64MinimumVotes;
+			uint64_t m_ui64MinimumVotes;
 			double m_f64TimeWindow;
-			OpenViBE::uint64 m_ui64RejectClassLabel;
+			uint64_t m_ui64RejectClassLabel;
 			OpenViBE::CIdentifier m_oClearVotes;
 			OpenViBE::CIdentifier m_oOutputDateMode;
 			OpenViBE::CIdentifier m_oRejectClass_CanWin;
@@ -46,10 +46,10 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_pStimulationSet;
 
-			std::deque<std::pair<OpenViBE::uint64, OpenViBE::uint64>> m_oStimulusDeque; // <label,time>
+			std::deque<std::pair<uint64_t, uint64_t>> m_oStimulusDeque; // <label,time>
 
-			OpenViBE::uint64 m_ui64LatestStimulusDate;
-			OpenViBE::uint64 m_ui64LastTime;
+			uint64_t m_ui64LatestStimulusDate;
+			uint64_t m_ui64LastTime;
 		};
 
 
@@ -87,8 +87,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StimulationVoter; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Stimulation::CBoxAlgorithmStimulationVoter; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Stimulus input", OV_TypeId_Stimulations);
 				rBoxAlgorithmPrototype.addOutput("Selected stimulus", OV_TypeId_Stimulations);

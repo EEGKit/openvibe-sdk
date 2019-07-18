@@ -34,7 +34,7 @@ bool CStreamedMatrixEncoder::processHeader(void)
 {
 	IMatrix* l_pMatrix = ip_pMatrix;
 	bool l_bShouldSendLabels;
-	uint32 i, j;
+	uint32_t i, j;
 
 	m_ui64MatrixBufferSize = (l_pMatrix->getDimensionCount() == 0 ? 0 : 1);
 

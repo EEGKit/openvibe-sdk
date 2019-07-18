@@ -36,7 +36,7 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rInputParameterIdentifier,
 				const OpenViBE::CString& sInputName,
 				const OpenViBE::Kernel::EParameterType eParameterType,
-				const OpenViBE::CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) =0;
+				const OpenViBE::CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an output parameter
 			 * \param rOutputParameterIdentifier [in] : the identifier for this parameter
@@ -51,7 +51,7 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& rOutputParameterIdentifier,
 				const OpenViBE::CString& sOutputName,
 				const OpenViBE::Kernel::EParameterType eParameterType,
-				const OpenViBE::CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) =0;
+				const OpenViBE::CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an input trigger
 			 * \param rInputTriggerIdentifier [in] : the identifier for this trigger
@@ -61,7 +61,7 @@ namespace OpenViBE
 			 */
 			virtual bool addInputTrigger(
 				const OpenViBE::CIdentifier& rInputTriggerIdentifier,
-				const OpenViBE::CString& rInputTriggerName) =0;
+				const OpenViBE::CString& rInputTriggerName) = 0;
 			/**
 			 * \brief Adds an output trigger
 			 * \param rOutputTriggerIdentifier [in] : the identifier for this trigger
@@ -71,7 +71,7 @@ namespace OpenViBE
 			 */
 			virtual bool addOutputTrigger(
 				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
-				const OpenViBE::CString& rOutputTriggerName) =0;
+				const OpenViBE::CString& rOutputTriggerName) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmProto)
 		};

@@ -38,7 +38,7 @@ namespace EBML
 		 * return \e true when the node should have children, and
 		 * \e false in other cases.
 		 */
-		virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier) =0;
+		virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier) = 0;
 		/**
 		 * \brief Informs the callback object a new node parsing is starting
 		 * \param rIdentifier [in] : The idenfier of the newly parsing node
@@ -50,7 +50,7 @@ namespace EBML
 		 * a master one, whher a processData if this node is a
 		 * simple child one.
 		 */
-		virtual void openChild(const EBML::CIdentifier& rIdentifier) =0;
+		virtual void openChild(const EBML::CIdentifier& rIdentifier) = 0;
 		/**
 		 * \brief Gives the callback object the data associated with the currently opened child node
 		 * \param pBuffer [in] : The buffer corresponding to the current simple child node
@@ -63,7 +63,7 @@ namespace EBML
 		 * a reader helper object to do the work... See
 		 * EBML::IReaderHelper for more details on that subject.
 		 */
-		virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize) =0;
+		virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Informs the callback object the current node parsing is terminated
 		 *
@@ -72,7 +72,7 @@ namespace EBML
 		 * top level node, whether opening a new child or closing
 		 * itself and so on...
 		 */
-		virtual void closeChild(void) =0;
+		virtual void closeChild(void) = 0;
 	};
 
 	class EBML_API IReaderCallBack : public IReaderCallback { };
@@ -119,17 +119,17 @@ namespace EBML
 		 * EBML::IReaderCallback for more details on the
 		 * callback object.
 		 */
-		virtual bool processData(const void* pBuffer, const EBML::uint64 ui64BufferSize) =0;
+		virtual bool processData(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Gets the identifier of the current node
 		 * \return the identifier of the current node
 		 */
-		virtual EBML::CIdentifier getCurrentNodeIdentifier(void) const =0;
+		virtual EBML::CIdentifier getCurrentNodeIdentifier(void) const = 0;
 		/**
 		 * \brief Gets the size of the current node
 		 * \return the size of the current node
 		 */
-		virtual EBML::uint64 getCurrentNodeSize(void) const =0;
+		virtual uint64_t getCurrentNodeSize(void) const = 0;
 		/**
 		 * \brief Tells this object it won't be used anymore
 		 *
@@ -144,7 +144,7 @@ namespace EBML
 		 * The current object is invalid after calling this
 		 * function. It can not be used anymore.
 		 */
-		virtual void release(void) =0;
+		virtual void release(void) = 0;
 
 	protected:
 

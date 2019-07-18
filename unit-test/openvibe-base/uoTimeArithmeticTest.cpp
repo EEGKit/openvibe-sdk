@@ -102,15 +102,12 @@ TEST(time_arithmetic_test_case, time_to_fixed_to_samples_to_fixed)
 		for (auto testTimeInSecond : timesToTestInSecond)
 		{
 			auto testTimeInFixedPoint = ITimeArithmetics::secondsToTime(testTimeInSecond);
-			// If the sample count would overflow an uint64 we skip the test
+			// If the sample count would overflow an uint64_t we skip the test
 			if (std::log2(testSamplingRate) + std::log2(testTimeInFixedPoint) >= 64)
 			{
 				continue;
 			}
-			auto computedTimeInFixedPoint = ITimeArithmetics::sampleCountToTime(
-				testSamplingRate,
-				ITimeArithmetics::timeToSampleCount(testSamplingRate, testTimeInFixedPoint)
-			);
+			auto computedTimeInFixedPoint = ITimeArithmetics::sampleCountToTime(testSamplingRate, ITimeArithmetics::timeToSampleCount(testSamplingRate, testTimeInFixedPoint));
 
 			uint64_t timeDifference = static_cast<uint64_t>(std::abs(static_cast<int64_t>(computedTimeInFixedPoint) - static_cast<int64_t>(testTimeInFixedPoint)));
 			EXPECT_LT(ITimeArithmetics::timeToSeconds(timeDifference), (1.0 / static_cast<double>(testSamplingRate)))
@@ -127,11 +124,7 @@ TEST(time_arithmetic_test_case, samples_to_time_to_samples)
 	{
 		for (auto testSample : samplesToTest)
 		{
-			auto computedSampleCount = ITimeArithmetics::timeToSampleCount(
-				testSamplingRate,
-				ITimeArithmetics::sampleCountToTime(testSamplingRate, testSample)
-			);
-
+			auto computedSampleCount = ITimeArithmetics::timeToSampleCount(testSamplingRate, ITimeArithmetics::sampleCountToTime(testSamplingRate, testSample));
 			EXPECT_EQ(testSample, computedSampleCount);
 		}
 	}
@@ -144,7 +137,6 @@ TEST(time_arithmetic_test_case, 1s_samples_to_samplig_rate)
 	for (auto testSamplingRate : samplingRatesToTest)
 	{
 		auto sampleCount = ITimeArithmetics::timeToSampleCount(testSamplingRate, ITimeArithmetics::secondsToTime(1.0));
-
 		EXPECT_EQ(sampleCount, testSamplingRate);
 	}
 }

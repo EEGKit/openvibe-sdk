@@ -27,13 +27,13 @@ namespace OpenViBEPlugins
 											   , double& rf64Class
 											   , OpenViBEToolkit::IVector& rDistanceValue
 											   , OpenViBEToolkit::IVector& rProbabilityValue);
-			virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount);
+			virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount);
 
 			virtual XML::IXMLNode* saveConfiguration(void);
 			virtual bool loadConfiguration(XML::IXMLNode* pConfigurationNode);
 
-			virtual OpenViBE::uint32 getOutputProbabilityVectorLength();
-			virtual OpenViBE::uint32 getOutputDistanceVectorLength();
+			virtual uint32_t getOutputProbabilityVectorLength();
+			virtual uint32_t getOutputDistanceVectorLength();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsAll)
 
@@ -45,7 +45,7 @@ namespace OpenViBEPlugins
 			bool addNewClassifierAtBack(void);
 			void removeClassifierAtBack(void);
 			bool setSubClassifierIdentifier(const OpenViBE::CIdentifier& rId);
-			OpenViBE::uint32 getClassCount(void) const;
+			uint32_t getClassCount(void) const;
 
 			bool loadSubClassifierConfiguration(XML::IXMLNode* pSubClassifiersNode);
 
@@ -73,8 +73,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ClassifierOneVsAll; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CAlgorithmClassifierOneVsAll; }
 
-			virtual bool getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				CAlgorithmPairingStrategyDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 

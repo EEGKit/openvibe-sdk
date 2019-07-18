@@ -26,7 +26,7 @@ using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
 
-void CBoxSettingModifierVisitor::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount)
+void CBoxSettingModifierVisitor::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
 {
 	if (!m_bIsParsingSettingOverride)
 	{
@@ -137,7 +137,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 			{
 				rObjectVisitorContext.getLogManager() << LogLevel_Trace << "Overrode " << m_ui32SettingIndex << " setting(s) with this configuration file...\n";
 
-				for (uint32 i = 0; i < m_ui32SettingIndex; i++)
+				for (uint32_t i = 0; i < m_ui32SettingIndex; i++)
 				{
 					CString l_sSettingName     = "";
 					CString l_sRawSettingValue = "";

@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_Windowing)
@@ -38,7 +38,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmWindowing> m_Decoder;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmWindowing> m_Encoder;
 
-			OpenViBE::uint64 m_WindowMethod;
+			uint64_t m_WindowMethod;
 			std::vector<double> m_WindowCoefficients;
 		};
 

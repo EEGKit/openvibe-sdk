@@ -44,7 +44,7 @@ bool CBoxAlgorithmWindowing::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmWindowing::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmWindowing::processInput(uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

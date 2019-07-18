@@ -21,7 +21,7 @@ namespace
 
 		bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
 		{
-			uint64 v = rTypeIdentifier.toUInteger();
+			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64InputCountHash);
 			swap_byte(m_ui64InputCountHash, 0x7936A0F3BD12D936LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
@@ -36,7 +36,7 @@ namespace
 
 		bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
 		{
-			uint64 v = rTypeIdentifier.toUInteger();
+			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
@@ -51,7 +51,7 @@ namespace
 
 		bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const OpenViBE::CIdentifier& rIdentifier, const bool bNotify)
 		{
-			uint64 v = rTypeIdentifier.toUInteger();
+			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64SettingCountHash);
 			swap_byte(m_ui64SettingCountHash, 0x3C87F3AAE9F8303BLL);
 			m_oHash = m_oHash.toUInteger() ^ v;
@@ -66,7 +66,7 @@ namespace
 
 		bool addInputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
 		{
-			uint64 v = rTypeIdentifier.toUInteger();
+			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
@@ -75,7 +75,7 @@ namespace
 
 		bool addInputAndDerivedSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
 		{
-			uint64 v = rTypeIdentifier.toUInteger();
+			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
@@ -84,7 +84,7 @@ namespace
 
 		bool addOutputSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
 		{
-			uint64 v = rTypeIdentifier.toUInteger();
+			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
@@ -93,7 +93,7 @@ namespace
 
 		bool addOutputAndDerivedSupport(const OpenViBE::CIdentifier& rTypeIdentifier)
 		{
-			uint64 v = rTypeIdentifier.toUInteger();
+			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
@@ -134,17 +134,17 @@ namespace
 			return true;
 		}
 
-		void swap_byte(uint64& v, const uint64 s)
+		void swap_byte(uint64_t& v, const uint64_t s)
 		{
-			uint8 t;
-			uint8 V[sizeof(v)];
-			uint8 S[sizeof(s)];
+			uint8_t t;
+			uint8_t V[sizeof(v)];
+			uint8_t S[sizeof(s)];
 			System::Memory::hostToLittleEndian(v, V);
 			System::Memory::hostToLittleEndian(s, S);
-			for (uint32 i = 0; i < sizeof(s); i += 2)
+			for (uint32_t i = 0; i < sizeof(s); i += 2)
 			{
-				uint32 j = S[i] % sizeof(v);
-				uint32 k = S[i + 1] % sizeof(v);
+				uint32_t j = S[i] % sizeof(v);
+				uint32_t k = S[i + 1] % sizeof(v);
 				t        = V[j];
 				V[j]     = V[k];
 				V[k]     = t;
@@ -156,9 +156,9 @@ namespace
 
 		CIdentifier m_oHash;
 		bool m_bIsDeprecated;
-		uint64 m_ui64InputCountHash;
-		uint64 m_ui64OutputCountHash;
-		uint64 m_ui64SettingCountHash;
+		uint64_t m_ui64InputCountHash;
+		uint64_t m_ui64OutputCountHash;
+		uint64_t m_ui64SettingCountHash;
 		OpenViBE::Kernel::ITypeManager& m_TypeManager;
 	};
 }

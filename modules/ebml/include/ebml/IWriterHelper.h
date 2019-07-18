@@ -50,7 +50,7 @@ namespace EBML
 		 * thanks to the \c disconnect function. It must be done
 		 * before calling \c connect again.
 		 */
-		virtual bool connect(EBML::IWriter* pWriter) =0;
+		virtual bool connect(EBML::IWriter* pWriter) = 0;
 		/**
 		 * \brief Disconnects the currently connected EBML writer
 		 * \return \e true on success.
@@ -61,7 +61,7 @@ namespace EBML
 		 * with another EBML writer instance calling \c connect
 		 * again.
 		 */
-		virtual bool disconnect(void) =0;
+		virtual bool disconnect(void) = 0;
 		//@}
 
 		/** \name Writer binding functions */
@@ -76,7 +76,7 @@ namespace EBML
 		 * corresponding EBML::IWriter function. See
 		 * EBML::IWriter::openChild for more details.
 		 */
-		virtual bool openChild(const EBML::CIdentifier& rIdentifier) =0;
+		virtual bool openChild(const EBML::CIdentifier& rIdentifier) = 0;
 		/**
 		 * \brief Child closing binding
 		 * \return \e true on success.
@@ -86,7 +86,7 @@ namespace EBML
 		 * corresponding EBML::IWriter function. See
 		 * EBML::IWriter::closeChild for more details.
 		 */
-		virtual bool closeChild(void) =0;
+		virtual bool closeChild(void) = 0;
 		//@}
 
 		/**
@@ -107,22 +107,22 @@ namespace EBML
 		 * \brief Sets a signed integer as child data
 		 * \param iValue [in] : The integer value to set
 		 */
-		virtual bool setSIntegerAsChildData(const EBML::int64 iValue) =0;
+		virtual bool setSIntegerAsChildData(const int64_t iValue) = 0;
 		/**
 		 * \brief Sets an unsigned integer as child data
 		 * \param uiValue [in] : The integer value to set
 		 */
-		virtual bool setUIntegerAsChildData(const EBML::uint64 uiValue) =0;
+		virtual bool setUIntegerAsChildData(const uint64_t uiValue) = 0;
 		/**
 		 * \brief Sets a 32 bits float value as child data
 		 * \param fValue [in] : The 32 bits float value to set
 		 */
-		virtual bool setFloat32AsChildData(const float fValue) =0;
+		virtual bool setFloat32AsChildData(const float fValue) = 0;
 		/**
 		 * \brief Sets a 64 bits float value as child data
 		 * \param fValue [in] : The 64 bits float value to set
 		 */
-		virtual bool setFloat64AsChildData(const double fValue) =0;
+		virtual bool setFloat64AsChildData(const double fValue) = 0;
 		// virtual bool setFloat80AsChildData( ??? value)=0;
 		// virtual bool setDateAsChildData( ??? value)=0;
 		/**
@@ -133,12 +133,12 @@ namespace EBML
 		 *       EBML::IWriter::setChildData function with the
 		 *       same two parameters.
 		 */
-		virtual bool setBinaryAsChildData(const void* pBuffer, const EBML::uint64 ui64BufferLength) =0;
+		virtual bool setBinaryAsChildData(const void* pBuffer, const uint64_t ui64BufferLength) = 0;
 		/**
 		 * \brief Sets an ASCII string as child data
 		 * \param sValue [in] : The ASCII string value to set
 		 */
-		virtual bool setASCIIStringAsChildData(const char* sValue) =0;
+		virtual bool setASCIIStringAsChildData(const char* sValue) = 0;
 		// virtual bool setUTF8StringAsChildData( ??? value)=0;
 		//@}
 
@@ -159,7 +159,7 @@ namespace EBML
 		 * \warning Releasing this obbject does not release the
 		 *          connected writer instance !
 		 */
-		virtual void release(void) =0;
+		virtual void release(void) = 0;
 
 	protected:
 

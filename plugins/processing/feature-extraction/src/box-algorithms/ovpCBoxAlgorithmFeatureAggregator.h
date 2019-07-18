@@ -34,7 +34,7 @@ namespace OpenViBEPlugins
 			virtual bool initialize();
 			virtual bool uninitialize();
 
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 
 			virtual bool process();
 
@@ -49,25 +49,25 @@ namespace OpenViBEPlugins
 			std::vector<std::vector<std::vector<std::string>>> m_oFeatureNames;
 
 			// contains the dimension size for each dimension of each input
-			std::vector<std::vector<OpenViBE::uint32>> m_oDimensionSize;
+			std::vector<std::vector<uint32_t>> m_oDimensionSize;
 
 			// contains the input buffer's total size for each input
-			std::vector<OpenViBE::uint64> m_oInputBufferSizes;
+			std::vector<uint64_t> m_oInputBufferSizes;
 
 			//start time and end time of the last arrived chunk
-			OpenViBE::uint64 m_ui64LastChunkStartTime;
-			OpenViBE::uint64 m_ui64LastChunkEndTime;
+			uint64_t m_ui64LastChunkStartTime;
+			uint64_t m_ui64LastChunkEndTime;
 
 			// number of inputs
-			OpenViBE::uint32 m_ui32NumberOfInput;
+			uint32_t m_ui32NumberOfInput;
 
 			// current input (usesful in the EBML callbacks)
-			OpenViBE::uint32 m_ui32CurrentInput;
+			uint32_t m_ui32CurrentInput;
 
 			// the feature vector
 			double* m_pVectorBuffer;
 			// the feature vector size
-			OpenViBE::uint32 m_ui32VectorSize;
+			uint32_t m_ui32VectorSize;
 
 			bool m_bHeaderSent;
 		};
@@ -79,7 +79,7 @@ namespace OpenViBEPlugins
 			bool check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
-				OpenViBE::uint32 i;
+				uint32_t i;
 
 				for (i = 0; i < rBox.getInputCount(); i++)
 				{
@@ -91,8 +91,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return this->check(rBox); }
-			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return this->check(rBox); };
+			virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return this->check(rBox); }
+			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return this->check(rBox); };
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
 		};

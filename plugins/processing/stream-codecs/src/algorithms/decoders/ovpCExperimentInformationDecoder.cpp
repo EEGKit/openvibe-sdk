@@ -96,7 +96,7 @@ void CExperimentInformationDecoder::openChild(const EBML::CIdentifier& rIdentifi
 	}
 }
 
-void CExperimentInformationDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CExperimentInformationDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

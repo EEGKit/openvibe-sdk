@@ -97,42 +97,42 @@ void CLogListenerFile::log(const time64 time64Value)
 	}
 }
 
-void CLogListenerFile::log(const uint64 ui64Value)
+void CLogListenerFile::log(const uint64_t ui64Value)
 {
 	logInteger(ui64Value);
 }
 
-void CLogListenerFile::log(const uint32 ui32Value)
+void CLogListenerFile::log(const uint32_t ui32Value)
 {
 	logInteger(ui32Value);
 }
 
-void CLogListenerFile::log(const uint16 ui16Value)
+void CLogListenerFile::log(const uint16_t ui16Value)
 {
 	logInteger(ui16Value);
 }
 
-void CLogListenerFile::log(const uint8 ui8Value)
+void CLogListenerFile::log(const uint8_t ui8Value)
 {
 	logInteger(ui8Value);
 }
 
-void CLogListenerFile::log(const int64 i64Value)
+void CLogListenerFile::log(const int64_t i64Value)
 {
 	logInteger(i64Value);
 }
 
-void CLogListenerFile::log(const int32 i32Value)
+void CLogListenerFile::log(const int32_t i32Value)
 {
 	logInteger(i32Value);
 }
 
-void CLogListenerFile::log(const int16 i16Value)
+void CLogListenerFile::log(const int16_t i16Value)
 {
 	logInteger(i16Value);
 }
 
-void CLogListenerFile::log(const int8 i8Value)
+void CLogListenerFile::log(const int8_t i8Value)
 {
 	logInteger(i8Value);
 }

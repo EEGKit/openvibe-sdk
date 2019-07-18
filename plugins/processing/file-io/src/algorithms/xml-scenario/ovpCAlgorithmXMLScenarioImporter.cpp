@@ -63,7 +63,7 @@ namespace
 			return l_oResult;
 		}
 
-		operator uint32(void) { return atoi(m_sValue.c_str()); }
+		operator uint32_t(void) { return atoi(m_sValue.c_str()); }
 	protected:
 		const std::string& m_sValue;
 	};
@@ -94,14 +94,14 @@ namespace
 			m_rAlgorithmContext.getLogManager() << LogLevel_Trace
 					<< "Failed to validate xml: error ["
 					<< xercesToString(exception.getMessage()).c_str()
-					<< "], line number [" << static_cast<uint64>(exception.getLineNumber()) << "]"
+					<< "], line number [" << static_cast<uint64_t>(exception.getLineNumber()) << "]"
 					<< "\n";
 		}
 
 		void warning(const xercesc::SAXParseException& exception) override
 		{
 			OV_WARNING(
-				"Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << static_cast<uint64>(exception.getLineNumber()) << "]",
+				"Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << static_cast<uint64_t>(exception.getLineNumber()) << "]",
 				m_rAlgorithmContext.getLogManager()
 			);
 		}
@@ -124,7 +124,7 @@ CAlgorithmXMLScenarioImporter::~CAlgorithmXMLScenarioImporter(void)
 	m_pReader->release();
 }
 
-void CAlgorithmXMLScenarioImporter::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount)
+void CAlgorithmXMLScenarioImporter::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
 {
 	m_vNodes.push(sName);
 

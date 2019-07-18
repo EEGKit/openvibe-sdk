@@ -26,10 +26,10 @@ namespace OpenViBE
 			virtual bool sendMessage(
 				const OpenViBE::CMessageEvent& rMessageEvent,
 				const OpenViBE::CIdentifier* pTargetIdentifier,
-				const OpenViBE::uint32 ui32TargetIdentifierCount);
+				const uint32_t ui32TargetIdentifierCount);
 
-			virtual OpenViBE::uint64 getCurrentTime(void) const;
-			virtual OpenViBE::uint64 getCurrentLateness(void) const;
+			virtual uint64_t getCurrentTime(void) const;
+			virtual uint64_t getCurrentLateness(void) const;
 			virtual double getCurrentCPUUsage(void) const;
 			virtual double getCurrentFastForwardMaximumFactor(void) const;
 

@@ -23,7 +23,7 @@ bool CBoxAlgorithmStimulationMultiplexer::initialize(void)
 
 	m_StimulationEncoder.initialize(*this, 0);
 
-	m_StreamDecoderEndTimes = std::vector<uint64>(staticBoxContext.getInputCount(), 0ULL);
+	m_StreamDecoderEndTimes = std::vector<uint64_t>(staticBoxContext.getInputCount(), 0ULL);
 
 	m_LastStartTime = 0;
 	m_LastEndTime   = 0;
@@ -44,7 +44,7 @@ bool CBoxAlgorithmStimulationMultiplexer::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationMultiplexer::processInput(uint32)
+bool CBoxAlgorithmStimulationMultiplexer::processInput(uint32_t)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -62,17 +62,17 @@ bool CBoxAlgorithmStimulationMultiplexer::process(void)
 		m_WasHeaderSent = true;
 	}
 
-	uint64 earliestReceivedChunkEndTime = 0xffffffffffffffffULL;
+	uint64_t earliestReceivedChunkEndTime = 0xffffffffffffffffULL;
 
-	for (uint32 input = 0; input < staticBoxContext.getInputCount(); ++input)
+	for (uint32_t input = 0; input < staticBoxContext.getInputCount(); ++input)
 	{
-		for (uint32 chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(input); ++chunk)
+		for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(input); ++chunk)
 		{
 			m_StimulationDecoders[input].decode(chunk);
 
 			if (m_StimulationDecoders[input].isBufferReceived())
 			{
-				for (uint32 stimulation = 0; stimulation < m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationCount(); ++stimulation)
+				for (uint32_t stimulation = 0; stimulation < m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationCount(); ++stimulation)
 				{
 					m_vStimulation.insert(std::make_pair(
 						m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),

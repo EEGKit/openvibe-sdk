@@ -38,7 +38,7 @@ namespace OpenViBE
 			 *       cause this function to return the first input parameter identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextInputParameterIdentifier(
-				const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const =0;
+				const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const = 0;
 			/**
 			 * \brief Gets the name of a specific input parameter
 			 * \param rInputParameterIdentifier [in] : the identifier of the parameter which name should be returned
@@ -46,7 +46,7 @@ namespace OpenViBE
 			 * \return En empty string on error
 			 */
 			virtual OpenViBE::CString getInputParameterName(
-				const OpenViBE::CIdentifier& rInputParameterIdentifier) const =0;
+				const OpenViBE::CIdentifier& rInputParameterIdentifier) const = 0;
 			/**
 			 * \brief Gets the parameter details of a specific input parameter
 			 * \param rInputParameterIdentifier [in] : the identifier of the parameter which details should be returned
@@ -54,7 +54,7 @@ namespace OpenViBE
 			 * \return \c NULL in case of error.
 			 */
 			virtual OpenViBE::Kernel::IParameter* getInputParameter(
-				const OpenViBE::CIdentifier& rInputParameterIdentifier) =0;
+				const OpenViBE::CIdentifier& rInputParameterIdentifier) = 0;
 
 			//@}
 			/** \name Output parameters */
@@ -69,7 +69,7 @@ namespace OpenViBE
 			 *       cause this function to return the first output parameter identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextOutputParameterIdentifier(
-				const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const =0;
+				const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const = 0;
 			/**
 			 * \brief Gets the name of a specific input parameter
 			 * \param rOutputParameterIdentifier [in] : the identifier of the parameter which name should be returned
@@ -77,7 +77,7 @@ namespace OpenViBE
 			 * \return En empty string on error
 			 */
 			virtual OpenViBE::CString getOutputParameterName(
-				const OpenViBE::CIdentifier& rOutputParameterIdentifier) const =0;
+				const OpenViBE::CIdentifier& rOutputParameterIdentifier) const = 0;
 			/**
 			 * \brief Gets the parameter details of a specific output parameter
 			 * \param rOutputParameterIdentifier [in] : the identifier of the parameter which details should be returned
@@ -85,7 +85,7 @@ namespace OpenViBE
 			 * \return \c NULL in case of error.
 			 */
 			virtual OpenViBE::Kernel::IParameter* getOutputParameter(
-				const OpenViBE::CIdentifier& rOutputParameterIdentifier) =0;
+				const OpenViBE::CIdentifier& rOutputParameterIdentifier) = 0;
 
 			//@}
 			/** \name Trigger management */
@@ -100,7 +100,7 @@ namespace OpenViBE
 			 *       cause this function to return the first output trigger identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextOutputTriggerIdentifier(
-				const OpenViBE::CIdentifier& rPreviousOutputTriggerIdentifier) const =0;
+				const OpenViBE::CIdentifier& rPreviousOutputTriggerIdentifier) const = 0;
 			/**
 			 * \brief Gets the name of a specific output trigger
 			 * \param rOutputTriggerIdentifier [in] : the identifier of the trigger which name should be returned
@@ -108,7 +108,7 @@ namespace OpenViBE
 			 * \return En empty string on error
 			 */
 			virtual OpenViBE::CString getOutputTriggerName(
-				const OpenViBE::CIdentifier& rOutputTriggerIdentifier) const =0;
+				const OpenViBE::CIdentifier& rOutputTriggerIdentifier) const = 0;
 			/**
 			 * \brief Tests whether an output trigger is activated or not.
 			 * \param rOutputTriggerIdentifier [in] : the identifier of the output trigger which activation status should be returned
@@ -116,7 +116,7 @@ namespace OpenViBE
 			 * \return \e false if the provided trigger is not currently active or does not exist.
 			 */
 			virtual bool isOutputTriggerActive(
-				const OpenViBE::CIdentifier& rOutputTriggerIdentifier) const =0;
+				const OpenViBE::CIdentifier& rOutputTriggerIdentifier) const = 0;
 
 			/**
 			 * \brief Gets next input trigger identifier given the previous input trigger
@@ -127,7 +127,7 @@ namespace OpenViBE
 			 *       cause this function to return the first input trigger identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextInputTriggerIdentifier(
-				const OpenViBE::CIdentifier& rPreviousInputTriggerIdentifier) const =0;
+				const OpenViBE::CIdentifier& rPreviousInputTriggerIdentifier) const = 0;
 			/**
 			 * \brief Gets the name of a specific input trigger
 			 * \param rInputTriggerIdentifier [in] : the identifier of the trigger which name should be returned
@@ -135,7 +135,7 @@ namespace OpenViBE
 			 * \return En empty string on error
 			 */
 			virtual OpenViBE::CString getInputTriggerName(
-				const OpenViBE::CIdentifier& rInputTriggerIdentifier) const =0;
+				const OpenViBE::CIdentifier& rInputTriggerIdentifier) const = 0;
 			/**
 			 * \brief Activates an input trigger before calling the processing function.
 			 * \param rInputTriggerIdentifier [in] : the identifier of the input to activate
@@ -146,7 +146,7 @@ namespace OpenViBE
 			 */
 			virtual bool activateInputTrigger(
 				const OpenViBE::CIdentifier& rInputTriggerIdentifier,
-				const bool bTriggerState) =0;
+				const bool bTriggerState) = 0;
 
 			//@}
 			/** \name Algorithm functions */
@@ -159,7 +159,7 @@ namespace OpenViBE
 			 * \note The algorithm context is managed internally
 			 * \pre The algorithm is not yet initialized
 			 */
-			virtual bool initialize(void) =0;
+			virtual bool initialize(void) = 0;
 			/**
 			 * \brief Uninitializes the algorithm
 			 * \return \e true in case of success.
@@ -167,7 +167,7 @@ namespace OpenViBE
 			 * \note The algorithm context is managed internally
 			 * \pre The algorithm is initialized
 			 */
-			virtual bool uninitialize(void) =0;
+			virtual bool uninitialize(void) = 0;
 			/**
 			 * \brief Calls the processing method of the algorithm
 			 * \return \e true in case of success.
@@ -175,7 +175,7 @@ namespace OpenViBE
 			 * \note The algorithm context is managed internally
 			 * \pre The algorithm is initialized
 			 */
-			virtual bool process(void) =0;
+			virtual bool process(void) = 0;
 			/**
 			 * \brief Activates an input trigger and immediatly calls the processing method
 			 * \param rTriggerIdentifier [in] : the identifier of the input trigger to activate
@@ -185,11 +185,11 @@ namespace OpenViBE
 			 * \pre The algorithm is initialized
 			 */
 			virtual bool process(
-				const OpenViBE::CIdentifier& rTriggerIdentifier) =0;
+				const OpenViBE::CIdentifier& rTriggerIdentifier) = 0;
 
 
 			virtual bool isAlgorithmDerivedFrom(
-				const OpenViBE::CIdentifier& rClassIdentifier) =0;
+				const OpenViBE::CIdentifier& rClassIdentifier) = 0;
 
 			//@}
 

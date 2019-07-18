@@ -17,10 +17,10 @@ ILogManager& operator <<(ILogManager& rLogManager, IMatrix& rMatrix)
 {
 	rLogManager << "Matrix :\n";
 	rLogManager << " | Dimension count : " << rMatrix.getDimensionCount() << "\n";
-	for (uint32 i = 0; i < rMatrix.getDimensionCount(); i++)
+	for (uint32_t i = 0; i < rMatrix.getDimensionCount(); i++)
 	{
 		rLogManager << " |   Dimension size " << i << " : " << rMatrix.getDimensionSize(i) << "\n";
-		for (uint32 j = 0; j < rMatrix.getDimensionSize(i); j++)
+		for (uint32_t j = 0; j < rMatrix.getDimensionSize(i); j++)
 		{
 			rLogManager << " |     Dimension label " << i << " " << j << " : " << rMatrix.getDimensionLabel(i, j) << "\n";
 		}
@@ -33,7 +33,7 @@ ILogManager& operator <<(ILogManager& rLogManager, IStimulationSet& rStimulation
 {
 	rLogManager << "Stimulation set :\n";
 	rLogManager << " | Number of elements : " << rStimulationSet.getStimulationCount() << "\n";
-	for (uint64 i = 0; i < rStimulationSet.getStimulationCount(); i++)
+	for (uint64_t i = 0; i < rStimulationSet.getStimulationCount(); i++)
 	{
 		rLogManager << " |   Stimulation " << i << " : "
 				<< "id=" << rStimulationSet.getStimulationIdentifier(i) << " "
@@ -57,7 +57,7 @@ bool CDecoderAlgorithmTest::initialize(void)
 	m_pStreamDecoder[5] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_StreamedMatrixStreamDecoder));
 	m_pStreamDecoder[6] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ChannelLocalisationStreamDecoder));
 
-	for (uint32 i = 0; i < 7; i++)
+	for (uint32_t i = 0; i < 7; i++)
 	{
 		m_pStreamDecoder[i]->initialize();
 		ip_pMemoryBuffer[i].initialize(m_pStreamDecoder[i]->getInputParameter(OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode));
@@ -68,7 +68,7 @@ bool CDecoderAlgorithmTest::initialize(void)
 
 bool CDecoderAlgorithmTest::uininitialize(void)
 {
-	for (uint32 i = 0; i < 7; i++)
+	for (uint32_t i = 0; i < 7; i++)
 	{
 		ip_pMemoryBuffer[i].uninitialize();
 		m_pStreamDecoder[i]->uninitialize();
@@ -79,7 +79,7 @@ bool CDecoderAlgorithmTest::uininitialize(void)
 	return true;
 }
 
-bool CDecoderAlgorithmTest::processInput(uint32 ui32InputIndex)
+bool CDecoderAlgorithmTest::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -90,9 +90,9 @@ bool CDecoderAlgorithmTest::process(void)
 	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();
 
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		for (uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
 			ip_pMemoryBuffer[i] = l_rDynamicBoxContext.getInputChunk(i, j);
 			m_pStreamDecoder[i]->process();
@@ -116,7 +116,7 @@ bool CDecoderAlgorithmTest::process(void)
 				}
 
 				{
-					TParameterHandler<uint64> l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+					TParameterHandler<uint64_t> l_oHandle(m_pStreamDecoder[i]->getOutputParameter(OVP_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
 					if (l_oHandle.exists())
 					{
 						OV_WARNING_K(l_oHandle);

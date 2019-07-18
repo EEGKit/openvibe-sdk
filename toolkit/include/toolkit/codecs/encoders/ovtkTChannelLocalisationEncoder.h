@@ -79,7 +79,7 @@ namespace OpenViBEToolkit
 
 		TChannelLocalisationEncoder() { }
 
-		TChannelLocalisationEncoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TChannelLocalisationEncoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);

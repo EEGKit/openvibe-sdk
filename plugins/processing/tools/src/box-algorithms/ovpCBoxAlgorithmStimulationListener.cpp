@@ -11,12 +11,12 @@ using namespace OpenViBEPlugins::Tools;
 bool CBoxAlgorithmStimulationListener::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		m_vStimulationDecoder.push_back(new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>(*this, i));
 	}
 
-	m_eLogLevel = static_cast<ELogLevel>((uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
+	m_eLogLevel = static_cast<ELogLevel>((uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
 
 	return true;
 }
@@ -24,7 +24,7 @@ bool CBoxAlgorithmStimulationListener::initialize(void)
 bool CBoxAlgorithmStimulationListener::uninitialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		m_vStimulationDecoder[i]->uninitialize();
 		delete m_vStimulationDecoder[i];
@@ -34,7 +34,7 @@ bool CBoxAlgorithmStimulationListener::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationListener::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmStimulationListener::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -45,9 +45,9 @@ bool CBoxAlgorithmStimulationListener::process(void)
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		for (uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
 			m_vStimulationDecoder[i]->decode(j);
 			if (m_vStimulationDecoder[i]->isHeaderReceived()) { }
@@ -57,7 +57,7 @@ bool CBoxAlgorithmStimulationListener::process(void)
 
 				CString l_sInputName;
 				l_rStaticBoxContext.getInputName(i, l_sInputName);
-				for (uint64 k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
+				for (uint64_t k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
 				{
 					this->getLogManager() << m_eLogLevel
 							<< "For input " << i << " with name " << l_sInputName
@@ -67,10 +67,8 @@ bool CBoxAlgorithmStimulationListener::process(void)
 							<< " and duration " << time64(op_pStimulationSet->getStimulationDuration(k))
 							<< "\n";
 
-					OV_WARNING_UNLESS_K(
-						op_pStimulationSet->getStimulationDate(k) >= l_rDynamicBoxContext.getInputChunkStartTime(i, j) && op_pStimulationSet->getStimulationDate(k) <= l_rDynamicBoxContext.getInputChunkEndTime(i, j),
-						"Invalid out of range date [" << time64(op_pStimulationSet->getStimulationDate(k)) << "] (expected value between [" << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << "])"
-					);
+					OV_WARNING_UNLESS_K(op_pStimulationSet->getStimulationDate(k) >= l_rDynamicBoxContext.getInputChunkStartTime(i, j) && op_pStimulationSet->getStimulationDate(k) <= l_rDynamicBoxContext.getInputChunkEndTime(i, j),
+										"Invalid out of range date [" << time64(op_pStimulationSet->getStimulationDate(k)) << "] (expected value between [" << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << "])");
 				}
 				/*
 				if(ITimeArithmetics::timeToSeconds(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) > 234 && op_pStimulationSet->getStimulationCount()==0)

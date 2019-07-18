@@ -13,20 +13,18 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
-	uint64 l_ui64LogLevel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	uint64_t l_ui64LogLevel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_eLogLevel               = static_cast<ELogLevel>(l_ui64LogLevel);
 	m_ui64ValidityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	if (l_rStaticBoxContext.getSettingCount() == 1) m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); // note that for boxes with one setting, we fallback to the old behavior
 
-	OV_ERROR_UNLESS_KRF(
-		l_rStaticBoxContext.getSettingCount() <= 1 || l_rStaticBoxContext.getInputCount() == l_rStaticBoxContext.getOutputCount(),
-		"Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (expected same value as output count [" << l_rStaticBoxContext.getOutputCount() << "])",
-		OpenViBE::Kernel::ErrorType::BadConfig
-	);
+	OV_ERROR_UNLESS_KRF(l_rStaticBoxContext.getSettingCount() <= 1 || l_rStaticBoxContext.getInputCount() == l_rStaticBoxContext.getOutputCount(),
+						"Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (expected same value as output count [" << l_rStaticBoxContext.getOutputCount() << "])",
+						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	m_vStreamDecoder.resize(l_rStaticBoxContext.getInputCount());
 	m_vStreamEncoder.resize(l_rStaticBoxContext.getInputCount());
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		m_vStreamDecoder[i].initialize(*this, i);
 		m_vStreamEncoder[i].initialize(*this, i);
@@ -46,7 +44,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize(void)
 bool CBoxAlgorithmMatrixValidityChecker::uninitialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		m_vStreamDecoder[i].uninitialize();
 		m_vStreamEncoder[i].uninitialize();
@@ -57,7 +55,7 @@ bool CBoxAlgorithmMatrixValidityChecker::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmMatrixValidityChecker::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmMatrixValidityChecker::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -68,9 +66,9 @@ bool CBoxAlgorithmMatrixValidityChecker::process(void)
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		for (uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
 			m_vStreamDecoder[i].decode(j);
 			IMatrix* l_pMatrix = m_vStreamDecoder[i].getOutputMatrix();
@@ -103,23 +101,21 @@ bool CBoxAlgorithmMatrixValidityChecker::process(void)
 					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
 					{
 						this->getPlayerContext().stop();
-						OV_ERROR_KRF(
-							"Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << "]",
-							OpenViBE::Kernel::ErrorType::BadInput
-						);
+						OV_ERROR_KRF("Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << "]",
+									 OpenViBE::Kernel::ErrorType::BadInput);
 					}
 				}
 					// interpolate
 				else if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
-					uint32 l_ui32ChannelCount            = l_pMatrix->getDimensionSize(0);
-					uint32 l_ui32SampleCount             = l_pMatrix->getDimensionSize(1);
+					uint32_t l_ui32ChannelCount            = l_pMatrix->getDimensionSize(0);
+					uint32_t l_ui32SampleCount             = l_pMatrix->getDimensionSize(1);
 					double* l_pBuffer                   = l_pMatrix->getBuffer();
-					uint32 l_ui32InterpolatedSampleCount = 0;
+					uint32_t l_ui32InterpolatedSampleCount = 0;
 
-					for (uint32 k = 0; k < l_ui32ChannelCount; k++)
+					for (uint32_t k = 0; k < l_ui32ChannelCount; k++)
 					{
-						for (uint32 l = 0; l < l_ui32SampleCount; l++)
+						for (uint32_t l = 0; l < l_ui32SampleCount; l++)
 						{
 							if (std::isnan(l_pBuffer[l + k * l_ui32SampleCount]) || std::isinf(l_pBuffer[l + k * l_ui32SampleCount]))
 							{

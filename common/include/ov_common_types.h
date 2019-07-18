@@ -26,15 +26,15 @@ OV_APPEND_TO_NAMESPACE
 	//___________________________________________________________________//
 	//                                                                   //
 
-	typedef std::uint64_t uint64;          ///< 64 bits unsigned integer
-	typedef std::uint32_t uint32;          ///< 32 bits unsigned integer
-	typedef std::uint16_t uint16;          ///< 16 bits unsigned integer
-	typedef std::uint8_t uint8;            ///< 8 bits unsigned integer
+	//typedef std::uint64_t uint64;          ///< 64 bits unsigned integer
+	//typedef std::uint32_t uint32;          ///< 32 bits unsigned integer
+	//typedef std::uint16_t uint16;          ///< 16 bits unsigned integer
+	//typedef std::uint8_t uint8;            ///< 8 bits unsigned integer
 
-	typedef std::int64_t int64;            ///< 64 bits signed integer
-	typedef std::int32_t int32;            ///< 32 bits signed integer
-	typedef std::int16_t int16;            ///< 16 bits signed integer
-	typedef std::int8_t int8;              ///< 8 bits signed integer
+	//typedef std::int64_t int64;            ///< 64 bits signed integer
+	//typedef std::int32_t int32;            ///< 32 bits signed integer
+	//typedef std::int16_t int16;            ///< 16 bits signed integer
+	//typedef std::int8_t int8;              ///< 8 bits signed integer
 
 	//___________________________________________________________________//
 	//                                                                   //
@@ -51,8 +51,8 @@ OV_APPEND_TO_NAMESPACE
 	//___________________________________________________________________//
 	//                                                                   //
 
-	//typedef float float32;                  ///< 32 bits floating point
-	//typedef double float64;                 ///< 64 bits floating point
+	//typedef float float;                  ///< 32 bits floating point
+	//typedef double double;                 ///< 64 bits floating point
 	typedef long double float80;            ///< 80 bits floating point
 
 	//___________________________________________________________________//
@@ -63,8 +63,8 @@ OV_APPEND_TO_NAMESPACE
 
 	typedef struct _time64
 	{
-		_time64(uint64 ui64TimeValue) : m_ui64TimeValue(ui64TimeValue) {}
-		uint64 m_ui64TimeValue;
+		_time64(uint64_t ui64TimeValue) : m_ui64TimeValue(ui64TimeValue) {}
+		uint64_t m_ui64TimeValue;
 	} time64;                                ///< Time on uint64
 };
 

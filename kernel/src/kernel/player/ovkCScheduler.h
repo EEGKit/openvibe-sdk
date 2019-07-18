@@ -33,7 +33,7 @@ namespace OpenViBE
 			virtual bool setScenario(
 				const OpenViBE::CIdentifier& rScenarioIdentifier);
 			virtual bool setFrequency(
-				const OpenViBE::uint64 ui64Frequency);
+				const uint64_t ui64Frequency);
 
 			virtual bool isHoldingResources() const;
 
@@ -41,11 +41,11 @@ namespace OpenViBE
 			virtual bool uninitialize(void);
 			virtual bool loop(void);
 
-			virtual bool sendInput(const OpenViBE::Kernel::CChunk& rChunk, const OpenViBE::CIdentifier& rBoxIdentifier, const OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::uint64 getCurrentTime(void) const;
-			virtual OpenViBE::uint64 getCurrentLateness(void) const;
-			virtual OpenViBE::uint64 getFrequency(void) const;
-			virtual OpenViBE::uint64 getStepDuration(void) const;
+			virtual bool sendInput(const OpenViBE::Kernel::CChunk& rChunk, const OpenViBE::CIdentifier& rBoxIdentifier, const uint32_t ui32InputIndex);
+			virtual uint64_t getCurrentTime(void) const;
+			virtual uint64_t getCurrentLateness(void) const;
+			virtual uint64_t getFrequency(void) const;
+			virtual uint64_t getStepDuration(void) const;
 			virtual double getCPUUsage(void) const;
 			virtual double getFastForwardMaximumFactor(void) const;
 
@@ -61,14 +61,14 @@ namespace OpenViBE
 			OpenViBE::Kernel::CPlayer& m_rPlayer;
 			OpenViBE::CIdentifier m_oScenarioIdentifier;
 			OpenViBE::Kernel::IScenario* m_pScenario;
-			OpenViBE::uint64 m_ui64Steps;
-			OpenViBE::uint64 m_ui64Frequency;
-			OpenViBE::uint64 m_ui64StepDuration;
-			OpenViBE::uint64 m_ui64CurrentTime;
+			uint64_t m_ui64Steps;
+			uint64_t m_ui64Frequency;
+			uint64_t m_ui64StepDuration;
+			uint64_t m_ui64CurrentTime;
 
-			std::map<std::pair<OpenViBE::int32, OpenViBE::CIdentifier>, OpenViBE::Kernel::CSimulatedBox*> m_vSimulatedBox;
+			std::map<std::pair<int32_t, OpenViBE::CIdentifier>, OpenViBE::Kernel::CSimulatedBox*> m_vSimulatedBox;
 			std::map<OpenViBE::CIdentifier, System::CChrono> m_vSimulatedBoxChrono;
-			std::map<OpenViBE::CIdentifier, std::map<OpenViBE::uint32, std::list<OpenViBE::Kernel::CChunk>>> m_vSimulatedBoxInput;
+			std::map<OpenViBE::CIdentifier, std::map<uint32_t, std::list<OpenViBE::Kernel::CChunk>>> m_vSimulatedBoxInput;
 
 		private:
 

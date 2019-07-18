@@ -22,8 +22,8 @@ namespace OpenViBE
 		 * IParameter abstract class and it's associated value. Client code
 		 * should probably use this template better than IParameter directly.
 		 * The template argument is the handled data type :
-		 *  - for \c ParameterType_Integer : \c OpenViBE::int64
-		 *  - for \c ParameterType_UInteger : \c OpenViBE::uint64
+		 *  - for \c ParameterType_Integer : \c int64_t
+		 *  - for \c ParameterType_UInteger : \c uint64_t
 		 *  - for \c ParameterType_Boolean : \c bool
 		 *  - for \c ParameterType_Float : \c double
 		 *  - for \c ParameterType_String : \c OpenViBE::CString
@@ -32,7 +32,7 @@ namespace OpenViBE
 		 *  - for \c ParameterType_StimulationSet : \c OpenViBE::IStimulationSet*
 		 *  - for \c ParameterType_MemoryBuffer : \c OpenViBE::IMemoryBuffer*
 		 *  - for \c ParameterType_Object : \c OpenViBE::IObject*
-		 *  - for \c ParameterType_Pointer : \c OpenViBE::uint8*
+		 *  - for \c ParameterType_Pointer : \c uint8_t*
 		 *
 		 * The idea is to connect the handler to the corresponding IParameter object
 		 * thanks to the \c initialize function. Then the provided interface translates
@@ -124,9 +124,9 @@ namespace OpenViBE
 			 *
 			 * \code
 			 * // l_oParameter will directly be used as if it is an unsigned integer
-			 * TParameterHandler<uint64> l_oParameter ( ... );
-			 * uint64 a= ...;
-			 * uint64 c=a*l_oParameter+l_oParameter;
+			 * TParameterHandler<uint64_t> l_oParameter ( ... );
+			 * uint64_t a= ...;
+			 * uint64_t c=a*l_oParameter+l_oParameter;
 			 * \endcode
 			 */
 			operator T(void) const
@@ -167,7 +167,7 @@ namespace OpenViBE
 			 *
 			 * \code
 			 * // the affectation of l_oParameter will directly go to its handled unsigned integer
-			 * TParameterHandler<uint64> l_oParameter ( ... );
+			 * TParameterHandler<uint64_t> l_oParameter ( ... );
 			 * l_oParameter = 1;
 			 * \endcode
 			 */

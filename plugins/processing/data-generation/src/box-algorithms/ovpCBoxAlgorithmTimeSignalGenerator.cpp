@@ -101,7 +101,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process(void)
 	return true;
 }
 
-OpenViBE::uint64 CBoxAlgorithmTimeSignalGenerator::getClockFrequency(void)
+uint64_t CBoxAlgorithmTimeSignalGenerator::getClockFrequency(void)
 {
 	return 128LL << 32;
 }

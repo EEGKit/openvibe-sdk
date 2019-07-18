@@ -98,7 +98,7 @@ bool CScheduler::setScenario(
 }
 
 bool CScheduler::setFrequency(
-	const uint64 ui64Frequency)
+	const uint64_t ui64Frequency)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setFrequency\n";
 
@@ -240,7 +240,7 @@ bool CScheduler::flattenScenario()
 			l_rMetaboxScenarioInstance.addAttribute(OV_AttributeId_ScenarioFilename, l_sMetaboxScenarioPath);
 
 			// Push down the settings from the box to the scenario
-			for (uint32 l_ui32SettingIndex = 0; l_ui32SettingIndex < l_pBox->getSettingCount(); l_ui32SettingIndex++)
+			for (uint32_t l_ui32SettingIndex = 0; l_ui32SettingIndex < l_pBox->getSettingCount(); l_ui32SettingIndex++)
 			{
 				CString l_sSettingValue;
 				CIdentifier l_oSettingIdentifier;
@@ -543,7 +543,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 				}
 
 				m_vSimulatedBox[std::make_pair(-l_iPriority, boxIdentifier)] = l_pSimulatedBox;
-				m_vSimulatedBoxChrono[boxIdentifier].reset(static_cast<uint32>(m_ui64Frequency));
+				m_vSimulatedBoxChrono[boxIdentifier].reset(static_cast<uint32_t>(m_ui64Frequency));
 			}
 		}
 		m_pScenario->releaseIdentifierList(identifierList);
@@ -558,7 +558,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 
 
 	bool l_bBoxInitialization = true;
-	for (map<pair<int32, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
+	for (map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
@@ -583,7 +583,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 	m_ui64Steps       = 0;
 	m_ui64CurrentTime = 0;
 
-	m_oBenchmarkChrono.reset((System::uint32)m_ui64Frequency);
+	m_oBenchmarkChrono.reset((uint32_t )m_ui64Frequency);
 
 	return (l_bBoxInitialization ? SchedulerInitialization_Success : SchedulerInitialization_Failed);
 }
@@ -593,7 +593,7 @@ bool CScheduler::uninitialize(void)
 	this->getLogManager() << LogLevel_Trace << "Scheduler uninitialize\n";
 
 	bool l_bBoxUninitialization = true;
-	for (map<pair<int32, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
+	for (map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
@@ -612,7 +612,7 @@ bool CScheduler::uninitialize(void)
 		}
 	}
 
-	for (map<pair<int32, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
+	for (map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		delete itSimulatedBox->second;
 	}
@@ -636,7 +636,7 @@ bool CScheduler::loop(void)
 
 	bool l_bBoxProcessing = true;
 	m_oBenchmarkChrono.stepIn();
-	for (map<pair<int32, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
+	for (map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		CSimulatedBox* l_pSimulatedBox = itSimulatedBox->second;
 
@@ -720,8 +720,8 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 		}
 
 		//if the box is muted we still have to erase chunks that arrives at the input
-		map<uint32, list<CChunk>>& l_rSimulatedBoxInput = m_vSimulatedBoxInput[boxIdentifier];
-		map<uint32, list<CChunk>>::iterator itSimulatedBoxInput;
+		map<uint32_t, list<CChunk>>& l_rSimulatedBoxInput = m_vSimulatedBoxInput[boxIdentifier];
+		map<uint32_t, list<CChunk>>::iterator itSimulatedBoxInput;
 		for (itSimulatedBoxInput = l_rSimulatedBoxInput.begin(); itSimulatedBoxInput != l_rSimulatedBoxInput.end(); ++itSimulatedBoxInput)
 		{
 			list<CChunk>& l_rSimulatedBoxInputChunkList = itSimulatedBoxInput->second;
@@ -756,7 +756,7 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 bool CScheduler::sendInput(
 	const CChunk& rChunk,
 	const CIdentifier& rBoxIdentifier,
-	const uint32 ui32InputIndex)
+	const uint32_t ui32InputIndex)
 {
 	IBox* l_pBox = m_pScenario->getBoxDetails(rBoxIdentifier);
 	if (l_pBox->hasAttribute(OV_AttributeId_Box_Disabled)) { return true; }
@@ -772,7 +772,7 @@ bool CScheduler::sendInput(
 		ErrorType::OutOfBound
 	);
 
-	map<pair<int32, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin();
+	map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin();
 	while (itSimulatedBox != m_vSimulatedBox.end() && itSimulatedBox->first.second != rBoxIdentifier)
 	{
 		++itSimulatedBox;
@@ -800,22 +800,22 @@ bool CScheduler::sendInput(
 	return true;
 }
 
-uint64 CScheduler::getCurrentTime(void) const
+uint64_t CScheduler::getCurrentTime(void) const
 {
 	return m_ui64CurrentTime;
 }
 
-uint64 CScheduler::getCurrentLateness(void) const
+uint64_t CScheduler::getCurrentLateness(void) const
 {
 	return m_rPlayer.getCurrentSimulatedLateness();
 }
 
-uint64 CScheduler::getFrequency(void) const
+uint64_t CScheduler::getFrequency(void) const
 {
 	return m_ui64Frequency;
 }
 
-uint64 CScheduler::getStepDuration(void) const
+uint64_t CScheduler::getStepDuration(void) const
 {
 	return m_ui64StepDuration;
 }

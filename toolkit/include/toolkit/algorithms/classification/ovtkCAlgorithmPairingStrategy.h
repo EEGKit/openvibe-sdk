@@ -18,7 +18,7 @@
 #define OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture            OpenViBE::CIdentifier(0x784A9CDF, 0xA41C27F8)
 
 
-typedef OpenViBE::int32 (*fClassifierComparison)(OpenViBE::IMatrix&, OpenViBE::IMatrix&);
+typedef int32_t (*fClassifierComparison)(OpenViBE::IMatrix&, OpenViBE::IMatrix&);
 
 namespace OpenViBEToolkit
 {
@@ -33,20 +33,20 @@ namespace OpenViBEToolkit
 		virtual bool process(void);
 		virtual void release(void) { delete this; }
 
-		virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount) = 0;
+		virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) = 0;
 
-		virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) =0;
+		virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) = 0;
 		virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
 										   , double& rf64Class
 										   , OpenViBEToolkit::IVector& rDistanceValue
-										   , OpenViBEToolkit::IVector& rProbabilityValue) =0;
+										   , OpenViBEToolkit::IVector& rProbabilityValue) = 0;
 
-		virtual XML::IXMLNode* saveConfiguration(void) =0;
-		virtual bool loadConfiguration(XML::IXMLNode* pConfiguratioNode) =0;
+		virtual XML::IXMLNode* saveConfiguration(void) = 0;
+		virtual bool loadConfiguration(XML::IXMLNode* pConfiguratioNode) = 0;
 		_IsDerivedFromClass_(CAlgorithmClassifier, OVTK_ClassId_Algorithm_PairingStrategy)
 
-		virtual OpenViBE::uint32 getOutputProbabilityVectorLength(void) =0;
-		virtual OpenViBE::uint32 getOutputDistanceVectorLength(void) =0;
+		virtual uint32_t getOutputProbabilityVectorLength(void) = 0;
+		virtual uint32_t getOutputDistanceVectorLength(void) = 0;
 
 
 	protected:
@@ -59,8 +59,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual bool getAlgorithmPrototype(
-			OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+		virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 		{
 			CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 

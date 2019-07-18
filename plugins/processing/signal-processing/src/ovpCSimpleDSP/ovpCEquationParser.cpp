@@ -69,7 +69,7 @@ functionPointer CEquationParser::m_pFunctionTable[] =
 	&op_bool_xor,
 };
 
-CEquationParser::CEquationParser(TBoxAlgorithm<IBoxAlgorithm>& oPlugin, double** ppVariable, uint32 ui32VariableCount)
+CEquationParser::CEquationParser(TBoxAlgorithm<IBoxAlgorithm>& oPlugin, double** ppVariable, uint32_t ui32VariableCount)
 	: m_pTree(NULL)
 	  , m_ppVariable(ppVariable)
 	  , m_ui32VariableCount(ui32VariableCount)
@@ -249,7 +249,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	}
 	else if (i->value.id() == CEquationGrammar::variableID)
 	{
-		uint32 l_ui32Index = 0;
+		uint32_t l_ui32Index = 0;
 		std::string l_sValue(i->value.begin(), i->value.end());
 		if (l_sValue != "x" && l_sValue != "X")
 		{
@@ -280,7 +280,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	else if (i->value.id() == CEquationGrammar::functionID)
 	{
 		std::string l_sValue(i->value.begin(), i->value.end());
-		uint64* l_ui64FunctionIdentifier;
+		uint64_t* l_ui64FunctionIdentifier;
 
 		//converts the string to lowercase
 		std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
@@ -315,7 +315,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	else if (i->value.id() == CEquationGrammar::comparisonID)
 	{
 		std::string l_sValue(i->value.begin(), i->value.end());
-		uint64* l_ui64FunctionIdentifier;
+		uint64_t* l_ui64FunctionIdentifier;
 
 		//converts the string to lowercase
 		std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
@@ -342,7 +342,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	else if (i->value.id() == CEquationGrammar::booleanID)
 	{
 		std::string l_sValue(i->value.begin(), i->value.end());
-		uint64* l_ui64FunctionIdentifier;
+		uint64_t* l_ui64FunctionIdentifier;
 
 		//converts the string to lowercase
 		std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
@@ -393,13 +393,13 @@ void CEquationParser::push_value(double f64Value)
 	(*(m_pFunctionContextList++)).m_f64DirectValue = f64Value;
 }
 
-void CEquationParser::push_var(uint32 ui32Index)
+void CEquationParser::push_var(uint32_t ui32Index)
 {
 	*(m_pFunctionList++)                            = op_loadVar;
 	(*(m_pFunctionContextList++)).m_ppIndirectValue = &m_ppVariable[ui32Index];
 }
 
-void CEquationParser::push_op(uint64 ui64Operator)
+void CEquationParser::push_op(uint64_t ui64Operator)
 {
 	*(m_pFunctionList++)                            = m_pFunctionTable[ui64Operator];
 	(*(m_pFunctionContextList++)).m_ppIndirectValue = NULL;

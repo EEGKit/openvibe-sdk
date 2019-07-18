@@ -27,8 +27,8 @@ bool CAlgorithmPairwiseDecisionVoting::uninitialize() { return true; }
 
 bool CAlgorithmPairwiseDecisionVoting::parameterize()
 {
-	TParameterHandler<uint64> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
-	m_ui32ClassCount = static_cast<uint32>(ip_pClassCount);
+	TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
+	m_ui32ClassCount = static_cast<uint32_t>(ip_pClassCount);
 
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
@@ -50,29 +50,29 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 #if VOTING_DEBUG
 	std::cout << pClassificationValueList.size() << std::endl;
 
-	for(OpenViBE::uint32 i = 0 ; i< pClassificationValueList.size() ; ++i){
+	for(uint32_t i = 0 ; i< pClassificationValueList.size() ; ++i){
 		std::cout << pClassificationValueList[i].m_f64FirstClass << " " << pClassificationValueList[i].m_f64SecondClass << std::endl;
 		std::cout << pClassificationValueList[i].m_f64ClassLabel;
 		std::cout << std::endl;
 	}
 #endif
 
-	uint32* l_pWinCount = new uint32[m_ui32ClassCount];
+	uint32_t* l_pWinCount = new uint32_t[m_ui32ClassCount];
 	for (size_t i = 0; i < m_ui32ClassCount; ++i)
 	{
 		l_pWinCount[i] = 0;
 	}
 
-	for (uint32 i = 0; i < pClassificationValueList.size(); ++i)
+	for (uint32_t i = 0; i < pClassificationValueList.size(); ++i)
 	{
 		SClassificationInfo& l_rTemp = pClassificationValueList[i];
 		if (l_rTemp.m_f64ClassLabel == 0)
 		{
-			++(l_pWinCount[(uint32)(l_rTemp.m_f64FirstClass)]);
+			++(l_pWinCount[(uint32_t)(l_rTemp.m_f64FirstClass)]);
 		}
 		else
 		{
-			++(l_pWinCount[(uint32)(l_rTemp.m_f64SecondClass)]);
+			++(l_pWinCount[(uint32_t)(l_rTemp.m_f64SecondClass)]);
 		}
 	}
 
@@ -87,7 +87,7 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 	pProbabilityVector->setDimensionCount(1);
 	pProbabilityVector->setDimensionSize(0, m_ui32ClassCount);
 
-	for (OpenViBE::uint32 i = 0; i < m_ui32ClassCount; ++i)
+	for (uint32_t i = 0; i < m_ui32ClassCount; ++i)
 	{
 		pProbabilityVector->getBuffer()[i] = ((double)l_pWinCount[i]) / pClassificationValueList.size();
 	}

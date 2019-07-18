@@ -60,14 +60,14 @@ bool CBoxAlgorithmTimeout::processClock(IMessageClock& rMessageClock)
 /*******************************************************************************/
 
 
-uint64 CBoxAlgorithmTimeout::getClockFrequency(void)
+uint64_t CBoxAlgorithmTimeout::getClockFrequency(void)
 {
 	return 16LL << 32; // the box clock frequency
 }
 /*******************************************************************************/
 
 
-bool CBoxAlgorithmTimeout::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmTimeout::processInput(uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 

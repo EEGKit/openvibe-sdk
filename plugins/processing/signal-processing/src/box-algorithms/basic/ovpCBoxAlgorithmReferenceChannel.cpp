@@ -12,9 +12,9 @@ using namespace OpenViBEPlugins::SignalProcessing;
 
 namespace
 {
-	uint32 _find_channel_(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32 uiStart = 0)
+	uint32_t _find_channel_(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32_t uiStart = 0)
 	{
-		uint32 i, l_ui32Result = std::numeric_limits<uint32>::max();
+		uint32_t i, l_ui32Result = std::numeric_limits<uint32_t>::max();
 
 		if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Name)
 		{
@@ -33,9 +33,9 @@ namespace
 				unsigned int value = std::stoul(rChannel.toASCIIString());
 				value--; // => makes it 0-indexed !
 
-				if (uiStart <= uint32(value) && uint32(value) < rMatrix.getDimensionSize(0))
+				if (uiStart <= uint32_t(value) && uint32_t(value) < rMatrix.getDimensionSize(0))
 				{
-					l_ui32Result = uint32(value);
+					l_ui32Result = uint32_t(value);
 				}
 			}
 			catch (const std::exception&)
@@ -45,8 +45,8 @@ namespace
 		}
 		else if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Smart)
 		{
-			if (l_ui32Result == std::numeric_limits<uint32>::max()) l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart);
-			if (l_ui32Result == std::numeric_limits<uint32>::max()) l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart);
+			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart);
+			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart);
 		}
 
 		return l_ui32Result;
@@ -68,7 +68,7 @@ bool CBoxAlgorithmReferenceChannel::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmReferenceChannel::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmReferenceChannel::processInput(uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -80,7 +80,7 @@ bool CBoxAlgorithmReferenceChannel::process(void)
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
-	uint32 i, j, k;
+	uint32_t i, j, k;
 
 	for (i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
@@ -97,17 +97,17 @@ bool CBoxAlgorithmReferenceChannel::process(void)
 			);
 
 			CString l_sChannel       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-			uint64 l_ui64MatchMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+			uint64_t l_ui64MatchMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 			m_ui32ReferenceChannelIndex = ::_find_channel_(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
 
 			OV_ERROR_UNLESS_KRF(
-				m_ui32ReferenceChannelIndex != std::numeric_limits<uint32>::max(),
+				m_ui32ReferenceChannelIndex != std::numeric_limits<uint32_t>::max(),
 				"Invalid channel [" << l_sChannel << "]: channel not found",
 				OpenViBE::Kernel::ErrorType::BadSetting
 			);
 
-			if (::_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32>::max())
+			if (::_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::max())
 			{
 				OV_WARNING_K("Multiple channels match for setting [" << l_sChannel << "]. Selecting [" << m_ui32ReferenceChannelIndex << "]");
 			}
@@ -132,8 +132,8 @@ bool CBoxAlgorithmReferenceChannel::process(void)
 			double* l_pInputBuffer     = l_rInputMatrix.getBuffer();
 			double* l_pOutputBuffer    = l_rOutputMatrix.getBuffer();
 			double* l_pReferenceBuffer = l_rInputMatrix.getBuffer() + m_ui32ReferenceChannelIndex * l_rInputMatrix.getDimensionSize(1);
-			uint32 l_ui32ChannelCount   = l_rInputMatrix.getDimensionSize(0);
-			uint32 l_ui32SampleCount    = l_rInputMatrix.getDimensionSize(1);
+			uint32_t l_ui32ChannelCount   = l_rInputMatrix.getDimensionSize(0);
+			uint32_t l_ui32SampleCount    = l_rInputMatrix.getDimensionSize(1);
 			for (j = 0; j < l_ui32ChannelCount; j++)
 			{
 				if (j != m_ui32ReferenceChannelIndex)

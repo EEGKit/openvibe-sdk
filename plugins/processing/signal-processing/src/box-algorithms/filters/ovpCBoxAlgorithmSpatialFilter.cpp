@@ -56,7 +56,7 @@ uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CString& r
 
 	// Ok, convert to floats
 	l_sPtr                  = rCoefficients.toASCIIString();
-	uint32 l_ui32currentIdx = 0;
+	uint32_t l_ui32currentIdx = 0;
 	while (*l_sPtr != 0)
 	{
 		const int BUFFSIZE = 1024;
@@ -93,8 +93,8 @@ uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const OpenViBE::CString& r
 		}
 		catch (const std::exception&)
 		{
-			const uint32 l_ui32currentRow = l_ui32currentIdx / nRows + 1;
-			const uint32 l_ui32currentCol = l_ui32currentIdx % nRows + 1;
+			const uint32_t l_ui32currentRow = l_ui32currentIdx / nRows + 1;
+			const uint32_t l_ui32currentCol = l_ui32currentIdx % nRows + 1;
 
 			OV_ERROR_KRZ(
 				"Failed to parse coefficient number [" << l_ui32currentIdx << "] at matrix positions [" << l_ui32currentRow << "," << l_ui32currentCol << "]",
@@ -169,10 +169,10 @@ bool CBoxAlgorithmSpatialFilter::initialize(void)
 	else
 	{
 		const CString l_sCoefficient = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-		// The double cast is needed until FSettingValueAutoCast supports uint32.
-		const uint32 l_ui32OutputChannelCountSetting = (uint32)(uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-		const uint32 l_ui32InputChannelCountSetting  = (uint32)(uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-		const uint32 l_ui32nCoefficients             = loadCoefficients(l_sCoefficient, ' ', OV_Value_EnumeratedStringSeparator, l_ui32OutputChannelCountSetting, l_ui32InputChannelCountSetting);
+		// The double cast is needed until FSettingValueAutoCast supports uint32_t.
+		const uint32_t l_ui32OutputChannelCountSetting = (uint32_t)(uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+		const uint32_t l_ui32InputChannelCountSetting  = (uint32_t)(uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+		const uint32_t l_ui32nCoefficients             = loadCoefficients(l_sCoefficient, ' ', OV_Value_EnumeratedStringSeparator, l_ui32OutputChannelCountSetting, l_ui32InputChannelCountSetting);
 
 		OV_ERROR_UNLESS_KRF(
 			l_ui32nCoefficients == l_ui32OutputChannelCountSetting * l_ui32InputChannelCountSetting,
@@ -207,7 +207,7 @@ bool CBoxAlgorithmSpatialFilter::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmSpatialFilter::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSpatialFilter::processInput(uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

@@ -37,7 +37,7 @@ namespace OpenViBE
 			 *       identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextScenarioIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const =0;
+				const OpenViBE::CIdentifier& rPreviousIdentifier) const = 0;
 
 			virtual bool isScenario(const OpenViBE::CIdentifier& scenarioIdentifier) const = 0;
 			/**
@@ -48,7 +48,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool createScenario(
-				OpenViBE::CIdentifier& rScenarioIdentifier) =0;
+				OpenViBE::CIdentifier& rScenarioIdentifier) = 0;
 
 			/**
 			 * @brief Import a scenario from a memory buffer and insert it in the scenario manager
@@ -113,7 +113,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool releaseScenario(
-				const OpenViBE::CIdentifier& rScenarioIdentifier) =0;
+				const OpenViBE::CIdentifier& rScenarioIdentifier) = 0;
 			/**
 			 * \brief Gets details on a specific scenario
 			 * \param rScenarioIdentifier [in] : the scenario identifier which details should be returned
@@ -121,7 +121,7 @@ namespace OpenViBE
 			 * \warning Calling this function with a bad identifier causes a crash
 			 */
 			virtual OpenViBE::Kernel::IScenario& getScenario(
-				const OpenViBE::CIdentifier& rScenarioIdentifier) =0;
+				const OpenViBE::CIdentifier& rScenarioIdentifier) = 0;
 
 
 			/** @{

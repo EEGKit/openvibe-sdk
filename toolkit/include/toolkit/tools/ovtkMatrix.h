@@ -17,10 +17,10 @@ namespace OpenViBEToolkit
 			OVTK_API bool isContentSimilar(const OpenViBE::IMatrix& rSourceMatrix1, const OpenViBE::IMatrix& rSourceMatrix2);
 			OVTK_API bool isContentValid(const OpenViBE::IMatrix& rSourceMatrix, const bool bCheckNotANumber = true, const bool bCheckInfinity = true);
 
-			OVTK_API bool toString(const OpenViBE::IMatrix& rMatrix, OpenViBE::CString& sString, OpenViBE::uint32 ui32Precision = 6);
+			OVTK_API bool toString(const OpenViBE::IMatrix& rMatrix, OpenViBE::CString& sString, uint32_t ui32Precision = 6);
 			OVTK_API bool fromString(OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sString);
 
-			OVTK_API bool saveToTextFile(const OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename, OpenViBE::uint32 ui32Precision = 6);
+			OVTK_API bool saveToTextFile(const OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename, uint32_t ui32Precision = 6);
 			OVTK_API bool loadFromTextFile(OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename);
 		};
 

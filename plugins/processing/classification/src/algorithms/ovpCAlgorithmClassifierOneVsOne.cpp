@@ -264,7 +264,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector
 
 	TParameterHandler<IMatrix*> op_pProbabilityVector = m_pDecisionStrategyAlgorithm->getOutputParameter(OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector);
 	double l_f64MaxProb                              = -1;
-	int32 l_i32IndexSelectedClass                     = -1;
+	int32_t l_i32IndexSelectedClass                     = -1;
 
 	rClassificationValues.setSize(0);
 	rProbabilityValue.setSize(m_ui32NumberOfClasses);

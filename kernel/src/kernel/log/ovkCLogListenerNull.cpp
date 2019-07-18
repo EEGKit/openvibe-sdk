@@ -32,14 +32,14 @@ bool CLogListenerNull::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel
 bool CLogListenerNull::activate(bool bActive) { return activate(LogLevel_First, LogLevel_Last, bActive); }
 
 void CLogListenerNull::log(const time64 value) {}
-void CLogListenerNull::log(const uint64 value) {}
-void CLogListenerNull::log(const uint32 value) {}
-void CLogListenerNull::log(const uint16 value) {}
-void CLogListenerNull::log(const uint8 value) {}
-void CLogListenerNull::log(const int64 value) {}
-void CLogListenerNull::log(const int32 value) {}
-void CLogListenerNull::log(const int16 value) {}
-void CLogListenerNull::log(const int8 value) {}
+void CLogListenerNull::log(const uint64_t value) {}
+void CLogListenerNull::log(const uint32_t value) {}
+void CLogListenerNull::log(const uint16_t value) {}
+void CLogListenerNull::log(const uint8_t value) {}
+void CLogListenerNull::log(const int64_t value) {}
+void CLogListenerNull::log(const int32_t value) {}
+void CLogListenerNull::log(const int16_t value) {}
+void CLogListenerNull::log(const int8_t value) {}
 void CLogListenerNull::log(const float value) {}
 void CLogListenerNull::log(const double value) {}
 void CLogListenerNull::log(const bool value) {}

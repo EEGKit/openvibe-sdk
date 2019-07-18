@@ -26,14 +26,14 @@ namespace OpenViBE
 			bool removeListener(OpenViBE::Kernel::ILogListener* listener) override { return m_LogManager.removeListener(listener); }
 
 			void log(const OpenViBE::time64 value) override { m_LogManager.log(value); }
-			void log(const OpenViBE::uint64 value) override { m_LogManager.log(value); }
-			void log(const OpenViBE::uint32 value) override { m_LogManager.log(value); }
-			void log(const OpenViBE::uint16 value) override { m_LogManager.log(value); }
-			void log(const OpenViBE::uint8 value) override { m_LogManager.log(value); }
-			void log(const OpenViBE::int64 value) override { m_LogManager.log(value); }
-			void log(const OpenViBE::int32 value) override { m_LogManager.log(value); }
-			void log(const OpenViBE::int16 value) override { m_LogManager.log(value); }
-			void log(const OpenViBE::int8 value) override { m_LogManager.log(value); }
+			void log(const uint64_t value) override { m_LogManager.log(value); }
+			void log(const uint32_t value) override { m_LogManager.log(value); }
+			void log(const uint16_t value) override { m_LogManager.log(value); }
+			void log(const uint8_t value) override { m_LogManager.log(value); }
+			void log(const int64_t value) override { m_LogManager.log(value); }
+			void log(const int32_t value) override { m_LogManager.log(value); }
+			void log(const int16_t value) override { m_LogManager.log(value); }
+			void log(const int8_t value) override { m_LogManager.log(value); }
 			void log(const float value) override { m_LogManager.log(value); }
 			void log(const double value) override { m_LogManager.log(value); }
 			void log(const bool value) override { m_LogManager.log(value); }

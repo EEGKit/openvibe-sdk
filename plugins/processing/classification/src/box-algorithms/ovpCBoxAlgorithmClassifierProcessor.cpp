@@ -44,7 +44,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 	l_sVersion = l_pRootNode->getAttribute(c_sFormatVersionAttributeName);
 	std::stringstream l_sData(l_sVersion);
-	uint32 l_ui32Version;
+	uint32_t l_ui32Version;
 	l_sData >> l_ui32Version;
 
 	OV_WARNING_UNLESS_K(
@@ -103,7 +103,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	);
 
 	//Now load every stimulation and store them in the map with the right class id
-	for (uint32 i = 0; i < l_pStimulationsNode->getChildCount(); i++)
+	for (uint32_t i = 0; i < l_pStimulationsNode->getChildCount(); i++)
 	{
 		l_pTempNode = l_pStimulationsNode->getChild(i);
 
@@ -206,7 +206,7 @@ bool CBoxAlgorithmClassifierProcessor::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmClassifierProcessor::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmClassifierProcessor::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
@@ -218,13 +218,13 @@ bool CBoxAlgorithmClassifierProcessor::process(void)
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
 	// Check if we have a command first
-	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(1); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(1); i++)
 	{
 		m_oStimulationDecoder.decode(i);
 		if (m_oStimulationDecoder.isHeaderReceived()) { }
 		if (m_oStimulationDecoder.isBufferReceived())
 		{
-			for (uint64 j = 0; j < m_oStimulationDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
+			for (uint64_t j = 0; j < m_oStimulationDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
 			{
 				if (m_oStimulationDecoder.getOutputStimulationSet()->getStimulationIdentifier(j) == OVTK_StimulationId_TrainCompleted)
 				{
@@ -238,10 +238,10 @@ bool CBoxAlgorithmClassifierProcessor::process(void)
 	}
 
 	// Classify data
-	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
-		const uint64 l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, i);
-		const uint64 l_ui64EndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, i);
+		const uint64_t l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, i);
+		const uint64_t l_ui64EndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, i);
 
 		m_oFeatureVectorDecoder.decode(i);
 		if (m_oFeatureVectorDecoder.isHeaderReceived())

@@ -34,17 +34,17 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> ip_ui64ExperimentIdentifier;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64ExperimentIdentifier;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pExperimentDate;
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> ip_ui64SubjectIdentifier;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64SubjectIdentifier;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pSubjectName;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> ip_ui64SubjectAge;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> ip_ui64SubjectGender;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64SubjectAge;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64SubjectGender;
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> ip_ui64LaboratoryIdentifier;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64LaboratoryIdentifier;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pLaboratoryName;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> ip_ui64TechnicianIdentifier;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64TechnicianIdentifier;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pTechnicianName;
 		};
 
@@ -68,8 +68,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ExperimentInformationStreamEncoder; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CExperimentInformationEncoder(); }
 
-			virtual bool getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				OpenViBEPlugins::StreamCodecs::CEBMLBaseEncoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 

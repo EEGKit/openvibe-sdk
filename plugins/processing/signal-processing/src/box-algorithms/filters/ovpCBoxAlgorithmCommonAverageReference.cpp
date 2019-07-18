@@ -10,7 +10,7 @@ using namespace OpenViBEPlugins::SignalProcessing;
 bool CBoxAlgorithmCommonAverageReference::initialize(void)
 {
 	// CString   l_sSettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	// uint64 l_ui64SettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	// uint64_t l_ui64SettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	// double l_f64SettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	// ...
 
@@ -52,7 +52,7 @@ bool CBoxAlgorithmCommonAverageReference::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmCommonAverageReference::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmCommonAverageReference::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -63,7 +63,7 @@ bool CBoxAlgorithmCommonAverageReference::process(void)
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, i);
 		op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
@@ -75,9 +75,9 @@ bool CBoxAlgorithmCommonAverageReference::process(void)
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			uint32 i, j;
-			uint32 l_ui32ChannelCount = m_oMatrix.getDimensionSize(0);
-			uint32 l_ui32SampleCount  = m_oMatrix.getDimensionSize(1);
+			uint32_t i, j;
+			uint32_t l_ui32ChannelCount = m_oMatrix.getDimensionSize(0);
+			uint32_t l_ui32SampleCount  = m_oMatrix.getDimensionSize(1);
 			for (i = 0; i < l_ui32SampleCount; i++)
 			{
 				double* l_pBufferBase = m_oMatrix.getBuffer() + i;

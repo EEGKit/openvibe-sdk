@@ -38,7 +38,7 @@ namespace OpenViBE
 			 * \brief Gets the size of this parameter's content
 			 * \return the size of this parameter's content.
 			 */
-			virtual OpenViBE::uint64 getParameterSize(void) const { return 0; }
+			virtual uint64_t getParameterSize(void) const { return 0; }
 			/**
 			 * \brief Gets the type of this parameter's content
 			 * \return the type of this parameter's content.

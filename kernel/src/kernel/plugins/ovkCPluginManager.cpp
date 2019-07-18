@@ -73,8 +73,8 @@ namespace OpenViBE
 				}
 
 				bool l_bPluginObjectDescAdded          = false;
-				uint32 l_ui32Index                     = 0;
-				uint32 l_ui32Count                     = 0;
+				uint32_t l_ui32Index                     = 0;
+				uint32_t l_ui32Count                     = 0;
 				IPluginObjectDesc* l_pPluginObjectDesc = NULL;
 				while (l_pPluginModule->getPluginObjectDescription(l_ui32Index, l_pPluginObjectDesc))
 				{
@@ -431,8 +431,8 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 
 	CIdentifier l_oSubstitutionTokenIdentifier;
 	char l_sSubstitutionTokenName[1024];
-	uint64 l_ui64SourceClassIdentifier = rClassIdentifier.toUInteger();
-	uint64 l_ui64TargetClassIdentifier = l_ui64SourceClassIdentifier;
+	uint64_t l_ui64SourceClassIdentifier = rClassIdentifier.toUInteger();
+	uint64_t l_ui64TargetClassIdentifier = l_ui64SourceClassIdentifier;
 	::sprintf(l_sSubstitutionTokenName, "Kernel_PluginSubstitution_%0" PRIx64, l_ui64SourceClassIdentifier);
 	if ((l_oSubstitutionTokenIdentifier = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(l_sSubstitutionTokenName)) != OV_UndefinedIdentifier)
 	{

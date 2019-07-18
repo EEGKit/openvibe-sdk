@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
 
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 
 			virtual bool process(void);
 

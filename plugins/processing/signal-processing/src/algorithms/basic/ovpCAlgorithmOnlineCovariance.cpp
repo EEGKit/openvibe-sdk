@@ -46,7 +46,7 @@ bool CAlgorithmOnlineCovariance::process(void)
 	// Note: The input parameters must have been set by the caller by now
 	const TParameterHandler<double> ip_f64Shrinkage(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage));
 	const TParameterHandler<bool> ip_bTraceNormalization(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_TraceNormalization));
-	const TParameterHandler<uint64> ip_ui64UpdateMethod(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod));
+	const TParameterHandler<uint64_t> ip_ui64UpdateMethod(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_UpdateMethod));
 	const TParameterHandler<IMatrix*> ip_pFeatureVectorSet(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors));
 	TParameterHandler<IMatrix*> op_pMean(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_Mean));
 	TParameterHandler<IMatrix*> op_pCovarianceMatrix(getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
@@ -65,8 +65,8 @@ bool CAlgorithmOnlineCovariance::process(void)
 			OpenViBE::Kernel::ErrorType::BadInput
 		);
 
-		const uint32 l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
-		const uint32 l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const uint32_t l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
+		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 		OV_ERROR_UNLESS_KRF(
 			l_ui32nRows >= 1 && l_ui32nCols >= 1,
@@ -97,8 +97,8 @@ bool CAlgorithmOnlineCovariance::process(void)
 
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_Update))
 	{
-		const uint32 l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
-		const uint32 l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const uint32_t l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
+		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 		const double* l_pBuffer = ip_pFeatureVectorSet->getBuffer();
 
@@ -148,7 +148,7 @@ bool CAlgorithmOnlineCovariance::process(void)
 			// It should be implementing the Youngs & Cramer algorithm as described in
 			// Chan, Golub, Leveq, "Updating formulae and a pairwise algorithm...", 1979
 
-			uint32 l_ui32Start = 0;
+			uint32_t l_ui32Start = 0;
 			if (m_ui64Count == 0)
 			{
 				m_oIncrementalMean = l_oSampleChunk.row(0);
@@ -160,7 +160,7 @@ bool CAlgorithmOnlineCovariance::process(void)
 			l_oChunkContribution.resizeLike(m_oIncrementalCov);
 			l_oChunkContribution.setZero();
 
-			for (uint32 i = l_ui32Start; i < l_ui32nRows; i++)
+			for (uint32_t i = l_ui32Start; i < l_ui32nRows; i++)
 			{
 				m_oIncrementalMean += l_oSampleChunk.row(i);
 
@@ -185,9 +185,9 @@ bool CAlgorithmOnlineCovariance::process(void)
 		else if(l_ui32Method == 2)
 		{
 			// Increment sample counts
-			const uint64 l_ui64CountBefore = m_ui64Count;
-			const uint64 l_ui64CountChunk = l_ui32nRows;
-			const uint64 l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
+			const uint64_t l_ui64CountBefore = m_ui64Count;
+			const uint64_t l_ui64CountChunk = l_ui32nRows;
+			const uint64_t l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
 			const MatrixXd l_oSampleSum = l_oSampleChunk.colwise().sum();
 
 			// Center the chunk
@@ -212,9 +212,9 @@ bool CAlgorithmOnlineCovariance::process(void)
 		else
 		{
 			// Increment sample counts
-			const uint64 l_ui64CountBefore = m_ui64Count;
-			const uint64 l_ui64CountChunk = l_ui32nRows;
-			const uint64 l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
+			const uint64_t l_ui64CountBefore = m_ui64Count;
+			const uint64_t l_ui64CountChunk = l_ui32nRows;
+			const uint64_t l_ui64CountAfter = l_ui64CountBefore + l_ui64CountChunk;
 
 			// Insert our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
 			const Map<MatrixXdRowMajor> l_oDataMatrix(const_cast<double*>(l_pBuffer),l_ui32nRows,l_ui32nCols);
@@ -255,7 +255,7 @@ bool CAlgorithmOnlineCovariance::process(void)
 	// Give output with regularization (mix prior + cov)?
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_GetCov))
 	{
-		const uint32 l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 		OV_ERROR_UNLESS_KRF(
 			m_ui64Count > 0,
@@ -286,7 +286,7 @@ bool CAlgorithmOnlineCovariance::process(void)
 	// Give just the output with no shrinkage?
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_GetCovRaw))
 	{
-		const uint32 l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 		OV_ERROR_UNLESS_KRF(
 			m_ui64Count > 0,

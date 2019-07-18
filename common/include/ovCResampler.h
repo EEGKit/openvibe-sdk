@@ -28,7 +28,7 @@ namespace Common
 			public:
 
 				virtual ~ICallback(void) { }
-				virtual void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const =0;
+				virtual void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const = 0;
 			};
 
 		private:

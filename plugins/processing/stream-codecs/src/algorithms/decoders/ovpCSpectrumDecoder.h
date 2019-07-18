@@ -27,20 +27,20 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
+			virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize);
 			virtual void closeChild(void);
 
 		protected:
 
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pFrequencyAbscissa;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> op_pSamplingRate;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_pSamplingRate;
 
 
 		private:
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
-			OpenViBE::uint32 m_ui32FrequencyBandIndex;
+			uint32_t m_ui32FrequencyBandIndex;
 
 			// Value of the current lower frequency of the band. Only used to read old spectrum format.
 			double m_lowerFreq;
@@ -66,8 +66,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_SpectrumStreamDecoder; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CSpectrumDecoder(); }
 
-			virtual bool getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 

@@ -14,12 +14,12 @@ namespace OpenViBEToolkit
 
 		CInternalFeatureVector(void);
 
-		virtual OpenViBE::uint32 getSize(void) const;
-		virtual bool setSize(const OpenViBE::uint32 ui32Size);
+		virtual uint32_t getSize(void) const;
+		virtual bool setSize(const uint32_t ui32Size);
 		virtual double* getBuffer(void);
 		virtual const double* getBuffer(void) const;
-		virtual const char* getElementLabel(const OpenViBE::uint32 ui32Index) const;
-		virtual bool setElementLabel(const OpenViBE::uint32 ui32Index, const char* sElementLabel);
+		virtual const char* getElementLabel(const uint32_t ui32Index) const;
+		virtual bool setElementLabel(const uint32_t ui32Index, const char* sElementLabel);
 
 		virtual double getLabel(void) const;
 		virtual bool setLabel(const double f64Label);
@@ -29,8 +29,8 @@ namespace OpenViBEToolkit
 	public:
 
 		const OpenViBE::IMatrix* m_pMatrix;
-		OpenViBE::uint32 m_ui32DimensionIndex;
-		OpenViBE::uint32 m_ui32BufferElementCount;
+		uint32_t m_ui32DimensionIndex;
+		uint32_t m_ui32BufferElementCount;
 		const double* m_pBuffer;
 	};
 
@@ -40,19 +40,19 @@ namespace OpenViBEToolkit
 
 		explicit CFeatureVectorSet(const OpenViBE::IMatrix& rMatrix);
 
-		virtual OpenViBE::uint32 getFeatureVectorCount(void) const;
-		virtual bool setFeatureVectorCount(const OpenViBE::uint32 ui32FeatureVectorCount);
+		virtual uint32_t getFeatureVectorCount(void) const;
+		virtual bool setFeatureVectorCount(const uint32_t ui32FeatureVectorCount);
 		virtual bool addFeatureVector(const OpenViBEToolkit::IFeatureVector& rFeatureVector);
-		virtual OpenViBEToolkit::IFeatureVector& getFeatureVector(const OpenViBE::uint32 ui32Index);
-		virtual const OpenViBEToolkit::IFeatureVector& getFeatureVector(const OpenViBE::uint32 ui32Index) const;
-		virtual OpenViBE::uint32 getLabelCount(void) const;
+		virtual OpenViBEToolkit::IFeatureVector& getFeatureVector(const uint32_t ui32Index);
+		virtual const OpenViBEToolkit::IFeatureVector& getFeatureVector(const uint32_t ui32Index) const;
+		virtual uint32_t getLabelCount(void) const;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVectorSet, OV_UndefinedIdentifier);
 
 	protected:
 
 		const OpenViBE::IMatrix& m_rMatrix;
-		std::map<OpenViBE::uint32, CInternalFeatureVector> m_vFeatureVector;
+		std::map<uint32_t, CInternalFeatureVector> m_vFeatureVector;
 	};
 };
 

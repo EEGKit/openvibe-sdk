@@ -44,10 +44,10 @@ bool CBoxAlgorithmStimulationVoter::initialize(void)
 
 	m_ui64MinimumVotes     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_f64TimeWindow        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_oClearVotes          = ((uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
-	m_oOutputDateMode      = ((uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
+	m_oClearVotes          = ((uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
+	m_oOutputDateMode      = ((uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3));
 	m_ui64RejectClassLabel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
-	m_oRejectClass_CanWin  = ((uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5));
+	m_oRejectClass_CanWin  = ((uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5));
 
 	this->getLogManager() << LogLevel_Debug << "Vote clear mode " << m_oClearVotes << ", timestamp at " << m_oOutputDateMode << ", reject mode " << m_oRejectClass_CanWin << "\n";
 
@@ -70,7 +70,7 @@ bool CBoxAlgorithmStimulationVoter::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationVoter::processInput(uint32 ui32Index)
+bool CBoxAlgorithmStimulationVoter::processInput(uint32_t ui32Index)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -88,22 +88,22 @@ bool CBoxAlgorithmStimulationVoter::process(void)
 
 	// Push the stimulations to a queue
 	bool l_bNewStimulus = false;
-	for (uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(0); j++)
+	for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(0); j++)
 	{
 		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, j);
 		m_pDecoder->process();
 		if (m_pDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader)) { }
 		if (m_pDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			for (uint32 k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
+			for (uint32_t k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
 			{
-				uint64 l_ui64StimulationIdentifier = op_pStimulationSet->getStimulationIdentifier(k);
-				uint64 l_ui64StimulationDate       = op_pStimulationSet->getStimulationDate(k);
+				uint64_t l_ui64StimulationIdentifier = op_pStimulationSet->getStimulationIdentifier(k);
+				uint64_t l_ui64StimulationDate       = op_pStimulationSet->getStimulationDate(k);
 				m_ui64LatestStimulusDate           = std::max(m_ui64LatestStimulusDate, l_ui64StimulationDate);
 				if (ITimeArithmetics::timeToSeconds(m_ui64LatestStimulusDate - l_ui64StimulationDate) <= m_f64TimeWindow)
 				{
 					// Stimulus is fresh, append
-					m_oStimulusDeque.push_back(std::pair<uint64, uint64>(l_ui64StimulationIdentifier, l_ui64StimulationDate));
+					m_oStimulusDeque.push_back(std::pair<uint64_t, uint64_t>(l_ui64StimulationIdentifier, l_ui64StimulationDate));
 					l_bNewStimulus = true;
 				}
 			}
@@ -117,7 +117,7 @@ bool CBoxAlgorithmStimulationVoter::process(void)
 	// Always clear too old votes that have slipped off the time window. The time window is relative to the time of the latest stimulus received.
 	while (!m_oStimulusDeque.empty())
 	{
-		uint64 l_ui64FrontDate = m_oStimulusDeque.front().second;
+		uint64_t l_ui64FrontDate = m_oStimulusDeque.front().second;
 		if (ITimeArithmetics::timeToSeconds(m_ui64LatestStimulusDate - l_ui64FrontDate) > m_f64TimeWindow)
 		{
 			// Drop it
@@ -130,7 +130,7 @@ bool CBoxAlgorithmStimulationVoter::process(void)
 		}
 	}
 
-	this->getLogManager() << LogLevel_Debug << "Queue size is " << (uint64)m_oStimulusDeque.size() << "\n";
+	this->getLogManager() << LogLevel_Debug << "Queue size is " << (uint64_t)m_oStimulusDeque.size() << "\n";
 
 	if (m_oStimulusDeque.size() < m_ui64MinimumVotes)
 	{
@@ -138,16 +138,16 @@ bool CBoxAlgorithmStimulationVoter::process(void)
 		return true;
 	}
 
-	std::map<uint64, uint64> l_oLastSeen;			// The last occurrence of each type in time
-	std::map<uint64, uint32> l_mVotes;				// Histogram of votes
+	std::map<uint64_t, uint64_t> l_oLastSeen;			// The last occurrence of each type in time
+	std::map<uint64_t, uint32_t> l_mVotes;				// Histogram of votes
 
 	// Make a histogram of the votes
-	for (std::deque<std::pair<uint64, uint64>>::const_iterator it = m_oStimulusDeque.begin();
+	for (std::deque<std::pair<uint64_t, uint64_t>>::const_iterator it = m_oStimulusDeque.begin();
 		 it != m_oStimulusDeque.end();
 		 ++it)
 	{
-		uint64 l_ui64StimulusType = (*it).first;
-		uint64 l_ui64StimulusDate = (*it).second;
+		uint64_t l_ui64StimulusType = (*it).first;
+		uint64_t l_ui64StimulusDate = (*it).second;
 
 		l_mVotes[l_ui64StimulusType]++;
 		l_oLastSeen[l_ui64StimulusType] = std::max(l_oLastSeen[l_ui64StimulusType], l_ui64StimulusDate);
@@ -155,15 +155,15 @@ bool CBoxAlgorithmStimulationVoter::process(void)
 	}
 
 	// Find the winner
-	uint64 l_ui64ResultClassLabel = m_ui64RejectClassLabel;
-	uint64 l_ui64MaxVotes         = 0;
+	uint64_t l_ui64ResultClassLabel = m_ui64RejectClassLabel;
+	uint64_t l_ui64MaxVotes         = 0;
 
-	for (std::map<uint64, uint32>::const_iterator it = l_mVotes.begin();
+	for (std::map<uint64_t, uint32_t>::const_iterator it = l_mVotes.begin();
 		 it != l_mVotes.end();
 		 ++it)
 	{
-		uint64 l_ui64StimulusType  = (*it).first;
-		uint64 l_ui64StimulusVotes = (*it).second; // can not be zero by construction above
+		uint64_t l_ui64StimulusType  = (*it).first;
+		uint64_t l_ui64StimulusVotes = (*it).second; // can not be zero by construction above
 
 		if (m_oRejectClass_CanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && l_ui64StimulusType == m_ui64RejectClassLabel)
 		{
@@ -199,9 +199,9 @@ bool CBoxAlgorithmStimulationVoter::process(void)
 	}
 	else
 	{
-		uint64 l_ui64CurrentTime = getPlayerContext().getCurrentTime();
+		uint64_t l_ui64CurrentTime = getPlayerContext().getCurrentTime();
 
-		uint64 l_ui64TimeStamp;
+		uint64_t l_ui64TimeStamp;
 		if (m_oOutputDateMode == OVP_TypeId_Voting_OutputTime_Vote)
 		{
 			l_ui64TimeStamp = l_ui64CurrentTime;

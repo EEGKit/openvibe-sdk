@@ -22,7 +22,7 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual OpenViBE::uint32 addSetting(
+			virtual uint32_t addSetting(
 				const OpenViBE::CString& sName,
 				const OpenViBE::CIdentifier& rTypeIdentifier,
 				const OpenViBE::CString& sDefaultValue) = 0;

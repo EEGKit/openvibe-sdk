@@ -36,22 +36,22 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
+			virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize);
 			virtual void closeChild(void);
 
 		protected:
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> op_ui64ExperimentIdentifier;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64ExperimentIdentifier;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> op_pExperimentDate;
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> op_ui64SubjectIdentifier;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64SubjectIdentifier;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> op_pSubjectName;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> op_ui64SubjectAge;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> op_ui64SubjectGender;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64SubjectAge;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64SubjectGender;
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> op_ui64LaboratoryIdentifier;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64LaboratoryIdentifier;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> op_pLaboratoryName;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> op_ui64TechnicianIdentifier;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64TechnicianIdentifier;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> op_pTechnicianName;
 
 		private:
@@ -79,8 +79,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ExperimentInformationStreamDecoder; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CExperimentInformationDecoder(); }
 
-			virtual bool getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 

@@ -102,27 +102,27 @@ namespace Socket
 #endif
 		}
 
-		bool isReadyToSend(Socket::uint32 ui32TimeOut = 0) const
+		bool isReadyToSend(uint32_t ui32TimeOut = 0) const
 		{
 			return this->isConnected();
 		}
 
-		bool isReadyToReceive(Socket::uint32 ui32TimeOut = 0) const
+		bool isReadyToReceive(uint32_t ui32TimeOut = 0) const
 		{
 			return this->isConnected();
 		}
 
-		uint32 getPendingByteCount()
+		uint32_t getPendingByteCount()
 		{
 			return (this->isConnected() ? 0 : 1);
 		}
 
-		uint32 sendBuffer(const void* pBuffer, const uint32 ui32BufferSize = 8)
+		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize = 8)
 		{
 			if (!this->isConnected()) return 0;
 
 #if defined TARGET_OS_Windows
-			uint8 l_ui8Value = *(static_cast<const uint8*>(pBuffer));
+			uint8_t l_ui8Value = *(static_cast<const uint8_t*>(pBuffer));
 
 			m_lpfnTVicPortWrite(m_ui16PortNumber, l_ui8Value);
 			return ui32BufferSize;
@@ -136,7 +136,7 @@ namespace Socket
 #endif
 		}
 
-		uint32 receiveBuffer(void* pBuffer, const uint32 ui32BufferSize = 8)
+		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize = 8)
 		{
 			if (!this->isConnected()) { return 0; }
 
@@ -173,10 +173,10 @@ namespace Socket
 			return 0;
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
+		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			const char* l_pPointer = reinterpret_cast<const char*>(pBuffer);
-			uint32 l_ui32BytesLeft = ui32BufferSize;
+			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
@@ -186,10 +186,10 @@ namespace Socket
 			return this->isConnected();
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
+		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			char* l_pPointer       = reinterpret_cast<char*>(pBuffer);
-			uint32 l_ui32BytesLeft = ui32BufferSize;
+			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{

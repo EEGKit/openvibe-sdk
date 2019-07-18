@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CScopeTester(const OpenViBE::Kernel::IKernelContext& rKernelCotnext, const OpenViBE::CString& sPrefix);
+			CScopeTester(const OpenViBE::Kernel::IKernelContext& rKernelContext, const OpenViBE::CString& sPrefix);
 			virtual ~CScopeTester(void);
 
 			_IsDerivedFromClass_Final_(IObject, OVK_ClassId_Tools_ScopeTester);
@@ -21,7 +21,7 @@ namespace OpenViBE
 		protected:
 
 			OpenViBE::CString m_sPrefix;
-			const OpenViBE::Kernel::IKernelContext& m_rKernelContext;
+			const OpenViBE::Kernel::IKernelContext& m_kernelContext;
 		};
 	};
 };

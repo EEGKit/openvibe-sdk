@@ -8,7 +8,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::Stimulation;
 
-uint64 CBoxAlgorithmClockStimulator::getClockFrequency(void)
+uint64_t CBoxAlgorithmClockStimulator::getClockFrequency(void)
 {
 	return (1LL << 32) * 32;
 }
@@ -55,7 +55,7 @@ bool CBoxAlgorithmClockStimulator::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	uint64 l_ui64CurrentTime = getPlayerContext().getCurrentTime();
+	uint64_t l_ui64CurrentTime = getPlayerContext().getCurrentTime();
 
 	CStimulationSet l_oStimulationSet;
 	l_oStimulationSet.setStimulationCount(0);

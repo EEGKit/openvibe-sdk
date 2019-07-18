@@ -369,7 +369,7 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 	{
 		SBoxProto l_oMetaboxProto(getKernelContext().getTypeManager());
 
-		for (uint32 l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < scenario.getInputCount(); l_ui32ScenarioInputIndex++)
+		for (uint32_t l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < scenario.getInputCount(); l_ui32ScenarioInputIndex++)
 		{
 			CIdentifier l_oInputputIdentifier;
 			CString l_sInputName;
@@ -382,7 +382,7 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 			l_oMetaboxProto.addInput(l_sInputName, l_oInputTypeIdentifier, l_oInputputIdentifier, true);
 		}
 
-		for (uint32 l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < scenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
+		for (uint32_t l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < scenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
 		{
 			CIdentifier l_oOutputIdentifier;
 			CString l_sOutputName;
@@ -395,7 +395,7 @@ bool CScenarioManager::exportScenario(OpenViBE::IMemoryBuffer& outputMemoryBuffe
 			l_oMetaboxProto.addOutput(l_sOutputName, l_oOutputTypeIdentifier, l_oOutputIdentifier, true);
 		}
 
-		for (uint32 l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < scenario.getSettingCount(); l_ui32ScenarioSettingIndex++)
+		for (uint32_t l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < scenario.getSettingCount(); l_ui32ScenarioSettingIndex++)
 		{
 			CString l_sSettingName;
 			CIdentifier l_oSettingTypeIdentifier;
@@ -687,7 +687,7 @@ IScenario& CScenarioManager::getScenario(const CIdentifier& rScenarioIdentifier)
 
 CIdentifier CScenarioManager::getUnusedIdentifier(void) const
 {
-	uint64 l_ui64Identifier = (((uint64)rand()) << 32) + ((uint64)rand());
+	uint64_t l_ui64Identifier = (((uint64_t)rand()) << 32) + ((uint64_t)rand());
 	CIdentifier l_oResult;
 	map<CIdentifier, CScenario*>::const_iterator i;
 	do

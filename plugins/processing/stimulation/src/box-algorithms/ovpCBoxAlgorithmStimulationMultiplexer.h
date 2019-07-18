@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 
 			bool initialize(void);
 			bool uninitialize(void);
-			bool processInput(OpenViBE::uint32 ui32InputIndex);
+			bool processInput(uint32_t ui32InputIndex);
 			bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationMultiplexer);
@@ -32,13 +32,13 @@ namespace OpenViBEPlugins
 			std::vector<OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationMultiplexer>> m_StimulationDecoders;
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmStimulationMultiplexer> m_StimulationEncoder;
 
-			std::vector<OpenViBE::uint64> m_StreamDecoderEndTimes;
+			std::vector<uint64_t> m_StreamDecoderEndTimes;
 
-			OpenViBE::uint64 m_LastStartTime;
-			OpenViBE::uint64 m_LastEndTime;
+			uint64_t m_LastStartTime;
+			uint64_t m_LastEndTime;
 			bool m_WasHeaderSent;
 
-			std::multimap<OpenViBE::uint64, std::tuple<OpenViBE::uint64, OpenViBE::uint64, OpenViBE::uint64>> m_vStimulation;
+			std::multimap<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> m_vStimulation;
 		};
 
 		class CBoxAlgorithmStimulationMultiplexerListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 			{
 				char inputName[1024];
 
-				for (OpenViBE::uint32 input = 0; input < box.getInputCount(); ++input)
+				for (uint32_t input = 0; input < box.getInputCount(); ++input)
 				{
 					sprintf(inputName, "Input stimulations %u", input + 1);
 					box.setInputName(input, inputName);
@@ -59,8 +59,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return this->check(rBox); }
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return this->check(rBox); }
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return this->check(rBox); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return this->check(rBox); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
 		};

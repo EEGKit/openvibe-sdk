@@ -106,7 +106,7 @@ public:
 	std::vector<CAbstractTreeNode *> m_oChildren;
 
 	//! The node operator's identifier
-	OpenViBE::uint64 m_ui64Identifier;
+	uint64_t m_ui64Identifier;
 
 	//! True if the node is "associative"
 	bool m_bIsAssociative;
@@ -114,12 +114,12 @@ public:
 public:
 
 	//Constructors
-	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, bool bIsAssociative = false)
+	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, bool bIsAssociative = false)
 		: CAbstractTreeNode(false, false)
 		  , m_ui64Identifier(ui64NodeIdentifier)
 		  , m_bIsAssociative(bIsAssociative) { }
 
-	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, CAbstractTreeNode* pChild, bool bIsAssociative = false)
+	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pChild, bool bIsAssociative = false)
 		: CAbstractTreeNode(false, false)
 		  , m_ui64Identifier(ui64NodeIdentifier)
 		  , m_bIsAssociative(bIsAssociative)
@@ -127,7 +127,7 @@ public:
 		m_oChildren.push_back(pChild);
 	}
 
-	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, CAbstractTreeNode* pLeftChild, CAbstractTreeNode* pRightChild, bool bIsAssociative = false)
+	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pLeftChild, CAbstractTreeNode* pRightChild, bool bIsAssociative = false)
 		: CAbstractTreeNode(false, false)
 		  , m_ui64Identifier(ui64NodeIdentifier)
 		  , m_bIsAssociative(bIsAssociative)
@@ -136,7 +136,7 @@ public:
 		m_oChildren.push_back(pRightChild);
 	}
 
-	CAbstractTreeParentNode(OpenViBE::uint64 ui64NodeIdentifier, CAbstractTreeNode* pTestChild, CAbstractTreeNode* pIfChild, CAbstractTreeNode* pThenChild, bool bIsAssociative = false)
+	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pTestChild, CAbstractTreeNode* pIfChild, CAbstractTreeNode* pThenChild, bool bIsAssociative = false)
 		: CAbstractTreeNode(false, false)
 		  , m_ui64Identifier(ui64NodeIdentifier)
 		  , m_bIsAssociative(bIsAssociative)
@@ -150,7 +150,7 @@ public:
 	 * Returns the node's operator identifier.
 	 * \return The operator identifier
 	 */
-	OpenViBE::uint64 getOperatorIdentifier() { return m_ui64Identifier; }
+	uint64_t getOperatorIdentifier() { return m_ui64Identifier; }
 
 	/**
 	 * Used to know if the node is an associative node.
@@ -331,7 +331,7 @@ class CAbstractTreeVariableNode : public CAbstractTreeNode
 {
 public:
 
-	explicit CAbstractTreeVariableNode(OpenViBE::uint32 ui32Index)
+	explicit CAbstractTreeVariableNode(uint32_t ui32Index)
 		: CAbstractTreeNode(true, false)
 		  , m_ui32Index(ui32Index) { }
 
@@ -359,7 +359,7 @@ public:
 
 protected:
 
-	OpenViBE::uint32 m_ui32Index;
+	uint32_t m_ui32Index;
 };
 
 /**
@@ -422,7 +422,7 @@ public:
 	* \param ui64TreeIdentifier The identifier of the tree (OP_USERDEF for non special tree).
 	* \param f64Parameter The optional parameter if it is a special tree.
 	*/
-	void recognizeSpecialTree(OpenViBE::uint64& ui64TreeIdentifier, double& f64Parameter);
+	void recognizeSpecialTree(uint64_t& ui64TreeIdentifier, double& f64Parameter);
 };
 
 /**

@@ -66,7 +66,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 	m_vEncoder[2].initialize(*this, 2);
 	m_vEncoder[3].initialize(*this, 3);
 
-	uint64 l_ui64WaveletType   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	uint64_t l_ui64WaveletType   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_dWaveletParameter        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_iScaleCount_J            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_dHighestFrequency        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
@@ -101,7 +101,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 	{
 		m_pWaveletType = "dog";
 
-		if (m_dWaveletParameter <= 0 || static_cast<uint32>(m_dWaveletParameter) % 2 == 1)
+		if (m_dWaveletParameter <= 0 || static_cast<uint32_t>(m_dWaveletParameter) % 2 == 1)
 		{
 			this->getLogManager() << LogLevel_Error << "Derivative of Gaussian wavelet parameter should be strictly positive and even.\n";
 			return false;
@@ -157,7 +157,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmContinuousWaveletAnalysis::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmContinuousWaveletAnalysis::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -173,16 +173,16 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); ++i)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); ++i)
 	{
 		m_oDecoder.decode(i);
 		IMatrix* l_pInputMatrix   = m_oDecoder.getOutputMatrix();
-		uint32 l_ui32ChannelCount = l_pInputMatrix->getDimensionSize(0);
+		uint32_t l_ui32ChannelCount = l_pInputMatrix->getDimensionSize(0);
 		int l_iSampleCount        = l_pInputMatrix->getDimensionSize(1);
 
 		if (m_oDecoder.isHeaderReceived())
 		{
-			uint64 l_uiSamplingRate = m_oDecoder.getOutputSamplingRate();
+			uint64_t l_uiSamplingRate = m_oDecoder.getOutputSamplingRate();
 			this->getLogManager() << LogLevel_Trace << "Input signal is [" << l_ui32ChannelCount << " x " << l_iSampleCount << "] @ " << l_uiSamplingRate << "Hz.\n";
 			if (l_uiSamplingRate == 0)
 			{
@@ -221,15 +221,15 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 			}
 			//cwt_summary(m_oWaveletTransform); // FOR DEBUG
 
-			for (uint32 l_ui32EncoderIndex = 0; l_ui32EncoderIndex < 4; ++l_ui32EncoderIndex)
+			for (uint32_t l_ui32EncoderIndex = 0; l_ui32EncoderIndex < 4; ++l_ui32EncoderIndex)
 			{
 				IMatrix* l_pOutputMatrix = m_vEncoder[l_ui32EncoderIndex].getInputMatrix();
 				l_pOutputMatrix->setDimensionCount(3);
 				l_pOutputMatrix->setDimensionSize(0, l_ui32ChannelCount);
-				l_pOutputMatrix->setDimensionSize(1, static_cast<uint32>(m_iScaleCount_J));
-				l_pOutputMatrix->setDimensionSize(2, static_cast<uint32>(l_iSampleCount));
+				l_pOutputMatrix->setDimensionSize(1, static_cast<uint32_t>(m_iScaleCount_J));
+				l_pOutputMatrix->setDimensionSize(2, static_cast<uint32_t>(l_iSampleCount));
 
-				for (uint32 l_ui32ChannelIndex = 0; l_ui32ChannelIndex < l_ui32ChannelCount; ++l_ui32ChannelIndex)
+				for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < l_ui32ChannelCount; ++l_ui32ChannelIndex)
 				{
 					l_pOutputMatrix->setDimensionLabel(0, l_ui32ChannelIndex, l_pInputMatrix->getDimensionLabel(0, l_ui32ChannelIndex));
 				}
@@ -260,7 +260,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 			double* l_pOutputRealPartBuffer  = m_vEncoder[2].getInputMatrix()->getBuffer();
 			double* l_pOutputImagPartBuffer  = m_vEncoder[3].getInputMatrix()->getBuffer();
 
-			for (uint32 l_ui32ChannelIndex = 0; l_ui32ChannelIndex < l_ui32ChannelCount; l_ui32ChannelIndex++)
+			for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < l_ui32ChannelCount; l_ui32ChannelIndex++)
 			{
 				// compute CWT
 				int l_iReturn = cwt(m_oWaveletTransform, l_pInputBuffer);

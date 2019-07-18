@@ -39,7 +39,7 @@ double CAlgorithmLDADiscriminantFunction::getValue(const VectorXd& rFeatureVecto
 	return (m_oWeight.transpose() * rFeatureVector)(0) + m_f64Bias;
 }
 
-uint32 CAlgorithmLDADiscriminantFunction::getWeightVectorSize()
+uint32_t CAlgorithmLDADiscriminantFunction::getWeightVectorSize()
 {
 	return m_oWeight.size();
 }
@@ -75,7 +75,7 @@ XML::IXMLNode* CAlgorithmLDADiscriminantFunction::getConfiguration(void)
 
 
 	l_sWeigths << std::scientific;
-	for (int32 i = 0; i < m_oWeight.size(); i++)
+	for (int32_t i = 0; i < m_oWeight.size(); i++)
 	{
 		l_sWeigths << " " << m_oWeight(i, 0);
 	}

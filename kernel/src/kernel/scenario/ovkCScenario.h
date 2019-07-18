@@ -60,23 +60,23 @@ namespace OpenViBE
 			OpenViBE::CIdentifier getNextLinkIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const;
 
 			OpenViBE::CIdentifier getNextLinkIdentifierFromBox(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier) const;
-			OpenViBE::CIdentifier getNextLinkIdentifierFromBoxOutput(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 outputIndex) const;
+			OpenViBE::CIdentifier getNextLinkIdentifierFromBoxOutput(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier, const uint32_t outputIndex) const;
 			OpenViBE::CIdentifier getNextLinkIdentifierToBox(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier) const;
-			OpenViBE::CIdentifier getNextLinkIdentifierToBoxInput(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 inputInex) const;
+			OpenViBE::CIdentifier getNextLinkIdentifierToBoxInput(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputInex) const;
 			bool isLink(const OpenViBE::CIdentifier& boxIdentifier) const;
 
 			bool setHasIO(const bool hasIO);
 			bool hasIO() const;
-			bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex);
-			bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::CIdentifier& boxInputIdentifier);
-			bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxOutputIndex);
-			bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::CIdentifier& boxOutputIdentifier);
-			bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::uint32& boxInputIndex) const;
-			bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier& boxOutputIdentifier) const;
-			bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::uint32& boxOutputIndex) const;
-			bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier& boxOutputIdentifier) const;
-			bool removeScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex);
-			bool removeScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxOutputIndex);
+			bool setScenarioInputLink(const uint32_t scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const uint32_t boxInputIndex);
+			bool setScenarioInputLink(const uint32_t scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::CIdentifier& boxInputIdentifier);
+			bool setScenarioOutputLink(const uint32_t scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const uint32_t boxOutputIndex);
+			bool setScenarioOutputLink(const uint32_t scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::CIdentifier& boxOutputIdentifier);
+			bool getScenarioInputLink(const uint32_t scenarioInputIndex, OpenViBE::CIdentifier& boxIdentifier, uint32_t& boxInputIndex) const;
+			bool getScenarioInputLink(const uint32_t scenarioInputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier& boxOutputIdentifier) const;
+			bool getScenarioOutputLink(const uint32_t scenarioOutputIndex, OpenViBE::CIdentifier& boxIdentifier, uint32_t& boxOutputIndex) const;
+			bool getScenarioOutputLink(const uint32_t scenarioOutputIndex, OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier& boxOutputIdentifier) const;
+			bool removeScenarioInputLink(const uint32_t scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const uint32_t boxInputIndex);
+			bool removeScenarioOutputLink(const uint32_t scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const uint32_t boxOutputIndex);
 
 			bool removeScenarioInput(const uint32_t inputIndex);
 			bool removeScenarioOutput(const uint32_t outputIndex);
@@ -87,9 +87,9 @@ namespace OpenViBE
 			bool connect(
 				OpenViBE::CIdentifier& linkIdentifier,
 				const OpenViBE::CIdentifier& sourceBoxIdentifier,
-				const OpenViBE::uint32 sourceBoxOutputIndex,
+				const uint32_t sourceBoxOutputIndex,
 				const OpenViBE::CIdentifier& targetBoxIdentifier,
-				const OpenViBE::uint32 targetBoxInputIndex,
+				const uint32_t targetBoxInputIndex,
 				const OpenViBE::CIdentifier& suggestedLinkIdentifier);
 			bool connect(
 				OpenViBE::CIdentifier& linkIdentifier,
@@ -100,9 +100,9 @@ namespace OpenViBE
 				const OpenViBE::CIdentifier& suggestedLinkIdentifier);
 			bool disconnect(
 				const OpenViBE::CIdentifier& sourceBoxIdentifier,
-				const OpenViBE::uint32 sourceBoxOutputIndex,
+				const uint32_t sourceBoxOutputIndex,
 				const OpenViBE::CIdentifier& targetBoxIdentifier,
-				const OpenViBE::uint32 targetBoxInputIndex);
+				const uint32_t targetBoxInputIndex);
 			bool disconnect(
 				const OpenViBE::CIdentifier& sourceBoxIdentifier,
 				const OpenViBE::CIdentifier& sourceBoxOutputIdentifier,
@@ -176,8 +176,8 @@ namespace OpenViBE
 
 			bool m_HasIO;
 
-			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32>> m_ScenarioInputLinks;
-			mutable std::vector<std::pair<OpenViBE::CIdentifier, OpenViBE::uint32>> m_ScenarioOutputLinks;
+			mutable std::vector<std::pair<OpenViBE::CIdentifier, uint32_t>> m_ScenarioInputLinks;
+			mutable std::vector<std::pair<OpenViBE::CIdentifier, uint32_t>> m_ScenarioOutputLinks;
 
 			// Helper members. These are used for quick lookup of next identifiers for the purpose
 			// of the getNextMetadataIdentifier function.

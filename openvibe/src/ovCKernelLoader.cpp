@@ -31,7 +31,7 @@ namespace OpenViBE
 
 		_IsDerivedFromClass_Final_(IKernelLoader, OV_UndefinedIdentifier)
 
-		virtual bool isOpen(void) =0;
+		virtual bool isOpen(void) = 0;
 
 	protected:
 

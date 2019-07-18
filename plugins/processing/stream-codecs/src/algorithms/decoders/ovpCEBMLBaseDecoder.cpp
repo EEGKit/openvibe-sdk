@@ -83,6 +83,6 @@ void CEBMLBaseDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	}
 }
 
-void CEBMLBaseDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize) {}
+void CEBMLBaseDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize) {}
 
 void CEBMLBaseDecoder::closeChild(void) {}

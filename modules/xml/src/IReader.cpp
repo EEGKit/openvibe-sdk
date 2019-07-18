@@ -14,10 +14,10 @@ namespace XML
 	public:
 		explicit CReader(IReaderCallback& rReaderCallback);
 
-		virtual bool processData(const void* pBuffer, const uint64 ui64BufferSize);
+		virtual bool processData(const void* pBuffer, const uint64_t ui64BufferSize);
 		virtual void release(void);
 
-		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64 ui64AttributeCount);
+		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
 		virtual void processChildData(const char* sData);
 		virtual void closeChild(void);
 
@@ -43,7 +43,7 @@ CReader::CReader(IReaderCallback& rReaderCallback)
 	XML_SetUserData(m_pXMLParser, this);
 }
 
-bool CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
+bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	// $$$ TODO take 64bits size into consideration
 	XML_Status l_eStatus = XML_Parse(
@@ -67,7 +67,7 @@ void CReader::release(void)
 	delete this;
 }
 
-void CReader::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64 ui64AttributeCount)
+void CReader::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
 {
 	m_rReaderCallback.openChild(sName, sAttributeName, sAttributeValue, ui64AttributeCount);
 	m_sData = "";
@@ -95,7 +95,7 @@ XML_API IReader* XML::createReader(IReaderCallback& rReaderCallback)
 
 static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, const char** ppAttribute)
 {
-	uint64 i, l_ui64AttributeCount = 0;
+	uint64_t i, l_ui64AttributeCount = 0;
 	while (ppAttribute[l_ui64AttributeCount++]);
 	l_ui64AttributeCount >>= 1;
 

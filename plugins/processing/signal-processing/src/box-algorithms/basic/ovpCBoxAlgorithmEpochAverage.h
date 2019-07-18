@@ -20,7 +20,7 @@ namespace OpenViBEPlugins
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
 
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EpochAverage)
@@ -31,15 +31,15 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pMatrixAverage;
 
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> ip_ui64MatrixCount;
-			OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> ip_ui64AveragingMethod;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64MatrixCount;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64AveragingMethod;
 		};
 
 		class CBoxAlgorithmEpochAverageListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getInputType(ui32Index, l_oTypeIdentifier);
@@ -47,7 +47,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
@@ -79,8 +79,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmEpochAverageListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{
 				rPrototype.addInput("Input epochs", OV_TypeId_StreamedMatrix);
 				rPrototype.addOutput("Averaged epochs", OV_TypeId_StreamedMatrix);

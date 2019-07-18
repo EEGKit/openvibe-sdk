@@ -23,7 +23,7 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::uint64 getClockFrequency(void);
+			virtual uint64_t getClockFrequency(void);
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
 			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
@@ -49,10 +49,10 @@ namespace OpenViBEPlugins
 			OpenViBE::CString m_sFilename;
 
 			OpenViBE::CIdentifier m_oTypeIdentifier;
-			OpenViBE::uint32 m_ui32ColumnCount;
-			OpenViBE::uint64 m_ui64SamplingRate;
-			OpenViBE::uint32 m_ui32SamplesPerBuffer;
-			OpenViBE::uint32 m_ui32ChannelNumberPerBuffer;
+			uint32_t m_ui32ColumnCount;
+			uint64_t m_ui64SamplingRate;
+			uint32_t m_ui32SamplesPerBuffer;
+			uint32_t m_ui32ChannelNumberPerBuffer;
 
 			bool (OpenViBEPlugins::FileIO::CBoxAlgorithmCSVFileReader::*m_fpRealProcess)(void);
 
@@ -65,17 +65,17 @@ namespace OpenViBEPlugins
 
 			double m_f64NextTime;
 
-			OpenViBE::uint64 m_ui64ChunkStartTime;
-			OpenViBE::uint64 m_ui64ChunkEndTime;
+			uint64_t m_ui64ChunkStartTime;
+			uint64_t m_ui64ChunkEndTime;
 
-			static const OpenViBE::uint32 m_ui32bufferLen = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
+			static const uint32_t m_ui32bufferLen = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
 		};
 
 		class CBoxAlgorithmCSVFileReaderListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
@@ -143,8 +143,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmCSVFileReaderListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addOutput("Output stream", OV_TypeId_Signal);
 				rBoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "");

@@ -16,9 +16,9 @@ namespace Socket
 		*                       an available port.
 		*/
 		virtual bool listen(
-			uint32_t ui32Port) =0;
+			uint32_t ui32Port) = 0;
 
-		virtual Socket::IConnection* accept(void) =0;
+		virtual Socket::IConnection* accept(void) = 0;
 
 		/*
 		 * \brief Returns the port on the one the server is listening.

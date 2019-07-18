@@ -35,7 +35,7 @@ namespace OpenViBE
 			 * \return \e OV_UndefinedIdentifier in case of error.
 			 */
 			virtual OpenViBE::CIdentifier createAlgorithm(
-				const OpenViBE::CIdentifier& rAlgorithmClassIdentifier) =0;
+				const OpenViBE::CIdentifier& rAlgorithmClassIdentifier) = 0;
 			/**
 			  * \brief Creates a new algorithm
 			  * \param rAlgorithmDesc [in] : the algorithm descriptor of
@@ -44,7 +44,7 @@ namespace OpenViBE
 			  * \return \e OV_UndefinedIdentifier
 			  */
 			virtual OpenViBE::CIdentifier createAlgorithm(
-				const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc) =0;
+				const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc) = 0;
 
 			/**
 			 * \brief Releases an existing algorithm
@@ -53,7 +53,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool releaseAlgorithm(
-				const OpenViBE::CIdentifier& rAlgorithmIdentifier) =0;
+				const OpenViBE::CIdentifier& rAlgorithmIdentifier) = 0;
 			/**
 			 * \brief Releases an existing algorithm
 			 * \param rAlgorithm [in] : the existing algorithm
@@ -61,7 +61,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 */
 			virtual bool releaseAlgorithm(
-				OpenViBE::Kernel::IAlgorithmProxy& rAlgorithm) =0;
+				OpenViBE::Kernel::IAlgorithmProxy& rAlgorithm) = 0;
 			/**
 			 * \brief Gets details on a specific algorithm
 			 * \param rAlgorithmIdentifier [in] : the algorithm identifier which details should be returned
@@ -69,7 +69,7 @@ namespace OpenViBE
 			 * \warning Calling this function with a bad identifier causes a crash
 			 */
 			virtual OpenViBE::Kernel::IAlgorithmProxy& getAlgorithm(
-				const OpenViBE::CIdentifier& rAlgorithmIdentifier) =0;
+				const OpenViBE::CIdentifier& rAlgorithmIdentifier) = 0;
 			/**
 			 * \brief Gets next algorithm identifier
 			 * \param rPreviousIdentifier [in] : The identifier
@@ -81,7 +81,7 @@ namespace OpenViBE
 			 *       identifier.
 			 */
 			virtual OpenViBE::CIdentifier getNextAlgorithmIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const =0;
+				const OpenViBE::CIdentifier& rPreviousIdentifier) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmManager);
 		};

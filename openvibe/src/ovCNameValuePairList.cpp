@@ -103,7 +103,7 @@ bool CNameValuePairList::getValue(const CString& rName, bool& rValue) const
 	else { return false; }
 }
 
-bool CNameValuePairList::getValue(const uint32 rIndex, OpenViBE::CString& rName, OpenViBE::CString& rValue) const
+bool CNameValuePairList::getValue(const uint32_t rIndex, OpenViBE::CString& rName, OpenViBE::CString& rValue) const
 {
 	if (rIndex >= this->getSize()) { return false; }
 	std::map<CString, CString>::const_iterator it = m_pNameValuePairListImpl->m_oMap.begin();
@@ -113,7 +113,7 @@ bool CNameValuePairList::getValue(const uint32 rIndex, OpenViBE::CString& rName,
 	return true;
 }
 
-uint32 CNameValuePairList::getSize() const
+uint32_t CNameValuePairList::getSize() const
 {
-	return static_cast<uint32>(m_pNameValuePairListImpl->m_oMap.size());
+	return static_cast<uint32_t>(m_pNameValuePairListImpl->m_oMap.size());
 }

@@ -63,7 +63,7 @@
  *   {
  *     if(m_pFile) fclose(m_pFile);
  *   }
- *   virtual void write(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+ *   virtual void write(const void* pBuffer, const uint64_t ui64BufferSize)
  *   {
  *     if(m_pFile) fwrite(pBuffer, ui64BufferSize, 1, m_pFile);
  *   }

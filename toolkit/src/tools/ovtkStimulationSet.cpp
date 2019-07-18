@@ -2,58 +2,52 @@
 
 using namespace OpenViBE;
 
-bool OpenViBEToolkit::Tools::StimulationSet::shift(IStimulationSet& rStimulationSet, const uint64 ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::shift(IStimulationSet& rStimulationSet, const uint64_t ui64TimeShift)
 {
-	uint64 l_ui64StimulationCount = rStimulationSet.getStimulationCount();
-	for (uint64 i = 0; i < l_ui64StimulationCount; i++)
+	uint64_t count = rStimulationSet.getStimulationCount();
+	for (uint64_t i = 0; i < count; i++)
 	{
 		rStimulationSet.setStimulationDate(i, rStimulationSet.getStimulationDate(i) + ui64TimeShift);
 	}
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::copy(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64 ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::copy(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64_t ui64TimeShift)
 {
 	rDestinationStimulationSet.clear();
 	return append(rDestinationStimulationSet, rSourceStimulationSet, ui64TimeShift);
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64 ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64_t ui64TimeShift)
 {
-	uint64 l_ui64StimulationCount = rSourceStimulationSet.getStimulationCount();
-	for (uint64 i = 0; i < l_ui64StimulationCount; i++)
+	uint64_t count = rSourceStimulationSet.getStimulationCount();
+	for (uint64_t i = 0; i < count; i++)
 	{
-		rDestinationStimulationSet.appendStimulation(
-			rSourceStimulationSet.getStimulationIdentifier(i),
-			rSourceStimulationSet.getStimulationDate(i) + ui64TimeShift,
-			rSourceStimulationSet.getStimulationDuration(i));
+		rDestinationStimulationSet.appendStimulation(rSourceStimulationSet.getStimulationIdentifier(i), rSourceStimulationSet.getStimulationDate(i) + ui64TimeShift, rSourceStimulationSet.getStimulationDuration(i));
 	}
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64 ui64SourceStartTime, const uint64 ui64SourceEndTime, const uint64 ui64TimeShift)
+bool OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64_t ui64SourceStartTime, const uint64_t ui64SourceEndTime, const uint64_t ui64TimeShift)
 {
-	uint64 l_ui64StimulationCount = rSourceStimulationSet.getStimulationCount();
-	for (uint64 i = 0; i < l_ui64StimulationCount; i++)
+	uint64_t count = rSourceStimulationSet.getStimulationCount();
+	for (uint64_t i = 0; i < count; i++)
 	{
-		uint64 l_ui64StimulationDate = rSourceStimulationSet.getStimulationDate(i);
-		if (ui64SourceStartTime <= l_ui64StimulationDate && l_ui64StimulationDate < ui64SourceEndTime)
+		uint64_t date = rSourceStimulationSet.getStimulationDate(i);
+		if (ui64SourceStartTime <= date && date < ui64SourceEndTime)
 		{
-			rDestinationStimulationSet.appendStimulation(
-				rSourceStimulationSet.getStimulationIdentifier(i),
-				rSourceStimulationSet.getStimulationDate(i) + ui64TimeShift,
-				rSourceStimulationSet.getStimulationDuration(i));
+			rDestinationStimulationSet.appendStimulation(rSourceStimulationSet.getStimulationIdentifier(i), rSourceStimulationSet.getStimulationDate(i) + ui64TimeShift, rSourceStimulationSet.getStimulationDuration(i));
 		}
 	}
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::StimulationSet::removeRange(IStimulationSet& rStimulationSet, const uint64 ui64StartTime, const uint64 ui64EndTime)
+bool OpenViBEToolkit::Tools::StimulationSet::removeRange(IStimulationSet& rStimulationSet, const uint64_t ui64StartTime, const uint64_t ui64EndTime)
 {
-	for (uint64 i = 0; i < rStimulationSet.getStimulationCount(); i++)
+	for (uint64_t i = 0; i < rStimulationSet.getStimulationCount(); i++)
 	{
-		uint64 l_ui64StimulationDate = rStimulationSet.getStimulationDate(i);
-		if (ui64StartTime <= l_ui64StimulationDate && l_ui64StimulationDate < ui64EndTime)
+		uint64_t date = rStimulationSet.getStimulationDate(i);
+		if (ui64StartTime <= date && date < ui64EndTime)
 		{
 			rStimulationSet.removeStimulation(i--);
 		}

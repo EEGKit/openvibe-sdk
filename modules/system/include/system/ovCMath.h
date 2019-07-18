@@ -16,20 +16,20 @@ namespace System
 	{
 	public:
 
-		static bool initializeRandomMachine(const System::uint64 ui64RandomSeed);
+		static bool initializeRandomMachine(const uint64_t ui64RandomSeed);
 
-		static System::uint8 randomUInteger8(void);
-		static System::uint16 randomUInteger16(void);
-		static System::uint32 randomUInteger32(void);
-		static System::uint64 randomUInteger64(void);
+		static uint8_t randomUInteger8(void);
+		static uint16_t randomUInteger16(void);
+		static uint32_t randomUInteger32(void);
+		static uint64_t randomUInteger64(void);
 
 		// returns a value in [0,ui32upperLimit( -- i.e. ui32upperLimit not included in range
-		static System::uint32 randomUInteger32WithCeiling(uint32 ui32upperLimit);
+		static uint32_t randomUInteger32WithCeiling(uint32_t ui32upperLimit);
 
-		static System::int8 randomSInteger8(void);
-		static System::int16 randomSInteger16(void);
-		static System::int32 randomSInteger32(void);
-		static System::int64 randomSInteger64(void);
+		static int8_t randomSInteger8(void);
+		static int16_t randomSInteger16(void);
+		static int32_t randomSInteger32(void);
+		static int64_t randomSInteger64(void);
 
 		static float randomFloat32(void);
 		static float randomFloat32BetweenZeroAndOne(void);

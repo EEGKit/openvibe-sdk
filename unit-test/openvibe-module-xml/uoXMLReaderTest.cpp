@@ -49,7 +49,7 @@ public:
 
 protected:
 
-	virtual void openChild(const char* name, const char** attributeName, const char** attributeValue, XML::uint64 attributeCount) override
+	virtual void openChild(const char* name, const char** attributeName, const char** attributeValue, uint64_t attributeCount) override
 	{
 		auto node = std::make_shared<Node>();
 
@@ -62,7 +62,7 @@ protected:
 		currentNode       = node;
 		currentNode->name = name;
 
-		for (XML::uint64 i = 0; i < attributeCount; i++)
+		for (uint64_t i = 0; i < attributeCount; i++)
 		{
 			currentNode->attributes[attributeName[i]] = attributeValue[i];
 		}

@@ -18,7 +18,7 @@ namespace XML
 
 		//Parsing
 		virtual XML::IXMLNode* parseFile(const char* sPath);
-		virtual XML::IXMLNode* parseString(const char* sString, const uint32& uiSize);
+		virtual XML::IXMLNode* parseString(const char* sString, const uint32_t& uiSize);
 
 		//XML extraction
 		virtual bool writeXMLInFile(const IXMLNode& rNode, const char* sPath) const;
@@ -27,7 +27,7 @@ namespace XML
 		virtual std::string getLastErrorString() const;
 
 		//Internal function for parsing
-		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64 ui64AttributeCount);
+		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
 		virtual void processChildData(const char* sData);
 		virtual void closeChild(void);
 
@@ -86,11 +86,11 @@ IXMLNode* IXMLHandlerImpl::parseFile(const char* sPath)
 	if (l_oFile.is_open())
 	{
 		char* l_sBuffer;
-		uint32 l_iFileLen;
+		uint32_t l_iFileLen;
 
 		//Compute size
 		l_oFile.seekg(0, ios::end);
-		l_iFileLen = static_cast<uint32>(l_oFile.tellg());
+		l_iFileLen = static_cast<uint32_t>(l_oFile.tellg());
 		l_oFile.seekg(0, ios::beg);
 
 		//Read the file
@@ -108,7 +108,7 @@ IXMLNode* IXMLHandlerImpl::parseFile(const char* sPath)
 	return NULL;
 }
 
-IXMLNode* IXMLHandlerImpl::parseString(const char* sString, const uint32& uiSize)
+IXMLNode* IXMLHandlerImpl::parseString(const char* sString, const uint32_t& uiSize)
 {
 	m_pRootNode          = NULL;
 	XML_Status l_eStatus = XML_Parse(m_pXMLParser, sString, uiSize, false);
@@ -147,10 +147,10 @@ bool IXMLHandlerImpl::writeXMLInFile(const IXMLNode& rNode, const char* sPath) c
 	return false;
 }
 
-void IXMLHandlerImpl::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64 ui64AttributeCount)
+void IXMLHandlerImpl::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
 {
 	IXMLNode* l_pNode = createNode(sName);
-	for (uint32 i = 0; i < ui64AttributeCount; ++i)
+	for (uint32_t i = 0; i < ui64AttributeCount; ++i)
 	{
 		l_pNode->addAttribute(sAttributeName[i], sAttributeValue[i]);
 	}
@@ -194,7 +194,7 @@ std::string IXMLHandlerImpl::getLastErrorString() const
 
 static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, const char** ppAttribute)
 {
-	uint64 l_ui64AttributeCount = 0;
+	uint64_t l_ui64AttributeCount = 0;
 	while (ppAttribute[l_ui64AttributeCount++]);
 	l_ui64AttributeCount >>= 1;
 
@@ -202,7 +202,7 @@ static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, cons
 	const char** l_pAttributeName  = new const char*[static_cast<size_t>(l_ui64AttributeCount)];
 	const char** l_pAttributeValue = new const char*[static_cast<size_t>(l_ui64AttributeCount)];
 
-	for (uint64 i = 0; i < l_ui64AttributeCount; i++)
+	for (uint64_t i = 0; i < l_ui64AttributeCount; i++)
 	{
 		l_pAttributeName[i]  = ppAttribute[(i << 1)];
 		l_pAttributeValue[i] = ppAttribute[(i << 1) + 1];

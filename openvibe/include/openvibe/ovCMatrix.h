@@ -45,23 +45,23 @@ namespace OpenViBE
 
 		//@}
 
-		virtual const OpenViBE::uint32 getDimensionCount(void) const;
-		virtual const OpenViBE::uint32 getDimensionSize(
-			const OpenViBE::uint32 ui32DimensionIndex) const;
+		virtual const uint32_t getDimensionCount(void) const;
+		virtual const uint32_t getDimensionSize(
+			const uint32_t ui32DimensionIndex) const;
 		virtual const char* getDimensionLabel(
-			const OpenViBE::uint32 ui32DimensionIndex,
-			const OpenViBE::uint32 ui32DimensionEntryIndex) const;
+			const uint32_t ui32DimensionIndex,
+			const uint32_t ui32DimensionEntryIndex) const;
 		virtual const double* getBuffer(void) const;
-		virtual const OpenViBE::uint32 getBufferElementCount(void) const;
+		virtual const uint32_t getBufferElementCount(void) const;
 
 		virtual bool setDimensionCount(
-			const OpenViBE::uint32 ui32DimensionCount);
+			const uint32_t ui32DimensionCount);
 		virtual bool setDimensionSize(
-			const OpenViBE::uint32 ui32DimensionIndex,
-			const OpenViBE::uint32 ui32DimensionSize);
+			const uint32_t ui32DimensionIndex,
+			const uint32_t ui32DimensionSize);
 		virtual bool setDimensionLabel(
-			const OpenViBE::uint32 ui32DimensionIndex,
-			const OpenViBE::uint32 ui32DimensionEntryIndex,
+			const uint32_t ui32DimensionIndex,
+			const uint32_t ui32DimensionEntryIndex,
 			const char* sDimensionLabel);
 		virtual double* getBuffer(void);
 

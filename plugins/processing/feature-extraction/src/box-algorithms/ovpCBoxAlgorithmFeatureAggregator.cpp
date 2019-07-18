@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 			m_ui32NumberOfInput = getBoxAlgorithmContext()->getStaticBoxContext()->getInputCount();
 
 			// Prepares decoders
-			for (uint32 i = 0; i < m_ui32NumberOfInput; i++)
+			for (uint32_t i = 0; i < m_ui32NumberOfInput; i++)
 			{
 				TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>* l_pStreamedMatrixDecoder = new TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>();
 				m_pStreamedMatrixDecoder.push_back(l_pStreamedMatrixDecoder);
@@ -53,7 +53,7 @@ namespace OpenViBEPlugins
 
 		bool CBoxAlgorithmFeatureAggregator::uninitialize()
 		{
-			for (uint32 i = 0; i < m_ui32NumberOfInput; i++)
+			for (uint32_t i = 0; i < m_ui32NumberOfInput; i++)
 			{
 				if (m_pStreamedMatrixDecoder.back())
 				{
@@ -72,26 +72,26 @@ namespace OpenViBEPlugins
 			return true;
 		}
 
-		bool CBoxAlgorithmFeatureAggregator::processInput(uint32 ui32InputIndex)
+		bool CBoxAlgorithmFeatureAggregator::processInput(uint32_t ui32InputIndex)
 		{
 			IBoxIO* l_pBoxIO = getBoxAlgorithmContext()->getDynamicBoxContext();
 
-			uint64 l_ui64LastBufferChunkSize;
-			const uint8* l_pLastBuffer;
+			uint64_t l_ui64LastBufferChunkSize;
+			const uint8_t* l_pLastBuffer;
 
-			uint64 l_ui64CurrentBufferChunkSize;
-			const uint8* l_pCurrentBuffer;
+			uint64_t l_ui64CurrentBufferChunkSize;
+			const uint8_t* l_pCurrentBuffer;
 
 			//gets the first buffer from the concerned input
 			l_pBoxIO->getInputChunk(ui32InputIndex, 0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime, l_ui64LastBufferChunkSize, l_pLastBuffer);
 
-			uint64 l_ui64StartTime = 0;
-			uint64 l_ui64EndTime   = 0;
+			uint64_t l_ui64StartTime = 0;
+			uint64_t l_ui64EndTime   = 0;
 
 			bool l_bReadyToProcess = true;
 
 			//checks every input's first chunk's dates
-			for (uint32 i = 0; i < m_ui32NumberOfInput && l_bReadyToProcess; i++)
+			for (uint32_t i = 0; i < m_ui32NumberOfInput && l_bReadyToProcess; i++)
 			{
 				if (l_pBoxIO->getInputChunkCount(i) != 0)
 				{
@@ -106,9 +106,9 @@ namespace OpenViBEPlugins
 					if (l_ui64EndTime - l_ui64StartTime != m_ui64LastChunkEndTime - m_ui64LastChunkStartTime)
 					{
 						//marks everything as deprecated and sends a warning
-						for (uint32 input = 0; input < m_ui32NumberOfInput; input++)
+						for (uint32_t input = 0; input < m_ui32NumberOfInput; input++)
 						{
-							for (uint32 chunk = 0; chunk < l_pBoxIO->getInputChunkCount(input); chunk++)
+							for (uint32_t chunk = 0; chunk < l_pBoxIO->getInputChunkCount(input); chunk++)
 							{
 								l_pBoxIO->markInputAsDeprecated(input, chunk);
 							}
@@ -144,10 +144,10 @@ namespace OpenViBEPlugins
 
 			IMatrix* l_pOutputMatrix = m_pFeatureVectorEncoder->getInputMatrix();
 			std::vector<double> l_vBufferElements;
-			uint64 l_ui64TotalBufferSize = 0;
+			uint64_t l_ui64TotalBufferSize = 0;
 			bool l_bBufferReceived    = false;
 
-			for (uint32 input = 0; input < l_pStaticBoxContext->getInputCount(); input++)
+			for (uint32_t input = 0; input < l_pStaticBoxContext->getInputCount(); input++)
 			{
 				m_pStreamedMatrixDecoder[input]->decode(0);
 				//*
@@ -159,9 +159,9 @@ namespace OpenViBEPlugins
 					if (input == l_pStaticBoxContext->getInputCount() - 1)
 					{
 						l_pOutputMatrix->setDimensionCount(1);
-						l_pOutputMatrix->setDimensionSize(0, (uint32)l_ui64TotalBufferSize);
+						l_pOutputMatrix->setDimensionSize(0, (uint32_t)l_ui64TotalBufferSize);
 
-						for (uint32 i = 0; i < (uint32)l_ui64TotalBufferSize; i++)
+						for (uint32_t i = 0; i < (uint32_t)l_ui64TotalBufferSize; i++)
 						{
 							char l_sBuffer[64];
 							sprintf(l_sBuffer, "Feature %d", (i + 1));
@@ -178,10 +178,10 @@ namespace OpenViBEPlugins
 				{
 					l_bBufferReceived       = true;
 					IMatrix* l_pInputMatrix = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
-					uint32 l_ui32BufferSize = l_pInputMatrix->getBufferElementCount();
+					uint32_t l_ui32BufferSize = l_pInputMatrix->getBufferElementCount();
 
 					double* l_pBuffer = l_pInputMatrix->getBuffer();
-					for (uint32 i = 0; i < l_ui32BufferSize; i++)
+					for (uint32_t i = 0; i < l_ui32BufferSize; i++)
 					{
 						l_vBufferElements.push_back(l_pBuffer[i]);
 					}
@@ -191,7 +191,7 @@ namespace OpenViBEPlugins
 			if (m_bHeaderSent && l_bBufferReceived)
 			{
 				double* l_pOutputBuffer = l_pOutputMatrix->getBuffer();
-				for (uint32 i = 0; i < l_vBufferElements.size(); i++)
+				for (uint32_t i = 0; i < l_vBufferElements.size(); i++)
 				{
 					l_pOutputBuffer[i] = l_vBufferElements[i];
 				}

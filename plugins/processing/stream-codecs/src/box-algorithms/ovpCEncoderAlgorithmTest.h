@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::uint64 getClockFrequency(void) { return 1LL << 32; }
+			virtual uint64_t getClockFrequency(void) { return 1LL << 32; }
 
 			virtual bool initialize(void);
 			virtual bool uininitialize(void);
@@ -32,8 +32,8 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer[7];
 
 			bool m_bHasSentHeader;
-			OpenViBE::uint64 m_ui64StartTime;
-			OpenViBE::uint64 m_ui64EndTime;
+			uint64_t m_ui64StartTime;
+			uint64_t m_ui64EndTime;
 
 			OpenViBE::CMatrix* m_pMatrix1;
 			OpenViBE::CMatrix* m_pMatrix2;
@@ -57,8 +57,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CEncoderAlgorithmTest(); }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{
 				rPrototype.addOutput("Experiment information", OV_TypeId_ExperimentInformation);
 				rPrototype.addOutput("Feature vector", OV_TypeId_FeatureVector);

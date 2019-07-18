@@ -371,14 +371,14 @@ namespace OpenViBE
 		if (returnCode == PlayerReturnCode::Success)
 		{
 			// loop until timeout
-			uint64 startTime    = System::Time::zgetTime();
-			uint64 lastLoopTime = startTime;
+			uint64_t startTime    = System::Time::zgetTime();
+			uint64_t lastLoopTime = startTime;
 
 			// cannot directly feed secondsToTime with parameters.m_MaximumExecutionTime
 			// because it could overflow
-			double boundedMaxExecutionTimeInS = ITimeArithmetics::timeToSeconds(std::numeric_limits<uint64>::max());
+			double boundedMaxExecutionTimeInS = ITimeArithmetics::timeToSeconds(std::numeric_limits<uint64_t>::max());
 
-			uint64 maxExecutionTimeInFixedPoint;
+			uint64_t maxExecutionTimeInFixedPoint;
 			if (command.maximumExecutionTime &&
 				command.maximumExecutionTime.get() > 0 &&
 				command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS)
@@ -387,13 +387,13 @@ namespace OpenViBE
 			}
 			else
 			{
-				maxExecutionTimeInFixedPoint = std::numeric_limits<uint64>::max();
+				maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max();
 			}
 
 			bool allStopped{ false };
 			while (!allStopped) // negative condition here because it is easier to reason about it
 			{
-				uint64 currentTime = System::Time::zgetTime();
+				uint64_t currentTime = System::Time::zgetTime();
 				allStopped         = true;
 				for (auto p : playerList)
 				{

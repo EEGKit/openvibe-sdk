@@ -70,7 +70,7 @@ CIdentifier CPlayerManager::getNextPlayerIdentifier(
 
 CIdentifier CPlayerManager::getUnusedIdentifier(void) const
 {
-	uint64 l_ui64Identifier = System::Math::randomUInteger64();
+	uint64_t l_ui64Identifier = System::Math::randomUInteger64();
 	CIdentifier l_oResult;
 	map<CIdentifier, CPlayer*>::const_iterator i;
 	do

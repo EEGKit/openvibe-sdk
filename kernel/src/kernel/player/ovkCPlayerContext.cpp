@@ -40,19 +40,19 @@ bool CPlayerContext::sendMessage(
 bool CPlayerContext::sendMessage(
 	const CMessageEvent& rMessageEvent,
 	const CIdentifier* pTargetIdentifier,
-	const uint32 ui32TargetIdentifierCount)
+	const uint32_t ui32TargetIdentifierCount)
 {
 	// TODO
 	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
 	return false;
 }
 
-uint64 CPlayerContext::getCurrentTime(void) const
+uint64_t CPlayerContext::getCurrentTime(void) const
 {
 	return m_rSimulatedBox.getScheduler().getCurrentTime();
 }
 
-uint64 CPlayerContext::getCurrentLateness(void) const
+uint64_t CPlayerContext::getCurrentLateness(void) const
 {
 	return m_rSimulatedBox.getScheduler().getCurrentLateness();
 }

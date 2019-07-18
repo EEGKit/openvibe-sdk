@@ -11,14 +11,13 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TBoxAlgorithm(void)
-			: m_pBoxAlgorithmContext(NULL) { }
+		TBoxAlgorithm(void) : m_pBoxAlgorithmContext(NULL) { }
 
 		// ====================================================================================================================================
 
 	private:
 
-		virtual OpenViBE::uint64 getClockFrequency(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext)
+		virtual uint64_t getClockFrequency(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext)
 		{
 			CScopedBoxAlgorithm l_oScopedBoxAlgorithm(m_pBoxAlgorithmContext, &rBoxAlgorithmContext);
 			return getClockFrequency();
@@ -54,7 +53,7 @@ namespace OpenViBEToolkit
 			return processClock(rMessageClock);
 		}
 
-		virtual bool processInput(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, OpenViBE::uint32 ui32InputIndex)
+		virtual bool processInput(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, uint32_t ui32InputIndex)
 		{
 			CScopedBoxAlgorithm l_oScopedBoxAlgorithm(m_pBoxAlgorithmContext, &rBoxAlgorithmContext);
 			return processInput(ui32InputIndex);
@@ -70,14 +69,14 @@ namespace OpenViBEToolkit
 
 	public:
 
-		virtual OpenViBE::uint64 getClockFrequency(void) { return 0; }
+		virtual uint64_t getClockFrequency(void) { return 0; }
 		virtual bool initialize(void) { return true; }
 		virtual bool uninitialize(void) { return true; }
 		virtual bool processEvent(OpenViBE::CMessageEvent& rMessageEvent) { return false; }
 		virtual bool processSignal(OpenViBE::CMessageSignal& rMessageSignal) { return false; }
 		virtual bool processClock(OpenViBE::CMessageClock& rMessageClock) { return false; }
-		virtual bool processInput(OpenViBE::uint32 ui32InputIndex) { return false; }
-		virtual bool process(void) =0;
+		virtual bool processInput(uint32_t ui32InputIndex) { return false; }
+		virtual bool process(void) = 0;
 
 		// ====================================================================================================================================
 
@@ -111,7 +110,7 @@ namespace OpenViBEToolkit
 
 		// ====================================================================================================================================
 
-		virtual void appendOutputChunkData(const OpenViBE::uint32 ui32OutputIndex, const void* pBuffer, const OpenViBE::uint64 ui64BufferSize)
+		virtual void appendOutputChunkData(const uint32_t ui32OutputIndex, const void* pBuffer, const uint64_t ui64BufferSize)
 		{
 			OpenViBE::Kernel::IBoxAlgorithmContext* l_pBoxAlgorithmContext = this->getBoxAlgorithmContext();
 			if (l_pBoxAlgorithmContext)
@@ -119,13 +118,13 @@ namespace OpenViBEToolkit
 				OpenViBE::Kernel::IBoxIO* l_pDynamicBoxContext = l_pBoxAlgorithmContext->getDynamicBoxContext();
 				if (l_pDynamicBoxContext)
 				{
-					l_pDynamicBoxContext->appendOutputChunkData(ui32OutputIndex, static_cast<const OpenViBE::uint8*>(pBuffer), ui64BufferSize);
+					l_pDynamicBoxContext->appendOutputChunkData(ui32OutputIndex, static_cast<const uint8_t*>(pBuffer), ui64BufferSize);
 				}
 			}
 		}
 
-		template <OpenViBE::uint32 ui32OutputIndex>
-		void appendOutputChunkData(const void* pBuffer, const OpenViBE::uint64 ui64BufferSize)
+		template <uint32_t ui32OutputIndex>
+		void appendOutputChunkData(const void* pBuffer, const uint64_t ui64BufferSize)
 		{
 			appendOutputChunkData(ui32OutputIndex, pBuffer, ui64BufferSize);
 		}
@@ -137,7 +136,7 @@ namespace OpenViBEToolkit
 		class FSettingValueAutoCast
 		{
 		public:
-			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const OpenViBE::uint32 ui32Index)
+			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const uint32_t ui32Index)
 				: m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
 				  , m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
 				  , m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
@@ -167,93 +166,68 @@ namespace OpenViBEToolkit
 				rBoxAlgorithmContext.getStaticBoxContext()->getInterfacorType(OpenViBE::Kernel::BoxInterfacorType::Setting, rIdentifier, m_oSettingType);
 			}
 
-			operator OpenViBE::uint32(void)
+			operator uint32_t(void)
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 
-				OV_ERROR_UNLESS(
-					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
-					"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 32bits.",
-					OpenViBE::Kernel::ErrorType::BadParsing,
-					std::numeric_limits<OpenViBE::uint32>::max(),
-					m_rErrorManager,
-					m_rLogManager
-				);
+				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
+								"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 32bits.",
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint32_t>::max(), m_rErrorManager, m_rLogManager);
 
-				return static_cast<OpenViBE::uint32>(l_dResult);
+				return static_cast<uint32_t>(l_dResult);
 			}
 
-			operator OpenViBE::uint64(void)
+			operator uint64_t(void)
 			{
-				OpenViBE::uint64 l_ui64StimId     = std::numeric_limits<OpenViBE::uint64>::max();
+				uint64_t l_ui64StimId     = std::numeric_limits<uint64_t>::max();
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 				double l_dResult;
 				if (m_rTypeManager.isEnumeration(m_oSettingType))
 				{
 					l_ui64StimId = m_rTypeManager.getEnumerationEntryValueFromName(m_oSettingType, l_sSettingValue);
 
-					OV_ERROR_UNLESS(
-						l_ui64StimId != std::numeric_limits<OpenViBE::uint64>::max(),
-						"Did not find an enumeration value for [" << m_rTypeManager.getTypeName(m_oSettingType) << "] = [" << m_sSettingValue << "]",
-						OpenViBE::Kernel::ErrorType::BadParsing,
-						std::numeric_limits<OpenViBE::uint64>::max(),
-						m_rErrorManager,
-						m_rLogManager
-					);
+					OV_ERROR_UNLESS(l_ui64StimId != std::numeric_limits<uint64_t>::max(),
+									"Did not find an enumeration value for [" << m_rTypeManager.getTypeName(m_oSettingType) << "] = [" << m_sSettingValue << "]",
+									OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_rErrorManager, m_rLogManager);
 				}
 				else if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
 				{
-					return static_cast<OpenViBE::uint64>(l_dResult);
+					return static_cast<uint64_t>(l_dResult);
 				}
 
 				// Seems like currently some plugins use FSettingValueAutoCast without knowing then setting type.
 				// In this case, to avoid to pollute the console with useless messages, throw a message only if the
 				// setting should be an integer.
-				OV_ERROR_UNLESS(
-					l_ui64StimId != std::numeric_limits<OpenViBE::uint64>::max() || m_oSettingType != OV_TypeId_Integer,
-					"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 64bits.",
-					OpenViBE::Kernel::ErrorType::BadParsing,
-					std::numeric_limits<OpenViBE::uint64>::max(),
-					m_rErrorManager,
-					m_rLogManager
-				);
+				OV_ERROR_UNLESS(l_ui64StimId != std::numeric_limits<uint64_t>::max() || m_oSettingType != OV_TypeId_Integer,
+								"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 64bits.",
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_rErrorManager, m_rLogManager);
 
 				return l_ui64StimId;
 			}
 
-			operator OpenViBE::int32(void)
+			operator int32_t(void)
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 
-				OV_ERROR_UNLESS(
-					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
+				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult), 
 					"Could not expand numeric expression [" << m_sSettingValue << "] to integer 32bits.",
-					OpenViBE::Kernel::ErrorType::BadParsing,
-					std::numeric_limits<OpenViBE::int32>::max(),
-					m_rErrorManager,
-					m_rLogManager
-				);
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int32_t>::max(), m_rErrorManager, m_rLogManager);
 
-				return static_cast<OpenViBE::int32>(l_dResult);
+				return static_cast<int32_t>(l_dResult);
 			}
 
-			operator OpenViBE::int64(void)
+			operator int64_t(void)
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 
-				OV_ERROR_UNLESS(
-					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
-					"Could not expand numeric expression [" << m_sSettingValue << "] to integer 64bits.",
-					OpenViBE::Kernel::ErrorType::BadParsing,
-					std::numeric_limits<OpenViBE::int64>::max(),
-					m_rErrorManager,
-					m_rLogManager
-				);
+				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult), 
+								"Could not expand numeric expression [" << m_sSettingValue << "] to integer 64bits.",
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int64_t>::max(), m_rErrorManager, m_rLogManager);
 
-				return static_cast<OpenViBE::int64>(l_dResult);;
+				return static_cast<int64_t>(l_dResult);;
 			}
 
 			operator double(void)
@@ -261,27 +235,15 @@ namespace OpenViBEToolkit
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 
-				OV_ERROR_UNLESS(
-					m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
-					"Could not expand numeric expression [" << m_sSettingValue << "] to float.",
-					OpenViBE::Kernel::ErrorType::BadParsing,
-					std::numeric_limits<double>::max(),
-					m_rErrorManager,
-					m_rLogManager
-				);
+				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult), "Could not expand numeric expression [" << m_sSettingValue << "] to float.", 
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<double>::max(), m_rErrorManager, m_rLogManager);
 
 				return static_cast<double>(l_dResult);
 			}
 
-			operator bool(void)
-			{
-				return m_rConfigurationManager.expandAsBoolean(m_sSettingValue);
-			}
+			operator bool(void) { return m_rConfigurationManager.expandAsBoolean(m_sSettingValue); }
 
-			operator OpenViBE::CString(void)
-			{
-				return m_rConfigurationManager.expand(m_sSettingValue);
-			}
+			operator OpenViBE::CString(void) { return m_rConfigurationManager.expand(m_sSettingValue); }
 
 		private:
 			OpenViBE::Kernel::ILogManager& m_rLogManager;
@@ -303,10 +265,7 @@ namespace OpenViBEToolkit
 				m_rpBoxAlgorithmContext = pBoxAlgorithmContext;
 			}
 
-			virtual ~CScopedBoxAlgorithm(void)
-			{
-				m_rpBoxAlgorithmContext = NULL;
-			}
+			virtual ~CScopedBoxAlgorithm(void) { m_rpBoxAlgorithmContext = NULL; }
 
 		protected:
 			OpenViBE::Kernel::IBoxAlgorithmContext*& m_rpBoxAlgorithmContext;
@@ -320,28 +279,23 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TBoxListener(void)
-			: m_pBoxListenerContext(NULL) { }
+		TBoxListener(void) : m_pBoxListenerContext(NULL) { }
 
 	private:
 
-		virtual bool initialize(
-			OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext)
+		virtual bool initialize(OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext)
 		{
 			CScopedBoxListener l_oScopedBoxListener(m_pBoxListenerContext, &rBoxListenerContext);
 			return initialize();
 		}
 
-		virtual bool uninitialize(
-			OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext)
+		virtual bool uninitialize(OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext)
 		{
 			CScopedBoxListener l_oScopedBoxListener(m_pBoxListenerContext, &rBoxListenerContext);
 			return uninitialize();
 		}
 
-		virtual bool process(
-			OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext,
-			const OpenViBE::Kernel::EBoxModification eBoxModificationType)
+		virtual bool process(OpenViBE::Kernel::IBoxListenerContext& rBoxListenerContext, const OpenViBE::Kernel::EBoxModification eBoxModificationType)
 		{
 			CScopedBoxListener l_oScopedBoxListener(m_pBoxListenerContext, &rBoxListenerContext);
 			switch (eBoxModificationType)
@@ -369,7 +323,7 @@ namespace OpenViBEToolkit
 				case OpenViBE::Kernel::BoxModification_SettingNameChanged: return this->onSettingNameChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
 				case OpenViBE::Kernel::BoxModification_SettingDefaultValueChanged: return this->onSettingDefaultValueChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
 				case OpenViBE::Kernel::BoxModification_SettingValueChanged: return this->onSettingValueChanged(m_pBoxListenerContext->getBox(), m_pBoxListenerContext->getIndex());
-				default: OV_ERROR_KRF("Unhandled box modification type " << (OpenViBE::uint32)eBoxModificationType, OpenViBE::Kernel::ErrorType::BadArgument);
+				default: OV_ERROR_KRF("Unhandled box modification type " << (uint32_t)eBoxModificationType, OpenViBE::Kernel::ErrorType::BadArgument);
 			}
 			return false;
 		}
@@ -385,24 +339,24 @@ namespace OpenViBEToolkit
 		virtual bool onNameChanged(OpenViBE::Kernel::IBox& rBox) { return true; };
 		virtual bool onIdentifierChanged(OpenViBE::Kernel::IBox& rBox) { return true; };
 		virtual bool onAlgorithmClassIdentifierChanged(OpenViBE::Kernel::IBox& rBox) { return true; };
-		virtual bool onInputConnected(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onInputDisconnected(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onInputNameChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onOutputConnected(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onOutputDisconnected(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onOutputNameChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onSettingAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onSettingRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onSettingTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onSettingNameChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onSettingDefaultValueChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
-		virtual bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return true; };
+		virtual bool onInputConnected(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onInputDisconnected(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onInputNameChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onOutputConnected(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onOutputDisconnected(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onOutputNameChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onSettingAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onSettingRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onSettingTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onSettingNameChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onSettingDefaultValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
+		virtual bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; };
 
 		// ====================================================================================================================================
 

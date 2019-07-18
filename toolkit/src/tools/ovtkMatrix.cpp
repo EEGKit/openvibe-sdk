@@ -33,14 +33,14 @@ bool OpenViBEToolkit::Tools::Matrix::copyDescription(IMatrix& rDestinationMatrix
 {
 	if (&rDestinationMatrix == &rSourceMatrix) { return true; }
 
-	uint32 l_ui32DimensionCount = rSourceMatrix.getDimensionCount();
-	uint32 l_ui32DimensionSize  = 0;
+	uint32_t l_ui32DimensionCount = rSourceMatrix.getDimensionCount();
+	uint32_t l_ui32DimensionSize  = 0;
 	if (!rDestinationMatrix.setDimensionCount(l_ui32DimensionCount)) { return false; }
-	for (uint32 i = 0; i < l_ui32DimensionCount; i++)
+	for (uint32_t i = 0; i < l_ui32DimensionCount; i++)
 	{
 		l_ui32DimensionSize = rSourceMatrix.getDimensionSize(i);
 		if (!rDestinationMatrix.setDimensionSize(i, l_ui32DimensionSize)) { return false; }
-		for (uint32 j = 0; j < l_ui32DimensionSize; j++)
+		for (uint32_t j = 0; j < l_ui32DimensionSize; j++)
 		{
 			if (!rDestinationMatrix.setDimensionLabel(i, j, rSourceMatrix.getDimensionLabel(i, j))) { return false; }
 		}
@@ -52,8 +52,8 @@ bool OpenViBEToolkit::Tools::Matrix::copyContent(IMatrix& rDestinationMatrix, co
 {
 	if (&rDestinationMatrix == &rSourceMatrix) { return true; }
 
-	uint32 l_ui32SourceElementCount      = rSourceMatrix.getBufferElementCount();
-	uint32 l_ui32DestinationElementCount = rDestinationMatrix.getBufferElementCount();
+	uint32_t l_ui32SourceElementCount      = rSourceMatrix.getBufferElementCount();
+	uint32_t l_ui32DestinationElementCount = rDestinationMatrix.getBufferElementCount();
 	if (l_ui32DestinationElementCount != l_ui32SourceElementCount) { return false; }
 	const double* l_pSourceBuffer = rSourceMatrix.getBuffer();
 	double* l_pDestinationBuffer  = rDestinationMatrix.getBuffer();
@@ -73,16 +73,16 @@ bool OpenViBEToolkit::Tools::Matrix::isDescriptionSimilar(const IMatrix& rSource
 
 	if (rSourceMatrix1.getDimensionCount() != rSourceMatrix2.getDimensionCount()) { return false; }
 
-	for (uint32 i = 0; i < rSourceMatrix1.getDimensionCount(); i++)
+	for (uint32_t i = 0; i < rSourceMatrix1.getDimensionCount(); i++)
 	{
 		if (rSourceMatrix1.getDimensionSize(i) != rSourceMatrix2.getDimensionSize(i)) { return false; }
 	}
 
 	if (bCheckLabels)
 	{
-		for (uint32 i = 0; i < rSourceMatrix1.getDimensionCount(); i++)
+		for (uint32_t i = 0; i < rSourceMatrix1.getDimensionCount(); i++)
 		{
-			for (uint32 j = 0; j < rSourceMatrix1.getDimensionSize(i); j++)
+			for (uint32_t j = 0; j < rSourceMatrix1.getDimensionSize(i); j++)
 			{
 				if (strcmp(rSourceMatrix1.getDimensionLabel(i, j), rSourceMatrix2.getDimensionLabel(i, j)) != 0) { return false; }
 			}
@@ -144,17 +144,17 @@ bool OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, cons
 	//current string to parse
 	std::string l_sWhat;
 	//current parsing status
-	uint32 l_ui32Status = Status_Nothing;
+	uint32_t l_ui32Status = Status_Nothing;
 	//current element index (incremented every time a value is stored in matrix)
-	uint32 l_ui32CurElementIndex = 0;
+	uint32_t l_ui32CurElementIndex = 0;
 	//number of dimensions
-	// uint32 l_ui32DimensionCount = rDestinationMatrix.getDimensionCount();
+	// uint32_t l_ui32DimensionCount = rDestinationMatrix.getDimensionCount();
 	//current dimension index
-	uint32 l_ui32CurDimensionIndex = (uint32)-1;
+	uint32_t l_ui32CurDimensionIndex = (uint32_t)-1;
 	//vector keeping track of dimension sizes
-	std::vector<uint32> l_vDimensionSize;
+	std::vector<uint32_t> l_vDimensionSize;
 	//vector keeping track of number of values found in each dimension
-	std::vector<uint32> l_vValuesCount;
+	std::vector<uint32_t> l_vValuesCount;
 	// Dim labels
 	std::vector<std::string> l_vLabels;
 	//current quote-delimited string
@@ -252,10 +252,10 @@ bool OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, cons
 						l_vValuesCount.resize(rMatrix.getDimensionCount());
 
 						// set labels now that we know the matrix size
-						uint32 l_ui32Element = 0;
-						for (uint32 i = 0; i < rMatrix.getDimensionCount(); i++)
+						uint32_t l_ui32Element = 0;
+						for (uint32_t i = 0; i < rMatrix.getDimensionCount(); i++)
 						{
-							for (uint32 j = 0; j < rMatrix.getDimensionSize(i); j++)
+							for (uint32_t j = 0; j < rMatrix.getDimensionSize(i); j++)
 							{
 								rMatrix.setDimensionLabel(i, j, l_vLabels[l_ui32Element++].c_str());
 							}
@@ -277,12 +277,12 @@ bool OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, cons
 							}
 						}
 						getLogManager() << LogLevel_Trace
-							<< "End of header section reached, found " << (uint32)l_vDimensionSize.size() << " dimensions of size ["
+							<< "End of header section reached, found " << (uint32_t)l_vDimensionSize.size() << " dimensions of size ["
 							<< CString(l_pBuf) << "]\n";
 						*/
 
 						//reset current dimension index
-						l_ui32CurDimensionIndex = (uint32)-1;
+						l_ui32CurDimensionIndex = (uint32_t)-1;
 
 						//update status
 						l_ui32Status = Status_ParsingBuffer;
@@ -400,7 +400,7 @@ bool OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, cons
 							l_vValuesCount[l_ui32CurDimensionIndex + 1] = 0;
 						}
 							//ensure dimension count is correct
-						else if (l_ui32CurDimensionIndex == (uint32)-1)
+						else if (l_ui32CurDimensionIndex == (uint32_t)-1)
 						{
 							// getLogManager() << LogLevel_Trace << "Found one too many closing bracket character, parsing aborted\n";
 							return false;
@@ -507,20 +507,20 @@ bool OpenViBEToolkit::Tools::Matrix::fromString(OpenViBE::IMatrix& rMatrix, cons
 }
 
 // A recursive helper function to spool matrix contents to a txt stringstream.
-bool dumpMatrixBuffer(const OpenViBE::IMatrix& rMatrix, std::stringstream& buffer, uint32 ui32DimensionIndex, uint32& ui32ElementIndex)
+bool dumpMatrixBuffer(const OpenViBE::IMatrix& rMatrix, std::stringstream& buffer, uint32_t ui32DimensionIndex, uint32_t& ui32ElementIndex)
 {
 	//are we in innermost dimension?
 	if (ui32DimensionIndex == rMatrix.getDimensionCount() - 1)
 	{
 		//dimension start
-		for (uint32 j = 0; j < ui32DimensionIndex; j++)
+		for (uint32_t j = 0; j < ui32DimensionIndex; j++)
 		{
 			buffer << CONSTANT_TAB;
 		}
 		buffer << CONSTANT_LEFT_SQUARE_BRACKET;
 
 		//dump current cell contents
-		for (uint32 j = 0; j < rMatrix.getDimensionSize(ui32DimensionIndex); j++, ui32ElementIndex++)
+		for (uint32_t j = 0; j < rMatrix.getDimensionSize(ui32DimensionIndex); j++, ui32ElementIndex++)
 		{
 			buffer << CONSTANT_SPACE << rMatrix.getBuffer()[ui32ElementIndex];
 		}
@@ -531,10 +531,10 @@ bool dumpMatrixBuffer(const OpenViBE::IMatrix& rMatrix, std::stringstream& buffe
 	else
 	{
 		//dump all entries in current dimension
-		for (uint32 i = 0; i < rMatrix.getDimensionSize(ui32DimensionIndex); i++)
+		for (uint32_t i = 0; i < rMatrix.getDimensionSize(ui32DimensionIndex); i++)
 		{
 			//dimension start
-			for (uint32 j = 0; j < ui32DimensionIndex; j++)
+			for (uint32_t j = 0; j < ui32DimensionIndex; j++)
 			{
 				buffer << CONSTANT_TAB;
 			}
@@ -543,7 +543,7 @@ bool dumpMatrixBuffer(const OpenViBE::IMatrix& rMatrix, std::stringstream& buffe
 			dumpMatrixBuffer(rMatrix, buffer, ui32DimensionIndex + 1, ui32ElementIndex);
 
 			//dimension end
-			for (uint32 j = 0; j < ui32DimensionIndex; j++)
+			for (uint32_t j = 0; j < ui32DimensionIndex; j++)
 			{
 				buffer << CONSTANT_TAB;
 			}
@@ -554,7 +554,7 @@ bool dumpMatrixBuffer(const OpenViBE::IMatrix& rMatrix, std::stringstream& buffe
 	return true;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::toString(const OpenViBE::IMatrix& rMatrix, OpenViBE::CString& sString, uint32 ui32Precision /* = 6 */)
+bool OpenViBEToolkit::Tools::Matrix::toString(const OpenViBE::IMatrix& rMatrix, OpenViBE::CString& sString, uint32_t ui32Precision /* = 6 */)
 {
 	std::stringstream l_oBuffer;
 
@@ -567,11 +567,11 @@ bool OpenViBEToolkit::Tools::Matrix::toString(const OpenViBE::IMatrix& rMatrix, 
 	l_oBuffer << CONSTANT_LEFT_SQUARE_BRACKET << CONSTANT_EOL;
 
 	//dump labels for each dimension
-	for (uint32 i = 0; i < rMatrix.getDimensionCount(); i++)
+	for (uint32_t i = 0; i < rMatrix.getDimensionCount(); i++)
 	{
 		l_oBuffer << CONSTANT_TAB << CONSTANT_LEFT_SQUARE_BRACKET;
 
-		for (uint32 j = 0; j < rMatrix.getDimensionSize(i); j++)
+		for (uint32_t j = 0; j < rMatrix.getDimensionSize(i); j++)
 		{
 			l_oBuffer << CONSTANT_SPACE << CONSTANT_DOUBLE_QUOTE << rMatrix.getDimensionLabel(i, j) << CONSTANT_DOUBLE_QUOTE;
 		}
@@ -583,7 +583,7 @@ bool OpenViBEToolkit::Tools::Matrix::toString(const OpenViBE::IMatrix& rMatrix, 
 	l_oBuffer << CONSTANT_RIGHT_SQUARE_BRACKET << CONSTANT_EOL;
 
 	// Dump buffer using a recursive algorithm
-	uint32 l_ui32ElementIndex = 0;
+	uint32_t l_ui32ElementIndex = 0;
 	dumpMatrixBuffer(rMatrix, l_oBuffer, 0, l_ui32ElementIndex);
 
 	sString = CString(l_oBuffer.str().c_str());
@@ -608,7 +608,7 @@ bool OpenViBEToolkit::Tools::Matrix::loadFromTextFile(OpenViBE::IMatrix& rMatrix
 	return l_bReturnValue;
 }
 
-bool OpenViBEToolkit::Tools::Matrix::saveToTextFile(const OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename, uint32 ui32Precision /* = 6 */)
+bool OpenViBEToolkit::Tools::Matrix::saveToTextFile(const OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename, uint32_t ui32Precision /* = 6 */)
 {
 	std::ofstream m_oDataFile;
 	FS::Files::openOFStream(m_oDataFile, sFilename.toASCIIString(), std::ios_base::out | std::ios_base::trunc);

@@ -14,7 +14,7 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_pOutputSamplingRate;
+		OpenViBE::Kernel::TParameterHandler<uint64_t> m_pOutputSamplingRate;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
@@ -49,7 +49,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getOutputSamplingRate()
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate()
 		{
 			return m_pOutputSamplingRate;
 		}
@@ -80,7 +80,7 @@ namespace OpenViBEToolkit
 
 		TSignalDecoder() { }
 
-		TSignalDecoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TSignalDecoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);

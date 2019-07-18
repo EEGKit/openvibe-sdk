@@ -32,7 +32,7 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize(void)
 
 	bool l_bExpand;
 	CString l_sFileName   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	uint64 l_ui64LogLevel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	uint64_t l_ui64LogLevel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	if (l_rStaticBoxContext.getSettingCount() > 2)
 	{
@@ -147,11 +147,11 @@ void CBoxAlgorithmEBMLStreamSpy::openChild(const EBML::CIdentifier& rIdentifier)
 }
 
 template <class T>
-void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const uint64_t ui64BufferSize)
 {
-	uint64 l_ui64Count = (ui64BufferSize / sizeof(T));
+	uint64_t l_ui64Count = (ui64BufferSize / sizeof(T));
 	const T* l_pBuffer = static_cast<const T*>(pBuffer);
-	for (uint64 i = 0; i < std::min(m_ui64ExpandValuesCount, l_ui64Count); i++)
+	for (uint64_t i = 0; i < std::min(m_ui64ExpandValuesCount, l_ui64Count); i++)
 	{
 		getLogManager() << (i == 0 ? "" : " ") << l_pBuffer[i];
 	}
@@ -161,7 +161,7 @@ void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const E
 	}
 }
 
-void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	map<EBML::CIdentifier, string>::iterator t;
 	t = m_vType.find(m_vNodes.top());
@@ -193,49 +193,49 @@ void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const EBM
 		else if (t->second == "binary(integer8)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<int8>(pBuffer, ui64BufferSize);
+			processBinaryBlock<int8_t>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(integer16)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<int16>(pBuffer, ui64BufferSize);
+			processBinaryBlock<int16_t>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(integer32)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<int32>(pBuffer, ui64BufferSize);
+			processBinaryBlock<int32_t>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(integer64)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<int64>(pBuffer, ui64BufferSize);
+			processBinaryBlock<int64_t>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(uinteger8)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<uint8>(pBuffer, ui64BufferSize);
+			processBinaryBlock<uint8_t>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(uinteger16)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<uint16>(pBuffer, ui64BufferSize);
+			processBinaryBlock<uint16_t>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(uinteger32)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<uint32>(pBuffer, ui64BufferSize);
+			processBinaryBlock<uint32_t>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(uinteger64)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<uint64>(pBuffer, ui64BufferSize);
+			processBinaryBlock<uint64_t>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
 		else
@@ -249,7 +249,7 @@ void CBoxAlgorithmEBMLStreamSpy::closeChild(void)
 	m_vNodes.pop();
 }
 
-bool CBoxAlgorithmEBMLStreamSpy::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmEBMLStreamSpy::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -260,14 +260,14 @@ bool CBoxAlgorithmEBMLStreamSpy::process(void)
 	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();
 
-	uint64 l_ui64StartTime      = 0;
-	uint64 l_ui64EndTime        = 0;
-	uint64 l_ui64ChunkSize      = 0;
-	const uint8* l_pChunkBuffer = NULL;
+	uint64_t l_ui64StartTime      = 0;
+	uint64_t l_ui64EndTime        = 0;
+	uint64_t l_ui64ChunkSize      = 0;
+	const uint8_t* l_pChunkBuffer = NULL;
 
 	getLogManager() << m_eLogLevel << "\n";
 
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		if (l_rDynamicBoxContext.getInputChunkCount(i))
 		{
@@ -280,7 +280,7 @@ bool CBoxAlgorithmEBMLStreamSpy::process(void)
 			getLogManager() << m_eLogLevel
 					<< "For input " << l_sInputName << " of type " << getTypeManager().getTypeName(l_sInputType) << " :\n";
 
-			for (uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+			for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 			{
 				l_rDynamicBoxContext.getInputChunk(i, j, l_ui64StartTime, l_ui64EndTime, l_ui64ChunkSize, l_pChunkBuffer);
 				l_rDynamicBoxContext.markInputAsDeprecated(i, j);

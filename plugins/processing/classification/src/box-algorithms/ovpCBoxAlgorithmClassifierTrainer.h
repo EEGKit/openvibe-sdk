@@ -40,7 +40,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierTrainer)
@@ -50,9 +50,9 @@ namespace OpenViBEPlugins
 			typedef struct
 			{
 				OpenViBE::CMatrix* m_pFeatureVectorMatrix;
-				OpenViBE::uint64 m_ui64StartTime;
-				OpenViBE::uint64 m_ui64EndTime;
-				OpenViBE::uint32 m_ui32InputIndex;
+				uint64_t m_ui64StartTime;
+				uint64_t m_ui64EndTime;
+				uint32_t m_ui32InputIndex;
 			} SFeatureVector;
 
 			virtual bool train(const std::vector<CBoxAlgorithmClassifierTrainer::SFeatureVector>& rDataset,
@@ -69,11 +69,11 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			std::map<OpenViBE::uint32, OpenViBE::uint32> m_vFeatureCount;
+			std::map<uint32_t, uint32_t> m_vFeatureCount;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier;
-			OpenViBE::uint64 m_ui64TrainStimulation;
-			OpenViBE::uint64 m_ui64PartitionCount;
+			uint64_t m_ui64TrainStimulation;
+			uint64_t m_ui64PartitionCount;
 
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_oStimulationDecoder;
 			std::vector<OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_vFeatureVectorDecoder;
@@ -107,8 +107,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ClassifierTrainer; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Classification::CBoxAlgorithmClassifierTrainer; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Stimulations", OV_TypeId_Stimulations);
 				rBoxAlgorithmPrototype.addInput("Features for class 1", OV_TypeId_FeatureVector);

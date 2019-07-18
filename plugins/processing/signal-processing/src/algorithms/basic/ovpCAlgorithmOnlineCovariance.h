@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 			Eigen::MatrixXd m_oIncrementalMean;
 
 			// The divisor for the above estimates to do the normalization
-			OpenViBE::uint64 m_ui64Count;
+			uint64_t m_ui64Count;
 		};
 
 		class CAlgorithmOnlineCovarianceDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc
@@ -80,8 +80,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_OnlineCovariance; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CAlgorithmOnlineCovariance; }
 
-			virtual bool getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage, "Shrinkage", OpenViBE::Kernel::ParameterType_Float);
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors, "Input vectors", OpenViBE::Kernel::ParameterType_Matrix);

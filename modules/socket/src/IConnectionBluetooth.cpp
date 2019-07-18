@@ -114,14 +114,14 @@ namespace Socket
 #endif
 		}
 
-		bool isReadyToSend(Socket::uint32 ui32TimeOut) const
+		bool isReadyToSend(uint32_t ui32TimeOut) const
 		{
 			if (!this->isConnected()) { return false; }
 
 			return true;
 		}
 
-		bool isReadyToReceive(Socket::uint32 ui32TimeOut) const
+		bool isReadyToReceive(uint32_t ui32TimeOut) const
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -142,7 +142,7 @@ namespace Socket
 #endif
 		}
 
-		uint32 getPendingByteCount()
+		uint32_t getPendingByteCount()
 		{
 			if (!this->isConnected())
 			{
@@ -167,7 +167,7 @@ namespace Socket
 #endif
 		}
 
-		uint32 sendBuffer(const void* pBuffer, const uint32 ui32BufferSize)
+		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			if (!this->isConnected())
 			{
@@ -186,14 +186,14 @@ namespace Socket
 				return 0;
 			}
 
-			return static_cast<uint32>(l_i32BytesSentCount);
+			return static_cast<uint32_t>(l_i32BytesSentCount);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return 0;
 #endif
 		}
 
-		uint32 receiveBuffer(void* pBuffer, const uint32 ui32BufferSize)
+		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			if (!this->isConnected())
 			{
@@ -214,14 +214,14 @@ namespace Socket
 				return 0;
 			}
 
-			return static_cast<uint32>(l_i32BytesReceivedCount);
+			return static_cast<uint32_t>(l_i32BytesReceivedCount);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return 0;
 #endif
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
+		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			if (!this->isConnected())
 			{
@@ -230,7 +230,7 @@ namespace Socket
 			}
 
 			const char* l_pPointer = reinterpret_cast<const char*>(pBuffer);
-			uint32 l_ui32BytesLeft = ui32BufferSize;
+			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
@@ -242,7 +242,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
+		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			if (!this->isConnected())
 			{
@@ -251,7 +251,7 @@ namespace Socket
 			}
 
 			char* l_pPointer       = reinterpret_cast<char*>(pBuffer);
-			uint32 l_ui32BytesLeft = ui32BufferSize;
+			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{

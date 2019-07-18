@@ -50,11 +50,11 @@ namespace OpenViBEToolkit
 										   , OpenViBEToolkit::IVector& distanceValue
 										   , OpenViBEToolkit::IVector& probabilityValue) = 0;
 
-		virtual XML::IXMLNode* saveConfiguration(void) =0;
-		virtual bool loadConfiguration(XML::IXMLNode* configurationRoot) =0;
+		virtual XML::IXMLNode* saveConfiguration(void) = 0;
+		virtual bool loadConfiguration(XML::IXMLNode* configurationRoot) = 0;
 
-		virtual OpenViBE::uint32 getOutputProbabilityVectorLength(void) =0;
-		virtual OpenViBE::uint32 getOutputDistanceVectorLength(void) =0;
+		virtual uint32_t getOutputProbabilityVectorLength(void) = 0;
+		virtual uint32_t getOutputDistanceVectorLength(void) = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_Classifier);
 
@@ -62,16 +62,16 @@ namespace OpenViBEToolkit
 		bool initializeExtraParameterMechanism();
 		bool uninitializeExtraParameterMechanism();
 
-		OpenViBE::uint64 getUInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		OpenViBE::int64 getInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		uint64_t getUInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		int64_t getInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
 		double getFloat64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
 		bool getBooleanParameter(const OpenViBE::CIdentifier& parameterIdentifier);
 		OpenViBE::CString* getCStringParameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		OpenViBE::uint64 getEnumerationParameter(const OpenViBE::CIdentifier& parameterIdentifier, const OpenViBE::CIdentifier& enumerationIdentifier);
+		uint64_t getEnumerationParameter(const OpenViBE::CIdentifier& parameterIdentifier, const OpenViBE::CIdentifier& enumerationIdentifier);
 
 	private:
 		OpenViBE::CString& getParameterValue(const OpenViBE::CIdentifier& parameterIdentifier);
-		void setMatrixOutputDimension(OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& matrix, OpenViBE::uint32 length);
+		void setMatrixOutputDimension(OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& matrix, uint32_t length);
 
 		OpenViBE::Kernel::IAlgorithmProxy* m_AlgorithmProxy;
 		void* m_ExtraParametersMap;
@@ -81,8 +81,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual bool getAlgorithmPrototype(
-			OpenViBE::Kernel::IAlgorithmProto& algorithmPrototype) const
+		virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& algorithmPrototype) const
 		{
 			algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector, "Feature vector", OpenViBE::Kernel::ParameterType_Matrix);
 			algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet, "Feature vector set", OpenViBE::Kernel::ParameterType_Matrix);

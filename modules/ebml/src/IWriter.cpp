@@ -10,7 +10,7 @@ using namespace std;
 // ________________________________________________________________________________________________________________
 //
 
-inline unsigned long getCodedSizeLength(const uint64 uiValue)
+inline unsigned long getCodedSizeLength(const uint64_t uiValue)
 {
 	unsigned long l_ulCodedSizeLength = 0;
 	if (uiValue < 0x000000000000007fLL)
@@ -37,7 +37,7 @@ inline unsigned long getCodedSizeLength(const uint64 uiValue)
 	return l_ulCodedSizeLength;
 }
 
-inline bool getCodedBuffer(const uint64 uiValue, unsigned char* pBuffer, uint64* pBufferLength)
+inline bool getCodedBuffer(const uint64_t uiValue, unsigned char* pBuffer, uint64_t* pBufferLength)
 {
 	unsigned long i;
 	unsigned long l_ulCodedSizeLength = getCodedSizeLength(uiValue);
@@ -76,7 +76,7 @@ namespace EBML
 
 		protected:
 
-			uint64 getTotalContentSize(bool bCountIdentifierAndSize);
+			uint64_t getTotalContentSize(bool bCountIdentifierAndSize);
 
 		private:
 
@@ -86,7 +86,7 @@ namespace EBML
 
 			CIdentifier m_oIdentifier;
 			CWriterNode* m_pParentNode;
-			uint64 m_ui64BufferLength;
+			uint64_t m_ui64BufferLength;
 			unsigned char* m_pBuffer;
 			bool m_bBuffered;
 			vector<CWriterNode*> m_vChildren;
@@ -123,9 +123,9 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 {
 	unsigned char l_pIdentifier[10];
 	unsigned char l_pContentSize[10];
-	uint64 l_ui64ContentSizeLength = sizeof(l_pContentSize);
-	uint64 l_ui64IdentifierLength  = sizeof(l_pIdentifier);
-	uint64 l_ui64ContentSize       = getTotalContentSize(false);
+	uint64_t l_ui64ContentSizeLength = sizeof(l_pContentSize);
+	uint64_t l_ui64IdentifierLength  = sizeof(l_pIdentifier);
+	uint64_t l_ui64ContentSize       = getTotalContentSize(false);
 
 	if (!getCodedBuffer(l_ui64ContentSize, l_pContentSize, &l_ui64ContentSizeLength))
 	{
@@ -154,9 +154,9 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	}
 }
 
-uint64 CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
+uint64_t CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
 {
-	uint64 l_ui64ContentSize = 0;
+	uint64_t l_ui64ContentSize = 0;
 	if (m_vChildren.size() == 0)
 	{
 		l_ui64ContentSize = m_ui64BufferLength;
@@ -170,7 +170,7 @@ uint64 CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
 		}
 	}
 
-	uint64 l_ui64Result = l_ui64ContentSize;
+	uint64_t l_ui64Result = l_ui64ContentSize;
 	if (bCountIdentifierAndSize)
 	{
 		l_ui64Result += getCodedSizeLength(m_oIdentifier);
@@ -194,7 +194,7 @@ namespace EBML
 			explicit CWriter(IWriterCallback& rWriterCallback);
 
 			virtual bool openChild(const CIdentifier& rIdentifier);
-			virtual bool setChildData(const void* pBuffer, const uint64 ui64BufferSize);
+			virtual bool setChildData(const void* pBuffer, const uint64_t ui64BufferSize);
 			virtual bool closeChild(void);
 
 			virtual void release(void);
@@ -234,7 +234,7 @@ bool CWriter::openChild(const CIdentifier& rIdentifier)
 	return true;
 }
 
-bool CWriter::setChildData(const void* pBuffer, const uint64 ui64BufferSize)
+bool CWriter::setChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	if (!m_pCurrentNode) { return false; }
 

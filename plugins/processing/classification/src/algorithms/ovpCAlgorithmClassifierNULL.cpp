@@ -21,7 +21,7 @@ bool CAlgorithmClassifierNULL::initialize(void)
 {
 	TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
 	TParameterHandler<double> ip_f64Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
-	TParameterHandler<uint64> ip_ui64Parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
+	TParameterHandler<uint64_t> ip_ui64Parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
 
 	ip_bParameter1    = true;
 	ip_f64Parameter2  = 3.141592654;
@@ -37,7 +37,7 @@ bool CAlgorithmClassifierNULL::train(const IFeatureVectorSet& rFeatureVectorSet)
 {
 	TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
 	TParameterHandler<double> ip_f64Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
-	TParameterHandler<uint64> ip_ui64Parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
+	TParameterHandler<uint64_t> ip_ui64Parameter3(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter3));
 
 	OV_WARNING_K("Parameter 1 : " << ip_bParameter1);
 	OV_WARNING_K("Parameter 2 : " << ip_f64Parameter2);
@@ -72,6 +72,6 @@ XML::IXMLNode* CAlgorithmClassifierNULL::saveConfiguration(void)
 
 bool CAlgorithmClassifierNULL::loadConfiguration(XML::IXMLNode* pConfigurationNode) { return true; }
 
-uint32 CAlgorithmClassifierNULL::getOutputProbabilityVectorLength() { return 1; }
+uint32_t CAlgorithmClassifierNULL::getOutputProbabilityVectorLength() { return 1; }
 
-uint32 CAlgorithmClassifierNULL::getOutputDistanceVectorLength() { return 1; }
+uint32_t CAlgorithmClassifierNULL::getOutputDistanceVectorLength() { return 1; }

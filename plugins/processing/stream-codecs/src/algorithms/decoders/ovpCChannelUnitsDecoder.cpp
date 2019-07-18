@@ -55,7 +55,7 @@ void CChannelUnitsDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	}
 }
 
-void CChannelUnitsDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CChannelUnitsDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

@@ -14,7 +14,7 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> op_ui64BufferDuration;
+		OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64BufferDuration;
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pExperimentInformationStream;
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pSignalStream;
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pStimulationStream;
@@ -65,7 +65,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getBufferDuration() { return op_ui64BufferDuration; }
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getBufferDuration() { return op_ui64BufferDuration; }
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getExperimentInformationStream() { return op_pExperimentInformationStream; }
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getSignalStream() { return op_pSignalStream; }
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getStimulationStream() { return op_pStimulationStream; }

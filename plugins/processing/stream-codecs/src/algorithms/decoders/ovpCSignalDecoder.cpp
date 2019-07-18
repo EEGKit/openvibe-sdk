@@ -52,7 +52,7 @@ void CSignalDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	}
 }
 
-void CSignalDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CSignalDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

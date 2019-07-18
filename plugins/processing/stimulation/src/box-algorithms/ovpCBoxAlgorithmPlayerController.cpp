@@ -36,7 +36,7 @@ bool CBoxAlgorithmPlayerController::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmPlayerController::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmPlayerController::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -47,7 +47,7 @@ bool CBoxAlgorithmPlayerController::process(void)
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, i);
 		m_pStreamDecoder->process();
@@ -55,7 +55,7 @@ bool CBoxAlgorithmPlayerController::process(void)
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
 			IStimulationSet* l_pStimulationSet = op_pStimulationSet;
-			for (uint32 j = 0; j < l_pStimulationSet->getStimulationCount(); j++)
+			for (uint32_t j = 0; j < l_pStimulationSet->getStimulationCount(); j++)
 			{
 				if (l_pStimulationSet->getStimulationIdentifier(j) == m_ui64StimulationIdentifier)
 				{

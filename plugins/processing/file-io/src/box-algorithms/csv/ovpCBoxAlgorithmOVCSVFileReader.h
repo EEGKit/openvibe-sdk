@@ -112,8 +112,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmOVCSVFileReaderListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& BoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& BoxAlgorithmPrototype) const
 			{
 				BoxAlgorithmPrototype.addOutput("Output stream", OV_TypeId_Signal);
 				BoxAlgorithmPrototype.addOutput("Output stimulation", OV_TypeId_Stimulations);

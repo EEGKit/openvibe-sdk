@@ -57,8 +57,8 @@ bool CBoxAlgorithmEpochAverage::initialize(void)
 	ip_ui64AveragingMethod.initialize(m_pMatrixAverage->getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_AveragingMethod));
 	ip_ui64MatrixCount.initialize(m_pMatrixAverage->getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_MatrixCount));
 
-	ip_ui64AveragingMethod = (uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	ip_ui64MatrixCount     = (uint64)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	ip_ui64AveragingMethod = (uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	ip_ui64MatrixCount     = (uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	m_pMatrixAverage->getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_Matrix)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
 	m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix)->setReferenceTarget(m_pMatrixAverage->getOutputParameter(OVP_Algorithm_MatrixAverage_OutputParameterId_AveragedMatrix));
@@ -93,7 +93,7 @@ bool CBoxAlgorithmEpochAverage::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmEpochAverage::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmEpochAverage::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -104,9 +104,9 @@ bool CBoxAlgorithmEpochAverage::process(void)
 	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();
 
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		for (uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
 			TParameterHandler<const IMemoryBuffer*> l_oInputMemoryBufferHandle(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
 			TParameterHandler<IMemoryBuffer*> l_oOutputMemoryBufferHandle(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));

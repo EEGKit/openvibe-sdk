@@ -91,7 +91,7 @@ bool CBoxAlgorithmCSVFileWriter::uninitialize(void)
 bool CBoxAlgorithmCSVFileWriter::initializeFile()
 {
 	const CString l_sFilename    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	const uint64 l_ui64Precision = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	const uint64_t l_ui64Precision = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	m_oFileStream.open(l_sFilename.toASCIIString(), std::ios::trunc);
 
@@ -107,7 +107,7 @@ bool CBoxAlgorithmCSVFileWriter::initializeFile()
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileWriter::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmCSVFileWriter::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -125,10 +125,10 @@ bool CBoxAlgorithmCSVFileWriter::process(void)
 bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
-	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
-		const uint64 l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, i);
-		const uint64 l_ui64EndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, i);
+		const uint64_t l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, i);
+		const uint64_t l_ui64EndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, i);
 
 		m_pStreamDecoder->decode(i);
 
@@ -154,7 +154,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 					// This [n X 1] will get written as a single row due to transpose later
 					m_oMatrix.setDimensionSize(0, l_pMatrix->getDimensionSize(0));
 					m_oMatrix.setDimensionSize(1, 1);
-					for (uint32 i = 0; i < l_pMatrix->getDimensionSize(0); i++)
+					for (uint32_t i = 0; i < l_pMatrix->getDimensionSize(0); i++)
 					{
 						m_oMatrix.setDimensionLabel(0, i, l_pMatrix->getDimensionLabel(0, i));
 					}
@@ -166,7 +166,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 				}
 				//			std::cout<<&m_pMatrix<<" "<<&op_pMatrix<<"\n";
 				m_oFileStream << "Time (s)";
-				for (uint32 c = 0; c < m_oMatrix.getDimensionSize(0); c++)
+				for (uint32_t c = 0; c < m_oMatrix.getDimensionSize(0); c++)
 				{
 					std::string l_sLabel(m_oMatrix.getDimensionLabel(0, c));
 					while (l_sLabel.length() > 0 && l_sLabel[l_sLabel.length() - 1] == ' ')
@@ -198,13 +198,13 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 		{
 			const IMatrix* l_pMatrix = ((OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->getOutputMatrix();
 
-			const uint32 l_ui32NumChannels = m_oMatrix.getDimensionSize(0);
-			const uint32 l_ui32NumSamples  = m_oMatrix.getDimensionSize(1);
+			const uint32_t l_ui32NumChannels = m_oMatrix.getDimensionSize(0);
+			const uint32_t l_ui32NumSamples  = m_oMatrix.getDimensionSize(1);
 
 			//this->getLogManager() << LogLevel_Info << " dimsIn " << l_pMatrix->getDimensionSize(0) << "," << l_pMatrix->getDimensionSize(1) << "\n";
 			//this->getLogManager() << LogLevel_Info << " dimsBuf " << m_oMatrix.getDimensionSize(0) << "," << m_oMatrix.getDimensionSize(1) << "\n";
 
-			for (uint32 s = 0; s < l_ui32NumSamples; s++)
+			for (uint32_t s = 0; s < l_ui32NumSamples; s++)
 			{
 				if (m_oTypeIdentifier == OV_TypeId_StreamedMatrix || m_oTypeIdentifier == OV_TypeId_FeatureVector)
 				{
@@ -212,9 +212,9 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 				}
 				else if (m_oTypeIdentifier == OV_TypeId_Signal)
 				{
-					const uint64 l_ui64SamplingFrequency = ((OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->getOutputSamplingRate();
-					const uint64 l_ui64TimeOfNthSample   = ITimeArithmetics::sampleCountToTime(l_ui64SamplingFrequency, s); // assuming chunk start is 0
-					const uint64 l_ui64SampleTime        = l_ui64StartTime + l_ui64TimeOfNthSample;
+					const uint64_t l_ui64SamplingFrequency = ((OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->getOutputSamplingRate();
+					const uint64_t l_ui64TimeOfNthSample   = ITimeArithmetics::sampleCountToTime(l_ui64SamplingFrequency, s); // assuming chunk start is 0
+					const uint64_t l_ui64SampleTime        = l_ui64StartTime + l_ui64TimeOfNthSample;
 
 					m_oFileStream << ITimeArithmetics::timeToSeconds(l_ui64SampleTime);
 				}
@@ -222,7 +222,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 				{
 					m_oFileStream << ITimeArithmetics::timeToSeconds(l_ui64EndTime);
 				}
-				for (uint32 c = 0; c < l_ui32NumChannels; c++)
+				for (uint32_t c = 0; c < l_ui32NumChannels; c++)
 				{
 					m_oFileStream << m_sSeparator.toASCIIString() << l_pMatrix->getBuffer()[c * l_ui32NumSamples + s];
 				}
@@ -231,9 +231,9 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 				{
 					if (m_oTypeIdentifier == OV_TypeId_Signal)
 					{
-						const uint64 l_ui64SamplingFrequency = ((OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->getOutputSamplingRate();
+						const uint64_t l_ui64SamplingFrequency = ((OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->getOutputSamplingRate();
 
-						m_oFileStream << m_sSeparator.toASCIIString() << (uint64)l_ui64SamplingFrequency;
+						m_oFileStream << m_sSeparator.toASCIIString() << (uint64_t)l_ui64SamplingFrequency;
 
 						m_bFirstBuffer = false;
 					}
@@ -280,7 +280,7 @@ bool CBoxAlgorithmCSVFileWriter::process_stimulation(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		m_pStreamDecoder->decode(i);
 		if (m_pStreamDecoder->isHeaderReceived())
@@ -298,7 +298,7 @@ bool CBoxAlgorithmCSVFileWriter::process_stimulation(void)
 		if (m_pStreamDecoder->isBufferReceived())
 		{
 			const IStimulationSet* l_pStimulationSet = ((OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmCSVFileWriter>*)m_pStreamDecoder)->getOutputStimulationSet();
-			for (uint32 j = 0; j < l_pStimulationSet->getStimulationCount(); j++)
+			for (uint32_t j = 0; j < l_pStimulationSet->getStimulationCount(); j++)
 			{
 				m_oFileStream << ITimeArithmetics::timeToSeconds(l_pStimulationSet->getStimulationDate(j))
 						<< m_sSeparator.toASCIIString()

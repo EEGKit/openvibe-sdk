@@ -19,7 +19,7 @@ namespace OpenViBEToolkit
 
 				virtual void endSplit(void) const { }
 
-				virtual void setToken(const char* sToken) const =0;
+				virtual void setToken(const char* sToken) const = 0;
 			};
 
 			template <class TContainer>
@@ -44,8 +44,8 @@ namespace OpenViBEToolkit
 				TContainer* m_pTokenContainer;
 			};
 
-			OVTK_API OpenViBE::uint32 split(const OpenViBE::CString& rString, const ISplitCallback& rSplitCallback, OpenViBE::uint8 ui8Separator);
-			OVTK_API OpenViBE::uint32 split(const OpenViBE::CString& rString, const ISplitCallback& rSplitCallback, OpenViBE::uint8* pSeparator, OpenViBE::uint32 ui32SeparatorCount);
+			OVTK_API uint32_t split(const OpenViBE::CString& rString, const ISplitCallback& rSplitCallback, uint8_t ui8Separator);
+			OVTK_API uint32_t split(const OpenViBE::CString& rString, const ISplitCallback& rSplitCallback, uint8_t* pSeparator, uint32_t ui32SeparatorCount);
 			OVTK_API bool isAlmostEqual(const OpenViBE::CString& rString1, const OpenViBE::CString& rString2, const bool bCaseSensitive = true, const bool bRemoveStartSpaces = true, const bool bRemoveEndSpaces = true);
 		};
 	};

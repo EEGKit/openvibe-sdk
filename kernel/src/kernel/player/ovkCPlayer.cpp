@@ -26,8 +26,8 @@ using namespace OpenViBE::Kernel;
 using namespace OpenViBE::Plugins;
 
 
-const uint64 g_ui64Scheduler_Default_Frequency_      = 128;
-const uint64 g_ui64Scheduler_Maximum_Loops_Duration_ = (100LL << 22); /* 100/1024 seconds, approx 100ms */
+const uint64_t g_ui64Scheduler_Default_Frequency_      = 128;
+const uint64_t g_ui64Scheduler_Maximum_Loops_Duration_ = (100LL << 22); /* 100/1024 seconds, approx 100ms */
 
 //___________________________________________________________________//
 //                                                                   //
@@ -44,7 +44,7 @@ CPlayer::CPlayer(const IKernelContext& rKernelContext)
 	  , m_eStatus(PlayerStatus_Stop)
 	  , m_bIsInitializing(false)
 {
-	uint64 l_ui64SchedulerFrequency = this->getConfigurationManager().expandAsUInteger("${Kernel_PlayerFrequency}");
+	uint64_t l_ui64SchedulerFrequency = this->getConfigurationManager().expandAsUInteger("${Kernel_PlayerFrequency}");
 	if (l_ui64SchedulerFrequency == 0)
 	{
 		OV_WARNING_K("Invalid frequency configuration " << CString("Kernel_PlayerFrequency") << "=" << this->getConfigurationManager().expand("${Kernel_PlayerFrequency}") << " restored to default " << g_ui64Scheduler_Default_Frequency_);
@@ -215,7 +215,7 @@ EPlayerReturnCode CPlayer::initialize(void)
 		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_BoxInitializationFailed);
 	}
 
-	m_oBenchmarkChrono.reset(static_cast<uint32>(m_oScheduler.getFrequency()));
+	m_oBenchmarkChrono.reset(static_cast<uint32_t>(m_oScheduler.getFrequency()));
 
 	m_ui64CurrentTimeToReach = 0;
 	m_ui64Lateness           = 0;
@@ -379,12 +379,12 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 ::printf("Time to reach : %llx\n", m_ui64CurrentTimeToReach);
 #endif // CPlayer_Debug_Time
 
-	uint64 l_ui64SchedulerStepDuration = m_oScheduler.getStepDuration();
-	uint64 l_ui64StartTime             = System::Time::zgetTime();
+	uint64_t l_ui64SchedulerStepDuration = m_oScheduler.getStepDuration();
+	uint64_t l_ui64StartTime             = System::Time::zgetTime();
 	bool l_bFinished                = false;
 	while (!l_bFinished)
 	{
-		uint64 l_ui64NextSchedulerTime = m_oScheduler.getCurrentTime() + l_ui64SchedulerStepDuration;
+		uint64_t l_ui64NextSchedulerTime = m_oScheduler.getCurrentTime() + l_ui64SchedulerStepDuration;
 
 #if defined CPlayer_Debug_Time
 ::printf("    Next time : %llx\n", l_ui64NextSchedulerTime);
@@ -431,7 +431,7 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 		m_ui64CurrentTimeToReach = m_oScheduler.getCurrentTime();
 	}
 
-	uint64 l_ui64Lateness;
+	uint64_t l_ui64Lateness;
 	if (m_ui64CurrentTimeToReach > m_oScheduler.getCurrentTime())
 	{
 		l_ui64Lateness = m_ui64CurrentTimeToReach - m_oScheduler.getCurrentTime();
@@ -445,8 +445,8 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 ::printf("Done -- New time to reach : %llx\n", m_ui64CurrentTimeToReach);
 #endif // CPlayer_Debug_Time
 
-	uint64 l_ui64LatenessSec = l_ui64Lateness >> 32;
-	uint64 m_ui64LatenessSec = m_ui64Lateness >> 32;
+	uint64_t l_ui64LatenessSec = l_ui64Lateness >> 32;
+	uint64_t m_ui64LatenessSec = m_ui64Lateness >> 32;
 	OV_WARNING_UNLESS_K(
 		l_ui64LatenessSec == m_ui64LatenessSec,
 		"<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Player" << LogColor_PopStateBit
@@ -457,12 +457,12 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 	return true;
 }
 
-uint64 CPlayer::getCurrentSimulatedTime(void) const
+uint64_t CPlayer::getCurrentSimulatedTime(void) const
 {
 	return m_oScheduler.getCurrentTime();
 }
 
-uint64 CPlayer::getCurrentSimulatedLateness(void) const
+uint64_t CPlayer::getCurrentSimulatedLateness(void) const
 {
 	return m_ui64InnerLateness;
 }

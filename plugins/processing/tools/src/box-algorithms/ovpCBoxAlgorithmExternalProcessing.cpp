@@ -42,7 +42,7 @@ CBoxAlgorithmExternalProcessing::CBoxAlgorithmExternalProcessing()
 	  , m_SyncTimeout(0)
 	  , m_LastSyncTime(0) {}
 
-uint64 CBoxAlgorithmExternalProcessing::getClockFrequency(void)
+uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency(void)
 {
 	if (m_IsGenerator)
 	{

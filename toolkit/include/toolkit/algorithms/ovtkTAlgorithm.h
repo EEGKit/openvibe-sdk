@@ -10,8 +10,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TAlgorithm(void)
-			: m_pAlgorithmContext(NULL) { }
+		TAlgorithm(void) : m_pAlgorithmContext(NULL) { }
 
 		virtual bool initialize(OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)
 		{
@@ -37,7 +36,7 @@ namespace OpenViBEToolkit
 
 		virtual bool initialize(void) { return true; }
 		virtual bool uninitialize(void) { return true; }
-		virtual bool process(void) =0;
+		virtual bool process(void) = 0;
 
 		// ====================================================================================================================================
 
@@ -73,39 +72,32 @@ namespace OpenViBEToolkit
 			return m_pAlgorithmContext->getTypeManager(); // should never be null
 		}
 
-		virtual OpenViBE::CIdentifier getNextInputParameterIdentifier(
-			const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const
+		virtual OpenViBE::CIdentifier getNextInputParameterIdentifier(const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const
 		{
 			return m_pAlgorithmContext->getNextInputParameterIdentifier(rPreviousInputParameterIdentifier);
 		}
 
-		virtual OpenViBE::Kernel::IParameter* getInputParameter(
-			const OpenViBE::CIdentifier& rInputParameterIdentifier)
+		virtual OpenViBE::Kernel::IParameter* getInputParameter(const OpenViBE::CIdentifier& rInputParameterIdentifier)
 		{
 			return m_pAlgorithmContext->getInputParameter(rInputParameterIdentifier);
 		}
 
-		virtual OpenViBE::CIdentifier getNextOutputParameterIdentifier(
-			const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const
+		virtual OpenViBE::CIdentifier getNextOutputParameterIdentifier(const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const
 		{
 			return m_pAlgorithmContext->getNextOutputParameterIdentifier(rPreviousOutputParameterIdentifier);
 		}
 
-		virtual OpenViBE::Kernel::IParameter* getOutputParameter(
-			const OpenViBE::CIdentifier& rOutputParameterIdentifier)
+		virtual OpenViBE::Kernel::IParameter* getOutputParameter(const OpenViBE::CIdentifier& rOutputParameterIdentifier)
 		{
 			return m_pAlgorithmContext->getOutputParameter(rOutputParameterIdentifier);
 		}
 
-		virtual bool isInputTriggerActive(
-			const OpenViBE::CIdentifier& rInputTriggerIdentifier) const
+		virtual bool isInputTriggerActive(const OpenViBE::CIdentifier& rInputTriggerIdentifier) const
 		{
 			return m_pAlgorithmContext->isInputTriggerActive(rInputTriggerIdentifier);
 		}
 
-		virtual bool activateOutputTrigger(
-			const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
-			const bool bTriggerState)
+		virtual bool activateOutputTrigger(const OpenViBE::CIdentifier& rOutputTriggerIdentifier, const bool bTriggerState)
 		{
 			return m_pAlgorithmContext->activateOutputTrigger(rOutputTriggerIdentifier, bTriggerState);
 		}
@@ -126,10 +118,7 @@ namespace OpenViBEToolkit
 				m_rpAlgorithmContext = pAlgorithmContext;
 			}
 
-			virtual ~CScopedAlgorithm(void)
-			{
-				m_rpAlgorithmContext = NULL;
-			}
+			virtual ~CScopedAlgorithm(void) { m_rpAlgorithmContext = NULL; }
 
 		protected:
 

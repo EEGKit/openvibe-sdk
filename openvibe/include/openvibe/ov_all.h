@@ -144,7 +144,7 @@ namespace OpenViBE
 		{ \
 			return true; \
 		} \
-		OVP_API bool onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext, OpenViBE::uint32 ui32Index, OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) \
+		OVP_API bool onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext, uint32_t ui32Index, OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) \
 		{ \
 			if(ui32Index>=g_descriptors.size()) \
 			{ \

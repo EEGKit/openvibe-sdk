@@ -56,7 +56,7 @@ namespace OpenViBEToolkit
 		- decode it (specific for each decoder)
 		- mark input as deprecated
 		*/
-		virtual bool decode(OpenViBE::uint32 ui32ChunkIndex, bool bMarkInputAsDeprecated = true)
+		virtual bool decode(uint32_t ui32ChunkIndex, bool bMarkInputAsDeprecated = true)
 		{
 			this->setInputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getInputChunk(m_ui32ConnectorIndex, ui32ChunkIndex));
 			if (! m_pCodec->process()) return false;

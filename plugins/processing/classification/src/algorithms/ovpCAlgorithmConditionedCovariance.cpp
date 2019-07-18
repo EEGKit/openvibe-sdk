@@ -70,8 +70,8 @@ bool CAlgorithmConditionedCovariance::process(void)
 		OpenViBE::Kernel::ErrorType::BadInput
 	);
 
-	const uint32 l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
-	const uint32 l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
+	const uint32_t l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
+	const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
 	OV_ERROR_UNLESS_KRF(
 		l_ui32nRows >= 1 && l_ui32nCols >= 1,

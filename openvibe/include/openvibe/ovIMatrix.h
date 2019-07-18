@@ -30,15 +30,15 @@ namespace OpenViBE
 		 * \return the dimension count for this matrix
 		 * \note Uninitialized matrices should return \c 0
 		 */
-		virtual const OpenViBE::uint32 getDimensionCount(void) const =0;
+		virtual const uint32_t getDimensionCount(void) const = 0;
 		/**
 		 * \brief Gets the dimension size for a given dimension index
 		 * \param ui32DimensionIndex [in] : the dimension index which size has to be returned
 		 * \return the dimension size for the specified dimension index
 		 * \note Each dimension can have a different size
 		 */
-		virtual const OpenViBE::uint32 getDimensionSize(
-			const OpenViBE::uint32 ui32DimensionIndex) const =0;
+		virtual const uint32_t getDimensionSize(
+			const uint32_t ui32DimensionIndex) const = 0;
 		/**
 		 * \brief Gets the dimension label for a given dimension index / dimension entry index pair
 		 * \param ui32DimensionIndex [in] : the dimension index
@@ -47,8 +47,8 @@ namespace OpenViBE
 		 * \note The string is permanent pointer until the dimension size or the label itself changes
 		 */
 		virtual const char* getDimensionLabel(
-			const OpenViBE::uint32 ui32DimensionIndex,
-			const OpenViBE::uint32 ui32DimensionEntryIndex) const =0;
+			const uint32_t ui32DimensionIndex,
+			const uint32_t ui32DimensionEntryIndex) const = 0;
 
 		/**
 		 * \brief Gets the raw buffer for this matrix
@@ -81,13 +81,13 @@ namespace OpenViBE
 		 * \endcode
 		 * \sa getBufferElementCount
 		 */
-		virtual const double* getBuffer(void) const =0;
+		virtual const double* getBuffer(void) const = 0;
 		/**
 		 * \brief Gets the total number of elements in the matrix
 		 * \return the total number of elements in the matrix
 		 * \note The value returned by this function is the size of the raw buffer returned by \c getBuffer
 		 */
-		virtual const OpenViBE::uint32 getBufferElementCount(void) const =0;
+		virtual const uint32_t getBufferElementCount(void) const = 0;
 
 		//@}
 		/** \name Modifiers */
@@ -100,7 +100,7 @@ namespace OpenViBE
 		 * \return \e false in case of error.
 		 */
 		virtual bool setDimensionCount(
-			const OpenViBE::uint32 ui32DimensionCount) =0;
+			const uint32_t ui32DimensionCount) = 0;
 		/**
 		 * \brief Sets the dimension size for this matrix on a given dimension index
 		 * \param ui32DimensionIndex [in] : the dimension index which size has to be changed
@@ -109,8 +109,8 @@ namespace OpenViBE
 		 * \return \e false in case of error.
 		 */
 		virtual bool setDimensionSize(
-			const OpenViBE::uint32 ui32DimensionIndex,
-			const OpenViBE::uint32 ui32DimensionSize) =0;
+			const uint32_t ui32DimensionIndex,
+			const uint32_t ui32DimensionSize) = 0;
 		/**
 		 * \brief Sets the dimension label for this matrix on a given dimension index / dimension entry index pair
 		 * \param ui32DimensionIndex [in] : the dimension index
@@ -120,9 +120,9 @@ namespace OpenViBE
 		 * \return \e false in case of error.
 		 */
 		virtual bool setDimensionLabel(
-			const OpenViBE::uint32 ui32DimensionIndex,
-			const OpenViBE::uint32 ui32DimensionEntryIndex,
-			const char* sDimensionLabel) =0;
+			const uint32_t ui32DimensionIndex,
+			const uint32_t ui32DimensionEntryIndex,
+			const char* sDimensionLabel) = 0;
 
 		/**
 		 * \brief Gets a writable raw buffer for this matrix
@@ -132,18 +132,18 @@ namespace OpenViBE
 		 * \sa IMatrix::getBufferElementCount
 		 * \sa IMatrix::getBuffer const
 		 */
-		virtual double* getBuffer(void) =0;
+		virtual double* getBuffer(void) = 0;
 
 		//@}
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Matrix);
 
-		const double& operator [](const OpenViBE::uint32 ui32Index) const
+		const double& operator [](const uint32_t ui32Index) const
 		{
 			return this->getBuffer()[ui32Index];
 		}
 
-		double& operator [](const OpenViBE::uint32 ui32Index)
+		double& operator [](const uint32_t ui32Index)
 		{
 			return this->getBuffer()[ui32Index];
 		}

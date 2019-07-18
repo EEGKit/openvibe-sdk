@@ -50,12 +50,12 @@ CAbstractTreeParentNode::~CAbstractTreeParentNode(void)
 
 void CAbstractTreeParentNode::levelOperators()
 {
-	uint64 l_ui64NumberOfChildren = m_oChildren.size();
+	uint64_t l_ui64NumberOfChildren = m_oChildren.size();
 
 	vector<CAbstractTreeNode*> l_oNewChildren;
 
 	//for all the node's children
-	for (uint64 i = 0; i < l_ui64NumberOfChildren; i++)
+	for (uint64_t i = 0; i < l_ui64NumberOfChildren; i++)
 	{
 		CAbstractTreeNode* l_pChild = m_oChildren[(size_t)i];
 
@@ -126,7 +126,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 	bool l_bChildrenChanged = true;
 
 	//number of children of this node
-	uint64 l_ui64NumberOfChildren = m_oChildren.size();
+	uint64_t l_ui64NumberOfChildren = m_oChildren.size();
 
 	//while the children aren't stable
 	while (l_bChildrenChanged)
@@ -360,7 +360,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 
 void CAbstractTreeParentNode::useNegationOperator()
 {
-	uint64 l_ui64NumberOfChildren = m_oChildren.size();
+	uint64_t l_ui64NumberOfChildren = m_oChildren.size();
 
 	//try to use the negation operator in all the children
 	for (size_t i = 0; i < l_ui64NumberOfChildren; i++)
@@ -422,7 +422,7 @@ void CAbstractTree::generateCode(CEquationParser& oParser)
 
 void CAbstractTreeParentNode::generateCode(CEquationParser& oParser)
 {
-	uint64 l_ui64NumberOfChildren = m_oChildren.size();
+	uint64_t l_ui64NumberOfChildren = m_oChildren.size();
 
 #if 0
 
@@ -463,7 +463,7 @@ void CAbstractTreeVariableNode::generateCode(CEquationParser& oParser)
 	oParser.push_var(m_ui32Index);
 }
 
-void CAbstractTree::recognizeSpecialTree(uint64& ui64TreeIdentifier, double& f64Parameter)
+void CAbstractTree::recognizeSpecialTree(uint64_t& ui64TreeIdentifier, double& f64Parameter)
 {
 	//default
 	ui64TreeIdentifier = OP_USERDEF;
@@ -483,8 +483,8 @@ void CAbstractTree::recognizeSpecialTree(uint64& ui64TreeIdentifier, double& f64
 	CAbstractTreeParentNode* l_pParent = reinterpret_cast<CAbstractTreeParentNode *>(m_pRoot);
 
 	std::vector<CAbstractTreeNode *>& l_oChildren = l_pParent->getChildren();
-	uint64 l_ui64NumberOfChildren                 = l_oChildren.size();
-	uint64 l_ui64NodeIdentifier                   = l_pParent->getOperatorIdentifier();
+	uint64_t l_ui64NumberOfChildren                 = l_oChildren.size();
+	uint64_t l_ui64NodeIdentifier                   = l_pParent->getOperatorIdentifier();
 
 	//unary operator/function
 	if (l_ui64NumberOfChildren == 1)

@@ -15,9 +15,9 @@ namespace XML
 	class XML_API IXMLNode
 	{
 	public:
-		virtual void release(void) =0;
+		virtual void release(void) = 0;
 
-		virtual const char* getName() const =0;
+		virtual const char* getName() const = 0;
 
 		//Attribute
 		/**
@@ -27,28 +27,28 @@ namespace XML
 		 * @param sAttributeValue [in] : Value of the attribute
 		 * @return true in success, false otherwise
 		 */
-		virtual bool addAttribute(const char* sAttributeName, const char* sAttributeValue) =0;
+		virtual bool addAttribute(const char* sAttributeName, const char* sAttributeValue) = 0;
 
 		/**
 		 * @brief Indicate if an attribute exists or not.
 		 * @param sAttributeName [in] : Name of the attribute
 		 * @return true if attribute exists, false otherwise
 		 */
-		virtual bool hasAttribute(const char* sAttributeName) const =0;
+		virtual bool hasAttribute(const char* sAttributeName) const = 0;
 
 		/**
 		 * @brief Return the value of an attribute.
 		 * @param sAttributeName [in] : Name of the attribute
 		 * @return Value of the attribute
 		 */
-		virtual const char* getAttribute(const char* sAttributeName) const =0;
+		virtual const char* getAttribute(const char* sAttributeName) const = 0;
 
 		//PCDATA
 		/**
 		 * @brief Set the PCDATA of the node.
 		 * @param childData [in] : Value of the PCDATA
 		 */
-		virtual void setPCData(const char* childData) =0;
+		virtual void setPCData(const char* childData) = 0;
 
 		/**
 		 * @brief Apppend a string to the current PCDATA of the node
@@ -60,14 +60,14 @@ namespace XML
 		 * @brief Return the PCDATA of the node.
 		 * @return Value of PCDATA
 		 */
-		virtual const char* getPCData(void) const =0;
+		virtual const char* getPCData(void) const = 0;
 
 		//Child
 		/**
 		 * @brief Add a node child of the
 		 * @param ChildNode [in] : The Node that will became the new child
 		 */
-		virtual void addChild(XML::IXMLNode* ChildNode) =0;
+		virtual void addChild(XML::IXMLNode* ChildNode) = 0;
 
 		/**
 		 * @brief Return the ith child of the node.
@@ -81,7 +81,7 @@ namespace XML
 		 * @param sName [in]] : Name of th child
 		 * @return The first child of the node which name is sName.
 		 */
-		virtual XML::IXMLNode* getChildByName(const char* sName) const =0;
+		virtual XML::IXMLNode* getChildByName(const char* sName) const = 0;
 
 		/**
 		 * @brief Return the amount of child the node has.
@@ -96,7 +96,7 @@ namespace XML
 		 * @param depth [in] : Amount of indentation
 		 * @return XML string describing the node and its childs.
 		 */
-		virtual char* getXML(const XML::uint32 depth = 0) const =0;
+		virtual char* getXML(const uint32_t depth = 0) const = 0;
 
 	protected:
 		virtual ~IXMLNode(void) {}

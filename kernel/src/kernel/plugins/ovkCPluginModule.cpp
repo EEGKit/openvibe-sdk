@@ -27,7 +27,7 @@ namespace OpenViBE
 
 			virtual bool initialize(void);
 			virtual bool getPluginObjectDescription(
-				uint32 ui32Index,
+				uint32_t ui32Index,
 				IPluginObjectDesc*& rpPluginObjectDescription);
 			virtual bool uninitialize(void);
 			virtual bool getFileName(CString& rFileName) const;
@@ -36,14 +36,14 @@ namespace OpenViBE
 
 		protected:
 
-			virtual bool isOpen(void) const =0;
+			virtual bool isOpen(void) const = 0;
 
 			vector<IPluginObjectDesc*> m_vPluginObjectDescriptor;
 			CString m_sFileName;
 			bool m_bGotDescriptions;
 
 			bool (*onInitializeCB)(const IPluginModuleContext&);
-			bool (*onGetPluginObjectDescriptionCB)(const IPluginModuleContext&, uint32, Plugins::IPluginObjectDesc*&);
+			bool (*onGetPluginObjectDescriptionCB)(const IPluginModuleContext&, uint32_t, Plugins::IPluginObjectDesc*&);
 			bool (*onUninitializeCB)(const IPluginModuleContext&);
 		};
 	};
@@ -101,7 +101,7 @@ bool CPluginModuleBase::initialize(void)
 }
 
 bool CPluginModuleBase::getPluginObjectDescription(
-	uint32 ui32Index,
+	uint32_t ui32Index,
 	IPluginObjectDesc*& rpPluginObjectDescription)
 {
 	if (!m_bGotDescriptions)
@@ -109,7 +109,7 @@ bool CPluginModuleBase::getPluginObjectDescription(
 		if (!isOpen()) { return false; }
 		if (!onGetPluginObjectDescriptionCB) { return false; }
 
-		uint32 l_ui32Index                           = 0;
+		uint32_t l_ui32Index                           = 0;
 		IPluginObjectDesc* l_pPluginObjectDescriptor = NULL;
 		while (onGetPluginObjectDescriptionCB(CPluginModuleContext(getKernelContext()), l_ui32Index, l_pPluginObjectDescriptor))
 		{
@@ -270,7 +270,7 @@ bool CPluginModuleLinux::load(
 
 	onInitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_pFileHandle, "onInitialize");
 	onUninitializeCB=(bool (*)(const IPluginModuleContext&))dlsym(m_pFileHandle, "onUninitialize");
-	onGetPluginObjectDescriptionCB=(bool (*)(const IPluginModuleContext&, uint32, Plugins::IPluginObjectDesc*&))dlsym(m_pFileHandle, "onGetPluginObjectDescription");
+	onGetPluginObjectDescriptionCB=(bool (*)(const IPluginModuleContext&, uint32_t, Plugins::IPluginObjectDesc*&))dlsym(m_pFileHandle, "onGetPluginObjectDescription");
 
 	if(!onGetPluginObjectDescriptionCB)
 	{
@@ -338,7 +338,7 @@ bool CPluginModuleWindows::load(
 
 	onInitializeCB                 = (bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onInitialize");
 	onUninitializeCB               = (bool (*)(const IPluginModuleContext&))GetProcAddress(m_pFileHandle, "onUninitialize");
-	onGetPluginObjectDescriptionCB = (bool (*)(const IPluginModuleContext&, uint32, Plugins::IPluginObjectDesc*&))GetProcAddress(m_pFileHandle, "onGetPluginObjectDescription");
+	onGetPluginObjectDescriptionCB = (bool (*)(const IPluginModuleContext&, uint32_t, Plugins::IPluginObjectDesc*&))GetProcAddress(m_pFileHandle, "onGetPluginObjectDescription");
 	if (!onGetPluginObjectDescriptionCB)
 	{
 		if (pError)
@@ -455,7 +455,7 @@ bool CPluginModule::initialize(void)
 }
 
 bool CPluginModule::getPluginObjectDescription(
-	uint32 ui32Index,
+	uint32_t ui32Index,
 	IPluginObjectDesc*& rpPluginObjectDescription)
 {
 	return !m_pImplementation ? false : m_pImplementation->getPluginObjectDescription(ui32Index, rpPluginObjectDescription);

@@ -68,7 +68,7 @@ namespace OpenViBE
 			 * \endcode
 			 */
 			virtual OpenViBE::CIdentifier getNextParameterIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const =0;
+				const OpenViBE::CIdentifier& rPreviousIdentifier) const = 0;
 
 			/**
 			 * \brief Gets a specific parameter given its identifier
@@ -77,7 +77,7 @@ namespace OpenViBE
 			 * \return \c NULL in case of error.
 			 */
 			virtual OpenViBE::Kernel::IParameter* getParameter(
-				const OpenViBE::CIdentifier& rParameterIdentifier) =0;
+				const OpenViBE::CIdentifier& rParameterIdentifier) = 0;
 			/**
 			 * \brief Replaces the parameter with a client handled object
 			 * \param rParameterIdentifier [in] : the identifier of the parameter to replace
@@ -92,7 +92,7 @@ namespace OpenViBE
 			 */
 			virtual bool setParameter(
 				const OpenViBE::CIdentifier& rParameterIdentifier,
-				OpenViBE::Kernel::IParameter& rpParameter) =0;
+				OpenViBE::Kernel::IParameter& rpParameter) = 0;
 			/**
 			 * \brief Creates a new parameter of a specific type
 			 * \param rParameterIdentifier [in] : the parameter identifier which has to be created
@@ -106,7 +106,7 @@ namespace OpenViBE
 			virtual OpenViBE::Kernel::IParameter* createParameter(
 				const OpenViBE::CIdentifier& rParameterIdentifier,
 				const OpenViBE::Kernel::EParameterType eParameterType,
-				const OpenViBE::CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) =0;
+				const OpenViBE::CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Removes an existing parameter
 			 * \param rParameterIdentifier [in] : the identifier of the parameter to remove
@@ -116,7 +116,7 @@ namespace OpenViBE
 			 *       parameter object thanks to \c setParameter function.
 			 */
 			virtual bool removeParameter(
-				const OpenViBE::CIdentifier& rParameterIdentifier) =0;
+				const OpenViBE::CIdentifier& rParameterIdentifier) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Configurable);
 		};

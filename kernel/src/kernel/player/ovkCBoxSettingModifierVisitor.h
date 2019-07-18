@@ -21,7 +21,7 @@ public:
 																												 m_pBox(nullptr),
 																												 m_pConfigurationManager(pConfigurationManager) {}
 
-	virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount);
+	virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
 
 	virtual void processChildData(const char* sData);
 
@@ -33,7 +33,7 @@ public:
 
 	OpenViBE::Kernel::IObjectVisitorContext* m_pObjectVisitorContext;
 	OpenViBE::Kernel::IBox* m_pBox;
-	OpenViBE::uint32 m_ui32SettingIndex;
+	uint32_t m_ui32SettingIndex;
 	bool m_bIsParsingSettingValue;
 	bool m_bIsParsingSettingOverride;
 	OpenViBE::Kernel::IConfigurationManager* m_pConfigurationManager;

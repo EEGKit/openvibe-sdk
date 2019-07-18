@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			bool generateFileHeader(void);
@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 
 		private:
 
-			virtual void write(const void* pBuffer, const EBML::uint64 ui64BufferSize);
+			virtual void write(const void* pBuffer, const uint64_t ui64BufferSize);
 
 		private:
 
@@ -67,7 +67,7 @@ namespace OpenViBEPlugins
 			bool check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
-				OpenViBE::uint32 i = rBox.getInputCount() - 1;
+				uint32_t i = rBox.getInputCount() - 1;
 				//only check last input (we assume previous inputs have benn named, how could they not?)
 				sprintf(l_sName, "Input stream %u", i + 1);
 				rBox.setInputName(i, l_sName);
@@ -89,20 +89,20 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				rBox.setInputType(ui32Index, OV_TypeId_EBMLStream);
 				this->check(rBox);
 				return true;
 			}
 
-			virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				//this->check(rBox);
 				return true;
 			}
 
-			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				//this->check(rBox);
 				return true;
@@ -133,8 +133,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmGenericStreamWriterListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Input stream 1", OV_TypeId_EBMLStream);
 				rBoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].ov");

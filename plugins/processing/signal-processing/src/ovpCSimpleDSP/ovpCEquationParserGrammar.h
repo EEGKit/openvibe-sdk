@@ -91,7 +91,7 @@ enum Variables
 * Symbols table for unary functions.
 *
 */
-struct CUnaryFunctionSymbols : symbols<OpenViBE::uint64>
+struct CUnaryFunctionSymbols : symbols<uint64_t>
 {
 	CUnaryFunctionSymbols()
 	{
@@ -117,7 +117,7 @@ struct CUnaryFunctionSymbols : symbols<OpenViBE::uint64>
 * Symbols table for binary functions.
 *
 */
-struct CBinaryFunctionSymbols : symbols<OpenViBE::uint64>
+struct CBinaryFunctionSymbols : symbols<uint64_t>
 {
 	CBinaryFunctionSymbols()
 	{
@@ -130,7 +130,7 @@ struct CBinaryFunctionSymbols : symbols<OpenViBE::uint64>
 * Symbol tables for unary boolean operators
 *
 */
-struct CUnaryBooleanFunctionSymbols : symbols<OpenViBE::uint64>
+struct CUnaryBooleanFunctionSymbols : symbols<uint64_t>
 {
 	CUnaryBooleanFunctionSymbols()
 	{
@@ -143,7 +143,7 @@ struct CUnaryBooleanFunctionSymbols : symbols<OpenViBE::uint64>
 * Symbol tables for binary boolean operators
 *
 */
-struct CBinaryBoolean1FunctionSymbols : symbols<OpenViBE::uint64>
+struct CBinaryBoolean1FunctionSymbols : symbols<uint64_t>
 {
 	CBinaryBoolean1FunctionSymbols()
 	{
@@ -157,7 +157,7 @@ struct CBinaryBoolean1FunctionSymbols : symbols<OpenViBE::uint64>
 * Symbol tables for binary boolean operators
 *
 */
-struct CBinaryBoolean2FunctionSymbols : symbols<OpenViBE::uint64>
+struct CBinaryBoolean2FunctionSymbols : symbols<uint64_t>
 {
 	CBinaryBoolean2FunctionSymbols()
 	{
@@ -171,7 +171,7 @@ struct CBinaryBoolean2FunctionSymbols : symbols<OpenViBE::uint64>
 * Symbol tables for binary boolean operators
 *
 */
-struct CBinaryBoolean3FunctionSymbols : symbols<OpenViBE::uint64>
+struct CBinaryBoolean3FunctionSymbols : symbols<uint64_t>
 {
 	CBinaryBoolean3FunctionSymbols()
 	{
@@ -185,7 +185,7 @@ struct CBinaryBoolean3FunctionSymbols : symbols<OpenViBE::uint64>
 * Symbols table for comparison 1 functions.
 *
 */
-struct CComparison1FunctionSymbols : symbols<OpenViBE::uint64>
+struct CComparison1FunctionSymbols : symbols<uint64_t>
 {
 	CComparison1FunctionSymbols()
 	{
@@ -201,7 +201,7 @@ struct CComparison1FunctionSymbols : symbols<OpenViBE::uint64>
 * Symbols table for comparison 2 functions.
 *
 */
-struct CComparison2FunctionSymbols : symbols<OpenViBE::uint64>
+struct CComparison2FunctionSymbols : symbols<uint64_t>
 {
 	CComparison2FunctionSymbols()
 	{
@@ -241,7 +241,7 @@ struct CMathConstantSymbols : symbols<double>
 * Symbols table for variables.
 *
 */
-struct CVariableSymbols : symbols<OpenViBE::uint64>
+struct CVariableSymbols : symbols<uint64_t>
 {
 	CVariableSymbols()
 	{

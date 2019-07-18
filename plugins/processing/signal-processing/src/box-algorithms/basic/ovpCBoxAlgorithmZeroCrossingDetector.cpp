@@ -88,7 +88,7 @@ bool CBoxAlgorithmZeroCrossingDetector::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmZeroCrossingDetector::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmZeroCrossingDetector::processInput(uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -97,15 +97,15 @@ bool CBoxAlgorithmZeroCrossingDetector::processInput(uint32 ui32InputIndex)
 bool CBoxAlgorithmZeroCrossingDetector::process(void)
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
-	uint32 i, j, k;
+	uint32_t i, j, k;
 
 	for (i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		m_oDecoder.decode(i);
 		m_oEncoder1.getInputStimulationSet()->clear();
 
-		uint32 l_ui32ChannelCount = m_oDecoder.getOutputMatrix()->getDimensionSize(0);
-		uint32 l_ui32SampleCount  = m_oDecoder.getOutputMatrix()->getDimensionSize(1);
+		uint32_t l_ui32ChannelCount = m_oDecoder.getOutputMatrix()->getDimensionSize(0);
+		uint32_t l_ui32SampleCount  = m_oDecoder.getOutputMatrix()->getDimensionSize(1);
 
 		if (m_oDecoder.isHeaderReceived())
 		{
@@ -135,8 +135,8 @@ bool CBoxAlgorithmZeroCrossingDetector::process(void)
 		{
 			if (m_ui64ChunkCount == 0)
 			{
-				m_ui32SamplingRate = l_ui32SampleCount * static_cast<uint32>((1LL << 32) / (l_rDynamicBoxContext.getInputChunkEndTime(0, i) - l_rDynamicBoxContext.getInputChunkStartTime(0, i)));
-				m_ui32WindowTime   = static_cast<uint32>(m_f64WindowTime * m_ui32SamplingRate);
+				m_ui32SamplingRate = l_ui32SampleCount * static_cast<uint32_t>((1LL << 32) / (l_rDynamicBoxContext.getInputChunkEndTime(0, i) - l_rDynamicBoxContext.getInputChunkStartTime(0, i)));
+				m_ui32WindowTime   = static_cast<uint32_t>(m_f64WindowTime * m_ui32SamplingRate);
 			}
 
 			double* l_pInputBuffer   = m_oDecoder.getOutputMatrix()->getBuffer();

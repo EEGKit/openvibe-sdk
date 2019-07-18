@@ -97,7 +97,7 @@ namespace OpenViBE
 			 * call any of the plugin functions after release is
 			 * called.
 			 */
-			virtual void release(void) =0;
+			virtual void release(void) = 0;
 
 			//@}
 			/** \name Creation process */
@@ -111,7 +111,7 @@ namespace OpenViBE
 			 * descriptor. It should return the concrete class
 			 * identifier of the plugin object itself.
 			 */
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const =0;
+			virtual OpenViBE::CIdentifier getCreatedClass(void) const = 0;
 			virtual OpenViBE::CIdentifier getCreatedClassIdentifier(void) const { return this->getCreatedClass(); }
 			/**
 			 * \brief Creates the plugin object itself
@@ -122,7 +122,7 @@ namespace OpenViBE
 			 * platform then uses the IObject::isDerivedFromClass
 			 * method to use the plugin correctly.
 			 */
-			virtual OpenViBE::Plugins::IPluginObject* create(void) =0;
+			virtual OpenViBE::Plugins::IPluginObject* create(void) = 0;
 
 			//@}
 			/** \name Textual plugin object description and information */

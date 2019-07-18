@@ -80,7 +80,7 @@ namespace OpenViBEToolkit
 
 		TChannelUnitsEncoder() { }
 
-		TChannelUnitsEncoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TChannelUnitsEncoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);

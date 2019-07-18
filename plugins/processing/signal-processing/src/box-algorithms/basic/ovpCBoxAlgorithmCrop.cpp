@@ -79,7 +79,7 @@ bool CBoxAlgorithmCrop::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmCrop::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmCrop::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -90,7 +90,7 @@ bool CBoxAlgorithmCrop::process(void)
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		TParameterHandler<const IMemoryBuffer*> l_oInputMemoryBufferHandle(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
 		TParameterHandler<IMemoryBuffer*> l_oOutputMemoryBufferHandle(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
@@ -106,7 +106,7 @@ bool CBoxAlgorithmCrop::process(void)
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
 			double* l_pBuffer = m_pMatrix->getBuffer();
-			for (uint32 j = 0; j < m_pMatrix->getBufferElementCount(); j++, l_pBuffer++)
+			for (uint32_t j = 0; j < m_pMatrix->getBufferElementCount(); j++, l_pBuffer++)
 			{
 				if (*l_pBuffer < m_f64MinCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Min || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) *l_pBuffer = m_f64MinCropValue;
 				if (*l_pBuffer > m_f64MaxCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Max || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) *l_pBuffer = m_f64MaxCropValue;

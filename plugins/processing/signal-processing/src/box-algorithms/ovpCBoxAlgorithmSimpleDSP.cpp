@@ -22,7 +22,7 @@ CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP(void)
 bool CBoxAlgorithmSimpleDSP::initialize(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	uint32 i;
+	uint32_t i;
 
 	m_ppVariable = new double*[l_rStaticBoxContext.getInputCount()];
 
@@ -89,8 +89,8 @@ bool CBoxAlgorithmSimpleDSP::initialize(void)
 		{
 			IAlgorithmProxy* l_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
 			l_pStreamDecoder->initialize();
-			TParameterHandler<uint64> ip_ui64SamplingRate(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate));
-			TParameterHandler<uint64> op_ui64SamplingRate(l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
+			TParameterHandler<uint64_t> ip_ui64SamplingRate(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate));
+			TParameterHandler<uint64_t> op_ui64SamplingRate(l_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
 			ip_ui64SamplingRate.setReferenceTarget(op_ui64SamplingRate);
 			m_vStreamDecoder.push_back(l_pStreamDecoder);
 		}
@@ -150,16 +150,16 @@ bool CBoxAlgorithmSimpleDSP::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmSimpleDSP::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSimpleDSP::processInput(uint32_t ui32InputIndex)
 {
 	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
 	if (l_rDynamicBoxContext.getInputChunkCount(0) == 0) { return true; }
 
-	uint64 l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, 0);
-	uint64 l_ui64EndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, 0);
-	for (uint32 i = 1; i < l_rStaticBoxContext.getInputCount(); i++)
+	uint64_t l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, 0);
+	uint64_t l_ui64EndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, 0);
+	for (uint32_t i = 1; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		if (l_rDynamicBoxContext.getInputChunkCount(i) == 0) { return true; }
 		if (m_bCheckChunkDates)
@@ -183,10 +183,10 @@ bool CBoxAlgorithmSimpleDSP::process(void)
 	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	uint32 i;
-	uint32 l_ui32HeaderCount = 0;
-	uint32 l_ui32BufferCount = 0;
-	uint32 l_ui32EndCount    = 0;
+	uint32_t i;
+	uint32_t l_ui32HeaderCount = 0;
+	uint32_t l_ui32BufferCount = 0;
+	uint32_t l_ui32EndCount    = 0;
 
 	TParameterHandler<IMatrix*> ip_pMatrix(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
 	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
@@ -259,7 +259,7 @@ void CBoxAlgorithmSimpleDSP::evaluate(void)
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
-	for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		m_ppVariable[i] = m_vMatrix[i]->getBuffer();
 	}
@@ -272,7 +272,7 @@ void CBoxAlgorithmSimpleDSP::evaluate(void)
 	{
 		*l_pBuffer = m_pEquationParser->executeEquation();
 
-		for (uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+		for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 		{
 			m_ppVariable[i]++;
 		}
@@ -286,7 +286,7 @@ void CBoxAlgorithmSimpleDSP::evaluate(void)
 		//The equation is not a special one, we have to execute the whole stack of function calls
 		case OP_USERDEF:
 			//for every samples
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_f64Variable = pBuffer[i];
 				m_pMatrixBuffer[i] = m_pEquationParser->executeEquation();
@@ -294,7 +294,7 @@ void CBoxAlgorithmSimpleDSP::evaluate(void)
 			break;
 
 		case OP_X2:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = pBuffer[i]*pBuffer[i];
 			}
@@ -305,111 +305,111 @@ void CBoxAlgorithmSimpleDSP::evaluate(void)
 			break;
 
 		case OP_ABS:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = abs(pBuffer[i]);
 			}
 			break;
 		case OP_ACOS:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = acos(pBuffer[i]);
 			}
 			break;
 
 		case OP_ASIN:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = asin(pBuffer[i]);
 			}
 			break;
 
 		case OP_ATAN:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = atan(pBuffer[i]);
 			}
 			break;
 
 		case OP_CEIL:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = ceil(pBuffer[i]);
 			}
 			break;
 
 		case OP_COS:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = cos(pBuffer[i]);
 			}
 			break;
 
 		case OP_EXP:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = exp(pBuffer[i]);
 			}
 			break;
 
 		case OP_FLOOR:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = floor(pBuffer[i]);
 			}
 			break;
 
 		case OP_LOG:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = log(pBuffer[i]);
 			}
 			break;
 
 		case OP_LOG10:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = log10(pBuffer[i]);
 			}
 			break;
 
 		case OP_SIN:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = sin(pBuffer[i]);
 			}
 			break;
 
 		case OP_SQRT:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = sqrt(pBuffer[i]);
 			}
 			break;
 
 		case OP_TAN:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = tan(pBuffer[i]);
 			}
 			break;
 
 		case OP_ADD:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = pBuffer[i] + m_f64SpecialEquationParameter;
 			}
 			break;
 
 		case OP_MUL:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = pBuffer[i] * m_f64SpecialEquationParameter;
 			}
 			break;
 
 		case OP_DIV:
-			for(uint64 i=0 ; i<m_ui64MatrixBufferSize ; i++)
+			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
 				m_pMatrixBuffer[i] = pBuffer[i] / m_f64SpecialEquationParameter;
 			}

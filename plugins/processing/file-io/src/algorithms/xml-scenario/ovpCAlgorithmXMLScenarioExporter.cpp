@@ -29,7 +29,7 @@ CAlgorithmXMLScenarioExporter::~CAlgorithmXMLScenarioExporter(void)
 
 void CAlgorithmXMLScenarioExporter::write(const char* sString)
 {
-	m_pMemoryBuffer->append(reinterpret_cast<const uint8*>(sString), ::strlen(sString));
+	m_pMemoryBuffer->append(reinterpret_cast<const uint8_t*>(sString), ::strlen(sString));
 }
 
 bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier)
@@ -177,7 +177,7 @@ bool CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& rMemoryBuffer, c
 	return true;
 }
 
-bool CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const uint64 ui64Value)
+bool CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const uint64_t ui64Value)
 {
 	char l_sValue[1024];
 	sprintf(l_sValue, "%lu", ui64Value);

@@ -81,14 +81,14 @@ bool CBoxProto::addSetting(
 	return true;
 }
 /*
-uint32 CBoxProto::addSetting(
+uint32_t CBoxProto::addSetting(
 	const OpenViBE::CString& sName,
 	const OpenViBE::CIdentifier& rTypeIdentifier,
 	const OpenViBE::CString& sDefaultValue,
 	const bool bModifiable)
 {
 	addSetting(sName, rTypeIdentifier, sDefaultValue);
-	uint32 l_ui32LastSetting = m_rBox.getSettingCount();
+	uint32_t l_ui32LastSetting = m_rBox.getSettingCount();
 	m_rBox.setSettingMod(l_ui32LastSetting, bModifiable);
 	return true;
 

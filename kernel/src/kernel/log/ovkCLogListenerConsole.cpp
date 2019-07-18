@@ -71,7 +71,7 @@ void CLogListenerConsole::log(const time64 time64Value)
 
 	if (m_bTimeInSeconds)
 	{
-		uint64 l_ui64Precision = m_ui64TimePrecision;
+		uint64_t l_ui64Precision = m_ui64TimePrecision;
 		double l_f64Time      = ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
 		std::stringstream ss;
 		ss.precision(static_cast<long long>(l_ui64Precision));
@@ -98,7 +98,7 @@ void CLogListenerConsole::log(const time64 time64Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const uint64 ui64Value)
+void CLogListenerConsole::log(const uint64_t ui64Value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -113,7 +113,7 @@ void CLogListenerConsole::log(const uint64 ui64Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const uint32 ui32Value)
+void CLogListenerConsole::log(const uint32_t ui32Value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -127,7 +127,7 @@ void CLogListenerConsole::log(const uint32 ui32Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const uint16 ui16Value)
+void CLogListenerConsole::log(const uint16_t ui16Value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -141,7 +141,7 @@ void CLogListenerConsole::log(const uint16 ui16Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const uint8 ui8Value)
+void CLogListenerConsole::log(const uint8_t ui8Value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -155,7 +155,7 @@ void CLogListenerConsole::log(const uint8 ui8Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const int64 i64Value)
+void CLogListenerConsole::log(const int64_t i64Value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -169,7 +169,7 @@ void CLogListenerConsole::log(const int64 i64Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const int32 i32Value)
+void CLogListenerConsole::log(const int32_t i32Value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -183,7 +183,7 @@ void CLogListenerConsole::log(const int32 i32Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const int16 i16Value)
+void CLogListenerConsole::log(const int16_t i16Value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -197,7 +197,7 @@ void CLogListenerConsole::log(const int16 i16Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const int8 i8Value)
+void CLogListenerConsole::log(const int8_t i8Value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);

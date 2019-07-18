@@ -11,7 +11,7 @@ bool CBoxAlgorithmChannelRename::initialize(void)
 {
 	std::vector<CString> tokens;
 	CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	uint32 tokenCount    = OpenViBEToolkit::Tools::String::split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
+	uint32_t tokenCount    = OpenViBEToolkit::Tools::String::split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
 
 	m_ChannelNames.clear();
 	for (uint32_t i = 0; i < tokenCount; i++)
@@ -68,7 +68,7 @@ bool CBoxAlgorithmChannelRename::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmChannelRename::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmChannelRename::processInput(uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

@@ -51,7 +51,7 @@ CIdentifier CLink::getIdentifier(void) const
 
 bool CLink::setSource(
 	const CIdentifier& rBoxIdentifier,
-	const uint32 ui32BoxOutputIndex,
+	const uint32_t ui32BoxOutputIndex,
 	const CIdentifier rBoxOutputIdentifier)
 {
 	m_oSourceBoxIdentifier       = rBoxIdentifier;
@@ -62,7 +62,7 @@ bool CLink::setSource(
 
 bool CLink::setTarget(
 	const CIdentifier& rBoxIdentifier,
-	const uint32 ui32BoxInputIndex,
+	const uint32_t ui32BoxInputIndex,
 	const CIdentifier rBoxInputIdentifier)
 {
 	m_oTargetBoxIdentifier      = rBoxIdentifier;
@@ -73,7 +73,7 @@ bool CLink::setTarget(
 
 bool CLink::getSource(
 	CIdentifier& rBoxIdentifier,
-	uint32& ui32BoxOutputIndex,
+	uint32_t& ui32BoxOutputIndex,
 	CIdentifier& rBoxOuputIdentifier) const
 {
 	rBoxIdentifier      = m_oSourceBoxIdentifier;
@@ -87,7 +87,7 @@ CIdentifier CLink::getSourceBoxIdentifier(void) const
 	return m_oSourceBoxIdentifier;
 }
 
-uint32 CLink::getSourceBoxOutputIndex(void) const
+uint32_t CLink::getSourceBoxOutputIndex(void) const
 {
 	return m_ui32SourceOutputIndex;
 }
@@ -99,7 +99,7 @@ CIdentifier CLink::getSourceBoxOutputIdentifier(void) const
 
 bool CLink::getTarget(
 	CIdentifier& rTargetBoxIdentifier,
-	uint32& ui32BoxInputIndex,
+	uint32_t& ui32BoxInputIndex,
 	CIdentifier& rTargetBoxInputIdentifier) const
 {
 	rTargetBoxIdentifier      = m_oTargetBoxIdentifier;
@@ -113,7 +113,7 @@ CIdentifier CLink::getTargetBoxIdentifier(void) const
 	return m_oTargetBoxIdentifier;
 }
 
-uint32 CLink::getTargetBoxInputIndex(void) const
+uint32_t CLink::getTargetBoxInputIndex(void) const
 {
 	return m_ui32TargetInputIndex;
 }

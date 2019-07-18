@@ -15,7 +15,7 @@ namespace XML
 	public:
 		TReaderCallbackProxy1(
 			COwnerClass& rOwnerObject,
-			void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount),
+			void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount),
 			void (COwnerClass::*mfpProcessChildData)(const char* sData),
 			void (COwnerClass::*mfpCloseChild)(void))
 			: m_rOwnerObject(rOwnerObject)
@@ -23,7 +23,7 @@ namespace XML
 			  , m_mfpProcessChildData(mfpProcessChildData)
 			  , m_mfpCloseChild(mfpCloseChild) { }
 
-		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount)
+		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
 		{
 			if (m_mfpOpenChild)
 			{
@@ -49,7 +49,7 @@ namespace XML
 
 	protected:
 		COwnerClass& m_rOwnerObject;
-		void (COwnerClass::*m_mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount);
+		void (COwnerClass::*m_mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
 		void (COwnerClass::*m_mfpProcessChildData)(const char* sData);
 		void (COwnerClass::*m_mfpCloseChild)(void);
 	};
@@ -57,7 +57,7 @@ namespace XML
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass, void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount), void (COwnerClass::*mfpProcessChildData)(const char* sData), void (COwnerClass::*mfpCloseChild)(void)>
+	template <class COwnerClass, void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount), void (COwnerClass::*mfpProcessChildData)(const char* sData), void (COwnerClass::*mfpCloseChild)(void)>
 	class TReaderCallbackProxy2 : public XML::IReaderCallback
 	{
 	public:
@@ -67,7 +67,7 @@ namespace XML
 			  , m_mfpProcessChildData(mfpProcessChildData)
 			  , m_mfpCloseChild(mfpCloseChild) { }
 
-		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount)
+		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
 		{
 			if (mfpOpenChild)
 			{
@@ -93,7 +93,7 @@ namespace XML
 
 	protected:
 		COwnerClass& m_rOwnerObject;
-		void (COwnerClass::*m_mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, XML::uint64 ui64AttributeCount);
+		void (COwnerClass::*m_mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
 		void (COwnerClass::*m_mfpProcessChildData)(const char* sData);
 		void (COwnerClass::*m_mfpCloseChild)(void);
 	};

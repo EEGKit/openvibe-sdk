@@ -89,7 +89,7 @@ namespace OpenViBEPlugins
 			//				return true;
 			//			}
 
-			virtual OpenViBE::int32 getStrategySettingsCount(OpenViBE::Kernel::IBox& rBox)
+			virtual int32_t getStrategySettingsCount(OpenViBE::Kernel::IBox& rBox)
 			{
 				if (m_i32StrategyAmountSettings < 0)//The value have never been initialized
 				{

@@ -14,7 +14,7 @@ namespace OpenViBEToolkit
 	{
 	protected:
 		//The signal stream is a streamed matrix plus a sampling rate
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64> m_pInputSamplingRate;
+		OpenViBE::Kernel::TParameterHandler<uint64_t> m_pInputSamplingRate;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
@@ -50,7 +50,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::uint64>& getInputSamplingRate()
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate()
 		{
 			return m_pInputSamplingRate;
 		}
@@ -90,7 +90,7 @@ namespace OpenViBEToolkit
 
 		TSignalEncoder() { }
 
-		TSignalEncoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TSignalEncoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);

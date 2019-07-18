@@ -56,14 +56,14 @@ namespace OpenViBE
 		 * components.
 		 */
 		CIdentifier(
-			const OpenViBE::uint32 ui32Identifier1,
-			const OpenViBE::uint32 ui32Identifier2);
+			const uint32_t ui32Identifier1,
+			const uint32_t ui32Identifier2);
 		/**
 		 * \brief 64 bits integer based constructor
 		 * \param ui64Identifier [in] : The identifier
 		 */
 		CIdentifier(
-			const OpenViBE::uint64 ui64Identifier);
+			const uint64_t ui64Identifier);
 		/**
 		 * \brief Copy constructor
 		 * \param rIdentifier [in] : the identifier to initialize
@@ -223,7 +223,7 @@ namespace OpenViBE
 		 *          as integers. Actually, the internal 64 bits representation may
 		 *          change, resulting in code port needs if you use this function
 		 */
-		OpenViBE::uint64 toUInteger(void) const;
+		uint64_t toUInteger(void) const;
 		/**
 		 * \brief Creates a random identifier
 		 * \return a random identifier
@@ -233,7 +233,7 @@ namespace OpenViBE
 
 	protected:
 
-		OpenViBE::uint64 m_ui64Identifier; ///< the 64 bit identifier value
+		uint64_t m_ui64Identifier; ///< the 64 bit identifier value
 	};
 };
 

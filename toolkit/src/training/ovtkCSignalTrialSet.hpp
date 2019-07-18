@@ -14,8 +14,8 @@ namespace OpenViBEToolkit
 		virtual bool addSignalTrial(OpenViBEToolkit::ISignalTrial& rSignalTrial);
 		virtual bool clear(void);
 
-		virtual OpenViBE::uint32 getSignalTrialCount(void) const;
-		virtual OpenViBEToolkit::ISignalTrial& getSignalTrial(OpenViBE::uint32 ui32Index) const;
+		virtual uint32_t getSignalTrialCount(void) const;
+		virtual OpenViBEToolkit::ISignalTrial& getSignalTrial(uint32_t ui32Index) const;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_);
 

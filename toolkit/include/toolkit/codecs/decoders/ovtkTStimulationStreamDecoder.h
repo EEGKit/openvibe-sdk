@@ -77,7 +77,7 @@ namespace OpenViBEToolkit
 
 		TStimulationDecoder() { }
 
-		TStimulationDecoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TStimulationDecoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);

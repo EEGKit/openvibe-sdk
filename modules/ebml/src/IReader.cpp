@@ -12,7 +12,7 @@ using namespace EBML;
 
 #if 0
 #define _Debug_ _is_in_debug_mode_(m_ui64TotalBytes)
-static bool _is_in_debug_mode_(uint64 ui64Value)
+static bool _is_in_debug_mode_(uint64_t ui64Value)
 {
 	static int i=0;
 	// bool result=i++>5500000;
@@ -65,9 +65,9 @@ inline unsigned long getCodedSizeLength(unsigned char* pBuffer, unsigned long ul
 	return l_ulCodedSizeLength;
 }
 
-inline uint64 getValue(unsigned char* pBuffer, unsigned long ulBufferLength)
+inline uint64_t getValue(unsigned char* pBuffer, unsigned long ulBufferLength)
 {
-	uint64 l_uiResult                 = 0;
+	uint64_t l_uiResult                 = 0;
 	unsigned long l_ulCodedSizeLength = getCodedSizeLength(pBuffer, ulBufferLength);
 	unsigned long i;
 	unsigned long l_ulIthBit = l_ulCodedSizeLength;
@@ -101,8 +101,8 @@ namespace EBML
 
 			CReaderNode* m_pParentNode;
 			CIdentifier m_oIdentifier;
-			uint64 m_ui64ContentSize;
-			uint64 m_ui64ReadContentSize;
+			uint64_t m_ui64ContentSize;
+			uint64_t m_ui64ReadContentSize;
 			unsigned char* m_pBuffer;
 			//			bool m_bBufferShouldBeDeleted;
 		};
@@ -130,9 +130,9 @@ namespace EBML
 			explicit CReader(IReaderCallback& rReaderCallback);
 			virtual ~CReader(void);
 
-			virtual bool processData(const void* pBuffer, const uint64 ui64BufferSize);
+			virtual bool processData(const void* pBuffer, const uint64_t ui64BufferSize);
 			virtual CIdentifier getCurrentNodeIdentifier(void) const;
-			virtual uint64 getCurrentNodeSize(void) const;
+			virtual uint64_t getCurrentNodeSize(void) const;
 
 			virtual void release(void);
 
@@ -147,15 +147,15 @@ namespace EBML
 
 			IReaderCallback& m_rReaderCallback;
 			CReaderNode* m_pCurrentNode;
-			uint64 m_ui64PendingSize;
-			uint64 m_ui64PendingCount;
+			uint64_t m_ui64PendingSize;
+			uint64_t m_ui64PendingCount;
 			unsigned char* m_pPending;
 			Status m_eStatus;
 			Status m_eLastStatus;
 			CIdentifier m_oCurrentIdentifier;
-			uint64 m_ui64CurrentContentSize;
+			uint64_t m_ui64CurrentContentSize;
 
-			uint64 m_ui64TotalBytes;
+			uint64_t m_ui64TotalBytes;
 		};
 	};
 };
@@ -185,7 +185,7 @@ CReader::~CReader(void)
 	}
 }
 
-bool CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
+bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	m_ui64TotalBytes += ui64BufferSize;
 
@@ -200,12 +200,12 @@ bool CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
 	if (!pBuffer || !ui64BufferSize) { return true; }
 
 	unsigned char* l_pBuffer = (unsigned char*)pBuffer;
-	uint64 l_ui64BufferSize  = ui64BufferSize;
+	uint64_t l_ui64BufferSize  = ui64BufferSize;
 	bool l_bFinished      = false;
 	while (!l_bFinished)
 	{
-		uint64 l_ui64ProcessedPendingBytes = 0;
-		uint64 l_ui64ProcessedBytes        = 0;
+		uint64_t l_ui64ProcessedPendingBytes = 0;
+		uint64_t l_ui64ProcessedBytes        = 0;
 		m_eLastStatus                      = m_eStatus;
 
 		if (_Debug_)
@@ -252,10 +252,10 @@ bool CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
 				else
 				{
 					unsigned char* l_pEncodedBuffer = new unsigned char[l_ulCodedSizeLength];
-					uint64 l_ui64PendingBytesToCopy = (l_ulCodedSizeLength > m_ui64PendingCount ? m_ui64PendingCount : l_ulCodedSizeLength);
+					uint64_t l_ui64PendingBytesToCopy = (l_ulCodedSizeLength > m_ui64PendingCount ? m_ui64PendingCount : l_ulCodedSizeLength);
 					::memcpy(l_pEncodedBuffer, m_pPending, (size_t)(l_ui64PendingBytesToCopy));
 					::memcpy(l_pEncodedBuffer + l_ui64PendingBytesToCopy, l_pBuffer, (size_t)(l_ulCodedSizeLength - l_ui64PendingBytesToCopy));
-					uint64 l_ui64DecodedValue = getValue(l_pEncodedBuffer, l_ulCodedSizeLength);
+					uint64_t l_ui64DecodedValue = getValue(l_pEncodedBuffer, l_ulCodedSizeLength);
 					delete [] l_pEncodedBuffer;
 					l_ui64ProcessedPendingBytes = l_ui64PendingBytesToCopy;
 					l_ui64ProcessedBytes        = l_ulCodedSizeLength;
@@ -354,7 +354,7 @@ bool CReader::processData(const void* pBuffer, const uint64 ui64BufferSize)
 		}
 
 		// Updates buffer pointer and size
-		uint64 l_ui64ProcessedBytesInBuffer = l_ui64ProcessedBytes - l_ui64ProcessedPendingBytes;
+		uint64_t l_ui64ProcessedBytesInBuffer = l_ui64ProcessedBytes - l_ui64ProcessedPendingBytes;
 		l_pBuffer += l_ui64ProcessedBytesInBuffer;
 		l_ui64BufferSize -= l_ui64ProcessedBytesInBuffer;
 		m_ui64PendingCount -= l_ui64ProcessedPendingBytes;
@@ -417,7 +417,7 @@ CIdentifier CReader::getCurrentNodeIdentifier(void) const
 	return m_pCurrentNode ? m_pCurrentNode->m_oIdentifier : CIdentifier();
 }
 
-uint64 CReader::getCurrentNodeSize(void) const
+uint64_t CReader::getCurrentNodeSize(void) const
 {
 	if (_Debug_)
 	{

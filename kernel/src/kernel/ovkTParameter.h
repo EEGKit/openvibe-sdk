@@ -25,7 +25,7 @@ namespace OpenViBE
 				  , m_eParameterType(eParameterType)
 				  , m_oSubTypeIdentifier(rSubTypeIdentifier) { }
 
-			virtual OpenViBE::uint64 getParameterSize(void) const
+			virtual uint64_t getParameterSize(void) const
 			{
 				return sizeof(IType);
 			}

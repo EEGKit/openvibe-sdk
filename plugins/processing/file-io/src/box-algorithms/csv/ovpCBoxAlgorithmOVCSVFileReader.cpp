@@ -155,7 +155,7 @@ bool CBoxAlgorithmOVCSVFileReader::process(void)
 		}
 		else if (m_TypeIdentifier == OV_TypeId_StreamedMatrix || m_TypeIdentifier == OV_TypeId_CovarianceMatrix)
 		{
-			OV_FATAL_UNLESS_K(matrix->setDimensionCount(static_cast<uint32>(m_DimensionSizes.size())),
+			OV_FATAL_UNLESS_K(matrix->setDimensionCount(static_cast<uint32_t>(m_DimensionSizes.size())),
 							  "Failed to set dimension count",
 							  ErrorType::Internal);
 			uint32_t previousDimensionSize = 0;

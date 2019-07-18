@@ -14,12 +14,12 @@ namespace OpenViBEToolkit
 		explicit TVector(OpenViBE::IMatrix& rMatrix)
 			: m_rMatrix(rMatrix) { }
 
-		virtual OpenViBE::uint32 getSize(void) const
+		virtual uint32_t getSize(void) const
 		{
 			return m_rMatrix.getBufferElementCount();
 		}
 
-		virtual bool setSize(const OpenViBE::uint32 ui32Size)
+		virtual bool setSize(const uint32_t ui32Size)
 		{
 			m_rMatrix.setDimensionCount(1);
 			m_rMatrix.setDimensionSize(0, ui32Size);
@@ -36,12 +36,12 @@ namespace OpenViBEToolkit
 			return m_rMatrix.getBuffer();
 		}
 
-		virtual const char* getElementLabel(const OpenViBE::uint32 ui32Index) const
+		virtual const char* getElementLabel(const uint32_t ui32Index) const
 		{
 			return m_rMatrix.getDimensionLabel(0, ui32Index);
 		}
 
-		virtual bool setElementLabel(const OpenViBE::uint32 ui32Index, const char* sElementLabel)
+		virtual bool setElementLabel(const uint32_t ui32Index, const char* sElementLabel)
 		{
 			m_rMatrix.setDimensionLabel(0, ui32Index, sElementLabel);
 			return true;

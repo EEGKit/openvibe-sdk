@@ -36,7 +36,7 @@ bool CStimulationEncoder::processBuffer(void)
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations);
 	m_pEBMLWriterHelper->setUIntegerAsChildData(l_pStimulationSet->getStimulationCount());
 	m_pEBMLWriterHelper->closeChild();
-	for (uint32 i = 0; i < l_pStimulationSet->getStimulationCount(); i++)
+	for (uint32_t i = 0; i < l_pStimulationSet->getStimulationCount(); i++)
 	{
 		m_pEBMLWriterHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation);
 		m_pEBMLWriterHelper->openChild(OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier);

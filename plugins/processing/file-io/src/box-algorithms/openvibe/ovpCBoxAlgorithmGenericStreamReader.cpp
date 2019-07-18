@@ -16,7 +16,7 @@ CBoxAlgorithmGenericStreamReader::CBoxAlgorithmGenericStreamReader(void)
 	  , m_bHasEBMLHeader(false)
 	  , m_pFile(NULL) {}
 
-uint64 CBoxAlgorithmGenericStreamReader::getClockFrequency(void)
+uint64_t CBoxAlgorithmGenericStreamReader::getClockFrequency(void)
 {
 	return 128LL << 32; // the box clock frequency
 }
@@ -73,7 +73,7 @@ bool CBoxAlgorithmGenericStreamReader::process(void)
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
-	uint64 l_ui64Time   = this->getPlayerContext().getCurrentTime();
+	uint64_t l_ui64Time   = this->getPlayerContext().getCurrentTime();
 	bool l_bFinished = false;
 
 	while (!l_bFinished && (!::feof(m_pFile) || m_bPending))
@@ -102,8 +102,8 @@ bool CBoxAlgorithmGenericStreamReader::process(void)
 			bool l_bJustStarted = true;
 			while (!::feof(m_pFile) && m_oReader.getCurrentNodeIdentifier() == EBML::CIdentifier())
 			{
-				uint8 l_ui8Byte;
-				size_t s = ::fread(&l_ui8Byte, sizeof(uint8), 1, m_pFile);
+				uint8_t l_ui8Byte;
+				size_t s = ::fread(&l_ui8Byte, sizeof(uint8_t), 1, m_pFile);
 
 				OV_ERROR_UNLESS_KRF(
 					s == 1 || l_bJustStarted,
@@ -117,7 +117,7 @@ bool CBoxAlgorithmGenericStreamReader::process(void)
 			if (!::feof(m_pFile) && m_oReader.getCurrentNodeSize() != 0)
 			{
 				m_oSwap.setSize(m_oReader.getCurrentNodeSize(), true);
-				size_t s = (size_t)::fread(m_oSwap.getDirectPointer(), sizeof(uint8), (size_t)m_oSwap.getSize(), m_pFile);
+				size_t s = (size_t)::fread(m_oSwap.getDirectPointer(), sizeof(uint8_t), (size_t)m_oSwap.getSize(), m_pFile);
 
 				OV_ERROR_UNLESS_KRF(
 					s == m_oSwap.getSize(),
@@ -126,9 +126,9 @@ bool CBoxAlgorithmGenericStreamReader::process(void)
 				);
 
 				m_oPendingChunk.setSize(0, true);
-				m_ui64StartTime   = std::numeric_limits<uint64>::max();
-				m_ui64EndTime     = std::numeric_limits<uint64>::max();
-				m_ui32OutputIndex = std::numeric_limits<uint32>::max();
+				m_ui64StartTime   = std::numeric_limits<uint64_t>::max();
+				m_ui64EndTime     = std::numeric_limits<uint64_t>::max();
+				m_ui32OutputIndex = std::numeric_limits<uint32_t>::max();
 
 				m_oReader.processData(m_oSwap.getDirectPointer(), m_oSwap.getSize());
 			}
@@ -176,14 +176,14 @@ void CBoxAlgorithmGenericStreamReader::openChild(const EBML::CIdentifier& rIdent
 	}
 }
 
-void CBoxAlgorithmGenericStreamReader::processChildData(const void* pBuffer, const uint64 ui64BufferSize)
+void CBoxAlgorithmGenericStreamReader::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
 	// Uncomment this when ebml version will be used
 	//if(l_rTop == EBML_Identifier_EBMLVersion)
 	//{
-	//	const uint64 l_ui64VersionNumber=(uint64)m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize);
+	//	const uint64_t l_ui64VersionNumber=(uint64_t)m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize);
 	//}
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Header_Compression)
@@ -200,7 +200,7 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* pBuffer, con
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_StreamIndex)
 	{
-		uint32 l_ui32StreamIndex = (uint32)m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize);
+		uint32_t l_ui32StreamIndex = (uint32_t)m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize);
 		if (m_vStreamIndexToTypeIdentifier.find(l_ui32StreamIndex) != m_vStreamIndexToTypeIdentifier.end())
 		{
 			m_ui32OutputIndex = m_vStreamIndexToOutputIndex[l_ui32StreamIndex];
@@ -217,7 +217,7 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* pBuffer, con
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_Content)
 	{
 		m_oPendingChunk.setSize(0, true);
-		m_oPendingChunk.append(reinterpret_cast<const EBML::uint8*>(pBuffer), ui64BufferSize);
+		m_oPendingChunk.append(reinterpret_cast<const uint8_t*>(pBuffer), ui64BufferSize);
 	}
 }
 
@@ -229,8 +229,8 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 	{
 		const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
-		std::map<uint32, CIdentifier>::const_iterator it;
-		std::map<uint32, uint32> l_vOutputIndexToStreamIndex;
+		std::map<uint32_t, CIdentifier>::const_iterator it;
+		std::map<uint32_t, uint32_t> l_vOutputIndexToStreamIndex;
 
 		bool l_bLostStreams = false;
 		bool l_bLastOutputs = false;
@@ -239,10 +239,10 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 		for (it = m_vStreamIndexToTypeIdentifier.begin(); it != m_vStreamIndexToTypeIdentifier.end(); ++it)
 		{
 			CIdentifier l_oOutputTypeIdentifier;
-			uint32 l_ui32Index = std::numeric_limits<uint32>::max();
+			uint32_t l_ui32Index = std::numeric_limits<uint32_t>::max();
 
 			// Find the first box output with this type that has no file stream connected
-			for (uint32 i = 0; i < l_rStaticBoxContext.getOutputCount() && l_ui32Index == std::numeric_limits<uint32>::max(); i++)
+			for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount() && l_ui32Index == std::numeric_limits<uint32_t>::max(); i++)
 			{
 				if (l_rStaticBoxContext.getOutputType(i, l_oOutputTypeIdentifier))
 				{
@@ -258,7 +258,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 			}
 
 			// In case no suitable output was found, see if we can downcast some type
-			for (uint32 i = 0; i < l_rStaticBoxContext.getOutputCount() && l_ui32Index == std::numeric_limits<uint32>::max(); i++)
+			for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount() && l_ui32Index == std::numeric_limits<uint32_t>::max(); i++)
 			{
 				if (l_rStaticBoxContext.getOutputType(i, l_oOutputTypeIdentifier))
 				{
@@ -277,13 +277,13 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 			}
 
 			// In case it was not found
-			if (l_ui32Index == std::numeric_limits<uint32>::max())
+			if (l_ui32Index == std::numeric_limits<uint32_t>::max())
 			{
 				CString l_sTypeName = this->getTypeManager().getTypeName(it->second);
 
 				OV_WARNING_K("No free output connector for stream " << it->first << " of type " << it->second << " (" << l_sTypeName << ")");
 
-				m_vStreamIndexToOutputIndex[it->first] = std::numeric_limits<uint32>::max();
+				m_vStreamIndexToOutputIndex[it->first] = std::numeric_limits<uint32_t>::max();
 				l_bLostStreams                         = true;
 			}
 			else
@@ -294,7 +294,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 		}
 
 		// Warns for output with no stream connected to them
-		for (uint32 i = 0; i < l_rStaticBoxContext.getOutputCount(); i++)
+		for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++)
 		{
 			if (l_vOutputIndexToStreamIndex.find(i) == l_vOutputIndexToStreamIndex.end())
 			{
@@ -313,9 +313,9 @@ void CBoxAlgorithmGenericStreamReader::closeChild(void)
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer)
 	{
-		m_bPending = ((m_ui32OutputIndex != std::numeric_limits<uint32>::max()) &&
-					  (m_ui64StartTime != std::numeric_limits<uint64>::max()) &&
-					  (m_ui64EndTime != std::numeric_limits<uint64>::max()));
+		m_bPending = ((m_ui32OutputIndex != std::numeric_limits<uint32_t>::max()) &&
+					  (m_ui64StartTime != std::numeric_limits<uint64_t>::max()) &&
+					  (m_ui64EndTime != std::numeric_limits<uint64_t>::max()));
 	}
 
 	m_vNodes.pop();

@@ -17,19 +17,19 @@ namespace OpenViBE
 			explicit TMessage(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 
 			virtual OpenViBE::CIdentifier getIdentifier(void) const;
-			virtual OpenViBE::uint64 getTime(void) const;
+			virtual uint64_t getTime(void) const;
 
 			virtual bool setIdentifier(
 				const OpenViBE::CIdentifier& rIdentifier);
 			virtual bool setTime(
-				const OpenViBE::uint64 ui64Time);
+				const uint64_t ui64Time);
 
 			_IsDerivedFromClass_Final_(T, OVK_ClassId_Kernel_Player_MessageT);
 
 		protected:
 
 			OpenViBE::CIdentifier m_oIdentifier;
-			OpenViBE::uint64 m_ui64Time;
+			uint64_t m_ui64Time;
 		};
 	};
 };

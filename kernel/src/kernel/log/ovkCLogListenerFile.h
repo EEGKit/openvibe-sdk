@@ -26,15 +26,15 @@ namespace OpenViBE
 
 			virtual void log(const OpenViBE::time64 time64Value);
 
-			virtual void log(const OpenViBE::uint64 ui64Value);
-			virtual void log(const OpenViBE::uint32 ui32Value);
-			virtual void log(const OpenViBE::uint16 ui16Value);
-			virtual void log(const OpenViBE::uint8 ui8Value);
+			virtual void log(const uint64_t ui64Value);
+			virtual void log(const uint32_t ui32Value);
+			virtual void log(const uint16_t ui16Value);
+			virtual void log(const uint8_t ui8Value);
 
-			virtual void log(const OpenViBE::int64 i64Value);
-			virtual void log(const OpenViBE::int32 i32Value);
-			virtual void log(const OpenViBE::int16 i16Value);
-			virtual void log(const OpenViBE::int8 i8Value);
+			virtual void log(const int64_t i64Value);
+			virtual void log(const int32_t i32Value);
+			virtual void log(const int16_t i16Value);
+			virtual void log(const int8_t i8Value);
 
 			virtual void log(const double f64Value);
 			virtual void log(const float f32Value);
@@ -60,7 +60,7 @@ namespace OpenViBE
 			// Log Settings
 			bool m_bTimeInSeconds;
 			bool m_bLogWithHexa;
-			OpenViBE::uint64 m_ui64TimePrecision;
+			uint64_t m_ui64TimePrecision;
 
 		private:
 			template <typename T>

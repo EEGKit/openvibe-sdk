@@ -1372,7 +1372,7 @@ namespace OpenViBE
 				{
 					OV_ERROR_UNLESS_KRF(
 						ui32Index <= static_cast<uint32_t>(m_Interfacors[Setting].size()),
-						"Tried to push '" << rsName << "' to slot " << ui32Index << " with the array size being " << static_cast<uint32>(m_Interfacors[Setting].size()),
+						"Tried to push '" << rsName << "' to slot " << ui32Index << " with the array size being " << static_cast<uint32_t>(m_Interfacors[Setting].size()),
 						ErrorType::OutOfBound
 					);
 
@@ -1895,7 +1895,7 @@ namespace OpenViBE
 				m_bIsNotificationActive = false;
 			}
 
-			virtual void notify(const OpenViBE::Kernel::EBoxModification eBoxModificationType, const OpenViBE::uint32 ui32Index)
+			virtual void notify(const OpenViBE::Kernel::EBoxModification eBoxModificationType, const uint32_t ui32Index)
 			{
 				if (m_pBoxListener && !m_bIsNotifyingDescriptor && m_bIsNotificationActive)
 				{

@@ -24,7 +24,7 @@ namespace OpenViBE
 		}
 
 		template <class T>
-		uint64 TMessage<T>::getTime(void) const
+		uint64_t TMessage<T>::getTime(void) const
 		{
 			return m_ui64Time;
 		}
@@ -39,7 +39,7 @@ namespace OpenViBE
 		}
 
 		template <class T>
-		bool TMessage<T>::setTime(const uint64 ui64Time)
+		bool TMessage<T>::setTime(const uint64_t ui64Time)
 		{
 			m_ui64Time = ui64Time;
 			return true;

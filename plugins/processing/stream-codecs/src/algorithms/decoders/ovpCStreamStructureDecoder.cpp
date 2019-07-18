@@ -40,7 +40,7 @@ void CStreamStructureDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	CEBMLBaseDecoder::openChild(rIdentifier);
 }
 
-void CStreamStructureDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CStreamStructureDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	CEBMLBaseDecoder::processChildData(pBuffer, ui64BufferSize);
 }

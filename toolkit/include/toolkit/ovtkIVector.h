@@ -9,21 +9,21 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual OpenViBE::uint32 getSize(void) const =0;
-		virtual bool setSize(const OpenViBE::uint32 ui32Size) =0;
-		virtual double* getBuffer(void) =0;
-		virtual const double* getBuffer(void) const =0;
-		virtual const char* getElementLabel(const OpenViBE::uint32 ui32Index) const =0;
-		virtual bool setElementLabel(const OpenViBE::uint32 ui32Index, const char* sElementLabel) =0;
+		virtual uint32_t getSize(void) const = 0;
+		virtual bool setSize(const uint32_t ui32Size) = 0;
+		virtual double* getBuffer(void) = 0;
+		virtual const double* getBuffer(void) const = 0;
+		virtual const char* getElementLabel(const uint32_t ui32Index) const = 0;
+		virtual bool setElementLabel(const uint32_t ui32Index, const char* sElementLabel) = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_Vector);
 
-		const double& operator [](const OpenViBE::uint32 ui32Index) const
+		const double& operator [](const uint32_t ui32Index) const
 		{
 			return this->getBuffer()[ui32Index];
 		}
 
-		double& operator [](const OpenViBE::uint32 ui32Index)
+		double& operator [](const uint32_t ui32Index)
 		{
 			return this->getBuffer()[ui32Index];
 		}

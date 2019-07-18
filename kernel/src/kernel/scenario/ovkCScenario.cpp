@@ -44,10 +44,10 @@ namespace
 
 	struct TTestEqSourceBoxOutput
 	{
-		TTestEqSourceBoxOutput(const CIdentifier& boxId, uint32 outputIndex) : m_BoxId(boxId), m_OutputIndex(outputIndex) { }
+		TTestEqSourceBoxOutput(const CIdentifier& boxId, uint32_t outputIndex) : m_BoxId(boxId), m_OutputIndex(outputIndex) { }
 		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getSourceBoxIdentifier() == m_BoxId && it->second->getSourceBoxOutputIndex() == m_OutputIndex; }
 		const CIdentifier& m_BoxId;
-		uint32 m_OutputIndex;
+		uint32_t m_OutputIndex;
 	};
 
 	struct TTestEqTargetBox
@@ -59,10 +59,10 @@ namespace
 
 	struct TTestEqTargetBoxInput
 	{
-		TTestEqTargetBoxInput(const CIdentifier& boxId, uint32 inputIndex) : m_BoxId(boxId), m_InputIndex(inputIndex) { }
+		TTestEqTargetBoxInput(const CIdentifier& boxId, uint32_t inputIndex) : m_BoxId(boxId), m_InputIndex(inputIndex) { }
 		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIndex; }
 		const CIdentifier& m_BoxId;
-		uint32 m_InputIndex;
+		uint32_t m_InputIndex;
 	};
 
 	template <class T, class TTest>
@@ -209,7 +209,7 @@ bool CScenario::clear(void)
 	return true;
 }
 
-bool CScenario::removeScenarioInput(const uint32 inputIndex)
+bool CScenario::removeScenarioInput(const uint32_t inputIndex)
 {
 	OV_ERROR_UNLESS_KRF(
 		inputIndex < this->getInputCount(),
@@ -228,7 +228,7 @@ bool CScenario::removeScenarioInput(const uint32 inputIndex)
 	return true;
 }
 
-bool CScenario::removeScenarioOutput(const uint32 outputIndex)
+bool CScenario::removeScenarioOutput(const uint32_t outputIndex)
 {
 	OV_ERROR_UNLESS_KRF(
 		outputIndex < this->getOutputCount(),
@@ -319,11 +319,11 @@ bool CScenario::merge(const IScenario& scenario, IScenarioMergeCallback* scenari
 
 	// Copy settings if requested
 
-	uint32 previousSettingCount = this->getSettingCount();
+	uint32_t previousSettingCount = this->getSettingCount();
 
 	if (mergeSettings)
 	{
-		for (uint32 settingIndex = 0; settingIndex < scenario.getSettingCount(); settingIndex++)
+		for (uint32_t settingIndex = 0; settingIndex < scenario.getSettingCount(); settingIndex++)
 		{
 			CIdentifier settingTypeIdentifier;
 			CString settingName;
@@ -698,7 +698,7 @@ CIdentifier CScenario::getNextLinkIdentifierFromBox(const CIdentifier& previousI
 	return getNextTIdentifier<CLink*, TTestEqSourceBox>(m_Links, previousIdentifier, TTestEqSourceBox(boxIdentifier));
 }
 
-CIdentifier CScenario::getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32 outputIndex) const
+CIdentifier CScenario::getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32_t outputIndex) const
 {
 	return getNextTIdentifier<CLink*, TTestEqSourceBoxOutput>(m_Links, previousIdentifier, TTestEqSourceBoxOutput(boxIdentifier, outputIndex));
 }
@@ -708,7 +708,7 @@ CIdentifier CScenario::getNextLinkIdentifierToBox(const CIdentifier& previousIde
 	return getNextTIdentifier<CLink*, TTestEqTargetBox>(m_Links, previousIdentifier, TTestEqTargetBox(boxIdentifier));
 }
 
-CIdentifier CScenario::getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32 inputIndex) const
+CIdentifier CScenario::getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32_t inputIndex) const
 {
 	return getNextTIdentifier<CLink*, TTestEqTargetBoxInput>(m_Links, previousIdentifier, TTestEqTargetBoxInput(boxIdentifier, inputIndex));
 }
@@ -730,7 +730,7 @@ bool CScenario::hasIO() const
 	return m_HasIO;
 }
 
-bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32 boxInputIndex)
+bool CScenario::setScenarioInputLink(const uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32_t boxInputIndex)
 {
 	if (boxIdentifier != OV_UndefinedIdentifier)
 	{
@@ -762,12 +762,12 @@ bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIde
 	for (size_t inputLinkIndex = 0; inputLinkIndex < m_ScenarioInputLinks.size(); inputLinkIndex++)
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
-		uint32 alreadyConnectedBoxInputIndex;
-		this->getScenarioInputLink(static_cast<uint32>(inputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxInputIndex);
+		uint32_t alreadyConnectedBoxInputIndex;
+		this->getScenarioInputLink(static_cast<uint32_t>(inputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxInputIndex);
 
 		if (alreadyConnectedBoxIdentifier == boxIdentifier && alreadyConnectedBoxInputIndex == boxInputIndex)
 		{
-			this->removeScenarioInputLink(static_cast<uint32>(inputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxInputIndex);
+			this->removeScenarioInputLink(static_cast<uint32_t>(inputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxInputIndex);
 		}
 	}
 
@@ -786,9 +786,9 @@ bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIde
 	return true;
 }
 
-bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier)
+bool CScenario::setScenarioInputLink(const uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier)
 {
-	uint32 boxInputIndex = OV_Value_UndefinedIndexUInt;
+	uint32_t boxInputIndex = OV_Value_UndefinedIndexUInt;
 
 	if (boxIdentifier != OV_UndefinedIdentifier)
 	{
@@ -802,7 +802,7 @@ bool CScenario::setScenarioInputLink(const uint32 scenarioInputIndex, const CIde
 	return this->setScenarioInputLink(scenarioInputIndex, boxIdentifier, boxInputIndex);
 }
 
-bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32 boxOutputIndex)
+bool CScenario::setScenarioOutputLink(const uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32_t boxOutputIndex)
 {
 	if (boxIdentifier != OV_UndefinedIdentifier)
 	{
@@ -834,12 +834,12 @@ bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CI
 	for (size_t outputLinkIndex = 0; outputLinkIndex < m_ScenarioOutputLinks.size(); outputLinkIndex++)
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
-		uint32 alreadyConnectedBoxOutputIndex;
-		this->getScenarioOutputLink(static_cast<uint32>(outputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
+		uint32_t alreadyConnectedBoxOutputIndex;
+		this->getScenarioOutputLink(static_cast<uint32_t>(outputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
 
 		if (alreadyConnectedBoxIdentifier == boxIdentifier && alreadyConnectedBoxOutputIndex == boxOutputIndex)
 		{
-			this->removeScenarioOutputLink(static_cast<uint32>(outputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
+			this->removeScenarioOutputLink(static_cast<uint32_t>(outputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
 		}
 	}
 
@@ -848,9 +848,9 @@ bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CI
 	return true;
 }
 
-bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier)
+bool CScenario::setScenarioOutputLink(const uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier)
 {
-	uint32 boxOutputIndex = OV_Value_UndefinedIndexUInt;
+	uint32_t boxOutputIndex = OV_Value_UndefinedIndexUInt;
 
 	if (boxIdentifier != OV_UndefinedIdentifier)
 	{
@@ -865,7 +865,7 @@ bool CScenario::setScenarioOutputLink(const uint32 scenarioOutputIndex, const CI
 	return this->setScenarioOutputLink(scenarioOutputIndex, boxIdentifier, boxOutputIndex);
 }
 
-bool CScenario::getScenarioInputLink(const uint32 scenarioInputIndex, CIdentifier& boxIdentifier, uint32& boxInputIndex) const
+bool CScenario::getScenarioInputLink(const uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, uint32_t& boxInputIndex) const
 {
 	OV_ERROR_UNLESS_KRF(
 		scenarioInputIndex < this->getInputCount(),
@@ -884,9 +884,9 @@ bool CScenario::getScenarioInputLink(const uint32 scenarioInputIndex, CIdentifie
 	return true;
 }
 
-bool CScenario::getScenarioInputLink(const uint32 scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const
+bool CScenario::getScenarioInputLink(const uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const
 {
-	uint32 boxInputIndex;
+	uint32_t boxInputIndex;
 	boxOutputIdentifier = OV_UndefinedIdentifier;
 
 	this->getScenarioInputLink(scenarioInputIndex, boxIdentifier, boxInputIndex);
@@ -902,7 +902,7 @@ bool CScenario::getScenarioInputLink(const uint32 scenarioInputIndex, CIdentifie
 	return true;
 }
 
-bool CScenario::getScenarioOutputLink(const uint32 scenarioOutputIndex, CIdentifier& boxIdentifier, uint32& boxOutputIndex) const
+bool CScenario::getScenarioOutputLink(const uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, uint32_t& boxOutputIndex) const
 {
 	OV_ERROR_UNLESS_KRF(
 		scenarioOutputIndex < this->getOutputCount(),
@@ -921,9 +921,9 @@ bool CScenario::getScenarioOutputLink(const uint32 scenarioOutputIndex, CIdentif
 	return true;
 }
 
-bool CScenario::getScenarioOutputLink(const uint32 scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const
+bool CScenario::getScenarioOutputLink(const uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const
 {
-	uint32 boxOutputIndex;
+	uint32_t boxOutputIndex;
 	boxOutputIdentifier = OV_UndefinedIdentifier;
 
 	this->getScenarioOutputLink(scenarioOutputIndex, boxIdentifier, boxOutputIndex);
@@ -941,7 +941,7 @@ bool CScenario::getScenarioOutputLink(const uint32 scenarioOutputIndex, CIdentif
 
 // Note: In current implementation only the scenarioInputIndex is necessary as it can only be connected to one input
 // but to keep things simpler we give it all the info
-bool CScenario::removeScenarioInputLink(const uint32 scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32 boxInputIndex)
+bool CScenario::removeScenarioInputLink(const uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32_t boxInputIndex)
 {
 	if (boxIdentifier != OV_UndefinedIdentifier)
 	{
@@ -976,7 +976,7 @@ bool CScenario::removeScenarioInputLink(const uint32 scenarioInputIndex, const C
 
 // Note: In current implementation only the scenarioOutputIndex is necessary as it can only be connected to one Output
 // but to keep things simpler we give it all the info
-bool CScenario::removeScenarioOutputLink(const uint32 scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32 boxOutputIndex)
+bool CScenario::removeScenarioOutputLink(const uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const uint32_t boxOutputIndex)
 {
 	if (boxIdentifier != OV_UndefinedIdentifier)
 	{
@@ -1038,9 +1038,9 @@ ILink* CScenario::getLinkDetails(const CIdentifier& linkIdentifier)
 bool CScenario::connect(
 	CIdentifier& linkIdentifier,
 	const CIdentifier& sourceBoxIdentifier,
-	const uint32 sourceBoxOutputIndex,
+	const uint32_t sourceBoxOutputIndex,
 	const CIdentifier& targetBoxIdentifier,
-	const uint32 targetBoxInputIndex,
+	const uint32_t targetBoxInputIndex,
 	const CIdentifier& suggestedLinkIdentifier)
 {
 	const auto itBox1 = m_Boxes.find(sourceBoxIdentifier);
@@ -1117,8 +1117,8 @@ bool CScenario::connect(
 	const CIdentifier& targetBoxInputIdentifier,
 	const CIdentifier& suggestedLinkIdentifier)
 {
-	uint32 sourceBoxOutputIndex;
-	uint32 targetBoxInputIndex;
+	uint32_t sourceBoxOutputIndex;
+	uint32_t targetBoxInputIndex;
 
 	this->getSourceBoxOutputIndex(sourceBoxIdentifier, sourceBoxOutputIdentifier, sourceBoxOutputIndex);
 	this->getTargetBoxInputIndex(targetBoxIdentifier, targetBoxInputIdentifier, targetBoxInputIndex);
@@ -1127,7 +1127,7 @@ bool CScenario::connect(
 }
 
 
-bool CScenario::disconnect(const CIdentifier& sourceBoxIdentifier, const uint32 sourceBoxOutputIndex, const CIdentifier& targetBoxIdentifier, const uint32 targetBoxInputIndex)
+bool CScenario::disconnect(const CIdentifier& sourceBoxIdentifier, const uint32_t sourceBoxOutputIndex, const CIdentifier& targetBoxIdentifier, const uint32_t targetBoxInputIndex)
 {
 	// Looks for any link with the same signature
 	for (auto itLink = m_Links.begin(); itLink != m_Links.end(); ++itLink)
@@ -1161,8 +1161,8 @@ bool CScenario::disconnect(
 	const CIdentifier& targetBoxIdentifier,
 	const CIdentifier& targetBoxInputIdentifier)
 {
-	uint32 sourceBoxOutputIndex;
-	uint32 targetBoxInputIndex;
+	uint32_t sourceBoxOutputIndex;
+	uint32_t targetBoxInputIndex;
 
 	this->getSourceBoxOutputIndex(sourceBoxIdentifier, sourceBoxOutputIdentifier, sourceBoxOutputIndex);
 	this->getTargetBoxInputIndex(targetBoxIdentifier, targetBoxInputIdentifier, targetBoxInputIndex);
@@ -1201,7 +1201,7 @@ bool CScenario::applyLocalSettings()
 		CScenarioSettingKeywordParserCallback scenarioSettingKeywordParserCallback(*this);
 		this->getConfigurationManager().registerKeywordParser("var", scenarioSettingKeywordParserCallback);
 
-		for (uint32 settingIndex = 0; settingIndex < box.second->getSettingCount(); settingIndex++)
+		for (uint32_t settingIndex = 0; settingIndex < box.second->getSettingCount(); settingIndex++)
 		{
 			CString settingName  = "";
 			CString settingValue = "";
@@ -1268,7 +1268,7 @@ bool CScenario::acceptVisitor(IObjectVisitor& objectVisitor)
 
 CIdentifier CScenario::getUnusedIdentifier(const CIdentifier& suggestedIdentifier) const
 {
-	uint64 newIdentifier = (((uint64)rand()) << 32) + ((uint64)rand());
+	uint64_t newIdentifier = (((uint64_t)rand()) << 32) + ((uint64_t)rand());
 	if (suggestedIdentifier != OV_UndefinedIdentifier)
 	{
 		newIdentifier = suggestedIdentifier.toUInteger() - 1;
@@ -1300,7 +1300,7 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 			CScenarioSettingKeywordParserCallback scenarioSettingKeywordParserCallback(*this);
 			this->getConfigurationManager().registerKeywordParser("var", scenarioSettingKeywordParserCallback);
 
-			for (uint32 settingIndex = 0; settingIndex < box.second->getSettingCount(); settingIndex++)
+			for (uint32_t settingIndex = 0; settingIndex < box.second->getSettingCount(); settingIndex++)
 			{
 				CString settingName     = "";
 				CString rawSettingValue = "";
@@ -1530,7 +1530,7 @@ void CScenario::releaseIdentifierList(OpenViBE::CIdentifier* identifierList) con
 	delete[] identifierList;
 }
 
-bool CScenario::getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, uint32& sourceBoxOutputIndex)
+bool CScenario::getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, uint32_t& sourceBoxOutputIndex)
 {
 	const auto itSourceBox = m_Boxes.find(sourceBoxIdentifier);
 
@@ -1545,7 +1545,7 @@ bool CScenario::getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, 
 	return true;
 }
 
-bool CScenario::getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, uint32& targetBoxInputIndex)
+bool CScenario::getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, uint32_t& targetBoxInputIndex)
 {
 	const auto itTargetBox = m_Boxes.find(targetBoxIdentifier);
 
@@ -1560,7 +1560,7 @@ bool CScenario::getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, c
 	return true;
 }
 
-bool CScenario::getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentifier, const uint32& sourceBoxOutputIndex, CIdentifier& sourceBoxOutputIdentifier)
+bool CScenario::getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentifier, const uint32_t& sourceBoxOutputIndex, CIdentifier& sourceBoxOutputIdentifier)
 {
 	const auto itSourceBox = m_Boxes.find(sourceBoxIdentifier);
 
@@ -1575,7 +1575,7 @@ bool CScenario::getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentif
 	return true;
 }
 
-bool CScenario::getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifier, const uint32& targetBoxInputIndex, CIdentifier& targetBoxInputIdentifier)
+bool CScenario::getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifier, const uint32_t& targetBoxInputIndex, CIdentifier& targetBoxInputIdentifier)
 {
 	const auto itTargetBox = m_Boxes.find(targetBoxIdentifier);
 

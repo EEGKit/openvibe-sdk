@@ -33,12 +33,12 @@ bool CWriterHelper::closeChild(void)
 	return m_pWriterHelperImplementation->closeChild();
 }
 
-bool CWriterHelper::setSIntegerAsChildData(const int64 iValue)
+bool CWriterHelper::setSIntegerAsChildData(const int64_t iValue)
 {
 	return m_pWriterHelperImplementation->setSIntegerAsChildData(iValue);
 }
 
-bool CWriterHelper::setUIntegerAsChildData(const uint64 uiValue)
+bool CWriterHelper::setUIntegerAsChildData(const uint64_t uiValue)
 {
 	return m_pWriterHelperImplementation->setUIntegerAsChildData(uiValue);
 }
@@ -53,7 +53,7 @@ bool CWriterHelper::setFloat64AsChildData(const double fValue)
 	return m_pWriterHelperImplementation->setFloat64AsChildData(fValue);
 }
 
-bool CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64 ui64BufferLength)
+bool CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64_t ui64BufferLength)
 {
 	return m_pWriterHelperImplementation->setBinaryAsChildData(pBuffer, ui64BufferLength);
 }

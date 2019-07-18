@@ -38,14 +38,14 @@ bool CLogManager::activate(bool bActive)
 }
 
 void CLogManager::log(const time64 time64Value) { logForEach<const time64>(time64Value); }
-void CLogManager::log(const uint64 ui64Value) { logForEach<const uint64>(ui64Value); }
-void CLogManager::log(const uint32 ui32Value) { logForEach<const uint32>(ui32Value); }
-void CLogManager::log(const uint16 ui16Value) { logForEach<const uint16>(ui16Value); }
-void CLogManager::log(const uint8 ui8Value) { logForEach<const uint8>(ui8Value); }
-void CLogManager::log(const int64 i64Value) { logForEach<const int64>(i64Value); }
-void CLogManager::log(const int32 i32Value) { logForEach<const int32>(i32Value); }
-void CLogManager::log(const int16 i16Value) { logForEach<const int16>(i16Value); }
-void CLogManager::log(const int8 i8Value) { logForEach<const int8>(i8Value); }
+void CLogManager::log(const uint64_t ui64Value) { logForEach<const uint64_t>(ui64Value); }
+void CLogManager::log(const uint32_t ui32Value) { logForEach<const uint32_t>(ui32Value); }
+void CLogManager::log(const uint16_t ui16Value) { logForEach<const uint16_t>(ui16Value); }
+void CLogManager::log(const uint8_t ui8Value) { logForEach<const uint8_t>(ui8Value); }
+void CLogManager::log(const int64_t i64Value) { logForEach<const int64_t>(i64Value); }
+void CLogManager::log(const int32_t i32Value) { logForEach<const int32_t>(i32Value); }
+void CLogManager::log(const int16_t i16Value) { logForEach<const int16_t>(i16Value); }
+void CLogManager::log(const int8_t i8Value) { logForEach<const int8_t>(i8Value); }
 void CLogManager::log(const double f64Value) { logForEach<const double>(f64Value); }
 void CLogManager::log(const float f32Value) { logForEach<const float>(f32Value); }
 void CLogManager::log(const bool bValue) { logForEach<const bool>(bValue); }

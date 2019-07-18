@@ -145,22 +145,14 @@ bool CAlgorithmClassifier::initializeExtraParameterMechanism()
 
 	m_AlgorithmProxy = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(this->getClassIdentifier()));
 
-	OV_ERROR_UNLESS_KRF(
-		m_AlgorithmProxy->initialize(),
-		"Failed to initialize algorithm",
-		OpenViBE::Kernel::ErrorType::Internal
-	);
+	OV_ERROR_UNLESS_KRF(m_AlgorithmProxy->initialize(), "Failed to initialize algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
 	return true;
 }
 
 bool CAlgorithmClassifier::uninitializeExtraParameterMechanism()
 {
-	OV_ERROR_UNLESS_KRF(
-		m_AlgorithmProxy->uninitialize(),
-		"Failed to uninitialize algorithm",
-		OpenViBE::Kernel::ErrorType::Internal
-	);
+	OV_ERROR_UNLESS_KRF(m_AlgorithmProxy->uninitialize(), "Failed to uninitialize algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
 	this->getAlgorithmManager().releaseAlgorithm(*m_AlgorithmProxy);
 
@@ -175,24 +167,24 @@ CString& CAlgorithmClassifier::getParameterValue(const CIdentifier& parameterIde
 	return (*static_cast<std::map<CString, CString>*>(m_ExtraParametersMap))[parameterName];
 }
 
-void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<IMatrix*>& matrix, uint32 length)
+void CAlgorithmClassifier::setMatrixOutputDimension(TParameterHandler<IMatrix*>& matrix, uint32_t length)
 {
 	matrix->setDimensionCount(1);
 	matrix->setDimensionSize(0, length);
 }
 
-uint64 CAlgorithmClassifier::getUInt64Parameter(const CIdentifier& parameterIdentifier)
+uint64_t CAlgorithmClassifier::getUInt64Parameter(const CIdentifier& parameterIdentifier)
 {
-	TParameterHandler<uint64> temp(getInputParameter(parameterIdentifier));
+	TParameterHandler<uint64_t> temp(getInputParameter(parameterIdentifier));
 	temp = this->getAlgorithmContext().getConfigurationManager().expandAsUInteger(getParameterValue(parameterIdentifier));
-	return static_cast<uint64>(temp);
+	return static_cast<uint64_t>(temp);
 }
 
-int64 CAlgorithmClassifier::getInt64Parameter(const CIdentifier& parameterIdentifier)
+int64_t CAlgorithmClassifier::getInt64Parameter(const CIdentifier& parameterIdentifier)
 {
-	TParameterHandler<int64> temp(getInputParameter(parameterIdentifier));
+	TParameterHandler<int64_t> temp(getInputParameter(parameterIdentifier));
 	temp = this->getAlgorithmContext().getConfigurationManager().expandAsInteger(getParameterValue(parameterIdentifier));
-	return static_cast<int64>(temp);
+	return static_cast<int64_t>(temp);
 }
 
 double CAlgorithmClassifier::getFloat64Parameter(const CIdentifier& parameterIdentifier)
@@ -216,9 +208,9 @@ CString* CAlgorithmClassifier::getCStringParameter(const CIdentifier& parameterI
 	return static_cast<CString*>(temp);
 }
 
-uint64 CAlgorithmClassifier::getEnumerationParameter(const CIdentifier& parameterIdentifier, const CIdentifier& enumerationIdentifier)
+uint64_t CAlgorithmClassifier::getEnumerationParameter(const CIdentifier& parameterIdentifier, const CIdentifier& enumerationIdentifier)
 {
-	TParameterHandler<uint64> temp(getInputParameter(parameterIdentifier));
+	TParameterHandler<uint64_t> temp(getInputParameter(parameterIdentifier));
 	temp = this->getTypeManager().getEnumerationEntryValueFromName(enumerationIdentifier, getParameterValue(parameterIdentifier));
-	return static_cast<uint64>(temp);
+	return static_cast<uint64_t>(temp);
 }

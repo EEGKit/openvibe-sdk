@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
+			virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize);
 			virtual void closeChild(void);
 
 		protected:
@@ -46,11 +46,11 @@ namespace OpenViBEPlugins
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
-			OpenViBE::uint32 m_ui32Status;
-			OpenViBE::uint32 m_ui32DimensionIndex;
-			OpenViBE::uint32 m_ui32DimensionEntryIndex;
-			//			OpenViBE::uint32 m_ui32DimensionEntryIndexUnit;
-			OpenViBE::uint64 m_ui64MatrixBufferSize;
+			uint32_t m_ui32Status;
+			uint32_t m_ui32DimensionIndex;
+			uint32_t m_ui32DimensionEntryIndex;
+			//			uint32_t m_ui32DimensionEntryIndexUnit;
+			uint64_t m_ui64MatrixBufferSize;
 		};
 
 		class CStreamedMatrixDecoderDesc : public OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoderDesc
@@ -73,8 +73,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_StreamedMatrixStreamDecoder; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder(); }
 
-			virtual bool getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoderDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 

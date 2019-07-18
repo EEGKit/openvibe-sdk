@@ -29,8 +29,7 @@ namespace
 		void SetUp() override
 		{
 			m_KernelContext.initialize();
-			m_KernelContext->getPluginManager().addPluginsFromFiles(
-				m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
+			m_KernelContext->getPluginManager().addPluginsFromFiles(m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
 
 			m_DecoderId = OV_UndefinedIdentifier;
 			m_DecoderId = m_KernelContext->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder);

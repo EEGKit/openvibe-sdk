@@ -28,15 +28,15 @@ namespace OpenViBE
 		class OV_API IServerExtensionDynamicContext : public OpenViBE::Kernel::IKernelObject
 		{
 		public:
-			virtual OpenViBE::uint32 getChannelCount() = 0;
+			virtual uint32_t getChannelCount() = 0;
 
-			virtual OpenViBE::uint32 getSampleCountPerSentBlock() = 0;
+			virtual uint32_t getSampleCountPerSentBlock() = 0;
 
 			virtual double* getBuffer() = 0;
 
-			virtual OpenViBE::uint64 getStimulationSetStartTime() = 0;
+			virtual uint64_t getStimulationSetStartTime() = 0;
 
-			virtual OpenViBE::uint64 getStimulationSetEndTime() = 0;
+			virtual uint64_t getStimulationSetEndTime() = 0;
 
 			virtual OpenViBE::IStimulationSet& getStimulationSet() = 0;
 		};

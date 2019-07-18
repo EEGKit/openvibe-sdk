@@ -46,8 +46,8 @@ namespace Socket
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int32 l_i32VersionHigh = 2;
-			int32 l_i32VersionLow  = 0;
+			int32_t l_i32VersionHigh = 2;
+			int32_t l_i32VersionLow  = 0;
 			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
 			::WSAStartup(l_oWinsockVersion, &l_oWSAData);
@@ -55,12 +55,12 @@ namespace Socket
 #endif
 		}
 
-		explicit TConnection(int32 i32Socket) : m_i32Socket(i32Socket)
+		explicit TConnection(int32_t i32Socket) : m_i32Socket(i32Socket)
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int32 l_i32VersionHigh = 2;
-			int32 l_i32VersionLow  = 0;
+			int32_t l_i32VersionHigh = 2;
+			int32_t l_i32VersionLow  = 0;
 			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
 			::WSAStartup(l_oWinsockVersion, &l_oWSAData);
@@ -83,7 +83,7 @@ namespace Socket
 		{
 			if (isConnected()) { return false; }
 
-			m_i32Socket = static_cast<int32>(::socket(AF_INET, SOCK_STREAM, 0));
+			m_i32Socket = static_cast<int32_t>(::socket(AF_INET, SOCK_STREAM, 0));
 			if (m_i32Socket == -1) { return false; }
 
 			return true;
@@ -109,7 +109,7 @@ namespace Socket
 		}
 
 		virtual bool isReadyToSend(
-			uint32 ui32TimeOut = 0) const
+			uint32_t ui32TimeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
 
@@ -127,7 +127,7 @@ namespace Socket
 		}
 
 		virtual bool isReadyToReceive(
-			uint32 ui32TimeOut = 0) const
+			uint32_t ui32TimeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
 
@@ -144,9 +144,9 @@ namespace Socket
 			return true;
 		}
 
-		virtual uint32 sendBuffer(
+		virtual uint32_t sendBuffer(
 			const void* pBuffer,
-			const uint32 ui32BufferSize)
+			const uint32_t ui32BufferSize)
 		{
 			if (!isConnected()) { return 0; }
 #if 0
@@ -158,12 +158,12 @@ namespace Socket
 			{
 				close();
 			}
-			return l_iResult <= 0 ? 0 : (uint32)l_iResult;
+			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
 		}
 
-		virtual uint32 receiveBuffer(
+		virtual uint32_t receiveBuffer(
 			void* pBuffer,
-			const uint32 ui32BufferSize)
+			const uint32_t ui32BufferSize)
 		{
 			if (!isConnected() || !ui32BufferSize) { return 0; }
 #if 0
@@ -175,14 +175,14 @@ namespace Socket
 			{
 				close();
 			}
-			return l_iResult <= 0 ? 0 : (uint32)l_iResult;
+			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
 		}
 
 		virtual bool sendBufferBlocking(
 			const void* pBuffer,
-			const uint32 ui32BufferSize)
+			const uint32_t ui32BufferSize)
 		{
-			uint32 l_ui32LeftBytes = ui32BufferSize;
+			uint32_t l_ui32LeftBytes = ui32BufferSize;
 			const char* l_pBuffer  = static_cast<const char*>(pBuffer);
 			do
 			{
@@ -194,9 +194,9 @@ namespace Socket
 
 		virtual bool receiveBufferBlocking(
 			void* pBuffer,
-			const uint32 ui32BufferSize)
+			const uint32_t ui32BufferSize)
 		{
-			uint32 l_ui32LeftBytes = ui32BufferSize;
+			uint32_t l_ui32LeftBytes = ui32BufferSize;
 			char* l_pBuffer        = static_cast<char*>(pBuffer);
 			do
 			{
@@ -222,6 +222,6 @@ namespace Socket
 
 	protected:
 
-		int32 m_i32Socket;
+		int32_t m_i32Socket;
 	};
 };

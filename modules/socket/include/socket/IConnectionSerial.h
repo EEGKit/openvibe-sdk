@@ -16,7 +16,7 @@ namespace Socket
 		 * \brief Return the input serial pending byte count.
 		 * \return The number of pending byte.
 		 */
-		virtual uint32 getPendingByteCount() = 0;
+		virtual uint32_t getPendingByteCount() = 0;
 
 		/**
 		 * \brief Flush the input serial buffer.

@@ -180,7 +180,7 @@ CIdentifier CAlgorithmManager::getUnusedIdentifier(void) const
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	uint64 l_ui64Identifier = System::Math::randomUInteger64();
+	uint64_t l_ui64Identifier = System::Math::randomUInteger64();
 	CIdentifier l_oResult;
 
 	AlgorithmMap::const_iterator i;

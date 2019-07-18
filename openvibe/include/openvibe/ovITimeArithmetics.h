@@ -24,7 +24,7 @@ namespace OpenViBE
 		 * \param ui64SampleCount : the size of the sample
 		 * \return Time in fixed point format corresponding to the input parameters
 		 */
-		static uint64 sampleCountToTime(const uint64 ui64SamplingRate, const uint64 ui64SampleCount)
+		static uint64_t sampleCountToTime(const uint64_t ui64SamplingRate, const uint64_t ui64SampleCount)
 		{
 			// Note that if samplingRate is 0, this will crash. Its preferable to silent fail, the caller should check the argument.
 			// FIXME: assert or something
@@ -37,7 +37,7 @@ namespace OpenViBE
 		 * \param ui64Time : elapsed time in fixed point format
 		 * \return Sample count corresponding to the input parameters
 		 */
-		static uint64 timeToSampleCount(const uint64 ui64SamplingRate, const uint64 ui64Time)
+		static uint64_t timeToSampleCount(const uint64_t ui64SamplingRate, const uint64_t ui64Time)
 		{
 			return ((ui64Time + 1) * ui64SamplingRate - 1) >> 32;
 		}
@@ -48,7 +48,7 @@ namespace OpenViBE
 		 * \return Regular floating point time in seconds
 		 *
 		 */
-		static double timeToSeconds(const uint64 ui64Time)
+		static double timeToSeconds(const uint64_t ui64Time)
 		{
 			return ui64Time / static_cast<double>(1LL << 32);
 		}
@@ -59,9 +59,9 @@ namespace OpenViBE
 		 * \return Time in fixed point format
 		 *
 		 */
-		static uint64 secondsToTime(const double f64Time)
+		static uint64_t secondsToTime(const double f64Time)
 		{
-			return static_cast<uint64>(f64Time * static_cast<double>(1LL << 32));
+			return static_cast<uint64_t>(f64Time * static_cast<double>(1LL << 32));
 		}
 
 	private:
@@ -69,11 +69,11 @@ namespace OpenViBE
 		ITimeArithmetics();
 
 		// These calls are probably mistakes and prohibited. Use explicit casts if you're certain of your intention.
-		uint64 timeToSampleCount(const uint64 ui64SamplingRate, const uint32 ui32Time);
-		uint64 timeToSampleCount(const uint64 ui64SamplingRate, const double f64Time);
-		double timeToSeconds(const uint32 ui32Time);
+		uint64_t timeToSampleCount(const uint64_t ui64SamplingRate, const uint32_t ui32Time);
+		uint64_t timeToSampleCount(const uint64_t ui64SamplingRate, const double f64Time);
+		double timeToSeconds(const uint32_t ui32Time);
 		double timeToSeconds(const double f64Time);
-		uint64 secondsToTime(const uint32 ui32Time);
-		uint64 secondsToTime(const uint64 ui64Time);
+		uint64_t secondsToTime(const uint32_t ui32Time);
+		uint64_t secondsToTime(const uint64_t ui64Time);
 	};
 }

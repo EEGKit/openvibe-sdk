@@ -52,11 +52,11 @@ namespace OpenViBE
 			virtual double getCPUUsage() const;
 
 			virtual bool loop(
-				const OpenViBE::uint64 ui64ElapsedTime,
-				const OpenViBE::uint64 ui64MaximumTimeToReach);
+				const uint64_t ui64ElapsedTime,
+				const uint64_t ui64MaximumTimeToReach);
 
-			virtual OpenViBE::uint64 getCurrentSimulatedTime(void) const;
-			virtual OpenViBE::uint64 getCurrentSimulatedLateness(void) const;
+			virtual uint64_t getCurrentSimulatedTime(void) const;
+			virtual uint64_t getCurrentSimulatedLateness(void) const;
 
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IPlayer >, OVK_ClassId_Kernel_Player_Player);
@@ -70,9 +70,9 @@ namespace OpenViBE
 
 			OpenViBE::Kernel::CScheduler m_oScheduler;
 
-			OpenViBE::uint64 m_ui64CurrentTimeToReach;
-			OpenViBE::uint64 m_ui64Lateness;
-			OpenViBE::uint64 m_ui64InnerLateness;
+			uint64_t m_ui64CurrentTimeToReach;
+			uint64_t m_ui64Lateness;
+			uint64_t m_ui64InnerLateness;
 			OpenViBE::Kernel::EPlayerStatus m_eStatus;
 			bool m_bIsInitializing;
 			double m_f64FastForwardMaximumFactor;

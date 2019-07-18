@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 
 			//Return the class membership of the feature vector
 			double getValue(const Eigen::VectorXd& rFeatureVector);
-			OpenViBE::uint32 getWeightVectorSize(void);
+			uint32_t getWeightVectorSize(void);
 
 			bool loadConfiguration(const XML::IXMLNode* pConfiguration);
 			XML::IXMLNode* getConfiguration(void);

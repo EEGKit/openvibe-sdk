@@ -11,15 +11,15 @@ namespace System
 		CChrono(void);
 		virtual ~CChrono(void);
 
-		virtual bool reset(System::uint32 ui32StepCount);
+		virtual bool reset(uint32_t ui32StepCount);
 
 		virtual bool stepIn(void);
 		virtual bool stepOut(void);
 
-		virtual System::uint64 getTotalStepInDuration(void) const;
-		virtual System::uint64 getTotalStepOutDuration(void) const;
-		virtual System::uint64 getAverageStepInDuration(void) const;
-		virtual System::uint64 getAverageStepOutDuration(void) const;
+		virtual uint64_t getTotalStepInDuration(void) const;
+		virtual uint64_t getTotalStepOutDuration(void) const;
+		virtual uint64_t getAverageStepInDuration(void) const;
+		virtual uint64_t getAverageStepOutDuration(void) const;
 		virtual double getStepInPercentage(void) const;
 		virtual double getStepOutPercentage(void) const;
 
@@ -27,14 +27,14 @@ namespace System
 
 	private:
 
-		System::uint64* m_pStepInTime;
-		System::uint64* m_pStepOutTime;
-		System::uint32 m_ui32StepCount;
-		System::uint32 m_ui32StepIndex;
+		uint64_t* m_pStepInTime;
+		uint64_t* m_pStepOutTime;
+		uint32_t m_ui32StepCount;
+		uint32_t m_ui32StepIndex;
 		bool m_bIsInStep;
 		bool m_bHasNewEstimation;
 
-		System::uint64 m_ui64TotalStepInTime;
-		System::uint64 m_ui64TotalStepOutTime;
+		uint64_t m_ui64TotalStepInTime;
+		uint64_t m_ui64TotalStepOutTime;
 	};
 };

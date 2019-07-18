@@ -57,7 +57,7 @@ public:
 		m_Depth++;
 	}
 
-	virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize) override
+	virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override
 	{
 		for (int i = 0; i < m_Depth; i++) g_OutputStream << "   ";
 		if (m_CurrentIdentifier == EBML_Identifier_DocType)

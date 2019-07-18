@@ -52,7 +52,7 @@ void CChannelLocalisationDecoder::openChild(const EBML::CIdentifier& rIdentifier
 	}
 }
 
-void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

@@ -60,7 +60,7 @@ public:
 		}
 	}
 
-	virtual void write(const void* pBuffer, const EBML::uint64 ui64BufferSize) override
+	virtual void write(const void* pBuffer, const uint64_t ui64BufferSize) override
 	{
 		if (m_File)
 		{

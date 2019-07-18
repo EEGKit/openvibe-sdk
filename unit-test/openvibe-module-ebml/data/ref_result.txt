@@ -17,10 +17,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=16
 Opening child node [0x000000000a45dfa3]
@@ -41,10 +41,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=15
 Opening child node [0x000000000a45dfa3]
@@ -65,10 +65,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=14
 Opening child node [0x000000000a45dfa3]
@@ -89,10 +89,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=13
 Opening child node [0x000000000a45dfa3]
@@ -113,10 +113,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=12
 Opening child node [0x000000000a45dfa3]
@@ -137,10 +137,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=11
 Opening child node [0x000000000a45dfa3]
@@ -161,10 +161,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=10
 Opening child node [0x000000000a45dfa3]
@@ -185,10 +185,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=9
 Opening child node [0x000000000a45dfa3]
@@ -209,10 +209,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=8
 Opening child node [0x000000000a45dfa3]
@@ -233,10 +233,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=7
 Opening child node [0x000000000a45dfa3]
@@ -257,10 +257,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=6
 Opening child node [0x000000000a45dfa3]
@@ -281,10 +281,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=5
 Opening child node [0x000000000a45dfa3]
@@ -305,10 +305,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=4
 Opening child node [0x000000000a45dfa3]
@@ -329,10 +329,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=3
 Opening child node [0x000000000a45dfa3]
@@ -353,10 +353,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=2
 Opening child node [0x000000000a45dfa3]
@@ -377,10 +377,10 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed
 testing with n=1
 Opening child node [0x000000000a45dfa3]
@@ -401,8 +401,8 @@ Opening child node [0xffffffffffffffff]
    Got uinteger : [0xff000000ff000000]
 Node closed
 Opening child node [0x0000000000004321]
-   Got float64 : [3.14159]
+   Got double : [3.14159]
 Node closed
 Opening child node [0x0000000000008765]
-   Got float32 : [3.14159]
+   Got float : [3.14159]
 Node closed

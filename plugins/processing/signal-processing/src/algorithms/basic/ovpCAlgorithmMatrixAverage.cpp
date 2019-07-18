@@ -185,7 +185,7 @@ bool CAlgorithmMatrixAverage::process(void)
 		}
 		else
 		{
-			uint32 l_ui32Count = l_pOutputMatrix->getBufferElementCount();
+			uint32_t l_ui32Count = l_pOutputMatrix->getBufferElementCount();
 			double l_f64Scale = 1. / m_vHistory.size();
 
 			for (OpenViBE::IMatrix* matrix : m_vHistory)
@@ -193,7 +193,7 @@ bool CAlgorithmMatrixAverage::process(void)
 				double* l_pOutputMatrixBuffer = l_pOutputMatrix->getBuffer();
 				double* l_pInputMatrixBuffer  = matrix->getBuffer();
 
-				for (uint32 i = 0; i < l_ui32Count; i++)
+				for (uint32_t i = 0; i < l_ui32Count; i++)
 				{
 					*l_pOutputMatrixBuffer += *l_pInputMatrixBuffer * l_f64Scale;
 					l_pOutputMatrixBuffer++;

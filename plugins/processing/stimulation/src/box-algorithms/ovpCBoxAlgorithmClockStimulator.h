@@ -18,7 +18,7 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual OpenViBE::uint64 getClockFrequency(void);
+			virtual uint64_t getClockFrequency(void);
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
 			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
@@ -29,9 +29,9 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClockStimulator> m_oStimulationEncoder;
-			OpenViBE::uint64 m_ui64StimulationId;
-			OpenViBE::uint64 m_ui64LastStimulationDate;
-			OpenViBE::uint64 m_ui64LastEndTime;
+			uint64_t m_ui64StimulationId;
+			uint64_t m_ui64LastStimulationDate;
+			uint64_t m_ui64LastEndTime;
 
 			uint64_t m_SentStimulationCount;
 			double m_StimulationInterval;
@@ -57,8 +57,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ClockStimulator; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::Stimulation::CBoxAlgorithmClockStimulator; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addOutput("Generated stimulations", OV_TypeId_Stimulations);
 				rBoxAlgorithmPrototype.addSetting("Interstimulation interval (in sec)", OV_TypeId_Float, "1.0");

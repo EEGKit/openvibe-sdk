@@ -41,37 +41,37 @@ namespace OpenViBE
 		//@}
 
 		virtual void clear(void);
-		virtual const OpenViBE::uint64 getStimulationCount(void) const;
-		virtual const OpenViBE::uint64 getStimulationIdentifier(
-			const OpenViBE::uint64 ui64StimulationIndex) const;
-		virtual const OpenViBE::uint64 getStimulationDate(
-			const OpenViBE::uint64 ui64StimulationIndex) const;
-		virtual const OpenViBE::uint64 getStimulationDuration(
-			const OpenViBE::uint64 ui64StimulationIndex) const;
+		virtual const uint64_t getStimulationCount(void) const;
+		virtual const uint64_t getStimulationIdentifier(
+			const uint64_t ui64StimulationIndex) const;
+		virtual const uint64_t getStimulationDate(
+			const uint64_t ui64StimulationIndex) const;
+		virtual const uint64_t getStimulationDuration(
+			const uint64_t ui64StimulationIndex) const;
 
 		virtual bool setStimulationCount(
-			const OpenViBE::uint64 ui64StimulationCount);
+			const uint64_t ui64StimulationCount);
 		virtual bool setStimulationIdentifier(
-			const OpenViBE::uint64 ui64StimulationIndex,
-			const OpenViBE::uint64 ui64StimulationIdentifier);
+			const uint64_t ui64StimulationIndex,
+			const uint64_t ui64StimulationIdentifier);
 		virtual bool setStimulationDate(
-			const OpenViBE::uint64 ui64StimulationIndex,
-			const OpenViBE::uint64 ui64StimulationDate);
+			const uint64_t ui64StimulationIndex,
+			const uint64_t ui64StimulationDate);
 		virtual bool setStimulationDuration(
-			const OpenViBE::uint64 ui64StimulationIndex,
-			const OpenViBE::uint64 ui64StimulationDuration);
+			const uint64_t ui64StimulationIndex,
+			const uint64_t ui64StimulationDuration);
 
-		virtual OpenViBE::uint64 appendStimulation(
-			const OpenViBE::uint64 ui64StimulationIdentifier,
-			const OpenViBE::uint64 ui64StimulationDate,
-			const OpenViBE::uint64 ui64StimulationDuration);
-		virtual OpenViBE::uint64 insertStimulation(
-			const OpenViBE::uint64 ui64StimulationIndex,
-			const OpenViBE::uint64 ui64StimulationIdentifier,
-			const OpenViBE::uint64 ui64StimulationDate,
-			const OpenViBE::uint64 ui64StimulationDuration);
+		virtual uint64_t appendStimulation(
+			const uint64_t ui64StimulationIdentifier,
+			const uint64_t ui64StimulationDate,
+			const uint64_t ui64StimulationDuration);
+		virtual uint64_t insertStimulation(
+			const uint64_t ui64StimulationIndex,
+			const uint64_t ui64StimulationIdentifier,
+			const uint64_t ui64StimulationDate,
+			const uint64_t ui64StimulationDuration);
 		virtual bool removeStimulation(
-			const OpenViBE::uint64 ui64StimulationIndex);
+			const uint64_t ui64StimulationIndex);
 
 		_IsDerivedFromClass_Final_(OpenViBE::IStimulationSet, OV_ClassId_StimulationSetBridge);
 

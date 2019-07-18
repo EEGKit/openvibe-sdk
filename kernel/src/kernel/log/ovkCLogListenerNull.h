@@ -23,15 +23,15 @@ namespace OpenViBE
 
 			virtual void log(const OpenViBE::time64 value);
 
-			virtual void log(const OpenViBE::uint64 value);
-			virtual void log(const OpenViBE::uint32 value);
-			virtual void log(const OpenViBE::uint16 value);
-			virtual void log(const OpenViBE::uint8 value);
+			virtual void log(const uint64_t value);
+			virtual void log(const uint32_t value);
+			virtual void log(const uint16_t value);
+			virtual void log(const uint8_t value);
 
-			virtual void log(const OpenViBE::int64 value);
-			virtual void log(const OpenViBE::int32 value);
-			virtual void log(const OpenViBE::int16 value);
-			virtual void log(const OpenViBE::int8 value);
+			virtual void log(const int64_t value);
+			virtual void log(const int32_t value);
+			virtual void log(const int16_t value);
+			virtual void log(const int8_t value);
 
 			virtual void log(const double value);
 			virtual void log(const float value);

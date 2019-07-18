@@ -186,7 +186,7 @@ namespace OpenViBE
 			virtual OpenViBE::CIdentifier getNextLinkIdentifierFromBoxOutput(
 				const OpenViBE::CIdentifier& previousIdentifier,
 				const OpenViBE::CIdentifier& boxIdentifier,
-				const OpenViBE::uint32 outputIndex) const = 0;
+				const uint32_t outputIndex) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box
@@ -207,7 +207,7 @@ namespace OpenViBE
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextLinkIdentifierToBoxInput(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 inputIndex) const = 0;
+			virtual OpenViBE::CIdentifier getNextLinkIdentifierToBoxInput(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputIndex) const = 0;
 
 			/**
 			 * \brief Tests whether a given identifier is a link or not
@@ -244,9 +244,9 @@ namespace OpenViBE
 			virtual bool connect(
 				OpenViBE::CIdentifier& linkIdentifier,
 				const OpenViBE::CIdentifier& sourceBoxIdentifier,
-				const OpenViBE::uint32 sourceBoxOutputIndex,
+				const uint32_t sourceBoxOutputIndex,
 				const OpenViBE::CIdentifier& targetBoxIdentifier,
-				const OpenViBE::uint32 targetBoxInputIndex,
+				const uint32_t targetBoxInputIndex,
 				const OpenViBE::CIdentifier& suggestedLinkIdentifier) = 0;
 
 			/**
@@ -281,9 +281,9 @@ namespace OpenViBE
 			 */
 			virtual bool disconnect(
 				const OpenViBE::CIdentifier& sourceBoxIdentifier,
-				const OpenViBE::uint32 sourceBoxOutputIndex,
+				const uint32_t sourceBoxOutputIndex,
 				const OpenViBE::CIdentifier& targetBoxIdentifier,
-				const OpenViBE::uint32 targetBoxInputIndex) = 0;
+				const uint32_t targetBoxInputIndex) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -364,44 +364,44 @@ namespace OpenViBE
 			virtual bool setHasIO(const bool hasIO) = 0;
 			virtual bool hasIO() const = 0;
 
-			virtual bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
+			virtual bool setScenarioInputLink(const uint32_t scenarioInputIndex,
 											  const OpenViBE::CIdentifier& boxIdentifier,
-											  const OpenViBE::uint32 boxInputIndex) = 0;
+											  const uint32_t boxInputIndex) = 0;
 
-			virtual bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
+			virtual bool setScenarioInputLink(const uint32_t scenarioInputIndex,
 											  const OpenViBE::CIdentifier& boxIdentifier,
 											  const OpenViBE::CIdentifier& boxInputIdentifier) = 0;
 
-			virtual bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
+			virtual bool setScenarioOutputLink(const uint32_t scenarioOutputIndex,
 											   const OpenViBE::CIdentifier& boxIdentifier,
-											   const OpenViBE::uint32 boxOutputIndex) = 0;
+											   const uint32_t boxOutputIndex) = 0;
 
-			virtual bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
+			virtual bool setScenarioOutputLink(const uint32_t scenarioOutputIndex,
 											   const OpenViBE::CIdentifier& boxIdentifier,
 											   const OpenViBE::CIdentifier& boxOutputIdentifier) = 0;
 
-			virtual bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
+			virtual bool getScenarioInputLink(const uint32_t scenarioInputIndex,
 											  OpenViBE::CIdentifier& boxIdentifier,
-											  OpenViBE::uint32& boxInputIndex) const = 0;
+											  uint32_t& boxInputIndex) const = 0;
 
-			virtual bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
+			virtual bool getScenarioInputLink(const uint32_t scenarioInputIndex,
 											  OpenViBE::CIdentifier& boxIdentifier,
 											  OpenViBE::CIdentifier& boxInputIdentifier) const = 0;
 
-			virtual bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
+			virtual bool getScenarioOutputLink(const uint32_t scenarioOutputIndex,
 											   OpenViBE::CIdentifier& boxIdentifier,
-											   OpenViBE::uint32& boxOutputIndex) const = 0;
+											   uint32_t& boxOutputIndex) const = 0;
 
-			virtual bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
+			virtual bool getScenarioOutputLink(const uint32_t scenarioOutputIndex,
 											   OpenViBE::CIdentifier& boxIdentifier,
 											   OpenViBE::CIdentifier& boxOutputIdentifier) const = 0;
 
-			virtual bool removeScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex) = 0;
+			virtual bool removeScenarioInputLink(const uint32_t scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const uint32_t boxInputIndex) = 0;
 
-			virtual bool removeScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxOutputIndex) = 0;
+			virtual bool removeScenarioOutputLink(const uint32_t scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const uint32_t boxOutputIndex) = 0;
 
-			virtual bool removeScenarioInput(const uint32 inputIndex) = 0;
-			virtual bool removeScenarioOutput(const uint32 outputIndex) = 0;
+			virtual bool removeScenarioInput(const uint32_t inputIndex) = 0;
+			virtual bool removeScenarioOutput(const uint32_t outputIndex) = 0;
 
 			//@}
 			/** \name Comment management */

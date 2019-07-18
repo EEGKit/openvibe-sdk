@@ -43,12 +43,12 @@ namespace OpenViBEPlugins
 
 			virtual void release(void) { delete this; }
 
-			virtual bool initialize(void) =0;
-			virtual bool uninitialize(void) =0;
+			virtual bool initialize(void) = 0;
+			virtual bool uninitialize(void) = 0;
 
-			virtual bool parameterize(void) =0;
+			virtual bool parameterize(void) = 0;
 
-			virtual bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) =0;
+			virtual bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) = 0;
 			virtual XML::IXMLNode* saveConfiguration(void) = 0;
 			virtual bool loadConfiguration(XML::IXMLNode& rNode) = 0;
 
@@ -60,8 +60,7 @@ namespace OpenViBEPlugins
 		class CAlgorithmPairwiseDecisionDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
-			virtual bool getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix, "Probability Matrix", OpenViBE::Kernel::ParameterType_Matrix);
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Configuration, "Configuration node", OpenViBE::Kernel::ParameterType_Pointer);

@@ -5,12 +5,12 @@ using namespace EBML;
 CIdentifier::CIdentifier(void)
 	: m_ui64Identifier(0) {}
 
-CIdentifier::CIdentifier(const uint64 ui64Identifier)
+CIdentifier::CIdentifier(const uint64_t ui64Identifier)
 	: m_ui64Identifier(ui64Identifier) {}
 
-CIdentifier::CIdentifier(const uint32 ui32Identifier1, const uint32 ui32Identifier2)
+CIdentifier::CIdentifier(const uint32_t ui32Identifier1, const uint32_t ui32Identifier2)
 {
-	m_ui64Identifier = (((uint64)ui32Identifier1) << 32) + ui32Identifier2;
+	m_ui64Identifier = (((uint64_t)ui32Identifier1) << 32) + ui32Identifier2;
 }
 
 CIdentifier::CIdentifier(const CIdentifier& rIdentifier)
@@ -55,12 +55,12 @@ namespace EBML
 	}
 };
 
-CIdentifier::operator uint64(void) const
+CIdentifier::operator uint64_t(void) const
 {
 	return this->toUInteger();
 }
 
-uint64 CIdentifier::toUInteger(void) const
+uint64_t CIdentifier::toUInteger(void) const
 {
 	return m_ui64Identifier;
 }

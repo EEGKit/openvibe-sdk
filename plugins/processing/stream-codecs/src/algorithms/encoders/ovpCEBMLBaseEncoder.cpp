@@ -9,12 +9,7 @@ using namespace OpenViBE::Plugins;
 using namespace OpenViBEPlugins;
 using namespace OpenViBEPlugins::StreamCodecs;
 
-CEBMLBaseEncoder::CEBMLBaseEncoder(void)
-	: m_pEBMLWriterHelper(NULL)
-	  , m_pEBMLWriter(NULL)
-	  , m_oEBMLWriterCallbackProxy(
-		  *this,
-		  &CEBMLBaseEncoder::write) {}
+CEBMLBaseEncoder::CEBMLBaseEncoder(void): m_pEBMLWriterHelper(NULL), m_pEBMLWriter(NULL), m_oEBMLWriterCallbackProxy(*this, &CEBMLBaseEncoder::write) {}
 
 // ________________________________________________________________________________________________________________
 //
@@ -85,9 +80,9 @@ bool CEBMLBaseEncoder::process(void)
 // ________________________________________________________________________________________________________________
 //
 
-void CEBMLBaseEncoder::write(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CEBMLBaseEncoder::write(const void* pBuffer, const uint64_t ui64BufferSize)
 {
-	uint64 l_ui64CurrentBufferSize = op_pMemoryBuffer->getSize();
+	uint64_t l_ui64CurrentBufferSize = op_pMemoryBuffer->getSize();
 	op_pMemoryBuffer->setSize(l_ui64CurrentBufferSize + ui64BufferSize, false);
 	System::Memory::copy(op_pMemoryBuffer->getDirectPointer() + l_ui64CurrentBufferSize, pBuffer, ui64BufferSize);
 }

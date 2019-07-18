@@ -16,12 +16,12 @@ bool CSignalTrialSet::clear(void)
 	return true;
 }
 
-uint32 CSignalTrialSet::getSignalTrialCount(void) const
+uint32_t CSignalTrialSet::getSignalTrialCount(void) const
 {
-	return static_cast<uint32>(m_vSignalTrial.size());
+	return static_cast<uint32_t>(m_vSignalTrial.size());
 }
 
-ISignalTrial& CSignalTrialSet::getSignalTrial(uint32 ui32Index) const
+ISignalTrial& CSignalTrialSet::getSignalTrial(uint32_t ui32Index) const
 {
 	return *m_vSignalTrial[ui32Index];
 }

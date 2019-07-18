@@ -22,9 +22,9 @@ namespace OpenViBEToolkit
 		{
 			namespace
 			{
-				bool isSeparator(uint8 ui8Value, uint8* pSeparator, uint32 ui32SeparatorCount)
+				bool isSeparator(uint8_t ui8Value, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
 				{
-					for (uint32 i = 0; i < ui32SeparatorCount; i++)
+					for (uint32_t i = 0; i < ui32SeparatorCount; i++)
 					{
 						if (ui8Value == pSeparator[i]) { return true; }
 					}
@@ -44,16 +44,16 @@ namespace OpenViBEToolkit
 	};
 };
 
-uint32 OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8 ui8Separator)
+uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t ui8Separator)
 {
 	return OpenViBEToolkit::Tools::String::split(rString, rSplitCallback, &ui8Separator, 1);
 }
 
-uint32 OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8* pSeparator, uint32 ui32SeparatorCount)
+uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
 {
 	if (ui32SeparatorCount == 0 || pSeparator == NULL) return 0;
 
-	uint32 l_ui32Count = 0;
+	uint32_t l_ui32Count = 0;
 	std::string l_sString(rString.toASCIIString());
 	std::string::size_type i = 0;
 	std::string::size_type j = 0;

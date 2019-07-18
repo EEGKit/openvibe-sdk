@@ -11,10 +11,10 @@ using namespace OpenViBE;
 CIdentifier::CIdentifier(void)
 	: m_ui64Identifier(0xffffffffffffffffll) {}
 
-CIdentifier::CIdentifier(const uint32 ui32Identifier1, const uint32 ui32Identifier2)
-	: m_ui64Identifier((((uint64)ui32Identifier1) << 32) + ui32Identifier2) {}
+CIdentifier::CIdentifier(const uint32_t ui32Identifier1, const uint32_t ui32Identifier2)
+	: m_ui64Identifier((((uint64_t)ui32Identifier1) << 32) + ui32Identifier2) {}
 
-CIdentifier::CIdentifier(const uint64 ui64Identifier)
+CIdentifier::CIdentifier(const uint64_t ui64Identifier)
 	: m_ui64Identifier(ui64Identifier) {}
 
 CIdentifier::CIdentifier(const CIdentifier& rIdentifier)
@@ -90,11 +90,11 @@ bool CIdentifier::fromString(const CString& rString)
 	unsigned int l_uiIdentifier1;
 	unsigned int l_uiIdentifier2;
 	if (sscanf(l_sBuffer, "(0x%x, 0x%x)", &l_uiIdentifier1, &l_uiIdentifier2) != 2) { return false; }
-	m_ui64Identifier = (((uint64)l_uiIdentifier1) << 32) + l_uiIdentifier2;
+	m_ui64Identifier = (((uint64_t)l_uiIdentifier1) << 32) + l_uiIdentifier2;
 	return true;
 }
 
-uint64 CIdentifier::toUInteger(void) const
+uint64_t CIdentifier::toUInteger(void) const
 {
 	return m_ui64Identifier;
 }

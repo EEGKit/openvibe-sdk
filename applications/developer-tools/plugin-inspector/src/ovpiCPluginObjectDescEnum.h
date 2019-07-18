@@ -16,7 +16,7 @@ public:
 	virtual bool enumeratePluginObjectDesc(std::vector<const OpenViBE::Plugins::IPluginObjectDesc*>& pluginDescriptors);
 	virtual bool enumeratePluginObjectDesc(const OpenViBE::CIdentifier& parentClassIdentifier);
 
-	virtual bool callback(const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc) =0;
+	virtual bool callback(const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc) = 0;
 
 	static std::string transform(const std::string& sInput, const bool bRemoveSlash = false);
 

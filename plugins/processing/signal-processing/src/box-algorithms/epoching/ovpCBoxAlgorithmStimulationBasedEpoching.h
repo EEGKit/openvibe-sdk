@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching);
@@ -32,28 +32,28 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_StimulationDecoder;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_SignalEncoder;
 
-			OpenViBE::uint64 m_StimulationId;
+			uint64_t m_StimulationId;
 			double m_EpochDurationInSeconds;
-			OpenViBE::uint64 m_EpochDuration;
-			OpenViBE::int64 m_EpochOffset;
+			uint64_t m_EpochDuration;
+			int64_t m_EpochOffset;
 
 			// Input matrix parameters
-			OpenViBE::uint64 m_SamplingRate;
-			OpenViBE::uint32 m_SampleCountPerInputBuffer;
+			uint64_t m_SamplingRate;
+			uint32_t m_SampleCountPerInputBuffer;
 
 			// Output matrix dimensions
-			OpenViBE::uint32 m_ChannelCount;
-			OpenViBE::uint32 m_SampleCountPerOutputEpoch;
+			uint32_t m_ChannelCount;
+			uint32_t m_SampleCountPerOutputEpoch;
 
-			OpenViBE::uint64 m_LastSignalChunkEndTime;
-			OpenViBE::uint64 m_LastStimulationChunkStartTime;
+			uint64_t m_LastSignalChunkEndTime;
+			uint64_t m_LastStimulationChunkStartTime;
 			uint64_t m_LastReceivedStimulationDate;
 
-			std::deque<OpenViBE::uint64> m_ReceivedStimulations;
+			std::deque<uint64_t> m_ReceivedStimulations;
 
 			struct CachedChunk
 			{
-				CachedChunk(OpenViBE::uint64 startTime, OpenViBE::uint64 endTime, OpenViBE::IMatrix* matrix)
+				CachedChunk(uint64_t startTime, uint64_t endTime, OpenViBE::IMatrix* matrix)
 					: startTime(startTime)
 					  , endTime(endTime)
 					  , matrix(matrix) {}
@@ -66,8 +66,8 @@ namespace OpenViBEPlugins
 					return *this;
 				}
 
-				OpenViBE::uint64 startTime;
-				OpenViBE::uint64 endTime;
+				uint64_t startTime;
+				uint64_t endTime;
 				std::unique_ptr<OpenViBE::IMatrix> matrix;
 			};
 
@@ -94,8 +94,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmStimulationBasedEpoching; }
 			virtual OpenViBE::CString getStockItemName(void) const { return "gtk-cut"; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
 				rBoxAlgorithmPrototype.addInput("Input stimulations", OV_TypeId_Stimulations);

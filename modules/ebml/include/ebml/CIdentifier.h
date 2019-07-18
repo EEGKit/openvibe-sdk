@@ -37,7 +37,7 @@ namespace EBML
 		 *
 		 * Initializes the identifier to the given 64 bits value.
 		 */
-		CIdentifier(const EBML::uint64 ui64Identifier);
+		CIdentifier(const uint64_t ui64Identifier);
 		/**
 		 * \brief 32 bits integer based constructor
 		 * \param ui32Identifier1 [in] : the first part of the identifier
@@ -46,7 +46,7 @@ namespace EBML
 		 * Builds up the 64 bits identifier given its two 32 bits
 		 * components.
 		 */
-		CIdentifier(const EBML::uint32 ui32Identifier1, const EBML::uint32 ui32Identifier2);
+		CIdentifier(const uint32_t ui32Identifier1, const uint32_t ui32Identifier2);
 		/**
 		 * \brief Copy constructor
 		 * \param rIdentifier [in] : The source identifier to use
@@ -133,18 +133,18 @@ namespace EBML
 		 * \brief Cast operator
 		 * \return \e the 64 bits value contained by this identifier.
 		 */
-		operator EBML::uint64(void) const;
+		operator uint64_t(void) const;
 		/**
 		 * \brief Conversion to 64 bits unsigned int (should be used instead of the cast)
 		 * \return \e the 64 bits value contained by this identifier.
 		 */
-		EBML::uint64 toUInteger(void) const;
+		uint64_t toUInteger(void) const;
 
 		//@}
 
 	protected:
 
-		EBML::uint64 m_ui64Identifier; ///< The 64 bits value of this identifier
+		uint64_t m_ui64Identifier; ///< The 64 bits value of this identifier
 	};
 };
 

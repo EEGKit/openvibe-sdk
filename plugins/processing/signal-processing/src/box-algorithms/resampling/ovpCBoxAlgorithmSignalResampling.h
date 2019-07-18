@@ -50,7 +50,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 
 			// implementation for TResampler::ICallback
@@ -63,15 +63,15 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalResampling> m_oDecoder;
 			mutable OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_oEncoder;
 
-			OpenViBE::uint32 m_ui32OutputSamplingRate;
-			OpenViBE::uint32 m_ui32OutputSampleCount;
+			uint32_t m_ui32OutputSamplingRate;
+			uint32_t m_ui32OutputSampleCount;
 
 			int m_iFractionalDelayFilterSampleCount;
 			double m_f64TransitionBandInPercent;
 			double m_f64StopBandAttenuation;
 
-			OpenViBE::uint32 m_ui32InputSamplingRate;
-			mutable OpenViBE::uint64 m_ui64TotalOutputSampleCount;
+			uint32_t m_ui32InputSamplingRate;
+			mutable uint64_t m_ui64TotalOutputSampleCount;
 			CResampler m_oResampler;
 			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext;
 		};
@@ -96,8 +96,7 @@ namespace OpenViBEPlugins
 			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_SignalResampling; }
 			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalResampling; }
 
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
 				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
 				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);

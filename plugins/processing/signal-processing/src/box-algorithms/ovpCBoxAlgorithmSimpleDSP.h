@@ -28,7 +28,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize(void);
 			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+			virtual bool processInput(uint32_t ui32InputIndex);
 			virtual bool process(void);
 			virtual void evaluate(void);
 
@@ -42,7 +42,7 @@ namespace OpenViBEPlugins
 
 			CEquationParser* m_pEquationParser;
 
-			OpenViBE::uint64 m_ui64EquationType;
+			uint64_t m_ui64EquationType;
 			double m_f64SpecialEquationParameter;
 			double** m_ppVariable;
 
@@ -53,7 +53,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				char l_sName[1024];
 				::sprintf(l_sName, "Input - %c", 'A' + ui32Index);
@@ -64,9 +64,9 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::uint32 i;
+				uint32_t i;
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getInputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(0, l_oTypeIdentifier);
@@ -77,9 +77,9 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::uint32 i;
+				uint32_t i;
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(0, l_oTypeIdentifier);

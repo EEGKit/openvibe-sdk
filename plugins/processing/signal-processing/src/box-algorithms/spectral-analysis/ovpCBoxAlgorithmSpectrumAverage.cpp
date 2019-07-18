@@ -47,7 +47,7 @@ bool CBoxAlgorithmSpectrumAverage::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmSpectrumAverage::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSpectrumAverage::processInput(uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -58,7 +58,7 @@ bool CBoxAlgorithmSpectrumAverage::process(void)
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	for (uint32 i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, i);
 		op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
@@ -75,13 +75,13 @@ bool CBoxAlgorithmSpectrumAverage::process(void)
 		{
 			double* l_pInputMatrix   = ip_pMatrix->getBuffer();
 			double* l_pOutputMatrix  = op_pMatrix->getBuffer();
-			uint32 l_ui32ChannelCount = op_pMatrix->getDimensionSize(0);
-			uint32 l_ui32BandCount    = op_pMatrix->getDimensionSize(1);
-			for (uint32 j = 0; j < l_ui32ChannelCount; j++)
+			uint32_t l_ui32ChannelCount = op_pMatrix->getDimensionSize(0);
+			uint32_t l_ui32BandCount    = op_pMatrix->getDimensionSize(1);
+			for (uint32_t j = 0; j < l_ui32ChannelCount; j++)
 			{
 				double l_f64Mean  = 0;
-				uint32 l_ui32Count = 0;
-				for (uint32 k = 0; k < l_ui32BandCount; k++)
+				uint32_t l_ui32Count = 0;
+				for (uint32_t k = 0; k < l_ui32BandCount; k++)
 				{
 					l_f64Mean += *l_pOutputMatrix;
 					l_ui32Count += (m_bZeroCare || *l_pOutputMatrix != 0) ? 1 : 0;

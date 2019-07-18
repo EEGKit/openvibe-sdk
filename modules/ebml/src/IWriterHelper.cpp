@@ -25,11 +25,11 @@ namespace EBML
 			virtual bool openChild(const CIdentifier& rIdentifier);
 			virtual bool closeChild(void);
 
-			virtual bool setSIntegerAsChildData(const int64 iValue);
-			virtual bool setUIntegerAsChildData(const uint64 uiValue);
+			virtual bool setSIntegerAsChildData(const int64_t iValue);
+			virtual bool setUIntegerAsChildData(const uint64_t uiValue);
 			virtual bool setFloat32AsChildData(const float fValue);
 			virtual bool setFloat64AsChildData(const double fValue);
-			virtual bool setBinaryAsChildData(const void* pBuffer, const uint64 ui64BufferLength);
+			virtual bool setBinaryAsChildData(const void* pBuffer, const uint64_t ui64BufferLength);
 			virtual bool setASCIIStringAsChildData(const char* sValue);
 
 			virtual void release(void);
@@ -78,10 +78,10 @@ bool CWriterHelper::closeChild(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CWriterHelper::setSIntegerAsChildData(const int64 iValue)
+bool CWriterHelper::setSIntegerAsChildData(const int64_t iValue)
 {
-	uint64 i;
-	uint64 l_ui64BufferSize = 0;
+	uint64_t i;
+	uint64_t l_ui64BufferSize = 0;
 	unsigned char l_pBuffer[8];
 
 	if (iValue == 0x00000000000000LL)
@@ -111,10 +111,10 @@ bool CWriterHelper::setSIntegerAsChildData(const int64 iValue)
 	return m_pWriter->setChildData(l_pBuffer, l_ui64BufferSize);
 }
 
-bool CWriterHelper::setUIntegerAsChildData(const uint64 uiValue)
+bool CWriterHelper::setUIntegerAsChildData(const uint64_t uiValue)
 {
-	uint64 i;
-	uint64 l_ui64BufferSize = 0;
+	uint64_t i;
+	uint64_t l_ui64BufferSize = 0;
 	unsigned char l_pBuffer[8];
 
 	if (uiValue == 0x000000000000000LL)
@@ -146,9 +146,9 @@ bool CWriterHelper::setUIntegerAsChildData(const uint64 uiValue)
 
 bool CWriterHelper::setFloat32AsChildData(const float fValue)
 {
-	uint32 l_uiValue;
-	uint64 i;
-	uint64 l_ui64BufferSize = 0;
+	uint32_t l_uiValue;
+	uint64_t i;
+	uint64_t l_ui64BufferSize = 0;
 	unsigned char l_pBuffer[8];
 	::memcpy(&l_uiValue, &fValue, sizeof(fValue));
 
@@ -162,9 +162,9 @@ bool CWriterHelper::setFloat32AsChildData(const float fValue)
 
 bool CWriterHelper::setFloat64AsChildData(const double fValue)
 {
-	uint64 l_uiValue;
-	uint64 i;
-	uint64 l_ui64BufferSize = 0;
+	uint64_t l_uiValue;
+	uint64_t i;
+	uint64_t l_ui64BufferSize = 0;
 	unsigned char l_pBuffer[8];
 	::memcpy(&l_uiValue, &fValue, sizeof(fValue));
 
@@ -176,7 +176,7 @@ bool CWriterHelper::setFloat64AsChildData(const double fValue)
 	return m_pWriter->setChildData(l_pBuffer, l_ui64BufferSize);
 }
 
-bool CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64 ui64BufferLength)
+bool CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64_t ui64BufferLength)
 {
 	return m_pWriter->setChildData(pBuffer, ui64BufferLength);
 }
