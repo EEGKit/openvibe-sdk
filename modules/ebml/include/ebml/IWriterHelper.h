@@ -23,7 +23,7 @@ namespace EBML
 	 * Be sure to look at http://ebml.sourceforge.net/specs/ in
 	 * order to understand what EBML is and how it should be used.
 	 *
-	 * \todo float80 formating implementation
+	 * \todo long double formating implementation
 	 * \todo date formating implementation
 	 * \todo utf8 string formating implementation
 	 */

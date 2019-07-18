@@ -138,7 +138,7 @@ bool Memory::hostToLittleEndian(const double f64Value, uint8_t* pBuffer)
 	return hostToLittleEndian(ui64Value, pBuffer);
 }
 
-bool Memory::hostToLittleEndian(const float80 f80Value, uint8_t* pBuffer)
+bool Memory::hostToLittleEndian(const long double f80Value, uint8_t* pBuffer)
 {
 	// $$$ TODO
 	return false;
@@ -192,7 +192,7 @@ bool Memory::hostToBigEndian(const double f64Value, uint8_t* pBuffer)
 	return hostToBigEndian(ui64Value, pBuffer);
 }
 
-bool Memory::hostToBigEndian(const float80 f80Value, uint8_t* pBuffer)
+bool Memory::hostToBigEndian(const long double f80Value, uint8_t* pBuffer)
 {
 	// $$$ TODO
 	return false;
@@ -247,7 +247,7 @@ bool Memory::littleEndianToHost(const uint8_t* pBuffer, double* pValue)
 	return b;
 }
 
-bool Memory::littleEndianToHost(const uint8_t* pBuffer, float80* pValue)
+bool Memory::littleEndianToHost(const uint8_t* pBuffer, long double* pValue)
 {
 	// $$$ TODO
 	return false;
@@ -302,7 +302,7 @@ bool Memory::bigEndianToHost(const uint8_t* pBuffer, double* pValue)
 	return b;
 }
 
-bool Memory::bigEndianToHost(const uint8_t* pBuffer, float80* pValue)
+bool Memory::bigEndianToHost(const uint8_t* pBuffer, long double* pValue)
 {
 	// $$$ TODO
 	return false;

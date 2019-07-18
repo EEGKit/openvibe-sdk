@@ -21,7 +21,7 @@ int main(void)
 	static_assert(sizeof(int8_t) >= 1, "int8_t is not at least 1 byte");
 
 #if defined(LINUX)
-	static_assert(sizeof(float80)>=10, "float80 is not at least 10 bytes");
+	static_assert(sizeof(long double)>=10, "long double is not at least 10 bytes");
 #endif
 	// Float80 seems to be the same size as double on Win at the time of writing, but its not widely used in openvibe.	
 	static_assert(sizeof(double) >= 8, "double is not at least 8 bytes");

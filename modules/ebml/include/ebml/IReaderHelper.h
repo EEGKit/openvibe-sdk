@@ -21,7 +21,7 @@ namespace EBML
 	 * Be sure to look at http://ebml.sourceforge.net/specs/ in
 	 * order to understand what EBML is and how it should be used.
 	 *
-	 * \todo float80 reading implementation
+	 * \todo long double reading implementation
 	 * \todo date reading implementation
 	 * \todo utf8 string reading implementation
 	 */

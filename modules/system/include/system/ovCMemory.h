@@ -21,7 +21,7 @@ namespace System
 		static bool hostToLittleEndian(const int64_t i64Value, uint8_t* pBuffer);
 		static bool hostToLittleEndian(const float f32Value, uint8_t* pBuffer);
 		static bool hostToLittleEndian(const double f64Value, uint8_t* pBuffer);
-		static bool hostToLittleEndian(const System::float80 f80Value, uint8_t* pBuffer);
+		static bool hostToLittleEndian(const long double f80Value, uint8_t* pBuffer);
 		static bool hostToBigEndian(const uint16_t ui16Value, uint8_t* pBuffer);
 		static bool hostToBigEndian(const uint32_t ui32Value, uint8_t* pBuffer);
 		static bool hostToBigEndian(const uint64_t ui64Value, uint8_t* pBuffer);
@@ -30,7 +30,7 @@ namespace System
 		static bool hostToBigEndian(const int64_t i64Value, uint8_t* pBuffer);
 		static bool hostToBigEndian(const float f32Value, uint8_t* pBuffer);
 		static bool hostToBigEndian(const double f64Value, uint8_t* pBuffer);
-		static bool hostToBigEndian(const System::float80 f80Value, uint8_t* pBuffer);
+		static bool hostToBigEndian(const long double f80Value, uint8_t* pBuffer);
 
 		static bool littleEndianToHost(const uint8_t* pBuffer, uint16_t* pValue);
 		static bool littleEndianToHost(const uint8_t* pBuffer, uint32_t* pValue);
@@ -40,7 +40,7 @@ namespace System
 		static bool littleEndianToHost(const uint8_t* pBuffer, int64_t* pValue);
 		static bool littleEndianToHost(const uint8_t* pBuffer, float* pValue);
 		static bool littleEndianToHost(const uint8_t* pBuffer, double* pValue);
-		static bool littleEndianToHost(const uint8_t* pBuffer, System::float80* pValue);
+		static bool littleEndianToHost(const uint8_t* pBuffer, long double* pValue);
 		static bool bigEndianToHost(const uint8_t* pBuffer, uint16_t* pValue);
 		static bool bigEndianToHost(const uint8_t* pBuffer, uint32_t* pValue);
 		static bool bigEndianToHost(const uint8_t* pBuffer, uint64_t* pValue);
@@ -49,7 +49,7 @@ namespace System
 		static bool bigEndianToHost(const uint8_t* pBuffer, int64_t* pValue);
 		static bool bigEndianToHost(const uint8_t* pBuffer, float* pValue);
 		static bool bigEndianToHost(const uint8_t* pBuffer, double* pValue);
-		static bool bigEndianToHost(const uint8_t* pBuffer, System::float80* pValue);
+		static bool bigEndianToHost(const uint8_t* pBuffer, long double* pValue);
 
 	private:
 

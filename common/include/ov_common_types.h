@@ -53,7 +53,7 @@ OV_APPEND_TO_NAMESPACE
 
 	//typedef float float;                  ///< 32 bits floating point
 	//typedef double double;                 ///< 64 bits floating point
-	typedef long double float80;            ///< 80 bits floating point
+	//typedef long double float80;            ///< 80 bits floating point
 
 	//___________________________________________________________________//
 	//                                                                   //

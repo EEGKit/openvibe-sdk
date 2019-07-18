@@ -68,7 +68,7 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize(void)
 
 		if (!l_bExpand)
 		{
-			if ((l_sType == "binary(float80)")
+			if ((l_sType == "binary(long double)")
 				|| (l_sType == "binary(double)")
 				|| (l_sType == "binary(float)")
 				|| (l_sType == "binary(integer8)")
