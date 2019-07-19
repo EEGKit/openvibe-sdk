@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_IMatrix_H__
-#define __OpenViBE_IMatrix_H__
+#pragma once
 
 #include "ovIObject.h"
 
@@ -150,4 +149,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_IMatrix_H__
+

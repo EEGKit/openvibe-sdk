@@ -19,8 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __OpenViBEPlugins_BoxAlgorithm_SignalResampling_H__
-#define __OpenViBEPlugins_BoxAlgorithm_SignalResampling_H__
+#pragma once
 
 #include "ovCResampler.h"
 
@@ -116,4 +115,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_SignalResampling_H__
+

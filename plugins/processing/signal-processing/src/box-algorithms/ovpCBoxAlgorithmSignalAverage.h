@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_SignalAverage_H__
-#define __OpenViBEPlugins_BoxAlgorithm_SignalAverage_H__
+#pragma once
 
 #include <toolkit/ovtk_all.h>
 
@@ -78,4 +77,4 @@ namespace OpenViBEPlugins
 	}
 }
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_SignalAverage_H__
+

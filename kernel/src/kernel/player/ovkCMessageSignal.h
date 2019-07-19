@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CMessageSignal_H__
-#define __OpenViBEKernel_Kernel_Player_CMessageSignal_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 #include "ovkTMessage.h"
@@ -22,4 +21,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Kernel_Player_CMessageSignal_H__
+

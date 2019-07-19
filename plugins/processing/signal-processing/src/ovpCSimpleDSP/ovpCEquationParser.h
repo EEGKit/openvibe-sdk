@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_SignalProcessing_CEquationParser_H__
-#define __OpenViBEPlugins_SignalProcessing_CEquationParser_H__
+#pragma once
 
 #include "../ovp_defines.h"
 
@@ -199,6 +198,3 @@ public:
 	static void op_loadVal(double*& pStack, functionContext& pContext);
 	static void op_loadVar(double*& pStack, functionContext& pContext);
 };
-
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_CommonAverageReference_H__
-#define __OpenViBEPlugins_BoxAlgorithm_CommonAverageReference_H__
+#pragma once
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
@@ -72,4 +71,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_CommonAverageReference_H__
+

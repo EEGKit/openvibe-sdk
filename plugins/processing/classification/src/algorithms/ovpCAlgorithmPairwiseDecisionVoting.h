@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Algorithm_DecisionStrategy_Voting_H__
-#define __OpenViBEPlugins_Algorithm_DecisionStrategy_Voting_H__
+#pragma once
 
 #include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
@@ -75,4 +74,4 @@ namespace OpenViBEPlugins
 	}
 }
 
-#endif //__OpenViBEPlugins_Algorithm_DecisionStrategy_Voting_H__
+

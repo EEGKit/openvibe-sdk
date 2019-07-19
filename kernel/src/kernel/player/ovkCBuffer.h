@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CBuffer_H__
-#define __OpenViBEKernel_Kernel_Player_CBuffer_H__
+#pragma once
 
 #include "../../ovk_base.h"
 
@@ -21,4 +20,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Kernel_Player_CBuffer_H__
+

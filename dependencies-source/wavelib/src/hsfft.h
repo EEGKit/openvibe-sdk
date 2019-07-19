@@ -5,8 +5,7 @@
  *      Author: Rafat Hussain
  */
 
-#ifndef HSFFT_H_
-#define HSFFT_H_
+#pragma once
 
 #include <stdlib.h>
 #include <math.h>
@@ -69,6 +68,3 @@ void free_fft(fft_object object);
 #ifdef __cplusplus
 }
 #endif
-
-
-#endif /* HSFFT_H_ */

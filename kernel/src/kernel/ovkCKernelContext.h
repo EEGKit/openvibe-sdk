@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_CKernelContext_H__
-#define __OpenViBEKernel_CKernelContext_H__
+#pragma once
 
 #include <memory>
 
@@ -129,4 +128,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_CKernelContext_H__
+

@@ -1,5 +1,4 @@
-#ifndef __XML_Defines_H__
-#define __XML_Defines_H__
+#pragma once
 
 #include <ov_common_defines.h>
 
@@ -29,4 +28,4 @@
 	#define XML_API XML_API_Import
 #endif
 
-#endif // __XML_Defines_H__
+

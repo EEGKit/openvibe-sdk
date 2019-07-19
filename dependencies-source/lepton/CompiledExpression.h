@@ -1,5 +1,4 @@
-#ifndef LEPTON_COMPILED_EXPRESSION_H_
-#define LEPTON_COMPILED_EXPRESSION_H_
+#pragma once
 
 /* -------------------------------------------------------------------------- *
  *                                   Lepton                                   *
@@ -90,5 +89,3 @@ namespace Lepton
 		std::map<std::string, double> dummyVariables;
 	};
 } // namespace Lepton
-
-#endif /*LEPTON_COMPILED_EXPRESSION_H_*/

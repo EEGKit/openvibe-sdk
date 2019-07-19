@@ -1,5 +1,4 @@
-#ifndef __FS_Files_H__
-#define __FS_Files_H__
+#pragma once
 
 #include "defines.h"
 #include <cstdio>
@@ -65,4 +64,4 @@ namespace FS
 	};
 }
 
-#endif // __FS_Files_H__
+

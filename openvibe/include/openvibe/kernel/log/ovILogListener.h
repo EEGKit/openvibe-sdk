@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Log_ILogListener_h__
-#define __OpenViBE_Kernel_Log_ILogListener_h__
+#pragma once
 
 #include "../ovIKernelObject.h"
 
@@ -246,5 +245,3 @@ namespace OpenViBE
 		};
 	};
 };
-
-#endif // __OpenViBE_Kernel_Log_ILogListener_h__

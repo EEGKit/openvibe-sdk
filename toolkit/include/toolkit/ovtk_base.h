@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Base_H__
-#define __OpenViBEToolkit_Base_H__
+#pragma once
 
 #include "ovtk_defines.h"
 
@@ -41,4 +40,4 @@ namespace OpenViBEToolkit
 	};
 };
 
-#endif // __OpenViBEToolkit_Base_H__
+

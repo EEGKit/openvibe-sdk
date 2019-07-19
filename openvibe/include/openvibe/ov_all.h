@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_All_H__
-#define __OpenViBE_All_H__
+#pragma once
 
 #include <memory>
 
@@ -156,4 +155,4 @@ namespace OpenViBE
 		} \
 	}
 
-#endif // __OpenViBE_All_H__
+

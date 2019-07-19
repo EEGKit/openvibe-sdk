@@ -1,5 +1,4 @@
-#ifndef LEPTON_CUSTOM_FUNCTION_H_
-#define LEPTON_CUSTOM_FUNCTION_H_
+#pragma once
 
 /* -------------------------------------------------------------------------- *
  *                                   Lepton                                   *
@@ -73,5 +72,3 @@ namespace Lepton
 		virtual CustomFunction* clone() const = 0;
 	};
 } // namespace Lepton
-
-#endif /*LEPTON_CUSTOM_FUNCTION_H_*/

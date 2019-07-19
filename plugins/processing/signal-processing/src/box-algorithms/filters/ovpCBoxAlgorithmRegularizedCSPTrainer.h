@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_RegularizedCSPTrainer_H__
-#define __OpenViBEPlugins_BoxAlgorithm_RegularizedCSPTrainer_H__
+#pragma once
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 
@@ -141,4 +140,4 @@ namespace OpenViBEPlugins
 
 #endif // TARGET_HAS_ThirdPartyEIGEN
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_RegularizedCSPTrainer_H__
+

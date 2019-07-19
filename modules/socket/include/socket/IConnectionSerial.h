@@ -1,5 +1,4 @@
-#ifndef __Socket_IConnectionSerial_H__
-#define __Socket_IConnectionSerial_H__
+#pragma once
 
 #include "IConnection.h"
 #include <string>
@@ -55,4 +54,4 @@ namespace Socket
 	extern Socket_API IConnectionSerial* createConnectionSerial(void);
 };
 
-#endif // __Socket_IConnectionSerial_H__
+

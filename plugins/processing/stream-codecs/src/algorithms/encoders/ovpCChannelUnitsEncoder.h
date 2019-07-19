@@ -1,5 +1,4 @@
-#ifndef __SamplePlugin_Algorithms_CChannelUnitsEncoder_H__
-#define __SamplePlugin_Algorithms_CChannelUnitsEncoder_H__
+#pragma once
 
 #include "ovpCStreamedMatrixEncoder.h"
 
@@ -64,4 +63,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __SamplePlugin_Algorithms_CChannelUnitsEncoder_H__
+

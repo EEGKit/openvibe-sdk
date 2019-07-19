@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_ReferenceChannel_H__
-#define __OpenViBEPlugins_BoxAlgorithm_ReferenceChannel_H__
+#pragma once
 
 #include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
@@ -68,4 +67,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_ReferenceChannel_H__
+

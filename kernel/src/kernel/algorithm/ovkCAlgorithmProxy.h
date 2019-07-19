@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_CAlgorithmProxy_H__
-#define __OpenViBEKernel_Kernel_CAlgorithmProxy_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -118,4 +117,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Kernel_CAlgorithm_H__
+

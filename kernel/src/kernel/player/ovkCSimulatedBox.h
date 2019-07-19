@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CSimulatedBox_H__
-#define __OpenViBEKernel_Kernel_Player_CSimulatedBox_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 #include "ovkCBuffer.h"
@@ -191,4 +190,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Kernel_Player_CSimulatedBox_H__
+

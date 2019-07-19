@@ -1,6 +1,5 @@
-#ifndef __OpenViBEPlugins_Defines_H__
-#define __OpenViBEPlugins_Defines_H__
+#pragma once
 
 // add plugin common definitions here
 
-#endif // __OpenViBEPlugins_Defines_H__
+

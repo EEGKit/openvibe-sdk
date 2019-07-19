@@ -1,5 +1,4 @@
-#ifndef __EBML_TReaderCallbackProxy__
-#define __EBML_TReaderCallbackProxy__
+#pragma once
 
 #include "IReader.h"
 
@@ -125,5 +124,3 @@ namespace EBML
 	// ________________________________________________________________________________________________________________
 	//
 };
-
-#endif // __EBML_TReaderCallbackProxy__

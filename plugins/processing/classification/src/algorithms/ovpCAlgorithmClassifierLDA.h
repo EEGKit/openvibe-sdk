@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Algorithm_ClassifierLDA_H__
-#define __OpenViBEPlugins_Algorithm_ClassifierLDA_H__
+#pragma once
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 
@@ -113,6 +112,6 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_Algorithm_ClassifierLDA_H__
+
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

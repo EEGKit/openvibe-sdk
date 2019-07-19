@@ -1,5 +1,4 @@
-#ifndef __FS_Defines_H__
-#define __FS_Defines_H__
+#pragma once
 
 #include <ov_common_defines.h>
 
@@ -29,4 +28,4 @@
 	#define FS_API FS_API_Import
 #endif
 
-#endif // __FS_Defines_H__
+

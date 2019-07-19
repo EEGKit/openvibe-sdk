@@ -1,5 +1,4 @@
-#ifndef __FS_IEntryEnumerator_H__
-#define __FS_IEntryEnumerator_H__
+#pragma once
 
 #include "defines.h"
 #include <cinttypes>
@@ -54,4 +53,4 @@ namespace FS
 	extern FS_API IEntryEnumerator* createEntryEnumerator(IEntryEnumeratorCallBack& rCallBack);
 };
 
-#endif // __FS_IEntryEnumerator_H__
+

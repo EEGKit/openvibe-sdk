@@ -1,5 +1,4 @@
-#ifndef __EBML_IReader_H__
-#define __EBML_IReader_H__
+#pragma once
 
 #include "CIdentifier.h"
 
@@ -163,4 +162,4 @@ namespace EBML
 	extern EBML_API IReader* createReader(IReaderCallback& rReaderCallback);
 };
 
-#endif // __EBML_IReader_H__
+

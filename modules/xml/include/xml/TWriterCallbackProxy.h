@@ -1,5 +1,4 @@
-#ifndef __XML_TWriterCallbackProxy_H__
-#define __XML_TWriterCallbackProxy_H__
+#pragma once
 
 #include "IWriter.h"
 
@@ -60,4 +59,4 @@ namespace XML
 	//
 };
 
-#endif // __XML_TWriterCallbackProxy_H__
+

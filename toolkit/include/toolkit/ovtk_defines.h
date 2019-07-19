@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Defines_H__
-#define __OpenViBEToolkit_Defines_H__
+#pragma once
 
 #include <toolkit/ovtk_stimulations.h>
 
@@ -857,4 +856,4 @@
 	#define OVTK_API OVTK_API_Import
 #endif
 
-#endif // __OpenViBEToolkit_Defines_H__
+

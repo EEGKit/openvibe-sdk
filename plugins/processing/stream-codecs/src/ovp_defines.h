@@ -1,4 +1,3 @@
-#ifndef __OpenViBEPlugins_Defines_H__
-#define __OpenViBEPlugins_Defines_H__
+#pragma once
 
-#endif // __OpenViBEPlugins_Defines_H__
+

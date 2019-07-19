@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_Identity_H__
-#define __OpenViBEPlugins_BoxAlgorithm_Identity_H__
+#pragma once
 
 #include <toolkit/ovtk_all.h>
 #include <cstdio>
@@ -136,4 +135,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_Identity_H__
+

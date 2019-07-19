@@ -1,5 +1,4 @@
-#ifndef __XML_IReader_H__
-#define __XML_IReader_H__
+#pragma once
 
 #include "defines.h"
 
@@ -28,4 +27,4 @@ namespace XML
 	extern XML_API IReader* createReader(IReaderCallback& rReaderCallback);
 };
 
-#endif // __XML_IReader_H__
+

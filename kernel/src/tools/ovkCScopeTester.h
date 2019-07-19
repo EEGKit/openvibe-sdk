@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Tools_CScopeTester_H__
-#define __OpenViBEKernel_Tools_CScopeTester_H__
+#pragma once
 
 #include "../ovk_base.h"
 
@@ -26,4 +25,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Tools_CScopeTester_H__
+

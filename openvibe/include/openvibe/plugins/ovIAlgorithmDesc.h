@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Plugins_IAlgorithmDesc_H__
-#define __OpenViBE_Plugins_IAlgorithmDesc_H__
+#pragma once
 
 #include "ovIPluginObjectDesc.h"
 #include "../kernel/algorithm/ovIAlgorithmProto.h"
@@ -46,4 +45,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Plugins_IAlgorithmDesc_H__
+

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_All_H__
-#define __OpenViBEToolkit_All_H__
+#pragma once
 
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
@@ -99,4 +98,4 @@ namespace OpenViBEToolkit
 	bool initializeStimulationList(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 };
 
-#endif // __OpenViBEToolkit_All_H__
+

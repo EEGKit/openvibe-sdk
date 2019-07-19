@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Plugins_IBoxAlgorithm_H__
-#define __OpenViBE_Plugins_IBoxAlgorithm_H__
+#pragma once
 
 #include "ovIPluginObject.h"
 
@@ -310,4 +309,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Plugins_IBoxAlgorithm_H__
+

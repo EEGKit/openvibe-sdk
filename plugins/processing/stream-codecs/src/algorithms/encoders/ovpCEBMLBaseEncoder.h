@@ -1,5 +1,4 @@
-#ifndef __SamplePlugin_Algorithms_CEBMLBaseEncoder_H__
-#define __SamplePlugin_Algorithms_CEBMLBaseEncoder_H__
+#pragma once
 
 #include <openvibe/ov_all.h>
 
@@ -69,4 +68,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __SamplePlugin_Algorithms_CEBMLBaseEncoder_H__
+

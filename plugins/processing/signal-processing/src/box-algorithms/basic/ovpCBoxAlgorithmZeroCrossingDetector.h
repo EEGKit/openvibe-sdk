@@ -18,8 +18,7 @@
  * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __OpenViBEPlugins_BoxAlgorithm_ZeroCrossingDetector_H__
-#define __OpenViBEPlugins_BoxAlgorithm_ZeroCrossingDetector_H__
+#pragma once
 
 #include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
@@ -179,4 +178,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_ZeroCrossingDetector_H__
+

@@ -12,8 +12,7 @@
  * See the "License.txt" file for license.
  */
 
-#ifndef R8B_CDSPPROCESSOR_INCLUDED
-#define R8B_CDSPPROCESSOR_INCLUDED
+#pragma once
 
 #include "r8bbase.h"
 
@@ -104,5 +103,3 @@ namespace r8b
 		virtual int process(double* ip, int l0, double*& op0) = 0;
 	};
 } // namespace r8b
-
-#endif // R8B_CDSPPROCESSOR_INCLUDED

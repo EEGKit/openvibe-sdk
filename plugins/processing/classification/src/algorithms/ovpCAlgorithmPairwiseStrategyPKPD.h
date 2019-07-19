@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Algorithm_PairwiseStrategy_PKPD_H__
-#define __OpenViBEPlugins_Algorithm_PairwiseStrategy_PKPD_H__
+#pragma once
 
 #include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
@@ -83,4 +82,4 @@ namespace OpenViBEPlugins
 	}
 }
 
-#endif //__OpenViBEPlugins_Algorithm_PairwiseStrategy_PKPD_H__
+

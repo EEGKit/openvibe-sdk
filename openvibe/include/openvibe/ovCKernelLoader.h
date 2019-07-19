@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_CKernelLoader_H__
-#define __OpenViBE_CKernelLoader_H__
+#pragma once
 
 #include "ovIKernelLoader.h"
 
@@ -27,4 +26,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_CKernelLoader_H__
+

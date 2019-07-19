@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_CVector_H__
-#define __OpenViBEToolkit_CVector_H__
+#pragma once
 
 #include "../../ovtk_base.h"
 #include "../../ovtkIVector.h"
@@ -57,4 +56,4 @@ namespace OpenViBEToolkit
 	typedef TVector<IVector> CVector;
 };
 
-#endif // __OpenViBEToolkit_CVector_H__
+

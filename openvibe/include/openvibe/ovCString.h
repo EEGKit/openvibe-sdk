@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_CString_H__
-#define __OpenViBE_CString_H__
+#pragma once
 
 #include "ov_base.h"
 
@@ -169,4 +168,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_CString_H__
+

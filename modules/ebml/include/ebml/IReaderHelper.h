@@ -1,5 +1,4 @@
-#ifndef __EBML_IReaderHelper_H__
-#define __EBML_IReaderHelper_H__
+#pragma once
 
 #include "IReader.h"
 
@@ -94,4 +93,4 @@ namespace EBML
 	extern EBML_API IReaderHelper* createReaderHelper(void);
 };
 
-#endif // __EBML_IReaderHelper_H__
+

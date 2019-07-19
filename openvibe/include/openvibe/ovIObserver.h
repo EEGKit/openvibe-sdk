@@ -1,5 +1,5 @@
-#ifndef OVIOBSERVER_H
-#define OVIOBSERVER_H
+#pragma once
+
 
 #include "ovCObservable.h"
 #include "ov_base.h"
@@ -29,5 +29,3 @@ namespace OpenViBE
 		virtual void update(CObservable& o, void* data) = 0;
 	};
 }
-
-#endif // OVIOBSERVER_H

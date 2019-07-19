@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Offline_ISignalTrial_H__
-#define __OpenViBEToolkit_Offline_ISignalTrial_H__
+#pragma once
 
 #include "../ovtkIObject.h"
 
@@ -40,4 +39,4 @@ namespace OpenViBEToolkit
 	extern OVTK_API ISignalTrial& insertBufferTime(ISignalTrial& trial, uint64_t timeStart, uint32_t sampleCount, const double* buffer, const ISignalTrial* srcTrial = nullptr);
 };
 
-#endif // __OpenViBEToolkit_Offline_ISignalTrial_H__
+

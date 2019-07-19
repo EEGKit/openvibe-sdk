@@ -2,8 +2,7 @@
 Copyright (c) 2014, Rafat Hussain
 Copyright (c) 2016, Holger Nahrstaedt
 */
-#ifndef WAVEFILT_H_
-#define WAVEFILT_H_
+#pragma once
 
 #include <stdio.h>
 #include "conv.h"
@@ -26,6 +25,3 @@ void copy(const double* in, int N, double* out);
 #ifdef __cplusplus
 }
 #endif
-
-
-#endif /* WAVEFILT_H_ */

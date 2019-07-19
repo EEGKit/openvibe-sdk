@@ -5,8 +5,7 @@
  * \brief Contains basic type definitions and EBML standard identifiers
  */
 
-#ifndef __EBML_defines_H__
-#define __EBML_defines_H__
+#pragma once
 
 #include <ov_common_defines.h>
 
@@ -119,4 +118,4 @@
 	#define EBML_API EBML_API_Import
 #endif
 
-#endif // __EBML_defines_H__
+

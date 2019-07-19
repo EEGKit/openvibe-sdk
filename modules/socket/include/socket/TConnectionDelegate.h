@@ -1,5 +1,4 @@
-#ifndef __Socket_IConnectionDelegate_H__
-#define __Socket_IConnectionDelegate_H__
+#pragma once
 
 #include "IConnection.h"
 
@@ -85,4 +84,4 @@ namespace Socket
 	};
 }
 
-#endif // __Socket_IConnectionDelegate_H__
+

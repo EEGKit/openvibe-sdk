@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_IStimulationSet_H__
-#define __OpenViBE_IStimulationSet_H__
+#pragma once
 
 #include "ovIObject.h"
 
@@ -152,4 +151,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_IStimulationSet_H__
+

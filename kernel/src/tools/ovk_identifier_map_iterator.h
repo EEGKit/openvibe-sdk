@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Tools_Identifier_Map_Iterator_H__
-#define __OpenViBEKernel_Tools_Identifier_Map_Iterator_H__
+#pragma once
 
 #include "../ovk_base.h"
 
@@ -32,4 +31,4 @@ namespace
 	}
 };
 
-#endif // __OpenViBEKernel_Tools_Identifier_Map_Iterator_H__
+

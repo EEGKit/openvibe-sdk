@@ -1,5 +1,4 @@
-#ifndef __EBML_IWriterHelper_H__
-#define __EBML_IWriterHelper_H__
+#pragma once
 
 #include "IWriter.h"
 
@@ -177,4 +176,4 @@ namespace EBML
 	extern EBML_API IWriterHelper* createWriterHelper(void);
 };
 
-#endif // __EBML_IEnhancedWriter_H__
+

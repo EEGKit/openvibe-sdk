@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithms_CDecoderAlgorithmTest_H__
-#define __OpenViBEPlugins_BoxAlgorithms_CDecoderAlgorithmTest_H__
+#pragma once
 
 #include "../ovp_defines.h"
 
@@ -68,4 +67,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithms_CDecoderAlgorithmTest_H__
+

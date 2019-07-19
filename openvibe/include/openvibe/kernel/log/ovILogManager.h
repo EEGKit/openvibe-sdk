@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Log_ILogManager_h__
-#define __OpenViBE_Kernel_Log_ILogManager_h__
+#pragma once
 
 #include "ovILogListener.h"
 
@@ -65,5 +64,3 @@ namespace OpenViBE
 		}
 	};
 };
-
-#endif // __OpenViBE_Kernel_Log_ILogManager_h__

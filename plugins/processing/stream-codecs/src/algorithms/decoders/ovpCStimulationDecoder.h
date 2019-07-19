@@ -1,5 +1,4 @@
-#ifndef __SamplePlugin_Algorithms_CStimulationDecoder_H__
-#define __SamplePlugin_Algorithms_CStimulationDecoder_H__
+#pragma once
 
 #include "ovpCEBMLBaseDecoder.h"
 
@@ -74,4 +73,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __SamplePlugin_Algorithms_CStimulationDecoder_H__
+

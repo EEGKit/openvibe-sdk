@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Scenario_IBoxIO_H__
-#define __OpenViBE_Kernel_Scenario_IBoxIO_H__
+#pragma once
 
 #include "../ovIKernelObject.h"
 
@@ -223,4 +222,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Kernel_Scenario_IBoxIO_H__
+

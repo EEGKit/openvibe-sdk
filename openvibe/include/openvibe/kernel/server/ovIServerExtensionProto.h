@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Server_IServerExtensionProto_H_
-#define __OpenViBE_Kernel_Server_IServerExtensionProto_H_
+#pragma once
 
 #include "../ovIConfigurable.h"
 
@@ -31,5 +30,3 @@ namespace OpenViBE
 		};
 	}
 }
-
-#endif // __OpenViBE_Kernel_Server_IServerExtensionProto_H_

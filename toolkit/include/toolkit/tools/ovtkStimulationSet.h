@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Tools_StimulationSet_H__
-#define __OpenViBEToolkit_Tools_StimulationSet_H__
+#pragma once
 
 #include "../ovtk_base.h"
 
@@ -18,4 +17,4 @@ namespace OpenViBEToolkit
 	};
 };
 
-#endif // __OpenViBEToolkit_Tools_StimulationSet_H__
+

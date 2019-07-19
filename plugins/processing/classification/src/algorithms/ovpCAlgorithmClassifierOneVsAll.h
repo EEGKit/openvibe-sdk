@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Algorithm_OneVsAll_H__
-#define __OpenViBEPlugins_Algorithm_OneVsAll_H__
+#pragma once
 
 #include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
@@ -85,4 +84,4 @@ namespace OpenViBEPlugins
 	}
 }
 
-#endif // __OpenViBEPlugins_Algorithm_OneVsAll_H__
+

@@ -1,5 +1,4 @@
-#ifndef __Socket_IConnectionServer_H__
-#define __Socket_IConnectionServer_H__
+#pragma once
 
 #include "IConnection.h"
 
@@ -31,4 +30,4 @@ namespace Socket
 	extern Socket_API IConnectionServer* createConnectionServer(void);
 };
 
-#endif // __Socket_IConnectionServer_H__
+

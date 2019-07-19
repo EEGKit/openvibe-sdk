@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_IFeatureVectorSet_H__
-#define __OpenViBEToolkit_IFeatureVectorSet_H__
+#pragma once
 
 #include "ovtkIObject.h"
 
@@ -33,4 +32,4 @@ namespace OpenViBEToolkit
 	};
 };
 
-#endif // __OpenViBEToolkit_IFeatureVectorSet_H__
+

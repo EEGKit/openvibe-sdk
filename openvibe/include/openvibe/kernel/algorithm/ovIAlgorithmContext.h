@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Algorithm_IAlgorithmContext_H__
-#define __OpenViBE_Kernel_Algorithm_IAlgorithmContext_H__
+#pragma once
 
 #include "../ovIKernelObject.h"
 
@@ -72,16 +71,14 @@ namespace OpenViBE
 			 * \note Passing \c OV_UndefinedIdentifier as \c rPreviousInputParameterIdentifier will
 			 *       cause this function to return the firs input parameter identifier.
 			 */
-			virtual CIdentifier getNextInputParameterIdentifier(
-				const CIdentifier& rPreviousInputParameterIdentifier) const = 0;
+			virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const = 0;
 			/**
 			 * \brief Gets the parameter details of a specific input parameter
 			 * \param rInputParameterIdentifier [in] : the identifier of the parameter which details should be returned
 			 * \return the parameter pointer that corresponds to the provided identifier.
 			 * \return \c NULL in case of error.
 			 */
-			virtual IParameter* getInputParameter(
-				const CIdentifier& rInputParameterIdentifier) = 0;
+			virtual IParameter* getInputParameter(const CIdentifier& rInputParameterIdentifier) = 0;
 
 			//@}
 			/** \name Output parameters */
@@ -95,16 +92,14 @@ namespace OpenViBE
 			 * \note Passing \c OV_UndefinedIdentifier as \c rPreviousOutputParameterIdentifier will
 			 *       cause this function to return the firs output parameter identifier.
 			 */
-			virtual CIdentifier getNextOutputParameterIdentifier(
-				const CIdentifier& rPreviousOutputParameterIdentifier) const = 0;
+			virtual CIdentifier getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const = 0;
 			/**
 			 * \brief Gets the parameter details of a specific output parameter
 			 * \param rOutputParameterIdentifier [in] : the identifier of the parameter which details should be returned
 			 * \return the parameter pointer that corresponds to the provided identifier.
 			 * \return \c NULL in case of error.
 			 */
-			virtual IParameter* getOutputParameter(
-				const CIdentifier& rOutputParameterIdentifier) = 0;
+			virtual IParameter* getOutputParameter(const CIdentifier& rOutputParameterIdentifier) = 0;
 
 			//@}
 			/** \name Trigger management */
@@ -116,8 +111,7 @@ namespace OpenViBE
 			 * \return \e true if the provided trigger is currently active.
 			 * \return \e false if the provided trigger is not currently active or does not exist.
 			 */
-			virtual bool isInputTriggerActive(
-				const CIdentifier& rInputTriggerIdentifier) const = 0;
+			virtual bool isInputTriggerActive(const CIdentifier& rInputTriggerIdentifier) const = 0;
 			/**
 			 * \brief Activates an output trigger before calling the processing function.
 			 * \param rOutputTriggerIdentifier [in] : the identifier of the output to activate
@@ -126,9 +120,7 @@ namespace OpenViBE
 			 * \return \e true in case the state was correctly changed.
 			 * \return \e false in case the state was not changed or the provided trigger identifier does not exist.
 			 */
-			virtual bool activateOutputTrigger(
-				const CIdentifier& rOutputTriggerIdentifier,
-				bool bTriggerState) = 0;
+			virtual bool activateOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, bool bTriggerState) = 0;
 
 			//@}
 
@@ -137,4 +129,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Kernel_Algorithm_IAlgorithmContext_H__
+

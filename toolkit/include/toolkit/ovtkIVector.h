@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_IVector_H__
-#define __OpenViBEToolkit_IVector_H__
+#pragma once
 
 #include "ovtkIObject.h"
 
@@ -30,4 +29,4 @@ namespace OpenViBEToolkit
 	};
 };
 
-#endif // __OpenViBEToolkit_IVector_H__
+

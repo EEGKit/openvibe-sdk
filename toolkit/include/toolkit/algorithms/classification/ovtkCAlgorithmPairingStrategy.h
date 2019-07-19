@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Algorithm_Pairing_Strategy_H__
-#define __OpenViBEToolkit_Algorithm_Pairing_Strategy_H__
+#pragma once
 
 #include "../ovtkTAlgorithm.h"
 #include "../../ovtkIVector.h"
@@ -72,5 +71,3 @@ namespace OpenViBEToolkit
 		_IsDerivedFromClass_(OpenViBEToolkit::CAlgorithmClassifierDesc, OVTK_ClassId_Algorithm_PairingStrategyDesc)
 	};
 }
-
-#endif // OVTKCALGORITHMPAIRINGSTRATEGY_H

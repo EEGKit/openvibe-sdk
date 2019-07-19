@@ -5,8 +5,7 @@
  *      Author: Rafat Hussain
  */
 
-#ifndef REAL_H_
-#define REAL_H_
+#pragma once
 
 #include "hsfft.h"
 
@@ -33,5 +32,3 @@ void free_real_fft(fft_real_object object);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* REAL_H_ */

@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Configuration_IConfigurationKeywordExpandCallback_H__
-#define __OpenViBE_Kernel_Configuration_IConfigurationKeywordExpandCallback_H__
+#pragma once
 
 #include <ov_common_defines.h>
 #include "../../ov_types.h"
@@ -31,4 +30,4 @@ namespace OpenViBE
 	}
 }
 
-#endif // __OpenViBE_Kernel_Configuration_IConfigurationKeywordExpandCallback_H__
+

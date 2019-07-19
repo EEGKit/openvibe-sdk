@@ -1,5 +1,4 @@
-#ifndef __EBML_TWriterCallbackProxy__
-#define __EBML_TWriterCallbackProxy__
+#pragma once
 
 #include "IWriter.h"
 
@@ -60,5 +59,3 @@ namespace EBML
 	// ________________________________________________________________________________________________________________
 	//
 };
-
-#endif // __EBML_TWriterCallbackProxy__

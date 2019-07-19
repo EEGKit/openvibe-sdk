@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_IObjectVisitor_H__
-#define __OpenViBE_IObjectVisitor_H__
+#pragma once
 
 #include "ovIObject.h"
 
@@ -36,4 +35,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_IObjectVisitor_H__
+

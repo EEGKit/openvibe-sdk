@@ -1,5 +1,4 @@
-#ifndef __XML_IXMLNODE_H_
-#define __XML_IXMLNODE_H_
+#pragma once
 
 #include "defines.h"
 #include <string>
@@ -109,5 +108,3 @@ namespace XML
 	 */
 	extern XML_API IXMLNode* createNode(const char* sName);
 }
-
-#endif // IXMLNODE_H

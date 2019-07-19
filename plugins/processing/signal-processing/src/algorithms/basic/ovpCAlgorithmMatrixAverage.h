@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Algorithm_MatrixAverage_H__
-#define __OpenViBEPlugins_Algorithm_MatrixAverage_H__
+#pragma once
 
 #include <vector>
 #include "../../ovp_defines.h"
@@ -93,4 +92,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_Algorithm_MatrixAverage_H__
+

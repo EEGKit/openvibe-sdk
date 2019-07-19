@@ -1,5 +1,4 @@
-#ifndef __EBML_IWriter_H__
-#define __EBML_IWriter_H__
+#pragma once
 
 #include "CIdentifier.h"
 
@@ -154,4 +153,4 @@ namespace EBML
 	extern EBML_API IWriter* createWriter(IWriterCallback& rWriterCallback);
 };
 
-#endif // __EBML_IWriter_H__
+

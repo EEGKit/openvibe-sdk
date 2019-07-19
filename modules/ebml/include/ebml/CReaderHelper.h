@@ -1,5 +1,4 @@
-#ifndef __EBML_CReaderHelper_H__
-#define __EBML_CReaderHelper_H__
+#pragma once
 
 #include "IReaderHelper.h"
 
@@ -24,4 +23,4 @@ namespace EBML
 	};
 };
 
-#endif // __EBML_CReaderHelper_H__
+

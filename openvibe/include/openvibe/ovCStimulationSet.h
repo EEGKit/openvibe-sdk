@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_CStimulationSet_H__
-#define __OpenViBE_CStimulationSet_H__
+#pragma once
 
 #include "ovIStimulationSet.h"
 
@@ -81,4 +80,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_CStimulationSet_H__
+

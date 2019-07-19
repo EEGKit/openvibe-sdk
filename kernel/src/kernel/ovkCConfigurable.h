@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_CConfigurable_H__
-#define __OpenViBEKernel_Kernel_CConfigurable_H__
+#pragma once
 
 #include "ovkTKernelObject.h"
 #include "ovkTConfigurable.h"
@@ -23,4 +22,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Kernel_CConfigurable_H__
+

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_TimeBasedEpoching_H__
-#define __OpenViBEPlugins_BoxAlgorithm_TimeBasedEpoching_H__
+#pragma once
 
 #include <toolkit/ovtk_all.h>
 #include <vector>
@@ -76,4 +75,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_TimeBasedEpoching_H__
+

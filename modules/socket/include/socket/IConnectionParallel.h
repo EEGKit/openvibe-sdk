@@ -1,5 +1,4 @@
-#ifndef __Socket_IConnectionParallel_H__
-#define __Socket_IConnectionParallel_H__
+#pragma once
 
 #include "IConnection.h"
 #include <string>
@@ -42,4 +41,4 @@ namespace Socket
 	extern Socket_API IConnectionParallel* createConnectionParallel(void);
 };
 
-#endif // __Socket_IConnectionParallel_H__
+

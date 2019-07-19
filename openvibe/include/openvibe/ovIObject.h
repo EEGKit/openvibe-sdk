@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_IObject_H__
-#define __OpenViBE_IObject_H__
+#pragma once
 
 #include "ov_base.h"
 #include "ovCIdentifier.h"
@@ -116,4 +115,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_IObject_H__
+

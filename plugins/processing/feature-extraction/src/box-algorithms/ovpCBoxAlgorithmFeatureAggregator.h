@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_FeatureAggregator_H__
-#define __OpenViBEPlugins_BoxAlgorithm_FeatureAggregator_H__
+#pragma once
 
 #include "../ovp_defines.h"
 
@@ -134,5 +133,3 @@ namespace OpenViBEPlugins
 		};
 	};
 };
-
-#endif

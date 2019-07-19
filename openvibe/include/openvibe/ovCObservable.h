@@ -1,5 +1,4 @@
-#ifndef OVCOBSERVABLE_H
-#define OVCOBSERVABLE_H
+#pragma once
 
 #include "ovIObserver.h"
 #include "ov_base.h"
@@ -70,6 +69,3 @@ namespace OpenViBE
 		bool m_bHasChanged;
 	};
 }
-
-
-#endif // OVCOBSERVABLE_H

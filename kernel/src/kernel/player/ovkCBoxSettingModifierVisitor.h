@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CBoxSettingModifierVisitor_H__
-#define __OpenViBEKernel_Kernel_Player_CBoxSettingModifierVisitor_H__
+#pragma once
 
 #include "ovkCSimulatedBox.h"
 #include "ovkCPlayer.h"
@@ -40,5 +39,3 @@ public:
 
 	_IsDerivedFromClass_Final_(OpenViBE::IObjectVisitor, OV_UndefinedIdentifier);
 };
-
-#endif

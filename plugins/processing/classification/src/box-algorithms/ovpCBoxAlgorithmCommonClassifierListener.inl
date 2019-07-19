@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_CommonClassifierListener_INL__
-#define __OpenViBEPlugins_BoxAlgorithm_CommonClassifierListener_INL__
+#pragma once
 
 #include "../ovp_defines.h"
 #include "../algorithms/ovpCAlgorithmClassifierOneVsOne.h"
@@ -421,5 +420,3 @@ namespace OpenViBEPlugins
 		};
 	}
 }
-
-#endif // __OpenViBEPlugins_BoxAlgorithm_CommonClassifierListener_INL__

@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Defines_H__
-#define __OpenViBE_Defines_H__
+#pragma once
 
 #include <ov_common_defines.h>
 
@@ -238,4 +237,4 @@
 #define OV_ScenarioImportContext_SchedulerMetaboxImport            OpenViBE::CIdentifier(0xDDBDD59F, 0xE8C76702)
 #define OV_ScenarioImportContext_OnLoadMetaboxImport               OpenViBE::CIdentifier(0xED48480A, 0x9F6DBAA7)
 
-#endif // __OpenViBE_Defines_H__
+

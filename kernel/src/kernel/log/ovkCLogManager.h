@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Log_CLogManager_h__
-#define __OpenViBEKernel_Kernel_Log_CLogManager_h__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -96,5 +95,3 @@ namespace OpenViBE
 		};
 	};
 };
-
-#endif // __OpenViBEKernel_Kernel_Log_CLogManager_h__

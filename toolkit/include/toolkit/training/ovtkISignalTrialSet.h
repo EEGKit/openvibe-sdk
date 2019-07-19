@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Offline_ISignalTrialSet_H__
-#define __OpenViBEToolkit_Offline_ISignalTrialSet_H__
+#pragma once
 
 #include "../ovtkIObject.h"
 
@@ -24,4 +23,4 @@ namespace OpenViBEToolkit
 	extern OVTK_API void releaseSignalTrialSet(ISignalTrialSet* pSignalTrialSet);
 };
 
-#endif // __OpenViBEToolkit_Offline_ISignalTrialSet_H__
+

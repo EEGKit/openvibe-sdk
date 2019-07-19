@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_SimpleDSP_H__
-#define __OpenViBEPlugins_BoxAlgorithm_SimpleDSP_H__
+#pragma once
 
 #include <system/ovCTime.h>
 #include <toolkit/ovtk_all.h>
@@ -142,4 +141,4 @@ namespace OpenViBEPlugins
 	}
 }
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_SimpleDSP_H__
+

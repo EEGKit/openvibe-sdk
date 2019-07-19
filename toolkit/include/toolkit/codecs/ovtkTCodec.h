@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TCodec_H__
-#define __OpenViBEToolkit_TCodec_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -118,4 +117,4 @@ namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
-#endif //__OpenViBEToolkit_TCodec_H__
+

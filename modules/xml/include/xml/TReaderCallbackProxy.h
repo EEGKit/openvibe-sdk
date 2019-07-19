@@ -1,5 +1,4 @@
-#ifndef __XML_TReaderCallbackProxy_H__
-#define __XML_TReaderCallbackProxy_H__
+#pragma once
 
 #include "IReader.h"
 
@@ -102,4 +101,4 @@ namespace XML
 	//
 };
 
-#endif // __XML_TReaderCallbackProxy_H__
+

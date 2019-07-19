@@ -1,5 +1,4 @@
-#ifndef __EBML_CWriterHelper_H__
-#define __EBML_CWriterHelper_H__
+#pragma once
 
 #include "IWriterHelper.h"
 
@@ -33,4 +32,4 @@ namespace EBML
 	};
 };
 
-#endif // __EBML_CWriterHelper_H__
+

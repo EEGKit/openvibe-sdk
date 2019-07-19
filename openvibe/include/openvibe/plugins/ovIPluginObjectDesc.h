@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Plugins_IPluginObjectDesc_H__
-#define __OpenViBE_Plugins_IPluginObjectDesc_H__
+#pragma once
 
 #include "../ovIObject.h"
 
@@ -254,4 +253,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Plugins_IPluginObjectDesc_H__
+

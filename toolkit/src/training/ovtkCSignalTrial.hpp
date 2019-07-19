@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Offline_CSignalTrial_HPP__
-#define __OpenViBEToolkit_Offline_CSignalTrial_HPP__
+#pragma once
 
 #include "ovtkISignalTrial.h"
 
@@ -42,5 +41,3 @@ namespace OpenViBEToolkit
 		OpenViBE::CIdentifier m_oLabelIdentifier;
 	};
 };
-
-#endif // __OpenViBEToolkit_Offline_CSignalTrial_HPP__

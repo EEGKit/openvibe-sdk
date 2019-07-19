@@ -171,8 +171,7 @@
  * @version 1.6
  */
 
-#ifndef R8BBASE_INCLUDED
-#define R8BBASE_INCLUDED
+#pragma once
 
 #include <stdlib.h>
 #include <string.h>
@@ -269,30 +268,21 @@ namespace r8b
 		 * @return Pointer to object.
 		 */
 
-		void* operator new(size_t, void* p)
-		{
-			return (p);
-		}
+		void* operator new(size_t, void* p) { return (p); }
 
 		/**
 		 * @param n The size of the object, in bytes.
 		 * @return Pointer to the allocated memory block for the object.
 		 */
 
-		void* operator new(size_t n)
-		{
-			return (malloc(n));
-		}
+		void* operator new(size_t n) { return (malloc(n)); }
 
 		/**
 		 * @param n The size of the object, in bytes.
 		 * @return Pointer to the allocated memory block for the object.
 		 */
 
-		void* operator new[](size_t n)
-		{
-			return (malloc(n));
-		}
+		void* operator new[](size_t n) { return (malloc(n)); }
 
 		/**
 		 * Operator frees a previously allocated memory block for the object.
@@ -300,10 +290,7 @@ namespace r8b
 		 * @param p Pointer to the allocated memory block for the object.
 		 */
 
-		void operator delete(void* p)
-		{
-			free(p);
-		}
+		void operator delete(void* p) { free(p); }
 
 		/**
 		 * Operator frees a previously allocated memory block for the object.
@@ -311,10 +298,7 @@ namespace r8b
 		 * @param p Pointer to the allocated memory block for the object.
 		 */
 
-		void operator delete[](void* p)
-		{
-			free(p);
-		}
+		void operator delete[](void* p) { free(p); }
 	};
 
 	/**
@@ -333,10 +317,7 @@ namespace r8b
 		 * @result The pointer to the allocated block.
 		 */
 
-		static void* allocmem(const size_t Size)
-		{
-			return (malloc(Size));
-		}
+		static void* allocmem(const size_t Size) { return (malloc(Size)); }
 
 		/**
 		 * Function reallocates a previously allocated memory block.
@@ -346,10 +327,7 @@ namespace r8b
 		 * @result The pointer to the (re)allocated block.
 		 */
 
-		static void* reallocmem(void* p, const size_t Size)
-		{
-			return (realloc(p, Size));
-		}
+		static void* reallocmem(void* p, const size_t Size) { return (realloc(p, Size)); }
 
 		/**
 		 * Function frees a previously allocated memory block.
@@ -357,10 +335,7 @@ namespace r8b
 		 * @param p Pointer to the allocated block, can be NULL.
 		 */
 
-		static void freemem(void* p)
-		{
-			free(p);
-		}
+		static void freemem(void* p) { free(p); }
 	};
 
 	/**
@@ -384,8 +359,7 @@ namespace r8b
 	R8BNOCTOR(CFixedBuffer);
 
 	public:
-		CFixedBuffer()
-			: Data(NULL) { }
+		CFixedBuffer() : Data(NULL) { }
 
 		/**
 		 * Constructor allocates memory so that the specified number of elements
@@ -403,10 +377,7 @@ namespace r8b
 			R8BASSERT(Data != NULL || Capacity == 0);
 		}
 
-		~CFixedBuffer()
-		{
-			freemem(Data);
-		}
+		~CFixedBuffer() { freemem(Data); }
 
 		/**
 		 * Function allocates memory so that the specified number of elements of
@@ -440,20 +411,14 @@ namespace r8b
 		 * not allocated.
 		 */
 
-		T* getPtr() const
-		{
-			return (Data);
-		}
+		T* getPtr() const { return (Data); }
 
 		/**
 		 * @return Pointer to the first element of the allocated buffer, NULL if
 		 * not allocated.
 		 */
 
-		operator T*() const
-		{
-			return (Data);
-		}
+		operator T*() const { return (Data); }
 
 	private:
 		T* Data; ///< Element buffer pointer.
@@ -477,8 +442,7 @@ namespace r8b
 	R8BNOCTOR(CPtrKeeper);
 
 	public:
-		CPtrKeeper()
-			: Object(NULL) { }
+		CPtrKeeper() : Object(NULL) { }
 
 		/**
 		 * Constructor assigns a pointer to object to *this keeper.
@@ -487,13 +451,9 @@ namespace r8b
 		 */
 
 		template <class T2>
-		CPtrKeeper(T2 const aObject)
-			: Object(aObject) { }
+		CPtrKeeper(T2 const aObject) : Object(aObject) { }
 
-		~CPtrKeeper()
-		{
-			delete Object;
-		}
+		~CPtrKeeper() { delete Object; }
 
 		/**
 		 * Function assigns a pointer to object to *this keeper. A previously
@@ -513,19 +473,13 @@ namespace r8b
 		 * @return Pointer to keeped object, NULL if no object is being kept.
 		 */
 
-		T operator ->() const
-		{
-			return (Object);
-		}
+		T operator ->() const { return (Object); }
 
 		/**
 		 * @return Pointer to keeped object, NULL if no object is being kept.
 		 */
 
-		operator T() const
-		{
-			return (Object);
-		}
+		operator T() const { return (Object); }
 
 		/**
 		 * Function resets the keeped pointer and deletes the keeped object.
@@ -646,41 +600,23 @@ namespace r8b
 	R8BNOCTOR(CSyncKeeper);
 
 	public:
-		CSyncKeeper()
-			: SyncObj(NULL) { }
+		CSyncKeeper() : SyncObj(NULL) { }
 
 		/**
 		 * @param aSyncObj Pointer to the sync object which should be used for
 		 * sync'ing, can be NULL.
 		 */
 
-		CSyncKeeper(CSyncObject* const aSyncObj)
-			: SyncObj(aSyncObj)
-		{
-			if (SyncObj != NULL)
-			{
-				SyncObj->acquire();
-			}
-		}
+		CSyncKeeper(CSyncObject* const aSyncObj) : SyncObj(aSyncObj) { if (SyncObj != NULL) { SyncObj->acquire(); } }
 
 		/**
 		 * @param aSyncObj Reference to the sync object which should be used for
 		 * sync'ing.
 		 */
 
-		CSyncKeeper(CSyncObject& aSyncObj)
-			: SyncObj(&aSyncObj)
-		{
-			SyncObj->acquire();
-		}
+		CSyncKeeper(CSyncObject& aSyncObj) : SyncObj(&aSyncObj) { SyncObj->acquire(); }
 
-		~CSyncKeeper()
-		{
-			if (SyncObj != NULL)
-			{
-				SyncObj->release();
-			}
-		}
+		~CSyncKeeper() { if (SyncObj != NULL) { SyncObj->release(); } }
 
 	protected:
 		CSyncObject* SyncObj; ///< Sync object in use (can be NULL).
@@ -724,10 +660,7 @@ namespace r8b
 		 * function.
 		 */
 
-		CSineGen(const double si, const double ph)
-			: svalue1(sin(ph))
-			  , svalue2(sin(ph - si))
-			  , sincr(2.0 * cos(si)) { }
+		CSineGen(const double si, const double ph) : svalue1(sin(ph)), svalue2(sin(ph - si)), sincr(2.0 * cos(si)) { }
 
 		/**
 		 * Constructor initializes *this sine signal generator.
@@ -739,10 +672,7 @@ namespace r8b
 		 * amplitude).
 		 */
 
-		CSineGen(const double si, const double ph, const double g)
-			: svalue1(sin(ph) * g)
-			  , svalue2(sin(ph - si) * g)
-			  , sincr(2.0 * cos(si)) { }
+		CSineGen(const double si, const double ph, const double g) : svalue1(sin(ph) * g), svalue2(sin(ph - si) * g), sincr(2.0 * cos(si)) { }
 
 		/**
 		 * Function initializes *this sine signal generator.
@@ -854,8 +784,7 @@ namespace r8b
 	 * @param fltlat Filter's latency in samples.
 	 */
 
-	inline void calcFIRFilterResponse(const double* flt, int fltlen,
-									  const double th, double& re0, double& im0, const int fltlat = 0)
+	inline void calcFIRFilterResponse(const double* flt, int fltlen, const double th, double& re0, double& im0, const int fltlat = 0)
 	{
 		const double sincr = 2.0 * cos(th);
 		double cvalue1;
@@ -912,8 +841,7 @@ namespace r8b
 	 * samples.
 	 */
 
-	inline void calcFIRFilterResponseAndGroupDelay(const double* const flt,
-												   const int fltlen, const double th, double& re, double& im, double& gd)
+	inline void calcFIRFilterResponseAndGroupDelay(const double* const flt, const int fltlen, const double th, double& re, double& im, double& gd)
 	{
 		// Calculate response at "th".
 
@@ -925,15 +853,8 @@ namespace r8b
 		const double thd2   = 1e-9;
 		double ths[ Count ] = { th - thd2, th + thd2 };
 
-		if (ths[0] < 0.0)
-		{
-			ths[0] = 0.0;
-		}
-
-		if (ths[1] > M_PI)
-		{
-			ths[1] = M_PI;
-		}
+		if (ths[0] < 0.0) { ths[0] = 0.0; }
+		if (ths[1] > M_PI) { ths[1] = M_PI; }
 
 		double ph1[ Count ];
 		int i;
@@ -949,14 +870,8 @@ namespace r8b
 
 		if (fabs(ph1[1] - ph1[0]) > M_PI)
 		{
-			if (ph1[1] > ph1[0])
-			{
-				ph1[1] -= M_2PI;
-			}
-			else
-			{
-				ph1[1] += M_2PI;
-			}
+			if (ph1[1] > ph1[0]) { ph1[1] -= M_2PI; }
+			else { ph1[1] += M_2PI; }
 		}
 
 		const double thd = ths[1] - ths[0];
@@ -972,9 +887,7 @@ namespace r8b
 	 * @param DCGain Filter's gain at DC (linear, non-decibel value).
 	 * @param pstep "p" array step.
 	 */
-
-	inline void normalizeFIRFilter(double* const p, const int l,
-								   const double DCGain, const int pstep = 1)
+	inline void normalizeFIRFilter(double* const p, const int l, const double DCGain, const int pstep = 1)
 	{
 		R8BASSERT(l > 0);
 		R8BASSERT(pstep != 0);
@@ -1016,20 +929,14 @@ namespace r8b
 	 * @param x3 Point at x+3 position.
 	 * @param x4 Point at x+4 position.
 	 */
-
-	inline void calcSpline3p8Coeffs(double* c, const double xm3,
-									const double xm2, const double xm1, const double x0, const double x1,
-									const double x2, const double x3, const double x4)
+	inline void calcSpline3p8Coeffs(double* c, const double xm3, const double xm2, const double xm1, const double x0, const double x1, const double x2, const double x3, const double x4)
 	{
 		c[0] = x0;
-		c[1] = (61.0 * (x1 - xm1) + 16.0 * (xm2 - x2) +
-				3.0 * (x3 - xm3)) / 76.0;
+		c[1] = (61.0 * (x1 - xm1) + 16.0 * (xm2 - x2) + 3.0 * (x3 - xm3)) / 76.0;
 
-		c[2] = (106.0 * (xm1 + x1) + 10.0 * x3 + 6.0 * xm3 - 3.0 * x4 -
-				29.0 * (xm2 + x2) - 167.0 * x0) / 76.0;
+		c[2] = (106.0 * (xm1 + x1) + 10.0 * x3 + 6.0 * xm3 - 3.0 * x4 - 29.0 * (xm2 + x2) - 167.0 * x0) / 76.0;
 
-		c[3] = (91.0 * (x0 - x1) + 45.0 * (x2 - xm1) +
-				13.0 * (xm2 - x3) + 3.0 * (x4 - xm3)) / 76.0;
+		c[3] = (91.0 * (x0 - x1) + 45.0 * (x2 - xm1) + 13.0 * (xm2 - x3) + 3.0 * (x4 - xm3)) / 76.0;
 	}
 
 	/**
@@ -1049,16 +956,11 @@ namespace r8b
 	 * @param x4 Point at x+4 position.
 	 */
 
-	inline void calcSpline2p8Coeffs(double* c, const double xm3,
-									const double xm2, const double xm1, const double x0, const double x1,
-									const double x2, const double x3, const double x4)
+	inline void calcSpline2p8Coeffs(double* c, const double xm3, const double xm2, const double xm1, const double x0, const double x1, const double x2, const double x3, const double x4)
 	{
 		c[0] = x0;
-		c[1] = (61.0 * (x1 - xm1) + 16.0 * (xm2 - x2) +
-				3.0 * (x3 - xm3)) / 76.0;
-
-		c[2] = (106.0 * (xm1 + x1) + 10.0 * x3 + 6.0 * xm3 - 3.0 * x4 -
-				29.0 * (xm2 + x2) - 167.0 * x0) / 76.0;
+		c[1] = (61.0 * (x1 - xm1) + 16.0 * (xm2 - x2) + 3.0 * (x3 - xm3)) / 76.0;
+		c[2] = (106.0 * (xm1 + x1) + 10.0 * x3 + 6.0 * xm3 - 3.0 * x4 - 29.0 * (xm2 + x2) - 167.0 * x0) / 76.0;
 	}
 
 	/**
@@ -1091,11 +993,8 @@ namespace r8b
 	{
 		c[0] = y[2];
 		c[1] = (11.0 * (y[3] - y[1]) + 2.0 * (y[0] - y[4])) / 14.0;
-		c[2] = (20.0 * (y[1] + y[3]) + 2.0 * y[5] - 4.0 * y[0] -
-				7.0 * y[4] - 31.0 * y[2]) / 14.0;
-
-		c[3] = (17.0 * (y[2] - y[3]) + 9.0 * (y[4] - y[1]) +
-				2.0 * (y[0] - y[5])) / 14.0;
+		c[2] = (20.0 * (y[1] + y[3]) + 2.0 * y[5] - 4.0 * y[0] - 7.0 * y[4] - 31.0 * y[2]) / 14.0;
+		c[3] = (17.0 * (y[2] - y[3]) + 9.0 * (y[4] - y[1]) + 2.0 * (y[0] - y[5])) / 14.0;
 	}
 
 	/**
@@ -1110,14 +1009,9 @@ namespace r8b
 	inline void calcInterpCoeffs3p8(double* const c, const double* const y)
 	{
 		c[0] = y[3];
-		c[1] = (61.0 * (y[4] - y[2]) + 16.0 * (y[1] - y[5]) +
-				3.0 * (y[6] - y[0])) / 76.0;
-
-		c[2] = (106.0 * (y[2] + y[4]) + 10.0 * y[6] + 6.0 * y[0] -
-				3.0 * y[7] - 29.0 * (y[1] + y[5]) - 167.0 * y[3]) / 76.0;
-
-		c[3] = (91.0 * (y[3] - y[4]) + 45.0 * (y[5] - y[2]) +
-				13.0 * (y[1] - y[6]) + 3.0 * (y[7] - y[0])) / 76.0;
+		c[1] = (61.0 * (y[4] - y[2]) + 16.0 * (y[1] - y[5]) + 3.0 * (y[6] - y[0])) / 76.0;
+		c[2] = (106.0 * (y[2] + y[4]) + 10.0 * y[6] + 6.0 * y[0] - 3.0 * y[7] - 29.0 * (y[1] + y[5]) - 167.0 * y[3]) / 76.0;
+		c[3] = (91.0 * (y[3] - y[4]) + 45.0 * (y[5] - y[2]) + 13.0 * (y[1] - y[6]) + 3.0 * (y[7] - y[0])) / 76.0;
 	}
 
 	/**
@@ -1132,11 +1026,9 @@ namespace r8b
 	inline void calcInterpCoeffs2p8(double* const c, const double* const y)
 	{
 		c[0] = y[3];
-		c[1] = (61.0 * (y[4] - y[2]) + 16.0 * (y[1] - y[5]) +
-				3.0 * (y[6] - y[0])) / 76.0;
+		c[1] = (61.0 * (y[4] - y[2]) + 16.0 * (y[1] - y[5]) + 3.0 * (y[6] - y[0])) / 76.0;
 
-		c[2] = (106.0 * (y[2] + y[4]) + 10.0 * y[6] + 6.0 * y[0] -
-				3.0 * y[7] - 29.0 * (y[1] + y[5]) - 167.0 * y[3]) / 76.0;
+		c[2] = (106.0 * (y[2] + y[4]) + 10.0 * y[6] + 6.0 * y[0] - 3.0 * y[7] - 29.0 * (y[1] + y[5]) - 167.0 * y[3]) / 76.0;
 	}
 
 #if !defined( min )
@@ -1146,12 +1038,8 @@ namespace r8b
 	 * @param v2 Value 2.
 	 * @return The minimum of 2 values.
 	 */
-
 	template <class T>
-	T min(const T& v1, const T& v2)
-	{
-		return (v1 < v2 ? v1 : v2);
-	}
+	T min(const T& v1, const T& v2) { return (v1 < v2 ? v1 : v2); }
 
 #endif // min
 
@@ -1162,12 +1050,8 @@ namespace r8b
 	 * @param v2 Value 2.
 	 * @return The maximum of 2 values.
 	 */
-
 	template <class T>
-	T max(const T& v1, const T& v2)
-	{
-		return (v1 > v2 ? v1 : v2);
-	}
+	T max(const T& v1, const T& v2) { return (v1 > v2 ? v1 : v2); }
 
 #endif // max
 
@@ -1180,71 +1064,43 @@ namespace r8b
 	 * @param maxv Maximal allowed value.
 	 * @return "Clamped" value.
 	 */
-
-	inline double clampr(const double Value, const double minv,
-						 const double maxv)
+	inline double clampr(const double Value, const double minv, const double maxv)
 	{
-		if (Value < minv)
-		{
-			return (minv);
-		}
-		else if (Value > maxv)
-		{
-			return (maxv);
-		}
-		else
-		{
-			return (Value);
-		}
+		if (Value < minv) { return (minv); }
+		else if (Value > maxv) { return (maxv); }
+		else { return (Value); }
 	}
 
 	/**
 	 * @param x Value to square.
 	 * @return Squared value of the argument.
 	 */
-
-	inline double sqr(const double x)
-	{
-		return (x * x);
-	}
+	inline double sqr(const double x) { return (x * x); }
 
 	/**
 	 * @param v Input value.
 	 * @param p Power factor.
 	 * @return Returns pow() function's value with input value's sign check.
 	 */
-
-	inline double pows(const double v, const double p)
-	{
-		return (v < 0.0 ? -pow(-v, p) : pow(v, p));
-	}
+	inline double pows(const double v, const double p) { return (v < 0.0 ? -pow(-v, p) : pow(v, p)); }
 
 	/**
 	 * @param v Input value.
 	 * @return Calculated single-argument Gaussian function of the input value.
 	 */
-
-	inline double gauss(const double v)
-	{
-		return (exp(-(v * v)));
-	}
+	inline double gauss(const double v) { return (exp(-(v * v))); }
 
 	/**
 	 * @param v Input value.
 	 * @return Calculated inverse hyperbolic sine of the input value.
 	 */
-
-	inline double asinh(const double v)
-	{
-		return (log(v + sqrt(v * v + 1.0)));
-	}
+	inline double asinh(const double v) { return (log(v + sqrt(v * v + 1.0))); }
 
 	/**
 	 * @param x Input value.
 	 * @return Calculated zero-th order modified Bessel function of the first kind
 	 * of the input value. Approximate value.
 	 */
-
 	inline double besselI0(const double x)
 	{
 		const double ax = fabs(x);
@@ -1255,17 +1111,11 @@ namespace r8b
 			y = x / 3.75;
 			y *= y;
 
-			return (1.0 + y * (3.5156229 + y * (3.0899424 + y * (1.2067492 +
-																 y * (0.2659732 + y * (0.360768e-1 + y * 0.45813e-2))))));
+			return (1.0 + y * (3.5156229 + y * (3.0899424 + y * (1.2067492 + y * (0.2659732 + y * (0.360768e-1 + y * 0.45813e-2))))));
 		}
 
 		y = 3.75 / ax;
 
-		return (exp(ax) / sqrt(ax) * (0.39894228 + y * (0.1328592e-1 +
-														y * (0.225319e-2 + y * (-0.157565e-2 + y * (0.916281e-2 +
-																									y * (-0.2057706e-1 + y * (0.2635537e-1 + y * (-0.1647633e-1 +
-																																				  y * 0.392377e-2)))))))));
+		return (exp(ax) / sqrt(ax) * (0.39894228 + y * (0.1328592e-1 + y * (0.225319e-2 + y * (-0.157565e-2 + y * (0.916281e-2 + y * (-0.2057706e-1 + y * (0.2635537e-1 + y * (-0.1647633e-1 + y * 0.392377e-2)))))))));
 	}
 } // namespace r8b
-
-#endif // R8BBASE_INCLUDED

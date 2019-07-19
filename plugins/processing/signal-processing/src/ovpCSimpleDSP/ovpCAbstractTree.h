@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_SignalProcessing_CAbstractTree_H__
-#define __OpenViBEPlugins_SignalProcessing_CAbstractTree_H__
+#pragma once
 
 #include "../ovp_defines.h"
 
@@ -455,5 +454,3 @@ struct CAbstractTreeNodeOrderingFunction
 #endif
 	}
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_SignalProcessing_CEquationParserGrammar_H__
-#define __OpenViBEPlugins_SignalProcessing_CEquationParserGrammar_H__
+#pragma once
 
 #include "../ovp_defines.h"
 
@@ -351,5 +350,3 @@ struct CEquationGrammar : public grammar<CEquationGrammar>
 		rule<ScannerT, parser_context<>, parser_tag<ifthenID>> const& start() const { return ifthen; }
 	};
 };
-
-#endif

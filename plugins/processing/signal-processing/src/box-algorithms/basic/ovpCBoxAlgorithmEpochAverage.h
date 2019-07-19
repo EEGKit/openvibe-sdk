@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_EpochAverage_H__
-#define __OpenViBEPlugins_BoxAlgorithm_EpochAverage_H__
+#pragma once
 
 #include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
@@ -107,4 +106,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_BoxAlgorithm_EpochAverage_H__
+

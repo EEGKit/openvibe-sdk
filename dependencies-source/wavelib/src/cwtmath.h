@@ -1,5 +1,4 @@
-#ifndef CWTMATH_H_
-#define CWTMATH_H_
+#pragma once
 
 #include "wtmath.h"
 #include "hsfft.h"
@@ -18,5 +17,3 @@ int nint(double N);
 }
 #endif
 
-
-#endif /* WAVELIB_H_ */

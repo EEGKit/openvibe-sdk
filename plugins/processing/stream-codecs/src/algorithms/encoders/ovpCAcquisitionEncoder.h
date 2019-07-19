@@ -1,5 +1,4 @@
-#ifndef __SamplePlugin_Algorithms_CAcquisitionEncoder_H__
-#define __SamplePlugin_Algorithms_CAcquisitionEncoder_H__
+#pragma once
 
 #include "ovpCEBMLBaseEncoder.h"
 
@@ -80,4 +79,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __SamplePlugin_Algorithms_CAcquisitionEncoder_H__
+

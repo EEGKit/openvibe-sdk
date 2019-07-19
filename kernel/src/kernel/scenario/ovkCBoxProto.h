@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Scenario_CBoxProto_H__
-#define __OpenViBEKernel_Kernel_Scenario_CBoxProto_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -58,4 +57,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Kernel_Scenario_CBoxProto_H__
+

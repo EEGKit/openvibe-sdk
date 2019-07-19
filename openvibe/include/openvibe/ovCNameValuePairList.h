@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_CNameValuePairList_H__
-#define __OpenViBE_CNameValuePairList_H__
+#pragma once
 
 #include "ov_base.h"
 
@@ -156,4 +155,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_CNameValuePairList_H__
+

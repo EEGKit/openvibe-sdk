@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_IKernelDesc_H__
-#define __OpenViBE_Kernel_IKernelDesc_H__
+#pragma once
 
 #include "ovIKernelObject.h"
 
@@ -114,4 +113,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Kernel_IKernelDesc_H__
+

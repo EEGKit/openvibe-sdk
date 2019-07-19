@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Defines_H__
-#define __OpenViBEPlugins_Defines_H__
+#pragma once
 
 //___________________________________________________________________//
 //                                                                   //
@@ -64,4 +63,4 @@
 #define OVP_Value_CoupledStringSeparator                                '-'
 //#define OVP_Value_AllSelection											'*'
 
-#endif // __OpenViBEPlugins_Defines_H__
+

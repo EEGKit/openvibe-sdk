@@ -1,5 +1,4 @@
-#ifndef __CBoxAlgorithmContinuousWaveletAnalysis_H__
-#define __CBoxAlgorithmContinuousWaveletAnalysis_H__
+#pragma once
 
 #include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
@@ -86,4 +85,4 @@ namespace OpenViBEPlugins
 	}
 }
 
-#endif // __CBoxAlgorithmContinuousWaveletAnalysis_H__
+

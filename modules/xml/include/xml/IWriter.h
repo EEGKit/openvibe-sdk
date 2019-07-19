@@ -1,5 +1,4 @@
-#ifndef __XML_IWriter_H__
-#define __XML_IWriter_H__
+#pragma once
 
 #include "defines.h"
 
@@ -29,4 +28,4 @@ namespace XML
 	extern XML_API IWriter* createWriter(IWriterCallback& rWriterCallback);
 };
 
-#endif // __XML_IWriter_H__
+

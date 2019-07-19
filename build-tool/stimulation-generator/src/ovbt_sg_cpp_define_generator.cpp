@@ -10,8 +10,7 @@ bool CCppDefineGenerator::openFile(const char* sFilename)
 	m_oFile.open(sFilename, ios::out | ios::trunc);
 	if (!m_oFile.is_open())
 		return false;
-	m_oFile << "#ifndef __OpenViBEToolkit_Stimulations_Defines_H__" << endl;
-	m_oFile << "#define __OpenViBEToolkit_Stimulations_Defines_H__" << endl << endl;
+	m_oFile << "#pragma once" << endl << endl;
 
 	return true;
 }
@@ -26,7 +25,7 @@ bool CCppDefineGenerator::appendStimulation(SStimulation& rStim)
 
 bool CCppDefineGenerator::closeFile(void)
 {
-	m_oFile << endl << "#endif // __OpenViBEToolkit_Stimulations_Defines_H__" << endl;
+	m_oFile << endl;
 	m_oFile.close();
 	return true;
 }

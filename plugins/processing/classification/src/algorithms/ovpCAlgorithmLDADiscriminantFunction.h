@@ -1,5 +1,4 @@
-#ifndef OVPCALGORITHMLDACOMPUTATIONHELPER_H
-#define OVPCALGORITHMLDACOMPUTATIONHELPER_H
+#pragma once
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 
@@ -42,4 +41,3 @@ namespace OpenViBEPlugins
 }
 
 #endif
-#endif // OVPCALGORITHMLDACOMPUTATIONHELPER_H

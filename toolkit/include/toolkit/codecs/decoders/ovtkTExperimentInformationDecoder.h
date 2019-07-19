@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TExperimentInformationDecoder_H__
-#define __OpenViBEToolkit_TExperimentInformationDecoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -171,4 +170,4 @@ namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
-#endif //__OpenViBEToolkit_TExperimentInformationDecoder_H__
+

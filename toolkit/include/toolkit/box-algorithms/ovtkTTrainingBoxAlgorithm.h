@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TTrainingBoxAlgorithm_H__
-#define __OpenViBEToolkit_TTrainingBoxAlgorithm_H__
+#pragma once
 
 #include "ovtkTBoxAlgorithm.h"
 
@@ -271,4 +270,4 @@ namespace OpenViBEToolkit
 	//
 };
 
-#endif // __OpenViBEToolkit_TTrainingBoxAlgorithm_H__
+

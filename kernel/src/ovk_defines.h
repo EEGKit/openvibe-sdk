@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Defines_H__
-#define __OpenViBEKernel_Defines_H__
+#pragma once
 
 //___________________________________________________________________//
 //                                                                   //
@@ -132,4 +131,4 @@
 	#define OVK_API OVK_API_Import
 #endif
 
-#endif // __OpenViBEKernel_Defines_H__
+

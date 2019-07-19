@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_ITypeManager_H__
-#define __OpenViBE_Kernel_ITypeManager_H__
+#pragma once
 
 #include "ovIKernelObject.h"
 #include <vector>
@@ -338,4 +337,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Kernel_ITypeManager_H__
+

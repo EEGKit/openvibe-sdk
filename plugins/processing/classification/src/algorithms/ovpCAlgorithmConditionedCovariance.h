@@ -1,7 +1,6 @@
 #if defined TARGET_HAS_ThirdPartyEIGEN
 
-#ifndef __OpenViBEPlugins_Algorithm_ConditionedCovariance_H__
-#define __OpenViBEPlugins_Algorithm_ConditionedCovariance_H__
+#pragma once
 
 #include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
@@ -79,6 +78,6 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_Algorithm_ConditionedCovariance_H__
+
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

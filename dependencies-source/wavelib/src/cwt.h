@@ -1,5 +1,4 @@
-#ifndef CWT_H_
-#define CWT_H_
+#pragma once
 
 #include "wavefunc.h"
 
@@ -21,6 +20,3 @@ void icwavelet(double* wave, int N, double* scale, int jtot, double dt, double d
 #ifdef __cplusplus
 }
 #endif
-
-
-#endif /* WAVELIB_H_ */

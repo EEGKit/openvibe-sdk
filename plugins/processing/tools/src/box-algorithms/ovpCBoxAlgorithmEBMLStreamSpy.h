@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_EBMLStreamSpy_H__
-#define __OpenViBEPlugins_BoxAlgorithm_EBMLStreamSpy_H__
+#pragma once
 
 #include "../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
@@ -115,4 +114,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_Tools_CEBMLStreamSpy_H__
+

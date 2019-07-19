@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Algorithm_OVMatrixFileWriter_H__
-#define __OpenViBEPlugins_Algorithm_OVMatrixFileWriter_H__
+#pragma once
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
@@ -64,4 +63,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_Algorithm_OVMatrixFileWriter_H__
+

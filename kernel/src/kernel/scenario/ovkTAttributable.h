@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Scenario_TAttributable_H__
-#define __OpenViBEKernel_Kernel_Scenario_TAttributable_H__
+#pragma once
 
 #include "../../ovk_base.h"
 #include "../../ovk_tools.h"
@@ -100,4 +99,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Kernel_Scenario_TAttributable_H__
+

@@ -1,5 +1,4 @@
-#ifndef __SamplePlugin_Algorithms_CSpectrumDecoder_H__
-#define __SamplePlugin_Algorithms_CSpectrumDecoder_H__
+#pragma once
 
 #include "ovpCStreamedMatrixDecoder.h"
 #include <iomanip>
@@ -81,4 +80,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __SamplePlugin_Algorithms_CSpectrumDecoder_H__
+

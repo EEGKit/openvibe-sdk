@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_CMemoryBuffer_H__
-#define __OpenViBE_CMemoryBuffer_H__
+#pragma once
 
 #include "ovIMemoryBuffer.h"
 
@@ -77,4 +76,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_CMemoryBuffer_H__
+

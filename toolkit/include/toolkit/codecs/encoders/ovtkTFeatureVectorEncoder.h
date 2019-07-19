@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TFeatureVectorEncoder_H__
-#define __OpenViBEToolkit_TFeatureVectorEncoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -78,4 +77,4 @@ namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
-#endif //__OpenViBEToolkit_TFeatureVectorEncoder_H__
+

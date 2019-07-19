@@ -1,5 +1,4 @@
-#ifndef __Socket_Defines_H__
-#define __Socket_Defines_H__
+#pragma once
 
 #include <ov_common_defines.h>
 
@@ -33,4 +32,4 @@
 #endif
 
 
-#endif // __Socket_Defines_H__
+

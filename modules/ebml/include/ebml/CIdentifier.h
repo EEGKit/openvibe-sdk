@@ -1,5 +1,4 @@
-#ifndef __EBML_CIdentifier_H__
-#define __EBML_CIdentifier_H__
+#pragma once
 
 #include "defines.h"
 
@@ -148,4 +147,4 @@ namespace EBML
 	};
 };
 
-#endif // __EBML_CIdentifier_H__
+

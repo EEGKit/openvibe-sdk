@@ -1,5 +1,4 @@
-#ifndef __SamplePlugin_Algorithms_CEBMLBaseDecoder_H__
-#define __SamplePlugin_Algorithms_CEBMLBaseDecoder_H__
+#pragma once
 
 #include "../../ovp_defines.h"
 
@@ -73,4 +72,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __SamplePlugin_Algorithms_CEBMLBaseDecoder_H__
+

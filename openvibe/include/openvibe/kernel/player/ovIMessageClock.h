@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Player_IMessageClock_H__
-#define __OpenViBE_Kernel_Player_IMessageClock_H__
+#pragma once
 
 #include "ovIMessage.h"
 
@@ -24,4 +23,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Kernel_Player_IMessageClock_H__
+

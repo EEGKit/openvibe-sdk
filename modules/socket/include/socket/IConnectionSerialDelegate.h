@@ -1,5 +1,4 @@
-#ifndef __Socket_IConnectionSerialDelegate_H__
-#define __Socket_IConnectionSerialDelegate_H__
+#pragma once
 
 #include "TConnectionDelegate.h"
 #include "IConnectionSerial.h"
@@ -33,4 +32,4 @@ namespace Socket
 	extern Socket_API IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate);
 }
 
-#endif // __Socket_IConnectionSerialDelegate_H__
+

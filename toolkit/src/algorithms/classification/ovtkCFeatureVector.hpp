@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_CFeatureVector_H__
-#define __OpenViBEToolkit_CFeatureVector_H__
+#pragma once
 
 #include "ovtkCVector.hpp"
 #include "../../ovtkIFeatureVector.h"
@@ -24,4 +23,4 @@ namespace OpenViBEToolkit
 	typedef TFeatureVector<IFeatureVector> CFeatureVector;
 };
 
-#endif // __OpenViBEToolkit_CFeatureVector_H__
+

@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Scenario_ILink_H__
-#define __OpenViBE_Kernel_Scenario_ILink_H__
+#pragma once
 
 #include "ovIAttributable.h"
 
@@ -149,4 +148,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Kernel_Scenario_ILink_H__
+

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CBoxAlgorithmContext_H__
-#define __OpenViBEKernel_Kernel_Player_CBoxAlgorithmContext_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 #include "ovkCPlayerContext.h"
@@ -39,4 +38,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Kernel_Player_CBoxAlgorithmContext_H__
+

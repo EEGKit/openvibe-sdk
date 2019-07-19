@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CPlayer_H__
-#define __OpenViBEKernel_Kernel_Player_CPlayer_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 #include "ovkCScheduler.h"
@@ -91,4 +90,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBEKernel_Kernel_Player_CPlayer_H__
+

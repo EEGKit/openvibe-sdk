@@ -1,5 +1,4 @@
-#ifndef __Socket_IConnection_H__
-#define __Socket_IConnection_H__
+#pragma once
 
 #include "defines.h"
 
@@ -44,4 +43,4 @@ namespace Socket
 	};
 };
 
-#endif // __Socket_IConnection_H__
+

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TBoxAlgorithm_H__
-#define __OpenViBEToolkit_TBoxAlgorithm_H__
+#pragma once
 
 #include "../ovtkIObject.h"
 #include <limits>
@@ -400,4 +399,4 @@ namespace OpenViBEToolkit
 	};
 };
 
-#endif // __OpenViBEToolkit_TBoxAlgorithm_H__
+

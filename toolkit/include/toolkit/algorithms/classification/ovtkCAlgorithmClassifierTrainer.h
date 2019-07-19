@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Algorithm_ClassifierTrainer_H__
-#define __OpenViBEToolkit_Algorithm_ClassifierTrainer_H__
+#pragma once
 
 #include "../ovtkTAlgorithm.h"
 #include "../../ovtkIFeatureVectorSet.h"
@@ -49,4 +48,4 @@ namespace OpenViBEToolkit
 	};
 };
 
-#endif // __OpenViBEToolkit_Algorithm_ClassifierTrainer_H__
+

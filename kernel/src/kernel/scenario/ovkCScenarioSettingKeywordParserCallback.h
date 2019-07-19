@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CScenarioSettingKeywordParserCallback_H__
-#define __OpenViBEKernel_Kernel_Player_CScenarioSettingKeywordParserCallback_H__
+#pragma once
 
 #include <openvibe/ov_all.h>
 
@@ -23,4 +22,4 @@ namespace OpenViBE
 	}
 }
 
-#endif // __OpenViBEKernel_Kernel_Player_CScenarioSettingKeywordParserCallback_H__
+

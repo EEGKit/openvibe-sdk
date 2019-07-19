@@ -1,5 +1,4 @@
-#ifndef __XML_IXMLHANDLER_H_
-#define __XML_IXMLHANDLER_H_
+#pragma once
 
 #include "defines.h"
 #include "IXMLNode.h"
@@ -58,5 +57,3 @@ namespace XML
 
 	extern XML_API IXMLHandler* createXMLHandler(void);
 }
-
-#endif // __XML_IXMLHANDLER_H_

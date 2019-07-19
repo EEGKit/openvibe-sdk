@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Algorithm_XMLScenarioExporter_H__
-#define __OpenViBEPlugins_Algorithm_XMLScenarioExporter_H__
+#pragma once
 
 #include "../../ovp_defines.h"
 
@@ -64,4 +63,4 @@ namespace OpenViBEPlugins
 	};
 };
 
-#endif // __OpenViBEPlugins_Algorithm_XMLScenarioExporter_H__
+

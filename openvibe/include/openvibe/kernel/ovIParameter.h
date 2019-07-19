@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_IParameter_H__
-#define __OpenViBE_Kernel_IParameter_H__
+#pragma once
 
 #include "ovIKernelObject.h"
 #include "ovIConfigurable.h"
@@ -149,4 +148,4 @@ namespace OpenViBE
 	};
 };
 
-#endif // __OpenViBE_Kernel_IParameter_H__
+
