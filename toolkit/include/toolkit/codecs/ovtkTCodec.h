@@ -88,7 +88,7 @@ namespace OpenViBEToolkit
 		}
 		
 		// As we need to properly uninit parameter handlers before anything else, we can't design a common uninit behavior
-		virtual bool uninitialize(void) = 0;
+		virtual bool uninitialize() = 0;
 
 	protected:
 
@@ -108,7 +108,7 @@ namespace OpenViBEToolkit
 			return m_pCodec->process(oTrigger);
 		}
 
-		virtual bool process(void)
+		virtual bool process()
 		{
 			return m_pCodec->process();
 		}

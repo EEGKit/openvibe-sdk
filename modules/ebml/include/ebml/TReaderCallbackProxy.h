@@ -17,7 +17,7 @@ namespace EBML
 			bool (COwnerClass::*mfpIsMasterChild)(const CIdentifier& rIdentifier),
 			void (COwnerClass::*mfpOpenChild)(const CIdentifier& rIdentifier),
 			void (COwnerClass::*mfpProcessChildData)(const void* pBuffer, uint64_t ui64BufferSize),
-			void (COwnerClass::*mfpCloseChild)(void))
+			void (COwnerClass::*mfpCloseChild)())
 			: m_rOwnerObject(rOwnerObject)
 			  , m_mfpIsMasterChild(mfpIsMasterChild)
 			  , m_mfpOpenChild(mfpOpenChild)
@@ -49,7 +49,7 @@ namespace EBML
 			}
 		}
 
-		virtual void closeChild(void)
+		virtual void closeChild()
 		{
 			if (m_mfpCloseChild)
 			{
@@ -62,13 +62,13 @@ namespace EBML
 		bool (COwnerClass::*m_mfpIsMasterChild)(const CIdentifier& rIdentifier);
 		void (COwnerClass::*m_mfpOpenChild)(const CIdentifier& rIdentifier);
 		void (COwnerClass::*m_mfpProcessChildData)(const void* pBuffer, uint64_t ui64BufferSize);
-		void (COwnerClass::*m_mfpCloseChild)(void);
+		void (COwnerClass::*m_mfpCloseChild)();
 	};
 
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass, bool (COwnerClass::*mfpIsMasterChild)(const CIdentifier& rIdentifier), void (COwnerClass::*mfpOpenChild)(const CIdentifier& rIdentifier), void (COwnerClass::*mfpProcessChildData)(const void* pBuffer, uint64_t ui64BufferSize), void (COwnerClass::*mfpCloseChild)(void)>
+	template <class COwnerClass, bool (COwnerClass::*mfpIsMasterChild)(const CIdentifier& rIdentifier), void (COwnerClass::*mfpOpenChild)(const CIdentifier& rIdentifier), void (COwnerClass::*mfpProcessChildData)(const void* pBuffer, uint64_t ui64BufferSize), void (COwnerClass::*mfpCloseChild)()>
 	class TReaderCallbackProxy2 : public IReaderCallback
 	{
 	public:
@@ -105,7 +105,7 @@ namespace EBML
 			}
 		}
 
-		virtual void closeChild(void)
+		virtual void closeChild()
 		{
 			if (m_mfpCloseChild)
 			{
@@ -118,7 +118,7 @@ namespace EBML
 		bool (COwnerClass::*m_mfpIsMasterChild)(const CIdentifier& rIdentifier);
 		void (COwnerClass::*m_mfpOpenChild)(const CIdentifier& rIdentifier);
 		void (COwnerClass::*m_mfpProcessChildData)(const void* pBuffer, uint64_t ui64BufferSize);
-		void (COwnerClass::*m_mfpCloseChild)(void);
+		void (COwnerClass::*m_mfpCloseChild)();
 	};
 
 	// ________________________________________________________________________________________________________________

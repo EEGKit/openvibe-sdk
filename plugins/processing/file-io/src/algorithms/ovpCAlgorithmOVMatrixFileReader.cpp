@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-bool CAlgorithmOVMatrixFileReader::initialize(void)
+bool CAlgorithmOVMatrixFileReader::initialize()
 {
 	ip_sFilename.initialize(getInputParameter(OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename));
 
@@ -16,7 +16,7 @@ bool CAlgorithmOVMatrixFileReader::initialize(void)
 	return true;
 }
 
-bool CAlgorithmOVMatrixFileReader::uninitialize(void)
+bool CAlgorithmOVMatrixFileReader::uninitialize()
 {
 	op_pMatrix.uninitialize();
 
@@ -25,7 +25,7 @@ bool CAlgorithmOVMatrixFileReader::uninitialize(void)
 	return true;
 }
 
-bool CAlgorithmOVMatrixFileReader::process(void)
+bool CAlgorithmOVMatrixFileReader::process()
 {
 	OV_ERROR_UNLESS_KRF(
 		OpenViBEToolkit::Tools::Matrix::loadFromTextFile(*op_pMatrix, ip_sFilename->toASCIIString()),

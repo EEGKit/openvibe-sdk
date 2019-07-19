@@ -34,14 +34,14 @@ namespace Socket
 	{
 	public:
 
-		CConnectionBluetooth(void) : m_sLastError()
+		CConnectionBluetooth() : m_sLastError()
 #if defined TARGET_OS_Windows
 									 , m_oSocket(INVALID_SOCKET)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #endif
 		{ }
 
-		bool initialize(void)
+		bool initialize()
 		{
 #if defined TARGET_OS_Windows
 			WSADATA l_oWSAData;
@@ -69,9 +69,9 @@ namespace Socket
 #endif
 		}
 
-		bool open(void) { return false; }
+		bool open() { return false; }
 
-		bool close(void)
+		bool close()
 		{
 			if (!this->isConnected())
 			{
@@ -263,7 +263,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool isConnected(void) const
+		bool isConnected() const
 		{
 #if defined TARGET_OS_Windows
 
@@ -274,7 +274,7 @@ namespace Socket
 #endif
 		}
 
-		void release(void)
+		void release()
 		{
 			delete this;
 		}
@@ -326,11 +326,11 @@ namespace Socket
 #endif
 		}
 
-		bool isErrorRaised(void) { return !m_sLastError.empty(); }
+		bool isErrorRaised() { return !m_sLastError.empty(); }
 
-		const char* getLastError(void) const { return m_sLastError.c_str(); }
+		const char* getLastError() const { return m_sLastError.c_str(); }
 
-		std::string getLastErrorFormated(void)
+		std::string getLastErrorFormated()
 		{
 #if defined TARGET_OS_Windows
 
@@ -360,7 +360,7 @@ namespace Socket
 #endif
 		}
 
-		void clearError(void) { m_sLastError.clear(); }
+		void clearError() { m_sLastError.clear(); }
 
 		bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** strarray, unsigned long long** bluetoothAddresses)
 		{
@@ -457,5 +457,5 @@ namespace Socket
 #endif
 	};
 
-	IConnectionBluetooth* createConnectionBluetooth(void) { return new CConnectionBluetooth(); }
+	IConnectionBluetooth* createConnectionBluetooth() { return new CConnectionBluetooth(); }
 };

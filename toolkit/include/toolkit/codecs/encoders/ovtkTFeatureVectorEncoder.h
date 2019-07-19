@@ -32,17 +32,17 @@ namespace OpenViBEToolkit
 
 	protected:
 
-		bool encodeHeaderImpl(void)
+		bool encodeHeaderImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeHeader);
 		}
 
-		bool encodeBufferImpl(void)
+		bool encodeBufferImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
 
-		bool encodeEndImpl(void)
+		bool encodeEndImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeEnd);
 		}

@@ -18,7 +18,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CChunk(void)
+			CChunk()
 				: m_ui64StartTime(0)
 				  , m_ui64EndTime(0)
 				  , m_bIsDeprecated(false) { }
@@ -29,27 +29,27 @@ namespace OpenViBE
 				  , m_ui64EndTime(rChunk.m_ui64EndTime)
 				  , m_bIsDeprecated(false) { }
 
-			const CBuffer& getBuffer(void) const
+			const CBuffer& getBuffer() const
 			{
 				return m_oBuffer;
 			}
 
-			uint64_t getStartTime(void) const
+			uint64_t getStartTime() const
 			{
 				return m_ui64StartTime;
 			}
 
-			uint64_t getEndTime(void) const
+			uint64_t getEndTime() const
 			{
 				return m_ui64EndTime;
 			}
 
-			bool isDeprecated(void) const
+			bool isDeprecated() const
 			{
 				return m_bIsDeprecated;
 			}
 
-			CBuffer& getBuffer(void)
+			CBuffer& getBuffer()
 			{
 				return m_oBuffer;
 			}
@@ -99,16 +99,16 @@ namespace OpenViBE
 			virtual bool setBoxIdentifier(
 				const CIdentifier& rBoxIdentifier);
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
 
-			virtual bool processClock(void);
+			virtual bool processClock();
 			virtual bool processInput(uint32_t ui32InputIndex, const CChunk& rChunk);
-			virtual bool process(void);
-			virtual bool isReadyToProcess(void) const;
+			virtual bool process();
+			virtual bool isReadyToProcess() const;
 
-			virtual CString getName(void) const;
-			virtual const IScenario& getScenario(void) const;
+			virtual CString getName() const;
+			virtual const IScenario& getScenario() const;
 
 			/** \name IBoxIO inputs handling */
 			//@{
@@ -159,7 +159,7 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >, OVK_ClassId_Kernel_Player_SimulatedBox);
 
-			CScheduler& getScheduler(void)
+			CScheduler& getScheduler()
 			{
 				return m_rScheduler;
 			}

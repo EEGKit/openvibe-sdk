@@ -33,7 +33,7 @@ namespace FS
 
 		explicit CEntry(const string& sName);
 
-		virtual const char* getName(void);
+		virtual const char* getName();
 
 	public:
 
@@ -44,12 +44,12 @@ namespace FS
 // ________________________________________________________________________________________________________________
 //
 
-IEntryEnumerator::IEntry::~IEntry(void) {}
+IEntryEnumerator::IEntry::~IEntry() {}
 
 CEntry::CEntry(const string& sName)
 	: m_sName(sName) {}
 
-const char* CEntry::getName(void)
+const char* CEntry::getName()
 {
 	return m_sName.c_str();
 }
@@ -63,20 +63,20 @@ namespace FS
 	{
 	public:
 
-		CAttributes(void);
-		virtual ~CAttributes(void);
+		CAttributes();
+		virtual ~CAttributes();
 
-		virtual bool isFile(void);
-		virtual bool isDirectory(void);
-		virtual bool isSymbolicLink(void);
+		virtual bool isFile();
+		virtual bool isDirectory();
+		virtual bool isSymbolicLink();
 
-		virtual bool isArchive(void);
-		virtual bool isReadOnly(void);
-		virtual bool isHidden(void);
-		virtual bool isSystem(void);
-		virtual bool isExecutable(void);
+		virtual bool isArchive();
+		virtual bool isReadOnly();
+		virtual bool isHidden();
+		virtual bool isSystem();
+		virtual bool isExecutable();
 
-		virtual uint64_t getSize(void);
+		virtual uint64_t getSize();
 
 	public:
 
@@ -95,9 +95,9 @@ namespace FS
 // ________________________________________________________________________________________________________________
 //
 
-IEntryEnumerator::IAttributes::~IAttributes(void) {}
+IEntryEnumerator::IAttributes::~IAttributes() {}
 
-CAttributes::CAttributes(void)
+CAttributes::CAttributes()
 	: m_bIsFile(false)
 	  , m_bIsDirectory(false)
 	  , m_bIsSymbolicLink(false)
@@ -108,47 +108,47 @@ CAttributes::CAttributes(void)
 	  , m_bIsExecutable(false)
 	  , m_ui64Size(0) {}
 
-CAttributes::~CAttributes(void) {}
+CAttributes::~CAttributes() {}
 
 // ________________________________________________________________________________________________________________
 //
 
-bool CAttributes::isFile(void)
+bool CAttributes::isFile()
 {
 	return m_bIsFile;
 }
 
-bool CAttributes::isDirectory(void)
+bool CAttributes::isDirectory()
 {
 	return m_bIsDirectory;
 }
 
-bool CAttributes::isSymbolicLink(void)
+bool CAttributes::isSymbolicLink()
 {
 	return m_bIsSymbolicLink;
 }
 
-bool CAttributes::isArchive(void)
+bool CAttributes::isArchive()
 {
 	return m_bIsArchive;
 }
 
-bool CAttributes::isReadOnly(void)
+bool CAttributes::isReadOnly()
 {
 	return m_bIsReadOnly;
 }
 
-bool CAttributes::isHidden(void)
+bool CAttributes::isHidden()
 {
 	return m_bIsHidden;
 }
 
-bool CAttributes::isSystem(void)
+bool CAttributes::isSystem()
 {
 	return m_bIsSystem;
 }
 
-bool CAttributes::isExecutable(void)
+bool CAttributes::isExecutable()
 {
 	return m_bIsExecutable;
 }
@@ -156,7 +156,7 @@ bool CAttributes::isExecutable(void)
 // ________________________________________________________________________________________________________________
 //
 
-uint64_t CAttributes::getSize(void)
+uint64_t CAttributes::getSize()
 {
 	return m_ui64Size;
 }
@@ -164,7 +164,7 @@ uint64_t CAttributes::getSize(void)
 // ________________________________________________________________________________________________________________
 //
 
-IEntryEnumerator::~IEntryEnumerator(void) {}
+IEntryEnumerator::~IEntryEnumerator() {}
 
 // ________________________________________________________________________________________________________________
 //
@@ -175,7 +175,7 @@ namespace FS
 	{
 	public:
 		explicit CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
-		virtual void release(void);
+		virtual void release();
 	protected:
 		IEntryEnumeratorCallBack& m_rEntryEnumeratorCallBack;
 	};
@@ -187,7 +187,7 @@ namespace FS
 CEntryEnumerator::CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
 	: m_rEntryEnumeratorCallBack(rEntryEnumeratorCallBack) {}
 
-void CEntryEnumerator::release(void)
+void CEntryEnumerator::release()
 {
 	delete this;
 }

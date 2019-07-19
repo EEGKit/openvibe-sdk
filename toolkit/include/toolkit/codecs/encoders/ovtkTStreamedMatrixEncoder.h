@@ -33,7 +33,7 @@ namespace OpenViBEToolkit
 		// we propagate the visiblity of TCodec::initialize
 		using T::initialize;
 
-		bool uninitialize(void)
+		bool uninitialize()
 		{
 			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
@@ -56,17 +56,17 @@ namespace OpenViBEToolkit
 		/*
 		The methods specific to the Streamed Matrix encoder :
 		*/
-		bool encodeHeaderImpl(void)
+		bool encodeHeaderImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeHeader);
 		}
 
-		bool encodeBufferImpl(void)
+		bool encodeBufferImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
 
-		bool encodeEndImpl(void)
+		bool encodeEndImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd);
 		}

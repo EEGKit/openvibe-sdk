@@ -22,7 +22,7 @@ namespace OpenViBE
 
 #define _IsDerivedFromClass_Final_(_SuperClassName_,_ClassIdentifier_) \
 	_IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
-	virtual OpenViBE::CIdentifier getClassIdentifier(void) const \
+	virtual OpenViBE::CIdentifier getClassIdentifier() const \
 	{ \
 		return _ClassIdentifier_; \
 	}
@@ -63,7 +63,7 @@ namespace OpenViBE
 		 * This method should return the class identifier of the
 		 * concrete instanciated class.
 		 */
-		virtual CIdentifier getClassIdentifier(void) const = 0;
+		virtual CIdentifier getClassIdentifier() const = 0;
 		/**
 		 * \brief Checks if this object is compatible with a class identifier
 		 * \param rClassIdentifier [in] : the class identifier you want
@@ -101,7 +101,7 @@ namespace OpenViBE
 
 	protected:
 
-		virtual ~IObject(void) { }
+		virtual ~IObject() { }
 	};
 };
 

@@ -52,7 +52,7 @@ public:
 		m_File = std::fopen(filename, "wb");
 	}
 
-	virtual ~CWriterCallBack(void)
+	virtual ~CWriterCallBack()
 	{
 		if (m_File)
 		{

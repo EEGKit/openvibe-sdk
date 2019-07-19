@@ -25,7 +25,7 @@ namespace Socket
 	public:
 		TConnectionDelegate(SConnectionDelegate oConnectionDelegate) : m_oConnectionDelegate(oConnectionDelegate) { }
 
-		virtual bool close(void)
+		virtual bool close()
 		{
 			return m_oConnectionDelegate.fpClose(m_oConnectionDelegate.pUserData);
 		}
@@ -60,20 +60,20 @@ namespace Socket
 			return m_oConnectionDelegate.fpReceiveBufferBlocking(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
 		}
 
-		virtual bool isConnected(void) const
+		virtual bool isConnected() const
 		{
 			return m_oConnectionDelegate.fpIsConnected(m_oConnectionDelegate.pUserData);
 		}
 
-		virtual void release(void)
+		virtual void release()
 		{
 			m_oConnectionDelegate.fpRelease(m_oConnectionDelegate.pUserData);
 		}
 
 	public:
-		virtual ~TConnectionDelegate(void) { }
+		virtual ~TConnectionDelegate() { }
 	protected:
-		virtual bool open(void)
+		virtual bool open()
 		{
 			return m_oConnectionDelegate.fpOpen(m_oConnectionDelegate.pUserData);
 		}

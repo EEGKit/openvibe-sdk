@@ -13,15 +13,15 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual uint64_t getClockFrequency(void) { return 1LL << 32; }
+			virtual uint64_t getClockFrequency() { return 1LL << 32; }
 
-			virtual bool initialize(void);
-			virtual bool uininitialize(void);
+			virtual bool initialize();
+			virtual bool uininitialize();
 
 			virtual bool processClock(OpenViBE::Kernel::IMessageClock& rMessageClock);
-			virtual bool process(void);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest)
 
@@ -44,17 +44,17 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Encoder algorithm test"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Setups various streams and outputs them"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Note: Data sent in the streams does not change over time"); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Tests/Algorithms"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
+			virtual void release() { }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Encoder algorithm test"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Setups various streams and outputs them"); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Note: Data sent in the streams does not change over time"); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Tests/Algorithms"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CEncoderAlgorithmTest(); }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_StreamEncoderAlgorithmTest; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CEncoderAlgorithmTest(); }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{

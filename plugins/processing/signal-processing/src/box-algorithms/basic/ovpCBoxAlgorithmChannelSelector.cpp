@@ -77,7 +77,7 @@ namespace
 	}
 };
 
-bool CBoxAlgorithmChannelSelector::initialize(void)
+bool CBoxAlgorithmChannelSelector::initialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -133,7 +133,7 @@ bool CBoxAlgorithmChannelSelector::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmChannelSelector::uninitialize(void)
+bool CBoxAlgorithmChannelSelector::uninitialize()
 {
 	if (m_pDecoder)
 	{
@@ -155,7 +155,7 @@ bool CBoxAlgorithmChannelSelector::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmChannelSelector::process(void)
+bool CBoxAlgorithmChannelSelector::process()
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)

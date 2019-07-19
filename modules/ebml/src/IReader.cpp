@@ -95,7 +95,7 @@ namespace EBML
 
 		private:
 
-			CReaderNode(void);
+			CReaderNode();
 
 		public:
 
@@ -128,13 +128,13 @@ namespace EBML
 		public:
 
 			explicit CReader(IReaderCallback& rReaderCallback);
-			virtual ~CReader(void);
+			virtual ~CReader();
 
 			virtual bool processData(const void* pBuffer, uint64_t ui64BufferSize);
-			virtual CIdentifier getCurrentNodeIdentifier(void) const;
-			virtual uint64_t getCurrentNodeSize(void) const;
+			virtual CIdentifier getCurrentNodeIdentifier() const;
+			virtual uint64_t getCurrentNodeSize() const;
 
-			virtual void release(void);
+			virtual void release();
 
 		protected:
 
@@ -174,7 +174,7 @@ CReader::CReader(IReaderCallback& rReaderCallback)
 	  , m_ui64CurrentContentSize(0)
 	  , m_ui64TotalBytes(0) {}
 
-CReader::~CReader(void)
+CReader::~CReader()
 {
 	delete [] m_pPending;
 	while (m_pCurrentNode)
@@ -408,7 +408,7 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 	return true;
 }
 
-CIdentifier CReader::getCurrentNodeIdentifier(void) const
+CIdentifier CReader::getCurrentNodeIdentifier() const
 {
 	if (_Debug_)
 	{
@@ -417,7 +417,7 @@ CIdentifier CReader::getCurrentNodeIdentifier(void) const
 	return m_pCurrentNode ? m_pCurrentNode->m_oIdentifier : CIdentifier();
 }
 
-uint64_t CReader::getCurrentNodeSize(void) const
+uint64_t CReader::getCurrentNodeSize() const
 {
 	if (_Debug_)
 	{
@@ -426,7 +426,7 @@ uint64_t CReader::getCurrentNodeSize(void) const
 	return m_pCurrentNode ? m_pCurrentNode->m_ui64ContentSize : 0;
 }
 
-void CReader::release(void)
+void CReader::release()
 {
 	delete this;
 }

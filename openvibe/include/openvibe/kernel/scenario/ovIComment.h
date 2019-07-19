@@ -29,12 +29,12 @@ namespace OpenViBE
 			 * \brief Gets the identifier of this comment
 			 * \return The identifier of this OpenViBE comment.
 			 */
-			virtual CIdentifier getIdentifier(void) const = 0;
+			virtual CIdentifier getIdentifier() const = 0;
 			/**
 			 * \brief Gets the display name of this comment
 			 * \return The name of this OpenViBE comment.
 			 */
-			virtual CString getText(void) const = 0;
+			virtual CString getText() const = 0;
 			/**
 			 * \brief Changes the identifier of this comment
 			 * \param rIdentifier [in] : The new identifier

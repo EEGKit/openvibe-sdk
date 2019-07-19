@@ -11,13 +11,13 @@ namespace OpenViBE
 		public:
 
 			explicit CObjectVisitorContext(const IKernelContext& rKernelContext);
-			virtual ~CObjectVisitorContext(void);
+			virtual ~CObjectVisitorContext();
 
-			virtual IAlgorithmManager& getAlgorithmManager(void) const;
-			virtual IConfigurationManager& getConfigurationManager(void) const;
-			virtual ITypeManager& getTypeManager(void) const;
-			virtual ILogManager& getLogManager(void) const;
-			virtual IErrorManager& getErrorManager(void) const;
+			virtual IAlgorithmManager& getAlgorithmManager() const;
+			virtual IConfigurationManager& getConfigurationManager() const;
+			virtual ITypeManager& getTypeManager() const;
+			virtual ILogManager& getLogManager() const;
+			virtual IErrorManager& getErrorManager() const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IObjectVisitorContext >, OVK_ClassId_Kernel_ObjectVisitorContext)
 		};

@@ -11,7 +11,7 @@ using namespace std;
 CAlgorithmManager::CAlgorithmManager(const IKernelContext& rKernelContext)
 	: TKernelObject<IAlgorithmManager>(rKernelContext) {}
 
-CAlgorithmManager::~CAlgorithmManager(void)
+CAlgorithmManager::~CAlgorithmManager()
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
@@ -176,7 +176,7 @@ CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(
 	return (itAlgorithm != m_vAlgorithms.end() ? itAlgorithm->first : OV_UndefinedIdentifier);
 }
 
-CIdentifier CAlgorithmManager::getUnusedIdentifier(void) const
+CIdentifier CAlgorithmManager::getUnusedIdentifier() const
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 

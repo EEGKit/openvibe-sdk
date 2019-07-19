@@ -27,48 +27,48 @@ namespace OpenViBE
 			 * \brief Gets a reference on the current algorithm manager
 			 * \return a reference on the current algorithm manager
 			 */
-			virtual IAlgorithmManager& getAlgorithmManager(void) const = 0;
+			virtual IAlgorithmManager& getAlgorithmManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current player manager
 			 * \return a reference on the current player manager
 			 */
-			virtual IPlayerManager& getPlayerManager(void) const = 0;
+			virtual IPlayerManager& getPlayerManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current plugin manager
 			 * \return a reference on the current plugin manager
 			 */
-			virtual IPluginManager& getPluginManager(void) const = 0;
+			virtual IPluginManager& getPluginManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current metabox manager
 			 * \return a reference on the current metabox manager
 			 */
-			virtual IMetaboxManager& getMetaboxManager(void) const = 0;
+			virtual IMetaboxManager& getMetaboxManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current scenario manager
 			 * \return a reference on the current scenario manager
 			 */
-			virtual IScenarioManager& getScenarioManager(void) const = 0;
+			virtual IScenarioManager& getScenarioManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current type manager
 			 * \return a reference on the current type manager
 			 */
-			virtual ITypeManager& getTypeManager(void) const = 0;
+			virtual ITypeManager& getTypeManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current log manager
 			 * \return a reference on the current log manager
 			 */
-			virtual ILogManager& getLogManager(void) const = 0;
+			virtual ILogManager& getLogManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current error manager
 			 * \return a reference on the current error manager
 			 */
-			virtual IErrorManager& getErrorManager(void) const = 0;
+			virtual IErrorManager& getErrorManager() const = 0;
 
 			/**
 			 * \brief Gets a reference on the current configuration manager
 			 * \return a reference on the current configuration manager
 			 */
-			virtual IConfigurationManager& getConfigurationManager(void) const = 0;
+			virtual IConfigurationManager& getConfigurationManager() const = 0;
 
 			//@}
 			/** \name Box specific stuffs */
@@ -77,18 +77,18 @@ namespace OpenViBE
 			 * \brief Gets a reference to the considered box
 			 * \return a reference to the considered box
 			 */
-			virtual IBox& getBox(void) const = 0;
+			virtual IBox& getBox() const = 0;
 			/**
 			 * \brief Gets a reference to the scenario owning the considered box
 			 * \return a reference to the scenario owning the considered box
 			 */
-			virtual IScenario& getScenario(void) const = 0;
+			virtual IScenario& getScenario() const = 0;
 			/**
 			 * \brief Gets the index of the concerned callback message
 			 * \return the index of the concerned callback message in case it makes sense
 			 * \return \c 0xffffffff in case it does not make any sense
 			 */
-			virtual uint32_t getIndex(void) const = 0;
+			virtual uint32_t getIndex() const = 0;
 
 			//@}
 

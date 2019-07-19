@@ -49,7 +49,7 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool clear(void) = 0;
+			virtual bool clear() = 0;
 
 			/**
 			 * \brief Merges this scenario with an other existing scenario
@@ -520,7 +520,7 @@ namespace OpenViBE
 			/**
 			 * \brief replaces settings of each box by its locally expanded version only expands the $var{} tokens, it leaves others as is
 			 */
-			virtual bool applyLocalSettings(void) = 0;
+			virtual bool applyLocalSettings() = 0;
 
 			/**
 			 * \brief Check settings before playing scenario, if the settings are not suitable, stop scenario
@@ -579,7 +579,7 @@ namespace OpenViBE
 			/**
 			 * \return true if the scenario is actually a metabox
 			 */
-			virtual bool isMetabox(void) = 0;
+			virtual bool isMetabox() = 0;
 
 			virtual void getBoxIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getCommentIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;

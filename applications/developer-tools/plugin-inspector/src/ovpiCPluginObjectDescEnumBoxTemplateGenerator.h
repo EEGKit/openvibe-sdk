@@ -16,8 +16,8 @@ public:
 
 	CPluginObjectDescEnumBoxTemplateGenerator(const OpenViBE::Kernel::IKernelContext& kernelContext, const OpenViBE::CString& docTemplateDirectory);
 	virtual bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pluginObjectDesc);
-	virtual bool initialize(void);
-	virtual bool uninitialize(void);
+	virtual bool initialize();
+	virtual bool uninitialize();
 
 private:
 	// Return a string that correspond to the indexed categories under rst format

@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
-bool CBoxAlgorithmSpectrumAverage::initialize(void)
+bool CBoxAlgorithmSpectrumAverage::initialize()
 {
 	m_bZeroCare = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
@@ -25,7 +25,7 @@ bool CBoxAlgorithmSpectrumAverage::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmSpectrumAverage::uninitialize(void)
+bool CBoxAlgorithmSpectrumAverage::uninitialize()
 {
 	ip_pMatrix.uninitialize();
 	op_pMatrix.uninitialize();
@@ -53,7 +53,7 @@ bool CBoxAlgorithmSpectrumAverage::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmSpectrumAverage::process(void)
+bool CBoxAlgorithmSpectrumAverage::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();

@@ -76,17 +76,17 @@ const char* CDynamicModule::getErrorString(unsigned int errorCode) const
 	}
 }
 
-const char* CDynamicModule::getErrorDetails(void) const
+const char* CDynamicModule::getErrorDetails() const
 {
 	return &m_ErrorDetails[0];
 }
 
-unsigned int CDynamicModule::getLastError(void) const
+unsigned int CDynamicModule::getLastError() const
 {
 	return m_ErrorCode;
 }
 
-CDynamicModule::CDynamicModule(void)
+CDynamicModule::CDynamicModule()
 	: m_Handle(NULL)
 	  , m_ErrorMode(m_ErrorModeNull)
 	  , m_ShouldFreeModule(true)
@@ -96,7 +96,7 @@ CDynamicModule::CDynamicModule(void)
 	strcpy(m_Filename, "");
 }
 
-CDynamicModule::~CDynamicModule(void) {}
+CDynamicModule::~CDynamicModule() {}
 
 // --------------------------------------
 
@@ -320,7 +320,7 @@ bool CDynamicModule::isModuleCompatible(const char* filePath, int architecture)
 
 // --------------------------------------
 
-bool CDynamicModule::unload(void)
+bool CDynamicModule::unload()
 {
 	if (!m_Handle)
 	{
@@ -364,12 +364,12 @@ bool CDynamicModule::unload(void)
 	return true;
 }
 
-bool CDynamicModule::isLoaded(void) const
+bool CDynamicModule::isLoaded() const
 {
 	return m_Handle != NULL;
 }
 
-const char* CDynamicModule::getFilename(void) const
+const char* CDynamicModule::getFilename() const
 {
 	return m_Filename;
 }

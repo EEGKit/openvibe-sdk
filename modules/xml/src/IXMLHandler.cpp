@@ -13,7 +13,7 @@ namespace XML
 	class IXMLHandlerImpl : public IXMLHandler
 	{
 	public:
-		virtual void release(void);
+		virtual void release();
 		IXMLHandlerImpl();
 
 		//Parsing
@@ -29,7 +29,7 @@ namespace XML
 		//Internal function for parsing
 		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
 		virtual void processChildData(const char* sData);
-		virtual void closeChild(void);
+		virtual void closeChild();
 
 		std::stringstream& getErrorStringStream() const;
 
@@ -64,7 +64,7 @@ IXMLHandlerImpl::~IXMLHandlerImpl()
 	}
 }
 
-void IXMLHandlerImpl::release(void)
+void IXMLHandlerImpl::release()
 {
 	delete this;
 }
@@ -225,7 +225,7 @@ static void XMLCALL XML::expat_xml_data(void* pData, const char* pDataValue, int
 	static_cast<IXMLHandlerImpl*>(pData)->processChildData(sData.c_str());
 }
 
-OV_API IXMLHandler* XML::createXMLHandler(void)
+OV_API IXMLHandler* XML::createXMLHandler()
 {
 	return new IXMLHandlerImpl();
 }

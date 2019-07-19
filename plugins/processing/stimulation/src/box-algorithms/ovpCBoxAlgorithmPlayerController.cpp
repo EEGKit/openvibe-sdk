@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Stimulation;
 
-bool CBoxAlgorithmPlayerController::initialize(void)
+bool CBoxAlgorithmPlayerController::initialize()
 {
 	m_ui64StimulationIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_ui64ActionIdentifier      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -21,7 +21,7 @@ bool CBoxAlgorithmPlayerController::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmPlayerController::uninitialize(void)
+bool CBoxAlgorithmPlayerController::uninitialize()
 {
 	op_pStimulationSet.uninitialize();
 	ip_pMemoryBuffer.uninitialize();
@@ -42,7 +42,7 @@ bool CBoxAlgorithmPlayerController::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmPlayerController::process(void)
+bool CBoxAlgorithmPlayerController::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();

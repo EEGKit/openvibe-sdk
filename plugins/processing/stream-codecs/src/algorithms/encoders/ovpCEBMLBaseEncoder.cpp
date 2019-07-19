@@ -9,12 +9,12 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-CEBMLBaseEncoder::CEBMLBaseEncoder(void): m_pEBMLWriterHelper(NULL), m_pEBMLWriter(NULL), m_oEBMLWriterCallbackProxy(*this, &CEBMLBaseEncoder::write) {}
+CEBMLBaseEncoder::CEBMLBaseEncoder(): m_pEBMLWriterHelper(NULL), m_pEBMLWriter(NULL), m_oEBMLWriterCallbackProxy(*this, &CEBMLBaseEncoder::write) {}
 
 // ________________________________________________________________________________________________________________
 //
 
-bool CEBMLBaseEncoder::initialize(void)
+bool CEBMLBaseEncoder::initialize()
 {
 	op_pMemoryBuffer.initialize(getOutputParameter(OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
 
@@ -25,7 +25,7 @@ bool CEBMLBaseEncoder::initialize(void)
 	return true;
 }
 
-bool CEBMLBaseEncoder::uninitialize(void)
+bool CEBMLBaseEncoder::uninitialize()
 {
 	m_pEBMLWriterHelper->disconnect();
 	m_pEBMLWriterHelper->release();
@@ -42,7 +42,7 @@ bool CEBMLBaseEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CEBMLBaseEncoder::process(void)
+bool CEBMLBaseEncoder::process()
 {
 	if (isInputTriggerActive(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeHeader))
 	{

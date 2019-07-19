@@ -27,13 +27,13 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CEBMLBaseDecoder(void);
+			CEBMLBaseDecoder();
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
-			virtual bool process(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseStreamDecoder);
 
@@ -41,7 +41,7 @@ namespace OpenViBEPlugins
 			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
 			virtual void processChildData(const void* pBuffer, uint64_t ui64BufferSize);
-			virtual void closeChild(void);
+			virtual void closeChild();
 
 		protected:
 

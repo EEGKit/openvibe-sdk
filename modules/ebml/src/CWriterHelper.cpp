@@ -2,13 +2,13 @@
 
 using namespace EBML;
 
-CWriterHelper::CWriterHelper(void)
+CWriterHelper::CWriterHelper()
 	: m_pWriterHelperImplementation(NULL)
 {
 	m_pWriterHelperImplementation = createWriterHelper();
 }
 
-CWriterHelper::~CWriterHelper(void)
+CWriterHelper::~CWriterHelper()
 {
 	m_pWriterHelperImplementation->release();
 }
@@ -18,7 +18,7 @@ bool CWriterHelper::connect(IWriter* pWriter)
 	return m_pWriterHelperImplementation->connect(pWriter);
 }
 
-bool CWriterHelper::disconnect(void)
+bool CWriterHelper::disconnect()
 {
 	return m_pWriterHelperImplementation->disconnect();
 }
@@ -28,7 +28,7 @@ bool CWriterHelper::openChild(const CIdentifier& rIdentifier)
 	return m_pWriterHelperImplementation->openChild(rIdentifier);
 }
 
-bool CWriterHelper::closeChild(void)
+bool CWriterHelper::closeChild()
 {
 	return m_pWriterHelperImplementation->closeChild();
 }
@@ -63,4 +63,4 @@ bool CWriterHelper::setASCIIStringAsChildData(const char* sValue)
 	return m_pWriterHelperImplementation->setASCIIStringAsChildData(sValue);
 }
 
-void CWriterHelper::release(void) {}
+void CWriterHelper::release() {}

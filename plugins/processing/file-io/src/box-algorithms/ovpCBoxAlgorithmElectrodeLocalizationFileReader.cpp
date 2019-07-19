@@ -9,12 +9,12 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency(void)
+uint64_t CBoxAlgorithmElectrodeLocalisationFileReader::getClockFrequency()
 {
 	return ((uint64_t)1LL) << 32;
 }
 
-bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize(void)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize()
 {
 	m_bHeaderSent = false;
 	m_bBufferSent = false;
@@ -49,7 +49,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmElectrodeLocalisationFileReader::uninitialize(void)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::uninitialize()
 {
 	//m_pOVMatrixFileReader->process(OVP_Algorithm_OVMatrixFileReader_InputTriggerId_Close);
 
@@ -72,7 +72,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::processClock(CMessageClock& r
 	return true;
 }
 
-bool CBoxAlgorithmElectrodeLocalisationFileReader::process(void)
+bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 {
 	if (m_bHeaderSent == true && m_bBufferSent == true) { return true; }
 

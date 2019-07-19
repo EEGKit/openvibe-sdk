@@ -12,7 +12,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CBuffer(void) { }
+			CBuffer() { }
 			explicit CBuffer(const CBuffer& rBuffer);
 
 			CBuffer& operator=(const CBuffer& rBuffer);

@@ -36,7 +36,7 @@ bool CMatlabGenerator::appendStimulation(SStimulation& rStim)
 }
 
 
-bool CMatlabGenerator::closeFile(void)
+bool CMatlabGenerator::closeFile()
 {
 	m_oFile << "end" << endl;
 	m_oFile.close();

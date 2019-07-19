@@ -24,12 +24,12 @@ namespace OpenViBE
 		/**
 		 * \brief Clears this stimulation set removing every existing stimulation
 		 */
-		virtual void clear(void) = 0;
+		virtual void clear() = 0;
 		/**
 		 * \brief Gets the number of stimulations contained in this stimulation set
 		 * \return the number of stimulations contained in this stimulation set.
 		 */
-		virtual const uint64_t getStimulationCount(void) const = 0;
+		virtual const uint64_t getStimulationCount() const = 0;
 		/**
 		 * \brief Gets the identifier of a specific stimulation in this stimulation set
 		 * \param ui64StimulationIndex [in] : the index of the stimulation which identifier has to be returned

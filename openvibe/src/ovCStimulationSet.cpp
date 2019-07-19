@@ -13,7 +13,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CStimulation(void) : m_ui64Identifier(0), m_ui64Date(0), m_ui64Duration(0) { }
+			CStimulation() : m_ui64Identifier(0), m_ui64Date(0), m_ui64Duration(0) { }
 
 			CStimulation(const uint64_t ui64Identifier, const uint64_t ui64Date, const uint64_t ui64Duration)
 				: m_ui64Identifier(ui64Identifier), m_ui64Date(ui64Date), m_ui64Duration(ui64Duration) { }
@@ -27,9 +27,9 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual void clear(void);
+			virtual void clear();
 
-			virtual const uint64_t getStimulationCount(void) const;
+			virtual const uint64_t getStimulationCount() const;
 			virtual const uint64_t getStimulationIdentifier(uint64_t ui64StimulationIndex) const;
 			virtual const uint64_t getStimulationDate(uint64_t ui64StimulationIndex) const;
 			virtual const uint64_t getStimulationDuration(uint64_t ui64StimulationIndex) const;
@@ -55,9 +55,9 @@ namespace OpenViBE
 // ________________________________________________________________________________________________________________
 //
 
-void CStimulationSetImpl::clear(void) { m_vStimulation.clear(); }
+void CStimulationSetImpl::clear() { m_vStimulation.clear(); }
 
-const uint64_t CStimulationSetImpl::getStimulationCount(void) const { return m_vStimulation.size(); }
+const uint64_t CStimulationSetImpl::getStimulationCount() const { return m_vStimulation.size(); }
 
 const uint64_t CStimulationSetImpl::getStimulationIdentifier(const uint64_t ui64StimulationIndex) const
 {
@@ -128,13 +128,13 @@ bool CStimulationSetImpl::removeStimulation(const uint64_t ui64StimulationIndex)
 // ________________________________________________________________________________________________________________
 //
 
-CStimulationSet::CStimulationSet(void) : m_pStimulationSetImpl(NULL) { m_pStimulationSetImpl = new CStimulationSetImpl(); }
+CStimulationSet::CStimulationSet() : m_pStimulationSetImpl(NULL) { m_pStimulationSetImpl = new CStimulationSetImpl(); }
 
-CStimulationSet::~CStimulationSet(void) { delete m_pStimulationSetImpl; }
+CStimulationSet::~CStimulationSet() { delete m_pStimulationSetImpl; }
 
-void CStimulationSet::clear(void) { m_pStimulationSetImpl->clear(); }
+void CStimulationSet::clear() { m_pStimulationSetImpl->clear(); }
 
-const uint64_t CStimulationSet::getStimulationCount(void) const
+const uint64_t CStimulationSet::getStimulationCount() const
 {
 	return m_pStimulationSetImpl->getStimulationCount();
 }

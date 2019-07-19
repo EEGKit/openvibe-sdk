@@ -28,15 +28,15 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmGenericStreamReader(void);
+			CBoxAlgorithmGenericStreamReader();
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual uint64_t getClockFrequency(void);
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual uint64_t getClockFrequency();
+			virtual bool initialize();
+			virtual bool uninitialize();
 			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual bool process(void);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_GenericStreamReader);
 
@@ -67,7 +67,7 @@ namespace OpenViBEPlugins
 			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
 			virtual void processChildData(const void* pBuffer, uint64_t ui64BufferSize);
-			virtual void closeChild(void);
+			virtual void closeChild();
 		};
 
 		class CBoxAlgorithmGenericStreamReaderListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
@@ -120,22 +120,22 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Generic stream reader"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Reads OpenViBE streams saved in the .ov format"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Generic Stream Writer box can be used to store data in the format read by this box"); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("File reading and writing/OpenViBE"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Generic stream reader"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Reads OpenViBE streams saved in the .ov format"); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Generic Stream Writer box can be used to store data in the format read by this box"); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("File reading and writing/OpenViBE"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_GenericStreamReader; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmGenericStreamReader; }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmGenericStreamReaderListener; }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_GenericStreamReader; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmGenericStreamReader; }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener() const { return new CBoxAlgorithmGenericStreamReaderListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const

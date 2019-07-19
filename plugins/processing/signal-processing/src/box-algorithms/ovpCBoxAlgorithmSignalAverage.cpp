@@ -11,7 +11,7 @@ using namespace SignalProcessing;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-void CBoxAlgorithmSignalAverage::computeAverage(void)
+void CBoxAlgorithmSignalAverage::computeAverage()
 {
 	const double* l_pInput = m_oSignalDecoder.getOutputMatrix()->getBuffer();
 	double* l_pOutput      = m_oSignalEncoder.getInputMatrix()->getBuffer();
@@ -36,9 +36,9 @@ void CBoxAlgorithmSignalAverage::computeAverage(void)
 }
 
 
-CBoxAlgorithmSignalAverage::CBoxAlgorithmSignalAverage(void) {}
+CBoxAlgorithmSignalAverage::CBoxAlgorithmSignalAverage() {}
 
-void CBoxAlgorithmSignalAverage::release(void) {}
+void CBoxAlgorithmSignalAverage::release() {}
 
 bool CBoxAlgorithmSignalAverage::initialize()
 {

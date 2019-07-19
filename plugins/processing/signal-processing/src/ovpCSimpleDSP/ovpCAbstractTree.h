@@ -43,7 +43,7 @@ public:
 		  , m_bIsConstant(bIsConstant) { }
 
 	//! virtual destructor
-	virtual ~CAbstractTreeNode(void) { }
+	virtual ~CAbstractTreeNode() { }
 
 	/**
 	* Used to know if this node is a leaf.
@@ -170,7 +170,7 @@ public:
 	virtual void addChild(CAbstractTreeNode* pChild) { m_oChildren.push_back(pChild); }
 
 	//! Destructor.
-	virtual ~CAbstractTreeParentNode(void);
+	virtual ~CAbstractTreeParentNode();
 
 	//! Debug function, prints the node and its children (prefix notation)
 	virtual void print(OpenViBE::Kernel::ILogManager& rLogManager)

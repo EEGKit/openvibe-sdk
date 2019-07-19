@@ -52,7 +52,7 @@ namespace OpenViBE
 
 		private:
 
-			CBoxProto(void);
+			CBoxProto();
 		};
 	};
 };

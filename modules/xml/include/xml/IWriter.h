@@ -7,7 +7,7 @@ namespace XML
 	class XML_API IWriterCallback
 	{
 	public:
-		virtual ~IWriterCallback(void) { }
+		virtual ~IWriterCallback() { }
 		virtual void write(const char* sString) = 0;
 	};
 
@@ -19,10 +19,10 @@ namespace XML
 		virtual bool openChild(const char* sName) = 0;
 		virtual bool setAttribute(const char* sAttributeName, const char* sAttributeValue) = 0;
 		virtual bool setChildData(const char* sData) = 0;
-		virtual bool closeChild(void) = 0;
-		virtual void release(void) = 0;
+		virtual bool closeChild() = 0;
+		virtual void release() = 0;
 	protected:
-		virtual ~IWriter(void) { }
+		virtual ~IWriter() { }
 	};
 
 	extern XML_API IWriter* createWriter(IWriterCallback& rWriterCallback);

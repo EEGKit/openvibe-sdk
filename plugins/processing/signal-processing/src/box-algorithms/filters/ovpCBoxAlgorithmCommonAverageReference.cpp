@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
-bool CBoxAlgorithmCommonAverageReference::initialize(void)
+bool CBoxAlgorithmCommonAverageReference::initialize()
 {
 	// CString   l_sSettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	// uint64_t l_ui64SettingValue=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -35,7 +35,7 @@ bool CBoxAlgorithmCommonAverageReference::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmCommonAverageReference::uninitialize(void)
+bool CBoxAlgorithmCommonAverageReference::uninitialize()
 {
 	op_pMemoryBuffer.uninitialize();
 	ip_ui64SamplingRate.uninitialize();
@@ -58,7 +58,7 @@ bool CBoxAlgorithmCommonAverageReference::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmCommonAverageReference::process(void)
+bool CBoxAlgorithmCommonAverageReference::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();

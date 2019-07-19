@@ -38,7 +38,7 @@ namespace Socket
 #endif
 	};
 
-	extern Socket_API IConnectionParallel* createConnectionParallel(void);
+	extern Socket_API IConnectionParallel* createConnectionParallel();
 };
 
 

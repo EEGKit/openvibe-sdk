@@ -17,12 +17,12 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
 			virtual bool processInput(uint32_t ui32InputIndex);
-			virtual bool process(void);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClassifierProcessor)
 
@@ -47,21 +47,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Classifier processor"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard, Guillaume Serriere"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Generic classification, relying on several box algorithms"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Classifies incoming feature vectors using a previously learned classifier."); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Classification"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("2.1"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.1.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Classifier processor"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard, Guillaume Serriere"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Generic classification, relying on several box algorithms"); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Classifies incoming feature vectors using a previously learned classifier."); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Classification"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("2.1"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.1.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ClassifierProcessor; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmClassifierProcessor; }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_ClassifierProcessor; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmClassifierProcessor; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{
@@ -76,7 +76,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			// virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmCommonClassifierListener(5); }
+			// virtual OpenViBE::Plugins::IBoxListener* createBoxListener() const { return new CBoxAlgorithmCommonClassifierListener(5); }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ClassifierProcessorDesc)

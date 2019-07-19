@@ -31,7 +31,7 @@ namespace OpenViBE
 		 *
 		 * Initializes the list.
 		 */
-		CNameValuePairList(void);
+		CNameValuePairList();
 		/**
 		 * \brief Copy constructor
 		 * \param rNameValuePairList [in] : The list to copy
@@ -44,7 +44,7 @@ namespace OpenViBE
 		 *
 		 * The destructor releases the std::map implementation !
 		 */
-		virtual ~CNameValuePairList(void);
+		virtual ~CNameValuePairList();
 
 		//@}
 		/** \name Operators */

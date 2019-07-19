@@ -14,10 +14,10 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
 
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_ChannelUnitsStreamDecoder);
 
@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
 			virtual void processChildData(const void* pBuffer, uint64_t ui64BufferSize);
-			virtual void closeChild(void);
+			virtual void closeChild();
 
 		protected:
 
@@ -41,21 +41,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Channel units stream decoder"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Stream codecs/Decoders"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Channel units stream decoder"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Stream codecs/Decoders"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
 
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ChannelUnitsStreamDecoder; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CChannelUnitsDecoder(); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_Algorithm_ChannelUnitsStreamDecoder; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CChannelUnitsDecoder(); }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{

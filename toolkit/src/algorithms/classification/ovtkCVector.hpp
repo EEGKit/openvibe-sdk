@@ -13,7 +13,7 @@ namespace OpenViBEToolkit
 		explicit TVector(OpenViBE::IMatrix& rMatrix)
 			: m_rMatrix(rMatrix) { }
 
-		virtual uint32_t getSize(void) const
+		virtual uint32_t getSize() const
 		{
 			return m_rMatrix.getBufferElementCount();
 		}
@@ -25,12 +25,12 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		virtual double* getBuffer(void)
+		virtual double* getBuffer()
 		{
 			return m_rMatrix.getBuffer();
 		}
 
-		virtual const double* getBuffer(void) const
+		virtual const double* getBuffer() const
 		{
 			return m_rMatrix.getBuffer();
 		}

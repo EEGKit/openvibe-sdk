@@ -3,7 +3,7 @@
 
 using namespace System;
 
-CChrono::CChrono(void)
+CChrono::CChrono()
 	: m_pStepInTime(NULL)
 	  , m_pStepOutTime(NULL)
 	  , m_ui32StepCount(0)
@@ -13,7 +13,7 @@ CChrono::CChrono(void)
 	  , m_ui64TotalStepInTime(0)
 	  , m_ui64TotalStepOutTime(0) {}
 
-CChrono::~CChrono(void)
+CChrono::~CChrono()
 {
 	delete [] m_pStepInTime;
 	delete [] m_pStepOutTime;
@@ -54,7 +54,7 @@ bool CChrono::reset(uint32_t ui32StepCount)
 	return true;
 }
 
-bool CChrono::stepIn(void)
+bool CChrono::stepIn()
 {
 	if (m_bIsInStep || !m_ui32StepCount) { return false; }
 
@@ -82,7 +82,7 @@ bool CChrono::stepIn(void)
 	return true;
 }
 
-bool CChrono::stepOut(void)
+bool CChrono::stepOut()
 {
 	if (!m_bIsInStep || !m_ui32StepCount) { return false; }
 
@@ -94,39 +94,39 @@ bool CChrono::stepOut(void)
 	return true;
 }
 
-uint64_t CChrono::getTotalStepInDuration(void) const
+uint64_t CChrono::getTotalStepInDuration() const
 {
 	return m_ui64TotalStepInTime;
 }
 
-uint64_t CChrono::getTotalStepOutDuration(void) const
+uint64_t CChrono::getTotalStepOutDuration() const
 {
 	return m_ui64TotalStepOutTime;
 }
 
-uint64_t CChrono::getAverageStepInDuration(void) const
+uint64_t CChrono::getAverageStepInDuration() const
 {
 	return m_ui32StepCount ? this->getTotalStepInDuration() / m_ui32StepCount : 0;
 }
 
-uint64_t CChrono::getAverageStepOutDuration(void) const
+uint64_t CChrono::getAverageStepOutDuration() const
 {
 	return m_ui32StepCount ? this->getTotalStepOutDuration() / m_ui32StepCount : 0;
 }
 
-double CChrono::getStepInPercentage(void) const
+double CChrono::getStepInPercentage() const
 {
 	uint64_t l_ui64TotalStepDuration = (this->getTotalStepInDuration() + this->getTotalStepOutDuration());
 	return l_ui64TotalStepDuration ? (this->getTotalStepInDuration() * 100.0) / l_ui64TotalStepDuration : 0;
 }
 
-double CChrono::getStepOutPercentage(void) const
+double CChrono::getStepOutPercentage() const
 {
 	uint64_t l_ui64TotalStepDuration = (this->getTotalStepOutDuration() + this->getTotalStepInDuration());
 	return l_ui64TotalStepDuration ? (this->getTotalStepOutDuration() * 100.0) / l_ui64TotalStepDuration : 0;
 }
 
-bool CChrono::hasNewEstimation(void)
+bool CChrono::hasNewEstimation()
 {
 	return m_bHasNewEstimation;
 }

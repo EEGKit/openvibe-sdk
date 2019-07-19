@@ -31,7 +31,7 @@ namespace Socket
 		std::string m_sLastError;
 	public:
 
-		CConnectionParallel(void)
+		CConnectionParallel()
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			:m_iFile(0)
@@ -62,13 +62,13 @@ namespace Socket
 #endif
 		}
 
-		bool open(void)
+		bool open()
 		{
 			// Should never be used
 			return false;
 		}
 
-		bool close(void)
+		bool close()
 		{
 #if defined TARGET_OS_Windows
 
@@ -199,7 +199,7 @@ namespace Socket
 			return this->isConnected();
 		}
 
-		bool isConnected(void) const
+		bool isConnected() const
 		{
 #if defined TARGET_OS_Windows
 
@@ -214,7 +214,7 @@ namespace Socket
 			return false;
 		}
 
-		void release(void)
+		void release()
 		{
 #if defined TARGET_OS_Windows
 			if (m_hmodTVicPort != NULL)
@@ -316,7 +316,7 @@ namespace Socket
 #endif
 	};
 
-	IConnectionParallel* createConnectionParallel(void)
+	IConnectionParallel* createConnectionParallel()
 	{
 		return new CConnectionParallel();
 	}

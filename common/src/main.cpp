@@ -7,7 +7,7 @@
 
 using namespace OpenViBETypeTest;
 
-int main(void)
+int main()
 {
 #if defined(WIN32) || (defined(LINUX) && defined(__GXX_EXPERIMENTAL_CXX0X__))
 	static_assert(sizeof(uint64_t) >= 8, "uint64_t is not at least 8 bytes");

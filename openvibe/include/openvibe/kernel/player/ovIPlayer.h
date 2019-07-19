@@ -73,7 +73,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IConfigurationManager
 			 */
-			virtual IConfigurationManager& getRuntimeConfigurationManager(void) const = 0;
+			virtual IConfigurationManager& getRuntimeConfigurationManager() const = 0;
 
 			/**
 			 * \brief returns a reference to the runtime scenario manager
@@ -85,7 +85,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IScenarioManager
 			 */
-			virtual IScenarioManager& getRuntimeScenarioManager(void) const = 0;
+			virtual IScenarioManager& getRuntimeScenarioManager() const = 0;
 
 			/**
 			 * \brief returns the cidentifier of the associated runtime scenario
@@ -96,56 +96,56 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::CIdentifier
 			 */
-			virtual CIdentifier getRuntimeScenarioIdentifier(void) const = 0;
+			virtual CIdentifier getRuntimeScenarioIdentifier() const = 0;
 
 			/**
 			 * \brief Initializes this player
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual EPlayerReturnCode initialize(void) = 0;
+			virtual EPlayerReturnCode initialize() = 0;
 			/**
 			 * \brief Uninitializes this player
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool uninitialize(void) = 0;
+			virtual bool uninitialize() = 0;
 
 			/**
 			 * \brief Stops player execution
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool stop(void) = 0;
+			virtual bool stop() = 0;
 			/**
 			 * \brief Pauses player execution
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool pause(void) = 0;
+			virtual bool pause() = 0;
 			/**
 			 * \brief Executes one more step and pauses
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool step(void) = 0;
+			virtual bool step() = 0;
 			/**
 			 * \brief Makes player run normal speed
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool play(void) = 0;
+			virtual bool play() = 0;
 			/**
 			 * \brief Makes player run as fast as possible
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool forward(void) = 0;
+			virtual bool forward() = 0;
 			/**
 			 * \brief Gets current player status
 			 * \return current player status
 			 */
-			virtual EPlayerStatus getStatus(void) const = 0;
+			virtual EPlayerStatus getStatus() const = 0;
 
 			/**
 			 * \brief Sets maximum fast forward factor coefficient
@@ -161,7 +161,7 @@ namespace OpenViBE
 			 * \brief Gets the maximum fast forward factor coefficient
 			 * \return The maximum fast forward factor coefficient.
 			 */
-			virtual double getFastForwardMaximumFactor(void) const = 0;
+			virtual double getFastForwardMaximumFactor() const = 0;
 
 			/**
 			 * \brief Gets an estimate of the actual time ratio spent in the player's loop
@@ -184,7 +184,7 @@ namespace OpenViBE
 				uint64_t ui64ElapsedTime,
 				uint64_t ui64MaximumTimeToReach = uint64_t(-1)) = 0;
 
-			virtual uint64_t getCurrentSimulatedTime(void) const = 0;
+			virtual uint64_t getCurrentSimulatedTime() const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Player);
 		};

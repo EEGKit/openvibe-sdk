@@ -53,7 +53,7 @@ namespace
 	}
 };
 
-bool CBoxAlgorithmReferenceChannel::initialize(void)
+bool CBoxAlgorithmReferenceChannel::initialize()
 {
 	m_oDecoder.initialize(*this, 0);
 	m_oEncoder.initialize(*this, 0);
@@ -61,7 +61,7 @@ bool CBoxAlgorithmReferenceChannel::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmReferenceChannel::uninitialize(void)
+bool CBoxAlgorithmReferenceChannel::uninitialize()
 {
 	m_oDecoder.uninitialize();
 	m_oEncoder.uninitialize();
@@ -76,7 +76,7 @@ bool CBoxAlgorithmReferenceChannel::processInput(uint32_t ui32InputIndex)
 
 #include <cstdio>
 
-bool CBoxAlgorithmReferenceChannel::process(void)
+bool CBoxAlgorithmReferenceChannel::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();

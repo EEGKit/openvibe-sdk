@@ -9,7 +9,7 @@ using namespace Stimulation;
 
 using namespace std;
 
-bool CBoxAlgorithmStimulationMultiplexer::initialize(void)
+bool CBoxAlgorithmStimulationMultiplexer::initialize()
 {
 	const IBox& staticBoxContext = this->getStaticBoxContext();
 
@@ -32,7 +32,7 @@ bool CBoxAlgorithmStimulationMultiplexer::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationMultiplexer::uninitialize(void)
+bool CBoxAlgorithmStimulationMultiplexer::uninitialize()
 {
 	for (auto& stimulationDecoder : m_StimulationDecoders)
 	{
@@ -50,7 +50,7 @@ bool CBoxAlgorithmStimulationMultiplexer::processInput(uint32_t)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationMultiplexer::process(void)
+bool CBoxAlgorithmStimulationMultiplexer::process()
 {
 	const IBox& staticBoxContext = this->getStaticBoxContext();
 	IBoxIO& dynamicBoxContext    = this->getDynamicBoxContext();

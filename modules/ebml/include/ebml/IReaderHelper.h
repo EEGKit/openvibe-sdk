@@ -75,14 +75,14 @@ namespace EBML
 		 * The current object is invalid after calling this
 		 * function. It can not be used anymore.
 		 */
-		virtual void release(void) = 0;
+		virtual void release() = 0;
 
 	protected:
 
 		/**
 		 * \brief Virtual destructor - should be overloaded
 		 */
-		virtual ~IReaderHelper(void) { }
+		virtual ~IReaderHelper() { }
 	};
 
 	/**
@@ -90,7 +90,7 @@ namespace EBML
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API IReaderHelper* createReaderHelper(void);
+	extern EBML_API IReaderHelper* createReaderHelper();
 };
 
 

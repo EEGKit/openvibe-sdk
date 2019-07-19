@@ -35,10 +35,10 @@ std::ofstream g_OutputStream;
 class CReaderCallBack : public EBML::IReaderCallBack
 {
 public:
-	CReaderCallBack(void)
+	CReaderCallBack()
 		: m_Depth(0) { }
 
-	virtual ~CReaderCallBack(void) { }
+	virtual ~CReaderCallBack() { }
 
 	bool isMasterChild(const EBML::CIdentifier& rIdentifier) override
 	{
@@ -82,7 +82,7 @@ public:
 			g_OutputStream << "Got " << ui64BufferSize << " data bytes, node id not known\n";
 	}
 
-	void closeChild(void) override
+	void closeChild() override
 	{
 		m_Depth--;
 		for (int i = 0; i < m_Depth; i++) g_OutputStream << "   ";

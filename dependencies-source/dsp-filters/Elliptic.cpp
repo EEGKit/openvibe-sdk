@@ -208,7 +208,7 @@ namespace Dsp
 		}
 
 		// calculate f(z)
-		void AnalogLowPass::calcfz(void)
+		void AnalogLowPass::calcfz()
 		{
 			int i = 1;
 			if (m_nin == 1)
@@ -223,7 +223,7 @@ namespace Dsp
 		}
 
 		// determine q(z)
-		void AnalogLowPass::calcqz(void)
+		void AnalogLowPass::calcqz()
 		{
 			int i;
 			for (i = 1; i <= m_nin; i++)

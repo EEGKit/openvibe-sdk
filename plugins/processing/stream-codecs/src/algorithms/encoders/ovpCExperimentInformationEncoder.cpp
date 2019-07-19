@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-bool CExperimentInformationEncoder::initialize(void)
+bool CExperimentInformationEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
 
@@ -25,7 +25,7 @@ bool CExperimentInformationEncoder::initialize(void)
 	return true;
 }
 
-bool CExperimentInformationEncoder::uninitialize(void)
+bool CExperimentInformationEncoder::uninitialize()
 {
 	ip_pTechnicianName.uninitialize();
 	ip_ui64TechnicianIdentifier.uninitialize();
@@ -46,7 +46,7 @@ bool CExperimentInformationEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CExperimentInformationEncoder::processHeader(void)
+bool CExperimentInformationEncoder::processHeader()
 {
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation);
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Experiment);

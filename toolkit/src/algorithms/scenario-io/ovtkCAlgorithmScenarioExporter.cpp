@@ -73,7 +73,7 @@ void CAlgorithmScenarioExporterHelper::exportAttributes(const IAttributable& att
 }
 
 
-bool CAlgorithmScenarioExporter::process(void)
+bool CAlgorithmScenarioExporter::process()
 {
 	CAlgorithmScenarioExporterHelper l_oHelper(this->getAlgorithmContext(), *this);
 	CMemoryBuffer l_oTemporaryMemoryBuffer;

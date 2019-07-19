@@ -10,7 +10,7 @@ using namespace StreamCodecs;
 // ________________________________________________________________________________________________________________
 //
 
-bool CChannelLocalisationDecoder::initialize(void)
+bool CChannelLocalisationDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
 
@@ -19,7 +19,7 @@ bool CChannelLocalisationDecoder::initialize(void)
 	return true;
 }
 
-bool CChannelLocalisationDecoder::uninitialize(void)
+bool CChannelLocalisationDecoder::uninitialize()
 {
 	op_bDynamic.uninitialize();
 
@@ -70,7 +70,7 @@ void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const ui
 	}
 }
 
-void CChannelLocalisationDecoder::closeChild(void)
+void CChannelLocalisationDecoder::closeChild()
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

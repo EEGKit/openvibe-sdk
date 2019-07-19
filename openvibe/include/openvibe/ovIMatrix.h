@@ -29,7 +29,7 @@ namespace OpenViBE
 		 * \return the dimension count for this matrix
 		 * \note Uninitialized matrices should return \c 0
 		 */
-		virtual const uint32_t getDimensionCount(void) const = 0;
+		virtual const uint32_t getDimensionCount() const = 0;
 		/**
 		 * \brief Gets the dimension size for a given dimension index
 		 * \param ui32DimensionIndex [in] : the dimension index which size has to be returned
@@ -80,13 +80,13 @@ namespace OpenViBE
 		 * \endcode
 		 * \sa getBufferElementCount
 		 */
-		virtual const double* getBuffer(void) const = 0;
+		virtual const double* getBuffer() const = 0;
 		/**
 		 * \brief Gets the total number of elements in the matrix
 		 * \return the total number of elements in the matrix
 		 * \note The value returned by this function is the size of the raw buffer returned by \c getBuffer
 		 */
-		virtual const uint32_t getBufferElementCount(void) const = 0;
+		virtual const uint32_t getBufferElementCount() const = 0;
 
 		//@}
 		/** \name Modifiers */
@@ -131,7 +131,7 @@ namespace OpenViBE
 		 * \sa IMatrix::getBufferElementCount
 		 * \sa IMatrix::getBuffer const
 		 */
-		virtual double* getBuffer(void) = 0;
+		virtual double* getBuffer() = 0;
 
 		//@}
 

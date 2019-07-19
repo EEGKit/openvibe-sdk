@@ -24,7 +24,7 @@ namespace EBML
 		/**
 		 * \brief Virtual destructor
 		 */
-		virtual ~IReaderCallback(void) { }
+		virtual ~IReaderCallback() { }
 		/**
 		 * \brief Kind of child querry
 		 * \param rIdentifier [in] : The identifier which type has to be known
@@ -71,7 +71,7 @@ namespace EBML
 		 * top level node, whether opening a new child or closing
 		 * itself and so on...
 		 */
-		virtual void closeChild(void) = 0;
+		virtual void closeChild() = 0;
 	};
 
 	class EBML_API IReaderCallBack : public IReaderCallback { };
@@ -123,12 +123,12 @@ namespace EBML
 		 * \brief Gets the identifier of the current node
 		 * \return the identifier of the current node
 		 */
-		virtual CIdentifier getCurrentNodeIdentifier(void) const = 0;
+		virtual CIdentifier getCurrentNodeIdentifier() const = 0;
 		/**
 		 * \brief Gets the size of the current node
 		 * \return the size of the current node
 		 */
-		virtual uint64_t getCurrentNodeSize(void) const = 0;
+		virtual uint64_t getCurrentNodeSize() const = 0;
 		/**
 		 * \brief Tells this object it won't be used anymore
 		 *
@@ -143,14 +143,14 @@ namespace EBML
 		 * The current object is invalid after calling this
 		 * function. It can not be used anymore.
 		 */
-		virtual void release(void) = 0;
+		virtual void release() = 0;
 
 	protected:
 
 		/**
 		 * \brief Virtual destructor - should be overloaded
 		 */
-		virtual ~IReader(void) { }
+		virtual ~IReader() { }
 	};
 
 	/**

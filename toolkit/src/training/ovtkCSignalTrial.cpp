@@ -11,13 +11,13 @@ using namespace std;
 // ________________________________________________________________________________________________________________
 //
 
-CSignalTrial::CSignalTrial(void)
+CSignalTrial::CSignalTrial()
 	: m_ui32ChannelCount(0)
 	  , m_ui32SampleCount(0)
 	  , m_ui32SampleCountReserved(0)
 	  , m_ui32SamplingRate(0) {}
 
-CSignalTrial::~CSignalTrial(void)
+CSignalTrial::~CSignalTrial()
 {
 	map<uint32_t, double*>::iterator itChannel;
 	for (itChannel = m_vChannelSample.begin(); itChannel != m_vChannelSample.end(); ++itChannel)
@@ -100,12 +100,12 @@ bool CSignalTrial::setSampleCount(const uint32_t ui32SampleCount, const bool bPr
 // ________________________________________________________________________________________________________________
 //
 
-uint32_t CSignalTrial::getSamplingRate(void) const
+uint32_t CSignalTrial::getSamplingRate() const
 {
 	return m_ui32SamplingRate;
 }
 
-uint32_t CSignalTrial::getChannelCount(void) const
+uint32_t CSignalTrial::getChannelCount() const
 {
 	return m_ui32ChannelCount;
 }
@@ -121,17 +121,17 @@ const char* CSignalTrial::getChannelName(const uint32_t ui32ChannelIndex) const
 	return "";
 }
 
-CIdentifier CSignalTrial::getLabelIdentifier(void) const
+CIdentifier CSignalTrial::getLabelIdentifier() const
 {
 	return m_oLabelIdentifier;
 }
 
-uint32_t CSignalTrial::getSampleCount(void) const
+uint32_t CSignalTrial::getSampleCount() const
 {
 	return m_ui32SampleCount;
 }
 
-uint64_t CSignalTrial::getDuration(void) const
+uint64_t CSignalTrial::getDuration() const
 {
 	return (m_ui32SamplingRate ? ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, m_ui32SampleCount) : 0);
 }
@@ -150,7 +150,7 @@ double* CSignalTrial::getChannelSampleBuffer(const uint32_t ui32ChannelIndex) co
 // ________________________________________________________________________________________________________________
 //
 
-ISignalTrial* OpenViBEToolkit::createSignalTrial(void)
+ISignalTrial* OpenViBEToolkit::createSignalTrial()
 {
 	return new CSignalTrial();
 }

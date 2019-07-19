@@ -61,7 +61,7 @@ namespace OpenViBE
 			 *
 			 * This function calls the onInitialize main function of the plugin module.
 			 */
-			virtual bool initialize(void) = 0;
+			virtual bool initialize() = 0;
 			/**
 			 * \brief Gets a specific plugin object descriptor
 			 * \param ui32Index [in] : the index of the plugin object descriptor to get
@@ -90,7 +90,7 @@ namespace OpenViBE
 			 *
 			 * This function calls the onUninitialize main function of the plugin module.
 			 */
-			virtual bool uninitialize(void) = 0;
+			virtual bool uninitialize() = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginModule)
 		};

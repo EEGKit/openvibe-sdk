@@ -12,7 +12,7 @@ namespace OpenViBE
 	};
 };
 
-CString::CString(void)
+CString::CString()
 {
 	m_pStringImpl = new CStringImpl();
 }
@@ -32,12 +32,12 @@ CString::CString(const char* pString)
 	}
 }
 
-CString::~CString(void)
+CString::~CString()
 {
 	delete m_pStringImpl;
 }
 
-CString::operator const char*(void) const
+CString::operator const char*() const
 {
 	return m_pStringImpl->m_sValue.c_str();
 }
@@ -103,12 +103,12 @@ bool CString::set(const char* pString)
 	return true;
 }
 
-const char* CString::toASCIIString(void) const
+const char* CString::toASCIIString() const
 {
 	return m_pStringImpl->m_sValue.c_str();
 }
 
-size_t CString::length(void) const
+size_t CString::length() const
 {
 	return m_pStringImpl->m_sValue.length();
 }

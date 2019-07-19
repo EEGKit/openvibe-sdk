@@ -8,7 +8,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
-bool CBoxAlgorithmCrop::initialize(void)
+bool CBoxAlgorithmCrop::initialize()
 {
 	CIdentifier l_oInputTypeIdentifier;
 	getStaticBoxContext().getInputType(0, l_oInputTypeIdentifier);
@@ -66,7 +66,7 @@ bool CBoxAlgorithmCrop::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmCrop::uninitialize(void)
+bool CBoxAlgorithmCrop::uninitialize()
 {
 	delete m_pMatrix;
 
@@ -85,7 +85,7 @@ bool CBoxAlgorithmCrop::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmCrop::process(void)
+bool CBoxAlgorithmCrop::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();

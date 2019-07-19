@@ -14,21 +14,21 @@ namespace EBML
 		class CReaderHelper : public IReaderHelper
 		{
 		public:
-			CReaderHelper(void);
+			CReaderHelper();
 
 			virtual uint64_t getUIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize);
 			virtual int64_t getSIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize);
 			virtual double getFloatFromChildData(const void* pBuffer, uint64_t ui64BufferSize);
 			virtual const char* getASCIIStringFromChildData(const void* pBuffer, uint64_t ui64BufferSize);
 
-			virtual void release(void);
+			virtual void release();
 
 			std::string m_sASCIIString;
 		};
 	};
 };
 
-CReaderHelper::CReaderHelper(void) {}
+CReaderHelper::CReaderHelper() {}
 
 uint64_t CReaderHelper::getUIntegerFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
@@ -109,12 +109,12 @@ const char* CReaderHelper::getASCIIStringFromChildData(const void* pBuffer, cons
 	return m_sASCIIString.c_str();
 }
 
-void CReaderHelper::release(void)
+void CReaderHelper::release()
 {
 	delete this;
 }
 
-EBML_API IReaderHelper* EBML::createReaderHelper(void)
+EBML_API IReaderHelper* EBML::createReaderHelper()
 {
 	return new CReaderHelper();
 }

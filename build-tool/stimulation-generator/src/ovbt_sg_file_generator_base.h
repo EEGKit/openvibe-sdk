@@ -7,7 +7,7 @@ class CFileGeneratorBase
 public:
 	virtual bool openFile(const char* sFilename) = 0;
 	virtual bool appendStimulation(SStimulation& rStim) = 0;
-	virtual bool closeFile(void) = 0;
+	virtual bool closeFile() = 0;
 protected:
 	std::ofstream m_oFile;
 };
@@ -18,7 +18,7 @@ class CCppDefineGenerator : public CFileGeneratorBase
 public:
 	virtual bool openFile(const char* sFilename);
 	virtual bool appendStimulation(SStimulation& rStim);
-	virtual bool closeFile(void);
+	virtual bool closeFile();
 };
 
 class CCppCodeGenerator : public CFileGeneratorBase
@@ -26,7 +26,7 @@ class CCppCodeGenerator : public CFileGeneratorBase
 public:
 	virtual bool openFile(const char* sFilename);
 	virtual bool appendStimulation(SStimulation& rStim);
-	virtual bool closeFile(void);
+	virtual bool closeFile();
 };
 
 class CMatlabGenerator : public CFileGeneratorBase
@@ -34,5 +34,5 @@ class CMatlabGenerator : public CFileGeneratorBase
 public:
 	virtual bool openFile(const char* sFilename);
 	virtual bool appendStimulation(SStimulation& rStim);
-	virtual bool closeFile(void);
+	virtual bool closeFile();
 };

@@ -22,23 +22,23 @@ namespace OpenViBE
 	{
 	public:
 
-		CKernelLoaderBase(void);
+		CKernelLoaderBase();
 
-		virtual bool initialize(void);
+		virtual bool initialize();
 		virtual bool getKernelDesc(IKernelDesc*& rpKernelDesc);
-		virtual bool uninitialize(void);
-		virtual void release(void);
+		virtual bool uninitialize();
+		virtual void release();
 
 		_IsDerivedFromClass_Final_(IKernelLoader, OV_UndefinedIdentifier)
 
-		virtual bool isOpen(void) = 0;
+		virtual bool isOpen() = 0;
 
 	protected:
 
 		CString m_sFileName;
-		bool (*onInitializeCB)(void);
+		bool (*onInitializeCB)();
 		bool (*onGetKernelDescCB)(IKernelDesc*&);
-		bool (*onUninitializeCB)(void);
+		bool (*onUninitializeCB)();
 	};
 };
 
@@ -48,9 +48,9 @@ namespace OpenViBE
 //___________________________________________________________________//
 //                                                                   //
 
-CKernelLoaderBase::CKernelLoaderBase(void) : onInitializeCB(NULL), onGetKernelDescCB(NULL), onUninitializeCB(NULL) {}
+CKernelLoaderBase::CKernelLoaderBase() : onInitializeCB(NULL), onGetKernelDescCB(NULL), onUninitializeCB(NULL) {}
 
-bool CKernelLoaderBase::initialize(void)
+bool CKernelLoaderBase::initialize()
 {
 	if (!isOpen()) { return false; }
 	if (!onInitializeCB) { return true; }
@@ -65,14 +65,14 @@ bool CKernelLoaderBase::getKernelDesc(
 	return onGetKernelDescCB(rpKernelDesc);
 }
 
-bool CKernelLoaderBase::uninitialize(void)
+bool CKernelLoaderBase::uninitialize()
 {
 	if (!isOpen()) { return false; }
 	if (!onUninitializeCB) { return true; }
 	return onUninitializeCB();
 }
 
-void CKernelLoaderBase::release(void) { delete this; }
+void CKernelLoaderBase::release() { delete this; }
 
 //___________________________________________________________________//
 //                                                                   //
@@ -85,14 +85,14 @@ namespace OpenViBE
 	{
 	public:
 
-		CKernelLoaderLinux(void);
+		CKernelLoaderLinux();
 
 		virtual bool load(const CString& sFileName, CString* pError);
 		virtual bool unload(CString* pError);
 
 	protected:
 
-		virtual bool isOpen(void);
+		virtual bool isOpen();
 
 		void* m_pFileHandle;
 	};
@@ -105,14 +105,14 @@ namespace OpenViBE
 	class CKernelLoaderWindows : public CKernelLoaderBase
 	{
 	public:
-		CKernelLoaderWindows(void);
+		CKernelLoaderWindows();
 
 		virtual bool load(const CString& sFileName, CString* pError);
 		virtual bool unload(CString* pError);
 
 	protected:
 
-		virtual bool isOpen(void);
+		virtual bool isOpen();
 
 		HMODULE m_pFileHandle;
 	};
@@ -127,7 +127,7 @@ namespace OpenViBE
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-CKernelLoaderLinux::CKernelLoaderLinux(void)
+CKernelLoaderLinux::CKernelLoaderLinux()
 	:m_pFileHandle(NULL)
 {
 }
@@ -150,8 +150,8 @@ bool CKernelLoaderLinux::load(
 		return false;
 	}
 
-	onInitializeCB=(bool (*)(void))dlsym(m_pFileHandle, "onInitialize");
-	onUninitializeCB=(bool (*)(void))dlsym(m_pFileHandle, "onUninitialize");
+	onInitializeCB=(bool (*)())dlsym(m_pFileHandle, "onInitialize");
+	onUninitializeCB=(bool (*)())dlsym(m_pFileHandle, "onUninitialize");
 	onGetKernelDescCB=(bool (*)(IKernelDesc*&))dlsym(m_pFileHandle, "onGetKernelDesc");
 	if(!onGetKernelDescCB)
 	{
@@ -183,14 +183,14 @@ bool CKernelLoaderLinux::unload(
 	return true;
 }
 
-bool CKernelLoaderLinux::isOpen(void)
+bool CKernelLoaderLinux::isOpen()
 {
 	return m_pFileHandle!=NULL;
 }
 
 #elif defined TARGET_OS_Windows
 
-CKernelLoaderWindows::CKernelLoaderWindows(void) : m_pFileHandle(NULL) {}
+CKernelLoaderWindows::CKernelLoaderWindows() : m_pFileHandle(NULL) {}
 
 bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 {
@@ -215,8 +215,8 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 		return false;
 	}
 
-	onInitializeCB    = (bool (*)(void))GetProcAddress(m_pFileHandle, "onInitialize");
-	onUninitializeCB  = (bool (*)(void))GetProcAddress(m_pFileHandle, "onUninitialize");
+	onInitializeCB    = (bool (*)())GetProcAddress(m_pFileHandle, "onInitialize");
+	onUninitializeCB  = (bool (*)())GetProcAddress(m_pFileHandle, "onUninitialize");
 	onGetKernelDescCB = (bool (*)(IKernelDesc*&))GetProcAddress(m_pFileHandle, "onGetKernelDesc");
 	if (!onGetKernelDescCB)
 	{
@@ -257,7 +257,7 @@ bool CKernelLoaderWindows::unload(
 	return true;
 }
 
-bool CKernelLoaderWindows::isOpen(void)
+bool CKernelLoaderWindows::isOpen()
 {
 	return m_pFileHandle != NULL;
 }
@@ -269,7 +269,7 @@ bool CKernelLoaderWindows::isOpen(void)
 //___________________________________________________________________//
 //                                                                   //
 
-CKernelLoader::CKernelLoader(void) : m_pKernelLoaderImpl(NULL)
+CKernelLoader::CKernelLoader() : m_pKernelLoaderImpl(NULL)
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_pKernelLoaderImpl=new CKernelLoaderLinux();
@@ -279,7 +279,7 @@ CKernelLoader::CKernelLoader(void) : m_pKernelLoaderImpl(NULL)
 #endif
 }
 
-CKernelLoader::~CKernelLoader(void) { delete m_pKernelLoaderImpl; }
+CKernelLoader::~CKernelLoader() { delete m_pKernelLoaderImpl; }
 
 bool CKernelLoader::load(const CString& sFileName, CString* pError)
 {
@@ -291,7 +291,7 @@ bool CKernelLoader::unload(CString* pError)
 	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->unload(pError) : false;
 }
 
-bool CKernelLoader::initialize(void)
+bool CKernelLoader::initialize()
 {
 	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->initialize() : false;
 }
@@ -301,7 +301,7 @@ bool CKernelLoader::getKernelDesc(IKernelDesc*& rpKernelDesc)
 	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->getKernelDesc(rpKernelDesc) : false;
 }
 
-bool CKernelLoader::uninitialize(void)
+bool CKernelLoader::uninitialize()
 {
 	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->uninitialize() : false;
 }

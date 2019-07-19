@@ -14,7 +14,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Classification;
 
-bool CBoxAlgorithmVotingClassifier::initialize(void)
+bool CBoxAlgorithmVotingClassifier::initialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -64,7 +64,7 @@ bool CBoxAlgorithmVotingClassifier::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmVotingClassifier::uninitialize(void)
+bool CBoxAlgorithmVotingClassifier::uninitialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	// IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
@@ -89,7 +89,7 @@ bool CBoxAlgorithmVotingClassifier::processInput(uint32_t ui32Index)
 	return true;
 }
 
-bool CBoxAlgorithmVotingClassifier::process(void)
+bool CBoxAlgorithmVotingClassifier::process()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();

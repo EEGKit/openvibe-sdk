@@ -60,7 +60,7 @@ namespace FS
 		static bool removeAll(const char* path);
 	private:
 
-		Files(void);
+		Files();
 	};
 }
 

@@ -17,7 +17,7 @@ namespace Socket
 		virtual bool listen(
 			uint32_t ui32Port) = 0;
 
-		virtual IConnection* accept(void) = 0;
+		virtual IConnection* accept() = 0;
 
 		/*
 		 * \brief Returns the port on the one the server is listening.
@@ -27,7 +27,7 @@ namespace Socket
 		virtual bool getSocketPort(uint32_t& port) = 0;
 	};
 
-	extern Socket_API IConnectionServer* createConnectionServer(void);
+	extern Socket_API IConnectionServer* createConnectionServer();
 };
 
 

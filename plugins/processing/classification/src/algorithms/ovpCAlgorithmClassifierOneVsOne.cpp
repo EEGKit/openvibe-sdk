@@ -53,7 +53,7 @@ bool CAlgorithmClassifierOneVsOne::initialize()
 	return CAlgorithmPairingStrategy::initialize();
 }
 
-bool CAlgorithmClassifierOneVsOne::uninitialize(void)
+bool CAlgorithmClassifierOneVsOne::uninitialize()
 {
 	if (m_pDecisionStrategyAlgorithm != NULL)
 	{
@@ -285,7 +285,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsOne::createSubClassifiers(void)
+bool CAlgorithmClassifierOneVsOne::createSubClassifiers()
 {
 	// Clear any previous ones
 	for (auto& kv : m_oSubClassifiers)
@@ -370,7 +370,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::getPairwiseDecisionConfiguration()
 	return l_pTempNode;
 }
 
-XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfiguration(void)
+XML::IXMLNode* CAlgorithmClassifierOneVsOne::saveConfiguration()
 {
 	std::stringstream l_sClassifierCount;
 	l_sClassifierCount << m_ui32NumberOfSubClassifiers;

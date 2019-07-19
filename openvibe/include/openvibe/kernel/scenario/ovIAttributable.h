@@ -23,7 +23,7 @@ namespace OpenViBE
 				const CString& sAttributeValue) = 0;
 			virtual bool removeAttribute(
 				const CIdentifier& rAttributeIdentifier) = 0;
-			virtual bool removeAllAttributes(void) = 0;
+			virtual bool removeAllAttributes() = 0;
 
 			virtual CString getAttributeValue(
 				const CIdentifier& rAttributeIdentifier) const = 0;
@@ -33,7 +33,7 @@ namespace OpenViBE
 
 			virtual bool hasAttribute(
 				const CIdentifier& rAttributeIdentifier) const = 0;
-			virtual bool hasAttributes(void) const = 0;
+			virtual bool hasAttributes() const = 0;
 
 			virtual CIdentifier getNextAttributeIdentifier(
 				const CIdentifier& rPreviousIdentifier) const = 0;

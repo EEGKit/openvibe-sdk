@@ -149,7 +149,7 @@ CScenario::CScenario(const IKernelContext& kernelContext, const CIdentifier& ide
 	this->m_oIdentifier = identifier;
 }
 
-CScenario::~CScenario(void)
+CScenario::~CScenario()
 {
 	this->clear();
 }
@@ -157,7 +157,7 @@ CScenario::~CScenario(void)
 //___________________________________________________________________//
 //                                                                   //
 
-bool CScenario::clear(void)
+bool CScenario::clear()
 {
 	this->getLogManager() << LogLevel_Debug << "Clearing scenario\n";
 

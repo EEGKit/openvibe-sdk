@@ -25,24 +25,24 @@ namespace OpenViBE
 			CMetaboxObjectDesc() { }
 
 			CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel::IScenario& metaboxScenario);
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual CString getMetaboxDescriptor(void) const { return m_MetaboxDescriptor; }
+			virtual CString getMetaboxDescriptor() const { return m_MetaboxDescriptor; }
 
-			virtual CString getName(void) const { return m_Name; }
-			virtual CString getAuthorName(void) const { return m_AuthorName; }
-			virtual CString getAuthorCompanyName(void) const { return m_AuthorCompanyName; }
-			virtual CString getShortDescription(void) const { return m_ShortDescription; }
-			virtual CString getDetailedDescription(void) const { return m_DetailedDescription; }
-			virtual CString getCategory(void) const { return m_Category; }
-			virtual CString getVersion(void) const { return m_Version; }
-			virtual CString getStockItemName(void) const { return m_StockItemName; }
-			virtual CString getAddedSoftwareVersion(void) const { return m_AddedSoftwareVersion; }
+			virtual CString getName() const { return m_Name; }
+			virtual CString getAuthorName() const { return m_AuthorName; }
+			virtual CString getAuthorCompanyName() const { return m_AuthorCompanyName; }
+			virtual CString getShortDescription() const { return m_ShortDescription; }
+			virtual CString getDetailedDescription() const { return m_DetailedDescription; }
+			virtual CString getCategory() const { return m_Category; }
+			virtual CString getVersion() const { return m_Version; }
+			virtual CString getStockItemName() const { return m_StockItemName; }
+			virtual CString getAddedSoftwareVersion() const { return m_AddedSoftwareVersion; }
 
-			virtual CString getUpdatedSoftwareVersion(void) const { return m_UpdatedSoftwareVersion; }
+			virtual CString getUpdatedSoftwareVersion() const { return m_UpdatedSoftwareVersion; }
 
-			virtual CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_Metabox; }
-			virtual Plugins::IPluginObject* create(void) { return NULL; }
+			virtual CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_Metabox; }
+			virtual Plugins::IPluginObject* create() { return NULL; }
 
 			// Handling of the virtual prototype
 

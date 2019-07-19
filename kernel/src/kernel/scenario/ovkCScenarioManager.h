@@ -15,7 +15,7 @@ namespace OpenViBE
 		public:
 
 			explicit CScenarioManager(const IKernelContext& rKernelContext);
-			virtual ~CScenarioManager(void);
+			virtual ~CScenarioManager();
 
 			virtual void cloneScenarioImportersAndExporters(const IScenarioManager& scenarioManager);
 
@@ -97,7 +97,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual CIdentifier getUnusedIdentifier(void) const;
+			virtual CIdentifier getUnusedIdentifier() const;
 
 		protected:
 

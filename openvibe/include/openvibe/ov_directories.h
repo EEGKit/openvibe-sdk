@@ -17,37 +17,37 @@ namespace OpenViBE
 	public:
 		Directories() = delete;
 
-		static CString getDistRootDir(void)
+		static CString getDistRootDir()
 		{
 			return StringDirectories::getDistRootDir().c_str();
 		}
 
-		static CString getBinDir(void)
+		static CString getBinDir()
 		{
 			return StringDirectories::getBinDir().c_str();
 		}
 
-		static CString getDataDir(void)
+		static CString getDataDir()
 		{
 			return StringDirectories::getDataDir().c_str();
 		}
 
-		static CString getLibDir(void)
+		static CString getLibDir()
 		{
 			return StringDirectories::getLibDir().c_str();
 		}
 
-		static CString getUserHomeDir(void)
+		static CString getUserHomeDir()
 		{
 			return StringDirectories::getUserHomeDir().c_str();
 		}
 
-		static CString getUserDataDir(void)
+		static CString getUserDataDir()
 		{
 			return StringDirectories::getUserDataDir().c_str();
 		}
 
-		static CString getLogDir(void)
+		static CString getLogDir()
 		{
 			return StringDirectories::getLogDir().c_str();
 		}

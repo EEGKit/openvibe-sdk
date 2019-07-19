@@ -14,18 +14,18 @@ namespace OpenViBEToolkit
 		virtual bool setLabelIdentifier(const OpenViBE::CIdentifier& rLabelIdentifier) = 0;
 		virtual bool setSampleCount(uint32_t ui32SampleCount, bool bPreserve) = 0;
 
-		virtual uint32_t getSamplingRate(void) const = 0;
-		virtual uint32_t getChannelCount(void) const = 0;
+		virtual uint32_t getSamplingRate() const = 0;
+		virtual uint32_t getChannelCount() const = 0;
 		virtual const char* getChannelName(uint32_t index) const = 0;
-		virtual OpenViBE::CIdentifier getLabelIdentifier(void) const = 0;
-		virtual uint32_t getSampleCount(void) const = 0;
-		virtual uint64_t getDuration(void) const = 0;
+		virtual OpenViBE::CIdentifier getLabelIdentifier() const = 0;
+		virtual uint32_t getSampleCount() const = 0;
+		virtual uint64_t getDuration() const = 0;
 		virtual double* getChannelSampleBuffer(uint32_t index) const = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_);
 	};
 
-	extern OVTK_API ISignalTrial* createSignalTrial(void);
+	extern OVTK_API ISignalTrial* createSignalTrial();
 	extern OVTK_API void releaseSignalTrial(ISignalTrial* trial);
 
 	// operations

@@ -17,17 +17,17 @@ CComment::CComment(const IKernelContext& rKernelContext, CScenario& rOwnerScenar
 	  , m_oIdentifier(OV_UndefinedIdentifier)
 	  , m_sText("") {}
 
-CComment::~CComment(void) {}
+CComment::~CComment() {}
 
 //___________________________________________________________________//
 //                                                                   //
 
-CIdentifier CComment::getIdentifier(void) const
+CIdentifier CComment::getIdentifier() const
 {
 	return m_oIdentifier;
 }
 
-CString CComment::getText(void) const
+CString CComment::getText() const
 {
 	return m_sText;
 }

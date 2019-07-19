@@ -40,7 +40,7 @@ using namespace OpenViBEPlugins;
 using namespace Classification;
 using namespace std;
 
-bool CBoxAlgorithmClassifierTrainer::initialize(void)
+bool CBoxAlgorithmClassifierTrainer::initialize()
 {
 	m_pClassifier = NULL;
 	m_pParameter  = NULL;
@@ -145,7 +145,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmClassifierTrainer::uninitialize(void)
+bool CBoxAlgorithmClassifierTrainer::uninitialize()
 {
 	m_oStimulationDecoder.uninitialize();
 	m_oStimulationEncoder.uninitialize();
@@ -259,7 +259,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 }
 
 
-bool CBoxAlgorithmClassifierTrainer::process(void)
+bool CBoxAlgorithmClassifierTrainer::process()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
@@ -638,7 +638,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 	return true;
 }
 
-bool CBoxAlgorithmClassifierTrainer::saveConfiguration(void)
+bool CBoxAlgorithmClassifierTrainer::saveConfiguration()
 {
 	CIdentifier l_oStrategyClassIdentifier, l_oClassifierAlgorithmClassIdentifier;
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();

@@ -16,7 +16,7 @@ namespace OpenViBE
 		public:
 
 			explicit CAlgorithmManager(const IKernelContext& rKernelContext);
-			virtual ~CAlgorithmManager(void);
+			virtual ~CAlgorithmManager();
 
 			virtual CIdentifier createAlgorithm(
 				const CIdentifier& rAlgorithmClassIdentifier);
@@ -35,7 +35,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual CIdentifier getUnusedIdentifier(void) const;
+			virtual CIdentifier getUnusedIdentifier() const;
 
 		protected:
 

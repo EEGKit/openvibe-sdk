@@ -9,7 +9,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Stimulation;
 
-bool CBoxAlgorithmTimeout::initialize(void)
+bool CBoxAlgorithmTimeout::initialize()
 {
 	m_TimeoutState = ETimeout_No;
 
@@ -34,7 +34,7 @@ bool CBoxAlgorithmTimeout::initialize(void)
 }
 /*******************************************************************************/
 
-bool CBoxAlgorithmTimeout::uninitialize(void)
+bool CBoxAlgorithmTimeout::uninitialize()
 {
 	m_StimulationEncoder.uninitialize();
 
@@ -60,7 +60,7 @@ bool CBoxAlgorithmTimeout::processClock(IMessageClock& rMessageClock)
 /*******************************************************************************/
 
 
-uint64_t CBoxAlgorithmTimeout::getClockFrequency(void)
+uint64_t CBoxAlgorithmTimeout::getClockFrequency()
 {
 	return 16LL << 32; // the box clock frequency
 }
@@ -78,7 +78,7 @@ bool CBoxAlgorithmTimeout::processInput(uint32_t ui32InputIndex)
 }
 /*******************************************************************************/
 
-bool CBoxAlgorithmTimeout::process(void)
+bool CBoxAlgorithmTimeout::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 

@@ -45,7 +45,7 @@ namespace OpenViBE
 		 * Builds up the 64 bits identifier initialized to
 		 * \c OV_UndefinedIdentifier.
 		 */
-		CIdentifier(void);
+		CIdentifier();
 		/**
 		 * \brief 32 bits integer based constructor
 		 * \param ui32Identifier1 [in] : the first part of the identifier
@@ -95,14 +95,14 @@ namespace OpenViBE
 		 * \note if this identifier is \c OV_UndefinedIdentifier, it is not incremented
 		 * \note if this idenfitier is not \c OV_UndefinedIdentifier, it can not becomre \c OV_UndefinedIdentifier after being incremented
 		 */
-		CIdentifier& operator++(void);
+		CIdentifier& operator++();
 		/**
 		 * \brief Decrements this identifier by 1
 		 * \return this identifier
 		 * \note if this identifier is \c OV_UndefinedIdentifier, it is not decremented
 		 * \note if this idenfitier is not \c OV_UndefinedIdentifier, it can not becomre \c OV_UndefinedIdentifier after being decremented
 		 */
-		CIdentifier& operator--(void);
+		CIdentifier& operator--();
 		/**
 		 * \brief Equality test operator
 		 * \param rIdentifier1 [in] : the first identifier to compare
@@ -206,7 +206,7 @@ namespace OpenViBE
 		 * \brief Converts this identifier into an OpenViBE string
 		 * \return This identifier represented as an OpenViBE string
 		 */
-		CString toString(void) const;
+		CString toString() const;
 		/**
 		 * \brief Reads a an OpenViBE string to extract this identifier
 		 * \param rString [in] : the string to convert
@@ -222,13 +222,13 @@ namespace OpenViBE
 		 *          as integers. Actually, the internal 64 bits representation may
 		 *          change, resulting in code port needs if you use this function
 		 */
-		uint64_t toUInteger(void) const;
+		uint64_t toUInteger() const;
 		/**
 		 * \brief Creates a random identifier
 		 * \return a random identifier
 		 * \note The returned identifier can not be \c OV_UndefinedIdentifier
 		 */
-		static CIdentifier random(void);
+		static CIdentifier random();
 
 	protected:
 

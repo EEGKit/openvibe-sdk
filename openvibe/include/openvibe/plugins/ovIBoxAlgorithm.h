@@ -267,9 +267,9 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual ~IBoxListener(void) { }
+			virtual ~IBoxListener() { }
 
-			virtual void release(void) { }
+			virtual void release() { }
 
 			virtual bool initialize(
 				Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }

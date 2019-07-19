@@ -20,7 +20,7 @@ namespace OpenViBE
 			explicit TBaseConfigurable(const IKernelContext& rKernelContext)
 				: IBase(rKernelContext) { }
 
-			virtual ~TBaseConfigurable(void)
+			virtual ~TBaseConfigurable()
 			{
 				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.begin();
 				while (itParameter != m_vParameter.end())

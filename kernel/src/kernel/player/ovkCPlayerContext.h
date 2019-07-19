@@ -27,25 +27,25 @@ namespace OpenViBE
 				const CIdentifier* pTargetIdentifier,
 				uint32_t ui32TargetIdentifierCount);
 
-			virtual uint64_t getCurrentTime(void) const;
-			virtual uint64_t getCurrentLateness(void) const;
-			virtual double getCurrentCPUUsage(void) const;
-			virtual double getCurrentFastForwardMaximumFactor(void) const;
+			virtual uint64_t getCurrentTime() const;
+			virtual uint64_t getCurrentLateness() const;
+			virtual double getCurrentCPUUsage() const;
+			virtual double getCurrentFastForwardMaximumFactor() const;
 
-			virtual bool stop(void);
-			virtual bool pause(void);
-			virtual bool play(void);
-			virtual bool forward(void);
-			virtual EPlayerStatus getStatus(void) const;
+			virtual bool stop();
+			virtual bool pause();
+			virtual bool play();
+			virtual bool forward();
+			virtual EPlayerStatus getStatus() const;
 
 			//@}
 
-			virtual IAlgorithmManager& getAlgorithmManager(void) const;
-			virtual IConfigurationManager& getConfigurationManager(void) const;
-			virtual ILogManager& getLogManager(void) const;
-			virtual IErrorManager& getErrorManager(void) const;
-			virtual IScenarioManager& getScenarioManager(void) const;
-			virtual ITypeManager& getTypeManager(void) const;
+			virtual IAlgorithmManager& getAlgorithmManager() const;
+			virtual IConfigurationManager& getConfigurationManager() const;
+			virtual ILogManager& getLogManager() const;
+			virtual IErrorManager& getErrorManager() const;
+			virtual IScenarioManager& getScenarioManager() const;
+			virtual ITypeManager& getTypeManager() const;
 			bool canCreatePluginObject(const CIdentifier& pluginIdentifier) const;
 			Plugins::IPluginObject* createPluginObject(const CIdentifier& pluginIdentifier) const;
 			bool releasePluginObject(Plugins::IPluginObject* pluginObject) const;

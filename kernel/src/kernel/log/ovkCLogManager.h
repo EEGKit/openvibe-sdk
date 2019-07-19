@@ -57,7 +57,7 @@ namespace OpenViBE
 
 			// This macro waits until m_oHolder is either the current thread id or unassigned
 #define GRAB_OWNERSHIP std::unique_lock<std::mutex> lock(m_oMutex); \
-	m_oCondition.wait(lock, [this](void) { return (this->m_oOwner == std::thread::id() || this->m_oOwner == std::this_thread::get_id() ); } ); \
+	m_oCondition.wait(lock, [this]() { return (this->m_oOwner == std::thread::id() || this->m_oOwner == std::this_thread::get_id() ); } ); \
 	m_oOwner = std::this_thread::get_id();
 
 			template <class T>

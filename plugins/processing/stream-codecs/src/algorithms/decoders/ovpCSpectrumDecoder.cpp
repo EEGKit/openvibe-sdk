@@ -10,7 +10,7 @@ using namespace StreamCodecs;
 // ________________________________________________________________________________________________________________
 //
 
-bool CSpectrumDecoder::initialize(void)
+bool CSpectrumDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
 
@@ -20,7 +20,7 @@ bool CSpectrumDecoder::initialize(void)
 	return true;
 }
 
-bool CSpectrumDecoder::uninitialize(void)
+bool CSpectrumDecoder::uninitialize()
 {
 	op_pFrequencyAbscissa.uninitialize();
 	op_pSamplingRate.uninitialize();
@@ -105,7 +105,7 @@ void CSpectrumDecoder::processChildData(const void* pBuffer, const uint64_t ui64
 	}
 }
 
-void CSpectrumDecoder::closeChild(void)
+void CSpectrumDecoder::closeChild()
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

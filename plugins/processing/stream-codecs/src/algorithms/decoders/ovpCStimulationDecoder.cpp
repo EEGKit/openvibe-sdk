@@ -10,7 +10,7 @@ using namespace StreamCodecs;
 // ________________________________________________________________________________________________________________
 //
 
-bool CStimulationDecoder::initialize(void)
+bool CStimulationDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
 
@@ -19,7 +19,7 @@ bool CStimulationDecoder::initialize(void)
 	return true;
 }
 
-bool CStimulationDecoder::uninitialize(void)
+bool CStimulationDecoder::uninitialize()
 {
 	op_pStimulationSet.uninitialize();
 
@@ -86,7 +86,7 @@ void CStimulationDecoder::processChildData(const void* pBuffer, const uint64_t u
 	}
 }
 
-void CStimulationDecoder::closeChild(void)
+void CStimulationDecoder::closeChild()
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

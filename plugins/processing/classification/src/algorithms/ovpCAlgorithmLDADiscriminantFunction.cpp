@@ -66,7 +66,7 @@ bool CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode* p
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmLDADiscriminantFunction::getConfiguration(void)
+XML::IXMLNode* CAlgorithmLDADiscriminantFunction::getConfiguration()
 {
 	XML::IXMLNode* l_pRootNode = XML::createNode(c_sBaseNodeName);
 

@@ -106,7 +106,7 @@ namespace
 	typedef std::shared_ptr<Dsp::Filter> (*fpCreateFilter_t)(uint64_t ui64FilterType, uint64_t ui64SmoothingSampleCount);
 }
 
-bool CBoxAlgorithmTemporalFilter::initialize(void)
+bool CBoxAlgorithmTemporalFilter::initialize()
 {
 	m_ui64FilterMethod     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_ui64FilterType       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -172,7 +172,7 @@ bool CBoxAlgorithmTemporalFilter::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmTemporalFilter::uninitialize(void)
+bool CBoxAlgorithmTemporalFilter::uninitialize()
 {
 	m_oDecoder.uninitialize();
 	m_oEncoder.uninitialize();
@@ -186,7 +186,7 @@ bool CBoxAlgorithmTemporalFilter::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmTemporalFilter::process(void)
+bool CBoxAlgorithmTemporalFilter::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();

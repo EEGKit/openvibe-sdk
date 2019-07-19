@@ -23,9 +23,7 @@ namespace
 	{
 		if (dest.size() < bufferIndex + value.size()) { return false; }
 
-		memcpy(dest.data() + bufferIndex,
-			   value.data(),
-			   value.size());
+		memcpy(dest.data() + bufferIndex, value.data(), value.size());
 
 		bufferIndex += value.size();
 
@@ -46,9 +44,7 @@ namespace
 	{
 		if (dest.size() < bufferIndex + sizeof(value)) { return false; }
 
-		memcpy(dest.data() + bufferIndex,
-			   &value,
-			   sizeof(value));
+		memcpy(dest.data() + bufferIndex, &value, sizeof(value));
 
 		bufferIndex += sizeof(value);
 
@@ -60,9 +56,7 @@ namespace
 	{
 		if (src.size() < bufferIndex + sizeof(destVariable)) { return false; }
 
-		memcpy(&destVariable,
-			   src.data() + bufferIndex,
-			   sizeof(destVariable));
+		memcpy(&destVariable, src.data() + bufferIndex, sizeof(destVariable));
 
 		return true;
 	}
@@ -84,8 +78,7 @@ namespace
 	{
 		if (src.size() < bufferIndex + size) { return false; }
 
-		string = std::string(src.begin() + static_cast<const long>(bufferIndex)
-							 , src.begin() + static_cast<const long>(bufferIndex) + static_cast<const long>(size));
+		string = std::string(src.begin() + static_cast<const long>(bufferIndex), src.begin() + static_cast<const long>(bufferIndex) + static_cast<const long>(size));
 
 		return true;
 	}
@@ -98,17 +91,13 @@ namespace
 ******************************************************************************/
 
 Header::Header()
-	: m_Type(MessageType_Unknown)
-	  , m_Id(std::numeric_limits<decltype(m_Id)>::max())
-	  , m_Size(0)
+	: m_Type(MessageType_Unknown), m_Id(std::numeric_limits<decltype(m_Id)>::max()), m_Size(0)
 {
 	m_IsValid = false;
 }
 
 Header::Header(const EMessageType type, const uint64_t id, const uint64_t size)
-	: m_Type(type)
-	  , m_Id(id)
-	  , m_Size(size)
+	: m_Type(type), m_Id(id), m_Size(size)
 {
 	m_IsValid = true;
 }
@@ -125,20 +114,11 @@ std::vector<uint8_t> Header::toBytes() const
 	return buffer;
 }
 
-void Header::setId(uint64_t id)
-{
-	m_Id = id;
-}
+void Header::setId(uint64_t id) { m_Id = id; }
 
-EMessageType Header::getType() const
-{
-	return m_Type;
-}
+EMessageType Header::getType() const { return m_Type; }
 
-uint64_t Header::getSize() const
-{
-	return m_Size;
-}
+uint64_t Header::getSize() const { return m_Size; }
 
 bool Header::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 {
@@ -170,16 +150,9 @@ bool Header::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 *
 ******************************************************************************/
 
-AuthenticationMessage::AuthenticationMessage()
-{
-	m_IsValid = false;
-}
+AuthenticationMessage::AuthenticationMessage() { m_IsValid = false; }
 
-AuthenticationMessage::AuthenticationMessage(const std::string& connectionID)
-	: m_ConnectionID(connectionID)
-{
-	m_IsValid = true;
-}
+AuthenticationMessage::AuthenticationMessage(const std::string& connectionID) : m_ConnectionID(connectionID) { m_IsValid = true; }
 
 std::vector<uint8_t> AuthenticationMessage::toBytes() const
 {
@@ -211,15 +184,9 @@ bool AuthenticationMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t
 	return true;
 }
 
-std::string AuthenticationMessage::getConnectionID()
-{
-	return m_ConnectionID;
-}
+std::string AuthenticationMessage::getConnectionID() { return m_ConnectionID; }
 
-EMessageType AuthenticationMessage::getMessageType() const
-{
-	return MessageType_Authentication;
-}
+EMessageType AuthenticationMessage::getMessageType() const { return MessageType_Authentication; }
 
 /******************************************************************************
 *
@@ -228,15 +195,13 @@ EMessageType AuthenticationMessage::getMessageType() const
 ******************************************************************************/
 
 CommunicationProtocolVersionMessage::CommunicationProtocolVersionMessage()
-	: m_MinorVersion(0)
-	  , m_MajorVersion(0)
+	: m_MinorVersion(0), m_MajorVersion(0)
 {
 	m_IsValid = false;
 }
 
 CommunicationProtocolVersionMessage::CommunicationProtocolVersionMessage(uint8_t majorVersion, uint8_t minorVersion)
-	: m_MinorVersion(minorVersion)
-	  , m_MajorVersion(majorVersion)
+	: m_MinorVersion(minorVersion), m_MajorVersion(majorVersion)
 {
 	m_IsValid = true;
 }
@@ -280,17 +245,13 @@ EMessageType CommunicationProtocolVersionMessage::getMessageType() const
 ******************************************************************************/
 
 InputOutput::InputOutput()
-	: m_Id(std::numeric_limits<decltype(m_Id)>::max())
-	  , m_Type(std::numeric_limits<decltype(m_Type)>::max())
-	  , m_Name(std::string())
+	: m_Id(std::numeric_limits<decltype(m_Id)>::max()), m_Type(std::numeric_limits<decltype(m_Type)>::max()), m_Name(std::string())
 {
 	m_IsValid = false;
 }
 
 InputOutput::InputOutput(const uint32_t id, const uint64_t type, const std::string& name)
-	: m_Id(id)
-	  , m_Type(type)
-	  , m_Name(name)
+	: m_Id(id), m_Type(type), m_Name(name)
 {
 	m_IsValid = true;
 }
@@ -329,20 +290,11 @@ bool InputOutput::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 	return true;
 }
 
-uint32_t InputOutput::getId() const
-{
-	return m_Id;
-}
+uint32_t InputOutput::getId() const { return m_Id; }
 
-uint64_t InputOutput::getType() const
-{
-	return m_Type;
-}
+uint64_t InputOutput::getType() const { return m_Type; }
 
-std::string InputOutput::getName() const
-{
-	return m_Name;
-}
+std::string InputOutput::getName() const { return m_Name; }
 
 /******************************************************************************
 *
@@ -351,19 +303,13 @@ std::string InputOutput::getName() const
 ******************************************************************************/
 
 Parameter::Parameter()
-	: m_Id(std::numeric_limits<decltype(m_Id)>::max())
-	  , m_Type(std::numeric_limits<decltype(m_Type)>::max())
-	  , m_Name(std::string())
-	  , m_Value(std::string())
+	: m_Id(std::numeric_limits<decltype(m_Id)>::max()), m_Type(std::numeric_limits<decltype(m_Type)>::max()), m_Name(std::string()), m_Value(std::string())
 {
 	m_IsValid = false;
 }
 
 Parameter::Parameter(const uint32_t id, const uint64_t type, const std::string& name, const std::string& value)
-	: m_Id(id)
-	  , m_Type(type)
-	  , m_Name(name)
-	  , m_Value(value)
+	: m_Id(id), m_Type(type), m_Name(name), m_Value(value)
 {
 	m_IsValid = true;
 }
@@ -407,25 +353,13 @@ bool Parameter::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInde
 	return true;
 }
 
-uint32_t Parameter::getId() const
-{
-	return m_Id;
-}
+uint32_t Parameter::getId() const { return m_Id; }
 
-uint64_t Parameter::getType() const
-{
-	return m_Type;
-}
+uint64_t Parameter::getType() const { return m_Type; }
 
-std::string Parameter::getName() const
-{
-	return m_Name;
-}
+std::string Parameter::getName() const { return m_Name; }
 
-std::string Parameter::getValue() const
-{
-	return m_Value;
-}
+std::string Parameter::getValue() const { return m_Value; }
 
 /******************************************************************************
  *
@@ -515,10 +449,7 @@ bool BoxDescriptionMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t
 	return true;
 }
 
-EMessageType BoxDescriptionMessage::getMessageType() const
-{
-	return MessageType_BoxInformation;
-}
+EMessageType BoxDescriptionMessage::getMessageType() const { return MessageType_BoxInformation; }
 
 bool BoxDescriptionMessage::addInput(const uint32_t id, const uint64_t type, const std::string& name)
 {
@@ -550,20 +481,11 @@ bool BoxDescriptionMessage::addParameter(const uint32_t id, const uint64_t type,
 	return true;
 }
 
-const std::vector<InputOutput>* BoxDescriptionMessage::getInputs() const
-{
-	return &m_Inputs;
-}
+const std::vector<InputOutput>* BoxDescriptionMessage::getInputs() const { return &m_Inputs; }
 
-const std::vector<InputOutput>* BoxDescriptionMessage::getOutputs() const
-{
-	return &m_Outputs;
-}
+const std::vector<InputOutput>* BoxDescriptionMessage::getOutputs() const { return &m_Outputs; }
 
-const std::vector<Parameter>* BoxDescriptionMessage::getParameters() const
-{
-	return &m_Parameters;
-}
+const std::vector<Parameter>* BoxDescriptionMessage::getParameters() const { return &m_Parameters; }
 
 /******************************************************************************
 *
@@ -577,18 +499,9 @@ const std::vector<Parameter>* BoxDescriptionMessage::getParameters() const
 *
 ******************************************************************************/
 
-LogMessage::LogMessage()
-	: m_Type(LogLevel_Unknown)
-{
-	m_IsValid = false;
-}
+LogMessage::LogMessage() : m_Type(LogLevel_Unknown) { m_IsValid = false; }
 
-LogMessage::LogMessage(const ELogLevel type, const std::string& message)
-	: m_Type(type)
-	  , m_Message(message)
-{
-	m_IsValid = true;
-}
+LogMessage::LogMessage(const ELogLevel type, const std::string& message) : m_Type(type), m_Message(message) { m_IsValid = true; }
 
 std::vector<uint8_t> LogMessage::toBytes() const
 {
@@ -629,20 +542,11 @@ bool LogMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInd
 	return true;
 }
 
-EMessageType LogMessage::getMessageType() const
-{
-	return MessageType_Log;
-}
+EMessageType LogMessage::getMessageType() const { return MessageType_Log; }
 
-ELogLevel LogMessage::getType() const
-{
-	return m_Type;
-}
+ELogLevel LogMessage::getType() const { return m_Type; }
 
-std::string LogMessage::getMessage() const
-{
-	return m_Message;
-}
+std::string LogMessage::getMessage() const { return m_Message; }
 
 /******************************************************************************
 *
@@ -651,31 +555,20 @@ std::string LogMessage::getMessage() const
 ******************************************************************************/
 
 EBMLMessage::EBMLMessage()
-	: m_IOIndex(std::numeric_limits<decltype(m_IOIndex)>::max())
-	  , m_StartTime(std::numeric_limits<decltype(m_StartTime)>::max())
-	  , m_EndTime(std::numeric_limits<decltype(m_EndTime)>::max())
+	: m_IOIndex(std::numeric_limits<decltype(m_IOIndex)>::max()), m_StartTime(std::numeric_limits<decltype(m_StartTime)>::max()), m_EndTime(std::numeric_limits<decltype(m_EndTime)>::max())
 {
 	m_IsValid = false;
 }
 
-EBMLMessage::EBMLMessage(uint32_t index,
-						 uint64_t startTime,
-						 uint64_t endTime,
-						 std::shared_ptr<const std::vector<uint8_t>> ebml)
-	: m_IOIndex(index)
-	  , m_StartTime(startTime)
-	  , m_EndTime(endTime)
-	  , m_EBML(ebml)
+EBMLMessage::EBMLMessage(uint32_t index, uint64_t startTime, uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml)
+	: m_IOIndex(index), m_StartTime(startTime), m_EndTime(endTime), m_EBML(ebml)
 {
 	m_IsValid = true;
 }
 
 std::vector<uint8_t> EBMLMessage::toBytes() const
 {
-	if (!m_IsValid)
-	{
-		return std::vector<uint8_t>();
-	}
+	if (!m_IsValid) { return std::vector<uint8_t>(); }
 
 	std::vector<uint8_t> buffer(s_MinimumSize);
 	size_t bufferIndex = 0;
@@ -685,10 +578,7 @@ std::vector<uint8_t> EBMLMessage::toBytes() const
 	copyTobuffer(buffer, bufferIndex, m_EndTime);
 	copyTobuffer(buffer, bufferIndex, static_cast<uint32_t>(m_EBML->size()));
 
-	if (!m_EBML->empty())
-	{
-		buffer.insert(buffer.end(), m_EBML->begin(), m_EBML->end());
-	}
+	if (!m_EBML->empty()) { buffer.insert(buffer.end(), m_EBML->begin(), m_EBML->end()); }
 
 	return buffer;
 }
@@ -717,30 +607,14 @@ bool EBMLMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 	return true;
 }
 
-EMessageType EBMLMessage::getMessageType() const
-{
-	return MessageType_EBML;
-}
+EMessageType EBMLMessage::getMessageType() const { return MessageType_EBML; }
 
-uint32_t EBMLMessage::getIndex() const
-{
-	return m_IOIndex;
-}
+uint32_t EBMLMessage::getIndex() const { return m_IOIndex; }
 
-uint64_t EBMLMessage::getStartTime() const
-{
-	return m_StartTime;
-}
+uint64_t EBMLMessage::getStartTime() const { return m_StartTime; }
+uint64_t EBMLMessage::getEndTime() const { return m_EndTime; }
 
-uint64_t EBMLMessage::getEndTime() const
-{
-	return m_EndTime;
-}
-
-std::shared_ptr<const std::vector<uint8_t>> EBMLMessage::getEBML() const
-{
-	return m_EBML;
-}
+std::shared_ptr<const std::vector<uint8_t>> EBMLMessage::getEBML() const { return m_EBML; }
 
 /******************************************************************************
 *
@@ -748,13 +622,9 @@ std::shared_ptr<const std::vector<uint8_t>> EBMLMessage::getEBML() const
 *
 ******************************************************************************/
 
-ErrorMessage::ErrorMessage()
-	: m_Type(Error_Unknown)
-	  , m_GuiltyId(std::numeric_limits<decltype(m_GuiltyId)>::max()) {}
+ErrorMessage::ErrorMessage() : m_Type(Error_Unknown), m_GuiltyId(std::numeric_limits<decltype(m_GuiltyId)>::max()) {}
 
-ErrorMessage::ErrorMessage(const EError error, const uint64_t guiltyId)
-	: m_Type(error)
-	  , m_GuiltyId(guiltyId) {}
+ErrorMessage::ErrorMessage(const EError error, const uint64_t guiltyId) : m_Type(error), m_GuiltyId(guiltyId) {}
 
 std::vector<uint8_t> ErrorMessage::toBytes() const
 {
@@ -783,20 +653,11 @@ bool ErrorMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferI
 	return true;
 }
 
-EMessageType ErrorMessage::getMessageType() const
-{
-	return MessageType_Error;
-}
+EMessageType ErrorMessage::getMessageType() const { return MessageType_Error; }
 
-EError ErrorMessage::getType() const
-{
-	return m_Type;
-}
+EError ErrorMessage::getType() const { return m_Type; }
 
-uint64_t ErrorMessage::getGuiltyId() const
-{
-	return m_GuiltyId;
-}
+uint64_t ErrorMessage::getGuiltyId() const { return m_GuiltyId; }
 
 /******************************************************************************
 *
@@ -804,22 +665,11 @@ uint64_t ErrorMessage::getGuiltyId() const
 *
 ******************************************************************************/
 
-std::vector<uint8_t> EndMessage::toBytes() const
-{
-	return std::vector<uint8_t>();
-}
+std::vector<uint8_t> EndMessage::toBytes() const { return std::vector<uint8_t>(); }
 
-bool EndMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
-{
-	(void)buffer;
-	(void)bufferIndex;
-	return false;
-}
+bool EndMessage::fromBytes(const std::vector<uint8_t>& /*buffer*/, size_t& /*bufferIndex*/) { return false; }
 
-EMessageType EndMessage::getMessageType() const
-{
-	return MessageType_End;
-}
+EMessageType EndMessage::getMessageType() const { return MessageType_End; }
 
 /******************************************************************************
  *
@@ -827,8 +677,7 @@ EMessageType EndMessage::getMessageType() const
  *
  ******************************************************************************/
 
-TimeMessage::TimeMessage(uint64_t time)
-	: m_Time(time) {}
+TimeMessage::TimeMessage(uint64_t time) : m_Time(time) {}
 
 std::vector<uint8_t> TimeMessage::toBytes() const
 {
@@ -855,15 +704,9 @@ bool TimeMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 	return true;
 }
 
-EMessageType TimeMessage::getMessageType() const
-{
-	return MessageType_Time;
-}
+EMessageType TimeMessage::getMessageType() const { return MessageType_Time; }
 
-uint64_t TimeMessage::getTime() const
-{
-	return m_Time;
-}
+uint64_t TimeMessage::getTime() const { return m_Time; }
 
 /******************************************************************************
 *
@@ -871,19 +714,8 @@ uint64_t TimeMessage::getTime() const
 *
 ******************************************************************************/
 
-std::vector<uint8_t> SyncMessage::toBytes() const
-{
-	return std::vector<uint8_t>();
-}
+std::vector<uint8_t> SyncMessage::toBytes() const { return std::vector<uint8_t>(); }
 
-bool SyncMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
-{
-	(void)buffer;
-	(void)bufferIndex;
-	return false;
-}
+bool SyncMessage::fromBytes(const std::vector<uint8_t>& /*buffer*/, size_t& /*bufferIndex*/) { return false; }
 
-EMessageType SyncMessage::getMessageType() const
-{
-	return MessageType_Sync;
-}
+EMessageType SyncMessage::getMessageType() const { return MessageType_Sync; }

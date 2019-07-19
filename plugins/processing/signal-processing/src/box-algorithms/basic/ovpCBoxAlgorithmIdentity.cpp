@@ -10,7 +10,7 @@ using namespace SignalProcessing;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-void CBoxAlgorithmIdentity::release(void)
+void CBoxAlgorithmIdentity::release()
 {
 	delete this;
 }
@@ -21,7 +21,7 @@ bool CBoxAlgorithmIdentity::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmIdentity::process(void)
+bool CBoxAlgorithmIdentity::process()
 {
 	const IBox* l_pStaticBoxContext = getBoxAlgorithmContext()->getStaticBoxContext();
 	IBoxIO* l_pDynamicBoxContext    = getBoxAlgorithmContext()->getDynamicBoxContext();

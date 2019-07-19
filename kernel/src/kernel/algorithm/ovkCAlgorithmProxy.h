@@ -13,11 +13,11 @@ namespace OpenViBE
 		public:
 
 			CAlgorithmProxy(const IKernelContext& rKernelContext, Plugins::IAlgorithm& rAlgorithm, const Plugins::IAlgorithmDesc& rAlgorithmDesc);
-			virtual ~CAlgorithmProxy(void);
+			virtual ~CAlgorithmProxy();
 
-			virtual Plugins::IAlgorithm& getAlgorithm(void);
-			virtual const Plugins::IAlgorithm& getAlgorithm(void) const;
-			virtual const Plugins::IAlgorithmDesc& getAlgorithmDesc(void) const;
+			virtual Plugins::IAlgorithm& getAlgorithm();
+			virtual const Plugins::IAlgorithm& getAlgorithm() const;
+			virtual const Plugins::IAlgorithmDesc& getAlgorithmDesc() const;
 
 			virtual bool addInputParameter(
 				const CIdentifier& rInputParameterIdentifier,
@@ -81,9 +81,9 @@ namespace OpenViBE
 			virtual bool removeOutputTrigger(
 				const CIdentifier& rOutputTriggerIdentifier);
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
-			virtual bool process(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
+			virtual bool process();
 			virtual bool process(
 				const CIdentifier& rTriggerIdentifier);
 

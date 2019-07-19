@@ -15,7 +15,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader(void)
+CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader()
 	: m_ReaderLib(createCSVHandler(), releaseCSVHandler)
 	  , m_LastStimulationDate(0)
 	  , m_SamplingRate(0)
@@ -23,12 +23,12 @@ CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader(void)
 	  , m_IsHeaderSent(false)
 	  , m_IsStimulationHeaderSent(false) {}
 
-uint64_t CBoxAlgorithmOVCSVFileReader::getClockFrequency(void)
+uint64_t CBoxAlgorithmOVCSVFileReader::getClockFrequency()
 {
 	return 128LL << 32; // the box clock frequency
 }
 
-bool CBoxAlgorithmOVCSVFileReader::initialize(void)
+bool CBoxAlgorithmOVCSVFileReader::initialize()
 {
 	m_SamplingRate            = 0;
 	m_IsHeaderSent            = false;
@@ -100,7 +100,7 @@ bool CBoxAlgorithmOVCSVFileReader::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileReader::uninitialize(void)
+bool CBoxAlgorithmOVCSVFileReader::uninitialize()
 {
 	m_ChannelNames.clear();
 	m_DimensionSizes.clear();
@@ -123,7 +123,7 @@ bool CBoxAlgorithmOVCSVFileReader::processClock(IMessageClock& rMessageClock)
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileReader::process(void)
+bool CBoxAlgorithmOVCSVFileReader::process()
 {
 	IMatrix* matrix = m_AlgorithmEncoder.getInputMatrix();
 

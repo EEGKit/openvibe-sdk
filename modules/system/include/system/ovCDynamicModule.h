@@ -35,8 +35,8 @@ namespace System
 			LogErrorCodes_ModuleNotFound = 10
 		};
 
-		CDynamicModule(void);
-		virtual ~CDynamicModule(void);
+		CDynamicModule();
+		virtual ~CDynamicModule();
 
 #if defined TARGET_OS_Windows
 		/**
@@ -140,7 +140,7 @@ namespace System
 		 * \sa setShouldFreeModule
 		 * \sa isLoaded
 		 */
-		bool unload(void);
+		bool unload();
 
 		/**
 		 * \brief Check if the module is loaded.
@@ -151,14 +151,14 @@ namespace System
 		 * \sa unload
 		 * \sa setShouldFreeModule
 		 */
-		bool isLoaded(void) const;
+		bool isLoaded() const;
 
 		/**
 		 * \brief Get the filename of the module.
 		 *
 		 * \return the file name of the module.
 		 */
-		const char* getFilename(void) const;
+		const char* getFilename() const;
 
 		/**
 		 * \brief Should be used to avoid the warning "Missing dll" when loading acquisition server
@@ -182,7 +182,7 @@ namespace System
 		 *
 		 * \return The error code.
 		 */
-		unsigned int getLastError(void) const;
+		unsigned int getLastError() const;
 
 		/**
 		 * \brief Get the error message corresponding to the error code.
@@ -198,7 +198,7 @@ namespace System
 		 *
 		 * \return A string with detailed information about the last error.
 		 */
-		const char* getErrorDetails(void) const;
+		const char* getErrorDetails() const;
 
 	private:
 		void* m_Handle;
@@ -211,7 +211,7 @@ namespace System
 
 		unsigned int m_ErrorMode;
 		bool m_ShouldFreeModule;
-		typedef void (*symbol_t)(void);
+		typedef void (*symbol_t)();
 
 		char m_ErrorDetails[1024];
 		mutable ELogErrorCodes m_ErrorCode;

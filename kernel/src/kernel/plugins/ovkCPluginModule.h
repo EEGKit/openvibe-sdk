@@ -13,7 +13,7 @@ namespace OpenViBE
 		public:
 
 			explicit CPluginModule(const IKernelContext& rKernelContext);
-			virtual ~CPluginModule(void);
+			virtual ~CPluginModule();
 
 			virtual bool load(
 				const CString& sName,
@@ -23,11 +23,11 @@ namespace OpenViBE
 			virtual bool getFileName(
 				CString& rFileName) const;
 
-			virtual bool initialize(void);
+			virtual bool initialize();
 			virtual bool getPluginObjectDescription(
 				uint32_t ui32Index,
 				Plugins::IPluginObjectDesc*& rpPluginObjectDescription);
-			virtual bool uninitialize(void);
+			virtual bool uninitialize();
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IPluginModule, OVK_ClassId_Kernel_Plugins_PluginModule)
 

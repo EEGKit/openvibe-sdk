@@ -21,7 +21,7 @@ namespace XML
 
 		virtual const char* getName() const;
 
-		virtual void release(void);
+		virtual void release();
 
 		//Attribute
 		virtual bool addAttribute(const char* sAttributeName, const char* sAttributeValue);
@@ -31,19 +31,19 @@ namespace XML
 		//PCDATA
 		virtual void setPCData(const char* childData);
 		virtual void appendPCData(const char* childData);
-		virtual const char* getPCData(void) const;
+		virtual const char* getPCData() const;
 
 		//Child
 		virtual void addChild(IXMLNode* pChildNode);
 		virtual IXMLNode* getChild(size_t iChildIndex) const;
 		virtual IXMLNode* getChildByName(const char* sName) const;
-		virtual size_t getChildCount(void) const;
+		virtual size_t getChildCount() const;
 
 		//XMl generation
 		virtual char* getXML(uint32_t depth = 0) const;
 
 	protected:
-		virtual ~IXMLNodeImpl(void);
+		virtual ~IXMLNodeImpl();
 
 	private:
 		std::string sanitize(const std::string& sString) const;
@@ -61,7 +61,7 @@ namespace XML
 using namespace std;
 using namespace XML;
 
-IXMLNodeImpl::~IXMLNodeImpl(void)
+IXMLNodeImpl::~IXMLNodeImpl()
 {
 	for (size_t i = 0; i < getChildCount(); ++i)
 	{
@@ -69,7 +69,7 @@ IXMLNodeImpl::~IXMLNodeImpl(void)
 	}
 }
 
-void IXMLNodeImpl::release(void)
+void IXMLNodeImpl::release()
 {
 	delete this;
 }
@@ -120,7 +120,7 @@ void IXMLNodeImpl::appendPCData(const char* childData)
 	m_bHasPCData = true;
 }
 
-const char* IXMLNodeImpl::getPCData(void) const
+const char* IXMLNodeImpl::getPCData() const
 {
 	return m_sPCData.c_str();
 }
@@ -146,7 +146,7 @@ IXMLNode* IXMLNodeImpl::getChildByName(const char* sName) const
 	return NULL;
 }
 
-size_t IXMLNodeImpl::getChildCount(void) const
+size_t IXMLNodeImpl::getChildCount() const
 {
 	return m_oNodeVector.size();
 }

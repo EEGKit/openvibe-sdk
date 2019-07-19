@@ -17,7 +17,7 @@ namespace XML
 		/**
 		 * @brief Release the handler.
 		 */
-		virtual void release(void) = 0;
+		virtual void release() = 0;
 
 		//Parsing
 		/**
@@ -49,11 +49,11 @@ namespace XML
 		 * @brief Get the description of the last error that ocurred
 		 * @return A string object containing the error description
 		 */
-		virtual std::string getLastErrorString(void) const = 0;
+		virtual std::string getLastErrorString() const = 0;
 
 	protected:
 		virtual ~IXMLHandler() { }
 	};
 
-	extern XML_API IXMLHandler* createXMLHandler(void);
+	extern XML_API IXMLHandler* createXMLHandler();
 }

@@ -36,7 +36,7 @@ bool CCppCodeGenerator::appendStimulation(SStimulation& rStim)
 }
 
 
-bool CCppCodeGenerator::closeFile(void)
+bool CCppCodeGenerator::closeFile()
 {
 	m_oFile << endl << "\treturn true;" << endl;
 	m_oFile << "}" << endl;

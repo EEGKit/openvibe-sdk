@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-bool CStreamedMatrixEncoder::initialize(void)
+bool CStreamedMatrixEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
 
@@ -18,7 +18,7 @@ bool CStreamedMatrixEncoder::initialize(void)
 	return true;
 }
 
-bool CStreamedMatrixEncoder::uninitialize(void)
+bool CStreamedMatrixEncoder::uninitialize()
 {
 	ip_pMatrix.uninitialize();
 
@@ -30,7 +30,7 @@ bool CStreamedMatrixEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CStreamedMatrixEncoder::processHeader(void)
+bool CStreamedMatrixEncoder::processHeader()
 {
 	IMatrix* l_pMatrix = ip_pMatrix;
 	bool l_bShouldSendLabels;
@@ -73,7 +73,7 @@ bool CStreamedMatrixEncoder::processHeader(void)
 	return true;
 }
 
-bool CStreamedMatrixEncoder::processBuffer(void)
+bool CStreamedMatrixEncoder::processBuffer()
 {
 	IMatrix* l_pMatrix = ip_pMatrix;
 

@@ -14,7 +14,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Stimulation;
 
-bool CBoxAlgorithmStimulationVoter::initialize(void)
+bool CBoxAlgorithmStimulationVoter::initialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -59,7 +59,7 @@ bool CBoxAlgorithmStimulationVoter::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationVoter::uninitialize(void)
+bool CBoxAlgorithmStimulationVoter::uninitialize()
 {
 	m_pDecoder->uninitialize();
 	this->getAlgorithmManager().releaseAlgorithm(*m_pDecoder);
@@ -76,7 +76,7 @@ bool CBoxAlgorithmStimulationVoter::processInput(uint32_t ui32Index)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationVoter::process(void)
+bool CBoxAlgorithmStimulationVoter::process()
 {
 	//	this->getLogManager() << LogLevel_Info << "Process called\n";
 

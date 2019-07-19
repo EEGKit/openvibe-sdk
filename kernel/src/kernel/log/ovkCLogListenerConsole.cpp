@@ -463,7 +463,7 @@ void CLogListenerConsole::log(const ELogColor eLogColor)
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-void CLogListenerConsole::applyColor(void)
+void CLogListenerConsole::applyColor()
 {
 	int l_iGotACommand=0;
 
@@ -554,7 +554,7 @@ void CLogListenerConsole::applyColor(void)
 
 #elif defined TARGET_OS_Windows
 
-void CLogListenerConsole::applyColor(void)
+void CLogListenerConsole::applyColor()
 {
 	WORD l_dwTextAttribute = 0;
 
@@ -625,7 +625,7 @@ void CLogListenerConsole::applyColor(void)
 
 #else
 
-void CLogListenerConsole::applyColor(void)
+void CLogListenerConsole::applyColor()
 {
 }
 

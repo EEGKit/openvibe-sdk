@@ -15,13 +15,13 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual uint64_t getClockFrequency(void);
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual uint64_t getClockFrequency();
+			virtual bool initialize();
+			virtual bool uninitialize();
 			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual bool process(void);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ClockStimulator);
 
@@ -40,21 +40,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Clock stimulator"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Periodic stimulation generator"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Triggers stimulation at fixed frequency"); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Stimulation"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Clock stimulator"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Periodic stimulation generator"); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Triggers stimulation at fixed frequency"); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Stimulation"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ClockStimulator; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmClockStimulator; }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_ClockStimulator; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmClockStimulator; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{

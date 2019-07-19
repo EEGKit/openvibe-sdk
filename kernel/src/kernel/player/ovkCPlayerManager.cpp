@@ -68,7 +68,7 @@ CIdentifier CPlayerManager::getNextPlayerIdentifier(
 	return getNextIdentifier<CPlayer*>(m_vPlayer, rPreviousIdentifier);
 }
 
-CIdentifier CPlayerManager::getUnusedIdentifier(void) const
+CIdentifier CPlayerManager::getUnusedIdentifier() const
 {
 	uint64_t l_ui64Identifier = System::Math::randomUInteger64();
 	CIdentifier l_oResult;

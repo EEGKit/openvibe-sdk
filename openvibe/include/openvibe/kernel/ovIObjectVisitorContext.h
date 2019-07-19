@@ -21,27 +21,27 @@ namespace OpenViBE
 			 * \brief Gets a reference on the current algorithm manager
 			 * \return a reference on the current algorithm manager
 			 */
-			virtual IAlgorithmManager& getAlgorithmManager(void) const = 0;
+			virtual IAlgorithmManager& getAlgorithmManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current configuration manager
 			 * \return a reference on the current configuration manager
 			 */
-			virtual IConfigurationManager& getConfigurationManager(void) const = 0;
+			virtual IConfigurationManager& getConfigurationManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current type manager
 			 * \return a reference on the current type manager
 			 */
-			virtual ITypeManager& getTypeManager(void) const = 0;
+			virtual ITypeManager& getTypeManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current log manager
 			 * \return a reference on the current log manager
 			 */
-			virtual ILogManager& getLogManager(void) const = 0;
+			virtual ILogManager& getLogManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current error manager
 			 * \return a reference on the current error manager
 			 */
-			virtual IErrorManager& getErrorManager(void) const = 0;
+			virtual IErrorManager& getErrorManager() const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_ObjectVisitorContext)
 		};

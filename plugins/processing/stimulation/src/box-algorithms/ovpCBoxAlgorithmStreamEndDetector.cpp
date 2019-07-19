@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Stimulation;
 
-bool CBoxAlgorithmStreamEndDetector::initialize(void)
+bool CBoxAlgorithmStreamEndDetector::initialize()
 {
 	m_StimulationIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), id_SettingStimulationName());
 
@@ -30,7 +30,7 @@ bool CBoxAlgorithmStreamEndDetector::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmStreamEndDetector::uninitialize(void)
+bool CBoxAlgorithmStreamEndDetector::uninitialize()
 {
 	m_StructureDecoder.uninitialize();
 	m_StimulationEncoder.uninitialize();
@@ -44,7 +44,7 @@ bool CBoxAlgorithmStreamEndDetector::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmStreamEndDetector::process(void)
+bool CBoxAlgorithmStreamEndDetector::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 

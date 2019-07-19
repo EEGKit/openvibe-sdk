@@ -24,16 +24,16 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CEBMLBaseEncoder(void);
+			CEBMLBaseEncoder();
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
-			virtual bool process(void);
-			virtual bool processHeader(void) { return true; }
-			virtual bool processBuffer(void) { return true; }
-			virtual bool processEnd(void) { return true; }
+			virtual bool initialize();
+			virtual bool uninitialize();
+			virtual bool process();
+			virtual bool processHeader() { return true; }
+			virtual bool processBuffer() { return true; }
+			virtual bool processEnd() { return true; }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseStreamEncoder);
 

@@ -12,11 +12,11 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-CBoxAlgorithmCSVFileWriter::CBoxAlgorithmCSVFileWriter(void)
+CBoxAlgorithmCSVFileWriter::CBoxAlgorithmCSVFileWriter()
 	: m_fpRealProcess(NULL)
 	  , m_pStreamDecoder(NULL) {}
 
-bool CBoxAlgorithmCSVFileWriter::initialize(void)
+bool CBoxAlgorithmCSVFileWriter::initialize()
 {
 	this->getStaticBoxContext().getInputType(0, m_oTypeIdentifier);
 
@@ -72,7 +72,7 @@ bool CBoxAlgorithmCSVFileWriter::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileWriter::uninitialize(void)
+bool CBoxAlgorithmCSVFileWriter::uninitialize()
 {
 	if (m_oFileStream.is_open())
 	{
@@ -113,7 +113,7 @@ bool CBoxAlgorithmCSVFileWriter::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileWriter::process(void)
+bool CBoxAlgorithmCSVFileWriter::process()
 {
 	if (!m_oFileStream.is_open())
 	{
@@ -122,7 +122,7 @@ bool CBoxAlgorithmCSVFileWriter::process(void)
 	return (this->*m_fpRealProcess)();
 }
 
-bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
+bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
@@ -276,7 +276,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix(void)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileWriter::process_stimulation(void)
+bool CBoxAlgorithmCSVFileWriter::process_stimulation()
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 

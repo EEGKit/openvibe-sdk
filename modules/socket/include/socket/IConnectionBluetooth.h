@@ -22,18 +22,18 @@ namespace Socket
 		 * \brief Return the input serial pending byte count.
 		 * \return The number of pending byte.
 		 */
-		virtual uint32_t getPendingByteCount(void) = 0;
+		virtual uint32_t getPendingByteCount() = 0;
 
 		/**
 		 * \brief Flush the input serial buffer.
 		 * \return If the function succeeds, the return value is true, else false.
 		 */
-		virtual const char* getLastError(void) const = 0;
+		virtual const char* getLastError() const = 0;
 
 		/**
 		 * \brief Clear the last error registered.
 		 */
-		virtual void clearError(void) = 0;
+		virtual void clearError() = 0;
 
 		/** 
 		 * \brief List the paired bluetooth devices: Name and Bluetooth MAC address.
@@ -89,5 +89,5 @@ namespace Socket
 #endif
 	};
 
-	extern Socket_API IConnectionBluetooth* createConnectionBluetooth(void);
+	extern Socket_API IConnectionBluetooth* createConnectionBluetooth();
 };

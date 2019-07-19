@@ -14,16 +14,16 @@ using namespace Tools;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-CBoxAlgorithmEBMLStreamSpy::CBoxAlgorithmEBMLStreamSpy(void)
+CBoxAlgorithmEBMLStreamSpy::CBoxAlgorithmEBMLStreamSpy()
 	: m_pReader(NULL)
 	  , m_pReaderHelper(NULL) {}
 
-void CBoxAlgorithmEBMLStreamSpy::release(void)
+void CBoxAlgorithmEBMLStreamSpy::release()
 {
 	delete this;
 }
 
-bool CBoxAlgorithmEBMLStreamSpy::initialize(void)
+bool CBoxAlgorithmEBMLStreamSpy::initialize()
 {
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();
 
@@ -95,7 +95,7 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmEBMLStreamSpy::uninitialize(void)
+bool CBoxAlgorithmEBMLStreamSpy::uninitialize()
 {
 	m_pReaderHelper->release();
 	m_pReaderHelper = NULL;
@@ -244,7 +244,7 @@ void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const uin
 	getLogManager() << "\n";
 }
 
-void CBoxAlgorithmEBMLStreamSpy::closeChild(void)
+void CBoxAlgorithmEBMLStreamSpy::closeChild()
 {
 	m_vNodes.pop();
 }
@@ -255,7 +255,7 @@ bool CBoxAlgorithmEBMLStreamSpy::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmEBMLStreamSpy::process(void)
+bool CBoxAlgorithmEBMLStreamSpy::process()
 {
 	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();

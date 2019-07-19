@@ -12,11 +12,11 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
-CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer(void) : m_TrainStimulationId(0),
+CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer() : m_TrainStimulationId(0),
 															 m_FilterDimension(0),
 															 m_SaveAsBoxConfig(false) {}
 
-bool CBoxAlgorithmXDAWNTrainer::initialize(void)
+bool CBoxAlgorithmXDAWNTrainer::initialize()
 {
 	m_TrainStimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_FilterFilename     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -61,7 +61,7 @@ bool CBoxAlgorithmXDAWNTrainer::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmXDAWNTrainer::uninitialize(void)
+bool CBoxAlgorithmXDAWNTrainer::uninitialize()
 {
 	m_StimDecoder.uninitialize();
 	m_SignalDecoder[0].uninitialize();
@@ -81,7 +81,7 @@ bool CBoxAlgorithmXDAWNTrainer::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmXDAWNTrainer::process(void)
+bool CBoxAlgorithmXDAWNTrainer::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 

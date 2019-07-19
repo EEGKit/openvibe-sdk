@@ -9,7 +9,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Streaming;
 
-bool CBoxAlgorithmSignalMerger::initialize(void)
+bool CBoxAlgorithmSignalMerger::initialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -23,7 +23,7 @@ bool CBoxAlgorithmSignalMerger::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmSignalMerger::uninitialize(void)
+bool CBoxAlgorithmSignalMerger::uninitialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -82,7 +82,7 @@ bool CBoxAlgorithmSignalMerger::processInput(uint32_t index)
 	return true;
 }
 
-bool CBoxAlgorithmSignalMerger::process(void)
+bool CBoxAlgorithmSignalMerger::process()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();

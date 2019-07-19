@@ -96,7 +96,7 @@ namespace OpenViBE
 			 * call any of the plugin functions after release is
 			 * called.
 			 */
-			virtual void release(void) = 0;
+			virtual void release() = 0;
 
 			//@}
 			/** \name Creation process */
@@ -110,8 +110,8 @@ namespace OpenViBE
 			 * descriptor. It should return the concrete class
 			 * identifier of the plugin object itself.
 			 */
-			virtual CIdentifier getCreatedClass(void) const = 0;
-			virtual CIdentifier getCreatedClassIdentifier(void) const { return this->getCreatedClass(); }
+			virtual CIdentifier getCreatedClass() const = 0;
+			virtual CIdentifier getCreatedClassIdentifier() const { return this->getCreatedClass(); }
 			/**
 			 * \brief Creates the plugin object itself
 			 * \return the created object.
@@ -121,7 +121,7 @@ namespace OpenViBE
 			 * platform then uses the IObject::isDerivedFromClass
 			 * method to use the plugin correctly.
 			 */
-			virtual IPluginObject* create(void) = 0;
+			virtual IPluginObject* create() = 0;
 
 			//@}
 			/** \name Textual plugin object description and information */
@@ -133,28 +133,28 @@ namespace OpenViBE
 			 *
 			 * Default implementation simply returns empty string.
 			 */
-			virtual CString getName(void) const { return CString("no name"); }
+			virtual CString getName() const { return CString("no name"); }
 			/**
 			 * \brief Gets the author name for this plugin
 			 * \return The author name for this plugin.
 			 *
 			 * Default implementation simply returns "no name".
 			 */
-			virtual CString getAuthorName(void) const { return CString("unknown"); }
+			virtual CString getAuthorName() const { return CString("unknown"); }
 			/**
 			 * \brief Gets the author company name for this plugin
 			 * \return The author company name for this plugin.
 			 *
 			 * Default implementation simply returns "unknown".
 			 */
-			virtual CString getAuthorCompanyName(void) const { return CString("unknown"); }
+			virtual CString getAuthorCompanyName() const { return CString("unknown"); }
 			/**
 			 * \brief Gets a short description of the plugin
 			 * \return A short description of the plugin.
 			 *
 			 * Default implementation simply returns "unknown".
 			 */
-			virtual CString getShortDescription(void) const { return CString(""); }
+			virtual CString getShortDescription() const { return CString(""); }
 			/**
 			 * \brief Gets a detailed description of the plugin
 			 * \return A detailed description of the plugin.
@@ -164,7 +164,7 @@ namespace OpenViBE
 			 * \note You can use std::endl to have the description
 			 *       on several lines when needed.
 			 */
-			virtual CString getDetailedDescription(void) const { return CString(""); }
+			virtual CString getDetailedDescription() const { return CString(""); }
 			/**
 			 * \brief Gets a basic category of the plugin
 			 * \return the category tokens of the plugin
@@ -174,14 +174,14 @@ namespace OpenViBE
 			 *
 			 * Default implementation returns "unknown".
 			 */
-			virtual CString getCategory(void) const { return CString("unknown"); }
+			virtual CString getCategory() const { return CString("unknown"); }
 			/**
 			 * \brief Gets the version of the plugin
 			 * \return the version of the plugin.
 			 *
 			 * Default implementation simply returns "unknown".
 			 */
-			virtual CString getVersion(void) const { return CString("unknown"); }
+			virtual CString getVersion() const { return CString("unknown"); }
 			/**
 			 * \brief Gets the component in which the plugin is defined
 			 *
@@ -193,7 +193,7 @@ namespace OpenViBE
 			 * \return a string identifier of the component
 			 * \retval "unknown" if not redefined
 			 */
-			virtual CString getSoftwareComponent(void) const { return CString("unknown"); }
+			virtual CString getSoftwareComponent() const { return CString("unknown"); }
 			/**
 			 * \brief Gets the version of the software in the one the plugin was added
 			 * \return the version of the software in the one the plugin was added.
@@ -201,7 +201,7 @@ namespace OpenViBE
 			 *
 			 * \sa getSoftwareComponent
 			 */
-			virtual CString getAddedSoftwareVersion(void) const { return CString("unknown"); }
+			virtual CString getAddedSoftwareVersion() const { return CString("unknown"); }
 			/**
 			 * \brief Gets the version of the software in the one the plugin was last updated
 			 * \return the version of the software in the one the plugin was last updated
@@ -209,7 +209,7 @@ namespace OpenViBE
 			 *
 			 *  \sa getSoftwareComponent
 			 */
-			virtual CString getUpdatedSoftwareVersion(void) const { return CString("unknown"); }
+			virtual CString getUpdatedSoftwareVersion() const { return CString("unknown"); }
 			/**
 			 * \brief Tests whether the plugin has a given functionality
 			 * \param ePF [in] : functionality of interest

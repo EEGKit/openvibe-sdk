@@ -18,22 +18,22 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmSignalAverage(void);
+			CBoxAlgorithmSignalAverage();
 
-			virtual void release(void);
+			virtual void release();
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
 
 			virtual bool processInput(uint32_t ui32InputIndex);
 
-			virtual bool process(void);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_SignalAverage)
 
 		public:
 
-			virtual void computeAverage(void);
+			virtual void computeAverage();
 
 		public:
 
@@ -49,20 +49,20 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Signal average"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Bruno Renier"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Computes the average of each input buffer."); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Signal processing/Averaging"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("0.5"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			virtual void release() { }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Signal average"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Bruno Renier"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Computes the average of each input buffer."); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Signal processing/Averaging"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("0.5"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_SignalAverage; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmSignalAverage(); }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_SignalAverage; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmSignalAverage(); }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{

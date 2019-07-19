@@ -9,7 +9,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Tools;
 
-bool CBoxAlgorithmMatrixValidityChecker::initialize(void)
+bool CBoxAlgorithmMatrixValidityChecker::initialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -41,7 +41,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmMatrixValidityChecker::uninitialize(void)
+bool CBoxAlgorithmMatrixValidityChecker::uninitialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
@@ -61,7 +61,7 @@ bool CBoxAlgorithmMatrixValidityChecker::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmMatrixValidityChecker::process(void)
+bool CBoxAlgorithmMatrixValidityChecker::process()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();

@@ -18,12 +18,12 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			void release(void) { delete this; }
+			void release() { delete this; }
 
-			bool initialize(void);
-			bool uninitialize(void);
+			bool initialize();
+			bool uninitialize();
 			bool processInput(uint32_t ui32InputIndex);
-			bool process(void);
+			bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationMultiplexer);
 
@@ -69,23 +69,23 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			void release(void) { }
+			void release() { }
 
-			OpenViBE::CString getName(void) const { return OpenViBE::CString("Stimulation multiplexer"); }
-			OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Merges several stimulation streams into one."); }
-			OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("The stimulations are ordered according to their start date. Thus each time all the input have chunks covering a period of time, a new output chunk is sent. This box may eventually produce output chunk reflecting a different duration depending on the inputs."); }
-			OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Streaming"); }
-			OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.1"); }
-			OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-sort-ascending"); }
-			OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getName() const { return OpenViBE::CString("Stimulation multiplexer"); }
+			OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Merges several stimulation streams into one."); }
+			OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("The stimulations are ordered according to their start date. Thus each time all the input have chunks covering a period of time, a new output chunk is sent. This box may eventually produce output chunk reflecting a different duration depending on the inputs."); }
+			OpenViBE::CString getCategory() const { return OpenViBE::CString("Streaming"); }
+			OpenViBE::CString getVersion() const { return OpenViBE::CString("1.1"); }
+			OpenViBE::CString getStockItemName() const { return OpenViBE::CString("gtk-sort-ascending"); }
+			OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
 
-			OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StimulationMultiplexer; }
-			OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmStimulationMultiplexer; }
-			OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmStimulationMultiplexerListener; }
+			OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_StimulationMultiplexer; }
+			OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmStimulationMultiplexer; }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const { return new CBoxAlgorithmStimulationMultiplexerListener; }
 			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const

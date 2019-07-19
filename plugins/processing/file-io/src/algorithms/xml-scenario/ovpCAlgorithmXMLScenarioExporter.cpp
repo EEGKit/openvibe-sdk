@@ -15,14 +15,14 @@ using namespace std;
 //___________________________________________________________________//
 //                                                                   //
 
-CAlgorithmXMLScenarioExporter::CAlgorithmXMLScenarioExporter(void)
+CAlgorithmXMLScenarioExporter::CAlgorithmXMLScenarioExporter()
 	: m_pWriter(NULL)
 	  , m_pMemoryBuffer(NULL)
 {
 	m_pWriter = createWriter(*this);
 }
 
-CAlgorithmXMLScenarioExporter::~CAlgorithmXMLScenarioExporter(void)
+CAlgorithmXMLScenarioExporter::~CAlgorithmXMLScenarioExporter()
 {
 	m_pWriter->release();
 }

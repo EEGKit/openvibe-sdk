@@ -38,7 +38,7 @@ namespace
 	}
 };
 
-bool CBoxAlgorithmFrequencyBandSelector::initialize(void)
+bool CBoxAlgorithmFrequencyBandSelector::initialize()
 {
 	CString l_sSettingValue             = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	std::vector<std::string> l_vSetting = split(l_sSettingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
@@ -113,7 +113,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmFrequencyBandSelector::uninitialize(void)
+bool CBoxAlgorithmFrequencyBandSelector::uninitialize()
 {
 	op_pMemoryBuffer.uninitialize();
 	ip_pFrequencyAbscissa.uninitialize();
@@ -140,7 +140,7 @@ bool CBoxAlgorithmFrequencyBandSelector::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmFrequencyBandSelector::process(void)
+bool CBoxAlgorithmFrequencyBandSelector::process()
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 

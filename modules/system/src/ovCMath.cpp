@@ -30,7 +30,7 @@ public:
 
 	explicit RandomGenerator(uint32_t seed = 1) : l_ui32NextValue(seed) {}
 
-	int32_t rand(void)
+	int32_t rand()
 	{
 		// Pretty much C99 convention and parameters for a Linear Congruential Generator
 		l_ui32NextValue = (l_ui32NextValue * 1103515245 + 12345) & l_ui32RandMax;
@@ -42,7 +42,7 @@ public:
 		l_ui32NextValue = seed;
 	}
 
-	uint32_t getSeed(void) const
+	uint32_t getSeed() const
 	{
 		return l_ui32NextValue;
 	}
@@ -61,22 +61,22 @@ bool Math::initializeRandomMachine(const uint64_t ui64RandomSeed)
 	return true;
 }
 
-uint8_t Math::randomUInteger8(void)
+uint8_t Math::randomUInteger8()
 {
 	return static_cast<uint8_t>(randomUInteger64());
 }
 
-uint16_t Math::randomUInteger16(void)
+uint16_t Math::randomUInteger16()
 {
 	return static_cast<uint16_t>(randomUInteger64());
 }
 
-uint32_t Math::randomUInteger32(void)
+uint32_t Math::randomUInteger32()
 {
 	return static_cast<uint32_t>(randomUInteger64());
 }
 
-uint64_t Math::randomUInteger64(void)
+uint64_t Math::randomUInteger64()
 {
 	const uint64_t r1 = g_oRandomGenerator.rand();
 	const uint64_t r2 = g_oRandomGenerator.rand();
@@ -96,27 +96,27 @@ uint32_t Math::randomUInteger32WithCeiling(uint32_t ui32upperLimit)
 	return l_ui32ReturnValue;
 }
 
-int8_t Math::randomSInteger8(void)
+int8_t Math::randomSInteger8()
 {
 	return static_cast<int8_t>(randomUInteger64());
 }
 
-int16_t Math::randomSInteger16(void)
+int16_t Math::randomSInteger16()
 {
 	return static_cast<int16_t>(randomUInteger64());
 }
 
-int32_t Math::randomSInteger32(void)
+int32_t Math::randomSInteger32()
 {
 	return static_cast<int32_t>(randomUInteger64());
 }
 
-int64_t Math::randomSInteger64(void)
+int64_t Math::randomSInteger64()
 {
 	return static_cast<int64_t>(randomUInteger64());
 }
 
-float Math::randomFloat32(void)
+float Math::randomFloat32()
 {
 	const uint32_t r = randomUInteger32();
 	float fr;
@@ -124,13 +124,13 @@ float Math::randomFloat32(void)
 	return fr;
 }
 
-float Math::randomFloat32BetweenZeroAndOne(void)
+float Math::randomFloat32BetweenZeroAndOne()
 {
 	const float fr = static_cast<float>(g_oRandomGenerator.rand()) / static_cast<float>(g_oRandomGenerator.l_ui32RandMax);
 	return fr;
 }
 
-double Math::randomFloat64(void)
+double Math::randomFloat64()
 {
 	const uint64_t r = randomUInteger64();
 	double fr;

@@ -23,7 +23,7 @@ namespace OpenViBE
 			/**
 			 * \brief Clears the content of this configuration manager
 			 */
-			virtual void clear(void) = 0;
+			virtual void clear() = 0;
 
 			/**
 			 * \brief Parses a configuration file and adds its content as token configuration

@@ -29,8 +29,8 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual bool process(void);
-		virtual void release(void) { delete this; }
+		virtual bool process();
+		virtual void release() { delete this; }
 
 		virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) = 0;
 
@@ -40,12 +40,12 @@ namespace OpenViBEToolkit
 										   , IVector& rDistanceValue
 										   , IVector& rProbabilityValue) = 0;
 
-		virtual XML::IXMLNode* saveConfiguration(void) = 0;
+		virtual XML::IXMLNode* saveConfiguration() = 0;
 		virtual bool loadConfiguration(XML::IXMLNode* pConfiguratioNode) = 0;
 		_IsDerivedFromClass_(CAlgorithmClassifier, OVTK_ClassId_Algorithm_PairingStrategy)
 
-		virtual uint32_t getOutputProbabilityVectorLength(void) = 0;
-		virtual uint32_t getOutputDistanceVectorLength(void) = 0;
+		virtual uint32_t getOutputProbabilityVectorLength() = 0;
+		virtual uint32_t getOutputDistanceVectorLength() = 0;
 
 
 	protected:

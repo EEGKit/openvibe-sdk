@@ -41,19 +41,19 @@ namespace
 	}
 };
 
-CBoxAlgorithmCSVFileReader::CBoxAlgorithmCSVFileReader(void)
+CBoxAlgorithmCSVFileReader::CBoxAlgorithmCSVFileReader()
 	: m_pFile(nullptr),
 	  m_ui64SamplingRate(0),
 	  m_fpRealProcess(nullptr),
 	  m_pAlgorithmEncoder(nullptr),
 	  m_bHeaderSent(false) {}
 
-uint64_t CBoxAlgorithmCSVFileReader::getClockFrequency(void)
+uint64_t CBoxAlgorithmCSVFileReader::getClockFrequency()
 {
 	return 128LL << 32; // the box clock frequency
 }
 
-bool CBoxAlgorithmCSVFileReader::initialize(void)
+bool CBoxAlgorithmCSVFileReader::initialize()
 {
 	m_ui64SamplingRate  = 0;
 	m_pAlgorithmEncoder = NULL;
@@ -83,7 +83,7 @@ bool CBoxAlgorithmCSVFileReader::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::uninitialize(void)
+bool CBoxAlgorithmCSVFileReader::uninitialize()
 {
 	if (m_pFile)
 	{
@@ -231,7 +231,7 @@ bool CBoxAlgorithmCSVFileReader::processClock(IMessageClock& rMessageClock)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process(void)
+bool CBoxAlgorithmCSVFileReader::process()
 {
 	if (m_pFile == NULL)
 	{
@@ -323,7 +323,7 @@ bool CBoxAlgorithmCSVFileReader::process(void)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_streamedMatrix(void)
+bool CBoxAlgorithmCSVFileReader::process_streamedMatrix()
 {
 	IMatrix* ip_pMatrix = ((OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputMatrix();
 
@@ -369,7 +369,7 @@ bool CBoxAlgorithmCSVFileReader::process_streamedMatrix(void)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_stimulation(void)
+bool CBoxAlgorithmCSVFileReader::process_stimulation()
 {
 	//Header
 	if (!m_bHeaderSent)
@@ -414,7 +414,7 @@ bool CBoxAlgorithmCSVFileReader::process_stimulation(void)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_signal(void)
+bool CBoxAlgorithmCSVFileReader::process_signal()
 {
 	IMatrix* ip_pMatrix = ((OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputMatrix();
 
@@ -475,7 +475,7 @@ bool CBoxAlgorithmCSVFileReader::process_signal(void)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_channelLocalisation(void)
+bool CBoxAlgorithmCSVFileReader::process_channelLocalisation()
 {
 	IMatrix* ip_pMatrix = ((OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputMatrix();
 
@@ -537,7 +537,7 @@ bool CBoxAlgorithmCSVFileReader::process_channelLocalisation(void)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_featureVector(void)
+bool CBoxAlgorithmCSVFileReader::process_featureVector()
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 	IMatrix* l_pMatrix           = ((OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputMatrix();
@@ -588,7 +588,7 @@ bool CBoxAlgorithmCSVFileReader::process_featureVector(void)
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::process_spectrum(void)
+bool CBoxAlgorithmCSVFileReader::process_spectrum()
 {
 	IMatrix* ip_pMatrix            = ((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputMatrix();
 	IMatrix* ip_pFrequencyAbscissa = ((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputFrequencyAbscissa();

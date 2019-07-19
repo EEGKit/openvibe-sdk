@@ -32,14 +32,14 @@ CPluginObjectDescEnumBoxTemplateGenerator::CPluginObjectDescEnumBoxTemplateGener
 	: CPluginObjectDescEnum(rKernelContext)
 	  , m_DocTemplateDirectory(sDocTemplateDirectory) {}
 
-bool CPluginObjectDescEnumBoxTemplateGenerator::initialize(void)
+bool CPluginObjectDescEnumBoxTemplateGenerator::initialize()
 {
 	if (!m_KernelContext.getScenarioManager().createScenario(m_ScenarioIdentifier)) { return false; }
 	m_Scenario = &m_KernelContext.getScenarioManager().getScenario(m_ScenarioIdentifier);
 	return true;
 }
 
-bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize(void)
+bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 {
 	if (!m_KernelContext.getScenarioManager().releaseScenario(m_ScenarioIdentifier)) { return false; }
 

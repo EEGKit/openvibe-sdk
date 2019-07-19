@@ -55,19 +55,19 @@ namespace OpenViBE
 		 * \return the current size of this memory buffer
 		 * \sa setSize
 		 */
-		virtual uint64_t getSize(void) const = 0;
+		virtual uint64_t getSize() const = 0;
 		/**
 		 * \brief Gets a direct pointer to the byte array for read/write access
 		 * \return a direct pointer to the byte array for read/write access
 		 * \sa getSize
 		 */
-		virtual uint8_t* getDirectPointer(void) = 0;
+		virtual uint8_t* getDirectPointer() = 0;
 		/**
 		 * \brief Gets a direct pointer to the byte array for read access
 		 * \return a direct pointer to the byte array for read access
 		 * \sa getSize
 		 */
-		virtual const uint8_t* getDirectPointer(void) const = 0;
+		virtual const uint8_t* getDirectPointer() const = 0;
 		/**
 		 * \brief Appends data to this memory buffer
 		 * \param pBuffer [in] : the buffer containing data that should be appended

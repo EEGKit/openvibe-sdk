@@ -29,7 +29,7 @@ namespace EBML
 		 *
 		 * Initializes the identifier to 0.
 		 */
-		CIdentifier(void);
+		CIdentifier();
 		/**
 		 * \brief Integer based constructor
 		 * \param ui64Identifier [in] : The value to use
@@ -132,12 +132,12 @@ namespace EBML
 		 * \brief Cast operator
 		 * \return \e the 64 bits value contained by this identifier.
 		 */
-		operator uint64_t(void) const;
+		operator uint64_t() const;
 		/**
 		 * \brief Conversion to 64 bits unsigned int (should be used instead of the cast)
 		 * \return \e the 64 bits value contained by this identifier.
 		 */
-		uint64_t toUInteger(void) const;
+		uint64_t toUInteger() const;
 
 		//@}
 

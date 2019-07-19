@@ -8,7 +8,7 @@ using namespace std;
 CPluginObjectDescEnum::CPluginObjectDescEnum(const IKernelContext& rKernelContext)
 	: m_KernelContext(rKernelContext) {}
 
-CPluginObjectDescEnum::~CPluginObjectDescEnum(void) {}
+CPluginObjectDescEnum::~CPluginObjectDescEnum() {}
 
 // Enumerate plugins by iterating over a user defined list of descriptors, used for metaboxes
 bool CPluginObjectDescEnum::enumeratePluginObjectDesc(std::vector<const IPluginObjectDesc*>& pluginDescriptors)

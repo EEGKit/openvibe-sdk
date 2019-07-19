@@ -27,12 +27,12 @@ namespace OpenViBEPlugins
 
 		public:
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
 
-			virtual bool process(void);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_ConditionedCovariance);
 
@@ -45,21 +45,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Conditioned Covariance"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Jussi T. Lindgren"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Inria"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Computes covariance with shrinkage."); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Shrinkage: {<0 = auto-estimate, [0,1] balance between prior and sample cov}. The conditioned covariance matrix may allow better accuracies with models that rely on inverting the cov matrix, in cases where the regular cov matrix is close to singular."); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Conditioned Covariance"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Jussi T. Lindgren"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Inria"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Computes covariance with shrinkage."); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Shrinkage: {<0 = auto-estimate, [0,1] balance between prior and sample cov}. The conditioned covariance matrix may allow better accuracies with models that rely on inverting the cov matrix, in cases where the regular cov matrix is close to singular."); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
 
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ConditionedCovariance; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CAlgorithmConditionedCovariance; }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_Algorithm_ConditionedCovariance; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CAlgorithmConditionedCovariance; }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{

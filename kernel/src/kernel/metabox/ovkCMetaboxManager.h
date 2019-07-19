@@ -14,7 +14,7 @@ namespace OpenViBE
 		{
 		public:
 			explicit CMetaboxManager(const IKernelContext& kernelContext);
-			virtual ~CMetaboxManager(void);
+			virtual ~CMetaboxManager();
 
 			virtual bool addMetaboxesFromFiles(const CString& fileNameWildCard);
 			virtual CIdentifier getNextMetaboxObjectDescIdentifier(const CIdentifier& previousIdentifier) const;

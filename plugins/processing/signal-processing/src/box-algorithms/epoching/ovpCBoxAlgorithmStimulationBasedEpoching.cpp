@@ -19,7 +19,7 @@ namespace
 	const int outputSignalIndex      = 0;
 }
 
-bool CBoxAlgorithmStimulationBasedEpoching::initialize(void)
+bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 {
 	m_EpochDurationInSeconds = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	double epochOffset       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -52,7 +52,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationBasedEpoching::uninitialize(void)
+bool CBoxAlgorithmStimulationBasedEpoching::uninitialize()
 {
 	m_SignalDecoder.uninitialize();
 	m_SignalEncoder.uninitialize();
@@ -61,10 +61,8 @@ bool CBoxAlgorithmStimulationBasedEpoching::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationBasedEpoching::processInput(uint32_t inputIndex)
+bool CBoxAlgorithmStimulationBasedEpoching::processInput(uint32_t /*index*/)
 {
-	(void)inputIndex;
-
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
 	return true;

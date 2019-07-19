@@ -24,7 +24,7 @@ namespace OpenViBE
 
 			CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager = NULL);
 
-			virtual void clear(void);
+			virtual void clear();
 
 			virtual bool addConfigurationFromFile(
 				const CString& rFileNameWildCard);
@@ -96,7 +96,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual CIdentifier getUnusedIdentifier(void) const;
+			virtual CIdentifier getUnusedIdentifier() const;
 
 			bool internalExpand(const std::string& sValue, std::string& sResult) const;
 			bool internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult, bool preserveBackslashes) const;
@@ -111,12 +111,12 @@ namespace OpenViBE
 			mutable uint32_t m_ui32Index;
 			mutable uint32_t m_ui32StartTime;
 
-			uint32_t getRandom(void) const;
-			uint32_t getIndex(void) const;
-			CString getTime(void) const;
-			CString getDate(void) const;
-			uint32_t getRealTime(void) const;
-			uint32_t getProcessId(void) const;
+			uint32_t getRandom() const;
+			uint32_t getIndex() const;
+			CString getTime() const;
+			CString getDate() const;
+			uint32_t getRealTime() const;
+			uint32_t getProcessId() const;
 
 		protected:
 

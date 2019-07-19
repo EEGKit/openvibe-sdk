@@ -18,13 +18,13 @@ namespace OpenViBE
 		//                                                                   //
 
 		template <class T>
-		CIdentifier TMessage<T>::getIdentifier(void) const
+		CIdentifier TMessage<T>::getIdentifier() const
 		{
 			return m_oIdentifier;
 		}
 
 		template <class T>
-		uint64_t TMessage<T>::getTime(void) const
+		uint64_t TMessage<T>::getTime() const
 		{
 			return m_ui64Time;
 		}

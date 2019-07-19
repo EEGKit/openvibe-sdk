@@ -16,7 +16,7 @@ using namespace std;
 CScenarioManager::CScenarioManager(const IKernelContext& rKernelContext)
 	: TKernelObject<IScenarioManager>(rKernelContext) {}
 
-CScenarioManager::~CScenarioManager(void)
+CScenarioManager::~CScenarioManager()
 {
 	for (map<CIdentifier, CScenario*>::iterator i = m_vScenario.begin(); i != m_vScenario.end(); ++i)
 	{
@@ -685,7 +685,7 @@ IScenario& CScenarioManager::getScenario(const CIdentifier& rScenarioIdentifier)
 	return const_cast<CScenarioManager*>(this)->getScenario(rScenarioIdentifier);
 }
 
-CIdentifier CScenarioManager::getUnusedIdentifier(void) const
+CIdentifier CScenarioManager::getUnusedIdentifier() const
 {
 	uint64_t l_ui64Identifier = (((uint64_t)rand()) << 32) + ((uint64_t)rand());
 	CIdentifier l_oResult;

@@ -16,8 +16,8 @@ namespace XML
 		virtual bool openChild(const char* sName);
 		virtual bool setChildData(const char* sData);
 		virtual bool setAttribute(const char* sAttributeName, const char* sAttributeValue);
-		virtual bool closeChild(void);
-		virtual void release(void);
+		virtual bool closeChild();
+		virtual void release();
 
 	private:
 		void sanitize(string& sString, bool escapeQuotes = true);
@@ -100,7 +100,7 @@ bool CWriter::setAttribute(const char* sAttributeName, const char* sAttributeVal
 	return true;
 }
 
-bool CWriter::closeChild(void)
+bool CWriter::closeChild()
 {
 	if (m_vNodes.empty()) { return false; }
 
@@ -119,7 +119,7 @@ bool CWriter::closeChild(void)
 	return true;
 }
 
-void CWriter::release(void)
+void CWriter::release()
 {
 	while (!m_vNodes.empty())
 	{

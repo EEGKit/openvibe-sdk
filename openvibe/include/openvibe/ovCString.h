@@ -33,7 +33,7 @@ namespace OpenViBE
 		 *
 		 * Initializes the string to an empty string.
 		 */
-		CString(void);
+		CString();
 		/**
 		 * \brief Copy constructor
 		 * \param rString [in] : The string to copy
@@ -53,7 +53,7 @@ namespace OpenViBE
 		 *
 		 * The destructor releases the std::string implementation !
 		 */
-		virtual ~CString(void);
+		virtual ~CString();
 
 		//@}
 		/** \name Operators */
@@ -65,7 +65,7 @@ namespace OpenViBE
 		 *
 		 * The implementation simply calls \c c_str().
 		 */
-		operator const char*(void) const;
+		operator const char*() const;
 		/**
 		 * \brief Affectation operator (copy)
 		 * \param rString [in] : The string to copy
@@ -154,13 +154,13 @@ namespace OpenViBE
 		 * \brief Converts this string to an ANSI/ASCII string
 		 * \return the ANSI/ASCII converted string.
 		 */
-		virtual const char* toASCIIString(void) const;
+		virtual const char* toASCIIString() const;
 
 		/**
 		 * \brief Returns length of the string
 		 * \return Length of the string
 		 */
-		virtual std::size_t length(void) const;
+		virtual std::size_t length() const;
 
 	protected:
 

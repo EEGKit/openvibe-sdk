@@ -39,7 +39,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool removeAllAttributes(void)
+			virtual bool removeAllAttributes()
 			{
 				m_vAttribute.clear();
 				return true;
@@ -79,7 +79,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool hasAttributes(void) const
+			virtual bool hasAttributes() const
 			{
 				return !m_vAttribute.empty();
 			}

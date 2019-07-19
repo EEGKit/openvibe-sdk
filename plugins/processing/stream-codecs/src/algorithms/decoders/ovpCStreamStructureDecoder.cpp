@@ -10,18 +10,18 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-CStreamStructureDecoder::CStreamStructureDecoder(void) {}
+CStreamStructureDecoder::CStreamStructureDecoder() {}
 
 // ________________________________________________________________________________________________________________
 //
 
-bool CStreamStructureDecoder::initialize(void)
+bool CStreamStructureDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
 	return true;
 }
 
-bool CStreamStructureDecoder::uninitialize(void)
+bool CStreamStructureDecoder::uninitialize()
 {
 	CEBMLBaseDecoder::uninitialize();
 	return true;
@@ -45,7 +45,7 @@ void CStreamStructureDecoder::processChildData(const void* pBuffer, const uint64
 	CEBMLBaseDecoder::processChildData(pBuffer, ui64BufferSize);
 }
 
-void CStreamStructureDecoder::closeChild(void)
+void CStreamStructureDecoder::closeChild()
 {
 	CEBMLBaseDecoder::closeChild();
 }

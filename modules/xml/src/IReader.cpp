@@ -15,11 +15,11 @@ namespace XML
 		explicit CReader(IReaderCallback& rReaderCallback);
 
 		virtual bool processData(const void* pBuffer, uint64_t ui64BufferSize);
-		virtual void release(void);
+		virtual void release();
 
 		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
 		virtual void processChildData(const char* sData);
-		virtual void closeChild(void);
+		virtual void closeChild();
 
 	protected:
 
@@ -61,7 +61,7 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 	return (l_eStatus == XML_STATUS_OK);
 }
 
-void CReader::release(void)
+void CReader::release()
 {
 	XML_ParserFree(m_pXMLParser);
 	delete this;
@@ -78,7 +78,7 @@ void CReader::processChildData(const char* sData)
 	m_sData += sData;
 }
 
-void CReader::closeChild(void)
+void CReader::closeChild()
 {
 	if (m_sData.size() != 0)
 	{

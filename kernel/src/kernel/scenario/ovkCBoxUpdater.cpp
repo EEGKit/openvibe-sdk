@@ -38,7 +38,7 @@ CBoxUpdater::CBoxUpdater(CScenario& scenario, IBox* sourceBox)
 	m_OriginalToUpdatedCorrespondence[Setting] = std::map<uint32_t, uint32_t>();
 }
 
-CBoxUpdater::~CBoxUpdater(void)
+CBoxUpdater::~CBoxUpdater()
 {
 	if (!m_KernelBox || !m_UpdatedBox)
 	{

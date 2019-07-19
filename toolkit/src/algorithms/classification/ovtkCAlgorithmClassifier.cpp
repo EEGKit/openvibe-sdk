@@ -30,7 +30,7 @@ bool CAlgorithmClassifier::uninitialize()
 	return true;
 }
 
-bool CAlgorithmClassifier::process(void)
+bool CAlgorithmClassifier::process()
 {
 	TParameterHandler<IMatrix*> ip_FeatureVector(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector));
 	TParameterHandler<IMatrix*> ip_FeatureVectorSet(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));

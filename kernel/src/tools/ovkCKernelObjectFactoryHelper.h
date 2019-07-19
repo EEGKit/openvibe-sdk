@@ -41,7 +41,7 @@ namespace OpenViBE
 
 		private:
 
-			CKernelObjectFactoryHelper(void);
+			CKernelObjectFactoryHelper();
 		};
 	};
 };

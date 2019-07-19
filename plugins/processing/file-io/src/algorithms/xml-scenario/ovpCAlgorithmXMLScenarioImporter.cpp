@@ -54,16 +54,16 @@ namespace
 	{
 	public:
 		explicit _AutoBind_(const std::string& sValue) : m_sValue(sValue) { }
-		operator CString(void) { return CString(m_sValue.c_str()); }
+		operator CString() { return CString(m_sValue.c_str()); }
 
-		operator CIdentifier(void)
+		operator CIdentifier()
 		{
 			CIdentifier l_oResult;
 			l_oResult.fromString(m_sValue.c_str());
 			return l_oResult;
 		}
 
-		operator uint32_t(void) { return atoi(m_sValue.c_str()); }
+		operator uint32_t() { return atoi(m_sValue.c_str()); }
 	protected:
 		const std::string& m_sValue;
 	};
@@ -111,7 +111,7 @@ namespace
 	};
 };
 
-CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter(void)
+CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter()
 	: m_pContext(NULL)
 	  , m_ui32Status(Status_ParsingNothing)
 	  , m_pReader(NULL)
@@ -119,7 +119,7 @@ CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter(void)
 	m_pReader = createReader(*this);
 }
 
-CAlgorithmXMLScenarioImporter::~CAlgorithmXMLScenarioImporter(void)
+CAlgorithmXMLScenarioImporter::~CAlgorithmXMLScenarioImporter()
 {
 	m_pReader->release();
 }
@@ -324,7 +324,7 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
 	}
 }
 
-void CAlgorithmXMLScenarioImporter::closeChild(void)
+void CAlgorithmXMLScenarioImporter::closeChild()
 {
 	std::string& l_sTop = m_vNodes.top();
 

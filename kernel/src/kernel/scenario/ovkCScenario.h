@@ -23,9 +23,9 @@ namespace OpenViBE
 		public:
 
 			CScenario(const IKernelContext& kernelContext, const CIdentifier& identifier);
-			~CScenario(void);
+			~CScenario();
 
-			bool clear(void);
+			bool clear();
 			bool merge(
 				const IScenario& scenario,
 				IScenarioMergeCallback* scenarioMergeCallback,
@@ -130,7 +130,7 @@ namespace OpenViBE
 				const uint32_t& targetBoxInputIndex,
 				CIdentifier& targetBoxInputIdentifier);
 
-			bool applyLocalSettings(void);
+			bool applyLocalSettings();
 			bool checkSettings(IConfigurationManager* configurationManager);
 
 			bool isBoxOutdated(const CIdentifier& rBoxIdentifier);
@@ -139,7 +139,7 @@ namespace OpenViBE
 
 			CIdentifier getNextOutdatedBoxIdentifier(const CIdentifier& previousIdentifier) const;
 
-			bool isMetabox(void);
+			bool isMetabox();
 
 			void getBoxIdentifierList(CIdentifier** identifierList, size_t* size) const;
 			void getCommentIdentifierList(CIdentifier** identifierList, size_t* size) const;

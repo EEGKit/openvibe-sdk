@@ -82,7 +82,7 @@ uint32_t CAlgorithmClassifierLDA::getOutputDistanceVectorLength()
 }
 
 
-bool CAlgorithmClassifierLDA::initialize(void)
+bool CAlgorithmClassifierLDA::initialize()
 {
 	// Initialize the Conditioned Covariance Matrix algorithm
 	m_pCovarianceAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ConditionedCovariance));
@@ -106,7 +106,7 @@ bool CAlgorithmClassifierLDA::initialize(void)
 	return CAlgorithmClassifier::initialize();
 }
 
-bool CAlgorithmClassifierLDA::uninitialize(void)
+bool CAlgorithmClassifierLDA::uninitialize()
 {
 	OV_ERROR_UNLESS_KRF(
 		m_pCovarianceAlgorithm->uninitialize(),
@@ -422,7 +422,7 @@ uint32_t CAlgorithmClassifierLDA::getClassCount()
 	return m_ui32NumClasses;
 }
 
-XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration(void)
+XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration()
 {
 	XML::IXMLNode* l_pAlgorithmNode = XML::createNode(c_sTypeNodeName);
 	l_pAlgorithmNode->addAttribute(c_sLDAConfigFileVersionAttributeName, "1");

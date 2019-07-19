@@ -14,12 +14,12 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmTimeBasedEpoching final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
 			virtual bool processInput(uint32_t ui32InputIndex);
-			virtual bool process(void);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeBasedEpoching)
 
@@ -44,21 +44,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Time based epoching"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Quentin Barthelemy"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Mensia Technologies SA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Generates signal 'slices' or 'blocks' having a specified duration and interval"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Interval can be used to control the overlap of epochs"); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Signal processing/Epoching"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("2.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-cut"); }
+			virtual void release() { }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Time based epoching"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Quentin Barthelemy"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Mensia Technologies SA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Generates signal 'slices' or 'blocks' having a specified duration and interval"); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Interval can be used to control the overlap of epochs"); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Signal processing/Epoching"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("2.0"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getStockItemName() const { return OpenViBE::CString("gtk-cut"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_TimeBasedEpoching; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmTimeBasedEpoching(); }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_TimeBasedEpoching; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmTimeBasedEpoching(); }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{

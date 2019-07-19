@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-bool CAlgorithmOVMatrixFileWriter::initialize(void)
+bool CAlgorithmOVMatrixFileWriter::initialize()
 {
 	ip_sFilename.initialize(getInputParameter(OVP_Algorithm_OVMatrixFileWriter_InputParameterId_Filename));
 	ip_pMatrix.initialize(getInputParameter(OVP_Algorithm_OVMatrixFileWriter_InputParameterId_Matrix));
@@ -15,7 +15,7 @@ bool CAlgorithmOVMatrixFileWriter::initialize(void)
 	return true;
 }
 
-bool CAlgorithmOVMatrixFileWriter::uninitialize(void)
+bool CAlgorithmOVMatrixFileWriter::uninitialize()
 {
 	ip_sFilename.uninitialize();
 	ip_pMatrix.uninitialize();
@@ -23,7 +23,7 @@ bool CAlgorithmOVMatrixFileWriter::uninitialize(void)
 	return true;
 }
 
-bool CAlgorithmOVMatrixFileWriter::process(void)
+bool CAlgorithmOVMatrixFileWriter::process()
 {
 	OV_ERROR_UNLESS_KRF(
 		OpenViBEToolkit::Tools::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()),

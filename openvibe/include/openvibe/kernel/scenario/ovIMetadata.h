@@ -25,17 +25,17 @@ namespace OpenViBE
 			/**
 			 * \return The identifier of this scenario metadata.
 			 */
-			virtual CIdentifier getIdentifier(void) const = 0;
+			virtual CIdentifier getIdentifier() const = 0;
 
 			/**
 			 * \return The type of this scenario metadata
 			 */
-			virtual CIdentifier getType(void) const = 0;
+			virtual CIdentifier getType() const = 0;
 
 			/**
 			 * \return The enclosed metadata
 			 */
-			virtual CString getData(void) const = 0;
+			virtual CString getData() const = 0;
 
 			/**
 			 * \brief Change the identifier of this metadata

@@ -65,7 +65,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			uint32_t resetMetaboxCount(void)
+			uint32_t resetMetaboxCount()
 			{
 				uint32_t returnValue = m_MetaBoxCount;
 				m_MetaBoxCount       = 0;
@@ -86,7 +86,7 @@ CMetaboxManager::CMetaboxManager(const IKernelContext& kernelContext)
 	this->getScenarioManager().registerScenarioImporter(OV_ScenarioImportContext_OnLoadMetaboxImport, ".mxb", OVP_GD_ClassId_Algorithm_XMLScenarioImporter);
 }
 
-CMetaboxManager::~CMetaboxManager(void)
+CMetaboxManager::~CMetaboxManager()
 {
 	for (auto desc : m_MetaboxObjectDesc)
 	{

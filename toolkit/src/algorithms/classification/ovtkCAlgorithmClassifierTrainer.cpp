@@ -6,7 +6,7 @@ using namespace Kernel;
 using namespace Plugins;
 using namespace OpenViBEToolkit;
 
-bool CAlgorithmClassifierTrainer::process(void)
+bool CAlgorithmClassifierTrainer::process()
 {
 	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(this->getInputParameter(OVTK_Algorithm_ClassifierTrainer_InputParameterId_FeatureVectorSet));
 	TParameterHandler<IMemoryBuffer*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_ClassifierTrainer_OutputParameterId_Configuration));

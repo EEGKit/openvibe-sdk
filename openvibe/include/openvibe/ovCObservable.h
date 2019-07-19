@@ -19,8 +19,8 @@ namespace OpenViBE
 	class OV_API CObservable
 	{
 	public:
-		CObservable(void);
-		virtual ~CObservable(void);
+		CObservable();
+		virtual ~CObservable();
 
 		/**
 		 * \brief Add the observer give in parameter in the list of observers of the object.

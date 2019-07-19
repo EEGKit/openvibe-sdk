@@ -17,8 +17,8 @@ namespace OpenViBE
 				const CString& sFileName,
 				IScenario& rScenario);
 
-			virtual CString getFileName(void) const;
-			virtual IScenario& getScenario(void) const;
+			virtual CString getFileName() const;
+			virtual IScenario& getScenario() const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IScenarioImporterContext>, OVK_ClassId_Kernel_Scenario_ScenarioImporterContext);
 

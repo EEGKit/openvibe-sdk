@@ -17,13 +17,13 @@ namespace EBML
 		{
 		public:
 
-			CWriterHelper(void);
+			CWriterHelper();
 
 			virtual bool connect(IWriter* pWriter);
-			virtual bool disconnect(void);
+			virtual bool disconnect();
 
 			virtual bool openChild(const CIdentifier& rIdentifier);
-			virtual bool closeChild(void);
+			virtual bool closeChild();
 
 			virtual bool setSIntegerAsChildData(int64_t iValue);
 			virtual bool setUIntegerAsChildData(uint64_t uiValue);
@@ -32,7 +32,7 @@ namespace EBML
 			virtual bool setBinaryAsChildData(const void* pBuffer, uint64_t ui64BufferLength);
 			virtual bool setASCIIStringAsChildData(const char* sValue);
 
-			virtual void release(void);
+			virtual void release();
 
 		protected:
 
@@ -44,7 +44,7 @@ namespace EBML
 // ________________________________________________________________________________________________________________
 //
 
-CWriterHelper::CWriterHelper(void) : m_pWriter(0) {}
+CWriterHelper::CWriterHelper() : m_pWriter(0) {}
 
 // ________________________________________________________________________________________________________________
 //
@@ -55,7 +55,7 @@ bool CWriterHelper::connect(IWriter* pWriter)
 	return m_pWriter ? true : false;
 }
 
-bool CWriterHelper::disconnect(void)
+bool CWriterHelper::disconnect()
 {
 	if (!m_pWriter) { return false; }
 	m_pWriter = 0;
@@ -70,7 +70,7 @@ bool CWriterHelper::openChild(const CIdentifier& rIdentifier)
 	return m_pWriter ? m_pWriter->openChild(rIdentifier) : false;
 }
 
-bool CWriterHelper::closeChild(void)
+bool CWriterHelper::closeChild()
 {
 	return m_pWriter ? m_pWriter->closeChild() : false;
 }
@@ -189,7 +189,7 @@ bool CWriterHelper::setASCIIStringAsChildData(const char* sValue)
 // ________________________________________________________________________________________________________________
 //
 
-void CWriterHelper::release(void)
+void CWriterHelper::release()
 {
 	delete this;
 }
@@ -197,7 +197,7 @@ void CWriterHelper::release(void)
 // ________________________________________________________________________________________________________________
 //
 
-EBML_API IWriterHelper* EBML::createWriterHelper(void)
+EBML_API IWriterHelper* EBML::createWriterHelper()
 {
 	return new CWriterHelper();
 }

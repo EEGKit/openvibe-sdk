@@ -57,17 +57,17 @@ namespace OpenViBE
 			 * \brief Gets the identifier of this box
 			 * \return The identifier of this OpenViBE box.
 			 */
-			virtual CIdentifier getIdentifier(void) const = 0;
+			virtual CIdentifier getIdentifier() const = 0;
 			/**
 			 * \brief Gets the display name of this box
 			 * \return The name of this OpenViBE box.
 			 */
-			virtual CString getName(void) const = 0;
+			virtual CString getName() const = 0;
 			/**
 			 * \brief Gets the algorithm class identifier
 			 * \return This box' algorithm class identifier
 			 */
-			virtual CIdentifier getAlgorithmClassIdentifier(void) const = 0;
+			virtual CIdentifier getAlgorithmClassIdentifier() const = 0;
 			/**
 			 * \brief Changes the identifier of this box
 			 * \param rIdentifier [in] : The new identifier
@@ -233,7 +233,7 @@ namespace OpenViBE
 			 * \brief Gets the number of inputs for this box
 			 * \return The number of inputs for this box.
 			 */
-			virtual uint32_t getInputCount(void) const = 0;
+			virtual uint32_t getInputCount() const = 0;
 
 			/**
 			 * \brief Gets an input type identifier by index
@@ -322,7 +322,7 @@ namespace OpenViBE
 			 * \brief Gets the number of outputs for this box
 			 * \return The number of outputs for this box.
 			 */
-			virtual uint32_t getOutputCount(void) const = 0;
+			virtual uint32_t getOutputCount() const = 0;
 
 			/**
 			 * \brief Gets an output type identifier by index
@@ -422,7 +422,7 @@ namespace OpenViBE
 			 * \brief Gets the number of settings for this box
 			 * \return The number of settings for this box.
 			 */
-			virtual uint32_t getSettingCount(void) const = 0;
+			virtual uint32_t getSettingCount() const = 0;
 
 			/**
 			 * \brief checks if a setting with a given name is present
@@ -691,7 +691,7 @@ namespace OpenViBE
 			 * \return \e true if it does.
 			 * \return \e false otherwise.
 			 */
-			virtual bool hasModifiableSettings(void) const = 0;
+			virtual bool hasModifiableSettings() const = 0;
 
 
 			virtual uint32_t* getModifiableSettings(uint32_t& rCount) const = 0;

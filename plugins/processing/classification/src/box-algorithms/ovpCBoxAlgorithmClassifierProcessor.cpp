@@ -164,7 +164,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	return true;
 }
 
-bool CBoxAlgorithmClassifierProcessor::initialize(void)
+bool CBoxAlgorithmClassifierProcessor::initialize()
 {
 	m_pClassifier = NULL;
 
@@ -187,7 +187,7 @@ bool CBoxAlgorithmClassifierProcessor::initialize(void)
 	return loadClassifier(l_sConfigurationFilename.toASCIIString());
 }
 
-bool CBoxAlgorithmClassifierProcessor::uninitialize(void)
+bool CBoxAlgorithmClassifierProcessor::uninitialize()
 {
 	if (m_pClassifier)
 	{
@@ -213,7 +213,7 @@ bool CBoxAlgorithmClassifierProcessor::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmClassifierProcessor::process(void)
+bool CBoxAlgorithmClassifierProcessor::process()
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 

@@ -33,13 +33,13 @@ namespace System
 		 * \brief Retrieve time in ms 
 		 * \return Elapsed time in ms since the first call to this function or zgetTime functions
 		 */
-		static uint32_t getTime(void); 
+		static uint32_t getTime(); 
 
 		/**
 		 * \brief Retrieve time in fixed point 32:32 seconds 
 		 * \return Elapsed time since the first call to the zgetTime functions or getTime.
 		 */
-		static uint64_t zgetTime(void);
+		static uint64_t zgetTime();
 
 		/**
 		 * \brief Retrieve time in fixed point 32:32 seconds 
@@ -69,6 +69,6 @@ namespace System
 
 	private:
 
-		Time(void);
+		Time();
 	};
 };

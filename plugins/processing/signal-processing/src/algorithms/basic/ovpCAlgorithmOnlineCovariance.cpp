@@ -32,16 +32,16 @@ void CAlgorithmOnlineCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager &rMgr,
 void CAlgorithmOnlineCovariance::dumpMatrix(ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 #endif
 
-bool CAlgorithmOnlineCovariance::initialize(void)
+bool CAlgorithmOnlineCovariance::initialize()
 {
 	m_ui64Count = 0;
 
 	return true;
 }
 
-bool CAlgorithmOnlineCovariance::uninitialize(void) { return true; }
+bool CAlgorithmOnlineCovariance::uninitialize() { return true; }
 
-bool CAlgorithmOnlineCovariance::process(void)
+bool CAlgorithmOnlineCovariance::process()
 {
 	// Note: The input parameters must have been set by the caller by now
 	const TParameterHandler<double> ip_f64Shrinkage(getInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage));

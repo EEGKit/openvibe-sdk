@@ -32,7 +32,7 @@ namespace OpenViBEToolkit
 	public:
 		using T::initialize;
 
-		bool uninitialize(void)
+		bool uninitialize()
 		{
 			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
@@ -53,17 +53,17 @@ namespace OpenViBEToolkit
 		}
 
 	protected:
-		bool encodeHeaderImpl(void)
+		bool encodeHeaderImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeHeader);
 		}
 
-		bool encodeBufferImpl(void)
+		bool encodeBufferImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
 
-		bool encodeEndImpl(void)
+		bool encodeEndImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeEnd);
 		}

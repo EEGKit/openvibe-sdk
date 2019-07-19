@@ -24,22 +24,22 @@ namespace OpenViBE
 				  , m_eParameterType(eParameterType)
 				  , m_oSubTypeIdentifier(rSubTypeIdentifier) { }
 
-			virtual uint64_t getParameterSize(void) const
+			virtual uint64_t getParameterSize() const
 			{
 				return sizeof(IType);
 			}
 
-			virtual EParameterType getType(void) const
+			virtual EParameterType getType() const
 			{
 				return m_eParameterType;
 			}
 
-			virtual CIdentifier getSubTypeIdentifier(void) const
+			virtual CIdentifier getSubTypeIdentifier() const
 			{
 				return m_oSubTypeIdentifier;
 			}
 
-			virtual bool clearReferenceTarget(void)
+			virtual bool clearReferenceTarget()
 			{
 				m_pValueRef     = NULL;
 				m_pParameterRef = NULL;

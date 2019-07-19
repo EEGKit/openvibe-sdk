@@ -10,29 +10,29 @@ CAlgorithmContext::CAlgorithmContext(const IKernelContext& rKernelContext, CAlgo
 	  , m_rLogManager(rKernelContext.getLogManager())
 	  , m_rAlgorithmProxy(rAlgorithmProxy) {}
 
-CAlgorithmContext::~CAlgorithmContext(void) {}
+CAlgorithmContext::~CAlgorithmContext() {}
 
-IConfigurationManager& CAlgorithmContext::getConfigurationManager(void) const
+IConfigurationManager& CAlgorithmContext::getConfigurationManager() const
 {
 	return getKernelContext().getConfigurationManager();
 }
 
-IAlgorithmManager& CAlgorithmContext::getAlgorithmManager(void) const
+IAlgorithmManager& CAlgorithmContext::getAlgorithmManager() const
 {
 	return getKernelContext().getAlgorithmManager();
 }
 
-ILogManager& CAlgorithmContext::getLogManager(void) const
+ILogManager& CAlgorithmContext::getLogManager() const
 {
 	return m_rLogManager;
 }
 
-IErrorManager& CAlgorithmContext::getErrorManager(void) const
+IErrorManager& CAlgorithmContext::getErrorManager() const
 {
 	return getKernelContext().getErrorManager();
 }
 
-ITypeManager& CAlgorithmContext::getTypeManager(void) const
+ITypeManager& CAlgorithmContext::getTypeManager() const
 {
 	return getKernelContext().getTypeManager();
 }

@@ -18,9 +18,9 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual void release(void) { delete this; }
+		virtual void release() { delete this; }
 
-		virtual bool process(void);
+		virtual bool process();
 		virtual bool train(const IFeatureVectorSet& rFeatureVectorSet) = 0;
 		virtual bool saveConfiguration(OpenViBE::IMemoryBuffer& rMemoryBuffer) = 0;
 

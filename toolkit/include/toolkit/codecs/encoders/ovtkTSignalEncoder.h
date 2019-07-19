@@ -35,7 +35,7 @@ namespace OpenViBEToolkit
 		//again... we propagate initialize from upperclass.
 		using T::initialize;
 
-		bool uninitialize(void)
+		bool uninitialize()
 		{
 			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
@@ -59,17 +59,17 @@ namespace OpenViBEToolkit
 		/*
 		The methods specific to the Signal encoder (overriding the TStreamedMatrixEncoderLocal implementations):
 		*/
-		bool encodeHeaderImpl(void)
+		bool encodeHeaderImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader);
 		}
 
-		bool encodeBufferImpl(void)
+		bool encodeBufferImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
 
-		bool encodeEndImpl(void)
+		bool encodeEndImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd);
 		}

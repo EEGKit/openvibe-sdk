@@ -11,7 +11,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
-bool CBoxAlgorithmSignalDecimation::initialize(void)
+bool CBoxAlgorithmSignalDecimation::initialize()
 {
 	m_pStreamDecoder = NULL;
 	m_pStreamEncoder = NULL;
@@ -52,7 +52,7 @@ bool CBoxAlgorithmSignalDecimation::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmSignalDecimation::uninitialize(void)
+bool CBoxAlgorithmSignalDecimation::uninitialize()
 {
 	op_pMemoryBuffer.uninitialize();
 	ip_pMatrix.uninitialize();
@@ -85,7 +85,7 @@ bool CBoxAlgorithmSignalDecimation::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmSignalDecimation::process(void)
+bool CBoxAlgorithmSignalDecimation::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();

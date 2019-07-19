@@ -9,7 +9,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Streaming;
 
-bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize(void)
+bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize()
 {
 	m_lastStartTime = 0;
 	m_lastEndTime   = 0;
@@ -18,7 +18,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmStreamedMatrixMultiplexer::uninitialize(void) { return true; }
+bool CBoxAlgorithmStreamedMatrixMultiplexer::uninitialize() { return true; }
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(uint32_t ui32InputIndex)
 {
@@ -26,7 +26,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(uint32_t ui32InputInde
 	return true;
 }
 
-bool CBoxAlgorithmStreamedMatrixMultiplexer::process(void)
+bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();

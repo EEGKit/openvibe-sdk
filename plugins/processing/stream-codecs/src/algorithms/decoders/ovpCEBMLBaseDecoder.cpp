@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-CEBMLBaseDecoder::CEBMLBaseDecoder(void)
+CEBMLBaseDecoder::CEBMLBaseDecoder()
 	: m_pEBMLReaderHelper(NULL)
 	  , m_pEBMLReader(NULL)
 	  , m_oEBMLReaderCallbackProxy(
@@ -20,7 +20,7 @@ CEBMLBaseDecoder::CEBMLBaseDecoder(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CEBMLBaseDecoder::initialize(void)
+bool CEBMLBaseDecoder::initialize()
 {
 	ip_pMemoryBufferToDecode.initialize(getInputParameter(OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode));
 
@@ -31,7 +31,7 @@ bool CEBMLBaseDecoder::initialize(void)
 	return true;
 }
 
-bool CEBMLBaseDecoder::uninitialize(void)
+bool CEBMLBaseDecoder::uninitialize()
 {
 	m_pEBMLReader->release();
 	m_pEBMLReader = NULL;
@@ -47,7 +47,7 @@ bool CEBMLBaseDecoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CEBMLBaseDecoder::process(void)
+bool CEBMLBaseDecoder::process()
 {
 	m_pEBMLReader->processData(ip_pMemoryBufferToDecode->getDirectPointer(), ip_pMemoryBufferToDecode->getSize());
 
@@ -85,4 +85,4 @@ void CEBMLBaseDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 
 void CEBMLBaseDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize) {}
 
-void CEBMLBaseDecoder::closeChild(void) {}
+void CEBMLBaseDecoder::closeChild() {}

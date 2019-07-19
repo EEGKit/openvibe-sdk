@@ -182,7 +182,7 @@ CConfigurationManager::CConfigurationManager(const IKernelContext& rKernelContex
 	m_ui32StartTime = System::Time::getTime();
 }
 
-void CConfigurationManager::clear(void)
+void CConfigurationManager::clear()
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
@@ -474,7 +474,7 @@ CString CConfigurationManager::expand(
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-CIdentifier CConfigurationManager::getUnusedIdentifier(void) const
+CIdentifier CConfigurationManager::getUnusedIdentifier() const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
@@ -944,17 +944,17 @@ uint64_t CConfigurationManager::expandAsEnumerationEntryValue(
 	return ui64FallbackValue;
 }
 
-uint32_t CConfigurationManager::getRandom(void) const
+uint32_t CConfigurationManager::getRandom() const
 {
 	return System::Math::randomUInteger32();
 }
 
-uint32_t CConfigurationManager::getIndex(void) const
+uint32_t CConfigurationManager::getIndex() const
 {
 	return m_ui32Index++;
 }
 
-CString CConfigurationManager::getTime(void) const
+CString CConfigurationManager::getTime() const
 {
 	char l_sResult[1024];
 	time_t l_oRawTime;
@@ -967,7 +967,7 @@ CString CConfigurationManager::getTime(void) const
 	return l_sResult;
 }
 
-CString CConfigurationManager::getDate(void) const
+CString CConfigurationManager::getDate() const
 {
 	char l_sResult[1024];
 	time_t l_oRawTime;
@@ -980,12 +980,12 @@ CString CConfigurationManager::getDate(void) const
 	return l_sResult;
 }
 
-uint32_t CConfigurationManager::getRealTime(void) const
+uint32_t CConfigurationManager::getRealTime() const
 {
 	return System::Time::getTime() - m_ui32StartTime;
 }
 
-uint32_t CConfigurationManager::getProcessId(void) const
+uint32_t CConfigurationManager::getProcessId() const
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	return (uint32_t)getpid();

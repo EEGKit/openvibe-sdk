@@ -8,7 +8,7 @@ CWriter::CWriter(IWriterCallback& rWriterCallback)
 	m_pWriterImplementation = createWriter(rWriterCallback);
 }
 
-CWriter::~CWriter(void)
+CWriter::~CWriter()
 {
 	m_pWriterImplementation->release();
 }
@@ -23,9 +23,9 @@ bool CWriter::setChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 	return m_pWriterImplementation->setChildData(pBuffer, ui64BufferSize);
 }
 
-bool CWriter::closeChild(void)
+bool CWriter::closeChild()
 {
 	return m_pWriterImplementation->closeChild();
 }
 
-void CWriter::release(void) {}
+void CWriter::release() {}

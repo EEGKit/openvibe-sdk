@@ -129,7 +129,7 @@ namespace OpenViBE
 CPluginManager::CPluginManager(const IKernelContext& rKernelContext)
 	: TKernelObject<IPluginManager>(rKernelContext) {}
 
-CPluginManager::~CPluginManager(void)
+CPluginManager::~CPluginManager()
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 

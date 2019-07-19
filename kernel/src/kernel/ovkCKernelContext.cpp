@@ -43,7 +43,7 @@ CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const
 	  , m_pLogListenerConsole(nullptr)
 	  , m_pLogListenerFile(nullptr) {}
 
-CKernelContext::~CKernelContext(void)
+CKernelContext::~CKernelContext()
 {
 	this->uninitialize();
 }
@@ -217,7 +217,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	return true;
 }
 
-bool CKernelContext::uninitialize(void)
+bool CKernelContext::uninitialize()
 {
 	// As releaseScenario() can call into Plugin Manager we have to clear the scenario manager
 	// before destroying the Plugin Manager. We can not destroy the Scenario Manager first
@@ -256,42 +256,42 @@ bool CKernelContext::uninitialize(void)
 	return true;
 }
 
-IAlgorithmManager& CKernelContext::getAlgorithmManager(void) const
+IAlgorithmManager& CKernelContext::getAlgorithmManager() const
 {
 	assert(m_pAlgorithmManager);
 
 	return *m_pAlgorithmManager;
 }
 
-IConfigurationManager& CKernelContext::getConfigurationManager(void) const
+IConfigurationManager& CKernelContext::getConfigurationManager() const
 {
 	assert(m_pConfigurationManager);
 
 	return *m_pConfigurationManager;
 }
 
-IKernelObjectFactory& CKernelContext::getKernelObjectFactory(void) const
+IKernelObjectFactory& CKernelContext::getKernelObjectFactory() const
 {
 	assert(m_pKernelObjectFactory);
 
 	return *m_pKernelObjectFactory;
 }
 
-IPlayerManager& CKernelContext::getPlayerManager(void) const
+IPlayerManager& CKernelContext::getPlayerManager() const
 {
 	assert(m_pPlayerManager);
 
 	return *m_pPlayerManager;
 }
 
-IPluginManager& CKernelContext::getPluginManager(void) const
+IPluginManager& CKernelContext::getPluginManager() const
 {
 	assert(m_pPluginManager);
 
 	return *m_pPluginManager;
 }
 
-IMetaboxManager& CKernelContext::getMetaboxManager(void) const
+IMetaboxManager& CKernelContext::getMetaboxManager() const
 {
 	assert(m_pMetaboxManager);
 
@@ -299,28 +299,28 @@ IMetaboxManager& CKernelContext::getMetaboxManager(void) const
 }
 
 
-IScenarioManager& CKernelContext::getScenarioManager(void) const
+IScenarioManager& CKernelContext::getScenarioManager() const
 {
 	assert(m_pScenarioManager);
 
 	return *m_pScenarioManager;
 }
 
-ITypeManager& CKernelContext::getTypeManager(void) const
+ITypeManager& CKernelContext::getTypeManager() const
 {
 	assert(m_pTypeManager);
 
 	return *m_pTypeManager;
 }
 
-ILogManager& CKernelContext::getLogManager(void) const
+ILogManager& CKernelContext::getLogManager() const
 {
 	assert(m_pLogManager);
 
 	return *m_pLogManager;
 }
 
-IErrorManager& CKernelContext::getErrorManager(void) const
+IErrorManager& CKernelContext::getErrorManager() const
 {
 	assert(m_pErrorManager);
 

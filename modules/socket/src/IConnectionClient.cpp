@@ -178,7 +178,7 @@ namespace Socket
 		}
 	};
 
-	IConnectionClient* createConnectionClient(void)
+	IConnectionClient* createConnectionClient()
 	{
 		return new CConnectionClient();
 	}

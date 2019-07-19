@@ -35,8 +35,8 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
 			virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
 			virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
 								  , double& rf64Class
@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 								  , OpenViBEToolkit::IVector& rProbabilityValue);
 			virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount);
 
-			virtual XML::IXMLNode* saveConfiguration(void);
+			virtual XML::IXMLNode* saveConfiguration();
 			virtual bool loadConfiguration(XML::IXMLNode* pConfigurationNode);
 
 			virtual uint32_t getOutputProbabilityVectorLength();
@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			virtual bool createSubClassifiers(void);
+			virtual bool createSubClassifiers();
 
 		private:
 			uint32_t m_ui32NumberOfClasses;
@@ -67,9 +67,9 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier m_oPairwiseDecisionIdentifier;
 
 			XML::IXMLNode* getClassifierConfiguration(double f64FirstClass, double f64SecondClass, OpenViBE::Kernel::IAlgorithmProxy* pSubClassifier);
-			XML::IXMLNode* getPairwiseDecisionConfiguration(void);
+			XML::IXMLNode* getPairwiseDecisionConfiguration();
 
-			// uint32_t getClassCount(void) const;
+			// uint32_t getClassCount() const;
 
 			bool loadSubClassifierConfiguration(XML::IXMLNode* pSubClassifiersNode);
 
@@ -81,21 +81,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("OneVsOne pairing classifier"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Guillaume Serriere"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/Loria"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("0.2"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("OneVsOne pairing classifier"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Guillaume Serriere"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA/Loria"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("0.2"); }
 
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ClassifierOneVsOne; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CAlgorithmClassifierOneVsOne; }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_Algorithm_ClassifierOneVsOne; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CAlgorithmClassifierOneVsOne; }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{

@@ -66,7 +66,7 @@ namespace OpenViBE
 			 * should now be handled at application level.
 			 *
 			 */
-			virtual CString getStockItemName(void) const
+			virtual CString getStockItemName() const
 			{
 				return CString("");
 			}
@@ -86,7 +86,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxProto
 			 * \sa OpenViBE::Plugins::IBoxListener
 			 */
-			virtual IBoxListener* createBoxListener(void) const
+			virtual IBoxListener* createBoxListener() const
 			{
 				return NULL;
 			}

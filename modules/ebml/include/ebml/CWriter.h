@@ -9,12 +9,12 @@ namespace EBML
 	public:
 
 		explicit CWriter(IWriterCallback& rWriterCallback);
-		virtual ~CWriter(void);
+		virtual ~CWriter();
 
 		virtual bool openChild(const CIdentifier& rIdentifier);
 		virtual bool setChildData(const void* pBuffer, uint64_t ui64BufferSize);
-		virtual bool closeChild(void);
-		virtual void release(void);
+		virtual bool closeChild();
+		virtual void release();
 
 	protected:
 
@@ -22,7 +22,7 @@ namespace EBML
 
 	private:
 
-		CWriter(void);
+		CWriter();
 	};
 };
 

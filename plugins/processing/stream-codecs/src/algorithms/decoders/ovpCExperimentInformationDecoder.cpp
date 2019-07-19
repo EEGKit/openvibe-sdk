@@ -7,12 +7,12 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-CExperimentInformationDecoder::CExperimentInformationDecoder(void) {}
+CExperimentInformationDecoder::CExperimentInformationDecoder() {}
 
 // ________________________________________________________________________________________________________________
 //
 
-bool CExperimentInformationDecoder::initialize(void)
+bool CExperimentInformationDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
 
@@ -30,7 +30,7 @@ bool CExperimentInformationDecoder::initialize(void)
 	return true;
 }
 
-bool CExperimentInformationDecoder::uninitialize(void)
+bool CExperimentInformationDecoder::uninitialize()
 {
 	op_pTechnicianName.uninitialize();
 	op_ui64TechnicianIdentifier.uninitialize();
@@ -132,7 +132,7 @@ void CExperimentInformationDecoder::processChildData(const void* pBuffer, const 
 	}
 }
 
-void CExperimentInformationDecoder::closeChild(void)
+void CExperimentInformationDecoder::closeChild()
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

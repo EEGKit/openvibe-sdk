@@ -19,8 +19,8 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TTrainingBoxAlgorithm(void);
-		virtual ~TTrainingBoxAlgorithm(void);
+		TTrainingBoxAlgorithm();
+		virtual ~TTrainingBoxAlgorithm();
 
 		// Signal input reader callback
 		virtual void setChannelCount(uint32_t ui32ChannelCount);
@@ -34,11 +34,11 @@ namespace OpenViBEToolkit
 		virtual void setStimulation(uint32_t ui32StimulationIndex, uint64_t ui64StimulationIdentifier, uint64_t ui64StimulationDate);
 
 		// What should be implemented by the derived class
-		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialStart(void) = 0;
-		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialEnd(void) = 0;
-		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialLabelRangeStart(void) = 0;
-		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialLabelRangeEnd(void) = 0;
-		virtual OpenViBE::CIdentifier getStimulationIdentifierTrain(void) = 0;
+		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialStart() = 0;
+		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialEnd() = 0;
+		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialLabelRangeStart() = 0;
+		virtual OpenViBE::CIdentifier getStimulationIdentifierTrialLabelRangeEnd() = 0;
+		virtual OpenViBE::CIdentifier getStimulationIdentifierTrain() = 0;
 		virtual bool train(ISignalTrialSet& rTrialSet) = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TBoxAlgorithm<CBoxAlgorithmParentClass>, OVTK_ClassId_);
@@ -68,7 +68,7 @@ namespace OpenViBEToolkit
 #define _no_time_ 0xffffffffffffffffLL
 
 	template <class CBoxAlgorithmParentClass>
-	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::TTrainingBoxAlgorithm(void)
+	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::TTrainingBoxAlgorithm()
 		: m_pPendingSignal(NULL)
 		  , m_ui64TrialStartTime(_no_time_)
 		  , m_ui64TrialEndTime(_no_time_)
@@ -78,7 +78,7 @@ namespace OpenViBEToolkit
 	}
 
 	template <class CBoxAlgorithmParentClass>
-	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::~TTrainingBoxAlgorithm(void)
+	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::~TTrainingBoxAlgorithm()
 	{
 		std::vector<ISignalTrial*>::iterator itSignalTrial;
 		releaseSignalTrial(m_pPendingSignal);

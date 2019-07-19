@@ -7,29 +7,29 @@ using namespace Plugins;
 CObjectVisitorContext::CObjectVisitorContext(const IKernelContext& rKernelContext)
 	: TKernelObject<IObjectVisitorContext>(rKernelContext) {}
 
-CObjectVisitorContext::~CObjectVisitorContext(void) {}
+CObjectVisitorContext::~CObjectVisitorContext() {}
 
-IAlgorithmManager& CObjectVisitorContext::getAlgorithmManager(void) const
+IAlgorithmManager& CObjectVisitorContext::getAlgorithmManager() const
 {
 	return TKernelObject<IObjectVisitorContext>::getAlgorithmManager();
 }
 
-IConfigurationManager& CObjectVisitorContext::getConfigurationManager(void) const
+IConfigurationManager& CObjectVisitorContext::getConfigurationManager() const
 {
 	return TKernelObject<IObjectVisitorContext>::getConfigurationManager();
 }
 
-ITypeManager& CObjectVisitorContext::getTypeManager(void) const
+ITypeManager& CObjectVisitorContext::getTypeManager() const
 {
 	return TKernelObject<IObjectVisitorContext>::getTypeManager();
 }
 
-ILogManager& CObjectVisitorContext::getLogManager(void) const
+ILogManager& CObjectVisitorContext::getLogManager() const
 {
 	return TKernelObject<IObjectVisitorContext>::getLogManager();
 }
 
-IErrorManager& CObjectVisitorContext::getErrorManager(void) const
+IErrorManager& CObjectVisitorContext::getErrorManager() const
 {
 	return TKernelObject<IObjectVisitorContext>::getErrorManager();
 }

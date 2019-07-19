@@ -41,7 +41,7 @@ public:
 		m_File = FS::Files::open(filename, "wb");
 	}
 
-	virtual ~CWriterCallBack(void)
+	virtual ~CWriterCallBack()
 	{
 		if (m_File)
 		{

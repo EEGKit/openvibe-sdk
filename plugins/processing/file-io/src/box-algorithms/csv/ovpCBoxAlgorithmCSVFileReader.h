@@ -18,22 +18,22 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmCSVFileReader(void);
+			CBoxAlgorithmCSVFileReader();
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual uint64_t getClockFrequency(void);
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual uint64_t getClockFrequency();
+			virtual bool initialize();
+			virtual bool uninitialize();
 			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual bool process(void);
+			virtual bool process();
 
-			bool process_streamedMatrix(void);
-			bool process_stimulation(void);
-			bool process_signal(void);
-			bool process_channelLocalisation(void);
-			bool process_featureVector(void);
-			bool process_spectrum(void);
+			bool process_streamedMatrix();
+			bool process_stimulation();
+			bool process_signal();
+			bool process_channelLocalisation();
+			bool process_featureVector();
+			bool process_spectrum();
 			bool convertVectorDataToMatrix(OpenViBE::IMatrix* matrix);
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_CSVFileReader);
@@ -53,7 +53,7 @@ namespace OpenViBEPlugins
 			uint32_t m_ui32SamplesPerBuffer;
 			uint32_t m_ui32ChannelNumberPerBuffer;
 
-			bool (CBoxAlgorithmCSVFileReader::*m_fpRealProcess)(void);
+			bool (CBoxAlgorithmCSVFileReader::*m_fpRealProcess)();
 
 			OpenViBEToolkit::TEncoder<CBoxAlgorithmCSVFileReader>* m_pAlgorithmEncoder;
 
@@ -124,22 +124,22 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("CSV File Reader (Deprecated)"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Baptiste Payan"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Read signal in a CSV (text based) file"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("File reading and writing/CSV"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("CSV File Reader (Deprecated)"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Baptiste Payan"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Read signal in a CSV (text based) file"); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("File reading and writing/CSV"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_CSVFileReader; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmCSVFileReader; }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmCSVFileReaderListener; }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_CSVFileReader; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmCSVFileReader; }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener() const { return new CBoxAlgorithmCSVFileReaderListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const

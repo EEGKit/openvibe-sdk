@@ -2,7 +2,7 @@
 
 using namespace EBML;
 
-CIdentifier::CIdentifier(void)
+CIdentifier::CIdentifier()
 	: m_ui64Identifier(0) {}
 
 CIdentifier::CIdentifier(const uint64_t ui64Identifier)
@@ -55,12 +55,12 @@ namespace EBML
 	}
 };
 
-CIdentifier::operator uint64_t(void) const
+CIdentifier::operator uint64_t() const
 {
 	return this->toUInteger();
 }
 
-uint64_t CIdentifier::toUInteger(void) const
+uint64_t CIdentifier::toUInteger() const
 {
 	return m_ui64Identifier;
 }

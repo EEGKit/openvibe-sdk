@@ -19,12 +19,12 @@ using namespace Eigen;
 
 // typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
 
-CBoxAlgorithmRegularizedCSPTrainer::CBoxAlgorithmRegularizedCSPTrainer(void) : m_StimulationIdentifier(0),
+CBoxAlgorithmRegularizedCSPTrainer::CBoxAlgorithmRegularizedCSPTrainer() : m_StimulationIdentifier(0),
 																			   m_FiltersPerClass(0),
 																			   m_SaveAsBoxConf(false),
 																			   m_Tikhonov(0.0) {}
 
-bool CBoxAlgorithmRegularizedCSPTrainer::initialize(void)
+bool CBoxAlgorithmRegularizedCSPTrainer::initialize()
 {
 	m_StimulationDecoder.initialize(*this, 0);
 	m_StimulationEncoder.initialize(*this, 0);
@@ -88,7 +88,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmRegularizedCSPTrainer::uninitialize(void)
+bool CBoxAlgorithmRegularizedCSPTrainer::uninitialize()
 {
 	m_StimulationDecoder.uninitialize();
 	m_StimulationEncoder.uninitialize();
@@ -293,7 +293,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<MatrixXd>&
 	return true;
 }
 
-bool CBoxAlgorithmRegularizedCSPTrainer::process(void)
+bool CBoxAlgorithmRegularizedCSPTrainer::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 

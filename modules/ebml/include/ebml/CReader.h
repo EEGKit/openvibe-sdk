@@ -9,12 +9,12 @@ namespace EBML
 	public:
 
 		explicit CReader(IReaderCallback& rReaderCallback);
-		virtual ~CReader(void);
+		virtual ~CReader();
 
 		virtual bool processData(const void* pBuffer, uint64_t ui64BufferSize);
-		virtual CIdentifier getCurrentNodeIdentifier(void) const;
-		virtual uint64_t getCurrentNodeSize(void) const;
-		virtual void release(void);
+		virtual CIdentifier getCurrentNodeIdentifier() const;
+		virtual uint64_t getCurrentNodeSize() const;
+		virtual void release();
 
 	protected:
 
@@ -22,7 +22,7 @@ namespace EBML
 
 	private:
 
-		CReader(void);
+		CReader();
 	};
 };
 

@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-bool CChannelLocalisationEncoder::initialize(void)
+bool CChannelLocalisationEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
 
@@ -16,7 +16,7 @@ bool CChannelLocalisationEncoder::initialize(void)
 	return true;
 }
 
-bool CChannelLocalisationEncoder::uninitialize(void)
+bool CChannelLocalisationEncoder::uninitialize()
 {
 	ip_bDynamic.uninitialize();
 
@@ -28,7 +28,7 @@ bool CChannelLocalisationEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CChannelLocalisationEncoder::processHeader(void)
+bool CChannelLocalisationEncoder::processHeader()
 {
 	CStreamedMatrixEncoder::processHeader();
 

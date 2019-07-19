@@ -13,7 +13,7 @@ using namespace SignalProcessing;
 // ________________________________________________________________________________________________________________
 //
 
-bool CAlgorithmMatrixAverage::initialize(void)
+bool CAlgorithmMatrixAverage::initialize()
 {
 	ip_ui64AveragingMethod.initialize(getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_AveragingMethod));
 	ip_ui64MatrixCount.initialize(getInputParameter(OVP_Algorithm_MatrixAverage_InputParameterId_MatrixCount));
@@ -25,7 +25,7 @@ bool CAlgorithmMatrixAverage::initialize(void)
 	return true;
 }
 
-bool CAlgorithmMatrixAverage::uninitialize(void)
+bool CAlgorithmMatrixAverage::uninitialize()
 {
 	std::deque<IMatrix*>::iterator it;
 	for (it = m_vHistory.begin(); it != m_vHistory.end(); ++it)
@@ -45,7 +45,7 @@ bool CAlgorithmMatrixAverage::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CAlgorithmMatrixAverage::process(void)
+bool CAlgorithmMatrixAverage::process()
 {
 	IMatrix* l_pInputMatrix  = ip_pMatrix;
 	IMatrix* l_pOutputMatrix = op_pAveragedMatrix;

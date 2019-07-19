@@ -15,7 +15,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-bool CMasterAcquisitionEncoder::initialize(void)
+bool CMasterAcquisitionEncoder::initialize()
 {	
 	// Manages sub-algorithms
 
@@ -113,7 +113,7 @@ bool CMasterAcquisitionEncoder::initialize(void)
 	return true;
 }
 
-bool CMasterAcquisitionEncoder::uninitialize(void)
+bool CMasterAcquisitionEncoder::uninitialize()
 {
 	m_pChannelUnitsStreamEncoder->uninitialize();
 	m_pChannelLocalisationStreamEncoder->uninitialize();
@@ -132,7 +132,7 @@ bool CMasterAcquisitionEncoder::uninitialize(void)
 	return true;
 }
 
-bool CMasterAcquisitionEncoder::process(void)
+bool CMasterAcquisitionEncoder::process()
 {
 	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelUnitsMemoryBuffer(m_pAcquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ChannelUnitsStream));
 	TParameterHandler<IMemoryBuffer*> ip_pAcquisitionChannelLocalisationMemoryBuffer(m_pAcquisitionStreamEncoder->getInputParameter(OVP_Algorithm_AcquisitionStreamEncoder_InputParameterId_ChannelLocalisationStream));

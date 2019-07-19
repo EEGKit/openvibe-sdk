@@ -50,7 +50,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual void applyColor(void);
+			virtual void applyColor();
 
 		protected:
 

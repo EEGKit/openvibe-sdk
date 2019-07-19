@@ -8,22 +8,22 @@ namespace System
 	{
 	public:
 
-		CChrono(void);
-		virtual ~CChrono(void);
+		CChrono();
+		virtual ~CChrono();
 
 		virtual bool reset(uint32_t ui32StepCount);
 
-		virtual bool stepIn(void);
-		virtual bool stepOut(void);
+		virtual bool stepIn();
+		virtual bool stepOut();
 
-		virtual uint64_t getTotalStepInDuration(void) const;
-		virtual uint64_t getTotalStepOutDuration(void) const;
-		virtual uint64_t getAverageStepInDuration(void) const;
-		virtual uint64_t getAverageStepOutDuration(void) const;
-		virtual double getStepInPercentage(void) const;
-		virtual double getStepOutPercentage(void) const;
+		virtual uint64_t getTotalStepInDuration() const;
+		virtual uint64_t getTotalStepOutDuration() const;
+		virtual uint64_t getAverageStepInDuration() const;
+		virtual uint64_t getAverageStepOutDuration() const;
+		virtual double getStepInPercentage() const;
+		virtual double getStepOutPercentage() const;
 
-		virtual bool hasNewEstimation(void);
+		virtual bool hasNewEstimation();
 
 	private:
 

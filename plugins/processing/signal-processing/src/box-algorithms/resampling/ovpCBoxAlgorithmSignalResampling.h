@@ -45,12 +45,12 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
 			virtual bool processInput(uint32_t ui32InputIndex);
-			virtual bool process(void);
+			virtual bool process();
 
 			// implementation for TResampler::ICallback
 			virtual void processResampler(const double* pSample, size_t ui32ChannelCount) const;
@@ -62,15 +62,15 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalResampling> m_oDecoder;
 			mutable OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_oEncoder;
 
-			uint32_t m_ui32OutputSamplingRate;
-			uint32_t m_ui32OutputSampleCount;
+			uint32_t m_outSamplingRate;
+			uint32_t m_outSampleCount;
 
 			int m_iFractionalDelayFilterSampleCount;
 			double m_f64TransitionBandInPercent;
 			double m_f64StopBandAttenuation;
 
-			uint32_t m_ui32InputSamplingRate;
-			mutable uint64_t m_ui64TotalOutputSampleCount;
+			uint32_t m_inSamplingRate;
+			mutable uint64_t m_totalOutSampleCount;
 			CResampler m_oResampler;
 			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext;
 		};
@@ -79,21 +79,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Signal Resampling"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Quentin Barthelemy"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Mensia Technologies SA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Resamples and re-epochs input signal to chosen sampling frequency"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("The input signal is resampled, down-sampled or up-sampled, at a chosen sampling frequency and then re-epoched."); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("2.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Signal Resampling"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Quentin Barthelemy"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Mensia Technologies SA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Resamples and re-epochs input signal to chosen sampling frequency"); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("The input signal is resampled, down-sampled or up-sampled, at a chosen sampling frequency and then re-epoched."); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("2.0"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_SignalResampling; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmSignalResampling; }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_SignalResampling; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmSignalResampling; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{

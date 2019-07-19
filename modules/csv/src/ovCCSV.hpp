@@ -38,12 +38,12 @@ namespace OpenViBE
 			/**
 			 * \brief Set lib value to default
 			 */
-			CCSVHandler(void);
+			CCSVHandler();
 
 			/**
 			 * \brief Close the file if it is open.
 			 */
-			~CCSVHandler(void);
+			~CCSVHandler();
 
 			/**
 			 * \brief Get the floating point precision used to write float values.
@@ -60,10 +60,10 @@ namespace OpenViBE
 			void setOutputFloatPrecision(uint32_t precision) { m_OutputFloatPrecision = precision; }
 
 			void setFormatType(EStreamType typeIdentifier);
-			EStreamType getFormatType(void);
+			EStreamType getFormatType();
 
 			void setLastMatrixOnlyMode(bool isActivated) { m_LastMatrixOnly = isActivated; }
-			bool getLastMatrixOnlyMode(void) { return m_LastMatrixOnly; }
+			bool getLastMatrixOnlyMode() { return m_LastMatrixOnly; }
 
 			bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer);
 			bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer);
@@ -83,7 +83,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool writeHeaderToFile(void);
+			bool writeHeaderToFile();
 
 			/**
 			 * \brief Write current available data to the file until the last stimulation or if you set that it will not have new event before a date.
@@ -93,7 +93,7 @@ namespace OpenViBE
 			 *
 			 * \sa noEventsUntilDate
 			 */
-			bool writeDataToFile(void);
+			bool writeDataToFile();
 
 			/**
 			 * \brief Write current available data to the file.
@@ -101,7 +101,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool writeAllDataToFile(void);
+			bool writeAllDataToFile();
 
 			/**
 			 * \brief Read samples and stimulations.
@@ -129,7 +129,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool closeFile(void);
+			bool closeFile();
 
 			/**
 			 * \brief Add a single sample.
@@ -211,7 +211,7 @@ namespace OpenViBE
 			 * \retval true Header data as it should be written in the file
 			 * \retval "" in case of error
 			 */
-			std::string createHeaderString(void);
+			std::string createHeaderString();
 
 			/**
 			 * \brief Set the buffer in function of data saved.
@@ -230,7 +230,7 @@ namespace OpenViBE
 			 * \retval true in case of correct header
 			 * \retval false in case of incorrect header
 			 */
-			bool parseHeader(void);
+			bool parseHeader();
 
 			/**
 			 * \brief Parsing header to read signal data.

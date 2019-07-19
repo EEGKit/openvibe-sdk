@@ -72,11 +72,11 @@
  * class CReaderCallback : public EBML::IReaderCallback
  * {
  * public:
- *   CReaderCallback(void)
+ *   CReaderCallback()
  *   {
  *     m_pReaderHelper=EBML::createReaderHelper();
  *   }
- *   virtual ~CReaderCallback(void)
+ *   virtual ~CReaderCallback()
  *   {
  *     if(m_pReaderHelper) m_pReaderHelper->release();
  *   }
@@ -98,7 +98,7 @@
  *     if(m_oCurrent==EBML_Identifier_DocTypeVersion)
  *       std::cout << "Dox type version:" << m_pReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize) << std::endl;
  *   }
- *   virtual void closeChild(void)
+ *   virtual void closeChild()
  *   {
  *   }
  *   EBML::IReaderHelper* m_pReaderHelper;

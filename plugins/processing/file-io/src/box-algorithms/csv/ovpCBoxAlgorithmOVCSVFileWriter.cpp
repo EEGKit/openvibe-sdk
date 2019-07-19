@@ -14,7 +14,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-CBoxAlgorithmOVCSVFileWriter::CBoxAlgorithmOVCSVFileWriter(void)
+CBoxAlgorithmOVCSVFileWriter::CBoxAlgorithmOVCSVFileWriter()
 	: m_WriterLib(CSV::createCSVHandler(), CSV::releaseCSVHandler)
 	  , m_Epoch(0)
 	  , m_IsHeaderReceived(false)
@@ -23,7 +23,7 @@ CBoxAlgorithmOVCSVFileWriter::CBoxAlgorithmOVCSVFileWriter(void)
 	  , m_LastMatrixOnly(false)
 	  , m_WriteHeader(true) {}
 
-bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
+bool CBoxAlgorithmOVCSVFileWriter::initialize()
 {
 	m_IsFileOpen = false;
 	m_Epoch      = 0;
@@ -95,7 +95,7 @@ bool CBoxAlgorithmOVCSVFileWriter::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileWriter::uninitialize(void)
+bool CBoxAlgorithmOVCSVFileWriter::uninitialize()
 {
 	m_StreamDecoder.uninitialize();
 	m_StimulationDecoder.uninitialize();
@@ -123,7 +123,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processInput(uint32_t inputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileWriter::process(void)
+bool CBoxAlgorithmOVCSVFileWriter::process()
 {
 	OV_ERROR_UNLESS_KRF(this->processStreamedMatrix(),
 						"Error have been thrown during streamed matrix process",
@@ -143,7 +143,7 @@ bool CBoxAlgorithmOVCSVFileWriter::process(void)
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
+bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
@@ -338,7 +338,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix(void)
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileWriter::processStimulation(void)
+bool CBoxAlgorithmOVCSVFileWriter::processStimulation()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 

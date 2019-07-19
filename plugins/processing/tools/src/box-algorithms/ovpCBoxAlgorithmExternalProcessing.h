@@ -24,14 +24,14 @@ namespace OpenViBEPlugins
 		public:
 			CBoxAlgorithmExternalProcessing();
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual uint64_t getClockFrequency(void);
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual uint64_t getClockFrequency();
+			virtual bool initialize();
+			virtual bool uninitialize();
 			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
 			virtual bool processInput(uint32_t inputIndex);
-			virtual bool process(void);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ExternalProcessing);
 
@@ -105,23 +105,23 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) {}
+			virtual void release() {}
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("External Processing"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Alexis Placet"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Mensia Technologies SA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("This box can communicate via TCP with an other program."); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Launches an external program which can then processes data. This box and the program communicate using TCP connection and a defined protocol."); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Scripting"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("1.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("1.0.0"); }
-			virtual OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-edit"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("External Processing"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Alexis Placet"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Mensia Technologies SA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("This box can communicate via TCP with an other program."); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Launches an external program which can then processes data. This box and the program communicate using TCP connection and a defined protocol."); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Scripting"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("1.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("1.0.0"); }
+			virtual OpenViBE::CString getStockItemName() const { return OpenViBE::CString("gtk-edit"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ExternalProcessing; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmExternalProcessing; }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmExternalProcessingListener; }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_ExternalProcessing; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmExternalProcessing; }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener() const { return new CBoxAlgorithmExternalProcessingListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* boxListener) const { delete boxListener; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& boxAlgorithmPrototype) const

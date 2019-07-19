@@ -13,7 +13,7 @@ struct CObservable::ObserverList
 	std::vector<IObserver *> m_oVector;
 };
 
-CObservable::CObservable(void): m_bHasChanged(false)
+CObservable::CObservable(): m_bHasChanged(false)
 {
 	m_pObserverList = new ObserverList();
 }

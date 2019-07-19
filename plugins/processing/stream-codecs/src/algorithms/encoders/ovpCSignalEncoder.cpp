@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-bool CSignalEncoder::initialize(void)
+bool CSignalEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
 
@@ -16,7 +16,7 @@ bool CSignalEncoder::initialize(void)
 	return true;
 }
 
-bool CSignalEncoder::uninitialize(void)
+bool CSignalEncoder::uninitialize()
 {
 	ip_ui64SamplingRate.uninitialize();
 
@@ -28,7 +28,7 @@ bool CSignalEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CSignalEncoder::processHeader(void)
+bool CSignalEncoder::processHeader()
 {
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Signal);
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Signal_SamplingRate);

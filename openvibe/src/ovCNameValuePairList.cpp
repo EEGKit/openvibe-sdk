@@ -15,7 +15,7 @@ namespace OpenViBE
 	};
 };
 
-CNameValuePairList::CNameValuePairList(void)
+CNameValuePairList::CNameValuePairList()
 {
 	m_pNameValuePairListImpl = new CNameValuePairListImpl();
 }
@@ -26,7 +26,7 @@ CNameValuePairList::CNameValuePairList(const CNameValuePairList& rNameValuePairL
 	m_pNameValuePairListImpl->m_oMap = rNameValuePairList.m_pNameValuePairListImpl->m_oMap;
 }
 
-CNameValuePairList::~CNameValuePairList(void)
+CNameValuePairList::~CNameValuePairList()
 {
 	delete m_pNameValuePairListImpl;
 }

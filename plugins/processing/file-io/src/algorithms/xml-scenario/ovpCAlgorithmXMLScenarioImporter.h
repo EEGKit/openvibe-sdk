@@ -22,14 +22,14 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CAlgorithmXMLScenarioImporter(void);
-			virtual ~CAlgorithmXMLScenarioImporter(void);
+			CAlgorithmXMLScenarioImporter();
+			virtual ~CAlgorithmXMLScenarioImporter();
 
 			virtual bool import(OpenViBE::Plugins::IAlgorithmScenarioImporterContext& rContext, const OpenViBE::IMemoryBuffer& rMemoryBuffer);
 
 			virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount); // XML::IReaderCallback
 			virtual void processChildData(const char* sData); // XML::IReaderCallback
-			virtual void closeChild(void); // XML::IReaderCallback
+			virtual void closeChild(); // XML::IReaderCallback
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioImporter, OVP_ClassId_Algorithm_XMLScenarioImporter)
 
@@ -48,21 +48,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("XML Scenario importer"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("A sample XML scenario importer"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("This scenario importer uses simple XML format to input the scenario"); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Samples"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
-			// virtual OpenViBE::CString getFileExtension(void) const       { return OpenViBE::CString("xml;XML"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			virtual void release() { }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("XML Scenario importer"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA/IRISA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("A sample XML scenario importer"); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("This scenario importer uses simple XML format to input the scenario"); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Samples"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
+			// virtual OpenViBE::CString getFileExtension() const       { return OpenViBE::CString("xml;XML"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_XMLScenarioImporter; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CAlgorithmXMLScenarioImporter(); }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_Algorithm_XMLScenarioImporter; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CAlgorithmXMLScenarioImporter(); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioImporterDesc, OVP_ClassId_Algorithm_XMLScenarioImporterDesc)
 		};

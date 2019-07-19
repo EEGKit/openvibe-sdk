@@ -51,7 +51,7 @@ namespace Socket
 		void saveLastError();
 	};
 
-	extern Socket_API IConnectionSerial* createConnectionSerial(void);
+	extern Socket_API IConnectionSerial* createConnectionSerial();
 };
 
 

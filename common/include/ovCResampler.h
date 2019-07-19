@@ -27,7 +27,7 @@ namespace Common
 			{
 			public:
 
-				virtual ~ICallback(void) { }
+				virtual ~ICallback() { }
 				virtual void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const = 0;
 			};
 
@@ -40,7 +40,7 @@ namespace Common
 			/* 
 			 * Constructor, with default values for real-time processing.
 			 */
-			TResampler(void)
+			TResampler()
 			{
 				this->clear();
 				switch (eStoreMode)
@@ -58,12 +58,12 @@ namespace Common
 				}
 			}
 
-			~TResampler(void)
+			~TResampler()
 			{
 				this->clear();
 			}
 
-			void clear(void)
+			void clear()
 			{
 				for (size_t j = 0; j < m_vResampler.size(); j++)
 				{
@@ -285,7 +285,7 @@ namespace Common
 				return m_vResampler[0]->getMaxOutLen(MaxInLen);
 			}
 
-			float getBuiltInLatency(void) const
+			float getBuiltInLatency() const
 			{
 				return (m_ui32InputSamplingRate != 0) ? (1.0f * m_vResampler[0]->getInLenBeforeOutStart(0) / m_ui32InputSamplingRate) : 0.f;
 			}

@@ -15,8 +15,8 @@ namespace OpenViBE
 
 			explicit TMessage(const IKernelContext& rKernelContext);
 
-			virtual CIdentifier getIdentifier(void) const;
-			virtual uint64_t getTime(void) const;
+			virtual CIdentifier getIdentifier() const;
+			virtual uint64_t getTime() const;
 
 			virtual bool setIdentifier(
 				const CIdentifier& rIdentifier);

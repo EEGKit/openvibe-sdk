@@ -29,7 +29,7 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual IConfigurationManager& getConfigurationManager(void) const = 0;
+			virtual IConfigurationManager& getConfigurationManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current algorithm manager
 			 * \return a reference on the algorithm manager
@@ -37,7 +37,7 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual IAlgorithmManager& getAlgorithmManager(void) const = 0;
+			virtual IAlgorithmManager& getAlgorithmManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current log manager
 			 * \return a reference on the current log manager
@@ -45,7 +45,7 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual ILogManager& getLogManager(void) const = 0;
+			virtual ILogManager& getLogManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current error manager
 			 * \return a reference on the current error manager
@@ -53,12 +53,12 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual IErrorManager& getErrorManager(void) const = 0;
+			virtual IErrorManager& getErrorManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current type manager
 			 * \return a reference on the current type manager
 			 */
-			virtual ITypeManager& getTypeManager(void) const = 0;
+			virtual ITypeManager& getTypeManager() const = 0;
 
 			/** \name Input parameters */
 			//@{

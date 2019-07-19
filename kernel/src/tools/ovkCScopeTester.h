@@ -13,7 +13,7 @@ namespace OpenViBE
 		public:
 
 			CScopeTester(const Kernel::IKernelContext& rKernelContext, const CString& sPrefix);
-			virtual ~CScopeTester(void);
+			virtual ~CScopeTester();
 
 			_IsDerivedFromClass_Final_(IObject, OVK_ClassId_Tools_ScopeTester);
 

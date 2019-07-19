@@ -12,11 +12,11 @@ namespace OpenViBEToolkit
 			{
 			public:
 
-				virtual ~ISplitCallback(void) { }
+				virtual ~ISplitCallback() { }
 
-				virtual void beginSplit(void) const { }
+				virtual void beginSplit() const { }
 
-				virtual void endSplit(void) const { }
+				virtual void endSplit() const { }
 
 				virtual void setToken(const char* sToken) const = 0;
 			};
@@ -26,7 +26,7 @@ namespace OpenViBEToolkit
 			{
 			private:
 
-				TSplitCallback(void);
+				TSplitCallback();
 
 			public:
 

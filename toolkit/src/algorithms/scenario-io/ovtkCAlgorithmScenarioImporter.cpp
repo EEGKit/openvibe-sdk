@@ -138,7 +138,7 @@ namespace OpenViBEToolkit
 		virtual bool processIdentifier(const CIdentifier& rIdentifier, const CIdentifier& rValue);
 		virtual bool processString(const CIdentifier& rIdentifier, const CString& rValue);
 		virtual bool processUInteger(const CIdentifier& rIdentifier, uint64_t ui64Value);
-		virtual bool processStop(void);
+		virtual bool processStop();
 
 		_IsDerivedFromClass_Final_(IAlgorithmScenarioImporterContext, OV_UndefinedIdentifier);
 
@@ -149,7 +149,7 @@ namespace OpenViBEToolkit
 	};
 }
 
-bool CAlgorithmScenarioImporter::process(void)
+bool CAlgorithmScenarioImporter::process()
 {
 	TParameterHandler<IScenario*> op_pScenario(this->getOutputParameter(OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario));
 	IScenario* l_pScenario = op_pScenario;
@@ -529,4 +529,4 @@ bool CAlgorithmScenarioImporterContext::processUInteger(const CIdentifier& rIden
 	return true;
 }
 
-bool CAlgorithmScenarioImporterContext::processStop(void) { return true; }
+bool CAlgorithmScenarioImporterContext::processStop() { return true; }

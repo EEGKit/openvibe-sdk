@@ -21,9 +21,9 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CAlgorithmClassifierNULL(void);
+			CAlgorithmClassifierNULL();
 
-			virtual bool initialize(void);
+			virtual bool initialize();
 
 			virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
 			virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 											   , OpenViBEToolkit::IVector& rDistanceValue
 											   , OpenViBEToolkit::IVector& rProbabilityValue);
 
-			virtual XML::IXMLNode* saveConfiguration(void);
+			virtual XML::IXMLNode* saveConfiguration();
 			virtual bool loadConfiguration(XML::IXMLNode* pConfigurationNode);
 
 			virtual uint32_t getOutputProbabilityVectorLength();
@@ -46,21 +46,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("NULL Classifier (does nothing)"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("INRIA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Samples"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("NULL Classifier (does nothing)"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Samples"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_Algorithm_ClassifierNULL; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CAlgorithmClassifierNULL; }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_Algorithm_ClassifierNULL; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CAlgorithmClassifierNULL; }
 
 			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
 			{

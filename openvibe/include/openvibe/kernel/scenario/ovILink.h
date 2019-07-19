@@ -44,7 +44,7 @@ namespace OpenViBE
 			 * \brief Gets the identifier of this link
 			 * \return The identifier of this link.
 			 */
-			virtual CIdentifier getIdentifier(void) const = 0;
+			virtual CIdentifier getIdentifier() const = 0;
 
 			//@}
 			/** \name Source / Target management */
@@ -99,17 +99,17 @@ namespace OpenViBE
 			 * \brief Gets the source box identifier for this link
 			 * \return the source box identifier for thit link
 			 */
-			virtual CIdentifier getSourceBoxIdentifier(void) const = 0;
+			virtual CIdentifier getSourceBoxIdentifier() const = 0;
 			/**
 			 * \brief Gets the source box output index for this link
 			 * \return the source box output index for this link
 			 */
-			virtual uint32_t getSourceBoxOutputIndex(void) const = 0;
+			virtual uint32_t getSourceBoxOutputIndex() const = 0;
 			/**
 			 * \brief Gets the source box output index for this link
 			 * \return the source box output index for this link
 			 */
-			virtual CIdentifier getSourceBoxOutputIdentifier(void) const = 0;
+			virtual CIdentifier getSourceBoxOutputIdentifier() const = 0;
 			/**
 			 * \brief Gets the target information for this link
 			 * \param rTargetBoxIdentifier [out] : The identifier
@@ -129,17 +129,17 @@ namespace OpenViBE
 			 * \brief Gets the target box identifier for this link
 			 * \return the target box identifier for this link
 			 */
-			virtual CIdentifier getTargetBoxIdentifier(void) const = 0;
+			virtual CIdentifier getTargetBoxIdentifier() const = 0;
 			/**
 			 * \brief Gets the target box input index for this link
 			 * \return the target box input index for this link
 			 */
-			virtual uint32_t getTargetBoxInputIndex(void) const = 0;			
+			virtual uint32_t getTargetBoxInputIndex() const = 0;			
 			/**
 			 * \brief Gets the target box input identifier for this link
 			 * \return the target box input identifier for this link
 			 */
-			virtual CIdentifier getTargetBoxInputIdentifier(void) const = 0;
+			virtual CIdentifier getTargetBoxInputIdentifier() const = 0;
 
 			//@}
 

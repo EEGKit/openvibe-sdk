@@ -21,32 +21,32 @@ namespace OpenViBE
 		public:
 
 			explicit CPlayer(const IKernelContext& rKernelContext);
-			virtual ~CPlayer(void);
+			virtual ~CPlayer();
 
 			virtual bool setScenario(
 				const CIdentifier& rScenarioIdentifier,
 				const CNameValuePairList* pLocalConfigurationTokens);
 
-			virtual IConfigurationManager& getRuntimeConfigurationManager(void) const;
-			virtual IScenarioManager& getRuntimeScenarioManager(void) const;
-			virtual CIdentifier getRuntimeScenarioIdentifier(void) const;
+			virtual IConfigurationManager& getRuntimeConfigurationManager() const;
+			virtual IScenarioManager& getRuntimeScenarioManager() const;
+			virtual CIdentifier getRuntimeScenarioIdentifier() const;
 
 
 			virtual bool isHoldingResources() const;
 
-			virtual EPlayerReturnCode initialize(void);
-			virtual bool uninitialize(void);
+			virtual EPlayerReturnCode initialize();
+			virtual bool uninitialize();
 
-			virtual bool stop(void);
-			virtual bool pause(void);
-			virtual bool step(void);
-			virtual bool play(void);
-			virtual bool forward(void);
+			virtual bool stop();
+			virtual bool pause();
+			virtual bool step();
+			virtual bool play();
+			virtual bool forward();
 
-			virtual EPlayerStatus getStatus(void) const;
+			virtual EPlayerStatus getStatus() const;
 
 			virtual bool setFastForwardMaximumFactor(double f64FastForwardFactor);
-			virtual double getFastForwardMaximumFactor(void) const;
+			virtual double getFastForwardMaximumFactor() const;
 
 			virtual double getCPUUsage() const;
 
@@ -54,8 +54,8 @@ namespace OpenViBE
 				uint64_t ui64ElapsedTime,
 				uint64_t ui64MaximumTimeToReach);
 
-			virtual uint64_t getCurrentSimulatedTime(void) const;
-			virtual uint64_t getCurrentSimulatedLateness(void) const;
+			virtual uint64_t getCurrentSimulatedTime() const;
+			virtual uint64_t getCurrentSimulatedLateness() const;
 
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IPlayer >, OVK_ClassId_Kernel_Player_Player);

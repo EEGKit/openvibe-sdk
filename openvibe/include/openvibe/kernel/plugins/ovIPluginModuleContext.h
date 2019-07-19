@@ -29,27 +29,27 @@ namespace OpenViBE
 			 * \brief Gets the current scenario manager
 			 * \return a reference on the current scenario manager
 			 */
-			virtual IScenarioManager& getScenarioManager(void) const = 0;
+			virtual IScenarioManager& getScenarioManager() const = 0;
 			/**
 			 * \brief Gets the current type manager
 			 * \return a reference on the current type manager
 			 */
-			virtual ITypeManager& getTypeManager(void) const = 0;
+			virtual ITypeManager& getTypeManager() const = 0;
 			/**
 			 * \brief Gets the current log manager
 			 * \return a reference on the current log manager
 			 */
-			virtual ILogManager& getLogManager(void) const = 0;
+			virtual ILogManager& getLogManager() const = 0;
 			/**
 			 * \brief Gets the current error manager
 			 * \return a reference on the current error manager
 			 */
-			virtual IErrorManager& getErrorManager(void) const = 0;
+			virtual IErrorManager& getErrorManager() const = 0;
 			/**
 			 * \brief Gets the current configuration manager
 			 * \return a reference on the current configuration manager
 			 */
-			virtual IConfigurationManager& getConfigurationManager(void) const = 0;
+			virtual IConfigurationManager& getConfigurationManager() const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginModuleContext)
 		};

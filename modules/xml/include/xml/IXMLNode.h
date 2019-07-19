@@ -14,7 +14,7 @@ namespace XML
 	class XML_API IXMLNode
 	{
 	public:
-		virtual void release(void) = 0;
+		virtual void release() = 0;
 
 		virtual const char* getName() const = 0;
 
@@ -59,7 +59,7 @@ namespace XML
 		 * @brief Return the PCDATA of the node.
 		 * @return Value of PCDATA
 		 */
-		virtual const char* getPCData(void) const = 0;
+		virtual const char* getPCData() const = 0;
 
 		//Child
 		/**
@@ -86,7 +86,7 @@ namespace XML
 		 * @brief Return the amount of child the node has.
 		 * @return Amount of child.
 		 */
-		virtual size_t getChildCount(void) const = 0;
+		virtual size_t getChildCount() const = 0;
 
 		//XML generation
 		/**
@@ -98,7 +98,7 @@ namespace XML
 		virtual char* getXML(uint32_t depth = 0) const = 0;
 
 	protected:
-		virtual ~IXMLNode(void) {}
+		virtual ~IXMLNode() {}
 	};
 
 	/**

@@ -34,7 +34,7 @@ namespace OpenViBE
 
 			CBoxUpdater(CScenario& scenario, IBox* requestedBox);
 
-			virtual ~CBoxUpdater(void);
+			virtual ~CBoxUpdater();
 
 			bool initialize();
 

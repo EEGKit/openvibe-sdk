@@ -19,10 +19,10 @@ namespace OpenViBE
 		public:
 
 			CComment(const IKernelContext& rKernelContext, CScenario& rOwnerScenario);
-			virtual ~CComment(void);
+			virtual ~CComment();
 
-			virtual CIdentifier getIdentifier(void) const;
-			virtual CString getText(void) const;
+			virtual CIdentifier getIdentifier() const;
+			virtual CString getText() const;
 			virtual bool setIdentifier(
 				const CIdentifier& rIdentifier);
 			virtual bool setText(

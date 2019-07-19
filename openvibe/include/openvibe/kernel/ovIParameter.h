@@ -37,17 +37,17 @@ namespace OpenViBE
 			 * \brief Gets the size of this parameter's content
 			 * \return the size of this parameter's content.
 			 */
-			virtual uint64_t getParameterSize(void) const { return 0; }
+			virtual uint64_t getParameterSize() const { return 0; }
 			/**
 			 * \brief Gets the type of this parameter's content
 			 * \return the type of this parameter's content.
 			 */
-			virtual EParameterType getType(void) const { return ParameterType_None; }
+			virtual EParameterType getType() const { return ParameterType_None; }
 			/**
 			 * \brief Gets the sub type of this parameter's content (e.g. for enumeration)
 			 * \return the sub type of this parameter's content (e.g. for enumeration).
 			 */
-			virtual CIdentifier getSubTypeIdentifier(void) const { return OV_UndefinedIdentifier; }
+			virtual CIdentifier getSubTypeIdentifier() const { return OV_UndefinedIdentifier; }
 
 			//@}
 			/** \name Reinitialization */
@@ -60,7 +60,7 @@ namespace OpenViBE
 			 * \sa getReferenceTarget
 			 * \sa setReferenceTarget
 			 */
-			virtual bool clearReferenceTarget(void) { return false; }
+			virtual bool clearReferenceTarget() { return false; }
 
 			//@}
 			/** \name Reference target management */

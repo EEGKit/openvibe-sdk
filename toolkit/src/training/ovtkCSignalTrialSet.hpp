@@ -11,9 +11,9 @@ namespace OpenViBEToolkit
 	public:
 
 		virtual bool addSignalTrial(ISignalTrial& rSignalTrial);
-		virtual bool clear(void);
+		virtual bool clear();
 
-		virtual uint32_t getSignalTrialCount(void) const;
+		virtual uint32_t getSignalTrialCount() const;
 		virtual ISignalTrial& getSignalTrial(uint32_t ui32Index) const;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_);
@@ -23,5 +23,5 @@ namespace OpenViBEToolkit
 		mutable std::vector<ISignalTrial*> m_vSignalTrial;
 	};
 
-	extern OVTK_API ISignalTrialSet* createSignalTrialSet(void);
+	extern OVTK_API ISignalTrialSet* createSignalTrialSet();
 };

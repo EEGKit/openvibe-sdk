@@ -158,7 +158,7 @@ namespace OpenViBE
 			 * \note The algorithm context is managed internally
 			 * \pre The algorithm is not yet initialized
 			 */
-			virtual bool initialize(void) = 0;
+			virtual bool initialize() = 0;
 			/**
 			 * \brief Uninitializes the algorithm
 			 * \return \e true in case of success.
@@ -166,7 +166,7 @@ namespace OpenViBE
 			 * \note The algorithm context is managed internally
 			 * \pre The algorithm is initialized
 			 */
-			virtual bool uninitialize(void) = 0;
+			virtual bool uninitialize() = 0;
 			/**
 			 * \brief Calls the processing method of the algorithm
 			 * \return \e true in case of success.
@@ -174,7 +174,7 @@ namespace OpenViBE
 			 * \note The algorithm context is managed internally
 			 * \pre The algorithm is initialized
 			 */
-			virtual bool process(void) = 0;
+			virtual bool process() = 0;
 			/**
 			 * \brief Activates an input trigger and immediatly calls the processing method
 			 * \param rTriggerIdentifier [in] : the identifier of the input trigger to activate

@@ -16,7 +16,7 @@ namespace XML
 			COwnerClass& rOwnerObject,
 			void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount),
 			void (COwnerClass::*mfpProcessChildData)(const char* sData),
-			void (COwnerClass::*mfpCloseChild)(void))
+			void (COwnerClass::*mfpCloseChild)())
 			: m_rOwnerObject(rOwnerObject)
 			  , m_mfpOpenChild(mfpOpenChild)
 			  , m_mfpProcessChildData(mfpProcessChildData)
@@ -38,7 +38,7 @@ namespace XML
 			}
 		}
 
-		virtual void closeChild(void)
+		virtual void closeChild()
 		{
 			if (m_mfpCloseChild)
 			{
@@ -50,13 +50,13 @@ namespace XML
 		COwnerClass& m_rOwnerObject;
 		void (COwnerClass::*m_mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
 		void (COwnerClass::*m_mfpProcessChildData)(const char* sData);
-		void (COwnerClass::*m_mfpCloseChild)(void);
+		void (COwnerClass::*m_mfpCloseChild)();
 	};
 
 	// ________________________________________________________________________________________________________________
 	//
 
-	template <class COwnerClass, void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount), void (COwnerClass::*mfpProcessChildData)(const char* sData), void (COwnerClass::*mfpCloseChild)(void)>
+	template <class COwnerClass, void (COwnerClass::*mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount), void (COwnerClass::*mfpProcessChildData)(const char* sData), void (COwnerClass::*mfpCloseChild)()>
 	class TReaderCallbackProxy2 : public IReaderCallback
 	{
 	public:
@@ -82,7 +82,7 @@ namespace XML
 			}
 		}
 
-		virtual void closeChild(void)
+		virtual void closeChild()
 		{
 			if (mfpCloseChild)
 			{
@@ -94,7 +94,7 @@ namespace XML
 		COwnerClass& m_rOwnerObject;
 		void (COwnerClass::*m_mfpOpenChild)(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
 		void (COwnerClass::*m_mfpProcessChildData)(const char* sData);
-		void (COwnerClass::*m_mfpCloseChild)(void);
+		void (COwnerClass::*m_mfpCloseChild)();
 	};
 
 	// ________________________________________________________________________________________________________________

@@ -54,7 +54,7 @@ void CBoxSettingModifierVisitor::processChildData(const char* sData)
 	}
 }
 
-void CBoxSettingModifierVisitor::closeChild(void)
+void CBoxSettingModifierVisitor::closeChild()
 {
 	//We need to count it here because we need to take in account the empty value
 	if (m_bIsParsingSettingValue)

@@ -21,19 +21,19 @@ CMetadata::CMetadata(const IKernelContext& kernelContext, CScenario& ownerScenar
 	  , m_Type(OV_UndefinedIdentifier)
 	  , m_Data("") {}
 
-CMetadata::~CMetadata(void) {}
+CMetadata::~CMetadata() {}
 
-CIdentifier CMetadata::getIdentifier(void) const
+CIdentifier CMetadata::getIdentifier() const
 {
 	return m_Identifier;
 }
 
-CIdentifier CMetadata::getType(void) const
+CIdentifier CMetadata::getType() const
 {
 	return m_Type;
 }
 
-CString CMetadata::getData(void) const
+CString CMetadata::getData() const
 {
 	return m_Data;
 }

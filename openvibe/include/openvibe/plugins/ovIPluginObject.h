@@ -46,7 +46,7 @@ namespace OpenViBE
 			 * However, the OpenViBE platform will not call any
 			 * of the plugin functions after release is called.
 			 */
-			virtual void release(void) = 0;
+			virtual void release() = 0;
 
 			//@}
 			_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Plugins_PluginObject)

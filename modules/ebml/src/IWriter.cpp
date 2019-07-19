@@ -71,7 +71,7 @@ namespace EBML
 		public:
 
 			CWriterNode(const CIdentifier& rIdentifier, CWriterNode* pParentNode);
-			virtual ~CWriterNode(void);
+			virtual ~CWriterNode();
 			void process(IWriterCallback& rWriterCallback);
 
 		protected:
@@ -80,7 +80,7 @@ namespace EBML
 
 		private:
 
-			CWriterNode(void);
+			CWriterNode();
 
 		public:
 
@@ -104,7 +104,7 @@ CWriterNode::CWriterNode(const CIdentifier& rIdentifier, CWriterNode* pParentNod
 	  , m_pBuffer(NULL)
 	  , m_bBuffered(false) {}
 
-CWriterNode::~CWriterNode(void)
+CWriterNode::~CWriterNode()
 {
 	vector<CWriterNode*>::iterator i;
 	for (i = m_vChildren.begin(); i != m_vChildren.end(); ++i)
@@ -195,9 +195,9 @@ namespace EBML
 
 			virtual bool openChild(const CIdentifier& rIdentifier);
 			virtual bool setChildData(const void* pBuffer, uint64_t ui64BufferSize);
-			virtual bool closeChild(void);
+			virtual bool closeChild();
 
-			virtual void release(void);
+			virtual void release();
 
 		protected:
 
@@ -206,7 +206,7 @@ namespace EBML
 
 		private:
 
-			CWriter(void);
+			CWriter();
 		};
 	};
 };
@@ -260,7 +260,7 @@ bool CWriter::setChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 	return true;
 }
 
-bool CWriter::closeChild(void)
+bool CWriter::closeChild()
 {
 	if (!m_pCurrentNode) { return false; }
 
@@ -282,7 +282,7 @@ bool CWriter::closeChild(void)
 	return true;
 }
 
-void CWriter::release(void)
+void CWriter::release()
 {
 	while (m_pCurrentNode)
 	{

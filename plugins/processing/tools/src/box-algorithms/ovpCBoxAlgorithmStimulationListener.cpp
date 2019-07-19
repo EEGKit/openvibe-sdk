@@ -8,7 +8,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Tools;
 
-bool CBoxAlgorithmStimulationListener::initialize(void)
+bool CBoxAlgorithmStimulationListener::initialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
@@ -21,7 +21,7 @@ bool CBoxAlgorithmStimulationListener::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationListener::uninitialize(void)
+bool CBoxAlgorithmStimulationListener::uninitialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
@@ -40,7 +40,7 @@ bool CBoxAlgorithmStimulationListener::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmStimulationListener::process(void)
+bool CBoxAlgorithmStimulationListener::process()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();

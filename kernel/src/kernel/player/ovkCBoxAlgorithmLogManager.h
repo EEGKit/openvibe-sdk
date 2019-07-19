@@ -44,7 +44,7 @@ namespace OpenViBE
 
 			void log(ELogLevel logLevel) override;
 
-			CIdentifier getClassIdentifier(void) const override { return CIdentifier(); }
+			CIdentifier getClassIdentifier() const override { return CIdentifier(); }
 
 		private:
 			const IPlayerContext& m_PlayerContext;

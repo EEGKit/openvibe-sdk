@@ -19,57 +19,57 @@ namespace OpenViBE
 			TKernelObject(const TKernelObject&)            = delete;
 			TKernelObject& operator=(const TKernelObject&) = delete;
 
-			const IKernelContext& getKernelContext(void) const
+			const IKernelContext& getKernelContext() const
 			{
 				return m_kernelContext;
 			}
 
-			virtual IAlgorithmManager& getAlgorithmManager(void) const
+			virtual IAlgorithmManager& getAlgorithmManager() const
 			{
 				return m_kernelContext.getAlgorithmManager();
 			}
 
-			virtual IConfigurationManager& getConfigurationManager(void) const
+			virtual IConfigurationManager& getConfigurationManager() const
 			{
 				return m_kernelContext.getConfigurationManager();
 			}
 
-			virtual IKernelObjectFactory& getKernelObjectFactory(void) const
+			virtual IKernelObjectFactory& getKernelObjectFactory() const
 			{
 				return m_kernelContext.getKernelObjectFactory();
 			}
 
-			virtual IPlayerManager& getPlayerManager(void) const
+			virtual IPlayerManager& getPlayerManager() const
 			{
 				return m_kernelContext.getPlayerManager();
 			}
 
-			virtual IPluginManager& getPluginManager(void) const
+			virtual IPluginManager& getPluginManager() const
 			{
 				return m_kernelContext.getPluginManager();
 			}
 
-			virtual IMetaboxManager& getMetaboxManager(void) const
+			virtual IMetaboxManager& getMetaboxManager() const
 			{
 				return m_kernelContext.getMetaboxManager();
 			}
 
-			virtual IScenarioManager& getScenarioManager(void) const
+			virtual IScenarioManager& getScenarioManager() const
 			{
 				return m_kernelContext.getScenarioManager();
 			}
 
-			virtual ITypeManager& getTypeManager(void) const
+			virtual ITypeManager& getTypeManager() const
 			{
 				return m_kernelContext.getTypeManager();
 			}
 
-			virtual ILogManager& getLogManager(void) const
+			virtual ILogManager& getLogManager() const
 			{
 				return m_kernelContext.getLogManager();
 			}
 
-			virtual IErrorManager& getErrorManager(void) const
+			virtual IErrorManager& getErrorManager() const
 			{
 				return m_kernelContext.getErrorManager();
 			}
@@ -80,7 +80,7 @@ namespace OpenViBE
 
 			const IKernelContext& m_kernelContext;
 
-			// TKernelObject(void);
+			// TKernelObject();
 		};
 	};
 };

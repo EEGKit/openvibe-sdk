@@ -13,7 +13,7 @@ namespace OpenViBEToolkit
 		explicit TFeatureVector(OpenViBE::IMatrix& rMatrix)
 			: TVector<CParent>(rMatrix) { }
 
-		virtual double getLabel(void) const { return 0; }
+		virtual double getLabel() const { return 0; }
 
 		virtual bool setLabel(const double f64Label) { return false; }
 

@@ -79,7 +79,7 @@ namespace Socket
 			return true;
 		}
 
-		IConnection* accept(void)
+		IConnection* accept()
 		{
 			struct sockaddr_in l_oClientAddress;
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
@@ -113,7 +113,7 @@ namespace Socket
 		}
 	};
 
-	IConnectionServer* createConnectionServer(void)
+	IConnectionServer* createConnectionServer()
 	{
 		return new CConnectionServer();
 	}

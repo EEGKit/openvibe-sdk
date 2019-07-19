@@ -28,7 +28,7 @@ namespace OpenViBEToolkit
 			m_rHandler = rHandledValue;
 		}
 
-		~TScopeHandle(void)
+		~TScopeHandle()
 		{
 			m_rHandler = m_oLastHandledValue;
 		}

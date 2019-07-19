@@ -43,7 +43,7 @@ using namespace System;
 //
 
 // \brief Calibrate sleep function to estimate the extra time not spent at sleeping
-uint64_t calibrateSleep(unsigned int sampleCount, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)(void))
+uint64_t calibrateSleep(unsigned int sampleCount, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
 	uint64_t preTime;
 	uint64_t processingTime;
@@ -64,7 +64,7 @@ uint64_t calibrateSleep(unsigned int sampleCount, bool (*sleepFunction)(uint64_t
 }
 
 // \brief Record sleep function precision
-std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)(void))
+std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
 	std::vector<uint64_t> effectiveSleepTimes;
 	uint64_t preTime;
@@ -104,7 +104,7 @@ unsigned int assessSleepTestResult(const std::vector<uint64_t>& expectedTimes,
 // \brief Record clock function data (spin test taken from OpenViBE). Return a tuple with:
 //       - bool = monotonic state
 //       - std::vector<uint64_t> = all the cumulative steps
-std::tuple<bool, std::vector<uint64_t>> testClock(uint64_t samplePeriod, unsigned sampleCountGuess, uint64_t (*timeFunction)(void))
+std::tuple<bool, std::vector<uint64_t>> testClock(uint64_t samplePeriod, unsigned sampleCountGuess, uint64_t (*timeFunction)())
 {
 	std::vector<uint64_t> cumulativeSteps;
 	cumulativeSteps.reserve(sampleCountGuess);

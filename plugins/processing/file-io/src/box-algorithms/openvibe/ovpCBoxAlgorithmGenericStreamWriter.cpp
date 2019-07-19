@@ -9,11 +9,11 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter(void)
+CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter()
 	: m_bIsHeaderGenerate(false)
 	  , m_oWriter(*this) {}
 
-bool CBoxAlgorithmGenericStreamWriter::initialize(void)
+bool CBoxAlgorithmGenericStreamWriter::initialize()
 {
 	m_sFilename            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	bool l_bUseCompression = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -26,7 +26,7 @@ bool CBoxAlgorithmGenericStreamWriter::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmGenericStreamWriter::uninitialize(void)
+bool CBoxAlgorithmGenericStreamWriter::uninitialize()
 {
 	if (m_oFile.is_open())
 	{
@@ -93,7 +93,7 @@ bool CBoxAlgorithmGenericStreamWriter::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmGenericStreamWriter::process(void)
+bool CBoxAlgorithmGenericStreamWriter::process()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();

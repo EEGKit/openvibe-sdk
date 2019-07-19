@@ -11,7 +11,7 @@ class CPluginObjectDescEnum
 public:
 
 	explicit CPluginObjectDescEnum(const OpenViBE::Kernel::IKernelContext& rKernelContext);
-	virtual ~CPluginObjectDescEnum(void);
+	virtual ~CPluginObjectDescEnum();
 
 	virtual bool enumeratePluginObjectDesc(std::vector<const OpenViBE::Plugins::IPluginObjectDesc*>& pluginDescriptors);
 	virtual bool enumeratePluginObjectDesc(const OpenViBE::CIdentifier& parentClassIdentifier);

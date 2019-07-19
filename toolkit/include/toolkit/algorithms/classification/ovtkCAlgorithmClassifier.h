@@ -40,9 +40,9 @@ namespace OpenViBEToolkit
 		virtual bool initialize();
 		virtual bool uninitialize();
 
-		virtual void release(void) { delete this; }
+		virtual void release() { delete this; }
 
-		virtual bool process(void);
+		virtual bool process();
 
 		virtual bool train(const IFeatureVectorSet& featureVectorSet) = 0;
 		virtual bool classify(const IFeatureVector& featureVector
@@ -50,11 +50,11 @@ namespace OpenViBEToolkit
 										   , IVector& distanceValue
 										   , IVector& probabilityValue) = 0;
 
-		virtual XML::IXMLNode* saveConfiguration(void) = 0;
+		virtual XML::IXMLNode* saveConfiguration() = 0;
 		virtual bool loadConfiguration(XML::IXMLNode* configurationRoot) = 0;
 
-		virtual uint32_t getOutputProbabilityVectorLength(void) = 0;
-		virtual uint32_t getOutputDistanceVectorLength(void) = 0;
+		virtual uint32_t getOutputProbabilityVectorLength() = 0;
+		virtual uint32_t getOutputDistanceVectorLength() = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_Classifier);
 

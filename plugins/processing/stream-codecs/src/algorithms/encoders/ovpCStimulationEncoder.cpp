@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-bool CStimulationEncoder::initialize(void)
+bool CStimulationEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
 
@@ -16,7 +16,7 @@ bool CStimulationEncoder::initialize(void)
 	return true;
 }
 
-bool CStimulationEncoder::uninitialize(void)
+bool CStimulationEncoder::uninitialize()
 {
 	ip_pStimulationSet.uninitialize();
 
@@ -28,7 +28,7 @@ bool CStimulationEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CStimulationEncoder::processBuffer(void)
+bool CStimulationEncoder::processBuffer()
 {
 	IStimulationSet* l_pStimulationSet = ip_pStimulationSet;
 

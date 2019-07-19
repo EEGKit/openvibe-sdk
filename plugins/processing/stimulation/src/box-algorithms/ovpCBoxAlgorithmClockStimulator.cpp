@@ -8,12 +8,12 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Stimulation;
 
-uint64_t CBoxAlgorithmClockStimulator::getClockFrequency(void)
+uint64_t CBoxAlgorithmClockStimulator::getClockFrequency()
 {
 	return (1LL << 32) * 32;
 }
 
-bool CBoxAlgorithmClockStimulator::initialize(void)
+bool CBoxAlgorithmClockStimulator::initialize()
 {
 	double l_f64InterstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
@@ -37,7 +37,7 @@ bool CBoxAlgorithmClockStimulator::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmClockStimulator::uninitialize(void)
+bool CBoxAlgorithmClockStimulator::uninitialize()
 {
 	m_oStimulationEncoder.uninitialize();
 
@@ -51,7 +51,7 @@ bool CBoxAlgorithmClockStimulator::processClock(IMessageClock& rMessageClock)
 	return true;
 }
 
-bool CBoxAlgorithmClockStimulator::process(void)
+bool CBoxAlgorithmClockStimulator::process()
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 

@@ -17,12 +17,12 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
-			virtual bool processInput(uint32_t ui32InputIndex);
-			virtual bool process(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
+			virtual bool processInput(uint32_t index);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching);
 
@@ -76,22 +76,22 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmStimulationBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Stimulation based epoching"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Jozef Legeny"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Mensia Technologies"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Signal processing/Epoching"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("2.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.1.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Stimulation based epoching"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Jozef Legeny"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Mensia Technologies"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Signal processing/Epoching"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("2.0"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.1.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmStimulationBasedEpoching; }
-			virtual OpenViBE::CString getStockItemName(void) const { return "gtk-cut"; }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmStimulationBasedEpoching; }
+			virtual OpenViBE::CString getStockItemName() const { return "gtk-cut"; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{

@@ -29,7 +29,7 @@ namespace OpenViBE
 		 *
 		 * This constructor builds the internal implementation of this matrix.
 		 */
-		CMatrix(void);
+		CMatrix();
 
 
 		CMatrix(const CMatrix& other);
@@ -40,18 +40,18 @@ namespace OpenViBE
 		 *
 		 * The internal implementation is released.
 		 */
-		virtual ~CMatrix(void);
+		virtual ~CMatrix();
 
 		//@}
 
-		virtual const uint32_t getDimensionCount(void) const;
+		virtual const uint32_t getDimensionCount() const;
 		virtual const uint32_t getDimensionSize(
 			uint32_t ui32DimensionIndex) const;
 		virtual const char* getDimensionLabel(
 			uint32_t ui32DimensionIndex,
 			uint32_t ui32DimensionEntryIndex) const;
-		virtual const double* getBuffer(void) const;
-		virtual const uint32_t getBufferElementCount(void) const;
+		virtual const double* getBuffer() const;
+		virtual const uint32_t getBufferElementCount() const;
 
 		virtual bool setDimensionCount(
 			uint32_t ui32DimensionCount);
@@ -62,7 +62,7 @@ namespace OpenViBE
 			uint32_t ui32DimensionIndex,
 			uint32_t ui32DimensionEntryIndex,
 			const char* sDimensionLabel);
-		virtual double* getBuffer(void);
+		virtual double* getBuffer();
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMatrix, OV_ClassId_MatrixBridge);
 

@@ -63,7 +63,7 @@ namespace
 	class CInterfacor
 	{
 	public:
-		CInterfacor(void) { }
+		CInterfacor() { }
 
 		CInterfacor(const CInterfacor& other)
 			: m_sName(other.m_sName)
@@ -88,7 +88,7 @@ namespace
 	class CInputOutput : public CInterfacor
 	{
 	public:
-		CInputOutput(void) { }
+		CInputOutput() { }
 
 		CInputOutput(const CInputOutput& i)
 			: CInterfacor(i)
@@ -105,7 +105,7 @@ namespace
 	class CSetting : public CInterfacor
 	{
 	public:
-		CSetting(void) { }
+		CSetting() { }
 
 		CSetting(const CSetting& s)
 			: CInterfacor(s)
@@ -162,7 +162,7 @@ namespace OpenViBE
 				}
 			}
 
-			virtual ~TBox(void)
+			virtual ~TBox()
 			{
 				if (m_pBoxAlgorithmDescriptor && m_pBoxListener)
 				{
@@ -177,17 +177,17 @@ namespace OpenViBE
 				m_pOwnerScenario = pOwnerScenario;
 			}
 
-			virtual CIdentifier getIdentifier(void) const
+			virtual CIdentifier getIdentifier() const
 			{
 				return m_oIdentifier;
 			}
 
-			virtual CString getName(void) const
+			virtual CString getName() const
 			{
 				return m_sName;
 			}
 
-			virtual CIdentifier getAlgorithmClassIdentifier(void) const
+			virtual CIdentifier getAlgorithmClassIdentifier() const
 			{
 				return m_oAlgorithmClassIdentifier;
 			}
@@ -960,7 +960,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual uint32_t getInputCount(void) const
+			virtual uint32_t getInputCount() const
 			{
 				return this->getInterfacorCount(Input);
 			}
@@ -1151,7 +1151,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual uint32_t getOutputCount(void) const
+			virtual uint32_t getOutputCount() const
 			{
 				return this->getInterfacorCount(Output);
 			}
@@ -1476,7 +1476,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual uint32_t getSettingCount(void) const
+			virtual uint32_t getSettingCount() const
 			{
 				return this->getInterfacorCount(Setting);
 			}
@@ -1802,7 +1802,7 @@ namespace OpenViBE
 				}
 			}
 
-			virtual bool hasModifiableSettings(void) const
+			virtual bool hasModifiableSettings() const
 			{
 				for (const auto& setting : m_Interfacors.at(Setting))
 				{
@@ -1867,7 +1867,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual void clearBox(void)
+			virtual void clearBox()
 			{
 				m_pBoxAlgorithmDescriptor   = NULL;
 				m_oAlgorithmClassIdentifier = OV_UndefinedIdentifier;
@@ -1885,12 +1885,12 @@ namespace OpenViBE
 				this->removeAllAttributes();
 			}
 
-			virtual void enableNotification(void)
+			virtual void enableNotification()
 			{
 				m_bIsNotificationActive = true;
 			}
 
-			virtual void disableNotification(void)
+			virtual void disableNotification()
 			{
 				m_bIsNotificationActive = false;
 			}

@@ -40,18 +40,18 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual bool initialize(void) = 0;
-			virtual bool uninitialize(void) = 0;
+			virtual bool initialize() = 0;
+			virtual bool uninitialize() = 0;
 
-			virtual bool parameterize(void) = 0;
+			virtual bool parameterize() = 0;
 
 			virtual bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) = 0;
-			virtual XML::IXMLNode* saveConfiguration(void) = 0;
+			virtual XML::IXMLNode* saveConfiguration() = 0;
 			virtual bool loadConfiguration(XML::IXMLNode& rNode) = 0;
 
-			virtual bool process(void);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_PairwiseDecision)
 		};

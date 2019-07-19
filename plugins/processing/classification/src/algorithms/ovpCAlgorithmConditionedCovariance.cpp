@@ -37,7 +37,7 @@ void CAlgorithmConditionedCovariance::dumpMatrix(OpenViBE::Kernel::ILogManager &
 void CAlgorithmConditionedCovariance::dumpMatrix(ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 #endif
 
-bool CAlgorithmConditionedCovariance::initialize(void)
+bool CAlgorithmConditionedCovariance::initialize()
 {
 	// Default value setting
 	TParameterHandler<double> ip_f64Shrinkage(getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage));
@@ -46,9 +46,9 @@ bool CAlgorithmConditionedCovariance::initialize(void)
 	return true;
 }
 
-bool CAlgorithmConditionedCovariance::uninitialize(void) { return true; }
+bool CAlgorithmConditionedCovariance::uninitialize() { return true; }
 
-bool CAlgorithmConditionedCovariance::process(void)
+bool CAlgorithmConditionedCovariance::process()
 {
 	// Set up the IO
 	const TParameterHandler<double> ip_f64Shrinkage(getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_Shrinkage));

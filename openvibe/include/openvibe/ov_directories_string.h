@@ -96,7 +96,7 @@ namespace OpenViBE
 #endif
 		}
 
-		static std::string getLogDir(void)
+		static std::string getLogDir()
 		{
 			return getUserDataDir() + "/log";
 		}

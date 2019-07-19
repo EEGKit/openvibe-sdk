@@ -12,16 +12,16 @@ namespace OpenViBE
 		{
 		public:
 
-			CMemoryBufferImpl(void);
+			CMemoryBufferImpl();
 			explicit CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer);
 			CMemoryBufferImpl(const uint8_t* pMemoryBuffer, uint64_t ui64BufferSize);
-			virtual ~CMemoryBufferImpl(void);
+			virtual ~CMemoryBufferImpl();
 
 			virtual bool reserve(uint64_t ui64Size);
 			virtual bool setSize(uint64_t ui64Size, bool bDiscard);
-			virtual uint64_t getSize(void) const;
-			virtual uint8_t* getDirectPointer(void);
-			virtual const uint8_t* getDirectPointer(void) const;
+			virtual uint64_t getSize() const;
+			virtual uint8_t* getDirectPointer();
+			virtual const uint8_t* getDirectPointer() const;
 			virtual bool append(const uint8_t* pBuffer, uint64_t ui64BufferSize);
 			virtual bool append(const IMemoryBuffer& rMemoryBuffer);
 
@@ -39,7 +39,7 @@ namespace OpenViBE
 // ________________________________________________________________________________________________________________
 //
 
-CMemoryBufferImpl::CMemoryBufferImpl(void)
+CMemoryBufferImpl::CMemoryBufferImpl()
 	: m_pBuffer(NULL)
 	  , m_ui64BufferSize(0)
 	  , m_ui64AllocatedSize(0) {}
@@ -80,7 +80,7 @@ CMemoryBufferImpl::CMemoryBufferImpl(const uint8_t* pMemoryBuffer, const uint64_
 	}
 }
 
-CMemoryBufferImpl::~CMemoryBufferImpl(void)
+CMemoryBufferImpl::~CMemoryBufferImpl()
 {
 	if (m_pBuffer)
 	{
@@ -89,17 +89,17 @@ CMemoryBufferImpl::~CMemoryBufferImpl(void)
 	}
 }
 
-uint8_t* CMemoryBufferImpl::getDirectPointer(void)
+uint8_t* CMemoryBufferImpl::getDirectPointer()
 {
 	return m_pBuffer;
 }
 
-const uint8_t* CMemoryBufferImpl::getDirectPointer(void) const
+const uint8_t* CMemoryBufferImpl::getDirectPointer() const
 {
 	return m_pBuffer;
 }
 
-uint64_t CMemoryBufferImpl::getSize(void) const
+uint64_t CMemoryBufferImpl::getSize() const
 {
 	return m_ui64BufferSize;
 }
@@ -169,7 +169,7 @@ bool CMemoryBufferImpl::append(const IMemoryBuffer& rMemoryBuffer)
 // ________________________________________________________________________________________________________________
 //
 
-CMemoryBuffer::CMemoryBuffer(void)
+CMemoryBuffer::CMemoryBuffer()
 	: m_pMemoryBufferImpl(NULL)
 {
 	m_pMemoryBufferImpl = new CMemoryBufferImpl();
@@ -187,7 +187,7 @@ CMemoryBuffer::CMemoryBuffer(const uint8_t* pMemoryBuffer, const uint64_t ui64Bu
 	m_pMemoryBufferImpl = new CMemoryBufferImpl(pMemoryBuffer, ui64BufferSize);
 }
 
-CMemoryBuffer::~CMemoryBuffer(void)
+CMemoryBuffer::~CMemoryBuffer()
 {
 	delete m_pMemoryBufferImpl;
 }
@@ -202,17 +202,17 @@ bool CMemoryBuffer::setSize(const uint64_t ui64Size, const bool bDiscard)
 	return m_pMemoryBufferImpl->setSize(ui64Size, bDiscard);
 }
 
-uint64_t CMemoryBuffer::getSize(void) const
+uint64_t CMemoryBuffer::getSize() const
 {
 	return m_pMemoryBufferImpl->getSize();
 }
 
-uint8_t* CMemoryBuffer::getDirectPointer(void)
+uint8_t* CMemoryBuffer::getDirectPointer()
 {
 	return m_pMemoryBufferImpl->getDirectPointer();
 }
 
-const uint8_t* CMemoryBuffer::getDirectPointer(void) const
+const uint8_t* CMemoryBuffer::getDirectPointer() const
 {
 	return m_pMemoryBufferImpl->getDirectPointer();
 }

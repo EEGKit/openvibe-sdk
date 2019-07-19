@@ -137,7 +137,7 @@ bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputStr
 	return true;
 }
 
-CCSVHandler::CCSVHandler(void)
+CCSVHandler::CCSVHandler()
 	: m_LogError(LogErrorCodes_NoError)
 	  , m_LastStringError("")
 	  , m_InputTypeIdentifier(EStreamType::StreamedMatrix)
@@ -158,7 +158,7 @@ CCSVHandler::CCSVHandler(void)
 	  , m_HasDataToRead(true)
 	  , m_IsCRLFEOL(false) {}
 
-CCSVHandler::~CCSVHandler(void)
+CCSVHandler::~CCSVHandler()
 {
 	this->closeFile();
 }
@@ -190,7 +190,7 @@ void CCSVHandler::setFormatType(EStreamType typeIdentifier)
 	m_HasInputType        = true;
 }
 
-EStreamType CCSVHandler::getFormatType(void)
+EStreamType CCSVHandler::getFormatType()
 {
 	return m_InputTypeIdentifier;
 }
@@ -634,7 +634,7 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<
 	return true;
 }
 
-bool CCSVHandler::writeHeaderToFile(void)
+bool CCSVHandler::writeHeaderToFile()
 {
 	if (!m_Fs.is_open())
 	{
@@ -671,7 +671,7 @@ bool CCSVHandler::writeHeaderToFile(void)
 	return true;
 }
 
-bool CCSVHandler::writeDataToFile(void)
+bool CCSVHandler::writeDataToFile()
 {
 	if (!m_Fs.is_open())
 	{
@@ -700,7 +700,7 @@ bool CCSVHandler::writeDataToFile(void)
 	return true;
 }
 
-bool CCSVHandler::writeAllDataToFile(void)
+bool CCSVHandler::writeAllDataToFile()
 {
 	std::string csv;
 
@@ -997,7 +997,7 @@ std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChun
 	return boost::algorithm::join(stimulations, std::string(1, s_Separator));
 }
 
-std::string CCSVHandler::createHeaderString(void)
+std::string CCSVHandler::createHeaderString()
 {
 	const std::string invalidHeader = "";
 	std::string header;
@@ -1266,7 +1266,7 @@ bool CCSVHandler::createCSVStringFromData(bool canWriteAll, std::string& csv)
 	return true;
 }
 
-bool CCSVHandler::parseHeader(void)
+bool CCSVHandler::parseHeader()
 {
 	if (m_IsHeaderRead) { return true; }
 

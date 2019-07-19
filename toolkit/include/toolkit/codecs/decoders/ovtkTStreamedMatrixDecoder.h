@@ -32,7 +32,7 @@ namespace OpenViBEToolkit
 	public:
 		using T::initialize;
 
-		virtual bool uninitialize(void)
+		virtual bool uninitialize()
 		{
 			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 
@@ -50,17 +50,17 @@ namespace OpenViBEToolkit
 			return m_pOutputMatrix;
 		}
 
-		virtual bool isHeaderReceived(void)
+		virtual bool isHeaderReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedHeader);
 		}
 
-		virtual bool isBufferReceived(void)
+		virtual bool isBufferReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedBuffer);
 		}
 
-		virtual bool isEndReceived(void)
+		virtual bool isEndReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedEnd);
 		}

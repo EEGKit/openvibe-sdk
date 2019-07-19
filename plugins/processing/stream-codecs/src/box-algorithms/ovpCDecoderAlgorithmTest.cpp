@@ -43,11 +43,11 @@ ILogManager& operator <<(ILogManager& rLogManager, IStimulationSet& rStimulation
 	return rLogManager;
 }
 
-CDecoderAlgorithmTest::CDecoderAlgorithmTest(void) {}
+CDecoderAlgorithmTest::CDecoderAlgorithmTest() {}
 
-CDecoderAlgorithmTest::~CDecoderAlgorithmTest(void) {}
+CDecoderAlgorithmTest::~CDecoderAlgorithmTest() {}
 
-bool CDecoderAlgorithmTest::initialize(void)
+bool CDecoderAlgorithmTest::initialize()
 {
 	m_pStreamDecoder[0] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ExperimentInformationStreamDecoder));
 	m_pStreamDecoder[1] = &getAlgorithmManager().getAlgorithm(getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_FeatureVectorStreamDecoder));
@@ -66,7 +66,7 @@ bool CDecoderAlgorithmTest::initialize(void)
 	return true;
 }
 
-bool CDecoderAlgorithmTest::uininitialize(void)
+bool CDecoderAlgorithmTest::uininitialize()
 {
 	for (uint32_t i = 0; i < 7; i++)
 	{
@@ -85,7 +85,7 @@ bool CDecoderAlgorithmTest::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CDecoderAlgorithmTest::process(void)
+bool CDecoderAlgorithmTest::process()
 {
 	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();

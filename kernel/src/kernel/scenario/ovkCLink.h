@@ -20,7 +20,7 @@ namespace OpenViBE
 
 			virtual bool setIdentifier(
 				const CIdentifier& rIdentifier);
-			virtual CIdentifier getIdentifier(void) const;
+			virtual CIdentifier getIdentifier() const;
 
 			virtual bool setSource(
 				const CIdentifier& rBoxIdentifier,
@@ -34,16 +34,16 @@ namespace OpenViBE
 				CIdentifier& rBoxIdentifier,
 				uint32_t& ui32BoxOutputIndex,
 				CIdentifier& rBoxOutputIdentifier) const;
-			virtual CIdentifier getSourceBoxIdentifier(void) const;
-			virtual uint32_t getSourceBoxOutputIndex(void) const;
-			virtual CIdentifier getSourceBoxOutputIdentifier(void) const;
+			virtual CIdentifier getSourceBoxIdentifier() const;
+			virtual uint32_t getSourceBoxOutputIndex() const;
+			virtual CIdentifier getSourceBoxOutputIdentifier() const;
 			virtual bool getTarget(
 				CIdentifier& rTargetBoxIdentifier,
 				uint32_t& ui32BoxInputIndex,
 				CIdentifier& rTargetBoxInputIdentifier) const;
-			virtual CIdentifier getTargetBoxIdentifier(void) const;
-			virtual uint32_t getTargetBoxInputIndex(void) const;
-			virtual CIdentifier getTargetBoxInputIdentifier(void) const;
+			virtual CIdentifier getTargetBoxIdentifier() const;
+			virtual uint32_t getTargetBoxInputIndex() const;
+			virtual CIdentifier getTargetBoxInputIdentifier() const;
 
 
 			virtual bool acceptVisitor(

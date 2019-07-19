@@ -60,7 +60,7 @@ namespace EBML
 		 * with another EBML writer instance calling \c connect
 		 * again.
 		 */
-		virtual bool disconnect(void) = 0;
+		virtual bool disconnect() = 0;
 		//@}
 
 		/** \name Writer binding functions */
@@ -85,7 +85,7 @@ namespace EBML
 		 * corresponding EBML::IWriter function. See
 		 * EBML::IWriter::closeChild for more details.
 		 */
-		virtual bool closeChild(void) = 0;
+		virtual bool closeChild() = 0;
 		//@}
 
 		/**
@@ -158,14 +158,14 @@ namespace EBML
 		 * \warning Releasing this obbject does not release the
 		 *          connected writer instance !
 		 */
-		virtual void release(void) = 0;
+		virtual void release() = 0;
 
 	protected:
 
 		/**
 		 * \brief Virtual destructor - should be overloaded
 		 */
-		virtual ~IWriterHelper(void) { }
+		virtual ~IWriterHelper() { }
 	};
 
 	/**
@@ -173,7 +173,7 @@ namespace EBML
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API IWriterHelper* createWriterHelper(void);
+	extern EBML_API IWriterHelper* createWriterHelper();
 };
 
 

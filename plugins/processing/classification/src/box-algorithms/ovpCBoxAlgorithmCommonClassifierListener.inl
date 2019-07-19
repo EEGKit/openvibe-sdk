@@ -34,7 +34,7 @@ namespace OpenViBEPlugins
 				  m_ui32CustomSettingBase(ui32CustomSettingBase),
 				  m_i32StrategyAmountSettings(-1) { }
 
-			virtual bool initialize(void)
+			virtual bool initialize()
 			{
 				//Even if everything should have been set in constructor, we still set everything in initialize (in case of)
 				m_oClassifierClassIdentifier = OV_UndefinedIdentifier;
@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool uninitialize(void)
+			virtual bool uninitialize()
 			{
 				if (m_pClassifier)
 				{

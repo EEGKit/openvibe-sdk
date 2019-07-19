@@ -24,7 +24,7 @@ public:
 
 	virtual void processChildData(const char* sData);
 
-	virtual void closeChild(void);
+	virtual void closeChild();
 
 	virtual bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox);
 

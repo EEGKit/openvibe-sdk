@@ -40,7 +40,7 @@ namespace OpenViBEToolkit
 			return m_pCodec->process(oTrigger);
 		}
 
-		virtual bool process(void)
+		virtual bool process()
 		{
 			return m_pCodec->process();
 		}

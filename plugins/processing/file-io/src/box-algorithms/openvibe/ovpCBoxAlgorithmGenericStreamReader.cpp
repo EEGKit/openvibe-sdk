@@ -11,17 +11,17 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-CBoxAlgorithmGenericStreamReader::CBoxAlgorithmGenericStreamReader(void)
+CBoxAlgorithmGenericStreamReader::CBoxAlgorithmGenericStreamReader()
 	: m_oReader(*this)
 	  , m_bHasEBMLHeader(false)
 	  , m_pFile(NULL) {}
 
-uint64_t CBoxAlgorithmGenericStreamReader::getClockFrequency(void)
+uint64_t CBoxAlgorithmGenericStreamReader::getClockFrequency()
 {
 	return 128LL << 32; // the box clock frequency
 }
 
-bool CBoxAlgorithmGenericStreamReader::initialize(void)
+bool CBoxAlgorithmGenericStreamReader::initialize()
 {
 	m_sFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
@@ -33,7 +33,7 @@ bool CBoxAlgorithmGenericStreamReader::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmGenericStreamReader::uninitialize(void)
+bool CBoxAlgorithmGenericStreamReader::uninitialize()
 {
 	if (m_pFile)
 	{
@@ -64,7 +64,7 @@ bool CBoxAlgorithmGenericStreamReader::processClock(IMessageClock& rMessageClock
 	return true;
 }
 
-bool CBoxAlgorithmGenericStreamReader::process(void)
+bool CBoxAlgorithmGenericStreamReader::process()
 {
 	if (m_pFile == NULL)
 	{
@@ -221,7 +221,7 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* pBuffer, con
 	}
 }
 
-void CBoxAlgorithmGenericStreamReader::closeChild(void)
+void CBoxAlgorithmGenericStreamReader::closeChild()
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

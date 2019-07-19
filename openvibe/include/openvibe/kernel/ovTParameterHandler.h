@@ -50,7 +50,7 @@ namespace OpenViBE
 			/**
 			 * \brief Default construction, does nothing
 			 */
-			TParameterHandler(void)
+			TParameterHandler()
 				: m_pParameter(NULL) { }
 
 			/**
@@ -95,7 +95,7 @@ namespace OpenViBE
 			 *
 			 * This handler won't be usable until \c initialize is called successfully again.
 			 */
-			bool uninitialize(void)
+			bool uninitialize()
 			{
 				if (!m_pParameter) { return false; }
 
@@ -107,7 +107,7 @@ namespace OpenViBE
 			 * \brief Checks whether this handler is connected to a concrete IParameter or not
 			 * \return \e true if this handler is connected to a concrete IParameter, \e false if not
 			 */
-			bool exists(void) const { return m_pParameter != NULL; }
+			bool exists() const { return m_pParameter != NULL; }
 
 			//@{
 			/** \name Transparent operators */
@@ -128,7 +128,7 @@ namespace OpenViBE
 			 * uint64_t c=a*l_oParameter+l_oParameter;
 			 * \endcode
 			 */
-			operator T(void) const
+			operator T() const
 			{
 				if (!m_pParameter) { throw; }
 				T t;
@@ -149,7 +149,7 @@ namespace OpenViBE
 			 * l_oParameter->setDimensionCount(2);
 			 * \endcode
 			 */
-			T operator ->(void) const
+			T operator ->() const
 			{
 				if (!m_pParameter) { throw; }
 				T t;
@@ -186,7 +186,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			bool clearReferenceTarget(void)
+			bool clearReferenceTarget()
 			{
 				return m_pParameter ? m_pParameter->clearReferenceTarget() : false;
 			}

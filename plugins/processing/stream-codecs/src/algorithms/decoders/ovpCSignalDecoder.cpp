@@ -10,7 +10,7 @@ using namespace StreamCodecs;
 // ________________________________________________________________________________________________________________
 //
 
-bool CSignalDecoder::initialize(void)
+bool CSignalDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
 
@@ -19,7 +19,7 @@ bool CSignalDecoder::initialize(void)
 	return true;
 }
 
-bool CSignalDecoder::uninitialize(void)
+bool CSignalDecoder::uninitialize()
 {
 	op_ui64SamplingRate.uninitialize();
 
@@ -70,7 +70,7 @@ void CSignalDecoder::processChildData(const void* pBuffer, const uint64_t ui64Bu
 	}
 }
 
-void CSignalDecoder::closeChild(void)
+void CSignalDecoder::closeChild()
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

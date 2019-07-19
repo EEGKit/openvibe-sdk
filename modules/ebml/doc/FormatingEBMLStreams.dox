@@ -59,7 +59,7 @@
  *   {
  *     m_pFile=fopen(sFileName, "wb");
  *   }
- *   virtual ~CWriterCallback(void)
+ *   virtual ~CWriterCallback()
  *   {
  *     if(m_pFile) fclose(m_pFile);
  *   }

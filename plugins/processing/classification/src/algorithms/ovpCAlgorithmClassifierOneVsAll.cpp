@@ -40,7 +40,7 @@ bool CAlgorithmClassifierOneVsAll::initialize()
 	return CAlgorithmPairingStrategy::initialize();
 }
 
-bool CAlgorithmClassifierOneVsAll::uninitialize(void)
+bool CAlgorithmClassifierOneVsAll::uninitialize()
 {
 	while (!m_oSubClassifierList.empty())
 	{
@@ -232,7 +232,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack(void)
+bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 {
 	const CIdentifier l_oSubClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_oSubClassifierAlgorithmIdentifier);
 
@@ -257,7 +257,7 @@ bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack(void)
 	return true;
 }
 
-void CAlgorithmClassifierOneVsAll::removeClassifierAtBack(void)
+void CAlgorithmClassifierOneVsAll::removeClassifierAtBack()
 {
 	IAlgorithmProxy* l_pSubClassifier = m_oSubClassifierList.back();
 	l_pSubClassifier->uninitialize();
@@ -283,7 +283,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsAll::getClassifierConfiguration(IAlgorit
 	return l_pRes;
 }
 
-XML::IXMLNode* CAlgorithmClassifierOneVsAll::saveConfiguration(void)
+XML::IXMLNode* CAlgorithmClassifierOneVsAll::saveConfiguration()
 {
 	std::stringstream l_sClassCountes;
 	l_sClassCountes << getClassCount();
@@ -377,7 +377,7 @@ bool CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNode*
 	return true;
 }
 
-uint32_t CAlgorithmClassifierOneVsAll::getClassCount(void) const
+uint32_t CAlgorithmClassifierOneVsAll::getClassCount() const
 {
 	return static_cast<uint32_t>(m_oSubClassifierList.size());
 }

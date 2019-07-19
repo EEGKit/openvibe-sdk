@@ -37,7 +37,7 @@ CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& r
 	  , m_ui64ClockFrequency(0)
 	  , m_ui64ClockActivationStep(0) {}
 
-CSimulatedBox::~CSimulatedBox(void) {}
+CSimulatedBox::~CSimulatedBox() {}
 
 bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentifier)
 {
@@ -67,7 +67,7 @@ bool CSimulatedBox::setBoxIdentifier(const CIdentifier& rBoxIdentifier)
 	return m_pBox != NULL;
 }
 
-bool CSimulatedBox::initialize(void)
+bool CSimulatedBox::initialize()
 {
 	OV_ERROR_UNLESS_KRF(m_pBox, "Simulated box not initialized", ErrorType::BadCall);
 	OV_ERROR_UNLESS_KRF(m_pScenario, "No scenario set", ErrorType::BadCall);
@@ -105,7 +105,7 @@ bool CSimulatedBox::initialize(void)
 	return true;
 }
 
-bool CSimulatedBox::uninitialize(void)
+bool CSimulatedBox::uninitialize()
 {
 	if (!m_pBoxAlgorithm) { return true; }
 
@@ -126,7 +126,7 @@ bool CSimulatedBox::uninitialize(void)
 	return true;
 }
 
-bool CSimulatedBox::processClock(void)
+bool CSimulatedBox::processClock()
 {
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
@@ -207,7 +207,7 @@ bool CSimulatedBox::processInput(const uint32_t ui32InputIndex, const CChunk& rC
 	return true;
 }
 
-bool CSimulatedBox::process(void)
+bool CSimulatedBox::process()
 {
 	if (!m_bReadyToProcess) { return true; }
 
@@ -289,7 +289,7 @@ bool CSimulatedBox::process(void)
 	return true;
 }
 
-bool CSimulatedBox::isReadyToProcess(void) const
+bool CSimulatedBox::isReadyToProcess() const
 {
 	return m_bReadyToProcess;
 }
@@ -298,12 +298,12 @@ bool CSimulatedBox::isReadyToProcess(void) const
 // - --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- -
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-CString CSimulatedBox::getName(void) const
+CString CSimulatedBox::getName() const
 {
 	return m_pBox->getName();
 }
 
-const IScenario& CSimulatedBox::getScenario(void) const
+const IScenario& CSimulatedBox::getScenario() const
 {
 	return *m_pScenario;
 }

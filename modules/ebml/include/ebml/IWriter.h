@@ -25,7 +25,7 @@ namespace EBML
 		/**
 		 * \brief Virtual destructor
 		 */
-		virtual ~IWriterCallback(void) { }
+		virtual ~IWriterCallback() { }
 		/**
 		 * \brief Gives the callback object a new stream chunk
 		 * \param pBuffer [in] : The buffer to write in the stream
@@ -119,7 +119,7 @@ namespace EBML
 		 * either child nodes or data depending if it is
 		 * a master node or a simple child node.
 		 */
-		virtual bool closeChild(void) = 0;
+		virtual bool closeChild() = 0;
 		/**
 		 * \brief Tells this object it won't be used anymore
 		 *
@@ -134,14 +134,14 @@ namespace EBML
 		 * The current object is invalid after calling this
 		 * function. It can not be used anymore.
 		 */
-		virtual void release(void) = 0;
+		virtual void release() = 0;
 
 	protected:
 
 		/**
 		 * \brief Virtual destructor - should be overloaded
 		 */
-		virtual ~IWriter(void) { }
+		virtual ~IWriter() { }
 	};
 
 	/**

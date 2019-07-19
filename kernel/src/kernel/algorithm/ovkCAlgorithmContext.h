@@ -13,13 +13,13 @@ namespace OpenViBE
 		public:
 
 			CAlgorithmContext(const IKernelContext& rKernelContext, CAlgorithmProxy& rAlgorithmProxy, const Plugins::IPluginObjectDesc& rPluginObjectDesc);
-			virtual ~CAlgorithmContext(void);
+			virtual ~CAlgorithmContext();
 
-			virtual IConfigurationManager& getConfigurationManager(void) const;
-			virtual IAlgorithmManager& getAlgorithmManager(void) const;
-			virtual ILogManager& getLogManager(void) const;
-			virtual IErrorManager& getErrorManager(void) const;
-			virtual ITypeManager& getTypeManager(void) const;
+			virtual IConfigurationManager& getConfigurationManager() const;
+			virtual IAlgorithmManager& getAlgorithmManager() const;
+			virtual ILogManager& getLogManager() const;
+			virtual IErrorManager& getErrorManager() const;
+			virtual ITypeManager& getTypeManager() const;
 
 			virtual CIdentifier getNextInputParameterIdentifier(
 				const CIdentifier& rPreviousInputParameterIdentifier) const;

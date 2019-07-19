@@ -8,7 +8,7 @@
 
 using namespace OpenViBE;
 
-CIdentifier::CIdentifier(void)
+CIdentifier::CIdentifier()
 	: m_ui64Identifier(0xffffffffffffffffll) {}
 
 CIdentifier::CIdentifier(const uint32_t ui32Identifier1, const uint32_t ui32Identifier2)
@@ -26,7 +26,7 @@ CIdentifier& CIdentifier::operator=(const CIdentifier& rIdentifier)
 	return *this;
 }
 
-CIdentifier& CIdentifier::operator++(void)
+CIdentifier& CIdentifier::operator++()
 {
 	if (m_ui64Identifier != 0xffffffffffffffffll)
 	{
@@ -39,7 +39,7 @@ CIdentifier& CIdentifier::operator++(void)
 	return *this;
 }
 
-CIdentifier& CIdentifier::operator--(void)
+CIdentifier& CIdentifier::operator--()
 {
 	if (m_ui64Identifier != 0xffffffffffffffffll)
 	{
@@ -75,7 +75,7 @@ namespace OpenViBE
 	}
 };
 
-CString CIdentifier::toString(void) const
+CString CIdentifier::toString() const
 {
 	char l_sBuffer[1024];
 	unsigned int l_uiIdentifier1 = (unsigned int)(m_ui64Identifier >> 32);
@@ -94,12 +94,12 @@ bool CIdentifier::fromString(const CString& rString)
 	return true;
 }
 
-uint64_t CIdentifier::toUInteger(void) const
+uint64_t CIdentifier::toUInteger() const
 {
 	return m_ui64Identifier;
 }
 
-CIdentifier CIdentifier::random(void)
+CIdentifier CIdentifier::random()
 {
 	std::random_device rd;
 	std::default_random_engine rng(rd());

@@ -14,11 +14,11 @@ namespace OpenViBE
 		public:
 
 			CMetadata(const IKernelContext& kernelContext, CScenario& ownerScenario);
-			~CMetadata(void);
+			~CMetadata();
 
-			CIdentifier getIdentifier(void) const override;
-			CIdentifier getType(void) const override;
-			CString getData(void) const override;
+			CIdentifier getIdentifier() const override;
+			CIdentifier getType() const override;
+			CString getData() const override;
 			bool setIdentifier(const CIdentifier& identifier) override;
 			bool setType(const CIdentifier& identifier) override;
 			bool setData(const CString& data) override;

@@ -39,14 +39,14 @@ namespace
 	}
 }
 
-CStreamedMatrixDecoder::CStreamedMatrixDecoder(void)
+CStreamedMatrixDecoder::CStreamedMatrixDecoder()
 	: m_ui32Status(Status_ParsingNothing)
 	  , m_ui64MatrixBufferSize(0) {}
 
 // ________________________________________________________________________________________________________________
 //
 
-bool CStreamedMatrixDecoder::initialize(void)
+bool CStreamedMatrixDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
 
@@ -55,7 +55,7 @@ bool CStreamedMatrixDecoder::initialize(void)
 	return true;
 }
 
-bool CStreamedMatrixDecoder::uninitialize(void)
+bool CStreamedMatrixDecoder::uninitialize()
 {
 	op_pMatrix.uninitialize();
 
@@ -153,7 +153,7 @@ void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const uint64_
 	}
 }
 
-void CStreamedMatrixDecoder::closeChild(void)
+void CStreamedMatrixDecoder::closeChild()
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

@@ -60,7 +60,7 @@ CScheduler::CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer)
 	  , m_ui64StepDuration(0)
 	  , m_ui64CurrentTime(0) {}
 
-CScheduler::~CScheduler(void)
+CScheduler::~CScheduler()
 {
 	this->uninitialize();
 }
@@ -389,7 +389,7 @@ bool CScheduler::flattenScenario()
 	return true;
 }
 
-SchedulerInitializationCode CScheduler::initialize(void)
+SchedulerInitializationCode CScheduler::initialize()
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler initialize\n";
 
@@ -588,7 +588,7 @@ SchedulerInitializationCode CScheduler::initialize(void)
 	return (l_bBoxInitialization ? SchedulerInitialization_Success : SchedulerInitialization_Failed);
 }
 
-bool CScheduler::uninitialize(void)
+bool CScheduler::uninitialize()
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler uninitialize\n";
 
@@ -626,7 +626,7 @@ bool CScheduler::uninitialize(void)
 //___________________________________________________________________//
 //                                                                   //
 
-bool CScheduler::loop(void)
+bool CScheduler::loop()
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -800,32 +800,32 @@ bool CScheduler::sendInput(
 	return true;
 }
 
-uint64_t CScheduler::getCurrentTime(void) const
+uint64_t CScheduler::getCurrentTime() const
 {
 	return m_ui64CurrentTime;
 }
 
-uint64_t CScheduler::getCurrentLateness(void) const
+uint64_t CScheduler::getCurrentLateness() const
 {
 	return m_rPlayer.getCurrentSimulatedLateness();
 }
 
-uint64_t CScheduler::getFrequency(void) const
+uint64_t CScheduler::getFrequency() const
 {
 	return m_ui64Frequency;
 }
 
-uint64_t CScheduler::getStepDuration(void) const
+uint64_t CScheduler::getStepDuration() const
 {
 	return m_ui64StepDuration;
 }
 
-double CScheduler::getCPUUsage(void) const
+double CScheduler::getCPUUsage() const
 {
 	return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage();
 }
 
-double CScheduler::getFastForwardMaximumFactor(void) const
+double CScheduler::getFastForwardMaximumFactor() const
 {
 	return m_rPlayer.getFastForwardMaximumFactor();
 }

@@ -22,12 +22,12 @@ namespace OpenViBE
 			 * \brief Gets the message identifier
 			 * \return The identifier of the message.
 			 */
-			virtual CIdentifier getIdentifier(void) const = 0;
+			virtual CIdentifier getIdentifier() const = 0;
 			/**
 			 * \brief Gets the timestamp of the message
 			 * \return the timestamp of the message.
 			 */
-			virtual uint64_t getTime(void) const = 0;
+			virtual uint64_t getTime() const = 0;
 			/**
 			 * \brief Sets the message identifier for this message
 			 * \param rIdentifier [in] : the new identifier of the message

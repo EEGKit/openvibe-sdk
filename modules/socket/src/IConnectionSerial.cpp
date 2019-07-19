@@ -31,7 +31,7 @@ namespace Socket
 	{
 	public:
 
-		CConnectionSerial(void)
+		CConnectionSerial()
 			: m_sLastError(),
 #if defined TARGET_OS_Windows
 			  m_pFile(NULL)
@@ -40,13 +40,13 @@ namespace Socket
 #endif
 		{ }
 
-		bool open(void)
+		bool open()
 		{
 			// Should never be used
 			return false;
 		}
 
-		bool close(void)
+		bool close()
 		{
 #if defined TARGET_OS_Windows
 
@@ -169,7 +169,7 @@ namespace Socket
 #endif
 		}
 
-		bool flush(void)
+		bool flush()
 		{
 			if (!this->isConnected())
 			{
@@ -321,7 +321,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool isConnected(void) const
+		bool isConnected() const
 		{
 #if defined TARGET_OS_Windows
 
@@ -334,7 +334,7 @@ namespace Socket
 #endif
 		}
 
-		void release(void)
+		void release()
 		{
 			delete this;
 		}
@@ -474,12 +474,12 @@ namespace Socket
 			return true;
 		}
 
-		const char* getLastError(void)
+		const char* getLastError()
 		{
 			return m_sLastError.c_str();
 		}
 
-		std::string getLastErrorFormated(void)
+		std::string getLastErrorFormated()
 		{
 #if defined TARGET_OS_Windows
 			LPTSTR l_sErrorText;
@@ -501,12 +501,12 @@ namespace Socket
 #endif
 		}
 
-		bool isErrorRaised(void)
+		bool isErrorRaised()
 		{
 			return !m_sLastError.empty();
 		}
 
-		void clearError(void)
+		void clearError()
 		{
 			m_sLastError.clear();
 		}
@@ -520,7 +520,7 @@ namespace Socket
 #endif
 	};
 
-	IConnectionSerial* createConnectionSerial(void)
+	IConnectionSerial* createConnectionSerial()
 	{
 		return new CConnectionSerial();
 	}

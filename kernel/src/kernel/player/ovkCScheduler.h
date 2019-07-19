@@ -27,7 +27,7 @@ namespace OpenViBE
 		public:
 
 			CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer);
-			virtual ~CScheduler(void);
+			virtual ~CScheduler();
 
 			virtual bool setScenario(
 				const CIdentifier& rScenarioIdentifier);
@@ -36,21 +36,21 @@ namespace OpenViBE
 
 			virtual bool isHoldingResources() const;
 
-			virtual SchedulerInitializationCode initialize(void);
-			virtual bool uninitialize(void);
-			virtual bool loop(void);
+			virtual SchedulerInitializationCode initialize();
+			virtual bool uninitialize();
+			virtual bool loop();
 
 			virtual bool sendInput(const CChunk& rChunk, const CIdentifier& rBoxIdentifier, uint32_t ui32InputIndex);
-			virtual uint64_t getCurrentTime(void) const;
-			virtual uint64_t getCurrentLateness(void) const;
-			virtual uint64_t getFrequency(void) const;
-			virtual uint64_t getStepDuration(void) const;
-			virtual double getCPUUsage(void) const;
-			virtual double getFastForwardMaximumFactor(void) const;
+			virtual uint64_t getCurrentTime() const;
+			virtual uint64_t getCurrentLateness() const;
+			virtual uint64_t getFrequency() const;
+			virtual uint64_t getStepDuration() const;
+			virtual double getCPUUsage() const;
+			virtual double getFastForwardMaximumFactor() const;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler);
 
-			CPlayer& getPlayer(void)
+			CPlayer& getPlayer()
 			{
 				return m_rPlayer;
 			}
@@ -73,7 +73,7 @@ namespace OpenViBE
 
 			void handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception);
 			bool processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxIdentifier);
-			bool flattenScenario(void);
+			bool flattenScenario();
 			System::CChrono m_oBenchmarkChrono;
 		};
 	};

@@ -22,19 +22,19 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmOVCSVFileWriter(void);
-			void release(void) override { delete this; }
+			CBoxAlgorithmOVCSVFileWriter();
+			void release() override { delete this; }
 
-			bool initialize(void) override;
-			bool uninitialize(void) override;
+			bool initialize() override;
+			bool uninitialize() override;
 			bool processInput(unsigned int inputIndex) override;
-			bool process(void) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_OVCSVFileWriter);
 
 		private:
-			bool processStreamedMatrix(void);
-			bool processStimulation(void);
+			bool processStreamedMatrix();
+			bool processStimulation();
 
 			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_WriterLib;
 
@@ -79,22 +79,22 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("CSV File Writer"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Victor Herlin"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Mensia Technologies SA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Writes signal in a CSV (text based) file"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("File reading and writing/CSV"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.1.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.1.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("CSV File Writer"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Victor Herlin"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Mensia Technologies SA"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Writes signal in a CSV (text based) file"); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString(""); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("File reading and writing/CSV"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.1.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.1.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_OVCSVFileWriter; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmOVCSVFileWriter; }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmOVCSVFileWriterListener; }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_OVCSVFileWriter; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmOVCSVFileWriter; }
+			virtual OpenViBE::Plugins::IBoxListener* createBoxListener() const { return new CBoxAlgorithmOVCSVFileWriterListener; }
 			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* boxListener) const { delete boxListener; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& boxAlgorithmPrototype) const

@@ -14,10 +14,10 @@ using namespace Classification;
 
 using namespace OpenViBEToolkit;
 
-CAlgorithmClassifierNULL::CAlgorithmClassifierNULL(void) {}
+CAlgorithmClassifierNULL::CAlgorithmClassifierNULL() {}
 
 
-bool CAlgorithmClassifierNULL::initialize(void)
+bool CAlgorithmClassifierNULL::initialize()
 {
 	TParameterHandler<bool> ip_bParameter1(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter1));
 	TParameterHandler<double> ip_f64Parameter2(this->getInputParameter(OVP_Algorithm_ClassifierNULL_InputParameterId_Parameter2));
@@ -65,7 +65,7 @@ bool CAlgorithmClassifierNULL::classify(const IFeatureVector& rFeatureVector, do
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmClassifierNULL::saveConfiguration(void)
+XML::IXMLNode* CAlgorithmClassifierNULL::saveConfiguration()
 {
 	return NULL;
 }

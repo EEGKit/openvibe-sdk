@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-bool CAcquisitionEncoder::initialize(void)
+bool CAcquisitionEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
 
@@ -21,7 +21,7 @@ bool CAcquisitionEncoder::initialize(void)
 	return true;
 }
 
-bool CAcquisitionEncoder::uninitialize(void)
+bool CAcquisitionEncoder::uninitialize()
 {
 	ip_pChannelUnitsStream.uninitialize();
 	ip_pChannelLocalisationStream.uninitialize();
@@ -38,7 +38,7 @@ bool CAcquisitionEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-bool CAcquisitionEncoder::processHeader(void)
+bool CAcquisitionEncoder::processHeader()
 {
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Header_BufferDuration);
 	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64BufferDuration);
@@ -62,7 +62,7 @@ bool CAcquisitionEncoder::processHeader(void)
 	return true;
 }
 
-bool CAcquisitionEncoder::processBuffer(void)
+bool CAcquisitionEncoder::processBuffer()
 {
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Acquisition_Buffer_ExperimentInformation);
 	m_pEBMLWriterHelper->setBinaryAsChildData(ip_pExperimentInformationStream->getDirectPointer(), ip_pExperimentInformationStream->getSize());

@@ -57,7 +57,7 @@ CPlayer::CPlayer(const IKernelContext& rKernelContext)
 	m_oScheduler.setFrequency(l_ui64SchedulerFrequency);
 }
 
-CPlayer::~CPlayer(void)
+CPlayer::~CPlayer()
 {
 	if (this->isHoldingResources())
 	{
@@ -172,23 +172,23 @@ bool CPlayer::setScenario(
 	return m_oScheduler.setScenario(m_oRuntimeScenarioIdentifier);
 }
 
-IConfigurationManager& CPlayer::getRuntimeConfigurationManager(void) const
+IConfigurationManager& CPlayer::getRuntimeConfigurationManager() const
 {
 	return *m_pRuntimeConfigurationManager;
 }
 
-IScenarioManager& CPlayer::getRuntimeScenarioManager(void) const
+IScenarioManager& CPlayer::getRuntimeScenarioManager() const
 {
 	return *m_pRuntimeScenarioManager;
 }
 
-CIdentifier CPlayer::getRuntimeScenarioIdentifier(void) const
+CIdentifier CPlayer::getRuntimeScenarioIdentifier() const
 {
 	return m_oRuntimeScenarioIdentifier;
 }
 
 
-EPlayerReturnCode CPlayer::initialize(void)
+EPlayerReturnCode CPlayer::initialize()
 {
 	OV_ERROR_UNLESS_K(
 		!this->isHoldingResources(),
@@ -225,7 +225,7 @@ EPlayerReturnCode CPlayer::initialize(void)
 	return PlayerReturnCode_Sucess;
 }
 
-bool CPlayer::uninitialize(void)
+bool CPlayer::uninitialize()
 {
 	this->getLogManager() << LogLevel_Trace << "Player uninitialize\n";
 
@@ -244,7 +244,7 @@ bool CPlayer::uninitialize(void)
 	return true;
 }
 
-bool CPlayer::stop(void)
+bool CPlayer::stop()
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -259,7 +259,7 @@ bool CPlayer::stop(void)
 	return true;
 }
 
-bool CPlayer::pause(void)
+bool CPlayer::pause()
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -274,7 +274,7 @@ bool CPlayer::pause(void)
 	return true;
 }
 
-bool CPlayer::step(void)
+bool CPlayer::step()
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -289,7 +289,7 @@ bool CPlayer::step(void)
 	return true;
 }
 
-bool CPlayer::play(void)
+bool CPlayer::play()
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -304,7 +304,7 @@ bool CPlayer::play(void)
 	return true;
 }
 
-bool CPlayer::forward(void)
+bool CPlayer::forward()
 {
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
@@ -319,7 +319,7 @@ bool CPlayer::forward(void)
 	return true;
 }
 
-EPlayerStatus CPlayer::getStatus(void) const { return m_eStatus; }
+EPlayerStatus CPlayer::getStatus() const { return m_eStatus; }
 
 bool CPlayer::setFastForwardMaximumFactor(const double f64FastForwardFactor)
 {
@@ -327,7 +327,7 @@ bool CPlayer::setFastForwardMaximumFactor(const double f64FastForwardFactor)
 	return true;
 }
 
-double CPlayer::getFastForwardMaximumFactor(void) const { return m_f64FastForwardMaximumFactor; }
+double CPlayer::getFastForwardMaximumFactor() const { return m_f64FastForwardMaximumFactor; }
 
 double CPlayer::getCPUUsage() const { return m_oScheduler.getCPUUsage(); }
 
@@ -457,12 +457,12 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 	return true;
 }
 
-uint64_t CPlayer::getCurrentSimulatedTime(void) const
+uint64_t CPlayer::getCurrentSimulatedTime() const
 {
 	return m_oScheduler.getCurrentTime();
 }
 
-uint64_t CPlayer::getCurrentSimulatedLateness(void) const
+uint64_t CPlayer::getCurrentSimulatedLateness() const
 {
 	return m_ui64InnerLateness;
 }

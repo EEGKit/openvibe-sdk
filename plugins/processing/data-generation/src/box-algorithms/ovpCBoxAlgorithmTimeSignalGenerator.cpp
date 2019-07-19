@@ -14,18 +14,18 @@ using namespace DataGeneration;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-CBoxAlgorithmTimeSignalGenerator::CBoxAlgorithmTimeSignalGenerator(void)
+CBoxAlgorithmTimeSignalGenerator::CBoxAlgorithmTimeSignalGenerator()
 	: m_bHeaderSent(false)
 	  , m_ui32SamplingFrequency(0)
 	  , m_ui32GeneratedEpochSampleCount(0)
 	  , m_ui32SentSampleCount(0) {}
 
-void CBoxAlgorithmTimeSignalGenerator::release(void)
+void CBoxAlgorithmTimeSignalGenerator::release()
 {
 	delete this;
 }
 
-bool CBoxAlgorithmTimeSignalGenerator::initialize(void)
+bool CBoxAlgorithmTimeSignalGenerator::initialize()
 {
 	m_oSignalEncoder.initialize(*this, 0);
 
@@ -39,7 +39,7 @@ bool CBoxAlgorithmTimeSignalGenerator::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmTimeSignalGenerator::uninitialize(void)
+bool CBoxAlgorithmTimeSignalGenerator::uninitialize()
 {
 	m_oSignalEncoder.uninitialize();
 
@@ -52,7 +52,7 @@ bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& rMessageClock
 	return true;
 }
 
-bool CBoxAlgorithmTimeSignalGenerator::process(void)
+bool CBoxAlgorithmTimeSignalGenerator::process()
 {
 	IBoxIO* l_pDynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
@@ -101,7 +101,7 @@ bool CBoxAlgorithmTimeSignalGenerator::process(void)
 	return true;
 }
 
-uint64_t CBoxAlgorithmTimeSignalGenerator::getClockFrequency(void)
+uint64_t CBoxAlgorithmTimeSignalGenerator::getClockFrequency()
 {
 	return 128LL << 32;
 }

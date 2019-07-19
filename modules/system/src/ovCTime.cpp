@@ -55,13 +55,13 @@ bool System::Time::zsleep(const uint64_t ui64Seconds)
 	return true;
 }
 
-uint32_t System::Time::getTime(void)
+uint32_t System::Time::getTime()
 {
 	// turn the 32:32 fixed point seconds to milliseconds
 	return static_cast<uint32_t>((zgetTime() * 1000) >> 32);
 }
 
-uint64_t System::Time::zgetTime(void)
+uint64_t System::Time::zgetTime()
 {
 	return zgetTimeRaw(true);
 }

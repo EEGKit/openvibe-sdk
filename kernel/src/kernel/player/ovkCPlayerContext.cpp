@@ -18,7 +18,7 @@ CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedB
 	  , m_rTypeManager(rKernelContext.getTypeManager())
 	  , m_BoxLogManager(*this, m_rLogManager, m_rSimulatedBox) {}
 
-CPlayerContext::~CPlayerContext(void) {}
+CPlayerContext::~CPlayerContext() {}
 
 bool CPlayerContext::sendSignal(
 	const CMessageSignal& rMessageSignal)
@@ -47,77 +47,77 @@ bool CPlayerContext::sendMessage(
 	return false;
 }
 
-uint64_t CPlayerContext::getCurrentTime(void) const
+uint64_t CPlayerContext::getCurrentTime() const
 {
 	return m_rSimulatedBox.getScheduler().getCurrentTime();
 }
 
-uint64_t CPlayerContext::getCurrentLateness(void) const
+uint64_t CPlayerContext::getCurrentLateness() const
 {
 	return m_rSimulatedBox.getScheduler().getCurrentLateness();
 }
 
-double CPlayerContext::getCurrentCPUUsage(void) const
+double CPlayerContext::getCurrentCPUUsage() const
 {
 	return m_rSimulatedBox.getScheduler().getCPUUsage();
 }
 
-double CPlayerContext::getCurrentFastForwardMaximumFactor(void) const
+double CPlayerContext::getCurrentFastForwardMaximumFactor() const
 {
 	return m_rSimulatedBox.getScheduler().getFastForwardMaximumFactor();
 }
 
-bool CPlayerContext::stop(void)
+bool CPlayerContext::stop()
 {
 	return m_rSimulatedBox.getScheduler().getPlayer().stop();
 }
 
-bool CPlayerContext::pause(void)
+bool CPlayerContext::pause()
 {
 	return m_rSimulatedBox.getScheduler().getPlayer().pause();
 }
 
-bool CPlayerContext::play(void)
+bool CPlayerContext::play()
 {
 	return m_rSimulatedBox.getScheduler().getPlayer().play();
 }
 
-bool CPlayerContext::forward(void)
+bool CPlayerContext::forward()
 {
 	return m_rSimulatedBox.getScheduler().getPlayer().forward();
 }
 
-EPlayerStatus CPlayerContext::getStatus(void) const
+EPlayerStatus CPlayerContext::getStatus() const
 {
 	return m_rSimulatedBox.getScheduler().getPlayer().getStatus();
 }
 
-IAlgorithmManager& CPlayerContext::getAlgorithmManager(void) const
+IAlgorithmManager& CPlayerContext::getAlgorithmManager() const
 {
 	return m_rAlgorithmManager;
 }
 
-IConfigurationManager& CPlayerContext::getConfigurationManager(void) const
+IConfigurationManager& CPlayerContext::getConfigurationManager() const
 {
 	return m_rConfigurationManager;
 }
 
-ILogManager& CPlayerContext::getLogManager(void) const
+ILogManager& CPlayerContext::getLogManager() const
 {
 	return m_BoxLogManager;
 }
 
-IErrorManager& CPlayerContext::getErrorManager(void) const
+IErrorManager& CPlayerContext::getErrorManager() const
 {
 	return m_rErrorManager;
 }
 
-IScenarioManager& CPlayerContext::getScenarioManager(void) const
+IScenarioManager& CPlayerContext::getScenarioManager() const
 {
 	return m_rScenarioManager;
 }
 
-ITypeManager& CPlayerContext::getTypeManager(void) const
+ITypeManager& CPlayerContext::getTypeManager() const
 {
 	return m_rTypeManager;
 }

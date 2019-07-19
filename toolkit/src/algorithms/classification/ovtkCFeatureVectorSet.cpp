@@ -9,25 +9,25 @@ using namespace OpenViBEToolkit;
 // ____________________________________________________________________________________________________________________________________
 //
 
-CInternalFeatureVector::CInternalFeatureVector(void)
+CInternalFeatureVector::CInternalFeatureVector()
 	: m_pMatrix(NULL)
 	  , m_ui32DimensionIndex(0)
 	  , m_ui32BufferElementCount(0)
 	  , m_pBuffer(NULL) {}
 
-uint32_t CInternalFeatureVector::getSize(void) const
+uint32_t CInternalFeatureVector::getSize() const
 {
 	return m_ui32BufferElementCount;
 }
 
 bool CInternalFeatureVector::setSize(const uint32_t ui32Size) { return false; }
 
-double* CInternalFeatureVector::getBuffer(void)
+double* CInternalFeatureVector::getBuffer()
 {
 	return NULL;
 }
 
-const double* CInternalFeatureVector::getBuffer(void) const
+const double* CInternalFeatureVector::getBuffer() const
 {
 	return m_pBuffer;
 }
@@ -39,7 +39,7 @@ const char* CInternalFeatureVector::getElementLabel(const uint32_t ui32Index) co
 
 bool CInternalFeatureVector::setElementLabel(const uint32_t ui32Index, const char* sElementLabel) { return false; }
 
-double CInternalFeatureVector::getLabel(void) const
+double CInternalFeatureVector::getLabel() const
 {
 	return m_pBuffer[m_ui32BufferElementCount];
 }
@@ -66,7 +66,7 @@ CFeatureVectorSet::CFeatureVectorSet(const IMatrix& rMatrix)
 	}
 }
 
-uint32_t CFeatureVectorSet::getFeatureVectorCount(void) const
+uint32_t CFeatureVectorSet::getFeatureVectorCount() const
 {
 	return m_rMatrix.getDimensionSize(0);
 }
@@ -87,7 +87,7 @@ const IFeatureVector& CFeatureVectorSet::getFeatureVector(const uint32_t ui32Ind
 	return itFeatureVector->second;
 }
 
-uint32_t CFeatureVectorSet::getLabelCount(void) const
+uint32_t CFeatureVectorSet::getLabelCount() const
 {
 	std::map<double, bool> l_vLabel;
 	std::map<uint32_t, CInternalFeatureVector>::const_iterator itFeatureVector;

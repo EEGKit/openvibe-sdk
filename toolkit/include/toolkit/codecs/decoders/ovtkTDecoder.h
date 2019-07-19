@@ -40,7 +40,7 @@ namespace OpenViBEToolkit
 			return m_pCodec->process(oTrigger);
 		}
 
-		virtual bool process(void)
+		virtual bool process()
 		{
 			return m_pCodec->process();
 		}
@@ -71,9 +71,9 @@ namespace OpenViBEToolkit
 #endif
 
 		// The functions that need to be specified by the decoders (specific Trigger ID)
-		virtual bool isHeaderReceived(void) = 0;
-		virtual bool isBufferReceived(void) = 0;
-		virtual bool isEndReceived(void) = 0;
+		virtual bool isHeaderReceived() = 0;
+		virtual bool isBufferReceived() = 0;
+		virtual bool isEndReceived() = 0;
 	};
 
 	/*

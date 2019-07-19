@@ -32,7 +32,7 @@ namespace OpenViBEToolkit
 	public:
 		using T::initialize;
 
-		bool uninitialize(void)
+		bool uninitialize()
 		{
 			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
 

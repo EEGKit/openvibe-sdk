@@ -63,7 +63,7 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		void reset(void)
+		void reset()
 		{
 			m_pStreamedMatrixDecoder = nullptr;
 			m_pSignalDecoder         = nullptr;
@@ -73,7 +73,7 @@ namespace OpenViBEToolkit
 
 	public:
 
-		TGenericDecoder(void)
+		TGenericDecoder()
 			: m_pStreamedMatrixDecoder(nullptr)
 			  , m_pSignalDecoder(nullptr)
 			  , m_pSpectrumDecoder(nullptr)
@@ -82,7 +82,7 @@ namespace OpenViBEToolkit
 			this->reset();
 		}
 
-		~TGenericDecoder(void)
+		~TGenericDecoder()
 		{
 			this->uninitialize();
 		}
@@ -115,7 +115,7 @@ namespace OpenViBEToolkit
 			return *this;
 		}
 
-		void uninitialize(void)
+		void uninitialize()
 		{
 			this->reset();
 		}
@@ -150,17 +150,17 @@ namespace OpenViBEToolkit
 			decoder_return_impl(decode(ui32ChunkIndex, bMarkInputAsDeprecated));
 		}
 
-		bool isHeaderReceived(void)
+		bool isHeaderReceived()
 		{
 			decoder_return_impl(isHeaderReceived());
 		}
 
-		bool isBufferReceived(void)
+		bool isBufferReceived()
 		{
 			decoder_return_impl(isBufferReceived());
 		}
 
-		bool isEndReceived(void)
+		bool isEndReceived()
 		{
 			decoder_return_impl(isEndReceived());
 		}
@@ -197,7 +197,7 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		void reset(void)
+		void reset()
 		{
 			m_pStreamedMatrixEncoder = nullptr;
 			m_pSignalEncoder         = nullptr;
@@ -207,7 +207,7 @@ namespace OpenViBEToolkit
 
 	public:
 
-		TGenericEncoder(void)
+		TGenericEncoder()
 			: m_pStreamedMatrixEncoder(nullptr)
 			  , m_pSignalEncoder(nullptr)
 			  , m_pSpectrumEncoder(nullptr)
@@ -216,7 +216,7 @@ namespace OpenViBEToolkit
 			this->reset();
 		}
 
-		~TGenericEncoder(void)
+		~TGenericEncoder()
 		{
 			this->uninitialize();
 		}
@@ -249,7 +249,7 @@ namespace OpenViBEToolkit
 			return *this;
 		}
 
-		void uninitialize(void)
+		void uninitialize()
 		{
 			this->reset();
 		}

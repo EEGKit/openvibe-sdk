@@ -23,7 +23,7 @@ bool CCppDefineGenerator::appendStimulation(SStimulation& rStim)
 }
 
 
-bool CCppDefineGenerator::closeFile(void)
+bool CCppDefineGenerator::closeFile()
 {
 	m_oFile << endl;
 	m_oFile.close();

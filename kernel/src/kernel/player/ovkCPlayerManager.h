@@ -29,7 +29,7 @@ namespace OpenViBE
 
 		protected:
 
-			virtual CIdentifier getUnusedIdentifier(void) const;
+			virtual CIdentifier getUnusedIdentifier() const;
 
 		protected:
 

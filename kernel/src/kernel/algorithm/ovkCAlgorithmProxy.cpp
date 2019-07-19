@@ -29,23 +29,23 @@ CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& rKernelContext, IAlgorith
 	rAlgorithmDesc.getAlgorithmPrototype(l_oProto);
 }
 
-CAlgorithmProxy::~CAlgorithmProxy(void)
+CAlgorithmProxy::~CAlgorithmProxy()
 {
 	getKernelContext().getKernelObjectFactory().releaseObject(m_pOutputConfigurable);
 	getKernelContext().getKernelObjectFactory().releaseObject(m_pInputConfigurable);
 }
 
-IAlgorithm& CAlgorithmProxy::getAlgorithm(void)
+IAlgorithm& CAlgorithmProxy::getAlgorithm()
 {
 	return m_rAlgorithm;
 }
 
-const IAlgorithm& CAlgorithmProxy::getAlgorithm(void) const
+const IAlgorithm& CAlgorithmProxy::getAlgorithm() const
 {
 	return m_rAlgorithm;
 }
 
-const IAlgorithmDesc& CAlgorithmProxy::getAlgorithmDesc(void) const
+const IAlgorithmDesc& CAlgorithmProxy::getAlgorithmDesc() const
 {
 	return m_rAlgorithmDesc;
 }
@@ -291,7 +291,7 @@ bool CAlgorithmProxy::removeOutputTrigger(
 }
 
 
-bool CAlgorithmProxy::initialize(void)
+bool CAlgorithmProxy::initialize()
 {
 	assert(!m_bIsInitialized);
 
@@ -309,7 +309,7 @@ bool CAlgorithmProxy::initialize(void)
 	);
 }
 
-bool CAlgorithmProxy::uninitialize(void)
+bool CAlgorithmProxy::uninitialize()
 {
 	assert(m_bIsInitialized);
 
@@ -323,7 +323,7 @@ bool CAlgorithmProxy::uninitialize(void)
 	);
 }
 
-bool CAlgorithmProxy::process(void)
+bool CAlgorithmProxy::process()
 {
 	assert(m_bIsInitialized);
 

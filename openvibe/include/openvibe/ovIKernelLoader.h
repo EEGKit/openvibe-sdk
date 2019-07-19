@@ -57,7 +57,7 @@ namespace OpenViBE
 		 * the kernel DLL/so file. See section \ref Doc_CreatingNewKernel to get a full description
 		 * of how a kernel is loaded / used.
 		 */
-		virtual bool initialize(void) = 0;
+		virtual bool initialize() = 0;
 		/**
 		 * \brief Gets the kernel description of the loaded kernel DLL/so file
 		 * \param rpKernelDesc [out] : a pointer to the kernel description
@@ -73,7 +73,7 @@ namespace OpenViBE
 		 * \return \e false on error.
 		 * \warning both \c load and \c initialize must have been called successfully before calling \c getKernelDesc
 		 */
-		virtual bool uninitialize(void) = 0;
+		virtual bool uninitialize() = 0;
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_KernelLoader)
 	};

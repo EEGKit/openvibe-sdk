@@ -42,7 +42,7 @@ namespace Socket
 	{
 	public:
 
-		TConnection(void) : m_i32Socket(-1)
+		TConnection() : m_i32Socket(-1)
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
@@ -68,7 +68,7 @@ namespace Socket
 #endif
 		}
 
-		virtual ~TConnection(void)
+		virtual ~TConnection()
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
@@ -79,7 +79,7 @@ namespace Socket
 
 	protected:
 
-		virtual bool open(void)
+		virtual bool open()
 		{
 			if (isConnected()) { return false; }
 
@@ -91,7 +91,7 @@ namespace Socket
 
 	public:
 
-		virtual bool close(void)
+		virtual bool close()
 		{
 			if (!isConnected()) { return false; }
 
@@ -206,12 +206,12 @@ namespace Socket
 			return true;
 		}
 
-		virtual bool isConnected(void) const
+		virtual bool isConnected() const
 		{
 			return m_i32Socket != -1;
 		}
 
-		virtual void release(void)
+		virtual void release()
 		{
 			if (isConnected())
 			{

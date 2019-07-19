@@ -44,62 +44,62 @@ namespace OpenViBE
 			 * \return \e true in case of success
 			 * \return \e false in case of error
 			 */
-			virtual bool uninitialize(void) { return true; }
+			virtual bool uninitialize() { return true; }
 
 			/**
 			 * \brief Gets a reference on the kernel's algorithm manager
 			 * \return a reference on the kernel's algorithm manager
 			 */
-			virtual IAlgorithmManager& getAlgorithmManager(void) const = 0;
+			virtual IAlgorithmManager& getAlgorithmManager() const = 0;
 			/**
 			 * \brief Gets a reference on the kernel's configuration manager
 			 * \return a reference on the kernel's configuration manager
 			 */
-			virtual IConfigurationManager& getConfigurationManager(void) const = 0;
+			virtual IConfigurationManager& getConfigurationManager() const = 0;
 			/**
 			 * \brief Gets a reference on the kernel's player manager
 			 * \return a reference on the kernel's player manager
 			 */
-			virtual IPlayerManager& getPlayerManager(void) const = 0;
+			virtual IPlayerManager& getPlayerManager() const = 0;
 			/**
 			 * \brief Gets a reference on the kernel's plugin manager
 			 * \return a reference on the kernel's plugin manager
 			 */
-			virtual IPluginManager& getPluginManager(void) const = 0;
+			virtual IPluginManager& getPluginManager() const = 0;
 			/**
 			 * \brief Gets a reference on the kernel's metabox manager
 			 * \return a reference on the kernel's metabox manager
 			 */
-			virtual IMetaboxManager& getMetaboxManager(void) const = 0;
+			virtual IMetaboxManager& getMetaboxManager() const = 0;
 			/**
 			 * \brief Gets a reference on the kernel's object factory
 			 * \return a reference on the kernel's object factory
 			 */
-			virtual IKernelObjectFactory& getKernelObjectFactory(void) const = 0;
+			virtual IKernelObjectFactory& getKernelObjectFactory() const = 0;
 			/**
 			 * \brief Gets a reference on the kernel's scenario manager
 			 * \return a reference on the kernel's scenario manager
 			 */
-			virtual IScenarioManager& getScenarioManager(void) const = 0;
+			virtual IScenarioManager& getScenarioManager() const = 0;
 			/**
 			 * \brief Gets a reference on the kernel's type manager
 			 * \return a reference on the kernel's type manager
 			 */
-			virtual ITypeManager& getTypeManager(void) const = 0;
+			virtual ITypeManager& getTypeManager() const = 0;
 			/**
 			 * \brief Gets a reference on the kernel's log manager
 			 * \return a reference on the kernel's log manager
 			 */
-			virtual ILogManager& getLogManager(void) const = 0;
+			virtual ILogManager& getLogManager() const = 0;
 			/**
 			 * \brief Gets a reference on the kernel's error manager
 			 * \return a reference on the kernel's error manager
 			 */
-			virtual IErrorManager& getErrorManager(void) const = 0;
+			virtual IErrorManager& getErrorManager() const = 0;
 
 
 			// backward compatibility
-			virtual IKernelObjectFactory& getObjectFactory(void) const { return getKernelObjectFactory(); }
+			virtual IKernelObjectFactory& getObjectFactory() const { return getKernelObjectFactory(); }
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_KernelContext)
 		};

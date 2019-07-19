@@ -2,5 +2,5 @@
 
 namespace Socket
 {
-	IConnection::~IConnection(void) { }
+	IConnection::~IConnection() { }
 };

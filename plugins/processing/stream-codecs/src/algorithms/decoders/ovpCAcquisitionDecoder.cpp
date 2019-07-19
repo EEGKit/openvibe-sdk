@@ -9,12 +9,12 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-CAcquisitionDecoder::CAcquisitionDecoder(void) {}
+CAcquisitionDecoder::CAcquisitionDecoder() {}
 
 // ________________________________________________________________________________________________________________
 //
 
-bool CAcquisitionDecoder::initialize(void)
+bool CAcquisitionDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
 
@@ -28,7 +28,7 @@ bool CAcquisitionDecoder::initialize(void)
 	return true;
 }
 
-bool CAcquisitionDecoder::uninitialize(void)
+bool CAcquisitionDecoder::uninitialize()
 {
 	op_pChannelUnitsStream.uninitialize();
 	op_pChannelLocalisationStream.uninitialize();
@@ -120,7 +120,7 @@ void CAcquisitionDecoder::processChildData(const void* pBuffer, const uint64_t u
 	}
 }
 
-void CAcquisitionDecoder::closeChild(void)
+void CAcquisitionDecoder::closeChild()
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

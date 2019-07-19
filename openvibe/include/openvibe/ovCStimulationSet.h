@@ -29,18 +29,18 @@ namespace OpenViBE
 		 *
 		 * This constructor builds the internal implementation of this stimulation set.
 		 */
-		CStimulationSet(void);
+		CStimulationSet();
 		/**
 		 * \brief Destructor
 		 *
 		 * The internal implementation is released.
 		 */
-		virtual ~CStimulationSet(void);
+		virtual ~CStimulationSet();
 
 		//@}
 
-		virtual void clear(void);
-		virtual const uint64_t getStimulationCount(void) const;
+		virtual void clear();
+		virtual const uint64_t getStimulationCount() const;
 		virtual const uint64_t getStimulationIdentifier(
 			uint64_t ui64StimulationIndex) const;
 		virtual const uint64_t getStimulationDate(

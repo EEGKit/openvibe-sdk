@@ -12,7 +12,7 @@ using namespace StreamCodecs;
 // ________________________________________________________________________________________________________________
 //
 
-bool CChannelUnitsDecoder::initialize(void)
+bool CChannelUnitsDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
 
@@ -21,7 +21,7 @@ bool CChannelUnitsDecoder::initialize(void)
 	return true;
 }
 
-bool CChannelUnitsDecoder::uninitialize(void)
+bool CChannelUnitsDecoder::uninitialize()
 {
 	op_bDynamic.uninitialize();
 
@@ -77,7 +77,7 @@ void CChannelUnitsDecoder::processChildData(const void* pBuffer, const uint64_t 
 	}
 }
 
-void CChannelUnitsDecoder::closeChild(void)
+void CChannelUnitsDecoder::closeChild()
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 

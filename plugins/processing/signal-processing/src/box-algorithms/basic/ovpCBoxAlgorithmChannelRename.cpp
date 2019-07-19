@@ -7,7 +7,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
-bool CBoxAlgorithmChannelRename::initialize(void)
+bool CBoxAlgorithmChannelRename::initialize()
 {
 	std::vector<CString> tokens;
 	CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
@@ -60,7 +60,7 @@ bool CBoxAlgorithmChannelRename::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmChannelRename::uninitialize(void)
+bool CBoxAlgorithmChannelRename::uninitialize()
 {
 	m_StreamDecoder.uninitialize();
 	m_StreamEncoder.uninitialize();
@@ -74,7 +74,7 @@ bool CBoxAlgorithmChannelRename::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmChannelRename::process(void)
+bool CBoxAlgorithmChannelRename::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 

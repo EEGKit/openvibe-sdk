@@ -9,7 +9,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TAlgorithm(void) : m_pAlgorithmContext(NULL) { }
+		TAlgorithm() : m_pAlgorithmContext(NULL) { }
 
 		virtual bool initialize(OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)
 		{
@@ -33,40 +33,40 @@ namespace OpenViBEToolkit
 
 	public:
 
-		virtual bool initialize(void) { return true; }
-		virtual bool uninitialize(void) { return true; }
-		virtual bool process(void) = 0;
+		virtual bool initialize() { return true; }
+		virtual bool uninitialize() { return true; }
+		virtual bool process() = 0;
 
 		// ====================================================================================================================================
 
-		virtual OpenViBE::Kernel::IAlgorithmContext& getAlgorithmContext(void)
+		virtual OpenViBE::Kernel::IAlgorithmContext& getAlgorithmContext()
 		{
 			return *m_pAlgorithmContext; // should never be null
 		}
 
 	protected:
 
-		virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void)
+		virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager()
 		{
 			return m_pAlgorithmContext->getConfigurationManager(); // should never be null
 		}
 
-		virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void)
+		virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager()
 		{
 			return m_pAlgorithmContext->getAlgorithmManager(); // should never be null
 		}
 
-		virtual OpenViBE::Kernel::ILogManager& getLogManager(void)
+		virtual OpenViBE::Kernel::ILogManager& getLogManager()
 		{
 			return m_pAlgorithmContext->getLogManager(); // should never be null
 		}
 
-		virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void)
+		virtual OpenViBE::Kernel::IErrorManager& getErrorManager()
 		{
 			return m_pAlgorithmContext->getErrorManager(); // should never be null
 		}
 
-		virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void)
+		virtual OpenViBE::Kernel::ITypeManager& getTypeManager()
 		{
 			return m_pAlgorithmContext->getTypeManager(); // should never be null
 		}
@@ -117,7 +117,7 @@ namespace OpenViBEToolkit
 				m_rpAlgorithmContext = pAlgorithmContext;
 			}
 
-			virtual ~CScopedAlgorithm(void) { m_rpAlgorithmContext = NULL; }
+			virtual ~CScopedAlgorithm() { m_rpAlgorithmContext = NULL; }
 
 		protected:
 

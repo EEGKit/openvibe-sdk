@@ -73,7 +73,7 @@ protected:
 		currentNode->data = data;
 	}
 
-	void closeChild(void) override
+	void closeChild() override
 	{
 		if (currentNode->parent)
 		{

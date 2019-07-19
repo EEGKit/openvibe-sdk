@@ -42,7 +42,7 @@ static void clear_m_oChildren(std::vector<CAbstractTreeNode *>& m_oChildren)
 	}
 }
 
-CAbstractTreeParentNode::~CAbstractTreeParentNode(void)
+CAbstractTreeParentNode::~CAbstractTreeParentNode()
 {
 	// Dirty hack to avoid GCC 4.3 crash at compilation time
 	clear_m_oChildren(m_oChildren);

@@ -8,14 +8,14 @@ namespace EBML
 	{
 	public:
 
-		CWriterHelper(void);
-		virtual ~CWriterHelper(void);
+		CWriterHelper();
+		virtual ~CWriterHelper();
 
 		virtual bool connect(IWriter* pWriter);
-		virtual bool disconnect(void);
+		virtual bool disconnect();
 
 		virtual bool openChild(const CIdentifier& rIdentifier);
-		virtual bool closeChild(void);
+		virtual bool closeChild();
 
 		virtual bool setSIntegerAsChildData(int64_t iValue);
 		virtual bool setUIntegerAsChildData(uint64_t uiValue);
@@ -24,7 +24,7 @@ namespace EBML
 		virtual bool setBinaryAsChildData(const void* pBuffer, uint64_t ui64BufferLength);
 		virtual bool setASCIIStringAsChildData(const char* sValue);
 
-		virtual void release(void);
+		virtual void release();
 
 	protected:
 

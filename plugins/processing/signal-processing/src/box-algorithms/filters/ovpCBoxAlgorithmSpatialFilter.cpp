@@ -108,7 +108,7 @@ uint32_t CBoxAlgorithmSpatialFilter::loadCoefficients(const CString& rCoefficien
 	return l_ui32currentIdx;
 }
 
-bool CBoxAlgorithmSpatialFilter::initialize(void)
+bool CBoxAlgorithmSpatialFilter::initialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
@@ -188,7 +188,7 @@ bool CBoxAlgorithmSpatialFilter::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmSpatialFilter::uninitialize(void)
+bool CBoxAlgorithmSpatialFilter::uninitialize()
 {
 	if (m_pStreamDecoder)
 	{
@@ -213,7 +213,7 @@ bool CBoxAlgorithmSpatialFilter::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmSpatialFilter::process(void)
+bool CBoxAlgorithmSpatialFilter::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();

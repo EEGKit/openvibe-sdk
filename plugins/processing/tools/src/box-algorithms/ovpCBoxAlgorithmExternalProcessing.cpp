@@ -42,7 +42,7 @@ CBoxAlgorithmExternalProcessing::CBoxAlgorithmExternalProcessing()
 	  , m_SyncTimeout(0)
 	  , m_LastSyncTime(0) {}
 
-uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency(void)
+uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency()
 {
 	if (m_IsGenerator)
 	{
@@ -54,7 +54,7 @@ uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency(void)
 	return 128LL << 32;
 }
 
-bool CBoxAlgorithmExternalProcessing::initialize(void)
+bool CBoxAlgorithmExternalProcessing::initialize()
 {
 	m_Port = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
@@ -203,7 +203,7 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::uninitialize(void)
+bool CBoxAlgorithmExternalProcessing::uninitialize()
 {
 	for (auto& decoder : m_StimulationDecoders)
 	{
@@ -279,9 +279,8 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& rMessageClock)
+bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*rMessageClock*/)
 {
-	(void)rMessageClock;
 	return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 }
 
@@ -291,7 +290,7 @@ bool CBoxAlgorithmExternalProcessing::processInput(uint32_t inputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::process(void)
+bool CBoxAlgorithmExternalProcessing::process()
 {
 	if (m_Messaging.isInErrorState())
 	{

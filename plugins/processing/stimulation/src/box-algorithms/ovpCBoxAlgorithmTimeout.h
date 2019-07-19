@@ -22,17 +22,17 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmTimeout : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-			virtual void release(void) { delete this; }
+			virtual void release() { delete this; }
 
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
+			virtual bool initialize();
+			virtual bool uninitialize();
 
 			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
 			virtual bool processInput(uint32_t ui32InputIndex);
 
-			virtual uint64_t getClockFrequency(void);
+			virtual uint64_t getClockFrequency();
 
-			virtual bool process(void);
+			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
 
@@ -67,21 +67,21 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			virtual void release(void) { }
+			virtual void release() { }
 
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("Timeout"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Jozef Legény"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Inria"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection."); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Stimulation"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.1"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Timeout"); }
+			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Jozef Legény"); }
+			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Inria"); }
+			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal"); }
+			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection."); }
+			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Stimulation"); }
+			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.1"); }
+			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
+			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
 
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_Timeout; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmTimeout; }
+			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_Timeout; }
+			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmTimeout; }
 
 			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 			{

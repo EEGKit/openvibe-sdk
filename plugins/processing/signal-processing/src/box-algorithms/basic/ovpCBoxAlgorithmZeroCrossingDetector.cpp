@@ -36,7 +36,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
-bool CBoxAlgorithmZeroCrossingDetector::initialize(void)
+bool CBoxAlgorithmZeroCrossingDetector::initialize()
 {
 	m_oEncoder1.initialize(*this, 1);
 	m_oEncoder2.initialize(*this, 2);
@@ -79,7 +79,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmZeroCrossingDetector::uninitialize(void)
+bool CBoxAlgorithmZeroCrossingDetector::uninitialize()
 {
 	m_oEncoder0.uninitialize();
 	m_oEncoder1.uninitialize();
@@ -94,7 +94,7 @@ bool CBoxAlgorithmZeroCrossingDetector::processInput(uint32_t ui32InputIndex)
 	return true;
 }
 
-bool CBoxAlgorithmZeroCrossingDetector::process(void)
+bool CBoxAlgorithmZeroCrossingDetector::process()
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 	uint32_t i, j, k;
