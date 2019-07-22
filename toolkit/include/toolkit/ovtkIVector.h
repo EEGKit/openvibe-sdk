@@ -15,7 +15,7 @@ namespace OpenViBEToolkit
 		virtual const char* getElementLabel(uint32_t ui32Index) const = 0;
 		virtual bool setElementLabel(uint32_t ui32Index, const char* sElementLabel) = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_Vector);
+		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_Vector)
 
 		const double& operator [](const uint32_t ui32Index) const
 		{

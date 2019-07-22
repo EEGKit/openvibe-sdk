@@ -25,7 +25,7 @@ namespace OpenViBE
 			virtual bool append(const uint8_t* pBuffer, uint64_t ui64BufferSize);
 			virtual bool append(const IMemoryBuffer& rMemoryBuffer);
 
-			_IsDerivedFromClass_Final_(IMemoryBuffer, OV_ClassId_MemoryBufferImpl);
+			_IsDerivedFromClass_Final_(IMemoryBuffer, OV_ClassId_MemoryBufferImpl)
 
 		protected:
 

@@ -90,7 +90,7 @@ namespace OpenViBE
 				return getNextIdentifier<CString>(m_vAttribute, rPreviousIdentifier);
 			}
 
-			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_Scenario_AttributableT);
+			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_Scenario_AttributableT)
 
 		protected:
 

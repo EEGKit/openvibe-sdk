@@ -22,7 +22,7 @@ namespace OpenViBEToolkit
 		virtual uint64_t getDuration() const = 0;
 		virtual double* getChannelSampleBuffer(uint32_t index) const = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_);
+		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_)
 	};
 
 	extern OVTK_API ISignalTrial* createSignalTrial();

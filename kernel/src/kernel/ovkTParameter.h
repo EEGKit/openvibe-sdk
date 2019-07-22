@@ -112,7 +112,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			_IsDerivedFromClass_(IBase, OVK_ClassId_Kernel_ParameterT);
+			_IsDerivedFromClass_(IBase, OVK_ClassId_Kernel_ParameterT)
 
 		protected:
 

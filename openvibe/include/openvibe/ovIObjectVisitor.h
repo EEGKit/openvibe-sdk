@@ -31,7 +31,7 @@ namespace OpenViBE
 		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::ILink& rLink) { return true; }
 		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IScenario& rScenario) { return true; }
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_ObjectVisitor);
+		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_ObjectVisitor)
 	};
 };
 

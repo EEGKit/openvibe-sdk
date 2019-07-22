@@ -67,10 +67,9 @@ namespace OpenViBE
 		 * \brief Base class for plugin descriptor
 		 * \ingroup Group_Extend
 		 *
-		 * This class is the base class for all the plugin description
-		 * classes. It contains basic functions that could be used for
-		 * each plugin description. Derived plugin descriptions will
-		 * be used as a prototype of what they can create.
+		 * This class is the base class for all the plugin description classes. 
+		 * It contains basic functions that could be used for each plugin description. 
+		 * Derived plugin descriptions will be used as a prototype of what they can create.
 		 *
 		 * \sa IBoxAlgorithmDesc
 		 * \sa IScenarioImporterDesc
@@ -88,13 +87,9 @@ namespace OpenViBE
 			/**
 			 * \brief Informs the plugin description it won't be used any more
 			 *
-			 * This is called by the OpenViBE platform to inform
-			 * the plugin description it is not useful anymore.
-			 * The plugin can chose whether to delete itself or
-			 * to stay in memory until it decides it is ok to be
-			 * deleted. However, the OpenViBE platform will not
-			 * call any of the plugin functions after release is
-			 * called.
+			 * This is called by the OpenViBE platform to inform the plugin description it is not useful anymore.
+			 * The plugin can chose whether to delete itself or to stay in memory until it decides it is ok to be deleted. 
+			 * However, the OpenViBE platform will not call any of the plugin functions after release is called.
 			 */
 			virtual void release() = 0;
 
@@ -105,10 +100,8 @@ namespace OpenViBE
 			/**
 			 * \brief Gives a tip on what this plugin descriptor is able to create
 			 *
-			 * This may inform the OpenViBE platform about what
-			 * kind of plugin can be created using this plugin
-			 * descriptor. It should return the concrete class
-			 * identifier of the plugin object itself.
+			 * This may inform the OpenViBE platform about what kind of plugin can be created using this plugin descriptor. 
+			 * It should return the concrete class identifier of the plugin object itself.
 			 */
 			virtual CIdentifier getCreatedClass() const = 0;
 			virtual CIdentifier getCreatedClassIdentifier() const { return this->getCreatedClass(); }
@@ -116,10 +109,8 @@ namespace OpenViBE
 			 * \brief Creates the plugin object itself
 			 * \return the created object.
 			 *
-			 * This method creates the plugin object itself and returns
-			 * it with the lowest level interface. The OpenVIBE
-			 * platform then uses the IObject::isDerivedFromClass
-			 * method to use the plugin correctly.
+			 * This method creates the plugin object itself and returns it with the lowest level interface. 
+			 * The OpenVIBE platform then uses the IObject::isDerivedFromClass method to use the plugin correctly.
 			 */
 			virtual IPluginObject* create() = 0;
 
@@ -161,16 +152,14 @@ namespace OpenViBE
 			 *
 			 * Default implementation simply returns empty string.
 			 *
-			 * \note You can use std::endl to have the description
-			 *       on several lines when needed.
+			 * \note You can use std::endl to have the description on several lines when needed.
 			 */
 			virtual CString getDetailedDescription() const { return CString(""); }
 			/**
 			 * \brief Gets a basic category of the plugin
 			 * \return the category tokens of the plugin
 			 *
-			 * The tokens should be separated with '/' characters
-			 * in order to create sub categories.
+			 * The tokens should be separated with '/' characters in order to create sub categories.
 			 *
 			 * Default implementation returns "unknown".
 			 */
@@ -187,8 +176,7 @@ namespace OpenViBE
 			 *
 			 * OpenViBE SDK is used to build platforms that are composed of several components.
 			 * Each component can come with its own set of plugins, and has its own version.
-			 * The \ref getAddedSoftwareVersion and \ref getUpdatedSoftwareVersion will return
-			 * versions of the component in which the plugin belongs.
+			 * The \ref getAddedSoftwareVersion and \ref getUpdatedSoftwareVersion will return versions of the component in which the plugin belongs.
 			 *
 			 * \return a string identifier of the component
 			 * \retval "unknown" if not redefined
@@ -224,7 +212,7 @@ namespace OpenViBE
 			 * \retval true If the plugin has the demanded functionality.
 			 * \retval false If the plugin does not have the demanded functionality.
 			 */
-			virtual bool hasFunctionality(CIdentifier functionalityIdentifier) const { return false; }
+			virtual bool hasFunctionality(const CIdentifier functionalityIdentifier) const { return false; }
 			/**
 			 * \brief Tests the licence type for this plugin
 			 * \param eLT [in] : the licence type that this plugin may have
@@ -233,16 +221,11 @@ namespace OpenViBE
 			 *
 			 * Default implementation returns \c false .
 			 *
-			 * This function should return the licence which can be used to
-			 * distribute the plugin. The aim of this functionnality is to
-			 * be able to quickly warn the user if the usage he is doing for
-			 * the software is incompatible with the licence the plugin uses.
-			 * for example, a GPL plugin should not be used in a commercial
-			 * context.
+			 * This function should return the licence which can be used to distribute the plugin. The aim of this functionnality is to
+			 * be able to quickly warn the user if the usage he is doing for the software is incompatible with the licence the plugin uses.
+			 * for example, a GPL plugin should not be used in a commercial context.
 			 *
-			 * A plugin may be used under different licences. For this reason,
-			 * the OpenViBE kernel will loop on this function for each
-			 * licence type to request.
+			 * A plugin may be used under different licences. For this reason, the OpenViBE kernel will loop on this function for each licence type to request.
 			 */
 			virtual bool hasLicenceType(Kernel::ELicenseType eLT) const { return false; }
 

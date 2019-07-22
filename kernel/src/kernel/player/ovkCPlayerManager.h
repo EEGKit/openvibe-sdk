@@ -25,7 +25,7 @@ namespace OpenViBE
 			virtual CIdentifier getNextPlayerIdentifier(
 				const CIdentifier& rPreviousIdentifier) const;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>, OVK_ClassId_Kernel_Player_PlayerManager);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>, OVK_ClassId_Kernel_Player_PlayerManager)
 
 		protected:
 

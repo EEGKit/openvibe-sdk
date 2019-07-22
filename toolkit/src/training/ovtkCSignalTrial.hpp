@@ -28,7 +28,7 @@ namespace OpenViBEToolkit
 		virtual uint64_t getDuration() const;
 		virtual double* getChannelSampleBuffer(uint32_t ui32ChannelIndex) const;
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrial, OVTK_ClassId_);
+		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrial, OVTK_ClassId_)
 
 	protected:
 

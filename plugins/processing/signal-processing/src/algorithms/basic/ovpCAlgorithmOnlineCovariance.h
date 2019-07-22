@@ -45,7 +45,7 @@ namespace OpenViBEPlugins
 			virtual bool uninitialize();
 			virtual bool process();
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_OnlineCovariance);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_OnlineCovariance)
 
 		protected:
 			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
@@ -98,7 +98,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_OnlineCovarianceDesc);
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_OnlineCovarianceDesc)
 		};
 	};
 };

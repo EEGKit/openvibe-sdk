@@ -17,7 +17,7 @@ namespace OpenViBEToolkit
 
 		virtual bool setLabel(const double f64Label) { return false; }
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::TVector < CParent >, OV_UndefinedIdentifier);
+		_IsDerivedFromClass_Final_(OpenViBEToolkit::TVector < CParent >, OV_UndefinedIdentifier)
 	};
 
 	typedef TFeatureVector<IFeatureVector> CFeatureVector;

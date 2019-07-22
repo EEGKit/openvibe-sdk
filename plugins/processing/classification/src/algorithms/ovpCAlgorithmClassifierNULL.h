@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			virtual uint32_t getOutputProbabilityVectorLength();
 			virtual uint32_t getOutputDistanceVectorLength();
 
-			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierNULL);
+			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierNULL)
 
 		protected:
 		};
@@ -71,7 +71,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(CAlgorithmClassifierDesc, OVP_ClassId_Algorithm_ClassifierNULLDesc);
+			_IsDerivedFromClass_Final_(CAlgorithmClassifierDesc, OVP_ClassId_Algorithm_ClassifierNULLDesc)
 		};
 	};
 };

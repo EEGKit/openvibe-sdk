@@ -128,7 +128,7 @@ namespace OpenViBEToolkit
 			appendOutputChunkData(ui32OutputIndex, pBuffer, ui64BufferSize);
 		}
 
-		_IsDerivedFromClass_(CBoxAlgorithmParentClass, OVTK_ClassId_);
+		_IsDerivedFromClass_(CBoxAlgorithmParentClass, OVTK_ClassId_)
 
 	protected:
 
@@ -373,7 +373,7 @@ namespace OpenViBEToolkit
 
 		// ====================================================================================================================================
 
-		_IsDerivedFromClass_(CBoxListenerParentClass, OVTK_ClassId_);
+		_IsDerivedFromClass_(CBoxListenerParentClass, OVTK_ClassId_)
 
 	private:
 

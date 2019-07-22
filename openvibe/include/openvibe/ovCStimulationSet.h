@@ -72,7 +72,7 @@ namespace OpenViBE
 		virtual bool removeStimulation(
 			uint64_t ui64StimulationIndex);
 
-		_IsDerivedFromClass_Final_(OpenViBE::IStimulationSet, OV_ClassId_StimulationSetBridge);
+		_IsDerivedFromClass_Final_(OpenViBE::IStimulationSet, OV_ClassId_StimulationSetBridge)
 
 	private:
 

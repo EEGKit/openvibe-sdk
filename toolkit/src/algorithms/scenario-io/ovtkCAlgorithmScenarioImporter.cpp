@@ -140,7 +140,7 @@ namespace OpenViBEToolkit
 		virtual bool processUInteger(const CIdentifier& rIdentifier, uint64_t ui64Value);
 		virtual bool processStop();
 
-		_IsDerivedFromClass_Final_(IAlgorithmScenarioImporterContext, OV_UndefinedIdentifier);
+		_IsDerivedFromClass_Final_(IAlgorithmScenarioImporterContext, OV_UndefinedIdentifier)
 
 	public:
 

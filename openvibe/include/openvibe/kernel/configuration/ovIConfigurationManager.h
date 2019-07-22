@@ -221,7 +221,7 @@ namespace OpenViBE
 			virtual CString expand(
 				const CString& rExpression) const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Configuration_ConfigurationManager);
+			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Configuration_ConfigurationManager)
 
 			virtual CString expandOnlyKeyword(
 				const CString& rKeyword,

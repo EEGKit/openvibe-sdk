@@ -68,7 +68,7 @@ namespace OpenViBE
 		virtual bool append(
 			const IMemoryBuffer& rMemoryBuffer);
 
-		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge);
+		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge)
 
 	protected:
 

@@ -31,7 +31,7 @@ namespace OpenViBE
 			virtual bool setDimensionLabel(uint32_t ui32DimensionIndex, uint32_t ui32DimensionEntryIndex, const char* sDimensionLabel);
 			virtual double* getBuffer();
 
-			_IsDerivedFromClass_Final_(IMatrix, OV_ClassId_MatrixImpl);
+			_IsDerivedFromClass_Final_(IMatrix, OV_ClassId_MatrixImpl)
 
 		private:
 

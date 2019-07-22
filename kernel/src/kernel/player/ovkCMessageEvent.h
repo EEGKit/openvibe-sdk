@@ -16,7 +16,7 @@ namespace OpenViBE
 			explicit CMessageEvent(const IKernelContext& rKernelContext)
 				: TMessage<TKernelObject<IMessageEvent>>(rKernelContext) { }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageEvent> >, OVK_ClassId_Kernel_Player_MessageEvent);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageEvent> >, OVK_ClassId_Kernel_Player_MessageEvent)
 		};
 	};
 };

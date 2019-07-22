@@ -8,7 +8,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OVTK_ClassId_);
+		_IsDerivedFromClass_(OpenViBE::IObject, OVTK_ClassId_)
 	};
 };
 

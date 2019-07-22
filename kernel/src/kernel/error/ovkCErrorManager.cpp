@@ -62,7 +62,7 @@ namespace OpenViBE
 				return m_NestedError.get();
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IError, OVK_ClassId_Kernel_Error_Error);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IError, OVK_ClassId_Kernel_Error_Error)
 
 		private:
 

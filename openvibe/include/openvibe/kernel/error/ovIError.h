@@ -77,7 +77,7 @@ namespace OpenViBE
 			 */
 			virtual const IError* getNestedError() const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Error_Error);
+			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Error_Error)
 		};
 	}
 }

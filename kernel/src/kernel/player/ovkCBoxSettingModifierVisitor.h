@@ -37,5 +37,5 @@ public:
 	bool m_bIsParsingSettingOverride;
 	OpenViBE::Kernel::IConfigurationManager* m_pConfigurationManager;
 
-	_IsDerivedFromClass_Final_(OpenViBE::IObjectVisitor, OV_UndefinedIdentifier);
+	_IsDerivedFromClass_Final_(OpenViBE::IObjectVisitor, OV_UndefinedIdentifier)
 };

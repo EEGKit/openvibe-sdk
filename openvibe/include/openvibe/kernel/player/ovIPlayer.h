@@ -186,7 +186,7 @@ namespace OpenViBE
 
 			virtual uint64_t getCurrentSimulatedTime() const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Player);
+			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Player)
 		};
 	};
 };

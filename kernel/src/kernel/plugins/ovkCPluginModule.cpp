@@ -32,7 +32,7 @@ namespace OpenViBE
 			virtual bool uninitialize();
 			virtual bool getFileName(CString& rFileName) const;
 
-			_IsDerivedFromClass_Final_(IPluginModule, OV_UndefinedIdentifier);
+			_IsDerivedFromClass_Final_(IPluginModule, OV_UndefinedIdentifier)
 
 		protected:
 
@@ -69,7 +69,7 @@ namespace OpenViBE
 				virtual ITypeManager& getTypeManager() const { return m_rTypeManager; }
 				virtual IScenarioManager& getScenarioManager() const { return m_rScenarioManager; }
 
-				_IsDerivedFromClass_Final_(TKernelObject<IPluginModuleContext>, OVK_ClassId_Kernel_Plugins_PluginModuleContext);
+				_IsDerivedFromClass_Final_(TKernelObject<IPluginModuleContext>, OVK_ClassId_Kernel_Plugins_PluginModuleContext)
 
 			protected:
 

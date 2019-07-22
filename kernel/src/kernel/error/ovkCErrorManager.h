@@ -57,7 +57,7 @@ namespace OpenViBE
 
 			ErrorType getLastErrorType() const override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IErrorManager>, OVK_ClassId_Kernel_Error_ErrorManager);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IErrorManager>, OVK_ClassId_Kernel_Error_ErrorManager)
 
 		private:
 

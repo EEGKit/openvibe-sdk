@@ -56,7 +56,7 @@ namespace OpenViBEToolkit
 		virtual uint32_t getOutputProbabilityVectorLength() = 0;
 		virtual uint32_t getOutputDistanceVectorLength() = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_Classifier);
+		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_Classifier)
 
 	protected:
 		bool initializeExtraParameterMechanism();
@@ -106,6 +106,6 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVTK_ClassId_Algorithm_ClassifierDesc);
+		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVTK_ClassId_Algorithm_ClassifierDesc)
 	};
 };

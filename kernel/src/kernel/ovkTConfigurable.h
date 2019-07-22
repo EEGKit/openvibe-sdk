@@ -119,7 +119,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(IBase, OVK_ClassId_Kernel_ConfigurableT);
+			_IsDerivedFromClass_Final_(IBase, OVK_ClassId_Kernel_ConfigurableT)
 
 		private:
 

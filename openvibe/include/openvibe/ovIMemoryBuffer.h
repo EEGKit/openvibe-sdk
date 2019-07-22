@@ -90,7 +90,7 @@ namespace OpenViBE
 			return this->append(rMemoryBuffer.getDirectPointer(), rMemoryBuffer.getSize());
 		}
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_MemoryBuffer);
+		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_MemoryBuffer)
 
 		const uint8_t& operator [](const uint64_t ui64Index) const
 		{

@@ -117,7 +117,7 @@ namespace OpenViBE
 			virtual bool removeParameter(
 				const CIdentifier& rParameterIdentifier) = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Configurable);
+			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Configurable)
 		};
 	};
 };

@@ -18,7 +18,7 @@ namespace OpenViBEToolkit
 		virtual const IFeatureVector& getFeatureVector(uint32_t ui32Index) const = 0;
 		virtual uint32_t getLabelCount() const = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_FeatureVectorSet);
+		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_FeatureVectorSet)
 
 		const IFeatureVector& operator [](const uint32_t ui32Index) const
 		{

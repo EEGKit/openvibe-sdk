@@ -64,7 +64,7 @@ namespace OpenViBE
 			const char* sDimensionLabel);
 		virtual double* getBuffer();
 
-		_IsDerivedFromClass_Final_(OpenViBE::IMatrix, OV_ClassId_MatrixBridge);
+		_IsDerivedFromClass_Final_(OpenViBE::IMatrix, OV_ClassId_MatrixBridge)
 
 	private:
 

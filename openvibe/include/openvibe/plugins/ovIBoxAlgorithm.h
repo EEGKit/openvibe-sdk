@@ -105,8 +105,7 @@ namespace OpenViBE
 			 *
 			 * \sa processClock
 			 */
-			virtual uint64_t getClockFrequency(
-				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return 0; }
+			virtual uint64_t getClockFrequency(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return 0; }
 
 			//@}
 			/** \name Initialization / Uninitialization */
@@ -125,8 +124,7 @@ namespace OpenViBE
 			 *
 			 * \sa uninitialize
 			 */
-			virtual bool initialize(
-				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
+			virtual bool initialize(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
 			/**
 			 * \brief Unprepares the object so it can be deleted
 			 * \param rBoxAlgorithmContext [in] : the plugin object context
@@ -144,8 +142,7 @@ namespace OpenViBE
 			 *
 			 * \sa initialize
 			 */
-			virtual bool uninitialize(
-				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
+			virtual bool uninitialize(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) { return true; }
 
 			//@}
 			/** \name Several event processing callbacks */
@@ -167,9 +164,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::IBoxAlgorithmContext
 			 */
-			virtual bool processEvent(
-				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
-				Kernel::IMessageEvent& rMessageEvent) { return false; }
+			virtual bool processEvent(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, Kernel::IMessageEvent& rMessageEvent) { return false; }
 			/**
 			 * \brief Reaction to a signal
 			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
@@ -187,9 +182,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual bool processSignal(
-				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
-				Kernel::IMessageSignal& rMessageSignal) { return false; }
+			virtual bool processSignal(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, Kernel::IMessageSignal& rMessageSignal) { return false; }
 			/**
 			 * \brief Reaction to a clock tick
 			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
@@ -210,9 +203,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 * \sa getClockFrequency
 			 */
-			virtual bool processClock(
-				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
-				Kernel::IMessageClock& rMessageClock) { return false; }
+			virtual bool processClock(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, Kernel::IMessageClock& rMessageClock) { return false; }
 			/**
 			 * \brief Reaction to an input update
 			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
@@ -228,9 +219,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual bool processInput(
-				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext,
-				uint32_t ui32InputIndex) { return false; }
+			virtual bool processInput(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const uint32_t ui32InputIndex) { return false; }
 
 			//@}
 			/** \name Algorithm processing */
@@ -255,8 +244,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual bool process(
-				Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) = 0;
+			virtual bool process(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext) = 0;
 
 			//@}
 
@@ -271,11 +259,9 @@ namespace OpenViBE
 
 			virtual void release() { }
 
-			virtual bool initialize(
-				Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
+			virtual bool initialize(Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
 
-			virtual bool uninitialize(
-				Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
+			virtual bool uninitialize(Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
 
 			/** \name Box modifications callbacks */
 			//@{
@@ -298,9 +284,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Plugins::IBoxListenerContext
 			 * \sa OpenViBE::Plugins::EBoxModification
 			 */
-			virtual bool process(
-				Kernel::IBoxListenerContext& rBoxListenerContext,
-				Kernel::EBoxModification eBoxModificationType) = 0;
+			virtual bool process(Kernel::IBoxListenerContext& rBoxListenerContext, const Kernel::EBoxModification eBoxModificationType) = 0;
 
 			//@}
 

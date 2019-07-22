@@ -31,7 +31,7 @@ namespace OpenViBE
 			virtual CIdentifier getNextAlgorithmIdentifier(
 				const CIdentifier& rPreviousIdentifier) const;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IAlgorithmManager>, OVK_ClassId_Kernel_Algorithm_AlgorithmManager);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IAlgorithmManager>, OVK_ClassId_Kernel_Algorithm_AlgorithmManager)
 
 		protected:
 

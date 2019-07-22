@@ -17,7 +17,7 @@ namespace OpenViBE
 			explicit CConfigurable(const IKernelContext& rKernelContext)
 				: TBaseConfigurable<TKernelObject<IConfigurable>>(rKernelContext) { }
 
-			_IsDerivedFromClass_Final_(_Base__CConfigurable_, OVK_ClassId_Kernel_Configurable);
+			_IsDerivedFromClass_Final_(_Base__CConfigurable_, OVK_ClassId_Kernel_Configurable)
 		};
 	};
 };

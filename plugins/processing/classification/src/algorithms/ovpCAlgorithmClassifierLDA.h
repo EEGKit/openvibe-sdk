@@ -50,7 +50,7 @@ namespace OpenViBEPlugins
 			virtual uint32_t getOutputProbabilityVectorLength();
 			virtual uint32_t getOutputDistanceVectorLength();
 
-			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierLDA);
+			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierLDA)
 
 		protected:
 			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
@@ -107,7 +107,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(CAlgorithmClassifierDesc, OVP_ClassId_Algorithm_ClassifierLDADesc);
+			_IsDerivedFromClass_Final_(CAlgorithmClassifierDesc, OVP_ClassId_Algorithm_ClassifierLDADesc)
 		};
 	};
 };

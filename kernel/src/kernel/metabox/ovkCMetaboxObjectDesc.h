@@ -87,7 +87,7 @@ namespace OpenViBE
 
 			virtual bool getBoxPrototype(Kernel::IBoxProto& rBoxAlgorithmPrototype) const;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc);
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc)
 
 		private:
 			CString m_MetaboxDescriptor;

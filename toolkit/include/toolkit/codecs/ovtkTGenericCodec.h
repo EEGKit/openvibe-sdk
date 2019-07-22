@@ -370,7 +370,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		_IsDerivedFromClass_Final_(T, OV_UndefinedIdentifier);
+		_IsDerivedFromClass_Final_(T, OV_UndefinedIdentifier)
 
 	private:
 

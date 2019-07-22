@@ -133,7 +133,7 @@ namespace OpenViBE
 		virtual bool removeStimulation(
 			uint64_t ui64StimulationIndex) = 0;
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_StimulationSet);
+		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_StimulationSet)
 
 	public:
 

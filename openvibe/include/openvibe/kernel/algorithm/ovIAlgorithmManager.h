@@ -82,7 +82,7 @@ namespace OpenViBE
 			virtual CIdentifier getNextAlgorithmIdentifier(
 				const CIdentifier& rPreviousIdentifier) const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmManager);
+			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmManager)
 		};
 	};
 };

@@ -43,7 +43,7 @@ namespace OpenViBE
 			virtual uint64_t insertStimulation(uint64_t ui64StimulationIndex, uint64_t ui64StimulationIdentifier, uint64_t ui64StimulationDate, uint64_t ui64StimulationDuration);
 			virtual bool removeStimulation(uint64_t ui64StimulationIndex);
 
-			_IsDerivedFromClass_Final_(IStimulationSet, OV_ClassId_StimulationSetImpl);
+			_IsDerivedFromClass_Final_(IStimulationSet, OV_ClassId_StimulationSetImpl)
 
 		private:
 

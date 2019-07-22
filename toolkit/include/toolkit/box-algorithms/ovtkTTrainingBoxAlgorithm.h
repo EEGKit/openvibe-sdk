@@ -41,7 +41,7 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::CIdentifier getStimulationIdentifierTrain() = 0;
 		virtual bool train(ISignalTrialSet& rTrialSet) = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::TBoxAlgorithm<CBoxAlgorithmParentClass>, OVTK_ClassId_);
+		_IsDerivedFromClass_(OpenViBEToolkit::TBoxAlgorithm<CBoxAlgorithmParentClass>, OVTK_ClassId_)
 
 	private:
 

@@ -135,7 +135,7 @@ namespace OpenViBE
 
 		//@}
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Matrix);
+		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Matrix)
 
 		const double& operator [](const uint32_t ui32Index) const
 		{

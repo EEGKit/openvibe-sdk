@@ -22,7 +22,7 @@ namespace OpenViBE
 					m_oDefaultValue=0; \
 					memcpy(&m_Value, &m_oDefaultValue, sizeof(IType)); \
 				} \
-				_IsDerivedFromClass_Final_(_Base_##_CName_, oClassId); \
+				_IsDerivedFromClass_Final_(_Base_##_CName_, oClassId) \
 			protected: \
 				CType m_oDefaultValue; \
 			};
@@ -38,7 +38,7 @@ namespace OpenViBE
 					IType l_pDefaultValue=&m_oDefaultValue; \
 					memcpy(&m_Value, &l_pDefaultValue, sizeof(IType)); \
 				} \
-				_IsDerivedFromClass_Final_(_Base_##_CName_, oClassId); \
+				_IsDerivedFromClass_Final_(_Base_##_CName_, oClassId) \
 			protected: \
 				CType m_oDefaultValue; \
 			};
@@ -55,7 +55,7 @@ namespace OpenViBE
 					IType l_pDefaultValue=&m_oDefaultValue; \
 					memcpy(&m_Value, &l_pDefaultValue, sizeof(IType)); \
 				} \
-				_IsDerivedFromClass_Final_(_Base_##_CName_, oClassId); \
+				_IsDerivedFromClass_Final_(_Base_##_CName_, oClassId) \
 			protected: \
 				CType m_oDefaultValue; \
 			};

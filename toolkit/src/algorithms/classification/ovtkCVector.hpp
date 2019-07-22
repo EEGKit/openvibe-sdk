@@ -46,7 +46,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		_IsDerivedFromClass_Final_(CParent, OV_UndefinedIdentifier);
+		_IsDerivedFromClass_Final_(CParent, OV_UndefinedIdentifier)
 
 	protected:
 

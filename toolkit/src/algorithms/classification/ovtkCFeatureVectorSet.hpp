@@ -23,7 +23,7 @@ namespace OpenViBEToolkit
 		virtual double getLabel() const;
 		virtual bool setLabel(double f64Label);
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVector, OV_UndefinedIdentifier);
+		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVector, OV_UndefinedIdentifier)
 
 	public:
 
@@ -46,7 +46,7 @@ namespace OpenViBEToolkit
 		virtual const IFeatureVector& getFeatureVector(uint32_t ui32Index) const;
 		virtual uint32_t getLabelCount() const;
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVectorSet, OV_UndefinedIdentifier);
+		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVectorSet, OV_UndefinedIdentifier)
 
 	protected:
 

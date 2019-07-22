@@ -103,7 +103,7 @@ namespace OpenViBEToolkit
 
 		// ====================================================================================================================================
 
-		_IsDerivedFromClass_(CAlgorithmParentClass, OVTK_ClassId_);
+		_IsDerivedFromClass_(CAlgorithmParentClass, OVTK_ClassId_)
 
 	private:
 

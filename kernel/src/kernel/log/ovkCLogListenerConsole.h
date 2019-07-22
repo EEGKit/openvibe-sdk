@@ -46,7 +46,7 @@ namespace OpenViBE
 			virtual void log(ELogLevel eLogLevel);
 			virtual void log(ELogColor eLogColor);
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>, OVK_ClassId_Kernel_Log_LogListenerConsole);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>, OVK_ClassId_Kernel_Log_LogListenerConsole)
 
 		protected:
 

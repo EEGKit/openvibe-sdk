@@ -16,7 +16,7 @@ namespace OpenViBEToolkit
 		virtual uint32_t getSignalTrialCount() const;
 		virtual ISignalTrial& getSignalTrial(uint32_t ui32Index) const;
 
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_);
+		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_)
 
 	protected:
 

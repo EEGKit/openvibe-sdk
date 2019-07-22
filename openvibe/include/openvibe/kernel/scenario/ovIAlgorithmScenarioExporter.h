@@ -35,7 +35,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OV_UndefinedIdentifier);
+			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OV_UndefinedIdentifier)
 		};
 	}
 }

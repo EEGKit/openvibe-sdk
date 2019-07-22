@@ -111,7 +111,7 @@ namespace OpenViBE
 	{
 	public:
 
-		_IsDerivedFromClass_Final_(OpenViBE::IObject, OV_ClassId_Object);
+		_IsDerivedFromClass_Final_(OpenViBE::IObject, OV_ClassId_Object)
 	};
 };
 
