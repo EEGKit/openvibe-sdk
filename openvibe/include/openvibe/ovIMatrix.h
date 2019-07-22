@@ -36,8 +36,7 @@ namespace OpenViBE
 		 * \return the dimension size for the specified dimension index
 		 * \note Each dimension can have a different size
 		 */
-		virtual const uint32_t getDimensionSize(
-			uint32_t ui32DimensionIndex) const = 0;
+		virtual const uint32_t getDimensionSize(uint32_t ui32DimensionIndex) const = 0;
 		/**
 		 * \brief Gets the dimension label for a given dimension index / dimension entry index pair
 		 * \param ui32DimensionIndex [in] : the dimension index
@@ -45,9 +44,7 @@ namespace OpenViBE
 		 * \return the dimension label for the given dimension index / dimension entry index pair
 		 * \note The string is permanent pointer until the dimension size or the label itself changes
 		 */
-		virtual const char* getDimensionLabel(
-			uint32_t ui32DimensionIndex,
-			uint32_t ui32DimensionEntryIndex) const = 0;
+		virtual const char* getDimensionLabel(uint32_t ui32DimensionIndex, uint32_t ui32DimensionEntryIndex) const = 0;
 
 		/**
 		 * \brief Gets the raw buffer for this matrix
@@ -98,8 +95,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool setDimensionCount(
-			uint32_t ui32DimensionCount) = 0;
+		virtual bool setDimensionCount(uint32_t ui32DimensionCount) = 0;
 		/**
 		 * \brief Sets the dimension size for this matrix on a given dimension index
 		 * \param ui32DimensionIndex [in] : the dimension index which size has to be changed
@@ -107,9 +103,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool setDimensionSize(
-			uint32_t ui32DimensionIndex,
-			uint32_t ui32DimensionSize) = 0;
+		virtual bool setDimensionSize(uint32_t ui32DimensionIndex, uint32_t ui32DimensionSize) = 0;
 		/**
 		 * \brief Sets the dimension label for this matrix on a given dimension index / dimension entry index pair
 		 * \param ui32DimensionIndex [in] : the dimension index
@@ -118,10 +112,7 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool setDimensionLabel(
-			uint32_t ui32DimensionIndex,
-			uint32_t ui32DimensionEntryIndex,
-			const char* sDimensionLabel) = 0;
+		virtual bool setDimensionLabel(uint32_t ui32DimensionIndex, uint32_t ui32DimensionEntryIndex, const char* sDimensionLabel) = 0;
 
 		/**
 		 * \brief Gets a writable raw buffer for this matrix
@@ -137,16 +128,7 @@ namespace OpenViBE
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Matrix)
 
-		const double& operator [](const uint32_t ui32Index) const
-		{
-			return this->getBuffer()[ui32Index];
-		}
-
-		double& operator [](const uint32_t ui32Index)
-		{
-			return this->getBuffer()[ui32Index];
-		}
+		const double& operator [](const uint32_t ui32Index) const { return this->getBuffer()[ui32Index]; }
+		double& operator [](const uint32_t ui32Index) { return this->getBuffer()[ui32Index]; }
 	};
 };
-
-

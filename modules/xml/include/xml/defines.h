@@ -27,5 +27,3 @@
 #else
 	#define XML_API XML_API_Import
 #endif
-
-

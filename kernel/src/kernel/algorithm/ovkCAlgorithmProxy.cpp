@@ -59,8 +59,7 @@ bool CAlgorithmProxy::addInputParameter(
 	OV_ERROR_UNLESS_KRF(
 		m_pInputConfigurable->getParameter(rInputParameterIdentifier) == nullptr,
 		"For algorithm " << m_rAlgorithmDesc.getName() << " : Input parameter id " << rInputParameterIdentifier.toString() << " already exists",
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	m_pInputConfigurable->createParameter(rInputParameterIdentifier, eParameterType, rSubTypeIdentifier);
 	m_vInputParameterName[rInputParameterIdentifier] = sInputName;
@@ -81,8 +80,7 @@ IParameter* CAlgorithmProxy::getInputParameter(
 	OV_ERROR_UNLESS_KRN(
 		l_pParameter,
 		"For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null input parameter id " << rInputParameterIdentifier.toString(),
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return l_pParameter;
 }
@@ -126,8 +124,7 @@ bool CAlgorithmProxy::addOutputParameter(
 	OV_ERROR_UNLESS_KRF(
 		m_pOutputConfigurable->getParameter(rOutputParameterIdentifier) == nullptr,
 		"For algorithm " << m_rAlgorithmDesc.getName() << " : Output parameter id " << rOutputParameterIdentifier.toString() << " already exists",
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	m_pOutputConfigurable->createParameter(rOutputParameterIdentifier, eParameterType, rSubTypeIdentifier);
 	m_vOutputParameterName[rOutputParameterIdentifier] = sOutputName;
@@ -148,8 +145,7 @@ IParameter* CAlgorithmProxy::getOutputParameter(
 	OV_ERROR_UNLESS_KRN(
 		l_pParameter,
 		"For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null output parameter id " << rOutputParameterIdentifier.toString(),
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return l_pParameter;
 }

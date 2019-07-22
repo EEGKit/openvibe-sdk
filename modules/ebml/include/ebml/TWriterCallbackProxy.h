@@ -12,11 +12,8 @@ namespace EBML
 	class TWriterCallbackProxy1 : public IWriterCallback
 	{
 	public:
-		TWriterCallbackProxy1(
-			COwnerClass& rOwnerObject,
-			void (COwnerClass::*mfpWrite)(const void* pBuffer, uint64_t ui64BufferSize))
-			: m_rOwnerObject(rOwnerObject)
-			  , m_mfpWrite(mfpWrite) { }
+		TWriterCallbackProxy1(COwnerClass& rOwnerObject, void (COwnerClass::*mfpWrite)(const void* pBuffer, uint64_t ui64BufferSize))
+			: m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
 
 		virtual void write(const void* pBuffer, const uint64_t ui64BufferSize)
 		{
@@ -38,17 +35,11 @@ namespace EBML
 	class TWriterCallbackProxy2 : public IWriterCallback
 	{
 	public:
-		TWriterCallbackProxy2(
-			COwnerClass& rOwnerObject)
-			: m_rOwnerObject(rOwnerObject)
-			  , m_mfpWrite(mfpWrite) { }
+		TWriterCallbackProxy2(COwnerClass& rOwnerObject) : m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
 
 		virtual void write(const void* pBuffer, const uint64_t ui64BufferSize)
 		{
-			if (m_mfpWrite)
-			{
-				(m_rOwnerObject.*m_mfpWrite)(pBuffer, ui64BufferSize);
-			}
+			if (m_mfpWrite) { (m_rOwnerObject.*m_mfpWrite)(pBuffer, ui64BufferSize); }
 		}
 
 	protected:

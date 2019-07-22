@@ -455,7 +455,7 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						}
 
 						//retrieve value
-						errno                    = 0;
+						errno                   = 0;
 						const double l_f64Value = atof(l_sCurString.c_str());
 #if defined TARGET_OS_Windows
 						if (errno == ERANGE)

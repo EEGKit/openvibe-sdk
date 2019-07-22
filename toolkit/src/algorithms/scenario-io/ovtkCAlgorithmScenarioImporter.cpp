@@ -23,7 +23,7 @@ namespace OpenViBEToolkit
 			CIdentifier m_oTypeIdentifier;
 			CString m_sName;
 			CIdentifier m_oLinkedBoxIdentifier;
-			uint32_t m_ui32LinkedBoxInputIndex        = OV_Value_UndefinedIndexUInt;
+			uint32_t m_ui32LinkedBoxInputIndex      = OV_Value_UndefinedIndexUInt;
 			CIdentifier m_oLinkedBoxInputIdentifier = OV_UndefinedIdentifier;
 		} SScenarioInput;
 
@@ -33,7 +33,7 @@ namespace OpenViBEToolkit
 			CIdentifier m_oTypeIdentifier;
 			CString m_sName;
 			CIdentifier m_oLinkedBoxIdentifier;
-			uint32_t m_ui32LinkedBoxOutputIndex        = OV_Value_UndefinedIndexUInt;
+			uint32_t m_ui32LinkedBoxOutputIndex      = OV_Value_UndefinedIndexUInt;
 			CIdentifier m_oLinkedBoxOutputIdentifier = OV_UndefinedIdentifier;
 		} SScenarioOutput;
 
@@ -57,7 +57,7 @@ namespace OpenViBEToolkit
 			CString m_sName;
 			CString m_sDefaultValue;
 			CString m_sValue;
-			bool m_bModifiability  = false;
+			bool m_bModifiability     = false;
 			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 		} SSetting;
 
@@ -95,14 +95,14 @@ namespace OpenViBEToolkit
 		typedef struct _SLinkSource
 		{
 			CIdentifier m_oBoxIdentifier;
-			uint32_t m_ui32BoxOutputIndex        = OV_Value_UndefinedIndexUInt;
+			uint32_t m_ui32BoxOutputIndex      = OV_Value_UndefinedIndexUInt;
 			CIdentifier m_oBoxOutputIdentifier = OV_UndefinedIdentifier;
 		} SLinkSource;
 
 		typedef struct _SLinkTarget
 		{
 			CIdentifier m_oBoxIdentifier;
-			uint32_t m_ui32BoxInputIndex        = OV_Value_UndefinedIndexUInt;
+			uint32_t m_ui32BoxInputIndex      = OV_Value_UndefinedIndexUInt;
 			CIdentifier m_oBoxInputIdentifier = OV_UndefinedIdentifier;
 		} SLinkTarget;
 

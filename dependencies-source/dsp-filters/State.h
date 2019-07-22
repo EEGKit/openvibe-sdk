@@ -77,10 +77,10 @@ namespace Dsp
 		Sample process1(const Sample in, const BiquadBase& s, const double vsa) // very small amount
 		{
 			double out = s.m_b0 * in + s.m_b1 * m_x1 + s.m_b2 * m_x2 - s.m_a1 * m_y1 - s.m_a2 * m_y2 + vsa;
-			m_x2 = m_x1;
-			m_y2 = m_y1;
-			m_x1 = in;
-			m_y1 = out;
+			m_x2       = m_x1;
+			m_y2       = m_y1;
+			m_x1       = in;
+			m_y1       = out;
 
 			return static_cast<Sample>(out);
 		}

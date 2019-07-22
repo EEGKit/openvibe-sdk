@@ -229,5 +229,3 @@ namespace OpenViBE
 		};
 	};
 };
-
-

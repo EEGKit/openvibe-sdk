@@ -48,8 +48,7 @@ do {                                                                   \
 		OpenViBETest::printError(#origin, (msg), __FILE__, __LINE__);  \
 		return EXIT_FAILURE;                                           \
 	}                                                                  \
-}                                                                      \
-while (0)
+} while (0)
 
 /**
 * OVT_ASSERT: Assess simple expression
@@ -68,14 +67,11 @@ while (0)
 do {                                                                     \
 	if (!((str1) == (str2)))                                             \
 	{                                                                    \
-		OpenViBETest::printError(                                        \
-			OpenViBETest::buildExpressionFromPair(#str1, #str2).c_str(), \
-			(msg), __FILE__, __LINE__);                                  \
+		OpenViBETest::printError(OpenViBETest::buildExpressionFromPair(#str1, #str2).c_str(),(msg), __FILE__, __LINE__);	\
 		OpenViBETest::printExpressionPair((str1).c_str(),(str2).c_str());\
 		return EXIT_FAILURE;                                             \
 	}                                                                    \
-}                                                                        \
-while (0)
+} while (0)
 
 /**
 * OVT_ASSERT_EX: Assess expr throws an
@@ -83,17 +79,10 @@ while (0)
 * - expr: expression to assess
 * - msg: custom error message
 */
-#define OVT_ASSERT_EX(expr, msg)       \
-do {                                   \
-	bool hasTrown{ false };            \
-	try                                \
-	{                                  \
-		(expr);                        \
-	}                                  \
-	catch (...)                        \
-	{                                  \
-		hasTrown = true;               \
-	}                                  \
-	OVT_ASSERT_PRIV(hasTrown, (msg));  \
-}                                      \
-while (0)
+#define OVT_ASSERT_EX(expr, msg) 		\
+do {                             		\
+	bool hasTrown{ false };      		\
+	try { (expr); }						\
+	catch (...) { hasTrown = true; }	\
+	OVT_ASSERT_PRIV(hasTrown, (msg));	\
+} while (0)

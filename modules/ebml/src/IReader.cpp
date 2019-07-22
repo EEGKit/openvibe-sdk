@@ -67,7 +67,7 @@ inline unsigned long getCodedSizeLength(unsigned char* pBuffer, unsigned long ul
 
 inline uint64_t getValue(unsigned char* pBuffer, unsigned long ulBufferLength)
 {
-	uint64_t l_uiResult                 = 0;
+	uint64_t l_uiResult               = 0;
 	unsigned long l_ulCodedSizeLength = getCodedSizeLength(pBuffer, ulBufferLength);
 	unsigned long i;
 	unsigned long l_ulIthBit = l_ulCodedSizeLength;
@@ -199,14 +199,14 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 
 	if (!pBuffer || !ui64BufferSize) { return true; }
 
-	unsigned char* l_pBuffer = (unsigned char*)pBuffer;
-	uint64_t l_ui64BufferSize  = ui64BufferSize;
-	bool l_bFinished      = false;
+	unsigned char* l_pBuffer  = (unsigned char*)pBuffer;
+	uint64_t l_ui64BufferSize = ui64BufferSize;
+	bool l_bFinished          = false;
 	while (!l_bFinished)
 	{
 		uint64_t l_ui64ProcessedPendingBytes = 0;
 		uint64_t l_ui64ProcessedBytes        = 0;
-		m_eLastStatus                      = m_eStatus;
+		m_eLastStatus                        = m_eStatus;
 
 		if (_Debug_)
 		{
@@ -251,7 +251,7 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 				}
 				else
 				{
-					unsigned char* l_pEncodedBuffer = new unsigned char[l_ulCodedSizeLength];
+					unsigned char* l_pEncodedBuffer   = new unsigned char[l_ulCodedSizeLength];
 					uint64_t l_ui64PendingBytesToCopy = (l_ulCodedSizeLength > m_ui64PendingCount ? m_ui64PendingCount : l_ulCodedSizeLength);
 					memcpy(l_pEncodedBuffer, m_pPending, (size_t)(l_ui64PendingBytesToCopy));
 					memcpy(l_pEncodedBuffer + l_ui64PendingBytesToCopy, l_pBuffer, (size_t)(l_ulCodedSizeLength - l_ui64PendingBytesToCopy));

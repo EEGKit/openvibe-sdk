@@ -20,9 +20,7 @@ namespace OpenViBE
 			explicit TAttributable(const IKernelContext& rKernelContext)
 				: T(rKernelContext) { }
 
-			virtual bool addAttribute(
-				const CIdentifier& rAttributeIdentifier,
-				const CString& sAttributeValue)
+			virtual bool addAttribute(const CIdentifier& rAttributeIdentifier, const CString& sAttributeValue)
 			{
 				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
 				if (itAttribute != m_vAttribute.end()) { return false; }
@@ -30,8 +28,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool removeAttribute(
-				const CIdentifier& rAttributeIdentifier)
+			virtual bool removeAttribute(const CIdentifier& rAttributeIdentifier)
 			{
 				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
 				if (itAttribute == m_vAttribute.end()) { return false; }
@@ -45,20 +42,14 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual CString getAttributeValue(
-				const CIdentifier& rAttributeIdentifier) const
+			virtual CString getAttributeValue(const CIdentifier& rAttributeIdentifier) const
 			{
 				std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
-				if (itAttribute == m_vAttribute.end())
-				{
-					return CString("");
-				}
+				if (itAttribute == m_vAttribute.end()) { return CString(""); }
 				return itAttribute->second;
 			}
 
-			virtual bool setAttributeValue(
-				const CIdentifier& rAttributeIdentifier,
-				const CString& sAttributeValue)
+			virtual bool setAttributeValue(const CIdentifier& rAttributeIdentifier, const CString& sAttributeValue)
 			{
 				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
 				if (itAttribute == m_vAttribute.end())
@@ -71,21 +62,16 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool hasAttribute(
-				const CIdentifier& rAttributeIdentifier) const
+			virtual bool hasAttribute(const CIdentifier& rAttributeIdentifier) const
 			{
 				std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
 				if (itAttribute == m_vAttribute.end()) { return false; }
 				return true;
 			}
 
-			virtual bool hasAttributes() const
-			{
-				return !m_vAttribute.empty();
-			}
+			virtual bool hasAttributes() const { return !m_vAttribute.empty(); }
 
-			virtual CIdentifier getNextAttributeIdentifier(
-				const CIdentifier& rPreviousIdentifier) const
+			virtual CIdentifier getNextAttributeIdentifier(const CIdentifier& rPreviousIdentifier) const
 			{
 				return getNextIdentifier<CString>(m_vAttribute, rPreviousIdentifier);
 			}
@@ -98,5 +84,3 @@ namespace OpenViBE
 		};
 	};
 };
-
-

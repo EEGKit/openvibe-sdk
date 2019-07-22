@@ -42,16 +42,14 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setIdentifier(
-				const CIdentifier& rIdentifier) = 0;
+			virtual bool setIdentifier(const CIdentifier& rIdentifier) = 0;
 			/**
 			 * \brief Changes the text of this comment
 			 * \param sText [in] : The text this comment should contain
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setText(
-				const CString& sText) = 0;
+			virtual bool setText(const CString& sText) = 0;
 
 			//@}
 			/** \name Initialisation from prototypes etc... */
@@ -66,8 +64,7 @@ namespace OpenViBE
 			 * Resets the comment and initializes its text/attributes
 			 * according to the existing comment.
 			 */
-			virtual bool initializeFromExistingComment(
-				const IComment& rExisitingComment) = 0;
+			virtual bool initializeFromExistingComment(const IComment& rExisitingComment) = 0;
 
 			//@}
 
@@ -77,5 +74,3 @@ namespace OpenViBE
 		typedef IComment IStaticCommentContext;
 	};
 };
-
-

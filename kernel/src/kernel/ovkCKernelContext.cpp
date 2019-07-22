@@ -127,8 +127,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	OV_ERROR_UNLESS_KRF(
 		m_pConfigurationManager->addConfigurationFromFile(m_sConfigurationFile),
 		"Problem parsing config file [" << m_sConfigurationFile << "]",
-		ErrorType::Internal
-	);
+		ErrorType::Internal);
 
 	// Generate the openvibe directories that the applications may write to. These are done after addConfigurationFromFile(), in case the defaults have been modified.
 	// @FIXME note that there is an issue if these paths are changed by a delayed configuration, then the directories are not created unless the caller does it.

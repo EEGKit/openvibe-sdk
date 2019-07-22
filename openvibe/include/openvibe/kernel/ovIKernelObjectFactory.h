@@ -27,8 +27,7 @@ namespace OpenViBE
 			 * \return a pointer on the created object in case of success.
 			 * \return \c NULL in case of error.
 			 */
-			virtual IObject* createObject(
-				const CIdentifier& rClassIdentifier) = 0;
+			virtual IObject* createObject(const CIdentifier& rClassIdentifier) = 0;
 			/**
 			 * \brief Releases an object created by this factory
 			 * \param pObject [in] : the object to release
@@ -36,12 +35,9 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \note The factory should have created the object in order to release it.
 			 */
-			virtual bool releaseObject(
-				IObject* pObject) = 0;
+			virtual bool releaseObject(IObject* pObject) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_KernelObjectFactory)
 		};
 	};
 };
-
-

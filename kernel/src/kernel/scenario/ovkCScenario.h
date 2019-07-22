@@ -26,11 +26,7 @@ namespace OpenViBE
 			~CScenario();
 
 			bool clear();
-			bool merge(
-				const IScenario& scenario,
-				IScenarioMergeCallback* scenarioMergeCallback,
-				bool mergeSettings,
-				bool shouldPreserveIdentifies);
+			bool merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, bool mergeSettings, bool shouldPreserveIdentifies);
 
 			CIdentifier getNextBoxIdentifier(const CIdentifier& previousIdentifier) const;
 			bool isBox(const CIdentifier& boxIdentifier) const;
@@ -84,51 +80,21 @@ namespace OpenViBE
 			const ILink* getLinkDetails(const CIdentifier& linkIdentifier) const;
 			ILink* getLinkDetails(const CIdentifier& linkIdentifier);
 
-			bool connect(
-				CIdentifier& linkIdentifier,
-				const CIdentifier& sourceBoxIdentifier,
-				uint32_t sourceBoxOutputIndex,
-				const CIdentifier& targetBoxIdentifier,
-				uint32_t targetBoxInputIndex,
-				const CIdentifier& suggestedLinkIdentifier);
-			bool connect(
-				CIdentifier& linkIdentifier,
-				const CIdentifier& sourceBoxIdentifier,
-				const CIdentifier& sourceBoxOutputIdentifier,
-				const CIdentifier& targetBoxIdentifier,
-				const CIdentifier& targetBoxInputIdentifier,
-				const CIdentifier& suggestedLinkIdentifier);
-			bool disconnect(
-				const CIdentifier& sourceBoxIdentifier,
-				uint32_t sourceBoxOutputIndex,
-				const CIdentifier& targetBoxIdentifier,
-				uint32_t targetBoxInputIndex);
-			bool disconnect(
-				const CIdentifier& sourceBoxIdentifier,
-				const CIdentifier& sourceBoxOutputIdentifier,
-				const CIdentifier& targetBoxIdentifier,
-				const CIdentifier& targetBoxInputIdentifier);
+			bool connect(CIdentifier& linkIdentifier, const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex,
+						 const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex, const CIdentifier& suggestedLinkIdentifier);
+			bool connect(CIdentifier& linkIdentifier, const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier,
+						 const CIdentifier& targetBoxIdentifier,  const CIdentifier& targetBoxInputIdentifier, const CIdentifier& suggestedLinkIdentifier);
+			bool disconnect(const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex, const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex);
+			bool disconnect(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier);
 			bool disconnect(const CIdentifier& linkIdentifier);
 
-			bool getSourceBoxOutputIndex(
-				const CIdentifier& sourceBoxIdentifier,
-				const CIdentifier& sourceBoxOutputIdentifier,
-				uint32_t& sourceBoxOutputIndex);
+			bool getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, uint32_t& sourceBoxOutputIndex);
 
-			bool getTargetBoxInputIndex(
-				const CIdentifier& targetBoxIdentifier,
-				const CIdentifier& targetBoxInputIdentifier,
-				uint32_t& targetBoxInputIndex);
+			bool getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, uint32_t& targetBoxInputIndex);
 
-			bool getSourceBoxOutputIdentifier(
-				const CIdentifier& sourceBoxIdentifier,
-				const uint32_t& sourceBoxOutputIndex,
-				CIdentifier& sourceBoxOutputIdentifier);
+			bool getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentifier, const uint32_t& sourceBoxOutputIndex, CIdentifier& sourceBoxOutputIdentifier);
 
-			bool getTargetBoxInputIdentifier(
-				const CIdentifier& targetBoxIdentifier,
-				const uint32_t& targetBoxInputIndex,
-				CIdentifier& targetBoxInputIdentifier);
+			bool getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifier, const uint32_t& targetBoxInputIndex, CIdentifier& targetBoxInputIdentifier);
 
 			bool applyLocalSettings();
 			bool checkSettings(IConfigurationManager* configurationManager);

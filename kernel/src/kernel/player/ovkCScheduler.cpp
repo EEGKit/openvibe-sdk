@@ -76,8 +76,7 @@ bool CScheduler::setScenario(
 	OV_ERROR_UNLESS_KRF(
 		!this->isHoldingResources(),
 		"Trying to configure a scheduler with non-empty resources",
-		ErrorType::BadCall
-	);
+		ErrorType::BadCall);
 
 	m_oScenarioIdentifier = rScenarioIdentifier;
 
@@ -105,8 +104,7 @@ bool CScheduler::setFrequency(
 	OV_ERROR_UNLESS_KRF(
 		!this->isHoldingResources(),
 		"Trying to configure a scheduler with non-empty resources",
-		ErrorType::BadCall
-	);
+		ErrorType::BadCall);
 
 	m_ui64Frequency    = ui64Frequency;
 	m_ui64StepDuration = (1LL << 32) / ui64Frequency;
@@ -129,8 +127,7 @@ bool CScheduler::flattenScenario()
 	OV_ERROR_UNLESS_KRF(
 		m_pScenario->applyLocalSettings(),
 		"Failed to flatten scenario: applying local settings failed",
-		ErrorType::Internal
-	);
+		ErrorType::Internal);
 
 	// We are going to find all metaboxes in the scenario and then push their contents to this one
 	// As the scenario itself can contain more metaboxes, we are going to repeat this process
@@ -209,8 +206,7 @@ bool CScheduler::flattenScenario()
 			OV_ERROR_UNLESS_KRF(
 				l_sMetaboxIdentifier != CString(""),
 				"Failed to find metabox with id " << l_sMetaboxIdentifier,
-				ErrorType::ResourceNotFound
-			);
+				ErrorType::ResourceNotFound);
 
 			// We are going to copy the template scenario, flatten it and then copy all
 			// Note that copy constructor for IScenario does not exist
@@ -222,8 +218,7 @@ bool CScheduler::flattenScenario()
 					OV_ScenarioImportContext_SchedulerMetaboxImport,
 					l_sMetaboxScenarioPath),
 				"Failed to import the scenario file",
-				ErrorType::Internal
-			);
+				ErrorType::Internal);
 
 			IScenario& l_rMetaboxScenarioInstance = m_rPlayer.getRuntimeScenarioManager().getScenario(l_oMetaboxScenarioTemplateIdentifier);
 
@@ -319,8 +314,7 @@ bool CScheduler::flattenScenario()
 					OV_ERROR_UNLESS_KRF(
 						l_ui32MetaBoxInputIndex != OV_Value_UndefinedIndexUInt,
 						"Failed to find metabox input with identifier " << l_oMetaBoxInputIdentifier.toString(),
-						ErrorType::ResourceNotFound
-					);
+						ErrorType::ResourceNotFound);
 					l_rMetaboxScenarioInstance.getScenarioInputLink(l_ui32MetaBoxInputIndex, l_oTargetBoxIdentifier, l_ui32TargetBoxInputIndex);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
@@ -359,8 +353,7 @@ bool CScheduler::flattenScenario()
 					OV_ERROR_UNLESS_KRF(
 						l_ui32MetaBoxOutputIndex != OV_Value_UndefinedIndexUInt,
 						"Failed to find metabox input with identifier " << l_oMetaBoxOutputIdentifier.toString(),
-						ErrorType::ResourceNotFound
-					);
+						ErrorType::ResourceNotFound);
 					l_rMetaboxScenarioInstance.getScenarioOutputLink(l_ui32MetaBoxOutputIndex, l_oSourceBoxIdentifier, l_ui32SourceBoxOutputIndex);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
@@ -631,8 +624,7 @@ bool CScheduler::loop()
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
 		"Trying to use an uninitialized scheduler",
-		ErrorType::BadCall
-	);
+		ErrorType::BadCall);
 
 	bool l_bBoxProcessing = true;
 	m_oBenchmarkChrono.stepIn();
@@ -647,8 +639,7 @@ bool CScheduler::loop()
 		OV_ERROR_UNLESS_KRF(
 			l_pBox,
 			"Unable to get box details for box with id " << itSimulatedBox->first.second.toString(),
-			ErrorType::ResourceNotFound
-		);
+			ErrorType::ResourceNotFound);
 
 		l_rSimulatedBoxChrono.stepIn();
 
@@ -708,15 +699,13 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 		OV_ERROR_UNLESS_KRF(
 			simulatedBox->processClock(),
 			"Process clock failed for box with id " << boxIdentifier.toString(),
-			ErrorType::Internal
-		);
+			ErrorType::Internal);
 		if (simulatedBox->isReadyToProcess())
 		{
 			OV_ERROR_UNLESS_KRF(
 				simulatedBox->process(),
 				"Process failed for box with id " << boxIdentifier.toString(),
-				ErrorType::Internal
-			);
+				ErrorType::Internal);
 		}
 
 		//if the box is muted we still have to erase chunks that arrives at the input
@@ -731,16 +720,14 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 				OV_ERROR_UNLESS_KRF(
 					simulatedBox->processInput(itSimulatedBoxInput->first, *itSimulatedBoxInputChunkList),
 					"Process failed for box with id " << boxIdentifier.toString() << " on input " << itSimulatedBoxInput->first,
-					ErrorType::Internal
-				);
+					ErrorType::Internal);
 
 				if (simulatedBox->isReadyToProcess())
 				{
 					OV_ERROR_UNLESS_KRF(
 						simulatedBox->process(),
 						"Process failed for box with id " << boxIdentifier.toString(),
-						ErrorType::Internal
-					);
+						ErrorType::Internal);
 				}
 			}
 			l_rSimulatedBoxInputChunkList.clear();
@@ -763,14 +750,12 @@ bool CScheduler::sendInput(
 	OV_ERROR_UNLESS_KRF(
 		l_pBox,
 		"Tried to send data chunk with invalid box identifier " << rBoxIdentifier.toString(),
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	OV_ERROR_UNLESS_KRF(
 		ui32InputIndex < l_pBox->getInputCount(),
 		"Tried to send data chunk with invalid input index " << ui32InputIndex << " for box identifier" << rBoxIdentifier.toString(),
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin();
 	while (itSimulatedBox != m_vSimulatedBox.end() && itSimulatedBox->first.second != rBoxIdentifier)
@@ -781,8 +766,7 @@ bool CScheduler::sendInput(
 	OV_ERROR_UNLESS_KRF(
 		itSimulatedBox != m_vSimulatedBox.end(),
 		"Tried to send data chunk with invalid simulated box identifier " << rBoxIdentifier.toString(),
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 	CSimulatedBox* l_pSimulatedBox = itSimulatedBox->second;
 
 	// use a fatal here because failing to meet this invariant
@@ -790,8 +774,7 @@ bool CScheduler::sendInput(
 	OV_FATAL_UNLESS_K(
 		l_pSimulatedBox,
 		"Null box found for id " << rBoxIdentifier.toString(),
-		ErrorType::BadValue
-	);
+		ErrorType::BadValue);
 
 	// TODO: check if ui32InputIndex does not overflow
 

@@ -31,7 +31,7 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 	m_pReaderHelper = EBML::createReaderHelper();
 
 	bool l_bExpand;
-	CString l_sFileName   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	CString l_sFileName     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	uint64_t l_ui64LogLevel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	if (l_rStaticBoxContext.getSettingCount() > 2)
@@ -150,7 +150,7 @@ template <class T>
 void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	uint64_t l_ui64Count = (ui64BufferSize / sizeof(T));
-	const T* l_pBuffer = static_cast<const T*>(pBuffer);
+	const T* l_pBuffer   = static_cast<const T*>(pBuffer);
 	for (uint64_t i = 0; i < std::min(m_ui64ExpandValuesCount, l_ui64Count); i++)
 	{
 		getLogManager() << (i == 0 ? "" : " ") << l_pBuffer[i];

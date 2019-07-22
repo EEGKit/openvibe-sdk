@@ -46,16 +46,14 @@ namespace OpenViBE
 			 *       will cause this function to return the first metabox object
 			 *       descriptor identifier.
 			 */
-			virtual CIdentifier getNextMetaboxObjectDescIdentifier(
-				const CIdentifier& previousIdentifier) const = 0;
+			virtual CIdentifier getNextMetaboxObjectDescIdentifier(const CIdentifier& previousIdentifier) const = 0;
 
 			/**
 			 * \brief Gets details on a specific metabox object descriptor
 			 * \param[in] metaboxIdentifier : the metabox object descriptor identifier which details should be returned
 			 * \return the corresponding metabox object descriptor pointer.
 			 */
-			virtual const Plugins::IPluginObjectDesc* getMetaboxObjectDesc(
-				const CIdentifier& metaboxIdentifier) const = 0;
+			virtual const Plugins::IPluginObjectDesc* getMetaboxObjectDesc(const CIdentifier& metaboxIdentifier) const = 0;
 
 			/**
 			 * \brief Sets details on a specific metabox object descriptor
@@ -94,5 +92,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Metabox_MetaboxManager)
 		};
-	};
-};
+	}
+}

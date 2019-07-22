@@ -60,8 +60,7 @@ bool CBoxAlgorithmCrop::initialize()
 	OV_ERROR_UNLESS_KRF(
 		m_f64MinCropValue < m_f64MaxCropValue,
 		"Invalid crop values: minimum crop value [" << m_f64MinCropValue << "] should be lower than the maximum crop value [" << m_f64MaxCropValue << "]",
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
+		OpenViBE::Kernel::ErrorType::BadSetting);
 
 	return true;
 }

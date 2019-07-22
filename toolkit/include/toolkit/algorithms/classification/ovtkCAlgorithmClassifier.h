@@ -46,9 +46,9 @@ namespace OpenViBEToolkit
 
 		virtual bool train(const IFeatureVectorSet& featureVectorSet) = 0;
 		virtual bool classify(const IFeatureVector& featureVector
-										   , double& estimatedClass
-										   , IVector& distanceValue
-										   , IVector& probabilityValue) = 0;
+							  , double& estimatedClass
+							  , IVector& distanceValue
+							  , IVector& probabilityValue) = 0;
 
 		virtual XML::IXMLNode* saveConfiguration() = 0;
 		virtual bool loadConfiguration(XML::IXMLNode* configurationRoot) = 0;

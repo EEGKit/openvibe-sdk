@@ -130,10 +130,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 					uint32_t l_ui32SampleToFill = std::min(m_OutputSampleCount - m_OutputSampleIndex, l_ui32InputSampleCount - l_ui32SampleProcessed);
 					for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < l_ui32ChannelCount; l_ui32ChannelIndex++)
 					{
-						System::Memory::copy(
-							l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount + m_OutputSampleIndex,
-							l_pInputBuffer + l_ui32ChannelIndex * l_ui32InputSampleCount + l_ui32SampleProcessed,
-							l_ui32SampleToFill * sizeof(double));
+						System::Memory::copy(l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount + m_OutputSampleIndex,
+											 l_pInputBuffer + l_ui32ChannelIndex * l_ui32InputSampleCount + l_ui32SampleProcessed, l_ui32SampleToFill * sizeof(double));
 					}
 					m_OutputSampleIndex += l_ui32SampleToFill;
 					l_ui32SampleProcessed += l_ui32SampleToFill;
@@ -155,10 +153,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 							uint32_t l_ui32SamplesToSave = m_OutputSampleCount - m_OutputSampleCountBetweenEpoch;
 							for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < l_ui32ChannelCount; l_ui32ChannelIndex++)
 							{
-								System::Memory::move(
-									l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount,
-									l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount + m_OutputSampleCount - l_ui32SamplesToSave,
-									l_ui32SamplesToSave * sizeof(double));
+								System::Memory::move(l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount,
+													 l_pOutputBuffer + l_ui32ChannelIndex * m_OutputSampleCount + m_OutputSampleCount - l_ui32SamplesToSave, l_ui32SamplesToSave * sizeof(double));
 							}
 
 							// The counter can be reset

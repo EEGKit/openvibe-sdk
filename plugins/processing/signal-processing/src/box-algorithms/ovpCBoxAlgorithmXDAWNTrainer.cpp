@@ -13,8 +13,8 @@ using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
 CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer() : m_TrainStimulationId(0),
-															 m_FilterDimension(0),
-															 m_SaveAsBoxConfig(false) {}
+														 m_FilterDimension(0),
+														 m_SaveAsBoxConfig(false) {}
 
 bool CBoxAlgorithmXDAWNTrainer::initialize()
 {
@@ -24,8 +24,7 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 	OV_ERROR_UNLESS_KRF(
 		m_FilterFilename.length() != 0,
 		"The filter filename is empty.\n",
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
+		OpenViBE::Kernel::ErrorType::BadSetting);
 
 	if (FS::Files::fileExists(m_FilterFilename))
 	{
@@ -34,8 +33,7 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 		OV_ERROR_UNLESS_KRF(
 			file != NULL,
 			"The filter file exists but cannot be used.\n",
-			OpenViBE::Kernel::ErrorType::BadFileRead
-		);
+			OpenViBE::Kernel::ErrorType::BadFileRead);
 
 		fclose(file);
 	}
@@ -45,8 +43,7 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 	OV_ERROR_UNLESS_KRF(
 		filterDimension > 0,
 		"The dimension of the filter must be strictly positive.\n",
-		OpenViBE::Kernel::ErrorType::OutOfBound
-	);
+		OpenViBE::Kernel::ErrorType::OutOfBound);
 
 	m_FilterDimension = static_cast<unsigned int>(filterDimension);
 
@@ -90,14 +87,9 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 	for (unsigned int i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		m_StimEncoder.getInputStimulationSet()->clear();
-
 		m_StimDecoder.decode(i);
 
-		if (m_StimDecoder.isHeaderReceived())
-		{
-			m_StimEncoder.encodeHeader();
-		}
-
+		if (m_StimDecoder.isHeaderReceived()) { m_StimEncoder.encodeHeader(); }
 		if (m_StimDecoder.isBufferReceived())
 		{
 			for (uint64_t j = 0; j < m_StimDecoder.getOutputStimulationSet()->getStimulationCount(); j++)
@@ -108,20 +100,13 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 				{
 					train = true;
 
-					m_StimEncoder.getInputStimulationSet()->appendStimulation(
-						OVTK_StimulationId_TrainCompleted,
-						m_StimDecoder.getOutputStimulationSet()->getStimulationDate(j),
-						0);
+					m_StimEncoder.getInputStimulationSet()->appendStimulation(OVTK_StimulationId_TrainCompleted, m_StimDecoder.getOutputStimulationSet()->getStimulationDate(j), 0);
 				}
 			}
 
 			m_StimEncoder.encodeBuffer();
 		}
-
-		if (m_StimDecoder.isEndReceived())
-		{
-			m_StimEncoder.encodeEnd();
-		}
+		if (m_StimDecoder.isEndReceived()) { m_StimEncoder.encodeEnd(); }
 
 		dynamicBoxContext.markOutputAsReadyToSend(0, dynamicBoxContext.getInputChunkStartTime(0, i), dynamicBoxContext.getInputChunkEndTime(0, i));
 	}
@@ -161,26 +146,22 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 					OV_ERROR_UNLESS_KRF(
 						samplingRate > 0,
 						"Input sampling frequency is equal to 0. Plugin can not process.\n",
-						OpenViBE::Kernel::ErrorType::OutOfBound
-					);
+						OpenViBE::Kernel::ErrorType::OutOfBound);
 
 					OV_ERROR_UNLESS_KRF(
 						channelCount > 0,
 						"For condition " << j + 1 << " got no channel in signal stream.\n",
-						OpenViBE::Kernel::ErrorType::OutOfBound
-					);
+						OpenViBE::Kernel::ErrorType::OutOfBound);
 
 					OV_ERROR_UNLESS_KRF(
 						sampleCount > 0,
 						"For condition " << j + 1 << " got no samples in signal stream.\n",
-						OpenViBE::Kernel::ErrorType::OutOfBound
-					);
+						OpenViBE::Kernel::ErrorType::OutOfBound);
 
 					OV_ERROR_UNLESS_KRF(
 						m_FilterDimension <= channelCount,
 						"The filter dimension must not be superior than the channel count.\n",
-						OpenViBE::Kernel::ErrorType::OutOfBound
-					);
+						OpenViBE::Kernel::ErrorType::OutOfBound);
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
@@ -229,8 +210,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			OV_ERROR_UNLESS_KRF(
 				n[j] != 0,
 				"Did not have input signal for condition " << j + 1 << "\n",
-				OpenViBE::Kernel::ErrorType::BadValue
-			);
+				OpenViBE::Kernel::ErrorType::BadValue);
 
 			switch (j)
 			{
@@ -250,8 +230,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		OV_ERROR_UNLESS_KRF(
 			X[0].rows() == X[1].rows(),
 			"Dimension mismatch, first input had " << uint32_t(X[0].rows()) << " channels while second input had " << uint32_t(X[1].rows()) << " channels\n",
-			OpenViBE::Kernel::ErrorType::BadValue
-		);
+			OpenViBE::Kernel::ErrorType::BadValue);
 
 		// Grabs usefull values
 
@@ -294,8 +273,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 			OV_ERROR_KRF(
 				"Could not solve generalized eigen decomposition, got error[" << CString(errorMessage) << "]\n",
-				OpenViBE::Kernel::ErrorType::BadProcessing
-			);
+				OpenViBE::Kernel::ErrorType::BadProcessing);
 		}
 				
 		// Create a CMatrix mapper that can spool the filters to a file
@@ -307,26 +285,13 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		Eigen::Map<MatrixXdRowMajor> vectorsMapper(eigenVectors.getBuffer(), m_FilterDimension, channelCount);
 
-		vectorsMapper.block(
-					0, 0,
-					m_FilterDimension,
-					channelCount
-				) =
-				eigenSolver.eigenvectors().block(
-					0, 0,
-					channelCount,
-					m_FilterDimension
-				).transpose();			
+		vectorsMapper.block(0, 0, m_FilterDimension, channelCount) = eigenSolver.eigenvectors().block(0, 0, channelCount, m_FilterDimension).transpose();			
 					
 		// Saves filters
 
 		FILE* file = FS::Files::open(m_FilterFilename.toASCIIString(), "wt");
 
-		OV_ERROR_UNLESS_KRF(
-			file != NULL,
-			"Could not open file [" << m_FilterFilename << "] for writing.\n",
-			OpenViBE::Kernel::ErrorType::BadFileWrite
-		);
+		OV_ERROR_UNLESS_KRF(file != NULL, "Could not open file [" << m_FilterFilename << "] for writing.\n", OpenViBE::Kernel::ErrorType::BadFileWrite);
 
 		if (m_SaveAsBoxConfig)
 		{
@@ -349,8 +314,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 			OV_ERROR_UNLESS_KRF(
 				OpenViBEToolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_FilterFilename),
 				"Unable to save to [" << m_FilterFilename << "]\n",
-				OpenViBE::Kernel::ErrorType::BadFileWrite
-			);
+				OpenViBE::Kernel::ErrorType::BadFileWrite);
 		}
 
 		OV_WARNING_UNLESS_K(

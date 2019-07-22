@@ -13,7 +13,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
-	uint64_t l_ui64LogLevel     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	uint64_t l_ui64LogLevel   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_eLogLevel               = static_cast<ELogLevel>(l_ui64LogLevel);
 	m_ui64ValidityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	if (l_rStaticBoxContext.getSettingCount() == 1) m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); // note that for boxes with one setting, we fallback to the old behavior
@@ -110,7 +110,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				{
 					uint32_t l_ui32ChannelCount            = l_pMatrix->getDimensionSize(0);
 					uint32_t l_ui32SampleCount             = l_pMatrix->getDimensionSize(1);
-					double* l_pBuffer                   = l_pMatrix->getBuffer();
+					double* l_pBuffer                      = l_pMatrix->getBuffer();
 					uint32_t l_ui32InterpolatedSampleCount = 0;
 
 					for (uint32_t k = 0; k < l_ui32ChannelCount; k++)

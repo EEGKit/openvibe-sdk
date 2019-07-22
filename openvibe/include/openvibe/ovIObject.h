@@ -13,19 +13,11 @@ namespace OpenViBE
 	};
 
 #define _IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
-	virtual bool isDerivedFromClass( \
-		const OpenViBE::CIdentifier& rClassIdentifier) const \
-	{ \
-		return ((rClassIdentifier==_ClassIdentifier_) \
-		     || _SuperClassName_::isDerivedFromClass(rClassIdentifier)); \
-	}
+	virtual bool isDerivedFromClass(  const OpenViBE::CIdentifier& rClassIdentifier) const { return ((rClassIdentifier==_ClassIdentifier_) || _SuperClassName_::isDerivedFromClass(rClassIdentifier)); }
 
 #define _IsDerivedFromClass_Final_(_SuperClassName_,_ClassIdentifier_) \
 	_IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
-	virtual OpenViBE::CIdentifier getClassIdentifier() const \
-	{ \
-		return _ClassIdentifier_; \
-	}
+	virtual OpenViBE::CIdentifier getClassIdentifier() const { return _ClassIdentifier_; }
 
 	/**
 	 * \class IObject
@@ -79,11 +71,7 @@ namespace OpenViBE
 		 * plugin functions are implemented and so on... see
 		 * OpenViBE::Plugins::IPluginObject for an example...
 		 */
-		virtual bool isDerivedFromClass(
-			const CIdentifier& rClassIdentifier) const
-		{
-			return (rClassIdentifier == OV_ClassId_Object);
-		}
+		virtual bool isDerivedFromClass(const CIdentifier& rClassIdentifier) const { return (rClassIdentifier == OV_ClassId_Object); }
 
 		//@}
 		/** \name Visiting processes */
@@ -114,5 +102,3 @@ namespace OpenViBE
 		_IsDerivedFromClass_Final_(OpenViBE::IObject, OV_ClassId_Object)
 	};
 };
-
-

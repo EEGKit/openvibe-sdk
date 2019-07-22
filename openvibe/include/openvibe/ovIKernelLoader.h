@@ -36,17 +36,14 @@ namespace OpenViBE
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 */
-		virtual bool load(
-			const CString& sFileName,
-			CString* pError = NULL) = 0;
+		virtual bool load(const CString& sFileName, CString* pError = NULL) = 0;
 		/**
 		 * \brief Unloads a loaded kernel DLL/so file
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 * \warning \c load must have been called successfully before calling \c unload
 		 */
-		virtual bool unload(
-			CString* pError = NULL) = 0;
+		virtual bool unload(CString* pError = NULL) = 0;
 		/**
 		 * \brief Requests the kernel DLL/so file to self initialize
 		 * \return \e true on success.
@@ -65,8 +62,7 @@ namespace OpenViBE
 		 * \return \e false on error.
 		 * \warning both \c load and \c initialize must have been called successfully before calling \c getKernelDesc
 		 */
-		virtual bool getKernelDesc(
-			Kernel::IKernelDesc*& rpKernelDesc) = 0;
+		virtual bool getKernelDesc(Kernel::IKernelDesc*& rpKernelDesc) = 0;
 		/**
 		 * \brief Uninitializes a loaded and initialized kernel DLL/so file
 		 * \return \e true on success.
@@ -78,5 +74,3 @@ namespace OpenViBE
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_KernelLoader)
 	};
 };
-
-

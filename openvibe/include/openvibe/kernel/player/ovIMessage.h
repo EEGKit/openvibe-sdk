@@ -34,20 +34,16 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setIdentifier(
-				const CIdentifier& rIdentifier) = 0;
+			virtual bool setIdentifier(const CIdentifier& rIdentifier) = 0;
 			/**
 			 * \brief Sets the message timestamp
 			 * \param ui64Time [in] : the new timestamp of the message
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setTime(
-				uint64_t ui64Time) = 0;
+			virtual bool setTime(uint64_t ui64Time) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_Message)
 		};
 	};
 };
-
-

@@ -20,12 +20,12 @@ namespace OpenViBEPlugins
 	namespace FeatureExtraction
 	{
 		CBoxAlgorithmFeatureAggregator::CBoxAlgorithmFeatureAggregator() : m_pFeatureVectorEncoder(nullptr),
-																			   m_ui64LastChunkStartTime(0),
-																			   m_ui64LastChunkEndTime(0),
-																			   m_ui32CurrentInput(0),
-																			   m_pVectorBuffer(nullptr),
-																			   m_ui32VectorSize(0),
-																			   m_bHeaderSent(false) { }
+																		   m_ui64LastChunkStartTime(0),
+																		   m_ui64LastChunkEndTime(0),
+																		   m_ui32CurrentInput(0),
+																		   m_pVectorBuffer(nullptr),
+																		   m_ui32VectorSize(0),
+																		   m_bHeaderSent(false) { }
 
 		bool CBoxAlgorithmFeatureAggregator::initialize()
 		{
@@ -118,8 +118,7 @@ namespace OpenViBEPlugins
 
 						OV_ERROR_KRF(
 							"Invalid incoming input chunks: duration differs between chunks",
-							OpenViBE::Kernel::ErrorType::BadInput
-						);
+							OpenViBE::Kernel::ErrorType::BadInput);
 					}
 				}
 				else
@@ -145,7 +144,7 @@ namespace OpenViBEPlugins
 			IMatrix* l_pOutputMatrix = m_pFeatureVectorEncoder->getInputMatrix();
 			std::vector<double> l_vBufferElements;
 			uint64_t l_ui64TotalBufferSize = 0;
-			bool l_bBufferReceived    = false;
+			bool l_bBufferReceived         = false;
 
 			for (uint32_t input = 0; input < l_pStaticBoxContext->getInputCount(); input++)
 			{
@@ -176,8 +175,8 @@ namespace OpenViBEPlugins
 				//*/
 				if (m_pStreamedMatrixDecoder[input]->isBufferReceived())
 				{
-					l_bBufferReceived       = true;
-					IMatrix* l_pInputMatrix = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
+					l_bBufferReceived         = true;
+					IMatrix* l_pInputMatrix   = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
 					uint32_t l_ui32BufferSize = l_pInputMatrix->getBufferElementCount();
 
 					double* l_pBuffer = l_pInputMatrix->getBuffer();

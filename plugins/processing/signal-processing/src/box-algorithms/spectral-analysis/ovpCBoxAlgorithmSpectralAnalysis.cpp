@@ -22,12 +22,7 @@ namespace
 {
 	double amplitude(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix)
 	{
-		return sqrt(
-			matrix(channelIndex, FFTIndex).real()
-			* matrix(channelIndex, FFTIndex).real()
-			+ matrix(channelIndex, FFTIndex).imag()
-			* matrix(channelIndex, FFTIndex).imag()
-		);
+		return sqrt(matrix(channelIndex, FFTIndex).real() * matrix(channelIndex, FFTIndex).real() + matrix(channelIndex, FFTIndex).imag() * matrix(channelIndex, FFTIndex).imag());
 	}
 
 	double phase(unsigned int channelIndex, unsigned int FFTIndex, const MatrixXcd& matrix)
@@ -131,8 +126,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			OV_ERROR_UNLESS_KRF(
 				m_SamplingRate > 0,
 				"Invalid sampling rate [" << m_SamplingRate << "] (expected value > 0)",
-				OpenViBE::Kernel::ErrorType::BadInput
-			);
+				OpenViBE::Kernel::ErrorType::BadInput);
 
 			// size of the spectrum
 			m_FFTSize = m_SampleCount / 2 + 1;
@@ -246,8 +240,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 						default:
 							OV_ERROR_KRF(
 								"Invalid decoder output.\n",
-								OpenViBE::Kernel::ErrorType::BadProcessing
-							);
+								OpenViBE::Kernel::ErrorType::BadProcessing);
 					}
 
 					IMatrix* spectrum = m_SpectrumEncoders[encoderIndex]->getInputMatrix();

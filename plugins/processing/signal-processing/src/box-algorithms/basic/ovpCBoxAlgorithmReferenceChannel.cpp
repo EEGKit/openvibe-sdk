@@ -93,10 +93,9 @@ bool CBoxAlgorithmReferenceChannel::process()
 			OV_ERROR_UNLESS_KRF(
 				l_rInputMatrix.getDimensionSize(0) >= 2,
 				"Invalid input matrix with [" << l_rInputMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
-				OpenViBE::Kernel::ErrorType::BadInput
-			);
+				OpenViBE::Kernel::ErrorType::BadInput);
 
-			CString l_sChannel       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+			CString l_sChannel         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			uint64_t l_ui64MatchMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 			m_ui32ReferenceChannelIndex = _find_channel_(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
@@ -104,8 +103,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 			OV_ERROR_UNLESS_KRF(
 				m_ui32ReferenceChannelIndex != std::numeric_limits<uint32_t>::max(),
 				"Invalid channel [" << l_sChannel << "]: channel not found",
-				OpenViBE::Kernel::ErrorType::BadSetting
-			);
+				OpenViBE::Kernel::ErrorType::BadSetting);
 
 			if (_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::max())
 			{
@@ -129,11 +127,11 @@ bool CBoxAlgorithmReferenceChannel::process()
 		{
 			IMatrix& l_rInputMatrix     = *m_oDecoder.getOutputMatrix();
 			IMatrix& l_rOutputMatrix    = *m_oEncoder.getInputMatrix();
-			double* l_pInputBuffer     = l_rInputMatrix.getBuffer();
-			double* l_pOutputBuffer    = l_rOutputMatrix.getBuffer();
-			double* l_pReferenceBuffer = l_rInputMatrix.getBuffer() + m_ui32ReferenceChannelIndex * l_rInputMatrix.getDimensionSize(1);
-			uint32_t l_ui32ChannelCount   = l_rInputMatrix.getDimensionSize(0);
-			uint32_t l_ui32SampleCount    = l_rInputMatrix.getDimensionSize(1);
+			double* l_pInputBuffer      = l_rInputMatrix.getBuffer();
+			double* l_pOutputBuffer     = l_rOutputMatrix.getBuffer();
+			double* l_pReferenceBuffer  = l_rInputMatrix.getBuffer() + m_ui32ReferenceChannelIndex * l_rInputMatrix.getDimensionSize(1);
+			uint32_t l_ui32ChannelCount = l_rInputMatrix.getDimensionSize(0);
+			uint32_t l_ui32SampleCount  = l_rInputMatrix.getDimensionSize(1);
 			for (j = 0; j < l_ui32ChannelCount; j++)
 			{
 				if (j != m_ui32ReferenceChannelIndex)

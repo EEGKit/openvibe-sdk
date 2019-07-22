@@ -34,7 +34,7 @@ bool CSpectrumEncoder::processHeader()
 	// ip_pFrequencyAbscissa dimension size 0 should be the same as streamed matrix dimension size 1
 
 	IMatrix* frequencyAbscissa = ip_pFrequencyAbscissa;
-	uint64_t samplingRate        = ip_pSamplingRate;
+	uint64_t samplingRate      = ip_pSamplingRate;
 	CStreamedMatrixEncoder::processHeader();
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum);
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum_SamplingRate);

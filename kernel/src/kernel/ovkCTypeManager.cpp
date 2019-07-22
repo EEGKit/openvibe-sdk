@@ -237,8 +237,7 @@ bool CTypeManager::registerBitMaskEntry(
 			OV_ERROR_UNLESS_KRF(
 				l_ui32BitCount <= 1,
 				"Discarded bitmask entry (" << m_vName[rTypeIdentifier] << ":" << sEntryName << ") because value " << ui64EntryValue << " contains more than one bit",
-				ErrorType::Overflow
-			);
+				ErrorType::Overflow);
 		}
 	}
 	itBitMask->second[ui64EntryValue] = sEntryName;

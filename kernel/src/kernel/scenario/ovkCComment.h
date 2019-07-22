@@ -23,16 +23,12 @@ namespace OpenViBE
 
 			virtual CIdentifier getIdentifier() const;
 			virtual CString getText() const;
-			virtual bool setIdentifier(
-				const CIdentifier& rIdentifier);
-			virtual bool setText(
-				const CString& sText);
+			virtual bool setIdentifier(const CIdentifier& rIdentifier);
+			virtual bool setText(const CString& sText);
 
-			virtual bool initializeFromExistingComment(
-				const IComment& rExisitingComment);
+			virtual bool initializeFromExistingComment(const IComment& rExisitingComment);
 
-			virtual bool acceptVisitor(
-				IObjectVisitor& rObjectVisitor);
+			virtual bool acceptVisitor(IObjectVisitor& rObjectVisitor);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IComment > >, OVK_ClassId_Kernel_Scenario_Comment)
 

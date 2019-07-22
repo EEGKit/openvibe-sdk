@@ -51,8 +51,7 @@ bool CBoxAlgorithmGenericStreamReader::initializeFile()
 	OV_ERROR_UNLESS_KRF(
 		m_pFile,
 		"Error opening file [" << m_sFilename << "] for reading",
-		OpenViBE::Kernel::ErrorType::BadFileRead
-	);
+		OpenViBE::Kernel::ErrorType::BadFileRead);
 
 	return true;
 }
@@ -73,8 +72,8 @@ bool CBoxAlgorithmGenericStreamReader::process()
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
-	uint64_t l_ui64Time   = this->getPlayerContext().getCurrentTime();
-	bool l_bFinished = false;
+	uint64_t l_ui64Time = this->getPlayerContext().getCurrentTime();
+	bool l_bFinished    = false;
 
 	while (!l_bFinished && (!feof(m_pFile) || m_bPending))
 	{
@@ -85,8 +84,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 				OV_ERROR_UNLESS_KRF(
 					m_ui32OutputIndex < l_rStaticBoxContext.getOutputCount(),
 					"Stream index " << m_ui32OutputIndex << " can not be output from this box because it does not have enough outputs",
-					OpenViBE::Kernel::ErrorType::BadOutput
-				);
+					OpenViBE::Kernel::ErrorType::BadOutput);
 
 				l_rDynamicBoxContext.getOutputChunk(m_ui32OutputIndex)->append(m_oPendingChunk);
 				l_rDynamicBoxContext.markOutputAsReadyToSend(m_ui32OutputIndex, m_ui64StartTime, m_ui64EndTime);
@@ -108,8 +106,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 				OV_ERROR_UNLESS_KRF(
 					s == 1 || l_bJustStarted,
 					"Unexpected EOF in " << m_sFilename,
-					OpenViBE::Kernel::ErrorType::BadParsing
-				);
+					OpenViBE::Kernel::ErrorType::BadParsing);
 
 				m_oReader.processData(&l_ui8Byte, sizeof(l_ui8Byte));
 				l_bJustStarted = false;
@@ -122,8 +119,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 				OV_ERROR_UNLESS_KRF(
 					s == m_oSwap.getSize(),
 					"Unexpected EOF in " << m_sFilename,
-					OpenViBE::Kernel::ErrorType::BadParsing
-				);
+					OpenViBE::Kernel::ErrorType::BadParsing);
 
 				m_oPendingChunk.setSize(0, true);
 				m_ui64StartTime   = std::numeric_limits<uint64_t>::max();
@@ -307,8 +303,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 		OV_ERROR_UNLESS_KRV(
 			!l_bLastOutputs || !l_bLostStreams,
 			"Invalid configuration: missing output for stream(s) and missing stream for output(s)",
-			OpenViBE::Kernel::ErrorType::BadConfig
-		);
+			OpenViBE::Kernel::ErrorType::BadConfig);
 	}
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer)

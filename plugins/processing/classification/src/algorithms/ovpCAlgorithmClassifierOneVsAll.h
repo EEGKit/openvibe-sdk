@@ -23,9 +23,9 @@ namespace OpenViBEPlugins
 			virtual bool uninitialize();
 			virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
 			virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-											   , double& rf64Class
-											   , OpenViBEToolkit::IVector& rDistanceValue
-											   , OpenViBEToolkit::IVector& rProbabilityValue);
+								  , double& rf64Class
+								  , OpenViBEToolkit::IVector& rDistanceValue
+								  , OpenViBEToolkit::IVector& rProbabilityValue);
 			virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount);
 
 			virtual XML::IXMLNode* saveConfiguration();
@@ -83,5 +83,3 @@ namespace OpenViBEPlugins
 		};
 	}
 }
-
-

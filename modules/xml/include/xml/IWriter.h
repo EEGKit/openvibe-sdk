@@ -27,5 +27,3 @@ namespace XML
 
 	extern XML_API IWriter* createWriter(IWriterCallback& rWriterCallback);
 };
-
-

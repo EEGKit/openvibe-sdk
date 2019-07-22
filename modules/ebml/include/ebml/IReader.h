@@ -133,5 +133,3 @@ namespace EBML
 	 */
 	extern EBML_API IReader* createReader(IReaderCallback& rReaderCallback);
 };
-
-

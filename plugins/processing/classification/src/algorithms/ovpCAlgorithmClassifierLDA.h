@@ -40,9 +40,9 @@ namespace OpenViBEPlugins
 
 			virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
 			virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-											   , double& rf64Class
-											   , OpenViBEToolkit::IVector& rDistanceValue
-											   , OpenViBEToolkit::IVector& rProbabilityValue);
+								  , double& rf64Class
+								  , OpenViBEToolkit::IVector& rDistanceValue
+								  , OpenViBEToolkit::IVector& rProbabilityValue);
 
 			virtual XML::IXMLNode* saveConfiguration();
 			virtual bool loadConfiguration(XML::IXMLNode* pConfigurationNode);
@@ -111,7 +111,6 @@ namespace OpenViBEPlugins
 		};
 	};
 };
-
 
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

@@ -46,16 +46,14 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addPluginsFromFiles(
-				const CString& rFileNameWildCard) = 0;
+			virtual bool addPluginsFromFiles(const CString& rFileNameWildCard) = 0;
 			/**
 			 * \brief Registers a plugin object descriptor
 			 * \param rPreviousIdentifier [in] : the actual plugin object descriptor to register
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool registerPluginDesc(
-				const Plugins::IPluginObjectDesc& rPluginObjectDesc) = 0;
+			virtual bool registerPluginDesc(const Plugins::IPluginObjectDesc& rPluginObjectDesc) = 0;
 			/**
 			 * \brief Gets next plugin object descriptor identifier
 			 * \param rPreviousIdentifier [in] : The identifier
@@ -66,8 +64,7 @@ namespace OpenViBE
 			 *       will cause this function to return the first plugin object
 			 *       descriptor identifier.
 			 */
-			virtual CIdentifier getNextPluginObjectDescIdentifier(
-				const CIdentifier& rPreviousIdentifier) const = 0;
+			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const = 0;
 			/**
 			 * \brief Gets next plugin object descriptor identifier given a base class identifier
 			 * \param rPreviousIdentifier [in] : The identifier
@@ -79,33 +76,28 @@ namespace OpenViBE
 			 *       will cause this function to return the first plugin object
 			 *       descriptor identifier.
 			 */
-			virtual CIdentifier getNextPluginObjectDescIdentifier(
-				const CIdentifier& rPreviousIdentifier,
-				const CIdentifier& rBaseClassIdentifier) const = 0;
+			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier, const CIdentifier& rBaseClassIdentifier) const = 0;
 			/**
 			 * \brief Checks if a plugin object can be created or not
 			 * \param rClassIdentifier [in] : the class identifier a descriptor should be able to create
 			 * \return \e true in case this manager is able to create a plugin object with the provided class identifier.
 			 * \return \e false in other case.
 			 */
-			virtual bool canCreatePluginObject(
-				const CIdentifier& rClassIdentifier) = 0;
+			virtual bool canCreatePluginObject(const CIdentifier& rClassIdentifier) = 0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor
 			 * \param rIdentifier [in] : the plugin object descriptor identifier which details should be returned
 			 * \return the corresponding plugin object descriptor pointer.
 			 * \sa getNextPluginObjectDescIdentifier
 			 */
-			virtual const Plugins::IPluginObjectDesc* getPluginObjectDesc(
-				const CIdentifier& rIdentifier) const = 0;
+			virtual const Plugins::IPluginObjectDesc* getPluginObjectDesc(const CIdentifier& rIdentifier) const = 0;
 			/**
 			 * \brief Gets details on a specific plugin object descriptor given the class identifier it should create
 			 * \param rClassIdentifier [in] : the plugin object class identifier of the descriptor which details should be returned
 			 * \return the corresponding plugin object descriptor pointer.
 			 * \sa canCreatePluginObject
 			 */
-			virtual const Plugins::IPluginObjectDesc* getPluginObjectDescCreating(
-				const CIdentifier& rClassIdentifier) const = 0;
+			virtual const Plugins::IPluginObjectDesc* getPluginObjectDescCreating(const CIdentifier& rClassIdentifier) const = 0;
 
 			//@}
 			/** \name Plugin lifetime management */
@@ -126,11 +118,9 @@ namespace OpenViBE
 			 *       hash code is based on what OpenViBE::Kernel::IBoxProto receives at
 			 *       description stage)
 			 */
-			virtual CIdentifier getPluginObjectHashValue(
-				const CIdentifier& rClassIdentifier) const = 0;
+			virtual CIdentifier getPluginObjectHashValue(const CIdentifier& rClassIdentifier) const = 0;
 
-			virtual CIdentifier getPluginObjectHashValue(
-				const Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const = 0;
+			virtual CIdentifier getPluginObjectHashValue(const Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const = 0;
 			/**
 			 * \brief Gets a hint whether a plugin is deprecated or not
 			 * \param rClassIdentifier [in] : the class identifier of the plugin which deprecation should be returned
@@ -142,8 +132,7 @@ namespace OpenViBE
 			 * be removed soon or later. Code relying on this plugin
 			 * should consider any alternative available to avoid future problems.
 			 */
-			virtual bool isPluginObjectFlaggedAsDeprecated(
-				const CIdentifier& rClassIdentifier) const = 0;
+			virtual bool isPluginObjectFlaggedAsDeprecated(const CIdentifier& rClassIdentifier) const = 0;
 				
 			//@}
 			/** \name Plugin creation and destruction */
@@ -156,8 +145,7 @@ namespace OpenViBE
 			 * \return \c NULL in case of error.
 			 * \sa releasePluginObject
 			 */
-			virtual Plugins::IPluginObject* createPluginObject(
-				const CIdentifier& rClassIdentifier) = 0;
+			virtual Plugins::IPluginObject* createPluginObject(const CIdentifier& rClassIdentifier) = 0;
 			/**
 			 * \brief Tells the plugin manager a plugin object won't be ever used
 			 * \param pPluginObject [in] : the plugin object to release
@@ -168,8 +156,7 @@ namespace OpenViBE
 			 * call has been made. However, the plugin manager is free to release allocated memory
 			 * and resources for this plugin object.
 			 */
-			virtual bool releasePluginObject(
-				Plugins::IPluginObject* pPluginObject) = 0;
+			virtual bool releasePluginObject(Plugins::IPluginObject* pPluginObject) = 0;
 
 			//@{
 			/**\name Helpers */
@@ -184,9 +171,7 @@ namespace OpenViBE
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IAlgorithm* createAlgorithm(
-				const CIdentifier& rClassIdentifier,
-				const Plugins::IAlgorithmDesc** ppAlgorithmDesc) = 0;
+			virtual Plugins::IAlgorithm* createAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IAlgorithmDesc** ppAlgorithmDesc) = 0;
 			/**
 			 * \brief Creates a new algorithm given a descriptor
 			 * \param rAlgorithmDesc [in] : the class descriptor of the algorithm to create
@@ -195,8 +180,7 @@ namespace OpenViBE
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IAlgorithm* createAlgorithm(
-				const Plugins::IAlgorithmDesc& rAlgorithmDesc) = 0;
+			virtual Plugins::IAlgorithm* createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) = 0;
 			/**
 			 * \brief Creates a new box algorithm given its class identifier and eventually returns the associated descriptor
 			 * \param rClassIdentifier [in] : the class identifier of the box algorithm to create
@@ -206,9 +190,7 @@ namespace OpenViBE
 			 *
 			 * This function is a helper for the use of \c createPluginObject and co.
 			 */
-			virtual Plugins::IBoxAlgorithm* createBoxAlgorithm(
-				const CIdentifier& rClassIdentifier,
-				const Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc) = 0;
+			virtual Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc) = 0;
 
 			//@}
 
@@ -216,5 +198,3 @@ namespace OpenViBE
 		};
 	};
 };
-
-

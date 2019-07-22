@@ -60,8 +60,7 @@ bool CBoxAlgorithmCSVFileWriter::initialize()
 	{
 		OV_ERROR_KRF(
 			"Invalid input type identifier " << this->getTypeManager().getTypeName(m_oTypeIdentifier),
-			OpenViBE::Kernel::ErrorType::BadInput
-		);
+			OpenViBE::Kernel::ErrorType::BadInput);
 	}
 
 	m_ui64SampleCount = 0;
@@ -90,7 +89,7 @@ bool CBoxAlgorithmCSVFileWriter::uninitialize()
 
 bool CBoxAlgorithmCSVFileWriter::initializeFile()
 {
-	const CString l_sFilename    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	const CString l_sFilename      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	const uint64_t l_ui64Precision = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	m_oFileStream.open(l_sFilename.toASCIIString(), std::ios::trunc);
@@ -98,8 +97,7 @@ bool CBoxAlgorithmCSVFileWriter::initializeFile()
 	OV_ERROR_UNLESS_KRF(
 		m_oFileStream.is_open(),
 		"Error opening file [" << l_sFilename << "] for writing",
-		OpenViBE::Kernel::ErrorType::BadFileWrite
-	);
+		OpenViBE::Kernel::ErrorType::BadFileWrite);
 
 	m_oFileStream << std::scientific;
 	m_oFileStream.precision(static_cast<std::streamsize>(l_ui64Precision));
@@ -143,8 +141,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 				OV_ERROR_UNLESS_KRF(
 					l_pMatrix->getDimensionCount() == 1 || l_pMatrix->getDimensionCount() == 2,
 					"Invalid input matrix: must have 1 or 2 dimensions",
-					ErrorType::BadInput
-				);
+					ErrorType::BadInput);
 
 				if (l_pMatrix->getDimensionCount() == 1 || m_oTypeIdentifier == OV_TypeId_FeatureVector)
 				{

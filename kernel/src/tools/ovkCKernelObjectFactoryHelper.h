@@ -20,20 +20,14 @@ namespace OpenViBE
 			{
 				IObject* l_pObject = m_rKernelObjectFactory.createObject(rClassIdentifier);
 				T l_tResult                  = dynamic_cast<T>(l_pObject);
-				if (l_pObject && !l_tResult)
-				{
-					m_rKernelObjectFactory.releaseObject(l_pObject);
-				}
+				if (l_pObject && !l_tResult) { m_rKernelObjectFactory.releaseObject(l_pObject); }
 				return l_tResult;
 			}
 
 			template <class T>
-			bool releaseObject(T tObject)
-			{
-				return m_rKernelObjectFactory.releaseObject(tObject);
-			}
+			bool releaseObject(T tObject) { return m_rKernelObjectFactory.releaseObject(tObject); }
 
-			_IsDerivedFromClass_Final_(OpenViBE::IObject, OVK_ClassId_Tools_KernelObjectFactoryHelper);
+			_IsDerivedFromClass_Final_(OpenViBE::IObject, OVK_ClassId_Tools_KernelObjectFactoryHelper)
 
 		protected:
 

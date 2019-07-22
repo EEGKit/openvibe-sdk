@@ -7,7 +7,7 @@ namespace OpenViBE
 	namespace Plugins
 	{
 		class IPluginObjectDesc;
-	};
+	}
 
 	namespace Kernel
 	{
@@ -35,25 +35,21 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool load(
-				const CString& sName,
-				CString* pError = NULL) = 0;
+			virtual bool load(const CString& sName, CString* pError = NULL) = 0;
 			/**
 			 * \brief Tries to unload the loaded OpenViBE module
 			 * \param pError [out] : an optional output string containing the error on unload failure
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool unload(
-				CString* pError = NULL) = 0;
+			virtual bool unload(CString* pError = NULL) = 0;
 			/**
 			 * \brief Gets the current filename associated with this plugin module
 			 * \param rFileName [out] : the filename of this plugin module
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getFileName(
-				CString& rFileName) const = 0;
+			virtual bool getFileName(CString& rFileName) const = 0;
 			/**
 			 * \brief Initializes this plugin module
 			 * \return \e true in case of success.
@@ -80,9 +76,7 @@ namespace OpenViBE
 			 * \note \c rpPluginObjectDescription IS \c NULL if the function returned \e false
 			 * \note It is ok to call this function several times for a same index.
 			 */
-			virtual bool getPluginObjectDescription(
-				uint32_t ui32Index,
-				Plugins::IPluginObjectDesc*& rpPluginObjectDescription) = 0;
+			virtual bool getPluginObjectDescription(uint32_t ui32Index, Plugins::IPluginObjectDesc*& rpPluginObjectDescription) = 0;
 			/**
 			 * \brief Uninitializes this plugin module
 			 * \return \e true in case of success.
@@ -96,5 +90,3 @@ namespace OpenViBE
 		};
 	};
 };
-
-

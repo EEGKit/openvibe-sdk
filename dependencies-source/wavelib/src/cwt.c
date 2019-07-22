@@ -57,8 +57,7 @@ double factorial(int N)
 	return fact[N];
 }
 
-static void wave_function(int nk, double dt, int mother, double param, double scale1, double* kwave, double pi, double* period1,
-						  double* coi1, fft_data* daughter)
+static void wave_function(int nk, double dt, int mother, double param, double scale1, double* kwave, double pi, double* period1, double* coi1, fft_data* daughter)
 {
 	double norm, expnt, fourier_factor;
 	int k, m;
@@ -168,8 +167,7 @@ static void wave_function(int nk, double dt, int mother, double param, double sc
 	}
 }
 
-int cwavelet(double* y, int N, double dt, int mother, double param, double s0, double dj, int jtot, int npad,
-			 double* wave, double* scale, double* period, double* coi)
+int cwavelet(double* y, int N, double dt, int mother, double param, double s0, double dj, int jtot, int npad, double* wave, double* scale, double* period, double* coi)
 {
 	int i, j, k, iter;
 	double ymean, freq1, pi, period1, coi1;

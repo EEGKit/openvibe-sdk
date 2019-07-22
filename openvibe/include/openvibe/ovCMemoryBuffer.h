@@ -54,19 +54,13 @@ namespace OpenViBE
 
 		//@}
 
-		virtual bool reserve(
-			uint64_t ui64Size);
-		virtual bool setSize(
-			uint64_t ui64Size,
-			bool bDiscard);
+		virtual bool reserve(uint64_t ui64Size);
+		virtual bool setSize(uint64_t ui64Size, bool bDiscard);
 		virtual uint64_t getSize() const;
 		virtual uint8_t* getDirectPointer();
 		virtual const uint8_t* getDirectPointer() const;
-		virtual bool append(
-			const uint8_t* pBuffer,
-			uint64_t ui64BufferSize);
-		virtual bool append(
-			const IMemoryBuffer& rMemoryBuffer);
+		virtual bool append(const uint8_t* pBuffer, uint64_t ui64BufferSize);
+		virtual bool append(const IMemoryBuffer& rMemoryBuffer);
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge)
 
@@ -75,5 +69,3 @@ namespace OpenViBE
 		IMemoryBuffer* m_pMemoryBufferImpl; //!< Internal implementation
 	};
 };
-
-

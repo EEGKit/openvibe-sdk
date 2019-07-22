@@ -18,36 +18,22 @@ namespace OpenViBE
 
 			virtual bool InitializeFromExistingLink(const ILink& link);
 
-			virtual bool setIdentifier(
-				const CIdentifier& rIdentifier);
+			virtual bool setIdentifier(const CIdentifier& rIdentifier);
 			virtual CIdentifier getIdentifier() const;
 
-			virtual bool setSource(
-				const CIdentifier& rBoxIdentifier,
-				uint32_t ui32BoxOutputIndex,
-				CIdentifier rBoxOutputIdentifier);
-			virtual bool setTarget(
-				const CIdentifier& rBoxIdentifier,
-				uint32_t ui32BoxInputIndex,
-				CIdentifier rBoxInputIdentifier);
-			virtual bool getSource(
-				CIdentifier& rBoxIdentifier,
-				uint32_t& ui32BoxOutputIndex,
-				CIdentifier& rBoxOutputIdentifier) const;
+			virtual bool setSource(const CIdentifier& rBoxIdentifier, uint32_t ui32BoxOutputIndex, CIdentifier rBoxOutputIdentifier);
+			virtual bool setTarget(const CIdentifier& rBoxIdentifier, uint32_t ui32BoxInputIndex, CIdentifier rBoxInputIdentifier);
+			virtual bool getSource(CIdentifier& rBoxIdentifier, uint32_t& ui32BoxOutputIndex, CIdentifier& rBoxOutputIdentifier) const; 
 			virtual CIdentifier getSourceBoxIdentifier() const;
 			virtual uint32_t getSourceBoxOutputIndex() const;
 			virtual CIdentifier getSourceBoxOutputIdentifier() const;
-			virtual bool getTarget(
-				CIdentifier& rTargetBoxIdentifier,
-				uint32_t& ui32BoxInputIndex,
-				CIdentifier& rTargetBoxInputIdentifier) const;
+			virtual bool getTarget(CIdentifier& rTargetBoxIdentifier, uint32_t& ui32BoxInputIndex, CIdentifier& rTargetBoxInputIdentifier) const;
 			virtual CIdentifier getTargetBoxIdentifier() const;
 			virtual uint32_t getTargetBoxInputIndex() const;
 			virtual CIdentifier getTargetBoxInputIdentifier() const;
 
 
-			virtual bool acceptVisitor(
-				IObjectVisitor& rObjectVisitor);
+			virtual bool acceptVisitor(IObjectVisitor& rObjectVisitor);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::ILink > >, OVK_ClassId_Kernel_Scenario_Link)
 

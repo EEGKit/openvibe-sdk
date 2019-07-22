@@ -214,8 +214,7 @@ bool CScenario::removeScenarioInput(const uint32_t inputIndex)
 	OV_ERROR_UNLESS_KRF(
 		inputIndex < this->getInputCount(),
 		"Input index = [" << inputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	this->removeInput(inputIndex);
 
@@ -233,8 +232,7 @@ bool CScenario::removeScenarioOutput(const uint32_t outputIndex)
 	OV_ERROR_UNLESS_KRF(
 		outputIndex < this->getOutputCount(),
 		"Output index = [" << outputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	this->removeOutput(outputIndex);
 
@@ -369,8 +367,7 @@ const IBox* CScenario::getBoxDetails(const CIdentifier& boxIdentifier) const
 	OV_ERROR_UNLESS_KRN(
 		itBox != m_Boxes.end(),
 		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return itBox->second;
 }
@@ -392,8 +389,7 @@ IBox* CScenario::getBoxDetails(
 	OV_ERROR_UNLESS_KRN(
 		itBox != m_Boxes.end(),
 		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return itBox->second;
 }
@@ -471,8 +467,7 @@ bool CScenario::removeBox(const CIdentifier& boxIdentifier)
 	OV_ERROR_UNLESS_KRF(
 		itBox != m_Boxes.end(),
 		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	// Find all the links that are used by this box
 	auto itLink = m_Links.begin();
@@ -514,8 +509,7 @@ const IComment* CScenario::getCommentDetails(const CIdentifier& commentIdentifie
 	OV_ERROR_UNLESS_KRN(
 		itComment != m_Comments.end(),
 		"Comment [" << commentIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return itComment->second;
 }
@@ -533,8 +527,7 @@ IComment* CScenario::getCommentDetails(const CIdentifier& commentIdentifier)
 	OV_ERROR_UNLESS_KRN(
 		itComment != m_Comments.end(),
 		"Comment [" << commentIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return itComment->second;
 }
@@ -575,8 +568,7 @@ bool CScenario::removeComment(const CIdentifier& commentIdentifier)
 	OV_ERROR_UNLESS_KRF(
 		itComment != m_Comments.end(),
 		"Comment [" << commentIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	// Deletes the comment itself
 	delete itComment->second;
@@ -609,8 +601,7 @@ const IMetadata* CScenario::getMetadataDetails(const CIdentifier& metadataIdenti
 	OV_ERROR_UNLESS_KRN(
 		itMetadata != m_Metadata.end(),
 		"Metadata [" << metadataIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return itMetadata->second;
 }
@@ -622,8 +613,7 @@ IMetadata* CScenario::getMetadataDetails(const CIdentifier& metadataIdentifier)
 	OV_ERROR_UNLESS_KRN(
 		itMetadata != m_Metadata.end(),
 		"Metadata [" << metadataIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return itMetadata->second;
 }
@@ -653,8 +643,7 @@ bool CScenario::removeMetadata(const CIdentifier& metadataIdentifier)
 	OV_ERROR_UNLESS_KRF(
 		itMetadata != m_Metadata.end(),
 		"Comment [" << metadataIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	// Deletes the metadata and remove it from the cache
 	delete itMetadata->second;
@@ -676,8 +665,7 @@ bool CScenario::removeMetadata(const CIdentifier& metadataIdentifier)
 		OV_FATAL_UNLESS_K(
 			previousIdentifier != m_NextMetadataIdentifier.end(),
 			"Removing metadata [" << metadataIdentifier << "] which is not in the cache ",
-			ErrorType::Internal
-		);
+			ErrorType::Internal);
 
 		m_NextMetadataIdentifier[previousIdentifier->first] = m_NextMetadataIdentifier[metadataIdentifier];
 		m_NextMetadataIdentifier.erase(metadataIdentifier);
@@ -737,20 +725,17 @@ bool CScenario::setScenarioInputLink(const uint32_t scenarioInputIndex, const CI
 		OV_ERROR_UNLESS_KRF(
 			scenarioInputIndex < this->getInputCount(),
 			"Scenario Input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
-			ErrorType::OutOfBound
-		);
+			ErrorType::OutOfBound);
 
 		OV_ERROR_UNLESS_KRF(
 			this->isBox(boxIdentifier),
 			"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-			ErrorType::ResourceNotFound
-		);
+			ErrorType::ResourceNotFound);
 
 		OV_ERROR_UNLESS_KRF(
 			boxInputIndex < this->getBoxDetails(boxIdentifier)->getInputCount(),
 			"Box Input index = [" << boxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getInputCount() - 1) << "])",
-			ErrorType::OutOfBound
-		);
+			ErrorType::OutOfBound);
 	}
 
 	if (scenarioInputIndex >= m_ScenarioInputLinks.size())
@@ -795,8 +780,7 @@ bool CScenario::setScenarioInputLink(const uint32_t scenarioInputIndex, const CI
 		OV_ERROR_UNLESS_KRF(
 			this->isBox(boxIdentifier),
 			"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-			ErrorType::ResourceNotFound
-		);
+			ErrorType::ResourceNotFound);
 		this->getBoxDetails(boxIdentifier)->getInterfacorIndex(Input, boxInputIdentifier, boxInputIndex);
 	}
 	return this->setScenarioInputLink(scenarioInputIndex, boxIdentifier, boxInputIndex);
@@ -809,20 +793,17 @@ bool CScenario::setScenarioOutputLink(const uint32_t scenarioOutputIndex, const 
 		OV_ERROR_UNLESS_KRF(
 			scenarioOutputIndex < this->getOutputCount(),
 			"Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
-			ErrorType::OutOfBound
-		);
+			ErrorType::OutOfBound);
 
 		OV_ERROR_UNLESS_KRF(
 			this->isBox(boxIdentifier),
 			"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-			ErrorType::ResourceNotFound
-		);
+			ErrorType::ResourceNotFound);
 
 		OV_ERROR_UNLESS_KRF(
 			boxOutputIndex < this->getBoxDetails(boxIdentifier)->getOutputCount(),
 			"Box output index = [" << boxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getOutputCount() - 1) << "])",
-			ErrorType::OutOfBound
-		);
+			ErrorType::OutOfBound);
 	}
 
 	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size())
@@ -857,8 +838,7 @@ bool CScenario::setScenarioOutputLink(const uint32_t scenarioOutputIndex, const 
 		OV_ERROR_UNLESS_KRF(
 			this->isBox(boxIdentifier),
 			"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-			ErrorType::ResourceNotFound
-		);
+			ErrorType::ResourceNotFound);
 
 		this->getBoxDetails(boxIdentifier)->getInterfacorIndex(Output, boxOutputIdentifier, boxOutputIndex);
 	}
@@ -870,8 +850,7 @@ bool CScenario::getScenarioInputLink(const uint32_t scenarioInputIndex, CIdentif
 	OV_ERROR_UNLESS_KRF(
 		scenarioInputIndex < this->getInputCount(),
 		"Scenario input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	if (scenarioInputIndex >= m_ScenarioInputLinks.size())
 	{
@@ -907,8 +886,7 @@ bool CScenario::getScenarioOutputLink(const uint32_t scenarioOutputIndex, CIdent
 	OV_ERROR_UNLESS_KRF(
 		scenarioOutputIndex < this->getOutputCount(),
 		"Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size())
 	{
@@ -948,20 +926,17 @@ bool CScenario::removeScenarioInputLink(const uint32_t scenarioInputIndex, const
 		OV_ERROR_UNLESS_KRF(
 			scenarioInputIndex < this->getInputCount(),
 			"Scenario Input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
-			ErrorType::OutOfBound
-		);
+			ErrorType::OutOfBound);
 
 		OV_ERROR_UNLESS_KRF(
 			this->isBox(boxIdentifier),
 			"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-			ErrorType::ResourceNotFound
-		);
+			ErrorType::ResourceNotFound);
 
 		OV_ERROR_UNLESS_KRF(
 			boxInputIndex < this->getBoxDetails(boxIdentifier)->getInputCount(),
 			"Box Input index = [" << boxInputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getInputCount() - 1) << "])",
-			ErrorType::OutOfBound
-		);
+			ErrorType::OutOfBound);
 	}
 
 	// This should not happen either
@@ -983,20 +958,17 @@ bool CScenario::removeScenarioOutputLink(const uint32_t scenarioOutputIndex, con
 		OV_ERROR_UNLESS_KRF(
 			scenarioOutputIndex < this->getOutputCount(),
 			"Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
-			ErrorType::OutOfBound
-		);
+			ErrorType::OutOfBound);
 
 		OV_ERROR_UNLESS_KRF(
 			this->isBox(boxIdentifier),
 			"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-			ErrorType::ResourceNotFound
-		);
+			ErrorType::ResourceNotFound);
 
 		OV_ERROR_UNLESS_KRF(
 			boxOutputIndex < this->getBoxDetails(boxIdentifier)->getOutputCount(),
 			"Box output index = [" << boxOutputIndex << "] is out of range (max index = [" << (this->getBoxDetails(boxIdentifier)->getOutputCount() - 1) << "])",
-			ErrorType::OutOfBound
-		);
+			ErrorType::OutOfBound);
 	}
 
 	// This should not happen either
@@ -1016,8 +988,7 @@ const ILink* CScenario::getLinkDetails(const CIdentifier& linkIdentifier) const
 	OV_ERROR_UNLESS_KRN(
 		itLink != m_Links.end(),
 		"link [" << linkIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return itLink->second;
 }
@@ -1029,8 +1000,7 @@ ILink* CScenario::getLinkDetails(const CIdentifier& linkIdentifier)
 	OV_ERROR_UNLESS_KRN(
 		itLink != m_Links.end(),
 		"Link [" << linkIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return itLink->second;
 }
@@ -1049,14 +1019,12 @@ bool CScenario::connect(
 	OV_ERROR_UNLESS_KRF(
 		itBox1 != m_Boxes.end(),
 		"Source Box [" << sourceBoxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	OV_ERROR_UNLESS_KRF(
 		itBox2 != m_Boxes.end(),
 		"Target Box [" << targetBoxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	CBox* sourceBox = itBox1->second;
 	CBox* targetBox = itBox2->second;
@@ -1064,14 +1032,12 @@ bool CScenario::connect(
 	OV_ERROR_UNLESS_KRF(
 		targetBoxInputIndex < targetBox->getInterfacorCountIncludingDeprecated(Input),
 		"Target box input index = [" << targetBoxInputIndex << "] is out of range (max index = [" << (targetBox->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRF(
 		sourceBoxOutputIndex < sourceBox->getInterfacorCountIncludingDeprecated(Output),
 		"Source box output index = [" << sourceBoxOutputIndex << "] is out of range (max index = [" << (sourceBox->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	// Looks for any connected link to this box input and removes it
 	auto itLink = m_Links.begin();
@@ -1151,8 +1117,7 @@ bool CScenario::disconnect(const CIdentifier& sourceBoxIdentifier, const uint32_
 
 	OV_ERROR_KRF(
 		"Link is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 }
 
 bool CScenario::disconnect(
@@ -1178,8 +1143,7 @@ bool CScenario::disconnect(const CIdentifier& linkIdentifier)
 	OV_ERROR_UNLESS_KRF(
 		itLink != m_Links.end(),
 		"Link [" << linkIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	// Deletes the link itself
 	delete itLink->second;
@@ -1326,8 +1290,7 @@ bool CScenario::checkSettings(IConfigurationManager* configurationManager)
 				OV_ERROR_UNLESS_KRF(
 					::checkSettingValue(settingValue, typeIdentifier, this->getTypeManager()),
 					"<" << box.second->getName() << "> The following value: ["<< rawSettingValue <<"] expanded as ["<< settingValue <<"] given as setting is not a valid [" << settingTypeName << "] value.",
-					ErrorType::BadValue
-				);
+					ErrorType::BadValue);
 			}
 
 			this->getConfigurationManager().unregisterKeywordParser("var");
@@ -1537,8 +1500,7 @@ bool CScenario::getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, 
 	OV_ERROR_UNLESS_KRF(
 		itSourceBox != m_Boxes.end(),
 		"Source Box [" << sourceBoxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	m_Boxes[sourceBoxIdentifier]->getInterfacorIndex(Output, sourceBoxOutputIdentifier, sourceBoxOutputIndex);
 
@@ -1552,8 +1514,7 @@ bool CScenario::getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, c
 	OV_ERROR_UNLESS_KRF(
 		itTargetBox != m_Boxes.end(),
 		"Target Box [" << targetBoxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	m_Boxes[targetBoxIdentifier]->getInterfacorIndex(Input, targetBoxInputIdentifier, targetBoxInputIndex);
 
@@ -1567,8 +1528,7 @@ bool CScenario::getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentif
 	OV_ERROR_UNLESS_KRF(
 		itSourceBox != m_Boxes.end(),
 		"Source Box [" << sourceBoxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	m_Boxes[sourceBoxIdentifier]->getInterfacorIdentifier(Output, sourceBoxOutputIndex, sourceBoxOutputIdentifier);
 
@@ -1582,8 +1542,7 @@ bool CScenario::getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifi
 	OV_ERROR_UNLESS_KRF(
 		itTargetBox != m_Boxes.end(),
 		"Target Box [" << targetBoxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	m_Boxes[targetBoxIdentifier]->getInterfacorIdentifier(Input, targetBoxInputIndex, targetBoxInputIdentifier);
 
@@ -1604,8 +1563,7 @@ bool CScenario::updateBox(const CIdentifier& boxIdentifier)
 	OV_ERROR_UNLESS_KRF(
 		itSourceBox != m_Boxes.end(),
 		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	auto itUpdateBox = m_OutdatedBoxes.find(boxIdentifier);
 
@@ -1618,8 +1576,7 @@ bool CScenario::updateBox(const CIdentifier& boxIdentifier)
 	OV_ERROR_UNLESS_KRF(
 		itUpdateBox != m_OutdatedBoxes.end(),
 		"Box [" << boxIdentifier.toString() << "] misses an updated version",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 
 	if (itUpdateBox->second->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate)
@@ -1638,8 +1595,7 @@ bool CScenario::updateBox(const CIdentifier& boxIdentifier)
 	OV_ERROR_UNLESS_KRF(
 		itUpdateBox != m_OutdatedBoxes.end(),
 		"Box [" << boxIdentifier.toString() << "] does not have to be updated",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	// get all non-updatable attributes from the source box
 	std::map<CIdentifier, CString> nonUpdatableAttributes;

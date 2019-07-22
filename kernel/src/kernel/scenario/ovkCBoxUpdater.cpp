@@ -62,8 +62,7 @@ bool CBoxUpdater::initialize()
 		CString metaboxIdentifier = m_SourceBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
 		OV_ERROR_UNLESS_KRF(metaboxIdentifier != CString(""),
 							"Failed to find metabox with id " << metaboxIdentifier,
-							ErrorType::BadCall
-		);
+							ErrorType::BadCall);
 
 		CIdentifier metaboxId;
 		metaboxId.fromString(metaboxIdentifier);

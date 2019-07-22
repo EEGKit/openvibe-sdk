@@ -175,7 +175,7 @@ namespace Socket
 
 		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)
 		{
-			const char* l_pPointer = reinterpret_cast<const char*>(pBuffer);
+			const char* l_pPointer   = reinterpret_cast<const char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -188,7 +188,7 @@ namespace Socket
 
 		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize)
 		{
-			char* l_pPointer       = reinterpret_cast<char*>(pBuffer);
+			char* l_pPointer         = reinterpret_cast<char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())

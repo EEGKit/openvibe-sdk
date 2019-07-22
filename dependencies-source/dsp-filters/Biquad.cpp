@@ -67,11 +67,10 @@ namespace Dsp
 			}
 
 			{
-				const complex_t c = sqrt(complex_t(
-					b1 * b1 - 4 * b0 * b2, 0));
-				double d     = 2. * b0;
-				zeros.first  = -(b1 + c) / d;
-				zeros.second = (c - b1) / d;
+				const complex_t c = sqrt(complex_t(b1 * b1 - 4 * b0 * b2, 0));
+				double d          = 2. * b0;
+				zeros.first       = -(b1 + c) / d;
+				zeros.second      = (c - b1) / d;
 				assert(!zeros.is_nan());
 			}
 		}

@@ -62,5 +62,3 @@
 
 #define OVP_Value_CoupledStringSeparator									'-'
 //#define OVP_Value_AllSelection											'*'
-
-

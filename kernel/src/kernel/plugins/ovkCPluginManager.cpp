@@ -370,8 +370,7 @@ bool CPluginManager::releasePluginObject(IPluginObject* pPluginObject)
 
 	OV_ERROR_KRF(
 		"Plugin object has not been created by this plugin manager (class id was " << pPluginObject->getClassIdentifier().toString() << ")",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 }
 
 IAlgorithm* CPluginManager::createAlgorithm(
@@ -390,8 +389,7 @@ IAlgorithm* CPluginManager::createAlgorithm(
 	OV_ERROR_UNLESS_KRN(
 		l_pPluginObject,
 		"Could not create plugin object from " << rAlgorithmDesc.getName() << " plugin object descriptor",
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	IAlgorithmDesc* l_pPluginObjectDescT = dynamic_cast<IAlgorithmDesc*>(l_pAlgorithmDesc);
 	IAlgorithm* l_pPluginObjectT         = dynamic_cast<IAlgorithm*>(l_pPluginObject);
@@ -399,8 +397,7 @@ IAlgorithm* CPluginManager::createAlgorithm(
 	OV_ERROR_UNLESS_KRN(
 		l_pPluginObjectDescT && l_pPluginObjectT,
 		"Could not downcast plugin object and/or plugin object descriptor for " << rAlgorithmDesc.getName() << " plugin object descriptor",
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	{
 		std::unique_lock<std::mutex> lock(m_oMutex);
@@ -448,15 +445,13 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 		{
 			OV_ERROR_KRN(
 				"Received exception while converting class identifier from string to number: " << exception.what(),
-				ErrorType::BadArgument
-			);
+				ErrorType::BadArgument);
 		}
 		catch (const std::out_of_range& exception)
 		{
 			OV_ERROR_KRN(
 				"Received exception while converting class identifier from string to number: " << exception.what(),
-				ErrorType::OutOfBound
-			);
+				ErrorType::OutOfBound);
 		}
 	}
 	if (l_ui64TargetClassIdentifier != l_ui64SourceClassIdentifier)
@@ -481,16 +476,14 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 	OV_ERROR_UNLESS_KRN(
 		l_pPluginObjectDesc,
 		"Did not find the plugin object descriptor with requested class identifier " << CIdentifier(l_ui64SourceClassIdentifier).toString() << " in registered plugin object descriptors",
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	IPluginObject* l_pPluginObject = l_pPluginObjectDesc->create();
 
 	OV_ERROR_UNLESS_KRN(
 		l_pPluginObject,
 		"Could not create plugin object from " << l_pPluginObjectDesc->getName() << " plugin object descriptor",
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	IPluginObjectDescT* l_pPluginObjectDescT = dynamic_cast<IPluginObjectDescT*>(l_pPluginObjectDesc);
 	IPluginObjectT* l_pPluginObjectT         = dynamic_cast<IPluginObjectT*>(l_pPluginObject);
@@ -498,8 +491,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(
 	OV_ERROR_UNLESS_KRN(
 		l_pPluginObjectDescT && l_pPluginObjectT,
 		"Could not downcast plugin object and/or plugin object descriptor for " << l_pPluginObjectDesc->getName() << " plugin object descriptor",
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	if (ppPluginObjectDescT)
 	{

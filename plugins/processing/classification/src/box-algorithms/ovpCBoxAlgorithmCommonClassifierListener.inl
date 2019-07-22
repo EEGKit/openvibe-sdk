@@ -203,8 +203,7 @@ namespace OpenViBEPlugins
 					OV_ERROR_UNLESS_KRF(
 						l_oEnum != OV_UndefinedIdentifier,
 						"Unable to find Pairwise Decision for the algorithm [" << m_oClassifierClassIdentifier.toString() << "] (" << l_sClassifierName.toASCIIString() << ")",
-						OpenViBE::Kernel::ErrorType::BadConfig
-					);
+						OpenViBE::Kernel::ErrorType::BadConfig);
 
 					OpenViBE::Kernel::IParameter* l_pParameter = m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
 					OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64Parameter(l_pParameter);
@@ -282,8 +281,7 @@ namespace OpenViBEPlugins
 						OV_ERROR_UNLESS_KRF(
 							l_oEnum != OV_UndefinedIdentifier,
 							"Unable to find Pairwise Decision for the algorithm [" << m_oClassifierClassIdentifier.toString() << "]",
-							OpenViBE::Kernel::ErrorType::BadConfig
-						);
+							OpenViBE::Kernel::ErrorType::BadConfig);
 
 						//As we just switch to this strategy, we take the default value set in the strategy to initialize the value
 						OpenViBE::Kernel::IParameter* l_pParameter = m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);

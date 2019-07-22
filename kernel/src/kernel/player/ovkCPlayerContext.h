@@ -17,15 +17,9 @@ namespace OpenViBE
 			CPlayerContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox);
 			virtual ~CPlayerContext();
 
-			virtual bool sendSignal(
-				const CMessageSignal& rMessageSignal);
-			virtual bool sendMessage(
-				const CMessageEvent& rMessageEvent,
-				const CIdentifier& rTargetIdentifier);
-			virtual bool sendMessage(
-				const CMessageEvent& rMessageEvent,
-				const CIdentifier* pTargetIdentifier,
-				uint32_t ui32TargetIdentifierCount);
+			virtual bool sendSignal(const CMessageSignal& rMessageSignal);
+			virtual bool sendMessage(const CMessageEvent& rMessageEvent, const CIdentifier& rTargetIdentifier);
+			virtual bool sendMessage(const CMessageEvent& rMessageEvent, const CIdentifier* pTargetIdentifier, uint32_t ui32TargetIdentifierCount);
 
 			virtual uint64_t getCurrentTime() const;
 			virtual uint64_t getCurrentLateness() const;

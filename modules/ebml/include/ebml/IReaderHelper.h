@@ -92,5 +92,3 @@ namespace EBML
 	 */
 	extern EBML_API IReaderHelper* createReaderHelper();
 };
-
-

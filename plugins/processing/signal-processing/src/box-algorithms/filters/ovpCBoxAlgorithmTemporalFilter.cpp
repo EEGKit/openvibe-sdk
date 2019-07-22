@@ -108,17 +108,16 @@ namespace
 
 bool CBoxAlgorithmTemporalFilter::initialize()
 {
-	m_ui64FilterMethod     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_ui64FilterType       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_ui64FilterMethod       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_ui64FilterType         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	int64_t l_i64FilterOrder = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-	m_f64LowCutFrequency   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
-	m_f64HighCutFrequency  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
+	m_f64LowCutFrequency     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_f64HighCutFrequency    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
 	OV_ERROR_UNLESS_KRF(
 		l_i64FilterOrder >= 1,
 		"Invalid filter order [" << l_i64FilterOrder << "] (expected value >= 1)",
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
+		OpenViBE::Kernel::ErrorType::BadSetting);
 
 	m_ui64FilterOrder = static_cast<uint64_t>(l_i64FilterOrder);
 
@@ -127,36 +126,30 @@ bool CBoxAlgorithmTemporalFilter::initialize()
 		OV_ERROR_UNLESS_KRF(
 			m_f64HighCutFrequency > 0,
 			"Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value > 0)",
-			OpenViBE::Kernel::ErrorType::BadSetting
-		);
+			OpenViBE::Kernel::ErrorType::BadSetting);
 	}
 	else if (m_ui64FilterType == OVP_TypeId_FilterType_HighPass)
 	{
 		OV_ERROR_UNLESS_KRF(
 			m_f64LowCutFrequency > 0,
 			"Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value > 0)",
-			OpenViBE::Kernel::ErrorType::BadSetting
-		);
+			OpenViBE::Kernel::ErrorType::BadSetting);
 	}
 	else if (m_ui64FilterType == OVP_TypeId_FilterType_BandPass || m_ui64FilterType == FilterType_BandStop)
 	{
 		OV_ERROR_UNLESS_KRF(
 			m_f64LowCutFrequency >= 0,
 			"Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value >= 0)",
-			OpenViBE::Kernel::ErrorType::BadSetting
-		);
+			OpenViBE::Kernel::ErrorType::BadSetting);
 
 		OV_ERROR_UNLESS_KRF(
 			m_f64HighCutFrequency > 0,
 			"Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value > 0)",
-			OpenViBE::Kernel::ErrorType::BadSetting
-		);
+			OpenViBE::Kernel::ErrorType::BadSetting);
 
-		OV_ERROR_UNLESS_KRF(
-			m_f64HighCutFrequency > m_f64LowCutFrequency,
-			"Invalid cut-off frequencies [" << m_f64LowCutFrequency << "," << m_f64HighCutFrequency << "] (expected low frequency < high frequency)",
-			OpenViBE::Kernel::ErrorType::BadSetting
-		);
+		OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency > m_f64LowCutFrequency,
+							"Invalid cut-off frequencies [" << m_f64LowCutFrequency << "," << m_f64HighCutFrequency << "] (expected low frequency < high frequency)",
+							OpenViBE::Kernel::ErrorType::BadSetting);
 	}
 	else
 	{
@@ -206,16 +199,14 @@ bool CBoxAlgorithmTemporalFilter::process()
 				OV_ERROR_UNLESS_KRF(
 					m_f64LowCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
 					"Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value must meet nyquist criteria for sampling rate " << m_oDecoder.getOutputSamplingRate() << ")",
-					OpenViBE::Kernel::ErrorType::BadConfig
-				);
+					OpenViBE::Kernel::ErrorType::BadConfig);
 			}
 			if (m_ui64FilterType != OVP_TypeId_FilterType_HighPass) // verification for low-pass, band-pass and band-stop filters
 			{
 				OV_ERROR_UNLESS_KRF(
 					m_f64HighCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
 					"Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value must meet nyquist criteria for sampling rate " << m_oDecoder.getOutputSamplingRate() << ")",
-					OpenViBE::Kernel::ErrorType::BadConfig
-				);
+					OpenViBE::Kernel::ErrorType::BadConfig);
 			}
 
 			m_vFilter.clear();

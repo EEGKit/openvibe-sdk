@@ -97,8 +97,7 @@ bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const 
 	OV_ERROR_UNLESS_KRF(
 		this->createScenario(newScenarioIdentifier),
 		"Error creating new scenario",
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	auto releaseScenario = [&]()
 	{
@@ -107,8 +106,7 @@ bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const 
 		OV_FATAL_UNLESS_K(
 			this->releaseScenario(newScenarioIdentifier),
 			"Releasing just created scenario failed for " << newScenarioIdentifier.toString(),
-			ErrorType::Internal
-		);
+			ErrorType::Internal);
 		newScenarioIdentifier = OV_UndefinedIdentifier;
 	};
 
@@ -133,8 +131,7 @@ bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const 
 	OV_FATAL_UNLESS_K(
 		importer,
 		"Importer with id " << importerInstanceIdentifier.toString() << " not found although it has just been created",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	auto releaseAlgorithm = [&]()
 	{
@@ -143,8 +140,7 @@ bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const 
 		OV_FATAL_UNLESS_K(
 			this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*importer),
 			"Releasing just created algorithm failed for " << importerInstanceIdentifier.toString(),
-			ErrorType::Internal
-		);
+			ErrorType::Internal);
 	};
 
 	if (!importer->initialize())
@@ -165,14 +161,12 @@ bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const 
 		OV_ERROR_UNLESS_KRF(
 			memoryBufferParameter,
 			"The requested importer does not have a MemoryBuffer input parameter with identifier " << OV_Algorithm_ScenarioImporter_InputParameterId_MemoryBuffer.toString(),
-			ErrorType::BadInput
-		);
+			ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(
 			scenarioParameter,
 			"The requested importer does not have a Scenario output parameter with identifier " << OV_Algorithm_ScenarioImporter_OutputParameterId_Scenario.toString(),
-			ErrorType::BadOutput
-		);
+			ErrorType::BadOutput);
 	}
 
 
@@ -212,8 +206,7 @@ bool CScenarioManager::importScenarioFromFile(CIdentifier& newScenarioIdentifier
 	OV_ERROR_UNLESS_KRF(
 		inputFile,
 		"Can not open scenario file '" << fileName << "'",
-		ErrorType::BadFileRead
-	);
+		ErrorType::BadFileRead);
 
 	fseek(inputFile, 0, SEEK_END);
 	memoryBuffer.setSize(static_cast<size_t>(ftell(inputFile)), true);
@@ -357,8 +350,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 	OV_ERROR_UNLESS_KRF(
 		m_vScenario.find(scenarioIdentifier) != m_vScenario.end(),
 		"Scenario with identifier " << scenarioIdentifier.toString() << " does not exist.",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	// If the scenario is a metabox, we will save its prototype hash into an attribute of the scenario
 	// that way the standalone scheduler can check whether metaboxes included inside need updating.
@@ -425,16 +417,14 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 	OV_ERROR_UNLESS_KRF(
 		exporterInstanceIdentifier != OV_UndefinedIdentifier,
 		"Can not create the requested scenario exporter",
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	IAlgorithmProxy* exporter = &this->getKernelContext().getAlgorithmManager().getAlgorithm(exporterInstanceIdentifier);
 
 	OV_FATAL_UNLESS_K(
 		exporter,
 		"Exporter with id " << exporterInstanceIdentifier.toString() << " not found although it has just been created",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	auto releaseAlgorithm = [&]()
 	{
@@ -443,8 +433,7 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 		OV_FATAL_UNLESS_K(
 			this->getKernelContext().getAlgorithmManager().releaseAlgorithm(*exporter),
 			"Releasing just created algorithm failed for " << exporterInstanceIdentifier.toString(),
-			ErrorType::Internal
-		);
+			ErrorType::Internal);
 	};
 
 	if (!exporter->initialize())
@@ -463,14 +452,12 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 		OV_ERROR_UNLESS_KRF(
 			scenarioParameter,
 			"The requested exporter does not have a Scenario input parameter with identifier " << OV_Algorithm_ScenarioExporter_InputParameterId_Scenario.toString(),
-			ErrorType::BadInput
-		);
+			ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(
 			memoryBufferParameter,
 			"The requested exporter does not have a MemoryBuffer output parameter with identifier " << OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer.toString(),
-			ErrorType::BadOutput
-		);
+			ErrorType::BadOutput);
 	}
 
 	TParameterHandler<IScenario*> scenarioParameterHandler(scenarioParameter);
@@ -515,8 +502,7 @@ bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIden
 	OV_ERROR_UNLESS_KRF(
 		outputFileStream.good(),
 		"Failed to open file " << fileName,
-		ErrorType::BadFileRead
-	);
+		ErrorType::BadFileRead);
 
 	outputFileStream.write(reinterpret_cast<const char*>(memoryBuffer.getDirectPointer()), static_cast<long>(memoryBuffer.getSize()));
 	outputFileStream.close();
@@ -674,8 +660,7 @@ IScenario& CScenarioManager::getScenario(
 	OV_FATAL_UNLESS_K(
 		itScenario != m_vScenario.end(),
 		"Scenario " << rScenarioIdentifier.toString() << " does not exist !",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return *itScenario->second;
 }

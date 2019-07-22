@@ -14,5 +14,3 @@ namespace OpenViBEToolkit
 		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_FeatureVector)
 	};
 };
-
-

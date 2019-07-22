@@ -163,7 +163,7 @@ bool CBoxAlgorithmChannelSelector::process()
 		m_pDecoder->decode(i);
 		if (m_pDecoder->isHeaderReceived())
 		{
-			CString l_sSettingValue                = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+			CString l_sSettingValue                  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			uint64_t l_ui64SelectionMethodIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 			uint64_t l_ui64MatchMethodIdentifier     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
@@ -222,8 +222,7 @@ bool CBoxAlgorithmChannelSelector::process()
 						OV_ERROR_UNLESS_KRF(
 							l_ui32RangeStartIndex != std::numeric_limits<uint32_t>::max() && l_ui32RangeEndIndex != std::numeric_limits<uint32_t>::max() && l_ui32RangeStartIndex <= l_ui32RangeEndIndex,
 							"Invalid channel range [" << l_sToken[j] << "] - splitted as [" << l_sSubToken[0] << "][" << l_sSubToken[1] << "]",
-							OpenViBE::Kernel::ErrorType::BadSetting
-						);
+							OpenViBE::Kernel::ErrorType::BadSetting);
 
 						// The range is valid so selects all the channels in this range
 						this->getLogManager() << LogLevel_Debug << "For range [" << l_sToken[j] << "] :\n";
@@ -250,8 +249,7 @@ bool CBoxAlgorithmChannelSelector::process()
 						OV_ERROR_UNLESS_KRF(
 							l_bFound,
 							"Invalid channel [" << l_sToken[j] << "]",
-							OpenViBE::Kernel::ErrorType::BadSetting
-						);
+							OpenViBE::Kernel::ErrorType::BadSetting);
 					}
 				}
 
@@ -290,8 +288,7 @@ bool CBoxAlgorithmChannelSelector::process()
 			OV_ERROR_UNLESS_KRF(
 				!m_vLookup.empty(),
 				"No channel selected",
-				OpenViBE::Kernel::ErrorType::BadConfig
-			);
+				OpenViBE::Kernel::ErrorType::BadConfig);
 
 			m_pOutputMatrix->setDimensionCount(2);
 			m_pOutputMatrix->setDimensionSize(0, m_vLookup.size());
@@ -329,10 +326,7 @@ bool CBoxAlgorithmChannelSelector::process()
 			{
 				if (m_vLookup[j] < m_pInputMatrix->getDimensionSize(0))
 				{
-					System::Memory::copy(
-						m_pOutputMatrix->getBuffer() + j * l_ui32SampleCount,
-						m_pInputMatrix->getBuffer() + m_vLookup[j] * l_ui32SampleCount,
-						l_ui32SampleCount * sizeof(double));
+					System::Memory::copy(m_pOutputMatrix->getBuffer() + j * l_ui32SampleCount, m_pInputMatrix->getBuffer() + m_vLookup[j] * l_ui32SampleCount, l_ui32SampleCount * sizeof(double));
 				}
 			}
 			m_pEncoder->encodeBuffer();

@@ -163,11 +163,8 @@ namespace OpenViBE
 
 			CPluginModuleLinux(const IKernelContext& rKernelContext);
 
-			virtual bool load(
-				const CString& sFileName,
-				CString* pError);
-			virtual bool unload(
-				CString* pError);
+			virtual bool load(const CString& sFileName, CString* pError);
+			virtual bool unload(CString* pError);
 			virtual bool isOpen() const;
 
 		protected:
@@ -192,8 +189,7 @@ namespace OpenViBE
 			virtual bool load(
 				const CString& sFileName,
 				CString* pError);
-			virtual bool unload(
-				CString* pError);
+			virtual bool unload(CString* pError);
 
 		protected:
 
@@ -223,8 +219,7 @@ namespace OpenViBE
 			virtual bool load(
 				const CString& sFileName,
 				CString* pError);
-			virtual bool unload(
-				CString* pError);
+			virtual bool unload(CString* pError);
 
 		protected:
 

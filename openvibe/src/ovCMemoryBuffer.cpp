@@ -109,7 +109,7 @@ bool CMemoryBufferImpl::reserve(const uint64_t ui64Size)
 	if (ui64Size > m_ui64AllocatedSize)
 	{
 		uint8_t* l_pSavedBuffer = m_pBuffer;
-		m_pBuffer             = new uint8_t[static_cast<size_t>(ui64Size + 1)]; // $$$
+		m_pBuffer               = new uint8_t[static_cast<size_t>(ui64Size + 1)]; // $$$
 		if (!m_pBuffer) { return false; }
 		memcpy(m_pBuffer, l_pSavedBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
 
@@ -120,23 +120,15 @@ bool CMemoryBufferImpl::reserve(const uint64_t ui64Size)
 	return true;
 }
 
-bool CMemoryBufferImpl::setSize(
-	const uint64_t ui64Size,
-	const bool bDiscard)
+bool CMemoryBufferImpl::setSize(const uint64_t ui64Size, const bool bDiscard)
 {
 	if (ui64Size > m_ui64AllocatedSize)
 	{
 		uint8_t* l_pSavedBuffer = m_pBuffer;
-		m_pBuffer             = new uint8_t[static_cast<size_t>(ui64Size + 1)]; // $$$
+		m_pBuffer               = new uint8_t[static_cast<size_t>(ui64Size + 1)]; // $$$
 		if (!m_pBuffer) { return false; }
-		if (!bDiscard)
-		{
-			memcpy(m_pBuffer, l_pSavedBuffer, static_cast<size_t>(m_ui64BufferSize)); // $$$
-		}
-		if (l_pSavedBuffer)
-		{
-			delete [] l_pSavedBuffer;
-		}
+		if (!bDiscard) { memcpy(m_pBuffer, l_pSavedBuffer, static_cast<size_t>(m_ui64BufferSize)); }	// $$$
+		if (l_pSavedBuffer) { delete [] l_pSavedBuffer; }
 		m_ui64AllocatedSize            = ui64Size;
 		m_pBuffer[m_ui64AllocatedSize] = 0;
 	}

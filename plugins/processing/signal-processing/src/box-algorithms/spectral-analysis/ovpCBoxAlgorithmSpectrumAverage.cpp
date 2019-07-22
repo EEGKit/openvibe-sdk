@@ -73,13 +73,13 @@ bool CBoxAlgorithmSpectrumAverage::process()
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			double* l_pInputMatrix   = ip_pMatrix->getBuffer();
-			double* l_pOutputMatrix  = op_pMatrix->getBuffer();
+			double* l_pInputMatrix      = ip_pMatrix->getBuffer();
+			double* l_pOutputMatrix     = op_pMatrix->getBuffer();
 			uint32_t l_ui32ChannelCount = op_pMatrix->getDimensionSize(0);
 			uint32_t l_ui32BandCount    = op_pMatrix->getDimensionSize(1);
 			for (uint32_t j = 0; j < l_ui32ChannelCount; j++)
 			{
-				double l_f64Mean  = 0;
+				double l_f64Mean     = 0;
 				uint32_t l_ui32Count = 0;
 				for (uint32_t k = 0; k < l_ui32BandCount; k++)
 				{

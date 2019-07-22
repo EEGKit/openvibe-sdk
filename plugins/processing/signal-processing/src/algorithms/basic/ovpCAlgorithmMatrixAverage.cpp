@@ -148,7 +148,7 @@ bool CAlgorithmMatrixAverage::process()
 
 			if (m_CumulativeAverageSampleCount == 1) // If it's the first matrix, the average is the first matrix
 			{
-				double* buffer         = l_Matrix->getBuffer();
+				double* buffer          = l_Matrix->getBuffer();
 				unsigned int bufferSize = l_Matrix->getBufferElementCount();
 
 				m_CumulativeAverageMatrix.clear();
@@ -186,7 +186,7 @@ bool CAlgorithmMatrixAverage::process()
 		else
 		{
 			uint32_t l_ui32Count = l_pOutputMatrix->getBufferElementCount();
-			double l_f64Scale = 1. / m_vHistory.size();
+			double l_f64Scale    = 1. / m_vHistory.size();
 
 			for (IMatrix* matrix : m_vHistory)
 			{

@@ -156,9 +156,7 @@ namespace r8b
 				SrcSRMult             = 2;
 				const double NormFreq = (DstSampleRate > SrcSampleRate ? 0.5 : 0.5 * DstSampleRate / SrcSampleRate);
 
-				Convs[0] = new CDSPBlockConvolver(
-					CDSPFIRFilterCache::getLPFilter(NormFreq, ReqTransBand,
-													ReqAtten, ReqPhase, 2.0), 2, 1, 0.0);
+				Convs[0] = new CDSPBlockConvolver(CDSPFIRFilterCache::getLPFilter(NormFreq, ReqTransBand, ReqAtten, ReqPhase, 2.0), 2, 1, 0.0);
 
 				ConvCount            = 1;
 				MaxOutLen            = Convs[0]->getMaxOutLen(MaxOutLen);
@@ -200,9 +198,7 @@ namespace r8b
 					{
 						const double tb = (i >= 2 ? 45.0 : 34.0);
 
-						Convs[i] = new CDSPBlockConvolver(
-							CDSPFIRFilterCache::getLPFilter(0.5, tb, ReqAtten,
-															ReqPhase, 2.0), 2, 1, PrevLatencyFrac);
+						Convs[i] = new CDSPBlockConvolver(CDSPFIRFilterCache::getLPFilter(0.5, tb, ReqAtten, ReqPhase, 2.0), 2, 1, PrevLatencyFrac);
 
 						MaxOutLen                = Convs[i]->getMaxOutLen(MaxOutLen);
 						ConvBufCapacities[i & 1] = MaxOutLen;
@@ -238,9 +234,7 @@ namespace r8b
 					const double tb =
 							(CheckSR * SrcSRDiv <= SrcSampleRate ? 45.0 : 34.0);
 
-					Convs[ConvCount] = new CDSPBlockConvolver(
-						CDSPFIRFilterCache::getLPFilter(0.5, tb, ReqAtten,
-														ReqPhase, 1.0), 1, 2, PrevLatencyFrac);
+					Convs[ConvCount] = new CDSPBlockConvolver(CDSPFIRFilterCache::getLPFilter(0.5, tb, ReqAtten, ReqPhase, 1.0), 1, 2, PrevLatencyFrac);
 
 					MaxOutLen       = Convs[ConvCount]->getMaxOutLen(MaxOutLen);
 					PrevLatencyFrac = Convs[ConvCount]->getLatencyFrac();
@@ -252,9 +246,7 @@ namespace r8b
 				const double NormFreq = DstSampleRate * SrcSRDiv / SrcSampleRate;
 				const int downf       = (UsePower2 && NormFreq == 0.5 ? 2 : 1);
 
-				Convs[ConvCount] = new CDSPBlockConvolver(
-					CDSPFIRFilterCache::getLPFilter(NormFreq, ReqTransBand,
-													ReqAtten, ReqPhase, 1.0), 1, downf, PrevLatencyFrac);
+				Convs[ConvCount] = new CDSPBlockConvolver(CDSPFIRFilterCache::getLPFilter(NormFreq, ReqTransBand, ReqAtten, ReqPhase, 1.0), 1, downf, PrevLatencyFrac);
 
 				MaxOutLen       = Convs[ConvCount]->getMaxOutLen(MaxOutLen);
 				PrevLatencyFrac = Convs[ConvCount]->getLatencyFrac();
@@ -266,8 +258,7 @@ namespace r8b
 				}
 			}
 
-			Interp = new CInterpClass(SrcSampleRate * SrcSRMult / SrcSRDiv,
-									  DstSampleRate, PrevLatencyFrac);
+			Interp = new CInterpClass(SrcSampleRate * SrcSRMult / SrcSRDiv, DstSampleRate, PrevLatencyFrac);
 
 			MaxOutLen = Interp->getMaxOutLen(MaxOutLen);
 

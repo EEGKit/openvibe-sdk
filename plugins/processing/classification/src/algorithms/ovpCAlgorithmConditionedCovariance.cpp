@@ -60,15 +60,13 @@ bool CAlgorithmConditionedCovariance::process()
 	OV_ERROR_UNLESS_KRF(
 		l_f64Shrinkage <= 1.0,
 		"Invalid shrinkage value " << l_f64Shrinkage << "(expected value <= 1.0)",
-		OpenViBE::Kernel::ErrorType::BadConfig
-	);
+		OpenViBE::Kernel::ErrorType::BadConfig);
 
 
 	OV_ERROR_UNLESS_KRF(
 		ip_pFeatureVectorSet->getDimensionCount() == 2,
 		"Invalid dimension count for vector set " << ip_pFeatureVectorSet->getDimensionCount() << "(expected value = 2)",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+		OpenViBE::Kernel::ErrorType::BadInput);
 
 	const uint32_t l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
 	const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
@@ -76,8 +74,7 @@ bool CAlgorithmConditionedCovariance::process()
 	OV_ERROR_UNLESS_KRF(
 		l_ui32nRows >= 1 && l_ui32nCols >= 1,
 		"Invalid input matrix [" << l_ui32nRows << "x" << l_ui32nCols << "] (expected at least 1x1 size)",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+		OpenViBE::Kernel::ErrorType::BadInput);
 
 	const double* l_pBuffer = ip_pFeatureVectorSet->getBuffer();
 
@@ -85,8 +82,7 @@ bool CAlgorithmConditionedCovariance::process()
 	OV_ERROR_UNLESS_KRF(
 		l_pBuffer,
 		"Invalid NULL feature set buffer",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+		OpenViBE::Kernel::ErrorType::BadInput);
 
 	// Set the output buffers so we can write the results to them without copy
 	op_pMean->setDimensionCount(2);

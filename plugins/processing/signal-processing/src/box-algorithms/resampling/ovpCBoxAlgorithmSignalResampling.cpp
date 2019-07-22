@@ -34,9 +34,7 @@ using namespace SignalProcessing;
 
 namespace SigProSTD
 {
-	template <typename T,
-			  typename std::enable_if<std::is_integral<T>::value>::type* = nullptr,
-			  typename std::enable_if<std::is_unsigned<T>::value>::type* = nullptr>
+	template <typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr, typename std::enable_if<std::is_unsigned<T>::value>::type* = nullptr>
 	T gcd(T a, T b)
 	{
 		T t;
@@ -64,26 +62,12 @@ bool CBoxAlgorithmSignalResampling::initialize()
 	m_oDecoder.initialize(*this, 0);
 	m_oEncoder.initialize(*this, 0);
 
-	int64_t l_i64OutputSamplingRate = FSettingValueAutoCast(
-		*this->getBoxAlgorithmContext(),
-		OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency
-	);
-	int64_t l_i64OutputSampleCount = FSettingValueAutoCast(
-		*this->getBoxAlgorithmContext(),
-		OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer
-	);
+	int64_t l_i64OutputSamplingRate = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency);
+	int64_t l_i64OutputSampleCount  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
 
-	OV_ERROR_UNLESS_KRF(
-		l_i64OutputSamplingRate > 0,
-		"Invalid output sampling rate [" << l_i64OutputSamplingRate << "] (expected value > 0)",
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
+	OV_ERROR_UNLESS_KRF(l_i64OutputSamplingRate > 0, "Invalid output sampling rate [" << l_i64OutputSamplingRate << "] (expected value > 0)", OpenViBE::Kernel::ErrorType::BadSetting);
 
-	OV_ERROR_UNLESS_KRF(
-		l_i64OutputSampleCount > 0,
-		"Invalid sample count per buffer [" << l_i64OutputSampleCount << "] (expected value > 0)",
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
+	OV_ERROR_UNLESS_KRF(l_i64OutputSampleCount > 0, "Invalid sample count per buffer [" << l_i64OutputSampleCount << "] (expected value > 0)", OpenViBE::Kernel::ErrorType::BadSetting);
 
 	m_outSamplingRate = static_cast<uint32_t>(l_i64OutputSamplingRate);
 	m_outSampleCount  = static_cast<uint32_t>(l_i64OutputSampleCount);
@@ -135,7 +119,7 @@ bool CBoxAlgorithmSignalResampling::process()
 
 			this->getLogManager() << LogLevel_Info << "Resampling from [" << m_inSamplingRate << "] Hz to [" << m_outSamplingRate << "] Hz.\n";
 
-			double src                   = 1.0 * m_outSamplingRate / m_inSamplingRate;
+			double src                     = 1.0 * m_outSamplingRate / m_inSamplingRate;
 			uint32_t greatestCommonDivisor = static_cast<uint32_t>(SigProSTD::gcd(m_inSamplingRate, m_outSamplingRate));
 			uint32_t factorUpsampling      = m_outSamplingRate / greatestCommonDivisor;
 			uint32_t factorDownsampling    = m_inSamplingRate / greatestCommonDivisor;
@@ -186,8 +170,7 @@ bool CBoxAlgorithmSignalResampling::process()
 		if (m_oDecoder.isEndReceived())
 		{
 			m_oEncoder.encodeEnd();
-			m_pDynamicBoxContext->markOutputAsReadyToSend(0, (uint64_t((m_totalOutSampleCount % m_outSampleCount) << 32) / m_outSamplingRate),
-														  (uint64_t((m_totalOutSampleCount % m_outSampleCount) << 32) / m_outSamplingRate));
+			m_pDynamicBoxContext->markOutputAsReadyToSend(0, (uint64_t((m_totalOutSampleCount % m_outSampleCount) << 32) / m_outSamplingRate), (uint64_t((m_totalOutSampleCount % m_outSampleCount) << 32) / m_outSamplingRate));
 		}
 	}
 
@@ -196,7 +179,7 @@ bool CBoxAlgorithmSignalResampling::process()
 
 void CBoxAlgorithmSignalResampling::processResampler(const double* pSample, size_t ui32ChannelCount) const
 {
-	double* l_pBuffer             = m_oEncoder.getInputMatrix()->getBuffer();
+	double* l_pBuffer                = m_oEncoder.getInputMatrix()->getBuffer();
 	uint64_t l_ui64OutputSampleIndex = m_totalOutSampleCount % m_outSampleCount;
 
 	for (uint32_t j = 0; j < ui32ChannelCount; j++)
@@ -208,8 +191,6 @@ void CBoxAlgorithmSignalResampling::processResampler(const double* pSample, size
 	if ((m_totalOutSampleCount % m_outSampleCount) == 0)
 	{
 		m_oEncoder.encodeBuffer();
-		m_pDynamicBoxContext->markOutputAsReadyToSend(0,
-													  (uint64_t((m_totalOutSampleCount - m_outSampleCount) << 32) / m_outSamplingRate),
-													  (uint64_t((m_totalOutSampleCount) << 32) / m_outSamplingRate));
+		m_pDynamicBoxContext->markOutputAsReadyToSend(0, (uint64_t((m_totalOutSampleCount - m_outSampleCount) << 32) / m_outSamplingRate), (uint64_t((m_totalOutSampleCount) << 32) / m_outSamplingRate));
 	}
 }

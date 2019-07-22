@@ -107,8 +107,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 	OV_ERROR_UNLESS_KRF(
 		m_pFile,
 		"Error opening file [" << m_sFilename << "] for reading",
-		OpenViBE::Kernel::ErrorType::BadFileRead
-	);
+		OpenViBE::Kernel::ErrorType::BadFileRead);
 
 	// simulate RAII through closure
 	auto releaseResources = [&]()
@@ -218,8 +217,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		releaseResources();
 		OV_ERROR_KRF(
 			"Invalid input type identifier " << this->getTypeManager().getTypeName(m_oTypeIdentifier) << " in file ",
-			ErrorType::BadValue
-		);
+			ErrorType::BadValue);
 	}
 
 	return true;
@@ -238,8 +236,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 		OV_ERROR_UNLESS_KRF(
 			initializeFile(),
 			"Error reading data from csv file " << m_sFilename,
-			ErrorType::Internal
-		);
+			ErrorType::Internal);
 	}
 	//line buffer
 	char l_pLine[m_ui32bufferLen];
@@ -306,8 +303,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 		OV_ERROR_UNLESS_KRF(
 			(this->*m_fpRealProcess)(),
 			"Error encoding data from csv file " << m_sFilename << " into the right output format",
-			ErrorType::Internal
-		);
+			ErrorType::Internal);
 
 		//for the stimulation, the line contents in m_vLastLineSplit isn't processed.
 		if (m_oTypeIdentifier != OV_TypeId_Stimulations
@@ -348,8 +344,7 @@ bool CBoxAlgorithmCSVFileReader::process_streamedMatrix()
 	OV_ERROR_UNLESS_KRF(
 		convertVectorDataToMatrix(ip_pMatrix),
 		"Error converting vector data to streamed matrix",
-		ErrorType::Internal
-	);
+		ErrorType::Internal);
 
 	m_pAlgorithmEncoder->encodeBuffer();
 
@@ -388,8 +383,7 @@ bool CBoxAlgorithmCSVFileReader::process_stimulation()
 		OV_ERROR_UNLESS_KRF(
 			m_vDataMatrix[i].size() == 3,
 			"Invalid data row length: must be 3 for stimulation date, index and duration",
-			ErrorType::BadParsing
-		);
+			ErrorType::BadParsing);
 
 		//stimulation date
 		const uint64_t l_ui64StimulationDate = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[i][0].c_str()));
@@ -449,8 +443,7 @@ bool CBoxAlgorithmCSVFileReader::process_signal()
 	OV_ERROR_UNLESS_KRF(
 		convertVectorDataToMatrix(ip_pMatrix),
 		"Error converting vector data to signal",
-		ErrorType::Internal
-	);
+		ErrorType::Internal);
 
 	// this->getLogManager() << LogLevel_Info << "Cols from header " << m_ui32NbColumn << "\n";
 	// this->getLogManager() << LogLevel_Info << "InMatrix " << (m_vDataMatrix.size() > 0 ? m_vDataMatrix[0].size() : 0) << " outMatrix " << ip_pMatrix->getDimensionSize(0) << "\n";
@@ -519,8 +512,7 @@ bool CBoxAlgorithmCSVFileReader::process_channelLocalisation()
 			OV_ERROR_UNLESS_KRF(
 				convertVectorDataToMatrix(ip_pMatrix),
 				"Error converting vector data to channel localisation",
-				ErrorType::Internal
-			);
+				ErrorType::Internal);
 
 			m_pAlgorithmEncoder->encodeBuffer();
 			const uint64_t l_ui64Date = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
@@ -569,8 +561,7 @@ bool CBoxAlgorithmCSVFileReader::process_featureVector()
 		OV_ERROR_UNLESS_KRF(
 			m_vDataMatrix[i].size() == m_ui32ColumnCount,
 			"Unexpected number of elements" << "(got " << static_cast<uint64_t>(m_vDataMatrix[i].size()) << ", expected " << m_ui32ColumnCount << ")",
-			ErrorType::BadParsing
-		);
+			ErrorType::BadParsing);
 
 		for (uint32_t j = 0; j < m_ui32ColumnCount - 1; j++)
 		{
@@ -650,8 +641,7 @@ bool CBoxAlgorithmCSVFileReader::process_spectrum()
 			OV_ERROR_UNLESS_KRF(
 				convertVectorDataToMatrix(ip_pMatrix),
 				"Error converting vector data to spectrum",
-				ErrorType::Internal
-			);
+				ErrorType::Internal);
 
 			m_pAlgorithmEncoder->encodeBuffer();
 			const uint64_t l_ui64Date = ITimeArithmetics::secondsToTime(std::stod(m_vDataMatrix[0][0].c_str()));
@@ -676,8 +666,7 @@ bool CBoxAlgorithmCSVFileReader::convertVectorDataToMatrix(IMatrix* matrix)
 		matrix->getDimensionSize(1) >= m_vDataMatrix.size() && matrix->getDimensionSize(0) >= (m_ui32ColumnCount-1),
 		"Matrix size incompatibility, data suggests " << m_ui32ColumnCount-1 << "x" << static_cast<uint64_t>(m_vDataMatrix.size())
 		<< ", expected at most " << matrix->getDimensionSize(0) << "x" << matrix->getDimensionSize(0),
-		ErrorType::Overflow
-	);
+		ErrorType::Overflow);
 
 	std::stringstream l_sMatrix;
 	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)

@@ -13,7 +13,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize()
 {
 	m_lastStartTime = 0;
 	m_lastEndTime   = 0;
-	m_bHeaderSent       = false;
+	m_bHeaderSent   = false;
 
 	return true;
 }
@@ -36,8 +36,8 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::process()
 		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
 			const IMemoryBuffer* l_pInputMemoryBuffer = l_rDynamicBoxContext.getInputChunk(i, j);
-			uint64_t startTime                    = l_rDynamicBoxContext.getInputChunkStartTime(i, j);
-			uint64_t endTime                      = l_rDynamicBoxContext.getInputChunkEndTime(i, j);
+			uint64_t startTime                        = l_rDynamicBoxContext.getInputChunkStartTime(i, j);
+			uint64_t endTime                          = l_rDynamicBoxContext.getInputChunkEndTime(i, j);
 
 			if ((!m_bHeaderSent && startTime == endTime) || (m_bHeaderSent && startTime != endTime))
 			{

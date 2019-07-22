@@ -125,5 +125,3 @@ namespace EBML
 	 */
 	extern EBML_API IWriter* createWriter(IWriterCallback& rWriterCallback);
 };
-
-

@@ -23,9 +23,7 @@ ISignalTrial& OpenViBEToolkit::copyHeader(ISignalTrial& trial, const ISignalTria
 	return trial;
 }
 
-ISignalTrial& OpenViBEToolkit::copy(
-	ISignalTrial& trial,
-	const ISignalTrial* srcTrial)
+ISignalTrial& OpenViBEToolkit::copy(ISignalTrial& trial, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == NULL) { srcTrial = &trial; }
 
@@ -48,12 +46,7 @@ ISignalTrial& OpenViBEToolkit::copy(
 ISignalTrial& OpenViBEToolkit::selectSamples(ISignalTrial& trial, const uint32_t sampleStart, const uint32_t sampleEnd, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == NULL) { srcTrial = &trial; }
-
-	if (srcTrial == &trial)
-	{
-		// $$$ NOT YET IMPLEMENTED
-		return trial;
-	}
+	if (srcTrial == &trial) { return trial; }	// $$$ NOT YET IMPLEMENTED
 
 	// copyHeader(trial, srcTrial);
 
@@ -71,16 +64,8 @@ ISignalTrial& OpenViBEToolkit::selectSamples(ISignalTrial& trial, const uint32_t
 
 ISignalTrial& OpenViBEToolkit::selectTime(ISignalTrial& trial, const uint64_t timeStart, const uint64_t timeEnd, const ISignalTrial* srcTrial)
 {
-	if (srcTrial == NULL)
-	{
-		srcTrial = &trial;
-	}
-
-	if (srcTrial == &trial)
-	{
-		// $$$ NOT YET IMPLEMENTED
-		return trial;
-	}
+	if (srcTrial == NULL) { srcTrial = &trial; }
+	if (srcTrial == &trial) { return trial; }	// $$$ NOT YET IMPLEMENTED
 
 	uint32_t sampleStart = uint32_t((timeStart * srcTrial->getSamplingRate()) >> 32);
 	uint32_t sampleEnd   = uint32_t((timeEnd * srcTrial->getSamplingRate()) >> 32);
@@ -90,12 +75,7 @@ ISignalTrial& OpenViBEToolkit::selectTime(ISignalTrial& trial, const uint64_t ti
 ISignalTrial& OpenViBEToolkit::removeSamples(ISignalTrial& trial, const uint32_t sampleStart, const uint32_t sampleEnd, const ISignalTrial* srcTrial)
 {
 	if (srcTrial == NULL) { srcTrial = &trial; }
-
-	if (srcTrial == &trial)
-	{
-		// $$$ NOT YET IMPLEMENTED
-		return trial;
-	}
+	if (srcTrial == &trial) { return trial; } 	// $$$ NOT YET IMPLEMENTED
 
 	// copyHeader(trial, srcTrial);
 
@@ -105,35 +85,17 @@ ISignalTrial& OpenViBEToolkit::removeSamples(ISignalTrial& trial, const uint32_t
 	trial.setSampleCount(srcSampleCount, false);
 	for (uint32_t i = 0; i < srcChannelCount; i++)
 	{
-		System::Memory::copy(
-			trial.getChannelSampleBuffer(i),
-			srcTrial->getChannelSampleBuffer(i),
-			sampleStart * sizeof(double));
-		System::Memory::copy(
-			trial.getChannelSampleBuffer(i) + sampleStart,
-			srcTrial->getChannelSampleBuffer(i) + sampleEnd,
-			(srcSampleCount - sampleStart) * sizeof(double));
+		System::Memory::copy(trial.getChannelSampleBuffer(i), srcTrial->getChannelSampleBuffer(i), sampleStart * sizeof(double));
+		System::Memory::copy(trial.getChannelSampleBuffer(i) + sampleStart, srcTrial->getChannelSampleBuffer(i) + sampleEnd, (srcSampleCount - sampleStart) * sizeof(double));
 	}
 
 	return trial;
 }
 
-ISignalTrial& OpenViBEToolkit::removeTime(
-	ISignalTrial& trial,
-	const uint64_t timeStart,
-	const uint64_t timeEnd,
-	const ISignalTrial* srcTrial)
+ISignalTrial& OpenViBEToolkit::removeTime(ISignalTrial& trial, const uint64_t timeStart, const uint64_t timeEnd, const ISignalTrial* srcTrial)
 {
-	if (srcTrial == NULL)
-	{
-		srcTrial = &trial;
-	}
-
-	if (srcTrial == &trial)
-	{
-		// $$$ NOT YET IMPLEMENTED
-		return trial;
-	}
+	if (srcTrial == NULL) { srcTrial = &trial; }
+	if (srcTrial == &trial) { return trial; }	// $$$ NOT YET IMPLEMENTED
 
 	uint32_t sampleStart = uint32_t((timeStart * srcTrial->getSamplingRate()) >> 32);
 	uint32_t sampleEnd   = uint32_t((timeEnd * srcTrial->getSamplingRate()) >> 32);

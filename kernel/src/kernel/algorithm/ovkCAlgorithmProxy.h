@@ -19,76 +19,40 @@ namespace OpenViBE
 			virtual const Plugins::IAlgorithm& getAlgorithm() const;
 			virtual const Plugins::IAlgorithmDesc& getAlgorithmDesc() const;
 
-			virtual bool addInputParameter(
-				const CIdentifier& rInputParameterIdentifier,
-				const CString& sInputName,
-				EParameterType eParameterType,
-				const CIdentifier& rSubTypeIdentifier);
-			virtual CIdentifier getNextInputParameterIdentifier(
-				const CIdentifier& rPreviousInputParameterIdentifier) const;
-			virtual IParameter* getInputParameter(
-				const CIdentifier& rInputParameterIdentifier);
-			virtual EParameterType getInputParameterType(
-				const CIdentifier& rInputParameterIdentifier) const;
-			virtual CString getInputParameterName(
-				const CIdentifier& rInputParameterIdentifier) const;
-			virtual bool removeInputParameter(
-				const CIdentifier& rInputParameterIdentifier);
+			virtual bool addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier);
+			virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const;
+			virtual IParameter* getInputParameter(const CIdentifier& rInputParameterIdentifier);
+			virtual EParameterType getInputParameterType(const CIdentifier& rInputParameterIdentifier) const;
+			virtual CString getInputParameterName(const CIdentifier& rInputParameterIdentifier) const;
+			virtual bool removeInputParameter(const CIdentifier& rInputParameterIdentifier);
 
-			virtual bool addOutputParameter(
-				const CIdentifier& rOutputParameterIdentifier,
-				const CString& sOutputName,
-				EParameterType eParameterType,
-				const CIdentifier& rSubTypeIdentifier);
-			virtual CIdentifier getNextOutputParameterIdentifier(
-				const CIdentifier& rPreviousOutputParameterIdentifier) const;
-			virtual IParameter* getOutputParameter(
-				const CIdentifier& rOutputParameterIdentifier);
-			virtual EParameterType getOutputParameterType(
-				const CIdentifier& rOutputParameterIdentifier) const;
-			virtual CString getOutputParameterName(
-				const CIdentifier& rOutputParameterIdentifier) const;
-			virtual bool removeOutputParameter(
-				const CIdentifier& rOutputParameterIdentifier);
+			virtual bool addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier);
+			virtual CIdentifier getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const;
+			virtual IParameter* getOutputParameter(const CIdentifier& rOutputParameterIdentifier);
+			virtual EParameterType getOutputParameterType(const CIdentifier& rOutputParameterIdentifier) const;
+			virtual CString getOutputParameterName(const CIdentifier& rOutputParameterIdentifier) const;
+			virtual bool removeOutputParameter(const CIdentifier& rOutputParameterIdentifier);
 
-			virtual bool addInputTrigger(
-				const CIdentifier& rInputTriggerIdentifier,
-				const CString& rInputTriggerName);
-			virtual CIdentifier getNextInputTriggerIdentifier(
-				const CIdentifier& rPreviousInputTriggerIdentifier) const;
-			virtual CString getInputTriggerName(
-				const CIdentifier& rInputTriggerIdentifier) const;
-			virtual bool isInputTriggerActive(
-				const CIdentifier& rInputTriggerIdentifier) const;
-			virtual bool activateInputTrigger(
-				const CIdentifier& rInputTriggerIdentifier,
-				bool bTriggerState);
-			virtual bool removeInputTrigger(
-				const CIdentifier& rInputTriggerIdentifier);
+			virtual bool addInputTrigger(const CIdentifier& rInputTriggerIdentifier, const CString& rInputTriggerName);
+			virtual CIdentifier getNextInputTriggerIdentifier(const CIdentifier& rPreviousInputTriggerIdentifier) const;
+			virtual CString getInputTriggerName(const CIdentifier& rInputTriggerIdentifier) const;
+			virtual bool isInputTriggerActive(const CIdentifier& rInputTriggerIdentifier) const;
+			virtual bool activateInputTrigger(const CIdentifier& rInputTriggerIdentifier, bool bTriggerState);
+			virtual bool removeInputTrigger(const CIdentifier& rInputTriggerIdentifier);
 
-			virtual bool addOutputTrigger(
-				const CIdentifier& rOutputTriggerIdentifier,
-				const CString& rOutputTriggerName);
-			virtual CIdentifier getNextOutputTriggerIdentifier(
-				const CIdentifier& rPreviousOutputTriggerIdentifier) const;
-			virtual CString getOutputTriggerName(
-				const CIdentifier& rOutputTriggerIdentifier) const;
-			virtual bool isOutputTriggerActive(
-				const CIdentifier& rOutputTriggerIdentifier) const;
-			virtual bool activateOutputTrigger(
-				const CIdentifier& rOutputTriggerIdentifier,
-				bool bTriggerState);
-			virtual bool removeOutputTrigger(
-				const CIdentifier& rOutputTriggerIdentifier);
+			virtual bool addOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, const CString& rOutputTriggerName);
+			virtual CIdentifier getNextOutputTriggerIdentifier(const CIdentifier& rPreviousOutputTriggerIdentifier) const;
+			virtual CString getOutputTriggerName(const CIdentifier& rOutputTriggerIdentifier) const;
+			virtual bool isOutputTriggerActive(const CIdentifier& rOutputTriggerIdentifier) const;
+			virtual bool activateOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, bool bTriggerState);
+			virtual bool removeOutputTrigger(const CIdentifier& rOutputTriggerIdentifier);
 
 			virtual bool initialize();
 			virtual bool uninitialize();
 			virtual bool process();
-			virtual bool process(
-				const CIdentifier& rTriggerIdentifier);
+			virtual bool process(const CIdentifier& rTriggerIdentifier);
 
-			virtual bool isAlgorithmDerivedFrom(
-				const CIdentifier& rClassIdentifier);
+			virtual bool isAlgorithmDerivedFrom(const CIdentifier& rClassIdentifier);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProxy >, OVK_ClassId_Kernel_Algorithm_AlgorithmProxy)
 

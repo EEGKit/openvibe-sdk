@@ -28,8 +28,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	OV_ERROR_UNLESS_KRF(
 		l_pRootNode,
 		"Unable to get xml root node from file at " << sFilename,
-		OpenViBE::Kernel::ErrorType::BadParsing
-	);
+		OpenViBE::Kernel::ErrorType::BadParsing);
 
 	m_vStimulation.clear();
 
@@ -37,8 +36,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	OV_ERROR_UNLESS_KRF(
 		l_pRootNode->hasAttribute(c_sFormatVersionAttributeName),
 		"Configuration file [" << sFilename << "] has no version information",
-		OpenViBE::Kernel::ErrorType::ResourceNotFound
-	);
+		OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
 	string l_sVersion;
 
@@ -57,8 +55,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 		l_ui32Version >= OVP_Classification_BoxTrainerFormatVersionRequired,
 		"Classifier configuration in [" << sFilename << "] saved using an obsolete version [" << l_ui32Version
 		<< "] (minimum expected version = " << OVP_Classification_BoxTrainerFormatVersionRequired << ")",
-		OpenViBE::Kernel::ErrorType::BadVersion
-	);
+		OpenViBE::Kernel::ErrorType::BadVersion);
 
 	CIdentifier l_oAlgorithmClassIdentifier = OV_UndefinedIdentifier;
 
@@ -67,8 +64,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	OV_ERROR_UNLESS_KRF(
 		l_pTempNode,
 		"Configuration file [" << sFilename << "] has no node " << c_sStrategyNodeName,
-		OpenViBE::Kernel::ErrorType::BadParsing
-	);
+		OpenViBE::Kernel::ErrorType::BadParsing);
 
 	l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(c_sIdentifierAttributeName));
 
@@ -80,8 +76,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 		OV_ERROR_UNLESS_KRF(
 			l_pTempNode,
 			"Configuration file [" << sFilename << "] has no node " << c_sAlgorithmNodeName,
-			OpenViBE::Kernel::ErrorType::BadParsing
-		);
+			OpenViBE::Kernel::ErrorType::BadParsing);
 
 		l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(c_sIdentifierAttributeName));
 
@@ -89,8 +84,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 		OV_ERROR_UNLESS_KRF(
 			l_oAlgorithmClassIdentifier != OV_UndefinedIdentifier,
 			"No classifier retrieved from configuration file [" << sFilename << "]",
-			OpenViBE::Kernel::ErrorType::BadConfig
-		);
+			OpenViBE::Kernel::ErrorType::BadConfig);
 	}
 
 	//Now loading all stimulations output
@@ -99,8 +93,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	OV_ERROR_UNLESS_KRF(
 		l_pStimulationsNode,
 		"Configuration file [" << sFilename << "] has no node " << c_sStimulationsNodeName,
-		OpenViBE::Kernel::ErrorType::BadParsing
-	);
+		OpenViBE::Kernel::ErrorType::BadParsing);
 
 	//Now load every stimulation and store them in the map with the right class id
 	for (uint32_t i = 0; i < l_pStimulationsNode->getChildCount(); i++)
@@ -110,8 +103,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 		OV_ERROR_UNLESS_KRF(
 			l_pTempNode,
 			"Invalid NULL child node " << i << " for node [" << c_sStimulationsNodeName << "]",
-			OpenViBE::Kernel::ErrorType::BadParsing
-		);
+			OpenViBE::Kernel::ErrorType::BadParsing);
 
 		CString l_sStimulationName(l_pTempNode->getPCData());
 
@@ -121,8 +113,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 		OV_ERROR_UNLESS_KRF(
 			l_sAttributeData,
 			"Invalid child node " << i << " for node [" << c_sStimulationsNodeName << "]: attribute [" << c_sIdentifierAttributeName << "] not found",
-			OpenViBE::Kernel::ErrorType::BadParsing
-		);
+			OpenViBE::Kernel::ErrorType::BadParsing);
 
 		std::stringstream l_sIdentifierData(l_sAttributeData);
 		l_sIdentifierData >> l_f64ClassId;
@@ -134,8 +125,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	OV_ERROR_UNLESS_KRF(
 		l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
 		"Invalid classifier algorithm with id [" << l_oAlgorithmClassIdentifier.toString() << "] in configuration file [" << sFilename << "]",
-		OpenViBE::Kernel::ErrorType::BadConfig
-	);
+		OpenViBE::Kernel::ErrorType::BadConfig);
 
 	m_pClassifier = &this->getAlgorithmManager().getAlgorithm(l_oClassifierAlgorithmIdentifier);
 	m_pClassifier->initialize();
@@ -155,8 +145,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	OV_ERROR_UNLESS_KRF(
 		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
 		"Loading configuration failed for subclassifier [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
-		OpenViBE::Kernel::ErrorType::Internal
-	);
+		OpenViBE::Kernel::ErrorType::Internal);
 
 	l_pRootNode->release();
 	l_pHandler->release();
@@ -174,8 +163,7 @@ bool CBoxAlgorithmClassifierProcessor::initialize()
 	OV_ERROR_UNLESS_KRF(
 		l_sConfigurationFilename != CString(""),
 		"Invalid empty configuration file name",
-		OpenViBE::Kernel::ErrorType::BadConfig
-	);
+		OpenViBE::Kernel::ErrorType::BadConfig);
 
 	m_oFeatureVectorDecoder.initialize(*this, 0);
 	m_oStimulationDecoder.initialize(*this, 1);
@@ -260,8 +248,7 @@ bool CBoxAlgorithmClassifierProcessor::process()
 				m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Classify) &&
 				m_pClassifier->isOutputTriggerActive(OVTK_Algorithm_Classifier_OutputTriggerId_Success),
 				"Classification failed",
-				OpenViBE::Kernel::ErrorType::Internal
-			);
+				OpenViBE::Kernel::ErrorType::Internal);
 
 			TParameterHandler<double> op_f64ClassificationStateClass(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class));
 

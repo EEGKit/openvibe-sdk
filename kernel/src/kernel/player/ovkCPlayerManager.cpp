@@ -29,8 +29,7 @@ bool CPlayerManager::releasePlayer(
 	OV_ERROR_UNLESS_KRF(
 		itPlayer != m_vPlayer.end(),
 		"Player release failed, identifier :" << rPlayerIdentifier.toString(),
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	delete itPlayer->second;
 	m_vPlayer.erase(itPlayer);
@@ -48,16 +47,14 @@ IPlayer& CPlayerManager::getPlayer(
 	OV_FATAL_UNLESS_K(
 		itPlayer != m_vPlayer.end(),
 		"Trying to retrieve non existing player with id " << rPlayerIdentifier.toString(),
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	// use a fatal here because failing to meet this invariant
 	// means there is a bug in the manager implementation
 	OV_FATAL_UNLESS_K(
 		itPlayer->second,
 		"Null player found for id " << rPlayerIdentifier.toString(),
-		ErrorType::BadValue
-	);
+		ErrorType::BadValue);
 
 	return *itPlayer->second;
 }

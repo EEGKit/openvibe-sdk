@@ -31,5 +31,3 @@ namespace OpenViBEToolkit
 		}
 	};
 };
-
-

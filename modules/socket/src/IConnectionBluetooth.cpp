@@ -36,7 +36,7 @@ namespace Socket
 
 		CConnectionBluetooth() : m_sLastError()
 #if defined TARGET_OS_Windows
-									 , m_oSocket(INVALID_SOCKET)
+								 , m_oSocket(INVALID_SOCKET)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #endif
 		{ }
@@ -229,7 +229,7 @@ namespace Socket
 				return 0;
 			}
 
-			const char* l_pPointer = reinterpret_cast<const char*>(pBuffer);
+			const char* l_pPointer   = reinterpret_cast<const char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -250,7 +250,7 @@ namespace Socket
 				return 0;
 			}
 
-			char* l_pPointer       = reinterpret_cast<char*>(pBuffer);
+			char* l_pPointer         = reinterpret_cast<char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())

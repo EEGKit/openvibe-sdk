@@ -394,7 +394,7 @@ namespace OpenViBE
 			while (!allStopped) // negative condition here because it is easier to reason about it
 			{
 				uint64_t currentTime = System::Time::zgetTime();
-				allStopped         = true;
+				allStopped           = true;
 				for (auto p : playerList)
 				{
 					if (p->getStatus() != PlayerStatus_Stop)

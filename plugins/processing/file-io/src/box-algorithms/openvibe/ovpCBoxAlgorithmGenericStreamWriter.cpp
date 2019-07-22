@@ -78,8 +78,7 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 	OV_ERROR_UNLESS_KRF(
 		m_oFile.good(),
 		"Error opening file [" << m_sFilename << "] for writing",
-		OpenViBE::Kernel::ErrorType::BadFileWrite
-	);
+		OpenViBE::Kernel::ErrorType::BadFileWrite);
 
 	m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), (std::streamsize)m_oSwap.getSize());
 
@@ -136,8 +135,7 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 		OV_ERROR_UNLESS_KRF(
 			m_oFile.good(),
 			"Error opening file [" << m_sFilename << "] for writing",
-			OpenViBE::Kernel::ErrorType::BadFileWrite
-		);
+			OpenViBE::Kernel::ErrorType::BadFileWrite);
 	}
 
 	return true;

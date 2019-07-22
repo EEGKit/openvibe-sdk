@@ -260,7 +260,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 		vector<CAbstractTreeNode *> l_oNewChildren;
 
 		//iterator on the children
-		size_t i                = 0;
+		size_t i               = 0;
 		double l_f64TotalValue = 0;
 
 		switch (m_ui64Identifier)
@@ -483,8 +483,8 @@ void CAbstractTree::recognizeSpecialTree(uint64_t& ui64TreeIdentifier, double& f
 	CAbstractTreeParentNode* l_pParent = reinterpret_cast<CAbstractTreeParentNode *>(m_pRoot);
 
 	std::vector<CAbstractTreeNode *>& l_oChildren = l_pParent->getChildren();
-	uint64_t l_ui64NumberOfChildren                 = l_oChildren.size();
-	uint64_t l_ui64NodeIdentifier                   = l_pParent->getOperatorIdentifier();
+	uint64_t l_ui64NumberOfChildren               = l_oChildren.size();
+	uint64_t l_ui64NodeIdentifier                 = l_pParent->getOperatorIdentifier();
 
 	//unary operator/function
 	if (l_ui64NumberOfChildren == 1)

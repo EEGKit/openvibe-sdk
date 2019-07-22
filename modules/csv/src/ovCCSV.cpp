@@ -805,9 +805,8 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 		 || (!m_Chunks.empty() && sample.epoch != m_Chunks.back().epoch)))
 	{
 		m_Chunks.clear();
-		m_Stimulations.erase(
-			std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [&sample](const SStimulationChunk& chunk) { return chunk.stimulationDate < sample.startTime; }),
-			m_Stimulations.end());
+		m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [&sample](const SStimulationChunk& chunk) { return chunk.stimulationDate < sample.startTime; }),
+							 m_Stimulations.end());
 	}
 
 	m_Chunks.push_back(sample);
@@ -868,18 +867,16 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 
 			m_Chunks.insert(m_Chunks.end(), rangeStart, samples.end());
 			const double curTime = m_Chunks.front().startTime;
-			m_Stimulations.erase(
-				std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }),
-				m_Stimulations.end());
+			m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }),
+								 m_Stimulations.end());
 		}
 		else
 		{
 			m_Chunks.clear();
 			m_Chunks.push_back(samples.back());
 			const double curTime = m_Chunks.front().startTime;
-			m_Stimulations.erase(
-				std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }),
-				m_Stimulations.end());
+			m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }),
+								 m_Stimulations.end());
 		}
 	}
 	else

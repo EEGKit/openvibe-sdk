@@ -56,14 +56,12 @@ bool CBoxAlgorithmSignalMerger::processInput(uint32_t index)
 		OV_ERROR_UNLESS_KRF(l_ui64StartTime == l_rDynamicBoxContext.getInputChunkStartTime(i, 0),
 							"Invalid start time [" << l_rDynamicBoxContext.getInputChunkStartTime(i, 0) << "] on input [" << i
 							<< "] (expected value must match start time on input 0 [" << l_ui64StartTime << "])",
-							OpenViBE::Kernel::ErrorType::BadInput
-		);
+							OpenViBE::Kernel::ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(l_ui64EndTime == l_rDynamicBoxContext.getInputChunkEndTime(i, 0),
 							"Invalid end time [" << l_rDynamicBoxContext.getInputChunkEndTime(i, 0) << "] on input [" << i
 							<< "] (expected value must match end time on input 0 [" << l_ui64EndTime << "])",
-							OpenViBE::Kernel::ErrorType::BadInput
-		);
+							OpenViBE::Kernel::ErrorType::BadInput);
 	}
 
 	if (index == l_rStaticBoxContext.getInputCount() - 1)
@@ -73,8 +71,7 @@ bool CBoxAlgorithmSignalMerger::processInput(uint32_t index)
 			OV_ERROR_UNLESS_KRF(l_rDynamicBoxContext.getInputChunkCount(0) >= l_rDynamicBoxContext.getInputChunkCount(i),
 								"Invalid input chunk count [" << l_rDynamicBoxContext.getInputChunkCount(i) << "] on input [" << i
 								<< "] (expected value must be <= to chunk count on input 0 [" << l_rDynamicBoxContext.getInputChunkCount(0) << "])",
-								OpenViBE::Kernel::ErrorType::BadInput
-			);
+								OpenViBE::Kernel::ErrorType::BadInput);
 		}
 	}
 
@@ -116,18 +113,18 @@ bool CBoxAlgorithmSignalMerger::process()
 				if (i == 0)
 				{
 					sampleCountPerBlock = op_pMatrix->getDimensionSize(1);
-					channelCount            = op_pMatrix->getDimensionSize(0);
+					channelCount        = op_pMatrix->getDimensionSize(0);
 				}
 				else
 				{
 					// Check that properties agree
 					OV_ERROR_UNLESS_KRF(sampleCountPerBlock == op_pMatrix->getDimensionSize(1),
-										"Output matrix dimension [" << op_pMatrix->getDimensionSize(1) << "] on input [" << i 
+										"Output matrix dimension [" << op_pMatrix->getDimensionSize(1) << "] on input [" << i
 										<< "] must match sample count per block [" << sampleCountPerBlock << "]",
 										OpenViBE::Kernel::ErrorType::BadInput);
 
 					OV_ERROR_UNLESS_KRF(m_vStreamDecoder[0]->getOutputSamplingRate() == m_vStreamDecoder[i]->getOutputSamplingRate(),
-										"Output sampling rate [" << m_vStreamDecoder[i]->getOutputSamplingRate() << "] on input [" << i 
+										"Output sampling rate [" << m_vStreamDecoder[i]->getOutputSamplingRate() << "] on input [" << i
 										<< "] must match the sampling rate on input 0 [" << m_vStreamDecoder[0]->getOutputSamplingRate() << "]",
 										OpenViBE::Kernel::ErrorType::BadInput);
 
@@ -138,7 +135,7 @@ bool CBoxAlgorithmSignalMerger::process()
 			if (m_vStreamDecoder[i]->isEndReceived()) { endCount++; }
 		}
 
-		OV_ERROR_UNLESS_KRF(!headerCount || headerCount == l_rStaticBoxContext.getInputCount(), 
+		OV_ERROR_UNLESS_KRF(!headerCount || headerCount == l_rStaticBoxContext.getInputCount(),
 							"Received [" << headerCount << "] headers for [" << l_rStaticBoxContext.getInputCount() << "] declared inputs", OpenViBE::Kernel::ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(!bufferCount || bufferCount == l_rStaticBoxContext.getInputCount(),
@@ -163,7 +160,7 @@ bool CBoxAlgorithmSignalMerger::process()
 					ip_pMatrix->setDimensionLabel(0, k, op_pMatrix->getDimensionLabel(0, j));
 				}
 			}
-			const uint64_t l_ui64SamplingRate          = m_vStreamDecoder[0]->getOutputSamplingRate();
+			const uint64_t l_ui64SamplingRate        = m_vStreamDecoder[0]->getOutputSamplingRate();
 			m_pStreamEncoder->getInputSamplingRate() = l_ui64SamplingRate;
 
 			this->getLogManager() << LogLevel_Debug << "Setting sampling rate to " << l_ui64SamplingRate << "\n";

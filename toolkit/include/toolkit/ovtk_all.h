@@ -97,5 +97,3 @@ namespace OpenViBEToolkit
 	//
 	bool initializeStimulationList(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 };
-
-

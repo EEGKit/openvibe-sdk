@@ -18,6 +18,3 @@
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
 //___________________________________________________________________//
-
-
-

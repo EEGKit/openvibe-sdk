@@ -49,7 +49,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 	m_vSelected.clear();
 	for (it = l_vSetting.begin(); it != l_vSetting.end(); ++it)
 	{
-		bool l_bGood = true;
+		bool l_bGood    = true;
 		l_vSettingRange = split(*it, OV_Value_RangeStringSeparator);
 		if (l_vSettingRange.size() == 1)
 		{
@@ -107,8 +107,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 	OV_ERROR_UNLESS_KRF(
 		!l_bHadError || !m_vSelected.empty(),
 		l_sErrorMessage,
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
+		OpenViBE::Kernel::ErrorType::BadSetting);
 
 	return true;
 }
@@ -155,7 +154,7 @@ bool CBoxAlgorithmFrequencyBandSelector::process()
 			for (uint32_t frequencyAbscissaIndex = 0; frequencyAbscissaIndex < ip_pFrequencyAbscissa->getDimensionSize(0); frequencyAbscissaIndex++)
 			{
 				double f64FrequencyAbscissa = ip_pFrequencyAbscissa->getBuffer()[frequencyAbscissaIndex];
-				bool bSelected               = std::any_of(m_vSelected.begin(), m_vSelected.end(), [f64FrequencyAbscissa](const BandRange& currentBandRange)
+				bool bSelected              = std::any_of(m_vSelected.begin(), m_vSelected.end(), [f64FrequencyAbscissa](const BandRange& currentBandRange)
 				{
 					return currentBandRange.first <= f64FrequencyAbscissa
 						   && f64FrequencyAbscissa <= currentBandRange.second;

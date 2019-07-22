@@ -14,8 +14,7 @@ namespace Socket
 		*                       when set to '0', the socket wil start on 
 		*                       an available port.
 		*/
-		virtual bool listen(
-			uint32_t ui32Port) = 0;
+		virtual bool listen(uint32_t ui32Port) = 0;
 
 		virtual IConnection* accept() = 0;
 
@@ -29,5 +28,3 @@ namespace Socket
 
 	extern Socket_API IConnectionServer* createConnectionServer();
 };
-
-

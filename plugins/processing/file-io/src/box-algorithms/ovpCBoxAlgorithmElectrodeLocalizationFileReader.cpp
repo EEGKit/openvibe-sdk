@@ -87,8 +87,7 @@ bool CBoxAlgorithmElectrodeLocalisationFileReader::process()
 	OV_ERROR_UNLESS_KRF(
 		op_pMatrix->getDimensionCount() == 2 && op_pMatrix->getDimensionSize(1) == 3,
 		"Wrong format for electrode localisation matrix loaded from file " << m_sFilename,
-		OpenViBE::Kernel::ErrorType::BadParsing
-	);
+		OpenViBE::Kernel::ErrorType::BadParsing);
 
 	if (m_bHeaderSent == false)
 	{

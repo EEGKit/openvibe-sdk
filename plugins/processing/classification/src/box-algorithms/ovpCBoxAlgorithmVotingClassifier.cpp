@@ -113,8 +113,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 						OV_ERROR_UNLESS_KRF(
 							l_rInput.op_pMatrix->getBufferElementCount() == 2,
 							"Invalid input matrix with [" << l_rInput.op_pMatrix->getBufferElementCount() << "] (expected values must be 1 or 2)",
-							OpenViBE::Kernel::ErrorType::BadInput
-						);
+							OpenViBE::Kernel::ErrorType::BadInput);
 
 						this->getLogManager() << LogLevel_Debug << "Input got two dimensions, the value use for the vote will be the difference between the two values\n";
 						l_rInput.m_bTwoValueInput = true;
@@ -163,7 +162,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 
 	if (l_bCanChoose)
 	{
-		double l_f64ResultScore      = -1E100;
+		double l_f64ResultScore         = -1E100;
 		uint64_t l_ui64ResultClassLabel = m_ui64RejectClassLabel;
 		uint64_t l_ui64Time             = 0;
 

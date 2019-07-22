@@ -11,5 +11,3 @@ namespace OpenViBEToolkit
 		_IsDerivedFromClass_(OpenViBE::IObject, OVTK_ClassId_)
 	};
 };
-
-

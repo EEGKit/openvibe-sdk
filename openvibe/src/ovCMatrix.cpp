@@ -39,7 +39,7 @@ namespace OpenViBE
 
 		protected:
 
-			mutable double* m_pBuffer              = nullptr;
+			mutable double* m_pBuffer                 = nullptr;
 			mutable uint32_t m_ui32BufferElementCount = 0;
 
 			std::vector<uint32_t> m_vDimensionSize;

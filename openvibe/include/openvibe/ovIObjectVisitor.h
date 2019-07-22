@@ -34,5 +34,3 @@ namespace OpenViBE
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_ObjectVisitor)
 	};
 };
-
-

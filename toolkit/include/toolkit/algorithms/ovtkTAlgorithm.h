@@ -127,5 +127,3 @@ namespace OpenViBEToolkit
 		OpenViBE::Kernel::IAlgorithmContext* m_pAlgorithmContext;
 	};
 };
-
-

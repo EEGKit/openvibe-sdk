@@ -33,8 +33,7 @@ bool CAlgorithmPairwiseDecisionVoting::parameterize()
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
 		"Pairwise decision Voting algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+		OpenViBE::Kernel::ErrorType::BadInput);
 
 	return true;
 }
@@ -44,8 +43,7 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
 		"Pairwise decision Voting algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+		OpenViBE::Kernel::ErrorType::BadInput);
 
 #if VOTING_DEBUG
 	std::cout << pClassificationValueList.size() << std::endl;

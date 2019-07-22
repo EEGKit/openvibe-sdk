@@ -23,9 +23,7 @@ namespace OpenViBE
 			explicit CPlayer(const IKernelContext& rKernelContext);
 			virtual ~CPlayer();
 
-			virtual bool setScenario(
-				const CIdentifier& rScenarioIdentifier,
-				const CNameValuePairList* pLocalConfigurationTokens);
+			virtual bool setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens);
 
 			virtual IConfigurationManager& getRuntimeConfigurationManager() const;
 			virtual IScenarioManager& getRuntimeScenarioManager() const;
@@ -50,9 +48,7 @@ namespace OpenViBE
 
 			virtual double getCPUUsage() const;
 
-			virtual bool loop(
-				uint64_t ui64ElapsedTime,
-				uint64_t ui64MaximumTimeToReach);
+			virtual bool loop(uint64_t ui64ElapsedTime, uint64_t ui64MaximumTimeToReach);
 
 			virtual uint64_t getCurrentSimulatedTime() const;
 			virtual uint64_t getCurrentSimulatedLateness() const;

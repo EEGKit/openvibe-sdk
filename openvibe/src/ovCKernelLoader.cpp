@@ -57,8 +57,7 @@ bool CKernelLoaderBase::initialize()
 	return onInitializeCB();
 }
 
-bool CKernelLoaderBase::getKernelDesc(
-	IKernelDesc*& rpKernelDesc)
+bool CKernelLoaderBase::getKernelDesc(IKernelDesc*& rpKernelDesc)
 {
 	if (!isOpen()) { return false; }
 	if (!onGetKernelDescCB) { return false; }
@@ -127,13 +126,9 @@ namespace OpenViBE
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-CKernelLoaderLinux::CKernelLoaderLinux()
-	:m_pFileHandle(NULL)
-{
-}
+CKernelLoaderLinux::CKernelLoaderLinux() : m_pFileHandle(NULL) { }
 
-bool CKernelLoaderLinux::load(
-	const CString& sFileName,
+bool CKernelLoaderLinux::load(const CString& sFileName,
 	CString* pError)
 {
 	if(m_pFileHandle)
@@ -167,8 +162,7 @@ bool CKernelLoaderLinux::load(
 	return true;
 }
 
-bool CKernelLoaderLinux::unload(
-	CString* pError)
+bool CKernelLoaderLinux::unload(CString* pError)
 {
 	if(!m_pFileHandle)
 	{
@@ -206,9 +200,9 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 		if (pError)
 		{
 			LPVOID l_pMessageBuffer = NULL;
-			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
-				NULL, GetLastError(), 0, // Default language
-				(LPTSTR)&l_pMessageBuffer, 0, NULL);
+			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+						  NULL, GetLastError(), 0, // Default language
+						  (LPTSTR)&l_pMessageBuffer, 0, NULL);
 			*pError = (char*)l_pMessageBuffer;
 			LocalFree(l_pMessageBuffer);
 		}
@@ -223,9 +217,9 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 		if (pError)
 		{
 			LPVOID l_pMessageBuffer = NULL;
-			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
-				NULL, GetLastError(), 0, // Default language
-				(LPTSTR)&l_pMessageBuffer, 0, NULL);
+			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+						  NULL, GetLastError(), 0, // Default language
+						  (LPTSTR)&l_pMessageBuffer, 0, NULL);
 			*pError = (char*)l_pMessageBuffer;
 			LocalFree(l_pMessageBuffer);
 		}
@@ -240,8 +234,7 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 	return true;
 }
 
-bool CKernelLoaderWindows::unload(
-	CString* pError)
+bool CKernelLoaderWindows::unload(CString* pError)
 {
 	if (!m_pFileHandle)
 	{

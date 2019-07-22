@@ -45,8 +45,7 @@ namespace OpenViBEPlugins
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier;
 				rBox.getOutputType(0, l_oTypeIdentifier);
-				if (l_oTypeIdentifier == OV_TypeId_Signal || l_oTypeIdentifier == OV_TypeId_Spectrum
-					|| l_oTypeIdentifier == OV_TypeId_StreamedMatrix)
+				if (l_oTypeIdentifier == OV_TypeId_Signal || l_oTypeIdentifier == OV_TypeId_Spectrum || l_oTypeIdentifier == OV_TypeId_StreamedMatrix)
 				{
 					rBox.setInputType(0, l_oTypeIdentifier);
 					return true;
@@ -56,10 +55,7 @@ namespace OpenViBEPlugins
 					rBox.getInputType(0, l_oTypeIdentifier);
 					rBox.setOutputType(0, l_oTypeIdentifier);
 
-					OV_ERROR_KRF(
-						"Invalid output type [" << l_oTypeIdentifier.toString() << "] (expected Signal, Spectrum or Streamed Matrix)",
-						OpenViBE::Kernel::ErrorType::BadOutput
-					);
+					OV_ERROR_KRF("Invalid output type [" << l_oTypeIdentifier.toString() << "] (expected Signal, Spectrum or Streamed Matrix)", OpenViBE::Kernel::ErrorType::BadOutput);
 				}
 				return true;
 			}
@@ -79,10 +75,7 @@ namespace OpenViBEPlugins
 					rBox.getOutputType(0, l_oTypeIdentifier);
 					rBox.setInputType(0, l_oTypeIdentifier);
 
-					OV_ERROR_KRF(
-						"Invalid input type [" << l_oTypeIdentifier.toString() << "] (expected Signal, Spectrum or Streamed Matrix)",
-						OpenViBE::Kernel::ErrorType::BadInput
-					);
+					OV_ERROR_KRF("Invalid input type [" << l_oTypeIdentifier.toString() << "] (expected Signal, Spectrum or Streamed Matrix)", OpenViBE::Kernel::ErrorType::BadInput);
 				}
 			}
 
@@ -183,5 +176,3 @@ namespace OpenViBEPlugins
 		};
 	};
 };
-
-

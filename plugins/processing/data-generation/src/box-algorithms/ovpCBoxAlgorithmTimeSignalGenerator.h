@@ -59,8 +59,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
 			OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmTimeSignalGenerator(); }
 
-			bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
 			{
 				rPrototype.addOutput("Generated signal", OV_TypeId_Signal);
 

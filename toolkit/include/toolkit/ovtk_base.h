@@ -35,5 +35,3 @@ namespace OpenViBEToolkit
 		CHandledType m_oLastHandledValue;
 	};
 };
-
-

@@ -63,11 +63,7 @@ namespace OpenViBE
 			 * preserved when the destination scenario does not contain any elements which use it. In general, this parameter should only be set
 			 * to true when cloning a scenario.
 			 */
-			virtual bool merge(
-				const IScenario& scenario,
-				IScenarioMergeCallback* scenarioMergeCallback,
-				bool mergeSettings,
-				bool preserveIdentifiers) = 0;
+			virtual bool merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, bool mergeSettings, bool preserveIdentifiers) = 0;
 
 			//@}
 			/** \name Box management */
@@ -183,10 +179,7 @@ namespace OpenViBE
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual CIdentifier getNextLinkIdentifierFromBoxOutput(
-				const CIdentifier& previousIdentifier,
-				const CIdentifier& boxIdentifier,
-				uint32_t outputIndex) const = 0;
+			virtual CIdentifier getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t outputIndex) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box
@@ -241,13 +234,8 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error. In such case, \c linkIdentifier remains unchanged.
 			 */
-			virtual bool connect(
-				CIdentifier& linkIdentifier,
-				const CIdentifier& sourceBoxIdentifier,
-				uint32_t sourceBoxOutputIndex,
-				const CIdentifier& targetBoxIdentifier,
-				uint32_t targetBoxInputIndex,
-				const CIdentifier& suggestedLinkIdentifier) = 0;
+			virtual bool connect(CIdentifier& linkIdentifier, const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex,
+								 const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex, const CIdentifier& suggestedLinkIdentifier) = 0;
 
 			/**
 			 * \brief Creates a connection between two boxes
@@ -262,13 +250,8 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error. In such case, \c linkIdentifier remains unchanged.
 			 */
-			virtual bool connect(
-				CIdentifier& linkIdentifier,
-				const CIdentifier& sourceBoxIdentifier,
-				const CIdentifier& sourceBoxOutputIdentifier,
-				const CIdentifier& targetBoxIdentifier,
-				const CIdentifier& targetBoxInputIdentifier,
-				const CIdentifier& suggestedLinkIdentifier) = 0;
+			virtual bool connect(CIdentifier& linkIdentifier, const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier,
+								 const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, const CIdentifier& suggestedLinkIdentifier) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -279,11 +262,7 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool disconnect(
-				const CIdentifier& sourceBoxIdentifier,
-				uint32_t sourceBoxOutputIndex,
-				const CIdentifier& targetBoxIdentifier,
-				uint32_t targetBoxInputIndex) = 0;
+			virtual bool disconnect(const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex, const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -294,12 +273,7 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool disconnect(
-				const CIdentifier& sourceBoxIdentifier,
-				const CIdentifier& sourceBoxOutputIdentifier,
-				const CIdentifier& targetBoxIdentifier,
-				const CIdentifier& targetBoxInputIdentifier) = 0;
-
+			virtual bool disconnect(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -316,10 +290,7 @@ namespace OpenViBE
 			 * \param[out] sourceBoxOutputIndex The output index for the given source box
 			 * \retval true in case of success.
 			 */
-			virtual bool getSourceBoxOutputIndex(
-				const CIdentifier& sourceBoxIdentifier,
-				const CIdentifier& sourceBoxOutputIdentifier,
-				uint32_t& sourceBoxOutputIndex) = 0;
+			virtual bool getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, uint32_t& sourceBoxOutputIndex) = 0;
 
 			/**
 			 * \brief Get the input index of a target, for a specific box
@@ -328,10 +299,7 @@ namespace OpenViBE
 			 * \param[out] sourceBoxOutputIndex The input index for the given target box
 			 * \retval true in case of success.
 			 */
-			virtual bool getTargetBoxInputIndex(
-				const CIdentifier& targetBoxIdentifier,
-				const CIdentifier& targetBoxInputIdentifier,
-				uint32_t& targetBoxInputIndex) = 0;
+			virtual bool getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, uint32_t& targetBoxInputIndex) = 0;
 
 			/**
 			 * \brief  Get the output identifier of a source, for a specific box
@@ -340,10 +308,7 @@ namespace OpenViBE
 			 * \param sourceBoxOutputIdentifier The output identifier for the given source box
 			 * \retval true in case of success.
 			 */
-			virtual bool getSourceBoxOutputIdentifier(
-				const CIdentifier& sourceBoxIdentifier,
-				const uint32_t& sourceBoxOutputIndex,
-				CIdentifier& sourceBoxOutputIdentifier) = 0;
+			virtual bool getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentifier, const uint32_t& sourceBoxOutputIndex, CIdentifier& sourceBoxOutputIdentifier) = 0;
 
 			/**
 			 * \brief  Get the input identifier of a target, for a specific box
@@ -352,10 +317,7 @@ namespace OpenViBE
 			 * \param targetBoxInputIdentifier The input identifier for the given target box
 			 * \retval true in case of success.
 			 */
-			virtual bool getTargetBoxInputIdentifier(
-				const CIdentifier& targetBoxIdentifier,
-				const uint32_t& targetBoxOutputIndex,
-				CIdentifier& targetBoxOutputIdentifier) = 0;
+			virtual bool getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifier, const uint32_t& targetBoxOutputIndex, CIdentifier& targetBoxOutputIdentifier) = 0;
 
 			//@}
 			/** \name Scenario Input/Output and MetaBox management */
@@ -364,40 +326,17 @@ namespace OpenViBE
 			virtual bool setHasIO(bool hasIO) = 0;
 			virtual bool hasIO() const = 0;
 
-			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex,
-											  const CIdentifier& boxIdentifier,
-											  uint32_t boxInputIndex) = 0;
+			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) = 0;
+			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier) = 0;
+			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) = 0;
+			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier) = 0;
 
-			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex,
-											  const CIdentifier& boxIdentifier,
-											  const CIdentifier& boxInputIdentifier) = 0;
-
-			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex,
-											   const CIdentifier& boxIdentifier,
-											   uint32_t boxOutputIndex) = 0;
-
-			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex,
-											   const CIdentifier& boxIdentifier,
-											   const CIdentifier& boxOutputIdentifier) = 0;
-
-			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex,
-											  CIdentifier& boxIdentifier,
-											  uint32_t& boxInputIndex) const = 0;
-
-			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex,
-											  CIdentifier& boxIdentifier,
-											  CIdentifier& boxInputIdentifier) const = 0;
-
-			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex,
-											   CIdentifier& boxIdentifier,
-											   uint32_t& boxOutputIndex) const = 0;
-
-			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex,
-											   CIdentifier& boxIdentifier,
-											   CIdentifier& boxOutputIdentifier) const = 0;
+			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, uint32_t& boxInputIndex) const = 0;
+			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxInputIdentifier) const = 0;
+			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, uint32_t& boxOutputIndex) const = 0;
+			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const = 0;
 
 			virtual bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) = 0;
-
 			virtual bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) = 0;
 
 			virtual bool removeScenarioInput(uint32_t inputIndex) = 0;

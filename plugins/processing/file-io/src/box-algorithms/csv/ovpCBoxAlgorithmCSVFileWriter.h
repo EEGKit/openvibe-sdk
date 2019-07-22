@@ -101,5 +101,3 @@ namespace OpenViBEPlugins
 		};
 	};
 };
-
-

@@ -30,8 +30,7 @@ bool CAlgorithmOVMatrixFileReader::process()
 	OV_ERROR_UNLESS_KRF(
 		OpenViBEToolkit::Tools::Matrix::loadFromTextFile(*op_pMatrix, ip_sFilename->toASCIIString()),
 		"Reading matrix file " << *ip_sFilename << " failed",
-		OpenViBE::Kernel::ErrorType::BadFileRead
-	);
+		OpenViBE::Kernel::ErrorType::BadFileRead);
 
 	return true;
 }

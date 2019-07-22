@@ -596,14 +596,11 @@ void zero (int samples,
 	// http://www.codeproject.com/KB/recipes/one_variable_optimize.aspx?msg=2779038
 
 	template <class TFunction>
-	double BrentMinimize
-	(
-		TFunction& f,	// [in] objective function to minimize
-		double leftEnd,	// [in] smaller value of bracketing interval
-		double rightEnd,	// [in] larger value of bracketing interval
-		double epsilon,	// [in] stopping tolerance
-		double& minLoc	// [out] location of minimum
-	)
+	double BrentMinimize(TFunction& f,	// [in] objective function to minimize
+						 double leftEnd,	// [in] smaller value of bracketing interval
+						 double rightEnd,	// [in] larger value of bracketing interval
+						 double epsilon,	// [in] stopping tolerance
+						 double& minLoc)	// [out] location of minimum
 	{
 		double d, e, m, p, q, r, tol, t2, u, v, w, fu, fv, fw, fx;
 		static const double c                = 0.5 * (3.0 - std::sqrt(5.0));

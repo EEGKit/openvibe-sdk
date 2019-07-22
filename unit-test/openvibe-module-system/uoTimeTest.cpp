@@ -109,7 +109,7 @@ std::tuple<bool, std::vector<uint64_t>> testClock(uint64_t samplePeriod, unsigne
 	std::vector<uint64_t> cumulativeSteps;
 	cumulativeSteps.reserve(sampleCountGuess);
 
-	bool monotonic      = true;
+	bool monotonic        = true;
 	uint64_t startTime    = timeFunction();
 	uint64_t nowTime      = startTime;
 	uint64_t previousTime = nowTime;

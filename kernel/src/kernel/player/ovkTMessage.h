@@ -18,10 +18,8 @@ namespace OpenViBE
 			virtual CIdentifier getIdentifier() const;
 			virtual uint64_t getTime() const;
 
-			virtual bool setIdentifier(
-				const CIdentifier& rIdentifier);
-			virtual bool setTime(
-				uint64_t ui64Time);
+			virtual bool setIdentifier(const CIdentifier& rIdentifier);
+			virtual bool setTime(uint64_t ui64Time);
 
 			_IsDerivedFromClass_Final_(T, OVK_ClassId_Kernel_Player_MessageT)
 

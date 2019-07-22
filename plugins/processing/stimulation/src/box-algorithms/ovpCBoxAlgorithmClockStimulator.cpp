@@ -21,8 +21,7 @@ bool CBoxAlgorithmClockStimulator::initialize()
 	OV_ERROR_UNLESS_KRF(
 		!(l_f64InterstimulationInterval < l_f64MinInterstimulationInterval),
 		"Invalid stimulation interval [" << l_f64InterstimulationInterval << "] (expected value > " << l_f64MinInterstimulationInterval << ")",
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
+		OpenViBE::Kernel::ErrorType::BadSetting);
 
 	m_StimulationInterval  = l_f64InterstimulationInterval;
 	m_SentStimulationCount = 0;

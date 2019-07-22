@@ -154,5 +154,3 @@ namespace OpenViBE
 			return true; \
 		} \
 	}
-
-

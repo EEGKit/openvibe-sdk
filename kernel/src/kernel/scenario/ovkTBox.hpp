@@ -36,25 +36,12 @@ namespace
 
 		CBoxProtoRestriction(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::IBox& rBox): CBoxProto(rKernelContext, rBox) {}
 
-		virtual bool addInput(
-			const OpenViBE::CString& rsName,
-			const OpenViBE::CIdentifier& rTypeIdentifier,
-			const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier,
-			const bool bNotify          = true) { return true; }
+		virtual bool addInput(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) { return true; }
 
-		virtual bool addOutput(
-			const OpenViBE::CString& rsName,
-			const OpenViBE::CIdentifier& rTypeIdentifier,
-			const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-			const bool bNotify          = true) { return true; }
+		virtual bool addOutput(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) { return true; }
 
-		virtual bool addSetting(
-			const OpenViBE::CString& rsName,
-			const OpenViBE::CIdentifier& rTypeIdentifier,
-			const OpenViBE::CString& sDefaultValue,
-			const bool bModifiable                   = false,
-			const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-			const bool bNotify          = true) { return true; }
+		virtual bool addSetting(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& sDefaultValue, const bool bModifiable = false, 
+								const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) { return true; }
 
 		virtual bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag) { return true; }
 		virtual bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag) { return true; }
@@ -66,18 +53,10 @@ namespace
 		CInterfacor() { }
 
 		CInterfacor(const CInterfacor& other)
-			: m_sName(other.m_sName)
-			  , m_oTypeIdentifier(other.m_oTypeIdentifier)
-			  , m_oIdentifier(other.m_oIdentifier)
-			  , m_bDeprecated(other.m_bDeprecated) { }
+			: m_sName(other.m_sName), m_oTypeIdentifier(other.m_oTypeIdentifier), m_oIdentifier(other.m_oIdentifier), m_bDeprecated(other.m_bDeprecated) { }
 
-		CInterfacor(const OpenViBE::CString& name,
-					const OpenViBE::CIdentifier& idType,
-					const OpenViBE::CIdentifier& id)
-			: m_sName(name)
-			  , m_oTypeIdentifier(idType)
-			  , m_oIdentifier(id)
-			  , m_bDeprecated(false) {}
+		CInterfacor(const OpenViBE::CString& name, const OpenViBE::CIdentifier& idType, const OpenViBE::CIdentifier& id) 
+			: m_sName(name), m_oTypeIdentifier(idType), m_oIdentifier(id), m_bDeprecated(false) {}
 
 		OpenViBE::CString m_sName;
 		OpenViBE::CIdentifier m_oTypeIdentifier;
@@ -96,9 +75,7 @@ namespace
 			this->m_bDeprecated = false;
 		}
 
-		CInputOutput(const OpenViBE::CString& name,
-					 const OpenViBE::CIdentifier& idType,
-					 const OpenViBE::CIdentifier& id)
+		CInputOutput(const OpenViBE::CString& name, const OpenViBE::CIdentifier& idType, const OpenViBE::CIdentifier& id)
 			: CInterfacor(name, idType, id) { }
 	};
 
@@ -107,24 +84,13 @@ namespace
 	public:
 		CSetting() { }
 
-		CSetting(const CSetting& s)
-			: CInterfacor(s)
-			  , m_sDefaultValue(s.m_sDefaultValue)
-			  , m_sValue(s.m_sValue)
-			  , m_bMod(s.m_bMod)
+		CSetting(const CSetting& s) : CInterfacor(s), m_sDefaultValue(s.m_sDefaultValue), m_sValue(s.m_sValue), m_bMod(s.m_bMod)
 		{
 			this->m_bDeprecated = false;
 		}
 
-		CSetting(const OpenViBE::CString& name,
-				 const OpenViBE::CIdentifier& idType,
-				 const OpenViBE::CIdentifier& id,
-				 const OpenViBE::CString& defaultValue,
-				 const bool modifiable)
-			: CInterfacor(name, idType, id)
-			  , m_sDefaultValue(defaultValue)
-			  , m_sValue(defaultValue)
-			  , m_bMod(modifiable) { }
+		CSetting(const OpenViBE::CString& name, const OpenViBE::CIdentifier& idType, const OpenViBE::CIdentifier& id, const OpenViBE::CString& defaultValue, const bool modifiable)
+			: CInterfacor(name, idType, id), m_sDefaultValue(defaultValue) , m_sValue(defaultValue) , m_bMod(modifiable) { }
 
 		OpenViBE::CString m_sDefaultValue;
 		OpenViBE::CString m_sValue;
@@ -194,20 +160,10 @@ namespace OpenViBE
 
 			virtual bool setIdentifier(const CIdentifier& rIdentifier)
 			{
-				OV_ERROR_UNLESS_KRF(
-					m_oIdentifier == OV_UndefinedIdentifier,
-					"Trying to overwrite an already set indentifier",
-					ErrorType::BadCall
-				);
-
-				OV_ERROR_UNLESS_KRF(
-					rIdentifier != OV_UndefinedIdentifier,
-					"Trying to set an undefined identifier",
-					ErrorType::BadArgument
-				);
+				OV_ERROR_UNLESS_KRF(m_oIdentifier == OV_UndefinedIdentifier, "Trying to overwrite an already set indentifier", ErrorType::BadCall );
+				OV_ERROR_UNLESS_KRF( rIdentifier != OV_UndefinedIdentifier, "Trying to set an undefined identifier", ErrorType::BadArgument);
 
 				m_oIdentifier = rIdentifier;
-
 				this->notify(BoxModification_IdentifierChanged);
 
 				return true;
@@ -216,9 +172,7 @@ namespace OpenViBE
 			virtual bool setName(const CString& rsName)
 			{
 				m_sName = rsName;
-
 				this->notify(BoxModification_NameChanged);
-
 				return true;
 			}
 
@@ -416,11 +370,9 @@ namespace OpenViBE
 				{
 					case Input:
 					case Output:
-						OV_ERROR_UNLESS_KRF(
-							this->getTypeManager().isStream(typeIdentifier),
-							"While adding " << g_InterfacorTypeToName.at(interfacorType) << " '" << newName << "' to box '" << this->getName() << "', unknown stream type identifier " << typeIdentifier.toString(),
-							ErrorType::BadArgument
-						);
+						OV_ERROR_UNLESS_KRF(this->getTypeManager().isStream(typeIdentifier),
+											"While adding " << g_InterfacorTypeToName.at(interfacorType) << " '" << newName << "' to box '" << this->getName() << "', unknown stream type identifier " << typeIdentifier.toString(),
+											ErrorType::BadArgument);
 						break;
 					case Setting:
 						break;
@@ -448,11 +400,8 @@ namespace OpenViBE
 				m_Interfacors[interfacorType][position]->m_sName    = uniqueName;
 				m_InterfacorNameToIndex[interfacorType][uniqueName] = position;
 
-				OV_ERROR_UNLESS_KRF(
-					m_InterfacorNameToIndex[interfacorType].size() == m_Interfacors[interfacorType].size(),
-					"Box " << m_sName << " has corrupted name map storage",
-					ErrorType::BadResourceCreation
-				);
+				OV_ERROR_UNLESS_KRF(m_InterfacorNameToIndex[interfacorType].size() == m_Interfacors[interfacorType].size(),
+									"Box " << m_sName << " has corrupted name map storage", ErrorType::BadResourceCreation);
 
 				if (shouldNotify)
 				{
@@ -505,11 +454,9 @@ namespace OpenViBE
 			virtual bool getInterfacorIdentifier(BoxInterfacorType interfacorType, uint32_t index, CIdentifier& identifier) const
 			{
 				identifier = OV_UndefinedIdentifier;
-				OV_ERROR_UNLESS_KRF(
-					index < m_Interfacors.at(interfacorType).size(),
-					g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(), 
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])", 
+									ErrorType::OutOfBound);
 
 				identifier = m_Interfacors.at(interfacorType)[index]->m_oIdentifier;
 				return true;
@@ -519,11 +466,8 @@ namespace OpenViBE
 			{
 				index   = OV_Value_UndefinedIndexUInt;
 				auto it = m_InterfacorIdentifierToIndex.at(interfacorType).find(identifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex.at(interfacorType).end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with identifier " << identifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex.at(interfacorType).end(),
+									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with identifier " << identifier.toString(), ErrorType::ResourceNotFound);
 
 				index = it->second;
 				return true;
@@ -533,11 +477,7 @@ namespace OpenViBE
 			{
 				index   = OV_Value_UndefinedIndexUInt;
 				auto it = m_InterfacorNameToIndex.at(interfacorType).find(name);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorNameToIndex.at(interfacorType).end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << name,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorNameToIndex.at(interfacorType).end(), "Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
 
 				index = it->second;
 				return true;
@@ -546,10 +486,7 @@ namespace OpenViBE
 
 			virtual bool getInterfacorType(BoxInterfacorType interfacorType, uint32_t index, CIdentifier& typeIdentifier) const
 			{
-				OV_ERROR_UNLESS_KRF(
-					index < m_Interfacors.at(interfacorType).size(),
-					g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
-					ErrorType::OutOfBound);
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(), g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])", ErrorType::OutOfBound);
 
 				typeIdentifier = m_Interfacors.at(interfacorType)[index]->m_oTypeIdentifier;
 				return true;
@@ -558,11 +495,8 @@ namespace OpenViBE
 			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const CIdentifier& identifier, CIdentifier& typeIdentifier) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(interfacorType).find(identifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex.at(interfacorType).end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex.at(interfacorType).end(),
+									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->getInterfacorType(interfacorType, it->second, typeIdentifier);
 			}
@@ -570,11 +504,8 @@ namespace OpenViBE
 			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const CString& name, CIdentifier& typeIdentifier) const
 			{
 				auto it = m_InterfacorNameToIndex.at(interfacorType).find(name);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorNameToIndex.at(interfacorType).end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << name,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorNameToIndex.at(interfacorType).end(),
+									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
 
 				return this->getInterfacorType(interfacorType, it->second, typeIdentifier);
 			}
@@ -582,11 +513,9 @@ namespace OpenViBE
 
 			virtual bool getInterfacorName(BoxInterfacorType interfacorType, uint32_t index, CString& name) const
 			{
-				OV_ERROR_UNLESS_KRF(
-					index < m_Interfacors.at(interfacorType).size(),
-					g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(),
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
+					ErrorType::OutOfBound);
 
 				name = m_Interfacors.at(interfacorType)[index]->m_sName;
 				return true;
@@ -595,11 +524,8 @@ namespace OpenViBE
 			virtual bool getInterfacorName(BoxInterfacorType interfacorType, const CIdentifier& identifier, CString& name) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(interfacorType).find(identifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex.at(interfacorType).end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex.at(interfacorType).end(),
+									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->getInputName(it->second, name);
 			}
@@ -610,11 +536,9 @@ namespace OpenViBE
 				{
 					OV_WARNING_K("DUH");
 				}
-				OV_ERROR_UNLESS_KRF(
-					index < m_Interfacors.at(interfacorType).size(),
-					g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(),
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
+					ErrorType::OutOfBound);
 
 				value = m_Interfacors.at(interfacorType)[index]->m_bDeprecated;
 				return true;
@@ -623,11 +547,8 @@ namespace OpenViBE
 			virtual bool getInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const CIdentifier& identifier, bool& value) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(interfacorType).find(identifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex.at(interfacorType).end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex.at(interfacorType).end(), 
+									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->getInterfacorDeprecatedStatus(interfacorType, it->second, value);
 			}
@@ -659,21 +580,17 @@ namespace OpenViBE
 				{
 					case Input:
 					case Output:
-						OV_ERROR_UNLESS_KRF(
-							this->getTypeManager().isStream(typeIdentifier),
-							"While changing box '" << this->getName() << "' " << g_InterfacorTypeToName.at(interfacorType) << " type, unknown stream type identifier " << typeIdentifier.toString(),
-							ErrorType::BadArgument
-						);
+						OV_ERROR_UNLESS_KRF(this->getTypeManager().isStream(typeIdentifier),
+											"While changing box '" << this->getName() << "' " << g_InterfacorTypeToName.at(interfacorType) << " type, unknown stream type identifier " << typeIdentifier.toString(),
+											ErrorType::BadArgument);
 						break;
 					case Setting:
 						break;
 				}
 
-				OV_ERROR_UNLESS_KRF(
-					index < m_Interfacors.at(interfacorType).size(),
-					g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(),
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
+									ErrorType::OutOfBound);
 
 				if (m_Interfacors[interfacorType][index]->m_oTypeIdentifier == typeIdentifier) { return true; }
 
@@ -699,11 +616,9 @@ namespace OpenViBE
 			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CIdentifier& identifier, const CIdentifier& typeIdentifier)
 			{
 				auto it = m_InterfacorIdentifierToIndex[interfacorType].find(identifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex[interfacorType].end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex[interfacorType].end(),
+									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
+									ErrorType::ResourceNotFound);
 
 				return this->setInterfacorType(interfacorType, it->second, typeIdentifier);
 			}
@@ -711,11 +626,8 @@ namespace OpenViBE
 			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeIdentifier)
 			{
 				auto it = m_InterfacorNameToIndex[interfacorType].find(name);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorNameToIndex[interfacorType].end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << name,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorNameToIndex[interfacorType].end(), 
+									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << name, ErrorType::ResourceNotFound);
 
 				return this->setInterfacorType(interfacorType, it->second, typeIdentifier);
 			}
@@ -723,11 +635,9 @@ namespace OpenViBE
 
 			virtual bool setInterfacorName(BoxInterfacorType interfacorType, uint32_t index, const CString& newName)
 			{
-				OV_ERROR_UNLESS_KRF(
-					index < m_Interfacors[interfacorType].size(),
-					g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[interfacorType].size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors[interfacorType].size(),
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[interfacorType].size() - 1) << "])",
+									ErrorType::OutOfBound);
 
 				if (m_Interfacors[interfacorType][index]->m_sName == newName)
 				{
@@ -737,11 +647,9 @@ namespace OpenViBE
 
 				// remove entry from name key map
 				auto it = m_InterfacorNameToIndex[interfacorType].find(m_Interfacors[interfacorType][index]->m_sName);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorNameToIndex[interfacorType].end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << m_Interfacors[interfacorType][index]->m_sName,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorNameToIndex[interfacorType].end(),
+									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with name " << m_Interfacors[interfacorType][index]->m_sName,
+									ErrorType::ResourceNotFound);
 				m_InterfacorNameToIndex[interfacorType].erase(it);
 
 				// check for duplicated name key and update if necessary
@@ -750,9 +658,7 @@ namespace OpenViBE
 				m_Interfacors[interfacorType][index]->m_sName       = uniqueName;
 
 				OV_ERROR_UNLESS_KRF(m_InterfacorNameToIndex[interfacorType].size() == m_Interfacors[interfacorType].size(),
-									"Box " << m_sName << " has corrupted name map storage",
-									ErrorType::BadResourceCreation
-				);
+									"Box " << m_sName << " has corrupted name map storage", ErrorType::BadResourceCreation);
 
 				switch (interfacorType)
 				{
@@ -773,22 +679,17 @@ namespace OpenViBE
 			virtual bool setInterfacorName(BoxInterfacorType interfacorType, const CIdentifier& identifier, const CString& newName)
 			{
 				auto it = m_InterfacorIdentifierToIndex[interfacorType].find(identifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex[interfacorType].end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex[interfacorType].end(),
+									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << " with id " << identifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->setInterfacorName(interfacorType, it->second, newName);
 			}
 
 			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, uint32_t index, bool newValue)
 			{
-				OV_ERROR_UNLESS_KRF(
-					index < m_Interfacors[interfacorType].size(),
-					g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[interfacorType].size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors[interfacorType].size(),
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[interfacorType].size() - 1) << "])",
+									ErrorType::OutOfBound);
 
 				m_Interfacors[interfacorType][index]->m_bDeprecated = newValue;
 
@@ -798,11 +699,8 @@ namespace OpenViBE
 			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const CIdentifier& identifier, bool newValue)
 			{
 				auto it = m_InterfacorIdentifierToIndex[interfacorType].find(identifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex[interfacorType].end(),
-					"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << "  with id " << identifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex[interfacorType].end(),
+									"Failed to find " << g_InterfacorTypeToName.at(interfacorType) << "  with id " << identifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->setInterfacorDeprecatedStatus(interfacorType, it->second, newValue);
 			}
@@ -817,21 +715,16 @@ namespace OpenViBE
 
 			virtual bool removeInput(const uint32_t ui32InputIndex, const bool bNotify = true)
 			{
-				OV_ERROR_UNLESS_KRF(
-					ui32InputIndex < m_Interfacors[Input].size(),
-					"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[Input].size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(ui32InputIndex < m_Interfacors[Input].size(),
+									"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[Input].size() - 1) << "])",
+									ErrorType::OutOfBound);
 
 
 				{
 					CIdentifier* identifierList = nullptr;
 					size_t nbElems              = 0;
 					m_pOwnerScenario->getLinkIdentifierToBoxInputList(m_oIdentifier, ui32InputIndex, &identifierList, &nbElems);
-					for (size_t i = 0; i < nbElems; ++i)
-					{
-						m_pOwnerScenario->disconnect(identifierList[i]);
-					}
+					for (size_t i = 0; i < nbElems; ++i) { m_pOwnerScenario->disconnect(identifierList[i]); }
 					m_pOwnerScenario->releaseIdentifierList(identifierList);
 				}
 
@@ -905,10 +798,7 @@ namespace OpenViBE
 					// Reconnects scenario links
 					for (const auto& link : l_vScenarioLink)
 					{
-						m_pOwnerScenario->setScenarioInputLink(
-							link.first,
-							link.second.first,
-							link.second.second - 1);
+						m_pOwnerScenario->setScenarioInputLink(link.first, link.second.first, link.second.second - 1);
 					}
 				}
 
@@ -922,48 +812,28 @@ namespace OpenViBE
 				for (const auto& link : l_vLink)
 				{
 					CIdentifier newId;
-					m_pOwnerScenario->connect(
-						newId,
-						link.first.first,
-						link.first.second,
-						link.second.first,
-						link.second.second - 1,
-						OV_UndefinedIdentifier);
+					m_pOwnerScenario->connect(newId, link.first.first, link.first.second, link.second.first, link.second.second - 1, OV_UndefinedIdentifier);
 				}
 
 				// erase name key
 				auto itName = m_InterfacorNameToIndex[Input].find(toBeRemovedName);
-				OV_ERROR_UNLESS_KRF(
-					itName != m_InterfacorNameToIndex[Input].end(),
-					"No input found with name " << toBeRemovedName,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(itName != m_InterfacorNameToIndex[Input].end(), "No input found with name " << toBeRemovedName, ErrorType::ResourceNotFound);
 				m_InterfacorNameToIndex[Input].erase(itName);
 
 				// erase identifier key if defined
 				if (toBeRemovedId != OV_UndefinedIdentifier)
 				{
 					auto itIdent = m_InterfacorIdentifierToIndex[Input].find(toBeRemovedId);
-					OV_ERROR_UNLESS_KRF(
-						itIdent != m_InterfacorIdentifierToIndex[Input].end(),
-						"No input found with id " << toBeRemovedId.toString(),
-						ErrorType::ResourceNotFound
-					);
+					OV_ERROR_UNLESS_KRF(itIdent != m_InterfacorIdentifierToIndex[Input].end(), "No input found with id " << toBeRemovedId.toString(), ErrorType::ResourceNotFound);
 					m_InterfacorIdentifierToIndex[Input].erase(itIdent);
 				}
 
-				if (bNotify)
-				{
-					this->notify(BoxModification_InputRemoved, ui32InputIndex);
-				}
+				if (bNotify) { this->notify(BoxModification_InputRemoved, ui32InputIndex); }
 
 				return true;
 			}
 
-			virtual uint32_t getInputCount() const
-			{
-				return this->getInterfacorCount(Input);
-			}
+			virtual uint32_t getInputCount() const { return this->getInterfacorCount(Input); }
 
 			virtual bool getInputType(const uint32_t ui32InputIndex, CIdentifier& rTypeIdentifier) const
 			{
@@ -1000,11 +870,9 @@ namespace OpenViBE
 
 			virtual bool removeOutput(const uint32_t ui32OutputIndex, const bool bNotify = true)
 			{
-				OV_ERROR_UNLESS_KRF(
-					ui32OutputIndex < m_Interfacors[Output].size(),
-					"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[Output].size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(ui32OutputIndex < m_Interfacors[Output].size(),
+									"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[Output].size() - 1) << "])",
+									ErrorType::OutOfBound);
 
 				std::vector<std::pair<std::pair<uint64_t, uint32_t>, std::pair<uint64_t, uint32_t>>> l_vLink;
 
@@ -1091,10 +959,7 @@ namespace OpenViBE
 						// Reconnects scenario links
 						for (const auto& link : l_vScenarioLink)
 						{
-							m_pOwnerScenario->setScenarioOutputLink(
-								link.first,
-								link.second.first,
-								link.second.second - 1);
+							m_pOwnerScenario->setScenarioOutputLink(link.first, link.second.first, link.second.second - 1);
 						}
 					}
 				}
@@ -1110,51 +975,31 @@ namespace OpenViBE
 					for (const auto& link : l_vLink)
 					{
 						CIdentifier newId;
-						m_pOwnerScenario->connect(
-							newId,
-							link.first.first,
-							link.first.second - 1,
-							link.second.first,
-							link.second.second,
-							OV_UndefinedIdentifier);
+						m_pOwnerScenario->connect(newId, link.first.first, link.first.second - 1, link.second.first, link.second.second, OV_UndefinedIdentifier);
 					}
 				}
 
 
 				// erase name key
 				auto itName = m_InterfacorNameToIndex.at(Output).find(toBeRemovedName);
-				OV_ERROR_UNLESS_KRF(
-					itName != m_InterfacorNameToIndex.at(Output).end(),
-					"No output found with name " << toBeRemovedName,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(itName != m_InterfacorNameToIndex.at(Output).end(), "No output found with name " << toBeRemovedName, ErrorType::ResourceNotFound);
 				m_InterfacorNameToIndex.at(Output).erase(itName);
 
 				// erase identifier key if defined
 				if (toBeRemovedId != OV_UndefinedIdentifier)
 				{
 					auto itIdent = m_InterfacorIdentifierToIndex.at(Output).find(toBeRemovedId);
-					OV_ERROR_UNLESS_KRF(
-						itIdent != m_InterfacorIdentifierToIndex.at(Output).end(),
-						"No output found with id " << toBeRemovedId.toString(),
-						ErrorType::ResourceNotFound
-					);
+					OV_ERROR_UNLESS_KRF(itIdent != m_InterfacorIdentifierToIndex.at(Output).end(), "No output found with id " << toBeRemovedId.toString(), ErrorType::ResourceNotFound);
 
 					m_InterfacorIdentifierToIndex.at(Output).erase(itIdent);
 				}
 
-				if (bNotify)
-				{
-					this->notify(BoxModification_OutputRemoved, ui32OutputIndex);
-				}
+				if (bNotify) { this->notify(BoxModification_OutputRemoved, ui32OutputIndex); }
 
 				return true;
 			}
 
-			virtual uint32_t getOutputCount() const
-			{
-				return this->getInterfacorCount(Output);
-			}
+			virtual uint32_t getOutputCount() const { return this->getInterfacorCount(Output); }
 
 			virtual bool getOutputType(const uint32_t ui32OutputIndex, CIdentifier& rTypeIdentifier) const
 			{
@@ -1178,14 +1023,8 @@ namespace OpenViBE
 
 			virtual bool addInterfacorTypeSupport(BoxInterfacorType interfacorType, const CIdentifier& typeIdentifier)
 			{
-				if (interfacorType == Input)
-				{
-					m_vSupportInputType.push_back(typeIdentifier);
-				}
-				else if (interfacorType == Output)
-				{
-					m_vSupportOutputType.push_back(typeIdentifier);
-				}
+				if (interfacorType == Input) { m_vSupportInputType.push_back(typeIdentifier); }
+				else if (interfacorType == Output) { m_vSupportOutputType.push_back(typeIdentifier); }
 
 				return false;
 			}
@@ -1245,11 +1084,7 @@ namespace OpenViBE
 				const Plugins::IPluginObjectDesc* l_pPluginObjectDescriptor = this->getKernelContext().getPluginManager().getPluginObjectDescCreating(rTypeIdentifier);
 				const Plugins::IBoxAlgorithmDesc* l_pBoxAlgorithmDescriptor = dynamic_cast<const Plugins::IBoxAlgorithmDesc*>(l_pPluginObjectDescriptor);
 
-				OV_ERROR_UNLESS_KRF(
-					l_pBoxAlgorithmDescriptor,
-					"Tried to initialize with an unregistered algorithm",
-					ErrorType::Internal
-				);
+				OV_ERROR_UNLESS_KRF(l_pBoxAlgorithmDescriptor, "Tried to initialize with an unregistered algorithm", ErrorType::Internal);
 
 				//We use the neutralized version of CBoxProto to just initialize the stream restriction mecanism
 				CBoxProtoRestriction oTempProto(this->getKernelContext(), *this);
@@ -1257,25 +1092,10 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual std::vector<CIdentifier> getInputSupportTypes() const
-			{
-				return m_vSupportInputType;
-			}
-
-			virtual std::vector<CIdentifier> getOutputSupportTypes() const
-			{
-				return m_vSupportOutputType;
-			}
-
-			virtual void clearOutputSupportTypes()
-			{
-				m_vSupportOutputType.clear();
-			}
-
-			virtual void clearInputSupportTypes()
-			{
-				m_vSupportInputType.clear();
-			}
+			virtual std::vector<CIdentifier> getInputSupportTypes() const { return m_vSupportInputType; }
+			virtual std::vector<CIdentifier> getOutputSupportTypes() const { return m_vSupportOutputType; }
+			virtual void clearOutputSupportTypes() { m_vSupportOutputType.clear(); }
+			virtual void clearInputSupportTypes() { m_vSupportInputType.clear(); }
 
 		private:
 			CIdentifier getUnusedInterfacorIdentifier(BoxInterfacorType interfacorType, const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const
@@ -1314,14 +1134,7 @@ namespace OpenViBE
 				return this->getUnusedInterfacorIdentifier(Output);
 			}
 
-			virtual bool addSetting(
-				const CString& rsName,
-				const CIdentifier& rTypeIdentifier,
-				const CString& sDefaultValue,
-				const uint32_t ui32Index,
-				const bool bModifiability,
-				const CIdentifier& rIdentifier,
-				const bool bNotify)
+			virtual bool addSetting(const CString& rsName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const uint32_t ui32Index, const bool bModifiability, const CIdentifier& rIdentifier, const bool bNotify)
 			{
 				CString l_sValue(sDefaultValue);
 				if (this->getTypeManager().isEnumeration(rTypeIdentifier))
@@ -1370,11 +1183,9 @@ namespace OpenViBE
 				}
 				else
 				{
-					OV_ERROR_UNLESS_KRF(
-						ui32Index <= static_cast<uint32_t>(m_Interfacors[Setting].size()),
-						"Tried to push '" << rsName << "' to slot " << ui32Index << " with the array size being " << static_cast<uint32_t>(m_Interfacors[Setting].size()),
-						ErrorType::OutOfBound
-					);
+					OV_ERROR_UNLESS_KRF(ui32Index <= static_cast<uint32_t>(m_Interfacors[Setting].size()),
+										"Tried to push '" << rsName << "' to slot " << ui32Index << " with the array size being " << static_cast<uint32_t>(m_Interfacors[Setting].size()),
+										ErrorType::OutOfBound);
 
 					auto l_it = m_Interfacors[Setting].begin();
 					l_it += l_ui32Index;
@@ -1392,17 +1203,11 @@ namespace OpenViBE
 				m_Interfacors[Setting][l_ui32InsertLocation]->m_sName = newName;
 				m_InterfacorNameToIndex[Setting][newName]             = l_ui32InsertLocation;
 
-				OV_ERROR_UNLESS_KRF(
-					m_InterfacorNameToIndex.at(Setting).size() == m_Interfacors[Setting].size(),
-					"Box " << m_sName << " has corrupted name map storage",
-					ErrorType::BadResourceCreation
-				);
+				OV_ERROR_UNLESS_KRF(m_InterfacorNameToIndex.at(Setting).size() == m_Interfacors[Setting].size(),
+									"Box " << m_sName << " has corrupted name map storage", ErrorType::BadResourceCreation);
 
 				//if this setting is modifiable, keep its index
-				if (bModifiability)
-				{
-					m_vModifiableSettingIndexes.push_back(l_ui32Index);
-				}
+				if (bModifiability) { m_vModifiableSettingIndexes.push_back(l_ui32Index); }
 
 				this->getLogManager() << LogLevel_Debug
 						<< "Pushed '" << m_Interfacors.at(Setting)[l_ui32InsertLocation]->m_sName << "' : '"
@@ -1421,11 +1226,7 @@ namespace OpenViBE
 			virtual bool removeSetting(const uint32_t ui32SettingIndex, const bool bNotify = true)
 			{
 				auto it = m_Interfacors[Setting].begin() + ui32SettingIndex;
-				OV_ERROR_UNLESS_KRF(
-					it != m_Interfacors[Setting].end(),
-					"No setting found at index " << ui32SettingIndex,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_Interfacors[Setting].end(), "No setting found at index " << ui32SettingIndex, ErrorType::ResourceNotFound);
 
 				CIdentifier toBeRemovedId = m_Interfacors[Setting][ui32SettingIndex]->m_oIdentifier;
 				CString toBeRemovedName   = m_Interfacors[Setting][ui32SettingIndex]->m_sName;
@@ -1435,11 +1236,8 @@ namespace OpenViBE
 				//update the modifiable setting indexes
 				for (auto it2 = m_vModifiableSettingIndexes.begin(); it2 != m_vModifiableSettingIndexes.end();)
 				{
-					if (*it2 == ui32SettingIndex)
-					{
-						it2 = m_vModifiableSettingIndexes.erase(it2);
-					}
-					else if (*it2 > ui32SettingIndex)
+					if (*it2 == ui32SettingIndex) { it2 = m_vModifiableSettingIndexes.erase(it2); }
+					else if (*it2 > ui32SettingIndex) 
 					{
 						*it2 -= 1;
 						++it2;
@@ -1448,22 +1246,14 @@ namespace OpenViBE
 
 				// erase name key
 				auto itName = m_InterfacorNameToIndex.at(Setting).find(toBeRemovedName);
-				OV_ERROR_UNLESS_KRF(
-					itName != m_InterfacorNameToIndex.at(Setting).end(),
-					"No setting found with name " << toBeRemovedName,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(itName != m_InterfacorNameToIndex.at(Setting).end(), "No setting found with name " << toBeRemovedName, ErrorType::ResourceNotFound );
 				m_InterfacorNameToIndex.at(Setting).erase(itName);
 
 				// erase identifier key if defined
 				if (toBeRemovedId != OV_UndefinedIdentifier)
 				{
 					auto itIdent = m_InterfacorIdentifierToIndex.at(Setting).find(toBeRemovedId);
-					OV_ERROR_UNLESS_KRF(
-						itIdent != m_InterfacorIdentifierToIndex.at(Setting).end(),
-						"No setting found with id " << toBeRemovedId.toString(),
-						ErrorType::ResourceNotFound
-					);
+					OV_ERROR_UNLESS_KRF(itIdent != m_InterfacorIdentifierToIndex.at(Setting).end(), "No setting found with id " << toBeRemovedId.toString(), ErrorType::ResourceNotFound);
 					m_InterfacorIdentifierToIndex.at(Setting).erase(itIdent);
 				}
 
@@ -1476,10 +1266,7 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual uint32_t getSettingCount() const
-			{
-				return this->getInterfacorCount(Setting);
-			}
+			virtual uint32_t getSettingCount() const { return this->getInterfacorCount(Setting); }
 
 			virtual bool hasSettingWithName(const CString& rName) const
 			{
@@ -1498,11 +1285,9 @@ namespace OpenViBE
 
 			virtual bool getSettingDefaultValue(const uint32_t ui32SettingIndex, CString& rDefaultValue) const
 			{
-				OV_ERROR_UNLESS_KRF(
-					ui32SettingIndex < m_Interfacors.at(Setting).size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(),
+									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+									ErrorType::OutOfBound);
 
 				rDefaultValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[ui32SettingIndex])->m_sDefaultValue;
 				return true;
@@ -1511,11 +1296,7 @@ namespace OpenViBE
 			virtual bool getSettingDefaultValue(const CIdentifier& rIdentifier, CString& rDefaultValue) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex.at(Setting).end(),
-					"Failed to find setting with id " << rIdentifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex.at(Setting).end(), "Failed to find setting with id " << rIdentifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->getSettingDefaultValue(it->second, rDefaultValue);
 			}
@@ -1523,22 +1304,16 @@ namespace OpenViBE
 			virtual bool getSettingDefaultValue(const CString& rsName, CString& rDefaultValue) const
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorNameToIndex.at(Setting).end(),
-					"Failed to find setting with name " << rsName,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorNameToIndex.at(Setting).end(), "Failed to find setting with name " << rsName, ErrorType::ResourceNotFound);
 
 				return this->getSettingDefaultValue(it->second, rDefaultValue);
 			}
 
 			virtual bool getSettingValue(const uint32_t ui32SettingIndex, CString& rValue) const
 			{
-				OV_ERROR_UNLESS_KRF(
-					ui32SettingIndex < m_Interfacors.at(Setting).size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(), 
+									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])", 
+									ErrorType::OutOfBound);
 
 				rValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[ui32SettingIndex])->m_sValue;
 				return true;
@@ -1547,11 +1322,7 @@ namespace OpenViBE
 			virtual bool getSettingValue(const CIdentifier& rIdentifier, CString& rValue) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex.at(Setting).end(),
-					"Failed to find setting with id " << rIdentifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex.at(Setting).end(), "Failed to find setting with id " << rIdentifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->getSettingValue(it->second, rValue);
 			}
@@ -1559,22 +1330,16 @@ namespace OpenViBE
 			virtual bool getSettingValue(const CString& rsName, CString& rValue) const
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorNameToIndex.at(Setting).end(),
-					"Failed to find setting with name " << rsName,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorNameToIndex.at(Setting).end(), "Failed to find setting with name " << rsName, ErrorType::ResourceNotFound);
 
 				return this->getSettingValue(it->second, rValue);
 			}
 
 			virtual bool getSettingMod(const uint32_t ui32SettingIndex, bool& rValue) const
 			{
-				OV_ERROR_UNLESS_KRF(
-					ui32SettingIndex < m_Interfacors.at(Setting).size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(),
+									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+									ErrorType::OutOfBound);
 
 				rValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[ui32SettingIndex])->m_bMod;
 				return true;
@@ -1583,11 +1348,8 @@ namespace OpenViBE
 			virtual bool getSettingMod(const CIdentifier& rIdentifier, bool& rValue) const
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex.at(Setting).end(),
-					"Failed to find setting with id " << rIdentifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex.at(Setting).end(),
+									"Failed to find setting with id " << rIdentifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->getSettingMod(it->second, rValue);
 			}
@@ -1595,11 +1357,8 @@ namespace OpenViBE
 			virtual bool getSettingMod(const CString& rsName, bool& rValue) const
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorNameToIndex.at(Setting).end(),
-					"Failed to find setting with name " << rsName,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorNameToIndex.at(Setting).end(),
+									"Failed to find setting with name " << rsName, ErrorType::ResourceNotFound);
 
 				return this->getSettingMod(it->second, rValue);
 			}
@@ -1616,11 +1375,9 @@ namespace OpenViBE
 
 			virtual bool setSettingDefaultValue(const uint32_t ui32SettingIndex, const CString& rDefaultValue)
 			{
-				OV_ERROR_UNLESS_KRF(
-					ui32SettingIndex < m_Interfacors.at(Setting).size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(),
+									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+									ErrorType::OutOfBound);
 
 				std::static_pointer_cast<CSetting>(m_Interfacors[Setting][ui32SettingIndex])->m_sDefaultValue = rDefaultValue;
 
@@ -1632,11 +1389,7 @@ namespace OpenViBE
 			virtual bool setSettingDefaultValue(const CIdentifier& rIdentifier, const CString& rDefaultValue)
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex.at(Setting).end(),
-					"Failed to find setting with id " << rIdentifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex.at(Setting).end(), "Failed to find setting with id " << rIdentifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->setSettingDefaultValue(it->second, rDefaultValue);
 			}
@@ -1644,21 +1397,15 @@ namespace OpenViBE
 			virtual bool setSettingDefaultValue(const CString& rsName, const CString& rDefaultValue)
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorNameToIndex.at(Setting).end(),
-					"Failed to find setting with name " << rsName,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorNameToIndex.at(Setting).end(), "Failed to find setting with name " << rsName, ErrorType::ResourceNotFound);
 				return this->setSettingDefaultValue(it->second, rDefaultValue);
 			}
 
 			virtual bool setSettingValue(const uint32_t ui32SettingIndex, const CString& rValue, const bool bNotify = true)
 			{
-				OV_ERROR_UNLESS_KRF(
-					ui32SettingIndex < m_Interfacors.at(Setting).size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(), 
+									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])", 
+									ErrorType::OutOfBound);
 
 				auto setting = std::static_pointer_cast<CSetting>(m_Interfacors[Setting][ui32SettingIndex]);
 				if (setting->m_sValue != rValue)
@@ -1678,11 +1425,7 @@ namespace OpenViBE
 			virtual bool setSettingValue(const CIdentifier& rIdentifier, const CString& rValue)
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex.at(Setting).end(),
-					"Failed to find setting with id " << rIdentifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex.at(Setting).end(), "Failed to find setting with id " << rIdentifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->setSettingValue(it->second, rValue);
 			}
@@ -1690,22 +1433,16 @@ namespace OpenViBE
 			virtual bool setSettingValue(const CString& rsName, const CString& rValue)
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorNameToIndex.at(Setting).end(),
-					"Failed to find setting with name " << rsName,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorNameToIndex.at(Setting).end(), "Failed to find setting with name " << rsName, ErrorType::ResourceNotFound);
 
 				return this->setSettingValue(it->second, rValue);
 			}
 
 			virtual bool setSettingMod(const uint32_t ui32SettingIndex, const bool rValue)
 			{
-				OV_ERROR_UNLESS_KRF(
-					ui32SettingIndex < m_Interfacors.at(Setting).size(),
-					"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(),
+									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+									ErrorType::OutOfBound);
 
 				std::static_pointer_cast<CSetting>(m_Interfacors[Setting][ui32SettingIndex])->m_bMod = rValue;
 
@@ -1716,11 +1453,7 @@ namespace OpenViBE
 			virtual bool setSettingMod(const CString& rsName, const bool rValue)
 			{
 				auto it = m_InterfacorNameToIndex.at(Setting).find(rsName);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorNameToIndex.at(Setting).end(),
-					"Failed to find setting with name " << rsName,
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorNameToIndex.at(Setting).end(), "Failed to find setting with name " << rsName, ErrorType::ResourceNotFound);
 
 				return this->setSettingMod(it->second, rValue);
 			}
@@ -1728,27 +1461,19 @@ namespace OpenViBE
 			virtual bool setSettingMod(const CIdentifier& rIdentifier, const bool rValue)
 			{
 				auto it = m_InterfacorIdentifierToIndex.at(Setting).find(rIdentifier);
-				OV_ERROR_UNLESS_KRF(
-					it != m_InterfacorIdentifierToIndex.at(Setting).end(),
-					"Failed to find setting with id " << rIdentifier.toString(),
-					ErrorType::ResourceNotFound
-				);
+				OV_ERROR_UNLESS_KRF(it != m_InterfacorIdentifierToIndex.at(Setting).end(), "Failed to find setting with id " << rIdentifier.toString(), ErrorType::ResourceNotFound);
 
 				return this->setSettingMod(it->second, rValue);
 			}
 
 			virtual bool swapInterfacors(BoxInterfacorType interfacorType, uint32_t indexA, uint32_t indexB)
 			{
-				OV_ERROR_UNLESS_KRF(
-					indexA < m_Interfacors.at(interfacorType).size(),
-					g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexA << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
-				OV_ERROR_UNLESS_KRF(
-					indexB < m_Interfacors.at(interfacorType).size(),
-					g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexB << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(indexA < m_Interfacors.at(interfacorType).size(),
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexA << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
+									ErrorType::OutOfBound);
+				OV_ERROR_UNLESS_KRF(indexB < m_Interfacors.at(interfacorType).size(),
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexB << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
+									ErrorType::OutOfBound);
 
 				CString nameA;
 				CIdentifier identifierA;
@@ -1821,17 +1546,11 @@ namespace OpenViBE
 
 			virtual bool updateInterfacorIdentifier(BoxInterfacorType interfacorType, uint32_t index, const CIdentifier& newIdentifier)
 			{
-				OV_ERROR_UNLESS_KRF(
-					index < m_Interfacors.at(interfacorType).size(),
-					g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
-					ErrorType::OutOfBound
-				);
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(),
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+									ErrorType::OutOfBound);
 
-				OV_ERROR_UNLESS_KRF(
-					newIdentifier != OV_UndefinedIdentifier,
-					g_InterfacorTypeToName.at(interfacorType) << " identifier can not be undefined",
-					ErrorType::BadArgument
-				);
+				OV_ERROR_UNLESS_KRF(newIdentifier != OV_UndefinedIdentifier, g_InterfacorTypeToName.at(interfacorType) << " identifier can not be undefined", ErrorType::BadArgument);
 
 				CIdentifier oldIdentifier;
 				this->getInterfacorIdentifier(interfacorType, index, oldIdentifier);
@@ -1840,11 +1559,9 @@ namespace OpenViBE
 				{
 					// identifier key update is necessary
 					auto it = m_InterfacorIdentifierToIndex.at(interfacorType).find(newIdentifier);
-					OV_ERROR_UNLESS_KRF(
-						it == m_InterfacorIdentifierToIndex.at(interfacorType).end(),
-						"Conflict in " << g_InterfacorTypeToName.at(interfacorType) << " identifiers. An entity with the same identifier exists.",
-						ErrorType::ResourceNotFound
-					);
+					OV_ERROR_UNLESS_KRF(it == m_InterfacorIdentifierToIndex.at(interfacorType).end(),
+										"Conflict in " << g_InterfacorTypeToName.at(interfacorType) << " identifiers. An entity with the same identifier exists.",
+										ErrorType::ResourceNotFound);
 					m_Interfacors[interfacorType][index]->m_oIdentifier          = newIdentifier;
 					m_InterfacorIdentifierToIndex[interfacorType][newIdentifier] = index;
 					// remove the old identifier key

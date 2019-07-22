@@ -77,7 +77,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 		OV_ERROR_UNLESS_KRF(m_SignalDecoder.decode(chunk),
 							"Failed to decode chunk",
 							ErrorType::Internal);
-		IMatrix* inputMatrix       = m_SignalDecoder.getOutputMatrix();
+		IMatrix* inputMatrix         = m_SignalDecoder.getOutputMatrix();
 		uint64_t inputChunkStartTime = dynamicBoxContext.getInputChunkStartTime(inputSignalIndex, chunk);
 		uint64_t inputChunkEndTime   = dynamicBoxContext.getInputChunkEndTime(inputSignalIndex, chunk);
 

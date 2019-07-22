@@ -34,8 +34,7 @@ bool CAlgorithmPairwiseStrategyPKPD::parameterize()
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
 		"Pairwise decision PKPD algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+		OpenViBE::Kernel::ErrorType::BadInput);
 
 	return true;
 }
@@ -45,8 +44,7 @@ bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& p
 	OV_ERROR_UNLESS_KRF(
 		m_ui32ClassCount >= 2,
 		"Pairwise decision PKPD algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+		OpenViBE::Kernel::ErrorType::BadInput);
 
 	double* l_pProbabilityMatrix = new double[m_ui32ClassCount * m_ui32ClassCount];
 
@@ -59,9 +57,9 @@ bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& p
 	for (size_t i = 0; i < pClassificationValueList.size(); ++i)
 	{
 		SClassificationInfo& l_rTemp                                                = pClassificationValueList[i];
-		const uint32_t l_f64FirstIndex                                                = static_cast<uint32_t>(l_rTemp.m_f64FirstClass);
-		const uint32_t l_f64SecondIndex                                               = static_cast<uint32_t>(l_rTemp.m_f64SecondClass);
-		const double* l_pValues                                                    = l_rTemp.m_pClassificationValue->getBuffer();
+		const uint32_t l_f64FirstIndex                                              = static_cast<uint32_t>(l_rTemp.m_f64FirstClass);
+		const uint32_t l_f64SecondIndex                                             = static_cast<uint32_t>(l_rTemp.m_f64SecondClass);
+		const double* l_pValues                                                     = l_rTemp.m_pClassificationValue->getBuffer();
 		l_pProbabilityMatrix[l_f64FirstIndex * m_ui32ClassCount + l_f64SecondIndex] = l_pValues[0];
 		l_pProbabilityMatrix[l_f64SecondIndex * m_ui32ClassCount + l_f64FirstIndex] = 1 - l_pValues[0];
 	}

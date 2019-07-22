@@ -18,20 +18,12 @@ bool CBoxAlgorithmStimulationVoter::initialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
-	OV_ERROR_UNLESS_KRF(
-		l_rStaticBoxContext.getInputCount() == 1,
-		"Invalid number of inputs [" << l_rStaticBoxContext.getInputCount() << "] (expected 1 single input)",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+	OV_ERROR_UNLESS_KRF(l_rStaticBoxContext.getInputCount() == 1, "Invalid number of inputs [" << l_rStaticBoxContext.getInputCount() << "] (expected 1 single input)", OpenViBE::Kernel::ErrorType::BadInput);
 
 	CIdentifier l_oTypeIdentifier;
 	l_rStaticBoxContext.getInputType(0, l_oTypeIdentifier);
 
-	OV_ERROR_UNLESS_KRF(
-		l_oTypeIdentifier == OV_TypeId_Stimulations,
-		"Invalid input type [" << l_oTypeIdentifier.toString() << "] (expected OV_TypeId_Stimulations type)",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+	OV_ERROR_UNLESS_KRF(l_oTypeIdentifier == OV_TypeId_Stimulations, "Invalid input type [" << l_oTypeIdentifier.toString() << "] (expected OV_TypeId_Stimulations type)", OpenViBE::Kernel::ErrorType::BadInput);
 
 	m_pEncoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamEncoder));
 	m_pEncoder->initialize();
@@ -99,7 +91,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 			{
 				uint64_t l_ui64StimulationIdentifier = op_pStimulationSet->getStimulationIdentifier(k);
 				uint64_t l_ui64StimulationDate       = op_pStimulationSet->getStimulationDate(k);
-				m_ui64LatestStimulusDate           = std::max(m_ui64LatestStimulusDate, l_ui64StimulationDate);
+				m_ui64LatestStimulusDate             = std::max(m_ui64LatestStimulusDate, l_ui64StimulationDate);
 				if (ITimeArithmetics::timeToSeconds(m_ui64LatestStimulusDate - l_ui64StimulationDate) <= m_f64TimeWindow)
 				{
 					// Stimulus is fresh, append

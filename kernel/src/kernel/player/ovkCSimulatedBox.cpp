@@ -44,8 +44,7 @@ bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentifier
 	OV_ERROR_UNLESS_KRF(
 		m_rScheduler.getPlayer().getRuntimeScenarioManager().isScenario(rScenarioIdentifier),
 		"Scenario with identifier " << rScenarioIdentifier.toString() << " does not exist",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	m_pScenario = &m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(rScenarioIdentifier);
 	return true;
@@ -88,8 +87,7 @@ bool CSimulatedBox::initialize()
 	OV_ERROR_UNLESS_KRF(
 		m_pBoxAlgorithm,
 		"Could not create box algorithm with class id " << m_pBox->getAlgorithmClassIdentifier().toString(),
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
@@ -97,8 +95,7 @@ bool CSimulatedBox::initialize()
 			OV_ERROR_UNLESS_KRF(
 				m_pBoxAlgorithm->initialize(l_oBoxAlgorithmContext),
 				"Box algorithm <" << m_pBox->getName() << "> initialization failed",
-				ErrorType::Internal
-			);
+				ErrorType::Internal);
 		}
 	}
 
@@ -115,8 +112,7 @@ bool CSimulatedBox::uninitialize()
 			OV_ERROR_UNLESS_KRF(
 				m_pBoxAlgorithm->uninitialize(l_oBoxAlgorithmContext),
 				"Box algorithm <" << m_pBox->getName() << "> uninitialization failed",
-				ErrorType::Internal
-			);
+				ErrorType::Internal);
 		}
 	}
 
@@ -146,8 +142,7 @@ bool CSimulatedBox::processClock()
 					<< ITimeArithmetics::timeToSeconds(l_ui64NewClockFrequency) << "hz) "
 					<< "than what the scheduler can handle (" << (m_rScheduler.getFrequency()<<32) << " == "
 					<< ITimeArithmetics::timeToSeconds(m_rScheduler.getFrequency()<<32) << "hz)",
-					ErrorType::BadConfig
-				);
+					ErrorType::BadConfig);
 
 				// note: 1LL should be left shifted 64 bits but this
 				//       would result in an integer over shift (the one
@@ -178,8 +173,7 @@ bool CSimulatedBox::processClock()
 			OV_ERROR_UNLESS_KRF(
 				m_pBoxAlgorithm->processClock(l_oBoxAlgorithmContext, l_oClockMessage),
 				"Box algorithm <" << m_pBox->getName() << "> processClock() function failed",
-				ErrorType::Internal
-			);
+				ErrorType::Internal);
 
 			m_bReadyToProcess |= l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 		}
@@ -198,8 +192,7 @@ bool CSimulatedBox::processInput(const uint32_t ui32InputIndex, const CChunk& rC
 			OV_ERROR_UNLESS_KRF(
 				m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex),
 				"Box algorithm <" << m_pBox->getName() << "> processInput() function failed",
-				ErrorType::Internal
-			);
+				ErrorType::Internal);
 		}
 		m_bReadyToProcess |= l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 	}
@@ -217,8 +210,7 @@ bool CSimulatedBox::process()
 			OV_ERROR_UNLESS_KRF(
 				m_pBoxAlgorithm->process(l_oBoxAlgorithmContext),
 				"Box algorithm <" << m_pBox->getName() << "> processInput function failed",
-				ErrorType::Internal
-			);
+				ErrorType::Internal);
 		}
 	}
 
@@ -280,8 +272,7 @@ bool CSimulatedBox::process()
 		OV_FATAL_UNLESS_K(
 			chunk.getBuffer().getSize() == 0,
 			"Output buffer filled but not marked as ready to send. Possible loss of data.",
-			ErrorType::Internal
-		);
+			ErrorType::Internal);
 	}
 
 	m_bReadyToProcess = false;
@@ -317,8 +308,7 @@ uint32_t CSimulatedBox::getInputChunkCount(
 	OV_ERROR_UNLESS_KRF(
 		ui32InputIndex < m_vInput.size(),
 		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	return static_cast<uint32_t>(m_vInput[ui32InputIndex].size());
 }
@@ -334,14 +324,12 @@ bool CSimulatedBox::getInputChunk(
 	OV_ERROR_UNLESS_KRF(
 		ui32InputIndex < m_vInput.size(),
 		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRF(
 		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
 		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput[ui32InputIndex].size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
 	rStartTime             = l_rChunk.getStartTime();
@@ -358,14 +346,12 @@ const IMemoryBuffer* CSimulatedBox::getInputChunk(
 	OV_ERROR_UNLESS_KRN(
 		ui32InputIndex < m_vInput.size(),
 		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRN(
 		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
 		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput[ui32InputIndex].size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	return &(m_vInput[ui32InputIndex][ui32ChunkIndex]).getBuffer();
 }
@@ -377,14 +363,12 @@ uint64_t CSimulatedBox::getInputChunkStartTime(
 	OV_ERROR_UNLESS_KRZ(
 		ui32InputIndex < m_vInput.size(),
 		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRZ(
 		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
 		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput[ui32InputIndex].size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
 	return l_rChunk.getStartTime();
@@ -397,14 +381,12 @@ uint64_t CSimulatedBox::getInputChunkEndTime(
 	OV_ERROR_UNLESS_KRZ(
 		ui32InputIndex < m_vInput.size(),
 		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRZ(
 		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
 		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput[ui32InputIndex].size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
 	return l_rChunk.getEndTime();
@@ -417,14 +399,12 @@ bool CSimulatedBox::markInputAsDeprecated(
 	OV_ERROR_UNLESS_KRZ(
 		ui32InputIndex < m_vInput.size(),
 		"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	OV_ERROR_UNLESS_KRZ(
 		ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
 		"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vInput[ui32InputIndex].size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	m_vInput[ui32InputIndex][ui32ChunkIndex].markAsDeprecated(true);
 	return true;
@@ -439,8 +419,7 @@ uint64_t CSimulatedBox::getOutputChunkSize(
 	OV_ERROR_UNLESS_KRZ(
 		ui32OutputIndex < m_vCurrentOutput.size(),
 		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getSize();
 }
@@ -453,8 +432,7 @@ bool CSimulatedBox::setOutputChunkSize(
 	OV_ERROR_UNLESS_KRF(
 		ui32OutputIndex < m_vCurrentOutput.size(),
 		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().setSize(ui64Size, bDiscard);
 }
@@ -465,8 +443,7 @@ uint8_t* CSimulatedBox::getOutputChunkBuffer(
 	OV_ERROR_UNLESS_KRN(
 		ui32OutputIndex < m_vCurrentOutput.size(),
 		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getDirectPointer();
 }
@@ -479,8 +456,7 @@ bool CSimulatedBox::appendOutputChunkData(
 	OV_ERROR_UNLESS_KRF(
 		ui32OutputIndex < m_vCurrentOutput.size(),
 		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().append(pBuffer, ui64BufferSize);
 }
@@ -491,8 +467,7 @@ IMemoryBuffer* CSimulatedBox::getOutputChunk(
 	OV_ERROR_UNLESS_KRN(
 		ui32OutputIndex < m_vCurrentOutput.size(),
 		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	return &m_vCurrentOutput[ui32OutputIndex].getBuffer();
 }
@@ -505,8 +480,7 @@ bool CSimulatedBox::markOutputAsReadyToSend(
 	OV_ERROR_UNLESS_KRF(
 		ui32OutputIndex < m_vCurrentOutput.size(),
 		"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_vCurrentOutput.size() - 1) << "])",
-		ErrorType::OutOfBound
-	);
+		ErrorType::OutOfBound);
 
 	if (m_bChunkConsistencyChecking)
 	{

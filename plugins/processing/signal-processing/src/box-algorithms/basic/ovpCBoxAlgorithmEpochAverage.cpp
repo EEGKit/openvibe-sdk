@@ -66,8 +66,7 @@ bool CBoxAlgorithmEpochAverage::initialize()
 	OV_ERROR_UNLESS_KRF(
 		ip_ui64MatrixCount > 0,
 		"Invalid number of epochs (expected value > 0)",
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
+		OpenViBE::Kernel::ErrorType::BadSetting);
 
 	return true;
 }

@@ -25,13 +25,8 @@ namespace OpenViBEToolkit
 			bool exportInput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32_t ui32InputIndex);
 			bool exportOutput(IMemoryBuffer& rMemoryBuffer, const IScenario& rScenario, uint32_t ui32OutputIndex);
 			bool exportLink(IMemoryBuffer& rMemoryBuffer, const ILink& rLink);
-			void exportAttributes(
-				const IAttributable& attributable,
-				IMemoryBuffer& memoryBuffer,
-				const CIdentifier& idAttributes,
-				const CIdentifier& idAttribute,
-				const CIdentifier& idAttributeIdentifier,
-				const CIdentifier& idAttributeValue);
+			void exportAttributes(const IAttributable& attributable, IMemoryBuffer& memoryBuffer, const CIdentifier& idAttributes,
+								  const CIdentifier& idAttribute, const CIdentifier& idAttributeIdentifier, const CIdentifier& idAttributeValue);
 
 
 		protected:
@@ -84,29 +79,17 @@ bool CAlgorithmScenarioExporter::process()
 	TParameterHandler<IScenario*> ip_pScenario(this->getInputParameter(OV_Algorithm_ScenarioExporter_InputParameterId_Scenario));
 	IScenario* l_pScenario = ip_pScenario;
 
-	OV_ERROR_UNLESS_KRF(
-		l_pScenario,
-		"Input scenario is NULL",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+	OV_ERROR_UNLESS_KRF(l_pScenario, "Input scenario is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 
 	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(this->getOutputParameter(OV_Algorithm_ScenarioExporter_OutputParameterId_MemoryBuffer));
 	IMemoryBuffer* l_pMemoryBuffer = op_pMemoryBuffer;
 
-	OV_ERROR_UNLESS_KRF(
-		l_pMemoryBuffer,
-		"Output memory buffer is NULL",
-		OpenViBE::Kernel::ErrorType::BadOutput
-	);
+	OV_ERROR_UNLESS_KRF(l_pMemoryBuffer, "Output memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
 
 	this->exportStart(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario);
-
 	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_FormatVersion, CString("2"));
-
 	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Creator, this->getConfigurationManager().expand("${Application_Name}"));
-
 	this->exportString(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_CreatorVersion, this->getConfigurationManager().expand("${Application_Version}"));
-
 	this->exportStart(l_oTemporaryMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Settings);
 	for (uint32_t l_ui32SettingIndex = 0; l_ui32SettingIndex < l_pScenario->getSettingCount(); l_ui32SettingIndex++)
 	{

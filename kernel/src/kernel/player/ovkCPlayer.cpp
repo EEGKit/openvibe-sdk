@@ -78,8 +78,7 @@ bool CPlayer::setScenario(
 	OV_ERROR_UNLESS_KRF(
 		!this->isHoldingResources(),
 		"Trying to configure a player with non-empty resources",
-		ErrorType::BadCall
-	);
+		ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Debug << "Player setScenario\n";
 
@@ -98,8 +97,7 @@ bool CPlayer::setScenario(
 	OV_ERROR_UNLESS_KRF(
 		m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier),
 		"Fail to create a scenario duplicate for the current runtime session",
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	IScenario& l_rRuntimeScenario = m_pRuntimeScenarioManager->getScenario(m_oRuntimeScenarioIdentifier);
 	l_rRuntimeScenario.merge(l_rOriginalScenario, NULL, true, true);
@@ -166,8 +164,7 @@ bool CPlayer::setScenario(
 	OV_ERROR_UNLESS_KRF(
 		l_rRuntimeScenario.checkSettings(m_pRuntimeConfigurationManager),
 		"Checking settings failed for scenario duplicate instantiated for the current runtime session",
-		ErrorType::BadArgument
-	);
+		ErrorType::BadArgument);
 
 	return m_oScheduler.setScenario(m_oRuntimeScenarioIdentifier);
 }
@@ -249,8 +246,7 @@ bool CPlayer::stop()
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
 		"Trying to use an uninitialized player",
-		ErrorType::BadCall
-	);
+		ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Trace << "Player stop\n";
 
@@ -264,8 +260,7 @@ bool CPlayer::pause()
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
 		"Trying to use an uninitialized player",
-		ErrorType::BadCall
-	);
+		ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Trace << "Player pause\n";
 
@@ -279,8 +274,7 @@ bool CPlayer::step()
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
 		"Trying to use an uninitialized player",
-		ErrorType::BadCall
-	);
+		ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Trace << "Player step\n";
 
@@ -294,8 +288,7 @@ bool CPlayer::play()
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
 		"Trying to use an uninitialized player",
-		ErrorType::BadCall
-	);
+		ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Trace << "Player play\n";
 
@@ -309,8 +302,7 @@ bool CPlayer::forward()
 	OV_ERROR_UNLESS_KRF(
 		this->isHoldingResources(),
 		"Trying to use an uninitialized player",
-		ErrorType::BadCall
-	);
+		ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Trace << "Player forward\n";
 

@@ -36,5 +36,3 @@ extern const char* const c_sMLPEvaluationFunctionName;
 extern const char* const c_sMLPTransfertFunctionName;
 
 bool ov_float_equal(double f64First, double f64Second);
-
-

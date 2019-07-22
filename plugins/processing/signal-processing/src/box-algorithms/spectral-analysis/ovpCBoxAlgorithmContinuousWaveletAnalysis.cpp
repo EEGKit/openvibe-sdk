@@ -66,7 +66,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 	m_vEncoder[2].initialize(*this, 2);
 	m_vEncoder[3].initialize(*this, 3);
 
-	uint64_t l_ui64WaveletType   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	uint64_t l_ui64WaveletType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_dWaveletParameter        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_iScaleCount_J            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_dHighestFrequency        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
@@ -176,9 +176,9 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); ++i)
 	{
 		m_oDecoder.decode(i);
-		IMatrix* l_pInputMatrix   = m_oDecoder.getOutputMatrix();
+		IMatrix* l_pInputMatrix     = m_oDecoder.getOutputMatrix();
 		uint32_t l_ui32ChannelCount = l_pInputMatrix->getDimensionSize(0);
-		int l_iSampleCount        = l_pInputMatrix->getDimensionSize(1);
+		int l_iSampleCount          = l_pInputMatrix->getDimensionSize(1);
 
 		if (m_oDecoder.isHeaderReceived())
 		{

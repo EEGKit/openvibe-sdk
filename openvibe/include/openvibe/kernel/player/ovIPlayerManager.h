@@ -30,8 +30,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool createPlayer(
-				CIdentifier& rPlayerIdentifier) = 0;
+			virtual bool createPlayer(CIdentifier& rPlayerIdentifier) = 0;
 			/**
 			 * \brief Releases a specific player
 			 * \param rPlayerIdentifier [in] : the identifier of the player to release
@@ -42,16 +41,14 @@ namespace OpenViBE
 			 * thus the player manager can release any allocated resource / memory
 			 * for this player.
 			 */
-			virtual bool releasePlayer(
-				const CIdentifier& rPlayerIdentifier) = 0;
+			virtual bool releasePlayer(const CIdentifier& rPlayerIdentifier) = 0;
 			/**
 			 * \brief Gets a specific player instance, provided its identifier
 			 * \param rPlayerIdentifier [in] : the identifier of the player instance to return
 			 * \return A reference on the player instance
 			 * \warning Using a non player identifier will cause a crash
 			 */
-			virtual IPlayer& getPlayer(
-				const CIdentifier& rPlayerIdentifier) = 0;
+			virtual IPlayer& getPlayer(const CIdentifier& rPlayerIdentifier) = 0;
 			/**
 			 * \brief Gets next player identifier
 			 * \param rPreviousIdentifier [in] : The identifier
@@ -62,12 +59,9 @@ namespace OpenViBE
 			 *       will cause this function to return the first player
 			 *       identifier.
 			 */
-			virtual CIdentifier getNextPlayerIdentifier(
-				const CIdentifier& rPreviousIdentifier) const = 0;
+			virtual CIdentifier getNextPlayerIdentifier(const CIdentifier& rPreviousIdentifier) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_PlayerManager)
 		};
 	};
 };
-
-

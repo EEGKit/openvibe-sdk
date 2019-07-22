@@ -65,92 +65,49 @@ namespace r8b
 		}
 
 		/**
-		 * @return The minimal allowed low-pass filter's transition band, in
-		 * percent.
+		 * @return The minimal allowed low-pass filter's transition band, in percent.
 		 */
-
-		static double getLPMinTransBand()
-		{
-			return (0.5);
-		}
+		static double getLPMinTransBand() { return (0.5); }
 
 		/**
-		 * @return The maximal allowed low-pass filter's transition band, in
-		 * percent.
+		 * @return The maximal allowed low-pass filter's transition band, in percent.
 		 */
-
-		static double getLPMaxTransBand()
-		{
-			return (45.0);
-		}
+		static double getLPMaxTransBand() { return (45.0); }
 
 		/**
-		 * @return The minimal allowed low-pass filter's stop-band attenuation, in
-		 * decibel.
+		 * @return The minimal allowed low-pass filter's stop-band attenuation, in decibel.
 		 */
-
-		static double getLPMinAtten()
-		{
-			return (49.0);
-		}
+		static double getLPMinAtten() { return (49.0); }
 
 		/**
-		 * @return The maximal allowed low-pass filter's stop-band attenuation, in
-		 * decibel.
+		 * @return The maximal allowed low-pass filter's stop-band attenuation, in decibel.
 		 */
-
-		static double getLPMaxAtten()
-		{
-			return (218.0);
-		}
+		static double getLPMaxAtten() { return (218.0); }
 
 		/**
 		 * @return "True" if kernel block of *this filter has zero-phase response.
 		 */
-
-		bool isZeroPhase() const
-		{
-			return (IsZeroPhase);
-		}
+		bool isZeroPhase() const { return (IsZeroPhase); }
 
 		/**
 		 * @return Filter's latency, in samples (integer part).
 		 */
-
-		int getLatency() const
-		{
-			return (Latency);
-		}
+		int getLatency() const { return (Latency); }
 
 		/**
-		 * @return Filter's latency, in samples (fractional part). Always zero for
-		 * linear-phase filters.
+		 * @return Filter's latency, in samples (fractional part). Always zero for linear-phase filters.
 		 */
-
-		double getLatencyFrac() const
-		{
-			return (LatencyFrac);
-		}
+		double getLatencyFrac() const { return (LatencyFrac); }
 
 		/**
-		 * @return Filter kernel length, in samples. Not to be confused with the
-		 * block length.
+		 * @return Filter kernel length, in samples. Not to be confused with the block length.
 		 */
-
-		int getKernelLen() const
-		{
-			return (KernelLen);
-		}
+		int getKernelLen() const { return (KernelLen); }
 
 		/**
-		 * @return Filter's block length, espressed as Nth power of 2. The actual
-		 * length is twice as large due to zero-padding.
+		 * @return Filter's block length, espressed as Nth power of 2. The actual length is twice as large due to zero-padding.
 		 */
-
-		int getBlockLenBits() const
-		{
-			return (BlockLenBits);
-		}
+		int getBlockLenBits() const { return (BlockLenBits); }
 
 		/**
 		 * @return Filter's kernel block, in complex-numbered form obtained via
@@ -159,11 +116,7 @@ namespace r8b
 		 * suitable for convolution. Kernel block may have "zero-phase" response,
 		 * depending on the isZeroPhase() function's result.
 		 */
-
-		const double* getKernelBlock() const
-		{
-			return (KernelBlock);
-		}
+		const double* getKernelBlock() const { return (KernelBlock); }
 
 		/**
 		 * This function should be called when the filter obtained via the
@@ -207,8 +160,7 @@ namespace r8b
 		///< contains zero-padding to allow alias-free convolution.
 		///<
 
-		CDSPFIRFilter()
-			: RefCount(1) { }
+		CDSPFIRFilter() : RefCount(1) { }
 
 		/**
 		 * Function builds filter kernel based on the "Req" parameters.
@@ -227,62 +179,31 @@ namespace r8b
 
 			if (tb >= 0.25)
 			{
-				if (ReqAtten >= 117.0)
-				{
-					atten -= 1.60;
-				}
-				else if (ReqAtten >= 60.0)
-				{
-					atten -= 1.91;
-				}
-				else
-				{
-					atten -= 2.25;
-				}
+				if (ReqAtten >= 117.0) { atten -= 1.60; }
+				else if (ReqAtten >= 60.0) { atten -= 1.91; }
+				else { atten -= 2.25; }
 			}
 			else if (tb >= 0.10)
 			{
-				if (ReqAtten >= 117.0)
-				{
-					atten -= 0.69;
-				}
-				else if (ReqAtten >= 60.0)
-				{
-					atten -= 0.73;
-				}
-				else
-				{
-					atten -= 1.13;
-				}
+				if (ReqAtten >= 117.0) { atten -= 0.69; }
+				else if (ReqAtten >= 60.0) { atten -= 0.73; }
+				else { atten -= 1.13; }
 			}
 			else
 			{
-				if (ReqAtten >= 117.0)
-				{
-					atten -= 0.21;
-				}
-				else if (ReqAtten >= 60.0)
-				{
-					atten -= 0.25;
-				}
-				else
-				{
-					atten -= 0.36;
-				}
+				if (ReqAtten >= 117.0) { atten -= 0.21; }
+				else if (ReqAtten >= 60.0) { atten -= 0.25; }
+				else { atten -= 0.36; }
 			}
 
 			static const int AttenCorrCount   = 264;
 			static const double AttenCorrMin  = 49.0;
 			static const double AttenCorrDiff = 176.25;
-			int AttenCorr                     = (int)floor((-atten - AttenCorrMin) *
-														   AttenCorrCount / AttenCorrDiff + 0.5);
+			int AttenCorr                     = (int)floor((-atten - AttenCorrMin) * AttenCorrCount / AttenCorrDiff + 0.5);
 
 			AttenCorr = min(AttenCorrCount, max(0, AttenCorr));
 
-			if (ExtAttenCorrs != NULL)
-			{
-				atten -= ExtAttenCorrs[AttenCorr];
-			}
+			if (ExtAttenCorrs != NULL) { atten -= ExtAttenCorrs[AttenCorr]; }
 			else if (tb >= 0.25)
 			{
 				static const double AttenCorrScale    = 101.0;
@@ -367,78 +288,45 @@ namespace r8b
 				atten -= AttenCorrs[AttenCorr] / AttenCorrScale;
 			}
 
-			pwr = 7.43932822146293e-8 * sqr(atten) + 0.000102747434588003 *
-				  cos(0.00785021930010397 * atten) * cos(0.633854318781239 +
-														 0.103208573657699 * atten) - 0.00798132247867036 -
-				  0.000903555213543865 * atten - 0.0969365532127236 * exp(
-					  0.0779275237937911 * atten) - 1.37304948662012e-5 * atten * cos(
-					  0.00785021930010397 * atten);
+			pwr = 7.43932822146293e-8 * sqr(atten) + 0.000102747434588003 * cos(0.00785021930010397 * atten) * cos(0.633854318781239 + 0.103208573657699 * atten)
+				  - 0.00798132247867036 - 0.000903555213543865 * atten - 0.0969365532127236 * exp(0.0779275237937911 * atten) - 1.37304948662012e-5 * atten * cos(0.00785021930010397 * atten);
 
 			if (pwr <= 0.067665322581)
 			{
 				if (tb >= 0.25)
 				{
-					hl = 2.6778150875894 / tb + 300.547590563091 * atan(atan(
-							 2.68959772209918 * pwr)) / (5.5099277187035 * tb - tb *
-														 tanh(cos(asinh(atten))));
-
-					fo1 = 0.987205355829873 * tb + 1.00011788929851 * atan2(
-							  -0.321432067051302 - 6.19131357321578 * sqrt(pwr),
-							  hl + -1.14861472207245 / (hl - 14.1821147585957) + pow(
-								  0.9521145021664, pow(atan2(1.12018764830637, tb),
-													   2.10988901686912 * hl - 20.9691278378345)));
+					hl  = 2.6778150875894 / tb + 300.547590563091 * atan(atan(2.68959772209918 * pwr)) / (5.5099277187035 * tb - tb * tanh(cos(asinh(atten))));
+					fo1 = 0.987205355829873 * tb + 1.00011788929851 * atan2(-0.321432067051302 - 6.19131357321578 * sqrt(pwr),
+																			hl + -1.14861472207245 / (hl - 14.1821147585957) + pow(0.9521145021664,
+																																   pow(atan2(1.12018764830637, tb), 2.10988901686912 * hl - 20.9691278378345)));
 				}
 				else if (tb >= 0.10)
 				{
-					hl = (1.56688617018066 + 142.064321294568 * pwr +
-						  0.00419441117131136 * cos(243.633511747297 * pwr) -
-						  0.022953443903576 * atten - 0.026629568860284 * cos(
-							  127.715550622571 * pwr)) / tb;
-
-					fo1 = 0.982299356642411 * tb + 0.999441744774215 * asinh((
-																				 -0.361783054039583 - 5.80540593623676 * sqrt(pwr)) /
-																			 hl);
+					hl  = (1.56688617018066 + 142.064321294568 * pwr + 0.00419441117131136 * cos(243.633511747297 * pwr) - 0.022953443903576 * atten - 0.026629568860284 * cos(127.715550622571 * pwr)) / tb;
+					fo1 = 0.982299356642411 * tb + 0.999441744774215 * asinh((-0.361783054039583 - 5.80540593623676 * sqrt(pwr)) / hl);
 				}
 				else
 				{
-					hl = (2.45739657014937 + 269.183679500541 * pwr * cos(
-							  5.73225668178813 + atan2(cosh(0.988861169868941 -
-															17.2201556280744 * pwr), 1.08340138240431 * pwr))) / tb;
-
-					fo1 = 2.291956939 * tb + 0.01942450693 * sqr(tb) * hl -
-						  4.67538973161837 * pwr * tb - 1.668433124 * tb *
-						  pow(pwr, pwr);
+					hl  = (2.45739657014937 + 269.183679500541 * pwr * cos(5.73225668178813 + atan2(cosh(0.988861169868941 - 17.2201556280744 * pwr), 1.08340138240431 * pwr))) / tb;
+					fo1 = 2.291956939 * tb + 0.01942450693 * sqr(tb) * hl - 4.67538973161837 * pwr * tb - 1.668433124 * tb * pow(pwr, pwr);
 				}
 			}
 			else
 			{
 				if (tb >= 0.25)
 				{
-					hl = (1.50258368698213 + 158.556968859477 * asinh(pwr) *
-						  tanh(57.9466246871383 * tanh(pwr)) -
-						  0.0105440479814834 * atten) / tb;
-
-					fo1 = 0.994024401639321 * tb + (-0.236282717577215 -
-													6.8724924545387 * sqrt(sin(pwr))) / hl;
+					hl  = (1.50258368698213 + 158.556968859477 * asinh(pwr) * tanh(57.9466246871383 * tanh(pwr)) - 0.0105440479814834 * atten) / tb;
+					fo1 = 0.994024401639321 * tb + (-0.236282717577215 - 6.8724924545387 * sqrt(sin(pwr))) / hl;
 				}
 				else if (tb >= 0.10)
 				{
-					hl = (1.50277377248945 + 158.222625721046 * asinh(pwr) *
-						  tanh(1.02875299001715 + 42.072277322604 * pwr) -
-						  0.0108380943845632 * atten) / tb;
-
-					fo1 = 0.992539376734551 * tb + (-0.251747813037178 -
-													6.74159892452584 * sqrt(tanh(tanh(tan(pwr))))) / hl;
+					hl  = (1.50277377248945 + 158.222625721046 * asinh(pwr) * tanh(1.02875299001715 + 42.072277322604 * pwr) - 0.0108380943845632 * atten) / tb;
+					fo1 = 0.992539376734551 * tb + (-0.251747813037178 - 6.74159892452584 * sqrt(tanh(tanh(tan(pwr))))) / hl;
 				}
 				else
 				{
-					hl = (1.15990238966306 * pwr - 5.02124037125213 * sqr(
-							  pwr) - 0.158676856669827 * atten * cos(1.1609073390614 *
-																	 pwr - 6.33932586197475 * pwr * sqr(pwr))) / tb;
-
-					fo1 = 0.867344453126885 * tb + 0.052693817907757 * tb * log(
-							  pwr) + 0.0895511178735932 * tb * atan(59.7538527741309 *
-																	pwr) - 0.0745653568081453 * pwr * tb;
+					hl  = (1.15990238966306 * pwr - 5.02124037125213 * sqr(pwr) - 0.158676856669827 * atten * cos(1.1609073390614 * pwr - 6.33932586197475 * pwr * sqr(pwr))) / tb;
+					fo1 = 0.867344453126885 * tb + 0.052693817907757 * tb * log(pwr) + 0.0895511178735932 * tb * atan(59.7538527741309 * pwr) - 0.0745653568081453 * pwr * tb;
 				}
 			}
 
@@ -471,8 +359,7 @@ namespace r8b
 						IsZeroPhase = false;
 						double DCGroupDelay;
 			
-						calcMinPhaseTransform( &KernelBlock[ 0 ], KernelLen, 3, false,
-							&DCGroupDelay );
+						calcMinPhaseTransform( &KernelBlock[ 0 ], KernelLen, 3, false, &DCGroupDelay );
 			
 						Latency = (int) DCGroupDelay;
 						LatencyFrac = DCGroupDelay - Latency;
@@ -487,43 +374,27 @@ namespace r8b
 				double s = 0.0;
 				int i;
 
-				for (i = 0; i < KernelLen; i++)
-				{
-					s += KernelBlock[i];
-				}
+				for (i = 0; i < KernelLen; i++) { s += KernelBlock[i]; }
 
 				s = ffto->getInvMulConst() * ReqGain / s;
 
 				// Time-shift the filter so that zero-phase response is produced.
 				// Simultaneously multiply by "s".
 
-				for (i = 0; i <= sinc.fl2; i++)
-				{
-					KernelBlock[i] = KernelBlock[sinc.fl2 + i] * s;
-				}
+				for (i = 0; i <= sinc.fl2; i++) { KernelBlock[i] = KernelBlock[sinc.fl2 + i] * s; }
+				for (i = 1; i <= sinc.fl2; i++) { KernelBlock[BlockLen * 2 - i] = KernelBlock[i]; }
 
-				for (i = 1; i <= sinc.fl2; i++)
-				{
-					KernelBlock[BlockLen * 2 - i] = KernelBlock[i];
-				}
-
-				memset(&KernelBlock[sinc.fl2 + 1], 0,
-					   (BlockLen * 2 - KernelLen) * sizeof(double));
+				memset(&KernelBlock[sinc.fl2 + 1], 0, (BlockLen * 2 - KernelLen) * sizeof(double));
 			}
 			else
 			{
-				normalizeFIRFilter(&KernelBlock[0], KernelLen,
-								   ffto->getInvMulConst() * ReqGain);
-
-				memset(&KernelBlock[KernelLen], 0,
-					   (BlockLen * 2 - KernelLen) * sizeof(double));
+				normalizeFIRFilter(&KernelBlock[0], KernelLen, ffto->getInvMulConst() * ReqGain);
+				memset(&KernelBlock[KernelLen], 0, (BlockLen * 2 - KernelLen) * sizeof(double));
 			}
 
 			ffto->forward(KernelBlock);
 
-			R8BCONSOLE("CDSPFIRFilter: flt_len=%i latency=%i nfreq=%.4f "
-					   "tb=%.1f att=%.1f gain=%.3f\n", KernelLen, Latency,
-					   ReqNormFreq, ReqTransBand, ReqAtten, ReqGain);
+			R8BCONSOLE("CDSPFIRFilter: flt_len=%i latency=%i nfreq=%.4f tb=%.1f att=%.1f gain=%.3f\n", KernelLen, Latency, ReqNormFreq, ReqTransBand, ReqAtten, ReqGain);
 		}
 	};
 
@@ -580,10 +451,8 @@ namespace r8b
 		 * after use via the CDSPFIRFilter::unref() function.
 		 */
 
-		static CDSPFIRFilter& getLPFilter(const double ReqNormFreq,
-										  const double ReqTransBand, const double ReqAtten,
-										  const EDSPFilterPhaseResponse ReqPhase, const double ReqGain,
-										  const double* const AttenCorrs = NULL)
+		static CDSPFIRFilter& getLPFilter(const double ReqNormFreq, const double ReqTransBand, const double ReqAtten,
+										  const EDSPFilterPhaseResponse ReqPhase, const double ReqGain, const double* const AttenCorrs = NULL)
 		{
 			R8BASSERT(ReqNormFreq > 0.0 && ReqNormFreq <= 1.0);
 			R8BASSERT(ReqTransBand >= CDSPFIRFilter :: getLPMinTransBand());
@@ -637,10 +506,7 @@ namespace r8b
 			{
 				CurObj->RefCount++;
 
-				if (PrevObj == NULL)
-				{
-					return (*CurObj);
-				}
+				if (PrevObj == NULL) { return (*CurObj); }
 
 				// Remove the filter from the list temporarily.
 

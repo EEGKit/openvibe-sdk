@@ -23,10 +23,7 @@ namespace OpenViBE
 				return new CKernelContext(&rMasterKernelContext, rApplicationName, rConfigurationFilename);
 			}
 
-			virtual void releaseKernel(IKernelContext* pKernelContext)
-			{
-				delete pKernelContext;
-			}
+			virtual void releaseKernel(IKernelContext* pKernelContext) { delete pKernelContext; }
 
 			virtual CString getName() const { return CString("OpenViBE Kernel Implementation"); }
 			virtual CString getAuthorName() const { return CString("Yann Renard"); }
@@ -35,7 +32,7 @@ namespace OpenViBE
 			virtual CString getDetailedDescription() const { return CString("OpenViBE Kernel Implementation"); }
 			virtual CString getVersion() const { return CString("0.5"); }
 
-			_IsDerivedFromClass_Final_(IKernelDesc, OVK_ClassId_KernelDesc);
+			_IsDerivedFromClass_Final_(IKernelDesc, OVK_ClassId_KernelDesc)
 		};
 	};
 };

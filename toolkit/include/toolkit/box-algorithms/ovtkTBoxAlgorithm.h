@@ -179,7 +179,7 @@ namespace OpenViBEToolkit
 
 			operator uint64_t()
 			{
-				uint64_t l_ui64StimId     = std::numeric_limits<uint64_t>::max();
+				uint64_t l_ui64StimId             = std::numeric_limits<uint64_t>::max();
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 				double l_dResult;
 				if (m_rTypeManager.isEnumeration(m_oSettingType))
@@ -210,8 +210,8 @@ namespace OpenViBEToolkit
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 
-				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult), 
-					"Could not expand numeric expression [" << m_sSettingValue << "] to integer 32bits.",
+				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
+								"Could not expand numeric expression [" << m_sSettingValue << "] to integer 32bits.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int32_t>::max(), m_rErrorManager, m_rLogManager);
 
 				return static_cast<int32_t>(l_dResult);
@@ -222,7 +222,7 @@ namespace OpenViBEToolkit
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 
-				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult), 
+				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
 								"Could not expand numeric expression [" << m_sSettingValue << "] to integer 64bits.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int64_t>::max(), m_rErrorManager, m_rLogManager);
 
@@ -234,7 +234,7 @@ namespace OpenViBEToolkit
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 
-				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult), "Could not expand numeric expression [" << m_sSettingValue << "] to float.", 
+				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult), "Could not expand numeric expression [" << m_sSettingValue << "] to float.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<double>::max(), m_rErrorManager, m_rLogManager);
 
 				return static_cast<double>(l_dResult);
@@ -398,5 +398,3 @@ namespace OpenViBEToolkit
 		OpenViBE::Kernel::IBoxListenerContext* m_pBoxListenerContext;
 	};
 };
-
-

@@ -100,10 +100,8 @@ namespace
 
 		void warning(const SAXParseException& exception) override
 		{
-			OV_WARNING(
-				"Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << static_cast<uint64_t>(exception.getLineNumber()) << "]",
-				m_rAlgorithmContext.getLogManager()
-			);
+			OV_WARNING("Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << static_cast<uint64_t>(exception.getLineNumber()) << "]",
+					   m_rAlgorithmContext.getLogManager());
 		}
 
 	private:
@@ -112,17 +110,12 @@ namespace
 };
 
 CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter()
-	: m_pContext(NULL)
-	  , m_ui32Status(Status_ParsingNothing)
-	  , m_pReader(NULL)
+	: m_pContext(NULL), m_ui32Status(Status_ParsingNothing), m_pReader(NULL)
 {
 	m_pReader = createReader(*this);
 }
 
-CAlgorithmXMLScenarioImporter::~CAlgorithmXMLScenarioImporter()
-{
-	m_pReader->release();
-}
+CAlgorithmXMLScenarioImporter::~CAlgorithmXMLScenarioImporter() { m_pReader->release(); }
 
 void CAlgorithmXMLScenarioImporter::openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
 {
@@ -462,8 +455,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, 
 
 	OV_ERROR_KRF(
 		"Failed to validate scenario against XSD schemas",
-		OpenViBE::Kernel::ErrorType::BadXMLSchemaValidation
-	);
+		OpenViBE::Kernel::ErrorType::BadXMLSchemaValidation);
 }
 
 bool CAlgorithmXMLScenarioImporter::validateXMLAgainstSchema(const char* validationSchema, const unsigned char* xmlBuffer, unsigned long xmlBufferSize)

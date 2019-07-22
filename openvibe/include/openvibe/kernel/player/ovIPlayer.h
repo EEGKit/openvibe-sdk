@@ -58,9 +58,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setScenario(
-				const CIdentifier& rScenarioIdentifier,
-				const CNameValuePairList* pLocalConfigurationTokens = NULL) = 0;
+			virtual bool setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens = NULL) = 0;
 
 			/**
 			 * \brief returns a reference to the runtime configuration manager
@@ -180,9 +178,7 @@ namespace OpenViBE
 			 * run beyond the specified time when ran in fast forward mode. It defaults
 			 * to \c uint64_t(-1) which represents the largest OpenViBE time.
 			 */
-			virtual bool loop(
-				uint64_t ui64ElapsedTime,
-				uint64_t ui64MaximumTimeToReach = uint64_t(-1)) = 0;
+			virtual bool loop(uint64_t ui64ElapsedTime, uint64_t ui64MaximumTimeToReach = uint64_t(-1)) = 0;
 
 			virtual uint64_t getCurrentSimulatedTime() const = 0;
 
@@ -190,5 +186,3 @@ namespace OpenViBE
 		};
 	};
 };
-
-

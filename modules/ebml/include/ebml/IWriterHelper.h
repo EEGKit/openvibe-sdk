@@ -175,5 +175,3 @@ namespace EBML
 	 */
 	extern EBML_API IWriterHelper* createWriterHelper();
 };
-
-

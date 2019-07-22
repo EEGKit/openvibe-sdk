@@ -53,5 +53,3 @@ namespace Socket
 
 	extern Socket_API IConnectionSerial* createConnectionSerial();
 };
-
-

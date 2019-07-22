@@ -855,5 +855,3 @@
 #else
 	#define OVTK_API OVTK_API_Import
 #endif
-
-

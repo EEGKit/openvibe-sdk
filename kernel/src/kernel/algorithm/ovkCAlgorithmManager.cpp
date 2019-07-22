@@ -36,8 +36,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	OV_ERROR_UNLESS_KRU(
 		l_pAlgorithm && l_pAlgorithmDesc,
 		"Algorithm creation failed, class identifier :" << rAlgorithmClassIdentifier.toString(),
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmClassIdentifier << "\n";
 
@@ -63,8 +62,7 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	OV_ERROR_UNLESS_KRU(
 		l_pAlgorithm,
 		"Algorithm creation failed, class identifier :" << rAlgorithmDesc.getClassIdentifier().toString(),
-		ErrorType::BadResourceCreation
-	);
+		ErrorType::BadResourceCreation);
 
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmDesc.getClassIdentifier() << "\n";
 
@@ -85,8 +83,7 @@ bool CAlgorithmManager::releaseAlgorithm(
 	OV_ERROR_UNLESS_KRF(
 		itAlgorithm != m_vAlgorithms.end(),
 		"Algorithm release failed, identifier :" << rAlgorithmIdentifier.toString(),
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	getLogManager() << LogLevel_Debug << "Releasing algorithm with identifier " << rAlgorithmIdentifier << "\n";
 	CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;
@@ -131,8 +128,7 @@ bool CAlgorithmManager::releaseAlgorithm(
 	OV_ERROR_UNLESS_KRF(
 		l_bResult,
 		"Algorithm release failed",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return l_bResult;
 }
@@ -147,8 +143,7 @@ IAlgorithmProxy& CAlgorithmManager::getAlgorithm(
 	OV_FATAL_UNLESS_K(
 		itAlgorithm != m_vAlgorithms.end(),
 		"Algorithm " << rAlgorithmIdentifier << " does not exist !",
-		ErrorType::ResourceNotFound
-	);
+		ErrorType::ResourceNotFound);
 
 	return *itAlgorithm->second;
 }

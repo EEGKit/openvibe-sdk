@@ -31,11 +31,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \sa IParameter
 			 */
-			virtual bool addInputParameter(
-				const CIdentifier& rInputParameterIdentifier,
-				const CString& sInputName,
-				EParameterType eParameterType,
-				const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
+			virtual bool addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an output parameter
 			 * \param rOutputParameterIdentifier [in] : the identifier for this parameter
@@ -46,11 +42,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \sa IParameter
 			 */
-			virtual bool addOutputParameter(
-				const CIdentifier& rOutputParameterIdentifier,
-				const CString& sOutputName,
-				EParameterType eParameterType,
-				const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
+			virtual bool addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Adds an input trigger
 			 * \param rInputTriggerIdentifier [in] : the identifier for this trigger
@@ -58,9 +50,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addInputTrigger(
-				const CIdentifier& rInputTriggerIdentifier,
-				const CString& rInputTriggerName) = 0;
+			virtual bool addInputTrigger(const CIdentifier& rInputTriggerIdentifier, const CString& rInputTriggerName) = 0;
 			/**
 			 * \brief Adds an output trigger
 			 * \param rOutputTriggerIdentifier [in] : the identifier for this trigger
@@ -68,13 +58,9 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addOutputTrigger(
-				const CIdentifier& rOutputTriggerIdentifier,
-				const CString& rOutputTriggerName) = 0;
+			virtual bool addOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, const CString& rOutputTriggerName) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmProto)
 		};
-	};
-};
-
-
+	}
+}

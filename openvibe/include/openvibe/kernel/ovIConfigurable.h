@@ -66,8 +66,7 @@ namespace OpenViBE
 			 * }
 			 * \endcode
 			 */
-			virtual CIdentifier getNextParameterIdentifier(
-				const CIdentifier& rPreviousIdentifier) const = 0;
+			virtual CIdentifier getNextParameterIdentifier(const CIdentifier& rPreviousIdentifier) const = 0;
 
 			/**
 			 * \brief Gets a specific parameter given its identifier
@@ -75,8 +74,7 @@ namespace OpenViBE
 			 * \return a pointer to the corresponding parameter in case of success.
 			 * \return \c NULL in case of error.
 			 */
-			virtual IParameter* getParameter(
-				const CIdentifier& rParameterIdentifier) = 0;
+			virtual IParameter* getParameter(const CIdentifier& rParameterIdentifier) = 0;
 			/**
 			 * \brief Replaces the parameter with a client handled object
 			 * \param rParameterIdentifier [in] : the identifier of the parameter to replace
@@ -89,9 +87,7 @@ namespace OpenViBE
 			 *       none of \c removeParameter nor configurable destruction will release
 			 *       this parameter object. The caller should take care of this when needed.
 			 */
-			virtual bool setParameter(
-				const CIdentifier& rParameterIdentifier,
-				IParameter& rpParameter) = 0;
+			virtual bool setParameter(const CIdentifier& rParameterIdentifier, IParameter& rpParameter) = 0;
 			/**
 			 * \brief Creates a new parameter of a specific type
 			 * \param rParameterIdentifier [in] : the parameter identifier which has to be created
@@ -102,10 +98,7 @@ namespace OpenViBE
 			 *
 			 * This function creates a new parameter with its associated object.
 			 */
-			virtual IParameter* createParameter(
-				const CIdentifier& rParameterIdentifier,
-				EParameterType eParameterType,
-				const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
+			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Removes an existing parameter
 			 * \param rParameterIdentifier [in] : the identifier of the parameter to remove
@@ -114,12 +107,9 @@ namespace OpenViBE
 			 * \note if the parameter object is not released if it was replaced by a custom
 			 *       parameter object thanks to \c setParameter function.
 			 */
-			virtual bool removeParameter(
-				const CIdentifier& rParameterIdentifier) = 0;
+			virtual bool removeParameter(const CIdentifier& rParameterIdentifier) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Configurable)
 		};
-	};
-};
-
-
+	}
+}

@@ -27,5 +27,3 @@
 #else
 	#define System_API System_API_Import
 #endif
-
-

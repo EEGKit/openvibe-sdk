@@ -45,23 +45,14 @@ namespace OpenViBE
 		//@}
 
 		virtual const uint32_t getDimensionCount() const;
-		virtual const uint32_t getDimensionSize(
-			uint32_t ui32DimensionIndex) const;
-		virtual const char* getDimensionLabel(
-			uint32_t ui32DimensionIndex,
-			uint32_t ui32DimensionEntryIndex) const;
+		virtual const uint32_t getDimensionSize(uint32_t ui32DimensionIndex) const;
+		virtual const char* getDimensionLabel(uint32_t ui32DimensionIndex, uint32_t ui32DimensionEntryIndex) const;
 		virtual const double* getBuffer() const;
 		virtual const uint32_t getBufferElementCount() const;
 
-		virtual bool setDimensionCount(
-			uint32_t ui32DimensionCount);
-		virtual bool setDimensionSize(
-			uint32_t ui32DimensionIndex,
-			uint32_t ui32DimensionSize);
-		virtual bool setDimensionLabel(
-			uint32_t ui32DimensionIndex,
-			uint32_t ui32DimensionEntryIndex,
-			const char* sDimensionLabel);
+		virtual bool setDimensionCount(uint32_t ui32DimensionCount);
+		virtual bool setDimensionSize(uint32_t ui32DimensionIndex, uint32_t ui32DimensionSize);
+		virtual bool setDimensionLabel(uint32_t ui32DimensionIndex, uint32_t ui32DimensionEntryIndex, const char* sDimensionLabel);
 		virtual double* getBuffer();
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMatrix, OV_ClassId_MatrixBridge)
@@ -71,5 +62,3 @@ namespace OpenViBE
 		IMatrix* m_pMatrixImpl = nullptr; //!< Internal implementation
 	};
 };
-
-

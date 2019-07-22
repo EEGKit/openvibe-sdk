@@ -12,18 +12,11 @@ namespace XML
 	class TWriterCallbackProxy1 : public IWriterCallback
 	{
 	public:
-		TWriterCallbackProxy1(
-			COwnerClass& rOwnerObject,
-			void (COwnerClass::*mfpWrite)(const char* sString))
-			: m_rOwnerObject(rOwnerObject)
-			  , m_mfpWrite(mfpWrite) { }
+		TWriterCallbackProxy1(COwnerClass& rOwnerObject, void (COwnerClass::*mfpWrite)(const char* sString)) : m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
 
 		virtual void write(const char* sString)
 		{
-			if (m_mfpWrite)
-			{
-				m_rOwnerObject.m_mfpWrite(sString);
-			}
+			if (m_mfpWrite) { m_rOwnerObject.m_mfpWrite(sString); }
 		}
 
 	protected:
@@ -38,16 +31,11 @@ namespace XML
 	class TWriterCallbackProxy2 : public IWriterCallback
 	{
 	public:
-		TWriterCallbackProxy2(COwnerClass rOwnerObject)
-			: m_rOwnerObject(rOwnerObject)
-			  , m_mfpWrite(mfpWrite) { }
+		TWriterCallbackProxy2(COwnerClass rOwnerObject) : m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
 
 		virtual void write(const char* sString)
 		{
-			if (mfpWrite)
-			{
-				m_rOwnerObject.mfpWrite(sString);
-			}
+			if (mfpWrite) { m_rOwnerObject.mfpWrite(sString); }
 		}
 
 	protected:
@@ -58,5 +46,3 @@ namespace XML
 	// ________________________________________________________________________________________________________________
 	//
 };
-
-

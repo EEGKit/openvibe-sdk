@@ -54,5 +54,3 @@ namespace OpenViBEToolkit
 		std::map<uint32_t, CInternalFeatureVector> m_vFeatureVector;
 	};
 };
-
-

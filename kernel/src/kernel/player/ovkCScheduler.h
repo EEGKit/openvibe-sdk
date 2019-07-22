@@ -29,10 +29,8 @@ namespace OpenViBE
 			CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer);
 			virtual ~CScheduler();
 
-			virtual bool setScenario(
-				const CIdentifier& rScenarioIdentifier);
-			virtual bool setFrequency(
-				uint64_t ui64Frequency);
+			virtual bool setScenario(const CIdentifier& rScenarioIdentifier);
+			virtual bool setFrequency(uint64_t ui64Frequency);
 
 			virtual bool isHoldingResources() const;
 
@@ -48,7 +46,7 @@ namespace OpenViBE
 			virtual double getCPUUsage() const;
 			virtual double getFastForwardMaximumFactor() const;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler)
 
 			CPlayer& getPlayer()
 			{

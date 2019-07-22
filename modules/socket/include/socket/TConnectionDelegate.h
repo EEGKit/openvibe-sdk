@@ -83,5 +83,3 @@ namespace Socket
 		SConnectionDelegate m_oConnectionDelegate;
 	};
 }
-
-

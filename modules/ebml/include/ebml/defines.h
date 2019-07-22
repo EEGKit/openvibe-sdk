@@ -117,5 +117,3 @@
 #else
 	#define EBML_API EBML_API_Import
 #endif
-
-

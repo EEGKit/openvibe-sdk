@@ -48,7 +48,7 @@ namespace Socket
 #elif defined TARGET_OS_Windows
 			int32_t l_i32VersionHigh = 2;
 			int32_t l_i32VersionLow  = 0;
-			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
+			WORD l_oWinsockVersion   = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
 			WSAStartup(l_oWinsockVersion, &l_oWSAData);
 #else
@@ -61,7 +61,7 @@ namespace Socket
 #elif defined TARGET_OS_Windows
 			int32_t l_i32VersionHigh = 2;
 			int32_t l_i32VersionLow  = 0;
-			WORD l_oWinsockVersion = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
+			WORD l_oWinsockVersion   = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
 			WSAStartup(l_oWinsockVersion, &l_oWSAData);
 #else
@@ -183,7 +183,7 @@ namespace Socket
 			const uint32_t ui32BufferSize)
 		{
 			uint32_t l_ui32LeftBytes = ui32BufferSize;
-			const char* l_pBuffer  = static_cast<const char*>(pBuffer);
+			const char* l_pBuffer    = static_cast<const char*>(pBuffer);
 			do
 			{
 				l_ui32LeftBytes -= sendBuffer(l_pBuffer + ui32BufferSize - l_ui32LeftBytes, l_ui32LeftBytes);
@@ -197,7 +197,7 @@ namespace Socket
 			const uint32_t ui32BufferSize)
 		{
 			uint32_t l_ui32LeftBytes = ui32BufferSize;
-			char* l_pBuffer        = static_cast<char*>(pBuffer);
+			char* l_pBuffer          = static_cast<char*>(pBuffer);
 			do
 			{
 				l_ui32LeftBytes -= receiveBuffer(l_pBuffer + ui32BufferSize - l_ui32LeftBytes, l_ui32LeftBytes);

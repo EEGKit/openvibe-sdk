@@ -15,10 +15,8 @@ namespace OpenViBE
 
 			explicit CKernelObjectFactory(const IKernelContext& rKernelContext);
 
-			virtual IObject* createObject(
-				const CIdentifier& rClassIdentifier);
-			virtual bool releaseObject(
-				IObject* pObject);
+			virtual IObject* createObject(const CIdentifier& rClassIdentifier);
+			virtual bool releaseObject(IObject* pObject);
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelObjectFactory, OVK_ClassId_Kernel_KernelObjectFactory)
 

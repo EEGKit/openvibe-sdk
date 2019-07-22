@@ -36,8 +36,7 @@ IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& rClassIde
 	OV_ERROR_UNLESS_KRN(
 		l_pResult,
 		"Unable to allocate object with class id " << rClassIdentifier.toString(),
-		ErrorType::BadAlloc
-	);
+		ErrorType::BadAlloc);
 
 	return l_pResult;
 }

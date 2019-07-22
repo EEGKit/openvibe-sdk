@@ -104,5 +104,4 @@ namespace OpenViBEPlugins
 };
 
 
-
 #endif // TARGET_HAS_ThirdPartyEIGEN

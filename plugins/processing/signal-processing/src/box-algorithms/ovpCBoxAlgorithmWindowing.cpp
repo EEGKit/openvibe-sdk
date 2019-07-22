@@ -24,8 +24,7 @@ bool CBoxAlgorithmWindowing::initialize()
 	{
 		OV_ERROR_KRF(
 			"No valid windowing method set.\n",
-			OpenViBE::Kernel::ErrorType::BadSetting
-		);
+			OpenViBE::Kernel::ErrorType::BadSetting);
 	}
 
 	m_Decoder.initialize(*this, 0);
@@ -136,30 +135,15 @@ bool CBoxAlgorithmWindowing::process()
 
 				for (size_t k = n / 2 + 1; k <= n; k++)
 				{
-					if (n % 2 == 1)
-					{
-						m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k)) / (static_cast<double>(n) + 1.));
-					}
-					else
-					{
-						m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k) - 1.) / static_cast<double>(n));
-					}
+					if (n % 2 == 1) { m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k)) / (static_cast<double>(n) + 1.)); }
+					else { m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k) - 1.) / static_cast<double>(n)); }
 				}
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_None)
 			{
-				for (size_t k = 0; k < n; k++)
-				{
-					m_WindowCoefficients[k] = 1;
-				}
+				for (size_t k = 0; k < n; k++) { m_WindowCoefficients[k] = 1; }
 			}
-			else
-			{
-				OV_ERROR_KRF(
-					"The windows method chosen is not supported.\n",
-					OpenViBE::Kernel::ErrorType::BadSetting
-				);
-			}
+			else { OV_ERROR_KRF("The windows method chosen is not supported.\n", OpenViBE::Kernel::ErrorType::BadSetting); }
 
 			m_Encoder.encodeHeader();
 		}
@@ -178,10 +162,7 @@ bool CBoxAlgorithmWindowing::process()
 			m_Encoder.encodeBuffer();
 		}
 
-		if (m_Decoder.isEndReceived())
-		{
-			m_Encoder.encodeEnd();
-		}
+		if (m_Decoder.isEndReceived()) { m_Encoder.encodeEnd(); }
 
 		dynamicBoxContext->markOutputAsReadyToSend(0, startTime, endTime);
 	}

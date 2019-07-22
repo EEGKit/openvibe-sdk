@@ -31,5 +31,3 @@ namespace Socket
 
 	extern Socket_API IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate);
 }
-
-

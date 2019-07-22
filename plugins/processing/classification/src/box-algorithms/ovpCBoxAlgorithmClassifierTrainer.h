@@ -55,11 +55,11 @@ namespace OpenViBEPlugins
 			} SFeatureVector;
 
 			virtual bool train(const std::vector<SFeatureVector>& rDataset,
-											const std::vector<size_t>& rPermutation,
-											size_t uiStartIndex, size_t uiStopIndex);
+							   const std::vector<size_t>& rPermutation,
+							   size_t uiStartIndex, size_t uiStopIndex);
 			virtual double getAccuracy(const std::vector<SFeatureVector>& rDataset,
-												  const std::vector<size_t>& rPermutation,
-												  size_t uiStartIndex, size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
+									   const std::vector<size_t>& rPermutation,
+									   size_t uiStartIndex, size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
 			virtual bool printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
 			virtual bool balanceDataset();
 
@@ -140,5 +140,3 @@ namespace OpenViBEPlugins
 		};
 	}
 }
-
-

@@ -16,4 +16,3 @@ int nint(double N);
 #ifdef __cplusplus
 }
 #endif
-

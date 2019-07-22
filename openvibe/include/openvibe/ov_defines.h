@@ -236,5 +236,3 @@
 
 #define OV_ScenarioImportContext_SchedulerMetaboxImport            OpenViBE::CIdentifier(0xDDBDD59F, 0xE8C76702)
 #define OV_ScenarioImportContext_OnLoadMetaboxImport               OpenViBE::CIdentifier(0xED48480A, 0x9F6DBAA7)
-
-

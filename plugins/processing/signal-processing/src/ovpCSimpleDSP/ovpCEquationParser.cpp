@@ -232,10 +232,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		if (*i->value.begin() == '-')
 		{
 			// -X => (* -1 X), useful to simplify the tree later
-			return new CAbstractTreeParentNode(
-				OP_MUL,
-				new CAbstractTreeValueNode(-1), createNode(i->children.begin()),
-				true);
+			return new CAbstractTreeParentNode(OP_MUL, new CAbstractTreeValueNode(-1), createNode(i->children.begin()), true);
 		}
 		else if (*i->value.begin() == '+')
 		{

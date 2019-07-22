@@ -47,8 +47,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 	OV_ERROR_UNLESS_KRF(
 		m_f64WindowTime > 0,
 		"Invalid negative number for window length",
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
+		OpenViBE::Kernel::ErrorType::BadSetting);
 
 	m_ui64StimulationId1 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_ui64StimulationId2 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);

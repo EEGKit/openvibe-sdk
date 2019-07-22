@@ -31,5 +31,3 @@ namespace EBML
 		IWriterHelper* m_pWriterHelperImplementation;
 	};
 };
-
-

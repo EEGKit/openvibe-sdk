@@ -25,5 +25,3 @@ namespace OpenViBE
 		IKernelLoader* m_pKernelLoaderImpl; //!< Internal implementation
 	};
 };
-
-

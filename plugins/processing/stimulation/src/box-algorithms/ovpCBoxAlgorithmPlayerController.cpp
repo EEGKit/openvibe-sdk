@@ -59,34 +59,19 @@ bool CBoxAlgorithmPlayerController::process()
 			{
 				if (l_pStimulationSet->getStimulationIdentifier(j) == m_ui64StimulationIdentifier)
 				{
-					this->getLogManager()
-							<< LogLevel_Trace << "Received stimulation ["
+					this->getLogManager() << LogLevel_Trace << "Received stimulation ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_ui64StimulationIdentifier) << "] causing action ["
 							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]\n";
 
 					bool l_bResult = false;
-					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Play)
-					{
-						l_bResult = this->getPlayerContext().play();
-					}
-					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Stop)
-					{
-						l_bResult = this->getPlayerContext().stop();
-					}
-					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Pause)
-					{
-						l_bResult = this->getPlayerContext().pause();
-					}
-					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Forward)
-					{
-						l_bResult = this->getPlayerContext().forward();
-					}
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Play) { l_bResult = this->getPlayerContext().play(); }
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Stop) { l_bResult = this->getPlayerContext().stop(); }
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Pause) { l_bResult = this->getPlayerContext().pause(); }
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Forward) { l_bResult = this->getPlayerContext().forward(); }
 
-					OV_ERROR_UNLESS_KRF(
-						l_bResult,
-						"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]",
-						OpenViBE::Kernel::ErrorType::BadConfig
-					);
+					OV_ERROR_UNLESS_KRF(l_bResult,
+										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]",
+										OpenViBE::Kernel::ErrorType::BadConfig);
 				}
 			}
 		}

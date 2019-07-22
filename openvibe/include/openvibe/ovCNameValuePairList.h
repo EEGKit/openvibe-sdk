@@ -55,8 +55,7 @@ namespace OpenViBE
 		 * \param rNameValuePairList [in] : The list to copy
 		 * \return This list.
 		 */
-		CNameValuePairList& operator=(
-			const CNameValuePairList& rNameValuePairList);
+		CNameValuePairList& operator=(const CNameValuePairList& rNameValuePairList);
 		//@}
 
 		/**
@@ -65,9 +64,7 @@ namespace OpenViBE
 		 * \param [in] rValue Value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(
-			const CString& rName,
-			const CString& rValue);
+		bool setValue(const CString& rName, const CString& rValue);
 
 		/**
 		 * \brief Insert a name/value pair
@@ -75,9 +72,7 @@ namespace OpenViBE
 		 * \param [in] pValue Value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(
-			const CString& rName,
-			const char* pValue);
+		bool setValue(const CString& rName, const char* pValue);
 
 		/**
 		 * \brief Insert a name/value pair where value is a double
@@ -85,9 +80,7 @@ namespace OpenViBE
 		 * \param [in] rValue Float64 value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(
-			const CString& rName,
-			const double& rValue);
+		bool setValue(const CString& rName, const double& rValue);
 
 		/**
 		 * \brief Insert a name/value pair where value is a boolean
@@ -95,9 +88,7 @@ namespace OpenViBE
 		 * \param [in] bValue Boolean value to associate with the name
 		 * \return True if pair could be inserted, false otherwise
 		 */
-		bool setValue(
-			const CString& rName,
-			bool bValue);
+		bool setValue(const CString& rName, bool bValue);
 
 		/**
 		 * \brief Retrieve a value from the list
@@ -105,9 +96,7 @@ namespace OpenViBE
 		 * \param [out] rValue Value to be retrieved from the list
 		 * \return True if value could be retrieved, false otherwise
 		 */
-		bool getValue(
-			const CString& rName,
-			CString& rValue) const;
+		bool getValue(const CString& rName, CString& rValue) const;
 
 		/**
 		 * \brief Retrieve a double value from the list
@@ -115,9 +104,7 @@ namespace OpenViBE
 		 * \param [out] rValue Float64 value to be retrieved
 		 * \return True if a double value could be retrieved, false otherwise
 		 */
-		bool getValue(
-			const CString& rName,
-			double& rValue) const;
+		bool getValue(const CString& rName, double& rValue) const;
 
 		/**
 		 * \brief Retrieve a boolean value from the list
@@ -126,9 +113,7 @@ namespace OpenViBE
 		 * \param rValue String to evaluate
 		 * \return True if string evaluates to a boolean, false otherwise
 		 */
-		bool getValue(
-			const CString& rName,
-			bool& rValue) const;
+		bool getValue(const CString& rName, bool& rValue) const;
 
 		/**
 		 * \brief Retrieve a value from the list
@@ -137,10 +122,7 @@ namespace OpenViBE
 		 * \param [out] rValue Value stored in rIndex
 		 * \return True if value could be retrieved, false otherwise
 		 */
-		bool getValue(
-			uint32_t rIndex,
-			CString& rName,
-			CString& rValue) const;
+		bool getValue(uint32_t rIndex, CString& rName, CString& rValue) const;
 
 		
 		/**
@@ -154,5 +136,3 @@ namespace OpenViBE
 		CNameValuePairListImpl* m_pNameValuePairListImpl; ///< The list implementation
 	};
 };
-
-
