@@ -317,4 +317,4 @@ namespace Dsp
 
 		return ComplexPair(u / d, v / d);
 	}
-}
+}  // namespace Dsp

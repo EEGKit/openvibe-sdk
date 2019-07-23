@@ -24,7 +24,7 @@ namespace OpenViBE
 			const CString m_sFileName;
 			IScenario& m_rScenario;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

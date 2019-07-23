@@ -3,4 +3,4 @@
 namespace Socket
 {
 	IConnection::~IConnection() { }
-};
+} // namespace Socket

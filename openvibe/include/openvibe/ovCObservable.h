@@ -68,4 +68,4 @@ namespace OpenViBE
 		ObserverList* m_pObserverList;
 		bool m_bHasChanged;
 	};
-}
+}  // namespace OpenViBE

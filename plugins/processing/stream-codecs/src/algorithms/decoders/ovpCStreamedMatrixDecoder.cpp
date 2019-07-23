@@ -70,12 +70,12 @@ bool CStreamedMatrixDecoder::uninitialize()
 bool CStreamedMatrixDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix) return true;
-	else if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_Dimension) return true;
-	else if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) return false;
-	else if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) return false;
-	else if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label) return false;
-	else if (rIdentifier == OVTK_NodeId_Buffer_StreamedMatrix) return true;
-	else if (rIdentifier == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) return false;
+	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_Dimension) return true;
+	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) return false;
+	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) return false;
+	if (rIdentifier == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label) return false;
+	if (rIdentifier == OVTK_NodeId_Buffer_StreamedMatrix) return true;
+	if (rIdentifier == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) return false;
 	return CEBMLBaseDecoder::isMasterChild(rIdentifier);
 }
 

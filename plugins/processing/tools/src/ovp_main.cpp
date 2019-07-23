@@ -8,7 +8,6 @@
 #include "box-algorithms/ovpCBoxAlgorithmExternalProcessing.h"
 
 OVP_Declare_Begin()
-	;
 
 	// ValidityCheckerType: this type registration enables the choice between different action to do on an invalid stream
 	rPluginModuleContext.getTypeManager().registerEnumerationType(OVP_TypeId_ValidityCheckerType, "Action to do");
@@ -21,4 +20,4 @@ OVP_Declare_Begin()
 	OVP_Declare_New(OpenViBEPlugins::Tools::CBoxAlgorithmMatrixValidityCheckerDesc);
 	OVP_Declare_New(OpenViBEPlugins::Tools::CBoxAlgorithmExternalProcessingDesc);
 
-OVP_Declare_End();
+OVP_Declare_End()

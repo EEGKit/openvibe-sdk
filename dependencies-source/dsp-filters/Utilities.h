@@ -217,7 +217,7 @@ namespace Dsp
 					copy(samples, dest[i], src + i, 0, channels - 1);
 			}
 				break;
-		};
+		}
 	}
 
 	// Convenience for a stereo pair of channels
@@ -360,7 +360,7 @@ namespace Dsp
 					copy(samples, dest + i, src[i], channels - 1, 0);
 			}
 				break;
-		};
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -790,6 +790,6 @@ void zero (int samples,
 		Value m_slope [Channels];
 		Value m_prev [Channels];
 	};
-}
+}  // namespace Dsp
 
 #endif

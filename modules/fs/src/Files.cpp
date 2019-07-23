@@ -254,11 +254,8 @@ bool Files::fileExists(const char* pathToCheck)
 	if (!pathToCheck) { return false; }
 	FILE* fp = open(pathToCheck, "r");
 	if (!fp) { return false; }
-	else
-	{
-		fclose(fp);
-		return true;
-	}
+	fclose(fp);
+	return true;
 }
 
 bool Files::directoryExists(const char* pathToCheck)

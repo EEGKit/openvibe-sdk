@@ -31,11 +31,10 @@ namespace XML
 	static void XMLCALL expat_xml_start(void* pData, const char* pElement, const char** ppAttribute);
 	static void XMLCALL expat_xml_end(void* pData, const char* pElement);
 	static void XMLCALL expat_xml_data(void* pData, const char* pDataValue, int iDataLength);
-};
+}
 
 CReader::CReader(IReaderCallback& rReaderCallback)
-	: m_rReaderCallback(rReaderCallback)
-	  , m_pXMLParser(NULL)
+	: m_rReaderCallback(rReaderCallback), m_pXMLParser(NULL)
 {
 	m_pXMLParser = XML_ParserCreate(NULL);
 	XML_SetElementHandler(m_pXMLParser, expat_xml_start, expat_xml_end);
@@ -46,11 +45,7 @@ CReader::CReader(IReaderCallback& rReaderCallback)
 bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	// $$$ TODO take 64bits size into consideration
-	XML_Status l_eStatus = XML_Parse(
-		m_pXMLParser,
-		static_cast<const char*>(pBuffer),
-		static_cast<const int>(ui64BufferSize),
-		false);
+	XML_Status l_eStatus = XML_Parse(m_pXMLParser, static_cast<const char*>(pBuffer), static_cast<const int>(ui64BufferSize), false);
 	if (l_eStatus != XML_STATUS_OK)
 	{
 		XML_Error l_oErrorCode = XML_GetErrorCode(m_pXMLParser);

@@ -34,11 +34,14 @@ bool CStimulationDecoder::uninitialize()
 bool CStimulationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration) { return false; }
+	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations) { return false; }
+	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation) { return true; }
+	if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier) { return false; }
+	else
+	{
+		if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date) { return false; }
+		if (rIdentifier == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration) { return false; }
+	}
 	return CEBMLBaseDecoder::isMasterChild(rIdentifier);
 }
 

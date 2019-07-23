@@ -34,8 +34,8 @@ namespace OpenViBEToolkit
 			IAlgorithmContext& m_rAlgorithmContext;
 			CAlgorithmScenarioExporter& m_rParent;
 		};
-	};
-};
+	}  // namespace
+}  // namespace OpenViBEToolkit
 
 #define exportAttributesMacro(exporter, attributable, memoryBuffer, AttributableName) \
 	do { \

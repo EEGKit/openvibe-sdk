@@ -77,8 +77,8 @@ namespace OpenViBE
 			CMetaboxManager& m_MetaboxManager;
 			uint32_t m_MetaBoxCount;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 CMetaboxManager::CMetaboxManager(const IKernelContext& kernelContext)
 	: TKernelObject<IMetaboxManager>(kernelContext)

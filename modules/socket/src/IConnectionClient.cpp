@@ -182,4 +182,4 @@ namespace Socket
 	{
 		return new CConnectionClient();
 	}
-};
+} // namespace Socket

@@ -24,4 +24,4 @@ namespace OpenViBEToolkit
 	};
 
 	extern OVTK_API ISignalTrialSet* createSignalTrialSet();
-};
+}  // namespace OpenViBEToolkit

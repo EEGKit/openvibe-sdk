@@ -122,6 +122,6 @@ namespace Dsp
 	private:
 		double m_v;
 	};
-}
+}  // namespace Dsp
 
 #endif

@@ -21,4 +21,4 @@ namespace EBML
 
 		IReaderHelper* m_pReaderHelperImplementation;
 	};
-};
+}  // namespace EBML

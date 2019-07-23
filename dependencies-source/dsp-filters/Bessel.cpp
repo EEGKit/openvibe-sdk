@@ -219,5 +219,5 @@ namespace Dsp
 
 			setLayout(m_digitalProto);
 		}
-	}
-}
+	}  // namespace Bessel
+}  // namespace Dsp

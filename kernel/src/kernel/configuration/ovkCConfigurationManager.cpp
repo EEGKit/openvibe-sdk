@@ -42,7 +42,7 @@ namespace
 	{
 		return std::tolower(c);
 	}
-};
+}  // namespace
 
 namespace OpenViBE
 {
@@ -59,10 +59,7 @@ namespace OpenViBE
 
 			static std::string reduce(const std::string& sValue)
 			{
-				if (sValue.length() == 0)
-				{
-					return "";
-				}
+				if (sValue.length() == 0) { return ""; }
 
 				std::string::size_type i = 0;
 				std::string::size_type j = sValue.length() - 1;
@@ -73,21 +70,12 @@ namespace OpenViBE
 				return sValue.substr(i, j - i + 1);
 			}
 
-			virtual bool callback(
-				FS::IEntryEnumerator::IEntry& rEntry,
-				FS::IEntryEnumerator::IAttributes& rAttributes)
+			virtual bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes)
 			{
 				std::ifstream l_oFile;
 				FS::Files::openIFStream(l_oFile, rEntry.getName());
 
-				OV_ERROR_UNLESS(
-					l_oFile.good(),
-					"Could not open file " << CString(rEntry.getName()),
-					ErrorType::ResourceNotFound,
-					false,
-					m_rErrorManager,
-					m_rLogManager
-				);
+				OV_ERROR_UNLESS(l_oFile.good(), "Could not open file " << CString(rEntry.getName()), ErrorType::ResourceNotFound, false, m_rErrorManager, m_rLogManager);
 
 				m_rLogManager << LogLevel_Trace << "Processing configuration file " << CString(rEntry.getName()) << "\n";
 
@@ -171,12 +159,11 @@ namespace OpenViBE
 			IErrorManager& m_rErrorManager;
 			IConfigurationManager& m_rConfigurationManager;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 CConfigurationManager::CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager)
-	: TKernelObject<IConfigurationManager>(rKernelContext)
-	  , m_pParentConfigurationManager(pParentConfigurationManager)
+	: TKernelObject<IConfigurationManager>(rKernelContext), m_pParentConfigurationManager(pParentConfigurationManager)
 {
 	m_ui32Index     = 0;
 	m_ui32StartTime = System::Time::getTime();
@@ -185,22 +172,19 @@ CConfigurationManager::CConfigurationManager(const IKernelContext& rKernelContex
 void CConfigurationManager::clear()
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
-
 	m_vConfigurationToken.clear();
 }
 
-bool CConfigurationManager::addConfigurationFromFile(
-	const CString& rFileNameWildCard)
+bool CConfigurationManager::addConfigurationFromFile(const CString& rFileNameWildCard)
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
 	this->getLogManager() << LogLevel_Trace << "Adding configuration file(s) [" << rFileNameWildCard << "]\n";
 
 
-	bool l_bResult;
 	CConfigurationManagerEntryEnumeratorCallBack l_rCB(getKernelContext().getLogManager(), getKernelContext().getErrorManager(), *this);
 	FS::IEntryEnumerator* l_pEntryEnumerator = createEntryEnumerator(l_rCB);
-	l_bResult                                = l_pEntryEnumerator->enumerate(rFileNameWildCard);
+	const bool l_bResult = l_pEntryEnumerator->enumerate(rFileNameWildCard);
 	l_pEntryEnumerator->release();
 	return l_bResult;
 }
@@ -208,9 +192,7 @@ bool CConfigurationManager::addConfigurationFromFile(
 // ----------------------------------------------------------------------------------------------------------------------------
 //
 
-CIdentifier CConfigurationManager::createConfigurationToken(
-	const CString& rConfigurationTokenName,
-	const CString& rConfigurationTokenValue)
+CIdentifier CConfigurationManager::createConfigurationToken(const CString& rConfigurationTokenName, const CString& rConfigurationTokenValue)
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
@@ -911,7 +893,7 @@ uint64_t CConfigurationManager::expandAsEnumerationEntryValue(
 {
 	CString l_sResult     = this->expand(rExpression);
 	uint64_t l_ui64Result = this->getTypeManager().getEnumerationEntryValueFromName(rEnumerationTypeIdentifier, l_sResult);
-	if (l_ui64Result != 0xffffffffffffffffll)
+	if (l_ui64Result != 0xffffffffffffffffLL)
 	{
 		return l_ui64Result;
 	}

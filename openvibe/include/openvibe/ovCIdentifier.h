@@ -216,4 +216,4 @@ namespace OpenViBE
 
 		uint64_t m_ui64Identifier; ///< the 64 bit identifier value
 	};
-};
+}  // namespace OpenViBE

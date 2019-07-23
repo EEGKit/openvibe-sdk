@@ -39,20 +39,16 @@ namespace FS
 
 		string m_sName;
 	};
-};
+}
 
 // ________________________________________________________________________________________________________________
 //
 
 IEntryEnumerator::IEntry::~IEntry() {}
 
-CEntry::CEntry(const string& sName)
-	: m_sName(sName) {}
+CEntry::CEntry(const string& sName) : m_sName(sName) {}
 
-const char* CEntry::getName()
-{
-	return m_sName.c_str();
-}
+const char* CEntry::getName() { return m_sName.c_str(); }
 
 // ________________________________________________________________________________________________________________
 //
@@ -63,8 +59,8 @@ namespace FS
 	{
 	public:
 
-		CAttributes();
-		virtual ~CAttributes();
+		CAttributes() {}
+		virtual ~CAttributes() {}
 
 		virtual bool isFile();
 		virtual bool isDirectory();
@@ -80,15 +76,15 @@ namespace FS
 
 	public:
 
-		bool m_bIsFile;
-		bool m_bIsDirectory;
-		bool m_bIsSymbolicLink;
-		bool m_bIsArchive;
-		bool m_bIsReadOnly;
-		bool m_bIsHidden;
-		bool m_bIsSystem;
-		bool m_bIsExecutable;
-		uint64_t m_ui64Size;
+		bool m_bIsFile = false;
+		bool m_bIsDirectory = false;
+		bool m_bIsSymbolicLink = false;
+		bool m_bIsArchive = false;
+		bool m_bIsReadOnly = false;
+		bool m_bIsHidden = false;
+		bool m_bIsSystem = false;
+		bool m_bIsExecutable = false;
+		uint64_t m_ui64Size = 0;
 	};
 };
 
@@ -97,69 +93,18 @@ namespace FS
 
 IEntryEnumerator::IAttributes::~IAttributes() {}
 
-CAttributes::CAttributes()
-	: m_bIsFile(false)
-	  , m_bIsDirectory(false)
-	  , m_bIsSymbolicLink(false)
-	  , m_bIsArchive(false)
-	  , m_bIsReadOnly(false)
-	  , m_bIsHidden(false)
-	  , m_bIsSystem(false)
-	  , m_bIsExecutable(false)
-	  , m_ui64Size(0) {}
-
-CAttributes::~CAttributes() {}
-
 // ________________________________________________________________________________________________________________
 //
 
-bool CAttributes::isFile()
-{
-	return m_bIsFile;
-}
-
-bool CAttributes::isDirectory()
-{
-	return m_bIsDirectory;
-}
-
-bool CAttributes::isSymbolicLink()
-{
-	return m_bIsSymbolicLink;
-}
-
-bool CAttributes::isArchive()
-{
-	return m_bIsArchive;
-}
-
-bool CAttributes::isReadOnly()
-{
-	return m_bIsReadOnly;
-}
-
-bool CAttributes::isHidden()
-{
-	return m_bIsHidden;
-}
-
-bool CAttributes::isSystem()
-{
-	return m_bIsSystem;
-}
-
-bool CAttributes::isExecutable()
-{
-	return m_bIsExecutable;
-}
-
-// ________________________________________________________________________________________________________________
-//
-
-uint64_t CAttributes::getSize()
-{
-	return m_ui64Size;
-}
+bool CAttributes::isFile() { return m_bIsFile; }
+bool CAttributes::isDirectory() { return m_bIsDirectory; }
+bool CAttributes::isSymbolicLink() { return m_bIsSymbolicLink; }
+bool CAttributes::isArchive() { return m_bIsArchive; }
+bool CAttributes::isReadOnly() { return m_bIsReadOnly; }
+bool CAttributes::isHidden() { return m_bIsHidden; }
+bool CAttributes::isSystem() { return m_bIsSystem; }
+bool CAttributes::isExecutable() { return m_bIsExecutable; }
+uint64_t CAttributes::getSize() { return m_ui64Size; }
 
 // ________________________________________________________________________________________________________________
 //
@@ -187,10 +132,7 @@ namespace FS
 CEntryEnumerator::CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
 	: m_rEntryEnumeratorCallBack(rEntryEnumeratorCallBack) {}
 
-void CEntryEnumerator::release()
-{
-	delete this;
-}
+void CEntryEnumerator::release() { delete this; }
 
 // ________________________________________________________________________________________________________________
 //

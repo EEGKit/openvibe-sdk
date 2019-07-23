@@ -51,7 +51,7 @@ namespace
 
 		return l_ui32Result;
 	}
-};
+}  // namespace
 
 bool CBoxAlgorithmReferenceChannel::initialize()
 {

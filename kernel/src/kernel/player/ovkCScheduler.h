@@ -74,7 +74,7 @@ namespace OpenViBE
 			bool flattenScenario();
 			System::CChrono m_oBenchmarkChrono;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

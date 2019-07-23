@@ -134,7 +134,7 @@ namespace
 		return OV_UndefinedIdentifier;
 	}
 	*/
-};
+}  // namespace
 
 //___________________________________________________________________//
 //                                                                   //

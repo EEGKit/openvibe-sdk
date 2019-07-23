@@ -210,10 +210,7 @@ static int iabs(int N)
 	{
 		return N;
 	}
-	else
-	{
-		return -N;
-	}
+	return -N;
 }
 
 void circshift(double* array, int N, int L)

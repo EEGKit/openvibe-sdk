@@ -73,10 +73,9 @@ namespace Dsp
 		{
 			if (first.imag() != 0)
 				return second == std::conj(first);
-			else
-				return second.imag() == 0 &&
-					   second.real() != 0 &&
-					   first.real() != 0;
+			return second.imag() == 0 &&
+				   second.real() != 0 &&
+				   first.real() != 0;
 		}
 
 		bool is_nan() const
@@ -126,6 +125,6 @@ namespace Dsp
 		kindBandShelf,
 		kindOther
 	};
-}
+}  // namespace Dsp
 
 #endif

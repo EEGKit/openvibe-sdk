@@ -54,19 +54,22 @@ bool CExperimentInformationDecoder::uninitialize()
 bool CExperimentInformationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Experiment) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Subject) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Subject_Name) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Subject_Age) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Context) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Experiment) { return true; }
+	if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Subject) { return true; }
+	else
+	{
+		if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier) { return false; }
+		if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Subject_Name) { return false; }
+		if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Subject_Age) { return false; }
+		if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender) { return false; }
+		if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Context) { return true; }
+		if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier) { return false; }
+		if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName) { return false; }
+		if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier) { return false; }
+		if (rIdentifier == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName) { return false; }
+	}
 	return CEBMLBaseDecoder::isMasterChild(rIdentifier);
 }
 

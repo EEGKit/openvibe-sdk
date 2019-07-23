@@ -96,7 +96,7 @@ namespace
 		OpenViBE::CString m_sValue;
 		bool m_bMod;
 	};
-}
+}  // namespace
 
 
 namespace OpenViBE
@@ -1676,5 +1676,5 @@ namespace OpenViBE
 		private:
 			std::map<BoxInterfacorType, std::vector<std::shared_ptr<CInterfacor>>> m_Interfacors;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE

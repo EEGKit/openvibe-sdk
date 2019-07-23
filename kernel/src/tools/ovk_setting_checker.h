@@ -61,4 +61,4 @@ namespace
 		//TODO: else
 		return true;
 	}
-};
+}  // namespace

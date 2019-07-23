@@ -60,6 +60,6 @@ namespace Dsp
 		static const ParamInfo getParamInfo_6() { return ParamInfo(); }
 		static const ParamInfo getParamInfo_7() { return ParamInfo(); }
 	};
-}
+}  // namespace Dsp
 
 #endif

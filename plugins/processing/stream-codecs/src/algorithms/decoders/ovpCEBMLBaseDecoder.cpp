@@ -54,10 +54,10 @@ bool CEBMLBaseDecoder::process()
 bool CEBMLBaseDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Header_StreamVersion) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_StreamType) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Buffer) { return true; }
-	else if (rIdentifier == OVTK_NodeId_End) { return true; }
+	if (rIdentifier == OVTK_NodeId_Header_StreamVersion) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_StreamType) { return false; }
+	if (rIdentifier == OVTK_NodeId_Buffer) { return true; }
+	if (rIdentifier == OVTK_NodeId_End) { return true; }
 	return false;
 }
 

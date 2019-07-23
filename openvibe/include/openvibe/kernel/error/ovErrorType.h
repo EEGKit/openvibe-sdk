@@ -70,5 +70,5 @@ namespace OpenViBE
 			BadTrigger = 53, /*!< Used when an algorithm trigger has a wrong value */
 			BadSetting = 54 /*!< Used when a box setting has a wrong value */
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE

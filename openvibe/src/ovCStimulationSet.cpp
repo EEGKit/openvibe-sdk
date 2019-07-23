@@ -49,8 +49,8 @@ namespace OpenViBE
 
 			vector<CStimulation> m_vStimulation;
 		};
-	};
-};
+	}  // namespace
+}  // namespace OpenViBE
 
 // ________________________________________________________________________________________________________________
 //

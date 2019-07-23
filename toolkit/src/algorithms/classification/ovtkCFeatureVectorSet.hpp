@@ -53,4 +53,4 @@ namespace OpenViBEToolkit
 		const OpenViBE::IMatrix& m_rMatrix;
 		std::map<uint32_t, CInternalFeatureVector> m_vFeatureVector;
 	};
-};
+}  // namespace OpenViBEToolkit

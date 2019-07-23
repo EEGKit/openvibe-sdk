@@ -21,4 +21,4 @@ namespace OpenViBEToolkit
 	};
 
 	typedef TFeatureVector<IFeatureVector> CFeatureVector;
-};
+}  // namespace OpenViBEToolkit

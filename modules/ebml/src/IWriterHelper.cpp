@@ -36,15 +36,15 @@ namespace EBML
 
 		protected:
 
-			IWriter* m_pWriter;
+			IWriter* m_pWriter = nullptr;
 		};
-	};
-};
+	}  // namespace
+}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
 
-CWriterHelper::CWriterHelper() : m_pWriter(0) {}
+CWriterHelper::CWriterHelper() {}
 
 // ________________________________________________________________________________________________________________
 //
@@ -58,7 +58,7 @@ bool CWriterHelper::connect(IWriter* pWriter)
 bool CWriterHelper::disconnect()
 {
 	if (!m_pWriter) { return false; }
-	m_pWriter = 0;
+	m_pWriter = nullptr;
 	return true;
 }
 
@@ -85,23 +85,41 @@ bool CWriterHelper::setSIntegerAsChildData(const int64_t iValue)
 	unsigned char l_pBuffer[8];
 
 	if (iValue == 0x00000000000000LL)
+	{
 		l_ui64BufferSize = 0;
+	}
 	else if (iValue >= -0x00000000000080LL && iValue <= 0x0000000000007fLL)
+	{
 		l_ui64BufferSize = 1;
+	}
 	else if (iValue >= -0x00000000008000LL && iValue <= 0x00000000007fffLL)
+	{
 		l_ui64BufferSize = 2;
+	}
 	else if (iValue >= -0x00000000800000LL && iValue <= 0x000000007fffffLL)
+	{
 		l_ui64BufferSize = 3;
+	}
 	else if (iValue >= -0x00000080000000LL && iValue <= 0x0000007fffffffLL)
+	{
 		l_ui64BufferSize = 4;
+	}
 	else if (iValue >= -0x00008000000000LL && iValue <= 0x00007fffffffffLL)
+	{
 		l_ui64BufferSize = 5;
+	}
 	else if (iValue >= -0x00800000000000LL && iValue <= 0x007fffffffffffLL)
+	{
 		l_ui64BufferSize = 6;
+	}
 	else if (iValue >= -0x80000000000000LL && iValue <= 0x7fffffffffffffLL)
+	{
 		l_ui64BufferSize = 7;
+	}
 	else
+	{
 		l_ui64BufferSize = 8;
+	}
 
 	for (i = 0; i < l_ui64BufferSize; i++)
 	{
@@ -118,23 +136,41 @@ bool CWriterHelper::setUIntegerAsChildData(const uint64_t uiValue)
 	unsigned char l_pBuffer[8];
 
 	if (uiValue == 0x000000000000000LL)
+	{
 		l_ui64BufferSize = 0;
+	}
 	else if (uiValue < 0x000000000000100LL)
+	{
 		l_ui64BufferSize = 1;
+	}
 	else if (uiValue < 0x000000000010000LL)
+	{
 		l_ui64BufferSize = 2;
+	}
 	else if (uiValue < 0x000000001000000LL)
+	{
 		l_ui64BufferSize = 3;
+	}
 	else if (uiValue < 0x000000100000000LL)
+	{
 		l_ui64BufferSize = 4;
+	}
 	else if (uiValue < 0x000010000000000LL)
+	{
 		l_ui64BufferSize = 5;
+	}
 	else if (uiValue < 0x001000000000000LL)
+	{
 		l_ui64BufferSize = 6;
+	}
 	else if (uiValue < 0x100000000000000LL)
+	{
 		l_ui64BufferSize = 7;
+	}
 	else
+	{
 		l_ui64BufferSize = 8;
+	}
 
 	for (i = 0; i < l_ui64BufferSize; i++)
 	{

@@ -131,4 +131,4 @@ namespace OpenViBE
 			return (ui64Time * ui32SamplingRate) >> 32;
 		}
 	};
-};
+}  // namespace OpenViBE

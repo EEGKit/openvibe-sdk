@@ -25,8 +25,8 @@ namespace EBML
 
 			std::string m_sASCIIString;
 		};
-	};
-};
+	}  // namespace
+}  // namespace EBML
 
 CReaderHelper::CReaderHelper() {}
 

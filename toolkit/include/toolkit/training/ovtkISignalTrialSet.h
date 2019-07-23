@@ -21,4 +21,4 @@ namespace OpenViBEToolkit
 
 	extern OVTK_API ISignalTrialSet* createSignalTrialSet();
 	extern OVTK_API void releaseSignalTrialSet(ISignalTrialSet* pSignalTrialSet);
-};
+}  // namespace OpenViBEToolkit

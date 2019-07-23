@@ -132,6 +132,6 @@ namespace Dsp
 	private:
 		PoleZeroPair m_pairs[(MaxPoles + 1) / 2];
 	};
-}
+}  // namespace Dsp
 
 #endif

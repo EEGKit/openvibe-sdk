@@ -10,37 +10,25 @@ namespace OpenViBE
 	{
 		std::string m_sValue;
 	};
-};
-
-CString::CString()
-{
-	m_pStringImpl = new CStringImpl();
 }
+
+CString::CString() { m_pStringImpl = new CStringImpl(); }
 
 CString::CString(const CString& rString)
 {
-	m_pStringImpl           = new CStringImpl();
+	m_pStringImpl = new CStringImpl();
 	m_pStringImpl->m_sValue = rString.m_pStringImpl->m_sValue;
 }
 
 CString::CString(const char* pString)
 {
 	m_pStringImpl = new CStringImpl();
-	if (pString)
-	{
-		m_pStringImpl->m_sValue = pString;
-	}
+	if (pString) { m_pStringImpl->m_sValue = pString; }
 }
 
-CString::~CString()
-{
-	delete m_pStringImpl;
-}
+CString::~CString() { delete m_pStringImpl; }
 
-CString::operator const char*() const
-{
-	return m_pStringImpl->m_sValue.c_str();
-}
+CString::operator const char* () const { return m_pStringImpl->m_sValue.c_str(); }
 
 CString& CString::operator=(const CString& rString)
 {
@@ -54,10 +42,7 @@ CString& CString::operator+=(const CString& rString)
 	return *this;
 }
 
-char& CString::operator[](size_t idx)
-{
-	return m_pStringImpl->m_sValue[idx];
-}
+char& CString::operator[](size_t idx) { return m_pStringImpl->m_sValue[idx]; }
 
 namespace OpenViBE
 {
@@ -82,7 +67,7 @@ namespace OpenViBE
 	{
 		return (rString1.m_pStringImpl->m_sValue) < (rString2.m_pStringImpl->m_sValue);
 	}
-};
+}  // namespace OpenViBE
 
 bool CString::set(const CString& rString)
 {
@@ -92,23 +77,11 @@ bool CString::set(const CString& rString)
 
 bool CString::set(const char* pString)
 {
-	if (pString)
-	{
-		m_pStringImpl->m_sValue = pString;
-	}
-	else
-	{
-		m_pStringImpl->m_sValue = "";
-	}
+	if (pString) { m_pStringImpl->m_sValue = pString; }
+	else { m_pStringImpl->m_sValue = ""; }
 	return true;
 }
 
-const char* CString::toASCIIString() const
-{
-	return m_pStringImpl->m_sValue.c_str();
-}
+const char* CString::toASCIIString() const { return m_pStringImpl->m_sValue.c_str(); }
 
-size_t CString::length() const
-{
-	return m_pStringImpl->m_sValue.length();
-}
+size_t CString::length() const { return m_pStringImpl->m_sValue.length(); }

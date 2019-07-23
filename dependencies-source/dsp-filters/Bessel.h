@@ -448,9 +448,9 @@ namespace Dsp
 			template <int MaxOrder>
 			struct LowShelf : OrderBase<MaxOrder, TypeIII, Bessel::LowShelf>,
 							  LowShelfDescription {};
-		}
-	}
-}
+		}  // namespace Design
+	}  // namespace Bessel
+}  // namespace Dsp
 
 #endif
 

@@ -765,11 +765,8 @@ namespace r8b
 			const int t = v >> 24;
 			return (t != 0 ? 24 + OccupancyTable[t & 0xFF] : 16 + OccupancyTable[tt]);
 		}
-		else
-		{
-			const int t = v >> 8;
-			return (t != 0 ? 8 + OccupancyTable[t] : OccupancyTable[v]);
-		}
+		const int t = v >> 8;
+		return (t != 0 ? 8 + OccupancyTable[t] : OccupancyTable[v]);
 	}
 
 	/**
@@ -1067,8 +1064,8 @@ namespace r8b
 	inline double clampr(const double Value, const double minv, const double maxv)
 	{
 		if (Value < minv) { return (minv); }
-		else if (Value > maxv) { return (maxv); }
-		else { return (Value); }
+		if (Value > maxv) { return (maxv); }
+		return (Value);
 	}
 
 	/**

@@ -51,5 +51,5 @@ namespace OpenViBE
 			ILogManager& m_LogManager;
 			CSimulatedBox& m_SimulatedBox;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE

@@ -305,4 +305,4 @@ namespace Dsp
 						 &ParamInfo::Real_toNativeValue,
 						 &ParamInfo::Real_toString);
 	}
-}
+}  // namespace Dsp

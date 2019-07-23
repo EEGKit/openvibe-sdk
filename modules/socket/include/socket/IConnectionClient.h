@@ -12,4 +12,4 @@ namespace Socket
 	};
 
 	extern Socket_API IConnectionClient* createConnectionClient();
-};
+} // namespace Socket

@@ -78,5 +78,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_SpectralAnalysisDesc)
 		};
-	}
-}
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

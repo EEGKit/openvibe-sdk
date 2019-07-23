@@ -37,25 +37,43 @@ inline unsigned long getCodedSizeLength(unsigned char* pBuffer, unsigned long ul
 {
 	unsigned long l_ulCodedSizeLength;
 	if (pBuffer[0] >> 7)
+	{
 		l_ulCodedSizeLength = 1;
+	}
 	else if (pBuffer[0] >> 6)
+	{
 		l_ulCodedSizeLength = 2;
+	}
 	else if (pBuffer[0] >> 5)
+	{
 		l_ulCodedSizeLength = 3;
+	}
 	else if (pBuffer[0] >> 4)
+	{
 		l_ulCodedSizeLength = 4;
+	}
 	else if (pBuffer[0] >> 3)
+	{
 		l_ulCodedSizeLength = 5;
+	}
 	else if (pBuffer[0] >> 2)
+	{
 		l_ulCodedSizeLength = 6;
+	}
 	else if (pBuffer[0] >> 1)
+	{
 		l_ulCodedSizeLength = 7;
+	}
 	else if (pBuffer[0])
+	{
 		l_ulCodedSizeLength = 8;
+	}
 	else
 	{
 		if (_Debug_ && ulBufferLength < 2)
+		{
 			printf("EBML::getCodedSizeLength called with smaller buffer size %lu - needs at least 2\n", ulBufferLength);
+		}
 
 		if (pBuffer[1] >> 7)
 			l_ulCodedSizeLength = 9;
@@ -106,8 +124,8 @@ namespace EBML
 			unsigned char* m_pBuffer;
 			//			bool m_bBufferShouldBeDeleted;
 		};
-	};
-};
+	}  // namespace
+}  // namespace EBML
 
 CReaderNode::CReaderNode(const CIdentifier& rIdentifier, CReaderNode* pParentNode)
 	: m_pParentNode(pParentNode)
@@ -157,8 +175,8 @@ namespace EBML
 
 			uint64_t m_ui64TotalBytes;
 		};
-	};
-};
+	}  // namespace
+}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //

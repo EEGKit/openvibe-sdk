@@ -48,7 +48,7 @@ namespace OpenViBE
 			uint32_t m_ui32TargetInputIndex;
 			CIdentifier m_oTargetBoxInputIdentifier;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

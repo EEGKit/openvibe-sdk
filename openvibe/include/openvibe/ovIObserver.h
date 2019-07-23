@@ -28,4 +28,4 @@ namespace OpenViBE
 		 */
 		virtual void update(CObservable& o, void* data) = 0;
 	};
-}
+}  // namespace OpenViBE

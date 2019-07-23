@@ -367,5 +367,5 @@ namespace Dsp
 
 			setLayout(m_digitalProto);
 		}
-	}
-}
+	}  // namespace Legendre
+}  // namespace Dsp

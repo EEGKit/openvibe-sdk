@@ -109,5 +109,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationBasedEpochingDesc)
 		};
-	};
-};
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

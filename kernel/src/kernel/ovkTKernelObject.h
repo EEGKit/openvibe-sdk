@@ -82,5 +82,5 @@ namespace OpenViBE
 
 			// TKernelObject();
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

@@ -22,15 +22,14 @@ namespace
 	{
 		return title + "\n" + std::string(title.size(), indentCharacters[level]) + "\n";
 	}
-};
+}
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------------------------------------------------------
 
 CPluginObjectDescEnumBoxTemplateGenerator::CPluginObjectDescEnumBoxTemplateGenerator(const IKernelContext& rKernelContext, const CString& sDocTemplateDirectory)
-	: CPluginObjectDescEnum(rKernelContext)
-	  , m_DocTemplateDirectory(sDocTemplateDirectory) {}
+	: CPluginObjectDescEnum(rKernelContext), m_DocTemplateDirectory(sDocTemplateDirectory) {}
 
 bool CPluginObjectDescEnumBoxTemplateGenerator::initialize()
 {

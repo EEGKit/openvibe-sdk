@@ -18,10 +18,10 @@ namespace EBML
 
 	protected:
 
-		IReader* m_pReaderImplementation;
+		IReader* m_pReaderImplementation = nullptr;
 
 	private:
 
 		CReader();
 	};
-};
+}  // namespace EBML

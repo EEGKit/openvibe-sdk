@@ -472,14 +472,14 @@ namespace Common
 
 		protected:
 
-			size_t m_ui32ChannelCount;
-			size_t m_ui32InputSamplingRate;
-			size_t m_ui32OutputSamplingRate;
+			size_t m_ui32ChannelCount = 0;
+			size_t m_ui32InputSamplingRate = 0;
+			size_t m_ui32OutputSamplingRate = 0;
 
-			int m_iFractionalDelayFilterSampleCount;
-			int m_iMaxInputSampleCount;
-			double m_f64TransitionBandInPercent;
-			double m_f64StopBandAttenuation;
+			int m_iFractionalDelayFilterSampleCount = 6;
+			int m_iMaxInputSampleCount = 1024;
+			double m_f64TransitionBandInPercent = 45;
+			double m_f64StopBandAttenuation = 49;
 
 			std::vector<r8b::CDSPProcessor*> m_vResampler;
 
@@ -496,5 +496,5 @@ namespace Common
 		typedef TResampler<float, ResamplerStoreMode_ChannelWise> CDownsamplerCf;
 		typedef TResampler<double, ResamplerStoreMode_SampleWise> CDownsamplerSd;
 		typedef TResampler<double, ResamplerStoreMode_ChannelWise> CDownsamplerCd;
-	};
-};
+	}  // namespace Resampler
+}  // namespace Common

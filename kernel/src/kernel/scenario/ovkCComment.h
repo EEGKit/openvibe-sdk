@@ -39,7 +39,7 @@ namespace OpenViBE
 			CIdentifier m_oIdentifier;
 			CString m_sText;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

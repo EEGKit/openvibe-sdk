@@ -182,4 +182,4 @@ namespace Dsp
 
 		return y;
 	}
-}
+}  // namespace Dsp

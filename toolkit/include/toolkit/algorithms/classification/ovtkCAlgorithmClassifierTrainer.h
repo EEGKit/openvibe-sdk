@@ -46,4 +46,4 @@ namespace OpenViBEToolkit
 
 		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVTK_ClassId_Algorithm_ClassifierTrainerDesc)
 	};
-};
+}  // namespace OpenViBEToolkit

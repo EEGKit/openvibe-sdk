@@ -36,11 +36,11 @@ bool CSpectrumDecoder::uninitialize()
 bool CSpectrumDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_Spectrum) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { return false; }
-	else if (rIdentifier == OVTK_NodeId_Header_Spectrum_SamplingRate) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated) { return true; }
+	if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_Spectrum_SamplingRate) { return false; }
 	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
 }
 

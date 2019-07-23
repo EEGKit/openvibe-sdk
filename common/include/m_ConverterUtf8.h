@@ -81,5 +81,5 @@ namespace Common
 			return utf16;
 		}
 #endif // TARGET_OS_Windows
-	};
-};
+	}  // namespace Converter
+}  // namespace Common

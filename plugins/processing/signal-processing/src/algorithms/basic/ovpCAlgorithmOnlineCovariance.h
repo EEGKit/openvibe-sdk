@@ -100,8 +100,8 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_OnlineCovarianceDesc)
 		};
-	};
-};
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins
 
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

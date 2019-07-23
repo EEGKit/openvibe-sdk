@@ -378,5 +378,5 @@ namespace Dsp
 
 			setLayout(m_digitalProto);
 		}
-	}
-}
+	}  // namespace Elliptic
+}  // namespace Dsp

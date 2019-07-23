@@ -54,7 +54,7 @@ namespace OpenViBE
 			LicenseType_ZLL,          //!< zlib/libpng License
 			LicenseType_ZPL,          //!< Zope Public License
 		};
-	};
+	}  // namespace Kernel
 
 	namespace Plugins
 	{
@@ -233,5 +233,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Plugins_PluginObjectDesc)
 		};
-	};
-};
+	}  // namespace Plugins
+}  // namespace OpenViBE

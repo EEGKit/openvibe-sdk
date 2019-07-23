@@ -35,14 +35,11 @@ namespace OpenViBEToolkit
 				// it can not be easily used in std::transform
 				// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
 				template <class charT>
-				charT to_lower(charT c)
-				{
-					return std::tolower(c);
-				}
-			}
-		};
-	};
-};
+				charT to_lower(charT c) { return std::tolower(c); }
+			}  // namespace
+		}  // namespace String
+	}  // namespace Tools
+}  // namespace OpenViBEToolkit
 
 uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t ui8Separator)
 {

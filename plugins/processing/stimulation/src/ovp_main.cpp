@@ -10,7 +10,6 @@
 #include "box-algorithms/ovpCBoxAlgorithmTimeout.h"
 
 OVP_Declare_Begin()
-	;
 
 	rPluginModuleContext.getTypeManager().registerEnumerationType(OV_TypeId_PlayerAction, "Player Action");
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OV_TypeId_PlayerAction, "Play", OV_TypeId_PlayerAction_Play.toUInteger());
@@ -37,4 +36,4 @@ OVP_Declare_Begin()
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_RejectClass_CanWin, "Yes", OVP_TypeId_Voting_RejectClass_CanWin_Yes.toUInteger());
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVP_TypeId_Voting_RejectClass_CanWin, "No", OVP_TypeId_Voting_RejectClass_CanWin_No.toUInteger());
 
-OVP_Declare_End();
+OVP_Declare_End()

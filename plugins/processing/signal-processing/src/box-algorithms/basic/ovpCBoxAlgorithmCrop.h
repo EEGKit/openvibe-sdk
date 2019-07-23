@@ -103,5 +103,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_CropDesc)
 		};
-	}
-}
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

@@ -89,4 +89,4 @@ namespace OpenViBE
 		const uint8_t& operator [](const uint64_t ui64Index) const { return this->getDirectPointer()[ui64Index]; }
 		uint8_t& operator [](const uint64_t ui64Index) { return this->getDirectPointer()[ui64Index]; }
 	};
-};
+}  // namespace OpenViBE

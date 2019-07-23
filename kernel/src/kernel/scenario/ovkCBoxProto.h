@@ -36,5 +36,5 @@ namespace OpenViBE
 
 			CBoxProto();
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

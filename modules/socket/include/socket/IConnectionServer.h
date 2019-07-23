@@ -27,4 +27,4 @@ namespace Socket
 	};
 
 	extern Socket_API IConnectionServer* createConnectionServer();
-};
+} // namespace Socket

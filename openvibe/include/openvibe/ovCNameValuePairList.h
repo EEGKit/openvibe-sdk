@@ -135,4 +135,4 @@ namespace OpenViBE
 
 		CNameValuePairListImpl* m_pNameValuePairListImpl; ///< The list implementation
 	};
-};
+}  // namespace OpenViBE

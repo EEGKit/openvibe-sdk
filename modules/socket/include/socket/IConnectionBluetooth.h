@@ -90,4 +90,4 @@ namespace Socket
 	};
 
 	extern Socket_API IConnectionBluetooth* createConnectionBluetooth();
-};
+} // namespace Socket

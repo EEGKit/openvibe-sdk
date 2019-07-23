@@ -55,4 +55,4 @@ namespace System
 
 		Memory();
 	};
-};
+}  // namespace System

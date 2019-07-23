@@ -25,17 +25,13 @@ namespace XML
 	protected:
 		IWriterCallback& m_rWriterCallback;
 		stack<string> m_vNodes;
-		bool m_bHasChild;
-		bool m_bHasData;
-		bool m_bHasClosedOpeningNode;
+		bool m_bHasChild = false;
+		bool m_bHasData = false;
+		bool m_bHasClosedOpeningNode = true;
 	};
-};
+}
 
-CWriter::CWriter(IWriterCallback& rWriterCallback)
-	: m_rWriterCallback(rWriterCallback)
-	  , m_bHasChild(false)
-	  , m_bHasData(false)
-	  , m_bHasClosedOpeningNode(true) {}
+CWriter::CWriter(IWriterCallback& rWriterCallback) : m_rWriterCallback(rWriterCallback) {}
 
 bool CWriter::openChild(const char* sName)
 {

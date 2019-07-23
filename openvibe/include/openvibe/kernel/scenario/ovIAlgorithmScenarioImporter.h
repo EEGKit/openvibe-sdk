@@ -41,5 +41,5 @@ namespace OpenViBE
 				return true;
 			}
 		};
-	}
-}
+	}  // namespace Plugins
+}  // namespace OpenViBE

@@ -91,4 +91,4 @@ namespace EBML
 	 * \return \c NULL when something went wrong.
 	 */
 	extern EBML_API IReaderHelper* createReaderHelper();
-};
+}  // namespace EBML

@@ -52,4 +52,4 @@ namespace OpenViBE
 			return StringDirectories::getLogDir().c_str();
 		}
 	};
-}
+}  // namespace OpenViBE

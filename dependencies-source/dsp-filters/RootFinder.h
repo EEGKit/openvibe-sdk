@@ -124,6 +124,6 @@ namespace Dsp
 		complex_t m_ad0[maxdegree + 1];
 		complex_t m_r [maxdegree];
 	};
-}
+}  // namespace Dsp
 
 #endif

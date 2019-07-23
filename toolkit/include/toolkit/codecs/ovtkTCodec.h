@@ -113,6 +113,6 @@ namespace OpenViBEToolkit
 			return m_pCodec->process();
 		}
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

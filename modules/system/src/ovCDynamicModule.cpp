@@ -62,7 +62,7 @@ namespace
 		return std::string(l_ErrorText);
 	}
 #endif
-}
+}  // namespace
 
 const char* CDynamicModule::getErrorString(unsigned int errorCode) const
 {

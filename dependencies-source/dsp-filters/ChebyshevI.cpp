@@ -264,5 +264,5 @@ namespace Dsp
 
 			setLayout(m_digitalProto);
 		}
-	}
-}
+	}  // namespace ChebyshevI
+}  // namespace Dsp

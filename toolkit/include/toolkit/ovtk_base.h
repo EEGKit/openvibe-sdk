@@ -12,7 +12,7 @@ namespace EBML
 	class IReader;
 	class IReaderCallback;
 	class IReaderHelper;
-};
+}
 
 namespace OpenViBEToolkit
 {
@@ -34,4 +34,4 @@ namespace OpenViBEToolkit
 		CHandledType& m_rHandler;
 		CHandledType m_oLastHandledValue;
 	};
-};
+}  // namespace OpenViBEToolkit

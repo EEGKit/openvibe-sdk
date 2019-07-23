@@ -29,7 +29,7 @@ namespace OpenViBE
 
 			IPluginModule* m_pImplementation;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

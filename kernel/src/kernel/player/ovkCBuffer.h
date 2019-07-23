@@ -17,7 +17,7 @@ namespace OpenViBE
 
 			CBuffer& operator=(const CBuffer& rBuffer);
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

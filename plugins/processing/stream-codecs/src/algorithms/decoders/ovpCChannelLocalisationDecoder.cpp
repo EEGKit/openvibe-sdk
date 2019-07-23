@@ -34,7 +34,7 @@ bool CChannelLocalisationDecoder::uninitialize()
 bool CChannelLocalisationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_ChannelLocalisation) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Header_ChannelLocalisation_Dynamic) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_ChannelLocalisation_Dynamic) { return false; }
 	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
 }
 
@@ -44,12 +44,8 @@ void CChannelLocalisationDecoder::openChild(const EBML::CIdentifier& rIdentifier
 
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
-	if ((l_rTop == OVTK_NodeId_Header_ChannelLocalisation)
-		|| (l_rTop == OVTK_NodeId_Header_ChannelLocalisation_Dynamic)) { }
-	else
-	{
-		CStreamedMatrixDecoder::openChild(rIdentifier);
-	}
+	if ((l_rTop == OVTK_NodeId_Header_ChannelLocalisation) || (l_rTop == OVTK_NodeId_Header_ChannelLocalisation_Dynamic)) { }
+	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
 }
 
 void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)

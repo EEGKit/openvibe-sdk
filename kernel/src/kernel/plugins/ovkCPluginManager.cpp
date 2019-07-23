@@ -123,8 +123,8 @@ namespace OpenViBE
 			map<IPluginObjectDesc*, IPluginModule*>& m_rPluginObjectDesc;
 			bool& m_HaveAllPluginsLoadedCorrectly;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 CPluginManager::CPluginManager(const IKernelContext& rKernelContext)
 	: TKernelObject<IPluginManager>(rKernelContext) {}

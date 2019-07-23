@@ -34,7 +34,7 @@ bool CSignalDecoder::uninitialize()
 bool CSignalDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_Signal) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Header_Signal_SamplingRate) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_Signal_SamplingRate) { return false; }
 	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
 }
 

@@ -150,5 +150,5 @@ namespace OpenViBE
 			std::map<CIdentifier, CIdentifier> m_NextMetadataIdentifier;
 			CIdentifier m_FirstMetadataIdentifier;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE

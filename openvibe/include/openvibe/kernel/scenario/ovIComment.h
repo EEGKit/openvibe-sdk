@@ -72,5 +72,5 @@ namespace OpenViBE
 		};
 
 		typedef IComment IStaticCommentContext;
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

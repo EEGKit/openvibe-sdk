@@ -39,5 +39,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_KernelObjectFactory)
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

@@ -36,7 +36,7 @@ bool CChannelUnitsDecoder::uninitialize()
 bool CChannelUnitsDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Header_ChannelUnits) { return true; }
-	else if (rIdentifier == OVTK_NodeId_Header_ChannelUnits_Dynamic) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_ChannelUnits_Dynamic) { return false; }
 	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
 }
 

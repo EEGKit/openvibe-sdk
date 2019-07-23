@@ -231,6 +231,6 @@ namespace Dsp
 			BiquadBase::applyScale(scale);
 		}
 	};
-}
+}  // namespace Dsp
 
 #endif

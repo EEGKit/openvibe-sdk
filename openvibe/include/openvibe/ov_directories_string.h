@@ -221,4 +221,4 @@ namespace OpenViBE
 #endif
 		}
 	};
-}
+}  // namespace OpenViBE

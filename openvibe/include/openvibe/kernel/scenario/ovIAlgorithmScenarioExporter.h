@@ -37,5 +37,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OV_UndefinedIdentifier)
 		};
-	}
-}
+	}  // namespace Plugins
+}  // namespace OpenViBE

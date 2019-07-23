@@ -131,4 +131,4 @@ namespace OpenViBE
 		const double& operator [](const uint32_t ui32Index) const { return this->getBuffer()[ui32Index]; }
 		double& operator [](const uint32_t ui32Index) { return this->getBuffer()[ui32Index]; }
 	};
-};
+}  // namespace OpenViBE

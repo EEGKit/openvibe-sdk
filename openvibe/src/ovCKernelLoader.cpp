@@ -40,7 +40,7 @@ namespace OpenViBE
 		bool (*onGetKernelDescCB)(IKernelDesc*&);
 		bool (*onUninitializeCB)();
 	};
-};
+}  // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
@@ -115,7 +115,7 @@ namespace OpenViBE
 
 		HMODULE m_pFileHandle;
 	};
-};
+}  // namespace OpenViBE
 
 #else
 

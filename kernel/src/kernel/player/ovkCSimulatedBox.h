@@ -155,7 +155,7 @@ namespace OpenViBE
 			std::vector<uint64_t> m_vLastOutputStartTime;
 			std::vector<uint64_t> m_vLastOutputEndTime;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

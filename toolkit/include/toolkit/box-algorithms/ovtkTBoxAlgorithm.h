@@ -226,7 +226,7 @@ namespace OpenViBEToolkit
 								"Could not expand numeric expression [" << m_sSettingValue << "] to integer 64bits.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int64_t>::max(), m_rErrorManager, m_rLogManager);
 
-				return static_cast<int64_t>(l_dResult);;
+				return static_cast<int64_t>(l_dResult);
 			}
 
 			operator double()
@@ -397,4 +397,4 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::IBoxListenerContext* m_pBoxListenerContext;
 	};
-};
+}  // namespace OpenViBEToolkit

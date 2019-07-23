@@ -48,4 +48,4 @@ namespace System
 
 		Math();
 	};
-};
+}  // namespace System

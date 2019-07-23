@@ -30,4 +30,4 @@ namespace OpenViBEToolkit
 			return this->getFeatureVector(ui32Index);
 		}
 	};
-};
+}  // namespace OpenViBEToolkit

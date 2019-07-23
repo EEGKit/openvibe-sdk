@@ -76,6 +76,6 @@ namespace OpenViBEToolkit
 			this->uninitialize();
 		}
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

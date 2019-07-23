@@ -237,6 +237,6 @@ namespace Dsp
 		toNativeValue_t m_toNativeValue;
 		toString_t m_toString;
 	};
-}
+}  // namespace Dsp
 
 #endif

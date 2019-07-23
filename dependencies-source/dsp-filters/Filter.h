@@ -68,10 +68,7 @@ namespace Dsp
 
 		Params getDefaultParams() const;
 
-		const Params& getParams() const
-		{
-			return m_params;
-		}
+		const Params& getParams() const { return m_params; }
 
 		double getParam(int paramIndex) const
 		{
@@ -135,25 +132,13 @@ namespace Dsp
 	class FilterDesignBase : public Filter
 	{
 	public:
-		Kind getKind() const
-		{
-			return m_design.getKind();
-		}
+		Kind getKind() const { return m_design.getKind(); }
 
-		const std::string getName() const
-		{
-			return m_design.getName();
-		}
+		const std::string getName() const { return m_design.getName(); }
 
-		int getNumParams() const
-		{
-			return DesignClass::NumParams;
-		}
+		int getNumParams() const { return DesignClass::NumParams; }
 
-		Params getDefaultParams() const
-		{
-			return m_design.getDefaultParams();
-		}
+		Params getDefaultParams() const { return m_design.getDefaultParams(); }
 
 		ParamInfo getParamInfo(int index) const
 		{
@@ -167,26 +152,17 @@ namespace Dsp
 				case 5: return m_design.getParamInfo_5();
 				case 6: return m_design.getParamInfo_6();
 				case 7: return m_design.getParamInfo_7();
-			};
+			}
 
 			return ParamInfo();
 		}
 
-		std::vector<PoleZeroPair> getPoleZeros() const
-		{
-			return m_design.getPoleZeros();
-		}
+		std::vector<PoleZeroPair> getPoleZeros() const { return m_design.getPoleZeros(); }
 
-		complex_t response(double normalizedFrequency) const
-		{
-			return m_design.response(normalizedFrequency);
-		}
+		complex_t response(double normalizedFrequency) const { return m_design.response(normalizedFrequency); }
 
 	protected:
-		void doSetParams(const Params& parameters)
-		{
-			m_design.setParams(parameters);
-		}
+		void doSetParams(const Params& parameters) { m_design.setParams(parameters); }
 
 #include "FilterSynthesisH2.inl"
 
@@ -195,39 +171,19 @@ namespace Dsp
 	};
 
 
-	template <class DesignClass,
-			  int Channels = 0,
-			  class StateType = DirectFormII>
+	template <class DesignClass, int Channels = 0, class StateType = DirectFormII>
 	class FilterDesign : public FilterDesignBase<DesignClass>
 	{
 	public:
 		FilterDesign() { }
 
-		int getNumChannels()
-		{
-			return Channels;
-		}
-
-		void reset()
-		{
-			m_state.reset();
-		}
-
-		void process(int numSamples, float* const* arrayOfChannels)
-		{
-			m_state.process(numSamples, arrayOfChannels,
-							FilterDesignBase<DesignClass>::m_design);
-		}
-
-		void process(int numSamples, double* const* arrayOfChannels)
-		{
-			m_state.process(numSamples, arrayOfChannels,
-							FilterDesignBase<DesignClass>::m_design);
-		}
+		int getNumChannels() { return Channels; }
+		void reset() { m_state.reset(); }
+		void process(int numSamples, float* const* arrayOfChannels) { m_state.process(numSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design); }
+		void process(int numSamples, double* const* arrayOfChannels) { m_state.process(numSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design); }
 
 	protected:
-		ChannelsState<Channels,
-					  typename DesignClass::template State<StateType>> m_state;
+		ChannelsState<Channels, typename DesignClass::template State<StateType>> m_state;
 	};
 
 	//------------------------------------------------------------------------------
@@ -239,32 +195,19 @@ namespace Dsp
 	 * not supported, but this class has a smaller footprint.
 	 *
 	 */
-	template <class FilterClass,
-			  int Channels = 0,
-			  class StateType = DirectFormII>
+	template <class FilterClass, int Channels = 0, class StateType = DirectFormII>
 	class SimpleFilter : public FilterClass
 	{
 	public:
-		int getNumChannels()
-		{
-			return Channels;
-		}
-
-		void reset()
-		{
-			m_state.reset();
-		}
+		int getNumChannels() { return Channels; }
+		void reset() { m_state.reset(); }
 
 		template <typename Sample>
-		void process(int numSamples, Sample* const* arrayOfChannels)
-		{
-			m_state.process(numSamples, arrayOfChannels, *((FilterClass*)this));
-		}
+		void process(int numSamples, Sample* const* arrayOfChannels) { m_state.process(numSamples, arrayOfChannels, *((FilterClass*)this)); }
 
 	protected:
-		ChannelsState<Channels,
-					  typename FilterClass::template State<StateType>> m_state;
+		ChannelsState<Channels, typename FilterClass::template State<StateType>> m_state;
 	};
-}
+}  // namespace Dsp
 
 #endif

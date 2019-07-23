@@ -38,7 +38,7 @@ namespace OpenViBE
 			IBox& m_rBox;
 			uint32_t m_ui32Index;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

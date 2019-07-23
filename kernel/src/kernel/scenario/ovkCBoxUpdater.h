@@ -101,5 +101,5 @@ namespace OpenViBE
 			std::map<BoxInterfacorType, std::map<uint32_t, uint32_t>> m_OriginalToUpdatedCorrespondence;
 			bool m_IsUpdateRequired;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

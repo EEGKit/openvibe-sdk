@@ -10,7 +10,7 @@ namespace OpenViBE
 	namespace Kernel
 	{
 		class CKernelObjectFactory;
-	};
+	}
 
 #define _IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
 	virtual bool isDerivedFromClass(  const OpenViBE::CIdentifier& rClassIdentifier) const { return ((rClassIdentifier==_ClassIdentifier_) || _SuperClassName_::isDerivedFromClass(rClassIdentifier)); }
@@ -91,7 +91,7 @@ namespace OpenViBE
 
 		virtual ~IObject() { }
 	};
-};
+}  // namespace OpenViBE
 
 namespace OpenViBE
 {

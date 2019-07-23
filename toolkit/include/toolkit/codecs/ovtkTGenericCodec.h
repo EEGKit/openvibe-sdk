@@ -376,4 +376,4 @@ namespace OpenViBEToolkit
 
 		std::map<OpenViBE::CIdentifier, bool> m_vAllowedTypeIdentifier;
 	};
-};
+}  // namespace OpenViBEToolkit

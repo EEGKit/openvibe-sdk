@@ -16,26 +16,11 @@ typedef enum
 
 generation_type parse_argument(string option)
 {
-	if (option == "--cpp")
-	{
-		return CPP;
-	}
-	else if (option == "--matlab")
-	{
-		return MATLAB;
-	}
-	else if (option == "--python")
-	{
-		return PYTHON;
-	}
-	else if (option == "--lua")
-	{
-		return LUA;
-	}
-	else
-	{
-		return UNKNOWN;
-	}
+	if (option == "--cpp") { return CPP; }
+	if (option == "--matlab") { return MATLAB; }
+	if (option == "--python") { return PYTHON; }
+	if (option == "--lua") { return LUA; }
+	return UNKNOWN;
 }
 
 int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type rType, int argc, char** argv)
@@ -44,10 +29,7 @@ int generate_generator_list(vector<CFileGeneratorBase*>& rList, generation_type 
 	{
 		case CPP:
 		{
-			if (argc < 4)
-			{
-				return -1;
-			}
+			if (argc < 4) { return -1; }
 			CFileGeneratorBase* gen = new CCppDefineGenerator();
 			if (!gen->openFile(argv[3]))
 			{

@@ -112,5 +112,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalResamplingDesc)
 		};
-	};
-};
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

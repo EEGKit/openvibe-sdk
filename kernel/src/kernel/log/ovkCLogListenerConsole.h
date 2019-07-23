@@ -64,7 +64,7 @@ namespace OpenViBE
 			uint64_t m_ui64TimePrecision;
 			bool m_bUseColor;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

@@ -17,8 +17,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit TBaseConfigurable(const IKernelContext& rKernelContext)
-				: IBase(rKernelContext) { }
+			explicit TBaseConfigurable(const IKernelContext& rKernelContext) : IBase(rKernelContext) { }
 
 			virtual ~TBaseConfigurable()
 			{
@@ -43,10 +42,7 @@ namespace OpenViBE
 			virtual IParameter* getParameter(const CIdentifier& rParameterIdentifier)
 			{
 				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
-				if (itParameter == m_vParameter.end())
-				{
-					return NULL;
-				}
+				if (itParameter == m_vParameter.end()) { return NULL; }
 				return itParameter->second.second;
 			}
 
@@ -62,10 +58,7 @@ namespace OpenViBE
 			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier)
 			{
 				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
-				if (itParameter != m_vParameter.end())
-				{
-					return NULL;
-				}
+				if (itParameter != m_vParameter.end()) { return NULL; }
 
 				IParameter* l_pParameter = NULL;
 				switch (eParameterType)
@@ -95,12 +88,9 @@ namespace OpenViBE
 					case ParameterType_None:
 					case ParameterType_Pointer: l_pParameter = new CPointerParameter(this->getKernelContext(), eParameterType);
 						break;
-				};
-
-				if (l_pParameter != NULL)
-				{
-					m_vParameter[rParameterIdentifier] = std::pair<bool, IParameter*>(true, l_pParameter);
 				}
+
+				if (l_pParameter != NULL) { m_vParameter[rParameterIdentifier] = std::pair<bool, IParameter*>(true, l_pParameter); }
 
 				return l_pParameter;
 			}
@@ -110,10 +100,7 @@ namespace OpenViBE
 				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
 				if (itParameter == m_vParameter.end()) { return false; }
 
-				if (itParameter->second.first)
-				{
-					delete itParameter->second.second;
-				}
+				if (itParameter->second.first) { delete itParameter->second.second; }
 				m_vParameter.erase(itParameter);
 
 				return true;
@@ -125,7 +112,7 @@ namespace OpenViBE
 
 			std::map<CIdentifier, std::pair<bool, IParameter*>> m_vParameter;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

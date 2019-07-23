@@ -124,4 +124,4 @@ namespace EBML
 	 * \return \c NULL when something went wrong.
 	 */
 	extern EBML_API IWriter* createWriter(IWriterCallback& rWriterCallback);
-};
+}  // namespace EBML

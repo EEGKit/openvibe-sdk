@@ -73,8 +73,8 @@ namespace OpenViBEToolkit
 		OpenViBE::CString& getParameterValue(const OpenViBE::CIdentifier& parameterIdentifier);
 		void setMatrixOutputDimension(OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& matrix, uint32_t length);
 
-		OpenViBE::Kernel::IAlgorithmProxy* m_AlgorithmProxy;
-		void* m_ExtraParametersMap;
+		OpenViBE::Kernel::IAlgorithmProxy* m_AlgorithmProxy = nullptr;
+		void* m_ExtraParametersMap = nullptr;
 	};
 
 	class OVTK_API CAlgorithmClassifierDesc : public OpenViBE::Plugins::IAlgorithmDesc
@@ -108,4 +108,4 @@ namespace OpenViBEToolkit
 
 		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVTK_ClassId_Algorithm_ClassifierDesc)
 	};
-};
+}  // namespace OpenViBEToolkit

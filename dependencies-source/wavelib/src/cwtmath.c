@@ -164,10 +164,7 @@ static double fix(double x)
 	{
 		return floor(x);
 	}
-	else
-	{
-		return ceil(x);
-	}
+	return ceil(x);
 }
 
 int nint(double N)

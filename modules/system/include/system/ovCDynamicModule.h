@@ -270,4 +270,4 @@ namespace System
 			return *symbol != NULL;
 		}
 	};
-};
+}  // namespace System

@@ -208,5 +208,5 @@ namespace Dsp
 
 			setLayout(m_digitalProto);
 		}
-	}
-}
+	}  // namespace Butterworth
+}  // namespace Dsp

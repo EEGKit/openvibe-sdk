@@ -64,5 +64,5 @@ namespace OpenViBE
 			mutable std::mutex m_ManagerGuard;
 			std::unique_ptr<IError> m_TopError;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE

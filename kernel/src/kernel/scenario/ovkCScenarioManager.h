@@ -73,5 +73,5 @@ namespace OpenViBE
 
 			virtual IScenario& getScenario(const CIdentifier& rScenarioIdentifier) const;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE

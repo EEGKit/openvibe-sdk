@@ -150,6 +150,6 @@ namespace Dsp
 
 		int m_remainingSamples;        // remaining transition samples
 	};
-}
+}  // namespace Dsp
 
 #endif

@@ -62,5 +62,5 @@ namespace OpenViBE
 			rLogManager.log(rObject);
 			return rLogManager;
 		}
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

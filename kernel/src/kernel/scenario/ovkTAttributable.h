@@ -82,5 +82,5 @@ namespace OpenViBE
 
 			std::map<CIdentifier, CString> m_vAttribute;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

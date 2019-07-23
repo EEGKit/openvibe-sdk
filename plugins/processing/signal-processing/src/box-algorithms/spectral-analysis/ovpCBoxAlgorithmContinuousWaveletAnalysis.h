@@ -82,5 +82,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_ContinuousWaveletAnalysisDesc)
 		};
-	}
-}
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

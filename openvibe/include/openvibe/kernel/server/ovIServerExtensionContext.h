@@ -26,5 +26,5 @@ namespace OpenViBE
 			 */
 			virtual Kernel::ILogManager& getLogManager() = 0;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE

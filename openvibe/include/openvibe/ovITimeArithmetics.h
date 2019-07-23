@@ -76,4 +76,4 @@ namespace OpenViBE
 		uint64_t secondsToTime(uint32_t ui32Time);
 		uint64_t secondsToTime(uint64_t ui64Time);
 	};
-}
+}  // namespace OpenViBE

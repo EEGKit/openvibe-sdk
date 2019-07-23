@@ -135,7 +135,7 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainerDesc)
 		};
-	};
-};
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

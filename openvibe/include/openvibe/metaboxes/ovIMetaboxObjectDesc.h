@@ -13,5 +13,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IBoxAlgorithmDesc, OV_ClassId_Metaboxes_MetaboxObjectDesc)
 		};
-	};
-};
+	}
+}  // namespace OpenViBE

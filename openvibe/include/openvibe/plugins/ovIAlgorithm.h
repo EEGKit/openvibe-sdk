@@ -65,5 +65,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_Algorithm)
 		};
-	};
-};
+	}  // namespace Plugins
+}  // namespace OpenViBE

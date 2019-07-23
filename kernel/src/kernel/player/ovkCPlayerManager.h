@@ -31,7 +31,7 @@ namespace OpenViBE
 
 			std::map<CIdentifier, CPlayer*> m_vPlayer;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

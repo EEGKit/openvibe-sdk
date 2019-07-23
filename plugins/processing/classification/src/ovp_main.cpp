@@ -24,7 +24,6 @@
 const char* const c_sPairwiseStrategyEnumerationName = "Pairwise Decision Strategy";
 
 OVP_Declare_Begin()
-	;
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationStrategy, "Native", OV_UndefinedIdentifier.toUInteger());
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationStrategy, "OneVsAll", OVP_ClassId_Algorithm_ClassifierOneVsAll.toUInteger());
 	rPluginModuleContext.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationStrategy, "OneVsOne", OVP_ClassId_Algorithm_ClassifierOneVsOne.toUInteger());
@@ -66,7 +65,7 @@ OVP_Declare_Begin()
 
 #endif // TARGET_HAS_ThirdPartyEIGEN
 
-OVP_Declare_End();
+OVP_Declare_End()
 
 #include<cmath>
 

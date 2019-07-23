@@ -48,16 +48,16 @@ bool CAcquisitionDecoder::uninitialize()
 bool CAcquisitionDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
 	if (rIdentifier == OVTK_NodeId_Acquisition_Header_BufferDuration) return false;
-	else if (rIdentifier == OVTK_NodeId_Acquisition_Header_ExperimentInformation) return false;
-	else if (rIdentifier == OVTK_NodeId_Acquisition_Header_Signal) return false;
-	else if (rIdentifier == OVTK_NodeId_Acquisition_Header_Stimulation) return false;
-	else if (rIdentifier == OVTK_NodeId_Acquisition_Header_ChannelLocalisation) return false;
-	else if (rIdentifier == OVTK_NodeId_Acquisition_Header_ChannelUnits) return false;
-	else if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation) return false;
-	else if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_Signal) return false;
-	else if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_Stimulation) return false;
-	else if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation) return false;
-	else if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_ChannelUnits) return false;
+	if (rIdentifier == OVTK_NodeId_Acquisition_Header_ExperimentInformation) return false;
+	if (rIdentifier == OVTK_NodeId_Acquisition_Header_Signal) return false;
+	if (rIdentifier == OVTK_NodeId_Acquisition_Header_Stimulation) return false;
+	if (rIdentifier == OVTK_NodeId_Acquisition_Header_ChannelLocalisation) return false;
+	if (rIdentifier == OVTK_NodeId_Acquisition_Header_ChannelUnits) return false;
+	if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation) return false;
+	if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_Signal) return false;
+	if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_Stimulation) return false;
+	if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation) return false;
+	if (rIdentifier == OVTK_NodeId_Acquisition_Buffer_ChannelUnits) return false;
 	return CEBMLBaseDecoder::isMasterChild(rIdentifier);
 }
 

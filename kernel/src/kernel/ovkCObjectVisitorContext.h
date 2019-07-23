@@ -21,7 +21,7 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IObjectVisitorContext >, OVK_ClassId_Kernel_ObjectVisitorContext)
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

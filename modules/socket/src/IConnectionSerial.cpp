@@ -115,7 +115,7 @@ namespace Socket
 			{
 				return l_oStatus.cbInQue != 0;
 			}
-			else { return false; }
+			return false;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 

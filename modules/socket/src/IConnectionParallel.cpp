@@ -80,13 +80,10 @@ namespace Socket
 					m_lpfnTVicPortClose();
 					return true;
 				}
-				else
-				{
-					m_sLastError = "Cannot close the TVicPort library because it is not opened.";
-					return false;
-				}
+				m_sLastError = "Cannot close the TVicPort library because it is not opened.";
+				return false;
 			}
-			else { return false; }
+			return false;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
@@ -242,18 +239,12 @@ namespace Socket
 					m_ui16PortNumber = ui16PortNumber;
 					return true;
 				}
-				else
-				{
-					m_sLastError     = "Cannot open the TVic library";
-					m_ui16PortNumber = 0;
-					return false;
-				}
-			}
-			else
-			{
-				m_sLastError = "TVicPort library is not loaded.";
+				m_sLastError     = "Cannot open the TVic library";
+				m_ui16PortNumber = 0;
 				return false;
 			}
+			m_sLastError = "TVicPort library is not loaded.";
+			return false;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 

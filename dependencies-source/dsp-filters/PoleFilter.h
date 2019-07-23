@@ -211,6 +211,6 @@ namespace Dsp
 		double a2;
 		double b2;
 	};
-}
+}  // namespace Dsp
 
 #endif

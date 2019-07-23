@@ -38,7 +38,7 @@ namespace OpenViBE
 			ILogManager& m_rLogManager;
 			CAlgorithmProxy& m_rAlgorithmProxy;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

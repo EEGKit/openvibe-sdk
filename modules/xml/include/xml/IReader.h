@@ -25,4 +25,4 @@ namespace XML
 	};
 
 	extern XML_API IReader* createReader(IReaderCallback& rReaderCallback);
-};
+}

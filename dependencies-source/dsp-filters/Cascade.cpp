@@ -116,4 +116,4 @@ namespace Dsp
 	}
 
 #include "CascadeSynthesisCpp.inl"
-}
+}  // namespace Dsp

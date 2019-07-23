@@ -47,5 +47,5 @@ namespace OpenViBE
 
 		//___________________________________________________________________//
 		//                                                                   //
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

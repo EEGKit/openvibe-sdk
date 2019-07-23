@@ -73,7 +73,7 @@ namespace OpenViBE
 	{
 		return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier;
 	}
-};
+}  // namespace OpenViBE
 
 CString CIdentifier::toString() const
 {

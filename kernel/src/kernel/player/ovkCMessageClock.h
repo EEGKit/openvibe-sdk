@@ -18,7 +18,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >, OVK_ClassId_Kernel_Player_MessageClock)
 		};
-	};
-};
-
-
+	}  // namespace Kernel
+}  // namespace OpenViBE

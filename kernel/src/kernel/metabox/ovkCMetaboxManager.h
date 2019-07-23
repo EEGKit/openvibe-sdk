@@ -35,8 +35,8 @@ namespace OpenViBE
 			std::map<CIdentifier, CString> m_MetaboxFilePath;
 			std::map<CIdentifier, CIdentifier> m_MetaboxHash;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 
 

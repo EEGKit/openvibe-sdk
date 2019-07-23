@@ -125,7 +125,7 @@ namespace OpenViBE
 			mutable ILogManager* m_pLogManager;
 			mutable IErrorManager* m_pErrorManager;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 

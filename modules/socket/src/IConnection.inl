@@ -224,4 +224,4 @@ namespace Socket
 
 		int32_t m_i32Socket;
 	};
-};
+} // namespace Socket

@@ -36,7 +36,7 @@ namespace
 		}
 		return l_vResult;
 	}
-};
+}  // namespace
 
 bool CBoxAlgorithmFrequencyBandSelector::initialize()
 {

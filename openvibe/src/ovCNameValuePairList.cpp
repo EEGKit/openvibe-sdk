@@ -95,12 +95,12 @@ bool CNameValuePairList::getValue(const CString& rName, bool& rValue) const
 		rValue = false;
 		return true;
 	}
-	else if (l_sValue == CString("1") || l_sValue == CString("TRUE") || l_sValue == CString("true"))
+	if (l_sValue == CString("1") || l_sValue == CString("TRUE") || l_sValue == CString("true"))
 	{
 		rValue = true;
 		return true;
 	}
-	else { return false; }
+	return false;
 }
 
 bool CNameValuePairList::getValue(const uint32_t rIndex, CString& rName, CString& rValue) const
@@ -113,7 +113,4 @@ bool CNameValuePairList::getValue(const uint32_t rIndex, CString& rName, CString
 	return true;
 }
 
-uint32_t CNameValuePairList::getSize() const
-{
-	return static_cast<uint32_t>(m_pNameValuePairListImpl->m_oMap.size());
-}
+uint32_t CNameValuePairList::getSize() const { return static_cast<uint32_t>(m_pNameValuePairListImpl->m_oMap.size()); }

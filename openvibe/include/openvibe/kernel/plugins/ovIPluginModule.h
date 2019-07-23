@@ -88,5 +88,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginModule)
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

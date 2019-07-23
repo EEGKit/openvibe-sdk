@@ -82,7 +82,7 @@ namespace OpenViBE
 
 		return os;
 	}
-}
+}  // namespace OpenViBE
 
 /**
  * \def OV_WARNING_LOG(message, logManager)

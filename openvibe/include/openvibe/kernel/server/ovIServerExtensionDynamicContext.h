@@ -39,5 +39,5 @@ namespace OpenViBE
 
 			virtual IStimulationSet& getStimulationSet() = 0;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE

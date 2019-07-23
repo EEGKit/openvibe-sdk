@@ -46,8 +46,8 @@ namespace OpenViBE
 			bool (*onGetPluginObjectDescriptionCB)(const IPluginModuleContext&, uint32_t, IPluginObjectDesc*&);
 			bool (*onUninitializeCB)(const IPluginModuleContext&);
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 namespace OpenViBE
 {
@@ -77,9 +77,9 @@ namespace OpenViBE
 				ITypeManager& m_rTypeManager;
 				IScenarioManager& m_rScenarioManager;
 			};
-		};
-	};
-};
+		}  // namespace
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
@@ -201,8 +201,8 @@ namespace OpenViBE
 
 			CString getLastErrorMessageString();
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 #else
 

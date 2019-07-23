@@ -54,4 +54,4 @@ namespace OpenViBEToolkit
 	};
 
 	typedef TVector<IVector> CVector;
-};
+}  // namespace OpenViBEToolkit

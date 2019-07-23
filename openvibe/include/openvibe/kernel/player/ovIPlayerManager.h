@@ -63,5 +63,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Player_PlayerManager)
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

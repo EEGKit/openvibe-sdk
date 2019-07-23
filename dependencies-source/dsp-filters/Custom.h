@@ -163,8 +163,8 @@ namespace Dsp
 						  params[5]);
 				}
 			};
-		}
-	}
-}
+		}  // namespace Design
+	}  // namespace Custom
+}  // namespace Dsp
 
 #endif

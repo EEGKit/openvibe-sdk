@@ -13,7 +13,7 @@ namespace OpenViBE
 		class IMetadata;
 		class ILink;
 		class IScenario;
-	};
+	}
 
 	class OV_API IObjectVisitor : public IObject
 	{
@@ -33,4 +33,4 @@ namespace OpenViBE
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_ObjectVisitor)
 	};
-};
+}  // namespace OpenViBE

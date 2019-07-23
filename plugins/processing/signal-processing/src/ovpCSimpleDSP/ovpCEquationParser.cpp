@@ -47,7 +47,7 @@ namespace
 		}
 		return s;
 	}
-};
+}  // namespace
 
 functionPointer CEquationParser::m_pFunctionTable[] =
 {
@@ -167,28 +167,25 @@ bool CEquationParser::compileEquation(const char* pEquation)
 
 		return true;
 	}
-	else
+	std::string l_oErrorString;
+
+	size_t errorPosition = l_sEquation.find(l_oInfo.stop);
+	if (errorPosition != std::string::npos)
 	{
-		std::string l_oErrorString;
-
-		size_t errorPosition = l_sEquation.find(l_oInfo.stop);
-		if (errorPosition != std::string::npos)
+		for (size_t i = 0; i < errorPosition; i++)
 		{
-			for (size_t i = 0; i < errorPosition; i++)
-			{
-				l_oErrorString += " ";
-			}
-			l_oErrorString += "^--Here\n";
+			l_oErrorString += " ";
 		}
-
-		OV_ERROR(
-			"Failed parsing equation \n[" << pEquation << "]\n " << l_oErrorString.c_str(),
-			OpenViBE::Kernel::ErrorType::BadParsing,
-			false,
-			m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
-			m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-		);
+		l_oErrorString += "^--Here\n";
 	}
+
+	OV_ERROR(
+		"Failed parsing equation \n[" << pEquation << "]\n " << l_oErrorString.c_str(),
+		OpenViBE::Kernel::ErrorType::BadParsing,
+		false,
+		m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
+		m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
+	);
 }
 
 void CEquationParser::createAbstractTree(tree_parse_info<> oInfo)
@@ -234,7 +231,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 			// -X => (* -1 X), useful to simplify the tree later
 			return new CAbstractTreeParentNode(OP_MUL, new CAbstractTreeValueNode(-1), createNode(i->children.begin()), true);
 		}
-		else if (*i->value.begin() == '+')
+		if (*i->value.begin() == '+')
 		{
 			return createNode(i->children.begin());
 		}
@@ -291,7 +288,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 				false);
 		}
 			//gets the function's Id from the binary function's symbols table
-		else if ((l_ui64FunctionIdentifier = find(binaryFunction_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(binaryFunction_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
@@ -327,7 +324,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 				false);
 		}
 			//gets the function's Id from the comparison function's symbols table
-		else if ((l_ui64FunctionIdentifier = find(comparison2Function_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(comparison2Function_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
@@ -354,7 +351,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 				false);
 		}
 			//gets the function's Id from the binary boolean function's symbols table
-		else if ((l_ui64FunctionIdentifier = find(binaryBoolean2Function_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(binaryBoolean2Function_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
@@ -362,8 +359,8 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 				createNode(i->children.begin() + 1),
 				false);
 		}
-			//gets the function's Id from the binary boolean function's symbols table
-		else if ((l_ui64FunctionIdentifier = find(binaryBoolean3Function_p, l_sValue.c_str())) != NULL)
+		//gets the function's Id from the binary boolean function's symbols table
+		if ((l_ui64FunctionIdentifier = find(binaryBoolean3Function_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,
@@ -371,8 +368,8 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 				createNode(i->children.begin() + 1),
 				false);
 		}
-			//gets the function's Id from the binary boolean function's symbols table
-		else if ((l_ui64FunctionIdentifier = find(unaryBooleanFunction_p, l_sValue.c_str())) != NULL)
+		//gets the function's Id from the binary boolean function's symbols table
+		if ((l_ui64FunctionIdentifier = find(unaryBooleanFunction_p, l_sValue.c_str())) != NULL)
 		{
 			return new CAbstractTreeParentNode(
 				*l_ui64FunctionIdentifier,

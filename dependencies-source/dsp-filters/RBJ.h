@@ -315,8 +315,8 @@ namespace Dsp
 				static Kind getKind() { return kindOther; }
 				static const char* getName() { return "RBJ All Pass"; }
 			};
-		}
-	}
+		}  // namespace Design
+	}  // namespace RBJ
 }
 
 #endif

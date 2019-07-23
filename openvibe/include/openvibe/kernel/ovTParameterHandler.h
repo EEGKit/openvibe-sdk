@@ -50,8 +50,7 @@ namespace OpenViBE
 			/**
 			 * \brief Default construction, does nothing
 			 */
-			TParameterHandler()
-				: m_pParameter(NULL) { }
+			TParameterHandler() { }
 
 			/**
 			 * \brief IParameter based construction
@@ -62,8 +61,7 @@ namespace OpenViBE
 			 * using the default constructor and call the initialize function
 			 * with the provided IParameter pointer.
 			 */
-			TParameterHandler(IParameter* pParameter)
-				: m_pParameter(pParameter) { }
+			TParameterHandler(IParameter* pParameter) : m_pParameter(pParameter) { }
 
 			//@}
 			/** \name Initialization */
@@ -225,7 +223,7 @@ namespace OpenViBE
 
 		protected:
 
-			IParameter* m_pParameter; //!< Handled parameter
+			IParameter* m_pParameter = nullptr; //!< Handled parameter
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE

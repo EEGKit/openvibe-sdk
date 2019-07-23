@@ -111,4 +111,4 @@ namespace Dsp
 
 		doSetParams(m_params);
 	}
-}
+}  // namespace Dsp

@@ -10,45 +10,35 @@ using namespace std;
 // ________________________________________________________________________________________________________________
 //
 
-inline unsigned long getCodedSizeLength(const uint64_t uiValue)
+inline size_t getCodedSizeLength(const uint64_t uiValue)
 {
-	unsigned long l_ulCodedSizeLength = 0;
-	if (uiValue < 0x000000000000007fLL)
-		l_ulCodedSizeLength = 1;
-	else if (uiValue < 0x0000000000003fffLL)
-		l_ulCodedSizeLength = 2;
-	else if (uiValue < 0x00000000001fffffLL)
-		l_ulCodedSizeLength = 3;
-	else if (uiValue < 0x000000000fffffffLL)
-		l_ulCodedSizeLength = 4;
-	else if (uiValue < 0x00000007ffffffffLL)
-		l_ulCodedSizeLength = 5;
-	else if (uiValue < 0x000003ffffffffffLL)
-		l_ulCodedSizeLength = 6;
-	else if (uiValue < 0x0001ffffffffffffLL)
-		l_ulCodedSizeLength = 7;
-	else if (uiValue < 0x00ffffffffffffffLL)
-		l_ulCodedSizeLength = 8;
-	else if (uiValue < 0x7fffffffffffffffLL)
-		l_ulCodedSizeLength = 9;
-	else
-		l_ulCodedSizeLength = 10;
+	size_t l_ulCodedSizeLength = 0;
+	if (uiValue < 0x000000000000007fLL) { l_ulCodedSizeLength = 1; }
+	else if (uiValue < 0x0000000000003fffLL) { l_ulCodedSizeLength = 2; }
+	else if (uiValue < 0x00000000001fffffLL) { l_ulCodedSizeLength = 3; }
+	else if (uiValue < 0x000000000fffffffLL) { l_ulCodedSizeLength = 4; }
+	else if (uiValue < 0x00000007ffffffffLL) { l_ulCodedSizeLength = 5; }
+	else if (uiValue < 0x000003ffffffffffLL) { l_ulCodedSizeLength = 6; }
+	else if (uiValue < 0x0001ffffffffffffLL) { l_ulCodedSizeLength = 7; }
+	else if (uiValue < 0x00ffffffffffffffLL) { l_ulCodedSizeLength = 8; }
+	else if (uiValue < 0x7fffffffffffffffLL) { l_ulCodedSizeLength = 9; }
+	else { l_ulCodedSizeLength = 10; }
 
 	return l_ulCodedSizeLength;
 }
 
 inline bool getCodedBuffer(const uint64_t uiValue, unsigned char* pBuffer, uint64_t* pBufferLength)
 {
-	unsigned long i;
-	unsigned long l_ulCodedSizeLength = getCodedSizeLength(uiValue);
+	size_t i;
+	size_t l_ulCodedSizeLength = getCodedSizeLength(uiValue);
 
 	if (l_ulCodedSizeLength > *pBufferLength) { return false; }
 
-	unsigned long l_ulIthBit = l_ulCodedSizeLength;
+	size_t l_ulIthBit = l_ulCodedSizeLength;
 	for (i = 0; i < l_ulCodedSizeLength; i++)
 	{
-		unsigned long l_ulByteShift = l_ulCodedSizeLength - i - 1;
-		unsigned long l_ulByte      = (l_ulByteShift >= 8 ? 0 : (unsigned char)((uiValue >> (l_ulByteShift * 8)) & 0xff));
+		size_t l_ulByteShift = l_ulCodedSizeLength - i - 1;
+		size_t l_ulByte      = (l_ulByteShift >= 8 ? 0 : (unsigned char)((uiValue >> (l_ulByteShift * 8)) & 0xff));
 		l_ulByte |= (l_ulIthBit > 0 && l_ulIthBit <= 8 ? (1 << (8 - l_ulIthBit)) : 0);
 		l_ulIthBit -= 8;
 
@@ -86,31 +76,24 @@ namespace EBML
 
 			CIdentifier m_oIdentifier;
 			CWriterNode* m_pParentNode;
-			uint64_t m_ui64BufferLength;
-			unsigned char* m_pBuffer;
-			bool m_bBuffered;
+			uint64_t m_ui64BufferLength = 0;
+			unsigned char* m_pBuffer = nullptr;
+			bool m_bBuffered = false;
 			vector<CWriterNode*> m_vChildren;
 		};
-	};
-};
+	}  // namespace
+}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
 
 CWriterNode::CWriterNode(const CIdentifier& rIdentifier, CWriterNode* pParentNode)
-	: m_oIdentifier(rIdentifier)
-	  , m_pParentNode(pParentNode)
-	  , m_ui64BufferLength(0)
-	  , m_pBuffer(NULL)
-	  , m_bBuffered(false) {}
+	: m_oIdentifier(rIdentifier), m_pParentNode(pParentNode) {}
 
 CWriterNode::~CWriterNode()
 {
 	vector<CWriterNode*>::iterator i;
-	for (i = m_vChildren.begin(); i != m_vChildren.end(); ++i)
-	{
-		delete (*i);
-	}
+	for (i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { delete (*i); }
 
 	if (m_pBuffer)
 	{
@@ -208,8 +191,8 @@ namespace EBML
 
 			CWriter();
 		};
-	};
-};
+	}  // namespace
+}  // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //

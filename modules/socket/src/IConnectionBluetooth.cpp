@@ -412,14 +412,11 @@ namespace Socket
 					l_bLookup = false;
 					break;
 				}
-				else
-				{
-					// Get bluetooth MAC address and name
-					bluetoothDevicesAddress.push_back(((SOCKADDR_BTH *)l_sWSAQuerySet->lpcsaBuffer->RemoteAddr.lpSockaddr)->btAddr);
+				// Get bluetooth MAC address and name
+				bluetoothDevicesAddress.push_back(((SOCKADDR_BTH *)l_sWSAQuerySet->lpcsaBuffer->RemoteAddr.lpSockaddr)->btAddr);
 
-					std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converterX;
-					bluetoothDevicesName.push_back(converterX.to_bytes(l_sWSAQuerySet->lpszServiceInstanceName));
-				}
+				std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converterX;
+				bluetoothDevicesName.push_back(converterX.to_bytes(l_sWSAQuerySet->lpszServiceInstanceName));
 			}
 
 			if (_WINSOCK2API_::WSALookupServiceEnd(l_pHandle) == SOCKET_ERROR)

@@ -29,7 +29,7 @@ namespace r8b
 
 	class CDSPProcessor : public R8B_BASECLASS
 	{
-	R8BNOCTOR(CDSPProcessor);
+	R8BNOCTOR(CDSPProcessor)
 
 	public:
 		CDSPProcessor() { }
