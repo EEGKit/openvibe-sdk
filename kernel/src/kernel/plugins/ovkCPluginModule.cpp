@@ -26,9 +26,7 @@ namespace OpenViBE
 			virtual ~CPluginModuleBase();
 
 			virtual bool initialize();
-			virtual bool getPluginObjectDescription(
-				uint32_t ui32Index,
-				IPluginObjectDesc*& rpPluginObjectDescription);
+			virtual bool getPluginObjectDescription(uint32_t ui32Index, IPluginObjectDesc*& rpPluginObjectDescription);
 			virtual bool uninitialize();
 			virtual bool getFileName(CString& rFileName) const;
 
@@ -100,9 +98,7 @@ bool CPluginModuleBase::initialize()
 	return onInitializeCB(CPluginModuleContext(getKernelContext()));
 }
 
-bool CPluginModuleBase::getPluginObjectDescription(
-	uint32_t ui32Index,
-	IPluginObjectDesc*& rpPluginObjectDescription)
+bool CPluginModuleBase::getPluginObjectDescription(uint32_t ui32Index, IPluginObjectDesc*& rpPluginObjectDescription)
 {
 	if (!m_bGotDescriptions)
 	{
@@ -140,8 +136,7 @@ bool CPluginModuleBase::uninitialize()
 	return onUninitializeCB(CPluginModuleContext(getKernelContext()));
 }
 
-bool CPluginModuleBase::getFileName(
-	CString& rFileName) const
+bool CPluginModuleBase::getFileName(CString& rFileName) const
 {
 	if (!isOpen()) { return false; }
 	rFileName = m_sFileName;
@@ -186,9 +181,7 @@ namespace OpenViBE
 
 			explicit CPluginModuleWindows(const IKernelContext& rKernelContext);
 
-			virtual bool load(
-				const CString& sFileName,
-				CString* pError);
+			virtual bool load(const CString& sFileName, CString* pError);
 			virtual bool unload(CString* pError);
 
 		protected:
@@ -216,9 +209,7 @@ namespace OpenViBE
 
 			explicit CPluginModuleDummy(const IKernelContext& rKernelContext);
 
-			virtual bool load(
-				const CString& sFileName,
-				CString* pError);
+			virtual bool load(const CString& sFileName, CString* pError);
 			virtual bool unload(CString* pError);
 
 		protected:
@@ -241,9 +232,7 @@ CPluginModuleLinux::CPluginModuleLinux(const IKernelContext& rKernelContext)
 {
 }
 
-bool CPluginModuleLinux::load(
-	const CString& sFileName,
-	CString* pError)
+bool CPluginModuleLinux::load(const CString& sFileName, CString* pError)
 {
 	if(m_pFileHandle)
 	{
@@ -283,8 +272,7 @@ bool CPluginModuleLinux::load(
 	return true;
 }
 
-bool CPluginModuleLinux::unload(
-	CString* pError)
+bool CPluginModuleLinux::unload(CString* pError)
 {
 	if(!m_pFileHandle)
 	{
@@ -311,9 +299,7 @@ CPluginModuleWindows::CPluginModuleWindows(const IKernelContext& rKernelContext)
 	: CPluginModuleBase(rKernelContext)
 	  , m_pFileHandle(NULL) {}
 
-bool CPluginModuleWindows::load(
-	const CString& sFileName,
-	CString* pError)
+bool CPluginModuleWindows::load(const CString& sFileName, CString* pError)
 {
 	if (m_pFileHandle)
 	{
@@ -353,8 +339,7 @@ bool CPluginModuleWindows::load(
 	return true;
 }
 
-bool CPluginModuleWindows::unload(
-	CString* pError)
+bool CPluginModuleWindows::unload(CString* pError)
 {
 	if (!m_pFileHandle)
 	{
@@ -380,16 +365,7 @@ CString CPluginModuleWindows::getLastErrorMessageString()
 	CString l_sResult;
 
 	char* l_pMessageBuffer = NULL;
-	FormatMessage(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER |
-		FORMAT_MESSAGE_FROM_SYSTEM |
-		FORMAT_MESSAGE_IGNORE_INSERTS,
-		NULL,
-		GetLastError(),
-		0, // Default language
-		(LPTSTR)&l_pMessageBuffer,
-		0,
-		NULL);
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), 0, (LPTSTR)&l_pMessageBuffer, 0, NULL);
 	if (l_pMessageBuffer)
 	{
 		size_t l_iMessageLength = strlen(l_pMessageBuffer);
@@ -415,8 +391,7 @@ CString CPluginModuleWindows::getLastErrorMessageString()
 //                                                                   //
 
 CPluginModule::CPluginModule(const IKernelContext& rKernelContext)
-	: TKernelObject<IPluginModule>(rKernelContext)
-	  , m_pImplementation(NULL)
+	: TKernelObject<IPluginModule>(rKernelContext), m_pImplementation(NULL)
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_pImplementation=new CPluginModuleLinux(getKernelContext());
@@ -431,15 +406,12 @@ CPluginModule::~CPluginModule()
 	delete m_pImplementation;
 }
 
-bool CPluginModule::load(
-	const CString& sFileName,
-	CString* pError)
+bool CPluginModule::load(const CString& sFileName, CString* pError)
 {
 	return !m_pImplementation ? false : m_pImplementation->load(sFileName, pError);
 }
 
-bool CPluginModule::unload(
-	CString* pError)
+bool CPluginModule::unload(CString* pError)
 {
 	return !m_pImplementation ? false : m_pImplementation->unload(pError);
 }
@@ -449,8 +421,7 @@ bool CPluginModule::initialize()
 	return !m_pImplementation ? false : m_pImplementation->initialize();
 }
 
-bool CPluginModule::getPluginObjectDescription(
-	uint32_t ui32Index,
+bool CPluginModule::getPluginObjectDescription(uint32_t ui32Index,
 	IPluginObjectDesc*& rpPluginObjectDescription)
 {
 	return !m_pImplementation ? false : m_pImplementation->getPluginObjectDescription(ui32Index, rpPluginObjectDescription);
@@ -461,8 +432,7 @@ bool CPluginModule::uninitialize()
 	return !m_pImplementation ? false : m_pImplementation->uninitialize();
 }
 
-bool CPluginModule::getFileName(
-	CString& rFileName) const
+bool CPluginModule::getFileName(CString& rFileName) const
 {
 	return !m_pImplementation ? false : m_pImplementation->getFileName(rFileName);
 }

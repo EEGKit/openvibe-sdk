@@ -59,10 +59,7 @@ CPlayer::CPlayer(const IKernelContext& rKernelContext)
 
 CPlayer::~CPlayer()
 {
-	if (this->isHoldingResources())
-	{
-		this->uninitialize();
-	}
+	if (this->isHoldingResources()) { this->uninitialize(); }
 
 	delete m_pRuntimeConfigurationManager;
 	delete m_pRuntimeScenarioManager;
@@ -428,10 +425,7 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 	{
 		l_ui64Lateness = m_ui64CurrentTimeToReach - m_oScheduler.getCurrentTime();
 	}
-	else
-	{
-		l_ui64Lateness = 0;
-	}
+	else { l_ui64Lateness = 0; }
 
 #if defined CPlayer_Debug_Time
 ::printf("Done -- New time to reach : %llx\n", m_ui64CurrentTimeToReach);

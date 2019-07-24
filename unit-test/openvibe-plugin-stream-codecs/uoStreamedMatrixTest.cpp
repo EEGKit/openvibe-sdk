@@ -141,10 +141,7 @@ namespace
 
 int uoStreamedMatrixTest(int argc, char* argv[])
 {
-	if (argc > 1)
-	{
-		kernelConfig = argv[1];
-	}
+	if (argc > 1) { kernelConfig = argv[1]; }
 	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "StreamedMatrixTest.*";
 	return RUN_ALL_TESTS();

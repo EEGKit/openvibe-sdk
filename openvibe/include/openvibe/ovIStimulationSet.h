@@ -117,8 +117,6 @@ namespace OpenViBE
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_StimulationSet)
 
-	public:
-
 		// @deprecated please use OpenViBE::ITimeArithmetics::sampleCountToTime()
 		static uint64_t sampleIndexToTime(uint32_t ui32SamplingRate, uint64_t ui64SampleIndex)
 		{

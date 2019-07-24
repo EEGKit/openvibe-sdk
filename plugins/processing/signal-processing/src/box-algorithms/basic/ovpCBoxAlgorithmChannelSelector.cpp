@@ -18,13 +18,12 @@ namespace
 {
 	uint32_t _find_channel_(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32_t uiStart = 0)
 	{
-		uint32_t i;
 		uint32_t l_ui32Result       = std::numeric_limits<uint32_t>::max();
 		uint32_t l_ui32ChannelCount = rMatrix.getDimensionSize(0);
 
 		if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Name)
 		{
-			for (i = uiStart; i < rMatrix.getDimensionSize(0); i++)
+			for (uint32_t i = uiStart; i < rMatrix.getDimensionSize(0); i++)
 			{
 				if (Tools::String::isAlmostEqual(rMatrix.getDimensionLabel(0, i), rChannel, false))
 				{
@@ -246,10 +245,7 @@ bool CBoxAlgorithmChannelSelector::process()
 							this->getLogManager() << LogLevel_Debug << "Selected channel [" << l_ui32Index + 1 << "]\n";
 						}
 
-						OV_ERROR_UNLESS_KRF(
-							l_bFound,
-							"Invalid channel [" << l_sToken[j] << "]",
-							OpenViBE::Kernel::ErrorType::BadSetting);
+						OV_ERROR_UNLESS_KRF(l_bFound, "Invalid channel [" << l_sToken[j] << "]", OpenViBE::Kernel::ErrorType::BadSetting);
 					}
 				}
 

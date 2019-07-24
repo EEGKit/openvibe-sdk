@@ -16,10 +16,7 @@ namespace
 	// it can not be easily used in std::transform
 	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
 	template <class charT>
-	charT to_lower(charT c)
-	{
-		return std::tolower(c);
-	}
+	charT to_lower(charT c) { return std::tolower(c); }
 
 	/**
 	* \brief Check the setting value (if the setting is numeric),

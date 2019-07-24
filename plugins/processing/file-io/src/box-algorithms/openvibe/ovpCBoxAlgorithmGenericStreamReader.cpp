@@ -81,10 +81,9 @@ bool CBoxAlgorithmGenericStreamReader::process()
 		{
 			if (m_ui64EndTime <= l_ui64Time)
 			{
-				OV_ERROR_UNLESS_KRF(
-					m_ui32OutputIndex < l_rStaticBoxContext.getOutputCount(),
-					"Stream index " << m_ui32OutputIndex << " can not be output from this box because it does not have enough outputs",
-					OpenViBE::Kernel::ErrorType::BadOutput);
+				OV_ERROR_UNLESS_KRF(m_ui32OutputIndex < l_rStaticBoxContext.getOutputCount(),
+									"Stream index " << m_ui32OutputIndex << " can not be output from this box because it does not have enough outputs",
+									OpenViBE::Kernel::ErrorType::BadOutput);
 
 				l_rDynamicBoxContext.getOutputChunk(m_ui32OutputIndex)->append(m_oPendingChunk);
 				l_rDynamicBoxContext.markOutputAsReadyToSend(m_ui32OutputIndex, m_ui64StartTime, m_ui64EndTime);
@@ -103,10 +102,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 				uint8_t l_ui8Byte;
 				size_t s = fread(&l_ui8Byte, sizeof(uint8_t), 1, m_pFile);
 
-				OV_ERROR_UNLESS_KRF(
-					s == 1 || l_bJustStarted,
-					"Unexpected EOF in " << m_sFilename,
-					OpenViBE::Kernel::ErrorType::BadParsing);
+				OV_ERROR_UNLESS_KRF(s == 1 || l_bJustStarted, "Unexpected EOF in " << m_sFilename, OpenViBE::Kernel::ErrorType::BadParsing);
 
 				m_oReader.processData(&l_ui8Byte, sizeof(l_ui8Byte));
 				l_bJustStarted = false;
@@ -116,10 +112,7 @@ bool CBoxAlgorithmGenericStreamReader::process()
 				m_oSwap.setSize(m_oReader.getCurrentNodeSize(), true);
 				size_t s = (size_t)fread(m_oSwap.getDirectPointer(), sizeof(uint8_t), (size_t)m_oSwap.getSize(), m_pFile);
 
-				OV_ERROR_UNLESS_KRF(
-					s == m_oSwap.getSize(),
-					"Unexpected EOF in " << m_sFilename,
-					OpenViBE::Kernel::ErrorType::BadParsing);
+				OV_ERROR_UNLESS_KRF(s == m_oSwap.getSize(), "Unexpected EOF in " << m_sFilename, OpenViBE::Kernel::ErrorType::BadParsing);
 
 				m_oPendingChunk.setSize(0, true);
 				m_ui64StartTime   = std::numeric_limits<uint64_t>::max();
@@ -300,10 +293,7 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 		}
 
 		// When both outputs and streams were lost, there most probably was a damn mistake
-		OV_ERROR_UNLESS_KRV(
-			!l_bLastOutputs || !l_bLostStreams,
-			"Invalid configuration: missing output for stream(s) and missing stream for output(s)",
-			OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRV(!l_bLastOutputs || !l_bLostStreams, "Invalid configuration: missing output for stream(s) and missing stream for output(s)", OpenViBE::Kernel::ErrorType::BadConfig);
 	}
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer)

@@ -109,7 +109,9 @@ namespace Dsp
 
 		Biquad* stage = m_stageArray;
 		for (int i = 0; i < m_numStages; ++i, ++stage)
+		{
 			stage->setPoleZeroPair(proto[i]);
+		}
 
 		applyScale(proto.getNormalGain() /
 				   std::abs(response(proto.getNormalW() / (2 * doublePi))));

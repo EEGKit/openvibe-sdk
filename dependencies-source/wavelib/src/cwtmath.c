@@ -2,15 +2,13 @@
 
 static void nsfft_fd(fft_object obj, fft_data* inp, fft_data* oup, double lb, double ub, double* w)
 {
-	int M, N, i, j, L;
-	double delta, den, theta, tempr, tempi, plb;
-	double *temp1, *temp2;
+	int i;
 
-	N = obj->N;
-	L = N / 2;
+	int N = obj->N;
+	int L = N / 2;
 	//w = (double*)malloc(sizeof(double)*N);
 
-	M = divideby(N, 2);
+	int M = divideby(N, 2);
 
 	if (M == 0)
 	{
@@ -18,12 +16,12 @@ static void nsfft_fd(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 		exit(1);
 	}
 
-	temp1 = (double*)malloc(sizeof(double) * L);
-	temp2 = (double*)malloc(sizeof(double) * L);
+	double* temp1 = (double*)malloc(sizeof(double) * L);
+	double* temp2 = (double*)malloc(sizeof(double) * L);
 
-	delta = (ub - lb) / N;
-	j     = -N;
-	den   = 2 * (ub - lb);
+	double delta = (ub - lb) / N;
+	int j = -N;
+	double den = 2 * (ub - lb);
 
 	for (i = 0; i < N; ++i)
 	{
@@ -52,13 +50,13 @@ static void nsfft_fd(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 		oup[N - L + i].im = temp2[i];
 	}
 
-	plb = PI2 * lb;
+	double plb = PI2 * lb;
 
 	for (i = 0; i < N; ++i)
 	{
-		tempr = oup[i].re;
-		tempi = oup[i].im;
-		theta = w[i] * plb;
+		double tempr = oup[i].re;
+		double tempi = oup[i].im;
+		double theta = w[i] * plb;
 
 		oup[i].re = delta * (tempr * cos(theta) + tempi * sin(theta));
 		oup[i].im = delta * (tempi * cos(theta) - tempr * sin(theta));
@@ -72,16 +70,12 @@ static void nsfft_fd(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 
 static void nsfft_bk(fft_object obj, fft_data* inp, fft_data* oup, double lb, double ub, double* t)
 {
-	int M, N, i, j, L;
-	double* w;
-	double delta, den, plb, theta;
-	double *temp1, *temp2;
-	fft_data* inpt;
+	int i;
 
-	N = obj->N;
-	L = N / 2;
+	int N = obj->N;
+	int L = N / 2;
 
-	M = divideby(N, 2);
+	int M = divideby(N, 2);
 
 	if (M == 0)
 	{
@@ -89,14 +83,14 @@ static void nsfft_bk(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 		exit(1);
 	}
 
-	temp1 = (double*)malloc(sizeof(double) * L);
-	temp2 = (double*)malloc(sizeof(double) * L);
-	w     = (double*)malloc(sizeof(double) * N);
-	inpt  = (fft_data*)malloc(sizeof(fft_data) * N);
+	double* temp1 = (double*)malloc(sizeof(double) * L);
+	double* temp2 = (double*)malloc(sizeof(double) * L);
+	double* w = (double*)malloc(sizeof(double) * N);
+	fft_data* inpt = (fft_data*)malloc(sizeof(fft_data) * N);
 
-	delta = (ub - lb) / N;
-	j     = -N;
-	den   = 2 * (ub - lb);
+	double delta = (ub - lb) / N;
+	int j = -N;
+	double den = 2 * (ub - lb);
 
 	for (i = 0; i < N; ++i)
 	{
@@ -104,11 +98,11 @@ static void nsfft_bk(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 		j += 2;
 	}
 
-	plb = PI2 * lb;
+	double plb = PI2 * lb;
 
 	for (i = 0; i < N; ++i)
 	{
-		theta = w[i] * plb;
+		double theta = w[i] * plb;
 
 		inpt[i].re = (inp[i].re * cos(theta) - inp[i].im * sin(theta)) / delta;
 		inpt[i].im = (inp[i].im * cos(theta) + inp[i].re * sin(theta)) / delta;
@@ -134,10 +128,7 @@ static void nsfft_bk(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 
 	fft_exec(obj, inpt, oup);
 
-	for (i = 0; i < N; ++i)
-	{
-		t[i] = lb + i * delta;
-	}
+	for (i = 0; i < N; ++i) { t[i] = lb + i * delta; }
 
 	free(w);
 	free(temp1);
@@ -147,31 +138,20 @@ static void nsfft_bk(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 
 void nsfft_exec(fft_object obj, fft_data* inp, fft_data* oup, double lb, double ub, double* w)
 {
-	if (obj->sgn == 1)
-	{
-		nsfft_fd(obj, inp, oup, lb, ub, w);
-	}
-	else if (obj->sgn == -1)
-	{
-		nsfft_bk(obj, inp, oup, lb, ub, w);
-	}
+	if (obj->sgn == 1) { nsfft_fd(obj, inp, oup, lb, ub, w); }
+	else if (obj->sgn == -1) { nsfft_bk(obj, inp, oup, lb, ub, w); }
 }
 
 static double fix(double x)
 {
 	// Rounds to the integer nearest to zero 
-	if (x >= 0.)
-	{
-		return floor(x);
-	}
+	if (x >= 0.) { return floor(x); }
 	return ceil(x);
 }
 
 int nint(double N)
 {
-	int i;
-
-	i = (int)(N + 0.49999);
+	int i = (int)(N + 0.49999);
 
 	return i;
 }
@@ -193,8 +173,8 @@ double gamma(double x)
    
 	// numerator and denominator coefficients for 1 <= x <= 2
 
-	double y, oup, fact, sum, y2, yi, z, nsum, dsum;
-	int swi, n, i;
+	double oup, yi, z;
+	int i;
 
 	double spi   = 0.9189385332046727417803297;
 	double pi    = 3.1415926535897932384626434;
@@ -238,10 +218,10 @@ double gamma(double x)
 		5.7083835261e-03
 	};
 
-	y    = x;
-	swi  = 0;
-	fact = 1.0;
-	n    = 0;
+	double y = x;
+	int swi = 0;
+	double fact = 1.0;
+	int n = 0;
 
 
 	if (y < 0.)
@@ -291,8 +271,8 @@ double gamma(double x)
 			y -= (double)n;
 			z = y - 1.0;
 		}
-		nsum = 0.;
-		dsum = 1.;
+		double nsum = 0.;
+		double dsum = 1.;
 		for (i = 0; i < 8; ++i)
 		{
 			nsum = (nsum + num[i]) * z;
@@ -317,8 +297,8 @@ double gamma(double x)
 	{
 		if (y <= xmax)
 		{
-			y2  = y * y;
-			sum = c[6];
+			double y2 = y * y;
+			double sum = c[6];
 			for (i = 0; i < 6; ++i)
 			{
 				sum = sum / y2 + c[i];
@@ -333,14 +313,8 @@ double gamma(double x)
 		}
 	}
 
-	if (swi)
-	{
-		oup = -oup;
-	}
-	if (fact != 1.)
-	{
-		oup = fact / oup;
-	}
+	if (swi) { oup = -oup; }
+	if (fact != 1.) { oup = fact / oup; }
 
 	return oup;
 }

@@ -332,10 +332,7 @@ namespace OpenViBE
 	///////////////////////////////////////////
 
 	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::setGlobalDesc(const std::string& desc)
-	{
-		m_GlobalDesc = desc;
-	}
+	void ProgramOptions<First, Types...>::setGlobalDesc(const std::string& desc) { m_GlobalDesc = desc; }
 
 	template <typename First, typename... Types>
 	void ProgramOptions<First, Types...>::addSimpleOption(const std::string& name, const OptionDesc& optionDesc)
@@ -481,46 +478,25 @@ namespace OpenViBE
 	///////////////////////////////////////////
 
 	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::Integer& operand) const
-	{
-		operand = std::stoi(m_Value);
-	}
+	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::Integer& operand) const { operand = std::stoi(m_Value); }
 
 	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::Float& operand) const
-	{
-		operand = std::stod(m_Value);
-	}
+	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::Float& operand) const { operand = std::stod(m_Value); }
 
 	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::String& operand) const
-	{
-		operand = m_Value;
-	}
+	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::String& operand) const { operand = m_Value; }
 
 	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::TokenPair& operand) const
-	{
-		operand = this->parsePair(m_Value);
-	}
+	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::TokenPair& operand) const { operand = this->parsePair(m_Value); }
 
 	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::IntegerList& operand) const
-	{
-		operand.push_back(std::stoi(m_Value));
-	}
+	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::IntegerList& operand) const { operand.push_back(std::stoi(m_Value)); }
 
 	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::FloatList& operand) const
-	{
-		operand.push_back(std::stod(m_Value));
-	}
+	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::FloatList& operand) const { operand.push_back(std::stod(m_Value)); }
 
 	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::StringList& operand) const
-	{
-		operand.push_back(m_Value);
-	}
+	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::StringList& operand) const { operand.push_back(m_Value); }
 
 	template <typename First, typename... Types>
 	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::TokenPairList& operand) const

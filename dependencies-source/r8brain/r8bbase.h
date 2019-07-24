@@ -356,7 +356,7 @@ namespace r8b
 	template <class T>
 	class CFixedBuffer : public R8B_MEMALLOCCLASS
 	{
-	R8BNOCTOR(CFixedBuffer);
+	R8BNOCTOR(CFixedBuffer)
 
 	public:
 		CFixedBuffer() : Data(NULL) { }
@@ -439,7 +439,7 @@ namespace r8b
 	template <class T>
 	class CPtrKeeper
 	{
-	R8BNOCTOR(CPtrKeeper);
+	R8BNOCTOR(CPtrKeeper)
 
 	public:
 		CPtrKeeper() : Object(NULL) { }
@@ -521,7 +521,7 @@ namespace r8b
 
 	class CSyncObject
 	{
-	R8BNOCTOR(CSyncObject);
+	R8BNOCTOR(CSyncObject)
 
 	public:
 		CSyncObject()
@@ -597,7 +597,7 @@ namespace r8b
 
 	class CSyncKeeper
 	{
-	R8BNOCTOR(CSyncKeeper);
+	R8BNOCTOR(CSyncKeeper)
 
 	public:
 		CSyncKeeper() : SyncObj(NULL) { }
@@ -854,9 +854,8 @@ namespace r8b
 		if (ths[1] > M_PI) { ths[1] = M_PI; }
 
 		double ph1[ Count ];
-		int i;
 
-		for (i = 0; i < Count; i++)
+		for (int i = 0; i < Count; i++)
 		{
 			double re1;
 			double im1;

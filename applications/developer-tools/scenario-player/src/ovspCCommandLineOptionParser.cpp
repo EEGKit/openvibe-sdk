@@ -32,15 +32,9 @@ namespace OpenViBE
 		// nothing to do
 	}
 
-	void CommandLineOptionParser::uninitialize()
-	{
-		m_CommandList.clear();
-	}
+	void CommandLineOptionParser::uninitialize() { m_CommandList.clear(); }
 
-	std::vector<std::shared_ptr<ICommand>> CommandLineOptionParser::getCommandList() const
-	{
-		return m_CommandList;
-	}
+	std::vector<std::shared_ptr<ICommand>> CommandLineOptionParser::getCommandList() const { return m_CommandList; }
 
 	PlayerReturnCode CommandLineOptionParser::parse()
 	{

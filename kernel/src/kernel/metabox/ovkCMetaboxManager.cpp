@@ -88,10 +88,7 @@ CMetaboxManager::CMetaboxManager(const IKernelContext& kernelContext)
 
 CMetaboxManager::~CMetaboxManager()
 {
-	for (auto desc : m_MetaboxObjectDesc)
-	{
-		delete desc.second;
-	}
+	for (auto desc : m_MetaboxObjectDesc) { delete desc.second; }
 }
 
 bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
@@ -122,20 +119,14 @@ bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 
 CIdentifier CMetaboxManager::getNextMetaboxObjectDescIdentifier(const CIdentifier& previousIdentifier) const
 {
-	if (m_MetaboxObjectDesc.empty())
-	{
-		return OV_UndefinedIdentifier;
-	}
+	if (m_MetaboxObjectDesc.empty()) { return OV_UndefinedIdentifier; }
 	if (previousIdentifier == OV_UndefinedIdentifier)
 	{
 		return m_MetaboxObjectDesc.begin()->first;
 	}
 
 	auto result = m_MetaboxObjectDesc.find(previousIdentifier);
-	if (result == m_MetaboxObjectDesc.end() || std::next(result, 1) == m_MetaboxObjectDesc.end())
-	{
-		return OV_UndefinedIdentifier;
-	}
+	if (result == m_MetaboxObjectDesc.end() || std::next(result, 1) == m_MetaboxObjectDesc.end()) { return OV_UndefinedIdentifier; }
 	return std::next(result, 1)->first;
 }
 

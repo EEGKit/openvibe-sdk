@@ -38,10 +38,7 @@ namespace
 	// it can not be easily used in std::transform
 	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
 	template <class charT>
-	charT to_lower(charT c)
-	{
-		return std::tolower(c);
-	}
+	charT to_lower(charT c) { return std::tolower(c); }
 }  // namespace
 
 namespace OpenViBE
@@ -207,8 +204,7 @@ CIdentifier CConfigurationManager::createConfigurationToken(const CString& rConf
 	return l_oIdentifier;
 }
 
-bool CConfigurationManager::releaseConfigurationToken(
-	const CIdentifier& rConfigurationTokenIdentifier)
+bool CConfigurationManager::releaseConfigurationToken(const CIdentifier& rConfigurationTokenIdentifier)
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
@@ -223,8 +219,7 @@ bool CConfigurationManager::releaseConfigurationToken(
 	return true;
 }
 
-CIdentifier CConfigurationManager::getNextConfigurationTokenIdentifier(
-	const CIdentifier& rPreviousConfigurationTokenIdentifier) const
+CIdentifier CConfigurationManager::getNextConfigurationTokenIdentifier(const CIdentifier& rPreviousConfigurationTokenIdentifier) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
@@ -249,8 +244,7 @@ CIdentifier CConfigurationManager::getNextConfigurationTokenIdentifier(
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-CString CConfigurationManager::getConfigurationTokenName(
-	const CIdentifier& rConfigurationTokenIdentifier) const
+CString CConfigurationManager::getConfigurationTokenName(const CIdentifier& rConfigurationTokenIdentifier) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
@@ -262,8 +256,7 @@ CString CConfigurationManager::getConfigurationTokenName(
 	return "";
 }
 
-CString CConfigurationManager::getConfigurationTokenValue(
-	const CIdentifier& rConfigurationTokenIdentifier) const
+CString CConfigurationManager::getConfigurationTokenValue(const CIdentifier& rConfigurationTokenIdentifier) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
@@ -277,40 +270,31 @@ CString CConfigurationManager::getConfigurationTokenValue(
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-bool CConfigurationManager::setConfigurationTokenName(
-	const CIdentifier& rConfigurationTokenIdentifier,
-	const CString& rConfigurationTokenName)
+bool CConfigurationManager::setConfigurationTokenName(const CIdentifier& rConfigurationTokenIdentifier, const CString& rConfigurationTokenName)
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	OV_ERROR_UNLESS_KRF(
-		this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false) == OV_UndefinedIdentifier,
-		"Configuration token name " << rConfigurationTokenName << " already exists",
-		ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRF(this->lookUpConfigurationTokenIdentifier(rConfigurationTokenName, false) == OV_UndefinedIdentifier,
+						"Configuration token name " << rConfigurationTokenName << " already exists", ErrorType::BadResourceCreation);
 
 	std::map<CIdentifier, SConfigurationToken>::iterator itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 
-	OV_ERROR_UNLESS_KRF(
-		itConfigurationToken != m_vConfigurationToken.end(),
-		"Configuration token " << rConfigurationTokenIdentifier.toString() << " does not exist",
-		ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRF(itConfigurationToken != m_vConfigurationToken.end(), 
+						"Configuration token " << rConfigurationTokenIdentifier.toString() << " does not exist", ErrorType::BadResourceCreation);
 
 	itConfigurationToken->second.m_sConfigurationName = rConfigurationTokenName;
 	return true;
 }
 
-bool CConfigurationManager::setConfigurationTokenValue(
-	const CIdentifier& rConfigurationTokenIdentifier,
-	const CString& rConfigurationTokenValue)
+bool CConfigurationManager::setConfigurationTokenValue(const CIdentifier& rConfigurationTokenIdentifier, const CString& rConfigurationTokenValue)
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
 	std::map<CIdentifier, SConfigurationToken>::iterator itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 
-	OV_ERROR_UNLESS_KRF(
-		itConfigurationToken != m_vConfigurationToken.end(),
-		"Configuration token " << rConfigurationTokenIdentifier.toString() << " does not exist",
-		ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRF(itConfigurationToken != m_vConfigurationToken.end(),
+						"Configuration token " << rConfigurationTokenIdentifier.toString() << " does not exist",
+						ErrorType::BadResourceCreation);
 
 	itConfigurationToken->second.m_sConfigurationValue = rConfigurationTokenValue;
 	return true;
@@ -333,9 +317,7 @@ bool CConfigurationManager::addOrReplaceConfigurationToken(
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(
-	const CString& rConfigurationTokenName,
-	const bool bRecursive) const
+CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(const CString& rConfigurationTokenName, const bool bRecursive) const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
@@ -382,10 +364,9 @@ bool CConfigurationManager::registerKeywordParser(const CString& rKeyword, const
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	OV_ERROR_UNLESS_KRF(
-		rKeyword != CString("") && rKeyword != CString("core") && rKeyword != CString("environment"),
-		"Trying to overwrite internal keyword " << rKeyword,
-		ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRF(rKeyword != CString("") && rKeyword != CString("core") && rKeyword != CString("environment"),
+						"Trying to overwrite internal keyword " << rKeyword,
+						ErrorType::BadResourceCreation);
 
 	m_vKeywordOverride[rKeyword] = &rCallback;
 
@@ -396,10 +377,7 @@ bool CConfigurationManager::unregisterKeywordParser(const CString& rKeyword)
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	OV_ERROR_UNLESS_KRF(
-		m_vKeywordOverride.count(rKeyword),
-		"Override for keyword [" << rKeyword << "] was not found",
-		ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(m_vKeywordOverride.count(rKeyword), "Override for keyword [" << rKeyword << "] was not found", ErrorType::ResourceNotFound);
 
 	m_vKeywordOverride.erase(rKeyword);
 
@@ -424,25 +402,18 @@ bool CConfigurationManager::unregisterKeywordParser(const IConfigurationKeywordE
 		++l_itOverrideIterator;
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		l_bResult,
-		"Override for the callback was not found",
-		ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(l_bResult, "Override for the callback was not found", ErrorType::ResourceNotFound);
 
 	return l_bResult;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
-CString CConfigurationManager::expand(
-	const CString& rExpression) const
+CString CConfigurationManager::expand(const CString& rExpression) const
 {
 	std::string l_sValue(rExpression.toASCIIString());
 	std::string l_sResult;
-	if (this->internalExpand(l_sValue, l_sResult))
-	{
-		return l_sResult.c_str();
-	}
+	if (this->internalExpand(l_sValue, l_sResult)) { return l_sResult.c_str(); }
 	return l_sValue.c_str();
 }
 
@@ -499,18 +470,12 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 				break;
 
 			case '{':
-				OV_ERROR_UNLESS_KRF(
-					l_vChildren.top().first == NodeType_NamePrefix,
-					"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
-					ErrorType::BadFileParsing);
+				OV_ERROR_UNLESS_KRF(l_vChildren.top().first == NodeType_NamePrefix, "Could not expand token with syntax error while expanding " << CString(sValue.c_str()), ErrorType::BadFileParsing);
 				l_vChildren.push(std::make_pair(NodeType_NamePostfix, std::string()));
 				break;
 
 			case '}':
-				OV_ERROR_UNLESS_KRF(
-					l_vChildren.top().first == NodeType_NamePostfix,
-					"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
-					ErrorType::BadFileParsing);
+				OV_ERROR_UNLESS_KRF(l_vChildren.top().first == NodeType_NamePostfix, "Could not expand token with syntax error while expanding " << CString(sValue.c_str()), ErrorType::BadFileParsing);
 				l_sPostfix = l_vChildren.top().second;
 				l_sLowerPostfix.resize(l_sPostfix.size());
 				std::transform(l_sPostfix.begin(), l_sPostfix.end(), l_sLowerPostfix.begin(), ::to_lower<std::string::value_type>);
@@ -548,14 +513,8 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 						sprintf(l_sLocalValue, "%u", this->getIndex());
 						l_sValue = l_sLocalValue;
 					}
-					else if (l_sLowerPostfix == "time")
-					{
-						l_sValue = this->getTime();
-					}
-					else if (l_sLowerPostfix == "date")
-					{
-						l_sValue = this->getDate();
-					}
+					else if (l_sLowerPostfix == "time") { l_sValue = this->getTime(); }
+					else if (l_sLowerPostfix == "date") { l_sValue = this->getDate(); }
 					else if (l_sLowerPostfix == "real-time")
 					{
 						sprintf(l_sLocalValue, "%u", this->getRealTime());
@@ -579,19 +538,17 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 					{
 						CString l_sOverridenValue("");
 
-						OV_ERROR_UNLESS_KRF(
-							(m_vKeywordOverride.find(l_sLowerPrefix.c_str())->second)->expand(CString(l_sPostfix.c_str()), l_sOverridenValue),
-							"Could not expand $" << l_sLowerPrefix.c_str() << "{" << l_sLowerPostfix.c_str() << "}",
-							ErrorType::BadFileParsing);
+						OV_ERROR_UNLESS_KRF((m_vKeywordOverride.find(l_sLowerPrefix.c_str())->second)->expand(CString(l_sPostfix.c_str()), l_sOverridenValue),
+											"Could not expand $" << l_sLowerPrefix.c_str() << "{" << l_sLowerPostfix.c_str() << "}",
+											ErrorType::BadFileParsing);
 
 						l_sValue = l_sOverridenValue;
 					}
 					else
 					{
-						OV_ERROR_UNLESS_KRF(
-							m_pParentConfigurationManager,
-							"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
-							ErrorType::BadFileParsing);
+						OV_ERROR_UNLESS_KRF(m_pParentConfigurationManager, 
+											"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()), 
+											ErrorType::BadFileParsing);
 
 						std::string l_sKeyword = "$" + l_sLowerPrefix + "{" + l_sLowerPostfix + "}";
 
@@ -600,9 +557,8 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 						if (l_sValue == sValue)
 						{
 							l_sValue = "";
-							OV_ERROR_KRF(
-								"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
-								ErrorType::BadFileParsing);
+							OV_ERROR_KRF("Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
+										 ErrorType::BadFileParsing);
 						}
 					}
 				}
@@ -616,18 +572,14 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 
 					l_vChildren.top().second += l_sExpandedValue;
 				}
-				else
-				{
-					l_vChildren.top().second += l_sValue;
-				}
+				else { l_vChildren.top().second += l_sValue; }
 				break;
 
 			case '\\':
 				i++;
-				OV_ERROR_UNLESS_KRF(
-					i < sValue.length(),
-					"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
-					ErrorType::BadFileParsing);
+				OV_ERROR_UNLESS_KRF(i < sValue.length(),
+									"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
+									ErrorType::BadFileParsing);
 
 			default:
 				l_vChildren.top().second += sValue[i];
@@ -684,18 +636,16 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 				break;
 
 			case '{':
-				OV_ERROR_UNLESS_KRF(
-					l_vChildren.top().first == NodeType_NamePrefix,
-					"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
-					ErrorType::BadFileParsing);
+				OV_ERROR_UNLESS_KRF(l_vChildren.top().first == NodeType_NamePrefix,
+									"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
+									ErrorType::BadFileParsing);
 				l_vChildren.push(std::make_pair(NodeType_NamePostfix, std::string()));
 				break;
 
 			case '}':
-				OV_ERROR_UNLESS_KRF(
-					l_vChildren.top().first == NodeType_NamePostfix,
-					"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
-					ErrorType::BadFileParsing);
+				OV_ERROR_UNLESS_KRF(l_vChildren.top().first == NodeType_NamePostfix,
+									"Could not expand token with syntax error while expanding " << CString(sValue.c_str()),
+									ErrorType::BadFileParsing);
 
 				l_sPostfix = l_vChildren.top().second;
 				l_vChildren.pop();
@@ -712,17 +662,15 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 
 				if (l_sLowerPrefix == sKeyword)
 				{
-					OV_ERROR_UNLESS_KRF(
-						m_vKeywordOverride.count(l_sLowerPrefix.c_str()),
-						"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
-						ErrorType::BadFileParsing);
+					OV_ERROR_UNLESS_KRF(m_vKeywordOverride.count(l_sLowerPrefix.c_str()),
+										"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
+										ErrorType::BadFileParsing);
 
 					CString l_sOverridenValue("");
 
-					OV_ERROR_UNLESS_KRF(
-						(m_vKeywordOverride.find(l_sLowerPrefix.c_str())->second)->expand(CString(l_sPostfix.c_str()), l_sOverridenValue),
-						"Could not expand $" << l_sLowerPrefix.c_str() << "{" << l_sLowerPostfix.c_str() << "}",
-						ErrorType::BadFileParsing);
+					OV_ERROR_UNLESS_KRF((m_vKeywordOverride.find(l_sLowerPrefix.c_str())->second)->expand(CString(l_sPostfix.c_str()), l_sOverridenValue),
+										"Could not expand $" << l_sLowerPrefix.c_str() << "{" << l_sLowerPostfix.c_str() << "}",
+										ErrorType::BadFileParsing);
 
 					l_sValue = l_sOverridenValue;
 				}
@@ -735,29 +683,21 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 
 				if (l_bShouldExpand)
 				{
-					OV_ERROR_UNLESS_KRF(
-						this->internalExpandOnlyKeyword(sKeyword, l_sValue, l_sExpandedValue),
-						"Could not expand " << CString(l_sValue.c_str()) << " while expanding " << CString(sValue.c_str()),
-						ErrorType::BadFileParsing);
+					OV_ERROR_UNLESS_KRF(this->internalExpandOnlyKeyword(sKeyword, l_sValue, l_sExpandedValue),
+										"Could not expand " << CString(l_sValue.c_str()) << " while expanding " << CString(sValue.c_str()),
+										ErrorType::BadFileParsing);
 
 					l_vChildren.top().second += l_sExpandedValue;
 				}
-				else
-				{
-					l_vChildren.top().second += l_sValue;
-				}
+				else { l_vChildren.top().second += l_sValue; }
 				break;
 
 			case '\\':
-				if (preserveBackslashes)
-				{
-					l_vChildren.top().second += sValue[i];
-				}
+				if (preserveBackslashes) { l_vChildren.top().second += sValue[i]; }
 				i++;
-				OV_ERROR_UNLESS_KRF(
-					i < sValue.length(),
-					"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
-					ErrorType::BadFileParsing);
+				OV_ERROR_UNLESS_KRF(i < sValue.length(), 
+									"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
+									ErrorType::BadFileParsing);
 				l_vChildren.top().second += sValue[i];
 				break;
 
@@ -782,10 +722,9 @@ bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std
 	CIdentifier l_oTokenIdentifier = this->lookUpConfigurationTokenIdentifier(sTokenName.c_str(), false);
 	if (l_oTokenIdentifier == OV_UndefinedIdentifier)
 	{
-		OV_ERROR_UNLESS_KRF(
-			m_pParentConfigurationManager,
-			"Could not expand token [" << CString(sTokenName.c_str()) << "]. This token does not exist. If this is expected behavior, please add \"" << sTokenName.c_str() << " = \" to your configuration file",
-			ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(m_pParentConfigurationManager,
+							"Could not expand token [" << CString(sTokenName.c_str()) << "]. This token does not exist. If this is expected behavior, please add \"" << sTokenName.c_str() << " = \" to your configuration file",
+							ErrorType::ResourceNotFound);
 
 		std::string l_sNewString = std::string("${") + sTokenName + ("}");
 		sTokenValue              = m_pParentConfigurationManager->expand(l_sNewString.c_str());
@@ -797,23 +736,15 @@ bool CConfigurationManager::internalGetConfigurationTokenValueFromName(const std
 	return true;
 }
 
-CString CConfigurationManager::expandOnlyKeyword(
-	const CString& rKeyword,
-	const CString& rExpression,
-	bool preserveBackshlashes) const
+CString CConfigurationManager::expandOnlyKeyword(const CString& rKeyword, const CString& rExpression, bool preserveBackshlashes) const
 {
 	std::string l_sValue(rExpression.toASCIIString());
 	std::string l_sResult;
-	if (this->internalExpandOnlyKeyword(rKeyword.toASCIIString(), l_sValue, l_sResult, preserveBackshlashes))
-	{
-		return l_sResult.c_str();
-	}
+	if (this->internalExpandOnlyKeyword(rKeyword.toASCIIString(), l_sValue, l_sResult, preserveBackshlashes)) { return l_sResult.c_str(); }
 	return l_sValue.c_str();
 }
 
-double CConfigurationManager::expandAsFloat(
-	const CString& rExpression,
-	const double f64FallbackValue) const
+double CConfigurationManager::expandAsFloat(const CString& rExpression, const double f64FallbackValue) const
 {
 	CString l_sResult = this->expand(rExpression);
 	double l_f64Result;
@@ -822,55 +753,34 @@ double CConfigurationManager::expandAsFloat(
 	{
 		l_f64Result = std::stod(l_sResult.toASCIIString());
 	}
-	catch (const std::exception&)
-	{
-		l_f64Result = f64FallbackValue;
-	}
+	catch (const std::exception&) { l_f64Result = f64FallbackValue; }
 
 	return l_f64Result;
 }
 
-int64_t CConfigurationManager::expandAsInteger(
-	const CString& rExpression,
-	const int64_t i64FallbackValue) const
+int64_t CConfigurationManager::expandAsInteger(const CString& rExpression, const int64_t i64FallbackValue) const
 {
 	CString l_sResult = this->expand(rExpression);
 	int64_t l_i64Result;
 
-	try
-	{
-		l_i64Result = std::stoll(l_sResult.toASCIIString());
-	}
-	catch (const std::exception&)
-	{
-		l_i64Result = i64FallbackValue;
-	}
+	try { l_i64Result = std::stoll(l_sResult.toASCIIString()); }
+	catch (const std::exception&) { l_i64Result = i64FallbackValue; }
 
 	return l_i64Result;
 }
 
-uint64_t CConfigurationManager::expandAsUInteger(
-	const CString& rExpression,
-	const uint64_t ui64FallbackValue) const
+uint64_t CConfigurationManager::expandAsUInteger(const CString& rExpression, const uint64_t ui64FallbackValue) const
 {
 	CString l_sResult = this->expand(rExpression);
 	uint64_t l_ui64Result;
 
-	try
-	{
-		l_ui64Result = std::stoull(l_sResult.toASCIIString());
-	}
-	catch (const std::exception&)
-	{
-		l_ui64Result = ui64FallbackValue;
-	}
+	try { l_ui64Result = std::stoull(l_sResult.toASCIIString()); }
+	catch (const std::exception&) { l_ui64Result = ui64FallbackValue; }
 
 	return l_ui64Result;
 }
 
-bool CConfigurationManager::expandAsBoolean(
-	const CString& rExpression,
-	const bool bFallbackValue) const
+bool CConfigurationManager::expandAsBoolean( const CString& rExpression, const bool bFallbackValue) const
 {
 	std::string l_sResult = this->expand(rExpression).toASCIIString();
 	std::transform(l_sResult.begin(), l_sResult.end(), l_sResult.begin(), ::to_lower<std::string::value_type>);
@@ -886,30 +796,18 @@ bool CConfigurationManager::expandAsBoolean(
 	return bFallbackValue;
 }
 
-uint64_t CConfigurationManager::expandAsEnumerationEntryValue(
-	const CString& rExpression,
-	const CIdentifier& rEnumerationTypeIdentifier,
-	const uint64_t ui64FallbackValue) const
+uint64_t CConfigurationManager::expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier, const uint64_t ui64FallbackValue) const
 {
 	CString l_sResult     = this->expand(rExpression);
 	uint64_t l_ui64Result = this->getTypeManager().getEnumerationEntryValueFromName(rEnumerationTypeIdentifier, l_sResult);
-	if (l_ui64Result != 0xffffffffffffffffLL)
-	{
-		return l_ui64Result;
-	}
+	if (l_ui64Result != 0xffffffffffffffffLL) { return l_ui64Result; }
 
 	return ui64FallbackValue;
 }
 
-uint32_t CConfigurationManager::getRandom() const
-{
-	return System::Math::randomUInteger32();
-}
+uint32_t CConfigurationManager::getRandom() const { return System::Math::randomUInteger32(); }
 
-uint32_t CConfigurationManager::getIndex() const
-{
-	return m_ui32Index++;
-}
+uint32_t CConfigurationManager::getIndex() const { return m_ui32Index++; }
 
 CString CConfigurationManager::getTime() const
 {

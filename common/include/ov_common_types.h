@@ -67,6 +67,3 @@ OV_APPEND_TO_NAMESPACE
 		uint64_t m_ui64TimeValue;
 	} time64;                                ///< Time on uint64
 }  // namespace OpenViBETypeTest
-
-
-// #endif

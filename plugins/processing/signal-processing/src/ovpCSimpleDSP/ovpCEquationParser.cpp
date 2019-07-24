@@ -179,13 +179,8 @@ bool CEquationParser::compileEquation(const char* pEquation)
 		l_oErrorString += "^--Here\n";
 	}
 
-	OV_ERROR(
-		"Failed parsing equation \n[" << pEquation << "]\n " << l_oErrorString.c_str(),
-		OpenViBE::Kernel::ErrorType::BadParsing,
-		false,
-		m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(),
-		m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-	);
+	OV_ERROR("Failed parsing equation \n[" << pEquation << "]\n " << l_oErrorString.c_str(), OpenViBE::Kernel::ErrorType::BadParsing, false,
+			 m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getErrorManager(), m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
 }
 
 void CEquationParser::createAbstractTree(tree_parse_info<> oInfo)
@@ -204,13 +199,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		//replaces (- X Y) by (+ X (-Y)) (in fact (+ X (* -1 Y)) )
 		if (*i->value.begin() == '-')
 		{
-			return new CAbstractTreeParentNode(OP_ADD,
-											   createNode(i->children.begin()),
-											   new CAbstractTreeParentNode(OP_MUL,
-																		   new CAbstractTreeValueNode(-1),
-																		   createNode(i->children.begin() + 1),
-																		   true),
-											   true);
+			return new CAbstractTreeParentNode(OP_ADD, createNode(i->children.begin()), new CAbstractTreeParentNode(OP_MUL, new CAbstractTreeValueNode(-1), createNode(i->children.begin() + 1), true), true);
 		}
 	}
 	else if (i->value.id() == CEquationGrammar::termID)
@@ -253,10 +242,8 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 
 		if (l_ui32Index >= m_ui32VariableCount)
 		{
-			OV_WARNING(
-				"Missing input " << l_ui32Index+1 << " (referenced with variable [" << CString(l_sValue.c_str()) << "])",
-				m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
-			);
+			OV_WARNING("Missing input " << l_ui32Index+1 << " (referenced with variable [" << CString(l_sValue.c_str()) << "])",
+					   m_oParentPlugin.getBoxAlgorithmContext()->getPlayerContext()->getLogManager());
 			return new CAbstractTreeValueNode(0);
 		}
 		return new CAbstractTreeVariableNode(l_ui32Index);
@@ -282,29 +269,17 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		//gets the function's Id from the unary function's symbols table
 		if ((l_ui64FunctionIdentifier = find(unaryFunction_p, l_sValue.c_str())) != NULL)
 		{
-			return new CAbstractTreeParentNode(
-				*l_ui64FunctionIdentifier,
-				createNode(i->children.begin()),
-				false);
+			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), false);
 		}
 			//gets the function's Id from the binary function's symbols table
 		if ((l_ui64FunctionIdentifier = find(binaryFunction_p, l_sValue.c_str())) != NULL)
 		{
-			return new CAbstractTreeParentNode(
-				*l_ui64FunctionIdentifier,
-				createNode(i->children.begin()),
-				createNode(i->children.begin() + 1),
-				false);
+			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 	}
 	else if (i->value.id() == CEquationGrammar::ifthenID)
 	{
-		return new CAbstractTreeParentNode(
-			OP_IF_THEN_ELSE,
-			createNode(i->children.begin()),
-			createNode(i->children.begin() + 1),
-			createNode(i->children.begin() + 2),
-			false);
+		return new CAbstractTreeParentNode(OP_IF_THEN_ELSE, createNode(i->children.begin()), createNode(i->children.begin() + 1), createNode(i->children.begin() + 2), false);
 	}
 	else if (i->value.id() == CEquationGrammar::comparisonID)
 	{
@@ -317,20 +292,12 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		//gets the function's Id from the comparison function's symbols table
 		if ((l_ui64FunctionIdentifier = find(comparison1Function_p, l_sValue.c_str())) != NULL)
 		{
-			return new CAbstractTreeParentNode(
-				*l_ui64FunctionIdentifier,
-				createNode(i->children.begin()),
-				createNode(i->children.begin() + 1),
-				false);
+			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 			//gets the function's Id from the comparison function's symbols table
 		if ((l_ui64FunctionIdentifier = find(comparison2Function_p, l_sValue.c_str())) != NULL)
 		{
-			return new CAbstractTreeParentNode(
-				*l_ui64FunctionIdentifier,
-				createNode(i->children.begin()),
-				createNode(i->children.begin() + 1),
-				false);
+			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 	}
 	else if (i->value.id() == CEquationGrammar::booleanID)
@@ -344,37 +311,22 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		//gets the function's Id from the binary boolean function's symbols table
 		if ((l_ui64FunctionIdentifier = find(binaryBoolean1Function_p, l_sValue.c_str())) != NULL)
 		{
-			return new CAbstractTreeParentNode(
-				*l_ui64FunctionIdentifier,
-				createNode(i->children.begin()),
-				createNode(i->children.begin() + 1),
-				false);
+			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 			//gets the function's Id from the binary boolean function's symbols table
 		if ((l_ui64FunctionIdentifier = find(binaryBoolean2Function_p, l_sValue.c_str())) != NULL)
 		{
-			return new CAbstractTreeParentNode(
-				*l_ui64FunctionIdentifier,
-				createNode(i->children.begin()),
-				createNode(i->children.begin() + 1),
-				false);
+			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 		//gets the function's Id from the binary boolean function's symbols table
 		if ((l_ui64FunctionIdentifier = find(binaryBoolean3Function_p, l_sValue.c_str())) != NULL)
 		{
-			return new CAbstractTreeParentNode(
-				*l_ui64FunctionIdentifier,
-				createNode(i->children.begin()),
-				createNode(i->children.begin() + 1),
-				false);
+			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 		//gets the function's Id from the binary boolean function's symbols table
 		if ((l_ui64FunctionIdentifier = find(unaryBooleanFunction_p, l_sValue.c_str())) != NULL)
 		{
-			return new CAbstractTreeParentNode(
-				*l_ui64FunctionIdentifier,
-				createNode(i->children.begin()),
-				false);
+			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), false);
 		}
 	}
 
@@ -547,10 +499,7 @@ void CEquationParser::op_if_then_else(double*& pStack, functionContext& pContext
 {
 	pStack--;
 	pStack--;
-	if (*(pStack + 2))
-	{
-		*pStack = *(pStack + 1);
-	}
+	if (*(pStack + 2)) { *pStack = *(pStack + 1); }
 	else
 	{
 		// *pStack = *pStack;

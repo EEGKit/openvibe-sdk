@@ -20,27 +20,21 @@ CPlayerContext::CPlayerContext(const IKernelContext& rKernelContext, CSimulatedB
 
 CPlayerContext::~CPlayerContext() {}
 
-bool CPlayerContext::sendSignal(
-	const CMessageSignal& rMessageSignal)
+bool CPlayerContext::sendSignal(const CMessageSignal& rMessageSignal)
 {
 	// TODO
 	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendSignal - Not yet implemented\n";
 	return false;
 }
 
-bool CPlayerContext::sendMessage(
-	const CMessageEvent& rMessageEvent,
-	const CIdentifier& rTargetIdentifier)
+bool CPlayerContext::sendMessage(const CMessageEvent& rMessageEvent, const CIdentifier& rTargetIdentifier)
 {
 	// TODO
 	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";
 	return false;
 }
 
-bool CPlayerContext::sendMessage(
-	const CMessageEvent& rMessageEvent,
-	const CIdentifier* pTargetIdentifier,
-	const uint32_t ui32TargetIdentifierCount)
+bool CPlayerContext::sendMessage(const CMessageEvent& rMessageEvent, const CIdentifier* pTargetIdentifier, const uint32_t ui32TargetIdentifierCount)
 {
 	// TODO
 	this->getLogManager() << LogLevel_Debug << "CPlayerContext::sendMessage - Not yet implemented\n";

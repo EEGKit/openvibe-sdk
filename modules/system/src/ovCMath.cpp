@@ -37,15 +37,9 @@ public:
 		return static_cast<int32_t>(l_ui32NextValue);
 	}
 
-	void setSeed(uint32_t seed)
-	{
-		l_ui32NextValue = seed;
-	}
+	void setSeed(uint32_t seed) { l_ui32NextValue = seed; }
 
-	uint32_t getSeed() const
-	{
-		return l_ui32NextValue;
-	}
+	uint32_t getSeed() const { return l_ui32NextValue; }
 };
 
 // Should be only accessed via Math:: calls defined below

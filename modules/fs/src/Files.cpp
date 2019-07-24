@@ -108,10 +108,7 @@ FILE* Files::open(const char* sFile, const char* sMode)
 
 		fHandle = _wfopen(l_sUTF16FileName.c_str(), l_sUTF16Mode.c_str());
 	}
-	catch (const std::logic_error&)
-	{
-		fHandle = fopen(sFile, sMode);
-	}
+	catch (const std::logic_error&) { fHandle = fopen(sFile, sMode); }
 
 	return fHandle;
 }
@@ -127,10 +124,7 @@ FILE* Files::popen(const char* sFile, const char* sMode)
 
 		fHandle = _wpopen(l_sUTF16FileName.c_str(), l_sUTF16Mode.c_str());
 	}
-	catch (const std::logic_error&)
-	{
-		fHandle = popen(sFile, sMode);
-	}
+	catch (const std::logic_error&) { fHandle = popen(sFile, sMode); }
 
 	return fHandle;
 }
@@ -144,10 +138,7 @@ void openStream(T& rStream, const char* sFile, std::ios_base::openmode oMode)
 
 		rStream.open(l_sUTF16FileName.c_str(), oMode);
 	}
-	catch (const std::logic_error&)
-	{
-		rStream.open(sFile, oMode);
-	}
+	catch (const std::logic_error&) { rStream.open(sFile, oMode); }
 }
 
 void Files::openOFStream(std::ofstream& rStream, const char* sFile, std::ios_base::openmode oMode)

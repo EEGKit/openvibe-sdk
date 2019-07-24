@@ -51,10 +51,7 @@ bool CLogListenerConsole::activate(ELogLevel eLogLevel, bool bActive)
 
 bool CLogListenerConsole::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; i++)
-	{
-		m_vActiveLevel[ELogLevel(i)] = bActive;
-	}
+	for (int i = eStartLogLevel; i <= eEndLogLevel; i++) { m_vActiveLevel[ELogLevel(i)] = bActive; }
 	return true;
 }
 
@@ -147,10 +144,7 @@ void CLogListenerConsole::log(const uint8_t ui8Value)
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
 	cout << dec << ui8Value;
-	if (m_bLogWithHexa)
-	{
-		cout << " (0x" << hex << ui8Value << ")";
-	}
+	if (m_bLogWithHexa) { cout << " (0x" << hex << ui8Value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
@@ -161,10 +155,7 @@ void CLogListenerConsole::log(const int64_t i64Value)
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
 	cout << dec << i64Value;
-	if (m_bLogWithHexa)
-	{
-		cout << " (0x" << hex << i64Value << ")";
-	}
+	if (m_bLogWithHexa) { cout << " (0x" << hex << i64Value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
@@ -175,10 +166,7 @@ void CLogListenerConsole::log(const int32_t i32Value)
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
 	cout << dec << i32Value;
-	if (m_bLogWithHexa)
-	{
-		cout << " (0x" << hex << i32Value << ")";
-	}
+	if (m_bLogWithHexa) { cout << " (0x" << hex << i32Value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
@@ -189,10 +177,7 @@ void CLogListenerConsole::log(const int16_t i16Value)
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
 	cout << dec << i16Value;
-	if (m_bLogWithHexa)
-	{
-		cout << " (0x" << hex << i16Value << ")";
-	}
+	if (m_bLogWithHexa) { cout << " (0x" << hex << i16Value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
@@ -203,10 +188,7 @@ void CLogListenerConsole::log(const int8_t i8Value)
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
 	cout << dec << i8Value;
-	if (m_bLogWithHexa)
-	{
-		cout << " (0x" << hex << i8Value << ")";
-	}
+	if (m_bLogWithHexa) { cout << " (0x" << hex << i8Value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }

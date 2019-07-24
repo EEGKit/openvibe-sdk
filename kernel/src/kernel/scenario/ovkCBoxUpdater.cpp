@@ -77,10 +77,7 @@ bool CBoxUpdater::initialize()
 		// Note that copy constructor for IScenario does not exist
 		CIdentifier metaboxScenarioTemplateIdentifier;
 
-		this->getKernelContext().getScenarioManager().importScenarioFromFile(
-			metaboxScenarioTemplateIdentifier,
-			OV_ScenarioImportContext_SchedulerMetaboxImport,
-			metaboxScenarioPath);
+		this->getKernelContext().getScenarioManager().importScenarioFromFile(metaboxScenarioTemplateIdentifier, OV_ScenarioImportContext_SchedulerMetaboxImport, metaboxScenarioPath);
 
 		CScenario* metaboxScenarioInstance = dynamic_cast<CScenario*>(&(this->getKernelContext().getScenarioManager().getScenario(metaboxScenarioTemplateIdentifier)));
 		metaboxScenarioInstance->setAlgorithmClassIdentifier(OVP_ClassId_BoxAlgorithm_Metabox);
@@ -140,10 +137,7 @@ bool CBoxUpdater::initialize()
 		m_IsUpdateRequired |= this->checkForSupportedIOSAttributesToBeUpdated();
 	}
 
-	if (m_SourceBox->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
-	{
-		m_IsUpdateRequired |= isHashDifferent;
-	}
+	if (m_SourceBox->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox) { m_IsUpdateRequired |= isHashDifferent; }
 
 	return true;
 }

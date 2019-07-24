@@ -37,10 +37,7 @@ int32_t OpenViBEPlugins::Classification::LDAClassificationCompare(OpenViBE::IMat
 
 	//Then we just compared them
 	if (ov_float_equal(l_f64MaxFirst, l_f64MaxSecond)) { return 0; }
-	else if (l_f64MaxFirst > l_f64MaxSecond)
-	{
-		return -1;
-	}
+	else if (l_f64MaxFirst > l_f64MaxSecond) { return -1; }
 	return 1;
 }
 
@@ -107,10 +104,7 @@ bool CAlgorithmClassifierLDA::initialize()
 
 bool CAlgorithmClassifierLDA::uninitialize()
 {
-	OV_ERROR_UNLESS_KRF(
-		m_pCovarianceAlgorithm->uninitialize(),
-		"Failed to uninitialize covariance algorithm",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_pCovarianceAlgorithm->uninitialize(), "Failed to uninitialize covariance algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
 	this->getAlgorithmManager().releaseAlgorithm(*m_pCovarianceAlgorithm);
 
@@ -119,10 +113,7 @@ bool CAlgorithmClassifierLDA::uninitialize()
 
 bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 {
-	OV_ERROR_UNLESS_KRF(
-		this->initializeExtraParameterMechanism(),
-		"Failed to unitialize extra parameters",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->initializeExtraParameterMechanism(), "Failed to unitialize extra parameters", OpenViBE::Kernel::ErrorType::Internal);
 
 	//We need to clear list because a instance of this class should support more that one training.
 	m_vLabelList.clear();
@@ -147,10 +138,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 		l_pDiagonalCov  = false;
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		this->uninitializeExtraParameterMechanism(),
-		"Failed to ininitialize extra parameters",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->uninitializeExtraParameterMechanism(), "Failed to ininitialize extra parameters", OpenViBE::Kernel::ErrorType::Internal);
 
 	// IO to the covariance alg
 	TParameterHandler<IMatrix*> op_pMean(m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_Mean));
@@ -162,10 +150,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 	this->getLogManager() << LogLevel_Debug << "Feature set input dims ["
 			<< rFeatureVectorSet.getFeatureVectorCount() << "x" << l_ui32nCols << "]\n";
 
-	OV_ERROR_UNLESS_KRF(
-		l_ui32nRows != 0 && l_ui32nCols != 0,
-		"Input data has a zero-size dimension, dims = [" << l_ui32nRows << "x" << l_ui32nCols << "]",
-		OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(l_ui32nRows != 0 && l_ui32nCols != 0, "Input data has a zero-size dimension, dims = [" << l_ui32nRows << "x" << l_ui32nCols << "]", OpenViBE::Kernel::ErrorType::BadInput);
 
 	// The max amount of classes to be expected
 	TParameterHandler<uint64_t> ip_pNumberOfClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
@@ -349,15 +334,11 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 
 bool CAlgorithmClassifierLDA::classify(const IFeatureVector& rFeatureVector, double& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
 {
-	OV_ERROR_UNLESS_KRF(
-		!m_vDiscriminantFunctions.empty(),
-		"LDA discriminant function list is empty",
-		OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(!m_vDiscriminantFunctions.empty(), "LDA discriminant function list is empty", OpenViBE::Kernel::ErrorType::BadConfig);
 
-	OV_ERROR_UNLESS_KRF(
-		rFeatureVector.getSize() == m_vDiscriminantFunctions[0].getWeightVectorSize(),
-		"Classifier expected " << m_vDiscriminantFunctions[0].getWeightVectorSize() << " features, got " << rFeatureVector.getSize(),
-		OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(rFeatureVector.getSize() == m_vDiscriminantFunctions[0].getWeightVectorSize(),
+						"Classifier expected " << m_vDiscriminantFunctions[0].getWeightVectorSize() << " features, got " << rFeatureVector.getSize(),
+						OpenViBE::Kernel::ErrorType::BadInput);
 
 	const Map<VectorXd> l_oFeatureVec(const_cast<double*>(rFeatureVector.getBuffer()), rFeatureVector.getSize());
 	const VectorXd l_oWeights       = l_oFeatureVec;
@@ -423,10 +404,7 @@ XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration()
 	// Write the classifier to an .xml
 	std::stringstream l_sClasses;
 
-	for (size_t i = 0; i < getClassCount(); ++i)
-	{
-		l_sClasses << m_vLabelList[i] << " ";
-	}
+	for (size_t i = 0; i < getClassCount(); ++i) { l_sClasses << m_vLabelList[i] << " "; }
 
 	//Only new version should be recorded so we don't need to test
 	XML::IXMLNode* l_pHelpersConfiguration = XML::createNode(c_sComputationHelpersConfigurationNode);
@@ -456,20 +434,16 @@ double getFloatFromNode(XML::IXMLNode* pNode)
 
 bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* pConfigurationNode)
 {
-	OV_ERROR_UNLESS_KRF(
-		pConfigurationNode->hasAttribute(c_sLDAConfigFileVersionAttributeName),
-		"Invalid model: model trained with an obsolete version of LDA",
-		OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(pConfigurationNode->hasAttribute(c_sLDAConfigFileVersionAttributeName),
+						"Invalid model: model trained with an obsolete version of LDA",
+						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	m_vLabelList.clear();
 	m_vDiscriminantFunctions.clear();
 
 	XML::IXMLNode* l_pTempNode = pConfigurationNode->getChildByName(c_sClassesNodeName);
 
-	OV_ERROR_UNLESS_KRF(
-		l_pTempNode != NULL,
-		"Failed to retrieve xml node",
-		OpenViBE::Kernel::ErrorType::BadParsing);
+	OV_ERROR_UNLESS_KRF(l_pTempNode != NULL, "Failed to retrieve xml node", OpenViBE::Kernel::ErrorType::BadParsing);
 
 	loadClassesFromNode(l_pTempNode);
 
@@ -490,10 +464,7 @@ void CAlgorithmClassifierLDA::loadClassesFromNode(XML::IXMLNode* pNode)
 {
 	std::stringstream l_sData(pNode->getPCData());
 	double l_f64Temp;
-	while (l_sData >> l_f64Temp)
-	{
-		m_vLabelList.push_back(l_f64Temp);
-	}
+	while (l_sData >> l_f64Temp) { m_vLabelList.push_back(l_f64Temp); }
 	m_ui32NumClasses = m_vLabelList.size();
 }
 
@@ -504,17 +475,11 @@ void CAlgorithmClassifierLDA::loadCoefficientsFromNode(XML::IXMLNode* pNode)
 
 	std::vector<double> l_vCoefficients;
 	double l_f64Value;
-	while (l_sData >> l_f64Value)
-	{
-		l_vCoefficients.push_back(l_f64Value);
-	}
+	while (l_sData >> l_f64Value) { l_vCoefficients.push_back(l_f64Value); }
 
 	m_oWeights.resize(1, l_vCoefficients.size());
 	m_ui32NumCols = l_vCoefficients.size();
-	for (size_t i = 0; i < l_vCoefficients.size(); i++)
-	{
-		m_oWeights(0, i) = l_vCoefficients[i];
-	}
+	for (size_t i = 0; i < l_vCoefficients.size(); i++) { m_oWeights(0, i) = l_vCoefficients[i]; }
 }
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

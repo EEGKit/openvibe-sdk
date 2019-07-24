@@ -52,9 +52,9 @@ namespace Dsp
 	class LayoutBase
 	{
 	public:
-		LayoutBase() : m_numPoles(0), m_maxPoles(0) { }
+		LayoutBase() { }
 
-		LayoutBase(int maxPoles, PoleZeroPair* pairs) : m_numPoles(0), m_maxPoles(maxPoles), m_pair(pairs) { }
+		LayoutBase(int maxPoles, PoleZeroPair* pairs) : m_maxPoles(maxPoles), m_pair(pairs) { }
 
 		void setStorage(const LayoutBase& other)
 		{

@@ -337,16 +337,13 @@ namespace r8b
 
 		static void rdft(int n, int isgn, FPType* a, int* ip, FPType* w)
 		{
-			int nw, nc;
-			double xi;
-
-			nw = ip[0];
+			int nw = ip[0];
 			if (n > (nw << 2))
 			{
 				nw = n >> 2;
 				makewt(nw, ip, w);
 			}
-			nc = ip[1];
+			int nc = ip[1];
 			if (n > (nc << 2))
 			{
 				nc = n >> 2;
@@ -364,7 +361,7 @@ namespace r8b
 				{
 					cftfsub(n, a, w);
 				}
-				xi = a[0] - a[1];
+				double xi = a[0] - a[1];
 				a[0] += a[1];
 				a[1] = xi;
 			}
@@ -387,16 +384,16 @@ namespace r8b
 
 		static void ddct(int n, int isgn, FPType* a, int* ip, FPType* w)
 		{
-			int j, nw, nc;
+			int j;
 			double xr;
 
-			nw = ip[0];
+			int nw = ip[0];
 			if (n > (nw << 2))
 			{
 				nw = n >> 2;
 				makewt(nw, ip, w);
 			}
-			nc = ip[1];
+			int nc = ip[1];
 			if (n > nc)
 			{
 				nc = n;
@@ -449,16 +446,16 @@ namespace r8b
 
 		static void ddst(int n, int isgn, FPType* a, int* ip, FPType* w)
 		{
-			int j, nw, nc;
+			int j;
 			double xr;
 
-			nw = ip[0];
+			int nw = ip[0];
 			if (n > (nw << 2))
 			{
 				nw = n >> 2;
 				makewt(nw, ip, w);
 			}
-			nc = ip[1];
+			int nc = ip[1];
 			if (n > nc)
 			{
 				nc = n;
@@ -511,36 +508,35 @@ namespace r8b
 
 		static void dfct(int n, FPType* a, FPType* t, int* ip, FPType* w)
 		{
-			int j, k, l, m, mh, nw, nc;
-			double xr, xi, yr, yi;
+			int j, k;
 
-			nw = ip[0];
+			int nw = ip[0];
 			if (n > (nw << 3))
 			{
 				nw = n >> 3;
 				makewt(nw, ip, w);
 			}
-			nc = ip[1];
+			int nc = ip[1];
 			if (n > (nc << 1))
 			{
 				nc = n >> 1;
 				makect(nc, ip, w + nw);
 			}
-			m  = n >> 1;
-			yi = a[m];
-			xi = a[0] + a[n];
+			int m = n >> 1;
+			double yi = a[m];
+			double xi = a[0] + a[n];
 			a[0] -= a[n];
 			t[0] = xi - yi;
 			t[m] = xi + yi;
 			if (n > 2)
 			{
-				mh = m >> 1;
+				int mh = m >> 1;
 				for (j = 1; j < mh; j++)
 				{
 					k    = m - j;
-					xr   = a[j] - a[n - j];
+					double xr = a[j] - a[n - j];
 					xi   = a[j] + a[n - j];
-					yr   = a[k] - a[n - k];
+					double yr = a[k] - a[n - k];
 					yi   = a[k] + a[n - k];
 					a[j] = xr;
 					a[k] = yr;
@@ -567,7 +563,7 @@ namespace r8b
 					a[2 * j + 1] = a[j] + a[j + 1];
 					a[2 * j - 1] = a[j] - a[j + 1];
 				}
-				l = 2;
+				int l = 2;
 				m = mh;
 				while (m >= 2)
 				{
@@ -616,16 +612,15 @@ namespace r8b
 
 		static void dfst(int n, FPType* a, FPType* t, int* ip, FPType* w)
 		{
-			int j, k, l, m, mh, nw, nc;
-			double xr, xi, yr, yi;
+			int j, k;
 
-			nw = ip[0];
+			int nw = ip[0];
 			if (n > (nw << 3))
 			{
 				nw = n >> 3;
 				makewt(nw, ip, w);
 			}
-			nc = ip[1];
+			int nc = ip[1];
 			if (n > (nc << 1))
 			{
 				nc = n >> 1;
@@ -633,15 +628,15 @@ namespace r8b
 			}
 			if (n > 2)
 			{
-				m  = n >> 1;
-				mh = m >> 1;
+				int m = n >> 1;
+				int mh = m >> 1;
 				for (j = 1; j < mh; j++)
 				{
 					k    = m - j;
-					xr   = a[j] + a[n - j];
-					xi   = a[j] - a[n - j];
-					yr   = a[k] + a[n - k];
-					yi   = a[k] - a[n - k];
+					double xr = a[j] + a[n - j];
+					double xi = a[j] - a[n - j];
+					double yr = a[k] + a[n - k];
+					double yi = a[k] - a[n - k];
 					a[j] = xr;
 					a[k] = yr;
 					t[j] = xi + yi;
@@ -668,7 +663,7 @@ namespace r8b
 					a[2 * j + 1] = a[j] - a[j + 1];
 					a[2 * j - 1] = -a[j] - a[j + 1];
 				}
-				l = 2;
+				int l = 2;
 				m = mh;
 				while (m >= 2)
 				{
@@ -712,25 +707,22 @@ namespace r8b
 
 		static void makewt(int nw, int* ip, FPType* w)
 		{
-			int j, nwh;
-			double delta, x, y;
-
 			ip[0] = nw;
 			ip[1] = 1;
 			if (nw > 2)
 			{
-				nwh        = nw >> 1;
-				delta      = atan(1.0) / nwh;
+				int nwh = nw >> 1;
+				double delta = atan(1.0) / nwh;
 				w[0]       = 1;
 				w[1]       = 0;
 				w[nwh]     = cos(delta * nwh);
 				w[nwh + 1] = w[nwh];
 				if (nwh > 2)
 				{
-					for (j = 2; j < nwh; j += 2)
+					for (int j = 2; j < nwh; j += 2)
 					{
-						x             = cos(delta * j);
-						y             = sin(delta * j);
+						double x = cos(delta * j);
+						double y = sin(delta * j);
 						w[j]          = x;
 						w[j + 1]      = y;
 						w[nw - j]     = y;
@@ -743,17 +735,14 @@ namespace r8b
 
 		static void makect(int nc, int* ip, FPType* c)
 		{
-			int j, nch;
-			double delta;
-
 			ip[1] = nc;
 			if (nc > 1)
 			{
-				nch    = nc >> 1;
-				delta  = atan(1.0) / nch;
+				int nch = nc >> 1;
+				double delta = atan(1.0) / nch;
 				c[0]   = cos(delta * nch);
 				c[nch] = 0.5 * c[0];
-				for (j = 1; j < nch; j++)
+				for (int j = 1; j < nch; j++)
 				{
 					c[j]      = 0.5 * cos(delta * j);
 					c[nc - j] = 0.5 * sin(delta * j);
@@ -765,12 +754,12 @@ namespace r8b
 
 		static void bitrv2(int n, int* ip, FPType* a)
 		{
-			int j, j1, k, k1, l, m, m2;
+			int j, j1, k, k1;
 			double xr, xi, yr, yi;
 
 			ip[0] = 0;
-			l     = n;
-			m     = 1;
+			int l = n;
+			int m = 1;
 			while ((m << 3) < l)
 			{
 				l >>= 1;
@@ -780,7 +769,7 @@ namespace r8b
 				}
 				m <<= 1;
 			}
-			m2 = 2 * m;
+			int m2 = 2 * m;
 			if ((m << 3) == l)
 			{
 				for (k = 0; k < m; k++)
@@ -873,12 +862,12 @@ namespace r8b
 
 		static void bitrv2conj(int n, int* ip, FPType* a)
 		{
-			int j, j1, k, k1, l, m, m2;
+			int j, j1, k, k1;
 			double xr, xi, yr, yi;
 
 			ip[0] = 0;
-			l     = n;
-			m     = 1;
+			int l = n;
+			int m = 1;
 			while ((m << 3) < l)
 			{
 				l >>= 1;
@@ -888,7 +877,7 @@ namespace r8b
 				}
 				m <<= 1;
 			}
-			m2 = 2 * m;
+			int m2 = 2 * m;
 			if ((m << 3) == l)
 			{
 				for (k = 0; k < m; k++)
@@ -990,10 +979,10 @@ namespace r8b
 
 		static void cftfsub(int n, FPType* a, const FPType* w)
 		{
-			int j, j1, j2, j3, l;
-			double x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
+			int j, j1;
+			double x0r, x0i;
 
-			l = 2;
+			int l = 2;
 			if (n > 8)
 			{
 				cft1st(n, a, w);
@@ -1009,16 +998,16 @@ namespace r8b
 				for (j = 0; j < l; j += 2)
 				{
 					j1        = j + l;
-					j2        = j1 + l;
-					j3        = j2 + l;
+					int j2 = j1 + l;
+					int j3 = j2 + l;
 					x0r       = a[j] + a[j1];
 					x0i       = a[j + 1] + a[j1 + 1];
-					x1r       = a[j] - a[j1];
-					x1i       = a[j + 1] - a[j1 + 1];
-					x2r       = a[j2] + a[j3];
-					x2i       = a[j2 + 1] + a[j3 + 1];
-					x3r       = a[j2] - a[j3];
-					x3i       = a[j2 + 1] - a[j3 + 1];
+					double x1r = a[j] - a[j1];
+					double x1i = a[j + 1] - a[j1 + 1];
+					double x2r = a[j2] + a[j3];
+					double x2i = a[j2 + 1] + a[j3 + 1];
+					double x3r = a[j2] - a[j3];
+					double x3i = a[j2 + 1] - a[j3 + 1];
 					a[j]      = x0r + x2r;
 					a[j + 1]  = x0i + x2i;
 					a[j2]     = x0r - x2r;
@@ -1046,10 +1035,10 @@ namespace r8b
 
 		static void cftbsub(int n, FPType* a, const FPType* w)
 		{
-			int j, j1, j2, j3, l;
-			double x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
+			int j, j1;
+			double x0r, x0i;
 
-			l = 2;
+			int l = 2;
 			if (n > 8)
 			{
 				cft1st(n, a, w);
@@ -1065,16 +1054,16 @@ namespace r8b
 				for (j = 0; j < l; j += 2)
 				{
 					j1        = j + l;
-					j2        = j1 + l;
-					j3        = j2 + l;
+					int j2 = j1 + l;
+					int j3 = j2 + l;
 					x0r       = a[j] + a[j1];
 					x0i       = -a[j + 1] - a[j1 + 1];
-					x1r       = a[j] - a[j1];
-					x1i       = -a[j + 1] + a[j1 + 1];
-					x2r       = a[j2] + a[j3];
-					x2i       = a[j2 + 1] + a[j3 + 1];
-					x3r       = a[j2] - a[j3];
-					x3i       = a[j2 + 1] - a[j3 + 1];
+					double x1r = a[j] - a[j1];
+					double x1i = -a[j + 1] + a[j1 + 1];
+					double x2r = a[j2] + a[j3];
+					double x2i = a[j2 + 1] + a[j3 + 1];
+					double x3r = a[j2] - a[j3];
+					double x3i = a[j2 + 1] - a[j3 + 1];
 					a[j]      = x0r + x2r;
 					a[j + 1]  = x0i - x2i;
 					a[j2]     = x0r - x2r;
@@ -1102,18 +1091,14 @@ namespace r8b
 
 		static void cft1st(int n, FPType* a, const FPType* w)
 		{
-			int j, k1, k2;
-			double wk1r, wk1i, wk2r, wk2i, wk3r, wk3i;
-			double x0r, x0i, x1r, x1i, x2r, x2i, x3r, x3i;
-
-			x0r   = a[0] + a[2];
-			x0i   = a[1] + a[3];
-			x1r   = a[0] - a[2];
-			x1i   = a[1] - a[3];
-			x2r   = a[4] + a[6];
-			x2i   = a[5] + a[7];
-			x3r   = a[4] - a[6];
-			x3i   = a[5] - a[7];
+			double x0r = a[0] + a[2];
+			double x0i = a[1] + a[3];
+			double x1r = a[0] - a[2];
+			double x1i = a[1] - a[3];
+			double x2r = a[4] + a[6];
+			double x2i = a[5] + a[7];
+			double x3r = a[4] - a[6];
+			double x3i = a[5] - a[7];
 			a[0]  = x0r + x2r;
 			a[1]  = x0i + x2i;
 			a[4]  = x0r - x2r;
@@ -1122,7 +1107,7 @@ namespace r8b
 			a[3]  = x1i + x3r;
 			a[6]  = x1r + x3i;
 			a[7]  = x1i - x3r;
-			wk1r  = w[2];
+			double wk1r = w[2];
 			x0r   = a[8] + a[10];
 			x0i   = a[9] + a[11];
 			x1r   = a[8] - a[10];
@@ -1143,17 +1128,17 @@ namespace r8b
 			x0i   = x3r - x1i;
 			a[14] = wk1r * (x0i - x0r);
 			a[15] = wk1r * (x0i + x0r);
-			k1    = 0;
-			for (j = 16; j < n; j += 16)
+			int k1 = 0;
+			for (int j = 16; j < n; j += 16)
 			{
 				k1 += 2;
-				k2       = 2 * k1;
-				wk2r     = w[k1];
-				wk2i     = w[k1 + 1];
+				int k2 = 2 * k1;
+				double wk2r = w[k1];
+				double wk2i = w[k1 + 1];
 				wk1r     = w[k2];
-				wk1i     = w[k2 + 1];
-				wk3r     = wk1r - 2 * wk2i * wk1i;
-				wk3i     = 2 * wk2i * wk1r - wk1i;
+				double wk1i = w[k2 + 1];
+				double wk3r = wk1r - 2 * wk2i * wk1i;
+				double wk3i = 2 * wk2i * wk1r - wk1i;
 				x0r      = a[j] + a[j + 2];
 				x0i      = a[j + 1] + a[j + 3];
 				x1r      = a[j] - a[j + 2];
@@ -1338,22 +1323,19 @@ namespace r8b
 
 		static void rftfsub(int n, FPType* a, int nc, const FPType* c)
 		{
-			int j, k, kk, ks, m;
-			double wkr, wki, xr, xi, yr, yi;
-
-			m  = n >> 1;
-			ks = 2 * nc / m;
-			kk = 0;
-			for (j = 2; j < m; j += 2)
+			int m = n >> 1;
+			int ks = 2 * nc / m;
+			int kk = 0;
+			for (int j = 2; j < m; j += 2)
 			{
-				k = n - j;
+				int k = n - j;
 				kk += ks;
-				wkr = 0.5 - c[nc - kk];
-				wki = c[kk];
-				xr  = a[j] - a[k];
-				xi  = a[j + 1] + a[k + 1];
-				yr  = wkr * xr - wki * xi;
-				yi  = wkr * xi + wki * xr;
+				double wkr = 0.5 - c[nc - kk];
+				double wki = c[kk];
+				double xr = a[j] - a[k];
+				double xi = a[j + 1] + a[k + 1];
+				double yr = wkr * xr - wki * xi;
+				double yi = wkr * xi + wki * xr;
 				a[j] -= yr;
 				a[j + 1] -= yi;
 				a[k] += yr;
@@ -1363,23 +1345,20 @@ namespace r8b
 
 		static void rftbsub(int n, FPType* a, int nc, const FPType* c)
 		{
-			int j, k, kk, ks, m;
-			double wkr, wki, xr, xi, yr, yi;
-
 			a[1] = -a[1];
-			m    = n >> 1;
-			ks   = 2 * nc / m;
-			kk   = 0;
-			for (j = 2; j < m; j += 2)
+			int m = n >> 1;
+			int ks = 2 * nc / m;
+			int kk = 0;
+			for (int j = 2; j < m; j += 2)
 			{
-				k = n - j;
+				int k = n - j;
 				kk += ks;
-				wkr = 0.5 - c[nc - kk];
-				wki = c[kk];
-				xr  = a[j] - a[k];
-				xi  = a[j + 1] + a[k + 1];
-				yr  = wkr * xr + wki * xi;
-				yi  = wkr * xi - wki * xr;
+				double wkr = 0.5 - c[nc - kk];
+				double wki = c[kk];
+				double xr = a[j] - a[k];
+				double xi = a[j + 1] + a[k + 1];
+				double yr = wkr * xr + wki * xi;
+				double yi = wkr * xi - wki * xr;
 				a[j] -= yr;
 				a[j + 1] = yi - a[j + 1];
 				a[k] += yr;
@@ -1390,19 +1369,16 @@ namespace r8b
 
 		static void dctsub(int n, FPType* a, int nc, const FPType* c)
 		{
-			int j, k, kk, ks, m;
-			double wkr, wki, xr;
-
-			m  = n >> 1;
-			ks = nc / n;
-			kk = 0;
-			for (j = 1; j < m; j++)
+			int m = n >> 1;
+			int ks = nc / n;
+			int kk = 0;
+			for (int j = 1; j < m; j++)
 			{
-				k = n - j;
+				int k = n - j;
 				kk += ks;
-				wkr  = c[kk] - c[nc - kk];
-				wki  = c[kk] + c[nc - kk];
-				xr   = wki * a[j] - wkr * a[k];
+				double wkr = c[kk] - c[nc - kk];
+				double wki = c[kk] + c[nc - kk];
+				double xr = wki * a[j] - wkr * a[k];
 				a[j] = wkr * a[j] + wki * a[k];
 				a[k] = xr;
 			}
@@ -1411,19 +1387,16 @@ namespace r8b
 
 		static void dstsub(int n, FPType* a, int nc, const FPType* c)
 		{
-			int j, k, kk, ks, m;
-			double wkr, wki, xr;
-
-			m  = n >> 1;
-			ks = nc / n;
-			kk = 0;
-			for (j = 1; j < m; j++)
+			int m = n >> 1;
+			int ks = nc / n;
+			int kk = 0;
+			for (int j = 1; j < m; j++)
 			{
-				k = n - j;
+				int k = n - j;
 				kk += ks;
-				wkr  = c[kk] - c[nc - kk];
-				wki  = c[kk] + c[nc - kk];
-				xr   = wki * a[k] - wkr * a[j];
+				double wkr = c[kk] - c[nc - kk];
+				double wki = c[kk] + c[nc - kk];
+				double xr = wki * a[k] - wkr * a[j];
 				a[k] = wkr * a[k] + wki * a[j];
 				a[j] = xr;
 			}

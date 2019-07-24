@@ -14,10 +14,7 @@ using namespace OpenViBE;
 	if(rcid==cid) \
 	{ \
 		sptr=new cl(getKernelContext()); \
-		if(sptr) \
-		{ \
-			m_oCreatedObjects.push_back(sptr); \
-		} \
+		if(sptr) { m_oCreatedObjects.push_back(sptr); } \
 	}
 
 Kernel::CKernelObjectFactory::CKernelObjectFactory(const IKernelContext& rKernelContext)
@@ -33,16 +30,12 @@ IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& rClassIde
 
 	create(rClassIdentifier, OV_ClassId_Kernel_Configurable, l_pResult, Kernel::CConfigurable);
 
-	OV_ERROR_UNLESS_KRN(
-		l_pResult,
-		"Unable to allocate object with class id " << rClassIdentifier.toString(),
-		ErrorType::BadAlloc);
+	OV_ERROR_UNLESS_KRN(l_pResult, "Unable to allocate object with class id " << rClassIdentifier.toString(), ErrorType::BadAlloc);
 
 	return l_pResult;
 }
 
-bool Kernel::CKernelObjectFactory::releaseObject(
-	IObject* pObject)
+bool Kernel::CKernelObjectFactory::releaseObject(IObject* pObject)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 

@@ -46,11 +46,15 @@ namespace Dsp
 		static double fact(int n)
 		{
 			if (n == 0)
+			{
 				return 1;
+			}
 
 			double y = n;
 			for (double m = n; --m;)
+			{
 				y *= m;
+			}
 
 			return y;
 		}
@@ -81,7 +85,9 @@ namespace Dsp
 
 				RootFinderBase& solver(w->roots);
 				for (int i = 0; i < numPoles + 1; ++i)
+				{
 					solver.coef()[i] = reversebessel(i, numPoles);
+				}
 				solver.solve(numPoles);
 
 				const int pairs = numPoles / 2;
@@ -92,7 +98,9 @@ namespace Dsp
 				}
 
 				if (numPoles & 1)
+				{
 					add(solver.root()[pairs].real(), infinity());
+				}
 			}
 		}
 
@@ -120,12 +128,16 @@ namespace Dsp
 
 				RootFinderBase& poles(w->roots);
 				for (int i = 0; i < numPoles + 1; ++i)
+				{
 					poles.coef()[i] = reversebessel(i, numPoles);
+				}
 				poles.solve(numPoles);
 
 				RootFinder<50> zeros;
 				for (int i = 0; i < numPoles + 1; ++i)
+				{
 					zeros.coef()[i] = reversebessel(i, numPoles);
+				}
 				double a0 = reversebessel(0, numPoles);
 				zeros.coef()[0] += G * a0;
 				zeros.solve(numPoles);
@@ -139,7 +151,9 @@ namespace Dsp
 				}
 
 				if (numPoles & 1)
+				{
 					add(poles.root()[pairs].real(), zeros.root()[pairs].real());
+				}
 			}
 		}
 

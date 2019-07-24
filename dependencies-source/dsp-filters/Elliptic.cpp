@@ -147,9 +147,7 @@ namespace Dsp
 					m_rootI[r]            = .5 * sqrt(fabs(m_zw1[r] * m_zw1[r] / (m_zq1[r] * m_zq1[r]) - 4 * m_zw1[r] * m_zw1[r]));
 					m_rootI[r + m_em / 2] = -m_rootI[r];
 
-					complex_t pole(
-						-.5 * m_zw1[r] / m_zq1[r],
-						.5 * sqrt(fabs(m_zw1[r] * m_zw1[r] / (m_zq1[r] * m_zq1[r]) - 4 * m_zw1[r] * m_zw1[r])));
+					complex_t pole(-.5 * m_zw1[r] / m_zq1[r], .5 * sqrt(fabs(m_zw1[r] * m_zw1[r] / (m_zq1[r] * m_zq1[r]) - 4 * m_zw1[r] * m_zw1[r])));
 
 					complex_t zero(0, m_zeros[r - 1]);
 
@@ -174,8 +172,8 @@ namespace Dsp
 		{
 			m_b1[0] = m_s1[1];
 			m_b1[1] = 1;
-			int i, j;
-			for (j = 2; j <= sn; j++)
+			int i;
+			for (int j = 2; j <= sn; j++)
 			{
 				m_a1[0] = m_s1[j] * m_b1[0];
 				for (i = 1; i <= j - 1; i++)
@@ -202,8 +200,7 @@ namespace Dsp
 				jf = m_em;
 			}
 			m_c1[i] = 0;
-			int j;
-			for (j = ji; j <= jf; j += 2)
+			for (int j = ji; j <= jf; j += 2)
 				m_c1[i] += m_a1[j] * (m_a1[i - j] * pow(10., m_m - i / 2));
 		}
 
@@ -299,11 +296,10 @@ namespace Dsp
 		double AnalogLowPass::calcsn(double u)
 		{
 			double sn = 0;
-			int j;
 			// q = modular constant
 			double q = exp(-doublePi * m_Kprime / m_K);
 			double v = doublePi * .5 * u / m_K;
-			for (j = 0; ; j++)
+			for (int j = 0; ; j++)
 			{
 				double w = pow(q, j + .5);
 				sn += w * sin((2 * j + 1) * v) / (1 - w * w);

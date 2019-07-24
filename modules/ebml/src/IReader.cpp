@@ -36,38 +36,14 @@ inline bool needsTwoBytesToGetCodedSizeLength(unsigned char* pBuffer)
 inline unsigned long getCodedSizeLength(unsigned char* pBuffer, unsigned long ulBufferLength)
 {
 	unsigned long l_ulCodedSizeLength;
-	if (pBuffer[0] >> 7)
-	{
-		l_ulCodedSizeLength = 1;
-	}
-	else if (pBuffer[0] >> 6)
-	{
-		l_ulCodedSizeLength = 2;
-	}
-	else if (pBuffer[0] >> 5)
-	{
-		l_ulCodedSizeLength = 3;
-	}
-	else if (pBuffer[0] >> 4)
-	{
-		l_ulCodedSizeLength = 4;
-	}
-	else if (pBuffer[0] >> 3)
-	{
-		l_ulCodedSizeLength = 5;
-	}
-	else if (pBuffer[0] >> 2)
-	{
-		l_ulCodedSizeLength = 6;
-	}
-	else if (pBuffer[0] >> 1)
-	{
-		l_ulCodedSizeLength = 7;
-	}
-	else if (pBuffer[0])
-	{
-		l_ulCodedSizeLength = 8;
-	}
+	if (pBuffer[0] >> 7) { l_ulCodedSizeLength = 1; }
+	else if (pBuffer[0] >> 6) { l_ulCodedSizeLength = 2; }
+	else if (pBuffer[0] >> 5) { l_ulCodedSizeLength = 3; }
+	else if (pBuffer[0] >> 4) { l_ulCodedSizeLength = 4; }
+	else if (pBuffer[0] >> 3) { l_ulCodedSizeLength = 5; }
+	else if (pBuffer[0] >> 2) { l_ulCodedSizeLength = 6; }
+	else if (pBuffer[0] >> 1) { l_ulCodedSizeLength = 7; }
+	else if (pBuffer[0]) { l_ulCodedSizeLength = 8; }
 	else
 	{
 		if (_Debug_ && ulBufferLength < 2)
@@ -419,10 +395,7 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 	memcpy(m_pPending + m_ui64PendingCount, l_pBuffer, (size_t)(l_ui64BufferSize));
 	m_ui64PendingCount += l_ui64BufferSize;
 
-	if (_Debug_)
-	{
-		printf("\n");
-	}
+	if (_Debug_) { printf("\n"); }
 	return true;
 }
 

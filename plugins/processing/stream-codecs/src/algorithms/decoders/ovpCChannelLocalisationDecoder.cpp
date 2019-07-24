@@ -72,10 +72,7 @@ void CChannelLocalisationDecoder::closeChild()
 
 	if ((l_rTop == OVTK_NodeId_Header_ChannelLocalisation)
 		|| (l_rTop == OVTK_NodeId_Header_ChannelLocalisation_Dynamic)) { }
-	else
-	{
-		CStreamedMatrixDecoder::closeChild();
-	}
+	else { CStreamedMatrixDecoder::closeChild(); }
 
 	m_vNodes.pop();
 }

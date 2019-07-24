@@ -47,10 +47,7 @@ int64_t CReaderHelper::getSIntegerFromChildData(const void* pBuffer, const uint6
 	int64_t l_i64Result = 0;
 	uint64_t i;
 
-	if (ui64BufferSize != 0 && ((unsigned char*)pBuffer)[0] & 0x80)
-	{
-		l_i64Result = -1;
-	}
+	if (ui64BufferSize != 0 && ((unsigned char*)pBuffer)[0] & 0x80) { l_i64Result = -1; }
 
 	for (i = 0; i < ui64BufferSize; i++)
 	{
@@ -102,10 +99,7 @@ const char* CReaderHelper::getASCIIStringFromChildData(const void* pBuffer, cons
 	{
 		m_sASCIIString.assign((char*)pBuffer, (size_t)(ui64BufferSize));
 	}
-	else
-	{
-		m_sASCIIString = "";
-	}
+	else { m_sASCIIString = ""; }
 	return m_sASCIIString.c_str();
 }
 

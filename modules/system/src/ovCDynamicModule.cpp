@@ -47,17 +47,15 @@ namespace
 	{
 		LPTSTR l_ErrorText;
 
-		FormatMessage(
-			FORMAT_MESSAGE_FROM_SYSTEM |                 // use system message tables to retrieve error text
-			FORMAT_MESSAGE_ALLOCATE_BUFFER |             // allocate buffer on local heap for error text
-			FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
-			NULL,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
-			errorCode,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			(LPTSTR)&l_ErrorText,                        // output
-			0,                                           // minimum size for output buffer
-			NULL
-		);                                           // arguments - see note
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |                 // use system message tables to retrieve error text
+					  FORMAT_MESSAGE_ALLOCATE_BUFFER |             // allocate buffer on local heap for error text
+					  FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
+					  NULL,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
+					  errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+					  (LPTSTR)&l_ErrorText,                        // output
+					  0,                                           // minimum size for output buffer
+					  NULL
+					  );                                           // arguments - see note
 
 		return std::string(l_ErrorText);
 	}
@@ -66,31 +64,16 @@ namespace
 
 const char* CDynamicModule::getErrorString(unsigned int errorCode) const
 {
-	if (s_ErrorMap.count(ELogErrorCodes(errorCode)) == 0)
-	{
-		return "Invalid error code";
-	}
-	else
-	{
-		return s_ErrorMap.at(ELogErrorCodes(errorCode)).c_str();
-	}
+	if (s_ErrorMap.count(ELogErrorCodes(errorCode)) == 0) { return "Invalid error code"; }
+	else { return s_ErrorMap.at(ELogErrorCodes(errorCode)).c_str(); }
 }
 
-const char* CDynamicModule::getErrorDetails() const
-{
-	return &m_ErrorDetails[0];
-}
+const char* CDynamicModule::getErrorDetails() const { return &m_ErrorDetails[0]; }
 
-unsigned int CDynamicModule::getLastError() const
-{
-	return m_ErrorCode;
-}
+unsigned int CDynamicModule::getLastError() const { return m_ErrorCode; }
 
 CDynamicModule::CDynamicModule()
-	: m_Handle(NULL)
-	  , m_ErrorMode(m_ErrorModeNull)
-	  , m_ShouldFreeModule(true)
-	  , m_ErrorCode(LogErrorCodes_NoError)
+	: m_Handle(NULL), m_ErrorMode(m_ErrorModeNull), m_ShouldFreeModule(true), m_ErrorCode(LogErrorCodes_NoError)
 {
 	strcpy(m_ErrorDetails, "");
 	strcpy(m_Filename, "");
@@ -155,10 +138,7 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 		UINT l_Mode = SetErrorMode(m_ErrorModeNull);
 		SetErrorMode(l_Mode);
 	}
-	else
-	{
-		SetErrorMode(m_ErrorMode);
-	}
+	else { SetErrorMode(m_ErrorMode); }
 
 	m_Handle = WindowsUtilities::utf16CompliantLoadLibrary(modulePath, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
 
@@ -192,14 +172,8 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 		{
 			char* error = ::dlerror();
 			
-			if(error)
-			{
-				this->setError(LogErrorCodes_InvalidSymbol, "Error: " + std::string(error));
-			}
-			else
-			{
-				this->setError(LogErrorCodes_InvalidSymbol);
-			}
+			if(error) { this->setError(LogErrorCodes_InvalidSymbol, "Error: " + std::string(error)); }
+			else { this->setError(LogErrorCodes_InvalidSymbol); }
 
 			::dlclose(m_Handle);
 			m_Handle = NULL;
@@ -344,14 +318,8 @@ bool CDynamicModule::unload()
 	{
 		char* error = ::dlerror();
 
-		if(error)
-		{
-			this->setError(LogErrorCodes_UnloadModuleFailed, "Error: " + std::string(error));
-		}
-		else
-		{
-			this->setError(LogErrorCodes_UnloadModuleFailed);
-		}
+		if(error) { this->setError(LogErrorCodes_UnloadModuleFailed, "Error: " + std::string(error)); }
+		else { this->setError(LogErrorCodes_UnloadModuleFailed); }
 
 		return false;
 	}
@@ -364,25 +332,13 @@ bool CDynamicModule::unload()
 	return true;
 }
 
-bool CDynamicModule::isLoaded() const
-{
-	return m_Handle != NULL;
-}
+bool CDynamicModule::isLoaded() const { return m_Handle != NULL; }
 
-const char* CDynamicModule::getFilename() const
-{
-	return m_Filename;
-}
+const char* CDynamicModule::getFilename() const { return m_Filename; }
 
-void CDynamicModule::setDynamicModuleErrorMode(unsigned int errorMode)
-{
-	m_ErrorMode = errorMode;
-}
+void CDynamicModule::setDynamicModuleErrorMode(unsigned int errorMode) { m_ErrorMode = errorMode; }
 
-void CDynamicModule::setShouldFreeModule(bool shouldFreeModule)
-{
-	m_ShouldFreeModule = shouldFreeModule;
-}
+void CDynamicModule::setShouldFreeModule(bool shouldFreeModule) { m_ShouldFreeModule = shouldFreeModule; }
 
 CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName) const
 {
@@ -423,26 +379,11 @@ CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName
 #ifdef TARGET_OS_Windows
 bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS& headers)
 {
-	HANDLE l_FileHandle = CreateFile(
-		fileName,
-		GENERIC_READ,
-		FILE_SHARE_READ,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
-		0
-	);
+	HANDLE l_FileHandle = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 	if (l_FileHandle == INVALID_HANDLE_VALUE) { return false; }
 
-	HANDLE l_ImageHandle = CreateFileMapping(
-		l_FileHandle,
-		NULL,
-		PAGE_READONLY,
-		0,
-		0,
-		NULL
-	);
+	HANDLE l_ImageHandle = CreateFileMapping(l_FileHandle, NULL, PAGE_READONLY, 0, 0, NULL);
 
 	if (l_ImageHandle == 0)
 	{
@@ -450,13 +391,7 @@ bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS&
 		return false;
 	}
 
-	void* l_ImagePtr = MapViewOfFile(
-		l_ImageHandle,
-		FILE_MAP_READ,
-		0,
-		0,
-		0
-	);
+	void* l_ImagePtr = MapViewOfFile(l_ImageHandle, FILE_MAP_READ, 0, 0, 0);
 
 	if (l_ImagePtr == NULL)
 	{

@@ -9,24 +9,11 @@
 
 int factorf(int M)
 {
-	int N;
-	N = M;
-	while (N % 7 == 0)
-	{
-		N = N / 7;
-	}
-	while (N % 3 == 0)
-	{
-		N = N / 3;
-	}
-	while (N % 5 == 0)
-	{
-		N = N / 5;
-	}
-	while (N % 2 == 0)
-	{
-		N = N / 2;
-	}
+	int N = M;
+	while (N % 7 == 0) { N = N / 7; }
+	while (N % 3 == 0) { N = N / 3; }
+	while (N % 5 == 0) { N = N / 5; }
+	while (N % 2 == 0) { N = N / 2; }
 
 	return N;
 }
@@ -34,26 +21,18 @@ int factorf(int M)
 
 int findnext(int M)
 {
-	int N;
-	N = M;
+	int N = M;
 
-	while (factorf(N) != 1)
-	{
-		++N;
-	}
+	while (factorf(N) != 1) { ++N; }
 
 	return N;
 }
 
 int findnexte(int M)
 {
-	int N;
-	N = M;
+	int N = M;
 
-	while (factorf(N) != 1 || N % 2 != 0)
-	{
-		++N;
-	}
+	while (factorf(N) != 1 || N % 2 != 0) { ++N; }
 
 	return N;
 }
@@ -62,8 +41,7 @@ int findnexte(int M)
 conv_object conv_init(int N, int L)
 {
 	conv_object obj = NULL;
-	int conv_len;
-	conv_len = N + L - 1;
+	int conv_len = N + L - 1;
 
 	obj = (conv_object)malloc(sizeof(struct conv_set));
 	 
@@ -81,14 +59,12 @@ conv_object conv_init(int N, int L)
 
 void conv_directx(fft_type* inp1, int N, fft_type* inp2, int L,fft_type* oup)
 {
-	int M, k, n;
+	int M = N + L - 1;
 
-	M = N + L - 1;
-
-	for (k = 0; k < M; ++k)
+	for (int k = 0; k < M; ++k)
 	{
 		oup[k] = 0.0;
-		for (n = 0; n < N; ++n)
+		for (int n = 0; n < N; ++n)
 		{
 			if ((k - n) >= 0 && (k - n) < L)
 			{
@@ -100,11 +76,11 @@ void conv_directx(fft_type* inp1, int N, fft_type* inp2, int L,fft_type* oup)
 
 void conv_direct(fft_type* inp1, int N, fft_type* inp2, int L,fft_type* oup)
 {
-	int M, k, m, i;
+	int k, m;
 	fft_type t1, tmin;
 
-	M = N + L - 1;
-	i = 0;
+	int M = N + L - 1;
+	int i = 0;
 
 	if (N >= L)
 	{
@@ -157,25 +133,19 @@ void conv_direct(fft_type* inp1, int N, fft_type* inp2, int L,fft_type* oup)
 
 void conv_fft(const conv_object obj,fft_type* inp1,fft_type* inp2,fft_type* oup)
 {
-	int i, N, L1, L2, ls;
-	fft_type* a;
-	fft_type* b;
-	fft_data* c;
-	fft_data* ao;
-	fft_data* bo;
-	fft_type* co;
+	int i;
 
-	N  = obj->clen;
-	L1 = obj->ilen1;
-	L2 = obj->ilen2;
-	ls = L1 + L2 - 1;
+	int N = obj->clen;
+	int L1 = obj->ilen1;
+	int L2 = obj->ilen2;
+	int ls = L1 + L2 - 1;
 
-	a  = (fft_type*)malloc(sizeof(fft_data) * N);
-	b  = (fft_type*)malloc(sizeof(fft_data) * N);
-	c  = (fft_data*)malloc(sizeof(fft_data) * N);
-	ao = (fft_data*)malloc(sizeof(fft_data) * N);
-	bo = (fft_data*)malloc(sizeof(fft_data) * N);
-	co = (fft_type*)malloc(sizeof(fft_data) * N);
+	fft_type* a = (fft_type*)malloc(sizeof(fft_data) * N);
+	fft_type* b = (fft_type*)malloc(sizeof(fft_data) * N);
+	fft_data* c = (fft_data*)malloc(sizeof(fft_data) * N);
+	fft_data* ao = (fft_data*)malloc(sizeof(fft_data) * N);
+	fft_data* bo = (fft_data*)malloc(sizeof(fft_data) * N);
+	fft_type* co = (fft_type*)malloc(sizeof(fft_data) * N);
 
 	for (i = 0; i < N; i++)
 	{
@@ -209,10 +179,7 @@ void conv_fft(const conv_object obj,fft_type* inp1,fft_type* inp2,fft_type* oup)
 
 	fft_c2r_exec(obj->iobj, c, co);
 
-	for (i = 0; i < ls; i++)
-	{
-		oup[i] = co[i] / N;
-	}
+	for (i = 0; i < ls; i++) { oup[i] = co[i] / N; }
 
 	free(a);
 	free(b);

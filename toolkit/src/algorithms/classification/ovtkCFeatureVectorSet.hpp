@@ -21,7 +21,7 @@ namespace OpenViBEToolkit
 		virtual bool setElementLabel(uint32_t ui32Index, const char* sElementLabel);
 
 		virtual double getLabel() const;
-		virtual bool setLabel(double f64Label);
+		virtual bool setLabel(const double f64Label);
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVector, OV_UndefinedIdentifier)
 

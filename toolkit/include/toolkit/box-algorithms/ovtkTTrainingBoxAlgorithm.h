@@ -72,10 +72,7 @@ namespace OpenViBEToolkit
 		: m_pPendingSignal(NULL)
 		  , m_ui64TrialStartTime(_no_time_)
 		  , m_ui64TrialEndTime(_no_time_)
-		  , m_ui32SampleCountPerBuffer(0)
-	{
-		m_pPendingSignal = createSignalTrial();
-	}
+		  , m_ui32SampleCountPerBuffer(0) { m_pPendingSignal = createSignalTrial(); }
 
 	template <class CBoxAlgorithmParentClass>
 	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::~TTrainingBoxAlgorithm()

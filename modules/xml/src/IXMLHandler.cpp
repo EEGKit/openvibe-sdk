@@ -168,10 +168,7 @@ void IXMLHandlerImpl::closeChild()
 	IXMLNode* l_pNode = m_oNodeStack.top();
 	m_oNodeStack.pop();
 	//If the stack is empty this means that l_pNode is the root
-	if (m_oNodeStack.empty())
-	{
-		m_pRootNode = l_pNode;
-	}
+	if (m_oNodeStack.empty()) { m_pRootNode = l_pNode; }
 	else
 	{//If node, that means that the l_pNode if
 		IXMLNode* l_pParentNode = m_oNodeStack.top();

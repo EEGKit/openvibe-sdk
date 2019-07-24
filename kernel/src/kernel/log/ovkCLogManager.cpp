@@ -25,10 +25,7 @@ bool CLogManager::activate(ELogLevel eLogLevel, bool bActive)
 
 bool CLogManager::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; i++)
-	{
-		m_vActiveLevel[ELogLevel(i)] = bActive;
-	}
+	for (int i = eStartLogLevel; i <= eEndLogLevel; i++) { m_vActiveLevel[ELogLevel(i)] = bActive; }
 	return true;
 }
 

@@ -155,10 +155,7 @@ void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const u
 	{
 		getLogManager() << (i == 0 ? "" : " ") << l_pBuffer[i];
 	}
-	if (m_ui64ExpandValuesCount < l_ui64Count)
-	{
-		getLogManager() << " ...";
-	}
+	if (m_ui64ExpandValuesCount < l_ui64Count) { getLogManager() << " ..."; }
 }
 
 void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)

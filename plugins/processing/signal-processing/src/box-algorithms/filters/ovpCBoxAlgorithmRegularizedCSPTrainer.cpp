@@ -208,10 +208,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(uint32_t skipIndex, 
 	// Average the covs
 	covAvg.resizeLike(cov[0]);
 	covAvg.setZero();
-	for (uint32_t i = 0; i < m_NumClasses; i++)
-	{
-		covAvg += (classWeights[i] * cov[i]);
-	}
+	for (uint32_t i = 0; i < m_NumClasses; i++) { covAvg += (classWeights[i] * cov[i]); }
 
 	return true;
 }

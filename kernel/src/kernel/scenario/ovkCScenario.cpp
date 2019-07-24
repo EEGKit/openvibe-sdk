@@ -66,10 +66,7 @@ namespace
 	};
 
 	template <class T, class TTest>
-	CIdentifier getNextTIdentifier(
-		const map<CIdentifier, T>& elementMap,
-		const CIdentifier& previousIdentifier,
-		const TTest& testFunctor)
+	CIdentifier getNextTIdentifier(const map<CIdentifier, T>& elementMap, const CIdentifier& previousIdentifier, const TTest& testFunctor)
 	{
 		typename map<CIdentifier, T>::const_iterator it;
 
@@ -101,10 +98,7 @@ namespace
 
 	/*
 	template <class T, class TTest>
-	CIdentifier getNextTIdentifier(
-		const map<CIdentifier, T*>& elementMap,
-		const CIdentifier& previousIdentifier,
-		const TTest& testFunctor)
+	CIdentifier getNextTIdentifier(const map<CIdentifier, T*>& elementMap, const CIdentifier& previousIdentifier, const TTest& testFunctor)
 	{
 		typename map<CIdentifier, T*>::const_iterator it;
 
@@ -372,24 +366,19 @@ const IBox* CScenario::getBoxDetails(const CIdentifier& boxIdentifier) const
 	return itBox->second;
 }
 
-bool CScenario::isBox(
-	const CIdentifier& identifier) const
+bool CScenario::isBox(const CIdentifier& identifier) const
 {
 	return m_Boxes.count(identifier) == 1;
 }
 
-IBox* CScenario::getBoxDetails(
-	const CIdentifier& boxIdentifier)
+IBox* CScenario::getBoxDetails(const CIdentifier& boxIdentifier)
 {
 	//	this->getLogManager() << LogLevel_Debug << "Getting box details from scenario\n";
 
 	map<CIdentifier, CBox*>::const_iterator itBox;
 	itBox = m_Boxes.find(boxIdentifier);
 
-	OV_ERROR_UNLESS_KRN(
-		itBox != m_Boxes.end(),
-		"Box [" << boxIdentifier.toString() << "] is not part of the scenario",
-		ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(itBox != m_Boxes.end(), "Box [" << boxIdentifier.toString() << "] is not part of the scenario", ErrorType::ResourceNotFound);
 
 	return itBox->second;
 }
@@ -662,10 +651,7 @@ bool CScenario::removeMetadata(const CIdentifier& metadataIdentifier)
 			return v.second == metadataIdentifier;
 		});
 
-		OV_FATAL_UNLESS_K(
-			previousIdentifier != m_NextMetadataIdentifier.end(),
-			"Removing metadata [" << metadataIdentifier << "] which is not in the cache ",
-			ErrorType::Internal);
+		OV_FATAL_UNLESS_K(previousIdentifier != m_NextMetadataIdentifier.end(), "Removing metadata [" << metadataIdentifier << "] which is not in the cache ", ErrorType::Internal);
 
 		m_NextMetadataIdentifier[previousIdentifier->first] = m_NextMetadataIdentifier[metadataIdentifier];
 		m_NextMetadataIdentifier.erase(metadataIdentifier);
@@ -1424,11 +1410,7 @@ bool CScenario::checkOutdatedBoxes()
 
 
 template <class T, class TTest>
-void getIdentifierList(
-	const map<CIdentifier, T>& elementMap,
-	const TTest& testFunctor,
-	CIdentifier** identifierList,
-	size_t* size)
+void getIdentifierList(const map<CIdentifier, T>& elementMap, const TTest& testFunctor, CIdentifier** identifierList, size_t* size)
 {
 	*identifierList = new CIdentifier[elementMap.size()];
 

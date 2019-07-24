@@ -12,28 +12,18 @@ using namespace Plugins;
 //                                                                   //
 
 CComment::CComment(const IKernelContext& rKernelContext, CScenario& rOwnerScenario)
-	: TAttributable<TKernelObject<IComment>>(rKernelContext)
-	  , m_rOwnerScenario(rOwnerScenario)
-	  , m_oIdentifier(OV_UndefinedIdentifier)
-	  , m_sText("") {}
+	: TAttributable<TKernelObject<IComment>>(rKernelContext), m_rOwnerScenario(rOwnerScenario), m_sText("") {}
 
 CComment::~CComment() {}
 
 //___________________________________________________________________//
 //                                                                   //
 
-CIdentifier CComment::getIdentifier() const
-{
-	return m_oIdentifier;
-}
+CIdentifier CComment::getIdentifier() const { return m_oIdentifier; }
 
-CString CComment::getText() const
-{
-	return m_sText;
-}
+CString CComment::getText() const { return m_sText; }
 
-bool CComment::setIdentifier(
-	const CIdentifier& rIdentifier)
+bool CComment::setIdentifier(const CIdentifier& rIdentifier)
 {
 	if (m_oIdentifier != OV_UndefinedIdentifier) { return false; }
 	if (rIdentifier == OV_UndefinedIdentifier) { return false; }
@@ -42,19 +32,16 @@ bool CComment::setIdentifier(
 	return true;
 }
 
-bool CComment::setText(
-	const CString& sText)
+bool CComment::setText(const CString& sText)
 {
 	m_sText = sText;
-
 	return true;
 }
 
 //___________________________________________________________________//
 //                                                                   //
 
-bool CComment::initializeFromExistingComment(
-	const IComment& rExisitingComment)
+bool CComment::initializeFromExistingComment(const IComment& rExisitingComment)
 {
 	m_sText = rExisitingComment.getText();
 
@@ -71,8 +58,7 @@ bool CComment::initializeFromExistingComment(
 //___________________________________________________________________//
 //                                                                   //
 
-bool CComment::acceptVisitor(
-	IObjectVisitor& rObjectVisitor)
+bool CComment::acceptVisitor(IObjectVisitor& rObjectVisitor)
 {
 	CObjectVisitorContext l_oObjectVisitorContext(getKernelContext());
 	return rObjectVisitor.processBegin(l_oObjectVisitorContext, *this) && rObjectVisitor.processEnd(l_oObjectVisitorContext, *this);

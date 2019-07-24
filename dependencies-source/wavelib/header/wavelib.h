@@ -227,7 +227,7 @@ void wave_summary(wave_object obj);
 void wt_summary(wt_object wt);
 void wtree_summary(wtree_object wt);
 void wpt_summary(wpt_object wt);
-void cwt_summary(cwt_object wt);;
+void cwt_summary(cwt_object wt);
 void wave_free(wave_object object);
 void wt_free(wt_object object);
 void wtree_free(wtree_object object);

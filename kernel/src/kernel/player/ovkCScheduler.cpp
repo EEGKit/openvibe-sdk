@@ -68,8 +68,7 @@ CScheduler::~CScheduler()
 //___________________________________________________________________//
 //                                                                   //
 
-bool CScheduler::setScenario(
-	const CIdentifier& rScenarioIdentifier)
+bool CScheduler::setScenario(const CIdentifier& rScenarioIdentifier)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setScenario\n";
 
@@ -96,8 +95,7 @@ bool CScheduler::setScenario(
 	return true;
 }
 
-bool CScheduler::setFrequency(
-	const uint64_t ui64Frequency)
+bool CScheduler::setFrequency(const uint64_t ui64Frequency)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setFrequency\n";
 
@@ -114,10 +112,7 @@ bool CScheduler::setFrequency(
 //___________________________________________________________________//
 //                                                                   //
 
-bool CScheduler::isHoldingResources() const
-{
-	return !m_vSimulatedBox.empty();
-}
+bool CScheduler::isHoldingResources() const { return !m_vSimulatedBox.empty(); }
 
 //___________________________________________________________________//
 //                                                                   //
@@ -621,10 +616,7 @@ bool CScheduler::uninitialize()
 
 bool CScheduler::loop()
 {
-	OV_ERROR_UNLESS_KRF(
-		this->isHoldingResources(),
-		"Trying to use an uninitialized scheduler",
-		ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized scheduler", ErrorType::BadCall);
 
 	bool l_bBoxProcessing = true;
 	m_oBenchmarkChrono.stepIn();
@@ -636,20 +628,12 @@ bool CScheduler::loop()
 
 		IBox* l_pBox = m_pScenario->getBoxDetails(itSimulatedBox->first.second);
 
-		OV_ERROR_UNLESS_KRF(
-			l_pBox,
-			"Unable to get box details for box with id " << itSimulatedBox->first.second.toString(),
-			ErrorType::ResourceNotFound);
+		OV_ERROR_UNLESS_KRF(l_pBox, "Unable to get box details for box with id " << itSimulatedBox->first.second.toString(), ErrorType::ResourceNotFound);
 
 		l_rSimulatedBoxChrono.stepIn();
 
-		if (!translateException(
-				[&]()
-				{
-					return this->processBox(l_pSimulatedBox, itSimulatedBox->first.second);
-				},
-				std::bind(&CScheduler::handleException, this, l_pSimulatedBox, "Box processing", std::placeholders::_1))
-		)
+		if (!translateException([&]() { return this->processBox(l_pSimulatedBox, itSimulatedBox->first.second); },
+								std::bind(&CScheduler::handleException, this, l_pSimulatedBox, "Box processing", std::placeholders::_1)))
 		{
 			l_bBoxProcessing = false;
 
@@ -696,16 +680,10 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 {
 	if (simulatedBox)
 	{
-		OV_ERROR_UNLESS_KRF(
-			simulatedBox->processClock(),
-			"Process clock failed for box with id " << boxIdentifier.toString(),
-			ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(simulatedBox->processClock(), "Process clock failed for box with id " << boxIdentifier.toString(), ErrorType::Internal);
 		if (simulatedBox->isReadyToProcess())
 		{
-			OV_ERROR_UNLESS_KRF(
-				simulatedBox->process(),
-				"Process failed for box with id " << boxIdentifier.toString(),
-				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(simulatedBox->process(), "Process failed for box with id " << boxIdentifier.toString(), ErrorType::Internal);
 		}
 
 		//if the box is muted we still have to erase chunks that arrives at the input
@@ -740,22 +718,15 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 //___________________________________________________________________//
 //                                                                   //
 
-bool CScheduler::sendInput(
-	const CChunk& rChunk,
-	const CIdentifier& rBoxIdentifier,
-	const uint32_t ui32InputIndex)
+bool CScheduler::sendInput(const CChunk& rChunk, const CIdentifier& rBoxIdentifier, const uint32_t ui32InputIndex)
 {
 	IBox* l_pBox = m_pScenario->getBoxDetails(rBoxIdentifier);
 	if (l_pBox->hasAttribute(OV_AttributeId_Box_Disabled)) { return true; }
-	OV_ERROR_UNLESS_KRF(
-		l_pBox,
-		"Tried to send data chunk with invalid box identifier " << rBoxIdentifier.toString(),
-		ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(l_pBox, "Tried to send data chunk with invalid box identifier " << rBoxIdentifier.toString(), ErrorType::ResourceNotFound);
 
-	OV_ERROR_UNLESS_KRF(
-		ui32InputIndex < l_pBox->getInputCount(),
-		"Tried to send data chunk with invalid input index " << ui32InputIndex << " for box identifier" << rBoxIdentifier.toString(),
-		ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(ui32InputIndex < l_pBox->getInputCount(), 
+						"Tried to send data chunk with invalid input index " << ui32InputIndex << " for box identifier" << rBoxIdentifier.toString(),
+						ErrorType::OutOfBound);
 
 	map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin();
 	while (itSimulatedBox != m_vSimulatedBox.end() && itSimulatedBox->first.second != rBoxIdentifier)
@@ -763,18 +734,14 @@ bool CScheduler::sendInput(
 		++itSimulatedBox;
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		itSimulatedBox != m_vSimulatedBox.end(),
-		"Tried to send data chunk with invalid simulated box identifier " << rBoxIdentifier.toString(),
-		ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itSimulatedBox != m_vSimulatedBox.end(),
+						"Tried to send data chunk with invalid simulated box identifier " << rBoxIdentifier.toString(),
+						ErrorType::ResourceNotFound);
 	CSimulatedBox* l_pSimulatedBox = itSimulatedBox->second;
 
 	// use a fatal here because failing to meet this invariant
 	// means there is a bug in the scheduler implementation
-	OV_FATAL_UNLESS_K(
-		l_pSimulatedBox,
-		"Null box found for id " << rBoxIdentifier.toString(),
-		ErrorType::BadValue);
+	OV_FATAL_UNLESS_K(l_pSimulatedBox, "Null box found for id " << rBoxIdentifier.toString(), ErrorType::BadValue);
 
 	// TODO: check if ui32InputIndex does not overflow
 
@@ -783,35 +750,17 @@ bool CScheduler::sendInput(
 	return true;
 }
 
-uint64_t CScheduler::getCurrentTime() const
-{
-	return m_ui64CurrentTime;
-}
+uint64_t CScheduler::getCurrentTime() const { return m_ui64CurrentTime; }
 
-uint64_t CScheduler::getCurrentLateness() const
-{
-	return m_rPlayer.getCurrentSimulatedLateness();
-}
+uint64_t CScheduler::getCurrentLateness() const { return m_rPlayer.getCurrentSimulatedLateness(); }
 
-uint64_t CScheduler::getFrequency() const
-{
-	return m_ui64Frequency;
-}
+uint64_t CScheduler::getFrequency() const { return m_ui64Frequency; }
 
-uint64_t CScheduler::getStepDuration() const
-{
-	return m_ui64StepDuration;
-}
+uint64_t CScheduler::getStepDuration() const { return m_ui64StepDuration; }
 
-double CScheduler::getCPUUsage() const
-{
-	return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage();
-}
+double CScheduler::getCPUUsage() const { return (const_cast<System::CChrono&>(m_oBenchmarkChrono)).getStepInPercentage(); }
 
-double CScheduler::getFastForwardMaximumFactor() const
-{
-	return m_rPlayer.getFastForwardMaximumFactor();
-}
+double CScheduler::getFastForwardMaximumFactor() const { return m_rPlayer.getFastForwardMaximumFactor(); }
 
 void CScheduler::handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception)
 {

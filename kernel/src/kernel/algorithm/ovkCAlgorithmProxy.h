@@ -65,8 +65,6 @@ namespace OpenViBE
 			std::map<CIdentifier, std::pair<CString, bool>> m_vInputTrigger;
 			std::map<CIdentifier, std::pair<CString, bool>> m_vOutputTrigger;
 
-		protected:
-
 			void setAllInputTriggers(bool bTriggerStatus);
 			void setAllOutputTriggers(bool bTriggerStatus);
 

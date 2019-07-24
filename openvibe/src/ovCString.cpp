@@ -6,10 +6,7 @@ using namespace OpenViBE;
 
 namespace OpenViBE
 {
-	struct CStringImpl
-	{
-		std::string m_sValue;
-	};
+	struct CStringImpl { std::string m_sValue; };
 }
 
 CString::CString() { m_pStringImpl = new CStringImpl(); }

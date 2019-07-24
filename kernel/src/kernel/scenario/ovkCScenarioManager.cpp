@@ -18,10 +18,7 @@ CScenarioManager::CScenarioManager(const IKernelContext& rKernelContext)
 
 CScenarioManager::~CScenarioManager()
 {
-	for (map<CIdentifier, CScenario*>::iterator i = m_vScenario.begin(); i != m_vScenario.end(); ++i)
-	{
-		delete i->second;
-	}
+	for (map<CIdentifier, CScenario*>::iterator i = m_vScenario.begin(); i != m_vScenario.end(); ++i) { delete i->second; }
 }
 
 void CScenarioManager::cloneScenarioImportersAndExporters(const IScenarioManager& scenarioManager)
@@ -52,15 +49,11 @@ void CScenarioManager::cloneScenarioImportersAndExporters(const IScenarioManager
 	}
 }
 
-CIdentifier CScenarioManager::getNextScenarioIdentifier(
-	const CIdentifier& rPreviousIdentifier) const
+CIdentifier CScenarioManager::getNextScenarioIdentifier(const CIdentifier& rPreviousIdentifier) const
 {
 	map<CIdentifier, CScenario*>::const_iterator itScenario;
 
-	if (rPreviousIdentifier == OV_UndefinedIdentifier)
-	{
-		itScenario = m_vScenario.begin();
-	}
+	if (rPreviousIdentifier == OV_UndefinedIdentifier) { itScenario = m_vScenario.begin(); }
 	else
 	{
 		itScenario = m_vScenario.find(rPreviousIdentifier);
@@ -79,8 +72,7 @@ bool CScenarioManager::isScenario(const CIdentifier& scenarioIdentifier) const
 	return m_vScenario.find(scenarioIdentifier) != m_vScenario.end();
 }
 
-bool CScenarioManager::createScenario(
-	CIdentifier& rScenarioIdentifier)
+bool CScenarioManager::createScenario(CIdentifier& rScenarioIdentifier)
 {
 	//create scenario object
 	rScenarioIdentifier              = getUnusedIdentifier();
@@ -94,19 +86,13 @@ bool CScenarioManager::importScenario(CIdentifier& newScenarioIdentifier, const 
 {
 	newScenarioIdentifier = OV_UndefinedIdentifier;
 
-	OV_ERROR_UNLESS_KRF(
-		this->createScenario(newScenarioIdentifier),
-		"Error creating new scenario",
-		ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRF(this->createScenario(newScenarioIdentifier), "Error creating new scenario", ErrorType::BadResourceCreation);
 
 	auto releaseScenario = [&]()
 	{
 		// use a fatal here because a release failure while creation succeeded
 		// means we are in an unexpected state
-		OV_FATAL_UNLESS_K(
-			this->releaseScenario(newScenarioIdentifier),
-			"Releasing just created scenario failed for " << newScenarioIdentifier.toString(),
-			ErrorType::Internal);
+		OV_FATAL_UNLESS_K(this->releaseScenario(newScenarioIdentifier), "Releasing just created scenario failed for " << newScenarioIdentifier.toString(), ErrorType::Internal);
 		newScenarioIdentifier = OV_UndefinedIdentifier;
 	};
 
@@ -217,10 +203,7 @@ bool CScenarioManager::importScenarioFromFile(CIdentifier& newScenarioIdentifier
 		fclose(inputFile);
 		OV_ERROR_KRF("Problem reading scenario file '" << fileName << "'", ErrorType::BadFileRead);
 	}
-	else
-	{
-		fclose(inputFile);
-	}
+	else { fclose(inputFile); }
 
 	return this->importScenario(newScenarioIdentifier, memoryBuffer, scenarioImporterAlgorithmIdentifier);
 }
@@ -293,10 +276,7 @@ bool CScenarioManager::unregisterScenarioImporter(const CIdentifier& importConte
 
 CIdentifier CScenarioManager::getNextScenarioImportContext(const CIdentifier& importContext) const
 {
-	if (m_ScenarioImporters.empty())
-	{
-		return OV_UndefinedIdentifier;
-	}
+	if (m_ScenarioImporters.empty()) { return OV_UndefinedIdentifier; }
 
 	if (importContext == OV_UndefinedIdentifier)
 	{
@@ -304,20 +284,14 @@ CIdentifier CScenarioManager::getNextScenarioImportContext(const CIdentifier& im
 	}
 
 	auto current = m_ScenarioImporters.find(importContext);
-	if (current == m_ScenarioImporters.end() || ++current == m_ScenarioImporters.end())
-	{
-		return OV_UndefinedIdentifier;
-	}
+	if (current == m_ScenarioImporters.end() || ++current == m_ScenarioImporters.end()) { return OV_UndefinedIdentifier; }
 
 	return current->first;
 }
 
 CString CScenarioManager::getNextScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension) const
 {
-	if (m_ScenarioImporters.empty() || !m_ScenarioImporters.count(importContext))
-	{
-		return "";
-	}
+	if (m_ScenarioImporters.empty() || !m_ScenarioImporters.count(importContext)) { return ""; }
 
 	const auto& scenarioImportContextMap = m_ScenarioImporters.at(importContext);
 
@@ -327,10 +301,7 @@ CString CScenarioManager::getNextScenarioImporter(const CIdentifier& importConte
 	}
 
 	auto current = scenarioImportContextMap.find(fileNameExtension.toASCIIString());
-	if (current == scenarioImportContextMap.end() || ++current == scenarioImportContextMap.end())
-	{
-		return "";
-	}
+	if (current == scenarioImportContextMap.end() || ++current == scenarioImportContextMap.end()) { return ""; }
 
 	return current->first.c_str();
 }
@@ -578,10 +549,7 @@ bool CScenarioManager::unregisterScenarioExporter(const CIdentifier& exportConte
 
 CIdentifier CScenarioManager::getNextScenarioExportContext(const CIdentifier& exportContext) const
 {
-	if (m_ScenarioExporters.empty())
-	{
-		return OV_UndefinedIdentifier;
-	}
+	if (m_ScenarioExporters.empty()) { return OV_UndefinedIdentifier; }
 
 	if (exportContext == OV_UndefinedIdentifier)
 	{
@@ -589,20 +557,14 @@ CIdentifier CScenarioManager::getNextScenarioExportContext(const CIdentifier& ex
 	}
 
 	auto current = m_ScenarioExporters.find(exportContext);
-	if (current == m_ScenarioExporters.end() || ++current == m_ScenarioExporters.end())
-	{
-		return OV_UndefinedIdentifier;
-	}
+	if (current == m_ScenarioExporters.end() || ++current == m_ScenarioExporters.end()) { return OV_UndefinedIdentifier; }
 
 	return current->first;
 }
 
 CString CScenarioManager::getNextScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension) const
 {
-	if (m_ScenarioExporters.empty() || !m_ScenarioExporters.count(exportContext))
-	{
-		return "";
-	}
+	if (m_ScenarioExporters.empty() || !m_ScenarioExporters.count(exportContext)) { return ""; }
 
 	const auto& scenarioExportContextMap = m_ScenarioExporters.at(exportContext);
 
@@ -612,10 +574,7 @@ CString CScenarioManager::getNextScenarioExporter(const CIdentifier& exportConte
 	}
 
 	auto current = scenarioExportContextMap.find(fileNameExtension.toASCIIString());
-	if (current == scenarioExportContextMap.end() || ++current == scenarioExportContextMap.end())
-	{
-		return "";
-	}
+	if (current == scenarioExportContextMap.end() || ++current == scenarioExportContextMap.end()) { return ""; }
 
 	return current->first.c_str();
 }
@@ -630,8 +589,7 @@ CIdentifier CScenarioManager::getScenarioExporterAlgorithmIdentifier(const CIden
 	return m_ScenarioExporters.at(exportContext).at(fileNameExtension.toASCIIString());
 }
 
-bool CScenarioManager::releaseScenario(
-	const CIdentifier& rScenarioIdentifier)
+bool CScenarioManager::releaseScenario(const CIdentifier& rScenarioIdentifier)
 {
 	//retrieve iterator to scenario
 	map<CIdentifier, CScenario*>::iterator itScenario;
@@ -649,18 +607,14 @@ bool CScenarioManager::releaseScenario(
 	return true;
 }
 
-IScenario& CScenarioManager::getScenario(
-	const CIdentifier& rScenarioIdentifier)
+IScenario& CScenarioManager::getScenario(const CIdentifier& rScenarioIdentifier)
 {
 	map<CIdentifier, CScenario*>::const_iterator itScenario;
 	itScenario = m_vScenario.find(rScenarioIdentifier);
 
 	// If the call is wrongly handled, and falls in this condition then next instruction causes a crash...
 	// At least, here the abortion is handled!
-	OV_FATAL_UNLESS_K(
-		itScenario != m_vScenario.end(),
-		"Scenario " << rScenarioIdentifier.toString() << " does not exist !",
-		ErrorType::ResourceNotFound);
+	OV_FATAL_UNLESS_K(itScenario != m_vScenario.end(), "Scenario " << rScenarioIdentifier.toString() << " does not exist !", ErrorType::ResourceNotFound);
 
 	return *itScenario->second;
 }
@@ -672,7 +626,7 @@ IScenario& CScenarioManager::getScenario(const CIdentifier& rScenarioIdentifier)
 
 CIdentifier CScenarioManager::getUnusedIdentifier() const
 {
-	uint64_t l_ui64Identifier = (((uint64_t)rand()) << 32) + ((uint64_t)rand());
+	uint64_t l_ui64Identifier = (uint64_t(rand()) << 32) + uint64_t(rand());
 	CIdentifier l_oResult;
 	map<CIdentifier, CScenario*>::const_iterator i;
 	do

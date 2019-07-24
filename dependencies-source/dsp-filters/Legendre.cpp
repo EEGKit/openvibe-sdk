@@ -45,10 +45,7 @@ namespace Dsp
 {
 	namespace Legendre
 	{
-		static inline double m_sqrt2()
-		{
-			return 1.41421356237309504880;
-		}
+		static double m_sqrt2() { return 1.41421356237309504880; }
 
 		//  Optimum 'L' Filter algorithm.
 		//  (C) 2004, C. Bond.
@@ -134,10 +131,10 @@ namespace Dsp
 		{
 			assert(n <= m_maxN);
 
-			double c0, c1;
-			int i, j, k;
+			double c1;
+			int i, j;
 
-			k = (n - 1) / 2;
+			int k = (n - 1) / 2;
 			//
 			//  form vector of 'a' constants
 			//
@@ -236,7 +233,7 @@ namespace Dsp
 			{
 				if (i > 1)
 				{
-					c0 = -m_s[0];
+					double c0 = -m_s[0];
 					for (j = 1; j < i + 1; j++)
 					{
 						c1         = -m_s[j] + 2.0 * m_s[j - 1];
@@ -289,8 +286,12 @@ namespace Dsp
 
 				int j = 0;
 				for (int i = 0; i < degree; ++i)
+				{
 					if (poles.root()[i].real() <= 0)
+					{
 						poles.root()[j++] = poles.root()[i];
+					}
+				}
 				// sort descending imag() and cut degree in half
 				poles.sort(degree / 2);
 
@@ -302,7 +303,9 @@ namespace Dsp
 				}
 
 				if (numPoles & 1)
+				{
 					add(poles.root()[pairs].real(), infinity());
+				}
 			}
 		}
 

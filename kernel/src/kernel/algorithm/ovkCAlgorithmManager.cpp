@@ -27,16 +27,12 @@ CAlgorithmManager::~CAlgorithmManager()
 	m_vAlgorithms.clear();
 }
 
-CIdentifier CAlgorithmManager::createAlgorithm(
-	const CIdentifier& rAlgorithmClassIdentifier)
+CIdentifier CAlgorithmManager::createAlgorithm(const CIdentifier& rAlgorithmClassIdentifier)
 {
 	const IAlgorithmDesc* l_pAlgorithmDesc = NULL;
 	IAlgorithm* l_pAlgorithm               = getKernelContext().getPluginManager().createAlgorithm(rAlgorithmClassIdentifier, &l_pAlgorithmDesc);
 
-	OV_ERROR_UNLESS_KRU(
-		l_pAlgorithm && l_pAlgorithmDesc,
-		"Algorithm creation failed, class identifier :" << rAlgorithmClassIdentifier.toString(),
-		ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRU(l_pAlgorithm && l_pAlgorithmDesc, "Algorithm creation failed, class identifier :" << rAlgorithmClassIdentifier.toString(), ErrorType::BadResourceCreation);
 
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmClassIdentifier << "\n";
 
@@ -52,17 +48,13 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 	return l_oAlgorithmIdentifier;
 }
 
-CIdentifier CAlgorithmManager::createAlgorithm(
-	const IAlgorithmDesc& rAlgorithmDesc)
+CIdentifier CAlgorithmManager::createAlgorithm(const IAlgorithmDesc& rAlgorithmDesc)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
 	IAlgorithm* l_pAlgorithm = getKernelContext().getPluginManager().createAlgorithm(rAlgorithmDesc);
 
-	OV_ERROR_UNLESS_KRU(
-		l_pAlgorithm,
-		"Algorithm creation failed, class identifier :" << rAlgorithmDesc.getClassIdentifier().toString(),
-		ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRU(l_pAlgorithm, "Algorithm creation failed, class identifier :" << rAlgorithmDesc.getClassIdentifier().toString(), ErrorType::BadResourceCreation);
 
 	getLogManager() << LogLevel_Debug << "Creating algorithm with class identifier " << rAlgorithmDesc.getClassIdentifier() << "\n";
 
@@ -73,17 +65,15 @@ CIdentifier CAlgorithmManager::createAlgorithm(
 }
 
 
-bool CAlgorithmManager::releaseAlgorithm(
-	const CIdentifier& rAlgorithmIdentifier)
+bool CAlgorithmManager::releaseAlgorithm(const CIdentifier& rAlgorithmIdentifier)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
 	AlgorithmMap::iterator itAlgorithm = m_vAlgorithms.find(rAlgorithmIdentifier);
 
-	OV_ERROR_UNLESS_KRF(
-		itAlgorithm != m_vAlgorithms.end(),
-		"Algorithm release failed, identifier :" << rAlgorithmIdentifier.toString(),
-		ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(itAlgorithm != m_vAlgorithms.end(),
+						"Algorithm release failed, identifier :" << rAlgorithmIdentifier.toString(),
+						ErrorType::ResourceNotFound);
 
 	getLogManager() << LogLevel_Debug << "Releasing algorithm with identifier " << rAlgorithmIdentifier << "\n";
 	CAlgorithmProxy* l_pAlgorithmProxy = itAlgorithm->second;
@@ -101,8 +91,7 @@ bool CAlgorithmManager::releaseAlgorithm(
 	return true;
 }
 
-bool CAlgorithmManager::releaseAlgorithm(
-	IAlgorithmProxy& rAlgorithm)
+bool CAlgorithmManager::releaseAlgorithm(IAlgorithmProxy& rAlgorithm)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
@@ -125,40 +114,29 @@ bool CAlgorithmManager::releaseAlgorithm(
 		}
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		l_bResult,
-		"Algorithm release failed",
-		ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(l_bResult, "Algorithm release failed", ErrorType::ResourceNotFound);
 
 	return l_bResult;
 }
 
-IAlgorithmProxy& CAlgorithmManager::getAlgorithm(
-	const CIdentifier& rAlgorithmIdentifier)
+IAlgorithmProxy& CAlgorithmManager::getAlgorithm(const CIdentifier& rAlgorithmIdentifier)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
 	AlgorithmMap::const_iterator itAlgorithm = m_vAlgorithms.find(rAlgorithmIdentifier);
 
-	OV_FATAL_UNLESS_K(
-		itAlgorithm != m_vAlgorithms.end(),
-		"Algorithm " << rAlgorithmIdentifier << " does not exist !",
-		ErrorType::ResourceNotFound);
+	OV_FATAL_UNLESS_K(itAlgorithm != m_vAlgorithms.end(), "Algorithm " << rAlgorithmIdentifier << " does not exist !", ErrorType::ResourceNotFound);
 
 	return *itAlgorithm->second;
 }
 
-CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(
-	const CIdentifier& rPreviousIdentifier) const
+CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(const CIdentifier& rPreviousIdentifier) const
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
 	AlgorithmMap::const_iterator itAlgorithm = m_vAlgorithms.begin();
 
-	if (rPreviousIdentifier == OV_UndefinedIdentifier)
-	{
-		itAlgorithm = m_vAlgorithms.begin();
-	}
+	if (rPreviousIdentifier == OV_UndefinedIdentifier) { itAlgorithm = m_vAlgorithms.begin(); }
 	else
 	{
 		itAlgorithm = m_vAlgorithms.find(rPreviousIdentifier);

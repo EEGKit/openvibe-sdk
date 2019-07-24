@@ -269,10 +269,7 @@ namespace Socket
 #endif
 		}
 
-		std::string getLastError()
-		{
-			return m_sLastError;
-		}
+		std::string getLastError(){return m_sLastError;}
 
 		std::string getLastErrorFormated()
 		{
@@ -281,17 +278,15 @@ namespace Socket
 			LPTSTR l_sErrorText;
 			DWORD l_ui64Error = GetLastError();
 
-			FormatMessage(
-				FORMAT_MESSAGE_FROM_SYSTEM					// use system message tables to retrieve error text
-				| FORMAT_MESSAGE_ALLOCATE_BUFFER			// allocate buffer on local heap for error text
-				| FORMAT_MESSAGE_IGNORE_INSERTS,			// Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters 
-				NULL,										// unused with FORMAT_MESSAGE_FROM_SYSTEM
-				l_ui64Error,
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-				(LPTSTR)&l_sErrorText,						// output 
-				0,											// minimum size for output buffer
-				NULL
-			);											// arguments - see note
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM					// use system message tables to retrieve error text
+						  | FORMAT_MESSAGE_ALLOCATE_BUFFER				// allocate buffer on local heap for error text
+						  | FORMAT_MESSAGE_IGNORE_INSERTS,				// Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters 
+						  NULL,											// unused with FORMAT_MESSAGE_FROM_SYSTEM
+						  l_ui64Error,
+						  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+						  (LPTSTR)&l_sErrorText,						// output 
+						  0,											// minimum size for output buffer
+						  NULL);										// arguments - see note
 
 			return l_sErrorText + std::to_string(static_cast<unsigned long long>(l_ui64Error));
 
@@ -307,8 +302,5 @@ namespace Socket
 #endif
 	};
 
-	IConnectionParallel* createConnectionParallel()
-	{
-		return new CConnectionParallel();
-	}
+	IConnectionParallel* createConnectionParallel() { return new CConnectionParallel(); }
 };

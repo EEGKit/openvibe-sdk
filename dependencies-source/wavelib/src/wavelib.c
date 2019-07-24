@@ -7,8 +7,7 @@
 wave_object wave_init(char* wname)
 {
 	wave_object obj = NULL;
-	int retval;
-	retval = 0;
+	int retval = 0;
 
 	if (wname != NULL)
 	{
@@ -35,10 +34,10 @@ wave_object wave_init(char* wname)
 
 wt_object wt_init(wave_object wave, char* method, int siglength, int J)
 {
-	int size, i, MaxIter;
+	int i;
 	wt_object obj = NULL;
 
-	size = wave->filtlength;
+	int size = wave->filtlength;
 
 	if (J > 100)
 	{
@@ -46,7 +45,7 @@ wt_object wt_init(wave_object wave, char* method, int siglength, int J)
 		exit(-1);
 	}
 
-	MaxIter = wmaxiter(siglength, size);
+	int MaxIter = wmaxiter(siglength, size);
 
 	if (J > MaxIter)
 	{
@@ -103,14 +102,8 @@ wt_object wt_init(wave_object wave, char* method, int siglength, int J)
 	obj->MaxIter   = MaxIter;
 	strcpy(obj->method, method);
 
-	if (siglength % 2 == 0)
-	{
-		obj->even = 1;
-	}
-	else
-	{
-		obj->even = 0;
-	}
+	if (siglength % 2 == 0) { obj->even = 1; }
+	else { obj->even = 0; }
 
 	obj->cobj = NULL;
 
@@ -139,10 +132,10 @@ wt_object wt_init(wave_object wave, char* method, int siglength, int J)
 
 wtree_object wtree_init(wave_object wave, int siglength, int J)
 {
-	int size, i, MaxIter, temp, temp2, elength, nodes;
+	int i;
 	wtree_object obj = NULL;
 
-	size = wave->filtlength;
+	int size = wave->filtlength;
 
 	if (J > 100)
 	{
@@ -151,20 +144,20 @@ wtree_object wtree_init(wave_object wave, int siglength, int J)
 	}
 
 
-	MaxIter = wmaxiter(siglength, size);
+	int MaxIter = wmaxiter(siglength, size);
 	if (J > MaxIter)
 	{
 		printf("\n Error - The Signal Can only be iterated %d times using this wavelet. Exiting\n", MaxIter);
 		exit(-1);
 	}
-	temp    = 1;
-	elength = 0;
-	nodes   = 0;
+	int temp = 1;
+	int elength = 0;
+	int nodes = 0;
 	for (i = 0; i < J; ++i)
 	{
 		temp *= 2;
 		nodes += temp;
-		temp2 = (size - 2) * (temp - 1);
+		int temp2 = (size - 2) * (temp - 1);
 		elength += temp2;
 	}
 
@@ -178,14 +171,8 @@ wtree_object wtree_init(wave_object wave, int siglength, int J)
 	obj->MaxIter   = MaxIter;
 	strcpy(obj->method, "dwt");
 
-	if (siglength % 2 == 0)
-	{
-		obj->even = 1;
-	}
-	else
-	{
-		obj->even = 0;
-	}
+	if (siglength % 2 == 0) { obj->even = 1; }
+	else { obj->even = 0; }
 
 	obj->cobj  = NULL;
 	obj->nodes = nodes;
@@ -196,10 +183,7 @@ wtree_object wtree_init(wave_object wave, int siglength, int J)
 	obj->nodelength = (int*)&obj->params[siglength * (J + 1) + elength];
 	obj->coeflength = (int*)&obj->params[siglength * (J + 1) + elength + nodes];
 
-	for (i = 0; i < siglength * (J + 1) + elength + nodes + J + 1; ++i)
-	{
-		obj->params[i] = 0.0;
-	}
+	for (i = 0; i < siglength * (J + 1) + elength + nodes + J + 1; ++i) { obj->params[i] = 0.0; }
 
 	//wave_summary(obj->wave);
 
@@ -208,10 +192,10 @@ wtree_object wtree_init(wave_object wave, int siglength, int J)
 
 wpt_object wpt_init(wave_object wave, int siglength, int J)
 {
-	int size, i, MaxIter, temp, nodes, elength, p2, N, lp;
+	int i;
 	wpt_object obj = NULL;
 
-	size = wave->filtlength;
+	int size = wave->filtlength;
 
 	if (J > 100)
 	{
@@ -220,14 +204,14 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 	}
 
 
-	MaxIter = wmaxiter(siglength, size);
+	int MaxIter = wmaxiter(siglength, size);
 	if (J > MaxIter)
 	{
 		printf("\n Error - The Signal Can only be iterated %d times using this wavelet. Exiting\n", MaxIter);
 		exit(-1);
 	}
-	temp  = 1;
-	nodes = 0;
+	int temp = 1;
+	int nodes = 0;
 	for (i = 0; i < J; ++i)
 	{
 		temp *= 2;
@@ -235,10 +219,10 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 	}
 
 	i       = J;
-	p2      = 2;
-	N       = siglength;
-	lp      = size;
-	elength = 0;
+	int p2 = 2;
+	int N = siglength;
+	int lp = size;
+	int elength = 0;
 	while (i > 0)
 	{
 		N       = N + lp - 2;
@@ -260,14 +244,8 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 	obj->J         = J;
 	obj->MaxIter   = MaxIter;
 
-	if (siglength % 2 == 0)
-	{
-		obj->even = 1;
-	}
-	else
-	{
-		obj->even = 0;
-	}
+	if (siglength % 2 == 0) { obj->even = 1; }
+	else { obj->even = 0; }
 
 	obj->cobj  = NULL;
 	obj->nodes = nodes;
@@ -280,10 +258,7 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 	obj->numnodeslevel = (int*)&obj->params[elength + 4 * nodes + 4];
 	obj->coeflength    = (int*)&obj->params[elength + 4 * nodes + J + 5];
 
-	for (i = 0; i < elength + 4 * nodes + 2 * J + 6; ++i)
-	{
-		obj->params[i] = 0.0;
-	}
+	for (i = 0; i < elength + 4 * nodes + 2 * J + 6; ++i) { obj->params[i] = 0.0; }
 
 	//wave_summary(obj->wave);
 
@@ -293,21 +268,16 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 cwt_object cwt_init(char* wave, double param, int siglength, double dt, int J)
 {
 	cwt_object obj = NULL;
-	int N, i, nj2, ibase2, mother;
+	int mother;
 	double s0, dj;
-	double t1;
-	int m, odd;
 	char* pdefault = "pow";
 
-	m   = (int)param;
-	odd = 1;
-	if (2 * (m / 2) == m)
-	{
-		odd = 0;
-	}
+	int m = (int)param;
+	int odd = 1;
+	if (2 * (m / 2) == m) { odd = 0; }
 
-	N   = siglength;
-	nj2 = 2 * N * J;
+	int N = siglength;
+	int nj2 = 2 * N * J;
 	obj = (cwt_object)malloc(sizeof(struct cwt_set) + sizeof(double) * (nj2 + 2 * J + N));
 
 	if (!strcmp(wave, "morlet") || !strcmp(wave, "morl"))
@@ -375,8 +345,8 @@ cwt_object cwt_init(char* wave, double param, int siglength, double dt, int J)
 	obj->mother    = mother;
 	obj->m         = param;
 
-	t1     = 0.499999 + log((double)N) / log(2.0);
-	ibase2 = 1 + (int)t1;
+	double t1 = 0.499999 + log((double)N) / log(2.0);
+	int ibase2 = 1 + (int)t1;
 
 	obj->npad = (int)pow(2.0, (double)ibase2);
 
@@ -385,10 +355,7 @@ cwt_object cwt_init(char* wave, double param, int siglength, double dt, int J)
 	obj->period = &obj->params[nj2 + J];
 	obj->coi    = &obj->params[nj2 + 2 * J];
 
-	for (i = 0; i < nj2 + 2 * J + N; ++i)
-	{
-		obj->params[i] = 0.0;
-	}
+	for (int i = 0; i < nj2 + 2 * J + N; ++i) { obj->params[i] = 0.0; }
 
 	return obj;
 }
@@ -396,10 +363,7 @@ cwt_object cwt_init(char* wave, double param, int siglength, double dt, int J)
 
 static void wconv(wt_object wt, double* sig, int N, double* filt, int L, double* oup)
 {
-	if (!strcmp(wt->cmethod, "direct"))
-	{
-		conv_direct(sig, N, filt, L, oup);
-	}
+	if (!strcmp(wt->cmethod, "direct")) { conv_direct(sig, N, filt, L, oup); }
 	else if (!strcmp(wt->cmethod, "fft") || !strcmp(wt->cmethod, "FFT"))
 	{
 		if (wt->cfftset == 0)
@@ -423,18 +387,16 @@ static void wconv(wt_object wt, double* sig, int N, double* filt, int L, double*
 
 static void dwt_per(wt_object wt, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
-	int l, l2, isodd, i, t, len_avg;
+	int len_avg = wt->wave->lpd_len;
+	int l2 = len_avg / 2;
+	int isodd = N % 2;
 
-	len_avg = wt->wave->lpd_len;
-	l2      = len_avg / 2;
-	isodd   = N % 2;
-
-	for (i = 0; i < len_cA; ++i)
+	for (int i = 0; i < len_cA; ++i)
 	{
-		t     = 2 * i + l2;
+		int t = 2 * i + l2;
 		cA[i] = 0.0;
 		cD[i] = 0.0;
-		for (l = 0; l < len_avg; ++l)
+		for (int l = 0; l < len_avg; ++l)
 		{
 			if ((t - l) >= l2 && (t - l) < N)
 			{
@@ -488,18 +450,16 @@ static void dwt_per(wt_object wt, double* inp, int N, double* cA, int len_cA, do
 
 static void wtree_per(wtree_object wt, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
-	int l, l2, isodd, i, t, len_avg;
+	int len_avg = wt->wave->lpd_len;
+	int l2 = len_avg / 2;
+	int isodd = N % 2;
 
-	len_avg = wt->wave->lpd_len;
-	l2      = len_avg / 2;
-	isodd   = N % 2;
-
-	for (i = 0; i < len_cA; ++i)
+	for (int i = 0; i < len_cA; ++i)
 	{
-		t     = 2 * i + l2;
+		int t = 2 * i + l2;
 		cA[i] = 0.0;
 		cD[i] = 0.0;
-		for (l = 0; l < len_avg; ++l)
+		for (int l = 0; l < len_avg; ++l)
 		{
 			if ((t - l) >= l2 && (t - l) < N)
 			{
@@ -553,18 +513,16 @@ static void wtree_per(wtree_object wt, double* inp, int N, double* cA, int len_c
 
 static void dwpt_per(wpt_object wt, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
-	int l, l2, isodd, i, t, len_avg;
+	int len_avg = wt->wave->lpd_len;
+	int l2 = len_avg / 2;
+	int isodd = N % 2;
 
-	len_avg = wt->wave->lpd_len;
-	l2      = len_avg / 2;
-	isodd   = N % 2;
-
-	for (i = 0; i < len_cA; ++i)
+	for (int i = 0; i < len_cA; ++i)
 	{
-		t     = 2 * i + l2;
+		int t = 2 * i + l2;
 		cA[i] = 0.0;
 		cD[i] = 0.0;
-		for (l = 0; l < len_avg; ++l)
+		for (int l = 0; l < len_avg; ++l)
 		{
 			if ((t - l) >= l2 && (t - l) < N)
 			{
@@ -618,16 +576,14 @@ static void dwpt_per(wpt_object wt, double* inp, int N, double* cA, int len_cA, 
 
 static void dwt_sym(wt_object wt, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
-	int i, l, t, len_avg;
+	int len_avg = wt->wave->lpd_len;
 
-	len_avg = wt->wave->lpd_len;
-
-	for (i = 0; i < len_cA; ++i)
+	for (int i = 0; i < len_cA; ++i)
 	{
-		t     = 2 * i + 1;
+		int t = 2 * i + 1;
 		cA[i] = 0.0;
 		cD[i] = 0.0;
-		for (l = 0; l < len_avg; ++l)
+		for (int l = 0; l < len_avg; ++l)
 		{
 			if ((t - l) >= 0 && (t - l) < N)
 			{
@@ -650,16 +606,14 @@ static void dwt_sym(wt_object wt, double* inp, int N, double* cA, int len_cA, do
 
 static void wtree_sym(wtree_object wt, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
-	int i, l, t, len_avg;
+	int len_avg = wt->wave->lpd_len;
 
-	len_avg = wt->wave->lpd_len;
-
-	for (i = 0; i < len_cA; ++i)
+	for (int i = 0; i < len_cA; ++i)
 	{
-		t     = 2 * i + 1;
+		int t = 2 * i + 1;
 		cA[i] = 0.0;
 		cD[i] = 0.0;
-		for (l = 0; l < len_avg; ++l)
+		for (int l = 0; l < len_avg; ++l)
 		{
 			if ((t - l) >= 0 && (t - l) < N)
 			{
@@ -682,16 +636,14 @@ static void wtree_sym(wtree_object wt, double* inp, int N, double* cA, int len_c
 
 static void dwpt_sym(wpt_object wt, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
-	int i, l, t, len_avg;
+	int len_avg = wt->wave->lpd_len;
 
-	len_avg = wt->wave->lpd_len;
-
-	for (i = 0; i < len_cA; ++i)
+	for (int i = 0; i < len_cA; ++i)
 	{
-		t     = 2 * i + 1;
+		int t = 2 * i + 1;
 		cA[i] = 0.0;
 		cD[i] = 0.0;
-		for (l = 0; l < len_avg; ++l)
+		for (int l = 0; l < len_avg; ++l)
 		{
 			if ((t - l) >= 0 && (t - l) < N)
 			{
@@ -714,12 +666,11 @@ static void dwpt_sym(wpt_object wt, double* inp, int N, double* cA, int len_cA, 
 
 static void dwt1(wt_object wt, double* sig, int len_sig, double* cA, int len_cA, double* cD, int len_cD)
 {
-	int len_avg, D, lf;
 	double *signal, *cA_undec;
-	len_avg = (wt->wave->lpd_len + wt->wave->hpd_len) / 2;
+	int len_avg = (wt->wave->lpd_len + wt->wave->hpd_len) / 2;
 	//len_sig = 2 * (int)ceil((double)len_sig / 2.0);
 
-	D = 2;
+	int D = 2;
 
 	if (!strcmp(wt->ext, "per"))
 	{
@@ -751,7 +702,7 @@ static void dwt1(wt_object wt, double* sig, int len_sig, double* cA, int len_cA,
 	else if (!strcmp(wt->ext, "sym"))
 	{
 		//printf("\n YES %s \n", wt->ext);
-		lf = wt->wave->lpd_len;// lpd and hpd have the same length
+		int lf = wt->wave->lpd_len;// lpd and hpd have the same length
 
 		signal = (double*)malloc(sizeof(double) * (len_sig + 2 * (lf - 1)));
 
@@ -798,17 +749,16 @@ static void dwt1(wt_object wt, double* sig, int len_sig, double* cA, int len_cA,
 
 void dwt(wt_object wt, double* inp)
 {
-	int i, J, temp_len, iter, N, lp;
+	int i, iter;
 	int len_cA;
-	double *orig, *orig2;
 
-	temp_len          = wt->siglength;
-	J                 = wt->J;
+	int temp_len = wt->siglength;
+	int J = wt->J;
 	wt->length[J + 1] = temp_len;
 	wt->outlength     = 0;
 	wt->zpad          = 0;
-	orig              = (double*)malloc(sizeof(double) * temp_len);
-	orig2             = (double*)malloc(sizeof(double) * temp_len);
+	double* orig = (double*)malloc(sizeof(double) * temp_len);
+	double* orig2 = (double*)malloc(sizeof(double) * temp_len);
 	/*
 	if ((temp_len % 2) == 0) {
 	wt->zpad = 0;
@@ -823,18 +773,12 @@ void dwt(wt_object wt, double* inp)
 	}
 	*/
 
-	for (i = 0; i < wt->siglength; ++i)
-	{
-		orig[i] = inp[i];
-	}
+	for (i = 0; i < wt->siglength; ++i) { orig[i] = inp[i]; }
 
-	if (wt->zpad == 1)
-	{
-		orig[temp_len - 1] = orig[temp_len - 2];
-	}
+	if (wt->zpad == 1) { orig[temp_len - 1] = orig[temp_len - 2]; }
 
-	N  = temp_len;
-	lp = wt->wave->lpd_len;
+	int N = temp_len;
+	int lp = wt->wave->lpd_len;
 
 	if (!strcmp(wt->ext, "per"))
 	{
@@ -937,16 +881,15 @@ void dwt(wt_object wt, double* inp)
 
 void wtree(wtree_object wt, double* inp)
 {
-	int i, J, temp_len, iter, N, lp, p2, k, N2, Np;
-	int len_cA, t, t2, it1;
-	double* orig;
+	int i, iter, k, N2, Np;
+	int len_cA;
 
-	temp_len          = wt->siglength;
-	J                 = wt->J;
+	int temp_len = wt->siglength;
+	int J = wt->J;
 	wt->length[J + 1] = temp_len;
 	wt->outlength     = 0;
 	wt->zpad          = 0;
-	orig              = (double*)malloc(sizeof(double) * temp_len);
+	double* orig = (double*)malloc(sizeof(double) * temp_len);
 	/*
 	if ((temp_len % 2) == 0) {
 		wt->zpad = 0;
@@ -958,19 +901,13 @@ void wtree(wtree_object wt, double* inp)
 		orig = (double*)malloc(sizeof(double)* temp_len);
 	}
 	*/
-	for (i = 0; i < wt->siglength; ++i)
-	{
-		orig[i] = inp[i];
-	}
+	for (i = 0; i < wt->siglength; ++i) { orig[i] = inp[i]; }
 
-	if (wt->zpad == 1)
-	{
-		orig[temp_len - 1] = orig[temp_len - 2];
-	}
+	if (wt->zpad == 1) { orig[temp_len - 1] = orig[temp_len - 2]; }
 
-	N  = temp_len;
-	lp = wt->wave->lpd_len;
-	p2 = 1;
+	int N = temp_len;
+	int lp = wt->wave->lpd_len;
+	int p2 = 1;
 
 	if (!strcmp(wt->ext, "per"))
 	{
@@ -1060,12 +997,12 @@ void wtree(wtree_object wt, double* inp)
 	}
 
 	J   = wt->J;
-	t2  = wt->outlength - 2 * wt->length[J];
+	int t2 = wt->outlength - 2 * wt->length[J];
 	p2  = 2;
-	it1 = 0;
+	int it1 = 0;
 	for (i = 0; i < J; ++i)
 	{
-		t = t2;
+		int t = t2;
 		for (k = 0; k < p2; ++k)
 		{
 			wt->nodelength[it1] = t;
@@ -1088,13 +1025,9 @@ void wtree(wtree_object wt, double* inp)
 
 static int ipow2(int n)
 {
-	int p, i;
-	p = 1;
+	int p = 1;
 
-	for (i = 0; i < n; ++i)
-	{
-		p *= 2;
-	}
+	for (int i = 0; i < n; ++i) { p *= 2; }
 
 	return p;
 }
@@ -1128,15 +1061,9 @@ void dwpt(wpt_object wt, double* inp)
 	tree       = (double*)malloc(sizeof(double) * (temp_len * (J + 1) + elength));
 	nodelength = (int*)malloc(sizeof(int) * nodes);
 
-	for (i = 0; i < wt->siglength; ++i)
-	{
-		orig[i] = inp[i];
-	}
+	for (i = 0; i < wt->siglength; ++i) { orig[i] = inp[i]; }
 
-	for (i = 0; i < temp_len * (J + 1) + elength; ++i)
-	{
-		tree[i] = 0.0;
-	}
+	for (i = 0; i < temp_len * (J + 1) + elength; ++i) { tree[i] = 0.0; }
 
 	for (i = 0; i < nodes + 1; ++i)
 	{
@@ -1266,15 +1193,9 @@ void dwpt(wpt_object wt, double* inp)
 
 	J   = wt->J;
 	llb = 1;
-	for (i = 0; i < J; ++i)
-	{
-		llb *= 2;
-	}
+	for (i = 0; i < J; ++i) { llb *= 2; }
 
-	for (i = n1 - llb; i < n1; ++i)
-	{
-		wt->basisvector[i] = 1;
-	}
+	for (i = n1 - llb; i < n1; ++i) { wt->basisvector[i] = 1; }
 
 	for (j = J - 1; j >= 0; --j)
 	{
@@ -1372,8 +1293,7 @@ void dwpt(wpt_object wt, double* inp)
 
 int getWTREENodelength(wtree_object wt, int X)
 {
-	int N;
-	N = -1;
+	int N = -1;
 	/*
 	X - Level. All Nodes at any level have the same length
 	*/
@@ -1390,8 +1310,7 @@ int getWTREENodelength(wtree_object wt, int X)
 
 int getDWPTNodelength(wpt_object wt, int X)
 {
-	int N;
-	N = -1;
+	int N = -1;
 	/*
 	X - Level. All Nodes at any level have the same length
 	*/
@@ -1408,18 +1327,15 @@ int getDWPTNodelength(wpt_object wt, int X)
 
 void getWTREECoeffs(wtree_object wt, int X, int Y, double* coeffs, int N)
 {
-	int ymax, i, t, t2;
+	int i, t, t2;
 
 	if (X <= 0 || X > wt->J)
 	{
 		printf("X co-ordinate must be >= 1 and <= %d", wt->J);
 		exit(-1);
 	}
-	ymax = 1;
-	for (i = 0; i < X; ++i)
-	{
-		ymax *= 2;
-	}
+	int ymax = 1;
+	for (i = 0; i < X; ++i) { ymax *= 2; }
 
 	ymax -= 1;
 
@@ -1429,10 +1345,7 @@ void getWTREECoeffs(wtree_object wt, int X, int Y, double* coeffs, int N)
 		exit(-1);
 	}
 
-	if (X == 1)
-	{
-		t = 0;
-	}
+	if (X == 1) { t = 0; }
 	else
 	{
 		t  = 0;
@@ -1446,28 +1359,20 @@ void getWTREECoeffs(wtree_object wt, int X, int Y, double* coeffs, int N)
 
 	t += Y;
 	t2 = wt->nodelength[t];
-	for (i = 0; i < N; ++i)
-	{
-		coeffs[i] = wt->output[t2 + i];
-	}
+	for (i = 0; i < N; ++i) { coeffs[i] = wt->output[t2 + i]; }
 }
 
 void getDWPTCoeffs(wpt_object wt, int X, int Y, double* coeffs, int N)
 {
-	int ymax, i;
-	int np, citer;
-	int flag;
+	int i;
 
 	if (X <= 0 || X > wt->J)
 	{
 		printf("X co-ordinate must be >= 1 and <= %d", wt->J);
 		exit(-1);
 	}
-	ymax = 1;
-	for (i = 0; i < X; ++i)
-	{
-		ymax *= 2;
-	}
+	int ymax = 1;
+	for (i = 0; i < X; ++i) { ymax *= 2; }
 
 	ymax -= 1;
 
@@ -1477,8 +1382,8 @@ void getDWPTCoeffs(wpt_object wt, int X, int Y, double* coeffs, int N)
 		exit(-1);
 	}
 
-	np    = 0;
-	citer = 0;
+	int np = 0;
+	int citer = 0;
 
 	for (i = wt->J; i > X; --i)
 	{
@@ -1487,7 +1392,7 @@ void getDWPTCoeffs(wpt_object wt, int X, int Y, double* coeffs, int N)
 	}
 
 	i    = 0;
-	flag = 0;
+	int flag = 0;
 	for (i = 0; i < wt->numnodeslevel[X]; ++i)
 	{
 		if (wt->nodeindex[2 * np + 1] == Y)
@@ -1505,21 +1410,15 @@ void getDWPTCoeffs(wpt_object wt, int X, int Y, double* coeffs, int N)
 		exit(-1);
 	}
 
-	for (i = 0; i < N; ++i)
-	{
-		coeffs[i] = wt->output[citer + i];
-	}
+	for (i = 0; i < N; ++i) { coeffs[i] = wt->output[citer + i]; }
 }
 
 int getCWTScaleLength(int N)
 {
-	int J;
-	double temp, dj;
+	double dj = 0.4875;
 
-	dj = 0.4875;
-
-	temp = (log((double)N / 2.0) / log(2.0)) / dj;
-	J    = (int)temp;
+	double temp = (log((double)N / 2.0) / log(2.0)) / dj;
+	int J = (int)temp;
 
 	return J;
 }
@@ -1558,18 +1457,13 @@ int setCWTScales(cwt_object wt, double s0, double dj, char* type, int power)
 
 void setCWTScaleVector(cwt_object wt, double* scale, int J, double s0, double dj)
 {
-	int i;
-
 	if (J != wt->J)
 	{
 		printf("\n CWT object is only valid for %d scales\n", wt->J);
 		exit(-1);
 	}
 
-	for (i = 0; i < wt->J; ++i)
-	{
-		wt->scale[i] = scale[i];
-	}
+	for (int i = 0; i < wt->J; ++i) { wt->scale[i] = scale[i]; }
 	wt->dj    = dj;
 	wt->s0    = s0;
 	wt->sflag = 1;
@@ -1577,20 +1471,14 @@ void setCWTScaleVector(cwt_object wt, double* scale, int J, double s0, double dj
 
 void setCWTPadding(cwt_object wt, int pad)
 {
-	if (pad == 0)
-	{
-		wt->pflag = 0;
-	}
-	else
-	{
-		wt->pflag = 1;
-	}
+	if (pad == 0) { wt->pflag = 0; }
+	else { wt->pflag = 1; }
 }
 
 int cwt(cwt_object wt, double* inp)
 {
-	int i, N, npad, nj2, j, j2;
-	N = wt->siglength;
+	int i, npad;
+	int N = wt->siglength;
 	if (wt->sflag == 0)
 	{
 		for (i = 0; i < wt->J; ++i)
@@ -1600,25 +1488,16 @@ int cwt(cwt_object wt, double* inp)
 		wt->sflag = 1;
 	}
 
-	if (wt->pflag == 0)
-	{
-		npad = N;
-	}
-	else
-	{
-		npad = wt->npad;
-	}
+	if (wt->pflag == 0) { npad = N; }
+	else { npad = wt->npad; }
 
-	nj2 = 2 * N * wt->J;
-	j   = wt->J;
-	j2  = 2 * j;
+	int nj2 = 2 * N * wt->J;
+	int j = wt->J;
+	int j2 = 2 * j;
 
 	wt->smean = 0.0;
 
-	for (i = 0; i < N; ++i)
-	{
-		wt->smean += inp[i];
-	}
+	for (i = 0; i < N; ++i) { wt->smean += inp[i]; }
 	wt->smean /= N;
 
 	return cwavelet(inp, N, wt->dt, wt->mother, wt->m, wt->s0, wt->dj, wt->J, npad, wt->params, wt->params + nj2, wt->params + nj2 + j, wt->params + nj2 + j2);
@@ -1626,14 +1505,14 @@ int cwt(cwt_object wt, double* inp)
 
 void icwt(cwt_object wt, double* cwtop)
 {
-	double psi, cdel;
-	int real, i, N, nj2;
+	double psi;
+	int real;
 
-	N   = wt->siglength;
-	nj2 = N * 2 * wt->J;
+	int N = wt->siglength;
+	int nj2 = N * 2 * wt->J;
 
 	psi0(wt->mother, wt->m, &psi, &real);
-	cdel = cdelta(wt->mother, wt->m, psi);
+	double cdel = cdelta(wt->mother, wt->m, psi);
 
 	//printf("\n PSI %g CDEL %g param %g mother %d \n", psi, cdel,wt->m,wt->mother);
 	if ((!strcmp(wt->type, "pow") || !strcmp(wt->type, "power")) && wt->pow == 2)
@@ -1645,25 +1524,20 @@ void icwt(cwt_object wt, double* cwtop)
 		printf("Inverse CWT is only available for power of 2.0 scales \n");
 		exit(-1);
 	}
-	for (i = 0; i < N; ++i)
-	{
-		cwtop[i] += wt->smean;
-	}
+	for (int i = 0; i < N; ++i) { cwtop[i] += wt->smean; }
 }
 
 static void idwt1(wt_object wt, double* temp, double* cA_up, double* cA, int len_cA, double* cD, int len_cD, double* X_lp, double* X_hp, double* X)
 {
-	int len_avg, N, U, N2, i;
-
-	len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
-	N       = 2 * len_cD;
-	U       = 2;
+	int len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
+	int N = 2 * len_cD;
+	int U = 2;
 
 	upsamp2(cA, len_cA, U, cA_up);
 
 	per_ext(cA_up, 2 * len_cA, len_avg / 2, temp);
 
-	N2 = 2 * len_cA + len_avg;
+	int N2 = 2 * len_cA + len_avg;
 
 	if (wt->wave->lpr_len == wt->wave->hpr_len && (!strcmp(wt->cmethod, "fft") || !strcmp(wt->cmethod, "FFT")))
 	{
@@ -1687,10 +1561,7 @@ static void idwt1(wt_object wt, double* temp, double* cA_up, double* cA, int len
 	wconv(wt, temp, N2, wt->wave->hpr, len_avg, X_hp);
 
 
-	for (i = len_avg - 1; i < N + len_avg - 1; ++i)
-	{
-		X[i - len_avg + 1] = X_lp[i] + X_hp[i];
-	}
+	for (int i = len_avg - 1; i < N + len_avg - 1; ++i) { X[i - len_avg + 1] = X_lp[i] + X_hp[i]; }
 
 	if (wt->wave->lpr_len == wt->wave->hpr_len && (!strcmp(wt->cmethod, "fft") || !strcmp(wt->cmethod, "FFT")))
 	{
@@ -1701,22 +1572,20 @@ static void idwt1(wt_object wt, double* temp, double* cA_up, double* cA, int len
 
 static void idwt_per(wt_object wt, double* cA, int len_cA, double* cD, int len_cD, double* X)
 {
-	int len_avg, i, l, m, n, t, l2;
+	int len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
+	int l2 = len_avg / 2;
+	int m = -2;
+	int n = -1;
 
-	len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
-	l2      = len_avg / 2;
-	m       = -2;
-	n       = -1;
-
-	for (i = 0; i < len_cA + l2 - 1; ++i)
+	for (int i = 0; i < len_cA + l2 - 1; ++i)
 	{
 		m += 2;
 		n += 2;
 		X[m] = 0.0;
 		X[n] = 0.0;
-		for (l = 0; l < l2; ++l)
+		for (int l = 0; l < l2; ++l)
 		{
-			t = 2 * l;
+			int t = 2 * l;
 			if ((i - l) >= 0 && (i - l) < len_cA)
 			{
 				X[m] += wt->wave->lpr[t] * cA[i - l] + wt->wave->hpr[t] * cD[i - l];
@@ -1738,22 +1607,20 @@ static void idwt_per(wt_object wt, double* cA, int len_cA, double* cD, int len_c
 
 static void idwt_sym(wt_object wt, double* cA, int len_cA, double* cD, int len_cD, double* X)
 {
-	int len_avg, i, l, m, n, t, v;
+	int len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
+	int m = -2;
+	int n = -1;
 
-	len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
-	m       = -2;
-	n       = -1;
-
-	for (v = 0; v < len_cA; ++v)
+	for (int v = 0; v < len_cA; ++v)
 	{
-		i = v;
+		int i = v;
 		m += 2;
 		n += 2;
 		X[m] = 0.0;
 		X[n] = 0.0;
-		for (l = 0; l < len_avg / 2; ++l)
+		for (int l = 0; l < len_avg / 2; ++l)
 		{
-			t = 2 * l;
+			int t = 2 * l;
 			if ((i - l) >= 0 && (i - l) < len_cA)
 			{
 				X[m] += wt->wave->lpr[t] * cA[i - l] + wt->wave->hpr[t] * cD[i - l];
@@ -1766,14 +1633,14 @@ static void idwt_sym(wt_object wt, double* cA, int len_cA, double* cD, int len_c
 
 void idwt(wt_object wt, double* dwtop)
 {
-	int J, U, i, lf, N, N2, iter, k;
-	int app_len, det_len;
-	double *cA_up, *X_lp, *X_hp, *out, *temp;
+	int i, lf, N, iter, k;
+	int det_len;
+	double *cA_up, *X_lp, *X_hp;
 
-	J       = wt->J;
-	U       = 2;
-	app_len = wt->length[0];
-	out     = (double*)malloc(sizeof(double) * (wt->siglength + 1));
+	int J = wt->J;
+	int U = 2;
+	int app_len = wt->length[0];
+	double* out = (double*)malloc(sizeof(double) * (wt->siglength + 1));
 	if (!strcmp(wt->ext, "per") && (!strcmp(wt->cmethod, "fft") || !strcmp(wt->cmethod, "FFT")))
 	{
 		app_len = wt->length[0];
@@ -1782,7 +1649,7 @@ void idwt(wt_object wt, double* dwtop)
 		lf      = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
 
 		cA_up = (double*)malloc(sizeof(double) * N);
-		temp  = (double*)malloc(sizeof(double) * (N + lf));
+		double* temp = (double*)malloc(sizeof(double) * (N + lf));
 		X_lp  = (double*)malloc(sizeof(double) * (N + 2 * lf - 1));
 		X_hp  = (double*)malloc(sizeof(double) * (N + 2 * lf - 1));
 		iter  = app_len;
@@ -1893,7 +1760,7 @@ void idwt(wt_object wt, double* dwtop)
 		{
 			det_len = wt->length[i + 1];
 			upsamp(out, det_len, U, cA_up);
-			N2 = 2 * wt->length[i + 1] - 1;
+			int N2 = 2 * wt->length[i + 1] - 1;
 
 			if (wt->wave->lpr_len == wt->wave->hpr_len && (!strcmp(wt->cmethod, "fft") || !strcmp(wt->cmethod, "FFT")))
 			{
@@ -1934,10 +1801,7 @@ void idwt(wt_object wt, double* dwtop)
 		exit(-1);
 	}
 
-	for (i = 0; i < wt->siglength; ++i)
-	{
-		dwtop[i] = out[i];
-	}
+	for (i = 0; i < wt->siglength; ++i) { dwtop[i] = out[i]; }
 
 
 	free(out);
@@ -1945,22 +1809,20 @@ void idwt(wt_object wt, double* dwtop)
 
 static void idwpt_per(wpt_object wt, double* cA, int len_cA, double* cD, int len_cD, double* X)
 {
-	int len_avg, i, l, m, n, t, l2;
+	int len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
+	int l2 = len_avg / 2;
+	int m = -2;
+	int n = -1;
 
-	len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
-	l2      = len_avg / 2;
-	m       = -2;
-	n       = -1;
-
-	for (i = 0; i < len_cA + l2 - 1; ++i)
+	for (int i = 0; i < len_cA + l2 - 1; ++i)
 	{
 		m += 2;
 		n += 2;
 		X[m] = 0.0;
 		X[n] = 0.0;
-		for (l = 0; l < l2; ++l)
+		for (int l = 0; l < l2; ++l)
 		{
-			t = 2 * l;
+			int t = 2 * l;
 			if ((i - l) >= 0 && (i - l) < len_cA)
 			{
 				X[m] += wt->wave->lpr[t] * cA[i - l] + wt->wave->hpr[t] * cD[i - l];
@@ -1982,22 +1844,20 @@ static void idwpt_per(wpt_object wt, double* cA, int len_cA, double* cD, int len
 
 static void idwpt_sym(wpt_object wt, double* cA, int len_cA, double* cD, int len_cD, double* X)
 {
-	int len_avg, i, l, m, n, t, v;
+	int len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
+	int m = -2;
+	int n = -1;
 
-	len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
-	m       = -2;
-	n       = -1;
-
-	for (v = 0; v < len_cA; ++v)
+	for (int v = 0; v < len_cA; ++v)
 	{
-		i = v;
+		int i = v;
 		m += 2;
 		n += 2;
 		X[m] = 0.0;
 		X[n] = 0.0;
-		for (l = 0; l < len_avg / 2; ++l)
+		for (int l = 0; l < len_avg / 2; ++l)
 		{
-			t = 2 * l;
+			int t = 2 * l;
 			if ((i - l) >= 0 && (i - l) < len_cA)
 			{
 				X[m] += wt->wave->lpr[t] * cA[i - l] + wt->wave->hpr[t] * cD[i - l];
@@ -2330,19 +2190,17 @@ void idwpt(wpt_object wt, double* dwtop)
 
 static void swt_per(wt_object wt, int M, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
-	int l, l2, isodd, i, t, len_avg, j;
+	int len_avg = M * wt->wave->lpd_len;
+	int l2 = len_avg / 2;
+	int isodd = N % 2;
 
-	len_avg = M * wt->wave->lpd_len;
-	l2      = len_avg / 2;
-	isodd   = N % 2;
-
-	for (i = 0; i < len_cA; ++i)
+	for (int i = 0; i < len_cA; ++i)
 	{
-		t     = i + l2;
+		int t = i + l2;
 		cA[i] = 0.0;
 		cD[i] = 0.0;
-		l     = -1;
-		for (j = 0; j < len_avg; j += M)
+		int l = -1;
+		for (int j = 0; j < len_avg; j += M)
 		{
 			l++;
 			while (j >= len_cA)
@@ -2388,37 +2246,32 @@ static void swt_per(wt_object wt, int M, double* inp, int N, double* cA, int len
 
 static void swt_fft(wt_object wt, double* inp)
 {
-	int i, J, temp_len, iter, M, N, len_filt;
-	int lenacc;
-	double *low_pass, *high_pass, *sig, *cA, *cD;
+	int i, iter, N;
 
-	temp_len      = wt->siglength;
-	J             = wt->J;
+	int temp_len = wt->siglength;
+	int J = wt->J;
 	wt->length[0] = wt->length[J]     = temp_len;
 	wt->outlength = wt->length[J + 1] = (J + 1) * temp_len;
-	M             = 1;
+	int M = 1;
 	for (iter = 1; iter < J; ++iter)
 	{
 		M                = 2 * M;
 		wt->length[iter] = temp_len;
 	}
 
-	len_filt = wt->wave->filtlength;
+	int len_filt = wt->wave->filtlength;
 
-	low_pass  = (double*)malloc(sizeof(double) * M * len_filt);
-	high_pass = (double*)malloc(sizeof(double) * M * len_filt);
-	sig       = (double*)malloc(sizeof(double) * (M * len_filt + temp_len + (temp_len % 2)));
-	cA        = (double*)malloc(sizeof(double) * (2 * M * len_filt + temp_len + (temp_len % 2)) - 1);
-	cD        = (double*)malloc(sizeof(double) * (2 * M * len_filt + temp_len + (temp_len % 2)) - 1);
+	double* low_pass = (double*)malloc(sizeof(double) * M * len_filt);
+	double* high_pass = (double*)malloc(sizeof(double) * M * len_filt);
+	double* sig = (double*)malloc(sizeof(double) * (M * len_filt + temp_len + (temp_len % 2)));
+	double* cA = (double*)malloc(sizeof(double) * (2 * M * len_filt + temp_len + (temp_len % 2)) - 1);
+	double* cD = (double*)malloc(sizeof(double) * (2 * M * len_filt + temp_len + (temp_len % 2)) - 1);
 
 	M = 1;
 
-	for (i = 0; i < temp_len; ++i)
-	{
-		wt->params[i] = inp[i];
-	}
+	for (i = 0; i < temp_len; ++i) { wt->params[i] = inp[i]; }
 
-	lenacc = wt->outlength;
+	int lenacc = wt->outlength;
 
 	for (iter = 0; iter < J; ++iter)
 	{
@@ -2482,16 +2335,14 @@ static void swt_fft(wt_object wt, double* inp)
 
 static void swt_direct(wt_object wt, double* inp)
 {
-	int i, J, temp_len, iter, M, N;
-	int lenacc, len_filt;
-	double *cA, *cD;
+	int i, iter, N;
 
-	temp_len      = wt->siglength;
-	J             = wt->J;
+	int temp_len = wt->siglength;
+	int J = wt->J;
 	wt->length[0] = wt->length[J]     = temp_len;
 	wt->outlength = wt->length[J + 1] = (J + 1) * temp_len;
-	len_filt      = wt->wave->filtlength;
-	M             = 1;
+	int len_filt = wt->wave->filtlength;
+	int M = 1;
 	for (iter = 1; iter < J; ++iter)
 	{
 		M                = 2 * M;
@@ -2499,17 +2350,14 @@ static void swt_direct(wt_object wt, double* inp)
 	}
 
 
-	cA = (double*)malloc(sizeof(double) * temp_len);
-	cD = (double*)malloc(sizeof(double) * temp_len);
+	double* cA = (double*)malloc(sizeof(double) * temp_len);
+	double* cD = (double*)malloc(sizeof(double) * temp_len);
 
 	M = 1;
 
-	for (i = 0; i < temp_len; ++i)
-	{
-		wt->params[i] = inp[i];
-	}
+	for (i = 0; i < temp_len; ++i) { wt->params[i] = inp[i]; }
 
-	lenacc = wt->outlength;
+	int lenacc = wt->outlength;
 
 	for (iter = 0; iter < J; ++iter)
 	{
@@ -2541,14 +2389,8 @@ static void swt_direct(wt_object wt, double* inp)
 
 void swt(wt_object wt, double* inp)
 {
-	if (!strcmp(wt->method, "swt") && !strcmp(wt->cmethod, "direct"))
-	{
-		swt_direct(wt, inp);
-	}
-	else if (!strcmp(wt->method, "swt") && (!strcmp(wt->cmethod, "fft") || !strcmp(wt->cmethod, "FFT")))
-	{
-		swt_fft(wt, inp);
-	}
+	if (!strcmp(wt->method, "swt") && !strcmp(wt->cmethod, "direct")) { swt_direct(wt, inp); }
+	else if (!strcmp(wt->method, "swt") && (!strcmp(wt->cmethod, "fft") || !strcmp(wt->cmethod, "FFT"))) { swt_fft(wt, inp); }
 	else
 	{
 		printf("SWT Only accepts two methods - direct and fft");
@@ -2558,31 +2400,30 @@ void swt(wt_object wt, double* inp)
 
 void iswt(wt_object wt, double* swtop)
 {
-	int N, lf, iter, i, J, index, value, count, len;
-	int index_shift, len0, U, N1, index2;
-	double *appx1, *det1, *appx_sig, *det_sig, *cL0, *cH0, *tempx, *oup00L, *oup00H, *oup00, *oup01, *appx2, *det2;
+	int i, index;
+	int index_shift;
 
-	N  = wt->siglength;
-	J  = wt->J;
-	U  = 2;
-	lf = wt->wave->lpr_len;
+	int N = wt->siglength;
+	int J = wt->J;
+	int U = 2;
+	int lf = wt->wave->lpr_len;
 
-	appx_sig = (double*)malloc(sizeof(double) * N);
-	det_sig  = (double*)malloc(sizeof(double) * N);
-	appx1    = (double*)malloc(sizeof(double) * N);
-	det1     = (double*)malloc(sizeof(double) * N);
-	appx2    = (double*)malloc(sizeof(double) * N);
-	det2     = (double*)malloc(sizeof(double) * N);
-	tempx    = (double*)malloc(sizeof(double) * N);
-	cL0      = (double*)malloc(sizeof(double) * (N + (N % 2) + lf));
-	cH0      = (double*)malloc(sizeof(double) * (N + (N % 2) + lf));
-	oup00L   = (double*)malloc(sizeof(double) * (N + 2 * lf));
-	oup00H   = (double*)malloc(sizeof(double) * (N + 2 * lf));
-	oup00    = (double*)malloc(sizeof(double) * N);
-	oup01    = (double*)malloc(sizeof(double) * N);
+	double* appx_sig = (double*)malloc(sizeof(double) * N);
+	double* det_sig = (double*)malloc(sizeof(double) * N);
+	double* appx1 = (double*)malloc(sizeof(double) * N);
+	double* det1 = (double*)malloc(sizeof(double) * N);
+	double* appx2 = (double*)malloc(sizeof(double) * N);
+	double* det2 = (double*)malloc(sizeof(double) * N);
+	double* tempx = (double*)malloc(sizeof(double) * N);
+	double* cL0 = (double*)malloc(sizeof(double) * (N + (N % 2) + lf));
+	double* cH0 = (double*)malloc(sizeof(double) * (N + (N % 2) + lf));
+	double* oup00L = (double*)malloc(sizeof(double) * (N + 2 * lf));
+	double* oup00H = (double*)malloc(sizeof(double) * (N + 2 * lf));
+	double* oup00 = (double*)malloc(sizeof(double) * N);
+	double* oup01 = (double*)malloc(sizeof(double) * N);
 
 
-	for (iter = 0; iter < J; ++iter)
+	for (int iter = 0; iter < J; ++iter)
 	{
 		for (i = 0; i < N; ++i)
 		{
@@ -2604,11 +2445,11 @@ void iswt(wt_object wt, double* swtop)
 			}
 		}
 
-		value = (int)pow(2.0, (double)(J - 1 - iter));
+		int value = (int)pow(2.0, (double)(J - 1 - iter));
 
-		for (count = 0; count < value; count++)
+		for (int count = 0; count < value; count++)
 		{
-			len = 0;
+			int len = 0;
 			for (index = count; index < N; index += value)
 			{
 				appx1[len] = appx_sig[index];
@@ -2618,7 +2459,7 @@ void iswt(wt_object wt, double* swtop)
 
 
 			//SHIFT 0
-			len0 = 0;
+			int len0 = 0;
 
 			for (index_shift = 0; index_shift < len; index_shift += 2)
 			{
@@ -2632,7 +2473,7 @@ void iswt(wt_object wt, double* swtop)
 			upsamp2(det2, len0, U, tempx);
 			per_ext(tempx, 2 * len0, lf / 2, cH0);
 
-			N1 = 2 * len0 + lf;
+			int N1 = 2 * len0 + lf;
 
 			if (wt->wave->lpr_len == wt->wave->hpr_len && (!strcmp(wt->cmethod, "fft") || !strcmp(wt->cmethod, "FFT")))
 			{
@@ -2684,7 +2525,7 @@ void iswt(wt_object wt, double* swtop)
 
 			circshift(oup01, 2 * len0, -1);
 
-			index2 = 0;
+			int index2 = 0;
 
 			for (index = count; index < N; index += value)
 			{
@@ -2716,13 +2557,11 @@ void iswt(wt_object wt, double* swtop)
 
 static void modwt_per(wt_object wt, int M, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
-	int l, i, t, len_avg;
-	double s;
-	double* filt;
-	len_avg = wt->wave->lpd_len;
+	int i;
+	int len_avg = wt->wave->lpd_len;
 
-	filt = (double*)malloc(sizeof(double) * 2 * len_avg);
-	s    = sqrt(2.0);
+	double* filt = (double*)malloc(sizeof(double) * 2 * len_avg);
+	double s = sqrt(2.0);
 	for (i = 0; i < len_avg; ++i)
 	{
 		filt[i]           = wt->wave->lpd[i] / s;
@@ -2731,10 +2570,10 @@ static void modwt_per(wt_object wt, int M, double* inp, int N, double* cA, int l
 
 	for (i = 0; i < len_cA; ++i)
 	{
-		t     = i;
+		int t = i;
 		cA[i] = filt[0] * inp[t];
 		cD[i] = filt[len_avg] * inp[t];
-		for (l = 1; l < len_avg; l++)
+		for (int l = 1; l < len_avg; l++)
 		{
 			t -= M;
 			while (t >= len_cA)
@@ -2755,16 +2594,14 @@ static void modwt_per(wt_object wt, int M, double* inp, int N, double* cA, int l
 
 void modwt(wt_object wt, double* inp)
 {
-	int i, J, temp_len, iter, M, N;
-	int lenacc, len_filt;
-	double *cA, *cD;
+	int i, iter, N;
 
-	temp_len      = wt->siglength;
-	J             = wt->J;
+	int temp_len = wt->siglength;
+	int J = wt->J;
 	wt->length[0] = wt->length[J]     = temp_len;
 	wt->outlength = wt->length[J + 1] = (J + 1) * temp_len;
-	len_filt      = wt->wave->filtlength;
-	M             = 1;
+	int len_filt = wt->wave->filtlength;
+	int M = 1;
 	for (iter = 1; iter < J; ++iter)
 	{
 		M                = 2 * M;
@@ -2772,17 +2609,14 @@ void modwt(wt_object wt, double* inp)
 	}
 
 
-	cA = (double*)malloc(sizeof(double) * temp_len);
-	cD = (double*)malloc(sizeof(double) * temp_len);
+	double* cA = (double*)malloc(sizeof(double) * temp_len);
+	double* cD = (double*)malloc(sizeof(double) * temp_len);
 
 	M = 1;
 
-	for (i = 0; i < temp_len; ++i)
-	{
-		wt->params[i] = inp[i];
-	}
+	for (i = 0; i < temp_len; ++i) { wt->params[i] = inp[i]; }
 
-	lenacc = wt->outlength;
+	int lenacc = wt->outlength;
 
 	for (iter = 0; iter < J; ++iter)
 	{
@@ -2813,13 +2647,11 @@ void modwt(wt_object wt, double* inp)
 
 static void imodwt_per(wt_object wt, int M, double* cA, int len_cA, double* cD, int len_cD, double* X)
 {
-	int len_avg, i, l, t;
-	double s;
-	double* filt;
-	len_avg = wt->wave->lpd_len;
+	int i;
+	int len_avg = wt->wave->lpd_len;
 
-	filt = (double*)malloc(sizeof(double) * 2 * len_avg);
-	s    = sqrt(2.0);
+	double* filt = (double*)malloc(sizeof(double) * 2 * len_avg);
+	double s = sqrt(2.0);
 	for (i = 0; i < len_avg; ++i)
 	{
 		filt[i]           = wt->wave->lpd[i] / s;
@@ -2829,9 +2661,9 @@ static void imodwt_per(wt_object wt, int M, double* cA, int len_cA, double* cD, 
 
 	for (i = 0; i < len_cA; ++i)
 	{
-		t    = i;
+		int t = i;
 		X[i] = (filt[0] * cA[t]) + (filt[len_avg] * cD[t]);
-		for (l = 1; l < len_avg; l++)
+		for (int l = 1; l < len_avg; l++)
 		{
 			t += M;
 			while (t >= len_cA)
@@ -2851,25 +2683,18 @@ static void imodwt_per(wt_object wt, int M, double* cA, int len_cA, double* cD, 
 
 void imodwt(wt_object wt, double* dwtop)
 {
-	int N, lf, iter, i, J, j, U;
-	int lenacc, M;
-	double* X;
-
-	N      = wt->siglength;
-	J      = wt->J;
-	U      = 2;
-	lf     = wt->wave->lpr_len;
-	lenacc = N;
-	M      = (int)pow(2.0, (double)J - 1.0);
+	int N = wt->siglength;
+	int J = wt->J;
+	int U = 2;
+	int lf = wt->wave->lpr_len;
+	int lenacc = N;
+	int M = (int)pow(2.0, (double)J - 1.0);
 	//M = 1;
-	X = (double*)malloc(sizeof(double) * N);
+	double* X = (double*)malloc(sizeof(double) * N);
 
-	for (i = 0; i < N; ++i)
-	{
-		dwtop[i] = wt->output[i];
-	}
+	for (int i = 0; i < N; ++i) { dwtop[i] = wt->output[i]; }
 
-	for (iter = 0; iter < J; ++iter)
+	for (int iter = 0; iter < J; ++iter)
 	{
 		if (iter > 0)
 		{
@@ -2884,7 +2709,7 @@ void imodwt(wt_object wt, double* dwtop)
 			dwtop[N - lf + 1 + j] = X[j];
 		}
 		*/
-		for (j = 0; j < N; ++j)
+		for (int j = 0; j < N; ++j)
 		{
 			dwtop[j] = X[j];
 		}
@@ -2896,14 +2721,8 @@ void imodwt(wt_object wt, double* dwtop)
 
 void setDWTExtension(wt_object wt, char* extension)
 {
-	if (!strcmp(extension, "sym"))
-	{
-		strcpy(wt->ext, "sym");
-	}
-	else if (!strcmp(extension, "per"))
-	{
-		strcpy(wt->ext, "per");
-	}
+	if (!strcmp(extension, "sym")) { strcpy(wt->ext, "sym"); }
+	else if (!strcmp(extension, "per")) { strcpy(wt->ext, "per"); }
 	else
 	{
 		printf("Signal extension can be either per or sym");
@@ -2913,14 +2732,8 @@ void setDWTExtension(wt_object wt, char* extension)
 
 void setWTREEExtension(wtree_object wt, char* extension)
 {
-	if (!strcmp(extension, "sym"))
-	{
-		strcpy(wt->ext, "sym");
-	}
-	else if (!strcmp(extension, "per"))
-	{
-		strcpy(wt->ext, "per");
-	}
+	if (!strcmp(extension, "sym")) { strcpy(wt->ext, "sym"); }
+	else if (!strcmp(extension, "per")) { strcpy(wt->ext, "per"); }
 	else
 	{
 		printf("Signal extension can be either per or sym");
@@ -2930,14 +2743,8 @@ void setWTREEExtension(wtree_object wt, char* extension)
 
 void setDWPTExtension(wpt_object wt, char* extension)
 {
-	if (!strcmp(extension, "sym"))
-	{
-		strcpy(wt->ext, "sym");
-	}
-	else if (!strcmp(extension, "per"))
-	{
-		strcpy(wt->ext, "per");
-	}
+	if (!strcmp(extension, "sym")) { strcpy(wt->ext, "sym"); }
+	else if (!strcmp(extension, "per")) { strcpy(wt->ext, "per"); }
 	else
 	{
 		printf("Signal extension can be either per or sym");
@@ -2947,10 +2754,7 @@ void setDWPTExtension(wpt_object wt, char* extension)
 
 void setDWPTEntropy(wpt_object wt, char* entropy, double eparam)
 {
-	if (!strcmp(entropy, "shannon"))
-	{
-		strcpy(wt->entropy, "shannon");
-	}
+	if (!strcmp(entropy, "shannon")) { strcpy(wt->entropy, "shannon"); }
 	else if (!strcmp(entropy, "threshold"))
 	{
 		strcpy(wt->entropy, "threshold");
@@ -2961,10 +2765,7 @@ void setDWPTEntropy(wpt_object wt, char* entropy, double eparam)
 		strcpy(wt->entropy, "norm");
 		wt->eparam = eparam;
 	}
-	else if (!strcmp(entropy, "logenergy") || !strcmp(entropy, "log energy") || !strcmp(entropy, "energy"))
-	{
-		strcpy(wt->entropy, "logenergy");
-	}
+	else if (!strcmp(entropy, "logenergy") || !strcmp(entropy, "log energy") || !strcmp(entropy, "energy")) { strcpy(wt->entropy, "logenergy"); }
 	else
 	{
 		printf("Entropy should be one of shannon, threshold, norm or logenergy");
@@ -2974,14 +2775,8 @@ void setDWPTEntropy(wpt_object wt, char* entropy, double eparam)
 
 void setWTConv(wt_object wt, char* cmethod)
 {
-	if (!strcmp(cmethod, "fft") || !strcmp(cmethod, "FFT"))
-	{
-		strcpy(wt->cmethod, "fft");
-	}
-	else if (!strcmp(cmethod, "direct"))
-	{
-		strcpy(wt->cmethod, "direct");
-	}
+	if (!strcmp(cmethod, "fft") || !strcmp(cmethod, "FFT")) { strcpy(wt->cmethod, "fft"); }
+	else if (!strcmp(cmethod, "direct")) { strcpy(wt->cmethod, "direct"); }
 	else
 	{
 		printf("Convolution Only accepts two methods - direct and fft");
@@ -2991,47 +2786,33 @@ void setWTConv(wt_object wt, char* cmethod)
 
 void wave_summary(wave_object obj)
 {
-	int i, N;
-	N = obj->filtlength;
+	int i;
+	int N = obj->filtlength;
 	printf("\n");
 	printf("Wavelet Name : %s \n", obj->wname);
 	printf("\n");
 	printf("Wavelet Filters \n\n");
 	printf("lpd : [");
-	for (i = 0; i < N - 1; ++i)
-	{
-		printf("%g,", obj->lpd[i]);
-	}
+	for (i = 0; i < N - 1; ++i) { printf("%g,", obj->lpd[i]); }
 	printf("%g", obj->lpd[N - 1]);
 	printf("] \n\n");
 	printf("hpd : [");
-	for (i = 0; i < N - 1; ++i)
-	{
-		printf("%g,", obj->hpd[i]);
-	}
+	for (i = 0; i < N - 1; ++i) { printf("%g,", obj->hpd[i]); }
 	printf("%g", obj->hpd[N - 1]);
 	printf("] \n\n");
 	printf("lpr : [");
-	for (i = 0; i < N - 1; ++i)
-	{
-		printf("%g,", obj->lpr[i]);
-	}
+	for (i = 0; i < N - 1; ++i) { printf("%g,", obj->lpr[i]); }
 	printf("%g", obj->lpr[N - 1]);
 	printf("] \n\n");
 	printf("hpr : [");
-	for (i = 0; i < N - 1; ++i)
-	{
-		printf("%g,", obj->hpr[i]);
-	}
+	for (i = 0; i < N - 1; ++i) { printf("%g,", obj->hpr[i]); }
 	printf("%g", obj->hpr[N - 1]);
 	printf("] \n\n");
 }
 
 void wt_summary(wt_object wt)
 {
-	int i;
-	int J, t;
-	J = wt->J;
+	int J = wt->J;
 	wave_summary(wt->wave);
 	printf("\n");
 	printf("Wavelet Transform : %s \n", wt->method);
@@ -3052,8 +2833,8 @@ void wt_summary(wt_object wt)
 	printf("Level %d Access : output[%d] Length : %d \n", 1, 0, wt->length[0]);
 	printf("\n");
 	printf("Detail Coefficients \n");
-	t = wt->length[0];
-	for (i = 0; i < J; ++i)
+	int t = wt->length[0];
+	for (int i = 0; i < J; ++i)
 	{
 		printf("Level %d Access : output[%d] Length : %d \n", i + 1, t, wt->length[i + 1]);
 		t += wt->length[i + 1];
@@ -3063,9 +2844,7 @@ void wt_summary(wt_object wt)
 
 void wtree_summary(wtree_object wt)
 {
-	int i, k, p2;
-	int J, t;
-	J = wt->J;
+	int J = wt->J;
 	wave_summary(wt->wave);
 	printf("\n");
 	printf("Wavelet Transform : %s \n", wt->method);
@@ -3081,11 +2860,11 @@ void wtree_summary(wtree_object wt)
 	printf("Wavelet Coefficients are contained in vector : %s \n", "output");
 	printf("\n");
 	printf("Coefficients Access \n");
-	t  = 0;
-	p2 = 2;
-	for (i = 0; i < J; ++i)
+	int t = 0;
+	int p2 = 2;
+	for (int i = 0; i < J; ++i)
 	{
-		for (k = 0; k < p2; ++k)
+		for (int k = 0; k < p2; ++k)
 		{
 			printf("Node %d %d Access : output[%d] Length : %d \n", i + 1, k, wt->nodelength[t], wt->length[J - i]);
 			t++;
@@ -3097,9 +2876,8 @@ void wtree_summary(wtree_object wt)
 
 void wpt_summary(wpt_object wt)
 {
-	int i, k, p2;
-	int J, it1, it2;
-	J = wt->J;
+	int i;
+	int J = wt->J;
 	wave_summary(wt->wave);
 	printf("\n");
 	printf("Signal Extension : %s \n", wt->ext);
@@ -3117,17 +2895,14 @@ void wpt_summary(wpt_object wt)
 	printf("Wavelet Coefficients are contained in vector : %s \n", "output");
 	printf("\n");
 	printf("Coefficients Access \n");
-	it1 = 1;
-	it2 = 0;
-	for (i = 0; i < J; ++i)
-	{
-		it1 += ipow2(i + 1);
-	}
+	int it1 = 1;
+	int it2 = 0;
+	for (i = 0; i < J; ++i) { it1 += ipow2(i + 1); }
 	for (i = J; i > 0; --i)
 	{
-		p2 = ipow2(i);
+		int p2 = ipow2(i);
 		it1 -= p2;
-		for (k = 0; k < p2; ++k)
+		for (int k = 0; k < p2; ++k)
 		{
 			if (wt->basisvector[it1 + k] == 1)
 			{

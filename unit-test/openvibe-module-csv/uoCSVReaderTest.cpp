@@ -414,10 +414,7 @@ TEST(CSV_Reader_Test_Case, covarianceMatrixReaderTooManyLabels)
 
 int uoCSVReaderTest(int argc, char* argv[])
 {
-	if (argv[1] != nullptr)
-	{
-		dataDirectory = argv[1];
-	}
+	if (argv[1] != nullptr) { dataDirectory = argv[1]; }
 	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "CSV_Reader_Test_Case.*";
 	return RUN_ALL_TESTS();

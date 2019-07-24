@@ -35,14 +35,8 @@ void CBoxSettingModifierVisitor::openChild(const char* sName, const char** sAttr
 			m_bIsParsingSettingOverride = true;
 		}
 	}
-	else if (string(sName) == string("SettingValue"))
-	{
-		m_bIsParsingSettingValue = true;
-	}
-	else
-	{
-		m_bIsParsingSettingValue = false;
-	}
+	else if (string(sName) == string("SettingValue")) { m_bIsParsingSettingValue = true; }
+	else { m_bIsParsingSettingValue = false; }
 }
 
 void CBoxSettingModifierVisitor::processChildData(const char* sData)
@@ -57,10 +51,7 @@ void CBoxSettingModifierVisitor::processChildData(const char* sData)
 void CBoxSettingModifierVisitor::closeChild()
 {
 	//We need to count it here because we need to take in account the empty value
-	if (m_bIsParsingSettingValue)
-	{
-		m_ui32SettingIndex++;
-	}
+	if (m_bIsParsingSettingValue) { m_ui32SettingIndex++; }
 	m_bIsParsingSettingValue = false;
 }
 
@@ -152,26 +143,16 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 					{
 						auto settingTypeName = rObjectVisitorContext.getTypeManager().getTypeName(settingType);
 						cleanup();
-						OV_ERROR(
-							"<" << rBox.getName() << "> The following value: [" << l_sRawSettingValue << "] expanded as [" << l_sSettingValue << "] given as setting is not a valid [" << settingTypeName << "] value.",
-							ErrorType::BadArgument,
-							false,
-							m_pObjectVisitorContext->getErrorManager(),
-							m_pObjectVisitorContext->getLogManager()
-						);
+						OV_ERROR("<" << rBox.getName() << "> The following value: [" << l_sRawSettingValue << "] expanded as [" << l_sSettingValue << "] given as setting is not a valid [" << settingTypeName << "] value.",
+								 ErrorType::BadArgument, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
 					}
 				}
 			}
 			else
 			{
 				cleanup();
-				OV_ERROR(
-					"Overrode " << m_ui32SettingIndex << " setting(s) with configuration file [" << l_sSettingOverrideFilenameFinal << "]. That does not match the box setting count " << rBox.getSettingCount(),
-					ErrorType::OutOfBound,
-					false,
-					m_pObjectVisitorContext->getErrorManager(),
-					m_pObjectVisitorContext->getLogManager()
-				);
+				OV_ERROR("Overrode " << m_ui32SettingIndex << " setting(s) with configuration file [" << l_sSettingOverrideFilenameFinal << "]. That does not match the box setting count " << rBox.getSettingCount(),
+						 ErrorType::OutOfBound, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
 			}
 		}
 		else
@@ -183,13 +164,8 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 			else
 			{
 				cleanup();
-				OV_ERROR(
-					"Could not override [" << rBox.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal << "] could not be opened",
-					ErrorType::ResourceNotFound,
-					false,
-					m_pObjectVisitorContext->getErrorManager(),
-					m_pObjectVisitorContext->getLogManager()
-				);
+				OV_ERROR("Could not override [" << rBox.getName() << "] settings because configuration file [" << l_sSettingOverrideFilenameFinal << "] could not be opened",
+						 ErrorType::ResourceNotFound, false, m_pObjectVisitorContext->getErrorManager(), m_pObjectVisitorContext->getLogManager());
 			}
 		}
 

@@ -17,10 +17,7 @@ bool CBoxAlgorithmSignalDecimation::initialize()
 	m_pStreamEncoder = NULL;
 
 	m_i64DecimationFactor = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	OV_ERROR_UNLESS_KRF(
-		m_i64DecimationFactor > 1,
-		"Invalid decimation factor [" << m_i64DecimationFactor << "] (expected value > 1)",
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_i64DecimationFactor > 1, "Invalid decimation factor [" << m_i64DecimationFactor << "] (expected value > 1)", OpenViBE::Kernel::ErrorType::BadSetting);
 
 	m_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamDecoder));
 	m_pStreamDecoder->initialize();
@@ -115,20 +112,16 @@ bool CBoxAlgorithmSignalDecimation::process()
 			m_ui32InputSampleCountPerSentBlock = op_pMatrix->getDimensionSize(1);
 			m_ui64InputSamplingFrequency       = op_ui64SamplingRate;
 
-			OV_ERROR_UNLESS_KRF(
-				m_ui64InputSamplingFrequency%m_i64DecimationFactor == 0,
-				"Failed to decimate: input sampling frequency [" << m_ui64InputSamplingFrequency << "] not multiple of decimation factor [" << m_i64DecimationFactor << "]",
-				OpenViBE::Kernel::ErrorType::BadSetting);
+			OV_ERROR_UNLESS_KRF(m_ui64InputSamplingFrequency%m_i64DecimationFactor == 0,
+								"Failed to decimate: input sampling frequency [" << m_ui64InputSamplingFrequency << "] not multiple of decimation factor [" << m_i64DecimationFactor << "]",
+								OpenViBE::Kernel::ErrorType::BadSetting);
 
 			m_ui32OutputSampleIndex             = 0;
 			m_ui32OutputSampleCountPerSentBlock = static_cast<uint32_t>(m_ui32InputSampleCountPerSentBlock / m_i64DecimationFactor);
 			m_ui32OutputSampleCountPerSentBlock = (m_ui32OutputSampleCountPerSentBlock ? m_ui32OutputSampleCountPerSentBlock : 1);
 			m_ui64OutputSamplingFrequency       = op_ui64SamplingRate / m_i64DecimationFactor;
 
-			OV_ERROR_UNLESS_KRF(
-				m_ui64OutputSamplingFrequency != 0,
-				"Failed to decimate: output sampling frequency is 0",
-				OpenViBE::Kernel::ErrorType::BadOutput);
+			OV_ERROR_UNLESS_KRF(m_ui64OutputSamplingFrequency != 0, "Failed to decimate: output sampling frequency is 0", OpenViBE::Kernel::ErrorType::BadOutput);
 
 			m_ui32ChannelCount     = op_pMatrix->getDimensionSize(0);
 			m_ui64TotalSampleCount = 0;

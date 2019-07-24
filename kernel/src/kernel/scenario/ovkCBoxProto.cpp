@@ -9,14 +9,9 @@ using namespace Kernel;
 using namespace Plugins;
 
 CBoxProto::CBoxProto(const IKernelContext& rKernelContext, IBox& rBox)
-	: TKernelObject<IBoxProto>(rKernelContext)
-	  , m_rBox(rBox) {}
+	: TKernelObject<IBoxProto>(rKernelContext), m_rBox(rBox) {}
 
-bool CBoxProto::addInput(
-	const CString& sName,
-	const CIdentifier& rTypeIdentifier,
-	const CIdentifier& oIdentifier,
-	const bool bNotify)
+bool CBoxProto::addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier, const bool bNotify)
 {
 	if (!m_rBox.addInput(sName, rTypeIdentifier, oIdentifier, bNotify)) { return false; }
 
@@ -34,12 +29,7 @@ bool CBoxProto::addInput(
 	return true;
 }
 
-bool CBoxProto::addOutput(
-
-	const CString& sName,
-	const CIdentifier& rTypeIdentifier,
-	const CIdentifier& rIdentifier,
-	const bool bNotify)
+bool CBoxProto::addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify)
 {
 	if (!m_rBox.addOutput(sName, rTypeIdentifier, rIdentifier, bNotify)) { return false; }
 
@@ -57,13 +47,7 @@ bool CBoxProto::addOutput(
 	return true;
 }
 
-bool CBoxProto::addSetting(
-	const CString& sName,
-	const CIdentifier& rTypeIdentifier,
-	const CString& sDefaultValue,
-	const bool bModifiable,
-	const CIdentifier& rIdentifier,
-	const bool bNotify)
+bool CBoxProto::addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const CIdentifier& rIdentifier, const bool bNotify)
 {
 	if (!m_rBox.addSetting(sName, rTypeIdentifier, sDefaultValue, OV_Value_UndefinedIndexUInt, bModifiable, rIdentifier, bNotify)) { return false; }
 
@@ -81,17 +65,12 @@ bool CBoxProto::addSetting(
 	return true;
 }
 /*
-uint32_t CBoxProto::addSetting(
-	const OpenViBE::CString& sName,
-	const OpenViBE::CIdentifier& rTypeIdentifier,
-	const OpenViBE::CString& sDefaultValue,
-	const bool bModifiable)
+uint32_t CBoxProto::addSetting(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& sDefaultValue, const bool bModifiable)
 {
 	addSetting(sName, rTypeIdentifier, sDefaultValue);
 	uint32_t l_ui32LastSetting = m_rBox.getSettingCount();
 	m_rBox.setSettingMod(l_ui32LastSetting, bModifiable);
 	return true;
-
 }
 /*/
 

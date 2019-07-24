@@ -47,9 +47,7 @@ namespace r8b
 	 * @param minstep The minimal allowed step.
 	 */
 
-	inline void updateScanStep(double& step, const double curg,
-							   double& prevg_log, const double prec, const double maxstep,
-							   const double minstep = 1e-11)
+	inline void updateScanStep(double& step, const double curg, double& prevg_log, const double prec, const double maxstep, const double minstep = 1e-11)
 	{
 		double curg_log = 4.34294481903251828 * log(curg + 1e-100);
 		curg_log += (prevg_log - curg_log) * 0.7;
@@ -186,9 +184,7 @@ namespace r8b
 				{
 					// Perform 2 approximate binary searches.
 
-					int k;
-
-					for (k = 0; k < 2; k++)
+					for (int k = 0; k < 2; k++)
 					{
 						double l     = (k == 0 ? premaxth : maxth);
 						double curgl = (k == 0 ? premaxg : maxg);

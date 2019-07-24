@@ -149,10 +149,7 @@ bool CAlgorithmXMLScenarioExporter::exportIdentifier(IMemoryBuffer& rMemoryBuffe
 {
 	m_pMemoryBuffer = &rMemoryBuffer;
 
-	OV_ERROR_UNLESS_KRF(
-		this->exportStart(rMemoryBuffer, rIdentifier),
-		"Exporting identifier failed",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->exportStart(rMemoryBuffer, rIdentifier), "Exporting identifier failed", OpenViBE::Kernel::ErrorType::Internal);
 
 	m_pWriter->setChildData(rValue.toString().toASCIIString());
 	this->exportStop(rMemoryBuffer);
@@ -164,10 +161,7 @@ bool CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& rMemoryBuffer, c
 {
 	m_pMemoryBuffer = &rMemoryBuffer;
 
-	OV_ERROR_UNLESS_KRF(
-		this->exportStart(rMemoryBuffer, rIdentifier),
-		"Exporting string failed",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->exportStart(rMemoryBuffer, rIdentifier), "Exporting string failed", OpenViBE::Kernel::ErrorType::Internal);
 
 	m_pWriter->setChildData(rValue.toASCIIString());
 	this->exportStop(rMemoryBuffer);
@@ -182,10 +176,7 @@ bool CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& rMemoryBuffer,
 
 	m_pMemoryBuffer = &rMemoryBuffer;
 
-	OV_ERROR_UNLESS_KRF(
-		this->exportStart(rMemoryBuffer, rIdentifier),
-		"Exporting uint failed",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->exportStart(rMemoryBuffer, rIdentifier), "Exporting uint failed", OpenViBE::Kernel::ErrorType::Internal);
 
 	m_pWriter->setChildData(l_sValue);
 	this->exportStop(rMemoryBuffer);

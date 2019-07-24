@@ -60,10 +60,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	CString l_sConfigurationFilename(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
 
-	OV_ERROR_UNLESS_KRF(
-		l_sConfigurationFilename != CString(""),
-		"Invalid empty configuration filename",
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(l_sConfigurationFilename != CString(""), "Invalid empty configuration filename", OpenViBE::Kernel::ErrorType::BadSetting);
 
 	CIdentifier l_oStrategyClassIdentifier, l_oClassifierAlgorithmClassIdentifier;
 
@@ -75,10 +72,9 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 		//That means that we want to use a classical algorithm so just let's create it
 		const CIdentifier l_oClassifierAlgorithmIdentifier = this->getAlgorithmManager().createAlgorithm(l_oClassifierAlgorithmClassIdentifier);
 
-		OV_ERROR_UNLESS_KRF(
-			l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
-			"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
-			OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier, 
+							"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmIdentifier.toString() << "]", 
+							OpenViBE::Kernel::ErrorType::BadConfig);
 
 		m_pClassifier = &this->getAlgorithmManager().getAlgorithm(l_oClassifierAlgorithmIdentifier);
 		m_pClassifier->initialize();
@@ -93,10 +89,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	int64_t l_i64PartitionCount = this->getConfigurationManager().expandAsInteger((*m_pParameter)[c_sKFoldSettingName]);
 
-	OV_ERROR_UNLESS_KRF(
-		l_i64PartitionCount >= 0,
-		"Invalid partition count [" << l_i64PartitionCount << "] (expected value >= 0)",
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(l_i64PartitionCount >= 0, "Invalid partition count [" << l_i64PartitionCount << "] (expected value >= 0)", OpenViBE::Kernel::ErrorType::BadSetting);
 
 	m_ui64PartitionCount = uint64_t(l_i64PartitionCount);
 
@@ -131,10 +124,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 		TParameterHandler<CIdentifier*> ip_oClassId(m_pClassifier->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
 		ip_oClassId = &l_oClassifierAlgorithmClassIdentifier;
 
-		OV_ERROR_UNLESS_KRF(
-			m_pClassifier->process(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture),
-			"Failed to design architecture",
-			OpenViBE::Kernel::ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_pClassifier->process(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture), "Failed to design architecture", OpenViBE::Kernel::ErrorType::Internal);
 	}
 
 	return true;
@@ -329,15 +319,11 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	// On train stimulation reception, build up the labelled feature vector set matrix and go on training
 	if (l_bTrainStimulationReceived)
 	{
-		OV_ERROR_UNLESS_KRF(
-			m_vDataset.size() >= m_ui64PartitionCount,
-			"Received fewer examples (" << static_cast<uint32_t>(m_vDataset.size()) << ") than specified partition count (" << m_ui64PartitionCount << ")",
-			OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(m_vDataset.size() >= m_ui64PartitionCount,
+							"Received fewer examples (" << static_cast<uint32_t>(m_vDataset.size()) << ") than specified partition count (" << m_ui64PartitionCount << ")",
+							OpenViBE::Kernel::ErrorType::BadInput);
 
-		OV_ERROR_UNLESS_KRF(
-			!m_vDataset.empty(),
-			"No training example received",
-			OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(!m_vDataset.empty(), "No training example received", OpenViBE::Kernel::ErrorType::BadInput);
 
 		this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << (uint32_t)m_vDataset.size() << "x"
 				<< m_vDataset[0].m_pFeatureVectorMatrix->getBufferElementCount() << "]\n";
@@ -478,13 +464,10 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rD
 }
 
 // Note that this function is incremental for oConfusionMatrix and can be called many times; so we don't clear the matrix
-double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVector>& rDataset,
-												   const std::vector<size_t>& rPermutation, const size_t uiStartIndex, const size_t uiStopIndex, CMatrix& oConfusionMatrix)
+double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, 
+												   const size_t uiStartIndex, const size_t uiStopIndex, CMatrix& oConfusionMatrix)
 {
-	OV_ERROR_UNLESS_KRF(
-		uiStopIndex != uiStartIndex,
-		"Invalid indexes: start index equals stop index",
-		OpenViBE::Kernel::ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(uiStopIndex != uiStartIndex, "Invalid indexes: start index equals stop index", OpenViBE::Kernel::ErrorType::BadArgument);
 
 	const uint32_t l_ui32FeatureVectorSize = rDataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
 
@@ -571,10 +554,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 	ss << std::fixed;
 
 	ss << "  Cls vs cls ";
-	for (uint32_t i = 0; i < l_ui32Rows; i++)
-	{
-		ss << setw(6) << (i + 1);
-	}
+	for (uint32_t i = 0; i < l_ui32Rows; i++) { ss << setw(6) << (i + 1); }
 	this->getLogManager() << LogLevel_Info << ss.str().c_str() << "\n";
 
 	ss.precision(1);

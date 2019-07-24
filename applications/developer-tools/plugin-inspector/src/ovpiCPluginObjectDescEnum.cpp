@@ -13,10 +13,7 @@ CPluginObjectDescEnum::~CPluginObjectDescEnum() {}
 // Enumerate plugins by iterating over a user defined list of descriptors, used for metaboxes
 bool CPluginObjectDescEnum::enumeratePluginObjectDesc(std::vector<const IPluginObjectDesc*>& pluginDescriptors)
 {
-	for (auto plugin : pluginDescriptors)
-	{
-		this->callback(*plugin);
-	}
+	for (auto plugin : pluginDescriptors) { this->callback(*plugin); }
 	return true;
 }
 

@@ -192,9 +192,8 @@ namespace r8b
 
 					ConvBufCapacities[1] = 0;
 					ConvCount            = UseConvCount;
-					int i;
 
-					for (i = 1; i < UseConvCount; i++)
+					for (int i = 1; i < UseConvCount; i++)
 					{
 						const double tb = (i >= 2 ? 45.0 : 34.0);
 
@@ -291,9 +290,7 @@ namespace r8b
 		{
 			int l = (Interp == NULL ? 0 : Interp->getInLenBeforeOutStart(NextInLen));
 
-			int i;
-
-			for (i = ConvCount - 1; i >= 0; i--)
+			for (int i = ConvCount - 1; i >= 0; i--)
 			{
 				l = Convs[i]->getInLenBeforeOutStart(l);
 			}
@@ -320,9 +317,7 @@ namespace r8b
 
 		virtual void clear()
 		{
-			int i;
-
-			for (i = 0; i < ConvCount; i++)
+			for (int i = 0; i < ConvCount; i++)
 			{
 				Convs[i]->clear();
 			}
@@ -373,9 +368,8 @@ namespace r8b
 
 			double* ip = ip0;
 			double* op = NULL;
-			int i;
 
-			for (i = 0; i < ConvCount; i++)
+			for (int i = 0; i < ConvCount; i++)
 			{
 				op = (ConvBufs[i & 1] == NULL ? ip0 : ConvBufs[i & 1]);
 				l  = Convs[i]->process(ip, l, op);

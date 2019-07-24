@@ -6,10 +6,7 @@ namespace OpenViBE
 {
 	class IMemoryBuffer;
 
-	namespace Plugins
-	{
-		class IBoxAlgorithmDesc;
-	}
+	namespace Plugins { class IBoxAlgorithmDesc; }
 
 	namespace Kernel
 	{

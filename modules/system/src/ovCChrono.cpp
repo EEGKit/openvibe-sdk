@@ -74,10 +74,7 @@ bool CChrono::stepIn()
 		m_ui32StepIndex     = 0;
 		m_bHasNewEstimation = true;
 	}
-	else
-	{
-		m_bHasNewEstimation = false;
-	}
+	else { m_bHasNewEstimation = false; }
 
 	return true;
 }

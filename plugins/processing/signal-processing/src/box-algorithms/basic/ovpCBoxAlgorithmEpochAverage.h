@@ -52,7 +52,7 @@ namespace OpenViBEPlugins
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				rBox.setInputType(ui32Index, l_oTypeIdentifier);
 				return true;
-			};
+			}
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};

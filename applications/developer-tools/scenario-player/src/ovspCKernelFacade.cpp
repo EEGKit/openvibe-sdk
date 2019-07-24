@@ -68,15 +68,9 @@ namespace OpenViBE
 		this->uninitialize();
 	}
 
-	PlayerReturnCode KernelFacade::initialize(const InitCommand& command)
-	{
-		return PlayerReturnCode::Success;
-	}
+	PlayerReturnCode KernelFacade::initialize(const InitCommand& command) { return PlayerReturnCode::Success; }
 
-	PlayerReturnCode KernelFacade::uninitialize()
-	{
-		return PlayerReturnCode::Success;
-	}
+	PlayerReturnCode KernelFacade::uninitialize() { return PlayerReturnCode::Success; }
 
 	PlayerReturnCode KernelFacade::loadKernel(const LoadKernelCommand& command)
 	{

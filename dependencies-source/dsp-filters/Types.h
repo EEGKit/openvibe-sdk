@@ -72,7 +72,9 @@ namespace Dsp
 		bool isMatchedPair() const
 		{
 			if (first.imag() != 0)
+			{
 				return second == std::conj(first);
+			}
 			return second.imag() == 0 &&
 				   second.real() != 0 &&
 				   first.real() != 0;

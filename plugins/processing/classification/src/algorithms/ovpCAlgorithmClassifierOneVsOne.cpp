@@ -337,10 +337,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::getClassifierConfiguration(double f
 
 XML::IXMLNode* CAlgorithmClassifierOneVsOne::getPairwiseDecisionConfiguration()
 {
-	if (!m_pDecisionStrategyAlgorithm)
-	{
-		return NULL;
-	}
+	if (!m_pDecisionStrategyAlgorithm) { return NULL; }
 
 	XML::IXMLNode* l_pTempNode = XML::createNode(c_sPairwiseDecisionName);
 

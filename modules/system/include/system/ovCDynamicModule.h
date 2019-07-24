@@ -201,7 +201,7 @@ namespace System
 		const char* getErrorDetails() const;
 
 	private:
-		void* m_Handle;
+		void* m_Handle = nullptr;
 
 #if defined TARGET_OS_Windows
 		char m_Filename[MAX_PATH];
@@ -209,8 +209,8 @@ namespace System
 		char m_Filename[PATH_MAX];
 #endif
 
-		unsigned int m_ErrorMode;
-		bool m_ShouldFreeModule;
+		unsigned int m_ErrorMode = 0;
+		bool m_ShouldFreeModule = true;
 		typedef void (*symbol_t)();
 
 		char m_ErrorDetails[1024];

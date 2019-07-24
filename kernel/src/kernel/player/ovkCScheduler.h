@@ -48,20 +48,17 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler)
 
-			CPlayer& getPlayer()
-			{
-				return m_rPlayer;
-			}
+			CPlayer& getPlayer() { return m_rPlayer; }
 
 		protected:
 
 			CPlayer& m_rPlayer;
 			CIdentifier m_oScenarioIdentifier;
-			IScenario* m_pScenario;
-			uint64_t m_ui64Steps;
-			uint64_t m_ui64Frequency;
-			uint64_t m_ui64StepDuration;
-			uint64_t m_ui64CurrentTime;
+			IScenario* m_pScenario = nullptr;
+			uint64_t m_ui64Steps = 0;
+			uint64_t m_ui64Frequency = 0;
+			uint64_t m_ui64StepDuration = 0;
+			uint64_t m_ui64CurrentTime = 0;
 
 			std::map<std::pair<int32_t, CIdentifier>, CSimulatedBox*> m_vSimulatedBox;
 			std::map<CIdentifier, System::CChrono> m_vSimulatedBoxChrono;

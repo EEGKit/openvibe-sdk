@@ -136,10 +136,7 @@ void CAcquisitionDecoder::closeChild()
 		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
 		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
 	) { }
-	else
-	{
-		CEBMLBaseDecoder::closeChild();
-	}
+	else { CEBMLBaseDecoder::closeChild(); }
 
 	m_vNodes.pop();
 }

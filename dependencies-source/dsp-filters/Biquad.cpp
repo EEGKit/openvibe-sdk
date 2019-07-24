@@ -206,10 +206,7 @@ namespace Dsp
 		applyScale(bps.gain);
 	}
 
-	void BiquadBase::setIdentity()
-	{
-		setCoefficients(1, 0, 0, 1, 0, 0);
-	}
+	void BiquadBase::setIdentity() { setCoefficients(1, 0, 0, 1, 0, 0); }
 
 	void BiquadBase::applyScale(double scale)
 	{
@@ -223,10 +220,7 @@ namespace Dsp
 	Biquad::Biquad() {}
 
 	// Construct a second order section from a pair of poles and zeroes
-	Biquad::Biquad(const BiquadPoleState& bps)
-	{
-		setPoleZeroForm(bps);
-	}
+	Biquad::Biquad(const BiquadPoleState& bps) { setPoleZeroForm(bps); }
 
 	//------------------------------------------------------------------------------
 }  // namespace Dsp

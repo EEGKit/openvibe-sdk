@@ -53,9 +53,13 @@ namespace Dsp
 		const double minValue = toNativeValue(0);
 		const double maxValue = toNativeValue(1);
 		if (nativeValue < minValue)
+		{
 			nativeValue = minValue;
+		}
 		else if (nativeValue > maxValue)
+		{
 			nativeValue = maxValue;
+		}
 		return nativeValue;
 	}
 
@@ -141,11 +145,17 @@ namespace Dsp
 		const double af = fabs(nativeValue);
 		int prec;
 		if (af < 1)
+		{
 			prec = 3;
+		}
 		else if (af < 10)
+		{
 			prec = 2;
+		}
 		else
+		{
 			prec = 1;
+		}
 		std::ostringstream os;
 		os << std::fixed << std::setprecision(prec) << nativeValue << " dB";
 		return os.str();

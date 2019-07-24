@@ -43,9 +43,6 @@ bool CAlgorithmPairingStrategy::process()
 			OV_ERROR_KRF("Designing architecture failed", OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
-	else
-	{
-		return CAlgorithmClassifier::process();
-	}
+	else { return CAlgorithmClassifier::process(); }
 	return true;
 }

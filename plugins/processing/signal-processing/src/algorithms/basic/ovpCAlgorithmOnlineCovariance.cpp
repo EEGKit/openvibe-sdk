@@ -53,23 +53,20 @@ bool CAlgorithmOnlineCovariance::process()
 
 	if (isInputTriggerActive(OVP_Algorithm_OnlineCovariance_Process_Reset))
 	{
-		OV_ERROR_UNLESS_KRF(
-			ip_f64Shrinkage >= 0.0 && ip_f64Shrinkage <= 1.0,
-			"Invalid shrinkage parameter (expected value between 0 and 1)",
-			OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(ip_f64Shrinkage >= 0.0 && ip_f64Shrinkage <= 1.0,
+							"Invalid shrinkage parameter (expected value between 0 and 1)",
+							OpenViBE::Kernel::ErrorType::BadInput);
 
-		OV_ERROR_UNLESS_KRF(
-			ip_pFeatureVectorSet->getDimensionCount() == 2,
-			"Invalid feature vector with " << ip_pFeatureVectorSet->getDimensionCount() << " dimensions (expected dim = 2)",
-			OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(ip_pFeatureVectorSet->getDimensionCount() == 2,
+							"Invalid feature vector with " << ip_pFeatureVectorSet->getDimensionCount() << " dimensions (expected dim = 2)",
+							OpenViBE::Kernel::ErrorType::BadInput);
 
 		const uint32_t l_ui32nRows = ip_pFeatureVectorSet->getDimensionSize(0);
 		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(
-			l_ui32nRows >= 1 && l_ui32nCols >= 1,
-			"Invalid input matrix [" << l_ui32nRows << "x" << l_ui32nCols << "(minimum expected = 1x1)",
-			OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(l_ui32nRows >= 1 && l_ui32nCols >= 1,
+							"Invalid input matrix [" << l_ui32nRows << "x" << l_ui32nCols << "(minimum expected = 1x1)",
+							OpenViBE::Kernel::ErrorType::BadInput);
 
 		this->getLogManager() << LogLevel_Debug << "Using shrinkage coeff " << ip_f64Shrinkage << " ...\n";
 		this->getLogManager() << LogLevel_Debug << "Trace normalization is " << (ip_bTraceNormalization ? "[on]" : "[off]") << "\n";
@@ -253,10 +250,7 @@ bool CAlgorithmOnlineCovariance::process()
 	{
 		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(
-			m_ui64Count > 0,
-			"No sample to compute covariance",
-			OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(m_ui64Count > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
 
 		// Converters to CMatrix
 		Map<MatrixXdRowMajor> l_oOutputMean(op_pMean->getBuffer(), 1, l_ui32nCols);

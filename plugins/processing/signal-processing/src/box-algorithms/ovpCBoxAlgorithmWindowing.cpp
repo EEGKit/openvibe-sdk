@@ -22,9 +22,7 @@ bool CBoxAlgorithmWindowing::initialize()
 		&& m_WindowMethod != OVP_TypeId_WindowMethod_Triangular
 		&& m_WindowMethod != OVP_TypeId_WindowMethod_SquareRoot)
 	{
-		OV_ERROR_KRF(
-			"No valid windowing method set.\n",
-			OpenViBE::Kernel::ErrorType::BadSetting);
+		OV_ERROR_KRF("No valid windowing method set.\n", OpenViBE::Kernel::ErrorType::BadSetting);
 	}
 
 	m_Decoder.initialize(*this, 0);

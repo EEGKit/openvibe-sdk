@@ -172,16 +172,10 @@ void CCSVHandler::split(const std::string& input, char delimiter, std::vector<st
 	std::string buffer;
 
 	// Loop until the last delimiter
-	while (this->streamReader(stringStream, item, delimiter, buffer))
-	{
-		output.push_back(item);
-	}
+	while (this->streamReader(stringStream, item, delimiter, buffer)) { output.push_back(item); }
 
 	// Get the part after the last delimiter
-	if (this->streamReader(stringStream, item, '\0', buffer))
-	{
-		output.push_back(item);
-	}
+	if (this->streamReader(stringStream, item, '\0', buffer)) { output.push_back(item); }
 }
 
 void CCSVHandler::setFormatType(EStreamType typeIdentifier)
@@ -580,10 +574,7 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<
 		size_t spectrumSize = m_DimensionSizes[0] * m_DimensionSizes[1];
 		matrixSize *= spectrumSize;
 	}
-	else
-	{
-		matrixSize = 0;
-	}
+	else { matrixSize = 0; }
 
 	SMatrixChunk chunk(0, 0, std::vector<double>(matrixSize), 0);
 
@@ -656,10 +647,7 @@ bool CCSVHandler::writeHeaderToFile()
 	if (header.empty()) { return false; }
 
 	m_IsFirstLineWritten = true;
-	try
-	{
-		m_Fs << header;
-	}
+	try { m_Fs << header; }
 	catch (std::ios_base::failure& fail)
 	{
 		m_LastStringError = "Error occured while writing: ";
@@ -685,10 +673,7 @@ bool CCSVHandler::writeDataToFile()
 	// set matrix (in case of error, logError set in the function)
 	if (!this->createCSVStringFromData(false, csv)) { return false; }
 
-	try
-	{
-		m_Fs << csv;
-	}
+	try { m_Fs << csv; }
 	catch (std::ios_base::failure& fail)
 	{
 		m_LastStringError = "Error occured while writing: ";
@@ -707,10 +692,7 @@ bool CCSVHandler::writeAllDataToFile()
 	// in case of error, logError set in the function
 	if (!createCSVStringFromData(true, csv)) { return false; }
 
-	try
-	{
-		m_Fs << csv;
-	}
+	try { m_Fs << csv; }
 	catch (std::ios_base::failure& fail)
 	{
 		m_LastStringError = "Error occured while writing: ";
@@ -736,10 +718,7 @@ bool CCSVHandler::closeFile()
 	m_IsFirstLineWritten = false;
 	m_IsSetInfoCalled    = false;
 
-	try
-	{
-		m_Fs.close();
-	}
+	try { m_Fs.close(); }
 	catch (const std::ios_base::failure& fail)
 	{
 		m_LastStringError = "Error while closing file: ";
@@ -1162,10 +1141,9 @@ bool CCSVHandler::createCSVStringFromData(bool canWriteAll, std::string& csv)
 	// loop will add a line to the buffer while the last stimulation date registered is greater than the end of the current chunk or until their is an event
 	uint64_t linesWritten = 0;
 
-	while (!m_Chunks.empty() && (
-			   canWriteAll
-			   || (m_Stimulations.empty() && m_Chunks.front().endTime <= m_NoEventSince)
-			   || (!m_Stimulations.empty() && m_Chunks.front().startTime <= m_Stimulations.back().stimulationDate))
+	while (!m_Chunks.empty() && (canWriteAll
+			   					|| (m_Stimulations.empty() && m_Chunks.front().endTime <= m_NoEventSince)
+			   					|| (!m_Stimulations.empty() && m_Chunks.front().startTime <= m_Stimulations.back().stimulationDate))
 	)
 	{
 		// Signal data must be written as sampleCounterPerBuffer th lines;

@@ -32,10 +32,7 @@
 
 namespace Socket
 {
-	static bool FD_ISSET_PROXY(int fd, fd_set* set)
-	{
-		return FD_ISSET(fd, set) ? true : false;
-	}
+	static bool FD_ISSET_PROXY(int fd, fd_set* set) { return FD_ISSET(fd, set) ? true : false; }
 
 	template <class T>
 	class TConnection : public T
@@ -108,8 +105,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual bool isReadyToSend(
-			uint32_t ui32TimeOut = 0) const
+		virtual bool isReadyToSend(uint32_t ui32TimeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
 
@@ -126,8 +122,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual bool isReadyToReceive(
-			uint32_t ui32TimeOut = 0) const
+		virtual bool isReadyToReceive(uint32_t ui32TimeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
 
@@ -144,9 +139,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual uint32_t sendBuffer(
-			const void* pBuffer,
-			const uint32_t ui32BufferSize)
+		virtual uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			if (!isConnected()) { return 0; }
 #if 0
@@ -161,9 +154,7 @@ namespace Socket
 			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
 		}
 
-		virtual uint32_t receiveBuffer(
-			void* pBuffer,
-			const uint32_t ui32BufferSize)
+		virtual uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			if (!isConnected() || !ui32BufferSize) { return 0; }
 #if 0
@@ -178,9 +169,7 @@ namespace Socket
 			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
 		}
 
-		virtual bool sendBufferBlocking(
-			const void* pBuffer,
-			const uint32_t ui32BufferSize)
+		virtual bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			uint32_t l_ui32LeftBytes = ui32BufferSize;
 			const char* l_pBuffer    = static_cast<const char*>(pBuffer);
@@ -192,9 +181,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual bool receiveBufferBlocking(
-			void* pBuffer,
-			const uint32_t ui32BufferSize)
+		virtual bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			uint32_t l_ui32LeftBytes = ui32BufferSize;
 			char* l_pBuffer          = static_cast<char*>(pBuffer);

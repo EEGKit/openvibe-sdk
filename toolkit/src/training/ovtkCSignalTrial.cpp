@@ -140,10 +140,7 @@ double* CSignalTrial::getChannelSampleBuffer(const uint32_t ui32ChannelIndex) co
 {
 	map<uint32_t, double*>::const_iterator itChannelSample;
 	itChannelSample = m_vChannelSample.find(ui32ChannelIndex);
-	if (itChannelSample != m_vChannelSample.end())
-	{
-		return itChannelSample->second;
-	}
+	if (itChannelSample != m_vChannelSample.end()) { return itChannelSample->second; }
 	return NULL;
 }
 

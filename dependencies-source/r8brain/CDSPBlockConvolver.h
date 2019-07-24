@@ -474,9 +474,8 @@ namespace r8b
 				while (l > 0)
 				{
 					op[0] = *ip;
-					int j;
 
-					for (j = 1; j < UpFactor; j++)
+					for (int j = 1; j < UpFactor; j++)
 					{
 						op[j] = 0.0;
 					}

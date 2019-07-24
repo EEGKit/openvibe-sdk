@@ -44,7 +44,9 @@ namespace Dsp
 	complex_t LowPassTransform::transform(complex_t c)
 	{
 		if (c == infinity())
+		{
 			return complex_t(-1, 0);
+		}
 
 		// frequency transform
 		c = f * c; 
@@ -87,7 +89,9 @@ namespace Dsp
 	complex_t HighPassTransform::transform(complex_t c)
 	{
 		if (c == infinity())
+		{
 			return complex_t(1, 0);
+		}
 
 		// frequency transform
 		c = f * c; 
@@ -157,9 +161,13 @@ namespace Dsp
 
 		// what is this crap?
 		if (wc2 < 1e-8)
+		{
 			wc2 = 1e-8;
+		}
 		if (wc > doublePi - 1e-8)
+		{
 			wc = doublePi - 1e-8;
+		}
 
 		a = cos((wc + wc2) * 0.5) /
 			cos((wc - wc2) * 0.5);
@@ -207,7 +215,9 @@ namespace Dsp
 	ComplexPair BandPassTransform::transform(complex_t c)
 	{
 		if (c == infinity())
+		{
 			return ComplexPair(-1, 1);
+		}
 
 		c = (1. + c) / (1. - c); // bilinear
 
@@ -247,9 +257,13 @@ namespace Dsp
 
 		// this is crap
 		if (wc2 < 1e-8)
+		{
 			wc2 = 1e-8;
+		}
 		if (wc > doublePi - 1e-8)
+		{
 			wc = doublePi - 1e-8;
+		}
 
 		a = cos((wc + wc2) * .5) /
 			cos((wc - wc2) * .5);
@@ -270,7 +284,9 @@ namespace Dsp
 			//
 			// trick to get the conjugate
 			if (z.second == z.first)
+			{
 				z.second = std::conj(z.first);
+			}
 
 			digital.addPoleZeroConjugatePairs(p.first, z.first);
 			digital.addPoleZeroConjugatePairs(p.second, z.second);
@@ -285,19 +301,21 @@ namespace Dsp
 		}
 
 		if (fc < 0.25)
+		{
 			digital.setNormal(doublePi, analog.getNormalGain());
+		}
 		else
+		{
 			digital.setNormal(0, analog.getNormalGain());
+		}
 	}
 
 	ComplexPair BandStopTransform::transform(complex_t c)
 	{
-		if (c == infinity())
-			c = -1;
-		else
-			c = (1. + c) / (1. - c); // bilinear
+		if (c == infinity()) { c = -1; }
+		else { c = (1. + c) / (1. - c); }// bilinear 
 
-		complex_t u(0);
+			complex_t u(0);
 		u = addmul(u, 4 * (b2 + a2 - 1), c);
 		u += 8 * (b2 - a2 + 1);
 		u *= c;

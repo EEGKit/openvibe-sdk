@@ -351,14 +351,7 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-			m_pFile = ::CreateFile(
-				sURL,
-				GENERIC_READ | GENERIC_WRITE,
-				0,
-				0,
-				OPEN_EXISTING,
-				FILE_ATTRIBUTE_NORMAL,
-				0);
+			m_pFile = ::CreateFile(sURL, GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
 			if (m_pFile == INVALID_HANDLE_VALUE || m_pFile == NULL)
 			{
@@ -484,17 +477,15 @@ namespace Socket
 #if defined TARGET_OS_Windows
 			LPTSTR l_sErrorText;
 			DWORD l_ui64Error = GetLastError();
-			FormatMessage(
-				FORMAT_MESSAGE_FROM_SYSTEM |                  // use system message tables to retrieve error text
-				FORMAT_MESSAGE_ALLOCATE_BUFFER |              // allocate buffer on local heap for error text
-				FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
-				NULL,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
-				l_ui64Error,
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-				(LPTSTR)&l_sErrorText,                       // output
-				0,                                           // minimum size for output buffer
-				NULL
-			);                                           // arguments - see note
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |                  // use system message tables to retrieve error text
+						  FORMAT_MESSAGE_ALLOCATE_BUFFER |              // allocate buffer on local heap for error text
+						  FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
+						  NULL,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
+						  l_ui64Error,
+						  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+						  (LPTSTR)&l_sErrorText,                       // output
+						  0,                                           // minimum size for output buffer
+						  NULL);                                       // arguments - see note
 			return l_sErrorText;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return ""; // TODO
@@ -520,8 +511,5 @@ namespace Socket
 #endif
 	};
 
-	IConnectionSerial* createConnectionSerial()
-	{
-		return new CConnectionSerial();
-	}
+	IConnectionSerial* createConnectionSerial() { return new CConnectionSerial(); }
 };

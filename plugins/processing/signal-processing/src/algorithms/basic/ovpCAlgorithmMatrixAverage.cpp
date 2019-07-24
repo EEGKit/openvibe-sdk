@@ -27,8 +27,7 @@ bool CAlgorithmMatrixAverage::initialize()
 
 bool CAlgorithmMatrixAverage::uninitialize()
 {
-	std::deque<IMatrix*>::iterator it;
-	for (it = m_vHistory.begin(); it != m_vHistory.end(); ++it)
+	for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it)
 	{
 		delete *it;
 	}
@@ -54,9 +53,7 @@ bool CAlgorithmMatrixAverage::process()
 
 	if (this->isInputTriggerActive(OVP_Algorithm_MatrixAverage_InputTriggerId_Reset))
 	{
-		std::deque<IMatrix*>::iterator it;
-
-		for (it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete* it; }
+		for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete* it; }
 
 		m_vHistory.clear();
 
@@ -111,8 +108,7 @@ bool CAlgorithmMatrixAverage::process()
 
 			if (m_vHistory.size() >= ip_ui64MatrixCount)
 			{
-				std::deque<IMatrix*>::iterator it;
-				for (it = m_vHistory.begin(); it != m_vHistory.end(); ++it)
+				for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it)
 				{
 					delete *it;
 				}

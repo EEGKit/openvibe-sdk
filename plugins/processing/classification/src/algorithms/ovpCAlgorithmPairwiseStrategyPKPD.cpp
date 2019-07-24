@@ -41,10 +41,7 @@ bool CAlgorithmPairwiseStrategyPKPD::parameterize()
 
 bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* pProbabilityVector)
 {
-	OV_ERROR_UNLESS_KRF(
-		m_ui32ClassCount >= 2,
-		"Pairwise decision PKPD algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
-		OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision PKPD algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found", OpenViBE::Kernel::ErrorType::BadInput);
 
 	double* l_pProbabilityMatrix = new double[m_ui32ClassCount * m_ui32ClassCount];
 
@@ -90,16 +87,10 @@ bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& p
 		l_pProbVectorSum += l_pProbVector[l_ui32ClassIndex];
 	}
 
-	for (uint32_t i = 0; i < m_ui32ClassCount; ++i)
-	{
-		l_pProbVector[i] /= l_pProbVectorSum;
-	}
+	for (uint32_t i = 0; i < m_ui32ClassCount; ++i) { l_pProbVector[i] /= l_pProbVectorSum; }
 
 #if PKPD_DEBUG
-	for(uint32_t i = 0; i<m_ui32ClassCount ; ++i)
-	{
-		std::cout << l_pProbVector[i] << " ";
-	}
+	for(uint32_t i = 0; i<m_ui32ClassCount ; ++i) { std::cout << l_pProbVector[i] << " "; }
 	std::cout << std::endl;
 #endif
 

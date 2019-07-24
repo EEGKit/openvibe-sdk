@@ -14,11 +14,11 @@ namespace
 {
 	uint32_t _find_channel_(const IMatrix& rMatrix, const CString& rChannel, const CIdentifier& rMatchMethodIdentifier, uint32_t uiStart = 0)
 	{
-		uint32_t i, l_ui32Result = std::numeric_limits<uint32_t>::max();
+		uint32_t l_ui32Result = std::numeric_limits<uint32_t>::max();
 
 		if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Name)
 		{
-			for (i = uiStart; i < rMatrix.getDimensionSize(0); i++)
+			for (uint32_t i = uiStart; i < rMatrix.getDimensionSize(0); i++)
 			{
 				if (OpenViBEToolkit::Tools::String::isAlmostEqual(rMatrix.getDimensionLabel(0, i), rChannel, false))
 				{
@@ -80,9 +80,9 @@ bool CBoxAlgorithmReferenceChannel::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
-	uint32_t i, j, k;
+	uint32_t j, k;
 
-	for (i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		m_oDecoder.decode(i);
 		if (m_oDecoder.isHeaderReceived())
@@ -90,10 +90,9 @@ bool CBoxAlgorithmReferenceChannel::process()
 			IMatrix& l_rInputMatrix  = *m_oDecoder.getOutputMatrix();
 			IMatrix& l_rOutputMatrix = *m_oEncoder.getInputMatrix();
 
-			OV_ERROR_UNLESS_KRF(
-				l_rInputMatrix.getDimensionSize(0) >= 2,
-				"Invalid input matrix with [" << l_rInputMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
-				OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(l_rInputMatrix.getDimensionSize(0) >= 2,
+								"Invalid input matrix with [" << l_rInputMatrix.getDimensionSize(0) << "] channels (expected channels >= 2)",
+								OpenViBE::Kernel::ErrorType::BadInput);
 
 			CString l_sChannel         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 			uint64_t l_ui64MatchMethod = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);

@@ -75,10 +75,10 @@ bool CBoxAlgorithmCommonAverageReference::process()
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			uint32_t i, j;
+			uint32_t j;
 			uint32_t l_ui32ChannelCount = m_oMatrix.getDimensionSize(0);
 			uint32_t l_ui32SampleCount  = m_oMatrix.getDimensionSize(1);
-			for (i = 0; i < l_ui32SampleCount; i++)
+			for (uint32_t i = 0; i < l_ui32SampleCount; i++)
 			{
 				double* l_pBufferBase = m_oMatrix.getBuffer() + i;
 				double l_f64Sum       = 0;

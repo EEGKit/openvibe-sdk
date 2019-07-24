@@ -104,10 +104,14 @@ namespace Dsp
 		void setPoleZeroPair(const PoleZeroPair& pair)
 		{
 			if (pair.isSinglePole())
+			{
 				setOnePole(pair.poles.first, pair.zeros.first);
+			}
 			else
+			{
 				setTwoPole(pair.poles.first, pair.zeros.first,
 						   pair.poles.second, pair.zeros.second);
+			}
 		}
 
 		void setPoleZeroForm(const BiquadPoleState& bps);

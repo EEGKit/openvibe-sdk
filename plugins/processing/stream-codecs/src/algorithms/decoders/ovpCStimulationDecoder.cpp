@@ -102,10 +102,7 @@ void CStimulationDecoder::closeChild()
 	{
 		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation) { m_ui64StimulationIndex++; }
 	}
-	else
-	{
-		CEBMLBaseDecoder::closeChild();
-	}
+	else { CEBMLBaseDecoder::closeChild(); }
 
 	m_vNodes.pop();
 }

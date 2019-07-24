@@ -592,10 +592,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 
 #endif
 
-	for (size_t i = 0; i < argv.size() - 1; ++i)
-	{
-		delete[] argv[i];
-	}
+	for (size_t i = 0; i < argv.size() - 1; ++i) { delete[] argv[i]; }
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	if (status != 0)

@@ -233,12 +233,10 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				{
 					l_pOutputMatrix->setDimensionLabel(0, l_ui32ChannelIndex, l_pInputMatrix->getDimensionLabel(0, l_ui32ChannelIndex));
 				}
-				// equivalence between wavelet scale and Fourier frequency, last column of Table 1 (m_oWaveletTransform->period accessible only after applying cwt function)
-				double l_dScaleValue;
 				double l_dFrequencyValue = -1;
 				for (int l_iScaleIndex = 0; l_iScaleIndex < m_iScaleCount_J; ++l_iScaleIndex)
 				{
-					l_dScaleValue     = m_oWaveletTransform->scale[l_iScaleIndex];
+					double l_dScaleValue = m_oWaveletTransform->scale[l_iScaleIndex];
 					l_dFrequencyValue = SigProSTD::wavelet_scale2freq(const_cast<char *>(m_pWaveletType), m_dWaveletParameter, l_dScaleValue);
 
 					std::string l_sFrequencyString = std::to_string(l_dFrequencyValue);

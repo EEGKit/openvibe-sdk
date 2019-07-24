@@ -101,13 +101,16 @@ namespace OpenViBEPlugins
 			{
 				if (m_bHasUserSetName)
 				{
-					OpenViBE::CString l_sRename;
-					l_sRename = rBox.getName();
-					if (l_sRename == OpenViBE::CString("Channel Selector"))//default name, we switch back to default behaviour
+					OpenViBE::CString l_sRename = rBox.getName();
+					if (l_sRename == OpenViBE::CString("Channel Selector"))
+					{//default name, we switch back to default behaviour
 						m_bHasUserSetName = false;
+					}
 				}
 				else
+				{
 					m_bHasUserSetName = true;
+				}
 				return true;
 			}
 

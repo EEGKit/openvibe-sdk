@@ -197,10 +197,7 @@ namespace OpenViBE
 		m_CommandList.clear();
 	}
 
-	std::vector<std::shared_ptr<ICommand>> CommandFileParser::getCommandList() const
-	{
-		return m_CommandList;
-	}
+	std::vector<std::shared_ptr<ICommand>> CommandFileParser::getCommandList() const { return m_CommandList; }
 
 	PlayerReturnCode CommandFileParser::parse()
 	{

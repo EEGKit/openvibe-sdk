@@ -624,10 +624,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterWrongMatrixSize)
 
 int uoCSVWriterTest(int argc, char* argv[])
 {
-	if (argv[1] != nullptr)
-	{
-		directoryPath = argv[1];
-	}
+	if (argv[1] != nullptr) { directoryPath = argv[1]; }
 	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "CSV_Writer_Test_Case.*";
 	return RUN_ALL_TESTS();

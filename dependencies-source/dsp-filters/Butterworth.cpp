@@ -63,7 +63,9 @@ namespace Dsp
 				}
 
 				if (numPoles & 1)
+				{
 					add(-1, infinity());
+				}
 			}
 		}
 
@@ -98,7 +100,9 @@ namespace Dsp
 				}
 
 				if (numPoles & 1)
+				{
 					add(gp, gz);
+				}
 			}
 		}
 

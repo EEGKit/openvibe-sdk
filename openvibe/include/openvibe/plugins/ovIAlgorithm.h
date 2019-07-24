@@ -4,10 +4,7 @@
 
 namespace OpenViBE
 {
-	namespace Kernel
-	{
-		class IAlgorithmContext;
-	}
+	namespace Kernel { class IAlgorithmContext; }
 
 	namespace Plugins
 	{

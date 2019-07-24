@@ -54,15 +54,9 @@ public:
 
 	ParseToken(string text, Type type) : text(text), type(type) { }
 
-	const string& getText() const
-	{
-		return text;
-	}
+	const string& getText() const { return text; }
 
-	Type getType() const
-	{
-		return type;
-	}
+	Type getType() const { return type; }
 
 private:
 	string text;

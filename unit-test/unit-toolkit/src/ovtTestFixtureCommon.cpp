@@ -33,10 +33,7 @@ namespace OpenViBETest
 
 	KernelFixture::KernelFixture(const std::string& configFile) : m_ConfigurationFile(configFile) { }
 
-	void KernelFixture::setConfigurationFile(const std::string& configFile)
-	{
-		m_ConfigurationFile = configFile;
-	}
+	void KernelFixture::setConfigurationFile(const std::string& configFile) { m_ConfigurationFile = configFile; }
 
 	void KernelFixture::setUp()
 	{

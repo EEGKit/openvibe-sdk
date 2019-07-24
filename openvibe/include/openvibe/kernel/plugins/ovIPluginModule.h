@@ -4,10 +4,7 @@
 
 namespace OpenViBE
 {
-	namespace Plugins
-	{
-		class IPluginObjectDesc;
-	}
+	namespace Plugins { class IPluginObjectDesc; }
 
 	namespace Kernel
 	{

@@ -36,10 +36,7 @@ class CWriterCallBack : public XML::IWriterCallBack
 {
 public:
 
-	CWriterCallBack(const char* filename)
-	{
-		m_File = FS::Files::open(filename, "wb");
-	}
+	CWriterCallBack(const char* filename) { m_File = FS::Files::open(filename, "wb"); }
 
 	virtual ~CWriterCallBack()
 	{

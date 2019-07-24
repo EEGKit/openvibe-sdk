@@ -41,10 +41,7 @@ public:
 		return true;
 	}
 
-	void release()
-	{
-		files.clear();
-	}
+	void release() { files.clear(); }
 
 	std::vector<std::string> files;
 };

@@ -61,10 +61,7 @@ bool __littleEndianToHost(const uint8_t* pBuffer, T* pValue)
 	if (!pBuffer) return false;
 	if (!pValue) return false;
 	memset(pValue, 0, sizeof(T));
-	for (unsigned int i = 0; i < sizeof(T); i++)
-	{
-		((uint8_t*)pValue)[i] = pBuffer[i];
-	}
+	for (unsigned int i = 0; i < sizeof(T); i++) { ((uint8_t*)pValue)[i] = pBuffer[i]; }
 	return true;
 }
 

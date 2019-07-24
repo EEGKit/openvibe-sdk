@@ -52,7 +52,7 @@ namespace r8b
 
 	class CDSPFIRFilter : public R8B_BASECLASS
 	{
-	R8BNOCTOR(CDSPFIRFilter);
+	R8BNOCTOR(CDSPFIRFilter)
 
 		friend class CDSPFIRFilterCache;
 
@@ -172,7 +172,6 @@ namespace r8b
 		void buildLPFilter(const double* const ExtAttenCorrs)
 		{
 			const double tb = ReqTransBand * 0.01;
-			double pwr;
 			double fo1;
 			double hl;
 			double atten = -ReqAtten;
@@ -288,8 +287,8 @@ namespace r8b
 				atten -= AttenCorrs[AttenCorr] / AttenCorrScale;
 			}
 
-			pwr = 7.43932822146293e-8 * sqr(atten) + 0.000102747434588003 * cos(0.00785021930010397 * atten) * cos(0.633854318781239 + 0.103208573657699 * atten)
-				  - 0.00798132247867036 - 0.000903555213543865 * atten - 0.0969365532127236 * exp(0.0779275237937911 * atten) - 1.37304948662012e-5 * atten * cos(0.00785021930010397 * atten);
+			double pwr = 7.43932822146293e-8 * sqr(atten) + 0.000102747434588003 * cos(0.00785021930010397 * atten) * cos(0.633854318781239 + 0.103208573657699 * atten)
+						 - 0.00798132247867036 - 0.000903555213543865 * atten - 0.0969365532127236 * exp(0.0779275237937911 * atten) - 1.37304948662012e-5 * atten * cos(0.00785021930010397 * atten);
 
 			if (pwr <= 0.067665322581)
 			{

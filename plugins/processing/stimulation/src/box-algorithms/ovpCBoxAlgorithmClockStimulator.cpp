@@ -8,22 +8,18 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace Stimulation;
 
-uint64_t CBoxAlgorithmClockStimulator::getClockFrequency()
-{
-	return (1LL << 32) * 32;
-}
+uint64_t CBoxAlgorithmClockStimulator::getClockFrequency() { return (1LL << 32) * 32; }
 
 bool CBoxAlgorithmClockStimulator::initialize()
 {
-	double l_f64InterstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	double interstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-	const double l_f64MinInterstimulationInterval = 0.0001;
-	OV_ERROR_UNLESS_KRF(
-		!(l_f64InterstimulationInterval < l_f64MinInterstimulationInterval),
-		"Invalid stimulation interval [" << l_f64InterstimulationInterval << "] (expected value > " << l_f64MinInterstimulationInterval << ")",
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	const double minInterstimulationInterval = 0.0001;
+	OV_ERROR_UNLESS_KRF(!(interstimulationInterval < minInterstimulationInterval), 
+						"Invalid stimulation interval [" << interstimulationInterval << "] (expected value > " << minInterstimulationInterval << ")", 
+						OpenViBE::Kernel::ErrorType::BadSetting);
 
-	m_StimulationInterval  = l_f64InterstimulationInterval;
+	m_StimulationInterval  = interstimulationInterval;
 	m_SentStimulationCount = 0;
 
 	m_ui64StimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
@@ -39,7 +35,6 @@ bool CBoxAlgorithmClockStimulator::initialize()
 bool CBoxAlgorithmClockStimulator::uninitialize()
 {
 	m_oStimulationEncoder.uninitialize();
-
 	return true;
 }
 

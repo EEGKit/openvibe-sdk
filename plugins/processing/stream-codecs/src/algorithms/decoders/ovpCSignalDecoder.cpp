@@ -76,10 +76,7 @@ void CSignalDecoder::closeChild()
 
 	if ((l_rTop == OVTK_NodeId_Header_Signal)
 		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate)) { }
-	else
-	{
-		CStreamedMatrixDecoder::closeChild();
-	}
+	else { CStreamedMatrixDecoder::closeChild(); }
 
 	m_vNodes.pop();
 }

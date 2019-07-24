@@ -13,8 +13,8 @@ fft_object fft_init(int N, int sgn)
 	fft_object obj = NULL;
 	// Change N/2 to N-1 for longvector case
 
-	int twi_len, ct, out;
-	out = dividebyN(N);
+	int twi_len;
+	int out = dividebyN(N);
 
 	if (out == 1)
 	{
@@ -26,8 +26,8 @@ fft_object fft_init(int N, int sgn)
 	}
 	else
 	{
-		int K, M;
-		K = (int)pow(2.0, ceil(log10(N) / log10(2.0)));
+		int M;
+		int K = (int)pow(2.0, ceil(log10(N) / log10(2.0)));
 
 		if (K < 2 * N - 2)
 		{
@@ -50,7 +50,7 @@ fft_object fft_init(int N, int sgn)
 
 	if (sgn == -1)
 	{
-		for (ct = 0; ct < twi_len; ct++)
+		for (int ct = 0; ct < twi_len; ct++)
 		{
 			(obj->twiddle + ct)->im = - (obj->twiddle + ct)->im;
 		}
@@ -1458,7 +1458,9 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 					//int ind2 = (u+v)%M;
 					t = (u + 1) * (v + 1);
 					while (t >= radix)
+					{
 						t -= radix;
+					}
 					tt = t - 1;
 
 					temp1r += c1[tt] * taur[v];
@@ -1490,16 +1492,15 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 
 static void bluestein_exp(fft_data* hl, fft_data* hlt, int len, int M)
 {
-	fft_type PI, theta, angle;
-	int l2, len2, i;
-	PI    = 3.1415926535897932384626433832795;
-	theta = PI / len;
-	l2    = 0;
-	len2  = 2 * len;
+	int i;
+	fft_type PI = 3.1415926535897932384626433832795;
+	fft_type theta = PI / len;
+	int l2 = 0;
+	int len2 = 2 * len;
 
 	for (i = 0; i < len; ++i)
 	{
-		angle     = theta * l2;
+		fft_type angle = theta * l2;
 		hlt[i].re = cos(angle);
 		hlt[i].im = sin(angle);
 		hl[i].re  = hlt[i].re;
@@ -1526,39 +1527,27 @@ static void bluestein_exp(fft_data* hl, fft_data* hlt, int len, int M)
 
 static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn, int N)
 {
-	int K, M, ii, i;
-	int def_lt, def_N, def_sgn;
-	fft_type scale, temp;
-	fft_data* yn;
-	fft_data* hk;
-	fft_data* tempop;
-	fft_data* yno;
-	fft_data* hlt;
+	int M, ii, i;
+	fft_type temp;
 	obj->lt = 0;
-	K       = (int)pow(2.0, ceil((double)log10((double)N) / log10((double)2.0)));
-	def_lt  = 1;
-	def_sgn = obj->sgn;
-	def_N   = obj->N;
+	int K = (int)pow(2.0, ceil((double)log10((double)N) / log10((double)2.0)));
+	int def_lt = 1;
+	int def_sgn = obj->sgn;
+	int def_N = obj->N;
 
-	if (K < 2 * N - 2)
-	{
-		M = K * 2;
-	}
-	else
-	{
-		M = K;
-	}
+	if (K < 2 * N - 2) { M = K * 2; }
+	else { M = K; }
 	obj->N = M;
 
-	yn     = (fft_data*)malloc(sizeof(fft_data) * M);
-	hk     = (fft_data*)malloc(sizeof(fft_data) * M);
-	tempop = (fft_data*)malloc(sizeof(fft_data) * M);
-	yno    = (fft_data*)malloc(sizeof(fft_data) * M);
-	hlt    = (fft_data*)malloc(sizeof(fft_data) * N);
+	fft_data* yn = (fft_data*)malloc(sizeof(fft_data) * M);
+	fft_data* hk = (fft_data*)malloc(sizeof(fft_data) * M);
+	fft_data* tempop = (fft_data*)malloc(sizeof(fft_data) * M);
+	fft_data* yno = (fft_data*)malloc(sizeof(fft_data) * M);
+	fft_data* hlt = (fft_data*)malloc(sizeof(fft_data) * N);
 	//fft_data* twi = (fft_data*) malloc (sizeof(fft_data) * M);
 
 	bluestein_exp(tempop, hlt, N, M);
-	scale = 1.0 / M;
+	fft_type scale = 1.0 / M;
 
 	for (ii = 0; ii < M; ++ii)
 	{
@@ -1661,117 +1650,55 @@ void fft_exec(fft_object obj, fft_data* inp, fft_data* oup)
 {
 	if (obj->lt == 0)
 	{
-		//fftct_radix3_dit_rec(inp,oup,obj, obj->sgn, obj->N);
-		//fftct_mixed_rec(inp,oup,obj, obj->sgn, obj->N);
-		//printf("%f \n", 1.785);
-		int l, inc;
-		int nn, sgn1;
-		nn   = obj->N;
-		sgn1 = obj->sgn;
-		l    = 1;
-		inc  = 0;
+		int nn = obj->N;
+		int sgn1 = obj->sgn;
+		int l = 1;
+		int inc = 0;
 		//radix3_dit_rec(oup,inp,obj,sgn1,nn,l);
 		mixed_radix_dit_rec(oup, inp, obj, sgn1, nn, l, inc);
 	}
 	else if (obj->lt == 1)
 	{
-		//printf("%f \n", 1.785);
-		int nn, sgn1;
-		nn   = obj->N;
-		sgn1 = obj->sgn;
+		int nn = obj->N;
+		int sgn1 = obj->sgn;
 		bluestein_fft(inp, oup, obj, sgn1, nn);
 	}
 }
 
 int divideby(int M, int d)
 {
-	while (M % d == 0)
-	{
-		M = M / d;
-	}
+	while (M % d == 0) { M = M / d; }
 	if (M == 1) { return 1; }
 	return 0;
 }
 
 int dividebyN(int N)
 {
-	while (N % 53 == 0)
-	{
-		N = N / 53;
-	}
-	while (N % 47 == 0)
-	{
-		N = N / 47;
-	}
-	while (N % 43 == 0)
-	{
-		N = N / 43;
-	}
-	while (N % 41 == 0)
-	{
-		N = N / 41;
-	}
-	while (N % 37 == 0)
-	{
-		N = N / 37;
-	}
-	while (N % 31 == 0)
-	{
-		N = N / 31;
-	}
-	while (N % 29 == 0)
-	{
-		N = N / 29;
-	}
-	while (N % 23 == 0)
-	{
-		N = N / 23;
-	}
-	while (N % 17 == 0)
-	{
-		N = N / 17;
-	}
-	while (N % 13 == 0)
-	{
-		N = N / 13;
-	}
-	while (N % 11 == 0)
-	{
-		N = N / 11;
-	}
-	while (N % 8 == 0)
-	{
-		N = N / 8;
-	}
-	while (N % 7 == 0)
-	{
-		N = N / 7;
-	}
-	while (N % 5 == 0)
-	{
-		N = N / 5;
-	}
-	while (N % 4 == 0)
-	{
-		N = N / 4;
-	}
-	while (N % 3 == 0)
-	{
-		N = N / 3;
-	}
-	while (N % 2 == 0)
-	{
-		N = N / 2;
-	}
+	while (N % 53 == 0) { N = N / 53; }
+	while (N % 47 == 0) { N = N / 47; }
+	while (N % 43 == 0) { N = N / 43; }
+	while (N % 41 == 0) { N = N / 41; }
+	while (N % 37 == 0) { N = N / 37; }
+	while (N % 31 == 0) { N = N / 31; }
+	while (N % 29 == 0) { N = N / 29; }
+	while (N % 23 == 0) { N = N / 23; }
+	while (N % 17 == 0) { N = N / 17; }
+	while (N % 13 == 0) { N = N / 13; }
+	while (N % 11 == 0) { N = N / 11; }
+	while (N % 8 == 0) { N = N / 8; }
+	while (N % 7 == 0) { N = N / 7; }
+	while (N % 5 == 0) { N = N / 5; }
+	while (N % 4 == 0) { N = N / 4; }
+	while (N % 3 == 0) { N = N / 3; }
+	while (N % 2 == 0) { N = N / 2; }
 	if (N == 1) { return 1; }
 	return 0;
 }
 
 int factors(int M, int* arr)
 {
-	int i, N, num, mult, m1, m2;
-	i = 0;
-	N = M;
+	int i = 0;
+	int N = M;
 	while (N % 53 == 0)
 	{
 		N      = N / 53;
@@ -1882,13 +1809,13 @@ int factors(int M, int* arr)
 	}
 	if (N > 31)
 	{
-		num = 2;
+		int num = 2;
 
 		while (N > 1)
 		{
-			mult = num * 6;
-			m1   = mult - 1;
-			m2   = mult + 1;
+			int mult = num * 6;
+			int m1 = mult - 1;
+			int m2 = mult + 1;
 			while (N % m1 == 0)
 			{
 				arr[i] = m1;
@@ -1910,16 +1837,14 @@ int factors(int M, int* arr)
 
 void twiddle(fft_data* vec, int N, int radix)
 {
-	int K, KL;
-	fft_type theta, theta2;
-	theta     = PI2 / N;
-	KL        = N / radix;
+	fft_type theta = PI2 / N;
+	int KL = N / radix;
 	vec[0].re = 1.0;
 	vec[0].im = 0.0;
 
-	for (K = 1; K < KL; K++)
+	for (int K = 1; K < KL; K++)
 	{
-		theta2    = theta * K;
+		fft_type theta2 = theta * K;
 		vec[K].re = cos(theta2);
 		vec[K].im = -sin(theta2);
 	}
@@ -1927,18 +1852,16 @@ void twiddle(fft_data* vec, int N, int radix)
 
 void longvectorN(fft_data* sig, int N, int* array, int tx)
 {
-	int L, i, Ls, ct, j, k;
-	fft_type theta;
-	L  = 1;
-	ct = 0;
-	for (i = 0; i < tx; i++)
+	int L = 1;
+	int ct = 0;
+	for (int i = 0; i < tx; i++)
 	{
 		L     = L * array[tx - 1 - i];
-		Ls    = L / array[tx - 1 - i];
-		theta = -1.0 * PI2 / L;
-		for (j = 0; j < Ls; j++)
+		int Ls = L / array[tx - 1 - i];
+		fft_type theta = -1.0 * PI2 / L;
+		for (int j = 0; j < Ls; j++)
 		{
-			for (k = 0; k < array[tx - 1 - i] - 1; k++)
+			for (int k = 0; k < array[tx - 1 - i] - 1; k++)
 			{
 				sig[ct].re = cos((k + 1) * j * theta);
 				sig[ct].im = sin((k + 1) * j * theta);

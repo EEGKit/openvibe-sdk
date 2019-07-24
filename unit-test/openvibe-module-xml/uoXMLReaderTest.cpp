@@ -68,10 +68,7 @@ protected:
 		}
 	}
 
-	void processChildData(const char* data) override
-	{
-		currentNode->data = data;
-	}
+	void processChildData(const char* data) override { currentNode->data = data; }
 
 	void closeChild() override
 	{

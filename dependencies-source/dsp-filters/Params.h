@@ -86,7 +86,9 @@ namespace Dsp
 		void clear()
 		{
 			for (int i = 0; i < maxParameters; ++i)
+			{
 				value[i] = 0;
+			}
 		}
 
 		double& operator[](int index)

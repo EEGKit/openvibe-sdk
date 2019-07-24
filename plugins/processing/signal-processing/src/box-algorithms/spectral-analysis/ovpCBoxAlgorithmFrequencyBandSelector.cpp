@@ -42,15 +42,13 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 {
 	CString l_sSettingValue             = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	std::vector<std::string> l_vSetting = split(l_sSettingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
-	std::vector<std::string> l_vSettingRange;
-	std::vector<std::string>::const_iterator it;
 	bool l_bHadError = false;
 	CString l_sErrorMessage;
 	m_vSelected.clear();
-	for (it = l_vSetting.begin(); it != l_vSetting.end(); ++it)
+	for (std::vector<std::string>::const_iterator it = l_vSetting.begin(); it != l_vSetting.end(); ++it)
 	{
 		bool l_bGood    = true;
-		l_vSettingRange = split(*it, OV_Value_RangeStringSeparator);
+		std::vector<std::string> l_vSettingRange = split(*it, OV_Value_RangeStringSeparator);
 		if (l_vSettingRange.size() == 1)
 		{
 			try
@@ -104,10 +102,7 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 	ip_pMatrix = &m_oMatrix;
 	op_pMatrix = &m_oMatrix;
 
-	OV_ERROR_UNLESS_KRF(
-		!l_bHadError || !m_vSelected.empty(),
-		l_sErrorMessage,
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(!l_bHadError || !m_vSelected.empty(), l_sErrorMessage, OpenViBE::Kernel::ErrorType::BadSetting);
 
 	return true;
 }

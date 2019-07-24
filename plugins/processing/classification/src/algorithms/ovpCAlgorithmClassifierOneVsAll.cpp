@@ -42,10 +42,7 @@ bool CAlgorithmClassifierOneVsAll::initialize()
 
 bool CAlgorithmClassifierOneVsAll::uninitialize()
 {
-	while (!m_oSubClassifierList.empty())
-	{
-		this->removeClassifierAtBack();
-	}
+	while (!m_oSubClassifierList.empty()) { this->removeClassifierAtBack(); }
 	return CAlgorithmPairingStrategy::uninitialize();
 }
 
@@ -63,10 +60,9 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVector
 		l_vClassLabels[rFeatureVectorSet[i].getLabel()]++;
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		l_vClassLabels.size() == l_ui32ClassCount,
-		"Invalid samples count for [" << (uint32_t)l_vClassLabels.size() << "] classes (expected samples for " << l_ui32ClassCount << " classes)",
-		OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(l_vClassLabels.size() == l_ui32ClassCount, 
+						"Invalid samples count for [" << (uint32_t)l_vClassLabels.size() << "] classes (expected samples for " << l_ui32ClassCount << " classes)", 
+						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	//We set the IMatrix fo the first classifier
 	const uint32_t l_ui32FeatureVectorSize = rFeatureVectorSet[0].getSize();
@@ -192,10 +188,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 		}
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		l_oBest.second != NULL,
-		"Unable to find a class for feature vector",
-		OpenViBE::Kernel::ErrorType::BadProcessing);
+	OV_ERROR_UNLESS_KRF(l_oBest.second != NULL, "Unable to find a class for feature vector", OpenViBE::Kernel::ErrorType::BadProcessing);
 
 	// Now that we made the calculation, we send the corresponding data
 
@@ -228,10 +221,9 @@ bool CAlgorithmClassifierOneVsAll::addNewClassifierAtBack()
 {
 	const CIdentifier l_oSubClassifierAlgorithm = this->getAlgorithmManager().createAlgorithm(this->m_oSubClassifierAlgorithmIdentifier);
 
-	OV_ERROR_UNLESS_KRF(
-		l_oSubClassifierAlgorithm != OV_UndefinedIdentifier,
-		"Invalid classifier identifier [" << this->m_oSubClassifierAlgorithmIdentifier.toString() << "]",
-		OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(l_oSubClassifierAlgorithm != OV_UndefinedIdentifier,
+						"Invalid classifier identifier [" << this->m_oSubClassifierAlgorithmIdentifier.toString() << "]",
+						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	IAlgorithmProxy* l_pSubClassifier = &this->getAlgorithmManager().getAlgorithm(l_oSubClassifierAlgorithm);
 	l_pSubClassifier->initialize();
@@ -359,10 +351,9 @@ bool CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNode*
 		TParameterHandler<XML::IXMLNode*> ip_pConfiguration(m_oSubClassifierList[i]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
 		ip_pConfiguration = l_pSubClassifierNode;
 
-		OV_ERROR_UNLESS_KRF(
-			m_oSubClassifierList[i]->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
-			"Unable to load the configuration of the classifier " << static_cast<uint64_t>(i+1),
-			OpenViBE::Kernel::ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_oSubClassifierList[i]->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
+							"Unable to load the configuration of the classifier " << static_cast<uint64_t>(i+1),
+							OpenViBE::Kernel::ErrorType::Internal);
 	}
 	return true;
 }
@@ -377,10 +368,7 @@ bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const CIdentifier&
 	m_oSubClassifierAlgorithmIdentifier = rId;
 	m_fAlgorithmComparison              = getClassificationComparisonFunction(rId);
 
-	OV_ERROR_UNLESS_KRF(
-		m_fAlgorithmComparison != NULL,
-		"No comparison function found for classifier [" << m_oSubClassifierAlgorithmIdentifier.toString() << "]",
-		OpenViBE::Kernel::ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(m_fAlgorithmComparison != NULL, "No comparison function found for classifier [" << m_oSubClassifierAlgorithmIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
 	return true;
 }

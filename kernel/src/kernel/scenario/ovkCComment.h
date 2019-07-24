@@ -36,7 +36,7 @@ namespace OpenViBE
 
 			CScenario& m_rOwnerScenario;
 
-			CIdentifier m_oIdentifier;
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			CString m_sText;
 		};
 	}  // namespace Kernel

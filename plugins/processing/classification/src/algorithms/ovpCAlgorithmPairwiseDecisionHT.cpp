@@ -35,10 +35,7 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 	TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	m_ui32ClassCount = static_cast<uint32_t>(ip_pClassCount);
 
-	OV_ERROR_UNLESS_KRF(
-		m_ui32ClassCount >= 2,
-		"Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
-		OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found", OpenViBE::Kernel::ErrorType::BadInput);
 
 	return true;
 }
@@ -46,10 +43,7 @@ bool CAlgorithmPairwiseDecisionHT::parameterize()
 
 bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pClassificationValueList, IMatrix* pProbabilityVector)
 {
-	OV_ERROR_UNLESS_KRF(
-		m_ui32ClassCount >= 2,
-		"Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found",
-		OpenViBE::Kernel::ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found", OpenViBE::Kernel::ErrorType::BadConfig);
 
 	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 	double* l_pProbabilityMatrix                         = new double[m_ui32ClassCount * m_ui32ClassCount];
@@ -84,10 +78,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 	double** l_pMu              = new double*[m_ui32ClassCount];
 	uint32_t l_ui32AmountSample = 0;
 
-	for (size_t i = 0; i < m_ui32ClassCount; ++i)
-	{
-		l_pMu[i] = new double[m_ui32ClassCount];
-	}
+	for (size_t i = 0; i < m_ui32ClassCount; ++i) { l_pMu[i] = new double[m_ui32ClassCount]; }
 
 	for (size_t i = 0; i < m_ui32ClassCount; ++i)
 	{
@@ -202,10 +193,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 
 #if HT_DEBUG
 	std::cout << "Result " << std::endl;
-	for(uint32_t i = 0; i<m_ui32ClassCount ; ++i)
-	{
-		std::cout << l_pP[i] << " ";
-	}
+	for(uint32_t i = 0; i<m_ui32ClassCount ; ++i) { std::cout << l_pP[i] << " "; }
 	std::cout << std::endl << std::endl;
 #endif
 
@@ -217,10 +205,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 	}
 
 	delete[] l_pP;
-	for (size_t i = 0; i < m_ui32ClassCount; ++i)
-	{
-		delete[] l_pMu[i];
-	}
+	for (size_t i = 0; i < m_ui32ClassCount; ++i) { delete[] l_pMu[i]; }
 	delete[] l_pProbabilityMatrix;
 	delete[] l_pMu;
 	return true;

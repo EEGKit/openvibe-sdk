@@ -63,10 +63,7 @@ using namespace XML;
 
 IXMLNodeImpl::~IXMLNodeImpl()
 {
-	for (size_t i = 0; i < getChildCount(); ++i)
-	{
-		getChild(i)->release();
-	}
+	for (size_t i = 0; i < getChildCount(); ++i) { getChild(i)->release(); }
 }
 
 void IXMLNodeImpl::release()
@@ -100,10 +97,7 @@ const char* IXMLNodeImpl::getAttribute(const char* sAttributeName) const
 	const std::string l_sAttributeName(sAttributeName);
 
 	std::map<std::string, std::string>::const_iterator it = m_mAttibuteMap.find(l_sAttributeName);
-	if (it != m_mAttibuteMap.end())
-	{
-		res = (*it).second.c_str();
-	}
+	if (it != m_mAttibuteMap.end()) { res = (*it).second.c_str(); }
 
 	return res;
 }
@@ -201,10 +195,7 @@ char* IXMLNodeImpl::getXML(const uint32_t depth) const
 
 	l_sRes = l_sRes + string(">");
 
-	if (m_bHasPCData)
-	{
-		l_sRes = l_sRes + sanitize(m_sPCData);
-	}
+	if (m_bHasPCData) { l_sRes = l_sRes + sanitize(m_sPCData); }
 
 	for (vector<IXMLNode*>::const_iterator it = m_oNodeVector.begin(); it != m_oNodeVector.end(); ++it)
 	{

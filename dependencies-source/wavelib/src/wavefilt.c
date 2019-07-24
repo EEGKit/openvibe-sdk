@@ -3111,7 +3111,9 @@ int filtlength(const char* name)
 	{
 		new_str = (char*)malloc(sizeof(char) * (len - 2 + 1));
 		for (i = 2; i < len + 1; i++)
+		{
 			new_str[i - 2] = name[i];
+		}
 
 		N = atoi(new_str);
 		free(new_str);
@@ -3157,7 +3159,9 @@ int filtlength(const char* name)
 	{
 		new_str = (char*)malloc(sizeof(char) * (len - 4 + 1));
 		for (i = 4; i < len + 1; i++)
+		{
 			new_str[i - 4] = name[i];
+		}
 
 		N = atoi(new_str);
 		free(new_str);
@@ -3173,7 +3177,9 @@ int filtlength(const char* name)
 	{
 		new_str = (char*)malloc(sizeof(char) * (len - 3 + 1));
 		for (i = 3; i < len + 1; i++)
+		{
 			new_str[i - 3] = name[i];
+		}
 
 		N = atoi(new_str);
 		free(new_str);
@@ -3192,21 +3198,17 @@ int filtlength(const char* name)
 void copy_reverse(const double* in, int N, double* out)
 {
 	int count = 0;
-	for (count = 0; count < N; count++)
-		out[count] = in[N - count - 1];
+	for (count = 0; count < N; count++) { out[count] = in[N - count - 1]; }
 }
 
 void qmf_wrev(const double* in, int N, double* out)
 {
 	int count = 0;
-	double* sigOutTemp;
-	sigOutTemp = (double*)malloc(N * sizeof(double));
+	double* sigOutTemp = (double*)malloc(N * sizeof(double));
 
 	qmf_even(in, N, sigOutTemp);
 	copy_reverse(sigOutTemp, N, out);
-
 	free(sigOutTemp);
-	return;
 }
 
 void qmf_even(const double* in, int N, double* out)
@@ -3215,18 +3217,14 @@ void qmf_even(const double* in, int N, double* out)
 	for (count = 0; count < N; count++)
 	{
 		out[count] = in[N - count - 1];
-		if (count % 2 != 0)
-		{
-			out[count] = -1 * out[count];
-		}
+		if (count % 2 != 0) { out[count] = -1 * out[count]; }
 	}
 }
 
 void copy(const double* in, int N, double* out)
 {
 	int count = 0;
-	for (count = 0; count < N; count++)
-		out[count] = in[count];
+	for (count = 0; count < N; count++) { out[count] = in[count]; }
 }
 
 int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp2)
@@ -3718,583 +3716,562 @@ int filtcoef(const char* name, double* lp1, double* hp1, double* lp2, double* hp
 		qmf_even(h1, N, hp2);
 		return N;
 	}
-
-	else
+	if (!strcmp(name, "rbior2.2"))
 	{
-		if (!strcmp(name, "rbior2.2"))
-		{
-			copy_reverse(h2 + 6, N, lp1);
-			qmf_wrev(hm2_22, N, hp1);
-			copy(hm2_22, N, lp2);
-			qmf_even(h2 + 6, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior2.4"))
-		{
-			copy_reverse(h2 + 4, N, lp1);
-			qmf_wrev(hm2_24, N, hp1);
-			copy(hm2_24, N, lp2);
-			qmf_even(h2 + 4, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior2.6"))
-		{
-			copy_reverse(h2 + 2, N, lp1);
-			qmf_wrev(hm2_26, N, hp1);
-			copy(hm2_26, N, lp2);
-			qmf_even(h2 + 2, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior2.8"))
-		{
-			copy_reverse(h2, N, lp1);
-			qmf_wrev(hm2_28, N, hp1);
-			copy(hm2_28, N, lp2);
-			qmf_even(h2, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior3.1"))
-		{
-			copy_reverse(h3 + 8, N, lp1);
-			qmf_wrev(hm3_31, N, hp1);
-			copy(hm3_31, N, lp2);
-			qmf_even(h3 + 8, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior3.3"))
-		{
-			copy_reverse(h3 + 6, N, lp1);
-			qmf_wrev(hm3_33, N, hp1);
-			copy(hm3_33, N, lp2);
-			qmf_even(h3 + 6, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior3.5"))
-		{
-			copy_reverse(h3 + 4, N, lp1);
-			qmf_wrev(hm3_35, N, hp1);
-			copy(hm3_35, N, lp2);
-			qmf_even(h3 + 4, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior3.7"))
-		{
-			copy_reverse(h3 + 2, N, lp1);
-			qmf_wrev(hm3_37, N, hp1);
-			copy(hm3_37, N, lp2);
-			qmf_even(h3 + 2, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior3.9"))
-		{
-			copy_reverse(h3, N, lp1);
-			qmf_wrev(hm3_39, N, hp1);
-			copy(hm3_39, N, lp2);
-			qmf_even(h3, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior4.4"))
-		{
-			copy_reverse(h4, N, lp1);
-			qmf_wrev(hm4_44, N, hp1);
-			copy(hm4_44, N, lp2);
-			qmf_even(h4, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior5.5"))
-		{
-			copy_reverse(h5, N, lp1);
-			qmf_wrev(hm5_55, N, hp1);
-			copy(hm5_55, N, lp2);
-			qmf_even(h5, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "rbior6.8"))
-		{
-			copy_reverse(h6, N, lp1);
-			qmf_wrev(hm6_68, N, hp1);
-			copy(hm6_68, N, lp2);
-			qmf_even(h6, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "coif1"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif1, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif2"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif2, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif3"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif3, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif4"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif4, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif5"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif5, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif6"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif6, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif7"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif7, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif8"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif8, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif9"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif9, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif10"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif10, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif11"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif11, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif12"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif12, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif13"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif13, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif14"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif14, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif15"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif15, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif16"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif16, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "coif17"))
-		{
-			double* coeffTemp;
-			coeffTemp = (double*)malloc(N * sizeof(double));
-
-			copy(coif17, N, coeffTemp);
-			for (i = 0; i < N; ++i)
-			{
-				coeffTemp[i] *= M_SQRT2;
-			}
-
-			copy_reverse(coeffTemp, N, lp1);
-			qmf_wrev(coeffTemp, N, hp1);
-			copy(coeffTemp, N, lp2);
-			qmf_even(coeffTemp, N, hp2);
-			free(coeffTemp);
-
-			return N;
-		}
-		if (!strcmp(name, "sym2"))
-		{
-			copy_reverse(sym2, N, lp1);
-			qmf_wrev(sym2, N, hp1);
-			copy(sym2, N, lp2);
-			qmf_even(sym2, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym3"))
-		{
-			copy_reverse(sym3, N, lp1);
-			qmf_wrev(sym3, N, hp1);
-			copy(sym3, N, lp2);
-			qmf_even(sym3, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym4"))
-		{
-			copy_reverse(sym4, N, lp1);
-			qmf_wrev(sym4, N, hp1);
-			copy(sym4, N, lp2);
-			qmf_even(sym4, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym5"))
-		{
-			copy_reverse(sym5, N, lp1);
-			qmf_wrev(sym5, N, hp1);
-			copy(sym5, N, lp2);
-			qmf_even(sym5, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym6"))
-		{
-			copy_reverse(sym6, N, lp1);
-			qmf_wrev(sym6, N, hp1);
-			copy(sym6, N, lp2);
-			qmf_even(sym6, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym7"))
-		{
-			copy_reverse(sym7, N, lp1);
-			qmf_wrev(sym7, N, hp1);
-			copy(sym7, N, lp2);
-			qmf_even(sym7, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym8"))
-		{
-			copy_reverse(sym8, N, lp1);
-			qmf_wrev(sym8, N, hp1);
-			copy(sym8, N, lp2);
-			qmf_even(sym8, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym9"))
-		{
-			copy_reverse(sym9, N, lp1);
-			qmf_wrev(sym9, N, hp1);
-			copy(sym9, N, lp2);
-			qmf_even(sym9, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym10"))
-		{
-			copy_reverse(sym10, N, lp1);
-			qmf_wrev(sym10, N, hp1);
-			copy(sym10, N, lp2);
-			qmf_even(sym10, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym11"))
-		{
-			copy_reverse(sym11, N, lp1);
-			qmf_wrev(sym11, N, hp1);
-			copy(sym11, N, lp2);
-			qmf_even(sym11, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym12"))
-		{
-			copy_reverse(sym12, N, lp1);
-			qmf_wrev(sym12, N, hp1);
-			copy(sym12, N, lp2);
-			qmf_even(sym12, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym13"))
-		{
-			copy_reverse(sym13, N, lp1);
-			qmf_wrev(sym13, N, hp1);
-			copy(sym13, N, lp2);
-			qmf_even(sym13, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym14"))
-		{
-			copy_reverse(sym14, N, lp1);
-			qmf_wrev(sym14, N, hp1);
-			copy(sym14, N, lp2);
-			qmf_even(sym14, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym15"))
-		{
-			copy_reverse(sym15, N, lp1);
-			qmf_wrev(sym15, N, hp1);
-			copy(sym15, N, lp2);
-			qmf_even(sym15, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym16"))
-		{
-			copy_reverse(sym16, N, lp1);
-			qmf_wrev(sym16, N, hp1);
-			copy(sym16, N, lp2);
-			qmf_even(sym16, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym17"))
-		{
-			copy_reverse(sym17, N, lp1);
-			qmf_wrev(sym17, N, hp1);
-			copy(sym17, N, lp2);
-			qmf_even(sym17, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym18"))
-		{
-			copy_reverse(sym18, N, lp1);
-			qmf_wrev(sym18, N, hp1);
-			copy(sym18, N, lp2);
-			qmf_even(sym18, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym19"))
-		{
-			copy_reverse(sym19, N, lp1);
-			qmf_wrev(sym19, N, hp1);
-			copy(sym19, N, lp2);
-			qmf_even(sym19, N, hp2);
-			return N;
-		}
-		if (!strcmp(name, "sym20"))
-		{
-			copy_reverse(sym20, N, lp1);
-			qmf_wrev(sym20, N, hp1);
-			copy(sym20, N, lp2);
-			qmf_even(sym20, N, hp2);
-			return N;
-		}
-		printf("\n Filter Not in Database \n");
-		return -1;
+		copy_reverse(h2 + 6, N, lp1);
+		qmf_wrev(hm2_22, N, hp1);
+		copy(hm2_22, N, lp2);
+		qmf_even(h2 + 6, N, hp2);
+		return N;
 	}
+	if (!strcmp(name, "rbior2.4"))
+	{
+		copy_reverse(h2 + 4, N, lp1);
+		qmf_wrev(hm2_24, N, hp1);
+		copy(hm2_24, N, lp2);
+		qmf_even(h2 + 4, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "rbior2.6"))
+	{
+		copy_reverse(h2 + 2, N, lp1);
+		qmf_wrev(hm2_26, N, hp1);
+		copy(hm2_26, N, lp2);
+		qmf_even(h2 + 2, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "rbior2.8"))
+	{
+		copy_reverse(h2, N, lp1);
+		qmf_wrev(hm2_28, N, hp1);
+		copy(hm2_28, N, lp2);
+		qmf_even(h2, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "rbior3.1"))
+	{
+		copy_reverse(h3 + 8, N, lp1);
+		qmf_wrev(hm3_31, N, hp1);
+		copy(hm3_31, N, lp2);
+		qmf_even(h3 + 8, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "rbior3.3"))
+	{
+		copy_reverse(h3 + 6, N, lp1);
+		qmf_wrev(hm3_33, N, hp1);
+		copy(hm3_33, N, lp2);
+		qmf_even(h3 + 6, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "rbior3.5"))
+	{
+		copy_reverse(h3 + 4, N, lp1);
+		qmf_wrev(hm3_35, N, hp1);
+		copy(hm3_35, N, lp2);
+		qmf_even(h3 + 4, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "rbior3.7"))
+	{
+		copy_reverse(h3 + 2, N, lp1);
+		qmf_wrev(hm3_37, N, hp1);
+		copy(hm3_37, N, lp2);
+		qmf_even(h3 + 2, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "rbior3.9"))
+	{
+		copy_reverse(h3, N, lp1);
+		qmf_wrev(hm3_39, N, hp1);
+		copy(hm3_39, N, lp2);
+		qmf_even(h3, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "rbior4.4"))
+	{
+		copy_reverse(h4, N, lp1);
+		qmf_wrev(hm4_44, N, hp1);
+		copy(hm4_44, N, lp2);
+		qmf_even(h4, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "rbior5.5"))
+	{
+		copy_reverse(h5, N, lp1);
+		qmf_wrev(hm5_55, N, hp1);
+		copy(hm5_55, N, lp2);
+		qmf_even(h5, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "rbior6.8"))
+	{
+		copy_reverse(h6, N, lp1);
+		qmf_wrev(hm6_68, N, hp1);
+		copy(hm6_68, N, lp2);
+		qmf_even(h6, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "coif1"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif1, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif2"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif2, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif3"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif3, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif4"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif4, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif5"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif5, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif6"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif6, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif7"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif7, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif8"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif8, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif9"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif9, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif10"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif10, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif11"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif11, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif12"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif12, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif13"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif13, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif14"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif14, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif15"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif15, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif16"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif16, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "coif17"))
+	{
+		double* coeffTemp = (double*)malloc(N * sizeof(double));
+
+		copy(coif17, N, coeffTemp);
+		for (i = 0; i < N; ++i)
+		{
+			coeffTemp[i] *= M_SQRT2;
+		}
+
+		copy_reverse(coeffTemp, N, lp1);
+		qmf_wrev(coeffTemp, N, hp1);
+		copy(coeffTemp, N, lp2);
+		qmf_even(coeffTemp, N, hp2);
+		free(coeffTemp);
+
+		return N;
+	}
+	if (!strcmp(name, "sym2"))
+	{
+		copy_reverse(sym2, N, lp1);
+		qmf_wrev(sym2, N, hp1);
+		copy(sym2, N, lp2);
+		qmf_even(sym2, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym3"))
+	{
+		copy_reverse(sym3, N, lp1);
+		qmf_wrev(sym3, N, hp1);
+		copy(sym3, N, lp2);
+		qmf_even(sym3, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym4"))
+	{
+		copy_reverse(sym4, N, lp1);
+		qmf_wrev(sym4, N, hp1);
+		copy(sym4, N, lp2);
+		qmf_even(sym4, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym5"))
+	{
+		copy_reverse(sym5, N, lp1);
+		qmf_wrev(sym5, N, hp1);
+		copy(sym5, N, lp2);
+		qmf_even(sym5, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym6"))
+	{
+		copy_reverse(sym6, N, lp1);
+		qmf_wrev(sym6, N, hp1);
+		copy(sym6, N, lp2);
+		qmf_even(sym6, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym7"))
+	{
+		copy_reverse(sym7, N, lp1);
+		qmf_wrev(sym7, N, hp1);
+		copy(sym7, N, lp2);
+		qmf_even(sym7, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym8"))
+	{
+		copy_reverse(sym8, N, lp1);
+		qmf_wrev(sym8, N, hp1);
+		copy(sym8, N, lp2);
+		qmf_even(sym8, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym9"))
+	{
+		copy_reverse(sym9, N, lp1);
+		qmf_wrev(sym9, N, hp1);
+		copy(sym9, N, lp2);
+		qmf_even(sym9, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym10"))
+	{
+		copy_reverse(sym10, N, lp1);
+		qmf_wrev(sym10, N, hp1);
+		copy(sym10, N, lp2);
+		qmf_even(sym10, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym11"))
+	{
+		copy_reverse(sym11, N, lp1);
+		qmf_wrev(sym11, N, hp1);
+		copy(sym11, N, lp2);
+		qmf_even(sym11, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym12"))
+	{
+		copy_reverse(sym12, N, lp1);
+		qmf_wrev(sym12, N, hp1);
+		copy(sym12, N, lp2);
+		qmf_even(sym12, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym13"))
+	{
+		copy_reverse(sym13, N, lp1);
+		qmf_wrev(sym13, N, hp1);
+		copy(sym13, N, lp2);
+		qmf_even(sym13, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym14"))
+	{
+		copy_reverse(sym14, N, lp1);
+		qmf_wrev(sym14, N, hp1);
+		copy(sym14, N, lp2);
+		qmf_even(sym14, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym15"))
+	{
+		copy_reverse(sym15, N, lp1);
+		qmf_wrev(sym15, N, hp1);
+		copy(sym15, N, lp2);
+		qmf_even(sym15, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym16"))
+	{
+		copy_reverse(sym16, N, lp1);
+		qmf_wrev(sym16, N, hp1);
+		copy(sym16, N, lp2);
+		qmf_even(sym16, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym17"))
+	{
+		copy_reverse(sym17, N, lp1);
+		qmf_wrev(sym17, N, hp1);
+		copy(sym17, N, lp2);
+		qmf_even(sym17, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym18"))
+	{
+		copy_reverse(sym18, N, lp1);
+		qmf_wrev(sym18, N, hp1);
+		copy(sym18, N, lp2);
+		qmf_even(sym18, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym19"))
+	{
+		copy_reverse(sym19, N, lp1);
+		qmf_wrev(sym19, N, hp1);
+		copy(sym19, N, lp2);
+		qmf_even(sym19, N, hp2);
+		return N;
+	}
+	if (!strcmp(name, "sym20"))
+	{
+		copy_reverse(sym20, N, lp1);
+		qmf_wrev(sym20, N, hp1);
+		copy(sym20, N, lp2);
+		qmf_even(sym20, N, hp2);
+		return N;
+	}
+	printf("\n Filter Not in Database \n");
+	return -1;
 
 	return 0;
 }

@@ -192,10 +192,7 @@ void CStreamedMatrixDecoder::closeChild()
 			}
 		}
 	}
-	else
-	{
-		CEBMLBaseDecoder::closeChild();
-	}
+	else { CEBMLBaseDecoder::closeChild(); }
 
 	m_vNodes.pop();
 }

@@ -424,10 +424,7 @@ bool CMessaging::stopSyncing()
 {
 	impl->m_IsStopRequested = true;
 
-	if (impl->m_SyncThread.joinable())
-	{
-		impl->m_SyncThread.join();
-	}
+	if (impl->m_SyncThread.joinable()) { impl->m_SyncThread.join(); }
 
 	return true;
 }

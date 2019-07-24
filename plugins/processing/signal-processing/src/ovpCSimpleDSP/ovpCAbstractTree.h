@@ -405,10 +405,7 @@ public:
 	 * Changes the tree so it uses the NEG operator whenever it is possible.
 	 * (ie replaces (* -1 X) by (NEG X)
 	 */
-	void useNegationOperator()
-	{
-		m_pRoot->useNegationOperator();
-	}
+	void useNegationOperator() { m_pRoot->useNegationOperator(); }
 
 	/**
 	 * Generates the set of function calls needed to do the desired computation.

@@ -46,7 +46,7 @@ namespace r8b
 
 	class CDSPRealFFT : public R8B_BASECLASS
 	{
-	R8BNOCTOR(CDSPRealFFT);
+	R8BNOCTOR(CDSPRealFFT)
 
 		friend class CDSPRealFFTKeeper;
 
@@ -132,8 +132,7 @@ namespace r8b
 		 * @param[out] op Output data block, should not be equal to ip1 nor ip2.
 		 */
 
-		void multiplyBlocks(const double* const ip1, const double* const ip2,
-							double* const op) const
+		void multiplyBlocks(const double* const ip1, const double* const ip2, double* const op) const
 		{
 #if R8B_IPP
 
@@ -166,17 +165,14 @@ namespace r8b
 		 * @param[out] op Output data block, should not be equal to ip1 nor ip2.
 		 */
 
-		void multiplyBlocksAdd(const double* const ip1, const double* const ip2,
-							   double* const op) const
+		void multiplyBlocksAdd(const double* const ip1, const double* const ip2, double* const op) const
 		{
 			op[0] += ip1[0] * ip2[0];
 			op[1] += ip1[1] * ip2[1];
 
 #if R8B_IPP
 
-		ippsAddProduct_64fc( (const Ipp64fc*) ( ip1 + 2 ),
-			(const Ipp64fc*) ( ip2 + 2 ), (Ipp64fc*) ( op + 2 ),
-			( Len >> 1 ) - 1 );
+		ippsAddProduct_64fc( (const Ipp64fc*) ( ip1 + 2 ), (const Ipp64fc*) ( ip2 + 2 ), (Ipp64fc*) ( op + 2 ), ( Len >> 1 ) - 1 );
 
 #else // R8B_IPP
 
@@ -317,16 +313,12 @@ namespace r8b
 
 		class CObjKeeper
 		{
-		R8BNOCTOR(CObjKeeper);
+		R8BNOCTOR(CObjKeeper)
 
 		public:
-			CObjKeeper()
-				: Object(NULL) { }
+			CObjKeeper() : Object(NULL) { }
 
-			~CObjKeeper()
-			{
-				delete Object;
-			}
+			~CObjKeeper() { delete Object; }
 
 			CObjKeeper& operator =(CDSPRealFFT* const aObject)
 			{
@@ -334,10 +326,7 @@ namespace r8b
 				return (*this);
 			}
 
-			operator CDSPRealFFT*() const
-			{
-				return (Object);
-			}
+			operator CDSPRealFFT*() const { return (Object); }
 
 		private:
 			CDSPRealFFT* Object; ///< FFT object being kept.
@@ -355,8 +344,7 @@ namespace r8b
 		 */
 
 		CDSPRealFFT(const int aLenBits)
-			: LenBits(aLenBits)
-			  , Len(1 << aLenBits)
+			: LenBits(aLenBits), Len(1 << aLenBits)
 #if R8B_IPP
 		, InvMulConst( 1.0 / Len )
 #else // R8B_IPP
@@ -388,10 +376,7 @@ namespace r8b
 #endif // R8B_IPP
 		}
 
-		~CDSPRealFFT()
-		{
-			delete Next;
-		}
+		~CDSPRealFFT() { delete Next; }
 	};
 
 	/**
@@ -404,11 +389,10 @@ namespace r8b
 
 	class CDSPRealFFTKeeper : public R8B_BASECLASS
 	{
-	R8BNOCTOR(CDSPRealFFTKeeper);
+	R8BNOCTOR(CDSPRealFFTKeeper)
 
 	public:
-		CDSPRealFFTKeeper()
-			: Object(NULL) { }
+		CDSPRealFFTKeeper() : Object(NULL) { }
 
 		/**
 		 * Function acquires FFT object with the specified block length.
@@ -417,10 +401,7 @@ namespace r8b
 		 * [1; 30] inclusive, specifies the number of real values in a FFT block.
 		 */
 
-		CDSPRealFFTKeeper(const int LenBits)
-		{
-			Object = acquire(LenBits);
-		}
+		CDSPRealFFTKeeper(const int LenBits) { Object = acquire(LenBits); }
 
 		~CDSPRealFFTKeeper()
 		{

@@ -99,9 +99,8 @@ bool CBoxAlgorithmSignalResampling::processInput(uint32_t ui32InputIndex)
 bool CBoxAlgorithmSignalResampling::process()
 {
 	m_pDynamicBoxContext = &this->getDynamicBoxContext();
-	uint32_t i;
 
-	for (i = 0; i < m_pDynamicBoxContext->getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < m_pDynamicBoxContext->getInputChunkCount(0); i++)
 	{
 		m_oDecoder.decode(i);
 

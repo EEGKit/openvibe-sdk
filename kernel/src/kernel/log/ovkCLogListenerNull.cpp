@@ -22,10 +22,7 @@ bool CLogListenerNull::activate(ELogLevel eLogLevel, bool bActive)
 
 bool CLogListenerNull::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
 {
-	for (int i = eStartLogLevel; i <= eEndLogLevel; i++)
-	{
-		m_vActiveLevel[ELogLevel(i)] = bActive;
-	}
+	for (int i = eStartLogLevel; i <= eEndLogLevel; i++) { m_vActiveLevel[ELogLevel(i)] = bActive; }
 	return true;
 }
 

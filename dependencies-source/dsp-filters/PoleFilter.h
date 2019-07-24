@@ -75,7 +75,9 @@ namespace Dsp
 			std::vector<PoleZeroPair> vpz;
 			const int pairs = (m_digitalProto.getNumPoles() + 1) / 2;
 			for (int i = 0; i < pairs; ++i)
+			{
 				vpz.push_back(m_digitalProto[i]);
+			}
 			return vpz;
 		}
 #endif

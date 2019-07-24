@@ -20,8 +20,7 @@ namespace Socket
 	{
 	public:
 
-		bool listen(
-			uint32_t ui32Port)
+		bool listen(uint32_t ui32Port)
 		{
 			if (!open()) { return false; }
 
@@ -113,8 +112,5 @@ namespace Socket
 		}
 	};
 
-	IConnectionServer* createConnectionServer()
-	{
-		return new CConnectionServer();
-	}
+	IConnectionServer* createConnectionServer() { return new CConnectionServer(); }
 };

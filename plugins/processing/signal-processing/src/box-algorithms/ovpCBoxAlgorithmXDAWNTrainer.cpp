@@ -21,29 +21,20 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 	m_TrainStimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_FilterFilename     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	OV_ERROR_UNLESS_KRF(
-		m_FilterFilename.length() != 0,
-		"The filter filename is empty.\n",
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_FilterFilename.length() != 0, "The filter filename is empty.\n", OpenViBE::Kernel::ErrorType::BadSetting);
 
 	if (FS::Files::fileExists(m_FilterFilename))
 	{
 		FILE* file = FS::Files::open(m_FilterFilename, "wt");
 
-		OV_ERROR_UNLESS_KRF(
-			file != NULL,
-			"The filter file exists but cannot be used.\n",
-			OpenViBE::Kernel::ErrorType::BadFileRead);
+		OV_ERROR_UNLESS_KRF(file != NULL, "The filter file exists but cannot be used.\n", OpenViBE::Kernel::ErrorType::BadFileRead);
 
 		fclose(file);
 	}
 
 	int filterDimension = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
-	OV_ERROR_UNLESS_KRF(
-		filterDimension > 0,
-		"The dimension of the filter must be strictly positive.\n",
-		OpenViBE::Kernel::ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(filterDimension > 0, "The dimension of the filter must be strictly positive.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
 
 	m_FilterDimension = static_cast<unsigned int>(filterDimension);
 
@@ -114,8 +105,6 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 	if (train)
 	{
 		std::vector<unsigned int> ERPSampleIndexes;
-		Eigen::MatrixXd A;
-		Eigen::MatrixXd D, DI;
 		Eigen::MatrixXd X[2]; // X[0] is session matrix, X[1] is averaged ERP
 		Eigen::MatrixXd C[2]; // Covariance matrices
 		unsigned int n[2];
@@ -143,25 +132,10 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 				if (m_rSignalDecoder.isHeaderReceived())
 				{
-					OV_ERROR_UNLESS_KRF(
-						samplingRate > 0,
-						"Input sampling frequency is equal to 0. Plugin can not process.\n",
-						OpenViBE::Kernel::ErrorType::OutOfBound);
-
-					OV_ERROR_UNLESS_KRF(
-						channelCount > 0,
-						"For condition " << j + 1 << " got no channel in signal stream.\n",
-						OpenViBE::Kernel::ErrorType::OutOfBound);
-
-					OV_ERROR_UNLESS_KRF(
-						sampleCount > 0,
-						"For condition " << j + 1 << " got no samples in signal stream.\n",
-						OpenViBE::Kernel::ErrorType::OutOfBound);
-
-					OV_ERROR_UNLESS_KRF(
-						m_FilterDimension <= channelCount,
-						"The filter dimension must not be superior than the channel count.\n",
-						OpenViBE::Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(samplingRate > 0, "Input sampling frequency is equal to 0. Plugin can not process.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(channelCount > 0, "For condition " << j + 1 << " got no channel in signal stream.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(sampleCount > 0, "For condition " << j + 1 << " got no samples in signal stream.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
+					OV_ERROR_UNLESS_KRF(m_FilterDimension <= channelCount, "The filter dimension must not be superior than the channel count.\n", OpenViBE::Kernel::ErrorType::OutOfBound);
 
 					if (!n[0]) // Initialize signal buffer (X[0]) only when receiving input signal header.
 					{
@@ -175,7 +149,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 				if (m_rSignalDecoder.isBufferReceived())
 				{
-					A = Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(matrix->getBuffer(), channelCount, sampleCount);
+					Eigen::MatrixXd A = Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(matrix->getBuffer(), channelCount, sampleCount);
 
 					switch (j)
 					{
@@ -207,10 +181,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 #endif
 			}
 
-			OV_ERROR_UNLESS_KRF(
-				n[j] != 0,
-				"Did not have input signal for condition " << j + 1 << "\n",
-				OpenViBE::Kernel::ErrorType::BadValue);
+			OV_ERROR_UNLESS_KRF(n[j] != 0, "Did not have input signal for condition " << j + 1 << "\n", OpenViBE::Kernel::ErrorType::BadValue);
 
 			switch (j)
 			{
@@ -227,10 +198,9 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		}
 
 		// We need equal number of channels
-		OV_ERROR_UNLESS_KRF(
-			X[0].rows() == X[1].rows(),
-			"Dimension mismatch, first input had " << uint32_t(X[0].rows()) << " channels while second input had " << uint32_t(X[1].rows()) << " channels\n",
-			OpenViBE::Kernel::ErrorType::BadValue);
+		OV_ERROR_UNLESS_KRF(X[0].rows() == X[1].rows(),
+							"Dimension mismatch, first input had " << uint32_t(X[0].rows()) << " channels while second input had " << uint32_t(X[1].rows()) << " channels\n",
+							OpenViBE::Kernel::ErrorType::BadValue);
 
 		// Grabs usefull values
 
@@ -239,8 +209,8 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		// Now we compute matrix D
 
-		DI = Eigen::MatrixXd::Identity(sampleCountERP, sampleCountERP);
-		D  = Eigen::MatrixXd::Zero(sampleCountERP, sampleCountSession);
+		Eigen::MatrixXd DI = Eigen::MatrixXd::Identity(sampleCountERP, sampleCountERP);
+		Eigen::MatrixXd D = Eigen::MatrixXd::Zero(sampleCountERP, sampleCountSession);
 
 		for (unsigned int sampleIndex : ERPSampleIndexes)
 		{
@@ -271,9 +241,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 				default: break;
 			}
 
-			OV_ERROR_KRF(
-				"Could not solve generalized eigen decomposition, got error[" << CString(errorMessage) << "]\n",
-				OpenViBE::Kernel::ErrorType::BadProcessing);
+			OV_ERROR_KRF("Could not solve generalized eigen decomposition, got error[" << CString(errorMessage) << "]\n", OpenViBE::Kernel::ErrorType::BadProcessing);
 		}
 				
 		// Create a CMatrix mapper that can spool the filters to a file
@@ -311,16 +279,10 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		}
 		else
 		{
-			OV_ERROR_UNLESS_KRF(
-				OpenViBEToolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_FilterFilename),
-				"Unable to save to [" << m_FilterFilename << "]\n",
-				OpenViBE::Kernel::ErrorType::BadFileWrite);
+			OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::saveToTextFile(eigenVectors, m_FilterFilename), "Unable to save to [" << m_FilterFilename << "]\n", OpenViBE::Kernel::ErrorType::BadFileWrite);
 		}
 
-		OV_WARNING_UNLESS_K(
-			::fclose(file) == 0,
-			"Could not close file[" << m_FilterFilename << "].\n"
-		);
+		OV_WARNING_UNLESS_K(::fclose(file) == 0, "Could not close file[" << m_FilterFilename << "].\n");
 
 		this->getLogManager() << LogLevel_Info << "Training finished and saved to [" << m_FilterFilename << "]!\n";
 	}

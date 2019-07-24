@@ -30,10 +30,7 @@ namespace
 	// it can not be easily used in std::transform
 	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
 	template <class charT>
-	charT to_lower(charT c)
-	{
-		return std::tolower(c);
-	}
+	charT to_lower(charT c) { return std::tolower(c); }
 
 	struct a_inf_b
 	{
@@ -272,10 +269,7 @@ CString CTypeManager::getTypeName(
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	if (!isRegistered(rTypeIdentifier))
-	{
-		return CString("");
-	}
+	if (!isRegistered(rTypeIdentifier)) { return CString(""); }
 	return m_vName.find(rTypeIdentifier)->second;
 }
 
@@ -284,10 +278,7 @@ CIdentifier CTypeManager::getStreamParentType(
 {
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
-	if (!isStream(rTypeIdentifier))
-	{
-		return OV_UndefinedIdentifier;
-	}
+	if (!isStream(rTypeIdentifier)) { return OV_UndefinedIdentifier; }
 	return m_vStream.find(rTypeIdentifier)->second;
 }
 
@@ -329,15 +320,9 @@ CString CTypeManager::getEnumerationEntryNameFromValue(
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
 	const auto itEnumeration = m_vEnumeration.find(rTypeIdentifier);
-	if (itEnumeration == m_vEnumeration.end())
-	{
-		return "";
-	}
+	if (itEnumeration == m_vEnumeration.end()) { return ""; }
 	const auto itEnumerationEntry = itEnumeration->second.find(ui64EntryValue);
-	if (itEnumerationEntry == itEnumeration->second.end())
-	{
-		return "";
-	}
+	if (itEnumerationEntry == itEnumeration->second.end()) { return ""; }
 	return itEnumeration->second.find(ui64EntryValue)->second;
 }
 
@@ -348,10 +333,7 @@ uint64_t CTypeManager::getEnumerationEntryValueFromName(
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
 	const auto itEnumeration = m_vEnumeration.find(rTypeIdentifier);
-	if (itEnumeration == m_vEnumeration.end())
-	{
-		return OV_IncorrectStimulation;
-	}
+	if (itEnumeration == m_vEnumeration.end()) { return OV_IncorrectStimulation; }
 
 	// first looks at the exact std::string match
 	for (const auto& entry : itEnumeration->second)
@@ -386,10 +368,7 @@ uint64_t CTypeManager::getEnumerationEntryValueFromName(
 			return l_ui64Value;
 		}
 	}
-	catch (const std::exception&)
-	{
-		return OV_IncorrectStimulation;
-	}
+	catch (const std::exception&) { return OV_IncorrectStimulation; }
 
 	return OV_IncorrectStimulation;
 }
@@ -432,15 +411,9 @@ CString CTypeManager::getBitMaskEntryNameFromValue(
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
 	const auto itBitMask = m_vBitMask.find(rTypeIdentifier);
-	if (itBitMask == m_vBitMask.end())
-	{
-		return "";
-	}
+	if (itBitMask == m_vBitMask.end()) { return ""; }
 	const auto itBitMaskEntry = itBitMask->second.find(ui64EntryValue);
-	if (itBitMaskEntry == itBitMask->second.end())
-	{
-		return "";
-	}
+	if (itBitMaskEntry == itBitMask->second.end()) { return ""; }
 	return itBitMask->second.find(ui64EntryValue)->second;
 }
 
@@ -451,10 +424,7 @@ uint64_t CTypeManager::getBitMaskEntryValueFromName(
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
 	const auto itBitMask = m_vBitMask.find(rTypeIdentifier);
-	if (itBitMask == m_vBitMask.end())
-	{
-		return 0xffffffffffffffffLL;
-	}
+	if (itBitMask == m_vBitMask.end()) { return 0xffffffffffffffffLL; }
 
 	// first looks at the exact std::string match
 	for (const auto& mask : itBitMask->second)

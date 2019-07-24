@@ -26,23 +26,14 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 
 	m_ppVariable = new double*[l_rStaticBoxContext.getInputCount()];
 
-	OV_ERROR_UNLESS_KRF(
-		m_ppVariable,
-		"Failed to allocate arrays of floats for [" << l_rStaticBoxContext.getInputCount() << "] inputs",
-		OpenViBE::Kernel::ErrorType::BadAlloc);
+	OV_ERROR_UNLESS_KRF(m_ppVariable, "Failed to allocate arrays of floats for [" << l_rStaticBoxContext.getInputCount() << "] inputs", OpenViBE::Kernel::ErrorType::BadAlloc);
 
 	CString l_sEquation = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_pEquationParser   = new CEquationParser(*this, m_ppVariable, l_rStaticBoxContext.getInputCount());
 
-	OV_ERROR_UNLESS_KRF(
-		m_pEquationParser,
-		"Failed to create equation parser",
-		OpenViBE::Kernel::ErrorType::BadAlloc);
+	OV_ERROR_UNLESS_KRF(m_pEquationParser, "Failed to create equation parser", OpenViBE::Kernel::ErrorType::BadAlloc);
 
-	OV_ERROR_UNLESS_KRF(
-		m_pEquationParser->compileEquation(l_sEquation.toASCIIString()),
-		"Failed to compile equation [" << l_sEquation << "]",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_pEquationParser->compileEquation(l_sEquation.toASCIIString()), "Failed to compile equation [" << l_sEquation << "]", OpenViBE::Kernel::ErrorType::Internal);
 
 	m_ui64EquationType            = m_pEquationParser->getTreeCategory();
 	m_f64SpecialEquationParameter = m_pEquationParser->getTreeParameter();
@@ -50,10 +41,9 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 	CIdentifier l_oStreamType;
 	l_rStaticBoxContext.getOutputType(0, l_oStreamType);
 
-	OV_ERROR_UNLESS_KRF(
-		this->getTypeManager().isDerivedFromStream(l_oStreamType, OV_TypeId_StreamedMatrix),
-		"Invalid output stream [" << l_oStreamType.toString() << "] (expected stream must derive from OV_TypeId_StreamedMatrix)",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->getTypeManager().isDerivedFromStream(l_oStreamType, OV_TypeId_StreamedMatrix),
+						"Invalid output stream [" << l_oStreamType.toString() << "] (expected stream must derive from OV_TypeId_StreamedMatrix)",
+						OpenViBE::Kernel::ErrorType::Internal);
 
 	if (l_oStreamType == OV_TypeId_StreamedMatrix)
 	{
@@ -108,9 +98,7 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 	}
 	else
 	{
-		OV_ERROR_KRF(
-			"Type [name=" << this->getTypeManager().getTypeName(l_oStreamType) << ":id=" << l_oStreamType.toString() << "] not yet implemented",
-			OpenViBE::Kernel::ErrorType::NotImplemented);
+		OV_ERROR_KRF("Type [name=" << this->getTypeManager().getTypeName(l_oStreamType) << ":id=" << l_oStreamType.toString() << "] not yet implemented", OpenViBE::Kernel::ErrorType::NotImplemented);
 	}
 
 	m_bCheckChunkDates = this->getConfigurationManager().expandAsBoolean("${Plugin_SignalProcessing_SimpleDSP_CheckChunkDates}", true);
@@ -121,8 +109,7 @@ bool CBoxAlgorithmSimpleDSP::initialize()
 
 bool CBoxAlgorithmSimpleDSP::uninitialize()
 {
-	std::vector<IAlgorithmProxy*>::iterator it;
-	for (it = m_vStreamDecoder.begin(); it != m_vStreamDecoder.end(); ++it)
+	for (std::vector<IAlgorithmProxy*>::iterator it = m_vStreamDecoder.begin(); it != m_vStreamDecoder.end(); ++it)
 	{
 		(*it)->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(**it);
@@ -159,11 +146,9 @@ bool CBoxAlgorithmSimpleDSP::processInput(uint32_t ui32InputIndex)
 		if (l_rDynamicBoxContext.getInputChunkCount(i) == 0) { return true; }
 		if (m_bCheckChunkDates)
 		{
-			OV_ERROR_UNLESS_KRF(
-				l_ui64StartTime == l_rDynamicBoxContext.getInputChunkStartTime(i, 0) ||
-				l_ui64EndTime == l_rDynamicBoxContext.getInputChunkEndTime(i, 0),
-				"Invalid chunk dates (disable this error check by setting Plugin_SignalProcessing_SimpleDSP_CheckChunkDates to false)",
-				OpenViBE::Kernel::ErrorType::BadInput);
+			OV_ERROR_UNLESS_KRF(l_ui64StartTime == l_rDynamicBoxContext.getInputChunkStartTime(i, 0) || l_ui64EndTime == l_rDynamicBoxContext.getInputChunkEndTime(i, 0),
+								"Invalid chunk dates (disable this error check by setting Plugin_SignalProcessing_SimpleDSP_CheckChunkDates to false)",
+								OpenViBE::Kernel::ErrorType::BadInput);
 		}
 	}
 
@@ -177,7 +162,6 @@ bool CBoxAlgorithmSimpleDSP::process()
 	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	uint32_t i;
 	uint32_t l_ui32HeaderCount = 0;
 	uint32_t l_ui32BufferCount = 0;
 	uint32_t l_ui32EndCount    = 0;
@@ -188,7 +172,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 	m_vMatrix.clear();
 
 	op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
-	for (i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		TParameterHandler<const IMemoryBuffer*> ip_pMemoryBuffer(m_vStreamDecoder[i]->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
 		TParameterHandler<IMatrix*> op_pMatrix(m_vStreamDecoder[i]->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
@@ -198,10 +182,9 @@ bool CBoxAlgorithmSimpleDSP::process()
 		{
 			if (i != 0)
 			{
-				OV_ERROR_UNLESS_KRF(
-					m_vMatrix[0]->getBufferElementCount() == op_pMatrix->getBufferElementCount(),
-					"Invalid matrix dimension [" << m_vMatrix[0]->getBufferElementCount() << "] (expected value = " << op_pMatrix->getBufferElementCount() <<")",
-					OpenViBE::Kernel::ErrorType::BadValue);
+				OV_ERROR_UNLESS_KRF(m_vMatrix[0]->getBufferElementCount() == op_pMatrix->getBufferElementCount(),
+									"Invalid matrix dimension [" << m_vMatrix[0]->getBufferElementCount() << "] (expected value = " << op_pMatrix->getBufferElementCount() <<")",
+									OpenViBE::Kernel::ErrorType::BadValue);
 			}
 			l_ui32HeaderCount++;
 		}
@@ -217,12 +200,10 @@ bool CBoxAlgorithmSimpleDSP::process()
 		l_rDynamicBoxContext.markInputAsDeprecated(i, 0);
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		(!l_ui32HeaderCount || l_ui32HeaderCount == l_rStaticBoxContext.getInputCount()) &&
-		(!l_ui32BufferCount || l_ui32BufferCount == l_rStaticBoxContext.getInputCount()) &&
-		(!l_ui32EndCount || l_ui32EndCount == l_rStaticBoxContext.getInputCount()),
-		"Invalid stream structure",
-		OpenViBE::Kernel::ErrorType::BadValue);
+	OV_ERROR_UNLESS_KRF((!l_ui32HeaderCount || l_ui32HeaderCount == l_rStaticBoxContext.getInputCount()) &&
+						(!l_ui32BufferCount || l_ui32BufferCount == l_rStaticBoxContext.getInputCount()) &&
+						(!l_ui32EndCount || l_ui32EndCount == l_rStaticBoxContext.getInputCount()),
+						"Invalid stream structure", OpenViBE::Kernel::ErrorType::BadValue);
 
 	if (l_ui32HeaderCount)
 	{

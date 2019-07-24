@@ -81,7 +81,9 @@ namespace Dsp
 				const double t = 1. / m_remainingSamples;
 				double dp[maxParameters];
 				for (int i = 0; i < DesignClass::NumParams; ++i)
+				{
 					dp[i] = (this->getParams()[i] - m_transitionParams[i]) * t;
+				}
 
 				for (int n = 0; n < remainingSamples; ++n)
 				{
@@ -100,7 +102,9 @@ namespace Dsp
 				m_remainingSamples -= remainingSamples;
 
 				if (m_remainingSamples == 0)
+				{
 					m_transitionParams = this->getParams();
+				}
 			}
 
 			// do what's left
@@ -108,9 +112,11 @@ namespace Dsp
 			{
 				// no transition
 				for (int i = 0; i < numChannels; ++i)
+				{
 					this->m_design.process(numSamples - remainingSamples,
 										   destChannelArray[i] + remainingSamples,
 										   this->m_state[i]);
+				}
 			}
 		}
 

@@ -44,10 +44,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 	m_f64HysteresisThreshold = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_f64WindowTime          = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	OV_ERROR_UNLESS_KRF(
-		m_f64WindowTime > 0,
-		"Invalid negative number for window length",
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_f64WindowTime > 0, "Invalid negative number for window length", OpenViBE::Kernel::ErrorType::BadSetting);
 
 	m_ui64StimulationId1 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_ui64StimulationId2 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
@@ -96,9 +93,9 @@ bool CBoxAlgorithmZeroCrossingDetector::processInput(uint32_t ui32InputIndex)
 bool CBoxAlgorithmZeroCrossingDetector::process()
 {
 	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
-	uint32_t i, j, k;
+	uint32_t j, k;
 
-	for (i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		m_oDecoder.decode(i);
 		m_oEncoder1.getInputStimulationSet()->clear();

@@ -57,10 +57,9 @@ bool CBoxAlgorithmCrop::initialize()
 	m_f64MinCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_f64MaxCropValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
-	OV_ERROR_UNLESS_KRF(
-		m_f64MinCropValue < m_f64MaxCropValue,
-		"Invalid crop values: minimum crop value [" << m_f64MinCropValue << "] should be lower than the maximum crop value [" << m_f64MaxCropValue << "]",
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_f64MinCropValue < m_f64MaxCropValue,
+						"Invalid crop values: minimum crop value [" << m_f64MinCropValue << "] should be lower than the maximum crop value [" << m_f64MaxCropValue << "]",
+						OpenViBE::Kernel::ErrorType::BadSetting);
 
 	return true;
 }

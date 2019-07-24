@@ -40,15 +40,13 @@ CString CMetadata::getData() const
 
 bool CMetadata::setIdentifier(const CIdentifier& identifier)
 {
-	OV_ERROR_UNLESS_KRF(
-		m_Identifier == OV_UndefinedIdentifier,
-		"Metadata [" << m_Identifier.toString() << "] in scenario [" << m_OwnerScenario.getIdentifier().toString() << "]  already has an identifier.",
-		ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(m_Identifier == OV_UndefinedIdentifier,
+						"Metadata [" << m_Identifier.toString() << "] in scenario [" << m_OwnerScenario.getIdentifier().toString() << "]  already has an identifier.",
+						ErrorType::BadCall);
 
-	OV_ERROR_UNLESS_KRF(
-		identifier != OV_UndefinedIdentifier,
-		"Attempted to assign undefined identifier to Metadata in scenario [" << m_OwnerScenario.getIdentifier().toString() << "].",
-		ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(identifier != OV_UndefinedIdentifier,
+						"Attempted to assign undefined identifier to Metadata in scenario [" << m_OwnerScenario.getIdentifier().toString() << "].",
+						ErrorType::BadArgument);
 
 	m_Identifier = identifier;
 	return true;
@@ -56,10 +54,9 @@ bool CMetadata::setIdentifier(const CIdentifier& identifier)
 
 bool CMetadata::setType(const CIdentifier& type)
 {
-	OV_ERROR_UNLESS_KRF(
-		type != OV_UndefinedIdentifier,
-		"Attempted to assign undefined type to Metadata [" << m_Identifier.toString() << "] in scenario [" << m_OwnerScenario.getIdentifier().toString() << "].",
-		ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(type != OV_UndefinedIdentifier,
+						"Attempted to assign undefined type to Metadata [" << m_Identifier.toString() << "] in scenario [" << m_OwnerScenario.getIdentifier().toString() << "].",
+						ErrorType::BadArgument);
 
 	m_Type = type;
 	return true;

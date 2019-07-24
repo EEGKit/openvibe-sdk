@@ -65,12 +65,7 @@ namespace OpenViBE
 			bool internalExpandOnlyKeyword(const std::string& sKeyword, const std::string& sValue, std::string& sResult, bool preserveBackslashes) const;
 			bool internalGetConfigurationTokenValueFromName(const std::string& sTokenName, std::string& sTokenValue) const;
 
-		protected:
-
-			IConfigurationManager* m_pParentConfigurationManager;
-
-		protected:
-
+			IConfigurationManager* m_pParentConfigurationManager = nullptr;
 			mutable uint32_t m_ui32Index;
 			mutable uint32_t m_ui32StartTime;
 
@@ -80,8 +75,6 @@ namespace OpenViBE
 			CString getDate() const;
 			uint32_t getRealTime() const;
 			uint32_t getProcessId() const;
-
-		protected:
 
 			std::map<CIdentifier, SConfigurationToken> m_vConfigurationToken;
 			std::map<CString, const IConfigurationKeywordExpandCallback*> m_vKeywordOverride;

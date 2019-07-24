@@ -117,10 +117,7 @@ bool CWriter::closeChild()
 
 void CWriter::release()
 {
-	while (!m_vNodes.empty())
-	{
-		closeChild();
-	}
+	while (!m_vNodes.empty()) { closeChild(); }
 	delete this;
 }
 

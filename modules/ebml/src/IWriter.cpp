@@ -140,10 +140,7 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 uint64_t CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
 {
 	uint64_t l_ui64ContentSize = 0;
-	if (m_vChildren.size() == 0)
-	{
-		l_ui64ContentSize = m_ui64BufferLength;
-	}
+	if (m_vChildren.size() == 0) { l_ui64ContentSize = m_ui64BufferLength; }
 	else
 	{
 		vector<CWriterNode*>::iterator i;
@@ -232,10 +229,7 @@ bool CWriter::setChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 		memcpy(l_pBufferCopy, pBuffer, (size_t)(ui64BufferSize));
 	}
 
-	if (m_pCurrentNode->m_pBuffer)
-	{
-		delete [] m_pCurrentNode->m_pBuffer;
-	}
+	if (m_pCurrentNode->m_pBuffer) { delete [] m_pCurrentNode->m_pBuffer; }
 
 	m_pCurrentNode->m_ui64BufferLength = ui64BufferSize;
 	m_pCurrentNode->m_pBuffer          = l_pBufferCopy;
@@ -267,10 +261,7 @@ bool CWriter::closeChild()
 
 void CWriter::release()
 {
-	while (m_pCurrentNode)
-	{
-		closeChild();
-	}
+	while (m_pCurrentNode) { closeChild(); }
 	delete this;
 }
 

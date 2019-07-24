@@ -117,10 +117,7 @@ void CSpectrumDecoder::closeChild()
 	{
 		m_ui32FrequencyBandIndex++;
 	}
-	else
-	{
-		CStreamedMatrixDecoder::closeChild();
-	}
+	else { CStreamedMatrixDecoder::closeChild(); }
 
 	m_vNodes.pop();
 }

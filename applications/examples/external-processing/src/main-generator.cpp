@@ -38,15 +38,9 @@ public:
 		m_Buffer.insert(m_Buffer.end(), data, data + bufferSize);
 	}
 
-	void clear()
-	{
-		m_Buffer.clear();
-	}
+	void clear() { m_Buffer.clear(); }
 
-	const std::vector<uint8_t>& data()
-	{
-		return m_Buffer;
-	}
+	const std::vector<uint8_t>& data() { return m_Buffer; }
 
 private:
 	std::vector<uint8_t> m_Buffer;

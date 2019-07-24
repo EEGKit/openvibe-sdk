@@ -26,10 +26,7 @@ namespace Socket
 	{
 	public:
 
-		bool connect(
-			const char* sServerName,
-			uint32_t ui32ServerPort,
-			uint32_t ui32TimeOut)
+		bool connect(const char* sServerName, uint32_t ui32ServerPort, uint32_t ui32TimeOut)
 		{
 			if (!open()) { return false; }
 
@@ -178,8 +175,5 @@ namespace Socket
 		}
 	};
 
-	IConnectionClient* createConnectionClient()
-	{
-		return new CConnectionClient();
-	}
+	IConnectionClient* createConnectionClient() { return new CConnectionClient(); }
 } // namespace Socket
