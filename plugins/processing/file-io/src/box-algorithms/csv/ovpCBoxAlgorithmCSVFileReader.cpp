@@ -104,10 +104,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 	//open file
 	m_pFile = fopen(m_sFilename.toASCIIString(), "r"); // we don't open as binary as that gives us \r\n on Windows as line-endings and leaves a dangling char after split. CSV files should be text.
 
-	OV_ERROR_UNLESS_KRF(
-		m_pFile,
-		"Error opening file [" << m_sFilename << "] for reading",
-		OpenViBE::Kernel::ErrorType::BadFileRead);
+	OV_ERROR_UNLESS_KRF(m_pFile, "Error opening file [" << m_sFilename << "] for reading", OpenViBE::Kernel::ErrorType::BadFileRead);
 
 	// simulate RAII through closure
 	auto releaseResources = [&]()
@@ -175,9 +172,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		if (std::ceil(l_f64SamplingRate) != l_f64SamplingRate)
 		{
 			releaseResources();
-			OV_ERROR_KRF(
-				"Invalid fractional sampling rate (" << l_f64SamplingRate << ") in file",
-				ErrorType::BadValue);
+			OV_ERROR_KRF("Invalid fractional sampling rate (" << l_f64SamplingRate << ") in file", ErrorType::BadValue);
 		}
 
 		m_ui64SamplingRate = static_cast<uint64_t>(l_f64SamplingRate);
@@ -185,9 +180,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		if (m_ui64SamplingRate == 0)
 		{
 			releaseResources();
-			OV_ERROR_KRF(
-				"Invalid NULL sampling rate in file",
-				ErrorType::BadValue);
+			OV_ERROR_KRF("Invalid NULL sampling rate in file", ErrorType::BadValue);
 		}
 
 		// Skip the header
@@ -215,9 +208,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 	else
 	{
 		releaseResources();
-		OV_ERROR_KRF(
-			"Invalid input type identifier " << this->getTypeManager().getTypeName(m_oTypeIdentifier) << " in file ",
-			ErrorType::BadValue);
+		OV_ERROR_KRF("Invalid input type identifier " << this->getTypeManager().getTypeName(m_oTypeIdentifier) << " in file ", ErrorType::BadValue);
 	}
 
 	return true;
@@ -233,10 +224,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 {
 	if (m_pFile == NULL)
 	{
-		OV_ERROR_UNLESS_KRF(
-			initializeFile(),
-			"Error reading data from csv file " << m_sFilename,
-			ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(initializeFile(), "Error reading data from csv file " << m_sFilename, ErrorType::Internal);
 	}
 	//line buffer
 	char l_pLine[m_ui32bufferLen];
@@ -300,10 +288,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 	if (l_bSomethingToSend)
 	{
 		// Encode the data
-		OV_ERROR_UNLESS_KRF(
-			(this->*m_fpRealProcess)(),
-			"Error encoding data from csv file " << m_sFilename << " into the right output format",
-			ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF((this->*m_fpRealProcess)(), "Error encoding data from csv file " << m_sFilename << " into the right output format", ErrorType::Internal);
 
 		//for the stimulation, the line contents in m_vLastLineSplit isn't processed.
 		if (m_oTypeIdentifier != OV_TypeId_Stimulations
@@ -341,10 +326,7 @@ bool CBoxAlgorithmCSVFileReader::process_streamedMatrix()
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		convertVectorDataToMatrix(ip_pMatrix),
-		"Error converting vector data to streamed matrix",
-		ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(convertVectorDataToMatrix(ip_pMatrix), "Error converting vector data to streamed matrix", ErrorType::Internal);
 
 	m_pAlgorithmEncoder->encodeBuffer();
 
@@ -380,10 +362,7 @@ bool CBoxAlgorithmCSVFileReader::process_stimulation()
 
 	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
 	{
-		OV_ERROR_UNLESS_KRF(
-			m_vDataMatrix[i].size() == 3,
-			"Invalid data row length: must be 3 for stimulation date, index and duration",
-			ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(m_vDataMatrix[i].size() == 3, "Invalid data row length: must be 3 for stimulation date, index and duration", ErrorType::BadParsing);
 
 		//stimulation date
 		const uint64_t l_ui64StimulationDate = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[i][0].c_str()));
@@ -440,10 +419,7 @@ bool CBoxAlgorithmCSVFileReader::process_signal()
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		convertVectorDataToMatrix(ip_pMatrix),
-		"Error converting vector data to signal",
-		ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(convertVectorDataToMatrix(ip_pMatrix), "Error converting vector data to signal", ErrorType::Internal);
 
 	// this->getLogManager() << LogLevel_Info << "Cols from header " << m_ui32NbColumn << "\n";
 	// this->getLogManager() << LogLevel_Info << "InMatrix " << (m_vDataMatrix.size() > 0 ? m_vDataMatrix[0].size() : 0) << " outMatrix " << ip_pMatrix->getDimensionSize(0) << "\n";
@@ -509,10 +485,7 @@ bool CBoxAlgorithmCSVFileReader::process_channelLocalisation()
 		//send the current bloc if the next data hasn't the same date
 		if (i >= l_vChannelBloc.size() - 1 || l_vChannelBloc[(unsigned int)(i + 1)][0] != m_vDataMatrix[0][0])
 		{
-			OV_ERROR_UNLESS_KRF(
-				convertVectorDataToMatrix(ip_pMatrix),
-				"Error converting vector data to channel localisation",
-				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(convertVectorDataToMatrix(ip_pMatrix), "Error converting vector data to channel localisation", ErrorType::Internal);
 
 			m_pAlgorithmEncoder->encodeBuffer();
 			const uint64_t l_ui64Date = ITimeArithmetics::secondsToTime(atof(m_vDataMatrix[0][0].c_str()));
@@ -558,10 +531,9 @@ bool CBoxAlgorithmCSVFileReader::process_featureVector()
 	// Each vector has to be sent separately
 	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
 	{
-		OV_ERROR_UNLESS_KRF(
-			m_vDataMatrix[i].size() == m_ui32ColumnCount,
-			"Unexpected number of elements" << "(got " << static_cast<uint64_t>(m_vDataMatrix[i].size()) << ", expected " << m_ui32ColumnCount << ")",
-			ErrorType::BadParsing);
+		OV_ERROR_UNLESS_KRF(m_vDataMatrix[i].size() == m_ui32ColumnCount, 
+							"Unexpected number of elements" << "(got " << static_cast<uint64_t>(m_vDataMatrix[i].size()) << ", expected " << m_ui32ColumnCount << ")", 
+							ErrorType::BadParsing);
 
 		for (uint32_t j = 0; j < m_ui32ColumnCount - 1; j++)
 		{
@@ -638,10 +610,7 @@ bool CBoxAlgorithmCSVFileReader::process_spectrum()
 		//send the current bloc if the next data hasn't the same date
 		if (i >= l_vSpectrumBloc.size() - 1 || l_vSpectrumBloc[(unsigned int)(i + 1)][0] != m_vDataMatrix[0][0])
 		{
-			OV_ERROR_UNLESS_KRF(
-				convertVectorDataToMatrix(ip_pMatrix),
-				"Error converting vector data to spectrum",
-				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(convertVectorDataToMatrix(ip_pMatrix), "Error converting vector data to spectrum", ErrorType::Internal);
 
 			m_pAlgorithmEncoder->encodeBuffer();
 			const uint64_t l_ui64Date = ITimeArithmetics::secondsToTime(std::stod(m_vDataMatrix[0][0].c_str()));
@@ -662,11 +631,9 @@ bool CBoxAlgorithmCSVFileReader::convertVectorDataToMatrix(IMatrix* matrix)
 	// note: Chunk size shouldn't change after encoding header, do not mess with it here, even if the input has different size
 
 	// We accept partial data, but not buffer overruns ...
-	OV_ERROR_UNLESS_KRF(
-		matrix->getDimensionSize(1) >= m_vDataMatrix.size() && matrix->getDimensionSize(0) >= (m_ui32ColumnCount-1),
-		"Matrix size incompatibility, data suggests " << m_ui32ColumnCount-1 << "x" << static_cast<uint64_t>(m_vDataMatrix.size())
-		<< ", expected at most " << matrix->getDimensionSize(0) << "x" << matrix->getDimensionSize(0),
-		ErrorType::Overflow);
+	OV_ERROR_UNLESS_KRF(matrix->getDimensionSize(1) >= m_vDataMatrix.size() && matrix->getDimensionSize(0) >= (m_ui32ColumnCount-1),
+						"Matrix size incompatibility, data suggests " << m_ui32ColumnCount-1 << "x" << static_cast<uint64_t>(m_vDataMatrix.size())
+						<< ", expected at most " << matrix->getDimensionSize(0) << "x" << matrix->getDimensionSize(0), ErrorType::Overflow);
 
 	std::stringstream l_sMatrix;
 	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)

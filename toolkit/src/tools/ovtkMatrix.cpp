@@ -107,8 +107,8 @@ bool Matrix::isContentValid(const IMatrix& rSourceMatrix, const bool bCheckNotAN
 	const double* l_pBufferEnd = rSourceMatrix.getBuffer() + rSourceMatrix.getBufferElementCount();
 	while (l_pBuffer != l_pBufferEnd)
 	{
-		if (bCheckNotANumber && std::isnan(*l_pBuffer)) return false;
-		if (bCheckInfinity && std::isinf(*l_pBuffer)) return false;
+		if (bCheckNotANumber && std::isnan(*l_pBuffer)) { return false; }
+		if (bCheckInfinity && std::isinf(*l_pBuffer)) { return false; }
 		l_pBuffer++;
 	}
 	return true;

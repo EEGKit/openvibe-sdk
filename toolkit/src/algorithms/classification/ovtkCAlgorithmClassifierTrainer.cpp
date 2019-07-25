@@ -19,18 +19,15 @@ bool CAlgorithmClassifierTrainer::process()
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Feature vector set is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
+		CFeatureVectorSet l_oFeatureVectorSetAdapter(*l_pFeatureVectorSet);
+		if (this->train(l_oFeatureVectorSetAdapter))
+		{
+			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true);
+		}
 		else
 		{
-			CFeatureVectorSet l_oFeatureVectorSetAdapter(*l_pFeatureVectorSet);
-			if (this->train(l_oFeatureVectorSetAdapter))
-			{
-				this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true);
-			}
-			else
-			{
-				this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
-				OV_ERROR_KRF("Training failed", OpenViBE::Kernel::ErrorType::Internal);
-			}
+			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
+			OV_ERROR_KRF("Training failed", OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
 
@@ -42,18 +39,15 @@ bool CAlgorithmClassifierTrainer::process()
 			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Configuration memory buffer is NULL", OpenViBE::Kernel::ErrorType::BadOutput);
 		}
+		l_pConfiguration->setSize(0, true);
+		if (this->saveConfiguration(*l_pConfiguration))
+		{
+			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true);
+		}
 		else
 		{
-			l_pConfiguration->setSize(0, true);
-			if (this->saveConfiguration(*l_pConfiguration))
-			{
-				this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Success, true);
-			}
-			else
-			{
-				this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
-				OV_ERROR_KRF("Saving configuration failed", OpenViBE::Kernel::ErrorType::Internal);
-			}
+			this->activateOutputTrigger(OVTK_Algorithm_ClassifierTrainer_OutputTriggerId_Failed, true);
+			OV_ERROR_KRF("Saving configuration failed", OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
 

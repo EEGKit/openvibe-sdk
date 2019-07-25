@@ -205,10 +205,7 @@ bool CScenario::clear()
 
 bool CScenario::removeScenarioInput(const uint32_t inputIndex)
 {
-	OV_ERROR_UNLESS_KRF(
-		inputIndex < this->getInputCount(),
-		"Input index = [" << inputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
-		ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(inputIndex < this->getInputCount(), "Input index = [" << inputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])", ErrorType::OutOfBound);
 
 	this->removeInput(inputIndex);
 
@@ -223,10 +220,7 @@ bool CScenario::removeScenarioInput(const uint32_t inputIndex)
 
 bool CScenario::removeScenarioOutput(const uint32_t outputIndex)
 {
-	OV_ERROR_UNLESS_KRF(
-		outputIndex < this->getOutputCount(),
-		"Output index = [" << outputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
-		ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(outputIndex < this->getOutputCount(), "Output index = [" << outputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])", ErrorType::OutOfBound);
 
 	this->removeOutput(outputIndex);
 
@@ -375,8 +369,7 @@ IBox* CScenario::getBoxDetails(const CIdentifier& boxIdentifier)
 {
 	//	this->getLogManager() << LogLevel_Debug << "Getting box details from scenario\n";
 
-	map<CIdentifier, CBox*>::const_iterator itBox;
-	itBox = m_Boxes.find(boxIdentifier);
+	map<CIdentifier, CBox*>::const_iterator itBox = m_Boxes.find(boxIdentifier);
 
 	OV_ERROR_UNLESS_KRN(itBox != m_Boxes.end(), "Box [" << boxIdentifier.toString() << "] is not part of the scenario", ErrorType::ResourceNotFound);
 
@@ -1101,16 +1094,10 @@ bool CScenario::disconnect(const CIdentifier& sourceBoxIdentifier, const uint32_
 		}
 	}
 
-	OV_ERROR_KRF(
-		"Link is not part of the scenario",
-		ErrorType::ResourceNotFound);
+	OV_ERROR_KRF("Link is not part of the scenario", ErrorType::ResourceNotFound);
 }
 
-bool CScenario::disconnect(
-	const CIdentifier& sourceBoxIdentifier,
-	const CIdentifier& sourceBoxOutputIdentifier,
-	const CIdentifier& targetBoxIdentifier,
-	const CIdentifier& targetBoxInputIdentifier)
+bool CScenario::disconnect(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier)
 {
 	uint32_t sourceBoxOutputIndex;
 	uint32_t targetBoxInputIndex;

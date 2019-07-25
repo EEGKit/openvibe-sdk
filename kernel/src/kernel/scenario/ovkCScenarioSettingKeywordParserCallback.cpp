@@ -27,7 +27,7 @@ bool CScenarioSettingKeywordParserCallback::expand(const CString& rStringToExpan
 		return true;
 	}
 		// Expand settings from the scenario
-	else if (m_rScenario.hasSettingWithName(rStringToExpand))
+	if (m_rScenario.hasSettingWithName(rStringToExpand))
 	{
 		m_rScenario.getSettingValue(rStringToExpand, rExpandedString);
 		return true;

@@ -41,10 +41,9 @@ bool CBoxAlgorithmRegularizedCSPTrainer::initialize()
 	m_SaveAsBoxConf                      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
 	// @FIXME CERT
-	OV_ERROR_UNLESS_KRF(
-		m_FiltersPerClass > 0, // && m_FiltersPerClass%2 == 0,
-		"Invalid filter dimension number [" << m_FiltersPerClass << "] (expected value > 0)", // even ?
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_FiltersPerClass > 0, // && m_FiltersPerClass%2 == 0,
+						"Invalid filter dimension number [" << m_FiltersPerClass << "] (expected value > 0)", // even ?
+						OpenViBE::Kernel::ErrorType::BadSetting);
 
 	m_HasBeenInitialized = true;
 
@@ -55,17 +54,11 @@ bool CBoxAlgorithmRegularizedCSPTrainer::initialize()
 		m_SignalDecoders[i].initialize(*this, i + 1);
 
 		const CIdentifier covAlgId = this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_OnlineCovariance);
-		OV_ERROR_UNLESS_KRF(
-			covAlgId != OV_UndefinedIdentifier,
-			"Failed to create online covariance algorithm",
-			OpenViBE::Kernel::ErrorType::BadResourceCreation);
+		OV_ERROR_UNLESS_KRF(covAlgId != OV_UndefinedIdentifier, "Failed to create online covariance algorithm", OpenViBE::Kernel::ErrorType::BadResourceCreation);
 
 
 		m_IncCovarianceProxies[i].incrementalCov = &this->getAlgorithmManager().getAlgorithm(covAlgId);
-		OV_ERROR_UNLESS_KRF(
-			m_IncCovarianceProxies[i].incrementalCov->initialize(),
-			"Failed to initialize online covariance algorithm",
-			OpenViBE::Kernel::ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].incrementalCov->initialize(), "Failed to initialize online covariance algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
 
 		// Set the params of the cov algorithm
@@ -80,10 +73,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::initialize()
 
 	m_Tikhonov = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 7);
 
-	OV_ERROR_UNLESS_KRF(
-		m_SpatialFilterConfigurationFilename != CString(""),
-		"Output filename is required in box configuration",
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(m_SpatialFilterConfigurationFilename != CString(""), "Output filename is required in box configuration", OpenViBE::Kernel::ErrorType::BadSetting);
 
 	return true;
 }
@@ -134,17 +124,13 @@ bool CBoxAlgorithmRegularizedCSPTrainer::updateCov(uint32_t index)
 			featureVectorSet->setDimensionSize(0, inputSignal->getDimensionSize(1));
 			featureVectorSet->setDimensionSize(1, inputSignal->getDimensionSize(0));
 
-			OV_ERROR_UNLESS_KRF(
-				m_FiltersPerClass <= inputSignal->getDimensionSize(0),
-				"Invalid CSP filter dimension of [" << m_FiltersPerClass << "] for stream " << i+1 << " (expected value must be less than input channel count ["<< inputSignal->getDimensionSize(1) <<"])",
-				OpenViBE::Kernel::ErrorType::BadSetting);
+			OV_ERROR_UNLESS_KRF(m_FiltersPerClass <= inputSignal->getDimensionSize(0),
+								"Invalid CSP filter dimension of [" << m_FiltersPerClass << "] for stream " << i+1 << " (expected value must be less than input channel count ["<< inputSignal->getDimensionSize(1) <<"])",
+								OpenViBE::Kernel::ErrorType::BadSetting);
 
 			curCovProxy.incrementalCov->activateInputTrigger(OVP_Algorithm_OnlineCovariance_Process_Reset, true);
 
-			OV_ERROR_UNLESS_KRF(
-				curCovProxy.incrementalCov->process(),
-				"Failed to parametrize covariance algorithm",
-				OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(curCovProxy.incrementalCov->process(), "Failed to parametrize covariance algorithm", OpenViBE::Kernel::ErrorType::Internal);
 		}
 		if (decoder->isBufferReceived())
 		{
@@ -251,10 +237,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<MatrixXd>&
 		}
 
 		// Compute covariance in all the classes except 'classIndex'.
-		OV_ERROR_UNLESS_KRF(
-			outclassCovAverage(classIndex, cov, outclassCov),
-			"Outclass cov computation failed for condition [" << classIndex + 1 << "]",
-			OpenViBE::Kernel::ErrorType::BadProcessing);
+		OV_ERROR_UNLESS_KRF(outclassCovAverage(classIndex, cov, outclassCov), "Outclass cov computation failed for condition [" << classIndex + 1 << "]", OpenViBE::Kernel::ErrorType::BadProcessing);
 
 		covProd[classIndex] = covInv[classIndex] * outclassCov;
 
@@ -347,38 +330,28 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 		for (uint32_t i = 0; i < m_NumClasses; i++)
 		{
-			OV_ERROR_UNLESS_KRF(
-				m_IncCovarianceProxies[i].numSamples >= 2,
-				"Invalid sample count of [" <<m_IncCovarianceProxies[i].numSamples << "] for condition number " << i << " (expected value > 2)",
-				OpenViBE::Kernel::ErrorType::BadProcessing);
+			OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].numSamples >= 2, 
+								"Invalid sample count of [" <<m_IncCovarianceProxies[i].numSamples << "] for condition number " << i << " (expected value > 2)",
+								OpenViBE::Kernel::ErrorType::BadProcessing);
 
 			TParameterHandler<IMatrix*> op_pCovarianceMatrix(m_IncCovarianceProxies[i].incrementalCov->getOutputParameter(OVP_Algorithm_OnlineCovariance_OutputParameterId_CovarianceMatrix));
 
 			// Get regularized cov
 			m_IncCovarianceProxies[i].incrementalCov->activateInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCov, true);
-			OV_ERROR_UNLESS_KRF(
-				m_IncCovarianceProxies[i].incrementalCov->process(),
-				"Failed to retrieve regularized covariance",
-				OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].incrementalCov->process(), "Failed to retrieve regularized covariance", OpenViBE::Kernel::ErrorType::Internal);
 
 			Map<MatrixXdRowMajor> l_oCovMapper(op_pCovarianceMatrix->getBuffer(), nChannels, nChannels);
 			cov[i] = l_oCovMapper;
 
 			// Get vanilla cov
 			m_IncCovarianceProxies[i].incrementalCov->activateInputTrigger(OVP_Algorithm_OnlineCovariance_Process_GetCovRaw, true);
-			OV_ERROR_UNLESS_KRF(
-				m_IncCovarianceProxies[i].incrementalCov->process(),
-				"Failed to retrieve vanilla covariance",
-				OpenViBE::Kernel::ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].incrementalCov->process(), "Failed to retrieve vanilla covariance", OpenViBE::Kernel::ErrorType::Internal);
 		}
 
 		// Sanity check
 		for (uint32_t i = 1; i < m_NumClasses; i++)
 		{
-			OV_ERROR_UNLESS_KRF(
-				cov[i-1].rows() == cov[i].rows() && cov[i-1].cols() == cov[i].cols(),
-				"Mismatch between the number of channel in both input streams",
-				OpenViBE::Kernel::ErrorType::BadValue);
+			OV_ERROR_UNLESS_KRF(cov[i-1].rows() == cov[i].rows() && cov[i-1].cols() == cov[i].cols(), "Mismatch between the number of channel in both input streams", OpenViBE::Kernel::ErrorType::BadValue);
 		}
 
 		this->getLogManager() << LogLevel_Info << "Data covariance dims are [" << static_cast<uint32_t>(cov[0].rows()) << "x" << static_cast<uint32_t>(cov[0].cols())
@@ -393,10 +366,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		// Compute the actual CSP using the obtained covariance matrices
 		std::vector<MatrixXd> l_vSortedEigenVectors;
 		std::vector<VectorXd> l_vSortedEigenValues;
-		OV_ERROR_UNLESS_KRF(
-			computeCSP(cov, l_vSortedEigenVectors, l_vSortedEigenValues),
-			"Failure when computing CSP",
-			OpenViBE::Kernel::ErrorType::BadProcessing);
+		OV_ERROR_UNLESS_KRF(computeCSP(cov, l_vSortedEigenVectors, l_vSortedEigenValues), "Failure when computing CSP", OpenViBE::Kernel::ErrorType::BadProcessing);
 
 		// Create a CMatrix mapper that can spool the filters to a file
 		CMatrix selectedVectors;
@@ -417,10 +387,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 		if (m_SaveAsBoxConf)
 		{
 			FILE* file = FS::Files::open(m_SpatialFilterConfigurationFilename.toASCIIString(), "wb");
-			OV_ERROR_UNLESS_KRF(
-				file,
-				"Failed to open file located at [" << m_SpatialFilterConfigurationFilename.toASCIIString() << "]",
-				OpenViBE::Kernel::ErrorType::BadFileRead);
+			OV_ERROR_UNLESS_KRF(file, "Failed to open file located at [" << m_SpatialFilterConfigurationFilename.toASCIIString() << "]", OpenViBE::Kernel::ErrorType::BadFileRead);
 
 			fprintf(file, "<OpenViBE-SettingsOverride>\n");
 			fprintf(file, "\t<SettingValue>");
@@ -450,10 +417,9 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 				selectedVectors.setDimensionLabel(0, i, label.str().c_str());
 			}
 
-			OV_ERROR_UNLESS_KRF(
-				OpenViBEToolkit::Tools::Matrix::saveToTextFile(selectedVectors, m_SpatialFilterConfigurationFilename, 10),
-				"Failed to save file to location [" << m_SpatialFilterConfigurationFilename << "]",
-				OpenViBE::Kernel::ErrorType::BadFileWrite);
+			OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::saveToTextFile(selectedVectors, m_SpatialFilterConfigurationFilename, 10),
+								"Failed to save file to location [" << m_SpatialFilterConfigurationFilename << "]",
+								OpenViBE::Kernel::ErrorType::BadFileWrite);
 		}
 
 		this->getLogManager() << LogLevel_Info << "Regularized CSP Spatial filter trained successfully.\n";

@@ -67,10 +67,8 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 bool CBoxAlgorithmVotingClassifier::uninitialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	// IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
-	uint32_t i;
 
-	for (i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		SInput& l_rInput = m_vClassificationResults[i];
 		l_rInput.m_pDecoder->uninitialize();
@@ -93,7 +91,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
-	uint32_t i, j, k;
+	uint32_t i, j;
 
 	bool l_bCanChoose = true;
 
@@ -136,7 +134,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 				}
 				else
 				{
-					for (k = 0; k < l_rInput.op_pStimulationSet->getStimulationCount(); k++)
+					for (uint32_t k = 0; k < l_rInput.op_pStimulationSet->getStimulationCount(); k++)
 					{
 						uint64_t l_ui64StimulationIdentifier = l_rInput.op_pStimulationSet->getStimulationIdentifier(k);
 						if (l_ui64StimulationIdentifier == m_ui64TargetClassLabel || l_ui64StimulationIdentifier == m_ui64NonTargetClassLabel || l_ui64StimulationIdentifier == m_ui64RejectClassLabel)

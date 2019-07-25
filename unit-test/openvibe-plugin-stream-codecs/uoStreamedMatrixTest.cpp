@@ -21,7 +21,7 @@ namespace
 	protected:
 
 		StreamedMatrixTest()
-			: m_KernelContext() { }
+		{ }
 
 
 		~StreamedMatrixTest() override { }

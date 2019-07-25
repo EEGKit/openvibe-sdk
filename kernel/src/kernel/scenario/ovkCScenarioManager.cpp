@@ -203,7 +203,7 @@ bool CScenarioManager::importScenarioFromFile(CIdentifier& newScenarioIdentifier
 		fclose(inputFile);
 		OV_ERROR_KRF("Problem reading scenario file '" << fileName << "'", ErrorType::BadFileRead);
 	}
-	else { fclose(inputFile); }
+	fclose(inputFile);
 
 	return this->importScenario(newScenarioIdentifier, memoryBuffer, scenarioImporterAlgorithmIdentifier);
 }
@@ -591,9 +591,7 @@ CIdentifier CScenarioManager::getScenarioExporterAlgorithmIdentifier(const CIden
 
 bool CScenarioManager::releaseScenario(const CIdentifier& rScenarioIdentifier)
 {
-	//retrieve iterator to scenario
-	map<CIdentifier, CScenario*>::iterator itScenario;
-	itScenario = m_vScenario.find(rScenarioIdentifier);
+	map<CIdentifier, CScenario*>::iterator itScenario = m_vScenario.find(rScenarioIdentifier);
 	if (itScenario == m_vScenario.end())
 	{
 		// error is handled on a higher level
@@ -609,8 +607,7 @@ bool CScenarioManager::releaseScenario(const CIdentifier& rScenarioIdentifier)
 
 IScenario& CScenarioManager::getScenario(const CIdentifier& rScenarioIdentifier)
 {
-	map<CIdentifier, CScenario*>::const_iterator itScenario;
-	itScenario = m_vScenario.find(rScenarioIdentifier);
+	map<CIdentifier, CScenario*>::const_iterator itScenario = m_vScenario.find(rScenarioIdentifier);
 
 	// If the call is wrongly handled, and falls in this condition then next instruction causes a crash...
 	// At least, here the abortion is handled!

@@ -68,8 +68,8 @@ namespace
 		}
 		else if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Smart)
 		{
-			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart);
-			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart);
+			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) { l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart); }
+			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) { l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart); }
 		}
 
 		return l_ui32Result;
@@ -214,8 +214,8 @@ bool CBoxAlgorithmChannelSelector::process()
 						uint32_t l_ui32RangeEndIndex   = _find_channel_(*m_pInputMatrix, l_sSubToken[1], OVP_TypeId_MatchMethod_Index);
 
 						// When first or second part is not found but associated token is empty, don't consider this as an error
-						if (l_ui32RangeStartIndex == std::numeric_limits<uint32_t>::max() && l_sSubToken[0] == CString("")) l_ui32RangeStartIndex = 0;
-						if (l_ui32RangeEndIndex == std::numeric_limits<uint32_t>::max() && l_sSubToken[1] == CString("")) l_ui32RangeEndIndex = m_pInputMatrix->getDimensionSize(0) - 1;
+						if (l_ui32RangeStartIndex == std::numeric_limits<uint32_t>::max() && l_sSubToken[0] == CString("")) { l_ui32RangeStartIndex = 0; }
+						if (l_ui32RangeEndIndex == std::numeric_limits<uint32_t>::max() && l_sSubToken[1] == CString("")) { l_ui32RangeEndIndex = m_pInputMatrix->getDimensionSize(0) - 1; }
 
 						// After these corections, if either first or second token were not found, or if start index is greater than start index, consider this an error and invalid range
 						OV_ERROR_UNLESS_KRF(

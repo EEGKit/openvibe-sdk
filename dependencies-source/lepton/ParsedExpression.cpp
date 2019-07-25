@@ -183,8 +183,10 @@ ExpressionTreeNode ParsedExpression::substituteSimplerExpression(const Expressio
 			}
 			if (children[1].getOperation().getId() == Operation::CONSTANT)
 			{ // Multiply by a constant
-				if (children[0].getOperation().getId() == Operation::MULTIPLY_CONSTANT) // Combine two multiplies into a single one
+				if (children[0].getOperation().getId() == Operation::MULTIPLY_CONSTANT)
+				{ // Combine two multiplies into a single one
 					return ExpressionTreeNode(new Operation::MultiplyConstant(second * dynamic_cast<const Operation::MultiplyConstant*>(&children[0].getOperation())->getValue()), children[0].getChildren()[0]);
+				}
 				return ExpressionTreeNode(new Operation::MultiplyConstant(second), children[0]);
 			}
 			if (children[0].getOperation().getId() == Operation::NEGATE && children[1].getOperation().getId() == Operation::NEGATE) // The two negations cancel
@@ -199,8 +201,10 @@ ExpressionTreeNode ParsedExpression::substituteSimplerExpression(const Expressio
 				return ExpressionTreeNode(new Operation::Negate(), ExpressionTreeNode(new Operation::Multiply(), children[0], children[1].getChildren()[0]));
 			if (children[1].getOperation().getId() == Operation::RECIPROCAL) // a*(1/b) = a/b
 				return ExpressionTreeNode(new Operation::Divide(), children[0], children[1].getChildren()[0]);
-			if (children[0].getOperation().getId() == Operation::RECIPROCAL) // (1/a)*b = b/a
+			if (children[0].getOperation().getId() == Operation::RECIPROCAL)
+			{ // (1/a)*b = b/a
 				return ExpressionTreeNode(new Operation::Divide(), children[1], children[0].getChildren()[0]);
+			}
 			if (children[0] == children[1])
 				return ExpressionTreeNode(new Operation::Square(), children[0]); // x*x = square(x)
 			if (children[0].getOperation().getId() == Operation::SQUARE && children[0].getChildren()[0] == children[1])
@@ -302,7 +306,9 @@ ExpressionTreeNode ParsedExpression::differentiate(const ExpressionTreeNode& nod
 {
 	vector<ExpressionTreeNode> childDerivs(node.getChildren().size());
 	for (int i = 0; i < (int)childDerivs.size(); i++)
+	{
 		childDerivs[i] = differentiate(node.getChildren()[i], variable);
+	}
 	return node.getOperation().differentiate(node.getChildren(), childDerivs, variable);
 }
 

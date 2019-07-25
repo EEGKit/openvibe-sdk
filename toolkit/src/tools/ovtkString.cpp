@@ -48,7 +48,7 @@ uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISp
 
 uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
 {
-	if (ui32SeparatorCount == 0 || pSeparator == NULL) return 0;
+	if (ui32SeparatorCount == 0 || pSeparator == NULL) { return 0; }
 
 	uint32_t l_ui32Count = 0;
 	std::string l_sString(rString.toASCIIString());
@@ -88,14 +88,14 @@ bool OpenViBEToolkit::Tools::String::isAlmostEqual(const CString& rString1, cons
 
 	if (bRemoveStartSpaces)
 	{
-		while (*l_pString1_start == ' ') l_pString1_start++;
-		while (*l_pString2_start == ' ') l_pString2_start++;
+		while (*l_pString1_start == ' ') { l_pString1_start++; }
+		while (*l_pString2_start == ' ') { l_pString2_start++; }
 	}
 
 	if (bRemoveEndSpaces)
 	{
-		while (l_pString1_start < l_pString1_end && *l_pString1_end == ' ') l_pString1_end--;
-		while (l_pString2_start < l_pString2_end && *l_pString2_end == ' ') l_pString2_end--;
+		while (l_pString1_start < l_pString1_end && *l_pString1_end == ' ') { l_pString1_end--; }
+		while (l_pString2_start < l_pString2_end && *l_pString2_end == ' ') { l_pString2_end--; }
 	}
 
 	std::string l_sString1(l_pString1_start, l_pString1_end - l_pString1_start + 1);

@@ -326,7 +326,7 @@ string CPluginObjectDescEnumBoxTemplateGenerator::generateRstIndex(std::vector<s
 
 			for (itLastSplittedCategory = lastSplittedCategories.begin(), itSplittedCategory1 = splittedCategories.begin();
 				 itLastSplittedCategory != lastSplittedCategories.end() && itSplittedCategory1 != splittedCategories.end() && *itLastSplittedCategory == *itSplittedCategory1;
-				 ++itLastSplittedCategory, ++itSplittedCategory1);
+				 ++itLastSplittedCategory, ++itSplittedCategory1) { }
 
 			for (; itSplittedCategory1 != splittedCategories.end(); ++itSplittedCategory1)
 			{

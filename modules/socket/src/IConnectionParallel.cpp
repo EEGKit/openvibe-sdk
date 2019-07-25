@@ -99,24 +99,15 @@ namespace Socket
 #endif
 		}
 
-		bool isReadyToSend(uint32_t ui32TimeOut = 0) const
-		{
-			return this->isConnected();
-		}
+		bool isReadyToSend(uint32_t ui32TimeOut = 0) const { return this->isConnected(); }
 
-		bool isReadyToReceive(uint32_t ui32TimeOut = 0) const
-		{
-			return this->isConnected();
-		}
+		bool isReadyToReceive(uint32_t ui32TimeOut = 0) const { return this->isConnected(); }
 
-		uint32_t getPendingByteCount()
-		{
-			return (this->isConnected() ? 0 : 1);
-		}
+		uint32_t getPendingByteCount() { return (this->isConnected() ? 0 : 1); }
 
 		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize = 8)
 		{
-			if (!this->isConnected()) return 0;
+			if (!this->isConnected()) { return 0; }
 
 #if defined TARGET_OS_Windows
 			uint8_t l_ui8Value = *(static_cast<const uint8_t*>(pBuffer));
@@ -228,7 +219,7 @@ namespace Socket
 
 		bool connect(unsigned short ui16PortNumber)
 		{
-			if (this->isConnected()) return false;
+			if (this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
 			if (m_hmodTVicPort != NULL)

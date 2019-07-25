@@ -68,7 +68,9 @@ CompiledExpression& CompiledExpression::operator=(const CompiledExpression& expr
 	argValues.resize(expression.argValues.size());
 	operation.resize(expression.operation.size());
 	for (int i = 0; i < (int)operation.size(); i++)
+	{
 		operation[i] = expression.operation[i]->clone();
+	}
 	return *this;
 }
 

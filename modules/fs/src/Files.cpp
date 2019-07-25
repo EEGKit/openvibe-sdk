@@ -229,8 +229,8 @@ bool Files::equals(const char* pFile1, const char* pFile2)
 		}
 		else
 		{
-			if (l_pHandle1) CloseHandle(l_pHandle1);
-			if (l_pHandle2) CloseHandle(l_pHandle2);
+			if (l_pHandle1) { CloseHandle(l_pHandle1); }
+			if (l_pHandle2) { CloseHandle(l_pHandle2); }
 		}
 	}
 	return l_bResult;

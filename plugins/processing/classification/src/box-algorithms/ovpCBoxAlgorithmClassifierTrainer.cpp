@@ -62,9 +62,9 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	OV_ERROR_UNLESS_KRF(l_sConfigurationFilename != CString(""), "Invalid empty configuration filename", OpenViBE::Kernel::ErrorType::BadSetting);
 
-	CIdentifier l_oStrategyClassIdentifier, l_oClassifierAlgorithmClassIdentifier;
+	CIdentifier l_oClassifierAlgorithmClassIdentifier;
 
-	l_oStrategyClassIdentifier            = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[c_sMulticlassStrategySettingName]);
+	CIdentifier l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[c_sMulticlassStrategySettingName]);
 	l_oClassifierAlgorithmClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[c_sAlgorithmSettingName]);
 
 	if (l_oStrategyClassIdentifier == OV_UndefinedIdentifier)
@@ -108,10 +108,7 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 
 	m_vFeatureCount.clear();
 
-	OV_ERROR_UNLESS_KRF(
-		l_rStaticBoxContext.getInputCount() >= 2,
-		"Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (at least 2 input expected)",
-		OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(l_rStaticBoxContext.getInputCount() >= 2, "Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (at least 2 input expected)", OpenViBE::Kernel::ErrorType::BadSetting);
 
 	// Provide the number of classes to the classifier
 	const uint32_t l_ui32ClassCount = l_rStaticBoxContext.getInputCount() - 1;
@@ -219,7 +216,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 			this->getLogManager() << LogLevel_Debug << "Cannot resample class " << i << ", 0 examples\n";
 			continue;
 		}
-		else if (l_ui32PaddingNeeded > 0)
+		if (l_ui32PaddingNeeded > 0)
 		{
 			this->getLogManager() << LogLevel_Debug << "Padding class " << i << " with " << l_ui32PaddingNeeded << " examples\n";
 		}
@@ -249,7 +246,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
-	uint32_t i, j;
+	uint32_t i;
 	bool l_bTrainStimulationReceived = false;
 
 	// Parses stimulations
@@ -293,7 +290,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	// Parses feature vectors
 	for (i = 1; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		for (j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
 			m_vFeatureVectorDecoder[i - 1]->decode(j);
 
@@ -517,11 +514,10 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 
 bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix)
 {
-	OV_ERROR_UNLESS_KRF(
-		oMatrix.getDimensionCount() == 2 && oMatrix.getDimensionSize(0) == oMatrix.getDimensionSize(1),
-		"Invalid confution matrix [dim count = " << oMatrix.getDimensionCount() << ", dim size 0 = "
-		<< oMatrix.getDimensionSize(0) << ", dim size 1 = "<< oMatrix.getDimensionSize(1) << "] (expected 2 dimensions with same size)",
-		OpenViBE::Kernel::ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(oMatrix.getDimensionCount() == 2 && oMatrix.getDimensionSize(0) == oMatrix.getDimensionSize(1),
+						"Invalid confution matrix [dim count = " << oMatrix.getDimensionCount() << ", dim size 0 = "
+						<< oMatrix.getDimensionSize(0) << ", dim size 1 = "<< oMatrix.getDimensionSize(1) << "] (expected 2 dimensions with same size)",
+						OpenViBE::Kernel::ErrorType::BadArgument);
 
 	const uint32_t l_ui32Rows = oMatrix.getDimensionSize(0);
 
@@ -574,7 +570,6 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 
 bool CBoxAlgorithmClassifierTrainer::saveConfiguration()
 {
-	CIdentifier l_oStrategyClassIdentifier, l_oClassifierAlgorithmClassIdentifier;
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
@@ -602,13 +597,13 @@ bool CBoxAlgorithmClassifierTrainer::saveConfiguration()
 	l_sRoot->addAttribute(c_sCreatorVersionAttributeName, this->getConfigurationManager().expand("${Application_Version}"));
 
 	XML::IXMLNode* l_pTempNode = XML::createNode(c_sStrategyNodeName);
-	l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[c_sMulticlassStrategySettingName]);
+	CIdentifier l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[c_sMulticlassStrategySettingName]);
 	l_pTempNode->addAttribute(c_sIdentifierAttributeName, l_oStrategyClassIdentifier.toString());
 	l_pTempNode->setPCData((*m_pParameter)[c_sMulticlassStrategySettingName].toASCIIString());
 	l_sRoot->addChild(l_pTempNode);
 
 	l_pTempNode                           = XML::createNode(c_sAlgorithmNodeName);
-	l_oClassifierAlgorithmClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[c_sAlgorithmSettingName]);
+	CIdentifier l_oClassifierAlgorithmClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[c_sAlgorithmSettingName]);
 	l_pTempNode->addAttribute(c_sIdentifierAttributeName, l_oClassifierAlgorithmClassIdentifier.toString());
 	l_pTempNode->setPCData((*m_pParameter)[c_sAlgorithmSettingName].toASCIIString());
 	l_sRoot->addChild(l_pTempNode);

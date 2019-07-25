@@ -217,7 +217,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterNormalGoodSignal)
 	{
 		unsigned int epoch = i / 4;
 		std::vector<double> sample;
-		for (double index = -64.0; index < 64.0; sample.push_back(index++));
+		for (double index = -64.0; index < 64.0; sample.push_back(index++)) { }
 
 		ASSERT_TRUE(spectrumWriterTest->addSample({ time, time + 1.0, sample, epoch }));
 

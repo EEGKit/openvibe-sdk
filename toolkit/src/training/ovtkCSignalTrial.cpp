@@ -19,8 +19,7 @@ CSignalTrial::CSignalTrial()
 
 CSignalTrial::~CSignalTrial()
 {
-	map<uint32_t, double*>::iterator itChannel;
-	for (itChannel = m_vChannelSample.begin(); itChannel != m_vChannelSample.end(); ++itChannel)
+	for (map<uint32_t, double*>::iterator itChannel = m_vChannelSample.begin(); itChannel != m_vChannelSample.end(); ++itChannel)
 	{
 		delete [] itChannel->second;
 	}
@@ -80,8 +79,7 @@ bool CSignalTrial::setSampleCount(const uint32_t ui32SampleCount, const bool bPr
 	if (ui32SampleCount > m_ui32SampleCountReserved)
 	{
 		uint32_t l_ui32SampleCountReserved = (ui32SampleCount + l_ui32SampleCountRounding + 1) & (~l_ui32SampleCountRounding);
-		map<uint32_t, double*>::iterator itChannelSample;
-		for (itChannelSample = m_vChannelSample.begin(); itChannelSample != m_vChannelSample.end(); ++itChannelSample)
+		for (map<uint32_t, double*>::iterator itChannelSample = m_vChannelSample.begin(); itChannelSample != m_vChannelSample.end(); ++itChannelSample)
 		{
 			double* l_pSample = new double[l_ui32SampleCountReserved];
 			if (bPreserve)
@@ -112,8 +110,7 @@ uint32_t CSignalTrial::getChannelCount() const
 
 const char* CSignalTrial::getChannelName(const uint32_t ui32ChannelIndex) const
 {
-	map<uint32_t, string>::const_iterator itChannelName;
-	itChannelName = m_vChannelName.find(ui32ChannelIndex);
+	map<uint32_t, string>::const_iterator itChannelName = m_vChannelName.find(ui32ChannelIndex);
 	if (itChannelName != m_vChannelName.end())
 	{
 		return itChannelName->second.c_str();
@@ -138,8 +135,7 @@ uint64_t CSignalTrial::getDuration() const
 
 double* CSignalTrial::getChannelSampleBuffer(const uint32_t ui32ChannelIndex) const
 {
-	map<uint32_t, double*>::const_iterator itChannelSample;
-	itChannelSample = m_vChannelSample.find(ui32ChannelIndex);
+	map<uint32_t, double*>::const_iterator itChannelSample = m_vChannelSample.find(ui32ChannelIndex);
 	if (itChannelSample != m_vChannelSample.end()) { return itChannelSample->second; }
 	return NULL;
 }

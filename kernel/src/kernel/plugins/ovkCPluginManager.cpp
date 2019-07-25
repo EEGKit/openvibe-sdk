@@ -141,8 +141,7 @@ CPluginManager::~CPluginManager()
 	for (auto& pluginObjectDesc : m_vPluginObjectDesc) { pluginObjectDesc.first->release(); }
 	m_vPluginObjectDesc.clear();
 
-	vector<IPluginModule*>::iterator k;
-	for (k = m_vPluginModule.begin(); k != m_vPluginModule.end(); ++k)
+	for (vector<IPluginModule*>::iterator k = m_vPluginModule.begin(); k != m_vPluginModule.end(); ++k)
 	{
 		this->getLogManager() << LogLevel_Trace << "Releasing plugin module with class id " << (*k)->getClassIdentifier() << "\n";
 		(*k)->uninitialize();
@@ -394,8 +393,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& rClassIde
 	sprintf(l_sSubstitutionTokenName, "Kernel_PluginSubstitution_%0" PRIx64, l_ui64SourceClassIdentifier);
 	if ((l_oSubstitutionTokenIdentifier = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(l_sSubstitutionTokenName)) != OV_UndefinedIdentifier)
 	{
-		CString l_sSubstitutionTokenValue;
-		l_sSubstitutionTokenValue = this->getConfigurationManager().getConfigurationTokenValue(l_oSubstitutionTokenIdentifier);
+		CString l_sSubstitutionTokenValue = this->getConfigurationManager().getConfigurationTokenValue(l_oSubstitutionTokenIdentifier);
 		l_sSubstitutionTokenValue = this->getConfigurationManager().expand(l_sSubstitutionTokenValue);
 
 		try
@@ -421,8 +419,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& rClassIde
 	}
 
 	IPluginObjectDesc* l_pPluginObjectDesc = NULL;
-	map<IPluginObjectDesc*, IPluginModule*>::const_iterator i;
-	for (i = m_vPluginObjectDesc.begin(); i != m_vPluginObjectDesc.end(); ++i)
+	for (map<IPluginObjectDesc*, IPluginModule*>::const_iterator i = m_vPluginObjectDesc.begin(); i != m_vPluginObjectDesc.end(); ++i)
 	{
 		if (i->first->getCreatedClass() == CIdentifier(l_ui64TargetClassIdentifier))
 		{

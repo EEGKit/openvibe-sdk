@@ -37,7 +37,7 @@ int32_t OpenViBEPlugins::Classification::LDAClassificationCompare(OpenViBE::IMat
 
 	//Then we just compared them
 	if (ov_float_equal(l_f64MaxFirst, l_f64MaxSecond)) { return 0; }
-	else if (l_f64MaxFirst > l_f64MaxSecond) { return -1; }
+	if (l_f64MaxFirst > l_f64MaxSecond) { return -1; }
 	return 1;
 }
 
@@ -84,10 +84,7 @@ bool CAlgorithmClassifierLDA::initialize()
 	// Initialize the Conditioned Covariance Matrix algorithm
 	m_pCovarianceAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_ClassId_Algorithm_ConditionedCovariance));
 
-	OV_ERROR_UNLESS_KRF(
-		m_pCovarianceAlgorithm->initialize(),
-		"Failed to initialize covariance algorithm",
-		OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_pCovarianceAlgorithm->initialize(), "Failed to initialize covariance algorithm", OpenViBE::Kernel::ErrorType::Internal);
 
 	// This is the weight parameter local to this module and automatically exposed to the GUI. Its redirected to the corresponding parameter of the cov alg.
 	TParameterHandler<double> ip_f64Shrinkage(this->getInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage));

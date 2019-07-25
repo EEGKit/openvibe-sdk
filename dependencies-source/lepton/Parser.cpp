@@ -68,10 +68,9 @@ string Parser::trim(const string& expression)
 	// Remove leading and trailing spaces.
 
 	int start, end;
-	for (start = 0; start < (int)expression.size() && isspace(expression[start]); start++);
-	for (end   = (int)expression.size() - 1; end > start && isspace(expression[end]); end--);
-	if (start == end && isspace(expression[end]))
-		return "";
+	for (start = 0; start < (int)expression.size() && isspace(expression[start]); start++) { }
+	for (end   = (int)expression.size() - 1; end > start && isspace(expression[end]); end--) { }
+	if (start == end && isspace(expression[end])) {	return ""; }
 	return expression.substr(start, end - start + 1);
 }
 
@@ -118,7 +117,9 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 			{
 				foundExp = true;
 				if (pos < (int)expression.size() - 1 && (expression[pos + 1] == '-' || expression[pos + 1] == '+'))
+				{
 					pos++;
+				}
 				continue;
 			}
 			break;
@@ -168,10 +169,14 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 	{
 		string::size_type pos = primaryExpression.find_last_of(';');
 		if (pos == string::npos)
+		{
 			break;
+		}
 		string sub = trim(primaryExpression.substr(pos + 1));
 		if (sub.size() > 0)
+		{
 			subexpressions.push_back(sub);
+		}
 		primaryExpression = primaryExpression.substr(0, pos);
 	}
 
@@ -199,7 +204,9 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 	int pos                   = 0;
 	ExpressionTreeNode result = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);
 	if (pos != tokens.size())
+	{
 		throw Exception("Parse error: unexpected text at end of expression: " + tokens[pos].getText());
+	}
 	return ParsedExpression(result);
 }
 
@@ -253,7 +260,9 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 				pos++;
 		} while (moreArgs);
 		if (pos == tokens.size() || tokens[pos].getType() != ParseToken::RightParen)
+		{
 			throw Exception("Parse error: unbalanced parentheses");
+		}
 		pos++;
 		Operation* op = getFunctionOperation(token.getText(), customFunctions);
 		try
@@ -273,7 +282,9 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 		result                      = ExpressionTreeNode(new Operation::Negate(), toNegate);
 	}
 	else
+	{
 		throw Exception("Parse error: unexpected token: " + token.getText());
+	}
 
 	// Now deal with the next binary operator.
 
@@ -283,7 +294,9 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 		int opIndex      = (int)Operators.find(token.getText());
 		int opPrecedence = Precedence[opIndex];
 		if (opPrecedence < precedence)
+		{
 			return result;
+		}
 		pos++;
 		ExpressionTreeNode arg = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, LeftAssociative[opIndex] ? opPrecedence + 1 : opPrecedence);
 		Operation* op          = getOperatorOperation(token.getText());
@@ -362,7 +375,9 @@ Operation* Parser::getFunctionOperation(const std::string& name, const map<strin
 
 	map<string, Operation::Id>::const_iterator iter = opMap.find(trimmed);
 	if (iter == opMap.end())
+	{
 		throw Exception("Parse error: unknown function: " + trimmed);
+	}
 	switch (iter->second)
 	{
 		case Operation::SQRT:

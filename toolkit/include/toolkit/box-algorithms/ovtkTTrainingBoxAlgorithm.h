@@ -77,9 +77,8 @@ namespace OpenViBEToolkit
 	template <class CBoxAlgorithmParentClass>
 	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::~TTrainingBoxAlgorithm()
 	{
-		std::vector<ISignalTrial*>::iterator itSignalTrial;
 		releaseSignalTrial(m_pPendingSignal);
-		for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
+		for (std::vector<ISignalTrial*>::iterator itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
 		{
 			releaseSignalTrial(*itSignalTrial);
 		}

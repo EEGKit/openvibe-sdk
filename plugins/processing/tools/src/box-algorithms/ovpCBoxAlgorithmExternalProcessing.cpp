@@ -166,19 +166,16 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 			this->getLogManager() << LogLevel_Info << "Client connected to the server.\n";
 			break;
 		}
-		else
-		{
-			Communication::MessagingServer::ELibraryError error = m_Messaging.getLastError();
+		Communication::MessagingServer::ELibraryError error = m_Messaging.getLastError();
 
-			if (error == Communication::MessagingServer::ELibraryError::BadAuthenticationReceived)
-			{
-				OV_WARNING_K("A client sent a bad authentication.");
-				break;
-			}
-			else if (error == Communication::MessagingServer::ELibraryError::NoAuthenticationReceived)
-			{
-				OV_WARNING_K("The client has not sent authentication.");
-			}
+		if (error == Communication::MessagingServer::ELibraryError::BadAuthenticationReceived)
+		{
+			OV_WARNING_K("A client sent a bad authentication.");
+			break;
+		}
+		else if (error == Communication::MessagingServer::ELibraryError::NoAuthenticationReceived)
+		{
+			OV_WARNING_K("The client has not sent authentication.");
 		}
 	}
 

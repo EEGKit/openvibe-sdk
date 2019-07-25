@@ -32,7 +32,7 @@ namespace Socket
 	public:
 
 		CConnectionSerial()
-			: m_sLastError(),
+			:
 #if defined TARGET_OS_Windows
 			  m_pFile(NULL)
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS

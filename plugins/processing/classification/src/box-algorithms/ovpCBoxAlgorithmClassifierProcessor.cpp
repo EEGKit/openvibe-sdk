@@ -38,9 +38,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 		"Configuration file [" << sFilename << "] has no version information",
 		OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
-	string l_sVersion;
-
-	l_sVersion = l_pRootNode->getAttribute(c_sFormatVersionAttributeName);
+	string l_sVersion = l_pRootNode->getAttribute(c_sFormatVersionAttributeName);
 	std::stringstream l_sData(l_sVersion);
 	uint32_t l_ui32Version;
 	l_sData >> l_ui32Version;

@@ -159,10 +159,9 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 		const uint32_t l_ui32InputChannelCountSetting  = (uint32_t)(uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 		const uint32_t l_ui32nCoefficients             = loadCoefficients(l_sCoefficient, ' ', OV_Value_EnumeratedStringSeparator, l_ui32OutputChannelCountSetting, l_ui32InputChannelCountSetting);
 
-		OV_ERROR_UNLESS_KRF(
-			l_ui32nCoefficients == l_ui32OutputChannelCountSetting * l_ui32InputChannelCountSetting,
-			"Invalid number of coefficients [" << l_ui32nCoefficients << "] (expected "<< l_ui32OutputChannelCountSetting * l_ui32InputChannelCountSetting <<" coefficients)",
-			OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(l_ui32nCoefficients == l_ui32OutputChannelCountSetting * l_ui32InputChannelCountSetting,
+							"Invalid number of coefficients [" << l_ui32nCoefficients << "] (expected "<< l_ui32OutputChannelCountSetting * l_ui32InputChannelCountSetting <<" coefficients)",
+							OpenViBE::Kernel::ErrorType::BadConfig);
 
 #if defined(DEBUG)
 		OpenViBEToolkit::Tools::Matrix::saveToTextFile(m_oFilterBank, this->getConfigurationManager().expand("${Path_UserData}/spatialfilter_debug.txt"));

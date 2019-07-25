@@ -39,8 +39,7 @@ bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer, co
 	CString l_sNodeName;
 
 	if (false) { }
-
-	else if (rIdentifier == OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario) l_sNodeName = "OpenViBE-Scenario";
+	if (rIdentifier == OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario) l_sNodeName = "OpenViBE-Scenario";
 
 	else if (rIdentifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Settings) l_sNodeName = "Settings";
 	else if (rIdentifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Setting) l_sNodeName = "Setting";

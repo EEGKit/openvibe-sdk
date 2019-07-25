@@ -68,14 +68,9 @@ CPlayer::~CPlayer()
 //___________________________________________________________________//
 //                                                                   //
 
-bool CPlayer::setScenario(
-	const CIdentifier& rScenarioIdentifier,
-	const CNameValuePairList* pLocalConfigurationTokens)
+bool CPlayer::setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens)
 {
-	OV_ERROR_UNLESS_KRF(
-		!this->isHoldingResources(),
-		"Trying to configure a player with non-empty resources",
-		ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Debug << "Player setScenario\n";
 
@@ -91,10 +86,8 @@ bool CPlayer::setScenario(
 	m_pRuntimeScenarioManager = new CScenarioManager(this->getKernelContext());
 	m_pRuntimeScenarioManager->cloneScenarioImportersAndExporters(this->getKernelContext().getScenarioManager());
 
-	OV_ERROR_UNLESS_KRF(
-		m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier),
-		"Fail to create a scenario duplicate for the current runtime session",
-		ErrorType::BadResourceCreation);
+	OV_ERROR_UNLESS_KRF(m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier), 
+						"Fail to create a scenario duplicate for the current runtime session", ErrorType::BadResourceCreation);
 
 	IScenario& l_rRuntimeScenario = m_pRuntimeScenarioManager->getScenario(m_oRuntimeScenarioIdentifier);
 	l_rRuntimeScenario.merge(l_rOriginalScenario, NULL, true, true);
@@ -158,10 +151,7 @@ bool CPlayer::setScenario(
 		}
 	}
 
-	OV_ERROR_UNLESS_KRF(
-		l_rRuntimeScenario.checkSettings(m_pRuntimeConfigurationManager),
-		"Checking settings failed for scenario duplicate instantiated for the current runtime session",
-		ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(l_rRuntimeScenario.checkSettings(m_pRuntimeConfigurationManager), "Checking settings failed for scenario duplicate instantiated for the current runtime session", ErrorType::BadArgument);
 
 	return m_oScheduler.setScenario(m_oRuntimeScenarioIdentifier);
 }
@@ -184,12 +174,7 @@ CIdentifier CPlayer::getRuntimeScenarioIdentifier() const
 
 EPlayerReturnCode CPlayer::initialize()
 {
-	OV_ERROR_UNLESS_K(
-		!this->isHoldingResources(),
-		"Trying to configure a player with non-empty resources",
-		ErrorType::BadCall,
-		PlayerReturnCode_Failed
-	);
+	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall, PlayerReturnCode_Failed);
 
 	this->getLogManager() << LogLevel_Trace << "Player initialized.\n";
 
@@ -204,7 +189,7 @@ EPlayerReturnCode CPlayer::initialize()
 	{
 		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_Failed);
 	}
-	else if (l_eCode == SchedulerInitialization_BoxInitializationFailed)
+	if (l_eCode == SchedulerInitialization_BoxInitializationFailed)
 	{
 		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_BoxInitializationFailed);
 	}
@@ -240,10 +225,7 @@ bool CPlayer::uninitialize()
 
 bool CPlayer::stop()
 {
-	OV_ERROR_UNLESS_KRF(
-		this->isHoldingResources(),
-		"Trying to use an uninitialized player",
-		ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Trace << "Player stop\n";
 
@@ -254,10 +236,7 @@ bool CPlayer::stop()
 
 bool CPlayer::pause()
 {
-	OV_ERROR_UNLESS_KRF(
-		this->isHoldingResources(),
-		"Trying to use an uninitialized player",
-		ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Trace << "Player pause\n";
 
@@ -268,10 +247,7 @@ bool CPlayer::pause()
 
 bool CPlayer::step()
 {
-	OV_ERROR_UNLESS_KRF(
-		this->isHoldingResources(),
-		"Trying to use an uninitialized player",
-		ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Trace << "Player step\n";
 
@@ -282,10 +258,7 @@ bool CPlayer::step()
 
 bool CPlayer::play()
 {
-	OV_ERROR_UNLESS_KRF(
-		this->isHoldingResources(),
-		"Trying to use an uninitialized player",
-		ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Trace << "Player play\n";
 
@@ -296,10 +269,7 @@ bool CPlayer::play()
 
 bool CPlayer::forward()
 {
-	OV_ERROR_UNLESS_KRF(
-		this->isHoldingResources(),
-		"Trying to use an uninitialized player",
-		ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(this->isHoldingResources(), "Trying to use an uninitialized player", ErrorType::BadCall);
 
 	this->getLogManager() << LogLevel_Trace << "Player forward\n";
 
@@ -433,22 +403,13 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 
 	uint64_t l_ui64LatenessSec = l_ui64Lateness >> 32;
 	uint64_t m_ui64LatenessSec = m_ui64Lateness >> 32;
-	OV_WARNING_UNLESS_K(
-		l_ui64LatenessSec == m_ui64LatenessSec,
-		"<" << LogColor_PushStateBit << LogColor_ForegroundBlue << "Player" << LogColor_PopStateBit
-		<< "::" << LogColor_PushStateBit << LogColor_ForegroundBlue << "can not reach realtime" << LogColor_PopStateBit << "> "
-		<< l_ui64LatenessSec << " second(s) late...\n"
-	);
+	OV_WARNING_UNLESS_K(l_ui64LatenessSec == m_ui64LatenessSec, "<" << LogColor_PushStateBit << LogColor_ForegroundBlue 
+						<< "Player" << LogColor_PopStateBit << "::" << LogColor_PushStateBit << LogColor_ForegroundBlue 
+						<< "can not reach realtime" << LogColor_PopStateBit << "> " << l_ui64LatenessSec << " second(s) late...\n");
 
 	return true;
 }
 
-uint64_t CPlayer::getCurrentSimulatedTime() const
-{
-	return m_oScheduler.getCurrentTime();
-}
+uint64_t CPlayer::getCurrentSimulatedTime() const { return m_oScheduler.getCurrentTime(); }
 
-uint64_t CPlayer::getCurrentSimulatedLateness() const
-{
-	return m_ui64InnerLateness;
-}
+uint64_t CPlayer::getCurrentSimulatedLateness() const { return m_ui64InnerLateness; }

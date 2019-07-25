@@ -136,7 +136,6 @@ namespace
 
 		void swap_byte(uint64_t& v, const uint64_t s)
 		{
-			uint8_t t;
 			uint8_t V[sizeof(v)];
 			uint8_t S[sizeof(s)];
 			System::Memory::hostToLittleEndian(v, V);
@@ -145,7 +144,7 @@ namespace
 			{
 				uint32_t j = S[i] % sizeof(v);
 				uint32_t k = S[i + 1] % sizeof(v);
-				t        = V[j];
+				uint8_t t = V[j];
 				V[j]     = V[k];
 				V[k]     = t;
 			}

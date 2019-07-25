@@ -77,8 +77,7 @@ namespace OpenViBEPlugins
 			bool check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
-				uint32_t i;
-				for (i = 0; i < rBox.getOutputCount(); i++)
+				for (uint32_t i = 0; i < rBox.getOutputCount(); i++)
 				{
 					sprintf(l_sName, "Output stream %u", i + 1);
 					rBox.setOutputName(i, l_sName);

@@ -53,12 +53,7 @@ using namespace Plugins;
 CScheduler::CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer)
 	: TKernelObject<IKernelObject>(rKernelContext)
 	  , m_rPlayer(rPlayer)
-	  , m_oScenarioIdentifier(OV_UndefinedIdentifier)
-	  , m_pScenario(NULL)
-	  , m_ui64Steps(0)
-	  , m_ui64Frequency(0)
-	  , m_ui64StepDuration(0)
-	  , m_ui64CurrentTime(0) {}
+	  , m_oScenarioIdentifier(OV_UndefinedIdentifier) {}
 
 CScheduler::~CScheduler()
 {
@@ -72,10 +67,7 @@ bool CScheduler::setScenario(const CIdentifier& rScenarioIdentifier)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setScenario\n";
 
-	OV_ERROR_UNLESS_KRF(
-		!this->isHoldingResources(),
-		"Trying to configure a scheduler with non-empty resources",
-		ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall);
 
 	m_oScenarioIdentifier = rScenarioIdentifier;
 
@@ -99,10 +91,7 @@ bool CScheduler::setFrequency(const uint64_t ui64Frequency)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setFrequency\n";
 
-	OV_ERROR_UNLESS_KRF(
-		!this->isHoldingResources(),
-		"Trying to configure a scheduler with non-empty resources",
-		ErrorType::BadCall);
+	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall);
 
 	m_ui64Frequency    = ui64Frequency;
 	m_ui64StepDuration = (1LL << 32) / ui64Frequency;
@@ -119,10 +108,7 @@ bool CScheduler::isHoldingResources() const { return !m_vSimulatedBox.empty(); }
 
 bool CScheduler::flattenScenario()
 {
-	OV_ERROR_UNLESS_KRF(
-		m_pScenario->applyLocalSettings(),
-		"Failed to flatten scenario: applying local settings failed",
-		ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_pScenario->applyLocalSettings(), "Failed to flatten scenario: applying local settings failed", ErrorType::Internal);
 
 	// We are going to find all metaboxes in the scenario and then push their contents to this one
 	// As the scenario itself can contain more metaboxes, we are going to repeat this process
@@ -198,34 +184,21 @@ bool CScheduler::flattenScenario()
 			metaboxId.fromString(l_sMetaboxIdentifier);
 			CString l_sMetaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
-			OV_ERROR_UNLESS_KRF(
-				l_sMetaboxIdentifier != CString(""),
-				"Failed to find metabox with id " << l_sMetaboxIdentifier,
-				ErrorType::ResourceNotFound);
+			OV_ERROR_UNLESS_KRF(l_sMetaboxIdentifier != CString(""), "Failed to find metabox with id " << l_sMetaboxIdentifier, ErrorType::ResourceNotFound);
 
 			// We are going to copy the template scenario, flatten it and then copy all
 			// Note that copy constructor for IScenario does not exist
 			CIdentifier l_oMetaboxScenarioTemplateIdentifier;
 
-			OV_ERROR_UNLESS_KRF(
-				m_rPlayer.getRuntimeScenarioManager().importScenarioFromFile(
-					l_oMetaboxScenarioTemplateIdentifier,
-					OV_ScenarioImportContext_SchedulerMetaboxImport,
-					l_sMetaboxScenarioPath),
-				"Failed to import the scenario file",
-				ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_rPlayer.getRuntimeScenarioManager().importScenarioFromFile(l_oMetaboxScenarioTemplateIdentifier, OV_ScenarioImportContext_SchedulerMetaboxImport, l_sMetaboxScenarioPath),
+								"Failed to import the scenario file", ErrorType::Internal);
 
 			IScenario& l_rMetaboxScenarioInstance = m_rPlayer.getRuntimeScenarioManager().getScenario(l_oMetaboxScenarioTemplateIdentifier);
 
-			OV_WARNING_UNLESS_K(
-				l_rMetaboxScenarioInstance.hasAttribute(OV_AttributeId_Scenario_MetaboxHash),
-				"Box " << l_pBox->getName() << " [" << l_sMetaboxScenarioPath << "] has no computed hash"
-			);
+			OV_WARNING_UNLESS_K(l_rMetaboxScenarioInstance.hasAttribute(OV_AttributeId_Scenario_MetaboxHash), "Box " << l_pBox->getName() << " [" << l_sMetaboxScenarioPath << "] has no computed hash");
 
-			OV_WARNING_UNLESS_K(
-				l_pBox->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue) == l_rMetaboxScenarioInstance.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash),
-				"Box " << l_pBox->getName() << " [" << l_sMetaboxIdentifier << "] should be updated"
-			);
+			OV_WARNING_UNLESS_K(l_pBox->getAttributeValue(OV_AttributeId_Box_InitialPrototypeHashValue) == l_rMetaboxScenarioInstance.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash),
+								"Box " << l_pBox->getName() << " [" << l_sMetaboxIdentifier << "] should be updated");
 
 			l_rMetaboxScenarioInstance.addAttribute(OV_AttributeId_ScenarioFilename, l_sMetaboxScenarioPath);
 
@@ -306,10 +279,9 @@ bool CScheduler::flattenScenario()
 					{
 						l_rMetaboxScenarioInstance.getInterfacorIndex(Input, l_oMetaBoxInputIdentifier, l_ui32MetaBoxInputIndex);
 					}
-					OV_ERROR_UNLESS_KRF(
-						l_ui32MetaBoxInputIndex != OV_Value_UndefinedIndexUInt,
-						"Failed to find metabox input with identifier " << l_oMetaBoxInputIdentifier.toString(),
-						ErrorType::ResourceNotFound);
+					OV_ERROR_UNLESS_KRF(l_ui32MetaBoxInputIndex != OV_Value_UndefinedIndexUInt,
+										"Failed to find metabox input with identifier " << l_oMetaBoxInputIdentifier.toString(),
+										ErrorType::ResourceNotFound);
 					l_rMetaboxScenarioInstance.getScenarioInputLink(l_ui32MetaBoxInputIndex, l_oTargetBoxIdentifier, l_ui32TargetBoxInputIndex);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
@@ -318,10 +290,7 @@ bool CScheduler::flattenScenario()
 					{
 						m_pScenario->getBoxDetails(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier])->getInterfacorIdentifier(Input, l_ui32TargetBoxInputIndex, l_oTargetBoxInputIdentifier);
 
-						l_rLink->setTarget(
-							l_mIdentifierCorrespondence[l_oTargetBoxIdentifier],
-							l_ui32TargetBoxInputIndex,
-							l_oTargetBoxInputIdentifier);
+						l_rLink->setTarget(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier], l_ui32TargetBoxInputIndex, l_oTargetBoxInputIdentifier);
 					}
 				}
 				m_pScenario->releaseIdentifierList(identifierList);
@@ -345,10 +314,7 @@ bool CScheduler::flattenScenario()
 					{
 						l_rMetaboxScenarioInstance.getInterfacorIndex(Output, l_oMetaBoxOutputIdentifier, l_ui32MetaBoxOutputIndex);
 					}
-					OV_ERROR_UNLESS_KRF(
-						l_ui32MetaBoxOutputIndex != OV_Value_UndefinedIndexUInt,
-						"Failed to find metabox input with identifier " << l_oMetaBoxOutputIdentifier.toString(),
-						ErrorType::ResourceNotFound);
+					OV_ERROR_UNLESS_KRF(l_ui32MetaBoxOutputIndex != OV_Value_UndefinedIndexUInt, "Failed to find metabox input with identifier " << l_oMetaBoxOutputIdentifier.toString(), ErrorType::ResourceNotFound);
 					l_rMetaboxScenarioInstance.getScenarioOutputLink(l_ui32MetaBoxOutputIndex, l_oSourceBoxIdentifier, l_ui32SourceBoxOutputIndex);
 
 					// Now redirect the link to the newly created copy of the box in the scenario
@@ -357,10 +323,7 @@ bool CScheduler::flattenScenario()
 					{
 						m_pScenario->getBoxDetails(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier])->getInterfacorIdentifier(Output, l_ui32SourceBoxOutputIndex, l_oSourceBoxOutputIdentifier);
 
-						l_rLink->setSource(
-							l_mIdentifierCorrespondence[l_oSourceBoxIdentifier],
-							l_ui32SourceBoxOutputIndex,
-							l_oSourceBoxOutputIdentifier);
+						l_rLink->setSource(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier], l_ui32SourceBoxOutputIndex, l_oSourceBoxOutputIdentifier);
 					}
 				}
 				m_pScenario->releaseIdentifierList(identifierList);
@@ -381,37 +344,19 @@ SchedulerInitializationCode CScheduler::initialize()
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler initialize\n";
 
-	OV_ERROR_UNLESS_K(
-		!this->isHoldingResources(),
-		"Trying to configure a scheduler with non-empty resources",
-		ErrorType::BadCall,
-		SchedulerInitialization_Failed
-	);
+	OV_ERROR_UNLESS_K(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall, SchedulerInitialization_Failed);
 
 	m_pScenario = &m_rPlayer.getRuntimeScenarioManager().getScenario(m_oScenarioIdentifier);
 
-	OV_ERROR_UNLESS_K(
-		m_pScenario,
-		"Failed to find scenario with id " << m_oScenarioIdentifier.toString(),
-		ErrorType::ResourceNotFound,
-		SchedulerInitialization_Failed
-	);
+	OV_ERROR_UNLESS_K(m_pScenario, "Failed to find scenario with id " << m_oScenarioIdentifier.toString(), ErrorType::ResourceNotFound, SchedulerInitialization_Failed);
 
-	OV_ERROR_UNLESS_K(
-		m_pScenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier,
-		"Cannot initialize scheduler with an empty scenario",
-		ErrorType::BadCall,
-		SchedulerInitialization_Failed
-	);
+	OV_ERROR_UNLESS_K(m_pScenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier, 
+					  "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed );
 
 	CBoxSettingModifierVisitor l_oBoxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
 
-	OV_ERROR_UNLESS_K(
-		m_pScenario->acceptVisitor(l_oBoxSettingModifierVisitor),
-		"Failed to set box settings visitor for scenario with id " << m_oScenarioIdentifier.toString(),
-		ErrorType::Internal,
-		SchedulerInitialization_Failed
-	);
+	OV_ERROR_UNLESS_K(m_pScenario->acceptVisitor(l_oBoxSettingModifierVisitor), "Failed to set box settings visitor for scenario with id " 
+					  << m_oScenarioIdentifier.toString(), ErrorType::Internal, SchedulerInitialization_Failed);
 
 
 	{
@@ -457,38 +402,24 @@ SchedulerInitializationCode CScheduler::initialize()
 		{
 			const CIdentifier boxIdentifier = identifierList[i];
 			const IBox* l_pBox              = m_pScenario->getBoxDetails(boxIdentifier);
-			OV_ERROR_UNLESS_K(
-				!m_pScenario->hasOutdatedBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsOutdated}", false),
-				"Box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "] should be updated",
-				ErrorType::Internal,
-				SchedulerInitialization_Failed
-			);
+			OV_ERROR_UNLESS_K(!m_pScenario->hasOutdatedBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsOutdated}", false),
+							  "Box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "] should be updated",
+							  ErrorType::Internal, SchedulerInitialization_Failed);
 
-			OV_ERROR_UNLESS_K(
-				l_pBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox,
-				"Not expanded metabox with id [" << l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier) << "] detected in the scenario",
-				ErrorType::Internal,
-				SchedulerInitialization_Failed
-			);
+			OV_ERROR_UNLESS_K(l_pBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox,
+							  "Not expanded metabox with id [" << l_pBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier) << "] detected in the scenario",
+							  ErrorType::Internal, SchedulerInitialization_Failed);
 
 			const IPluginObjectDesc* l_pBoxDesc = this->getPluginManager().getPluginObjectDescCreating(l_pBox->getAlgorithmClassIdentifier());
 
-			OV_ERROR_UNLESS_K(
-				!(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled) &&
-					this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsDisabled}", false)),
-				"Disabled box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "] detected in the scenario",
-				ErrorType::Internal,
-				SchedulerInitialization_Failed
-			);
+			OV_ERROR_UNLESS_K(!(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled) && this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsDisabled}", false)),
+							  "Disabled box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "] detected in the scenario",
+							  ErrorType::Internal, SchedulerInitialization_Failed);
 
 			if (!l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
 			{
-				OV_ERROR_UNLESS_K(
-					l_pBoxDesc != nullptr,
-					"Failed to create runtime box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "]",
-					ErrorType::BadResourceCreation,
-					SchedulerInitialization_Failed
-				);
+				OV_ERROR_UNLESS_K(l_pBoxDesc != nullptr, "Failed to create runtime box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "]",
+								  ErrorType::BadResourceCreation, SchedulerInitialization_Failed);
 
 				CSimulatedBox* l_pSimulatedBox = new CSimulatedBox(this->getKernelContext(), *this);
 				l_pSimulatedBox->setScenarioIdentifier(m_oScenarioIdentifier);
@@ -537,12 +468,7 @@ SchedulerInitializationCode CScheduler::initialize()
 		m_pScenario->releaseIdentifierList(identifierList);
 	}
 
-	OV_ERROR_UNLESS_K(
-		!m_vSimulatedBox.empty(),
-		"Cannot initialize scheduler with an empty scenario",
-		ErrorType::BadCall,
-		SchedulerInitialization_Failed
-	);
+	OV_ERROR_UNLESS_K(!m_vSimulatedBox.empty(), "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed);
 
 
 	bool l_bBoxInitialization = true;
@@ -551,13 +477,8 @@ SchedulerInitializationCode CScheduler::initialize()
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
 			this->getLogManager() << LogLevel_Trace << "Scheduled box : id = " << itSimulatedBox->first.second << " priority = " << -itSimulatedBox->first.first << " name = " << l_pSimulatedBox->getName() << "\n";
-			if (!translateException(
-					[&]()
-					{
-						return l_pSimulatedBox->initialize();
-					},
-					std::bind(&CScheduler::handleException, this, l_pSimulatedBox, "Box initialization", std::placeholders::_1))
-			)
+			if (!translateException([&]() { return l_pSimulatedBox->initialize(); },
+					std::bind(&CScheduler::handleException, this, l_pSimulatedBox, "Box initialization", std::placeholders::_1)))
 			{
 				l_bBoxInitialization = false;
 
@@ -585,13 +506,8 @@ bool CScheduler::uninitialize()
 	{
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
-			if (!translateException(
-					[&]()
-					{
-						return l_pSimulatedBox->uninitialize();
-					},
-					std::bind(&CScheduler::handleException, this, l_pSimulatedBox, "Box uninitialization", std::placeholders::_1))
-			)
+			if (!translateException([&]() { return l_pSimulatedBox->uninitialize(); },
+					std::bind(&CScheduler::handleException, this, l_pSimulatedBox, "Box uninitialization", std::placeholders::_1)))
 			{
 				// do not break here because we want to try to
 				// at least uninitialize other resources properly
@@ -688,24 +604,19 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 
 		//if the box is muted we still have to erase chunks that arrives at the input
 		map<uint32_t, list<CChunk>>& l_rSimulatedBoxInput = m_vSimulatedBoxInput[boxIdentifier];
-		map<uint32_t, list<CChunk>>::iterator itSimulatedBoxInput;
-		for (itSimulatedBoxInput = l_rSimulatedBoxInput.begin(); itSimulatedBoxInput != l_rSimulatedBoxInput.end(); ++itSimulatedBoxInput)
+		for (map<uint32_t, list<CChunk>>::iterator itSimulatedBoxInput = l_rSimulatedBoxInput.begin(); itSimulatedBoxInput != l_rSimulatedBoxInput.end(); ++itSimulatedBoxInput)
 		{
 			list<CChunk>& l_rSimulatedBoxInputChunkList = itSimulatedBoxInput->second;
 			list<CChunk>::iterator itSimulatedBoxInputChunkList;
 			for (itSimulatedBoxInputChunkList = l_rSimulatedBoxInputChunkList.begin(); itSimulatedBoxInputChunkList != l_rSimulatedBoxInputChunkList.end(); ++itSimulatedBoxInputChunkList)
 			{
-				OV_ERROR_UNLESS_KRF(
-					simulatedBox->processInput(itSimulatedBoxInput->first, *itSimulatedBoxInputChunkList),
-					"Process failed for box with id " << boxIdentifier.toString() << " on input " << itSimulatedBoxInput->first,
-					ErrorType::Internal);
+				OV_ERROR_UNLESS_KRF(simulatedBox->processInput(itSimulatedBoxInput->first, *itSimulatedBoxInputChunkList),
+									"Process failed for box with id " << boxIdentifier.toString() << " on input " << itSimulatedBoxInput->first,
+									ErrorType::Internal);
 
 				if (simulatedBox->isReadyToProcess())
 				{
-					OV_ERROR_UNLESS_KRF(
-						simulatedBox->process(),
-						"Process failed for box with id " << boxIdentifier.toString(),
-						ErrorType::Internal);
+					OV_ERROR_UNLESS_KRF(simulatedBox->process(), "Process failed for box with id " << boxIdentifier.toString(), ErrorType::Internal);
 				}
 			}
 			l_rSimulatedBoxInputChunkList.clear();

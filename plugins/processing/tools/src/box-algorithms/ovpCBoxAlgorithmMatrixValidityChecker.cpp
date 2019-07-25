@@ -16,7 +16,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 	uint64_t l_ui64LogLevel   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	m_eLogLevel               = static_cast<ELogLevel>(l_ui64LogLevel);
 	m_ui64ValidityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	if (l_rStaticBoxContext.getSettingCount() == 1) m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); // note that for boxes with one setting, we fallback to the old behavior
+	if (l_rStaticBoxContext.getSettingCount() == 1) { m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); } // note that for boxes with one setting, we fallback to the old behavior 
 
 	OV_ERROR_UNLESS_KRF(l_rStaticBoxContext.getSettingCount() <= 1 || l_rStaticBoxContext.getInputCount() == l_rStaticBoxContext.getOutputCount(),
 						"Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (expected same value as output count [" << l_rStaticBoxContext.getOutputCount() << "])",
@@ -75,7 +75,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 
 			if (m_vStreamDecoder[i].isHeaderReceived())
 			{
-				if (l_rStaticBoxContext.getSettingCount() > 1) m_vStreamEncoder[i].encodeHeader();
+				if (l_rStaticBoxContext.getSettingCount() > 1) { m_vStreamEncoder[i].encodeHeader(); }
 
 				if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
@@ -153,13 +153,13 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					OV_WARNING_K("Invalid action type [" << m_ui64ValidityCheckerType << "]");
 				}
 
-				if (l_rStaticBoxContext.getSettingCount() > 1) m_vStreamEncoder[i].encodeBuffer();
+				if (l_rStaticBoxContext.getSettingCount() > 1) { m_vStreamEncoder[i].encodeBuffer(); }
 			}
 			if (m_vStreamDecoder[i].isEndReceived())
 			{
-				if (l_rStaticBoxContext.getSettingCount() > 1) m_vStreamEncoder[i].encodeEnd();
+				if (l_rStaticBoxContext.getSettingCount() > 1) { m_vStreamEncoder[i].encodeEnd(); }
 			}
-			if (l_rStaticBoxContext.getSettingCount() > 1) l_rDynamicBoxContext.markOutputAsReadyToSend(i, l_rDynamicBoxContext.getInputChunkStartTime(i, j), l_rDynamicBoxContext.getInputChunkEndTime(i, j));
+			if (l_rStaticBoxContext.getSettingCount() > 1) { l_rDynamicBoxContext.markOutputAsReadyToSend(i, l_rDynamicBoxContext.getInputChunkStartTime(i, j), l_rDynamicBoxContext.getInputChunkEndTime(i, j)); }
 		}
 	}
 

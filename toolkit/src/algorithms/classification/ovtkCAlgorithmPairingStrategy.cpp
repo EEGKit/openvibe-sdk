@@ -20,8 +20,7 @@ fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const
 {
 	if (mComparisionFunctionMap.count(rClassIdentifier.toUInteger()) == 0)
 		return NULL;
-	else
-		return mComparisionFunctionMap[rClassIdentifier.toUInteger()];
+	return mComparisionFunctionMap[rClassIdentifier.toUInteger()];
 }
 
 bool CAlgorithmPairingStrategy::process()

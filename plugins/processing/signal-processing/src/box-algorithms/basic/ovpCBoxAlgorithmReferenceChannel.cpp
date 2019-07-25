@@ -45,8 +45,8 @@ namespace
 		}
 		else if (rMatchMethodIdentifier == OVP_TypeId_MatchMethod_Smart)
 		{
-			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart);
-			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart);
+			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) { l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Name, uiStart); }
+			if (l_ui32Result == std::numeric_limits<uint32_t>::max()) { l_ui32Result = _find_channel_(rMatrix, rChannel, OVP_TypeId_MatchMethod_Index, uiStart); }
 		}
 
 		return l_ui32Result;
@@ -99,10 +99,8 @@ bool CBoxAlgorithmReferenceChannel::process()
 
 			m_ui32ReferenceChannelIndex = _find_channel_(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
 
-			OV_ERROR_UNLESS_KRF(
-				m_ui32ReferenceChannelIndex != std::numeric_limits<uint32_t>::max(),
-				"Invalid channel [" << l_sChannel << "]: channel not found",
-				OpenViBE::Kernel::ErrorType::BadSetting);
+			OV_ERROR_UNLESS_KRF(m_ui32ReferenceChannelIndex != std::numeric_limits<uint32_t>::max(), 
+								"Invalid channel [" << l_sChannel << "]: channel not found", OpenViBE::Kernel::ErrorType::BadSetting);
 
 			if (_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::max())
 			{

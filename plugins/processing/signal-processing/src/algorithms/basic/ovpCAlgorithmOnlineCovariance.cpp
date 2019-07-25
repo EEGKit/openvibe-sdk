@@ -96,10 +96,7 @@ bool CAlgorithmOnlineCovariance::process()
 
 		const double* l_pBuffer = ip_pFeatureVectorSet->getBuffer();
 
-		OV_ERROR_UNLESS_KRF(
-			l_pBuffer,
-			"Input buffer is NULL",
-			OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_UNLESS_KRF(l_pBuffer, "Input buffer is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 
 		// Cast our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
 		const Map<MatrixXdRowMajor> l_oSampleChunk(const_cast<double*>(l_pBuffer), l_ui32nRows, l_ui32nCols);
@@ -277,10 +274,7 @@ bool CAlgorithmOnlineCovariance::process()
 	{
 		const uint32_t l_ui32nCols = ip_pFeatureVectorSet->getDimensionSize(1);
 
-		OV_ERROR_UNLESS_KRF(
-			m_ui64Count > 0,
-			"No sample to compute covariance",
-			OpenViBE::Kernel::ErrorType::BadConfig);
+		OV_ERROR_UNLESS_KRF(m_ui64Count > 0, "No sample to compute covariance", OpenViBE::Kernel::ErrorType::BadConfig);
 
 		// Converters to CMatrix
 		Map<MatrixXdRowMajor> l_oOutputMean(op_pMean->getBuffer(), 1, l_ui32nCols);

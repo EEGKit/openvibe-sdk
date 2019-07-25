@@ -190,7 +190,7 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 {
 	if (m_pFileHandle)
 	{
-		if (pError) *pError = "kernel already loaded";
+		if (pError) { *pError = "kernel already loaded"; }
 		return false;
 	}
 
@@ -238,7 +238,7 @@ bool CKernelLoaderWindows::unload(CString* pError)
 {
 	if (!m_pFileHandle)
 	{
-		if (pError) *pError = "no kernel currently loaded";
+		if (pError) { *pError = "no kernel currently loaded"; }
 		return false;
 	}
 	FreeLibrary(m_pFileHandle);

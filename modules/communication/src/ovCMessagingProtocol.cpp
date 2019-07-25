@@ -128,14 +128,14 @@ bool Header::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 
 	uint8_t typeInt;
 
-	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, typeInt)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, typeInt)) { return false; }
 
 	if (typeInt >= MessageType_MAX) { return false; }
 
 	m_Type = static_cast<EMessageType>(typeInt);
 
-	if (!copyToVariable(buffer, bufferIndex + s_IdIndex, m_Id)) return false;
-	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, m_Size)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_IdIndex, m_Id)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, m_Size)) { return false; }
 
 	bufferIndex += s_MinimumSize;
 
@@ -173,7 +173,7 @@ bool AuthenticationMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t
 	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
 
 	size_t passPhraseSize;
-	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, passPhraseSize)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, passPhraseSize)) { return false; }
 
 	if (!copyToString(buffer, bufferIndex + s_ConnectionIDIndex, passPhraseSize, m_ConnectionID)) { return false; }
 
@@ -223,8 +223,8 @@ bool CommunicationProtocolVersionMessage::fromBytes(const std::vector<uint8_t>& 
 
 	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_MajorIndex, m_MajorVersion)) return false;
-	if (!copyToVariable(buffer, bufferIndex + s_MinorIndex, m_MinorVersion)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_MajorIndex, m_MajorVersion)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + s_MinorIndex, m_MinorVersion)) { return false; }
 
 	m_IsValid = true;
 
@@ -275,13 +275,12 @@ bool InputOutput::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 
 	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_IdIndex, m_Id)) return false;
-	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, m_Type)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_IdIndex, m_Id)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, m_Type)) { return false; }
 
 	uint32_t nameSize;
-	if (!copyToVariable(buffer, bufferIndex + s_NameSizeIndex, nameSize)) return false;
-
-	if (!copyToString(buffer, bufferIndex + s_NameIndex, nameSize, m_Name)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_NameSizeIndex, nameSize)) { return false; }
+	if (!copyToString(buffer, bufferIndex + s_NameIndex, nameSize, m_Name)) { return false; }
 
 	m_IsValid = true;
 
@@ -335,17 +334,15 @@ bool Parameter::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInde
 
 	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_IdIndex, m_Id)) return false;
-	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, m_Type)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_IdIndex, m_Id)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, m_Type)) { return false; }
 
 	uint32_t nameSize;
-	if (!copyToVariable(buffer, bufferIndex + s_NameSizeIndex, nameSize)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_NameSizeIndex, nameSize)) { return false; }
 
 	uint32_t valueSize;
-	if (!copyToVariable(buffer, bufferIndex + s_ValueSizeIndex, valueSize)) return false;
-
+	if (!copyToVariable(buffer, bufferIndex + s_ValueSizeIndex, valueSize)) { return false; }
 	if (!copyToString(buffer, bufferIndex + s_NameIndex, nameSize, m_Name)) { return false; }
-
 	if (!copyToString(buffer, bufferIndex + s_NameIndex + nameSize, valueSize, m_Value)) { return false; }
 
 	bufferIndex += s_MinimumSize + nameSize + valueSize;
@@ -407,9 +404,9 @@ bool BoxDescriptionMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t
 	uint32_t outputCount;
 	uint32_t parameterCount;
 
-	if (!copyToVariable(buffer, bufferIndex + s_InputCountIndex, inputCount)) return false;
-	if (!copyToVariable(buffer, bufferIndex + s_OutputCountIndex, outputCount)) return false;
-	if (!copyToVariable(buffer, bufferIndex + s_ParameterCountIndex, parameterCount)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_InputCountIndex, inputCount)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + s_OutputCountIndex, outputCount)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + s_ParameterCountIndex, parameterCount)) { return false; }
 
 	bufferIndex += s_MinimumSize;
 
@@ -524,7 +521,7 @@ bool LogMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInd
 	// Type
 	uint8_t typeInt;
 
-	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, typeInt)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, typeInt)) { return false; }
 
 	if (typeInt >= LogLevel_MAX) { return false; }
 
@@ -532,8 +529,8 @@ bool LogMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInd
 
 	// Message size
 	uint32_t messageSize;
-	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, messageSize)) return false;
-	if (!copyToString(buffer, bufferIndex + s_NameIndex, messageSize, m_Message)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, messageSize)) { return false; }
+	if (!copyToString(buffer, bufferIndex + s_NameIndex, messageSize, m_Message)) { return false; }
 
 	bufferIndex += s_MinimumSize + messageSize;
 
@@ -589,12 +586,12 @@ bool EBMLMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 
 	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_IOIndexIndex, m_IOIndex)) return false;
-	if (!copyToVariable(buffer, bufferIndex + s_StartTimeIndex, m_StartTime)) return false;
-	if (!copyToVariable(buffer, bufferIndex + s_EndTimeIndex, m_EndTime)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_IOIndexIndex, m_IOIndex)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + s_StartTimeIndex, m_StartTime)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + s_EndTimeIndex, m_EndTime)) { return false; }
 
 	uint32_t EBMLsize;
-	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, EBMLsize)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, EBMLsize)) { return false; }
 
 	if (buffer.size() < bufferIndex + s_EBMLIndex + EBMLsize) { return false; }
 
@@ -643,8 +640,8 @@ bool ErrorMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferI
 
 	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, m_Type)) return false;
-	if (!copyToVariable(buffer, bufferIndex + s_GuiltyIdIndex, m_GuiltyId)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_TypeIndex, m_Type)) { return false; }
+	if (!copyToVariable(buffer, bufferIndex + s_GuiltyIdIndex, m_GuiltyId)) { return false; }
 
 	bufferIndex += s_MinimumSize;
 
@@ -695,7 +692,7 @@ bool TimeMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIn
 
 	if (buffer.size() < bufferIndex + s_MinimumSize) { return false; }
 
-	if (!copyToVariable(buffer, bufferIndex + s_TimeIndex, m_Time)) return false;
+	if (!copyToVariable(buffer, bufferIndex + s_TimeIndex, m_Time)) { return false; }
 
 	bufferIndex += s_MinimumSize;
 

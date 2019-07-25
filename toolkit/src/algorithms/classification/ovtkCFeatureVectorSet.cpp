@@ -90,8 +90,7 @@ const IFeatureVector& CFeatureVectorSet::getFeatureVector(const uint32_t ui32Ind
 uint32_t CFeatureVectorSet::getLabelCount() const
 {
 	std::map<double, bool> l_vLabel;
-	std::map<uint32_t, CInternalFeatureVector>::const_iterator itFeatureVector;
-	for (itFeatureVector = m_vFeatureVector.begin(); itFeatureVector != m_vFeatureVector.end(); ++itFeatureVector)
+	for (std::map<uint32_t, CInternalFeatureVector>::const_iterator itFeatureVector = m_vFeatureVector.begin(); itFeatureVector != m_vFeatureVector.end(); ++itFeatureVector)
 	{
 		l_vLabel[itFeatureVector->second.getLabel()] = true;
 	}

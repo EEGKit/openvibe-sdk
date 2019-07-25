@@ -236,8 +236,8 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		std::string l_sValue(i->value.begin(), i->value.end());
 		if (l_sValue != "x" && l_sValue != "X")
 		{
-			if (l_sValue[0] >= 'a' && l_sValue[0] <= 'z') l_ui32Index = l_sValue[0] - 'a';
-			if (l_sValue[0] >= 'A' && l_sValue[0] <= 'Z') l_ui32Index = l_sValue[0] - 'A';
+			if (l_sValue[0] >= 'a' && l_sValue[0] <= 'z') { l_ui32Index = l_sValue[0] - 'a'; }
+			if (l_sValue[0] >= 'A' && l_sValue[0] <= 'Z') { l_ui32Index = l_sValue[0] - 'A'; }
 		}
 
 		if (l_ui32Index >= m_ui32VariableCount)

@@ -106,8 +106,8 @@ bool CBoxAlgorithmCrop::process()
 			double* l_pBuffer = m_pMatrix->getBuffer();
 			for (uint32_t j = 0; j < m_pMatrix->getBufferElementCount(); j++, l_pBuffer++)
 			{
-				if (*l_pBuffer < m_f64MinCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Min || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) *l_pBuffer = m_f64MinCropValue;
-				if (*l_pBuffer > m_f64MaxCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Max || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) *l_pBuffer = m_f64MaxCropValue;
+				if (*l_pBuffer < m_f64MinCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Min || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) { *l_pBuffer = m_f64MinCropValue; }
+				if (*l_pBuffer > m_f64MaxCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Max || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) { *l_pBuffer = m_f64MaxCropValue; }
 			}
 			m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer);
 			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));

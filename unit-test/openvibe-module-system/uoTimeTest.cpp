@@ -45,14 +45,12 @@ using namespace System;
 // \brief Calibrate sleep function to estimate the extra time not spent at sleeping
 uint64_t calibrateSleep(unsigned int sampleCount, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
-	uint64_t preTime;
-	uint64_t processingTime;
 	uint64_t maxTime = 0;
 	for (size_t i = 0; i < sampleCount; ++i)
 	{
-		preTime = timeFunction();
+		uint64_t preTime = timeFunction();
 		sleepFunction(0);
-		processingTime = timeFunction() - preTime;
+		uint64_t processingTime = timeFunction() - preTime;
 
 		if (processingTime > maxTime)
 		{
@@ -67,10 +65,9 @@ uint64_t calibrateSleep(unsigned int sampleCount, bool (*sleepFunction)(uint64_t
 std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
 	std::vector<uint64_t> effectiveSleepTimes;
-	uint64_t preTime;
 	for (auto time : sleepTimes)
 	{
-		preTime = timeFunction();
+		uint64_t preTime = timeFunction();
 		sleepFunction(time);
 		effectiveSleepTimes.push_back(timeFunction() - preTime);
 	}

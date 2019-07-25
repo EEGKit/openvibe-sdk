@@ -70,7 +70,7 @@ namespace OpenViBEPlugins
 			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
 				rBox.setInputType(ui32Index, OV_TypeId_StreamedMatrix);
-				if (rBox.getSettingCount() > 1) rBox.addOutput("", OV_TypeId_StreamedMatrix);
+				if (rBox.getSettingCount() > 1) { rBox.addOutput("", OV_TypeId_StreamedMatrix); }
 				this->check(rBox);
 				return true;
 			}

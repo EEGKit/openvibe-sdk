@@ -303,7 +303,7 @@ bool CPluginModuleWindows::load(const CString& sFileName, CString* pError)
 {
 	if (m_pFileHandle)
 	{
-		if (pError) *pError = "plugin module already loaded";
+		if (pError) { *pError = "plugin module already loaded"; }
 		return false;
 	}
 
@@ -343,7 +343,7 @@ bool CPluginModuleWindows::unload(CString* pError)
 {
 	if (!m_pFileHandle)
 	{
-		if (pError) *pError = "no plugin module currently loaded";
+		if (pError) { *pError = "no plugin module currently loaded"; }
 		return false;
 	}
 

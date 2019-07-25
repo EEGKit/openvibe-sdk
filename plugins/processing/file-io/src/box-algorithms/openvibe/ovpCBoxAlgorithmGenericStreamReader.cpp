@@ -129,15 +129,15 @@ bool CBoxAlgorithmGenericStreamReader::process()
 
 bool CBoxAlgorithmGenericStreamReader::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
-	if (rIdentifier == EBML_Identifier_Header) return true;
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Header) return true;
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Header_Compression) return false;
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Header_StreamType) return false;
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer) return true;
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_StreamIndex) return false;
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_StartTime) return false;
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_EndTime) return false;
-	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_Content) return false;
+	if (rIdentifier == EBML_Identifier_Header) { return true; }
+	if (rIdentifier == OVP_NodeId_OpenViBEStream_Header) { return true; }
+	if (rIdentifier == OVP_NodeId_OpenViBEStream_Header_Compression) { return false; }
+	if (rIdentifier == OVP_NodeId_OpenViBEStream_Header_StreamType) { return false; }
+	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer) { return true; }
+	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_StreamIndex) { return false; }
+	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_StartTime) { return false; }
+	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_EndTime) { return false; }
+	if (rIdentifier == OVP_NodeId_OpenViBEStream_Buffer_Content) { return false; }
 	return false;
 }
 
@@ -218,14 +218,13 @@ void CBoxAlgorithmGenericStreamReader::closeChild()
 	{
 		const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
-		std::map<uint32_t, CIdentifier>::const_iterator it;
 		std::map<uint32_t, uint32_t> l_vOutputIndexToStreamIndex;
 
 		bool l_bLostStreams = false;
 		bool l_bLastOutputs = false;
 
 		// Go on each stream of the file
-		for (it = m_vStreamIndexToTypeIdentifier.begin(); it != m_vStreamIndexToTypeIdentifier.end(); ++it)
+		for (std::map<uint32_t, CIdentifier>::const_iterator it = m_vStreamIndexToTypeIdentifier.begin(); it != m_vStreamIndexToTypeIdentifier.end(); ++it)
 		{
 			CIdentifier l_oOutputTypeIdentifier;
 			uint32_t l_ui32Index = std::numeric_limits<uint32_t>::max();

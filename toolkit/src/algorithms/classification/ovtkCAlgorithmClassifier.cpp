@@ -49,18 +49,15 @@ bool CAlgorithmClassifier::process()
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Feature vector set is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
+		CFeatureVectorSet featureVectorSetAdapter(*featureVectorSet);
+		if (this->train(featureVectorSetAdapter))
+		{
+			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
+		}
 		else
 		{
-			CFeatureVectorSet featureVectorSetAdapter(*featureVectorSet);
-			if (this->train(featureVectorSetAdapter))
-			{
-				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
-			}
-			else
-			{
-				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-				OV_ERROR_KRF("Training failed", OpenViBE::Kernel::ErrorType::Internal);
-			}
+			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
+			OV_ERROR_KRF("Training failed", OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
 
@@ -75,23 +72,20 @@ bool CAlgorithmClassifier::process()
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Classifying failed", (!featureVector) ? OpenViBE::Kernel::ErrorType::BadInput : OpenViBE::Kernel::ErrorType::BadOutput);
 		}
+		double estimatedClass = 0;
+		CFeatureVector featureVectorAdapter(*featureVector);
+		CVector classificationValuesAdapter(*classificationValues);
+		CVector probabilityValuesAdapter(*probabilityValues);
+
+		if (this->classify(featureVectorAdapter, estimatedClass, classificationValuesAdapter, probabilityValuesAdapter))
+		{
+			op_EstimatedClass = estimatedClass;
+			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
+		}
 		else
 		{
-			double estimatedClass = 0;
-			CFeatureVector featureVectorAdapter(*featureVector);
-			CVector classificationValuesAdapter(*classificationValues);
-			CVector probabilityValuesAdapter(*probabilityValues);
-
-			if (this->classify(featureVectorAdapter, estimatedClass, classificationValuesAdapter, probabilityValuesAdapter))
-			{
-				op_EstimatedClass = estimatedClass;
-				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
-			}
-			else
-			{
-				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-				OV_ERROR_KRF("Classifying failed", OpenViBE::Kernel::ErrorType::Internal);
-			}
+			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
+			OV_ERROR_KRF("Classifying failed", OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
 
@@ -118,20 +112,17 @@ bool CAlgorithmClassifier::process()
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
 			OV_ERROR_KRF("Configuration XML node is NULL", OpenViBE::Kernel::ErrorType::BadInput);
 		}
+		if (this->loadConfiguration(rootNode))
+		{
+			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
+			//Now we need to parametrize the two output Matrix for values
+			setMatrixOutputDimension(op_ProbabilityValues, this->getOutputProbabilityVectorLength());
+			setMatrixOutputDimension(op_ClassificationValues, this->getOutputDistanceVectorLength());
+		}
 		else
 		{
-			if (this->loadConfiguration(rootNode))
-			{
-				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
-				//Now we need to parametrize the two output Matrix for values
-				setMatrixOutputDimension(op_ProbabilityValues, this->getOutputProbabilityVectorLength());
-				setMatrixOutputDimension(op_ClassificationValues, this->getOutputDistanceVectorLength());
-			}
-			else
-			{
-				this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
-				OV_ERROR_KRF("Loading configuration failed", OpenViBE::Kernel::ErrorType::Internal);
-			}
+			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, true);
+			OV_ERROR_KRF("Loading configuration failed", OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
 

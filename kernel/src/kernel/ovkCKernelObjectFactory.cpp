@@ -41,8 +41,7 @@ bool Kernel::CKernelObjectFactory::releaseObject(IObject* pObject)
 
 	if (!pObject) { return true; }
 
-	CIdentifier l_rClassIdentifier;
-	l_rClassIdentifier = pObject->getClassIdentifier();
+	CIdentifier l_rClassIdentifier = pObject->getClassIdentifier();
 
 	vector<IObject*>::iterator i = find(m_oCreatedObjects.begin(), m_oCreatedObjects.end(), pObject);
 

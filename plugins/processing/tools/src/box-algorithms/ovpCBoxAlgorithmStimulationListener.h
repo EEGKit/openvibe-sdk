@@ -39,9 +39,8 @@ namespace OpenViBEPlugins
 			bool check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
-				uint32_t i;
 
-				for (i = 0; i < rBox.getInputCount(); i++)
+				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
 				{
 					sprintf(l_sName, "Stimulation stream %u", i + 1);
 					rBox.setInputName(i, l_sName);

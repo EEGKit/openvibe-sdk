@@ -124,8 +124,7 @@ void CAlgorithmXMLScenarioImporter::openChild(const char* sName, const char** sA
 	std::string& l_sTop = m_vNodes.top();
 
 	if (false) { }
-
-	else if (l_sTop == "OpenViBE-Scenario" && m_ui32Status == Status_ParsingNothing)
+	if (l_sTop == "OpenViBE-Scenario" && m_ui32Status == Status_ParsingNothing)
 	{
 		m_ui32Status = Status_ParsingScenario;
 		m_pContext->processStart(OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario);
@@ -322,8 +321,7 @@ void CAlgorithmXMLScenarioImporter::closeChild()
 	std::string& l_sTop = m_vNodes.top();
 
 	if (false) { }
-
-	else if (l_sTop == "OpenViBE-Scenario" && m_ui32Status == Status_ParsingScenario)
+	if (l_sTop == "OpenViBE-Scenario" && m_ui32Status == Status_ParsingScenario)
 	{
 		m_ui32Status = Status_ParsingNothing;
 		m_pContext->processStop();
@@ -425,7 +423,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, 
 	this->getErrorManager().releaseErrors();
 
 	if (this->validateXMLAgainstSchema((Directories::getDataDir() + "/kernel/openvibe-scenario-v2.xsd"), xmlBuffer, xmlBufferSize)) { return true; }
-	else if (this->getErrorManager().hasError())
+	if (this->getErrorManager().hasError())
 	{
 		// this is not a validation error thus we return directly
 		return false;
@@ -436,7 +434,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, 
 		this->getLogManager() << LogLevel_Trace << "Importing scenario with legacy format: v1 scenario might be deprecated in the future so upgrade to v2 format when possible\n";
 		return true;
 	}
-	else if (this->getErrorManager().hasError())
+	if (this->getErrorManager().hasError())
 	{
 		// this is not a validation error thus we return directly
 		return false;
@@ -447,7 +445,7 @@ bool CAlgorithmXMLScenarioImporter::validateXML(const unsigned char* xmlBuffer, 
 		OV_WARNING_K("Importing scenario with legacy format: legacy scenario might be deprecated in the future so upgrade to v2 format when possible");
 		return true;
 	}
-	else if (this->getErrorManager().hasError())
+	if (this->getErrorManager().hasError())
 	{
 		// this is not a validation error thus we return directly
 		return false;

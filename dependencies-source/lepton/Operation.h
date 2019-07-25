@@ -231,7 +231,9 @@ namespace Lepton
 		{
 			std::map<std::string, double>::const_iterator iter = variables.find(name);
 			if (iter == variables.end())
+			{
 				throw Exception("No value specified for variable " + name);
+			}
 			return iter->second;
 		}
 
@@ -288,7 +290,9 @@ namespace Lepton
 		double evaluate(double* args, const std::map<std::string, double>& variables) const
 		{
 			if (isDerivative)
+			{
 				return function->evaluateDerivative(args, &derivOrder[0]);
+			}
 			return function->evaluate(args);
 		}
 
@@ -1301,8 +1305,7 @@ namespace Lepton
 				}
 				return result;
 			}
-			else
-				return std::pow(args[0], value);
+			return std::pow(args[0], value);
 		}
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const;

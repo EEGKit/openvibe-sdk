@@ -54,14 +54,18 @@ ExpressionTreeNode Operation::Constant::differentiate(const std::vector<Expressi
 ExpressionTreeNode Operation::Variable::differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const
 {
 	if (variable == name)
+	{
 		return ExpressionTreeNode(new Constant(1.0));
+	}
 	return ExpressionTreeNode(new Constant(0.0));
 }
 
 ExpressionTreeNode Operation::Custom::differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const
 {
 	if (function->getNumArguments() == 0)
+	{
 		return ExpressionTreeNode(new Constant(0.0));
+	}
 	ExpressionTreeNode result = ExpressionTreeNode(new Multiply(), ExpressionTreeNode(new Custom(*this, 0), children), childDerivs[0]);
 	for (int i = 1; i < getNumArguments(); i++)
 	{

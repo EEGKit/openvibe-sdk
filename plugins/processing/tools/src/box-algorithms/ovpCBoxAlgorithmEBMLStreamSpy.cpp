@@ -108,10 +108,8 @@ bool CBoxAlgorithmEBMLStreamSpy::uninitialize()
 
 bool CBoxAlgorithmEBMLStreamSpy::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
-	map<EBML::CIdentifier, string>::iterator n;
-	map<EBML::CIdentifier, string>::iterator t;
-	n = m_vName.find(rIdentifier);
-	t = m_vType.find(rIdentifier);
+	map<EBML::CIdentifier, string>::iterator n = m_vName.find(rIdentifier);
+	map<EBML::CIdentifier, string>::iterator t = m_vType.find(rIdentifier);
 	if (n != m_vName.end() && t != m_vType.end())
 	{
 		return (t->second == "master");
@@ -121,8 +119,7 @@ bool CBoxAlgorithmEBMLStreamSpy::isMasterChild(const EBML::CIdentifier& rIdentif
 
 void CBoxAlgorithmEBMLStreamSpy::openChild(const EBML::CIdentifier& rIdentifier)
 {
-	map<EBML::CIdentifier, string>::iterator n;
-	n = m_vName.find(rIdentifier);
+	map<EBML::CIdentifier, string>::iterator n = m_vName.find(rIdentifier);
 
 	getLogManager() << m_eLogLevel;
 
@@ -160,8 +157,7 @@ void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const u
 
 void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
-	map<EBML::CIdentifier, string>::iterator t;
-	t = m_vType.find(m_vNodes.top());
+	map<EBML::CIdentifier, string>::iterator t = m_vType.find(m_vNodes.top());
 
 	if (t != m_vType.end())
 	{

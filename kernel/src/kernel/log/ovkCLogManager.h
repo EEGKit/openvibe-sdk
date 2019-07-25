@@ -67,8 +67,7 @@ namespace OpenViBE
 
 				if (m_eCurrentLogLevel != LogLevel_None && this->isActive(m_eCurrentLogLevel))
 				{
-					std::vector<ILogListener*>::iterator i;
-					for (i = m_vListener.begin(); i != m_vListener.end(); ++i)
+					for (std::vector<ILogListener*>::iterator i = m_vListener.begin(); i != m_vListener.end(); ++i)
 					{
 						if ((*i)->isActive(m_eCurrentLogLevel))
 						{

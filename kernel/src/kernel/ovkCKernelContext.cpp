@@ -127,10 +127,7 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	OV_ERROR_UNLESS_KRF(m_pConfigurationManager->addConfigurationFromFile(m_sConfigurationFile),
 						"Problem parsing config file [" << m_sConfigurationFile << "]", ErrorType::Internal);
 
-	// Generate the openvibe directories that the applications may write to. These are done after addConfigurationFromFile(), in case the defaults have been modified.
-	// @FIXME note that there is an issue if these paths are changed by a delayed configuration, then the directories are not created unless the caller does it.
-	CString l_sPathTmp;
-	l_sPathTmp = m_pConfigurationManager->expand("${Path_UserData}");
+	CString l_sPathTmp = m_pConfigurationManager->expand("${Path_UserData}");
 	FS::Files::createPath(l_sPathTmp.toASCIIString());
 	l_sPathTmp = m_pConfigurationManager->expand("${Path_Tmp}");
 	FS::Files::createPath(l_sPathTmp.toASCIIString());
@@ -334,15 +331,15 @@ ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)
 		return static_cast<char>(std::tolower(c));
 	});
 
-	if (l_sValue == "none") return LogLevel_None;
-	if (l_sValue == "debug") return LogLevel_Debug;
-	if (l_sValue == "benchmarking / profiling") return LogLevel_Benchmark;
-	if (l_sValue == "trace") return LogLevel_Trace;
-	if (l_sValue == "information") return LogLevel_Info;
-	if (l_sValue == "warning") return LogLevel_Warning;
-	if (l_sValue == "important warning") return LogLevel_ImportantWarning;
-	if (l_sValue == "error") return LogLevel_Error;
-	if (l_sValue == "fatal error") return LogLevel_Fatal;
+	if (l_sValue == "none") { return LogLevel_None; }
+	if (l_sValue == "debug") { return LogLevel_Debug; }
+	if (l_sValue == "benchmarking / profiling") { return LogLevel_Benchmark; }
+	if (l_sValue == "trace") { return LogLevel_Trace; }
+	if (l_sValue == "information") { return LogLevel_Info; }
+	if (l_sValue == "warning") { return LogLevel_Warning; }
+	if (l_sValue == "important warning") { return LogLevel_ImportantWarning; }
+	if (l_sValue == "error") { return LogLevel_Error; }
+	if (l_sValue == "fatal error") { return LogLevel_Fatal; }
 
 	OV_WARNING("Invalid log level " << rLogLevelName << " specified in configuration file, falling back to " << CString("Debug"), (*m_pLogManager));
 

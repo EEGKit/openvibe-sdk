@@ -163,7 +163,7 @@ namespace OpenViBEPlugins
 					}
 					return this->onAlgorithmClassifierChanged(rBox);
 				}
-				else { return true; }
+				return true;
 				//return this->onAlgorithmClassifierChanged(rBox);
 			}
 
@@ -182,12 +182,11 @@ namespace OpenViBEPlugins
 				{
 					return this->onAlgorithmClassifierChanged(rBox);
 				}
-				else if (ui32Index == getStrategyIndex())
+				if (ui32Index == getStrategyIndex())
 				{
 					return this->onStrategyChanged(rBox);
 				}
-				else
-					return true;
+				return true;
 			}
 
 
@@ -237,12 +236,11 @@ namespace OpenViBEPlugins
 			virtual bool onStrategyChanged(OpenViBE::Kernel::IBox& rBox)
 			{
 				OpenViBE::CString l_sStrategyName;
-				OpenViBE::CIdentifier l_oStrategyIdentifier;
 				// OpenViBE::CIdentifier l_oOldStrategyIdentifier=m_oStrategyClassIdentifier;
 
 				rBox.getSettingValue(getStrategyIndex(), l_sStrategyName);
 
-				l_oStrategyIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, l_sStrategyName);
+				OpenViBE::CIdentifier l_oStrategyIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, l_sStrategyName);
 				if (l_oStrategyIdentifier != m_oStrategyClassIdentifier)
 				{
 					if (m_pStrategy)
@@ -285,8 +283,7 @@ namespace OpenViBEPlugins
 						OpenViBE::Kernel::IParameter* l_pParameter = m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
 						OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64Parameter(l_pParameter);
 						uint64_t l_ui64EnumValue = ip_ui64Parameter;
-						OpenViBE::CString l_sEnumName;
-						l_sEnumName = this->getTypeManager().getEnumerationEntryNameFromValue(l_oEnum, l_ui64EnumValue);
+						OpenViBE::CString l_sEnumName = this->getTypeManager().getEnumerationEntryNameFromValue(l_oEnum, l_ui64EnumValue);
 
 						OpenViBE::CString l_sParameterName = this->getTypeManager().getTypeName(l_oEnum);
 
@@ -303,11 +300,10 @@ namespace OpenViBEPlugins
 			virtual bool onAlgorithmClassifierChanged(OpenViBE::Kernel::IBox& rBox)
 			{
 				OpenViBE::CString l_sClassifierName;
-				OpenViBE::CIdentifier l_oClassifierIdentifier;
 				OpenViBE::CIdentifier l_oIdentifier;
 
 				rBox.getSettingValue(getClassifierIndex(rBox), l_sClassifierName);
-				l_oClassifierIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, l_sClassifierName);
+				OpenViBE::CIdentifier l_oClassifierIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, l_sClassifierName);
 				if (l_oClassifierIdentifier != m_oClassifierClassIdentifier)
 				{
 					if (m_pClassifier)

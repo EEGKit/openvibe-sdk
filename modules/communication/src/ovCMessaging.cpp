@@ -532,5 +532,5 @@ bool CMessaging::waitForSyncMessage()
 		impl->m_WasSyncMessageReceived = false;
 		return true;
 	}
-	else { return false; }
+	return false;
 }
