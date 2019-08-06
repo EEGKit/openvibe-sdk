@@ -40,7 +40,7 @@ bool CBoxAlgorithmSignalMerger::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmSignalMerger::processInput(uint32_t index)
+bool CBoxAlgorithmSignalMerger::processInput(const uint32_t index)
 {
 	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();

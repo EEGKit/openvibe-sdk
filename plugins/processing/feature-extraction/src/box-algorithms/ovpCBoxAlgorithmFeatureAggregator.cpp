@@ -72,7 +72,7 @@ namespace OpenViBEPlugins
 			return true;
 		}
 
-		bool CBoxAlgorithmFeatureAggregator::processInput(uint32_t ui32InputIndex)
+		bool CBoxAlgorithmFeatureAggregator::processInput(const uint32_t ui32InputIndex)
 		{
 			IBoxIO* l_pBoxIO = getBoxAlgorithmContext()->getDynamicBoxContext();
 

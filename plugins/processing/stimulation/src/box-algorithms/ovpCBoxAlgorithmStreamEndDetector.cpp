@@ -38,7 +38,7 @@ bool CBoxAlgorithmStreamEndDetector::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmStreamEndDetector::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmStreamEndDetector::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

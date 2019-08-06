@@ -20,7 +20,7 @@ bool CBoxAlgorithmStreamedMatrixMultiplexer::initialize()
 
 bool CBoxAlgorithmStreamedMatrixMultiplexer::uninitialize() { return true; }
 
-bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmStreamedMatrixMultiplexer::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

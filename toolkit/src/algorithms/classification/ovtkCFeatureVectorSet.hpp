@@ -14,11 +14,11 @@ namespace OpenViBEToolkit
 		CInternalFeatureVector();
 
 		virtual uint32_t getSize() const;
-		virtual bool setSize(uint32_t ui32Size);
+		virtual bool setSize(const uint32_t ui32Size);
 		virtual double* getBuffer();
 		virtual const double* getBuffer() const;
-		virtual const char* getElementLabel(uint32_t ui32Index) const;
-		virtual bool setElementLabel(uint32_t ui32Index, const char* sElementLabel);
+		virtual const char* getElementLabel(const uint32_t ui32Index) const;
+		virtual bool setElementLabel(const uint32_t ui32Index, const char* sElementLabel);
 
 		virtual double getLabel() const;
 		virtual bool setLabel(const double f64Label);
@@ -42,8 +42,8 @@ namespace OpenViBEToolkit
 		virtual uint32_t getFeatureVectorCount() const;
 		virtual bool setFeatureVectorCount(uint32_t ui32FeatureVectorCount);
 		virtual bool addFeatureVector(const IFeatureVector& rFeatureVector);
-		virtual IFeatureVector& getFeatureVector(uint32_t ui32Index);
-		virtual const IFeatureVector& getFeatureVector(uint32_t ui32Index) const;
+		virtual IFeatureVector& getFeatureVector(const uint32_t ui32Index);
+		virtual const IFeatureVector& getFeatureVector(const uint32_t ui32Index) const;
 		virtual uint32_t getLabelCount() const;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVectorSet, OV_UndefinedIdentifier)

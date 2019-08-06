@@ -56,7 +56,7 @@ bool CBoxAlgorithmSignalAverage::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmSignalAverage::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmSignalAverage::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

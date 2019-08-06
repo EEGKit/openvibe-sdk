@@ -281,7 +281,7 @@ bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*rMessageCloc
 	return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 }
 
-bool CBoxAlgorithmExternalProcessing::processInput(uint32_t inputIndex)
+bool CBoxAlgorithmExternalProcessing::processInput(const uint32_t inputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

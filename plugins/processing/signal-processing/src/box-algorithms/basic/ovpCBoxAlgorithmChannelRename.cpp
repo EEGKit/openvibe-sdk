@@ -68,7 +68,7 @@ bool CBoxAlgorithmChannelRename::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmChannelRename::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmChannelRename::processInput(const uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

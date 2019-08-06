@@ -91,75 +91,29 @@ void CLogListenerFile::log(const time64 time64Value)
 	else { logInteger(time64Value.m_ui64TimeValue); }
 }
 
-void CLogListenerFile::log(const uint64_t ui64Value)
-{
-	logInteger(ui64Value);
-}
+void CLogListenerFile::log(const uint64_t value) { logInteger(value); }
+void CLogListenerFile::log(const uint32_t value) { logInteger(value); }
+void CLogListenerFile::log(const uint16_t value) { logInteger(value); }
+void CLogListenerFile::log(const uint8_t value) { logInteger(value); }
+void CLogListenerFile::log(const int64_t value) { logInteger(value); }
+void CLogListenerFile::log(const int32_t value) { logInteger(value); }
+void CLogListenerFile::log(const int16_t value) { logInteger(value); }
+void CLogListenerFile::log(const int8_t value) { logInteger(value); }
 
-void CLogListenerFile::log(const uint32_t ui32Value)
-{
-	logInteger(ui32Value);
-}
+void CLogListenerFile::log(const float value) { m_fsFileStream << value; }
+void CLogListenerFile::log(const double value) { m_fsFileStream << value; }
+void CLogListenerFile::log(const bool value) { m_fsFileStream << (value ? "true" : "false"); }
+void CLogListenerFile::log(const CIdentifier& value) { m_fsFileStream << value.toString(); }
 
-void CLogListenerFile::log(const uint16_t ui16Value)
+void CLogListenerFile::log(const CString& value)
 {
-	logInteger(ui16Value);
-}
-
-void CLogListenerFile::log(const uint8_t ui8Value)
-{
-	logInteger(ui8Value);
-}
-
-void CLogListenerFile::log(const int64_t i64Value)
-{
-	logInteger(i64Value);
-}
-
-void CLogListenerFile::log(const int32_t i32Value)
-{
-	logInteger(i32Value);
-}
-
-void CLogListenerFile::log(const int16_t i16Value)
-{
-	logInteger(i16Value);
-}
-
-void CLogListenerFile::log(const int8_t i8Value)
-{
-	logInteger(i8Value);
-}
-
-void CLogListenerFile::log(const float f32Value)
-{
-	m_fsFileStream << f32Value;
-}
-
-void CLogListenerFile::log(const double f64Value)
-{
-	m_fsFileStream << f64Value;
-}
-
-void CLogListenerFile::log(const bool bValue)
-{
-	m_fsFileStream << (bValue ? "true" : "false");
-}
-
-void CLogListenerFile::log(const CIdentifier& rValue)
-{
-	m_fsFileStream << rValue.toString();
-}
-
-void CLogListenerFile::log(const CString& rValue)
-{
-	m_fsFileStream << rValue;
+	m_fsFileStream << value;
 	m_fsFileStream << flush;
 }
 
-void CLogListenerFile::log(const char* pValue)
+void CLogListenerFile::log(const char* value)
 {
-	m_fsFileStream << pValue;
+	m_fsFileStream << value;
 	m_fsFileStream << flush;
 }
 

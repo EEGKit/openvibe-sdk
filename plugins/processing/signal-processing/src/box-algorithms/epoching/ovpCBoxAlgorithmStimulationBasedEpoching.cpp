@@ -61,7 +61,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmStimulationBasedEpoching::processInput(uint32_t /*index*/)
+bool CBoxAlgorithmStimulationBasedEpoching::processInput(const uint32_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 

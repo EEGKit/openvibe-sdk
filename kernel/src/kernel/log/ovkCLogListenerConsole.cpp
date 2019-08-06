@@ -60,7 +60,7 @@ bool CLogListenerConsole::activate(bool bActive)
 	return activate(LogLevel_First, LogLevel_Last, bActive);
 }
 
-void CLogListenerConsole::log(const time64 time64Value)
+void CLogListenerConsole::log(const time64 value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -69,7 +69,7 @@ void CLogListenerConsole::log(const time64 time64Value)
 	if (m_bTimeInSeconds)
 	{
 		uint64_t l_ui64Precision = m_ui64TimePrecision;
-		double l_f64Time      = ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
+		double l_f64Time      = ITimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
 		std::stringstream ss;
 		ss.precision(static_cast<long long>(l_ui64Precision));
 		ss.setf(std::ios::fixed, std::ios::floatfield);
@@ -77,17 +77,17 @@ void CLogListenerConsole::log(const time64 time64Value)
 		ss << " sec";
 		if (m_bLogWithHexa)
 		{
-			ss << " (0x" << hex << time64Value.m_ui64TimeValue << ")";
+			ss << " (0x" << hex << value.m_ui64TimeValue << ")";
 		}
 
 		cout << ss.str().c_str();
 	}
 	else
 	{
-		cout << dec << time64Value.m_ui64TimeValue;
+		cout << dec << value.m_ui64TimeValue;
 		if (m_bLogWithHexa)
 		{
-			cout << " (0x" << hex << time64Value.m_ui64TimeValue << ")";
+			cout << " (0x" << hex << value.m_ui64TimeValue << ")";
 		}
 	}
 
@@ -95,100 +95,100 @@ void CLogListenerConsole::log(const time64 time64Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const uint64_t ui64Value)
+void CLogListenerConsole::log(const uint64_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << ui64Value;
+	cout << dec << value;
 	if (m_bLogWithHexa)
 	{
-		cout << " (0x" << hex << ui64Value << ")";
+		cout << " (0x" << hex << value << ")";
 	}
 
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const uint32_t ui32Value)
+void CLogListenerConsole::log(const uint32_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << ui32Value;
+	cout << dec << value;
 	if (m_bLogWithHexa)
 	{
-		cout << " (0x" << hex << ui32Value << ")";
+		cout << " (0x" << hex << value << ")";
 	}
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const uint16_t ui16Value)
+void CLogListenerConsole::log(const uint16_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << ui16Value;
+	cout << dec << value;
 	if (m_bLogWithHexa)
 	{
-		cout << " (0x" << hex << ui16Value << ")";
+		cout << " (0x" << hex << value << ")";
 	}
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const uint8_t ui8Value)
+void CLogListenerConsole::log(const uint8_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << ui8Value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << ui8Value << ")"; }
+	cout << dec << value;
+	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const int64_t i64Value)
+void CLogListenerConsole::log(const int64_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << i64Value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << i64Value << ")"; }
+	cout << dec << value;
+	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const int32_t i32Value)
+void CLogListenerConsole::log(const int32_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << i32Value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << i32Value << ")"; }
+	cout << dec << value;
+	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const int16_t i16Value)
+void CLogListenerConsole::log(const int16_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << i16Value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << i16Value << ")"; }
+	cout << dec << value;
+	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const int8_t i8Value)
+void CLogListenerConsole::log(const int8_t value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
 	ios_base::fmtflags l_oFormat = cout.flags();
-	cout << dec << i8Value;
-	if (m_bLogWithHexa) { cout << " (0x" << hex << i8Value << ")"; }
+	cout << dec << value;
+	if (m_bLogWithHexa) { cout << " (0x" << hex << value << ")"; }
 	cout.flags(l_oFormat);
 	this->log(LogColor_PopStateBit);
 }
@@ -201,41 +201,41 @@ void CLogListenerConsole::log(const double f64Value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const float f32Value)
+void CLogListenerConsole::log(const float value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << f32Value;
+	cout << value;
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const bool bValue)
+void CLogListenerConsole::log(const bool value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << (bValue ? "true" : "false");
+	cout << (value ? "true" : "false");
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const CIdentifier& rValue)
+void CLogListenerConsole::log(const CIdentifier& value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << rValue.toString();
+	cout << value.toString();
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const CString& rValue)
+void CLogListenerConsole::log(const CString& value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << rValue;
+	cout << value;
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const char* pValue)
+void CLogListenerConsole::log(const char* value)
 {
-	cout << pValue;
+	cout << value;
 	cout << flush;
 }
 

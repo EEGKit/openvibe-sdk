@@ -17,12 +17,12 @@ namespace OpenViBE
 			CMemoryBufferImpl(const uint8_t* pMemoryBuffer, uint64_t ui64BufferSize);
 			virtual ~CMemoryBufferImpl();
 
-			virtual bool reserve(uint64_t ui64Size);
-			virtual bool setSize(uint64_t ui64Size, bool bDiscard);
+			virtual bool reserve(const uint64_t ui64Size);
+			virtual bool setSize(const uint64_t ui64Size, const bool bDiscard);
 			virtual uint64_t getSize() const;
 			virtual uint8_t* getDirectPointer();
 			virtual const uint8_t* getDirectPointer() const;
-			virtual bool append(const uint8_t* pBuffer, uint64_t ui64BufferSize);
+			virtual bool append(const uint8_t* pBuffer, const uint64_t ui64BufferSize);
 			virtual bool append(const IMemoryBuffer& rMemoryBuffer);
 
 			_IsDerivedFromClass_Final_(IMemoryBuffer, OV_ClassId_MemoryBufferImpl)
@@ -40,14 +40,10 @@ namespace OpenViBE
 //
 
 CMemoryBufferImpl::CMemoryBufferImpl()
-	: m_pBuffer(NULL)
-	  , m_ui64BufferSize(0)
-	  , m_ui64AllocatedSize(0) {}
+	: m_pBuffer(NULL), m_ui64BufferSize(0), m_ui64AllocatedSize(0) {}
 
 CMemoryBufferImpl::CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer)
-	: m_pBuffer(NULL)
-	  , m_ui64BufferSize(0)
-	  , m_ui64AllocatedSize(0)
+	: m_pBuffer(NULL), m_ui64BufferSize(0), m_ui64AllocatedSize(0)
 {
 	m_pBuffer = new uint8_t[static_cast<size_t>(rMemoryBuffer.getSize() + 1)]; // $$$
 	if (m_pBuffer)

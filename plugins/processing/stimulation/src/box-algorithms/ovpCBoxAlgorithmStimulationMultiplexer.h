@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 
 			bool initialize();
 			bool uninitialize();
-			bool processInput(uint32_t ui32InputIndex);
+			bool processInput(const uint32_t ui32InputIndex);
 			bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationMultiplexer)

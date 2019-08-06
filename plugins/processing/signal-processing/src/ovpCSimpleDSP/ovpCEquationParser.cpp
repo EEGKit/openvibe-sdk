@@ -425,75 +425,20 @@ void CEquationParser::op_power(double*& pStack, functionContext& pContext)
 #endif
 }
 
-void CEquationParser::op_abs(double*& pStack, functionContext& pContext)
-{
-	*pStack = fabs(*(pStack));
-}
-
-void CEquationParser::op_acos(double*& pStack, functionContext& pContext)
-{
-	*pStack = acos(*(pStack));
-}
-
-void CEquationParser::op_asin(double*& pStack, functionContext& pContext)
-{
-	*pStack = asin(*(pStack));
-}
-
-void CEquationParser::op_atan(double*& pStack, functionContext& pContext)
-{
-	*pStack = atan(*(pStack));
-}
-
-void CEquationParser::op_ceil(double*& pStack, functionContext& pContext)
-{
-	*pStack = ceil(*(pStack));
-}
-
-void CEquationParser::op_cos(double*& pStack, functionContext& pContext)
-{
-	*pStack = cos(*(pStack));
-}
-
-void CEquationParser::op_exp(double*& pStack, functionContext& pContext)
-{
-	*pStack = exp(*(pStack));
-}
-
-void CEquationParser::op_floor(double*& pStack, functionContext& pContext)
-{
-	*pStack = floor(*(pStack));
-}
-
-void CEquationParser::op_log(double*& pStack, functionContext& pContext)
-{
-	*pStack = log(*(pStack));
-}
-
-void CEquationParser::op_log10(double*& pStack, functionContext& pContext)
-{
-	*pStack = log10(*(pStack));
-}
-
-void CEquationParser::op_rand(double*& pStack, functionContext& pContext)
-{
-	*pStack = rand() * *(pStack) / RAND_MAX;
-}
-
-void CEquationParser::op_sin(double*& pStack, functionContext& pContext)
-{
-	*pStack = sin(*(pStack));
-}
-
-void CEquationParser::op_sqrt(double*& pStack, functionContext& pContext)
-{
-	*pStack = sqrt(*(pStack));
-}
-
-void CEquationParser::op_tan(double*& pStack, functionContext& pContext)
-{
-	*pStack = tan(*(pStack));
-}
+void CEquationParser::op_abs(double*& pStack, functionContext& pContext) { *pStack = fabs(*(pStack)); }
+void CEquationParser::op_acos(double*& pStack, functionContext& pContext) { *pStack = acos(*(pStack)); }
+void CEquationParser::op_asin(double*& pStack, functionContext& pContext) { *pStack = asin(*(pStack)); }
+void CEquationParser::op_atan(double*& pStack, functionContext& pContext) { *pStack = atan(*(pStack)); }
+void CEquationParser::op_ceil(double*& pStack, functionContext& pContext) { *pStack = ceil(*(pStack)); }
+void CEquationParser::op_cos(double*& pStack, functionContext& pContext) { *pStack = cos(*(pStack)); }
+void CEquationParser::op_exp(double*& pStack, functionContext& pContext) { *pStack = exp(*(pStack)); }
+void CEquationParser::op_floor(double*& pStack, functionContext& pContext) { *pStack = floor(*(pStack)); }
+void CEquationParser::op_log(double*& pStack, functionContext& pContext) { *pStack = log(*(pStack)); }
+void CEquationParser::op_log10(double*& pStack, functionContext& pContext) { *pStack = log10(*(pStack)); }
+void CEquationParser::op_rand(double*& pStack, functionContext& pContext) { *pStack = rand() * *(pStack) / RAND_MAX; }
+void CEquationParser::op_sin(double*& pStack, functionContext& pContext) { *pStack = sin(*(pStack)); }
+void CEquationParser::op_sqrt(double*& pStack, functionContext& pContext) { *pStack = sqrt(*(pStack)); }
+void CEquationParser::op_tan(double*& pStack, functionContext& pContext) { *pStack = tan(*(pStack)); }
 
 void CEquationParser::op_if_then_else(double*& pStack, functionContext& pContext)
 {

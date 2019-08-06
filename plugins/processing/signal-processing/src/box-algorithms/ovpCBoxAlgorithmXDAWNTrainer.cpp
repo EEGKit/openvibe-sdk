@@ -59,7 +59,7 @@ bool CBoxAlgorithmXDAWNTrainer::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmXDAWNTrainer::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmXDAWNTrainer::processInput(const uint32_t ui32InputIndex)
 {
 	if (ui32InputIndex == 0)
 	{

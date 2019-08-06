@@ -30,7 +30,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Loads new metaboxes module file(s)
-			 * \param[in] rFileNameWildCard  : a wild card with the file(s) to search metaboxes in
+			 * \param[in] fileNameWildCard : a wild card with the file(s) to search metaboxes in
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */

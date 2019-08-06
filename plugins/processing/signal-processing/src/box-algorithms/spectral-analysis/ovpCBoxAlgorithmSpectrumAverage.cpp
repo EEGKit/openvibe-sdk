@@ -47,7 +47,7 @@ bool CBoxAlgorithmSpectrumAverage::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmSpectrumAverage::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmSpectrumAverage::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

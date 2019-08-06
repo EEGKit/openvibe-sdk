@@ -67,7 +67,7 @@ uint64_t CBoxAlgorithmTimeout::getClockFrequency()
 /*******************************************************************************/
 
 
-bool CBoxAlgorithmTimeout::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmTimeout::processInput(const uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 

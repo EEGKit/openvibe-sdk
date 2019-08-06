@@ -9,11 +9,11 @@ namespace OpenViBEToolkit
 	public:
 
 		virtual uint32_t getSize() const = 0;
-		virtual bool setSize(uint32_t ui32Size) = 0;
+		virtual bool setSize(const uint32_t ui32Size) = 0;
 		virtual double* getBuffer() = 0;
 		virtual const double* getBuffer() const = 0;
-		virtual const char* getElementLabel(uint32_t ui32Index) const = 0;
-		virtual bool setElementLabel(uint32_t ui32Index, const char* sElementLabel) = 0;
+		virtual const char* getElementLabel(const uint32_t ui32Index) const = 0;
+		virtual bool setElementLabel(const uint32_t ui32Index, const char* sElementLabel) = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_Vector)
 

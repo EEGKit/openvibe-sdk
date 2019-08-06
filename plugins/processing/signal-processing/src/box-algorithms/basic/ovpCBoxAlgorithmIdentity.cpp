@@ -15,7 +15,7 @@ void CBoxAlgorithmIdentity::release()
 	delete this;
 }
 
-bool CBoxAlgorithmIdentity::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmIdentity::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

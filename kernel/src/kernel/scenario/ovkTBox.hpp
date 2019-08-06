@@ -1223,21 +1223,21 @@ namespace OpenViBE
 				return true;
 			}
 
-			virtual bool removeSetting(const uint32_t ui32SettingIndex, const bool bNotify = true)
+			virtual bool removeSetting(const uint32_t index, const bool bNotify = true)
 			{
-				auto it = m_Interfacors[Setting].begin() + ui32SettingIndex;
-				OV_ERROR_UNLESS_KRF(it != m_Interfacors[Setting].end(), "No setting found at index " << ui32SettingIndex, ErrorType::ResourceNotFound);
+				auto it = m_Interfacors[Setting].begin() + index;
+				OV_ERROR_UNLESS_KRF(it != m_Interfacors[Setting].end(), "No setting found at index " << index, ErrorType::ResourceNotFound);
 
-				CIdentifier toBeRemovedId = m_Interfacors[Setting][ui32SettingIndex]->m_oIdentifier;
-				CString toBeRemovedName   = m_Interfacors[Setting][ui32SettingIndex]->m_sName;
+				CIdentifier toBeRemovedId = m_Interfacors[Setting][index]->m_oIdentifier;
+				CString toBeRemovedName   = m_Interfacors[Setting][index]->m_sName;
 
 				it = m_Interfacors[Setting].erase(it);
 
 				//update the modifiable setting indexes
 				for (auto it2 = m_vModifiableSettingIndexes.begin(); it2 != m_vModifiableSettingIndexes.end();)
 				{
-					if (*it2 == ui32SettingIndex) { it2 = m_vModifiableSettingIndexes.erase(it2); }
-					else if (*it2 > ui32SettingIndex) 
+					if (*it2 == index) { it2 = m_vModifiableSettingIndexes.erase(it2); }
+					else if (*it2 > index) 
 					{
 						*it2 -= 1;
 						++it2;
@@ -1259,8 +1259,8 @@ namespace OpenViBE
 
 				if (bNotify)
 				{
-					this->notify(BoxModification_SettingRemoved, ui32SettingIndex);
-					this->notifySettingChange(SettingDelete, ui32SettingIndex);
+					this->notify(BoxModification_SettingRemoved, index);
+					this->notifySettingChange(SettingDelete, index);
 				}
 
 				return true;
@@ -1273,23 +1273,23 @@ namespace OpenViBE
 				return m_InterfacorNameToIndex.at(Setting).find(rName) != m_InterfacorNameToIndex.at(Setting).end();
 			}
 
-			virtual bool getSettingType(const uint32_t ui32SettingIndex, CIdentifier& rTypeIdentifier) const
+			virtual bool getSettingType(const uint32_t index, CIdentifier& rTypeIdentifier) const
 			{
-				return this - getInterfacorType(Setting, ui32SettingIndex, rTypeIdentifier);
+				return this - getInterfacorType(Setting, index, rTypeIdentifier);
 			}
 
-			virtual bool getSettingName(const uint32_t ui32SettingIndex, CString& rName) const
+			virtual bool getSettingName(const uint32_t index, CString& rName) const
 			{
-				return this->getInterfacorName(Setting, ui32SettingIndex, rName);
+				return this->getInterfacorName(Setting, index, rName);
 			}
 
-			virtual bool getSettingDefaultValue(const uint32_t ui32SettingIndex, CString& rDefaultValue) const
+			virtual bool getSettingDefaultValue(const uint32_t index, CString& rDefaultValue) const
 			{
-				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(),
-									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(),
+									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
-				rDefaultValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[ui32SettingIndex])->m_sDefaultValue;
+				rDefaultValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[index])->m_sDefaultValue;
 				return true;
 			}
 
@@ -1309,13 +1309,13 @@ namespace OpenViBE
 				return this->getSettingDefaultValue(it->second, rDefaultValue);
 			}
 
-			virtual bool getSettingValue(const uint32_t ui32SettingIndex, CString& rValue) const
+			virtual bool getSettingValue(const uint32_t index, CString& rValue) const
 			{
-				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(), 
-									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])", 
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(), 
+									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])", 
 									ErrorType::OutOfBound);
 
-				rValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[ui32SettingIndex])->m_sValue;
+				rValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[index])->m_sValue;
 				return true;
 			}
 
@@ -1335,13 +1335,13 @@ namespace OpenViBE
 				return this->getSettingValue(it->second, rValue);
 			}
 
-			virtual bool getSettingMod(const uint32_t ui32SettingIndex, bool& rValue) const
+			virtual bool getSettingMod(const uint32_t index, bool& rValue) const
 			{
-				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(),
-									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(),
+									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
-				rValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[ui32SettingIndex])->m_bMod;
+				rValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[index])->m_bMod;
 				return true;
 			}
 
@@ -1363,25 +1363,25 @@ namespace OpenViBE
 				return this->getSettingMod(it->second, rValue);
 			}
 
-			virtual bool setSettingType(const uint32_t ui32SettingIndex, const CIdentifier& rTypeIdentifier)
+			virtual bool setSettingType(const uint32_t index, const CIdentifier& rTypeIdentifier)
 			{
-				return this->setInterfacorType(Setting, ui32SettingIndex, rTypeIdentifier);
+				return this->setInterfacorType(Setting, index, rTypeIdentifier);
 			}
 
-			virtual bool setSettingName(const uint32_t ui32SettingIndex, const CString& rName)
+			virtual bool setSettingName(const uint32_t index, const CString& rName)
 			{
-				return this->setInterfacorName(Setting, ui32SettingIndex, rName);
+				return this->setInterfacorName(Setting, index, rName);
 			}
 
-			virtual bool setSettingDefaultValue(const uint32_t ui32SettingIndex, const CString& rDefaultValue)
+			virtual bool setSettingDefaultValue(const uint32_t index, const CString& rDefaultValue)
 			{
-				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(),
-									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(),
+									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
-				std::static_pointer_cast<CSetting>(m_Interfacors[Setting][ui32SettingIndex])->m_sDefaultValue = rDefaultValue;
+				std::static_pointer_cast<CSetting>(m_Interfacors[Setting][index])->m_sDefaultValue = rDefaultValue;
 
-				this->notify(BoxModification_SettingDefaultValueChanged, ui32SettingIndex);
+				this->notify(BoxModification_SettingDefaultValueChanged, index);
 
 				return true;
 			}
@@ -1401,21 +1401,21 @@ namespace OpenViBE
 				return this->setSettingDefaultValue(it->second, rDefaultValue);
 			}
 
-			virtual bool setSettingValue(const uint32_t ui32SettingIndex, const CString& rValue, const bool bNotify = true)
+			virtual bool setSettingValue(const uint32_t index, const CString& rValue, const bool bNotify = true)
 			{
-				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(), 
-									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])", 
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(), 
+									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])", 
 									ErrorType::OutOfBound);
 
-				auto setting = std::static_pointer_cast<CSetting>(m_Interfacors[Setting][ui32SettingIndex]);
+				auto setting = std::static_pointer_cast<CSetting>(m_Interfacors[Setting][index]);
 				if (setting->m_sValue != rValue)
 				{
 					setting->m_sValue = rValue;
 
 					if (bNotify)
 					{
-						this->notify(BoxModification_SettingValueChanged, ui32SettingIndex);
-						this->notifySettingChange(SettingValueUpdate, ui32SettingIndex);
+						this->notify(BoxModification_SettingValueChanged, index);
+						this->notifySettingChange(SettingValueUpdate, index);
 					}
 				}
 
@@ -1438,15 +1438,15 @@ namespace OpenViBE
 				return this->setSettingValue(it->second, rValue);
 			}
 
-			virtual bool setSettingMod(const uint32_t ui32SettingIndex, const bool rValue)
+			virtual bool setSettingMod(const uint32_t index, const bool rValue)
 			{
-				OV_ERROR_UNLESS_KRF(ui32SettingIndex < m_Interfacors.at(Setting).size(),
-									"Setting index = [" << ui32SettingIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(),
+									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
-				std::static_pointer_cast<CSetting>(m_Interfacors[Setting][ui32SettingIndex])->m_bMod = rValue;
+				std::static_pointer_cast<CSetting>(m_Interfacors[Setting][index])->m_bMod = rValue;
 
-				//this->notify(BoxModification_SettingNameChanged, ui32SettingIndex);
+				//this->notify(BoxModification_SettingNameChanged, index);
 				return true;
 			}
 

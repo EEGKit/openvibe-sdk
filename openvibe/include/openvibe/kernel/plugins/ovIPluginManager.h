@@ -49,7 +49,7 @@ namespace OpenViBE
 			virtual bool addPluginsFromFiles(const CString& rFileNameWildCard) = 0;
 			/**
 			 * \brief Registers a plugin object descriptor
-			 * \param rPreviousIdentifier [in] : the actual plugin object descriptor to register
+			 * \param rPluginObjectDesc [in] : the actual plugin object descriptor to register
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */

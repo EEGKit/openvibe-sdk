@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 
 			virtual bool initialize();
 			virtual bool uninitialize();
-			virtual bool processInput(uint32_t ui32InputIndex);
+			virtual bool processInput(const uint32_t ui32InputIndex);
 			virtual bool process();
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_ContinuousWaveletAnalysis)

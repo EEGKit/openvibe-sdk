@@ -97,7 +97,7 @@ bool CBoxAlgorithmCSVFileWriter::initializeFile()
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileWriter::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmCSVFileWriter::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

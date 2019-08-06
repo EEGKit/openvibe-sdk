@@ -34,29 +34,29 @@ bool CLogManager::activate(bool bActive)
 	return activate(LogLevel_First, LogLevel_Last, bActive);
 }
 
-void CLogManager::log(const time64 time64Value) { logForEach<const time64>(time64Value); }
-void CLogManager::log(const uint64_t ui64Value) { logForEach<const uint64_t>(ui64Value); }
-void CLogManager::log(const uint32_t ui32Value) { logForEach<const uint32_t>(ui32Value); }
-void CLogManager::log(const uint16_t ui16Value) { logForEach<const uint16_t>(ui16Value); }
-void CLogManager::log(const uint8_t ui8Value) { logForEach<const uint8_t>(ui8Value); }
-void CLogManager::log(const int64_t i64Value) { logForEach<const int64_t>(i64Value); }
-void CLogManager::log(const int32_t i32Value) { logForEach<const int32_t>(i32Value); }
-void CLogManager::log(const int16_t i16Value) { logForEach<const int16_t>(i16Value); }
-void CLogManager::log(const int8_t i8Value) { logForEach<const int8_t>(i8Value); }
-void CLogManager::log(const double f64Value) { logForEach<const double>(f64Value); }
-void CLogManager::log(const float f32Value) { logForEach<const float>(f32Value); }
-void CLogManager::log(const bool bValue) { logForEach<const bool>(bValue); }
-void CLogManager::log(const CIdentifier& rValue) { logForEach<const CIdentifier&>(rValue); }
-void CLogManager::log(const CString& rValue) { log(rValue.toASCIIString()); }
+void CLogManager::log(const time64 value) { logForEach<const time64>(value); }
+void CLogManager::log(const uint64_t value) { logForEach<const uint64_t>(value); }
+void CLogManager::log(const uint32_t value) { logForEach<const uint32_t>(value); }
+void CLogManager::log(const uint16_t value) { logForEach<const uint16_t>(value); }
+void CLogManager::log(const uint8_t value) { logForEach<const uint8_t>(value); }
+void CLogManager::log(const int64_t value) { logForEach<const int64_t>(value); }
+void CLogManager::log(const int32_t value) { logForEach<const int32_t>(value); }
+void CLogManager::log(const int16_t value) { logForEach<const int16_t>(value); }
+void CLogManager::log(const int8_t value) { logForEach<const int8_t>(value); }
+void CLogManager::log(const double value) { logForEach<const double>(value); }
+void CLogManager::log(const float value) { logForEach<const float>(value); }
+void CLogManager::log(const bool value) { logForEach<const bool>(value); }
+void CLogManager::log(const CIdentifier& value) { logForEach<const CIdentifier&>(value); }
+void CLogManager::log(const CString& value) { log(value.toASCIIString()); }
 
-void CLogManager::log(const char* rValue)
+void CLogManager::log(const char* value)
 {
-	logForEach<const char*>(rValue);
+	logForEach<const char*>(value);
 
 	{
 		GRAB_OWNERSHIP;
 
-		std::string l_sCopy(rValue);
+		std::string l_sCopy(value);
 		if (l_sCopy.length() > 0 && l_sCopy[l_sCopy.length() - 1] == '\n')
 		{
 			// we are done, release

@@ -74,7 +74,7 @@ namespace OpenViBEToolkit
 		virtual bool processEvent(OpenViBE::CMessageEvent& rMessageEvent) { return false; }
 		virtual bool processSignal(OpenViBE::CMessageSignal& rMessageSignal) { return false; }
 		virtual bool processClock(OpenViBE::CMessageClock& rMessageClock) { return false; }
-		virtual bool processInput(uint32_t ui32InputIndex) { return false; }
+		virtual bool processInput(const uint32_t ui32InputIndex) { return false; }
 		virtual bool process() = 0;
 
 		// ====================================================================================================================================

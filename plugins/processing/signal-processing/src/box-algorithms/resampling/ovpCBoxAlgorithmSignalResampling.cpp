@@ -90,7 +90,7 @@ bool CBoxAlgorithmSignalResampling::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmSignalResampling::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmSignalResampling::processInput(const uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

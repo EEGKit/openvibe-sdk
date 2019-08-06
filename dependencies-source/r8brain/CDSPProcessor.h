@@ -61,7 +61,7 @@ namespace r8b
 		 * induced by all processors which run after *this processor in chain.
 		 */
 
-		virtual int getInLenBeforeOutStart(int NextInLen) const = 0;
+		virtual int getInLenBeforeOutStart(const int NextInLen) const = 0;
 
 		/**
 		 * @param MaxInLen The number of samples planned to process at once, at
@@ -70,7 +70,7 @@ namespace r8b
 		 * processing the "MaxInLen" number of input samples.
 		 */
 
-		virtual int getMaxOutLen(int MaxInLen) const = 0;
+		virtual int getMaxOutLen(const int MaxInLen) const = 0;
 
 		/**
 		 * Function clears (resets) the state of *this object and returns it to

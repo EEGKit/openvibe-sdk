@@ -83,7 +83,7 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 	return true;
 }
 
-bool CBoxAlgorithmGenericStreamWriter::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmGenericStreamWriter::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

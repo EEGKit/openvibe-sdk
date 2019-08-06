@@ -68,7 +68,7 @@ bool CBoxAlgorithmReferenceChannel::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmReferenceChannel::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmReferenceChannel::processInput(const uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

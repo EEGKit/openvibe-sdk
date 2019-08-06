@@ -30,7 +30,7 @@ namespace OpenViBE
 			 * \param ui32InputIndex [in] : the input to work on.
 			 * \return The number of pending chunks for an input
 			 */
-			virtual uint32_t getInputChunkCount(uint32_t ui32InputIndex) const = 0;
+			virtual uint32_t getInputChunkCount(const uint32_t ui32InputIndex) const = 0;
 			/**
 			 * \brief Gets an input chunk and its time validity.
 			 * \param ui32InputIndex [in] : the index of the desired input.
@@ -53,7 +53,7 @@ namespace OpenViBE
 			 * \sa getInputChunkCount
 			 * \sa markInputAsDeprecated
 			 */
-			virtual bool getInputChunk(uint32_t ui32InputIndex, uint32_t ui32ChunkIndex, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const = 0;
+			virtual bool getInputChunk(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const = 0;
 			/**
 			 * \brief Gets an input chunk.
 			 * \param ui32InputIndex [in] : the index of the desired input.
@@ -68,7 +68,7 @@ namespace OpenViBE
 			 * \sa getInputChunkCount
 			 * \sa markInputAsDeprecated
 			 */
-			virtual const IMemoryBuffer* getInputChunk(uint32_t ui32InputIndex, uint32_t ui32ChunkIndex) const = 0;
+			virtual const IMemoryBuffer* getInputChunk(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex) const = 0;
 			/**
 			 * \brief Gets an input chunk start time.
 			 * \param ui32InputIndex [in] : the index of the desired input.

@@ -28,7 +28,7 @@ namespace OpenViBEPlugins
 			virtual bool uninitialize();
 
 			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual bool processInput(uint32_t ui32InputIndex);
+			virtual bool processInput(const uint32_t ui32InputIndex);
 
 			virtual uint64_t getClockFrequency();
 

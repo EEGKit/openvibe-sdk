@@ -171,17 +171,17 @@ namespace OpenViBE
 
 			/**
 			  * \brief Removes the keyword parser for a given keyword
-			  * \param rKeyword [in] : keyword of the parser to remove
+			  * \param keyword [in] : keyword of the parser to remove
 			  * \return true in case of success
 			  */
-			virtual bool unregisterKeywordParser(const CString& rKeyword) = 0;
+			virtual bool unregisterKeywordParser(const CString& keyword) = 0;
 
 			/**
 			  * \brief Removes the keyword parser for a given keyword
-			  * \param rKeyword [in] : keyword of the parser to remove
+			  * \param callback [in] : handler for the keyword
 			  * \return true in case of success
 			  */
-			virtual bool unregisterKeywordParser(const IConfigurationKeywordExpandCallback& rCallback) = 0;
+			virtual bool unregisterKeywordParser(const IConfigurationKeywordExpandCallback& callback) = 0;
 
 			/**
 			 * \brief Expands a string to an expanded string based on its use of configuration tokens

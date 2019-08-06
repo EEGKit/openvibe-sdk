@@ -36,7 +36,7 @@ bool CBoxAlgorithmPlayerController::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmPlayerController::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmPlayerController::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

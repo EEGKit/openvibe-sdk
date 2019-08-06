@@ -157,7 +157,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmContinuousWaveletAnalysis::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmContinuousWaveletAnalysis::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

@@ -128,7 +128,7 @@ bool CBoxAlgorithmFrequencyBandSelector::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmFrequencyBandSelector::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmFrequencyBandSelector::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

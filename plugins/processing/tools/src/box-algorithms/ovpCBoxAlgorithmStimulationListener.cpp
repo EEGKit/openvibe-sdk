@@ -34,7 +34,7 @@ bool CBoxAlgorithmStimulationListener::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmStimulationListener::processInput(uint32_t ui32InputIndex)
+bool CBoxAlgorithmStimulationListener::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
