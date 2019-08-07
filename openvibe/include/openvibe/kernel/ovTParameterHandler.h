@@ -105,7 +105,7 @@ namespace OpenViBE
 			 * \brief Checks whether this handler is connected to a concrete IParameter or not
 			 * \return \e true if this handler is connected to a concrete IParameter, \e false if not
 			 */
-			bool exists() const { return m_pParameter != NULL; }
+			bool exists() const { return m_pParameter != nullptr; }
 
 			//@{
 			/** \name Transparent operators */

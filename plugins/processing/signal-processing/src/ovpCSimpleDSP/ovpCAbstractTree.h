@@ -259,7 +259,7 @@ public:
 		rLogManager << "(" << op.c_str() << " ";
 		for (size_t i = 0; i < m_oChildren.size(); i++)
 		{
-			if (m_oChildren[i] == NULL) { }
+			if (m_oChildren[i] == nullptr) { }
 			else
 			{
 				m_oChildren[i]->print(rLogManager);

@@ -34,7 +34,7 @@ namespace OpenViBEToolkit
 
 		bool uninitialize()
 		{
-			if (m_pBoxAlgorithm == NULL || m_pCodec == NULL) { return false; }
+			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
 
 			m_bOutputDynamic.uninitialize();
 			m_pOutputMatrix.uninitialize();

@@ -48,7 +48,7 @@ uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISp
 
 uint32_t OpenViBEToolkit::Tools::String::split(const CString& rString, const ISplitCallback& rSplitCallback, uint8_t* pSeparator, uint32_t ui32SeparatorCount)
 {
-	if (ui32SeparatorCount == 0 || pSeparator == NULL) { return 0; }
+	if (ui32SeparatorCount == 0 || pSeparator == nullptr) { return 0; }
 
 	uint32_t l_ui32Count = 0;
 	std::string l_sString(rString.toASCIIString());

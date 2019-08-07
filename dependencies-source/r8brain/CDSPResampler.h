@@ -288,7 +288,7 @@ namespace r8b
 
 		virtual int getInLenBeforeOutStart(const int NextInLen) const
 		{
-			int l = (Interp == NULL ? 0 : Interp->getInLenBeforeOutStart(NextInLen));
+			int l = (Interp == nullptr ? 0 : Interp->getInLenBeforeOutStart(NextInLen));
 
 			for (int i = ConvCount - 1; i >= 0; i--)
 			{
@@ -322,7 +322,7 @@ namespace r8b
 				Convs[i]->clear();
 			}
 
-			if (Interp != NULL)
+			if (Interp != nullptr)
 			{
 				Interp->clear();
 			}
@@ -367,22 +367,22 @@ namespace r8b
 			}
 
 			double* ip = ip0;
-			double* op = NULL;
+			double* op = nullptr;
 
 			for (int i = 0; i < ConvCount; i++)
 			{
-				op = (ConvBufs[i & 1] == NULL ? ip0 : ConvBufs[i & 1]);
+				op = (ConvBufs[i & 1] == nullptr ? ip0 : ConvBufs[i & 1]);
 				l  = Convs[i]->process(ip, l, op);
 				ip = op;
 			}
 
-			if (Interp == NULL)
+			if (Interp == nullptr)
 			{
 				op0 = op;
 				return (l);
 			}
 
-			op  = (InterpBuf == NULL ? ip0 : InterpBuf);
+			op  = (InterpBuf == nullptr ? ip0 : InterpBuf);
 			op0 = op;
 
 			return (Interp->process(ip, l, op));

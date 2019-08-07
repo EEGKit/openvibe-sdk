@@ -12,7 +12,7 @@ namespace EBML
 		virtual ~CWriter();
 
 		virtual bool openChild(const CIdentifier& rIdentifier);
-		virtual bool setChildData(const void* pBuffer, uint64_t ui64BufferSize);
+		virtual bool setChildData(const void* pBuffer, const uint64_t ui64BufferSize);
 		virtual bool closeChild();
 		virtual void release();
 

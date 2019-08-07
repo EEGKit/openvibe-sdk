@@ -24,7 +24,7 @@ IObject* Kernel::CKernelObjectFactory::createObject(const CIdentifier& rClassIde
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	IObject* l_pResult = NULL;
+	IObject* l_pResult = nullptr;
 
 	create(rClassIdentifier, OV_ClassId_Kernel_Plugins_PluginModule, l_pResult, Kernel::CPluginModule);
 

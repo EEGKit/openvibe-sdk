@@ -69,7 +69,7 @@ ExpressionTreeNode::ExpressionTreeNode() : operation(NULL) {}
 
 ExpressionTreeNode::~ExpressionTreeNode()
 {
-	if (operation != NULL)
+	if (operation != nullptr)
 		delete operation;
 }
 
@@ -98,7 +98,7 @@ bool ExpressionTreeNode::operator==(const ExpressionTreeNode& node) const
 
 ExpressionTreeNode& ExpressionTreeNode::operator=(const ExpressionTreeNode& node)
 {
-	if (operation != NULL)
+	if (operation != nullptr)
 		delete operation;
 	operation = node.getOperation().clone();
 	children  = node.getChildren();

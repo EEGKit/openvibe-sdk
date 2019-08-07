@@ -193,7 +193,7 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 	memset(&l_oGlobStruc, GLOB_NOSORT, sizeof(l_oGlobStruc));
 
 	// Glob can retrn
-	switch (glob(sWildCard, 0, NULL, &l_oGlobStruc))
+	switch (glob(sWildCard, 0, nullptr, &l_oGlobStruc))
 	{
 	case GLOB_NOSPACE:
 	case GLOB_ABORTED:
@@ -274,7 +274,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 	// $$$ loses the initial path !!)
 	// $$$ TODO
 	wchar_t l_sExtendedWildCard[1024];
-	wchar_t* l_sExtendedWildCardFileName = NULL;
+	wchar_t* l_sExtendedWildCardFileName = nullptr;
 	GetFullPathName(wildCardUtf16, 1024, l_sExtendedWildCard, &l_sExtendedWildCardFileName);
 	std::wstring l_sPath(wildCardUtf16, wcslen(wildCardUtf16) - (l_sExtendedWildCardFileName ? wcslen(l_sExtendedWildCardFileName) : 0));
 
@@ -387,7 +387,7 @@ bool CEntryEnumeratorDummy::enumerate(const char* sWildCard, bool bRecursive)
 
 FS_API IEntryEnumerator* FS::createEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
 {
-	IEntryEnumerator* l_pResult = NULL;
+	IEntryEnumerator* l_pResult = nullptr;
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	l_pResult=new CEntryEnumeratorLinux(rEntryEnumeratorCallBack);
 #elif defined TARGET_OS_Windows

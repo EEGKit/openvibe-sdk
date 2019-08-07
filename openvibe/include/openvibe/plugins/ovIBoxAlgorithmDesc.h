@@ -66,10 +66,7 @@ namespace OpenViBE
 			 * should now be handled at application level.
 			 *
 			 */
-			virtual CString getStockItemName() const
-			{
-				return CString("");
-			}
+			virtual CString getStockItemName() const { return CString(""); }
 
 			//@{
 			/** \name Box modification monitoring */
@@ -86,10 +83,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxProto
 			 * \sa OpenViBE::Plugins::IBoxListener
 			 */
-			virtual IBoxListener* createBoxListener() const
-			{
-				return NULL;
-			}
+			virtual IBoxListener* createBoxListener() const { return nullptr; }
 			/**
 			 * \brief Releases an existing box listener
 			 * \param pBoxListener [in] : the box listener to release

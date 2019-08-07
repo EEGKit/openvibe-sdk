@@ -218,7 +218,7 @@ TEST(DynamicModule_Test_Case, loadFromRegistrySuccessNoSymbolCheck)
 {
 	CDynamicModule dynamicModule;
 
-	ASSERT_TRUE(dynamicModule.loadFromRegistry(s_ExistingRegistryKey, s_ExistingRegistryPath.c_str(), NULL, KEY_READ | KEY_WOW64_64KEY, s_ExistingRegistryModuleName.c_str()));
+	ASSERT_TRUE(dynamicModule.loadFromRegistry(s_ExistingRegistryKey, s_ExistingRegistryPath.c_str(), nullptr, KEY_READ | KEY_WOW64_64KEY, s_ExistingRegistryModuleName.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModuleName;
 	std::string moduleName         = dynamicModule.getFilename();
@@ -235,7 +235,7 @@ TEST(DynamicModule_Test_Case, loadFromRegistrySuccessSymbolCheck)
 {
 	CDynamicModule dynamicModule;
 
-	ASSERT_TRUE(dynamicModule.loadFromRegistry(s_ExistingRegistryKey, s_ExistingRegistryPath.c_str(), NULL, KEY_READ | KEY_WOW64_64KEY, s_ExistingRegistryModuleName.c_str(), s_SymbolNameNTDLL.c_str()));
+	ASSERT_TRUE(dynamicModule.loadFromRegistry(s_ExistingRegistryKey, s_ExistingRegistryPath.c_str(), nullptr, KEY_READ | KEY_WOW64_64KEY, s_ExistingRegistryModuleName.c_str(), s_SymbolNameNTDLL.c_str()));
 	ASSERT_TRUE(dynamicModule.isLoaded());
 	std::string moduleNameExpected = s_ExistingModuleName;
 	std::string moduleName         = dynamicModule.getFilename();
@@ -252,13 +252,13 @@ TEST(DynamicModule_Test_Case, loadFromRegistryFailNoSymbolCheck)
 {
 	CDynamicModule dynamicModule;
 
-	ASSERT_FALSE(dynamicModule.loadFromRegistry(s_NonExistingRegistryKey, s_ExistingRegistryPath.c_str(), NULL, KEY_READ | KEY_WOW64_32KEY, s_ExistingRegistryModuleName.c_str()));
+	ASSERT_FALSE(dynamicModule.loadFromRegistry(s_NonExistingRegistryKey, s_ExistingRegistryPath.c_str(), nullptr, KEY_READ | KEY_WOW64_32KEY, s_ExistingRegistryModuleName.c_str()));
 	ASSERT_FALSE(dynamicModule.isLoaded());
 
-	ASSERT_FALSE(dynamicModule.loadFromRegistry(s_ExistingRegistryKey, s_NonExistingRegistryPath.c_str(), NULL, KEY_READ | KEY_WOW64_32KEY, s_ExistingRegistryModuleName.c_str()));
+	ASSERT_FALSE(dynamicModule.loadFromRegistry(s_ExistingRegistryKey, s_NonExistingRegistryPath.c_str(), nullptr, KEY_READ | KEY_WOW64_32KEY, s_ExistingRegistryModuleName.c_str()));
 	ASSERT_FALSE(dynamicModule.isLoaded());
 
-	ASSERT_FALSE(dynamicModule.loadFromRegistry(s_NonExistingRegistryKey, s_ExistingRegistryPath.c_str(), NULL, KEY_READ | KEY_WOW64_32KEY, s_ExistingRegistryModuleName.c_str()));
+	ASSERT_FALSE(dynamicModule.loadFromRegistry(s_NonExistingRegistryKey, s_ExistingRegistryPath.c_str(), nullptr, KEY_READ | KEY_WOW64_32KEY, s_ExistingRegistryModuleName.c_str()));
 	ASSERT_FALSE(dynamicModule.isLoaded());
 }
 #endif

@@ -55,7 +55,7 @@ bool CAlgorithmClassifierOneVsOne::initialize()
 
 bool CAlgorithmClassifierOneVsOne::uninitialize()
 {
-	if (m_pDecisionStrategyAlgorithm != NULL)
+	if (m_pDecisionStrategyAlgorithm != nullptr)
 	{
 		m_pDecisionStrategyAlgorithm->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
@@ -96,7 +96,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 		"Invalid pairwise decision strategy [" << OVP_TypeId_ClassificationPairwiseStrategy.toString() << "]",
 		OpenViBE::Kernel::ErrorType::BadConfig);
 
-	if (m_pDecisionStrategyAlgorithm != NULL)
+	if (m_pDecisionStrategyAlgorithm != nullptr)
 	{
 		m_pDecisionStrategyAlgorithm->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
@@ -397,7 +397,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfiguration(XML::IXMLNode* pConfigurati
 	l_pPairwiseIdentifier.fromString(l_pTempNode->getAttribute(c_sAlgorithmIdAttribute));
 	if (l_pPairwiseIdentifier != m_oPairwiseDecisionIdentifier)
 	{
-		if (m_pDecisionStrategyAlgorithm != NULL)
+		if (m_pDecisionStrategyAlgorithm != nullptr)
 		{
 			m_pDecisionStrategyAlgorithm->uninitialize();
 			this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
@@ -484,7 +484,7 @@ bool CAlgorithmClassifierOneVsOne::setSubClassifierIdentifier(const CIdentifier&
 	m_fAlgorithmComparison              = getClassificationComparisonFunction(rId);
 
 	OV_ERROR_UNLESS_KRF(
-		m_fAlgorithmComparison != NULL,
+		m_fAlgorithmComparison != nullptr,
 		"No comparison function found for classifier " << m_oSubClassifierAlgorithmIdentifier.toString(),
 		OpenViBE::Kernel::ErrorType::ResourceNotFound);
 

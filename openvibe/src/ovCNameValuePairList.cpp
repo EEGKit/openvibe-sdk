@@ -42,7 +42,7 @@ bool CNameValuePairList::setValue(const CString& rName, const CString& rValue)
 
 bool CNameValuePairList::setValue(const CString& rName, const char* pValue)
 {
-	if (pValue == NULL) { return false; }
+	if (pValue == nullptr) { return false; }
 	m_pNameValuePairListImpl->m_oMap[rName] = pValue;
 	return true;
 }

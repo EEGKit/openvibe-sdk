@@ -35,7 +35,7 @@ CWriter::CWriter(IWriterCallback& rWriterCallback) : m_rWriterCallback(rWriterCa
 
 bool CWriter::openChild(const char* sName)
 {
-	if (sName == NULL) { return false; }
+	if (sName == nullptr) { return false; }
 
 	if (m_bHasData) { return false; }
 
@@ -57,7 +57,7 @@ bool CWriter::openChild(const char* sName)
 
 bool CWriter::setChildData(const char* sData)
 {
-	if (sData == NULL) { return false; }
+	if (sData == nullptr) { return false; }
 
 	if (m_bHasChild) { return false; }
 
@@ -78,9 +78,9 @@ bool CWriter::setChildData(const char* sData)
 
 bool CWriter::setAttribute(const char* sAttributeName, const char* sAttributeValue)
 {
-	if (sAttributeName == NULL) { return false; }
+	if (sAttributeName == nullptr) { return false; }
 
-	if (sAttributeValue == NULL) { return false; }
+	if (sAttributeValue == nullptr) { return false; }
 
 	if (m_bHasChild) { return false; }
 

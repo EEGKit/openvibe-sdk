@@ -179,7 +179,7 @@ bool CKernelLoaderLinux::unload(CString* pError)
 
 bool CKernelLoaderLinux::isOpen()
 {
-	return m_pFileHandle!=NULL;
+	return m_pFileHandle != nullptr;
 }
 
 #elif defined TARGET_OS_Windows
@@ -202,7 +202,7 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 			LPVOID l_pMessageBuffer = NULL;
 			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 						  NULL, GetLastError(), 0, // Default language
-						  (LPTSTR)&l_pMessageBuffer, 0, NULL);
+						  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
 			*pError = (char*)l_pMessageBuffer;
 			LocalFree(l_pMessageBuffer);
 		}
@@ -219,7 +219,7 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 			LPVOID l_pMessageBuffer = NULL;
 			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 						  NULL, GetLastError(), 0, // Default language
-						  (LPTSTR)&l_pMessageBuffer, 0, NULL);
+						  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
 			*pError = (char*)l_pMessageBuffer;
 			LocalFree(l_pMessageBuffer);
 		}
@@ -252,7 +252,7 @@ bool CKernelLoaderWindows::unload(CString* pError)
 
 bool CKernelLoaderWindows::isOpen()
 {
-	return m_pFileHandle != NULL;
+	return m_pFileHandle != nullptr;
 }
 
 #else

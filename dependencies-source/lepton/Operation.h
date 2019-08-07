@@ -198,7 +198,7 @@ namespace Lepton
 		bool operator!=(const Operation& op) const
 		{
 			const Constant* o = dynamic_cast<const Constant*>(&op);
-			return (o == NULL || o->value != value);
+			return (o == nullptr || o->value != value);
 		}
 
 	private:
@@ -242,7 +242,7 @@ namespace Lepton
 		bool operator!=(const Operation& op) const
 		{
 			const Variable* o = dynamic_cast<const Variable*>(&op);
-			return (o == NULL || o->name != name);
+			return (o == nullptr || o->name != name);
 		}
 
 	private:
@@ -306,7 +306,7 @@ namespace Lepton
 		bool operator!=(const Operation& op) const
 		{
 			const Custom* o = dynamic_cast<const Custom*>(&op);
-			return (o == NULL || o->name != name || o->isDerivative != isDerivative || o->derivOrder != derivOrder);
+			return (o == nullptr || o->name != name || o->isDerivative != isDerivative || o->derivOrder != derivOrder);
 		}
 
 	private:
@@ -1201,7 +1201,7 @@ namespace Lepton
 		bool operator!=(const Operation& op) const
 		{
 			const AddConstant* o = dynamic_cast<const AddConstant*>(&op);
-			return (o == NULL || o->value != value);
+			return (o == nullptr || o->value != value);
 		}
 
 	private:
@@ -1247,7 +1247,7 @@ namespace Lepton
 		bool operator!=(const Operation& op) const
 		{
 			const MultiplyConstant* o = dynamic_cast<const MultiplyConstant*>(&op);
-			return (o == NULL || o->value != value);
+			return (o == nullptr || o->value != value);
 		}
 
 	private:
@@ -1318,7 +1318,7 @@ namespace Lepton
 		bool operator!=(const Operation& op) const
 		{
 			const PowerConstant* o = dynamic_cast<const PowerConstant*>(&op);
-			return (o == NULL || o->value != value);
+			return (o == nullptr || o->value != value);
 		}
 
 		bool isInfixOperator() const { return true; }

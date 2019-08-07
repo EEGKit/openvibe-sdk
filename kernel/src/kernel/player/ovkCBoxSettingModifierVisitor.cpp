@@ -65,7 +65,7 @@ bool CBoxSettingModifierVisitor::processBegin(IObjectVisitorContext& rObjectVisi
 	{
 		CString l_sSettingOverrideFilename = rBox.getAttributeValue(OVD_AttributeId_SettingOverrideFilename);
 		CString l_sSettingOverrideFilenameFinal;
-		if (m_pConfigurationManager == NULL)
+		if (m_pConfigurationManager == nullptr)
 		{
 			l_sSettingOverrideFilenameFinal = rObjectVisitorContext.getConfigurationManager().expand(l_sSettingOverrideFilename);
 		}

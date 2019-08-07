@@ -9,7 +9,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace StreamCodecs;
 
-CEBMLBaseEncoder::CEBMLBaseEncoder(): m_pEBMLWriterHelper(NULL), m_pEBMLWriter(NULL), m_oEBMLWriterCallbackProxy(*this, &CEBMLBaseEncoder::write) {}
+CEBMLBaseEncoder::CEBMLBaseEncoder(): m_pEBMLWriterHelper(nullptr), m_pEBMLWriter(nullptr), m_oEBMLWriterCallbackProxy(*this, &CEBMLBaseEncoder::write) {}
 
 // ________________________________________________________________________________________________________________
 //

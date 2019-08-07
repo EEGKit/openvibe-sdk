@@ -90,7 +90,7 @@ bool CPlayer::setScenario(const CIdentifier& rScenarioIdentifier, const CNameVal
 						"Fail to create a scenario duplicate for the current runtime session", ErrorType::BadResourceCreation);
 
 	IScenario& l_rRuntimeScenario = m_pRuntimeScenarioManager->getScenario(m_oRuntimeScenarioIdentifier);
-	l_rRuntimeScenario.merge(l_rOriginalScenario, NULL, true, true);
+	l_rRuntimeScenario.merge(l_rOriginalScenario, nullptr, true, true);
 
 	if (l_rRuntimeScenario.hasAttribute(OV_AttributeId_ScenarioFilename))
 	{
@@ -123,7 +123,7 @@ bool CPlayer::setScenario(const CIdentifier& rScenarioIdentifier, const CNameVal
 
 	// Sets configuration tokens for this player
 	// Once every token file, applies the configuration tokens coming from an external application defining its own scenario specific tokens
-	if (pLocalConfigurationTokens != NULL)
+	if (pLocalConfigurationTokens != nullptr)
 	{
 		this->getLogManager() << LogLevel_Trace << "Player setScenario: add local configuration token from map.\n";
 		for (unsigned int i = 0; i < pLocalConfigurationTokens->getSize(); i++)
@@ -214,7 +214,7 @@ bool CPlayer::uninitialize()
 
 	m_sScenarioConfigurationFile  = "";
 	m_sWorkspaceConfigurationFile = "";
-	if (m_pRuntimeConfigurationManager != NULL)
+	if (m_pRuntimeConfigurationManager != nullptr)
 	{
 		delete m_pRuntimeConfigurationManager;
 		m_pRuntimeConfigurationManager = NULL;

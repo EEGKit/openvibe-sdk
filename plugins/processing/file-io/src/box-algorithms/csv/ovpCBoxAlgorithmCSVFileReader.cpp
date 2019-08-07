@@ -222,7 +222,7 @@ bool CBoxAlgorithmCSVFileReader::processClock(IMessageClock& rMessageClock)
 
 bool CBoxAlgorithmCSVFileReader::process()
 {
-	if (m_pFile == NULL)
+	if (m_pFile == nullptr)
 	{
 		OV_ERROR_UNLESS_KRF(initializeFile(), "Error reading data from csv file " << m_sFilename, ErrorType::Internal);
 	}
@@ -236,7 +236,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 	{
 		//next line
 		uint32_t l_ui32NbSamples = 0;
-		while (!feof(m_pFile) && l_ui32NbSamples < m_ui32SamplesPerBuffer && fgets(l_pLine, m_ui32bufferLen, m_pFile) != NULL)
+		while (!feof(m_pFile) && l_ui32NbSamples < m_ui32SamplesPerBuffer && fgets(l_pLine, m_ui32bufferLen, m_pFile) != nullptr)
 		{
 			m_vLastLineSplit = split(std::string(l_pLine), m_sSeparator);
 
@@ -272,7 +272,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 
 			l_bSomethingToSend = true;
 
-			if (!feof(m_pFile) && fgets(l_pLine, m_ui32bufferLen, m_pFile) != NULL)
+			if (!feof(m_pFile) && fgets(l_pLine, m_ui32bufferLen, m_pFile) != nullptr)
 			{
 				m_vLastLineSplit = split(std::string(l_pLine), m_sSeparator);
 			}

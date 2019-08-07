@@ -21,7 +21,7 @@ bool CAlgorithmClassifier::initialize()
 
 bool CAlgorithmClassifier::uninitialize()
 {
-	if (m_AlgorithmProxy != NULL)
+	if (m_AlgorithmProxy != nullptr)
 	{
 		m_AlgorithmProxy->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_AlgorithmProxy);

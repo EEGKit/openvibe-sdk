@@ -49,7 +49,7 @@ CompiledExpression::CompiledExpression(const ParsedExpression& expression)
 CompiledExpression::~CompiledExpression()
 {
 	for (int i = 0; i < (int)operation.size(); i++)
-		if (operation[i] != NULL)
+		if (operation[i] != nullptr)
 			delete operation[i];
 }
 

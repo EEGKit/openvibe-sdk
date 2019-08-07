@@ -73,7 +73,7 @@ namespace OpenViBE
 				bool l_bPluginObjectDescAdded          = false;
 				uint32_t l_ui32Index                     = 0;
 				uint32_t l_ui32Count                     = 0;
-				IPluginObjectDesc* l_pPluginObjectDesc = NULL;
+				IPluginObjectDesc* l_pPluginObjectDesc = nullptr;
 				while (l_pPluginModule->getPluginObjectDescription(l_ui32Index, l_pPluginObjectDesc))
 				{
 					bool l_bFound = false;
@@ -318,7 +318,7 @@ bool CPluginManager::isPluginObjectFlaggedAsDeprecated(const CIdentifier& rClass
 
 IPluginObject* CPluginManager::createPluginObject(const CIdentifier& rClassIdentifier)
 {
-	return createPluginObjectT<IPluginObject, IPluginObjectDesc>(rClassIdentifier, NULL);
+	return createPluginObjectT<IPluginObject, IPluginObjectDesc>(rClassIdentifier, nullptr);
 }
 
 bool CPluginManager::releasePluginObject(IPluginObject* pPluginObject)
@@ -384,7 +384,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& rClassIde
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	if (ppPluginObjectDescT) { *ppPluginObjectDescT = NULL; }
+	if (ppPluginObjectDescT) { *ppPluginObjectDescT = nullptr; }
 
 	CIdentifier l_oSubstitutionTokenIdentifier;
 	char l_sSubstitutionTokenName[1024];
@@ -418,7 +418,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& rClassIde
 		this->getLogManager() << LogLevel_Debug << "Not substitute plugin found for class identifier " << CIdentifier(l_ui64SourceClassIdentifier) << " (configuration token name was " << CString(l_sSubstitutionTokenName) << ")\n";
 	}
 
-	IPluginObjectDesc* l_pPluginObjectDesc = NULL;
+	IPluginObjectDesc* l_pPluginObjectDesc = nullptr;
 	for (map<IPluginObjectDesc*, IPluginModule*>::const_iterator i = m_vPluginObjectDesc.begin(); i != m_vPluginObjectDesc.end(); ++i)
 	{
 		if (i->first->getCreatedClass() == CIdentifier(l_ui64TargetClassIdentifier))

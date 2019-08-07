@@ -62,7 +62,7 @@ bool CSimulatedBox::setBoxIdentifier(const CIdentifier& rBoxIdentifier)
 	OV_ERROR_UNLESS_KRF(m_pScenario, "No scenario set", ErrorType::BadCall);
 
 	m_pBox = m_pScenario->getBoxDetails(rBoxIdentifier);
-	return m_pBox != NULL;
+	return m_pBox != nullptr;
 }
 
 bool CSimulatedBox::initialize()
@@ -81,7 +81,7 @@ bool CSimulatedBox::initialize()
 	m_ui64ClockFrequency          = 0;
 	m_ui64ClockActivationStep     = 0;
 
-	m_pBoxAlgorithm = getPluginManager().createBoxAlgorithm(m_pBox->getAlgorithmClassIdentifier(), NULL);
+	m_pBoxAlgorithm = getPluginManager().createBoxAlgorithm(m_pBox->getAlgorithmClassIdentifier(), nullptr);
 
 	OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm, "Could not create box algorithm with class id " << m_pBox->getAlgorithmClassIdentifier().toString(), ErrorType::BadResourceCreation);
 
@@ -398,7 +398,7 @@ bool CSimulatedBox::markOutputAsReadyToSend(const uint32_t ui32OutputIndex, cons
 	if (m_bChunkConsistencyChecking)
 	{
 		bool l_bIsConsistent        = true;
-		const char* l_sSpecificMessage = NULL;
+		const char* l_sSpecificMessage = nullptr;
 
 		// checks chunks consistency
 		CIdentifier l_oType;

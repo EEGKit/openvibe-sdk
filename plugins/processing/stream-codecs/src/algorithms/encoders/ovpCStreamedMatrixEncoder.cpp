@@ -51,7 +51,7 @@ bool CStreamedMatrixEncoder::processHeader()
 		bool l_bShouldSendLabels = false;
 		for (j = 0; j < l_pMatrix->getDimensionSize(i) && !l_bShouldSendLabels; j++)
 		{
-			if (l_pMatrix->getDimensionLabel(i, j) != NULL && l_pMatrix->getDimensionLabel(i, j)[0] != '\0')
+			if (l_pMatrix->getDimensionLabel(i, j) != nullptr && l_pMatrix->getDimensionLabel(i, j)[0] != '\0')
 			{
 				l_bShouldSendLabels = true;
 			}

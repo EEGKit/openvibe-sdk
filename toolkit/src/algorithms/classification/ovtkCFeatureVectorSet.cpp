@@ -10,7 +10,7 @@ using namespace OpenViBEToolkit;
 //
 
 CInternalFeatureVector::CInternalFeatureVector()
-	: m_pMatrix(NULL), m_ui32DimensionIndex(0), m_ui32BufferElementCount(0), m_pBuffer(NULL) {}
+	: m_pMatrix(nullptr), m_ui32DimensionIndex(0), m_ui32BufferElementCount(0), m_pBuffer(nullptr) {}
 
 uint32_t CInternalFeatureVector::getSize() const
 {

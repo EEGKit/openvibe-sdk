@@ -65,7 +65,7 @@ bool CBoxAlgorithmGenericStreamReader::processClock(IMessageClock& rMessageClock
 
 bool CBoxAlgorithmGenericStreamReader::process()
 {
-	if (m_pFile == NULL)
+	if (m_pFile == nullptr)
 	{
 		if (!initializeFile()) { return false; }
 	}

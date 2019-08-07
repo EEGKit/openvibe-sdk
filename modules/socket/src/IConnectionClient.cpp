@@ -33,7 +33,7 @@ namespace Socket
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			long l_iValue;
 			// Sets non blocking
-			if((l_iValue=::fcntl(m_i32Socket, F_GETFL, NULL))<0)
+			if((l_iValue=::fcntl(m_i32Socket, F_GETFL, nullptr))<0)
 			{
 				close();
 				return false;
@@ -63,7 +63,7 @@ namespace Socket
 			ZeroMemory(&hints, sizeof(hints));
 			hints.ai_family = AF_INET;
 			PADDRINFOA addr;
-			if (auto errorcode = getaddrinfo(sServerName, NULL, &hints, &addr) != 0)
+			if (auto errorcode = getaddrinfo(sServerName, nullptr, &hints, &addr) != 0)
 			{
 				close();
 				return false;
@@ -115,7 +115,7 @@ namespace Socket
 					FD_ZERO(&l_oWriteFileDescriptors);
 					FD_SET(m_i32Socket, &l_oWriteFileDescriptors);
 
-					if (select(m_i32Socket + 1, NULL, &l_oWriteFileDescriptors, NULL, &l_oTimeVal) < 0)
+					if (select(m_i32Socket + 1, nullptr, &l_oWriteFileDescriptors, nullptr, &l_oTimeVal) < 0)
 					{
 						close();
 						return false;
@@ -151,7 +151,7 @@ namespace Socket
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			// Sets back to blocking
-			if((l_iValue=::fcntl(m_i32Socket, F_GETFL, NULL))<0)
+			if((l_iValue=::fcntl(m_i32Socket, F_GETFL, nullptr))<0)
 			{
 				close();
 				return false;

@@ -50,7 +50,7 @@ namespace Socket
 		{
 #if defined TARGET_OS_Windows
 
-			if (m_pFile != NULL)
+			if (m_pFile != nullptr)
 			{
 				if (!CloseHandle(m_pFile))
 				{
@@ -75,7 +75,7 @@ namespace Socket
 			return true;
 		}
 
-		bool isReadyToSend(uint32_t ui32TimeOut) const
+		bool isReadyToSend(const uint32_t ui32TimeOut) const
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -93,7 +93,7 @@ namespace Socket
 			FD_ZERO(&l_oOutputFileDescriptorSet);
 			FD_SET(m_iFile, &l_oOutputFileDescriptorSet);
 
-			if(!::select(m_iFile+1, NULL, &l_oOutputFileDescriptorSet, NULL, &l_oTimeout)) { return false; }
+			if(!::select(m_iFile+1, nullptr, &l_oOutputFileDescriptorSet, nullptr, &l_oTimeout)) { return false; }
 
 			if(FD_ISSET(m_iFile, &l_oOutputFileDescriptorSet)) { return true; }
 
@@ -127,7 +127,7 @@ namespace Socket
 			FD_ZERO(&l_oInputFileDescriptorSet);
 			FD_SET(m_iFile, &l_oInputFileDescriptorSet);
 
-			if(!::select(m_iFile+1, &l_oInputFileDescriptorSet, NULL, NULL, &l_oTimeout)) { return false; }
+			if(!::select(m_iFile+1, &l_oInputFileDescriptorSet, nullptr, nullptr, &l_oTimeout)) { return false; }
 
 			if(FD_ISSET(m_iFile, &l_oInputFileDescriptorSet)) { return true; }
 
@@ -213,7 +213,7 @@ namespace Socket
 #if defined TARGET_OS_Windows
 			DWORD l_dwWritten = 0;
 
-			if (!WriteFile(m_pFile, pBuffer, ui32BufferSize, &l_dwWritten, NULL))
+			if (!WriteFile(m_pFile, pBuffer, ui32BufferSize, &l_dwWritten, nullptr))
 			{
 				m_sLastError = "Failed to write on serial port: " + this->getLastErrorFormated();
 				this->close();
@@ -258,7 +258,7 @@ namespace Socket
 
 			DWORD l_dwRead = 0;
 
-			if (!ReadFile(m_pFile, pBuffer, ui32BufferSize, &l_dwRead, NULL))
+			if (!ReadFile(m_pFile, pBuffer, ui32BufferSize, &l_dwRead, nullptr))
 			{
 				m_sLastError = "Failed to read on serial port: " + this->getLastErrorFormated();
 				this->close();
@@ -325,7 +325,7 @@ namespace Socket
 		{
 #if defined TARGET_OS_Windows
 
-			return ((m_pFile != NULL) && (m_pFile != INVALID_HANDLE_VALUE));
+			return ((m_pFile != nullptr) && (m_pFile != INVALID_HANDLE_VALUE));
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
@@ -353,7 +353,7 @@ namespace Socket
 
 			m_pFile = ::CreateFile(sURL, GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
-			if (m_pFile == INVALID_HANDLE_VALUE || m_pFile == NULL)
+			if (m_pFile == INVALID_HANDLE_VALUE || m_pFile == nullptr)
 			{
 				m_sLastError = "Failed to open serial port: " + this->getLastErrorFormated();
 				m_pFile      = NULL;
@@ -375,7 +375,7 @@ namespace Socket
 			l_oDCB.Parity    = NOPARITY;
 			l_oDCB.StopBits  = ONESTOPBIT;
 
-			ClearCommError(m_pFile, NULL, NULL);
+			ClearCommError(m_pFile, nullptr, nullptr);
 
 			if (!SetCommState(m_pFile, &l_oDCB))
 			{

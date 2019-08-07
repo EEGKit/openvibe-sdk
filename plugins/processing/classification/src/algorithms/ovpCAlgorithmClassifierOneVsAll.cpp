@@ -148,7 +148,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 		CClassifierOutput& l_pTemp = l_oClassificationVector[l_iClassificationCount];
 		if (static_cast<int>(l_pTemp.first) == 0)		// Predicts its "own" class, class=0
 		{
-			if (l_oBest.second == NULL)
+			if (l_oBest.second == nullptr)
 			{
 				l_oBest   = l_pTemp;
 				rf64Class = l_iClassificationCount;
@@ -171,7 +171,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 		for (uint32_t l_iClassificationCount = 0; l_iClassificationCount < l_oClassificationVector.size(); ++l_iClassificationCount)
 		{
 			CClassifierOutput& l_pTemp = l_oClassificationVector[l_iClassificationCount];
-			if (l_oBest.second == NULL)
+			if (l_oBest.second == nullptr)
 			{
 				l_oBest   = l_pTemp;
 				rf64Class = (static_cast<double>(l_iClassificationCount));
@@ -188,7 +188,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 		}
 	}
 
-	OV_ERROR_UNLESS_KRF(l_oBest.second != NULL, "Unable to find a class for feature vector", OpenViBE::Kernel::ErrorType::BadProcessing);
+	OV_ERROR_UNLESS_KRF(l_oBest.second != nullptr, "Unable to find a class for feature vector", OpenViBE::Kernel::ErrorType::BadProcessing);
 
 	// Now that we made the calculation, we send the corresponding data
 
@@ -368,7 +368,7 @@ bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const CIdentifier&
 	m_oSubClassifierAlgorithmIdentifier = rId;
 	m_fAlgorithmComparison              = getClassificationComparisonFunction(rId);
 
-	OV_ERROR_UNLESS_KRF(m_fAlgorithmComparison != NULL, "No comparison function found for classifier [" << m_oSubClassifierAlgorithmIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(m_fAlgorithmComparison != nullptr, "No comparison function found for classifier [" << m_oSubClassifierAlgorithmIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
 	return true;
 }

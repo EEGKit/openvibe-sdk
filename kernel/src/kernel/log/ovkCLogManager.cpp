@@ -86,7 +86,7 @@ bool CLogManager::addListener(ILogListener* pListener)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	if (pListener == NULL) { return false; }
+	if (pListener == nullptr) { return false; }
 
 	vector<ILogListener*>::iterator itLogListener = m_vListener.begin();
 	while (itLogListener != m_vListener.end())

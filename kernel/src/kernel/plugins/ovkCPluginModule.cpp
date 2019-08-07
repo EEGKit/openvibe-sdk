@@ -106,7 +106,7 @@ bool CPluginModuleBase::getPluginObjectDescription(uint32_t ui32Index, IPluginOb
 		if (!onGetPluginObjectDescriptionCB) { return false; }
 
 		uint32_t l_ui32Index                           = 0;
-		IPluginObjectDesc* l_pPluginObjectDescriptor = NULL;
+		IPluginObjectDesc* l_pPluginObjectDescriptor = nullptr;
 		while (onGetPluginObjectDescriptionCB(CPluginModuleContext(getKernelContext()), l_ui32Index, l_pPluginObjectDescriptor))
 		{
 			if (l_pPluginObjectDescriptor)
@@ -290,7 +290,7 @@ bool CPluginModuleLinux::unload(CString* pError)
 
 bool CPluginModuleLinux::isOpen() const
 {
-	return m_pFileHandle!=NULL;
+	return m_pFileHandle != nullptr;
 }
 
 #elif defined TARGET_OS_Windows
@@ -357,15 +357,15 @@ bool CPluginModuleWindows::unload(CString* pError)
 
 bool CPluginModuleWindows::isOpen() const
 {
-	return m_pFileHandle != NULL;
+	return m_pFileHandle != nullptr;
 }
 
 CString CPluginModuleWindows::getLastErrorMessageString()
 {
 	CString l_sResult;
 
-	char* l_pMessageBuffer = NULL;
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), 0, (LPTSTR)&l_pMessageBuffer, 0, NULL);
+	char* l_pMessageBuffer = nullptr;
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0, (LPTSTR)&l_pMessageBuffer, 0, nullptr);
 	if (l_pMessageBuffer)
 	{
 		size_t l_iMessageLength = strlen(l_pMessageBuffer);

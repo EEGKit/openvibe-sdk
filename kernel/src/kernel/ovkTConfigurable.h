@@ -60,7 +60,7 @@ namespace OpenViBE
 				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
 				if (itParameter != m_vParameter.end()) { return NULL; }
 
-				IParameter* l_pParameter = NULL;
+				IParameter* l_pParameter = nullptr;
 				switch (eParameterType)
 				{
 					case ParameterType_UInteger: l_pParameter = new CUIntegerParameter(this->getKernelContext(), eParameterType);
@@ -90,7 +90,7 @@ namespace OpenViBE
 						break;
 				}
 
-				if (l_pParameter != NULL) { m_vParameter[rParameterIdentifier] = std::pair<bool, IParameter*>(true, l_pParameter); }
+				if (l_pParameter != nullptr) { m_vParameter[rParameterIdentifier] = std::pair<bool, IParameter*>(true, l_pParameter); }
 
 				return l_pParameter;
 			}

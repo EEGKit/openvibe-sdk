@@ -29,7 +29,7 @@ CAlgorithmManager::~CAlgorithmManager()
 
 CIdentifier CAlgorithmManager::createAlgorithm(const CIdentifier& rAlgorithmClassIdentifier)
 {
-	const IAlgorithmDesc* l_pAlgorithmDesc = NULL;
+	const IAlgorithmDesc* l_pAlgorithmDesc = nullptr;
 	IAlgorithm* l_pAlgorithm               = getKernelContext().getPluginManager().createAlgorithm(rAlgorithmClassIdentifier, &l_pAlgorithmDesc);
 
 	OV_ERROR_UNLESS_KRU(l_pAlgorithm && l_pAlgorithmDesc, "Algorithm creation failed, class identifier :" << rAlgorithmClassIdentifier.toString(), ErrorType::BadResourceCreation);

@@ -3104,10 +3104,10 @@ int filtlength(const char* name)
 {
 	int len       = strlen(name);
 	int i         = 0;
-	char* new_str = NULL;
+	char* new_str = nullptr;
 	int N         = 0;
 	if (!strcmp(name, "haar") || !strcmp(name, "db1")) { return 2; }
-	if (len > 2 && strstr(name, "db") != NULL)
+	if (len > 2 && strstr(name, "db") != nullptr)
 	{
 		new_str = (char*)malloc(sizeof(char) * (len - 2 + 1));
 		for (i = 2; i < len + 1; i++)
@@ -3155,7 +3155,7 @@ int filtlength(const char* name)
 	if (!strcmp(name, "rbior4.4")) { return 10; }
 	if (!strcmp(name, "rbior5.5")) { return 12; }
 	if (!strcmp(name, "rbior6.8")) { return 18; }
-	if (len > 4 && strstr(name, "coif") != NULL)
+	if (len > 4 && strstr(name, "coif") != nullptr)
 	{
 		new_str = (char*)malloc(sizeof(char) * (len - 4 + 1));
 		for (i = 4; i < len + 1; i++)
@@ -3173,7 +3173,7 @@ int filtlength(const char* name)
 
 		return N * 6;
 	}
-	if (len > 3 && strstr(name, "sym") != NULL)
+	if (len > 3 && strstr(name, "sym") != nullptr)
 	{
 		new_str = (char*)malloc(sizeof(char) * (len - 3 + 1));
 		for (i = 3; i < len + 1; i++)

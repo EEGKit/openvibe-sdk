@@ -405,7 +405,7 @@ namespace r8b
 
 		~CDSPRealFFTKeeper()
 		{
-			if (Object != NULL)
+			if (Object != nullptr)
 			{
 				release(Object);
 			}
@@ -417,7 +417,7 @@ namespace r8b
 
 		const CDSPRealFFT* operator ->() const
 		{
-			R8BASSERT(Object != NULL);
+			R8BASSERT(Object != nullptr);
 
 			return (Object);
 		}
@@ -432,7 +432,7 @@ namespace r8b
 
 		void init(const int LenBits)
 		{
-			if (Object != NULL)
+			if (Object != nullptr)
 			{
 				if (Object->LenBits == LenBits)
 				{
@@ -451,7 +451,7 @@ namespace r8b
 
 		void reset()
 		{
-			if (Object != NULL)
+			if (Object != nullptr)
 			{
 				release(Object);
 				Object = NULL;
@@ -480,7 +480,7 @@ namespace r8b
 
 			R8BSYNC(StateSync);
 
-			if (FFTObjects[LenBits] == NULL)
+			if (FFTObjects[LenBits] == nullptr)
 			{
 				return (new CDSPRealFFT(LenBits));
 			}
@@ -615,7 +615,7 @@ namespace r8b
 			memcpy(&Kernel[0], &ip[0], KernelLen * sizeof(double));
 		}
 
-		if (DCGroupDelay != NULL)
+		if (DCGroupDelay != nullptr)
 		{
 			double tmp;
 

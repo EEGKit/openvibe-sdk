@@ -15,8 +15,8 @@ using namespace OpenViBEToolkit;
 using namespace std;
 
 CBoxAlgorithmEBMLStreamSpy::CBoxAlgorithmEBMLStreamSpy()
-	: m_pReader(NULL)
-	  , m_pReaderHelper(NULL) {}
+	: m_pReader(nullptr)
+	  , m_pReaderHelper(nullptr) {}
 
 void CBoxAlgorithmEBMLStreamSpy::release()
 {
@@ -256,7 +256,7 @@ bool CBoxAlgorithmEBMLStreamSpy::process()
 	uint64_t l_ui64StartTime      = 0;
 	uint64_t l_ui64EndTime        = 0;
 	uint64_t l_ui64ChunkSize      = 0;
-	const uint8_t* l_pChunkBuffer = NULL;
+	const uint8_t* l_pChunkBuffer = nullptr;
 
 	getLogManager() << m_eLogLevel << "\n";
 

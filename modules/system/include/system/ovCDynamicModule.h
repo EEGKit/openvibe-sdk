@@ -267,7 +267,7 @@ namespace System
 		static bool getSymbol(CDynamicModule& dynamicModule, const char* symbolName, T* symbol)
 		{
 			*symbol = reinterpret_cast<T>(dynamicModule.getSymbolGeneric(symbolName));
-			return *symbol != NULL;
+			return *symbol != nullptr;
 		}
 	};
 }  // namespace System

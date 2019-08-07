@@ -164,7 +164,7 @@ bool CBoxAlgorithmClassifierTrainer::uninitialize()
 
 	// @fixme who frees this? freeing here -> crash
 	/*
-	if(m_pExtraParameter != NULL)
+	if(m_pExtraParameter != nullptr)
 	{
 		delete m_pExtraParameter;
 		m_pExtraParameter = NULL;
@@ -452,7 +452,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rD
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
 	XML::IXMLNode* l_pTempNode = (XML::IXMLNode*)op_pConfiguration;
 
-	if (l_pTempNode != NULL) { l_pTempNode->release(); }
+	if (l_pTempNode != nullptr) { l_pTempNode->release(); }
 	op_pConfiguration = NULL;
 
 	bool l_bReturnValue = m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration);

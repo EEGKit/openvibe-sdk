@@ -105,7 +105,7 @@ namespace Socket
 			return true;
 		}
 
-		virtual bool isReadyToSend(uint32_t ui32TimeOut = 0) const
+		virtual bool isReadyToSend(const uint32_t ui32TimeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
 
@@ -117,12 +117,12 @@ namespace Socket
 			FD_ZERO(&l_oWriteFileDescriptors);
 			FD_SET(m_i32Socket, &l_oWriteFileDescriptors);
 
-			if (select(m_i32Socket + 1, NULL, &l_oWriteFileDescriptors, NULL, &l_oTimeVal) < 0) { return false; }
+			if (select(m_i32Socket + 1, nullptr, &l_oWriteFileDescriptors, nullptr, &l_oTimeVal) < 0) { return false; }
 			if (!FD_ISSET_PROXY(m_i32Socket, &l_oWriteFileDescriptors)) { return false; }
 			return true;
 		}
 
-		virtual bool isReadyToReceive(uint32_t ui32TimeOut = 0) const
+		virtual bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const
 		{
 			if (!isConnected()) { return false; }
 
@@ -134,7 +134,7 @@ namespace Socket
 			FD_ZERO(&l_oReadFileDescriptors);
 			FD_SET(m_i32Socket, &l_oReadFileDescriptors);
 
-			if (select(m_i32Socket + 1, &l_oReadFileDescriptors, NULL, NULL, &l_oTimeVal) < 0) { return false; }
+			if (select(m_i32Socket + 1, &l_oReadFileDescriptors, nullptr, nullptr, &l_oTimeVal) < 0) { return false; }
 			if (!(FD_ISSET_PROXY(m_i32Socket, &l_oReadFileDescriptors))) { return false; }
 			return true;
 		}

@@ -202,7 +202,7 @@ namespace r8b
 
 			AttenCorr = min(AttenCorrCount, max(0, AttenCorr));
 
-			if (ExtAttenCorrs != NULL) { atten -= ExtAttenCorrs[AttenCorr]; }
+			if (ExtAttenCorrs != nullptr) { atten -= ExtAttenCorrs[AttenCorr]; }
 			else if (tb >= 0.25)
 			{
 				static const double AttenCorrScale    = 101.0;
@@ -462,10 +462,10 @@ namespace r8b
 
 			R8BSYNC(StateSync);
 
-			CDSPFIRFilter* PrevObj = NULL;
+			CDSPFIRFilter* PrevObj = nullptr;
 			CDSPFIRFilter* CurObj  = Objects;
 
-			while (CurObj != NULL)
+			while (CurObj != nullptr)
 			{
 				if (CurObj->ReqNormFreq == ReqNormFreq &&
 					CurObj->ReqTransBand == ReqTransBand &&
@@ -473,7 +473,7 @@ namespace r8b
 					CurObj->ReqPhase == ReqPhase &&
 					CurObj->ReqGain == ReqGain) { break; }
 
-				if (CurObj->Next == NULL && ObjCount >= R8B_FILTER_CACHE_MAX)
+				if (CurObj->Next == nullptr && ObjCount >= R8B_FILTER_CACHE_MAX)
 				{
 					if (CurObj->RefCount == 0)
 					{
@@ -501,11 +501,11 @@ namespace r8b
 				CurObj  = CurObj->Next;
 			}
 
-			if (CurObj != NULL)
+			if (CurObj != nullptr)
 			{
 				CurObj->RefCount++;
 
-				if (PrevObj == NULL) { return (*CurObj); }
+				if (PrevObj == nullptr) { return (*CurObj); }
 
 				// Remove the filter from the list temporarily.
 

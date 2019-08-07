@@ -174,14 +174,14 @@ namespace EBML
 			explicit CWriter(IWriterCallback& rWriterCallback);
 
 			virtual bool openChild(const CIdentifier& rIdentifier);
-			virtual bool setChildData(const void* pBuffer, uint64_t ui64BufferSize);
+			virtual bool setChildData(const void* pBuffer, const uint64_t ui64BufferSize);
 			virtual bool closeChild();
 
 			virtual void release();
 
 		protected:
 
-			CWriterNode* m_pCurrentNode;
+			CWriterNode* m_pCurrentNode = nullptr;
 			IWriterCallback& m_rWriterCallback;
 
 		private:
@@ -195,21 +195,14 @@ namespace EBML
 //
 
 CWriter::CWriter(IWriterCallback& rWriterCallback)
-	: m_pCurrentNode(NULL)
-	  , m_rWriterCallback(rWriterCallback) {}
+	: m_pCurrentNode(NULL), m_rWriterCallback(rWriterCallback) {}
 
 bool CWriter::openChild(const CIdentifier& rIdentifier)
 {
-	if (m_pCurrentNode)
-	{
-		if (m_pCurrentNode->m_bBuffered) { return false; }
-	}
+	if (m_pCurrentNode) { if (m_pCurrentNode->m_bBuffered) { return false; } }
 
 	CWriterNode* pResult = new CWriterNode(rIdentifier, m_pCurrentNode);
-	if (m_pCurrentNode)
-	{
-		m_pCurrentNode->m_vChildren.push_back(pResult);
-	}
+	if (m_pCurrentNode) { m_pCurrentNode->m_vChildren.push_back(pResult); }
 	m_pCurrentNode = pResult;
 	return true;
 }
@@ -220,7 +213,7 @@ bool CWriter::setChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 
 	if (m_pCurrentNode->m_vChildren.size() != 0) { return false; }
 
-	unsigned char* l_pBufferCopy = NULL;
+	unsigned char* l_pBufferCopy = nullptr;
 	if (ui64BufferSize)
 	{
 		if (!pBuffer) { return false; }
@@ -268,7 +261,4 @@ void CWriter::release()
 // ________________________________________________________________________________________________________________
 //
 
-EBML_API IWriter* EBML::createWriter(IWriterCallback& rWriterCallback)
-{
-	return new CWriter(rWriterCallback);
-}
+EBML_API IWriter* EBML::createWriter(IWriterCallback& rWriterCallback) { return new CWriter(rWriterCallback); }

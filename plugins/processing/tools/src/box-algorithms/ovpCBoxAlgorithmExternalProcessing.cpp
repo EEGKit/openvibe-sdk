@@ -519,7 +519,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 
 	std::transform(programArguments.begin(), programArguments.end(), std::back_inserter(argv), strToChar);
 
-	argv.push_back(NULL);
+	argv.push_back(nullptr);
 
 #ifdef TARGET_OS_Windows
 	// _spawnp on Windows has a special case for empty program

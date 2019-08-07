@@ -29,7 +29,7 @@ bool CBoxAlgorithmIdentity::process()
 	uint64_t l_ui64StartTime      = 0;
 	uint64_t l_ui64EndTime        = 0;
 	uint64_t l_ui64ChunkSize      = 0;
-	const uint8_t* l_pChunkBuffer = NULL;
+	const uint8_t* l_pChunkBuffer = nullptr;
 
 	for (uint32_t i = 0; i < l_pStaticBoxContext->getInputCount(); i++)
 	{

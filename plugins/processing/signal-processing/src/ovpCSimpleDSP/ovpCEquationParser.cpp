@@ -228,7 +228,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 	else if (i->value.id() == CEquationGrammar::realID)
 	{
 		std::string l_sValue(i->value.begin(), i->value.end());
-		return new CAbstractTreeValueNode(strtod(l_sValue.c_str(), NULL));
+		return new CAbstractTreeValueNode(strtod(l_sValue.c_str(), nullptr));
 	}
 	else if (i->value.id() == CEquationGrammar::variableID)
 	{
@@ -267,12 +267,12 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
 
 		//gets the function's Id from the unary function's symbols table
-		if ((l_ui64FunctionIdentifier = find(unaryFunction_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(unaryFunction_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), false);
 		}
 			//gets the function's Id from the binary function's symbols table
-		if ((l_ui64FunctionIdentifier = find(binaryFunction_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(binaryFunction_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
@@ -290,12 +290,12 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
 
 		//gets the function's Id from the comparison function's symbols table
-		if ((l_ui64FunctionIdentifier = find(comparison1Function_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(comparison1Function_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 			//gets the function's Id from the comparison function's symbols table
-		if ((l_ui64FunctionIdentifier = find(comparison2Function_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(comparison2Function_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
@@ -309,22 +309,22 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), ::to_lower<std::string::value_type>);
 
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((l_ui64FunctionIdentifier = find(binaryBoolean1Function_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(binaryBoolean1Function_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 			//gets the function's Id from the binary boolean function's symbols table
-		if ((l_ui64FunctionIdentifier = find(binaryBoolean2Function_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(binaryBoolean2Function_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((l_ui64FunctionIdentifier = find(binaryBoolean3Function_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(binaryBoolean3Function_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
 		//gets the function's Id from the binary boolean function's symbols table
-		if ((l_ui64FunctionIdentifier = find(unaryBooleanFunction_p, l_sValue.c_str())) != NULL)
+		if ((l_ui64FunctionIdentifier = find(unaryBooleanFunction_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), false);
 		}

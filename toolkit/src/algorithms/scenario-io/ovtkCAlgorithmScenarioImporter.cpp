@@ -193,7 +193,7 @@ bool CAlgorithmScenarioImporter::process()
 
 	for (b = l_rSymbolicScenario.m_vBox.begin(); b != l_rSymbolicScenario.m_vBox.end(); ++b)
 	{
-		IBox* l_pBox = NULL;
+		IBox* l_pBox = nullptr;
 		CIdentifier l_oNewBoxIdentifier;
 
 		l_pScenario->addBox(l_oNewBoxIdentifier, b->m_oIdentifier);
@@ -243,7 +243,7 @@ bool CAlgorithmScenarioImporter::process()
 
 	for (c = l_rSymbolicScenario.m_vComment.begin(); c != l_rSymbolicScenario.m_vComment.end(); ++c)
 	{
-		IComment* l_pComment = NULL;
+		IComment* l_pComment = nullptr;
 		CIdentifier l_oNewCommentIdentifier;
 
 		l_pScenario->addComment(l_oNewCommentIdentifier, c->m_oIdentifier);
@@ -273,7 +273,7 @@ bool CAlgorithmScenarioImporter::process()
 
 	for (l = l_rSymbolicScenario.m_vLink.begin(); l != l_rSymbolicScenario.m_vLink.end(); ++l)
 	{
-		ILink* l_pLink = NULL;
+		ILink* l_pLink = nullptr;
 		CIdentifier l_oNewLinkIdentifier;
 
 		uint32_t l_ui32SourceBoxOutputIndex = l->m_oLinkSource.m_ui32BoxOutputIndex;

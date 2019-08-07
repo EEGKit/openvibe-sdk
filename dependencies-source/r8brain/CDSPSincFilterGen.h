@@ -620,7 +620,7 @@ namespace r8b
 		{
 			wn = (IsCentered ? 0 : -fl2);
 
-			if (Params == NULL)
+			if (Params == nullptr)
 			{
 				Params     = getKaiserParams(fl2);
 				KaiserBeta = Params[0];
@@ -654,7 +654,7 @@ namespace r8b
 		{
 			wn = (IsCentered ? 0 : -fl2);
 
-			if (Params == NULL)
+			if (Params == nullptr)
 			{
 				GaussianSigma = 1.0;
 				Power         = -1.0;
@@ -707,7 +707,7 @@ namespace r8b
 
 			double p[ 4 ];
 
-			if (Params == NULL)
+			if (Params == nullptr)
 			{
 				Params = Coeffs[fl2 - 3];
 				Power  = Params[4];
@@ -790,7 +790,7 @@ namespace r8b
 								   step3 * FracDelay);
 				}
 
-				Power = (UsePower && Params != NULL ? Params[0] : -1.0);
+				Power = (UsePower && Params != nullptr ? Params[0] : -1.0);
 			}
 			else if (WinType == wftKaiser)
 			{

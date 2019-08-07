@@ -27,7 +27,7 @@ bool CBoxAlgorithmXDAWNTrainer::initialize()
 	{
 		FILE* file = FS::Files::open(m_FilterFilename, "wt");
 
-		OV_ERROR_UNLESS_KRF(file != NULL, "The filter file exists but cannot be used.\n", OpenViBE::Kernel::ErrorType::BadFileRead);
+		OV_ERROR_UNLESS_KRF(file != nullptr, "The filter file exists but cannot be used.\n", OpenViBE::Kernel::ErrorType::BadFileRead);
 
 		fclose(file);
 	}
@@ -259,7 +259,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 
 		FILE* file = FS::Files::open(m_FilterFilename.toASCIIString(), "wt");
 
-		OV_ERROR_UNLESS_KRF(file != NULL, "Could not open file [" << m_FilterFilename << "] for writing.\n", OpenViBE::Kernel::ErrorType::BadFileWrite);
+		OV_ERROR_UNLESS_KRF(file != nullptr, "Could not open file [" << m_FilterFilename << "] for writing.\n", OpenViBE::Kernel::ErrorType::BadFileWrite);
 
 		if (m_SaveAsBoxConfig)
 		{

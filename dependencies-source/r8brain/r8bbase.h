@@ -374,7 +374,7 @@ namespace r8b
 
 			Data = (T*)allocmem(Capacity * sizeof(T));
 
-			R8BASSERT(Data != NULL || Capacity == 0);
+			R8BASSERT(Data != nullptr || Capacity == 0);
 		}
 
 		~CFixedBuffer() { freemem(Data); }
@@ -393,7 +393,7 @@ namespace r8b
 			freemem(Data);
 			Data = (T*)allocmem(Capacity * sizeof(T));
 
-			R8BASSERT(Data != NULL || Capacity == 0);
+			R8BASSERT(Data != nullptr || Capacity == 0);
 		}
 
 		/**
@@ -407,14 +407,14 @@ namespace r8b
 		}
 
 		/**
-		 * @return Pointer to the first element of the allocated buffer, NULL if
+		 * @return Pointer to the first element of the allocated buffer, nullptr if
 		 * not allocated.
 		 */
 
 		T* getPtr() const { return (Data); }
 
 		/**
-		 * @return Pointer to the first element of the allocated buffer, NULL if
+		 * @return Pointer to the first element of the allocated buffer, nullptr if
 		 * not allocated.
 		 */
 
@@ -470,13 +470,13 @@ namespace r8b
 		}
 
 		/**
-		 * @return Pointer to keeped object, NULL if no object is being kept.
+		 * @return Pointer to keeped object, nullptr if no object is being kept.
 		 */
 
 		T operator ->() const { return (Object); }
 
 		/**
-		 * @return Pointer to keeped object, NULL if no object is being kept.
+		 * @return Pointer to keeped object, nullptr if no object is being kept.
 		 */
 
 		operator T() const { return (Object); }
@@ -607,7 +607,7 @@ namespace r8b
 		 * sync'ing, can be NULL.
 		 */
 
-		CSyncKeeper(CSyncObject* const aSyncObj) : SyncObj(aSyncObj) { if (SyncObj != NULL) { SyncObj->acquire(); } }
+		CSyncKeeper(CSyncObject* const aSyncObj) : SyncObj(aSyncObj) { if (SyncObj != nullptr) { SyncObj->acquire(); } }
 
 		/**
 		 * @param aSyncObj Reference to the sync object which should be used for
@@ -616,7 +616,7 @@ namespace r8b
 
 		CSyncKeeper(CSyncObject& aSyncObj) : SyncObj(&aSyncObj) { SyncObj->acquire(); }
 
-		~CSyncKeeper() { if (SyncObj != NULL) { SyncObj->release(); } }
+		~CSyncKeeper() { if (SyncObj != nullptr) { SyncObj->release(); } }
 
 	protected:
 		CSyncObject* SyncObj; ///< Sync object in use (can be NULL).

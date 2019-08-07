@@ -93,7 +93,7 @@ bool IXMLNodeImpl::hasAttribute(const char* sAttributeName) const
 
 const char* IXMLNodeImpl::getAttribute(const char* sAttributeName) const
 {
-	const char* res = NULL;
+	const char* res = nullptr;
 	const std::string l_sAttributeName(sAttributeName);
 
 	std::map<std::string, std::string>::const_iterator it = m_mAttibuteMap.find(l_sAttributeName);

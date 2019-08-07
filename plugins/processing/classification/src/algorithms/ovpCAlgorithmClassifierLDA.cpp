@@ -440,7 +440,7 @@ bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* pConfigurationNod
 
 	XML::IXMLNode* l_pTempNode = pConfigurationNode->getChildByName(c_sClassesNodeName);
 
-	OV_ERROR_UNLESS_KRF(l_pTempNode != NULL, "Failed to retrieve xml node", OpenViBE::Kernel::ErrorType::BadParsing);
+	OV_ERROR_UNLESS_KRF(l_pTempNode != nullptr, "Failed to retrieve xml node", OpenViBE::Kernel::ErrorType::BadParsing);
 
 	loadClassesFromNode(l_pTempNode);
 

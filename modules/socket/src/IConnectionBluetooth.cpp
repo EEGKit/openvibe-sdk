@@ -114,7 +114,7 @@ namespace Socket
 #endif
 		}
 
-		bool isReadyToSend(uint32_t ui32TimeOut) const
+		bool isReadyToSend(const uint32_t ui32TimeOut) const
 		{
 			if (!this->isConnected()) { return false; }
 

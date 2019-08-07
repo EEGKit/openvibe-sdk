@@ -42,7 +42,7 @@ namespace Socket
 			m_ui16PortNumber = 0;
 			m_hmodTVicPort   = LoadLibrary(TEXT("TVicPort.dll"));
 
-			if (m_hmodTVicPort != NULL)
+			if (m_hmodTVicPort != nullptr)
 			{
 				m_lpfnTVicIsDriverOpened = (LPFNTVICPORTISDRIVEROPENED)GetProcAddress(m_hmodTVicPort, "IsDriverOpened");
 				m_lpfnTVicPortOpen       = (LPFNTVICPORTOPEN)GetProcAddress(m_hmodTVicPort, "OpenTVicPort");
@@ -72,7 +72,7 @@ namespace Socket
 		{
 #if defined TARGET_OS_Windows
 
-			if (m_hmodTVicPort != NULL)
+			if (m_hmodTVicPort != nullptr)
 			{
 				if (m_lpfnTVicIsDriverOpened())
 				{
@@ -99,9 +99,9 @@ namespace Socket
 #endif
 		}
 
-		bool isReadyToSend(uint32_t ui32TimeOut = 0) const { return this->isConnected(); }
+		bool isReadyToSend(const uint32_t ui32TimeOut = 0) const { return this->isConnected(); }
 
-		bool isReadyToReceive(uint32_t ui32TimeOut = 0) const { return this->isConnected(); }
+		bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const { return this->isConnected(); }
 
 		uint32_t getPendingByteCount() { return (this->isConnected() ? 0 : 1); }
 
@@ -205,7 +205,7 @@ namespace Socket
 		void release()
 		{
 #if defined TARGET_OS_Windows
-			if (m_hmodTVicPort != NULL)
+			if (m_hmodTVicPort != nullptr)
 			{
 				if (!FreeLibrary(m_hmodTVicPort))
 				{
@@ -222,7 +222,7 @@ namespace Socket
 			if (this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
-			if (m_hmodTVicPort != NULL)
+			if (m_hmodTVicPort != nullptr)
 			{
 				if (m_lpfnTVicPortOpen())
 				{
