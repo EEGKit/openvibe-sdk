@@ -254,7 +254,7 @@ bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const 
 
 	HKEY l_Key = 0;
 
-	LONG result = RegOpenKeyEx(key, TEXT(registryPath), nullptr, samDesired, &l_Key);
+	LONG result = RegOpenKeyEx(key, TEXT(registryPath), NULL, samDesired, &l_Key);
 
 	if (result != ERROR_SUCCESS)
 	{

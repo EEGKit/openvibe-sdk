@@ -148,8 +148,8 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TExperimentInformationEncoder : public TExperimentInformationEncoderLocal<TEncoder<T>>
 	{
-	private:
 		using TExperimentInformationEncoderLocal<TEncoder<T>>::m_pBoxAlgorithm;
+	
 	public:
 		using TExperimentInformationEncoderLocal<TEncoder<T>>::uninitialize;
 
@@ -161,10 +161,7 @@ namespace OpenViBEToolkit
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
 
-		virtual ~TExperimentInformationEncoder()
-		{
-			this->uninitialize();
-		}
+		virtual ~TExperimentInformationEncoder() { this->uninitialize(); }
 	};
 }  // namespace OpenViBEToolkit
 

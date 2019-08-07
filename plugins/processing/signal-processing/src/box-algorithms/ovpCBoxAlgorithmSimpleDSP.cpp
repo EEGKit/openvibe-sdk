@@ -12,12 +12,7 @@ using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 using namespace std;
 
-CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP()
-	: m_pStreamEncoder(nullptr)
-	  , m_pEquationParser(nullptr)
-	  , m_ui64EquationType(OP_USERDEF)
-	  , m_f64SpecialEquationParameter(0)
-	  , m_ppVariable(nullptr) {}
+CBoxAlgorithmSimpleDSP::CBoxAlgorithmSimpleDSP() {}
 
 bool CBoxAlgorithmSimpleDSP::initialize()
 {

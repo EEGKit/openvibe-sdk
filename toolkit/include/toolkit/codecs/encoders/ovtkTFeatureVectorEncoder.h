@@ -30,22 +30,9 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-	protected:
-
-		bool encodeHeaderImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeHeader);
-		}
-
-		bool encodeBufferImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeBuffer);
-		}
-
-		bool encodeEndImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeEnd);
-		}
+		bool encodeHeaderImpl() { return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeHeader); }
+		bool encodeBufferImpl() { return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeBuffer); }
+		bool encodeEndImpl() { return m_pCodec->process(OVP_GD_Algorithm_FeatureVectorStreamEncoder_InputTriggerId_EncodeEnd); }
 
 	public:
 		using T::initialize;
@@ -55,7 +42,6 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TFeatureVectorEncoder : public TFeatureVectorEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>
 	{
-	private:
 		using TFeatureVectorEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_pBoxAlgorithm;
 	public:
 		using TFeatureVectorEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::uninitialize;
@@ -68,10 +54,7 @@ namespace OpenViBEToolkit
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
 
-		virtual ~TFeatureVectorEncoder()
-		{
-			this->uninitialize();
-		}
+		virtual ~TFeatureVectorEncoder() { this->uninitialize(); }
 	};
 }  // namespace OpenViBEToolkit
 

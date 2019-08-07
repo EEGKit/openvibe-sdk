@@ -110,35 +110,25 @@ public:
 	//! True if the node is "associative"
 	bool m_bIsAssociative;
 
-public:
-
 	//Constructors
 	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, bool bIsAssociative = false)
-		: CAbstractTreeNode(false, false)
-		  , m_ui64Identifier(ui64NodeIdentifier)
-		  , m_bIsAssociative(bIsAssociative) { }
+		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative) { }
 
 	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pChild, bool bIsAssociative = false)
-		: CAbstractTreeNode(false, false)
-		  , m_ui64Identifier(ui64NodeIdentifier)
-		  , m_bIsAssociative(bIsAssociative)
+		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative)
 	{
 		m_oChildren.push_back(pChild);
 	}
 
 	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pLeftChild, CAbstractTreeNode* pRightChild, bool bIsAssociative = false)
-		: CAbstractTreeNode(false, false)
-		  , m_ui64Identifier(ui64NodeIdentifier)
-		  , m_bIsAssociative(bIsAssociative)
+		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative)
 	{
 		m_oChildren.push_back(pLeftChild);
 		m_oChildren.push_back(pRightChild);
 	}
 
 	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pTestChild, CAbstractTreeNode* pIfChild, CAbstractTreeNode* pThenChild, bool bIsAssociative = false)
-		: CAbstractTreeNode(false, false)
-		  , m_ui64Identifier(ui64NodeIdentifier)
-		  , m_bIsAssociative(bIsAssociative)
+		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative)
 	{
 		m_oChildren.push_back(pTestChild);
 		m_oChildren.push_back(pIfChild);
@@ -370,25 +360,18 @@ class CAbstractTree
 protected:
 
 	//! the root of the AST tree.
-	CAbstractTreeNode* m_pRoot;
+	CAbstractTreeNode* m_pRoot = nullptr;
 
 public:
 
 	//! Constructor
-	explicit CAbstractTree(CAbstractTreeNode* pRoot)
-		: m_pRoot(pRoot) { }
+	explicit CAbstractTree(CAbstractTreeNode* pRoot) : m_pRoot(pRoot) { }
 
 	//! Destructor
-	~CAbstractTree()
-	{
-		delete m_pRoot;
-	}
+	~CAbstractTree() { delete m_pRoot; }
 
 	//! Prints the whole tree.
-	void printTree(OpenViBE::Kernel::ILogManager& rLogManager)
-	{
-		m_pRoot->print(rLogManager);
-	}
+	void printTree(OpenViBE::Kernel::ILogManager& rLogManager) { m_pRoot->print(rLogManager); }
 
 	/**
 	 * Used to simplify the tree.

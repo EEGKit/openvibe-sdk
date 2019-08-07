@@ -307,15 +307,11 @@ namespace r8b
 	{
 		friend class CDSPRealFFT;
 
-	private:
 		typedef double FPType;
 
 		static void cdft(int n, int isgn, FPType* a, int* ip, FPType* w)
 		{
-			if (n > (ip[0] << 2))
-			{
-				makewt(n >> 2, ip, w);
-			}
+			if (n > (ip[0] << 2)) { makewt(n >> 2, ip, w); }
 			if (n > 4)
 			{
 				if (isgn >= 0)

@@ -149,12 +149,11 @@ namespace Dsp
 			filter_type_t::doSetParams(parameters);
 		}
 
-	protected:
 		Params m_transitionParams;
 		DesignClass m_transitionFilter;
-		int m_transitionSamples;
+		int m_transitionSamples = 0;
 
-		int m_remainingSamples;        // remaining transition samples
+		int m_remainingSamples = 0;			// remaining transition samples
 	};
 }  // namespace Dsp
 

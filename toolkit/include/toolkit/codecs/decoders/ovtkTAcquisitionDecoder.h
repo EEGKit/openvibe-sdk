@@ -90,12 +90,9 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TAcquisitionDecoder : public TAcquisitionDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
 	{
-	private:
-
 		using TAcquisitionDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_pBoxAlgorithm;
 
 	public:
-
 		using TAcquisitionDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
 
 		TAcquisitionDecoder() { }
@@ -106,10 +103,7 @@ namespace OpenViBEToolkit
 			this->initialize(rBoxAlgorithm);
 		}
 
-		virtual ~TAcquisitionDecoder()
-		{
-			this->uninitialize();
-		}
+		virtual ~TAcquisitionDecoder() { this->uninitialize(); }
 	};
 }  // namespace OpenViBEToolkit
 

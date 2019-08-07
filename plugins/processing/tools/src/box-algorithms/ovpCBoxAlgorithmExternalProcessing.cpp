@@ -173,7 +173,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 			OV_WARNING_K("A client sent a bad authentication.");
 			break;
 		}
-		else if (error == Communication::MessagingServer::ELibraryError::NoAuthenticationReceived)
+		if (error == Communication::MessagingServer::ELibraryError::NoAuthenticationReceived)
 		{
 			OV_WARNING_K("The client has not sent authentication.");
 		}

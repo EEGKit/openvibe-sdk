@@ -31,8 +31,6 @@ namespace OpenViBEToolkit
 
 		// ====================================================================================================================================
 
-	public:
-
 		virtual bool initialize() { return true; }
 		virtual bool uninitialize() { return true; }
 		virtual bool process() = 0;
@@ -124,6 +122,6 @@ namespace OpenViBEToolkit
 			OpenViBE::Kernel::IAlgorithmContext*& m_rpAlgorithmContext;
 		};
 
-		OpenViBE::Kernel::IAlgorithmContext* m_pAlgorithmContext;
+		OpenViBE::Kernel::IAlgorithmContext* m_pAlgorithmContext = nullptr;
 	};
 }  // namespace OpenViBEToolkit

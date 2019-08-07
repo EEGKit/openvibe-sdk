@@ -70,7 +70,6 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TStimulationEncoder : public TStimulationEncoderLocal<TEncoder<T>>
 	{
-	private:
 		using TStimulationEncoderLocal<TEncoder<T>>::m_pBoxAlgorithm;
 	public:
 		using TStimulationEncoderLocal<TEncoder<T>>::uninitialize;
@@ -83,10 +82,7 @@ namespace OpenViBEToolkit
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
 
-		virtual ~TStimulationEncoder()
-		{
-			this->uninitialize();
-		}
+		virtual ~TStimulationEncoder() { this->uninitialize(); }
 	};
 }  // namespace OpenViBEToolkit
 

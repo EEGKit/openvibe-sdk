@@ -77,10 +77,8 @@ namespace Dsp
 #include "StateBaseSynthesisH.inl"
 
 		protected:
-			StateBase(StateType* stateArray)
-				: m_stateArray(stateArray) { }
+			StateBase(StateType* stateArray) : m_stateArray(stateArray) { }
 
-		protected:
 			StateType* m_stateArray;
 		};
 
@@ -88,18 +86,13 @@ namespace Dsp
 
 		struct Storage
 		{
-			Storage(int maxStages_, Stage* stageArray_)
-				: maxStages(maxStages_)
-				  , stageArray(stageArray_) { }
+			Storage(int maxStages_, Stage* stageArray_) : maxStages(maxStages_), stageArray(stageArray_) { }
 
 			int maxStages;
 			Stage* stageArray;
 		};
 
-		int getNumStages() const
-		{
-			return m_numStages;
-		}
+		int getNumStages() const { return m_numStages; }
 
 		const Stage& operator[](int index)
 		{
@@ -107,7 +100,6 @@ namespace Dsp
 			return m_stageArray[index];
 		}
 
-	public:
 		// Calculate filter response at the given normalized frequency.
 		complex_t response(double normalizedFrequency) const;
 

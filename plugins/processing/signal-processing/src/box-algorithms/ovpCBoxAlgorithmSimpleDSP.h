@@ -33,19 +33,17 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_SimpleDSP)
 
-		public:
-
 			std::vector<OpenViBE::IMatrix*> m_vMatrix;
 			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_vStreamDecoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
 
-			CEquationParser* m_pEquationParser;
+			CEquationParser* m_pEquationParser = nullptr;
 
-			uint64_t m_ui64EquationType;
-			double m_f64SpecialEquationParameter;
-			double** m_ppVariable;
+			uint64_t m_ui64EquationType = OP_USERDEF;
+			double m_f64SpecialEquationParameter = 0;
+			double** m_ppVariable = nullptr;
 
-			bool m_bCheckChunkDates;
+			bool m_bCheckChunkDates = false;
 		};
 
 		class CBoxAlgorithmSimpleDSPListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

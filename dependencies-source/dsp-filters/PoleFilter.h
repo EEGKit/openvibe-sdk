@@ -99,7 +99,6 @@ namespace Dsp
 			m_digitalProto = digitalStorage;
 		}
 
-	protected:
 		AnalogPrototype m_analogProto;
 	};
 

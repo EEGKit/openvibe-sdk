@@ -45,8 +45,6 @@ namespace OpenViBE
 			template <class IPluginObjectT, class IPluginObjectDescT>
 			IPluginObjectT* createPluginObjectT(const CIdentifier& rClassIdentifier, const IPluginObjectDescT** ppPluginObjectDescT);
 
-		protected:
-
 			std::vector<IPluginModule*> m_vPluginModule;
 			std::map<Plugins::IPluginObjectDesc*, IPluginModule*> m_vPluginObjectDesc;
 			std::map<Plugins::IPluginObjectDesc*, std::vector<Plugins::IPluginObject*>> m_vPluginObject;

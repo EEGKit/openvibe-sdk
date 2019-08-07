@@ -58,7 +58,6 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TStreamStructureDecoder : public TStreamStructureDecoderLocal<TDecoder<T>>
 	{
-	private:
 		using TStreamStructureDecoderLocal<TDecoder<T>>::m_pBoxAlgorithm;
 	public:
 		using TStreamStructureDecoderLocal<TDecoder<T>>::uninitialize;
@@ -71,10 +70,7 @@ namespace OpenViBEToolkit
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
 
-		virtual ~TStreamStructureDecoder()
-		{
-			this->uninitialize();
-		}
+		virtual ~TStreamStructureDecoder() { this->uninitialize(); }
 	};
 }  // namespace OpenViBEToolkit
 

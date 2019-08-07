@@ -166,7 +166,6 @@ namespace Dsp
 
 #include "FilterSynthesisH2.inl"
 
-	protected:
 		DesignClass m_design;
 	};
 

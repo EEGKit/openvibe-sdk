@@ -9,7 +9,7 @@ wave_object wave_init(char* wname)
 	wave_object obj = NULL;
 	int retval = 0;
 
-	if (wname != nullptr)
+	if (wname != NULL)
 	{
 		retval = filtlength(wname);
 		//obj->filtlength = retval;
@@ -21,7 +21,7 @@ wave_object wave_init(char* wname)
 	obj->filtlength = retval;
 	obj->lpd_len    = obj->hpd_len = obj->lpr_len = obj->hpr_len = obj->filtlength;
 	strcpy(obj->wname, wname);
-	if (wname != nullptr)
+	if (wname != NULL)
 	{
 		filtcoef(wname, obj->params, obj->params + retval, obj->params + 2 * retval, obj->params + 3 * retval);
 	}
@@ -53,7 +53,7 @@ wt_object wt_init(wave_object wave, char* method, int siglength, int J)
 		exit(-1);
 	}
 
-	if (method == nullptr)
+	if (method == NULL)
 	{
 		obj            = (wt_object)malloc(sizeof(struct wt_set) + sizeof(double) * (siglength + 2 * J * (size + 1)));
 		obj->outlength = siglength + 2 * J * (size + 1); // Default

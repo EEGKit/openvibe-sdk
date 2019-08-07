@@ -27,8 +27,6 @@ namespace OpenViBE
 
 			virtual CIdentifier getUnusedIdentifier() const;
 
-		protected:
-
 			std::map<CIdentifier, CPlayer*> m_vPlayer;
 		};
 	}  // namespace Kernel

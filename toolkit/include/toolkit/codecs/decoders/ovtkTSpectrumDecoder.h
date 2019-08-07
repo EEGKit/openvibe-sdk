@@ -81,7 +81,6 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TSpectrumDecoder : public TSpectrumDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
 	{
-	private:
 		using TSpectrumDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_pBoxAlgorithm;
 	public:
 		using TSpectrumDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
@@ -94,10 +93,7 @@ namespace OpenViBEToolkit
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
 
-		virtual ~TSpectrumDecoder()
-		{
-			this->uninitialize();
-		}
+		virtual ~TSpectrumDecoder() { this->uninitialize(); }
 	};
 }  // namespace OpenViBEToolkit
 

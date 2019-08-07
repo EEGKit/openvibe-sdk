@@ -62,8 +62,6 @@ namespace OpenViBE
 
 			virtual CIdentifier getUnusedIdentifier() const;
 
-		protected:
-
 			std::map<CIdentifier, CScenario*> m_vScenario;
 		private:
 			/// Scenario Import Context -> File Name Extension -> Scenario Importer Identifier

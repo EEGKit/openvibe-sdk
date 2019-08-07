@@ -59,8 +59,6 @@ namespace OpenViBE
 			std::unique_ptr<CLogListenerConsole> m_pLogListenerConsole;
 			std::unique_ptr<CLogListenerFile> m_pLogListenerFile;
 
-		private:
-
 			CKernelContext();
 		};
 
@@ -68,18 +66,7 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit CKernelContextBridge(const IKernelContext& rKernelContext)
-				: m_kernelContext(rKernelContext)
-				  , m_pAlgorithmManager(NULL)
-				  , m_pConfigurationManager(NULL)
-				  , m_pKernelObjectFactory(NULL)
-				  , m_pPlayerManager(NULL)
-				  , m_pPluginManager(NULL)
-				  , m_pMetaboxManager(NULL)
-				  , m_pScenarioManager(NULL)
-				  , m_pTypeManager(NULL)
-				  , m_pLogManager(NULL)
-				  , m_pErrorManager(NULL) { }
+			explicit CKernelContextBridge(const IKernelContext& rKernelContext) : m_kernelContext(rKernelContext) { }
 
 			virtual bool initialize() { return true; }
 			virtual bool uninitialize() { return true; }
@@ -112,18 +99,16 @@ namespace OpenViBE
 
 			const IKernelContext& m_kernelContext;
 
-		protected:
-
-			mutable IAlgorithmManager* m_pAlgorithmManager;
-			mutable IConfigurationManager* m_pConfigurationManager;
-			mutable IKernelObjectFactory* m_pKernelObjectFactory;
-			mutable IPlayerManager* m_pPlayerManager;
-			mutable IPluginManager* m_pPluginManager;
-			mutable IMetaboxManager* m_pMetaboxManager;
-			mutable IScenarioManager* m_pScenarioManager;
-			mutable ITypeManager* m_pTypeManager;
-			mutable ILogManager* m_pLogManager;
-			mutable IErrorManager* m_pErrorManager;
+			mutable IAlgorithmManager* m_pAlgorithmManager = nullptr;
+			mutable IConfigurationManager* m_pConfigurationManager = nullptr;
+			mutable IKernelObjectFactory* m_pKernelObjectFactory = nullptr;
+			mutable IPlayerManager* m_pPlayerManager = nullptr;
+			mutable IPluginManager* m_pPluginManager = nullptr;
+			mutable IMetaboxManager* m_pMetaboxManager = nullptr;
+			mutable IScenarioManager* m_pScenarioManager = nullptr;
+			mutable ITypeManager* m_pTypeManager = nullptr;
+			mutable ILogManager* m_pLogManager = nullptr;
+			mutable IErrorManager* m_pErrorManager = nullptr;
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE

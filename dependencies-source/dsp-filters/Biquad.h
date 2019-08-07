@@ -64,7 +64,6 @@ namespace Dsp
 			}
 		};
 
-	public:
 		// Calculate filter response at the given normalized frequency.
 		complex_t response(double normalizedFrequency) const;
 
@@ -93,13 +92,11 @@ namespace Dsp
 		// These are protected so you can't mess with RBJ biquads
 		//
 
-		void setCoefficients(double a0, double a1, double a2,
-							 double b0, double b1, double b2);
+		void setCoefficients(double a0, double a1, double a2, double b0, double b1, double b2);
 
 		void setOnePole(complex_t pole, complex_t zero);
 
-		void setTwoPole(complex_t pole1, complex_t zero1,
-						complex_t pole2, complex_t zero2);
+		void setTwoPole(complex_t pole1, complex_t zero1, complex_t pole2, complex_t zero2);
 
 		void setPoleZeroPair(const PoleZeroPair& pair)
 		{
@@ -109,8 +106,7 @@ namespace Dsp
 			}
 			else
 			{
-				setTwoPole(pair.poles.first, pair.zeros.first,
-						   pair.poles.second, pair.zeros.second);
+				setTwoPole(pair.poles.first, pair.zeros.first, pair.poles.second, pair.zeros.second);
 			}
 		}
 
@@ -121,12 +117,12 @@ namespace Dsp
 		void applyScale(double scale);
 
 	public:
-		double m_a0;
-		double m_a1;
-		double m_a2;
-		double m_b1;
-		double m_b2;
-		double m_b0;
+		double m_a0 = 0;
+		double m_a1 = 0;
+		double m_a2 = 0;
+		double m_b1 = 0;
+		double m_b2 = 0;
+		double m_b0 = 0;
 	};
 
 	//------------------------------------------------------------------------------
@@ -150,16 +146,12 @@ namespace Dsp
 
 		explicit Biquad(const BiquadPoleState& bps);
 
-	public:
 		// Process a block of samples, interpolating from the old section's coefficients
 		// to this section's coefficients, over numSamples. This implements smooth
 		// parameter changes.
 
 		template <class StateType, typename Sample>
-		void smoothProcess1(int numSamples,
-							Sample* dest,
-							StateType& state,
-							Biquad sectionPrev) const
+		void smoothProcess1(int numSamples, Sample* dest, StateType& state, Biquad sectionPrev) const
 		{
 			double t   = 1. / numSamples;
 			double da1 = (m_a1 - sectionPrev.m_a1) * t;
@@ -211,29 +203,12 @@ namespace Dsp
 			}
 		}
 
-	public:
 		// Export these as public
 
-		void setOnePole(complex_t pole, complex_t zero)
-		{
-			BiquadBase::setOnePole(pole, zero);
-		}
-
-		void setTwoPole(complex_t pole1, complex_t zero1,
-						complex_t pole2, complex_t zero2)
-		{
-			BiquadBase::setTwoPole(pole1, zero1, pole2, zero2);
-		}
-
-		void setPoleZeroPair(const PoleZeroPair& pair)
-		{
-			BiquadBase::setPoleZeroPair(pair);
-		}
-
-		void applyScale(double scale)
-		{
-			BiquadBase::applyScale(scale);
-		}
+		void setOnePole(complex_t pole, complex_t zero) { BiquadBase::setOnePole(pole, zero); }
+		void setTwoPole(complex_t pole1, complex_t zero1, complex_t pole2, complex_t zero2) { BiquadBase::setTwoPole(pole1, zero1, pole2, zero2); }
+		void setPoleZeroPair(const PoleZeroPair& pair) { BiquadBase::setPoleZeroPair(pair); }
+		void applyScale(double scale) { BiquadBase::applyScale(scale); }
 	};
 }  // namespace Dsp
 

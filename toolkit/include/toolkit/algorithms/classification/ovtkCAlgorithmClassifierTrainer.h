@@ -25,8 +25,6 @@ namespace OpenViBEToolkit
 		virtual bool saveConfiguration(OpenViBE::IMemoryBuffer& rMemoryBuffer) = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_ClassifierTrainer)
-
-	protected:
 	};
 
 	class OVTK_API CAlgorithmClassifierTrainerDesc : public OpenViBE::Plugins::IAlgorithmDesc

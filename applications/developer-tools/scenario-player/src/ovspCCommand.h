@@ -163,8 +163,6 @@ namespace OpenViBE
 	*/
 	struct RunScenarioCommand : ICommand
 	{
-	public:
-
 		using Token = std::pair<std::string, std::string>;
 
 		// List of properties

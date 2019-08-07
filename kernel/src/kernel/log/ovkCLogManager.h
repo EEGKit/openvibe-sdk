@@ -77,8 +77,6 @@ namespace OpenViBE
 				}
 			}
 
-		protected:
-
 			std::vector<ILogListener*> m_vListener;
 			std::map<ELogLevel, bool> m_vActiveLevel;
 			ELogLevel m_eCurrentLogLevel;
