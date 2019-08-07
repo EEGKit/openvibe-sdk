@@ -90,7 +90,7 @@ XML_API IReader* XML::createReader(IReaderCallback& rReaderCallback)
 
 static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, const char** ppAttribute)
 {
-	uint64_t i, l_ui64AttributeCount = 0;
+	uint64_t l_ui64AttributeCount = 0;
 	while (ppAttribute[l_ui64AttributeCount++]);
 	l_ui64AttributeCount >>= 1;
 
@@ -98,7 +98,7 @@ static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, cons
 	const char** l_pAttributeName  = new const char*[static_cast<size_t>(l_ui64AttributeCount)];
 	const char** l_pAttributeValue = new const char*[static_cast<size_t>(l_ui64AttributeCount)];
 
-	for (i = 0; i < l_ui64AttributeCount; i++)
+	for (uint64_t i = 0; i < l_ui64AttributeCount; i++)
 	{
 		l_pAttributeName[i]  = ppAttribute[(i << 1)];
 		l_pAttributeValue[i] = ppAttribute[(i << 1) + 1];

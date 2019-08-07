@@ -13,8 +13,8 @@ using namespace OpenViBEPlugins;
 using namespace FileIO;
 
 CBoxAlgorithmCSVFileWriter::CBoxAlgorithmCSVFileWriter()
-	: m_fpRealProcess(NULL)
-	  , m_pStreamDecoder(NULL) {}
+	: m_fpRealProcess(nullptr)
+	  , m_pStreamDecoder(nullptr) {}
 
 bool CBoxAlgorithmCSVFileWriter::initialize()
 {

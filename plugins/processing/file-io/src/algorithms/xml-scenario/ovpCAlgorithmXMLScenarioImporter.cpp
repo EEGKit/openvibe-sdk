@@ -110,7 +110,7 @@ namespace
 };
 
 CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter()
-	: m_pContext(NULL), m_ui32Status(Status_ParsingNothing), m_pReader(NULL)
+	: m_pContext(nullptr), m_ui32Status(Status_ParsingNothing), m_pReader(nullptr)
 {
 	m_pReader = createReader(*this);
 }

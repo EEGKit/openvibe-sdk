@@ -70,5 +70,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoderDesc, OVP_ClassId_Algorithm_StimulationStreamDecoderDesc)
 		};
-	};
-};
+	} // namespace StreamCodecs
+} // namespace OpenViBEPlugins

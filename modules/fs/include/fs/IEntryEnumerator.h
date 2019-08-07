@@ -51,4 +51,4 @@ namespace FS
 	};
 
 	extern FS_API IEntryEnumerator* createEntryEnumerator(IEntryEnumeratorCallBack& rCallBack);
-};
+}

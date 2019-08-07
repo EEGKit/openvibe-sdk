@@ -14,7 +14,7 @@ using namespace FileIO;
 CBoxAlgorithmGenericStreamReader::CBoxAlgorithmGenericStreamReader()
 	: m_oReader(*this)
 	  , m_bHasEBMLHeader(false)
-	  , m_pFile(NULL) {}
+	  , m_pFile(nullptr) {}
 
 uint64_t CBoxAlgorithmGenericStreamReader::getClockFrequency()
 {
@@ -38,7 +38,7 @@ bool CBoxAlgorithmGenericStreamReader::uninitialize()
 	if (m_pFile)
 	{
 		fclose(m_pFile);
-		m_pFile = NULL;
+		m_pFile = nullptr;
 	}
 
 	return true;

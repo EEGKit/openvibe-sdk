@@ -85,16 +85,14 @@ IXMLNode* IXMLHandlerImpl::parseFile(const char* sPath)
 	FS::Files::openIFStream(l_oFile, sPath, ios::binary);
 	if (l_oFile.is_open())
 	{
-		char* l_sBuffer;
-		uint32_t l_iFileLen;
 
 		//Compute size
 		l_oFile.seekg(0, ios::end);
-		l_iFileLen = static_cast<uint32_t>(l_oFile.tellg());
+		uint32_t l_iFileLen = static_cast<uint32_t>(l_oFile.tellg());
 		l_oFile.seekg(0, ios::beg);
 
 		//Read the file
-		l_sBuffer = new char[l_iFileLen];
+		char* l_sBuffer = new char[l_iFileLen];
 		l_oFile.read(l_sBuffer, l_iFileLen);
 		l_oFile.close();
 

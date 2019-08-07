@@ -49,5 +49,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoderDesc, OVP_ClassId_Algorithm_FeatureVectorStreamEncoderDesc)
 		};
-	};
-};
+	} // namespace StreamCodecs
+} // namespace OpenViBEPlugins

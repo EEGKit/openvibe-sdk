@@ -32,29 +32,26 @@ CReaderHelper::CReaderHelper() {}
 
 uint64_t CReaderHelper::getUIntegerFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
-	uint64_t l_ui64Result = 0;
-	uint64_t i;
-	for (i = 0; i < ui64BufferSize; i++)
+	uint64_t result = 0;
+	for (uint64_t i = 0; i < ui64BufferSize; i++)
 	{
-		l_ui64Result <<= 8;
-		l_ui64Result |= ((unsigned char*)pBuffer)[i];
+		result <<= 8;
+		result |= ((unsigned char*)pBuffer)[i];
 	}
-	return l_ui64Result;
+	return result;
 }
 
 int64_t CReaderHelper::getSIntegerFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
-	int64_t l_i64Result = 0;
-	uint64_t i;
+	int64_t result = 0;
+	if (ui64BufferSize != 0 && ((unsigned char*)pBuffer)[0] & 0x80) { result = -1; }
 
-	if (ui64BufferSize != 0 && ((unsigned char*)pBuffer)[0] & 0x80) { l_i64Result = -1; }
-
-	for (i = 0; i < ui64BufferSize; i++)
+	for (uint64_t i = 0; i < ui64BufferSize; i++)
 	{
-		l_i64Result <<= 8;
-		l_i64Result |= ((unsigned char*)pBuffer)[i];
+		result <<= 8;
+		result |= ((unsigned char*)pBuffer)[i];
 	}
-	return l_i64Result;
+	return result;
 }
 
 double CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)
@@ -103,12 +100,6 @@ const char* CReaderHelper::getASCIIStringFromChildData(const void* pBuffer, cons
 	return m_sASCIIString.c_str();
 }
 
-void CReaderHelper::release()
-{
-	delete this;
-}
+void CReaderHelper::release() { delete this; }
 
-EBML_API IReaderHelper* EBML::createReaderHelper()
-{
-	return new CReaderHelper();
-}
+EBML_API IReaderHelper* EBML::createReaderHelper() { return new CReaderHelper(); }

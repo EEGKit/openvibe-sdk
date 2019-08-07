@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CAlgorithmPairwiseDecisionVoting() : m_ui32ClassCount(0) { };
+			CAlgorithmPairwiseDecisionVoting() { }
 
 			virtual void release() { delete this; }
 
@@ -40,7 +40,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_PairwiseDecision_Voting)
 
 		private:
-			uint32_t m_ui32ClassCount;
+			uint32_t m_ui32ClassCount = 0;
 		};
 
 		class CAlgorithmPairwiseDecisionVotingDesc : virtual public CAlgorithmPairwiseDecisionDesc

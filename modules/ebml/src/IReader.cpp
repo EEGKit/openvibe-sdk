@@ -63,9 +63,8 @@ inline uint64_t getValue(unsigned char* pBuffer, unsigned long ulBufferLength)
 {
 	uint64_t l_uiResult               = 0;
 	unsigned long l_ulCodedSizeLength = getCodedSizeLength(pBuffer, ulBufferLength);
-	unsigned long i;
 	unsigned long l_ulIthBit = l_ulCodedSizeLength;
-	for (i = 0; i < l_ulCodedSizeLength; i++)
+	for (unsigned long i = 0; i < l_ulCodedSizeLength; i++)
 	{
 		l_uiResult = (l_uiResult << 8) + (pBuffer[i]);
 		l_uiResult &= ~(l_ulIthBit > 0 && l_ulIthBit <= 8 ? (1 << (8 - l_ulIthBit)) : 0);

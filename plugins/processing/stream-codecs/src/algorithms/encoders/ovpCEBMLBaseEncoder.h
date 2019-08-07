@@ -65,5 +65,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseStreamEncoderDesc)
 		};
-	};
-};
+	} // namespace StreamCodecs
+} // namespace OpenViBEPlugins

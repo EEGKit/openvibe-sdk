@@ -8,7 +8,7 @@ namespace OpenViBE
 	{
 		class IBoxProto;
 		class IBoxAlgorithmContext;
-	};
+	}
 
 	namespace Plugins
 	{

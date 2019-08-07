@@ -41,12 +41,7 @@ namespace
 	}
 };
 
-CBoxAlgorithmCSVFileReader::CBoxAlgorithmCSVFileReader()
-	: m_pFile(nullptr),
-	  m_ui64SamplingRate(0),
-	  m_fpRealProcess(nullptr),
-	  m_pAlgorithmEncoder(nullptr),
-	  m_bHeaderSent(false) {}
+CBoxAlgorithmCSVFileReader::CBoxAlgorithmCSVFileReader() : m_fpRealProcess(nullptr) {}
 
 uint64_t CBoxAlgorithmCSVFileReader::getClockFrequency()
 {
@@ -56,7 +51,7 @@ uint64_t CBoxAlgorithmCSVFileReader::getClockFrequency()
 bool CBoxAlgorithmCSVFileReader::initialize()
 {
 	m_ui64SamplingRate  = 0;
-	m_pAlgorithmEncoder = NULL;
+	m_pAlgorithmEncoder = nullptr;
 
 	this->getStaticBoxContext().getOutputType(0, m_oTypeIdentifier);
 
@@ -88,13 +83,13 @@ bool CBoxAlgorithmCSVFileReader::uninitialize()
 	if (m_pFile)
 	{
 		fclose(m_pFile);
-		m_pFile = NULL;
+		m_pFile = nullptr;
 	}
 	if (m_pAlgorithmEncoder)
 	{
 		m_pAlgorithmEncoder->uninitialize();
 		delete m_pAlgorithmEncoder;
-		m_pAlgorithmEncoder = NULL;
+		m_pAlgorithmEncoder = nullptr;
 	}
 	return true;
 }
@@ -110,13 +105,13 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 	auto releaseResources = [&]()
 	{
 		fclose(m_pFile);
-		m_pFile = NULL;
+		m_pFile = nullptr;
 	};
 
 	//read the header
 	char l_pLine[m_ui32bufferLen];
 	char* l_pResult = fgets(l_pLine, m_ui32bufferLen, m_pFile);
-	if (NULL == l_pResult)
+	if (nullptr == l_pResult)
 	{
 		releaseResources();
 		OV_ERROR_KRF("Error reading data from file", ErrorType::BadParsing);
@@ -154,7 +149,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		//find the sampling rate
 		l_pResult = fgets(l_pLine, m_ui32bufferLen, m_pFile);
 
-		if (NULL == l_pResult)
+		if (nullptr == l_pResult)
 		{
 			releaseResources();
 			OV_ERROR_KRF("Error reading sampling rate from file", ErrorType::BadParsing);
@@ -186,7 +181,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 		// Skip the header
 		rewind(m_pFile);
 		l_pResult = fgets(l_pLine, m_ui32bufferLen, m_pFile);
-		if (NULL == l_pResult)
+		if (nullptr == l_pResult)
 		{
 			releaseResources();
 			OV_ERROR_KRF("Error reading data from file", ErrorType::BadParsing);

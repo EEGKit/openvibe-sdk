@@ -29,13 +29,12 @@ inline size_t getCodedSizeLength(const uint64_t uiValue)
 
 inline bool getCodedBuffer(const uint64_t uiValue, unsigned char* pBuffer, uint64_t* pBufferLength)
 {
-	size_t i;
 	size_t l_ulCodedSizeLength = getCodedSizeLength(uiValue);
 
 	if (l_ulCodedSizeLength > *pBufferLength) { return false; }
 
 	size_t l_ulIthBit = l_ulCodedSizeLength;
-	for (i = 0; i < l_ulCodedSizeLength; i++)
+	for (size_t i = 0; i < l_ulCodedSizeLength; i++)
 	{
 		size_t l_ulByteShift = l_ulCodedSizeLength - i - 1;
 		size_t l_ulByte      = (l_ulByteShift >= 8 ? 0 : (unsigned char)((uiValue >> (l_ulByteShift * 8)) & 0xff));
@@ -92,8 +91,7 @@ CWriterNode::CWriterNode(const CIdentifier& rIdentifier, CWriterNode* pParentNod
 
 CWriterNode::~CWriterNode()
 {
-	vector<CWriterNode*>::iterator i;
-	for (i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { delete (*i); }
+	for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { delete (*i); }
 
 	if (m_pBuffer)
 	{
@@ -129,8 +127,7 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	}
 	else
 	{
-		vector<CWriterNode*>::iterator i;
-		for (i = m_vChildren.begin(); i != m_vChildren.end(); ++i)
+		for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i)
 		{
 			(*i)->process(rWriterCallback);
 		}
@@ -143,8 +140,7 @@ uint64_t CWriterNode::getTotalContentSize(bool bCountIdentifierAndSize)
 	if (m_vChildren.size() == 0) { l_ui64ContentSize = m_ui64BufferLength; }
 	else
 	{
-		vector<CWriterNode*>::iterator i;
-		for (i = m_vChildren.begin(); i != m_vChildren.end(); ++i)
+		for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i)
 		{
 			l_ui64ContentSize += (*i)->getTotalContentSize(true);
 		}

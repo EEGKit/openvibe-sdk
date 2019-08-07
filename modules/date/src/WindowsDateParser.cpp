@@ -83,14 +83,14 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 	char c;
 	const char* bp;
 	size_t len                    = 0;
-	int alt_format, i, split_year = 0;
+	int i, split_year = 0;
 
 	bp = buf;
 
 	while ((c = *fmt) != '\0')
 	{
 		/* Clear `alternate' modifier prior to new conversion. */
-		alt_format = 0;
+		int alt_format = 0;
 
 		/* Eat up white-space. */
 		if (isspace(c))
@@ -111,7 +111,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case '%':	/* "%%" is converted to "%". */
 			literal :
 				if (c != *bp++)
-					return (0);
+					return (nullptr);
 				break;
 
 				/*
@@ -134,43 +134,43 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'c':	/* Date and time, using the locale's format. */
 			LEGAL_ALT(ALT_E);
 				if (!(bp = windowsStrptime(bp, "%x %X", tmParsed)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'D':	/* The date as "%m/%d/%y". */
 			LEGAL_ALT(0);
 				if (!(bp = windowsStrptime(bp, "%m/%d/%y", tmParsed)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'R':	/* The time as "%H:%M". */
 			LEGAL_ALT(0);
 				if (!(bp = windowsStrptime(bp, "%H:%M", tmParsed)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'r':	/* The time in 12-hour clock representation. */
 			LEGAL_ALT(0);
 				if (!(bp = windowsStrptime(bp, "%I:%M:%S %p", tmParsed)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'T':	/* The time as "%H:%M:%S". */
 			LEGAL_ALT(0);
 				if (!(bp = windowsStrptime(bp, "%H:%M:%S", tmParsed)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'X':	/* The time, using the locale's format. */
 			LEGAL_ALT(ALT_E);
 				if (!(bp = windowsStrptime(bp, "%H:%M:%S", tmParsed)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'x':	/* The date, using the locale's format. */
 			LEGAL_ALT(ALT_E);
 				if (!(bp = windowsStrptime(bp, "%m/%d/%y", tmParsed)))
-					return (0);
+					return (nullptr);
 				break;
 
 				/*
@@ -194,7 +194,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 
 				/* Nothing matched. */
 				if (i == 7)
-					return (0);
+					return (nullptr);
 
 				tmParsed->tm_wday = i;
 				bp += len;
@@ -219,7 +219,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 
 				/* Nothing matched. */
 				if (i == 12)
-					return (0);
+					return (nullptr);
 
 				tmParsed->tm_mon = i;
 				bp += len;
@@ -228,7 +228,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'C':	/* The century number. */
 			LEGAL_ALT(ALT_E);
 				if (!(conv_num(&bp, &i, 0, 99)))
-					return (0);
+					return (nullptr);
 
 				if (split_year)
 				{
@@ -245,7 +245,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'e':
 			LEGAL_ALT(ALT_O);
 				if (!(conv_num(&bp, &tmParsed->tm_mday, 1, 31)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'k':	/* The hour (24-hour clock representation). */
@@ -254,7 +254,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'H':
 			LEGAL_ALT(ALT_O);
 				if (!(conv_num(&bp, &tmParsed->tm_hour, 0, 23)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'l':	/* The hour (12-hour clock representation). */
@@ -263,7 +263,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'I':
 			LEGAL_ALT(ALT_O);
 				if (!(conv_num(&bp, &tmParsed->tm_hour, 1, 12)))
-					return (0);
+					return (nullptr);
 				if (tmParsed->tm_hour == 12)
 					tmParsed->tm_hour = 0;
 				break;
@@ -271,20 +271,20 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'j':	/* The day of year. */
 			LEGAL_ALT(0);
 				if (!(conv_num(&bp, &i, 1, 366)))
-					return (0);
+					return (nullptr);
 				tmParsed->tm_yday = i - 1;
 				break;
 
 			case 'M':	/* The minute. */
 			LEGAL_ALT(ALT_O);
 				if (!(conv_num(&bp, &tmParsed->tm_min, 0, 59)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'm':	/* The month. */
 			LEGAL_ALT(ALT_O);
 				if (!(conv_num(&bp, &i, 1, 12)))
-					return (0);
+					return (nullptr);
 				tmParsed->tm_mon = i - 1;
 				break;
 
@@ -294,7 +294,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				if (strcmp(am_pm[0], bp) == 0)
 				{
 					if (tmParsed->tm_hour > 11)
-						return (0);
+						return (nullptr);
 
 					bp += strlen(am_pm[0]);
 					break;
@@ -303,7 +303,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				else if (strcmp(am_pm[1], bp) == 0)
 				{
 					if (tmParsed->tm_hour > 11)
-						return (0);
+						return (nullptr);
 
 					tmParsed->tm_hour += 12;
 					bp += strlen(am_pm[1]);
@@ -311,12 +311,12 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				}
 
 				/* Nothing matched. */
-				return (0);
+				return (nullptr);
 
 			case 'S':	/* The seconds. */
 			LEGAL_ALT(ALT_O);
 				if (!(conv_num(&bp, &tmParsed->tm_sec, 0, 61)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'U':	/* The week of year, beginning on sunday. */
@@ -329,19 +329,19 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 				* range for now.
 				*/
 				if (!(conv_num(&bp, &i, 0, 53)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'w':	/* The day of week, beginning on sunday. */
 			LEGAL_ALT(ALT_O);
 				if (!(conv_num(&bp, &tmParsed->tm_wday, 0, 6)))
-					return (0);
+					return (nullptr);
 				break;
 
 			case 'Y':	/* The year. */
 			LEGAL_ALT(ALT_E);
 				if (!(conv_num(&bp, &i, 0, 9999)))
-					return (0);
+					return (nullptr);
 
 				tmParsed->tm_year = i - TM_YEAR_BASE;
 				break;
@@ -349,7 +349,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 			case 'y':	/* The year within 100 years of the epoch. */
 			LEGAL_ALT(ALT_E | ALT_O);
 				if (!(conv_num(&bp, &i, 0, 99)))
-					return (0);
+					return (nullptr);
 
 				if (split_year)
 				{
@@ -375,7 +375,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 
 
 			default:	/* Unknown/unsupported conversion. */
-				return (0);
+				return (nullptr);
 		}
 	}
 

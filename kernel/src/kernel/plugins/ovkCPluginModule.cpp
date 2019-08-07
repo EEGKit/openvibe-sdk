@@ -89,7 +89,7 @@ CPluginModuleBase::CPluginModuleBase(const IKernelContext& rKernelContext)
 	  , onGetPluginObjectDescriptionCB(NULL)
 	  , onUninitializeCB(NULL) {}
 
-CPluginModuleBase::~CPluginModuleBase() { };
+CPluginModuleBase::~CPluginModuleBase() { }
 
 bool CPluginModuleBase::initialize()
 {
