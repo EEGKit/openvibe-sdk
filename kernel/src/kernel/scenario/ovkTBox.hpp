@@ -416,10 +416,10 @@ namespace OpenViBE
 			virtual uint32_t getInterfacorCount(BoxInterfacorType interfacorType) const
 			{
 				auto interfacors = m_Interfacors.at(interfacorType);
-				return std::count_if(interfacors.begin(), interfacors.end(), [](const std::shared_ptr<CInterfacor>& i)
+				return uint32_t(std::count_if(interfacors.begin(), interfacors.end(), [](const std::shared_ptr<CInterfacor>& i)
 				{
 					return !i->m_bDeprecated;
-				});
+				}));
 			}
 
 			virtual uint32_t getInterfacorCountIncludingDeprecated(BoxInterfacorType interfacorType) const
@@ -1252,7 +1252,7 @@ namespace OpenViBE
 
 			virtual bool getSettingType(const uint32_t index, CIdentifier& rTypeIdentifier) const
 			{
-				return this - getInterfacorType(Setting, index, rTypeIdentifier);
+				return this->getInterfacorType(Setting, index, rTypeIdentifier);
 			}
 
 			virtual bool getSettingName(const uint32_t index, CString& rName) const

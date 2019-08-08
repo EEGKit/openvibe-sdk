@@ -24,25 +24,10 @@ namespace
 
 CAlgorithmLDADiscriminantFunction::CAlgorithmLDADiscriminantFunction(): m_f64Bias(0) {}
 
-void CAlgorithmLDADiscriminantFunction::setWeight(const VectorXd& rWeigth)
-{
-	m_oWeight = rWeigth;
-}
-
-void CAlgorithmLDADiscriminantFunction::setBias(double f64Bias)
-{
-	m_f64Bias = f64Bias;
-}
-
-double CAlgorithmLDADiscriminantFunction::getValue(const VectorXd& rFeatureVector)
-{
-	return (m_oWeight.transpose() * rFeatureVector)(0) + m_f64Bias;
-}
-
-uint32_t CAlgorithmLDADiscriminantFunction::getWeightVectorSize()
-{
-	return m_oWeight.size();
-}
+void CAlgorithmLDADiscriminantFunction::setWeight(const VectorXd& rWeigth) { m_oWeight = rWeigth; }
+void CAlgorithmLDADiscriminantFunction::setBias(double f64Bias) { m_f64Bias = f64Bias; }
+double CAlgorithmLDADiscriminantFunction::getValue(const VectorXd& rFeatureVector) { return (m_oWeight.transpose() * rFeatureVector)(0) + m_f64Bias; }
+uint32_t CAlgorithmLDADiscriminantFunction::getWeightVectorSize() { return uint32_t(m_oWeight.size()); }
 
 bool CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode* pConfiguration)
 {

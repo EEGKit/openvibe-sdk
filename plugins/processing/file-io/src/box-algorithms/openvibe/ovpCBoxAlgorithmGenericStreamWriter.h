@@ -48,7 +48,7 @@ namespace OpenViBEPlugins
 
 		private:
 
-			virtual void write(const void* pBuffer, uint64_t ui64BufferSize);
+			virtual void write(const void* pBuffer, const uint64_t ui64BufferSize);
 
 		private:
 
