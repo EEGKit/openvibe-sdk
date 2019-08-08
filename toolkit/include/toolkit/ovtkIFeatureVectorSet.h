@@ -11,11 +11,11 @@ namespace OpenViBEToolkit
 	public:
 
 		virtual uint32_t getFeatureVectorCount() const = 0;
-		virtual bool setFeatureVectorCount(uint32_t ui32FeatureVectorCount) = 0;
+		virtual bool setFeatureVectorCount(const uint32_t ui32FeatureVectorCount) = 0;
 		virtual bool addFeatureVector(const IFeatureVector& rFeatureVector) = 0;
 
-		virtual IFeatureVector& getFeatureVector(uint32_t ui32Index) = 0;
-		virtual const IFeatureVector& getFeatureVector(uint32_t ui32Index) const = 0;
+		virtual IFeatureVector& getFeatureVector(const uint32_t ui32Index) = 0;
+		virtual const IFeatureVector& getFeatureVector(const uint32_t ui32Index) const = 0;
 		virtual uint32_t getLabelCount() const = 0;
 
 		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_FeatureVectorSet)

@@ -94,7 +94,7 @@ bool CAlgorithmClassifierLDA::initialize()
 	ip_bDiagonalCov = false;
 
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
-	op_pConfiguration = NULL;
+	op_pConfiguration = nullptr;
 
 	return CAlgorithmClassifier::initialize();
 }

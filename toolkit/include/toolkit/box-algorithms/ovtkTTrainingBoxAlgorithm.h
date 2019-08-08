@@ -50,7 +50,7 @@ namespace OpenViBEToolkit
 		uint64_t m_ui64TrialStartTime;
 		uint64_t m_ui64TrialEndTime;
 		uint32_t m_ui32SampleCountPerBuffer;
-		OpenViBE::CIdentifier m_oTrialLabel;
+		OpenViBE::CIdentifier m_oTrialLabel = OV_UndefinedIdentifier;
 
 		std::vector<ISignalTrial*> m_vSignalTrial;
 	};

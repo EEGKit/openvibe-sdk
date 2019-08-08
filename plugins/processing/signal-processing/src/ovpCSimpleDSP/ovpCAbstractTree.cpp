@@ -90,7 +90,7 @@ void CAbstractTreeParentNode::levelOperators()
 
 						//we no longer need this child
 						delete l_pChildParentNode;
-						l_pChildParentNode = NULL;
+						l_pChildParentNode = nullptr;
 
 						break;
 
@@ -210,9 +210,9 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 
 					//delete the old value nodes
 					delete m_oChildren[0];
-					m_oChildren[0] = NULL;
+					m_oChildren[0] = nullptr;
 					delete m_oChildren[1];
-					m_oChildren[1] = NULL;
+					m_oChildren[1] = nullptr;
 
 					pModifiedNode = new CAbstractTreeValueNode(l_f64TotalValue);
 					l_bHasChanged = true;
@@ -225,9 +225,9 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 
 					//delete the old value nodes
 					delete m_oChildren[0];
-					m_oChildren[0] = NULL;
+					m_oChildren[0] = nullptr;
 					delete m_oChildren[1];
-					m_oChildren[1] = NULL;
+					m_oChildren[1] = nullptr;
 
 					pModifiedNode = new CAbstractTreeValueNode(l_f64TotalValue);
 					l_bHasChanged = true;
@@ -275,7 +275,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 
 					//delete the old value nodes
 					delete m_oChildren[i];
-					m_oChildren[i] = NULL;
+					m_oChildren[i] = nullptr;
 				}
 				break;
 
@@ -288,7 +288,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 
 					//delete the old value nodes
 					delete m_oChildren[i];
-					m_oChildren[i] = NULL;
+					m_oChildren[i] = nullptr;
 				}
 				break;
 		}

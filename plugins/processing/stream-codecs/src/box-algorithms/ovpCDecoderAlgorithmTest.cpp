@@ -73,7 +73,7 @@ bool CDecoderAlgorithmTest::uininitialize()
 		ip_pMemoryBuffer[i].uninitialize();
 		m_pStreamDecoder[i]->uninitialize();
 		getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder[i]);
-		m_pStreamDecoder[i] = NULL;
+		m_pStreamDecoder[i] = nullptr;
 	}
 
 	return true;

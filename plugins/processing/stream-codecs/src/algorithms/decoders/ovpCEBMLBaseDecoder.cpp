@@ -28,10 +28,10 @@ bool CEBMLBaseDecoder::initialize()
 bool CEBMLBaseDecoder::uninitialize()
 {
 	m_pEBMLReader->release();
-	m_pEBMLReader = NULL;
+	m_pEBMLReader = nullptr;
 
 	m_pEBMLReaderHelper->release();
-	m_pEBMLReaderHelper = NULL;
+	m_pEBMLReaderHelper = nullptr;
 
 	ip_pMemoryBufferToDecode.uninitialize();
 

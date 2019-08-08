@@ -34,14 +34,14 @@ bool CBoxAlgorithmSpectrumAverage::uninitialize()
 	{
 		m_pStreamEncoder->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
-		m_pStreamEncoder = NULL;
+		m_pStreamEncoder = nullptr;
 	}
 
 	if (m_pStreamDecoder)
 	{
 		m_pStreamDecoder->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
-		m_pStreamDecoder = NULL;
+		m_pStreamDecoder = nullptr;
 	}
 
 	return true;

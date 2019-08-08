@@ -28,7 +28,7 @@ bool CAlgorithmClassifierNULL::initialize()
 	ip_ui64Parameter3 = OVTK_StimulationId_Label_00;
 
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
-	op_pConfiguration = NULL;
+	op_pConfiguration = nullptr;
 
 	return CAlgorithmClassifier::initialize();
 }
@@ -67,7 +67,7 @@ bool CAlgorithmClassifierNULL::classify(const IFeatureVector& rFeatureVector, do
 
 XML::IXMLNode* CAlgorithmClassifierNULL::saveConfiguration()
 {
-	return NULL;
+	return nullptr;
 }
 
 bool CAlgorithmClassifierNULL::loadConfiguration(XML::IXMLNode* pConfigurationNode) { return true; }

@@ -328,7 +328,7 @@ namespace OpenViBEToolkit
 
 		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 		{
-			OpenViBE::CIdentifier l_oTypeIdentifier;
+			OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 			rBox.getInputType(ui32Index, l_oTypeIdentifier);
 			if (this->isValidInputType(l_oTypeIdentifier, ui32Index))
 			{
@@ -350,7 +350,7 @@ namespace OpenViBEToolkit
 
 		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 		{
-			OpenViBE::CIdentifier l_oTypeIdentifier;
+			OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 			rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 			if (this->isValidOutputType(l_oTypeIdentifier, ui32Index))
 			{

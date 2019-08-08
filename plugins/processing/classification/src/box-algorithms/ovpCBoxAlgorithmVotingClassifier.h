@@ -67,7 +67,7 @@ namespace OpenViBEPlugins
 
 			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::CIdentifier l_oInputTypeIdentifier;
+				OpenViBE::CIdentifier l_oInputTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getInputType(ui32Index, l_oInputTypeIdentifier);
 				if (l_oInputTypeIdentifier == OV_TypeId_Stimulations || l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix)
 				{
@@ -100,7 +100,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::CIdentifier m_oInputTypeIdentifier;
+			OpenViBE::CIdentifier m_oInputTypeIdentifier = OV_UndefinedIdentifier;
 		};
 
 		class CBoxAlgorithmVotingClassifierDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc

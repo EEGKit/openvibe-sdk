@@ -40,13 +40,13 @@ namespace OpenViBE
 		protected:
 
 			CScenario& m_rOwnerScenario;
-			CIdentifier m_oIdentifier;
-			CIdentifier m_oSourceBoxIdentifier;
-			CIdentifier m_oTargetBoxIdentifier;
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
+			CIdentifier m_oSourceBoxIdentifier = OV_UndefinedIdentifier;
+			CIdentifier m_oTargetBoxIdentifier = OV_UndefinedIdentifier;
 			uint32_t m_ui32SourceOutputIndex;
-			CIdentifier m_oSourceBoxOutputIdentifier;
+			CIdentifier m_oSourceBoxOutputIdentifier = OV_UndefinedIdentifier;
 			uint32_t m_ui32TargetInputIndex;
-			CIdentifier m_oTargetBoxInputIdentifier;
+			CIdentifier m_oTargetBoxInputIdentifier = OV_UndefinedIdentifier;
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE

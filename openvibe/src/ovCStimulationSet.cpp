@@ -128,7 +128,7 @@ bool CStimulationSetImpl::removeStimulation(const uint64_t ui64StimulationIndex)
 // ________________________________________________________________________________________________________________
 //
 
-CStimulationSet::CStimulationSet() : m_pStimulationSetImpl(NULL) { m_pStimulationSetImpl = new CStimulationSetImpl(); }
+CStimulationSet::CStimulationSet() : m_pStimulationSetImpl(nullptr) { m_pStimulationSetImpl = new CStimulationSetImpl(); }
 
 CStimulationSet::~CStimulationSet() { delete m_pStimulationSetImpl; }
 

@@ -531,7 +531,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 	}
 	else
 	{
-		status = _spawnvp(_P_NOWAIT, programPath.c_str(), argv.data());
+		status = int(_spawnvp(_P_NOWAIT, programPath.c_str(), argv.data()));
 	}
 	m_ThirdPartyProgramProcessId = status;
 	//	_P_DETACH,

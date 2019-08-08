@@ -55,7 +55,7 @@ namespace OpenViBE
 			*        targets contained in the \c pTargetIdentifier array.
 			* \return \e true in case of success, \e false in other cases.
 			*/
-			virtual bool sendMessage(const IMessageEvent& rMessageEvent, const CIdentifier* pTargetIdentifier, uint32_t ui32TargetIdentifierCount) = 0;
+			virtual bool sendMessage(const IMessageEvent& rMessageEvent, const CIdentifier* pTargetIdentifier, const uint32_t ui32TargetIdentifierCount) = 0;
 
 			//}@
 

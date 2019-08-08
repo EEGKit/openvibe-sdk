@@ -61,7 +61,7 @@ namespace OpenViBE
 		 * \brief Notify all registered observers.
 		 * \param data [in] : a pointer to data that will be send to observers.
 		 */
-		virtual void notifyObservers(void* data = NULL);
+		virtual void notifyObservers(void* data = nullptr);
 
 	private:
 		struct ObserverList;

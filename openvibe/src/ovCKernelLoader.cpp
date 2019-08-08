@@ -48,7 +48,7 @@ namespace OpenViBE
 //___________________________________________________________________//
 //                                                                   //
 
-CKernelLoaderBase::CKernelLoaderBase() : onInitializeCB(NULL), onGetKernelDescCB(NULL), onUninitializeCB(NULL) {}
+CKernelLoaderBase::CKernelLoaderBase() : onInitializeCB(nullptr), onGetKernelDescCB(nullptr), onUninitializeCB(nullptr) {}
 
 bool CKernelLoaderBase::initialize()
 {
@@ -184,7 +184,7 @@ bool CKernelLoaderLinux::isOpen()
 
 #elif defined TARGET_OS_Windows
 
-CKernelLoaderWindows::CKernelLoaderWindows() : m_pFileHandle(NULL) {}
+CKernelLoaderWindows::CKernelLoaderWindows() : m_pFileHandle(nullptr) {}
 
 bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 {
@@ -199,9 +199,8 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 	{
 		if (pError)
 		{
-			LPVOID l_pMessageBuffer = NULL;
-			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-						  NULL, GetLastError(), 0, // Default language
+			LPVOID l_pMessageBuffer = nullptr;
+			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0, // Default language
 						  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
 			*pError = (char*)l_pMessageBuffer;
 			LocalFree(l_pMessageBuffer);
@@ -216,19 +215,18 @@ bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 	{
 		if (pError)
 		{
-			LPVOID l_pMessageBuffer = NULL;
-			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-						  NULL, GetLastError(), 0, // Default language
+			LPVOID l_pMessageBuffer = nullptr;
+			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0, // Default language
 						  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
 			*pError = (char*)l_pMessageBuffer;
 			LocalFree(l_pMessageBuffer);
 		}
 
 		FreeLibrary(m_pFileHandle);
-		m_pFileHandle     = NULL;
-		onInitializeCB    = NULL;
-		onGetKernelDescCB = NULL;
-		onUninitializeCB  = NULL;
+		m_pFileHandle     = nullptr;
+		onInitializeCB    = nullptr;
+		onGetKernelDescCB = nullptr;
+		onUninitializeCB  = nullptr;
 		return false;
 	}
 	return true;
@@ -242,10 +240,10 @@ bool CKernelLoaderWindows::unload(CString* pError)
 		return false;
 	}
 	FreeLibrary(m_pFileHandle);
-	m_pFileHandle     = NULL;
-	onInitializeCB    = NULL;
-	onGetKernelDescCB = NULL;
-	onUninitializeCB  = NULL;
+	m_pFileHandle     = nullptr;
+	onInitializeCB    = nullptr;
+	onGetKernelDescCB = nullptr;
+	onUninitializeCB  = nullptr;
 
 	return true;
 }
@@ -262,7 +260,7 @@ bool CKernelLoaderWindows::isOpen()
 //___________________________________________________________________//
 //                                                                   //
 
-CKernelLoader::CKernelLoader() : m_pKernelLoaderImpl(NULL)
+CKernelLoader::CKernelLoader() : m_pKernelLoaderImpl(nullptr)
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_pKernelLoaderImpl=new CKernelLoaderLinux();

@@ -53,7 +53,7 @@ namespace OpenViBE
 		protected:
 
 			CPlayer& m_rPlayer;
-			CIdentifier m_oScenarioIdentifier;
+			CIdentifier m_oScenarioIdentifier = OV_UndefinedIdentifier;
 			IScenario* m_pScenario = nullptr;
 			uint64_t m_ui64Steps = 0;
 			uint64_t m_ui64Frequency = 0;

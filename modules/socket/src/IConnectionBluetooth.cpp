@@ -340,11 +340,11 @@ namespace Socket
 			size_t ui32Size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | // use system message tables to retrieve error text
 											FORMAT_MESSAGE_ALLOCATE_BUFFER |  // allocate buffer on local heap for error text
 											FORMAT_MESSAGE_IGNORE_INSERTS, // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
-											NULL, // unused with FORMAT_MESSAGE_FROM_SYSTEM
+											nullptr, // unused with FORMAT_MESSAGE_FROM_SYSTEM
 											l_ui64Error, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), 
 											(LPTSTR)&l_sErrorText, // output
 											0, // minimum size for output buffer
-											NULL);
+											nullptr);
 
 			// Converts std::wstring to std::string and returns it. 
 			std::wstring l_sErrorMessage(l_sErrorText, ui32Size);

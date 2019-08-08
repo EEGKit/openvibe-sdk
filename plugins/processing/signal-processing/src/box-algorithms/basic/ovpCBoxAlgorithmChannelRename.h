@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmChannelRename> m_StreamDecoder;
 			OpenViBEToolkit::TGenericEncoder<CBoxAlgorithmChannelRename> m_StreamEncoder;
 
-			OpenViBE::CIdentifier m_TypeIdentifier;
+			OpenViBE::CIdentifier m_TypeIdentifier = OV_UndefinedIdentifier;
 
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_Matrix;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_Matrix;
@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 		public:
 			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getInputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(ui32Index, l_oTypeIdentifier);
 				return true;
@@ -52,7 +52,7 @@ namespace OpenViBEPlugins
 
 			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				rBox.setInputType(ui32Index, l_oTypeIdentifier);
 				return true;

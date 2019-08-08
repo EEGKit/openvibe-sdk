@@ -137,7 +137,7 @@ IXMLNode* IXMLNodeImpl::getChildByName(const char* sName) const
 		if (strcmp(l_sTempNode->getName(), sName) == 0)
 			return l_sTempNode;
 	}
-	return NULL;
+	return nullptr;
 }
 
 size_t IXMLNodeImpl::getChildCount() const

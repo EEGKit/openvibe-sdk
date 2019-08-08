@@ -243,10 +243,10 @@ bool Matrix::fromString(IMatrix& rMatrix, const CString& sString)
 						}
 
 						//resize matrix
-						rMatrix.setDimensionCount(l_vDimensionSize.size());
+						rMatrix.setDimensionCount(uint32_t(l_vDimensionSize.size()));
 						for (size_t i = 0; i < l_vDimensionSize.size(); i++)
 						{
-							rMatrix.setDimensionSize(i, l_vDimensionSize[i]);
+							rMatrix.setDimensionSize(uint32_t(i), l_vDimensionSize[i]);
 						}
 
 						l_vValuesCount.resize(rMatrix.getDimensionCount());

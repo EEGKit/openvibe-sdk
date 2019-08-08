@@ -70,10 +70,10 @@ void IXMLHandlerImpl::release()
 }
 
 
-IXMLHandlerImpl::IXMLHandlerImpl(): m_pXMLParser(NULL),
-									m_pRootNode(NULL)
+IXMLHandlerImpl::IXMLHandlerImpl(): m_pXMLParser(nullptr),
+									m_pRootNode(nullptr)
 {
-	m_pXMLParser = XML_ParserCreate(NULL);
+	m_pXMLParser = XML_ParserCreate(nullptr);
 	XML_SetElementHandler(m_pXMLParser, expat_xml_start, expat_xml_end);
 	XML_SetCharacterDataHandler(m_pXMLParser, expat_xml_data);
 	XML_SetUserData(m_pXMLParser, this);
@@ -103,12 +103,12 @@ IXMLNode* IXMLHandlerImpl::parseFile(const char* sPath)
 		return l_pRes;
 	}
 	this->getErrorStringStream() << "Error : unable to open the file" << sPath << "." << std::endl;
-	return NULL;
+	return nullptr;
 }
 
 IXMLNode* IXMLHandlerImpl::parseString(const char* sString, const uint32_t& uiSize)
 {
-	m_pRootNode          = NULL;
+	m_pRootNode          = nullptr;
 	XML_Status l_eStatus = XML_Parse(m_pXMLParser, sString, uiSize, false);
 
 	//We delete what is still in the stack
@@ -124,7 +124,7 @@ IXMLNode* IXMLHandlerImpl::parseString(const char* sString, const uint32_t& uiSi
 		XML_Error l_oErrorCode = XML_GetErrorCode(m_pXMLParser);
 		// Although printf() is not too elegant, this component has no context to use e.g. LogManager -> printf() is better than a silent fail.
 		this->getErrorStringStream() << "processData(): expat error " << l_oErrorCode << " on the line " << XML_GetCurrentLineNumber(m_pXMLParser) << " of the input .xml\n";
-		return NULL;
+		return nullptr;
 	}
 	return m_pRootNode;
 }

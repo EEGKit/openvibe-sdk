@@ -29,8 +29,8 @@ namespace OpenViBEPlugins
 			explicit CBoxAlgorithmCommonClassifierListener(const uint32_t ui32CustomSettingBase)
 				: m_oClassifierClassIdentifier(OV_UndefinedIdentifier),
 				  m_oStrategyClassIdentifier(0x0),//OV_UndefinedIdentifier is already use for the native, We initialize to an unused identifier in the strategy list
-				  m_pClassifier(NULL),
-				  m_pStrategy(NULL),
+				  m_pClassifier(nullptr),
+				  m_pStrategy(nullptr),
 				  m_ui32CustomSettingBase(ui32CustomSettingBase),
 				  m_i32StrategyAmountSettings(-1) { }
 
@@ -38,11 +38,11 @@ namespace OpenViBEPlugins
 			{
 				//Even if everything should have been set in constructor, we still set everything in initialize (in case of)
 				m_oClassifierClassIdentifier = OV_UndefinedIdentifier;
-				m_pClassifier                = NULL;
+				m_pClassifier                = nullptr;
 
 				//OV_UndefinedIdentifier is already use for the native, We initialize to an unused identifier in the strategy list
 				m_oStrategyClassIdentifier = 0x0;
-				m_pStrategy                = NULL;
+				m_pStrategy                = nullptr;
 
 				//This value means that we need to calculate it
 				m_i32StrategyAmountSettings = -1;
@@ -55,13 +55,13 @@ namespace OpenViBEPlugins
 				{
 					m_pClassifier->uninitialize();
 					this->getAlgorithmManager().releaseAlgorithm(*m_pClassifier);
-					m_pClassifier = NULL;
+					m_pClassifier = nullptr;
 				}
 				if (m_pStrategy)
 				{
 					m_pStrategy->uninitialize();
 					this->getAlgorithmManager().releaseAlgorithm(*m_pStrategy);
-					m_pStrategy = NULL;
+					m_pStrategy = nullptr;
 				}
 				return true;
 			}
@@ -247,7 +247,7 @@ namespace OpenViBEPlugins
 					{
 						m_pStrategy->uninitialize();
 						this->getAlgorithmManager().releaseAlgorithm(*m_pStrategy);
-						m_pStrategy                = NULL;
+						m_pStrategy                = nullptr;
 						m_oStrategyClassIdentifier = OV_UndefinedIdentifier;
 					}
 					if (l_oStrategyIdentifier != OV_UndefinedIdentifier)
@@ -310,7 +310,7 @@ namespace OpenViBEPlugins
 					{
 						m_pClassifier->uninitialize();
 						this->getAlgorithmManager().releaseAlgorithm(*m_pClassifier);
-						m_pClassifier                = NULL;
+						m_pClassifier                = nullptr;
 						m_oClassifierClassIdentifier = OV_UndefinedIdentifier;
 					}
 					if (l_oClassifierIdentifier != OV_UndefinedIdentifier)

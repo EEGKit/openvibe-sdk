@@ -85,7 +85,7 @@ bool CEncoderAlgorithmTest::uininitialize()
 		op_pMemoryBuffer[i].uninitialize();
 		m_pStreamEncoder[i]->uninitialize();
 		getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder[i]);
-		m_pStreamEncoder[i] = NULL;
+		m_pStreamEncoder[i] = nullptr;
 	}
 
 	return true;

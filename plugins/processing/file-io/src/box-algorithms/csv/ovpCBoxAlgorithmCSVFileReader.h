@@ -47,7 +47,7 @@ namespace OpenViBEPlugins
 			bool m_bDoNotUseFileTime = false;
 			OpenViBE::CString m_sFilename;
 
-			OpenViBE::CIdentifier m_oTypeIdentifier;
+			OpenViBE::CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
 			uint32_t m_ui32ColumnCount = 0;
 			uint64_t m_ui64SamplingRate = 0;
 			uint32_t m_ui32SamplesPerBuffer = 0;
@@ -76,7 +76,7 @@ namespace OpenViBEPlugins
 
 			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				if (l_oTypeIdentifier == OV_TypeId_Spectrum)
 				{

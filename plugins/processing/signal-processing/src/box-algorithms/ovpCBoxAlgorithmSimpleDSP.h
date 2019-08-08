@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 			{
 				char l_sName[1024];
 				sprintf(l_sName, "Input - %c", 'A' + ui32Index);
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(0, l_oTypeIdentifier);
 				rBox.setInputType(ui32Index, l_oTypeIdentifier);
 				rBox.setInputName(ui32Index, l_sName);
@@ -63,7 +63,7 @@ namespace OpenViBEPlugins
 
 			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getInputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(0, l_oTypeIdentifier);
 				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
@@ -75,7 +75,7 @@ namespace OpenViBEPlugins
 
 			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(0, l_oTypeIdentifier);
 				for (uint32_t i = 0; i < rBox.getInputCount(); i++)

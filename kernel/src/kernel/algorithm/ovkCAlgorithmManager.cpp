@@ -82,7 +82,7 @@ bool CAlgorithmManager::releaseAlgorithm(const CIdentifier& rAlgorithmIdentifier
 		IAlgorithm& l_rAlgorithm = l_pAlgorithmProxy->getAlgorithm();
 
 		delete l_pAlgorithmProxy;
-		l_pAlgorithmProxy = NULL;
+		l_pAlgorithmProxy = nullptr;
 
 		getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);
 	}
@@ -105,7 +105,7 @@ bool CAlgorithmManager::releaseAlgorithm(IAlgorithmProxy& rAlgorithm)
 			getLogManager() << LogLevel_Debug << "Releasing algorithm with class id " << l_rAlgorithm.getClassIdentifier() << "\n";
 
 			delete l_pAlgorithmProxy;
-			l_pAlgorithmProxy = NULL;
+			l_pAlgorithmProxy = nullptr;
 
 			m_vAlgorithms.erase(algorithm.first);
 			getKernelContext().getPluginManager().releasePluginObject(&l_rAlgorithm);

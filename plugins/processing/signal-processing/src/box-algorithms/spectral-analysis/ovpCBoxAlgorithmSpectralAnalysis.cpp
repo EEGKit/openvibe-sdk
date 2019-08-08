@@ -149,9 +149,9 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 					spectrum->setDimensionSize(1, m_FFTSize);
 
 					// Spectrum channel names
-					for (unsigned int j = 0; j < m_ChannelCount; j++)
+					for (size_t j = 0; j < m_ChannelCount; j++)
 					{
-						spectrum->setDimensionLabel(0, j, matrix->getDimensionLabel(0, j));
+						spectrum->setDimensionLabel(0, uint32_t(j), matrix->getDimensionLabel(0, j));
 					}
 
 					// We also name the spectrum bands "Abscissa"
@@ -159,11 +159,11 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 					{
 						char frequencyBandName[1024];
 						sprintf(frequencyBandName, "%lg", m_FrequencyAbscissa->getBuffer()[j]);
-						spectrum->setDimensionLabel(1, j, frequencyBandName);
+						spectrum->setDimensionLabel(1, uint32_t(j), frequencyBandName);
 					}
 
 					m_SpectrumEncoders[encoderIndex]->encodeHeader();
-					dynamicBoxContext->markOutputAsReadyToSend(encoderIndex, startTime, endTime);
+					dynamicBoxContext->markOutputAsReadyToSend(uint32_t(encoderIndex), startTime, endTime);
 				}
 			}
 		}
@@ -247,7 +247,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 					}
 
 					m_SpectrumEncoders[encoderIndex]->encodeBuffer();
-					dynamicBoxContext->markOutputAsReadyToSend(encoderIndex, startTime, endTime);
+					dynamicBoxContext->markOutputAsReadyToSend(uint32_t(encoderIndex), startTime, endTime);
 				}
 			}
 		}
@@ -260,7 +260,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 				if (m_IsSpectrumEncoderActive[encoderIndex])
 				{
 					m_SpectrumEncoders[encoderIndex]->encodeEnd();
-					dynamicBoxContext->markOutputAsReadyToSend(encoderIndex, startTime, endTime);
+					dynamicBoxContext->markOutputAsReadyToSend(uint32_t(encoderIndex), startTime, endTime);
 				}
 			}
 		}

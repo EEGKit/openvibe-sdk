@@ -11,7 +11,7 @@ namespace System
 	public:
 		// Load a library in a matter compliant with non-ascii path
 		// returns the eventual error code
-		static void* utf16CompliantLoadLibrary(const char* sLibraryPath, HANDLE hFile = NULL, DWORD dwFlags = LOAD_WITH_ALTERED_SEARCH_PATH);
+		static void* utf16CompliantLoadLibrary(const char* sLibraryPath, HANDLE hFile = nullptr, DWORD dwFlags = LOAD_WITH_ALTERED_SEARCH_PATH);
 
 		static BOOL utf16CompliantSetEnvironmentVariable(const char* sEnvVarName, const char* sEnvVarValue);
 		

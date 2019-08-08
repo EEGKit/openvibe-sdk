@@ -35,9 +35,9 @@ const uint64_t g_ui64Scheduler_Maximum_Loops_Duration_ = (100LL << 22); /* 100/1
 CPlayer::CPlayer(const IKernelContext& rKernelContext)
 	: TKernelObject<IPlayer>(rKernelContext)
 	  , m_oKernelContextBridge(rKernelContext)
-	  , m_pRuntimeConfigurationManager(NULL)
-	  , m_pRuntimeScenarioManager(NULL)
-	  , m_pScenarioSettingKeywordParserCallback(NULL)
+	  , m_pRuntimeConfigurationManager(nullptr)
+	  , m_pRuntimeScenarioManager(nullptr)
+	  , m_pScenarioSettingKeywordParserCallback(nullptr)
 	  , m_oScheduler(m_oKernelContextBridge, *this)
 	  , m_ui64CurrentTimeToReach(0)
 	  , m_ui64Lateness(0)
@@ -210,14 +210,14 @@ bool CPlayer::uninitialize()
 
 	m_oScheduler.uninitialize();
 
-	m_oKernelContextBridge.setConfigurationManager(NULL);
+	m_oKernelContextBridge.setConfigurationManager(nullptr);
 
 	m_sScenarioConfigurationFile  = "";
 	m_sWorkspaceConfigurationFile = "";
 	if (m_pRuntimeConfigurationManager != nullptr)
 	{
 		delete m_pRuntimeConfigurationManager;
-		m_pRuntimeConfigurationManager = NULL;
+		m_pRuntimeConfigurationManager = nullptr;
 	}
 
 	return true;

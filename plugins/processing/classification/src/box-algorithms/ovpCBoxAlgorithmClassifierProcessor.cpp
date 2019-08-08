@@ -19,7 +19,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	{
 		m_pClassifier->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pClassifier);
-		m_pClassifier = NULL;
+		m_pClassifier = nullptr;
 	}
 
 	XML::IXMLHandler* l_pHandler = XML::createXMLHandler();
@@ -153,7 +153,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 bool CBoxAlgorithmClassifierProcessor::initialize()
 {
-	m_pClassifier = NULL;
+	m_pClassifier = nullptr;
 
 	//First of all, let's get the XML file for configuration
 	CString l_sConfigurationFilename = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
@@ -179,7 +179,7 @@ bool CBoxAlgorithmClassifierProcessor::uninitialize()
 	{
 		m_pClassifier->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pClassifier);
-		m_pClassifier = NULL;
+		m_pClassifier = nullptr;
 	}
 
 	m_oProbabilityValuesEncoder.uninitialize();

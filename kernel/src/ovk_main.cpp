@@ -15,7 +15,7 @@ namespace OpenViBE
 
 			virtual IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename)
 			{
-				return new CKernelContext(NULL, rApplicationName, rConfigurationFilename);
+				return new CKernelContext(nullptr, rApplicationName, rConfigurationFilename);
 			}
 
 			virtual IKernelContext* createKernel(const IKernelContext& rMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFilename)

@@ -107,7 +107,7 @@ CReaderNode::CReaderNode(const CIdentifier& rIdentifier, CReaderNode* pParentNod
 	  , m_oIdentifier(rIdentifier)
 	  , m_ui64ContentSize(0)
 	  , m_ui64ReadContentSize(0)
-	  , m_pBuffer(NULL) {}
+	  , m_pBuffer(nullptr) {}
 
 // ________________________________________________________________________________________________________________
 //
@@ -158,10 +158,10 @@ namespace EBML
 
 CReader::CReader(IReaderCallback& rReaderCallback)
 	: m_rReaderCallback(rReaderCallback)
-	  , m_pCurrentNode(NULL)
+	  , m_pCurrentNode(nullptr)
 	  , m_ui64PendingSize(0)
 	  , m_ui64PendingCount(0)
-	  , m_pPending(NULL)
+	  , m_pPending(nullptr)
 	  , m_eStatus(FillingIdentifier)
 	  , m_oCurrentIdentifier(0)
 	  , m_ui64CurrentContentSize(0)
@@ -305,7 +305,7 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 					{
 						printf("Finished with %llu byte(s) content - Changing status to FillingIdentifier...\n", (unsigned long long)m_pCurrentNode->m_ui64ContentSize);
 					}
-					m_rReaderCallback.processChildData(NULL, 0);
+					m_rReaderCallback.processChildData(nullptr, 0);
 				}
 				else
 				{

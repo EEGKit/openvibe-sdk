@@ -3,7 +3,7 @@
 using namespace EBML;
 
 CWriterHelper::CWriterHelper()
-	: m_pWriterHelperImplementation(NULL)
+	: m_pWriterHelperImplementation(nullptr)
 {
 	m_pWriterHelperImplementation = createWriterHelper();
 }

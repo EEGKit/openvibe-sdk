@@ -14,8 +14,8 @@ using namespace OpenViBEToolkit;
 
 bool CAlgorithmClassifier::initialize()
 {
-	m_AlgorithmProxy     = NULL;
-	m_ExtraParametersMap = NULL;
+	m_AlgorithmProxy     = nullptr;
+	m_ExtraParametersMap = nullptr;
 	return true;
 }
 
@@ -25,7 +25,7 @@ bool CAlgorithmClassifier::uninitialize()
 	{
 		m_AlgorithmProxy->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_AlgorithmProxy);
-		m_AlgorithmProxy = NULL;
+		m_AlgorithmProxy = nullptr;
 	}
 	return true;
 }
@@ -147,8 +147,8 @@ bool CAlgorithmClassifier::uninitializeExtraParameterMechanism()
 
 	this->getAlgorithmManager().releaseAlgorithm(*m_AlgorithmProxy);
 
-	m_AlgorithmProxy     = NULL;
-	m_ExtraParametersMap = NULL;
+	m_AlgorithmProxy     = nullptr;
+	m_ExtraParametersMap = nullptr;
 	return true;
 }
 

@@ -13,8 +13,8 @@ using namespace SignalProcessing;
 
 bool CBoxAlgorithmSignalDecimation::initialize()
 {
-	m_pStreamDecoder = NULL;
-	m_pStreamEncoder = NULL;
+	m_pStreamDecoder = nullptr;
+	m_pStreamEncoder = nullptr;
 
 	m_i64DecimationFactor = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	OV_ERROR_UNLESS_KRF(m_i64DecimationFactor > 1, "Invalid decimation factor [" << m_i64DecimationFactor << "] (expected value > 1)", OpenViBE::Kernel::ErrorType::BadSetting);
@@ -58,7 +58,7 @@ bool CBoxAlgorithmSignalDecimation::uninitialize()
 	{
 		m_pStreamEncoder->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
-		m_pStreamEncoder = NULL;
+		m_pStreamEncoder = nullptr;
 	}
 
 	op_ui64SamplingRate.uninitialize();
@@ -69,7 +69,7 @@ bool CBoxAlgorithmSignalDecimation::uninitialize()
 	{
 		m_pStreamDecoder->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
-		m_pStreamDecoder = NULL;
+		m_pStreamDecoder = nullptr;
 	}
 
 	return true;

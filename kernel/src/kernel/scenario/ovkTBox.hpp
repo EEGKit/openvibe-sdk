@@ -59,9 +59,9 @@ namespace
 			: m_sName(name), m_oTypeIdentifier(idType), m_oIdentifier(id), m_bDeprecated(false) {}
 
 		OpenViBE::CString m_sName;
-		OpenViBE::CIdentifier m_oTypeIdentifier;
-		OpenViBE::CIdentifier m_oIdentifier;
-		bool m_bDeprecated;
+		OpenViBE::CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
+		OpenViBE::CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
+		bool m_bDeprecated = false;
 	};
 
 	class CInputOutput : public CInterfacor
@@ -69,14 +69,9 @@ namespace
 	public:
 		CInputOutput() { }
 
-		CInputOutput(const CInputOutput& i)
-			: CInterfacor(i)
-		{
-			this->m_bDeprecated = false;
-		}
+		CInputOutput(const CInputOutput& i) : CInterfacor(i) { this->m_bDeprecated = false; }
 
-		CInputOutput(const OpenViBE::CString& name, const OpenViBE::CIdentifier& idType, const OpenViBE::CIdentifier& id)
-			: CInterfacor(name, idType, id) { }
+		CInputOutput(const OpenViBE::CString& name, const OpenViBE::CIdentifier& idType, const OpenViBE::CIdentifier& id) : CInterfacor(name, idType, id) { }
 	};
 
 	class CSetting : public CInterfacor
@@ -84,17 +79,14 @@ namespace
 	public:
 		CSetting() { }
 
-		CSetting(const CSetting& s) : CInterfacor(s), m_sDefaultValue(s.m_sDefaultValue), m_sValue(s.m_sValue), m_bMod(s.m_bMod)
-		{
-			this->m_bDeprecated = false;
-		}
+		CSetting(const CSetting& s) : CInterfacor(s), m_sDefaultValue(s.m_sDefaultValue), m_sValue(s.m_sValue), m_bMod(s.m_bMod) { this->m_bDeprecated = false; }
 
 		CSetting(const OpenViBE::CString& name, const OpenViBE::CIdentifier& idType, const OpenViBE::CIdentifier& id, const OpenViBE::CString& defaultValue, const bool modifiable)
 			: CInterfacor(name, idType, id), m_sDefaultValue(defaultValue) , m_sValue(defaultValue) , m_bMod(modifiable) { }
 
 		OpenViBE::CString m_sDefaultValue;
 		OpenViBE::CString m_sValue;
-		bool m_bMod;
+		bool m_bMod = false;
 	};
 }  // namespace
 
@@ -138,25 +130,10 @@ namespace OpenViBE
 				}
 			}
 
-			virtual void setOwnerScenario(IScenario* pOwnerScenario)
-			{
-				m_pOwnerScenario = pOwnerScenario;
-			}
-
-			virtual CIdentifier getIdentifier() const
-			{
-				return m_oIdentifier;
-			}
-
-			virtual CString getName() const
-			{
-				return m_sName;
-			}
-
-			virtual CIdentifier getAlgorithmClassIdentifier() const
-			{
-				return m_oAlgorithmClassIdentifier;
-			}
+			virtual void setOwnerScenario(IScenario* pOwnerScenario) { m_pOwnerScenario = pOwnerScenario; }
+			virtual CIdentifier getIdentifier() const { return m_oIdentifier; }
+			virtual CString getName() const { return m_sName; }
+			virtual CIdentifier getAlgorithmClassIdentifier() const { return m_oAlgorithmClassIdentifier; }
 
 			virtual bool setIdentifier(const CIdentifier& rIdentifier)
 			{
@@ -299,8 +276,8 @@ namespace OpenViBE
 				{
 					for (uint32_t i = 0; i < rExistingBox.getInterfacorCountIncludingDeprecated(interfacorType); ++i)
 					{
-						CIdentifier identifier;
-						CIdentifier type;
+						CIdentifier identifier = OV_UndefinedIdentifier;
+						CIdentifier type = OV_UndefinedIdentifier;
 						CString name;
 						bool isDeprecated;
 						rExistingBox.getInterfacorIdentifier(interfacorType, i, identifier);
@@ -374,8 +351,8 @@ namespace OpenViBE
 											"While adding " << g_InterfacorTypeToName.at(interfacorType) << " '" << newName << "' to box '" << this->getName() << "', unknown stream type identifier " << typeIdentifier.toString(),
 											ErrorType::BadArgument);
 						break;
-					case Setting:
-						break;
+					case Setting: break;
+					default: break;
 				}
 
 				uint32_t position = m_Interfacors[interfacorType].size();
@@ -388,12 +365,10 @@ namespace OpenViBE
 					case Setting:
 						m_Interfacors[interfacorType].push_back(std::shared_ptr<CSetting>(new CSetting(newName, typeIdentifier, identifier, "", false)));
 						break;
+					default: break;
 				}
 
-				if (identifier != OV_UndefinedIdentifier)
-				{
-					m_InterfacorIdentifierToIndex[interfacorType][identifier] = position;
-				}
+				if (identifier != OV_UndefinedIdentifier) { m_InterfacorIdentifierToIndex[interfacorType][identifier] = position; }
 
 				CString uniqueName = this->getUnusedName(m_InterfacorNameToIndex[interfacorType], newName);
 
@@ -417,9 +392,9 @@ namespace OpenViBE
 						case Setting:
 							this->notify(BoxModification_SettingAdded, newCount);
 							break;
+						default: break;
 					}
 				}
-
 				return true;
 			}
 
@@ -433,7 +408,9 @@ namespace OpenViBE
 						return this->removeOutput(index, shouldNotify);
 					case Setting:
 						return this->removeSetting(index, shouldNotify);
+					default: break;
 				}
+				return false;
 			}
 
 			virtual uint32_t getInterfacorCount(BoxInterfacorType interfacorType) const
@@ -567,7 +544,7 @@ namespace OpenViBE
 			{
 				if (index < this->getInterfacorCount(interfacorType))
 				{
-					CIdentifier type;
+					CIdentifier type = OV_UndefinedIdentifier;
 					this->getInterfacorType(interfacorType, index, type);
 					return (type == typeIdentifier);
 				}
@@ -773,7 +750,7 @@ namespace OpenViBE
 					std::vector<std::pair<uint32_t, std::pair<uint64_t, uint32_t>>> l_vScenarioLink;
 					for (uint32_t scenarioInputIndex = 0; scenarioInputIndex < m_pOwnerScenario->getInterfacorCount(Input); scenarioInputIndex++)
 					{
-						CIdentifier l_oBoxIdentifier;
+						CIdentifier l_oBoxIdentifier = OV_UndefinedIdentifier;
 						uint32_t l_ui32BoxConnectorIndex = uint32_t(-1);
 						m_pOwnerScenario->getScenarioInputLink(scenarioInputIndex, l_oBoxIdentifier, l_ui32BoxConnectorIndex);
 						if (l_oBoxIdentifier == m_oIdentifier)
@@ -811,7 +788,7 @@ namespace OpenViBE
 				// Reconnects box links
 				for (const auto& link : l_vLink)
 				{
-					CIdentifier newId;
+					CIdentifier newId = OV_UndefinedIdentifier;
 					m_pOwnerScenario->connect(newId, link.first.first, link.first.second, link.second.first, link.second.second - 1, OV_UndefinedIdentifier);
 				}
 
@@ -868,10 +845,10 @@ namespace OpenViBE
 				return this->addInterfacor(Output, rsName, rTypeIdentifier, rIdentifier, bNotify);
 			}
 
-			virtual bool removeOutput(const uint32_t ui32OutputIndex, const bool bNotify = true)
+			virtual bool removeOutput(const uint32_t index, const bool bNotify = true)
 			{
-				OV_ERROR_UNLESS_KRF(ui32OutputIndex < m_Interfacors[Output].size(),
-									"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[Output].size() - 1) << "])",
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors[Output].size(),
+									"Output index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[Output].size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				std::vector<std::pair<std::pair<uint64_t, uint32_t>, std::pair<uint64_t, uint32_t>>> l_vLink;
@@ -881,7 +858,7 @@ namespace OpenViBE
 					CIdentifier* identifierList = nullptr;
 					size_t nbElems              = 0;
 
-					m_pOwnerScenario->getLinkIdentifierFromBoxOutputList(m_oIdentifier, ui32OutputIndex, &identifierList, &nbElems);
+					m_pOwnerScenario->getLinkIdentifierFromBoxOutputList(m_oIdentifier, index, &identifierList, &nbElems);
 					for (size_t i = 0; i < nbElems; ++i)
 					{
 						m_pOwnerScenario->disconnect(identifierList[i]);
@@ -902,12 +879,12 @@ namespace OpenViBE
 					{
 						CIdentifier* identifierList = nullptr;
 						size_t nbElems              = 0;
-						m_pOwnerScenario->getLinkIdentifierFromBoxOutputList(m_oIdentifier, ui32OutputIndex, &identifierList, &nbElems);
+						m_pOwnerScenario->getLinkIdentifierFromBoxOutputList(m_oIdentifier, index, &identifierList, &nbElems);
 						for (size_t i = 0; i < nbElems; ++i)
 						{
 							const CIdentifier& cur_id = identifierList[i];
 							ILink* l_pLink                      = m_pOwnerScenario->getLinkDetails(cur_id);
-							if (l_pLink->getSourceBoxOutputIndex() > ui32OutputIndex)
+							if (l_pLink->getSourceBoxOutputIndex() > index)
 							{
 								l_vLink.push_back({
 									{
@@ -934,12 +911,12 @@ namespace OpenViBE
 						std::vector<std::pair<uint32_t, std::pair<uint64_t, uint32_t>>> l_vScenarioLink;
 						for (uint32_t scenarioOutputIndex = 0; scenarioOutputIndex < m_pOwnerScenario->getOutputCount(); scenarioOutputIndex++)
 						{
-							CIdentifier l_oBoxIdentier;
+							CIdentifier l_oBoxIdentier = OV_UndefinedIdentifier;
 							uint32_t l_ui32BoxConnectorIndex = uint32_t(-1);
 							m_pOwnerScenario->getScenarioOutputLink(scenarioOutputIndex, l_oBoxIdentier, l_ui32BoxConnectorIndex);
 							if (l_oBoxIdentier == m_oIdentifier)
 							{
-								if (l_ui32BoxConnectorIndex > ui32OutputIndex)
+								if (l_ui32BoxConnectorIndex > index)
 								{
 									l_vScenarioLink.push_back({
 										scenarioOutputIndex,
@@ -949,7 +926,7 @@ namespace OpenViBE
 										}
 									});
 								}
-								if (l_ui32BoxConnectorIndex >= ui32OutputIndex)
+								if (l_ui32BoxConnectorIndex >= index)
 								{
 									m_pOwnerScenario->removeScenarioOutputLink(scenarioOutputIndex, l_oBoxIdentier, l_ui32BoxConnectorIndex);
 								}
@@ -963,18 +940,18 @@ namespace OpenViBE
 						}
 					}
 				}
-				CIdentifier toBeRemovedId = m_Interfacors.at(Output)[ui32OutputIndex]->m_oIdentifier;
-				CString toBeRemovedName   = m_Interfacors.at(Output)[ui32OutputIndex]->m_sName;
+				CIdentifier toBeRemovedId = m_Interfacors.at(Output)[index]->m_oIdentifier;
+				CString toBeRemovedName   = m_Interfacors.at(Output)[index]->m_sName;
 
 				// Erases actual output
-				m_Interfacors[Output].erase(m_Interfacors.at(Output).begin() + ui32OutputIndex);
+				m_Interfacors[Output].erase(m_Interfacors.at(Output).begin() + index);
 
 				// Reconnects box links
 				if (m_pOwnerScenario)
 				{
 					for (const auto& link : l_vLink)
 					{
-						CIdentifier newId;
+						CIdentifier newId = OV_UndefinedIdentifier;
 						m_pOwnerScenario->connect(newId, link.first.first, link.first.second - 1, link.second.first, link.second.second, OV_UndefinedIdentifier);
 					}
 				}
@@ -994,31 +971,31 @@ namespace OpenViBE
 					m_InterfacorIdentifierToIndex.at(Output).erase(itIdent);
 				}
 
-				if (bNotify) { this->notify(BoxModification_OutputRemoved, ui32OutputIndex); }
+				if (bNotify) { this->notify(BoxModification_OutputRemoved, index); }
 
 				return true;
 			}
 
 			virtual uint32_t getOutputCount() const { return this->getInterfacorCount(Output); }
 
-			virtual bool getOutputType(const uint32_t ui32OutputIndex, CIdentifier& rTypeIdentifier) const
+			virtual bool getOutputType(const uint32_t index, CIdentifier& rTypeIdentifier) const
 			{
-				return this->getInterfacorType(Output, ui32OutputIndex, rTypeIdentifier);
+				return this->getInterfacorType(Output, index, rTypeIdentifier);
 			}
 
-			virtual bool getOutputName(const uint32_t ui32OutputIndex, CString& rName) const
+			virtual bool getOutputName(const uint32_t index, CString& rName) const
 			{
-				return this->getInterfacorName(Output, ui32OutputIndex, rName);
+				return this->getInterfacorName(Output, index, rName);
 			}
 
-			virtual bool setOutputType(const uint32_t ui32OutputIndex, const CIdentifier& rTypeIdentifier)
+			virtual bool setOutputType(const uint32_t index, const CIdentifier& rTypeIdentifier)
 			{
-				return this->setInterfacorType(Output, ui32OutputIndex, rTypeIdentifier);
+				return this->setInterfacorType(Output, index, rTypeIdentifier);
 			}
 
-			virtual bool setOutputName(const uint32_t ui32OutputIndex, const CString& rName)
+			virtual bool setOutputName(const uint32_t index, const CString& rName)
 			{
-				return this->setInterfacorName(Output, ui32OutputIndex, rName);
+				return this->setInterfacorName(Output, index, rName);
 			}
 
 			virtual bool addInterfacorTypeSupport(BoxInterfacorType interfacorType, const CIdentifier& typeIdentifier)
@@ -1106,7 +1083,7 @@ namespace OpenViBE
 					identifier = suggestedIdentifier.toUInteger();
 				}
 
-				CIdentifier resultIdentifier;
+				CIdentifier resultIdentifier = OV_UndefinedIdentifier;
 				std::map<CIdentifier, uint32_t>::const_iterator it;
 				do
 				{
@@ -1149,7 +1126,7 @@ namespace OpenViBE
 							this->getTypeManager().getEnumerationEntry(rTypeIdentifier, 0, l_sValue, l_ui64Value);
 
 							// Find if the default value string actually is an identifier, otherwise just keep the zero index name as default.
-							CIdentifier l_oDefaultValueIdentifier;
+							CIdentifier l_oDefaultValueIdentifier = OV_UndefinedIdentifier;
 							l_oDefaultValueIdentifier.fromString(sDefaultValue);
 
 							// Finally, if it is an identifier, then a name should be found
@@ -1476,9 +1453,9 @@ namespace OpenViBE
 									ErrorType::OutOfBound);
 
 				CString nameA;
-				CIdentifier identifierA;
+				CIdentifier identifierA = OV_UndefinedIdentifier;
 				CString nameB;
-				CIdentifier identifierB;
+				CIdentifier identifierB = OV_UndefinedIdentifier;
 
 				this->getInterfacorName(interfacorType, indexA, nameA);
 				this->getInterfacorIdentifier(interfacorType, indexA, identifierA);
@@ -1552,7 +1529,7 @@ namespace OpenViBE
 
 				OV_ERROR_UNLESS_KRF(newIdentifier != OV_UndefinedIdentifier, g_InterfacorTypeToName.at(interfacorType) << " identifier can not be undefined", ErrorType::BadArgument);
 
-				CIdentifier oldIdentifier;
+				CIdentifier oldIdentifier = OV_UndefinedIdentifier;
 				this->getInterfacorIdentifier(interfacorType, index, oldIdentifier);
 
 				if (oldIdentifier != newIdentifier)
@@ -1586,7 +1563,7 @@ namespace OpenViBE
 
 			virtual void clearBox()
 			{
-				m_pBoxAlgorithmDescriptor   = NULL;
+				m_pBoxAlgorithmDescriptor   = nullptr;
 				m_oAlgorithmClassIdentifier = OV_UndefinedIdentifier;
 				m_sName                     = "";
 				m_Interfacors[Input].clear();
@@ -1653,16 +1630,16 @@ namespace OpenViBE
 				return newName;
 			}
 
-			IScenario* m_pOwnerScenario;
-			const Plugins::IBoxAlgorithmDesc* m_pBoxAlgorithmDescriptor;
-			Plugins::IBoxListener* m_pBoxListener;
-			bool m_bIsNotifyingDescriptor;
-			bool m_bIsNotificationActive;
-			bool m_bIsObserverNotificationActive;
+			IScenario* m_pOwnerScenario = nullptr;
+			const Plugins::IBoxAlgorithmDesc* m_pBoxAlgorithmDescriptor = nullptr;
+			Plugins::IBoxListener* m_pBoxListener = nullptr;
+			bool m_bIsNotifyingDescriptor = false;
+			bool m_bIsNotificationActive = true;
+			bool m_bIsObserverNotificationActive = true;
 
-			CIdentifier m_oIdentifier;
-			CIdentifier m_oAlgorithmClassIdentifier;
-			CString m_sName;
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
+			CIdentifier m_oAlgorithmClassIdentifier = OV_UndefinedIdentifier;
+			CString m_sName = "unnamed";
 
 			std::map<BoxInterfacorType, std::map<CIdentifier, uint32_t>> m_InterfacorIdentifierToIndex;
 			std::map<BoxInterfacorType, std::map<CString, uint32_t>> m_InterfacorNameToIndex;

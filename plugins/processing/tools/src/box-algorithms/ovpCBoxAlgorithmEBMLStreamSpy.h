@@ -30,7 +30,7 @@ namespace OpenViBEPlugins
 
 			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, uint64_t ui64BufferSize);
+			virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize);
 			virtual void closeChild();
 
 			virtual bool processInput(const uint32_t ui32InputIndex);

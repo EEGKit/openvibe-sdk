@@ -39,7 +39,7 @@ namespace OpenViBEPlugins
 			std::ofstream m_oFileStream;
 
 			OpenViBE::CString m_sSeparator;
-			OpenViBE::CIdentifier m_oTypeIdentifier;
+			OpenViBE::CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
 			bool m_bFirstBuffer;
 			bool (CBoxAlgorithmCSVFileWriter::*m_fpRealProcess)();
 

@@ -38,6 +38,6 @@ namespace OpenViBEToolkit
 		uint32_t m_ui32SampleCount;
 		uint32_t m_ui32SampleCountReserved;
 		uint32_t m_ui32SamplingRate;
-		OpenViBE::CIdentifier m_oLabelIdentifier;
+		OpenViBE::CIdentifier m_oLabelIdentifier = OV_UndefinedIdentifier;
 	};
 }  // namespace OpenViBEToolkit

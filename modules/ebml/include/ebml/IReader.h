@@ -15,7 +15,7 @@ namespace EBML
 	 *
 	 * \sa EBML::IReader
 	 */
-	class EBML_API IReaderCallback
+	class EBML_API 	IReaderCallback
 	{
 	public:
 

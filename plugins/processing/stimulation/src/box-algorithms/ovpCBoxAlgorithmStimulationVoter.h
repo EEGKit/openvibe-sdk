@@ -34,9 +34,9 @@ namespace OpenViBEPlugins
 			uint64_t m_ui64MinimumVotes;
 			double m_f64TimeWindow;
 			uint64_t m_ui64RejectClassLabel;
-			OpenViBE::CIdentifier m_oClearVotes;
-			OpenViBE::CIdentifier m_oOutputDateMode;
-			OpenViBE::CIdentifier m_oRejectClass_CanWin;
+			OpenViBE::CIdentifier m_oClearVotes = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_oOutputDateMode = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_oRejectClass_CanWin = OV_UndefinedIdentifier;
 
 		private:
 
@@ -63,7 +63,7 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::CIdentifier m_oInputTypeIdentifier;
+			OpenViBE::CIdentifier m_oInputTypeIdentifier = OV_UndefinedIdentifier;
 		};
 
 		class CBoxAlgorithmStimulationVoterDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc

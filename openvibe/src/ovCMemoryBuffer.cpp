@@ -40,10 +40,10 @@ namespace OpenViBE
 //
 
 CMemoryBufferImpl::CMemoryBufferImpl()
-	: m_pBuffer(NULL), m_ui64BufferSize(0), m_ui64AllocatedSize(0) {}
+	: m_pBuffer(nullptr), m_ui64BufferSize(0), m_ui64AllocatedSize(0) {}
 
 CMemoryBufferImpl::CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer)
-	: m_pBuffer(NULL), m_ui64BufferSize(0), m_ui64AllocatedSize(0)
+	: m_pBuffer(nullptr), m_ui64BufferSize(0), m_ui64AllocatedSize(0)
 {
 	m_pBuffer = new uint8_t[static_cast<size_t>(rMemoryBuffer.getSize() + 1)]; // $$$
 	if (m_pBuffer)
@@ -59,7 +59,7 @@ CMemoryBufferImpl::CMemoryBufferImpl(const IMemoryBuffer& rMemoryBuffer)
 }
 
 CMemoryBufferImpl::CMemoryBufferImpl(const uint8_t* pMemoryBuffer, const uint64_t ui64BufferSize)
-	: m_pBuffer(NULL)
+	: m_pBuffer(nullptr)
 	  , m_ui64BufferSize(0)
 	  , m_ui64AllocatedSize(0)
 {
@@ -81,7 +81,7 @@ CMemoryBufferImpl::~CMemoryBufferImpl()
 	if (m_pBuffer)
 	{
 		delete [] m_pBuffer;
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 	}
 }
 
@@ -158,19 +158,19 @@ bool CMemoryBufferImpl::append(const IMemoryBuffer& rMemoryBuffer)
 //
 
 CMemoryBuffer::CMemoryBuffer()
-	: m_pMemoryBufferImpl(NULL)
+	: m_pMemoryBufferImpl(nullptr)
 {
 	m_pMemoryBufferImpl = new CMemoryBufferImpl();
 }
 
 CMemoryBuffer::CMemoryBuffer(const IMemoryBuffer& rMemoryBuffer)
-	: m_pMemoryBufferImpl(NULL)
+	: m_pMemoryBufferImpl(nullptr)
 {
 	m_pMemoryBufferImpl = new CMemoryBufferImpl(rMemoryBuffer);
 }
 
 CMemoryBuffer::CMemoryBuffer(const uint8_t* pMemoryBuffer, const uint64_t ui64BufferSize)
-	: m_pMemoryBufferImpl(NULL)
+	: m_pMemoryBufferImpl(nullptr)
 {
 	m_pMemoryBufferImpl = new CMemoryBufferImpl(pMemoryBuffer, ui64BufferSize);
 }

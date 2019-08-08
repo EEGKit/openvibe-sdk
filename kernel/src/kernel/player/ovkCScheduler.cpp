@@ -82,7 +82,7 @@ bool CScheduler::setScenario(const CIdentifier& rScenarioIdentifier)
 		return false;
 	}
 
-	m_pScenario = NULL;
+	m_pScenario = nullptr;
 
 	return true;
 }

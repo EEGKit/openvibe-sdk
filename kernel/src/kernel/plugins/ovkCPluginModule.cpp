@@ -85,9 +85,9 @@ namespace OpenViBE
 CPluginModuleBase::CPluginModuleBase(const IKernelContext& rKernelContext)
 	: TKernelObject<IPluginModule>(rKernelContext)
 	  , m_bGotDescriptions(false)
-	  , onInitializeCB(NULL)
-	  , onGetPluginObjectDescriptionCB(NULL)
-	  , onUninitializeCB(NULL) {}
+	  , onInitializeCB(nullptr)
+	  , onGetPluginObjectDescriptionCB(nullptr)
+	  , onUninitializeCB(nullptr) {}
 
 CPluginModuleBase::~CPluginModuleBase() { }
 
@@ -121,7 +121,7 @@ bool CPluginModuleBase::getPluginObjectDescription(uint32_t ui32Index, IPluginOb
 
 	if (ui32Index >= m_vPluginObjectDescriptor.size())
 	{
-		rpPluginObjectDescription = NULL;
+		rpPluginObjectDescription = nullptr;
 		return false;
 	}
 
@@ -297,7 +297,7 @@ bool CPluginModuleLinux::isOpen() const
 
 CPluginModuleWindows::CPluginModuleWindows(const IKernelContext& rKernelContext)
 	: CPluginModuleBase(rKernelContext)
-	  , m_pFileHandle(NULL) {}
+	  , m_pFileHandle(nullptr) {}
 
 bool CPluginModuleWindows::load(const CString& sFileName, CString* pError)
 {
@@ -328,10 +328,10 @@ bool CPluginModuleWindows::load(const CString& sFileName, CString* pError)
 		}
 
 		FreeLibrary(m_pFileHandle);
-		m_pFileHandle                  = NULL;
-		onInitializeCB                 = NULL;
-		onGetPluginObjectDescriptionCB = NULL;
-		onUninitializeCB               = NULL;
+		m_pFileHandle                  = nullptr;
+		onInitializeCB                 = nullptr;
+		onGetPluginObjectDescriptionCB = nullptr;
+		onUninitializeCB               = nullptr;
 		return false;
 	}
 
@@ -348,10 +348,10 @@ bool CPluginModuleWindows::unload(CString* pError)
 	}
 
 	FreeLibrary(m_pFileHandle);
-	m_pFileHandle                  = NULL;
-	onInitializeCB                 = NULL;
-	onGetPluginObjectDescriptionCB = NULL;
-	onUninitializeCB               = NULL;
+	m_pFileHandle                  = nullptr;
+	onInitializeCB                 = nullptr;
+	onGetPluginObjectDescriptionCB = nullptr;
+	onUninitializeCB               = nullptr;
 	return true;
 }
 
@@ -391,7 +391,7 @@ CString CPluginModuleWindows::getLastErrorMessageString()
 //                                                                   //
 
 CPluginModule::CPluginModule(const IKernelContext& rKernelContext)
-	: TKernelObject<IPluginModule>(rKernelContext), m_pImplementation(NULL)
+	: TKernelObject<IPluginModule>(rKernelContext), m_pImplementation(nullptr)
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_pImplementation=new CPluginModuleLinux(getKernelContext());

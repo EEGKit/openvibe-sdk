@@ -25,7 +25,7 @@ namespace OpenViBE
 
 		protected:
 
-			CIdentifier m_oIdentifier;
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			uint64_t m_ui64Time;
 		};
 	}  // namespace Kernel

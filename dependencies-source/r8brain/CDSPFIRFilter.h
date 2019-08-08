@@ -451,7 +451,7 @@ namespace r8b
 		 */
 
 		static CDSPFIRFilter& getLPFilter(const double ReqNormFreq, const double ReqTransBand, const double ReqAtten,
-										  const EDSPFilterPhaseResponse ReqPhase, const double ReqGain, const double* const AttenCorrs = NULL)
+										  const EDSPFilterPhaseResponse ReqPhase, const double ReqGain, const double* const AttenCorrs = nullptr)
 		{
 			R8BASSERT(ReqNormFreq > 0.0 && ReqNormFreq <= 1.0);
 			R8BASSERT(ReqTransBand >= CDSPFIRFilter :: getLPMinTransBand());
@@ -479,7 +479,7 @@ namespace r8b
 					{
 						// Delete the last filter which is not used.
 
-						PrevObj->Next = NULL;
+						PrevObj->Next = nullptr;
 						delete CurObj;
 						ObjCount--;
 					}
@@ -488,12 +488,12 @@ namespace r8b
 						// Move the last filter to the top of the list since it
 						// seems to be in use for a long time.
 
-						PrevObj->Next = NULL;
+						PrevObj->Next = nullptr;
 						CurObj->Next  = Objects.unkeep();
 						Objects       = CurObj;
 					}
 
-					CurObj = NULL;
+					CurObj = nullptr;
 					break;
 				}
 

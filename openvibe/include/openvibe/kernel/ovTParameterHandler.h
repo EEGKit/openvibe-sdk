@@ -97,7 +97,7 @@ namespace OpenViBE
 			{
 				if (!m_pParameter) { return false; }
 
-				m_pParameter = NULL;
+				m_pParameter = nullptr;
 				return true;
 			}
 

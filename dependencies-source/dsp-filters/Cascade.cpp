@@ -44,7 +44,7 @@ namespace Dsp
 	Cascade::Cascade()
 		: m_numStages(0)
 		  , m_maxStages(0)
-		  , m_stageArray(0) {}
+		  , m_stageArray(nullptr) {}
 
 	void Cascade::setCascadeStorage(const Storage& storage)
 	{

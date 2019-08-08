@@ -47,7 +47,7 @@ namespace OpenViBEPlugins
 
 			uint64_t m_LastStimulationDate;
 
-			OpenViBE::CIdentifier m_TypeIdentifier;
+			OpenViBE::CIdentifier m_TypeIdentifier = OV_UndefinedIdentifier;
 			std::vector<std::string> m_ChannelNames;
 			std::vector<uint32_t> m_DimensionSizes;
 			uint32_t m_SamplingRate;
@@ -64,7 +64,7 @@ namespace OpenViBEPlugins
 
 			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index)
 			{
-				OpenViBE::CIdentifier typeIdentifier;
+				OpenViBE::CIdentifier typeIdentifier = OV_UndefinedIdentifier;
 				box.getOutputType(index, typeIdentifier);
 
 				if (index == 0 && typeIdentifier == OV_TypeId_Stimulations)

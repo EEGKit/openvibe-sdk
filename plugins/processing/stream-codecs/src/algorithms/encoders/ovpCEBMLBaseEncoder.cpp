@@ -29,10 +29,10 @@ bool CEBMLBaseEncoder::uninitialize()
 {
 	m_pEBMLWriterHelper->disconnect();
 	m_pEBMLWriterHelper->release();
-	m_pEBMLWriterHelper = NULL;
+	m_pEBMLWriterHelper = nullptr;
 
 	m_pEBMLWriter->release();
-	m_pEBMLWriter = NULL;
+	m_pEBMLWriter = nullptr;
 
 	op_pMemoryBuffer.uninitialize();
 

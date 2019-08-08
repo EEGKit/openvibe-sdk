@@ -38,7 +38,7 @@ namespace OpenViBEToolkit
 		explicit CFeatureVectorSet(const OpenViBE::IMatrix& rMatrix);
 
 		virtual uint32_t getFeatureVectorCount() const;
-		virtual bool setFeatureVectorCount(uint32_t ui32FeatureVectorCount);
+		virtual bool setFeatureVectorCount(const uint32_t ui32FeatureVectorCount);
 		virtual bool addFeatureVector(const IFeatureVector& rFeatureVector);
 		virtual IFeatureVector& getFeatureVector(const uint32_t ui32Index);
 		virtual const IFeatureVector& getFeatureVector(const uint32_t ui32Index) const;

@@ -116,7 +116,7 @@ namespace
 		}
 		for (size_t i = 0; i < elemCount; ++i)
 		{
-			mat.getBuffer()[i] = i;
+			mat.getBuffer()[i] = double(i);
 		}
 
 		TParameterHandler<const IMatrix*> inputMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));

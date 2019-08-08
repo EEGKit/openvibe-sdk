@@ -76,7 +76,7 @@ namespace r8b
 		 * table values for the current FilterLen will be used.
 		 */
 
-		void calculate(const double* const Params = NULL)
+		void calculate(const double* const Params = nullptr)
 		{
 			CDSPSincFilterGen sinc;
 			sinc.Len2 = FilterLen / 2;

@@ -42,8 +42,8 @@ using namespace std;
 
 bool CBoxAlgorithmClassifierTrainer::initialize()
 {
-	m_pClassifier = NULL;
-	m_pParameter  = NULL;
+	m_pClassifier = nullptr;
+	m_pParameter  = nullptr;
 
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 	//As we add some parameter in the middle of "static" parameters, we cannot rely on settings index.
@@ -152,14 +152,14 @@ bool CBoxAlgorithmClassifierTrainer::uninitialize()
 	for (uint32_t i = 0; i < m_vDataset.size(); i++)
 	{
 		delete m_vDataset[i].m_pFeatureVectorMatrix;
-		m_vDataset[i].m_pFeatureVectorMatrix = NULL;
+		m_vDataset[i].m_pFeatureVectorMatrix = nullptr;
 	}
 	m_vDataset.clear();
 
 	if (m_pParameter)
 	{
 		delete m_pParameter;
-		m_pParameter = NULL;
+		m_pParameter = nullptr;
 	}
 
 	// @fixme who frees this? freeing here -> crash
@@ -453,7 +453,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rD
 	XML::IXMLNode* l_pTempNode = (XML::IXMLNode*)op_pConfiguration;
 
 	if (l_pTempNode != nullptr) { l_pTempNode->release(); }
-	op_pConfiguration = NULL;
+	op_pConfiguration = nullptr;
 
 	bool l_bReturnValue = m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration);
 
@@ -591,7 +591,7 @@ bool CBoxAlgorithmClassifierTrainer::saveConfiguration()
 	{
 		l_pHandler->release();
 		l_sRoot->release();
-		op_pConfiguration = NULL;
+		op_pConfiguration = nullptr;
 	};
 	l_sRoot->addAttribute(c_sCreatorAttributeName, this->getConfigurationManager().expand("${Application_Name}"));
 	l_sRoot->addAttribute(c_sCreatorVersionAttributeName, this->getConfigurationManager().expand("${Application_Version}"));

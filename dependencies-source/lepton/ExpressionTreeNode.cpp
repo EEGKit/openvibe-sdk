@@ -65,7 +65,7 @@ ExpressionTreeNode::ExpressionTreeNode(Operation* operation) : operation(operati
 
 ExpressionTreeNode::ExpressionTreeNode(const ExpressionTreeNode& node) : operation(node.getOperation().clone()), children(node.getChildren()) {}
 
-ExpressionTreeNode::ExpressionTreeNode() : operation(NULL) {}
+ExpressionTreeNode::ExpressionTreeNode() : operation(nullptr) {}
 
 ExpressionTreeNode::~ExpressionTreeNode()
 {

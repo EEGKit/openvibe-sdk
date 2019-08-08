@@ -22,7 +22,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager = NULL);
+			CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager = nullptr);
 
 			virtual void clear();
 

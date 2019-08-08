@@ -58,7 +58,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens = NULL) = 0;
+			virtual bool setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens = nullptr) = 0;
 
 			/**
 			 * \brief returns a reference to the runtime configuration manager

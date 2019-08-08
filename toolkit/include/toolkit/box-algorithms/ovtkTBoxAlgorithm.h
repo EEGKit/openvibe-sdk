@@ -52,7 +52,7 @@ namespace OpenViBEToolkit
 			return processClock(rMessageClock);
 		}
 
-		virtual bool processInput(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, uint32_t ui32InputIndex)
+		virtual bool processInput(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const uint32_t ui32InputIndex)
 		{
 			CScopedBoxAlgorithm l_oScopedBoxAlgorithm(m_pBoxAlgorithmContext, &rBoxAlgorithmContext);
 			return processInput(ui32InputIndex);
@@ -250,7 +250,7 @@ namespace OpenViBEToolkit
 			OpenViBE::Kernel::ITypeManager& m_rTypeManager;
 			OpenViBE::Kernel::IConfigurationManager& m_rConfigurationManager;
 			OpenViBE::CString m_sSettingValue;
-			OpenViBE::CIdentifier m_oSettingType;
+			OpenViBE::CIdentifier m_oSettingType = OV_UndefinedIdentifier;
 		};
 
 	private:
@@ -264,7 +264,7 @@ namespace OpenViBEToolkit
 				m_rpBoxAlgorithmContext = pBoxAlgorithmContext;
 			}
 
-			virtual ~CScopedBoxAlgorithm() { m_rpBoxAlgorithmContext = NULL; }
+			virtual ~CScopedBoxAlgorithm() { m_rpBoxAlgorithmContext = nullptr; }
 
 		protected:
 			OpenViBE::Kernel::IBoxAlgorithmContext*& m_rpBoxAlgorithmContext;
@@ -388,7 +388,7 @@ namespace OpenViBEToolkit
 
 			virtual ~CScopedBoxListener()
 			{
-				m_rpBoxListenerContext = NULL;
+				m_rpBoxListenerContext = nullptr;
 			}
 
 		protected:

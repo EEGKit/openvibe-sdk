@@ -18,8 +18,8 @@ namespace OpenViBE
 
 			TBaseParameter(const IKernelContext& rKernelContext, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier)
 				: IBase(rKernelContext)
-				  , m_pParameterRef(0)
-				  , m_pValueRef(0)
+				  , m_pParameterRef(nullptr)
+				  , m_pValueRef(nullptr)
 				  , m_Value(0)
 				  , m_eParameterType(eParameterType)
 				  , m_oSubTypeIdentifier(rSubTypeIdentifier) { }
@@ -42,7 +42,7 @@ namespace OpenViBE
 			virtual bool clearReferenceTarget()
 			{
 				m_pValueRef     = NULL;
-				m_pParameterRef = NULL;
+				m_pParameterRef = nullptr;
 				return true;
 			}
 
@@ -72,7 +72,7 @@ namespace OpenViBE
 			{
 				if (m_pParameterRef)
 				{
-					m_pParameterRef = NULL;
+					m_pParameterRef = nullptr;
 				}
 				memcpy(&m_pValueRef, &pValue, sizeof(IType*));
 				return true;
@@ -120,7 +120,7 @@ namespace OpenViBE
 			IType* m_pValueRef;
 			IType m_Value;
 			EParameterType m_eParameterType;
-			CIdentifier m_oSubTypeIdentifier;
+			CIdentifier m_oSubTypeIdentifier = OV_UndefinedIdentifier;
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE

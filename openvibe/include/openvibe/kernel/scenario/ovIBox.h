@@ -597,9 +597,9 @@ namespace OpenViBE
 			 */
 			virtual bool setSettingMod(const CString& sName, bool rValue) = 0;
 
-			virtual bool swapSettings(unsigned int indexA, unsigned int indexB) = 0;
-			virtual bool swapInputs(unsigned int indexA, unsigned int indexB) = 0;
-			virtual bool swapOutputs(unsigned int indexA, unsigned int indexB) = 0;
+			virtual bool swapSettings(const uint32_t indexA, const uint32_t indexB) = 0;
+			virtual bool swapInputs(const uint32_t indexA, const uint32_t indexB) = 0;
+			virtual bool swapOutputs(const uint32_t indexA, const uint32_t indexB) = 0;
 			/**
 			 * \brief Inform if the box possess a modifiable interface
 			 * \return \e true if it does.

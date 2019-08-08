@@ -32,14 +32,14 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool load(const CString& sName, CString* pError = NULL) = 0;
+			virtual bool load(const CString& sName, CString* pError = nullptr) = 0;
 			/**
 			 * \brief Tries to unload the loaded OpenViBE module
 			 * \param pError [out] : an optional output string containing the error on unload failure
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool unload(CString* pError = NULL) = 0;
+			virtual bool unload(CString* pError = nullptr) = 0;
 			/**
 			 * \brief Gets the current filename associated with this plugin module
 			 * \param rFileName [out] : the filename of this plugin module

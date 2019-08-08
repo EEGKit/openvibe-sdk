@@ -33,14 +33,14 @@ namespace OpenViBE
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 */
-		virtual bool load(const CString& sFileName, CString* pError = NULL) = 0;
+		virtual bool load(const CString& sFileName, CString* pError = nullptr) = 0;
 		/**
 		 * \brief Unloads a loaded kernel DLL/so file
 		 * \return \e true on success.
 		 * \return \e false on error.
 		 * \warning \c load must have been called successfully before calling \c unload
 		 */
-		virtual bool unload(CString* pError = NULL) = 0;
+		virtual bool unload(CString* pError = nullptr) = 0;
 		/**
 		 * \brief Requests the kernel DLL/so file to self initialize
 		 * \return \e true on success.

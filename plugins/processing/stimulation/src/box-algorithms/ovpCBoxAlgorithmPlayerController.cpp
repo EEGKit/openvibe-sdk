@@ -30,7 +30,7 @@ bool CBoxAlgorithmPlayerController::uninitialize()
 	{
 		m_pStreamDecoder->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
-		m_pStreamDecoder = NULL;
+		m_pStreamDecoder = nullptr;
 	}
 
 	return true;

@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv)
 {
-	srand((unsigned int)time(NULL));
+	srand((unsigned int)time(nullptr));
 	for (int i = 0; i < 16; i++)
 	{
 		unsigned short int l_ui16Value1 = (rand() & 0xffff);

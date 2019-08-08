@@ -115,14 +115,14 @@ bool CBoxAlgorithmSimpleDSP::uninitialize()
 	{
 		m_pStreamEncoder->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
-		m_pStreamEncoder = NULL;
+		m_pStreamEncoder = nullptr;
 	}
 
 	delete m_pEquationParser;
-	m_pEquationParser = NULL;
+	m_pEquationParser = nullptr;
 
 	delete [] m_ppVariable;
-	m_ppVariable = NULL;
+	m_ppVariable = nullptr;
 
 	return true;
 }

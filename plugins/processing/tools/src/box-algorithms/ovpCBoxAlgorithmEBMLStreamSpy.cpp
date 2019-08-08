@@ -98,10 +98,10 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 bool CBoxAlgorithmEBMLStreamSpy::uninitialize()
 {
 	m_pReaderHelper->release();
-	m_pReaderHelper = NULL;
+	m_pReaderHelper = nullptr;
 
 	m_pReader->release();
-	m_pReader = NULL;
+	m_pReader = nullptr;
 
 	return true;
 }

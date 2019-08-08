@@ -126,7 +126,7 @@ bool CMatrixImpl::setDimensionCount(const uint32_t ui32DimensionCount)
 	if (m_pBuffer)
 	{
 		delete [] m_pBuffer;
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 	}
 
 	m_vDimensionSize.clear();
@@ -145,7 +145,7 @@ bool CMatrixImpl::setDimensionSize(const uint32_t ui32DimensionIndex, const uint
 	if (m_pBuffer)
 	{
 		delete [] m_pBuffer;
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 	}
 
 	m_vDimensionSize[ui32DimensionIndex] = ui32DimensionSize;

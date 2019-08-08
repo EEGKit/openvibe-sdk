@@ -109,7 +109,7 @@ namespace r8b
 		 */
 
 		void initWindow(const EWindowFunctionType WinType = wftCosine,
-						const double* const Params        = NULL, const bool UsePower = false)
+						const double* const Params        = nullptr, const bool UsePower = false)
 		{
 			R8BASSERT(Len2 >= 2.0);
 
@@ -134,7 +134,7 @@ namespace r8b
 		 */
 
 		void initBand(const EWindowFunctionType WinType = wftCosine,
-					  const double* const Params        = NULL, const bool UsePower = false)
+					  const double* const Params        = nullptr, const bool UsePower = false)
 		{
 			R8BASSERT(Len2 >= 2.0);
 
@@ -161,7 +161,7 @@ namespace r8b
 		 */
 
 		void initHilbert(const EWindowFunctionType WinType = wftCosine,
-						 const double* const Params        = NULL, const bool UsePower = false)
+						 const double* const Params        = nullptr, const bool UsePower = false)
 		{
 			R8BASSERT(Len2 >= 2.0);
 
@@ -187,7 +187,7 @@ namespace r8b
 		 */
 
 		void initFrac(const EWindowFunctionType WinType = wftCosine,
-					  const double* const Params        = NULL, const bool UsePower = false)
+					  const double* const Params        = nullptr, const bool UsePower = false)
 		{
 			R8BASSERT(Len2 >= 2.0);
 

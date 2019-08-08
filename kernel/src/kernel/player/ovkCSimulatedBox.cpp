@@ -107,7 +107,7 @@ bool CSimulatedBox::uninitialize()
 	}
 
 	getPluginManager().releasePluginObject(m_pBoxAlgorithm);
-	m_pBoxAlgorithm = NULL;
+	m_pBoxAlgorithm = nullptr;
 
 	return true;
 }

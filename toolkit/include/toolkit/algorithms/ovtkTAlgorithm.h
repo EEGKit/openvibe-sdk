@@ -115,7 +115,7 @@ namespace OpenViBEToolkit
 				m_rpAlgorithmContext = pAlgorithmContext;
 			}
 
-			virtual ~CScopedAlgorithm() { m_rpAlgorithmContext = NULL; }
+			virtual ~CScopedAlgorithm() { m_rpAlgorithmContext = nullptr; }
 
 		protected:
 

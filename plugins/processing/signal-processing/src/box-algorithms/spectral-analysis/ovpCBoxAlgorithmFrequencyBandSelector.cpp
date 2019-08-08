@@ -115,7 +115,7 @@ bool CBoxAlgorithmFrequencyBandSelector::uninitialize()
 
 	m_pStreamEncoder->uninitialize();
 	this->getAlgorithmManager().releaseAlgorithm(*m_pStreamEncoder);
-	m_pStreamEncoder = NULL;
+	m_pStreamEncoder = nullptr;
 
 	op_pBands.uninitialize();
 	op_pMatrix.uninitialize();
@@ -123,7 +123,7 @@ bool CBoxAlgorithmFrequencyBandSelector::uninitialize()
 
 	m_pStreamDecoder->uninitialize();
 	this->getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
-	m_pStreamDecoder = NULL;
+	m_pStreamDecoder = nullptr;
 
 	return true;
 }

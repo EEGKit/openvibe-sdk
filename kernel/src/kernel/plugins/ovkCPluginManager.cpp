@@ -99,7 +99,7 @@ namespace OpenViBE
 						l_ui32Count++;
 					}
 					l_ui32Index++;
-					l_pPluginObjectDesc = NULL;
+					l_pPluginObjectDesc = nullptr;
 				}
 
 				OV_WARNING_UNLESS_K(l_bPluginObjectDescAdded, "No 'plugin object descriptor' found from [" << CString(rEntry.getName()) << "] even if it looked like a plugin module\n");
@@ -180,7 +180,7 @@ bool CPluginManager::registerPluginDesc(const IPluginObjectDesc& rPluginObjectDe
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	m_vPluginObjectDesc[const_cast<IPluginObjectDesc *>(&rPluginObjectDesc)] = NULL;
+	m_vPluginObjectDesc[const_cast<IPluginObjectDesc *>(&rPluginObjectDesc)] = nullptr;
 	return true;
 }
 
@@ -258,7 +258,7 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(const CIdentifier& 
 	}
 
 	this->getLogManager() << LogLevel_Debug << "Plugin object descriptor class identifier " << rClassIdentifier << " not found\n";
-	return NULL;
+	return nullptr;
 }
 
 const IPluginObjectDesc* CPluginManager::getPluginObjectDescCreating(const CIdentifier& rClassIdentifier) const
@@ -274,7 +274,7 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDescCreating(const CIden
 							 });
 	if (elem != m_vPluginObjectDesc.end()) { return elem->first; }
 	this->getLogManager() << LogLevel_Debug << "Plugin object descriptor class identifier " << rClassIdentifier << " not found\n";
-	return NULL;
+	return nullptr;
 }
 
 CIdentifier CPluginManager::getPluginObjectHashValue(const CIdentifier& rClassIdentifier) const
@@ -398,7 +398,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& rClassIde
 
 		try
 		{
-			l_ui64TargetClassIdentifier = std::stoull(l_sSubstitutionTokenValue.toASCIIString(), 0, 16);
+			l_ui64TargetClassIdentifier = std::stoull(l_sSubstitutionTokenValue.toASCIIString(), nullptr, 16);
 		}
 		catch (const std::invalid_argument& exception)
 		{

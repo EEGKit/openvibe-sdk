@@ -43,7 +43,7 @@ namespace OpenViBEPlugins
 
 			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(0, l_oTypeIdentifier);
 				if (l_oTypeIdentifier == OV_TypeId_Signal || l_oTypeIdentifier == OV_TypeId_Spectrum || l_oTypeIdentifier == OV_TypeId_StreamedMatrix)
 				{
@@ -59,7 +59,7 @@ namespace OpenViBEPlugins
 
 			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getInputType(0, l_oTypeIdentifier);
 				if (l_oTypeIdentifier == OV_TypeId_Signal || l_oTypeIdentifier == OV_TypeId_Spectrum
 					|| l_oTypeIdentifier == OV_TypeId_StreamedMatrix)
@@ -82,7 +82,7 @@ namespace OpenViBEPlugins
 					rBox.getSettingValue(0, l_sChannels);
 
 					OpenViBE::CString l_sSelectionMethod;
-					OpenViBE::CIdentifier l_oSelectionEnumIdentifier;
+					OpenViBE::CIdentifier l_oSelectionEnumIdentifier = OV_UndefinedIdentifier;
 					rBox.getSettingValue(1, l_sSelectionMethod);
 					rBox.getSettingType(1, l_oSelectionEnumIdentifier);
 

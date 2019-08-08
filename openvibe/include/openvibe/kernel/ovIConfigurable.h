@@ -98,7 +98,7 @@ namespace OpenViBE
 			 *
 			 * This function creates a new parameter with its associated object.
 			 */
-			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
+			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier = OV_UndefinedIdentifier) = 0;
 			/**
 			 * \brief Removes an existing parameter
 			 * \param rParameterIdentifier [in] : the identifier of the parameter to remove

@@ -34,9 +34,9 @@ namespace XML
 }
 
 CReader::CReader(IReaderCallback& rReaderCallback)
-	: m_rReaderCallback(rReaderCallback), m_pXMLParser(NULL)
+	: m_rReaderCallback(rReaderCallback), m_pXMLParser(nullptr)
 {
-	m_pXMLParser = XML_ParserCreate(NULL);
+	m_pXMLParser = XML_ParserCreate(nullptr);
 	XML_SetElementHandler(m_pXMLParser, expat_xml_start, expat_xml_end);
 	XML_SetCharacterDataHandler(m_pXMLParser, expat_xml_data);
 	XML_SetUserData(m_pXMLParser, this);

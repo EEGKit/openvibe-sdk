@@ -83,8 +83,8 @@ bool CBoxAlgorithmChannelSelector::initialize()
 	CIdentifier l_oTypeIdentifier;
 	l_rStaticBoxContext.getOutputType(0, l_oTypeIdentifier);
 
-	m_pDecoder = NULL;
-	m_pEncoder = NULL;
+	m_pDecoder = nullptr;
+	m_pEncoder = nullptr;
 
 	if (l_oTypeIdentifier == OV_TypeId_Signal)
 	{
@@ -287,7 +287,7 @@ bool CBoxAlgorithmChannelSelector::process()
 				OpenViBE::Kernel::ErrorType::BadConfig);
 
 			m_pOutputMatrix->setDimensionCount(2);
-			m_pOutputMatrix->setDimensionSize(0, m_vLookup.size());
+			m_pOutputMatrix->setDimensionSize(0, uint32_t(m_vLookup.size()));
 			m_pOutputMatrix->setDimensionSize(1, m_pInputMatrix->getDimensionSize(1));
 			Tools::Matrix::clearContent(*m_pOutputMatrix);
 			for (uint32_t j = 0; j < m_vLookup.size(); j++)

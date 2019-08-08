@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(unsigned int inputIndex) override;
+			bool processInput(const uint32_t inputIndex) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_OVCSVFileWriter)
@@ -38,18 +38,18 @@ namespace OpenViBEPlugins
 
 			std::unique_ptr<OpenViBE::CSV::ICSVHandler, decltype(&OpenViBE::CSV::releaseCSVHandler)> m_WriterLib;
 
-			OpenViBE::CIdentifier m_TypeIdentifier;
+			OpenViBE::CIdentifier m_TypeIdentifier = OV_UndefinedIdentifier;
 
 			OpenViBEToolkit::TGenericDecoder<CBoxAlgorithmOVCSVFileWriter> m_StreamDecoder;
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmOVCSVFileWriter> m_StimulationDecoder;
 
-			unsigned long long m_Epoch;
+			unsigned long long m_Epoch = 0;
 
-			bool m_IsHeaderReceived;
-			bool m_IsFileOpen;
-			bool m_AppendData;
-			bool m_LastMatrixOnly;
-			bool m_WriteHeader;
+			bool m_IsHeaderReceived = false;
+			bool m_IsFileOpen = false;
+			bool m_AppendData = false;
+			bool m_LastMatrixOnly = false;
+			bool m_WriteHeader = true;
 		};
 
 		class CBoxAlgorithmOVCSVFileWriterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
@@ -60,7 +60,7 @@ namespace OpenViBEPlugins
 			{
 				if (inputIndex == 1)
 				{
-					OpenViBE::CIdentifier l_oTypeIdentifier;
+					OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 					box.getInputType(1, l_oTypeIdentifier);
 					if (l_oTypeIdentifier != OV_TypeId_Stimulations)
 					{

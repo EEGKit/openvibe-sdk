@@ -12,16 +12,16 @@ namespace OpenViBE
 
 			CBoxProto(const IKernelContext& rKernelContext, IBox& rBox);
 
-			virtual bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier = OV_UndefinedIdentifier, bool bNotify = true);
+			virtual bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true);
 
-			virtual bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, bool bNotify = true);
+			virtual bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true);
 
 			//virtual bool addSetting(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& sDefaultValue); 
 
 			virtual bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue,
-									bool bModifiable = false, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, bool bNotify = true);
+									const bool bModifiable = false, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true);
 
-			virtual bool addFlag(EBoxFlag eBoxFlag);
+			virtual bool addFlag(const EBoxFlag eBoxFlag);
 			virtual bool addFlag(const CIdentifier& cIdentifierFlag);
 			virtual bool addInputSupport(const CIdentifier& rTypeIdentifier);
 			virtual bool addOutputSupport(const CIdentifier& rTypeIdentifier);

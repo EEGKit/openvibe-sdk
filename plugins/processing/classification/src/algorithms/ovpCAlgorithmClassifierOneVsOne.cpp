@@ -42,12 +42,12 @@ using namespace OpenViBEToolkit;
 bool CAlgorithmClassifierOneVsOne::initialize()
 {
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
-	op_pConfiguration = NULL;
+	op_pConfiguration = nullptr;
 
 	TParameterHandler<uint64_t> ip_pPairwise(this->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType));
 	ip_pPairwise = OV_UndefinedIdentifier.toUInteger();
 
-	m_pDecisionStrategyAlgorithm  = NULL;
+	m_pDecisionStrategyAlgorithm  = nullptr;
 	m_oPairwiseDecisionIdentifier = OV_UndefinedIdentifier;
 
 	return CAlgorithmPairingStrategy::initialize();
@@ -59,7 +59,7 @@ bool CAlgorithmClassifierOneVsOne::uninitialize()
 	{
 		m_pDecisionStrategyAlgorithm->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
-		m_pDecisionStrategyAlgorithm = NULL;
+		m_pDecisionStrategyAlgorithm = nullptr;
 	}
 
 	for (auto& kv : m_oSubClassifiers)
@@ -100,7 +100,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 	{
 		m_pDecisionStrategyAlgorithm->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
-		m_pDecisionStrategyAlgorithm = NULL;
+		m_pDecisionStrategyAlgorithm = nullptr;
 	}
 	m_pDecisionStrategyAlgorithm = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_oPairwiseDecisionIdentifier));
 
@@ -337,7 +337,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsOne::getClassifierConfiguration(double f
 
 XML::IXMLNode* CAlgorithmClassifierOneVsOne::getPairwiseDecisionConfiguration()
 {
-	if (!m_pDecisionStrategyAlgorithm) { return NULL; }
+	if (!m_pDecisionStrategyAlgorithm) { return nullptr; }
 
 	XML::IXMLNode* l_pTempNode = XML::createNode(c_sPairwiseDecisionName);
 
@@ -401,7 +401,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfiguration(XML::IXMLNode* pConfigurati
 		{
 			m_pDecisionStrategyAlgorithm->uninitialize();
 			this->getAlgorithmManager().releaseAlgorithm(*m_pDecisionStrategyAlgorithm);
-			m_pDecisionStrategyAlgorithm = NULL;
+			m_pDecisionStrategyAlgorithm = nullptr;
 		}
 		m_oPairwiseDecisionIdentifier = l_pPairwiseIdentifier;
 		m_pDecisionStrategyAlgorithm  = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(m_oPairwiseDecisionIdentifier));

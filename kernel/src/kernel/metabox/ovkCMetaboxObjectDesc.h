@@ -42,7 +42,7 @@ namespace OpenViBE
 			virtual CString getUpdatedSoftwareVersion() const { return m_UpdatedSoftwareVersion; }
 
 			virtual CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_Metabox; }
-			virtual Plugins::IPluginObject* create() { return NULL; }
+			virtual Plugins::IPluginObject* create() { return nullptr; }
 
 			// Handling of the virtual prototype
 
@@ -61,8 +61,8 @@ namespace OpenViBE
 					  m_oIdentifier(rIdentifier) {}
 
 				CString m_sName;
-				CIdentifier m_oTypeIdentifier;
-				CIdentifier m_oIdentifier;
+				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
+				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			} SIOStream;
 
 			typedef struct _SSetting
@@ -80,9 +80,9 @@ namespace OpenViBE
 					  m_oIdentifier(rIdentifier) {}
 
 				CString m_sName;
-				CIdentifier m_oTypeIdentifier;
+				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
 				CString m_sDefaultValue;
-				CIdentifier m_oIdentifier;
+				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			} SSetting;
 
 			virtual bool getBoxPrototype(Kernel::IBoxProto& rBoxAlgorithmPrototype) const;

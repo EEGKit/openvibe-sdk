@@ -76,14 +76,14 @@ namespace OpenViBEPlugins
 
 			virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getInputType(ui32Index, l_oTypeIdentifier);
 				return this->onConnectorTypeChanged(rBox, ui32Index, l_oTypeIdentifier, false);
 			}
 
 			virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				return this->onConnectorTypeChanged(rBox, ui32Index, l_oTypeIdentifier, true);
 			}
@@ -105,7 +105,7 @@ namespace OpenViBEPlugins
 					else
 					{
 						// Invalid i/o type identifier
-						OpenViBE::CIdentifier l_oOriginalTypeIdentifier;
+						OpenViBE::CIdentifier l_oOriginalTypeIdentifier = OV_UndefinedIdentifier;
 						if (bOutputChanged)
 						{
 							// Restores output

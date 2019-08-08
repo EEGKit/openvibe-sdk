@@ -35,7 +35,7 @@ typedef std::pair<double, IMatrix*> CClassifierOutput;
 bool CAlgorithmClassifierOneVsAll::initialize()
 {
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(this->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
-	op_pConfiguration = NULL;
+	op_pConfiguration = nullptr;
 
 	return CAlgorithmPairingStrategy::initialize();
 }
@@ -130,42 +130,42 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 		//If the algorithm give a probability we take it, instead we take the first value
 		if (l_pProbabilityValue->getDimensionCount() != 0)
 		{
-			l_oClassificationVector.push_back(CClassifierOutput(static_cast<double>(op_f64ClassificationStateClass), l_pProbabilityValue));
+			l_oClassificationVector.push_back(CClassifierOutput(double(op_f64ClassificationStateClass), l_pProbabilityValue));
 		}
 		else
 		{
-			l_oClassificationVector.push_back(CClassifierOutput(static_cast<double>(op_f64ClassificationStateClass), static_cast<IMatrix*>(op_pClassificationValues)));
+			l_oClassificationVector.push_back(CClassifierOutput(double(op_f64ClassificationStateClass), static_cast<IMatrix*>(op_pClassificationValues)));
 		}
-		this->getLogManager() << LogLevel_Debug << static_cast<uint64_t>(l_iClassifierCounter) << " " << static_cast<double>(op_f64ClassificationStateClass) << " " << static_cast<double>((*op_pProbabilityValues)[0]) << " " << static_cast<double>((*op_pProbabilityValues)[1]) << "\n";
+		this->getLogManager() << LogLevel_Debug << static_cast<uint64_t>(l_iClassifierCounter) << " " << double(op_f64ClassificationStateClass) << " " << double((*op_pProbabilityValues)[0]) << " " << double((*op_pProbabilityValues)[1]) << "\n";
 	}
 
 	//Now, we determine the best classification
-	CClassifierOutput l_oBest = CClassifierOutput(-1.0, static_cast<IMatrix*>(NULL));
+	CClassifierOutput l_oBest = CClassifierOutput(-1.0, static_cast<IMatrix*>(nullptr));
 	rf64Class                 = -1;
 
 	for (size_t l_iClassificationCount = 0; l_iClassificationCount < l_oClassificationVector.size(); ++l_iClassificationCount)
 	{
 		CClassifierOutput& l_pTemp = l_oClassificationVector[l_iClassificationCount];
-		if (static_cast<int>(l_pTemp.first) == 0)		// Predicts its "own" class, class=0
+		if (int(l_pTemp.first) == 0)		// Predicts its "own" class, class=0
 		{
 			if (l_oBest.second == nullptr)
 			{
 				l_oBest   = l_pTemp;
-				rf64Class = l_iClassificationCount;
+				rf64Class = double(l_iClassificationCount);
 			}
 			else
 			{
 				if ((*m_fAlgorithmComparison)((*l_oBest.second), *(l_pTemp.second)) > 0)
 				{
 					l_oBest   = l_pTemp;
-					rf64Class = l_iClassificationCount;
+					rf64Class = double(l_iClassificationCount);
 				}
 			}
 		}
 	}
 
 	//If no one recognize the class, let's take the more relevant
-	if (static_cast<int>(rf64Class) == -1)
+	if (int(rf64Class) == -1)
 	{
 		this->getLogManager() << LogLevel_Debug << "Unable to find a class in first instance\n";
 		for (uint32_t l_iClassificationCount = 0; l_iClassificationCount < l_oClassificationVector.size(); ++l_iClassificationCount)
@@ -174,7 +174,7 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& rFeatureVector
 			if (l_oBest.second == nullptr)
 			{
 				l_oBest   = l_pTemp;
-				rf64Class = (static_cast<double>(l_iClassificationCount));
+				rf64Class = (double(l_iClassificationCount));
 			}
 			else
 			{

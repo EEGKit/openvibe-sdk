@@ -267,7 +267,7 @@ namespace r8b
 			}
 			else if (MaxOutLen <= MaxInLen)
 			{
-				InterpBuf = NULL;
+				InterpBuf = nullptr;
 			}
 			else
 			{

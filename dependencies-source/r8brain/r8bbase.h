@@ -359,7 +359,7 @@ namespace r8b
 	R8BNOCTOR(CFixedBuffer)
 
 	public:
-		CFixedBuffer() : Data(NULL) { }
+		CFixedBuffer() : Data(nullptr) { }
 
 		/**
 		 * Constructor allocates memory so that the specified number of elements
@@ -600,7 +600,7 @@ namespace r8b
 	R8BNOCTOR(CSyncKeeper)
 
 	public:
-		CSyncKeeper() : SyncObj(NULL) { }
+		CSyncKeeper() : SyncObj(nullptr) { }
 
 		/**
 		 * @param aSyncObj Pointer to the sync object which should be used for

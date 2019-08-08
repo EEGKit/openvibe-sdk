@@ -96,7 +96,7 @@ CWriterNode::~CWriterNode()
 	if (m_pBuffer)
 	{
 		delete [] m_pBuffer;
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 	}
 }
 
@@ -191,7 +191,7 @@ namespace EBML
 //
 
 CWriter::CWriter(IWriterCallback& rWriterCallback)
-	: m_pCurrentNode(NULL), m_rWriterCallback(rWriterCallback) {}
+	: m_pCurrentNode(nullptr), m_rWriterCallback(rWriterCallback) {}
 
 bool CWriter::openChild(const CIdentifier& rIdentifier)
 {
@@ -233,7 +233,7 @@ bool CWriter::closeChild()
 	if ((!m_pCurrentNode->m_bBuffered) && (!m_pCurrentNode->m_vChildren.size()))
 	{
 		m_pCurrentNode->m_ui64BufferLength = 0;
-		m_pCurrentNode->m_pBuffer          = NULL;
+		m_pCurrentNode->m_pBuffer          = nullptr;
 		m_pCurrentNode->m_bBuffered        = true;
 	}
 

@@ -28,7 +28,7 @@ namespace OpenViBE
 					if (itParameter->second.first)
 					{
 						delete itParameter->second.second;
-						itParameter->second.second = NULL;
+						itParameter->second.second = nullptr;
 					}
 					++itParameter;
 				}
@@ -42,7 +42,7 @@ namespace OpenViBE
 			virtual IParameter* getParameter(const CIdentifier& rParameterIdentifier)
 			{
 				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
-				if (itParameter == m_vParameter.end()) { return NULL; }
+				if (itParameter == m_vParameter.end()) { return nullptr; }
 				return itParameter->second.second;
 			}
 
@@ -58,7 +58,7 @@ namespace OpenViBE
 			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier)
 			{
 				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
-				if (itParameter != m_vParameter.end()) { return NULL; }
+				if (itParameter != m_vParameter.end()) { return nullptr; }
 
 				IParameter* l_pParameter = nullptr;
 				switch (eParameterType)

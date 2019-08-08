@@ -4,8 +4,8 @@
 using namespace System;
 
 CChrono::CChrono()
-	: m_pStepInTime(NULL)
-	  , m_pStepOutTime(NULL)
+	: m_pStepInTime(nullptr)
+	  , m_pStepOutTime(nullptr)
 	  , m_ui32StepCount(0)
 	  , m_ui32StepIndex(0)
 	  , m_bIsInStep(false)

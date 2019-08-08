@@ -316,7 +316,7 @@ namespace r8b
 		R8BNOCTOR(CObjKeeper)
 
 		public:
-			CObjKeeper() : Object(NULL) { }
+			CObjKeeper() : Object(nullptr) { }
 
 			~CObjKeeper() { delete Object; }
 
@@ -392,7 +392,7 @@ namespace r8b
 	R8BNOCTOR(CDSPRealFFTKeeper)
 
 	public:
-		CDSPRealFFTKeeper() : Object(NULL) { }
+		CDSPRealFFTKeeper() : Object(nullptr) { }
 
 		/**
 		 * Function acquires FFT object with the specified block length.
@@ -454,7 +454,7 @@ namespace r8b
 			if (Object != nullptr)
 			{
 				release(Object);
-				Object = NULL;
+				Object = nullptr;
 			}
 		}
 
@@ -531,7 +531,7 @@ namespace r8b
 
 	inline void calcMinPhaseTransform(double* const Kernel, const int KernelLen,
 									  const int LenMult          = 2, const bool DoFinalMul = true,
-									  double* const DCGroupDelay = NULL)
+									  double* const DCGroupDelay = nullptr)
 	{
 		R8BASSERT(KernelLen > 0);
 		R8BASSERT(LenMult >= 2);

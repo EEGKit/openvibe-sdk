@@ -37,7 +37,7 @@ namespace
 		while (token != nullptr)
 		{
 			result.push_back(token);
-			token = strtok(NULL, delim);
+			token = strtok(nullptr, delim);
 		}
 
 		return result;
@@ -50,11 +50,11 @@ namespace
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |                 // use system message tables to retrieve error text
 					  FORMAT_MESSAGE_ALLOCATE_BUFFER |             // allocate buffer on local heap for error text
 					  FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
-					  NULL,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
+					  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
 					  errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 					  (LPTSTR)&l_ErrorText,                        // output
 					  0,                                           // minimum size for output buffer
-					  NULL
+					  nullptr
 					  );                                           // arguments - see note
 
 		return std::string(l_ErrorText);
@@ -73,7 +73,7 @@ const char* CDynamicModule::getErrorDetails() const { return &m_ErrorDetails[0];
 unsigned int CDynamicModule::getLastError() const { return m_ErrorCode; }
 
 CDynamicModule::CDynamicModule()
-	: m_Handle(NULL), m_ErrorMode(m_ErrorModeNull), m_ShouldFreeModule(true), m_ErrorCode(LogErrorCodes_NoError)
+	: m_Handle(nullptr), m_ErrorMode(m_ErrorModeNull), m_ShouldFreeModule(true), m_ErrorCode(LogErrorCodes_NoError)
 {
 	strcpy(m_ErrorDetails, "");
 	strcpy(m_Filename, "");
@@ -199,7 +199,7 @@ bool CDynamicModule::loadFromKnownPath(int standardPath, const char* modulePath,
 
 	char l_DLLPath[MAX_PATH];
 
-	HRESULT result = ::SHGetFolderPath(NULL, standardPath, nullptr, SHGFP_TYPE_CURRENT, l_DLLPath);
+	HRESULT result = ::SHGetFolderPath(nullptr, standardPath, nullptr, SHGFP_TYPE_CURRENT, l_DLLPath);
 
 	if (result != S_OK)
 	{
@@ -252,7 +252,7 @@ bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const 
 	DWORD l_Size = sizeof(l_DLLPath);
 	l_DLLPath[0] = '\0';
 
-	HKEY l_Key = 0;
+	HKEY l_Key = nullptr;
 
 	LONG result = RegOpenKeyEx(key, TEXT(registryPath), NULL, samDesired, &l_Key);
 
@@ -263,7 +263,7 @@ bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const 
 		return false;
 	}
 
-	result = ::RegQueryValueEx(l_Key, registryKeyName, 0, nullptr, (unsigned char*)l_DLLPath, &l_Size);
+	result = ::RegQueryValueEx(l_Key, registryKeyName, nullptr, nullptr, (unsigned char*)l_DLLPath, &l_Size);
 
 	if (result == ERROR_SUCCESS)
 	{
@@ -327,7 +327,7 @@ bool CDynamicModule::unload()
 #endif
 
 	strcpy(m_Filename, "");
-	m_Handle = NULL;
+	m_Handle = nullptr;
 
 	return true;
 }
@@ -342,7 +342,7 @@ void CDynamicModule::setShouldFreeModule(bool shouldFreeModule) { m_ShouldFreeMo
 
 CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName) const
 {
-	symbol_t l_Result = NULL;
+	symbol_t l_Result = nullptr;
 
 	if (!m_Handle)
 	{
@@ -379,13 +379,13 @@ CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName
 #ifdef TARGET_OS_Windows
 bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS& headers)
 {
-	HANDLE l_FileHandle = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE l_FileHandle = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
 	if (l_FileHandle == INVALID_HANDLE_VALUE) { return false; }
 
 	HANDLE l_ImageHandle = CreateFileMapping(l_FileHandle, nullptr, PAGE_READONLY, 0, 0, nullptr);
 
-	if (l_ImageHandle == 0)
+	if (l_ImageHandle == nullptr)
 	{
 		CloseHandle(l_FileHandle);
 		return false;

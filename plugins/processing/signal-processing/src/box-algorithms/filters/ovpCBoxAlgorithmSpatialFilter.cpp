@@ -101,8 +101,8 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 {
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
-	m_pStreamDecoder = NULL;
-	m_pStreamEncoder = NULL;
+	m_pStreamDecoder = nullptr;
+	m_pStreamEncoder = nullptr;
 
 	CIdentifier l_oIdentifier;
 	l_rStaticBoxContext.getInputType(0, l_oIdentifier);
@@ -177,14 +177,14 @@ bool CBoxAlgorithmSpatialFilter::uninitialize()
 	{
 		m_pStreamDecoder->uninitialize();
 		delete m_pStreamDecoder;
-		m_pStreamDecoder = NULL;
+		m_pStreamDecoder = nullptr;
 	}
 
 	if (m_pStreamEncoder)
 	{
 		m_pStreamEncoder->uninitialize();
 		delete m_pStreamEncoder;
-		m_pStreamEncoder = NULL;
+		m_pStreamEncoder = nullptr;
 	}
 
 	return true;

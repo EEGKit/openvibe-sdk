@@ -31,7 +31,7 @@ namespace EBML
 		 * This function tells the callback object new data are ready to send in the EBML stream. This function
 		 * may be called while the user sends data to the writer.
 		 */
-		virtual void write(const void* pBuffer, uint64_t ui64BufferSize) = 0;
+		virtual void write(const void* pBuffer, const uint64_t ui64BufferSize) = 0;
 	};
 
 	class EBML_API IWriterCallBack : public IWriterCallback { };

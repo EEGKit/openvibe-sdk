@@ -76,10 +76,10 @@ namespace OpenViBE
 			std::string m_sWorkspaceConfigurationFile;
 
 			// Stores the identifier of the scenario that is being played
-			CIdentifier m_oScenarioIdentifier;
+			CIdentifier m_oScenarioIdentifier = OV_UndefinedIdentifier;
 
 		private:
-			CIdentifier m_oRuntimeScenarioIdentifier;
+			CIdentifier m_oRuntimeScenarioIdentifier = OV_UndefinedIdentifier;
 
 			System::CChrono m_oBenchmarkChrono;
 		};

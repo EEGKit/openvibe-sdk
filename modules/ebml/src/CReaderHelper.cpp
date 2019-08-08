@@ -3,7 +3,7 @@
 using namespace EBML;
 
 CReaderHelper::CReaderHelper()
-	: m_pReaderHelperImplementation(NULL)
+	: m_pReaderHelperImplementation(nullptr)
 {
 	m_pReaderHelperImplementation = createReaderHelper();
 }

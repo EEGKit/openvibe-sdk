@@ -70,17 +70,17 @@ functionPointer CEquationParser::m_pFunctionTable[] =
 };
 
 CEquationParser::CEquationParser(TBoxAlgorithm<IBoxAlgorithm>& oPlugin, double** ppVariable, uint32_t ui32VariableCount)
-	: m_pTree(NULL)
+	: m_pTree(nullptr)
 	  , m_ppVariable(ppVariable)
 	  , m_ui32VariableCount(ui32VariableCount)
 	  , m_ui32FunctionStackSize(1024)
-	  , m_pFunctionList(NULL)
-	  , m_pFunctionListBase(NULL)
+	  , m_pFunctionList(nullptr)
+	  , m_pFunctionListBase(nullptr)
 	  , m_ui64FunctionContextStackSize(1024)
-	  , m_pFunctionContextList(NULL)
-	  , m_pFunctionContextListBase(NULL)
+	  , m_pFunctionContextList(nullptr)
+	  , m_pFunctionContextListBase(nullptr)
 	  , m_ui64StackSize(1024)
-	  , m_pStack(NULL)
+	  , m_pStack(nullptr)
 	  , m_ui64TreeCategory(OP_USERDEF)
 	  , m_f64TreeParameter(0)
 	  , m_oParentPlugin(oPlugin) {}
@@ -330,7 +330,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void CEquationParser::push_value(double f64Value)
@@ -348,7 +348,7 @@ void CEquationParser::push_var(uint32_t ui32Index)
 void CEquationParser::push_op(uint64_t ui64Operator)
 {
 	*(m_pFunctionList++)                            = m_pFunctionTable[ui64Operator];
-	(*(m_pFunctionContextList++)).m_ppIndirectValue = NULL;
+	(*(m_pFunctionContextList++)).m_ppIndirectValue = nullptr;
 }
 
 // Functions called by our "pseudo - VM"

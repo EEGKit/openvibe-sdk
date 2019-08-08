@@ -51,7 +51,7 @@ namespace OpenViBEToolkit
 	protected:
 		//  std::vector <double> m_fClasses;
 		//The vector will be use when the user will be able to specify class label
-		OpenViBE::CIdentifier m_oSubClassifierAlgorithmIdentifier;
+		OpenViBE::CIdentifier m_oSubClassifierAlgorithmIdentifier = OV_UndefinedIdentifier;
 	};
 
 	class OVTK_API CAlgorithmPairingStrategyDesc : public CAlgorithmClassifierDesc
