@@ -15,10 +15,7 @@ using namespace std;
 //___________________________________________________________________//
 //                                                                   //
 
-CAlgorithmXMLScenarioExporter::CAlgorithmXMLScenarioExporter()
-	: m_pWriter(nullptr)
-	  , m_pMemoryBuffer(nullptr)
-{
+CAlgorithmXMLScenarioExporter::CAlgorithmXMLScenarioExporter(){
 	m_pWriter = createWriter(*this);
 }
 

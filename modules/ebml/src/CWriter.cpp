@@ -2,9 +2,7 @@
 
 using namespace EBML;
 
-CWriter::CWriter(IWriterCallback& rWriterCallback)
-	: m_pWriterImplementation(nullptr)
-{
+CWriter::CWriter(IWriterCallback& rWriterCallback){
 	m_pWriterImplementation = createWriter(rWriterCallback);
 }
 

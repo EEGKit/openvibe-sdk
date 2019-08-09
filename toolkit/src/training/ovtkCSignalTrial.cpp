@@ -11,11 +11,7 @@ using namespace std;
 // ________________________________________________________________________________________________________________
 //
 
-CSignalTrial::CSignalTrial()
-	: m_ui32ChannelCount(0)
-	  , m_ui32SampleCount(0)
-	  , m_ui32SampleCountReserved(0)
-	  , m_ui32SamplingRate(0) {}
+CSignalTrial::CSignalTrial() {}
 
 CSignalTrial::~CSignalTrial()
 {

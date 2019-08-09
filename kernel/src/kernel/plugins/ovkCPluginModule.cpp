@@ -388,7 +388,7 @@ CString CPluginModuleWindows::getLastErrorMessageString()
 //                                                                   //
 
 CPluginModule::CPluginModule(const IKernelContext& rKernelContext)
-	: TKernelObject<IPluginModule>(rKernelContext), m_pImplementation(nullptr)
+	: TKernelObject<IPluginModule>(rKernelContext)
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_pImplementation=new CPluginModuleLinux(getKernelContext());

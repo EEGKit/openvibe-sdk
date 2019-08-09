@@ -9,8 +9,7 @@ using namespace Communication;
 
 MessagingClient::MessagingClient()
 	: CMessaging()
-	  , m_Client(Socket::createConnectionClient())
-	  , m_BoxDescriptionReceived(false) {}
+	  , m_Client(Socket::createConnectionClient()) {}
 
 MessagingClient::~MessagingClient()
 {

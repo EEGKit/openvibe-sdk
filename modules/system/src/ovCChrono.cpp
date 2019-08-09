@@ -3,15 +3,7 @@
 
 using namespace System;
 
-CChrono::CChrono()
-	: m_pStepInTime(nullptr)
-	  , m_pStepOutTime(nullptr)
-	  , m_ui32StepCount(0)
-	  , m_ui32StepIndex(0)
-	  , m_bIsInStep(false)
-	  , m_bHasNewEstimation(false)
-	  , m_ui64TotalStepInTime(0)
-	  , m_ui64TotalStepOutTime(0) {}
+CChrono::CChrono() {}
 
 CChrono::~CChrono()
 {

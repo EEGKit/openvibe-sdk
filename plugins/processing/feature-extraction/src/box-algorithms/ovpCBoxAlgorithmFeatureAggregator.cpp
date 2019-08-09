@@ -19,13 +19,7 @@ namespace OpenViBEPlugins
 {
 	namespace FeatureExtraction
 	{
-		CBoxAlgorithmFeatureAggregator::CBoxAlgorithmFeatureAggregator() : m_pFeatureVectorEncoder(nullptr),
-																		   m_ui64LastChunkStartTime(0),
-																		   m_ui64LastChunkEndTime(0),
-																		   m_ui32CurrentInput(0),
-																		   m_pVectorBuffer(nullptr),
-																		   m_ui32VectorSize(0),
-																		   m_bHeaderSent(false) { }
+		CBoxAlgorithmFeatureAggregator::CBoxAlgorithmFeatureAggregator() : m_pFeatureVectorEncoder(nullptr) { }
 
 		bool CBoxAlgorithmFeatureAggregator::initialize()
 		{

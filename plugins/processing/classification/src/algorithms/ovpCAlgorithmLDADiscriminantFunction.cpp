@@ -22,7 +22,7 @@ namespace
 	const char* const c_sBiasNodeName   = "Bias";
 }
 
-CAlgorithmLDADiscriminantFunction::CAlgorithmLDADiscriminantFunction(): m_f64Bias(0) {}
+CAlgorithmLDADiscriminantFunction::CAlgorithmLDADiscriminantFunction() {}
 
 void CAlgorithmLDADiscriminantFunction::setWeight(const VectorXd& rWeigth) { m_oWeight = rWeigth; }
 void CAlgorithmLDADiscriminantFunction::setBias(double f64Bias) { m_f64Bias = f64Bias; }

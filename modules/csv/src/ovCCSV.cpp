@@ -140,23 +140,7 @@ bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputStr
 CCSVHandler::CCSVHandler()
 	: m_LogError(LogErrorCodes_NoError)
 	  , m_LastStringError("")
-	  , m_InputTypeIdentifier(EStreamType::StreamedMatrix)
-	  , m_DimensionCount(0)
-	  , m_DimensionSizes({})
-	  , m_SampleCountPerBuffer(0)
-	  , m_NoEventSince(0)
-	  , m_SamplingRate(0)
-	  , m_ColumnCount(0)
-	  , m_HasInputType(false)
-	  , m_IsFirstLineWritten(false)
-	  , m_IsHeaderRead(false)
-	  , m_IsSetInfoCalled(false)
-	  , m_HasEpoch(false)
-	  , m_OriginalSampleNumber(0)
-	  , m_OutputFloatPrecision(10)
-	  , m_LastMatrixOnly(false)
-	  , m_HasDataToRead(true)
-	  , m_IsCRLFEOL(false) {}
+	  , m_InputTypeIdentifier(EStreamType::StreamedMatrix), m_DimensionSizes({}), m_ColumnCount(0), m_OutputFloatPrecision(10), m_HasDataToRead(true) {}
 
 CCSVHandler::~CCSVHandler()
 {

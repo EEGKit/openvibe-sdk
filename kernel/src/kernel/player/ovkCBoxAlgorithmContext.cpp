@@ -11,8 +11,7 @@ CBoxAlgorithmContext::CBoxAlgorithmContext(const IKernelContext& rKernelContext,
 	: TKernelObject<IBoxAlgorithmContext>(rKernelContext)
 	  , m_pStaticBoxContext(pBox)
 	  , m_pDynamicBoxContext(pSimulatedBox)
-	  , m_oPlayerContext(rKernelContext, pSimulatedBox)
-	  , m_bReadyToProcess(false) {}
+	  , m_oPlayerContext(rKernelContext, pSimulatedBox) {}
 
 CBoxAlgorithmContext::~CBoxAlgorithmContext() {}
 

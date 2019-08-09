@@ -10,24 +10,16 @@ namespace OpenViBE
 
 		template <class T>
 		TMessage<T>::TMessage(const IKernelContext& rKernelContext)
-			: T(rKernelContext)
-			  , m_oIdentifier(OV_UndefinedIdentifier)
-			  , m_ui64Time(0) {}
+			: T(rKernelContext), m_oIdentifier(OV_UndefinedIdentifier) {}
 
 		//___________________________________________________________________//
 		//                                                                   //
 
 		template <class T>
-		CIdentifier TMessage<T>::getIdentifier() const
-		{
-			return m_oIdentifier;
-		}
+		CIdentifier TMessage<T>::getIdentifier() const { return m_oIdentifier; }
 
 		template <class T>
-		uint64_t TMessage<T>::getTime() const
-		{
-			return m_ui64Time;
-		}
+		uint64_t TMessage<T>::getTime() const { return m_ui64Time; }
 
 		template <class T>
 		bool TMessage<T>::setIdentifier(const CIdentifier& rIdentifier)

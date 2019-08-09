@@ -33,14 +33,7 @@ using namespace OpenViBEPlugins;
 using namespace Tools;
 
 CBoxAlgorithmExternalProcessing::CBoxAlgorithmExternalProcessing()
-	: m_Port(0)
-	  , m_IsGenerator(false)
-	  , m_ThirdPartyProgramProcessId(0)
-	  , m_AcceptTimeout(10ULL << 32)
-	  , m_ShouldLaunchProgram(false)
-	  , m_HasReceivedEndMessage(false)
-	  , m_SyncTimeout(0)
-	  , m_LastSyncTime(0) {}
+	: m_AcceptTimeout(10ULL << 32) {}
 
 uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency()
 {

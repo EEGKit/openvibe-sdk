@@ -16,9 +16,7 @@ using namespace std;
 CLogListenerConsole::CLogListenerConsole(const IKernelContext& rKernelContext, const CString& sApplicationName)
 	: TKernelObject<ILogListener>(rKernelContext)
 	  , m_eLogColor(LogColor_Default)
-	  , m_sApplicationName(sApplicationName)
-	  , m_bLogWithHexa(false)
-	  , m_bTimeInSeconds(true)
+	  , m_sApplicationName(sApplicationName), m_bTimeInSeconds(true)
 	  , m_ui64TimePrecision(3)
 	  , m_bUseColor(true)
 {

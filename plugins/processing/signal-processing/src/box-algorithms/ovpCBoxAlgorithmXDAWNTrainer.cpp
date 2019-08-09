@@ -12,9 +12,7 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace SignalProcessing;
 
-CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer() : m_TrainStimulationId(0),
-														 m_FilterDimension(0),
-														 m_SaveAsBoxConfig(false) {}
+CBoxAlgorithmXDAWNTrainer::CBoxAlgorithmXDAWNTrainer() {}
 
 bool CBoxAlgorithmXDAWNTrainer::initialize()
 {

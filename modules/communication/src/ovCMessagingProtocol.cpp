@@ -91,7 +91,7 @@ namespace
 ******************************************************************************/
 
 Header::Header()
-	: m_Type(MessageType_Unknown), m_Id(std::numeric_limits<decltype(m_Id)>::max()), m_Size(0)
+	: m_Type(MessageType_Unknown), m_Id(std::numeric_limits<decltype(m_Id)>::max())
 {
 	m_IsValid = false;
 }
@@ -194,9 +194,7 @@ EMessageType AuthenticationMessage::getMessageType() const { return MessageType_
 *
 ******************************************************************************/
 
-CommunicationProtocolVersionMessage::CommunicationProtocolVersionMessage()
-	: m_MinorVersion(0), m_MajorVersion(0)
-{
+CommunicationProtocolVersionMessage::CommunicationProtocolVersionMessage(){
 	m_IsValid = false;
 }
 

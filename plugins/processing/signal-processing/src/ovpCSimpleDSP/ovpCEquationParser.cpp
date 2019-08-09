@@ -81,9 +81,7 @@ CEquationParser::CEquationParser(TBoxAlgorithm<IBoxAlgorithm>& oPlugin, double**
 	  , m_pFunctionContextListBase(nullptr)
 	  , m_ui64StackSize(1024)
 	  , m_pStack(nullptr)
-	  , m_ui64TreeCategory(OP_USERDEF)
-	  , m_f64TreeParameter(0)
-	  , m_oParentPlugin(oPlugin) {}
+	  , m_ui64TreeCategory(OP_USERDEF), m_oParentPlugin(oPlugin) {}
 
 CEquationParser::~CEquationParser()
 {

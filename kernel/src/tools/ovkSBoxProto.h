@@ -13,8 +13,7 @@ namespace
 	public:
 
 		SBoxProto(ITypeManager& typeManager)
-			: m_bIsDeprecated(false)
-			  , m_ui64InputCountHash(0x64AC3CB54A35888CLL)
+			: m_ui64InputCountHash(0x64AC3CB54A35888CLL)
 			  , m_ui64OutputCountHash(0x21E0FAAFE5CAF1E1LL)
 			  , m_ui64SettingCountHash(0x6BDFB15B54B09F63LL)
 			  , m_TypeManager(typeManager) { }

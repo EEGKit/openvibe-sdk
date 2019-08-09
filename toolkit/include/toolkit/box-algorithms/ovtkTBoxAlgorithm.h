@@ -10,7 +10,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TBoxAlgorithm() : m_pBoxAlgorithmContext(nullptr) { }
+		TBoxAlgorithm() { }
 
 		// ====================================================================================================================================
 
@@ -278,7 +278,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TBoxListener() : m_pBoxListenerContext(nullptr) { }
+		TBoxListener() { }
 
 	private:
 

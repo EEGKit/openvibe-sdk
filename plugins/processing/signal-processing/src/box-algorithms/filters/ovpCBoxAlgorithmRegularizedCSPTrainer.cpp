@@ -19,10 +19,7 @@ using namespace Eigen;
 
 // typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
 
-CBoxAlgorithmRegularizedCSPTrainer::CBoxAlgorithmRegularizedCSPTrainer() : m_StimulationIdentifier(0),
-																		   m_FiltersPerClass(0),
-																		   m_SaveAsBoxConf(false),
-																		   m_Tikhonov(0.0) {}
+CBoxAlgorithmRegularizedCSPTrainer::CBoxAlgorithmRegularizedCSPTrainer() : m_Tikhonov(0.0) {}
 
 bool CBoxAlgorithmRegularizedCSPTrainer::initialize()
 {

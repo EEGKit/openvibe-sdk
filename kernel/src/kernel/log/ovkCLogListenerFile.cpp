@@ -16,9 +16,7 @@ CLogListenerFile::CLogListenerFile(const IKernelContext& rKernelContext, const C
 	: TKernelObject<ILogListener>(rKernelContext)
 	  , m_sApplicationName(sApplicationName)
 	  , m_sLogFilename(sLogFilename)
-	  , m_bTimeInSeconds(true)
-	  , m_bLogWithHexa(false)
-	  , m_ui64TimePrecision(3)
+	  , m_bTimeInSeconds(true), m_ui64TimePrecision(3)
 {
 
 	// Create the path to the log file

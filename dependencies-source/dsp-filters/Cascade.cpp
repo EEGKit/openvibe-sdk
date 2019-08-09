@@ -41,10 +41,7 @@ THE SOFTWARE.
 
 namespace Dsp
 {
-	Cascade::Cascade()
-		: m_numStages(0)
-		  , m_maxStages(0)
-		  , m_stageArray(nullptr) {}
+	Cascade::Cascade() {}
 
 	void Cascade::setCascadeStorage(const Storage& storage)
 	{

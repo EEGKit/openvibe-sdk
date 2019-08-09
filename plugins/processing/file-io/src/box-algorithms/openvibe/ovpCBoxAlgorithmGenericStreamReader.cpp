@@ -12,9 +12,7 @@ using namespace OpenViBEPlugins;
 using namespace FileIO;
 
 CBoxAlgorithmGenericStreamReader::CBoxAlgorithmGenericStreamReader()
-	: m_oReader(*this)
-	  , m_bHasEBMLHeader(false)
-	  , m_pFile(nullptr) {}
+	: m_oReader(*this) {}
 
 uint64_t CBoxAlgorithmGenericStreamReader::getClockFrequency()
 {

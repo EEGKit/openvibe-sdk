@@ -38,9 +38,7 @@ namespace
 		dst[src2 - src1] = '\0';
 	}
 }  // namespace
-CStreamedMatrixDecoder::CStreamedMatrixDecoder()
-	: m_ui32Status(Status_ParsingNothing)
-	  , m_ui64MatrixBufferSize(0) {}
+CStreamedMatrixDecoder::CStreamedMatrixDecoder() {}
 
 // ________________________________________________________________________________________________________________
 //

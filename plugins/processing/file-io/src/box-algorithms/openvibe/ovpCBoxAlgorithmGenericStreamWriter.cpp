@@ -10,8 +10,7 @@ using namespace OpenViBEPlugins;
 using namespace FileIO;
 
 CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter()
-	: m_bIsHeaderGenerate(false)
-	  , m_oWriter(*this) {}
+	: m_oWriter(*this) {}
 
 bool CBoxAlgorithmGenericStreamWriter::initialize()
 {

@@ -257,8 +257,7 @@ bool CKernelLoaderWindows::isOpen()
 //___________________________________________________________________//
 //                                                                   //
 
-CKernelLoader::CKernelLoader() : m_pKernelLoaderImpl(nullptr)
-{
+CKernelLoader::CKernelLoader() {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_pKernelLoaderImpl=new CKernelLoaderLinux();
 #elif defined TARGET_OS_Windows

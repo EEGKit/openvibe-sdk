@@ -600,7 +600,7 @@ namespace r8b
 	R8BNOCTOR(CSyncKeeper)
 
 	public:
-		CSyncKeeper() : SyncObj(nullptr) { }
+		CSyncKeeper() { }
 
 		/**
 		 * @param aSyncObj Pointer to the sync object which should be used for

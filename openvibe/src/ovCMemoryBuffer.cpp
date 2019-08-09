@@ -156,21 +156,15 @@ bool CMemoryBufferImpl::append(const IMemoryBuffer& rMemoryBuffer)
 // ________________________________________________________________________________________________________________
 //
 
-CMemoryBuffer::CMemoryBuffer()
-	: m_pMemoryBufferImpl(nullptr)
-{
+CMemoryBuffer::CMemoryBuffer(){
 	m_pMemoryBufferImpl = new CMemoryBufferImpl();
 }
 
-CMemoryBuffer::CMemoryBuffer(const IMemoryBuffer& rMemoryBuffer)
-	: m_pMemoryBufferImpl(nullptr)
-{
+CMemoryBuffer::CMemoryBuffer(const IMemoryBuffer& rMemoryBuffer){
 	m_pMemoryBufferImpl = new CMemoryBufferImpl(rMemoryBuffer);
 }
 
-CMemoryBuffer::CMemoryBuffer(const uint8_t* pMemoryBuffer, const uint64_t ui64BufferSize)
-	: m_pMemoryBufferImpl(nullptr)
-{
+CMemoryBuffer::CMemoryBuffer(const uint8_t* pMemoryBuffer, const uint64_t ui64BufferSize){
 	m_pMemoryBufferImpl = new CMemoryBufferImpl(pMemoryBuffer, ui64BufferSize);
 }
 

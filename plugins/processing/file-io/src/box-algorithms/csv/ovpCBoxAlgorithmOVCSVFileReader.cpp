@@ -16,11 +16,7 @@ using namespace OpenViBEPlugins;
 using namespace FileIO;
 
 CBoxAlgorithmOVCSVFileReader::CBoxAlgorithmOVCSVFileReader()
-	: m_ReaderLib(createCSVHandler(), releaseCSVHandler)
-	  , m_LastStimulationDate(0)
-	  , m_SamplingRate(0)
-	  , m_SampleCountPerBuffer(0)
-	  , m_IsHeaderSent(false)
+	: m_ReaderLib(createCSVHandler(), releaseCSVHandler), m_IsHeaderSent(false)
 	  , m_IsStimulationHeaderSent(false) {}
 
 uint64_t CBoxAlgorithmOVCSVFileReader::getClockFrequency()

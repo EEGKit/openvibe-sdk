@@ -14,9 +14,7 @@ CLink::CLink(const IKernelContext& rKernelContext, CScenario& rOwnerScenario)
 	  , m_rOwnerScenario(rOwnerScenario)
 	  , m_oIdentifier(OV_UndefinedIdentifier)
 	  , m_oSourceBoxIdentifier(OV_UndefinedIdentifier)
-	  , m_oTargetBoxIdentifier(OV_UndefinedIdentifier)
-	  , m_ui32SourceOutputIndex(0)
-	  , m_ui32TargetInputIndex(0) {}
+	  , m_oTargetBoxIdentifier(OV_UndefinedIdentifier) {}
 
 bool CLink::InitializeFromExistingLink(const ILink& l)
 {

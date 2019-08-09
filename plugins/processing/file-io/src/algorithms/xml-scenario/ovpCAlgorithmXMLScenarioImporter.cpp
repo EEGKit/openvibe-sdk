@@ -109,9 +109,7 @@ namespace
 	};
 };
 
-CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter()
-	: m_pContext(nullptr), m_ui32Status(Status_ParsingNothing), m_pReader(nullptr)
-{
+CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter(){
 	m_pReader = createReader(*this);
 }
 

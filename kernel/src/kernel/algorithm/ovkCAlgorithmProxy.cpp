@@ -14,12 +14,8 @@ using namespace Plugins;
 using namespace std;
 
 CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& rKernelContext, IAlgorithm& rAlgorithm, const IAlgorithmDesc& rAlgorithmDesc)
-	: TKernelObject<IAlgorithmProxy>(rKernelContext)
-	  , m_pInputConfigurable(nullptr)
-	  , m_pOutputConfigurable(nullptr)
-	  , m_rAlgorithmDesc(rAlgorithmDesc)
+	: TKernelObject<IAlgorithmProxy>(rKernelContext), m_rAlgorithmDesc(rAlgorithmDesc)
 	  , m_rAlgorithm(rAlgorithm)
-	  , m_bIsInitialized(false)
 {
 	m_pInputConfigurable  = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
 	m_pOutputConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));

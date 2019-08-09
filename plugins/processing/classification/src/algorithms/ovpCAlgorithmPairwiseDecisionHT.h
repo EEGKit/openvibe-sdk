@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CAlgorithmPairwiseDecisionHT() : m_ui32ClassCount(0) { }
+			CAlgorithmPairwiseDecisionHT() { }
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;

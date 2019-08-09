@@ -316,7 +316,7 @@ namespace r8b
 		R8BNOCTOR(CObjKeeper)
 
 		public:
-			CObjKeeper() : Object(nullptr) { }
+			CObjKeeper() { }
 
 			~CObjKeeper() { delete Object; }
 
@@ -392,7 +392,7 @@ namespace r8b
 	R8BNOCTOR(CDSPRealFFTKeeper)
 
 	public:
-		CDSPRealFFTKeeper() : Object(nullptr) { }
+		CDSPRealFFTKeeper() { }
 
 		/**
 		 * Function acquires FFT object with the specified block length.

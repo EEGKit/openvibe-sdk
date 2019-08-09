@@ -14,11 +14,7 @@ using namespace DataGeneration;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-CBoxAlgorithmTimeSignalGenerator::CBoxAlgorithmTimeSignalGenerator()
-	: m_bHeaderSent(false)
-	  , m_ui32SamplingFrequency(0)
-	  , m_ui32GeneratedEpochSampleCount(0)
-	  , m_ui32SentSampleCount(0) {}
+CBoxAlgorithmTimeSignalGenerator::CBoxAlgorithmTimeSignalGenerator() {}
 
 void CBoxAlgorithmTimeSignalGenerator::release()
 {

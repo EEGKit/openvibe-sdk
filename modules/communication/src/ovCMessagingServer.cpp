@@ -9,8 +9,7 @@ using namespace Communication;
 
 MessagingServer::MessagingServer()
 	: CMessaging()
-	  , m_Server(Socket::createConnectionServer())
-	  , m_Client(nullptr) {}
+	  , m_Server(Socket::createConnectionServer()) {}
 
 MessagingServer::~MessagingServer()
 {
