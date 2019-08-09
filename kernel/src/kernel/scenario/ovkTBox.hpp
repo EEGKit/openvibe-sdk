@@ -54,7 +54,7 @@ namespace
 			: m_sName(other.m_sName), m_oTypeIdentifier(other.m_oTypeIdentifier), m_oIdentifier(other.m_oIdentifier), m_bDeprecated(other.m_bDeprecated) { }
 
 		CInterfacor(const OpenViBE::CString& name, const OpenViBE::CIdentifier& idType, const OpenViBE::CIdentifier& id) 
-			: m_sName(name), m_oTypeIdentifier(idType), m_oIdentifier(id), m_bDeprecated(false) {}
+			: m_sName(name), m_oTypeIdentifier(idType), m_oIdentifier(id) {}
 
 		OpenViBE::CString m_sName;
 		OpenViBE::CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
@@ -99,8 +99,7 @@ namespace OpenViBE
 		public:
 
 			explicit TBox(const IKernelContext& rKernelContext)
-				: TAttributable<TKernelObject<T>>(rKernelContext), m_pOwnerScenario(nullptr), m_pBoxAlgorithmDescriptor(nullptr), m_pBoxListener(nullptr), m_bIsNotifyingDescriptor(false)
-				  , m_bIsNotificationActive(true), m_bIsObserverNotificationActive(true), m_oIdentifier(OV_UndefinedIdentifier), m_oAlgorithmClassIdentifier(OV_UndefinedIdentifier), m_sName("unnamed")
+				: TAttributable<TKernelObject<T>>(rKernelContext), m_oIdentifier(OV_UndefinedIdentifier), m_oAlgorithmClassIdentifier(OV_UndefinedIdentifier)
 			{
 				for (auto i : { Input, Output, Setting })
 				{

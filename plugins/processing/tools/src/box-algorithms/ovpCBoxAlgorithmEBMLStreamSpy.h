@@ -42,10 +42,10 @@ namespace OpenViBEPlugins
 			std::stack<EBML::CIdentifier> m_vNodes;
 			std::map<EBML::CIdentifier, std::string> m_vName;
 			std::map<EBML::CIdentifier, std::string> m_vType;
-			uint64_t m_ui64ExpandValuesCount;
+			uint64_t m_ui64ExpandValuesCount = 0;
 			OpenViBE::Kernel::ELogLevel m_eLogLevel;
-			EBML::IReader* m_pReader;
-			EBML::IReaderHelper* m_pReaderHelper;
+			EBML::IReader* m_pReader = nullptr;
+			EBML::IReaderHelper* m_pReaderHelper = nullptr;
 		};
 
 		class CBoxAlgorithmEBMLStreamSpyListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

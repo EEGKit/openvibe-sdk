@@ -189,7 +189,7 @@ namespace EBML
 //
 
 CWriter::CWriter(IWriterCallback& rWriterCallback)
-	: m_pCurrentNode(nullptr), m_rWriterCallback(rWriterCallback) {}
+	: m_rWriterCallback(rWriterCallback) {}
 
 bool CWriter::openChild(const CIdentifier& rIdentifier)
 {

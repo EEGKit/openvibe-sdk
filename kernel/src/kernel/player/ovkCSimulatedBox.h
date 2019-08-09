@@ -18,16 +18,12 @@ namespace OpenViBE
 		{
 		public:
 
-			CChunk()
-				: m_ui64StartTime(0)
-				  , m_ui64EndTime(0)
-				  , m_bIsDeprecated(false) { }
+			CChunk() { }
 
 			explicit CChunk(const CChunk& rChunk)
 				: m_oBuffer(rChunk.m_oBuffer)
 				  , m_ui64StartTime(rChunk.m_ui64StartTime)
-				  , m_ui64EndTime(rChunk.m_ui64EndTime)
-				  , m_bIsDeprecated(false) { }
+				  , m_ui64EndTime(rChunk.m_ui64EndTime) { }
 
 			const CBuffer& getBuffer() const
 			{
@@ -132,7 +128,7 @@ namespace OpenViBE
 
 			bool m_bReadyToProcess = false;
 			bool m_bChunkConsistencyChecking = false;
-			ELogLevel m_eChunkConsistencyCheckingLogLevel;
+			ELogLevel m_eChunkConsistencyCheckingLogLevel = LogLevel_Warning;
 
 			Plugins::IBoxAlgorithm* m_pBoxAlgorithm = nullptr;
 			const IScenario* m_pScenario = nullptr;

@@ -14,14 +14,9 @@ using namespace Tools;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-CBoxAlgorithmEBMLStreamSpy::CBoxAlgorithmEBMLStreamSpy()
-	: m_pReader(nullptr)
-	  , m_pReaderHelper(nullptr) {}
+CBoxAlgorithmEBMLStreamSpy::CBoxAlgorithmEBMLStreamSpy() {}
 
-void CBoxAlgorithmEBMLStreamSpy::release()
-{
-	delete this;
-}
+void CBoxAlgorithmEBMLStreamSpy::release() { delete this; }
 
 bool CBoxAlgorithmEBMLStreamSpy::initialize()
 {

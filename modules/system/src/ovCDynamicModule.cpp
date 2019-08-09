@@ -73,7 +73,7 @@ const char* CDynamicModule::getErrorDetails() const { return &m_ErrorDetails[0];
 unsigned int CDynamicModule::getLastError() const { return m_ErrorCode; }
 
 CDynamicModule::CDynamicModule()
-	: m_Handle(nullptr), m_ErrorMode(m_ErrorModeNull), m_ShouldFreeModule(true), m_ErrorCode(LogErrorCodes_NoError)
+	: m_ErrorMode(m_ErrorModeNull), m_ErrorCode(LogErrorCodes_NoError)
 {
 	strcpy(m_ErrorDetails, "");
 	strcpy(m_Filename, "");

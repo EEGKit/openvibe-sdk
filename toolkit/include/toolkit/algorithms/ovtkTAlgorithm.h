@@ -9,7 +9,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TAlgorithm() : m_pAlgorithmContext(nullptr) { }
+		TAlgorithm() { }
 
 		virtual bool initialize(OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)
 		{

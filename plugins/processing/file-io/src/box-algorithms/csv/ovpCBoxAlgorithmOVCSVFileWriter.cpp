@@ -15,13 +15,7 @@ using namespace OpenViBEPlugins;
 using namespace FileIO;
 
 CBoxAlgorithmOVCSVFileWriter::CBoxAlgorithmOVCSVFileWriter()
-	: m_WriterLib(CSV::createCSVHandler(), CSV::releaseCSVHandler)
-	  , m_Epoch(0)
-	  , m_IsHeaderReceived(false)
-	  , m_IsFileOpen(false)
-	  , m_AppendData(false)
-	  , m_LastMatrixOnly(false)
-	  , m_WriteHeader(true) {}
+	: m_WriterLib(CSV::createCSVHandler(), CSV::releaseCSVHandler) {}
 
 bool CBoxAlgorithmOVCSVFileWriter::initialize()
 {

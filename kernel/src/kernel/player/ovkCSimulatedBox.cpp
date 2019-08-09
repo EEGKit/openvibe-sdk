@@ -25,17 +25,8 @@ using namespace Plugins;
 static const CNameValuePairList s_oDummyNameValuePairList;
 
 CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& rScheduler)
-	: TKernelObject<IBoxIO>(rKernelContext)
-	  , m_bReadyToProcess(false)
-	  , m_bChunkConsistencyChecking(false)
-	  , m_eChunkConsistencyCheckingLogLevel(LogLevel_Warning)
-	  , m_pBoxAlgorithm(nullptr)
-	  , m_pScenario(nullptr)
-	  , m_pBox(nullptr)
-	  , m_rScheduler(rScheduler)
-	  , m_ui64LastClockActivationDate(OV_IncorrectTime)
-	  , m_ui64ClockFrequency(0)
-	  , m_ui64ClockActivationStep(0) {}
+	: TKernelObject<IBoxIO>(rKernelContext), m_rScheduler(rScheduler)
+	  , m_ui64LastClockActivationDate(OV_IncorrectTime) {}
 
 CSimulatedBox::~CSimulatedBox() {}
 
