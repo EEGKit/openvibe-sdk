@@ -185,7 +185,7 @@ namespace Communication
 		void resetSyncMessageReceived();
 
 	private:
-		Socket::IConnectionServer* m_Server; //< Server connection
-		Socket::IConnection* m_Client;
+		Socket::IConnectionServer* m_Server = nullptr; //< Server connection
+		Socket::IConnection* m_Client = nullptr;
 	};
 }

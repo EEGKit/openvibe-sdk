@@ -60,17 +60,17 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalResampling> m_oDecoder;
 			mutable OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_oEncoder;
 
-			uint32_t m_outSamplingRate;
-			uint32_t m_outSampleCount;
+			uint32_t m_outSamplingRate = 0;
+			uint32_t m_outSampleCount = 0;
 
-			int m_iFractionalDelayFilterSampleCount;
-			double m_f64TransitionBandInPercent;
-			double m_f64StopBandAttenuation;
+			int m_iFractionalDelayFilterSampleCount = 0;
+			double m_f64TransitionBandInPercent = 0;
+			double m_f64StopBandAttenuation = 0;
 
-			uint32_t m_inSamplingRate;
+			uint32_t m_inSamplingRate = 0;
 			mutable uint64_t m_totalOutSampleCount;
 			CResampler m_oResampler;
-			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext;
+			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext = nullptr;
 		};
 
 		class CBoxAlgorithmSignalResamplingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc

@@ -326,6 +326,6 @@ namespace Communication
 
 	protected:
 		struct MessagingImplementation;
-		MessagingImplementation* impl;
+		MessagingImplementation* impl = nullptr;
 	};
 }

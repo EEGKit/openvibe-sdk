@@ -32,9 +32,9 @@ class CAbstractTreeNode
 protected:
 
 	//! True if this is a terminal node
-	bool m_bIsTerminal;
+	bool m_bIsTerminal = false;
 	//! True if this node contains a constant value
-	bool m_bIsConstant;
+	bool m_bIsConstant = false;
 
 public:
 
@@ -105,10 +105,10 @@ public:
 	std::vector<CAbstractTreeNode *> m_oChildren;
 
 	//! The node operator's identifier
-	uint64_t m_ui64Identifier;
+	uint64_t m_ui64Identifier = 0;
 
 	//! True if the node is "associative"
-	bool m_bIsAssociative;
+	bool m_bIsAssociative = false;
 
 	//Constructors
 	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, bool bIsAssociative = false)
@@ -274,7 +274,7 @@ class CAbstractTreeValueNode : public CAbstractTreeNode
 protected:
 
 	//! Value associated with the node.
-	double m_f64Value;
+	double m_f64Value = 0;
 
 public:
 
@@ -344,7 +344,7 @@ public:
 
 protected:
 
-	uint32_t m_ui32Index;
+	uint32_t m_ui32Index = 0;
 };
 
 /**

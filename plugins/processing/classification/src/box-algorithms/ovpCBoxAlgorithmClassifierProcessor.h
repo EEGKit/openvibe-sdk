@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_oHyperplaneValuesEncoder;
 			OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmClassifierProcessor> m_oProbabilityValuesEncoder;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier = nullptr;
 
 			std::map<double, uint64_t> m_vStimulation;
 		};

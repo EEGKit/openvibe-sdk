@@ -97,7 +97,7 @@ namespace Lepton
 		*/
 		const std::vector<ExpressionTreeNode>& getChildren() const;
 	private:
-		Operation* operation;
+		Operation* operation = nullptr;
 		std::vector<ExpressionTreeNode> children;
 	};
 } // namespace Lepton

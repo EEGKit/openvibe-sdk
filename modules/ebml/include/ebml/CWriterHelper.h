@@ -24,6 +24,6 @@ namespace EBML
 
 	protected:
 
-		IWriterHelper* m_pWriterHelperImplementation;
+		IWriterHelper* m_pWriterHelperImplementation = nullptr;
 	};
 }  // namespace EBML

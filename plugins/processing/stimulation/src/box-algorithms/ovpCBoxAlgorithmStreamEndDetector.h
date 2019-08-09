@@ -30,8 +30,8 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TStreamStructureDecoder<CBoxAlgorithmStreamEndDetector> m_StructureDecoder;
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmStreamEndDetector> m_StimulationEncoder;
 
-			uint64_t m_StimulationIdentifier;
-			uint64_t m_ActionIdentifier;
+			uint64_t m_StimulationIdentifier = 0;
+			uint64_t m_ActionIdentifier = 0;
 
 		private:
 			enum class EEndState
@@ -42,12 +42,12 @@ namespace OpenViBEPlugins
 				Finished
 			};
 
-			uint64_t m_EndDate;
-			uint64_t m_CurrentChunkEndDate;
-			uint64_t m_PreviousTime;
-			uint32_t m_InputEBMLIndex;
-			uint32_t m_OutputStimulationsIndex;
-			bool m_IsHeaderSent;
+			uint64_t m_EndDate = 0;
+			uint64_t m_CurrentChunkEndDate = 0;
+			uint64_t m_PreviousTime = 0;
+			uint32_t m_InputEBMLIndex = 0;
+			uint32_t m_OutputStimulationsIndex = 0;
+			bool m_IsHeaderSent = false;
 			EEndState m_EndState;
 		};
 

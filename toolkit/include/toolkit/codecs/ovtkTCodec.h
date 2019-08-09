@@ -63,11 +63,11 @@ namespace OpenViBEToolkit
 	protected:
 
 		// We will need the dynamic box context when trying to decode and encode, thus we keep a pointer on the underlying box.
-		T* m_pBoxAlgorithm;
+		T* m_pBoxAlgorithm = nullptr;
 
 		// Every codec has an algorithm
-		OpenViBE::Kernel::IAlgorithmProxy* m_pCodec;
-		uint32_t m_ui32ConnectorIndex;//one codec per connector
+		OpenViBE::Kernel::IAlgorithmProxy* m_pCodec = nullptr;
+		uint32_t m_ui32ConnectorIndex = 0;//one codec per connector
 
 	public:
 		TCodec()

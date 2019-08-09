@@ -32,8 +32,8 @@ namespace OpenViBEPlugins
 		protected:
 			void write(const char* sString) override; // XML::IWriterCallback
 
-			XML::IWriter* m_pWriter;
-			OpenViBE::IMemoryBuffer* m_pMemoryBuffer;
+			XML::IWriter* m_pWriter = nullptr;
+			OpenViBE::IMemoryBuffer* m_pMemoryBuffer = nullptr;
 		};
 
 		class CAlgorithmXMLScenarioExporterDesc : public OpenViBEToolkit::CAlgorithmScenarioExporterDesc

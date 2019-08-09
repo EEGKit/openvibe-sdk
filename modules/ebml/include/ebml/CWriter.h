@@ -17,7 +17,7 @@ namespace EBML
 
 	protected:
 
-		IWriter* m_pWriterImplementation;
+		IWriter* m_pWriterImplementation = nullptr;
 
 	private:
 

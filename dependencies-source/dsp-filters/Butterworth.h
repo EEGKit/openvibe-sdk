@@ -63,7 +63,7 @@ namespace Dsp
 			void design(int numPoles);
 
 		private:
-			int m_numPoles;
+			int m_numPoles = 0;
 		};
 
 		//------------------------------------------------------------------------------
@@ -76,8 +76,8 @@ namespace Dsp
 			void design(int numPoles, double gainDb);
 
 		private:
-			int m_numPoles;
-			double m_gainDb;
+			int m_numPoles = 0;
+			double m_gainDb = 0;
 		};
 
 		//------------------------------------------------------------------------------

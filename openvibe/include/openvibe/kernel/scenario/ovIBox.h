@@ -30,8 +30,8 @@ namespace OpenViBE
 		{
 		public:
 			BoxEventMessageType m_eType;
-			int32_t m_i32FirstIndex;
-			int32_t m_i32SecondIndex;
+			int32_t m_i32FirstIndex = 0;
+			int32_t m_i32SecondIndex = 0;
 		};
 
 		/**

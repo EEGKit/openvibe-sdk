@@ -43,13 +43,13 @@ namespace OpenViBEPlugins
 
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmRegularizedCSPTrainer> m_StimulationEncoder;
 
-			uint64_t m_StimulationIdentifier;
+			uint64_t m_StimulationIdentifier = 0;
 			OpenViBE::CString m_SpatialFilterConfigurationFilename;
-			uint32_t m_FiltersPerClass;
-			bool m_SaveAsBoxConf;
-			bool m_HasBeenInitialized;
+			uint32_t m_FiltersPerClass = 0;
+			bool m_SaveAsBoxConf = false;
+			bool m_HasBeenInitialized = false;
 
-			double m_Tikhonov;
+			double m_Tikhonov = 0;
 
 			struct IncrementalCovarianceProxy
 			{
@@ -61,7 +61,7 @@ namespace OpenViBEPlugins
 
 			std::vector<IncrementalCovarianceProxy> m_IncCovarianceProxies;
 
-			uint32_t m_NumClasses;
+			uint32_t m_NumClasses = 0;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainer)
 		};

@@ -91,7 +91,7 @@ namespace Dsp
 						WorkspaceBase* w);
 
 		private:
-			int m_numPoles;
+			int m_numPoles = 0;
 		};
 
 		//------------------------------------------------------------------------------
@@ -106,8 +106,8 @@ namespace Dsp
 						WorkspaceBase* w);
 
 		private:
-			int m_numPoles;
-			double m_gainDb;
+			int m_numPoles = 0;
+			double m_gainDb = 0;
 		};
 
 		//------------------------------------------------------------------------------

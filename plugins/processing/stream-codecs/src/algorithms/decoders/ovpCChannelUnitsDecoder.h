@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 		private:
 
 			std::stack<EBML::CIdentifier> m_vNodes;
-			//			uint32_t m_ui32UnitIndex;
+			//			uint32_t m_ui32UnitIndex = 0;
 		};
 
 		class CChannelUnitsDecoderDesc : public CStreamedMatrixDecoderDesc

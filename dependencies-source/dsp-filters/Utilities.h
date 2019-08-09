@@ -737,8 +737,8 @@ void zero (int samples,
 		double m_env[Channels];
 
 	protected:
-		double m_a;
-		double m_r;
+		double m_a = 0;
+		double m_r = 0;
 	};
 
 	//------------------------------------------------------------------------------
@@ -786,7 +786,7 @@ void zero (int samples,
 		}
 
 	private:
-		bool m_firstTime;
+		bool m_firstTime = false;
 		Value m_slope [Channels];
 		Value m_prev [Channels];
 	};

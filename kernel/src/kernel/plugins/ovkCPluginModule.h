@@ -25,7 +25,7 @@ namespace OpenViBE
 
 		protected:
 
-			IPluginModule* m_pImplementation;
+			IPluginModule* m_pImplementation = nullptr;
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE

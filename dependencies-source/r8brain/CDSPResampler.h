@@ -442,7 +442,7 @@ namespace r8b
 		///<
 		CPtrKeeper<CDSPBlockConvolver*> Convs[ ConvCountMax ]; ///< Convolvers.
 		///<
-		int ConvCount; ///< The number of objects defined in the Convs[] array.
+		int ConvCount = 0; ///< The number of objects defined in the Convs[] array.
 		///< Equals to 0 if sample rate conversion is not needed.
 		///<
 		CPtrKeeper<CInterpClass*> Interp; ///< Fractional interpolator object.
@@ -458,7 +458,7 @@ namespace r8b
 		CFixedBuffer<double> TmpBuf; ///< Additional output buffer, can be
 		///< addressed by the InterpBuf pointer.
 		///<
-		double* InterpBuf; ///< Final output interpolation buffer to use. If NULL
+		double* InterpBuf = nullptr; ///< Final output interpolation buffer to use. If NULL
 		///< then the input buffer will be used instead. Otherwise this
 		///< pointer points to either ConvBufs or TmpBuf.
 		///<

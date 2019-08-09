@@ -337,48 +337,48 @@ namespace r8b
 		}
 
 	private:
-		CDSPFIRFilter* Filter; ///< Filter in use.
+		CDSPFIRFilter* Filter = nullptr; ///< Filter in use.
 		///<
 		CPtrKeeper<CDSPRealFFTKeeper*> fftin; ///< FFT object 1, used to produce
 		///< the input spectrum (can embed the "power of 2" upsampling).
 		///<
 		CPtrKeeper<CDSPRealFFTKeeper*> ffto2; ///< FFT object 2 (can be NULL).
 		///<
-		CDSPRealFFTKeeper* fftout; ///< FFT object used to produce the output
+		CDSPRealFFTKeeper* fftout = nullptr; ///< FFT object used to produce the output
 		///< signal (can embed the "power of 2" downsampling), may point to
 		///< either "fftin" or "ffto2".
 		///<
-		int UpFactor; ///< Upsampling factor.
+		int UpFactor = 0; ///< Upsampling factor.
 		///<
-		int DownFactor; ///< Downsampling factor.
+		int DownFactor = 0; ///< Downsampling factor.
 		///<
 		bool DoConsumeLatency; ///< "True" if the output latency should be
 		///< consumed. Does not apply to the fractional part of the latency
 		///< (if such part is available).
 		///<
-		int BlockLen2; ///< Equals block length * 2.
+		int BlockLen2 = 0; ///< Equals block length * 2.
 		///<
-		int OutOffset; ///< Output offset, depends on filter's introduced latency.
+		int OutOffset = 0; ///< Output offset, depends on filter's introduced latency.
 		///<
-		int PrevInputLen; ///< The length of previous input data saved, used for
+		int PrevInputLen = 0; ///< The length of previous input data saved, used for
 		///< overlap.
 		///<
-		int InputLen; ///< The number of input samples that should be accumulated
+		int InputLen = 0; ///< The number of input samples that should be accumulated
 		///< before the input block is processed.
 		///<
-		int Latency; ///< Processing latency, in samples.
+		int Latency = 0; ///< Processing latency, in samples.
 		///<
-		double LatencyFrac; ///< Fractional latency, in samples, that is left in
+		double LatencyFrac = 0; ///< Fractional latency, in samples, that is left in
 		///< the output signal.
 		///<
-		int UpShift; ///< "Power of 2" upsampling shift. Equals -1 if UpFactor is
+		int UpShift = 0; ///< "Power of 2" upsampling shift. Equals -1 if UpFactor is
 		///< not a "power of 2" value. Equals 0 if UpFactor equals 1.
 		///<
-		int DownShift; ///< "Power of 2" downsampling shift. Equals -1 if
+		int DownShift = 0; ///< "Power of 2" downsampling shift. Equals -1 if
 		///< DownFactor is not a "power of 2". Equals 0 if DownFactor equals
 		///< 1.
 		///<
-		int InputDelay; ///< Additional input delay, in samples. Used to make the
+		int InputDelay = 0; ///< Additional input delay, in samples. Used to make the
 		///< output latency divisible by DownShift. Used only if UpShift <= 0
 		///< and DownShift > 0.
 		///<
@@ -386,26 +386,26 @@ namespace r8b
 		///< output data blocks, overall capacity = BlockLen2 * 2 +
 		///< PrevInputLen. Used in the flip-flop manner.
 		///<
-		double* PrevInput; ///< Previous input data buffer, capacity = BlockLen.
+		double* PrevInput = nullptr; ///< Previous input data buffer, capacity = BlockLen.
 		///<
-		double* CurInput; ///< Input data buffer, capacity = BlockLen2.
+		double* CurInput = nullptr; ///< Input data buffer, capacity = BlockLen2.
 		///<
-		double* CurOutput; ///< Output data buffer, capacity = BlockLen2.
+		double* CurOutput = nullptr; ///< Output data buffer, capacity = BlockLen2.
 		///<
-		int InDataLeft; ///< Samples left before processing input and output FFT
+		int InDataLeft = 0; ///< Samples left before processing input and output FFT
 		///< blocks. Initialized to InputLen on clear.
 		///<
-		int LatencyLeft; ///< Latency in samples left to skip.
+		int LatencyLeft = 0; ///< Latency in samples left to skip.
 		///<
-		int UpSkip; ///< The current upsampling sample skip (value in the range
+		int UpSkip = 0; ///< The current upsampling sample skip (value in the range
 		///< 0 to UpFactor - 1).
 		///<
-		int UpSkipInit; ///< The initial UpSkip value after clear().
+		int UpSkipInit = 0; ///< The initial UpSkip value after clear().
 		///<
-		int DownSkip; ///< The current downsampling sample skip (value in the
+		int DownSkip = 0; ///< The current downsampling sample skip (value in the
 		///< range 0 to DownFactor - 1). Not used if DownShift > 0.
 		///<
-		int DownSkipInit; ///< The initial DownSkip value after clear().
+		int DownSkipInit = 0; ///< The initial DownSkip value after clear().
 		///<
 
 		/**

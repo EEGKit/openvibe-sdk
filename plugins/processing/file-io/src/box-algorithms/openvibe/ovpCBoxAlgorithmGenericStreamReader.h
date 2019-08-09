@@ -48,13 +48,13 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CMemoryBuffer m_oSwap;
 			OpenViBE::CMemoryBuffer m_oPendingChunk;
-			uint64_t m_ui64StartTime;
-			uint64_t m_ui64EndTime;
-			uint32_t m_ui32OutputIndex;
-			bool m_bPending;
-			bool m_bHasEBMLHeader;
+			uint64_t m_ui64StartTime = 0;
+			uint64_t m_ui64EndTime = 0;
+			uint32_t m_ui32OutputIndex = 0;
+			bool m_bPending = false;
+			bool m_bHasEBMLHeader = false;
 
-			FILE* m_pFile;
+			FILE* m_pFile = nullptr;
 			std::stack<EBML::CIdentifier> m_vNodes;
 			std::map<uint32_t, uint32_t> m_vStreamIndexToOutputIndex;
 			std::map<uint32_t, OpenViBE::CIdentifier> m_vStreamIndexToTypeIdentifier;

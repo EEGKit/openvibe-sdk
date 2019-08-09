@@ -70,14 +70,14 @@ namespace Dsp
 			void legendre(double* p, int n);
 
 		protected:
-			int m_maxN;
-			double* m_w;
-			double* m_a;
-			double* m_p;
-			double* m_s;
-			double* m_v;
-			double* m_aa;
-			double* m_bb;
+			int m_maxN = 0;
+			double* m_w = nullptr;
+			double* m_a = nullptr;
+			double* m_p = nullptr;
+			double* m_s = nullptr;
+			double* m_v = nullptr;
+			double* m_aa = nullptr;
+			double* m_bb = nullptr;
 		};
 
 		template <int maxN>
@@ -154,7 +154,7 @@ namespace Dsp
 			void design(int numPoles, WorkspaceBase* w);
 
 		private:
-			int m_numPoles;
+			int m_numPoles = 0;
 		};
 
 		//------------------------------------------------------------------------------

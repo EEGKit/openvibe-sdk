@@ -270,7 +270,7 @@ namespace OpenViBEToolkit
 			OpenViBE::Kernel::IBoxAlgorithmContext*& m_rpBoxAlgorithmContext;
 		};
 
-		OpenViBE::Kernel::IBoxAlgorithmContext* m_pBoxAlgorithmContext;
+		OpenViBE::Kernel::IBoxAlgorithmContext* m_pBoxAlgorithmContext = nullptr;
 	};
 
 	template <class CBoxListenerParentClass>
@@ -395,6 +395,6 @@ namespace OpenViBEToolkit
 			OpenViBE::Kernel::IBoxListenerContext*& m_rpBoxListenerContext;
 		};
 
-		OpenViBE::Kernel::IBoxListenerContext* m_pBoxListenerContext;
+		OpenViBE::Kernel::IBoxListenerContext* m_pBoxListenerContext = nullptr;
 	};
 }  // namespace OpenViBEToolkit

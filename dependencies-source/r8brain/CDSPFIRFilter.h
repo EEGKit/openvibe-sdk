@@ -126,32 +126,32 @@ namespace r8b
 		void unref();
 
 	private:
-		double ReqNormFreq; ///< Required normalized frequency, 0 to 1 inclusive.
+		double ReqNormFreq = 0; ///< Required normalized frequency, 0 to 1 inclusive.
 		///<
-		double ReqTransBand; ///< Required transition band in percent, as passed
+		double ReqTransBand = 0; ///< Required transition band in percent, as passed
 		///< by the user.
 		///<
-		double ReqAtten; ///< Required stop-band attenuation in decibel, as passed
+		double ReqAtten = 0; ///< Required stop-band attenuation in decibel, as passed
 		///< by the user (positive value).
 		///<
 		EDSPFilterPhaseResponse ReqPhase; ///< Required filter's phase response.
 		///<
-		double ReqGain; ///< Required overall filter's gain.
+		double ReqGain = 0; ///< Required overall filter's gain.
 		///<
-		CDSPFIRFilter* Next; ///< Next FIR filter in cache's list.
+		CDSPFIRFilter* Next = nullptr; ///< Next FIR filter in cache's list.
 		///<
-		int RefCount; ///< The number of references made to *this FIR filter.
+		int RefCount = 0; ///< The number of references made to *this FIR filter.
 		///<
 		bool IsZeroPhase; ///< "True" if kernel block of *this filter has
 		///< zero-phase response.
 		///<
-		int Latency; ///< Filter's latency in samples (integer part).
+		int Latency = 0; ///< Filter's latency in samples (integer part).
 		///<
-		double LatencyFrac; ///< Filter's latency in samples (fractional part).
+		double LatencyFrac = 0; ///< Filter's latency in samples (fractional part).
 		///<
-		int KernelLen; ///< Filter kernel length, in samples.
+		int KernelLen = 0; ///< Filter kernel length, in samples.
 		///<
-		int BlockLenBits; ///< Block length used to store *this FIR filter,
+		int BlockLenBits = 0; ///< Block length used to store *this FIR filter,
 		///< expressed as Nth power of 2. This value is used directly by the
 		///< convolver.
 		///<

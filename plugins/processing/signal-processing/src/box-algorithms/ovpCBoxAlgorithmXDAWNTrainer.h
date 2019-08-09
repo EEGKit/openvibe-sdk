@@ -32,10 +32,10 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmXDAWNTrainer> m_SignalDecoder[2];
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmXDAWNTrainer> m_StimEncoder;
 
-			uint64_t m_TrainStimulationId;
+			uint64_t m_TrainStimulationId = 0;
 			OpenViBE::CString m_FilterFilename;
-			uint32_t m_FilterDimension;
-			bool m_SaveAsBoxConfig;
+			uint32_t m_FilterDimension = 0;
+			bool m_SaveAsBoxConfig = false;
 		};
 
 		class CBoxAlgorithmXDAWNTrainerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc

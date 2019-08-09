@@ -29,10 +29,10 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			bool m_bZeroCare;
+			bool m_bZeroCare = false;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
 
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;

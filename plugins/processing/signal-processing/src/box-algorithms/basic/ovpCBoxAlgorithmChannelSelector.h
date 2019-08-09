@@ -29,8 +29,8 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_pDecoder;
 			OpenViBEToolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_pEncoder;
 
-			OpenViBE::IMatrix* m_pInputMatrix;
-			OpenViBE::IMatrix* m_pOutputMatrix;
+			OpenViBE::IMatrix* m_pInputMatrix = nullptr;
+			OpenViBE::IMatrix* m_pOutputMatrix = nullptr;
 
 			std::vector<uint32_t> m_vLookup;
 		};
@@ -119,7 +119,7 @@ namespace OpenViBEPlugins
 			}
 
 		private:
-			bool m_bHasUserSetName;
+			bool m_bHasUserSetName = false;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};

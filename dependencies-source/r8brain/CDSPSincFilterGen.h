@@ -32,14 +32,14 @@ namespace r8b
 	class CDSPSincFilterGen
 	{
 	public:
-		double Len2; ///< Required half filter kernel's length in samples (can be
+		double Len2 = 0; ///< Required half filter kernel's length in samples (can be
 		///< a fractional value). Final physical kernel length will be
 		///< provided in the KernelLen variable. Len2 should be >= 2.
 		///<
-		int KernelLen; ///< Resulting length of the filter kernel, this variable
+		int KernelLen = 0; ///< Resulting length of the filter kernel, this variable
 		///< is set after the call to one of the "init" functions.
 		///<
-		int fl2; ///< Internal "half kernel length" value. This value can be used
+		int fl2 = 0; ///< Internal "half kernel length" value. This value can be used
 		///< as filter's latency in samples (taps), this variable is set after
 		///< the call to one of the "init" functions.
 		///<
@@ -532,14 +532,14 @@ namespace r8b
 		}
 
 	private:
-		double Power; ///< The power factor used to raise the window function.
+		double Power = 0; ///< The power factor used to raise the window function.
 		///< Equals a negative value if the power factor should not be used.
 		///<
 		CSineGen f1; ///< Sine function 1. Used in the generateBand() function.
 		///<
 		CSineGen f2; ///< Sine function 2. Used in the generateBand() function.
 		///<
-		int wn; ///< Window function integer position. 0 - center of the window
+		int wn = 0; ///< Window function integer position. 0 - center of the window
 		///< function. This variable may not be used by some window functions.
 		///<
 		CSineGen w1; ///< Cosine wave 1 for window function.

@@ -27,16 +27,16 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTimeBasedEpoching> m_SignalDecoder;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeBasedEpoching> m_SignalEncoder;
 
-			double m_EpochDuration;
-			double m_EpochInterval;
+			double m_EpochDuration = 0;
+			double m_EpochInterval = 0;
 
-			uint64_t m_SamplingRate;
-			uint32_t m_OutputSampleCount;
-			uint32_t m_OutputSampleCountBetweenEpoch;
-			uint64_t m_LastInputEndTime;
-			uint32_t m_OutputSampleIndex;
-			uint32_t m_OutputChunkIndex;
-			uint64_t m_ReferenceTime;
+			uint64_t m_SamplingRate = 0;
+			uint32_t m_OutputSampleCount = 0;
+			uint32_t m_OutputSampleCountBetweenEpoch = 0;
+			uint64_t m_LastInputEndTime = 0;
+			uint32_t m_OutputSampleIndex = 0;
+			uint32_t m_OutputChunkIndex = 0;
+			uint64_t m_ReferenceTime = 0;
 		};
 
 		class CBoxAlgorithmTimeBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc

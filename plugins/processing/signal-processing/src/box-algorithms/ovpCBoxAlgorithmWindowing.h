@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmWindowing> m_Decoder;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmWindowing> m_Encoder;
 
-			uint64_t m_WindowMethod;
+			uint64_t m_WindowMethod = 0;
 			std::vector<double> m_WindowCoefficients;
 		};
 

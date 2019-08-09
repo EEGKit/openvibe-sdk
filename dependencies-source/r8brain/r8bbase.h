@@ -421,7 +421,7 @@ namespace r8b
 		operator T*() const { return (Data); }
 
 	private:
-		T* Data; ///< Element buffer pointer.
+		T* Data = nullptr; ///< Element buffer pointer.
 		///<
 	};
 
@@ -619,7 +619,7 @@ namespace r8b
 		~CSyncKeeper() { if (SyncObj != nullptr) { SyncObj->release(); } }
 
 	protected:
-		CSyncObject* SyncObj; ///< Sync object in use (can be NULL).
+		CSyncObject* SyncObj = nullptr; ///< Sync object in use (can be NULL).
 		///<
 	};
 
@@ -721,11 +721,11 @@ namespace r8b
 		}
 
 	private:
-		double svalue1; ///< Current sine value.
+		double svalue1 = 0; ///< Current sine value.
 		///<
-		double svalue2; ///< Previous sine value.
+		double svalue2 = 0; ///< Previous sine value.
 		///<
-		double sincr; ///< Sine value increment.
+		double sincr = 0; ///< Sine value increment.
 		///<
 	};
 

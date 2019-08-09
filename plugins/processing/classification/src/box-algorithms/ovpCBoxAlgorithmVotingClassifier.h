@@ -28,11 +28,11 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			uint64_t m_ui64NumberOfRepetitions;
-			uint64_t m_ui64TargetClassLabel;
-			uint64_t m_ui64NonTargetClassLabel;
-			uint64_t m_ui64RejectClassLabel;
-			uint64_t m_ui64ResultClassLabelBase;
+			uint64_t m_ui64NumberOfRepetitions = 0;
+			uint64_t m_ui64TargetClassLabel = 0;
+			uint64_t m_ui64NonTargetClassLabel = 0;
+			uint64_t m_ui64RejectClassLabel = 0;
+			uint64_t m_ui64ResultClassLabelBase = 0;
 			bool m_bChooseOneIfExAequo;
 
 		private:
@@ -51,7 +51,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmVotingClassifier> m_oClassificationChoiceEncoder;
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IStimulationSet*> ip_pClassificationChoiceStimulationSet;
 
-			uint64_t m_ui64LastTime;
+			uint64_t m_ui64LastTime = 0;
 			bool m_bMatrixBased;
 		};
 

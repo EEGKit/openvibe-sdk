@@ -323,33 +323,33 @@ namespace OpenViBE
 			EStreamType m_InputTypeIdentifier;
 
 			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, char delimiter);
-			uint32_t m_DimensionCount;
+			uint32_t m_DimensionCount = 0;
 			std::vector<uint32_t> m_DimensionSizes;
 			std::vector<std::string> m_DimensionLabels;
-			uint32_t m_SampleCountPerBuffer;
-			double m_NoEventSince;
+			uint32_t m_SampleCountPerBuffer = 0;
+			double m_NoEventSince = 0;
 
 			std::vector<double> m_FrequencyAbscissa;
 
-			uint32_t m_SamplingRate;
+			uint32_t m_SamplingRate = 0;
 			size_t m_ColumnCount;
 
-			bool m_HasInputType;
-			bool m_IsFirstLineWritten;
-			bool m_IsHeaderRead;
-			bool m_IsSetInfoCalled;
-			bool m_HasEpoch;
+			bool m_HasInputType = false;
+			bool m_IsFirstLineWritten = false;
+			bool m_IsHeaderRead = false;
+			bool m_IsSetInfoCalled = false;
+			bool m_HasEpoch = false;
 
-			uint32_t m_OriginalSampleNumber;
-			uint32_t m_OutputFloatPrecision;
+			uint32_t m_OriginalSampleNumber = 0;
+			uint32_t m_OutputFloatPrecision = 0;
 
-			bool m_LastMatrixOnly;
+			bool m_LastMatrixOnly = false;
 
 			std::string m_BufferReadFileLine; // Buffer used to store unused read chars.
 
-			bool m_HasDataToRead;
+			bool m_HasDataToRead = false;
 
-			bool m_IsCRLFEOL; // Is a CRLF end of line
+			bool m_IsCRLFEOL = false; // Is a CRLF end of line
 		};
 	}
 }

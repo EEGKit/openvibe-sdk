@@ -28,7 +28,7 @@ public:
 
 	OpenViBE::Kernel::IObjectVisitorContext* m_pObjectVisitorContext;
 	OpenViBE::Kernel::IBox* m_pBox;
-	uint32_t m_ui32SettingIndex;
+	uint32_t m_ui32SettingIndex = 0;
 	bool m_bIsParsingSettingValue;
 	bool m_bIsParsingSettingOverride;
 	OpenViBE::Kernel::IConfigurationManager* m_pConfigurationManager;

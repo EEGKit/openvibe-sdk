@@ -451,29 +451,29 @@ namespace r8b
 		///<
 		double Buf[ BufLen * 2 ]; ///< The ring buffer.
 		///<
-		double SrcSampleRate; ///< Source sample rate.
+		double SrcSampleRate = 0; ///< Source sample rate.
 		///<
-		double DstSampleRate; ///< Destination sample rate.
+		double DstSampleRate = 0; ///< Destination sample rate.
 		///<
-		double InitFracPos; ///< Initial fractional position, in samples, in the
+		double InitFracPos = 0; ///< Initial fractional position, in samples, in the
 		///< range [0; 1).
 		///<
-		int BufLeft; ///< The number of samples left in the buffer to process.
+		int BufLeft = 0; ///< The number of samples left in the buffer to process.
 		///< When this value is below FilterLenD2Plus1, the interpolation
 		///< cycle ends.
 		///<
-		int WritePos; ///< The current buffer write position. Incremented together
+		int WritePos = 0; ///< The current buffer write position. Incremented together
 		///< with the BufLeft variable.
 		///<
-		int ReadPos; ///< The current buffer read position.
+		int ReadPos = 0; ///< The current buffer read position.
 		///<
-		int InCounter; ///< Interpolation step counter.
+		int InCounter = 0; ///< Interpolation step counter.
 		///<
-		int InPosInt; ///< Interpolation position (integer part).
+		int InPosInt = 0; ///< Interpolation position (integer part).
 		///<
-		double InPosFrac; ///< Interpolation position (fractional part).
+		double InPosFrac = 0; ///< Interpolation position (fractional part).
 		///<
-		double InPosShift; ///< Interpolation position fractional shift.
+		double InPosShift = 0; ///< Interpolation position fractional shift.
 		///<
 
 #if !R8B_FLTTEST

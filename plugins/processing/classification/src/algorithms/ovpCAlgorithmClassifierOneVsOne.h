@@ -54,13 +54,13 @@ namespace OpenViBEPlugins
 			virtual bool createSubClassifiers();
 
 		private:
-			uint32_t m_ui32NumberOfClasses;
-			uint32_t m_ui32NumberOfSubClassifiers;
+			uint32_t m_ui32NumberOfClasses = 0;
+			uint32_t m_ui32NumberOfSubClassifiers = 0;
 
 			std::map<std::pair<uint32_t, uint32_t>, OpenViBE::Kernel::IAlgorithmProxy*> m_oSubClassifiers;
 			fClassifierComparison m_fAlgorithmComparison;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pDecisionStrategyAlgorithm;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pDecisionStrategyAlgorithm = nullptr;
 			OpenViBE::CIdentifier m_oPairwiseDecisionIdentifier = OV_UndefinedIdentifier;
 
 			XML::IXMLNode* getClassifierConfiguration(double f64FirstClass, double f64SecondClass, OpenViBE::Kernel::IAlgorithmProxy* pSubClassifier);

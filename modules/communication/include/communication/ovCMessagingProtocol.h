@@ -98,7 +98,7 @@ namespace Communication
 		bool isValid() const { return m_IsValid; }
 
 	protected:
-		bool m_IsValid;
+		bool m_IsValid = false;
 	};
 
 	/**
@@ -127,8 +127,8 @@ namespace Communication
 
 	private:
 		EMessageType m_Type;
-		uint64_t m_Id;
-		uint64_t m_Size;
+		uint64_t m_Id = 0;
+		uint64_t m_Size = 0;
 
 	private:
 		static const size_t s_TypeIndex   = 0;
@@ -232,8 +232,8 @@ namespace Communication
 		std::string getValue() const;
 
 	private:
-		uint32_t m_Id;
-		uint64_t m_Type;
+		uint32_t m_Id = 0;
+		uint64_t m_Type = 0;
 		std::string m_Name;
 		std::string m_Value;
 

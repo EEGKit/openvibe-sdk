@@ -24,12 +24,12 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_pStimulationSet;
 
-			uint64_t m_ui64StimulationIdentifier;
-			uint64_t m_ui64ActionIdentifier;
+			uint64_t m_ui64StimulationIdentifier = 0;
+			uint64_t m_ui64ActionIdentifier = 0;
 		};
 
 		class CBoxAlgorithmPlayerControllerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc

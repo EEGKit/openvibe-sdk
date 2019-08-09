@@ -43,13 +43,13 @@ namespace OpenViBEPlugins
 			std::deque<OpenViBE::CSV::SMatrixChunk> m_SavedChunks;
 			std::deque<OpenViBE::CSV::SStimulationChunk> m_SavedStimulations;
 
-			uint64_t m_LastStimulationDate;
+			uint64_t m_LastStimulationDate = 0;
 
 			OpenViBE::CIdentifier m_TypeIdentifier = OV_UndefinedIdentifier;
 			std::vector<std::string> m_ChannelNames;
 			std::vector<uint32_t> m_DimensionSizes;
-			uint32_t m_SamplingRate;
-			uint32_t m_SampleCountPerBuffer;
+			uint32_t m_SamplingRate = 0;
+			uint32_t m_SampleCountPerBuffer = 0;
 
 			bool m_IsHeaderSent;
 			bool m_IsStimulationHeaderSent;

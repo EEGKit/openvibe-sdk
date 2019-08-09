@@ -37,10 +37,10 @@ namespace OpenViBEPlugins
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
-			uint32_t m_ui32FrequencyBandIndex;
+			uint32_t m_ui32FrequencyBandIndex = 0;
 
 			// Value of the current lower frequency of the band. Only used to read old spectrum format.
-			double m_lowerFreq;
+			double m_lowerFreq = 0;
 		};
 
 		class CSpectrumDecoderDesc : public CStreamedMatrixDecoderDesc

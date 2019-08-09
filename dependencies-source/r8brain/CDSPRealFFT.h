@@ -282,17 +282,17 @@ namespace r8b
 		}
 
 	private:
-		int LenBits; ///< Length of FFT block (expressed as Nth power of 2).
+		int LenBits = 0; ///< Length of FFT block (expressed as Nth power of 2).
 		///<
-		int Len; ///< Length of FFT block (number of real values).
+		int Len = 0; ///< Length of FFT block (number of real values).
 		///<
-		double InvMulConst; ///< Inverse FFT multiply constant.
+		double InvMulConst = 0; ///< Inverse FFT multiply constant.
 		///<
-		CDSPRealFFT* Next; ///< Next object in a singly-linked list.
+		CDSPRealFFT* Next = nullptr; ///< Next object in a singly-linked list.
 		///<
 
 #if R8B_IPP
-		IppsFFTSpec_R_64f* SPtr; ///< Pointer to initialized data buffer
+		IppsFFTSpec_R_64f* SPtr = nullptr; ///< Pointer to initialized data buffer
 			///< to be passed to IPP's FFT functions.
 			///<
 		CFixedBuffer< unsigned char > SpecBuffer; ///< Working buffer.
@@ -329,7 +329,7 @@ namespace r8b
 			operator CDSPRealFFT*() const { return (Object); }
 
 		private:
-			CDSPRealFFT* Object; ///< FFT object being kept.
+			CDSPRealFFT* Object = nullptr; ///< FFT object being kept.
 			///<
 		};
 
@@ -353,9 +353,9 @@ namespace r8b
 		{
 #if R8B_IPP
 
-		int SpecSize;
-		int SpecBufferSize;
-		int BufferSize;
+		int SpecSize = 0;
+		int SpecBufferSize = 0;
+		int BufferSize = 0;
 
 		ippsFFTGetSize_R_64f( LenBits, IPP_FFT_NODIV_BY_ANY,
 			ippAlgHintFast, &SpecSize, &SpecBufferSize, &BufferSize );
@@ -459,7 +459,7 @@ namespace r8b
 		}
 
 	private:
-		CDSPRealFFT* Object; ///< FFT object.
+		CDSPRealFFT* Object = nullptr; ///< FFT object.
 		///<
 
 		static CSyncObject StateSync; ///< FFTObjects synchronizer.

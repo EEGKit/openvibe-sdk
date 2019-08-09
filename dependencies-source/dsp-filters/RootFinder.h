@@ -100,10 +100,10 @@ namespace Dsp
 					  int& its);
 
 	protected:
-		int m_maxdegree;
-		complex_t* m_a;		// input coefficients (m_maxdegree+1 elements)
-		complex_t* m_ad;	// copy of deflating coefficients
-		complex_t* m_root; // array of roots (maxdegree elements)
+		int m_maxdegree = 0;
+		complex_t* m_a = nullptr;		// input coefficients (m_maxdegree+1 elements)
+		complex_t* m_ad = nullptr;	// copy of deflating coefficients
+		complex_t* m_root = nullptr; // array of roots (maxdegree elements)
 	};
 
 	//------------------------------------------------------------------------------

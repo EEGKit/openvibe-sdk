@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 			Eigen::MatrixXd m_oIncrementalMean;
 
 			// The divisor for the above estimates to do the normalization
-			uint64_t m_ui64Count;
+			uint64_t m_ui64Count = 0;
 		};
 
 		class CAlgorithmOnlineCovarianceDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc

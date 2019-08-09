@@ -79,7 +79,7 @@ namespace Dsp
 		protected:
 			StateBase(StateType* stateArray) : m_stateArray(stateArray) { }
 
-			StateType* m_stateArray;
+			StateType* m_stateArray = nullptr;
 		};
 
 		struct Stage : Biquad { };
@@ -127,9 +127,9 @@ namespace Dsp
 		void setLayout(const LayoutBase& proto);
 
 	private:
-		int m_numStages;
-		int m_maxStages;
-		Stage* m_stageArray;
+		int m_numStages = 0;
+		int m_maxStages = 0;
+		Stage* m_stageArray = nullptr;
 	};
 
 	//------------------------------------------------------------------------------

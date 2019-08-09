@@ -154,10 +154,10 @@ namespace
 		_IsDerivedFromClass_Final_(IBoxProto, OV_UndefinedIdentifier)
 
 		CIdentifier m_oHash = OV_UndefinedIdentifier;
-		bool m_bIsDeprecated;
-		uint64_t m_ui64InputCountHash;
-		uint64_t m_ui64OutputCountHash;
-		uint64_t m_ui64SettingCountHash;
+		bool m_bIsDeprecated = false;
+		uint64_t m_ui64InputCountHash = 0;
+		uint64_t m_ui64OutputCountHash = 0;
+		uint64_t m_ui64SettingCountHash = 0;
 		ITypeManager& m_TypeManager;
 	};
 }  // namespace

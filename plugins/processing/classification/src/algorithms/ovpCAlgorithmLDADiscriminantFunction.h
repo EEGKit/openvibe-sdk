@@ -34,7 +34,7 @@ namespace OpenViBEPlugins
 			double getBias() const { return m_f64Bias; }
 
 		private:
-			double m_f64Bias;
+			double m_f64Bias = 0;
 			Eigen::VectorXd m_oWeight;
 		};
 	}

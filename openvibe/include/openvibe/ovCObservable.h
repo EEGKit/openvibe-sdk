@@ -65,7 +65,7 @@ namespace OpenViBE
 
 	private:
 		struct ObserverList;
-		ObserverList* m_pObserverList;
-		bool m_bHasChanged;
+		ObserverList* m_pObserverList = nullptr;
+		bool m_bHasChanged = false;
 	};
 }  // namespace OpenViBE

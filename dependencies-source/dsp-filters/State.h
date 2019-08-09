@@ -86,10 +86,10 @@ namespace Dsp
 		}
 
 	protected:
-		double m_x2; // x[n-2]
-		double m_y2; // y[n-2]
-		double m_x1; // x[n-1]
-		double m_y1; // y[n-1]
+		double m_x2 = 0; // x[n-2]
+		double m_y2 = 0; // y[n-2]
+		double m_x1 = 0; // x[n-1]
+		double m_y1 = 0; // y[n-1]
 	};
 
 	//------------------------------------------------------------------------------
@@ -127,8 +127,8 @@ namespace Dsp
 		}
 
 	private:
-		double m_v1; // v[-1]
-		double m_v2; // v[-2]
+		double m_v1 = 0; // v[-1]
+		double m_v2 = 0; // v[-2]
 	};
 
 	//------------------------------------------------------------------------------
@@ -182,15 +182,15 @@ namespace Dsp
 		}
 
 	private:
-		double m_v;
-		double m_s1;
-		double m_s1_1;
-		double m_s2;
-		double m_s2_1;
-		double m_s3;
-		double m_s3_1;
-		double m_s4;
-		double m_s4_1;
+		double m_v = 0;
+		double m_s1 = 0;
+		double m_s1_1 = 0;
+		double m_s2 = 0;
+		double m_s2_1 = 0;
+		double m_s3 = 0;
+		double m_s3_1 = 0;
+		double m_s4 = 0;
+		double m_s4_1 = 0;
 	};
 
 	//------------------------------------------------------------------------------
@@ -221,10 +221,10 @@ namespace Dsp
 		}
 
 	private:
-		double m_s1;
-		double m_s1_1;
-		double m_s2;
-		double m_s2_1;
+		double m_s1 = 0;
+		double m_s1_1 = 0;
+		double m_s2 = 0;
+		double m_s2_1 = 0;
 	};
 
 	//------------------------------------------------------------------------------

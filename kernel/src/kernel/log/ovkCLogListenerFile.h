@@ -49,9 +49,9 @@ namespace OpenViBE
 			std::fstream m_fsFileStream;
 
 			// Log Settings
-			bool m_bTimeInSeconds;
-			bool m_bLogWithHexa;
-			uint64_t m_ui64TimePrecision;
+			bool m_bTimeInSeconds = false;
+			bool m_bLogWithHexa = false;
+			uint64_t m_ui64TimePrecision = 0;
 
 		private:
 			template <typename T>

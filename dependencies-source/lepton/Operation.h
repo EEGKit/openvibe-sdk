@@ -202,7 +202,7 @@ namespace Lepton
 		}
 
 	private:
-		double value;
+		double value = 0;
 	};
 
 	class LEPTON_EXPORT Operation::Variable : public Operation
@@ -311,7 +311,7 @@ namespace Lepton
 
 	private:
 		std::string name;
-		CustomFunction* function;
+		CustomFunction* function = nullptr;
 		bool isDerivative;
 		std::vector<int> derivOrder;
 	};
@@ -1205,7 +1205,7 @@ namespace Lepton
 		}
 
 	private:
-		double value;
+		double value = 0;
 	};
 
 	class LEPTON_EXPORT Operation::MultiplyConstant : public Operation
@@ -1251,7 +1251,7 @@ namespace Lepton
 		}
 
 	private:
-		double value;
+		double value = 0;
 	};
 
 	class LEPTON_EXPORT Operation::PowerConstant : public Operation
@@ -1324,8 +1324,8 @@ namespace Lepton
 		bool isInfixOperator() const override { return true; }
 
 	private:
-		double value;
-		int intValue;
+		double value = 0;
+		int intValue = 0;
 		bool isIntPower;
 	};
 

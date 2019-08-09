@@ -232,9 +232,9 @@ namespace Dsp
 		ParamID m_id;
 		const char* m_szLabel;
 		const char* m_szName;
-		double m_arg1;
-		double m_arg2;
-		double m_defaultNativeValue;
+		double m_arg1 = 0;
+		double m_arg2 = 0;
+		double m_defaultNativeValue = 0;
 		toControlValue_t m_toControlValue;
 		toNativeValue_t m_toNativeValue;
 		toString_t m_toString;

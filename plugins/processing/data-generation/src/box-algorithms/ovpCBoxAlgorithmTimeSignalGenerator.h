@@ -34,10 +34,10 @@ namespace OpenViBEPlugins
 
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeSignalGenerator> m_oSignalEncoder;
 
-			bool m_bHeaderSent;
-			uint32_t m_ui32SamplingFrequency;
-			uint32_t m_ui32GeneratedEpochSampleCount;
-			uint32_t m_ui32SentSampleCount;
+			bool m_bHeaderSent = false;
+			uint32_t m_ui32SamplingFrequency = 0;
+			uint32_t m_ui32GeneratedEpochSampleCount = 0;
+			uint32_t m_ui32SentSampleCount = 0;
 		};
 
 		class CBoxAlgorithmTimeSignalGeneratorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc

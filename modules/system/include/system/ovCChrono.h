@@ -27,14 +27,14 @@ namespace System
 
 	private:
 
-		uint64_t* m_pStepInTime;
-		uint64_t* m_pStepOutTime;
-		uint32_t m_ui32StepCount;
-		uint32_t m_ui32StepIndex;
-		bool m_bIsInStep;
-		bool m_bHasNewEstimation;
+		uint64_t* m_pStepInTime = nullptr;
+		uint64_t* m_pStepOutTime = nullptr;
+		uint32_t m_ui32StepCount = 0;
+		uint32_t m_ui32StepIndex = 0;
+		bool m_bIsInStep = false;
+		bool m_bHasNewEstimation = false;
 
-		uint64_t m_ui64TotalStepInTime;
-		uint64_t m_ui64TotalStepOutTime;
+		uint64_t m_ui64TotalStepInTime = 0;
+		uint64_t m_ui64TotalStepOutTime = 0;
 	};
 }  // namespace System

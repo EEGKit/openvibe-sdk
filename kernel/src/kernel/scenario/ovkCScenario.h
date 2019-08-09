@@ -140,7 +140,7 @@ namespace OpenViBE
 			std::map<BoxInterfacorType, std::map<CIdentifier, std::map<uint32_t, uint32_t>>> m_UpdatedBoxIOCorrespondence;
 
 
-			bool m_HasIO;
+			bool m_HasIO = false;
 
 			mutable std::vector<std::pair<CIdentifier, uint32_t>> m_ScenarioInputLinks;
 			mutable std::vector<std::pair<CIdentifier, uint32_t>> m_ScenarioOutputLinks;

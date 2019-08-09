@@ -87,18 +87,18 @@ namespace OpenViBE
 			bool checkForSupportedIOSAttributesToBeUpdated();
 
 			// pointer to the parent scenario
-			CScenario* m_Scenario;
+			CScenario* m_Scenario = nullptr;
 			// pointer to the original box to be updated
-			IBox* m_SourceBox;
+			IBox* m_SourceBox = nullptr;
 			// pointer to the kernel box
 			const IBox* m_KernelBox;
 			// pointer to the updated box. This box will be used to update the prototype of the original box
-			IBox* m_UpdatedBox;
+			IBox* m_UpdatedBox = nullptr;
 			// true when updater has been initialized
-			bool m_Initialized;
+			bool m_Initialized = false;
 
 			std::map<BoxInterfacorType, std::map<uint32_t, uint32_t>> m_OriginalToUpdatedCorrespondence;
-			bool m_IsUpdateRequired;
+			bool m_IsUpdateRequired = false;
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE

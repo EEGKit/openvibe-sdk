@@ -18,6 +18,6 @@ namespace EBML
 
 	protected:
 
-		IReaderHelper* m_pReaderHelperImplementation;
+		IReaderHelper* m_pReaderHelperImplementation = nullptr;
 	};
 }  // namespace EBML

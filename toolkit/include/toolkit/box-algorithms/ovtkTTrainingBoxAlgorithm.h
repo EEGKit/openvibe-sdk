@@ -45,11 +45,11 @@ namespace OpenViBEToolkit
 
 	private:
 
-		ISignalTrial* m_pPendingSignal;
+		ISignalTrial* m_pPendingSignal = nullptr;
 
-		uint64_t m_ui64TrialStartTime;
-		uint64_t m_ui64TrialEndTime;
-		uint32_t m_ui32SampleCountPerBuffer;
+		uint64_t m_ui64TrialStartTime = 0;
+		uint64_t m_ui64TrialEndTime = 0;
+		uint32_t m_ui32SampleCountPerBuffer = 0;
 		OpenViBE::CIdentifier m_oTrialLabel = OV_UndefinedIdentifier;
 
 		std::vector<ISignalTrial*> m_vSignalTrial;

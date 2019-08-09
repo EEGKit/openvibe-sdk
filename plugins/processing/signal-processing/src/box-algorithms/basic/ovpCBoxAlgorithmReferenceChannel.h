@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmReferenceChannel> m_oDecoder;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmReferenceChannel> m_oEncoder;
-			uint32_t m_ui32ReferenceChannelIndex;
+			uint32_t m_ui32ReferenceChannelIndex = 0;
 		};
 
 		class CBoxAlgorithmReferenceChannelDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc

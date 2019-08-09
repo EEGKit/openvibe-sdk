@@ -56,8 +56,8 @@ namespace OpenViBE
 
 		protected:
 
-			IConfigurable* m_pInputConfigurable;
-			IConfigurable* m_pOutputConfigurable;
+			IConfigurable* m_pInputConfigurable = nullptr;
+			IConfigurable* m_pOutputConfigurable = nullptr;
 			std::map<CIdentifier, CString> m_vInputParameterName;
 			std::map<CIdentifier, CString> m_vOutputParameterName;
 			std::map<CIdentifier, std::pair<CString, bool>> m_vInputTrigger;
@@ -72,7 +72,7 @@ namespace OpenViBE
 
 			const Plugins::IAlgorithmDesc& m_rAlgorithmDesc;
 			Plugins::IAlgorithm& m_rAlgorithm;
-			bool m_bIsInitialized;
+			bool m_bIsInitialized = false;
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE

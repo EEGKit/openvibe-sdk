@@ -55,17 +55,17 @@ namespace OpenViBEPlugins
 
 			std::vector<double> m_vSignalHistory;
 			std::vector<int> m_vStateHistory;
-			double m_f64HysteresisThreshold;
-			uint64_t m_ui64ChunkCount;
+			double m_f64HysteresisThreshold = 0;
+			uint64_t m_ui64ChunkCount = 0;
 
-			uint32_t m_ui32SamplingRate;
-			double m_f64WindowTime;
-			uint32_t m_ui32WindowTime;
+			uint32_t m_ui32SamplingRate = 0;
+			double m_f64WindowTime = 0;
+			uint32_t m_ui32WindowTime = 0;
 			std::vector<std::vector<uint64_t>> m_vMemoryChunk;
 			std::vector<std::vector<uint32_t>> m_vMemorySample;
 
-			uint64_t m_ui64StimulationId1;
-			uint64_t m_ui64StimulationId2;
+			uint64_t m_ui64StimulationId1 = 0;
+			uint64_t m_ui64StimulationId2 = 0;
 		};
 
 		class CBoxAlgorithmZeroCrossingDetectorListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

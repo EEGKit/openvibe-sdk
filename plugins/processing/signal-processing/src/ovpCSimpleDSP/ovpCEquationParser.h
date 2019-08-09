@@ -31,7 +31,7 @@ class CAbstractTreeNode;
 */
 union functionContext
 {
-	double m_f64DirectValue;//if the parameter if a value (push_val)
+	double m_f64DirectValue = 0;//if the parameter if a value (push_val)
 	double** m_ppIndirectValue;//if it is a pointer to a value (push_var)
 };
 
@@ -51,7 +51,7 @@ protected:
 	//! Pointer to the data referenced by X in the equation
 	double** m_ppVariable;
 	//! Number of accessible variables
-	uint32_t m_ui32VariableCount;
+	uint32_t m_ui32VariableCount = 0;
 
 	//! Size of the "function stack" (where the sucessive function pointers are stored)
 	const uint32_t m_ui32FunctionStackSize;
@@ -73,15 +73,15 @@ protected:
 	double* m_pStack;
 
 	//! Number of pointers/contexts in the function/context stacks (same for both)
-	uint64_t m_ui64NumberOfOperations;
+	uint64_t m_ui64NumberOfOperations = 0;
 
 	//! Table of function pointers
 	static functionPointer m_pFunctionTable[32];
 
 	//! Category of the tree (OP_USERDEF or Special tree)
-	uint64_t m_ui64TreeCategory;
+	uint64_t m_ui64TreeCategory = 0;
 	//! Optional parameter in case of a special tree
-	double m_f64TreeParameter;
+	double m_f64TreeParameter = 0;
 
 	OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& m_oParentPlugin;
 

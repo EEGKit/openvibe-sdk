@@ -120,7 +120,7 @@ namespace Dsp
 		static double dc() { return anti_denormal_vsa; }
 
 	private:
-		double m_v;
+		double m_v = 0;
 	};
 }  // namespace Dsp
 

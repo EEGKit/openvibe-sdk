@@ -23,9 +23,9 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pMatrixAverage;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pMatrixAverage = nullptr;
 
 			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64MatrixCount;
 			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64AveragingMethod;

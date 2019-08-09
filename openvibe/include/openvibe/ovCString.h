@@ -151,6 +151,6 @@ namespace OpenViBE
 
 	protected:
 
-		CStringImpl* m_pStringImpl; ///< The string implementation
+		CStringImpl* m_pStringImpl = nullptr; ///< The string implementation
 	};
 }  // namespace OpenViBE

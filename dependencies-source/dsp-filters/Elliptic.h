@@ -94,15 +94,15 @@ namespace Dsp
 #else
 #endif
 
-			double m_p0;
-			double m_q;
-			double m_K;
-			double m_Kprime;
-			double m_e;
-			int m_nin;
-			int m_m;
-			int m_n2;
-			int m_em;
+			double m_p0 = 0;
+			double m_q = 0;
+			double m_K = 0;
+			double m_Kprime = 0;
+			double m_e = 0;
+			int m_nin = 0;
+			int m_m = 0;
+			int m_n2 = 0;
+			int m_em = 0;
 			double m_zeros[100];
 			double m_c1[100];
 			double m_b1[100];
@@ -119,9 +119,9 @@ namespace Dsp
 			double m_rootR[100];
 			double m_rootI[100];
 
-			int m_numPoles;
-			double m_rippleDb;
-			double m_rolloff;
+			int m_numPoles = 0;
+			double m_rippleDb = 0;
+			double m_rolloff = 0;
 		};
 
 		//------------------------------------------------------------------------------

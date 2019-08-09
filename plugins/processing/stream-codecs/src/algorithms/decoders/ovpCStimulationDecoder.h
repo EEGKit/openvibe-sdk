@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
-			uint64_t m_ui64StimulationIndex;
+			uint64_t m_ui64StimulationIndex = 0;
 			OpenViBE::CStimulationSet m_oStimulationSet;
 		};
 

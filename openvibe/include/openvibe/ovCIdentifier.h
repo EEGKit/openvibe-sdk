@@ -214,6 +214,6 @@ namespace OpenViBE
 
 	protected:
 
-		uint64_t m_ui64Identifier; ///< the 64 bit identifier value
+		uint64_t m_ui64Identifier = 0; ///< the 64 bit identifier value
 	};
 }  // namespace OpenViBE

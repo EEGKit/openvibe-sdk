@@ -75,19 +75,19 @@ namespace OpenViBEPlugins
 			void log();
 
 			Communication::MessagingServer m_Messaging;
-			uint32_t m_Port;
+			uint32_t m_Port = 0;
 			std::string m_ConnectionID;
 			std::string m_ProgramPath;
-			bool m_IsGenerator;
+			bool m_IsGenerator = false;
 
-			int m_ThirdPartyProgramProcessId;
+			int m_ThirdPartyProgramProcessId = 0;
 
-			uint64_t m_AcceptTimeout;
-			bool m_ShouldLaunchProgram;
-			bool m_HasReceivedEndMessage;
+			uint64_t m_AcceptTimeout = 0;
+			bool m_ShouldLaunchProgram = false;
+			bool m_HasReceivedEndMessage = false;
 			// Synchronization timeout, and save time of last synchronization
-			uint64_t m_SyncTimeout;
-			uint64_t m_LastSyncTime;
+			uint64_t m_SyncTimeout = 0;
+			uint64_t m_LastSyncTime = 0;
 
 			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmExternalProcessing>> m_StimulationDecoders;
 			std::queue<Packet> m_PacketHistory;

@@ -148,7 +148,7 @@ namespace Dsp
 	private:
 		complex_t transform(complex_t c);
 
-		double f;
+		double f = 0;
 	};
 
 	//------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ namespace Dsp
 	private:
 		complex_t transform(complex_t c);
 
-		double f;
+		double f = 0;
 	};
 
 	//------------------------------------------------------------------------------
@@ -181,14 +181,14 @@ namespace Dsp
 	private:
 		ComplexPair transform(complex_t c);
 
-		double wc;
-		double wc2;
-		double a;
-		double b;
-		double a2;
-		double b2;
-		double ab;
-		double ab_2;
+		double wc = 0;
+		double wc2 = 0;
+		double a = 0;
+		double b = 0;
+		double a2 = 0;
+		double b2 = 0;
+		double ab = 0;
+		double ab_2 = 0;
 	};
 
 	//------------------------------------------------------------------------------
@@ -205,12 +205,12 @@ namespace Dsp
 	private:
 		ComplexPair transform(complex_t c);
 
-		double wc;
-		double wc2;
-		double a;
-		double b;
-		double a2;
-		double b2;
+		double wc = 0;
+		double wc2 = 0;
+		double a = 0;
+		double b = 0;
+		double a2 = 0;
+		double b2 = 0;
 	};
 }  // namespace Dsp
 

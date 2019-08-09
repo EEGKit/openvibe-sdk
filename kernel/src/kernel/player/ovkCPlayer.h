@@ -50,18 +50,18 @@ namespace OpenViBE
 		protected:
 
 			CKernelContextBridge m_oKernelContextBridge;
-			IConfigurationManager* m_pRuntimeConfigurationManager;
-			IScenarioManager* m_pRuntimeScenarioManager;
-			CScenarioSettingKeywordParserCallback* m_pScenarioSettingKeywordParserCallback;
+			IConfigurationManager* m_pRuntimeConfigurationManager = nullptr;
+			IScenarioManager* m_pRuntimeScenarioManager = nullptr;
+			CScenarioSettingKeywordParserCallback* m_pScenarioSettingKeywordParserCallback = nullptr;
 
 			CScheduler m_oScheduler;
 
-			uint64_t m_ui64CurrentTimeToReach;
-			uint64_t m_ui64Lateness;
-			uint64_t m_ui64InnerLateness;
+			uint64_t m_ui64CurrentTimeToReach = 0;
+			uint64_t m_ui64Lateness = 0;
+			uint64_t m_ui64InnerLateness = 0;
 			EPlayerStatus m_eStatus;
-			bool m_bIsInitializing;
-			double m_f64FastForwardMaximumFactor;
+			bool m_bIsInitializing = false;
+			double m_f64FastForwardMaximumFactor = 0;
 
 			std::string m_sScenarioConfigurationFile;
 			std::string m_sWorkspaceConfigurationFile;
