@@ -12,9 +12,8 @@ namespace OpenViBE
 			explicit CScenarioSettingKeywordParserCallback(const IScenario& rScenario)
 				: m_rScenario(rScenario) {}
 
-			virtual ~CScenarioSettingKeywordParserCallback() {}
-
-			virtual bool expand(const CString& rStringToExpand, CString& rExpandedString) const;
+			~CScenarioSettingKeywordParserCallback() override {}
+			bool expand(const CString& rStringToExpand, CString& rExpandedString) const override;
 
 		private:
 			const IScenario& m_rScenario;

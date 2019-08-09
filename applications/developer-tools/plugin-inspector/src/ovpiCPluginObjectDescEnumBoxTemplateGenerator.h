@@ -15,7 +15,7 @@ class CPluginObjectDescEnumBoxTemplateGenerator : public CPluginObjectDescEnum
 public:
 
 	CPluginObjectDescEnumBoxTemplateGenerator(const OpenViBE::Kernel::IKernelContext& kernelContext, const OpenViBE::CString& docTemplateDirectory);
-	virtual bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pluginObjectDesc);
+	bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pluginObjectDesc) override;
 	virtual bool initialize();
 	virtual bool uninitialize();
 

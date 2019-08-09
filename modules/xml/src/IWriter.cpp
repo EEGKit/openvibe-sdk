@@ -12,12 +12,11 @@ namespace XML
 	{
 	public:
 		explicit CWriter(IWriterCallback& rWriterCallback);
-
-		virtual bool openChild(const char* sName);
-		virtual bool setChildData(const char* sData);
-		virtual bool setAttribute(const char* sAttributeName, const char* sAttributeValue);
-		virtual bool closeChild();
-		virtual void release();
+		bool openChild(const char* sName) override;
+		bool setChildData(const char* sData) override;
+		bool setAttribute(const char* sAttributeName, const char* sAttributeValue) override;
+		bool closeChild() override;
+		void release() override;
 
 	private:
 		void sanitize(string& sString, bool escapeQuotes = true);

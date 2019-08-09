@@ -19,7 +19,7 @@ namespace
 			  , m_ui64SettingCountHash(0x6BDFB15B54B09F63LL)
 			  , m_TypeManager(typeManager) { }
 
-		bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify)
+		bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify) override
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64InputCountHash);
@@ -34,7 +34,7 @@ namespace
 			return true;
 		}
 
-		bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify)
+		bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify) override
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
@@ -49,7 +49,7 @@ namespace
 			return true;
 		}
 
-		bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const CIdentifier& rIdentifier, const bool bNotify)
+		bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const CIdentifier& rIdentifier, const bool bNotify) override
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64SettingCountHash);
@@ -64,7 +64,7 @@ namespace
 			return true;
 		}
 
-		bool addInputSupport(const CIdentifier& rTypeIdentifier)
+		bool addInputSupport(const CIdentifier& rTypeIdentifier) override
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
@@ -82,7 +82,7 @@ namespace
 			return true;
 		}
 
-		bool addOutputSupport(const CIdentifier& rTypeIdentifier)
+		bool addOutputSupport(const CIdentifier& rTypeIdentifier) override
 		{
 			uint64_t v = rTypeIdentifier.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
@@ -100,7 +100,7 @@ namespace
 			return true;
 		}
 
-		bool addFlag(const EBoxFlag eBoxFlag)
+		bool addFlag(const EBoxFlag eBoxFlag) override
 		{
 			switch (eBoxFlag)
 			{
@@ -125,7 +125,7 @@ namespace
 			return true;
 		}
 
-		bool addFlag(const CIdentifier& cIdentifierFlag)
+		bool addFlag(const CIdentifier& cIdentifierFlag) override
 		{
 			uint64_t flagValue = m_TypeManager.getEnumerationEntryValueFromName(OV_TypeId_BoxAlgorithmFlag, cIdentifierFlag.toString());
 			if (flagValue == OV_UndefinedIdentifier) { return false; }

@@ -38,12 +38,10 @@ namespace OpenViBEPlugins
 			typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
 		public:
-
-			virtual void release() { delete this; }
-
-			virtual bool initialize();
-			virtual bool uninitialize();
-			virtual bool process();
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_OnlineCovariance)
 
@@ -62,24 +60,21 @@ namespace OpenViBEPlugins
 		class CAlgorithmOnlineCovarianceDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Online Covariance"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jussi T. Lindgren"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Incrementally computes covariance with shrinkage."); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Regularized covariance output is computed as (diag*shrink + cov)"); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("0.5"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_OnlineCovariance; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmOnlineCovariance; }
 
-			virtual void release() { }
-
-			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Online Covariance"); }
-			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Jussi T. Lindgren"); }
-			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Inria"); }
-			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Incrementally computes covariance with shrinkage."); }
-			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Regularized covariance output is computed as (diag*shrink + cov)"); }
-			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("0.5"); }
-
-			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_Algorithm_OnlineCovariance; }
-			virtual OpenViBE::Plugins::IPluginObject* create() { return new CAlgorithmOnlineCovariance; }
-
-			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_Shrinkage, "Shrinkage", OpenViBE::Kernel::ParameterType_Float);
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_OnlineCovariance_InputParameterId_InputVectors, "Input vectors", OpenViBE::Kernel::ParameterType_Matrix);

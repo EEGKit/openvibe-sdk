@@ -13,10 +13,8 @@ namespace OpenViBEToolkit
 	class OVTK_API CAlgorithmScenarioExporter : public TAlgorithm<OpenViBE::Plugins::IAlgorithmScenarioExporter>
 	{
 	public:
-
-		virtual void release() { delete this; }
-
-		virtual bool process();
+		void release() override { delete this; }
+		bool process() override;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithmScenarioExporter >, OVTK_ClassId_Algorithm_ScenarioExporter)
 	};

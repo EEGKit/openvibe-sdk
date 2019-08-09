@@ -9,12 +9,10 @@ namespace OpenViBEToolkit
 	class CSignalTrialSet : public ISignalTrialSet
 	{
 	public:
-
-		virtual bool addSignalTrial(ISignalTrial& rSignalTrial);
-		virtual bool clear();
-
-		virtual uint32_t getSignalTrialCount() const;
-		virtual ISignalTrial& getSignalTrial(uint32_t ui32Index) const;
+		bool addSignalTrial(ISignalTrial& rSignalTrial) override;
+		bool clear() override;
+		uint32_t getSignalTrialCount() const override;
+		ISignalTrial& getSignalTrial(uint32_t ui32Index) const override;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_)
 

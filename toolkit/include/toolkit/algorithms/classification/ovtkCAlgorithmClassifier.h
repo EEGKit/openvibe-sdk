@@ -36,13 +36,10 @@ namespace OpenViBEToolkit
 	class OVTK_API CAlgorithmClassifier : public TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 	{
 	public:
-
-		virtual bool initialize();
-		virtual bool uninitialize();
-
-		virtual void release() { delete this; }
-
-		virtual bool process();
+		bool initialize() override;
+		bool uninitialize() override;
+		void release() override { delete this; }
+		bool process() override;
 
 		virtual bool train(const IFeatureVectorSet& featureVectorSet) = 0;
 		virtual bool classify(const IFeatureVector& featureVector
@@ -80,8 +77,7 @@ namespace OpenViBEToolkit
 	class OVTK_API CAlgorithmClassifierDesc : public OpenViBE::Plugins::IAlgorithmDesc
 	{
 	public:
-
-		virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& algorithmPrototype) const
+		bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& algorithmPrototype) const override
 		{
 			algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector, "Feature vector", OpenViBE::Kernel::ParameterType_Matrix);
 			algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet, "Feature vector set", OpenViBE::Kernel::ParameterType_Matrix);

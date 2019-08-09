@@ -31,7 +31,7 @@ namespace OpenViBE
 				m_MetaBoxCount = 0;
 			}
 
-			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes)
+			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
 			{
 				if (rAttributes.isFile())
 				{

@@ -298,7 +298,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 	}
 
 	// Hack for classes with zero examples, give them valid models but such that will always lose
-	uint32_t l_ui32NonZeroClassIdx = 0;
+	size_t l_ui32NonZeroClassIdx = 0;
 	for (size_t i = 0; i < getClassCount(); i++)
 	{
 		if (l_vClassCounts[i] > 0)
@@ -369,7 +369,7 @@ bool CAlgorithmClassifierLDA::classify(const IFeatureVector& rFeatureVector, dou
 	}
 
 	//Then we just find the highest probability and take it as a result
-	uint32_t l_ui32ClassIndex = std::distance(l_pValueArray, std::max_element(l_pValueArray, l_pValueArray + l_ui32ClassCount));
+	size_t l_ui32ClassIndex = size_t(std::distance(l_pValueArray, std::max_element(l_pValueArray, l_pValueArray + l_ui32ClassCount)));
 
 	rClassificationValues.setSize(l_ui32ClassCount);
 	rProbabilityValue.setSize(l_ui32ClassCount);
@@ -462,7 +462,7 @@ void CAlgorithmClassifierLDA::loadClassesFromNode(XML::IXMLNode* pNode)
 	std::stringstream l_sData(pNode->getPCData());
 	double l_f64Temp;
 	while (l_sData >> l_f64Temp) { m_vLabelList.push_back(l_f64Temp); }
-	m_ui32NumClasses = m_vLabelList.size();
+	m_ui32NumClasses = uint32_t(m_vLabelList.size());
 }
 
 //Load the weight vector
@@ -475,7 +475,7 @@ void CAlgorithmClassifierLDA::loadCoefficientsFromNode(XML::IXMLNode* pNode)
 	while (l_sData >> l_f64Value) { l_vCoefficients.push_back(l_f64Value); }
 
 	m_oWeights.resize(1, l_vCoefficients.size());
-	m_ui32NumCols = l_vCoefficients.size();
+	m_ui32NumCols = uint32_t(l_vCoefficients.size());
 	for (size_t i = 0; i < l_vCoefficients.size(); i++) { m_oWeights(0, i) = l_vCoefficients[i]; }
 }
 

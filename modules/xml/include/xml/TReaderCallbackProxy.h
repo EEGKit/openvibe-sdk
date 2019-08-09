@@ -17,14 +17,13 @@ namespace XML
 							  void (COwnerClass::*mfpProcessChildData)(const char* sData), void (COwnerClass::*mfpCloseChild)())
 			: m_rOwnerObject(rOwnerObject), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
 
-		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
+		void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount) override
 		{
 			if (m_mfpOpenChild) { m_rOwnerObject.m_mfpOpenChild(sName, sAttributeName, sAttributeValue, ui64AttributeCount); }
 		}
 
-		virtual void processChildData(const char* sData) { if (m_mfpProcessChildData) { m_rOwnerObject.m_mfpProcessChildData(sData); } }
-
-		virtual void closeChild() { if (m_mfpCloseChild) { m_rOwnerObject.m_mfpCloseChild(); } }
+		void processChildData(const char* sData) override { if (m_mfpProcessChildData) { m_rOwnerObject.m_mfpProcessChildData(sData); } }
+		void closeChild() override { if (m_mfpCloseChild) { m_rOwnerObject.m_mfpCloseChild(); } }
 
 	protected:
 		COwnerClass& m_rOwnerObject;
@@ -43,14 +42,13 @@ namespace XML
 		TReaderCallbackProxy2(COwnerClass rOwnerObject)
 			: m_rOwnerObject(rOwnerObject), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
 
-		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount)
+		void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount) override
 		{
 			if (mfpOpenChild) { m_rOwnerObject.mfpOpenChild(sName, sAttributeName, sAttributeValue, ui64AttributeCount); }
 		}
 
-		virtual void processChildData(const char* sData) { if (mfpProcessChildData) { m_rOwnerObject.mfpProcessChildData(sData); } }
-
-		virtual void closeChild() { if (mfpCloseChild) { m_rOwnerObject.mfpCloseChild(); } }
+		void processChildData(const char* sData) override { if (mfpProcessChildData) { m_rOwnerObject.mfpProcessChildData(sData); } }
+		void closeChild() override { if (mfpCloseChild) { m_rOwnerObject.mfpCloseChild(); } }
 
 	protected:
 		COwnerClass& m_rOwnerObject;

@@ -160,10 +160,10 @@ public:
 	virtual void addChild(CAbstractTreeNode* pChild) { m_oChildren.push_back(pChild); }
 
 	//! Destructor.
-	virtual ~CAbstractTreeParentNode();
+	~CAbstractTreeParentNode() override;
 
 	//! Debug function, prints the node and its children (prefix notation)
-	virtual void print(OpenViBE::Kernel::ILogManager& rLogManager)
+	void print(OpenViBE::Kernel::ILogManager& rLogManager) override
 	{
 		std::string op;
 		switch (m_ui64Identifier)
@@ -259,10 +259,10 @@ public:
 		rLogManager << ")";
 	}
 
-	virtual bool simplify(CAbstractTreeNode*& pModifiedNode);
-	virtual void levelOperators();
-	virtual void useNegationOperator();
-	virtual void generateCode(CEquationParser& oParser);
+	bool simplify(CAbstractTreeNode*& pModifiedNode) override;
+	void levelOperators() override;
+	void useNegationOperator() override;
+	void generateCode(CEquationParser& oParser) override;
 };
 
 /**
@@ -281,7 +281,7 @@ public:
 	explicit CAbstractTreeValueNode(double f64Value) : CAbstractTreeNode(true, true), m_f64Value(f64Value) {}
 
 	//! Destructor
-	virtual ~CAbstractTreeValueNode() { }
+	~CAbstractTreeValueNode() override { }
 
 	/**
 	* Used to set the value of the node.
@@ -295,22 +295,20 @@ public:
 	 */
 	double getValue() { return m_f64Value; }
 
-	virtual void print(OpenViBE::Kernel::ILogManager& rLogManager)
+	void print(OpenViBE::Kernel::ILogManager& rLogManager) override
 	{
 		rLogManager << m_f64Value;
 	}
 
-	virtual bool simplify(CAbstractTreeNode*& pModifiedNode)
+	bool simplify(CAbstractTreeNode*& pModifiedNode) override
 	{
 		pModifiedNode = this;
 		return false;
 	}
 
-	virtual void levelOperators() { }
-
-	virtual void useNegationOperator() { }
-
-	virtual void generateCode(CEquationParser& oParser);
+	void levelOperators() override { }
+	void useNegationOperator() override { }
+	void generateCode(CEquationParser& oParser) override;
 };
 
 /**
@@ -324,9 +322,9 @@ public:
 		: CAbstractTreeNode(true, false)
 		  , m_ui32Index(ui32Index) { }
 
-	virtual ~CAbstractTreeVariableNode() { }
+	~CAbstractTreeVariableNode() override { }
 
-	virtual void print(OpenViBE::Kernel::ILogManager& rLogManager)
+	void print(OpenViBE::Kernel::ILogManager& rLogManager) override
 	{
 		char l_sName[2];
 		l_sName[0] = 'a' + m_ui32Index;
@@ -334,17 +332,15 @@ public:
 		rLogManager << l_sName;
 	}
 
-	virtual bool simplify(CAbstractTreeNode*& pModifiedNode)
+	bool simplify(CAbstractTreeNode*& pModifiedNode) override
 	{
 		pModifiedNode = this;
 		return false;
 	}
 
-	virtual void levelOperators() { }
-
-	virtual void useNegationOperator() { }
-
-	virtual void generateCode(CEquationParser& oParser);
+	void levelOperators() override { }
+	void useNegationOperator() override { }
+	void generateCode(CEquationParser& oParser) override;
 
 protected:
 

@@ -20,15 +20,11 @@ public:
 																												 m_pBox(nullptr),
 																												 m_pConfigurationManager(pConfigurationManager) {}
 
-	virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
-
-	virtual void processChildData(const char* sData);
-
-	virtual void closeChild();
-
-	virtual bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox);
-
-	virtual bool processEnd(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox);
+	void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount) override;
+	void processChildData(const char* sData) override;
+	void closeChild() override;
+	bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox) override;
+	bool processEnd(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox) override;
 
 	OpenViBE::Kernel::IObjectVisitorContext* m_pObjectVisitorContext;
 	OpenViBE::Kernel::IBox* m_pBox;

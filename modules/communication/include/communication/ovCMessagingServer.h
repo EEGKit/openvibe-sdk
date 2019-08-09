@@ -19,7 +19,7 @@ namespace Communication
 		/**
 		 * \brief	Destructor.
 		 */
-		~MessagingServer();
+		~MessagingServer() override;
 
 		/**
 		 * \brief Start listening on the given port.
@@ -113,7 +113,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if the library is in error state.
 		 */
-		bool popLog(uint64_t& packetId, ELogLevel& type, std::string& message);
+		bool popLog(uint64_t& packetId, ELogLevel& type, std::string& message) override;
 
 		/**
 		 * \brief Get the EBML data received from the client.
@@ -127,7 +127,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if the library is in error state.
 		 */
-		bool popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml);
+		bool popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml) override;
 
 		/**
 		 * \brief Push Error message to the client

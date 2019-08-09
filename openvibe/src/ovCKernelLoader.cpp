@@ -23,10 +23,9 @@ namespace OpenViBE
 	public:
 
 		CKernelLoaderBase();
-
-		virtual bool initialize();
-		virtual bool getKernelDesc(IKernelDesc*& rpKernelDesc);
-		virtual bool uninitialize();
+		bool initialize() override;
+		bool getKernelDesc(IKernelDesc*& rpKernelDesc) override;
+		bool uninitialize() override;
 		virtual void release();
 
 		_IsDerivedFromClass_Final_(IKernelLoader, OV_UndefinedIdentifier)
@@ -105,13 +104,11 @@ namespace OpenViBE
 	{
 	public:
 		CKernelLoaderWindows();
-
-		virtual bool load(const CString& sFileName, CString* pError);
-		virtual bool unload(CString* pError);
+		bool load(const CString& sFileName, CString* pError) override;
+		bool unload(CString* pError) override;
 
 	protected:
-
-		virtual bool isOpen();
+		bool isOpen() override;
 
 		HMODULE m_pFileHandle;
 	};

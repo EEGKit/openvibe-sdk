@@ -14,13 +14,11 @@ namespace OpenViBE
 		public:
 
 			CBoxAlgorithmContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox, const IBox* pBox);
-			virtual ~CBoxAlgorithmContext();
-
-			virtual const IBox* getStaticBoxContext();
-			virtual IBoxIO* getDynamicBoxContext();
-			virtual IPlayerContext* getPlayerContext();
-
-			virtual bool markAlgorithmAsReadyToProcess();
+			~CBoxAlgorithmContext() override;
+			const IBox* getStaticBoxContext() override;
+			IBoxIO* getDynamicBoxContext() override;
+			IPlayerContext* getPlayerContext() override;
+			bool markAlgorithmAsReadyToProcess() override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxAlgorithmContext>, OVK_ClassId_Kernel_Player_BoxAlgorithmContext)
 

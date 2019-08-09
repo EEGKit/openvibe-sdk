@@ -27,7 +27,7 @@ namespace OpenViBE
 		public:
 
 			CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer);
-			virtual ~CScheduler();
+			~CScheduler() override;
 
 			virtual bool setScenario(const CIdentifier& rScenarioIdentifier);
 			virtual bool setFrequency(uint64_t ui64Frequency);

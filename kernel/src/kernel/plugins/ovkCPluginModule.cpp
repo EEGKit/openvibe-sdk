@@ -23,12 +23,11 @@ namespace OpenViBE
 		{
 		public:
 			explicit CPluginModuleBase(const IKernelContext& rKernelContext);
-			virtual ~CPluginModuleBase();
-
-			virtual bool initialize();
-			virtual bool getPluginObjectDescription(uint32_t ui32Index, IPluginObjectDesc*& rpPluginObjectDescription);
-			virtual bool uninitialize();
-			virtual bool getFileName(CString& rFileName) const;
+			~CPluginModuleBase() override;
+			bool initialize() override;
+			bool getPluginObjectDescription(uint32_t ui32Index, IPluginObjectDesc*& rpPluginObjectDescription) override;
+			bool uninitialize() override;
+			bool getFileName(CString& rFileName) const override;
 
 			_IsDerivedFromClass_Final_(IPluginModule, OV_UndefinedIdentifier)
 
@@ -63,9 +62,9 @@ namespace OpenViBE
 					  , m_rTypeManager(rKernelContext.getTypeManager())
 					  , m_rScenarioManager(rKernelContext.getScenarioManager()) { }
 
-				virtual ILogManager& getLogManager() const { return m_rLogManager; }
-				virtual ITypeManager& getTypeManager() const { return m_rTypeManager; }
-				virtual IScenarioManager& getScenarioManager() const { return m_rScenarioManager; }
+				ILogManager& getLogManager() const override { return m_rLogManager; }
+				ITypeManager& getTypeManager() const override { return m_rTypeManager; }
+				IScenarioManager& getScenarioManager() const override { return m_rScenarioManager; }
 
 				_IsDerivedFromClass_Final_(TKernelObject<IPluginModuleContext>, OVK_ClassId_Kernel_Plugins_PluginModuleContext)
 
@@ -180,13 +179,11 @@ namespace OpenViBE
 		public:
 
 			explicit CPluginModuleWindows(const IKernelContext& rKernelContext);
-
-			virtual bool load(const CString& sFileName, CString* pError);
-			virtual bool unload(CString* pError);
+			bool load(const CString& sFileName, CString* pError) override;
+			bool unload(CString* pError) override;
 
 		protected:
-
-			virtual bool isOpen() const;
+			bool isOpen() const override;
 
 			HMODULE m_pFileHandle;
 

@@ -9,14 +9,12 @@ namespace OpenViBE
 	public:
 
 		CKernelLoader();
-		virtual ~CKernelLoader();
-
-		virtual bool load(const CString& sFileName, CString* pError = nullptr);
-		virtual bool unload(CString* pError = nullptr);
-
-		virtual bool initialize();
-		virtual bool getKernelDesc(Kernel::IKernelDesc*& rpKernelDesc);
-		virtual bool uninitialize();
+		~CKernelLoader() override;
+		bool load(const CString& sFileName, CString* pError = nullptr) override;
+		bool unload(CString* pError = nullptr) override;
+		bool initialize() override;
+		bool getKernelDesc(Kernel::IKernelDesc*& rpKernelDesc) override;
+		bool uninitialize() override;
 
 		_IsDerivedFromClass_Final_(OpenViBE::IKernelLoader, OV_ClassId_KernelLoaderBridge)
 

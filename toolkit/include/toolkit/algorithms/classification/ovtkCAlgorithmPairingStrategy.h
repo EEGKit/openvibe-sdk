@@ -28,24 +28,20 @@ namespace OpenViBEToolkit
 	class OVTK_API CAlgorithmPairingStrategy : public CAlgorithmClassifier
 	{
 	public:
-
-		virtual bool process();
-		virtual void release() { delete this; }
+		bool process() override;
+		void release() override { delete this; }
 
 		virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) = 0;
-
-		virtual bool train(const IFeatureVectorSet& rFeatureVectorSet) = 0;
-		virtual bool classify(const IFeatureVector& rFeatureVector
+		bool train(const IFeatureVectorSet& rFeatureVectorSet) override = 0;
+		bool classify(const IFeatureVector& rFeatureVector
 							  , double& rf64Class
 							  , IVector& rDistanceValue
-							  , IVector& rProbabilityValue) = 0;
-
-		virtual XML::IXMLNode* saveConfiguration() = 0;
-		virtual bool loadConfiguration(XML::IXMLNode* pConfiguratioNode) = 0;
+							  , IVector& rProbabilityValue) override = 0;
+		XML::IXMLNode* saveConfiguration() override = 0;
+		bool loadConfiguration(XML::IXMLNode* pConfiguratioNode) override = 0;
 		_IsDerivedFromClass_(CAlgorithmClassifier, OVTK_ClassId_Algorithm_PairingStrategy)
-
-		virtual uint32_t getOutputProbabilityVectorLength() = 0;
-		virtual uint32_t getOutputDistanceVectorLength() = 0;
+		uint32_t getOutputProbabilityVectorLength() override = 0;
+		uint32_t getOutputDistanceVectorLength() override = 0;
 
 
 	protected:
@@ -57,8 +53,7 @@ namespace OpenViBEToolkit
 	class OVTK_API CAlgorithmPairingStrategyDesc : public CAlgorithmClassifierDesc
 	{
 	public:
-
-		virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+		bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 		{
 			CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 

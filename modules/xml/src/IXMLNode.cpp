@@ -18,32 +18,30 @@ namespace XML
 	{
 	public:
 		explicit IXMLNodeImpl(const char* sName);
-
-		virtual const char* getName() const;
-
-		virtual void release();
+		const char* getName() const override;
+		void release() override;
 
 		//Attribute
-		virtual bool addAttribute(const char* sAttributeName, const char* sAttributeValue);
-		virtual bool hasAttribute(const char* sAttributeName) const;
-		virtual const char* getAttribute(const char* sAttributeName) const;
+		bool addAttribute(const char* sAttributeName, const char* sAttributeValue) override;
+		bool hasAttribute(const char* sAttributeName) const override;
+		const char* getAttribute(const char* sAttributeName) const override;
 
 		//PCDATA
-		virtual void setPCData(const char* childData);
-		virtual void appendPCData(const char* childData);
-		virtual const char* getPCData() const;
+		void setPCData(const char* childData) override;
+		void appendPCData(const char* childData) override;
+		const char* getPCData() const override;
 
 		//Child
-		virtual void addChild(IXMLNode* pChildNode);
-		virtual IXMLNode* getChild(size_t iChildIndex) const;
-		virtual IXMLNode* getChildByName(const char* sName) const;
-		virtual size_t getChildCount() const;
+		void addChild(IXMLNode* pChildNode) override;
+		IXMLNode* getChild(size_t iChildIndex) const override;
+		IXMLNode* getChildByName(const char* sName) const override;
+		size_t getChildCount() const override;
 
 		//XMl generation
-		virtual char* getXML(uint32_t depth = 0) const;
+		char* getXML(uint32_t depth = 0) const override;
 
 	protected:
-		virtual ~IXMLNodeImpl();
+		~IXMLNodeImpl() override;
 
 	private:
 		std::string sanitize(const std::string& sString) const;

@@ -22,17 +22,13 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmTimeout : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-			virtual void release() { delete this; }
-
-			virtual bool initialize();
-			virtual bool uninitialize();
-
-			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual bool processInput(const uint32_t ui32InputIndex);
-
-			virtual uint64_t getClockFrequency();
-
-			virtual bool process();
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processClock(OpenViBE::CMessageClock& rMessageClock) override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			uint64_t getClockFrequency() override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
 
@@ -66,24 +62,21 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmTimeoutDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Timeout"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jozef Legény"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection."); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stimulation"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Timeout; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmTimeout; }
 
-			virtual void release() { }
-
-			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Timeout"); }
-			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Jozef Legény"); }
-			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Inria"); }
-			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal"); }
-			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection."); }
-			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Stimulation"); }
-			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.1"); }
-			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_Timeout; }
-			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmTimeout; }
-
-			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
 			{
 				rBoxAlgorithmPrototype.addInput("Input Stream",OV_TypeId_StreamedMatrix);
 

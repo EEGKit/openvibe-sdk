@@ -16,23 +16,23 @@ namespace EBML
 							  void (COwnerClass::*mfpProcessChildData)(const void* pBuffer, uint64_t ui64BufferSize), void (COwnerClass::*mfpCloseChild)())
 			: m_rOwnerObject(rOwnerObject), m_mfpIsMasterChild(mfpIsMasterChild), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
 
-		virtual bool isMasterChild(const CIdentifier& rIdentifier)
+		bool isMasterChild(const CIdentifier& rIdentifier) override
 		{
 			if (m_mfpIsMasterChild) { return (m_rOwnerObject.*m_mfpIsMasterChild)(rIdentifier); }
 			return false;
 		}
 
-		virtual void openChild(const CIdentifier& rIdentifier)
+		void openChild(const CIdentifier& rIdentifier) override
 		{
 			if (m_mfpOpenChild) { (m_rOwnerObject.*m_mfpOpenChild)(rIdentifier); }
 		}
 
-		virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+		void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override
 		{
 			if (m_mfpProcessChildData) { (m_rOwnerObject.*m_mfpProcessChildData)(pBuffer, ui64BufferSize); }
 		}
 
-		virtual void closeChild()
+		void closeChild() override
 		{
 			if (m_mfpCloseChild) { (m_rOwnerObject.*m_mfpCloseChild)(); }
 		}
@@ -55,23 +55,23 @@ namespace EBML
 		TReaderCallbackProxy2(COwnerClass& rOwnerObject)
 			: m_rOwnerObject(rOwnerObject), m_mfpIsMasterChild(mfpIsMasterChild), m_mfpOpenChild(mfpOpenChild), m_mfpProcessChildData(mfpProcessChildData), m_mfpCloseChild(mfpCloseChild) { }
 
-		virtual bool isMasterChild(const CIdentifier& rIdentifier)
+		bool isMasterChild(const CIdentifier& rIdentifier) override
 		{
 			if (m_mfpIsMasterChild) { return (m_rOwnerObject.*m_mfpIsMasterChild)(rIdentifier); }
 			return false;
 		}
 
-		virtual void openChild(const CIdentifier& rIdentifier)
+		void openChild(const CIdentifier& rIdentifier) override
 		{
 			if (m_mfpOpenChild) { (m_rOwnerObject.*m_mfpOpenChild)(rIdentifier); }
 		}
 
-		virtual void processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+		void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override
 		{
 			if (m_mfpProcessChildData) { (m_rOwnerObject.*m_mfpProcessChildData)(pBuffer, ui64BufferSize); }
 		}
 
-		virtual void closeChild()
+		void closeChild() override
 		{
 			if (m_mfpCloseChild) { (m_rOwnerObject.*m_mfpCloseChild)(); }
 		}

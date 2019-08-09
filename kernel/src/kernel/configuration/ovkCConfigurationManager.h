@@ -23,39 +23,30 @@ namespace OpenViBE
 		public:
 
 			CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager = nullptr);
-
-			virtual void clear();
-
-			virtual bool addConfigurationFromFile(const CString& rFileNameWildCard);
-
-			virtual CIdentifier createConfigurationToken(const CString& rConfigurationTokenName, const CString& rConfigurationTokenValue);
-			virtual bool releaseConfigurationToken(const CIdentifier& rConfigurationTokenIdentifier);
-			virtual CIdentifier getNextConfigurationTokenIdentifier(const CIdentifier& rPreviousConfigurationTokenIdentifier) const;
-
-			virtual CString getConfigurationTokenName(const CIdentifier& rConfigurationTokenIdentifier) const;
-			virtual CString getConfigurationTokenValue(const CIdentifier& rConfigurationTokenIdentifier) const;
-
-			virtual bool setConfigurationTokenName(const CIdentifier& rConfigurationTokenIdentifier, const CString& rConfigurationTokenName);
-			virtual bool setConfigurationTokenValue(const CIdentifier& rConfigurationTokenIdentifier, const CString& rConfigurationTokenValue);
-			virtual bool addOrReplaceConfigurationToken(const CString& rConfigurationTokenName, const CString& rConfigurationTokenValue);
-
-			virtual CIdentifier lookUpConfigurationTokenIdentifier(const CString& rConfigurationTokenName, bool bRecursive) const;
-			virtual CString lookUpConfigurationTokenValue(const CString& rConfigurationTokenName) const;
-
-			virtual bool registerKeywordParser(const CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback);
-			virtual bool unregisterKeywordParser(const CString& rKeyword);
-			virtual bool unregisterKeywordParser(const IConfigurationKeywordExpandCallback& rCallback);
-
-			virtual CString expand(const CString& rExpression) const;
+			void clear() override;
+			bool addConfigurationFromFile(const CString& rFileNameWildCard) override;
+			CIdentifier createConfigurationToken(const CString& rConfigurationTokenName, const CString& rConfigurationTokenValue) override;
+			bool releaseConfigurationToken(const CIdentifier& rConfigurationTokenIdentifier) override;
+			CIdentifier getNextConfigurationTokenIdentifier(const CIdentifier& rPreviousConfigurationTokenIdentifier) const override;
+			CString getConfigurationTokenName(const CIdentifier& rConfigurationTokenIdentifier) const override;
+			CString getConfigurationTokenValue(const CIdentifier& rConfigurationTokenIdentifier) const override;
+			bool setConfigurationTokenName(const CIdentifier& rConfigurationTokenIdentifier, const CString& rConfigurationTokenName) override;
+			bool setConfigurationTokenValue(const CIdentifier& rConfigurationTokenIdentifier, const CString& rConfigurationTokenValue) override;
+			bool addOrReplaceConfigurationToken(const CString& rConfigurationTokenName, const CString& rConfigurationTokenValue) override;
+			CIdentifier lookUpConfigurationTokenIdentifier(const CString& rConfigurationTokenName, bool bRecursive) const override;
+			CString lookUpConfigurationTokenValue(const CString& rConfigurationTokenName) const override;
+			bool registerKeywordParser(const CString& rKeyword, const IConfigurationKeywordExpandCallback& rCallback) override;
+			bool unregisterKeywordParser(const CString& rKeyword) override;
+			bool unregisterKeywordParser(const IConfigurationKeywordExpandCallback& rCallback) override;
+			CString expand(const CString& rExpression) const override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IConfigurationManager >, OVK_ClassId_Kernel_Configuration_ConfigurationManager)
-
-			virtual CString expandOnlyKeyword(const CString& rKeyword, const CString& rExpression, bool preserveBackslashes) const;
-			virtual double expandAsFloat(const CString& rExpression, double f64FallbackValue) const;
-			virtual int64_t expandAsInteger(const CString& rExpression, int64_t i64FallbackValue) const;
-			virtual uint64_t expandAsUInteger(const CString& rExpression, uint64_t ui64FallbackValue) const;
-			virtual bool expandAsBoolean(const CString& rExpression, bool bFallbackValue) const;
-			virtual uint64_t expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier, uint64_t ui64FallbackValue) const;
+			CString expandOnlyKeyword(const CString& rKeyword, const CString& rExpression, bool preserveBackslashes) const override;
+			double expandAsFloat(const CString& rExpression, double f64FallbackValue) const override;
+			int64_t expandAsInteger(const CString& rExpression, int64_t i64FallbackValue) const override;
+			uint64_t expandAsUInteger(const CString& rExpression, uint64_t ui64FallbackValue) const override;
+			bool expandAsBoolean(const CString& rExpression, bool bFallbackValue) const override;
+			uint64_t expandAsEnumerationEntryValue(const CString& rExpression, const CIdentifier& rEnumerationTypeIdentifier, uint64_t ui64FallbackValue) const override;
 
 		protected:
 

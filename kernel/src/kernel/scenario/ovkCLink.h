@@ -15,25 +15,20 @@ namespace OpenViBE
 		public:
 
 			CLink(const IKernelContext& rKernelContext, CScenario& rOwnerScenario);
-
-			virtual bool InitializeFromExistingLink(const ILink& link);
-
-			virtual bool setIdentifier(const CIdentifier& rIdentifier);
-			virtual CIdentifier getIdentifier() const;
-
-			virtual bool setSource(const CIdentifier& rBoxIdentifier, uint32_t ui32BoxOutputIndex, CIdentifier rBoxOutputIdentifier);
-			virtual bool setTarget(const CIdentifier& rBoxIdentifier, uint32_t ui32BoxInputIndex, CIdentifier rBoxInputIdentifier);
-			virtual bool getSource(CIdentifier& rBoxIdentifier, uint32_t& ui32BoxOutputIndex, CIdentifier& rBoxOutputIdentifier) const; 
-			virtual CIdentifier getSourceBoxIdentifier() const;
-			virtual uint32_t getSourceBoxOutputIndex() const;
-			virtual CIdentifier getSourceBoxOutputIdentifier() const;
-			virtual bool getTarget(CIdentifier& rTargetBoxIdentifier, uint32_t& ui32BoxInputIndex, CIdentifier& rTargetBoxInputIdentifier) const;
-			virtual CIdentifier getTargetBoxIdentifier() const;
-			virtual uint32_t getTargetBoxInputIndex() const;
-			virtual CIdentifier getTargetBoxInputIdentifier() const;
-
-
-			virtual bool acceptVisitor(IObjectVisitor& rObjectVisitor);
+			bool InitializeFromExistingLink(const ILink& link) override;
+			bool setIdentifier(const CIdentifier& rIdentifier) override;
+			CIdentifier getIdentifier() const override;
+			bool setSource(const CIdentifier& rBoxIdentifier, uint32_t ui32BoxOutputIndex, CIdentifier rBoxOutputIdentifier) override;
+			bool setTarget(const CIdentifier& rBoxIdentifier, uint32_t ui32BoxInputIndex, CIdentifier rBoxInputIdentifier) override;
+			bool getSource(CIdentifier& rBoxIdentifier, uint32_t& ui32BoxOutputIndex, CIdentifier& rBoxOutputIdentifier) const override;
+			CIdentifier getSourceBoxIdentifier() const override;
+			uint32_t getSourceBoxOutputIndex() const override;
+			CIdentifier getSourceBoxOutputIdentifier() const override;
+			bool getTarget(CIdentifier& rTargetBoxIdentifier, uint32_t& ui32BoxInputIndex, CIdentifier& rTargetBoxInputIdentifier) const override;
+			CIdentifier getTargetBoxIdentifier() const override;
+			uint32_t getTargetBoxInputIndex() const override;
+			CIdentifier getTargetBoxInputIdentifier() const override;
+			bool acceptVisitor(IObjectVisitor& rObjectVisitor) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::ILink > >, OVK_ClassId_Kernel_Scenario_Link)
 

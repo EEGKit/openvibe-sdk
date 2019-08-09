@@ -18,21 +18,17 @@ namespace EBML
 		public:
 
 			CWriterHelper();
-
-			virtual bool connect(IWriter* pWriter);
-			virtual bool disconnect();
-
-			virtual bool openChild(const CIdentifier& rIdentifier);
-			virtual bool closeChild();
-
-			virtual bool setSIntegerAsChildData(int64_t iValue);
-			virtual bool setUIntegerAsChildData(uint64_t uiValue);
-			virtual bool setFloat32AsChildData(float fValue);
-			virtual bool setFloat64AsChildData(double fValue);
-			virtual bool setBinaryAsChildData(const void* pBuffer, uint64_t ui64BufferLength);
-			virtual bool setASCIIStringAsChildData(const char* sValue);
-
-			virtual void release();
+			bool connect(IWriter* pWriter) override;
+			bool disconnect() override;
+			bool openChild(const CIdentifier& rIdentifier) override;
+			bool closeChild() override;
+			bool setSIntegerAsChildData(int64_t iValue) override;
+			bool setUIntegerAsChildData(uint64_t uiValue) override;
+			bool setFloat32AsChildData(float fValue) override;
+			bool setFloat64AsChildData(double fValue) override;
+			bool setBinaryAsChildData(const void* pBuffer, uint64_t ui64BufferLength) override;
+			bool setASCIIStringAsChildData(const char* sValue) override;
+			void release() override;
 
 		protected:
 

@@ -23,7 +23,7 @@ namespace Socket
 	{
 	public:
 		IConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate);
-		virtual ~IConnectionSerialDelegate();
+		~IConnectionSerialDelegate() override;
 
 	protected:
 		SConnectionSerialDelegate m_oConnectionSerialDelegate;

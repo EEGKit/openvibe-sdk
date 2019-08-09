@@ -32,8 +32,7 @@ namespace FS
 	public:
 
 		explicit CEntry(const string& sName);
-
-		virtual const char* getName();
+		const char* getName() override;
 
 	public:
 
@@ -60,19 +59,16 @@ namespace FS
 	public:
 
 		CAttributes() {}
-		virtual ~CAttributes() {}
-
-		virtual bool isFile();
-		virtual bool isDirectory();
-		virtual bool isSymbolicLink();
-
-		virtual bool isArchive();
-		virtual bool isReadOnly();
-		virtual bool isHidden();
-		virtual bool isSystem();
-		virtual bool isExecutable();
-
-		virtual uint64_t getSize();
+		~CAttributes() override {}
+		bool isFile() override;
+		bool isDirectory() override;
+		bool isSymbolicLink() override;
+		bool isArchive() override;
+		bool isReadOnly() override;
+		bool isHidden() override;
+		bool isSystem() override;
+		bool isExecutable() override;
+		uint64_t getSize() override;
 
 	public:
 
@@ -120,7 +116,7 @@ namespace FS
 	{
 	public:
 		explicit CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
-		virtual void release();
+		void release() override;
 	protected:
 		IEntryEnumeratorCallBack& m_rEntryEnumeratorCallBack;
 	};
@@ -157,7 +153,7 @@ namespace FS
 	{
 	public:
 		explicit CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
-		virtual bool enumerate(const char* sWildCard, bool bRecursive = false);
+		bool enumerate(const char* sWildCard, bool bRecursive = false) override;
 	};
 };
 

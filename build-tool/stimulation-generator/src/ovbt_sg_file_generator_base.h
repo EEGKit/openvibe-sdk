@@ -16,23 +16,23 @@ protected:
 class CCppDefineGenerator : public CFileGeneratorBase
 {
 public:
-	virtual bool openFile(const char* sFilename);
-	virtual bool appendStimulation(SStimulation& rStim);
-	virtual bool closeFile();
+	bool openFile(const char* sFilename) override;
+	bool appendStimulation(SStimulation& rStim) override;
+	bool closeFile() override;
 };
 
 class CCppCodeGenerator : public CFileGeneratorBase
 {
 public:
-	virtual bool openFile(const char* sFilename);
-	virtual bool appendStimulation(SStimulation& rStim);
-	virtual bool closeFile();
+	bool openFile(const char* sFilename) override;
+	bool appendStimulation(SStimulation& rStim) override;
+	bool closeFile() override;
 };
 
 class CMatlabGenerator : public CFileGeneratorBase
 {
 public:
-	virtual bool openFile(const char* sFilename);
-	virtual bool appendStimulation(SStimulation& rStim);
-	virtual bool closeFile();
+	bool openFile(const char* sFilename) override;
+	bool appendStimulation(SStimulation& rStim) override;
+	bool closeFile() override;
 };

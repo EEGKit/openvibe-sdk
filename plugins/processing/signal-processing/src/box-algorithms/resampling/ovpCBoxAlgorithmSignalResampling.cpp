@@ -108,7 +108,7 @@ bool CBoxAlgorithmSignalResampling::process()
 		IMatrix* oMatrix = m_oEncoder.getInputMatrix();
 
 		uint32_t channelCount = iMatrix->getDimensionSize(0);
-		uint32_t sampleCount  = iMatrix->getDimensionSize(1);
+		//uint32_t sampleCount  = iMatrix->getDimensionSize(1);
 
 		if (m_oDecoder.isHeaderReceived())
 		{

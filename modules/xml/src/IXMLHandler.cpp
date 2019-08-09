@@ -13,18 +13,18 @@ namespace XML
 	class IXMLHandlerImpl : public IXMLHandler
 	{
 	public:
-		virtual void release();
+		void release() override;
 		IXMLHandlerImpl();
 
 		//Parsing
-		virtual IXMLNode* parseFile(const char* sPath);
-		virtual IXMLNode* parseString(const char* sString, const uint32_t& uiSize);
+		IXMLNode* parseFile(const char* sPath) override;
+		IXMLNode* parseString(const char* sString, const uint32_t& uiSize) override;
 
 		//XML extraction
-		virtual bool writeXMLInFile(const IXMLNode& rNode, const char* sPath) const;
+		bool writeXMLInFile(const IXMLNode& rNode, const char* sPath) const override;
 
 		//Error handling
-		virtual std::string getLastErrorString() const;
+		std::string getLastErrorString() const override;
 
 		//Internal function for parsing
 		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
@@ -34,7 +34,7 @@ namespace XML
 		std::stringstream& getErrorStringStream() const;
 
 	protected:
-		virtual ~IXMLHandlerImpl();
+		~IXMLHandlerImpl() override;
 
 	private:
 		XML_Parser m_pXMLParser;

@@ -19,7 +19,7 @@ namespace Communication
 		/**
 		 * \brief	Destructor.
 		 */
-		~MessagingClient();
+		~MessagingClient() override;
 
 		/**
 		 * \brief	Connect to a server.
@@ -131,7 +131,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False there is no available error.
 		 */
-		bool popError(uint64_t& packetId, EError& type, uint64_t& guiltyId);
+		bool popError(uint64_t& packetId, EError& type, uint64_t& guiltyId) override;
 
 		/**
 		 * \brief Get the oldest EBML message, if available.
@@ -144,7 +144,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False there is no available error.
 		 */
-		bool popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml);
+		bool popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml) override;
 
 		/**
 		 * \brief	Push a log message to the server.

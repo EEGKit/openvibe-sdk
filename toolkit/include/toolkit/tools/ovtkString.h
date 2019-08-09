@@ -26,7 +26,7 @@ namespace OpenViBEToolkit
 
 				TSplitCallback(TContainer& vTokenContainer) : m_pTokenContainer(&vTokenContainer) { }
 
-				void setToken(const char* sToken) const { m_pTokenContainer->push_back(sToken); }
+				void setToken(const char* sToken) const override { m_pTokenContainer->push_back(sToken); }
 
 			protected:
 

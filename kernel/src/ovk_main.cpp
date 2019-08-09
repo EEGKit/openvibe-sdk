@@ -12,25 +12,23 @@ namespace OpenViBE
 		class CKernelDesc : public IKernelDesc
 		{
 		public:
-
-			virtual IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename)
+			IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename) override
 			{
 				return new CKernelContext(nullptr, rApplicationName, rConfigurationFilename);
 			}
 
-			virtual IKernelContext* createKernel(const IKernelContext& rMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFilename)
+			IKernelContext* createKernel(const IKernelContext& rMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFilename) override
 			{
 				return new CKernelContext(&rMasterKernelContext, rApplicationName, rConfigurationFilename);
 			}
 
-			virtual void releaseKernel(IKernelContext* pKernelContext) { delete pKernelContext; }
-
-			virtual CString getName() const { return CString("OpenViBE Kernel Implementation"); }
-			virtual CString getAuthorName() const { return CString("Yann Renard"); }
-			virtual CString getAuthorCompanyName() const { return CString("INRIA/IRISA"); }
-			virtual CString getShortDescription() const { return CString("OpenViBE Kernel Implementation"); }
-			virtual CString getDetailedDescription() const { return CString("OpenViBE Kernel Implementation"); }
-			virtual CString getVersion() const { return CString("0.5"); }
+			void releaseKernel(IKernelContext* pKernelContext) override { delete pKernelContext; }
+			CString getName() const override { return CString("OpenViBE Kernel Implementation"); }
+			CString getAuthorName() const override { return CString("Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+			CString getShortDescription() const override { return CString("OpenViBE Kernel Implementation"); }
+			CString getDetailedDescription() const override { return CString("OpenViBE Kernel Implementation"); }
+			CString getVersion() const override { return CString("0.5"); }
 
 			_IsDerivedFromClass_Final_(IKernelDesc, OVK_ClassId_KernelDesc)
 		};

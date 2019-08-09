@@ -38,7 +38,7 @@ public:
 	CReaderCallBack()
 		: m_Depth(0) { }
 
-	virtual ~CReaderCallBack() { }
+	~CReaderCallBack() override { }
 
 	bool isMasterChild(const EBML::CIdentifier& rIdentifier) override
 	{

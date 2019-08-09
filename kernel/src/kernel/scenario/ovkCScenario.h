@@ -23,109 +23,109 @@ namespace OpenViBE
 		public:
 
 			CScenario(const IKernelContext& kernelContext, const CIdentifier& identifier);
-			~CScenario();
+			~CScenario() override;
 
-			bool clear();
-			bool merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, bool mergeSettings, bool shouldPreserveIdentifies);
+			bool clear() override;
+			bool merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, bool mergeSettings, bool shouldPreserveIdentifies) override;
 
-			CIdentifier getNextBoxIdentifier(const CIdentifier& previousIdentifier) const;
-			bool isBox(const CIdentifier& boxIdentifier) const;
-			const IBox* getBoxDetails(const CIdentifier& boxIdentifier) const;
-			IBox* getBoxDetails(const CIdentifier& boxIdentifier);
-			bool addBox(CIdentifier& boxIdentifier, const CIdentifier& suggestedBoxIdentifier);
-			bool addBox(CIdentifier& boxIdentifier, const IBox& box, const CIdentifier& suggestedBoxIdentifier);
-			bool addBox(CIdentifier& boxIdentifier, const CIdentifier& boxAlgorithmIdentifier, const CIdentifier& suggestedBoxIdentifier);
-			bool addBox(CIdentifier& boxIdentifier, const Plugins::IBoxAlgorithmDesc& boxAlgorithmDesc, const CIdentifier& suggestedBoxIdentifier);
-			bool removeBox(const CIdentifier& boxIdentifier);
+			CIdentifier getNextBoxIdentifier(const CIdentifier& previousIdentifier) const override;
+			bool isBox(const CIdentifier& boxIdentifier) const override;
+			const IBox* getBoxDetails(const CIdentifier& boxIdentifier) const override;
+			IBox* getBoxDetails(const CIdentifier& boxIdentifier) override;
+			bool addBox(CIdentifier& boxIdentifier, const CIdentifier& suggestedBoxIdentifier) override;
+			bool addBox(CIdentifier& boxIdentifier, const IBox& box, const CIdentifier& suggestedBoxIdentifier) override;
+			bool addBox(CIdentifier& boxIdentifier, const CIdentifier& boxAlgorithmIdentifier, const CIdentifier& suggestedBoxIdentifier) override;
+			bool addBox(CIdentifier& boxIdentifier, const Plugins::IBoxAlgorithmDesc& boxAlgorithmDesc, const CIdentifier& suggestedBoxIdentifier) override;
+			bool removeBox(const CIdentifier& boxIdentifier) override;
 
-			CIdentifier getNextCommentIdentifier(const CIdentifier& previousIdentifier) const;
-			bool isComment(const CIdentifier& commentIdentifier) const;
-			const IComment* getCommentDetails(const CIdentifier& commentIdentifier) const;
-			IComment* getCommentDetails(const CIdentifier& commentIdentifier);
-			bool addComment(CIdentifier& commentIdentifier, const CIdentifier& suggestedCommentIdentifier);
-			bool addComment(CIdentifier& commentIdentifier, const IComment& rComment, const CIdentifier& suggestedCommentIdentifier);
-			bool removeComment(const CIdentifier& commentIdentifier);
+			CIdentifier getNextCommentIdentifier(const CIdentifier& previousIdentifier) const override;
+			bool isComment(const CIdentifier& commentIdentifier) const override;
+			const IComment* getCommentDetails(const CIdentifier& commentIdentifier) const override;
+			IComment* getCommentDetails(const CIdentifier& commentIdentifier) override;
+			bool addComment(CIdentifier& commentIdentifier, const CIdentifier& suggestedCommentIdentifier) override;
+			bool addComment(CIdentifier& commentIdentifier, const IComment& rComment, const CIdentifier& suggestedCommentIdentifier) override;
+			bool removeComment(const CIdentifier& commentIdentifier) override;
 
-			CIdentifier getNextMetadataIdentifier(const CIdentifier& previousIdentifier) const;
-			bool isMetadata(const CIdentifier& metadataIdentifier) const;
-			const IMetadata* getMetadataDetails(const CIdentifier& metadataIdentifier) const;
-			IMetadata* getMetadataDetails(const CIdentifier& metadataIdentifier);
-			bool addMetadata(CIdentifier& metadataIdentifier, const CIdentifier& suggestedMetadataIdentifier);
-			bool removeMetadata(const CIdentifier& metadataIdentifier);
+			CIdentifier getNextMetadataIdentifier(const CIdentifier& previousIdentifier) const override;
+			bool isMetadata(const CIdentifier& metadataIdentifier) const override;
+			const IMetadata* getMetadataDetails(const CIdentifier& metadataIdentifier) const override;
+			IMetadata* getMetadataDetails(const CIdentifier& metadataIdentifier) override;
+			bool addMetadata(CIdentifier& metadataIdentifier, const CIdentifier& suggestedMetadataIdentifier) override;
+			bool removeMetadata(const CIdentifier& metadataIdentifier) override;
 
-			CIdentifier getNextLinkIdentifier(const CIdentifier& previousIdentifier) const;
+			CIdentifier getNextLinkIdentifier(const CIdentifier& previousIdentifier) const override;
 
-			CIdentifier getNextLinkIdentifierFromBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const;
-			CIdentifier getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t outputIndex) const;
-			CIdentifier getNextLinkIdentifierToBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const;
-			CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t inputInex) const;
-			bool isLink(const CIdentifier& boxIdentifier) const;
+			CIdentifier getNextLinkIdentifierFromBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const override;
+			CIdentifier getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t outputIndex) const override;
+			CIdentifier getNextLinkIdentifierToBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const override;
+			CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t inputInex) const override;
+			bool isLink(const CIdentifier& boxIdentifier) const override;
 
-			bool setHasIO(bool hasIO);
-			bool hasIO() const;
-			bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex);
-			bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier);
-			bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex);
-			bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier);
-			bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, uint32_t& boxInputIndex) const;
-			bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const;
-			bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, uint32_t& boxOutputIndex) const;
-			bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const;
-			bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex);
-			bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex);
+			bool setHasIO(bool hasIO) override;
+			bool hasIO() const override;
+			bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) override;
+			bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier) override;
+			bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) override;
+			bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier) override;
+			bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, uint32_t& boxInputIndex) const override;
+			bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const override;
+			bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, uint32_t& boxOutputIndex) const override;
+			bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const override;
+			bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) override;
+			bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) override;
 
-			bool removeScenarioInput(uint32_t inputIndex);
-			bool removeScenarioOutput(uint32_t outputIndex);
+			bool removeScenarioInput(uint32_t inputIndex) override;
+			bool removeScenarioOutput(uint32_t outputIndex) override;
 
-			const ILink* getLinkDetails(const CIdentifier& linkIdentifier) const;
-			ILink* getLinkDetails(const CIdentifier& linkIdentifier);
+			const ILink* getLinkDetails(const CIdentifier& linkIdentifier) const override;
+			ILink* getLinkDetails(const CIdentifier& linkIdentifier) override;
 
 			bool connect(CIdentifier& linkIdentifier, const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex,
-						 const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex, const CIdentifier& suggestedLinkIdentifier);
+						 const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex, const CIdentifier& suggestedLinkIdentifier) override;
 			bool connect(CIdentifier& linkIdentifier, const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier,
-						 const CIdentifier& targetBoxIdentifier,  const CIdentifier& targetBoxInputIdentifier, const CIdentifier& suggestedLinkIdentifier);
-			bool disconnect(const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex, const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex);
-			bool disconnect(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier);
-			bool disconnect(const CIdentifier& linkIdentifier);
+						 const CIdentifier& targetBoxIdentifier,  const CIdentifier& targetBoxInputIdentifier, const CIdentifier& suggestedLinkIdentifier) override;
+			bool disconnect(const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex, const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex) override;
+			bool disconnect(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier) override;
+			bool disconnect(const CIdentifier& linkIdentifier) override;
 
-			bool getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, uint32_t& sourceBoxOutputIndex);
+			bool getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, uint32_t& sourceBoxOutputIndex) override;
 
-			bool getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, uint32_t& targetBoxInputIndex);
+			bool getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, uint32_t& targetBoxInputIndex) override;
 
-			bool getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentifier, const uint32_t& sourceBoxOutputIndex, CIdentifier& sourceBoxOutputIdentifier);
+			bool getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentifier, const uint32_t& sourceBoxOutputIndex, CIdentifier& sourceBoxOutputIdentifier) override;
 
-			bool getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifier, const uint32_t& targetBoxInputIndex, CIdentifier& targetBoxInputIdentifier);
+			bool getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifier, const uint32_t& targetBoxInputIndex, CIdentifier& targetBoxInputIdentifier) override;
 
-			bool applyLocalSettings();
-			bool checkSettings(IConfigurationManager* configurationManager);
+			bool applyLocalSettings() override;
+			bool checkSettings(IConfigurationManager* configurationManager) override;
 
 			bool isBoxOutdated(const CIdentifier& rBoxIdentifier);
-			bool checkOutdatedBoxes();
-			bool hasOutdatedBox();
+			bool checkOutdatedBoxes() override;
+			bool hasOutdatedBox() override;
 
-			CIdentifier getNextOutdatedBoxIdentifier(const CIdentifier& previousIdentifier) const;
+			CIdentifier getNextOutdatedBoxIdentifier(const CIdentifier& previousIdentifier) const override;
 
-			bool isMetabox();
+			bool isMetabox() override;
 
-			void getBoxIdentifierList(CIdentifier** identifierList, size_t* size) const;
-			void getCommentIdentifierList(CIdentifier** identifierList, size_t* size) const;
-			void getMetadataIdentifierList(CIdentifier** identifierList, size_t* size) const;
-			void getLinkIdentifierList(CIdentifier** identifierList, size_t* size) const;
-			void getLinkIdentifierFromBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const;
-			void getLinkIdentifierFromBoxOutputList(const CIdentifier& boxIdentifier, uint32_t outputIndex, CIdentifier** identifierList, size_t* size) const;
-			void getLinkIdentifierToBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const;
-			void getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, uint32_t inputInex, CIdentifier** identifierList, size_t* size) const;
-			void getOutdatedBoxIdentifierList(CIdentifier** identifierList, size_t* size) const;
-			void releaseIdentifierList(CIdentifier* identifierList) const;
+			void getBoxIdentifierList(CIdentifier** identifierList, size_t* size) const override;
+			void getCommentIdentifierList(CIdentifier** identifierList, size_t* size) const override;
+			void getMetadataIdentifierList(CIdentifier** identifierList, size_t* size) const override;
+			void getLinkIdentifierList(CIdentifier** identifierList, size_t* size) const override;
+			void getLinkIdentifierFromBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const override;
+			void getLinkIdentifierFromBoxOutputList(const CIdentifier& boxIdentifier, uint32_t outputIndex, CIdentifier** identifierList, size_t* size) const override;
+			void getLinkIdentifierToBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const override;
+			void getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, uint32_t inputInex, CIdentifier** identifierList, size_t* size) const override;
+			void getOutdatedBoxIdentifierList(CIdentifier** identifierList, size_t* size) const override;
+			void releaseIdentifierList(CIdentifier* identifierList) const override;
 
 
-			bool acceptVisitor(IObjectVisitor& objectVisitor);
+			bool acceptVisitor(IObjectVisitor& objectVisitor) override;
 
-			bool updateBox(const CIdentifier& boxIdentifier);
+			bool updateBox(const CIdentifier& boxIdentifier) override;
 
-			bool containsBoxWithDeprecatedInterfacors() const;
+			bool containsBoxWithDeprecatedInterfacors() const override;
 
-			bool removeDeprecatedInterfacorsFromBox(const CIdentifier& boxIdentifier);
+			bool removeDeprecatedInterfacorsFromBox(const CIdentifier& boxIdentifier) override;
 
 			_IsDerivedFromClass_Final_(TBox< OpenViBE::Kernel::IScenario >, OVK_ClassId_Kernel_Scenario_Scenario)
 

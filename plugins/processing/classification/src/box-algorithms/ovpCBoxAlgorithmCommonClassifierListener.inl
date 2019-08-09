@@ -34,7 +34,7 @@ namespace OpenViBEPlugins
 				  m_ui32CustomSettingBase(ui32CustomSettingBase),
 				  m_i32StrategyAmountSettings(-1) { }
 
-			virtual bool initialize()
+			bool initialize() override
 			{
 				//Even if everything should have been set in constructor, we still set everything in initialize (in case of)
 				m_oClassifierClassIdentifier = OV_UndefinedIdentifier;
@@ -49,7 +49,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool uninitialize()
+			bool uninitialize() override
 			{
 				if (m_pClassifier)
 				{
@@ -111,7 +111,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				//ui32Index represent the number of the class (because of rejected offset)
 				char l_sBuffer[64];
@@ -124,7 +124,7 @@ namespace OpenViBEPlugins
 				return this->onInputAddedOrRemoved(rBox);
 			}
 
-			virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				//First remove the removed input from settings
 				rBox.removeSetting(3 - 1 + getStrategySettingsCount(rBox) + ui32Index);
@@ -141,8 +141,7 @@ namespace OpenViBEPlugins
 				return this->onInputAddedOrRemoved(rBox);
 			}
 
-
-			virtual bool onInitialized(OpenViBE::Kernel::IBox& rBox)
+			bool onInitialized(OpenViBE::Kernel::IBox& rBox) override
 			{
 				//We need to know if the box is already initialized (can be called after a restore state)
 				OpenViBE::CString l_sStrategyName;
@@ -176,7 +175,7 @@ namespace OpenViBEPlugins
 				return getStrategySettingsCount(rBox) + 3 + rBox.getInputCount() - 1;
 			}
 
-			virtual bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
+			bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				if (ui32Index == getClassifierIndex(rBox))
 				{

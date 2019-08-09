@@ -23,13 +23,11 @@ namespace OpenViBEPlugins
 		public:
 
 			CAlgorithmXMLScenarioImporter();
-			virtual ~CAlgorithmXMLScenarioImporter();
-
-			virtual bool import(OpenViBE::Plugins::IAlgorithmScenarioImporterContext& rContext, const OpenViBE::IMemoryBuffer& rMemoryBuffer);
-
-			virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount); // XML::IReaderCallback
-			virtual void processChildData(const char* sData); // XML::IReaderCallback
-			virtual void closeChild(); // XML::IReaderCallback
+			~CAlgorithmXMLScenarioImporter() override;
+			bool import(OpenViBE::Plugins::IAlgorithmScenarioImporterContext& rContext, const OpenViBE::IMemoryBuffer& rMemoryBuffer) override;
+			void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount) override; // XML::IReaderCallback
+			void processChildData(const char* sData) override; // XML::IReaderCallback
+			void closeChild() override; // XML::IReaderCallback
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioImporter, OVP_ClassId_Algorithm_XMLScenarioImporter)
 
@@ -47,22 +45,20 @@ namespace OpenViBEPlugins
 		class CAlgorithmXMLScenarioImporterDesc : public OpenViBEToolkit::CAlgorithmScenarioImporterDesc
 		{
 		public:
-
-			virtual void release() { }
-			virtual OpenViBE::CString getName() const { return OpenViBE::CString("XML Scenario importer"); }
-			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("A sample XML scenario importer"); }
-			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("This scenario importer uses simple XML format to input the scenario"); }
-			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Samples"); }
-			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("XML Scenario importer"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("A sample XML scenario importer"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This scenario importer uses simple XML format to input the scenario"); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Samples"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
 			// virtual OpenViBE::CString getFileExtension() const       { return OpenViBE::CString("xml;XML"); }
-			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_Algorithm_XMLScenarioImporter; }
-			virtual OpenViBE::Plugins::IPluginObject* create() { return new CAlgorithmXMLScenarioImporter(); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_XMLScenarioImporter; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmXMLScenarioImporter(); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioImporterDesc, OVP_ClassId_Algorithm_XMLScenarioImporterDesc)
 		};

@@ -85,8 +85,7 @@ namespace OpenViBE
 		public:
 
 			CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& rScheduler);
-
-			virtual ~CSimulatedBox();
+			~CSimulatedBox() override;
 
 			virtual bool setScenarioIdentifier(const CIdentifier& rScenarioIdentifier);
 
@@ -107,22 +106,22 @@ namespace OpenViBE
 
 			/** \name IBoxIO inputs handling */
 			//@{
-			virtual uint32_t getInputChunkCount(const uint32_t inputIndex) const;
-			virtual bool getInputChunk(const uint32_t inputIndex, const uint32_t chunkIndex, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const;
-			virtual const IMemoryBuffer* getInputChunk(const uint32_t inputIndex, const uint32_t chunkIndex) const;
-			virtual uint64_t getInputChunkStartTime(const uint32_t inputIndex, const uint32_t chunkIndex) const;
-			virtual uint64_t getInputChunkEndTime(const uint32_t inputIndex, const uint32_t chunkIndex) const;
-			virtual bool markInputAsDeprecated(const uint32_t inputIndex, const uint32_t chunkIndex);
+			uint32_t getInputChunkCount(const uint32_t inputIndex) const override;
+			bool getInputChunk(const uint32_t inputIndex, const uint32_t chunkIndex, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const override;
+			const IMemoryBuffer* getInputChunk(const uint32_t inputIndex, const uint32_t chunkIndex) const override;
+			uint64_t getInputChunkStartTime(const uint32_t inputIndex, const uint32_t chunkIndex) const override;
+			uint64_t getInputChunkEndTime(const uint32_t inputIndex, const uint32_t chunkIndex) const override;
+			bool markInputAsDeprecated(const uint32_t inputIndex, const uint32_t chunkIndex) override;
 			//@}
 
 			/** \name IBoxIO outputs handling */
 			//@{
-			virtual uint64_t getOutputChunkSize(const uint32_t OutputIndex) const;
-			virtual bool setOutputChunkSize(const uint32_t OutputIndex, const uint64_t ui64Size, const bool bDiscard = true);
-			virtual uint8_t* getOutputChunkBuffer(const uint32_t OutputIndex);
-			virtual bool appendOutputChunkData(const uint32_t OutputIndex, const uint8_t* pBuffer,const uint64_t ui64BufferSize);
-			virtual IMemoryBuffer* getOutputChunk(const uint32_t OutputIndex);
-			virtual bool markOutputAsReadyToSend(const uint32_t OutputIndex, const uint64_t ui64StartTime, const uint64_t ui64EndTime);
+			uint64_t getOutputChunkSize(const uint32_t OutputIndex) const override;
+			bool setOutputChunkSize(const uint32_t OutputIndex, const uint64_t ui64Size, const bool bDiscard = true) override;
+			uint8_t* getOutputChunkBuffer(const uint32_t OutputIndex) override;
+			bool appendOutputChunkData(const uint32_t OutputIndex, const uint8_t* pBuffer,const uint64_t ui64BufferSize) override;
+			IMemoryBuffer* getOutputChunk(const uint32_t OutputIndex) override;
+			bool markOutputAsReadyToSend(const uint32_t OutputIndex, const uint64_t ui64StartTime, const uint64_t ui64EndTime) override;
 			//@}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >, OVK_ClassId_Kernel_Player_SimulatedBox)

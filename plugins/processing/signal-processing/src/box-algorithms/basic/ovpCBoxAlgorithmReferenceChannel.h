@@ -14,13 +14,11 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmReferenceChannel : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-
-			virtual void release() { delete this; }
-
-			virtual bool initialize();
-			virtual bool uninitialize();
-			virtual bool processInput(const uint32_t ui32InputIndex);
-			virtual bool process();
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ReferenceChannel)
 
@@ -34,26 +32,22 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmReferenceChannelDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
-
-			virtual void release() { }
-
-			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Reference Channel"); }
-			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA"); }
-			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Subtracts the value of the reference channel from all other channels"); }
-			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Reference channel must be specified as a parameter for the box"); }
-			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Signal processing/Channels"); }
-			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_ReferenceChannel; }
-			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmReferenceChannel; }
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Reference Channel"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Subtracts the value of the reference channel from all other channels"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Reference channel must be specified as a parameter for the box"); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Channels"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ReferenceChannel; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmReferenceChannel; }
 			// virtual OpenViBE::Plugins::IBoxListener* createBoxListener() const               { return new CBoxAlgorithmReferenceChannelListener; }
 			// virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
-
-			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
 			{
 				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
 				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);

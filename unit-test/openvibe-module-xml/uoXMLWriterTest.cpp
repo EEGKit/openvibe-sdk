@@ -38,7 +38,7 @@ public:
 
 	CWriterCallBack(const char* filename) { m_File = FS::Files::open(filename, "wb"); }
 
-	virtual ~CWriterCallBack()
+	~CWriterCallBack() override
 	{
 		if (m_File)
 		{

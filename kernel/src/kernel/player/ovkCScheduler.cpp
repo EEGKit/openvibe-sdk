@@ -245,7 +245,7 @@ bool CScheduler::flattenScenario()
 				explicit CScenarioMergeCallback(std::map<CIdentifier, CIdentifier>& rIdentifierCorrespondence)
 					: m_rIdentifierCorrespondence(rIdentifierCorrespondence) { }
 
-				virtual void process(CIdentifier& rOriginalIdentifier, CIdentifier& rNewIdentifier)
+				void process(CIdentifier& rOriginalIdentifier, CIdentifier& rNewIdentifier) override
 				{
 					m_rIdentifierCorrespondence[rOriginalIdentifier] = rNewIdentifier;
 				}

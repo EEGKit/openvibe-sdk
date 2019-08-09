@@ -15,28 +15,22 @@ namespace OpenViBE
 		public:
 
 			explicit CPluginManager(const IKernelContext& rKernelContext);
-			virtual ~CPluginManager();
-
-			virtual bool addPluginsFromFiles(const CString& rFileNameWildCard);
-			virtual bool registerPluginDesc(const Plugins::IPluginObjectDesc& rPluginObjectDesc);
-
-			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const;
-			virtual CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier, const CIdentifier& rBaseClassIdentifier) const;
-
-			virtual bool canCreatePluginObject(const CIdentifier& rClassIdentifier);
-			virtual const Plugins::IPluginObjectDesc* getPluginObjectDesc(const CIdentifier& rClassIdentifier) const;
-			virtual const Plugins::IPluginObjectDesc* getPluginObjectDescCreating(const CIdentifier& rClassIdentifier) const;
-
-			virtual CIdentifier getPluginObjectHashValue(const CIdentifier& rClassIdentifier) const;
-			virtual CIdentifier getPluginObjectHashValue(const Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const;
-			virtual bool isPluginObjectFlaggedAsDeprecated(const CIdentifier& rClassIdentifier) const;
-
-			virtual Plugins::IPluginObject* createPluginObject(const CIdentifier& rClassIdentifier);
-			virtual bool releasePluginObject(Plugins::IPluginObject* pPluginObject);
-
-			virtual Plugins::IAlgorithm* createAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IAlgorithmDesc** ppAlgorithmDesc);
-			virtual Plugins::IAlgorithm* createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc);
-			virtual Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc);
+			~CPluginManager() override;
+			bool addPluginsFromFiles(const CString& rFileNameWildCard) override;
+			bool registerPluginDesc(const Plugins::IPluginObjectDesc& rPluginObjectDesc) override;
+			CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const override;
+			CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier, const CIdentifier& rBaseClassIdentifier) const override;
+			bool canCreatePluginObject(const CIdentifier& rClassIdentifier) override;
+			const Plugins::IPluginObjectDesc* getPluginObjectDesc(const CIdentifier& rClassIdentifier) const override;
+			const Plugins::IPluginObjectDesc* getPluginObjectDescCreating(const CIdentifier& rClassIdentifier) const override;
+			CIdentifier getPluginObjectHashValue(const CIdentifier& rClassIdentifier) const override;
+			CIdentifier getPluginObjectHashValue(const Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const override;
+			bool isPluginObjectFlaggedAsDeprecated(const CIdentifier& rClassIdentifier) const override;
+			Plugins::IPluginObject* createPluginObject(const CIdentifier& rClassIdentifier) override;
+			bool releasePluginObject(Plugins::IPluginObject* pPluginObject) override;
+			Plugins::IAlgorithm* createAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IAlgorithmDesc** ppAlgorithmDesc) override;
+			Plugins::IAlgorithm* createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) override;
+			Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IPluginManager, OVK_ClassId_Kernel_Plugins_PluginManager)
 

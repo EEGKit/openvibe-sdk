@@ -132,15 +132,15 @@ namespace Dsp
 	class FilterDesignBase : public Filter
 	{
 	public:
-		Kind getKind() const { return m_design.getKind(); }
+		Kind getKind() const override { return m_design.getKind(); }
 
-		const std::string getName() const { return m_design.getName(); }
+		const std::string getName() const override { return m_design.getName(); }
 
-		int getNumParams() const { return DesignClass::NumParams; }
+		int getNumParams() const override { return DesignClass::NumParams; }
 
 		Params getDefaultParams() const { return m_design.getDefaultParams(); }
 
-		ParamInfo getParamInfo(int index) const
+		ParamInfo getParamInfo(int index) const override
 		{
 			switch (index)
 			{
@@ -157,12 +157,12 @@ namespace Dsp
 			return ParamInfo();
 		}
 
-		std::vector<PoleZeroPair> getPoleZeros() const { return m_design.getPoleZeros(); }
+		std::vector<PoleZeroPair> getPoleZeros() const override { return m_design.getPoleZeros(); }
 
-		complex_t response(double normalizedFrequency) const { return m_design.response(normalizedFrequency); }
+		complex_t response(double normalizedFrequency) const override { return m_design.response(normalizedFrequency); }
 
 	protected:
-		void doSetParams(const Params& parameters) { m_design.setParams(parameters); }
+		void doSetParams(const Params& parameters) override { m_design.setParams(parameters); }
 
 #include "FilterSynthesisH2.inl"
 
@@ -176,10 +176,10 @@ namespace Dsp
 	public:
 		FilterDesign() { }
 
-		int getNumChannels() { return Channels; }
-		void reset() { m_state.reset(); }
-		void process(int numSamples, float* const* arrayOfChannels) { m_state.process(numSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design); }
-		void process(int numSamples, double* const* arrayOfChannels) { m_state.process(numSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design); }
+		int getNumChannels() override { return Channels; }
+		void reset() override { m_state.reset(); }
+		void process(int numSamples, float* const* arrayOfChannels) override { m_state.process(numSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design); }
+		void process(int numSamples, double* const* arrayOfChannels) override { m_state.process(numSamples, arrayOfChannels, FilterDesignBase<DesignClass>::m_design); }
 
 	protected:
 		ChannelsState<Channels, typename DesignClass::template State<StateType>> m_state;

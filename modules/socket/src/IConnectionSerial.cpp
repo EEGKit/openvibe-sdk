@@ -40,13 +40,13 @@ namespace Socket
 #endif
 		{ }
 
-		bool open()
+		bool open() override
 		{
 			// Should never be used
 			return false;
 		}
 
-		bool close()
+		bool close() override
 		{
 #if defined TARGET_OS_Windows
 
@@ -75,7 +75,7 @@ namespace Socket
 			return true;
 		}
 
-		bool isReadyToSend(const uint32_t ui32TimeOut) const
+		bool isReadyToSend(const uint32_t ui32TimeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -102,7 +102,7 @@ namespace Socket
 			return false;
 		}
 
-		bool isReadyToReceive(uint32_t ui32TimeOut) const
+		bool isReadyToReceive(const uint32_t ui32TimeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -136,7 +136,7 @@ namespace Socket
 			return false;
 		}
 
-		uint32_t getPendingByteCount()
+		uint32_t getPendingByteCount() override
 		{
 			if (!this->isConnected())
 			{
@@ -169,7 +169,7 @@ namespace Socket
 #endif
 		}
 
-		bool flush()
+		bool flush() override
 		{
 			if (!this->isConnected())
 			{
@@ -202,7 +202,7 @@ namespace Socket
 			return false;
 		}
 
-		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize)
+		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -246,7 +246,7 @@ namespace Socket
 			return 0;
 		}
 
-		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize)
+		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -291,7 +291,7 @@ namespace Socket
 			return 0;
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)
+		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
 		{
 			const char* l_pPointer   = reinterpret_cast<const char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
@@ -306,7 +306,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize)
+		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
 		{
 			char* l_pPointer         = reinterpret_cast<char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
@@ -321,7 +321,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool isConnected() const
+		bool isConnected() const override
 		{
 #if defined TARGET_OS_Windows
 
@@ -334,12 +334,12 @@ namespace Socket
 #endif
 		}
 
-		void release()
+		void release() override
 		{
 			delete this;
 		}
 
-		bool connect(const char* sURL, unsigned long ul32BaudRate)
+		bool connect(const char* sURL, unsigned long ul32BaudRate) override
 		{
 			m_sLastError.clear();
 
@@ -419,7 +419,7 @@ namespace Socket
 			return true;
 		}
 
-		bool setTimeouts(unsigned long ui32DecisecondsTimeout)
+		bool setTimeouts(unsigned long ui32DecisecondsTimeout) override
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -467,7 +467,7 @@ namespace Socket
 			return true;
 		}
 
-		const char* getLastError()
+		const char* getLastError() override
 		{
 			return m_sLastError.c_str();
 		}
@@ -492,12 +492,12 @@ namespace Socket
 #endif
 		}
 
-		bool isErrorRaised()
+		bool isErrorRaised() override
 		{
 			return !m_sLastError.empty();
 		}
 
-		void clearError()
+		void clearError() override
 		{
 			m_sLastError.clear();
 		}

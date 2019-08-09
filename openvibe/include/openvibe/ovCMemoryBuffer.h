@@ -50,17 +50,16 @@ namespace OpenViBE
 		 *
 		 * The internal implementation is released.
 		 */
-		virtual ~CMemoryBuffer();
+		~CMemoryBuffer() override;
 
 		//@}
-
-		virtual bool reserve(const uint64_t ui64Size);
-		virtual bool setSize(const uint64_t ui64Size, const bool bDiscard);
-		virtual uint64_t getSize() const;
-		virtual uint8_t* getDirectPointer();
-		virtual const uint8_t* getDirectPointer() const;
-		virtual bool append(const uint8_t* pBuffer, const uint64_t ui64BufferSize);
-		virtual bool append(const IMemoryBuffer& rMemoryBuffer);
+		bool reserve(const uint64_t ui64Size) override;
+		bool setSize(const uint64_t ui64Size, const bool bDiscard) override;
+		uint64_t getSize() const override;
+		uint8_t* getDirectPointer() override;
+		const uint8_t* getDirectPointer() const override;
+		bool append(const uint8_t* pBuffer, const uint64_t ui64BufferSize) override;
+		bool append(const IMemoryBuffer& rMemoryBuffer) override;
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge)
 

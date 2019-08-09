@@ -49,7 +49,7 @@ class CWriterCallBack : public EBML::IWriterCallBack
 public:
 	CWriterCallBack(const char* filename) { m_File = std::fopen(filename, "wb"); }
 
-	virtual ~CWriterCallBack()
+	~CWriterCallBack() override
 	{
 		if (m_File)
 		{

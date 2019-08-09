@@ -15,11 +15,10 @@ namespace OpenViBE
 		public:
 
 			explicit CPlayerManager(const IKernelContext& rKernelContext);
-
-			virtual bool createPlayer(CIdentifier& rPlayerIdentifier);
-			virtual bool releasePlayer(const CIdentifier& rPlayerIdentifier);
-			virtual IPlayer& getPlayer(const CIdentifier& rPlayerIdentifier);
-			virtual CIdentifier getNextPlayerIdentifier(const CIdentifier& rPreviousIdentifier) const;
+			bool createPlayer(CIdentifier& rPlayerIdentifier) override;
+			bool releasePlayer(const CIdentifier& rPlayerIdentifier) override;
+			IPlayer& getPlayer(const CIdentifier& rPlayerIdentifier) override;
+			CIdentifier getNextPlayerIdentifier(const CIdentifier& rPreviousIdentifier) const override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>, OVK_ClassId_Kernel_Player_PlayerManager)
 

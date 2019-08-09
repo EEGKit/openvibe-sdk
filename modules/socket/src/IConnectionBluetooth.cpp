@@ -69,9 +69,9 @@ namespace Socket
 #endif
 		}
 
-		bool open() { return false; }
+		bool open() override { return false; }
 
-		bool close()
+		bool close() override
 		{
 			if (!this->isConnected())
 			{
@@ -114,14 +114,14 @@ namespace Socket
 #endif
 		}
 
-		bool isReadyToSend(const uint32_t ui32TimeOut) const
+		bool isReadyToSend(const uint32_t ui32TimeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
 
 			return true;
 		}
 
-		bool isReadyToReceive(uint32_t ui32TimeOut) const
+		bool isReadyToReceive(const uint32_t ui32TimeOut) const override
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -142,7 +142,7 @@ namespace Socket
 #endif
 		}
 
-		uint32_t getPendingByteCount()
+		uint32_t getPendingByteCount() override
 		{
 			if (!this->isConnected())
 			{
@@ -167,7 +167,7 @@ namespace Socket
 #endif
 		}
 
-		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize)
+		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -193,7 +193,7 @@ namespace Socket
 #endif
 		}
 
-		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize)
+		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -221,7 +221,7 @@ namespace Socket
 #endif
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)
+		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -242,7 +242,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize)
+		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -263,7 +263,7 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool isConnected() const
+		bool isConnected() const override
 		{
 #if defined TARGET_OS_Windows
 
@@ -274,12 +274,12 @@ namespace Socket
 #endif
 		}
 
-		void release()
+		void release() override
 		{
 			delete this;
 		}
 
-		bool connect(unsigned long long u64BluetoothAddress)
+		bool connect(unsigned long long u64BluetoothAddress) override
 		{
 			m_sLastError.clear();
 
@@ -328,7 +328,7 @@ namespace Socket
 
 		bool isErrorRaised() { return !m_sLastError.empty(); }
 
-		const char* getLastError() const { return m_sLastError.c_str(); }
+		const char* getLastError() const override { return m_sLastError.c_str(); }
 
 		std::string getLastErrorFormated()
 		{
@@ -357,9 +357,9 @@ namespace Socket
 #endif
 		}
 
-		void clearError() { m_sLastError.clear(); }
+		void clearError() override { m_sLastError.clear(); }
 
-		bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** strarray, unsigned long long** bluetoothAddresses)
+		bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** strarray, unsigned long long** bluetoothAddresses) override
 		{
 			std::vector<std::string> bluetoothDevicesName;
 			std::vector<unsigned long long> bluetoothDevicesAddress;

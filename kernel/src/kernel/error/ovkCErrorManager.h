@@ -41,7 +41,7 @@ namespace OpenViBE
 		public:
 
 			explicit CErrorManager(const IKernelContext& context);
-			~CErrorManager();
+			~CErrorManager() override;
 
 			void pushError(ErrorType type, const char* description) override;
 

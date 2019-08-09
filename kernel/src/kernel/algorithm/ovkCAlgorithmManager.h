@@ -16,14 +16,13 @@ namespace OpenViBE
 		public:
 
 			explicit CAlgorithmManager(const IKernelContext& rKernelContext);
-			virtual ~CAlgorithmManager();
-
-			virtual CIdentifier createAlgorithm(const CIdentifier& rAlgorithmClassIdentifier);
-			virtual CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc);
-			virtual bool releaseAlgorithm(const CIdentifier& rAlgorithmIdentifier);
-			virtual bool releaseAlgorithm(IAlgorithmProxy& rAlgorithm);
-			virtual IAlgorithmProxy& getAlgorithm(const CIdentifier& rAlgorithmIdentifier);
-			virtual CIdentifier getNextAlgorithmIdentifier(const CIdentifier& rPreviousIdentifier) const;
+			~CAlgorithmManager() override;
+			CIdentifier createAlgorithm(const CIdentifier& rAlgorithmClassIdentifier) override;
+			CIdentifier createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) override;
+			bool releaseAlgorithm(const CIdentifier& rAlgorithmIdentifier) override;
+			bool releaseAlgorithm(IAlgorithmProxy& rAlgorithm) override;
+			IAlgorithmProxy& getAlgorithm(const CIdentifier& rAlgorithmIdentifier) override;
+			CIdentifier getNextAlgorithmIdentifier(const CIdentifier& rPreviousIdentifier) const override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IAlgorithmManager>, OVK_ClassId_Kernel_Algorithm_AlgorithmManager)
 

@@ -40,20 +40,18 @@ namespace OpenViBE
 		 *
 		 * The internal implementation is released.
 		 */
-		virtual ~CMatrix();
+		~CMatrix() override;
 
 		//@}
-
-		virtual const uint32_t getDimensionCount() const;
-		virtual const uint32_t getDimensionSize(uint32_t ui32DimensionIndex) const;
-		virtual const char* getDimensionLabel(uint32_t ui32DimensionIndex, uint32_t ui32DimensionEntryIndex) const;
-		virtual const double* getBuffer() const;
-		virtual const uint32_t getBufferElementCount() const;
-
-		virtual bool setDimensionCount(uint32_t ui32DimensionCount);
-		virtual bool setDimensionSize(uint32_t ui32DimensionIndex, uint32_t ui32DimensionSize);
-		virtual bool setDimensionLabel(uint32_t ui32DimensionIndex, uint32_t ui32DimensionEntryIndex, const char* sDimensionLabel);
-		virtual double* getBuffer();
+		const uint32_t getDimensionCount() const override;
+		const uint32_t getDimensionSize(uint32_t index) const override;
+		const char* getDimensionLabel(uint32_t index, uint32_t entryIndex) const override;
+		const double* getBuffer() const override;
+		const uint32_t getBufferElementCount() const override;
+		bool setDimensionCount(uint32_t count) override;
+		bool setDimensionSize(uint32_t index, uint32_t size) override;
+		bool setDimensionLabel(uint32_t index, uint32_t entryIndex, const char* label) override;
+		double* getBuffer() override;
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMatrix, OV_ClassId_MatrixBridge)
 

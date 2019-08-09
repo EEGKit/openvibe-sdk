@@ -10,11 +10,11 @@ namespace OpenViBE
 	namespace Kernel { class CKernelObjectFactory; }
 
 #define _IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
-	virtual bool isDerivedFromClass(  const OpenViBE::CIdentifier& rClassIdentifier) const { return ((rClassIdentifier==(_ClassIdentifier_)) || _SuperClassName_::isDerivedFromClass(rClassIdentifier)); }
+	bool isDerivedFromClass(  const OpenViBE::CIdentifier& rClassIdentifier) const override { return ((rClassIdentifier==(_ClassIdentifier_)) || _SuperClassName_::isDerivedFromClass(rClassIdentifier)); }
 
 #define _IsDerivedFromClass_Final_(_SuperClassName_,_ClassIdentifier_) \
 	_IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
-	virtual OpenViBE::CIdentifier getClassIdentifier() const { return _ClassIdentifier_; }
+	OpenViBE::CIdentifier getClassIdentifier() const override { return _ClassIdentifier_; }
 
 	/**
 	 * \class IObject

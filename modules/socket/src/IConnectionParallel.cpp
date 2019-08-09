@@ -62,13 +62,13 @@ namespace Socket
 #endif
 		}
 
-		bool open()
+		bool open() override
 		{
 			// Should never be used
 			return false;
 		}
 
-		bool close()
+		bool close() override
 		{
 #if defined TARGET_OS_Windows
 
@@ -99,13 +99,13 @@ namespace Socket
 #endif
 		}
 
-		bool isReadyToSend(const uint32_t ui32TimeOut = 0) const { return this->isConnected(); }
+		bool isReadyToSend(const uint32_t ui32TimeOut = 0) const override { return this->isConnected(); }
 
-		bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const { return this->isConnected(); }
+		bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const override { return this->isConnected(); }
 
 		uint32_t getPendingByteCount() { return (this->isConnected() ? 0 : 1); }
 
-		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize = 8)
+		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize = 8) override
 		{
 			if (!this->isConnected()) { return 0; }
 
@@ -124,7 +124,7 @@ namespace Socket
 #endif
 		}
 
-		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize = 8)
+		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize = 8) override
 		{
 			if (!this->isConnected()) { return 0; }
 
@@ -161,7 +161,7 @@ namespace Socket
 			return 0;
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)
+		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
 		{
 			const char* l_pPointer   = reinterpret_cast<const char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
@@ -174,7 +174,7 @@ namespace Socket
 			return this->isConnected();
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize)
+		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
 		{
 			char* l_pPointer         = reinterpret_cast<char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
@@ -187,7 +187,7 @@ namespace Socket
 			return this->isConnected();
 		}
 
-		bool isConnected() const
+		bool isConnected() const override
 		{
 #if defined TARGET_OS_Windows
 
@@ -202,7 +202,7 @@ namespace Socket
 			return false;
 		}
 
-		void release()
+		void release() override
 		{
 #if defined TARGET_OS_Windows
 			if (m_hmodTVicPort != nullptr)
@@ -217,7 +217,7 @@ namespace Socket
 			delete this;
 		}
 
-		bool connect(unsigned short ui16PortNumber)
+		bool connect(unsigned short ui16PortNumber) override
 		{
 			if (this->isConnected()) { return false; }
 
@@ -260,7 +260,7 @@ namespace Socket
 #endif
 		}
 
-		std::string getLastError(){return m_sLastError;}
+		std::string getLastError() override {return m_sLastError;}
 
 		std::string getLastErrorFormated()
 		{

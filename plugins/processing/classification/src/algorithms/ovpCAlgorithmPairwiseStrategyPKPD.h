@@ -24,17 +24,13 @@ namespace OpenViBEPlugins
 		public:
 
 			CAlgorithmPairwiseStrategyPKPD() { }
-
-			virtual void release() { delete this; }
-
-			virtual bool initialize();
-			virtual bool uninitialize();
-
-			virtual bool parameterize();
-
-			virtual bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector);
-			virtual XML::IXMLNode* saveConfiguration();
-			virtual bool loadConfiguration(XML::IXMLNode& rNode);
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool parameterize() override;
+			bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) override;
+			XML::IXMLNode* saveConfiguration() override;
+			bool loadConfiguration(XML::IXMLNode& rNode) override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_PairwiseStrategy_PKPD)
 
@@ -45,15 +41,13 @@ namespace OpenViBEPlugins
 		class CAlgorithmPairwiseStrategyPKPDDesc : virtual public CAlgorithmPairwiseDecisionDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Pairwise decision strategy based on PKPD"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Serrière Guillaume"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("."); }
 
-			virtual void release() { }
-
-			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Pairwise decision strategy based on PKPD"); }
-			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Serrière Guillaume"); }
-			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Inria"); }
-			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("."); }
-
-			virtual OpenViBE::CString getDetailedDescription() const
+			OpenViBE::CString getDetailedDescription() const override
 			{
 				return OpenViBE::CString("Price, S. Knerr, L. Personnaz, and G. Dreyfus."
 					"Pairwise neural network classifiers with probabilistic outputs."
@@ -62,16 +56,15 @@ namespace OpenViBEPlugins
 					" 1109-1116. MIT Press, 1995.");
 			}
 
-			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("0.1"); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("0.1"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_PairwiseStrategy_PKPD; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmPairwiseStrategyPKPD; }
 
-			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_Algorithm_PairwiseStrategy_PKPD; }
-			virtual OpenViBE::Plugins::IPluginObject* create() { return new CAlgorithmPairwiseStrategyPKPD; }
-
-			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
 				CAlgorithmPairwiseDecisionDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 				return true;

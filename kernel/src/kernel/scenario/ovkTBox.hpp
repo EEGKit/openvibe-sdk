@@ -35,16 +35,14 @@ namespace
 	public:
 
 		CBoxProtoRestriction(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::IBox& rBox): CBoxProto(rKernelContext, rBox) {}
+		bool addInput(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override { return true; }
+		bool addOutput(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override { return true; }
 
-		virtual bool addInput(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) { return true; }
+		bool addSetting(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& sDefaultValue, const bool bModifiable = false, 
+								const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override { return true; }
 
-		virtual bool addOutput(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) { return true; }
-
-		virtual bool addSetting(const OpenViBE::CString& rsName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& sDefaultValue, const bool bModifiable = false, 
-								const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) { return true; }
-
-		virtual bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag) { return true; }
-		virtual bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag) { return true; }
+		bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag) override { return true; }
+		bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag) override { return true; }
 	};
 
 	class CInterfacor
@@ -101,16 +99,8 @@ namespace OpenViBE
 		public:
 
 			explicit TBox(const IKernelContext& rKernelContext)
-				: TAttributable<TKernelObject<T>>(rKernelContext)
-				  , m_pOwnerScenario(nullptr)
-				  , m_pBoxAlgorithmDescriptor(nullptr)
-				  , m_pBoxListener(nullptr)
-				  , m_bIsNotifyingDescriptor(false)
-				  , m_bIsNotificationActive(true)
-				  , m_bIsObserverNotificationActive(true)
-				  , m_oIdentifier(OV_UndefinedIdentifier)
-				  , m_oAlgorithmClassIdentifier(OV_UndefinedIdentifier)
-				  , m_sName("unnamed")
+				: TAttributable<TKernelObject<T>>(rKernelContext), m_pOwnerScenario(nullptr), m_pBoxAlgorithmDescriptor(nullptr), m_pBoxListener(nullptr), m_bIsNotifyingDescriptor(false)
+				  , m_bIsNotificationActive(true), m_bIsObserverNotificationActive(true), m_oIdentifier(OV_UndefinedIdentifier), m_oAlgorithmClassIdentifier(OV_UndefinedIdentifier), m_sName("unnamed")
 			{
 				for (auto i : { Input, Output, Setting })
 				{
@@ -355,7 +345,7 @@ namespace OpenViBE
 					default: break;
 				}
 
-				uint32_t position = m_Interfacors[interfacorType].size();
+				uint32_t position = uint32_t(m_Interfacors[interfacorType].size());
 				switch (interfacorType)
 				{
 					case Input:
@@ -424,7 +414,7 @@ namespace OpenViBE
 
 			virtual uint32_t getInterfacorCountIncludingDeprecated(BoxInterfacorType interfacorType) const
 			{
-				return m_Interfacors.at(interfacorType).size();
+				return uint32_t(m_Interfacors.at(interfacorType).size());
 			}
 
 

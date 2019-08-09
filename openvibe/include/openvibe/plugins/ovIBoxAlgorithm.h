@@ -254,10 +254,8 @@ namespace OpenViBE
 		class OV_API IBoxListener : public IPluginObject
 		{
 		public:
-
-			virtual ~IBoxListener() { }
-
-			virtual void release() { }
+			~IBoxListener() override { }
+			void release() override { }
 
 			virtual bool initialize(Kernel::IBoxListenerContext& rBoxListenerContext) { return true; }
 

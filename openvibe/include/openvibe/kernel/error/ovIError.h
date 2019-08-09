@@ -47,7 +47,7 @@ namespace OpenViBE
 		public:
 
 			IError() {}
-			virtual ~IError() {}
+			~IError() override {}
 			IError(const IError&)            = delete;
 			IError& operator=(const IError&) = delete;
 

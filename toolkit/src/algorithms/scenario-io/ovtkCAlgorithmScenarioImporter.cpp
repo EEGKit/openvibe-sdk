@@ -134,11 +134,11 @@ namespace OpenViBEToolkit
 		explicit CAlgorithmScenarioImporterContext(IAlgorithmContext& rAlgorithmContext)
 			: m_rAlgorithmContext(rAlgorithmContext) { }
 
-		virtual bool processStart(const CIdentifier& rIdentifier);
-		virtual bool processIdentifier(const CIdentifier& rIdentifier, const CIdentifier& rValue);
-		virtual bool processString(const CIdentifier& rIdentifier, const CString& rValue);
-		virtual bool processUInteger(const CIdentifier& rIdentifier, uint64_t ui64Value);
-		virtual bool processStop();
+		bool processStart(const CIdentifier& rIdentifier) override;
+		bool processIdentifier(const CIdentifier& rIdentifier, const CIdentifier& rValue) override;
+		bool processString(const CIdentifier& rIdentifier, const CString& rValue) override;
+		bool processUInteger(const CIdentifier& rIdentifier, uint64_t ui64Value) override;
+		bool processStop() override;
 
 		_IsDerivedFromClass_Final_(IAlgorithmScenarioImporterContext, OV_UndefinedIdentifier)
 

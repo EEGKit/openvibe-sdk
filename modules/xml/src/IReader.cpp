@@ -13,9 +13,8 @@ namespace XML
 	{
 	public:
 		explicit CReader(IReaderCallback& rReaderCallback);
-
-		virtual bool processData(const void* pBuffer, uint64_t ui64BufferSize);
-		virtual void release();
+		bool processData(const void* pBuffer, uint64_t ui64BufferSize) override;
+		void release() override;
 
 		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
 		virtual void processChildData(const char* sData);

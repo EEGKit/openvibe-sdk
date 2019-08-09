@@ -34,21 +34,17 @@ namespace OpenViBEPlugins
 		class CAlgorithmClassifierLDA : public OpenViBEToolkit::CAlgorithmClassifier
 		{
 		public:
-
-			virtual bool initialize();
-			virtual bool uninitialize();
-
-			virtual bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
-			virtual bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
+			bool initialize() override;
+			bool uninitialize() override;
+			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
 								  , double& rf64Class
 								  , OpenViBEToolkit::IVector& rDistanceValue
-								  , OpenViBEToolkit::IVector& rProbabilityValue);
-
-			virtual XML::IXMLNode* saveConfiguration();
-			virtual bool loadConfiguration(XML::IXMLNode* pConfigurationNode);
-
-			virtual uint32_t getOutputProbabilityVectorLength();
-			virtual uint32_t getOutputDistanceVectorLength();
+								  , OpenViBEToolkit::IVector& rProbabilityValue) override;
+			XML::IXMLNode* saveConfiguration() override;
+			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
+			uint32_t getOutputProbabilityVectorLength() override;
+			uint32_t getOutputDistanceVectorLength() override;
 
 			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierLDA)
 
@@ -79,24 +75,21 @@ namespace OpenViBEPlugins
 		class CAlgorithmClassifierLDADesc : public OpenViBEToolkit::CAlgorithmClassifierDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("LDA Classifier"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jussi T. Lindgren / Guillaume Serrière"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria / Loria"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Estimates LDA using regularized or classic covariances"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("2.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierLDA; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmClassifierLDA; }
 
-			virtual void release() { }
-
-			virtual OpenViBE::CString getName() const { return OpenViBE::CString("LDA Classifier"); }
-			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Jussi T. Lindgren / Guillaume Serrière"); }
-			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Inria / Loria"); }
-			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Estimates LDA using regularized or classic covariances"); }
-			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("2.0"); }
-			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_Algorithm_ClassifierLDA; }
-			virtual OpenViBE::Plugins::IPluginObject* create() { return new CAlgorithmClassifierLDA; }
-
-			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", OpenViBE::Kernel::ParameterType_Boolean);
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)", OpenViBE::Kernel::ParameterType_Boolean);

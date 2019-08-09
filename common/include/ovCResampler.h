@@ -409,7 +409,7 @@ namespace Common
 				CCallbackChannelWise(TFloat* pOutputSample)
 					: m_pOutputSample(pOutputSample) { }
 
-				virtual void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const
+				void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const override
 				{
 					for (size_t i = 0; i < ui32ChannelCount; i++)
 					{
@@ -433,7 +433,7 @@ namespace Common
 					  , m_ui32OutputSampleCount(ui32OutputSampleCount)
 					  , m_ui32OutputSampleIndex(0) { }
 
-				virtual void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const
+				void processResampler(const TFloat* pSample, size_t ui32ChannelCount) const override
 				{
 					for (size_t i = 0; i < ui32ChannelCount; i++)
 					{

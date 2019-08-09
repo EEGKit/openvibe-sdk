@@ -244,22 +244,22 @@ namespace r8b
 			clear();
 		}
 
-		virtual int getLatency() const
+		int getLatency() const override
 		{
 			return (0);
 		}
 
-		virtual double getLatencyFrac() const
+		double getLatencyFrac() const override
 		{
 			return (0.0);
 		}
 
-		virtual int getInLenBeforeOutStart(const int NextInLen) const
+		int getInLenBeforeOutStart(const int NextInLen) const override
 		{
 			return (FilterLenD2 + NextInLen);
 		}
 
-		virtual int getMaxOutLen(const int MaxInLen) const
+		int getMaxOutLen(const int MaxInLen) const override
 		{
 			R8BASSERT(MaxInLen >= 0);
 
@@ -301,8 +301,7 @@ namespace r8b
 		 * Note that the destination sample rate will remain unchanged, even if it
 		 * was changed since the time of *this object's construction.
 		 */
-
-		virtual void clear()
+		void clear() override
 		{
 			BufLeft  = 0;
 			WritePos = 0;
@@ -318,7 +317,7 @@ namespace r8b
 			InPosShift = InitFracPos;
 		}
 
-		virtual int process(double* ip, int l, double*& op0)
+		int process(double* ip, int l, double*& op0) override
 		{
 			R8BASSERT(l >= 0);
 			R8BASSERT(ip != op0 || l == 0 || SrcSampleRate > DstSampleRate);

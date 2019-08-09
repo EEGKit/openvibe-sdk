@@ -14,19 +14,15 @@ namespace OpenViBE
 		{
 		public:
 			explicit CMetaboxManager(const IKernelContext& kernelContext);
-			virtual ~CMetaboxManager();
-
-			virtual bool addMetaboxesFromFiles(const CString& fileNameWildCard);
-			virtual CIdentifier getNextMetaboxObjectDescIdentifier(const CIdentifier& previousIdentifier) const;
-
-			virtual const Plugins::IPluginObjectDesc* getMetaboxObjectDesc(const CIdentifier& metaboxIdentifier) const;
-			virtual void setMetaboxObjectDesc(const CIdentifier& metaboxIdentifier, Plugins::IPluginObjectDesc* metaboxDescriptor);
-
-			virtual CString getMetaboxFilePath(const CIdentifier& metaboxIdentifier) const;
-			virtual void setMetaboxFilePath(const CIdentifier& metaboxIdentifier, const CString& filePath);
-
-			virtual CIdentifier getMetaboxHash(const CIdentifier& metaboxIdentifier) const;
-			virtual void setMetaboxHash(const CIdentifier& metaboxIdentifier, const CIdentifier& hash);
+			~CMetaboxManager() override;
+			bool addMetaboxesFromFiles(const CString& fileNameWildCard) override;
+			CIdentifier getNextMetaboxObjectDescIdentifier(const CIdentifier& previousIdentifier) const override;
+			const Plugins::IPluginObjectDesc* getMetaboxObjectDesc(const CIdentifier& metaboxIdentifier) const override;
+			void setMetaboxObjectDesc(const CIdentifier& metaboxIdentifier, Plugins::IPluginObjectDesc* metaboxDescriptor) override;
+			CString getMetaboxFilePath(const CIdentifier& metaboxIdentifier) const override;
+			void setMetaboxFilePath(const CIdentifier& metaboxIdentifier, const CString& filePath) override;
+			CIdentifier getMetaboxHash(const CIdentifier& metaboxIdentifier) const override;
+			void setMetaboxHash(const CIdentifier& metaboxIdentifier, const CIdentifier& hash) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IMetaboxManager, OVK_ClassId_Kernel_Metaboxes_MetaboxManager)
 

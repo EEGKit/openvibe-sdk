@@ -12,21 +12,19 @@ namespace OpenViBEToolkit
 	public:
 
 		CSignalTrial();
-		virtual ~CSignalTrial();
-
-		virtual bool setSamplingRate(uint32_t ui32SamplingFrequency);
-		virtual bool setChannelCount(uint32_t ui32ChannelCount);
-		virtual bool setChannelName(uint32_t ui32ChannelIndex, const char* sChannelName);
-		virtual bool setLabelIdentifier(const OpenViBE::CIdentifier& rLabelIdentifier);
-		virtual bool setSampleCount(uint32_t ui32SampleCount, bool bPreserve);
-
-		virtual uint32_t getSamplingRate() const;
-		virtual uint32_t getChannelCount() const;
-		virtual const char* getChannelName(uint32_t ui32ChannelIndex) const;
-		virtual OpenViBE::CIdentifier getLabelIdentifier() const;
-		virtual uint32_t getSampleCount() const;
-		virtual uint64_t getDuration() const;
-		virtual double* getChannelSampleBuffer(uint32_t ui32ChannelIndex) const;
+		~CSignalTrial() override;
+		bool setSamplingRate(uint32_t ui32SamplingFrequency) override;
+		bool setChannelCount(uint32_t ui32ChannelCount) override;
+		bool setChannelName(uint32_t ui32ChannelIndex, const char* sChannelName) override;
+		bool setLabelIdentifier(const OpenViBE::CIdentifier& rLabelIdentifier) override;
+		bool setSampleCount(uint32_t ui32SampleCount, bool bPreserve) override;
+		uint32_t getSamplingRate() const override;
+		uint32_t getChannelCount() const override;
+		const char* getChannelName(uint32_t ui32ChannelIndex) const override;
+		OpenViBE::CIdentifier getLabelIdentifier() const override;
+		uint32_t getSampleCount() const override;
+		uint64_t getDuration() const override;
+		double* getChannelSampleBuffer(uint32_t ui32ChannelIndex) const override;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrial, OVTK_ClassId_)
 

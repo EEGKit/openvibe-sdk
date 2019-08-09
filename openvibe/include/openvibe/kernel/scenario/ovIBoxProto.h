@@ -73,7 +73,7 @@ namespace OpenViBE
 			 * \param bNotify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, bool bModifiable = false,
+			virtual bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable = false,
 									const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
 			/**
 			 * \brief Adds a flag to the box

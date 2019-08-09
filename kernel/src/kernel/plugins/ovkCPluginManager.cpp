@@ -36,7 +36,7 @@ namespace OpenViBE
 				  , m_rPluginObjectDesc(rPluginObjectDesc)
 				  , m_HaveAllPluginsLoadedCorrectly(haveAllPluginsLoadedCorrectly) { }
 
-			virtual bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes)
+			bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
 			{
 				for (auto& pluginModule : m_rPluginModule)
 				{

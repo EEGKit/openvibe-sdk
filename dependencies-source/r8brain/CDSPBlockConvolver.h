@@ -181,28 +181,28 @@ namespace r8b
 					   getLatency());
 		}
 
-		virtual ~CDSPBlockConvolver()
+		~CDSPBlockConvolver() override
 		{
 			Filter->unref();
 		}
 
-		virtual int getLatency() const
+		int getLatency() const override
 		{
 			return (DoConsumeLatency ? 0 : Latency);
 		}
 
-		virtual double getLatencyFrac() const
+		double getLatencyFrac() const override
 		{
 			return (LatencyFrac);
 		}
 
-		virtual int getInLenBeforeOutStart(const int NextInLen) const
+		int getInLenBeforeOutStart(const int NextInLen) const override
 		{
 			return ((InputLen - InputDelay + NextInLen * DownFactor) /
 					UpFactor);
 		}
 
-		virtual int getMaxOutLen(const int MaxInLen) const
+		int getMaxOutLen(const int MaxInLen) const override
 		{
 			R8BASSERT(MaxInLen >= 0);
 
@@ -210,7 +210,7 @@ namespace r8b
 					DownFactor);
 		}
 
-		virtual void clear()
+		void clear() override
 		{
 			memset(&PrevInput[0], 0, PrevInputLen * sizeof(double));
 
@@ -244,7 +244,7 @@ namespace r8b
 			DownSkip   = DownSkipInit;
 		}
 
-		virtual int process(double* ip, int l0, double*& op0)
+		int process(double* ip, int l0, double*& op0) override
 		{
 			R8BASSERT(l0 >= 0);
 			R8BASSERT(UpFactor / DownFactor <= 1 || ip != op0 || l0 == 0);

@@ -25,12 +25,10 @@ namespace OpenViBEPlugins
 		public:
 
 			CEBMLBaseEncoder();
-
-			virtual void release() { delete this; }
-
-			virtual bool initialize();
-			virtual bool uninitialize();
-			virtual bool process();
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool process() override;
 			virtual bool processHeader() { return true; }
 			virtual bool processBuffer() { return true; }
 			virtual bool processEnd() { return true; }
@@ -52,8 +50,7 @@ namespace OpenViBEPlugins
 		class CEBMLBaseEncoderDesc : public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
-
-			virtual bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
 				rAlgorithmPrototype.addOutputParameter(OVP_Algorithm_EBMLStreamEncoder_OutputParameterId_EncodedMemoryBuffer, "Encoded memory buffer", OpenViBE::Kernel::ParameterType_MemoryBuffer);
 				rAlgorithmPrototype.addInputTrigger(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeHeader, "Encode header");

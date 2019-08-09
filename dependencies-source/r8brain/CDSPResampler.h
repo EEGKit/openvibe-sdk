@@ -276,17 +276,17 @@ namespace r8b
 			}
 		}
 
-		virtual int getLatency() const
+		int getLatency() const override
 		{
 			return (0);
 		}
 
-		virtual double getLatencyFrac() const
+		double getLatencyFrac() const override
 		{
 			return (0.0);
 		}
 
-		virtual int getInLenBeforeOutStart(const int NextInLen) const
+		int getInLenBeforeOutStart(const int NextInLen) const override
 		{
 			int l = (Interp == nullptr ? 0 : Interp->getInLenBeforeOutStart(NextInLen));
 
@@ -298,7 +298,7 @@ namespace r8b
 			return (l);
 		}
 
-		virtual int getMaxOutLen(const int/* MaxInLen */) const
+		int getMaxOutLen(const int/* MaxInLen */) const override
 		{
 			return (0);
 		}
@@ -314,8 +314,7 @@ namespace r8b
 		 * efficient to clear the state of the resampler object than to destroy it
 		 * and create a new object.
 		 */
-
-		virtual void clear()
+		void clear() override
 		{
 			for (int i = 0; i < ConvCount; i++)
 			{
@@ -355,8 +354,7 @@ namespace r8b
 		 * bigger output buffer, it is suggested to check the returned number of
 		 * samples so that no overflow of the bigger output buffer happens.
 		 */
-
-		virtual int process(double* ip0, int l, double*& op0)
+		int process(double* ip0, int l, double*& op0) override
 		{
 			R8BASSERT(l >= 0);
 

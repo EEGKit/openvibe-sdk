@@ -16,13 +16,11 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmStimulationBasedEpoching final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-
-			virtual void release() { delete this; }
-
-			virtual bool initialize();
-			virtual bool uninitialize();
-			virtual bool processInput(const uint32_t index);
-			virtual bool process();
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processInput(const uint32_t index) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching)
 
@@ -76,24 +74,22 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmStimulationBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
-			virtual void release() { }
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Stimulation based epoching"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jozef Legeny"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Epoching"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("2.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.1.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmStimulationBasedEpoching; }
+			OpenViBE::CString getStockItemName() const override { return "gtk-cut"; }
 
-			virtual OpenViBE::CString getName() const { return OpenViBE::CString("Stimulation based epoching"); }
-			virtual OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Jozef Legeny"); }
-			virtual OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("Mensia Technologies"); }
-			virtual OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
-			virtual OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("Slices signal into chunks of a desired length following a stimulation event."); }
-			virtual OpenViBE::CString getCategory() const { return OpenViBE::CString("Signal processing/Epoching"); }
-			virtual OpenViBE::CString getVersion() const { return OpenViBE::CString("2.0"); }
-			virtual OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.1.0"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_StimulationBasedEpoching; }
-			virtual OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmStimulationBasedEpoching; }
-			virtual OpenViBE::CString getStockItemName() const { return "gtk-cut"; }
-
-			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
 			{
 				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
 				rBoxAlgorithmPrototype.addInput("Input stimulations", OV_TypeId_Stimulations);

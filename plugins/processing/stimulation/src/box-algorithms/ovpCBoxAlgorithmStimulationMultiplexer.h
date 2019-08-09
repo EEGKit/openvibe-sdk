@@ -18,12 +18,12 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			void release() { delete this; }
+			void release() override { delete this; }
 
-			bool initialize();
-			bool uninitialize();
-			bool processInput(const uint32_t ui32InputIndex);
-			bool process();
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_StimulationMultiplexer)
 
@@ -59,8 +59,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return this->check(rBox); }
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return this->check(rBox); }
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
@@ -69,26 +69,26 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			void release() { }
+			void release() override { }
 
-			OpenViBE::CString getName() const { return OpenViBE::CString("Stimulation multiplexer"); }
-			OpenViBE::CString getAuthorName() const { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName() const { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription() const { return OpenViBE::CString("Merges several stimulation streams into one."); }
-			OpenViBE::CString getDetailedDescription() const { return OpenViBE::CString("The stimulations are ordered according to their start date. Thus each time all the input have chunks covering a period of time, a new output chunk is sent. This box may eventually produce output chunk reflecting a different duration depending on the inputs."); }
-			OpenViBE::CString getCategory() const { return OpenViBE::CString("Streaming"); }
-			OpenViBE::CString getVersion() const { return OpenViBE::CString("1.1"); }
-			OpenViBE::CString getStockItemName() const { return OpenViBE::CString("gtk-sort-ascending"); }
-			OpenViBE::CString getSoftwareComponent() const { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion() const { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Stimulation multiplexer"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Merges several stimulation streams into one."); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("The stimulations are ordered according to their start date. Thus each time all the input have chunks covering a period of time, a new output chunk is sent. This box may eventually produce output chunk reflecting a different duration depending on the inputs."); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Streaming"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
+			OpenViBE::CString getStockItemName() const override { return OpenViBE::CString("gtk-sort-ascending"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
 
-			OpenViBE::CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_StimulationMultiplexer; }
-			OpenViBE::Plugins::IPluginObject* create() { return new CBoxAlgorithmStimulationMultiplexer; }
-			OpenViBE::Plugins::IBoxListener* createBoxListener() const { return new CBoxAlgorithmStimulationMultiplexerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationMultiplexer; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmStimulationMultiplexer; }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStimulationMultiplexerListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
 			{
 				rBoxAlgorithmPrototype.addInput("Input stimulations 1", OV_TypeId_Stimulations);
 				rBoxAlgorithmPrototype.addInput("Input stimulations 2", OV_TypeId_Stimulations);

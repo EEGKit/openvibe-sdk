@@ -25,24 +25,20 @@ namespace OpenViBE
 			CMetaboxObjectDesc() { }
 
 			CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel::IScenario& metaboxScenario);
-			virtual void release() { }
-
-			virtual CString getMetaboxDescriptor() const { return m_MetaboxDescriptor; }
-
-			virtual CString getName() const { return m_Name; }
-			virtual CString getAuthorName() const { return m_AuthorName; }
-			virtual CString getAuthorCompanyName() const { return m_AuthorCompanyName; }
-			virtual CString getShortDescription() const { return m_ShortDescription; }
-			virtual CString getDetailedDescription() const { return m_DetailedDescription; }
-			virtual CString getCategory() const { return m_Category; }
-			virtual CString getVersion() const { return m_Version; }
-			virtual CString getStockItemName() const { return m_StockItemName; }
-			virtual CString getAddedSoftwareVersion() const { return m_AddedSoftwareVersion; }
-
-			virtual CString getUpdatedSoftwareVersion() const { return m_UpdatedSoftwareVersion; }
-
-			virtual CIdentifier getCreatedClass() const { return OVP_ClassId_BoxAlgorithm_Metabox; }
-			virtual Plugins::IPluginObject* create() { return nullptr; }
+			void release() override { }
+			CString getMetaboxDescriptor() const override { return m_MetaboxDescriptor; }
+			CString getName() const override { return m_Name; }
+			CString getAuthorName() const override { return m_AuthorName; }
+			CString getAuthorCompanyName() const override { return m_AuthorCompanyName; }
+			CString getShortDescription() const override { return m_ShortDescription; }
+			CString getDetailedDescription() const override { return m_DetailedDescription; }
+			CString getCategory() const override { return m_Category; }
+			CString getVersion() const override { return m_Version; }
+			CString getStockItemName() const override { return m_StockItemName; }
+			CString getAddedSoftwareVersion() const override { return m_AddedSoftwareVersion; }
+			CString getUpdatedSoftwareVersion() const override { return m_UpdatedSoftwareVersion; }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Metabox; }
+			Plugins::IPluginObject* create() override { return nullptr; }
 
 			// Handling of the virtual prototype
 
@@ -85,7 +81,7 @@ namespace OpenViBE
 				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			} SSetting;
 
-			virtual bool getBoxPrototype(Kernel::IBoxProto& rBoxAlgorithmPrototype) const;
+			bool getBoxPrototype(Kernel::IBoxProto& rBoxAlgorithmPrototype) const override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc)
 

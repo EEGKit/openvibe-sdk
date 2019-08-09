@@ -20,7 +20,7 @@ namespace Socket
 	{
 	public:
 
-		bool listen(uint32_t ui32Port)
+		bool listen(uint32_t ui32Port) override
 		{
 			if (!open()) { return false; }
 
@@ -78,7 +78,7 @@ namespace Socket
 			return true;
 		}
 
-		IConnection* accept()
+		IConnection* accept() override
 		{
 			struct sockaddr_in l_oClientAddress;
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
@@ -95,7 +95,7 @@ namespace Socket
 			return new TConnection<IConnection>(static_cast<int32_t>(l_i32ClientSocket));
 		}
 
-		bool getSocketPort(uint32_t& port)
+		bool getSocketPort(uint32_t& port) override
 		{
 			struct sockaddr_in socketInfo;
 

@@ -35,24 +35,21 @@ namespace OpenViBE
 		 *
 		 * The internal implementation is released.
 		 */
-		virtual ~CStimulationSet();
+		~CStimulationSet() override;
 
 		//@}
-
-		virtual void clear();
-		virtual const uint64_t getStimulationCount() const;
-		virtual const uint64_t getStimulationIdentifier(uint64_t ui64StimulationIndex) const;
-		virtual const uint64_t getStimulationDate(uint64_t ui64StimulationIndex) const;
-		virtual const uint64_t getStimulationDuration(uint64_t ui64StimulationIndex) const;
-
-		virtual bool setStimulationCount(uint64_t ui64StimulationCount);
-		virtual bool setStimulationIdentifier(uint64_t ui64StimulationIndex, uint64_t ui64StimulationIdentifier);
-		virtual bool setStimulationDate(uint64_t ui64StimulationIndex, uint64_t ui64StimulationDate);
-		virtual bool setStimulationDuration(uint64_t ui64StimulationIndex, uint64_t ui64StimulationDuration);
-
-		virtual uint64_t appendStimulation(uint64_t ui64StimulationIdentifier, uint64_t ui64StimulationDate, uint64_t ui64StimulationDuration);
-		virtual uint64_t insertStimulation(uint64_t ui64StimulationIndex, uint64_t ui64StimulationIdentifier, uint64_t ui64StimulationDate, uint64_t ui64StimulationDuration);
-		virtual bool removeStimulation(uint64_t ui64StimulationIndex);
+		void clear() override;
+		const uint64_t getStimulationCount() const override;
+		const uint64_t getStimulationIdentifier(uint64_t ui64StimulationIndex) const override;
+		const uint64_t getStimulationDate(uint64_t ui64StimulationIndex) const override;
+		const uint64_t getStimulationDuration(uint64_t ui64StimulationIndex) const override;
+		bool setStimulationCount(uint64_t ui64StimulationCount) override;
+		bool setStimulationIdentifier(uint64_t ui64StimulationIndex, uint64_t ui64StimulationIdentifier) override;
+		bool setStimulationDate(uint64_t ui64StimulationIndex, uint64_t ui64StimulationDate) override;
+		bool setStimulationDuration(uint64_t ui64StimulationIndex, uint64_t ui64StimulationDuration) override;
+		uint64_t appendStimulation(uint64_t ui64StimulationIdentifier, uint64_t ui64StimulationDate, uint64_t ui64StimulationDuration) override;
+		uint64_t insertStimulation(uint64_t ui64StimulationIndex, uint64_t ui64StimulationIdentifier, uint64_t ui64StimulationDate, uint64_t ui64StimulationDuration) override;
+		bool removeStimulation(uint64_t ui64StimulationIndex) override;
 
 		_IsDerivedFromClass_Final_(OpenViBE::IStimulationSet, OV_ClassId_StimulationSetBridge)
 

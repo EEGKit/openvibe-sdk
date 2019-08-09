@@ -13,23 +13,18 @@ namespace OpenViBE
 		public:
 
 			CAlgorithmContext(const IKernelContext& rKernelContext, CAlgorithmProxy& rAlgorithmProxy, const Plugins::IPluginObjectDesc& rPluginObjectDesc);
-			virtual ~CAlgorithmContext();
-
-			virtual IConfigurationManager& getConfigurationManager() const;
-			virtual IAlgorithmManager& getAlgorithmManager() const;
-			virtual ILogManager& getLogManager() const;
-			virtual IErrorManager& getErrorManager() const;
-			virtual ITypeManager& getTypeManager() const;
-
-			virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const;
-			virtual IParameter* getInputParameter(const CIdentifier& rInputParameterIdentifier);
-
-			virtual CIdentifier getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const;
-			virtual IParameter* getOutputParameter(const CIdentifier& rOutputParameterIdentifier);
-
-			virtual bool isInputTriggerActive(const CIdentifier& rInputTriggerIdentifier) const;
-
-			virtual bool activateOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, bool bTriggerState);
+			~CAlgorithmContext() override;
+			IConfigurationManager& getConfigurationManager() const override;
+			IAlgorithmManager& getAlgorithmManager() const override;
+			ILogManager& getLogManager() const override;
+			IErrorManager& getErrorManager() const override;
+			ITypeManager& getTypeManager() const override;
+			CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const override;
+			IParameter* getInputParameter(const CIdentifier& rInputParameterIdentifier) override;
+			CIdentifier getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const override;
+			IParameter* getOutputParameter(const CIdentifier& rOutputParameterIdentifier) override;
+			bool isInputTriggerActive(const CIdentifier& rInputTriggerIdentifier) const override;
+			bool activateOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, bool bTriggerState) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmContext >, OVK_ClassId_Kernel_Algorithm_AlgorithmContext)
 

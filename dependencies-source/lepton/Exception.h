@@ -46,9 +46,9 @@ namespace Lepton
 	{
 	public:
 		Exception(const std::string& message) : message(message) { }
-		~Exception() throw() { }
+		~Exception() throw() override { }
 
-		const char* what() const throw()
+		const char* what() const throw() override
 		{
 			return message.c_str();
 		}

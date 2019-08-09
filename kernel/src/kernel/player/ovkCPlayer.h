@@ -21,36 +21,27 @@ namespace OpenViBE
 		public:
 
 			explicit CPlayer(const IKernelContext& rKernelContext);
-			virtual ~CPlayer();
-
-			virtual bool setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens);
-
-			virtual IConfigurationManager& getRuntimeConfigurationManager() const;
-			virtual IScenarioManager& getRuntimeScenarioManager() const;
-			virtual CIdentifier getRuntimeScenarioIdentifier() const;
+			~CPlayer() override;
+			bool setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens) override;
+			IConfigurationManager& getRuntimeConfigurationManager() const override;
+			IScenarioManager& getRuntimeScenarioManager() const override;
+			CIdentifier getRuntimeScenarioIdentifier() const override;
 
 
 			virtual bool isHoldingResources() const;
-
-			virtual EPlayerReturnCode initialize();
-			virtual bool uninitialize();
-
-			virtual bool stop();
-			virtual bool pause();
-			virtual bool step();
-			virtual bool play();
-			virtual bool forward();
-
-			virtual EPlayerStatus getStatus() const;
-
-			virtual bool setFastForwardMaximumFactor(double f64FastForwardFactor);
-			virtual double getFastForwardMaximumFactor() const;
-
-			virtual double getCPUUsage() const;
-
-			virtual bool loop(uint64_t ui64ElapsedTime, uint64_t ui64MaximumTimeToReach);
-
-			virtual uint64_t getCurrentSimulatedTime() const;
+			EPlayerReturnCode initialize() override;
+			bool uninitialize() override;
+			bool stop() override;
+			bool pause() override;
+			bool step() override;
+			bool play() override;
+			bool forward() override;
+			EPlayerStatus getStatus() const override;
+			bool setFastForwardMaximumFactor(double f64FastForwardFactor) override;
+			double getFastForwardMaximumFactor() const override;
+			double getCPUUsage() const override;
+			bool loop(uint64_t ui64ElapsedTime, uint64_t ui64MaximumTimeToReach) override;
+			uint64_t getCurrentSimulatedTime() const override;
 			virtual uint64_t getCurrentSimulatedLateness() const;
 
 
