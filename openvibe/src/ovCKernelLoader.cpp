@@ -3,7 +3,7 @@
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
  #include <dlfcn.h>
 #elif defined TARGET_OS_Windows
- #include <windows.h>
+#include <windows.h>
 #else
 #endif
 
@@ -11,7 +11,7 @@
 #include <string>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 //___________________________________________________________________//
 //                                                                   //
@@ -22,85 +22,55 @@ namespace OpenViBE
 	{
 	public:
 
-		CKernelLoaderBase(void);
-
-		virtual boolean initialize(void);
-		virtual boolean getKernelDesc(IKernelDesc*& rpKernelDesc);
-		virtual boolean uninitialize(void);
-		virtual void release(void);
+		CKernelLoaderBase();
+		bool initialize() override;
+		bool getKernelDesc(IKernelDesc*& rpKernelDesc) override;
+		bool uninitialize() override;
+		virtual void release();
 
 		_IsDerivedFromClass_Final_(IKernelLoader, OV_UndefinedIdentifier)
 
-		virtual boolean isOpen(void)=0;
+		virtual bool isOpen() = 0;
 
 	protected:
 
 		CString m_sFileName;
-		boolean (*onInitializeCB)(void);
-		boolean (*onGetKernelDescCB)(IKernelDesc*&);
-		boolean (*onUninitializeCB)(void);
+		bool (*onInitializeCB)();
+		bool (*onGetKernelDescCB)(IKernelDesc*&);
+		bool (*onUninitializeCB)();
 	};
-};
+}  // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
 
-#define boolean bool
-
 //___________________________________________________________________//
 //                                                                   //
 
-CKernelLoaderBase::CKernelLoaderBase(void)
-	:onInitializeCB(NULL)
-	,onGetKernelDescCB(NULL)
-	,onUninitializeCB(NULL)
-{
-}
+CKernelLoaderBase::CKernelLoaderBase() : onInitializeCB(nullptr), onGetKernelDescCB(nullptr), onUninitializeCB(nullptr) {}
 
-boolean CKernelLoaderBase::initialize(void)
+bool CKernelLoaderBase::initialize()
 {
-	if(!isOpen())
-	{
-		return false;
-	}
-	if(!onInitializeCB)
-	{
-		return true;
-	}
+	if (!isOpen()) { return false; }
+	if (!onInitializeCB) { return true; }
 	return onInitializeCB();
 }
 
-boolean CKernelLoaderBase::getKernelDesc(
-	IKernelDesc*& rpKernelDesc)
+bool CKernelLoaderBase::getKernelDesc(IKernelDesc*& rpKernelDesc)
 {
-	if(!isOpen())
-	{
-		return false;
-	}
-	if(!onGetKernelDescCB)
-	{
-		return false;
-	}
+	if (!isOpen()) { return false; }
+	if (!onGetKernelDescCB) { return false; }
 	return onGetKernelDescCB(rpKernelDesc);
 }
 
-boolean CKernelLoaderBase::uninitialize(void)
+bool CKernelLoaderBase::uninitialize()
 {
-	if(!isOpen())
-	{
-		return false;
-	}
-	if(!onUninitializeCB)
-	{
-		return true;
-	}
+	if (!isOpen()) { return false; }
+	if (!onUninitializeCB) { return true; }
 	return onUninitializeCB();
 }
 
-void CKernelLoaderBase::release(void)
-{
-	delete this;
-}
+void CKernelLoaderBase::release() { delete this; }
 
 //___________________________________________________________________//
 //                                                                   //
@@ -113,14 +83,14 @@ namespace OpenViBE
 	{
 	public:
 
-		CKernelLoaderLinux(void);
+		CKernelLoaderLinux();
 
-		virtual boolean load(const CString& sFileName, CString* pError);
-		virtual boolean unload(CString* pError);
+		virtual bool load(const CString& sFileName, CString* pError);
+		virtual bool unload(CString* pError);
 
 	protected:
 
-		virtual boolean isOpen(void);
+		virtual bool isOpen();
 
 		void* m_pFileHandle;
 	};
@@ -133,18 +103,16 @@ namespace OpenViBE
 	class CKernelLoaderWindows : public CKernelLoaderBase
 	{
 	public:
-		CKernelLoaderWindows(void);
-
-		virtual boolean load(const CString& sFileName, CString* pError);
-		virtual boolean unload(CString* pError);
+		CKernelLoaderWindows();
+		bool load(const CString& sFileName, CString* pError) override;
+		bool unload(CString* pError) override;
 
 	protected:
-
-		virtual boolean isOpen(void);
+		bool isOpen() override;
 
 		HMODULE m_pFileHandle;
 	};
-};
+}  // namespace OpenViBE
 
 #else
 
@@ -155,13 +123,9 @@ namespace OpenViBE
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-CKernelLoaderLinux::CKernelLoaderLinux(void)
-	:m_pFileHandle(NULL)
-{
-}
+CKernelLoaderLinux::CKernelLoaderLinux() : m_pFileHandle(NULL) { }
 
-boolean CKernelLoaderLinux::load(
-	const CString& sFileName,
+bool CKernelLoaderLinux::load(const CString& sFileName,
 	CString* pError)
 {
 	if(m_pFileHandle)
@@ -178,9 +142,9 @@ boolean CKernelLoaderLinux::load(
 		return false;
 	}
 
-	onInitializeCB=(boolean (*)(void))dlsym(m_pFileHandle, "onInitialize");
-	onUninitializeCB=(boolean (*)(void))dlsym(m_pFileHandle, "onUninitialize");
-	onGetKernelDescCB=(boolean (*)(IKernelDesc*&))dlsym(m_pFileHandle, "onGetKernelDesc");
+	onInitializeCB=(bool (*)())dlsym(m_pFileHandle, "onInitialize");
+	onUninitializeCB=(bool (*)())dlsym(m_pFileHandle, "onUninitialize");
+	onGetKernelDescCB=(bool (*)(IKernelDesc*&))dlsym(m_pFileHandle, "onGetKernelDesc");
 	if(!onGetKernelDescCB)
 	{
 		if(pError) *pError=dlerror();
@@ -195,8 +159,7 @@ boolean CKernelLoaderLinux::load(
 	return true;
 }
 
-boolean CKernelLoaderLinux::unload(
-	CString* pError)
+bool CKernelLoaderLinux::unload(CString* pError)
 {
 	if(!m_pFileHandle)
 	{
@@ -211,102 +174,80 @@ boolean CKernelLoaderLinux::unload(
 	return true;
 }
 
-boolean CKernelLoaderLinux::isOpen(void)
+bool CKernelLoaderLinux::isOpen()
 {
-	return m_pFileHandle!=NULL;
+	return m_pFileHandle != nullptr;
 }
 
 #elif defined TARGET_OS_Windows
 
-CKernelLoaderWindows::CKernelLoaderWindows(void)
-	:m_pFileHandle(NULL)
-{
-}
+CKernelLoaderWindows::CKernelLoaderWindows() : m_pFileHandle(nullptr) {}
 
-boolean CKernelLoaderWindows::load(
-	const CString& sFileName,
-	CString* pError)
+bool CKernelLoaderWindows::load(const CString& sFileName, CString* pError)
 {
-	if(m_pFileHandle)
+	if (m_pFileHandle)
 	{
-		if(pError) *pError="kernel already loaded";
+		if (pError) { *pError = "kernel already loaded"; }
 		return false;
 	}
 
-	m_pFileHandle=LoadLibrary(sFileName);
-	if(!m_pFileHandle)
+	m_pFileHandle = LoadLibrary(sFileName);
+	if (!m_pFileHandle)
 	{
-		if(pError)
+		if (pError)
 		{
-			LPVOID l_pMessageBuffer=NULL;
-			FormatMessage(
-				FORMAT_MESSAGE_ALLOCATE_BUFFER|
-				FORMAT_MESSAGE_FROM_SYSTEM|
-				FORMAT_MESSAGE_IGNORE_INSERTS,
-				NULL,
-				GetLastError(),
-				0, // Default language
-				(LPTSTR)&l_pMessageBuffer,
-				0,
-				NULL);
-			*pError=(char*)l_pMessageBuffer;
+			LPVOID l_pMessageBuffer = nullptr;
+			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0, // Default language
+						  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
+			*pError = (char*)l_pMessageBuffer;
 			LocalFree(l_pMessageBuffer);
 		}
 		return false;
 	}
 
-	onInitializeCB=(boolean (*)(void))GetProcAddress(m_pFileHandle, "onInitialize");
-	onUninitializeCB=(boolean (*)(void))GetProcAddress(m_pFileHandle, "onUninitialize");
-	onGetKernelDescCB=(boolean (*)(IKernelDesc*&))GetProcAddress(m_pFileHandle, "onGetKernelDesc");
-	if(!onGetKernelDescCB)
+	onInitializeCB    = (bool (*)())GetProcAddress(m_pFileHandle, "onInitialize");
+	onUninitializeCB  = (bool (*)())GetProcAddress(m_pFileHandle, "onUninitialize");
+	onGetKernelDescCB = (bool (*)(IKernelDesc*&))GetProcAddress(m_pFileHandle, "onGetKernelDesc");
+	if (!onGetKernelDescCB)
 	{
-		if(pError)
+		if (pError)
 		{
-			LPVOID l_pMessageBuffer=NULL;
-			FormatMessage(
-				FORMAT_MESSAGE_ALLOCATE_BUFFER|
-				FORMAT_MESSAGE_FROM_SYSTEM|
-				FORMAT_MESSAGE_IGNORE_INSERTS,
-				NULL,
-				GetLastError(),
-				0, // Default language
-				(LPTSTR)&l_pMessageBuffer,
-				0,
-				NULL);
-			*pError=(char*)l_pMessageBuffer;
+			LPVOID l_pMessageBuffer = nullptr;
+			FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, GetLastError(), 0, // Default language
+						  (LPTSTR)&l_pMessageBuffer, 0, nullptr);
+			*pError = (char*)l_pMessageBuffer;
 			LocalFree(l_pMessageBuffer);
 		}
 
 		FreeLibrary(m_pFileHandle);
-		m_pFileHandle=NULL;
-		onInitializeCB=NULL;
-		onGetKernelDescCB=NULL;
-		onUninitializeCB=NULL;
+		m_pFileHandle     = nullptr;
+		onInitializeCB    = nullptr;
+		onGetKernelDescCB = nullptr;
+		onUninitializeCB  = nullptr;
 		return false;
 	}
 	return true;
 }
 
-boolean CKernelLoaderWindows::unload(
-	CString* pError)
+bool CKernelLoaderWindows::unload(CString* pError)
 {
-	if(!m_pFileHandle)
+	if (!m_pFileHandle)
 	{
-		if(pError) *pError="no kernel currently loaded";
+		if (pError) { *pError = "no kernel currently loaded"; }
 		return false;
 	}
 	FreeLibrary(m_pFileHandle);
-	m_pFileHandle=NULL;
-	onInitializeCB=NULL;
-	onGetKernelDescCB=NULL;
-	onUninitializeCB=NULL;
+	m_pFileHandle     = nullptr;
+	onInitializeCB    = nullptr;
+	onGetKernelDescCB = nullptr;
+	onUninitializeCB  = nullptr;
 
 	return true;
 }
 
-boolean CKernelLoaderWindows::isOpen(void)
+bool CKernelLoaderWindows::isOpen()
 {
-	return m_pFileHandle!=NULL;
+	return m_pFileHandle != nullptr;
 }
 
 #else
@@ -316,43 +257,38 @@ boolean CKernelLoaderWindows::isOpen(void)
 //___________________________________________________________________//
 //                                                                   //
 
-CKernelLoader::CKernelLoader(void)
-	:m_pKernelLoaderImpl(NULL)
-{
+CKernelLoader::CKernelLoader() {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_pKernelLoaderImpl=new CKernelLoaderLinux();
 #elif defined TARGET_OS_Windows
-	m_pKernelLoaderImpl=new CKernelLoaderWindows();
+	m_pKernelLoaderImpl = new CKernelLoaderWindows();
 #else
 #endif
 }
 
-CKernelLoader::~CKernelLoader(void)
+CKernelLoader::~CKernelLoader() { delete m_pKernelLoaderImpl; }
+
+bool CKernelLoader::load(const CString& sFileName, CString* pError)
 {
-	delete m_pKernelLoaderImpl;
+	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->load(sFileName, pError) : false;
 }
 
-boolean CKernelLoader::load(const CString& sFileName, CString* pError)
+bool CKernelLoader::unload(CString* pError)
 {
-	return m_pKernelLoaderImpl?m_pKernelLoaderImpl->load(sFileName, pError):false;
+	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->unload(pError) : false;
 }
 
-boolean CKernelLoader::unload(CString* pError)
+bool CKernelLoader::initialize()
 {
-	return m_pKernelLoaderImpl?m_pKernelLoaderImpl->unload(pError):false;
+	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->initialize() : false;
 }
 
-boolean CKernelLoader::initialize(void)
+bool CKernelLoader::getKernelDesc(IKernelDesc*& rpKernelDesc)
 {
-	return m_pKernelLoaderImpl?m_pKernelLoaderImpl->initialize():false;
+	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->getKernelDesc(rpKernelDesc) : false;
 }
 
-boolean CKernelLoader::getKernelDesc(IKernelDesc*& rpKernelDesc)
+bool CKernelLoader::uninitialize()
 {
-	return m_pKernelLoaderImpl?m_pKernelLoaderImpl->getKernelDesc(rpKernelDesc):false;
-}
-
-boolean CKernelLoader::uninitialize(void)
-{
-	return m_pKernelLoaderImpl?m_pKernelLoaderImpl->uninitialize():false;
+	return m_pKernelLoaderImpl ? m_pKernelLoaderImpl->uninitialize() : false;
 }

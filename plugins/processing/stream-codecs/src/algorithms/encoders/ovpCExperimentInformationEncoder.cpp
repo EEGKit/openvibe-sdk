@@ -1,13 +1,13 @@
 #include "ovpCExperimentInformationEncoder.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::StreamCodecs;
+using namespace StreamCodecs;
 
-boolean CExperimentInformationEncoder::initialize(void)
+bool CExperimentInformationEncoder::initialize()
 {
 	CEBMLBaseEncoder::initialize();
 
@@ -25,7 +25,7 @@ boolean CExperimentInformationEncoder::initialize(void)
 	return true;
 }
 
-boolean CExperimentInformationEncoder::uninitialize(void)
+bool CExperimentInformationEncoder::uninitialize()
 {
 	ip_pTechnicianName.uninitialize();
 	ip_ui64TechnicianIdentifier.uninitialize();
@@ -46,45 +46,45 @@ boolean CExperimentInformationEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CExperimentInformationEncoder::processHeader(void)
+bool CExperimentInformationEncoder::processHeader()
 {
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation);
-	 m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Experiment);
-	   m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier);
-	    m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64ExperimentIdentifier);
-	   m_pEBMLWriterHelper->closeChild();
-	   m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Experiment_Date);
-	    m_pEBMLWriterHelper->setASCIIStringAsChildData(ip_pExperimentDate->toASCIIString());
-	   m_pEBMLWriterHelper->closeChild();
-	  m_pEBMLWriterHelper->closeChild();
-	  m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Subject);
-	   m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier);
-	   m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64SubjectIdentifier);
-	   m_pEBMLWriterHelper->closeChild();
-	   m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Subject_Name);
-	    m_pEBMLWriterHelper->setASCIIStringAsChildData(ip_pSubjectName->toASCIIString());
-	   m_pEBMLWriterHelper->closeChild();
-	   m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Subject_Age);
-	    m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64SubjectAge);
-	   m_pEBMLWriterHelper->closeChild();
-	   m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Subject_Gender);
-	    m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64SubjectGender);
-	   m_pEBMLWriterHelper->closeChild();
-	  m_pEBMLWriterHelper->closeChild();
-	  m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Context);
-	   m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier);
-	    m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64LaboratoryIdentifier);
-	   m_pEBMLWriterHelper->closeChild();
-	   m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName);
-	    m_pEBMLWriterHelper->setASCIIStringAsChildData(ip_pLaboratoryName->toASCIIString());
-	   m_pEBMLWriterHelper->closeChild();
-	   m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier);
-	    m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64TechnicianIdentifier);
-	   m_pEBMLWriterHelper->closeChild();
-	   m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName);
-	    m_pEBMLWriterHelper->setASCIIStringAsChildData(ip_pTechnicianName->toASCIIString());
-	   m_pEBMLWriterHelper->closeChild();
-	 m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Experiment);
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier);
+	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64ExperimentIdentifier);
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Experiment_Date);
+	m_pEBMLWriterHelper->setASCIIStringAsChildData(ip_pExperimentDate->toASCIIString());
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Subject);
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier);
+	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64SubjectIdentifier);
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Subject_Name);
+	m_pEBMLWriterHelper->setASCIIStringAsChildData(ip_pSubjectName->toASCIIString());
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Subject_Age);
+	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64SubjectAge);
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Subject_Gender);
+	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64SubjectGender);
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Context);
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier);
+	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64LaboratoryIdentifier);
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName);
+	m_pEBMLWriterHelper->setASCIIStringAsChildData(ip_pLaboratoryName->toASCIIString());
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier);
+	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_ui64TechnicianIdentifier);
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName);
+	m_pEBMLWriterHelper->setASCIIStringAsChildData(ip_pTechnicianName->toASCIIString());
+	m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->closeChild();
 	m_pEBMLWriterHelper->closeChild();
 
 	return true;

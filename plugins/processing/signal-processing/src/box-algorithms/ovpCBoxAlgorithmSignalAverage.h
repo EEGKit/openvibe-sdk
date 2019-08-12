@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_SignalAverage_H__
-#define __OpenViBEPlugins_BoxAlgorithm_SignalAverage_H__
+#pragma once
 
 #include <toolkit/ovtk_all.h>
 
@@ -17,32 +16,26 @@ namespace OpenViBEPlugins
 		*/
 		class CBoxAlgorithmSignalAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
-
 		public:
 
-			CBoxAlgorithmSignalAverage(void);
-
-			virtual void release(void);
-
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-
-			virtual OpenViBE::boolean process(void);
+			CBoxAlgorithmSignalAverage();
+			void release() override;
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_SignalAverage)
 
 		public:
 
-			virtual void computeAverage(void);
+			virtual void computeAverage();
 
 		public:
 
 			// Needed to read the input and write the output
 			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalAverage> m_oSignalDecoder;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalAverage> m_oSignalEncoder;
-
 		};
 
 		/**
@@ -51,23 +44,21 @@ namespace OpenViBEPlugins
 		class CSignalAverageDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Signal average"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Bruno Renier"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Computes the average of each input buffer."); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Averaging"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("0.5"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalAverage; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSignalAverage(); }
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Signal average"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Bruno Renier"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Computes the average of each input buffer."); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Averaging"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("0.5"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_SignalAverage; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalAverage(); }
-
-			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
 				rPrototype.addInput("Input signal", OV_TypeId_Signal);
 				rPrototype.addOutput("Filtered signal", OV_TypeId_Signal);
@@ -77,8 +68,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalAverageDesc)
 		};
-	}
-}
-
-#endif // __OpenViBEPlugins_BoxAlgorithm_SignalAverage_H__
-
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

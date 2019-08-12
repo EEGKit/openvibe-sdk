@@ -95,7 +95,7 @@ TEST(FS_Files_Test_Directories_UTF, validateCopyFile)
 
 TEST(FS_Files_Test_Directories_UTF, validateCopyDirectory)
 {
-	ASSERT_TRUE(FS::Files::copyDirectory(TEST_ASCII_DIR, TEMP_OUTPUT_DIR_COPY));	
+	ASSERT_TRUE(FS::Files::copyDirectory(TEST_ASCII_DIR, TEMP_OUTPUT_DIR_COPY));
 	ASSERT_TRUE(FS::Files::fileExists(TEMP_OUTPUT_UTF_FILE_PATH_COPY));
 	ASSERT_TRUE(FS::Files::fileExists(TEMP_OUTPUT_ASCII_FILE_PATH_COPY));
 }
@@ -104,7 +104,7 @@ TEST(FS_Files_Test_Directories_UTF, validateCopyDirectory)
 
 int uoFSFilesTestUTF(int argc, char* argv[])
 {
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 
 	::testing::GTEST_FLAG(filter) = "FS_Files_Test_Directories_UTF.*";
 	return RUN_ALL_TESTS();

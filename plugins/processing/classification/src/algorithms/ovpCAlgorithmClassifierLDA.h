@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Algorithm_ClassifierLDA_H__
-#define __OpenViBEPlugins_Algorithm_ClassifierLDA_H__
+#pragma once
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 
@@ -28,94 +27,83 @@ namespace OpenViBEPlugins
 	{
 		class CAlgorithmLDADiscriminantFunction;
 
-		OpenViBE::int32 LDAClassificationCompare(OpenViBE::IMatrix& rFirstClassificationValue, OpenViBE::IMatrix& rSecondClassificationValue);
+		int32_t LDAClassificationCompare(OpenViBE::IMatrix& rFirstClassificationValue, OpenViBE::IMatrix& rSecondClassificationValue);
 
-		typedef Eigen::Matrix< double , Eigen::Dynamic , Eigen::Dynamic, Eigen::RowMajor > MatrixXdRowMajor;
+		typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
 		class CAlgorithmClassifierLDA : public OpenViBEToolkit::CAlgorithmClassifier
 		{
-
 		public:
+			bool initialize() override;
+			bool uninitialize() override;
+			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
+								  , double& rf64Class
+								  , OpenViBEToolkit::IVector& rDistanceValue
+								  , OpenViBEToolkit::IVector& rProbabilityValue) override;
+			XML::IXMLNode* saveConfiguration() override;
+			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
+			uint32_t getOutputProbabilityVectorLength() override;
+			uint32_t getOutputDistanceVectorLength() override;
 
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-
-			virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
-			virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-											   , OpenViBE::float64& rf64Class
-											   , OpenViBEToolkit::IVector& rDistanceValue
-											   , OpenViBEToolkit::IVector& rProbabilityValue);
-
-			virtual XML::IXMLNode* saveConfiguration(void);
-			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode *pConfigurationNode);
-
-			virtual OpenViBE::uint32 getOutputProbabilityVectorLength();
-			virtual OpenViBE::uint32 getOutputDistanceVectorLength();
-
-			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierLDA);
+			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierLDA)
 
 		protected:
 			// Debug method. Prints the matrix to the logManager. May be disabled in implementation.
 			void dumpMatrix(OpenViBE::Kernel::ILogManager& pMgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
 
-			std::vector < OpenViBE::float64 > m_vLabelList;
-			std::vector < CAlgorithmLDADiscriminantFunction > m_vDiscriminantFunctions;
+			std::vector<double> m_vLabelList;
+			std::vector<CAlgorithmLDADiscriminantFunction> m_vDiscriminantFunctions;
 
 			Eigen::MatrixXd m_oCoefficients;
 			Eigen::MatrixXd m_oWeights;
-			OpenViBE::float64 m_f64BiasDistance;
-			OpenViBE::float64 m_f64w0;
+			double m_f64BiasDistance = 0;
+			double m_f64w0 = 0;
 
-			OpenViBE::uint32 m_ui32NumCols;
-			OpenViBE::uint32 m_ui32NumClasses;
+			uint32_t m_ui32NumCols = 0;
+			uint32_t m_ui32NumClasses = 0;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pCovarianceAlgorithm;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pCovarianceAlgorithm = nullptr;
 
 		private:
-			void loadClassesFromNode(XML::IXMLNode *pNode);
-			void loadCoefficientsFromNode(XML::IXMLNode *pNode);
+			void loadClassesFromNode(XML::IXMLNode* pNode);
+			void loadCoefficientsFromNode(XML::IXMLNode* pNode);
 
-			OpenViBE::uint32 getClassCount(void);
+			uint32_t getClassCount();
 		};
 
 		class CAlgorithmClassifierLDADesc : public OpenViBEToolkit::CAlgorithmClassifierDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("LDA Classifier"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jussi T. Lindgren / Guillaume Serrière"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria / Loria"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Estimates LDA using regularized or classic covariances"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("2.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierLDA; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmClassifierLDA; }
 
-			virtual void release(void) { }
-
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("LDA Classifier"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Jussi T. Lindgren / Guillaume Serrière"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("Inria / Loria"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Estimates LDA using regularized or classic covariances"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("2.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Algorithm_ClassifierLDA; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Classification::CAlgorithmClassifierLDA; }
-
-			virtual OpenViBE::boolean getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_UseShrinkage, "Use shrinkage", OpenViBE::Kernel::ParameterType_Boolean);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov,"Shrinkage: Force diagonal cov (DDA)",OpenViBE::Kernel::ParameterType_Boolean);
-				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage, "Shrinkage coefficient (-1 == auto)",OpenViBE::Kernel::ParameterType_Float);
+				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_DiagonalCov, "Shrinkage: Force diagonal cov (DDA)", OpenViBE::Kernel::ParameterType_Boolean);
+				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_ClassifierLDA_InputParameterId_Shrinkage, "Shrinkage coefficient (-1 == auto)", OpenViBE::Kernel::ParameterType_Float);
 
 
 				CAlgorithmClassifierDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(CAlgorithmClassifierDesc, OVP_ClassId_Algorithm_ClassifierLDADesc);
+			_IsDerivedFromClass_Final_(CAlgorithmClassifierDesc, OVP_ClassId_Algorithm_ClassifierLDADesc)
 		};
 	};
 };
 
-#endif // __OpenViBEPlugins_Algorithm_ClassifierLDA_H__
 
 #endif // TARGET_HAS_ThirdPartyEIGEN
-

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Tools_CScopeTester_H__
-#define __OpenViBEKernel_Tools_CScopeTester_H__
+#pragma once
 
 #include "../ovk_base.h"
 
@@ -9,21 +8,21 @@ namespace OpenViBE
 {
 	namespace Tools
 	{
-		class CScopeTester : public OpenViBE::IObject
+		class CScopeTester : public IObject
 		{
 		public:
 
-			CScopeTester(const OpenViBE::Kernel::IKernelContext& rKernelCotnext, const OpenViBE::CString& sPrefix);
-			virtual ~CScopeTester(void);
+			CScopeTester(const Kernel::IKernelContext& rKernelContext, const CString& sPrefix);
+			~CScopeTester() override;
 
-			_IsDerivedFromClass_Final_(IObject, OVK_ClassId_Tools_ScopeTester);
+			_IsDerivedFromClass_Final_(IObject, OVK_ClassId_Tools_ScopeTester)
 
 		protected:
 
-			OpenViBE::CString m_sPrefix;
-			const OpenViBE::Kernel::IKernelContext& m_rKernelContext;
+			CString m_sPrefix;
+			const Kernel::IKernelContext& m_kernelContext;
 		};
-	};
-};
+	}  // namespace Tools
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Tools_CScopeTester_H__
+

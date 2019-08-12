@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Scenario_IBoxListenerContext_H__
-#define __OpenViBE_Kernel_Scenario_IBoxListenerContext_H__
+#pragma once
 
 #include "../ovIKernelObject.h"
 
@@ -17,7 +16,7 @@ namespace OpenViBE
 		 * \sa OpenViBE::Plugins::IBoxAlgorithmDesc
 		 * \sa OpenViBE::Plugins::IBoxAlgorithm
 		 */
-		class OV_API IBoxListenerContext : public OpenViBE::Kernel::IKernelObject
+		class OV_API IBoxListenerContext : public IKernelObject
 		{
 		public:
 
@@ -28,48 +27,48 @@ namespace OpenViBE
 			 * \brief Gets a reference on the current algorithm manager
 			 * \return a reference on the current algorithm manager
 			 */
-			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const=0;
+			virtual IAlgorithmManager& getAlgorithmManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current player manager
 			 * \return a reference on the current player manager
 			 */
-			virtual OpenViBE::Kernel::IPlayerManager& getPlayerManager(void) const=0;
+			virtual IPlayerManager& getPlayerManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current plugin manager
 			 * \return a reference on the current plugin manager
 			 */
-			virtual OpenViBE::Kernel::IPluginManager& getPluginManager(void) const=0;
+			virtual IPluginManager& getPluginManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current metabox manager
 			 * \return a reference on the current metabox manager
 			 */
-			virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager(void) const=0;
+			virtual IMetaboxManager& getMetaboxManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current scenario manager
 			 * \return a reference on the current scenario manager
 			 */
-			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const=0;
+			virtual IScenarioManager& getScenarioManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current type manager
 			 * \return a reference on the current type manager
 			 */
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const=0;
+			virtual ITypeManager& getTypeManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current log manager
 			 * \return a reference on the current log manager
 			 */
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const=0;
+			virtual ILogManager& getLogManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current error manager
 			 * \return a reference on the current error manager
 			 */
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const=0;
+			virtual IErrorManager& getErrorManager() const = 0;
 
 			/**
 			 * \brief Gets a reference on the current configuration manager
 			 * \return a reference on the current configuration manager
 			 */
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const=0;
+			virtual IConfigurationManager& getConfigurationManager() const = 0;
 
 			//@}
 			/** \name Box specific stuffs */
@@ -78,24 +77,22 @@ namespace OpenViBE
 			 * \brief Gets a reference to the considered box
 			 * \return a reference to the considered box
 			 */
-			virtual OpenViBE::Kernel::IBox& getBox(void) const=0;
+			virtual IBox& getBox() const = 0;
 			/**
 			 * \brief Gets a reference to the scenario owning the considered box
 			 * \return a reference to the scenario owning the considered box
 			 */
-			virtual OpenViBE::Kernel::IScenario& getScenario(void) const=0;
+			virtual IScenario& getScenario() const = 0;
 			/**
 			 * \brief Gets the index of the concerned callback message
 			 * \return the index of the concerned callback message in case it makes sense
 			 * \return \c 0xffffffff in case it does not make any sense
 			 */
-			virtual OpenViBE::uint32 getIndex(void) const=0;
+			virtual uint32_t getIndex() const = 0;
 
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxListenerContext)
 		};
-	};
-};
-
-#endif // __OpenViBE_Kernel_Scenario_IBoxListenerContext_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

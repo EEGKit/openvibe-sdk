@@ -19,7 +19,6 @@ namespace DateParser
 		static char* strpTime(const char* sStringToParse, const char* sDateFormat, struct tm* tmParsed);
 
 	private:
-		CDateParser(void);
+		CDateParser();
 	};
-
 }

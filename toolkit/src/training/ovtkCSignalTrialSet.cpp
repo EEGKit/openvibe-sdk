@@ -4,29 +4,29 @@ using namespace OpenViBE;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-boolean CSignalTrialSet::addSignalTrial(ISignalTrial& rSignalTrial)
+bool CSignalTrialSet::addSignalTrial(ISignalTrial& rSignalTrial)
 {
 	m_vSignalTrial.push_back(&rSignalTrial);
 	return true;
 }
 
-boolean CSignalTrialSet::clear(void)
+bool CSignalTrialSet::clear()
 {
 	m_vSignalTrial.clear();
 	return true;
 }
 
-uint32 CSignalTrialSet::getSignalTrialCount(void) const
+uint32_t CSignalTrialSet::getSignalTrialCount() const
 {
-	return static_cast<uint32>(m_vSignalTrial.size());
+	return static_cast<uint32_t>(m_vSignalTrial.size());
 }
 
-ISignalTrial& CSignalTrialSet::getSignalTrial(uint32 ui32Index) const
+ISignalTrial& CSignalTrialSet::getSignalTrial(uint32_t ui32Index) const
 {
 	return *m_vSignalTrial[ui32Index];
 }
 
-ISignalTrialSet* OpenViBEToolkit::createSignalTrialSet(void)
+ISignalTrialSet* OpenViBEToolkit::createSignalTrialSet()
 {
 	return new CSignalTrialSet();
 }

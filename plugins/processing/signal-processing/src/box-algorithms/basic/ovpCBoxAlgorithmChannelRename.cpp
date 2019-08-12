@@ -1,17 +1,17 @@
 #include "ovpCBoxAlgorithmChannelRename.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 
-bool CBoxAlgorithmChannelRename::initialize(void)
+bool CBoxAlgorithmChannelRename::initialize()
 {
 	std::vector<CString> tokens;
 	CString settingValue = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	uint32 tokenCount = OpenViBEToolkit::Tools::String::split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback < std::vector < CString > > (tokens), OV_Value_EnumeratedStringSeparator);
+	uint32_t tokenCount  = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
 
 	m_ChannelNames.clear();
 	for (uint32_t i = 0; i < tokenCount; i++)
@@ -60,7 +60,7 @@ bool CBoxAlgorithmChannelRename::initialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmChannelRename::uninitialize(void)
+bool CBoxAlgorithmChannelRename::uninitialize()
 {
 	m_StreamDecoder.uninitialize();
 	m_StreamEncoder.uninitialize();
@@ -68,20 +68,20 @@ bool CBoxAlgorithmChannelRename::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmChannelRename::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmChannelRename::processInput(const uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-bool CBoxAlgorithmChannelRename::process(void)
+bool CBoxAlgorithmChannelRename::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
-	for(uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(0); chunk++)
+	for (uint32_t chunk = 0; chunk < dynamicBoxContext.getInputChunkCount(0); chunk++)
 	{
 		m_StreamDecoder.decode(chunk);
-		if(m_StreamDecoder.isHeaderReceived())
+		if (m_StreamDecoder.isHeaderReceived())
 		{
 			OpenViBEToolkit::Tools::Matrix::copyDescription(*ip_Matrix, *op_Matrix);
 			for (uint32_t channel = 0; channel < ip_Matrix->getDimensionSize(0) && channel < m_ChannelNames.size(); channel++)
@@ -90,7 +90,7 @@ bool CBoxAlgorithmChannelRename::process(void)
 			}
 			m_StreamEncoder.encodeHeader();
 		}
-		if(m_StreamDecoder.isBufferReceived())
+		if (m_StreamDecoder.isBufferReceived())
 		{
 			m_StreamEncoder.encodeBuffer();
 		}

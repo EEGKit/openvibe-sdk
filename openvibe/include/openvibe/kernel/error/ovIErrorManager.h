@@ -44,7 +44,7 @@ namespace OpenViBE
 		 * is thus independant of warning or fatal crashes that must be handled
 		 * separately.
 		 */
-		class OV_API IErrorManager : public OpenViBE::Kernel::IKernelObject
+		class OV_API IErrorManager : public IKernelObject
 		{
 		public:
 
@@ -56,7 +56,7 @@ namespace OpenViBE
 			 * Errors already added to the manager will be nested in the
 			 * newly added error.
 			 */
-			virtual void pushError(OpenViBE::Kernel::ErrorType type, const char* description) = 0;
+			virtual void pushError(ErrorType type, const char* description) = 0;
 
 			/**
 			 * \brief Push error with location information to the manager
@@ -68,7 +68,7 @@ namespace OpenViBE
 			 * Errors already added to the manager will be nested in the
 			 * newly added error.
 			 */
-			virtual void pushErrorAtLocation(OpenViBE::Kernel::ErrorType type, const char* description, const char* filename, unsigned int line) = 0;
+			virtual void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, unsigned int line) = 0;
 
 			/**
 			 * \brief Release manager errors
@@ -97,7 +97,7 @@ namespace OpenViBE
 			 *          life cycle/management and must use releaseErrors to
 			 *          release them.
 			 */
-			virtual const OpenViBE::Kernel::IError* getLastError() const = 0;
+			virtual const IError* getLastError() const = 0;
 
 			/**
 			 * \brief Get description of last error added to the manager
@@ -109,9 +109,9 @@ namespace OpenViBE
 			 * \brief Get type of last error added to the manager
 			 * \return the type if manager contains error, NoErrorFound otherwise
 			 */
-			virtual OpenViBE::Kernel::ErrorType getLastErrorType() const = 0;
+			virtual ErrorType getLastErrorType() const = 0;
 
-			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Error_ErrorManager);
+			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Error_ErrorManager)
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE

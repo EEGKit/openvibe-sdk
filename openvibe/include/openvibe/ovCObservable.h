@@ -1,5 +1,4 @@
-#ifndef OVCOBSERVABLE_H
-#define OVCOBSERVABLE_H
+#pragma once
 
 #include "ovIObserver.h"
 #include "ov_base.h"
@@ -20,22 +19,22 @@ namespace OpenViBE
 	class OV_API CObservable
 	{
 	public:
-		CObservable(void);
-		virtual ~CObservable(void);
+		CObservable();
+		virtual ~CObservable();
 
 		/**
 		 * \brief Add the observer give in parameter in the list of observers of the object.
 		 * \param o [in] : the observer to add
 		 * \note A same observer can be add multiple time.
 		 */
-		virtual void addObserver(IObserver *o);
+		virtual void addObserver(IObserver* o);
 
 		/**
 		 * \brief Remove the observer give in parameter from the list of observers of the object. Only the first
 		 * occurence of the observer will be remove from the list.
 		 * \param o [in] : the observer to remove
 		 */
-		virtual void deleteObserver(IObserver *o);
+		virtual void deleteObserver(IObserver* o);
 
 	protected:
 		/**
@@ -56,20 +55,17 @@ namespace OpenViBE
 		 * \return \e true if setChanged have been called this the last clearChanged/notifyObservers call.
 		 * \return \e false in other case.
 		 */
-		virtual OpenViBE::boolean hasChanged();
+		virtual bool hasChanged();
 
 		/**
 		 * \brief Notify all registered observers.
 		 * \param data [in] : a pointer to data that will be send to observers.
 		 */
-		virtual void notifyObservers(void* data = NULL);
+		virtual void notifyObservers(void* data = nullptr);
 
 	private:
 		struct ObserverList;
-		ObserverList* m_pObserverList;
-		OpenViBE::boolean m_bHasChanged;
+		ObserverList* m_pObserverList = nullptr;
+		bool m_bHasChanged = false;
 	};
-}
-
-
-#endif // OVCOBSERVABLE_H
+}  // namespace OpenViBE

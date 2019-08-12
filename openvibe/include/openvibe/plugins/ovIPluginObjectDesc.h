@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Plugins_IPluginObjectDesc_H__
-#define __OpenViBE_Plugins_IPluginObjectDesc_H__
+#pragma once
 
 #include "../ovIObject.h"
 
@@ -14,7 +13,6 @@ namespace OpenViBE
 		{
 			PluginFunctionality_Undefined,
 			PluginFunctionality_Processing,
-
 		};
 
 		/**
@@ -56,7 +54,7 @@ namespace OpenViBE
 			LicenseType_ZLL,          //!< zlib/libpng License
 			LicenseType_ZPL,          //!< Zope Public License
 		};
-	};
+	}  // namespace Kernel
 
 	namespace Plugins
 	{
@@ -69,10 +67,9 @@ namespace OpenViBE
 		 * \brief Base class for plugin descriptor
 		 * \ingroup Group_Extend
 		 *
-		 * This class is the base class for all the plugin description
-		 * classes. It contains basic functions that could be used for
-		 * each plugin description. Derived plugin descriptions will
-		 * be used as a prototype of what they can create.
+		 * This class is the base class for all the plugin description classes. 
+		 * It contains basic functions that could be used for each plugin description. 
+		 * Derived plugin descriptions will be used as a prototype of what they can create.
 		 *
 		 * \sa IBoxAlgorithmDesc
 		 * \sa IScenarioImporterDesc
@@ -81,7 +78,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IPluginObjectDesc : public OpenViBE::IObject
+		class OV_API IPluginObjectDesc : public IObject
 		{
 		public:
 			/** \name Memory management */
@@ -90,15 +87,11 @@ namespace OpenViBE
 			/**
 			 * \brief Informs the plugin description it won't be used any more
 			 *
-			 * This is called by the OpenViBE platform to inform
-			 * the plugin description it is not useful anymore.
-			 * The plugin can chose whether to delete itself or
-			 * to stay in memory until it decides it is ok to be
-			 * deleted. However, the OpenViBE platform will not
-			 * call any of the plugin functions after release is
-			 * called.
+			 * This is called by the OpenViBE platform to inform the plugin description it is not useful anymore.
+			 * The plugin can chose whether to delete itself or to stay in memory until it decides it is ok to be deleted. 
+			 * However, the OpenViBE platform will not call any of the plugin functions after release is called.
 			 */
-			virtual void release(void)=0;
+			virtual void release() = 0;
 
 			//@}
 			/** \name Creation process */
@@ -107,23 +100,19 @@ namespace OpenViBE
 			/**
 			 * \brief Gives a tip on what this plugin descriptor is able to create
 			 *
-			 * This may inform the OpenViBE platform about what
-			 * kind of plugin can be created using this plugin
-			 * descriptor. It should return the concrete class
-			 * identifier of the plugin object itself.
+			 * This may inform the OpenViBE platform about what kind of plugin can be created using this plugin descriptor. 
+			 * It should return the concrete class identifier of the plugin object itself.
 			 */
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const=0;
-			virtual OpenViBE::CIdentifier getCreatedClassIdentifier(void) const { return this->getCreatedClass(); }
+			virtual CIdentifier getCreatedClass() const = 0;
+			virtual CIdentifier getCreatedClassIdentifier() const { return this->getCreatedClass(); }
 			/**
 			 * \brief Creates the plugin object itself
 			 * \return the created object.
 			 *
-			 * This method creates the plugin object itself and returns
-			 * it with the lowest level interface. The OpenVIBE
-			 * platform then uses the IObject::isDerivedFromClass
-			 * method to use the plugin correctly.
+			 * This method creates the plugin object itself and returns it with the lowest level interface. 
+			 * The OpenVIBE platform then uses the IObject::isDerivedFromClass method to use the plugin correctly.
 			 */
-			virtual OpenViBE::Plugins::IPluginObject* create(void)=0;
+			virtual IPluginObject* create() = 0;
 
 			//@}
 			/** \name Textual plugin object description and information */
@@ -135,67 +124,64 @@ namespace OpenViBE
 			 *
 			 * Default implementation simply returns empty string.
 			 */
-			virtual OpenViBE::CString getName(void) const { return CString("no name"); }
+			virtual CString getName() const { return CString("no name"); }
 			/**
 			 * \brief Gets the author name for this plugin
 			 * \return The author name for this plugin.
 			 *
 			 * Default implementation simply returns "no name".
 			 */
-			virtual OpenViBE::CString getAuthorName(void) const { return CString("unknown"); }
+			virtual CString getAuthorName() const { return CString("unknown"); }
 			/**
 			 * \brief Gets the author company name for this plugin
 			 * \return The author company name for this plugin.
 			 *
 			 * Default implementation simply returns "unknown".
 			 */
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return CString("unknown"); }
+			virtual CString getAuthorCompanyName() const { return CString("unknown"); }
 			/**
 			 * \brief Gets a short description of the plugin
 			 * \return A short description of the plugin.
 			 *
 			 * Default implementation simply returns "unknown".
 			 */
-			virtual OpenViBE::CString getShortDescription(void) const { return CString(""); }
+			virtual CString getShortDescription() const { return CString(""); }
 			/**
 			 * \brief Gets a detailed description of the plugin
 			 * \return A detailed description of the plugin.
 			 *
 			 * Default implementation simply returns empty string.
 			 *
-			 * \note You can use std::endl to have the description
-			 *       on several lines when needed.
+			 * \note You can use std::endl to have the description on several lines when needed.
 			 */
-			virtual OpenViBE::CString getDetailedDescription(void) const { return CString(""); }
+			virtual CString getDetailedDescription() const { return CString(""); }
 			/**
 			 * \brief Gets a basic category of the plugin
 			 * \return the category tokens of the plugin
 			 *
-			 * The tokens should be separated with '/' characters
-			 * in order to create sub categories.
+			 * The tokens should be separated with '/' characters in order to create sub categories.
 			 *
 			 * Default implementation returns "unknown".
 			 */
-			virtual OpenViBE::CString getCategory(void) const { return CString("unknown"); }
+			virtual CString getCategory() const { return CString("unknown"); }
 			/**
 			 * \brief Gets the version of the plugin
 			 * \return the version of the plugin.
 			 *
 			 * Default implementation simply returns "unknown".
 			 */
-			virtual OpenViBE::CString getVersion(void) const { return CString("unknown"); }
+			virtual CString getVersion() const { return CString("unknown"); }
 			/**
 			 * \brief Gets the component in which the plugin is defined
 			 *
 			 * OpenViBE SDK is used to build platforms that are composed of several components.
 			 * Each component can come with its own set of plugins, and has its own version.
-			 * The \ref getAddedSoftwareVersion and \ref getUpdatedSoftwareVersion will return
-			 * versions of the component in which the plugin belongs.
+			 * The \ref getAddedSoftwareVersion and \ref getUpdatedSoftwareVersion will return versions of the component in which the plugin belongs.
 			 *
 			 * \return a string identifier of the component
 			 * \retval "unknown" if not redefined
 			 */
-			virtual OpenViBE::CString getSoftwareComponent(void) const { return CString("unknown"); }
+			virtual CString getSoftwareComponent() const { return CString("unknown"); }
 			/**
 			 * \brief Gets the version of the software in the one the plugin was added
 			 * \return the version of the software in the one the plugin was added.
@@ -203,7 +189,7 @@ namespace OpenViBE
 			 *
 			 * \sa getSoftwareComponent
 			 */
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const { return CString("unknown"); }
+			virtual CString getAddedSoftwareVersion() const { return CString("unknown"); }
 			/**
 			 * \brief Gets the version of the software in the one the plugin was last updated
 			 * \return the version of the software in the one the plugin was last updated
@@ -211,14 +197,14 @@ namespace OpenViBE
 			 *
 			 *  \sa getSoftwareComponent
 			 */
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return CString("unknown"); }
+			virtual CString getUpdatedSoftwareVersion() const { return CString("unknown"); }
 			/**
 			 * \brief Tests whether the plugin has a given functionality
 			 * \param ePF [in] : functionality of interest
 			 * \return \e true in case plugin has this functionality.
 			 * \return \e false otherwise.
 			 */
-			virtual OpenViBE::boolean hasFunctionality(OpenViBE::Kernel::EPluginFunctionality ePF) const { return false; }
+			virtual bool hasFunctionality(Kernel::EPluginFunctionality ePF) const { return false; }
 
 			/**
 			 * \brief Tests whether the plugin has a specific functionality identified by a CIdentifier
@@ -226,7 +212,7 @@ namespace OpenViBE
 			 * \retval true If the plugin has the demanded functionality.
 			 * \retval false If the plugin does not have the demanded functionality.
 			 */
-			virtual OpenViBE::boolean hasFunctionality(OpenViBE::CIdentifier functionalityIdentifier) const { return false; }
+			virtual bool hasFunctionality(const CIdentifier functionalityIdentifier) const { return false; }
 			/**
 			 * \brief Tests the licence type for this plugin
 			 * \param eLT [in] : the licence type that this plugin may have
@@ -235,24 +221,17 @@ namespace OpenViBE
 			 *
 			 * Default implementation returns \c false .
 			 *
-			 * This function should return the licence which can be used to
-			 * distribute the plugin. The aim of this functionnality is to
-			 * be able to quickly warn the user if the usage he is doing for
-			 * the software is incompatible with the licence the plugin uses.
-			 * for example, a GPL plugin should not be used in a commercial
-			 * context.
+			 * This function should return the licence which can be used to distribute the plugin. The aim of this functionnality is to
+			 * be able to quickly warn the user if the usage he is doing for the software is incompatible with the licence the plugin uses.
+			 * for example, a GPL plugin should not be used in a commercial context.
 			 *
-			 * A plugin may be used under different licences. For this reason,
-			 * the OpenViBE kernel will loop on this function for each
-			 * licence type to request.
+			 * A plugin may be used under different licences. For this reason, the OpenViBE kernel will loop on this function for each licence type to request.
 			 */
-			virtual OpenViBE::boolean hasLicenceType(OpenViBE::Kernel::ELicenseType eLT) const { return false; }
+			virtual bool hasLicenceType(Kernel::ELicenseType eLT) const { return false; }
 
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Plugins_PluginObjectDesc)
 		};
-	};
-};
-
-#endif // __OpenViBE_Plugins_IPluginObjectDesc_H__
+	}  // namespace Plugins
+}  // namespace OpenViBE

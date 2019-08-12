@@ -1,5 +1,2 @@
 
-	void setParamsSynthesis (const Params& parameters)
-	{
-		assert(false);
-	}
+	void setParamsSynthesis (const Params& parameters) { assert(false); }

@@ -4,26 +4,24 @@
 #include <cstdlib>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::StreamCodecs;
+using namespace StreamCodecs;
 
-CStreamStructureDecoder::CStreamStructureDecoder(void)
-{
-}
+CStreamStructureDecoder::CStreamStructureDecoder() {}
 
 // ________________________________________________________________________________________________________________
 //
 
-bool CStreamStructureDecoder::initialize(void)
+bool CStreamStructureDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
 	return true;
 }
 
-bool CStreamStructureDecoder::uninitialize(void)
+bool CStreamStructureDecoder::uninitialize()
 {
 	CEBMLBaseDecoder::uninitialize();
 	return true;
@@ -42,12 +40,12 @@ void CStreamStructureDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	CEBMLBaseDecoder::openChild(rIdentifier);
 }
 
-void CStreamStructureDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CStreamStructureDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	CEBMLBaseDecoder::processChildData(pBuffer, ui64BufferSize);
 }
 
-void CStreamStructureDecoder::closeChild(void)
+void CStreamStructureDecoder::closeChild()
 {
 	CEBMLBaseDecoder::closeChild();
 }

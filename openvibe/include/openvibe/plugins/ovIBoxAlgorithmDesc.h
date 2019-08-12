@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Plugins_IBoxAlgorithmDesc_H__
-#define __OpenViBE_Plugins_IBoxAlgorithmDesc_H__
+#pragma once
 
 #include "ovIPluginObjectDesc.h"
 
@@ -9,7 +8,7 @@ namespace OpenViBE
 	{
 		class IBoxProto;
 		class IBoxAlgorithmContext;
-	};
+	}
 
 	namespace Plugins
 	{
@@ -29,7 +28,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IBoxAlgorithmDesc : public OpenViBE::Plugins::IPluginObjectDesc
+		class OV_API IBoxAlgorithmDesc : public IPluginObjectDesc
 		{
 		public:
 
@@ -49,8 +48,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Plugins::IBoxProto
 			 */
-			virtual OpenViBE::boolean getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const=0;
+			virtual bool getBoxPrototype(Kernel::IBoxProto& rPrototype) const = 0;
 			/**
 			 * \brief Gets the stock item to display with this algorithm
 			 * \return The stock item to display with this algorithm.
@@ -68,10 +66,7 @@ namespace OpenViBE
 			 * should now be handled at application level.
 			 *
 			 */
-			virtual OpenViBE::CString getStockItemName(void) const
-			{
-				return OpenViBE::CString("");
-			}
+			virtual CString getStockItemName() const { return CString(""); }
 
 			//@{
 			/** \name Box modification monitoring */
@@ -88,10 +83,7 @@ namespace OpenViBE
 			 * \sa OpenViBE::Kernel::IBoxProto
 			 * \sa OpenViBE::Plugins::IBoxListener
 			 */
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const
-			{
-				return NULL;
-			}
+			virtual IBoxListener* createBoxListener() const { return nullptr; }
 			/**
 			 * \brief Releases an existing box listener
 			 * \param pBoxListener [in] : the box listener to release
@@ -102,15 +94,11 @@ namespace OpenViBE
 			 * can be freed safely, no more call will be done on this
 			 * box listener.
 			 */
-			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const
-			{
-			}
+			virtual void releaseBoxListener(IBoxListener* pBoxListener) const { }
 
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObjectDesc, OV_ClassId_Plugins_BoxAlgorithmDesc)
 		};
-	};
-};
-
-#endif // __OpenViBE_Plugins_IBoxAlgorithmDesc_H__
+	}  // namespace Plugins
+}  // namespace OpenViBE

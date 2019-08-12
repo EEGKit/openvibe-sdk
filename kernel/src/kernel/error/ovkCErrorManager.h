@@ -36,33 +36,33 @@ namespace OpenViBE
 		 * \date 2016-07-13
 		 * \brief Error manager kernel default implementation
 		 */
-		class CErrorManager final : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IErrorManager>
+		class CErrorManager final : public TKernelObject<IErrorManager>
 		{
 		public:
 
-			explicit CErrorManager(const OpenViBE::Kernel::IKernelContext& context);
-			~CErrorManager();
+			explicit CErrorManager(const IKernelContext& context);
+			~CErrorManager() override;
 
-			void pushError(OpenViBE::Kernel::ErrorType type, const char* description) override;
+			void pushError(ErrorType type, const char* description) override;
 
-			void pushErrorAtLocation(OpenViBE::Kernel::ErrorType type, const char* description, const char* filename, unsigned int line) override;
+			void pushErrorAtLocation(ErrorType type, const char* description, const char* filename, unsigned int line) override;
 
 			void releaseErrors() override;
 
 			bool hasError() const override;
 
-			const OpenViBE::Kernel::IError* getLastError() const override;
+			const IError* getLastError() const override;
 
 			const char* getLastErrorString() const override;
 
-			OpenViBE::Kernel::ErrorType getLastErrorType() const override;
+			ErrorType getLastErrorType() const override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IErrorManager>, OVK_ClassId_Kernel_Error_ErrorManager);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IErrorManager>, OVK_ClassId_Kernel_Error_ErrorManager)
 
 		private:
 
 			mutable std::mutex m_ManagerGuard;
 			std::unique_ptr<IError> m_TopError;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE

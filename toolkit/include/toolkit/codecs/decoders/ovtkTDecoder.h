@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TDecoder_H__
-#define __OpenViBEToolkit_TDecoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -14,33 +13,34 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < const OpenViBE::IMemoryBuffer* > m_pInputMemoryBuffer;
+		OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> m_pInputMemoryBuffer;
 
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
 		using T::m_ui32ConnectorIndex;
 
-		virtual void setInputChunk(const OpenViBE::IMemoryBuffer * pInputChunkMemoryBuffer)
+		virtual void setInputChunk(const OpenViBE::IMemoryBuffer* pInputChunkMemoryBuffer)
 		{
 			m_pInputMemoryBuffer = pInputChunkMemoryBuffer;
 		}
 
-		virtual OpenViBE::Kernel::TParameterHandler < const OpenViBE::IMemoryBuffer* >& getInputMemoryBuffer()
+		virtual OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*>& getInputMemoryBuffer()
 		{
 			return m_pInputMemoryBuffer;
 		}
 
-		virtual OpenViBE::boolean isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
+		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
 		{
 			return m_pCodec->isOutputTriggerActive(oTrigger);
 		}
 
-		virtual OpenViBE::boolean process(const OpenViBE::CIdentifier& oTrigger)
+		virtual bool process(const OpenViBE::CIdentifier& oTrigger)
 		{
 			return m_pCodec->process(oTrigger);
 		}
-		virtual OpenViBE::boolean process(void)
+
+		virtual bool process()
 		{
 			return m_pCodec->process();
 		}
@@ -55,26 +55,25 @@ namespace OpenViBEToolkit
 		- decode it (specific for each decoder)
 		- mark input as deprecated
 		*/
-		virtual OpenViBE::boolean decode(OpenViBE::uint32 ui32ChunkIndex, OpenViBE::boolean bMarkInputAsDeprecated = true)
+		virtual bool decode(uint32_t ui32ChunkIndex, bool bMarkInputAsDeprecated = true)
 		{
 			this->setInputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getInputChunk(m_ui32ConnectorIndex, ui32ChunkIndex));
-			if(! m_pCodec->process()) return false;
-			if( bMarkInputAsDeprecated) m_pBoxAlgorithm->getDynamicBoxContext().markInputAsDeprecated(m_ui32ConnectorIndex, ui32ChunkIndex);
+			if (! m_pCodec->process()) return false;
+			if (bMarkInputAsDeprecated) m_pBoxAlgorithm->getDynamicBoxContext().markInputAsDeprecated(m_ui32ConnectorIndex, ui32ChunkIndex);
 			return true;
 		}
 
 		// We explicitly delete the decode function taking two integers as parameters
 		// in order to raise errors in plugins using the older API
 #ifndef TARGET_OS_MacOS // Current clang has a bug which fails to link these
-		virtual OpenViBE::boolean decode(int, int) = delete;
-		virtual OpenViBE::boolean decode(unsigned int, unsigned int) = delete;
+		virtual bool decode(int, int)                   = delete;
+		virtual bool decode(unsigned int, unsigned int) = delete;
 #endif
 
 		// The functions that need to be specified by the decoders (specific Trigger ID)
-		virtual OpenViBE::boolean isHeaderReceived(void) = 0;
-		virtual OpenViBE::boolean isBufferReceived(void) = 0;
-		virtual OpenViBE::boolean isEndReceived(void) = 0;
-
+		virtual bool isHeaderReceived() = 0;
+		virtual bool isBufferReceived() = 0;
+		virtual bool isEndReceived() = 0;
 	};
 
 	/*
@@ -83,21 +82,14 @@ namespace OpenViBEToolkit
 	You don't need to know which type of decoder is in the vector.
 	*/
 	template <class T>
-	class TDecoder : public TDecoderLocal < TCodec < T > >
+	class TDecoder : public TDecoderLocal<TCodec<T>>
 	{
 	public:
-		virtual ~TDecoder()
-		{
-		}
+		virtual ~TDecoder() { }
 	protected:
 		// constructor is protected, ensuring we can't instanciate a TDecoder
-		TDecoder()
-		{
-		}
-
+		TDecoder() { }
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
-#endif //__OpenViBEToolkit_TDecoder_H__

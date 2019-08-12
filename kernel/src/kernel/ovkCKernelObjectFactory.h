@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_CKernelObjectFactory_H__
-#define __OpenViBEKernel_Kernel_CKernelObjectFactory_H__
+#pragma once
 
 #include "ovkTKernelObject.h"
 
@@ -10,26 +9,23 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CKernelObjectFactory : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IKernelObjectFactory>
+		class CKernelObjectFactory : public TKernelObject<IKernelObjectFactory>
 		{
 		public:
 
-			explicit CKernelObjectFactory(const OpenViBE::Kernel::IKernelContext& rKernelContext);
-
-			virtual OpenViBE::IObject* createObject(
-				const OpenViBE::CIdentifier& rClassIdentifier);
-			virtual OpenViBE::boolean releaseObject(
-				OpenViBE::IObject* pObject);
+			explicit CKernelObjectFactory(const IKernelContext& rKernelContext);
+			IObject* createObject(const CIdentifier& rClassIdentifier) override;
+			bool releaseObject(IObject* pObject) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IKernelObjectFactory, OVK_ClassId_Kernel_KernelObjectFactory)
 
 		protected:
 
-			std::vector<OpenViBE::IObject*> m_oCreatedObjects;
+			std::vector<IObject*> m_oCreatedObjects;
 
 			std::mutex m_oMutex;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_CObjectFactory_H__
+

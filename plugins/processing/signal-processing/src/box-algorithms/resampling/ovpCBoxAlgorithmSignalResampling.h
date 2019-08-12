@@ -19,8 +19,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __OpenViBEPlugins_BoxAlgorithm_SignalResampling_H__
-#define __OpenViBEPlugins_BoxAlgorithm_SignalResampling_H__
+#pragma once
 
 #include "ovCResampler.h"
 
@@ -40,71 +39,65 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		typedef ::Common::Resampler::CResamplerSd CResampler;
+		typedef Common::Resampler::CResamplerSd CResampler;
 
-		class CBoxAlgorithmSignalResampling : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, CResampler::ICallback
+		class CBoxAlgorithmSignalResampling : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, CResampler::ICallback
 		{
 		public:
-
-			virtual void release(void) { delete this; }
-
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
 			// implementation for TResampler::ICallback
-			virtual void processResampler(const OpenViBE::float64* pSample, size_t ui32ChannelCount) const;
+			void processResampler(const double* pSample, size_t ui32ChannelCount) const override;
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalResampling);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalResampling)
 
 		protected:
 
-			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmSignalResampling > m_oDecoder;
-			mutable OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmSignalResampling > m_oEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalResampling> m_oDecoder;
+			mutable OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_oEncoder;
 
-			OpenViBE::uint32 m_ui32OutputSamplingRate;
-			OpenViBE::uint32 m_ui32OutputSampleCount;
+			uint32_t m_outSamplingRate = 0;
+			uint32_t m_outSampleCount = 0;
 
-			int m_iFractionalDelayFilterSampleCount;
-			double m_f64TransitionBandInPercent;
-			double m_f64StopBandAttenuation;
+			int m_iFractionalDelayFilterSampleCount = 0;
+			double m_f64TransitionBandInPercent = 0;
+			double m_f64StopBandAttenuation = 0;
 
-			OpenViBE::uint32 m_ui32InputSamplingRate;
-			mutable OpenViBE::uint64 m_ui64TotalOutputSampleCount;
+			uint32_t m_inSamplingRate = 0;
+			mutable uint64_t m_totalOutSampleCount;
 			CResampler m_oResampler;
-			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext;
+			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext = nullptr;
 		};
 
 		class CBoxAlgorithmSignalResamplingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Signal Resampling"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Quentin Barthelemy"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Resamples and re-epochs input signal to chosen sampling frequency"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("The input signal is resampled, down-sampled or up-sampled, at a chosen sampling frequency and then re-epoched."); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("2.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalResampling; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSignalResampling; }
 
-			virtual void release(void) { }
-
-			virtual OpenViBE::CString getName(void) const                    { return OpenViBE::CString("Signal Resampling"); }
-			virtual OpenViBE::CString getAuthorName(void) const              { return OpenViBE::CString("Quentin Barthelemy"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const       { return OpenViBE::CString("Mensia Technologies SA"); }
-			virtual OpenViBE::CString getShortDescription(void) const        { return OpenViBE::CString("Resamples and re-epochs input signal to chosen sampling frequency"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const     { return OpenViBE::CString("The input signal is resampled, down-sampled or up-sampled, at a chosen sampling frequency and then re-epoched."); }
-			virtual OpenViBE::CString getCategory(void) const                { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
-			virtual OpenViBE::CString getVersion(void) const                 { return OpenViBE::CString("2.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const        { return OVP_ClassId_BoxAlgorithm_SignalResampling; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)           { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalResampling; }
-
-			virtual OpenViBE::boolean getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput  ("Input signal",                               OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput ("Output signal",                              OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("New Sampling Frequency",                     OV_TypeId_Integer, "128", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency);
-				rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer",                    OV_TypeId_Integer, "8", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
+				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
+				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);
+				rBoxAlgorithmPrototype.addSetting("New Sampling Frequency", OV_TypeId_Integer, "128", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency);
+				rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer", OV_TypeId_Integer, "8", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
 				rBoxAlgorithmPrototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_LowPassFilterSignalFlag); // displayed for backward compatibility, but never used
-				
+
 				//rBoxAlgorithmPrototype.addSetting("New Sampling Frequency",OV_TypeId_Integer,"128");
 				//rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer",OV_TypeId_Integer,"8");
 				//rBoxAlgorithmPrototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true"); // displayed for backward compatibility, but never used
@@ -112,9 +105,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalResamplingDesc);
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalResamplingDesc)
 		};
-	};
-};
-
-#endif // __OpenViBEPlugins_BoxAlgorithm_SignalResampling_H__
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

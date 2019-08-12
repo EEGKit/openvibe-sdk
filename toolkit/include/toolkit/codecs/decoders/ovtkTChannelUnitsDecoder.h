@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TChannelUnitsDecoder_H__
-#define __OpenViBEToolkit_TChannelUnitsDecoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -10,17 +9,16 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TChannelUnitsDecoderLocal : public T
 	{
-
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::boolean > m_bOutputDynamic;
+		OpenViBE::Kernel::TParameterHandler<bool> m_bOutputDynamic;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
 		using T::m_pInputMemoryBuffer;
 		using T::m_pOutputMatrix;
 
-		OpenViBE::boolean initializeImpl()
+		bool initializeImpl()
 		{
 			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelUnitsStreamDecoder));
 			m_pCodec->initialize();
@@ -34,12 +32,9 @@ namespace OpenViBEToolkit
 	public:
 		using T::initialize;
 
-		OpenViBE::boolean uninitialize(void)
+		bool uninitialize()
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
 
 			m_bOutputDynamic.uninitialize();
 			m_pOutputMatrix.uninitialize();
@@ -52,50 +47,44 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::boolean >& getOutputDynamic()
+		OpenViBE::Kernel::TParameterHandler<bool>& getOutputDynamic()
 		{
 			return m_bOutputDynamic;
 		}
 
-		virtual OpenViBE::boolean isHeaderReceived()
+		virtual bool isHeaderReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedHeader);
 		}
 
-		virtual OpenViBE::boolean isBufferReceived()
+		virtual bool isBufferReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedBuffer);
 		}
 
-		virtual OpenViBE::boolean isEndReceived()
+		virtual bool isEndReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ChannelUnitsStreamDecoder_OutputTriggerId_ReceivedEnd);
 		}
 	};
 
 	template <class T>
-	class TChannelUnitsDecoder : public TChannelUnitsDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >
+	class TChannelUnitsDecoder : public TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
 	{
-	private:
-		using TChannelUnitsDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >::m_pBoxAlgorithm;
+		using TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_pBoxAlgorithm;
 	public:
-		using TChannelUnitsDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >::uninitialize;
+		using TChannelUnitsDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
 
-		TChannelUnitsDecoder()
-		{
-		}
-		TChannelUnitsDecoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TChannelUnitsDecoder() { }
+
+		TChannelUnitsDecoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
-		virtual ~TChannelUnitsDecoder()
-		{
-			this->uninitialize();
-		}
+
+		virtual ~TChannelUnitsDecoder() { this->uninitialize(); }
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
-#endif //__OpenViBEToolkit_TChannelUnitsDecoder_H__

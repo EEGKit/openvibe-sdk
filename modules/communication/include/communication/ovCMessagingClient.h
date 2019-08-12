@@ -19,7 +19,7 @@ namespace Communication
 		/**
 		 * \brief	Destructor.
 		 */
-		~MessagingClient();
+		~MessagingClient() override;
 
 		/**
 		 * \brief	Connect to a server.
@@ -36,7 +36,7 @@ namespace Communication
 		 *
 		 * \sa close
 		 */
-		bool connect(const std::string& URI, const unsigned int port);
+		bool connect(const std::string& URI, unsigned int port);
 
 		/**
 		 * \brief Closes the connection to the server.
@@ -90,7 +90,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if the index is out of range.
 		 */
-		bool getParameter(const size_t i, uint32_t& id, uint64_t& type, std::string& name, std::string& value) const;
+		bool getParameter(size_t i, uint32_t& id, uint64_t& type, std::string& name, std::string& value) const;
 
 		/**
 		 * \brief Get input information.
@@ -105,7 +105,7 @@ namespace Communication
 		 *
 		 * \sa getInputCount
 		 */
-		bool getInput(const size_t i, uint32_t& id, uint64_t& type, std::string& name) const;
+		bool getInput(size_t i, uint32_t& id, uint64_t& type, std::string& name) const;
 
 		/**
 		 * \brief Get input information.
@@ -120,7 +120,7 @@ namespace Communication
 		 *
 		 * \sa getOutputCount
 		 */
-		bool getOutput(const size_t i, uint32_t& id, uint64_t& type, std::string& name) const;
+		bool getOutput(size_t i, uint32_t& id, uint64_t& type, std::string& name) const;
 
 		/**
 		 * \brief Get the oldest error message, if available.
@@ -131,7 +131,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False there is no available error.
 		 */
-		bool popError(uint64_t& packetId, EError& type, uint64_t& guiltyId);
+		bool popError(uint64_t& packetId, EError& type, uint64_t& guiltyId) override;
 
 		/**
 		 * \brief Get the oldest EBML message, if available.
@@ -144,7 +144,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False there is no available error.
 		 */
-		bool popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml);
+		bool popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml) override;
 
 		/**
 		 * \brief	Push a log message to the server.
@@ -160,7 +160,7 @@ namespace Communication
 		 *
 		 * \sa getLastError
 		 */
-		bool pushLog(const ELogLevel logLevel, const std::string& log);
+		bool pushLog(ELogLevel logLevel, const std::string& log);
 
 		/**
 		 * \brief	Pushes an ebml.
@@ -178,7 +178,7 @@ namespace Communication
 		 *
 		 * \sa getLastError
 		 */
-		bool pushEBML(const uint32_t index, const uint64_t startTime, const uint64_t endtime, std::shared_ptr<const std::vector<uint8_t>> ebml);
+		bool pushEBML(uint32_t index, uint64_t startTime, uint64_t endtime, std::shared_ptr<const std::vector<uint8_t>> ebml);
 
 		/**
 		 * \brief Push Sync message to the server.
@@ -212,9 +212,8 @@ namespace Communication
 		bool pushAuthentication(std::string connectionID);
 
 	private:
-		Socket::IConnectionClient* m_Client;
+		Socket::IConnectionClient* m_Client = nullptr;
 
-		bool m_BoxDescriptionReceived;
+		bool m_BoxDescriptionReceived = false;
 	};
 }
-

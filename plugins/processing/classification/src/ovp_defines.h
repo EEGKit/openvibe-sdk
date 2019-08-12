@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Defines_H__
-#define __OpenViBEPlugins_Defines_H__
+#pragma once
 
 #define OVP_Classification_BoxTrainerFormatVersion                  4
 #define OVP_Classification_BoxTrainerFormatVersionRequired          4
@@ -11,7 +10,7 @@
 //                                                                   //
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
- #include "ovp_global_defines.h"
+#include "ovp_global_defines.h"
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
 
@@ -37,5 +36,3 @@ extern const char* const c_sMLPEvaluationFunctionName;
 extern const char* const c_sMLPTransfertFunctionName;
 
 bool ov_float_equal(double f64First, double f64Second);
-
-#endif // __OpenViBEPlugins_Defines_H__

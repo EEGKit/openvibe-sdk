@@ -9,20 +9,19 @@
 using namespace OpenViBE;
 
 
-
 TEST(CMatrix_Test_Case, test_copy_constructor)
 {
-	OpenViBE::CMatrix matA;
+	CMatrix matA;
 	matA.setDimensionCount(2);
-	matA.setDimensionSize(0,1);
-	matA.setDimensionSize(1,2);
+	matA.setDimensionSize(0, 1);
+	matA.setDimensionSize(1, 2);
 	matA.getBuffer()[0] = 10;
 	matA.getBuffer()[1] = 20;
 	matA.setDimensionLabel(0, 0, "dim0e0");
 	matA.setDimensionLabel(1, 0, "dim1e0");
 	matA.setDimensionLabel(1, 1, "dim1e1");
 
-	OpenViBE::CMatrix matB(matA);
+	CMatrix matB(matA);
 
 	ASSERT_EQ(2, matB.getDimensionCount());
 	ASSERT_EQ(1, matB.getDimensionSize(0));
@@ -47,21 +46,21 @@ TEST(CMatrix_Test_Case, test_copy_constructor)
 
 TEST(CMatrix_Test_Case, test_copy_constructor_in_array_push)
 {
-	OpenViBE::CMatrix tmpMatrix;
+	CMatrix tmpMatrix;
 	tmpMatrix.setDimensionCount(2);
-	tmpMatrix.setDimensionSize(0,10);
-	tmpMatrix.setDimensionSize(1,20);
-	std::vector<OpenViBE::CMatrix> list;
+	tmpMatrix.setDimensionSize(0, 10);
+	tmpMatrix.setDimensionSize(1, 20);
+	std::vector<CMatrix> list;
 	list.push_back(tmpMatrix);
 	list.push_back(tmpMatrix);
 }
 
 TEST(CMatrix_Test_Case, test_copy_assignment_operator)
 {
-	OpenViBE::CMatrix matA;
+	CMatrix matA;
 	matA.setDimensionCount(2);
-	matA.setDimensionSize(0,1);
-	matA.setDimensionSize(1,2);
+	matA.setDimensionSize(0, 1);
+	matA.setDimensionSize(1, 2);
 	matA.getBuffer()[0] = 10;
 	matA.getBuffer()[1] = 20;
 	matA.setDimensionLabel(0, 0, "dim0e0");
@@ -96,7 +95,7 @@ TEST(CMatrix_Test_Case, test_copy_assignment_operator)
 
 int uoCMatrixTest(int argc, char* argv[])
 {
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "CMatrix_Test_Case.*";
 	return RUN_ALL_TESTS();
 }

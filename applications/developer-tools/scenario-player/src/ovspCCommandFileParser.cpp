@@ -32,7 +32,7 @@ namespace OpenViBE
 		// remove leading and trailing space
 		// no use of regex here cause it might be too slow
 		auto begin = str.find_first_not_of(" \t");
-		auto end = str.find_last_not_of(" \t");
+		auto end   = str.find_last_not_of(" \t");
 
 		if (begin == std::string::npos)
 		{
@@ -60,7 +60,7 @@ namespace OpenViBE
 		}
 
 		auto token = trim(str.substr(0, split));
-		auto val = trim(str.substr(split + 1, str.size() - split - 1));
+		auto val   = trim(str.substr(split + 1, str.size() - split - 1));
 
 		return std::make_pair(token, val);
 	}
@@ -69,7 +69,7 @@ namespace OpenViBE
 	std::vector<std::string> CommandFileParser::split(const std::string& str, char delimiter)
 	{
 		std::vector<std::string> vec;
-		std::size_t currentIndex = 0;
+		std::size_t currentIndex   = 0;
 		std::size_t delimiterIndex = str.find(delimiter);
 
 		auto trimmed = trim(str.substr(currentIndex, delimiterIndex));
@@ -84,7 +84,7 @@ namespace OpenViBE
 			// abc,cde,fgh
 			//     ^       -> current index points to the first element after a match
 			//        ^    -> delimiter index points to next match
-			currentIndex = delimiterIndex + 1;
+			currentIndex   = delimiterIndex + 1;
 			delimiterIndex = str.find(delimiter, currentIndex);
 
 			trimmed = trim(str.substr(currentIndex, delimiterIndex - currentIndex));
@@ -105,7 +105,7 @@ namespace OpenViBE
 
 		std::string lowerStr;
 		lowerStr.reserve(str.size());
-		std::transform(str.begin(), str.end(), lowerStr.begin(), ::tolower);
+		std::transform(str.begin(), str.end(), lowerStr.begin(), tolower);
 
 		bool result;
 		if (str == "false" || str == "0")
@@ -130,7 +130,7 @@ namespace OpenViBE
 	{
 		std::vector<std::string> vec;
 		// {token1, token2, token3 ...} pattern expected
-		if (str.size() >= 3 && str[0] == '{' && str[str.size() - 1] == '}') 
+		if (str.size() >= 3 && str[0] == '{' && str[str.size() - 1] == '}')
 		{
 			vec = split(str.substr(1, str.length() - 2), ',');
 		}
@@ -153,12 +153,12 @@ namespace OpenViBE
 			// rawToken is expected to be trimmed
 
 			auto split = rawToken.find_first_of(":");
-			auto size = rawToken.size();
+			auto size  = rawToken.size();
 
 			// (a:b) pattern expected
 			// minimal regex std::regex("\\(.+:.+\\)")
 			if (!(size >= 5 && rawToken[0] == '(' && rawToken[size - 1] == ')') ||
-				split == std::string::npos) 
+				split == std::string::npos)
 			{
 				throw std::runtime_error("Failed to parse token pair from value: " + rawToken);
 			}
@@ -177,20 +177,18 @@ namespace OpenViBE
 	}
 
 	CommandFileParser::CommandFileParser(const std::string& file)
-		: m_CommandFile(file)
-	{
-	}
+		: m_CommandFile(file) { }
 
 	void CommandFileParser::initialize()
 	{
 		// using a callback mechanism allows us to implement the core parse() method
 		// very easily (no need to put some if/else blocks everywhere depending on which command is encountered)
-		m_CallbackList["Init"] = std::bind(&CommandFileParser::initCommandCb, this, _1);
-		m_CallbackList["Reset"] = std::bind(&CommandFileParser::resetCommandCb, this, _1);
-		m_CallbackList["LoadKernel"] = std::bind(&CommandFileParser::loadKernelCommandCb, this, _1);
-		m_CallbackList["LoadScenario"] = std::bind(&CommandFileParser::loadScenarioCommandCb, this, _1);
+		m_CallbackList["Init"]          = std::bind(&CommandFileParser::initCommandCb, this, _1);
+		m_CallbackList["Reset"]         = std::bind(&CommandFileParser::resetCommandCb, this, _1);
+		m_CallbackList["LoadKernel"]    = std::bind(&CommandFileParser::loadKernelCommandCb, this, _1);
+		m_CallbackList["LoadScenario"]  = std::bind(&CommandFileParser::loadScenarioCommandCb, this, _1);
 		m_CallbackList["SetupScenario"] = std::bind(&CommandFileParser::setupScenarioCommandCb, this, _1);
-		m_CallbackList["RunScenario"] = std::bind(&CommandFileParser::runScenarioCommandCb, this, _1);
+		m_CallbackList["RunScenario"]   = std::bind(&CommandFileParser::runScenarioCommandCb, this, _1);
 	}
 
 	void CommandFileParser::uninitialize()
@@ -199,10 +197,7 @@ namespace OpenViBE
 		m_CommandList.clear();
 	}
 
-	std::vector<std::shared_ptr<ICommand>> CommandFileParser::getCommandList() const
-	{
-		return m_CommandList;
-	}
+	std::vector<std::shared_ptr<ICommand>> CommandFileParser::getCommandList() const { return m_CommandList; }
 
 	PlayerReturnCode CommandFileParser::parse()
 	{
@@ -222,12 +217,12 @@ namespace OpenViBE
 		while (std::getline(fileStream, line))
 		{
 			auto trimmedLine = trim(line);
-			auto size = trimmedLine.size();
+			auto size        = trimmedLine.size();
 
 			// [a] pattern expected
 			// minimal regex std::regex("^(?!\\#)\\[.+\\])")
 			if (size >= 3 && trimmedLine[0] == '['
-				&& trimmedLine[size - 1] == ']') 
+				&& trimmedLine[size - 1] == ']')
 			{
 				if (isFillingSection) // flush the section that was beeing filled
 				{
@@ -274,14 +269,13 @@ namespace OpenViBE
 
 	PlayerReturnCode CommandFileParser::flush(const std::string& sectionTag, const std::vector<std::string>& sectionContent)
 	{
-
 		try // try block here as some conversions are made with the stl in the callback and might throw
 		{
 			auto returnCode = m_CallbackList[sectionTag](sectionContent);
 
 			if (returnCode != PlayerReturnCode::Success)
 			{
-				return  returnCode;
+				return returnCode;
 			}
 		}
 		catch (const std::exception& e)

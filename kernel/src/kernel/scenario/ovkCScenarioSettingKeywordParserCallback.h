@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CScenarioSettingKeywordParserCallback_H__
-#define __OpenViBEKernel_Kernel_Player_CScenarioSettingKeywordParserCallback_H__
+#pragma once
 
 #include <openvibe/ov_all.h>
 
@@ -7,22 +6,19 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CScenarioSettingKeywordParserCallback : public OpenViBE::Kernel::IConfigurationKeywordExpandCallback
+		class CScenarioSettingKeywordParserCallback : public IConfigurationKeywordExpandCallback
 		{
 		public:
 			explicit CScenarioSettingKeywordParserCallback(const IScenario& rScenario)
-			    : m_rScenario(rScenario)
-			{}
+				: m_rScenario(rScenario) {}
 
-			virtual ~CScenarioSettingKeywordParserCallback()
-			{}
-
-			virtual OpenViBE::boolean expand(const CString& rStringToExpand, CString& rExpandedString) const;
+			~CScenarioSettingKeywordParserCallback() override {}
+			bool expand(const CString& rStringToExpand, CString& rExpandedString) const override;
 
 		private:
 			const IScenario& m_rScenario;
 		};
-	}
-}
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Player_CScenarioSettingKeywordParserCallback_H__
+

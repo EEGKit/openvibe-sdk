@@ -43,16 +43,14 @@ using namespace System;
 //
 
 // \brief Calibrate sleep function to estimate the extra time not spent at sleeping
-uint64 calibrateSleep(unsigned int sampleCount, bool(*sleepFunction)(uint64), uint64(*timeFunction)(void))
+uint64_t calibrateSleep(unsigned int sampleCount, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
-	uint64 preTime;
-	uint64 processingTime;
-	uint64 maxTime = 0;
+	uint64_t maxTime = 0;
 	for (size_t i = 0; i < sampleCount; ++i)
 	{
-		preTime = timeFunction();
+		uint64_t preTime = timeFunction();
 		sleepFunction(0);
-		processingTime = timeFunction() - preTime;
+		uint64_t processingTime = timeFunction() - preTime;
 
 		if (processingTime > maxTime)
 		{
@@ -64,13 +62,12 @@ uint64 calibrateSleep(unsigned int sampleCount, bool(*sleepFunction)(uint64), ui
 }
 
 // \brief Record sleep function precision
-std::vector<uint64> testSleep(const std::vector<uint64>& sleepTimes, bool(*sleepFunction)(uint64), uint64(*timeFunction)(void))
+std::vector<uint64_t> testSleep(const std::vector<uint64_t>& sleepTimes, bool (*sleepFunction)(uint64_t), uint64_t (*timeFunction)())
 {
-	std::vector<uint64> effectiveSleepTimes;
-	uint64 preTime;
+	std::vector<uint64_t> effectiveSleepTimes;
 	for (auto time : sleepTimes)
 	{
-		preTime = timeFunction();
+		uint64_t preTime = timeFunction();
 		sleepFunction(time);
 		effectiveSleepTimes.push_back(timeFunction() - preTime);
 	}
@@ -81,9 +78,9 @@ std::vector<uint64> testSleep(const std::vector<uint64>& sleepTimes, bool(*sleep
 // \brief Return a warning count that is incremented when sleep function did not meet following requirements:
 //       - sleep enough time
 //       - sleep less than the expected time + delta
-unsigned int assessSleepTestResult(const std::vector<uint64>& expectedTimes,
-								   const std::vector<uint64>& resultTimes,
-								   uint64 delta, uint64 epsilon)
+unsigned int assessSleepTestResult(const std::vector<uint64_t>& expectedTimes,
+								   const std::vector<uint64_t>& resultTimes,
+								   uint64_t delta, uint64_t epsilon)
 {
 	unsigned int warningCount = 0;
 	for (size_t i = 0; i < expectedTimes.size(); ++i)
@@ -92,8 +89,8 @@ unsigned int assessSleepTestResult(const std::vector<uint64>& expectedTimes,
 			|| resultTimes[i] > (expectedTimes[i] + delta + epsilon))
 		{
 			std::cerr << "WARNING: Failure to sleep the right amount of time: [expected|result] = "
-					  << OpenViBE::ITimeArithmetics::timeToSeconds(expectedTimes[i]) << "|"
-					  << OpenViBE::ITimeArithmetics::timeToSeconds(resultTimes[i]) << std::endl;
+					<< OpenViBE::ITimeArithmetics::timeToSeconds(expectedTimes[i]) << "|"
+					<< OpenViBE::ITimeArithmetics::timeToSeconds(resultTimes[i]) << std::endl;
 			warningCount++;
 		}
 	}
@@ -103,16 +100,16 @@ unsigned int assessSleepTestResult(const std::vector<uint64>& expectedTimes,
 
 // \brief Record clock function data (spin test taken from OpenViBE). Return a tuple with:
 //       - bool = monotonic state
-//       - std::vector<uint64> = all the cumulative steps
-std::tuple<bool, std::vector<uint64>> testClock(uint64 samplePeriod, unsigned sampleCountGuess, uint64(*timeFunction)(void))
+//       - std::vector<uint64_t> = all the cumulative steps
+std::tuple<bool, std::vector<uint64_t>> testClock(uint64_t samplePeriod, unsigned sampleCountGuess, uint64_t (*timeFunction)())
 {
-	std::vector<uint64> cumulativeSteps;
+	std::vector<uint64_t> cumulativeSteps;
 	cumulativeSteps.reserve(sampleCountGuess);
 
-	bool monotonic = true;
-	uint64 startTime = timeFunction();
-	uint64 nowTime = startTime;
-	uint64 previousTime = nowTime;
+	bool monotonic        = true;
+	uint64_t startTime    = timeFunction();
+	uint64_t nowTime      = startTime;
+	uint64_t previousTime = nowTime;
 
 	while (nowTime - startTime < samplePeriod)
 	{
@@ -120,7 +117,8 @@ std::tuple<bool, std::vector<uint64>> testClock(uint64 samplePeriod, unsigned sa
 		if (nowTime > previousTime)
 		{
 			cumulativeSteps.push_back(nowTime - previousTime);
-		} else if (nowTime < previousTime)
+		}
+		else if (nowTime < previousTime)
 		{
 			monotonic = false;
 			break;
@@ -135,19 +133,19 @@ std::tuple<bool, std::vector<uint64>> testClock(uint64 samplePeriod, unsigned sa
 //       - double = mean
 //       - double = max deviation from mean
 //       - double = RMSE
-std::tuple<double, double, double> assessTimeClock(const std::vector<uint64>& measurements)
+std::tuple<double, double, double> assessTimeClock(const std::vector<uint64_t>& measurements)
 {
 	double jitterMax = 0.0;
 	double jitterMSE = 0.0;
-	double mean = 0.0;
+	double mean      = 0.0;
 
 	// compute mean
 	for (auto& data : measurements)
 	{
 		// convert data
-		auto seconds = static_cast<uint32>(data >> 32);
-		auto microseconds = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
-	    std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
+		auto seconds                         = static_cast<uint32_t>(data >> 32);
+		auto microseconds                    = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
+		std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
 
 		mean += static_cast<double>(chronoData.count()) / (1000 * measurements.size());
 	}
@@ -156,11 +154,11 @@ std::tuple<double, double, double> assessTimeClock(const std::vector<uint64>& me
 	for (auto& data : measurements)
 	{
 		// convert data
-		auto seconds = static_cast<uint32>(data >> 32);
-		auto microseconds = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
-	    std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
+		auto seconds                         = static_cast<uint32_t>(data >> 32);
+		auto microseconds                    = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
+		std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
 
-		double deviation = std::abs(static_cast<double>(chronoData.count())/1000 - mean);
+		double deviation = std::abs(static_cast<double>(chronoData.count()) / 1000 - mean);
 		jitterMSE += std::pow(deviation, 2) / measurements.size();
 
 		if (deviation - jitterMax > std::numeric_limits<double>::epsilon())
@@ -185,18 +183,18 @@ int uoTimeTest(int argc, char* argv[])
 	OVT_ASSERT(Time::checkResolution(1), "Failure to check for resolution");
 
 	// A stress test to check no overflow happens
-	OVT_ASSERT(Time::checkResolution(std::numeric_limits<System::uint32>::max()), "Failure to check for resolution");
+	OVT_ASSERT(Time::checkResolution(std::numeric_limits<uint32_t >::max()), "Failure to check for resolution");
 
 	//
 	// zSleep() function test
 	//
 
-	std::vector<System::uint64> expectedSleepData = {
-		0x80000000LL,0x40000000LL,0x20000000LL,0x10000000LL,
-		0x80000000LL,0x40000000LL,0x20000000LL,0x10000000LL,
-		0x08000000LL,0x04000000LL,0x02000000LL,0x01000000LL,
-		0x08000000LL,0x04000000LL,0x02000000LL,0x01000000LL
-		};
+	std::vector<uint64_t> expectedSleepData = {
+		0x80000000LL, 0x40000000LL, 0x20000000LL, 0x10000000LL,
+		0x80000000LL, 0x40000000LL, 0x20000000LL, 0x10000000LL,
+		0x08000000LL, 0x04000000LL, 0x02000000LL, 0x01000000LL,
+		0x08000000LL, 0x04000000LL, 0x02000000LL, 0x01000000LL
+	};
 
 	// calibrate sleep function
 	auto deltaTime = calibrateSleep(1000, Time::zsleep, Time::zgetTime);
@@ -219,10 +217,7 @@ int uoTimeTest(int argc, char* argv[])
 	//
 
 	// the sample count guess was found in an empiric way
-	auto resultGetTimeData = testClock(
-		OpenViBE::ITimeArithmetics::secondsToTime(0.5),
-		500000,
-		Time::zgetTime);
+	auto resultGetTimeData = testClock(OpenViBE::ITimeArithmetics::secondsToTime(0.5), 500000, Time::zgetTime);
 
 	OVT_ASSERT(std::get<0>(resultGetTimeData), "Failure in zgetTime() test: the clock is not monotonic");
 
@@ -235,11 +230,7 @@ int uoTimeTest(int argc, char* argv[])
 
 	// We expect at least 1ms resolution
 	double resolutionDelta = std::get<0>(clockMetrics) - 1;
-	OVT_ASSERT(
-		resolutionDelta <= std::numeric_limits<double>::epsilon(),
-		"Failure in zgetTime() test: the clock resolution does not match requirements"
-		);
+	OVT_ASSERT(resolutionDelta <= std::numeric_limits<double>::epsilon(), "Failure in zgetTime() test: the clock resolution does not match requirements");
 
 	return EXIT_SUCCESS;
 }
-

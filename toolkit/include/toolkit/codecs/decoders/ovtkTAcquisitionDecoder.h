@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TAcquisitionDecoder_H__
-#define __OpenViBEToolkit_TAcquisitionDecoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -14,18 +13,18 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > op_ui64BufferDuration;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pExperimentInformationStream;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pSignalStream;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pStimulationStream;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pChannelLocalisationStream;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pChannelUnitsStream;
+		OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64BufferDuration;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pExperimentInformationStream;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pSignalStream;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pStimulationStream;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pChannelLocalisationStream;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pChannelUnitsStream;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
 		using T::m_pInputMemoryBuffer;
 
-		OpenViBE::boolean initializeImpl()
+		bool initializeImpl()
 		{
 			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_AcquisitionStreamDecoder));
 			m_pCodec->initialize();
@@ -46,12 +45,9 @@ namespace OpenViBEToolkit
 
 		using T::initialize;
 
-		OpenViBE::boolean uninitialize(void)
+		bool uninitialize()
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
 
 			op_pChannelUnitsStream.uninitialize();
 			op_pChannelLocalisationStream.uninitialize();
@@ -68,43 +64,38 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getBufferDuration() { return op_ui64BufferDuration; }
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* >& getExperimentInformationStream() { return op_pExperimentInformationStream; }
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* >& getSignalStream() { return op_pSignalStream; }
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* >& getStimulationStream() { return op_pStimulationStream; }
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* >& getChannelLocalisationStream() { return op_pChannelLocalisationStream; }
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* >& getChannelUnitsStream() { return op_pChannelUnitsStream; }
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getBufferDuration() { return op_ui64BufferDuration; }
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getExperimentInformationStream() { return op_pExperimentInformationStream; }
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getSignalStream() { return op_pSignalStream; }
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getStimulationStream() { return op_pStimulationStream; }
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getChannelLocalisationStream() { return op_pChannelLocalisationStream; }
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getChannelUnitsStream() { return op_pChannelUnitsStream; }
 
-		virtual OpenViBE::boolean isHeaderReceived()
+		virtual bool isHeaderReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputTriggerId_ReceivedHeader);
 		}
 
-		virtual OpenViBE::boolean isBufferReceived()
+		virtual bool isBufferReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputTriggerId_ReceivedBuffer);
 		}
 
-		virtual OpenViBE::boolean isEndReceived()
+		virtual bool isEndReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_AcquisitionStreamDecoder_OutputTriggerId_ReceivedEnd);
 		}
 	};
 
 	template <class T>
-	class TAcquisitionDecoder : public TAcquisitionDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >
+	class TAcquisitionDecoder : public TAcquisitionDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
 	{
-	private:
-
-		using TAcquisitionDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >::m_pBoxAlgorithm;
+		using TAcquisitionDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_pBoxAlgorithm;
 
 	public:
+		using TAcquisitionDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
 
-		using TAcquisitionDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >::uninitialize;
-
-		TAcquisitionDecoder()
-		{
-		}
+		TAcquisitionDecoder() { }
 
 		TAcquisitionDecoder(T& rBoxAlgorithm)
 		{
@@ -112,13 +103,8 @@ namespace OpenViBEToolkit
 			this->initialize(rBoxAlgorithm);
 		}
 
-		virtual ~TAcquisitionDecoder()
-		{
-			this->uninitialize();
-		}
+		virtual ~TAcquisitionDecoder() { this->uninitialize(); }
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
-#endif //__OpenViBEToolkit_TAcquisitionDecoder_H__

@@ -42,146 +42,133 @@ THE SOFTWARE.
 #include "Layout.h"
 #include "MathSupplement.h"
 
-namespace Dsp {
-
-/*
- * Holds coefficients for a cascade of second order sections.
- *
- */
-
-// Factored implementation to reduce template instantiations
-class Cascade
+namespace Dsp
 {
-public:
-  template <class StateType>
-  class StateBase : private DenormalPrevention
-  {
-  public:
-    template <typename Sample>
-    inline Sample process (const Sample in, const Cascade& c)
-    {
-      double out = in;
-      StateType* state = m_stateArray;
-      Biquad const* stage = c.m_stageArray;
-      const double vsa = ac();
-      int i = c.m_numStages - 1;
-        out = (state++)->process1 (out, *stage++, vsa);
-      for (; --i >= 0;)
-        out = (state++)->process1 (out, *stage++, 0);
-      //for (int i = c.m_numStages; --i >= 0; ++state, ++stage)
-      //  out = state->process1 (out, *stage, vsa);
-      return static_cast<Sample> (out);
-    }
 
-	#include "StateBaseSynthesisH.inl"
+	/*
+	 * Holds coefficients for a cascade of second order sections.
+	 *
+	 */
 
-  protected:
-    StateBase (StateType* stateArray)
-      : m_stateArray (stateArray)
-    {
-    }
+	// Factored implementation to reduce template instantiations
+	class Cascade
+	{
+	public:
+		template <class StateType>
+		class StateBase : private DenormalPrevention
+		{
+		public:
+			template <typename Sample>
+			Sample process(const Sample in, const Cascade& c)
+			{
+				double out          = in;
+				StateType* state    = m_stateArray;
+				Biquad const* stage = c.m_stageArray;
+				const double vsa    = ac();
+				int i               = c.m_numStages - 1;
+				out                 = (state++)->process1(out, *stage++, vsa);
+				for (; --i >= 0;)
+					out = (state++)->process1(out, *stage++, 0);
+				//for (int i = c.m_numStages; --i >= 0; ++state, ++stage)
+				//  out = state->process1 (out, *stage, vsa);
+				return static_cast<Sample>(out);
+			}
 
-  protected:
-    StateType* m_stateArray;
-  };
+#include "StateBaseSynthesisH.inl"
 
-  struct Stage : Biquad
-  {
-  };
+		protected:
+			StateBase(StateType* stateArray) : m_stateArray(stateArray) { }
 
-  struct Storage
-  {
-    Storage (int maxStages_, Stage* stageArray_)
-      : maxStages (maxStages_)
-      , stageArray (stageArray_)
-    {
-    }
+			StateType* m_stateArray = nullptr;
+		};
 
-    int maxStages;
-    Stage* stageArray;
-  };
+		struct Stage : Biquad { };
 
-  int getNumStages () const
-  {
-    return m_numStages;
-  }
+		struct Storage
+		{
+			Storage(int maxStages_, Stage* stageArray_) : maxStages(maxStages_), stageArray(stageArray_) { }
 
-  const Stage& operator[] (int index)
-  {
-    assert (index >= 0 && index <= m_numStages);
-    return m_stageArray[index];
-  }
+			int maxStages;
+			Stage* stageArray;
+		};
 
-public:
-  // Calculate filter response at the given normalized frequency.
-  complex_t response (double normalizedFrequency) const;
+		int getNumStages() const { return m_numStages; }
 
-  std::vector<PoleZeroPair> getPoleZeros () const;
+		const Stage& operator[](int index)
+		{
+			assert(index >= 0 && index <= m_numStages);
+			return m_stageArray[index];
+		}
 
-  // Process a block of samples in the given form
-  template <class StateType, typename Sample>
-  void process (int numSamples, Sample* dest, StateType& state) const
-  {
-    while (--numSamples >= 0) {
-      *dest = state.process (*dest, *this);
-      dest++;
-    }
-  }
+		// Calculate filter response at the given normalized frequency.
+		complex_t response(double normalizedFrequency) const;
 
-  #include "CascadeSynthesisH.inl"
+		std::vector<PoleZeroPair> getPoleZeros() const;
 
-protected:
-  Cascade ();
+		// Process a block of samples in the given form
+		template <class StateType, typename Sample>
+		void process(int numSamples, Sample* dest, StateType& state) const
+		{
+			while (--numSamples >= 0)
+			{
+				*dest = state.process(*dest, *this);
+				++dest;
+			}
+		}
 
-  void setCascadeStorage (const Storage& storage);
+#include "CascadeSynthesisH.inl"
 
-  void applyScale (double scale);
-  void setLayout (const LayoutBase& proto);
+	protected:
+		Cascade();
 
-private:
-  int m_numStages;
-  int m_maxStages;
-  Stage* m_stageArray;
-};
+		void setCascadeStorage(const Storage& storage);
 
-//------------------------------------------------------------------------------
+		void applyScale(double scale);
+		void setLayout(const LayoutBase& proto);
 
-// Storage for Cascade
-template <int MaxStages>
-class CascadeStages
-{
-public:
-  template <class StateType>
-  class State : public Cascade::StateBase <StateType>
-  {
-  public:
-    State() : Cascade::StateBase <StateType> (m_states)
-    {
-      Cascade::StateBase <StateType>::m_stateArray = m_states;
-      reset ();
-    }
+	private:
+		int m_numStages = 0;
+		int m_maxStages = 0;
+		Stage* m_stageArray = nullptr;
+	};
 
-    void reset ()
-    {
-      StateType* state = m_states;
-      for (int i = MaxStages; --i >= 0; ++state)
-        state->reset();
-    }
+	//------------------------------------------------------------------------------
 
-  private:
-    StateType m_states[MaxStages];
-  };
+	// Storage for Cascade
+	template <int MaxStages>
+	class CascadeStages
+	{
+	public:
+		template <class StateType>
+		class State : public Cascade::StateBase<StateType>
+		{
+		public:
+			State() : Cascade::StateBase<StateType>(m_states)
+			{
+				Cascade::StateBase<StateType>::m_stateArray = m_states;
+				reset();
+			}
 
-  /*@Internal*/
-  Cascade::Storage getCascadeStorage()
-  {
-    return Cascade::Storage (MaxStages, m_stages);
-  }
+			void reset()
+			{
+				StateType* state = m_states;
+				for (int i = MaxStages; --i >= 0; ++state)
+					state->reset();
+			}
 
-private:
-  Cascade::Stage m_stages[MaxStages];
-};
+		private:
+			StateType m_states[MaxStages];
+		};
 
-}
+		/*@Internal*/
+		Cascade::Storage getCascadeStorage()
+		{
+			return Cascade::Storage(MaxStages, m_stages);
+		}
+
+	private:
+		Cascade::Stage m_stages[MaxStages];
+	};
+}  // namespace Dsp
 
 #endif

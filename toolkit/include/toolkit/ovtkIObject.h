@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_IObject_H__
-#define __OpenViBEToolkit_IObject_H__
+#pragma once
 
 #include "ovtk_base.h"
 
@@ -9,8 +8,6 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OVTK_ClassId_);
+		_IsDerivedFromClass_(OpenViBE::IObject, OVTK_ClassId_)
 	};
-};
-
-#endif // __OpenViBEToolkit_IObject_H__
+}

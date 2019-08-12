@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Plugins_CPluginModule_H__
-#define __OpenViBEKernel_Kernel_Plugins_CPluginModule_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -9,34 +8,26 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CPluginModule : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPluginModule>
+		class CPluginModule : public TKernelObject<IPluginModule>
 		{
 		public:
 
-			explicit CPluginModule(const OpenViBE::Kernel::IKernelContext& rKernelContext);
-			virtual ~CPluginModule(void);
-
-			virtual OpenViBE::boolean load(
-				const OpenViBE::CString& sName,
-				OpenViBE::CString* pError);
-			virtual OpenViBE::boolean unload(
-				OpenViBE::CString* pError);
-			virtual OpenViBE::boolean getFileName(
-				OpenViBE::CString& rFileName) const;
-
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean getPluginObjectDescription(
-				OpenViBE::uint32 ui32Index,
-				OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription);
-			virtual OpenViBE::boolean uninitialize(void);
+			explicit CPluginModule(const IKernelContext& rKernelContext);
+			~CPluginModule() override;
+			bool load(const CString& sName, CString* pError) override;
+			bool unload(CString* pError) override;
+			bool getFileName(CString& rFileName) const override;
+			bool initialize() override;
+			bool getPluginObjectDescription(uint32_t ui32Index, Plugins::IPluginObjectDesc*& rpPluginObjectDescription) override;
+			bool uninitialize() override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IPluginModule, OVK_ClassId_Kernel_Plugins_PluginModule)
 
 		protected:
 
-			OpenViBE::Kernel::IPluginModule* m_pImplementation;
+			IPluginModule* m_pImplementation = nullptr;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Plugins_CPluginModule_H__
+

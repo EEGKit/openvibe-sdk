@@ -8,12 +8,12 @@
 
 using namespace OpenViBE;
 
-struct CObservable::ObserverList{
-	std::vector< IObserver * > m_oVector;
+struct CObservable::ObserverList
+{
+	std::vector<IObserver *> m_oVector;
 };
 
-CObservable::CObservable(void): m_bHasChanged(false)
-{
+CObservable::CObservable(){
 	m_pObserverList = new ObserverList();
 }
 
@@ -22,16 +22,17 @@ CObservable::~CObservable()
 	delete m_pObserverList;
 }
 
-void CObservable::addObserver(IObserver *o)
+void CObservable::addObserver(IObserver* o)
 {
 	m_pObserverList->m_oVector.push_back(o);
 }
 
-void CObservable::deleteObserver(IObserver *o)
+void CObservable::deleteObserver(IObserver* o)
 {
-	for(std::vector<IObserver *>::iterator it = m_pObserverList->m_oVector.begin(); it != m_pObserverList->m_oVector.end() ; ++it)
+	for (std::vector<IObserver *>::iterator it = m_pObserverList->m_oVector.begin(); it != m_pObserverList->m_oVector.end(); ++it)
 	{
-		if((*it) == o){
+		if ((*it) == o)
+		{
 			m_pObserverList->m_oVector.erase(it);
 			//We only suppress the first occurence, no need to continue
 			return;
@@ -49,18 +50,18 @@ void CObservable::clearChanged()
 	m_bHasChanged = false;
 }
 
-boolean CObservable::hasChanged()
+bool CObservable::hasChanged()
 {
 	return m_bHasChanged;
 }
 
 void CObservable::notifyObservers(void* data)
 {
-	if(m_bHasChanged)
+	if (m_bHasChanged)
 	{
-		for(std::vector<IObserver *>::iterator it = m_pObserverList->m_oVector.begin(); it != m_pObserverList->m_oVector.end() ; ++it)
+		for (std::vector<IObserver *>::iterator it = m_pObserverList->m_oVector.begin(); it != m_pObserverList->m_oVector.end(); ++it)
 		{
-			((IObserver * )*it)->update(*this, data);
+			((IObserver *)*it)->update(*this, data);
 		}
 		m_bHasChanged = false;
 	}

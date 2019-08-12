@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TChannelLocalisationEncoder_H__
-#define __OpenViBEToolkit_TChannelLocalisationEncoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -10,17 +9,16 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TChannelLocalisationEncoderLocal : public T
 	{
-
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::boolean > m_bInputDynamic;
+		OpenViBE::Kernel::TParameterHandler<bool> m_bInputDynamic;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
 		using T::m_pOutputMemoryBuffer;
 		using T::m_pInputMatrix;
 
-		OpenViBE::boolean initializeImpl()
+		bool initializeImpl()
 		{
 			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_ChannelLocalisationStreamEncoder));
 			m_pCodec->initialize();
@@ -34,12 +32,9 @@ namespace OpenViBEToolkit
 	public:
 		using T::initialize;
 
-		OpenViBE::boolean uninitialize(void)
+		bool uninitialize()
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
 
 			m_pInputMatrix.uninitialize();
 			m_bInputDynamic.uninitialize();
@@ -51,51 +46,45 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::boolean >& getInputDynamic()
+		OpenViBE::Kernel::TParameterHandler<bool>& getInputDynamic()
 		{
 			return m_bInputDynamic;
 		}
 
 	protected:
-		OpenViBE::boolean encodeHeaderImpl(void)
+		bool encodeHeaderImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputTriggerId_EncodeHeader);
 		}
 
-		OpenViBE::boolean encodeBufferImpl(void)
+		bool encodeBufferImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
 
-		OpenViBE::boolean encodeEndImpl(void)
+		bool encodeEndImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_ChannelLocalisationStreamEncoder_InputTriggerId_EncodeEnd);
 		}
 	};
 
 	template <class T>
-	class TChannelLocalisationEncoder : public TChannelLocalisationEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >
+	class TChannelLocalisationEncoder : public TChannelLocalisationEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>
 	{
-	private:
-		using TChannelLocalisationEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >::m_pBoxAlgorithm;
+		using TChannelLocalisationEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_pBoxAlgorithm;
 	public:
-		using TChannelLocalisationEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >::uninitialize;
+		using TChannelLocalisationEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::uninitialize;
 
-		TChannelLocalisationEncoder()
-		{
-		}
-		TChannelLocalisationEncoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TChannelLocalisationEncoder() { }
+
+		TChannelLocalisationEncoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
-		virtual ~TChannelLocalisationEncoder()
-		{
-			this->uninitialize();
-		}
+
+		virtual ~TChannelLocalisationEncoder() { this->uninitialize(); }
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
-#endif //__OpenViBEToolkit_TChannelLocalisationEncoder_H__

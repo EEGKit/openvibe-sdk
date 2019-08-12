@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Server_IServerExtensionContext_H__
-#define __OpenViBE_Kernel_Server_IServerExtensionContext_H__
+#pragma once
 
 #include "../ovIKernelObject.h"
 
@@ -17,18 +16,15 @@ namespace OpenViBE
 		  * \ingroup Group_Extend
 		  * \sa OpenViBE::Plugins::IServerExtension
 		  */
-		class OV_API IServerExtensionContext : public OpenViBE::Kernel::IKernelObject
+		class OV_API IServerExtensionContext : public IKernelObject
 		{
-			public:
+		public:
 
 			/**
 			 * \brief Gets a reference on the current log manager
 			 * \return a reference on the current log manager
 			 */
-			virtual OpenViBE::Kernel::ILogManager& getLogManager() = 0;
+			virtual Kernel::ILogManager& getLogManager() = 0;
 		};
-	}
-}
-
-
-#endif // __OpenViBE_Kernel_Server_IServerExtensionContext_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

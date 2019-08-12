@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithms_CDecoderAlgorithmTest_H__
-#define __OpenViBEPlugins_BoxAlgorithms_CDecoderAlgorithmTest_H__
+#pragma once
 
 #include "../ovp_defines.h"
 
@@ -16,43 +15,37 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CDecoderAlgorithmTest(void);
-			virtual ~CDecoderAlgorithmTest(void);
-
-			virtual void release(void) { delete this; }
-
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uininitialize(void);
-
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			CDecoderAlgorithmTest();
+			~CDecoderAlgorithmTest() override;
+			void release() override { delete this; }
+			bool initialize() override;
+			virtual bool uininitialize();
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTest)
 
 		protected:
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder[7];
-			OpenViBE::Kernel::TParameterHandler < const OpenViBE::IMemoryBuffer* > ip_pMemoryBuffer[7];
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer[7];
 		};
 
 		class CDecoderAlgorithmTestDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Decoder algorithm test"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Decodes various types of streams and outputs some of the content parameters the log"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Note: Warnings are normal as the algorithm polls the decoders for structures they may not contain."); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Tests/Algorithms"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTest; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CDecoderAlgorithmTest(); }
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Decoder algorithm test"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Decodes various types of streams and outputs some of the content parameters the log"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Note: Warnings are normal as the algorithm polls the decoders for structures they may not contain."); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Tests/Algorithms"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTest; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::StreamCodecs::CDecoderAlgorithmTest(); }
-
-			virtual OpenViBE::boolean getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
 				rPrototype.addInput("Experiment information", OV_TypeId_ExperimentInformation);
 				rPrototype.addInput("Feature vector", OV_TypeId_FeatureVector);
@@ -66,7 +59,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTestDesc)
 		};
-	};
-};
-
-#endif // __OpenViBEPlugins_BoxAlgorithms_CDecoderAlgorithmTest_H__
+	}  // namespace StreamCodecs
+}  // namespace OpenViBEPlugins

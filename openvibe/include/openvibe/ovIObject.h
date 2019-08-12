@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_IObject_H__
-#define __OpenViBE_IObject_H__
+#pragma once
 
 #include "ov_base.h"
 #include "ovCIdentifier.h"
@@ -8,25 +7,14 @@ namespace OpenViBE
 {
 	class IObjectVisitor;
 
-	namespace Kernel
-	{
-		class CKernelObjectFactory;
-	};
+	namespace Kernel { class CKernelObjectFactory; }
 
 #define _IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
-	virtual OpenViBE::boolean isDerivedFromClass( \
-		const OpenViBE::CIdentifier& rClassIdentifier) const \
-	{ \
-		return ((rClassIdentifier==_ClassIdentifier_) \
-		     || _SuperClassName_::isDerivedFromClass(rClassIdentifier)); \
-	}
+	bool isDerivedFromClass(  const OpenViBE::CIdentifier& rClassIdentifier) const override { return ((rClassIdentifier==(_ClassIdentifier_)) || _SuperClassName_::isDerivedFromClass(rClassIdentifier)); }
 
 #define _IsDerivedFromClass_Final_(_SuperClassName_,_ClassIdentifier_) \
 	_IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
-	virtual OpenViBE::CIdentifier getClassIdentifier(void) const \
-	{ \
-		return _ClassIdentifier_; \
-	}
+	OpenViBE::CIdentifier getClassIdentifier() const override { return _ClassIdentifier_; }
 
 	/**
 	 * \class IObject
@@ -52,7 +40,7 @@ namespace OpenViBE
 	{
 	public:
 
-		friend class OpenViBE::Kernel::CKernelObjectFactory;
+		friend class Kernel::CKernelObjectFactory;
 
 		/** \name Class identification */
 		//@{
@@ -64,7 +52,7 @@ namespace OpenViBE
 		 * This method should return the class identifier of the
 		 * concrete instanciated class.
 		 */
-		virtual OpenViBE::CIdentifier getClassIdentifier(void) const=0;
+		virtual CIdentifier getClassIdentifier() const = 0;
 		/**
 		 * \brief Checks if this object is compatible with a class identifier
 		 * \param rClassIdentifier [in] : the class identifier you want
@@ -80,11 +68,7 @@ namespace OpenViBE
 		 * plugin functions are implemented and so on... see
 		 * OpenViBE::Plugins::IPluginObject for an example...
 		 */
-		virtual OpenViBE::boolean isDerivedFromClass(
-			const OpenViBE::CIdentifier& rClassIdentifier) const
-		{
-			return (rClassIdentifier==OV_ClassId_Object);
-		}
+		virtual bool isDerivedFromClass(const CIdentifier& rClassIdentifier) const { return (rClassIdentifier == OV_ClassId_Object); }
 
 		//@}
 		/** \name Visiting processes */
@@ -96,27 +80,22 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean acceptVisitor(OpenViBE::IObjectVisitor& rObjectVisitor)
-		{
-			return true;
-		}
+		virtual bool acceptVisitor(IObjectVisitor& rObjectVisitor) { return true; }
 
 		//@}
 
 	protected:
 
-		virtual ~IObject(void) { }
+		virtual ~IObject() { }
 	};
-};
+}  // namespace OpenViBE
 
 namespace OpenViBE
 {
-	class CNullObject : public OpenViBE::IObject
+	class CNullObject : public IObject
 	{
 	public:
 
-		_IsDerivedFromClass_Final_(OpenViBE::IObject, OV_ClassId_Object);
+		_IsDerivedFromClass_Final_(OpenViBE::IObject, OV_ClassId_Object)
 	};
 };
-
-#endif // __OpenViBE_IObject_H__

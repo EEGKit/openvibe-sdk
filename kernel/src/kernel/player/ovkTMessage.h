@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_TMessage_H__
-#define __OpenViBEKernel_Kernel_Player_TMessage_H__
+#pragma once
 
 #include "../../ovk_base.h"
 
@@ -14,26 +13,24 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit TMessage(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit TMessage(const IKernelContext& rKernelContext);
 
-			virtual OpenViBE::CIdentifier getIdentifier(void) const;
-			virtual OpenViBE::uint64 getTime(void) const;
+			virtual CIdentifier getIdentifier() const;
+			virtual uint64_t getTime() const;
 
-			virtual OpenViBE::boolean setIdentifier(
-				const OpenViBE::CIdentifier& rIdentifier);
-			virtual OpenViBE::boolean setTime(
-				const OpenViBE::uint64 ui64Time);
+			virtual bool setIdentifier(const CIdentifier& rIdentifier);
+			virtual bool setTime(uint64_t ui64Time);
 
-			_IsDerivedFromClass_Final_(T, OVK_ClassId_Kernel_Player_MessageT);
+			_IsDerivedFromClass_Final_(T, OVK_ClassId_Kernel_Player_MessageT)
 
 		protected:
 
-			OpenViBE::CIdentifier m_oIdentifier;
-			OpenViBE::uint64 m_ui64Time;
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
+			uint64_t m_ui64Time = 0;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 #include "ovkTMessage.inl"
 
-#endif // __OpenViBEKernel_Kernel_Player_TMessage_H__
+

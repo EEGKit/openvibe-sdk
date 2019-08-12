@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_FeatureAggregator_H__
-#define __OpenViBEPlugins_BoxAlgorithm_FeatureAggregator_H__
+#pragma once
 
 #include "../ovp_defines.h"
 
@@ -27,63 +26,58 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmFeatureAggregator(void);
-
-			virtual void release(void) { delete this; }
-
-			virtual OpenViBE::boolean initialize();
-			virtual OpenViBE::boolean uninitialize();
-
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-
-			virtual OpenViBE::boolean process();
+			CBoxAlgorithmFeatureAggregator();
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_FeatureAggregator)
 
 		public:
-				//codecs
+			//codecs
 			OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>* m_pFeatureVectorEncoder;
-			std::vector< OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>* > m_pStreamedMatrixDecoder;
+			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>*> m_pStreamedMatrixDecoder;
 
-				// contains the labels for each dimension for each input
-				std::vector<std::vector<std::vector<std::string> > > m_oFeatureNames;
+			// contains the labels for each dimension for each input
+			std::vector<std::vector<std::vector<std::string>>> m_oFeatureNames;
 
-				// contains the dimension size for each dimension of each input
-				std::vector<std::vector<OpenViBE::uint32> > m_oDimensionSize;
+			// contains the dimension size for each dimension of each input
+			std::vector<std::vector<uint32_t>> m_oDimensionSize;
 
-				// contains the input buffer's total size for each input
-				std::vector<OpenViBE::uint64> m_oInputBufferSizes;
+			// contains the input buffer's total size for each input
+			std::vector<uint64_t> m_oInputBufferSizes;
 
-				//start time and end time of the last arrived chunk
-				OpenViBE::uint64 m_ui64LastChunkStartTime;
-				OpenViBE::uint64 m_ui64LastChunkEndTime;
+			//start time and end time of the last arrived chunk
+			uint64_t m_ui64LastChunkStartTime = 0;
+			uint64_t m_ui64LastChunkEndTime = 0;
 
-				// number of inputs
-				OpenViBE::uint32 m_ui32NumberOfInput;
+			// number of inputs
+			uint32_t m_ui32NumberOfInput = 0;
 
-				// current input (usesful in the EBML callbacks)
-				OpenViBE::uint32 m_ui32CurrentInput;
+			// current input (usesful in the EBML callbacks)
+			uint32_t m_ui32CurrentInput = 0;
 
-				// the feature vector
-				OpenViBE::float64 * m_pVectorBuffer;
-				// the feature vector size
-				OpenViBE::uint32 m_ui32VectorSize;
+			// the feature vector
+			double* m_pVectorBuffer = nullptr;
+			// the feature vector size
+			uint32_t m_ui32VectorSize = 0;
 
-				OpenViBE::boolean m_bHeaderSent;
+			bool m_bHeaderSent = false;
 		};
 
-		class CBoxAlgorithmFeatureAggregatorListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmFeatureAggregatorListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			OpenViBE::boolean check(OpenViBE::Kernel::IBox& rBox)
+			bool check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
-				OpenViBE::uint32 i;
 
-				for(i=0; i<rBox.getInputCount(); i++)
+				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
 				{
-					sprintf(l_sName, "Input stream %u", i+1);
+					sprintf(l_sName, "Input stream %u", i + 1);
 					rBox.setInputName(i, l_sName);
 					rBox.setInputType(i, OV_TypeId_StreamedMatrix);
 				}
@@ -91,10 +85,10 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual OpenViBE::boolean onInputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return this->check(rBox); }
-			virtual OpenViBE::boolean onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return this->check(rBox); };
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); };
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		/**
@@ -103,24 +97,23 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmFeatureAggregatorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Feature aggregator"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Bruno Renier"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Aggregates input to feature vectors"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Each chunk of input will be catenated into one feature vector."); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Feature extraction"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Feature aggregator"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Bruno Renier"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Aggregates input to feature vectors"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Each chunk of input will be catenated into one feature vector."); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Feature extraction"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			void release() override { }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_FeatureAggregator; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmFeatureAggregator(); }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmFeatureAggregatorListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
 
-			virtual void release(void)                                   { }
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_FeatureAggregator; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::FeatureExtraction::CBoxAlgorithmFeatureAggregator(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmFeatureAggregatorListener; }
-			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
-
-			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
 				rPrototype.addInput("Input stream 1", OV_TypeId_StreamedMatrix);
 				// rPrototype.addInput("Input stream 2", OV_TypeId_StreamedMatrix);
@@ -131,11 +124,6 @@ namespace OpenViBEPlugins
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_FeatureAggregatorDesc)
-
 		};
-
 	};
 };
-
-#endif
-

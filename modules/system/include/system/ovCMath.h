@@ -3,7 +3,7 @@
 #include "defines.h"
 
 #if defined TARGET_OS_Windows
- #include <float.h>
+#include <float.h>
 #elif defined System_OS_Linux
  #include <cmath>
 #else
@@ -16,37 +16,36 @@ namespace System
 	{
 	public:
 
-		static System::boolean initializeRandomMachine(const System::uint64 ui64RandomSeed);
+		static bool initializeRandomMachine(uint64_t ui64RandomSeed);
 
-		static System::uint8 randomUInteger8(void);
-		static System::uint16 randomUInteger16(void);
-		static System::uint32 randomUInteger32(void);
-		static System::uint64 randomUInteger64(void);
+		static uint8_t randomUInteger8();
+		static uint16_t randomUInteger16();
+		static uint32_t randomUInteger32();
+		static uint64_t randomUInteger64();
 
 		// returns a value in [0,ui32upperLimit( -- i.e. ui32upperLimit not included in range
-		static System::uint32 randomUInteger32WithCeiling(uint32 ui32upperLimit);
+		static uint32_t randomUInteger32WithCeiling(uint32_t ui32upperLimit);
 
-		static System::int8 randomSInteger8(void);
-		static System::int16 randomSInteger16(void);
-		static System::int32 randomSInteger32(void);
-		static System::int64 randomSInteger64(void);
+		static int8_t randomSInteger8();
+		static int16_t randomSInteger16();
+		static int32_t randomSInteger32();
+		static int64_t randomSInteger64();
 
-		static System::float32 randomFloat32(void);
-		static System::float32 randomFloat32BetweenZeroAndOne(void);
-		static System::float64 randomFloat64(void);
+		static float randomFloat32();
+		static float randomFloat32BetweenZeroAndOne();
+		static double randomFloat64();
 
 		// Numerical check
 		// Checks if the value is normal, subnormal or zero, but not infinite or NAN.
-		static System::boolean isfinite(System::float64 f64Value);
+		static bool isfinite(double f64Value);
 		// Checks if the value is positive or negative infinity.
-		static System::boolean isinf(System::float64 f64Value);
+		static bool isinf(double f64Value);
 		// Checks if the value is Not a Number
-		static System::boolean isnan(System::float64 f64Value);
+		static bool isnan(double f64Value);
 		// Checks if the value is normal, i.e. is neither zero, subnormal, infinite, nor NaN.
-		static System::boolean isnormal(System::float64 f64Value);
+		static bool isnormal(double f64Value);
 	private:
 
-		Math(void);
+		Math();
 	};
-};
-
+}  // namespace System

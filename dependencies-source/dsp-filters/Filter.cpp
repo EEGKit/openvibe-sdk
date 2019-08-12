@@ -36,82 +36,81 @@ THE SOFTWARE.
 #include "Common.h"
 #include "Filter.h"
 
-namespace Dsp {
-
-Params Filter::getDefaultParams() const
+namespace Dsp
 {
-  Params params;
+	Params Filter::getDefaultParams() const
+	{
+		Params params;
 
-  params.clear();
+		params.clear();
 
-  for (int i = 0; i < getNumParams(); ++i)
-    params[i] = getParamInfo(i).getDefaultValue();
+		for (int i = 0; i < getNumParams(); ++i)
+		{
+			params[i] = getParamInfo(i).getDefaultValue();
+		}
 
-  return params;
-}
+		return params;
+	}
 
-Filter::~Filter()
-{
-}
+	Filter::~Filter() {}
 
-int Filter::findParamId (int paramId)
-{
-  int index = -1;
+	int Filter::findParamId(int paramId)
+	{
+		int index = -1;
 
-  for (int i = getNumParams(); --i >= 0;)
-  {
-    if (getParamInfo (i).getId () == paramId)
-    {
-      index = i;
-      break;
-    }
-  }
+		for (int i = getNumParams(); --i >= 0;)
+		{
+			if (getParamInfo(i).getId() == paramId)
+			{
+				index = i;
+				break;
+			}
+		}
 
-  return index;
-}
+		return index;
+	}
 
-void Filter::setParamById (int paramId, double nativeValue)
-{
-  for (int i = getNumParams(); --i >= 0;)
-  {
-    if (getParamInfo (i).getId () == paramId)
-    {
-      setParam (i, nativeValue);
-      return;
-    }
-  }
-  
-  assert (0);
-}
+	void Filter::setParamById(int paramId, double nativeValue)
+	{
+		for (int i = getNumParams(); --i >= 0;)
+		{
+			if (getParamInfo(i).getId() == paramId)
+			{
+				setParam(i, nativeValue);
+				return;
+			}
+		}
 
-void Filter::copyParamsFrom (Dsp::Filter const* other)
-{
-  // first, set reasonable defaults
-  m_params = getDefaultParams ();
+		assert(0);
+	}
 
-  if (other)
-  {
-    // now loop
-    for (int i = 0; i < getNumParams (); ++i)
-    {
-      const ParamInfo& paramInfo = getParamInfo (i);
+	void Filter::copyParamsFrom(Filter const* other)
+	{
+		// first, set reasonable defaults
+		m_params = getDefaultParams();
 
-      // find a match
-      for (int j = 0; j < other->getNumParams(); ++j)
-      {
-        const ParamInfo& otherParamInfo = other->getParamInfo (j);
+		if (other)
+		{
+			// now loop
+			for (int i = 0; i < getNumParams(); ++i)
+			{
+				const ParamInfo& paramInfo = getParamInfo(i);
 
-        if (paramInfo.getId() == otherParamInfo.getId())
-        {
-          // match!
-          m_params [i] = paramInfo.clamp (other->getParam (j));
-          break;
-        }
-      }
-    }
-  }
+				// find a match
+				for (int j = 0; j < other->getNumParams(); ++j)
+				{
+					const ParamInfo& otherParamInfo = other->getParamInfo(j);
 
-  doSetParams (m_params);
-}
+					if (paramInfo.getId() == otherParamInfo.getId())
+					{
+						// match!
+						m_params[i] = paramInfo.clamp(other->getParam(j));
+						break;
+					}
+				}
+			}
+		}
 
-}
+		doSetParams(m_params);
+	}
+}  // namespace Dsp

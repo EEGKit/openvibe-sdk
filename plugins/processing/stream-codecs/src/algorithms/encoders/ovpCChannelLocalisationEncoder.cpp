@@ -1,13 +1,13 @@
 #include "ovpCChannelLocalisationEncoder.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::StreamCodecs;
+using namespace StreamCodecs;
 
-boolean CChannelLocalisationEncoder::initialize(void)
+bool CChannelLocalisationEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
 
@@ -16,7 +16,7 @@ boolean CChannelLocalisationEncoder::initialize(void)
 	return true;
 }
 
-boolean CChannelLocalisationEncoder::uninitialize(void)
+bool CChannelLocalisationEncoder::uninitialize()
 {
 	ip_bDynamic.uninitialize();
 
@@ -28,14 +28,14 @@ boolean CChannelLocalisationEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CChannelLocalisationEncoder::processHeader(void)
+bool CChannelLocalisationEncoder::processHeader()
 {
 	CStreamedMatrixEncoder::processHeader();
 
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ChannelLocalisation);
-	 m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ChannelLocalisation_Dynamic);
-	  m_pEBMLWriterHelper->setUIntegerAsChildData(ip_bDynamic?1:0);
-	 m_pEBMLWriterHelper->closeChild();
+	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_ChannelLocalisation_Dynamic);
+	m_pEBMLWriterHelper->setUIntegerAsChildData(ip_bDynamic ? 1 : 0);
+	m_pEBMLWriterHelper->closeChild();
 	m_pEBMLWriterHelper->closeChild();
 
 	return true;

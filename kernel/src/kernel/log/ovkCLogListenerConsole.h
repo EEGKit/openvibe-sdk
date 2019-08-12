@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Log_CLogListenerConsole_H__
-#define __OpenViBEKernel_Kernel_Log_CLogListenerConsole_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -10,62 +9,52 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CLogListenerConsole : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>
+		class CLogListenerConsole : public TKernelObject<ILogListener>
 		{
 		public:
 
-			CLogListenerConsole(const OpenViBE::Kernel::IKernelContext& rKernelContext, const CString& sApplicationName);
+			CLogListenerConsole(const IKernelContext& rKernelContext, const CString& sApplicationName);
+			bool isActive(ELogLevel eLogLevel) override;
+			bool activate(ELogLevel eLogLevel, bool bActive) override;
+			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override;
+			bool activate(bool bActive) override;
 
-			virtual OpenViBE::boolean isActive(OpenViBE::Kernel::ELogLevel eLogLevel);
-			virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eLogLevel, OpenViBE::boolean bActive);
-			virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eStartLogLevel, OpenViBE::Kernel::ELogLevel eEndLogLevel, OpenViBE::boolean bActive);
-			virtual OpenViBE::boolean activate(OpenViBE::boolean bActive);
+			void configure(const IConfigurationManager& rConfigurationManager);
+			void log(const time64 value) override;
+			void log(const uint64_t value) override;
+			void log(const uint32_t value) override;
+			void log(const uint16_t value) override;
+			void log(const uint8_t value) override;
+			void log(const int64_t value) override;
+			void log(const int32_t value) override;
+			void log(const int16_t value) override;
+			void log(const int8_t value) override;
+			void log(const double value) override;
+			void log(const float value) override;
+			void log(const bool value) override;
+			void log(const CIdentifier& value) override;
+			void log(const CString& value) override;
+			void log(const char* value) override;
+			void log(const ELogLevel eLogLevel) override;
+			void log(const ELogColor eLogColor) override;
 
-			void configure(const OpenViBE::Kernel::IConfigurationManager& rConfigurationManager);
-
-			virtual void log(const OpenViBE::time64 time64Value);
-
-			virtual void log(const OpenViBE::uint64 ui64Value);
-			virtual void log(const OpenViBE::uint32 ui32Value);
-			virtual void log(const OpenViBE::uint16 ui16Value);
-			virtual void log(const OpenViBE::uint8 ui8Value);
-
-			virtual void log(const OpenViBE::int64 i64Value);
-			virtual void log(const OpenViBE::int32 i32Value);
-			virtual void log(const OpenViBE::int16 i16Value);
-			virtual void log(const OpenViBE::int8 i8Value);
-
-			virtual void log(const OpenViBE::float64 f64Value);
-			virtual void log(const OpenViBE::float32 f32Value);
-
-			virtual void log(const OpenViBE::boolean bValue);
-
-			virtual void log(const OpenViBE::CIdentifier& rValue);
-			virtual void log(const OpenViBE::CString& rValue);
-			virtual void log(const char* pValue);
-
-			virtual void log(const OpenViBE::Kernel::ELogLevel eLogLevel);
-			virtual void log(const OpenViBE::Kernel::ELogColor eLogColor);
-
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>, OVK_ClassId_Kernel_Log_LogListenerConsole);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogListener>, OVK_ClassId_Kernel_Log_LogListenerConsole)
 
 		protected:
 
-			virtual void applyColor(void);
+			virtual void applyColor();
 
-		protected:
+			std::map<ELogLevel, bool> m_vActiveLevel;
+			std::stack<ELogColor> m_vLogColor;
+			ELogColor m_eLogColor;
+			CString m_sApplicationName;
 
-			std::map<OpenViBE::Kernel::ELogLevel, OpenViBE::boolean> m_vActiveLevel;
-			std::stack<OpenViBE::Kernel::ELogColor> m_vLogColor;
-			OpenViBE::Kernel::ELogColor m_eLogColor;
-			OpenViBE::CString m_sApplicationName;
-
-			OpenViBE::boolean m_bLogWithHexa;
-			OpenViBE::boolean m_bTimeInSeconds;
-			OpenViBE::uint64 m_ui64TimePrecision;
-			OpenViBE::boolean m_bUseColor;
+			bool m_bLogWithHexa = false;
+			bool m_bTimeInSeconds = false;
+			uint64_t m_ui64TimePrecision = 0;
+			bool m_bUseColor = false;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Log_CLogListenerConsole_H__
+

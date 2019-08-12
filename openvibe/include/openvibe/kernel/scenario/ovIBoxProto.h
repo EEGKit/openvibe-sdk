@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Scenario_IBoxProto_H__
-#define __OpenViBE_Kernel_Scenario_IBoxProto_H__
+#pragma once
 
 #include "../ovIKernelObject.h"
 
@@ -39,7 +38,7 @@ namespace OpenViBE
 		 *
 		 * \sa OpenViBE::Kernel::IBoxAlgorithmDesc
 		 */
-		class OV_API IBoxProto : public OpenViBE::Kernel::IKernelObject
+		class OV_API IBoxProto : public IKernelObject
 		{
 		public:
 
@@ -51,11 +50,7 @@ namespace OpenViBE
 			 * \param bNotify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addInput(
-				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier,
-				const OpenViBE::boolean bNotify=true)=0;
+			virtual bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
 
 			/**
 			 * \brief Adds an output to the box
@@ -65,11 +60,7 @@ namespace OpenViBE
 			 * \param bNotify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addOutput(
-				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-				const OpenViBE::boolean bNotify=true)=0;
+			virtual bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
 				
 			/**
 			 * \brief Add an setting to the box
@@ -82,20 +73,15 @@ namespace OpenViBE
 			 * \param bNotify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addSetting(
-				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sDefaultValue,
-				const bool bModifiable = false,
-				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-				const OpenViBE::boolean bNotify=true)=0;
+			virtual bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable = false,
+									const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
 			/**
 			 * \brief Adds a flag to the box
 			 * \param eBoxFlag [in] : the flag to add to the box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addFlag(const OpenViBE::Kernel::EBoxFlag eBoxFlag)=0;
+			virtual bool addFlag(const EBoxFlag eBoxFlag) = 0;
 
 			/**
 			 * \brief Adds a flag to the box
@@ -103,7 +89,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addFlag(const OpenViBE::CIdentifier& cIdentifierFlag)=0;
+			virtual bool addFlag(const CIdentifier& cIdentifierFlag) = 0;
 
 			/**
 			 * \brief Adds a new type supported by inputs of the box
@@ -111,18 +97,16 @@ namespace OpenViBE
 			  * \return \e true in case of success.
 			  * \return \e false in case of error.
 			  */
-			virtual bool addInputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)=0;
+			virtual bool addInputSupport(const CIdentifier& rTypeIdentifier) = 0;
 			/**
 			 * \brief Adds a new type supported by outputs of the box
 			  * \param rTypeIdentifier [in] : The type identifier
 			  * \return \e true in case of success.
 			  * \return \e false in case of error.
 			  */
-			virtual bool addOutputSupport(const OpenViBE::CIdentifier &rTypeIdentifier)=0;
+			virtual bool addOutputSupport(const CIdentifier& rTypeIdentifier) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxProto)
 		};
-	};
-};
-
-#endif // __OpenViBE_Kernel_Scenario_IBoxProto_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

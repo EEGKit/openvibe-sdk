@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Server_IServerExtensionProto_H_
-#define __OpenViBE_Kernel_Server_IServerExtensionProto_H_
+#pragma once
 
 #include "../ovIConfigurable.h"
 
@@ -18,23 +17,13 @@ namespace OpenViBE
 		  * \sa OpenViBE::Plugins::IServerExtensionDesc
 		  */
 
-		class OV_API IServerExtensionProto : public OpenViBE::Kernel::IKernelObject
+		class OV_API IServerExtensionProto : public IKernelObject
 		{
 		public:
 
-			virtual OpenViBE::uint32 addSetting(
-				const OpenViBE::CString& sName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sDefaultValue) = 0;
+			virtual uint32_t addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Server_ServerExtensionProto)
-
 		};
-
-	}
-
-}
-
-#endif // __OpenViBE_Kernel_Server_IServerExtensionProto_H_
-
-
+	}  // namespace Kernel
+}  // namespace OpenViBE

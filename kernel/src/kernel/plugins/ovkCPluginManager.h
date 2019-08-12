@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Plugins_CPluginManager_H__
-#define __OpenViBEKernel_Kernel_Plugins_CPluginManager_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -11,70 +10,42 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CPluginManager : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPluginManager>
+		class CPluginManager : public TKernelObject<IPluginManager>
 		{
 		public:
 
-			explicit CPluginManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
-			virtual ~CPluginManager(void);
-
-			virtual OpenViBE::boolean addPluginsFromFiles(
-				const OpenViBE::CString& rFileNameWildCard);
-			virtual OpenViBE::boolean registerPluginDesc(
-				const OpenViBE::Plugins::IPluginObjectDesc& rPluginObjectDesc);
-
-			virtual OpenViBE::CIdentifier getNextPluginObjectDescIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
-			virtual OpenViBE::CIdentifier getNextPluginObjectDescIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier,
-				const OpenViBE::CIdentifier& rBaseClassIdentifier) const;
-
-			virtual OpenViBE::boolean canCreatePluginObject(
-				const OpenViBE::CIdentifier& rClassIdentifier);
-			virtual const OpenViBE::Plugins::IPluginObjectDesc* getPluginObjectDesc(
-				const OpenViBE::CIdentifier& rClassIdentifier) const;
-			virtual const OpenViBE::Plugins::IPluginObjectDesc* getPluginObjectDescCreating(
-				const OpenViBE::CIdentifier& rClassIdentifier) const;
-
-			virtual OpenViBE::CIdentifier getPluginObjectHashValue(
-				const OpenViBE::CIdentifier& rClassIdentifier) const;
-			virtual OpenViBE::CIdentifier getPluginObjectHashValue(
-				const OpenViBE::Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const;
-			virtual OpenViBE::boolean isPluginObjectFlaggedAsDeprecated(
-				const OpenViBE::CIdentifier& rClassIdentifier) const;
-
-			virtual OpenViBE::Plugins::IPluginObject* createPluginObject(
-				const OpenViBE::CIdentifier& rClassIdentifier);
-			virtual OpenViBE::boolean releasePluginObject(
-				OpenViBE::Plugins::IPluginObject* pPluginObject);
-
-			virtual OpenViBE::Plugins::IAlgorithm* createAlgorithm(
-				const OpenViBE::CIdentifier& rClassIdentifier,
-				const OpenViBE::Plugins::IAlgorithmDesc** ppAlgorithmDesc);
-			virtual OpenViBE::Plugins::IAlgorithm* createAlgorithm(
-				const OpenViBE::Plugins::IAlgorithmDesc& rAlgorithmDesc);
-			virtual OpenViBE::Plugins::IBoxAlgorithm* createBoxAlgorithm(
-				const OpenViBE::CIdentifier& rClassIdentifier,
-				const OpenViBE::Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc);
+			explicit CPluginManager(const IKernelContext& rKernelContext);
+			~CPluginManager() override;
+			bool addPluginsFromFiles(const CString& rFileNameWildCard) override;
+			bool registerPluginDesc(const Plugins::IPluginObjectDesc& rPluginObjectDesc) override;
+			CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier) const override;
+			CIdentifier getNextPluginObjectDescIdentifier(const CIdentifier& rPreviousIdentifier, const CIdentifier& rBaseClassIdentifier) const override;
+			bool canCreatePluginObject(const CIdentifier& rClassIdentifier) override;
+			const Plugins::IPluginObjectDesc* getPluginObjectDesc(const CIdentifier& rClassIdentifier) const override;
+			const Plugins::IPluginObjectDesc* getPluginObjectDescCreating(const CIdentifier& rClassIdentifier) const override;
+			CIdentifier getPluginObjectHashValue(const CIdentifier& rClassIdentifier) const override;
+			CIdentifier getPluginObjectHashValue(const Plugins::IBoxAlgorithmDesc& rBoxAlgorithmDesc) const override;
+			bool isPluginObjectFlaggedAsDeprecated(const CIdentifier& rClassIdentifier) const override;
+			Plugins::IPluginObject* createPluginObject(const CIdentifier& rClassIdentifier) override;
+			bool releasePluginObject(Plugins::IPluginObject* pPluginObject) override;
+			Plugins::IAlgorithm* createAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IAlgorithmDesc** ppAlgorithmDesc) override;
+			Plugins::IAlgorithm* createAlgorithm(const Plugins::IAlgorithmDesc& rAlgorithmDesc) override;
+			Plugins::IBoxAlgorithm* createBoxAlgorithm(const CIdentifier& rClassIdentifier, const Plugins::IBoxAlgorithmDesc** ppBoxAlgorithmDesc) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::IPluginManager, OVK_ClassId_Kernel_Plugins_PluginManager)
 
 		protected:
 
 			template <class IPluginObjectT, class IPluginObjectDescT>
-			IPluginObjectT* createPluginObjectT(
-				const OpenViBE::CIdentifier& rClassIdentifier,
-				const IPluginObjectDescT** ppPluginObjectDescT);
+			IPluginObjectT* createPluginObjectT(const CIdentifier& rClassIdentifier, const IPluginObjectDescT** ppPluginObjectDescT);
 
-		protected:
-
-			std::vector < OpenViBE::Kernel::IPluginModule* > m_vPluginModule;
-			std::map < OpenViBE::Plugins::IPluginObjectDesc*, OpenViBE::Kernel::IPluginModule* > m_vPluginObjectDesc;
-			std::map < OpenViBE::Plugins::IPluginObjectDesc*, std::vector<OpenViBE::Plugins::IPluginObject* > > m_vPluginObject;
+			std::vector<IPluginModule*> m_vPluginModule;
+			std::map<Plugins::IPluginObjectDesc*, IPluginModule*> m_vPluginObjectDesc;
+			std::map<Plugins::IPluginObjectDesc*, std::vector<Plugins::IPluginObject*>> m_vPluginObject;
 
 			mutable std::mutex m_oMutex;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Plugins_CPluginManager_H__
+

@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_IKernelObjectFactory_H__
-#define __OpenViBE_Kernel_IKernelObjectFactory_H__
+#pragma once
 
 #include "ovIKernelObject.h"
 
@@ -18,7 +17,7 @@ namespace OpenViBE
 		 *
 		 * \todo should it be removed ?
 		 */
-		class OV_API IKernelObjectFactory : public OpenViBE::Kernel::IKernelObject
+		class OV_API IKernelObjectFactory : public IKernelObject
 		{
 		public:
 
@@ -28,8 +27,7 @@ namespace OpenViBE
 			 * \return a pointer on the created object in case of success.
 			 * \return \c NULL in case of error.
 			 */
-			virtual OpenViBE::IObject* createObject(
-				const OpenViBE::CIdentifier& rClassIdentifier)=0;
+			virtual IObject* createObject(const CIdentifier& rClassIdentifier) = 0;
 			/**
 			 * \brief Releases an object created by this factory
 			 * \param pObject [in] : the object to release
@@ -37,12 +35,9 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \note The factory should have created the object in order to release it.
 			 */
-			virtual OpenViBE::boolean releaseObject(
-				OpenViBE::IObject* pObject)=0;
+			virtual bool releaseObject(IObject* pObject) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_KernelObjectFactory)
 		};
-	};
-};
-
-#endif // __OpenViBE_Kernel_IKernelObjectFactory_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

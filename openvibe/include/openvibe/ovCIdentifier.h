@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_CIdentifier_H__
-#define __OpenViBE_CIdentifier_H__
+#pragma once
 
 #include "ov_base.h"
 #include "ovCString.h"
@@ -46,7 +45,7 @@ namespace OpenViBE
 		 * Builds up the 64 bits identifier initialized to
 		 * \c OV_UndefinedIdentifier.
 		 */
-		CIdentifier(void);
+		CIdentifier();
 		/**
 		 * \brief 32 bits integer based constructor
 		 * \param ui32Identifier1 [in] : the first part of the identifier
@@ -55,15 +54,12 @@ namespace OpenViBE
 		 * Builds up the 64 bits identifier given its two 32 bits
 		 * components.
 		 */
-		CIdentifier(
-			const OpenViBE::uint32 ui32Identifier1,
-			const OpenViBE::uint32 ui32Identifier2);
+		CIdentifier(uint32_t ui32Identifier1, uint32_t ui32Identifier2);
 		/**
 		 * \brief 64 bits integer based constructor
 		 * \param ui64Identifier [in] : The identifier
 		 */
-		CIdentifier(
-			const OpenViBE::uint64 ui64Identifier);
+		CIdentifier(uint64_t ui64Identifier);
 		/**
 		 * \brief Copy constructor
 		 * \param rIdentifier [in] : the identifier to initialize
@@ -72,8 +68,7 @@ namespace OpenViBE
 		 * Builds up the 64 bits identifier exacly the same as
 		 * given rIdentifier parameter.
 		 */
-		CIdentifier(
-			const OpenViBE::CIdentifier& rIdentifier);
+		CIdentifier(const CIdentifier& rIdentifier);
 
 		//@}
 		/** \name Operators */
@@ -88,22 +83,21 @@ namespace OpenViBE
 		 * Reinitializes the 64 bits identifier exactly the same as
 		 * given rIdentifier parameter.
 		 */
-		OpenViBE::CIdentifier& operator=(
-			const OpenViBE::CIdentifier& rIdentifier);
+		CIdentifier& operator=(const CIdentifier& rIdentifier);
 		/**
 		 * \brief Increments this identifier by 1
 		 * \return this identifier
 		 * \note if this identifier is \c OV_UndefinedIdentifier, it is not incremented
 		 * \note if this idenfitier is not \c OV_UndefinedIdentifier, it can not becomre \c OV_UndefinedIdentifier after being incremented
 		 */
-		OpenViBE::CIdentifier& operator++(void);
+		CIdentifier& operator++();
 		/**
 		 * \brief Decrements this identifier by 1
 		 * \return this identifier
 		 * \note if this identifier is \c OV_UndefinedIdentifier, it is not decremented
 		 * \note if this idenfitier is not \c OV_UndefinedIdentifier, it can not becomre \c OV_UndefinedIdentifier after being decremented
 		 */
-		OpenViBE::CIdentifier& operator--(void);
+		CIdentifier& operator--();
 		/**
 		 * \brief Equality test operator
 		 * \param rIdentifier1 [in] : the first identifier to compare
@@ -116,9 +110,7 @@ namespace OpenViBE
 		 *
 		 * \sa operator!=
 		 */
-		friend OV_API OpenViBE::boolean operator==(
-			const OpenViBE::CIdentifier& rIdentifier1,
-			const OpenViBE::CIdentifier& rIdentifier2);
+		friend OV_API bool operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
 		/**
 		 * \brief Difference test operator
 		 * \param rIdentifier1 [in] : the first identifier to compare
@@ -131,9 +123,7 @@ namespace OpenViBE
 		 *
 		 * \sa operator==
 		 */
-		friend OV_API OpenViBE::boolean operator!=(
-			const OpenViBE::CIdentifier& rIdentifier1,
-			const OpenViBE::CIdentifier& rIdentifier2);
+		friend OV_API bool operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
 		/**
 		 * \brief Order test operator
 		 * \param rIdentifier1 [in] : the first identifier to compare
@@ -146,9 +136,7 @@ namespace OpenViBE
 		 * \sa operator>
 		 * \sa operator==
 		 */
-		friend OV_API OpenViBE::boolean operator<(
-			const OpenViBE::CIdentifier& rIdentifier1,
-			const OpenViBE::CIdentifier& rIdentifier2);
+		friend OV_API bool operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
 		/**
 		 * \brief Order test operator
 		 * \param rIdentifier1 [in] : the first identifier to compare
@@ -161,9 +149,7 @@ namespace OpenViBE
 		 * \sa operator<
 		 * \sa operator==
 		 */
-		friend OV_API OpenViBE::boolean operator>(
-			const OpenViBE::CIdentifier& rIdentifier1,
-			const OpenViBE::CIdentifier& rIdentifier2);
+		friend OV_API bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2);
 		/**
 		 * \brief Order test operator
 		 * \param rIdentifier1 [in] : the first identifier to compare
@@ -176,11 +162,9 @@ namespace OpenViBE
 		 * \sa operator>
 		 * \sa operator==
 		 */
-		friend OV_API OpenViBE::boolean operator<=(
-			const OpenViBE::CIdentifier& rIdentifier1,
-			const OpenViBE::CIdentifier& rIdentifier2)
+		friend OV_API bool operator<=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
 		{
-			return !(rIdentifier1>rIdentifier2);
+			return !(rIdentifier1 > rIdentifier2);
 		}
 		/**
 		 * \brief Order test operator
@@ -194,11 +178,9 @@ namespace OpenViBE
 		 * \sa operator<
 		 * \sa operator==
 		 */
-		friend OV_API OpenViBE::boolean operator>=(
-			const OpenViBE::CIdentifier& rIdentifier1,
-			const OpenViBE::CIdentifier& rIdentifier2)
+		friend OV_API bool operator>=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
 		{
-			return !(rIdentifier1<rIdentifier2);
+			return !(rIdentifier1 < rIdentifier2);
 		}
 
 		//@}
@@ -207,15 +189,14 @@ namespace OpenViBE
 		 * \brief Converts this identifier into an OpenViBE string
 		 * \return This identifier represented as an OpenViBE string
 		 */
-		OpenViBE::CString toString(void) const;
+		CString toString() const;
 		/**
 		 * \brief Reads a an OpenViBE string to extract this identifier
 		 * \param rString [in] : the string to convert
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		OpenViBE::boolean fromString(
-			const OpenViBE::CString& rString);
+		bool fromString(const CString& rString);
 		/**
 		 * \brief Converts this identifier into an unsigned 64 bits integer
 		 * \return The unsigned integer converted identifier
@@ -223,18 +204,16 @@ namespace OpenViBE
 		 *          as integers. Actually, the internal 64 bits representation may
 		 *          change, resulting in code port needs if you use this function
 		 */
-		OpenViBE::uint64 toUInteger(void) const;
+		uint64_t toUInteger() const;
 		/**
 		 * \brief Creates a random identifier
 		 * \return a random identifier
 		 * \note The returned identifier can not be \c OV_UndefinedIdentifier
 		 */
-		static OpenViBE::CIdentifier random(void);
+		static CIdentifier random();
 
 	protected:
 
-		OpenViBE::uint64 m_ui64Identifier; ///< the 64 bit identifier value
+		uint64_t m_ui64Identifier = 0; ///< the 64 bit identifier value
 	};
-};
-
-#endif // __OpenViBE_CIdentifier_H__
+}  // namespace OpenViBE

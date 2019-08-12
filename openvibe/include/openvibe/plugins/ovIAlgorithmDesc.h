@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Plugins_IAlgorithmDesc_H__
-#define __OpenViBE_Plugins_IAlgorithmDesc_H__
+#pragma once
 
 #include "ovIPluginObjectDesc.h"
 #include "../kernel/algorithm/ovIAlgorithmProto.h"
@@ -22,7 +21,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IAlgorithmDesc : public OpenViBE::Plugins::IPluginObjectDesc
+		class OV_API IAlgorithmDesc : public IPluginObjectDesc
 		{
 		public:
 
@@ -39,12 +38,9 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Plugins::IAlgorithmProto
 			 */
-			virtual OpenViBE::boolean getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const=0;
+			virtual bool getAlgorithmPrototype(Kernel::IAlgorithmProto& rAlgorithmPrototype) const = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObjectDesc, OV_ClassId_Plugins_AlgorithmDesc)
 		};
-	};
-};
-
-#endif // __OpenViBE_Plugins_IAlgorithmDesc_H__
+	}  // namespace Plugins
+}  // namespace OpenViBE

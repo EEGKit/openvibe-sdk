@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TEncoder_H__
-#define __OpenViBEToolkit_TEncoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -14,41 +13,42 @@ namespace OpenViBEToolkit
 	{
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > m_pOutputMemoryBuffer;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> m_pOutputMemoryBuffer;
 
 		using T::initialize;
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
 		using T::m_ui32ConnectorIndex;
 
-		virtual void setOutputChunk(OpenViBE::IMemoryBuffer * pOutputChunkMemoryBuffer)
+		virtual void setOutputChunk(OpenViBE::IMemoryBuffer* pOutputChunkMemoryBuffer)
 		{
 			m_pOutputMemoryBuffer = pOutputChunkMemoryBuffer;
 		}
 
-		virtual OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* >& getOutputMemoryBuffer()
+		virtual OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getOutputMemoryBuffer()
 		{
 			return m_pOutputMemoryBuffer;
 		}
 
-		virtual OpenViBE::boolean isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
+		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
 		{
 			return m_pCodec->isOutputTriggerActive(oTrigger);
 		}
 
-		virtual OpenViBE::boolean process(const OpenViBE::CIdentifier& oTrigger)
+		virtual bool process(const OpenViBE::CIdentifier& oTrigger)
 		{
 			return m_pCodec->process(oTrigger);
 		}
-		virtual OpenViBE::boolean process(void)
+
+		virtual bool process()
 		{
 			return m_pCodec->process();
 		}
 
 		// The functions that need to be specified by the encoders (specific Trigger ID)
-		virtual OpenViBE::boolean encodeHeaderImpl() = 0;
-		virtual OpenViBE::boolean encodeBufferImpl() = 0;
-		virtual OpenViBE::boolean encodeEndImpl() = 0;
+		virtual bool encodeHeaderImpl() = 0;
+		virtual bool encodeBufferImpl() = 0;
+		virtual bool encodeEndImpl() = 0;
 
 	public:
 
@@ -59,24 +59,24 @@ namespace OpenViBEToolkit
 		- mark output as ready to be sent has to be done manually, for accurate timing.
 		*/
 
-		OpenViBE::boolean encodeHeader()
+		bool encodeHeader()
 		{
 			this->setOutputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getOutputChunk(m_ui32ConnectorIndex));
-			if(!this->encodeHeaderImpl()) return false;
+			if (!this->encodeHeaderImpl()) return false;
 			return true;
 		}
 
-		OpenViBE::boolean encodeBuffer()
+		bool encodeBuffer()
 		{
 			this->setOutputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getOutputChunk(m_ui32ConnectorIndex));
-			if(!this->encodeBufferImpl()) return false;
+			if (!this->encodeBufferImpl()) return false;
 			return true;
 		}
 
-		OpenViBE::boolean encodeEnd()
+		bool encodeEnd()
 		{
 			this->setOutputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getOutputChunk(m_ui32ConnectorIndex));
-			if(!this->encodeEndImpl()) return false;
+			if (!this->encodeEndImpl()) return false;
 			return true;
 		}
 	};
@@ -87,20 +87,14 @@ namespace OpenViBEToolkit
 	You don't need to know which type of encoder is in the vector.
 	*/
 	template <class T>
-	class TEncoder : public TEncoderLocal < TCodec < T > >
+	class TEncoder : public TEncoderLocal<TCodec<T>>
 	{
 	public:
-		virtual ~TEncoder()
-		{
-		}
+		virtual ~TEncoder() { }
 	protected:
 		// constructor is protected, ensuring we can't instanciate a TEncoder
-		TEncoder()
-		{
-		}
+		TEncoder() { }
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
-#endif //__OpenViBEToolkit_TEncoder_H__

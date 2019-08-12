@@ -5,29 +5,29 @@
 #include <sstream>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Plugins;
+using namespace Plugins;
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::SignalProcessing;
+using namespace SignalProcessing;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-void CBoxAlgorithmSignalAverage::computeAverage(void)
+void CBoxAlgorithmSignalAverage::computeAverage()
 {
-	const float64* l_pInput = m_oSignalDecoder.getOutputMatrix()->getBuffer();
-	float64* l_pOutput = m_oSignalEncoder.getInputMatrix()->getBuffer();
+	const double* l_pInput = m_oSignalDecoder.getOutputMatrix()->getBuffer();
+	double* l_pOutput      = m_oSignalEncoder.getInputMatrix()->getBuffer();
 
-	const uint32 l_ui32ChannelCount = m_oSignalDecoder.getOutputMatrix()->getDimensionSize(0);
-	const uint32 l_ui32SampleCount = m_oSignalDecoder.getOutputMatrix()->getDimensionSize(1);
+	const uint32_t l_ui32ChannelCount = m_oSignalDecoder.getOutputMatrix()->getDimensionSize(0);
+	const uint32_t l_ui32SampleCount  = m_oSignalDecoder.getOutputMatrix()->getDimensionSize(1);
 
 	//for each channel
-	for(uint32 c=0 ; c<l_ui32ChannelCount ; c++)
+	for (uint32_t c = 0; c < l_ui32ChannelCount; c++)
 	{
-		float64 l_f64SamplesSum = 0;
+		double l_f64SamplesSum = 0;
 
 		//sum its samples
-		for(uint32 i=0 ; i<l_ui32SampleCount ; i++)
+		for (uint32_t i = 0; i < l_ui32SampleCount; i++)
 		{
-			l_f64SamplesSum += l_pInput[(c*l_ui32SampleCount)+i];
+			l_f64SamplesSum += l_pInput[(c * l_ui32SampleCount) + i];
 		}
 
 		//computes and stores the average for a channel
@@ -36,23 +36,19 @@ void CBoxAlgorithmSignalAverage::computeAverage(void)
 }
 
 
-CBoxAlgorithmSignalAverage::CBoxAlgorithmSignalAverage(void)
-{
-}
+CBoxAlgorithmSignalAverage::CBoxAlgorithmSignalAverage() {}
 
-void CBoxAlgorithmSignalAverage::release(void)
-{
-}
+void CBoxAlgorithmSignalAverage::release() {}
 
-boolean CBoxAlgorithmSignalAverage::initialize()
-{	 
-	m_oSignalDecoder.initialize(*this,0);
-	m_oSignalEncoder.initialize(*this,0);
+bool CBoxAlgorithmSignalAverage::initialize()
+{
+	m_oSignalDecoder.initialize(*this, 0);
+	m_oSignalEncoder.initialize(*this, 0);
 
 	return true;
 }
 
-boolean CBoxAlgorithmSignalAverage::uninitialize()
+bool CBoxAlgorithmSignalAverage::uninitialize()
 {
 	m_oSignalEncoder.uninitialize();
 	m_oSignalDecoder.uninitialize();
@@ -60,40 +56,40 @@ boolean CBoxAlgorithmSignalAverage::uninitialize()
 	return true;
 }
 
-boolean CBoxAlgorithmSignalAverage::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmSignalAverage::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmSignalAverage::process()
+bool CBoxAlgorithmSignalAverage::process()
 {
-	IDynamicBoxContext* l_pDynamicBoxContext=getBoxAlgorithmContext()->getDynamicBoxContext();
+	IDynamicBoxContext* l_pDynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	// Process input data
-	for(uint32 i=0; i<l_pDynamicBoxContext->getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_pDynamicBoxContext->getInputChunkCount(0); i++)
 	{
 		m_oSignalDecoder.decode(i);
 
-		if(m_oSignalDecoder.isHeaderReceived())
+		if (m_oSignalDecoder.isHeaderReceived())
 		{
 			// Construct the properties of the output stream
 			const IMatrix* l_pInputMatrix = m_oSignalDecoder.getOutputMatrix();
-			IMatrix* l_pOutputMatrix = m_oSignalEncoder.getInputMatrix();
+			IMatrix* l_pOutputMatrix      = m_oSignalEncoder.getInputMatrix();
 
 			// Sampling rate will be decimated in the output
-			const uint64 l_ui64InputSamplingRate =  m_oSignalDecoder.getOutputSamplingRate();
-			const uint32 l_ui32InputSampleCount =  l_pInputMatrix->getDimensionSize(1);
-			const uint64 l_ui64NewSamplingRate = static_cast<uint64>(ceil((float64)l_ui64InputSamplingRate/(float64)l_ui32InputSampleCount));
+			const uint64_t l_ui64InputSamplingRate = m_oSignalDecoder.getOutputSamplingRate();
+			const uint32_t l_ui32InputSampleCount  = l_pInputMatrix->getDimensionSize(1);
+			const uint64_t l_ui64NewSamplingRate   = static_cast<uint64_t>(ceil((double)l_ui64InputSamplingRate / (double)l_ui32InputSampleCount));
 
 			m_oSignalEncoder.getInputSamplingRate() = l_ui64NewSamplingRate;
 
 			// We keep the number of channels, but the output chunk size will be 1
 			l_pOutputMatrix->setDimensionCount(2);
-			l_pOutputMatrix->setDimensionSize(0,l_pInputMatrix->getDimensionSize(0));
-			l_pOutputMatrix->setDimensionSize(1,1);
+			l_pOutputMatrix->setDimensionSize(0, l_pInputMatrix->getDimensionSize(0));
+			l_pOutputMatrix->setDimensionSize(1, 1);
 
-			for(uint32 j=0;j<l_pOutputMatrix->getDimensionSize(0);j++)
+			for (uint32_t j = 0; j < l_pOutputMatrix->getDimensionSize(0); j++)
 			{
 				l_pOutputMatrix->setDimensionLabel(0, j, l_pInputMatrix->getDimensionLabel(0, j));
 			}
@@ -103,10 +99,10 @@ boolean CBoxAlgorithmSignalAverage::process()
 			getBoxAlgorithmContext()->getDynamicBoxContext()->markOutputAsReadyToSend(0, 0, 0);
 		}
 
-		if(m_oSignalDecoder.isBufferReceived())
+		if (m_oSignalDecoder.isBufferReceived())
 		{
-			const uint64 l_ui64LastChunkStartTime = l_pDynamicBoxContext->getInputChunkStartTime(0,i);
-			const uint64 l_ui64LastChunkEndTime = l_pDynamicBoxContext->getInputChunkEndTime(0,i);
+			const uint64_t l_ui64LastChunkStartTime = l_pDynamicBoxContext->getInputChunkStartTime(0, i);
+			const uint64_t l_ui64LastChunkEndTime   = l_pDynamicBoxContext->getInputChunkEndTime(0, i);
 
 			computeAverage();
 
@@ -115,7 +111,7 @@ boolean CBoxAlgorithmSignalAverage::process()
 			getBoxAlgorithmContext()->getDynamicBoxContext()->markOutputAsReadyToSend(0, l_ui64LastChunkStartTime, l_ui64LastChunkEndTime);
 		}
 
-		if(m_oSignalDecoder.isEndReceived()) 
+		if (m_oSignalDecoder.isEndReceived())
 		{
 			// NOP
 		}

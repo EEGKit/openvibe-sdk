@@ -8,33 +8,33 @@ namespace System
 	{
 	public:
 
-		CChrono(void);
-		virtual ~CChrono(void);
+		CChrono();
+		virtual ~CChrono();
 
-		virtual System::boolean reset(System::uint32 ui32StepCount);
+		virtual bool reset(uint32_t ui32StepCount);
 
-		virtual System::boolean stepIn(void);
-		virtual System::boolean stepOut(void);
+		virtual bool stepIn();
+		virtual bool stepOut();
 
-		virtual System::uint64 getTotalStepInDuration(void) const;
-		virtual System::uint64 getTotalStepOutDuration(void) const;
-		virtual System::uint64 getAverageStepInDuration(void) const;
-		virtual System::uint64 getAverageStepOutDuration(void) const;
-		virtual System::float64 getStepInPercentage(void) const;
-		virtual System::float64 getStepOutPercentage(void) const;
+		virtual uint64_t getTotalStepInDuration() const;
+		virtual uint64_t getTotalStepOutDuration() const;
+		virtual uint64_t getAverageStepInDuration() const;
+		virtual uint64_t getAverageStepOutDuration() const;
+		virtual double getStepInPercentage() const;
+		virtual double getStepOutPercentage() const;
 
-		virtual System::boolean hasNewEstimation(void);
+		virtual bool hasNewEstimation();
 
 	private:
 
-		System::uint64* m_pStepInTime;
-		System::uint64* m_pStepOutTime;
-		System::uint32 m_ui32StepCount;
-		System::uint32 m_ui32StepIndex;
-		System::boolean m_bIsInStep;
-		System::boolean m_bHasNewEstimation;
+		uint64_t* m_pStepInTime = nullptr;
+		uint64_t* m_pStepOutTime = nullptr;
+		uint32_t m_ui32StepCount = 0;
+		uint32_t m_ui32StepIndex = 0;
+		bool m_bIsInStep = false;
+		bool m_bHasNewEstimation = false;
 
-		System::uint64 m_ui64TotalStepInTime;
-		System::uint64 m_ui64TotalStepOutTime;
+		uint64_t m_ui64TotalStepInTime = 0;
+		uint64_t m_ui64TotalStepOutTime = 0;
 	};
-};
+}  // namespace System

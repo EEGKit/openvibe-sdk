@@ -24,14 +24,14 @@
 
 namespace Socket
 {
-	class CConnectionParallel : public Socket::IConnectionParallel
+	class CConnectionParallel : public IConnectionParallel
 	{
 	protected:
 		unsigned short m_ui16PortNumber;
 		std::string m_sLastError;
 	public:
 
-		CConnectionParallel(void)
+		CConnectionParallel()
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			:m_iFile(0)
@@ -40,14 +40,14 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 			m_ui16PortNumber = 0;
-			m_hmodTVicPort = LoadLibrary(TEXT("TVicPort.dll"));
+			m_hmodTVicPort   = LoadLibrary(TEXT("TVicPort.dll"));
 
-			if (m_hmodTVicPort != NULL)
+			if (m_hmodTVicPort != nullptr)
 			{
 				m_lpfnTVicIsDriverOpened = (LPFNTVICPORTISDRIVEROPENED)GetProcAddress(m_hmodTVicPort, "IsDriverOpened");
-				m_lpfnTVicPortOpen = (LPFNTVICPORTOPEN)GetProcAddress(m_hmodTVicPort, "OpenTVicPort");
-				m_lpfnTVicPortClose = (LPFNTVICPORTCLOSE)GetProcAddress(m_hmodTVicPort, "CloseTVicPort");
-				m_lpfnTVicPortWrite = (LPFNTVICPORTWRITE)GetProcAddress(m_hmodTVicPort, "WritePort");
+				m_lpfnTVicPortOpen       = (LPFNTVICPORTOPEN)GetProcAddress(m_hmodTVicPort, "OpenTVicPort");
+				m_lpfnTVicPortClose      = (LPFNTVICPORTCLOSE)GetProcAddress(m_hmodTVicPort, "CloseTVicPort");
+				m_lpfnTVicPortWrite      = (LPFNTVICPORTWRITE)GetProcAddress(m_hmodTVicPort, "WritePort");
 
 				if (!m_lpfnTVicIsDriverOpened || !m_lpfnTVicPortOpen || !m_lpfnTVicPortClose || !m_lpfnTVicPortWrite)
 				{
@@ -62,17 +62,17 @@ namespace Socket
 #endif
 		}
 
-		bool open(void)
+		bool open() override
 		{
 			// Should never be used
 			return false;
 		}
 
-		bool close(void)
+		bool close() override
 		{
 #if defined TARGET_OS_Windows
 
-			if (m_hmodTVicPort != NULL)
+			if (m_hmodTVicPort != nullptr)
 			{
 				if (m_lpfnTVicIsDriverOpened())
 				{
@@ -80,59 +80,37 @@ namespace Socket
 					m_lpfnTVicPortClose();
 					return true;
 				}
-				else
-				{
-					m_sLastError = "Cannot close the TVicPort library because it is not opened.";
-					return false;
-				}
-			}
-			else
-			{
+				m_sLastError = "Cannot close the TVicPort library because it is not opened.";
 				return false;
 			}
+			return false;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
 			return false;
 
-			/*if (ioctl(fd, PPRELEASE) < 0) 
-			{
-				return false;
-			}
+			/*if (ioctl(fd, PPRELEASE) < 0)  { return false; }
 
-			if (close(m_iFile) < 0)
-			{
-				return false;
-			}
+			if (close(m_iFile) < 0) { return false; }
 			else
 			{
 				m_iFile = -1;
 			}*/
 #endif
-
 		}
 
-		bool isReadyToSend(Socket::uint32 ui32TimeOut = 0) const
-		{
-			return this->isConnected();
-		}
+		bool isReadyToSend(const uint32_t ui32TimeOut = 0) const override { return this->isConnected(); }
 
-		bool isReadyToReceive(Socket::uint32 ui32TimeOut = 0) const
-		{
-			return this->isConnected();
-		}
+		bool isReadyToReceive(const uint32_t ui32TimeOut = 0) const override { return this->isConnected(); }
 
-		uint32 getPendingByteCount()
-		{
-			return (this->isConnected() ? 0 : 1);
-		}
+		uint32_t getPendingByteCount() { return (this->isConnected() ? 0 : 1); }
 
-		uint32 sendBuffer(const void* pBuffer, const uint32 ui32BufferSize = 8)
+		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize = 8) override
 		{
-			if (!this->isConnected()) return 0;
+			if (!this->isConnected()) { return 0; }
 
 #if defined TARGET_OS_Windows
-			uint8 l_ui8Value = *(static_cast<const uint8*>(pBuffer));
+			uint8_t l_ui8Value = *(static_cast<const uint8_t*>(pBuffer));
 
 			m_lpfnTVicPortWrite(m_ui16PortNumber, l_ui8Value);
 			return ui32BufferSize;
@@ -141,20 +119,14 @@ namespace Socket
 
 			return 0;
 
-			/*if (ioctl(m_iFile, PPWDATA, &l_ui8Value) < 0) 
-			{
-				return ui32BufferSize;
-			}*/
+			/*if (ioctl(m_iFile, PPWDATA, &l_ui8Value) < 0) { return ui32BufferSize; }*/
 
 #endif
 		}
 
-		uint32 receiveBuffer(void* pBuffer, const uint32 ui32BufferSize = 8)
+		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize = 8) override
 		{
-			if (!this->isConnected())
-			{
-				return 0;
-			}
+			if (!this->isConnected()) { return 0; }
 
 #if defined TARGET_OS_Windows
 
@@ -187,13 +159,12 @@ namespace Socket
 #endif
 
 			return 0;
-
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32 ui32BufferSize)
+		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
 		{
-			const char* l_pPointer = reinterpret_cast<const char*>(pBuffer);
-			uint32 l_ui32BytesLeft = ui32BufferSize;
+			const char* l_pPointer   = reinterpret_cast<const char*>(pBuffer);
+			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
@@ -203,10 +174,10 @@ namespace Socket
 			return this->isConnected();
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32 ui32BufferSize)
+		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
 		{
-			char* l_pPointer = reinterpret_cast<char*>(pBuffer);
-			uint32 l_ui32BytesLeft = ui32BufferSize;
+			char* l_pPointer         = reinterpret_cast<char*>(pBuffer);
+			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
@@ -216,7 +187,7 @@ namespace Socket
 			return this->isConnected();
 		}
 
-		bool isConnected(void) const
+		bool isConnected() const override
 		{
 #if defined TARGET_OS_Windows
 
@@ -231,10 +202,10 @@ namespace Socket
 			return false;
 		}
 
-		void release(void)
+		void release() override
 		{
 #if defined TARGET_OS_Windows
-			if (m_hmodTVicPort != NULL)
+			if (m_hmodTVicPort != nullptr)
 			{
 				if (!FreeLibrary(m_hmodTVicPort))
 				{
@@ -246,31 +217,25 @@ namespace Socket
 			delete this;
 		}
 
-		bool connect(unsigned short ui16PortNumber)
+		bool connect(unsigned short ui16PortNumber) override
 		{
-			if (this->isConnected()) return false;
+			if (this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
-			if (m_hmodTVicPort != NULL)
+			if (m_hmodTVicPort != nullptr)
 			{
 				if (m_lpfnTVicPortOpen())
 				{
-					m_sLastError = "No error";
+					m_sLastError     = "No error";
 					m_ui16PortNumber = ui16PortNumber;
 					return true;
 				}
-				else
-				{
-					m_sLastError = "Cannot open the TVic library";
-					m_ui16PortNumber = 0;
-					return false;
-				}
-			}
-			else
-			{
-				m_sLastError = "TVicPort library is not loaded.";
+				m_sLastError     = "Cannot open the TVic library";
+				m_ui16PortNumber = 0;
 				return false;
 			}
+			m_sLastError = "TVicPort library is not loaded.";
+			return false;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
@@ -295,10 +260,7 @@ namespace Socket
 #endif
 		}
 
-		std::string getLastError()
-		{
-			return m_sLastError;
-		}
+		std::string getLastError() override {return m_sLastError;}
 
 		std::string getLastErrorFormated()
 		{
@@ -307,17 +269,15 @@ namespace Socket
 			LPTSTR l_sErrorText;
 			DWORD l_ui64Error = GetLastError();
 
-			FormatMessage(
-				FORMAT_MESSAGE_FROM_SYSTEM					// use system message tables to retrieve error text
-				| FORMAT_MESSAGE_ALLOCATE_BUFFER			// allocate buffer on local heap for error text
-				| FORMAT_MESSAGE_IGNORE_INSERTS,			// Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters 
-				NULL,										// unused with FORMAT_MESSAGE_FROM_SYSTEM
-				l_ui64Error,
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-				(LPTSTR)&l_sErrorText,						// output 
-				0,											// minimum size for output buffer
-				NULL
-				);											// arguments - see note
+			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM					// use system message tables to retrieve error text
+						  | FORMAT_MESSAGE_ALLOCATE_BUFFER				// allocate buffer on local heap for error text
+						  | FORMAT_MESSAGE_IGNORE_INSERTS,				// Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters 
+						  nullptr,											// unused with FORMAT_MESSAGE_FROM_SYSTEM
+						  l_ui64Error,
+						  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+						  (LPTSTR)&l_sErrorText,						// output 
+						  0,											// minimum size for output buffer
+						  nullptr);										// arguments - see note
 
 			return l_sErrorText + std::to_string(static_cast<unsigned long long>(l_ui64Error));
 
@@ -331,11 +291,7 @@ namespace Socket
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	int m_iFile;
 #endif
-
 	};
 
-	IConnectionParallel* createConnectionParallel(void)
-	{
-		return new CConnectionParallel();
-	}
+	IConnectionParallel* createConnectionParallel() { return new CConnectionParallel(); }
 };

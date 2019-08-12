@@ -1,27 +1,23 @@
-#ifndef __EBML_CReaderHelper_H__
-#define __EBML_CReaderHelper_H__
+#pragma once
 
 #include "IReaderHelper.h"
 
 namespace EBML
 {
-	class EBML_API CReaderHelper : public EBML::IReaderHelper
+	class EBML_API CReaderHelper : public IReaderHelper
 	{
 	public:
 
-		CReaderHelper(void);
-		virtual ~CReaderHelper(void);
-
-		virtual EBML::uint64 getUIntegerFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-		virtual EBML::int64 getSIntegerFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-		virtual EBML::float64 getFloatFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-		virtual const char* getASCIIStringFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-		virtual void release(void);
+		CReaderHelper();
+		~CReaderHelper() override;
+		uint64_t getUIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
+		int64_t getSIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
+		double getFloatFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
+		const char* getASCIIStringFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
+		void release() override;
 
 	protected:
 
-		EBML::IReaderHelper* m_pReaderHelperImplementation;
+		IReaderHelper* m_pReaderHelperImplementation = nullptr;
 	};
-};
-
-#endif // __EBML_CReaderHelper_H__
+}  // namespace EBML

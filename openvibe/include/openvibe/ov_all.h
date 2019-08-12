@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_All_H__
-#define __OpenViBE_All_H__
+#pragma once
 
 #include <memory>
 
@@ -116,8 +115,8 @@ namespace OpenViBE
 	namespace Plugins
 	{
 		// Backward compatibility
-		typedef OpenViBE::Kernel::IBox IStaticBoxContext;
-		typedef OpenViBE::Kernel::IBoxIO IDynamicBoxContext;
+		typedef Kernel::IBox IStaticBoxContext;
+		typedef Kernel::IBoxIO IDynamicBoxContext;
 	};
 };
 
@@ -131,7 +130,7 @@ namespace OpenViBE
 	static std::vector<std::unique_ptr<OpenViBE::Plugins::IPluginObjectDesc>> g_descriptors; \
 	extern "C" \
 	{ \
-		OVP_API OpenViBE::boolean onInitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
+		OVP_API bool onInitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
 		{
 
 #define OVP_Declare_New(Class) \
@@ -140,11 +139,11 @@ namespace OpenViBE
 #define OVP_Declare_End() \
 			return true; \
 		} \
-		OVP_API OpenViBE::boolean onUninitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
+		OVP_API bool onUninitialize(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext) \
 		{ \
 			return true; \
 		} \
-		OVP_API OpenViBE::boolean onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext, OpenViBE::uint32 ui32Index, OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) \
+		OVP_API bool onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext, uint32_t ui32Index, OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) \
 		{ \
 			if(ui32Index>=g_descriptors.size()) \
 			{ \
@@ -155,5 +154,3 @@ namespace OpenViBE
 			return true; \
 		} \
 	}
-
-#endif // __OpenViBE_All_H__

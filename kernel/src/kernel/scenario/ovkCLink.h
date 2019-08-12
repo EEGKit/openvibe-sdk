@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Scenario_CLink_H__
-#define __OpenViBEKernel_Kernel_Scenario_CLink_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -11,59 +10,40 @@ namespace OpenViBE
 	{
 		class CScenario;
 
-		class CLink : public OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::ILink > >
+		class CLink : public TAttributable<TKernelObject<ILink>>
 		{
 		public:
 
-			CLink(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CScenario& rOwnerScenario);			
-
-			virtual bool InitializeFromExistingLink(const ILink& link);
-			
-			virtual OpenViBE::boolean setIdentifier(
-				const OpenViBE::CIdentifier& rIdentifier);
-			virtual OpenViBE::CIdentifier getIdentifier(void) const;
-
-			virtual OpenViBE::boolean setSource(
-				const OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::uint32 ui32BoxOutputIndex,
-				const OpenViBE::CIdentifier rBoxOutputIdentifier);
-			virtual OpenViBE::boolean setTarget(
-				const OpenViBE::CIdentifier& rBoxIdentifier,
-				const OpenViBE::uint32 ui32BoxInputIndex,
-				const OpenViBE::CIdentifier rBoxInputIdentifier);
-			virtual OpenViBE::boolean getSource(
-				OpenViBE::CIdentifier& rBoxIdentifier,
-				OpenViBE::uint32& ui32BoxOutputIndex,
-				OpenViBE::CIdentifier& rBoxOutputIdentifier) const;
-			virtual OpenViBE::CIdentifier getSourceBoxIdentifier(void) const;
-			virtual OpenViBE::uint32 getSourceBoxOutputIndex(void) const;
-			virtual OpenViBE::CIdentifier getSourceBoxOutputIdentifier(void) const;
-			virtual OpenViBE::boolean getTarget(
-				OpenViBE::CIdentifier& rTargetBoxIdentifier,
-				OpenViBE::uint32& ui32BoxInputIndex,
-				OpenViBE::CIdentifier& rTargetBoxInputIdentifier) const;
-			virtual OpenViBE::CIdentifier getTargetBoxIdentifier(void) const;
-			virtual OpenViBE::uint32 getTargetBoxInputIndex(void) const;
-			virtual OpenViBE::CIdentifier getTargetBoxInputIdentifier(void) const;
-			
-
-			virtual OpenViBE::boolean acceptVisitor(
-				OpenViBE::IObjectVisitor& rObjectVisitor);
+			CLink(const IKernelContext& rKernelContext, CScenario& rOwnerScenario);
+			bool InitializeFromExistingLink(const ILink& link) override;
+			bool setIdentifier(const CIdentifier& rIdentifier) override;
+			CIdentifier getIdentifier() const override;
+			bool setSource(const CIdentifier& rBoxIdentifier, uint32_t ui32BoxOutputIndex, CIdentifier rBoxOutputIdentifier) override;
+			bool setTarget(const CIdentifier& rBoxIdentifier, uint32_t ui32BoxInputIndex, CIdentifier rBoxInputIdentifier) override;
+			bool getSource(CIdentifier& rBoxIdentifier, uint32_t& ui32BoxOutputIndex, CIdentifier& rBoxOutputIdentifier) const override;
+			CIdentifier getSourceBoxIdentifier() const override;
+			uint32_t getSourceBoxOutputIndex() const override;
+			CIdentifier getSourceBoxOutputIdentifier() const override;
+			bool getTarget(CIdentifier& rTargetBoxIdentifier, uint32_t& ui32BoxInputIndex, CIdentifier& rTargetBoxInputIdentifier) const override;
+			CIdentifier getTargetBoxIdentifier() const override;
+			uint32_t getTargetBoxInputIndex() const override;
+			CIdentifier getTargetBoxInputIdentifier() const override;
+			bool acceptVisitor(IObjectVisitor& rObjectVisitor) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::ILink > >, OVK_ClassId_Kernel_Scenario_Link)
 
 		protected:
 
-			OpenViBE::Kernel::CScenario& m_rOwnerScenario;
-			OpenViBE::CIdentifier m_oIdentifier;
-			OpenViBE::CIdentifier m_oSourceBoxIdentifier;
-			OpenViBE::CIdentifier m_oTargetBoxIdentifier;
-			OpenViBE::uint32 m_ui32SourceOutputIndex;
-			OpenViBE::CIdentifier m_oSourceBoxOutputIdentifier;
-			OpenViBE::uint32 m_ui32TargetInputIndex;
-			OpenViBE::CIdentifier m_oTargetBoxInputIdentifier;
+			CScenario& m_rOwnerScenario;
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
+			CIdentifier m_oSourceBoxIdentifier = OV_UndefinedIdentifier;
+			CIdentifier m_oTargetBoxIdentifier = OV_UndefinedIdentifier;
+			uint32_t m_ui32SourceOutputIndex = 0;
+			CIdentifier m_oSourceBoxOutputIdentifier = OV_UndefinedIdentifier;
+			uint32_t m_ui32TargetInputIndex = 0;
+			CIdentifier m_oTargetBoxInputIdentifier = OV_UndefinedIdentifier;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Scenario_CLink_H__
+

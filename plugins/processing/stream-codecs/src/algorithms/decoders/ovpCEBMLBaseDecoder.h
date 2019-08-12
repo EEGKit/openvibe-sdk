@@ -1,5 +1,4 @@
-#ifndef __SamplePlugin_Algorithms_CEBMLBaseDecoder_H__
-#define __SamplePlugin_Algorithms_CEBMLBaseDecoder_H__
+#pragma once
 
 #include "../../ovp_defines.h"
 
@@ -24,41 +23,37 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CEBMLBaseDecoder : public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >
+		class CEBMLBaseDecoder : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 		public:
 
-			CEBMLBaseDecoder(void);
+			CEBMLBaseDecoder();
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool process() override;
 
-			virtual void release(void) { delete this; }
-
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean process(void);
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseStreamDecoder);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseStreamDecoder)
 
 			// ebml callbacks
-			virtual EBML::boolean isMasterChild(const EBML::CIdentifier& rIdentifier);
+			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
 			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-			virtual void closeChild(void);
+			virtual void processChildData(const void* pBuffer, uint64_t ui64BufferSize);
+			virtual void closeChild();
 
 		protected:
 
-			EBML::IReaderHelper* m_pEBMLReaderHelper;
-			EBML::IReader* m_pEBMLReader;
-			EBML::TReaderCallbackProxy1 < OpenViBEPlugins::StreamCodecs::CEBMLBaseDecoder > m_oEBMLReaderCallbackProxy;
+			EBML::IReaderHelper* m_pEBMLReaderHelper = nullptr;
+			EBML::IReader* m_pEBMLReader = nullptr;
+			EBML::TReaderCallbackProxy1<CEBMLBaseDecoder> m_oEBMLReaderCallbackProxy;
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > ip_pMemoryBufferToDecode;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pMemoryBufferToDecode;
 		};
 
 		class CEBMLBaseDecoderDesc : public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
-
-			virtual OpenViBE::boolean getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_EBMLStreamDecoder_InputParameterId_MemoryBufferToDecode, "Memory buffer to decode", OpenViBE::Kernel::ParameterType_MemoryBuffer);
 
@@ -69,9 +64,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseStreamDecoderDesc);
+			_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_EBMLBaseStreamDecoderDesc)
 		};
-	};
-};
-
-#endif // __SamplePlugin_Algorithms_CEBMLBaseDecoder_H__
+	} // namespace StreamCodecs
+} // namespace OpenViBEPlugins

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_EBMLStreamSpy_H__
-#define __OpenViBEPlugins_BoxAlgorithm_EBMLStreamSpy_H__
+#pragma once
 
 #include "../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
@@ -22,49 +21,44 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmEBMLStreamSpy(void);
-
-			virtual void release(void);
-
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-
-			virtual EBML::boolean isMasterChild(const EBML::CIdentifier& rIdentifier);
-			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-			virtual void closeChild(void);
-
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			CBoxAlgorithmEBMLStreamSpy();
+			void release() override;
+			bool initialize() override;
+			bool uninitialize() override;
+			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
+			void openChild(const EBML::CIdentifier& rIdentifier) override;
+			void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override;
+			void closeChild() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EBMLStreamSpy)
 
 		protected:
 
 			template <class T>
-			void processBinaryBlock(const void* pBuffer, const EBML::uint64 ui64BufferSize);
+			void processBinaryBlock(const void* pBuffer, uint64_t ui64BufferSize);
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 			std::map<EBML::CIdentifier, std::string> m_vName;
 			std::map<EBML::CIdentifier, std::string> m_vType;
-			OpenViBE::uint64 m_ui64ExpandValuesCount;
+			uint64_t m_ui64ExpandValuesCount = 0;
 			OpenViBE::Kernel::ELogLevel m_eLogLevel;
-			EBML::IReader* m_pReader;
-			EBML::IReaderHelper* m_pReaderHelper;
+			EBML::IReader* m_pReader = nullptr;
+			EBML::IReaderHelper* m_pReaderHelper = nullptr;
 		};
 
-		class CBoxAlgorithmEBMLStreamSpyListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmEBMLStreamSpyListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			OpenViBE::boolean check(OpenViBE::Kernel::IBox& rBox)
+			bool check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
-				OpenViBE::uint32 i;
 
-				for(i=0; i<rBox.getInputCount(); i++)
+				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
 				{
-					sprintf(l_sName, "Spied EBML stream %u", i+1);
+					sprintf(l_sName, "Spied EBML stream %u", i + 1);
 					rBox.setInputName(i, l_sName);
 					rBox.setInputType(i, OV_TypeId_EBMLStream);
 				}
@@ -72,42 +66,39 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual OpenViBE::boolean onInputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return this->check(rBox); }
-			virtual OpenViBE::boolean onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index) { return this->check(rBox); };
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); };
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmEBMLStreamSpyDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("EBML stream spy"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("EBML stream tree viewer"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This sample EBML stream analyzer prints the EBML tree structure to the console"); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Tools"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_EBMLStreamSpy; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmEBMLStreamSpy(); }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmEBMLStreamSpyListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("EBML stream spy"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("EBML stream tree viewer"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("This sample EBML stream analyzer prints the EBML tree structure to the console"); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Tools"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_EBMLStreamSpy; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Tools::CBoxAlgorithmEBMLStreamSpy(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmEBMLStreamSpyListener; }
-			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
-
-			virtual OpenViBE::boolean getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
-				rPrototype.addInput  ("Spied EBML stream 1",                 OV_TypeId_EBMLStream);
-				rPrototype.addSetting("EBML nodes description",              OV_TypeId_Filename, "${Path_Data}/plugins/tools/config-ebml-stream-spy.txt");
-				rPrototype.addSetting("Log level to use",                    OV_TypeId_LogLevel, "Information");
-				rPrototype.addSetting("Expand binary blocks",                OV_TypeId_Boolean,  "false");
-				rPrototype.addSetting("Number of values in expanded blocks", OV_TypeId_Integer,  "4");
-				rPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddInput);
+				rPrototype.addInput("Spied EBML stream 1", OV_TypeId_EBMLStream);
+				rPrototype.addSetting("EBML nodes description", OV_TypeId_Filename, "${Path_Data}/plugins/tools/config-ebml-stream-spy.txt");
+				rPrototype.addSetting("Log level to use", OV_TypeId_LogLevel, "Information");
+				rPrototype.addSetting("Expand binary blocks", OV_TypeId_Boolean, "false");
+				rPrototype.addSetting("Number of values in expanded blocks", OV_TypeId_Integer, "4");
+				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 				return true;
 			}
 
@@ -115,5 +106,3 @@ namespace OpenViBEPlugins
 		};
 	};
 };
-
-#endif // __OpenViBEPlugins_Tools_CEBMLStreamSpy_H__

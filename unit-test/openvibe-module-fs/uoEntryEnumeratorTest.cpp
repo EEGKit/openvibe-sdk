@@ -31,7 +31,7 @@ class EntryEnumeratorCallBack : public FS::IEntryEnumeratorCallBack
 {
 public:
 
-	virtual bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
+	bool callback(FS::IEntryEnumerator::IEntry& rEntry, FS::IEntryEnumerator::IAttributes& rAttributes) override
 	{
 		if (rAttributes.isFile())
 		{
@@ -41,21 +41,17 @@ public:
 		return true;
 	}
 
-	void release()
-	{
-		files.clear();
-	}
+	void release() { files.clear(); }
 
 	std::vector<std::string> files;
-
 };
 
 int uoEntryEnumeratorTest(int argc, char* argv[])
-{  
+{
 	std::string dataDirectory = argv[1];
 
 	EntryEnumeratorCallBack cb;
-	FS::IEntryEnumerator* enumerator = FS::createEntryEnumerator(cb);
+	FS::IEntryEnumerator* enumerator = createEntryEnumerator(cb);
 	enumerator->enumerate((dataDirectory + "*.txt").c_str());
 
 	OVT_ASSERT(cb.files.size() == 2, "Failure to enumerate with wildcard prefix");
@@ -103,4 +99,3 @@ int uoEntryEnumeratorTest(int argc, char* argv[])
 
 	return EXIT_SUCCESS;
 }
-

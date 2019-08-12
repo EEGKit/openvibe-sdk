@@ -3,7 +3,8 @@
 #include <ovICSV.h>
 
 using namespace OpenViBE::CSV;
-namespace {
+namespace
+{
 	const std::map<ELogErrorCodes, std::string> s_ErrorMap =
 	{
 		{ LogErrorCodes_ErrorWhileClosing, "Error while closing the file" },
@@ -42,12 +43,6 @@ namespace {
 
 std::string ICSVHandler::getLogError(ELogErrorCodes code)
 {
-	if (s_ErrorMap.count(code) != 0)
-	{
-		return s_ErrorMap.at(code);
-	}
-	else
-	{
-		return "Unknow error";
-	}
+	if (s_ErrorMap.count(code) != 0) { return s_ErrorMap.at(code); }
+	else { return "Unknow error"; }
 }

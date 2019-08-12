@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Algorithm_IAlgorithmContext_H__
-#define __OpenViBE_Kernel_Algorithm_IAlgorithmContext_H__
+#pragma once
 
 #include "../ovIKernelObject.h"
 
@@ -19,7 +18,7 @@ namespace OpenViBE
 		 * \ingroup Group_Extend
 		 * \sa OpenViBE::Plugins::IAlgorithm
 		 */
-		class OV_API IAlgorithmContext : public OpenViBE::Kernel::IKernelObject
+		class OV_API IAlgorithmContext : public IKernelObject
 		{
 		public:
 
@@ -30,7 +29,7 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const=0;
+			virtual IConfigurationManager& getConfigurationManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current algorithm manager
 			 * \return a reference on the algorithm manager
@@ -38,7 +37,7 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const=0;
+			virtual IAlgorithmManager& getAlgorithmManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current log manager
 			 * \return a reference on the current log manager
@@ -46,7 +45,7 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const=0;
+			virtual ILogManager& getLogManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current error manager
 			 * \return a reference on the current error manager
@@ -54,12 +53,12 @@ namespace OpenViBE
 			 * \warning The algorithm should not use this reference after it
 			 *          has finished its work, it could be deprecated.
 			 */
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const=0;
+			virtual IErrorManager& getErrorManager() const = 0;
 			/**
 			 * \brief Gets a reference on the current type manager
 			 * \return a reference on the current type manager
 			 */
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const=0;
+			virtual ITypeManager& getTypeManager() const = 0;
 
 			/** \name Input parameters */
 			//@{
@@ -72,16 +71,14 @@ namespace OpenViBE
 			 * \note Passing \c OV_UndefinedIdentifier as \c rPreviousInputParameterIdentifier will
 			 *       cause this function to return the firs input parameter identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextInputParameterIdentifier(
-				const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const=0;
+			virtual CIdentifier getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const = 0;
 			/**
 			 * \brief Gets the parameter details of a specific input parameter
 			 * \param rInputParameterIdentifier [in] : the identifier of the parameter which details should be returned
 			 * \return the parameter pointer that corresponds to the provided identifier.
 			 * \return \c NULL in case of error.
 			 */
-			virtual OpenViBE::Kernel::IParameter* getInputParameter(
-				const OpenViBE::CIdentifier& rInputParameterIdentifier)=0;
+			virtual IParameter* getInputParameter(const CIdentifier& rInputParameterIdentifier) = 0;
 
 			//@}
 			/** \name Output parameters */
@@ -95,16 +92,14 @@ namespace OpenViBE
 			 * \note Passing \c OV_UndefinedIdentifier as \c rPreviousOutputParameterIdentifier will
 			 *       cause this function to return the firs output parameter identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextOutputParameterIdentifier(
-				const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const=0;
+			virtual CIdentifier getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const = 0;
 			/**
 			 * \brief Gets the parameter details of a specific output parameter
 			 * \param rOutputParameterIdentifier [in] : the identifier of the parameter which details should be returned
 			 * \return the parameter pointer that corresponds to the provided identifier.
 			 * \return \c NULL in case of error.
 			 */
-			virtual OpenViBE::Kernel::IParameter* getOutputParameter(
-				const OpenViBE::CIdentifier& rOutputParameterIdentifier)=0;
+			virtual IParameter* getOutputParameter(const CIdentifier& rOutputParameterIdentifier) = 0;
 
 			//@}
 			/** \name Trigger management */
@@ -116,8 +111,7 @@ namespace OpenViBE
 			 * \return \e true if the provided trigger is currently active.
 			 * \return \e false if the provided trigger is not currently active or does not exist.
 			 */
-			virtual OpenViBE::boolean isInputTriggerActive(
-				const OpenViBE::CIdentifier& rInputTriggerIdentifier) const=0;
+			virtual bool isInputTriggerActive(const CIdentifier& rInputTriggerIdentifier) const = 0;
 			/**
 			 * \brief Activates an output trigger before calling the processing function.
 			 * \param rOutputTriggerIdentifier [in] : the identifier of the output to activate
@@ -126,15 +120,11 @@ namespace OpenViBE
 			 * \return \e true in case the state was correctly changed.
 			 * \return \e false in case the state was not changed or the provided trigger identifier does not exist.
 			 */
-			virtual OpenViBE::boolean activateOutputTrigger(
-				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
-				const OpenViBE::boolean bTriggerState)=0;
+			virtual bool activateOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, bool bTriggerState) = 0;
 
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Algorithm_AlgorithmContext)
 		};
-	};
-};
-
-#endif // __OpenViBE_Kernel_Algorithm_IAlgorithmContext_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

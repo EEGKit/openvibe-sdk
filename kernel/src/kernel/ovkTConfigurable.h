@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_TConfigurable_H__
-#define __OpenViBEKernel_Kernel_TConfigurable_H__
+#pragma once
 
 #include "ovkTKernelObject.h"
 
@@ -18,108 +17,102 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit TBaseConfigurable(const OpenViBE::Kernel::IKernelContext& rKernelContext)
-				:IBase(rKernelContext)
-			{
-			}
+			explicit TBaseConfigurable(const IKernelContext& rKernelContext) : IBase(rKernelContext) { }
 
-			virtual ~TBaseConfigurable(void)
+			virtual ~TBaseConfigurable()
 			{
-				std::map < OpenViBE::CIdentifier, std::pair < OpenViBE::boolean, OpenViBE::Kernel::IParameter* > >::iterator itParameter=m_vParameter.begin();
-				while(itParameter!=m_vParameter.end())
+				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.begin();
+				while (itParameter != m_vParameter.end())
 				{
 					// @FIXME is this really as intended, test the first, delete the second?
-					if(itParameter->second.first)
+					if (itParameter->second.first)
 					{
 						delete itParameter->second.second;
-						itParameter->second.second = NULL;
+						itParameter->second.second = nullptr;
 					}
 					++itParameter;
 				}
 			}
 
-			virtual OpenViBE::CIdentifier getNextParameterIdentifier(const OpenViBE::CIdentifier& rPreviousIdentifier) const
+			virtual CIdentifier getNextParameterIdentifier(const CIdentifier& rPreviousIdentifier) const
 			{
-				return getNextIdentifier< std::pair < OpenViBE::boolean, OpenViBE::Kernel::IParameter* > >(m_vParameter, rPreviousIdentifier);
+				return getNextIdentifier<std::pair<bool, IParameter*>>(m_vParameter, rPreviousIdentifier);
 			}
 
-			virtual OpenViBE::Kernel::IParameter* getParameter(const OpenViBE::CIdentifier& rParameterIdentifier)
+			virtual IParameter* getParameter(const CIdentifier& rParameterIdentifier)
 			{
-				std::map < OpenViBE::CIdentifier, std::pair < OpenViBE::boolean, OpenViBE::Kernel::IParameter* > >::iterator itParameter=m_vParameter.find(rParameterIdentifier);
-				if(itParameter==m_vParameter.end())
-				{
-					return NULL;
-				}
+				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
+				if (itParameter == m_vParameter.end()) { return nullptr; }
 				return itParameter->second.second;
 			}
 
-			virtual OpenViBE::boolean setParameter(const OpenViBE::CIdentifier& rParameterIdentifier, OpenViBE::Kernel::IParameter& rpParameter)
+			virtual bool setParameter(const CIdentifier& rParameterIdentifier, IParameter& rpParameter)
 			{
 				this->removeParameter(rParameterIdentifier);
 
-				m_vParameter[rParameterIdentifier]=std::pair < OpenViBE::boolean, OpenViBE::Kernel::IParameter* >(false, &rpParameter);
+				m_vParameter[rParameterIdentifier] = std::pair<bool, IParameter*>(false, &rpParameter);
 
 				return true;
 			}
 
-			virtual OpenViBE::Kernel::IParameter* createParameter(const OpenViBE::CIdentifier& rParameterIdentifier, const EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier)
+			virtual IParameter* createParameter(const CIdentifier& rParameterIdentifier, const EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier)
 			{
-				std::map < OpenViBE::CIdentifier, std::pair < OpenViBE::boolean, OpenViBE::Kernel::IParameter* > >::iterator itParameter=m_vParameter.find(rParameterIdentifier);
-				if(itParameter!=m_vParameter.end())
+				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
+				if (itParameter != m_vParameter.end()) { return nullptr; }
+
+				IParameter* l_pParameter = nullptr;
+				switch (eParameterType)
 				{
-					return NULL;
+					case ParameterType_UInteger: l_pParameter = new CUIntegerParameter(this->getKernelContext(), eParameterType);
+						break;
+					case ParameterType_Integer: l_pParameter = new CIntegerParameter(this->getKernelContext(), eParameterType);
+						break;
+					case ParameterType_Enumeration: l_pParameter = new CEnumerationParameter(this->getKernelContext(), eParameterType, rSubTypeIdentifier);
+						break;
+					case ParameterType_Boolean: l_pParameter = new CBooleanParameter(this->getKernelContext(), eParameterType);
+						break;
+					case ParameterType_Float: l_pParameter = new CFloatParameter(this->getKernelContext(), eParameterType);
+						break;
+					case ParameterType_String: l_pParameter = new CStringParameter(this->getKernelContext(), eParameterType);
+						break;
+					case ParameterType_Identifier: l_pParameter = new CIdentifierParameter(this->getKernelContext(), eParameterType);
+						break;
+					case ParameterType_Matrix: l_pParameter = new CMatrixParameter(this->getKernelContext(), eParameterType);
+						break;
+					case ParameterType_StimulationSet: l_pParameter = new CStimulationSetParameter(this->getKernelContext(), eParameterType);
+						break;
+					case ParameterType_MemoryBuffer: l_pParameter = new CMemoryBufferParameter(this->getKernelContext(), eParameterType);
+						break;
+					case ParameterType_Object: l_pParameter = new CObjectParameter(this->getKernelContext(), eParameterType);
+						break;
+					case ParameterType_None:
+					case ParameterType_Pointer: l_pParameter = new CPointerParameter(this->getKernelContext(), eParameterType);
+						break;
 				}
 
-				OpenViBE::Kernel::IParameter* l_pParameter=NULL;
-				switch(eParameterType)
-				{
-					case OpenViBE::Kernel::ParameterType_UInteger:       l_pParameter=new OpenViBE::Kernel::CUIntegerParameter(this->getKernelContext(), eParameterType);                        break;
-					case OpenViBE::Kernel::ParameterType_Integer:        l_pParameter=new OpenViBE::Kernel::CIntegerParameter(this->getKernelContext(), eParameterType);                         break;
-					case OpenViBE::Kernel::ParameterType_Enumeration:    l_pParameter=new OpenViBE::Kernel::CEnumerationParameter(this->getKernelContext(), eParameterType, rSubTypeIdentifier); break;
-					case OpenViBE::Kernel::ParameterType_Boolean:        l_pParameter=new OpenViBE::Kernel::CBooleanParameter(this->getKernelContext(), eParameterType);                         break;
-					case OpenViBE::Kernel::ParameterType_Float:          l_pParameter=new OpenViBE::Kernel::CFloatParameter(this->getKernelContext(), eParameterType);                           break;
-					case OpenViBE::Kernel::ParameterType_String:         l_pParameter=new OpenViBE::Kernel::CStringParameter(this->getKernelContext(), eParameterType);                          break;
-					case OpenViBE::Kernel::ParameterType_Identifier:     l_pParameter=new OpenViBE::Kernel::CIdentifierParameter(this->getKernelContext(), eParameterType);                      break;
-					case OpenViBE::Kernel::ParameterType_Matrix:         l_pParameter=new OpenViBE::Kernel::CMatrixParameter(this->getKernelContext(), eParameterType);                          break;
-					case OpenViBE::Kernel::ParameterType_StimulationSet: l_pParameter=new OpenViBE::Kernel::CStimulationSetParameter(this->getKernelContext(), eParameterType);                  break;
-					case OpenViBE::Kernel::ParameterType_MemoryBuffer:   l_pParameter=new OpenViBE::Kernel::CMemoryBufferParameter(this->getKernelContext(), eParameterType);                    break;
-					case OpenViBE::Kernel::ParameterType_Object:         l_pParameter=new OpenViBE::Kernel::CObjectParameter(this->getKernelContext(), eParameterType);                          break;
-					case OpenViBE::Kernel::ParameterType_None:
-					case OpenViBE::Kernel::ParameterType_Pointer:        l_pParameter=new OpenViBE::Kernel::CPointerParameter(this->getKernelContext(), eParameterType);                         break;
-				};
-
-				if(l_pParameter!=NULL)
-				{
-					m_vParameter[rParameterIdentifier]=std::pair < OpenViBE::boolean, OpenViBE::Kernel::IParameter* >(true, l_pParameter);
-				}
+				if (l_pParameter != nullptr) { m_vParameter[rParameterIdentifier] = std::pair<bool, IParameter*>(true, l_pParameter); }
 
 				return l_pParameter;
 			}
 
-			virtual OpenViBE::boolean removeParameter(const OpenViBE::CIdentifier& rParameterIdentifier)
+			virtual bool removeParameter(const CIdentifier& rParameterIdentifier)
 			{
-				std::map < OpenViBE::CIdentifier, std::pair < OpenViBE::boolean, OpenViBE::Kernel::IParameter* > >::iterator itParameter=m_vParameter.find(rParameterIdentifier);
-				if(itParameter==m_vParameter.end())
-				{
-					return false;
-				}
+				std::map<CIdentifier, std::pair<bool, IParameter*>>::iterator itParameter = m_vParameter.find(rParameterIdentifier);
+				if (itParameter == m_vParameter.end()) { return false; }
 
-				if(itParameter->second.first)
-				{
-					delete itParameter->second.second;
-				}
+				if (itParameter->second.first) { delete itParameter->second.second; }
 				m_vParameter.erase(itParameter);
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(IBase, OVK_ClassId_Kernel_ConfigurableT);
+			_IsDerivedFromClass_Final_(IBase, OVK_ClassId_Kernel_ConfigurableT)
 
 		private:
 
-			std::map < OpenViBE::CIdentifier, std::pair < OpenViBE::boolean, OpenViBE::Kernel::IParameter* > > m_vParameter;
+			std::map<CIdentifier, std::pair<bool, IParameter*>> m_vParameter;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_TConfigurable_H__
+

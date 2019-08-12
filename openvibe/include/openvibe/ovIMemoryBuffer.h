@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_IMemoryBuffer_H__
-#define __OpenViBE_IMemoryBuffer_H__
+#pragma once
 
 #include "ovIObject.h"
 
@@ -18,7 +17,7 @@ namespace OpenViBE
 	 *
 	 * OpenViBE provides an standalone implementation of this interface in OpenViBE::CMemoryBuffer
 	 */
-	class OV_API IMemoryBuffer : public OpenViBE::IObject
+	class OV_API IMemoryBuffer : public IObject
 	{
 	public:
 
@@ -35,8 +34,7 @@ namespace OpenViBE
 		 * \note if \c ui64Size is lower than the actual buffer size
 		 *       then \e true is returned and nothing is done.
 		 */
-		virtual OpenViBE::boolean reserve(
-			const OpenViBE::uint64 ui64Size)=0;
+		virtual bool reserve(const uint64_t ui64Size) = 0;
 		/**
 		 * \brief Changes the size of this memory buffer
 		 * \param ui64Size [in] : the new size to give to the buffer
@@ -48,27 +46,25 @@ namespace OpenViBE
 		 *       buffer is simply truncated to the \c ui64Size first bytes.
 		 * \sa getSize
 		 */
-		virtual OpenViBE::boolean setSize(
-			const OpenViBE::uint64 ui64Size,
-			const OpenViBE::boolean bDiscard)=0;
+		virtual bool setSize(const uint64_t ui64Size, const bool bDiscard) = 0;
 		/**
 		 * \brief Gets the current size of this memory buffer
 		 * \return the current size of this memory buffer
 		 * \sa setSize
 		 */
-		virtual OpenViBE::uint64 getSize(void) const=0;
+		virtual uint64_t getSize() const = 0;
 		/**
 		 * \brief Gets a direct pointer to the byte array for read/write access
 		 * \return a direct pointer to the byte array for read/write access
 		 * \sa getSize
 		 */
-		virtual OpenViBE::uint8* getDirectPointer(void)=0;
+		virtual uint8_t* getDirectPointer() = 0;
 		/**
 		 * \brief Gets a direct pointer to the byte array for read access
 		 * \return a direct pointer to the byte array for read access
 		 * \sa getSize
 		 */
-		virtual const OpenViBE::uint8* getDirectPointer(void) const=0;
+		virtual const uint8_t* getDirectPointer() const = 0;
 		/**
 		 * \brief Appends data to this memory buffer
 		 * \param pBuffer [in] : the buffer containing data that should be appended
@@ -76,33 +72,21 @@ namespace OpenViBE
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean append(
-			const OpenViBE::uint8* pBuffer,
-			const OpenViBE::uint64 ui64BufferSize)=0;
+		virtual bool append(const uint8_t* pBuffer, const uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Appends data to this memory buffer
 		 * \param rMemoryBuffer [in] : the memory buffer containing data that should be appended
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual OpenViBE::boolean append(
-			const OpenViBE::IMemoryBuffer& rMemoryBuffer)
+		virtual bool append(const IMemoryBuffer& rMemoryBuffer)
 		{
 			return this->append(rMemoryBuffer.getDirectPointer(), rMemoryBuffer.getSize());
 		}
 
-		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_MemoryBuffer);
+		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_MemoryBuffer)
 
-		const OpenViBE::uint8& operator [] (const OpenViBE::uint64 ui64Index) const
-		{
-			return this->getDirectPointer()[ui64Index];
-		}
-
-		OpenViBE::uint8& operator [] (const OpenViBE::uint64 ui64Index)
-		{
-			return this->getDirectPointer()[ui64Index];
-		}
+		const uint8_t& operator [](const uint64_t ui64Index) const { return this->getDirectPointer()[ui64Index]; }
+		uint8_t& operator [](const uint64_t ui64Index) { return this->getDirectPointer()[ui64Index]; }
 	};
-};
-
-#endif // __OpenViBE_IMemoryBuffer_H__
+}  // namespace OpenViBE

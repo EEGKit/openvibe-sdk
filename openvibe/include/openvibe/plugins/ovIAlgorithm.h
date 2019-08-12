@@ -1,14 +1,10 @@
-#ifndef __OpenViBE_Plugins_IAlgorithm_H__
-#define __OpenViBE_Plugins_IAlgorithm_H__
+#pragma once
 
 #include "ovIPluginObject.h"
 
 namespace OpenViBE
 {
-	namespace Kernel
-	{
-		class IAlgorithmContext;
-	}
+	namespace Kernel { class IAlgorithmContext; }
 
 	namespace Plugins
 	{
@@ -34,7 +30,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IAlgorithm : public OpenViBE::Plugins::IPluginObject
+		class OV_API IAlgorithm : public IPluginObject
 		{
 		public:
 
@@ -44,8 +40,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual OpenViBE::boolean initialize(
-				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
+			virtual bool initialize(Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
 			/**
 			 * \brief Unitializes this algorithm
 			 * \param rAlgorithmContext [in] : the extecution context for this algorithm
@@ -53,8 +48,7 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \exception this method must be noexcept
 			 */
-			virtual OpenViBE::boolean uninitialize(
-				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
+			virtual bool uninitialize(Kernel::IAlgorithmContext& rAlgorithmContext) { return true; }
 			/**
 			 * \brief Effectively executes this algorithm
 			 * \param rAlgorithmContext [in] : the extecution context for this algorithm
@@ -64,12 +58,9 @@ namespace OpenViBE
 			 * When called, this function should get its "input" parameters, do stuffs with them
 			 * and finally produce "output" parameters.
 			 */
-			virtual OpenViBE::boolean process(
-				OpenViBE::Kernel::IAlgorithmContext& rAlgorithmContext)=0;
+			virtual bool process(Kernel::IAlgorithmContext& rAlgorithmContext) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_Algorithm)
 		};
-	};
-};
-
-#endif // __OpenViBE_Plugins_IAlgorithm_H__
+	}  // namespace Plugins
+}  // namespace OpenViBE

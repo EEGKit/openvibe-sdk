@@ -4,25 +4,13 @@
 #include "ovkCPlayer.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
-void CBoxAlgorithmLogManager::log(const OpenViBE::Kernel::ELogLevel logLevel) {
-	OpenViBE::CIdentifier boxId;
+void CBoxAlgorithmLogManager::log(const ELogLevel logLevel)
+{
+	CIdentifier boxId;
 	m_SimulatedBox.getBoxIdentifier(boxId);
 
-	m_LogManager
-	        << logLevel
-	        << "At time "
-	        << OpenViBE::time64(m_PlayerContext.getCurrentTime())
-	        << " <"
-	        << OpenViBE::Kernel::LogColor_PushStateBit
-	        << OpenViBE::Kernel::LogColor_ForegroundBlue
-	        << "Box algorithm"
-	        << OpenViBE::Kernel::LogColor_PopStateBit
-	        << "::"
-	        << boxId
-	        << " aka "
-	        << m_SimulatedBox.getName()
-	        << "> ";
+	m_LogManager << logLevel << "At time " << time64(m_PlayerContext.getCurrentTime()) << " <" << LogColor_PushStateBit << LogColor_ForegroundBlue 
+				 << "Box algorithm" << LogColor_PopStateBit << "::" << boxId << " aka " << m_SimulatedBox.getName() << "> "; 
 }
-

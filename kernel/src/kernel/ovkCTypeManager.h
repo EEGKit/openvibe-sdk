@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_CTypeManager_H__
-#define __OpenViBEKernel_Kernel_CTypeManager_H__
+#pragma once
 
 #include "ovkTKernelObject.h"
 
@@ -12,111 +11,51 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CTypeManager : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ITypeManager>
+		class CTypeManager : public TKernelObject<ITypeManager>
 		{
 		public:
 
-			explicit CTypeManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CTypeManager(const IKernelContext& rKernelContext);
+			CIdentifier getNextTypeIdentifier(const CIdentifier& rPreviousIdentifier) const override;
+			std::vector<std::pair<CIdentifier, CString>> getSortedTypes() const override;
+			bool registerType(const CIdentifier& rTypeIdentifier, const CString& sTypeName) override;
+			bool registerStreamType(const CIdentifier& rTypeIdentifier, const CString& sTypeName, const CIdentifier& rParentTypeIdentifier) override;
+			bool registerEnumerationType(const CIdentifier& rTypeIdentifier, const CString& sTypeName) override;
+			bool registerEnumerationEntry(const CIdentifier& rTypeIdentifier, const CString& sEntryName, uint64_t ui64EntryValue) override;
+			bool registerBitMaskType(const CIdentifier& rTypeIdentifier, const CString& sTypeName) override;
+			bool registerBitMaskEntry(const CIdentifier& rTypeIdentifier, const CString& sEntryName, uint64_t ui64EntryValue) override;
+			bool isRegistered(const CIdentifier& rTypeIdentifier) const override;
+			bool isStream(const CIdentifier& rTypeIdentifier) const override;
+			bool isDerivedFromStream(const CIdentifier& rTypeIdentifier, const CIdentifier& rParentTypeIdentifier) const override;
+			bool isEnumeration(const CIdentifier& rTypeIdentifier) const override;
+			bool isBitMask(const CIdentifier& rTypeIdentifier) const override;
+			CString getTypeName(const CIdentifier& rTypeIdentifier) const override;
+			CIdentifier getStreamParentType(const CIdentifier& rTypeIdentifier) const override;
+			uint64_t getEnumerationEntryCount(const CIdentifier& rTypeIdentifier) const override;
+			bool getEnumerationEntry(const CIdentifier& rTypeIdentifier, uint64_t ui64EntryIndex, CString& sEntryName, uint64_t& rEntryValue) const override;
+			CString getEnumerationEntryNameFromValue(const CIdentifier& rTypeIdentifier, uint64_t ui64EntryValue) const override;
+			uint64_t getEnumerationEntryValueFromName(const CIdentifier& rTypeIdentifier, const CString& rEntryName) const override;
+			uint64_t getBitMaskEntryCount(const CIdentifier& rTypeIdentifier) const override;
+			bool getBitMaskEntry(const CIdentifier& rTypeIdentifier, uint64_t ui64EntryIndex, CString& sEntryName, uint64_t& rEntryValue) const override;
+			CString getBitMaskEntryNameFromValue(const CIdentifier& rTypeIdentifier, uint64_t ui64EntryValue) const override;
+			uint64_t getBitMaskEntryValueFromName(const CIdentifier& rTypeIdentifier, const CString& rEntryName) const override;
+			CString getBitMaskEntryCompositionNameFromValue(const CIdentifier& rTypeIdentifier, uint64_t ui64EntryCompositionValue) const override;
+			uint64_t getBitMaskEntryCompositionValueFromName(const CIdentifier& rTypeIdentifier, const CString& rEntryCompositionName) const override;
+			bool evaluateSettingValue(CString settingValue, double& numericResult) const override;
 
-			virtual OpenViBE::CIdentifier getNextTypeIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
-
-			virtual std::vector<std::pair<CIdentifier, CString> > getSortedTypes() const;
-
-			virtual bool registerType(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sTypeName);
-
-			virtual bool registerStreamType(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sTypeName,
-				const OpenViBE::CIdentifier& rParentTypeIdentifier);
-
-
-			virtual bool registerEnumerationType(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sTypeName);
-			virtual bool registerEnumerationEntry(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sEntryName,
-				const uint64_t ui64EntryValue);
-
-			virtual bool registerBitMaskType(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sTypeName);
-			virtual bool registerBitMaskEntry(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sEntryName,
-				const uint64_t ui64EntryValue);
-
-			virtual bool isRegistered(
-				const OpenViBE::CIdentifier& rTypeIdentifier) const;
-			virtual bool isStream(
-				const OpenViBE::CIdentifier& rTypeIdentifier) const;
-			virtual bool isDerivedFromStream(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CIdentifier& rParentTypeIdentifier) const;
-			virtual bool isEnumeration(
-				const OpenViBE::CIdentifier& rTypeIdentifier) const;
-			virtual bool isBitMask(
-				const OpenViBE::CIdentifier& rTypeIdentifier) const;
-
-			virtual OpenViBE::CString getTypeName(
-				const OpenViBE::CIdentifier& rTypeIdentifier) const;
-			virtual OpenViBE::CIdentifier getStreamParentType(
-				const OpenViBE::CIdentifier& rTypeIdentifier) const;
-
-			virtual uint64_t getEnumerationEntryCount(
-				const OpenViBE::CIdentifier& rTypeIdentifier) const;
-			virtual bool getEnumerationEntry(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryIndex,
-				OpenViBE::CString& sEntryName,
-				uint64_t& rEntryValue) const;
-			virtual OpenViBE::CString getEnumerationEntryNameFromValue(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryValue) const;
-			virtual uint64_t getEnumerationEntryValueFromName(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& rEntryName) const;
-
-			virtual uint64_t getBitMaskEntryCount(
-				const OpenViBE::CIdentifier& rTypeIdentifier) const;
-			virtual bool getBitMaskEntry(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryIndex,
-				OpenViBE::CString& sEntryName,
-				uint64_t& rEntryValue) const;
-			virtual OpenViBE::CString getBitMaskEntryNameFromValue(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryValue) const;
-			virtual uint64_t getBitMaskEntryValueFromName(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& rEntryName) const;
-			virtual OpenViBE::CString getBitMaskEntryCompositionNameFromValue(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const uint64_t ui64EntryCompositionValue) const;
-			virtual uint64_t getBitMaskEntryCompositionValueFromName(
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& rEntryCompositionName) const;
-
-			virtual bool evaluateSettingValue(
-				const CString settingValue,
-				float64& numericResult) const;
-
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ITypeManager>, OVK_ClassId_Kernel_TypeManager);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ITypeManager>, OVK_ClassId_Kernel_TypeManager)
 
 		protected:
 
-			std::map<OpenViBE::CIdentifier, OpenViBE::CString> m_vName;
-			std::set<OpenViBE::CString> m_TakenNames;
-			std::map<OpenViBE::CIdentifier, std::map<uint64_t, OpenViBE::CString> > m_vEnumeration;
-			std::map<OpenViBE::CIdentifier, std::map<uint64_t, OpenViBE::CString> > m_vBitMask;
-			std::map<OpenViBE::CIdentifier, OpenViBE::CIdentifier> m_vStream;
+			std::map<CIdentifier, CString> m_vName;
+			std::set<CString> m_TakenNames;
+			std::map<CIdentifier, std::map<uint64_t, CString>> m_vEnumeration;
+			std::map<CIdentifier, std::map<uint64_t, CString>> m_vBitMask;
+			std::map<CIdentifier, CIdentifier> m_vStream;
 
 			mutable std::recursive_mutex m_oMutex;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_CTypeManager_H__
+

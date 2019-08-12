@@ -1,13 +1,13 @@
 #include "ovpCSpectrumEncoder.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::StreamCodecs;
+using namespace StreamCodecs;
 
-boolean CSpectrumEncoder::initialize(void)
+bool CSpectrumEncoder::initialize()
 {
 	CStreamedMatrixEncoder::initialize();
 	ip_pFrequencyAbscissa.initialize(getInputParameter(OVP_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa));
@@ -15,7 +15,7 @@ boolean CSpectrumEncoder::initialize(void)
 	return true;
 }
 
-boolean CSpectrumEncoder::uninitialize(void)
+bool CSpectrumEncoder::uninitialize()
 {
 	ip_pFrequencyAbscissa.uninitialize();
 	ip_pSamplingRate.uninitialize();
@@ -28,19 +28,19 @@ boolean CSpectrumEncoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-boolean CSpectrumEncoder::processHeader(void)
+bool CSpectrumEncoder::processHeader()
 {
 	// ip_pFrequencyAbscissa dimension count should be 1
 	// ip_pFrequencyAbscissa dimension size 0 should be the same as streamed matrix dimension size 1
 
 	IMatrix* frequencyAbscissa = ip_pFrequencyAbscissa;
-	uint64 samplingRate = ip_pSamplingRate;
+	uint64_t samplingRate      = ip_pSamplingRate;
 	CStreamedMatrixEncoder::processHeader();
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum);
 	m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum_SamplingRate);
 	m_pEBMLWriterHelper->setUIntegerAsChildData(samplingRate);
 	m_pEBMLWriterHelper->closeChild();
-	for(uint32 i=0; i<frequencyAbscissa->getDimensionSize(0); i++)
+	for (uint32_t i = 0; i < frequencyAbscissa->getDimensionSize(0); i++)
 	{
 		m_pEBMLWriterHelper->openChild(OVTK_NodeId_Header_Spectrum_FrequencyAbscissa);
 		m_pEBMLWriterHelper->setFloat64AsChildData(frequencyAbscissa->getBuffer()[i]);

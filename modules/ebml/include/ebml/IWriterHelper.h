@@ -1,5 +1,4 @@
-#ifndef __EBML_IWriterHelper_H__
-#define __EBML_IWriterHelper_H__
+#pragma once
 
 #include "IWriter.h"
 
@@ -23,7 +22,7 @@ namespace EBML
 	 * Be sure to look at http://ebml.sourceforge.net/specs/ in
 	 * order to understand what EBML is and how it should be used.
 	 *
-	 * \todo float80 formating implementation
+	 * \todo long double formating implementation
 	 * \todo date formating implementation
 	 * \todo utf8 string formating implementation
 	 */
@@ -50,7 +49,7 @@ namespace EBML
 		 * thanks to the \c disconnect function. It must be done
 		 * before calling \c connect again.
 		 */
-		virtual EBML::boolean connect(EBML::IWriter* pWriter)=0;
+		virtual bool connect(IWriter* pWriter) = 0;
 		/**
 		 * \brief Disconnects the currently connected EBML writer
 		 * \return \e true on success.
@@ -61,7 +60,7 @@ namespace EBML
 		 * with another EBML writer instance calling \c connect
 		 * again.
 		 */
-		virtual EBML::boolean disconnect(void)=0;
+		virtual bool disconnect() = 0;
 		//@}
 
 		/** \name Writer binding functions */
@@ -76,7 +75,7 @@ namespace EBML
 		 * corresponding EBML::IWriter function. See
 		 * EBML::IWriter::openChild for more details.
 		 */
-		virtual EBML::boolean openChild(const EBML::CIdentifier& rIdentifier)=0;
+		virtual bool openChild(const CIdentifier& rIdentifier) = 0;
 		/**
 		 * \brief Child closing binding
 		 * \return \e true on success.
@@ -86,7 +85,7 @@ namespace EBML
 		 * corresponding EBML::IWriter function. See
 		 * EBML::IWriter::closeChild for more details.
 		 */
-		virtual EBML::boolean closeChild(void)=0;
+		virtual bool closeChild() = 0;
 		//@}
 
 		/**
@@ -107,24 +106,24 @@ namespace EBML
 		 * \brief Sets a signed integer as child data
 		 * \param iValue [in] : The integer value to set
 		 */
-		virtual EBML::boolean setSIntegerAsChildData(const EBML::int64 iValue)=0;
+		virtual bool setSIntegerAsChildData(int64_t iValue) = 0;
 		/**
 		 * \brief Sets an unsigned integer as child data
 		 * \param uiValue [in] : The integer value to set
 		 */
-		virtual EBML::boolean setUIntegerAsChildData(const EBML::uint64 uiValue)=0;
+		virtual bool setUIntegerAsChildData(uint64_t uiValue) = 0;
 		/**
 		 * \brief Sets a 32 bits float value as child data
 		 * \param fValue [in] : The 32 bits float value to set
 		 */
-		virtual EBML::boolean setFloat32AsChildData(const EBML::float32 fValue)=0;
+		virtual bool setFloat32AsChildData(float fValue) = 0;
 		/**
 		 * \brief Sets a 64 bits float value as child data
 		 * \param fValue [in] : The 64 bits float value to set
 		 */
-		virtual EBML::boolean setFloat64AsChildData(const EBML::float64 fValue)=0;
-// virtual EBML::boolean setFloat80AsChildData( ??? value)=0;
-// virtual EBML::boolean setDateAsChildData( ??? value)=0;
+		virtual bool setFloat64AsChildData(double fValue) = 0;
+		// virtual bool setFloat80AsChildData( ??? value)=0;
+		// virtual bool setDateAsChildData( ??? value)=0;
 		/**
 		 * \brief Sets a buffer as child data
 		 * \param pBuffer [in] : The buffer to send to the writer
@@ -133,13 +132,13 @@ namespace EBML
 		 *       EBML::IWriter::setChildData function with the
 		 *       same two parameters.
 		 */
-		virtual EBML::boolean setBinaryAsChildData(const void* pBuffer, const EBML::uint64 ui64BufferLength)=0;
+		virtual bool setBinaryAsChildData(const void* pBuffer, uint64_t ui64BufferLength) = 0;
 		/**
 		 * \brief Sets an ASCII string as child data
 		 * \param sValue [in] : The ASCII string value to set
 		 */
-		virtual EBML::boolean setASCIIStringAsChildData(const char* sValue)=0;
-// virtual EBML::boolean setUTF8StringAsChildData( ??? value)=0;
+		virtual bool setASCIIStringAsChildData(const char* sValue) = 0;
+		// virtual bool setUTF8StringAsChildData( ??? value)=0;
 		//@}
 
 		/**
@@ -159,14 +158,14 @@ namespace EBML
 		 * \warning Releasing this obbject does not release the
 		 *          connected writer instance !
 		 */
-		virtual void release(void)=0;
+		virtual void release() = 0;
 
 	protected:
 
 		/**
 		 * \brief Virtual destructor - should be overloaded
 		 */
-		virtual ~IWriterHelper(void) { }
+		virtual ~IWriterHelper() { }
 	};
 
 	/**
@@ -174,7 +173,5 @@ namespace EBML
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API EBML::IWriterHelper* createWriterHelper(void);
-};
-
-#endif // __EBML_IEnhancedWriter_H__
+	extern EBML_API IWriterHelper* createWriterHelper();
+}  // namespace EBML

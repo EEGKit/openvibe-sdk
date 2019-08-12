@@ -9,12 +9,12 @@
 #include <ovp_global_defines.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 // DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> variable here
 // because it causes a bug due to plugins global descriptors beeing destroyed before
 // the kernel context.
-OpenViBE::Kernel::IKernelContext* g_context = nullptr;
+IKernelContext* g_context = nullptr;
 std::string g_dataDirectory;
 
 
@@ -25,7 +25,7 @@ bool importScenarioFromFile(const char* filename)
 	g_context->getErrorManager().releaseErrors();
 
 	CIdentifier scenarioIdentifier;
-	if(g_context->getScenarioManager().importScenarioFromFile(scenarioIdentifier, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
+	if (g_context->getScenarioManager().importScenarioFromFile(scenarioIdentifier, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
 	{
 		g_context->getScenarioManager().releaseScenario(scenarioIdentifier);
 		return true;
@@ -41,12 +41,9 @@ bool checkForSchemaValidationError()
 
 	auto error = errorManager.getLastError();
 
-	while(error)
+	while (error)
 	{
-		if(error->getErrorType() == OpenViBE::Kernel::ErrorType::BadXMLSchemaValidation)
-		{
-			return true;
-		}
+		if (error->getErrorType() == ErrorType::BadXMLSchemaValidation) { return true; }
 
 		error = error->getNestedError();
 	}
@@ -67,7 +64,7 @@ TEST(validate_scenario_test_case, test_no_false_positive)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 3; i++)
+	for (unsigned int i = 0; i < 3; i++)
 	{
 		EXPECT_TRUE(importScenarioFromFile(files[i]));
 	}
@@ -91,7 +88,7 @@ TEST(validate_scenario_test_case, test_root)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 9; i++)
+	for (unsigned int i = 0; i < 9; i++)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -111,7 +108,7 @@ TEST(validate_scenario_test_case, test_attribute)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 4; i++)
+	for (unsigned int i = 0; i < 4; i++)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -137,7 +134,7 @@ TEST(validate_scenario_test_case, test_box)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 10; i++)
+	for (unsigned int i = 0; i < 10; i++)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -158,7 +155,7 @@ TEST(validate_scenario_test_case, test_comment)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 5; i++)
+	for (unsigned int i = 0; i < 5; i++)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -178,7 +175,7 @@ TEST(validate_scenario_test_case, test_input)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 4; i++)
+	for (unsigned int i = 0; i < 4; i++)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -201,7 +198,7 @@ TEST(validate_scenario_test_case, test_link)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 7; i++)
+	for (unsigned int i = 0; i < 7; i++)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -221,7 +218,7 @@ TEST(validate_scenario_test_case, test_output)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 4; i++)
+	for (unsigned int i = 0; i < 4; i++)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -246,7 +243,7 @@ TEST(validate_scenario_test_case, test_setting)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 9; i++)
+	for (unsigned int i = 0; i < 9; i++)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -267,7 +264,7 @@ TEST(validate_scenario_test_case, test_source)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 5; i++)
+	for (unsigned int i = 0; i < 5; i++)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -289,7 +286,7 @@ TEST(validate_scenario_test_case, test_target)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for(unsigned int i = 0; i < 5; i++)
+	for (unsigned int i = 0; i < 5; i++)
 	{
 		EXPECT_FALSE(importScenarioFromFile(files[i]));
 		EXPECT_TRUE(checkForSchemaValidationError());
@@ -304,25 +301,23 @@ int urValidateScenarioTest(int argc, char* argv[])
 	fixture->setConfigurationFile(argv[1]);
 
 	g_dataDirectory = argv[2];
-	g_context = fixture->context;
+	g_context       = fixture->context;
 
-	#if defined TARGET_OS_Windows
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
-	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
-	#elif defined TARGET_OS_Linux
+#if defined TARGET_OS_Windows
+	g_context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
+	g_context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
+	g_context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
+#elif defined TARGET_OS_Linux
 	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
 	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
 	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
-	#elif defined TARGET_OS_MacOS
+#elif defined TARGET_OS_MacOS
 	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
 	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
 	g_context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
-	#endif
+#endif
 
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "validate_scenario_test_case.*";
 	return RUN_ALL_TESTS();
 }
-
-

@@ -16,55 +16,54 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmTimeSignalGenerator(void);
+			CBoxAlgorithmTimeSignalGenerator();
 
-			void release(void);
+			void release() override;
 
-			OpenViBE::uint64 getClockFrequency(void);
+			uint64_t getClockFrequency() override;
 
-			bool initialize(void);
-			bool uninitialize(void);
+			bool initialize() override;
+			bool uninitialize() override;
 
-			bool processClock(OpenViBE::Kernel::IMessageClock& rMessageClock);
-			bool process(void);
+			bool processClock(OpenViBE::Kernel::IMessageClock& rMessageClock) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeSignalGenerator)
 
 		protected:
 
-			OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmTimeSignalGenerator > m_oSignalEncoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeSignalGenerator> m_oSignalEncoder;
 
-			bool m_bHeaderSent;
-			OpenViBE::uint32 m_ui32SamplingFrequency;
-			OpenViBE::uint32 m_ui32GeneratedEpochSampleCount;
-			OpenViBE::uint32 m_ui32SentSampleCount;
+			bool m_bHeaderSent = false;
+			uint32_t m_ui32SamplingFrequency = 0;
+			uint32_t m_ui32GeneratedEpochSampleCount = 0;
+			uint32_t m_ui32SentSampleCount = 0;
 		};
 
 		class CBoxAlgorithmTimeSignalGeneratorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 
-			void release(void) { }
-			OpenViBE::CString getName(void) const                { return OpenViBE::CString("Time signal"); }
-			OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Simple time signal generator (for use with DSP)"); }
-			OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Data generation"); }
-			OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.1"); }
-			OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.4.0"); }
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Time signal"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Simple time signal generator (for use with DSP)"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Data generation"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.4.0"); }
 
-			OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
-			OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::DataGeneration::CBoxAlgorithmTimeSignalGenerator(); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TimeSignalGenerator; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmTimeSignalGenerator(); }
 
-			bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
-				rPrototype.addOutput("Generated signal",              OV_TypeId_Signal);
+				rPrototype.addOutput("Generated signal", OV_TypeId_Signal);
 
-				rPrototype.addSetting("Sampling frequency",           OV_TypeId_Integer, "512");
+				rPrototype.addSetting("Sampling frequency", OV_TypeId_Integer, "512");
 				rPrototype.addSetting("Generated epoch sample count", OV_TypeId_Integer, "32");
 
 				return true;
@@ -74,4 +73,3 @@ namespace OpenViBEPlugins
 		};
 	};
 };
-

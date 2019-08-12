@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Defines_H__
-#define __OpenViBEKernel_Defines_H__
+#pragma once
 
 //___________________________________________________________________//
 //                                                                   //
@@ -111,25 +110,25 @@
 // - http://people.redhat.com/drepper/dsohowto.pdf
 // - http://www.nedprod.com/programs/gccvisibility.html
 #if defined OVK_Shared
-	#if defined TARGET_OS_Windows
-		#define OVK_API_Export __declspec(dllexport)
-		#define OVK_API_Import __declspec(dllimport)
-	#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#if defined TARGET_OS_Windows
+#define OVK_API_Export __declspec(dllexport)
+#define OVK_API_Import __declspec(dllimport)
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 		#define OVK_API_Export __attribute__((visibility("default")))
 		#define OVK_API_Import __attribute__((visibility("default")))
-	#else
+#else
 		#define OVK_API_Export
 		#define OVK_API_Import
-	#endif
+#endif
 #else
 	#define OVK_API_Export
 	#define OVK_API_Import
 #endif
 
 #if defined OVK_Exports
-	#define OVK_API OVK_API_Export
+#define OVK_API OVK_API_Export
 #else
 	#define OVK_API OVK_API_Import
 #endif
 
-#endif // __OpenViBEKernel_Defines_H__
+

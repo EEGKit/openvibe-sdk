@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Plugins_IPluginObject_H__
-#define __OpenViBE_Plugins_IPluginObject_H__
+#pragma once
 
 #include "../ovIObject.h"
 
@@ -30,7 +29,7 @@ namespace OpenViBE
 		 *
 		 * \todo details about building new plugins
 		 */
-		class OV_API IPluginObject : public OpenViBE::IObject
+		class OV_API IPluginObject : public IObject
 		{
 		public:
 
@@ -47,12 +46,10 @@ namespace OpenViBE
 			 * However, the OpenViBE platform will not call any
 			 * of the plugin functions after release is called.
 			 */
-			virtual void release(void)=0;
+			virtual void release() = 0;
 
 			//@}
 			_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Plugins_PluginObject)
 		};
-	};
-};
-
-#endif // __OpenViBE_Plugins_IPluginObject_H__
+	}  // namespace Plugins
+}  // namespace OpenViBE

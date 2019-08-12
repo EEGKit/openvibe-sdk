@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TFeatureVectorDecoder_H__
-#define __OpenViBEToolkit_TFeatureVectorDecoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -12,7 +11,6 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TFeatureVectorDecoderLocal : public T
 	{
-
 	protected:
 
 		using T::m_pCodec;
@@ -20,7 +18,7 @@ namespace OpenViBEToolkit
 		using T::m_pInputMemoryBuffer;
 		using T::m_pOutputMatrix;
 
-		OpenViBE::boolean initializeImpl()
+		bool initializeImpl()
 		{
 			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_FeatureVectorStreamDecoder));
 			m_pCodec->initialize();
@@ -34,45 +32,39 @@ namespace OpenViBEToolkit
 		using T::initialize;
 		using T::uninitialize;
 
-		virtual OpenViBE::boolean isHeaderReceived()
+		virtual bool isHeaderReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorStreamDecoder_OutputTriggerId_ReceivedHeader);
 		}
 
-		virtual OpenViBE::boolean isBufferReceived()
+		virtual bool isBufferReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorStreamDecoder_OutputTriggerId_ReceivedBuffer);
 		}
 
-		virtual OpenViBE::boolean isEndReceived()
+		virtual bool isEndReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_FeatureVectorStreamDecoder_OutputTriggerId_ReceivedEnd);
 		}
 	};
 
 	template <class T>
-	class TFeatureVectorDecoder : public TFeatureVectorDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >
+	class TFeatureVectorDecoder : public TFeatureVectorDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
 	{
-	private:
-		using TFeatureVectorDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >::m_pBoxAlgorithm;
+		using TFeatureVectorDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_pBoxAlgorithm;
 	public:
-		using TFeatureVectorDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >::uninitialize;
+		using TFeatureVectorDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
 
-		TFeatureVectorDecoder()
-		{
-		}
-		TFeatureVectorDecoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TFeatureVectorDecoder() { }
+
+		TFeatureVectorDecoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
-		virtual ~TFeatureVectorDecoder()
-		{
-			this->uninitialize();
-		}
+
+		virtual ~TFeatureVectorDecoder() { this->uninitialize(); }
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
-#endif //__OpenViBEToolkit_TFeatureVectorDecoder_H__

@@ -3,38 +3,38 @@
 #include <cmath>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Stimulation;
+using namespace Stimulation;
 
-bool CBoxAlgorithmTimeout::initialize(void)
+bool CBoxAlgorithmTimeout::initialize()
 {
 	m_TimeoutState = ETimeout_No;
 
-	m_StimulationEncoder.initialize(*this,0);
-	
+	m_StimulationEncoder.initialize(*this, 0);
+
 	double timeout = static_cast<double>(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
 	OV_ERROR_UNLESS_KRF(timeout > 0,
-	                    "Timeout delay value must be positive and non-zero",
-	                    ErrorType::BadSetting);
+						"Timeout delay value must be positive and non-zero",
+						ErrorType::BadSetting);
 	OV_ERROR_UNLESS_KRF(timeout == std::floor(timeout),
-	                    "Timeout delay value is not an integer",
-	                    ErrorType::BadSetting);
+						"Timeout delay value is not an integer",
+						ErrorType::BadSetting);
 
-	m_Timeout = static_cast<uint64_t>(timeout) << 32;
+	m_Timeout           = static_cast<uint64_t>(timeout) << 32;
 	m_StimulationToSend = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	m_LastTimePolled = 0;
-	m_PreviousTime = 0;
-	m_IsHeaderSent = false;
+	m_PreviousTime   = 0;
+	m_IsHeaderSent   = false;
 
 	return true;
 }
 /*******************************************************************************/
 
-bool CBoxAlgorithmTimeout::uninitialize(void)
+bool CBoxAlgorithmTimeout::uninitialize()
 {
 	m_StimulationEncoder.uninitialize();
 
@@ -60,14 +60,14 @@ bool CBoxAlgorithmTimeout::processClock(IMessageClock& rMessageClock)
 /*******************************************************************************/
 
 
-uint64 CBoxAlgorithmTimeout::getClockFrequency(void)
+uint64_t CBoxAlgorithmTimeout::getClockFrequency()
 {
-	return 16LL<<32; // the box clock frequency
+	return 16LL << 32; // the box clock frequency
 }
 /*******************************************************************************/
 
 
-bool CBoxAlgorithmTimeout::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmTimeout::processInput(const uint32_t ui32InputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
@@ -78,18 +78,18 @@ bool CBoxAlgorithmTimeout::processInput(uint32 ui32InputIndex)
 }
 /*******************************************************************************/
 
-bool CBoxAlgorithmTimeout::process(void)
+bool CBoxAlgorithmTimeout::process()
 {
 	IBoxIO& dynamicBoxContext = this->getDynamicBoxContext();
 
 	// Discard input data
-	for(uint32_t i=0; i<dynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < dynamicBoxContext.getInputChunkCount(0); i++)
 	{
 		dynamicBoxContext.markInputAsDeprecated(0, i);
 	}
 
 	// Encoding the header
-	if(!m_IsHeaderSent)
+	if (!m_IsHeaderSent)
 	{
 		m_StimulationEncoder.encodeHeader();
 		this->getDynamicBoxContext().markOutputAsReadyToSend(0, 0, 0);

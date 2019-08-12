@@ -1,5 +1,5 @@
-#ifndef OVIOBSERVER_H
-#define OVIOBSERVER_H
+#pragma once
+
 
 #include "ovCObservable.h"
 #include "ov_base.h"
@@ -26,9 +26,6 @@ namespace OpenViBE
 		 * \param o [in] : the object which do the notification.
 		 * \param data [in] : a pointer to data give by the observed object during the notification.
 		 */
-		virtual void update(CObservable &o, void* data) = 0;
-
+		virtual void update(CObservable& o, void* data) = 0;
 	};
-}
-
-#endif // OVIOBSERVER_H
+}  // namespace OpenViBE

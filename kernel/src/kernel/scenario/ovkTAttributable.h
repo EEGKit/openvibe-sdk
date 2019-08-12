@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Scenario_TAttributable_H__
-#define __OpenViBEKernel_Kernel_Scenario_TAttributable_H__
+#pragma once
 
 #include "../../ovk_base.h"
 #include "../../ovk_tools.h"
@@ -13,101 +12,75 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		template <class T> class TAttributable : public T
+		template <class T>
+		class TAttributable : public T
 		{
 		public:
 
-			explicit TAttributable(const OpenViBE::Kernel::IKernelContext& rKernelContext)
-				:T(rKernelContext)
-			{
-			}
+			explicit TAttributable(const IKernelContext& rKernelContext)
+				: T(rKernelContext) { }
 
-			virtual OpenViBE::boolean addAttribute(
-				const OpenViBE::CIdentifier& rAttributeIdentifier,
-				const OpenViBE::CString& sAttributeValue)
+			virtual bool addAttribute(const CIdentifier& rAttributeIdentifier, const CString& sAttributeValue)
 			{
-				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
-				if(itAttribute!=m_vAttribute.end())
-				{
-					return false;
-				}
-				m_vAttribute[rAttributeIdentifier]=sAttributeValue;
+				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				if (itAttribute != m_vAttribute.end()) { return false; }
+				m_vAttribute[rAttributeIdentifier] = sAttributeValue;
 				return true;
 			}
 
-			virtual OpenViBE::boolean removeAttribute(
-				const OpenViBE::CIdentifier& rAttributeIdentifier)
+			virtual bool removeAttribute(const CIdentifier& rAttributeIdentifier)
 			{
-				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
-				if(itAttribute==m_vAttribute.end())
-				{
-					return false;
-				}
+				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				if (itAttribute == m_vAttribute.end()) { return false; }
 				m_vAttribute.erase(itAttribute);
 				return true;
 			}
 
-			virtual OpenViBE::boolean removeAllAttributes(void)
+			virtual bool removeAllAttributes()
 			{
 				m_vAttribute.clear();
 				return true;
 			}
 
-			virtual OpenViBE::CString getAttributeValue(
-				const OpenViBE::CIdentifier& rAttributeIdentifier) const
+			virtual CString getAttributeValue(const CIdentifier& rAttributeIdentifier) const
 			{
-				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::const_iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
-				if(itAttribute==m_vAttribute.end())
-				{
-					return OpenViBE::CString("");
-				}
+				std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				if (itAttribute == m_vAttribute.end()) { return CString(""); }
 				return itAttribute->second;
 			}
 
-			virtual OpenViBE::boolean setAttributeValue(
-				const OpenViBE::CIdentifier& rAttributeIdentifier,
-				const OpenViBE::CString& sAttributeValue)
+			virtual bool setAttributeValue(const CIdentifier& rAttributeIdentifier, const CString& sAttributeValue)
 			{
-				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
-				if(itAttribute==m_vAttribute.end())
+				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				if (itAttribute == m_vAttribute.end())
 				{
-//					this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << "Automatically added unexisting attribute identifier " << rAttributeIdentifier << " while setting its value\n";
-					m_vAttribute[rAttributeIdentifier]=sAttributeValue;
+					//					this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << "Automatically added unexisting attribute identifier " << rAttributeIdentifier << " while setting its value\n";
+					m_vAttribute[rAttributeIdentifier] = sAttributeValue;
 					return true;
 				}
-				itAttribute->second=sAttributeValue;
+				itAttribute->second = sAttributeValue;
 				return true;
 			}
 
-			virtual OpenViBE::boolean hasAttribute(
-				const OpenViBE::CIdentifier& rAttributeIdentifier) const
+			virtual bool hasAttribute(const CIdentifier& rAttributeIdentifier) const
 			{
-				std::map<OpenViBE::CIdentifier, OpenViBE::CString>::const_iterator itAttribute=m_vAttribute.find(rAttributeIdentifier);
-				if(itAttribute==m_vAttribute.end())
-				{
-					return false;
-				}
+				std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				if (itAttribute == m_vAttribute.end()) { return false; }
 				return true;
 			}
 
-			virtual OpenViBE::boolean hasAttributes(void) const
+			virtual bool hasAttributes() const { return !m_vAttribute.empty(); }
+
+			virtual CIdentifier getNextAttributeIdentifier(const CIdentifier& rPreviousIdentifier) const
 			{
-				return !m_vAttribute.empty();
+				return getNextIdentifier<CString>(m_vAttribute, rPreviousIdentifier);
 			}
 
-			virtual OpenViBE::CIdentifier getNextAttributeIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const
-			{
-				return getNextIdentifier < OpenViBE::CString >(m_vAttribute, rPreviousIdentifier);
-			}
-
-			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_Scenario_AttributableT);
+			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_Scenario_AttributableT)
 
 		protected:
 
-			std::map<OpenViBE::CIdentifier, OpenViBE::CString> m_vAttribute;
+			std::map<CIdentifier, CString> m_vAttribute;
 		};
-	};
-};
-
-#endif // __OpenViBEKernel_Kernel_Scenario_TAttributable_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TSignalEncoder_H__
-#define __OpenViBEToolkit_TSignalEncoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -12,17 +11,16 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TSignalEncoderLocal : public T
 	{
-
 	protected:
 		//The signal stream is a streamed matrix plus a sampling rate
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_pInputSamplingRate;
+		OpenViBE::Kernel::TParameterHandler<uint64_t> m_pInputSamplingRate;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
 		using T::m_pOutputMemoryBuffer;
 		using T::m_pInputMatrix;
 
-		OpenViBE::boolean initializeImpl()
+		bool initializeImpl()
 		{
 			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SignalStreamEncoder));
 			m_pCodec->initialize();
@@ -37,12 +35,9 @@ namespace OpenViBEToolkit
 		//again... we propagate initialize from upperclass.
 		using T::initialize;
 
-		OpenViBE::boolean uninitialize(void)
+		bool uninitialize()
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
 
 			m_pInputMatrix.uninitialize();
 			m_pInputSamplingRate.uninitialize();
@@ -54,7 +49,7 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getInputSamplingRate()
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate()
 		{
 			return m_pInputSamplingRate;
 		}
@@ -64,17 +59,17 @@ namespace OpenViBEToolkit
 		/*
 		The methods specific to the Signal encoder (overriding the TStreamedMatrixEncoderLocal implementations):
 		*/
-		OpenViBE::boolean encodeHeaderImpl(void)
+		bool encodeHeaderImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader);
 		}
 
-		OpenViBE::boolean encodeBufferImpl(void)
+		bool encodeBufferImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
 
-		OpenViBE::boolean encodeEndImpl(void)
+		bool encodeEndImpl()
 		{
 			return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd);
 		}
@@ -85,28 +80,22 @@ namespace OpenViBEToolkit
 	You just need one template class : the box (T).
 	*/
 	template <class T>
-	class TSignalEncoder : public TSignalEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >
+	class TSignalEncoder : public TSignalEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>
 	{
-	private:
-		using TSignalEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >::m_pBoxAlgorithm;
+		using TSignalEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::m_pBoxAlgorithm;
 	public:
-		using TSignalEncoderLocal < TStreamedMatrixEncoderLocal < TEncoder < T > > >::uninitialize;
+		using TSignalEncoderLocal<TStreamedMatrixEncoderLocal<TEncoder<T>>>::uninitialize;
 
-		TSignalEncoder()
-		{
-		}
-		TSignalEncoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TSignalEncoder() { }
+
+		TSignalEncoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
-		virtual ~TSignalEncoder()
-		{
-			this->uninitialize();
-		}
+
+		virtual ~TSignalEncoder() { this->uninitialize(); }
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
-#endif //__OpenViBEToolkit_TSignalEncoder_H__

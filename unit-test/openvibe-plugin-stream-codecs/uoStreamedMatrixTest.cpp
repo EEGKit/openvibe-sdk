@@ -10,28 +10,26 @@
 #include <ovp_global_defines.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
-namespace {
-
+namespace
+{
 	const char* kernelConfig = nullptr;
 
-	class StreamedMatrixTest : public ::testing::Test {
+	class StreamedMatrixTest : public testing::Test
+	{
 	protected:
 
 		StreamedMatrixTest()
-		    : m_KernelContext()
+		{ }
+
+
+		~StreamedMatrixTest() override { }
+
+		void SetUp() override
 		{
-		}
-
-
-		~StreamedMatrixTest() override {
-		}
-
-		void SetUp() override {
 			m_KernelContext.initialize();
-			m_KernelContext->getPluginManager().addPluginsFromFiles(
-			            m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
+			m_KernelContext->getPluginManager().addPluginsFromFiles(m_KernelContext->getConfigurationManager().expand("${Path_Lib}/*openvibe-plugins-sdk-stream-codecs*"));
 
 			m_DecoderId = OV_UndefinedIdentifier;
 			m_DecoderId = m_KernelContext->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StreamedMatrixStreamDecoder);
@@ -42,7 +40,8 @@ namespace {
 			ASSERT_NE(OV_UndefinedIdentifier, m_EncoderId);
 		}
 
-		void TearDown() override {
+		void TearDown() override
+		{
 			ASSERT_TRUE(m_KernelContext->getAlgorithmManager().releaseAlgorithm(m_DecoderId));
 			m_DecoderId = OV_UndefinedIdentifier;
 			ASSERT_TRUE(m_KernelContext->getAlgorithmManager().releaseAlgorithm(m_EncoderId));
@@ -50,8 +49,8 @@ namespace {
 			m_KernelContext.uninitialize();
 		}
 
-		OpenViBE::CIdentifier m_DecoderId;
-		OpenViBE::CIdentifier m_EncoderId;
+		CIdentifier m_DecoderId;
+		CIdentifier m_EncoderId;
 		OpenViBETest::KernelContext m_KernelContext;
 	};
 
@@ -117,7 +116,7 @@ namespace {
 		}
 		for (size_t i = 0; i < elemCount; ++i)
 		{
-			mat.getBuffer()[i] = i;
+			mat.getBuffer()[i] = double(i);
 		}
 
 		TParameterHandler<const IMatrix*> inputMatrix(encoder.getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
@@ -142,10 +141,8 @@ namespace {
 
 int uoStreamedMatrixTest(int argc, char* argv[])
 {
-	if (argc > 1) {
-		kernelConfig = argv[1];
-	}
-	::testing::InitGoogleTest(&argc, argv);
+	if (argc > 1) { kernelConfig = argv[1]; }
+	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "StreamedMatrixTest.*";
 	return RUN_ALL_TESTS();
 }

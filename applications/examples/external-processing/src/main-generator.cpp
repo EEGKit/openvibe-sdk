@@ -29,7 +29,8 @@ static void signalHandler(int /* signal */)
 }
 
 
-class EBMLWriterCallback {
+class EBMLWriterCallback
+{
 public:
 	void write(const void* buffer, const uint64_t bufferSize)
 	{
@@ -37,27 +38,21 @@ public:
 		m_Buffer.insert(m_Buffer.end(), data, data + bufferSize);
 	}
 
-	void clear()
-	{
-		m_Buffer.clear();
-	}
+	void clear() { m_Buffer.clear(); }
 
-	const std::vector<uint8_t>& data()
-	{
-		return m_Buffer;
-	}
+	const std::vector<uint8_t>& data() { return m_Buffer; }
 
 private:
 	std::vector<uint8_t> m_Buffer;
 };
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	std::signal(SIGINT, signalHandler);
 
 	std::string connectionID;
 	unsigned int port = 49687;
-	
+
 	for (int i = 0; i < argc; i++)
 	{
 		if (std::strcmp(argv[i], "--connection-id") == 0)
@@ -80,7 +75,7 @@ int main(int argc, char **argv)
 
 	EBMLWriterCallback writerCallback;
 	EBML::TWriterCallbackProxy1<EBMLWriterCallback> writerCallbackProxy(writerCallback, &EBMLWriterCallback::write);
-	EBML::IWriter* writer = EBML::createWriter(writerCallbackProxy);
+	EBML::IWriter* writer             = createWriter(writerCallbackProxy);
 	EBML::IWriterHelper* writerHelper = EBML::createWriterHelper();
 	writerHelper->connect(writer);
 
@@ -89,11 +84,11 @@ int main(int argc, char **argv)
 	MessagingClient client;
 
 	client.setConnectionID(connectionID);
-	
-	while(!client.connect("127.0.0.1", port))
+
+	while (!client.connect("127.0.0.1", port))
 	{
 		MessagingClient::ELibraryError error = client.getLastError();
-		
+
 		if (error == MessagingClient::ELibraryError::Socket_FailedToConnect)
 		{
 			printf("Server not responding\n");
@@ -136,7 +131,7 @@ int main(int argc, char **argv)
 
 	std::map<std::string, std::string> parameters;
 
-	for (uint32_t i = 0 ; i < client.getParameterCount(); i++)
+	for (uint32_t i = 0; i < client.getParameterCount(); i++)
 	{
 		uint32_t index;
 		uint64_t type;
@@ -154,10 +149,10 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	uint32_t channelCount = static_cast<uint32_t>(std::stoul(parameters.at("Channel Count")));
-	uint32_t samplingRate = static_cast<uint32_t>(std::stoul(parameters.at("Sampling Rate")));
+	uint32_t channelCount     = static_cast<uint32_t>(std::stoul(parameters.at("Channel Count")));
+	uint32_t samplingRate     = static_cast<uint32_t>(std::stoul(parameters.at("Sampling Rate")));
 	uint32_t samplesPerBuffer = static_cast<uint32_t>(std::stoul(parameters.at("Samples Per Buffer")));
-	uint32_t samplesToSend = static_cast<uint32_t>(std::stoul(parameters.at("Amount of Samples to Generate")));
+	uint32_t samplesToSend    = static_cast<uint32_t>(std::stoul(parameters.at("Amount of Samples to Generate")));
 
 	std::vector<double> matrix;
 	matrix.resize(channelCount * samplesPerBuffer);
@@ -167,10 +162,10 @@ int main(int argc, char **argv)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-	client.pushLog(ELogLevel::LogLevel_Info, "Received Ping");
+	client.pushLog(LogLevel_Info, "Received Ping");
 
 	client.pushSync();
-	client.pushLog(ELogLevel::LogLevel_Info, "Sent Pong");
+	client.pushLog(LogLevel_Info, "Sent Pong");
 
 	// Process
 
@@ -294,7 +289,7 @@ int main(int argc, char **argv)
 
 
 			uint64_t startTime = OpenViBE::ITimeArithmetics::sampleCountToTime(samplingRate, sentSamples);
-			uint64_t endTime = OpenViBE::ITimeArithmetics::sampleCountToTime(samplingRate, sentSamples + samplesPerBuffer);
+			uint64_t endTime   = OpenViBE::ITimeArithmetics::sampleCountToTime(samplingRate, sentSamples + samplesPerBuffer);
 
 			if (!client.pushEBML(0, startTime, endTime, std::make_shared<const std::vector<uint8_t>>(writerCallback.data())))
 			{
@@ -314,8 +309,8 @@ int main(int argc, char **argv)
 		while (client.popError(packetId, error, guiltyId))
 		{
 			std::cerr << "Error received:\n";
-			std::cerr << "\tError: "<< static_cast<int>(error) << "\n";
-			std::cerr << "\tGuilty Id: "<< guiltyId << "\n";
+			std::cerr << "\tError: " << static_cast<int>(error) << "\n";
+			std::cerr << "\tGuilty Id: " << guiltyId << "\n";
 		}
 		// Here, we send a sync message to tell to the server that we have no more data to send and we can move forward.
 		if (!client.pushSync())

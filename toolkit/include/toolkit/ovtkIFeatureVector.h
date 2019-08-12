@@ -1,19 +1,16 @@
-#ifndef __OpenViBEToolkit_IFeatureVector_H__
-#define __OpenViBEToolkit_IFeatureVector_H__
+#pragma once
 
 #include "ovtkIVector.h"
 
 namespace OpenViBEToolkit
 {
-	class OVTK_API IFeatureVector : public OpenViBEToolkit::IVector
+	class OVTK_API IFeatureVector : public IVector
 	{
 	public:
 
-		virtual OpenViBE::float64 getLabel(void) const=0;
-		virtual OpenViBE::boolean setLabel(const OpenViBE::float64 f64Label)=0;
+		virtual double getLabel() const = 0;
+		virtual bool setLabel(const double f64Label) = 0;
 
-		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_FeatureVector);
+		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_FeatureVector)
 	};
-};
-
-#endif // __OpenViBEToolkit_IFeatureVector_H__
+}  // namespace OpenViBEToolkit

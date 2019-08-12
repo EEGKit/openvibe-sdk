@@ -6,12 +6,12 @@
 #include "ovtTestFixtureCommon.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 // DO NOT USE a global OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> variable here
 // because it causes a bug due to plugins global descriptors beeing destroyed before
 // the kernel context.
-OpenViBE::Kernel::IKernelContext* g_context = nullptr;
+IKernelContext* g_context = nullptr;
 
 TEST(error_manager_test_case, test_init)
 {
@@ -122,7 +122,7 @@ TEST(error_manager_test_case, test_stress_push)
 	}
 
 	unsigned int errorCount = 0;
-	auto error = errorManager.getLastError();
+	auto error              = errorManager.getLastError();
 	while (error)
 	{
 		errorCount++;
@@ -141,7 +141,7 @@ int urErrorManagerTest(int argc, char* argv[])
 
 	g_context = fixture->context;
 
-	::testing::InitGoogleTest(&argc, argv);
+	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "error_manager_test_case.*";
 	return RUN_ALL_TESTS();
 }

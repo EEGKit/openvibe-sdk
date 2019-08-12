@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_SpectrumAverage_H__
-#define __OpenViBEPlugins_BoxAlgorithm_SpectrumAverage_H__
+#pragma once
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
@@ -12,72 +11,65 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSpectrumAverage : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmSpectrumAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
+			void release() override { delete this; }
 
-			virtual void release(void) { delete this; }
+			// virtual uint64_t getClockFrequency();
+			bool initialize() override;
+			bool uninitialize() override;
+			// virtual bool processEvent(OpenViBE::CMessageEvent& rMessageEvent);
+			// virtual bool processSignal(OpenViBE::CMessageSignal& rMessageSignal);
+			// virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
-			// virtual OpenViBE::uint64 getClockFrequency(void);
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			// virtual OpenViBE::boolean processEvent(OpenViBE::CMessageEvent& rMessageEvent);
-			// virtual OpenViBE::boolean processSignal(OpenViBE::CMessageSignal& rMessageSignal);
-			// virtual OpenViBE::boolean processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SpectrumAverage);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SpectrumAverage)
 
 		protected:
 
-			OpenViBE::boolean m_bZeroCare;
+			bool m_bZeroCare = false;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > op_pMatrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
 
-			OpenViBE::Kernel::TParameterHandler < const OpenViBE::IMemoryBuffer* > ip_pMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
 
-			std::vector < OpenViBE::uint32 > m_vSelectedIndices;
+			std::vector<uint32_t> m_vSelectedIndices;
 		};
 
 		class CBoxAlgorithmSpectrumAverageDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Spectrum Average"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Computes the average of all the frequency band powers for a spectrum"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SpectrumAverage; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSpectrumAverage; }
 
-			virtual void release(void) { }
-
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Spectrum Average"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Computes the average of all the frequency band powers for a spectrum"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Spectral Analysis"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_SpectrumAverage; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSpectrumAverage; }
-
-			virtual OpenViBE::boolean getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput  ("Spectrum",         OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addOutput ("Spectrum average", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addSetting("Considers zeros",  OV_TypeId_Boolean, "false");
+				rBoxAlgorithmPrototype.addInput("Spectrum", OV_TypeId_Spectrum);
+				rBoxAlgorithmPrototype.addOutput("Spectrum average", OV_TypeId_StreamedMatrix);
+				rBoxAlgorithmPrototype.addSetting("Considers zeros", OV_TypeId_Boolean, "false");
 
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SpectrumAverageDesc);
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SpectrumAverageDesc)
 		};
-	};
-};
-
-#endif // __OpenViBEPlugins_BoxAlgorithm_SpectrumAverage_H__
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

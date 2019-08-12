@@ -9,8 +9,8 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-
-		enum BoxEventMessageType{
+		enum BoxEventMessageType
+		{
 			SettingValueUpdate,
 			SettingChange,
 			SettingDelete,
@@ -19,17 +19,19 @@ namespace OpenViBE
 			SettingsAllChange
 		};
 
-		enum BoxInterfacorType {
+		enum BoxInterfacorType
+		{
 			Setting,
 			Input,
 			Output
 		};
 
-		class OV_API BoxEventMessage{
+		class OV_API BoxEventMessage
+		{
 		public:
 			BoxEventMessageType m_eType;
-			OpenViBE::int32 m_i32FirstIndex;
-			OpenViBE::int32 m_i32SecondIndex;
+			int32_t m_i32FirstIndex = 0;
+			int32_t m_i32SecondIndex = 0;
 		};
 
 		/**
@@ -44,7 +46,7 @@ namespace OpenViBE
 		 * OpenViBE black box. It describes its identification values,
 		 * its inputs, its outputs and its settings.
 		 */
-		class OV_API IBox : public OpenViBE::Kernel::IAttributable, public OpenViBE::CObservable
+		class OV_API IBox : public IAttributable, public CObservable
 		{
 		public:
 
@@ -55,17 +57,17 @@ namespace OpenViBE
 			 * \brief Gets the identifier of this box
 			 * \return The identifier of this OpenViBE box.
 			 */
-			virtual OpenViBE::CIdentifier getIdentifier(void) const=0;
+			virtual CIdentifier getIdentifier() const = 0;
 			/**
 			 * \brief Gets the display name of this box
 			 * \return The name of this OpenViBE box.
 			 */
-			virtual OpenViBE::CString getName(void) const=0;
+			virtual CString getName() const = 0;
 			/**
 			 * \brief Gets the algorithm class identifier
 			 * \return This box' algorithm class identifier
 			 */
-			virtual OpenViBE::CIdentifier getAlgorithmClassIdentifier(void) const=0;
+			virtual CIdentifier getAlgorithmClassIdentifier() const = 0;
 			/**
 			 * \brief Changes the identifier of this box
 			 * \param rIdentifier [in] : The new identifier
@@ -73,16 +75,14 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setIdentifier(
-				const OpenViBE::CIdentifier& rIdentifier)=0;
+			virtual bool setIdentifier(const CIdentifier& rIdentifier) = 0;
 			/**
 			 * \brief Renames this box
 			 * \param sName [in] : The name this box should take
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setName(
-				const OpenViBE::CString& rsName)=0;
+			virtual bool setName(const CString& rsName) = 0;
 			/**
 			 * \brief Changes the algorithm identifier of this box
 			 * \param rAlgorithmClassIdentifier [in] : The new algorithm
@@ -90,8 +90,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setAlgorithmClassIdentifier(
-				const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)=0;
+			virtual bool setAlgorithmClassIdentifier(const CIdentifier& rAlgorithmClassIdentifier) = 0;
 
 
 			/**
@@ -100,7 +99,7 @@ namespace OpenViBE
 			 * \param oIdentifier [in] : the requested identifier
 			 * \return the proposed identifier
 			 */
-			virtual CIdentifier getUnusedSettingIdentifier(const CIdentifier& rIdentifier = OV_UndefinedIdentifier) const=0;
+			virtual CIdentifier getUnusedSettingIdentifier(const CIdentifier& rIdentifier = OV_UndefinedIdentifier) const = 0;
 
 			/**
 			 * \brief Requests for a suggested identifier. If it is already used in the box or
@@ -109,7 +108,7 @@ namespace OpenViBE
 			 * \param oIdentifier [in] : the requested identifier
 			 * \return the proposed identifier
 			 */
-			virtual CIdentifier getUnusedInputIdentifier(const CIdentifier& rIdentifier = OV_UndefinedIdentifier) const=0;
+			virtual CIdentifier getUnusedInputIdentifier(const CIdentifier& rIdentifier = OV_UndefinedIdentifier) const = 0;
 
 			/**
 			 * \brief Requests for a suggested identifier. If it is already used in the box or
@@ -118,7 +117,7 @@ namespace OpenViBE
 			 * \param oIdentifier [in] : the requested identifier
 			 * \return the proposed identifier
 			 */
-			virtual CIdentifier getUnusedOutputIdentifier(const CIdentifier& rIdentifier = OV_UndefinedIdentifier) const=0;
+			virtual CIdentifier getUnusedOutputIdentifier(const CIdentifier& rIdentifier = OV_UndefinedIdentifier) const = 0;
 
 			//@}
 			/** \name Initialisation from prototypes etc... */
@@ -134,8 +133,7 @@ namespace OpenViBE
 			 * Resets the box and initializes its input/output/settings
 			 * according to the box algorithm descriptor
 			 */
-			virtual bool initializeFromAlgorithmClassIdentifier(
-				const OpenViBE::CIdentifier& rAlgorithmClassIdentifier)=0;
+			virtual bool initializeFromAlgorithmClassIdentifier(const CIdentifier& rAlgorithmClassIdentifier) = 0;
 			/**
 			 * \brief Initializes the box from an already existing box
 			 * \param rExisitingBox [in] : The existing box.
@@ -145,49 +143,48 @@ namespace OpenViBE
 			 * Resets the box and initializes its input/output/settings
 			 * according to the existing box.
 			 */
-			virtual bool initializeFromExistingBox(
-				const OpenViBE::Kernel::IBox& rExistingBox)=0;
+			virtual bool initializeFromExistingBox(const IBox& rExistingBox) = 0;
 
 
-			virtual bool addInterfacor(BoxInterfacorType interfacorType, const OpenViBE::CString& newName, const OpenViBE::CIdentifier& typeIdentifier, const OpenViBE::CIdentifier& identifier, bool shouldNotify = true) = 0;
-			virtual bool removeInterfacor(BoxInterfacorType interfacorType, const uint32_t index, bool shouldNotify = true) = 0;
+			virtual bool addInterfacor(BoxInterfacorType interfacorType, const CString& newName, const CIdentifier& typeIdentifier, const CIdentifier& identifier, bool shouldNotify = true) = 0;
+			virtual bool removeInterfacor(BoxInterfacorType interfacorType, const uint32_t index, const bool shouldNotify = true) = 0;
 
 			virtual uint32_t getInterfacorCount(BoxInterfacorType interfacorType) const = 0;
 			virtual uint32_t getInterfacorCountIncludingDeprecated(BoxInterfacorType interfacorType) const = 0;
 
-			virtual bool getInterfacorIdentifier(BoxInterfacorType interfacorType, uint32_t index, OpenViBE::CIdentifier& identifier) const = 0;
+			virtual bool getInterfacorIdentifier(BoxInterfacorType interfacorType, const uint32_t index, CIdentifier& identifier) const = 0;
 
-			virtual bool getInterfacorIndex(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, uint32_t& index) const = 0;
-			virtual bool getInterfacorIndex(BoxInterfacorType interfacorType, const OpenViBE::CString& name, uint32_t& index) const = 0;
+			virtual bool getInterfacorIndex(BoxInterfacorType interfacorType, const CIdentifier& identifier, uint32_t& index) const = 0;
+			virtual bool getInterfacorIndex(BoxInterfacorType interfacorType, const CString& name, uint32_t& index) const = 0;
 
-			virtual bool getInterfacorType(BoxInterfacorType interfacorType, uint32_t index, OpenViBE::CIdentifier& typeIdentifier) const = 0;
-			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, OpenViBE::CIdentifier& typeIdentifier) const = 0;
-			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const CString& name, OpenViBE::CIdentifier& typeIdentifier) const = 0;
+			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const uint32_t index, CIdentifier& typeIdentifier) const = 0;
+			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const CIdentifier& identifier, CIdentifier& typeIdentifier) const = 0;
+			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const CString& name, CIdentifier& typeIdentifier) const = 0;
 
-			virtual bool getInterfacorName(BoxInterfacorType interfacorType, uint32_t index, OpenViBE::CString& name) const = 0;
-			virtual bool getInterfacorName(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, OpenViBE::CString& name) const = 0;
+			virtual bool getInterfacorName(BoxInterfacorType interfacorType, const uint32_t index, CString& name) const = 0;
+			virtual bool getInterfacorName(BoxInterfacorType interfacorType, const CIdentifier& identifier, CString& name) const = 0;
 
-			virtual bool getInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, uint32_t index, bool& value) const = 0;
-			virtual bool getInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, bool& value) const = 0;
+			virtual bool getInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const uint32_t index, bool& value) const = 0;
+			virtual bool getInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const CIdentifier& identifier, bool& value) const = 0;
 
-			virtual bool hasInterfacorWithIdentifier(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier) const = 0;
-			virtual bool hasInterfacorWithType(BoxInterfacorType interfacorType, uint32_t index, const OpenViBE::CIdentifier& typeIdentifier) const = 0;
-			virtual bool hasInterfacorWithNameAndType(BoxInterfacorType interfacorType, const CString& name, const OpenViBE::CIdentifier& typeIdentifier) const = 0;
+			virtual bool hasInterfacorWithIdentifier(BoxInterfacorType interfacorType, const CIdentifier& identifier) const = 0;
+			virtual bool hasInterfacorWithType(BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeIdentifier) const = 0;
+			virtual bool hasInterfacorWithNameAndType(BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeIdentifier) const = 0;
 
-			virtual bool setInterfacorType(BoxInterfacorType interfacorType, uint32_t index, const OpenViBE::CIdentifier& typeIdentifier) = 0;
-			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, const OpenViBE::CIdentifier& typeIdentifier) = 0;
-			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CString& name, const OpenViBE::CIdentifier& typeIdentifier) = 0;
+			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& typeIdentifier) = 0;
+			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CIdentifier& identifier, const CIdentifier& typeIdentifier) = 0;
+			virtual bool setInterfacorType(BoxInterfacorType interfacorType, const CString& name, const CIdentifier& typeIdentifier) = 0;
 
-			virtual bool setInterfacorName(BoxInterfacorType interfacorType, uint32_t index, const OpenViBE::CString& name) = 0;
-			virtual bool setInterfacorName(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, const OpenViBE::CString& name) = 0;
+			virtual bool setInterfacorName(BoxInterfacorType interfacorType, const uint32_t index, const CString& name) = 0;
+			virtual bool setInterfacorName(BoxInterfacorType interfacorType, const CIdentifier& identifier, const CString& name) = 0;
 
-			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, uint32_t index, bool value) = 0;
-			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& identifier, bool value) = 0;
+			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const uint32_t index, bool value) = 0;
+			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const CIdentifier& identifier, bool value) = 0;
 
-			virtual bool updateInterfacorIdentifier(BoxInterfacorType interfacorType, uint32_t index, const CIdentifier& newIdentifier) = 0;
+			virtual bool updateInterfacorIdentifier(BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& newIdentifier) = 0;
 
-			virtual bool addInterfacorTypeSupport(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& typeIdentifier) = 0;
-			virtual bool hasInterfacorTypeSupport(BoxInterfacorType interfacorType, const OpenViBE::CIdentifier& typeIdentifier) const = 0;
+			virtual bool addInterfacorTypeSupport(BoxInterfacorType interfacorType, const CIdentifier& typeIdentifier) = 0;
+			virtual bool hasInterfacorTypeSupport(BoxInterfacorType interfacorType, const CIdentifier& typeIdentifier) const = 0;
 			//@}
 			/** \name Input management */
 			//@{
@@ -205,11 +202,7 @@ namespace OpenViBE
 			 * The input is always added after the last
 			 * already existing input.
 			 */
-			virtual bool addInput(
-				const OpenViBE::CString& rsName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CIdentifier& oIdentifier = OV_UndefinedIdentifier,
-				const bool bNotify=true)=0;
+			virtual bool addInput(const CString& rsName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
 
 			/**
 			 * \brief Removes an input for this box
@@ -223,15 +216,13 @@ namespace OpenViBE
 			 * have their indices changing after this,
 			 * they all decrease by 1.
 			 */
-			virtual bool removeInput(
-				const OpenViBE::uint32 ui32InputIndex,
-				const bool bNotify=true)=0;
+			virtual bool removeInput(const uint32_t ui32InputIndex, const bool bNotify = true) = 0;
 
 			/**
 			 * \brief Gets the number of inputs for this box
 			 * \return The number of inputs for this box.
 			 */
-			virtual OpenViBE::uint32 getInputCount(void) const=0;
+			virtual uint32_t getInputCount() const = 0;
 
 			/**
 			 * \brief Gets an input type identifier by index
@@ -241,9 +232,7 @@ namespace OpenViBE
 			 * \return \e false in case of error. In such case,
 			 *         \c rTypeIdentifier remains unchanged.
 			 */
-			virtual bool getInputType(
-				const OpenViBE::uint32 ui32InputIndex,
-				OpenViBE::CIdentifier& rTypeIdentifier) const=0;
+			virtual bool getInputType(const uint32_t ui32InputIndex, CIdentifier& rTypeIdentifier) const = 0;
 
 			/**
 			 * \brief Gets an input name by index
@@ -253,9 +242,7 @@ namespace OpenViBE
 			 * \return \e false in case of error. In such case,
 			 *         \c rName remains unchanged.
 			 */
-			virtual bool getInputName(
-				const OpenViBE::uint32 ui32InputIndex,
-				OpenViBE::CString& rName) const=0;
+			virtual bool getInputName(const uint32_t ui32InputIndex, CString& rName) const = 0;
 
 			/**
 			 * \brief Sets an input type identifier by index
@@ -264,9 +251,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setInputType(
-				const OpenViBE::uint32 ui32InputIndex,
-				const OpenViBE::CIdentifier& rTypeIdentifier)=0;
+			virtual bool setInputType(const uint32_t ui32InputIndex, const CIdentifier& rTypeIdentifier) = 0;
 
 			/**
 			 * \brief Sets an input name by index
@@ -275,9 +260,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setInputName(
-				const OpenViBE::uint32 ui32InputIndex,
-				const OpenViBE::CString& rName)=0;
+			virtual bool setInputName(const uint32_t ui32InputIndex, const CString& rName) = 0;
 
 			//@}
 			/** \name Output management */
@@ -288,7 +271,7 @@ namespace OpenViBE
 			 * \param sName [in] : The output name
 			 * \param rTypeIdentifier [in] : The
 			 *        output type idenfitier
-			 * \param oIdentifier [in] : The output identifier
+			 * \param rIdentifier [in] : The output identifier
 			 * \param bNotify: if true, activate notification callback (true by default)
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
@@ -296,11 +279,8 @@ namespace OpenViBE
 			 * The output is always added after the last
 			 * already existing output.
 			 */
-			virtual bool addOutput(
-				const OpenViBE::CString& rsName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-				const bool bNotify = true)=0;
+			virtual bool addOutput(const CString& rsName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
+			
 			/**
 			 * \brief Removes an output for this box
 			 * \param ui32OutputIndex [in] : The index
@@ -313,14 +293,12 @@ namespace OpenViBE
 			 * have their indices changing after this,
 			 * they all decrease by 1.
 			 */
-			virtual bool removeOutput(
-				const OpenViBE::uint32 ui32OutputIndex,
-				const bool bNotify=true)=0;
+			virtual bool removeOutput(const uint32_t ui32OutputIndex, const bool bNotify = true) = 0;
 			/**
 			 * \brief Gets the number of outputs for this box
 			 * \return The number of outputs for this box.
 			 */
-			virtual OpenViBE::uint32 getOutputCount(void) const=0;
+			virtual uint32_t getOutputCount() const = 0;
 
 			/**
 			 * \brief Gets an output type identifier by index
@@ -330,9 +308,7 @@ namespace OpenViBE
 			 * \return \e false in case of error. In such case,
 			 *         \c rTypeIdentifier remains unchanged.
 			 */
-			virtual bool getOutputType(
-				const OpenViBE::uint32 ui32OutputIndex,
-				OpenViBE::CIdentifier& rTypeIdentifier) const=0;
+			virtual bool getOutputType(const uint32_t ui32OutputIndex, CIdentifier& rTypeIdentifier) const = 0;
 
 			/**
 			 * \brief Gets an output name by index
@@ -342,9 +318,7 @@ namespace OpenViBE
 			 * \return \e false in case of error. In such case,
 			 *         \c rName remains unchanged.
 			 */
-			virtual bool getOutputName(
-				const OpenViBE::uint32 ui32OutputIndex,
-				OpenViBE::CString& rName) const=0;
+			virtual bool getOutputName(const uint32_t ui32OutputIndex, CString& rName) const = 0;
 
 			/**
 			 * \brief Sets an output type identifier by index
@@ -353,9 +327,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setOutputType(
-				const OpenViBE::uint32 ui32OutputIndex,
-				const OpenViBE::CIdentifier& rTypeIdentifier)=0;
+			virtual bool setOutputType(const uint32_t ui32OutputIndex, const CIdentifier& rTypeIdentifier) = 0;
 
 			/**
 			 * \brief Sets an output name by index
@@ -364,9 +336,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setOutputName(
-				const OpenViBE::uint32 ui32OutputIndex,
-				const OpenViBE::CString& rName)=0;
+			virtual bool setOutputName(const uint32_t ui32OutputIndex, const CString& rName) = 0;
 
 			//@}
 			/** \name Setting management */
@@ -392,18 +362,12 @@ namespace OpenViBE
 			 * The default value -1 means that the setting
 			 * will be add to the end.
 			 */
-			virtual bool addSetting(
-				const OpenViBE::CString& rsName,
-				const OpenViBE::CIdentifier& rTypeIdentifier,
-				const OpenViBE::CString& sDefaultValue,
-				const OpenViBE::uint32 ui32Index = OV_Value_UndefinedIndexUInt,
-				const bool bModifiability = false,
-				const OpenViBE::CIdentifier& rIdentifier = OV_UndefinedIdentifier,
-				const bool bNotify=true)=0;
+			virtual bool addSetting(const CString& rsName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const uint32_t ui32Index = OV_Value_UndefinedIndexUInt,
+									const bool bModifiability = false, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
 
 			/**
 			 * \brief Removes a setting for this box
-			 * \param ui32SettingIndex [in] : The index
+			 * \param index [in] : The index
 			 *        of the setting to remove
 			 * \param bNotify manage notify. Is enabled by default
 			 * \return \e true in case of success.
@@ -413,60 +377,51 @@ namespace OpenViBE
 			 * have their indices changing after this,
 			 * they all decrease by 1.
 			 */
-			virtual bool removeSetting(
-				const OpenViBE::uint32 ui32SettingIndex,
-				const bool bNotify=true)=0;
+			virtual bool removeSetting(const uint32_t index, const bool bNotify = true) = 0;
 			/**
 			 * \brief Gets the number of settings for this box
 			 * \return The number of settings for this box.
 			 */
-			virtual OpenViBE::uint32 getSettingCount(void) const=0;
+			virtual uint32_t getSettingCount() const = 0;
 
 			/**
 			 * \brief checks if a setting with a given name is present
 			 * \param rName [in] : Name of the setting
 			 * \return true if setting is present, false otherwise
 			 */
-			virtual bool hasSettingWithName(
-			        const OpenViBE::CString& rName) const = 0;
+			virtual bool hasSettingWithName(const CString& rName) const = 0;
 
 			/**
 			 * \brief Gets a setting type by index
-			 * \param ui32SettingIndex [in] : The setting index
+			 * \param index [in] : The setting index
 			 * \param rTypeIdentifier [out] : The type identifier
 			 * \return \e true in case of success.
 			 * \return \e false in case of error. In such case,
 			 *         \c rTypeIdentifier remains unchanged.
 			 */
-			virtual bool getSettingType(
-				const OpenViBE::uint32 ui32SettingIndex,
-				OpenViBE::CIdentifier& rTypeIdentifier) const=0;
+			virtual bool getSettingType(const uint32_t index, CIdentifier& rTypeIdentifier) const = 0;
 
 			/**
 			 * \brief Gets a setting name by index
-			 * \param ui32SettingIndex [in] : The setting index
+			 * \param index [in] : The setting index
 			 * \param rName [out] : The name of this setting
 			 * \return \e true in case of success.
 			 * \return \e false in case of error. In such case,
 			 *         \c rName remains unchanged.
 			 */
-			virtual bool getSettingName(
-				const OpenViBE::uint32 ui32SettingIndex,
-				OpenViBE::CString& rName) const=0;
+			virtual bool getSettingName(const uint32_t index, CString& rName) const = 0;
 
 			/**
 			 * \brief Gets the default setting value by index
-			 * \param ui32SettingIndex [in] : The setting index
+			 * \param index [in] : The setting index
 			 * \param rDefaultValue [out] : The default value
 			 * \return \e true in case of success.
 			 * \return \e false in case of error. In such case,
 			 *         \c rDefaultValue remains unchanged.
 			 */
-			virtual bool getSettingDefaultValue(
-				const OpenViBE::uint32 ui32SettingIndex,
-				OpenViBE::CString& rDefaultValue) const=0;
+			virtual bool getSettingDefaultValue(const uint32_t index, CString& rDefaultValue) const = 0;
 
-		    /**
+			/**
 			 * \brief Gets the default setting value by identifier
 			 * \param rIdentifier [in] : The setting identifier
 			 * \param rDefaultValue [out] : The default value
@@ -474,33 +429,27 @@ namespace OpenViBE
 			 * \return \e false in case of error. In such case,
 			 *         \c rDefaultValue remains unchanged.
 			 */
-			virtual bool getSettingDefaultValue(
-				const OpenViBE::CIdentifier &rIdentifier,
-				OpenViBE::CString& rDefaultValue) const=0;
+			virtual bool getSettingDefaultValue(const CIdentifier& rIdentifier, CString& rDefaultValue) const = 0;
 
-			 /**
-			 * \brief Gets the default setting value by name
-			 * \param sName [in] : The setting name
-			 * \param rDefaultValue [out] : The default value
-			 * \return \e true in case of success.
-			 * \return \e false in case of error. In such case,
-			 *         \c rDefaultValue remains unchanged.
-			 */
-			virtual bool getSettingDefaultValue(
-				const OpenViBE::CString &sName,
-				OpenViBE::CString& rDefaultValue) const=0;
+			/**
+			* \brief Gets the default setting value by name
+			* \param sName [in] : The setting name
+			* \param rDefaultValue [out] : The default value
+			* \return \e true in case of success.
+			* \return \e false in case of error. In such case,
+			*         \c rDefaultValue remains unchanged.
+			*/
+			virtual bool getSettingDefaultValue(const CString& sName, CString& rDefaultValue) const = 0;
 
 			/**
 			 * \brief Gets the setting value by index
-			 * \param ui32SettingIndex [in] : The setting index
+			 * \param index [in] : The setting index
 			 * \param rValue [out] : The value
 			 * \return \e true in case of success.
 			 * \return \e false in case of error. In such case,
 			 *         \c rValue remains unchanged.
 			 */
-			virtual bool getSettingValue(
-				const OpenViBE::uint32 ui32SettingIndex,
-				OpenViBE::CString& rValue) const=0;
+			virtual bool getSettingValue(const uint32_t index, CString& rValue) const = 0;
 
 			/**
 			 * \brief Gets the setting value by identifier
@@ -510,9 +459,7 @@ namespace OpenViBE
 			 * \return \e false in case of error. In such case,
 			 *         \c rValue remains unchanged.
 			 */
-			virtual bool getSettingValue(
-				const OpenViBE::CIdentifier &rIdentifier,
-				OpenViBE::CString& rValue) const=0;
+			virtual bool getSettingValue(const CIdentifier& rIdentifier, CString& rValue) const = 0;
 
 			/**
 			 * \brief Gets the setting value by name
@@ -522,42 +469,34 @@ namespace OpenViBE
 			 * \return \e false in case of error. In such case,
 			 *         \c rValue remains unchanged.
 			 */
-			virtual bool getSettingValue(
-				const OpenViBE::CString &sName,
-				OpenViBE::CString& rValue) const=0;
+			virtual bool getSettingValue(const CString& sName, CString& rValue) const = 0;
 
 			/**
 			 * \brief Sets a setting type identifier by index
-			 * \param ui32SettingIndex [in] : The setting index
+			 * \param index [in] : The setting index
 			 * \param rTypeIdentifier [in] : The type identifier
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingType(
-				const OpenViBE::uint32 ui32SettingIndex,
-				const OpenViBE::CIdentifier& rTypeIdentifier)=0;
+			virtual bool setSettingType(const uint32_t index, const CIdentifier& rTypeIdentifier) = 0;
 
 			/**
 			 * \brief Sets a setting name by index
-			 * \param ui32SettingIndex [in] : The setting index
+			 * \param index [in] : The setting index
 			 * \param rName [in] : The name of this setting
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingName(
-				const OpenViBE::uint32 ui32SettingIndex,
-				const OpenViBE::CString& rName)=0;
+			virtual bool setSettingName(const uint32_t index, const CString& rName) = 0;
 
 			/**
 			 * \brief Sets the default setting value by index
-			 * \param ui32SettingIndex [in] : The setting index
+			 * \param index [in] : The setting index
 			 * \param rDefaultValue [in] : The default value
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingDefaultValue(
-				const OpenViBE::uint32 ui32SettingIndex,
-				const OpenViBE::CString& rDefaultValue)=0;
+			virtual bool setSettingDefaultValue(const uint32_t index, const CString& rDefaultValue) = 0;
 
 			/**
 			 * \brief Sets the default setting value by identifier
@@ -566,9 +505,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingDefaultValue(
-				const OpenViBE::CIdentifier &rIdentifier,
-				const OpenViBE::CString& rDefaultValue)=0;
+			virtual bool setSettingDefaultValue(const CIdentifier& rIdentifier, const CString& rDefaultValue) = 0;
 
 			/**
 			 * \brief Sets the default setting value by name
@@ -577,21 +514,16 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingDefaultValue(
-				const OpenViBE::CString &sName,
-				const OpenViBE::CString& rDefaultValue)=0;
+			virtual bool setSettingDefaultValue(const CString& sName, const CString& rDefaultValue) = 0;
 
 			/**
 			 * \brief Sets the setting value by index
-			 * \param ui32SettingIndex [in] : The setting index
+			 * \param index [in] : The setting index
 			 * \param rValue [in] : The value
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingValue(
-				const OpenViBE::uint32 ui32SettingIndex,
-				const OpenViBE::CString& rValue,
-				const bool bNotify=true)=0;
+			virtual bool setSettingValue(const uint32_t index, const CString& rValue, const bool bNotify = true) = 0;
 
 			/**
 			 * \brief Sets the setting value by identifier
@@ -600,9 +532,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingValue(
-				const OpenViBE::CIdentifier& rIdentifier,
-				const OpenViBE::CString& rValue)=0;
+			virtual bool setSettingValue(const CIdentifier& rIdentifier, const CString& rValue) = 0;
 
 			/**
 			 * \brief Sets the setting value by name
@@ -611,20 +541,16 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingValue(
-				const OpenViBE::CString& rsName,
-				const OpenViBE::CString& rValue)=0;
+			virtual bool setSettingValue(const CString& rsName, const CString& rValue) = 0;
 
 			/**
 			 * \brief Gets the setting modifiability by index
-			 * \param ui32SettingIndex [in] : The setting index
+			 * \param index [in] : The setting index
 			 * \param rValue [out] : The value
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getSettingMod(
-				const OpenViBE::uint32 ui32SettingIndex,
-				bool& rValue) const=0;
+			virtual bool getSettingMod(const uint32_t index, bool& rValue) const = 0;
 
 			/**
 			 * \brief Gets the setting modifiability by identifier
@@ -633,9 +559,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getSettingMod(
-				const OpenViBE::CIdentifier &rIdentifier,
-				bool& rValue) const=0;
+			virtual bool getSettingMod(const CIdentifier& rIdentifier, bool& rValue) const = 0;
 
 			/**
 			 * \brief Gets the setting modifiability by name
@@ -644,20 +568,16 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getSettingMod(
-				const OpenViBE::CString &sName,
-				bool& rValue) const=0;
+			virtual bool getSettingMod(const CString& sName, bool& rValue) const = 0;
 
 			/**
 			 * \brief Sets the setting modifiability by index
-			 * \param ui32SettingIndex [in] : The setting index
+			 * \param index [in] : The setting index
 			 * \param rValue [in] : The value
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingMod(
-				const OpenViBE::uint32 ui32SettingIndex,
-				const bool rValue)=0;
+			virtual bool setSettingMod(const uint32_t index, const bool rValue) = 0;
 
 			/**
 			 * \brief Sets the setting modifiability by identifier
@@ -666,9 +586,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingMod(
-				const OpenViBE::CIdentifier &rIdentifier,
-				const bool rValue)=0;
+			virtual bool setSettingMod(const CIdentifier& rIdentifier, const bool rValue) = 0;
 
 			/**
 			 * \brief Sets the setting modifiability by name
@@ -677,22 +595,20 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setSettingMod(
-				const OpenViBE::CString &sName,
-				const bool rValue)=0;
+			virtual bool setSettingMod(const CString& sName, const bool rValue) = 0;
 
-			virtual bool swapSettings(unsigned int indexA, unsigned int indexB)=0;
-			virtual bool swapInputs(unsigned int indexA, unsigned int indexB)=0;
-			virtual bool swapOutputs(unsigned int indexA, unsigned int indexB)=0;
+			virtual bool swapSettings(const uint32_t indexA, const uint32_t indexB) = 0;
+			virtual bool swapInputs(const uint32_t indexA, const uint32_t indexB) = 0;
+			virtual bool swapOutputs(const uint32_t indexA, const uint32_t indexB) = 0;
 			/**
 			 * \brief Inform if the box possess a modifiable interface
 			 * \return \e true if it does.
 			 * \return \e false otherwise.
 			 */
-			virtual bool hasModifiableSettings(void)const=0;
+			virtual bool hasModifiableSettings() const = 0;
 
 
-			virtual OpenViBE::uint32* getModifiableSettings(OpenViBE::uint32& rCount)const =0;
+			virtual uint32_t* getModifiableSettings(uint32_t& rCount) const = 0;
 
 
 			//@}
@@ -706,8 +622,7 @@ namespace OpenViBE
 			  * \return \e true in case of success.
 			  * \return \e false in case of error.
 			  */
-			virtual bool addInputSupport(
-					const OpenViBE::CIdentifier& rTypeIdentifier)=0;
+			virtual bool addInputSupport(const CIdentifier& rTypeIdentifier) = 0;
 
 			/**
 			  * \brief Indicates if a type is support by inputs
@@ -715,8 +630,7 @@ namespace OpenViBE
 			  * \return \e true if type is support.
 			  * \return \e false if type isn't support.
 			  */
-			virtual bool hasInputSupport(
-					const OpenViBE::CIdentifier& rTypeIdentifier) const =0;
+			virtual bool hasInputSupport(const CIdentifier& rTypeIdentifier) const = 0;
 
 			/**
 			  * \brief Marks this type as supported by outputs
@@ -724,8 +638,7 @@ namespace OpenViBE
 			  * \return \e true in case of success.
 			  * \return \e false in case of error.
 			  */
-			virtual bool addOutputSupport(
-					const OpenViBE::CIdentifier& rTypeIdentifier)=0;
+			virtual bool addOutputSupport(const CIdentifier& rTypeIdentifier) = 0;
 
 			/**
 			  * \brief Indicates if a type is support by outputs
@@ -733,8 +646,7 @@ namespace OpenViBE
 			  * \return \e true if type is support.
 			  * \return \e false if type isn't support.
 			  */
-			virtual bool hasOutputSupport(
-					const OpenViBE::CIdentifier& rTypeIdentifier) const =0;
+			virtual bool hasOutputSupport(const CIdentifier& rTypeIdentifier) const = 0;
 			//@}
 
 			/**
@@ -745,20 +657,19 @@ namespace OpenViBE
 			 * \return \e false in case of error.
 			 * \note The supported stream list is not reset.
 			 */
-			virtual bool setSupportTypeFromAlgorithmIdentifier(
-					const OpenViBE::CIdentifier& rTypeIdentifier)=0;
+			virtual bool setSupportTypeFromAlgorithmIdentifier(const CIdentifier& rTypeIdentifier) = 0;
 
 			/**
 			 * \brief Get a vector of input supported types
 			 * \return the vector of input supported types
 			 */
-			virtual std::vector<OpenViBE::CIdentifier> getInputSupportTypes() const = 0;
+			virtual std::vector<CIdentifier> getInputSupportTypes() const = 0;
 
 			/**
 			 * \brief Get a vector of output supported types
 			 * \return the vector of output supported types
 			 */
-			virtual std::vector<OpenViBE::CIdentifier> getOutputSupportTypes() const = 0;
+			virtual std::vector<CIdentifier> getOutputSupportTypes() const = 0;
 
 			/**
 			 * \brief clear output supported types list
@@ -773,7 +684,6 @@ namespace OpenViBE
 			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Box)
 		};
 
-		typedef OpenViBE::Kernel::IBox IStaticBoxContext;
-	};
-};
-
+		typedef IBox IStaticBoxContext;
+	}  // namespace Kernel
+}  // namespace OpenViBE

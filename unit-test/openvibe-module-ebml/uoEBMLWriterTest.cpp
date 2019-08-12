@@ -47,12 +47,9 @@
 class CWriterCallBack : public EBML::IWriterCallBack
 {
 public:
-	CWriterCallBack(const char* filename)
-	{
-		m_File = std::fopen(filename, "wb");
-	}
+	CWriterCallBack(const char* filename) { m_File = std::fopen(filename, "wb"); }
 
-	virtual ~CWriterCallBack(void)
+	~CWriterCallBack() override
 	{
 		if (m_File)
 		{
@@ -60,7 +57,7 @@ public:
 		}
 	}
 
-	virtual void write(const void* pBuffer, const EBML::uint64 ui64BufferSize) override
+	void write(const void* pBuffer, const uint64_t ui64BufferSize) override
 	{
 		if (m_File)
 		{
@@ -77,7 +74,7 @@ public:
 
 private:
 
-	std::FILE* m_File { nullptr };
+	std::FILE* m_File{ nullptr };
 };
 
 int uoEBMLWriterTest(int argc, char* argv[])
@@ -85,7 +82,7 @@ int uoEBMLWriterTest(int argc, char* argv[])
 	OVT_ASSERT(argc == 3, "Failure to retrieve tests arguments. Expecting: data_dir output_dir");
 
 	std::string expectedFile = std::string(argv[1]) + "ref_data.ebml";
-	std::string outputFile = std::string(argv[2]) + "uoEBMLWriterTest.ebml";
+	std::string outputFile   = std::string(argv[2]) + "uoEBMLWriterTest.ebml";
 
 	// The test serializes a known ebml sequence and compares the output
 	// to a reference.
@@ -93,7 +90,7 @@ int uoEBMLWriterTest(int argc, char* argv[])
 	// serializing
 	CWriterCallBack writerCallback(outputFile.c_str());
 
-	EBML::IWriter* writer = EBML::createWriter(writerCallback);
+	EBML::IWriter* writer = createWriter(writerCallback);
 	EBML::CWriterHelper writerHelper;
 
 	writerHelper.connect(writer);
@@ -127,7 +124,7 @@ int uoEBMLWriterTest(int argc, char* argv[])
 	writerHelper.closeChild();
 
 	writerHelper.openChild(0x8765);
-	writerHelper.setFloat32AsChildData(static_cast<EBML::float32>(M_PI));
+	writerHelper.setFloat32AsChildData(static_cast<float>(M_PI));
 	writerHelper.closeChild();
 	writer->release();
 	writerCallback.release();
@@ -154,4 +151,3 @@ int uoEBMLWriterTest(int argc, char* argv[])
 
 	return EXIT_SUCCESS;
 }
-

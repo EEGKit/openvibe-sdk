@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Global_Defines_H__
-#define __OpenViBEPlugins_Global_Defines_H__
+#pragma once
 
 
 // -----------------------------------------------------
@@ -277,5 +276,3 @@
 #define OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer                                                        OpenViBE::CIdentifier(0x1b7076fd, 0x449bc70a) // Duplicate of OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer
 #define OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd                                                           OpenViBE::CIdentifier(0x3fc23508, 0x806753d8) // Duplicate of OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd
 #define OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader                                                        OpenViBE::CIdentifier(0x878eaf60, 0xf9d5303f) // Duplicate of OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeHeader
-
-#endif // __OpenViBEPlugins_Global_Defines_H__

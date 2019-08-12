@@ -7,17 +7,17 @@
 //
 
 #if defined(_MSC_VER)
- // We need some magic to get #warning behavior on MSVC
- #define STRINGISE(N) #N
- #define EXPAND_THEN_STRINGISE(N) STRINGISE(N)
- #define __LINE_STR__ EXPAND_THEN_STRINGISE(__LINE__)
+// We need some magic to get #warning behavior on MSVC
+#define STRINGISE(N) #N
+#define EXPAND_THEN_STRINGISE(N) STRINGISE(N)
+#define __LINE_STR__ EXPAND_THEN_STRINGISE(__LINE__)
 
- // Format #pragma message
- #define __LOC__ __FILE__ "(" __LINE_STR__ ")"
- #define __OUTPUT_FORMAT__(type) __LOC__ " : " type " : "
+// Format #pragma message
+#define __LOC__ __FILE__ "(" __LINE_STR__ ")"
+#define __OUTPUT_FORMAT__(type) __LOC__ " : " type " : "
 
- // Actual warning message type
- #define __WARNING__ __OUTPUT_FORMAT__("Warning")
+// Actual warning message type
+#define __WARNING__ __OUTPUT_FORMAT__("Warning")
 #endif
 
 
@@ -73,25 +73,25 @@
 // - http://people.redhat.com/drepper/dsohowto.pdf
 // - http://www.nedprod.com/programs/gccvisibility.html
 #if defined OV_Shared
- #if defined TARGET_OS_Windows
+#if defined TARGET_OS_Windows
   #define OV_API_Export __declspec(dllexport)
   #define OV_API_Import __declspec(dllimport)
- #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
   #define OV_API_Export __attribute__((visibility("default")))
   #define OV_API_Import __attribute__((visibility("default")))
- #else
+#else
   #define OV_API_Export
   #define OV_API_Import
- #endif
+#endif
 #else
- #define OV_API_Export
- #define OV_API_Import
+#define OV_API_Export
+#define OV_API_Import
 #endif
 
 #if defined OV_Exports
  #define OV_API OV_API_Export
 #else
- #define OV_API OV_API_Import
+#define OV_API OV_API_Import
 #endif
 
 //___________________________________________________________________//
@@ -105,25 +105,25 @@
 // - http://people.redhat.com/drepper/dsohowto.pdf
 // - http://www.nedprod.com/programs/gccvisibility.html
 #if defined OVP_Shared
-	#if defined TARGET_OS_Windows
+#if defined TARGET_OS_Windows
 		#define OVP_API_Export __declspec(dllexport)
 		#define OVP_API_Import __declspec(dllimport)
-	#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 		#define OVP_API_Export __attribute__((visibility("default")))
 		#define OPV_API_Import __attribute__((visibility("default")))
-	#else
+#else
 		#define OVP_API_Export
 		#define OVP_API_Import
-	#endif
+#endif
 #else
-	#define OVP_API_Export
-	#define OVP_API_Import
+#define OVP_API_Export
+#define OVP_API_Import
 #endif
 
 #if defined OVP_Exports
 	#define OVP_API OVP_API_Export
 #else
-	#define OVP_API OVP_API_Import
+#define OVP_API OVP_API_Import
 #endif
 //___________________________________________________________________//
 //                                                                   //
@@ -139,12 +139,11 @@
   #define OV_DEPRECATED(since) [[deprecated("Since " #since)]]
   #define OV_DEPRECATED_FOR(since, replacement) [[deprecated("Since " #since "; use " #replacement)]]
 #elif defined(_MSC_VER)
-  #define OV_DEPRECATED(since) __declspec(deprecated("Since " # since))
-  #define OV_DEPRECATED_FOR(since, replacement) __declspec(deprecated("Since " #since "; use " #replacement))
+#define OV_DEPRECATED(since) __declspec(deprecated("Since " # since))
+#define OV_DEPRECATED_FOR(since, replacement) __declspec(deprecated("Since " #since "; use " #replacement))
 #else
   #define OV_DEPRECATED(since) __attribute__((__deprecated__))
   #define OV_DEPRECATED_FOR(since, replacement) __attribute__((__deprecated__))
 #endif
 
 #endif
-

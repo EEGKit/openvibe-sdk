@@ -15,20 +15,19 @@ class CPluginObjectDescEnumBoxTemplateGenerator : public CPluginObjectDescEnum
 public:
 
 	CPluginObjectDescEnumBoxTemplateGenerator(const OpenViBE::Kernel::IKernelContext& kernelContext, const OpenViBE::CString& docTemplateDirectory);
-	virtual bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pluginObjectDesc);
-	virtual bool initialize(void);
-	virtual bool uninitialize(void);
+	bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pluginObjectDesc) override;
+	virtual bool initialize();
+	virtual bool uninitialize();
 
 private:
 	// Return a string that correspond to the indexed categories under rst format
-	std::string generateRstIndex(std::vector < std::pair < std::string, std::string > > categories);
+	std::string generateRstIndex(std::vector<std::pair<std::string, std::string>> categories);
 
 protected:
 
 	std::string m_DocTemplateDirectory;
-	std::vector < std::pair < std::string, std::string > > m_Categories;
-	std::vector < std::pair < std::string, std::string > > m_DeprecatedBoxesCategories;
-	OpenViBE::CIdentifier m_ScenarioIdentifier;
+	std::vector<std::pair<std::string, std::string>> m_Categories;
+	std::vector<std::pair<std::string, std::string>> m_DeprecatedBoxesCategories;
+	OpenViBE::CIdentifier m_ScenarioIdentifier = OV_UndefinedIdentifier;
 	OpenViBE::Kernel::IScenario* m_Scenario;
-
 };

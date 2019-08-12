@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Tools_Identifier_Map_Iterator_H__
-#define __OpenViBEKernel_Tools_Identifier_Map_Iterator_H__
+#pragma once
 
 #include "../ovk_base.h"
 
@@ -14,22 +13,22 @@ namespace
 	{
 		typename std::map<OpenViBE::CIdentifier, T>::const_iterator it;
 
-		if(rPreviousIdentifier==OV_UndefinedIdentifier)
+		if (rPreviousIdentifier == OV_UndefinedIdentifier)
 		{
-			it=rMap.begin();
+			it = rMap.begin();
 		}
 		else
 		{
-			it=rMap.find(rPreviousIdentifier);
-			if(it==rMap.end())
+			it = rMap.find(rPreviousIdentifier);
+			if (it == rMap.end())
 			{
 				return OV_UndefinedIdentifier;
 			}
 			++it;
 		}
 
-		return it!=rMap.end()?it->first:OV_UndefinedIdentifier;
+		return it != rMap.end() ? it->first : OV_UndefinedIdentifier;
 	}
-};
+}  // namespace
 
-#endif // __OpenViBEKernel_Tools_Identifier_Map_Iterator_H__
+

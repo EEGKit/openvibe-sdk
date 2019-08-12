@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Algorithm_PairwiseDecision_H__
-#define __OpenViBEPlugins_Algorithm_PairwiseDecision_H__
+#pragma once
 
 #include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
@@ -37,23 +36,19 @@ namespace OpenViBEPlugins
 		 * @brief The CAlgorithmPairwiseDecision class
 		 * This is the default class for every decision usable with the One Vs One pairwise strategy.
 		 */
-		class CAlgorithmPairwiseDecision : virtual public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >
+		class CAlgorithmPairwiseDecision : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
-
 		public:
+			void release() override { delete this; }
+			bool initialize() override = 0;
+			bool uninitialize() override = 0;
 
-			virtual void release(void) { delete this; }
+			virtual bool parameterize() = 0;
 
-			virtual OpenViBE::boolean initialize(void)=0;
-			virtual OpenViBE::boolean uninitialize(void)=0;
-
-			virtual OpenViBE::boolean parameterize(void)=0;
-
-			virtual OpenViBE::boolean compute(std::vector< SClassificationInfo >& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) =0;
-			virtual XML::IXMLNode* saveConfiguration(void) = 0;
-			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode& rNode) = 0;
-
-			virtual OpenViBE::boolean process(void);
+			virtual bool compute(std::vector<SClassificationInfo>& pClassificationValueList, OpenViBE::IMatrix* pProbabilityVector) = 0;
+			virtual XML::IXMLNode* saveConfiguration() = 0;
+			virtual bool loadConfiguration(XML::IXMLNode& rNode) = 0;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_PairwiseDecision)
 		};
@@ -61,8 +56,7 @@ namespace OpenViBEPlugins
 		class CAlgorithmPairwiseDecisionDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
-			virtual OpenViBE::boolean getAlgorithmPrototype(
-				OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_Classifier_InputParameter_ProbabilityMatrix, "Probability Matrix", OpenViBE::Kernel::ParameterType_Matrix);
 				rAlgorithmPrototype.addInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_Configuration, "Configuration node", OpenViBE::Kernel::ParameterType_Pointer);
@@ -88,7 +82,3 @@ namespace OpenViBEPlugins
 		};
 	}
 }
-
-
-
-#endif // __OpenViBEPlugins_Algorithm_PairwiseStrategy_PKPD_H__

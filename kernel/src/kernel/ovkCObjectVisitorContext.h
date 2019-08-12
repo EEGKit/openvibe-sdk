@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_CObjectVisitorContext_H__
-#define __OpenViBEKernel_Kernel_CObjectVisitorContext_H__
+#pragma once
 
 #include "ovkTKernelObject.h"
 
@@ -7,22 +6,21 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CObjectVisitorContext : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IObjectVisitorContext >
+		class CObjectVisitorContext : public TKernelObject<IObjectVisitorContext>
 		{
 		public:
 
-			explicit CObjectVisitorContext(const OpenViBE::Kernel::IKernelContext& rKernelContext);
-			virtual ~CObjectVisitorContext(void);
-
-			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const;
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const;
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const;
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const;
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const;
+			explicit CObjectVisitorContext(const IKernelContext& rKernelContext);
+			~CObjectVisitorContext() override;
+			IAlgorithmManager& getAlgorithmManager() const override;
+			IConfigurationManager& getConfigurationManager() const override;
+			ITypeManager& getTypeManager() const override;
+			ILogManager& getLogManager() const override;
+			IErrorManager& getErrorManager() const override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IObjectVisitorContext >, OVK_ClassId_Kernel_ObjectVisitorContext)
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_CObjectVisitorContext_H__
+

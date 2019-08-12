@@ -5,8 +5,8 @@
 #include <vector>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins::Classification;
 
@@ -15,59 +15,40 @@ using namespace OpenViBEToolkit;
 using namespace Eigen;
 
 
-namespace{
-	const char* const c_sBaseNodeName     = "Class-config";
-	const char* const c_sWeightNodeName   = "Weights";
-	const char* const c_sBiasNodeName     = "Bias";
-}
-
-CAlgorithmLDADiscriminantFunction::CAlgorithmLDADiscriminantFunction():m_f64Bias(0)
+namespace
 {
+	const char* const c_sBaseNodeName   = "Class-config";
+	const char* const c_sWeightNodeName = "Weights";
+	const char* const c_sBiasNodeName   = "Bias";
 }
 
-void CAlgorithmLDADiscriminantFunction::setWeight(const VectorXd &rWeigth)
-{
-	m_oWeight = rWeigth;
-}
+CAlgorithmLDADiscriminantFunction::CAlgorithmLDADiscriminantFunction() {}
 
-void CAlgorithmLDADiscriminantFunction::setBias(float64 f64Bias)
-{
-	m_f64Bias = f64Bias;
-}
+void CAlgorithmLDADiscriminantFunction::setWeight(const VectorXd& rWeigth) { m_oWeight = rWeigth; }
+void CAlgorithmLDADiscriminantFunction::setBias(double f64Bias) { m_f64Bias = f64Bias; }
+double CAlgorithmLDADiscriminantFunction::getValue(const VectorXd& rFeatureVector) { return (m_oWeight.transpose() * rFeatureVector)(0) + m_f64Bias; }
+uint32_t CAlgorithmLDADiscriminantFunction::getWeightVectorSize() { return uint32_t(m_oWeight.size()); }
 
-float64 CAlgorithmLDADiscriminantFunction::getValue(const VectorXd &rFeatureVector)
-{
-	return (m_oWeight.transpose() * rFeatureVector)(0) + m_f64Bias;
-}
-
-uint32 CAlgorithmLDADiscriminantFunction::getWeightVectorSize()
-{
-	return m_oWeight.size();
-}
-
-boolean CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode *pConfiguration)
+bool CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode* pConfiguration)
 {
 	std::stringstream l_sBias(pConfiguration->getChildByName(c_sBiasNodeName)->getPCData());
 	l_sBias >> m_f64Bias;
 
 	std::stringstream l_sData(pConfiguration->getChildByName(c_sWeightNodeName)->getPCData());
-	std::vector < float64 > l_vCoefficients;
-	while(!l_sData.eof())
+	std::vector<double> l_vCoefficients;
+	while (!l_sData.eof())
 	{
-		float64 l_f64Value;
+		double l_f64Value;
 		l_sData >> l_f64Value;
 		l_vCoefficients.push_back(l_f64Value);
 	}
 
 	m_oWeight.resize(l_vCoefficients.size());
-	for(size_t i=0; i<l_vCoefficients.size(); i++)
-	{
-		m_oWeight(i,0)=l_vCoefficients[i];
-	}
+	for (size_t i = 0; i < l_vCoefficients.size(); i++) { m_oWeight(i, 0) = l_vCoefficients[i]; }
 	return true;
 }
 
-XML::IXMLNode *CAlgorithmLDADiscriminantFunction::getConfiguration(void)
+XML::IXMLNode* CAlgorithmLDADiscriminantFunction::getConfiguration()
 {
 	XML::IXMLNode* l_pRootNode = XML::createNode(c_sBaseNodeName);
 
@@ -76,10 +57,7 @@ XML::IXMLNode *CAlgorithmLDADiscriminantFunction::getConfiguration(void)
 
 
 	l_sWeigths << std::scientific;
-	for(int32 i=0; i<m_oWeight.size(); i++)
-	{
-		l_sWeigths << " " << m_oWeight(i,0);
-	}
+	for (int32_t i = 0; i < m_oWeight.size(); i++) { l_sWeigths << " " << m_oWeight(i, 0); }
 
 	l_sBias << m_f64Bias;
 

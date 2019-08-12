@@ -4,36 +4,35 @@
 #include <map>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEToolkit;
 
-static std::map<uint64, fClassifierComparison> mComparisionFunctionMap;
+static std::map<uint64_t, fClassifierComparison> mComparisionFunctionMap;
 
-void OpenViBEToolkit::registerClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier, fClassifierComparison pComparision)
+void OpenViBEToolkit::registerClassificationComparisonFunction(const CIdentifier& rClassIdentifier, fClassifierComparison pComparision)
 {
 	mComparisionFunctionMap[rClassIdentifier.toUInteger()] = pComparision;
 }
 
-fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const OpenViBE::CIdentifier& rClassIdentifier)
+fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const CIdentifier& rClassIdentifier)
 {
-	if(mComparisionFunctionMap.count(rClassIdentifier.toUInteger()) == 0)
-		return NULL;
-	else
-		return mComparisionFunctionMap[rClassIdentifier.toUInteger()];
+	if (mComparisionFunctionMap.count(rClassIdentifier.toUInteger()) == 0)
+		return nullptr;
+	return mComparisionFunctionMap[rClassIdentifier.toUInteger()];
 }
 
-boolean CAlgorithmPairingStrategy::process(void)
+bool CAlgorithmPairingStrategy::process()
 {
-	if(this->isInputTriggerActive(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture))
+	if (this->isInputTriggerActive(OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture))
 	{
-		TParameterHandler < CIdentifier* > ip_pClassifierIdentifier(this->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
-		TParameterHandler < uint64 > ip_pClassCount(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
+		TParameterHandler<CIdentifier*> ip_pClassifierIdentifier(this->getInputParameter(OVTK_Algorithm_PairingStrategy_InputParameterId_SubClassifierAlgorithm));
+		TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
 
-		const uint64 l_ui64ClassCount = (uint64) ip_pClassCount;
+		const uint64_t l_ui64ClassCount           = (uint64_t)ip_pClassCount;
 		const CIdentifier l_oClassifierIdentifier = *((CIdentifier*)ip_pClassifierIdentifier);
-		if(this->designArchitecture(l_oClassifierIdentifier, static_cast<uint32>(l_ui64ClassCount)))
+		if (this->designArchitecture(l_oClassifierIdentifier, static_cast<uint32_t>(l_ui64ClassCount)))
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
 		}
@@ -43,9 +42,6 @@ boolean CAlgorithmPairingStrategy::process(void)
 			OV_ERROR_KRF("Designing architecture failed", OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
-	else
-	{
-		return CAlgorithmClassifier::process();
-	}
+	else { return CAlgorithmClassifier::process(); }
 	return true;
 }

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_EpochAverage_H__
-#define __OpenViBEPlugins_BoxAlgorithm_EpochAverage_H__
+#pragma once
 
 #include "../../ovp_defines.h"
 #include <toolkit/ovtk_all.h>
@@ -14,80 +13,73 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmEpochAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-
-			virtual void release(void) { delete this; }
-
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_EpochAverage)
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pMatrixAverage;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pMatrixAverage = nullptr;
 
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64MatrixCount;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > ip_ui64AveragingMethod;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64MatrixCount;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64AveragingMethod;
 		};
 
-		class CBoxAlgorithmEpochAverageListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmEpochAverageListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-
-			virtual OpenViBE::boolean onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getInputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(ui32Index, l_oTypeIdentifier);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				rBox.setInputType(ui32Index, l_oTypeIdentifier);
 				return true;
-			};
+			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmEpochAverageDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Epoch average"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Averages matrices among time, this can be used to enhance ERPs"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This box can average matrices of different types including signal, spectrum or feature vectors"); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Averaging"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_EpochAverage; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmEpochAverage(); }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmEpochAverageListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Epoch average"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Averages matrices among time, this can be used to enhance ERPs"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("This box can average matrices of different types including signal, spectrum or feature vectors"); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Averaging"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_EpochAverage; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmEpochAverage(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmEpochAverageListener; }
-			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
-
-			virtual OpenViBE::boolean getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
-				rPrototype.addInput  ("Input epochs",    OV_TypeId_StreamedMatrix);
-				rPrototype.addOutput ("Averaged epochs", OV_TypeId_StreamedMatrix);
-				rPrototype.addSetting("Averaging type",  OVP_TypeId_EpochAverageMethod, OVP_TypeId_EpochAverageMethod_MovingAverage.toString());
-				rPrototype.addSetting("Epoch count",     OV_TypeId_Integer, "4");
-				rPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyOutput);
-				rPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				rPrototype.addInput("Input epochs", OV_TypeId_StreamedMatrix);
+				rPrototype.addOutput("Averaged epochs", OV_TypeId_StreamedMatrix);
+				rPrototype.addSetting("Averaging type", OVP_TypeId_EpochAverageMethod, OVP_TypeId_EpochAverageMethod_MovingAverage.toString());
+				rPrototype.addSetting("Epoch count", OV_TypeId_Integer, "4");
+				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 
 				rPrototype.addInputSupport(OV_TypeId_Signal);
 				rPrototype.addInputSupport(OV_TypeId_Spectrum);
@@ -105,7 +97,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_EpochAverageDesc)
 		};
-	};
-};
-
-#endif // __OpenViBEPlugins_BoxAlgorithm_EpochAverage_H__
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

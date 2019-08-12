@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Server_IServerExtensionDynamicContext_H__
-#define __OpenViBE_Kernel_Server_IServerExtensionDynamicContext_H__
+#pragma once
 
 #include "../ovIKernelObject.h"
 
@@ -25,22 +24,20 @@ namespace OpenViBE
 		  * \sa OpenViBE::Plugins::IServerExtension
 		  */
 
-		class OV_API IServerExtensionDynamicContext : public OpenViBE::Kernel::IKernelObject
+		class OV_API IServerExtensionDynamicContext : public IKernelObject
 		{
 		public:
-			virtual OpenViBE::uint32 getChannelCount() = 0;
+			virtual uint32_t getChannelCount() = 0;
 
-			virtual OpenViBE::uint32 getSampleCountPerSentBlock() = 0;
+			virtual uint32_t getSampleCountPerSentBlock() = 0;
 
-			virtual OpenViBE::float64* getBuffer() = 0;
+			virtual double* getBuffer() = 0;
 
-			virtual OpenViBE::uint64 getStimulationSetStartTime() = 0;
+			virtual uint64_t getStimulationSetStartTime() = 0;
 
-			virtual OpenViBE::uint64 getStimulationSetEndTime() = 0;
+			virtual uint64_t getStimulationSetEndTime() = 0;
 
-			virtual OpenViBE::IStimulationSet& getStimulationSet() = 0;
+			virtual IStimulationSet& getStimulationSet() = 0;
 		};
-	}
-}
-
-#endif // __OpenViBE_Kernel_Server_IServerExtensionDynamicContext_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

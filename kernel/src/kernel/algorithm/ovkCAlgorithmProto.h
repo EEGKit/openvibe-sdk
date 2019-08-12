@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Algorithm_CAlgorithmProto_H__
-#define __OpenViBEKernel_Kernel_Algorithm_CAlgorithmProto_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -9,39 +8,23 @@ namespace OpenViBE
 	{
 		class CAlgorithmProxy;
 
-		class CAlgorithmProto : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProto >
+		class CAlgorithmProto : public TKernelObject<IAlgorithmProto>
 		{
 		public:
 
-			CAlgorithmProto(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CAlgorithmProxy& rAlgorithmProxy);
-
-			virtual OpenViBE::boolean addInputParameter(
-				const OpenViBE::CIdentifier& rInputParameterIdentifier,
-				const OpenViBE::CString& sInputName,
-				const OpenViBE::Kernel::EParameterType eParameterType,
-				const OpenViBE::CIdentifier& rSubTypeIdentifier);
-
-			virtual OpenViBE::boolean addOutputParameter(
-				const OpenViBE::CIdentifier& rOutputParameterIdentifier,
-				const OpenViBE::CString& sOutputName,
-				const OpenViBE::Kernel::EParameterType eParameterType,
-				const OpenViBE::CIdentifier& rSubTypeIdentifier);
-
-			virtual OpenViBE::boolean addInputTrigger(
-				const OpenViBE::CIdentifier& rInputTriggerIdentifier,
-				const OpenViBE::CString& rInputTriggerName);
-
-			virtual OpenViBE::boolean addOutputTrigger(
-				const OpenViBE::CIdentifier& rOutputTriggerIdentifier,
-				const OpenViBE::CString& rOutputTriggerName);
+			CAlgorithmProto(const IKernelContext& rKernelContext, CAlgorithmProxy& rAlgorithmProxy);
+			bool addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier) override;
+			bool addOutputParameter(const CIdentifier& rOutputParameterIdentifier, const CString& sOutputName, EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier) override;
+			bool addInputTrigger(const CIdentifier& rInputTriggerIdentifier, const CString& rInputTriggerName) override;
+			bool addOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, const CString& rOutputTriggerName) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IAlgorithmProto >, OVK_ClassId_Kernel_Algorithm_AlgorithmProto)
 
 		protected:
 
-			OpenViBE::Kernel::CAlgorithmProxy& m_rAlgorithmProxy;
+			CAlgorithmProxy& m_rAlgorithmProxy;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Algorithm_CAlgorithmProto_H__
+

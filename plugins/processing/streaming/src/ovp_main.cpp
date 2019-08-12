@@ -1,4 +1,3 @@
-
 #include "ovp_defines.h"
 
 #include "box-algorithms/ovpCBoxAlgorithmStreamedMatrixMultiplexer.h"

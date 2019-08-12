@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CBoxAlgorithmContext_H__
-#define __OpenViBEKernel_Kernel_Player_CBoxAlgorithmContext_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 #include "ovkCPlayerContext.h"
@@ -10,33 +9,31 @@ namespace OpenViBE
 	{
 		class CSimulatedBox;
 
-		class CBoxAlgorithmContext : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxAlgorithmContext>
+		class CBoxAlgorithmContext : public TKernelObject<IBoxAlgorithmContext>
 		{
 		public:
 
-			CBoxAlgorithmContext(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CSimulatedBox* pSimulatedBox, const OpenViBE::Kernel::IBox* pBox);
-			virtual ~CBoxAlgorithmContext(void);
-
-			virtual const OpenViBE::Kernel::IBox* getStaticBoxContext(void);
-			virtual OpenViBE::Kernel::IBoxIO* getDynamicBoxContext(void);
-			virtual OpenViBE::Kernel::IPlayerContext* getPlayerContext(void);
-
-			virtual OpenViBE::boolean markAlgorithmAsReadyToProcess(void);
+			CBoxAlgorithmContext(const IKernelContext& rKernelContext, CSimulatedBox* pSimulatedBox, const IBox* pBox);
+			~CBoxAlgorithmContext() override;
+			const IBox* getStaticBoxContext() override;
+			IBoxIO* getDynamicBoxContext() override;
+			IPlayerContext* getPlayerContext() override;
+			bool markAlgorithmAsReadyToProcess() override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IBoxAlgorithmContext>, OVK_ClassId_Kernel_Player_BoxAlgorithmContext)
 
-			virtual OpenViBE::boolean isAlgorithmReadyToProcess(void);
+			virtual bool isAlgorithmReadyToProcess();
 
 		protected:
 
-			const OpenViBE::Kernel::IBox* m_pStaticBoxContext;
-			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext;
+			const IBox* m_pStaticBoxContext;
+			IBoxIO* m_pDynamicBoxContext = nullptr;
 			// here we prefer value type over reference/pointer
 			// in order to improve performance at runtime (no heap allocation)
-			OpenViBE::Kernel::CPlayerContext m_oPlayerContext;
-			OpenViBE::boolean m_bReadyToProcess;
+			CPlayerContext m_oPlayerContext;
+			bool m_bReadyToProcess = false;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Player_CBoxAlgorithmContext_H__
+

@@ -1,11 +1,11 @@
-#ifndef __Socket_IConnectionDelegate_H__
-#define __Socket_IConnectionDelegate_H__
+#pragma once
 
 #include "IConnection.h"
 
 namespace Socket
 {
-	struct SConnectionDelegate {
+	struct SConnectionDelegate
+	{
 		void* pUserData;
 		bool (*fpOpen)(void*);
 		bool (*fpClose)(void*);
@@ -23,63 +23,58 @@ namespace Socket
 	class Socket_API TConnectionDelegate : public T
 	{
 	public:
-		TConnectionDelegate(SConnectionDelegate oConnectionDelegate) :
-			m_oConnectionDelegate(oConnectionDelegate)
-		{
-		}
+		TConnectionDelegate(SConnectionDelegate oConnectionDelegate) : m_oConnectionDelegate(oConnectionDelegate) { }
 
-		virtual Socket::boolean close(void)
+		virtual bool close()
 		{
 			return m_oConnectionDelegate.fpClose(m_oConnectionDelegate.pUserData);
 		}
 
-		virtual Socket::boolean isReadyToSend(Socket::uint32 ui32TimeOut) const
+		virtual bool isReadyToSend(const uint32_t ui32TimeOut) const
 		{
 			return m_oConnectionDelegate.fpIsReadyToSend(m_oConnectionDelegate.pUserData, ui32TimeOut);
 		}
 
-		virtual Socket::boolean isReadyToReceive(Socket::uint32 ui32TimeOut) const
+		virtual bool isReadyToReceive(const uint32_t ui32TimeOut) const
 		{
 			return m_oConnectionDelegate.fpIsReadyToReceive(m_oConnectionDelegate.pUserData, ui32TimeOut);
 		}
 
-		virtual Socket::uint32 sendBuffer(const void* pBuffer, const Socket::uint32 ui32BufferSize)
+		virtual uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			return m_oConnectionDelegate.fpSendBuffer(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
 		}
 
-		virtual Socket::uint32 receiveBuffer(void* pBuffer, const Socket::uint32 ui32BufferSize)
+		virtual uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			return m_oConnectionDelegate.fpReceiveBuffer(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
 		}
 
-		virtual Socket::boolean sendBufferBlocking(const void* pBuffer, const Socket::uint32 ui32BufferSize)
+		virtual bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			return m_oConnectionDelegate.fpSendBufferBlocking(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
 		}
 
-		virtual Socket::boolean receiveBufferBlocking(void* pBuffer, const Socket::uint32 ui32BufferSize)
+		virtual bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			return m_oConnectionDelegate.fpReceiveBufferBlocking(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
 		}
 
-		virtual Socket::boolean isConnected(void) const
+		virtual bool isConnected() const
 		{
 			return m_oConnectionDelegate.fpIsConnected(m_oConnectionDelegate.pUserData);
 		}
 
-		virtual void release(void)
+		virtual void release()
 		{
 			m_oConnectionDelegate.fpRelease(m_oConnectionDelegate.pUserData);
 		}
 
 	public:
-		virtual ~TConnectionDelegate(void)
-		{
-
-		}
+		virtual ~TConnectionDelegate() { }
 	protected:
-		virtual Socket::boolean open(void) {
+		virtual bool open()
+		{
 			return m_oConnectionDelegate.fpOpen(m_oConnectionDelegate.pUserData);
 		}
 
@@ -88,5 +83,3 @@ namespace Socket
 		SConnectionDelegate m_oConnectionDelegate;
 	};
 }
-
-#endif // __Socket_IConnectionDelegate_H__

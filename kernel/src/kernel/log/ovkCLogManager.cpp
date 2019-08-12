@@ -3,124 +3,61 @@
 #include <iostream>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 using namespace std;
 
 CLogManager::CLogManager(const IKernelContext& rKernelContext)
-	:TKernelObject<ILogManager>(rKernelContext)
-	,m_eCurrentLogLevel(LogLevel_Info)
-{
-}
+	: TKernelObject<ILogManager>(rKernelContext)
+	  , m_eCurrentLogLevel(LogLevel_Info) {}
 
-boolean CLogManager::isActive(ELogLevel eLogLevel)
+bool CLogManager::isActive(ELogLevel eLogLevel)
 {
-	map<ELogLevel, boolean>::iterator itLogLevel=m_vActiveLevel.find(eLogLevel);
-	if(itLogLevel==m_vActiveLevel.end())
-	{
-		return true;
-	}
+	map<ELogLevel, bool>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
+	if (itLogLevel == m_vActiveLevel.end()) { return true; }
 	return itLogLevel->second;
 }
 
-boolean CLogManager::activate(ELogLevel eLogLevel, boolean bActive)
+bool CLogManager::activate(ELogLevel eLogLevel, bool bActive)
 {
-	m_vActiveLevel[eLogLevel]=bActive;
+	m_vActiveLevel[eLogLevel] = bActive;
 	return true;
 }
 
-boolean CLogManager::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, boolean bActive)
+bool CLogManager::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
 {
-	for(int i=eStartLogLevel; i<=eEndLogLevel; i++)
-	{
-		m_vActiveLevel[ELogLevel(i)]=bActive;
-	}
+	for (int i = eStartLogLevel; i <= eEndLogLevel; i++) { m_vActiveLevel[ELogLevel(i)] = bActive; }
 	return true;
 }
 
-boolean CLogManager::activate(boolean bActive)
+bool CLogManager::activate(bool bActive)
 {
 	return activate(LogLevel_First, LogLevel_Last, bActive);
 }
 
-void CLogManager::log(const time64 time64Value)
-{
-	logForEach<const time64>(time64Value);
-}
+void CLogManager::log(const time64 value) { logForEach<const time64>(value); }
+void CLogManager::log(const uint64_t value) { logForEach<const uint64_t>(value); }
+void CLogManager::log(const uint32_t value) { logForEach<const uint32_t>(value); }
+void CLogManager::log(const uint16_t value) { logForEach<const uint16_t>(value); }
+void CLogManager::log(const uint8_t value) { logForEach<const uint8_t>(value); }
+void CLogManager::log(const int64_t value) { logForEach<const int64_t>(value); }
+void CLogManager::log(const int32_t value) { logForEach<const int32_t>(value); }
+void CLogManager::log(const int16_t value) { logForEach<const int16_t>(value); }
+void CLogManager::log(const int8_t value) { logForEach<const int8_t>(value); }
+void CLogManager::log(const double value) { logForEach<const double>(value); }
+void CLogManager::log(const float value) { logForEach<const float>(value); }
+void CLogManager::log(const bool value) { logForEach<const bool>(value); }
+void CLogManager::log(const CIdentifier& value) { logForEach<const CIdentifier&>(value); }
+void CLogManager::log(const CString& value) { log(value.toASCIIString()); }
 
-void CLogManager::log(const uint64 ui64Value)
+void CLogManager::log(const char* value)
 {
-	logForEach<const uint64>(ui64Value);
-}
-
-void CLogManager::log(const uint32 ui32Value)
-{
-	logForEach<const uint32>(ui32Value);
-}
-
-void CLogManager::log(const uint16 ui16Value)
-{
-	logForEach<const uint16>(ui16Value);
-}
-
-void CLogManager::log(const uint8 ui8Value)
-{
-	logForEach<const uint8>(ui8Value);
-}
-
-void CLogManager::log(const int64 i64Value)
-{
-	logForEach<const int64>(i64Value);
-}
-
-void CLogManager::log(const int32 i32Value)
-{
-	logForEach<const int32>(i32Value);
-}
-
-void CLogManager::log(const int16 i16Value)
-{
-	logForEach<const int16>(i16Value);
-}
-
-void CLogManager::log(const int8 i8Value)
-{
-	logForEach<const int8>(i8Value);
-}
-
-void CLogManager::log(const float64 f64Value)
-{
-	logForEach<const float64>(f64Value);
-}
-
-void CLogManager::log(const float32 f32Value)
-{
-	logForEach<const float32>(f32Value);
-}
-
-void CLogManager::log(const boolean bValue)
-{
-	logForEach<const boolean>(bValue);
-}
-
-void CLogManager::log(const CIdentifier& rValue)
-{
-	logForEach<const CIdentifier&>(rValue);
-}
-
-void CLogManager::log(const CString& rValue)
-{
-	log(rValue.toASCIIString());
-}
-
-void CLogManager::log(const char* rValue)
-{
-	logForEach<const char*>(rValue);
+	logForEach<const char*>(value);
 
 	{
 		GRAB_OWNERSHIP;
 
-		std::string l_sCopy(rValue);
-		if(l_sCopy.length()>0 && l_sCopy[l_sCopy.length()-1]=='\n')
+		std::string l_sCopy(value);
+		if (l_sCopy.length() > 0 && l_sCopy[l_sCopy.length() - 1] == '\n')
 		{
 			// we are done, release
 			m_oOwner = std::thread::id();
@@ -134,7 +71,7 @@ void CLogManager::log(const ELogLevel eLogLevel)
 	{
 		GRAB_OWNERSHIP;
 
-		m_eCurrentLogLevel=eLogLevel;
+		m_eCurrentLogLevel = eLogLevel;
 	}
 
 	logForEach<ELogLevel>(eLogLevel);
@@ -145,22 +82,16 @@ void CLogManager::log(const ELogColor eLogColor)
 	logForEach<ELogColor>(eLogColor);
 }
 
-boolean CLogManager::addListener(ILogListener* pListener)
+bool CLogManager::addListener(ILogListener* pListener)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	if(pListener==NULL)
-	{
-		return false;
-	}
+	if (pListener == nullptr) { return false; }
 
-	vector<ILogListener*>::iterator itLogListener=m_vListener.begin();
-	while(itLogListener!=m_vListener.end())
+	vector<ILogListener*>::iterator itLogListener = m_vListener.begin();
+	while (itLogListener != m_vListener.end())
 	{
-		if((*itLogListener)==pListener)
-		{
-			return false;
-		}
+		if ((*itLogListener) == pListener) { return false; }
 		++itLogListener;
 	}
 
@@ -168,14 +99,14 @@ boolean CLogManager::addListener(ILogListener* pListener)
 	return true;
 }
 
-boolean CLogManager::removeListener(ILogListener* pListener)
+bool CLogManager::removeListener(ILogListener* pListener)
 {
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
-	vector<ILogListener*>::iterator itLogListener=m_vListener.begin();
-	while(itLogListener!=m_vListener.end())
+	vector<ILogListener*>::iterator itLogListener = m_vListener.begin();
+	while (itLogListener != m_vListener.end())
 	{
-		if((*itLogListener)==pListener)
+		if ((*itLogListener) == pListener)
 		{
 			m_vListener.erase(itLogListener);
 			return true;	// due to constraint in addListener(), pListener can be in the array only once, so we can return

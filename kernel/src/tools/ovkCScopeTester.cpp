@@ -1,17 +1,16 @@
 #include "ovkCScopeTester.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Tools;
+using namespace Kernel;
+using namespace Tools;
 
 CScopeTester::CScopeTester(const IKernelContext& rKernelContext, const CString& sPrefix)
-	:m_sPrefix(sPrefix)
-	,m_rKernelContext(rKernelContext)
+	: m_sPrefix(sPrefix), m_kernelContext(rKernelContext)
 {
-	m_rKernelContext.getLogManager() << LogLevel_Debug << "## CScopeTester [" << m_sPrefix << "] enter\n";
+	m_kernelContext.getLogManager() << LogLevel_Debug << "## CScopeTester [" << m_sPrefix << "] enter\n";
 }
 
-CScopeTester::~CScopeTester(void)
+CScopeTester::~CScopeTester()
 {
-	m_rKernelContext.getLogManager() << LogLevel_Debug << "## CScopeTester [" << m_sPrefix << "] leave\n";
+	m_kernelContext.getLogManager() << LogLevel_Debug << "## CScopeTester [" << m_sPrefix << "] leave\n";
 }

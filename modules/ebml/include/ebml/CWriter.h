@@ -1,30 +1,26 @@
-#ifndef __EBML_CWriter_H__
-#define __EBML_CWriter_H__
+#pragma once
 
 #include "IWriter.h"
 
 namespace EBML
 {
-	class EBML_API CWriter : public EBML::IWriter
+	class EBML_API CWriter : public IWriter
 	{
 	public:
 
-		explicit CWriter(EBML::IWriterCallback& rWriterCallback);
-		virtual ~CWriter(void);
-
-		virtual EBML::boolean openChild(const EBML::CIdentifier& rIdentifier);
-		virtual EBML::boolean setChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-		virtual EBML::boolean closeChild(void);
-		virtual void release(void);
+		explicit CWriter(IWriterCallback& rWriterCallback);
+		~CWriter() override;
+		bool openChild(const CIdentifier& rIdentifier) override;
+		bool setChildData(const void* pBuffer, const uint64_t ui64BufferSize) override;
+		bool closeChild() override;
+		void release() override;
 
 	protected:
 
-		EBML::IWriter* m_pWriterImplementation;
+		IWriter* m_pWriterImplementation = nullptr;
 
 	private:
 
-		CWriter(void);
+		CWriter();
 	};
-};
-
-#endif // __EBML_CWriter_H__
+}  // namespace EBML

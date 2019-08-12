@@ -1,18 +1,18 @@
 #include "ovpCBoxAlgorithmPlayerController.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Stimulation;
+using namespace Stimulation;
 
-boolean CBoxAlgorithmPlayerController::initialize(void)
+bool CBoxAlgorithmPlayerController::initialize()
 {
-	m_ui64StimulationIdentifier=FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_ui64ActionIdentifier     =FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_ui64StimulationIdentifier = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_ui64ActionIdentifier      = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	m_pStreamDecoder=&this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamDecoder));
+	m_pStreamDecoder = &this->getAlgorithmManager().getAlgorithm(this->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamDecoder));
 	m_pStreamDecoder->initialize();
 
 	ip_pMemoryBuffer.initialize(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamDecoder_InputParameterId_MemoryBufferToDecode));
@@ -21,80 +21,61 @@ boolean CBoxAlgorithmPlayerController::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmPlayerController::uninitialize(void)
+bool CBoxAlgorithmPlayerController::uninitialize()
 {
 	op_pStimulationSet.uninitialize();
 	ip_pMemoryBuffer.uninitialize();
 
-	if(m_pStreamDecoder)
+	if (m_pStreamDecoder)
 	{
 		m_pStreamDecoder->uninitialize();
 		this->getAlgorithmManager().releaseAlgorithm(*m_pStreamDecoder);
-		m_pStreamDecoder=NULL;
+		m_pStreamDecoder = nullptr;
 	}
 
 	return true;
 }
 
-boolean CBoxAlgorithmPlayerController::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmPlayerController::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmPlayerController::process(void)
+bool CBoxAlgorithmPlayerController::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
+	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	for(uint32 i=0; i<l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
 	{
-		ip_pMemoryBuffer=l_rDynamicBoxContext.getInputChunk(0, i);
+		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, i);
 		m_pStreamDecoder->process();
-		if(m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader))
+		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader)) { }
+		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-		}
-		if(m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
-		{
-			IStimulationSet* l_pStimulationSet=op_pStimulationSet;
-			for(uint32 j=0; j<l_pStimulationSet->getStimulationCount(); j++)
+			IStimulationSet* l_pStimulationSet = op_pStimulationSet;
+			for (uint32_t j = 0; j < l_pStimulationSet->getStimulationCount(); j++)
 			{
-				if(l_pStimulationSet->getStimulationIdentifier(j) == m_ui64StimulationIdentifier)
+				if (l_pStimulationSet->getStimulationIdentifier(j) == m_ui64StimulationIdentifier)
 				{
-					this->getLogManager()
-						<< LogLevel_Trace << "Received stimulation ["
-						<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_ui64StimulationIdentifier) << "] causing action ["
-						<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]\n";
+					this->getLogManager() << LogLevel_Trace << "Received stimulation ["
+							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, m_ui64StimulationIdentifier) << "] causing action ["
+							<< this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]\n";
 
-					boolean l_bResult=false;
-					if(m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Play)
-					{
-						l_bResult=this->getPlayerContext().play();
-					}
-					if(m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Stop)
-					{
-						l_bResult=this->getPlayerContext().stop();
-					}
-					if(m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Pause)
-					{
-						l_bResult=this->getPlayerContext().pause();
-					}
-					if(m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Forward)
-					{
-						l_bResult=this->getPlayerContext().forward();
-					}
+					bool l_bResult = false;
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Play) { l_bResult = this->getPlayerContext().play(); }
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Stop) { l_bResult = this->getPlayerContext().stop(); }
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Pause) { l_bResult = this->getPlayerContext().pause(); }
+					if (m_ui64ActionIdentifier == OV_TypeId_PlayerAction_Forward) { l_bResult = this->getPlayerContext().forward(); }
 
-					OV_ERROR_UNLESS_KRF(
-						l_bResult,
-						"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]",
-						OpenViBE::Kernel::ErrorType::BadConfig
-					);
+					OV_ERROR_UNLESS_KRF(l_bResult,
+										"Failed to request player action [" << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_PlayerAction, m_ui64ActionIdentifier) << "]",
+										OpenViBE::Kernel::ErrorType::BadConfig);
 				}
 			}
 		}
-		if(m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedEnd))
-		{
-		}
+		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedEnd)) { }
 
 		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
 	}

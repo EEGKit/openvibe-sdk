@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_CMemoryBuffer_H__
-#define __OpenViBE_CMemoryBuffer_H__
+#pragma once
 
 #include "ovIMemoryBuffer.h"
 
@@ -19,7 +18,7 @@ namespace OpenViBE
 	 * interface and redirect their calls to this implementation.
 	 */
 
-	class OV_API CMemoryBuffer : public OpenViBE::IMemoryBuffer
+	class OV_API CMemoryBuffer : public IMemoryBuffer
 	{
 	public:
 
@@ -31,50 +30,41 @@ namespace OpenViBE
 		 *
 		 * This constructor builds the internal implementation of this memory buffer.
 		 */
-		CMemoryBuffer(void);
+		CMemoryBuffer();
 		/**
 		 * \brief Copy constructor
 		 *
 		 * This constructor builds the internal implementation of this memory buffer and initializes it
 		 * with the actual parameter of the constructor as a copy.
 		 */
-		CMemoryBuffer(const OpenViBE::IMemoryBuffer& rMemoryBuffer);
+		CMemoryBuffer(const IMemoryBuffer& rMemoryBuffer);
 		/**
 		 * \brief Copy constructor
 		 *
 		 * This constructor builds the internal implementation of this memory buffer and initializes it
 		 * with the actual parameter of the constructor as a copy.
 		 */
-		CMemoryBuffer(const OpenViBE::uint8* pMemoryBuffer, const OpenViBE::uint64 ui64BufferSize);
+		CMemoryBuffer(const uint8_t* pMemoryBuffer, uint64_t ui64BufferSize);
 		/**
 		 * \brief Destructor
 		 *
 		 * The internal implementation is released.
 		 */
-		virtual ~CMemoryBuffer(void);
+		~CMemoryBuffer() override;
 
 		//@}
+		bool reserve(const uint64_t ui64Size) override;
+		bool setSize(const uint64_t ui64Size, const bool bDiscard) override;
+		uint64_t getSize() const override;
+		uint8_t* getDirectPointer() override;
+		const uint8_t* getDirectPointer() const override;
+		bool append(const uint8_t* pBuffer, const uint64_t ui64BufferSize) override;
+		bool append(const IMemoryBuffer& rMemoryBuffer) override;
 
-		virtual OpenViBE::boolean reserve(
-			const OpenViBE::uint64 ui64Size);
-		virtual OpenViBE::boolean setSize(
-			const OpenViBE::uint64 ui64Size,
-			const OpenViBE::boolean bDiscard);
-		virtual OpenViBE::uint64 getSize(void) const;
-		virtual OpenViBE::uint8* getDirectPointer(void);
-		virtual const OpenViBE::uint8* getDirectPointer(void) const;
-		virtual OpenViBE::boolean append(
-			const OpenViBE::uint8* pBuffer,
-			const OpenViBE::uint64 ui64BufferSize);
-		virtual OpenViBE::boolean append(
-			const OpenViBE::IMemoryBuffer& rMemoryBuffer);
-
-		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge);
+		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge)
 
 	protected:
 
-		OpenViBE::IMemoryBuffer* m_pMemoryBufferImpl; //!< Internal implementation
+		IMemoryBuffer* m_pMemoryBufferImpl = nullptr; //!< Internal implementation
 	};
-};
-
-#endif // __OpenViBE_CMemoryBuffer_H__
+}  // namespace OpenViBE

@@ -19,21 +19,19 @@ namespace OpenViBEPlugins
 {
 	namespace Tools
 	{
-		class CBoxAlgorithmExternalProcessing : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmExternalProcessing : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			CBoxAlgorithmExternalProcessing();
+			void release() override { delete this; }
+			uint64_t getClockFrequency() override;
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processClock(OpenViBE::CMessageClock& rMessageClock) override;
+			bool processInput(const uint32_t inputIndex) override;
+			bool process() override;
 
-			virtual void release(void) { delete this; }
-
-			virtual OpenViBE::uint64 getClockFrequency(void);
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
-			virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual bool processInput(uint32_t inputIndex);
-			virtual bool process(void);
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ExternalProcessing);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ExternalProcessing)
 
 		private:
 
@@ -42,15 +40,13 @@ namespace OpenViBEPlugins
 				uint64_t startTime;
 				uint64_t endTime;
 				uint32_t inputIndex;
-				::std::shared_ptr<::std::vector<uint8_t>> EBML;
+				std::shared_ptr<std::vector<uint8_t>> EBML;
 
-				Packet(uint64_t startTime, uint64_t endTime, uint32_t inputIndex, ::std::shared_ptr<::std::vector<uint8_t>> EBML)
+				Packet(uint64_t startTime, uint64_t endTime, uint32_t inputIndex, std::shared_ptr<std::vector<uint8_t>> EBML)
 					: startTime(startTime)
-					, endTime(endTime)
-					, inputIndex(inputIndex)
-					, EBML(EBML)
-				{
-				}
+					  , endTime(endTime)
+					  , inputIndex(inputIndex)
+					  , EBML(EBML) { }
 			};
 
 			/**
@@ -79,54 +75,51 @@ namespace OpenViBEPlugins
 			void log();
 
 			Communication::MessagingServer m_Messaging;
-			uint32_t m_Port;
+			uint32_t m_Port = 0;
 			std::string m_ConnectionID;
 			std::string m_ProgramPath;
-			bool m_IsGenerator;
+			bool m_IsGenerator = false;
 
-			int m_ThirdPartyProgramProcessId;
+			int m_ThirdPartyProgramProcessId = 0;
 
-			uint64_t m_AcceptTimeout;
-			bool m_ShouldLaunchProgram;
-			bool m_HasReceivedEndMessage;
+			uint64_t m_AcceptTimeout = 0;
+			bool m_ShouldLaunchProgram = false;
+			bool m_HasReceivedEndMessage = false;
 			// Synchronization timeout, and save time of last synchronization
-			uint64_t m_SyncTimeout;
-			uint64_t m_LastSyncTime;
+			uint64_t m_SyncTimeout = 0;
+			uint64_t m_LastSyncTime = 0;
 
-			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder < CBoxAlgorithmExternalProcessing >> m_StimulationDecoders;
+			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmExternalProcessing>> m_StimulationDecoders;
 			std::queue<Packet> m_PacketHistory;
 		};
 
-		class CBoxAlgorithmExternalProcessingListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmExternalProcessingListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmExternalProcessingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override {}
+			OpenViBE::CString getName() const override { return OpenViBE::CString("External Processing"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Alexis Placet"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("This box can communicate via TCP with an other program."); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Launches an external program which can then processes data. This box and the program communicate using TCP connection and a defined protocol."); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Scripting"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("1.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("1.0.0"); }
+			OpenViBE::CString getStockItemName() const override { return OpenViBE::CString("gtk-edit"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ExternalProcessing; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmExternalProcessing; }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmExternalProcessingListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* boxListener) const override { delete boxListener; }
 
-			virtual void release(void) {}
-
-			virtual OpenViBE::CString getName(void) const { return OpenViBE::CString("External Processing"); }
-			virtual OpenViBE::CString getAuthorName(void) const { return OpenViBE::CString("Alexis Placet"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const { return OpenViBE::CString("Mensia Technologies SA"); }
-			virtual OpenViBE::CString getShortDescription(void) const { return OpenViBE::CString("This box can communicate via TCP with an other program."); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Launches an external program which can then processes data. This box and the program communicate using TCP connection and a defined protocol."); }
-			virtual OpenViBE::CString getCategory(void) const { return OpenViBE::CString("Scripting"); }
-			virtual OpenViBE::CString getVersion(void) const { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const     { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const  { return OpenViBE::CString("1.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const{ return OpenViBE::CString("1.0.0"); }
-			virtual OpenViBE::CString getStockItemName(void) const { return OpenViBE::CString("gtk-edit"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const { return OVP_ClassId_BoxAlgorithm_ExternalProcessing; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void) { return new CBoxAlgorithmExternalProcessing; }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const { return new CBoxAlgorithmExternalProcessingListener; }
-			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* boxListener) const { delete boxListener; }
-
-			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& boxAlgorithmPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& boxAlgorithmPrototype) const override
 			{
 				boxAlgorithmPrototype.addSetting("Launch third party program", OV_TypeId_Boolean, "true");     // 0
 				boxAlgorithmPrototype.addSetting("Executable path", OV_TypeId_Filename, "");                   // 1
@@ -146,7 +139,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ExternalProcessingDesc);
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ExternalProcessingDesc)
 		};
 	};
 };

@@ -47,11 +47,11 @@ namespace OpenViBE
 		boost::optional<bool> benchmark;
 
 
-		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
-		virtual void doPrint(std::ostream& os) const override;
+		void doPrint(std::ostream& os) const override;
 	};
 
 
@@ -72,11 +72,11 @@ namespace OpenViBE
 		// List of properties
 		boost::optional<std::string> configurationFile;
 
-		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
-		virtual void doPrint(std::ostream& os) const override;
+		void doPrint(std::ostream& os) const override;
 	};
 
 	/**
@@ -98,11 +98,11 @@ namespace OpenViBE
 		boost::optional<std::string> scenarioFile;
 		boost::optional<std::string> scenarioName;
 
-		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
-		virtual void doPrint(std::ostream& os) const override;
+		void doPrint(std::ostream& os) const override;
 	};
 	
 	/**
@@ -121,13 +121,13 @@ namespace OpenViBE
 	{
 		// List of properties
 		boost::optional<std::string> scenarioFile;
-		boost::optional<std::string> scenarioName;	
+		boost::optional<std::string> scenarioName;
 
-		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
-		virtual void doPrint(std::ostream& os) const override;
+		void doPrint(std::ostream& os) const override;
 	};
 
 	/**
@@ -139,12 +139,11 @@ namespace OpenViBE
 	*/
 	struct ResetCommand : ICommand
 	{
-
-		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
-		virtual void doPrint(std::ostream& os) const override;
+		void doPrint(std::ostream& os) const override;
 	};
 
 	/**
@@ -164,9 +163,6 @@ namespace OpenViBE
 	*/
 	struct RunScenarioCommand : ICommand
 	{
-
-	public:
-
 		using Token = std::pair<std::string, std::string>;
 
 		// List of properties
@@ -175,11 +171,11 @@ namespace OpenViBE
 		boost::optional<double> maximumExecutionTime;
 		boost::optional<std::vector<Token>> tokenList;
 
-		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
-		virtual void doPrint(std::ostream& os) const override;
+		void doPrint(std::ostream& os) const override;
 	};
 
 	/**
@@ -200,7 +196,6 @@ namespace OpenViBE
 	*/
 	struct SetupScenarioCommand : ICommand
 	{
-
 		using Token = std::pair<std::string, std::string>;
 
 		// List of properties
@@ -208,10 +203,10 @@ namespace OpenViBE
 		boost::optional<std::vector<Token>> tokenList;
 
 
-		virtual PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
+		PlayerReturnCode execute(KernelFacade& kernelFacade) const override;
 
 	protected:
 
-		virtual void doPrint(std::ostream& os) const override;
+		void doPrint(std::ostream& os) const override;
 	};
 }

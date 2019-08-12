@@ -1,16 +1,16 @@
 #include "ovpCChannelLocalisationDecoder.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::StreamCodecs;
+using namespace StreamCodecs;
 
 // ________________________________________________________________________________________________________________
 //
 
-boolean CChannelLocalisationDecoder::initialize(void)
+bool CChannelLocalisationDecoder::initialize()
 {
 	CStreamedMatrixDecoder::initialize();
 
@@ -19,7 +19,7 @@ boolean CChannelLocalisationDecoder::initialize(void)
 	return true;
 }
 
-boolean CChannelLocalisationDecoder::uninitialize(void)
+bool CChannelLocalisationDecoder::uninitialize()
 {
 	op_bDynamic.uninitialize();
 
@@ -31,10 +31,10 @@ boolean CChannelLocalisationDecoder::uninitialize(void)
 // ________________________________________________________________________________________________________________
 //
 
-EBML::boolean CChannelLocalisationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
+bool CChannelLocalisationDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
-	     if(rIdentifier==OVTK_NodeId_Header_ChannelLocalisation)         { return true; }
-	else if(rIdentifier==OVTK_NodeId_Header_ChannelLocalisation_Dynamic) { return false; }
+	if (rIdentifier == OVTK_NodeId_Header_ChannelLocalisation) { return true; }
+	if (rIdentifier == OVTK_NodeId_Header_ChannelLocalisation_Dynamic) { return false; }
 	return CStreamedMatrixDecoder::isMasterChild(rIdentifier);
 }
 
@@ -42,28 +42,22 @@ void CChannelLocalisationDecoder::openChild(const EBML::CIdentifier& rIdentifier
 {
 	m_vNodes.push(rIdentifier);
 
-	EBML::CIdentifier& l_rTop=m_vNodes.top();
+	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
-	if((l_rTop==OVTK_NodeId_Header_ChannelLocalisation)
-	 ||(l_rTop==OVTK_NodeId_Header_ChannelLocalisation_Dynamic))
-	{
-	}
-	else
-	{
-		CStreamedMatrixDecoder::openChild(rIdentifier);
-	}
+	if ((l_rTop == OVTK_NodeId_Header_ChannelLocalisation) || (l_rTop == OVTK_NodeId_Header_ChannelLocalisation_Dynamic)) { }
+	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
 }
 
-void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)
+void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
-	EBML::CIdentifier& l_rTop=m_vNodes.top();
+	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
-	if((l_rTop==OVTK_NodeId_Header_ChannelLocalisation)
-	 ||(l_rTop==OVTK_NodeId_Header_ChannelLocalisation_Dynamic))
+	if ((l_rTop == OVTK_NodeId_Header_ChannelLocalisation)
+		|| (l_rTop == OVTK_NodeId_Header_ChannelLocalisation_Dynamic))
 	{
-		if(l_rTop==OVTK_NodeId_Header_ChannelLocalisation_Dynamic)
+		if (l_rTop == OVTK_NodeId_Header_ChannelLocalisation_Dynamic)
 		{
-			op_bDynamic=(m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize)?true:false);
+			op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize) ? true : false);
 		}
 	}
 	else
@@ -72,18 +66,13 @@ void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const EB
 	}
 }
 
-void CChannelLocalisationDecoder::closeChild(void)
+void CChannelLocalisationDecoder::closeChild()
 {
-	EBML::CIdentifier& l_rTop=m_vNodes.top();
+	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
-	if((l_rTop==OVTK_NodeId_Header_ChannelLocalisation)
-	 ||(l_rTop==OVTK_NodeId_Header_ChannelLocalisation_Dynamic))
-	{
-	}
-	else
-	{
-		CStreamedMatrixDecoder::closeChild();
-	}
+	if ((l_rTop == OVTK_NodeId_Header_ChannelLocalisation)
+		|| (l_rTop == OVTK_NodeId_Header_ChannelLocalisation_Dynamic)) { }
+	else { CStreamedMatrixDecoder::closeChild(); }
 
 	m_vNodes.pop();
 }

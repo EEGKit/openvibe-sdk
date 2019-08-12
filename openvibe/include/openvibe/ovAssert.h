@@ -55,18 +55,18 @@ namespace OpenViBE
  * the system occurs and it is impossible to recover from it.
  */
 
- // internal use
- #define convertErrorTypeToString(type) #type
+// internal use
+#define convertErrorTypeToString(type) #type
 
 namespace OpenViBE
 {
 	// overload needed to enable streaming time data in error description
-	inline std::ostream& operator<<(std::ostream& os, const OpenViBE::time64 time)
+	inline std::ostream& operator<<(std::ostream& os, const time64 time)
 	{
 		std::stringstream ss;
 		ss.precision(3);
-		ss.setf(std::ios::fixed,std::ios::floatfield);
-		ss << OpenViBE::ITimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
+		ss.setf(std::ios::fixed, std::ios::floatfield);
+		ss << ITimeArithmetics::timeToSeconds(time.m_ui64TimeValue);
 		ss << " sec";
 
 		os << ss.str();
@@ -75,14 +75,14 @@ namespace OpenViBE
 	}
 
 #define HAS_ImbuedOStreamWithCIdentifier
-	inline std::ostream& operator<<(std::ostream& os, const OpenViBE::CIdentifier id)
+
+	inline std::ostream& operator<<(std::ostream& os, const CIdentifier id)
 	{
 		os << id.toString();
 
 		return os;
 	}
-
-}
+}  // namespace OpenViBE
 
 /**
  * \def OV_WARNING_LOG(message, logManager)
@@ -93,8 +93,7 @@ namespace OpenViBE
 #define OV_WARNING_LOG(message, logManager) \
 do { \
 	logManager << OpenViBE::Kernel::LogLevel_Warning << message << "\n"; \
-} \
-while (0)
+} while(0)
 
 /**
  * \def OV_WARNING(message, logManager)
@@ -117,8 +116,7 @@ do { \
 	{ \
 		OV_WARNING(message, logManager); \
 	} \
-} \
-while (0)
+} while(0)
 
 /**
  * \def OV_WARNING_K(message)
@@ -163,8 +161,7 @@ do { \
 			   << " (code " \
 			   << static_cast<unsigned int>((type)) \
 			   << ")}" << OV_ERROR_LOG_LOCATION(file, line) << "\n"; \
-} \
-while (0)
+} while(0)
 
 /**
  * \def OV_ERROR(description, type, returnValue, errorManager, logManager)
@@ -179,15 +176,10 @@ while (0)
  */
 #define OV_ERROR(description, type, returnValue, errorManager, logManager) \
 do { \
-	errorManager.pushErrorAtLocation( \
-		type, \
-		static_cast<const OpenViBE::ErrorStream&>(OpenViBE::ErrorStream() << description).str().c_str(), \
-		__FILE__, __LINE__ \
-	); \
+	errorManager.pushErrorAtLocation(type, static_cast<const OpenViBE::ErrorStream&>(OpenViBE::ErrorStream() << description).str().c_str(), __FILE__, __LINE__ ); \
 	OV_ERROR_LOG(description, type, __FILE__, __LINE__ , logManager); \
 	return returnValue; \
-} \
-while (0)
+} while (0)
 
 /**
  * \def OV_ERROR_UNLESS(expression, description, type, returnValue, errorManager, logManager)
@@ -205,8 +197,7 @@ do { \
 	{ \
 		OV_ERROR(description, type, returnValue, errorManager, logManager); \
 	} \
-} \
-while (0)
+} while(0)
 
 /**
  * \def OV_ERROR_K(description, type, returnValue)
@@ -375,8 +366,7 @@ do { \
 			   << static_cast<unsigned int>((type)) \
 			   << ")}" << OV_FATAL_LOG_LOCATION << "\n"; \
 	std::abort(); \
-} \
-while (0)
+} while(0)
 
 /**
  * \def OV_FATAL_UNLESS(expression, description, type, logManager)
@@ -391,8 +381,7 @@ do { \
 	{ \
 		OV_FATAL(description, type, logManager); \
 	} \
-} \
-while (0)
+} while(0)
 
 /**
  * \def OV_FATAL_K(description, type)

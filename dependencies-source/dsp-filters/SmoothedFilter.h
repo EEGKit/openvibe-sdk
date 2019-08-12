@@ -39,118 +39,122 @@ THE SOFTWARE.
 #include "Common.h"
 #include "Filter.h"
 
-namespace Dsp {
-
-/*
- * Implements smooth modulation of time-varying filter parameters
- *
- */
-template <class DesignClass,
-          int Channels,
-          class StateType = DirectFormII>
-class SmoothedFilterDesign
-  : public FilterDesign <DesignClass,
-                       Channels,
-                       StateType>
+namespace Dsp
 {
-public:
-  typedef FilterDesign <DesignClass, Channels, StateType> filter_type_t;
 
-  SmoothedFilterDesign (int transitionSamples)
-    : m_transitionSamples (transitionSamples)
-    , m_remainingSamples (-1) // first time flag
-  {
-  }
+	/*
+	 * Implements smooth modulation of time-varying filter parameters
+	 *
+	 */
+	template <class DesignClass,
+			  int Channels,
+			  class StateType = DirectFormII>
+	class SmoothedFilterDesign
+			: public FilterDesign<DesignClass,
+								  Channels,
+								  StateType>
+	{
+	public:
+		typedef FilterDesign<DesignClass, Channels, StateType> filter_type_t;
 
-  // Process a block of samples.
-  template <typename Sample>
-  void processBlock (int numSamples,
-                     Sample* const* destChannelArray)
-  {
-    const int numChannels = this->getNumChannels();
+		SmoothedFilterDesign(int transitionSamples)
+			: m_transitionSamples(transitionSamples)
+			  , m_remainingSamples(-1) // first time flag
+		{ }
 
-    // If this goes off it means setup() was never called
-    assert (m_remainingSamples >= 0);
+		// Process a block of samples.
+		template <typename Sample>
+		void processBlock(int numSamples,
+						  Sample* const* destChannelArray)
+		{
+			const int numChannels = this->getNumChannels();
 
-    // first handle any transition samples
-    int remainingSamples = std::min (m_remainingSamples, numSamples);
+			// If this goes off it means setup() was never called
+			assert(m_remainingSamples >= 0);
 
-    if (remainingSamples > 0)
-    {
-      // interpolate parameters for each sample
-      const double t = 1. / m_remainingSamples;
-      double dp[maxParameters];
-      for (int i = 0; i < DesignClass::NumParams; ++i)
-        dp[i] = (this->getParams()[i] - m_transitionParams[i]) * t;
+			// first handle any transition samples
+			int remainingSamples = std::min(m_remainingSamples, numSamples);
 
-      for (int n = 0; n < remainingSamples; ++n)
-      {
-        for (int i = DesignClass::NumParams; --i >=0;)
-          m_transitionParams[i] += dp[i];
+			if (remainingSamples > 0)
+			{
+				// interpolate parameters for each sample
+				const double t = 1. / m_remainingSamples;
+				double dp[maxParameters];
+				for (int i = 0; i < DesignClass::NumParams; ++i)
+				{
+					dp[i] = (this->getParams()[i] - m_transitionParams[i]) * t;
+				}
 
-        m_transitionFilter.setParams (m_transitionParams);
-        
-        for (int i = numChannels; --i >= 0;)
-        {
-          Sample* dest = destChannelArray[i]+n;
-          *dest = this->m_state[i].process (*dest, m_transitionFilter);
-        }
-      }
+				for (int n = 0; n < remainingSamples; ++n)
+				{
+					for (int i = DesignClass::NumParams; --i >= 0;)
+						m_transitionParams[i] += dp[i];
 
-      m_remainingSamples -= remainingSamples;
+					m_transitionFilter.setParams(m_transitionParams);
 
-      if (m_remainingSamples == 0)
-        m_transitionParams = this->getParams();
-    }
+					for (int i = numChannels; --i >= 0;)
+					{
+						Sample* dest = destChannelArray[i] + n;
+						*dest        = this->m_state[i].process(*dest, m_transitionFilter);
+					}
+				}
 
-    // do what's left
-    if (numSamples - remainingSamples > 0)
-    {
-      // no transition
-      for (int i = 0; i < numChannels; ++i)
-        this->m_design.process (numSamples - remainingSamples,
-                          destChannelArray[i] + remainingSamples,
-                          this->m_state[i]);
-    }
-  }
+				m_remainingSamples -= remainingSamples;
 
-  void process (int numSamples, float* const* arrayOfChannels)
-  {
-    processBlock (numSamples, arrayOfChannels);
-  }
+				if (m_remainingSamples == 0)
+				{
+					m_transitionParams = this->getParams();
+				}
+			}
 
-  void process (int numSamples, double* const* arrayOfChannels)
-  {
-    processBlock (numSamples, arrayOfChannels);
-  }
+			// do what's left
+			if (numSamples - remainingSamples > 0)
+			{
+				// no transition
+				for (int i = 0; i < numChannels; ++i)
+				{
+					this->m_design.process(numSamples - remainingSamples,
+										   destChannelArray[i] + remainingSamples,
+										   this->m_state[i]);
+				}
+			}
+		}
+
+		void process(int numSamples, float* const* arrayOfChannels) override
+		{
+			processBlock(numSamples, arrayOfChannels);
+		}
+
+		void process(int numSamples, double* const* arrayOfChannels) override
+		{
+			processBlock(numSamples, arrayOfChannels);
+		}
 
 #include "SmoothedFilterSynthesisH.inl"
 
-protected:
-  void doSetParams (const Params& parameters)
-  {
-    if (m_remainingSamples >= 0)
-    {
-      m_remainingSamples = m_transitionSamples;
-    }
-    else
-    {
-      // first time
-      m_remainingSamples = 0;
-      m_transitionParams = parameters;
-    }
+	protected:
+		void doSetParams(const Params& parameters) override
+		{
+			if (m_remainingSamples >= 0)
+			{
+				m_remainingSamples = m_transitionSamples;
+			}
+			else
+			{
+				// first time
+				m_remainingSamples = 0;
+				m_transitionParams = parameters;
+			}
 
-    filter_type_t::doSetParams (parameters);
-  }
+			filter_type_t::doSetParams(parameters);
+		}
 
-protected:
-  Params m_transitionParams;
-  DesignClass m_transitionFilter;
-  int m_transitionSamples;
+		Params m_transitionParams;
+		DesignClass m_transitionFilter;
+		int m_transitionSamples = 0;
 
-  int m_remainingSamples;        // remaining transition samples
-};
-
-}
+		int m_remainingSamples = 0;			// remaining transition samples
+	};
+}  // namespace Dsp
 
 #endif

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_TimeBasedEpoching_H__
-#define __OpenViBEPlugins_BoxAlgorithm_TimeBasedEpoching_H__
+#pragma once
 
 #include <toolkit/ovtk_all.h>
 #include <vector>
@@ -15,58 +14,54 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmTimeBasedEpoching final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-			virtual void release(void) { delete this; }
-
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
-			virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual bool process(void);
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_TimeBasedEpoching)
 
 		private:
 
-			OpenViBEToolkit::TSignalDecoder < CBoxAlgorithmTimeBasedEpoching > m_SignalDecoder;
-			OpenViBEToolkit::TSignalEncoder < CBoxAlgorithmTimeBasedEpoching > m_SignalEncoder;
+			OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmTimeBasedEpoching> m_SignalDecoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmTimeBasedEpoching> m_SignalEncoder;
 
-			OpenViBE::float64 m_EpochDuration;
-			OpenViBE::float64 m_EpochInterval;
+			double m_EpochDuration = 0;
+			double m_EpochInterval = 0;
 
-			OpenViBE::uint64 m_SamplingRate;
-			OpenViBE::uint32 m_OutputSampleCount;
-			OpenViBE::uint32 m_OutputSampleCountBetweenEpoch;
-			OpenViBE::uint64 m_LastInputEndTime;
-			OpenViBE::uint32 m_OutputSampleIndex;
-			OpenViBE::uint32 m_OutputChunkIndex;
-			OpenViBE::uint64 m_ReferenceTime;
+			uint64_t m_SamplingRate = 0;
+			uint32_t m_OutputSampleCount = 0;
+			uint32_t m_OutputSampleCountBetweenEpoch = 0;
+			uint64_t m_LastInputEndTime = 0;
+			uint32_t m_OutputSampleIndex = 0;
+			uint32_t m_OutputChunkIndex = 0;
+			uint64_t m_ReferenceTime = 0;
 		};
 
 		class CBoxAlgorithmTimeBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Time based epoching"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Quentin Barthelemy"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Mensia Technologies SA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Generates signal 'slices' or 'blocks' having a specified duration and interval"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Interval can be used to control the overlap of epochs"); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Epoching"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("2.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getStockItemName() const override { return OpenViBE::CString("gtk-cut"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TimeBasedEpoching; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmTimeBasedEpoching(); }
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Time based epoching"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Quentin Barthelemy"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("Mensia Technologies SA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Generates signal 'slices' or 'blocks' having a specified duration and interval"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Interval can be used to control the overlap of epochs"); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Epoching"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("2.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getStockItemName(void) const       { return OpenViBE::CString("gtk-cut"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_TimeBasedEpoching; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmTimeBasedEpoching(); }
-
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
-				rPrototype.addInput  ("Input signal",             OV_TypeId_Signal);
-				rPrototype.addOutput ("Epoched signal",           OV_TypeId_Signal);
-				rPrototype.addSetting("Epoch duration (in sec)",  OV_TypeId_Float, "1");
+				rPrototype.addInput("Input signal", OV_TypeId_Signal);
+				rPrototype.addOutput("Epoched signal", OV_TypeId_Signal);
+				rPrototype.addSetting("Epoch duration (in sec)", OV_TypeId_Float, "1");
 				rPrototype.addSetting("Epoch intervals (in sec)", OV_TypeId_Float, "0.5");
 
 				return true;
@@ -74,7 +69,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeBasedEpochingDesc)
 		};
-	};
-};
-
-#endif // __OpenViBEPlugins_BoxAlgorithm_TimeBasedEpoching_H__
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

@@ -3,30 +3,28 @@
 #include <cmath>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Tools;
+using namespace Tools;
 
-boolean CBoxAlgorithmMatrixValidityChecker::initialize(void)
+bool CBoxAlgorithmMatrixValidityChecker::initialize()
 {
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
+	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
-	uint64 l_ui64LogLevel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_eLogLevel = static_cast<ELogLevel>(l_ui64LogLevel);
+	uint64_t l_ui64LogLevel   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_eLogLevel               = static_cast<ELogLevel>(l_ui64LogLevel);
 	m_ui64ValidityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	if(l_rStaticBoxContext.getSettingCount()==1) m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); // note that for boxes with one setting, we fallback to the old behavior
+	if (l_rStaticBoxContext.getSettingCount() == 1) { m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); } // note that for boxes with one setting, we fallback to the old behavior 
 
-	OV_ERROR_UNLESS_KRF(
-		l_rStaticBoxContext.getSettingCount() <= 1 || l_rStaticBoxContext.getInputCount() == l_rStaticBoxContext.getOutputCount(),
-		"Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (expected same value as output count [" << l_rStaticBoxContext.getOutputCount() << "])",
-		OpenViBE::Kernel::ErrorType::BadConfig
-	);
+	OV_ERROR_UNLESS_KRF(l_rStaticBoxContext.getSettingCount() <= 1 || l_rStaticBoxContext.getInputCount() == l_rStaticBoxContext.getOutputCount(),
+						"Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (expected same value as output count [" << l_rStaticBoxContext.getOutputCount() << "])",
+						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	m_vStreamDecoder.resize(l_rStaticBoxContext.getInputCount());
 	m_vStreamEncoder.resize(l_rStaticBoxContext.getInputCount());
-	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		m_vStreamDecoder[i].initialize(*this, i);
 		m_vStreamEncoder[i].initialize(*this, i);
@@ -43,10 +41,10 @@ boolean CBoxAlgorithmMatrixValidityChecker::initialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmMatrixValidityChecker::uninitialize(void)
+bool CBoxAlgorithmMatrixValidityChecker::uninitialize()
 {
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	for(uint32 i=0; i<l_rStaticBoxContext.getInputCount(); i++)
+	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		m_vStreamDecoder[i].uninitialize();
 		m_vStreamEncoder[i].uninitialize();
@@ -57,99 +55,97 @@ boolean CBoxAlgorithmMatrixValidityChecker::uninitialize(void)
 	return true;
 }
 
-boolean CBoxAlgorithmMatrixValidityChecker::processInput(uint32 ui32InputIndex)
+bool CBoxAlgorithmMatrixValidityChecker::processInput(const uint32_t ui32InputIndex)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-boolean CBoxAlgorithmMatrixValidityChecker::process(void)
+bool CBoxAlgorithmMatrixValidityChecker::process()
 {
-	const IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
+	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
 
-	for(uint32 i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		for(uint32 j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
 		{
 			m_vStreamDecoder[i].decode(j);
 			IMatrix* l_pMatrix = m_vStreamDecoder[i].getOutputMatrix();
 
-			if(m_vStreamDecoder[i].isHeaderReceived())
+			if (m_vStreamDecoder[i].isHeaderReceived())
 			{
-				if(l_rStaticBoxContext.getSettingCount()>1) m_vStreamEncoder[i].encodeHeader();
+				if (l_rStaticBoxContext.getSettingCount() > 1) { m_vStreamEncoder[i].encodeHeader(); }
 
-				if( m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger() )
+				if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
 					m_ui32TotalInterpolatedSampleCount[i] = 0;
-					m_ui32TotalInterpolatedChunkCount[i] = 0;
+					m_ui32TotalInterpolatedChunkCount[i]  = 0;
 					// for each channel, save of the last valid sample
 					m_vLastValidSample[i].resize(l_pMatrix->getDimensionSize(0));
 				}
 			}
-			if(m_vStreamDecoder[i].isBufferReceived())
+			if (m_vStreamDecoder[i].isBufferReceived())
 			{
 				// log warning
-				if( m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger() )
+				if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger())
 				{
-					if(!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
+					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
 					{
 						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity between " << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << " and " << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << ".\n";
 					}
 				}
-				// stop player
-				else if( m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger() )
+					// stop player
+				else if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_StopPlayer.toUInteger())
 				{
-					if(!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
+					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
 					{
 						this->getPlayerContext().stop();
-						OV_ERROR_KRF(
-							"Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << "]",
-							OpenViBE::Kernel::ErrorType::BadInput
-						);
+						OV_ERROR_KRF("Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << "]",
+									 OpenViBE::Kernel::ErrorType::BadInput);
 					}
 				}
-				// interpolate
-				else if( m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger() )
+					// interpolate
+				else if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
-					uint32 l_ui32ChannelCount=l_pMatrix->getDimensionSize(0);
-					uint32 l_ui32SampleCount=l_pMatrix->getDimensionSize(1);
-					float64* l_pBuffer=l_pMatrix->getBuffer();
-					uint32 l_ui32InterpolatedSampleCount = 0;
+					uint32_t l_ui32ChannelCount            = l_pMatrix->getDimensionSize(0);
+					uint32_t l_ui32SampleCount             = l_pMatrix->getDimensionSize(1);
+					double* l_pBuffer                      = l_pMatrix->getBuffer();
+					uint32_t l_ui32InterpolatedSampleCount = 0;
 
-					for(uint32 k=0; k<l_ui32ChannelCount; k++)
+					for (uint32_t k = 0; k < l_ui32ChannelCount; k++)
 					{
-						for(uint32 l=0; l<l_ui32SampleCount; l++)
+						for (uint32_t l = 0; l < l_ui32SampleCount; l++)
 						{
-							if( std::isnan( l_pBuffer[l+k*l_ui32SampleCount] ) || std::isinf( l_pBuffer[l+k*l_ui32SampleCount] ) )
+							if (std::isnan(l_pBuffer[l + k * l_ui32SampleCount]) || std::isinf(l_pBuffer[l + k * l_ui32SampleCount]))
 							{
 								// interpolation : order 0 (easiest for online interpolation)
-								l_pBuffer[l+k*l_ui32SampleCount] = m_vLastValidSample[i][k];
+								l_pBuffer[l + k * l_ui32SampleCount] = m_vLastValidSample[i][k];
 								l_ui32InterpolatedSampleCount++;
 							}
 							else
 							{
 								// save of the last valid sample of channel k
-								m_vLastValidSample[i][k] = l_pBuffer[l+k*l_ui32SampleCount];
+								m_vLastValidSample[i][k] = l_pBuffer[l + k * l_ui32SampleCount];
 							}
 						}
 					}
 					m_ui32TotalInterpolatedSampleCount[i] += l_ui32InterpolatedSampleCount;
 
 					// log management
-					if (l_ui32InterpolatedSampleCount>0 && m_ui32TotalInterpolatedSampleCount[i]==l_ui32InterpolatedSampleCount) // beginning of interpolation
+					if (l_ui32InterpolatedSampleCount > 0 && m_ui32TotalInterpolatedSampleCount[i] == l_ui32InterpolatedSampleCount) // beginning of interpolation
 					{
 						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << ": interpolation is enable.\n";
 					}
-					if (l_ui32InterpolatedSampleCount>0) // update of ChunkCount during interpolation
+					if (l_ui32InterpolatedSampleCount > 0) // update of ChunkCount during interpolation
 					{
 						m_ui32TotalInterpolatedChunkCount[i]++;
 					}
-					if (l_ui32InterpolatedSampleCount==0 && m_ui32TotalInterpolatedSampleCount[i]>0) // end of interpolation
+					if (l_ui32InterpolatedSampleCount == 0 && m_ui32TotalInterpolatedSampleCount[i] > 0) // end of interpolation
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " contained " << 100.0*m_ui32TotalInterpolatedSampleCount[i]/(m_ui32TotalInterpolatedChunkCount[i]*l_ui32SampleCount*l_ui32ChannelCount) << " % of NAN or Infinity. Interpolation disable from " << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << ".\n";
+						getLogManager() << m_eLogLevel << "Matrix on input " << i << " contained " << 100.0 * m_ui32TotalInterpolatedSampleCount[i] / (m_ui32TotalInterpolatedChunkCount[i] * l_ui32SampleCount * l_ui32ChannelCount) << " % of NAN or Infinity. Interpolation disable from " << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << ".\n";
 						m_ui32TotalInterpolatedSampleCount[i] = 0; // reset
-						m_ui32TotalInterpolatedChunkCount[i] = 0;
+						m_ui32TotalInterpolatedChunkCount[i]  = 0;
 					}
 				}
 				else
@@ -157,13 +153,13 @@ boolean CBoxAlgorithmMatrixValidityChecker::process(void)
 					OV_WARNING_K("Invalid action type [" << m_ui64ValidityCheckerType << "]");
 				}
 
-				if(l_rStaticBoxContext.getSettingCount()>1) m_vStreamEncoder[i].encodeBuffer();
+				if (l_rStaticBoxContext.getSettingCount() > 1) { m_vStreamEncoder[i].encodeBuffer(); }
 			}
-			if(m_vStreamDecoder[i].isEndReceived())
+			if (m_vStreamDecoder[i].isEndReceived())
 			{
-				if(l_rStaticBoxContext.getSettingCount()>1) m_vStreamEncoder[i].encodeEnd();
+				if (l_rStaticBoxContext.getSettingCount() > 1) { m_vStreamEncoder[i].encodeEnd(); }
 			}
-			if(l_rStaticBoxContext.getSettingCount()>1) l_rDynamicBoxContext.markOutputAsReadyToSend(i, l_rDynamicBoxContext.getInputChunkStartTime(i, j), l_rDynamicBoxContext.getInputChunkEndTime(i, j));
+			if (l_rStaticBoxContext.getSettingCount() > 1) { l_rDynamicBoxContext.markOutputAsReadyToSend(i, l_rDynamicBoxContext.getInputChunkStartTime(i, j), l_rDynamicBoxContext.getInputChunkEndTime(i, j)); }
 		}
 	}
 

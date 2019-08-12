@@ -16,8 +16,8 @@ namespace OpenViBE
 	{
 		typedef struct _InterfacorRequest
 		{
-			uint32_t index = OV_Value_UndefinedIndexUInt;
-			CIdentifier identifier = OV_UndefinedIdentifier;
+			uint32_t index             = OV_Value_UndefinedIndexUInt;
+			CIdentifier identifier     = OV_UndefinedIdentifier;
 			CIdentifier typeIdentifier = OV_UndefinedIdentifier;
 			CString name;
 			bool toBeRemoved;
@@ -28,13 +28,12 @@ namespace OpenViBE
 			CString value;
 		} InterfacorRequest;
 
-		class CBoxUpdater : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IKernelObject>
+		class CBoxUpdater : public TKernelObject<IKernelObject>
 		{
 		public:
 
-			CBoxUpdater(CScenario& scenario, IBox *requestedBox);
-
-			virtual ~CBoxUpdater(void);
+			CBoxUpdater(CScenario& scenario, IBox* requestedBox);
+			~CBoxUpdater() override;
 
 			bool initialize();
 
@@ -53,12 +52,12 @@ namespace OpenViBE
 				OV_FATAL_UNLESS_K(m_Initialized, "Box Updater is not initialized", ErrorType::BadCall);
 
 				return m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagNeedsManualUpdate)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddInput)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyInput)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddOutput)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyOutput)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddSetting)
-				        || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting);
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddInput)
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyInput)
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddOutput)
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifyOutput)
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanAddSetting)
+					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting);
 			}
 
 			bool isUpdateRequired()
@@ -88,21 +87,18 @@ namespace OpenViBE
 			bool checkForSupportedIOSAttributesToBeUpdated();
 
 			// pointer to the parent scenario
-			CScenario* m_Scenario;
+			CScenario* m_Scenario = nullptr;
 			// pointer to the original box to be updated
-			IBox* m_SourceBox;
+			IBox* m_SourceBox = nullptr;
 			// pointer to the kernel box
 			const IBox* m_KernelBox;
 			// pointer to the updated box. This box will be used to update the prototype of the original box
-			IBox* m_UpdatedBox;
+			IBox* m_UpdatedBox = nullptr;
 			// true when updater has been initialized
-			bool m_Initialized;
+			bool m_Initialized = false;
 
 			std::map<BoxInterfacorType, std::map<uint32_t, uint32_t>> m_OriginalToUpdatedCorrespondence;
-			bool m_IsUpdateRequired;
-
-
+			bool m_IsUpdateRequired = false;
 		};
-	};
-};
-
+	}  // namespace Kernel
+}  // namespace OpenViBE

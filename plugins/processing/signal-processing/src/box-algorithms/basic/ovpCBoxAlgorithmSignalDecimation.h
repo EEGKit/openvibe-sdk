@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_SignalDecimation_H__
-#define __OpenViBEPlugins_BoxAlgorithm_SignalDecimation_H__
+#pragma once
 
 #include <openvibe/ov_all.h>
 #include <toolkit/ovtk_all.h>
@@ -11,78 +10,70 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSignalDecimation : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmSignalDecimation : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
-			virtual void release(void) { delete this; }
-
-			virtual bool initialize(void);
-			virtual bool uninitialize(void);
-			virtual bool processInput(uint32_t ui32InputIndex);
-			virtual bool process(void);
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalDecimation);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SignalDecimation)
 
 		protected:
 
-			int64_t m_i64DecimationFactor;
-			uint32_t m_ui32ChannelCount;
-			uint32_t m_ui32InputSampleIndex;
-			uint32_t m_ui32InputSampleCountPerSentBlock;
-			uint64_t m_ui64InputSamplingFrequency;
-			uint32_t m_ui32OutputSampleIndex;
-			uint32_t m_ui32OutputSampleCountPerSentBlock;
-			uint64_t m_ui64OutputSamplingFrequency;
+			int64_t m_i64DecimationFactor = 0;
+			uint32_t m_ui32ChannelCount = 0;
+			uint32_t m_ui32InputSampleIndex = 0;
+			uint32_t m_ui32InputSampleCountPerSentBlock = 0;
+			uint64_t m_ui64InputSamplingFrequency = 0;
+			uint32_t m_ui32OutputSampleIndex = 0;
+			uint32_t m_ui32OutputSampleCountPerSentBlock = 0;
+			uint64_t m_ui64OutputSamplingFrequency = 0;
 
-			uint64_t m_ui64TotalSampleCount;
-			uint64_t m_ui64StartTimeBase;
-			uint64_t m_ui64LastStartTime;
-			uint64_t m_ui64LastEndTime;
+			uint64_t m_ui64TotalSampleCount = 0;
+			uint64_t m_ui64StartTimeBase = 0;
+			uint64_t m_ui64LastStartTime = 0;
+			uint64_t m_ui64LastEndTime = 0;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder;
-			OpenViBE::Kernel::TParameterHandler < const OpenViBE::IMemoryBuffer* > ip_pMemoryBuffer;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > op_pMatrix;
-			OpenViBE::Kernel::TParameterHandler < uint64_t > op_ui64SamplingRate;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
+			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64SamplingRate;
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
-			OpenViBE::Kernel::TParameterHandler < uint64_t > ip_ui64SamplingRate;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > ip_pMatrix;
-			OpenViBE::Kernel::TParameterHandler < OpenViBE::IMemoryBuffer* > op_pMemoryBuffer;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
+			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64SamplingRate;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> ip_pMatrix;
+			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
 		};
 
 		class CBoxAlgorithmSignalDecimationDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Signal Decimation"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Reduces the sampling frequency to a divider of the original sampling frequency"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("No pre filtering applied - Number of samples per block have to be a multiple of the decimation factor"); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalDecimation; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSignalDecimation; }
 
-			virtual void release(void) { }
-
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Signal Decimation"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Reduces the sampling frequency to a divider of the original sampling frequency"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("No pre filtering applied - Number of samples per block have to be a multiple of the decimation factor"); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Temporal Filtering"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_SignalDecimation; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSignalDecimation; }
-
-			virtual bool getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput  ("Input signal",  OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput ("Output signal", OV_TypeId_Signal);
+				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
+				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);
 				rBoxAlgorithmPrototype.addSetting("Decimation factor", OV_TypeId_Integer, "8");
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalDecimationDesc);
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalDecimationDesc)
 		};
-	};
-};
-
-#endif // __OpenViBEPlugins_BoxAlgorithm_SignalDecimation_H__
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

@@ -1,20 +1,16 @@
 #include "ovpCFeatureVectorEncoder.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::StreamCodecs;
+using namespace StreamCodecs;
 
 
-boolean CFeatureVectorEncoder::processHeader(void)
+bool CFeatureVectorEncoder::processHeader()
 {
-	OV_ERROR_UNLESS_KRF(
-		ip_pMatrix->getDimensionCount() == 1,
-		"Invalid feature vector: found " << ip_pMatrix->getDimensionCount() << " dimensions, 1 expected",
-		OpenViBE::Kernel::ErrorType::BadInput
-	);
+	OV_ERROR_UNLESS_KRF(ip_pMatrix->getDimensionCount() == 1, "Invalid feature vector: found " << ip_pMatrix->getDimensionCount() << " dimensions, 1 expected", OpenViBE::Kernel::ErrorType::BadInput);
 
 	CStreamedMatrixEncoder::processHeader();
 

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Log_CLogManager_h__
-#define __OpenViBEKernel_Kernel_Log_CLogManager_h__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -14,63 +13,54 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CLogManager : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogManager>
+		class CLogManager : public TKernelObject<ILogManager>
 		{
 		public:
 
-			explicit CLogManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CLogManager(const IKernelContext& rKernelContext);
+			bool isActive(ELogLevel eLogLevel) override;
+			bool activate(ELogLevel eLogLevel, bool bActive) override;
+			bool activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive) override;
+			bool activate(bool bActive) override;
+			void log(const time64 value) override;
+			void log(const uint64_t value) override;
+			void log(const uint32_t value) override;
+			void log(const uint16_t value) override;
+			void log(const uint8_t value) override;
+			void log(const int64_t value) override;
+			void log(const int32_t value) override;
+			void log(const int16_t value) override;
+			void log(const int8_t value) override;
+			void log(const double value) override;
+			void log(const float value) override;
+			void log(const bool value) override;
+			void log(const CIdentifier& value) override;
+			void log(const CString& value) override;
+			void log(const char* value) override;
+			void log(const ELogLevel eLogLevel) override;
+			void log(const ELogColor eLogColor) override;
+			bool addListener(ILogListener* pListener) override;
+			bool removeListener(ILogListener* pListener) override;
 
-			virtual OpenViBE::boolean isActive(OpenViBE::Kernel::ELogLevel eLogLevel);
-			virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eLogLevel, OpenViBE::boolean bActive);
-			virtual OpenViBE::boolean activate(OpenViBE::Kernel::ELogLevel eStartLogLevel, OpenViBE::Kernel::ELogLevel eEndLogLevel, OpenViBE::boolean bActive);
-			virtual OpenViBE::boolean activate(OpenViBE::boolean bActive);
-
-			virtual void log(const OpenViBE::time64 time64Value);
-
-			virtual void log(const OpenViBE::uint64 ui64Value);
-			virtual void log(const OpenViBE::uint32 ui32Value);
-			virtual void log(const OpenViBE::uint16 ui16Value);
-			virtual void log(const OpenViBE::uint8 ui8Value);
-
-			virtual void log(const OpenViBE::int64 i64Value);
-			virtual void log(const OpenViBE::int32 i32Value);
-			virtual void log(const OpenViBE::int16 i16Value);
-			virtual void log(const OpenViBE::int8 i8Value);
-
-			virtual void log(const OpenViBE::float64 f64Value);
-			virtual void log(const OpenViBE::float32 f32Value);
-
-			virtual void log(const OpenViBE::boolean bValue);
-
-			virtual void log(const OpenViBE::CIdentifier& rValue);
-			virtual void log(const OpenViBE::CString& rValue);
-			virtual void log(const char* pValue);
-
-			virtual void log(const OpenViBE::Kernel::ELogLevel eLogLevel);
-			virtual void log(const OpenViBE::Kernel::ELogColor eLogColor);
-
-			virtual OpenViBE::boolean addListener(OpenViBE::Kernel::ILogListener* pListener);
-			virtual OpenViBE::boolean removeListener(OpenViBE::Kernel::ILogListener* pListener);
-
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogManager>, OVK_ClassId_Kernel_Log_LogManager);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::ILogManager>, OVK_ClassId_Kernel_Log_LogManager)
 
 		protected:
 
-// This macro waits until m_oHolder is either the current thread id or unassigned
+			// This macro waits until m_oHolder is either the current thread id or unassigned
 #define GRAB_OWNERSHIP std::unique_lock<std::mutex> lock(m_oMutex); \
-	m_oCondition.wait(lock, [this](void) { return (this->m_oOwner == std::thread::id() || this->m_oOwner == std::this_thread::get_id() ); } ); \
+	m_oCondition.wait(lock, [this]() { return (this->m_oOwner == std::thread::id() || this->m_oOwner == std::this_thread::get_id() ); } ); \
 	m_oOwner = std::this_thread::get_id();
 
-			template <class T> void logForEach(T tValue)
+			template <class T>
+			void logForEach(T tValue)
 			{
 				GRAB_OWNERSHIP;
 
-				if(m_eCurrentLogLevel!=LogLevel_None && this->isActive(m_eCurrentLogLevel))
+				if (m_eCurrentLogLevel != LogLevel_None && this->isActive(m_eCurrentLogLevel))
 				{
-					std::vector<OpenViBE::Kernel::ILogListener*>::iterator i;
-					for(i=m_vListener.begin(); i!=m_vListener.end(); ++i)
+					for (std::vector<ILogListener*>::iterator i = m_vListener.begin(); i != m_vListener.end(); ++i)
 					{
-						if((*i)->isActive(m_eCurrentLogLevel))
+						if ((*i)->isActive(m_eCurrentLogLevel))
 						{
 							(*i)->log(tValue);
 						}
@@ -78,10 +68,8 @@ namespace OpenViBE
 				}
 			}
 
-		protected:
-
-			std::vector<OpenViBE::Kernel::ILogListener*> m_vListener;
-			std::map<OpenViBE::Kernel::ELogLevel, OpenViBE::boolean> m_vActiveLevel;
+			std::vector<ILogListener*> m_vListener;
+			std::map<ELogLevel, bool> m_vActiveLevel;
 			ELogLevel m_eCurrentLogLevel;
 
 			// Variables to make sure only one thread writes to the LogManager at a time.
@@ -93,7 +81,5 @@ namespace OpenViBE
 			std::condition_variable m_oCondition;
 			std::thread::id m_oOwner;
 		};
-	};
-};
-
-#endif // __OpenViBEKernel_Kernel_Log_CLogManager_h__
+	}  // namespace Kernel
+}  // namespace OpenViBE

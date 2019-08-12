@@ -18,7 +18,7 @@
  * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #pragma once
 
 #include "defines.h"
@@ -42,11 +42,9 @@ namespace OpenViBE
 
 			SMatrixChunk(double startTime, double endTime, const std::vector<double>& matrix, uint64_t epoch)
 				: startTime(startTime)
-				, endTime(endTime)
-				, matrix(matrix)
-				, epoch(epoch)
-			{
-			}
+				  , endTime(endTime)
+				  , matrix(matrix)
+				  , epoch(epoch) { }
 		};
 
 		struct SStimulationChunk
@@ -57,10 +55,8 @@ namespace OpenViBE
 
 			SStimulationChunk(uint64_t stimulationIdentifier, double stimulationDate, double stimulationDuration)
 				: stimulationIdentifier(stimulationIdentifier)
-				, stimulationDate(stimulationDate)
-				, stimulationDuration(stimulationDuration)
-			{
-			}
+				  , stimulationDate(stimulationDate)
+				  , stimulationDuration(stimulationDuration) { }
 		};
 
 		enum class EStreamType
@@ -145,7 +141,7 @@ namespace OpenViBE
 			 *
 			 * \return EStreamType format type
 			 */
-			virtual EStreamType getFormatType(void) = 0;
+			virtual EStreamType getFormatType() = 0;
 
 			/**
 			 * \brief Set the state of the LastMatrixOnly mode.
@@ -160,7 +156,7 @@ namespace OpenViBE
 			 * \retval true if LastMatrixOnly mode is activated
 			 * \retval false if this is not (normal mode)
 			 */
-			virtual bool getLastMatrixOnlyMode(void) = 0;
+			virtual bool getLastMatrixOnlyMode() = 0;
 
 			/**
 			 * \brief Set informations to read or write signal data
@@ -196,7 +192,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of incorrect or incomplete parameters
 			 */
-			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const uint32_t samplingRate) = 0;
+			virtual bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, uint32_t samplingRate) = 0;
 
 			/**
 			 * \brief get spectrum information in file
@@ -257,7 +253,7 @@ namespace OpenViBE
 			 * \retval true in case of writing header
 			 * \retval false in case of already written header
 			 */
-			virtual bool writeHeaderToFile(void) = 0;
+			virtual bool writeHeaderToFile() = 0;
 
 			/**
 			 * \brief Write the matrix data in the opened file
@@ -265,7 +261,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \return false in case of error while writing
 			 */
-			virtual bool writeDataToFile(void) = 0;
+			virtual bool writeDataToFile() = 0;
 
 			/**
 			 * \brief Write all the remaining data
@@ -273,7 +269,7 @@ namespace OpenViBE
 			 * \retval true in case of sucess
 			 * \retval false in case of error while writing
 			 */
-			virtual bool writeAllDataToFile(void) = 0;
+			virtual bool writeAllDataToFile() = 0;
 
 			/**
 			 * \brief Read samples and events on the specified number of chunks
@@ -303,7 +299,7 @@ namespace OpenViBE
 			 * \retval true in case of sucess
 			 * \retval false in case of error while closing
 			 */
-			virtual bool closeFile(void) = 0;
+			virtual bool closeFile() = 0;
 
 			/**
 			 * \brief Add a sample of the data type

@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_TParameterHandler_H__
-#define __OpenViBE_Kernel_TParameterHandler_H__
+#pragma once
 
 #include "ovIParameter.h"
 #include "ovIConfigurable.h"
@@ -22,17 +21,17 @@ namespace OpenViBE
 		 * IParameter abstract class and it's associated value. Client code
 		 * should probably use this template better than IParameter directly.
 		 * The template argument is the handled data type :
-		 *  - for \c ParameterType_Integer : \c OpenViBE::int64
-		 *  - for \c ParameterType_UInteger : \c OpenViBE::uint64
-		 *  - for \c ParameterType_Boolean : \c OpenViBE::boolean
-		 *  - for \c ParameterType_Float : \c OpenViBE::float64
+		 *  - for \c ParameterType_Integer : \c int64_t
+		 *  - for \c ParameterType_UInteger : \c uint64_t
+		 *  - for \c ParameterType_Boolean : \c bool
+		 *  - for \c ParameterType_Float : \c double
 		 *  - for \c ParameterType_String : \c OpenViBE::CString
 		 *  - for \c ParameterType_Identifier : \c OpenViBE::CIdentifier
 		 *  - for \c ParameterType_Matrix : \c OpenViBE::IMatrix*
 		 *  - for \c ParameterType_StimulationSet : \c OpenViBE::IStimulationSet*
 		 *  - for \c ParameterType_MemoryBuffer : \c OpenViBE::IMemoryBuffer*
 		 *  - for \c ParameterType_Object : \c OpenViBE::IObject*
-		 *  - for \c ParameterType_Pointer : \c OpenViBE::uint8*
+		 *  - for \c ParameterType_Pointer : \c uint8_t*
 		 *
 		 * The idea is to connect the handler to the corresponding IParameter object
 		 * thanks to the \c initialize function. Then the provided interface translates
@@ -43,7 +42,6 @@ namespace OpenViBE
 		template <typename T>
 		class TParameterHandler
 		{
-
 		public:
 
 			/** \name Construction */
@@ -52,10 +50,7 @@ namespace OpenViBE
 			/**
 			 * \brief Default construction, does nothing
 			 */
-			TParameterHandler(void)
-				:m_pParameter(NULL)
-			{
-			}
+			TParameterHandler() { }
 
 			/**
 			 * \brief IParameter based construction
@@ -66,10 +61,7 @@ namespace OpenViBE
 			 * using the default constructor and call the initialize function
 			 * with the provided IParameter pointer.
 			 */
-			TParameterHandler(OpenViBE::Kernel::IParameter* pParameter)
-				:m_pParameter(pParameter)
-			{
-			}
+			TParameterHandler(IParameter* pParameter) : m_pParameter(pParameter) { }
 
 			//@}
 			/** \name Initialization */
@@ -84,19 +76,13 @@ namespace OpenViBE
 			 * Future calls to this handler will be redirected to the
 			 * concrete parameter object.
 			 */
-			OpenViBE::boolean initialize(OpenViBE::Kernel::IParameter* pParameter)
+			bool initialize(IParameter* pParameter)
 			{
-				if(m_pParameter)
-				{
-					return false;
-				}
+				if (m_pParameter) { return false; }
 
-				if(!pParameter)
-				{
-					return false;
-				}
+				if (!pParameter) { return false; }
 
-				m_pParameter=pParameter;
+				m_pParameter = pParameter;
 				return true;
 			}
 
@@ -107,14 +93,11 @@ namespace OpenViBE
 			 *
 			 * This handler won't be usable until \c initialize is called successfully again.
 			 */
-			OpenViBE::boolean uninitialize(void)
+			bool uninitialize()
 			{
-				if(!m_pParameter)
-				{
-					return false;
-				}
+				if (!m_pParameter) { return false; }
 
-				m_pParameter=NULL;
+				m_pParameter = nullptr;
 				return true;
 			}
 
@@ -122,10 +105,7 @@ namespace OpenViBE
 			 * \brief Checks whether this handler is connected to a concrete IParameter or not
 			 * \return \e true if this handler is connected to a concrete IParameter, \e false if not
 			 */
-			OpenViBE::boolean exists(void) const
-			{
-				return m_pParameter!=NULL;
-			}
+			bool exists() const { return m_pParameter != nullptr; }
 
 			//@{
 			/** \name Transparent operators */
@@ -141,17 +121,14 @@ namespace OpenViBE
 			 *
 			 * \code
 			 * // l_oParameter will directly be used as if it is an unsigned integer
-			 * TParameterHandler<uint64> l_oParameter ( ... );
-			 * uint64 a= ...;
-			 * uint64 c=a*l_oParameter+l_oParameter;
+			 * TParameterHandler<uint64_t> l_oParameter ( ... );
+			 * uint64_t a= ...;
+			 * uint64_t c=a*l_oParameter+l_oParameter;
 			 * \endcode
 			 */
-			operator T (void) const
+			operator T() const
 			{
-				if(!m_pParameter)
-				{
-					throw;
-				}
+				if (!m_pParameter) { throw; }
 				T t;
 				m_pParameter->getValue(&t);
 				return t;
@@ -170,12 +147,9 @@ namespace OpenViBE
 			 * l_oParameter->setDimensionCount(2);
 			 * \endcode
 			 */
-			T operator -> (void) const
+			T operator ->() const
 			{
-				if(!m_pParameter)
-				{
-					throw;
-				}
+				if (!m_pParameter) { throw; }
 				T t;
 				m_pParameter->getValue(&t);
 				return t;
@@ -190,16 +164,13 @@ namespace OpenViBE
 			 *
 			 * \code
 			 * // the affectation of l_oParameter will directly go to its handled unsigned integer
-			 * TParameterHandler<uint64> l_oParameter ( ... );
+			 * TParameterHandler<uint64_t> l_oParameter ( ... );
 			 * l_oParameter = 1;
 			 * \endcode
 			 */
 			TParameterHandler<T>& operator=(const T& t)
 			{
-				if(!m_pParameter)
-				{
-					throw;
-				}
+				if (!m_pParameter) { throw; }
 				m_pParameter->setValue(&t);
 				return *this;
 			}
@@ -213,9 +184,9 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			OpenViBE::boolean clearReferenceTarget(void)
+			bool clearReferenceTarget()
 			{
-				return m_pParameter?m_pParameter->clearReferenceTarget():false;
+				return m_pParameter ? m_pParameter->clearReferenceTarget() : false;
 			}
 			/**
 			 * \brief Sets a new reference target
@@ -223,9 +194,9 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			OpenViBE::boolean setReferenceTarget(OpenViBE::Kernel::TParameterHandler<T>& rParameterHandler)
+			bool setReferenceTarget(TParameterHandler<T>& rParameterHandler)
 			{
-				return m_pParameter&&rParameterHandler.m_pParameter?m_pParameter->setReferenceTarget(rParameterHandler.m_pParameter):false;
+				return m_pParameter && rParameterHandler.m_pParameter ? m_pParameter->setReferenceTarget(rParameterHandler.m_pParameter) : false;
 			}
 			/**
 			 * \brief Sets a new reference target
@@ -233,9 +204,9 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			OpenViBE::boolean setReferenceTarget(OpenViBE::Kernel::IParameter* pParameter)
+			bool setReferenceTarget(IParameter* pParameter)
 			{
-				return m_pParameter&&pParameter?m_pParameter->setReferenceTarget(pParameter):false;
+				return m_pParameter && pParameter ? m_pParameter->setReferenceTarget(pParameter) : false;
 			}
 			/**
 			 * \brief Sets a new reference target
@@ -243,18 +214,16 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			OpenViBE::boolean setReferenceTarget(T& t)
+			bool setReferenceTarget(T& t)
 			{
-				return m_pParameter?m_pParameter->setReferenceTarget(&t):false;
+				return m_pParameter ? m_pParameter->setReferenceTarget(&t) : false;
 			}
 
 			//@}
 
 		protected:
 
-			OpenViBE::Kernel::IParameter* m_pParameter; //!< Handled parameter
+			IParameter* m_pParameter = nullptr; //!< Handled parameter
 		};
-	};
-};
-
-#endif // __OpenViBE_Kernel_TParameterHandler_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

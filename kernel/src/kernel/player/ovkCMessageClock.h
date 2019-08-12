@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CMessageClock_H__
-#define __OpenViBEKernel_Kernel_Player_CMessageClock_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 #include "ovkTMessage.h"
@@ -10,18 +9,14 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CMessageClock : public OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >
+		class CMessageClock : public TMessage<TKernelObject<IMessageClock>>
 		{
 		public:
 
-			explicit CMessageClock(const OpenViBE::Kernel::IKernelContext& rKernelContext)
-				:OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >(rKernelContext)
-			{
-			}
+			explicit CMessageClock(const IKernelContext& rKernelContext)
+				: TMessage<TKernelObject<IMessageClock>>(rKernelContext) { }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >, OVK_ClassId_Kernel_Player_MessageClock);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageClock> >, OVK_ClassId_Kernel_Player_MessageClock)
 		};
-	};
-};
-
-#endif // __OpenViBEKernel_Kernel_Player_CMessageClock_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

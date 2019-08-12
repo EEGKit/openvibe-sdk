@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_CMatrix_H__
-#define __OpenViBE_CMatrix_H__
+#pragma once
 
 #include "ovIMatrix.h"
 
@@ -18,7 +17,7 @@ namespace OpenViBE
 	 * Instances of this class use an internal implementation of the OpenViBE::IMatrix
 	 * interface and redirect their calls to this implementation.
 	 */
-	class OV_API CMatrix : public OpenViBE::IMatrix
+	class OV_API CMatrix : public IMatrix
 	{
 	public:
 
@@ -30,7 +29,7 @@ namespace OpenViBE
 		 *
 		 * This constructor builds the internal implementation of this matrix.
 		 */
-		CMatrix(void);
+		CMatrix();
 
 
 		CMatrix(const CMatrix& other);
@@ -41,36 +40,23 @@ namespace OpenViBE
 		 *
 		 * The internal implementation is released.
 		 */
-		virtual ~CMatrix(void);
+		~CMatrix() override;
 
 		//@}
+		const uint32_t getDimensionCount() const override;
+		const uint32_t getDimensionSize(uint32_t index) const override;
+		const char* getDimensionLabel(uint32_t index, uint32_t entryIndex) const override;
+		const double* getBuffer() const override;
+		const uint32_t getBufferElementCount() const override;
+		bool setDimensionCount(uint32_t count) override;
+		bool setDimensionSize(uint32_t index, uint32_t size) override;
+		bool setDimensionLabel(uint32_t index, uint32_t entryIndex, const char* label) override;
+		double* getBuffer() override;
 
-		virtual const OpenViBE::uint32 getDimensionCount(void) const;
-		virtual const OpenViBE::uint32 getDimensionSize(
-			const OpenViBE::uint32 ui32DimensionIndex) const;
-		virtual const char* getDimensionLabel(
-			const OpenViBE::uint32 ui32DimensionIndex,
-			const OpenViBE::uint32 ui32DimensionEntryIndex) const;
-		virtual const OpenViBE::float64* getBuffer(void) const;
-		virtual const OpenViBE::uint32 getBufferElementCount(void) const;
-
-		virtual OpenViBE::boolean setDimensionCount(
-			const OpenViBE::uint32 ui32DimensionCount);
-		virtual OpenViBE::boolean setDimensionSize(
-			const OpenViBE::uint32 ui32DimensionIndex,
-			const OpenViBE::uint32 ui32DimensionSize);
-		virtual OpenViBE::boolean setDimensionLabel(
-			const OpenViBE::uint32 ui32DimensionIndex,
-			const OpenViBE::uint32 ui32DimensionEntryIndex,
-			const char* sDimensionLabel);
-		virtual OpenViBE::float64* getBuffer(void);
-
-		_IsDerivedFromClass_Final_(OpenViBE::IMatrix, OV_ClassId_MatrixBridge);
+		_IsDerivedFromClass_Final_(OpenViBE::IMatrix, OV_ClassId_MatrixBridge)
 
 	private:
 
-		OpenViBE::IMatrix* m_pMatrixImpl = nullptr; //!< Internal implementation
+		IMatrix* m_pMatrixImpl = nullptr; //!< Internal implementation
 	};
-};
-
-#endif // __OpenViBE_CMatrix_H__
+}  // namespace OpenViBE

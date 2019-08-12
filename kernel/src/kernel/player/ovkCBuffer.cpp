@@ -3,7 +3,7 @@
 #include <system/ovCMemory.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 CBuffer::CBuffer(const CBuffer& rBuffer)
 {
@@ -11,8 +11,7 @@ CBuffer::CBuffer(const CBuffer& rBuffer)
 	System::Memory::copy(this->getDirectPointer(), rBuffer.getDirectPointer(), rBuffer.getSize());
 }
 
-CBuffer& CBuffer::operator=(
-	const CBuffer& rBuffer)
+CBuffer& CBuffer::operator=(const CBuffer& rBuffer)
 {
 	this->setSize(rBuffer.getSize(), true);
 	System::Memory::copy(this->getDirectPointer(), rBuffer.getDirectPointer(), rBuffer.getSize());

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CPlayerManager_H__
-#define __OpenViBEKernel_Kernel_Player_CPlayerManager_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -11,32 +10,25 @@ namespace OpenViBE
 	{
 		class CPlayer;
 
-		class CPlayerManager : public OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>
+		class CPlayerManager : public TKernelObject<IPlayerManager>
 		{
 		public:
 
-			explicit CPlayerManager(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+			explicit CPlayerManager(const IKernelContext& rKernelContext);
+			bool createPlayer(CIdentifier& rPlayerIdentifier) override;
+			bool releasePlayer(const CIdentifier& rPlayerIdentifier) override;
+			IPlayer& getPlayer(const CIdentifier& rPlayerIdentifier) override;
+			CIdentifier getNextPlayerIdentifier(const CIdentifier& rPreviousIdentifier) const override;
 
-			virtual OpenViBE::boolean createPlayer(
-				OpenViBE::CIdentifier& rPlayerIdentifier);
-			virtual OpenViBE::boolean releasePlayer(
-				const OpenViBE::CIdentifier& rPlayerIdentifier);
-			virtual OpenViBE::Kernel::IPlayer& getPlayer(
-				const OpenViBE::CIdentifier& rPlayerIdentifier);
-			virtual OpenViBE::CIdentifier getNextPlayerIdentifier(
-				const OpenViBE::CIdentifier& rPreviousIdentifier) const;
-
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>, OVK_ClassId_Kernel_Player_PlayerManager);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IPlayerManager>, OVK_ClassId_Kernel_Player_PlayerManager)
 
 		protected:
 
-			virtual OpenViBE::CIdentifier getUnusedIdentifier(void) const;
+			virtual CIdentifier getUnusedIdentifier() const;
 
-		protected:
-
-			std::map<OpenViBE::CIdentifier, OpenViBE::Kernel::CPlayer*> m_vPlayer;
+			std::map<CIdentifier, CPlayer*> m_vPlayer;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Player_CPlayerManager_H__
+

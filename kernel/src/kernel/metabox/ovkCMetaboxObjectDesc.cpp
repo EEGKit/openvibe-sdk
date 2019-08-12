@@ -1,23 +1,23 @@
 #include "ovkCMetaboxObjectDesc.h"
 
-using namespace OpenViBE::Metabox;
+using namespace OpenViBE;
+using namespace Metabox;
 
-CMetaboxObjectDesc::CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescriptor, OpenViBE::Kernel::IScenario& metaboxScenario)
+CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel::IScenario& metaboxScenario)
 	: m_MetaboxDescriptor(rMetaboxDescriptor)
-	, m_Name(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name))
-	, m_AuthorName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Author))
-	, m_AuthorCompanyName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Company))
-	, m_ShortDescription(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_ShortDescription))
-	, m_DetailedDescription(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_DetailedDescription))
-	, m_Category( metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Category))
-	, m_Version(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Version))
-	, m_StockItemName("")
-	, m_AddedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_AddedSoftwareVersion))
-	, m_UpdatedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_UpdatedSoftwareVersion))
-	, m_MetaboxIdentifier(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier))
+	  , m_Name(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name))
+	  , m_AuthorName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Author))
+	  , m_AuthorCompanyName(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Company))
+	  , m_ShortDescription(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_ShortDescription))
+	  , m_DetailedDescription(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_DetailedDescription))
+	  , m_Category(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Category))
+	  , m_Version(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Version))
+	  , m_StockItemName("")
+	  , m_AddedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_AddedSoftwareVersion))
+	  , m_UpdatedSoftwareVersion(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_UpdatedSoftwareVersion))
+	  , m_MetaboxIdentifier(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier))
 {
-
-	for (uint32 l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < metaboxScenario.getInputCount(); l_ui32ScenarioInputIndex++)
+	for (uint32_t l_ui32ScenarioInputIndex = 0; l_ui32ScenarioInputIndex < metaboxScenario.getInputCount(); l_ui32ScenarioInputIndex++)
 	{
 		CString l_sInputName;
 		CIdentifier l_oInputTypeIdentifier;
@@ -30,7 +30,7 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescript
 		m_Inputs.push_back(SIOStream(l_sInputName, l_oInputTypeIdentifier, l_oInputIdentifier));
 	}
 
-	for (uint32 l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < metaboxScenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
+	for (uint32_t l_ui32ScenarioOutputIndex = 0; l_ui32ScenarioOutputIndex < metaboxScenario.getOutputCount(); l_ui32ScenarioOutputIndex++)
 	{
 		CString l_sOutputName;
 		CIdentifier l_oOutputTypeIdentifier;
@@ -43,7 +43,7 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescript
 		m_Outputs.push_back(SIOStream(l_sOutputName, l_oOutputTypeIdentifier, l_oOutputIdentifier));
 	}
 
-	for (uint32 l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < metaboxScenario.getSettingCount(); l_ui32ScenarioSettingIndex++)
+	for (uint32_t l_ui32ScenarioSettingIndex = 0; l_ui32ScenarioSettingIndex < metaboxScenario.getSettingCount(); l_ui32ScenarioSettingIndex++)
 	{
 		CString l_sSettingName;
 		CIdentifier l_oSettingTypeIdentifier;
@@ -56,11 +56,11 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescript
 		metaboxScenario.getInterfacorIdentifier(Kernel::BoxInterfacorType::Setting, l_ui32ScenarioSettingIndex, l_oSettingIdentifier);
 
 
-		m_Settings.push_back(SSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sSettingDefaultValue,l_oSettingIdentifier));
+		m_Settings.push_back(SSetting(l_sSettingName, l_oSettingTypeIdentifier, l_sSettingDefaultValue, l_oSettingIdentifier));
 	}
 }
 
-bool CMetaboxObjectDesc::getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+bool CMetaboxObjectDesc::getBoxPrototype(Kernel::IBoxProto& rBoxAlgorithmPrototype) const
 {
 	for (auto& input : m_Inputs)
 	{
@@ -79,4 +79,3 @@ bool CMetaboxObjectDesc::getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgori
 
 	return true;
 }
-

@@ -8,12 +8,12 @@
  #include <glob.h>
  #include <sys/stat.h>
 #elif defined TARGET_OS_Windows
- #ifndef UNICODE
- #define UNICODE
- #endif
- #include <Windows.h>
- #include <codecvt>
- #include <locale>
+#ifndef UNICODE
+#define UNICODE
+#endif
+#include <Windows.h>
+#include <codecvt>
+#include <locale>
 #else
 #endif
 
@@ -32,31 +32,22 @@ namespace FS
 	public:
 
 		explicit CEntry(const string& sName);
-
-		virtual const char* getName(void);
+		const char* getName() override;
 
 	public:
 
 		string m_sName;
 	};
-};
+}
 
 // ________________________________________________________________________________________________________________
 //
 
-IEntryEnumerator::IEntry::~IEntry(void)
-{
-}
+IEntryEnumerator::IEntry::~IEntry() {}
 
-CEntry::CEntry(const string& sName)
-	:m_sName(sName)
-{
-}
+CEntry::CEntry(const string& sName) : m_sName(sName) {}
 
-const char* CEntry::getName(void)
-{
-	return m_sName.c_str();
-}
+const char* CEntry::getName() { return m_sName.c_str(); }
 
 // ________________________________________________________________________________________________________________
 //
@@ -67,116 +58,54 @@ namespace FS
 	{
 	public:
 
-		CAttributes(void);
-		virtual ~CAttributes(void);
-
-		virtual bool isFile(void);
-		virtual bool isDirectory(void);
-		virtual bool isSymbolicLink(void);
-
-		virtual bool isArchive(void);
-		virtual bool isReadOnly(void);
-		virtual bool isHidden(void);
-		virtual bool isSystem(void);
-		virtual bool isExecutable(void);
-
-		virtual uint64_t getSize(void);
+		CAttributes() {}
+		~CAttributes() override {}
+		bool isFile() override;
+		bool isDirectory() override;
+		bool isSymbolicLink() override;
+		bool isArchive() override;
+		bool isReadOnly() override;
+		bool isHidden() override;
+		bool isSystem() override;
+		bool isExecutable() override;
+		uint64_t getSize() override;
 
 	public:
 
-		bool m_bIsFile;
-		bool m_bIsDirectory;
-		bool m_bIsSymbolicLink;
-		bool m_bIsArchive;
-		bool m_bIsReadOnly;
-		bool m_bIsHidden;
-		bool m_bIsSystem;
-		bool m_bIsExecutable;
-		uint64_t m_ui64Size;
+		bool m_bIsFile = false;
+		bool m_bIsDirectory = false;
+		bool m_bIsSymbolicLink = false;
+		bool m_bIsArchive = false;
+		bool m_bIsReadOnly = false;
+		bool m_bIsHidden = false;
+		bool m_bIsSystem = false;
+		bool m_bIsExecutable = false;
+		uint64_t m_ui64Size = 0;
 	};
 };
 
 // ________________________________________________________________________________________________________________
 //
 
-IEntryEnumerator::IAttributes::~IAttributes(void)
-{
-}
-
-CAttributes::CAttributes(void)
-	:m_bIsFile(false)
-	,m_bIsDirectory(false)
-	,m_bIsSymbolicLink(false)
-	,m_bIsArchive(false)
-	,m_bIsReadOnly(false)
-	,m_bIsHidden(false)
-	,m_bIsSystem(false)
-	,m_bIsExecutable(false)
-	,m_ui64Size(0)
-{
-}
-
-CAttributes::~CAttributes(void)
-{
-}
+IEntryEnumerator::IAttributes::~IAttributes() {}
 
 // ________________________________________________________________________________________________________________
 //
 
-bool CAttributes::isFile(void)
-{
-	return m_bIsFile;
-}
-
-bool CAttributes::isDirectory(void)
-{
-	return m_bIsDirectory;
-}
-
-bool CAttributes::isSymbolicLink(void)
-{
-	return m_bIsSymbolicLink;
-}
-
-bool CAttributes::isArchive(void)
-{
-	return m_bIsArchive;
-}
-
-bool CAttributes::isReadOnly(void)
-{
-	return m_bIsReadOnly;
-}
-
-bool CAttributes::isHidden(void)
-{
-	return m_bIsHidden;
-}
-
-bool CAttributes::isSystem(void)
-{
-	return m_bIsSystem;
-}
-
-bool CAttributes::isExecutable(void)
-{
-	return m_bIsExecutable;
-}
+bool CAttributes::isFile() { return m_bIsFile; }
+bool CAttributes::isDirectory() { return m_bIsDirectory; }
+bool CAttributes::isSymbolicLink() { return m_bIsSymbolicLink; }
+bool CAttributes::isArchive() { return m_bIsArchive; }
+bool CAttributes::isReadOnly() { return m_bIsReadOnly; }
+bool CAttributes::isHidden() { return m_bIsHidden; }
+bool CAttributes::isSystem() { return m_bIsSystem; }
+bool CAttributes::isExecutable() { return m_bIsExecutable; }
+uint64_t CAttributes::getSize() { return m_ui64Size; }
 
 // ________________________________________________________________________________________________________________
 //
 
-uint64_t CAttributes::getSize(void)
-{
-	return m_ui64Size;
-}
-
-// ________________________________________________________________________________________________________________
-//
-
-IEntryEnumerator::~IEntryEnumerator(void)
-{
-}
+IEntryEnumerator::~IEntryEnumerator() {}
 
 // ________________________________________________________________________________________________________________
 //
@@ -187,7 +116,7 @@ namespace FS
 	{
 	public:
 		explicit CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
-		virtual void release(void);
+		void release() override;
 	protected:
 		IEntryEnumeratorCallBack& m_rEntryEnumeratorCallBack;
 	};
@@ -197,14 +126,9 @@ namespace FS
 //
 
 CEntryEnumerator::CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
-	:m_rEntryEnumeratorCallBack(rEntryEnumeratorCallBack)
-{
-}
+	: m_rEntryEnumeratorCallBack(rEntryEnumeratorCallBack) {}
 
-void CEntryEnumerator::release(void)
-{
-	delete this;
-}
+void CEntryEnumerator::release() { delete this; }
 
 // ________________________________________________________________________________________________________________
 //
@@ -229,7 +153,7 @@ namespace FS
 	{
 	public:
 		explicit CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
-		virtual bool enumerate(const char* sWildCard, bool bRecursive=false);
+		bool enumerate(const char* sWildCard, bool bRecursive = false) override;
 	};
 };
 
@@ -259,16 +183,13 @@ CEntryEnumeratorLinux::CEntryEnumeratorLinux(IEntryEnumeratorCallBack& rEntryEnu
 
 bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 {
-	if(!sWildCard)
-	{
-		return false;
-	}
+	if(!sWildCard) { return false; }
 
 	glob_t l_oGlobStruc;
 	memset(&l_oGlobStruc, GLOB_NOSORT, sizeof(l_oGlobStruc));
 
 	// Glob can retrn
-	switch (glob(sWildCard, 0, NULL, &l_oGlobStruc))
+	switch (glob(sWildCard, 0, nullptr, &l_oGlobStruc))
 	{
 	case GLOB_NOSPACE:
 	case GLOB_ABORTED:
@@ -333,17 +254,11 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 #elif defined TARGET_OS_Windows
 
 CEntryEnumeratorWindows::CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
-	:CEntryEnumerator(rEntryEnumeratorCallBack)
-{
-}
+	: CEntryEnumerator(rEntryEnumeratorCallBack) {}
 
 bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 {
-
-	if(!sWildCard || strlen(sWildCard)==0)
-	{
-		return false;
-	}
+	if (!sWildCard || strlen(sWildCard) == 0) { return false; }
 
 	wchar_t wildCardUtf16[1024];
 	MultiByteToWideChar(CP_UTF8, 0, sWildCard, -1, wildCardUtf16, 1024);
@@ -355,7 +270,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 	// $$$ loses the initial path !!)
 	// $$$ TODO
 	wchar_t l_sExtendedWildCard[1024];
-	wchar_t* l_sExtendedWildCardFileName = NULL;
+	wchar_t* l_sExtendedWildCardFileName = nullptr;
 	GetFullPathName(wildCardUtf16, 1024, l_sExtendedWildCard, &l_sExtendedWildCardFileName);
 	std::wstring l_sPath(wildCardUtf16, wcslen(wildCardUtf16) - (l_sExtendedWildCardFileName ? wcslen(l_sExtendedWildCardFileName) : 0));
 
@@ -363,23 +278,23 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 	l_vFoldersToEnumerate.push(l_sPath);
 
 	// if we need to recurse over subfolders, let's fetch all subfolders in l_vFoldersToEnumerate
-	if(bRecursive)
+	if (bRecursive)
 	{
 		std::stack<std::wstring> l_oTemporaryFolderSearchStack;
 		l_oTemporaryFolderSearchStack.push(l_sPath);
 		std::wstring l_sCurrentSearchPath;
-		while(! l_oTemporaryFolderSearchStack.empty())
+		while (! l_oTemporaryFolderSearchStack.empty())
 		{
 			l_sCurrentSearchPath = l_oTemporaryFolderSearchStack.top();
 			l_oTemporaryFolderSearchStack.pop();
 
 			WIN32_FIND_DATA l_oFindData;
 			HANDLE l_pFileHandle;
-			l_pFileHandle=FindFirstFile((l_sCurrentSearchPath+L"*").c_str(), &l_oFindData);
-			if(l_pFileHandle != INVALID_HANDLE_VALUE)
+			l_pFileHandle = FindFirstFile((l_sCurrentSearchPath + L"*").c_str(), &l_oFindData);
+			if (l_pFileHandle != INVALID_HANDLE_VALUE)
 			{
-				bool l_bFinished=false;
-				while(!l_bFinished)
+				bool l_bFinished = false;
+				while (!l_bFinished)
 				{
 					if (std::wstring(l_oFindData.cFileName) != L"." && std::wstring(l_oFindData.cFileName) != L"..")
 					{
@@ -390,9 +305,9 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 						}
 					}
 
-					if(!FindNextFile(l_pFileHandle, &l_oFindData))
+					if (!FindNextFile(l_pFileHandle, &l_oFindData))
 					{
-						l_bFinished=true;
+						l_bFinished = true;
 					}
 				}
 				FindClose(l_pFileHandle);
@@ -402,7 +317,7 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 
 	std::wstring l_sCurrentPath;
-	while(! l_vFoldersToEnumerate.empty())
+	while (! l_vFoldersToEnumerate.empty())
 	{
 		l_sCurrentPath = l_vFoldersToEnumerate.top();
 		l_vFoldersToEnumerate.pop();
@@ -411,36 +326,36 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 		HANDLE l_pFileHandle;
 		l_pFileHandle = FindFirstFile((l_sCurrentPath + l_sExtendedWildCardFileName).c_str(), &l_oFindData);
 
-		if(l_pFileHandle!=INVALID_HANDLE_VALUE)
+		if (l_pFileHandle != INVALID_HANDLE_VALUE)
 		{
-			bool l_bFinished=false;
-			while(!l_bFinished)
+			bool l_bFinished = false;
+			while (!l_bFinished)
 			{
-				std::string entryName = converter.to_bytes(l_sCurrentPath+l_oFindData.cFileName);
+				std::string entryName = converter.to_bytes(l_sCurrentPath + l_oFindData.cFileName);
 				CEntry l_oEntry(entryName.c_str());
 				CAttributes l_oAttributes;
 
-				l_oAttributes.m_bIsDirectory=(l_oFindData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)?true:false;
-				l_oAttributes.m_bIsFile=(l_oFindData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)?false:true;
-				l_oAttributes.m_bIsSymbolicLink=false;
+				l_oAttributes.m_bIsDirectory    = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? true : false;
+				l_oAttributes.m_bIsFile         = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? false : true;
+				l_oAttributes.m_bIsSymbolicLink = false;
 
-				l_oAttributes.m_bIsArchive=(l_oFindData.dwFileAttributes&FILE_ATTRIBUTE_ARCHIVE)?true:false;
-				l_oAttributes.m_bIsReadOnly=(l_oFindData.dwFileAttributes&FILE_ATTRIBUTE_READONLY)?true:false;
-				l_oAttributes.m_bIsHidden=(l_oFindData.dwFileAttributes&FILE_ATTRIBUTE_HIDDEN)?true:false;
-				l_oAttributes.m_bIsSystem=(l_oFindData.dwFileAttributes&FILE_ATTRIBUTE_SYSTEM)?true:false;
-				l_oAttributes.m_bIsExecutable=false; // TODO
+				l_oAttributes.m_bIsArchive    = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) ? true : false;
+				l_oAttributes.m_bIsReadOnly   = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) ? true : false;
+				l_oAttributes.m_bIsHidden     = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) ? true : false;
+				l_oAttributes.m_bIsSystem     = (l_oFindData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ? true : false;
+				l_oAttributes.m_bIsExecutable = false; // TODO
 
-				l_oAttributes.m_ui64Size=(l_oFindData.nFileSizeHigh<<16)+l_oFindData.nFileSizeLow;
+				l_oAttributes.m_ui64Size = (l_oFindData.nFileSizeHigh << 16) + l_oFindData.nFileSizeLow;
 
 				// Sends to callback
-				if(!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes))
+				if (!m_rEntryEnumeratorCallBack.callback(l_oEntry, l_oAttributes))
 				{
-					l_bFinished=true;
+					l_bFinished = true;
 				}
 
-				if(!FindNextFile(l_pFileHandle, &l_oFindData))
+				if (!FindNextFile(l_pFileHandle, &l_oFindData))
 				{
-					l_bFinished=true;
+					l_bFinished = true;
 				}
 			}
 			FindClose(l_pFileHandle);
@@ -459,10 +374,7 @@ CEntryEnumeratorDummy::CEntryEnumeratorDummy(IEntryEnumeratorCallBack& rEntryEnu
 
 bool CEntryEnumeratorDummy::enumerate(const char* sWildCard, bool bRecursive)
 {
-	if(!sWildCard)
-	{
-		return false;
-	}
+	if(!sWildCard) { return false; }
 
 	return true;
 }
@@ -471,11 +383,11 @@ bool CEntryEnumeratorDummy::enumerate(const char* sWildCard, bool bRecursive)
 
 FS_API IEntryEnumerator* FS::createEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
 {
-	IEntryEnumerator* l_pResult=NULL;
+	IEntryEnumerator* l_pResult = nullptr;
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	l_pResult=new CEntryEnumeratorLinux(rEntryEnumeratorCallBack);
 #elif defined TARGET_OS_Windows
-	l_pResult=new CEntryEnumeratorWindows(rEntryEnumeratorCallBack);
+	l_pResult = new CEntryEnumeratorWindows(rEntryEnumeratorCallBack);
 #else
 	l_pResult=new CEntryEnumeratorDummy(rEntryEnumeratorCallBack);
 #endif

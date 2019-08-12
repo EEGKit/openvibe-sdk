@@ -8,53 +8,45 @@
 
 using namespace OpenViBE;
 
-CIdentifier::CIdentifier(void)
-	:m_ui64Identifier(0xffffffffffffffffll)
-{
-}
+CIdentifier::CIdentifier()
+	: m_ui64Identifier(0xffffffffffffffffll) {}
 
-CIdentifier::CIdentifier(const uint32 ui32Identifier1, const uint32 ui32Identifier2)
-	:m_ui64Identifier((((uint64)ui32Identifier1)<<32)+ui32Identifier2)
-{
-}
+CIdentifier::CIdentifier(const uint32_t ui32Identifier1, const uint32_t ui32Identifier2)
+	: m_ui64Identifier((uint64_t(ui32Identifier1) << 32) + ui32Identifier2) {}
 
-CIdentifier::CIdentifier(const uint64 ui64Identifier)
-	:m_ui64Identifier(ui64Identifier)
-{
-}
+CIdentifier::CIdentifier(const uint64_t ui64Identifier)
+	: m_ui64Identifier(ui64Identifier) {}
 
 CIdentifier::CIdentifier(const CIdentifier& rIdentifier)
-	:m_ui64Identifier(rIdentifier.m_ui64Identifier)
-{
-}
+	: m_ui64Identifier(rIdentifier.m_ui64Identifier) {}
 
 CIdentifier& CIdentifier::operator=(const CIdentifier& rIdentifier)
 {
-	m_ui64Identifier=rIdentifier.m_ui64Identifier;
+	m_ui64Identifier = rIdentifier.m_ui64Identifier;
 	return *this;
 }
 
-CIdentifier& CIdentifier::operator++(void)
+CIdentifier& CIdentifier::operator++()
 {
-	if(m_ui64Identifier!=0xffffffffffffffffll)
+	if (m_ui64Identifier != 0xffffffffffffffffll)
 	{
 		m_ui64Identifier++;
-		if(m_ui64Identifier==0xffffffffffffffffll)
+		if (m_ui64Identifier == 0xffffffffffffffffll)
 		{
-			m_ui64Identifier=0ll;
+			m_ui64Identifier = 0ll;
 		}
 	}
 	return *this;
 }
 
-CIdentifier& CIdentifier::operator--(void)
+CIdentifier& CIdentifier::operator--()
 {
-	if(m_ui64Identifier!=0xffffffffffffffffll)
+	if (m_ui64Identifier != 0xffffffffffffffffll)
 	{
 		m_ui64Identifier--;
-		if(m_ui64Identifier==0xffffffffffffffffll)
+		if (m_ui64Identifier == 0xffffffffffffffffll)
 		{
-			m_ui64Identifier=0xfffffffffffffffell;
+			m_ui64Identifier = 0xfffffffffffffffell;
 		}
 	}
 	return *this;
@@ -62,55 +54,49 @@ CIdentifier& CIdentifier::operator--(void)
 
 namespace OpenViBE
 {
-	boolean operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
+	bool operator==(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
 	{
-		return rIdentifier1.m_ui64Identifier==rIdentifier2.m_ui64Identifier;
+		return rIdentifier1.m_ui64Identifier == rIdentifier2.m_ui64Identifier;
 	}
 
-	boolean operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
+	bool operator!=(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return !(rIdentifier1 == rIdentifier2); }
+
+	bool operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
 	{
-		return !(rIdentifier1==rIdentifier2);
+		return rIdentifier1.m_ui64Identifier < rIdentifier2.m_ui64Identifier;
 	}
 
-	boolean operator<(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
+	bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
 	{
-		return rIdentifier1.m_ui64Identifier<rIdentifier2.m_ui64Identifier;
+		return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier;
 	}
+}  // namespace OpenViBE
 
-	boolean operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-	{
-		return rIdentifier1.m_ui64Identifier>rIdentifier2.m_ui64Identifier;
-	}
-};
-
-CString CIdentifier::toString(void) const
+CString CIdentifier::toString() const
 {
 	char l_sBuffer[1024];
-	unsigned int l_uiIdentifier1=(unsigned int)(m_ui64Identifier>>32);
-	unsigned int l_uiIdentifier2=(unsigned int)(m_ui64Identifier);
+	unsigned int l_uiIdentifier1 = (unsigned int)(m_ui64Identifier >> 32);
+	unsigned int l_uiIdentifier2 = (unsigned int)(m_ui64Identifier);
 	sprintf(l_sBuffer, "(0x%08x, 0x%08x)", l_uiIdentifier1, l_uiIdentifier2);
 	return CString(l_sBuffer);
 }
 
-boolean CIdentifier::fromString(const CString& rString)
+bool CIdentifier::fromString(const CString& rString)
 {
-	const char* l_sBuffer=rString;
+	const char* l_sBuffer = rString;
 	unsigned int l_uiIdentifier1;
 	unsigned int l_uiIdentifier2;
-	if(sscanf(l_sBuffer, "(0x%x, 0x%x)", &l_uiIdentifier1, &l_uiIdentifier2)!=2)
-	{
-		return false;
-	}
-	m_ui64Identifier=(((uint64)l_uiIdentifier1)<<32)+l_uiIdentifier2;
+	if (sscanf(l_sBuffer, "(0x%x, 0x%x)", &l_uiIdentifier1, &l_uiIdentifier2) != 2) { return false; }
+	m_ui64Identifier = (((uint64_t)l_uiIdentifier1) << 32) + l_uiIdentifier2;
 	return true;
 }
 
-uint64 CIdentifier::toUInteger(void) const
+uint64_t CIdentifier::toUInteger() const
 {
 	return m_ui64Identifier;
 }
 
-CIdentifier CIdentifier::random(void)
+CIdentifier CIdentifier::random()
 {
 	std::random_device rd;
 	std::default_random_engine rng(rd());

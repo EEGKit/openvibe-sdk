@@ -9,10 +9,7 @@ using namespace Communication;
 
 MessagingServer::MessagingServer()
 	: CMessaging()
-	, m_Server(Socket::createConnectionServer())
-	, m_Client(nullptr)
-{
-}
+	  , m_Server(Socket::createConnectionServer()) {}
 
 MessagingServer::~MessagingServer()
 {
@@ -60,7 +57,7 @@ bool MessagingServer::accept()
 		const std::chrono::time_point<std::chrono::system_clock> startClock = std::chrono::system_clock::now();
 
 		std::string connectionID;
-		uint64_t id = 0;
+		uint64_t id         = 0;
 		bool isAuthReceived = false;
 
 		while (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - startClock).count() < 10)
@@ -194,4 +191,3 @@ bool MessagingServer::waitForSyncMessage()
 {
 	return CMessaging::waitForSyncMessage();
 }
-

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Scenario_CComment_H__
-#define __OpenViBEKernel_Kernel_Scenario_CComment_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -15,36 +14,29 @@ namespace OpenViBE
 	{
 		class CScenario;
 
-		class CComment : public OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IComment > >
+		class CComment : public TAttributable<TKernelObject<IComment>>
 		{
 		public:
 
-			CComment(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CScenario& rOwnerScenario);
-			virtual ~CComment(void);
-
-			virtual OpenViBE::CIdentifier getIdentifier(void) const;
-			virtual OpenViBE::CString getText(void) const;
-			virtual OpenViBE::boolean setIdentifier(
-				const OpenViBE::CIdentifier& rIdentifier);
-			virtual OpenViBE::boolean setText(
-				const OpenViBE::CString& sText);
-
-			virtual OpenViBE::boolean initializeFromExistingComment(
-				const OpenViBE::Kernel::IComment& rExisitingComment);
-
-			virtual OpenViBE::boolean acceptVisitor(
-				OpenViBE::IObjectVisitor& rObjectVisitor);
+			CComment(const IKernelContext& rKernelContext, CScenario& rOwnerScenario);
+			~CComment() override;
+			CIdentifier getIdentifier() const override;
+			CString getText() const override;
+			bool setIdentifier(const CIdentifier& rIdentifier) override;
+			bool setText(const CString& sText) override;
+			bool initializeFromExistingComment(const IComment& rExisitingComment) override;
+			bool acceptVisitor(IObjectVisitor& rObjectVisitor) override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TAttributable < OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IComment > >, OVK_ClassId_Kernel_Scenario_Comment)
 
 		protected:
 
-			OpenViBE::Kernel::CScenario& m_rOwnerScenario;
+			CScenario& m_rOwnerScenario;
 
-			OpenViBE::CIdentifier m_oIdentifier;
-			OpenViBE::CString m_sText;
+			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
+			CString m_sText;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Scenario_CComment_H__
+

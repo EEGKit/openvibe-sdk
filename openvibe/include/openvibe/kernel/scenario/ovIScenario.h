@@ -6,10 +6,7 @@ namespace OpenViBE
 {
 	class IMemoryBuffer;
 
-	namespace Plugins
-	{
-		class IBoxAlgorithmDesc;
-	}
+	namespace Plugins { class IBoxAlgorithmDesc; }
 
 	namespace Kernel
 	{
@@ -32,13 +29,13 @@ namespace OpenViBE
 		 *
 		 * \todo Add meta information for this scenario
 		 */
-		class OV_API IScenario : public OpenViBE::Kernel::IBox
+		class OV_API IScenario : public IBox
 		{
 		public:
 			class IScenarioMergeCallback
 			{
 			public:
-				virtual void process(OpenViBE::CIdentifier& originalIdentifier, OpenViBE::CIdentifier& newIdentifier) = 0;
+				virtual void process(CIdentifier& originalIdentifier, CIdentifier& newIdentifier) = 0;
 			};
 
 			/** \name General purpose functions */
@@ -49,7 +46,7 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool clear(void) = 0;
+			virtual bool clear() = 0;
 
 			/**
 			 * \brief Merges this scenario with an other existing scenario
@@ -63,11 +60,7 @@ namespace OpenViBE
 			 * preserved when the destination scenario does not contain any elements which use it. In general, this parameter should only be set
 			 * to true when cloning a scenario.
 			 */
-			virtual bool merge(
-			        const OpenViBE::Kernel::IScenario& scenario,
-			        OpenViBE::Kernel::IScenario::IScenarioMergeCallback* scenarioMergeCallback,
-			        bool mergeSettings,
-			        bool preserveIdentifiers) = 0;
+			virtual bool merge(const IScenario& scenario, IScenarioMergeCallback* scenarioMergeCallback, bool mergeSettings, bool preserveIdentifiers) = 0;
 
 			//@}
 			/** \name Box management */
@@ -83,7 +76,7 @@ namespace OpenViBE
 			 *       will cause this function to return the first box
 			 *       identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
+			virtual CIdentifier getNextBoxIdentifier(const CIdentifier& previousIdentifier) const = 0;
 
 			/**
 			 * \brief Tests whether a given identifier is a box or not
@@ -92,17 +85,17 @@ namespace OpenViBE
 			 * \retval false if the identified object is not a box
 			 * \note Requesting a bad identifier returns \e false
 			 */
-			virtual bool isBox(const OpenViBE::CIdentifier& boxIdentifier) const = 0;
+			virtual bool isBox(const CIdentifier& boxIdentifier) const = 0;
 
 			/**
 			 * \brief Gets the details for a specific box
 			 * \param boxIdentifier The identifier of the box which details should be sent.
 			 * \return The box details
 			 */
-			virtual const OpenViBE::Kernel::IBox* getBoxDetails(const OpenViBE::CIdentifier& boxIdentifier) const = 0;
+			virtual const IBox* getBoxDetails(const CIdentifier& boxIdentifier) const = 0;
 
 			/// \copydoc getBoxDetails(const OpenViBE::CIdentifier&)const
-			virtual OpenViBE::Kernel::IBox* getBoxDetails(const OpenViBE::CIdentifier& boxIdentifier) = 0;
+			virtual IBox* getBoxDetails(const CIdentifier& boxIdentifier) = 0;
 
 			/**
 			 * \brief Adds a new box in the scenario
@@ -114,7 +107,7 @@ namespace OpenViBE
 			 * \retval false In case of error. In such case, \c boxIdentifier remains unchanged.
 			 * \note This produces an empty and unconfigured box!
 			 */
-			virtual bool addBox(OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::CIdentifier& suggestedBoxIdentifier) = 0;
+			virtual bool addBox(CIdentifier& boxIdentifier, const CIdentifier& suggestedBoxIdentifier) = 0;
 			/**
 			 * \brief Adds a new box in the scenario based on an existing box
 			 * \param[out] boxIdentifier The identifier of the created box
@@ -125,7 +118,7 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error. In such case, \c boxIdentifier remains unchanged.
 			 */
-			virtual bool addBox(OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::Kernel::IBox& box, const OpenViBE::CIdentifier& suggestedBoxIdentifier) = 0;
+			virtual bool addBox(CIdentifier& boxIdentifier, const IBox& box, const CIdentifier& suggestedBoxIdentifier) = 0;
 			/**
 			 * \brief Adds a new box in the scenario
 			 * \param[out] boxIdentifier The identifier of the created box
@@ -137,10 +130,10 @@ namespace OpenViBE
 			 * \retval false In case of error. In such case, \c boxIdentifier remains unchanged.
 			 * \note This function prepares the box according to its algorithm class identifier !
 			 */
-			virtual bool addBox(OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::CIdentifier& boxAlgorithmClassIdentifier, const OpenViBE::CIdentifier& suggestedBoxIdentifier) = 0;
+			virtual bool addBox(CIdentifier& boxIdentifier, const CIdentifier& boxAlgorithmClassIdentifier, const CIdentifier& suggestedBoxIdentifier) = 0;
 
 			// TODO_JL: Doc
-			virtual bool addBox(OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::Plugins::IBoxAlgorithmDesc& boxAlgorithmDesc, const OpenViBE::CIdentifier& suggestedBoxIdentifier) = 0;
+			virtual bool addBox(CIdentifier& boxIdentifier, const Plugins::IBoxAlgorithmDesc& boxAlgorithmDesc, const CIdentifier& suggestedBoxIdentifier) = 0;
 
 			/**
 			 * \brief Removes a box of the scenario
@@ -149,7 +142,7 @@ namespace OpenViBE
 			 * \retval false In case of error.
 			 * \note Each link related to this box is also removed
 			 */
-			virtual bool removeBox(const OpenViBE::CIdentifier& boxIdentifier) = 0;
+			virtual bool removeBox(const CIdentifier& boxIdentifier) = 0;
 
 			//@}
 			/** \name Connection management */
@@ -162,7 +155,7 @@ namespace OpenViBE
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextLinkIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
+			virtual CIdentifier getNextLinkIdentifier(const CIdentifier& previousIdentifier) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box
@@ -172,7 +165,7 @@ namespace OpenViBE
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextLinkIdentifierFromBox(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier) const = 0;
+			virtual CIdentifier getNextLinkIdentifierFromBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box output
@@ -183,10 +176,7 @@ namespace OpenViBE
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextLinkIdentifierFromBoxOutput(
-				const OpenViBE::CIdentifier& previousIdentifier,
-				const OpenViBE::CIdentifier& boxIdentifier,
-				const OpenViBE::uint32 outputIndex) const = 0;
+			virtual CIdentifier getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t outputIndex) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box
@@ -196,7 +186,7 @@ namespace OpenViBE
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextLinkIdentifierToBox(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier) const = 0;
+			virtual CIdentifier getNextLinkIdentifierToBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box input
@@ -207,7 +197,7 @@ namespace OpenViBE
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextLinkIdentifierToBoxInput(const OpenViBE::CIdentifier& previousIdentifier, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 inputIndex) const = 0;
+			virtual CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t inputIndex) const = 0;
 
 			/**
 			 * \brief Tests whether a given identifier is a link or not
@@ -216,17 +206,17 @@ namespace OpenViBE
 			 * \retval false if the identified object is not a link
 			 * \note Requesting a bad identifier returns \e false
 			 */
-			virtual bool isLink(const OpenViBE::CIdentifier& identifier) const = 0;
+			virtual bool isLink(const CIdentifier& identifier) const = 0;
 
 			/**
 			 * \brief Gets the details for a specific link
 			 * \param linkIdentifier The identifier of the link which details should be sent.
 			 * \return The link details
 			 */
-			virtual const OpenViBE::Kernel::ILink* getLinkDetails(const OpenViBE::CIdentifier& linkIdentifier) const = 0;
+			virtual const ILink* getLinkDetails(const CIdentifier& linkIdentifier) const = 0;
 
 			/// \copydoc getLinkDetails(const OpenViBE::CIdentifier&)const
-			virtual OpenViBE::Kernel::ILink* getLinkDetails(const OpenViBE::CIdentifier& linkIdentifier) = 0;
+			virtual ILink* getLinkDetails(const CIdentifier& linkIdentifier) = 0;
 
 			/**
 			 * \brief Creates a connection between two boxes
@@ -241,13 +231,8 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error. In such case, \c linkIdentifier remains unchanged.
 			 */
-			virtual bool connect(
-				OpenViBE::CIdentifier& linkIdentifier,
-				const OpenViBE::CIdentifier& sourceBoxIdentifier,
-				const OpenViBE::uint32 sourceBoxOutputIndex,
-				const OpenViBE::CIdentifier& targetBoxIdentifier,
-				const OpenViBE::uint32 targetBoxInputIndex,
-				const OpenViBE::CIdentifier& suggestedLinkIdentifier) = 0;
+			virtual bool connect(CIdentifier& linkIdentifier, const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex,
+								 const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex, const CIdentifier& suggestedLinkIdentifier) = 0;
 
 			/**
 			 * \brief Creates a connection between two boxes
@@ -262,13 +247,8 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error. In such case, \c linkIdentifier remains unchanged.
 			 */
-			virtual bool connect(
-				OpenViBE::CIdentifier& linkIdentifier,
-				const OpenViBE::CIdentifier& sourceBoxIdentifier,
-				const OpenViBE::CIdentifier& sourceBoxOutputIdentifier,
-				const OpenViBE::CIdentifier& targetBoxIdentifier,
-				const OpenViBE::CIdentifier& targetBoxInputIdentifier,
-				const OpenViBE::CIdentifier& suggestedLinkIdentifier) = 0;
+			virtual bool connect(CIdentifier& linkIdentifier, const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier,
+								 const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, const CIdentifier& suggestedLinkIdentifier) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -279,11 +259,7 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool disconnect(
-				const OpenViBE::CIdentifier& sourceBoxIdentifier,
-				const OpenViBE::uint32 sourceBoxOutputIndex,
-				const OpenViBE::CIdentifier& targetBoxIdentifier,
-				const OpenViBE::uint32 targetBoxInputIndex) = 0;
+			virtual bool disconnect(const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex, const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -294,12 +270,7 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool disconnect(
-				const OpenViBE::CIdentifier& sourceBoxIdentifier,
-				const OpenViBE::CIdentifier& sourceBoxOutputIdentifier,
-				const OpenViBE::CIdentifier& targetBoxIdentifier,
-				const OpenViBE::CIdentifier& targetBoxInputIdentifier) = 0;
-
+			virtual bool disconnect(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier) = 0;
 
 			/**
 			 * \brief Deletes a connection between two boxes
@@ -307,7 +278,7 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool disconnect(const OpenViBE::CIdentifier& linkIdentifier) = 0;
+			virtual bool disconnect(const CIdentifier& linkIdentifier) = 0;
 
 			/**
 			 * \brief Get the output index of a source, for a specific box
@@ -316,10 +287,7 @@ namespace OpenViBE
 			 * \param[out] sourceBoxOutputIndex The output index for the given source box
 			 * \retval true in case of success.
 			 */
-			virtual bool getSourceBoxOutputIndex(
-				const CIdentifier& sourceBoxIdentifier,
-				const CIdentifier& sourceBoxOutputIdentifier,
-				uint32_t& sourceBoxOutputIndex) = 0;
+			virtual bool getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, uint32_t& sourceBoxOutputIndex) = 0;
 
 			/**
 			 * \brief Get the input index of a target, for a specific box
@@ -328,10 +296,7 @@ namespace OpenViBE
 			 * \param[out] sourceBoxOutputIndex The input index for the given target box
 			 * \retval true in case of success.
 			 */
-			virtual bool getTargetBoxInputIndex(
-				const CIdentifier& targetBoxIdentifier,
-				const CIdentifier& targetBoxInputIdentifier,
-				uint32_t& targetBoxInputIndex) = 0;
+			virtual bool getTargetBoxInputIndex(const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, uint32_t& targetBoxInputIndex) = 0;
 
 			/**
 			 * \brief  Get the output identifier of a source, for a specific box
@@ -340,10 +305,7 @@ namespace OpenViBE
 			 * \param sourceBoxOutputIdentifier The output identifier for the given source box
 			 * \retval true in case of success.
 			 */
-			virtual bool getSourceBoxOutputIdentifier(
-				const CIdentifier& sourceBoxIdentifier,
-				const uint32_t& sourceBoxOutputIndex,
-				CIdentifier& sourceBoxOutputIdentifier) = 0;
+			virtual bool getSourceBoxOutputIdentifier(const CIdentifier& sourceBoxIdentifier, const uint32_t& sourceBoxOutputIndex, CIdentifier& sourceBoxOutputIdentifier) = 0;
 
 			/**
 			 * \brief  Get the input identifier of a target, for a specific box
@@ -352,56 +314,30 @@ namespace OpenViBE
 			 * \param targetBoxInputIdentifier The input identifier for the given target box
 			 * \retval true in case of success.
 			 */
-			virtual bool getTargetBoxInputIdentifier(
-				const CIdentifier& targetBoxIdentifier,
-				const uint32_t& targetBoxOutputIndex,
-				CIdentifier& targetBoxOutputIdentifier) = 0;
+			virtual bool getTargetBoxInputIdentifier(const CIdentifier& targetBoxIdentifier, const uint32_t& targetBoxOutputIndex, CIdentifier& targetBoxOutputIdentifier) = 0;
 
 			//@}
 			/** \name Scenario Input/Output and MetaBox management */
 			//@{
 
-			virtual bool setHasIO(const bool hasIO) = 0;
+			virtual bool setHasIO(bool hasIO) = 0;
 			virtual bool hasIO() const = 0;
 
-			virtual bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
-							const OpenViBE::CIdentifier& boxIdentifier,
-							const OpenViBE::uint32 boxInputIndex) = 0;
+			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) = 0;
+			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier) = 0;
+			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) = 0;
+			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier) = 0;
 
-			virtual bool setScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
-							const OpenViBE::CIdentifier& boxIdentifier,
-							const OpenViBE::CIdentifier& boxInputIdentifier) = 0;
+			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, uint32_t& boxInputIndex) const = 0;
+			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxInputIdentifier) const = 0;
+			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, uint32_t& boxOutputIndex) const = 0;
+			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const = 0;
 
-			virtual bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
-							const OpenViBE::CIdentifier& boxIdentifier,
-							const OpenViBE::uint32 boxOutputIndex) = 0;
+			virtual bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) = 0;
+			virtual bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) = 0;
 
-			virtual bool setScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
-							const OpenViBE::CIdentifier& boxIdentifier,
-							const OpenViBE::CIdentifier& boxOutputIdentifier) = 0;
-
-			virtual bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
-							OpenViBE::CIdentifier& boxIdentifier,
-							OpenViBE::uint32& boxInputIndex) const = 0;
-
-			virtual bool getScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex,
-							OpenViBE::CIdentifier& boxIdentifier,
-							OpenViBE::CIdentifier& boxInputIdentifier) const = 0;
-
-			virtual bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
-							OpenViBE::CIdentifier& boxIdentifier,
-							OpenViBE::uint32& boxOutputIndex) const = 0;
-
-			virtual bool getScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex,
-							OpenViBE::CIdentifier& boxIdentifier,
-							OpenViBE::CIdentifier& boxOutputIdentifier) const = 0;
-
-			virtual bool removeScenarioInputLink(const OpenViBE::uint32 scenarioInputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxInputIndex) = 0;
-
-			virtual bool removeScenarioOutputLink(const OpenViBE::uint32 scenarioOutputIndex, const OpenViBE::CIdentifier& boxIdentifier, const OpenViBE::uint32 boxOutputIndex) = 0;
-
-			virtual bool removeScenarioInput(const uint32 inputIndex) = 0;
-			virtual bool removeScenarioOutput(const uint32 outputIndex) = 0;
+			virtual bool removeScenarioInput(uint32_t inputIndex) = 0;
+			virtual bool removeScenarioOutput(uint32_t outputIndex) = 0;
 
 			//@}
 			/** \name Comment management */
@@ -414,7 +350,7 @@ namespace OpenViBE
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first comment identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextCommentIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
+			virtual CIdentifier getNextCommentIdentifier(const CIdentifier& previousIdentifier) const = 0;
 
 			/**
 			 * \brief Tests whether a given identifier is a comment or not
@@ -423,17 +359,17 @@ namespace OpenViBE
 			 * \retval false if the identified object is not a comment
 			 * \note Requesting a bad identifier returns \e false
 			 */
-			virtual bool isComment(const OpenViBE::CIdentifier& commentIdentifier) const = 0;
+			virtual bool isComment(const CIdentifier& commentIdentifier) const = 0;
 
 			/**
 			 * \brief Gets the details for a specific comment
 			 * \param commentIdentifier The identifier of the comment which details should be sent.
 			 * \return The comment details
 			 */
-			virtual const OpenViBE::Kernel::IComment* getCommentDetails(const OpenViBE::CIdentifier& commentIdentifier) const = 0;
+			virtual const IComment* getCommentDetails(const CIdentifier& commentIdentifier) const = 0;
 
 			/// \copydoc getCommentDetails(const OpenViBE::CIdentifier&)const
-			virtual OpenViBE::Kernel::IComment* getCommentDetails(const OpenViBE::CIdentifier& commentIdentifier) = 0;
+			virtual IComment* getCommentDetails(const CIdentifier& commentIdentifier) = 0;
 
 			/**
 			 * \brief Adds a new comment in the scenario
@@ -445,7 +381,7 @@ namespace OpenViBE
 			 * \retval false In case of error. In such case, \c commentIdentifier remains unchanged.
 			 * \note This produces an empty and unconfigured comment!
 			 */
-			virtual bool addComment(OpenViBE::CIdentifier& commentIdentifier, const OpenViBE::CIdentifier& suggestedCommentIdentifier) = 0;
+			virtual bool addComment(CIdentifier& commentIdentifier, const CIdentifier& suggestedCommentIdentifier) = 0;
 
 			/**
 			 * \brief Adds a new comment in the scenario based on an existing comment
@@ -457,14 +393,14 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error. In such case, \c commentIdentifier remains unchanged.
 			 */
-			virtual bool addComment(OpenViBE::CIdentifier& commentIdentifier, const OpenViBE::Kernel::IComment& comment, const OpenViBE::CIdentifier& suggestedCommentIdentifier) = 0;
+			virtual bool addComment(CIdentifier& commentIdentifier, const IComment& comment, const CIdentifier& suggestedCommentIdentifier) = 0;
 			/**
 			 * \brief Removes a comment of the scenario
 			 * \param commentIdentifier The comment identifier
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool removeComment(const OpenViBE::CIdentifier& commentIdentifier) = 0;
+			virtual bool removeComment(const CIdentifier& commentIdentifier) = 0;
 
 			//@}
 			/** \name Metadata management */
@@ -478,24 +414,24 @@ namespace OpenViBE
 			 * \return The identifier of the next metadata
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first metadata identifier.
 			 */
-			virtual OpenViBE::CIdentifier getNextMetadataIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
+			virtual CIdentifier getNextMetadataIdentifier(const CIdentifier& previousIdentifier) const = 0;
 
 			/**
 			 * \param metadataIdentifier The identifier to test
 			 * \retval true If the identified object is metadata
 			 * \retval false If the identified object is not metadata or when the identifier is not present in the scenario
 			 */
-			virtual bool isMetadata(const OpenViBE::CIdentifier& metadataIdentifier) const = 0;
+			virtual bool isMetadata(const CIdentifier& metadataIdentifier) const = 0;
 
 
 			/**
 			 * \param metadataIdentifier The identifier of a metadata
 			 * \return Pointer to object containing metadata details
 			 */
-			virtual const OpenViBE::Kernel::IMetadata* getMetadataDetails(const OpenViBE::CIdentifier& metadataIdentifier) const = 0;
+			virtual const IMetadata* getMetadataDetails(const CIdentifier& metadataIdentifier) const = 0;
 
 			/// \copydoc getMetadataDetails(const OpenViBE::CIdentifier&)const
-			virtual OpenViBE::Kernel::IMetadata* getMetadataDetails(const OpenViBE::CIdentifier& metadataIdentifier) = 0;
+			virtual IMetadata* getMetadataDetails(const CIdentifier& metadataIdentifier) = 0;
 
 			/**
 			 * \brief Add new metadata in the scenario
@@ -506,7 +442,7 @@ namespace OpenViBE
 			 * \retval false In case of error. In this case, \c metadataIdentifier remains unchanged.
 			 * \note This method creates an empty metadata.
 			 */
-			virtual bool addMetadata(OpenViBE::CIdentifier& metadataIdentifier, const OpenViBE::CIdentifier& suggestedMetadataIdentifier) = 0;
+			virtual bool addMetadata(CIdentifier& metadataIdentifier, const CIdentifier& suggestedMetadataIdentifier) = 0;
 
 			/**
 			 * \brief Remove metadata from the scenario
@@ -514,13 +450,13 @@ namespace OpenViBE
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 */
-			virtual bool removeMetadata(const OpenViBE::CIdentifier& metadataIdentifier) = 0;
+			virtual bool removeMetadata(const CIdentifier& metadataIdentifier) = 0;
 			//@}
 
 			/**
 			 * \brief replaces settings of each box by its locally expanded version only expands the $var{} tokens, it leaves others as is
 			 */
-			virtual bool applyLocalSettings(void) = 0;
+			virtual bool applyLocalSettings() = 0;
 
 			/**
 			 * \brief Check settings before playing scenario, if the settings are not suitable, stop scenario
@@ -544,7 +480,7 @@ namespace OpenViBE
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first processing unit identifier.
 			 * \note Warning: You need to call at least once the function "checkOutdatedBoxes", before calling this function
 			 */
-			virtual OpenViBE::CIdentifier getNextOutdatedBoxIdentifier(const OpenViBE::CIdentifier& previousIdentifier) const = 0;
+			virtual CIdentifier getNextOutdatedBoxIdentifier(const CIdentifier& previousIdentifier) const = 0;
 
 			/**
 			 * \brief Indicates if at least one box in scenario need to be updated.
@@ -567,7 +503,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false if the box does not exist
 			 */
-			virtual bool removeDeprecatedInterfacorsFromBox(const CIdentifier &boxIdentifier) = 0;
+			virtual bool removeDeprecatedInterfacorsFromBox(const CIdentifier& boxIdentifier) = 0;
 
 			/**
 			 * \brief Check if scenario contains a box with a deprecated interfacor due to an incomplete update
@@ -579,22 +515,21 @@ namespace OpenViBE
 			/**
 			 * \return true if the scenario is actually a metabox
 			 */
-			virtual bool isMetabox(void) = 0;
+			virtual bool isMetabox() = 0;
 
-			virtual void getBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getCommentIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getMetadataIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierFromBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierFromBoxOutputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t outputIndex, OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierToBoxList(const OpenViBE::CIdentifier& boxIdentifier, OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierToBoxInputList(const OpenViBE::CIdentifier& boxIdentifier, const uint32_t inputInex, OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getOutdatedBoxIdentifierList(OpenViBE::CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void releaseIdentifierList(OpenViBE::CIdentifier* identifierList) const = 0;
+			virtual void getBoxIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getCommentIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getMetadataIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierFromBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierFromBoxOutputList(const CIdentifier& boxIdentifier, uint32_t outputIndex, CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierToBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, uint32_t inputInex, CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getOutdatedBoxIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void releaseIdentifierList(CIdentifier* identifierList) const = 0;
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Scenario)
 		};
-	}
-}
-
+	}  // namespace Kernel
+}  // namespace OpenViBE

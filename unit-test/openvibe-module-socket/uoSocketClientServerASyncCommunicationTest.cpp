@@ -70,9 +70,9 @@ namespace
 
 			if (clientConnection && clientConnection->isReadyToReceive())
 			{
-				unsigned int dataSize =  0;
+				unsigned int dataSize       = 0;
 				unsigned int bytesToReceive = sizeof(dataSize);
-				unsigned int bytesReceived = 0;
+				unsigned int bytesReceived  = 0;
 				char dataBuffer[32];
 
 				// first receive data size
@@ -83,13 +83,13 @@ namespace
 
 				// then receive data
 				bytesToReceive = dataSize;
-				bytesReceived = 0;
+				bytesReceived  = 0;
 
 				while (bytesReceived < bytesToReceive)
 				{
 					bytesReceived += clientConnection->receiveBuffer(dataBuffer, bytesToReceive - bytesReceived);
 				}
-				
+
 				g_ReceivedData.push_back(std::string(dataBuffer, dataSize));
 			}
 		}
@@ -100,7 +100,7 @@ namespace
 	void sendData(Socket::IConnectionClient* client, void* data, unsigned int size)
 	{
 		unsigned int bytesToSend = size;
-		unsigned int bytesSent = 0;
+		unsigned int bytesSent   = 0;
 
 		while (bytesSent < bytesToSend)
 		{
@@ -113,8 +113,8 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc == 4, "Failure to retrieve tests arguments. Expecting: server_name port_number packet_count");
 
-	std::string serverName = argv[1];
-	int portNumber = std::atoi(argv[2]);
+	std::string serverName   = argv[1];
+	int portNumber           = std::atoi(argv[2]);
 	unsigned int packetCount = static_cast<unsigned int>(std::atoi(argv[3]));
 
 	// test asynchronous data transmission from a single client to server:
@@ -141,7 +141,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	std::string baseData = "Data packet index: ";
 
 	char dataBuffer[32];
-	for (unsigned int sendIndex = 0; sendIndex < packetCount; ++sendIndex) 
+	for (unsigned int sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{
 		std::string dataString = baseData + std::to_string(sendIndex);
 		std::strcpy(dataBuffer, dataString.c_str());
@@ -167,4 +167,3 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 
 	return EXIT_SUCCESS;
 }
-

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TSpectrumDecoder_H__
-#define __OpenViBEToolkit_TSpectrumDecoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -12,11 +11,10 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TSpectrumDecoderLocal : public T
 	{
-
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > m_pOutputFrequencyAbscissa;
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 > m_pOutputSamplingRate;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> m_pOutputFrequencyAbscissa;
+		OpenViBE::Kernel::TParameterHandler<uint64_t> m_pOutputSamplingRate;
 
 
 		using T::m_pCodec;
@@ -24,7 +22,7 @@ namespace OpenViBEToolkit
 		using T::m_pInputMemoryBuffer;
 		using T::m_pOutputMatrix;
 
-		OpenViBE::boolean initializeImpl()
+		bool initializeImpl()
 		{
 			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_SpectrumStreamDecoder));
 			m_pCodec->initialize();
@@ -39,12 +37,9 @@ namespace OpenViBEToolkit
 	public:
 		using T::initialize;
 
-		OpenViBE::boolean uninitialize(void)
+		bool uninitialize()
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
 
 			m_pOutputMatrix.uninitialize();
 			m_pOutputFrequencyAbscissa.uninitialize();
@@ -57,55 +52,49 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::uint64 >& getOutputSamplingRate()
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate()
 		{
 			return m_pOutputSamplingRate;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* >& getOutputFrequencyAbscissa()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputFrequencyAbscissa()
 		{
 			return m_pOutputFrequencyAbscissa;
 		}
 
-		virtual OpenViBE::boolean isHeaderReceived()
+		virtual bool isHeaderReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedHeader);
 		}
 
-		virtual OpenViBE::boolean isBufferReceived()
+		virtual bool isBufferReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedBuffer);
 		}
 
-		virtual OpenViBE::boolean isEndReceived()
+		virtual bool isEndReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd);
 		}
 	};
 
 	template <class T>
-	class TSpectrumDecoder : public TSpectrumDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >
+	class TSpectrumDecoder : public TSpectrumDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>
 	{
-	private:
-		using TSpectrumDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >::m_pBoxAlgorithm;
+		using TSpectrumDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::m_pBoxAlgorithm;
 	public:
-		using TSpectrumDecoderLocal < TStreamedMatrixDecoderLocal < TDecoder < T > > >::uninitialize;
+		using TSpectrumDecoderLocal<TStreamedMatrixDecoderLocal<TDecoder<T>>>::uninitialize;
 
-		TSpectrumDecoder()
-		{
-		}
-		TSpectrumDecoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TSpectrumDecoder() { }
+
+		TSpectrumDecoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
-		virtual ~TSpectrumDecoder()
-		{
-			this->uninitialize();
-		}
+
+		virtual ~TSpectrumDecoder() { this->uninitialize(); }
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
-#endif //__OpenViBEToolkit_TSpectrumDecoder_H__

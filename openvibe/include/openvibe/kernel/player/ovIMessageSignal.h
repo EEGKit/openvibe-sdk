@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Player_IMessageSignal_H__
-#define __OpenViBE_Kernel_Player_IMessageSignal_H__
+#pragma once
 
 #include "ovIMessage.h"
 
@@ -15,14 +14,11 @@ namespace OpenViBE
 		 * \ingroup Group_Player
 		 * \ingroup Group_Kernel
 		 */
-		class OV_API IMessageSignal : public OpenViBE::Kernel::IMessage
+		class OV_API IMessageSignal : public IMessage
 		{
 		public:
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IMessage, OV_ClassId_Kernel_Player_MessageSignal)
-
 		};
-	};
-};
-
-#endif // __OpenViBE_Kernel_Player_IMessageSignal_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

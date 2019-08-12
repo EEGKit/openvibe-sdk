@@ -19,32 +19,26 @@ namespace OpenViBE
 		 *
 		 * Variables such as name, author etc are pulled from scenario information.
 		 */
-		class CMetaboxObjectDesc : virtual public OpenViBE::Metabox::IMetaboxObjectDesc
+		class CMetaboxObjectDesc : virtual public IMetaboxObjectDesc
 		{
 		public:
-			CMetaboxObjectDesc()
-			{
-			}
+			CMetaboxObjectDesc() { }
 
-			CMetaboxObjectDesc(const OpenViBE::CString& rMetaboxDescriptor, OpenViBE::Kernel::IScenario& metaboxScenario);
-			virtual void release(void) { }
-
-			virtual OpenViBE::CString getMetaboxDescriptor(void) const              { return m_MetaboxDescriptor; }
-
-			virtual OpenViBE::CString getName(void) const                   { return m_Name; }
-			virtual OpenViBE::CString getAuthorName(void) const             { return m_AuthorName; }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const      { return m_AuthorCompanyName; }
-			virtual OpenViBE::CString getShortDescription(void) const       { return m_ShortDescription; }
-			virtual OpenViBE::CString getDetailedDescription(void) const    { return m_DetailedDescription; }
-			virtual OpenViBE::CString getCategory(void) const               { return m_Category; }
-			virtual OpenViBE::CString getVersion(void) const                { return m_Version; }
-			virtual OpenViBE::CString getStockItemName(void) const          { return m_StockItemName; }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return m_AddedSoftwareVersion; }
-
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return m_UpdatedSoftwareVersion; }
-
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_Metabox; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return NULL; }
+			CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel::IScenario& metaboxScenario);
+			void release() override { }
+			CString getMetaboxDescriptor() const override { return m_MetaboxDescriptor; }
+			CString getName() const override { return m_Name; }
+			CString getAuthorName() const override { return m_AuthorName; }
+			CString getAuthorCompanyName() const override { return m_AuthorCompanyName; }
+			CString getShortDescription() const override { return m_ShortDescription; }
+			CString getDetailedDescription() const override { return m_DetailedDescription; }
+			CString getCategory() const override { return m_Category; }
+			CString getVersion() const override { return m_Version; }
+			CString getStockItemName() const override { return m_StockItemName; }
+			CString getAddedSoftwareVersion() const override { return m_AddedSoftwareVersion; }
+			CString getUpdatedSoftwareVersion() const override { return m_UpdatedSoftwareVersion; }
+			CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Metabox; }
+			Plugins::IPluginObject* create() override { return nullptr; }
 
 			// Handling of the virtual prototype
 
@@ -55,19 +49,16 @@ namespace OpenViBE
 				_SIOStream()
 					: m_sName(""),
 					  m_oTypeIdentifier(OV_UndefinedIdentifier),
-					  m_oIdentifier(OV_UndefinedIdentifier)
-				{}
+					  m_oIdentifier(OV_UndefinedIdentifier) {}
 
-				_SIOStream(const OpenViBE::CString& rName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CIdentifier& rIdentifier)
+				_SIOStream(const CString& rName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier)
 					: m_sName(rName),
 					  m_oTypeIdentifier(rTypeIdentifier),
-					  m_oIdentifier(rIdentifier)
-				{}
+					  m_oIdentifier(rIdentifier) {}
 
-				OpenViBE::CString m_sName;
-				OpenViBE::CIdentifier m_oTypeIdentifier;
-				OpenViBE::CIdentifier m_oIdentifier;
-
+				CString m_sName;
+				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
+				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			} SIOStream;
 
 			typedef struct _SSetting
@@ -76,46 +67,42 @@ namespace OpenViBE
 					: m_sName(""),
 					  m_oTypeIdentifier(OV_UndefinedIdentifier),
 					  m_sDefaultValue(""),
-					  m_oIdentifier(OV_UndefinedIdentifier)
-				{}
+					  m_oIdentifier(OV_UndefinedIdentifier) {}
 
-				_SSetting(const OpenViBE::CString& rName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& rDefaultValue, const OpenViBE::CIdentifier& rIdentifier)
+				_SSetting(const CString& rName, const CIdentifier& rTypeIdentifier, const CString& rDefaultValue, const CIdentifier& rIdentifier)
 					: m_sName(rName),
 					  m_oTypeIdentifier(rTypeIdentifier),
 					  m_sDefaultValue(rDefaultValue),
-					  m_oIdentifier(rIdentifier)
-				{}
+					  m_oIdentifier(rIdentifier) {}
 
-				OpenViBE::CString m_sName;
-				OpenViBE::CIdentifier m_oTypeIdentifier;
-				OpenViBE::CString m_sDefaultValue;
-				OpenViBE::CIdentifier m_oIdentifier;
-
+				CString m_sName;
+				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
+				CString m_sDefaultValue;
+				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			} SSetting;
 
-			virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const;
+			bool getBoxPrototype(Kernel::IBoxProto& rBoxAlgorithmPrototype) const override;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc);
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc)
 
 		private:
-			OpenViBE::CString m_MetaboxDescriptor;
+			CString m_MetaboxDescriptor;
 
-			OpenViBE::CString m_Name;
-			OpenViBE::CString m_AuthorName;
-			OpenViBE::CString m_AuthorCompanyName;
-			OpenViBE::CString m_ShortDescription;
-			OpenViBE::CString m_DetailedDescription;
-			OpenViBE::CString m_Category;
-			OpenViBE::CString m_Version;
-			OpenViBE::CString m_StockItemName;
-			OpenViBE::CString m_AddedSoftwareVersion;
-			OpenViBE::CString m_UpdatedSoftwareVersion;
-			OpenViBE::CString m_MetaboxIdentifier;
+			CString m_Name;
+			CString m_AuthorName;
+			CString m_AuthorCompanyName;
+			CString m_ShortDescription;
+			CString m_DetailedDescription;
+			CString m_Category;
+			CString m_Version;
+			CString m_StockItemName;
+			CString m_AddedSoftwareVersion;
+			CString m_UpdatedSoftwareVersion;
+			CString m_MetaboxIdentifier;
 
 			std::vector<SIOStream> m_Inputs;
 			std::vector<SIOStream> m_Outputs;
 			std::vector<SSetting> m_Settings;
-
 		};
-	};
-};
+	}  // namespace Metabox
+}  // namespace OpenViBE

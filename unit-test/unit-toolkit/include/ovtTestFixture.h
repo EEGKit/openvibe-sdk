@@ -38,7 +38,7 @@ namespace OpenViBETest
 	struct TestFixture
 	{
 		virtual ~TestFixture() = default;
-		TestFixture() = default;
+		TestFixture()          = default;
 
 		/**
 		* \brief Setup resources for the test
@@ -53,7 +53,7 @@ namespace OpenViBETest
 	private:
 
 		TestFixture& operator=(const TestFixture&) = delete;
-		TestFixture(const TestFixture&) = delete;
+		TestFixture(const TestFixture&)            = delete;
 	};
 
 	/**
@@ -66,9 +66,9 @@ namespace OpenViBETest
 	* ensure RAII when running tests.
 	*/
 	template <typename T>
-	struct ScopedTest {
-
-		template<typename... Args>
+	struct ScopedTest
+	{
+		template <typename... Args>
 		ScopedTest(Args&&... args)
 			: fixture(new T(std::forward<Args>(args)...))
 		{

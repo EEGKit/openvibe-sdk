@@ -33,8 +33,8 @@
 
 namespace OpenViBE
 {
-	using namespace OpenViBE::Kernel;
-	using namespace OpenViBE::Plugins;
+	using namespace Kernel;
+	using namespace Plugins;
 	using TokenList = std::vector<std::pair<std::string, std::string>>;
 
 	namespace
@@ -56,9 +56,7 @@ namespace OpenViBE
 		std::map<std::string, TokenList> scenarioTokenMap;
 	};
 
-	KernelFacade::KernelFacade() : m_Pimpl(new KernelFacadeImpl())
-	{
-	}
+	KernelFacade::KernelFacade() : m_Pimpl(new KernelFacadeImpl()) { }
 
 	// The destructor is needed in the .cpp file to implement pimpl idiom
 	// with unique_ptr. This is due to the fact that Kernel facade dtor
@@ -70,15 +68,9 @@ namespace OpenViBE
 		this->uninitialize();
 	}
 
-	PlayerReturnCode KernelFacade::initialize(const InitCommand& command)
-	{
-		return PlayerReturnCode::Success;
-	}
+	PlayerReturnCode KernelFacade::initialize(const InitCommand& command) { return PlayerReturnCode::Success; }
 
-	PlayerReturnCode KernelFacade::uninitialize()
-	{
-		return PlayerReturnCode::Success;
-	}
+	PlayerReturnCode KernelFacade::uninitialize() { return PlayerReturnCode::Success; }
 
 	PlayerReturnCode KernelFacade::loadKernel(const LoadKernelCommand& command)
 	{
@@ -91,7 +83,7 @@ namespace OpenViBE
 		CString kernelFile;
 
 #if defined TARGET_OS_Windows
-		kernelFile = OpenViBE::Directories::getLibDir() + "/openvibe-kernel.dll";
+		kernelFile = Directories::getLibDir() + "/openvibe-kernel.dll";
 #elif defined TARGET_OS_Linux
 		kernelFile = OpenViBE::Directories::getLibDir() + "/libopenvibe-kernel.so";
 #elif defined TARGET_OS_MacOS
@@ -126,7 +118,7 @@ namespace OpenViBE
 		}
 		else
 		{
-			configurationFile = CString(OpenViBE::Directories::getDataDir() + "/kernel/openvibe.conf");
+			configurationFile = CString(Directories::getDataDir() + "/kernel/openvibe.conf");
 		}
 
 
@@ -156,7 +148,7 @@ namespace OpenViBE
 			// not releasing the scenario before releasing the kernel
 			// causes a segfault on linux
 			auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
-			for (auto scenarioPair : m_Pimpl->scenarioMap)
+			for (auto& scenarioPair : m_Pimpl->scenarioMap)
 			{
 				scenarioManager.releaseScenario(scenarioPair.second);
 			}
@@ -226,14 +218,14 @@ namespace OpenViBE
 			return PlayerReturnCode::ScenarioNotLoaded;
 		}
 
-		auto &scenario = scenarioManager.getScenario(m_Pimpl->scenarioMap[scenarioName]);
+		auto& scenario = scenarioManager.getScenario(m_Pimpl->scenarioMap[scenarioName]);
 
 		// check for boxes to be updated
-//		scenario.checkBoxesRequiringUpdate();
+		//		scenario.checkBoxesRequiringUpdate();
 
 		// update boxes to be updated
 		CIdentifier* identifierList = nullptr;
-		size_t elemCount = 0;
+		size_t elemCount            = 0;
 		scenario.getOutdatedBoxIdentifierList(&identifierList, &elemCount);
 		for (size_t i = 0; i < elemCount; ++i)
 		{
@@ -241,7 +233,7 @@ namespace OpenViBE
 		}
 
 		// export scenario to the destination file
-		if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(),m_Pimpl->scenarioMap[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
+		if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(), m_Pimpl->scenarioMap[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
 		{
 			std::cerr << "ERROR: failed to create scenario " << std::endl;
 			return PlayerReturnCode::KernelInternalFailure;
@@ -335,7 +327,7 @@ namespace OpenViBE
 			// player identifier is pushed here to ensure a correct cleanup event if player initialization fails
 			playerIdentifiersList.push_back(playerIdentifier);
 
-			OpenViBE::CNameValuePairList configurationTokensMap;
+			CNameValuePairList configurationTokensMap;
 			for (auto& token : m_Pimpl->scenarioTokenMap[scenarioName])
 			{
 				configurationTokensMap.setValue(token.first.c_str(), token.second.c_str());
@@ -373,14 +365,14 @@ namespace OpenViBE
 		if (returnCode == PlayerReturnCode::Success)
 		{
 			// loop until timeout
-			uint64 startTime = System::Time::zgetTime();
-			uint64 lastLoopTime = startTime;
+			uint64_t startTime    = System::Time::zgetTime();
+			uint64_t lastLoopTime = startTime;
 
 			// cannot directly feed secondsToTime with parameters.m_MaximumExecutionTime
 			// because it could overflow
-			float64 boundedMaxExecutionTimeInS = ITimeArithmetics::timeToSeconds(std::numeric_limits<uint64>::max());
+			double boundedMaxExecutionTimeInS = ITimeArithmetics::timeToSeconds(std::numeric_limits<uint64_t>::max());
 
-			uint64 maxExecutionTimeInFixedPoint;
+			uint64_t maxExecutionTimeInFixedPoint;
 			if (command.maximumExecutionTime &&
 				command.maximumExecutionTime.get() > 0 &&
 				command.maximumExecutionTime.get() < boundedMaxExecutionTimeInS)
@@ -389,17 +381,17 @@ namespace OpenViBE
 			}
 			else
 			{
-				maxExecutionTimeInFixedPoint = std::numeric_limits<uint64>::max();
+				maxExecutionTimeInFixedPoint = std::numeric_limits<uint64_t>::max();
 			}
 
 			bool allStopped{ false };
 			while (!allStopped) // negative condition here because it is easier to reason about it
 			{
-				uint64 currentTime = System::Time::zgetTime();
-				allStopped = true;
+				uint64_t currentTime = System::Time::zgetTime();
+				allStopped           = true;
 				for (auto p : playerList)
 				{
-					if(p->getStatus() != EPlayerStatus::PlayerStatus_Stop)
+					if (p->getStatus() != PlayerStatus_Stop)
 					{
 						if (!p->loop(currentTime - lastLoopTime, maxExecutionTimeInFixedPoint))
 						{
@@ -412,12 +404,11 @@ namespace OpenViBE
 						p->stop();
 					}
 
-					allStopped &= (p->getStatus() == EPlayerStatus::PlayerStatus_Stop);
+					allStopped &= (p->getStatus() == PlayerStatus_Stop);
 				}
 
 				lastLoopTime = currentTime;
 			}
-
 		}
 
 		// release players

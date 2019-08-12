@@ -19,42 +19,37 @@ namespace OpenViBEPlugins
 		 * \brief The class CBoxAlgorithmTimeout describes the box Timeout.
 		 *
 		 */
-		class CBoxAlgorithmTimeout : virtual public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >
+		class CBoxAlgorithmTimeout : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
-			public:
-				virtual void release(void) { delete this; }
+		public:
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processClock(OpenViBE::CMessageClock& rMessageClock) override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			uint64_t getClockFrequency() override;
+			bool process() override;
 
-				virtual bool initialize(void);
-				virtual bool uninitialize(void);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
 
-				virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
-				virtual bool processInput(OpenViBE::uint32 ui32InputIndex);
+		protected:
+			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmTimeout> m_StimulationEncoder;
 
-				virtual uint64_t getClockFrequency(void);
+		private:
+			enum ETimeoutState
+			{
+				ETimeout_No,
+				ETimeout_Occurred,
+				ETimeout_Sent
+			};
 
-				virtual bool process(void);
+			ETimeoutState m_TimeoutState;
+			bool m_IsHeaderSent = false;
 
-				_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_Timeout)
-
-			protected:
-				OpenViBEToolkit::TStimulationEncoder < CBoxAlgorithmTimeout > m_StimulationEncoder;
-
-			private:
-				enum ETimeoutState
-				{
-					ETimeout_No,
-					ETimeout_Occurred,
-					ETimeout_Sent
-				};
-
-				ETimeoutState m_TimeoutState;
-				bool m_IsHeaderSent;
-
-				uint64_t m_Timeout;
-				uint64_t m_LastTimePolled;
-				uint64_t m_PreviousTime;
-				uint64_t m_StimulationToSend;
-
+			uint64_t m_Timeout = 0;
+			uint64_t m_LastTimePolled = 0;
+			uint64_t m_PreviousTime = 0;
+			uint64_t m_StimulationToSend = 0;
 		};
 
 		/**
@@ -66,37 +61,34 @@ namespace OpenViBEPlugins
 		 */
 		class CBoxAlgorithmTimeoutDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
-			public:
+		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Timeout"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Jozef Legény"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("Inria"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection."); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Stimulation"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.1"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Timeout; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmTimeout; }
 
-				virtual void release(void) { }
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			{
+				rBoxAlgorithmPrototype.addInput("Input Stream",OV_TypeId_StreamedMatrix);
 
-				virtual OpenViBE::CString getName(void) const                  { return OpenViBE::CString("Timeout"); }
-				virtual OpenViBE::CString getAuthorName(void) const            { return OpenViBE::CString("Jozef Legény"); }
-				virtual OpenViBE::CString getAuthorCompanyName(void) const     { return OpenViBE::CString("Inria"); }
-				virtual OpenViBE::CString getShortDescription(void) const      { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal"); }
-				virtual OpenViBE::CString getDetailedDescription(void) const   { return OpenViBE::CString("Sends a stimulation after a period of time without receiving signal. Useful for stopping scenarios after hardware disconnection."); }
-				virtual OpenViBE::CString getCategory(void) const              { return OpenViBE::CString("Stimulation"); }
-				virtual OpenViBE::CString getVersion(void) const               { return OpenViBE::CString("1.1"); }
-				virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-				virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-				virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-				
-				virtual OpenViBE::CIdentifier getCreatedClass(void) const      { return OVP_ClassId_BoxAlgorithm_Timeout; }
-				virtual OpenViBE::Plugins::IPluginObject* create(void)         { return new OpenViBEPlugins::Stimulation::CBoxAlgorithmTimeout; }
+				rBoxAlgorithmPrototype.addOutput("Output Stimulations",OV_TypeId_Stimulations);
 
-				virtual bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
-				{
-					rBoxAlgorithmPrototype.addInput("Input Stream",OV_TypeId_StreamedMatrix);
+				rBoxAlgorithmPrototype.addSetting("Timeout delay",OV_TypeId_Integer, "5");
+				rBoxAlgorithmPrototype.addSetting("Output Stimulation",OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
 
-					rBoxAlgorithmPrototype.addOutput("Output Stimulations",OV_TypeId_Stimulations);
+				return true;
+			}
 
-					rBoxAlgorithmPrototype.addSetting("Timeout delay",OV_TypeId_Integer,"5");
-					rBoxAlgorithmPrototype.addSetting("Output Stimulation",OV_TypeId_Stimulation,"OVTK_StimulationId_Label_00");
-
-					return true;
-				}
-				_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeoutDesc);
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeoutDesc)
 		};
 	};
 };
-

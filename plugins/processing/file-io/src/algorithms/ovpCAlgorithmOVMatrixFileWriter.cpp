@@ -1,13 +1,13 @@
 #include "ovpCAlgorithmOVMatrixFileWriter.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::FileIO;
+using namespace FileIO;
 
-boolean CAlgorithmOVMatrixFileWriter::initialize(void)
+bool CAlgorithmOVMatrixFileWriter::initialize()
 {
 	ip_sFilename.initialize(getInputParameter(OVP_Algorithm_OVMatrixFileWriter_InputParameterId_Filename));
 	ip_pMatrix.initialize(getInputParameter(OVP_Algorithm_OVMatrixFileWriter_InputParameterId_Matrix));
@@ -15,7 +15,7 @@ boolean CAlgorithmOVMatrixFileWriter::initialize(void)
 	return true;
 }
 
-boolean CAlgorithmOVMatrixFileWriter::uninitialize(void)
+bool CAlgorithmOVMatrixFileWriter::uninitialize()
 {
 	ip_sFilename.uninitialize();
 	ip_pMatrix.uninitialize();
@@ -23,13 +23,9 @@ boolean CAlgorithmOVMatrixFileWriter::uninitialize(void)
 	return true;
 }
 
-boolean CAlgorithmOVMatrixFileWriter::process(void)
+bool CAlgorithmOVMatrixFileWriter::process()
 {
-	OV_ERROR_UNLESS_KRF(
-		OpenViBEToolkit::Tools::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()),
-		"Writing matrix file " << *ip_sFilename << " failed",
-		OpenViBE::Kernel::ErrorType::BadFileWrite
-	);
+	OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::saveToTextFile(*ip_pMatrix, ip_sFilename->toASCIIString()), "Writing matrix file " << *ip_sFilename << " failed", OpenViBE::Kernel::ErrorType::BadFileWrite);
 
 	return true;
 }

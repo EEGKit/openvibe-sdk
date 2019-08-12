@@ -1,11 +1,10 @@
-#ifndef __Socket_IConnectionServer_H__
-#define __Socket_IConnectionServer_H__
+#pragma once
 
 #include "IConnection.h"
 
 namespace Socket
 {
-	class Socket_API IConnectionServer : public Socket::IConnection
+	class Socket_API IConnectionServer : public IConnection
 	{
 	public:
 
@@ -15,10 +14,9 @@ namespace Socket
 		*                       when set to '0', the socket wil start on 
 		*                       an available port.
 		*/
-		virtual bool listen(
-			uint32_t ui32Port)=0;
+		virtual bool listen(uint32_t ui32Port) = 0;
 
-		virtual Socket::IConnection* accept(void)=0;
+		virtual IConnection* accept() = 0;
 
 		/*
 		 * \brief Returns the port on the one the server is listening.
@@ -28,7 +26,5 @@ namespace Socket
 		virtual bool getSocketPort(uint32_t& port) = 0;
 	};
 
-	extern Socket_API Socket::IConnectionServer* createConnectionServer(void);
-};
-
-#endif // __Socket_IConnectionServer_H__
+	extern Socket_API IConnectionServer* createConnectionServer();
+} // namespace Socket

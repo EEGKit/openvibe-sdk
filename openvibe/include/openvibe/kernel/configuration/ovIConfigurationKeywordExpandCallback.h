@@ -1,5 +1,4 @@
-#ifndef __OpenViBE_Kernel_Configuration_IConfigurationKeywordExpandCallback_H__
-#define __OpenViBE_Kernel_Configuration_IConfigurationKeywordExpandCallback_H__
+#pragma once
 
 #include <ov_common_defines.h>
 #include "../../ov_types.h"
@@ -22,15 +21,8 @@ namespace OpenViBE
 		{
 		public:
 
-			virtual ~IConfigurationKeywordExpandCallback()
-			{}
-
-			virtual OpenViBE::boolean expand(
-			        const OpenViBE::CString& rStringToExpand,
-			        OpenViBE::CString& rExpandedString) const = 0;
-
+			virtual ~IConfigurationKeywordExpandCallback() {}
+			virtual bool expand(const CString& rStringToExpand, CString& rExpandedString) const = 0;
 		};
-	}
-}
-
-#endif // __OpenViBE_Kernel_Configuration_IConfigurationKeywordExpandCallback_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

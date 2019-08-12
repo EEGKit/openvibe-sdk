@@ -55,9 +55,9 @@ namespace Communication
 		std::mutex m_SendBufferMutex;
 		std::vector<uint8_t> m_SendBuffer;
 
-		Socket::IConnection* m_Connection;
+		Socket::IConnection* m_Connection = nullptr;
 
-		mutable std::atomic<CMessaging::ELibraryError> m_LastLibraryError;
+		mutable std::atomic<ELibraryError> m_LastLibraryError;
 
 		std::thread m_SyncThread;
 
@@ -66,8 +66,5 @@ namespace Communication
 		std::atomic<bool> m_IsEndMessageReceived;
 
 		std::atomic<bool> m_WasSyncMessageReceived;
-
 	};
-
 }
-

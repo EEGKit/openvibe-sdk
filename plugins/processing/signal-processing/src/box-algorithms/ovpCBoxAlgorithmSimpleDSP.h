@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_SimpleDSP_H__
-#define __OpenViBEPlugins_BoxAlgorithm_SimpleDSP_H__
+#pragma once
 
 #include <system/ovCTime.h>
 #include <toolkit/ovtk_all.h>
@@ -22,99 +21,90 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmSimpleDSP(void);
-
-			virtual void release(void) { delete this; }
-
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
-			virtual void evaluate(void);
+			CBoxAlgorithmSimpleDSP();
+			void release() override { delete this; }
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
+			virtual void evaluate();
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_SimpleDSP)
 
-		public:
+			std::vector<OpenViBE::IMatrix*> m_vMatrix;
+			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_vStreamDecoder;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
 
-			std::vector < OpenViBE::IMatrix* > m_vMatrix;
-			std::vector < OpenViBE::Kernel::IAlgorithmProxy* > m_vStreamDecoder;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder;
+			CEquationParser* m_pEquationParser = nullptr;
 
-			CEquationParser * m_pEquationParser;
+			uint64_t m_ui64EquationType = OP_USERDEF;
+			double m_f64SpecialEquationParameter = 0;
+			double** m_ppVariable = nullptr;
 
-			OpenViBE::uint64 m_ui64EquationType;
-			OpenViBE::float64 m_f64SpecialEquationParameter;
-			OpenViBE::float64** m_ppVariable;
-
-			OpenViBE::boolean m_bCheckChunkDates;
+			bool m_bCheckChunkDates = false;
 		};
 
-		class CBoxAlgorithmSimpleDSPListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmSimpleDSPListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-
-			virtual OpenViBE::boolean onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				char l_sName[1024];
-				::sprintf(l_sName, "Input - %c", 'A' + ui32Index);
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				sprintf(l_sName, "Input - %c", 'A' + ui32Index);
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(0, l_oTypeIdentifier);
 				rBox.setInputType(ui32Index, l_oTypeIdentifier);
 				rBox.setInputName(ui32Index, l_sName);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
-				OpenViBE::uint32 i;
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getInputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(0, l_oTypeIdentifier);
-				for(i=0; i<rBox.getInputCount(); i++)
+				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
 				{
 					rBox.setInputType(i, l_oTypeIdentifier);
 				}
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
-				OpenViBE::uint32 i;
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(0, l_oTypeIdentifier);
-				for(i=0; i<rBox.getInputCount(); i++)
+				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
 				{
 					rBox.setInputType(i, l_oTypeIdentifier);
 				}
 				return true;
-			};
+			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmSimpleDSPDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Simple DSP"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Bruno Renier / Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA / IRISA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Apply mathematical formulaes to matrices."); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Basic"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SimpleDSP; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSimpleDSP(); }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmSimpleDSPListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Simple DSP"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Bruno Renier / Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA / IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Apply mathematical formulaes to matrices."); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Basic"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_SimpleDSP; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmSimpleDSP(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmSimpleDSPListener; }
-			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
-
-			virtual OpenViBE::boolean getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
 				rPrototype.addInput("Input - A", OV_TypeId_Signal);
 				rPrototype.addOutput("Output", OV_TypeId_Signal);
@@ -139,7 +129,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SimpleDSPDesc)
 		};
-	}
-}
-
-#endif // __OpenViBEPlugins_BoxAlgorithm_SimpleDSP_H__
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins

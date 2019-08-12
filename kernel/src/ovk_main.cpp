@@ -3,7 +3,7 @@
 #include <openvibe/ov_all.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 namespace OpenViBE
 {
@@ -12,55 +12,43 @@ namespace OpenViBE
 		class CKernelDesc : public IKernelDesc
 		{
 		public:
-
-			virtual IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename)
+			IKernelContext* createKernel(const CString& rApplicationName, const CString& rConfigurationFilename) override
 			{
-				return new CKernelContext(NULL, rApplicationName, rConfigurationFilename);
+				return new CKernelContext(nullptr, rApplicationName, rConfigurationFilename);
 			}
 
-			virtual IKernelContext* createKernel(const IKernelContext& rMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFilename)
+			IKernelContext* createKernel(const IKernelContext& rMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFilename) override
 			{
 				return new CKernelContext(&rMasterKernelContext, rApplicationName, rConfigurationFilename);
 			}
 
-			virtual void releaseKernel(IKernelContext* pKernelContext)
-			{
-				delete pKernelContext;
-			}
+			void releaseKernel(IKernelContext* pKernelContext) override { delete pKernelContext; }
+			CString getName() const override { return CString("OpenViBE Kernel Implementation"); }
+			CString getAuthorName() const override { return CString("Yann Renard"); }
+			CString getAuthorCompanyName() const override { return CString("INRIA/IRISA"); }
+			CString getShortDescription() const override { return CString("OpenViBE Kernel Implementation"); }
+			CString getDetailedDescription() const override { return CString("OpenViBE Kernel Implementation"); }
+			CString getVersion() const override { return CString("0.5"); }
 
-			virtual CString getName(void) const                { return CString("OpenViBE Kernel Implementation"); }
-			virtual CString getAuthorName(void) const          { return CString("Yann Renard"); }
-			virtual CString getAuthorCompanyName(void) const   { return CString("INRIA/IRISA"); }
-			virtual CString getShortDescription(void) const    { return CString("OpenViBE Kernel Implementation"); }
-			virtual CString getDetailedDescription(void) const { return CString("OpenViBE Kernel Implementation"); }
-			virtual CString getVersion(void) const             { return CString("0.5"); }
-
-			_IsDerivedFromClass_Final_(IKernelDesc, OVK_ClassId_KernelDesc);
+			_IsDerivedFromClass_Final_(IKernelDesc, OVK_ClassId_KernelDesc)
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
 static CKernelDesc gst_oKernelDesc;
 
 #include <system/ovCTime.h>
 
-extern "C"
-{
+extern "C" {
 
-OVK_API boolean onInitialize(void)
+OVK_API bool onInitialize() { return true; }
+
+OVK_API bool onGetKernelDesc(IKernelDesc*& rpKernelDesc)
 {
+	rpKernelDesc = &gst_oKernelDesc;
 	return true;
 }
 
-OVK_API boolean onGetKernelDesc(IKernelDesc*& rpKernelDesc)
-{
-	rpKernelDesc=&gst_oKernelDesc;
-	return true;
-}
-
-OVK_API boolean onUninitialize(void)
-{
-	return true;
-}
+OVK_API bool onUninitialize() { return true; }
 
 };

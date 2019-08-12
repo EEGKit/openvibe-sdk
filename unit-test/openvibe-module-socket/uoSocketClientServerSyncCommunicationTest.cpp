@@ -41,7 +41,7 @@ namespace
 	std::condition_variable g_ClientConnectedCondVar;
 	std::mutex g_ClientConnectedMutex;
 	std::vector<std::string> g_ReceivedData;
-	bool g_ServerStarted = false;
+	bool g_ServerStarted   = false;
 	bool g_ClientConnected = false;
 
 	// server callback run from a child thread
@@ -61,7 +61,7 @@ namespace
 			std::lock_guard<std::mutex> lockOnServerStart(g_ServerStartedMutex);
 			g_ServerStarted = true;
 		}
-		
+
 		g_ServerStartedCondVar.notify_one();
 
 		// connect clients
@@ -101,8 +101,8 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 {
 	OVT_ASSERT(argc == 4, "Failure to retrieve tests arguments. Expecting: server_name port_number packet_count");
 
-	std::string serverName = argv[1];
-	int portNumber = std::atoi(argv[2]);
+	std::string serverName   = argv[1];
+	int portNumber           = std::atoi(argv[2]);
 	unsigned int packetCount = static_cast<unsigned int>(std::atoi(argv[3]));
 
 	// test synchronous data transmission from a single client to server:
@@ -136,7 +136,7 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 	for (unsigned int sendIndex = 0; sendIndex < packetCount; ++sendIndex)
 	{
 		std::string dataString = baseData + std::to_string(sendIndex);
-		uint32_t dataSize = static_cast<uint32_t>(dataString.size());
+		uint32_t dataSize      = static_cast<uint32_t>(dataString.size());
 
 		client->sendBufferBlocking(&dataSize, sizeof(dataSize));
 		client->sendBufferBlocking(dataString.c_str(), dataSize);
@@ -158,4 +158,3 @@ int uoSocketClientServerSyncCommunicationTest(int argc, char* argv[])
 
 	return EXIT_SUCCESS;
 }
-

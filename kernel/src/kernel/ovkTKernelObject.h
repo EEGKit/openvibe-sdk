@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_TKernelObject_H__
-#define __OpenViBEKernel_Kernel_TKernelObject_H__
+#pragma once
 
 #include "../ovk_base.h"
 
@@ -14,78 +13,30 @@ namespace OpenViBE
 		{
 		public:
 
-			explicit TKernelObject(const OpenViBE::Kernel::IKernelContext& rKernelContext)
-				:m_rKernelContext(rKernelContext)
-			{
-			}
+			explicit TKernelObject(const IKernelContext& rKernelContext) : m_kernelContext(rKernelContext) { }
 
-			TKernelObject(const TKernelObject&) = delete;
+			TKernelObject(const TKernelObject&)            = delete;
 			TKernelObject& operator=(const TKernelObject&) = delete;
 
-			const OpenViBE::Kernel::IKernelContext& getKernelContext(void) const
-			{
-				return m_rKernelContext;
-			}
-
-			virtual OpenViBE::Kernel::IAlgorithmManager& getAlgorithmManager(void) const
-			{
-				return m_rKernelContext.getAlgorithmManager();
-			}
-
-			virtual OpenViBE::Kernel::IConfigurationManager& getConfigurationManager(void) const
-			{
-				return m_rKernelContext.getConfigurationManager();
-			}
-
-			virtual OpenViBE::Kernel::IKernelObjectFactory& getKernelObjectFactory(void) const
-			{
-				return m_rKernelContext.getKernelObjectFactory();
-			}
-
-			virtual OpenViBE::Kernel::IPlayerManager& getPlayerManager(void) const
-			{
-				return m_rKernelContext.getPlayerManager();
-			}
-
-			virtual OpenViBE::Kernel::IPluginManager& getPluginManager(void) const
-			{
-				return m_rKernelContext.getPluginManager();
-			}
-
-			virtual OpenViBE::Kernel::IMetaboxManager& getMetaboxManager(void) const
-			{
-				return m_rKernelContext.getMetaboxManager();
-			}
-
-			virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager(void) const
-			{
-				return m_rKernelContext.getScenarioManager();
-			}
-
-			virtual OpenViBE::Kernel::ITypeManager& getTypeManager(void) const
-			{
-				return m_rKernelContext.getTypeManager();
-			}
-
-			virtual OpenViBE::Kernel::ILogManager& getLogManager(void) const
-			{
-				return m_rKernelContext.getLogManager();
-			}
-
-			virtual OpenViBE::Kernel::IErrorManager& getErrorManager(void) const
-			{
-				return m_rKernelContext.getErrorManager();
-			}
+			const IKernelContext& getKernelContext() const { return m_kernelContext; }
+			virtual IAlgorithmManager& getAlgorithmManager() const { return m_kernelContext.getAlgorithmManager(); }
+			virtual IConfigurationManager& getConfigurationManager() const { return m_kernelContext.getConfigurationManager(); }
+			virtual IKernelObjectFactory& getKernelObjectFactory() const { return m_kernelContext.getKernelObjectFactory(); }
+			virtual IPlayerManager& getPlayerManager() const { return m_kernelContext.getPlayerManager(); }
+			virtual IPluginManager& getPluginManager() const { return m_kernelContext.getPluginManager(); }
+			virtual IMetaboxManager& getMetaboxManager() const { return m_kernelContext.getMetaboxManager(); }
+			virtual IScenarioManager& getScenarioManager() const { return m_kernelContext.getScenarioManager(); }
+			virtual ITypeManager& getTypeManager() const { return m_kernelContext.getTypeManager(); }
+			virtual ILogManager& getLogManager() const { return m_kernelContext.getLogManager(); }
+			virtual IErrorManager& getErrorManager() const { return m_kernelContext.getErrorManager(); }
 
 			_IsDerivedFromClass_(T, OVK_ClassId_Kernel_KernelObjectT)
 
 		private:
 
-			const OpenViBE::Kernel::IKernelContext& m_rKernelContext;
+			const IKernelContext& m_kernelContext;
 
-			// TKernelObject(void);
+			// TKernelObject();
 		};
-	};
-};
-
-#endif // __OpenViBEKernel_Kernel_TKernelObject_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

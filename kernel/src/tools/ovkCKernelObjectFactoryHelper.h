@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Tools_CKernelObjectFactoryHelper_H__
-#define __OpenViBEKernel_Tools_CKernelObjectFactoryHelper_H__
+#pragma once
 
 #include "../ovk_base.h"
 
@@ -9,42 +8,36 @@ namespace OpenViBE
 {
 	namespace Tools
 	{
-		class CKernelObjectFactoryHelper : public OpenViBE::IObject
+		class CKernelObjectFactoryHelper : public IObject
 		{
 		public:
 
-			explicit CKernelObjectFactoryHelper(OpenViBE::Kernel::IKernelObjectFactory& rKernelObjectFactory)
-				:m_rKernelObjectFactory(rKernelObjectFactory)
-			{
-			}
+			explicit CKernelObjectFactoryHelper(Kernel::IKernelObjectFactory& rKernelObjectFactory)
+				: m_rKernelObjectFactory(rKernelObjectFactory) { }
 
-			template <class T> T createObject(const OpenViBE::CIdentifier& rClassIdentifier)
+			template <class T>
+			T createObject(const CIdentifier& rClassIdentifier)
 			{
-				OpenViBE::IObject* l_pObject=m_rKernelObjectFactory.createObject(rClassIdentifier);
-				T l_tResult=dynamic_cast<T>(l_pObject);
-				if(l_pObject && !l_tResult)
-				{
-					m_rKernelObjectFactory.releaseObject(l_pObject);
-				}
+				IObject* l_pObject = m_rKernelObjectFactory.createObject(rClassIdentifier);
+				T l_tResult                  = dynamic_cast<T>(l_pObject);
+				if (l_pObject && !l_tResult) { m_rKernelObjectFactory.releaseObject(l_pObject); }
 				return l_tResult;
 			}
 
-			template <class T> OpenViBE::boolean releaseObject(T tObject)
-			{
-				return m_rKernelObjectFactory.releaseObject(tObject);
-			}
+			template <class T>
+			bool releaseObject(T tObject) { return m_rKernelObjectFactory.releaseObject(tObject); }
 
-			_IsDerivedFromClass_Final_(OpenViBE::IObject, OVK_ClassId_Tools_KernelObjectFactoryHelper);
+			_IsDerivedFromClass_Final_(OpenViBE::IObject, OVK_ClassId_Tools_KernelObjectFactoryHelper)
 
 		protected:
 
-			OpenViBE::Kernel::IKernelObjectFactory& m_rKernelObjectFactory;
+			Kernel::IKernelObjectFactory& m_rKernelObjectFactory;
 
 		private:
 
-			CKernelObjectFactoryHelper(void);
+			CKernelObjectFactoryHelper();
 		};
-	};
-};
+	}  // namespace Tools
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Tools_CKernelObjectFactoryHelper_H__
+

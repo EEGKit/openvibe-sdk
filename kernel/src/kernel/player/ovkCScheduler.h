@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Scheduler_CScheduler_H__
-#define __OpenViBEKernel_Kernel_Scheduler_CScheduler_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 
@@ -12,7 +11,8 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		enum SchedulerInitializationCode{
+		enum SchedulerInitializationCode
+		{
 			SchedulerInitialization_Success,
 			SchedulerInitialization_BoxInitializationFailed,
 			SchedulerInitialization_Failed
@@ -22,61 +22,56 @@ namespace OpenViBE
 		class CChunk;
 		class CPlayer;
 
-		class CScheduler : public OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >
+		class CScheduler : public TKernelObject<IKernelObject>
 		{
 		public:
 
-			CScheduler(const OpenViBE::Kernel::IKernelContext& rKernelContext, OpenViBE::Kernel::CPlayer& rPlayer);
-			virtual ~CScheduler(void);
+			CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer);
+			~CScheduler() override;
 
-			virtual OpenViBE::boolean setScenario(
-				const OpenViBE::CIdentifier& rScenarioIdentifier);
-			virtual OpenViBE::boolean setFrequency(
-				const OpenViBE::uint64 ui64Frequency);
+			virtual bool setScenario(const CIdentifier& rScenarioIdentifier);
+			virtual bool setFrequency(uint64_t ui64Frequency);
 
-			virtual OpenViBE::boolean isHoldingResources() const;
+			virtual bool isHoldingResources() const;
 
-			virtual SchedulerInitializationCode initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean loop(void);
+			virtual SchedulerInitializationCode initialize();
+			virtual bool uninitialize();
+			virtual bool loop();
 
-			virtual OpenViBE::boolean sendInput(const OpenViBE::Kernel::CChunk& rChunk, const OpenViBE::CIdentifier& rBoxIdentifier, const OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::uint64 getCurrentTime(void) const;
-			virtual OpenViBE::uint64 getCurrentLateness(void) const;
-			virtual OpenViBE::uint64 getFrequency(void) const;
-			virtual OpenViBE::uint64 getStepDuration(void) const;
-			virtual OpenViBE::float64 getCPUUsage(void) const;
-			virtual OpenViBE::float64 getFastForwardMaximumFactor(void) const;
+			virtual bool sendInput(const CChunk& rChunk, const CIdentifier& rBoxIdentifier, uint32_t ui32InputIndex);
+			virtual uint64_t getCurrentTime() const;
+			virtual uint64_t getCurrentLateness() const;
+			virtual uint64_t getFrequency() const;
+			virtual uint64_t getStepDuration() const;
+			virtual double getCPUUsage() const;
+			virtual double getFastForwardMaximumFactor() const;
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IKernelObject >, OVK_ClassId_Kernel_Player_Scheduler)
 
-			CPlayer& getPlayer(void)
-			{
-				return m_rPlayer;
-			}
+			CPlayer& getPlayer() { return m_rPlayer; }
 
 		protected:
 
-			OpenViBE::Kernel::CPlayer& m_rPlayer;
-			OpenViBE::CIdentifier m_oScenarioIdentifier;
-			OpenViBE::Kernel::IScenario* m_pScenario;
-			OpenViBE::uint64 m_ui64Steps;
-			OpenViBE::uint64 m_ui64Frequency;
-			OpenViBE::uint64 m_ui64StepDuration;
-			OpenViBE::uint64 m_ui64CurrentTime;
+			CPlayer& m_rPlayer;
+			CIdentifier m_oScenarioIdentifier = OV_UndefinedIdentifier;
+			IScenario* m_pScenario = nullptr;
+			uint64_t m_ui64Steps = 0;
+			uint64_t m_ui64Frequency = 0;
+			uint64_t m_ui64StepDuration = 0;
+			uint64_t m_ui64CurrentTime = 0;
 
-			std::map < std::pair < OpenViBE::int32, OpenViBE::CIdentifier>, OpenViBE::Kernel::CSimulatedBox* > m_vSimulatedBox;
-			std::map < OpenViBE::CIdentifier, System::CChrono > m_vSimulatedBoxChrono;
-			std::map < OpenViBE::CIdentifier, std::map < OpenViBE::uint32, std::list < OpenViBE::Kernel::CChunk > > > m_vSimulatedBoxInput;
+			std::map<std::pair<int32_t, CIdentifier>, CSimulatedBox*> m_vSimulatedBox;
+			std::map<CIdentifier, System::CChrono> m_vSimulatedBoxChrono;
+			std::map<CIdentifier, std::map<uint32_t, std::list<CChunk>>> m_vSimulatedBoxInput;
 
 		private:
 
 			void handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception);
-			boolean processBox(CSimulatedBox* simulatedBox, const OpenViBE::CIdentifier& boxIdentifier);
-			OpenViBE::boolean flattenScenario(void);
+			bool processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxIdentifier);
+			bool flattenScenario();
 			System::CChrono m_oBenchmarkChrono;
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Scheduler_CScheduler_H__
+

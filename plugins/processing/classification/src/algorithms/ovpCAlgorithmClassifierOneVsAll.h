@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_Algorithm_OneVsAll_H__
-#define __OpenViBEPlugins_Algorithm_OneVsAll_H__
+#pragma once
 
 #include "../ovp_defines.h"
 #include <openvibe/ov_all.h>
@@ -19,21 +18,18 @@ namespace OpenViBEPlugins
 		class CAlgorithmClassifierOneVsAll : public OpenViBEToolkit::CAlgorithmPairingStrategy
 		{
 		public:
-
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet);
-			virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-											   , OpenViBE::float64& rf64Class
-											   , OpenViBEToolkit::IVector& rDistanceValue
-											   , OpenViBEToolkit::IVector& rProbabilityValue);
-			virtual OpenViBE::boolean designArchitecture(const OpenViBE::CIdentifier& rId, OpenViBE::uint32 rClassCount);
-
-			virtual XML::IXMLNode* saveConfiguration(void);
-			virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode *pConfigurationNode);
-
-			virtual OpenViBE::uint32 getOutputProbabilityVectorLength();
-			virtual OpenViBE::uint32 getOutputDistanceVectorLength();
+			bool initialize() override;
+			bool uninitialize() override;
+			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
+								  , double& rf64Class
+								  , OpenViBEToolkit::IVector& rDistanceValue
+								  , OpenViBEToolkit::IVector& rProbabilityValue) override;
+			bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) override;
+			XML::IXMLNode* saveConfiguration() override;
+			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
+			uint32_t getOutputProbabilityVectorLength() override;
+			uint32_t getOutputDistanceVectorLength() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsAll)
 
@@ -42,12 +38,12 @@ namespace OpenViBEPlugins
 
 		private:
 			XML::IXMLNode* getClassifierConfiguration(OpenViBE::Kernel::IAlgorithmProxy* classifier);
-			OpenViBE::boolean addNewClassifierAtBack(void);
-			void removeClassifierAtBack(void);
-			OpenViBE::boolean setSubClassifierIdentifier(const OpenViBE::CIdentifier &rId);
-			OpenViBE::uint32 getClassCount(void) const;
+			bool addNewClassifierAtBack();
+			void removeClassifierAtBack();
+			bool setSubClassifierIdentifier(const OpenViBE::CIdentifier& rId);
+			uint32_t getClassCount() const;
 
-			OpenViBE::boolean loadSubClassifierConfiguration(XML::IXMLNode *pSubClassifiersNode);
+			bool loadSubClassifierConfiguration(XML::IXMLNode* pSubClassifiersNode);
 
 			std::vector<OpenViBE::Kernel::IAlgorithmProxy*> m_oSubClassifierList;
 			fClassifierComparison m_fAlgorithmComparison;
@@ -56,25 +52,21 @@ namespace OpenViBEPlugins
 		class CAlgorithmClassifierOneVsAllDesc : public OpenViBEToolkit::CAlgorithmPairingStrategyDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("OneVsAll pairing classifier"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Guillaume Serriere"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/Loria"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString(""); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("0.1"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_Algorithm_ClassifierOneVsAll; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CAlgorithmClassifierOneVsAll; }
 
-			virtual void release(void) { }
-
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("OneVsAll pairing classifier"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Guillaume Serriere"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/Loria"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString(""); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("0.1"); }
-
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_Algorithm_ClassifierOneVsAll; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::Classification::CAlgorithmClassifierOneVsAll; }
-
-			virtual OpenViBE::boolean getAlgorithmPrototype(
-					OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const
+			bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& rAlgorithmPrototype) const override
 			{
 				CAlgorithmPairingStrategyDesc::getAlgorithmPrototype(rAlgorithmPrototype);
 
@@ -85,5 +77,3 @@ namespace OpenViBEPlugins
 		};
 	}
 }
-
-#endif // __OpenViBEPlugins_Algorithm_OneVsAll_H__

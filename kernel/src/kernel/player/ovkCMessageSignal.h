@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CMessageSignal_H__
-#define __OpenViBEKernel_Kernel_Player_CMessageSignal_H__
+#pragma once
 
 #include "../ovkTKernelObject.h"
 #include "ovkTMessage.h"
@@ -10,18 +9,14 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CMessageSignal : public OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageSignal> >
+		class CMessageSignal : public TMessage<TKernelObject<IMessageSignal>>
 		{
 		public:
 
-			explicit CMessageSignal(const OpenViBE::Kernel::IKernelContext& rKernelContext)
-				:OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageSignal> >(rKernelContext)
-			{
-			}
+			explicit CMessageSignal(const IKernelContext& rKernelContext)
+				: TMessage<TKernelObject<IMessageSignal>>(rKernelContext) { }
 
-			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageSignal> >, OVK_ClassId_Kernel_Player_MessageSignal);
+			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TMessage<OpenViBE::Kernel::TKernelObject<OpenViBE::Kernel::IMessageSignal> >, OVK_ClassId_Kernel_Player_MessageSignal)
 		};
-	};
-};
-
-#endif // __OpenViBEKernel_Kernel_Player_CMessageSignal_H__
+	}  // namespace Kernel
+}  // namespace OpenViBE

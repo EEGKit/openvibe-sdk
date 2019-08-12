@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Offline_CSignalTrialSet_HPP__
-#define __OpenViBEToolkit_Offline_CSignalTrialSet_HPP__
+#pragma once
 
 #include "ovtkISignalTrialSet.h"
 
@@ -7,24 +6,20 @@
 
 namespace OpenViBEToolkit
 {
-	class CSignalTrialSet : public OpenViBEToolkit::ISignalTrialSet
+	class CSignalTrialSet : public ISignalTrialSet
 	{
 	public:
+		bool addSignalTrial(ISignalTrial& rSignalTrial) override;
+		bool clear() override;
+		uint32_t getSignalTrialCount() const override;
+		ISignalTrial& getSignalTrial(uint32_t ui32Index) const override;
 
-		virtual OpenViBE::boolean addSignalTrial(OpenViBEToolkit::ISignalTrial& rSignalTrial);
-		virtual OpenViBE::boolean clear(void);
-
-		virtual OpenViBE::uint32 getSignalTrialCount(void) const;
-		virtual OpenViBEToolkit::ISignalTrial& getSignalTrial(OpenViBE::uint32 ui32Index) const;
-
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_);
+		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_)
 
 	protected:
 
-		mutable std::vector<OpenViBEToolkit::ISignalTrial*> m_vSignalTrial;
+		mutable std::vector<ISignalTrial*> m_vSignalTrial;
 	};
 
-	extern OVTK_API OpenViBEToolkit::ISignalTrialSet* createSignalTrialSet(void);
-};
-
-#endif // __OpenViBEToolkit_Offline_CSignalTrialSet_HPP__
+	extern OVTK_API ISignalTrialSet* createSignalTrialSet();
+}  // namespace OpenViBEToolkit

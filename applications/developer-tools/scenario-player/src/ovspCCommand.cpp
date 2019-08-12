@@ -34,7 +34,6 @@ namespace OpenViBE
 
 	void InitCommand::doPrint(std::ostream& os) const
 	{
-
 		os << "command name: InitCommand" << std::endl;
 		os << "Benchmark: " << (this->benchmark ? std::to_string(this->benchmark.get()) : "not set") << std::endl;
 	}
@@ -74,7 +73,7 @@ namespace OpenViBE
 		os << "ScenarioName: " << (this->scenarioName ? this->scenarioName.get() : "not set") << std::endl;
 		os << "ScenarioFile: " << (this->scenarioFile ? this->scenarioFile.get() : "not set") << std::endl;
 	}
-	
+
 	PlayerReturnCode UpdateScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
 		std::cout << "About to execute:" << std::endl;
@@ -173,7 +172,6 @@ namespace OpenViBE
 			os << " not set";
 		}
 		os << std::endl;
-
 	}
 
 	PlayerReturnCode SetupScenarioCommand::execute(KernelFacade& kernelFacade) const
@@ -209,6 +207,5 @@ namespace OpenViBE
 			os << " not set";
 		}
 		os << std::endl;
-
 	}
 }

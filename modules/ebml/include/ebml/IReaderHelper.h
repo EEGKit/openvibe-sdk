@@ -1,5 +1,4 @@
-#ifndef __EBML_IReaderHelper_H__
-#define __EBML_IReaderHelper_H__
+#pragma once
 
 #include "IReader.h"
 
@@ -21,7 +20,7 @@ namespace EBML
 	 * Be sure to look at http://ebml.sourceforge.net/specs/ in
 	 * order to understand what EBML is and how it should be used.
 	 *
-	 * \todo float80 reading implementation
+	 * \todo long double reading implementation
 	 * \todo date reading implementation
 	 * \todo utf8 string reading implementation
 	 */
@@ -42,24 +41,24 @@ namespace EBML
 		/**
 		 * \brief Gets an unsigned integer from the given buffer
 		 */
-		virtual EBML::uint64 getUIntegerFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)=0;
+		virtual uint64_t getUIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Gets a signed integer from the given buffer
 		 */
-		virtual EBML::int64 getSIntegerFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)=0;
+		virtual int64_t getSIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
 		/**
 		 * \brief Gets a float from the given buffer
 		 */
-		virtual EBML::float64 getFloatFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)=0;
-// virtual ??? getFloat80FromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)=0;
-// virtual ??? getDateFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)=0;
+		virtual double getFloatFromChildData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
+		// virtual ??? getFloat80FromChildData(const void* pBuffer, const uint64_t ui64BufferSize)=0;
+		// virtual ??? getDateFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)=0;
 		/**
 		 * \brief Gets an ASCII string from the given buffer
 		 * \warning The returned value is not permanent. It should be
 		 *          copied immediatly somewhere else by the caller.
 		 */
-		virtual const char* getASCIIStringFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)=0;
-// virtual ??? getUTF8StringFromChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize)=0;
+		virtual const char* getASCIIStringFromChildData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
+		// virtual ??? getUTF8StringFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)=0;
 		//@}
 
 		/**
@@ -76,14 +75,14 @@ namespace EBML
 		 * The current object is invalid after calling this
 		 * function. It can not be used anymore.
 		 */
-		virtual void release(void)=0;
+		virtual void release() = 0;
 
 	protected:
 
 		/**
 		 * \brief Virtual destructor - should be overloaded
 		 */
-		virtual ~IReaderHelper(void) { }
+		virtual ~IReaderHelper() { }
 	};
 
 	/**
@@ -91,7 +90,5 @@ namespace EBML
 	 * \return a pointer to the created instance on success.
 	 * \return \c NULL when something went wrong.
 	 */
-	extern EBML_API EBML::IReaderHelper* createReaderHelper(void);
-};
-
-#endif // __EBML_IReaderHelper_H__
+	extern EBML_API IReaderHelper* createReaderHelper();
+}  // namespace EBML

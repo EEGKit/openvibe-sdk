@@ -125,7 +125,7 @@ namespace Communication
 		 *
 		 * \sa getLastError
 		 */
-		void setLastError(const ELibraryError libraryError);
+		void setLastError(ELibraryError libraryError);
 
 		/**
 		 * \brief Provide the connection to the base class to communicate.
@@ -326,7 +326,6 @@ namespace Communication
 
 	protected:
 		struct MessagingImplementation;
-		MessagingImplementation* impl;
-
+		MessagingImplementation* impl = nullptr;
 	};
 }

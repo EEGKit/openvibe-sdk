@@ -1,11 +1,10 @@
-#ifndef __Socket_IConnectionParallel_H__
-#define __Socket_IConnectionParallel_H__
+#pragma once
 
 #include "IConnection.h"
 #include <string>
 
 #if defined TARGET_OS_Windows
-	#include <windows.h> 
+#include <windows.h>
 #endif
 
 namespace Socket
@@ -14,11 +13,11 @@ namespace Socket
 	 * \brief The IConnectionParallel class provides the possibility to communicate with a parallel port.
 	 * On Windows, you must have TVicPort library installed (available for free: http://entechtaiwan.com/dev/port/index.shtm).
 	 */
-	class Socket_API IConnectionParallel : public Socket::IConnection
+	class Socket_API IConnectionParallel : public IConnection
 	{
 	public:
 
-		virtual boolean connect(unsigned short ui16PortNumber) = 0;
+		virtual bool connect(unsigned short ui16PortNumber) = 0;
 
 		virtual std::string getLastError() = 0;
 
@@ -39,7 +38,5 @@ namespace Socket
 #endif
 	};
 
-	extern Socket_API Socket::IConnectionParallel* createConnectionParallel(void);
-};
-
-#endif // __Socket_IConnectionParallel_H__
+	extern Socket_API IConnectionParallel* createConnectionParallel();
+}

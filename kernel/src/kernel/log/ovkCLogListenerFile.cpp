@@ -9,16 +9,14 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 using namespace std;
 
 CLogListenerFile::CLogListenerFile(const IKernelContext& rKernelContext, const CString& sApplicationName, const CString& sLogFilename)
-	:TKernelObject<ILogListener>(rKernelContext)
-	,m_sApplicationName(sApplicationName)
-	,m_sLogFilename(sLogFilename)
-	,m_bTimeInSeconds(true)
-	,m_bLogWithHexa(false)
-	,m_ui64TimePrecision(3)
+	: TKernelObject<ILogListener>(rKernelContext)
+	  , m_sApplicationName(sApplicationName)
+	  , m_sLogFilename(sLogFilename)
+	  , m_bTimeInSeconds(true), m_ui64TimePrecision(3)
 {
 
 	// Create the path to the log file
@@ -41,140 +39,85 @@ CLogListenerFile::~CLogListenerFile()
 
 void CLogListenerFile::configure(const IConfigurationManager& rConfigurationManager)
 {
-	m_bTimeInSeconds = rConfigurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}",false);
-	m_bLogWithHexa = rConfigurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}",true);
-	m_ui64TimePrecision = rConfigurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}",3);
+	m_bTimeInSeconds    = rConfigurationManager.expandAsBoolean("${Kernel_FileLogTimeInSecond}", false);
+	m_bLogWithHexa      = rConfigurationManager.expandAsBoolean("${Kernel_FileLogWithHexa}", true);
+	m_ui64TimePrecision = rConfigurationManager.expandAsUInteger("${Kernel_FileLogTimePrecision}", 3);
 }
 
-boolean CLogListenerFile::isActive(ELogLevel eLogLevel)
+bool CLogListenerFile::isActive(ELogLevel eLogLevel)
 {
-	map<ELogLevel, boolean>::iterator itLogLevel=m_vActiveLevel.find(eLogLevel);
-	if(itLogLevel==m_vActiveLevel.end())
-	{
-		return true;
-	}
+	map<ELogLevel, bool>::iterator itLogLevel = m_vActiveLevel.find(eLogLevel);
+	if (itLogLevel == m_vActiveLevel.end()) { return true; }
 	return itLogLevel->second;
 }
 
-boolean CLogListenerFile::activate(ELogLevel eLogLevel, boolean bActive)
+bool CLogListenerFile::activate(ELogLevel eLogLevel, bool bActive)
 {
-	m_vActiveLevel[eLogLevel]=bActive;
+	m_vActiveLevel[eLogLevel] = bActive;
 	return true;
 }
 
-boolean CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, boolean bActive)
+bool CLogListenerFile::activate(ELogLevel eStartLogLevel, ELogLevel eEndLogLevel, bool bActive)
 {
-	for(int i=eStartLogLevel; i<=eEndLogLevel; i++)
-	{
-		m_vActiveLevel[ELogLevel(i)]=bActive;
-	}
+	for (int i = eStartLogLevel; i <= eEndLogLevel; i++) { m_vActiveLevel[ELogLevel(i)] = bActive; }
 	return true;
 }
 
-boolean CLogListenerFile::activate(boolean bActive)
+bool CLogListenerFile::activate(bool bActive)
 {
 	return activate(LogLevel_First, LogLevel_Last, bActive);
 }
 
 void CLogListenerFile::log(const time64 time64Value)
 {
-	if(m_bTimeInSeconds)
+	if (m_bTimeInSeconds)
 	{
-		float64 l_f64Time=ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
+		double l_f64Time = ITimeArithmetics::timeToSeconds(time64Value.m_ui64TimeValue);
 		std::stringstream ss;
 		ss.precision(m_ui64TimePrecision);
-		ss.setf(std::ios::fixed,std::ios::floatfield);
+		ss.setf(std::ios::fixed, std::ios::floatfield);
 		ss << l_f64Time;
 		ss << " sec";
 
-		if(m_bLogWithHexa)
+		if (m_bLogWithHexa)
 		{
 			ss << " (0x" << hex << time64Value.m_ui64TimeValue << ")";
 		}
 
 		m_fsFileStream << ss.str();
 	}
-	else
-	{
-		logInteger(time64Value.m_ui64TimeValue);
-	}
+	else { logInteger(time64Value.m_ui64TimeValue); }
 }
 
-void CLogListenerFile::log(const uint64 ui64Value)
-{
-	logInteger(ui64Value);
-}
+void CLogListenerFile::log(const uint64_t value) { logInteger(value); }
+void CLogListenerFile::log(const uint32_t value) { logInteger(value); }
+void CLogListenerFile::log(const uint16_t value) { logInteger(value); }
+void CLogListenerFile::log(const uint8_t value) { logInteger(value); }
+void CLogListenerFile::log(const int64_t value) { logInteger(value); }
+void CLogListenerFile::log(const int32_t value) { logInteger(value); }
+void CLogListenerFile::log(const int16_t value) { logInteger(value); }
+void CLogListenerFile::log(const int8_t value) { logInteger(value); }
 
-void CLogListenerFile::log(const uint32 ui32Value)
-{
-	logInteger(ui32Value);
-}
+void CLogListenerFile::log(const float value) { m_fsFileStream << value; }
+void CLogListenerFile::log(const double value) { m_fsFileStream << value; }
+void CLogListenerFile::log(const bool value) { m_fsFileStream << (value ? "true" : "false"); }
+void CLogListenerFile::log(const CIdentifier& value) { m_fsFileStream << value.toString(); }
 
-void CLogListenerFile::log(const uint16 ui16Value)
+void CLogListenerFile::log(const CString& value)
 {
-	logInteger(ui16Value);
-}
-
-void CLogListenerFile::log(const uint8 ui8Value)
-{
-	logInteger(ui8Value);
-}
-
-void CLogListenerFile::log(const int64 i64Value)
-{
-	logInteger(i64Value);
-}
-
-void CLogListenerFile::log(const int32 i32Value)
-{
-	logInteger(i32Value);
-}
-
-void CLogListenerFile::log(const int16 i16Value)
-{
-	logInteger(i16Value);
-}
-
-void CLogListenerFile::log(const int8 i8Value)
-{
-	logInteger(i8Value);
-}
-
-void CLogListenerFile::log(const float32 f32Value)
-{
-	m_fsFileStream << f32Value;
-}
-
-void CLogListenerFile::log(const float64 f64Value)
-{
-	m_fsFileStream << f64Value;
-}
-
-void CLogListenerFile::log(const boolean bValue)
-{
-	m_fsFileStream << (bValue ? "true" : "false");
-}
-
-void CLogListenerFile::log(const CIdentifier& rValue)
-{
-	m_fsFileStream << rValue.toString();
-}
-
-void CLogListenerFile::log(const CString& rValue)
-{
-	m_fsFileStream << rValue;
+	m_fsFileStream << value;
 	m_fsFileStream << flush;
 }
 
-void CLogListenerFile::log(const char* pValue)
+void CLogListenerFile::log(const char* value)
 {
-	m_fsFileStream << pValue;
+	m_fsFileStream << value;
 	m_fsFileStream << flush;
 }
 
 void CLogListenerFile::log(const ELogLevel eLogLevel)
 {
-	switch(eLogLevel)
+	switch (eLogLevel)
 	{
 		case LogLevel_Debug:
 			m_fsFileStream << "[ DEBUG ] ";
@@ -214,6 +157,4 @@ void CLogListenerFile::log(const ELogLevel eLogLevel)
 	}
 }
 
-void CLogListenerFile::log(const ELogColor eLogColor)
-{
-}
+void CLogListenerFile::log(const ELogColor eLogColor) {}

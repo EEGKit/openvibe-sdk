@@ -1,5 +1,4 @@
-#ifndef OVPCALGORITHMLDACOMPUTATIONHELPER_H
-#define OVPCALGORITHMLDACOMPUTATIONHELPER_H
+#pragma once
 
 #if defined TARGET_HAS_ThirdPartyEIGEN
 
@@ -21,26 +20,24 @@ namespace OpenViBEPlugins
 		public:
 			CAlgorithmLDADiscriminantFunction();
 
-			void setWeight(const Eigen::VectorXd &rWeigth);
-			void setBias(OpenViBE::float64 f64Bias);
+			void setWeight(const Eigen::VectorXd& rWeigth);
+			void setBias(double f64Bias);
 
 			//Return the class membership of the feature vector
-			OpenViBE::float64 getValue(const Eigen::VectorXd &rFeatureVector);
-			OpenViBE::uint32 getWeightVectorSize(void);
+			double getValue(const Eigen::VectorXd& rFeatureVector);
+			uint32_t getWeightVectorSize();
 
-			OpenViBE::boolean loadConfiguration(const XML::IXMLNode* pConfiguration);
-			XML::IXMLNode* getConfiguration(void);
+			bool loadConfiguration(const XML::IXMLNode* pConfiguration);
+			XML::IXMLNode* getConfiguration();
 
-			const Eigen::VectorXd& getWeight(void) const { return m_oWeight; }
-			OpenViBE::float64 getBias(void) const { return m_f64Bias; }
+			const Eigen::VectorXd& getWeight() const { return m_oWeight; }
+			double getBias() const { return m_f64Bias; }
 
 		private:
-			OpenViBE::float64 m_f64Bias;
-			Eigen::VectorXd   m_oWeight;
-
+			double m_f64Bias = 0;
+			Eigen::VectorXd m_oWeight;
 		};
 	}
 }
 
 #endif
-#endif // OVPCALGORITHMLDACOMPUTATIONHELPER_H

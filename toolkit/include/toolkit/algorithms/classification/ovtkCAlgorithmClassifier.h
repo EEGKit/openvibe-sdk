@@ -14,7 +14,7 @@
 #define OVTK_Algorithm_Classifier_InputParameterId_FeatureVector         OpenViBE::CIdentifier(0x6D69BF98, 0x1EB9EE66)  // Single vector to classify
 #define OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet      OpenViBE::CIdentifier(0x27C05927, 0x5DE9103A)	// Training set
 #define OVTK_Algorithm_Classifier_InputParameterId_Configuration         OpenViBE::CIdentifier(0xA705428E, 0x5BB1CADD)  // The model
-#define OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses       OpenViBE::CIdentifier(0x1B95825A, 0x24F2E949)  
+#define OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses       OpenViBE::CIdentifier(0x1B95825A, 0x24F2E949)
 #define OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter        OpenViBE::CIdentifier(0x42AD6BE3, 0xF483DE3F)  // Params specific to classifier type
 
 #define OVTK_Algorithm_Classifier_OutputParameterId_Class                OpenViBE::CIdentifier(0x8A39A7EA, 0xF2EE45C4)
@@ -33,83 +33,75 @@
 
 namespace OpenViBEToolkit
 {
-	class OVTK_API CAlgorithmClassifier : public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >
+	class OVTK_API CAlgorithmClassifier : public TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 	{
 	public:
+		bool initialize() override;
+		bool uninitialize() override;
+		void release() override { delete this; }
+		bool process() override;
 
-		virtual OpenViBE::boolean initialize();
-		virtual OpenViBE::boolean uninitialize();
+		virtual bool train(const IFeatureVectorSet& featureVectorSet) = 0;
+		virtual bool classify(const IFeatureVector& featureVector
+							  , double& estimatedClass
+							  , IVector& distanceValue
+							  , IVector& probabilityValue) = 0;
 
-		virtual void release(void) { delete this; }
+		virtual XML::IXMLNode* saveConfiguration() = 0;
+		virtual bool loadConfiguration(XML::IXMLNode* configurationRoot) = 0;
 
-		virtual OpenViBE::boolean process(void);
+		virtual uint32_t getOutputProbabilityVectorLength() = 0;
+		virtual uint32_t getOutputDistanceVectorLength() = 0;
 
-		virtual OpenViBE::boolean train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) = 0;
-		virtual OpenViBE::boolean classify(const OpenViBEToolkit::IFeatureVector& featureVector
-		                                   ,OpenViBE::float64& estimatedClass
-		                                   ,OpenViBEToolkit::IVector& distanceValue
-		                                   ,OpenViBEToolkit::IVector& probabilityValue) = 0;
-
-		virtual XML::IXMLNode* saveConfiguration(void)=0;
-		virtual OpenViBE::boolean loadConfiguration(XML::IXMLNode * configurationRoot)=0;
-
-		virtual OpenViBE::uint32 getOutputProbabilityVectorLength(void) =0;
-		virtual OpenViBE::uint32 getOutputDistanceVectorLength(void) =0;
-
-		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_Classifier);
+		_IsDerivedFromClass_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVTK_ClassId_Algorithm_Classifier)
 
 	protected:
-		OpenViBE::boolean initializeExtraParameterMechanism();
-		OpenViBE::boolean uninitializeExtraParameterMechanism();
+		bool initializeExtraParameterMechanism();
+		bool uninitializeExtraParameterMechanism();
 
-		OpenViBE::uint64 getUInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		OpenViBE::int64 getInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		OpenViBE::float64 getFloat64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		OpenViBE::boolean getBooleanParameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		uint64_t getUInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		int64_t getInt64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		double getFloat64Parameter(const OpenViBE::CIdentifier& parameterIdentifier);
+		bool getBooleanParameter(const OpenViBE::CIdentifier& parameterIdentifier);
 		OpenViBE::CString* getCStringParameter(const OpenViBE::CIdentifier& parameterIdentifier);
-		OpenViBE::uint64 getEnumerationParameter(const OpenViBE::CIdentifier& parameterIdentifier, const OpenViBE::CIdentifier& enumerationIdentifier);
+		uint64_t getEnumerationParameter(const OpenViBE::CIdentifier& parameterIdentifier, const OpenViBE::CIdentifier& enumerationIdentifier);
 
 	private:
 		OpenViBE::CString& getParameterValue(const OpenViBE::CIdentifier& parameterIdentifier);
-		void setMatrixOutputDimension(OpenViBE::Kernel::TParameterHandler < OpenViBE::IMatrix* > &matrix, OpenViBE::uint32 length);
+		void setMatrixOutputDimension(OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& matrix, uint32_t length);
 
-		OpenViBE::Kernel::IAlgorithmProxy *m_AlgorithmProxy;
-		void* m_ExtraParametersMap;
-
-
+		OpenViBE::Kernel::IAlgorithmProxy* m_AlgorithmProxy = nullptr;
+		void* m_ExtraParametersMap = nullptr;
 	};
 
 	class OVTK_API CAlgorithmClassifierDesc : public OpenViBE::Plugins::IAlgorithmDesc
 	{
 	public:
-
-		virtual OpenViBE::boolean getAlgorithmPrototype(
-			OpenViBE::Kernel::IAlgorithmProto& algorithmPrototype) const
+		bool getAlgorithmPrototype(OpenViBE::Kernel::IAlgorithmProto& algorithmPrototype) const override
 		{
-			algorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_FeatureVector,         "Feature vector",        OpenViBE::Kernel::ParameterType_Matrix);
-			algorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet,      "Feature vector set",    OpenViBE::Kernel::ParameterType_Matrix);
-			algorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_Configuration,         "Configuration",         OpenViBE::Kernel::ParameterType_Pointer);
-			algorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses,       "Number of classes",     OpenViBE::Kernel::ParameterType_UInteger);
-			algorithmPrototype.addInputParameter (OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter,        "Extra parameter",       OpenViBE::Kernel::ParameterType_Pointer);
+			algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVector, "Feature vector", OpenViBE::Kernel::ParameterType_Matrix);
+			algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet, "Feature vector set", OpenViBE::Kernel::ParameterType_Matrix);
+			algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration, "Configuration", OpenViBE::Kernel::ParameterType_Pointer);
+			algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses, "Number of classes", OpenViBE::Kernel::ParameterType_UInteger);
+			algorithmPrototype.addInputParameter(OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter, "Extra parameter", OpenViBE::Kernel::ParameterType_Pointer);
 
-			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class,                "Class",                 OpenViBE::Kernel::ParameterType_Float);
-			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues, "Hyperplane distance",   OpenViBE::Kernel::ParameterType_Matrix);
-			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues,    "Probability values",    OpenViBE::Kernel::ParameterType_Matrix);
-			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration,        "Configuration",         OpenViBE::Kernel::ParameterType_Pointer);
+			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Class, "Class", OpenViBE::Kernel::ParameterType_Float);
+			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues, "Hyperplane distance", OpenViBE::Kernel::ParameterType_Matrix);
+			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ProbabilityValues, "Probability values", OpenViBE::Kernel::ParameterType_Matrix);
+			algorithmPrototype.addOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration, "Configuration", OpenViBE::Kernel::ParameterType_Pointer);
 
-			algorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_Train,                   "Train");
-			algorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_Classify,                "Classify");
-			algorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration,       "Load configuration");
-			algorithmPrototype.addInputTrigger   (OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration,       "Save configuration");
+			algorithmPrototype.addInputTrigger(OVTK_Algorithm_Classifier_InputTriggerId_Train, "Train");
+			algorithmPrototype.addInputTrigger(OVTK_Algorithm_Classifier_InputTriggerId_Classify, "Classify");
+			algorithmPrototype.addInputTrigger(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration, "Load configuration");
+			algorithmPrototype.addInputTrigger(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration, "Save configuration");
 
-			algorithmPrototype.addOutputTrigger  (OVTK_Algorithm_Classifier_OutputTriggerId_Success,                "Success");
-			algorithmPrototype.addOutputTrigger  (OVTK_Algorithm_Classifier_OutputTriggerId_Failed,                 "Failed");
+			algorithmPrototype.addOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, "Success");
+			algorithmPrototype.addOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Failed, "Failed");
 
 
 			return true;
 		}
 
-		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVTK_ClassId_Algorithm_ClassifierDesc);
+		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVTK_ClassId_Algorithm_ClassifierDesc)
 	};
-};
-
+}  // namespace OpenViBEToolkit

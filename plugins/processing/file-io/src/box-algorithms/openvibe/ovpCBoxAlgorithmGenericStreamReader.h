@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_GenericStreamReader_H__
-#define __OpenViBEPlugins_BoxAlgorithm_GenericStreamReader_H__
+#pragma once
 
 #include "../../ovp_defines.h"
 #include <openvibe/ov_all.h>
@@ -25,21 +24,19 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CBoxAlgorithmGenericStreamReader : public OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, public EBML::IReaderCallback
+		class CBoxAlgorithmGenericStreamReader : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, public EBML::IReaderCallback
 		{
 		public:
 
-			CBoxAlgorithmGenericStreamReader(void);
+			CBoxAlgorithmGenericStreamReader();
+			void release() override { delete this; }
+			uint64_t getClockFrequency() override;
+			bool initialize() override;
+			bool uninitialize() override;
+			bool processClock(OpenViBE::CMessageClock& rMessageClock) override;
+			bool process() override;
 
-			virtual void release(void) { delete this; }
-
-			virtual OpenViBE::uint64 getClockFrequency(void);
-			virtual OpenViBE::boolean initialize(void);
-			virtual OpenViBE::boolean uninitialize(void);
-			virtual OpenViBE::boolean processClock(OpenViBE::CMessageClock& rMessageClock);
-			virtual OpenViBE::boolean process(void);
-
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_GenericStreamReader);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_GenericStreamReader)
 
 
 		protected:
@@ -51,43 +48,41 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CMemoryBuffer m_oSwap;
 			OpenViBE::CMemoryBuffer m_oPendingChunk;
-			OpenViBE::uint64 m_ui64StartTime;
-			OpenViBE::uint64 m_ui64EndTime;
-			OpenViBE::uint32 m_ui32OutputIndex;
-			OpenViBE::boolean m_bPending;
-			OpenViBE::boolean m_bHasEBMLHeader;
+			uint64_t m_ui64StartTime = 0;
+			uint64_t m_ui64EndTime = 0;
+			uint32_t m_ui32OutputIndex = 0;
+			bool m_bPending = false;
+			bool m_bHasEBMLHeader = false;
 
-			::FILE* m_pFile;
-			std::stack < EBML::CIdentifier > m_vNodes;
-			std::map < OpenViBE::uint32, OpenViBE::uint32 > m_vStreamIndexToOutputIndex;
-			std::map < OpenViBE::uint32, OpenViBE::CIdentifier > m_vStreamIndexToTypeIdentifier;
+			FILE* m_pFile = nullptr;
+			std::stack<EBML::CIdentifier> m_vNodes;
+			std::map<uint32_t, uint32_t> m_vStreamIndexToOutputIndex;
+			std::map<uint32_t, OpenViBE::CIdentifier> m_vStreamIndexToTypeIdentifier;
 
 		private:
-			OpenViBE::boolean initializeFile();
-
-			virtual EBML::boolean isMasterChild(const EBML::CIdentifier& rIdentifier);
-			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-			virtual void closeChild(void);
+			bool initializeFile();
+			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
+			void openChild(const EBML::CIdentifier& rIdentifier) override;
+			void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override;
+			void closeChild() override;
 		};
 
-		class CBoxAlgorithmGenericStreamReaderListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmGenericStreamReaderListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			OpenViBE::boolean check(OpenViBE::Kernel::IBox& rBox)
+			bool check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
-				OpenViBE::uint32 i;
-				for(i=0; i<rBox.getOutputCount(); i++)
+				for (uint32_t i = 0; i < rBox.getOutputCount(); i++)
 				{
-					sprintf(l_sName, "Output stream %u", i+1);
+					sprintf(l_sName, "Output stream %u", i + 1);
 					rBox.setOutputName(i, l_sName);
 				}
 				return true;
 			}
 
-			virtual OpenViBE::boolean onDefaultInitialized(OpenViBE::Kernel::IBox& rBox)
+			bool onDefaultInitialized(OpenViBE::Kernel::IBox& rBox) override
 			{
 				rBox.setOutputName(0, "Output Signal");
 				rBox.setOutputType(0, OV_TypeId_Signal);
@@ -95,20 +90,20 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				rBox.setOutputType(ui32Index, OV_TypeId_EBMLStream);
 				this->check(rBox);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				this->check(rBox);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				this->check(rBox);
 				return true;
@@ -120,38 +115,32 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmGenericStreamReaderDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Generic stream reader"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Reads OpenViBE streams saved in the .ov format"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("Generic Stream Writer box can be used to store data in the format read by this box"); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("File reading and writing/OpenViBE"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_GenericStreamReader; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmGenericStreamReader; }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmGenericStreamReaderListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
 
-			virtual void release(void) { }
-
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Generic stream reader"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Reads OpenViBE streams saved in the .ov format"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("Generic Stream Writer box can be used to store data in the format read by this box"); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("File reading and writing/OpenViBE"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_GenericStreamReader; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::FileIO::CBoxAlgorithmGenericStreamReader; }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmGenericStreamReaderListener; }
-			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
-
-			virtual OpenViBE::boolean getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
 			{
-				rBoxAlgorithmPrototype.addOutput ("Output stream 1", OV_TypeId_EBMLStream);
+				rBoxAlgorithmPrototype.addOutput("Output stream 1", OV_TypeId_EBMLStream);
 				rBoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "");
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanAddOutput);
-				rBoxAlgorithmPrototype.addFlag   (OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddOutput);
+				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 				return true;
 			}
 
-			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_GenericStreamReaderDesc);
+			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_GenericStreamReaderDesc)
 		};
 	};
 };
-
-#endif // __OpenViBEPlugins_BoxAlgorithm_GenericStreamReader_H__

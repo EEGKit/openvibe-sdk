@@ -24,39 +24,37 @@
 #include <fs/Files.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const CString& rApplicationName, const CString& rConfigurationFile)
-	:m_rMasterKernelContext(pMasterKernelContext?*pMasterKernelContext:*this)
-	,m_pAlgorithmManager(nullptr)
-	,m_pConfigurationManager(nullptr)
-	,m_pKernelObjectFactory(nullptr)
-	,m_pPlayerManager(nullptr)
-	,m_pPluginManager(nullptr)
-	,m_pMetaboxManager(nullptr)
-	,m_pScenarioManager(nullptr)
-	,m_pTypeManager(nullptr)
-	,m_pLogManager(nullptr)
-	,m_pErrorManager(nullptr)
-	,m_sApplicationName(rApplicationName)
-	,m_sConfigurationFile(rConfigurationFile)
-	,m_pLogListenerConsole(nullptr)
-	,m_pLogListenerFile(nullptr)
-{
-}
+	: m_rMasterKernelContext(pMasterKernelContext ? *pMasterKernelContext : *this)
+	  , m_pAlgorithmManager(nullptr)
+	  , m_pConfigurationManager(nullptr)
+	  , m_pKernelObjectFactory(nullptr)
+	  , m_pPlayerManager(nullptr)
+	  , m_pPluginManager(nullptr)
+	  , m_pMetaboxManager(nullptr)
+	  , m_pScenarioManager(nullptr)
+	  , m_pTypeManager(nullptr)
+	  , m_pLogManager(nullptr)
+	  , m_pErrorManager(nullptr)
+	  , m_sApplicationName(rApplicationName)
+	  , m_sConfigurationFile(rConfigurationFile)
+	  , m_pLogListenerConsole(nullptr)
+	  , m_pLogListenerFile(nullptr) {}
 
-CKernelContext::~CKernelContext(void)
+CKernelContext::~CKernelContext()
 {
 	this->uninitialize();
 }
 
-bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
+bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 {
 	std::map<std::string, std::string> initializationTokens;
 	auto token = tokenList;
 	while (token && tokenCount > 0)
 	{
-		auto key = tokenList++;
+		auto key   = tokenList++;
 		auto value = tokenList++;
 		tokenCount--;
 		initializationTokens[*key] = *value;
@@ -86,12 +84,12 @@ bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 
 
 	m_pConfigurationManager->createConfigurationToken("ApplicationName", m_sApplicationName);
-	m_pConfigurationManager->createConfigurationToken("Path_UserData", OpenViBE::Directories::getUserDataDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Log", OpenViBE::Directories::getLogDir());
+	m_pConfigurationManager->createConfigurationToken("Path_UserData", Directories::getUserDataDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Log", Directories::getLogDir());
 	m_pConfigurationManager->createConfigurationToken("Path_Tmp", "${Path_UserData}/tmp");
-	m_pConfigurationManager->createConfigurationToken("Path_Lib", OpenViBE::Directories::getLibDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Bin", OpenViBE::Directories::getBinDir());
-	m_pConfigurationManager->createConfigurationToken("Path_Data", OpenViBE::Directories::getDataDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Lib", Directories::getLibDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Bin", Directories::getBinDir());
+	m_pConfigurationManager->createConfigurationToken("Path_Data", Directories::getDataDir());
 
 #if defined TARGET_OS_Windows
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Windows");
@@ -103,8 +101,8 @@ bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 	m_pConfigurationManager->createConfigurationToken("OperatingSystem", "Unknown");
 #endif
 
-	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternMacOS",   "libopenvibe-plugins-*.dylib");
-	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternLinux",   "libopenvibe-plugins-*.so");
+	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternMacOS", "libopenvibe-plugins-*.dylib");
+	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternLinux", "libopenvibe-plugins-*.so");
 	m_pConfigurationManager->createConfigurationToken("Kernel_PluginsPatternWindows", "openvibe-plugins-*.dll");
 	m_pConfigurationManager->createConfigurationToken("Kernel_Plugins", "${Path_Lib}/${Kernel_PluginsPattern${OperatingSystem}}");
 
@@ -126,16 +124,10 @@ bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 
 	this->getLogManager() << LogLevel_Info << "Adding kernel configuration file [" << m_sConfigurationFile << "]\n";
 
-	OV_ERROR_UNLESS_KRF(
-		m_pConfigurationManager->addConfigurationFromFile(m_sConfigurationFile),
-		"Problem parsing config file [" << m_sConfigurationFile << "]",
-		ErrorType::Internal
-	);
+	OV_ERROR_UNLESS_KRF(m_pConfigurationManager->addConfigurationFromFile(m_sConfigurationFile),
+						"Problem parsing config file [" << m_sConfigurationFile << "]", ErrorType::Internal);
 
-	// Generate the openvibe directories that the applications may write to. These are done after addConfigurationFromFile(), in case the defaults have been modified.
-	// @FIXME note that there is an issue if these paths are changed by a delayed configuration, then the directories are not created unless the caller does it.
-	CString l_sPathTmp;
-	l_sPathTmp = m_pConfigurationManager->expand("${Path_UserData}");
+	CString l_sPathTmp = m_pConfigurationManager->expand("${Path_UserData}");
 	FS::Files::createPath(l_sPathTmp.toASCIIString());
 	l_sPathTmp = m_pConfigurationManager->expand("${Path_Tmp}");
 	FS::Files::createPath(l_sPathTmp.toASCIIString());
@@ -148,9 +140,9 @@ bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 	m_pLogListenerFile->activate(true);
 	this->getLogManager().addListener(m_pLogListenerFile.get());
 
-	ELogLevel l_eMainLogLevel   =this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_MainLogLevel}"));
-	ELogLevel l_eConsoleLogLevel=this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_ConsoleLogLevel}"));
-	ELogLevel l_eFileLogLevel   =this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_FileLogLevel}"));
+	ELogLevel l_eMainLogLevel    = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_MainLogLevel}"));
+	ELogLevel l_eConsoleLogLevel = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_ConsoleLogLevel}"));
+	ELogLevel l_eFileLogLevel    = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_FileLogLevel}"));
 
 	m_pLogManager->activate(false);
 	m_pLogManager->activate(l_eMainLogLevel, LogLevel_Last, true);
@@ -208,7 +200,7 @@ bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 	m_pTypeManager->registerStreamType(OV_TypeId_CovarianceMatrix, "Covariance Matrix", OV_TypeId_StreamedMatrix);
 
 
-	m_pTypeManager->registerType(OV_TypeId_Message,  "Message");
+	m_pTypeManager->registerType(OV_TypeId_Message, "Message");
 
 	m_pScenarioManager.reset(new CScenarioManager(m_rMasterKernelContext));
 
@@ -219,7 +211,7 @@ bool CKernelContext::initialize(const char*const* tokenList, size_t tokenCount)
 	return true;
 }
 
-bool CKernelContext::uninitialize(void)
+bool CKernelContext::uninitialize()
 {
 	// As releaseScenario() can call into Plugin Manager we have to clear the scenario manager
 	// before destroying the Plugin Manager. We can not destroy the Scenario Manager first
@@ -258,42 +250,42 @@ bool CKernelContext::uninitialize(void)
 	return true;
 }
 
-IAlgorithmManager& CKernelContext::getAlgorithmManager(void) const
+IAlgorithmManager& CKernelContext::getAlgorithmManager() const
 {
 	assert(m_pAlgorithmManager);
 
 	return *m_pAlgorithmManager;
 }
 
-IConfigurationManager& CKernelContext::getConfigurationManager(void) const
+IConfigurationManager& CKernelContext::getConfigurationManager() const
 {
 	assert(m_pConfigurationManager);
 
 	return *m_pConfigurationManager;
 }
 
-IKernelObjectFactory& CKernelContext::getKernelObjectFactory(void) const
+IKernelObjectFactory& CKernelContext::getKernelObjectFactory() const
 {
 	assert(m_pKernelObjectFactory);
 
 	return *m_pKernelObjectFactory;
 }
 
-IPlayerManager& CKernelContext::getPlayerManager(void) const
+IPlayerManager& CKernelContext::getPlayerManager() const
 {
 	assert(m_pPlayerManager);
 
 	return *m_pPlayerManager;
 }
 
-IPluginManager& CKernelContext::getPluginManager(void) const
+IPluginManager& CKernelContext::getPluginManager() const
 {
 	assert(m_pPluginManager);
 
 	return *m_pPluginManager;
 }
 
-IMetaboxManager& CKernelContext::getMetaboxManager(void) const
+IMetaboxManager& CKernelContext::getMetaboxManager() const
 {
 	assert(m_pMetaboxManager);
 
@@ -301,28 +293,28 @@ IMetaboxManager& CKernelContext::getMetaboxManager(void) const
 }
 
 
-IScenarioManager& CKernelContext::getScenarioManager(void) const
+IScenarioManager& CKernelContext::getScenarioManager() const
 {
 	assert(m_pScenarioManager);
 
 	return *m_pScenarioManager;
 }
 
-ITypeManager& CKernelContext::getTypeManager(void) const
+ITypeManager& CKernelContext::getTypeManager() const
 {
 	assert(m_pTypeManager);
 
 	return *m_pTypeManager;
 }
 
-ILogManager& CKernelContext::getLogManager(void) const
+ILogManager& CKernelContext::getLogManager() const
 {
 	assert(m_pLogManager);
 
 	return *m_pLogManager;
 }
 
-IErrorManager& CKernelContext::getErrorManager(void) const
+IErrorManager& CKernelContext::getErrorManager() const
 {
 	assert(m_pErrorManager);
 
@@ -334,24 +326,22 @@ ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)
 	assert(m_pLogManager);
 
 	std::string l_sValue(rLogLevelName.toASCIIString());
-	std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), [](char c){
+	std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), [](char c)
+	{
 		return static_cast<char>(std::tolower(c));
 	});
 
-	if(l_sValue=="none")                     return LogLevel_None;
-	if(l_sValue=="debug")                    return LogLevel_Debug;
-	if(l_sValue=="benchmarking / profiling") return LogLevel_Benchmark;
-	if(l_sValue=="trace")                    return LogLevel_Trace;
-	if(l_sValue=="information")              return LogLevel_Info;
-	if(l_sValue=="warning")                  return LogLevel_Warning;
-	if(l_sValue=="important warning")        return LogLevel_ImportantWarning;
-	if(l_sValue=="error")                    return LogLevel_Error;
-	if(l_sValue=="fatal error")              return LogLevel_Fatal;
+	if (l_sValue == "none") { return LogLevel_None; }
+	if (l_sValue == "debug") { return LogLevel_Debug; }
+	if (l_sValue == "benchmarking / profiling") { return LogLevel_Benchmark; }
+	if (l_sValue == "trace") { return LogLevel_Trace; }
+	if (l_sValue == "information") { return LogLevel_Info; }
+	if (l_sValue == "warning") { return LogLevel_Warning; }
+	if (l_sValue == "important warning") { return LogLevel_ImportantWarning; }
+	if (l_sValue == "error") { return LogLevel_Error; }
+	if (l_sValue == "fatal error") { return LogLevel_Fatal; }
 
-	OV_WARNING(
-		"Invalid log level " << rLogLevelName << " specified in configuration file, falling back to " << CString("Debug"),
-		(*m_pLogManager)
-	);
+	OV_WARNING("Invalid log level " << rLogLevelName << " specified in configuration file, falling back to " << CString("Debug"), (*m_pLogManager));
 
 	return LogLevel_Debug;
 }

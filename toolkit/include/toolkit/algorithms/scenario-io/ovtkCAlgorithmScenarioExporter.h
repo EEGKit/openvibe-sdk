@@ -10,16 +10,13 @@
 
 namespace OpenViBEToolkit
 {
-	class OVTK_API CAlgorithmScenarioExporter : public OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithmScenarioExporter >
+	class OVTK_API CAlgorithmScenarioExporter : public TAlgorithm<OpenViBE::Plugins::IAlgorithmScenarioExporter>
 	{
 	public:
-
-		virtual void release(void) { delete this; }
-
-		virtual OpenViBE::boolean process(void);
+		void release() override { delete this; }
+		bool process() override;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithmScenarioExporter >, OVTK_ClassId_Algorithm_ScenarioExporter)
-
 	};
 
 	class OVTK_API CAlgorithmScenarioExporterDesc : public OpenViBE::Plugins::IAlgorithmScenarioExporterDesc
@@ -28,5 +25,4 @@ namespace OpenViBEToolkit
 
 		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmDesc, OVTK_ClassId_Algorithm_ScenarioExporterDesc)
 	};
-}
-
+}  // namespace OpenViBEToolkit

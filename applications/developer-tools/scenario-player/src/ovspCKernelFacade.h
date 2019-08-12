@@ -48,7 +48,6 @@ namespace OpenViBE
 	*/
 	class KernelFacade final
 	{
-
 	public:
 
 		KernelFacade();
@@ -105,8 +104,8 @@ namespace OpenViBE
 
 		// disable copy and assignment because it is not meant to used
 		// as a value class event if it is not inheritable
-		KernelFacade(const KernelFacade&) = delete;
-		KernelFacade &operator=(const KernelFacade&) = delete;
+		KernelFacade(const KernelFacade&)            = delete;
+		KernelFacade& operator=(const KernelFacade&) = delete;
 
 		struct KernelFacadeImpl;
 		std::unique_ptr<KernelFacadeImpl> m_Pimpl;

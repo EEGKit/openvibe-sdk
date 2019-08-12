@@ -37,7 +37,7 @@ namespace
 TEST(CSV_Writer_Test_Case, signalWriterNormalGoodSignal)
 {
 	ICSVHandler* signalWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSignalWriter01.csv";
+	const std::string filename    = directoryPath + "testCSVSignalWriter01.csv";
 
 	ASSERT_TRUE(signalWriterTest->openFile(filename, EFileAccessMode::Write));
 	signalWriterTest->setFormatType(EStreamType::Signal);
@@ -65,7 +65,7 @@ TEST(CSV_Writer_Test_Case, signalWriterNormalGoodSignal)
 TEST(CSV_Writer_Test_Case, signalWriterNoStimulations)
 {
 	ICSVHandler* signalWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSignalWriter02.csv";
+	const std::string filename    = directoryPath + "testCSVSignalWriter02.csv";
 
 	ASSERT_TRUE(signalWriterTest->openFile(filename, EFileAccessMode::Write));
 	signalWriterTest->setFormatType(EStreamType::Signal);
@@ -114,7 +114,7 @@ TEST(CSV_Writer_Test_Case, signalWriterWrongInputType)
 TEST(CSV_Writer_Test_Case, signalWriterWrongMatrixSize)
 {
 	ICSVHandler* signalWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSignalWriter05.csv";
+	const std::string filename    = directoryPath + "testCSVSignalWriter05.csv";
 
 	ASSERT_TRUE(signalWriterTest->openFile(filename, EFileAccessMode::Write));
 	signalWriterTest->setFormatType(EStreamType::Signal);
@@ -130,7 +130,7 @@ TEST(CSV_Writer_Test_Case, signalWriterWrongMatrixSize)
 TEST(CSV_Writer_Test_Case, signalWriterTonsOfSignalWithoutSetNoEventsUntilDate)
 {
 	ICSVHandler* signalWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSignalWriter06.csv";
+	const std::string filename    = directoryPath + "testCSVSignalWriter06.csv";
 
 	ASSERT_TRUE(signalWriterTest->openFile(filename, EFileAccessMode::Write));
 	signalWriterTest->setFormatType(EStreamType::Signal);
@@ -148,7 +148,7 @@ TEST(CSV_Writer_Test_Case, signalWriterTonsOfSignalWithoutSetNoEventsUntilDate)
 TEST(CSV_Writer_Test_Case, signalWriterTonsOfSignalWithSetNoEventsUntilDate)
 {
 	ICSVHandler* signalWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSignalWriter07.csv";
+	const std::string filename    = directoryPath + "testCSVSignalWriter07.csv";
 
 	ASSERT_TRUE(signalWriterTest->openFile(filename, EFileAccessMode::Write));
 	signalWriterTest->setFormatType(EStreamType::Signal);
@@ -201,7 +201,7 @@ TEST(CSV_Writer_Test_Case, signalWriterOnlyLastMatrix)
 TEST(CSV_Writer_Test_Case, spectrumWriterNormalGoodSignal)
 {
 	ICSVHandler* spectrumWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSpectrumWriter01.csv";
+	const std::string filename      = directoryPath + "testCSVSpectrumWriter01.csv";
 
 	ASSERT_TRUE(spectrumWriterTest->openFile(filename, EFileAccessMode::Write));
 	spectrumWriterTest->setFormatType(EStreamType::Spectrum);
@@ -217,7 +217,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterNormalGoodSignal)
 	{
 		unsigned int epoch = i / 4;
 		std::vector<double> sample;
-		for (double index = -64.0; index < 64.0; sample.push_back(index++));
+		for (double index = -64.0; index < 64.0; sample.push_back(index++)) { }
 
 		ASSERT_TRUE(spectrumWriterTest->addSample({ time, time + 1.0, sample, epoch }));
 
@@ -237,7 +237,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterNormalGoodSignal)
 TEST(CSV_Writer_Test_Case, spectrumWriterWrongInputType)
 {
 	ICSVHandler* spectrumWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSpectrumWriter02.csv";
+	const std::string filename      = directoryPath + "testCSVSpectrumWriter02.csv";
 
 	ASSERT_TRUE(spectrumWriterTest->openFile(filename, EFileAccessMode::Write));
 	spectrumWriterTest->setFormatType(EStreamType::Signal);
@@ -256,7 +256,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterWrongInputType)
 TEST(CSV_Writer_Test_Case, spectrumWriterWrongMatrixSize)
 {
 	ICSVHandler* spectrumWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVSpectrumWriter03.csv";
+	const std::string filename      = directoryPath + "testCSVSpectrumWriter03.csv";
 
 	ASSERT_TRUE(spectrumWriterTest->openFile(filename, EFileAccessMode::Write));
 	spectrumWriterTest->setFormatType(EStreamType::Spectrum);
@@ -276,7 +276,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterWrongMatrixSize)
 TEST(CSV_Writer_Test_Case, matrixWriterNormalGoodSignal)
 {
 	ICSVHandler* matrixWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter01.csv";
+	const std::string filename    = directoryPath + "testCSVMatrixWriter01.csv";
 
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::StreamedMatrix);
@@ -303,7 +303,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterNormalGoodSignal)
 TEST(CSV_Writer_Test_Case, matrixWriterEmptyLabels)
 {
 	ICSVHandler* matrixWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter02.csv";
+	const std::string filename    = directoryPath + "testCSVMatrixWriter02.csv";
 
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::StreamedMatrix);
@@ -330,7 +330,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterEmptyLabels)
 TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes)
 {
 	ICSVHandler* matrixWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter03.csv";
+	const std::string filename    = directoryPath + "testCSVMatrixWriter03.csv";
 
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::StreamedMatrix);
@@ -357,7 +357,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes)
 TEST(CSV_Writer_Test_Case, matrixWriterWrongMatrixSize)
 {
 	ICSVHandler* matrixWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter04.csv";
+	const std::string filename    = directoryPath + "testCSVMatrixWriter04.csv";
 
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::StreamedMatrix);
@@ -372,7 +372,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterWrongMatrixSize)
 TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes2)
 {
 	ICSVHandler* matrixWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter05.csv";
+	const std::string filename    = directoryPath + "testCSVMatrixWriter05.csv";
 
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::StreamedMatrix);
@@ -405,7 +405,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes2)
 TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes3)
 {
 	ICSVHandler* matrixWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter06.csv";
+	const std::string filename    = directoryPath + "testCSVMatrixWriter06.csv";
 
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::StreamedMatrix);
@@ -439,7 +439,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes3)
 TEST(CSV_Writer_Test_Case, matrixWriterWithInvalidTime)
 {
 	ICSVHandler* matrixWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVMatrixWriter07.csv";
+	const std::string filename    = directoryPath + "testCSVMatrixWriter07.csv";
 
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::StreamedMatrix);
@@ -467,7 +467,7 @@ TEST(CSV_Writer_Test_Case, matrixWriterOnlyLastMatrix)
 
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 2, 2, 2 }, { "LA", "LB", "1", "2", "X", "Y" }));
 	ASSERT_TRUE(matrixWriterTest->writeHeaderToFile());
-	
+
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
@@ -490,11 +490,10 @@ TEST(CSV_Writer_Test_Case, matrixWriterOnlyLastMatrix)
 }
 
 
-
 TEST(CSV_Writer_Test_Case, featureVectorNormalGoodSignal)
 {
 	ICSVHandler* featureVectorWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVFeatureVectorWriter01.csv";
+	const std::string filename           = directoryPath + "testCSVFeatureVectorWriter01.csv";
 
 	ASSERT_TRUE(featureVectorWriterTest->openFile(filename, EFileAccessMode::Write));
 	featureVectorWriterTest->setFormatType(EStreamType::FeatureVector);
@@ -522,7 +521,7 @@ TEST(CSV_Writer_Test_Case, featureVectorNormalGoodSignal)
 TEST(CSV_Writer_Test_Case, featureVectorEmptyLabels)
 {
 	ICSVHandler* featureVectorWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVFeatureVectorWriter02.csv";
+	const std::string filename           = directoryPath + "testCSVFeatureVectorWriter02.csv";
 
 	ASSERT_TRUE(featureVectorWriterTest->openFile(filename, EFileAccessMode::Write));
 	featureVectorWriterTest->setFormatType(EStreamType::FeatureVector);
@@ -545,7 +544,7 @@ TEST(CSV_Writer_Test_Case, featureVectorEmptyLabels)
 TEST(CSV_Writer_Test_Case, featureVectorWrongVectorSize)
 {
 	ICSVHandler* featureVectorWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVFeatureVectorWriter03.csv";
+	const std::string filename           = directoryPath + "testCSVFeatureVectorWriter03.csv";
 
 	ASSERT_TRUE(featureVectorWriterTest->openFile(filename, EFileAccessMode::Write));
 	featureVectorWriterTest->setFormatType(EStreamType::FeatureVector);
@@ -561,11 +560,10 @@ TEST(CSV_Writer_Test_Case, featureVectorWrongVectorSize)
 }
 
 
-
 TEST(CSV_Writer_Test_Case, covarianceMatrixWriterNormalGoodSignal)
 {
 	ICSVHandler* matrixWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVCovarMatrixWriter01.csv";
+	const std::string filename    = directoryPath + "testCSVCovarMatrixWriter01.csv";
 
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::CovarianceMatrix);
@@ -588,7 +586,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterNormalGoodSignal)
 TEST(CSV_Writer_Test_Case, covarianceMatrixWriterEmptyLabels)
 {
 	ICSVHandler* matrixWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVCovarMatrixWriter02.csv";
+	const std::string filename    = directoryPath + "testCSVCovarMatrixWriter02.csv";
 
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::CovarianceMatrix);
@@ -611,7 +609,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterEmptyLabels)
 TEST(CSV_Writer_Test_Case, covarianceMatrixWriterWrongMatrixSize)
 {
 	ICSVHandler* matrixWriterTest = createCSVHandler();
-	const std::string filename = directoryPath + "testCSVCovarMatrixWriter04.csv";
+	const std::string filename    = directoryPath + "testCSVCovarMatrixWriter04.csv";
 
 	ASSERT_TRUE(matrixWriterTest->openFile(filename, EFileAccessMode::Write));
 	matrixWriterTest->setFormatType(EStreamType::CovarianceMatrix);
@@ -624,14 +622,10 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterWrongMatrixSize)
 }
 
 
-
 int uoCSVWriterTest(int argc, char* argv[])
 {
-	if (argv[1] != nullptr)
-	{
-		directoryPath = argv[1];
-	}
-	::testing::InitGoogleTest(&argc, argv);
+	if (argv[1] != nullptr) { directoryPath = argv[1]; }
+	testing::InitGoogleTest(&argc, argv);
 	::testing::GTEST_FLAG(filter) = "CSV_Writer_Test_Case.*";
 	return RUN_ALL_TESTS();
 }

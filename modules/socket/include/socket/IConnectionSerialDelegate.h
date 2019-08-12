@@ -1,5 +1,4 @@
-#ifndef __Socket_IConnectionSerialDelegate_H__
-#define __Socket_IConnectionSerialDelegate_H__
+#pragma once
 
 #include "TConnectionDelegate.h"
 #include "IConnectionSerial.h"
@@ -20,18 +19,15 @@ namespace Socket
 		//bool(*fSetTimeouts)(void*, unsigned long ui32DecisecondsTimeout);
 	};
 
-	class Socket_API IConnectionSerialDelegate : public Socket::TConnectionDelegate<Socket::IConnectionSerial>
+	class Socket_API IConnectionSerialDelegate : public TConnectionDelegate<IConnectionSerial>
 	{
 	public:
 		IConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate);
-		virtual ~IConnectionSerialDelegate();
+		~IConnectionSerialDelegate() override;
 
 	protected:
 		SConnectionSerialDelegate m_oConnectionSerialDelegate;
-
 	};
 
 	extern Socket_API IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate);
 }
-
-#endif // __Socket_IConnectionSerialDelegate_H__

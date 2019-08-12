@@ -39,7 +39,6 @@ namespace OpenViBE
 	*/
 	class CommandLineOptionParser : public ICommandParser
 	{
-
 	public:
 
 		/**
@@ -50,13 +49,13 @@ namespace OpenViBE
 		*/
 		explicit CommandLineOptionParser(ProgramOptionParser& parser);
 
-		virtual void initialize() override;
+		void initialize() override;
 
-		virtual void uninitialize() override;
+		void uninitialize() override;
 
-		virtual std::vector<std::shared_ptr<ICommand>> getCommandList() const override;
+		std::vector<std::shared_ptr<ICommand>> getCommandList() const override;
 
-		virtual PlayerReturnCode parse() override;
+		PlayerReturnCode parse() override;
 
 	private:
 

@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_Offline_CSignalTrial_HPP__
-#define __OpenViBEToolkit_Offline_CSignalTrial_HPP__
+#pragma once
 
 #include "ovtkISignalTrial.h"
 
@@ -8,39 +7,35 @@
 
 namespace OpenViBEToolkit
 {
-	class CSignalTrial : public OpenViBEToolkit::ISignalTrial
+	class CSignalTrial : public ISignalTrial
 	{
 	public:
 
-		CSignalTrial(void);
-		virtual ~CSignalTrial(void);
+		CSignalTrial();
+		~CSignalTrial() override;
+		bool setSamplingRate(uint32_t ui32SamplingFrequency) override;
+		bool setChannelCount(uint32_t ui32ChannelCount) override;
+		bool setChannelName(uint32_t ui32ChannelIndex, const char* sChannelName) override;
+		bool setLabelIdentifier(const OpenViBE::CIdentifier& rLabelIdentifier) override;
+		bool setSampleCount(uint32_t ui32SampleCount, bool bPreserve) override;
+		uint32_t getSamplingRate() const override;
+		uint32_t getChannelCount() const override;
+		const char* getChannelName(uint32_t ui32ChannelIndex) const override;
+		OpenViBE::CIdentifier getLabelIdentifier() const override;
+		uint32_t getSampleCount() const override;
+		uint64_t getDuration() const override;
+		double* getChannelSampleBuffer(uint32_t ui32ChannelIndex) const override;
 
-		virtual OpenViBE::boolean setSamplingRate(const OpenViBE::uint32 ui32SamplingFrequency);
-		virtual OpenViBE::boolean setChannelCount(const OpenViBE::uint32 ui32ChannelCount);
-		virtual OpenViBE::boolean setChannelName(const OpenViBE::uint32 ui32ChannelIndex, const char* sChannelName);
-		virtual OpenViBE::boolean setLabelIdentifier(const OpenViBE::CIdentifier& rLabelIdentifier);
-		virtual OpenViBE::boolean setSampleCount(const OpenViBE::uint32 ui32SampleCount, const OpenViBE::boolean bPreserve);
-
-		virtual OpenViBE::uint32 getSamplingRate(void) const;
-		virtual OpenViBE::uint32 getChannelCount(void) const;
-		virtual const char* getChannelName(const OpenViBE::uint32 ui32ChannelIndex) const;
-		virtual OpenViBE::CIdentifier getLabelIdentifier(void) const;
-		virtual OpenViBE::uint32 getSampleCount(void) const;
-		virtual OpenViBE::uint64 getDuration(void) const;
-		virtual OpenViBE::float64* getChannelSampleBuffer(const OpenViBE::uint32 ui32ChannelIndex) const;
-
-		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrial, OVTK_ClassId_);
+		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrial, OVTK_ClassId_)
 
 	protected:
 
-		std::map<OpenViBE::uint32, std::string> m_vChannelName;
-		std::map<OpenViBE::uint32, OpenViBE::float64*> m_vChannelSample;
-		OpenViBE::uint32 m_ui32ChannelCount;
-		OpenViBE::uint32 m_ui32SampleCount;
-		OpenViBE::uint32 m_ui32SampleCountReserved;
-		OpenViBE::uint32 m_ui32SamplingRate;
-		OpenViBE::CIdentifier m_oLabelIdentifier;
+		std::map<uint32_t, std::string> m_vChannelName;
+		std::map<uint32_t, double*> m_vChannelSample;
+		uint32_t m_ui32ChannelCount = 0;
+		uint32_t m_ui32SampleCount = 0;
+		uint32_t m_ui32SampleCountReserved = 0;
+		uint32_t m_ui32SamplingRate = 0;
+		OpenViBE::CIdentifier m_oLabelIdentifier = OV_UndefinedIdentifier;
 	};
-};
-
-#endif // __OpenViBEToolkit_Offline_CSignalTrial_HPP__
+}  // namespace OpenViBEToolkit

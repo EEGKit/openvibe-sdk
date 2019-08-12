@@ -1,13 +1,13 @@
 #include "ovpCAlgorithmOVMatrixFileReader.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::FileIO;
+using namespace FileIO;
 
-boolean CAlgorithmOVMatrixFileReader::initialize(void)
+bool CAlgorithmOVMatrixFileReader::initialize()
 {
 	ip_sFilename.initialize(getInputParameter(OVP_Algorithm_OVMatrixFileReader_InputParameterId_Filename));
 
@@ -16,7 +16,7 @@ boolean CAlgorithmOVMatrixFileReader::initialize(void)
 	return true;
 }
 
-boolean CAlgorithmOVMatrixFileReader::uninitialize(void)
+bool CAlgorithmOVMatrixFileReader::uninitialize()
 {
 	op_pMatrix.uninitialize();
 
@@ -25,13 +25,11 @@ boolean CAlgorithmOVMatrixFileReader::uninitialize(void)
 	return true;
 }
 
-boolean CAlgorithmOVMatrixFileReader::process(void)
+bool CAlgorithmOVMatrixFileReader::process()
 {
-	OV_ERROR_UNLESS_KRF(
-		OpenViBEToolkit::Tools::Matrix::loadFromTextFile(*op_pMatrix, ip_sFilename->toASCIIString()),
-		"Reading matrix file " << *ip_sFilename << " failed",
-		OpenViBE::Kernel::ErrorType::BadFileRead
-	);
+	OV_ERROR_UNLESS_KRF(OpenViBEToolkit::Tools::Matrix::loadFromTextFile(*op_pMatrix, ip_sFilename->toASCIIString()),
+						"Reading matrix file " << *ip_sFilename << " failed",
+						OpenViBE::Kernel::ErrorType::BadFileRead);
 
 	return true;
 }

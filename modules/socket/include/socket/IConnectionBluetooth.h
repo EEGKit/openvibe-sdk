@@ -7,7 +7,7 @@
 
 namespace Socket
 {
-	class Socket_API IConnectionBluetooth: public Socket::IConnection
+	class Socket_API IConnectionBluetooth : public IConnection
 	{
 	public:
 	
@@ -16,24 +16,24 @@ namespace Socket
 		 * \param[in] ui64BluetoothAddress the MAC address of the Bluetooth device.
 		 * \return If the function succeeds, the return value is true, else false.
 		 */
-		virtual boolean connect(unsigned long long ui64BluetoothAddress) = 0;
+		virtual bool connect(unsigned long long ui64BluetoothAddress) = 0;
 		
 		/**
 		 * \brief Return the input serial pending byte count.
 		 * \return The number of pending byte.
 		 */
-		virtual uint32 getPendingByteCount(void) = 0;
+		virtual uint32_t getPendingByteCount() = 0;
 
 		/**
 		 * \brief Flush the input serial buffer.
 		 * \return If the function succeeds, the return value is true, else false.
 		 */
-		virtual const char* getLastError(void) const = 0;
+		virtual const char* getLastError() const = 0;
 
 		/**
 		 * \brief Clear the last error registered.
 		 */
-		virtual void clearError(void) = 0;
+		virtual void clearError() = 0;
 
 		/** 
 		 * \brief List the paired bluetooth devices: Name and Bluetooth MAC address.
@@ -44,7 +44,7 @@ namespace Socket
 		 *
 		 * \return  If the function succeeds, the return value is true, else false.
 		 */
-		virtual bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** bluetoothNames, unsigned long long ** bluetoothAddresses) = 0;
+		virtual bool listPairedBluetoothDevices(unsigned int* pairedBluetoothDevicesCount, char** bluetoothNames, unsigned long long** bluetoothAddresses) = 0;
 
 		/**
 		 * \brief Convert string MAC Bluetooth address to hexadecimal.
@@ -61,37 +61,33 @@ namespace Socket
 							   &aaddr[0], &aaddr[1], &aaddr[2],
 							   &aaddr[3], &aaddr[4], &aaddr[5]);
 
-			if (value != 6)
-			{
-				return false;
-			}
+			if (value != 6) { return false; }
 
 			*btaddr = 0;
 
 			for (size_t i = 0; i < 6; i++)
 			{
 				unsigned long long tmpaddr = static_cast<unsigned long long>(aaddr[i] & 0xff);
-				*btaddr = (*btaddr << 8) + tmpaddr;
+				*btaddr                    = (*btaddr << 8) + tmpaddr;
 			}
 
 			return true;
 		}
 
-		
+
 	protected:
 
-	#if defined TARGET_OS_Windows
+#if defined TARGET_OS_Windows
 
 		static const unsigned char m_ui8WinSocketMajorVersion = 2; // Winsock major version to use
 		static const unsigned char m_ui8WinSocketMinorVersion = 2; // Winsock minor version to use
 
 		static bool b_IsWinsockInitialized;
 
-	#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-	#endif
-
+#endif
 	};
 
-	extern Socket_API Socket::IConnectionBluetooth* createConnectionBluetooth(void);
-};
+	extern Socket_API IConnectionBluetooth* createConnectionBluetooth();
+} // namespace Socket

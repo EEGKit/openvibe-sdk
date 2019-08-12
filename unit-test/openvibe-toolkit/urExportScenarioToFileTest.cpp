@@ -7,7 +7,7 @@
 #include "ovtTestFixtureCommon.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 int urImportScenarioFromFileTest(int argc, char* argv[]);
 
@@ -16,12 +16,11 @@ int urImportScenarioFromFileTest(int argc, char* argv[]);
 #define OVP_ClassId_BoxAlgorithm_StimulationListener OpenViBE::CIdentifier(0x65731E1D, 0x47DE5276)
 
 
-
 #include "urSimpleTestScenarioDefinition.h"
 
 int urExportScenarioToFileTest(int argc, char* argv[])
 {
-	const char* configurationFile = argv[1];
+	const char* configurationFile  = argv[1];
 	const char* temporaryDirectory = argv[2];
 
 	{
@@ -29,19 +28,19 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 
 		auto& context = fixture->context;
 
-		#if defined TARGET_OS_Windows
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
-		#elif defined TARGET_OS_Linux
+#if defined TARGET_OS_Windows
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
+#elif defined TARGET_OS_Linux
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
-		#elif defined TARGET_OS_MacOS
+#elif defined TARGET_OS_MacOS
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
-		#endif
+#endif
 
 		CIdentifier emptyScenarioIdentifier;
 		context->getScenarioManager().createScenario(emptyScenarioIdentifier);
@@ -125,4 +124,3 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 
 	return urImportScenarioFromFileTest(argc, argv);
 }
-

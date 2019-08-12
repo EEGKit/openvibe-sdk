@@ -1,9 +1,8 @@
-#ifndef __OpenViBEToolkit_All_H__
-#define __OpenViBEToolkit_All_H__
+#pragma once
 
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
- #include "ovp_global_defines.h"
+#include "ovp_global_defines.h"
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
 //___________________________________________________________________//
@@ -92,11 +91,9 @@
 
 namespace OpenViBEToolkit
 {
-	OVTK_API OpenViBE::boolean initialize(const OpenViBE::Kernel::IKernelContext& rKernelContext);
-	OVTK_API OpenViBE::boolean uninitialize(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+	OVTK_API bool initialize(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+	OVTK_API bool uninitialize(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 
 	//
-	OpenViBE::boolean initializeStimulationList(const OpenViBE::Kernel::IKernelContext& rKernelContext);
+	bool initializeStimulationList(const OpenViBE::Kernel::IKernelContext& rKernelContext);
 };
-
-#endif // __OpenViBEToolkit_All_H__

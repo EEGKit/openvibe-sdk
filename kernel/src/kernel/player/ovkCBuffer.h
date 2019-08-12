@@ -1,5 +1,4 @@
-#ifndef __OpenViBEKernel_Kernel_Player_CBuffer_H__
-#define __OpenViBEKernel_Kernel_Player_CBuffer_H__
+#pragma once
 
 #include "../../ovk_base.h"
 
@@ -9,16 +8,16 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CBuffer : public OpenViBE::CMemoryBuffer
+		class CBuffer : public CMemoryBuffer
 		{
 		public:
 
-			CBuffer(void) { }
-			explicit CBuffer(const OpenViBE::Kernel::CBuffer& rBuffer);
+			CBuffer() { }
+			explicit CBuffer(const CBuffer& rBuffer);
 
 			CBuffer& operator=(const CBuffer& rBuffer);
 		};
-	};
-};
+	}  // namespace Kernel
+}  // namespace OpenViBE
 
-#endif // __OpenViBEKernel_Kernel_Player_CBuffer_H__
+

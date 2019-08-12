@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_CVector_H__
-#define __OpenViBEToolkit_CVector_H__
+#pragma once
 
 #include "../../ovtk_base.h"
 #include "../../ovtkIVector.h"
@@ -12,51 +11,47 @@ namespace OpenViBEToolkit
 	public:
 
 		explicit TVector(OpenViBE::IMatrix& rMatrix)
-			:m_rMatrix(rMatrix)
-		{
-		}
+			: m_rMatrix(rMatrix) { }
 
-		virtual OpenViBE::uint32 getSize(void) const
+		virtual uint32_t getSize() const
 		{
 			return m_rMatrix.getBufferElementCount();
 		}
 
-		virtual OpenViBE::boolean setSize(const OpenViBE::uint32 ui32Size)
+		virtual bool setSize(const uint32_t ui32Size)
 		{
 			m_rMatrix.setDimensionCount(1);
 			m_rMatrix.setDimensionSize(0, ui32Size);
 			return true;
 		}
 
-		virtual OpenViBE::float64* getBuffer(void)
+		virtual double* getBuffer()
 		{
 			return m_rMatrix.getBuffer();
 		}
 
-		virtual const OpenViBE::float64* getBuffer(void) const
+		virtual const double* getBuffer() const
 		{
 			return m_rMatrix.getBuffer();
 		}
 
-		virtual const char* getElementLabel(const OpenViBE::uint32 ui32Index) const
+		virtual const char* getElementLabel(const uint32_t ui32Index) const
 		{
 			return m_rMatrix.getDimensionLabel(0, ui32Index);
 		}
 
-		virtual OpenViBE::boolean setElementLabel(const OpenViBE::uint32 ui32Index, const char* sElementLabel)
+		virtual bool setElementLabel(const uint32_t ui32Index, const char* sElementLabel)
 		{
 			m_rMatrix.setDimensionLabel(0, ui32Index, sElementLabel);
 			return true;
 		}
 
-		_IsDerivedFromClass_Final_(CParent, OV_UndefinedIdentifier);
+		_IsDerivedFromClass_Final_(CParent, OV_UndefinedIdentifier)
 
 	protected:
 
 		OpenViBE::IMatrix& m_rMatrix;
 	};
 
-	typedef OpenViBEToolkit::TVector < OpenViBEToolkit::IVector > CVector;
-};
-
-#endif // __OpenViBEToolkit_CVector_H__
+	typedef TVector<IVector> CVector;
+}  // namespace OpenViBEToolkit

@@ -1,28 +1,27 @@
-#ifndef __Socket_IConnectionSerial_H__
-#define __Socket_IConnectionSerial_H__
+#pragma once
 
 #include "IConnection.h"
 #include <string>
 
 namespace Socket
 {
-	class Socket_API IConnectionSerial: public Socket::IConnection
+	class Socket_API IConnectionSerial : public IConnection
 	{
 	public:
 
-		virtual boolean connect(const char* sURL, unsigned long ui32BaudRate) = 0;
+		virtual bool connect(const char* sURL, unsigned long ui32BaudRate) = 0;
 		
 		/**
 		 * \brief Return the input serial pending byte count.
 		 * \return The number of pending byte.
 		 */
-		virtual uint32 getPendingByteCount() = 0;
+		virtual uint32_t getPendingByteCount() = 0;
 
 		/**
 		 * \brief Flush the input serial buffer.
 		 * \return If the function succeeds, the return value is true, else false.
 		 */
-		virtual boolean flush() = 0;
+		virtual bool flush() = 0;
 
 		/**
 		 * \brief Flush the input serial buffer.
@@ -50,10 +49,7 @@ namespace Socket
 
 	protected:
 		void saveLastError();
-
 	};
 
-	extern Socket_API Socket::IConnectionSerial* createConnectionSerial(void);
-};
-
-#endif // __Socket_IConnectionSerial_H__
+	extern Socket_API IConnectionSerial* createConnectionSerial();
+}

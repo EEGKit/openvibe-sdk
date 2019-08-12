@@ -20,86 +20,82 @@ namespace Socket
 	{
 	public:
 
-		bool listen(
-			uint32_t ui32Port)
+		bool listen(uint32_t ui32Port) override
 		{
-			if(!open())
-			{
-				return false;
-			}
+			if (!open()) { return false; }
 
-			int l_iReuseAddress=1;
+			int l_iReuseAddress = 1;
 #if defined TARGET_OS_Windows
-			::setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&l_iReuseAddress), sizeof(l_iReuseAddress));
+			setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&l_iReuseAddress), sizeof(l_iReuseAddress));
 #else
 			::setsockopt(m_i32Socket, SOL_SOCKET, SO_REUSEADDR, &l_iReuseAddress, sizeof(l_iReuseAddress));
 #endif
 
 			struct sockaddr_in l_oLocalHostAddress;
 			memset(&l_oLocalHostAddress, 0, sizeof(l_oLocalHostAddress));
-			l_oLocalHostAddress.sin_family=AF_INET;
-			l_oLocalHostAddress.sin_port=htons((unsigned short)ui32Port);
-			l_oLocalHostAddress.sin_addr.s_addr=htonl(INADDR_ANY);
+			l_oLocalHostAddress.sin_family      = AF_INET;
+			l_oLocalHostAddress.sin_port        = htons((unsigned short)ui32Port);
+			l_oLocalHostAddress.sin_addr.s_addr = htonl(INADDR_ANY);
 
-			if(::bind(m_i32Socket, (struct sockaddr*)&l_oLocalHostAddress, sizeof(l_oLocalHostAddress))==-1)
+			if (bind(m_i32Socket, (struct sockaddr*)&l_oLocalHostAddress, sizeof(l_oLocalHostAddress)) == -1)
 			{
-/*
-				switch(errno)
-				{
-					case EBADF: std::cout << "EBADF" << std::endl; break;
-					case ENOTSOCK: std::cout << "ENOTSOCK" << std::endl; break;
-					case EADDRINUSE: std::cout << "EADDRINUSE" << std::endl; break;
-					case EINVAL: std::cout << "EINVAL" << std::endl; break;
-					case EROFS: std::cout << "EROFS" << std::endl; break;
-					case EFAULT: std::cout << "EFAULT" << std::endl; break;
-					case ENAMETOOLONG: std::cout << "ENAMETOOLONG" << std::endl; break;
-					case ENOENT: std::cout << "ENOENT" << std::endl; break;
-					case ENOMEM: std::cout << "ENOMEM" << std::endl; break;
-					case ENOTDIR: std::cout << "ENOTDIR" << std::endl; break;
-					case EACCES: std::cout << "EACCES" << std::endl; break;
-					case ELOOP: std::cout << "ELOOP" << std::endl; break;
-					default: std::cout << "Bind_unknown" << std::endl;
-				}
-*/
+				/*
+								switch(errno)
+								{
+									case EBADF: std::cout << "EBADF" << std::endl; break;
+									case ENOTSOCK: std::cout << "ENOTSOCK" << std::endl; break;
+									case EADDRINUSE: std::cout << "EADDRINUSE" << std::endl; break;
+									case EINVAL: std::cout << "EINVAL" << std::endl; break;
+									case EROFS: std::cout << "EROFS" << std::endl; break;
+									case EFAULT: std::cout << "EFAULT" << std::endl; break;
+									case ENAMETOOLONG: std::cout << "ENAMETOOLONG" << std::endl; break;
+									case ENOENT: std::cout << "ENOENT" << std::endl; break;
+									case ENOMEM: std::cout << "ENOMEM" << std::endl; break;
+									case ENOTDIR: std::cout << "ENOTDIR" << std::endl; break;
+									case EACCES: std::cout << "EACCES" << std::endl; break;
+									case ELOOP: std::cout << "ELOOP" << std::endl; break;
+									default: std::cout << "Bind_unknown" << std::endl;
+								}
+				*/
 				return false;
 			}
 
-			if(::listen(m_i32Socket, 32)==-1)
+			if (::listen(m_i32Socket, 32) == -1)
 			{
-/*
-				switch(errno)
-				{
-					case EADDRINUSE: std::cout << "EADDRINUSE" << std::endl; break;
-					case EBADF: std::cout << "EBADF" << std::endl; break;
-					case ENOTSOCK: std::cout << "ENOTSOCK" << std::endl; break;
-					case EOPNOTSUPP: std::cout << "EOPNOTSUPP" << std::endl; break;
-					default: std::cout << "Listen_unknown" << std::endl;
-				}
-*/
+				/*
+								switch(errno)
+								{
+									case EADDRINUSE: std::cout << "EADDRINUSE" << std::endl; break;
+									case EBADF: std::cout << "EBADF" << std::endl; break;
+									case ENOTSOCK: std::cout << "ENOTSOCK" << std::endl; break;
+									case EOPNOTSUPP: std::cout << "EOPNOTSUPP" << std::endl; break;
+									default: std::cout << "Listen_unknown" << std::endl;
+								}
+				*/
 				return false;
 			}
 
 			return true;
 		}
 
-		IConnection* accept(void)
+		IConnection* accept() override
 		{
 			struct sockaddr_in l_oClientAddress;
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			socklen_t l_iClientAddressSize=sizeof(l_oClientAddress);
 #elif defined TARGET_OS_Windows
-			int l_iClientAddressSize=sizeof(l_oClientAddress);
+			int l_iClientAddressSize = sizeof(l_oClientAddress);
 #else
 #endif
-			int32 l_i32ClientSocket=::accept(m_i32Socket, (struct sockaddr*)&l_oClientAddress, &l_iClientAddressSize);
-			if(l_i32ClientSocket==-1)
+			int32_t l_i32ClientSocket = ::accept(m_i32Socket, (struct sockaddr*)&l_oClientAddress, &l_iClientAddressSize);
+			if (l_i32ClientSocket == -1)
 			{
-				return NULL;
+				return nullptr;
 			}
-			return new TConnection<IConnection>(static_cast<int32>(l_i32ClientSocket));
+			return new TConnection<IConnection>(static_cast<int32_t>(l_i32ClientSocket));
 		}
 
-		bool getSocketPort(uint32_t& port)
+		bool getSocketPort(uint32_t& port) override
 		{
 			struct sockaddr_in socketInfo;
 
@@ -108,19 +104,13 @@ namespace Socket
 #elif defined TARGET_OS_Windows
 			int socketInfoLength = sizeof(socketInfo);
 #endif
-			
-			if (getsockname(m_i32Socket, (sockaddr*)&socketInfo, &socketInfoLength) == -1)
-			{
-				return false;
-			}
+
+			if (getsockname(m_i32Socket, (sockaddr*)&socketInfo, &socketInfoLength) == -1) { return false; }
 
 			port = static_cast<uint32_t>(ntohs(socketInfo.sin_port));
 			return true;
 		}
 	};
 
-	IConnectionServer* createConnectionServer(void)
-	{
-		return new CConnectionServer();
-	}
+	IConnectionServer* createConnectionServer() { return new CConnectionServer(); }
 };

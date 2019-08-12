@@ -5,8 +5,7 @@
  * \brief Contains basic type definitions and EBML standard identifiers
  */
 
-#ifndef __EBML_defines_H__
-#define __EBML_defines_H__
+#pragma once
 
 #include <ov_common_defines.h>
 
@@ -98,25 +97,23 @@
 //@}
 
 #if defined EBML_Shared
-	#if defined TARGET_OS_Windows
-		#define EBML_API_Export __declspec(dllexport)
-		#define EBML_API_Import __declspec(dllimport)
-	#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+#if defined TARGET_OS_Windows
+#define EBML_API_Export __declspec(dllexport)
+#define EBML_API_Import __declspec(dllimport)
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 		#define EBML_API_Export __attribute__((visibility("default")))
 		#define EBML_API_Import __attribute__((visibility("default")))
-	#else
+#else
 		#define EBML_API_Export
 		#define EBML_API_Import
-	#endif
+#endif
 #else
-	#define EBML_API_Export
-	#define EBML_API_Import
+#define EBML_API_Export
+#define EBML_API_Import
 #endif
 
 #if defined EBML_Exports
-	#define EBML_API EBML_API_Export
+#define EBML_API EBML_API_Export
 #else
 	#define EBML_API EBML_API_Import
 #endif
-
-#endif // __EBML_defines_H__

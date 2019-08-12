@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_TStimulationDecoder_H__
-#define __OpenViBEToolkit_TStimulationDecoder_H__
+#pragma once
 
 #ifdef TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
 
@@ -12,16 +11,15 @@ namespace OpenViBEToolkit
 	template <class T>
 	class TStimulationDecoderLocal : public T
 	{
-
 	protected:
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IStimulationSet* > m_pOutputStimulationSet;
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> m_pOutputStimulationSet;
 
 		using T::m_pCodec;
 		using T::m_pBoxAlgorithm;
 		using T::m_pInputMemoryBuffer;
 
-		OpenViBE::boolean initializeImpl()
+		bool initializeImpl()
 		{
 			m_pCodec = &m_pBoxAlgorithm->getAlgorithmManager().getAlgorithm(m_pBoxAlgorithm->getAlgorithmManager().createAlgorithm(OVP_GD_ClassId_Algorithm_StimulationStreamDecoder));
 			m_pCodec->initialize();
@@ -34,12 +32,9 @@ namespace OpenViBEToolkit
 	public:
 		using T::initialize;
 
-		OpenViBE::boolean uninitialize(void)
+		bool uninitialize()
 		{
-			if(m_pBoxAlgorithm == NULL || m_pCodec == NULL)
-			{
-				return false;
-			}
+			if (m_pBoxAlgorithm == nullptr || m_pCodec == nullptr) { return false; }
 
 			m_pOutputStimulationSet.uninitialize();
 			m_pInputMemoryBuffer.uninitialize();
@@ -50,50 +45,44 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler < OpenViBE::IStimulationSet* >& getOutputStimulationSet()
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*>& getOutputStimulationSet()
 		{
 			return m_pOutputStimulationSet;
 		}
 
-		virtual OpenViBE::boolean isHeaderReceived()
+		virtual bool isHeaderReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader);
 		}
 
-		virtual OpenViBE::boolean isBufferReceived()
+		virtual bool isBufferReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer);
 		}
 
-		virtual OpenViBE::boolean isEndReceived()
+		virtual bool isEndReceived()
 		{
 			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedEnd);
 		}
 	};
 
 	template <class T>
-	class TStimulationDecoder : public TStimulationDecoderLocal < TDecoder < T > >
+	class TStimulationDecoder : public TStimulationDecoderLocal<TDecoder<T>>
 	{
-	private:
-		using TStimulationDecoderLocal < TDecoder < T > >::m_pBoxAlgorithm;
+		using TStimulationDecoderLocal<TDecoder<T>>::m_pBoxAlgorithm;
 	public:
-		using TStimulationDecoderLocal < TDecoder < T > >::uninitialize;
+		using TStimulationDecoderLocal<TDecoder<T>>::uninitialize;
 
-		TStimulationDecoder()
-		{
-		}
-		TStimulationDecoder(T& rBoxAlgorithm, OpenViBE::uint32 ui32ConnectorIndex)
+		TStimulationDecoder() { }
+
+		TStimulationDecoder(T& rBoxAlgorithm, uint32_t ui32ConnectorIndex)
 		{
 			m_pBoxAlgorithm = NULL;
 			this->initialize(rBoxAlgorithm, ui32ConnectorIndex);
 		}
-		virtual ~TStimulationDecoder()
-		{
-			this->uninitialize();
-		}
+
+		virtual ~TStimulationDecoder() { this->uninitialize(); }
 	};
-};
+}  // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines
-
-#endif //__OpenViBEToolkit_TStimulationDecoder_H__

@@ -26,52 +26,33 @@ extern char **environ;
 #include <system/ovCTime.h>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Tools;
+using namespace Tools;
 
 CBoxAlgorithmExternalProcessing::CBoxAlgorithmExternalProcessing()
-    : m_Port(0)
-    , m_IsGenerator(false)
-    , m_ThirdPartyProgramProcessId(0)
-    , m_AcceptTimeout(10ULL<<32)
-    , m_ShouldLaunchProgram(false)
-	, m_HasReceivedEndMessage(false)
-	, m_SyncTimeout(0)
-	, m_LastSyncTime(0)
-{
-}
+	: m_AcceptTimeout(10ULL << 32) {}
 
-uint64 CBoxAlgorithmExternalProcessing::getClockFrequency(void)
+uint64_t CBoxAlgorithmExternalProcessing::getClockFrequency()
 {
 	if (m_IsGenerator)
 	{
 		// We slow down the generator type boxes by default, in order to limit syncing
 		// In fast forward we limit the syncing even more by setting the frequency to 1Hz
-		if (this->getPlayerContext().getStatus() == EPlayerStatus::PlayerStatus_Forward)
-		{
-			return 1LL << 32;
-		}
-		else
-		{
-			return 16LL << 32;
-		}
+		if (this->getPlayerContext().getStatus() == PlayerStatus_Forward) { return 1LL << 32; }
+		return 16LL << 32;
 	}
-	else
-	{
-		return 128LL << 32;
-	}
+	return 128LL << 32;
 }
 
-bool CBoxAlgorithmExternalProcessing::initialize(void)
+bool CBoxAlgorithmExternalProcessing::initialize()
 {
 	m_Port = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
 	// Check that the port is not in the system range
-	OV_ERROR_UNLESS_KRF((m_Port >= 49152 && m_Port <= 65535) || (m_Port == 0),
-	                    "Port [" << m_Port << "] is invalid. It must be either 0 or a number in the range 49152-65535.", ErrorType::BadConfig);
+	OV_ERROR_UNLESS_KRF((m_Port >= 49152 && m_Port <= 65535) || (m_Port == 0), "Port [" << m_Port << "] is invalid. It must be either 0 or a number in the range 49152-65535.", ErrorType::BadConfig);
 
 	// Settings
 	const IBox* staticBoxContext = this->getBoxAlgorithmContext()->getStaticBoxContext();
@@ -81,19 +62,19 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 		CString name;
 		staticBoxContext->getSettingName(i, name);
 
-		OpenViBE::CIdentifier type;
+		CIdentifier type;
 		staticBoxContext->getSettingType(i, type);
 
 		const CString value = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), i);
 
 		OV_FATAL_UNLESS_K(m_Messaging.addParameter(i, type.toUInteger(), name.toASCIIString(), value.toASCIIString()),
-		                  "Failed to add a parameter: " << i, ErrorType::Internal);
+						  "Failed to add a parameter: " << i, ErrorType::Internal);
 	}
 
 	// Inputs
 	for (unsigned int i = 0; i < staticBoxContext->getInputCount(); ++i)
 	{
-		OpenViBE::CIdentifier type;
+		CIdentifier type;
 		staticBoxContext->getInputType(i, type);
 
 		if (type == OV_TypeId_Stimulations)
@@ -105,13 +86,13 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 		staticBoxContext->getInputName(i, name);
 
 		OV_FATAL_UNLESS_K(m_Messaging.addInput(i, type.toUInteger(), name.toASCIIString()),
-		                  "Failed to add an input: " << i, ErrorType::Internal);
+						  "Failed to add an input: " << i, ErrorType::Internal);
 	}
 
 	// Outputs
 	for (unsigned int i = 0; i < staticBoxContext->getOutputCount(); ++i)
 	{
-		OpenViBE::CIdentifier type;
+		CIdentifier type;
 		staticBoxContext->getOutputType(i, type);
 
 		CString name;
@@ -133,12 +114,12 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 	else
 	{
 		CString connectionIDSetting = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 5);
-		m_ConnectionID = connectionIDSetting.toASCIIString();
+		m_ConnectionID              = connectionIDSetting.toASCIIString();
 	}
 
 	OV_ERROR_UNLESS_KRF(m_Messaging.listen(m_Port),
-	                    "Could not listen to TCP port: " << m_Port << ". This port may be already used by another service. Please try another one.",
-	                    ErrorType::BadNetworkConnection);
+						"Could not listen to TCP port: " << m_Port << ". This port may be already used by another service. Please try another one.",
+						ErrorType::BadNetworkConnection);
 
 	if (m_Port == 0)
 	{
@@ -151,7 +132,7 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 	if (m_ShouldLaunchProgram)
 	{
 		CString programPath = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-		CString arguments = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+		CString arguments   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 		if (!launchThirdPartyProgram(programPath.toASCIIString(), arguments.toASCIIString()))
 		{
@@ -164,11 +145,11 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 
 	auto startTime = System::Time::zgetTime();
 
-	bool clientConnected = false;
+	bool clientConnected    = false;
 	m_HasReceivedEndMessage = false;
 
 	m_AcceptTimeout = ITimeArithmetics::secondsToTime(static_cast<double>(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6)));
-	m_IsGenerator = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 7);
+	m_IsGenerator   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 7);
 
 	while (System::Time::zgetTime() - startTime < m_AcceptTimeout)
 	{
@@ -178,19 +159,16 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 			this->getLogManager() << LogLevel_Info << "Client connected to the server.\n";
 			break;
 		}
-		else
-		{
-			Communication::MessagingServer::ELibraryError error = m_Messaging.getLastError();
+		Communication::MessagingServer::ELibraryError error = m_Messaging.getLastError();
 
-			if (error == Communication::MessagingServer::ELibraryError::BadAuthenticationReceived)
-			{
-				OV_WARNING_K("A client sent a bad authentication.");
-				break;
-			}
-			else if (error == Communication::MessagingServer::ELibraryError::NoAuthenticationReceived)
-			{
-				OV_WARNING_K("The client has not sent authentication.");
-			}
+		if (error == Communication::MessagingServer::ELibraryError::BadAuthenticationReceived)
+		{
+			OV_WARNING_K("A client sent a bad authentication.");
+			break;
+		}
+		if (error == Communication::MessagingServer::ELibraryError::NoAuthenticationReceived)
+		{
+			OV_WARNING_K("The client has not sent authentication.");
 		}
 	}
 
@@ -210,14 +188,14 @@ bool CBoxAlgorithmExternalProcessing::initialize(void)
 		}
 	}
 
-	m_SyncTimeout = ITimeArithmetics::secondsToTime(0.0625);
+	m_SyncTimeout  = ITimeArithmetics::secondsToTime(0.0625);
 	m_LastSyncTime = System::Time::zgetTime();
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::uninitialize(void)
+bool CBoxAlgorithmExternalProcessing::uninitialize()
 {
-	for (auto &decoder : m_StimulationDecoders)
+	for (auto& decoder : m_StimulationDecoders)
 	{
 		decoder.second.uninitialize();
 	}
@@ -237,18 +215,14 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 			{
 				GetExitCodeProcess((HANDLE)m_ThirdPartyProgramProcessId, &exitCode);
 
-				if (exitCode != STILL_ACTIVE)
-				{
-					break;
-				}
+				if (exitCode != STILL_ACTIVE) { break; }
 				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			}
 
 
 			if (exitCode == STILL_ACTIVE)
 			{
-				OV_ERROR_UNLESS_KRF(::TerminateProcess((HANDLE)m_ThirdPartyProgramProcessId, EXIT_FAILURE),
-				                    "Failed to kill third party program.", ErrorType::Unknown);
+				OV_ERROR_UNLESS_KRF(::TerminateProcess((HANDLE)m_ThirdPartyProgramProcessId, EXIT_FAILURE), "Failed to kill third party program.", ErrorType::Unknown);
 			}
 			else if (exitCode != 0)
 			{
@@ -295,23 +269,22 @@ bool CBoxAlgorithmExternalProcessing::uninitialize(void)
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::processClock(OpenViBE::CMessageClock& rMessageClock)
+bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*rMessageClock*/)
 {
-	(void)rMessageClock;
 	return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 }
 
-bool CBoxAlgorithmExternalProcessing::processInput(uint32_t inputIndex)
+bool CBoxAlgorithmExternalProcessing::processInput(const uint32_t inputIndex)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::process(void)
+bool CBoxAlgorithmExternalProcessing::process()
 {
 	if (m_Messaging.isInErrorState())
 	{
-		std::string errorString = ::Communication::MessagingServer::getErrorString(m_Messaging.getLastError());
+		std::string errorString = Communication::MessagingServer::getErrorString(m_Messaging.getLastError());
 		OV_ERROR_KRF("Error state connection: " << errorString.c_str() << ".\n This may be due to a broken client connection.", ErrorType::BadNetworkConnection);
 	}
 
@@ -323,10 +296,10 @@ bool CBoxAlgorithmExternalProcessing::process(void)
 	}
 
 	OV_ERROR_UNLESS_KRF(m_Messaging.pushTime(this->getPlayerContext().getCurrentTime())
-	                    , "Failed to push Time.", ErrorType::BadNetworkConnection);
+						, "Failed to push Time.", ErrorType::BadNetworkConnection);
 
 	const IBox* staticBoxContext = getBoxAlgorithmContext()->getStaticBoxContext();
-	IBoxIO* dynamicBoxContext = getBoxAlgorithmContext()->getDynamicBoxContext();
+	IBoxIO* dynamicBoxContext    = getBoxAlgorithmContext()->getDynamicBoxContext();
 
 	// Send input EBML to the client
 
@@ -339,13 +312,13 @@ bool CBoxAlgorithmExternalProcessing::process(void)
 		{
 			if (!m_HasReceivedEndMessage)
 			{
-				uint64_t startTime = 0;
-				uint64_t endTime = 0;
-				uint64_t chunkSize = 0;
+				uint64_t startTime         = 0;
+				uint64_t endTime           = 0;
+				uint64_t chunkSize         = 0;
 				const uint8_t* chunkBuffer = nullptr;
 
 				OV_FATAL_UNLESS_K(dynamicBoxContext->getInputChunk(i, j, startTime, endTime, chunkSize, chunkBuffer),
-				                  "Failed to get input chunk [" << i << "][" << j << "]", ErrorType::Internal);
+								  "Failed to get input chunk [" << i << "][" << j << "]", ErrorType::Internal);
 
 				std::shared_ptr<std::vector<uint8_t>> ebml(new std::vector<uint8_t>(chunkBuffer, chunkBuffer + chunkSize));
 
@@ -367,10 +340,10 @@ bool CBoxAlgorithmExternalProcessing::process(void)
 				while (!m_PacketHistory.empty())
 				{
 					OV_ERROR_UNLESS_KRF(m_Messaging.pushEBML(m_PacketHistory.front().inputIndex,
-					                                         m_PacketHistory.front().startTime,
-					                                         m_PacketHistory.front().endTime,
-					                                         m_PacketHistory.front().EBML),
-					                    "Failed to push EBML.", ErrorType::BadNetworkConnection);
+											m_PacketHistory.front().startTime,
+											m_PacketHistory.front().endTime,
+											m_PacketHistory.front().EBML),
+										"Failed to push EBML.", ErrorType::BadNetworkConnection);
 
 					m_PacketHistory.pop();
 				}
@@ -410,10 +383,10 @@ bool CBoxAlgorithmExternalProcessing::process(void)
 				while (m_Messaging.popEBML(packetId, index, startTime, endTime, ebml))
 				{
 					OV_ERROR_UNLESS_KRF(dynamicBoxContext->appendOutputChunkData(index, ebml->data(), ebml->size()),
-					                    "Failed to append output chunk data.", ErrorType::Internal);
+										"Failed to append output chunk data.", ErrorType::Internal);
 
 					OV_ERROR_UNLESS_KRF(dynamicBoxContext->markOutputAsReadyToSend(index, startTime, endTime),
-					                    "Failed to mark output as ready to send.", ErrorType::Internal);
+										"Failed to mark output as ready to send.", ErrorType::Internal);
 				}
 				if (!receivedSync)
 				{
@@ -428,7 +401,7 @@ bool CBoxAlgorithmExternalProcessing::process(void)
 
 std::string CBoxAlgorithmExternalProcessing::generateConnectionID(size_t size)
 {
-	std::default_random_engine generator {std::random_device()()};
+	std::default_random_engine generator{ std::random_device()() };
 	std::uniform_int_distribution<int> character(0, 34);
 
 	std::string connectionID;
@@ -446,7 +419,7 @@ static std::vector<std::string> splitCommandLine(const std::string& cmdLine)
 {
 	std::vector<std::string> list;
 	std::string arg;
-	bool escape = false;
+	bool escape                         = false;
 	enum { Idle, Arg, QuotedArg } state = Idle;
 
 	for (const char c : cmdLine)
@@ -520,9 +493,9 @@ static std::vector<std::string> splitCommandLine(const std::string& cmdLine)
 	return list;
 }
 
-char *strToChar(const std::string& s)
+char* strToChar(const std::string& s)
 {
-	char *pc = new char[s.size() + 1];
+	char* pc = new char[s.size() + 1];
 	std::strcpy(pc, s.c_str());
 	return pc;
 }
@@ -539,7 +512,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 
 	std::transform(programArguments.begin(), programArguments.end(), std::back_inserter(argv), strToChar);
 
-	argv.push_back(NULL);
+	argv.push_back(nullptr);
 
 #ifdef TARGET_OS_Windows
 	// _spawnp on Windows has a special case for empty program
@@ -551,7 +524,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 	}
 	else
 	{
-		status = _spawnvp(_P_NOWAIT, programPath.c_str(), argv.data());
+		status = int(_spawnvp(_P_NOWAIT, programPath.c_str(), argv.data()));
 	}
 	m_ThirdPartyProgramProcessId = status;
 	//	_P_DETACH,
@@ -609,10 +582,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 
 #endif
 
-	for (size_t i = 0; i < argv.size() - 1; ++i)
-	{
-		delete[] argv[i];
-	}
+	for (size_t i = 0; i < argv.size() - 1; ++i) { delete[] argv[i]; }
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	if (status != 0)
@@ -628,29 +598,29 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 
 		switch (errno)
 		{
-		case E2BIG:
-			errorMessage += "Argument list exceeds 1024 bytes.\n";
-			break;
+			case E2BIG:
+				errorMessage += "Argument list exceeds 1024 bytes.\n";
+				break;
 
-		case EINVAL:
-			errorMessage += "Mode argument is invalid.\n";
-			break;
+			case EINVAL:
+				errorMessage += "Mode argument is invalid.\n";
+				break;
 
-		case ENOENT:
-			errorMessage += "File or path is not found.\n";
-			break;
+			case ENOENT:
+				errorMessage += "File or path is not found.\n";
+				break;
 
-		case ENOEXEC:
-			errorMessage += "Specified file is not executable or has invalid executable-file format.\n";
-			break;
+			case ENOEXEC:
+				errorMessage += "Specified file is not executable or has invalid executable-file format.\n";
+				break;
 
-		case ENOMEM:
-			errorMessage += "Not enough memory is available to execute the new process.\n";
-			break;
+			case ENOMEM:
+				errorMessage += "Not enough memory is available to execute the new process.\n";
+				break;
 
-		default:
-			errorMessage += "Unknown error.\n";
-			break;
+			default:
+				errorMessage += "Unknown error.\n";
+				break;
 		}
 
 		OV_ERROR_KRF(errorMessage.c_str(), ErrorType::BadResourceCreation);
@@ -662,7 +632,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 
 void CBoxAlgorithmExternalProcessing::log()
 {
-	::Communication::ELogLevel logLevel;
+	Communication::ELogLevel logLevel;
 	std::string logMessage;
 	uint64_t packetId;
 
@@ -672,25 +642,25 @@ void CBoxAlgorithmExternalProcessing::log()
 
 		switch (logLevel)
 		{
-			case ::Communication::LogLevel_Info:
+			case Communication::LogLevel_Info:
 				loglevel = LogLevel_Info;
 				break;
 
-			case ::Communication::LogLevel_Warning:
+			case Communication::LogLevel_Warning:
 				loglevel = LogLevel_Warning;
 				break;
 
-			case ::Communication::LogLevel_Error:
+			case Communication::LogLevel_Error:
 				loglevel = LogLevel_Error;
 				break;
 
-			case ::Communication::LogLevel_Fatal:
+			case Communication::LogLevel_Fatal:
 				loglevel = LogLevel_Fatal;
-				
+
 				break;
 
-			case ::Communication::LogLevel_Unknown:
-			case ::Communication::LogLevel_MAX:
+			case Communication::LogLevel_Unknown:
+			case Communication::LogLevel_MAX:
 				break;
 		}
 

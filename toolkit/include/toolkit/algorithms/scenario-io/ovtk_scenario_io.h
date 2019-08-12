@@ -1,5 +1,4 @@
-#ifndef __OpenViBEToolkit_ScenarioIO_H__
-#define __OpenViBEToolkit_ScenarioIO_H__
+#pragma once
 
 #define OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario                         OpenViBE::CIdentifier(0x1CD93114, 0x6A544E8C)
 
@@ -98,5 +97,3 @@
 #define OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute                       OpenViBE::CIdentifier(0x195DF0C2, 0x01071746)
 #define OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier            OpenViBE::CIdentifier(0x66A99FF0, 0x402B6F19)
 #define OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value                 OpenViBE::CIdentifier(0xA4795600, 0x31AFDFB1)
-
-#endif // __OpenViBEToolkit_ScenarioIO_H__

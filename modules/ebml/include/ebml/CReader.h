@@ -1,30 +1,26 @@
-#ifndef __EBML_CReader_H__
-#define __EBML_CReader_H__
+#pragma once
 
 #include "IReader.h"
 
 namespace EBML
 {
-	class EBML_API CReader : public EBML::IReader
+	class EBML_API CReader : public IReader
 	{
 	public:
 
-		explicit CReader(EBML::IReaderCallback& rReaderCallback);
-		virtual ~CReader(void);
-
-		virtual EBML::boolean processData(const void* pBuffer, const EBML::uint64 ui64BufferSize);
-		virtual EBML::CIdentifier getCurrentNodeIdentifier(void) const;
-		virtual EBML::uint64 getCurrentNodeSize(void) const;
-		virtual void release(void);
+		explicit CReader(IReaderCallback& rReaderCallback);
+		~CReader() override;
+		bool processData(const void* pBuffer, uint64_t ui64BufferSize) override;
+		CIdentifier getCurrentNodeIdentifier() const override;
+		uint64_t getCurrentNodeSize() const override;
+		void release() override;
 
 	protected:
 
-		EBML::IReader* m_pReaderImplementation;
+		IReader* m_pReaderImplementation = nullptr;
 
 	private:
 
-		CReader(void);
+		CReader();
 	};
-};
-
-#endif // __EBML_IReader_H__
+}  // namespace EBML

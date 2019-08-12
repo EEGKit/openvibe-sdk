@@ -18,13 +18,13 @@ static void signalHandler(int /* signal */)
 	s_DidRequestForcedQuit = true;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	std::signal(SIGINT, signalHandler);
 
 	std::string connectionID;
 	unsigned int port = 49687;
-	
+
 	for (int i = 0; i < argc; i++)
 	{
 		if (std::strcmp(argv[i], "--connection-id") == 0)
@@ -47,11 +47,11 @@ int main(int argc, char **argv)
 	MessagingClient client;
 
 	client.setConnectionID(connectionID);
-	
-	while(!client.connect("127.0.0.1", port))
+
+	while (!client.connect("127.0.0.1", port))
 	{
 		MessagingClient::ELibraryError error = client.getLastError();
-		
+
 		if (error == MessagingClient::ELibraryError::Socket_FailedToConnect)
 		{
 			printf("Server not responding\n");
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 
 		if (client.getParameter(i, index, type, name, value))
 		{
-			std::cout << "Parameter:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\tValue: "<< value << "\n\n";
+			std::cout << "Parameter:\n\tIndex: " << index << "\n\tType: " << type << "\n\tName: " << name << "\n\tValue: " << value << "\n\n";
 		}
 	}
 
@@ -115,10 +115,10 @@ int main(int argc, char **argv)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-	client.pushLog(ELogLevel::LogLevel_Info, "Received Ping");
+	client.pushLog(LogLevel_Info, "Received Ping");
 
 	client.pushSync();
-	client.pushLog(ELogLevel::LogLevel_Info, "Sent Pong");
+	client.pushLog(LogLevel_Info, "Sent Pong");
 
 	// Process
 
@@ -203,16 +203,13 @@ int main(int argc, char **argv)
 		while (client.popError(packetId, error, guiltyId))
 		{
 			std::cerr << "Error received:\n";
-			std::cerr << "\tError: "<< static_cast<int>(error) << "\n";
-			std::cerr << "\tGuilty Id: "<< guiltyId << "\n";
+			std::cerr << "\tError: " << static_cast<int>(error) << "\n";
+			std::cerr << "\tGuilty Id: " << guiltyId << "\n";
 		}
 
 		// Here, we send a sync message to tell to the server that we have no more
 		// data to send and we can move forward. This will unblock the box.
-		if (!client.pushSync())
-		{
-			return 0;
-		}
+		if (!client.pushSync()) { return 0; }
 	}
 
 	std::cout << "Processing stopped.\n";

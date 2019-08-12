@@ -38,44 +38,44 @@ namespace OpenViBE
 			/**
 			 * \brief Set lib value to default
 			 */
-			CCSVHandler(void);
+			CCSVHandler();
 
 			/**
 			 * \brief Close the file if it is open.
 			 */
-			~CCSVHandler(void);
+			~CCSVHandler() override;
 
 			/**
 			 * \brief Get the floating point precision used to write float values.
 			 *
 			 * \return the Floating point precision.
 			 */
-			uint32_t getOutputFloatPrecision() { return m_OutputFloatPrecision; }
+			uint32_t getOutputFloatPrecision() override { return m_OutputFloatPrecision; }
 
 			/**
 			 * \brief Set the floating point precision used to write float values.
 			 *
 			 * \param precision the floating point precision.
 			 */
-			void setOutputFloatPrecision(uint32_t precision) { m_OutputFloatPrecision = precision; }
+			void setOutputFloatPrecision(uint32_t precision) override { m_OutputFloatPrecision = precision; }
 
-			void setFormatType(EStreamType typeIdentifier);
-			EStreamType getFormatType(void);
+			void setFormatType(EStreamType typeIdentifier) override;
+			EStreamType getFormatType() override;
 
-			void setLastMatrixOnlyMode(bool isActivated) { m_LastMatrixOnly = isActivated; }
-			bool getLastMatrixOnlyMode(void) { return m_LastMatrixOnly; }
+			void setLastMatrixOnlyMode(bool isActivated) override { m_LastMatrixOnly = isActivated; }
+			bool getLastMatrixOnlyMode() override { return m_LastMatrixOnly; }
 
-			bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer);
-			bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer);
+			bool setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer) override;
+			bool getSignalInformation(std::vector<std::string>& channelNames, uint32_t& samplingFrequency, uint32_t& sampleCountPerBuffer) override;
 
-			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, const uint32_t samplingRate);
-			bool getSpectrumInformation(std::vector<std::string> &channelNames, std::vector<double> &frequencyAbscissa, uint32_t& samplingRate);
+			bool setSpectrumInformation(const std::vector<std::string>& channelNames, const std::vector<double>& frequencyAbscissa, uint32_t samplingRate) override;
+			bool getSpectrumInformation(std::vector<std::string>& channelNames, std::vector<double>& frequencyAbscissa, uint32_t& samplingRate) override;
 
-			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames);
-			bool getFeatureVectorInformation(std::vector<std::string>& channelNames);
+			bool setFeatureVectorInformation(const std::vector<std::string>& channelNames) override;
+			bool getFeatureVectorInformation(std::vector<std::string>& channelNames) override;
 
-			bool setStreamedMatrixInformation(const std::vector<uint32_t>& dimensionSizes, const std::vector<std::string>& labels);
-			bool getStreamedMatrixInformation(std::vector<uint32_t>& dimensionSizes, std::vector<std::string>& labels);
+			bool setStreamedMatrixInformation(const std::vector<uint32_t>& dimensionSizes, const std::vector<std::string>& labels) override;
+			bool getStreamedMatrixInformation(std::vector<uint32_t>& dimensionSizes, std::vector<std::string>& labels) override;
 
 			/**
 			 * \brief Write the header to the file
@@ -83,7 +83,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool writeHeaderToFile(void);
+			bool writeHeaderToFile() override;
 
 			/**
 			 * \brief Write current available data to the file until the last stimulation or if you set that it will not have new event before a date.
@@ -93,7 +93,7 @@ namespace OpenViBE
 			 *
 			 * \sa noEventsUntilDate
 			 */
-			bool writeDataToFile(void);
+			bool writeDataToFile() override;
 
 			/**
 			 * \brief Write current available data to the file.
@@ -101,7 +101,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool writeAllDataToFile(void);
+			bool writeAllDataToFile() override;
 
 			/**
 			 * \brief Read samples and stimulations.
@@ -113,7 +113,7 @@ namespace OpenViBE
 			 * \retval True in case of success, even if the number of lines is different than the linesToRead parameter.
 			 * \retval False in case of error.
 			 */
-			bool readSamplesAndEventsFromFile(size_t linesToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations);
+			bool readSamplesAndEventsFromFile(size_t linesToRead, std::vector<SMatrixChunk>& chunks, std::vector<SStimulationChunk>& stimulations) override;
 
 			/**
 			 * \brief Open a OV CSV file.
@@ -121,7 +121,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool openFile(const std::string& fileName, EFileAccessMode mode);
+			bool openFile(const std::string& fileName, EFileAccessMode mode) override;
 
 			/**
 			 * \brief Close the opened file.
@@ -129,7 +129,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool closeFile(void);
+			bool closeFile() override;
 
 			/**
 			 * \brief Add a single sample.
@@ -137,7 +137,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool addSample(const SMatrixChunk& sample);
+			bool addSample(const SMatrixChunk& sample) override;
 
 			/**
 			 * \brief Add several samples.
@@ -145,7 +145,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool addBuffer(const std::vector<SMatrixChunk>& samples);
+			bool addBuffer(const std::vector<SMatrixChunk>& samples) override;
 
 			/**
 			 * \brief Add a single stimulation.
@@ -153,7 +153,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool addEvent(uint64_t code, double date, double duration);
+			bool addEvent(uint64_t code, double date, double duration) override;
 
 			/**
 			 * \brief Add several stimulations.
@@ -161,7 +161,7 @@ namespace OpenViBE
 			 * \retval True in case of success.
 			 * \retval False in case of error.
 			 */
-			bool addEvent(const SStimulationChunk& event);
+			bool addEvent(const SStimulationChunk& event) override;
 
 			/**
 			 * \brief Guarantee that will not have new event before a date.
@@ -172,11 +172,11 @@ namespace OpenViBE
 			 *
 			 * \sa writeDataToFile
 			 */
-			bool noEventsUntilDate(double date);
+			bool noEventsUntilDate(double date) override;
 
-			ELogErrorCodes getLastLogError();
+			ELogErrorCodes getLastLogError() override;
 
-			std::string getLastErrorString();
+			std::string getLastErrorString() override;
 
 			/**
 			 * \brief Check if there is still data to read in the file.
@@ -184,7 +184,7 @@ namespace OpenViBE
 			 * \retval True if there is still data to read in the file.
 			 * \retval False if there is no more data to read in the file.
 			 */
-			bool hasDataToRead() const;
+			bool hasDataToRead() const override;
 
 		private:
 			/**
@@ -211,7 +211,7 @@ namespace OpenViBE
 			 * \retval true Header data as it should be written in the file
 			 * \retval "" in case of error
 			 */
-			std::string createHeaderString(void);
+			std::string createHeaderString();
 
 			/**
 			 * \brief Set the buffer in function of data saved.
@@ -230,7 +230,7 @@ namespace OpenViBE
 			 * \retval true in case of correct header
 			 * \retval false in case of incorrect header
 			 */
-			bool parseHeader(void);
+			bool parseHeader();
 
 			/**
 			 * \brief Parsing header to read signal data.
@@ -272,7 +272,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readSampleChunk(const std::string& line, SMatrixChunk& sample, const uint64_t lineNb);
+			bool readSampleChunk(const std::string& line, SMatrixChunk& sample, uint64_t lineNb);
 
 			/**
 			 * \brief Read line data conerning stimulations.
@@ -284,7 +284,7 @@ namespace OpenViBE
 			 * \retval true in case of success
 			 * \retval false in case of error (as letters instead of numbers)
 			 */
-			bool readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, const uint64_t lineNb);
+			bool readStimulationChunk(const std::string& line, std::vector<SStimulationChunk>& stimulations, uint64_t lineNb);
 
 			/**
 			 * \brief Update position into the matrix while reading or writing.
@@ -311,7 +311,7 @@ namespace OpenViBE
 			 * \param outputString The string before the next delimitor.
 			 * \param delimiter The delimiter .
 			 */
-			bool streamReader(std::istream& inputStream, std::string& outputString, const char delimiter, std::string& bufferHistory) const;
+			bool streamReader(std::istream& inputStream, std::string& outputString, char delimiter, std::string& bufferHistory) const;
 
 			std::fstream m_Fs;
 			std::string m_Filename;
@@ -322,34 +322,34 @@ namespace OpenViBE
 
 			EStreamType m_InputTypeIdentifier;
 
-			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, const char delimiter);
-			uint32_t m_DimensionCount;
+			typedef std::istream& GetLine(std::istream& inputStream, std::string& outputString, char delimiter);
+			uint32_t m_DimensionCount = 0;
 			std::vector<uint32_t> m_DimensionSizes;
 			std::vector<std::string> m_DimensionLabels;
-			uint32_t m_SampleCountPerBuffer;
-			double m_NoEventSince;
+			uint32_t m_SampleCountPerBuffer = 0;
+			double m_NoEventSince = 0;
 
 			std::vector<double> m_FrequencyAbscissa;
 
-			uint32_t m_SamplingRate;
+			uint32_t m_SamplingRate = 0;
 			size_t m_ColumnCount;
 
-			bool m_HasInputType;
-			bool m_IsFirstLineWritten;
-			bool m_IsHeaderRead;
-			bool m_IsSetInfoCalled;
-			bool m_HasEpoch;
+			bool m_HasInputType = false;
+			bool m_IsFirstLineWritten = false;
+			bool m_IsHeaderRead = false;
+			bool m_IsSetInfoCalled = false;
+			bool m_HasEpoch = false;
 
-			uint32_t m_OriginalSampleNumber;
-			uint32_t m_OutputFloatPrecision;
+			uint32_t m_OriginalSampleNumber = 0;
+			uint32_t m_OutputFloatPrecision = 0;
 
-			bool m_LastMatrixOnly;
+			bool m_LastMatrixOnly = false;
 
 			std::string m_BufferReadFileLine; // Buffer used to store unused read chars.
 
-			bool m_HasDataToRead;
+			bool m_HasDataToRead = false;
 
-			bool m_IsCRLFEOL; // Is a CRLF end of line
+			bool m_IsCRLFEOL = false; // Is a CRLF end of line
 		};
 	}
 }

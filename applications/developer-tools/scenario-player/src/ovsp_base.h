@@ -25,4 +25,3 @@
 #include <toolkit/ovtk_all.h>
 
 #include "ovsp_defines.h"
-

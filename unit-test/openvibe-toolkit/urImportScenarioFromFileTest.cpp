@@ -7,32 +7,32 @@
 #include "urSimpleTestScenarioDefinition.h"
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
+using namespace Kernel;
 
 #define to_cppstring(str) std::string(str.toASCIIString())
 
 int urImportScenarioFromFileTest(int argc, char* argv[])
 {
 	const char* configurationFile = argv[1];
-	const char* dataDirectory = argv[2];
+	const char* dataDirectory     = argv[2];
 
 	{
 		OpenViBETest::ScopedTest<OpenViBETest::KernelFixture> fixture(configurationFile);
 		auto& context = fixture->context;
 
-		#if defined TARGET_OS_Windows
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
-		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
-		#elif defined TARGET_OS_Linux
+#if defined TARGET_OS_Windows
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-file-io*dll");
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-stimulation*dll");
+		context->getPluginManager().addPluginsFromFiles(Directories::getLibDir() + "/openvibe-plugins-sdk-tools*dll");
+#elif defined TARGET_OS_Linux
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*so");
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*so");
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*so");
-		#elif defined TARGET_OS_MacOS
+#elif defined TARGET_OS_MacOS
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-file-io*dylib");
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-stimulation*dylib");
 		context->getPluginManager().addPluginsFromFiles(OpenViBE::Directories::getLibDir() + "/libopenvibe-plugins-sdk-tools*dylib");
-		#endif
+#endif
 
 		std::string scenarioFilePath = std::string(dataDirectory) + "/" + s_SimpleScenarioFileName;
 
@@ -161,4 +161,3 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 
 	return EXIT_SUCCESS;
 }
-

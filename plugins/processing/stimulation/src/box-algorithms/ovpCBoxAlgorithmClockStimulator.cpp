@@ -2,60 +2,54 @@
 #include <cstdlib>
 
 using namespace OpenViBE;
-using namespace OpenViBE::Kernel;
-using namespace OpenViBE::Plugins;
+using namespace Kernel;
+using namespace Plugins;
 
 using namespace OpenViBEPlugins;
-using namespace OpenViBEPlugins::Stimulation;
+using namespace Stimulation;
 
-uint64 CBoxAlgorithmClockStimulator::getClockFrequency(void)
+uint64_t CBoxAlgorithmClockStimulator::getClockFrequency() { return (1LL << 32) * 32; }
+
+bool CBoxAlgorithmClockStimulator::initialize()
 {
-	return (1LL<<32)*32;
-}
+	double interstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
-boolean CBoxAlgorithmClockStimulator::initialize(void)
-{
-	float64 l_f64InterstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	const double minInterstimulationInterval = 0.0001;
+	OV_ERROR_UNLESS_KRF(!(interstimulationInterval < minInterstimulationInterval), 
+						"Invalid stimulation interval [" << interstimulationInterval << "] (expected value > " << minInterstimulationInterval << ")", 
+						OpenViBE::Kernel::ErrorType::BadSetting);
 
-	const float64 l_f64MinInterstimulationInterval= 0.0001;
-	OV_ERROR_UNLESS_KRF(
-		!(l_f64InterstimulationInterval < l_f64MinInterstimulationInterval),
-		"Invalid stimulation interval [" << l_f64InterstimulationInterval << "] (expected value > " << l_f64MinInterstimulationInterval << ")",
-		OpenViBE::Kernel::ErrorType::BadSetting
-	);
-
-	m_StimulationInterval = l_f64InterstimulationInterval;
+	m_StimulationInterval  = interstimulationInterval;
 	m_SentStimulationCount = 0;
 
 	m_ui64StimulationId = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	m_ui64LastStimulationDate=0;
-	m_ui64LastEndTime=0;
+	m_ui64LastStimulationDate = 0;
+	m_ui64LastEndTime         = 0;
 
 	m_oStimulationEncoder.initialize(*this, 0);
 
 	return true;
 }
 
-boolean CBoxAlgorithmClockStimulator::uninitialize(void)
+bool CBoxAlgorithmClockStimulator::uninitialize()
 {
 	m_oStimulationEncoder.uninitialize();
-
 	return true;
 }
 
-boolean CBoxAlgorithmClockStimulator::processClock(IMessageClock& rMessageClock)
+bool CBoxAlgorithmClockStimulator::processClock(IMessageClock& rMessageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 
 	return true;
 }
 
-boolean CBoxAlgorithmClockStimulator::process(void)
+bool CBoxAlgorithmClockStimulator::process()
 {
-	IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
+	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
 
-	uint64 l_ui64CurrentTime=getPlayerContext().getCurrentTime();
+	uint64_t l_ui64CurrentTime = getPlayerContext().getCurrentTime();
 
 	CStimulationSet l_oStimulationSet;
 	l_oStimulationSet.setStimulationCount(0);
@@ -67,7 +61,7 @@ boolean CBoxAlgorithmClockStimulator::process(void)
 		l_oStimulationSet.appendStimulation(m_ui64StimulationId, m_ui64LastStimulationDate, 0);
 	}
 
-	if(l_ui64CurrentTime==0)
+	if (l_ui64CurrentTime == 0)
 	{
 		m_oStimulationEncoder.encodeHeader();
 		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, m_ui64LastEndTime);
@@ -77,7 +71,7 @@ boolean CBoxAlgorithmClockStimulator::process(void)
 	m_oStimulationEncoder.encodeBuffer();
 	l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, l_ui64CurrentTime);
 
-	m_ui64LastEndTime=l_ui64CurrentTime;
+	m_ui64LastEndTime = l_ui64CurrentTime;
 
 	return true;
 }

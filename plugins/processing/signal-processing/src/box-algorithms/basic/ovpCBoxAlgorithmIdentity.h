@@ -1,5 +1,4 @@
-#ifndef __OpenViBEPlugins_BoxAlgorithm_Identity_H__
-#define __OpenViBEPlugins_BoxAlgorithm_Identity_H__
+#pragma once
 
 #include <toolkit/ovtk_all.h>
 #include <cstdio>
@@ -14,66 +13,65 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmIdentity : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
-
-			virtual void release(void);
-			virtual OpenViBE::boolean processInput(OpenViBE::uint32 ui32InputIndex);
-			virtual OpenViBE::boolean process(void);
+			void release() override;
+			bool processInput(const uint32_t ui32InputIndex) override;
+			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithm, OVP_ClassId_BoxAlgorithm_Identity)
 		};
 
-		class CBoxAlgorithmIdentityListener : public OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >
+		class CBoxAlgorithmIdentityListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
-			OpenViBE::boolean check(OpenViBE::Kernel::IBox& rBox)
+			bool check(OpenViBE::Kernel::IBox& rBox)
 			{
 				char l_sName[1024];
-				OpenViBE::uint32 i;
-				for(i=0; i<rBox.getInputCount(); i++)
+				uint32_t i;
+				for (i = 0; i < rBox.getInputCount(); i++)
 				{
-					sprintf(l_sName, "Input stream %u", i+1);
+					sprintf(l_sName, "Input stream %u", i + 1);
 					rBox.setInputName(i, l_sName);
 				}
-				for(i=0; i<rBox.getOutputCount(); i++)
+				for (i = 0; i < rBox.getOutputCount(); i++)
 				{
-					sprintf(l_sName, "Output stream %u", i+1);
+					sprintf(l_sName, "Output stream %u", i + 1);
 					rBox.setOutputName(i, l_sName);
 				}
 				return true;
 			}
 
-			virtual OpenViBE::boolean onDefaultInitialized(OpenViBE::Kernel::IBox& rBox)
+			bool onDefaultInitialized(OpenViBE::Kernel::IBox& rBox) override
 			{
 				rBox.setInputType(0, OV_TypeId_Signal);
 				rBox.setOutputType(0, OV_TypeId_Signal);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onInputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				rBox.setInputType(ui32Index, OV_TypeId_Signal);
-				rBox.addOutput("", OV_TypeId_Signal,rBox.getUnusedInputIdentifier());
+				rBox.addOutput("", OV_TypeId_Signal, rBox.getUnusedInputIdentifier());
 				this->check(rBox);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onInputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				rBox.removeOutput(ui32Index);
 				this->check(rBox);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getInputType(ui32Index, l_oTypeIdentifier);
 				rBox.setOutputType(ui32Index, l_oTypeIdentifier);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputAdded(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				rBox.setOutputType(ui32Index, OV_TypeId_Signal);
 				rBox.addInput("", OV_TypeId_Signal, rBox.getUnusedOutputIdentifier());
@@ -81,60 +79,55 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
 				rBox.removeInput(ui32Index);
 				this->check(rBox);
 				return true;
 			}
 
-			virtual OpenViBE::boolean onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const OpenViBE::uint32 ui32Index)
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier;
+				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
 				rBox.setInputType(ui32Index, l_oTypeIdentifier);
 				return true;
-			};
+			}
 
-			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier);
+			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
 		class CBoxAlgorithmIdentityDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
+			void release() override { }
+			OpenViBE::CString getName() const override { return OpenViBE::CString("Identity"); }
+			OpenViBE::CString getAuthorName() const override { return OpenViBE::CString("Yann Renard"); }
+			OpenViBE::CString getAuthorCompanyName() const override { return OpenViBE::CString("INRIA/IRISA"); }
+			OpenViBE::CString getShortDescription() const override { return OpenViBE::CString("Duplicates input to output"); }
+			OpenViBE::CString getDetailedDescription() const override { return OpenViBE::CString("This simply duplicates intput on its output"); }
+			OpenViBE::CString getCategory() const override { return OpenViBE::CString("Signal processing/Basic"); }
+			OpenViBE::CString getVersion() const override { return OpenViBE::CString("1.0"); }
+			OpenViBE::CString getSoftwareComponent() const override { return OpenViBE::CString("openvibe-sdk"); }
+			OpenViBE::CString getAddedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CString getUpdatedSoftwareVersion() const override { return OpenViBE::CString("0.0.0"); }
+			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Identity; }
+			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmIdentity(); }
+			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmIdentityListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
 
-			virtual void release(void) { }
-			virtual OpenViBE::CString getName(void) const                { return OpenViBE::CString("Identity"); }
-			virtual OpenViBE::CString getAuthorName(void) const          { return OpenViBE::CString("Yann Renard"); }
-			virtual OpenViBE::CString getAuthorCompanyName(void) const   { return OpenViBE::CString("INRIA/IRISA"); }
-			virtual OpenViBE::CString getShortDescription(void) const    { return OpenViBE::CString("Duplicates input to output"); }
-			virtual OpenViBE::CString getDetailedDescription(void) const { return OpenViBE::CString("This simply duplicates intput on its output"); }
-			virtual OpenViBE::CString getCategory(void) const            { return OpenViBE::CString("Signal processing/Basic"); }
-			virtual OpenViBE::CString getVersion(void) const             { return OpenViBE::CString("1.0"); }
-			virtual OpenViBE::CString getSoftwareComponent(void) const   { return OpenViBE::CString("openvibe-sdk"); }
-			virtual OpenViBE::CString getAddedSoftwareVersion(void) const   { return OpenViBE::CString("0.0.0"); }
-			virtual OpenViBE::CString getUpdatedSoftwareVersion(void) const { return OpenViBE::CString("0.0.0"); }
-			
-			virtual OpenViBE::CIdentifier getCreatedClass(void) const    { return OVP_ClassId_BoxAlgorithm_Identity; }
-			virtual OpenViBE::Plugins::IPluginObject* create(void)       { return new OpenViBEPlugins::SignalProcessing::CBoxAlgorithmIdentity(); }
-			virtual OpenViBE::Plugins::IBoxListener* createBoxListener(void) const               { return new CBoxAlgorithmIdentityListener; }
-			virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
-
-			virtual OpenViBE::boolean getBoxPrototype(
-				OpenViBE::Kernel::IBoxProto& rPrototype) const
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
-				rPrototype.addInput ("Input stream",  OV_TypeId_Signal);
+				rPrototype.addInput("Input stream", OV_TypeId_Signal);
 				rPrototype.addOutput("Output stream", OV_TypeId_Signal);
-				rPrototype.addFlag  (OpenViBE::Kernel::BoxFlag_CanAddOutput);
-				rPrototype.addFlag  (OpenViBE::Kernel::BoxFlag_CanModifyOutput);
-				rPrototype.addFlag  (OpenViBE::Kernel::BoxFlag_CanAddInput);
-				rPrototype.addFlag  (OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddOutput);
+				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				rPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_IdentityDesc)
 		};
-	};
-};
-
-#endif // __OpenViBEPlugins_BoxAlgorithm_Identity_H__
+	}  // namespace SignalProcessing
+}  // namespace OpenViBEPlugins
