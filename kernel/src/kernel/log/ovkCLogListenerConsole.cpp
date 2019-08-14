@@ -158,7 +158,7 @@ void CLogListenerConsole::log(const int64_t value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const int32_t value)
+void CLogListenerConsole::log(const int value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);

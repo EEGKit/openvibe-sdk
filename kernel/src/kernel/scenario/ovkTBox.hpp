@@ -1178,7 +1178,7 @@ namespace OpenViBE
 				this->getLogManager() << LogLevel_Debug
 						<< "Pushed '" << m_Interfacors.at(Setting)[l_ui32InsertLocation]->m_sName << "' : '"
 						<< std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[l_ui32InsertLocation])->m_sValue
-						<< "' to slot " << l_ui32InsertLocation << " with the array size now " << int32_t(m_Interfacors.at(Setting).size()) << "\n";
+						<< "' to slot " << l_ui32InsertLocation << " with the array size now " << int(m_Interfacors.at(Setting).size()) << "\n";
 
 				if (bNotify)
 				{
@@ -1479,7 +1479,7 @@ namespace OpenViBE
 				return this->swapInterfacors(Output, indexA, indexB);
 			}
 
-			virtual void notifySettingChange(BoxEventMessageType eType, int32_t i32FirstIndex = -1, int32_t i32SecondIndex = -1)
+			virtual void notifySettingChange(BoxEventMessageType eType, int i32FirstIndex = -1, int i32SecondIndex = -1)
 			{
 				if (m_bIsObserverNotificationActive)
 				{

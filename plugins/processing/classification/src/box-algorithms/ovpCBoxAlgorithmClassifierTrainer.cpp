@@ -368,8 +368,8 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			this->getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
 			for (uint64_t i = 0; i < m_ui64PartitionCount; i++)
 			{
-				const size_t l_uiStartIndex = (size_t)(((i) * l_rActualDataset.size()) / m_ui64PartitionCount);
-				const size_t l_uiStopIndex  = (size_t)(((i + 1) * l_rActualDataset.size()) / m_ui64PartitionCount);
+				const size_t l_uiStartIndex = size_t(((i) * l_rActualDataset.size()) / m_ui64PartitionCount);
+				const size_t l_uiStopIndex  = size_t(((i + 1) * l_rActualDataset.size()) / m_ui64PartitionCount);
 
 				this->getLogManager() << LogLevel_Trace << "Training on partition " << i << " (feature vectors " << (uint32_t)l_uiStartIndex << " to " << (uint32_t)l_uiStopIndex - 1 << ")...\n";
 

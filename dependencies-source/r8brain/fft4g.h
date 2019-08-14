@@ -69,7 +69,7 @@ function prototypes
                         length of ip >= 2+sqrt(n)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n+0.5)/log(2))/2).
+                            2+(1<<int(log(n+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n/2-1]   :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -118,7 +118,7 @@ function prototypes
                         length of ip >= 2+sqrt(n/2)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n/2+0.5)/log(2))/2).
+                            2+(1<<int(log(n/2+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n/2-1]   :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -156,7 +156,7 @@ function prototypes
                         length of ip >= 2+sqrt(n/2)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n/2+0.5)/log(2))/2).
+                            2+(1<<int(log(n/2+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n*5/4-1] :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -203,7 +203,7 @@ function prototypes
                         length of ip >= 2+sqrt(n/2)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n/2+0.5)/log(2))/2).
+                            2+(1<<int(log(n/2+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n*5/4-1] :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -236,7 +236,7 @@ function prototypes
                         length of ip >= 2+sqrt(n/4)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n/4+0.5)/log(2))/2).
+                            2+(1<<int(log(n/4+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n*5/8-1] :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -273,7 +273,7 @@ function prototypes
                         length of ip >= 2+sqrt(n/4)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n/4+0.5)/log(2))/2).
+                            2+(1<<int(log(n/4+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n*5/8-1] :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.

@@ -205,16 +205,16 @@ namespace OpenViBEToolkit
 				return l_ui64StimId;
 			}
 
-			operator int32_t()
+			operator int()
 			{
 				double l_dResult;
 				OpenViBE::CString l_sSettingValue = m_rConfigurationManager.expand(m_sSettingValue);
 
 				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult),
 								"Could not expand numeric expression [" << m_sSettingValue << "] to integer 32bits.",
-								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int32_t>::max(), m_rErrorManager, m_rLogManager);
+								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int>::max(), m_rErrorManager, m_rLogManager);
 
-				return int32_t(l_dResult);
+				return int(l_dResult);
 			}
 
 			operator int64_t()

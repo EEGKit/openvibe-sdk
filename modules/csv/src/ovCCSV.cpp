@@ -1310,8 +1310,8 @@ bool CCSVHandler::parseHeader()
 	m_BufferReadFileLine.clear();
 
 	// check stimulations
-	if (columns.cend()[-int32_t(s_PostDataColumnCount)] != s_EventIdentifierColumn
-		|| columns.cend()[-int32_t(s_PreDataColumnCount)] != s_EventDateColumn
+	if (columns.cend()[-int(s_PostDataColumnCount)] != s_EventIdentifierColumn
+		|| columns.cend()[-int(s_PreDataColumnCount)] != s_EventDateColumn
 		|| columns.back() != s_EventDurationColumn)
 	{
 		m_LastStringError = "Three last column must be \"Even Id\", \"Event Date\" and \"Event Duration\"";

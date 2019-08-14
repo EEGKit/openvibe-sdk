@@ -26,7 +26,7 @@ namespace
 
 extern const char* const c_sClassifierRoot;
 
-int32_t OpenViBEPlugins::Classification::LDAClassificationCompare(OpenViBE::IMatrix& rFirstClassificationValue, OpenViBE::IMatrix& rSecondClassificationValue)
+int OpenViBEPlugins::Classification::LDAClassificationCompare(OpenViBE::IMatrix& rFirstClassificationValue, OpenViBE::IMatrix& rSecondClassificationValue)
 {
 	//We first need to find the best classification of each.
 	double* l_pClassificationValueBuffer = rFirstClassificationValue.getBuffer();

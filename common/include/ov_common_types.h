@@ -32,7 +32,7 @@ OV_APPEND_TO_NAMESPACE
 	//typedef std::uint8_t uint8;            ///< 8 bits unsigned integer
 
 	//typedef std::int64_t int64;            ///< 64 bits signed integer
-	//typedef std::int32_t int32;            ///< 32 bits signed integer
+	//typedef std::int int32;            ///< 32 bits signed integer
 	//typedef std::int16_t int16;            ///< 16 bits signed integer
 	//typedef std::int8_t int8;              ///< 8 bits signed integer
 

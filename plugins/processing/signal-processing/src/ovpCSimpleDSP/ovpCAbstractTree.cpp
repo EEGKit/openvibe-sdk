@@ -443,7 +443,7 @@ void CAbstractTreeParentNode::generateCode(CEquationParser& oParser)
 			m_oChildren[i] -> generateCode(oParser);
 		}
 	}
-	m_oChildren[(size_t)(l_ui64NumberOfChildren-1)] -> generateCode(oParser);
+	m_oChildren[size_t(l_ui64NumberOfChildren-1)] -> generateCode(oParser);
 #else
 	oParser.push_op(m_ui64Identifier);
 	for (size_t i = 0; i < l_ui64NumberOfChildren; i++) { m_oChildren[i]->generateCode(oParser); }

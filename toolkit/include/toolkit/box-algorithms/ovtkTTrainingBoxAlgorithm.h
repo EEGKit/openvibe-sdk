@@ -236,7 +236,7 @@ namespace OpenViBEToolkit
 
 		if (m_ui64TrialEndTime != _no_time_ && m_ui64TrialStartTime != _no_time_ && m_ui64TrialEndTime > m_ui64TrialStartTime)
 		{
-			uint32_t l_ui32SampleCount = (uint32_t)(((m_ui64TrialEndTime - m_ui64TrialStartTime) * m_pPendingSignal->getSamplingRate()) >> 32);
+			uint32_t l_ui32SampleCount = uint32_t(((m_ui64TrialEndTime - m_ui64TrialStartTime) * m_pPendingSignal->getSamplingRate()) >> 32);
 
 			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
 					<< OpenViBE::Kernel::LogLevel_Trace

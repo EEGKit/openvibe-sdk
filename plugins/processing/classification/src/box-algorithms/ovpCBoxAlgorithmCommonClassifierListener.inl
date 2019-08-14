@@ -88,7 +88,7 @@ namespace OpenViBEPlugins
 			//				return true;
 			//			}
 
-			virtual int32_t getStrategySettingsCount(OpenViBE::Kernel::IBox& rBox)
+			virtual int getStrategySettingsCount(OpenViBE::Kernel::IBox& rBox)
 			{
 				if (m_i32StrategyAmountSettings < 0)//The value have never been initialized
 				{
@@ -407,7 +407,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStrategy;
 			const uint32_t m_ui32CustomSettingBase;
-			int32_t m_i32StrategyAmountSettings;
+			int m_i32StrategyAmountSettings;
 		};
 	}
 }

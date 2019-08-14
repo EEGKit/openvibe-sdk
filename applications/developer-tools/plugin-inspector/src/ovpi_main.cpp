@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	bool ignoreMetaboxes = false;
 	vector<string> metaboxExtensionsToLoad;
 
-	for (int32_t i = 1; i < argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{

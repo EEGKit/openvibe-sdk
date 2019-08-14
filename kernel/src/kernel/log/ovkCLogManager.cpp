@@ -40,7 +40,7 @@ void CLogManager::log(const uint32_t value) { logForEach<const uint32_t>(value);
 void CLogManager::log(const uint16_t value) { logForEach<const uint16_t>(value); }
 void CLogManager::log(const uint8_t value) { logForEach<const uint8_t>(value); }
 void CLogManager::log(const int64_t value) { logForEach<const int64_t>(value); }
-void CLogManager::log(const int32_t value) { logForEach<const int32_t>(value); }
+void CLogManager::log(const int value) { logForEach<const int>(value); }
 void CLogManager::log(const int16_t value) { logForEach<const int16_t>(value); }
 void CLogManager::log(const int8_t value) { logForEach<const int8_t>(value); }
 void CLogManager::log(const double value) { logForEach<const double>(value); }

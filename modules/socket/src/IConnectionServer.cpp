@@ -87,12 +87,12 @@ namespace Socket
 			int l_iClientAddressSize = sizeof(l_oClientAddress);
 #else
 #endif
-			int32_t l_i32ClientSocket = ::accept(m_i32Socket, (struct sockaddr*)&l_oClientAddress, &l_iClientAddressSize);
+			int l_i32ClientSocket = ::accept(m_i32Socket, (struct sockaddr*)&l_oClientAddress, &l_iClientAddressSize);
 			if (l_i32ClientSocket == -1)
 			{
 				return nullptr;
 			}
-			return new TConnection<IConnection>(int32_t(l_i32ClientSocket));
+			return new TConnection<IConnection>(int(l_i32ClientSocket));
 		}
 
 		bool getSocketPort(uint32_t& port) override

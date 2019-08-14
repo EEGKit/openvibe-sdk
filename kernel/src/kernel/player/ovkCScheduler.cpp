@@ -472,7 +472,7 @@ SchedulerInitializationCode CScheduler::initialize()
 
 
 	bool l_bBoxInitialization = true;
-	for (map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
+	for (map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
@@ -502,7 +502,7 @@ bool CScheduler::uninitialize()
 	this->getLogManager() << LogLevel_Trace << "Scheduler uninitialize\n";
 
 	bool l_bBoxUninitialization = true;
-	for (map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
+	for (map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
@@ -516,7 +516,7 @@ bool CScheduler::uninitialize()
 		}
 	}
 
-	for (map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
+	for (map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		delete itSimulatedBox->second;
 	}
@@ -536,7 +536,7 @@ bool CScheduler::loop()
 
 	bool l_bBoxProcessing = true;
 	m_oBenchmarkChrono.stepIn();
-	for (map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
+	for (map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
 	{
 		CSimulatedBox* l_pSimulatedBox = itSimulatedBox->second;
 
@@ -639,7 +639,7 @@ bool CScheduler::sendInput(const CChunk& rChunk, const CIdentifier& rBoxIdentifi
 						"Tried to send data chunk with invalid input index " << ui32InputIndex << " for box identifier" << rBoxIdentifier.toString(),
 						ErrorType::OutOfBound);
 
-	map<pair<int32_t, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin();
+	map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin();
 	while (itSimulatedBox != m_vSimulatedBox.end() && itSimulatedBox->first.second != rBoxIdentifier)
 	{
 		++itSimulatedBox;

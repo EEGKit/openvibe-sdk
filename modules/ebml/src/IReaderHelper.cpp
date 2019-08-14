@@ -56,7 +56,7 @@ double CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64_t 
 {
 	float l_f32Result;
 	double l_f64Result;
-	int32_t l_ui32Result;
+	int l_ui32Result;
 	int64_t l_ui64Result;
 
 	switch (ui64BufferSize)
@@ -92,7 +92,7 @@ const char* CReaderHelper::getASCIIStringFromChildData(const void* pBuffer, cons
 {
 	if (ui64BufferSize)
 	{
-		m_sASCIIString.assign((char*)pBuffer, (size_t)(ui64BufferSize));
+		m_sASCIIString.assign((char*)pBuffer, size_t(ui64BufferSize));
 	}
 	else { m_sASCIIString = ""; }
 	return m_sASCIIString.c_str();

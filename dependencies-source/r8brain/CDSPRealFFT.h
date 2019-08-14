@@ -369,7 +369,7 @@ namespace r8b
 
 #else // R8B_IPP
 
-			wi.alloc((int)ceil(2.0 + sqrt((double)(Len >> 1))));
+			wi.alloc((int)ceil(2.0 + sqrt(double(Len >> 1))));
 			wi[0] = 0;
 			wd.alloc(Len >> 1);
 

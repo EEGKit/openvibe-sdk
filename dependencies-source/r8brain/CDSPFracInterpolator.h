@@ -89,7 +89,7 @@ namespace r8b
 			{
 				for (i = -pc2 + 1; i <= FilterFracs + pc2; i++)
 				{
-					sinc.FracDelay = (double)(FilterFracs - i) / FilterFracs;
+					sinc.FracDelay = double(FilterFracs - i) / FilterFracs;
 					sinc.initFrac(CDSPSincFilterGen::wftVaneev, Params);
 					sinc.generateFrac(p, &CDSPSincFilterGen::calcWindowVaneev,
 									  ElementSize);
@@ -102,7 +102,7 @@ namespace r8b
 			{
 				for (i = -pc2 + 1; i <= FilterFracs + pc2; i++)
 				{
-					sinc.FracDelay = (double)(FilterFracs - i) / FilterFracs;
+					sinc.FracDelay = double(FilterFracs - i) / FilterFracs;
 					sinc.initFrac(CDSPSincFilterGen::wftKaiser, Params, true);
 					sinc.generateFrac(p, &CDSPSincFilterGen::calcWindowKaiser,
 									  ElementSize);
@@ -404,7 +404,7 @@ namespace r8b
 				InPosShift = InPosFrac;
 			}
 
-			return ((int)(op - op0));
+			return (int(op - op0));
 		}
 
 	private:

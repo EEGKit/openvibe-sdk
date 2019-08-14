@@ -74,8 +74,8 @@ namespace Common
 				else
 				{
 					uni -= 0x10000;
-					utf16 += (wchar_t)((uni >> 10) + 0xD800);
-					utf16 += (wchar_t)((uni & 0x3FF) + 0xDC00);
+					utf16 += wchar_t((uni >> 10) + 0xD800);
+					utf16 += wchar_t((uni & 0x3FF) + 0xDC00);
 				}
 			}
 			return utf16;

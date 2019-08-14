@@ -193,7 +193,7 @@ void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const uin
 		else if (t->second == "binary(integer32)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<int32_t>(pBuffer, ui64BufferSize);
+			processBinaryBlock<int>(pBuffer, ui64BufferSize);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(integer64)")

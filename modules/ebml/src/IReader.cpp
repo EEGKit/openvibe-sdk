@@ -227,8 +227,8 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 				{
 					unsigned char* encodedBuffer   = new unsigned char[l_ulCodedSizeLength];
 					const uint64_t pendingBytesToCopy = (l_ulCodedSizeLength > m_ui64PendingCount ? m_ui64PendingCount : l_ulCodedSizeLength);
-					memcpy(encodedBuffer, m_pPending, (size_t)(pendingBytesToCopy));
-					memcpy(encodedBuffer + pendingBytesToCopy, l_pBuffer, (size_t)(l_ulCodedSizeLength - pendingBytesToCopy));
+					memcpy(encodedBuffer, m_pPending, size_t(pendingBytesToCopy));
+					memcpy(encodedBuffer + pendingBytesToCopy, l_pBuffer, size_t(l_ulCodedSizeLength - pendingBytesToCopy));
 					const uint64_t value = getValue(encodedBuffer, l_ulCodedSizeLength);
 					delete [] encodedBuffer;
 					l_ui64ProcessedPendingBytes = pendingBytesToCopy;
@@ -367,12 +367,12 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 	if (m_ui64PendingCount + l_ui64BufferSize > m_ui64PendingSize)
 	{
 		unsigned char* l_pPending = new unsigned char[(unsigned int)(m_ui64PendingCount + l_ui64BufferSize + 1)]; // Ugly hack, reserve 1 more byte on pending data so we are sure we can insert this additional pending byte when only one byte is pending and two bytes are needed for decoding identifier and/or buffer size
-		memcpy(l_pPending, m_pPending, (size_t)(m_ui64PendingCount));
+		memcpy(l_pPending, m_pPending, size_t(m_ui64PendingCount));
 		delete [] m_pPending;
 		m_pPending        = l_pPending;
 		m_ui64PendingSize = m_ui64PendingCount + l_ui64BufferSize;
 	}
-	memcpy(m_pPending + m_ui64PendingCount, l_pBuffer, (size_t)(l_ui64BufferSize));
+	memcpy(m_pPending + m_ui64PendingCount, l_pBuffer, size_t(l_ui64BufferSize));
 	m_ui64PendingCount += l_ui64BufferSize;
 
 	if (_Debug_) { std::cout << "\n"; }

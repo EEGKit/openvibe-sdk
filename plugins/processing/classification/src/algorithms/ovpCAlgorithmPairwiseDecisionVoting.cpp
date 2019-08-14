@@ -57,11 +57,11 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 		SClassificationInfo& l_rTemp = pClassificationValueList[i];
 		if (l_rTemp.m_f64ClassLabel == 0)
 		{
-			++(l_pWinCount[(uint32_t)(l_rTemp.m_f64FirstClass)]);
+			++(l_pWinCount[uint32_t(l_rTemp.m_f64FirstClass)]);
 		}
 		else
 		{
-			++(l_pWinCount[(uint32_t)(l_rTemp.m_f64SecondClass)]);
+			++(l_pWinCount[uint32_t(l_rTemp.m_f64SecondClass)]);
 		}
 	}
 

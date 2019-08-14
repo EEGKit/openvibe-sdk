@@ -181,7 +181,7 @@ namespace OpenViBE
 			 * \brief Logs a 32 bits signed integer
 			 * \param value [in] : the value that should be logged
 			 */
-			virtual void log(const int32_t value) = 0;
+			virtual void log(const int value) = 0;
 			/**
 			 * \brief Logs a 16 bits signed integer
 			 * \param value [in] : the value that should be logged

@@ -155,12 +155,12 @@ bool CBoxAlgorithmSpatialFilter::initialize()
 	{
 		const CString l_sCoefficient = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 		// The double cast is needed until FSettingValueAutoCast supports uint32_t.
-		const uint32_t l_ui32OutputChannelCountSetting = (uint32_t)(uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-		const uint32_t l_ui32InputChannelCountSetting  = (uint32_t)(uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-		const uint32_t l_ui32nCoefficients             = loadCoefficients(l_sCoefficient, ' ', OV_Value_EnumeratedStringSeparator, l_ui32OutputChannelCountSetting, l_ui32InputChannelCountSetting);
+		const uint32_t nOutputChannelSetting = uint32_t((uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1));
+		const uint32_t nInputChannelSetting  = uint32_t((uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2));
+		const uint32_t nCoefficients         = loadCoefficients(l_sCoefficient, ' ', OV_Value_EnumeratedStringSeparator, nOutputChannelSetting, nInputChannelSetting);
 
-		OV_ERROR_UNLESS_KRF(l_ui32nCoefficients == l_ui32OutputChannelCountSetting * l_ui32InputChannelCountSetting,
-							"Invalid number of coefficients [" << l_ui32nCoefficients << "] (expected "<< l_ui32OutputChannelCountSetting * l_ui32InputChannelCountSetting <<" coefficients)",
+		OV_ERROR_UNLESS_KRF(nCoefficients == nOutputChannelSetting * nInputChannelSetting,
+							"Invalid number of coefficients [" << nCoefficients << "] (expected "<< nOutputChannelSetting * nInputChannelSetting <<" coefficients)",
 							OpenViBE::Kernel::ErrorType::BadConfig);
 
 #if defined(DEBUG)

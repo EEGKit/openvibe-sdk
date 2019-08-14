@@ -34,7 +34,7 @@ void CLogListenerNull::log(const uint32_t value) {}
 void CLogListenerNull::log(const uint16_t value) {}
 void CLogListenerNull::log(const uint8_t value) {}
 void CLogListenerNull::log(const int64_t value) {}
-void CLogListenerNull::log(const int32_t value) {}
+void CLogListenerNull::log(const int value) {}
 void CLogListenerNull::log(const int16_t value) {}
 void CLogListenerNull::log(const int8_t value) {}
 void CLogListenerNull::log(const float value) {}

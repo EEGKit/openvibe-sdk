@@ -94,7 +94,7 @@ void CLogListenerFile::log(const uint32_t value) { logInteger(value); }
 void CLogListenerFile::log(const uint16_t value) { logInteger(value); }
 void CLogListenerFile::log(const uint8_t value) { logInteger(value); }
 void CLogListenerFile::log(const int64_t value) { logInteger(value); }
-void CLogListenerFile::log(const int32_t value) { logInteger(value); }
+void CLogListenerFile::log(const int value) { logInteger(value); }
 void CLogListenerFile::log(const int16_t value) { logInteger(value); }
 void CLogListenerFile::log(const int8_t value) { logInteger(value); }
 

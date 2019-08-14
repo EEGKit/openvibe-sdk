@@ -28,7 +28,7 @@ namespace System
 
 		static int8_t randomSInteger8();
 		static int16_t randomSInteger16();
-		static int32_t randomSInteger32();
+		static int randomSInteger32();
 		static int64_t randomSInteger64();
 
 		static float randomFloat32();

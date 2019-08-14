@@ -30,11 +30,11 @@ public:
 
 	explicit RandomGenerator(uint32_t seed = 1) : l_ui32NextValue(seed) {}
 
-	int32_t rand()
+	int rand()
 	{
 		// Pretty much C99 convention and parameters for a Linear Congruential Generator
 		l_ui32NextValue = (l_ui32NextValue * 1103515245 + 12345) & l_ui32RandMax;
-		return int32_t(l_ui32NextValue);
+		return int(l_ui32NextValue);
 	}
 
 	void setSeed(uint32_t seed) { l_ui32NextValue = seed; }
@@ -100,9 +100,9 @@ int16_t Math::randomSInteger16()
 	return int16_t(randomUInteger64());
 }
 
-int32_t Math::randomSInteger32()
+int Math::randomSInteger32()
 {
-	return int32_t(randomUInteger64());
+	return int(randomUInteger64());
 }
 
 int64_t Math::randomSInteger64()
@@ -146,7 +146,7 @@ bool Math::isfinite(double f64Value)
 bool Math::isinf(double f64Value)
 {
 #ifdef TARGET_OS_Windows
-	int32_t l_i32Class = _fpclass(f64Value);
+	int l_i32Class = _fpclass(f64Value);
 	return (l_i32Class == _FPCLASS_NINF || l_i32Class == _FPCLASS_PINF);
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	return std::isinf(f64Value);
@@ -169,7 +169,7 @@ bool Math::isnan(double f64Value)
 bool Math::isnormal(double f64Value)
 {
 #ifdef TARGET_OS_Windows
-	int32_t l_i32Class = _fpclass(f64Value);
+	int l_i32Class = _fpclass(f64Value);
 	return (l_i32Class == _FPCLASS_NN || l_i32Class == _FPCLASS_PN);
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	return std::isnormal(f64Value);
