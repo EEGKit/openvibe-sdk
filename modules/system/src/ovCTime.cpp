@@ -45,7 +45,7 @@ bool System::Time::sleep(const uint32_t ui32MilliSeconds)
 
 bool System::Time::zsleep(const uint64_t ui64Seconds)
 {
-	const uint32_t l_ui32Seconds = static_cast<uint32_t>(ui64Seconds >> 32);
+	const uint32_t l_ui32Seconds = uint32_t(ui64Seconds >> 32);
 	// zero the seconds with 0xFFFFFFFF, multiply to get the rest as fixed point microsec, then grab them (now in the 32 msbs)
 	const uint64_t l_ui64MicroSeconds = ((ui64Seconds & 0xFFFFFFFFLL) * 1000000LL) >> 32;
 
@@ -58,7 +58,7 @@ bool System::Time::zsleep(const uint64_t ui64Seconds)
 uint32_t System::Time::getTime()
 {
 	// turn the 32:32 fixed point seconds to milliseconds
-	return static_cast<uint32_t>((zgetTime() * 1000) >> 32);
+	return uint32_t((zgetTime() * 1000) >> 32);
 }
 
 uint64_t System::Time::zgetTime()
@@ -84,8 +84,8 @@ uint64_t System::Time::zgetTimeRaw(bool sinceFirstCall)
 	const timelib::chrono::microseconds l_oElapsedMs = timelib::chrono::duration_cast<timelib::chrono::microseconds>(l_oElapsed);
 
 	const uint64_t l_ui64MicrosPerSecond = 1000ULL * 1000ULL;
-	const uint64_t l_ui64Seconds         = static_cast<uint64_t>(l_oElapsedMs.count() / l_ui64MicrosPerSecond);
-	const uint64_t l_ui64Fraction        = static_cast<uint64_t>(l_oElapsedMs.count() % l_ui64MicrosPerSecond);
+	const uint64_t l_ui64Seconds         = uint64_t(l_oElapsedMs.count() / l_ui64MicrosPerSecond);
+	const uint64_t l_ui64Fraction        = uint64_t(l_oElapsedMs.count() % l_ui64MicrosPerSecond);
 
 	// below in fraction part, scale [0,l_ui64MicrosPerSecond-1] to 32bit integer range
 	const uint64_t l_ui64ReturnValue = (l_ui64Seconds << 32) + l_ui64Fraction * (0xFFFFFFFFLL / (l_ui64MicrosPerSecond - 1));
@@ -102,6 +102,6 @@ bool System::Time::checkResolution(const uint32_t ui32MilliSeconds)
 {
 	assert(ui32MilliSeconds != 0);
 
-	auto l_ui32Resolution = static_cast<double>(internal_clock::period::num) / internal_clock::period::den;
-	return (static_cast<uint32_t>(std::ceil(l_ui32Resolution * 1000)) <= ui32MilliSeconds);
+	auto l_ui32Resolution = double(internal_clock::period::num) / internal_clock::period::den;
+	return (uint32_t(std::ceil(l_ui32Resolution * 1000)) <= ui32MilliSeconds);
 }

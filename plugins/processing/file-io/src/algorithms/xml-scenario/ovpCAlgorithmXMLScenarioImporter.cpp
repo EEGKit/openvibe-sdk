@@ -94,13 +94,13 @@ namespace
 			m_rAlgorithmContext.getLogManager() << LogLevel_Trace
 					<< "Failed to validate xml: error ["
 					<< xercesToString(exception.getMessage()).c_str()
-					<< "], line number [" << static_cast<uint64_t>(exception.getLineNumber()) << "]"
+					<< "], line number [" << uint64_t(exception.getLineNumber()) << "]"
 					<< "\n";
 		}
 
 		void warning(const SAXParseException& exception) override
 		{
-			OV_WARNING("Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << static_cast<uint64_t>(exception.getLineNumber()) << "]",
+			OV_WARNING("Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << uint64_t(exception.getLineNumber()) << "]",
 					   m_rAlgorithmContext.getLogManager());
 		}
 

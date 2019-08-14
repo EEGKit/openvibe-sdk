@@ -80,7 +80,7 @@ namespace Socket
 		{
 			if (isConnected()) { return false; }
 
-			m_i32Socket = static_cast<int32_t>(socket(AF_INET, SOCK_STREAM, 0));
+			m_i32Socket = int32_t(socket(AF_INET, SOCK_STREAM, 0));
 			if (m_i32Socket == -1) { return false; }
 
 			return true;

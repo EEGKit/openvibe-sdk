@@ -28,7 +28,7 @@ bool CAlgorithmPairwiseDecisionVoting::uninitialize() { return true; }
 bool CAlgorithmPairwiseDecisionVoting::parameterize()
 {
 	TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
-	m_ui32ClassCount = static_cast<uint32_t>(ip_pClassCount);
+	m_ui32ClassCount = uint32_t(ip_pClassCount);
 
 	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision Voting algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found", OpenViBE::Kernel::ErrorType::BadInput);
 

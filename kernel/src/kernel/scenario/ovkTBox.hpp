@@ -421,7 +421,7 @@ namespace OpenViBE
 			{
 				identifier = OV_UndefinedIdentifier;
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(), 
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])", 
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(interfacorType).size() - 1) << "])", 
 									ErrorType::OutOfBound);
 
 				identifier = m_Interfacors.at(interfacorType)[index]->m_oIdentifier;
@@ -452,7 +452,7 @@ namespace OpenViBE
 
 			virtual bool getInterfacorType(BoxInterfacorType interfacorType, const uint32_t index, CIdentifier& typeIdentifier) const
 			{
-				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(), g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])", ErrorType::OutOfBound);
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(), g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(interfacorType).size() - 1) << "])", ErrorType::OutOfBound);
 
 				typeIdentifier = m_Interfacors.at(interfacorType)[index]->m_oTypeIdentifier;
 				return true;
@@ -480,7 +480,7 @@ namespace OpenViBE
 			virtual bool getInterfacorName(BoxInterfacorType interfacorType, const uint32_t index, CString& name) const
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(interfacorType).size() - 1) << "])",
 					ErrorType::OutOfBound);
 
 				name = m_Interfacors.at(interfacorType)[index]->m_sName;
@@ -503,7 +503,7 @@ namespace OpenViBE
 					OV_WARNING_K("DUH");
 				}
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(interfacorType).size() - 1) << "])",
 					ErrorType::OutOfBound);
 
 				value = m_Interfacors.at(interfacorType)[index]->m_bDeprecated;
@@ -555,7 +555,7 @@ namespace OpenViBE
 				}
 
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				if (m_Interfacors[interfacorType][index]->m_oTypeIdentifier == typeIdentifier) { return true; }
@@ -602,7 +602,7 @@ namespace OpenViBE
 			virtual bool setInterfacorName(BoxInterfacorType interfacorType, const uint32_t index, const CString& newName)
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors[interfacorType].size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[interfacorType].size() - 1) << "])",
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors[interfacorType].size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				if (m_Interfacors[interfacorType][index]->m_sName == newName)
@@ -654,7 +654,7 @@ namespace OpenViBE
 			virtual bool setInterfacorDeprecatedStatus(BoxInterfacorType interfacorType, const uint32_t index, bool newValue)
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors[interfacorType].size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[interfacorType].size() - 1) << "])",
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors[interfacorType].size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				m_Interfacors[interfacorType][index]->m_bDeprecated = newValue;
@@ -682,7 +682,7 @@ namespace OpenViBE
 			virtual bool removeInput(const uint32_t ui32InputIndex, const bool bNotify = true)
 			{
 				OV_ERROR_UNLESS_KRF(ui32InputIndex < m_Interfacors[Input].size(),
-									"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[Input].size() - 1) << "])",
+									"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_Interfacors[Input].size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 
@@ -837,7 +837,7 @@ namespace OpenViBE
 			virtual bool removeOutput(const uint32_t index, const bool bNotify = true)
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors[Output].size(),
-									"Output index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors[Output].size() - 1) << "])",
+									"Output index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors[Output].size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				std::vector<std::pair<std::pair<uint64_t, uint32_t>, std::pair<uint64_t, uint32_t>>> l_vLink;
@@ -1142,15 +1142,15 @@ namespace OpenViBE
 
 				uint32_t l_ui32InsertLocation;
 
-				if (ui32Index == OV_Value_UndefinedIndexUInt || ui32Index == static_cast<uint32_t>(m_Interfacors[Setting].size()))
+				if (ui32Index == OV_Value_UndefinedIndexUInt || ui32Index == uint32_t(m_Interfacors[Setting].size()))
 				{
 					m_Interfacors[Setting].push_back(std::shared_ptr<CSetting>(new CSetting(s)));
-					l_ui32InsertLocation = (static_cast<uint32_t>(m_Interfacors[Setting].size())) - 1;
+					l_ui32InsertLocation = (uint32_t(m_Interfacors[Setting].size())) - 1;
 				}
 				else
 				{
-					OV_ERROR_UNLESS_KRF(ui32Index <= static_cast<uint32_t>(m_Interfacors[Setting].size()),
-										"Tried to push '" << rsName << "' to slot " << ui32Index << " with the array size being " << static_cast<uint32_t>(m_Interfacors[Setting].size()),
+					OV_ERROR_UNLESS_KRF(ui32Index <= uint32_t(m_Interfacors[Setting].size()),
+										"Tried to push '" << rsName << "' to slot " << ui32Index << " with the array size being " << uint32_t(m_Interfacors[Setting].size()),
 										ErrorType::OutOfBound);
 
 					auto l_it = m_Interfacors[Setting].begin();
@@ -1178,7 +1178,7 @@ namespace OpenViBE
 				this->getLogManager() << LogLevel_Debug
 						<< "Pushed '" << m_Interfacors.at(Setting)[l_ui32InsertLocation]->m_sName << "' : '"
 						<< std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[l_ui32InsertLocation])->m_sValue
-						<< "' to slot " << l_ui32InsertLocation << " with the array size now " << static_cast<int32_t>(m_Interfacors.at(Setting).size()) << "\n";
+						<< "' to slot " << l_ui32InsertLocation << " with the array size now " << int32_t(m_Interfacors.at(Setting).size()) << "\n";
 
 				if (bNotify)
 				{
@@ -1252,7 +1252,7 @@ namespace OpenViBE
 			virtual bool getSettingDefaultValue(const uint32_t index, CString& rDefaultValue) const
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(),
-									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+									"Setting index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(Setting).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				rDefaultValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[index])->m_sDefaultValue;
@@ -1278,7 +1278,7 @@ namespace OpenViBE
 			virtual bool getSettingValue(const uint32_t index, CString& rValue) const
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(), 
-									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])", 
+									"Setting index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(Setting).size() - 1) << "])", 
 									ErrorType::OutOfBound);
 
 				rValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[index])->m_sValue;
@@ -1304,7 +1304,7 @@ namespace OpenViBE
 			virtual bool getSettingMod(const uint32_t index, bool& rValue) const
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(),
-									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+									"Setting index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(Setting).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				rValue = std::static_pointer_cast<CSetting>(m_Interfacors.at(Setting)[index])->m_bMod;
@@ -1342,7 +1342,7 @@ namespace OpenViBE
 			virtual bool setSettingDefaultValue(const uint32_t index, const CString& rDefaultValue)
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(),
-									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+									"Setting index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(Setting).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				std::static_pointer_cast<CSetting>(m_Interfacors[Setting][index])->m_sDefaultValue = rDefaultValue;
@@ -1370,7 +1370,7 @@ namespace OpenViBE
 			virtual bool setSettingValue(const uint32_t index, const CString& rValue, const bool bNotify = true)
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(), 
-									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])", 
+									"Setting index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(Setting).size() - 1) << "])", 
 									ErrorType::OutOfBound);
 
 				auto setting = std::static_pointer_cast<CSetting>(m_Interfacors[Setting][index]);
@@ -1407,7 +1407,7 @@ namespace OpenViBE
 			virtual bool setSettingMod(const uint32_t index, const bool rValue)
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(Setting).size(),
-									"Setting index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+									"Setting index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(Setting).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				std::static_pointer_cast<CSetting>(m_Interfacors[Setting][index])->m_bMod = rValue;
@@ -1435,10 +1435,10 @@ namespace OpenViBE
 			virtual bool swapInterfacors(BoxInterfacorType interfacorType, const uint32_t indexA, const uint32_t indexB)
 			{
 				OV_ERROR_UNLESS_KRF(indexA < m_Interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexA << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexA << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 				OV_ERROR_UNLESS_KRF(indexB < m_Interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexB << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(interfacorType).size() - 1) << "])",
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << indexB << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(interfacorType).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				CString nameA;
@@ -1505,7 +1505,7 @@ namespace OpenViBE
 			virtual uint32_t* getModifiableSettings(uint32_t& rCount) const
 			{
 				uint32_t* l_pReturn = nullptr;
-				rCount              = static_cast<uint32_t>(m_vModifiableSettingIndexes.size());
+				rCount              = uint32_t(m_vModifiableSettingIndexes.size());
 
 				return l_pReturn;
 			}
@@ -1513,7 +1513,7 @@ namespace OpenViBE
 			virtual bool updateInterfacorIdentifier(BoxInterfacorType interfacorType, const uint32_t index, const CIdentifier& newIdentifier)
 			{
 				OV_ERROR_UNLESS_KRF(index < m_Interfacors.at(interfacorType).size(),
-									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << static_cast<uint32_t>(m_Interfacors.at(Setting).size() - 1) << "])",
+									g_InterfacorTypeToName.at(interfacorType) << " index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors.at(Setting).size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 				OV_ERROR_UNLESS_KRF(newIdentifier != OV_UndefinedIdentifier, g_InterfacorTypeToName.at(interfacorType) << " identifier can not be undefined", ErrorType::BadArgument);

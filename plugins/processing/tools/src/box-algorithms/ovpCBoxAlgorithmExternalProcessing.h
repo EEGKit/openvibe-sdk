@@ -28,7 +28,7 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processClock(OpenViBE::CMessageClock& rMessageClock) override;
-			bool processInput(const uint32_t inputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ExternalProcessing)
@@ -39,13 +39,13 @@ namespace OpenViBEPlugins
 			{
 				uint64_t startTime;
 				uint64_t endTime;
-				uint32_t inputIndex;
+				uint32_t index;
 				std::shared_ptr<std::vector<uint8_t>> EBML;
 
-				Packet(uint64_t startTime, uint64_t endTime, uint32_t inputIndex, std::shared_ptr<std::vector<uint8_t>> EBML)
+				Packet(uint64_t startTime, uint64_t endTime, uint32_t index, std::shared_ptr<std::vector<uint8_t>> EBML)
 					: startTime(startTime)
 					  , endTime(endTime)
-					  , inputIndex(inputIndex)
+					  , index(index)
 					  , EBML(EBML) { }
 			};
 

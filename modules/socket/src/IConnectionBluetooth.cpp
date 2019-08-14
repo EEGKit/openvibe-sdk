@@ -186,7 +186,7 @@ namespace Socket
 				return 0;
 			}
 
-			return static_cast<uint32_t>(l_i32BytesSentCount);
+			return uint32_t(l_i32BytesSentCount);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return 0;
@@ -214,7 +214,7 @@ namespace Socket
 				return 0;
 			}
 
-			return static_cast<uint32_t>(l_i32BytesReceivedCount);
+			return uint32_t(l_i32BytesReceivedCount);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return 0;

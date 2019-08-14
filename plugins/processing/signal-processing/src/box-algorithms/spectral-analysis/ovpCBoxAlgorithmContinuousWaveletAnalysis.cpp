@@ -101,7 +101,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 	{
 		m_pWaveletType = "dog";
 
-		if (m_dWaveletParameter <= 0 || static_cast<uint32_t>(m_dWaveletParameter) % 2 == 1)
+		if (m_dWaveletParameter <= 0 || uint32_t(m_dWaveletParameter) % 2 == 1)
 		{
 			this->getLogManager() << LogLevel_Error << "Derivative of Gaussian wavelet parameter should be strictly positive and even.\n";
 			return false;
@@ -197,7 +197,7 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				return false;
 			}
 
-			int l_iScaleCountLimit = static_cast<int>(std::log2(l_iSampleCount * m_dSamplingPeriod_dt / m_dSmallestScale_s0) / m_dScaleSpacing_dj); // Eq.(10)
+			int l_iScaleCountLimit = int(std::log2(l_iSampleCount * m_dSamplingPeriod_dt / m_dSmallestScale_s0) / m_dScaleSpacing_dj); // Eq.(10)
 			if (m_iScaleCount_J > l_iScaleCountLimit)
 			{
 				this->getLogManager() << LogLevel_Error << "Frequency count [" << m_iScaleCount_J << "] is superior to the limit [" << l_iScaleCountLimit << "].\n";
@@ -226,8 +226,8 @@ bool CBoxAlgorithmContinuousWaveletAnalysis::process()
 				IMatrix* l_pOutputMatrix = m_vEncoder[l_ui32EncoderIndex].getInputMatrix();
 				l_pOutputMatrix->setDimensionCount(3);
 				l_pOutputMatrix->setDimensionSize(0, l_ui32ChannelCount);
-				l_pOutputMatrix->setDimensionSize(1, static_cast<uint32_t>(m_iScaleCount_J));
-				l_pOutputMatrix->setDimensionSize(2, static_cast<uint32_t>(l_iSampleCount));
+				l_pOutputMatrix->setDimensionSize(1, uint32_t(m_iScaleCount_J));
+				l_pOutputMatrix->setDimensionSize(2, uint32_t(l_iSampleCount));
 
 				for (uint32_t l_ui32ChannelIndex = 0; l_ui32ChannelIndex < l_ui32ChannelCount; ++l_ui32ChannelIndex)
 				{

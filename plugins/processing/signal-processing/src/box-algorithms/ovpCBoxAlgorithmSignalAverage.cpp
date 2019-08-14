@@ -80,7 +80,7 @@ bool CBoxAlgorithmSignalAverage::process()
 			// Sampling rate will be decimated in the output
 			const uint64_t l_ui64InputSamplingRate = m_oSignalDecoder.getOutputSamplingRate();
 			const uint32_t l_ui32InputSampleCount  = l_pInputMatrix->getDimensionSize(1);
-			const uint64_t l_ui64NewSamplingRate   = static_cast<uint64_t>(ceil((double)l_ui64InputSamplingRate / (double)l_ui32InputSampleCount));
+			const uint64_t l_ui64NewSamplingRate   = uint64_t(ceil((double)l_ui64InputSamplingRate / (double)l_ui32InputSampleCount));
 
 			m_oSignalEncoder.getInputSamplingRate() = l_ui64NewSamplingRate;
 

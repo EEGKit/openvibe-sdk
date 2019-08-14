@@ -34,7 +34,7 @@ public:
 	{
 		// Pretty much C99 convention and parameters for a Linear Congruential Generator
 		l_ui32NextValue = (l_ui32NextValue * 1103515245 + 12345) & l_ui32RandMax;
-		return static_cast<int32_t>(l_ui32NextValue);
+		return int32_t(l_ui32NextValue);
 	}
 
 	void setSeed(uint32_t seed) { l_ui32NextValue = seed; }
@@ -47,7 +47,7 @@ static RandomGenerator g_oRandomGenerator;
 
 bool Math::initializeRandomMachine(const uint64_t ui64RandomSeed)
 {
-	g_oRandomGenerator.setSeed(static_cast<uint32_t>(ui64RandomSeed));
+	g_oRandomGenerator.setSeed(uint32_t(ui64RandomSeed));
 
 	// For safety, we install also the C++ basic random engine (it might be useg by dependencies, old code, etc)
 	srand(static_cast<unsigned int>(ui64RandomSeed));
@@ -57,17 +57,17 @@ bool Math::initializeRandomMachine(const uint64_t ui64RandomSeed)
 
 uint8_t Math::randomUInteger8()
 {
-	return static_cast<uint8_t>(randomUInteger64());
+	return uint8_t(randomUInteger64());
 }
 
 uint16_t Math::randomUInteger16()
 {
-	return static_cast<uint16_t>(randomUInteger64());
+	return uint16_t(randomUInteger64());
 }
 
 uint32_t Math::randomUInteger32()
 {
-	return static_cast<uint32_t>(randomUInteger64());
+	return uint32_t(randomUInteger64());
 }
 
 uint64_t Math::randomUInteger64()
@@ -82,32 +82,32 @@ uint64_t Math::randomUInteger64()
 uint32_t Math::randomUInteger32WithCeiling(uint32_t ui32upperLimit)
 {
 	// float in range [0,1]
-	const double l_f64Temp = g_oRandomGenerator.rand() / static_cast<double>(g_oRandomGenerator.l_ui32RandMax);
+	const double l_f64Temp = g_oRandomGenerator.rand() / double(g_oRandomGenerator.l_ui32RandMax);
 
 	// static_cast is effectively floor(), so below we get output range [0,upperLimit-1], without explicit subtraction of 1
-	const uint32_t l_ui32ReturnValue = static_cast<uint32_t>(ui32upperLimit * l_f64Temp);
+	const uint32_t l_ui32ReturnValue = uint32_t(ui32upperLimit * l_f64Temp);
 
 	return l_ui32ReturnValue;
 }
 
 int8_t Math::randomSInteger8()
 {
-	return static_cast<int8_t>(randomUInteger64());
+	return int8_t(randomUInteger64());
 }
 
 int16_t Math::randomSInteger16()
 {
-	return static_cast<int16_t>(randomUInteger64());
+	return int16_t(randomUInteger64());
 }
 
 int32_t Math::randomSInteger32()
 {
-	return static_cast<int32_t>(randomUInteger64());
+	return int32_t(randomUInteger64());
 }
 
 int64_t Math::randomSInteger64()
 {
-	return static_cast<int64_t>(randomUInteger64());
+	return int64_t(randomUInteger64());
 }
 
 float Math::randomFloat32()
@@ -120,7 +120,7 @@ float Math::randomFloat32()
 
 float Math::randomFloat32BetweenZeroAndOne()
 {
-	const float fr = static_cast<float>(g_oRandomGenerator.rand()) / static_cast<float>(g_oRandomGenerator.l_ui32RandMax);
+	const float fr = float(g_oRandomGenerator.rand()) / float(g_oRandomGenerator.l_ui32RandMax);
 	return fr;
 }
 

@@ -14,7 +14,7 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
 
 	uint64_t l_ui64LogLevel   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_eLogLevel               = static_cast<ELogLevel>(l_ui64LogLevel);
+	m_eLogLevel               = ELogLevel(l_ui64LogLevel);
 	m_ui64ValidityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	if (l_rStaticBoxContext.getSettingCount() == 1) { m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); } // note that for boxes with one setting, we fallback to the old behavior 
 

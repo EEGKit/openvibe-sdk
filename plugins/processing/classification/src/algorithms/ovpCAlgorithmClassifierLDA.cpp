@@ -151,7 +151,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 
 	// The max amount of classes to be expected
 	TParameterHandler<uint64_t> ip_pNumberOfClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
-	m_ui32NumClasses = static_cast<uint32_t>(ip_pNumberOfClasses);
+	m_ui32NumClasses = uint32_t(ip_pNumberOfClasses);
 
 	// Count the classes actually present
 	std::vector<uint32_t> l_vClassCounts;
@@ -159,7 +159,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 
 	for (uint32_t i = 0; i < rFeatureVectorSet.getFeatureVectorCount(); i++)
 	{
-		uint32_t classIdx = static_cast<uint32_t>(rFeatureVectorSet[i].getLabel());
+		uint32_t classIdx = uint32_t(rFeatureVectorSet[i].getLabel());
 		l_vClassCounts[classIdx]++;
 	}
 

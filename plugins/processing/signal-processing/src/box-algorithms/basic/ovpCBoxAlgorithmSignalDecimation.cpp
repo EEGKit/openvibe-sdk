@@ -117,7 +117,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 								OpenViBE::Kernel::ErrorType::BadSetting);
 
 			m_ui32OutputSampleIndex             = 0;
-			m_ui32OutputSampleCountPerSentBlock = static_cast<uint32_t>(m_ui32InputSampleCountPerSentBlock / m_i64DecimationFactor);
+			m_ui32OutputSampleCountPerSentBlock = uint32_t(m_ui32InputSampleCountPerSentBlock / m_i64DecimationFactor);
 			m_ui32OutputSampleCountPerSentBlock = (m_ui32OutputSampleCountPerSentBlock ? m_ui32OutputSampleCountPerSentBlock : 1);
 			m_ui64OutputSamplingFrequency       = op_ui64SamplingRate / m_i64DecimationFactor;
 

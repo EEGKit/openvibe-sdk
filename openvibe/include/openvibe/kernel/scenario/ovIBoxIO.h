@@ -27,10 +27,10 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets the number of pending chunks for an input
-			 * \param inputIndex [in] : the input to work on.
+			 * \param index [in] : the input to work on.
 			 * \return The number of pending chunks for an input
 			 */
-			virtual uint32_t getInputChunkCount(const uint32_t inputIndex) const = 0;
+			virtual uint32_t getInputChunkCount(const uint32_t index) const = 0;
 			/**
 			 * \brief Gets an input chunk and its time validity.
 			 * \param inputIndex [in] : the index of the desired input.

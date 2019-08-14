@@ -168,28 +168,28 @@ uint64_t CAlgorithmClassifier::getUInt64Parameter(const CIdentifier& parameterId
 {
 	TParameterHandler<uint64_t> temp(getInputParameter(parameterIdentifier));
 	temp = this->getAlgorithmContext().getConfigurationManager().expandAsUInteger(getParameterValue(parameterIdentifier));
-	return static_cast<uint64_t>(temp);
+	return uint64_t(temp);
 }
 
 int64_t CAlgorithmClassifier::getInt64Parameter(const CIdentifier& parameterIdentifier)
 {
 	TParameterHandler<int64_t> temp(getInputParameter(parameterIdentifier));
 	temp = this->getAlgorithmContext().getConfigurationManager().expandAsInteger(getParameterValue(parameterIdentifier));
-	return static_cast<int64_t>(temp);
+	return int64_t(temp);
 }
 
 double CAlgorithmClassifier::getFloat64Parameter(const CIdentifier& parameterIdentifier)
 {
 	TParameterHandler<double> temp(getInputParameter(parameterIdentifier));
 	temp = this->getAlgorithmContext().getConfigurationManager().expandAsFloat(getParameterValue(parameterIdentifier));
-	return static_cast<double>(temp);
+	return double(temp);
 }
 
 bool CAlgorithmClassifier::getBooleanParameter(const CIdentifier& parameterIdentifier)
 {
 	TParameterHandler<bool> temp(getInputParameter(parameterIdentifier));
 	temp = this->getAlgorithmContext().getConfigurationManager().expandAsBoolean(getParameterValue(parameterIdentifier));
-	return static_cast<bool>(temp);
+	return bool(temp);
 }
 
 CString* CAlgorithmClassifier::getCStringParameter(const CIdentifier& parameterIdentifier)
@@ -203,5 +203,5 @@ uint64_t CAlgorithmClassifier::getEnumerationParameter(const CIdentifier& parame
 {
 	TParameterHandler<uint64_t> temp(getInputParameter(parameterIdentifier));
 	temp = this->getTypeManager().getEnumerationEntryValueFromName(enumerationIdentifier, getParameterValue(parameterIdentifier));
-	return static_cast<uint64_t>(temp);
+	return uint64_t(temp);
 }

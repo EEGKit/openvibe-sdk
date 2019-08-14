@@ -328,7 +328,7 @@ ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)
 	std::string l_sValue(rLogLevelName.toASCIIString());
 	std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), [](char c)
 	{
-		return static_cast<char>(std::tolower(c));
+		return char(std::tolower(c));
 	});
 
 	if (l_sValue == "none") { return LogLevel_None; }

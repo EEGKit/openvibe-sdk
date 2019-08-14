@@ -23,10 +23,10 @@ namespace
 	{
 		switch (ui64FilterType)
 		{
-			case FilterType_BandPass: return std::shared_ptr<Dsp::Filter>(new CButterworthBandPass(static_cast<int>(ui64SmoothingSampleCount)));
-			case FilterType_BandStop: return std::shared_ptr<Dsp::Filter>(new CButterworthBandStop(static_cast<int>(ui64SmoothingSampleCount)));
-			case FilterType_HighPass: return std::shared_ptr<Dsp::Filter>(new CButterworthHighPass(static_cast<int>(ui64SmoothingSampleCount)));
-			case FilterType_LowPass: return std::shared_ptr<Dsp::Filter>(new CButterworthLowPass(static_cast<int>(ui64SmoothingSampleCount)));
+			case FilterType_BandPass: return std::shared_ptr<Dsp::Filter>(new CButterworthBandPass(int(ui64SmoothingSampleCount)));
+			case FilterType_BandStop: return std::shared_ptr<Dsp::Filter>(new CButterworthBandStop(int(ui64SmoothingSampleCount)));
+			case FilterType_HighPass: return std::shared_ptr<Dsp::Filter>(new CButterworthHighPass(int(ui64SmoothingSampleCount)));
+			case FilterType_LowPass: return std::shared_ptr<Dsp::Filter>(new CButterworthLowPass(int(ui64SmoothingSampleCount)));
 			default:
 				break;
 		}
@@ -35,8 +35,8 @@ namespace
 
 	bool getButterworthParameters(Dsp::Params& rParameters, uint64_t ui64SamplingRate, uint64_t ui64FilterType, uint64_t ui64Order, double f64LowCutFrequency, double f64HighCutFrequency, double f64BandPassRipple)
 	{
-		rParameters[0] = static_cast<double>(ui64SamplingRate);
-		rParameters[1] = static_cast<double>(ui64Order);
+		rParameters[0] = double(ui64SamplingRate);
+		rParameters[1] = double(ui64Order);
 		switch (ui64FilterType)
 		{
 			case FilterType_BandPass:
@@ -65,10 +65,10 @@ namespace
 		{
 			switch(ui64FilterType)
 			{
-				case FilterType_BandPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandPass(static_cast<int>(ui64SmoothingSampleCount)));
-				case FilterType_BandStop: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandStop(static_cast<int>(ui64SmoothingSampleCount)));
-				case FilterType_HighPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevHighPass(static_cast<int>(ui64SmoothingSampleCount)));
-				case FilterType_LowPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevLowPass(static_cast<int>(ui64SmoothingSampleCount)));
+				case FilterType_BandPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandPass(int(ui64SmoothingSampleCount)));
+				case FilterType_BandStop: return std::shared_ptr < Dsp::Filter >(new CChebyshevBandStop(int(ui64SmoothingSampleCount)));
+				case FilterType_HighPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevHighPass(int(ui64SmoothingSampleCount)));
+				case FilterType_LowPass: return std::shared_ptr < Dsp::Filter >(new CChebyshevLowPass(int(ui64SmoothingSampleCount)));
 				default:
 					break;
 			}
@@ -77,8 +77,8 @@ namespace
 	
 		bool getChebishevParameters(Dsp::Params& rParameters, uint64_t ui64FilterType, uint64_t ui64SamplingRate, uint64_t ui64Order, double f64LowCutFrequency, double f64HighCutFrequency, double f64BandPassRipple)
 		{
-			rParameters[0]=static_cast<int>(ui64SamplingRate);
-			rParameters[1]=static_cast<int>(ui64Order);
+			rParameters[0]=int(ui64SamplingRate);
+			rParameters[1]=int(ui64Order);
 			switch(ui64FilterType)
 			{
 				case FilterType_BandPass:
@@ -116,7 +116,7 @@ bool CBoxAlgorithmTemporalFilter::initialize()
 
 	OV_ERROR_UNLESS_KRF(l_i64FilterOrder >= 1, "Invalid filter order [" << l_i64FilterOrder << "] (expected value >= 1)", OpenViBE::Kernel::ErrorType::BadSetting);
 
-	m_ui64FilterOrder = static_cast<uint64_t>(l_i64FilterOrder);
+	m_ui64FilterOrder = uint64_t(l_i64FilterOrder);
 
 	if (m_ui64FilterType == OVP_TypeId_FilterType_LowPass)
 	{

@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t inputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_OVCSVFileWriter)
@@ -55,9 +55,9 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmOVCSVFileWriterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const unsigned int inputIndex) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const unsigned int index) override
 			{
-				if (inputIndex == 1)
+				if (index == 1)
 				{
 					OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 					box.getInputType(1, l_oTypeIdentifier);

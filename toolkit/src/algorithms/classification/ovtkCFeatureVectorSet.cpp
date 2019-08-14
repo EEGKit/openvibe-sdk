@@ -78,5 +78,5 @@ uint32_t CFeatureVectorSet::getLabelCount() const
 	{
 		l_vLabel[itFeatureVector->second.getLabel()] = true;
 	}
-	return static_cast<uint32_t>(l_vLabel.size());
+	return uint32_t(l_vLabel.size());
 }

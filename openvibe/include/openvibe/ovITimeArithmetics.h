@@ -50,7 +50,7 @@ namespace OpenViBE
 		 */
 		static double timeToSeconds(const uint64_t ui64Time)
 		{
-			return ui64Time / static_cast<double>(1LL << 32);
+			return ui64Time / double(1LL << 32);
 		}
 
 		/**
@@ -61,7 +61,7 @@ namespace OpenViBE
 		 */
 		static uint64_t secondsToTime(const double f64Time)
 		{
-			return static_cast<uint64_t>(f64Time * static_cast<double>(1LL << 32));
+			return uint64_t(f64Time * double(1LL << 32));
 		}
 
 	private:

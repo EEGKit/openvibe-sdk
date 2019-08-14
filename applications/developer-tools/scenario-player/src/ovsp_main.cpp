@@ -68,18 +68,18 @@ int main(int argc, char** argv)
 	if (!optionParser.parse(argc, argv))
 	{
 		std::cerr << "ERROR: Failed to parse arguments" << std::endl;
-		return static_cast<int>(PlayerReturnCode::InvalidArg);
+		return int(PlayerReturnCode::InvalidArg);
 	}
 	if (optionParser.hasOption("help"))
 	{
 		optionParser.printOptionsDesc();
-		return static_cast<int>(PlayerReturnCode::Success);
+		return int(PlayerReturnCode::Success);
 	}
 	if (optionParser.hasOption("version"))
 	{
 		// PROJECT_VERSION is added to definition from cmake
 		std::cout << "version: " << PROJECT_VERSION << std::endl;
-		return static_cast<int>(PlayerReturnCode::Success);
+		return int(PlayerReturnCode::Success);
 	}
 	if (optionParser.hasOption("mode") || optionParser.hasOption("updated-scenario-file"))
 	{
@@ -97,7 +97,7 @@ int main(int argc, char** argv)
 			else
 			{
 				std::cerr << "ERROR: mandatory option 'command-file' not set" << std::endl;
-				return static_cast<int>(PlayerReturnCode::MissingMandatoryArgument);
+				return int(PlayerReturnCode::MissingMandatoryArgument);
 			}
 		}
 		else if ((mode == "x") || optionParser.hasOption("updated-scenario-file"))
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 		{
 			std::cerr << "ERROR: unknown mode set" << std::endl;
 			std::cerr << "Mode must be 'x' or 'c'" << std::endl;
-			return static_cast<int>(PlayerReturnCode::InvalidArg);
+			return int(PlayerReturnCode::InvalidArg);
 		}
 
 		commandParser->initialize();
@@ -127,26 +127,26 @@ int main(int argc, char** argv)
 
 					if (returnCode != PlayerReturnCode::Success)
 					{
-						return static_cast<int>(returnCode);
+						return int(returnCode);
 					}
 				}
 			}
 			else
 			{
-				return static_cast<int>(returnCode);
+				return int(returnCode);
 			}
 		}
 		catch (const std::exception& e)
 		{
 			std::cerr << "ERROR: received unexpected exception: " << e.what() << std::endl;
-			return static_cast<int>(PlayerReturnCode::UnkownFailure);
+			return int(PlayerReturnCode::UnkownFailure);
 		}
 	}
 	else
 	{
 		std::cerr << "ERROR: mandatory option 'mode' not set" << std::endl;
-		return static_cast<int>(PlayerReturnCode::MissingMandatoryArgument);
+		return int(PlayerReturnCode::MissingMandatoryArgument);
 	}
 
-	return static_cast<int>(PlayerReturnCode::Success);
+	return int(PlayerReturnCode::Success);
 }

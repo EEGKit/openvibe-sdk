@@ -135,15 +135,10 @@ CIdentifier CAlgorithmManager::getNextAlgorithmIdentifier(const CIdentifier& rPr
 	std::unique_lock<std::mutex> lock(m_oMutex);
 
 	AlgorithmMap::const_iterator itAlgorithm = m_vAlgorithms.begin();
-
-	if (rPreviousIdentifier == OV_UndefinedIdentifier) { itAlgorithm = m_vAlgorithms.begin(); }
-	else
+	if (rPreviousIdentifier != OV_UndefinedIdentifier)
 	{
 		itAlgorithm = m_vAlgorithms.find(rPreviousIdentifier);
-		if (itAlgorithm == m_vAlgorithms.end())
-		{
-			return OV_UndefinedIdentifier;
-		}
+		if (itAlgorithm == m_vAlgorithms.end()) { return OV_UndefinedIdentifier; }
 		++itAlgorithm;
 	}
 	return (itAlgorithm != m_vAlgorithms.end() ? itAlgorithm->first : OV_UndefinedIdentifier);

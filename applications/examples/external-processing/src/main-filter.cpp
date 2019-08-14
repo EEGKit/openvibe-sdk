@@ -54,7 +54,7 @@ int main(int argc, char** argv)
 
 		if (error == MessagingClient::ELibraryError::Socket_FailedToConnect)
 		{
-			printf("Server not responding\n");
+			std::cout << "Server not responding\n";
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
 		else
@@ -167,7 +167,7 @@ int main(int argc, char** argv)
 
 				/*if (!client.pushLog(Communication::ELogLevel::LogLevel_Info, "EBML received on index: " + std::to_string(index)))
 				{
-					printf("Failed to push log.\n");
+					std::cout << "Failed to push log.\n";
 					client.close();
 					exit(EXIT_FAILURE);
 				}*/
@@ -189,7 +189,7 @@ int main(int argc, char** argv)
 
 			/*if (!client.pushLog(Communication::ELogLevel::LogLevel_Info, "EBML received on index: " + std::to_string(index)))
 			{
-			printf("Failed to push log.\n");
+			std::cout << "Failed to push log.\n";
 			client.close();
 			exit(EXIT_FAILURE);
 			}*/
@@ -203,7 +203,7 @@ int main(int argc, char** argv)
 		while (client.popError(packetId, error, guiltyId))
 		{
 			std::cerr << "Error received:\n";
-			std::cerr << "\tError: " << static_cast<int>(error) << "\n";
+			std::cerr << "\tError: " << int(error) << "\n";
 			std::cerr << "\tGuilty Id: " << guiltyId << "\n";
 		}
 

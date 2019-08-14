@@ -82,7 +82,7 @@ namespace Dsp
 			m_x1       = in;
 			m_y1       = out;
 
-			return static_cast<Sample>(out);
+			return Sample(out);
 		}
 
 	protected:
@@ -123,7 +123,7 @@ namespace Dsp
 			m_v2 = m_v1;
 			m_v1 = w;
 
-			return static_cast<Sample>(out);
+			return Sample(out);
 		}
 
 	private:
@@ -178,7 +178,7 @@ namespace Dsp
 			m_s2_1 = m_s2;
 			m_s1_1 = m_s1;
 
-			return static_cast<Sample>(out);
+			return Sample(out);
 		}
 
 	private:
@@ -217,7 +217,7 @@ namespace Dsp
 			m_s1_1 = m_s1;
 			m_s2_1 = m_s2;
 
-			return static_cast<Sample>(out);
+			return Sample(out);
 		}
 
 	private:

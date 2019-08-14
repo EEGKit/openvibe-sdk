@@ -155,7 +155,7 @@ TEST(XML_Writer_Test_Case, validateHandlerWriteToJapanesePath)
 
 	XML::IXMLHandler* xmlHandler = XML::createXMLHandler();
 	std::string testData         = "<Document name=\"日本語\"><Node>日本語 1</Node><Node>日本語 2</Node><Node>日本語 3</Node></Document>";
-	XML::IXMLNode* rootNode      = xmlHandler->parseString(testData.c_str(), static_cast<uint32_t>(testData.size()));
+	XML::IXMLNode* rootNode      = xmlHandler->parseString(testData.c_str(), uint32_t(testData.size()));
 	xmlHandler->writeXMLInFile(*rootNode, outputFile.c_str());
 
 	// comparison part

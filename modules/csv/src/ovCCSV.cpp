@@ -267,7 +267,7 @@ bool CCSVHandler::setSpectrumInformation(const std::vector<std::string>& channel
 	}
 
 	m_DimensionLabels      = channelNames;
-	m_DimensionSizes       = { static_cast<uint32_t>(channelNames.size()), static_cast<uint32_t>(frequencyAbscissa.size()) };
+	m_DimensionSizes       = { uint32_t(channelNames.size()), uint32_t(frequencyAbscissa.size()) };
 	m_FrequencyAbscissa    = frequencyAbscissa;
 	m_OriginalSampleNumber = samplingRate;
 	return true;
@@ -336,7 +336,7 @@ bool CCSVHandler::setFeatureVectorInformation(const std::vector<std::string>& ch
 	}
 
 	m_DimensionLabels = channelNames;
-	m_DimensionSizes  = { static_cast<uint32_t>(channelNames.size()) };
+	m_DimensionSizes  = { uint32_t(channelNames.size()) };
 	m_DimensionCount  = 1;
 	return true;
 }
@@ -397,7 +397,7 @@ bool CCSVHandler::setStreamedMatrixInformation(const std::vector<uint32_t>& dime
 
 	m_IsSetInfoCalled = true;
 	m_DimensionSizes  = dimensionSizes;
-	m_DimensionCount  = static_cast<uint32_t>(m_DimensionSizes.size());
+	m_DimensionCount  = uint32_t(m_DimensionSizes.size());
 	m_DimensionLabels = labels;
 	return true;
 }
@@ -546,11 +546,11 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<
 	chunks.clear();
 
 	// Calculate the size of the matrix depending of the stream type
-	size_t matrixSize = static_cast<size_t>(m_SampleCountPerBuffer);
+	size_t matrixSize = size_t(m_SampleCountPerBuffer);
 
 	if (m_InputTypeIdentifier == EStreamType::Signal)
 	{
-		size_t signalSize = static_cast<size_t>(m_ColumnCount - (s_PreDataColumnCount + s_PostDataColumnCount));
+		size_t signalSize = size_t(m_ColumnCount - (s_PreDataColumnCount + s_PostDataColumnCount));
 		matrixSize *= signalSize;
 	}
 	else if (m_InputTypeIdentifier == EStreamType::Spectrum)
@@ -1310,8 +1310,8 @@ bool CCSVHandler::parseHeader()
 	m_BufferReadFileLine.clear();
 
 	// check stimulations
-	if (columns.cend()[-static_cast<int32_t>(s_PostDataColumnCount)] != s_EventIdentifierColumn
-		|| columns.cend()[-static_cast<int32_t>(s_PreDataColumnCount)] != s_EventDateColumn
+	if (columns.cend()[-int32_t(s_PostDataColumnCount)] != s_EventIdentifierColumn
+		|| columns.cend()[-int32_t(s_PreDataColumnCount)] != s_EventDateColumn
 		|| columns.back() != s_EventDurationColumn)
 	{
 		m_LastStringError = "Three last column must be \"Even Id\", \"Event Date\" and \"Event Duration\"";
@@ -1714,7 +1714,7 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 			return false;
 		}
 
-		sample.endTime = sample.startTime + (static_cast<double>(m_SampleCountPerBuffer) / static_cast<double>(m_SamplingRate));
+		sample.endTime = sample.startTime + (double(m_SampleCountPerBuffer) / double(m_SamplingRate));
 	}
 	else
 	{
@@ -1752,14 +1752,14 @@ bool CCSVHandler::readSampleChunk(const std::string& line, SMatrixChunk& sample,
 	{
 		for (size_t index = 0; index < m_DimensionLabels.size(); ++index)
 		{
-			sample.matrix[(index * m_SampleCountPerBuffer) + static_cast<uint32_t>(lineNb)] = columnsMatrix[index];
+			sample.matrix[(index * m_SampleCountPerBuffer) + uint32_t(lineNb)] = columnsMatrix[index];
 		}
 	}
 	else if (m_InputTypeIdentifier == EStreamType::Spectrum)
 	{
 		for (size_t index = 0; index < columnsMatrix.size(); ++index)
 		{
-			sample.matrix[(index * m_SampleCountPerBuffer) + static_cast<uint32_t>(lineNb)] = columnsMatrix[index];
+			sample.matrix[(index * m_SampleCountPerBuffer) + uint32_t(lineNb)] = columnsMatrix[index];
 		}
 	}
 	else
@@ -1856,7 +1856,7 @@ bool CCSVHandler::calculateSampleCountPerBuffer()
 		lineParts.clear();
 		this->split(line, s_Separator, lineParts);
 
-		if (lineParts.size() != static_cast<size_t>(m_ColumnCount))
+		if (lineParts.size() != size_t(m_ColumnCount))
 		{
 			m_LastStringError = "File may be corrupt, can't found sample count per buffer";
 			return false;

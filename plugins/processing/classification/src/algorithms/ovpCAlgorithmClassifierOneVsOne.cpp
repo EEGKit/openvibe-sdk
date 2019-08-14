@@ -77,7 +77,7 @@ bool CAlgorithmClassifierOneVsOne::uninitialize()
 bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVectorSet)
 {
 	TParameterHandler<uint64_t> ip_pNumberOfClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
-	m_ui32NumberOfClasses = static_cast<uint32_t>(ip_pNumberOfClasses);
+	m_ui32NumberOfClasses = uint32_t(ip_pNumberOfClasses);
 
 	m_ui32NumberOfSubClassifiers = m_ui32NumberOfClasses * (m_ui32NumberOfClasses - 1) / 2;
 
@@ -137,7 +137,7 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 
 	OV_ERROR_UNLESS_KRF(
 		l_vClassLabels.size() == m_ui32NumberOfClasses,
-		"There are samples for " << static_cast<uint32_t>(l_vClassLabels.size()) << " classes but expected samples for " << m_ui32NumberOfClasses << " classes.",
+		"There are samples for " << uint32_t(l_vClassLabels.size()) << " classes but expected samples for " << m_ui32NumberOfClasses << " classes.",
 		OpenViBE::Kernel::ErrorType::BadConfig);
 
 	//Now we create the corresponding repartition set
@@ -149,11 +149,11 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 	//Now let's train each classifier
 	for (uint32_t l_iFirstClass = 0; l_iFirstClass < m_ui32NumberOfClasses; ++l_iFirstClass)
 	{
-		ip_pRepartitionSet->getBuffer()[l_iFirstClass] = static_cast<double>(l_vClassLabels[static_cast<double>(l_iFirstClass)]);
+		ip_pRepartitionSet->getBuffer()[l_iFirstClass] = double(l_vClassLabels[double(l_iFirstClass)]);
 
 		for (uint32_t l_iSecondClass = l_iFirstClass + 1; l_iSecondClass < m_ui32NumberOfClasses; ++l_iSecondClass)
 		{
-			uint32_t l_iFeatureCount = l_vClassLabels[static_cast<double>(l_iFirstClass)] + l_vClassLabels[static_cast<double>(l_iSecondClass)];
+			uint32_t l_iFeatureCount = l_vClassLabels[double(l_iFirstClass)] + l_vClassLabels[double(l_iSecondClass)];
 
 			IAlgorithmProxy* l_pSubClassifier = m_oSubClassifiers[std::pair<uint32_t, uint32_t>(l_iFirstClass, l_iSecondClass)];
 
@@ -166,18 +166,18 @@ bool CAlgorithmClassifierOneVsOne::train(const IFeatureVectorSet& rFeatureVector
 			for (uint32_t j = 0; j < rFeatureVectorSet.getFeatureVectorCount(); j++)
 			{
 				const double l_f64TempClass = rFeatureVectorSet[j].getLabel();
-				if (l_f64TempClass == static_cast<double>(l_iFirstClass) || l_f64TempClass == static_cast<double>(l_iSecondClass))
+				if (l_f64TempClass == double(l_iFirstClass) || l_f64TempClass == double(l_iSecondClass))
 				{
 					System::Memory::copy(l_pFeatureVectorSetBuffer, rFeatureVectorSet[j].getBuffer(), l_iFeatureVectorSize * sizeof(double));
 
-					l_pFeatureVectorSetBuffer[l_iFeatureVectorSize] = static_cast<size_t>(l_f64TempClass) == l_iFirstClass ? 0 : 1;
+					l_pFeatureVectorSetBuffer[l_iFeatureVectorSize] = size_t(l_f64TempClass) == l_iFirstClass ? 0 : 1;
 					l_pFeatureVectorSetBuffer += (l_iFeatureVectorSize + 1);
 				}
 			}
 
 			OV_ERROR_UNLESS_KRF(
 				l_pSubClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train),
-				"Failed to train subclassifier [1st class = " << static_cast<uint64_t>(l_iFirstClass) << ", 2nd class = " << static_cast<uint64_t>(l_iSecondClass) << "]",
+				"Failed to train subclassifier [1st class = " << uint64_t(l_iFirstClass) << ", 2nd class = " << uint64_t(l_iSecondClass) << "]",
 				OpenViBE::Kernel::ErrorType::Internal);
 		}
 	}
@@ -265,7 +265,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector
 		rProbabilityValue[i] = l_f64TempProb;
 	}
 
-	rf64Class = static_cast<double>(l_i32IndexSelectedClass);
+	rf64Class = double(l_i32IndexSelectedClass);
 	return true;
 }
 
@@ -419,7 +419,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfiguration(XML::IXMLNode* pConfigurati
 
 	// Invert the class count from subCls = numClass*(numClass-1)/2.
 	const uint32_t l_ui32DeltaCarre = 1 + 8 * m_ui32NumberOfSubClassifiers;
-	m_ui32NumberOfClasses           = static_cast<uint32_t>((1 + sqrt(static_cast<double>(l_ui32DeltaCarre))) / 2);
+	m_ui32NumberOfClasses           = uint32_t((1 + sqrt(double(l_ui32DeltaCarre))) / 2);
 
 	TParameterHandler<uint64_t> ip_pClassCount(m_pDecisionStrategyAlgorithm->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
 	ip_pClassCount = m_ui32NumberOfClasses;
@@ -439,7 +439,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfiguration(XML::IXMLNode* pConfigurati
 
 uint32_t CAlgorithmClassifierOneVsOne::getOutputProbabilityVectorLength()
 {
-	return static_cast<uint32_t>(m_ui32NumberOfClasses);
+	return uint32_t(m_ui32NumberOfClasses);
 }
 
 uint32_t CAlgorithmClassifierOneVsOne::getOutputDistanceVectorLength() { return 0; }
@@ -459,20 +459,20 @@ bool CAlgorithmClassifierOneVsOne::loadSubClassifierConfiguration(XML::IXMLNode*
 		std::stringstream l_sSecondClass(l_pSubClassifierNode->getAttribute(c_sSecondClassAttributeName));
 		l_sSecondClass >> l_f64SecondClass;
 
-		IAlgorithmProxy* l_pSubClassifier = m_oSubClassifiers[std::make_pair(static_cast<uint32_t>(l_f64FirstClass), static_cast<uint32_t>(l_f64SecondClass))];
+		IAlgorithmProxy* l_pSubClassifier = m_oSubClassifiers[std::make_pair(uint32_t(l_f64FirstClass), uint32_t(l_f64SecondClass))];
 
 		TParameterHandler<XML::IXMLNode*> ip_pConfiguration(l_pSubClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
 		ip_pConfiguration = l_pSubClassifierNode->getChild(0);
 
 		OV_ERROR_UNLESS_KRF(
 			l_pSubClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),
-			"Unable to load the configuration for the sub-classifier " << static_cast<uint64_t>(i+1),
+			"Unable to load the configuration for the sub-classifier " << uint64_t(i+1),
 			OpenViBE::Kernel::ErrorType::Internal);
 	}
 
 	OV_ERROR_UNLESS_KRF(
 		m_oSubClassifiers.size() == m_ui32NumberOfSubClassifiers,
-		"Invalid number of loaded classifiers [" << static_cast<uint64_t>(m_oSubClassifiers.size()) << "] (expected = " << m_ui32NumberOfSubClassifiers << ")",
+		"Invalid number of loaded classifiers [" << uint64_t(m_oSubClassifiers.size()) << "] (expected = " << m_ui32NumberOfSubClassifiers << ")",
 		OpenViBE::Kernel::ErrorType::Internal);
 
 	return true;

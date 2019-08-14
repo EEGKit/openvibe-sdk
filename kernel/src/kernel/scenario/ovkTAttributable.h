@@ -22,7 +22,7 @@ namespace OpenViBE
 
 			virtual bool addAttribute(const CIdentifier& rAttributeIdentifier, const CString& sAttributeValue)
 			{
-				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				const std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
 				if (itAttribute != m_vAttribute.end()) { return false; }
 				m_vAttribute[rAttributeIdentifier] = sAttributeValue;
 				return true;
@@ -30,7 +30,7 @@ namespace OpenViBE
 
 			virtual bool removeAttribute(const CIdentifier& rAttributeIdentifier)
 			{
-				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				const std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
 				if (itAttribute == m_vAttribute.end()) { return false; }
 				m_vAttribute.erase(itAttribute);
 				return true;
@@ -44,7 +44,7 @@ namespace OpenViBE
 
 			virtual CString getAttributeValue(const CIdentifier& rAttributeIdentifier) const
 			{
-				std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				const std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
 				if (itAttribute == m_vAttribute.end()) { return CString(""); }
 				return itAttribute->second;
 			}
@@ -54,7 +54,6 @@ namespace OpenViBE
 				std::map<CIdentifier, CString>::iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
 				if (itAttribute == m_vAttribute.end())
 				{
-					//					this->getLogManager() << OpenViBE::Kernel::LogLevel_Trace << "Automatically added unexisting attribute identifier " << rAttributeIdentifier << " while setting its value\n";
 					m_vAttribute[rAttributeIdentifier] = sAttributeValue;
 					return true;
 				}
@@ -64,7 +63,7 @@ namespace OpenViBE
 
 			virtual bool hasAttribute(const CIdentifier& rAttributeIdentifier) const
 			{
-				std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
+				const std::map<CIdentifier, CString>::const_iterator itAttribute = m_vAttribute.find(rAttributeIdentifier);
 				if (itAttribute == m_vAttribute.end()) { return false; }
 				return true;
 			}

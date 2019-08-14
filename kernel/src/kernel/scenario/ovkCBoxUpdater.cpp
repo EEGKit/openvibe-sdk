@@ -288,7 +288,7 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 
 		interfacors.push_back(request);
 
-		m_OriginalToUpdatedCorrespondence[interfacorType][index] = static_cast<uint32_t>(interfacors.size() - 1);
+		m_OriginalToUpdatedCorrespondence[interfacorType][index] = uint32_t(interfacors.size() - 1);
 
 		++index;
 	}

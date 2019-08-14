@@ -192,12 +192,12 @@ namespace OpenViBE
 			 * \brief Gets next link identifier from fixed box input
 			 * \param previousIdentifier The identifier for the preceeding link
 			 * \param boxIdentifier The box identifier which the link should start from
-			 * \param inputIndex The input index which the link should start from
+			 * \param index The input index which the link should start from
 			 * \return The identifier of the next link in case of success.
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t inputIndex) const = 0;
+			virtual CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t index) const = 0;
 
 			/**
 			 * \brief Tests whether a given identifier is a link or not
@@ -336,7 +336,7 @@ namespace OpenViBE
 			virtual bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) = 0;
 			virtual bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) = 0;
 
-			virtual bool removeScenarioInput(uint32_t inputIndex) = 0;
+			virtual bool removeScenarioInput(uint32_t index) = 0;
 			virtual bool removeScenarioOutput(uint32_t outputIndex) = 0;
 
 			//@}

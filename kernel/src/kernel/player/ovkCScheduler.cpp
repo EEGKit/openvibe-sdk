@@ -439,7 +439,7 @@ SchedulerInitializationCode CScheduler::initialize()
 
 						if (p < 0)
 						{
-							l_iPriority = -static_cast<int>((ypositions.size() << 15) + xpositions.size()) + p;
+							l_iPriority = -int((ypositions.size() << 15) + xpositions.size()) + p;
 						}
 						else
 						{
@@ -451,8 +451,8 @@ SchedulerInitializationCode CScheduler::initialize()
 						int x = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_XCenterPosition).toASCIIString());
 						int y = std::stoi(l_pBox->getAttributeValue(OV_AttributeId_Box_YCenterPosition).toASCIIString());
 
-						int xindex  = static_cast<int>(std::distance(xpositions.begin(), xpositions.find(x)));
-						int yindex  = static_cast<int>(std::distance(ypositions.begin(), ypositions.find(y)));
+						int xindex  = int(std::distance(xpositions.begin(), xpositions.find(x)));
+						int yindex  = int(std::distance(ypositions.begin(), ypositions.find(y)));
 						l_iPriority = - ((yindex << 15) + xindex);
 					}
 				}
@@ -462,7 +462,7 @@ SchedulerInitializationCode CScheduler::initialize()
 				}
 
 				m_vSimulatedBox[std::make_pair(-l_iPriority, boxIdentifier)] = l_pSimulatedBox;
-				m_vSimulatedBoxChrono[boxIdentifier].reset(static_cast<uint32_t>(m_ui64Frequency));
+				m_vSimulatedBoxChrono[boxIdentifier].reset(uint32_t(m_ui64Frequency));
 			}
 		}
 		m_pScenario->releaseIdentifierList(identifierList);

@@ -132,7 +132,7 @@ bool Header::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex)
 
 	if (typeInt >= MessageType_MAX) { return false; }
 
-	m_Type = static_cast<EMessageType>(typeInt);
+	m_Type = EMessageType(typeInt);
 
 	if (!copyToVariable(buffer, bufferIndex + s_IdIndex, m_Id)) { return false; }
 	if (!copyToVariable(buffer, bufferIndex + s_SizeIndex, m_Size)) { return false; }
@@ -261,7 +261,7 @@ std::vector<uint8_t> InputOutput::toBytes() const
 
 	copyTobuffer(buffer, bufferIndex, m_Id);
 	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, static_cast<uint32_t>(m_Name.size()));
+	copyTobuffer(buffer, bufferIndex, uint32_t(m_Name.size()));
 	copyTobuffer(buffer, bufferIndex, m_Name);
 
 	return buffer;
@@ -318,8 +318,8 @@ std::vector<uint8_t> Parameter::toBytes() const
 
 	copyTobuffer(buffer, bufferIndex, m_Id);
 	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, static_cast<uint32_t>(m_Name.size()));
-	copyTobuffer(buffer, bufferIndex, static_cast<uint32_t>(m_Value.size()));
+	copyTobuffer(buffer, bufferIndex, uint32_t(m_Name.size()));
+	copyTobuffer(buffer, bufferIndex, uint32_t(m_Value.size()));
 	copyTobuffer(buffer, bufferIndex, m_Name);
 	copyTobuffer(buffer, bufferIndex, m_Value);
 
@@ -367,9 +367,9 @@ std::vector<uint8_t> BoxDescriptionMessage::toBytes() const
 	std::vector<uint8_t> buffer(s_MinimumSize);
 	size_t bufferIndex = 0;
 
-	copyTobuffer(buffer, bufferIndex, static_cast<uint32_t>(m_Inputs.size()));
-	copyTobuffer(buffer, bufferIndex, static_cast<uint32_t>(m_Outputs.size()));
-	copyTobuffer(buffer, bufferIndex, static_cast<uint32_t>(m_Parameters.size()));
+	copyTobuffer(buffer, bufferIndex, uint32_t(m_Inputs.size()));
+	copyTobuffer(buffer, bufferIndex, uint32_t(m_Outputs.size()));
+	copyTobuffer(buffer, bufferIndex, uint32_t(m_Parameters.size()));
 
 	for (const InputOutput& input : m_Inputs)
 	{
@@ -504,7 +504,7 @@ std::vector<uint8_t> LogMessage::toBytes() const
 	size_t bufferIndex = 0;
 
 	copyTobuffer(buffer, bufferIndex, m_Type);
-	copyTobuffer(buffer, bufferIndex, static_cast<uint32_t>(m_Message.size()));
+	copyTobuffer(buffer, bufferIndex, uint32_t(m_Message.size()));
 	copyTobuffer(buffer, bufferIndex, m_Message);
 
 	return buffer;
@@ -523,7 +523,7 @@ bool LogMessage::fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferInd
 
 	if (typeInt >= LogLevel_MAX) { return false; }
 
-	m_Type = static_cast<ELogLevel>(typeInt);
+	m_Type = ELogLevel(typeInt);
 
 	// Message size
 	uint32_t messageSize;
@@ -571,7 +571,7 @@ std::vector<uint8_t> EBMLMessage::toBytes() const
 	copyTobuffer(buffer, bufferIndex, m_IOIndex);
 	copyTobuffer(buffer, bufferIndex, m_StartTime);
 	copyTobuffer(buffer, bufferIndex, m_EndTime);
-	copyTobuffer(buffer, bufferIndex, static_cast<uint32_t>(m_EBML->size()));
+	copyTobuffer(buffer, bufferIndex, uint32_t(m_EBML->size()));
 
 	if (!m_EBML->empty()) { buffer.insert(buffer.end(), m_EBML->begin(), m_EBML->end()); }
 

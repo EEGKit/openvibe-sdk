@@ -163,14 +163,14 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 			OV_ERROR_KRF("Error reading columns (not enough columns found) from file", ErrorType::BadParsing);
 		}
 
-		const double l_f64SamplingRate = static_cast<double>(atof(l_vParsed[m_ui32ColumnCount - 1].c_str()));
+		const double l_f64SamplingRate = double(atof(l_vParsed[m_ui32ColumnCount - 1].c_str()));
 		if (std::ceil(l_f64SamplingRate) != l_f64SamplingRate)
 		{
 			releaseResources();
 			OV_ERROR_KRF("Invalid fractional sampling rate (" << l_f64SamplingRate << ") in file", ErrorType::BadValue);
 		}
 
-		m_ui64SamplingRate = static_cast<uint64_t>(l_f64SamplingRate);
+		m_ui64SamplingRate = uint64_t(l_f64SamplingRate);
 
 		if (m_ui64SamplingRate == 0)
 		{
@@ -527,7 +527,7 @@ bool CBoxAlgorithmCSVFileReader::process_featureVector()
 	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
 	{
 		OV_ERROR_UNLESS_KRF(m_vDataMatrix[i].size() == m_ui32ColumnCount, 
-							"Unexpected number of elements" << "(got " << static_cast<uint64_t>(m_vDataMatrix[i].size()) << ", expected " << m_ui32ColumnCount << ")", 
+							"Unexpected number of elements" << "(got " << uint64_t(m_vDataMatrix[i].size()) << ", expected " << m_ui32ColumnCount << ")", 
 							ErrorType::BadParsing);
 
 		for (uint32_t j = 0; j < m_ui32ColumnCount - 1; j++)
@@ -569,7 +569,7 @@ bool CBoxAlgorithmCSVFileReader::process_spectrum()
 			for (uint32_t frequencyBandIndex = 0; frequencyBandIndex < m_vDataMatrix.size(); frequencyBandIndex++)
 			{
 				double curFrequencyAbscissa = std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32ColumnCount].c_str())
-											  + static_cast<double>(frequencyBandIndex) / (m_vDataMatrix.size() - 1) * (std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32ColumnCount + 1].c_str()) - std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32ColumnCount].c_str()));
+											  + double(frequencyBandIndex) / (m_vDataMatrix.size() - 1) * (std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32ColumnCount + 1].c_str()) - std::stod(m_vDataMatrix[frequencyBandIndex][m_ui32ColumnCount].c_str()));
 				ip_pFrequencyAbscissa->getBuffer()[frequencyBandIndex] = curFrequencyAbscissa;
 
 				std::stringstream l_sLabel;
@@ -582,7 +582,7 @@ bool CBoxAlgorithmCSVFileReader::process_spectrum()
 			ip_pFrequencyAbscissa->getBuffer()[0] = 0;
 		}
 
-		((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputSamplingRate() = static_cast<uint64_t>(m_vDataMatrix.size() /
+		((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputSamplingRate() = uint64_t(m_vDataMatrix.size() /
 																																			  (std::stod(m_vDataMatrix[m_vDataMatrix.size() - 1][m_ui32ColumnCount].c_str()) - std::stod(m_vDataMatrix[0][m_ui32ColumnCount].c_str())));
 		m_bHeaderSent = true;
 		m_pAlgorithmEncoder->encodeHeader();
@@ -627,7 +627,7 @@ bool CBoxAlgorithmCSVFileReader::convertVectorDataToMatrix(IMatrix* matrix)
 
 	// We accept partial data, but not buffer overruns ...
 	OV_ERROR_UNLESS_KRF(matrix->getDimensionSize(1) >= m_vDataMatrix.size() && matrix->getDimensionSize(0) >= (m_ui32ColumnCount-1),
-						"Matrix size incompatibility, data suggests " << m_ui32ColumnCount-1 << "x" << static_cast<uint64_t>(m_vDataMatrix.size())
+						"Matrix size incompatibility, data suggests " << m_ui32ColumnCount-1 << "x" << uint64_t(m_vDataMatrix.size())
 						<< ", expected at most " << matrix->getDimensionSize(0) << "x" << matrix->getDimensionSize(0), ErrorType::Overflow);
 
 	std::stringstream l_sMatrix;

@@ -357,17 +357,17 @@ namespace OpenViBEPlugins
 
 								case OpenViBE::Kernel::ParameterType_Integer:
 								case OpenViBE::Kernel::ParameterType_UInteger:
-									sprintf(l_sBuffer, "%li", static_cast<int64_t>(ip_i64Parameter));
+									sprintf(l_sBuffer, "%li", int64_t(ip_i64Parameter));
 									l_oTypeIdentifier = OV_TypeId_Integer;
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Boolean:
-									sprintf(l_sBuffer, "%s", (static_cast<bool>(ip_bParameter)) ? "true" : "false");
+									sprintf(l_sBuffer, "%s", (bool(ip_bParameter)) ? "true" : "false");
 									l_oTypeIdentifier = OV_TypeId_Boolean;
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Float:
-									sprintf(l_sBuffer, "%lf", static_cast<double>(ip_f64Parameter));
+									sprintf(l_sBuffer, "%lf", double(ip_f64Parameter));
 									l_oTypeIdentifier = OV_TypeId_Float;
 									break;
 								case OpenViBE::Kernel::ParameterType_String:

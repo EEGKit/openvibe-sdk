@@ -131,8 +131,8 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 		{
 			if (m_ui64ChunkCount == 0)
 			{
-				m_ui32SamplingRate = l_ui32SampleCount * static_cast<uint32_t>((1LL << 32) / (l_rDynamicBoxContext.getInputChunkEndTime(0, i) - l_rDynamicBoxContext.getInputChunkStartTime(0, i)));
-				m_ui32WindowTime   = static_cast<uint32_t>(m_f64WindowTime * m_ui32SamplingRate);
+				m_ui32SamplingRate = l_ui32SampleCount * uint32_t((1LL << 32) / (l_rDynamicBoxContext.getInputChunkEndTime(0, i) - l_rDynamicBoxContext.getInputChunkStartTime(0, i)));
+				m_ui32WindowTime   = uint32_t(m_f64WindowTime * m_ui32SamplingRate);
 			}
 
 			double* l_pInputBuffer   = m_oDecoder.getOutputMatrix()->getBuffer();

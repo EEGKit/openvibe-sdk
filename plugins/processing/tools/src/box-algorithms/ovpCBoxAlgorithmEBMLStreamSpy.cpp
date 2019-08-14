@@ -40,7 +40,7 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 		m_ui64ExpandValuesCount = 4;
 	}
 
-	m_eLogLevel = static_cast<ELogLevel>(l_ui64LogLevel);
+	m_eLogLevel = ELogLevel(l_ui64LogLevel);
 
 	ifstream l_oFile;
 	FS::Files::openIFStream(l_oFile, l_sFileName);

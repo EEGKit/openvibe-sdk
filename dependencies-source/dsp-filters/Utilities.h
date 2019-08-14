@@ -65,7 +65,7 @@ namespace Dsp
 			++destSkip;
 			while (--samples >= 0)
 			{
-				*dest = static_cast<Td>(*src);
+				*dest = Td(*src);
 				dest += destSkip;
 				src += srcSkip;
 			}
@@ -73,7 +73,7 @@ namespace Dsp
 		else
 		{
 			while (--samples >= 0)
-				*dest++ += static_cast<Td>(*src++);
+				*dest++ += Td(*src++);
 		}
 	}
 
@@ -282,7 +282,7 @@ namespace Dsp
 
 		while (--samples >= 0)
 		{
-			*dest = static_cast<Td>(*dest + t * (*src++ - *dest));
+			*dest = Td(*dest + t * (*src++ - *dest));
 			++dest;
 			t += dt;
 		}
@@ -394,7 +394,7 @@ namespace Dsp
 			++destSkip;
 			while (--samples >= 0)
 			{
-				*dest = static_cast<Td>(*dest * factor);
+				*dest = Td(*dest * factor);
 				dest += destSkip;
 			}
 		}
@@ -402,7 +402,7 @@ namespace Dsp
 		{
 			while (--samples >= 0)
 			{
-				*dest = static_cast<Td>(*dest * factor);
+				*dest = Td(*dest * factor);
 				++dest;
 			}
 		}

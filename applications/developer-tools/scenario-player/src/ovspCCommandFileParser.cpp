@@ -433,7 +433,7 @@ namespace OpenViBE
 				}
 				else if (param.first == "PlayMode")
 				{
-					command->playMode = static_cast<PlayerPlayMode>(std::stoi(param.second));
+					command->playMode = PlayerPlayMode(std::stoi(param.second));
 				}
 				else if (param.first == "MaximumExecutionTime")
 				{

@@ -51,7 +51,7 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 		// Test settings
 		OVT_ASSERT(scenario.getSettingCount() == simpleScenarioSettings.size(), "Imported scenario does not have the correct number of settings");
 
-		for (uint32_t settingIndex = 0; settingIndex < static_cast<uint32_t>(simpleScenarioSettings.size()); settingIndex += 1)
+		for (uint32_t settingIndex = 0; settingIndex < uint32_t(simpleScenarioSettings.size()); settingIndex += 1)
 		{
 			CIdentifier settingTypeId;
 			OVT_ASSERT(scenario.getSettingType(settingIndex, settingTypeId), "Cannot get setting type");
@@ -83,29 +83,29 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 		// Test inputs
 		OVT_ASSERT(scenario.getInputCount() == simpleScenarioInputs.size(), "Imported scenario has wrong number of inputs");
 
-		for (uint32_t inputIndex = 0; inputIndex < static_cast<uint32_t>(simpleScenarioInputs.size()); inputIndex += 1)
+		for (uint32_t index = 0; index < uint32_t(simpleScenarioInputs.size()); index += 1)
 		{
 			CIdentifier inputTypeId;
-			OVT_ASSERT(scenario.getInputType(inputIndex, inputTypeId), "Cannot get input type");
-			OVT_ASSERT(inputTypeId == std::get<0>(simpleScenarioInputs[inputIndex]), "Input has wrong type");
+			OVT_ASSERT(scenario.getInputType(index, inputTypeId), "Cannot get input type");
+			OVT_ASSERT(inputTypeId == std::get<0>(simpleScenarioInputs[index]), "Input has wrong type");
 
 			CString inputName;
-			OVT_ASSERT(scenario.getInputName(inputIndex, inputName), "Cannot get input name");
-			OVT_ASSERT_STREQ(to_cppstring(inputName), std::get<1>(simpleScenarioInputs[inputIndex]), "Input has wrong name");
+			OVT_ASSERT(scenario.getInputName(index, inputName), "Cannot get input name");
+			OVT_ASSERT_STREQ(to_cppstring(inputName), std::get<1>(simpleScenarioInputs[index]), "Input has wrong name");
 
 			CIdentifier targetBoxId;
 			uint32_t targetBoxInputIndex;
 			CIdentifier targetBoxInputIdentifier = OV_UndefinedIdentifier;
-			OVT_ASSERT(scenario.getScenarioInputLink(inputIndex, targetBoxId, targetBoxInputIndex), "Cannot get scenario input details by index");
-			OVT_ASSERT(scenario.getScenarioInputLink(inputIndex, targetBoxId, targetBoxInputIdentifier), "Cannot get scenario input details by identifier");
-			OVT_ASSERT(targetBoxId == std::get<2>(simpleScenarioInputs[inputIndex]), "Scenario input is not connected to the correct box");
-			OVT_ASSERT(targetBoxInputIndex == std::get<3>(simpleScenarioInputs[inputIndex]), "Scenario input is not connected to the correct box input");
+			OVT_ASSERT(scenario.getScenarioInputLink(index, targetBoxId, targetBoxInputIndex), "Cannot get scenario input details by index");
+			OVT_ASSERT(scenario.getScenarioInputLink(index, targetBoxId, targetBoxInputIdentifier), "Cannot get scenario input details by identifier");
+			OVT_ASSERT(targetBoxId == std::get<2>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box");
+			OVT_ASSERT(targetBoxInputIndex == std::get<3>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box input");
 		}
 
 		// Test outputs
 		OVT_ASSERT(scenario.getOutputCount() == simpleScenarioOutputs.size(), "Imported scenario has wrong number of outputs");
 
-		for (uint32_t outputIndex = 0; outputIndex < static_cast<uint32_t>(simpleScenarioOutputs.size()); outputIndex += 1)
+		for (uint32_t outputIndex = 0; outputIndex < uint32_t(simpleScenarioOutputs.size()); outputIndex += 1)
 		{
 			CIdentifier outputTypeId;
 			OVT_ASSERT(scenario.getOutputType(outputIndex, outputTypeId), "Cannot get output type");

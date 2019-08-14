@@ -94,8 +94,8 @@ static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, cons
 	l_ui64AttributeCount >>= 1;
 
 	// $$$ TODO take 64bits size into consideration
-	const char** l_pAttributeName  = new const char*[static_cast<size_t>(l_ui64AttributeCount)];
-	const char** l_pAttributeValue = new const char*[static_cast<size_t>(l_ui64AttributeCount)];
+	const char** l_pAttributeName  = new const char*[size_t(l_ui64AttributeCount)];
+	const char** l_pAttributeValue = new const char*[size_t(l_ui64AttributeCount)];
 
 	for (uint64_t i = 0; i < l_ui64AttributeCount; i++)
 	{

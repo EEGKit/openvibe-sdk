@@ -194,7 +194,7 @@ EPlayerReturnCode CPlayer::initialize()
 		OV_ERROR_K("Failed to initialize player", ErrorType::Internal, PlayerReturnCode_BoxInitializationFailed);
 	}
 
-	m_oBenchmarkChrono.reset(static_cast<uint32_t>(m_oScheduler.getFrequency()));
+	m_oBenchmarkChrono.reset(uint32_t(m_oScheduler.getFrequency()));
 
 	m_ui64CurrentTimeToReach = 0;
 	m_ui64Lateness           = 0;
@@ -315,7 +315,7 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 			// g_ui64Scheduler_Maximum_Loops_Duration_ seconds elapsed
 			if (m_f64FastForwardMaximumFactor != 0)
 			{
-				m_ui64CurrentTimeToReach += static_cast<uint64_t>(m_f64FastForwardMaximumFactor * ui64ElapsedTime);
+				m_ui64CurrentTimeToReach += uint64_t(m_f64FastForwardMaximumFactor * ui64ElapsedTime);
 				l_bHasTimeToReach = true;
 			}
 			break;

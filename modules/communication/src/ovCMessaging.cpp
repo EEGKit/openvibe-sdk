@@ -136,7 +136,7 @@ bool CMessaging::pull()
 			return false;
 		}
 
-		impl->m_RcvBuffer.insert(impl->m_RcvBuffer.end(), impl->m_TemporaryRcvBuffer.cbegin(), impl->m_TemporaryRcvBuffer.cbegin() + static_cast<int>(bytesReceived));
+		impl->m_RcvBuffer.insert(impl->m_RcvBuffer.end(), impl->m_TemporaryRcvBuffer.cbegin(), impl->m_TemporaryRcvBuffer.cbegin() + int(bytesReceived));
 	}
 
 	return true;
@@ -182,7 +182,7 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 	if (!header.fromBytes(buffer, byteRead))
 	{
 		this->setLastError(Deserialize_Header);
-		byteRead = static_cast<size_t>(header.getSize());
+		byteRead = size_t(header.getSize());
 		return false;
 	}
 

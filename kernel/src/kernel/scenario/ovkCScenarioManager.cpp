@@ -195,7 +195,7 @@ bool CScenarioManager::importScenarioFromFile(CIdentifier& newScenarioIdentifier
 		ErrorType::BadFileRead);
 
 	fseek(inputFile, 0, SEEK_END);
-	memoryBuffer.setSize(static_cast<size_t>(ftell(inputFile)), true);
+	memoryBuffer.setSize(size_t(ftell(inputFile)), true);
 	fseek(inputFile, 0, SEEK_SET);
 
 	if (fread(reinterpret_cast<char*>(memoryBuffer.getDirectPointer()), (size_t)memoryBuffer.getSize(), 1, inputFile) != 1)
@@ -475,7 +475,7 @@ bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIden
 		"Failed to open file " << fileName,
 		ErrorType::BadFileRead);
 
-	outputFileStream.write(reinterpret_cast<const char*>(memoryBuffer.getDirectPointer()), static_cast<long>(memoryBuffer.getSize()));
+	outputFileStream.write(reinterpret_cast<const char*>(memoryBuffer.getDirectPointer()), long(memoryBuffer.getSize()));
 	outputFileStream.close();
 
 	return true;

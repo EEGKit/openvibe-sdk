@@ -317,7 +317,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	if (l_bTrainStimulationReceived)
 	{
 		OV_ERROR_UNLESS_KRF(m_vDataset.size() >= m_ui64PartitionCount,
-							"Received fewer examples (" << static_cast<uint32_t>(m_vDataset.size()) << ") than specified partition count (" << m_ui64PartitionCount << ")",
+							"Received fewer examples (" << uint32_t(m_vDataset.size()) << ") than specified partition count (" << m_ui64PartitionCount << ")",
 							OpenViBE::Kernel::ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(!m_vDataset.empty(), "No training example received", OpenViBE::Kernel::ErrorType::BadInput);
@@ -504,12 +504,12 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 		if (l_f64PredictedValue < oConfusionMatrix.getDimensionSize(0) && l_f64CorrectValue < oConfusionMatrix.getDimensionSize(0))
 		{
 			double* buf = oConfusionMatrix.getBuffer();
-			buf[static_cast<uint32_t>(l_f64CorrectValue) * oConfusionMatrix.getDimensionSize(1) + static_cast<uint32_t>(l_f64PredictedValue)] += 1.0;
+			buf[uint32_t(l_f64CorrectValue) * oConfusionMatrix.getDimensionSize(1) + uint32_t(l_f64PredictedValue)] += 1.0;
 		}
 		else { std::cout << "errorn\n"; }
 	}
 
-	return static_cast<double>((l_iSuccessCount * 100.0) / (uiStopIndex - uiStartIndex));
+	return double((l_iSuccessCount * 100.0) / (uiStopIndex - uiStartIndex));
 }
 
 bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix)
@@ -562,7 +562,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 		{
 			ss << setw(6) << l_oTmp[i * l_ui32Rows + j] * 100;
 		}
-		this->getLogManager() << LogLevel_Info << ss.str().c_str() << " %, " << static_cast<uint32_t>(l_oRowSum[i]) << " examples\n";
+		this->getLogManager() << LogLevel_Info << ss.str().c_str() << " %, " << uint32_t(l_oRowSum[i]) << " examples\n";
 	}
 
 	return true;

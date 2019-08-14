@@ -73,21 +73,21 @@ bool CBoxAlgorithmWindowing::process()
 			{
 				for (size_t k = 0; k < n; k++)
 				{
-					m_WindowCoefficients[k] = 0.54 - 0.46 * cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n) - 1.));
+					m_WindowCoefficients[k] = 0.54 - 0.46 * cos(2. * M_PI * double(k) / (double(n) - 1.));
 				}
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Hann || m_WindowMethod == OVP_TypeId_WindowMethod_Hanning)
 			{
 				for (size_t k = 0; k < n; k++)
 				{
-					m_WindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n) - 1.)));
+					m_WindowCoefficients[k] = 0.5 * (1. - cos(2. * M_PI * double(k) / (double(n) - 1.)));
 				}
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Blackman)
 			{
 				for (size_t k = 0; k < n; k++)
 				{
-					m_WindowCoefficients[k] = 0.42 - 0.5 * cos(2. * M_PI * static_cast<double>(k) / (static_cast<double>(n) - 1.)) + 0.08 * cos(4. * M_PI * static_cast<double>(k) / (static_cast<double>(n) - 1.));
+					m_WindowCoefficients[k] = 0.42 - 0.5 * cos(2. * M_PI * double(k) / (double(n) - 1.)) + 0.08 * cos(4. * M_PI * double(k) / (double(n) - 1.));
 				}
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_Triangular)
@@ -97,11 +97,11 @@ bool CBoxAlgorithmWindowing::process()
 				{
 					if (n % 2 == 1)
 					{
-						m_WindowCoefficients[k - 1] = static_cast<double>((2. * static_cast<double>(k)) / (static_cast<double>(n) + 1.));
+						m_WindowCoefficients[k - 1] = double((2. * double(k)) / (double(n) + 1.));
 					}
 					else
 					{
-						m_WindowCoefficients[k - 1] = static_cast<double>((2. * static_cast<double>(k) - 1.) / static_cast<double>(n));
+						m_WindowCoefficients[k - 1] = double((2. * double(k) - 1.) / double(n));
 					}
 				}
 
@@ -109,11 +109,11 @@ bool CBoxAlgorithmWindowing::process()
 				{
 					if (n % 2 == 1)
 					{
-						m_WindowCoefficients[k - 1] = static_cast<double>(2. - (2. * static_cast<double>(k)) / (static_cast<double>(n) + 1.));
+						m_WindowCoefficients[k - 1] = double(2. - (2. * double(k)) / (double(n) + 1.));
 					}
 					else
 					{
-						m_WindowCoefficients[k - 1] = static_cast<double>(2. - (2. * static_cast<double>(k) - 1.) / static_cast<double>(n));
+						m_WindowCoefficients[k - 1] = double(2. - (2. * double(k) - 1.) / double(n));
 					}
 				}
 			}
@@ -123,18 +123,18 @@ bool CBoxAlgorithmWindowing::process()
 				{
 					if (n % 2 == 1)
 					{
-						m_WindowCoefficients[k - 1] = sqrt(2. * static_cast<double>(k) / (static_cast<double>(n) + 1.));
+						m_WindowCoefficients[k - 1] = sqrt(2. * double(k) / (double(n) + 1.));
 					}
 					else
 					{
-						m_WindowCoefficients[k - 1] = sqrt((2. * static_cast<double>(k) - 1.) / static_cast<double>(n));
+						m_WindowCoefficients[k - 1] = sqrt((2. * double(k) - 1.) / double(n));
 					}
 				}
 
 				for (size_t k = n / 2 + 1; k <= n; k++)
 				{
-					if (n % 2 == 1) { m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k)) / (static_cast<double>(n) + 1.)); }
-					else { m_WindowCoefficients[k - 1] = sqrt(2. - (2. * static_cast<double>(k) - 1.) / static_cast<double>(n)); }
+					if (n % 2 == 1) { m_WindowCoefficients[k - 1] = sqrt(2. - (2. * double(k)) / (double(n) + 1.)); }
+					else { m_WindowCoefficients[k - 1] = sqrt(2. - (2. * double(k) - 1.) / double(n)); }
 				}
 			}
 			else if (m_WindowMethod == OVP_TypeId_WindowMethod_None)

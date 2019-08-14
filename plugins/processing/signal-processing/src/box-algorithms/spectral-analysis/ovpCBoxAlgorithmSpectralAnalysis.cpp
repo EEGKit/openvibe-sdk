@@ -133,7 +133,7 @@ bool CBoxAlgorithmSpectralAnalysis::process()
 			// Frequency values
 			for (unsigned int frequencyAbscissaIndex = 0; frequencyAbscissaIndex < m_FFTSize; frequencyAbscissaIndex++)
 			{
-				m_FrequencyAbscissa->getBuffer()[frequencyAbscissaIndex] = frequencyAbscissaIndex * (static_cast<double>(m_SamplingRate) / m_SampleCount);
+				m_FrequencyAbscissa->getBuffer()[frequencyAbscissaIndex] = frequencyAbscissaIndex * (double(m_SamplingRate) / m_SampleCount);
 			}
 
 			// All spectra share the same header structure

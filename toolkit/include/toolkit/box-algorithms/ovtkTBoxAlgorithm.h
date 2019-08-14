@@ -174,7 +174,7 @@ namespace OpenViBEToolkit
 								"Could not expand numeric expression [" << m_sSettingValue << "] to unsigned integer 32bits.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint32_t>::max(), m_rErrorManager, m_rLogManager);
 
-				return static_cast<uint32_t>(l_dResult);
+				return uint32_t(l_dResult);
 			}
 
 			operator uint64_t()
@@ -192,7 +192,7 @@ namespace OpenViBEToolkit
 				}
 				else if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
 				{
-					return static_cast<uint64_t>(l_dResult);
+					return uint64_t(l_dResult);
 				}
 
 				// Seems like currently some plugins use FSettingValueAutoCast without knowing then setting type.
@@ -214,7 +214,7 @@ namespace OpenViBEToolkit
 								"Could not expand numeric expression [" << m_sSettingValue << "] to integer 32bits.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int32_t>::max(), m_rErrorManager, m_rLogManager);
 
-				return static_cast<int32_t>(l_dResult);
+				return int32_t(l_dResult);
 			}
 
 			operator int64_t()
@@ -226,7 +226,7 @@ namespace OpenViBEToolkit
 								"Could not expand numeric expression [" << m_sSettingValue << "] to integer 64bits.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<int64_t>::max(), m_rErrorManager, m_rLogManager);
 
-				return static_cast<int64_t>(l_dResult);
+				return int64_t(l_dResult);
 			}
 
 			operator double()
@@ -237,7 +237,7 @@ namespace OpenViBEToolkit
 				OV_ERROR_UNLESS(m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult), "Could not expand numeric expression [" << m_sSettingValue << "] to float.",
 								OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<double>::max(), m_rErrorManager, m_rLogManager);
 
-				return static_cast<double>(l_dResult);
+				return double(l_dResult);
 			}
 
 			operator bool() { return m_rConfigurationManager.expandAsBoolean(m_sSettingValue); }

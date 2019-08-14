@@ -59,7 +59,7 @@ namespace
 
 	struct TTestEqTargetBoxInput
 	{
-		TTestEqTargetBoxInput(const CIdentifier& boxId, uint32_t inputIndex) : m_BoxId(boxId), m_InputIndex(inputIndex) { }
+		TTestEqTargetBoxInput(const CIdentifier& boxId, uint32_t index) : m_BoxId(boxId), m_InputIndex(index) { }
 		bool operator()(map<CIdentifier, CLink*>::const_iterator it) const { return it->second->getTargetBoxIdentifier() == m_BoxId && it->second->getTargetBoxInputIndex() == m_InputIndex; }
 		const CIdentifier& m_BoxId;
 		uint32_t m_InputIndex;
@@ -203,16 +203,16 @@ bool CScenario::clear()
 	return true;
 }
 
-bool CScenario::removeScenarioInput(const uint32_t inputIndex)
+bool CScenario::removeScenarioInput(const uint32_t index)
 {
-	OV_ERROR_UNLESS_KRF(inputIndex < this->getInputCount(), "Input index = [" << inputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])", ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(index < this->getInputCount(), "Input index = [" << index << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])", ErrorType::OutOfBound);
 
-	this->removeInput(inputIndex);
+	this->removeInput(index);
 
 	// Remove the link within the scenario to this input
-	if (inputIndex < m_ScenarioInputLinks.size())
+	if (index < m_ScenarioInputLinks.size())
 	{
-		m_ScenarioInputLinks.erase(m_ScenarioInputLinks.begin() + inputIndex);
+		m_ScenarioInputLinks.erase(m_ScenarioInputLinks.begin() + index);
 	}
 
 	return true;
@@ -675,9 +675,9 @@ CIdentifier CScenario::getNextLinkIdentifierToBox(const CIdentifier& previousIde
 	return getNextTIdentifier<CLink*, TTestEqTargetBox>(m_Links, previousIdentifier, TTestEqTargetBox(boxIdentifier));
 }
 
-CIdentifier CScenario::getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32_t inputIndex) const
+CIdentifier CScenario::getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, const uint32_t index) const
 {
-	return getNextTIdentifier<CLink*, TTestEqTargetBoxInput>(m_Links, previousIdentifier, TTestEqTargetBoxInput(boxIdentifier, inputIndex));
+	return getNextTIdentifier<CLink*, TTestEqTargetBoxInput>(m_Links, previousIdentifier, TTestEqTargetBoxInput(boxIdentifier, index));
 }
 
 bool CScenario::isLink(const CIdentifier& identifier) const
@@ -727,11 +727,11 @@ bool CScenario::setScenarioInputLink(const uint32_t scenarioInputIndex, const CI
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
 		uint32_t alreadyConnectedBoxInputIndex;
-		this->getScenarioInputLink(static_cast<uint32_t>(inputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxInputIndex);
+		this->getScenarioInputLink(uint32_t(inputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxInputIndex);
 
 		if (alreadyConnectedBoxIdentifier == boxIdentifier && alreadyConnectedBoxInputIndex == boxInputIndex)
 		{
-			this->removeScenarioInputLink(static_cast<uint32_t>(inputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxInputIndex);
+			this->removeScenarioInputLink(uint32_t(inputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxInputIndex);
 		}
 	}
 
@@ -795,11 +795,11 @@ bool CScenario::setScenarioOutputLink(const uint32_t scenarioOutputIndex, const 
 	{
 		CIdentifier alreadyConnectedBoxIdentifier;
 		uint32_t alreadyConnectedBoxOutputIndex;
-		this->getScenarioOutputLink(static_cast<uint32_t>(outputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
+		this->getScenarioOutputLink(uint32_t(outputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
 
 		if (alreadyConnectedBoxIdentifier == boxIdentifier && alreadyConnectedBoxOutputIndex == boxOutputIndex)
 		{
-			this->removeScenarioOutputLink(static_cast<uint32_t>(outputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
+			this->removeScenarioOutputLink(uint32_t(outputLinkIndex), alreadyConnectedBoxIdentifier, alreadyConnectedBoxOutputIndex);
 		}
 	}
 
@@ -1447,9 +1447,9 @@ void CScenario::getLinkIdentifierToBoxList(const CIdentifier& boxIdentifier, CId
 	getIdentifierList<CLink*, TTestEqTargetBox>(m_Links, TTestEqTargetBox(boxIdentifier), identifierList, size);
 }
 
-void CScenario::getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, const uint32_t inputIndex, CIdentifier** identifierList, size_t* size) const
+void CScenario::getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, const uint32_t index, CIdentifier** identifierList, size_t* size) const
 {
-	getIdentifierList<CLink*, TTestEqTargetBoxInput>(m_Links, TTestEqTargetBoxInput(boxIdentifier, inputIndex), identifierList, size);
+	getIdentifierList<CLink*, TTestEqTargetBoxInput>(m_Links, TTestEqTargetBoxInput(boxIdentifier, index), identifierList, size);
 }
 
 void CScenario::getOutdatedBoxIdentifierList(CIdentifier** identifierList, size_t* size) const
@@ -1651,14 +1651,14 @@ bool CScenario::updateBox(const CIdentifier& boxIdentifier)
 	for (auto& link : links[Input])
 	{
 		CIdentifier newLinkIdentifier;
-		auto inputIndex = m_UpdatedBoxIOCorrespondence.at(Input).at(boxIdentifier).at(link->getTargetBoxInputIndex());
+		auto index = m_UpdatedBoxIOCorrespondence.at(Input).at(boxIdentifier).at(link->getTargetBoxInputIndex());
 		this->connect(newLinkIdentifier,
 					  link->getSourceBoxIdentifier(),
 					  link->getSourceBoxOutputIndex(),
 					  boxIdentifier,
-					  inputIndex,
+					  index,
 					  link->getIdentifier());
-		isInterfacorConnected[Input].insert(inputIndex);
+		isInterfacorConnected[Input].insert(index);
 		if (link->hasAttribute(OV_AttributeId_Link_Invalid))
 		{
 			this->getLinkDetails(newLinkIdentifier)->setAttributeValue(OV_AttributeId_Link_Invalid, "");

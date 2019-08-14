@@ -74,7 +74,7 @@ namespace OpenViBE
 			bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) override;
 			bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) override;
 
-			bool removeScenarioInput(uint32_t inputIndex) override;
+			bool removeScenarioInput(uint32_t index) override;
 			bool removeScenarioOutput(uint32_t outputIndex) override;
 
 			const ILink* getLinkDetails(const CIdentifier& linkIdentifier) const override;

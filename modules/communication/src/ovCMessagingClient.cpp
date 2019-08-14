@@ -92,21 +92,21 @@ uint32_t MessagingClient::getParameterCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
 
-	return static_cast<uint32_t>(impl->m_BoxDescription.getParameters()->size());
+	return uint32_t(impl->m_BoxDescription.getParameters()->size());
 }
 
 uint32_t MessagingClient::getInputCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
 
-	return static_cast<uint32_t>(impl->m_BoxDescription.getInputs()->size());
+	return uint32_t(impl->m_BoxDescription.getInputs()->size());
 }
 
 uint32_t MessagingClient::getOutputCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
 
-	return static_cast<uint32_t>(impl->m_BoxDescription.getOutputs()->size());
+	return uint32_t(impl->m_BoxDescription.getOutputs()->size());
 }
 
 bool MessagingClient::getParameter(const size_t i, uint32_t& id, uint64_t& type, std::string& name, std::string& value) const

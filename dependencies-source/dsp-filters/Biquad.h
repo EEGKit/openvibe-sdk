@@ -60,7 +60,7 @@ namespace Dsp
 			template <typename Sample>
 			Sample process(const Sample in, const BiquadBase& b)
 			{
-				return static_cast<Sample>(StateType::process1(in, b, ac()));
+				return Sample(StateType::process1(in, b, ac()));
 			}
 		};
 

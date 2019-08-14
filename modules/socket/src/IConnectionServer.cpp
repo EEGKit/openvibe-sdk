@@ -92,7 +92,7 @@ namespace Socket
 			{
 				return nullptr;
 			}
-			return new TConnection<IConnection>(static_cast<int32_t>(l_i32ClientSocket));
+			return new TConnection<IConnection>(int32_t(l_i32ClientSocket));
 		}
 
 		bool getSocketPort(uint32_t& port) override
@@ -107,7 +107,7 @@ namespace Socket
 
 			if (getsockname(m_i32Socket, (sockaddr*)&socketInfo, &socketInfoLength) == -1) { return false; }
 
-			port = static_cast<uint32_t>(ntohs(socketInfo.sin_port));
+			port = uint32_t(ntohs(socketInfo.sin_port));
 			return true;
 		}
 	};

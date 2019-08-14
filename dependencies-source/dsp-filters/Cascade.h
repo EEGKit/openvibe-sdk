@@ -71,7 +71,7 @@ namespace Dsp
 					out = (state++)->process1(out, *stage++, 0);
 				//for (int i = c.m_numStages; --i >= 0; ++state, ++stage)
 				//  out = state->process1 (out, *stage, vsa);
-				return static_cast<Sample>(out);
+				return Sample(out);
 			}
 
 #include "StateBaseSynthesisH.inl"

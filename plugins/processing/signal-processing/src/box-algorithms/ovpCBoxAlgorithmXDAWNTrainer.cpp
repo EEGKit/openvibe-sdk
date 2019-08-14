@@ -126,7 +126,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 				IMatrix* matrix = m_rSignalDecoder.getOutputMatrix();
 				channelCount    = matrix->getDimensionSize(0);
 				sampleCount     = matrix->getDimensionSize(1);
-				samplingRate    = static_cast<uint32_t>(m_rSignalDecoder.getOutputSamplingRate());
+				samplingRate    = uint32_t(m_rSignalDecoder.getOutputSamplingRate());
 
 				if (m_rSignalDecoder.isHeaderReceived())
 				{

@@ -140,7 +140,7 @@ namespace OpenViBE
 				// able to run in any case.
 				std::abort();
 			}
-			std::unique_ptr<char> utf8Value(new char[static_cast<size_t>(multiByteSize)]);
+			std::unique_ptr<char> utf8Value(new char[size_t(multiByteSize)]);
 			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0)
 			{
 				std::abort();
@@ -188,7 +188,7 @@ namespace OpenViBE
 			{
 				return convertPath(sDefaultPath);
 			}
-			std::unique_ptr<char> utf8Value(new char[static_cast<size_t>(multiByteSize)]);
+			std::unique_ptr<char> utf8Value(new char[size_t(multiByteSize)]);
 			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0)
 			{
 				return convertPath(sDefaultPath);

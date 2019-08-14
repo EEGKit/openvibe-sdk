@@ -93,7 +93,7 @@ namespace OpenViBE
 			virtual bool uninitialize();
 
 			virtual bool processClock();
-			virtual bool processInput(const uint32_t inputIndex, const CChunk& rChunk);
+			virtual bool processInput(const uint32_t index, const CChunk& rChunk);
 			virtual bool process();
 			virtual bool isReadyToProcess() const;
 
@@ -102,7 +102,7 @@ namespace OpenViBE
 
 			/** \name IBoxIO inputs handling */
 			//@{
-			uint32_t getInputChunkCount(const uint32_t inputIndex) const override;
+			uint32_t getInputChunkCount(const uint32_t index) const override;
 			bool getInputChunk(const uint32_t inputIndex, const uint32_t chunkIndex, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const override;
 			const IMemoryBuffer* getInputChunk(const uint32_t inputIndex, const uint32_t chunkIndex) const override;
 			uint64_t getInputChunkStartTime(const uint32_t inputIndex, const uint32_t chunkIndex) const override;

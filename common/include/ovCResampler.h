@@ -323,12 +323,12 @@ namespace Common
 				{
 					for (uint32_t k = 0; k < ui32InputSampleCount; k++)
 					{
-						l_vInputBuffer[k] = static_cast<double>(pInputSample[k * m_ui32ChannelCount + j]);
+						l_vInputBuffer[k] = double(pInputSample[k * m_ui32ChannelCount + j]);
 					}
 
 					l_iCount = 0;
 					double* l_pResamplerOutputBuffer;
-					l_iCount = m_vResampler[j]->process(&l_vInputBuffer[0], static_cast<int>(ui32InputSampleCount), l_pResamplerOutputBuffer);
+					l_iCount = m_vResampler[j]->process(&l_vInputBuffer[0], int(ui32InputSampleCount), l_pResamplerOutputBuffer);
 
 					if (l_bIsFirstChannel)
 					{
@@ -338,7 +338,7 @@ namespace Common
 
 					for (int k = 0; k < l_iCount; k++)
 					{
-						l_vOutputBuffer[k * m_ui32ChannelCount + j] = static_cast<TFloat>(l_pResamplerOutputBuffer[k]);
+						l_vOutputBuffer[k * m_ui32ChannelCount + j] = TFloat(l_pResamplerOutputBuffer[k]);
 					}
 				}
 
@@ -371,12 +371,12 @@ namespace Common
 				{
 					for (size_t k = 0; k < ui32InputSampleCount; k++)
 					{
-						l_vInputBuffer[k] = static_cast<double>(pInputSample[j * ui32InputSampleCount + k]);
+						l_vInputBuffer[k] = double(pInputSample[j * ui32InputSampleCount + k]);
 					}
 
 					l_iCount = 0;
 					double* l_pResamplerOutputBuffer;
-					l_iCount = m_vResampler[j]->process(&l_vInputBuffer[0], static_cast<int>(ui32InputSampleCount), l_pResamplerOutputBuffer);
+					l_iCount = m_vResampler[j]->process(&l_vInputBuffer[0], int(ui32InputSampleCount), l_pResamplerOutputBuffer);
 
 					if (l_bIsFirstChannel)
 					{
@@ -386,7 +386,7 @@ namespace Common
 
 					for (int k = 0; k < l_iCount; k++)
 					{
-						l_vOutputBuffer[k * m_ui32ChannelCount + j] = static_cast<TFloat>(l_pResamplerOutputBuffer[k]);
+						l_vOutputBuffer[k * m_ui32ChannelCount + j] = TFloat(l_pResamplerOutputBuffer[k]);
 					}
 				}
 

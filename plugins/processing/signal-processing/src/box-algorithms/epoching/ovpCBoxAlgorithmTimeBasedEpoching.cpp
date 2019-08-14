@@ -76,8 +76,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 								"Input sampling frequency is equal to 0. Plugin can not process.",
 								ErrorType::Internal);
 
-			m_OutputSampleCount             = static_cast<uint32_t>(m_EpochDuration * m_SamplingRate); // sample count per output epoch
-			m_OutputSampleCountBetweenEpoch = static_cast<uint32_t>(m_EpochInterval * m_SamplingRate);
+			m_OutputSampleCount             = uint32_t(m_EpochDuration * m_SamplingRate); // sample count per output epoch
+			m_OutputSampleCountBetweenEpoch = uint32_t(m_EpochInterval * m_SamplingRate);
 
 			OV_ERROR_UNLESS_KRF(m_OutputSampleCount>0 && m_OutputSampleCountBetweenEpoch>0,
 								"Input sampling frequency is [" << m_SamplingRate << "]. This is too low in order to produce epochs of [" << m_EpochDuration
@@ -139,8 +139,8 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 					if (m_OutputSampleIndex == m_OutputSampleCount) // An epoch has been totally filled !
 					{
 						// Calculates start and end time of output
-						uint64_t l_ui64OutputChunkStartTime = m_ReferenceTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, static_cast<uint64_t>(m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch));
-						uint64_t l_ui64OutputChunkEndTime   = m_ReferenceTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, static_cast<uint64_t>(m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch + m_OutputSampleCount));
+						uint64_t l_ui64OutputChunkStartTime = m_ReferenceTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, uint64_t(m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch));
+						uint64_t l_ui64OutputChunkEndTime   = m_ReferenceTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, uint64_t(m_OutputChunkIndex * m_OutputSampleCountBetweenEpoch + m_OutputSampleCount));
 						m_OutputChunkIndex++;
 
 						// Writes epoch

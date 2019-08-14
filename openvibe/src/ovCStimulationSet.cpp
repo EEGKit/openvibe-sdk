@@ -57,40 +57,40 @@ const uint64_t CStimulationSetImpl::getStimulationCount() const { return m_vStim
 
 const uint64_t CStimulationSetImpl::getStimulationIdentifier(const uint64_t ui64StimulationIndex) const
 {
-	return m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Identifier;
+	return m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Identifier;
 }
 
 const uint64_t CStimulationSetImpl::getStimulationDate(const uint64_t ui64StimulationIndex) const
 {
-	return m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Date;
+	return m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Date;
 }
 
 const uint64_t CStimulationSetImpl::getStimulationDuration(const uint64_t ui64StimulationIndex) const
 {
-	return m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Duration;
+	return m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Duration;
 }
 
 bool CStimulationSetImpl::setStimulationCount(const uint64_t ui64StimulationCount)
 {
-	m_vStimulation.resize(static_cast<size_t>(ui64StimulationCount));
+	m_vStimulation.resize(size_t(ui64StimulationCount));
 	return true;
 }
 
 bool CStimulationSetImpl::setStimulationIdentifier(const uint64_t ui64StimulationIndex, const uint64_t ui64StimulationIdentifier)
 {
-	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Identifier = ui64StimulationIdentifier;
+	m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Identifier = ui64StimulationIdentifier;
 	return true;
 }
 
 bool CStimulationSetImpl::setStimulationDate(const uint64_t ui64StimulationIndex, const uint64_t ui64StimulationDate)
 {
-	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Date = ui64StimulationDate;
+	m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Date = ui64StimulationDate;
 	return true;
 }
 
 bool CStimulationSetImpl::setStimulationDuration(const uint64_t ui64StimulationIndex, const uint64_t ui64StimulationDuration)
 {
-	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Duration = ui64StimulationDuration;
+	m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Duration = ui64StimulationDuration;
 	return true;
 }
 
@@ -109,7 +109,7 @@ uint64_t CStimulationSetImpl::insertStimulation(const uint64_t ui64StimulationIn
 	}
 	else
 	{
-		m_vStimulation.insert(m_vStimulation.begin() + static_cast<size_t>(ui64StimulationIndex), CStimulation(ui64StimulationIdentifier, ui64StimulationDate, ui64StimulationDuration));
+		m_vStimulation.insert(m_vStimulation.begin() + size_t(ui64StimulationIndex), CStimulation(ui64StimulationIdentifier, ui64StimulationDate, ui64StimulationDuration));
 	}
 	return true;
 }
@@ -117,7 +117,7 @@ uint64_t CStimulationSetImpl::insertStimulation(const uint64_t ui64StimulationIn
 bool CStimulationSetImpl::removeStimulation(const uint64_t ui64StimulationIndex)
 {
 	if (ui64StimulationIndex >= m_vStimulation.size()) { return false; }
-	m_vStimulation.erase(m_vStimulation.begin() + static_cast<size_t>(ui64StimulationIndex));
+	m_vStimulation.erase(m_vStimulation.begin() + size_t(ui64StimulationIndex));
 	return true;
 }
 

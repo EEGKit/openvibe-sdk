@@ -148,7 +148,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	bool clientConnected    = false;
 	m_HasReceivedEndMessage = false;
 
-	m_AcceptTimeout = ITimeArithmetics::secondsToTime(static_cast<double>(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6)));
+	m_AcceptTimeout = ITimeArithmetics::secondsToTime(double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6)));
 	m_IsGenerator   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 7);
 
 	while (System::Time::zgetTime() - startTime < m_AcceptTimeout)
@@ -226,7 +226,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 			}
 			else if (exitCode != 0)
 			{
-				OV_WARNING_K("Third party program [" << m_ThirdPartyProgramProcessId << "] has terminated with exit code [" << static_cast<int>(exitCode) << "]");
+				OV_WARNING_K("Third party program [" << m_ThirdPartyProgramProcessId << "] has terminated with exit code [" << int(exitCode) << "]");
 			}
 		}
 #else
@@ -274,7 +274,7 @@ bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*rMessageCloc
 	return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 }
 
-bool CBoxAlgorithmExternalProcessing::processInput(const uint32_t inputIndex)
+bool CBoxAlgorithmExternalProcessing::processInput(const uint32_t index)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -339,7 +339,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 				// Empty the history before to send useful data
 				while (!m_PacketHistory.empty())
 				{
-					OV_ERROR_UNLESS_KRF(m_Messaging.pushEBML(m_PacketHistory.front().inputIndex,
+					OV_ERROR_UNLESS_KRF(m_Messaging.pushEBML(m_PacketHistory.front().index,
 											m_PacketHistory.front().startTime,
 											m_PacketHistory.front().endTime,
 											m_PacketHistory.front().EBML),
@@ -408,7 +408,7 @@ std::string CBoxAlgorithmExternalProcessing::generateConnectionID(size_t size)
 
 	for (size_t i = 0; i < size; ++i)
 	{
-		char c = static_cast<char>(character(generator));
+		char c = char(character(generator));
 		connectionID.push_back((c < 26) ? ('A' + c) : '1' + (c - 26));
 	}
 

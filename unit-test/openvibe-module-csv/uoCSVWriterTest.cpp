@@ -286,11 +286,11 @@ TEST(CSV_Writer_Test_Case, matrixWriterNormalGoodSignal)
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(matrixWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
+		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 
 		if (i == 5 || i == 3 || i == 7)
 		{
-			ASSERT_TRUE(matrixWriterTest->addEvent(35001, static_cast<double>(i)+3.5, 1.0));
+			ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i)+3.5, 1.0));
 		}
 	}
 
@@ -313,11 +313,11 @@ TEST(CSV_Writer_Test_Case, matrixWriterEmptyLabels)
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(matrixWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
+		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 
 		if (i == 5 || i == 3 || i == 7)
 		{
-			ASSERT_TRUE(matrixWriterTest->addEvent(35001, static_cast<double>(i)+3.5, 1.0));
+			ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i)+3.5, 1.0));
 		}
 	}
 
@@ -340,11 +340,11 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes)
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(matrixWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i)+1.0, { -20.20, -10.10, 10.10, 20.20 }, epoch }));
+		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -10.10, 10.10, 20.20 }, epoch }));
 
 		if (i == 5 || i == 3 || i == 7)
 		{
-			ASSERT_TRUE(matrixWriterTest->addEvent(35001, static_cast<double>(i)+3.5, 1.0));
+			ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i)+3.5, 1.0));
 		}
 	}
 
@@ -382,17 +382,17 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes2)
 	std::vector<double> values;
 	for (unsigned int index = 0; index < 96; index++)
 	{
-		values.push_back(static_cast<double>(index));
+		values.push_back(double(index));
 	}
 
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(matrixWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i)+1.0, values, epoch }));
+		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, values, epoch }));
 
 		if (i == 5 || i == 3 || i == 7)
 		{
-			ASSERT_TRUE(matrixWriterTest->addEvent(35001, static_cast<double>(i)+3.5, 1.0));
+			ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i)+3.5, 1.0));
 		}
 	}
 
@@ -415,17 +415,17 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes3)
 	std::vector<double> values;
 	for (unsigned int index = 0; index < 16; index++)
 	{
-		values.push_back(static_cast<double>(index));
+		values.push_back(double(index));
 	}
 
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(matrixWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i)+1.0, values, epoch }));
+		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, values, epoch }));
 
 		if (i == 5 || i == 3 || i == 7)
 		{
-			ASSERT_TRUE(matrixWriterTest->addEvent(35001, static_cast<double>(i)+3.5, 1.0));
+			ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i)+3.5, 1.0));
 		}
 	}
 
@@ -471,11 +471,11 @@ TEST(CSV_Writer_Test_Case, matrixWriterOnlyLastMatrix)
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(matrixWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i) + 1.0, { static_cast<double>(i), 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0 }, epoch }));
+		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i) + 1.0, { double(i), 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0 }, epoch }));
 
 		if (i == 3 || i == 5 || i == 7)
 		{
-			ASSERT_TRUE(matrixWriterTest->addEvent(35001, static_cast<double>(i) + 3.5, 1.0));
+			ASSERT_TRUE(matrixWriterTest->addEvent(35001, double(i) + 3.5, 1.0));
 		}
 	}
 
@@ -503,11 +503,11 @@ TEST(CSV_Writer_Test_Case, featureVectorNormalGoodSignal)
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(featureVectorWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i)+1.0, { -20.20, -15.15, -10.10 }, epoch }));
+		ASSERT_TRUE(featureVectorWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10 }, epoch }));
 
 		if (i == 5 || i == 3 || i == 7)
 		{
-			ASSERT_TRUE(featureVectorWriterTest->addEvent(35001, static_cast<double>(i)+3.5, 1.0));
+			ASSERT_TRUE(featureVectorWriterTest->addEvent(35001, double(i)+3.5, 1.0));
 		}
 	}
 
@@ -531,7 +531,7 @@ TEST(CSV_Writer_Test_Case, featureVectorEmptyLabels)
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(featureVectorWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i)+1.0, { -20.20, -15.15, -10.10 }, epoch }));
+		ASSERT_TRUE(featureVectorWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10 }, epoch }));
 	}
 
 	ASSERT_TRUE(featureVectorWriterTest->writeHeaderToFile());
@@ -573,7 +573,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterNormalGoodSignal)
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(matrixWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
+		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 	}
 	matrixWriterTest->noEventsUntilDate(20.0);
 
@@ -596,7 +596,7 @@ TEST(CSV_Writer_Test_Case, covarianceMatrixWriterEmptyLabels)
 	for (unsigned int i = 0; i < 50; i++)
 	{
 		unsigned int epoch = i / 10;
-		ASSERT_TRUE(matrixWriterTest->addSample({ static_cast<double>(i), static_cast<double>(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
+		ASSERT_TRUE(matrixWriterTest->addSample({ double(i), double(i)+1.0, { -20.20, -15.15, -10.10, -5.05, 5.05, 10.10, 15.15, 20.20 }, epoch }));
 	}
 
 	ASSERT_TRUE(matrixWriterTest->writeHeaderToFile());
