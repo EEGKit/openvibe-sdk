@@ -48,8 +48,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); }
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); };
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t /*index*/) override { return this->check(rBox); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t /*index*/) override { return this->check(rBox); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
@@ -83,5 +83,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationListenerDesc)
 		};
-	};
-};
+	}  // namespace Tools
+}  // namespace OpenViBEPlugins

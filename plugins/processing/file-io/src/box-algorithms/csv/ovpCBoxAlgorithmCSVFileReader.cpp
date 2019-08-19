@@ -39,7 +39,7 @@ namespace
 		}
 		vMatrix.clear();
 	}
-};
+}
 
 CBoxAlgorithmCSVFileReader::CBoxAlgorithmCSVFileReader() : m_fpRealProcess(nullptr) {}
 
@@ -56,16 +56,15 @@ bool CBoxAlgorithmCSVFileReader::initialize()
 	this->getStaticBoxContext().getOutputType(0, m_oTypeIdentifier);
 
 	m_sFilename            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	CString l_sSeparator   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	m_sSeparator           = l_sSeparator.toASCIIString();
+	const CString token    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	m_sSeparator           = token.toASCIIString();
 	m_bDoNotUseFileTime    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_ui32SamplesPerBuffer = 1;
 	if (m_oTypeIdentifier == OV_TypeId_ChannelLocalisation)
 	{
 		m_ui32ChannelNumberPerBuffer = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	}
-	else if (m_oTypeIdentifier != OV_TypeId_Stimulations
-			 && m_oTypeIdentifier != OV_TypeId_Spectrum)
+	else if (m_oTypeIdentifier != OV_TypeId_Stimulations && m_oTypeIdentifier != OV_TypeId_Spectrum)
 	{
 		m_ui32SamplesPerBuffer = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	}

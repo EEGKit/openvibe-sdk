@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 				rBox.getOutputType(0, l_oTypeIdentifier);
 				rBox.setInputType(ui32Index, l_oTypeIdentifier);
 				return this->check(rBox);
-			};
+			}
 
 			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
@@ -111,7 +111,7 @@ namespace OpenViBEPlugins
 				}
 
 				return true;
-			};
+			}
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
@@ -155,5 +155,6 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexerDesc)
 		};
-	};
-};
+	}  // namespace Streaming
+}
+// namespace OpenViBEPlugins

@@ -34,8 +34,6 @@ namespace OpenViBEPlugins
 			uint32_t getOutputDistanceVectorLength() override;
 
 			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierNULL)
-
-		protected:
 		};
 
 		class CAlgorithmClassifierNULLDesc : public OpenViBEToolkit::CAlgorithmClassifierDesc

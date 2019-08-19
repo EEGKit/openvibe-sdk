@@ -122,8 +122,6 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 
 		op[2].re = tau2r - tau1i;
 		op[2].im = tau2i + tau1r;
-
-		return;
 	}
 	else if (N == 4)
 	{

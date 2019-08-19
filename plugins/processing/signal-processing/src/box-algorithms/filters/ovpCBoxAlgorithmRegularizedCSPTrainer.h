@@ -78,7 +78,7 @@ namespace OpenViBEPlugins
 				rBox.setInputName(ui32Index, l_sName.str().c_str());
 
 				return true;
-			};
+			}
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};

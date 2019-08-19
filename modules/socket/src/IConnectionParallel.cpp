@@ -163,12 +163,12 @@ namespace Socket
 
 		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
 		{
-			const char* l_pPointer   = reinterpret_cast<const char*>(pBuffer);
+			const char* p   = reinterpret_cast<const char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->sendBuffer(l_pPointer + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
+				l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
 			}
 
 			return this->isConnected();
@@ -176,44 +176,28 @@ namespace Socket
 
 		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
 		{
-			char* l_pPointer         = reinterpret_cast<char*>(pBuffer);
+			char* p         = reinterpret_cast<char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->receiveBuffer(l_pPointer + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
+				l_ui32BytesLeft -= this->receiveBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
 			}
 
 			return this->isConnected();
 		}
 
-		bool isConnected() const override
-		{
 #if defined TARGET_OS_Windows
-
-			return m_ui16PortNumber != 0;
-
+		bool isConnected() const override { return m_ui16PortNumber != 0; }
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-			return m_iFile != 0;
-
+		bool isConnected() const override { return m_iFile != 0; }
 #endif
-
-			return false;
-		}
 
 		void release() override
 		{
 #if defined TARGET_OS_Windows
-			if (m_hmodTVicPort != nullptr)
-			{
-				if (!FreeLibrary(m_hmodTVicPort))
-				{
-					m_sLastError = getLastErrorFormated();
-				}
-			}
+			if (m_hmodTVicPort != nullptr && !FreeLibrary(m_hmodTVicPort)) { m_sLastError = getLastErrorFormated(); }
 #endif
-
 			delete this;
 		}
 
@@ -266,25 +250,23 @@ namespace Socket
 		{
 #if defined TARGET_OS_Windows
 
-			LPTSTR l_sErrorText;
-			DWORD l_ui64Error = GetLastError();
+			LPTSTR errorText;
+			const DWORD error = GetLastError();
 
 			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM					// use system message tables to retrieve error text
 						  | FORMAT_MESSAGE_ALLOCATE_BUFFER				// allocate buffer on local heap for error text
 						  | FORMAT_MESSAGE_IGNORE_INSERTS,				// Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters 
 						  nullptr,											// unused with FORMAT_MESSAGE_FROM_SYSTEM
-						  l_ui64Error,
+						  error,
 						  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-						  (LPTSTR)&l_sErrorText,						// output 
+						  LPTSTR(&errorText),						// output 
 						  0,											// minimum size for output buffer
 						  nullptr);										// arguments - see note
 
-			return l_sErrorText + std::to_string(static_cast<unsigned long long>(l_ui64Error));
+			return errorText + std::to_string(static_cast<unsigned long long>(error));
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
 			return "Not implemented.";
-
 #endif
 		}
 
@@ -294,4 +276,4 @@ namespace Socket
 	};
 
 	IConnectionParallel* createConnectionParallel() { return new CConnectionParallel(); }
-};
+}  // namespace Socket

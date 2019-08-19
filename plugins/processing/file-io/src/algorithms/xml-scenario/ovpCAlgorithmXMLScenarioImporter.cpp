@@ -107,11 +107,9 @@ namespace
 	private:
 		IAlgorithmContext& m_rAlgorithmContext;
 	};
-};
-
-CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter(){
-	m_pReader = createReader(*this);
 }
+
+CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter() { m_pReader = createReader(*this); }
 
 CAlgorithmXMLScenarioImporter::~CAlgorithmXMLScenarioImporter() { m_pReader->release(); }
 
@@ -121,7 +119,6 @@ void CAlgorithmXMLScenarioImporter::openChild(const char* sName, const char** sA
 
 	std::string& l_sTop = m_vNodes.top();
 
-	if (false) { }
 	if (l_sTop == "OpenViBE-Scenario" && m_ui32Status == Status_ParsingNothing)
 	{
 		m_ui32Status = Status_ParsingScenario;

@@ -8,7 +8,7 @@ namespace
 	using namespace OpenViBE;
 	using namespace Kernel;
 
-	struct SBoxProto : public IBoxProto
+	struct SBoxProto : IBoxProto
 	{
 		SBoxProto(ITypeManager& typeManager)
 			: m_ui64InputCountHash(0x64AC3CB54A35888CLL)

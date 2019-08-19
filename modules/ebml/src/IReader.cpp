@@ -49,16 +49,16 @@ inline unsigned long getCodedSizeLength(unsigned char* pBuffer, unsigned long ul
 			std::cout << "EBML::getCodedSizeLength called with smaller buffer size " << ulBufferLength << " - needs at least 2" << std::endl;
 		}
 
-		if (pBuffer[1] >> 7) l_ulCodedSizeLength = 9;
-		else l_ulCodedSizeLength = 10;
+		if (pBuffer[1] >> 7) { l_ulCodedSizeLength = 9; }
+		else { l_ulCodedSizeLength = 10; }
 	}
 	return l_ulCodedSizeLength;
 }
 
 inline uint64_t getValue(unsigned char* pBuffer, unsigned long ulBufferLength)
 {
-	uint64_t result               = 0;
-	unsigned long length = getCodedSizeLength(pBuffer, ulBufferLength);
+	uint64_t result            = 0;
+	const unsigned long length = getCodedSizeLength(pBuffer, ulBufferLength);
 	unsigned long ithBit = length;
 	for (unsigned long i = 0; i < length; i++)
 	{
@@ -79,11 +79,9 @@ namespace EBML
 		class CReaderNode
 		{
 		public:
-
 			CReaderNode(const CIdentifier& rIdentifier, CReaderNode* pParentNode);
 
 		private:
-
 			CReaderNode();
 
 		public:
@@ -165,9 +163,11 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 
 	if (_Debug_)
 	{
-		printf("Received %i byte(s) new buffer :", (int)ui64BufferSize);
-		for (int i = 0; i < (int)ui64BufferSize /* && i<4*/; i++)
+		printf("Received %i byte(s) new buffer :", int(ui64BufferSize));
+		for (int i = 0; i < int(ui64BufferSize) /* && i<4*/; i++)
+		{
 			printf("[%02X]", ((unsigned char*)pBuffer)[i]);
+		}
 		std::cout << "...\n";
 	}
 
@@ -187,8 +187,9 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 			if (m_ui64PendingCount)
 			{
 				printf("%i byte(s) pending : ", (int)m_ui64PendingCount);
-				for (int i = 0; i < (int)m_ui64PendingCount; i++)
+				for (int i = 0; i < (int)m_ui64PendingCount; i++){
 					printf("[%02X]", m_pPending[i]);
+				}
 				std::cout << "\n";
 			}
 		}
@@ -217,22 +218,22 @@ bool CReader::processData(const void* pBuffer, const uint64_t ui64BufferSize)
 					}
 				}
 
-				unsigned long l_ulCodedSizeLength = getCodedSizeLength(m_ui64PendingCount ? m_pPending : l_pBuffer,
+				const unsigned long codedSizeLength = getCodedSizeLength(m_ui64PendingCount ? m_pPending : l_pBuffer,
 																	   (unsigned long)(m_ui64PendingCount ? m_ui64PendingCount : l_ui64BufferSize));
-				if (l_ulCodedSizeLength > l_ui64BufferSize + m_ui64PendingCount)
+				if (codedSizeLength > l_ui64BufferSize + m_ui64PendingCount)
 				{
 					l_bFinished = true;
 				}
 				else
 				{
-					unsigned char* encodedBuffer   = new unsigned char[l_ulCodedSizeLength];
-					const uint64_t pendingBytesToCopy = (l_ulCodedSizeLength > m_ui64PendingCount ? m_ui64PendingCount : l_ulCodedSizeLength);
+					unsigned char* encodedBuffer   = new unsigned char[codedSizeLength];
+					const uint64_t pendingBytesToCopy = (codedSizeLength > m_ui64PendingCount ? m_ui64PendingCount : codedSizeLength);
 					memcpy(encodedBuffer, m_pPending, size_t(pendingBytesToCopy));
-					memcpy(encodedBuffer + pendingBytesToCopy, l_pBuffer, size_t(l_ulCodedSizeLength - pendingBytesToCopy));
-					const uint64_t value = getValue(encodedBuffer, l_ulCodedSizeLength);
+					memcpy(encodedBuffer + pendingBytesToCopy, l_pBuffer, size_t(codedSizeLength - pendingBytesToCopy));
+					const uint64_t value = getValue(encodedBuffer, codedSizeLength);
 					delete [] encodedBuffer;
 					l_ui64ProcessedPendingBytes = pendingBytesToCopy;
-					l_ui64ProcessedBytes        = l_ulCodedSizeLength;
+					l_ui64ProcessedBytes        = codedSizeLength;
 
 					switch (m_eStatus)
 					{

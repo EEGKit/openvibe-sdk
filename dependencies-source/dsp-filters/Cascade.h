@@ -55,7 +55,7 @@ namespace Dsp
 	{
 	public:
 		template <class StateType>
-		class StateBase : private DenormalPrevention
+		class StateBase : DenormalPrevention
 		{
 		public:
 			template <typename Sample>

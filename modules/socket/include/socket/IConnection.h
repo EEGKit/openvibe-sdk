@@ -31,4 +31,4 @@ namespace Socket
 
 		virtual ~IConnection();
 	};
-}
+}  // namespace Socket

@@ -113,4 +113,4 @@ namespace Socket
 	};
 
 	IConnectionServer* createConnectionServer() { return new CConnectionServer(); }
-};
+}  // namespace Socket

@@ -59,7 +59,7 @@ namespace OpenViBE
 			uint64_t m_ui64CurrentTimeToReach = 0;
 			uint64_t m_ui64Lateness = 0;
 			uint64_t m_ui64InnerLateness = 0;
-			EPlayerStatus m_eStatus;
+			EPlayerStatus m_eStatus = PlayerStatus_Stop;
 			bool m_bIsInitializing = false;
 			double m_f64FastForwardMaximumFactor = 0;
 

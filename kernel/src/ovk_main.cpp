@@ -51,4 +51,4 @@ OVK_API bool onGetKernelDesc(IKernelDesc*& rpKernelDesc)
 
 OVK_API bool onUninitialize() { return true; }
 
-};
+}

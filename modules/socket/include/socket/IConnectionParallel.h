@@ -39,4 +39,4 @@ namespace Socket
 	};
 
 	extern Socket_API IConnectionParallel* createConnectionParallel();
-}
+}  // namespace Socket
