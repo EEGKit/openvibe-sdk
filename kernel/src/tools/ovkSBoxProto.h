@@ -10,8 +10,6 @@ namespace
 
 	struct SBoxProto : public IBoxProto
 	{
-	public:
-
 		SBoxProto(ITypeManager& typeManager)
 			: m_ui64InputCountHash(0x64AC3CB54A35888CLL)
 			  , m_ui64OutputCountHash(0x21E0FAAFE5CAF1E1LL)

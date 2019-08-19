@@ -130,7 +130,6 @@ namespace Communication
 		uint64_t m_Id = 0;
 		uint64_t m_Size = 0;
 
-	private:
 		static const size_t s_TypeIndex   = 0;
 		static const size_t s_TypeSize    = sizeof(EMessageType);
 		static const size_t s_IdIndex     = s_TypeIndex + s_TypeSize;
@@ -181,7 +180,6 @@ namespace Communication
 		uint8_t m_MinorVersion = 0;
 		uint8_t m_MajorVersion = 0;
 
-	private:
 		static const size_t s_MajorIndex = 0;
 		static const size_t s_MajorSize  = sizeof(uint8_t);
 		static const size_t s_MinorIndex = s_MajorIndex + s_MajorSize;
@@ -208,7 +206,6 @@ namespace Communication
 		uint64_t m_Type = 0;
 		std::string m_Name;
 
-	private:
 		static const size_t s_IdIndex       = 0;
 		static const size_t s_IdSize        = sizeof(uint32_t);
 		static const size_t s_TypeIndex     = s_IdIndex + s_IdSize;
@@ -237,7 +234,6 @@ namespace Communication
 		std::string m_Name;
 		std::string m_Value;
 
-	private:
 		static const size_t s_IdIndex        = 0;
 		static const size_t s_IdSize         = sizeof(uint32_t);
 		static const size_t s_TypeIndex      = s_IdIndex + s_IdSize;
@@ -272,7 +268,6 @@ namespace Communication
 		std::vector<InputOutput> m_Outputs;
 		std::vector<Parameter> m_Parameters;
 
-	private:
 		static const size_t s_InputCountIndex = 0;
 		static const size_t s_InputCountSize  = sizeof(uint32_t);
 		static const size_t s_OutputCountIndex = s_InputCountIndex + s_InputCountSize;
@@ -300,7 +295,6 @@ namespace Communication
 		ELogLevel m_Type;
 		std::string m_Message;
 
-	private:
 		static const size_t s_TypeIndex = 0;
 		static const size_t s_TypeSize  = sizeof(ELogLevel);
 		static const size_t s_SizeIndex = s_TypeIndex + s_TypeSize;
@@ -339,7 +333,6 @@ namespace Communication
 
 		std::shared_ptr<const std::vector<uint8_t>> m_EBML;
 
-	private:
 		static const size_t s_IOIndexIndex = 0;
 		static const size_t s_IOIndexSize  = sizeof(uint32_t);
 
@@ -375,7 +368,6 @@ namespace Communication
 		EError m_Type;
 		uint64_t m_GuiltyId = 0;
 
-	private:
 		static const size_t s_TypeIndex     = 0;
 		static const size_t s_TypeSize      = sizeof(EError);
 		static const size_t s_GuiltyIdIndex = s_TypeIndex + s_TypeSize;
@@ -411,10 +403,8 @@ namespace Communication
 	private:
 		uint64_t m_Time = 0;
 
-	private:
 		static const size_t s_TimeIndex = 0;
 		static const size_t s_TimeSize  = sizeof(uint64_t);
-
 		static const size_t s_MinimumSize = s_TimeSize;
 	};
 

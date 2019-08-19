@@ -48,8 +48,6 @@ namespace OpenViBEPlugins
 		private:
 			void write(const void* pBuffer, const uint64_t ui64BufferSize) override;
 
-		private:
-
 			OpenViBE::CMemoryBuffer m_oSwap;
 			std::ofstream m_oFile;
 		};

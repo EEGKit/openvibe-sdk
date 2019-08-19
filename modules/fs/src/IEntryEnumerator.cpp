@@ -34,8 +34,6 @@ namespace FS
 		explicit CEntry(const string& sName);
 		const char* getName() override;
 
-	public:
-
 		string m_sName;
 	};
 }
@@ -69,8 +67,6 @@ namespace FS
 		bool isSystem() override;
 		bool isExecutable() override;
 		uint64_t getSize() override;
-
-	public:
 
 		bool m_bIsFile = false;
 		bool m_bIsDirectory = false;

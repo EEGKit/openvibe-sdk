@@ -218,7 +218,6 @@ namespace System
 
 		static const unsigned int m_ErrorModeNull = 0xffffffff;
 
-	private:
 		friend class CDynamicModuleSymbolLoader;
 		/**
 		 * \brief Set the error code and details.

@@ -211,7 +211,6 @@ namespace Communication
 		 */
 		bool pushAuthentication(std::string connectionID);
 
-	private:
 		Socket::IConnectionClient* m_Client = nullptr;
 
 		bool m_BoxDescriptionReceived = false;

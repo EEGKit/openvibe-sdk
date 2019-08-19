@@ -22,13 +22,12 @@ using namespace System;
 
 class RandomGenerator
 {
-private:
-	uint32_t l_ui32NextValue;
+	uint32_t l_ui32NextValue = 0;
 
 public:
 	static const uint32_t l_ui32RandMax = 0x7FFFFFFF; // (2^32)/2-1 == 2147483647
 
-	explicit RandomGenerator(uint32_t seed = 1) : l_ui32NextValue(seed) {}
+	explicit RandomGenerator(const uint32_t seed = 1) : l_ui32NextValue(seed) {}
 
 	int rand()
 	{
@@ -37,7 +36,7 @@ public:
 		return int(l_ui32NextValue);
 	}
 
-	void setSeed(uint32_t seed) { l_ui32NextValue = seed; }
+	void setSeed(const uint32_t seed) { l_ui32NextValue = seed; }
 
 	uint32_t getSeed() const { return l_ui32NextValue; }
 };

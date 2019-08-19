@@ -13,9 +13,8 @@ using namespace System;
 // returns the eventual error code
 void* WindowsUtilities::utf16CompliantLoadLibrary(const char* sLibraryPath, HANDLE hFile, DWORD dwFlags)
 {
-	HMODULE hModule;
-	hModule = ::LoadLibraryEx(sLibraryPath, hFile, dwFlags); // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_DEFAULT_DIRS);
-	return hModule;
+	//const HMODULE hModule = ::LoadLibraryEx(sLibraryPath, hFile, dwFlags); // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_DEFAULT_DIRS);
+	return ::LoadLibraryEx(sLibraryPath, hFile, dwFlags); // LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_DEFAULT_DIRS);
 }
 
 BOOL WindowsUtilities::utf16CompliantSetEnvironmentVariable(const char* sEnvVarName, const char* sEnvVarValue)

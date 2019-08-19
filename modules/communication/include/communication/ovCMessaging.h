@@ -48,11 +48,8 @@ namespace Communication
 			ThreadJoinFailed = 80
 		};
 
-	public:
 		CMessaging();
 		virtual ~CMessaging();
-
-	public:
 
 		/**
 		 * \brief Get the code of the last error produced by the API

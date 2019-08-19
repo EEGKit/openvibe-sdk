@@ -1568,15 +1568,8 @@ namespace OpenViBE
 				this->removeAllAttributes();
 			}
 
-			virtual void enableNotification()
-			{
-				m_bIsNotificationActive = true;
-			}
-
-			virtual void disableNotification()
-			{
-				m_bIsNotificationActive = false;
-			}
+			virtual void enableNotification() { m_bIsNotificationActive = true; }
+			virtual void disableNotification() { m_bIsNotificationActive = false; }
 
 			virtual void notify(const EBoxModification eBoxModificationType, const uint32_t ui32Index)
 			{
@@ -1589,17 +1582,9 @@ namespace OpenViBE
 				}
 			}
 
-			virtual void notify(const EBoxModification eBoxModificationType)
-			{
-				this->notify(eBoxModificationType, 0xffffffff);
-			}
-
-		protected:
-
+			virtual void notify(const EBoxModification eBoxModificationType) { this->notify(eBoxModificationType, 0xffffffff); }
 
 			_IsDerivedFromClass_Final_(TAttributable< TKernelObject <T> >, OVK_ClassId_Kernel_Scenario_Box)
-
-		protected:
 
 			CString getUnusedName(const std::map<CString, uint32_t>& nameToIndex, const CString& suggestedName) const
 			{
