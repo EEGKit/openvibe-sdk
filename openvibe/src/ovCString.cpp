@@ -67,7 +67,7 @@ namespace OpenViBE
 	{
 		return (rString1.m_pStringImpl->m_sValue) < (rString2.m_pStringImpl->m_sValue);
 	}
-}  // namespace OpenViBE
+} // namespace OpenViBE
 
 bool CString::set(const CString& rString)
 {

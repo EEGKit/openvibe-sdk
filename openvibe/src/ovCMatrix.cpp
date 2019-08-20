@@ -43,8 +43,8 @@ namespace OpenViBE
 			std::vector<uint32_t> m_vDimensionSize;
 			std::vector<std::vector<std::string>> m_vDimensionLabel;
 		};
-	}  // namespace
-}  // namespace OpenViBE
+	} // namespace
+} // namespace OpenViBE
 
 // ________________________________________________________________________________________________________________
 //

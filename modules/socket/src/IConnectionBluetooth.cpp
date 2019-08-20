@@ -440,4 +440,4 @@ namespace Socket
 	};
 
 	IConnectionBluetooth* createConnectionBluetooth() { return new CConnectionBluetooth(); }
-}  // namespace Socket
+} // namespace Socket

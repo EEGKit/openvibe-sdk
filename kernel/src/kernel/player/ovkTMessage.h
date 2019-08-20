@@ -28,7 +28,7 @@ namespace OpenViBE
 			CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			uint64_t m_ui64Time       = 0;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE
 
 #include "ovkTMessage.inl"

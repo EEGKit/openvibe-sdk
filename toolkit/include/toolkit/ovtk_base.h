@@ -34,4 +34,4 @@ namespace OpenViBEToolkit
 		CHandledType& m_rHandler;
 		CHandledType m_oLastHandledValue;
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

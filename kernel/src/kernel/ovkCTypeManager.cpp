@@ -39,7 +39,7 @@ namespace
 			return a.second < b.second;
 		}
 	};
-}  // namespace
+} // namespace
 
 CTypeManager::CTypeManager(const IKernelContext& rKernelContext)
 	: TKernelObject<ITypeManager>(rKernelContext)

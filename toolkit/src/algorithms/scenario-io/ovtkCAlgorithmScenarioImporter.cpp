@@ -125,7 +125,7 @@ namespace OpenViBEToolkit
 			std::vector<SLink> m_vLink;
 			std::vector<SAttribute> m_vAttribute;
 		} SScenario;
-	}  // namespace
+	} // namespace
 
 	class CAlgorithmScenarioImporterContext : public IAlgorithmScenarioImporterContext
 	{
@@ -145,7 +145,7 @@ namespace OpenViBEToolkit
 		IAlgorithmContext& m_rAlgorithmContext;
 		SScenario m_oSymbolicScenario;
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 bool CAlgorithmScenarioImporter::process()
 {

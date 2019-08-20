@@ -39,7 +39,7 @@ namespace
 	{
 		return matrix(channelIndex, FFTIndex).imag();
 	}
-}  // namespace
+} // namespace
 
 bool CBoxAlgorithmSpectralAnalysis::initialize()
 {

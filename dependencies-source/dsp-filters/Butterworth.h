@@ -366,8 +366,8 @@ namespace Dsp
 			template <int MaxOrder>
 			struct BandShelf : OrderBase<MaxOrder, TypeIV, Butterworth::BandShelf>,
 							   BandShelfDescription {};
-		}  // namespace Design
-	}  // namespace Butterworth
-}  // namespace Dsp
+		} // namespace Design
+	} // namespace Butterworth
+} // namespace Dsp
 
 #endif

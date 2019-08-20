@@ -78,5 +78,5 @@ namespace OpenViBE
 			std::condition_variable m_oCondition;
 			std::thread::id m_oOwner;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

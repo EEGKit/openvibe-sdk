@@ -685,5 +685,5 @@ namespace OpenViBE
 		};
 
 		typedef IBox IStaticBoxContext;
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

@@ -31,4 +31,4 @@ namespace OpenViBE
 
 		static CString getLogDir() { return StringDirectories::getLogDir().c_str(); }
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE

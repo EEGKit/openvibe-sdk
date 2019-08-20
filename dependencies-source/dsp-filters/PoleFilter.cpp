@@ -43,10 +43,7 @@ namespace Dsp
 
 	complex_t LowPassTransform::transform(complex_t c)
 	{
-		if (c == infinity())
-		{
-			return complex_t(-1, 0);
-		}
+		if (c == infinity()) { return complex_t(-1, 0); }
 
 		// frequency transform
 		c = f * c; 
@@ -88,10 +85,7 @@ namespace Dsp
 
 	complex_t HighPassTransform::transform(complex_t c)
 	{
-		if (c == infinity())
-		{
-			return complex_t(1, 0);
-		}
+		if (c == infinity()) { return complex_t(1, 0); }
 
 		// frequency transform
 		c = f * c; 
@@ -335,4 +329,4 @@ namespace Dsp
 
 		return ComplexPair(u / d, v / d);
 	}
-}  // namespace Dsp
+} // namespace Dsp

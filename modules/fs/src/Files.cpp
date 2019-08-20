@@ -50,10 +50,7 @@ bool recursiveCopy(const boost::filesystem::path& source, const boost::filesyste
 	}
 	else if (is_regular_file(source))
 	{
-		try
-		{
-			boost::filesystem::copy(source, target);
-		}
+		try { boost::filesystem::copy(source, target); }
 		catch (...) { return false; }
 	}
 	else { return false; }

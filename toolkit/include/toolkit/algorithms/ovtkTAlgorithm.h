@@ -109,4 +109,4 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::IAlgorithmContext* m_pAlgorithmContext = nullptr;
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

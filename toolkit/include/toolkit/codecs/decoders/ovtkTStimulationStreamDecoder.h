@@ -71,6 +71,6 @@ namespace OpenViBEToolkit
 
 		virtual ~TStimulationDecoder() { this->uninitialize(); }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

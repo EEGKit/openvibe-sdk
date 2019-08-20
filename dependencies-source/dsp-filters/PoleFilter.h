@@ -209,6 +209,6 @@ namespace Dsp
 		double a2  = 0;
 		double b2  = 0;
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

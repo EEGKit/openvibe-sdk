@@ -14,7 +14,7 @@ namespace OpenViBE
 
 		class IAlgorithm;
 		class IAlgorithmDesc;
-	}  // namespace Plugins
+	} // namespace Plugins
 
 	namespace Kernel
 	{
@@ -196,5 +196,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginManager)
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

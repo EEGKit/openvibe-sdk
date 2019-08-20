@@ -51,5 +51,5 @@ namespace OpenViBE
 			//@}
 			_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Plugins_PluginObject)
 		};
-	}  // namespace Plugins
-}  // namespace OpenViBE
+	} // namespace Plugins
+} // namespace OpenViBE

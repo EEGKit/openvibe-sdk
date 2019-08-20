@@ -72,5 +72,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_PairwiseStrategy_PKPDDesc)
 		};
-	}
-}
+	} // namespace Classification
+} // namespace OpenViBEPlugins

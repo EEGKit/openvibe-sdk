@@ -67,4 +67,4 @@ namespace OpenViBE
 
 		IMemoryBuffer* m_pMemoryBufferImpl = nullptr; //!< Internal implementation
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE

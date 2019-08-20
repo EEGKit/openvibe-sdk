@@ -48,49 +48,49 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				rBox.setInputType(ui32Index, OV_TypeId_Signal);
+				rBox.setInputType(index, OV_TypeId_Signal);
 				rBox.addOutput("", OV_TypeId_Signal, rBox.getUnusedInputIdentifier());
 				this->check(rBox);
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				rBox.removeOutput(ui32Index);
+				rBox.removeOutput(index);
 				this->check(rBox);
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(ui32Index, l_oTypeIdentifier);
-				rBox.setOutputType(ui32Index, l_oTypeIdentifier);
+				rBox.getInputType(index, l_oTypeIdentifier);
+				rBox.setOutputType(index, l_oTypeIdentifier);
 				return true;
 			}
 
-			bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				rBox.setOutputType(ui32Index, OV_TypeId_Signal);
+				rBox.setOutputType(index, OV_TypeId_Signal);
 				rBox.addInput("", OV_TypeId_Signal, rBox.getUnusedOutputIdentifier());
 				this->check(rBox);
 				return true;
 			}
 
-			bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				rBox.removeInput(ui32Index);
+				rBox.removeInput(index);
 				this->check(rBox);
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
-				rBox.setInputType(ui32Index, l_oTypeIdentifier);
+				rBox.getOutputType(index, l_oTypeIdentifier);
+				rBox.setInputType(index, l_oTypeIdentifier);
 				return true;
 			}
 
@@ -129,5 +129,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_IdentityDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

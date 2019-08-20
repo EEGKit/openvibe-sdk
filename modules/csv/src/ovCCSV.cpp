@@ -313,7 +313,7 @@ bool CCSVHandler::setFeatureVectorInformation(const std::vector<std::string>& ch
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
-	else if (m_IsSetInfoCalled)
+	if (m_IsSetInfoCalled)
 	{
 		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_SetInfoOnce;
@@ -570,12 +570,9 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<
 					m_LogError        = LogErrorCodes_MissingData;
 					return false;
 				}
-				else
-				{
-					// There is no more data to read
-					m_HasDataToRead = false;
-					return true;
-				}
+				// There is no more data to read
+				m_HasDataToRead = false;
+				return true;
 			}
 
 			const int64_t columnCount = std::count(lineValue.cbegin(), lineValue.cend(), ',') + 1;
@@ -821,16 +818,14 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 
 			m_Chunks.insert(m_Chunks.end(), rangeStart, samples.end());
 			const double curTime = m_Chunks.front().startTime;
-			m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }),
-								 m_Stimulations.end());
+			m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }), m_Stimulations.end());
 		}
 		else
 		{
 			m_Chunks.clear();
 			m_Chunks.push_back(samples.back());
 			const double curTime = m_Chunks.front().startTime;
-			m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }),
-								 m_Stimulations.end());
+			m_Stimulations.erase(std::remove_if(m_Stimulations.begin(), m_Stimulations.end(), [curTime](const SStimulationChunk& chunk) { return chunk.stimulationDate < curTime; }), m_Stimulations.end());
 		}
 	}
 	else
@@ -901,10 +896,7 @@ std::string CCSVHandler::getLastErrorString() { return m_LastStringError; }
 
 std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChunk>& stimulationToPrint) const
 {
-	if (stimulationToPrint.empty())
-	{
-		return std::string(2, s_Separator); // Empty columns
-	}
+	if (stimulationToPrint.empty()) { return std::string(2, s_Separator); } // Empty columns
 
 	std::array<std::string, 3> stimulations;
 
@@ -1520,7 +1512,7 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 		m_LastStringError = "First column is empty";
 		return false;
 	}
-	else if (linePart != "Time")
+	if (linePart != "Time")
 	{
 		m_LastStringError = "First column " + header[s_TimeColumnIndex] + " is not well formed";
 		return false;
@@ -1635,16 +1627,14 @@ bool CCSVHandler::parseMatrixHeader(const std::vector<std::string>& header)
 				if (labelsInDimensions[dimensionIndex][positionInCurrentDimension] != columnLabels[dimensionIndex]
 					&& filledLabel[dimensionIndex][positionInCurrentDimension])
 				{
-					m_LastStringError = "Error at column " + std::to_string(columnIndex + 1)
-										+ " for the label \"" + columnLabels[dimensionIndex]
-										+ "\" in dimension " + std::to_string(dimensionIndex + 1)
-										+ " is trying to reset label to \"" + columnLabels[dimensionIndex]
+					m_LastStringError = "Error at column " + std::to_string(columnIndex + 1) + " for the label \"" + columnLabels[dimensionIndex]
+										+ "\" in dimension " + std::to_string(dimensionIndex + 1) + " is trying to reset label to \"" + columnLabels[dimensionIndex]
 										+ "\" that have been already set to \"" + labelsInDimensions[dimensionIndex][positionInCurrentDimension] + "\"";
 					m_LogError = LogErrorCodes_WrongHeader;
 					return false;
 				}
-					// if label isn't set, set it
-				else if (!(filledLabel[dimensionIndex][positionInCurrentDimension]))
+				// if label isn't set, set it
+				if (!(filledLabel[dimensionIndex][positionInCurrentDimension]))
 				{
 					labelsInDimensions[dimensionIndex][positionInCurrentDimension] = columnLabels[dimensionIndex];
 					filledLabel[dimensionIndex][positionInCurrentDimension]        = true;

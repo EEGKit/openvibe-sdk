@@ -37,5 +37,5 @@ namespace OpenViBE
 
 			CKernelObjectFactoryHelper();
 		};
-	}  // namespace Tools
-}  // namespace OpenViBE
+	} // namespace Tools
+} // namespace OpenViBE

@@ -55,7 +55,7 @@ namespace SigProSTD
 
 		return a;
 	}
-}  // namespace SigProSTD
+} // namespace SigProSTD
 
 bool CBoxAlgorithmSignalResampling::initialize()
 {

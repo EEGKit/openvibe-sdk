@@ -38,7 +38,7 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmChannelSelectorListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getOutputType(0, l_oTypeIdentifier);
@@ -54,7 +54,7 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
 				rBox.getInputType(0, l_oTypeIdentifier);
@@ -70,10 +70,10 @@ namespace OpenViBEPlugins
 				OV_ERROR_KRF("Invalid input type [" << l_oTypeIdentifier.toString() << "] (expected Signal, Spectrum or Streamed Matrix)", OpenViBE::Kernel::ErrorType::BadInput);
 			}
 
-			bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				//we are only interested in the setting 0 and the type changes (select or reject)
-				if ((ui32Index == 0 || ui32Index == 1) && (!m_bHasUserSetName))
+				if ((index == 0 || index == 1) && (!m_bHasUserSetName))
 				{
 					OpenViBE::CString l_sChannels;
 					rBox.getSettingValue(0, l_sChannels);
@@ -166,5 +166,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ChannelSelectorDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

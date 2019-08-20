@@ -83,6 +83,6 @@ namespace OpenViBEToolkit
 		// constructor is protected, ensuring we can't instanciate a TEncoder
 		TEncoder() { }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

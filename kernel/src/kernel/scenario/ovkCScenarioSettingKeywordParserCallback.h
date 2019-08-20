@@ -18,5 +18,5 @@ namespace OpenViBE
 		private:
 			const IScenario& m_rScenario;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

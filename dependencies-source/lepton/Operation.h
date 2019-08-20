@@ -392,10 +392,7 @@ namespace Lepton
 
 		Operation* clone() const override { return new Power(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::pow(args[0], args[1]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::pow(args[0], args[1]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 

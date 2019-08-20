@@ -93,8 +93,8 @@ namespace EBML
 			unsigned char* m_pBuffer = nullptr;
 			//			bool m_bBufferShouldBeDeleted;
 		};
-	}  // namespace
-}  // namespace EBML
+	} // namespace
+} // namespace EBML
 
 CReaderNode::CReaderNode(const CIdentifier& rIdentifier, CReaderNode* pParentNode)
 	: m_pParentNode(pParentNode), m_oIdentifier(rIdentifier) { }
@@ -138,8 +138,8 @@ namespace EBML
 
 			uint64_t m_ui64TotalBytes = 0;
 		};
-	}  // namespace
-}  // namespace EBML
+	} // namespace
+} // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //

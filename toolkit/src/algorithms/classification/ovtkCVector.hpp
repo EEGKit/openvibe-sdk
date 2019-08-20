@@ -26,14 +26,14 @@ namespace OpenViBEToolkit
 
 		virtual const double* getBuffer() const { return m_rMatrix.getBuffer(); }
 
-		virtual const char* getElementLabel(const uint32_t ui32Index) const
+		virtual const char* getElementLabel(const uint32_t index) const
 		{
-			return m_rMatrix.getDimensionLabel(0, ui32Index);
+			return m_rMatrix.getDimensionLabel(0, index);
 		}
 
-		virtual bool setElementLabel(const uint32_t ui32Index, const char* sElementLabel)
+		virtual bool setElementLabel(const uint32_t index, const char* sElementLabel)
 		{
-			m_rMatrix.setDimensionLabel(0, ui32Index, sElementLabel);
+			m_rMatrix.setDimensionLabel(0, index, sElementLabel);
 			return true;
 		}
 
@@ -45,4 +45,4 @@ namespace OpenViBEToolkit
 	};
 
 	typedef TVector<IVector> CVector;
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

@@ -52,4 +52,4 @@ namespace Socket
 	};
 
 	extern Socket_API IConnectionSerial* createConnectionSerial();
-}  // namespace Socket
+} // namespace Socket

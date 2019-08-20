@@ -32,8 +32,8 @@ namespace OpenViBE
 			uint64_t m_ui64BufferSize;
 			uint64_t m_ui64AllocatedSize;
 		};
-	}  // namespace
-}  // namespace OpenViBE
+	} // namespace
+} // namespace OpenViBE
 
 // ________________________________________________________________________________________________________________
 //

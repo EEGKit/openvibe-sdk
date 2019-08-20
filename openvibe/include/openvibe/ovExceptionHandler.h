@@ -60,4 +60,4 @@ namespace OpenViBE
 			return false;
 		}
 	}
-}  // namespace OpenViBE
+} // namespace OpenViBE

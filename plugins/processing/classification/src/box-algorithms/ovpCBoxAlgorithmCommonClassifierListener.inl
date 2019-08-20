@@ -108,23 +108,23 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				//ui32Index represent the number of the class (because of rejected offset)
+				//index represent the number of the class (because of rejected offset)
 				char l_sBuffer[64];
-				sprintf(l_sBuffer, "Class %d label", ui32Index);
+				sprintf(l_sBuffer, "Class %d label", index);
 				char l_sStimulation[64];
-				sprintf(l_sStimulation, "OVTK_StimulationId_Label_%02X", ui32Index);
-				rBox.addSetting(l_sBuffer, OV_TypeId_Stimulation, l_sStimulation, 3 - 1 + getStrategySettingsCount(rBox) + ui32Index);
+				sprintf(l_sStimulation, "OVTK_StimulationId_Label_%02X", index);
+				rBox.addSetting(l_sBuffer, OV_TypeId_Stimulation, l_sStimulation, 3 - 1 + getStrategySettingsCount(rBox) + index);
 
 				//Rename input
 				return this->onInputAddedOrRemoved(rBox);
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				//First remove the removed input from settings
-				rBox.removeSetting(3 - 1 + getStrategySettingsCount(rBox) + ui32Index);
+				rBox.removeSetting(3 - 1 + getStrategySettingsCount(rBox) + index);
 
 				//Then rename the remains inputs in settings
 				for (uint32_t i = 1; i < rBox.getInputCount(); ++i)
@@ -172,10 +172,10 @@ namespace OpenViBEPlugins
 				return getStrategySettingsCount(rBox) + 3 + rBox.getInputCount() - 1;
 			}
 
-			bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				if (ui32Index == getClassifierIndex(rBox)) { return this->onAlgorithmClassifierChanged(rBox); }
-				if (ui32Index == getStrategyIndex()) { return this->onStrategyChanged(rBox); }
+				if (index == getClassifierIndex(rBox)) { return this->onAlgorithmClassifierChanged(rBox); }
+				if (index == getStrategyIndex()) { return this->onStrategyChanged(rBox); }
 				return true;
 			}
 
@@ -400,5 +400,5 @@ namespace OpenViBEPlugins
 			const uint32_t m_ui32CustomSettingBase;
 			int m_i32StrategyAmountSettings;
 		};
-	}
-}
+	} // namespace Classification
+} // namespace OpenViBEPlugins

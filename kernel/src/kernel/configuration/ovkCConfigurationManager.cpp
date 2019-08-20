@@ -39,7 +39,7 @@ namespace
 	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
 	template <class charT>
 	charT to_lower(charT c) { return std::tolower(c); }
-}  // namespace
+} // namespace
 
 namespace OpenViBE
 {
@@ -143,8 +143,8 @@ namespace OpenViBE
 			IErrorManager& m_rErrorManager;
 			IConfigurationManager& m_rConfigurationManager;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE
 
 CConfigurationManager::CConfigurationManager(const IKernelContext& rKernelContext, IConfigurationManager* pParentConfigurationManager)
 	: TKernelObject<IConfigurationManager>(rKernelContext), m_pParentConfigurationManager(pParentConfigurationManager)

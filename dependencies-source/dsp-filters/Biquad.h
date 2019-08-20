@@ -210,6 +210,6 @@ namespace Dsp
 		void setPoleZeroPair(const PoleZeroPair& pair) { BiquadBase::setPoleZeroPair(pair); }
 		void applyScale(double scale) { BiquadBase::applyScale(scale); }
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

@@ -21,7 +21,7 @@ namespace OpenViBEPlugins
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processInput(const uint32_t ui32Index) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_VotingClassifier)
@@ -63,10 +63,10 @@ namespace OpenViBEPlugins
 			CBoxAlgorithmVotingClassifierListener()
 				: m_oInputTypeIdentifier(OV_TypeId_Stimulations) { }
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oInputTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(ui32Index, l_oInputTypeIdentifier);
+				rBox.getInputType(index, l_oInputTypeIdentifier);
 				if (l_oInputTypeIdentifier == OV_TypeId_Stimulations || l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix)
 				{
 					m_oInputTypeIdentifier = l_oInputTypeIdentifier;
@@ -77,12 +77,12 @@ namespace OpenViBEPlugins
 				}
 				else
 				{
-					rBox.setInputType(ui32Index, m_oInputTypeIdentifier);
+					rBox.setInputType(index, m_oInputTypeIdentifier);
 				}
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
 				{
@@ -139,5 +139,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_VotingClassifierDesc)
 		};
-	};
-};
+	} // namespace Classification
+} // namespace OpenViBEPlugins

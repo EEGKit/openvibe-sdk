@@ -475,5 +475,5 @@ namespace Common
 		typedef TResampler<float, ResamplerStoreMode_ChannelWise> CDownsamplerCf;
 		typedef TResampler<double, ResamplerStoreMode_SampleWise> CDownsamplerSd;
 		typedef TResampler<double, ResamplerStoreMode_ChannelWise> CDownsamplerCd;
-	}  // namespace Resampler
-}  // namespace Common
+	} // namespace Resampler
+} // namespace Common

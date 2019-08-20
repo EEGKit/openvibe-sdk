@@ -80,8 +80,8 @@ namespace EBML
 			bool m_bBuffered = false;
 			vector<CWriterNode*> m_vChildren;
 		};
-	}  // namespace
-}  // namespace EBML
+	} // namespace
+} // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
@@ -179,8 +179,8 @@ namespace EBML
 
 			CWriter();
 		};
-	}  // namespace
-}  // namespace EBML
+	} // namespace
+} // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //

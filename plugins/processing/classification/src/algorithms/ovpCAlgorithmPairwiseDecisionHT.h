@@ -69,5 +69,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_PairwiseDecision_HTDesc)
 		};
-	}
-}
+	} // namespace Classification
+} // namespace OpenViBEPlugins

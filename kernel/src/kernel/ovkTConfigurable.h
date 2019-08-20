@@ -112,5 +112,5 @@ namespace OpenViBE
 
 			std::map<CIdentifier, std::pair<bool, IParameter*>> m_vParameter;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

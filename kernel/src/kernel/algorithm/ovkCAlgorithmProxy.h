@@ -74,5 +74,5 @@ namespace OpenViBE
 			Plugins::IAlgorithm& m_rAlgorithm;
 			bool m_bIsInitialized = false;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

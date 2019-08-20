@@ -110,7 +110,7 @@ public:
 
 	void push_op(uint64_t ui64Operator);
 	void push_value(double f64Value);
-	void push_var(uint32_t ui32Index);
+	void push_var(uint32_t index);
 
 	/**
 	* Returns the tree's category.

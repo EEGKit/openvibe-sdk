@@ -223,4 +223,4 @@ namespace Dsp
 	Biquad::Biquad(const BiquadPoleState& bps) { setPoleZeroForm(bps); }
 
 	//------------------------------------------------------------------------------
-}  // namespace Dsp
+} // namespace Dsp

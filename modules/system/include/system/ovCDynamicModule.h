@@ -269,4 +269,4 @@ namespace System
 			return *symbol != nullptr;
 		}
 	};
-}  // namespace System
+} // namespace System

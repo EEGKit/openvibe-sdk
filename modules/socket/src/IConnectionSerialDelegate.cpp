@@ -33,4 +33,4 @@ namespace Socket
 	};
 
 	IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) { return new CConnectionSerialDelegate(oConnectionSerialDelegate); }
-}  // namespace Socket
+} // namespace Socket

@@ -306,8 +306,8 @@ namespace Dsp
 			template <int MaxOrder>
 			struct BandStop : OrderBase<MaxOrder, TypeII, Elliptic::BandStop>,
 							  BandStopDescription {};
-		}  // namespace Design
-	}  // namespace Elliptic
-}  // namespace Dsp
+		} // namespace Design
+	} // namespace Elliptic
+} // namespace Dsp
 
 #endif

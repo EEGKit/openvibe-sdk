@@ -94,10 +94,7 @@ namespace Dsp
 					addPoleZeroConjugatePairs(c, infinity());
 				}
 
-				if (numPoles & 1)
-				{
-					add(solver.root()[pairs].real(), infinity());
-				}
+				if (numPoles & 1) { add(solver.root()[pairs].real(), infinity()); }
 			}
 		}
 
@@ -147,10 +144,7 @@ namespace Dsp
 					addPoleZeroConjugatePairs(p, z);
 				}
 
-				if (numPoles & 1)
-				{
-					add(poles.root()[pairs].real(), zeros.root()[pairs].real());
-				}
+				if (numPoles & 1) { add(poles.root()[pairs].real(), zeros.root()[pairs].real()); }
 			}
 		}
 
@@ -230,5 +224,5 @@ namespace Dsp
 
 			setLayout(m_digitalProto);
 		}
-	}  // namespace Bessel
-}  // namespace Dsp
+	} // namespace Bessel
+} // namespace Dsp

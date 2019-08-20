@@ -34,7 +34,7 @@ namespace
 		strncpy(dst, src1, src2 - src1);
 		dst[src2 - src1] = '\0';
 	}
-}  // namespace
+} // namespace
 CStreamedMatrixDecoder::CStreamedMatrixDecoder() {}
 
 // ________________________________________________________________________________________________________________

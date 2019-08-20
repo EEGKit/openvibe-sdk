@@ -760,6 +760,6 @@ void zero (int samples,
 		Value m_slope [Channels];
 		Value m_prev [Channels];
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

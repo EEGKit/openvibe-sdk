@@ -157,4 +157,4 @@ namespace
 		uint64_t m_ui64SettingCountHash = 0;
 		ITypeManager& m_TypeManager;
 	};
-}  // namespace
+} // namespace

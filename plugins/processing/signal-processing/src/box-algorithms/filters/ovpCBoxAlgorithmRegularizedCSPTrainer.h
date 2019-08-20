@@ -69,13 +69,13 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmRegularizedCSPTrainerListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				std::stringstream l_sName;
 
-				l_sName << "Signal condition " << ui32Index;
+				l_sName << "Signal condition " << index;
 
-				rBox.setInputName(ui32Index, l_sName.str().c_str());
+				rBox.setInputName(index, l_sName.str().c_str());
 
 				return true;
 			}
@@ -130,7 +130,7 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_RegularizedCSPTrainerDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

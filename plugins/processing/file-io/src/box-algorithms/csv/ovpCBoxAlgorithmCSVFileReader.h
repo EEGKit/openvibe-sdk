@@ -71,10 +71,10 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmCSVFileReaderListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
+				rBox.getOutputType(index, l_oTypeIdentifier);
 				if (l_oTypeIdentifier == OV_TypeId_Spectrum)
 				{
 					rBox.setSettingName(3, "Unused parameter");
@@ -102,7 +102,7 @@ namespace OpenViBEPlugins
 				}
 				else
 				{
-					rBox.setOutputType(ui32Index, OV_TypeId_Signal);
+					rBox.setOutputType(index, OV_TypeId_Signal);
 					rBox.setSettingName(3, "Samples per buffer");
 					rBox.setSettingValue(3, "32");
 
@@ -154,5 +154,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_CSVFileReaderDesc)
 		};
-	};
-};
+	} // namespace FileIO
+} // namespace OpenViBEPlugins

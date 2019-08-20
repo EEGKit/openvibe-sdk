@@ -54,7 +54,7 @@ namespace OpenViBEToolkit
 
 		std::vector<ISignalTrial*> m_vSignalTrial;
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 // ________________________________________________________________________________________________________________
 //
@@ -250,4 +250,4 @@ namespace OpenViBEToolkit
 
 	// ________________________________________________________________________________________________________________
 	//
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

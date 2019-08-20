@@ -26,4 +26,4 @@ namespace EBML
 
 		IWriterHelper* m_pWriterHelperImplementation = nullptr;
 	};
-}  // namespace EBML
+} // namespace EBML

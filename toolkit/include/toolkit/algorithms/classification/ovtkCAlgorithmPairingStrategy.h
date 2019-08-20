@@ -65,4 +65,4 @@ namespace OpenViBEToolkit
 
 		_IsDerivedFromClass_(OpenViBEToolkit::CAlgorithmClassifierDesc, OVTK_ClassId_Algorithm_PairingStrategyDesc)
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

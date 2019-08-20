@@ -85,5 +85,5 @@ namespace OpenViBE
 			EParameterType m_eParameterType;
 			CIdentifier m_oSubTypeIdentifier = OV_UndefinedIdentifier;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

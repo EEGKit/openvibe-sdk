@@ -104,5 +104,5 @@ namespace OpenViBE
 			std::vector<SIOStream> m_Outputs;
 			std::vector<SSetting> m_Settings;
 		};
-	}  // namespace Metabox
-}  // namespace OpenViBE
+	} // namespace Metabox
+} // namespace OpenViBE

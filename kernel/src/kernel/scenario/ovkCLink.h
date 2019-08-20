@@ -43,5 +43,5 @@ namespace OpenViBE
 			uint32_t m_ui32TargetInputIndex          = 0;
 			CIdentifier m_oTargetBoxInputIdentifier  = OV_UndefinedIdentifier;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

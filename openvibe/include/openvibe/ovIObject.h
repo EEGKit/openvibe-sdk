@@ -91,7 +91,7 @@ namespace OpenViBE
 
 		virtual ~IObject() { }
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE
 
 namespace OpenViBE
 {
@@ -101,4 +101,4 @@ namespace OpenViBE
 
 		_IsDerivedFromClass_Final_(OpenViBE::IObject, OV_ClassId_Object)
 	};
-};
+} // namespace OpenViBE

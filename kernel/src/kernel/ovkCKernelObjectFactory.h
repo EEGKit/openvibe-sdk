@@ -25,5 +25,5 @@ namespace OpenViBE
 
 			std::mutex m_oMutex;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

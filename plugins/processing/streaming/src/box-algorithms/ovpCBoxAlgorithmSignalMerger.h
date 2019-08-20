@@ -32,12 +32,12 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmSignalMergerListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				char l_sInputName[1024];
-				sprintf(l_sInputName, "Input %i", ui32Index + 1);
-				rBox.setInputName(ui32Index, l_sInputName);
-				rBox.setInputType(ui32Index, OV_TypeId_Signal);
+				sprintf(l_sInputName, "Input %i", index + 1);
+				rBox.setInputName(index, l_sInputName);
+				rBox.setInputType(index, OV_TypeId_Signal);
 				return true;
 			}
 
@@ -75,5 +75,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalMergerDesc)
 		};
-	}  // namespace Streaming
-}  // namespace OpenViBEPlugins
+	} // namespace Streaming
+} // namespace OpenViBEPlugins

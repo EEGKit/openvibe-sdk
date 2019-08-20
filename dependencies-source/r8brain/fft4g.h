@@ -325,10 +325,7 @@ namespace r8b
 					cftbsub(n, a, w);
 				}
 			}
-			else if (n == 4)
-			{
-				cftfsub(n, a, w);
-			}
+			else if (n == 4) { cftfsub(n, a, w); }
 		}
 
 		static void rdft(int n, int isgn, FPType* a, int* ip, FPType* w)
@@ -353,10 +350,7 @@ namespace r8b
 					cftfsub(n, a, w);
 					rftfsub(n, a, nc, w + nw);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 				double xi = a[0] - a[1];
 				a[0] += a[1];
 				a[1] = xi;
@@ -371,10 +365,7 @@ namespace r8b
 					bitrv2(n, ip + 2, a);
 					cftbsub(n, a, w);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 			}
 		}
 
@@ -411,10 +402,7 @@ namespace r8b
 					bitrv2(n, ip + 2, a);
 					cftbsub(n, a, w);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 			}
 			dctsub(n, a, nc, w + nw);
 			if (isgn >= 0)
@@ -425,10 +413,7 @@ namespace r8b
 					cftfsub(n, a, w);
 					rftfsub(n, a, nc, w + nw);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 				xr = a[0] - a[1];
 				a[0] += a[1];
 				for (j = 2; j < n; j += 2)
@@ -473,10 +458,7 @@ namespace r8b
 					bitrv2(n, ip + 2, a);
 					cftbsub(n, a, w);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 			}
 			dstsub(n, a, nc, w + nw);
 			if (isgn >= 0)
@@ -487,10 +469,7 @@ namespace r8b
 					cftfsub(n, a, w);
 					rftfsub(n, a, nc, w + nw);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 				xr = a[0] - a[1];
 				a[0] += a[1];
 				for (j = 2; j < n; j += 2)
@@ -548,10 +527,7 @@ namespace r8b
 					cftfsub(m, a, w);
 					rftfsub(m, a, nc, w + nw);
 				}
-				else if (m == 4)
-				{
-					cftfsub(m, a, w);
-				}
+				else if (m == 4) { cftfsub(m, a, w); }
 				a[n - 1] = a[0] - a[1];
 				a[1]     = a[0] + a[1];
 				for (j = m - 2; j >= 2; j -= 2)
@@ -570,10 +546,7 @@ namespace r8b
 						cftfsub(m, t, w);
 						rftfsub(m, t, nc, w + nw);
 					}
-					else if (m == 4)
-					{
-						cftfsub(m, t, w);
-					}
+					else if (m == 4) { cftfsub(m, t, w); }
 					a[n - l] = t[0] - t[1];
 					a[l]     = t[0] + t[1];
 					k        = 0;
@@ -648,10 +621,7 @@ namespace r8b
 					cftfsub(m, a, w);
 					rftfsub(m, a, nc, w + nw);
 				}
-				else if (m == 4)
-				{
-					cftfsub(m, a, w);
-				}
+				else if (m == 4) { cftfsub(m, a, w); }
 				a[n - 1] = a[1] - a[0];
 				a[1]     = a[0] + a[1];
 				for (j = m - 2; j >= 2; j -= 2)
@@ -670,10 +640,7 @@ namespace r8b
 						cftfsub(m, t, w);
 						rftfsub(m, t, nc, w + nw);
 					}
-					else if (m == 4)
-					{
-						cftfsub(m, t, w);
-					}
+					else if (m == 4) { cftfsub(m, t, w); }
 					a[n - l] = t[1] - t[0];
 					a[l]     = t[0] + t[1];
 					k        = 0;

@@ -186,5 +186,5 @@ namespace OpenViBEPlugins
 
 			return true;
 		}
-	};
-};
+	} // namespace FeatureExtraction
+} // namespace OpenViBEPlugins

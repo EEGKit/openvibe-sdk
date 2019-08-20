@@ -167,6 +167,6 @@ namespace Dsp
 	private:
 		Cascade::Stage m_stages[MaxStages];
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

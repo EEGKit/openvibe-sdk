@@ -57,4 +57,4 @@ namespace OpenViBE
 
 		IStimulationSet* m_pStimulationSetImpl = nullptr; //!< Internal implementation
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE

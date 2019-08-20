@@ -42,5 +42,5 @@ namespace OpenViBE
 
 			std::map<ELogLevel, bool> m_vActiveLevel;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

@@ -16,8 +16,8 @@ namespace OpenViBEToolkit
 		bool setSize(const uint32_t ui32Size) override;
 		double* getBuffer() override;
 		const double* getBuffer() const override;
-		const char* getElementLabel(const uint32_t ui32Index) const override;
-		bool setElementLabel(const uint32_t ui32Index, const char* sElementLabel) override;
+		const char* getElementLabel(const uint32_t index) const override;
+		bool setElementLabel(const uint32_t index, const char* sElementLabel) override;
 		double getLabel() const override;
 		bool setLabel(const double f64Label) override;
 
@@ -37,8 +37,8 @@ namespace OpenViBEToolkit
 		uint32_t getFeatureVectorCount() const override;
 		bool setFeatureVectorCount(const uint32_t ui32FeatureVectorCount) override;
 		bool addFeatureVector(const IFeatureVector& rFeatureVector) override;
-		IFeatureVector& getFeatureVector(const uint32_t ui32Index) override;
-		const IFeatureVector& getFeatureVector(const uint32_t ui32Index) const override;
+		IFeatureVector& getFeatureVector(const uint32_t index) override;
+		const IFeatureVector& getFeatureVector(const uint32_t index) const override;
 		uint32_t getLabelCount() const override;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVectorSet, OV_UndefinedIdentifier)
@@ -48,4 +48,4 @@ namespace OpenViBEToolkit
 		const OpenViBE::IMatrix& m_rMatrix;
 		std::map<uint32_t, CInternalFeatureVector> m_vFeatureVector;
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

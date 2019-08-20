@@ -67,4 +67,4 @@ namespace Socket
 
 		SConnectionDelegate m_oConnectionDelegate;
 	};
-}  // namespace Socket
+} // namespace Socket

@@ -42,7 +42,7 @@ namespace OpenViBE
 			//BoxModification_InputTypeChanged,
 			//BoxModification_OutputTypeChanged,
 		};
-	}  // namespace Kernel
+	} // namespace Kernel
 
 	// for backward compatibility
 	typedef Kernel::IMessageClock CMessageClock;
@@ -288,5 +288,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_BoxListener)
 		};
-	}  // namespace Plugins
-}  // namespace OpenViBE
+	} // namespace Plugins
+} // namespace OpenViBE

@@ -83,6 +83,6 @@ namespace OpenViBEToolkit
 
 		virtual ~TSpectrumEncoder() { this->uninitialize(); }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

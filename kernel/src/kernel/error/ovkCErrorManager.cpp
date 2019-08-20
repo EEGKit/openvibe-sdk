@@ -57,8 +57,8 @@ namespace OpenViBE
 			std::string m_Description;
 			std::string m_Location;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE
 
 // Error manager implementation
 namespace OpenViBE
@@ -110,5 +110,5 @@ namespace OpenViBE
 			std::lock_guard<std::mutex> lock(m_ManagerGuard);
 			return (m_TopError ? m_TopError->getErrorType() : ErrorType::NoErrorFound);
 		}
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

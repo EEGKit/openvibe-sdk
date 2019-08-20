@@ -207,6 +207,6 @@ namespace Dsp
 	protected:
 		ChannelsState<Channels, typename FilterClass::template State<StateType>> m_state;
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

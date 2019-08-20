@@ -104,6 +104,6 @@ namespace OpenViBEToolkit
 
 		virtual bool process() { return m_pCodec->process(); }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

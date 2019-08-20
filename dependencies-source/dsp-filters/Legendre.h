@@ -377,8 +377,8 @@ namespace Dsp
 			template <int MaxOrder>
 			struct BandStop : OrderBase<MaxOrder, TypeII, Legendre::BandStop>,
 							  BandStopDescription {};
-		}  // namespace Design
-	}  // namespace Legendre
-}  // namespace Dsp
+		} // namespace Design
+	} // namespace Legendre
+} // namespace Dsp
 
 #endif

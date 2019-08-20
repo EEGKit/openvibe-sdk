@@ -116,7 +116,7 @@ namespace
 		return OV_UndefinedIdentifier;
 	}
 	*/
-}  // namespace
+} // namespace
 
 //___________________________________________________________________//
 //                                                                   //

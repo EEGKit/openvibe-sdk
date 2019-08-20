@@ -86,7 +86,7 @@ namespace
 		OpenViBE::CString m_sValue;
 		bool m_bMod = false;
 	};
-}  // namespace
+} // namespace
 
 
 namespace OpenViBE
@@ -1067,7 +1067,7 @@ namespace OpenViBE
 
 			CIdentifier getUnusedOutputIdentifier(const CIdentifier& suggestedIdentifier = OV_UndefinedIdentifier) const { return this->getUnusedInterfacorIdentifier(Output); }
 
-			virtual bool addSetting(const CString& rsName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const uint32_t ui32Index, const bool bModifiability, const CIdentifier& rIdentifier, const bool bNotify)
+			virtual bool addSetting(const CString& rsName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const uint32_t index, const bool bModifiability, const CIdentifier& rIdentifier, const bool bNotify)
 			{
 				CString l_sValue(sDefaultValue);
 				if (this->getTypeManager().isEnumeration(rTypeIdentifier))
@@ -1104,26 +1104,26 @@ namespace OpenViBE
 				s.m_bMod            = bModifiability;
 				s.m_oIdentifier     = rIdentifier;
 
-				uint32_t l_ui32Index = ui32Index;
+				uint32_t l_ui32Index = index;
 
 
 				uint32_t l_ui32InsertLocation;
 
-				if (ui32Index == OV_Value_UndefinedIndexUInt || ui32Index == uint32_t(m_Interfacors[Setting].size()))
+				if (index == OV_Value_UndefinedIndexUInt || index == uint32_t(m_Interfacors[Setting].size()))
 				{
 					m_Interfacors[Setting].push_back(std::shared_ptr<CSetting>(new CSetting(s)));
 					l_ui32InsertLocation = (uint32_t(m_Interfacors[Setting].size())) - 1;
 				}
 				else
 				{
-					OV_ERROR_UNLESS_KRF(ui32Index <= uint32_t(m_Interfacors[Setting].size()),
-										"Tried to push '" << rsName << "' to slot " << ui32Index << " with the array size being " << uint32_t(m_Interfacors[Setting].size()),
+					OV_ERROR_UNLESS_KRF(index <= uint32_t(m_Interfacors[Setting].size()),
+										"Tried to push '" << rsName << "' to slot " << index << " with the array size being " << uint32_t(m_Interfacors[Setting].size()),
 										ErrorType::OutOfBound);
 
 					auto l_it = m_Interfacors[Setting].begin();
 					l_it += l_ui32Index;
 					m_Interfacors[Setting].insert(l_it, std::shared_ptr<CSetting>(new CSetting(s)));
-					l_ui32InsertLocation = ui32Index;
+					l_ui32InsertLocation = index;
 				}
 
 				if (s.m_oIdentifier != OV_UndefinedIdentifier)
@@ -1535,11 +1535,11 @@ namespace OpenViBE
 			virtual void enableNotification() { m_bIsNotificationActive = true; }
 			virtual void disableNotification() { m_bIsNotificationActive = false; }
 
-			virtual void notify(const EBoxModification eBoxModificationType, const uint32_t ui32Index)
+			virtual void notify(const EBoxModification eBoxModificationType, const uint32_t index)
 			{
 				if (m_pBoxListener && !m_bIsNotifyingDescriptor && m_bIsNotificationActive)
 				{
-					CBoxListenerContext l_oContext(this->getKernelContext(), *this, ui32Index);
+					CBoxListenerContext l_oContext(this->getKernelContext(), *this, index);
 					m_bIsNotifyingDescriptor = true;
 					m_pBoxListener->process(l_oContext, eBoxModificationType);
 					m_bIsNotifyingDescriptor = false;
@@ -1591,5 +1591,5 @@ namespace OpenViBE
 		private:
 			std::map<BoxInterfacorType, std::vector<std::shared_ptr<CInterfacor>>> m_Interfacors;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

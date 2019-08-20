@@ -100,5 +100,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObjectDesc, OV_ClassId_Plugins_BoxAlgorithmDesc)
 		};
-	}  // namespace Plugins
-}  // namespace OpenViBE
+	} // namespace Plugins
+} // namespace OpenViBE

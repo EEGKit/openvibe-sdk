@@ -471,4 +471,4 @@ namespace Socket
 	};
 
 	IConnectionSerial* createConnectionSerial() { return new CConnectionSerial(); }
-}  // namespace Socket
+} // namespace Socket

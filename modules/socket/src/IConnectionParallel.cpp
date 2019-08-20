@@ -276,4 +276,4 @@ namespace Socket
 	};
 
 	IConnectionParallel* createConnectionParallel() { return new CConnectionParallel(); }
-}  // namespace Socket
+} // namespace Socket

@@ -379,8 +379,8 @@ namespace Dsp
 			template <int MaxOrder>
 			struct BandShelf : OrderBase<MaxOrder, TypeIV, ChebyshevI::BandShelf>,
 							   BandShelfDescription {};
-		}  // namespace Design
-	}  // namespace ChebyshevI
-}  // namespace Dsp
+		} // namespace Design
+	} // namespace ChebyshevI
+} // namespace Dsp
 
 #endif

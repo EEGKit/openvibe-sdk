@@ -56,6 +56,6 @@ namespace OpenViBEToolkit
 
 		virtual ~TFeatureVectorDecoder() { this->uninitialize(); }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

@@ -21,7 +21,7 @@ namespace OpenViBEToolkit
 
 			OVTK_API bool saveToTextFile(const OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename, uint32_t ui32Precision = 6);
 			OVTK_API bool loadFromTextFile(OpenViBE::IMatrix& rMatrix, const OpenViBE::CString& sFilename);
-		}  // namespace Matrix
+		} // namespace Matrix
 
 		namespace MatrixManipulation
 		{
@@ -41,6 +41,6 @@ namespace OpenViBEToolkit
 			}
 
 			inline bool clearContent(OpenViBE::IMatrix& rMatrix) { return Matrix::clearContent(rMatrix); }
-		}  // namespace MatrixManipulation
-	}  // namespace Tools
-}  // namespace OpenViBEToolkit
+		} // namespace MatrixManipulation
+	} // namespace Tools
+} // namespace OpenViBEToolkit

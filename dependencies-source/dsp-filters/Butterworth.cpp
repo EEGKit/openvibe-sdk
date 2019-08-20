@@ -62,10 +62,7 @@ namespace Dsp
 					addPoleZeroConjugatePairs(c, infinity());
 				}
 
-				if (numPoles & 1)
-				{
-					add(-1, infinity());
-				}
+				if (numPoles & 1) { add(-1, infinity()); }
 			}
 		}
 
@@ -99,10 +96,7 @@ namespace Dsp
 					addPoleZeroConjugatePairs(std::polar(gp, theta), std::polar(gz, theta));
 				}
 
-				if (numPoles & 1)
-				{
-					add(gp, gz);
-				}
+				if (numPoles & 1) { add(gp, gz); }
 			}
 		}
 
@@ -212,5 +206,5 @@ namespace Dsp
 
 			setLayout(m_digitalProto);
 		}
-	}  // namespace Butterworth
-}  // namespace Dsp
+	} // namespace Butterworth
+} // namespace Dsp

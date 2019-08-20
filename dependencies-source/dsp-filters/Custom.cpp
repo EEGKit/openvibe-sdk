@@ -60,5 +60,5 @@ namespace Dsp
 			setTwoPole(pole, zero, std::conj(pole), std::conj(zero));
 			applyScale(scale);
 		}
-	}  // namespace Custom
-}  // namespace Dsp
+	} // namespace Custom
+} // namespace Dsp

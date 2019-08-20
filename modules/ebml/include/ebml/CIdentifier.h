@@ -145,4 +145,4 @@ namespace EBML
 
 		uint64_t m_ui64Identifier = 0; ///< The 64 bits value of this identifier
 	};
-}  // namespace EBML
+} // namespace EBML

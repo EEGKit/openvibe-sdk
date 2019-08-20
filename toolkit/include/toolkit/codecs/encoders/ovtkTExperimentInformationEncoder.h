@@ -124,6 +124,6 @@ namespace OpenViBEToolkit
 
 		virtual ~TExperimentInformationEncoder() { this->uninitialize(); }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

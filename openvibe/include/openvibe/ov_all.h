@@ -117,8 +117,8 @@ namespace OpenViBE
 		// Backward compatibility
 		typedef Kernel::IBox IStaticBoxContext;
 		typedef Kernel::IBoxIO IDynamicBoxContext;
-	};
-};
+	} // namespace Plugins
+} // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
@@ -143,14 +143,14 @@ namespace OpenViBE
 		{ \
 			return true; \
 		} \
-		OVP_API bool onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext, uint32_t ui32Index, OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) \
+		OVP_API bool onGetPluginObjectDescription(const OpenViBE::Kernel::IPluginModuleContext& rPluginModuleContext, uint32_t index, OpenViBE::Plugins::IPluginObjectDesc*& rpPluginObjectDescription) \
 		{ \
-			if(ui32Index>=g_descriptors.size()) \
+			if(index>=g_descriptors.size()) \
 			{ \
 				rpPluginObjectDescription=NULL; \
 				return false; \
 			} \
-			rpPluginObjectDescription=g_descriptors[ui32Index].get(); \
+			rpPluginObjectDescription=g_descriptors[index].get(); \
 			return true; \
 		} \
 	}

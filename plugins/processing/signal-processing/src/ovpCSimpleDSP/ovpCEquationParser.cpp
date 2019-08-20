@@ -38,13 +38,10 @@ namespace
 	std::string find_and_replace(std::string s, const std::string& f, const std::string& r)
 	{
 		size_t i;
-		while ((i = s.find(f)) != std::string::npos)
-		{
-			s.replace(i, f.length(), r);
-		}
+		while ((i = s.find(f)) != std::string::npos) { s.replace(i, f.length(), r); }
 		return s;
 	}
-}  // namespace
+} // namespace
 
 functionPointer CEquationParser::m_pFunctionTable[] =
 {
@@ -331,10 +328,10 @@ void CEquationParser::push_value(double f64Value)
 	(*(m_pFunctionContextList++)).m_f64DirectValue = f64Value;
 }
 
-void CEquationParser::push_var(uint32_t ui32Index)
+void CEquationParser::push_var(uint32_t index)
 {
 	*(m_pFunctionList++)                            = op_loadVar;
-	(*(m_pFunctionContextList++)).m_ppIndirectValue = &m_ppVariable[ui32Index];
+	(*(m_pFunctionContextList++)).m_ppIndirectValue = &m_ppVariable[index];
 }
 
 void CEquationParser::push_op(uint64_t ui64Operator)

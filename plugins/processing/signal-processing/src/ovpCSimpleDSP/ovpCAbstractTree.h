@@ -306,9 +306,9 @@ class CAbstractTreeVariableNode : public CAbstractTreeNode
 {
 public:
 
-	explicit CAbstractTreeVariableNode(uint32_t ui32Index)
+	explicit CAbstractTreeVariableNode(uint32_t index)
 		: CAbstractTreeNode(true, false)
-		  , m_ui32Index(ui32Index) { }
+		  , m_ui32Index(index) { }
 
 	~CAbstractTreeVariableNode() override { }
 

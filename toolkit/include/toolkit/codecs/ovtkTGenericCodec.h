@@ -290,46 +290,46 @@ namespace OpenViBEToolkit
 			if (ui32ValidTypeFlag & Type_Covariance) m_vAllowedTypeIdentifier[OV_TypeId_CovarianceMatrix] = true;
 		}
 
-		bool isValidInputType(const OpenViBE::CIdentifier& rTypeIdentifier, uint32_t ui32Index)
+		bool isValidInputType(const OpenViBE::CIdentifier& rTypeIdentifier, uint32_t index)
 		{
 			return m_vAllowedTypeIdentifier[rTypeIdentifier];
 			//			return (rTypeIdentifier==OV_TypeId_Signal || rTypeIdentifier==OV_TypeId_Spectrum);
 		}
 
-		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
+		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index)
 		{
 			OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-			rBox.getInputType(ui32Index, l_oTypeIdentifier);
-			if (this->isValidInputType(l_oTypeIdentifier, ui32Index))
+			rBox.getInputType(index, l_oTypeIdentifier);
+			if (this->isValidInputType(l_oTypeIdentifier, index))
 			{
-				rBox.setOutputType(ui32Index, l_oTypeIdentifier);
+				rBox.setOutputType(index, l_oTypeIdentifier);
 			}
 			else
 			{
-				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
-				rBox.setInputType(ui32Index, l_oTypeIdentifier);
+				rBox.getOutputType(index, l_oTypeIdentifier);
+				rBox.setInputType(index, l_oTypeIdentifier);
 			}
 			return true;
 		}
 
-		bool isValidOutputType(const OpenViBE::CIdentifier& rTypeIdentifier, uint32_t ui32Index)
+		bool isValidOutputType(const OpenViBE::CIdentifier& rTypeIdentifier, uint32_t index)
 		{
 			return m_vAllowedTypeIdentifier[rTypeIdentifier];
 			//			return (rTypeIdentifier==OV_TypeId_Signal || rTypeIdentifier==OV_TypeId_Spectrum);
 		}
 
-		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index)
+		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index)
 		{
 			OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-			rBox.getOutputType(ui32Index, l_oTypeIdentifier);
-			if (this->isValidOutputType(l_oTypeIdentifier, ui32Index))
+			rBox.getOutputType(index, l_oTypeIdentifier);
+			if (this->isValidOutputType(l_oTypeIdentifier, index))
 			{
-				rBox.setInputType(ui32Index, l_oTypeIdentifier);
+				rBox.setInputType(index, l_oTypeIdentifier);
 			}
 			else
 			{
-				rBox.getInputType(ui32Index, l_oTypeIdentifier);
-				rBox.setOutputType(ui32Index, l_oTypeIdentifier);
+				rBox.getInputType(index, l_oTypeIdentifier);
+				rBox.setOutputType(index, l_oTypeIdentifier);
 			}
 			return true;
 		}
@@ -340,4 +340,4 @@ namespace OpenViBEToolkit
 
 		std::map<OpenViBE::CIdentifier, bool> m_vAllowedTypeIdentifier;
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

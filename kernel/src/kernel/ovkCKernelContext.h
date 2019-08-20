@@ -107,5 +107,5 @@ namespace OpenViBE
 			mutable ILogManager* m_pLogManager                     = nullptr;
 			mutable IErrorManager* m_pErrorManager                 = nullptr;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

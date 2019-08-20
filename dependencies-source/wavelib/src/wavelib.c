@@ -372,10 +372,7 @@ static void wconv(wt_object wt, double* sig, int N, double* filt, int L, double*
 			conv_fft(wt->cobj, sig, filt, oup);
 			free_conv(wt->cobj);
 		}
-		else
-		{
-			conv_fft(wt->cobj, sig, filt, oup);
-		}
+		else { conv_fft(wt->cobj, sig, filt, oup); }
 	}
 	else
 	{

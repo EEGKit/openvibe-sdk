@@ -71,23 +71,23 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmZeroCrossingDetectorListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(ui32Index, l_oTypeIdentifier);
-				return this->onConnectorTypeChanged(rBox, ui32Index, l_oTypeIdentifier, false);
+				rBox.getInputType(index, l_oTypeIdentifier);
+				return this->onConnectorTypeChanged(rBox, index, l_oTypeIdentifier, false);
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
-				return this->onConnectorTypeChanged(rBox, ui32Index, l_oTypeIdentifier, true);
+				rBox.getOutputType(index, l_oTypeIdentifier);
+				return this->onConnectorTypeChanged(rBox, index, l_oTypeIdentifier, true);
 			}
 
-			virtual bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index, const OpenViBE::CIdentifier& rTypeIdentifier, bool bOutputChanged)
+			virtual bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index, const OpenViBE::CIdentifier& rTypeIdentifier, bool bOutputChanged)
 			{
-				if (ui32Index == 0)
+				if (index == 0)
 				{
 					if (rTypeIdentifier == OV_TypeId_Signal)
 					{
@@ -117,11 +117,11 @@ namespace OpenViBEPlugins
 						}
 					}
 				}
-				if (ui32Index == 1)
+				if (index == 1)
 				{
 					rBox.setOutputType(1, OV_TypeId_Stimulations);
 				}
-				if (ui32Index == 2)
+				if (index == 2)
 				{
 					rBox.setOutputType(2, OV_TypeId_StreamedMatrix);
 				}
@@ -169,5 +169,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ZeroCrossingDetectorDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

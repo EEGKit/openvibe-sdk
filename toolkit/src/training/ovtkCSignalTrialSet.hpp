@@ -12,7 +12,7 @@ namespace OpenViBEToolkit
 		bool addSignalTrial(ISignalTrial& rSignalTrial) override;
 		bool clear() override;
 		uint32_t getSignalTrialCount() const override;
-		ISignalTrial& getSignalTrial(uint32_t ui32Index) const override;
+		ISignalTrial& getSignalTrial(uint32_t index) const override;
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::ISignalTrialSet, OVTK_ClassId_)
 
@@ -22,4 +22,4 @@ namespace OpenViBEToolkit
 	};
 
 	extern OVTK_API ISignalTrialSet* createSignalTrialSet();
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

@@ -49,7 +49,7 @@ namespace EBML
 	}
 
 	bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier; }
-}  // namespace EBML
+} // namespace EBML
 
 CIdentifier::operator uint64_t() const { return this->toUInteger(); }
 

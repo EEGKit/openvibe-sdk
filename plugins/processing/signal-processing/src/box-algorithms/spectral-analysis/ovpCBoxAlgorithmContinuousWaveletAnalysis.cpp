@@ -56,7 +56,7 @@ namespace SigProSTD
 
 		return 1.0 / (l_FourierFactor * dFrequency);
 	}
-}  // namespace SigProSTD
+} // namespace SigProSTD
 
 bool CBoxAlgorithmContinuousWaveletAnalysis::initialize()
 {

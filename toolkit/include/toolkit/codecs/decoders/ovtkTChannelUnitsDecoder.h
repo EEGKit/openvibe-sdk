@@ -73,6 +73,6 @@ namespace OpenViBEToolkit
 
 		virtual ~TChannelUnitsDecoder() { this->uninitialize(); }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

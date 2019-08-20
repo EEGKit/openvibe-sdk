@@ -78,6 +78,6 @@ namespace OpenViBEToolkit
 		// constructor is protected, ensuring we can't instanciate a TDecoder
 		TDecoder() { }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

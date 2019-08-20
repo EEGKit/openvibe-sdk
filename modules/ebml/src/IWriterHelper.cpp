@@ -34,8 +34,8 @@ namespace EBML
 
 			IWriter* m_pWriter = nullptr;
 		};
-	}  // namespace
-}  // namespace EBML
+	} // namespace
+} // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //

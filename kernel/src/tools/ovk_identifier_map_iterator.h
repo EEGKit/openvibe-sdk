@@ -26,4 +26,4 @@ namespace
 
 		return it != rMap.end() ? it->first : OV_UndefinedIdentifier;
 	}
-}  // namespace
+} // namespace

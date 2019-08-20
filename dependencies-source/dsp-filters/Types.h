@@ -127,6 +127,6 @@ namespace Dsp
 		kindBandShelf,
 		kindOther
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

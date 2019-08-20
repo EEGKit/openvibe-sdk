@@ -126,14 +126,14 @@ namespace OpenViBEToolkit
 		class FSettingValueAutoCast
 		{
 		public:
-			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const uint32_t ui32Index)
+			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const uint32_t index)
 				: m_rLogManager(rBoxAlgorithmContext.getPlayerContext()->getLogManager())
 				  , m_rErrorManager(rBoxAlgorithmContext.getPlayerContext()->getErrorManager())
 				  , m_rTypeManager(rBoxAlgorithmContext.getPlayerContext()->getTypeManager())
 				  , m_rConfigurationManager(rBoxAlgorithmContext.getPlayerContext()->getConfigurationManager())
 			{
-				rBoxAlgorithmContext.getStaticBoxContext()->getSettingValue(ui32Index, m_sSettingValue);
-				rBoxAlgorithmContext.getStaticBoxContext()->getSettingType(ui32Index, m_oSettingType);
+				rBoxAlgorithmContext.getStaticBoxContext()->getSettingValue(index, m_sSettingValue);
+				rBoxAlgorithmContext.getStaticBoxContext()->getSettingType(index, m_oSettingType);
 			}
 
 			FSettingValueAutoCast(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const OpenViBE::CString& rsName)
@@ -326,24 +326,24 @@ namespace OpenViBEToolkit
 		virtual bool onNameChanged(OpenViBE::Kernel::IBox& rBox) { return true; }
 		virtual bool onIdentifierChanged(OpenViBE::Kernel::IBox& rBox) { return true; }
 		virtual bool onAlgorithmClassIdentifierChanged(OpenViBE::Kernel::IBox& rBox) { return true; }
-		virtual bool onInputConnected(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onInputDisconnected(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onInputNameChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onOutputConnected(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onOutputDisconnected(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onOutputNameChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onSettingAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onSettingRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onSettingTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onSettingNameChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onSettingDefaultValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
-		virtual bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) { return true; }
+		virtual bool onInputConnected(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onInputDisconnected(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onInputNameChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onOutputConnected(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onOutputDisconnected(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onOutputNameChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onSettingAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onSettingRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onSettingTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onSettingNameChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onSettingDefaultValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
+		virtual bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) { return true; }
 
 		// ====================================================================================================================================
 
@@ -385,4 +385,4 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::IBoxListenerContext* m_pBoxListenerContext = nullptr;
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

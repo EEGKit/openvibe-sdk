@@ -83,10 +83,7 @@ namespace Dsp
 
 		if (polish)
 		{
-			for (int j = 0; j < m; ++j)
-			{
-				laguerre(degree, m_a, m_root[j], its);
-			}
+			for (int j = 0; j < m; ++j) { laguerre(degree, m_a, m_root[j], its); }
 		}
 
 		if (doSort) { sort(degree); }
@@ -193,4 +190,4 @@ namespace Dsp
 
 		return y;
 	}
-}  // namespace Dsp
+} // namespace Dsp

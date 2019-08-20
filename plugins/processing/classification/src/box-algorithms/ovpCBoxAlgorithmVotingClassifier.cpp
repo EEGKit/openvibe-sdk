@@ -80,7 +80,7 @@ bool CBoxAlgorithmVotingClassifier::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmVotingClassifier::processInput(const uint32_t ui32Index)
+bool CBoxAlgorithmVotingClassifier::processInput(const uint32_t index)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 

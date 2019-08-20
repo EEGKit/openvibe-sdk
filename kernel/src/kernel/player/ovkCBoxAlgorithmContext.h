@@ -33,5 +33,5 @@ namespace OpenViBE
 			CPlayerContext m_oPlayerContext;
 			bool m_bReadyToProcess = false;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

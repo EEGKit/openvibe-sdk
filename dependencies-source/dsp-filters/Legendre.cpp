@@ -302,10 +302,7 @@ namespace Dsp
 					addPoleZeroConjugatePairs(c, infinity());
 				}
 
-				if (numPoles & 1)
-				{
-					add(poles.root()[pairs].real(), infinity());
-				}
+				if (numPoles & 1) { add(poles.root()[pairs].real(), infinity()); }
 			}
 		}
 
@@ -370,5 +367,5 @@ namespace Dsp
 
 			setLayout(m_digitalProto);
 		}
-	}  // namespace Legendre
-}  // namespace Dsp
+	} // namespace Legendre
+} // namespace Dsp

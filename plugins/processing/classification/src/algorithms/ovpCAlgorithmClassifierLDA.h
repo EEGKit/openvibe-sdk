@@ -102,8 +102,8 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(CAlgorithmClassifierDesc, OVP_ClassId_Algorithm_ClassifierLDADesc)
 		};
-	};
-};
+	} // namespace Classification
+} // namespace OpenViBEPlugins
 
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

@@ -73,4 +73,4 @@ namespace OpenViBE
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_KernelLoader)
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE

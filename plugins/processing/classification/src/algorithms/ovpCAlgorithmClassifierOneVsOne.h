@@ -101,5 +101,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(CAlgorithmPairingStrategyDesc, OVP_ClassId_Algorithm_ClassifierOneVsOneDesc)
 		};
-	}
-}
+	} // namespace Classification
+} // namespace OpenViBEPlugins

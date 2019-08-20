@@ -186,5 +186,5 @@ namespace Dsp
 			m_digitalProto.setNormal(((centerFrequency / sampleRate) < 0.25) ? doublePi : 0, 1);
 			setLayout(m_digitalProto);
 		}
-	}  // namespace ChebyshevI
-}  // namespace Dsp
+	} // namespace ChebyshevI
+} // namespace Dsp

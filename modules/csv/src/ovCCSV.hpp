@@ -351,5 +351,5 @@ namespace OpenViBE
 
 			bool m_IsCRLFEOL = false; // Is a CRLF end of line
 		};
-	}
-}
+	} // namespace CSV
+} // namespace OpenViBE

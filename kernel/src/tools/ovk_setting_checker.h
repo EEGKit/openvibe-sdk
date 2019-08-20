@@ -55,4 +55,4 @@ namespace
 		//TODO: else
 		return true;
 	}
-}  // namespace
+} // namespace

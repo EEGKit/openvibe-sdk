@@ -225,5 +225,5 @@ namespace OpenViBE
 
 			IParameter* m_pParameter = nullptr; //!< Handled parameter
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE
