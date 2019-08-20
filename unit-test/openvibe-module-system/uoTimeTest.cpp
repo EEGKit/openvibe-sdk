@@ -114,10 +114,7 @@ std::tuple<bool, std::vector<uint64_t>> testClock(uint64_t samplePeriod, unsigne
 	while (nowTime - startTime < samplePeriod)
 	{
 		nowTime = timeFunction();
-		if (nowTime > previousTime)
-		{
-			cumulativeSteps.push_back(nowTime - previousTime);
-		}
+		if (nowTime > previousTime) { cumulativeSteps.push_back(nowTime - previousTime); }
 		else if (nowTime < previousTime)
 		{
 			monotonic = false;

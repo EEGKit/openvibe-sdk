@@ -61,10 +61,7 @@ uint32_t System::Time::getTime()
 	return uint32_t((zgetTime() * 1000) >> 32);
 }
 
-uint64_t System::Time::zgetTime()
-{
-	return zgetTimeRaw(true);
-}
+uint64_t System::Time::zgetTime() { return zgetTimeRaw(true); }
 
 uint64_t System::Time::zgetTimeRaw(bool sinceFirstCall)
 {
@@ -93,10 +90,7 @@ uint64_t System::Time::zgetTimeRaw(bool sinceFirstCall)
 	return l_ui64ReturnValue;
 }
 
-bool System::Time::isClockSteady()
-{
-	return internal_clock::is_steady;
-}
+bool System::Time::isClockSteady() { return internal_clock::is_steady; }
 
 bool System::Time::checkResolution(const uint32_t ui32MilliSeconds)
 {

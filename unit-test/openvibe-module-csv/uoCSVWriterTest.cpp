@@ -207,10 +207,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterNormalGoodSignal)
 	spectrumWriterTest->setFormatType(EStreamType::Spectrum);
 
 	std::vector<double> frequencyAbscissa;
-	for (double frequency = 0.0; frequency < 64.0; frequency++)
-	{
-		frequencyAbscissa.push_back(frequency);
-	}
+	for (double frequency = 0.0; frequency < 64.0; frequency++) { frequencyAbscissa.push_back(frequency); }
 	ASSERT_TRUE(spectrumWriterTest->setSpectrumInformation({ "O1", "O2" }, frequencyAbscissa, 256));
 	double time = 0;
 	for (unsigned int i = 0; i < 10; i++)
@@ -242,10 +239,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterWrongInputType)
 	ASSERT_TRUE(spectrumWriterTest->openFile(filename, EFileAccessMode::Write));
 	spectrumWriterTest->setFormatType(EStreamType::Signal);
 	std::vector<double> frequencyAbscissa;
-	for (double frequency = 0.0; frequency < 64.0; frequency++)
-	{
-		frequencyAbscissa.push_back(frequency);
-	}
+	for (double frequency = 0.0; frequency < 64.0; frequency++) { frequencyAbscissa.push_back(frequency); }
 
 	ASSERT_FALSE(spectrumWriterTest->setSpectrumInformation({ "O1", "O2" }, frequencyAbscissa, 256));
 
@@ -261,10 +255,7 @@ TEST(CSV_Writer_Test_Case, spectrumWriterWrongMatrixSize)
 	ASSERT_TRUE(spectrumWriterTest->openFile(filename, EFileAccessMode::Write));
 	spectrumWriterTest->setFormatType(EStreamType::Spectrum);
 	std::vector<double> frequencyAbscissa;
-	for (double frequency = 0.0; frequency < 64.0; frequency++)
-	{
-		frequencyAbscissa.push_back(frequency);
-	}
+	for (double frequency = 0.0; frequency < 64.0; frequency++) { frequencyAbscissa.push_back(frequency); }
 	ASSERT_TRUE(spectrumWriterTest->setSpectrumInformation({ "O1", "O2" }, frequencyAbscissa, 256));
 
 	ASSERT_FALSE(spectrumWriterTest->addSample({ 0, 1, { -20.20, -10.10, 0.0, 10.10, 20.20 }, 0 }));
@@ -380,10 +371,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes2)
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 6, 8, 2 }, { "L1", "L2", "L3", "L4", "L5", "L6", "A1", "B2", "C3", "D4", "E5", "F6", "G7", "H8", "X", "Y" }));
 
 	std::vector<double> values;
-	for (unsigned int index = 0; index < 96; index++)
-	{
-		values.push_back(double(index));
-	}
+	for (unsigned int index = 0; index < 96; index++) { values.push_back(double(index)); }
 
 	for (unsigned int i = 0; i < 50; i++)
 	{
@@ -413,10 +401,7 @@ TEST(CSV_Writer_Test_Case, matrixWithDifferentsDimensionSizes3)
 	ASSERT_TRUE(matrixWriterTest->setStreamedMatrixInformation({ 4, 1, 4 }, { "L1", "L2", "L3", "L4", "X", "R1", "R2", "R3", "R4" }));
 
 	std::vector<double> values;
-	for (unsigned int index = 0; index < 16; index++)
-	{
-		values.push_back(double(index));
-	}
+	for (unsigned int index = 0; index < 16; index++) { values.push_back(double(index)); }
 
 	for (unsigned int i = 0; i < 50; i++)
 	{

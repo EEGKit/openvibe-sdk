@@ -100,10 +100,7 @@ int main(int argc, char** argv)
 			exit(EXIT_FAILURE);
 		}
 
-		if (s_DidRequestForcedQuit)
-		{
-			exit(EXIT_SUCCESS);
-		}
+		if (s_DidRequestForcedQuit) { exit(EXIT_SUCCESS); }
 	}
 
 	std::cout << "Connected to server\n";
@@ -158,10 +155,7 @@ int main(int argc, char** argv)
 	matrix.resize(channelCount * samplesPerBuffer);
 
 	// Announce to server that the box has finished initializing and wait for acknowledgement
-	while (!client.waitForSyncMessage())
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	}
+	while (!client.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 	client.pushLog(LogLevel_Info, "Received Ping");
 
 	client.pushSync();
@@ -255,10 +249,7 @@ int main(int argc, char** argv)
 
 		// Send data
 
-		while (!client.waitForSyncMessage())
-		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		}
+		while (!client.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 
 		uint64_t expectedSamples = OpenViBE::ITimeArithmetics::timeToSampleCount(samplingRate, client.getTime());
 
@@ -313,10 +304,7 @@ int main(int argc, char** argv)
 			std::cerr << "\tGuilty Id: " << guiltyId << "\n";
 		}
 		// Here, we send a sync message to tell to the server that we have no more data to send and we can move forward.
-		if (!client.pushSync())
-		{
-			exit(EXIT_FAILURE);
-		}
+		if (!client.pushSync()) { exit(EXIT_FAILURE); }
 	}
 
 	std::cout << "Processing stopped.\n";

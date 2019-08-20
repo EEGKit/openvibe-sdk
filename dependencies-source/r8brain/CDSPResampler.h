@@ -206,10 +206,7 @@ namespace r8b
 
 					ConvBufs[0].alloc(ConvBufCapacities[0]);
 
-					if (ConvBufCapacities[1] > 0)
-					{
-						ConvBufs[1].alloc(ConvBufCapacities[1]);
-					}
+					if (ConvBufCapacities[1] > 0) { ConvBufs[1].alloc(ConvBufCapacities[1]); }
 
 					return; // No interpolator is needed.
 				}
@@ -276,15 +273,9 @@ namespace r8b
 			}
 		}
 
-		int getLatency() const override
-		{
-			return (0);
-		}
+		int getLatency() const override { return (0); }
 
-		double getLatencyFrac() const override
-		{
-			return (0.0);
-		}
+		double getLatencyFrac() const override { return (0.0); }
 
 		int getInLenBeforeOutStart(const int NextInLen) const override
 		{
@@ -298,10 +289,7 @@ namespace r8b
 			return (l);
 		}
 
-		int getMaxOutLen(const int/* MaxInLen */) const override
-		{
-			return (0);
-		}
+		int getMaxOutLen(const int/* MaxInLen */) const override { return (0); }
 
 		/**
 		 * Function clears (resets) the state of *this object and returns it to
@@ -316,15 +304,9 @@ namespace r8b
 		 */
 		void clear() override
 		{
-			for (int i = 0; i < ConvCount; i++)
-			{
-				Convs[i]->clear();
-			}
+			for (int i = 0; i < ConvCount; i++) { Convs[i]->clear(); }
 
-			if (Interp != nullptr)
-			{
-				Interp->clear();
-			}
+			if (Interp != nullptr) { Interp->clear(); }
 		}
 
 		/**

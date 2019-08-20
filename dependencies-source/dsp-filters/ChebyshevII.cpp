@@ -137,7 +137,7 @@ namespace Dsp
 		void LowPassBase::setup(int order, double sampleRate, double cutoffFrequency, double stopBandDb)
 		{
 			m_analogProto.design(order, stopBandDb);
-			LowPassTransform(cutoffFrequency / sampleRate, m_digitalProto, m_analogProto); 
+			LowPassTransform(cutoffFrequency / sampleRate, m_digitalProto, m_analogProto);
 			setLayout(m_digitalProto);
 		}
 
@@ -172,7 +172,7 @@ namespace Dsp
 		void HighShelfBase::setup(int order, double sampleRate, double cutoffFrequency, double gainDb, double stopBandDb)
 		{
 			m_analogProto.design(order, gainDb, stopBandDb);
-			HighPassTransform(cutoffFrequency / sampleRate, m_digitalProto, m_analogProto); 
+			HighPassTransform(cutoffFrequency / sampleRate, m_digitalProto, m_analogProto);
 			setLayout(m_digitalProto);
 		}
 

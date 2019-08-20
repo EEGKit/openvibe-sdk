@@ -103,10 +103,7 @@ TEST(time_arithmetic_test_case, time_to_fixed_to_samples_to_fixed)
 		{
 			auto testTimeInFixedPoint = ITimeArithmetics::secondsToTime(testTimeInSecond);
 			// If the sample count would overflow an uint64_t we skip the test
-			if (std::log2(testSamplingRate) + std::log2(testTimeInFixedPoint) >= 64)
-			{
-				continue;
-			}
+			if (std::log2(testSamplingRate) + std::log2(testTimeInFixedPoint) >= 64) { continue; }
 			auto computedTimeInFixedPoint = ITimeArithmetics::sampleCountToTime(testSamplingRate, ITimeArithmetics::timeToSampleCount(testSamplingRate, testTimeInFixedPoint));
 
 			uint64_t timeDifference = uint64_t(std::abs(int64_t(computedTimeInFixedPoint) - int64_t(testTimeInFixedPoint)));

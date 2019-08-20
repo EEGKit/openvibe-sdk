@@ -54,10 +54,7 @@ void CStimulationDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier)
 		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date)
 		|| (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration)) { }
-	else
-	{
-		CEBMLBaseDecoder::openChild(rIdentifier);
-	}
+	else { CEBMLBaseDecoder::openChild(rIdentifier); }
 }
 
 void CStimulationDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)

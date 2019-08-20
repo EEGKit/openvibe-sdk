@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_pDecoder;
 			OpenViBEToolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_pEncoder;
 
-			OpenViBE::IMatrix* m_pInputMatrix = nullptr;
+			OpenViBE::IMatrix* m_pInputMatrix  = nullptr;
 			OpenViBE::IMatrix* m_pOutputMatrix = nullptr;
 
 			std::vector<uint32_t> m_vLookup;

@@ -142,10 +142,7 @@ CCSVHandler::CCSVHandler()
 	  , m_LastStringError("")
 	  , m_InputTypeIdentifier(EStreamType::StreamedMatrix), m_DimensionSizes({}), m_ColumnCount(0), m_OutputFloatPrecision(10), m_HasDataToRead(true) {}
 
-CCSVHandler::~CCSVHandler()
-{
-	this->closeFile();
-}
+CCSVHandler::~CCSVHandler() { this->closeFile(); }
 
 void CCSVHandler::split(const std::string& input, char delimiter, std::vector<std::string>& output) const
 {
@@ -168,10 +165,7 @@ void CCSVHandler::setFormatType(EStreamType typeIdentifier)
 	m_HasInputType        = true;
 }
 
-EStreamType CCSVHandler::getFormatType()
-{
-	return m_InputTypeIdentifier;
-}
+EStreamType CCSVHandler::getFormatType() { return m_InputTypeIdentifier; }
 
 bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNames, uint32_t samplingFrequency, uint32_t sampleCountPerBuffer)
 {
@@ -823,10 +817,7 @@ bool CCSVHandler::addBuffer(const std::vector<SMatrixChunk>& samples)
 			const uint64_t lastEpoch = samples.back().epoch;
 			const auto rangeStart    = std::find_if(samples.begin(), samples.end(), [&lastEpoch](const SMatrixChunk& s) -> bool { return s.epoch == lastEpoch; });
 
-			if (!m_Chunks.empty() && m_Chunks.front().epoch != lastEpoch)
-			{
-				m_Chunks.clear();
-			}
+			if (!m_Chunks.empty() && m_Chunks.front().epoch != lastEpoch) { m_Chunks.clear(); }
 
 			m_Chunks.insert(m_Chunks.end(), rangeStart, samples.end());
 			const double curTime = m_Chunks.front().startTime;
@@ -904,15 +895,9 @@ bool CCSVHandler::noEventsUntilDate(double date)
 	return true;
 }
 
-ELogErrorCodes CCSVHandler::getLastLogError()
-{
-	return m_LogError;
-}
+ELogErrorCodes CCSVHandler::getLastLogError() { return m_LogError; }
 
-std::string CCSVHandler::getLastErrorString()
-{
-	return m_LastStringError;
-}
+std::string CCSVHandler::getLastErrorString() { return m_LastStringError; }
 
 std::string CCSVHandler::stimulationsToString(const std::vector<SStimulationChunk>& stimulationToPrint) const
 {
@@ -1053,10 +1038,7 @@ std::string CCSVHandler::createHeaderString()
 	{
 		case EStreamType::Signal:
 		case EStreamType::FeatureVector:
-			for (const std::string& label : m_DimensionLabels)
-			{
-				addColumn(label);
-			}
+			for (const std::string& label : m_DimensionLabels) { addColumn(label); }
 			break;
 
 		case EStreamType::CovarianceMatrix:
@@ -1355,10 +1337,7 @@ bool CCSVHandler::parseSignalHeader(const std::vector<std::string>& header)
 	}
 
 	// get dimension labels
-	for (size_t index = s_PreDataColumnCount; index < header.size() - s_PostDataColumnCount; index++)
-	{
-		m_DimensionLabels.push_back(header[index]);
-	}
+	for (size_t index = s_PreDataColumnCount; index < header.size() - s_PostDataColumnCount; index++) { m_DimensionLabels.push_back(header[index]); }
 
 	if (!this->calculateSampleCountPerBuffer()) { return false; } // m_LastErrorString set in the function, m_LogError set outside the function
 
@@ -1878,15 +1857,9 @@ bool CCSVHandler::calculateSampleCountPerBuffer()
 	return true;
 }
 
-bool CCSVHandler::hasDataToRead() const
-{
-	return m_HasDataToRead;
-}
+bool CCSVHandler::hasDataToRead() const { return m_HasDataToRead; }
 
-CSV_API ICSVHandler* CSV::createCSVHandler()
-{
-	return new CCSVHandler();
-}
+CSV_API ICSVHandler* CSV::createCSVHandler() { return new CCSVHandler(); }
 
 CSV_API void CSV::releaseCSVHandler(ICSVHandler* object)
 {

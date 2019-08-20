@@ -67,7 +67,7 @@ namespace OpenViBEToolkit
 
 		// Every codec has an algorithm
 		OpenViBE::Kernel::IAlgorithmProxy* m_pCodec = nullptr;
-		uint32_t m_ui32ConnectorIndex = 0;//one codec per connector
+		uint32_t m_ui32ConnectorIndex               = 0;//one codec per connector
 
 	public:
 		TCodec()
@@ -98,20 +98,11 @@ namespace OpenViBEToolkit
 
 		// for easier access to algorithm functionnality, we redefine some functions:
 
-		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
-		{
-			return m_pCodec->isOutputTriggerActive(oTrigger);
-		}
+		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger) { return m_pCodec->isOutputTriggerActive(oTrigger); }
 
-		virtual bool process(const OpenViBE::CIdentifier& oTrigger)
-		{
-			return m_pCodec->process(oTrigger);
-		}
+		virtual bool process(const OpenViBE::CIdentifier& oTrigger) { return m_pCodec->process(oTrigger); }
 
-		virtual bool process()
-		{
-			return m_pCodec->process();
-		}
+		virtual bool process() { return m_pCodec->process(); }
 	};
 }  // namespace OpenViBEToolkit
 

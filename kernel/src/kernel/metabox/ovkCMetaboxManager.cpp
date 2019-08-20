@@ -42,7 +42,7 @@ namespace OpenViBE
 					if (scenarioId != OV_UndefinedIdentifier)
 					{
 						IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioId);
-						bool isValid                                 = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
+						bool isValid               = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
 						if (isValid && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
 						{
 							bool hasHash = metaboxHash.fromString(metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_MetaboxHash));
@@ -120,10 +120,7 @@ bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 CIdentifier CMetaboxManager::getNextMetaboxObjectDescIdentifier(const CIdentifier& previousIdentifier) const
 {
 	if (m_MetaboxObjectDesc.empty()) { return OV_UndefinedIdentifier; }
-	if (previousIdentifier == OV_UndefinedIdentifier)
-	{
-		return m_MetaboxObjectDesc.begin()->first;
-	}
+	if (previousIdentifier == OV_UndefinedIdentifier) { return m_MetaboxObjectDesc.begin()->first; }
 
 	auto result = m_MetaboxObjectDesc.find(previousIdentifier);
 	if (result == m_MetaboxObjectDesc.end() || std::next(result, 1) == m_MetaboxObjectDesc.end()) { return OV_UndefinedIdentifier; }

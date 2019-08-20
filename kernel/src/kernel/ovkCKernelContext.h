@@ -96,18 +96,16 @@ namespace OpenViBE
 
 			const IKernelContext& m_kernelContext;
 
-			mutable IAlgorithmManager* m_pAlgorithmManager = nullptr;
+			mutable IAlgorithmManager* m_pAlgorithmManager         = nullptr;
 			mutable IConfigurationManager* m_pConfigurationManager = nullptr;
-			mutable IKernelObjectFactory* m_pKernelObjectFactory = nullptr;
-			mutable IPlayerManager* m_pPlayerManager = nullptr;
-			mutable IPluginManager* m_pPluginManager = nullptr;
-			mutable IMetaboxManager* m_pMetaboxManager = nullptr;
-			mutable IScenarioManager* m_pScenarioManager = nullptr;
-			mutable ITypeManager* m_pTypeManager = nullptr;
-			mutable ILogManager* m_pLogManager = nullptr;
-			mutable IErrorManager* m_pErrorManager = nullptr;
+			mutable IKernelObjectFactory* m_pKernelObjectFactory   = nullptr;
+			mutable IPlayerManager* m_pPlayerManager               = nullptr;
+			mutable IPluginManager* m_pPluginManager               = nullptr;
+			mutable IMetaboxManager* m_pMetaboxManager             = nullptr;
+			mutable IScenarioManager* m_pScenarioManager           = nullptr;
+			mutable ITypeManager* m_pTypeManager                   = nullptr;
+			mutable ILogManager* m_pLogManager                     = nullptr;
+			mutable IErrorManager* m_pErrorManager                 = nullptr;
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE
-
-

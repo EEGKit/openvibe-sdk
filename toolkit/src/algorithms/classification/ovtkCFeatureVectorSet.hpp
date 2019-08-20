@@ -24,9 +24,9 @@ namespace OpenViBEToolkit
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVector, OV_UndefinedIdentifier)
 
 		const OpenViBE::IMatrix* m_pMatrix = nullptr;
-		uint32_t m_ui32DimensionIndex = 0;
-		uint32_t m_ui32BufferElementCount = 0;
-		const double* m_pBuffer = nullptr;
+		uint32_t m_ui32DimensionIndex      = 0;
+		uint32_t m_ui32BufferElementCount  = 0;
+		const double* m_pBuffer            = nullptr;
 	};
 
 	class CFeatureVectorSet : public IFeatureVectorSet

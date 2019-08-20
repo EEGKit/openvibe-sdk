@@ -234,10 +234,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 					channelsLabels.push_back(matrix->getDimensionLabel(0, j));
 				}
 
-				for (uint32_t j = 0; j < frequencyAbscissaMatrix->getDimensionSize(0); j++)
-				{
-					frequencyAbscissa.push_back(frequencyAbscissaMatrix->getBuffer()[j]);
-				}
+				for (uint32_t j = 0; j < frequencyAbscissaMatrix->getDimensionSize(0); j++) { frequencyAbscissa.push_back(frequencyAbscissaMatrix->getBuffer()[j]); }
 
 				OV_ERROR_UNLESS_KRF(m_WriterLib->setSpectrumInformation(channelsLabels, frequencyAbscissa, uint32_t(m_StreamDecoder.getOutputSamplingRate())),
 									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),

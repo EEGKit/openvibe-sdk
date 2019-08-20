@@ -58,17 +58,11 @@ namespace Common
 				}
 			}
 
-			~TResampler()
-			{
-				this->clear();
-			}
+			~TResampler() { this->clear(); }
 
 			void clear()
 			{
-				for (size_t j = 0; j < m_vResampler.size(); j++)
-				{
-					delete m_vResampler[j];
-				}
+				for (size_t j = 0; j < m_vResampler.size(); j++) { delete m_vResampler[j]; }
 				m_vResampler.clear();
 
 				m_ui32ChannelCount                  = 0;
@@ -165,10 +159,7 @@ namespace Common
 				m_ui32InputSamplingRate  = ui32InputSamplingRate;
 				m_ui32OutputSamplingRate = ui32OutputSamplingRate;
 
-				for (size_t i = 0; i < m_vResampler.size(); i++)
-				{
-					delete m_vResampler[i];
-				}
+				for (size_t i = 0; i < m_vResampler.size(); i++) { delete m_vResampler[i]; }
 				m_vResampler.clear();
 				m_vResampler.resize(ui32ChannelCount);
 
@@ -246,10 +237,7 @@ namespace Common
 			 * This value is usually zero if the DSP processor "consumes" the latency
 			 * automatically. (from CDSPProcessor.h)
 			 */
-			virtual int getLatency() const
-			{
-				return m_vResampler[0]->getLatency();
-			}
+			virtual int getLatency() const { return m_vResampler[0]->getLatency(); }
 
 			/*
 			 * Fractional latency, in samples, which is present in the output
@@ -257,10 +245,7 @@ namespace Common
 			 * With minimum-phase filters in use, this value can be non-zero even if
 			 * the getLatency() function returns zero. (from CDSPProcessor.h)
 			 */
-			virtual double getLatencyFrac() const
-			{
-				return m_vResampler[0]->getLatencyFrac();
-			}
+			virtual double getLatencyFrac() const { return m_vResampler[0]->getLatencyFrac(); }
 
 			/*
 			 * The cumulative number of samples that should be passed to *this
@@ -269,10 +254,7 @@ namespace Common
 			 * @param NextInLen The number of input samples required before the output
 			 * starts on the next resampling step. (from CDSPProcessor.h)
 			 */
-			virtual int getInLenBeforeOutStart(const int NextInLen) const
-			{
-				return m_vResampler[0]->getInLenBeforeOutStart(NextInLen);
-			}
+			virtual int getInLenBeforeOutStart(const int NextInLen) const { return m_vResampler[0]->getInLenBeforeOutStart(NextInLen); }
 
 			/*
 			 * The maximal length of the output buffer required when processing
@@ -280,10 +262,7 @@ namespace Common
 			 * @param MaxInLen The number of samples planned to process at once, at
 			 * most. (from CDSPProcessor.h)
 			 */
-			virtual int getMaxOutLen(const int MaxInLen) const
-			{
-				return m_vResampler[0]->getMaxOutLen(MaxInLen);
-			}
+			virtual int getMaxOutLen(const int MaxInLen) const { return m_vResampler[0]->getMaxOutLen(MaxInLen); }
 
 			float getBuiltInLatency() const
 			{
@@ -472,14 +451,14 @@ namespace Common
 
 		protected:
 
-			size_t m_ui32ChannelCount = 0;
-			size_t m_ui32InputSamplingRate = 0;
+			size_t m_ui32ChannelCount       = 0;
+			size_t m_ui32InputSamplingRate  = 0;
 			size_t m_ui32OutputSamplingRate = 0;
 
 			int m_iFractionalDelayFilterSampleCount = 6;
-			int m_iMaxInputSampleCount = 1024;
-			double m_f64TransitionBandInPercent = 45;
-			double m_f64StopBandAttenuation = 49;
+			int m_iMaxInputSampleCount              = 1024;
+			double m_f64TransitionBandInPercent     = 45;
+			double m_f64StopBandAttenuation         = 49;
 
 			std::vector<r8b::CDSPProcessor*> m_vResampler;
 

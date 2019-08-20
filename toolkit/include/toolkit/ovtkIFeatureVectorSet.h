@@ -20,14 +20,8 @@ namespace OpenViBEToolkit
 
 		_IsDerivedFromClass_(OpenViBEToolkit::IObject, OVTK_ClassId_FeatureVectorSet)
 
-		const IFeatureVector& operator [](const uint32_t ui32Index) const
-		{
-			return this->getFeatureVector(ui32Index);
-		}
+		const IFeatureVector& operator [](const uint32_t ui32Index) const { return this->getFeatureVector(ui32Index); }
 
-		IFeatureVector& operator [](const uint32_t ui32Index)
-		{
-			return this->getFeatureVector(ui32Index);
-		}
+		IFeatureVector& operator [](const uint32_t ui32Index) { return this->getFeatureVector(ui32Index); }
 	};
 }  // namespace OpenViBEToolkit

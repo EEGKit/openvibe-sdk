@@ -183,10 +183,7 @@ bool CBoxAlgorithmChannelSelector::process()
 				{
 					for (uint32_t k = 0; k < l_ui32TokenCount; k++)
 					{
-						if (Tools::String::isAlmostEqual(m_pInputMatrix->getDimensionLabel(0, j), l_sToken[k], false))
-						{
-							m_vLookup.push_back(j);
-						}
+						if (Tools::String::isAlmostEqual(m_pInputMatrix->getDimensionLabel(0, j), l_sToken[k], false)) { m_vLookup.push_back(j); }
 					}
 				}
 			}
@@ -266,10 +263,7 @@ bool CBoxAlgorithmChannelSelector::process()
 						{
 							l_bSelected |= (m_vLookup[k] == j);
 						}
-						if (!l_bSelected)
-						{
-							l_vInversedLookup.push_back(j);
-						}
+						if (!l_bSelected) { l_vInversedLookup.push_back(j); }
 					}
 					m_vLookup = l_vInversedLookup;
 				}
@@ -327,10 +321,7 @@ bool CBoxAlgorithmChannelSelector::process()
 			}
 			m_pEncoder->encodeBuffer();
 		}
-		if (m_pDecoder->isEndReceived())
-		{
-			m_pEncoder->encodeEnd();
-		}
+		if (m_pDecoder->isEndReceived()) { m_pEncoder->encodeEnd(); }
 		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
 	}
 

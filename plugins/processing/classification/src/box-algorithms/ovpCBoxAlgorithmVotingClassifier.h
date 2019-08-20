@@ -28,10 +28,10 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			uint64_t m_ui64NumberOfRepetitions = 0;
-			uint64_t m_ui64TargetClassLabel = 0;
-			uint64_t m_ui64NonTargetClassLabel = 0;
-			uint64_t m_ui64RejectClassLabel = 0;
+			uint64_t m_ui64NumberOfRepetitions  = 0;
+			uint64_t m_ui64TargetClassLabel     = 0;
+			uint64_t m_ui64NonTargetClassLabel  = 0;
+			uint64_t m_ui64RejectClassLabel     = 0;
 			uint64_t m_ui64ResultClassLabelBase = 0;
 			bool m_bChooseOneIfExAequo;
 

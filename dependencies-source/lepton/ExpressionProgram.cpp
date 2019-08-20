@@ -45,18 +45,15 @@ ExpressionProgram::ExpressionProgram(const ParsedExpression& expression) : maxAr
 	for (int i = 0; i < (int)operations.size(); i++)
 	{
 		int args = operations[i]->getNumArguments();
-		if (args > maxArgs)
-			maxArgs = args;
+		if (args > maxArgs) maxArgs = args;
 		currentStackSize += 1 - args;
-		if (currentStackSize > stackSize)
-			stackSize = currentStackSize;
+		if (currentStackSize > stackSize) stackSize = currentStackSize;
 	}
 }
 
 ExpressionProgram::~ExpressionProgram()
 {
-	for (int i = 0; i < (int)operations.size(); i++)
-		delete operations[i];
+	for (int i = 0; i < (int)operations.size(); i++) delete operations[i];
 }
 
 ExpressionProgram::ExpressionProgram(const ExpressionProgram& program)
@@ -69,32 +66,21 @@ ExpressionProgram& ExpressionProgram::operator=(const ExpressionProgram& program
 	maxArgs   = program.maxArgs;
 	stackSize = program.stackSize;
 	operations.resize(program.operations.size());
-	for (int i = 0; i < (int)operations.size(); i++)
-		operations[i] = program.operations[i]->clone();
+	for (int i = 0; i < (int)operations.size(); i++) operations[i] = program.operations[i]->clone();
 	return *this;
 }
 
 void ExpressionProgram::buildProgram(const ExpressionTreeNode& node)
 {
-	for (int i = (int)node.getChildren().size() - 1; i >= 0; i--)
-		buildProgram(node.getChildren()[i]);
+	for (int i = (int)node.getChildren().size() - 1; i >= 0; i--) buildProgram(node.getChildren()[i]);
 	operations.push_back(node.getOperation().clone());
 }
 
-int ExpressionProgram::getNumOperations() const
-{
-	return (int)operations.size();
-}
+int ExpressionProgram::getNumOperations() const { return (int)operations.size(); }
 
-const Operation& ExpressionProgram::getOperation(int index) const
-{
-	return *operations[index];
-}
+const Operation& ExpressionProgram::getOperation(int index) const { return *operations[index]; }
 
-int ExpressionProgram::getStackSize() const
-{
-	return stackSize;
-}
+int ExpressionProgram::getStackSize() const { return stackSize; }
 
 double ExpressionProgram::evaluate() const
 {

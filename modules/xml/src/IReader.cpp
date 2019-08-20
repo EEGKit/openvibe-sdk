@@ -74,18 +74,12 @@ void CReader::processChildData(const char* sData)
 
 void CReader::closeChild()
 {
-	if (m_sData.size() != 0)
-	{
-		m_rReaderCallback.processChildData(m_sData.c_str());
-	}
+	if (m_sData.size() != 0) { m_rReaderCallback.processChildData(m_sData.c_str()); }
 	m_sData = "";
 	m_rReaderCallback.closeChild();
 }
 
-XML_API IReader* XML::createReader(IReaderCallback& rReaderCallback)
-{
-	return new CReader(rReaderCallback);
-}
+XML_API IReader* XML::createReader(IReaderCallback& rReaderCallback) { return new CReader(rReaderCallback); }
 
 static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, const char** ppAttribute)
 {

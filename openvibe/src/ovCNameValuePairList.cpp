@@ -9,7 +9,10 @@ using namespace OpenViBE;
 
 namespace OpenViBE
 {
-	struct CNameValuePairListImpl { std::map<CString, CString> m_oMap; };
+	struct CNameValuePairListImpl
+	{
+		std::map<CString, CString> m_oMap;
+	};
 }
 
 CNameValuePairList::CNameValuePairList()
@@ -23,10 +26,7 @@ CNameValuePairList::CNameValuePairList(const CNameValuePairList& rNameValuePairL
 	m_pNameValuePairListImpl->m_oMap = rNameValuePairList.m_pNameValuePairListImpl->m_oMap;
 }
 
-CNameValuePairList::~CNameValuePairList()
-{
-	delete m_pNameValuePairListImpl;
-}
+CNameValuePairList::~CNameValuePairList() { delete m_pNameValuePairListImpl; }
 
 CNameValuePairList& CNameValuePairList::operator=(const CNameValuePairList& rNameValuePairList)
 {

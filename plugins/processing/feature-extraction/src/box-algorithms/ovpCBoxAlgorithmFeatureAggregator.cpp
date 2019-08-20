@@ -120,10 +120,7 @@ namespace OpenViBEPlugins
 			}
 
 			//If there is one buffer of the same time period per input, process
-			if (l_bReadyToProcess)
-			{
-				getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-			}
+			if (l_bReadyToProcess) { getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
 
 			return true;
 		}
@@ -172,10 +169,7 @@ namespace OpenViBEPlugins
 					uint32_t l_ui32BufferSize = l_pInputMatrix->getBufferElementCount();
 
 					double* l_pBuffer = l_pInputMatrix->getBuffer();
-					for (uint32_t i = 0; i < l_ui32BufferSize; i++)
-					{
-						l_vBufferElements.push_back(l_pBuffer[i]);
-					}
+					for (uint32_t i = 0; i < l_ui32BufferSize; i++) { l_vBufferElements.push_back(l_pBuffer[i]); }
 				}
 			}
 

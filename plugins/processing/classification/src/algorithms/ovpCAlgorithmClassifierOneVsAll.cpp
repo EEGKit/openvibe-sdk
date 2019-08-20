@@ -60,8 +60,8 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVector
 		l_vClassLabels[rFeatureVectorSet[i].getLabel()]++;
 	}
 
-	OV_ERROR_UNLESS_KRF(l_vClassLabels.size() == l_ui32ClassCount, 
-						"Invalid samples count for [" << (uint32_t)l_vClassLabels.size() << "] classes (expected samples for " << l_ui32ClassCount << " classes)", 
+	OV_ERROR_UNLESS_KRF(l_vClassLabels.size() == l_ui32ClassCount,
+						"Invalid samples count for [" << (uint32_t)l_vClassLabels.size() << "] classes (expected samples for " << l_ui32ClassCount << " classes)",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	//We set the IMatrix fo the first classifier
@@ -285,10 +285,7 @@ XML::IXMLNode* CAlgorithmClassifierOneVsAll::saveConfiguration()
 	XML::IXMLNode* l_pSubClassifersNode = XML::createNode(c_sSubClassifiersNodeName);
 
 	//We now add configuration of each subclassifiers
-	for (size_t i = 0; i < m_oSubClassifierList.size(); ++i)
-	{
-		l_pSubClassifersNode->addChild(getClassifierConfiguration(m_oSubClassifierList[i]));
-	}
+	for (size_t i = 0; i < m_oSubClassifierList.size(); ++i) { l_pSubClassifersNode->addChild(getClassifierConfiguration(m_oSubClassifierList[i])); }
 	l_pOneVsAllNode->addChild(l_pSubClassifersNode);
 
 	return l_pOneVsAllNode;
@@ -301,10 +298,7 @@ bool CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode* pConfigurati
 	l_oIdentifier.fromString(l_pTempNode->getAttribute(c_sAlgorithmIdAttribute));
 	if (m_oSubClassifierAlgorithmIdentifier.toUInteger() != l_oIdentifier)
 	{
-		while (!m_oSubClassifierList.empty())
-		{
-			this->removeClassifierAtBack();
-		}
+		while (!m_oSubClassifierList.empty()) { this->removeClassifierAtBack(); }
 		if (!this->setSubClassifierIdentifier(l_oIdentifier))
 		{
 			//if the sub classifier doesn't have comparison function it is an error
@@ -319,10 +313,7 @@ bool CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode* pConfigurati
 
 	while (l_iClassCount != getClassCount())
 	{
-		if (l_iClassCount < getClassCount())
-		{
-			this->removeClassifierAtBack();
-		}
+		if (l_iClassCount < getClassCount()) { this->removeClassifierAtBack(); }
 		else
 		{
 			if (!this->addNewClassifierAtBack()) { return false; }
@@ -332,10 +323,7 @@ bool CAlgorithmClassifierOneVsAll::loadConfiguration(XML::IXMLNode* pConfigurati
 	return loadSubClassifierConfiguration(pConfigurationNode->getChildByName(c_sSubClassifiersNodeName));
 }
 
-uint32_t CAlgorithmClassifierOneVsAll::getOutputProbabilityVectorLength()
-{
-	return uint32_t(m_oSubClassifierList.size());
-}
+uint32_t CAlgorithmClassifierOneVsAll::getOutputProbabilityVectorLength() { return uint32_t(m_oSubClassifierList.size()); }
 
 uint32_t CAlgorithmClassifierOneVsAll::getOutputDistanceVectorLength()
 {
@@ -358,10 +346,7 @@ bool CAlgorithmClassifierOneVsAll::loadSubClassifierConfiguration(XML::IXMLNode*
 	return true;
 }
 
-uint32_t CAlgorithmClassifierOneVsAll::getClassCount() const
-{
-	return uint32_t(m_oSubClassifierList.size());
-}
+uint32_t CAlgorithmClassifierOneVsAll::getClassCount() const { return uint32_t(m_oSubClassifierList.size()); }
 
 bool CAlgorithmClassifierOneVsAll::setSubClassifierIdentifier(const CIdentifier& rId)
 {

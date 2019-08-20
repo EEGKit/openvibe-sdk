@@ -81,10 +81,7 @@ namespace
 		explicit CErrorHandler(IAlgorithmContext& rAlgorithmContext)
 			: m_rAlgorithmContext(rAlgorithmContext) { }
 
-		void fatalError(const SAXParseException& exception) override
-		{
-			this->error(exception);
-		}
+		void fatalError(const SAXParseException& exception) override { this->error(exception); }
 
 		void error(const SAXParseException& exception) override
 		{

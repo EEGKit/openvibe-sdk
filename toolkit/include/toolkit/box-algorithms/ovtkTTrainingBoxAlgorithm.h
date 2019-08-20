@@ -47,8 +47,8 @@ namespace OpenViBEToolkit
 
 		ISignalTrial* m_pPendingSignal = nullptr;
 
-		uint64_t m_ui64TrialStartTime = 0;
-		uint64_t m_ui64TrialEndTime = 0;
+		uint64_t m_ui64TrialStartTime       = 0;
+		uint64_t m_ui64TrialEndTime         = 0;
 		uint32_t m_ui32SampleCountPerBuffer = 0;
 		OpenViBE::CIdentifier m_oTrialLabel = OV_UndefinedIdentifier;
 
@@ -71,16 +71,15 @@ namespace OpenViBEToolkit
 	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::TTrainingBoxAlgorithm()
 		: m_ui64TrialStartTime(_no_time_)
 		  , m_ui64TrialEndTime(_no_time_)
-	{ m_pPendingSignal = createSignalTrial(); }
+	{
+		m_pPendingSignal = createSignalTrial();
+	}
 
 	template <class CBoxAlgorithmParentClass>
 	TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::~TTrainingBoxAlgorithm()
 	{
 		releaseSignalTrial(m_pPendingSignal);
-		for (std::vector<ISignalTrial*>::iterator itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
-		{
-			releaseSignalTrial(*itSignalTrial);
-		}
+		for (std::vector<ISignalTrial*>::iterator itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial) { releaseSignalTrial(*itSignalTrial); }
 	}
 
 	// ________________________________________________________________________________________________________________
@@ -90,10 +89,7 @@ namespace OpenViBEToolkit
 	//
 
 	template <class CBoxAlgorithmParentClass>
-	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setChannelCount(const uint32_t ui32ChannelCount)
-	{
-		m_pPendingSignal->setChannelCount(ui32ChannelCount);
-	}
+	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setChannelCount(const uint32_t ui32ChannelCount) { m_pPendingSignal->setChannelCount(ui32ChannelCount); }
 
 	template <class CBoxAlgorithmParentClass>
 	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setChannelName(const uint32_t ui32ChannelIndex, const char* sChannelName)
@@ -108,10 +104,7 @@ namespace OpenViBEToolkit
 	}
 
 	template <class CBoxAlgorithmParentClass>
-	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSamplingRate(const uint32_t ui32SamplingFrequency)
-	{
-		m_pPendingSignal->setSamplingRate(ui32SamplingFrequency);
-	}
+	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSamplingRate(const uint32_t ui32SamplingFrequency) { m_pPendingSignal->setSamplingRate(ui32SamplingFrequency); }
 
 	template <class CBoxAlgorithmParentClass>
 	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSampleBuffer(const double* pBuffer)
@@ -148,10 +141,7 @@ namespace OpenViBEToolkit
 					<< "Constituting a signal trial set based on previous signal trials...\n";
 
 			ISignalTrialSet* l_pSignalTrialSet = createSignalTrialSet();
-			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
-			{
-				l_pSignalTrialSet->addSignalTrial(**itSignalTrial);
-			}
+			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial) { l_pSignalTrialSet->addSignalTrial(**itSignalTrial); }
 
 			this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
 					<< OpenViBE::Kernel::LogLevel_Info
@@ -185,10 +175,7 @@ namespace OpenViBEToolkit
 					<< OpenViBE::Kernel::LogLevel_Trace
 					<< "Training done... will clear signal trials and signal trial set now...\n";
 
-			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial)
-			{
-				releaseSignalTrial(*itSignalTrial);
-			}
+			for (itSignalTrial = m_vSignalTrial.begin(); itSignalTrial != m_vSignalTrial.end(); ++itSignalTrial) { releaseSignalTrial(*itSignalTrial); }
 			releaseSignalTrialSet(l_pSignalTrialSet);
 			m_vSignalTrial.clear();
 

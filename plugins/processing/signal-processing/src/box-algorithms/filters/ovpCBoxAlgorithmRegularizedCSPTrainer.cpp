@@ -238,10 +238,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<MatrixXd>&
 
 		covProd[classIndex] = covInv[classIndex] * outclassCov;
 
-		try
-		{
-			eigenSolverGeneral.compute(covProd[classIndex]);
-		}
+		try { eigenSolverGeneral.compute(covProd[classIndex]); }
 		catch (...)
 		{
 			OV_ERROR_KRF("EigenSolver failed for condition [" << classIndex + 1 << "]", OpenViBE::Kernel::ErrorType::BadProcessing);
@@ -301,10 +298,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 				}
 			}
 		}
-		if (m_StimulationDecoder.isEndReceived())
-		{
-			m_StimulationEncoder.encodeEnd();
-		}
+		if (m_StimulationDecoder.isEndReceived()) { m_StimulationEncoder.encodeEnd(); }
 	}
 
 	// Update all covs with the current data chunks (if any)
@@ -327,7 +321,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 		for (uint32_t i = 0; i < m_NumClasses; i++)
 		{
-			OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].numSamples >= 2, 
+			OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].numSamples >= 2,
 								"Invalid sample count of [" <<m_IncCovarianceProxies[i].numSamples << "] for condition number " << i << " (expected value > 2)",
 								OpenViBE::Kernel::ErrorType::BadProcessing);
 

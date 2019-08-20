@@ -26,13 +26,13 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder[7];
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer[7];
 
-			bool m_bHasSentHeader = false;
+			bool m_bHasSentHeader    = false;
 			uint64_t m_ui64StartTime = 0;
-			uint64_t m_ui64EndTime = 0;
+			uint64_t m_ui64EndTime   = 0;
 
-			OpenViBE::CMatrix* m_pMatrix1 = nullptr;
-			OpenViBE::CMatrix* m_pMatrix2 = nullptr;
-			OpenViBE::CMatrix* m_pMatrix3 = nullptr;
+			OpenViBE::CMatrix* m_pMatrix1                = nullptr;
+			OpenViBE::CMatrix* m_pMatrix2                = nullptr;
+			OpenViBE::CMatrix* m_pMatrix3                = nullptr;
 			OpenViBE::CStimulationSet* m_pStimulationSet = nullptr;
 		};
 

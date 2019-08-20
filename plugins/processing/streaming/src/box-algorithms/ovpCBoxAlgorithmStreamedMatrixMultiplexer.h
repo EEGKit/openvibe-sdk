@@ -27,8 +27,8 @@ namespace OpenViBEPlugins
 		protected:
 
 			uint64_t m_lastStartTime = 0;
-			uint64_t m_lastEndTime = 0;
-			bool m_bHeaderSent = false;
+			uint64_t m_lastEndTime   = 0;
+			bool m_bHeaderSent       = false;
 		};
 
 		class CBoxAlgorithmStreamedMatrixMultiplexerListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

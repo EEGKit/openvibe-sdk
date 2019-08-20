@@ -4,7 +4,10 @@
 
 namespace OpenViBE
 {
-	namespace Plugins { class IPluginObject; }
+	namespace Plugins
+	{
+		class IPluginObject;
+	}
 	namespace Kernel
 	{
 		class IConfigurationManager;

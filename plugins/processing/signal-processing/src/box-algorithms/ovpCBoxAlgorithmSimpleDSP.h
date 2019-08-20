@@ -37,9 +37,9 @@ namespace OpenViBEPlugins
 
 			CEquationParser* m_pEquationParser = nullptr;
 
-			uint64_t m_ui64EquationType = OP_USERDEF;
+			uint64_t m_ui64EquationType          = OP_USERDEF;
 			double m_f64SpecialEquationParameter = 0;
-			double** m_ppVariable = nullptr;
+			double** m_ppVariable                = nullptr;
 
 			bool m_bCheckChunkDates = false;
 		};

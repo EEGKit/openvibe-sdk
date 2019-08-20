@@ -25,25 +25,13 @@ namespace OpenViBEToolkit
 			m_pOutputMemoryBuffer = pOutputChunkMemoryBuffer;
 		}
 
-		virtual OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getOutputMemoryBuffer()
-		{
-			return m_pOutputMemoryBuffer;
-		}
+		virtual OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*>& getOutputMemoryBuffer() { return m_pOutputMemoryBuffer; }
 
-		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
-		{
-			return m_pCodec->isOutputTriggerActive(oTrigger);
-		}
+		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger) { return m_pCodec->isOutputTriggerActive(oTrigger); }
 
-		virtual bool process(const OpenViBE::CIdentifier& oTrigger)
-		{
-			return m_pCodec->process(oTrigger);
-		}
+		virtual bool process(const OpenViBE::CIdentifier& oTrigger) { return m_pCodec->process(oTrigger); }
 
-		virtual bool process()
-		{
-			return m_pCodec->process();
-		}
+		virtual bool process() { return m_pCodec->process(); }
 
 		// The functions that need to be specified by the encoders (specific Trigger ID)
 		virtual bool encodeHeaderImpl() = 0;

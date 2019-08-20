@@ -43,10 +43,7 @@ THE SOFTWARE.
 
 namespace Dsp
 {
-	ParamInfo::ParamInfo()
-	{
-		throw std::logic_error("invalid usage of ParamInfo");
-	}
+	ParamInfo::ParamInfo() { throw std::logic_error("invalid usage of ParamInfo"); }
 
 	double ParamInfo::clamp(double nativeValue) const
 	{

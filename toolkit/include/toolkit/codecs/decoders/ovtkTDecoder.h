@@ -25,25 +25,13 @@ namespace OpenViBEToolkit
 			m_pInputMemoryBuffer = pInputChunkMemoryBuffer;
 		}
 
-		virtual OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*>& getInputMemoryBuffer()
-		{
-			return m_pInputMemoryBuffer;
-		}
+		virtual OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*>& getInputMemoryBuffer() { return m_pInputMemoryBuffer; }
 
-		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger)
-		{
-			return m_pCodec->isOutputTriggerActive(oTrigger);
-		}
+		virtual bool isOutputTriggerActive(OpenViBE::CIdentifier oTrigger) { return m_pCodec->isOutputTriggerActive(oTrigger); }
 
-		virtual bool process(const OpenViBE::CIdentifier& oTrigger)
-		{
-			return m_pCodec->process(oTrigger);
-		}
+		virtual bool process(const OpenViBE::CIdentifier& oTrigger) { return m_pCodec->process(oTrigger); }
 
-		virtual bool process()
-		{
-			return m_pCodec->process();
-		}
+		virtual bool process() { return m_pCodec->process(); }
 
 	public:
 		// We make visible the initialize methods of the superclass (should be TCodec), in the same scope (public)

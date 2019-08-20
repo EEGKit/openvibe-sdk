@@ -69,30 +69,15 @@ namespace OpenViBEToolkit
 			return m_pAlgorithmContext->getTypeManager(); // should never be null
 		}
 
-		virtual OpenViBE::CIdentifier getNextInputParameterIdentifier(const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const
-		{
-			return m_pAlgorithmContext->getNextInputParameterIdentifier(rPreviousInputParameterIdentifier);
-		}
+		virtual OpenViBE::CIdentifier getNextInputParameterIdentifier(const OpenViBE::CIdentifier& rPreviousInputParameterIdentifier) const { return m_pAlgorithmContext->getNextInputParameterIdentifier(rPreviousInputParameterIdentifier); }
 
-		virtual OpenViBE::Kernel::IParameter* getInputParameter(const OpenViBE::CIdentifier& rInputParameterIdentifier)
-		{
-			return m_pAlgorithmContext->getInputParameter(rInputParameterIdentifier);
-		}
+		virtual OpenViBE::Kernel::IParameter* getInputParameter(const OpenViBE::CIdentifier& rInputParameterIdentifier) { return m_pAlgorithmContext->getInputParameter(rInputParameterIdentifier); }
 
-		virtual OpenViBE::CIdentifier getNextOutputParameterIdentifier(const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const
-		{
-			return m_pAlgorithmContext->getNextOutputParameterIdentifier(rPreviousOutputParameterIdentifier);
-		}
+		virtual OpenViBE::CIdentifier getNextOutputParameterIdentifier(const OpenViBE::CIdentifier& rPreviousOutputParameterIdentifier) const { return m_pAlgorithmContext->getNextOutputParameterIdentifier(rPreviousOutputParameterIdentifier); }
 
-		virtual OpenViBE::Kernel::IParameter* getOutputParameter(const OpenViBE::CIdentifier& rOutputParameterIdentifier)
-		{
-			return m_pAlgorithmContext->getOutputParameter(rOutputParameterIdentifier);
-		}
+		virtual OpenViBE::Kernel::IParameter* getOutputParameter(const OpenViBE::CIdentifier& rOutputParameterIdentifier) { return m_pAlgorithmContext->getOutputParameter(rOutputParameterIdentifier); }
 
-		virtual bool isInputTriggerActive(const OpenViBE::CIdentifier& rInputTriggerIdentifier) const
-		{
-			return m_pAlgorithmContext->isInputTriggerActive(rInputTriggerIdentifier);
-		}
+		virtual bool isInputTriggerActive(const OpenViBE::CIdentifier& rInputTriggerIdentifier) const { return m_pAlgorithmContext->isInputTriggerActive(rInputTriggerIdentifier); }
 
 		virtual bool activateOutputTrigger(const OpenViBE::CIdentifier& rOutputTriggerIdentifier, const bool bTriggerState)
 		{

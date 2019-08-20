@@ -73,8 +73,8 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 				{
 					m_vStimulation.insert(std::make_pair(m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
 														 std::make_tuple(m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationIdentifier(stimulation),
-														 				 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
-														 				 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation))));
+																		 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
+																		 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation))));
 				}
 			}
 

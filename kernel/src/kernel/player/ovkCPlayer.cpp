@@ -77,7 +77,7 @@ bool CPlayer::setScenario(const CIdentifier& rScenarioIdentifier, const CNameVal
 	m_pRuntimeScenarioManager = new CScenarioManager(this->getKernelContext());
 	m_pRuntimeScenarioManager->cloneScenarioImportersAndExporters(this->getKernelContext().getScenarioManager());
 
-	OV_ERROR_UNLESS_KRF(m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier), 
+	OV_ERROR_UNLESS_KRF(m_pRuntimeScenarioManager->createScenario(m_oRuntimeScenarioIdentifier),
 						"Fail to create a scenario duplicate for the current runtime session", ErrorType::BadResourceCreation);
 
 	IScenario& l_rRuntimeScenario = m_pRuntimeScenarioManager->getScenario(m_oRuntimeScenarioIdentifier);
@@ -317,7 +317,7 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 
 	uint64_t l_ui64SchedulerStepDuration = m_oScheduler.getStepDuration();
 	uint64_t l_ui64StartTime             = System::Time::zgetTime();
-	bool l_bFinished                = false;
+	bool l_bFinished                     = false;
 	while (!l_bFinished)
 	{
 		uint64_t l_ui64NextSchedulerTime = m_oScheduler.getCurrentTime() + l_ui64SchedulerStepDuration;
@@ -380,8 +380,8 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 
 	uint64_t l_ui64LatenessSec = l_ui64Lateness >> 32;
 	uint64_t m_ui64LatenessSec = m_ui64Lateness >> 32;
-	OV_WARNING_UNLESS_K(l_ui64LatenessSec == m_ui64LatenessSec, "<" << LogColor_PushStateBit << LogColor_ForegroundBlue 
-						<< "Player" << LogColor_PopStateBit << "::" << LogColor_PushStateBit << LogColor_ForegroundBlue 
+	OV_WARNING_UNLESS_K(l_ui64LatenessSec == m_ui64LatenessSec, "<" << LogColor_PushStateBit << LogColor_ForegroundBlue
+						<< "Player" << LogColor_PopStateBit << "::" << LogColor_PushStateBit << LogColor_ForegroundBlue
 						<< "can not reach realtime" << LogColor_PopStateBit << "> " << l_ui64LatenessSec << " second(s) late...\n");
 
 	return true;

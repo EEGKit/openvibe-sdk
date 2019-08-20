@@ -65,15 +65,15 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	CIdentifier l_oClassifierAlgorithmClassIdentifier;
 
 	CIdentifier l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[c_sMulticlassStrategySettingName]);
-	l_oClassifierAlgorithmClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[c_sAlgorithmSettingName]);
+	l_oClassifierAlgorithmClassIdentifier  = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[c_sAlgorithmSettingName]);
 
 	if (l_oStrategyClassIdentifier == OV_UndefinedIdentifier)
 	{
 		//That means that we want to use a classical algorithm so just let's create it
 		const CIdentifier l_oClassifierAlgorithmIdentifier = this->getAlgorithmManager().createAlgorithm(l_oClassifierAlgorithmClassIdentifier);
 
-		OV_ERROR_UNLESS_KRF(l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier, 
-							"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmIdentifier.toString() << "]", 
+		OV_ERROR_UNLESS_KRF(l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
+							"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
 							OpenViBE::Kernel::ErrorType::BadConfig);
 
 		m_pClassifier = &this->getAlgorithmManager().getAlgorithm(l_oClassifierAlgorithmIdentifier);
@@ -192,10 +192,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 	// Collect index set of feature vectors per class
 	std::vector<std::vector<uint32_t>> l_vClassIndexes;
 	l_vClassIndexes.resize(l_ui32ClassCount);
-	for (size_t i = 0; i < m_vDataset.size(); i++)
-	{
-		l_vClassIndexes[m_vDataset[i].m_ui32InputIndex].push_back(i);
-	}
+	for (size_t i = 0; i < m_vDataset.size(); i++) { l_vClassIndexes[m_vDataset[i].m_ui32InputIndex].push_back(i); }
 
 	// Count how many vectors the largest class has
 	uint32_t l_ui32MaxCount = 0;
@@ -224,10 +221,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 		// Copy all the examples first to a temporary array so we don't mess with the original data.
 		// This is not too bad as instead of data, we copy the pointer. m_vDataset owns the data pointer.
 		const std::vector<uint32_t>& l_vThisClassesIndexes = l_vClassIndexes[i];
-		for (uint32_t j = 0; j < l_ui32ExamplesInClass; j++)
-		{
-			m_vBalancedDataset.push_back(m_vDataset[l_vThisClassesIndexes[j]]);
-		}
+		for (uint32_t j = 0; j < l_ui32ExamplesInClass; j++) { m_vBalancedDataset.push_back(m_vDataset[l_vThisClassesIndexes[j]]); }
 
 		for (uint32_t j = 0; j < l_ui32PaddingNeeded; j++)
 		{
@@ -330,10 +324,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 		}
 
 		const bool l_bBalanceDataset = this->getConfigurationManager().expandAsBoolean((*m_pParameter)[c_sBalanceSettingName]);
-		if (l_bBalanceDataset)
-		{
-			balanceDataset();
-		}
+		if (l_bBalanceDataset) { balanceDataset(); }
 
 		const std::vector<SFeatureVector>& l_rActualDataset = (l_bBalanceDataset ? m_vBalancedDataset : m_vDataset);
 
@@ -461,7 +452,7 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rD
 }
 
 // Note that this function is incremental for oConfusionMatrix and can be called many times; so we don't clear the matrix
-double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, 
+double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation,
 												   const size_t uiStartIndex, const size_t uiStopIndex, CMatrix& oConfusionMatrix)
 {
 	OV_ERROR_UNLESS_KRF(uiStopIndex != uiStartIndex, "Invalid indexes: start index equals stop index", OpenViBE::Kernel::ErrorType::BadArgument);
@@ -596,13 +587,13 @@ bool CBoxAlgorithmClassifierTrainer::saveConfiguration()
 	l_sRoot->addAttribute(c_sCreatorAttributeName, this->getConfigurationManager().expand("${Application_Name}"));
 	l_sRoot->addAttribute(c_sCreatorVersionAttributeName, this->getConfigurationManager().expand("${Application_Version}"));
 
-	XML::IXMLNode* l_pTempNode = XML::createNode(c_sStrategyNodeName);
+	XML::IXMLNode* l_pTempNode             = XML::createNode(c_sStrategyNodeName);
 	CIdentifier l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[c_sMulticlassStrategySettingName]);
 	l_pTempNode->addAttribute(c_sIdentifierAttributeName, l_oStrategyClassIdentifier.toString());
 	l_pTempNode->setPCData((*m_pParameter)[c_sMulticlassStrategySettingName].toASCIIString());
 	l_sRoot->addChild(l_pTempNode);
 
-	l_pTempNode                           = XML::createNode(c_sAlgorithmNodeName);
+	l_pTempNode                                       = XML::createNode(c_sAlgorithmNodeName);
 	CIdentifier l_oClassifierAlgorithmClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[c_sAlgorithmSettingName]);
 	l_pTempNode->addAttribute(c_sIdentifierAttributeName, l_oClassifierAlgorithmClassIdentifier.toString());
 	l_pTempNode->setPCData((*m_pParameter)[c_sAlgorithmSettingName].toASCIIString());

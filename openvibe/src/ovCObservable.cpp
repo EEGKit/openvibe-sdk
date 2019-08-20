@@ -13,19 +13,14 @@ struct CObservable::ObserverList
 	std::vector<IObserver *> m_oVector;
 };
 
-CObservable::CObservable(){
+CObservable::CObservable()
+{
 	m_pObserverList = new ObserverList();
 }
 
-CObservable::~CObservable()
-{
-	delete m_pObserverList;
-}
+CObservable::~CObservable() { delete m_pObserverList; }
 
-void CObservable::addObserver(IObserver* o)
-{
-	m_pObserverList->m_oVector.push_back(o);
-}
+void CObservable::addObserver(IObserver* o) { m_pObserverList->m_oVector.push_back(o); }
 
 void CObservable::deleteObserver(IObserver* o)
 {
@@ -50,10 +45,7 @@ void CObservable::clearChanged()
 	m_bHasChanged = false;
 }
 
-bool CObservable::hasChanged()
-{
-	return m_bHasChanged;
-}
+bool CObservable::hasChanged() { return m_bHasChanged; }
 
 void CObservable::notifyObservers(void* data)
 {

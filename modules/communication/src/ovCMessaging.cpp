@@ -89,10 +89,7 @@ void CMessaging::reset()
 	impl->m_Connection = nullptr;
 }
 
-CMessaging::ELibraryError CMessaging::getLastError() const
-{
-	return impl->m_LastLibraryError;
-}
+CMessaging::ELibraryError CMessaging::getLastError() const { return impl->m_LastLibraryError; }
 
 void CMessaging::setLastError(const ELibraryError libraryError)
 {
@@ -333,20 +330,11 @@ bool CMessaging::processBuffer(const std::vector<uint8_t>& buffer, size_t& byteR
 	return true;
 }
 
-bool CMessaging::isInErrorState() const
-{
-	return impl->m_IsInErrorState.load();
-}
+bool CMessaging::isInErrorState() const { return impl->m_IsInErrorState.load(); }
 
-bool CMessaging::isEndReceived()
-{
-	return impl->m_IsEndMessageReceived;
-}
+bool CMessaging::isEndReceived() { return impl->m_IsEndMessageReceived; }
 
-uint64_t CMessaging::getTime()
-{
-	return impl->m_Time;
-}
+uint64_t CMessaging::getTime() { return impl->m_Time; }
 
 bool CMessaging::pushMessage(const Message& message)
 {
@@ -363,10 +351,7 @@ bool CMessaging::pushMessage(const Message& message)
 	return true;
 }
 
-std::string CMessaging::getErrorString(ELibraryError error)
-{
-	return m_ErrorsString.at(error);
-}
+std::string CMessaging::getErrorString(ELibraryError error) { return m_ErrorsString.at(error); }
 
 bool CMessaging::isConnected()
 {

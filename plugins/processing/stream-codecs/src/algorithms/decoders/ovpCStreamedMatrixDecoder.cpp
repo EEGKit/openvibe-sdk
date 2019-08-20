@@ -29,10 +29,7 @@ namespace
 		{
 			src1++;
 		}
-		while (src1 < src2 && (*src2 == ' ' || *src2 == '\t' || *src2 == '\r' || *src2 == '\n'))
-		{
-			src2--;
-		}
+		while (src1 < src2 && (*src2 == ' ' || *src2 == '\t' || *src2 == '\r' || *src2 == '\n')) { src2--; }
 		src2++;
 		strncpy(dst, src1, src2 - src1);
 		dst[src2 - src1] = '\0';
@@ -105,10 +102,7 @@ void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 			m_ui32Status = Status_ParsingBuffer;
 		}
 	}
-	else
-	{
-		CEBMLBaseDecoder::openChild(rIdentifier);
-	}
+	else { CEBMLBaseDecoder::openChild(rIdentifier); }
 }
 
 void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)

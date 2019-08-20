@@ -315,7 +315,7 @@ namespace Dsp
 		if (c == infinity()) { c = -1; }
 		else { c = (1. + c) / (1. - c); }// bilinear 
 
-			complex_t u(0);
+		complex_t u(0);
 		u = addmul(u, 4 * (b2 + a2 - 1), c);
 		u += 8 * (b2 - a2 + 1);
 		u *= c;

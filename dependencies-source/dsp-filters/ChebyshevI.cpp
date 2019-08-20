@@ -111,9 +111,9 @@ namespace Dsp
 
 				double eps;
 				if (Gb != G0) { eps = sqrt((G * G - Gb * Gb) / (Gb * Gb - G0 * G0)); }
-				else { eps = G - 1;  } // This is surely wrong
+				else { eps = G - 1; } // This is surely wrong
 
-					const double b = pow(G / eps + Gb * sqrt(1 + 1 / (eps * eps)), 1. / numPoles);
+				const double b = pow(G / eps + Gb * sqrt(1 + 1 / (eps * eps)), 1. / numPoles);
 				const double u = log(b / g0);
 				const double v = log(pow(1. / eps + sqrt(1 + 1 / (eps * eps)), 1. / numPoles));
 
@@ -144,7 +144,7 @@ namespace Dsp
 			setLayout(m_digitalProto);
 		}
 
-		void HighPassBase::setup(int order, double sampleRate, double cutoffFrequency, double rippleDb) 
+		void HighPassBase::setup(int order, double sampleRate, double cutoffFrequency, double rippleDb)
 		{
 			m_analogProto.design(order, rippleDb);
 			HighPassTransform(cutoffFrequency / sampleRate, m_digitalProto, m_analogProto);
@@ -175,7 +175,7 @@ namespace Dsp
 		void HighShelfBase::setup(int order, double sampleRate, double cutoffFrequency, double gainDb, double rippleDb)
 		{
 			m_analogProto.design(order, gainDb, rippleDb);
-			HighPassTransform(cutoffFrequency / sampleRate, m_digitalProto, m_analogProto); 
+			HighPassTransform(cutoffFrequency / sampleRate, m_digitalProto, m_analogProto);
 			setLayout(m_digitalProto);
 		}
 

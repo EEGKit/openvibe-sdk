@@ -49,10 +49,7 @@ void CChannelUnitsDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	if ((l_rTop == OVTK_NodeId_Header_ChannelUnits)
 		|| (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic)
 	) { }
-	else
-	{
-		CStreamedMatrixDecoder::openChild(rIdentifier);
-	}
+	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
 }
 
 void CChannelUnitsDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
@@ -90,10 +87,7 @@ void CChannelUnitsDecoder::closeChild()
 		//	m_ui32UnitIndex++;
 		//}
 	}
-	else
-	{
-		CStreamedMatrixDecoder::closeChild();
-	}
+	else { CStreamedMatrixDecoder::closeChild(); }
 
 	m_vNodes.pop();
 }

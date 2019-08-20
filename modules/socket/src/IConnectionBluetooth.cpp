@@ -265,10 +265,7 @@ namespace Socket
 #endif
 		}
 
-		void release() override
-		{
-			delete this;
-		}
+		void release() override { delete this; }
 
 		bool connect(unsigned long long u64BluetoothAddress) override
 		{

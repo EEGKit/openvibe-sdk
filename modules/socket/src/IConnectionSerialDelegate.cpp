@@ -32,8 +32,5 @@ namespace Socket
 		bool setTimeouts(unsigned long ui32DecisecondsTimeout) override { return true; }	// return m_oConnectionSerialDelegate.fpSetTimeouts(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData, ui32DecisecondsTimeout);
 	};
 
-	IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate)
-	{
-		return new CConnectionSerialDelegate(oConnectionSerialDelegate);
-	}
+	IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) { return new CConnectionSerialDelegate(oConnectionSerialDelegate); }
 }  // namespace Socket

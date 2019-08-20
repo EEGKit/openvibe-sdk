@@ -90,20 +90,11 @@ namespace Dsp
 
 				static int getNumParams() { return 4; }
 
-				static const ParamInfo getParamInfo_1()
-				{
-					return ParamInfo::defaultGainParam();
-				}
+				static const ParamInfo getParamInfo_1() { return ParamInfo::defaultGainParam(); }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultPoleRealParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultPoleRealParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultZeroRealParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultZeroRealParam(); }
 
 				static Kind getKind() { return kindOther; }
 				static const char* getName() { return "Custom One-Pole"; }
@@ -125,30 +116,15 @@ namespace Dsp
 
 				static int getNumParams() { return 6; }
 
-				static const ParamInfo getParamInfo_1()
-				{
-					return ParamInfo::defaultGainParam();
-				}
+				static const ParamInfo getParamInfo_1() { return ParamInfo::defaultGainParam(); }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultPoleRhoParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultPoleRhoParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultPoleThetaParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultPoleThetaParam(); }
 
-				static const ParamInfo getParamInfo_4()
-				{
-					return ParamInfo::defaultZeroRhoParam();
-				}
+				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultZeroRhoParam(); }
 
-				static const ParamInfo getParamInfo_5()
-				{
-					return ParamInfo::defaultZeroThetaParam();
-				}
+				static const ParamInfo getParamInfo_5() { return ParamInfo::defaultZeroThetaParam(); }
 
 
 				static Kind getKind() { return kindOther; }

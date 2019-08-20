@@ -41,92 +41,38 @@ bool CPlayerContext::sendMessage(const CMessageEvent& rMessageEvent, const CIden
 	return false;
 }
 
-uint64_t CPlayerContext::getCurrentTime() const
-{
-	return m_rSimulatedBox.getScheduler().getCurrentTime();
-}
+uint64_t CPlayerContext::getCurrentTime() const { return m_rSimulatedBox.getScheduler().getCurrentTime(); }
 
-uint64_t CPlayerContext::getCurrentLateness() const
-{
-	return m_rSimulatedBox.getScheduler().getCurrentLateness();
-}
+uint64_t CPlayerContext::getCurrentLateness() const { return m_rSimulatedBox.getScheduler().getCurrentLateness(); }
 
-double CPlayerContext::getCurrentCPUUsage() const
-{
-	return m_rSimulatedBox.getScheduler().getCPUUsage();
-}
+double CPlayerContext::getCurrentCPUUsage() const { return m_rSimulatedBox.getScheduler().getCPUUsage(); }
 
-double CPlayerContext::getCurrentFastForwardMaximumFactor() const
-{
-	return m_rSimulatedBox.getScheduler().getFastForwardMaximumFactor();
-}
+double CPlayerContext::getCurrentFastForwardMaximumFactor() const { return m_rSimulatedBox.getScheduler().getFastForwardMaximumFactor(); }
 
-bool CPlayerContext::stop()
-{
-	return m_rSimulatedBox.getScheduler().getPlayer().stop();
-}
+bool CPlayerContext::stop() { return m_rSimulatedBox.getScheduler().getPlayer().stop(); }
 
-bool CPlayerContext::pause()
-{
-	return m_rSimulatedBox.getScheduler().getPlayer().pause();
-}
+bool CPlayerContext::pause() { return m_rSimulatedBox.getScheduler().getPlayer().pause(); }
 
-bool CPlayerContext::play()
-{
-	return m_rSimulatedBox.getScheduler().getPlayer().play();
-}
+bool CPlayerContext::play() { return m_rSimulatedBox.getScheduler().getPlayer().play(); }
 
-bool CPlayerContext::forward()
-{
-	return m_rSimulatedBox.getScheduler().getPlayer().forward();
-}
+bool CPlayerContext::forward() { return m_rSimulatedBox.getScheduler().getPlayer().forward(); }
 
-EPlayerStatus CPlayerContext::getStatus() const
-{
-	return m_rSimulatedBox.getScheduler().getPlayer().getStatus();
-}
+EPlayerStatus CPlayerContext::getStatus() const { return m_rSimulatedBox.getScheduler().getPlayer().getStatus(); }
 
-IAlgorithmManager& CPlayerContext::getAlgorithmManager() const
-{
-	return m_rAlgorithmManager;
-}
+IAlgorithmManager& CPlayerContext::getAlgorithmManager() const { return m_rAlgorithmManager; }
 
-IConfigurationManager& CPlayerContext::getConfigurationManager() const
-{
-	return m_rConfigurationManager;
-}
+IConfigurationManager& CPlayerContext::getConfigurationManager() const { return m_rConfigurationManager; }
 
-ILogManager& CPlayerContext::getLogManager() const
-{
-	return m_BoxLogManager;
-}
+ILogManager& CPlayerContext::getLogManager() const { return m_BoxLogManager; }
 
-IErrorManager& CPlayerContext::getErrorManager() const
-{
-	return m_rErrorManager;
-}
+IErrorManager& CPlayerContext::getErrorManager() const { return m_rErrorManager; }
 
-IScenarioManager& CPlayerContext::getScenarioManager() const
-{
-	return m_rScenarioManager;
-}
+IScenarioManager& CPlayerContext::getScenarioManager() const { return m_rScenarioManager; }
 
-ITypeManager& CPlayerContext::getTypeManager() const
-{
-	return m_rTypeManager;
-}
+ITypeManager& CPlayerContext::getTypeManager() const { return m_rTypeManager; }
 
-bool CPlayerContext::canCreatePluginObject(const CIdentifier& pluginIdentifier) const
-{
-	return m_rPluginManager.canCreatePluginObject(pluginIdentifier);
-}
+bool CPlayerContext::canCreatePluginObject(const CIdentifier& pluginIdentifier) const { return m_rPluginManager.canCreatePluginObject(pluginIdentifier); }
 
-Plugins::IPluginObject* CPlayerContext::createPluginObject(const CIdentifier& pluginIdentifier) const
-{
-	return m_rPluginManager.createPluginObject(pluginIdentifier);
-}
+Plugins::IPluginObject* CPlayerContext::createPluginObject(const CIdentifier& pluginIdentifier) const { return m_rPluginManager.createPluginObject(pluginIdentifier); }
 
-bool CPlayerContext::releasePluginObject(Plugins::IPluginObject* pluginObject) const
-{
-	return m_rPluginManager.releasePluginObject(pluginObject);
-}
+bool CPlayerContext::releasePluginObject(Plugins::IPluginObject* pluginObject) const { return m_rPluginManager.releasePluginObject(pluginObject); }

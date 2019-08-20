@@ -122,7 +122,7 @@ namespace OpenViBE
 								m_rLogManager << LogLevel_Trace << "Changing configuration token " << CString(l_sTokenName.c_str()) << " to " << CString(l_sTokenValue.c_str()) << "\n";
 
 								// warning if base token are overwritten here
-								OV_WARNING_UNLESS(l_sTokenName != "Path_UserData" && l_sTokenName != "Path_Log" && l_sTokenName != "Path_Tmp" 
+								OV_WARNING_UNLESS(l_sTokenName != "Path_UserData" && l_sTokenName != "Path_Log" && l_sTokenName != "Path_Tmp"
 												  && l_sTokenName != "Path_Lib" && l_sTokenName != "Path_Bin" && l_sTokenName != "OperatingSystem",
 												  "Overwriting critical token " << l_sTokenName.c_str(), m_rLogManager);
 
@@ -168,7 +168,7 @@ bool CConfigurationManager::addConfigurationFromFile(const CString& rFileNameWil
 
 	CConfigurationManagerEntryEnumeratorCallBack l_rCB(getKernelContext().getLogManager(), getKernelContext().getErrorManager(), *this);
 	FS::IEntryEnumerator* l_pEntryEnumerator = createEntryEnumerator(l_rCB);
-	const bool l_bResult = l_pEntryEnumerator->enumerate(rFileNameWildCard);
+	const bool l_bResult                     = l_pEntryEnumerator->enumerate(rFileNameWildCard);
 	l_pEntryEnumerator->release();
 	return l_bResult;
 }
@@ -216,10 +216,7 @@ CIdentifier CConfigurationManager::getNextConfigurationTokenIdentifier(const CId
 	else
 	{
 		itConfigurationToken = m_vConfigurationToken.find(rPreviousConfigurationTokenIdentifier);
-		if (itConfigurationToken == m_vConfigurationToken.end())
-		{
-			return OV_UndefinedIdentifier;
-		}
+		if (itConfigurationToken == m_vConfigurationToken.end()) { return OV_UndefinedIdentifier; }
 		++itConfigurationToken;
 	}
 
@@ -233,10 +230,7 @@ CString CConfigurationManager::getConfigurationTokenName(const CIdentifier& rCon
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
 	std::map<CIdentifier, SConfigurationToken>::const_iterator itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
-	if (itConfigurationToken != m_vConfigurationToken.end())
-	{
-		return itConfigurationToken->second.m_sConfigurationName;
-	}
+	if (itConfigurationToken != m_vConfigurationToken.end()) { return itConfigurationToken->second.m_sConfigurationName; }
 	return "";
 }
 
@@ -245,10 +239,7 @@ CString CConfigurationManager::getConfigurationTokenValue(const CIdentifier& rCo
 	std::unique_lock<std::recursive_mutex> lock(m_oMutex);
 
 	std::map<CIdentifier, SConfigurationToken>::const_iterator itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
-	if (itConfigurationToken != m_vConfigurationToken.end())
-	{
-		return itConfigurationToken->second.m_sConfigurationValue;
-	}
+	if (itConfigurationToken != m_vConfigurationToken.end()) { return itConfigurationToken->second.m_sConfigurationValue; }
 	return "";
 }
 
@@ -263,7 +254,7 @@ bool CConfigurationManager::setConfigurationTokenName(const CIdentifier& rConfig
 
 	std::map<CIdentifier, SConfigurationToken>::iterator itConfigurationToken = m_vConfigurationToken.find(rConfigurationTokenIdentifier);
 
-	OV_ERROR_UNLESS_KRF(itConfigurationToken != m_vConfigurationToken.end(), 
+	OV_ERROR_UNLESS_KRF(itConfigurationToken != m_vConfigurationToken.end(),
 						"Configuration token " << rConfigurationTokenIdentifier.toString() << " does not exist", ErrorType::BadResourceCreation);
 
 	itConfigurationToken->second.m_sConfigurationName = rConfigurationTokenName;
@@ -303,10 +294,7 @@ CIdentifier CConfigurationManager::lookUpConfigurationTokenIdentifier(const CStr
 	std::map<CIdentifier, SConfigurationToken>::const_iterator itConfigurationToken = m_vConfigurationToken.begin();
 	while (itConfigurationToken != m_vConfigurationToken.end())
 	{
-		if (itConfigurationToken->second.m_sConfigurationName == rConfigurationTokenName)
-		{
-			return itConfigurationToken->first;
-		}
+		if (itConfigurationToken->second.m_sConfigurationName == rConfigurationTokenName) { return itConfigurationToken->first; }
 		++itConfigurationToken;
 	}
 	if (bRecursive && m_pParentConfigurationManager)
@@ -323,16 +311,10 @@ CString CConfigurationManager::lookUpConfigurationTokenValue(const CString& rCon
 	std::map<CIdentifier, SConfigurationToken>::const_iterator itConfigurationToken = m_vConfigurationToken.begin();
 	while (itConfigurationToken != m_vConfigurationToken.end())
 	{
-		if (itConfigurationToken->second.m_sConfigurationName == rConfigurationTokenName)
-		{
-			return itConfigurationToken->second.m_sConfigurationValue;
-		}
+		if (itConfigurationToken->second.m_sConfigurationName == rConfigurationTokenName) { return itConfigurationToken->second.m_sConfigurationValue; }
 		++itConfigurationToken;
 	}
-	if (m_pParentConfigurationManager)
-	{
-		return m_pParentConfigurationManager->lookUpConfigurationTokenValue(rConfigurationTokenName);
-	}
+	if (m_pParentConfigurationManager) { return m_pParentConfigurationManager->lookUpConfigurationTokenValue(rConfigurationTokenName); }
 	return "";
 }
 
@@ -523,8 +505,8 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 					}
 					else
 					{
-						OV_ERROR_UNLESS_KRF(m_pParentConfigurationManager, 
-											"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()), 
+						OV_ERROR_UNLESS_KRF(m_pParentConfigurationManager,
+											"Could not expand token with " << CString(l_sPrefix.c_str()) << " prefix while expanding " << CString(sValue.c_str()),
 											ErrorType::BadFileParsing);
 
 						std::string l_sKeyword = "$" + l_sLowerPrefix + "{" + l_sLowerPostfix + "}";
@@ -666,7 +648,7 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 			case '\\':
 				if (preserveBackslashes) { l_vChildren.top().second += sValue[i]; }
 				i++;
-				OV_ERROR_UNLESS_KRF(i < sValue.length(), 
+				OV_ERROR_UNLESS_KRF(i < sValue.length(),
 									"Could not expand token with unterminated string while expanding " << CString(sValue.c_str()),
 									ErrorType::BadFileParsing);
 				l_vChildren.top().second += sValue[i];
@@ -748,7 +730,7 @@ uint64_t CConfigurationManager::expandAsUInteger(const CString& rExpression, con
 	return l_ui64Result;
 }
 
-bool CConfigurationManager::expandAsBoolean( const CString& rExpression, const bool bFallbackValue) const
+bool CConfigurationManager::expandAsBoolean(const CString& rExpression, const bool bFallbackValue) const
 {
 	std::string l_sResult = this->expand(rExpression).toASCIIString();
 	std::transform(l_sResult.begin(), l_sResult.end(), l_sResult.begin(), ::to_lower<std::string::value_type>);
@@ -796,10 +778,7 @@ CString CConfigurationManager::getDate() const
 	return l_sResult;
 }
 
-uint32_t CConfigurationManager::getRealTime() const
-{
-	return System::Time::getTime() - m_ui32StartTime;
-}
+uint32_t CConfigurationManager::getRealTime() const { return System::Time::getTime() - m_ui32StartTime; }
 
 uint32_t CConfigurationManager::getProcessId() const
 {

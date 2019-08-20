@@ -74,10 +74,7 @@ namespace OpenViBE
 
 		auto trimmed = trim(str.substr(currentIndex, delimiterIndex));
 
-		if (!trimmed.empty())
-		{
-			vec.push_back(trimmed);
-		}
+		if (!trimmed.empty()) { vec.push_back(trimmed); }
 
 		while (delimiterIndex != std::string::npos)
 		{
@@ -89,10 +86,7 @@ namespace OpenViBE
 
 			trimmed = trim(str.substr(currentIndex, delimiterIndex - currentIndex));
 
-			if (!trimmed.empty())
-			{
-				vec.push_back(trimmed);
-			}
+			if (!trimmed.empty()) { vec.push_back(trimmed); }
 		}
 
 		return vec;
@@ -228,10 +222,7 @@ namespace OpenViBE
 				{
 					auto errorCode = this->flush(sectionTag, sectionContent);
 
-					if (errorCode != PlayerReturnCode::Success)
-					{
-						return errorCode;
-					}
+					if (errorCode != PlayerReturnCode::Success) { return errorCode; }
 				}
 
 				// use of regex to be confident on tag structure
@@ -248,20 +239,14 @@ namespace OpenViBE
 				isFillingSection = true;
 				sectionContent.clear();
 			}
-			else
-			{
-				sectionContent.push_back(trimmedLine);
-			}
+			else { sectionContent.push_back(trimmedLine); }
 		}
 
 		if (isFillingSection)
 		{
 			auto errorCode = this->flush(sectionTag, sectionContent);
 
-			if (errorCode != PlayerReturnCode::Success)
-			{
-				return errorCode;
-			}
+			if (errorCode != PlayerReturnCode::Success) { return errorCode; }
 		}
 
 		return PlayerReturnCode::Success;
@@ -273,10 +258,7 @@ namespace OpenViBE
 		{
 			auto returnCode = m_CallbackList[sectionTag](sectionContent);
 
-			if (returnCode != PlayerReturnCode::Success)
-			{
-				return returnCode;
-			}
+			if (returnCode != PlayerReturnCode::Success) { return returnCode; }
 		}
 		catch (const std::exception& e)
 		{

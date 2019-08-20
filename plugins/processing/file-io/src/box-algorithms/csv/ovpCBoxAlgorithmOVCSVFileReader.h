@@ -48,7 +48,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier m_TypeIdentifier = OV_UndefinedIdentifier;
 			std::vector<std::string> m_ChannelNames;
 			std::vector<uint32_t> m_DimensionSizes;
-			uint32_t m_SamplingRate = 0;
+			uint32_t m_SamplingRate         = 0;
 			uint32_t m_SampleCountPerBuffer = 0;
 
 			bool m_IsHeaderSent;

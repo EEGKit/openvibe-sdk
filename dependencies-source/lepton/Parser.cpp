@@ -70,29 +70,24 @@ string Parser::trim(const string& expression)
 	int start, end;
 	for (start = 0; start < (int)expression.size() && isspace(expression[start]); start++) { }
 	for (end   = (int)expression.size() - 1; end > start && isspace(expression[end]); end--) { }
-	if (start == end && isspace(expression[end])) {	return ""; }
+	if (start == end && isspace(expression[end])) { return ""; }
 	return expression.substr(start, end - start + 1);
 }
 
 ParseToken Parser::getNextToken(const string& expression, int start)
 {
 	char c = expression[start];
-	if (c == '(')
-		return ParseToken("(", ParseToken::LeftParen);
-	if (c == ')')
-		return ParseToken(")", ParseToken::RightParen);
-	if (c == ',')
-		return ParseToken(",", ParseToken::Comma);
-	if (Operators.find(c) != string::npos)
-		return ParseToken(string(1, c), ParseToken::Operator);
+	if (c == '(') return ParseToken("(", ParseToken::LeftParen);
+	if (c == ')') return ParseToken(")", ParseToken::RightParen);
+	if (c == ',') return ParseToken(",", ParseToken::Comma);
+	if (Operators.find(c) != string::npos) return ParseToken(string(1, c), ParseToken::Operator);
 	if (isspace(c))
 	{
 		// White space
 
 		for (int pos = start + 1; pos < (int)expression.size(); pos++)
 		{
-			if (!isspace(expression[pos]))
-				return ParseToken(expression.substr(start, pos - start), ParseToken::Whitespace);
+			if (!isspace(expression[pos])) return ParseToken(expression.substr(start, pos - start), ParseToken::Whitespace);
 		}
 		return ParseToken(expression.substr(start, string::npos), ParseToken::Whitespace);
 	}
@@ -106,8 +101,7 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 		for (pos = start + 1; pos < (int)expression.size(); pos++)
 		{
 			c = expression[pos];
-			if (Digits.find(c) != string::npos)
-				continue;
+			if (Digits.find(c) != string::npos) continue;
 			if (c == '.' && !foundDecimal)
 			{
 				foundDecimal = true;
@@ -132,10 +126,8 @@ ParseToken Parser::getNextToken(const string& expression, int start)
 	for (int pos = start; pos < (int)expression.size(); pos++)
 	{
 		c = expression[pos];
-		if (c == '(')
-			return ParseToken(expression.substr(start, pos - start + 1), ParseToken::Function);
-		if (Operators.find(c) != string::npos || c == ',' || c == ')' || isspace(c))
-			return ParseToken(expression.substr(start, pos - start), ParseToken::Variable);
+		if (c == '(') return ParseToken(expression.substr(start, pos - start + 1), ParseToken::Function);
+		if (Operators.find(c) != string::npos || c == ',' || c == ')' || isspace(c)) return ParseToken(expression.substr(start, pos - start), ParseToken::Variable);
 	}
 	return ParseToken(expression.substr(start, string::npos), ParseToken::Variable);
 }
@@ -147,8 +139,7 @@ vector<ParseToken> Parser::tokenize(const string& expression)
 	while (pos < (int)expression.size())
 	{
 		ParseToken token = getNextToken(expression, pos);
-		if (token.getType() != ParseToken::Whitespace)
-			tokens.push_back(token);
+		if (token.getType() != ParseToken::Whitespace) tokens.push_back(token);
 		pos += (int)token.getText().size();
 	}
 	return tokens;
@@ -168,15 +159,9 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 	while (true)
 	{
 		string::size_type pos = primaryExpression.find_last_of(';');
-		if (pos == string::npos)
-		{
-			break;
-		}
+		if (pos == string::npos) { break; }
 		string sub = trim(primaryExpression.substr(pos + 1));
-		if (sub.size() > 0)
-		{
-			subexpressions.push_back(sub);
-		}
+		if (sub.size() > 0) { subexpressions.push_back(sub); }
 		primaryExpression = primaryExpression.substr(0, pos);
 	}
 
@@ -186,16 +171,13 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 	for (int i = 0; i < (int)subexpressions.size(); i++)
 	{
 		string::size_type equalsPos = subexpressions[i].find('=');
-		if (equalsPos == string::npos)
-			throw Exception("Parse error: subexpression does not specify a name");
+		if (equalsPos == string::npos) throw Exception("Parse error: subexpression does not specify a name");
 		string name = trim(subexpressions[i].substr(0, equalsPos));
-		if (name.size() == 0)
-			throw Exception("Parse error: subexpression does not specify a name");
+		if (name.size() == 0) throw Exception("Parse error: subexpression does not specify a name");
 		vector<ParseToken> tokens = tokenize(subexpressions[i].substr(equalsPos + 1));
 		int pos                   = 0;
 		subexpDefs[name]          = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);
-		if (pos != tokens.size())
-			throw Exception("Parse error: unexpected text at end of subexpression: " + tokens[pos].getText());
+		if (pos != tokens.size()) throw Exception("Parse error: unexpected text at end of subexpression: " + tokens[pos].getText());
 	}
 
 	// Now parse the primary expression.
@@ -213,8 +195,7 @@ ParsedExpression Parser::parse(const string& expression, const map<string, Custo
 ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int& pos, const map<string, CustomFunction*>& customFunctions,
 										   const map<string, ExpressionTreeNode>& subexpressionDefs, int precedence)
 {
-	if (pos == tokens.size())
-		throw Exception("Parse error: unexpected end of expression");
+	if (pos == tokens.size()) throw Exception("Parse error: unexpected end of expression");
 
 	// Parse the next value (number, variable, function, parenthesized expression)
 
@@ -235,16 +216,14 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 			Operation* op = new Operation::Variable(token.getText());
 			result        = ExpressionTreeNode(op);
 		}
-		else
-			result = subexp->second;
+		else result = subexp->second;
 		pos++;
 	}
 	else if (token.getType() == ParseToken::LeftParen)
 	{
 		pos++;
 		result = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, 0);
-		if (pos == tokens.size() || tokens[pos].getType() != ParseToken::RightParen)
-			throw Exception("Parse error: unbalanced parentheses");
+		if (pos == tokens.size() || tokens[pos].getType() != ParseToken::RightParen) throw Exception("Parse error: unbalanced parentheses");
 		pos++;
 	}
 	else if (token.getType() == ParseToken::Function)
@@ -256,13 +235,9 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 		{
 			args.push_back(parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, 0));
 			moreArgs = (pos < (int)tokens.size() && tokens[pos].getType() == ParseToken::Comma);
-			if (moreArgs)
-				pos++;
+			if (moreArgs) pos++;
 		} while (moreArgs);
-		if (pos == tokens.size() || tokens[pos].getType() != ParseToken::RightParen)
-		{
-			throw Exception("Parse error: unbalanced parentheses");
-		}
+		if (pos == tokens.size() || tokens[pos].getType() != ParseToken::RightParen) { throw Exception("Parse error: unbalanced parentheses"); }
 		pos++;
 		Operation* op = getFunctionOperation(token.getText(), customFunctions);
 		try
@@ -293,10 +268,7 @@ ExpressionTreeNode Parser::parsePrecedence(const vector<ParseToken>& tokens, int
 		token            = tokens[pos];
 		int opIndex      = (int)Operators.find(token.getText());
 		int opPrecedence = Precedence[opIndex];
-		if (opPrecedence < precedence)
-		{
-			return result;
-		}
+		if (opPrecedence < precedence) { return result; }
 		pos++;
 		ExpressionTreeNode arg = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, LeftAssociative[opIndex] ? opPrecedence + 1 : opPrecedence);
 		Operation* op          = getOperatorOperation(token.getText());
@@ -368,8 +340,7 @@ Operation* Parser::getFunctionOperation(const std::string& name, const map<strin
 	// First check custom functions.
 
 	map<string, CustomFunction*>::const_iterator custom = customFunctions.find(trimmed);
-	if (custom != customFunctions.end())
-		return new Operation::Custom(trimmed, custom->second->clone());
+	if (custom != customFunctions.end()) return new Operation::Custom(trimmed, custom->second->clone());
 
 	// Now try standard functions.
 

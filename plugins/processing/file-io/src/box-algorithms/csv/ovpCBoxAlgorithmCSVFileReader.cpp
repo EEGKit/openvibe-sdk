@@ -33,10 +33,7 @@ namespace
 
 	void clearMatrix(std::vector<std::vector<std::string>>& vMatrix)
 	{
-		for (uint32_t i = 0; i < vMatrix.size(); i++)
-		{
-			vMatrix[i].clear();
-		}
+		for (uint32_t i = 0; i < vMatrix.size(); i++) { vMatrix[i].clear(); }
 		vMatrix.clear();
 	}
 }
@@ -238,10 +235,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 
 			if (m_oTypeIdentifier != OV_TypeId_Stimulations
 				&& m_oTypeIdentifier != OV_TypeId_Spectrum
-				&& m_oTypeIdentifier != OV_TypeId_ChannelLocalisation)
-			{
-				m_vDataMatrix.push_back(m_vLastLineSplit);
-			}
+				&& m_oTypeIdentifier != OV_TypeId_ChannelLocalisation) { m_vDataMatrix.push_back(m_vLastLineSplit); }
 		}
 		if ((m_oTypeIdentifier == OV_TypeId_StreamedMatrix || m_oTypeIdentifier == OV_TypeId_Signal)
 			&& feof(m_pFile) && l_ui32NbSamples < m_ui32SamplesPerBuffer)
@@ -270,10 +264,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 			{
 				m_vLastLineSplit = split(std::string(l_pLine), m_sSeparator);
 			}
-			else
-			{
-				m_vLastLineSplit.clear();
-			}
+			else { m_vLastLineSplit.clear(); }
 		}
 	}
 
@@ -287,10 +278,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 		//for the stimulation, the line contents in m_vLastLineSplit isn't processed.
 		if (m_oTypeIdentifier != OV_TypeId_Stimulations
 			&& m_oTypeIdentifier != OV_TypeId_Spectrum
-			&& m_oTypeIdentifier != OV_TypeId_ChannelLocalisation)
-		{
-			m_vLastLineSplit.clear();
-		}
+			&& m_oTypeIdentifier != OV_TypeId_ChannelLocalisation) { m_vLastLineSplit.clear(); }
 
 		//clear the Data Matrix.
 		clearMatrix(m_vDataMatrix);
@@ -464,10 +452,7 @@ bool CBoxAlgorithmCSVFileReader::process_channelLocalisation()
 	}
 
 	std::vector<std::vector<std::string>> l_vChannelBloc;
-	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
-	{
-		l_vChannelBloc.push_back(m_vDataMatrix[i]);
-	}
+	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++) { l_vChannelBloc.push_back(m_vDataMatrix[i]); }
 
 	//clear matrix
 	clearMatrix(m_vDataMatrix);
@@ -525,8 +510,8 @@ bool CBoxAlgorithmCSVFileReader::process_featureVector()
 	// Each vector has to be sent separately
 	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
 	{
-		OV_ERROR_UNLESS_KRF(m_vDataMatrix[i].size() == m_ui32ColumnCount, 
-							"Unexpected number of elements" << "(got " << uint64_t(m_vDataMatrix[i].size()) << ", expected " << m_ui32ColumnCount << ")", 
+		OV_ERROR_UNLESS_KRF(m_vDataMatrix[i].size() == m_ui32ColumnCount,
+							"Unexpected number of elements" << "(got " << uint64_t(m_vDataMatrix[i].size()) << ", expected " << m_ui32ColumnCount << ")",
 							ErrorType::BadParsing);
 
 		for (uint32_t j = 0; j < m_ui32ColumnCount - 1; j++)
@@ -582,7 +567,7 @@ bool CBoxAlgorithmCSVFileReader::process_spectrum()
 		}
 
 		((OpenViBEToolkit::TSpectrumEncoder<CBoxAlgorithmCSVFileReader>*)m_pAlgorithmEncoder)->getInputSamplingRate() = uint64_t(m_vDataMatrix.size() /
-																																			  (std::stod(m_vDataMatrix[m_vDataMatrix.size() - 1][m_ui32ColumnCount].c_str()) - std::stod(m_vDataMatrix[0][m_ui32ColumnCount].c_str())));
+																																 (std::stod(m_vDataMatrix[m_vDataMatrix.size() - 1][m_ui32ColumnCount].c_str()) - std::stod(m_vDataMatrix[0][m_ui32ColumnCount].c_str())));
 		m_bHeaderSent = true;
 		m_pAlgorithmEncoder->encodeHeader();
 
@@ -590,10 +575,7 @@ bool CBoxAlgorithmCSVFileReader::process_spectrum()
 	}
 
 	std::vector<std::vector<std::string>> l_vSpectrumBloc;
-	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++)
-	{
-		l_vSpectrumBloc.push_back(m_vDataMatrix[i]);
-	}
+	for (uint32_t i = 0; i < m_vDataMatrix.size(); i++) { l_vSpectrumBloc.push_back(m_vDataMatrix[i]); }
 
 	//clear matrix
 	clearMatrix(m_vDataMatrix);

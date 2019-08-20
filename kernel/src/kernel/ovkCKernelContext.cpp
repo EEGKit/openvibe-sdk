@@ -43,10 +43,7 @@ CKernelContext::CKernelContext(const IKernelContext* pMasterKernelContext, const
 	  , m_pLogListenerConsole(nullptr)
 	  , m_pLogListenerFile(nullptr) {}
 
-CKernelContext::~CKernelContext()
-{
-	this->uninitialize();
-}
+CKernelContext::~CKernelContext() { this->uninitialize(); }
 
 bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 {
@@ -217,16 +214,10 @@ bool CKernelContext::uninitialize()
 	// before destroying the Plugin Manager. We can not destroy the Scenario Manager first
 	// before Plugin Manager destructor needs it.
 	CIdentifier scenarioIdentifier;
-	while ((scenarioIdentifier = m_pScenarioManager->getNextScenarioIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier)
-	{
-		m_pScenarioManager->releaseScenario(scenarioIdentifier);
-	}
+	while ((scenarioIdentifier = m_pScenarioManager->getNextScenarioIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier) { m_pScenarioManager->releaseScenario(scenarioIdentifier); }
 
 	CIdentifier algorithmIdentifier;
-	while ((algorithmIdentifier = m_pAlgorithmManager->getNextAlgorithmIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier)
-	{
-		m_pAlgorithmManager->releaseAlgorithm(algorithmIdentifier);
-	}
+	while ((algorithmIdentifier = m_pAlgorithmManager->getNextAlgorithmIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier) { m_pAlgorithmManager->releaseAlgorithm(algorithmIdentifier); }
 
 	m_pPluginManager.reset();
 	m_pMetaboxManager.reset();
@@ -326,10 +317,7 @@ ELogLevel CKernelContext::earlyGetLogLevel(const CString& rLogLevelName)
 	assert(m_pLogManager);
 
 	std::string l_sValue(rLogLevelName.toASCIIString());
-	std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), [](char c)
-	{
-		return char(std::tolower(c));
-	});
+	std::transform(l_sValue.begin(), l_sValue.end(), l_sValue.begin(), [](char c) { return char(std::tolower(c)); });
 
 	if (l_sValue == "none") { return LogLevel_None; }
 	if (l_sValue == "debug") { return LogLevel_Debug; }

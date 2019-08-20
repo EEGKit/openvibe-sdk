@@ -127,10 +127,7 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	}
 	else
 	{
-		for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i)
-		{
-			(*i)->process(rWriterCallback);
-		}
+		for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { (*i)->process(rWriterCallback); }
 	}
 }
 

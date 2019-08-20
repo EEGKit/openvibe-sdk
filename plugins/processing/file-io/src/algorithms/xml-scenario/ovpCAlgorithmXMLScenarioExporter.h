@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 		protected:
 			void write(const char* sString) override; // XML::IWriterCallback
 
-			XML::IWriter* m_pWriter = nullptr;
+			XML::IWriter* m_pWriter                  = nullptr;
 			OpenViBE::IMemoryBuffer* m_pMemoryBuffer = nullptr;
 		};
 

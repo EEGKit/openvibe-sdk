@@ -18,8 +18,7 @@ void OpenViBEToolkit::registerClassificationComparisonFunction(const CIdentifier
 
 fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const CIdentifier& rClassIdentifier)
 {
-	if (mComparisionFunctionMap.count(rClassIdentifier.toUInteger()) == 0)
-		return nullptr;
+	if (mComparisionFunctionMap.count(rClassIdentifier.toUInteger()) == 0) return nullptr;
 	return mComparisionFunctionMap[rClassIdentifier.toUInteger()];
 }
 

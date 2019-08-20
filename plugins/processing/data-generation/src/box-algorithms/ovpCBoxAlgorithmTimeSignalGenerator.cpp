@@ -16,10 +16,7 @@ using namespace std;
 
 CBoxAlgorithmTimeSignalGenerator::CBoxAlgorithmTimeSignalGenerator() {}
 
-void CBoxAlgorithmTimeSignalGenerator::release()
-{
-	delete this;
-}
+void CBoxAlgorithmTimeSignalGenerator::release() { delete this; }
 
 bool CBoxAlgorithmTimeSignalGenerator::initialize()
 {

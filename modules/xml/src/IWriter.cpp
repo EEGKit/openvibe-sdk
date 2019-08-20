@@ -144,7 +144,4 @@ void CWriter::sanitize(string& sString, bool escapeQuotes)
 	}
 }
 
-XML_API IWriter* XML::createWriter(IWriterCallback& rWriterCallback)
-{
-	return new CWriter(rWriterCallback);
-}
+XML_API IWriter* XML::createWriter(IWriterCallback& rWriterCallback) { return new CWriter(rWriterCallback); }

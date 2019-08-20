@@ -28,18 +28,12 @@ void CAbstractTree::simplifyTree()
 	}
 }
 
-void CAbstractTree::levelOperators()
-{
-	m_pRoot->levelOperators();
-}
+void CAbstractTree::levelOperators() { m_pRoot->levelOperators(); }
 
 // Dirty hack to avoid GCC 4.3 crash at compilation time
 static void clear_m_oChildren(std::vector<CAbstractTreeNode *>& m_oChildren)
 {
-	for (size_t i = 0; i < m_oChildren.size(); i++)
-	{
-		delete m_oChildren[i];
-	}
+	for (size_t i = 0; i < m_oChildren.size(); i++) { delete m_oChildren[i]; }
 }
 
 CAbstractTreeParentNode::~CAbstractTreeParentNode()
@@ -100,10 +94,7 @@ void CAbstractTreeParentNode::levelOperators()
 						break;
 				}
 			}
-			else
-			{
-				l_oNewChildren.push_back(l_pChild);
-			}
+			else { l_oNewChildren.push_back(l_pChild); }
 		}
 	}
 
@@ -307,10 +298,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 			l_oNewChildren.push_back(new CAbstractTreeValueNode(l_f64TotalValue));
 
 			//adds the other remaining children
-			for (; i < l_ui64NumberOfChildren; i++)
-			{
-				l_oNewChildren.push_back(m_oChildren[i]);
-			}
+			for (; i < l_ui64NumberOfChildren; i++) { l_oNewChildren.push_back(m_oChildren[i]); }
 			//we keep this node, but modify its children
 			m_oChildren = l_oNewChildren;
 
@@ -331,10 +319,7 @@ bool CAbstractTreeParentNode::simplify(CAbstractTreeNode*& pModifiedNode)
 				{
 					//don't keep the valueNode
 					//adds the other remaining children
-					for (; i < l_ui64NumberOfChildren; i++)
-					{
-						l_oNewChildren.push_back(m_oChildren[i]);
-					}
+					for (; i < l_ui64NumberOfChildren; i++) { l_oNewChildren.push_back(m_oChildren[i]); }
 
 					//we keep this node, but modify its children
 					m_oChildren = l_oNewChildren;
@@ -402,10 +387,7 @@ void CAbstractTreeParentNode::useNegationOperator()
 				{
 					CAbstractTreeParentNode* l_pNewOperatorNode = new CAbstractTreeParentNode(OP_MUL, true);
 
-					for (size_t i = 1; i < l_ui64NumberOfChildren; i++)
-					{
-						l_pNewOperatorNode->addChild(m_oChildren[i]);
-					}
+					for (size_t i = 1; i < l_ui64NumberOfChildren; i++) { l_pNewOperatorNode->addChild(m_oChildren[i]); }
 
 					m_oChildren.clear();
 					m_oChildren.push_back(l_pNewOperatorNode);
@@ -415,10 +397,7 @@ void CAbstractTreeParentNode::useNegationOperator()
 	}
 }
 
-void CAbstractTree::generateCode(CEquationParser& oParser)
-{
-	m_pRoot->generateCode(oParser);
-}
+void CAbstractTree::generateCode(CEquationParser& oParser) { m_pRoot->generateCode(oParser); }
 
 void CAbstractTreeParentNode::generateCode(CEquationParser& oParser)
 {
@@ -431,10 +410,7 @@ void CAbstractTreeParentNode::generateCode(CEquationParser& oParser)
 	// and bugged to me. I simplified/corrected it
 
 	//if it is a unary operator/function
-	if(l_ui64NumberOfChildren==1)
-	{
-		oParser.push_op(m_ui64Identifier);
-	}
+	if(l_ui64NumberOfChildren==1) { oParser.push_op(m_ui64Identifier); }
 	else
 	{
 		for(size_t i = 0 ; i<l_ui64NumberOfChildren-1 ; i++)
@@ -450,15 +426,9 @@ void CAbstractTreeParentNode::generateCode(CEquationParser& oParser)
 #endif
 }
 
-void CAbstractTreeValueNode::generateCode(CEquationParser& oParser)
-{
-	oParser.push_value(m_f64Value);
-}
+void CAbstractTreeValueNode::generateCode(CEquationParser& oParser) { oParser.push_value(m_f64Value); }
 
-void CAbstractTreeVariableNode::generateCode(CEquationParser& oParser)
-{
-	oParser.push_var(m_ui32Index);
-}
+void CAbstractTreeVariableNode::generateCode(CEquationParser& oParser) { oParser.push_var(m_ui32Index); }
 
 void CAbstractTree::recognizeSpecialTree(uint64_t& ui64TreeIdentifier, double& f64Parameter)
 {

@@ -67,7 +67,7 @@ void CLogListenerConsole::log(const time64 value)
 	if (m_bTimeInSeconds)
 	{
 		uint64_t l_ui64Precision = m_ui64TimePrecision;
-		double l_f64Time      = ITimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
+		double l_f64Time         = ITimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
 		std::stringstream ss;
 		ss.precision(static_cast<long long>(l_ui64Precision));
 		ss.setf(std::ios::fixed, std::ios::floatfield);
@@ -339,10 +339,7 @@ void CLogListenerConsole::log(const ELogColor eLogColor)
 	if (m_bUseColor)
 	{
 		// Tests 'push state' bit
-		if (eLogColor & LogColor_PushStateBit)
-		{
-			m_vLogColor.push(m_eLogColor);
-		}
+		if (eLogColor & LogColor_PushStateBit) { m_vLogColor.push(m_eLogColor); }
 
 		// Tests 'pop state' bit
 		if (eLogColor & LogColor_PopStateBit)

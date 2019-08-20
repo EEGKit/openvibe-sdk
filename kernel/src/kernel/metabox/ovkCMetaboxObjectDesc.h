@@ -58,7 +58,7 @@ namespace OpenViBE
 
 				CString m_sName;
 				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
-				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
+				CIdentifier m_oIdentifier     = OV_UndefinedIdentifier;
 			} SIOStream;
 
 			typedef struct _SSetting

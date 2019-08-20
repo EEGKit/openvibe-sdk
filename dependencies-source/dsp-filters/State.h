@@ -166,12 +166,12 @@ namespace Dsp
 		{
 
 			// can be: in += m_s1_1;
-			m_v  = in + m_s1_1;
+			m_v        = in + m_s1_1;
 			double out = s.m_b0 * m_v + m_s3_1;
-			m_s1 = m_s2_1 - s.m_a1 * m_v;
-			m_s2 = -s.m_a2 * m_v;
-			m_s3 = s.m_b1 * m_v + m_s4_1;
-			m_s4 = s.m_b2 * m_v;
+			m_s1       = m_s2_1 - s.m_a1 * m_v;
+			m_s2       = -s.m_a2 * m_v;
+			m_s3       = s.m_b1 * m_v + m_s4_1;
+			m_s4       = s.m_b2 * m_v;
 
 			m_s4_1 = m_s4;
 			m_s3_1 = m_s3;
@@ -182,14 +182,14 @@ namespace Dsp
 		}
 
 	private:
-		double m_v = 0;
-		double m_s1 = 0;
+		double m_v    = 0;
+		double m_s1   = 0;
 		double m_s1_1 = 0;
-		double m_s2 = 0;
+		double m_s2   = 0;
 		double m_s2_1 = 0;
-		double m_s3 = 0;
+		double m_s3   = 0;
 		double m_s3_1 = 0;
-		double m_s4 = 0;
+		double m_s4   = 0;
 		double m_s4_1 = 0;
 	};
 
@@ -212,18 +212,18 @@ namespace Dsp
 		Sample process1(const Sample in, const BiquadBase& s, const double vsa)
 		{
 			double out = m_s1_1 + s.m_b0 * in + vsa;
-			m_s1   = m_s2_1 + s.m_b1 * in - s.m_a1 * out;
-			m_s2   = s.m_b2 * in - s.m_a2 * out;
-			m_s1_1 = m_s1;
-			m_s2_1 = m_s2;
+			m_s1       = m_s2_1 + s.m_b1 * in - s.m_a1 * out;
+			m_s2       = s.m_b2 * in - s.m_a2 * out;
+			m_s1_1     = m_s1;
+			m_s2_1     = m_s2;
 
 			return Sample(out);
 		}
 
 	private:
-		double m_s1 = 0;
+		double m_s1   = 0;
 		double m_s1_1 = 0;
-		double m_s2 = 0;
+		double m_s2   = 0;
 		double m_s2_1 = 0;
 	};
 
@@ -266,16 +266,10 @@ namespace Dsp
 	public:
 		const int getNumChannels() const { return 0; }
 
-		void reset()
-		{
-			throw std::logic_error("attempt to reset empty ChannelState");
-		}
+		void reset() { throw std::logic_error("attempt to reset empty ChannelState"); }
 
 		template <class FilterDesign, typename Sample>
-		void process(int numSamples, Sample* const* arrayOfChannels, FilterDesign& filter)
-		{
-			throw std::logic_error("attempt to process empty ChannelState");
-		}
+		void process(int numSamples, Sample* const* arrayOfChannels, FilterDesign& filter) { throw std::logic_error("attempt to process empty ChannelState"); }
 	};
 
 	//------------------------------------------------------------------------------

@@ -64,19 +64,13 @@ IXMLNodeImpl::~IXMLNodeImpl()
 	for (size_t i = 0; i < getChildCount(); ++i) { getChild(i)->release(); }
 }
 
-void IXMLNodeImpl::release()
-{
-	delete this;
-}
+void IXMLNodeImpl::release() { delete this; }
 
 IXMLNodeImpl::IXMLNodeImpl(const char* sName): m_sNodeName(sName)
 											   , m_sPCData("")
 											   , m_bHasPCData(false) {}
 
-const char* IXMLNodeImpl::getName() const
-{
-	return m_sNodeName.c_str();
-}
+const char* IXMLNodeImpl::getName() const { return m_sNodeName.c_str(); }
 
 bool IXMLNodeImpl::addAttribute(const char* sAttributeName, const char* sAttributeValue)
 {
@@ -112,20 +106,11 @@ void IXMLNodeImpl::appendPCData(const char* childData)
 	m_bHasPCData = true;
 }
 
-const char* IXMLNodeImpl::getPCData() const
-{
-	return m_sPCData.c_str();
-}
+const char* IXMLNodeImpl::getPCData() const { return m_sPCData.c_str(); }
 
-void IXMLNodeImpl::addChild(IXMLNode* pChildNode)
-{
-	m_oNodeVector.push_back(pChildNode);
-}
+void IXMLNodeImpl::addChild(IXMLNode* pChildNode) { m_oNodeVector.push_back(pChildNode); }
 
-IXMLNode* IXMLNodeImpl::getChild(const size_t iChildIndex) const
-{
-	return m_oNodeVector[iChildIndex];
-}
+IXMLNode* IXMLNodeImpl::getChild(const size_t iChildIndex) const { return m_oNodeVector[iChildIndex]; }
 
 IXMLNode* IXMLNodeImpl::getChildByName(const char* sName) const
 {
@@ -138,10 +123,7 @@ IXMLNode* IXMLNodeImpl::getChildByName(const char* sName) const
 	return nullptr;
 }
 
-size_t IXMLNodeImpl::getChildCount() const
-{
-	return m_oNodeVector.size();
-}
+size_t IXMLNodeImpl::getChildCount() const { return m_oNodeVector.size(); }
 
 std::string IXMLNodeImpl::sanitize(const string& sString) const
 {
@@ -212,7 +194,4 @@ char* IXMLNodeImpl::getXML(const uint32_t depth) const
 	return l_pRes;
 }
 
-OV_API IXMLNode* XML::createNode(const char* sName)
-{
-	return new IXMLNodeImpl(sName);
-}
+OV_API IXMLNode* XML::createNode(const char* sName) { return new IXMLNodeImpl(sName); }

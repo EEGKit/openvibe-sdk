@@ -179,13 +179,13 @@ bool CBoxAlgorithmTemporalFilter::process()
 		{
 			if (m_ui64FilterType != OVP_TypeId_FilterType_LowPass) // verification for high-pass, band-pass and band-stop filters
 			{
-				OV_ERROR_UNLESS_KRF(m_f64LowCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5, 
-									"Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value must meet nyquist criteria for sampling rate " << m_oDecoder.getOutputSamplingRate() << ")", 
+				OV_ERROR_UNLESS_KRF(m_f64LowCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
+									"Invalid low cut-off frequency [" << m_f64LowCutFrequency << "] (expected value must meet nyquist criteria for sampling rate " << m_oDecoder.getOutputSamplingRate() << ")",
 									OpenViBE::Kernel::ErrorType::BadConfig);
 			}
 			if (m_ui64FilterType != OVP_TypeId_FilterType_HighPass) // verification for low-pass, band-pass and band-stop filters
 			{
-				OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5, 
+				OV_ERROR_UNLESS_KRF(m_f64HighCutFrequency <= m_oDecoder.getOutputSamplingRate()*.5,
 									"Invalid high cut-off frequency [" << m_f64HighCutFrequency << "] (expected value must meet nyquist criteria for sampling rate " << m_oDecoder.getOutputSamplingRate() << ")",
 									OpenViBE::Kernel::ErrorType::BadConfig);
 			}
@@ -284,10 +284,7 @@ bool CBoxAlgorithmTemporalFilter::process()
 			}
 			m_oEncoder.encodeBuffer();
 		}
-		if (m_oDecoder.isEndReceived())
-		{
-			m_oEncoder.encodeEnd();
-		}
+		if (m_oDecoder.isEndReceived()) { m_oEncoder.encodeEnd(); }
 		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
 	}
 

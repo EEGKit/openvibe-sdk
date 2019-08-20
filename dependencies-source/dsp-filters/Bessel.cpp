@@ -45,10 +45,7 @@ namespace Dsp
 		// returns fact(n) = n!
 		static double fact(int n)
 		{
-			if (n == 0)
-			{
-				return 1;
-			}
+			if (n == 0) { return 1; }
 
 			double y = n;
 			for (double m = n; --m;)

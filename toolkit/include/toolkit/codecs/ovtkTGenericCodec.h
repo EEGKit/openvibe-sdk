@@ -77,15 +77,9 @@ namespace OpenViBEToolkit
 			: m_pStreamedMatrixDecoder(nullptr)
 			  , m_pSignalDecoder(nullptr)
 			  , m_pSpectrumDecoder(nullptr)
-			  , m_pFeatureVectorDecoder(nullptr)
-		{
-			this->reset();
-		}
+			  , m_pFeatureVectorDecoder(nullptr) { this->reset(); }
 
-		~TGenericDecoder()
-		{
-			this->uninitialize();
-		}
+		~TGenericDecoder() { this->uninitialize(); }
 
 		TGenericDecoder<T>& operator=(TStreamedMatrixDecoder<T>* pDecoder)
 		{
@@ -115,10 +109,7 @@ namespace OpenViBEToolkit
 			return *this;
 		}
 
-		void uninitialize()
-		{
-			this->reset();
-		}
+		void uninitialize() { this->reset(); }
 
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputMatrix()
 		{
@@ -127,17 +118,11 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate()
 		{
-			if (m_pSignalDecoder)
-			{
-				return m_pSignalDecoder->getOutputSamplingRate();
-			}
+			if (m_pSignalDecoder) { return m_pSignalDecoder->getOutputSamplingRate(); }
 			return m_pSpectrumDecoder->getOutputSamplingRate();
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputFrequencyAbcissa()
-		{
-			return m_pSpectrumDecoder->getOutputFrequencyAbscissa();
-		}
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getOutputFrequencyAbcissa() { return m_pSpectrumDecoder->getOutputFrequencyAbscissa(); }
 
 		bool decode(int, int)                   = delete;
 		bool decode(unsigned int, unsigned int) = delete;
@@ -208,15 +193,9 @@ namespace OpenViBEToolkit
 			: m_pStreamedMatrixEncoder(nullptr)
 			  , m_pSignalEncoder(nullptr)
 			  , m_pSpectrumEncoder(nullptr)
-			  , m_pFeatureVectorEncoder(nullptr)
-		{
-			this->reset();
-		}
+			  , m_pFeatureVectorEncoder(nullptr) { this->reset(); }
 
-		~TGenericEncoder()
-		{
-			this->uninitialize();
-		}
+		~TGenericEncoder() { this->uninitialize(); }
 
 		TGenericEncoder<T>& operator=(TStreamedMatrixEncoder<T>* pEncoder)
 		{
@@ -246,10 +225,7 @@ namespace OpenViBEToolkit
 			return *this;
 		}
 
-		void uninitialize()
-		{
-			this->reset();
-		}
+		void uninitialize() { this->reset(); }
 
 		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputMatrix()
 		{
@@ -258,17 +234,11 @@ namespace OpenViBEToolkit
 
 		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate()
 		{
-			if (m_pSignalEncoder)
-			{
-				return m_pSignalEncoder->getInputSamplingRate();
-			}
+			if (m_pSignalEncoder) { return m_pSignalEncoder->getInputSamplingRate(); }
 			return m_pSpectrumEncoder->getInputSamplingRate();
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbcissa()
-		{
-			return m_pSpectrumEncoder->getInputFrequencyAbscissa();
-		}
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbcissa() { return m_pSpectrumEncoder->getInputFrequencyAbscissa(); }
 
 		bool encodeHeader()
 		{

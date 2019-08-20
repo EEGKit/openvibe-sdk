@@ -29,14 +29,14 @@ namespace OpenViBEPlugins
 
 			const char* m_pWaveletType;
 			double m_dWaveletParameter = 0;
-			int m_iScaleCount_J = 0;
+			int m_iScaleCount_J        = 0;
 			double m_dHighestFrequency = 0;
 			double m_dSmallestScale_s0 = 0;
-			double m_dScaleSpacing_dj = 0;
+			double m_dScaleSpacing_dj  = 0;
 
 			const char* m_pScaleType;
-			int m_iScalePowerBase_a0 = 0;
-			double m_dSamplingPeriod_dt = 0;
+			int m_iScalePowerBase_a0       = 0;
+			double m_dSamplingPeriod_dt    = 0;
 			cwt_object m_oWaveletTransform = nullptr;
 		};
 

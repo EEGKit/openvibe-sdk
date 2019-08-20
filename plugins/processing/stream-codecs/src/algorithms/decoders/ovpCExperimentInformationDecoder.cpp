@@ -90,10 +90,7 @@ void CExperimentInformationDecoder::openChild(const EBML::CIdentifier& rIdentifi
 		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName)
 		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
 		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName)) { }
-	else
-	{
-		CEBMLBaseDecoder::openChild(rIdentifier);
-	}
+	else { CEBMLBaseDecoder::openChild(rIdentifier); }
 }
 
 void CExperimentInformationDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
@@ -150,10 +147,7 @@ void CExperimentInformationDecoder::closeChild()
 		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName)
 		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
 		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName)) { }
-	else
-	{
-		CEBMLBaseDecoder::closeChild();
-	}
+	else { CEBMLBaseDecoder::closeChild(); }
 
 	m_vNodes.pop();
 }

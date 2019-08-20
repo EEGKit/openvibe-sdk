@@ -231,10 +231,7 @@ bool CommunicationProtocolVersionMessage::fromBytes(const std::vector<uint8_t>& 
 	return true;
 }
 
-EMessageType CommunicationProtocolVersionMessage::getMessageType() const
-{
-	return MessageType_ProtocolVersion;
-}
+EMessageType CommunicationProtocolVersionMessage::getMessageType() const { return MessageType_ProtocolVersion; }
 
 /******************************************************************************
 *

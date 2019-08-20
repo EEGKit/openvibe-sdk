@@ -77,19 +77,13 @@ namespace
 		else
 		{
 			it = elementMap.find(previousIdentifier);
-			if (it == elementMap.end())
-			{
-				return OV_UndefinedIdentifier;
-			}
+			if (it == elementMap.end()) { return OV_UndefinedIdentifier; }
 			++it;
 		}
 
 		while (it != elementMap.end())
 		{
-			if (testFunctor(it))
-			{
-				return it->first;
-			}
+			if (testFunctor(it)) { return it->first; }
 			++it;
 		}
 
@@ -109,19 +103,13 @@ namespace
 		else
 		{
 			it=elementMap.find(previousIdentifier);
-			if(it==elementMap.end())
-			{
-				return OV_UndefinedIdentifier;
-			}
+			if(it==elementMap.end()) { return OV_UndefinedIdentifier; }
 			++it;
 		}
 
 		while(it!=elementMap.end())
 		{
-			if(testFunctor(it))
-			{
-				return it->first;
-			}
+			if(testFunctor(it)) { return it->first; }
 			++it;
 		}
 
@@ -143,10 +131,7 @@ CScenario::CScenario(const IKernelContext& kernelContext, const CIdentifier& ide
 	this->m_oIdentifier = identifier;
 }
 
-CScenario::~CScenario()
-{
-	this->clear();
-}
+CScenario::~CScenario() { this->clear(); }
 
 //___________________________________________________________________//
 //                                                                   //
@@ -155,48 +140,27 @@ bool CScenario::clear()
 {
 	this->getLogManager() << LogLevel_Debug << "Clearing scenario\n";
 
-	for (auto& box : m_Boxes)
-	{
-		delete box.second;
-	}
+	for (auto& box : m_Boxes) { delete box.second; }
 	m_Boxes.clear();
 
-	for (auto& comment : m_Comments)
-	{
-		delete comment.second;
-	}
+	for (auto& comment : m_Comments) { delete comment.second; }
 	m_Comments.clear();
 
-	for (auto& metadata : m_Metadata)
-	{
-		delete metadata.second;
-	}
+	for (auto& metadata : m_Metadata) { delete metadata.second; }
 	m_Metadata.clear();
 	m_FirstMetadataIdentifier = OV_UndefinedIdentifier;
 	m_NextMetadataIdentifier.clear();
 
-	for (auto& link : m_Links)
-	{
-		delete link.second;
-	}
+	for (auto& link : m_Links) { delete link.second; }
 	m_Links.clear();
 
 	m_OutdatedBoxes.clear();
 
-	while (this->getSettingCount())
-	{
-		this->removeSetting(0);
-	}
+	while (this->getSettingCount()) { this->removeSetting(0); }
 
-	while (this->getInputCount())
-	{
-		this->removeScenarioInput(0);
-	}
+	while (this->getInputCount()) { this->removeScenarioInput(0); }
 
-	while (this->getOutputCount())
-	{
-		this->removeScenarioOutput(0);
-	}
+	while (this->getOutputCount()) { this->removeScenarioOutput(0); }
 
 	this->removeAllAttributes();
 
@@ -563,15 +527,9 @@ bool CScenario::removeComment(const CIdentifier& commentIdentifier)
 
 CIdentifier CScenario::getNextMetadataIdentifier(const CIdentifier& previousIdentifier) const
 {
-	if (previousIdentifier == OV_UndefinedIdentifier)
-	{
-		return m_FirstMetadataIdentifier;
-	}
+	if (previousIdentifier == OV_UndefinedIdentifier) { return m_FirstMetadataIdentifier; }
 
-	if (m_Metadata.count(previousIdentifier) == 0)
-	{
-		return OV_UndefinedIdentifier;
-	}
+	if (m_Metadata.count(previousIdentifier) == 0) { return OV_UndefinedIdentifier; }
 
 	return m_NextMetadataIdentifier.at(previousIdentifier);
 }
@@ -600,10 +558,7 @@ IMetadata* CScenario::getMetadataDetails(const CIdentifier& metadataIdentifier)
 	return itMetadata->second;
 }
 
-bool CScenario::isMetadata(const CIdentifier& identifier) const
-{
-	return m_Metadata.count(identifier) > 0;
-}
+bool CScenario::isMetadata(const CIdentifier& identifier) const { return m_Metadata.count(identifier) > 0; }
 
 bool CScenario::addMetadata(CIdentifier& metadataIdentifier, const CIdentifier& suggestedMetadataIdentifier)
 {
@@ -692,10 +647,7 @@ bool CScenario::setHasIO(const bool bHasIO)
 	return true;
 }
 
-bool CScenario::hasIO() const
-{
-	return m_HasIO;
-}
+bool CScenario::hasIO() const { return m_HasIO; }
 
 bool CScenario::setScenarioInputLink(const uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const uint32_t boxInputIndex)
 {
@@ -717,10 +669,7 @@ bool CScenario::setScenarioInputLink(const uint32_t scenarioInputIndex, const CI
 			ErrorType::OutOfBound);
 	}
 
-	if (scenarioInputIndex >= m_ScenarioInputLinks.size())
-	{
-		m_ScenarioInputLinks.resize(this->getInputCount());
-	}
+	if (scenarioInputIndex >= m_ScenarioInputLinks.size()) { m_ScenarioInputLinks.resize(this->getInputCount()); }
 
 	// Remove any existing inputs connected to the target
 	for (size_t inputLinkIndex = 0; inputLinkIndex < m_ScenarioInputLinks.size(); inputLinkIndex++)
@@ -740,10 +689,7 @@ bool CScenario::setScenarioInputLink(const uint32_t scenarioInputIndex, const CI
 	{
 		CIdentifier linkIdentifier = kv.first;
 		const CLink* link          = kv.second;
-		if (link->getTargetBoxIdentifier() == boxIdentifier && link->getTargetBoxInputIndex() == boxInputIndex)
-		{
-			this->disconnect(linkIdentifier);
-		}
+		if (link->getTargetBoxIdentifier() == boxIdentifier && link->getTargetBoxInputIndex() == boxInputIndex) { this->disconnect(linkIdentifier); }
 	}
 
 	m_ScenarioInputLinks[scenarioInputIndex] = std::make_pair(boxIdentifier, boxInputIndex);
@@ -785,10 +731,7 @@ bool CScenario::setScenarioOutputLink(const uint32_t scenarioOutputIndex, const 
 			ErrorType::OutOfBound);
 	}
 
-	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size())
-	{
-		m_ScenarioOutputLinks.resize(this->getOutputCount());
-	}
+	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size()) { m_ScenarioOutputLinks.resize(this->getOutputCount()); }
 
 	// Remove any existing outputs connected to the target
 	for (size_t outputLinkIndex = 0; outputLinkIndex < m_ScenarioOutputLinks.size(); outputLinkIndex++)
@@ -831,10 +774,7 @@ bool CScenario::getScenarioInputLink(const uint32_t scenarioInputIndex, CIdentif
 		"Scenario input index = [" << scenarioInputIndex << "] is out of range (max index = [" << (this->getInputCount() - 1) << "])",
 		ErrorType::OutOfBound);
 
-	if (scenarioInputIndex >= m_ScenarioInputLinks.size())
-	{
-		m_ScenarioInputLinks.resize(this->getInputCount());
-	}
+	if (scenarioInputIndex >= m_ScenarioInputLinks.size()) { m_ScenarioInputLinks.resize(this->getInputCount()); }
 
 	boxIdentifier = m_ScenarioInputLinks[scenarioInputIndex].first;
 	boxInputIndex = m_ScenarioInputLinks[scenarioInputIndex].second;
@@ -867,10 +807,7 @@ bool CScenario::getScenarioOutputLink(const uint32_t scenarioOutputIndex, CIdent
 		"Scenario output index = [" << scenarioOutputIndex << "] is out of range (max index = [" << (this->getOutputCount() - 1) << "])",
 		ErrorType::OutOfBound);
 
-	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size())
-	{
-		m_ScenarioOutputLinks.resize(this->getOutputCount());
-	}
+	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size()) { m_ScenarioOutputLinks.resize(this->getOutputCount()); }
 
 	boxIdentifier  = m_ScenarioOutputLinks[scenarioOutputIndex].first;
 	boxOutputIndex = m_ScenarioOutputLinks[scenarioOutputIndex].second;
@@ -919,10 +856,7 @@ bool CScenario::removeScenarioInputLink(const uint32_t scenarioInputIndex, const
 	}
 
 	// This should not happen either
-	if (scenarioInputIndex >= m_ScenarioInputLinks.size())
-	{
-		m_ScenarioInputLinks.resize(this->getInputCount());
-	}
+	if (scenarioInputIndex >= m_ScenarioInputLinks.size()) { m_ScenarioInputLinks.resize(this->getInputCount()); }
 
 	m_ScenarioInputLinks[scenarioInputIndex] = std::make_pair(OV_UndefinedIdentifier, 0);
 	return true;
@@ -951,10 +885,7 @@ bool CScenario::removeScenarioOutputLink(const uint32_t scenarioOutputIndex, con
 	}
 
 	// This should not happen either
-	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size())
-	{
-		m_ScenarioOutputLinks.resize(this->getOutputCount());
-	}
+	if (scenarioOutputIndex >= m_ScenarioOutputLinks.size()) { m_ScenarioOutputLinks.resize(this->getOutputCount()); }
 
 	m_ScenarioOutputLinks[scenarioOutputIndex] = std::make_pair(OV_UndefinedIdentifier, 0);
 	return true;
@@ -1285,8 +1216,7 @@ bool CScenario::hasOutdatedBox()
 {
 	for (auto& box : m_Boxes)
 	{
-		if (box.second->hasAttribute(OV_AttributeId_Box_ToBeUpdated))
-			return true;
+		if (box.second->hasAttribute(OV_AttributeId_Box_ToBeUpdated)) return true;
 	}
 	return false;
 }
@@ -1328,28 +1258,19 @@ bool CScenario::checkOutdatedBoxes()
 		// Do not attempt to update boxes which do not have existing box algorithm identifiers
 		auto boxAlgorithmClassIdentifier = box.second->getAlgorithmClassIdentifier();
 		if (boxAlgorithmClassIdentifier != OVP_ClassId_BoxAlgorithm_Metabox
-			&& !dynamic_cast<const IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(boxAlgorithmClassIdentifier)))
-		{
-			continue;
-		}
+			&& !dynamic_cast<const IBoxAlgorithmDesc*>(this->getKernelContext().getPluginManager().getPluginObjectDescCreating(boxAlgorithmClassIdentifier))) { continue; }
 
 		// Do not attempt to update metaboxes which do not have an associated scenario
 		if (boxAlgorithmClassIdentifier == OVP_ClassId_BoxAlgorithm_Metabox)
 		{
 			CString metaboxIdentifier = box.second->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
-			if (metaboxIdentifier == CString(""))
-			{
-				continue;
-			}
+			if (metaboxIdentifier == CString("")) { continue; }
 
 			CIdentifier metaboxId;
 			metaboxId.fromString(metaboxIdentifier);
 			CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
-			if (metaboxScenarioPath == CString(""))
-			{
-				continue;
-			}
+			if (metaboxScenarioPath == CString("")) { continue; }
 		}
 
 		// Box Updater instance which is in charge of create updated boxes and links
@@ -1457,10 +1378,7 @@ void CScenario::getOutdatedBoxIdentifierList(CIdentifier** identifierList, size_
 	getIdentifierList<std::shared_ptr<CBox>, TTestTrue<std::shared_ptr<CBox>>>(m_OutdatedBoxes, TTestTrue<std::shared_ptr<CBox>>(), identifierList, size);
 }
 
-void CScenario::releaseIdentifierList(CIdentifier* identifierList) const
-{
-	delete[] identifierList;
-}
+void CScenario::releaseIdentifierList(CIdentifier* identifierList) const { delete[] identifierList; }
 
 bool CScenario::getSourceBoxOutputIndex(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, uint32_t& sourceBoxOutputIndex)
 {
@@ -1630,10 +1548,7 @@ bool CScenario::updateBox(const CIdentifier& boxIdentifier)
 
 	for (const auto& attr : nonUpdatableAttributes)
 	{
-		if (attr.first == OV_AttributeId_Box_ToBeUpdated)
-		{
-			continue;
-		}
+		if (attr.first == OV_AttributeId_Box_ToBeUpdated) { continue; }
 		if (updatedBox->hasAttribute(attr.first))
 		{
 			updatedBox->setAttributeValue(attr.first, attr.second);
@@ -1746,10 +1661,7 @@ bool CScenario::removeDeprecatedInterfacorsFromBox(const CIdentifier& boxIdentif
 	for (auto interfacorType : { Input, Output, Setting })
 	{
 		auto interfacorCount = box->getInterfacorCountIncludingDeprecated(interfacorType);
-		if (interfacorCount == 0)
-		{
-			continue;
-		}
+		if (interfacorCount == 0) { continue; }
 		auto index = interfacorCount;
 		do
 		{

@@ -148,10 +148,7 @@ namespace OpenViBE
 			// not releasing the scenario before releasing the kernel
 			// causes a segfault on linux
 			auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
-			for (auto& scenarioPair : m_Pimpl->scenarioMap)
-			{
-				scenarioManager.releaseScenario(scenarioPair.second);
-			}
+			for (auto& scenarioPair : m_Pimpl->scenarioMap) { scenarioManager.releaseScenario(scenarioPair.second); }
 
 
 			OpenViBEToolkit::uninitialize(*m_Pimpl->kernelContext);
@@ -193,10 +190,7 @@ namespace OpenViBE
 		scenarioManager.getScenario(scenarioIdentifier).addAttribute(OV_AttributeId_ScenarioFilename, scenarioFile.c_str());
 
 		auto scenarioToReleaseIt = m_Pimpl->scenarioMap.find(scenarioName);
-		if (scenarioToReleaseIt != m_Pimpl->scenarioMap.end())
-		{
-			scenarioManager.releaseScenario(scenarioToReleaseIt->second);
-		}
+		if (scenarioToReleaseIt != m_Pimpl->scenarioMap.end()) { scenarioManager.releaseScenario(scenarioToReleaseIt->second); }
 
 		m_Pimpl->scenarioMap[scenarioName] = scenarioIdentifier;
 
@@ -227,10 +221,7 @@ namespace OpenViBE
 		CIdentifier* identifierList = nullptr;
 		size_t elemCount            = 0;
 		scenario.getOutdatedBoxIdentifierList(&identifierList, &elemCount);
-		for (size_t i = 0; i < elemCount; ++i)
-		{
-			scenario.updateBox(identifierList[i]);
-		}
+		for (size_t i = 0; i < elemCount; ++i) { scenario.updateBox(identifierList[i]); }
 
 		// export scenario to the destination file
 		if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(), m_Pimpl->scenarioMap[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))
@@ -309,10 +300,7 @@ namespace OpenViBE
 		{
 			auto scenarioName = scenarioPair.first;
 			if (std::find(scenarioList.begin(), scenarioList.end(), scenarioName) ==
-				scenarioList.end()) // not in the list of scenario to run
-			{
-				continue;
-			}
+				scenarioList.end()) { continue; } // not in the list of scenario to run 
 
 			CIdentifier playerIdentifier;
 			if (!playerManager.createPlayer(playerIdentifier) || playerIdentifier == OV_UndefinedIdentifier)
@@ -343,14 +331,8 @@ namespace OpenViBE
 
 			if (player->initialize() == PlayerReturnCode_Sucess)
 			{
-				if (command.playMode && command.playMode.get() == PlayerPlayMode::Fastfoward)
-				{
-					player->forward();
-				}
-				else
-				{
-					player->play();
-				}
+				if (command.playMode && command.playMode.get() == PlayerPlayMode::Fastfoward) { player->forward(); }
+				else { player->play(); }
 
 				playerList.push_back(player);
 			}
@@ -399,10 +381,7 @@ namespace OpenViBE
 						}
 					}
 
-					if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint)
-					{
-						p->stop();
-					}
+					if (p->getCurrentSimulatedTime() >= maxExecutionTimeInFixedPoint) { p->stop(); }
 
 					allStopped &= (p->getStatus() == PlayerStatus_Stop);
 				}

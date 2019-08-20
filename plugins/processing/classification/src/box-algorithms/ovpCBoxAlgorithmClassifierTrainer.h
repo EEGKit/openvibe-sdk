@@ -69,8 +69,8 @@ namespace OpenViBEPlugins
 			std::map<uint32_t, uint32_t> m_vFeatureCount;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier = nullptr;
-			uint64_t m_ui64TrainStimulation = 0;
-			uint64_t m_ui64PartitionCount = 0;
+			uint64_t m_ui64TrainStimulation                  = 0;
+			uint64_t m_ui64PartitionCount                    = 0;
 
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_oStimulationDecoder;
 			std::vector<OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_vFeatureVectorDecoder;

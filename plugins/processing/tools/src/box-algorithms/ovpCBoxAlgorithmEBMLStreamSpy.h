@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 			std::map<EBML::CIdentifier, std::string> m_vType;
 			uint64_t m_ui64ExpandValuesCount = 0;
 			OpenViBE::Kernel::ELogLevel m_eLogLevel;
-			EBML::IReader* m_pReader = nullptr;
+			EBML::IReader* m_pReader             = nullptr;
 			EBML::IReaderHelper* m_pReaderHelper = nullptr;
 		};
 

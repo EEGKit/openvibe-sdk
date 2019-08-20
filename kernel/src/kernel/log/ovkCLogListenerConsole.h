@@ -49,12 +49,10 @@ namespace OpenViBE
 			ELogColor m_eLogColor;
 			CString m_sApplicationName;
 
-			bool m_bLogWithHexa = false;
-			bool m_bTimeInSeconds = false;
+			bool m_bLogWithHexa          = false;
+			bool m_bTimeInSeconds        = false;
 			uint64_t m_ui64TimePrecision = 0;
-			bool m_bUseColor = false;
+			bool m_bUseColor             = false;
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE
-
-

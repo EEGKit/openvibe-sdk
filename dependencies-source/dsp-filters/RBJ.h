@@ -143,15 +143,9 @@ namespace Dsp
 
 				static int getNumParams() { return 3; }
 
-				static const ParamInfo getParamInfo_1()
-				{
-					return ParamInfo::defaultCutoffFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_1() { return ParamInfo::defaultCutoffFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultQParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultQParam(); }
 			};
 
 			template <class FilterClass>
@@ -172,15 +166,9 @@ namespace Dsp
 
 				static int getNumParams() { return 3; }
 
-				static const ParamInfo getParamInfo_1()
-				{
-					return ParamInfo::defaultCenterFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_1() { return ParamInfo::defaultCenterFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultBandwidthParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultBandwidthParam(); }
 			};
 
 			template <class FilterClass>
@@ -201,20 +189,11 @@ namespace Dsp
 
 				static int getNumParams() { return 4; }
 
-				static const ParamInfo getParamInfo_1()
-				{
-					return ParamInfo::defaultCutoffFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_1() { return ParamInfo::defaultCutoffFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultGainParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultGainParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultSlopeParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultSlopeParam(); }
 			};
 
 			template <class FilterClass>
@@ -235,20 +214,11 @@ namespace Dsp
 
 				static int getNumParams() { return 4; }
 
-				static const ParamInfo getParamInfo_1()
-				{
-					return ParamInfo::defaultCenterFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_1() { return ParamInfo::defaultCenterFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultGainParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultGainParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultBandwidthParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthParam(); }
 			};
 
 			template <class FilterClass>

@@ -30,7 +30,7 @@ namespace OpenViBE
 		{
 		public:
 			BoxEventMessageType m_eType;
-			int m_i32FirstIndex = 0;
+			int m_i32FirstIndex  = 0;
 			int m_i32SecondIndex = 0;
 		};
 
@@ -363,7 +363,7 @@ namespace OpenViBE
 			 * will be add to the end.
 			 */
 			virtual bool addSetting(const CString& rsName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const uint32_t ui32Index = OV_Value_UndefinedIndexUInt,
-									const bool bModifiability = false, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
+									const bool bModifiability                                                                                         = false, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
 
 			/**
 			 * \brief Removes a setting for this box

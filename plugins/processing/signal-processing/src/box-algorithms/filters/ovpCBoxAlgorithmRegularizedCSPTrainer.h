@@ -46,8 +46,8 @@ namespace OpenViBEPlugins
 			uint64_t m_StimulationIdentifier = 0;
 			OpenViBE::CString m_SpatialFilterConfigurationFilename;
 			uint32_t m_FiltersPerClass = 0;
-			bool m_SaveAsBoxConf = false;
-			bool m_HasBeenInitialized = false;
+			bool m_SaveAsBoxConf       = false;
+			bool m_HasBeenInitialized  = false;
 
 			double m_Tikhonov = 0;
 

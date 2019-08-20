@@ -72,8 +72,7 @@ namespace Dsp
 		}
 		else
 		{
-			while (--samples >= 0)
-				*dest++ += Td(*src++);
+			while (--samples >= 0) *dest++ += Td(*src++);
 		}
 	}
 
@@ -85,8 +84,7 @@ namespace Dsp
 			 Td* const* dest,
 			 Ts const* const* src)
 	{
-		for (int i = channels; --i >= 0;)
-			add(samples, dest[i], src[i]);
+		for (int i = channels; --i >= 0;) add(samples, dest[i], src[i]);
 	}
 
 	//--------------------------------------------------------------------------
@@ -135,8 +133,7 @@ namespace Dsp
 		}
 		else
 		{
-			while (--samples >= 0)
-				*dest++ = *src++;
+			while (--samples >= 0) *dest++ = *src++;
 		}
 	}
 
@@ -148,10 +145,8 @@ namespace Dsp
 			  int destSkip = 0,
 			  int srcSkip  = 0)
 	{
-		if (destSkip != 0 || srcSkip != 0)
-			copy<Ty, Ty>(samples, dest, src, destSkip, srcSkip);
-		else
-			::memcpy(dest, src, samples * sizeof(src[0]));
+		if (destSkip != 0 || srcSkip != 0) copy<Ty, Ty>(samples, dest, src, destSkip, srcSkip);
+		else ::memcpy(dest, src, samples * sizeof(src[0]));
 	}
 
 	// Copy a set of channels from src to dest, with implicit type conversion.
@@ -164,8 +159,7 @@ namespace Dsp
 			  int destSkip = 0,
 			  int srcSkip  = 0)
 	{
-		for (int i = channels; --i >= 0;)
-			copy(samples, dest[i], src[i], destSkip, srcSkip);
+		for (int i = channels; --i >= 0;) copy(samples, dest[i], src[i], destSkip, srcSkip);
 	}
 
 	//--------------------------------------------------------------------------
@@ -213,8 +207,7 @@ namespace Dsp
 
 			default:
 			{
-				for (int i = channels; --i >= 0;)
-					copy(samples, dest[i], src + i, 0, channels - 1);
+				for (int i = channels; --i >= 0;) copy(samples, dest[i], src + i, 0, channels - 1);
 			}
 				break;
 		}
@@ -263,8 +256,7 @@ namespace Dsp
 			  Ty start = 0,
 			  Ty end   = 1)
 	{
-		for (int i = channels; --i >= 0;)
-			fade(samples, dest[i], start, end);
+		for (int i = channels; --i >= 0;) fade(samples, dest[i], start, end);
 	}
 
 	// Fade src into dest
@@ -299,8 +291,7 @@ namespace Dsp
 			  Ty start = 0,
 			  Ty end   = 1)
 	{
-		for (int i = channels; --i >= 0;)
-			fade(samples, dest[i], src[i], start, end);
+		for (int i = channels; --i >= 0;) fade(samples, dest[i], src[i], start, end);
 	}
 
 	//--------------------------------------------------------------------------
@@ -317,8 +308,7 @@ namespace Dsp
 	{
 		assert(channels>1);
 
-		if (samples == 0)
-			return;
+		if (samples == 0) return;
 
 		switch (channels)
 		{
@@ -356,8 +346,7 @@ namespace Dsp
 
 			default:
 			{
-				for (int i = channels; --i >= 0;)
-					copy(samples, dest + i, src[i], channels - 1, 0);
+				for (int i = channels; --i >= 0;) copy(samples, dest + i, src[i], channels - 1, 0);
 			}
 				break;
 		}
@@ -417,8 +406,7 @@ namespace Dsp
 				  Ty factor,
 				  int destSkip = 0)
 	{
-		for (int i = channels; --i >= 0;)
-			multiply(samples, dest[i], factor, destSkip);
+		for (int i = channels; --i >= 0;) multiply(samples, dest[i], factor, destSkip);
 	}
 
 	//--------------------------------------------------------------------------
@@ -448,16 +436,14 @@ namespace Dsp
 		}
 		else
 		{
-			while (--samples >= 0)
-				*dest++ = *--src;
+			while (--samples >= 0) *dest++ = *--src;
 		}
 	}
 
 	template <typename Td, typename Ts>
 	void reverse(int channels, size_t frames, Td* const* dest, const Ts* const* src)
 	{
-		for (int i = channels; --i >= 0;)
-			reverse(frames, dest[i], src[i]);
+		for (int i = channels; --i >= 0;) reverse(frames, dest[i], src[i]);
 	}
 
 	//--------------------------------------------------------------------------
@@ -466,8 +452,7 @@ namespace Dsp
 	void to_mono(int samples, Tn* dest, Tn const* left, Tn const* right)
 	{
 #if 1
-		while (samples-- > 0)
-			*dest++ = (*left++ + *right++) * Tn(0.70710678118654752440084436210485);
+		while (samples-- > 0) *dest++ = (*left++ + *right++) * Tn(0.70710678118654752440084436210485);
 #else
   while (samples-- > 0)
     *dest++ = (*left++ + *right++) * Tn(0.5);
@@ -579,8 +564,7 @@ void zero (int samples,
 			  Ty* const* dest,
 			  int destSkip = 0)
 	{
-		for (int i = channels; --i >= 0;)
-			zero(samples, dest[i], destSkip);
+		for (int i = channels; --i >= 0;) zero(samples, dest[i], destSkip);
 	}
 
 	//------------------------------------------------------------------------------
@@ -610,15 +594,15 @@ void zero (int samples,
 		double& b = rightEnd;
 		double& x = minLoc;
 
-		double v = w = x = a + c * (b - a);
-		double d = e = 0.0;
-		double fv = fw = fx = f(x);
+		double v    = w  = x = a + c * (b - a);
+		double d    = e  = 0.0;
+		double fv   = fw = fx = f(x);
 		int counter = 0;
 	loop:
 		counter++;
-		double m = 0.5 * (a + b);
+		double m   = 0.5 * (a + b);
 		double tol = SQRT_DBL_EPSILON * fabs(x) + epsilon;
-		double t2 = 2.0 * tol;
+		double t2  = 2.0 * tol;
 		// Check stopping criteria
 		if (fabs(x - m) > t2 - 0.5 * (b - a))
 		{
@@ -640,8 +624,7 @@ void zero (int samples,
 				d = p / q;
 				u = x + d;
 				// f must not be evaluated too close to a or b
-				if (u - a < t2 || b - u < t2)
-					d = (x < m) ? tol : -tol;
+				if (u - a < t2 || b - u < t2) d = (x < m) ? tol : -tol;
 			}
 			else
 			{
@@ -651,12 +634,9 @@ void zero (int samples,
 				d = c * e;
 			}
 			// f must not be evaluated too close to x
-			if (fabs(d) >= tol)
-				u = x + d;
-			else if (d > 0.0)
-				u = x + tol;
-			else
-				u = x - tol;
+			if (fabs(d) >= tol) u = x + d;
+			else if (d > 0.0) u = x + tol;
+			else u              = x - tol;
 			double fu = f(u);
 			// Update a, b, v, w, and x
 			if (fu <= fx)
@@ -700,14 +680,10 @@ void zero (int samples,
 	public:
 		EnvelopeFollower()
 		{
-			for (int i = 0; i < Channels; i++)
-				m_env[i] = 0;
+			for (int i = 0; i < Channels; i++) m_env[i] = 0;
 		}
 
-		Value operator[](int channel) const
-		{
-			return m_env[channel];
-		}
+		Value operator[](int channel) const { return m_env[channel]; }
 
 		void Setup(int sampleRate, double attackMs, double releaseMs)
 		{
@@ -725,10 +701,8 @@ void zero (int samples,
 				for (int n = samples; n; n--)
 				{
 					double v = std::abs(*cur++);
-					if (v > e)
-						e = m_a * (e - v) + v;
-					else
-						e = m_r * (e - v) + v;
+					if (v > e) e = m_a * (e - v) + v;
+					else e       = m_r * (e - v) + v;
 				}
 				m_env[i] = e;
 			}
@@ -750,14 +724,10 @@ void zero (int samples,
 	public:
 		SlopeDetector() : m_firstTime(true)
 		{
-			for (int i = 0; i < Channels; ++i)
-				m_slope[i] = 0;
+			for (int i = 0; i < Channels; ++i) m_slope[i] = 0;
 		}
 
-		Value getSlope(int channel) const
-		{
-			return m_slope[channel];
-		}
+		Value getSlope(int channel) const { return m_slope[channel]; }
 
 		void process(size_t numSamples, const Value** input)
 		{

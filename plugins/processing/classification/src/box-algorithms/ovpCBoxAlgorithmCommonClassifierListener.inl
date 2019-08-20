@@ -90,10 +90,7 @@ namespace OpenViBEPlugins
 
 			virtual int getStrategySettingsCount(OpenViBE::Kernel::IBox& rBox)
 			{
-				if (m_i32StrategyAmountSettings < 0)//The value have never been initialized
-				{
-					initializedStrategy(rBox);
-				}
+				if (m_i32StrategyAmountSettings < 0) { initializedStrategy(rBox); }	//The value have never been initialized
 				return m_i32StrategyAmountSettings;
 			}
 
@@ -177,14 +174,8 @@ namespace OpenViBEPlugins
 
 			bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
 			{
-				if (ui32Index == getClassifierIndex(rBox))
-				{
-					return this->onAlgorithmClassifierChanged(rBox);
-				}
-				if (ui32Index == getStrategyIndex())
-				{
-					return this->onStrategyChanged(rBox);
-				}
+				if (ui32Index == getClassifierIndex(rBox)) { return this->onAlgorithmClassifierChanged(rBox); }
+				if (ui32Index == getStrategyIndex()) { return this->onStrategyChanged(rBox); }
 				return true;
 			}
 
@@ -281,7 +272,7 @@ namespace OpenViBEPlugins
 						//As we just switch to this strategy, we take the default value set in the strategy to initialize the value
 						OpenViBE::Kernel::IParameter* l_pParameter = m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
 						OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64Parameter(l_pParameter);
-						uint64_t l_ui64EnumValue = ip_ui64Parameter;
+						uint64_t l_ui64EnumValue      = ip_ui64Parameter;
 						OpenViBE::CString l_sEnumName = this->getTypeManager().getEnumerationEntryNameFromValue(l_oEnum, l_ui64EnumValue);
 
 						OpenViBE::CString l_sParameterName = this->getTypeManager().getTypeName(l_oEnum);

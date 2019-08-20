@@ -25,9 +25,9 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
 			bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-								  , double& rf64Class
-								  , OpenViBEToolkit::IVector& rDistanceValue
-								  , OpenViBEToolkit::IVector& rProbabilityValue) override;
+						  , double& rf64Class
+						  , OpenViBEToolkit::IVector& rDistanceValue
+						  , OpenViBEToolkit::IVector& rProbabilityValue) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
 			uint32_t getOutputProbabilityVectorLength() override;

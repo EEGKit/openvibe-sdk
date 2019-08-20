@@ -25,10 +25,7 @@ namespace Socket
 	public:
 		TConnectionDelegate(SConnectionDelegate oConnectionDelegate) : m_oConnectionDelegate(oConnectionDelegate) { }
 
-		virtual bool close()
-		{
-			return m_oConnectionDelegate.fpClose(m_oConnectionDelegate.pUserData);
-		}
+		virtual bool close() { return m_oConnectionDelegate.fpClose(m_oConnectionDelegate.pUserData); }
 
 		virtual bool isReadyToSend(const uint32_t ui32TimeOut) const
 		{

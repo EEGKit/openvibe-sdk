@@ -47,26 +47,14 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<bool>& getInputDynamic()
-		{
-			return m_bInputDynamic;
-		}
+		OpenViBE::Kernel::TParameterHandler<bool>& getInputDynamic() { return m_bInputDynamic; }
 
 	protected:
-		bool encodeHeaderImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeHeader);
-		}
+		bool encodeHeaderImpl() { return m_pCodec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeHeader); }
 
-		bool encodeBufferImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeBuffer);
-		}
+		bool encodeBufferImpl() { return m_pCodec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeBuffer); }
 
-		bool encodeEndImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeEnd);
-		}
+		bool encodeEndImpl() { return m_pCodec->process(OVP_GD_Algorithm_ChannelUnitsStreamEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	template <class T>

@@ -100,10 +100,7 @@ int main(int argc, char** argv)
 				return int(PlayerReturnCode::MissingMandatoryArgument);
 			}
 		}
-		else if ((mode == "x") || optionParser.hasOption("updated-scenario-file"))
-		{
-			commandParser.reset(new CommandLineOptionParser(optionParser));
-		}
+		else if ((mode == "x") || optionParser.hasOption("updated-scenario-file")) { commandParser.reset(new CommandLineOptionParser(optionParser)); }
 		else
 		{
 			std::cerr << "ERROR: unknown mode set" << std::endl;
@@ -125,16 +122,10 @@ int main(int argc, char** argv)
 				{
 					returnCode = cmd->execute(kernel);
 
-					if (returnCode != PlayerReturnCode::Success)
-					{
-						return int(returnCode);
-					}
+					if (returnCode != PlayerReturnCode::Success) { return int(returnCode); }
 				}
 			}
-			else
-			{
-				return int(returnCode);
-			}
+			else { return int(returnCode); }
 		}
 		catch (const std::exception& e)
 		{

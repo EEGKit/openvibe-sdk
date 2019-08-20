@@ -61,21 +61,18 @@ namespace Dsp
 		public:
 			void solve(int n);
 
-			double* coef()
-			{
-				return m_w;
-			}
+			double* coef() { return m_w; }
 
 		private:
 			void legendre(double* p, int n);
 
 		protected:
-			int m_maxN = 0;
-			double* m_w = nullptr;
-			double* m_a = nullptr;
-			double* m_p = nullptr;
-			double* m_s = nullptr;
-			double* m_v = nullptr;
+			int m_maxN   = 0;
+			double* m_w  = nullptr;
+			double* m_a  = nullptr;
+			double* m_p  = nullptr;
+			double* m_s  = nullptr;
+			double* m_v  = nullptr;
 			double* m_aa = nullptr;
 			double* m_bb = nullptr;
 		};
@@ -282,10 +279,7 @@ namespace Dsp
 
 				static int getNumParams() { return 3; }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultCutoffFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
 			};
 
 			template <class FilterClass>
@@ -306,15 +300,9 @@ namespace Dsp
 
 				static int getNumParams() { return 4; }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultCenterFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultBandwidthHzParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
 			};
 
 			template <class FilterClass>

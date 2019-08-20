@@ -35,8 +35,8 @@ namespace OpenViBEPlugins
 			std::vector<uint64_t> m_StreamDecoderEndTimes;
 
 			uint64_t m_LastStartTime = 0;
-			uint64_t m_LastEndTime = 0;
-			bool m_WasHeaderSent = false;
+			uint64_t m_LastEndTime   = 0;
+			bool m_WasHeaderSent     = false;
 
 			std::multimap<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> m_vStimulation;
 		};

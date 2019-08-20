@@ -32,14 +32,14 @@ namespace r8b
 	class CDSPSincFilterGen
 	{
 	public:
-		double Len2 = 0; ///< Required half filter kernel's length in samples (can be
+		double Len2   = 0; ///< Required half filter kernel's length in samples (can be
 		///< a fractional value). Final physical kernel length will be
 		///< provided in the KernelLen variable. Len2 should be >= 2.
 		///<
 		int KernelLen = 0; ///< Resulting length of the filter kernel, this variable
 		///< is set after the call to one of the "init" functions.
 		///<
-		int fl2 = 0; ///< Internal "half kernel length" value. This value can be used
+		int fl2       = 0; ///< Internal "half kernel length" value. This value can be used
 		///< as filter's latency in samples (taps), this variable is set after
 		///< the call to one of the "init" functions.
 		///<
@@ -253,10 +253,7 @@ namespace r8b
 			const double n = 1.0 - sqr(wn / Len2 + KaiserLen2Frac);
 			wn++;
 
-			if (n < 0.0)
-			{
-				return (0.0);
-			}
+			if (n < 0.0) { return (0.0); }
 
 			return (besselI0(KaiserBeta * sqrt(n)) / KaiserDiv);
 		}

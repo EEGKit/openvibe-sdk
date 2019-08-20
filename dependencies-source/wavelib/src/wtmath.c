@@ -125,8 +125,8 @@ int per_ext(double* sig, int len, int a, double* oup)
 	}
 	for (i = 0; i < a; ++i)
 	{
-		double temp1 = oup[a + i];
-		double temp2 = oup[a + len2 - 1 - i];
+		double temp1      = oup[a + i];
+		double temp2      = oup[a + len2 - 1 - i];
 		oup[a - 1 - i]    = temp2;
 		oup[len2 + a + i] = temp1;
 	}
@@ -158,8 +158,8 @@ int symm_ext(double* sig, int len, int a, double* oup)
 	int len2 = len;
 	for (i = 0; i < a; ++i)
 	{
-		double temp1 = oup[a + i];
-		double temp2 = oup[a + len2 - 1 - i];
+		double temp1      = oup[a + i];
+		double temp2      = oup[a + len2 - 1 - i];
 		oup[a - 1 - i]    = temp1;
 		oup[len2 + a + i] = temp2;
 	}
@@ -214,7 +214,7 @@ int testSWTlength(int N, int J)
 int wmaxiter(int sig_len, int filt_len)
 {
 	double temp = log((double)sig_len / ((double)filt_len - 1.0)) / log(2.0);
-	int lev = (int)temp;
+	int lev     = (int)temp;
 
 	return lev;
 }

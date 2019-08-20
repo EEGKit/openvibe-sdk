@@ -20,15 +20,10 @@ namespace
 		else
 		{
 			it = rMap.find(rPreviousIdentifier);
-			if (it == rMap.end())
-			{
-				return OV_UndefinedIdentifier;
-			}
+			if (it == rMap.end()) { return OV_UndefinedIdentifier; }
 			++it;
 		}
 
 		return it != rMap.end() ? it->first : OV_UndefinedIdentifier;
 	}
 }  // namespace
-
-

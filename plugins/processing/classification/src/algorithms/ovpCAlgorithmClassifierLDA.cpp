@@ -68,15 +68,9 @@ void CAlgorithmClassifierLDA::dumpMatrix(OpenViBE::Kernel::ILogManager &rMgr, co
 void CAlgorithmClassifierLDA::dumpMatrix(ILogManager& /* rMgr */, const MatrixXdRowMajor& /*mat*/, const CString& /*desc*/) { }
 #endif
 
-uint32_t CAlgorithmClassifierLDA::getOutputProbabilityVectorLength()
-{
-	return m_vDiscriminantFunctions.size();
-}
+uint32_t CAlgorithmClassifierLDA::getOutputProbabilityVectorLength() { return m_vDiscriminantFunctions.size(); }
 
-uint32_t CAlgorithmClassifierLDA::getOutputDistanceVectorLength()
-{
-	return m_vDiscriminantFunctions.size();
-}
+uint32_t CAlgorithmClassifierLDA::getOutputDistanceVectorLength() { return m_vDiscriminantFunctions.size(); }
 
 
 bool CAlgorithmClassifierLDA::initialize()
@@ -388,10 +382,7 @@ bool CAlgorithmClassifierLDA::classify(const IFeatureVector& rFeatureVector, dou
 	return true;
 }
 
-uint32_t CAlgorithmClassifierLDA::getClassCount()
-{
-	return m_ui32NumClasses;
-}
+uint32_t CAlgorithmClassifierLDA::getClassCount() { return m_ui32NumClasses; }
 
 XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration()
 {
@@ -405,10 +396,7 @@ XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration()
 
 	//Only new version should be recorded so we don't need to test
 	XML::IXMLNode* l_pHelpersConfiguration = XML::createNode(c_sComputationHelpersConfigurationNode);
-	for (size_t i = 0; i < m_vDiscriminantFunctions.size(); ++i)
-	{
-		l_pHelpersConfiguration->addChild(m_vDiscriminantFunctions[i].getConfiguration());
-	}
+	for (size_t i = 0; i < m_vDiscriminantFunctions.size(); ++i) { l_pHelpersConfiguration->addChild(m_vDiscriminantFunctions[i].getConfiguration()); }
 
 	XML::IXMLNode* l_pTempNode = XML::createNode(c_sClassesNodeName);
 	l_pTempNode->setPCData(l_sClasses.str().c_str());

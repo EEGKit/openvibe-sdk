@@ -49,8 +49,7 @@ CompiledExpression::CompiledExpression(const ParsedExpression& expression)
 CompiledExpression::~CompiledExpression()
 {
 	for (int i = 0; i < (int)operation.size(); i++)
-		if (operation[i] != nullptr)
-			delete operation[i];
+		if (operation[i] != nullptr) delete operation[i];
 }
 
 CompiledExpression::CompiledExpression(const CompiledExpression& expression)
@@ -76,8 +75,7 @@ CompiledExpression& CompiledExpression::operator=(const CompiledExpression& expr
 
 void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vector<pair<ExpressionTreeNode, int>>& temps)
 {
-	if (findTempIndex(node, temps) != -1)
-		return; // We have already processed a node identical to this one.
+	if (findTempIndex(node, temps) != -1) return; // We have already processed a node identical to this one.
 
 	// Process the child nodes.
 
@@ -101,23 +99,19 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 		arguments.push_back(vector<int>());
 		target.push_back((int)workspace.size());
 		operation.push_back(node.getOperation().clone());
-		if (args.size() == 0)
-			arguments[stepIndex].push_back(0); // The value won't actually be used.  We just need something there.
+		if (args.size() == 0) arguments[stepIndex].push_back(0); // The value won't actually be used.  We just need something there.
 		else
 		{
 			// If the arguments are sequential, we can just pass a pointer to the first one.
 
 			bool sequential = true;
 			for (unsigned int i = 1; i < args.size(); i++)
-				if (args[i] != args[i - 1] + 1)
-					sequential = false;
-			if (sequential)
-				arguments[stepIndex].push_back(args[0]);
+				if (args[i] != args[i - 1] + 1) sequential = false;
+			if (sequential) arguments[stepIndex].push_back(args[0]);
 			else
 			{
 				arguments[stepIndex] = args;
-				if (args.size() > argValues.size())
-					argValues.resize(args.size(), 0.0);
+				if (args.size() > argValues.size()) argValues.resize(args.size(), 0.0);
 			}
 		}
 	}
@@ -128,21 +122,16 @@ void CompiledExpression::compileExpression(const ExpressionTreeNode& node, vecto
 int CompiledExpression::findTempIndex(const ExpressionTreeNode& node, vector<pair<ExpressionTreeNode, int>>& temps)
 {
 	for (int i = 0; i < (int)temps.size(); i++)
-		if (temps[i].first == node)
-			return i;
+		if (temps[i].first == node) return i;
 	return -1;
 }
 
-const set<string>& CompiledExpression::getVariables() const
-{
-	return variableNames;
-}
+const set<string>& CompiledExpression::getVariables() const { return variableNames; }
 
 double& CompiledExpression::getVariableReference(const string& name)
 {
 	map<string, int>::iterator index = variableIndices.find(name);
-	if (index == variableIndices.end())
-		throw Exception("getVariableReference: Unknown variable '" + name + "'");
+	if (index == variableIndices.end()) throw Exception("getVariableReference: Unknown variable '" + name + "'");
 	return workspace[index->second];
 }
 
@@ -153,12 +142,10 @@ double CompiledExpression::evaluate() const
 	for (unsigned int step = 0; step < operation.size(); step++)
 	{
 		const vector<int>& args = arguments[step];
-		if (args.size() == 1)
-			workspace[target[step]] = operation[step]->evaluate(&workspace[args[0]], dummyVariables);
+		if (args.size() == 1) workspace[target[step]] = operation[step]->evaluate(&workspace[args[0]], dummyVariables);
 		else
 		{
-			for (int i = 0; i < args.size(); i++)
-				argValues[i] = workspace[args[i]];
+			for (int i = 0; i < args.size(); i++) argValues[i] = workspace[args[i]];
 			workspace[target[step]] = operation[step]->evaluate(&argValues[0], dummyVariables);
 		}
 	}

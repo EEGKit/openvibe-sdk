@@ -147,10 +147,7 @@ namespace Socket
 			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
 			int l_iResult = send(m_i32Socket, static_cast<const char*>(pBuffer), ui32BufferSize, Socket_SendFlags);
-			if (ui32BufferSize != 0 && l_iResult <= 0)
-			{
-				close();
-			}
+			if (ui32BufferSize != 0 && l_iResult <= 0) { close(); }
 			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
 		}
 
@@ -162,10 +159,7 @@ namespace Socket
 			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
 			int l_iResult = recv(m_i32Socket, static_cast<char *>(pBuffer), ui32BufferSize, Socket_ReceiveFlags);
-			if (ui32BufferSize != 0 && l_iResult <= 0)
-			{
-				close();
-			}
+			if (ui32BufferSize != 0 && l_iResult <= 0) { close(); }
 			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
 		}
 
@@ -200,10 +194,7 @@ namespace Socket
 
 		virtual void release()
 		{
-			if (isConnected())
-			{
-				close();
-			}
+			if (isConnected()) { close(); }
 			delete this;
 		}
 

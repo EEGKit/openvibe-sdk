@@ -43,8 +43,8 @@ namespace OpenViBEPlugins
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 
-			uint32_t m_ui32Status = 0;
-			uint32_t m_ui32DimensionIndex = 0;
+			uint32_t m_ui32Status              = 0;
+			uint32_t m_ui32DimensionIndex      = 0;
 			uint32_t m_ui32DimensionEntryIndex = 0;
 			//			uint32_t m_ui32DimensionEntryIndexUnit = 0;
 			uint64_t m_ui64MatrixBufferSize = 0;

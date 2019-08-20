@@ -48,10 +48,7 @@ namespace OpenViBE
 	>
 	bool translateException(Callback&& callable, ExceptionHandlerType exceptionHandler)
 	{
-		try
-		{
-			return callable();
-		}
+		try { return callable(); }
 		catch (const std::exception& exception)
 		{
 			exceptionHandler(exception);

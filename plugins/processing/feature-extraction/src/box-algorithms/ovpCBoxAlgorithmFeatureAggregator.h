@@ -50,7 +50,7 @@ namespace OpenViBEPlugins
 
 			//start time and end time of the last arrived chunk
 			uint64_t m_ui64LastChunkStartTime = 0;
-			uint64_t m_ui64LastChunkEndTime = 0;
+			uint64_t m_ui64LastChunkEndTime   = 0;
 
 			// number of inputs
 			uint32_t m_ui32NumberOfInput = 0;

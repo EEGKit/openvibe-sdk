@@ -64,10 +64,7 @@ TEST(validate_scenario_test_case, test_no_false_positive)
 	// in order to avoid a segfault
 	ASSERT_TRUE(g_context != nullptr);
 
-	for (unsigned int i = 0; i < 3; i++)
-	{
-		EXPECT_TRUE(importScenarioFromFile(files[i]));
-	}
+	for (unsigned int i = 0; i < 3; i++) { EXPECT_TRUE(importScenarioFromFile(files[i])); }
 }
 
 TEST(validate_scenario_test_case, test_root)

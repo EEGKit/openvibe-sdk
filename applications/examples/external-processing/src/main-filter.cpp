@@ -63,10 +63,7 @@ int main(int argc, char** argv)
 			exit(EXIT_FAILURE);
 		}
 
-		if (s_DidRequestForcedQuit)
-		{
-			exit(EXIT_SUCCESS);
-		}
+		if (s_DidRequestForcedQuit) { exit(EXIT_SUCCESS); }
 	}
 
 	std::cout << "Connected to server\n";
@@ -111,10 +108,7 @@ int main(int argc, char** argv)
 	}
 
 	// Announce to server that the box has finished initializing and wait for acknowledgement
-	while (!client.waitForSyncMessage())
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	}
+	while (!client.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 	client.pushLog(LogLevel_Info, "Received Ping");
 
 	client.pushSync();

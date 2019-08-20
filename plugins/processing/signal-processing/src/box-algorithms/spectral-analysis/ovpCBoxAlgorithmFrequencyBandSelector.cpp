@@ -42,12 +42,12 @@ bool CBoxAlgorithmFrequencyBandSelector::initialize()
 {
 	CString l_sSettingValue             = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	std::vector<std::string> l_vSetting = split(l_sSettingValue.toASCIIString(), OV_Value_EnumeratedStringSeparator);
-	bool l_bHadError = false;
+	bool l_bHadError                    = false;
 	CString l_sErrorMessage;
 	m_vSelected.clear();
 	for (std::vector<std::string>::const_iterator it = l_vSetting.begin(); it != l_vSetting.end(); ++it)
 	{
-		bool l_bGood    = true;
+		bool l_bGood                             = true;
 		std::vector<std::string> l_vSettingRange = split(*it, OV_Value_RangeStringSeparator);
 		if (l_vSettingRange.size() == 1)
 		{
@@ -173,10 +173,7 @@ bool CBoxAlgorithmFrequencyBandSelector::process()
 
 			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
-		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd))
-		{
-			m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd);
-		}
+		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputTriggerId_ReceivedEnd)) { m_pStreamEncoder->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd); }
 
 		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
 		l_rDynamicBoxContext.markInputAsDeprecated(0, i);

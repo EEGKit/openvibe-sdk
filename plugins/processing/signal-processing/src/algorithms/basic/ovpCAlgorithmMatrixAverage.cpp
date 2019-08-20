@@ -27,10 +27,7 @@ bool CAlgorithmMatrixAverage::initialize()
 
 bool CAlgorithmMatrixAverage::uninitialize()
 {
-	for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it)
-	{
-		delete *it;
-	}
+	for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete *it; }
 	m_vHistory.clear();
 
 	op_pAveragedMatrix.uninitialize();
@@ -108,10 +105,7 @@ bool CAlgorithmMatrixAverage::process()
 
 			if (m_vHistory.size() >= ip_ui64MatrixCount)
 			{
-				for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it)
-				{
-					delete *it;
-				}
+				for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete *it; }
 				m_vHistory.clear();
 			}
 

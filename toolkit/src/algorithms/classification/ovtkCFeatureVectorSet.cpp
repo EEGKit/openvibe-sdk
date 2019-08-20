@@ -23,10 +23,7 @@ const char* CInternalFeatureVector::getElementLabel(const uint32_t ui32Index) co
 
 bool CInternalFeatureVector::setElementLabel(const uint32_t ui32Index, const char* sElementLabel) { return false; }
 
-double CInternalFeatureVector::getLabel() const
-{
-	return m_pBuffer[m_ui32BufferElementCount];
-}
+double CInternalFeatureVector::getLabel() const { return m_pBuffer[m_ui32BufferElementCount]; }
 
 bool CInternalFeatureVector::setLabel(const double f64Label) { return false; }
 
@@ -36,10 +33,7 @@ bool CInternalFeatureVector::setLabel(const double f64Label) { return false; }
 CFeatureVectorSet::CFeatureVectorSet(const IMatrix& rMatrix)
 	: m_rMatrix(rMatrix)
 {
-	if (rMatrix.getDimensionCount() != 2)
-	{
-		throw std::runtime_error("Fetaure vector set matrix must be 2 dimensions");
-	}
+	if (rMatrix.getDimensionCount() != 2) { throw std::runtime_error("Fetaure vector set matrix must be 2 dimensions"); }
 
 	for (uint32_t i = 0; i < rMatrix.getDimensionSize(0); i++)
 	{
@@ -50,10 +44,7 @@ CFeatureVectorSet::CFeatureVectorSet(const IMatrix& rMatrix)
 	}
 }
 
-uint32_t CFeatureVectorSet::getFeatureVectorCount() const
-{
-	return m_rMatrix.getDimensionSize(0);
-}
+uint32_t CFeatureVectorSet::getFeatureVectorCount() const { return m_rMatrix.getDimensionSize(0); }
 
 bool CFeatureVectorSet::setFeatureVectorCount(const uint32_t ui32FeatureVectorCount) { return false; }
 

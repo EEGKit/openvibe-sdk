@@ -59,10 +59,7 @@ bool CBoxAlgorithmXDAWNTrainer::uninitialize()
 
 bool CBoxAlgorithmXDAWNTrainer::processInput(const uint32_t ui32InputIndex)
 {
-	if (ui32InputIndex == 0)
-	{
-		this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-	}
+	if (ui32InputIndex == 0) { this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
 
 	return true;
 }
@@ -208,7 +205,7 @@ bool CBoxAlgorithmXDAWNTrainer::process()
 		// Now we compute matrix D
 
 		Eigen::MatrixXd DI = Eigen::MatrixXd::Identity(sampleCountERP, sampleCountERP);
-		Eigen::MatrixXd D = Eigen::MatrixXd::Zero(sampleCountERP, sampleCountSession);
+		Eigen::MatrixXd D  = Eigen::MatrixXd::Zero(sampleCountERP, sampleCountSession);
 
 		for (unsigned int sampleIndex : ERPSampleIndexes)
 		{

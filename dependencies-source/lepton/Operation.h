@@ -171,29 +171,17 @@ namespace Lepton
 			return name.str();
 		}
 
-		Id getId() const override
-		{
-			return CONSTANT;
-		}
+		Id getId() const override { return CONSTANT; }
 
 		int getNumArguments() const override { return 0; }
 
-		Operation* clone() const override
-		{
-			return new Constant(value);
-		}
+		Operation* clone() const override { return new Constant(value); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return value;
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return value; }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 
-		double getValue() const
-		{
-			return value;
-		}
+		double getValue() const { return value; }
 
 		bool operator!=(const Operation& op) const override
 		{
@@ -210,22 +198,13 @@ namespace Lepton
 	public:
 		Variable(const std::string& name) : name(name) { }
 
-		std::string getName() const override
-		{
-			return name;
-		}
+		std::string getName() const override { return name; }
 
-		Id getId() const override
-		{
-			return VARIABLE;
-		}
+		Id getId() const override { return VARIABLE; }
 
 		int getNumArguments() const override { return 0; }
 
-		Operation* clone() const override
-		{
-			return new Variable(name);
-		}
+		Operation* clone() const override { return new Variable(name); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -259,25 +238,13 @@ namespace Lepton
 			derivOrder[derivIndex]++;
 		}
 
-		~Custom() override
-		{
-			delete function;
-		}
+		~Custom() override { delete function; }
 
-		std::string getName() const override
-		{
-			return name;
-		}
+		std::string getName() const override { return name; }
 
-		Id getId() const override
-		{
-			return CUSTOM;
-		}
+		Id getId() const override { return CUSTOM; }
 
-		int getNumArguments() const override
-		{
-			return function->getNumArguments();
-		}
+		int getNumArguments() const override { return function->getNumArguments(); }
 
 		Operation* clone() const override
 		{
@@ -298,10 +265,7 @@ namespace Lepton
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 
-		const std::vector<int>& getDerivOrder() const
-		{
-			return derivOrder;
-		}
+		const std::vector<int>& getDerivOrder() const { return derivOrder; }
 
 		bool operator!=(const Operation& op) const override
 		{
@@ -326,17 +290,11 @@ namespace Lepton
 			return "+";
 		}
 
-		Id getId() const override
-		{
-			return ADD;
-		}
+		Id getId() const override { return ADD; }
 
 		int getNumArguments() const override { return 2; }
 
-		Operation* clone() const override
-		{
-			return new Add();
-		}
+		Operation* clone() const override { return new Add(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -355,27 +313,15 @@ namespace Lepton
 	public:
 		Subtract() { }
 
-		std::string getName() const override
-		{
-			return "-";
-		}
+		std::string getName() const override { return "-"; }
 
-		Id getId() const override
-		{
-			return SUBTRACT;
-		}
+		Id getId() const override { return SUBTRACT; }
 
 		int getNumArguments() const override { return 2; }
 
-		Operation* clone() const override
-		{
-			return new Subtract();
-		}
+		Operation* clone() const override { return new Subtract(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return args[0] - args[1];
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return args[0] - args[1]; }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 
@@ -387,27 +333,15 @@ namespace Lepton
 	public:
 		Multiply() { }
 
-		std::string getName() const override
-		{
-			return "*";
-		}
+		std::string getName() const override { return "*"; }
 
-		Id getId() const override
-		{
-			return MULTIPLY;
-		}
+		Id getId() const override { return MULTIPLY; }
 
 		int getNumArguments() const override { return 2; }
 
-		Operation* clone() const override
-		{
-			return new Multiply();
-		}
+		Operation* clone() const override { return new Multiply(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return args[0] * args[1];
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return args[0] * args[1]; }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 
@@ -426,17 +360,11 @@ namespace Lepton
 			return "/";
 		}
 
-		Id getId() const override
-		{
-			return DIVIDE;
-		}
+		Id getId() const override { return DIVIDE; }
 
 		int getNumArguments() const override { return 2; }
 
-		Operation* clone() const override
-		{
-			return new Divide();
-		}
+		Operation* clone() const override { return new Divide(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -458,17 +386,11 @@ namespace Lepton
 			return "^";
 		}
 
-		Id getId() const override
-		{
-			return POWER;
-		}
+		Id getId() const override { return POWER; }
 
 		int getNumArguments() const override { return 2; }
 
-		Operation* clone() const override
-		{
-			return new Power();
-		}
+		Operation* clone() const override { return new Power(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -485,27 +407,15 @@ namespace Lepton
 	public:
 		Negate() { }
 
-		std::string getName() const override
-		{
-			return "-";
-		}
+		std::string getName() const override { return "-"; }
 
-		Id getId() const override
-		{
-			return NEGATE;
-		}
+		Id getId() const override { return NEGATE; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Negate();
-		}
+		Operation* clone() const override { return new Negate(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return -args[0];
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return -args[0]; }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -515,27 +425,15 @@ namespace Lepton
 	public:
 		Sqrt() { }
 
-		std::string getName() const override
-		{
-			return "sqrt";
-		}
+		std::string getName() const override { return "sqrt"; }
 
-		Id getId() const override
-		{
-			return SQRT;
-		}
+		Id getId() const override { return SQRT; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Sqrt();
-		}
+		Operation* clone() const override { return new Sqrt(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::sqrt(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::sqrt(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -545,27 +443,15 @@ namespace Lepton
 	public:
 		Exp() { }
 
-		std::string getName() const override
-		{
-			return "exp";
-		}
+		std::string getName() const override { return "exp"; }
 
-		Id getId() const override
-		{
-			return EXP;
-		}
+		Id getId() const override { return EXP; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Exp();
-		}
+		Operation* clone() const override { return new Exp(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::exp(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::exp(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -575,27 +461,15 @@ namespace Lepton
 	public:
 		Log() { }
 
-		std::string getName() const override
-		{
-			return "log";
-		}
+		std::string getName() const override { return "log"; }
 
-		Id getId() const override
-		{
-			return LOG;
-		}
+		Id getId() const override { return LOG; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Log();
-		}
+		Operation* clone() const override { return new Log(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::log(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::log(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -605,27 +479,15 @@ namespace Lepton
 	public:
 		Sin() { }
 
-		std::string getName() const override
-		{
-			return "sin";
-		}
+		std::string getName() const override { return "sin"; }
 
-		Id getId() const override
-		{
-			return SIN;
-		}
+		Id getId() const override { return SIN; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Sin();
-		}
+		Operation* clone() const override { return new Sin(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::sin(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::sin(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -635,27 +497,15 @@ namespace Lepton
 	public:
 		Cos() { }
 
-		std::string getName() const override
-		{
-			return "cos";
-		}
+		std::string getName() const override { return "cos"; }
 
-		Id getId() const override
-		{
-			return COS;
-		}
+		Id getId() const override { return COS; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Cos();
-		}
+		Operation* clone() const override { return new Cos(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::cos(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::cos(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -665,22 +515,13 @@ namespace Lepton
 	public:
 		Sec() { }
 
-		std::string getName() const override
-		{
-			return "sec";
-		}
+		std::string getName() const override { return "sec"; }
 
-		Id getId() const override
-		{
-			return SEC;
-		}
+		Id getId() const override { return SEC; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Sec();
-		}
+		Operation* clone() const override { return new Sec(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -695,22 +536,13 @@ namespace Lepton
 	public:
 		Csc() { }
 
-		std::string getName() const override
-		{
-			return "csc";
-		}
+		std::string getName() const override { return "csc"; }
 
-		Id getId() const override
-		{
-			return CSC;
-		}
+		Id getId() const override { return CSC; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Csc();
-		}
+		Operation* clone() const override { return new Csc(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -725,27 +557,15 @@ namespace Lepton
 	public:
 		Tan() { }
 
-		std::string getName() const override
-		{
-			return "tan";
-		}
+		std::string getName() const override { return "tan"; }
 
-		Id getId() const override
-		{
-			return TAN;
-		}
+		Id getId() const override { return TAN; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Tan();
-		}
+		Operation* clone() const override { return new Tan(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::tan(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::tan(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -755,22 +575,13 @@ namespace Lepton
 	public:
 		Cot() { }
 
-		std::string getName() const override
-		{
-			return "cot";
-		}
+		std::string getName() const override { return "cot"; }
 
-		Id getId() const override
-		{
-			return COT;
-		}
+		Id getId() const override { return COT; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Cot();
-		}
+		Operation* clone() const override { return new Cot(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -785,27 +596,15 @@ namespace Lepton
 	public:
 		Asin() { }
 
-		std::string getName() const override
-		{
-			return "asin";
-		}
+		std::string getName() const override { return "asin"; }
 
-		Id getId() const override
-		{
-			return ASIN;
-		}
+		Id getId() const override { return ASIN; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Asin();
-		}
+		Operation* clone() const override { return new Asin(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::asin(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::asin(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -815,27 +614,15 @@ namespace Lepton
 	public:
 		Acos() { }
 
-		std::string getName() const override
-		{
-			return "acos";
-		}
+		std::string getName() const override { return "acos"; }
 
-		Id getId() const override
-		{
-			return ACOS;
-		}
+		Id getId() const override { return ACOS; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Acos();
-		}
+		Operation* clone() const override { return new Acos(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::acos(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::acos(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -845,27 +632,15 @@ namespace Lepton
 	public:
 		Atan() { }
 
-		std::string getName() const override
-		{
-			return "atan";
-		}
+		std::string getName() const override { return "atan"; }
 
-		Id getId() const override
-		{
-			return ATAN;
-		}
+		Id getId() const override { return ATAN; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Atan();
-		}
+		Operation* clone() const override { return new Atan(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::atan(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::atan(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -875,27 +650,15 @@ namespace Lepton
 	public:
 		Sinh() { }
 
-		std::string getName() const override
-		{
-			return "sinh";
-		}
+		std::string getName() const override { return "sinh"; }
 
-		Id getId() const override
-		{
-			return SINH;
-		}
+		Id getId() const override { return SINH; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Sinh();
-		}
+		Operation* clone() const override { return new Sinh(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::sinh(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::sinh(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -905,27 +668,15 @@ namespace Lepton
 	public:
 		Cosh() { }
 
-		std::string getName() const override
-		{
-			return "cosh";
-		}
+		std::string getName() const override { return "cosh"; }
 
-		Id getId() const override
-		{
-			return COSH;
-		}
+		Id getId() const override { return COSH; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Cosh();
-		}
+		Operation* clone() const override { return new Cosh(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::cosh(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::cosh(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -935,27 +686,15 @@ namespace Lepton
 	public:
 		Tanh() { }
 
-		std::string getName() const override
-		{
-			return "tanh";
-		}
+		std::string getName() const override { return "tanh"; }
 
-		Id getId() const override
-		{
-			return TANH;
-		}
+		Id getId() const override { return TANH; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Tanh();
-		}
+		Operation* clone() const override { return new Tanh(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::tanh(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::tanh(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -965,22 +704,13 @@ namespace Lepton
 	public:
 		Erf() { }
 
-		std::string getName() const override
-		{
-			return "erf";
-		}
+		std::string getName() const override { return "erf"; }
 
-		Id getId() const override
-		{
-			return ERF;
-		}
+		Id getId() const override { return ERF; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Erf();
-		}
+		Operation* clone() const override { return new Erf(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override;
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
@@ -991,22 +721,13 @@ namespace Lepton
 	public:
 		Erfc() { }
 
-		std::string getName() const override
-		{
-			return "erfc";
-		}
+		std::string getName() const override { return "erfc"; }
 
-		Id getId() const override
-		{
-			return ERFC;
-		}
+		Id getId() const override { return ERFC; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Erfc();
-		}
+		Operation* clone() const override { return new Erfc(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override;
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
@@ -1017,22 +738,13 @@ namespace Lepton
 	public:
 		Step() { }
 
-		std::string getName() const override
-		{
-			return "step";
-		}
+		std::string getName() const override { return "step"; }
 
-		Id getId() const override
-		{
-			return STEP;
-		}
+		Id getId() const override { return STEP; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Step();
-		}
+		Operation* clone() const override { return new Step(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -1047,22 +759,13 @@ namespace Lepton
 	public:
 		Delta() { }
 
-		std::string getName() const override
-		{
-			return "delta";
-		}
+		std::string getName() const override { return "delta"; }
 
-		Id getId() const override
-		{
-			return DELTA;
-		}
+		Id getId() const override { return DELTA; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Delta();
-		}
+		Operation* clone() const override { return new Delta(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -1077,27 +780,15 @@ namespace Lepton
 	public:
 		Square() { }
 
-		std::string getName() const override
-		{
-			return "square";
-		}
+		std::string getName() const override { return "square"; }
 
-		Id getId() const override
-		{
-			return SQUARE;
-		}
+		Id getId() const override { return SQUARE; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Square();
-		}
+		Operation* clone() const override { return new Square(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return args[0] * args[0];
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return args[0] * args[0]; }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -1107,27 +798,15 @@ namespace Lepton
 	public:
 		Cube() { }
 
-		std::string getName() const override
-		{
-			return "cube";
-		}
+		std::string getName() const override { return "cube"; }
 
-		Id getId() const override
-		{
-			return CUBE;
-		}
+		Id getId() const override { return CUBE; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Cube();
-		}
+		Operation* clone() const override { return new Cube(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return args[0] * args[0] * args[0];
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return args[0] * args[0] * args[0]; }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};
@@ -1137,22 +816,13 @@ namespace Lepton
 	public:
 		Reciprocal() { }
 
-		std::string getName() const override
-		{
-			return "recip";
-		}
+		std::string getName() const override { return "recip"; }
 
-		Id getId() const override
-		{
-			return RECIPROCAL;
-		}
+		Id getId() const override { return RECIPROCAL; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Reciprocal();
-		}
+		Operation* clone() const override { return new Reciprocal(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -1174,17 +844,11 @@ namespace Lepton
 			return name.str();
 		}
 
-		Id getId() const override
-		{
-			return ADD_CONSTANT;
-		}
+		Id getId() const override { return ADD_CONSTANT; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new AddConstant(value);
-		}
+		Operation* clone() const override { return new AddConstant(value); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -1193,10 +857,7 @@ namespace Lepton
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 
-		double getValue() const
-		{
-			return value;
-		}
+		double getValue() const { return value; }
 
 		bool operator!=(const Operation& op) const override
 		{
@@ -1220,29 +881,17 @@ namespace Lepton
 			return name.str();
 		}
 
-		Id getId() const override
-		{
-			return MULTIPLY_CONSTANT;
-		}
+		Id getId() const override { return MULTIPLY_CONSTANT; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new MultiplyConstant(value);
-		}
+		Operation* clone() const override { return new MultiplyConstant(value); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return args[0] * value;
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return args[0] * value; }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 
-		double getValue() const
-		{
-			return value;
-		}
+		double getValue() const { return value; }
 
 		bool operator!=(const Operation& op) const override
 		{
@@ -1270,17 +919,11 @@ namespace Lepton
 			return name.str();
 		}
 
-		Id getId() const override
-		{
-			return POWER_CONSTANT;
-		}
+		Id getId() const override { return POWER_CONSTANT; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new PowerConstant(value);
-		}
+		Operation* clone() const override { return new PowerConstant(value); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -1298,8 +941,7 @@ namespace Lepton
 				double result = 1.0;
 				while (exponent != 0)
 				{
-					if ((exponent & 1) == 1)
-						result *= base;
+					if ((exponent & 1) == 1) result *= base;
 					base *= base;
 					exponent = exponent >> 1;
 				}
@@ -1310,10 +952,7 @@ namespace Lepton
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 
-		double getValue() const
-		{
-			return value;
-		}
+		double getValue() const { return value; }
 
 		bool operator!=(const Operation& op) const override
 		{
@@ -1334,22 +973,13 @@ namespace Lepton
 	public:
 		Min() { }
 
-		std::string getName() const override
-		{
-			return "min";
-		}
+		std::string getName() const override { return "min"; }
 
-		Id getId() const override
-		{
-			return MIN;
-		}
+		Id getId() const override { return MIN; }
 
 		int getNumArguments() const override { return 2; }
 
-		Operation* clone() const override
-		{
-			return new Min();
-		}
+		Operation* clone() const override { return new Min(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -1365,22 +995,13 @@ namespace Lepton
 	public:
 		Max() { }
 
-		std::string getName() const override
-		{
-			return "max";
-		}
+		std::string getName() const override { return "max"; }
 
-		Id getId() const override
-		{
-			return MAX;
-		}
+		Id getId() const override { return MAX; }
 
 		int getNumArguments() const override { return 2; }
 
-		Operation* clone() const override
-		{
-			return new Max();
-		}
+		Operation* clone() const override { return new Max(); }
 
 		double evaluate(double* args, const std::map<std::string, double>& variables) const override
 		{
@@ -1396,27 +1017,15 @@ namespace Lepton
 	public:
 		Abs() { }
 
-		std::string getName() const override
-		{
-			return "abs";
-		}
+		std::string getName() const override { return "abs"; }
 
-		Id getId() const override
-		{
-			return ABS;
-		}
+		Id getId() const override { return ABS; }
 
 		int getNumArguments() const override { return 1; }
 
-		Operation* clone() const override
-		{
-			return new Abs();
-		}
+		Operation* clone() const override { return new Abs(); }
 
-		double evaluate(double* args, const std::map<std::string, double>& variables) const override
-		{
-			return std::abs(args[0]);
-		}
+		double evaluate(double* args, const std::map<std::string, double>& variables) const override { return std::abs(args[0]); }
 
 		ExpressionTreeNode differentiate(const std::vector<ExpressionTreeNode>& children, const std::vector<ExpressionTreeNode>& childDerivs, const std::string& variable) const override;
 	};

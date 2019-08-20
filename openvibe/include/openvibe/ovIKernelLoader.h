@@ -4,7 +4,10 @@
 
 namespace OpenViBE
 {
-	namespace Kernel { class IKernelDesc; }
+	namespace Kernel
+	{
+		class IKernelDesc;
+	}
 
 	/**
 	 * \class IKernelLoader

@@ -24,12 +24,12 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::IMatrix* m_pMatrix = nullptr;
+			OpenViBE::IMatrix* m_pMatrix                        = nullptr;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
-			double m_f64MinCropValue = 0;
-			double m_f64MaxCropValue = 0;
-			uint64_t m_ui64CropMethod = 0;
+			double m_f64MinCropValue                            = 0;
+			double m_f64MaxCropValue                            = 0;
+			uint64_t m_ui64CropMethod                           = 0;
 		};
 
 		class CBoxAlgorithmCropListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

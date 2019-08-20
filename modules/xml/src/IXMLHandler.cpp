@@ -64,10 +64,7 @@ IXMLHandlerImpl::~IXMLHandlerImpl()
 	}
 }
 
-void IXMLHandlerImpl::release()
-{
-	delete this;
-}
+void IXMLHandlerImpl::release() { delete this; }
 
 
 IXMLHandlerImpl::IXMLHandlerImpl(): m_pXMLParser(nullptr),
@@ -182,10 +179,7 @@ std::stringstream& IXMLHandlerImpl::getErrorStringStream() const
 	return m_ssErrorStringStream;
 }
 
-std::string IXMLHandlerImpl::getLastErrorString() const
-{
-	return m_ssErrorStringStream.str();
-}
+std::string IXMLHandlerImpl::getLastErrorString() const { return m_ssErrorStringStream.str(); }
 
 static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, const char** ppAttribute)
 {
@@ -220,7 +214,4 @@ static void XMLCALL XML::expat_xml_data(void* pData, const char* pDataValue, int
 	static_cast<IXMLHandlerImpl*>(pData)->processChildData(sData.c_str());
 }
 
-OV_API IXMLHandler* XML::createXMLHandler()
-{
-	return new IXMLHandlerImpl();
-}
+OV_API IXMLHandler* XML::createXMLHandler() { return new IXMLHandlerImpl(); }

@@ -29,11 +29,11 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			uint64_t m_ui64MinimumVotes = 0;
-			double m_f64TimeWindow = 0;
-			uint64_t m_ui64RejectClassLabel = 0;
-			OpenViBE::CIdentifier m_oClearVotes = OV_UndefinedIdentifier;
-			OpenViBE::CIdentifier m_oOutputDateMode = OV_UndefinedIdentifier;
+			uint64_t m_ui64MinimumVotes                 = 0;
+			double m_f64TimeWindow                      = 0;
+			uint64_t m_ui64RejectClassLabel             = 0;
+			OpenViBE::CIdentifier m_oClearVotes         = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_oOutputDateMode     = OV_UndefinedIdentifier;
 			OpenViBE::CIdentifier m_oRejectClass_CanWin = OV_UndefinedIdentifier;
 
 		private:
@@ -46,7 +46,7 @@ namespace OpenViBEPlugins
 			std::deque<std::pair<uint64_t, uint64_t>> m_oStimulusDeque; // <label,time>
 
 			uint64_t m_ui64LatestStimulusDate = 0;
-			uint64_t m_ui64LastTime = 0;
+			uint64_t m_ui64LastTime           = 0;
 		};
 
 

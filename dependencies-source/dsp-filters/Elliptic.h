@@ -94,15 +94,15 @@ namespace Dsp
 #else
 #endif
 
-			double m_p0 = 0;
-			double m_q = 0;
-			double m_K = 0;
+			double m_p0     = 0;
+			double m_q      = 0;
+			double m_K      = 0;
 			double m_Kprime = 0;
-			double m_e = 0;
-			int m_nin = 0;
-			int m_m = 0;
-			int m_n2 = 0;
-			int m_em = 0;
+			double m_e      = 0;
+			int m_nin       = 0;
+			int m_m         = 0;
+			int m_n2        = 0;
+			int m_em        = 0;
 			double m_zeros[100];
 			double m_c1[100];
 			double m_b1[100];
@@ -119,9 +119,9 @@ namespace Dsp
 			double m_rootR[100];
 			double m_rootI[100];
 
-			int m_numPoles = 0;
+			int m_numPoles    = 0;
 			double m_rippleDb = 0;
-			double m_rolloff = 0;
+			double m_rolloff  = 0;
 		};
 
 		//------------------------------------------------------------------------------
@@ -201,20 +201,11 @@ namespace Dsp
 
 				static int getNumParams() { return 5; }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultCutoffFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultRippleDbParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultRippleDbParam(); }
 
-				static const ParamInfo getParamInfo_4()
-				{
-					return ParamInfo::defaultRolloffParam();
-				}
+				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultRolloffParam(); }
 			};
 
 			template <class FilterClass>
@@ -235,25 +226,13 @@ namespace Dsp
 
 				static int getNumParams() { return 6; }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultCenterFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultBandwidthHzParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
 
-				static const ParamInfo getParamInfo_4()
-				{
-					return ParamInfo::defaultRippleDbParam();
-				}
+				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultRippleDbParam(); }
 
-				static const ParamInfo getParamInfo_5()
-				{
-					return ParamInfo::defaultRolloffParam();
-				}
+				static const ParamInfo getParamInfo_5() { return ParamInfo::defaultRolloffParam(); }
 			};
 
 			template <class FilterClass>

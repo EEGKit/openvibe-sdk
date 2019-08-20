@@ -54,20 +54,11 @@ bool Math::initializeRandomMachine(const uint64_t ui64RandomSeed)
 	return true;
 }
 
-uint8_t Math::randomUInteger8()
-{
-	return uint8_t(randomUInteger64());
-}
+uint8_t Math::randomUInteger8() { return uint8_t(randomUInteger64()); }
 
-uint16_t Math::randomUInteger16()
-{
-	return uint16_t(randomUInteger64());
-}
+uint16_t Math::randomUInteger16() { return uint16_t(randomUInteger64()); }
 
-uint32_t Math::randomUInteger32()
-{
-	return uint32_t(randomUInteger64());
-}
+uint32_t Math::randomUInteger32() { return uint32_t(randomUInteger64()); }
 
 uint64_t Math::randomUInteger64()
 {
@@ -89,25 +80,13 @@ uint32_t Math::randomUInteger32WithCeiling(uint32_t ui32upperLimit)
 	return l_ui32ReturnValue;
 }
 
-int8_t Math::randomSInteger8()
-{
-	return int8_t(randomUInteger64());
-}
+int8_t Math::randomSInteger8() { return int8_t(randomUInteger64()); }
 
-int16_t Math::randomSInteger16()
-{
-	return int16_t(randomUInteger64());
-}
+int16_t Math::randomSInteger16() { return int16_t(randomUInteger64()); }
 
-int Math::randomSInteger32()
-{
-	return int(randomUInteger64());
-}
+int Math::randomSInteger32() { return int(randomUInteger64()); }
 
-int64_t Math::randomSInteger64()
-{
-	return int64_t(randomUInteger64());
-}
+int64_t Math::randomSInteger64() { return int64_t(randomUInteger64()); }
 
 float Math::randomFloat32()
 {

@@ -6,14 +6,17 @@ using namespace OpenViBE;
 
 namespace OpenViBE
 {
-	struct CStringImpl { std::string m_sValue; };
+	struct CStringImpl
+	{
+		std::string m_sValue;
+	};
 }
 
 CString::CString() { m_pStringImpl = new CStringImpl(); }
 
 CString::CString(const CString& rString)
 {
-	m_pStringImpl = new CStringImpl();
+	m_pStringImpl           = new CStringImpl();
 	m_pStringImpl->m_sValue = rString.m_pStringImpl->m_sValue;
 }
 
@@ -25,7 +28,7 @@ CString::CString(const char* pString)
 
 CString::~CString() { delete m_pStringImpl; }
 
-CString::operator const char* () const { return m_pStringImpl->m_sValue.c_str(); }
+CString::operator const char*() const { return m_pStringImpl->m_sValue.c_str(); }
 
 CString& CString::operator=(const CString& rString)
 {

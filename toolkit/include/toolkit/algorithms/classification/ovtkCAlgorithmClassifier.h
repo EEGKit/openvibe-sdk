@@ -71,7 +71,7 @@ namespace OpenViBEToolkit
 		void setMatrixOutputDimension(OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& matrix, uint32_t length);
 
 		OpenViBE::Kernel::IAlgorithmProxy* m_AlgorithmProxy = nullptr;
-		void* m_ExtraParametersMap = nullptr;
+		void* m_ExtraParametersMap                          = nullptr;
 	};
 
 	class OVTK_API CAlgorithmClassifierDesc : public OpenViBE::Plugins::IAlgorithmDesc

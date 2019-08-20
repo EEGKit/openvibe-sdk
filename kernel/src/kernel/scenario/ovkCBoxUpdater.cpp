@@ -38,10 +38,7 @@ CBoxUpdater::CBoxUpdater(CScenario& scenario, IBox* sourceBox)
 
 CBoxUpdater::~CBoxUpdater()
 {
-	if (!m_KernelBox || !m_UpdatedBox)
-	{
-		return;
-	}
+	if (!m_KernelBox || !m_UpdatedBox) { return; }
 
 	if (m_KernelBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox)
 	{
@@ -108,10 +105,7 @@ bool CBoxUpdater::initialize()
 	}
 
 	// initialize supported types to kernel ones
-	if (m_SourceBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox)
-	{
-		m_UpdatedBox->setSupportTypeFromAlgorithmIdentifier(m_KernelBox->getAlgorithmClassIdentifier());
-	}
+	if (m_SourceBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox) { m_UpdatedBox->setSupportTypeFromAlgorithmIdentifier(m_KernelBox->getAlgorithmClassIdentifier()); }
 	// should not be done before adding IO elements so the box listener is never called
 	// updatedBox->setAlgorithmClassIdentifier(kernelBox->getAlgorithmClassIdentifier());
 	m_Initialized = true;

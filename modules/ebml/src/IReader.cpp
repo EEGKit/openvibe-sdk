@@ -397,7 +397,4 @@ void CReader::release() { delete this; }
 // ________________________________________________________________________________________________________________
 //
 
-EBML_API IReader* EBML::createReader(IReaderCallback& rReaderCallback)
-{
-	return new CReader(rReaderCallback);
-}
+EBML_API IReader* EBML::createReader(IReaderCallback& rReaderCallback) { return new CReader(rReaderCallback); }

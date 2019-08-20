@@ -104,14 +104,11 @@ bool CPluginModuleBase::getPluginObjectDescription(uint32_t ui32Index, IPluginOb
 		if (!isOpen()) { return false; }
 		if (!onGetPluginObjectDescriptionCB) { return false; }
 
-		uint32_t l_ui32Index                           = 0;
+		uint32_t l_ui32Index                         = 0;
 		IPluginObjectDesc* l_pPluginObjectDescriptor = nullptr;
 		while (onGetPluginObjectDescriptionCB(CPluginModuleContext(getKernelContext()), l_ui32Index, l_pPluginObjectDescriptor))
 		{
-			if (l_pPluginObjectDescriptor)
-			{
-				m_vPluginObjectDescriptor.push_back(l_pPluginObjectDescriptor);
-			}
+			if (l_pPluginObjectDescriptor) { m_vPluginObjectDescriptor.push_back(l_pPluginObjectDescriptor); }
 			l_ui32Index++;
 		}
 
@@ -398,10 +395,7 @@ CPluginModule::CPluginModule(const IKernelContext& rKernelContext)
 #endif
 }
 
-CPluginModule::~CPluginModule()
-{
-	delete m_pImplementation;
-}
+CPluginModule::~CPluginModule() { delete m_pImplementation; }
 
 bool CPluginModule::load(const CString& sFileName, CString* pError)
 {
@@ -419,7 +413,7 @@ bool CPluginModule::initialize()
 }
 
 bool CPluginModule::getPluginObjectDescription(uint32_t ui32Index,
-	IPluginObjectDesc*& rpPluginObjectDescription)
+											   IPluginObjectDesc*& rpPluginObjectDescription)
 {
 	return !m_pImplementation ? false : m_pImplementation->getPluginObjectDescription(ui32Index, rpPluginObjectDescription);
 }

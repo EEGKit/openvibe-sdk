@@ -215,10 +215,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastTime, l_ui64CurrentTime);
 		m_ui64LastTime = l_ui64CurrentTime;
 
-		if (m_oClearVotes == OVP_TypeId_Voting_ClearVotes_AfterOutput)
-		{
-			m_oStimulusDeque.clear();
-		}
+		if (m_oClearVotes == OVP_TypeId_Voting_ClearVotes_AfterOutput) { m_oStimulusDeque.clear(); }
 	}
 
 	return true;

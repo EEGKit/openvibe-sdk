@@ -46,9 +46,9 @@ namespace OpenViBEPlugins
 			ETimeoutState m_TimeoutState;
 			bool m_IsHeaderSent = false;
 
-			uint64_t m_Timeout = 0;
-			uint64_t m_LastTimePolled = 0;
-			uint64_t m_PreviousTime = 0;
+			uint64_t m_Timeout           = 0;
+			uint64_t m_LastTimePolled    = 0;
+			uint64_t m_PreviousTime      = 0;
 			uint64_t m_StimulationToSend = 0;
 		};
 

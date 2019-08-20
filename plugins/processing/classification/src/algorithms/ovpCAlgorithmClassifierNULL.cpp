@@ -65,10 +65,7 @@ bool CAlgorithmClassifierNULL::classify(const IFeatureVector& rFeatureVector, do
 	return true;
 }
 
-XML::IXMLNode* CAlgorithmClassifierNULL::saveConfiguration()
-{
-	return nullptr;
-}
+XML::IXMLNode* CAlgorithmClassifierNULL::saveConfiguration() { return nullptr; }
 
 bool CAlgorithmClassifierNULL::loadConfiguration(XML::IXMLNode* pConfigurationNode) { return true; }
 

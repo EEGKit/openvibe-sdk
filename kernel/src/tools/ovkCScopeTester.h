@@ -24,5 +24,3 @@ namespace OpenViBE
 		};
 	}  // namespace Tools
 }  // namespace OpenViBE
-
-

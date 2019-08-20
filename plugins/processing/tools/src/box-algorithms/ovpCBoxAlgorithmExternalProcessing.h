@@ -82,11 +82,11 @@ namespace OpenViBEPlugins
 
 			int m_ThirdPartyProgramProcessId = 0;
 
-			uint64_t m_AcceptTimeout = 0;
-			bool m_ShouldLaunchProgram = false;
+			uint64_t m_AcceptTimeout     = 0;
+			bool m_ShouldLaunchProgram   = false;
 			bool m_HasReceivedEndMessage = false;
 			// Synchronization timeout, and save time of last synchronization
-			uint64_t m_SyncTimeout = 0;
+			uint64_t m_SyncTimeout  = 0;
 			uint64_t m_LastSyncTime = 0;
 
 			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmExternalProcessing>> m_StimulationDecoders;

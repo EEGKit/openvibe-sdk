@@ -26,7 +26,7 @@ namespace OpenViBE
 			virtual EParameterType getType() const { return m_eParameterType; }
 			virtual CIdentifier getSubTypeIdentifier() const { return m_oSubTypeIdentifier; }
 
-			virtual bool clearReferenceTarget() 
+			virtual bool clearReferenceTarget()
 			{
 				m_pValueRef     = NULL;
 				m_pParameterRef = nullptr;
@@ -80,12 +80,10 @@ namespace OpenViBE
 		protected:
 
 			IParameter* m_pParameterRef = nullptr;
-			IType* m_pValueRef = nullptr;
+			IType* m_pValueRef          = nullptr;
 			IType m_Value;
 			EParameterType m_eParameterType;
 			CIdentifier m_oSubTypeIdentifier = OV_UndefinedIdentifier;
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE
-
-

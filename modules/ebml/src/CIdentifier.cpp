@@ -48,18 +48,9 @@ namespace EBML
 		return rIdentifier1.m_ui64Identifier < rIdentifier2.m_ui64Identifier;
 	}
 
-	bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-	{
-		return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier;
-	}
+	bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier; }
 }  // namespace EBML
 
-CIdentifier::operator uint64_t() const
-{
-	return this->toUInteger();
-}
+CIdentifier::operator uint64_t() const { return this->toUInteger(); }
 
-uint64_t CIdentifier::toUInteger() const
-{
-	return m_ui64Identifier;
-}
+uint64_t CIdentifier::toUInteger() const { return m_ui64Identifier; }

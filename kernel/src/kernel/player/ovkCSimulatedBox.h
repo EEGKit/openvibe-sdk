@@ -25,30 +25,15 @@ namespace OpenViBE
 				  , m_ui64StartTime(rChunk.m_ui64StartTime)
 				  , m_ui64EndTime(rChunk.m_ui64EndTime) { }
 
-			const CBuffer& getBuffer() const
-			{
-				return m_oBuffer;
-			}
+			const CBuffer& getBuffer() const { return m_oBuffer; }
 
-			uint64_t getStartTime() const
-			{
-				return m_ui64StartTime;
-			}
+			uint64_t getStartTime() const { return m_ui64StartTime; }
 
-			uint64_t getEndTime() const
-			{
-				return m_ui64EndTime;
-			}
+			uint64_t getEndTime() const { return m_ui64EndTime; }
 
-			bool isDeprecated() const
-			{
-				return m_bIsDeprecated;
-			}
+			bool isDeprecated() const { return m_bIsDeprecated; }
 
-			CBuffer& getBuffer()
-			{
-				return m_oBuffer;
-			}
+			CBuffer& getBuffer() { return m_oBuffer; }
 
 			bool setStartTime(uint64_t ui64StartTime)
 			{
@@ -72,8 +57,8 @@ namespace OpenViBE
 
 			CBuffer m_oBuffer;
 			uint64_t m_ui64StartTime = 0;
-			uint64_t m_ui64EndTime = 0;
-			bool m_bIsDeprecated = false;
+			uint64_t m_ui64EndTime   = 0;
+			bool m_bIsDeprecated     = false;
 		};
 
 		class CSimulatedBox : public TKernelObject<IBoxIO>
@@ -115,7 +100,7 @@ namespace OpenViBE
 			uint64_t getOutputChunkSize(const uint32_t OutputIndex) const override;
 			bool setOutputChunkSize(const uint32_t OutputIndex, const uint64_t ui64Size, const bool bDiscard = true) override;
 			uint8_t* getOutputChunkBuffer(const uint32_t OutputIndex) override;
-			bool appendOutputChunkData(const uint32_t OutputIndex, const uint8_t* pBuffer,const uint64_t ui64BufferSize) override;
+			bool appendOutputChunkData(const uint32_t OutputIndex, const uint8_t* pBuffer, const uint64_t ui64BufferSize) override;
 			IMemoryBuffer* getOutputChunk(const uint32_t OutputIndex) override;
 			bool markOutputAsReadyToSend(const uint32_t OutputIndex, const uint64_t ui64StartTime, const uint64_t ui64EndTime) override;
 			//@}
@@ -126,18 +111,18 @@ namespace OpenViBE
 
 		protected:
 
-			bool m_bReadyToProcess = false;
-			bool m_bChunkConsistencyChecking = false;
+			bool m_bReadyToProcess                        = false;
+			bool m_bChunkConsistencyChecking              = false;
 			ELogLevel m_eChunkConsistencyCheckingLogLevel = LogLevel_Warning;
 
 			Plugins::IBoxAlgorithm* m_pBoxAlgorithm = nullptr;
-			const IScenario* m_pScenario = nullptr;
-			const IBox* m_pBox = nullptr;
+			const IScenario* m_pScenario            = nullptr;
+			const IBox* m_pBox                      = nullptr;
 			CScheduler& m_rScheduler;
 
 			uint64_t m_ui64LastClockActivationDate = 0;
-			uint64_t m_ui64ClockFrequency = 0;
-			uint64_t m_ui64ClockActivationStep = 0;
+			uint64_t m_ui64ClockFrequency          = 0;
+			uint64_t m_ui64ClockActivationStep     = 0;
 
 		public:
 
@@ -149,5 +134,3 @@ namespace OpenViBE
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE
-
-

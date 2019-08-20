@@ -26,12 +26,12 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClockStimulator> m_oStimulationEncoder;
-			uint64_t m_ui64StimulationId = 0;
+			uint64_t m_ui64StimulationId       = 0;
 			uint64_t m_ui64LastStimulationDate = 0;
-			uint64_t m_ui64LastEndTime = 0;
+			uint64_t m_ui64LastEndTime         = 0;
 
 			uint64_t m_SentStimulationCount = 0;
-			double m_StimulationInterval = 0;
+			double m_StimulationInterval    = 0;
 		};
 
 		class CBoxAlgorithmClockStimulatorDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc

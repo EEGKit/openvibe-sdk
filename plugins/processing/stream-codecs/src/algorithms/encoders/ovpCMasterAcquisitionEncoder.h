@@ -33,12 +33,12 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::Kernel::IAlgorithmProxy* m_pAcquisitionStreamEncoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pAcquisitionStreamEncoder           = nullptr;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pExperimentInformationStreamEncoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pSignalStreamEncoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStimulationStreamEncoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pChannelLocalisationStreamEncoder = nullptr;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pChannelUnitsStreamEncoder = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pSignalStreamEncoder                = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStimulationStreamEncoder           = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pChannelLocalisationStreamEncoder   = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pChannelUnitsStreamEncoder          = nullptr;
 		};
 
 		class CMasterAcquisitionEncoderDesc : public OpenViBE::Plugins::IAlgorithmDesc

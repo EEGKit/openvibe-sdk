@@ -83,15 +83,9 @@ bool CChrono::stepOut()
 	return true;
 }
 
-uint64_t CChrono::getTotalStepInDuration() const
-{
-	return m_ui64TotalStepInTime;
-}
+uint64_t CChrono::getTotalStepInDuration() const { return m_ui64TotalStepInTime; }
 
-uint64_t CChrono::getTotalStepOutDuration() const
-{
-	return m_ui64TotalStepOutTime;
-}
+uint64_t CChrono::getTotalStepOutDuration() const { return m_ui64TotalStepOutTime; }
 
 uint64_t CChrono::getAverageStepInDuration() const
 {
@@ -115,7 +109,4 @@ double CChrono::getStepOutPercentage() const
 	return l_ui64TotalStepDuration ? (this->getTotalStepOutDuration() * 100.0) / l_ui64TotalStepDuration : 0;
 }
 
-bool CChrono::hasNewEstimation()
-{
-	return m_bHasNewEstimation;
-}
+bool CChrono::hasNewEstimation() { return m_bHasNewEstimation; }

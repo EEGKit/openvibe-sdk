@@ -57,10 +57,7 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 		m_ui32FrequencyBandIndex = 0;
 	}
 	else if (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { }
-	else
-	{
-		CStreamedMatrixDecoder::openChild(rIdentifier);
-	}
+	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
 }
 
 void CSpectrumDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)

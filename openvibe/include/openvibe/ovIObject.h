@@ -7,7 +7,10 @@ namespace OpenViBE
 {
 	class IObjectVisitor;
 
-	namespace Kernel { class CKernelObjectFactory; }
+	namespace Kernel
+	{
+		class CKernelObjectFactory;
+	}
 
 #define _IsDerivedFromClass_(_SuperClassName_,_ClassIdentifier_) \
 	bool isDerivedFromClass(  const OpenViBE::CIdentifier& rClassIdentifier) const override { return ((rClassIdentifier==(_ClassIdentifier_)) || _SuperClassName_::isDerivedFromClass(rClassIdentifier)); }

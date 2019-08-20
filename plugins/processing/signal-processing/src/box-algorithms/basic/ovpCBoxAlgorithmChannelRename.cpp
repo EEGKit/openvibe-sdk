@@ -14,10 +14,7 @@ bool CBoxAlgorithmChannelRename::initialize()
 	uint32_t tokenCount  = split(settingValue, OpenViBEToolkit::Tools::String::TSplitCallback<std::vector<CString>>(tokens), OV_Value_EnumeratedStringSeparator);
 
 	m_ChannelNames.clear();
-	for (uint32_t i = 0; i < tokenCount; i++)
-	{
-		m_ChannelNames.push_back(tokens[i].toASCIIString());
-	}
+	for (uint32_t i = 0; i < tokenCount; i++) { m_ChannelNames.push_back(tokens[i].toASCIIString()); }
 
 	this->getStaticBoxContext().getOutputType(0, m_TypeIdentifier);
 
@@ -46,10 +43,7 @@ bool CBoxAlgorithmChannelRename::initialize()
 
 	m_StreamEncoder.getInputMatrix().setReferenceTarget(m_StreamDecoder.getOutputMatrix());
 
-	if (m_TypeIdentifier == OV_TypeId_Signal)
-	{
-		m_StreamEncoder.getInputSamplingRate().setReferenceTarget(m_StreamDecoder.getOutputSamplingRate());
-	}
+	if (m_TypeIdentifier == OV_TypeId_Signal) { m_StreamEncoder.getInputSamplingRate().setReferenceTarget(m_StreamDecoder.getOutputSamplingRate()); }
 
 	if (m_TypeIdentifier == OV_TypeId_Spectrum)
 	{
@@ -90,14 +84,8 @@ bool CBoxAlgorithmChannelRename::process()
 			}
 			m_StreamEncoder.encodeHeader();
 		}
-		if (m_StreamDecoder.isBufferReceived())
-		{
-			m_StreamEncoder.encodeBuffer();
-		}
-		if (m_StreamDecoder.isEndReceived())
-		{
-			m_StreamEncoder.encodeEnd();
-		}
+		if (m_StreamDecoder.isBufferReceived()) { m_StreamEncoder.encodeBuffer(); }
+		if (m_StreamDecoder.isEndReceived()) { m_StreamEncoder.encodeEnd(); }
 
 		dynamicBoxContext.markOutputAsReadyToSend(0, dynamicBoxContext.getInputChunkStartTime(0, chunk), dynamicBoxContext.getInputChunkEndTime(0, chunk));
 		dynamicBoxContext.markInputAsDeprecated(0, chunk);

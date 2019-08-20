@@ -125,8 +125,7 @@ namespace Dsp
 				double tp  = 2 * doublePi;
 				calcfz();
 				calcqz();
-				if (m_m > m_em)
-					m_c1[2 * m_m] = 0;
+				if (m_m > m_em) m_c1[2 * m_m] = 0;
 				for (i = 0; i <= 2 * m_m; i += 2)
 				{
 					m_a1[m_m - i / 2] = m_c1[i] + m_d1[i];
@@ -178,10 +177,8 @@ namespace Dsp
 			for (int j = 2; j <= sn; j++)
 			{
 				m_a1[0] = m_s1[j] * m_b1[0];
-				for (i = 1; i <= j - 1; i++)
-					m_a1[i] = m_b1[i - 1] + m_s1[j] * m_b1[i];
-				for (i = 0; i != j; i++)
-					m_b1[i] = m_a1[i];
+				for (i = 1; i <= j - 1; i++) m_a1[i] = m_b1[i - 1] + m_s1[j] * m_b1[i];
+				for (i = 0; i != j; i++) m_b1[i] = m_a1[i];
 				m_b1[j] = 1;
 			}
 		}
@@ -202,39 +199,30 @@ namespace Dsp
 				jf = m_em;
 			}
 			m_c1[i] = 0;
-			for (int j = ji; j <= jf; j += 2)
-				m_c1[i] += m_a1[j] * (m_a1[i - j] * pow(10., m_m - i / 2));
+			for (int j = ji; j <= jf; j += 2) m_c1[i] += m_a1[j] * (m_a1[i - j] * pow(10., m_m - i / 2));
 		}
 
 		// calculate f(z)
 		void AnalogLowPass::calcfz()
 		{
 			int i = 1;
-			if (m_nin == 1)
-				m_s1[i++] = 1;
-			for (; i <= m_nin + m_n2; i++)
-				m_s1[i] = m_s1[i + m_n2] = m_z1[i - m_nin];
+			if (m_nin == 1) m_s1[i++] = 1;
+			for (; i <= m_nin + m_n2; i++) m_s1[i] = m_s1[i + m_n2] = m_z1[i - m_nin];
 			prodpoly(m_nin + 2 * m_n2);
-			for (i = 0; i <= m_em; i += 2)
-				m_a1[i] = m_e * m_b1[i];
-			for (i = 0; i <= 2 * m_em; i += 2)
-				calcfz2(i);
+			for (i = 0; i <= m_em; i += 2) m_a1[i] = m_e * m_b1[i];
+			for (i = 0; i <= 2 * m_em; i += 2) calcfz2(i);
 		}
 
 		// determine q(z)
 		void AnalogLowPass::calcqz()
 		{
 			int i;
-			for (i = 1; i <= m_nin; i++)
-				m_s1[i] = -10;
-			for (; i <= m_nin + m_n2; i++)
-				m_s1[i] = -10 * m_z1[i - m_nin] * m_z1[i - m_nin];
-			for (; i <= m_nin + 2 * m_n2; i++)
-				m_s1[i] = m_s1[i - m_n2];
+			for (i = 1; i <= m_nin; i++) m_s1[i] = -10;
+			for (; i <= m_nin + m_n2; i++) m_s1[i] = -10 * m_z1[i - m_nin] * m_z1[i - m_nin];
+			for (; i <= m_nin + 2 * m_n2; i++) m_s1[i] = m_s1[i - m_n2];
 			prodpoly(m_m);
 			int dd = ((m_nin & 1) == 1) ? -1 : 1;
-			for (i = 0; i <= 2 * m_m; i += 2)
-				m_d1[i] = dd * m_b1[i / 2];
+			for (i = 0; i <= 2 * m_m; i += 2) m_d1[i] = dd * m_b1[i / 2];
 		}
 
 		// compute factors
@@ -242,22 +230,19 @@ namespace Dsp
 		{
 			int i;
 			double a = 0;
-			for (i = 1; i <= t; i++)
-				m_a1[i] /= m_a1[0];
+			for (i = 1; i <= t; i++) m_a1[i] /= m_a1[0];
 			m_a1[0] = m_b1[0] = m_c1[0] = 1;
 			int i1  = 0;
 			for (;;)
 			{
-				if (t <= 2)
-					break;
+				if (t <= 2) break;
 				double p0 = 0, q0 = 0;
 				i1++;
 				for (;;)
 				{
 					m_b1[1] = m_a1[1] - p0;
 					m_c1[1] = m_b1[1] - p0;
-					for (i = 2; i <= t; i++)
-						m_b1[i] = m_a1[i] - p0 * m_b1[i - 1] - q0 * m_b1[i - 2];
+					for (i = 2; i <= t; i++) m_b1[i] = m_a1[i] - p0 * m_b1[i - 1] - q0 * m_b1[i - 2];
 					for (i = 2; i < t; i++)
 					{
 						m_c1[i] = m_b1[i] - p0 * m_c1[i - 1] - q0 * m_c1[i - 2];
@@ -266,23 +251,19 @@ namespace Dsp
 					int x2    = t - 2;
 					int x3    = t - 3;
 					double x4 = m_c1[x2] * m_c1[x2] + m_c1[x3] * (m_b1[x1] - m_c1[x1]);
-					if (x4 == 0)
-						x4 = 1e-3;
+					if (x4 == 0) x4 = 1e-3;
 					double ddp = (m_b1[x1] * m_c1[x2] - m_b1[t] * m_c1[x3]) / x4;
 					p0 += ddp;
 					double dq = (m_b1[t] * m_c1[x2] - m_b1[x1] * (m_c1[x1] - m_b1[x1])) / x4;
 					q0 += dq;
-					if (fabs(ddp + dq) < 1e-6)
-						break;
+					if (fabs(ddp + dq) < 1e-6) break;
 				}
 				m_p[i1]  = p0;
 				m_q1[i1] = q0;
 				m_a1[1]  = m_a1[1] - p0;
 				t -= 2;
-				for (i = 2; i <= t; i++)
-					m_a1[i] -= p0 * m_a1[i - 1] + q0 * m_a1[i - 2];
-				if (t <= 2)
-					break;
+				for (i = 2; i <= t; i++) m_a1[i] -= p0 * m_a1[i - 1] + q0 * m_a1[i - 2];
+				if (t <= 2) break;
 			}
 
 			if (t == 2)
@@ -291,8 +272,7 @@ namespace Dsp
 				m_p[i1]  = m_a1[1];
 				m_q1[i1] = m_a1[2];
 			}
-			if (t == 1)
-				a = -m_a1[1];
+			if (t == 1) a = -m_a1[1];
 
 			return a;
 		}
@@ -307,8 +287,7 @@ namespace Dsp
 			{
 				double w = pow(q, j + .5);
 				sn += w * sin((2 * j + 1) * v) / (1 - w * w);
-				if (w < 1e-7)
-					break;
+				if (w < 1e-7) break;
 			}
 			return sn;
 		}

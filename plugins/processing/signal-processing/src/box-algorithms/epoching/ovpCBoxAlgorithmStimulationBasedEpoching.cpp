@@ -240,10 +240,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 				m_SignalEncoder.encodeBuffer();
 				dynamicBoxContext.markOutputAsReadyToSend(outputSignalIndex, currentEpochStartTime, currentEpochStartTime + m_EpochDuration);
 			}
-			else
-			{
-				OV_WARNING_K("Skipped creating an epoch on a timespan with no signal. The input signal probably contains non-contiguous chunks.");
-			}
+			else { OV_WARNING_K("Skipped creating an epoch on a timespan with no signal. The input signal probably contains non-contiguous chunks."); }
 
 			lastProcessedStimulationDate = stimulationDate;
 		}

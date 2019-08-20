@@ -166,10 +166,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 			OV_WARNING_K("A client sent a bad authentication.");
 			break;
 		}
-		if (error == Communication::MessagingServer::ELibraryError::NoAuthenticationReceived)
-		{
-			OV_WARNING_K("The client has not sent authentication.");
-		}
+		if (error == Communication::MessagingServer::ELibraryError::NoAuthenticationReceived) { OV_WARNING_K("The client has not sent authentication."); }
 	}
 
 	OV_ERROR_UNLESS_KRF(clientConnected, "No client connected before the timeout.", ErrorType::Internal);
@@ -182,10 +179,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 	while (m_Messaging.isConnected() && !m_Messaging.waitForSyncMessage())
 	{
-		if (!m_Messaging.waitForSyncMessage())
-		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		}
+		if (!m_Messaging.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 	}
 
 	m_SyncTimeout  = ITimeArithmetics::secondsToTime(0.0625);
@@ -195,10 +189,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 bool CBoxAlgorithmExternalProcessing::uninitialize()
 {
-	for (auto& decoder : m_StimulationDecoders)
-	{
-		decoder.second.uninitialize();
-	}
+	for (auto& decoder : m_StimulationDecoders) { decoder.second.uninitialize(); }
 
 	if (!m_HasReceivedEndMessage)
 	{
@@ -269,10 +260,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*rMessageClock*/)
-{
-	return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-}
+bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*rMessageClock*/) { return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
 
 bool CBoxAlgorithmExternalProcessing::processInput(const uint32_t index)
 {
@@ -388,10 +376,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 					OV_ERROR_UNLESS_KRF(dynamicBoxContext->markOutputAsReadyToSend(index, startTime, endTime),
 										"Failed to mark output as ready to send.", ErrorType::Internal);
 				}
-				if (!receivedSync)
-				{
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
-				}
+				if (!receivedSync) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 			}
 		}
 	}
@@ -485,10 +470,7 @@ static std::vector<std::string> splitCommandLine(const std::string& cmdLine)
 		escape = false;
 	}
 
-	if (!arg.empty())
-	{
-		list.push_back(arg);
-	}
+	if (!arg.empty()) { list.push_back(arg); }
 
 	return list;
 }

@@ -29,10 +29,7 @@ namespace
 	// it can not be easily used in std::transform
 	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
 	template <class charT>
-	charT to_lower(charT c)
-	{
-		return std::tolower(c);
-	}
+	charT to_lower(charT c) { return std::tolower(c); }
 
 	// BOOST::Ast should be able to remove spaces / tabs etc but
 	// unfortunately, it seems it does not work correcly in some
@@ -218,10 +215,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 			// -X => (* -1 X), useful to simplify the tree later
 			return new CAbstractTreeParentNode(OP_MUL, new CAbstractTreeValueNode(-1), createNode(i->children.begin()), true);
 		}
-		if (*i->value.begin() == '+')
-		{
-			return createNode(i->children.begin());
-		}
+		if (*i->value.begin() == '+') { return createNode(i->children.begin()); }
 	}
 	else if (i->value.id() == CEquationGrammar::realID)
 	{
@@ -269,7 +263,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), false);
 		}
-			//gets the function's Id from the binary function's symbols table
+		//gets the function's Id from the binary function's symbols table
 		if ((l_ui64FunctionIdentifier = find(binaryFunction_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
@@ -292,7 +286,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
-			//gets the function's Id from the comparison function's symbols table
+		//gets the function's Id from the comparison function's symbols table
 		if ((l_ui64FunctionIdentifier = find(comparison2Function_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
@@ -311,7 +305,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
-			//gets the function's Id from the binary boolean function's symbols table
+		//gets the function's Id from the binary boolean function's symbols table
 		if ((l_ui64FunctionIdentifier = find(binaryBoolean2Function_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);

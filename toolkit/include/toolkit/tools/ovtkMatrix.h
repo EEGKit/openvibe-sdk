@@ -40,10 +40,7 @@ namespace OpenViBEToolkit
 				return Matrix::copyContent(rDestinationMatrix, rSourceMatrix);
 			}
 
-			inline bool clearContent(OpenViBE::IMatrix& rMatrix)
-			{
-				return Matrix::clearContent(rMatrix);
-			}
+			inline bool clearContent(OpenViBE::IMatrix& rMatrix) { return Matrix::clearContent(rMatrix); }
 		}  // namespace MatrixManipulation
 	}  // namespace Tools
 }  // namespace OpenViBEToolkit

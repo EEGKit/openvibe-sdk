@@ -169,10 +169,7 @@ bool MessagingClient::popEBML(uint64_t& packetId, uint32_t& index, uint64_t& sta
 	return CMessaging::popEBML(packetId, index, startTime, endTime, ebml);
 }
 
-bool MessagingClient::pushAuthentication(std::string connectionID)
-{
-	return this->pushMessage(AuthenticationMessage(connectionID));
-}
+bool MessagingClient::pushAuthentication(std::string connectionID) { return this->pushMessage(AuthenticationMessage(connectionID)); }
 
 bool MessagingClient::pushLog(ELogLevel logLevel, const std::string& log)
 {
@@ -184,12 +181,6 @@ bool MessagingClient::pushEBML(const uint32_t index, const uint64_t startTime, c
 	return this->pushMessage(EBMLMessage(index, startTime, endTime, ebml));
 }
 
-bool MessagingClient::pushSync()
-{
-	return this->pushMessage(SyncMessage());
-}
+bool MessagingClient::pushSync() { return this->pushMessage(SyncMessage()); }
 
-bool MessagingClient::waitForSyncMessage()
-{
-	return CMessaging::waitForSyncMessage();
-}
+bool MessagingClient::waitForSyncMessage() { return CMessaging::waitForSyncMessage(); }

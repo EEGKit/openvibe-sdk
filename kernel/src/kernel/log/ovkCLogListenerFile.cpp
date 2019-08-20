@@ -32,10 +32,7 @@ CLogListenerFile::CLogListenerFile(const IKernelContext& rKernelContext, const C
 	m_fsFileStream << flush;
 }
 
-CLogListenerFile::~CLogListenerFile()
-{
-	m_fsFileStream.close();
-}
+CLogListenerFile::~CLogListenerFile() { m_fsFileStream.close(); }
 
 void CLogListenerFile::configure(const IConfigurationManager& rConfigurationManager)
 {

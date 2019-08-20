@@ -169,13 +169,13 @@ int cwavelet(double* y, int N, double dt, int mother, double param, double s0, d
 		return 1;
 	}
 
-	fft_object obj = fft_init(npad, 1);
+	fft_object obj  = fft_init(npad, 1);
 	fft_object iobj = fft_init(npad, -1);
 
-	fft_data* ypad = (fft_data*)malloc(sizeof(fft_data) * npad);
-	fft_data* yfft = (fft_data*)malloc(sizeof(fft_data) * npad);
+	fft_data* ypad     = (fft_data*)malloc(sizeof(fft_data) * npad);
+	fft_data* yfft     = (fft_data*)malloc(sizeof(fft_data) * npad);
 	fft_data* daughter = (fft_data*)malloc(sizeof(fft_data) * npad);
-	double* kwave = (double*)malloc(sizeof(double) * npad);
+	double* kwave      = (double*)malloc(sizeof(double) * npad);
 
 	double ymean = 0.0;
 
@@ -206,7 +206,7 @@ int cwavelet(double* y, int N, double dt, int mother, double param, double s0, d
 	//Construct the wavenumber array
 
 	double freq1 = 2.0 * pi / ((double)npad * dt);
-	kwave[0] = 0.0;
+	kwave[0]     = 0.0;
 
 	for (i = 1; i < npad / 2 + 1; ++i) { kwave[i] = i * freq1; }
 
@@ -222,8 +222,8 @@ int cwavelet(double* y, int N, double dt, int mother, double param, double s0, d
 		period[j - 1] = period1;
 		for (int k = 0; k < npad; ++k)
 		{
-			double tmp1 = daughter[k].re * yfft[k].re - daughter[k].im * yfft[k].im;
-			double tmp2 = daughter[k].re * yfft[k].im + daughter[k].im * yfft[k].re;
+			double tmp1    = daughter[k].re * yfft[k].re - daughter[k].im * yfft[k].im;
+			double tmp2    = daughter[k].re * yfft[k].im + daughter[k].im * yfft[k].re;
 			daughter[k].re = tmp1;
 			daughter[k].im = tmp2;
 		}
@@ -259,7 +259,7 @@ void psi0(int mother, double param, double* val, int* real)
 {
 	int sign;
 
-	int m = (int)param;
+	int m     = (int)param;
 	double pi = 4.0 * atan(1.0);
 
 	if (mother == 0)
@@ -306,7 +306,7 @@ void psi0(int mother, double param, double* val, int* real)
 				sign = 1;
 			}
 			double coeff = sign * pow(2.0, (double)m / 2) / gamma(0.5);
-			*val  = coeff * gamma(((double)m + 1.0) / 2.0) / sqrt(gamma(m + 0.50));
+			*val         = coeff * gamma(((double)m + 1.0) / 2.0) / sqrt(gamma(m + 0.50));
 		}
 		else
 		{
@@ -318,7 +318,7 @@ void psi0(int mother, double param, double* val, int* real)
 static int maxabs(double* array, int N)
 {
 	double maxval = 0.0;
-	int index = -1;
+	int index     = -1;
 
 	for (int i = 0; i < N; ++i)
 	{
@@ -340,7 +340,7 @@ double cdelta(int mother, double param, double psi0)
 	double s0;
 
 	double subscale = 8.0;
-	double dt = 0.25;
+	double dt       = 0.25;
 	if (mother == 0)
 	{
 		N  = 16;
@@ -364,14 +364,14 @@ double cdelta(int mother, double param, double psi0)
 	}
 
 	double dj = 1.0 / subscale;
-	int jtot = 16 * (int)subscale;
+	int jtot  = 16 * (int)subscale;
 
-	double* delta = (double*)malloc(sizeof(double) * N);
-	double* wave = (double*)malloc(sizeof(double) * 2 * N * jtot);
-	double* coi = (double*)malloc(sizeof(double) * N);
-	double* scale = (double*)malloc(sizeof(double) * jtot);
+	double* delta  = (double*)malloc(sizeof(double) * N);
+	double* wave   = (double*)malloc(sizeof(double) * 2 * N * jtot);
+	double* coi    = (double*)malloc(sizeof(double) * N);
+	double* scale  = (double*)malloc(sizeof(double) * jtot);
 	double* period = (double*)malloc(sizeof(double) * jtot);
-	double* mval = (double*)malloc(sizeof(double) * N);
+	double* mval   = (double*)malloc(sizeof(double) * N);
 
 
 	delta[0] = 1;
@@ -389,7 +389,7 @@ double cdelta(int mother, double param, double psi0)
 
 	for (int j = 0; j < jtot; ++j)
 	{
-		int iter = 2 * j * N;
+		int iter   = 2 * j * N;
 		double den = sqrt(scale[j]);
 		for (i = 0; i < N; ++i)
 		{
@@ -423,7 +423,7 @@ void icwavelet(double* wave, int N, double* scale, int jtot, double dt, double d
 
 	for (int j = 0; j < jtot; ++j)
 	{
-		int iter = 2 * j * N;
+		int iter   = 2 * j * N;
 		double den = sqrt(scale[j]);
 		for (i = 0; i < N; ++i)
 		{

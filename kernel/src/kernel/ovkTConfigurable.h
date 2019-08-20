@@ -114,5 +114,3 @@ namespace OpenViBE
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE
-
-

@@ -51,37 +51,19 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate()
-		{
-			return m_pInputSamplingRate;
-		}
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_pInputSamplingRate; }
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbscissa()
-		{
-			return m_pInputFrequencyAbscissa;
-		}
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputFrequencyAbscissa() { return m_pInputFrequencyAbscissa; }
 
-		size_t getInputFrequencyAbscissaCount()
-		{
-			return m_pInputFrequencyAbscissa->getDimensionSize(0);
-		}
+		size_t getInputFrequencyAbscissaCount() { return m_pInputFrequencyAbscissa->getDimensionSize(0); }
 
 
 	protected:
-		bool encodeHeaderImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeHeader);
-		}
+		bool encodeHeaderImpl() { return m_pCodec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeHeader); }
 
-		bool encodeBufferImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeBuffer);
-		}
+		bool encodeBufferImpl() { return m_pCodec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeBuffer); }
 
-		bool encodeEndImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd);
-		}
+		bool encodeEndImpl() { return m_pCodec->process(OVP_GD_Algorithm_SpectrumStreamEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	template <class T>

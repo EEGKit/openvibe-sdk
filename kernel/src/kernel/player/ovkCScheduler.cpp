@@ -55,10 +55,7 @@ CScheduler::CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer)
 	  , m_rPlayer(rPlayer)
 	  , m_oScenarioIdentifier(OV_UndefinedIdentifier) {}
 
-CScheduler::~CScheduler()
-{
-	this->uninitialize();
-}
+CScheduler::~CScheduler() { this->uninitialize(); }
 
 //___________________________________________________________________//
 //                                                                   //
@@ -331,10 +328,7 @@ bool CScheduler::flattenScenario()
 		}
 
 		// Remove processed metaboxes from the scenario
-		for (CIdentifier l_oMetaboxIdentifier : l_vScenarioMetabox)
-		{
-			m_pScenario->removeBox(l_oMetaboxIdentifier);
-		}
+		for (CIdentifier l_oMetaboxIdentifier : l_vScenarioMetabox) { m_pScenario->removeBox(l_oMetaboxIdentifier); }
 	}
 
 	return true;
@@ -350,12 +344,12 @@ SchedulerInitializationCode CScheduler::initialize()
 
 	OV_ERROR_UNLESS_K(m_pScenario, "Failed to find scenario with id " << m_oScenarioIdentifier.toString(), ErrorType::ResourceNotFound, SchedulerInitialization_Failed);
 
-	OV_ERROR_UNLESS_K(m_pScenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier, 
-					  "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed );
+	OV_ERROR_UNLESS_K(m_pScenario->getNextBoxIdentifier(OV_UndefinedIdentifier) != OV_UndefinedIdentifier,
+					  "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed);
 
 	CBoxSettingModifierVisitor l_oBoxSettingModifierVisitor(&this->getKernelContext().getConfigurationManager());
 
-	OV_ERROR_UNLESS_K(m_pScenario->acceptVisitor(l_oBoxSettingModifierVisitor), "Failed to set box settings visitor for scenario with id " 
+	OV_ERROR_UNLESS_K(m_pScenario->acceptVisitor(l_oBoxSettingModifierVisitor), "Failed to set box settings visitor for scenario with id "
 					  << m_oScenarioIdentifier.toString(), ErrorType::Internal, SchedulerInitialization_Failed);
 
 
@@ -478,7 +472,7 @@ SchedulerInitializationCode CScheduler::initialize()
 		{
 			this->getLogManager() << LogLevel_Trace << "Scheduled box : id = " << itSimulatedBox->first.second << " priority = " << -itSimulatedBox->first.first << " name = " << l_pSimulatedBox->getName() << "\n";
 			if (!translateException([&]() { return l_pSimulatedBox->initialize(); },
-					std::bind(&CScheduler::handleException, this, l_pSimulatedBox, "Box initialization", std::placeholders::_1)))
+									std::bind(&CScheduler::handleException, this, l_pSimulatedBox, "Box initialization", std::placeholders::_1)))
 			{
 				l_bBoxInitialization = false;
 
@@ -492,7 +486,7 @@ SchedulerInitializationCode CScheduler::initialize()
 	m_ui64Steps       = 0;
 	m_ui64CurrentTime = 0;
 
-	m_oBenchmarkChrono.reset((uint32_t )m_ui64Frequency);
+	m_oBenchmarkChrono.reset((uint32_t)m_ui64Frequency);
 
 	return (l_bBoxInitialization ? SchedulerInitialization_Success : SchedulerInitialization_Failed);
 }
@@ -507,7 +501,7 @@ bool CScheduler::uninitialize()
 		if (auto l_pSimulatedBox = itSimulatedBox->second)
 		{
 			if (!translateException([&]() { return l_pSimulatedBox->uninitialize(); },
-					std::bind(&CScheduler::handleException, this, l_pSimulatedBox, "Box uninitialization", std::placeholders::_1)))
+									std::bind(&CScheduler::handleException, this, l_pSimulatedBox, "Box uninitialization", std::placeholders::_1)))
 			{
 				// do not break here because we want to try to
 				// at least uninitialize other resources properly
@@ -516,10 +510,7 @@ bool CScheduler::uninitialize()
 		}
 	}
 
-	for (map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox)
-	{
-		delete itSimulatedBox->second;
-	}
+	for (map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin(); itSimulatedBox != m_vSimulatedBox.end(); ++itSimulatedBox) { delete itSimulatedBox->second; }
 	m_vSimulatedBox.clear();
 
 	m_pScenario = nullptr;
@@ -635,7 +626,7 @@ bool CScheduler::sendInput(const CChunk& rChunk, const CIdentifier& rBoxIdentifi
 	if (l_pBox->hasAttribute(OV_AttributeId_Box_Disabled)) { return true; }
 	OV_ERROR_UNLESS_KRF(l_pBox, "Tried to send data chunk with invalid box identifier " << rBoxIdentifier.toString(), ErrorType::ResourceNotFound);
 
-	OV_ERROR_UNLESS_KRF(ui32InputIndex < l_pBox->getInputCount(), 
+	OV_ERROR_UNLESS_KRF(ui32InputIndex < l_pBox->getInputCount(),
 						"Tried to send data chunk with invalid input index " << ui32InputIndex << " for box identifier" << rBoxIdentifier.toString(),
 						ErrorType::OutOfBound);
 

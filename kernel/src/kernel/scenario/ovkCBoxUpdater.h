@@ -37,15 +37,9 @@ namespace OpenViBE
 
 			bool initialize();
 
-			const std::map<uint32_t, uint32_t>& getOriginalToUpdatedInterfacorCorrespondence(BoxInterfacorType interfacorType) const
-			{
-				return m_OriginalToUpdatedCorrespondence.at(interfacorType);
-			}
+			const std::map<uint32_t, uint32_t>& getOriginalToUpdatedInterfacorCorrespondence(BoxInterfacorType interfacorType) const { return m_OriginalToUpdatedCorrespondence.at(interfacorType); }
 
-			IBox& getUpdatedBox()
-			{
-				return *m_UpdatedBox;
-			}
+			IBox& getUpdatedBox() { return *m_UpdatedBox; }
 
 			bool flaggedForManualUpdate()
 			{
@@ -60,10 +54,7 @@ namespace OpenViBE
 					   || m_KernelBox->hasAttribute(OV_AttributeId_Box_FlagCanModifySetting);
 			}
 
-			bool isUpdateRequired()
-			{
-				return m_IsUpdateRequired;
-			}
+			bool isUpdateRequired() { return m_IsUpdateRequired; }
 
 			static const std::array<CIdentifier, 10> updatableAttributes;
 

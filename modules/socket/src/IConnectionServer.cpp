@@ -88,10 +88,7 @@ namespace Socket
 #else
 #endif
 			int l_i32ClientSocket = ::accept(m_i32Socket, (struct sockaddr*)&l_oClientAddress, &l_iClientAddressSize);
-			if (l_i32ClientSocket == -1)
-			{
-				return nullptr;
-			}
+			if (l_i32ClientSocket == -1) { return nullptr; }
 			return new TConnection<IConnection>(int(l_i32ClientSocket));
 		}
 

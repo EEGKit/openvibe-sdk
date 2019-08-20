@@ -92,20 +92,11 @@ namespace OpenViBEToolkit
 		virtual OpenViBE::Kernel::IScenarioManager& getScenarioManager() { return getPlayerContext().getScenarioManager(); }
 		virtual OpenViBE::Kernel::ITypeManager& getTypeManager() { return getPlayerContext().getTypeManager(); }
 
-		virtual bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier)
-		{
-			return getPlayerContext().canCreatePluginObject(pluginIdentifier);
-		}
+		virtual bool canCreatePluginObject(const OpenViBE::CIdentifier& pluginIdentifier) { return getPlayerContext().canCreatePluginObject(pluginIdentifier); }
 
-		virtual OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier)
-		{
-			return getPlayerContext().createPluginObject(pluginIdentifier);
-		}
+		virtual OpenViBE::Plugins::IPluginObject* createPluginObject(const OpenViBE::CIdentifier& pluginIdentifier) { return getPlayerContext().createPluginObject(pluginIdentifier); }
 
-		virtual bool releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject)
-		{
-			return getPlayerContext().releasePluginObject(pluginObject);
-		}
+		virtual bool releasePluginObject(OpenViBE::Plugins::IPluginObject* pluginObject) { return getPlayerContext().releasePluginObject(pluginObject); }
 
 		// ====================================================================================================================================
 
@@ -190,10 +181,7 @@ namespace OpenViBEToolkit
 									"Did not find an enumeration value for [" << m_rTypeManager.getTypeName(m_oSettingType) << "] = [" << m_sSettingValue << "]",
 									OpenViBE::Kernel::ErrorType::BadParsing, std::numeric_limits<uint64_t>::max(), m_rErrorManager, m_rLogManager);
 				}
-				else if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult))
-				{
-					return uint64_t(l_dResult);
-				}
+				else if (m_rTypeManager.evaluateSettingValue(l_sSettingValue, l_dResult)) { return uint64_t(l_dResult); }
 
 				// Seems like currently some plugins use FSettingValueAutoCast without knowing then setting type.
 				// In this case, to avoid to pollute the console with useless messages, throw a message only if the

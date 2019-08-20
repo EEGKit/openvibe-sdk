@@ -49,8 +49,8 @@ namespace OpenViBE
 			std::fstream m_fsFileStream;
 
 			// Log Settings
-			bool m_bTimeInSeconds = false;
-			bool m_bLogWithHexa = false;
+			bool m_bTimeInSeconds        = false;
+			bool m_bLogWithHexa          = false;
 			uint64_t m_ui64TimePrecision = 0;
 
 		private:
@@ -68,5 +68,3 @@ namespace OpenViBE
 		};
 	}  // namespace Kernel
 }  // namespace OpenViBE
-
-

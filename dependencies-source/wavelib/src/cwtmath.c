@@ -20,8 +20,8 @@ static void nsfft_fd(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 	double* temp2 = (double*)malloc(sizeof(double) * L);
 
 	double delta = (ub - lb) / N;
-	int j = -N;
-	double den = 2 * (ub - lb);
+	int j        = -N;
+	double den   = 2 * (ub - lb);
 
 	for (i = 0; i < N; ++i)
 	{
@@ -83,14 +83,14 @@ static void nsfft_bk(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 		exit(1);
 	}
 
-	double* temp1 = (double*)malloc(sizeof(double) * L);
-	double* temp2 = (double*)malloc(sizeof(double) * L);
-	double* w = (double*)malloc(sizeof(double) * N);
+	double* temp1  = (double*)malloc(sizeof(double) * L);
+	double* temp2  = (double*)malloc(sizeof(double) * L);
+	double* w      = (double*)malloc(sizeof(double) * N);
 	fft_data* inpt = (fft_data*)malloc(sizeof(fft_data) * N);
 
 	double delta = (ub - lb) / N;
-	int j = -N;
-	double den = 2 * (ub - lb);
+	int j        = -N;
+	double den   = 2 * (ub - lb);
 
 	for (i = 0; i < N; ++i)
 	{
@@ -218,10 +218,10 @@ double gamma(double x)
 		5.7083835261e-03
 	};
 
-	double y = x;
-	int swi = 0;
+	double y    = x;
+	int swi     = 0;
 	double fact = 1.0;
-	int n = 0;
+	int n       = 0;
 
 
 	if (y < 0.)
@@ -240,10 +240,7 @@ double gamma(double x)
 			fact = -pi / sin(pi * oup);
 			y += 1.;
 		}
-		else
-		{
-			return xinf;
-		}
+		else { return xinf; }
 	}
 
 	if (y < eps)
@@ -252,10 +249,7 @@ double gamma(double x)
 		{
 			oup = 1.0 / y;
 		}
-		else
-		{
-			return xinf;
-		}
+		else { return xinf; }
 	}
 	else if (y < 12.)
 	{
@@ -297,7 +291,7 @@ double gamma(double x)
 	{
 		if (y <= xmax)
 		{
-			double y2 = y * y;
+			double y2  = y * y;
 			double sum = c[6];
 			for (i = 0; i < 6; ++i)
 			{
@@ -307,10 +301,7 @@ double gamma(double x)
 			sum += (y - .5) * log(y);
 			oup = exp(sum);
 		}
-		else
-		{
-			return (xinf);
-		}
+		else { return (xinf); }
 	}
 
 	if (swi) { oup = -oup; }

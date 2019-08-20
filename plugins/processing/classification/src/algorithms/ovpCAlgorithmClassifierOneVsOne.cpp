@@ -248,7 +248,7 @@ bool CAlgorithmClassifierOneVsOne::classify(const IFeatureVector& rFeatureVector
 
 	TParameterHandler<IMatrix*> op_pProbabilityVector = m_pDecisionStrategyAlgorithm->getOutputParameter(OVP_Algorithm_Classifier_OutputParameter_ProbabilityVector);
 	double l_f64MaxProb                               = -1;
-	int l_i32IndexSelectedClass                   = -1;
+	int l_i32IndexSelectedClass                       = -1;
 
 	rClassificationValues.setSize(0);
 	rProbabilityValue.setSize(m_ui32NumberOfClasses);
@@ -437,10 +437,7 @@ bool CAlgorithmClassifierOneVsOne::loadConfiguration(XML::IXMLNode* pConfigurati
 	return loadSubClassifierConfiguration(pConfigurationNode->getChildByName(c_sSubClassifiersNodeName));
 }
 
-uint32_t CAlgorithmClassifierOneVsOne::getOutputProbabilityVectorLength()
-{
-	return uint32_t(m_ui32NumberOfClasses);
-}
+uint32_t CAlgorithmClassifierOneVsOne::getOutputProbabilityVectorLength() { return uint32_t(m_ui32NumberOfClasses); }
 
 uint32_t CAlgorithmClassifierOneVsOne::getOutputDistanceVectorLength() { return 0; }
 

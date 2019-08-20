@@ -67,8 +67,7 @@ namespace Dsp
 				const double vsa    = ac();
 				int i               = c.m_numStages - 1;
 				out                 = (state++)->process1(out, *stage++, vsa);
-				for (; --i >= 0;)
-					out = (state++)->process1(out, *stage++, 0);
+				for (; --i >= 0;) out = (state++)->process1(out, *stage++, 0);
 				//for (int i = c.m_numStages; --i >= 0; ++state, ++stage)
 				//  out = state->process1 (out, *stage, vsa);
 				return Sample(out);
@@ -127,8 +126,8 @@ namespace Dsp
 		void setLayout(const LayoutBase& proto);
 
 	private:
-		int m_numStages = 0;
-		int m_maxStages = 0;
+		int m_numStages     = 0;
+		int m_maxStages     = 0;
 		Stage* m_stageArray = nullptr;
 	};
 
@@ -152,8 +151,7 @@ namespace Dsp
 			void reset()
 			{
 				StateType* state = m_states;
-				for (int i = MaxStages; --i >= 0; ++state)
-					state->reset();
+				for (int i = MaxStages; --i >= 0; ++state) state->reset();
 			}
 
 		private:

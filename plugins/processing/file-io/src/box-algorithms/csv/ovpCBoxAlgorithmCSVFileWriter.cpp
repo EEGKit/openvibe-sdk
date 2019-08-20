@@ -156,10 +156,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 				for (uint32_t c = 0; c < m_oMatrix.getDimensionSize(0); c++)
 				{
 					std::string l_sLabel(m_oMatrix.getDimensionLabel(0, c));
-					while (l_sLabel.length() > 0 && l_sLabel[l_sLabel.length() - 1] == ' ')
-					{
-						l_sLabel.erase(l_sLabel.length() - 1);
-					}
+					while (l_sLabel.length() > 0 && l_sLabel[l_sLabel.length() - 1] == ' ') { l_sLabel.erase(l_sLabel.length() - 1); }
 					m_oFileStream << m_sSeparator.toASCIIString() << l_sLabel.c_str();
 				}
 

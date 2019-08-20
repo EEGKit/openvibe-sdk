@@ -38,9 +38,9 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
 			bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-								  , double& rf64Class
-								  , OpenViBEToolkit::IVector& rDistanceValue
-								  , OpenViBEToolkit::IVector& rProbabilityValue) override;
+						  , double& rf64Class
+						  , OpenViBEToolkit::IVector& rDistanceValue
+						  , OpenViBEToolkit::IVector& rProbabilityValue) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
 			uint32_t getOutputProbabilityVectorLength() override;
@@ -58,9 +58,9 @@ namespace OpenViBEPlugins
 			Eigen::MatrixXd m_oCoefficients;
 			Eigen::MatrixXd m_oWeights;
 			double m_f64BiasDistance = 0;
-			double m_f64w0 = 0;
+			double m_f64w0           = 0;
 
-			uint32_t m_ui32NumCols = 0;
+			uint32_t m_ui32NumCols    = 0;
 			uint32_t m_ui32NumClasses = 0;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pCovarianceAlgorithm = nullptr;

@@ -273,10 +273,7 @@ bool CBoxAlgorithmSpatialFilter::process()
 #endif
 			m_pStreamEncoder->encodeBuffer();
 		}
-		if (m_pStreamDecoder->isEndReceived())
-		{
-			m_pStreamEncoder->encodeEnd();
-		}
+		if (m_pStreamDecoder->isEndReceived()) { m_pStreamEncoder->encodeEnd(); }
 
 		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
 	}

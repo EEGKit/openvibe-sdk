@@ -16,8 +16,7 @@ string getBrutHexaCode(string l_oFormatedHexaCode)
 bool CMatlabGenerator::openFile(const char* sFilename)
 {
 	m_oFile.open(sFilename, ios::out | ios::trunc);
-	if (!m_oFile.is_open())
-		return false;
+	if (!m_oFile.is_open()) return false;
 	m_oFile << "function OV_stimulations()" << endl << endl;
 
 	m_oFile << "global OVTK_StimulationId_LabelStart;" << endl;

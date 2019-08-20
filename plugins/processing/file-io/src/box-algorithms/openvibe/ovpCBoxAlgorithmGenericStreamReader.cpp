@@ -175,10 +175,7 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* pBuffer, con
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Header_Compression)
 	{
-		if (m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) != 0)
-		{
-			OV_WARNING_K("Impossible to use compression as it is not yet implemented");
-		}
+		if (m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) != 0) { OV_WARNING_K("Impossible to use compression as it is not yet implemented"); }
 	}
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Header_StreamType)
 	{

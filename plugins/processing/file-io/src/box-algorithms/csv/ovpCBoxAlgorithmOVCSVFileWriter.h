@@ -46,10 +46,10 @@ namespace OpenViBEPlugins
 			unsigned long long m_Epoch = 0;
 
 			bool m_IsHeaderReceived = false;
-			bool m_IsFileOpen = false;
-			bool m_AppendData = false;
-			bool m_LastMatrixOnly = false;
-			bool m_WriteHeader = true;
+			bool m_IsFileOpen       = false;
+			bool m_AppendData       = false;
+			bool m_LastMatrixOnly   = false;
+			bool m_WriteHeader      = true;
 		};
 
 		class CBoxAlgorithmOVCSVFileWriterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

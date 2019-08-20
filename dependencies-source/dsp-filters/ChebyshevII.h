@@ -64,7 +64,7 @@ namespace Dsp
 						double stopBandDb);
 
 		private:
-			int m_numPoles = 0;
+			int m_numPoles      = 0;
 			double m_stopBandDb = 0;
 		};
 
@@ -80,9 +80,9 @@ namespace Dsp
 						double stopBandDb);
 
 		private:
-			int m_numPoles = 0;
+			int m_numPoles      = 0;
 			double m_stopBandDb = 0;
-			double m_gainDb = 0;
+			double m_gainDb     = 0;
 		};
 
 		//------------------------------------------------------------------------------
@@ -195,15 +195,9 @@ namespace Dsp
 
 				static int getNumParams() { return 4; }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultCutoffFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultStopDbParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultStopDbParam(); }
 			};
 
 			template <class FilterClass>
@@ -224,20 +218,11 @@ namespace Dsp
 
 				static int getNumParams() { return 5; }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultCenterFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultBandwidthHzParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
 
-				static const ParamInfo getParamInfo_4()
-				{
-					return ParamInfo::defaultStopDbParam();
-				}
+				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultStopDbParam(); }
 			};
 
 			template <class FilterClass>
@@ -258,20 +243,11 @@ namespace Dsp
 
 				static int getNumParams() { return 5; }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultCutoffFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultGainParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultGainParam(); }
 
-				static const ParamInfo getParamInfo_4()
-				{
-					return ParamInfo::defaultStopDbParam();
-				}
+				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultStopDbParam(); }
 			};
 
 			template <class FilterClass>
@@ -292,25 +268,13 @@ namespace Dsp
 
 				static int getNumParams() { return 6; }
 
-				static const ParamInfo getParamInfo_2()
-				{
-					return ParamInfo::defaultCenterFrequencyParam();
-				}
+				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
 
-				static const ParamInfo getParamInfo_3()
-				{
-					return ParamInfo::defaultBandwidthHzParam();
-				}
+				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
 
-				static const ParamInfo getParamInfo_4()
-				{
-					return ParamInfo::defaultGainParam();
-				}
+				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultGainParam(); }
 
-				static const ParamInfo getParamInfo_5()
-				{
-					return ParamInfo::defaultStopDbParam();
-				}
+				static const ParamInfo getParamInfo_5() { return ParamInfo::defaultStopDbParam(); }
 			};
 
 			template <class FilterClass>

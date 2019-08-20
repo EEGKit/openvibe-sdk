@@ -91,15 +91,9 @@ namespace Dsp
 			}
 		}
 
-		double& operator[](int index)
-		{
-			return value[index];
-		}
+		double& operator[](int index) { return value[index]; }
 
-		const double& operator[](int index) const
-		{
-			return value[index];
-		}
+		const double& operator[](int index) const { return value[index]; }
 
 		double value[maxParameters];
 	};
@@ -138,49 +132,28 @@ namespace Dsp
 			  , m_toString(toString_proc) { }
 
 		// Used to identify well-known parameters (like cutoff frequency)
-		ParamID getId() const
-		{
-			return m_id;
-		}
+		ParamID getId() const { return m_id; }
 
 		// Returns a short label suitable for placement on a control
-		const char* getLabel() const
-		{
-			return m_szLabel;
-		}
+		const char* getLabel() const { return m_szLabel; }
 
 		// Returns the full name
-		const char* getName() const
-		{
-			return m_szName;
-		}
+		const char* getName() const { return m_szName; }
 
-		double getDefaultValue() const
-		{
-			return m_defaultNativeValue;
-		}
+		double getDefaultValue() const { return m_defaultNativeValue; }
 
 		//
 		// Control value is always in the range [0..1]
 		//
-		double toControlValue(double nativeValue) const
-		{
-			return (this->*m_toControlValue)(nativeValue);
-		}
+		double toControlValue(double nativeValue) const { return (this->*m_toControlValue)(nativeValue); }
 
 		//
 		// Native value is in filter-specific units. For example,
 		// cutoff frequency would probably be in Hertz.
 		//
-		double toNativeValue(double controlValue) const
-		{
-			return (this->*m_toNativeValue)(controlValue);
-		}
+		double toNativeValue(double controlValue) const { return (this->*m_toNativeValue)(controlValue); }
 
-		std::string toString(double nativeValue) const
-		{
-			return (this->*m_toString)(nativeValue);
-		}
+		std::string toString(double nativeValue) const { return (this->*m_toString)(nativeValue); }
 
 		double clamp(double nativeValue) const;
 
@@ -232,8 +205,8 @@ namespace Dsp
 		ParamID m_id;
 		const char* m_szLabel;
 		const char* m_szName;
-		double m_arg1 = 0;
-		double m_arg2 = 0;
+		double m_arg1               = 0;
+		double m_arg2               = 0;
 		double m_defaultNativeValue = 0;
 		toControlValue_t m_toControlValue;
 		toNativeValue_t m_toNativeValue;

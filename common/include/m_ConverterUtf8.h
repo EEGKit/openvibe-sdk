@@ -24,10 +24,7 @@ namespace Common
 					uni  = ch;
 					todo = 0;
 				}
-				else if (ch <= 0xBF)
-				{
-					throw std::logic_error("not a UTF-8 string");
-				}
+				else if (ch <= 0xBF) { throw std::logic_error("not a UTF-8 string"); }
 				else if (ch <= 0xDF)
 				{
 					uni  = ch & 0x1F;
@@ -43,24 +40,17 @@ namespace Common
 					uni  = ch & 0x07;
 					todo = 3;
 				}
-				else
-				{
-					throw std::logic_error("not a UTF-8 string");
-				}
+				else { throw std::logic_error("not a UTF-8 string"); }
 				for (size_t j = 0; j < todo; ++j)
 				{
-					if (i == utf8.size())
-						throw std::logic_error("not a UTF-8 string");
+					if (i == utf8.size()) throw std::logic_error("not a UTF-8 string");
 					unsigned char ch = utf8[i++];
-					if (ch < 0x80 || ch > 0xBF)
-						throw std::logic_error("not a UTF-8 string");
+					if (ch < 0x80 || ch > 0xBF) throw std::logic_error("not a UTF-8 string");
 					uni <<= 6;
 					uni += ch & 0x3F;
 				}
-				if (uni >= 0xD800 && uni <= 0xDFFF)
-					throw std::logic_error("not a UTF-8 string");
-				if (uni > 0x10FFFF)
-					throw std::logic_error("not a UTF-8 string");
+				if (uni >= 0xD800 && uni <= 0xDFFF) throw std::logic_error("not a UTF-8 string");
+				if (uni > 0x10FFFF) throw std::logic_error("not a UTF-8 string");
 				unicode.push_back(uni);
 			}
 			std::wstring utf16;
