@@ -194,20 +194,19 @@ namespace r8b
 						while (true)
 						{
 							const double c = (l + r) * 0.5;
-							calcFIRFilterResponse(flt, fltlen, M_PI * c,
-												  re, im);
+							calcFIRFilterResponse(flt, fltlen, M_PI * c, re, im);
 
-							const double curg = re * re + im * im;
+							const double curgTmp = re * re + im * im;
 
 							if (curgl > curgr)
 							{
 								r     = c;
-								curgr = curg;
+								curgr = curgTmp;
 							}
 							else
 							{
 								l     = c;
-								curgl = curg;
+								curgl = curgTmp;
 							}
 
 							if (r - l < 1e-11)
@@ -257,8 +256,7 @@ namespace r8b
 	 * @param thend The leftmost frequency to scan, inclusive.
 	 */
 
-	inline void findFIRFilterResponseLevelRtoL(const double* const flt,
-											   const int fltlen, const double maxg, double& th, const double thend)
+	inline void findFIRFilterResponseLevelRtoL(const double* const flt, const int fltlen, const double maxg, double& th, const double thend)
 	{
 		// Perform exact binary search.
 

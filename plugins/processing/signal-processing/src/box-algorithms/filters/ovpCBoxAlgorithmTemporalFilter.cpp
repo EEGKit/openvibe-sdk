@@ -56,11 +56,11 @@ namespace
 		return true;
 	}
 
+	/*
 	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::BandPass<4>, 1, Dsp::DirectFormII> CChebyshevBandPass;
 	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::BandStop<4>, 1, Dsp::DirectFormII> CChebyshevBandStop;
 	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::HighPass<4>, 1, Dsp::DirectFormII> CChebyshevHighPass;
 	typedef Dsp::SmoothedFilterDesign<Dsp::ChebyshevI::Design::LowPass<4>, 1, Dsp::DirectFormII> CChebyshevLowPass;
-	/*
 		std::shared_ptr < Dsp::Filter > createChebishevFilter(uint64_t ui64FilterType, uint64_t ui64SmoothingSampleCount)
 		{
 			switch(ui64FilterType)
@@ -104,19 +104,19 @@ namespace
 
 	typedef bool (*fpGetParameters_t)(Dsp::Params& rParameters, uint64_t ui64FilterType, uint64_t ui64SamplingRate, uint64_t ui64Order, double f64LowCutFrequency, double f64HighCutFrequency, double f64BandPassRipple);
 	typedef std::shared_ptr<Dsp::Filter> (*fpCreateFilter_t)(uint64_t ui64FilterType, uint64_t ui64SmoothingSampleCount);
-}
+}  // namespace
 
 bool CBoxAlgorithmTemporalFilter::initialize()
 {
-	m_ui64FilterMethod       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_ui64FilterType         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	int64_t l_i64FilterOrder = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
-	m_f64LowCutFrequency     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
-	m_f64HighCutFrequency    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
+	m_ui64FilterMethod          = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_ui64FilterType            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	const int64_t fildterOrder  = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+	m_f64LowCutFrequency        = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
+	m_f64HighCutFrequency       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 4);
 
-	OV_ERROR_UNLESS_KRF(l_i64FilterOrder >= 1, "Invalid filter order [" << l_i64FilterOrder << "] (expected value >= 1)", OpenViBE::Kernel::ErrorType::BadSetting);
+	OV_ERROR_UNLESS_KRF(fildterOrder >= 1, "Invalid filter order [" << fildterOrder << "] (expected value >= 1)", OpenViBE::Kernel::ErrorType::BadSetting);
 
-	m_ui64FilterOrder = uint64_t(l_i64FilterOrder);
+	m_ui64FilterOrder = uint64_t(fildterOrder);
 
 	if (m_ui64FilterType == OVP_TypeId_FilterType_LowPass)
 	{

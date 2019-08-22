@@ -201,14 +201,13 @@ namespace Dsp
 						case 1: *l++ = *src++;
 							*r++ = *src++;
 						} while (--n > 0);
+					default: break;
 				}
 			}
 			break;
 
 			default:
-			{
 				for (int i = channels; --i >= 0;) copy(samples, dest[i], src + i, 0, channels - 1);
-			}
 				break;
 		}
 	}
@@ -340,6 +339,7 @@ namespace Dsp
 						case 1: *dest++ = *l++;
 							*dest++ = *r++;
 						} while (--n > 0);
+					default: break;
 				}
 			}
 			break;

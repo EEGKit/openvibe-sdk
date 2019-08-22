@@ -405,7 +405,7 @@ namespace
 		NodeType_NamePrefix,
 		NodeType_NamePostfix,
 	};
-};
+} // namespace
 
 bool CConfigurationManager::internalExpand(const std::string& sValue, std::string& sResult) const
 {

@@ -136,12 +136,12 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 	TParameterHandler<IMatrix*> op_pCovarianceMatrix(m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
 	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_pCovarianceAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
 
-	const uint32_t l_ui32nRows = rFeatureVectorSet.getFeatureVectorCount();
-	const uint32_t l_ui32nCols = (l_ui32nRows > 0 ? rFeatureVectorSet[0].getSize() : 0);
+	const uint32_t nRows = rFeatureVectorSet.getFeatureVectorCount();
+	const uint32_t nCols = (nRows > 0 ? rFeatureVectorSet[0].getSize() : 0);
 	this->getLogManager() << LogLevel_Debug << "Feature set input dims ["
-			<< rFeatureVectorSet.getFeatureVectorCount() << "x" << l_ui32nCols << "]\n";
+			<< rFeatureVectorSet.getFeatureVectorCount() << "x" << nCols << "]\n";
 
-	OV_ERROR_UNLESS_KRF(l_ui32nRows != 0 && l_ui32nCols != 0, "Input data has a zero-size dimension, dims = [" << l_ui32nRows << "x" << l_ui32nCols << "]", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(nRows != 0 && nCols != 0, "Input data has a zero-size dimension, dims = [" << nRows << "x" << nCols << "]", OpenViBE::Kernel::ErrorType::BadInput);
 
 	// The max amount of classes to be expected
 	TParameterHandler<uint64_t> ip_pNumberOfClasses(this->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses));
@@ -166,7 +166,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 
 	// Per-class means and a global covariance are used to form the LDA model
 	MatrixXd* l_oPerClassMeans = new MatrixXd[m_ui32NumClasses];
-	MatrixXd l_oGlobalCov      = MatrixXd::Zero(l_ui32nCols, l_ui32nCols);
+	MatrixXd l_oGlobalCov      = MatrixXd::Zero(nCols, nCols);
 
 	// We need the means per class
 	for (uint32_t l_ui32classIdx = 0; l_ui32classIdx < m_ui32NumClasses; l_ui32classIdx++)
@@ -180,26 +180,26 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 			CMatrix l_oClassData;
 			l_oClassData.setDimensionCount(2);
 			l_oClassData.setDimensionSize(0, l_ui32nExamplesInClass);
-			l_oClassData.setDimensionSize(1, l_ui32nCols);
+			l_oClassData.setDimensionSize(1, nCols);
 			double* l_pBuffer = l_oClassData.getBuffer();
-			for (uint32_t i = 0; i < l_ui32nRows; i++)
+			for (uint32_t i = 0; i < nRows; i++)
 			{
 				if (rFeatureVectorSet[i].getLabel() == l_ui32classIdx)
 				{
-					System::Memory::copy(l_pBuffer, rFeatureVectorSet[i].getBuffer(), l_ui32nCols * sizeof(double));
-					l_pBuffer += l_ui32nCols;
+					System::Memory::copy(l_pBuffer, rFeatureVectorSet[i].getBuffer(), nCols * sizeof(double));
+					l_pBuffer += nCols;
 				}
 			}
 
 			// Get the mean out of it
-			Map<MatrixXdRowMajor> l_oDataMapper(l_oClassData.getBuffer(), l_ui32nExamplesInClass, l_ui32nCols);
+			Map<MatrixXdRowMajor> l_oDataMapper(l_oClassData.getBuffer(), l_ui32nExamplesInClass, nCols);
 			const MatrixXd l_oClassMean      = l_oDataMapper.colwise().mean().transpose();
 			l_oPerClassMeans[l_ui32classIdx] = l_oClassMean;
 		}
 		else
 		{
 			MatrixXd l_oTmp;
-			l_oTmp.resize(l_ui32nCols, 1);
+			l_oTmp.resize(nCols, 1);
 			l_oTmp.setZero();
 			l_oPerClassMeans[l_ui32classIdx] = l_oTmp;
 		}
@@ -208,15 +208,15 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 	// We need a global covariance, use the regularized cov algorithm
 	{
 		ip_pFeatureVectorSet->setDimensionCount(2);
-		ip_pFeatureVectorSet->setDimensionSize(0, l_ui32nRows);
-		ip_pFeatureVectorSet->setDimensionSize(1, l_ui32nCols);
+		ip_pFeatureVectorSet->setDimensionSize(0, nRows);
+		ip_pFeatureVectorSet->setDimensionSize(1, nCols);
 		double* l_pBuffer = ip_pFeatureVectorSet->getBuffer();
 
 		// Insert all data as the input of the cov algorithm
-		for (uint32_t i = 0; i < l_ui32nRows; i++)
+		for (uint32_t i = 0; i < nRows; i++)
 		{
-			System::Memory::copy(l_pBuffer, rFeatureVectorSet[i].getBuffer(), l_ui32nCols * sizeof(double));
-			l_pBuffer += l_ui32nCols;
+			System::Memory::copy(l_pBuffer, rFeatureVectorSet[i].getBuffer(), nCols * sizeof(double));
+			l_pBuffer += nCols;
 		}
 
 		// Compute cov
@@ -230,7 +230,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 		}
 
 		// Get the results from the cov algorithm
-		Map<MatrixXdRowMajor> l_oCovMapper(op_pCovarianceMatrix->getBuffer(), l_ui32nCols, l_ui32nCols);
+		Map<MatrixXdRowMajor> l_oCovMapper(op_pCovarianceMatrix->getBuffer(), nCols, nCols);
 		l_oGlobalCov = l_oCovMapper;
 	}
 
@@ -239,9 +239,9 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 
 	if (l_pDiagonalCov)
 	{
-		for (uint32_t i = 0; i < l_ui32nCols; i++)
+		for (uint32_t i = 0; i < nCols; i++)
 		{
-			for (uint32_t j = i + 1; j < l_ui32nCols; j++)
+			for (uint32_t j = i + 1; j < nCols; j++)
 			{
 				l_oGlobalCov(i, j) = 0.0;
 				l_oGlobalCov(j, i) = 0.0;
@@ -254,7 +254,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 	SelfAdjointEigenSolver<MatrixXd> l_oEigenSolver;
 	l_oEigenSolver.compute(l_oGlobalCov);
 	VectorXd l_oEigenValues = l_oEigenSolver.eigenvalues();
-	for (uint32_t i = 0; i < l_ui32nCols; i++)
+	for (uint32_t i = 0; i < nCols; i++)
 	{
 		if (l_oEigenValues(i) >= l_f64Tolerance)
 		{
@@ -310,7 +310,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 		}
 	}
 
-	m_ui32NumCols = l_ui32nCols;
+	m_ui32NumCols = nCols;
 
 	// Debug output
 	//dumpMatrix(this->getLogManager(), l_oGlobalCov, "Global cov");

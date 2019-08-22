@@ -177,7 +177,7 @@ namespace Dsp
 		{
 			const PoleZeroPair& pair = analog[i];
 			ComplexPair p1           = transform(pair.poles.first);
-			ComplexPair z1           = transform(pair.zeros.first);
+			const ComplexPair z1     = transform(pair.zeros.first);
 
 			//
 			// Optimize out the calculations for conjugates for Release builds

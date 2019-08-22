@@ -50,8 +50,8 @@ using namespace CSV;
 
 namespace
 {
-	const uint32_t s_StimulationDateColumnNbr       = 1;
-	const uint32_t s_StimulationIdentifierColumnNbr = 2;
+	//const uint32_t s_StimulationDateColumnNbr       = 1;
+	//const uint32_t s_StimulationIdentifierColumnNbr = 2;
 	const uint32_t s_SignalEpochColumnIndex         = 1;
 	const uint32_t s_TimeColumnIndex                = 0;
 	const uint32_t s_EndTimeColumnIndex             = 1;

@@ -64,18 +64,7 @@ functionPointer CEquationParser::m_pFunctionTable[] =
 };
 
 CEquationParser::CEquationParser(TBoxAlgorithm<IBoxAlgorithm>& oPlugin, double** ppVariable, uint32_t ui32VariableCount)
-	: m_pTree(nullptr)
-	  , m_ppVariable(ppVariable)
-	  , m_ui32VariableCount(ui32VariableCount)
-	  , m_ui32FunctionStackSize(1024)
-	  , m_pFunctionList(nullptr)
-	  , m_pFunctionListBase(nullptr)
-	  , m_ui64FunctionContextStackSize(1024)
-	  , m_pFunctionContextList(nullptr)
-	  , m_pFunctionContextListBase(nullptr)
-	  , m_ui64StackSize(1024)
-	  , m_pStack(nullptr)
-	  , m_ui64TreeCategory(OP_USERDEF), m_oParentPlugin(oPlugin) {}
+	: m_ppVariable(ppVariable), m_ui32VariableCount(ui32VariableCount), m_oParentPlugin(oPlugin) {}
 
 CEquationParser::~CEquationParser()
 {

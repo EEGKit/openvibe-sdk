@@ -833,20 +833,12 @@ namespace OpenViBE
 					for (size_t i = 0; i < nbElems; ++i) { m_pOwnerScenario->disconnect(identifierList[i]); }
 					m_pOwnerScenario->releaseIdentifierList(identifierList);
 
-
-
 					// $$$
-					// The way the links are removed here
-					// is not correct because they are all
-					// collected and then all removed. In case
-					// the box listener callback on box removal,
-					// the nextcoming links would potentially be
-					// invalid
-
-
+					// The way the links are removed here is not correct because they are all collected and then all removed. In case
+					// the box listener callback on box removal, the nextcoming links would potentially be invalid
 					{
-						CIdentifier* identifierList = nullptr;
-						size_t nbElems              = 0;
+						identifierList = nullptr;
+						nbElems = 0;
 						m_pOwnerScenario->getLinkIdentifierFromBoxOutputList(m_oIdentifier, index, &identifierList, &nbElems);
 						for (size_t i = 0; i < nbElems; ++i)
 						{
@@ -883,13 +875,7 @@ namespace OpenViBE
 							{
 								if (l_ui32BoxConnectorIndex > index)
 								{
-									l_vScenarioLink.push_back({
-										scenarioOutputIndex,
-										{
-											l_oBoxIdentier.toUInteger(),
-											l_ui32BoxConnectorIndex
-										}
-									});
+									l_vScenarioLink.push_back({ scenarioOutputIndex, { l_oBoxIdentier.toUInteger(), l_ui32BoxConnectorIndex } });
 								}
 								if (l_ui32BoxConnectorIndex >= index)
 								{

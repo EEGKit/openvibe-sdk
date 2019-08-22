@@ -152,9 +152,8 @@ namespace Dsp
 				case 5: return m_design.getParamInfo_5();
 				case 6: return m_design.getParamInfo_6();
 				case 7: return m_design.getParamInfo_7();
+				default: return ParamInfo();
 			}
-
-			return ParamInfo();
 		}
 
 		std::vector<PoleZeroPair> getPoleZeros() const override { return m_design.getPoleZeros(); }

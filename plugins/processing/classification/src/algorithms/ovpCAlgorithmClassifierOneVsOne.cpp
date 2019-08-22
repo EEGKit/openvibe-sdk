@@ -25,7 +25,7 @@ namespace
 	const char* const c_sSecondClassAttributeName = "second-class";
 
 	//This map is used to record the decision strategies available for each algorithm
-	std::map<uint64_t, OpenViBE::CIdentifier> g_oDecisionMap;
+	//std::map<uint64_t, OpenViBE::CIdentifier> g_oDecisionMap;
 }
 
 extern const char* const c_sClassifierRoot;

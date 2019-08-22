@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmCSVFileWriter();
+			CBoxAlgorithmCSVFileWriter() { }
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
@@ -39,15 +39,15 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CString m_sSeparator;
 			OpenViBE::CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
-			bool m_bFirstBuffer;
-			bool (CBoxAlgorithmCSVFileWriter::*m_fpRealProcess)();
+			bool m_bFirstBuffer = false;
+			bool (CBoxAlgorithmCSVFileWriter::*m_fpRealProcess)() = nullptr;
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_pStreamDecoder;
+			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_pStreamDecoder = nullptr;
 			OpenViBE::CMatrix m_oMatrix;		// This represents the properties of the input, no data
 
-			uint64_t m_ui64SampleCount;
+			uint64_t m_ui64SampleCount = 0;
 
-			bool m_bHeaderReceived;
+			bool m_bHeaderReceived = false;
 		};
 
 		class CBoxAlgorithmCSVFileWriterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>

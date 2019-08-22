@@ -10,11 +10,7 @@
 fft_real_object fft_real_init(int N, int sgn)
 {
 	fft_real_object obj = NULL;
-
-	fft_type PI = 3.1415926535897932384626433832795;
-
 	obj = (fft_real_object)malloc(sizeof(struct fft_real_set) + sizeof(fft_data) * (N / 2));
-
 	obj->cobj = fft_init(N / 2, sgn);
 
 	for (int k = 0; k < N / 2; ++k)
@@ -23,8 +19,6 @@ fft_real_object fft_real_init(int N, int sgn)
 		obj->twiddle2[k].re = cos(theta);
 		obj->twiddle2[k].im = sin(theta);
 	}
-
-
 	return obj;
 }
 
@@ -73,14 +67,12 @@ void fft_r2c_exec(fft_real_object obj,fft_type* inp, fft_data* oup)
 
 void fft_c2r_exec(fft_real_object obj, fft_data* inp,fft_type* oup)
 {
-	int i;
-	int N2 = obj->cobj->N;
-	int N  = N2 * 2;
+	const int N2 = obj->cobj->N;
 
 	fft_data* cinp = (fft_data*)malloc(sizeof(fft_data) * N2);
 	fft_data* coup = (fft_data*)malloc(sizeof(fft_data) * N2);
 
-	for (i = 0; i < N2; ++i)
+	for (int i = 0; i < N2; ++i)
 	{
 		fft_type temp1 = -inp[i].im - inp[N2 - i].im;
 		fft_type temp2 = -inp[N2 - i].re + inp[i].re;
@@ -89,7 +81,7 @@ void fft_c2r_exec(fft_real_object obj, fft_data* inp,fft_type* oup)
 	}
 
 	fft_exec(obj->cobj, cinp, coup);
-	for (i = 0; i < N2; ++i)
+	for (int i = 0; i < N2; ++i)
 	{
 		oup[2 * i]     = coup[i].re;
 		oup[2 * i + 1] = coup[i].im;

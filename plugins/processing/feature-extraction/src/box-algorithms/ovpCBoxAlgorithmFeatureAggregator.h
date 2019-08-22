@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmFeatureAggregator();
+			CBoxAlgorithmFeatureAggregator() { }
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, OVP_ClassId_BoxAlgorithm_FeatureAggregator)
 
 			//codecs
-			OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>* m_pFeatureVectorEncoder;
+			OpenViBEToolkit::TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>* m_pFeatureVectorEncoder = nullptr;
 			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>*> m_pStreamedMatrixDecoder;
 
 			// contains the labels for each dimension for each input

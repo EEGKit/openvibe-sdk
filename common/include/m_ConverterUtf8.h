@@ -17,7 +17,6 @@ namespace Common
 			{
 				unsigned long uni;
 				size_t todo;
-				bool error       = false;
 				unsigned char ch = utf8[i++];
 				if (ch <= 0x7F)
 				{
@@ -44,7 +43,7 @@ namespace Common
 				for (size_t j = 0; j < todo; ++j)
 				{
 					if (i == utf8.size()) throw std::logic_error("not a UTF-8 string");
-					unsigned char ch = utf8[i++];
+					ch = utf8[i++];
 					if (ch < 0x80 || ch > 0xBF) throw std::logic_error("not a UTF-8 string");
 					uni <<= 6;
 					uni += ch & 0x3F;
@@ -54,12 +53,12 @@ namespace Common
 				unicode.push_back(uni);
 			}
 			std::wstring utf16;
-			for (size_t i = 0; i < unicode.size(); ++i)
+			for (i = 0; i < unicode.size(); ++i)
 			{
 				unsigned long uni = unicode[i];
 				if (uni <= 0xFFFF)
 				{
-					utf16 += (wchar_t)uni;
+					utf16 += wchar_t(uni);
 				}
 				else
 				{

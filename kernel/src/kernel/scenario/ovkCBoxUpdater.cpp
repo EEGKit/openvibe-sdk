@@ -292,10 +292,10 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 		m_UpdatedBox->addInterfacor(interfacorType, i.name, i.typeIdentifier, i.identifier);
 		if (interfacorType == Setting)
 		{
-			auto index = m_UpdatedBox->getInterfacorCountIncludingDeprecated(Setting) - 1;
-			m_UpdatedBox->setSettingDefaultValue(index, i.defaultValue);
-			m_UpdatedBox->setSettingValue(index, i.value);
-			m_UpdatedBox->setSettingMod(index, i.modifiability);
+			auto idx = m_UpdatedBox->getInterfacorCountIncludingDeprecated(Setting) - 1;
+			m_UpdatedBox->setSettingDefaultValue(idx, i.defaultValue);
+			m_UpdatedBox->setSettingValue(idx, i.value);
+			m_UpdatedBox->setSettingMod(idx, i.modifiability);
 		}
 		if (i.toBeRemoved)
 		{

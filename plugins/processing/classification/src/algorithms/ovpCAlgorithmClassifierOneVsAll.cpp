@@ -85,7 +85,7 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& rFeatureVector
 		TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_oSubClassifierList[l_iClassifierCounter]->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
 		ip_pFeatureVectorSet = (IMatrix*)ip_pFeatureVectorSetReference;
 
-		double* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
+		l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
 		for (uint32_t j = 0; j < rFeatureVectorSet.getFeatureVectorCount(); j++)
 		{
 			//Modify the class of each featureVector

@@ -162,7 +162,7 @@ bool MessagingClient::getOutput(const size_t i, uint32_t& id, uint64_t& type, st
 bool MessagingClient::popError(uint64_t& packetId, EError& type, uint64_t& guiltyId)
 {
 	return CMessaging::popError(packetId, type, guiltyId);
-};
+}
 
 bool MessagingClient::popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml)
 {

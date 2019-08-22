@@ -26,7 +26,7 @@ namespace FS
 
 			virtual uint64_t getSize() = 0;
 		protected:
-			virtual ~IAttributes();
+			virtual ~IAttributes() {}
 		};
 
 		class FS_API IEntry
@@ -34,13 +34,13 @@ namespace FS
 		public:
 			virtual const char* getName() = 0;
 		protected:
-			virtual ~IEntry();
+			virtual ~IEntry() {}
 		};
 
 		virtual bool enumerate(const char* sWildcard, bool bRecursive = false) = 0;
 		virtual void release() = 0;
 	protected:
-		virtual ~IEntryEnumerator();
+		virtual ~IEntryEnumerator() { }
 	};
 
 	class FS_API IEntryEnumeratorCallBack

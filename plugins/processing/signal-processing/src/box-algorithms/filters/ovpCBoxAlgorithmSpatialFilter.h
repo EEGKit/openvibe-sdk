@@ -25,8 +25,8 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmSpatialFilter>* m_pStreamDecoder;
-			OpenViBEToolkit::TEncoder<CBoxAlgorithmSpatialFilter>* m_pStreamEncoder;
+			OpenViBEToolkit::TDecoder<CBoxAlgorithmSpatialFilter>* m_pStreamDecoder = nullptr;
+			OpenViBEToolkit::TEncoder<CBoxAlgorithmSpatialFilter>* m_pStreamEncoder = nullptr;
 
 			OpenViBE::CMatrix m_oFilterBank;
 

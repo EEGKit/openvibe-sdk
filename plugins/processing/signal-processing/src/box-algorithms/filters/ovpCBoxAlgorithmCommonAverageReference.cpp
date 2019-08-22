@@ -61,35 +61,33 @@ bool CBoxAlgorithmCommonAverageReference::processInput(const uint32_t ui32InputI
 bool CBoxAlgorithmCommonAverageReference::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
-		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, i);
-		op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
+		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
+		op_pMemoryBuffer = boxContext.getOutputChunk(0);
 
 		m_pStreamDecoder->process();
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader)) { m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader); }
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			uint32_t j;
-			uint32_t l_ui32ChannelCount = m_oMatrix.getDimensionSize(0);
-			uint32_t l_ui32SampleCount  = m_oMatrix.getDimensionSize(1);
-			for (uint32_t i = 0; i < l_ui32SampleCount; i++)
+			const uint32_t nChannel = m_oMatrix.getDimensionSize(0),
+						   nSample  = m_oMatrix.getDimensionSize(1);
+			for (uint32_t j = 0; j < nSample; j++)
 			{
-				double* l_pBufferBase = m_oMatrix.getBuffer() + i;
-				double l_f64Sum       = 0;
-				double l_f64Mean      = 0;
-				for (j = l_ui32ChannelCount; j != 0; j--)
+				double* buffer = m_oMatrix.getBuffer() + j;
+				double sum       = 0;
+				for (uint32_t c = nChannel; c != 0; c--)
 				{
-					l_f64Sum += *l_pBufferBase;
-					l_pBufferBase += l_ui32SampleCount;
+					sum += *buffer;
+					buffer += nSample;
 				}
-				l_f64Mean = l_f64Sum / l_ui32ChannelCount;
-				for (j = l_ui32ChannelCount; j != 0; j--)
+				const double mean = sum / nChannel;
+				for (uint32_t c = nChannel; c != 0; c--)
 				{
-					l_pBufferBase -= l_ui32SampleCount;
-					*l_pBufferBase -= l_f64Mean;
+					buffer -= nSample;
+					*buffer -= mean;
 				}
 			}
 
@@ -97,8 +95,8 @@ bool CBoxAlgorithmCommonAverageReference::process()
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedEnd)) { m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd); }
 
-		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
+		boxContext.markInputAsDeprecated(0, i);
+		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 	}
 
 	return true;

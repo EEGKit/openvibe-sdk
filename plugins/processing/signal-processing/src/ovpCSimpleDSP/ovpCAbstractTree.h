@@ -247,7 +247,7 @@ public:
 		rLogManager << ")";
 	}
 
-	bool simplify(CAbstractTreeNode*& pModifiedNode) override;
+	bool simplify(CAbstractTreeNode*& node) override;
 	void levelOperators() override;
 	void useNegationOperator() override;
 	void generateCode(CEquationParser& oParser) override;

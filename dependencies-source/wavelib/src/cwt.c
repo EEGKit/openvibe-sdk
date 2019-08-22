@@ -8,24 +8,14 @@ C. Torrence and G. Compo, and is available at URL: http://atoc.colorado.edu/rese
 
 #include "cwt.h"
 
-static int factorial2(int N)
-{
-	int factorial = 1;
-
-	for (int i = 1; i <= N; ++i) { factorial *= i; }
-
-	return factorial;
-}
-
+/*
 static double factorial3(int N)
 {
 	double factorial = 1;
-
 	for (int i = 1; i <= N; ++i) { factorial *= i; }
-
 	return factorial;
 }
-
+*/
 double factorial(int N)
 {
 	if (N > 40)
@@ -86,7 +76,7 @@ static void wave_function(int nk, double dt, int mother, double param, double sc
 			param = 4.0;
 		}
 		m    = (int)param;
-		norm = sqrt(2.0 * pi * scale1 / dt) * (pow(2.0, (double)m) / sqrt((double)(m * factorial(2 * m - 1))));
+		norm = sqrt(2.0 * pi * scale1 / dt) * (pow(2.0, (double)m) / sqrt(m * factorial(2 * m - 1)));
 		for (k = 1; k <= nk / 2 + 1; ++k)
 		{
 			temp               = scale1 * kwave[k - 1];
@@ -158,10 +148,9 @@ static void wave_function(int nk, double dt, int mother, double param, double sc
 
 int cwavelet(double* y, int N, double dt, int mother, double param, double s0, double dj, int jtot, int npad, double* wave, double* scale, double* period, double* coi)
 {
-	int i;
 	double period1, coi1;
 
-	double pi = 4.0 * atan(1.0);
+	const double pi = 4.0 * atan(1.0);
 
 	if (npad < N)
 	{
@@ -169,8 +158,8 @@ int cwavelet(double* y, int N, double dt, int mother, double param, double s0, d
 		return 1;
 	}
 
-	fft_object obj  = fft_init(npad, 1);
-	fft_object iobj = fft_init(npad, -1);
+	const fft_object obj  = fft_init(npad, 1);
+	const fft_object iobj = fft_init(npad, -1);
 
 	fft_data* ypad     = (fft_data*)malloc(sizeof(fft_data) * npad);
 	fft_data* yfft     = (fft_data*)malloc(sizeof(fft_data) * npad);
@@ -179,24 +168,24 @@ int cwavelet(double* y, int N, double dt, int mother, double param, double s0, d
 
 	double ymean = 0.0;
 
-	for (i = 0; i < N; ++i) { ymean += y[i]; }
+	for (int i = 0; i < N; ++i) { ymean += y[i]; }
 
 	ymean /= N;
 
-	for (i = 0; i < N; ++i)
+	for (int i = 0; i < N; ++i)
 	{
 		ypad[i].re = y[i] - ymean;
 		ypad[i].im = 0.0;
 	}
 
-	for (i = N; i < npad; ++i) { ypad[i].re = ypad[i].im = 0.0; }
+	for (int i = N; i < npad; ++i) { ypad[i].re = ypad[i].im = 0.0; }
 
 
 	// Find FFT of the input y (ypad)
 
 	fft_exec(obj, ypad, yfft);
 
-	for (i = 0; i < npad; ++i)
+	for (int i = 0; i < npad; ++i)
 	{
 		yfft[i].re /= (double)npad;
 		yfft[i].im /= (double)npad;
@@ -205,31 +194,30 @@ int cwavelet(double* y, int N, double dt, int mother, double param, double s0, d
 
 	//Construct the wavenumber array
 
-	double freq1 = 2.0 * pi / ((double)npad * dt);
-	kwave[0]     = 0.0;
+	const double freq1 = 2.0 * pi / ((double)npad * dt);
+	kwave[0]           = 0.0;
 
-	for (i = 1; i < npad / 2 + 1; ++i) { kwave[i] = i * freq1; }
+	for (int i = 1; i < npad / 2 + 1; ++i) { kwave[i] = i * freq1; }
 
-	for (i = npad / 2 + 1; i < npad; ++i) { kwave[i] = -kwave[npad - i]; }
-
+	for (int i = npad / 2 + 1; i < npad; ++i) { kwave[i] = -kwave[npad - i]; }
 	
 	// Main loop
 
 	for (int j = 1; j <= jtot; ++j)
 	{
-		double scale1 = scale[j - 1];// = s0*pow(2.0, (double)(j - 1)*dj);
+		const double scale1 = scale[j - 1];// = s0*pow(2.0, (double)(j - 1)*dj);
 		wave_function(npad, dt, mother, param, scale1, kwave, pi, &period1, &coi1, daughter);
 		period[j - 1] = period1;
 		for (int k = 0; k < npad; ++k)
 		{
-			double tmp1    = daughter[k].re * yfft[k].re - daughter[k].im * yfft[k].im;
-			double tmp2    = daughter[k].re * yfft[k].im + daughter[k].im * yfft[k].re;
+			const double tmp1    = daughter[k].re * yfft[k].re - daughter[k].im * yfft[k].im;
+			const double tmp2    = daughter[k].re * yfft[k].im + daughter[k].im * yfft[k].re;
 			daughter[k].re = tmp1;
 			daughter[k].im = tmp2;
 		}
 		fft_exec(iobj, daughter, ypad);
-		int iter = 2 * (j - 1) * N;
-		for (i = 0; i < N; ++i)
+		const int iter = 2 * (j - 1) * N;
+		for (int i = 0; i < N; ++i)
 		{
 			wave[iter + 2 * i]     = ypad[i].re;
 			wave[iter + 2 * i + 1] = ypad[i].im;
@@ -237,7 +225,7 @@ int cwavelet(double* y, int N, double dt, int mother, double param, double s0, d
 	}
 
 
-	for (i = 1; i <= (N + 1) / 2; ++i)
+	for (int i = 1; i <= (N + 1) / 2; ++i)
 	{
 		coi[i - 1] = coi1 * dt * ((double)i - 1.0);
 		coi[N - i] = coi[i - 1];
@@ -259,8 +247,8 @@ void psi0(int mother, double param, double* val, int* real)
 {
 	int sign;
 
-	int m     = (int)param;
-	double pi = 4.0 * atan(1.0);
+	const int m     = (int)param;
+	const double pi = 4.0 * atan(1.0);
 
 	if (mother == 0)
 	{
@@ -271,23 +259,11 @@ void psi0(int mother, double param, double* val, int* real)
 	else if (mother == 1)
 	{
 		//Paul
-		if (m % 2 == 0)
-		{
-			*real = 1;
-		}
-		else
-		{
-			*real = 0;
-		}
+		if (m % 2 == 0) { *real = 1; }
+		else { *real = 0; }
 
-		if (m % 4 == 0 || m % 4 == 1)
-		{
-			sign = 1;
-		}
-		else
-		{
-			sign = -1;
-		}
+		if (m % 4 == 0 || m % 4 == 1) { sign = 1; }
+		else { sign = -1; }
 		*val = sign * pow(2.0, (double)m) * factorial(m) / (sqrt(pi * factorial(2 * m)));
 	}
 	else if (mother == 2)
@@ -297,21 +273,12 @@ void psi0(int mother, double param, double* val, int* real)
 
 		if (m % 2 == 0)
 		{
-			if (m % 4 == 0)
-			{
-				sign = -1;
-			}
-			else
-			{
-				sign = 1;
-			}
-			double coeff = sign * pow(2.0, (double)m / 2) / gamma(0.5);
-			*val         = coeff * gamma(((double)m + 1.0) / 2.0) / sqrt(gamma(m + 0.50));
+			if (m % 4 == 0) { sign = -1; }
+			else { sign = 1; }
+			const double coeff = sign * pow(2.0, (double)m / 2) / gamma(0.5);
+			*val               = coeff * gamma(((double)m + 1.0) / 2.0) / sqrt(gamma(m + 0.50));
 		}
-		else
-		{
-			*val = 0;
-		}
+		else { *val = 0; }
 	}
 }
 
@@ -322,7 +289,7 @@ static int maxabs(double* array, int N)
 
 	for (int i = 0; i < N; ++i)
 	{
-		double temp = fabs(array[i]);
+		const double temp = fabs(array[i]);
 		if (temp >= maxval)
 		{
 			maxval = temp;
@@ -336,11 +303,11 @@ static int maxabs(double* array, int N)
 
 double cdelta(int mother, double param, double psi0)
 {
-	int N, i;
-	double s0;
+	int N = 0;
+	double s0 = 0;
 
 	double subscale = 8.0;
-	double dt       = 0.25;
+	const double dt = 0.25;
 	if (mother == 0)
 	{
 		N  = 16;
@@ -363,8 +330,8 @@ double cdelta(int mother, double param, double psi0)
 		}
 	}
 
-	double dj = 1.0 / subscale;
-	int jtot  = 16 * (int)subscale;
+	const double dj = 1.0 / subscale;
+	const int jtot  = 16 * (int)subscale;
 
 	double* delta  = (double*)malloc(sizeof(double) * N);
 	double* wave   = (double*)malloc(sizeof(double) * 2 * N * jtot);
@@ -376,31 +343,30 @@ double cdelta(int mother, double param, double psi0)
 
 	delta[0] = 1;
 
-	for (i = 1; i < N; ++i) { delta[i] = 0; }
+	for (int i = 1; i < N; ++i) { delta[i] = 0; }
 
-	for (i = 0; i < jtot; ++i)
+	for (int i = 0; i < jtot; ++i)
 	{
 		scale[i] = s0 * pow(2.0, (double)(i) * dj);
 	}
 
 	cwavelet(delta, N, dt, mother, param, s0, dj, jtot, N, wave, scale, period, coi);
 
-	for (i = 0; i < N; ++i) { mval[i] = 0; }
+	for (int i = 0; i < N; ++i) { mval[i] = 0; }
 
 	for (int j = 0; j < jtot; ++j)
 	{
-		int iter   = 2 * j * N;
-		double den = sqrt(scale[j]);
-		for (i = 0; i < N; ++i)
+		const int iter   = 2 * j * N;
+		const double den = sqrt(scale[j]);
+		for (int i = 0; i < N; ++i)
 		{
 			mval[i] += wave[iter + 2 * i] / den;
 		}
 	}
 
 
-	int maxarr = maxabs(mval, N);
-
-	double cdel = sqrt(dt) * dj * mval[maxarr] / psi0;
+	const int maxarr = maxabs(mval, N);
+	const double cdel = sqrt(dt) * dj * mval[maxarr] / psi0;
 
 	free(delta);
 	free(wave);
@@ -415,21 +381,19 @@ double cdelta(int mother, double param, double psi0)
 
 void icwavelet(double* wave, int N, double* scale, int jtot, double dt, double dj, double cdelta, double psi0, double* oup)
 {
-	int i;
+	const double coeff = sqrt(dt) * dj / (cdelta * psi0);
 
-	double coeff = sqrt(dt) * dj / (cdelta * psi0);
-
-	for (i = 0; i < N; ++i) { oup[i] = 0.0; }
+	for (int i = 0; i < N; ++i) { oup[i] = 0.0; }
 
 	for (int j = 0; j < jtot; ++j)
 	{
-		int iter   = 2 * j * N;
-		double den = sqrt(scale[j]);
-		for (i = 0; i < N; ++i)
+		const int iter   = 2 * j * N;
+		const double den = sqrt(scale[j]);
+		for (int i = 0; i < N; ++i)
 		{
 			oup[i] += wave[iter + 2 * i] / den;
 		}
 	}
 
-	for (i = 0; i < N; ++i) { oup[i] *= coeff; }
+	for (int i = 0; i < N; ++i) { oup[i] *= coeff; }
 }

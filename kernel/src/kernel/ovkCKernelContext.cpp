@@ -48,11 +48,11 @@ CKernelContext::~CKernelContext() { this->uninitialize(); }
 bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 {
 	std::map<std::string, std::string> initializationTokens;
-	auto token = tokenList;
-	while (token && tokenCount > 0)
+	const auto tokens = tokenList;
+	while (tokens && tokenCount > 0)
 	{
-		auto key   = tokenList++;
-		auto value = tokenList++;
+		const auto key   = tokenList++;
+		const auto value = tokenList++;
 		tokenCount--;
 		initializationTokens[*key] = *value;
 	}
@@ -137,21 +137,21 @@ bool CKernelContext::initialize(const char* const* tokenList, size_t tokenCount)
 	m_pLogListenerFile->activate(true);
 	this->getLogManager().addListener(m_pLogListenerFile.get());
 
-	ELogLevel l_eMainLogLevel    = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_MainLogLevel}"));
-	ELogLevel l_eConsoleLogLevel = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_ConsoleLogLevel}"));
-	ELogLevel l_eFileLogLevel    = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_FileLogLevel}"));
+	const ELogLevel mainLogLevel    = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_MainLogLevel}"));
+	const ELogLevel consoleLogLevel = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_ConsoleLogLevel}"));
+	const ELogLevel fileLogLevel    = this->earlyGetLogLevel(m_pConfigurationManager->expand("${Kernel_FileLogLevel}"));
 
 	m_pLogManager->activate(false);
-	m_pLogManager->activate(l_eMainLogLevel, LogLevel_Last, true);
+	m_pLogManager->activate(mainLogLevel, LogLevel_Last, true);
 	m_pLogListenerFile->activate(false);
-	m_pLogListenerFile->activate(l_eFileLogLevel, LogLevel_Last, true);
+	m_pLogListenerFile->activate(fileLogLevel, LogLevel_Last, true);
 	m_pLogListenerFile->configure(*m_pConfigurationManager);
 	m_pLogListenerFile->configure(*m_pConfigurationManager);
 
 	if (m_pLogListenerConsole.get())
 	{
 		m_pLogListenerConsole->activate(false);
-		m_pLogListenerConsole->activate(l_eConsoleLogLevel, LogLevel_Last, true);
+		m_pLogListenerConsole->activate(consoleLogLevel, LogLevel_Last, true);
 		m_pLogListenerConsole->configure(*m_pConfigurationManager);
 	}
 

@@ -26,8 +26,8 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_pDecoder;
-			OpenViBEToolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_pEncoder;
+			OpenViBEToolkit::TDecoder<CBoxAlgorithmChannelSelector>* m_pDecoder = nullptr;
+			OpenViBEToolkit::TEncoder<CBoxAlgorithmChannelSelector>* m_pEncoder = nullptr;
 
 			OpenViBE::IMatrix* m_pInputMatrix  = nullptr;
 			OpenViBE::IMatrix* m_pOutputMatrix = nullptr;

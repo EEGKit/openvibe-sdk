@@ -85,28 +85,25 @@ bool CPlayer::setScenario(const CIdentifier& rScenarioIdentifier, const CNameVal
 
 	if (l_rRuntimeScenario.hasAttribute(OV_AttributeId_ScenarioFilename))
 	{
-		std::string filename      = l_rRuntimeScenario.getAttributeValue(OV_AttributeId_ScenarioFilename).toASCIIString();
-		std::string directoryName = ".";
+		const std::string filename = l_rRuntimeScenario.getAttributeValue(OV_AttributeId_ScenarioFilename).toASCIIString();
+		std::string directoryName  = ".";
 		m_pRuntimeConfigurationManager->createConfigurationToken("Player_ScenarioFilename", filename.c_str());
 
-		size_t iDir = filename.rfind("/");
-		if (iDir != std::string::npos)
-		{
-			directoryName = filename.substr(0, iDir).c_str();
-		}
+		const size_t iDir = filename.rfind('/');
+		if (iDir != std::string::npos) { directoryName = filename.substr(0, iDir); }
 		m_pRuntimeConfigurationManager->createConfigurationToken("Player_ScenarioDirectory", directoryName.c_str());
 		m_pRuntimeConfigurationManager->createConfigurationToken("__volatile_ScenarioDir", directoryName.c_str());
-		std::string workspaceConfigurationFile = directoryName + "/" + std::string("openvibe-workspace.conf");
+		const std::string workspaceConfigurationFile = directoryName + "/" + std::string("openvibe-workspace.conf");
 		this->getLogManager() << LogLevel_Trace << "Player adds workspace configuration file [" << CString(workspaceConfigurationFile.c_str()) << "] to runtime configuration manager\n";
 		m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(workspaceConfigurationFile.c_str()));
 		std::string scenarioConfigurationFile = directoryName + "/" + std::string("scenario.conf");
 		this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(scenarioConfigurationFile.c_str()) << "] to runtime configuration manager\n";
 		m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(scenarioConfigurationFile.c_str()));
 
-		size_t ext = filename.rfind(".");
+		const size_t ext = filename.rfind('.');
 		if (ext != std::string::npos)
 		{
-			std::string scenarioConfigurationFile = filename.substr(0, ext) + std::string(".conf");
+			scenarioConfigurationFile = filename.substr(0, ext) + std::string(".conf");
 			this->getLogManager() << LogLevel_Trace << "Player adds scenario configuration file [" << CString(scenarioConfigurationFile.c_str()) << "] to runtime configuration manager\n";
 			m_pRuntimeConfigurationManager->addConfigurationFromFile(CString(scenarioConfigurationFile.c_str()));
 		}

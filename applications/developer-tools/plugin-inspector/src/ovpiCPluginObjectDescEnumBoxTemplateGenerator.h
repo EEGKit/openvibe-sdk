@@ -29,5 +29,5 @@ protected:
 	std::vector<std::pair<std::string, std::string>> m_Categories;
 	std::vector<std::pair<std::string, std::string>> m_DeprecatedBoxesCategories;
 	OpenViBE::CIdentifier m_ScenarioIdentifier = OV_UndefinedIdentifier;
-	OpenViBE::Kernel::IScenario* m_Scenario;
+	OpenViBE::Kernel::IScenario* m_Scenario = nullptr;
 };

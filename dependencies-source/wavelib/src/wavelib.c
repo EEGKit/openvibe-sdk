@@ -268,8 +268,8 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 cwt_object cwt_init(char* wave, double param, int siglength, double dt, int J)
 {
 	cwt_object obj = NULL;
-	int mother;
-	double s0, dj;
+	int mother = 0;
+	double s0 = 0, dj = 0;
 	char* pdefault = "pow";
 
 	int m   = (int)param;
@@ -2680,12 +2680,11 @@ static void imodwt_per(wt_object wt, int M, double* cA, int len_cA, double* cD, 
 
 void imodwt(wt_object wt, double* dwtop)
 {
-	int N      = wt->siglength;
-	int J      = wt->J;
-	int U      = 2;
-	int lf     = wt->wave->lpr_len;
-	int lenacc = N;
-	int M      = (int)pow(2.0, (double)J - 1.0);
+	const int N = wt->siglength;
+	const int J = wt->J;
+	//int lf      = wt->wave->lpr_len;
+	int lenacc  = N;
+	int M       = (int)pow(2.0, (double)J - 1.0);
 	//M = 1;
 	double* X = (double*)malloc(sizeof(double) * N);
 
@@ -2693,23 +2692,11 @@ void imodwt(wt_object wt, double* dwtop)
 
 	for (int iter = 0; iter < J; ++iter)
 	{
-		if (iter > 0)
-		{
-			M = M / 2;
-		}
+		if (iter > 0) { M = M / 2; }
 		imodwt_per(wt, M, dwtop, N, wt->params + lenacc, N, X);
-		/*
-		for (j = lf - 1; j < N; ++j) {
-			dwtop[j - lf + 1] = X[j];
-		}
-		for (j = 0; j < lf - 1; ++j) {
-			dwtop[N - lf + 1 + j] = X[j];
-		}
-		*/
-		for (int j = 0; j < N; ++j)
-		{
-			dwtop[j] = X[j];
-		}
+		//for (j = lf - 1; j < N; ++j) { dwtop[j - lf + 1] = X[j]; }
+		//for (j = 0; j < lf - 1; ++j) { dwtop[N - lf + 1 + j] = X[j]; }
+		for (int j = 0; j < N; ++j) { dwtop[j] = X[j]; }
 
 		lenacc += N;
 	}

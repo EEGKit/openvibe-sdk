@@ -305,6 +305,7 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
 			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier, _AutoBind_(sData));
 			if (l_sTop == "Value") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value, _AutoBind_(sData));
 			break;
+		default: break;
 	}
 }
 

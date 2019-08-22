@@ -39,7 +39,7 @@ namespace OpenViBEPlugins
 
 			typedef struct
 			{
-				OpenViBEToolkit::TDecoder<CBoxAlgorithmVotingClassifier>* m_pDecoder;
+				OpenViBEToolkit::TDecoder<CBoxAlgorithmVotingClassifier>* m_pDecoder = nullptr;
 				OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> op_pStimulationSet;
 				OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*> op_pMatrix;
 				bool m_bTwoValueInput;

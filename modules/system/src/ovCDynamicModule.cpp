@@ -404,7 +404,7 @@ bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS&
 	CloseHandle(l_FileHandle);
 
 	return true;
-};
+}
 #endif
 
 void CDynamicModule::setError(ELogErrorCodes errorCode, const std::string& details)

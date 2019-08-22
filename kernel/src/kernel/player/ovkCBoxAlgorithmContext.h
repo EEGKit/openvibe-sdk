@@ -26,7 +26,7 @@ namespace OpenViBE
 
 		protected:
 
-			const IBox* m_pStaticBoxContext;
+			const IBox* m_pStaticBoxContext = nullptr;
 			IBoxIO* m_pDynamicBoxContext = nullptr;
 			// here we prefer value type over reference/pointer
 			// in order to improve performance at runtime (no heap allocation)

@@ -7,17 +7,12 @@
 
 using namespace Communication;
 
-MessagingServer::MessagingServer()
-	: CMessaging()
-	  , m_Server(Socket::createConnectionServer()) {}
-
 MessagingServer::~MessagingServer()
 {
 	this->close();
 	m_Server->release();
 }
 
-bool MessagingServer::listen(uint32_t port) { return m_Server->listen(port); }
 
 bool MessagingServer::accept()
 {
@@ -105,8 +100,6 @@ bool MessagingServer::accept()
 	return true;
 }
 
-bool MessagingServer::getSocketPort(uint32_t& port) { return m_Server->getSocketPort(port); }
-
 bool MessagingServer::close()
 {
 	this->pushMessage(EndMessage());
@@ -170,9 +163,3 @@ bool MessagingServer::pushEBML(const uint32_t index, const uint64_t startTime, c
 {
 	return this->pushMessage(EBMLMessage(index, startTime, endTime, ebml));
 }
-
-bool MessagingServer::pushTime(const uint64_t time) { return this->pushMessage(TimeMessage(time)); }
-
-bool MessagingServer::pushSync() { return this->pushMessage(SyncMessage()); }
-
-bool MessagingServer::waitForSyncMessage() { return CMessaging::waitForSyncMessage(); }

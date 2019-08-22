@@ -63,12 +63,12 @@ namespace Socket
 			ZeroMemory(&hints, sizeof(hints));
 			hints.ai_family = AF_INET;
 			PADDRINFOA addr;
-			if (auto errorcode = getaddrinfo(sServerName, nullptr, &hints, &addr) != 0)
+			if (getaddrinfo(sServerName, nullptr, &hints, &addr) != 0)
 			{
 				close();
 				return false;
 			}
-			auto sockaddr_ipv4 = reinterpret_cast<sockaddr_in*>(addr->ai_addr);
+			const auto sockaddr_ipv4 = reinterpret_cast<sockaddr_in*>(addr->ai_addr);
 
 #endif
 

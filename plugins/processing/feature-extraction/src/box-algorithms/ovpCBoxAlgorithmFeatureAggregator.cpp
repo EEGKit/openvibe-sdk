@@ -19,8 +19,6 @@ namespace OpenViBEPlugins
 {
 	namespace FeatureExtraction
 	{
-		CBoxAlgorithmFeatureAggregator::CBoxAlgorithmFeatureAggregator() : m_pFeatureVectorEncoder(nullptr) { }
-
 		bool CBoxAlgorithmFeatureAggregator::initialize()
 		{
 			m_ui32NumberOfInput = getBoxAlgorithmContext()->getStaticBoxContext()->getInputCount();
