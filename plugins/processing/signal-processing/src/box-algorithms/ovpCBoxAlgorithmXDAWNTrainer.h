@@ -56,18 +56,18 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_InriaXDAWNTrainer; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmXDAWNTrainer; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Stimulations", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addInput("Session signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInput("Evoked potential epochs", OV_TypeId_Signal);
+				prototype.addInput("Stimulations", OV_TypeId_Stimulations);
+				prototype.addInput("Session signal", OV_TypeId_Signal);
+				prototype.addInput("Evoked potential epochs", OV_TypeId_Signal);
 
-				rBoxAlgorithmPrototype.addOutput("Train-completed Flag", OV_TypeId_Stimulations);
+				prototype.addOutput("Train-completed Flag", OV_TypeId_Stimulations);
 
-				rBoxAlgorithmPrototype.addSetting("Train stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_Train");
-				rBoxAlgorithmPrototype.addSetting("Spatial filter configuration", OV_TypeId_Filename, "");
-				rBoxAlgorithmPrototype.addSetting("Filter dimension", OV_TypeId_Integer, "4");
-				rBoxAlgorithmPrototype.addSetting("Save as box config", OV_TypeId_Boolean, "true");
+				prototype.addSetting("Train stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_Train");
+				prototype.addSetting("Spatial filter configuration", OV_TypeId_Filename, "");
+				prototype.addSetting("Filter dimension", OV_TypeId_Integer, "4");
+				prototype.addSetting("Save as box config", OV_TypeId_Boolean, "true");
 				return true;
 			}
 

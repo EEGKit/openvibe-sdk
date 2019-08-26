@@ -74,26 +74,26 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SpatialFilter; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSpatialFilter; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmSpatialFilterListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input Signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Output Signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("Spatial Filter Coefficients", OV_TypeId_String, "1;0;0;0;0;1;0;0;0;0;1;0;0;0;0;1");
-				rBoxAlgorithmPrototype.addSetting("Number of Output Channels", OV_TypeId_Integer, "4");
-				rBoxAlgorithmPrototype.addSetting("Number of Input Channels", OV_TypeId_Integer, "4");
-				rBoxAlgorithmPrototype.addSetting("Filter matrix file", OV_TypeId_Filename, "");
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addInput("Input Signal", OV_TypeId_Signal);
+				prototype.addOutput("Output Signal", OV_TypeId_Signal);
+				prototype.addSetting("Spatial Filter Coefficients", OV_TypeId_String, "1;0;0;0;0;1;0;0;0;0;1;0;0;0;0;1");
+				prototype.addSetting("Number of Output Channels", OV_TypeId_Integer, "4");
+				prototype.addSetting("Number of Input Channels", OV_TypeId_Integer, "4");
+				prototype.addSetting("Filter matrix file", OV_TypeId_Filename, "");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
+				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addInputSupport(OV_TypeId_Spectrum);
+				prototype.addInputSupport(OV_TypeId_Signal);
 
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Signal);
+				prototype.addOutputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addOutputSupport(OV_TypeId_Spectrum);
+				prototype.addOutputSupport(OV_TypeId_Signal);
 
 				return true;
 			}

@@ -49,13 +49,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReader; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmElectrodeLocalisationFileReader; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
 				// Adds box outputs
-				rBoxAlgorithmPrototype.addOutput("Channel localisation", OV_TypeId_ChannelLocalisation);
+				prototype.addOutput("Channel localisation", OV_TypeId_ChannelLocalisation);
 
 				// Adds settings
-				rBoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "");
+				prototype.addSetting("Filename", OV_TypeId_Filename, "");
 
 				return true;
 			}

@@ -141,26 +141,26 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ChannelSelector; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmChannelSelector; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmChannelSelectorListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("Channel List", OV_TypeId_String, ":");
-				rBoxAlgorithmPrototype.addSetting("Action", OVP_TypeId_SelectionMethod, OVP_TypeId_SelectionMethod_Select.toString());
-				rBoxAlgorithmPrototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, OVP_TypeId_MatchMethod_Smart.toString());
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addOutput("Output signal", OV_TypeId_Signal);
+				prototype.addSetting("Channel List", OV_TypeId_String, ":");
+				prototype.addSetting("Action", OVP_TypeId_SelectionMethod, OVP_TypeId_SelectionMethod_Select.toString());
+				prototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, OVP_TypeId_MatchMethod_Smart.toString());
 
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addInputSupport(OV_TypeId_Signal);
+				prototype.addInputSupport(OV_TypeId_Spectrum);
+				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
 
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addOutputSupport(OV_TypeId_Signal);
+				prototype.addOutputSupport(OV_TypeId_Spectrum);
+				prototype.addOutputSupport(OV_TypeId_StreamedMatrix);
 				return true;
 			}
 

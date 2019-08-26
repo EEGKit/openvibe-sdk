@@ -115,16 +115,16 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_MatrixValidityChecker; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmMatrixValidityChecker; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmMatrixValidityCheckerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Stream 1", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addOutput("Output stream 1", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addSetting("Log level", OV_TypeId_LogLevel, "Warning");
-				rBoxAlgorithmPrototype.addSetting("Action to do", OVP_TypeId_ValidityCheckerType, OVP_TypeId_ValidityCheckerType_LogWarning.toString());
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddOutput);
+				prototype.addInput("Stream 1", OV_TypeId_StreamedMatrix);
+				prototype.addOutput("Output stream 1", OV_TypeId_StreamedMatrix);
+				prototype.addSetting("Log level", OV_TypeId_LogLevel, "Warning");
+				prototype.addSetting("Action to do", OVP_TypeId_ValidityCheckerType, OVP_TypeId_ValidityCheckerType_LogWarning.toString());
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddOutput);
 
 				return true;
 			}

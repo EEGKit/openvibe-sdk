@@ -208,11 +208,11 @@ namespace OpenViBE
 
 			/**
 			 * \brief Tests whether the plugin has a specific functionality identified by a CIdentifier
-			 * \param functionalityIdentifier The identifier of the functionality to poll
+			 * \param functionality The identifier of the functionality to poll
 			 * \retval true If the plugin has the demanded functionality.
 			 * \retval false If the plugin does not have the demanded functionality.
 			 */
-			virtual bool hasFunctionality(const CIdentifier functionalityIdentifier) const { return false; }
+			virtual bool hasFunctionality(const CIdentifier functionality) const { return false; }
 			/**
 			 * \brief Tests the licence type for this plugin
 			 * \param eLT [in] : the licence type that this plugin may have

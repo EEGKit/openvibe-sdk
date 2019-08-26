@@ -81,7 +81,7 @@ namespace OpenViBE
 				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			} SSetting;
 
-			bool getBoxPrototype(Kernel::IBoxProto& rBoxAlgorithmPrototype) const override;
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc)
 

@@ -131,24 +131,24 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_CSVFileReader; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmCSVFileReader; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmCSVFileReaderListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addOutput("Output stream", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "");
-				rBoxAlgorithmPrototype.addSetting("Column separator", OV_TypeId_String, ";");
-				rBoxAlgorithmPrototype.addSetting("Don't use the file time",OV_TypeId_Boolean, "false");
-				rBoxAlgorithmPrototype.addSetting("Samples per buffer", OV_TypeId_Integer, "32");
+				prototype.addOutput("Output stream", OV_TypeId_Signal);
+				prototype.addSetting("Filename", OV_TypeId_Filename, "");
+				prototype.addSetting("Column separator", OV_TypeId_String, ";");
+				prototype.addSetting("Don't use the file time",OV_TypeId_Boolean, "false");
+				prototype.addSetting("Samples per buffer", OV_TypeId_Integer, "32");
 
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_FeatureVector);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_ChannelLocalisation);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Stimulations);
+				prototype.addOutputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addOutputSupport(OV_TypeId_FeatureVector);
+				prototype.addOutputSupport(OV_TypeId_ChannelLocalisation);
+				prototype.addOutputSupport(OV_TypeId_Signal);
+				prototype.addOutputSupport(OV_TypeId_Spectrum);
+				prototype.addOutputSupport(OV_TypeId_Stimulations);
 				return true;
 			}
 

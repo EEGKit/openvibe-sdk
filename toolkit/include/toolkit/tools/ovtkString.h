@@ -20,8 +20,6 @@ namespace OpenViBEToolkit
 			template <class TContainer>
 			class TSplitCallback : public ISplitCallback
 			{
-				TSplitCallback();
-
 			public:
 
 				TSplitCallback(TContainer& vTokenContainer) : m_pTokenContainer(&vTokenContainer) { }

@@ -89,16 +89,16 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmStimulationBasedEpoching; }
 			OpenViBE::CString getStockItemName() const override { return "gtk-cut"; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInput("Input stimulations", OV_TypeId_Stimulations);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addInput("Input stimulations", OV_TypeId_Stimulations);
 
-				rBoxAlgorithmPrototype.addOutput("Epoched signal", OV_TypeId_Signal);
+				prototype.addOutput("Epoched signal", OV_TypeId_Signal);
 
-				rBoxAlgorithmPrototype.addSetting("Epoch duration (in sec)", OV_TypeId_Float, "1");
-				rBoxAlgorithmPrototype.addSetting("Epoch offset (in sec)", OV_TypeId_Float, "0.5");
-				rBoxAlgorithmPrototype.addSetting("Stimulation to epoch from", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+				prototype.addSetting("Epoch duration (in sec)", OV_TypeId_Float, "1");
+				prototype.addSetting("Epoch offset (in sec)", OV_TypeId_Float, "0.5");
+				prototype.addSetting("Stimulation to epoch from", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
 
 				return true;
 			}

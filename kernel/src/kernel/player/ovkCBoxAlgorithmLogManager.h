@@ -12,9 +12,7 @@ namespace OpenViBE
 		{
 		public:
 			CBoxAlgorithmLogManager(const IPlayerContext& playerContext, ILogManager& logManager, CSimulatedBox& simulatedBox)
-				: m_PlayerContext(playerContext)
-				  , m_LogManager(logManager)
-				  , m_SimulatedBox(simulatedBox) {}
+				: m_PlayerContext(playerContext), m_LogManager(logManager), m_SimulatedBox(simulatedBox) {}
 
 			bool isActive(ELogLevel eLogLevel) override { return m_LogManager.isActive(eLogLevel); }
 
@@ -41,8 +39,7 @@ namespace OpenViBE
 			void log(const char* value) override { m_LogManager.log(value); }
 			void log(const CIdentifier& value) override { m_LogManager.log(value); }
 			void log(const ELogColor value) override { m_LogManager.log(value); }
-
-			void log(ELogLevel logLevel) override;
+			void log(const ELogLevel logLevel) override;
 
 			CIdentifier getClassIdentifier() const override { return CIdentifier(); }
 

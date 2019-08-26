@@ -184,10 +184,7 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			bool clearReferenceTarget()
-			{
-				return m_pParameter ? m_pParameter->clearReferenceTarget() : false;
-			}
+			bool clearReferenceTarget() { return m_pParameter ? m_pParameter->clearReferenceTarget() : false; }
 			/**
 			 * \brief Sets a new reference target
 			 * \param rParameterHandler [in] : a parameter handler of the same type as this parameter handler
@@ -204,20 +201,14 @@ namespace OpenViBE
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			bool setReferenceTarget(IParameter* pParameter)
-			{
-				return m_pParameter && pParameter ? m_pParameter->setReferenceTarget(pParameter) : false;
-			}
+			bool setReferenceTarget(IParameter* pParameter) { return m_pParameter && pParameter ? m_pParameter->setReferenceTarget(pParameter) : false; }
 			/**
 			 * \brief Sets a new reference target
 			 * \param t [in] : a value to use as reference target
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			bool setReferenceTarget(T& t)
-			{
-				return m_pParameter ? m_pParameter->setReferenceTarget(&t) : false;
-			}
+			bool setReferenceTarget(T& t) { return m_pParameter ? m_pParameter->setReferenceTarget(&t) : false; }
 
 			//@}
 

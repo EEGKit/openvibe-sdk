@@ -51,11 +51,11 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ClockStimulator; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmClockStimulator; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addOutput("Generated stimulations", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addSetting("Interstimulation interval (in sec)", OV_TypeId_Float, "1.0");
-				rBoxAlgorithmPrototype.addSetting("Stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+				prototype.addOutput("Generated stimulations", OV_TypeId_Stimulations);
+				prototype.addSetting("Interstimulation interval (in sec)", OV_TypeId_Float, "1.0");
+				prototype.addSetting("Stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
 				return true;
 			}
 

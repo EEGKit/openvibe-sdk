@@ -104,7 +104,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_OVCSVFileReader; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmOVCSVFileReader; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmOVCSVFileReaderListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
 			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& BoxAlgorithmPrototype) const override
 			{

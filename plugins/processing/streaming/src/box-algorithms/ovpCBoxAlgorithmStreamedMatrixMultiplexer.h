@@ -133,22 +133,22 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StreamedMatrixMultiplexer; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmStreamedMatrixMultiplexer; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStreamedMatrixMultiplexerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input stream 1", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addInput("Input stream 2", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addOutput("Multiplexed streamed matrix", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addInput("Input stream 1", OV_TypeId_StreamedMatrix);
+				prototype.addInput("Input stream 2", OV_TypeId_StreamedMatrix);
+				prototype.addOutput("Multiplexed streamed matrix", OV_TypeId_StreamedMatrix);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_ChannelLocalisation);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_FeatureVector);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);
+				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addInputSupport(OV_TypeId_ChannelLocalisation);
+				prototype.addInputSupport(OV_TypeId_FeatureVector);
+				prototype.addInputSupport(OV_TypeId_Signal);
+				prototype.addInputSupport(OV_TypeId_Spectrum);
 
 				return true;
 			}

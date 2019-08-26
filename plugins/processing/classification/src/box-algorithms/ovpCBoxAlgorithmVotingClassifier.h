@@ -118,24 +118,24 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_VotingClassifier; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmVotingClassifier; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Classification result 1", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addInput("Classification result 2", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addOutput("Classification choice", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addSetting("Number of repetitions", OV_TypeId_Integer, "12");
-				rBoxAlgorithmPrototype.addSetting("Target class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Target");
-				rBoxAlgorithmPrototype.addSetting("Non target class label", OV_TypeId_Stimulation, "OVTK_StimulationId_NonTarget");
-				rBoxAlgorithmPrototype.addSetting("Reject class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
-				rBoxAlgorithmPrototype.addSetting("Result class label base", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_01");
-				rBoxAlgorithmPrototype.addSetting("Choose one if ex-aequo", OV_TypeId_Boolean, "false");
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addInput("Classification result 1", OV_TypeId_Stimulations);
+				prototype.addInput("Classification result 2", OV_TypeId_Stimulations);
+				prototype.addOutput("Classification choice", OV_TypeId_Stimulations);
+				prototype.addSetting("Number of repetitions", OV_TypeId_Integer, "12");
+				prototype.addSetting("Target class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Target");
+				prototype.addSetting("Non target class label", OV_TypeId_Stimulation, "OVTK_StimulationId_NonTarget");
+				prototype.addSetting("Reject class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+				prototype.addSetting("Result class label base", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_01");
+				prototype.addSetting("Choose one if ex-aequo", OV_TypeId_Boolean, "false");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 				return true;
 			}
 
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmVotingClassifierListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_VotingClassifierDesc)
 		};

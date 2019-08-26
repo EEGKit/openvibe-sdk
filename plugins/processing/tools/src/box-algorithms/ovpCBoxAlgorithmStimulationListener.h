@@ -71,13 +71,13 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationListener; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmStimulationListener; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStimulationListenerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Stimulation stream 1", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addSetting("Log level to use", OV_TypeId_LogLevel, "Information");
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addInput("Stimulation stream 1", OV_TypeId_Stimulations);
+				prototype.addSetting("Log level to use", OV_TypeId_LogLevel, "Information");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 				return true;
 			}
 

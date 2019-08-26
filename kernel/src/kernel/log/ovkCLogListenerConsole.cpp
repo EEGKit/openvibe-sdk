@@ -349,17 +349,11 @@ void CLogListenerConsole::log(const ELogColor eLogColor)
 				m_eLogColor = m_vLogColor.top();
 				m_vLogColor.pop();
 			}
-			else
-			{
-				m_eLogColor = LogColor_Default;
-			}
+			else { m_eLogColor = LogColor_Default; }
 		}
 
 		// Tests 'reset' bit
-		if (eLogColor & LogColor_ResetBit)
-		{
-			m_eLogColor = LogColor_Default;
-		}
+		if (eLogColor & LogColor_ResetBit) { m_eLogColor = LogColor_Default; }
 
 		// Tests 'foreground' bit
 		if (eLogColor & LogColor_ForegroundBit)

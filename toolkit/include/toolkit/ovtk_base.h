@@ -12,7 +12,7 @@ namespace EBML
 	class IReader;
 	class IReaderCallback;
 	class IReaderHelper;
-}
+} // namespace EBML
 
 namespace OpenViBEToolkit
 {
@@ -21,12 +21,7 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		TScopeHandle(CHandledType& rHandler, CHandledType& rHandledValue)
-			: m_oLastHandledValue(rHandler), m_rHandler(rHandler)
-		{
-			m_rHandler = rHandledValue;
-		}
-
+		TScopeHandle(CHandledType& rHandler, CHandledType& rHandledValue) : m_rHandler(rHandler), m_oLastHandledValue(rHandler) { m_rHandler = rHandledValue; }
 		~TScopeHandle() { m_rHandler = m_oLastHandledValue; }
 
 	private:

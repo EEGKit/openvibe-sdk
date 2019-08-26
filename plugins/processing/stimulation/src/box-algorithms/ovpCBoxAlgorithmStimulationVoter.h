@@ -81,22 +81,22 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationVoter; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmStimulationVoter; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Stimulus input", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addOutput("Selected stimulus", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addSetting("Number of stimuli required for vote", OV_TypeId_Integer, "4");
-				rBoxAlgorithmPrototype.addSetting("Time window (secs)", OV_TypeId_Float, "2");
-				rBoxAlgorithmPrototype.addSetting("Clear votes", OVP_TypeId_Voting_ClearVotes, "After output");
-				rBoxAlgorithmPrototype.addSetting("Output timestamp", OVP_TypeId_Voting_OutputTime, "Time of last voting stimulus");
-				rBoxAlgorithmPrototype.addSetting("Reject class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
-				rBoxAlgorithmPrototype.addSetting("Reject class can win", OVP_TypeId_Voting_RejectClass_CanWin, "No");
+				prototype.addInput("Stimulus input", OV_TypeId_Stimulations);
+				prototype.addOutput("Selected stimulus", OV_TypeId_Stimulations);
+				prototype.addSetting("Number of stimuli required for vote", OV_TypeId_Integer, "4");
+				prototype.addSetting("Time window (secs)", OV_TypeId_Float, "2");
+				prototype.addSetting("Clear votes", OVP_TypeId_Voting_ClearVotes, "After output");
+				prototype.addSetting("Output timestamp", OVP_TypeId_Voting_OutputTime, "Time of last voting stimulus");
+				prototype.addSetting("Reject class label", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+				prototype.addSetting("Reject class can win", OVP_TypeId_Voting_RejectClass_CanWin, "No");
 
 				return true;
 			}
 
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStimulationVoterListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationVoterDesc)
 		};

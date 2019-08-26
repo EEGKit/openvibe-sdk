@@ -61,16 +61,16 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_TemporalFilter; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmTemporalFilter; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("Filter Method", OVP_TypeId_FilterMethod, OVP_TypeId_FilterMethod_Butterworth.toString());
-				rBoxAlgorithmPrototype.addSetting("Filter Type", OVP_TypeId_FilterType, OVP_TypeId_FilterType_BandPass.toString());
-				rBoxAlgorithmPrototype.addSetting("Filter Order", OV_TypeId_Integer, "4");
-				rBoxAlgorithmPrototype.addSetting("Low Cut-off Frequency (Hz)", OV_TypeId_Float, "1");
-				rBoxAlgorithmPrototype.addSetting("High Cut-off Frequency (Hz)", OV_TypeId_Float, "40");
-				rBoxAlgorithmPrototype.addSetting("Band Pass Ripple (dB)", OV_TypeId_Float, "0.5");
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addOutput("Output signal", OV_TypeId_Signal);
+				prototype.addSetting("Filter Method", OVP_TypeId_FilterMethod, OVP_TypeId_FilterMethod_Butterworth.toString());
+				prototype.addSetting("Filter Type", OVP_TypeId_FilterType, OVP_TypeId_FilterType_BandPass.toString());
+				prototype.addSetting("Filter Order", OV_TypeId_Integer, "4");
+				prototype.addSetting("Low Cut-off Frequency (Hz)", OV_TypeId_Float, "1");
+				prototype.addSetting("High Cut-off Frequency (Hz)", OV_TypeId_Float, "40");
+				prototype.addSetting("Band Pass Ripple (dB)", OV_TypeId_Float, "0.5");
 
 				return true;
 			}

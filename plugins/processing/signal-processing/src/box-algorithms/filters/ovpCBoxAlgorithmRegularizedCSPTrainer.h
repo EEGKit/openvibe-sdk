@@ -101,29 +101,29 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmRegularizedCSPTrainer; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmRegularizedCSPTrainerListener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Stimulations", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addInput("Signal condition 1", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInput("Signal condition 2", OV_TypeId_Signal);
+				prototype.addInput("Stimulations", OV_TypeId_Stimulations);
+				prototype.addInput("Signal condition 1", OV_TypeId_Signal);
+				prototype.addInput("Signal condition 2", OV_TypeId_Signal);
 
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addInputSupport(OV_TypeId_Signal);
+				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
 
-				rBoxAlgorithmPrototype.addSetting("Train Trigger", OV_TypeId_Stimulation, "OVTK_GDF_End_Of_Session");
-				rBoxAlgorithmPrototype.addSetting("Spatial filter configuration", OV_TypeId_Filename, "");
-				rBoxAlgorithmPrototype.addSetting("Filters per condition", OV_TypeId_Integer, "2");
-				rBoxAlgorithmPrototype.addSetting("Save filters as box config", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Train Trigger", OV_TypeId_Stimulation, "OVTK_GDF_End_Of_Session");
+				prototype.addSetting("Spatial filter configuration", OV_TypeId_Filename, "");
+				prototype.addSetting("Filters per condition", OV_TypeId_Integer, "2");
+				prototype.addSetting("Save filters as box config", OV_TypeId_Boolean, "false");
 
 				// Params of the cov algorithm; would be better to poll the params from the algorithm, however this is not straightforward to do
-				rBoxAlgorithmPrototype.addSetting("Covariance update", OVP_TypeId_OnlineCovariance_UpdateMethod, OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toString());
-				rBoxAlgorithmPrototype.addSetting("Trace normalization", OV_TypeId_Boolean, "false");
-				rBoxAlgorithmPrototype.addSetting("Shrinkage coefficient", OV_TypeId_Float, "0.0");
-				rBoxAlgorithmPrototype.addSetting("Tikhonov coefficient", OV_TypeId_Float, "0.0");
+				prototype.addSetting("Covariance update", OVP_TypeId_OnlineCovariance_UpdateMethod, OVP_TypeId_OnlineCovariance_UpdateMethod_ChunkAverage.toString());
+				prototype.addSetting("Trace normalization", OV_TypeId_Boolean, "false");
+				prototype.addSetting("Shrinkage coefficient", OV_TypeId_Float, "0.0");
+				prototype.addSetting("Tikhonov coefficient", OV_TypeId_Float, "0.0");
 
-				rBoxAlgorithmPrototype.addOutput("Train-completed Flag", OV_TypeId_Stimulations);
+				prototype.addOutput("Train-completed Flag", OV_TypeId_Stimulations);
 
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 
 				return true;
 			}

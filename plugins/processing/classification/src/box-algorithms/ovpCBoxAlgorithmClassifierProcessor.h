@@ -58,21 +58,21 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ClassifierProcessor; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmClassifierProcessor; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Features", OV_TypeId_FeatureVector);
-				rBoxAlgorithmPrototype.addInput("Commands", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addOutput("Labels", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addOutput("Hyperplane distance", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addOutput("Probability values", OV_TypeId_StreamedMatrix);
+				prototype.addInput("Features", OV_TypeId_FeatureVector);
+				prototype.addInput("Commands", OV_TypeId_Stimulations);
+				prototype.addOutput("Labels", OV_TypeId_Stimulations);
+				prototype.addOutput("Hyperplane distance", OV_TypeId_StreamedMatrix);
+				prototype.addOutput("Probability values", OV_TypeId_StreamedMatrix);
 
 				//We load everything in the save filed
-				rBoxAlgorithmPrototype.addSetting("Filename to load configuration from", OV_TypeId_Filename, "");
+				prototype.addSetting("Filename to load configuration from", OV_TypeId_Filename, "");
 				return true;
 			}
 
 			// virtual OpenViBE::Plugins::IBoxListener* createBoxListener() const { return new CBoxAlgorithmCommonClassifierListener(5); }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ClassifierProcessorDesc)
 		};

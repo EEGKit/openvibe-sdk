@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 
 	while (!client.connect("127.0.0.1", port))
 	{
-		MessagingClient::ELibraryError error = client.getLastError();
+		const MessagingClient::ELibraryError error = client.getLastError();
 
 		if (error == MessagingClient::ELibraryError::Socket_FailedToConnect)
 		{

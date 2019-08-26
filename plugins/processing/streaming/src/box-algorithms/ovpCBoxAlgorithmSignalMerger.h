@@ -61,14 +61,14 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalMerger; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSignalMerger; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmSignalMergerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input 1", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInput("Input 2", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Merged", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addInput("Input 1", OV_TypeId_Signal);
+				prototype.addInput("Input 2", OV_TypeId_Signal);
+				prototype.addOutput("Merged", OV_TypeId_Signal);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 
 				return true;
 			}

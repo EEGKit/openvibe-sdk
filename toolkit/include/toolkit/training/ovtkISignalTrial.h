@@ -8,11 +8,11 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		virtual bool setSamplingRate(uint32_t ui32SamplingFrequency) = 0;
-		virtual bool setChannelCount(uint32_t ui32ChannelCount) = 0;
+		virtual bool setSamplingRate(uint32_t samplingRate) = 0;
+		virtual bool setChannelCount(uint32_t count) = 0;
 		virtual bool setChannelName(uint32_t index, const char* name) = 0;
-		virtual bool setLabelIdentifier(const OpenViBE::CIdentifier& rLabelIdentifier) = 0;
-		virtual bool setSampleCount(uint32_t ui32SampleCount, bool bPreserve) = 0;
+		virtual bool setLabelIdentifier(const OpenViBE::CIdentifier& labelIdentifier) = 0;
+		virtual bool setSampleCount(uint32_t count, bool preserve) = 0;
 
 		virtual uint32_t getSamplingRate() const = 0;
 		virtual uint32_t getChannelCount() const = 0;

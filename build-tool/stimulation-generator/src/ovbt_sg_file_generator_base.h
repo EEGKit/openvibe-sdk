@@ -5,6 +5,7 @@
 class CFileGeneratorBase
 {
 public:
+	virtual ~CFileGeneratorBase() = default;
 	virtual bool openFile(const char* sFilename) = 0;
 	virtual bool appendStimulation(SStimulation& rStim) = 0;
 	virtual bool closeFile() = 0;

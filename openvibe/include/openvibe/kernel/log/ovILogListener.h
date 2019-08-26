@@ -55,7 +55,7 @@ namespace OpenViBE
 			LogColor_BackgroundBit = 0x00200000,
 			LogColor_PushStateBit = 0x00400000,
 			LogColor_PopStateBit = 0x00800000,
-			LogColor_ResetBit = 0x80000000,
+			LogColor_ResetBit = 0x08000000,
 
 			LogColor_Default = 0x00000000,
 

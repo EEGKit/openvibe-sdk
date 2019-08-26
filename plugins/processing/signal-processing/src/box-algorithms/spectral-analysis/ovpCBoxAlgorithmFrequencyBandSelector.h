@@ -61,11 +61,11 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_FrequencyBandSelector; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmFrequencyBandSelector; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input spectrum", OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addOutput("Output spectrum", OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addSetting("Frequencies to select", OV_TypeId_String, "8:12;16:24");
+				prototype.addInput("Input spectrum", OV_TypeId_Spectrum);
+				prototype.addOutput("Output spectrum", OV_TypeId_Spectrum);
+				prototype.addSetting("Frequencies to select", OV_TypeId_String, "8:12;16:24");
 				// @fixme Use OV_Value_RangeStringSeparator / OV_Value_EnumeratedStringSeparator tokens above
 
 				return true;

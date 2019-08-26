@@ -149,20 +149,20 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ZeroCrossingDetector; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmZeroCrossingDetector; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmZeroCrossingDetectorListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Zero-crossing signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Zero-crossing stimulations", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addOutput("Events rythm (per min)", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addSetting("Hysteresis threshold", OV_TypeId_Float, "0.01");
-				rBoxAlgorithmPrototype.addSetting("Rythm estimation window (in sec)", OV_TypeId_Float, "10");
-				rBoxAlgorithmPrototype.addSetting("Negative-to-positive stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_ThresholdPassed_Positive");
-				rBoxAlgorithmPrototype.addSetting("Positive-to-negative stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_ThresholdPassed_Negative");
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addOutput("Zero-crossing signal", OV_TypeId_Signal);
+				prototype.addOutput("Zero-crossing stimulations", OV_TypeId_Stimulations);
+				prototype.addOutput("Events rythm (per min)", OV_TypeId_StreamedMatrix);
+				prototype.addSetting("Hysteresis threshold", OV_TypeId_Float, "0.01");
+				prototype.addSetting("Rythm estimation window (in sec)", OV_TypeId_Float, "10");
+				prototype.addSetting("Negative-to-positive stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_ThresholdPassed_Positive");
+				prototype.addSetting("Positive-to-negative stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_ThresholdPassed_Negative");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 
 				return true;
 			}
