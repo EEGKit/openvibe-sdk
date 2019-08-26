@@ -48,8 +48,6 @@ namespace OpenViBEPlugins
 		private:
 			void write(const void* pBuffer, const uint64_t ui64BufferSize) override;
 
-		private:
-
 			OpenViBE::CMemoryBuffer m_oSwap;
 			std::ofstream m_oFile;
 		};
@@ -86,20 +84,20 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				rBox.setInputType(ui32Index, OV_TypeId_EBMLStream);
+				rBox.setInputType(index, OV_TypeId_EBMLStream);
 				this->check(rBox);
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				//this->check(rBox);
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				//this->check(rBox);
 				return true;
@@ -125,19 +123,19 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_GenericStreamWriter; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmGenericStreamWriter; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmGenericStreamWriterListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input stream 1", OV_TypeId_EBMLStream);
-				rBoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].ov");
-				rBoxAlgorithmPrototype.addSetting("Use compression", OV_TypeId_Boolean, "false");
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addInput("Input stream 1", OV_TypeId_EBMLStream);
+				prototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].ov");
+				prototype.addSetting("Use compression", OV_TypeId_Boolean, "false");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_GenericStreamWriterDesc)
 		};
-	};
-};
+	} // namespace FileIO
+} // namespace OpenViBEPlugins

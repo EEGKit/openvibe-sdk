@@ -4,7 +4,10 @@
 
 namespace OpenViBE
 {
-	namespace Plugins { class IPluginObjectDesc; }
+	namespace Plugins
+	{
+		class IPluginObjectDesc;
+	}
 
 	namespace Kernel
 	{
@@ -57,12 +60,12 @@ namespace OpenViBE
 			virtual bool initialize() = 0;
 			/**
 			 * \brief Gets a specific plugin object descriptor
-			 * \param ui32Index [in] : the index of the plugin object descriptor to get
+			 * \param index [in] : the index of the plugin object descriptor to get
 			 * \param rpPluginObjectDescription [out] : a pointer on the associated plugin object descriptor
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 *
-			 * This function should be called with \c ui32Index ranging from 0 to
+			 * This function should be called with \c index ranging from 0 to
 			 * the number of plugin object descriptor - 1. The number of plugin object
 			 * descriptor is known as soon as this function returns \e false meaning
 			 * there are no more descriptors to return.
@@ -73,7 +76,7 @@ namespace OpenViBE
 			 * \note \c rpPluginObjectDescription IS \c NULL if the function returned \e false
 			 * \note It is ok to call this function several times for a same index.
 			 */
-			virtual bool getPluginObjectDescription(uint32_t ui32Index, Plugins::IPluginObjectDesc*& rpPluginObjectDescription) = 0;
+			virtual bool getPluginObjectDescription(uint32_t index, Plugins::IPluginObjectDesc*& rpPluginObjectDescription) = 0;
 			/**
 			 * \brief Uninitializes this plugin module
 			 * \return \e true in case of success.
@@ -85,5 +88,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Plugins_PluginModule)
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

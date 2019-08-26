@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			double m_f64Bias = 0;
 			Eigen::VectorXd m_oWeight;
 		};
-	}
-}
+	} // namespace Classification
+} // namespace OpenViBEPlugins
 
 #endif

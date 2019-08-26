@@ -55,7 +55,7 @@ namespace OpenViBE
 			LogColor_BackgroundBit = 0x00200000,
 			LogColor_PushStateBit = 0x00400000,
 			LogColor_PopStateBit = 0x00800000,
-			LogColor_ResetBit = 0x80000000,
+			LogColor_ResetBit = 0x08000000,
 
 			LogColor_Default = 0x00000000,
 
@@ -181,7 +181,7 @@ namespace OpenViBE
 			 * \brief Logs a 32 bits signed integer
 			 * \param value [in] : the value that should be logged
 			 */
-			virtual void log(const int32_t value) = 0;
+			virtual void log(const int value) = 0;
 			/**
 			 * \brief Logs a 16 bits signed integer
 			 * \param value [in] : the value that should be logged
@@ -243,5 +243,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Log_LogListener)
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

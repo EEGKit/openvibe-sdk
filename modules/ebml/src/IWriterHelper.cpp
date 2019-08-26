@@ -34,8 +34,8 @@ namespace EBML
 
 			IWriter* m_pWriter = nullptr;
 		};
-	}  // namespace
-}  // namespace EBML
+	} // namespace
+} // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
@@ -160,15 +160,9 @@ bool CWriterHelper::setASCIIStringAsChildData(const char* sValue)
 // ________________________________________________________________________________________________________________
 //
 
-void CWriterHelper::release()
-{
-	delete this;
-}
+void CWriterHelper::release() { delete this; }
 
 // ________________________________________________________________________________________________________________
 //
 
-EBML_API IWriterHelper* EBML::createWriterHelper()
-{
-	return new CWriterHelper();
-}
+EBML_API IWriterHelper* EBML::createWriterHelper() { return new CWriterHelper(); }

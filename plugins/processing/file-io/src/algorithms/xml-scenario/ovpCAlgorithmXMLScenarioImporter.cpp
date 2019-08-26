@@ -81,10 +81,7 @@ namespace
 		explicit CErrorHandler(IAlgorithmContext& rAlgorithmContext)
 			: m_rAlgorithmContext(rAlgorithmContext) { }
 
-		void fatalError(const SAXParseException& exception) override
-		{
-			this->error(exception);
-		}
+		void fatalError(const SAXParseException& exception) override { this->error(exception); }
 
 		void error(const SAXParseException& exception) override
 		{
@@ -94,24 +91,22 @@ namespace
 			m_rAlgorithmContext.getLogManager() << LogLevel_Trace
 					<< "Failed to validate xml: error ["
 					<< xercesToString(exception.getMessage()).c_str()
-					<< "], line number [" << static_cast<uint64_t>(exception.getLineNumber()) << "]"
+					<< "], line number [" << uint64_t(exception.getLineNumber()) << "]"
 					<< "\n";
 		}
 
 		void warning(const SAXParseException& exception) override
 		{
-			OV_WARNING("Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << static_cast<uint64_t>(exception.getLineNumber()) << "]",
+			OV_WARNING("Warning while validating xml: warning [" << xercesToString(exception.getMessage()).c_str() << "], line number [" << uint64_t(exception.getLineNumber()) << "]",
 					   m_rAlgorithmContext.getLogManager());
 		}
 
 	private:
 		IAlgorithmContext& m_rAlgorithmContext;
 	};
-};
-
-CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter(){
-	m_pReader = createReader(*this);
 }
+
+CAlgorithmXMLScenarioImporter::CAlgorithmXMLScenarioImporter() { m_pReader = createReader(*this); }
 
 CAlgorithmXMLScenarioImporter::~CAlgorithmXMLScenarioImporter() { m_pReader->release(); }
 
@@ -121,7 +116,6 @@ void CAlgorithmXMLScenarioImporter::openChild(const char* sName, const char** sA
 
 	std::string& l_sTop = m_vNodes.top();
 
-	if (false) { }
 	if (l_sTop == "OpenViBE-Scenario" && m_ui32Status == Status_ParsingNothing)
 	{
 		m_ui32Status = Status_ParsingScenario;
@@ -311,6 +305,7 @@ void CAlgorithmXMLScenarioImporter::processChildData(const char* sData)
 			if (l_sTop == "Identifier") m_pContext->processIdentifier(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Identifier, _AutoBind_(sData));
 			if (l_sTop == "Value") m_pContext->processString(OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Attribute_Value, _AutoBind_(sData));
 			break;
+		default: break;
 	}
 }
 

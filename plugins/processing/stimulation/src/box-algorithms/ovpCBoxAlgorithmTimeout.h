@@ -46,9 +46,9 @@ namespace OpenViBEPlugins
 			ETimeoutState m_TimeoutState;
 			bool m_IsHeaderSent = false;
 
-			uint64_t m_Timeout = 0;
-			uint64_t m_LastTimePolled = 0;
-			uint64_t m_PreviousTime = 0;
+			uint64_t m_Timeout           = 0;
+			uint64_t m_LastTimePolled    = 0;
+			uint64_t m_PreviousTime      = 0;
 			uint64_t m_StimulationToSend = 0;
 		};
 
@@ -76,19 +76,19 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Timeout; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmTimeout; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input Stream",OV_TypeId_StreamedMatrix);
+				prototype.addInput("Input Stream",OV_TypeId_StreamedMatrix);
 
-				rBoxAlgorithmPrototype.addOutput("Output Stimulations",OV_TypeId_Stimulations);
+				prototype.addOutput("Output Stimulations",OV_TypeId_Stimulations);
 
-				rBoxAlgorithmPrototype.addSetting("Timeout delay",OV_TypeId_Integer, "5");
-				rBoxAlgorithmPrototype.addSetting("Output Stimulation",OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+				prototype.addSetting("Timeout delay",OV_TypeId_Integer, "5");
+				prototype.addSetting("Output Stimulation",OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
 
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeoutDesc)
 		};
-	};
-};
+	} // namespace Stimulation
+} // namespace OpenViBEPlugins

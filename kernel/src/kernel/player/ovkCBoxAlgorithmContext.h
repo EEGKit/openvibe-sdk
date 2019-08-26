@@ -26,14 +26,12 @@ namespace OpenViBE
 
 		protected:
 
-			const IBox* m_pStaticBoxContext;
+			const IBox* m_pStaticBoxContext = nullptr;
 			IBoxIO* m_pDynamicBoxContext = nullptr;
 			// here we prefer value type over reference/pointer
 			// in order to improve performance at runtime (no heap allocation)
 			CPlayerContext m_oPlayerContext;
 			bool m_bReadyToProcess = false;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
-
-
+	} // namespace Kernel
+} // namespace OpenViBE

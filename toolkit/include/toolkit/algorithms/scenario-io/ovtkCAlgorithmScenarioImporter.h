@@ -24,4 +24,4 @@ namespace OpenViBEToolkit
 
 		_IsDerivedFromClass_(OpenViBE::Plugins::IAlgorithmScenarioImporterDesc, OVP_ClassId_Algorithm_ScenarioImporterDesc)
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

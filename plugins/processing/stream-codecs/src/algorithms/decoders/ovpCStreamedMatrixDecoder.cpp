@@ -17,27 +17,15 @@ namespace
 	// removes pre and post spaces, tabs and carriage returns
 	void trim(char* dst, const char* src1, const char* src2)
 	{
-		if (!src1 || *src1 == '\0')
-		{
-			dst[0] = '\0';
-		}
-		if (!src2)
-		{
-			src2 = src1 + strlen(src1) - 1;
-		}
-		while (src1 < src2 && (*src1 == ' ' || *src1 == '\t' || *src1 == '\r' || *src1 == '\n'))
-		{
-			src1++;
-		}
-		while (src1 < src2 && (*src2 == ' ' || *src2 == '\t' || *src2 == '\r' || *src2 == '\n'))
-		{
-			src2--;
-		}
+		if (!src1 || *src1 == '\0') { dst[0] = '\0'; }
+		if (!src2) { src2 = src1 + strlen(src1) - 1; }
+		while (src1 < src2 && (*src1 == ' ' || *src1 == '\t' || *src1 == '\r' || *src1 == '\n')) { src1++; }
+		while (src1 < src2 && (*src2 == ' ' || *src2 == '\t' || *src2 == '\r' || *src2 == '\n')) { src2--; }
 		src2++;
 		strncpy(dst, src1, src2 - src1);
 		dst[src2 - src1] = '\0';
 	}
-}  // namespace
+} // namespace
 CStreamedMatrixDecoder::CStreamedMatrixDecoder() {}
 
 // ________________________________________________________________________________________________________________
@@ -46,18 +34,14 @@ CStreamedMatrixDecoder::CStreamedMatrixDecoder() {}
 bool CStreamedMatrixDecoder::initialize()
 {
 	CEBMLBaseDecoder::initialize();
-
 	op_pMatrix.initialize(getOutputParameter(OVP_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
-
 	return true;
 }
 
 bool CStreamedMatrixDecoder::uninitialize()
 {
 	op_pMatrix.uninitialize();
-
 	CEBMLBaseDecoder::uninitialize();
-
 	return true;
 }
 
@@ -105,10 +89,7 @@ void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 			m_ui32Status = Status_ParsingBuffer;
 		}
 	}
-	else
-	{
-		CEBMLBaseDecoder::openChild(rIdentifier);
-	}
+	else { CEBMLBaseDecoder::openChild(rIdentifier); }
 }
 
 void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
@@ -126,22 +107,23 @@ void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const uint64_
 		switch (m_ui32Status)
 		{
 			case Status_ParsingHeader:
-				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { op_pMatrix->setDimensionCount((uint32_t)m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize)); }
+				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { op_pMatrix->setDimensionCount(uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize))); }
 				break;
 
 			case Status_ParsingDimension:
-				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) { op_pMatrix->setDimensionSize(m_ui32DimensionIndex, (uint32_t)m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize)); }
+				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) { op_pMatrix->setDimensionSize(m_ui32DimensionIndex, uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize))); }
 				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label)
 				{
-					char l_sDimensionLabel[1024];
-					trim(l_sDimensionLabel, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), nullptr);
-					op_pMatrix->setDimensionLabel(m_ui32DimensionIndex, m_ui32DimensionEntryIndex++, l_sDimensionLabel);
+					char label[1024];
+					trim(label, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize), nullptr);
+					op_pMatrix->setDimensionLabel(m_ui32DimensionIndex, m_ui32DimensionEntryIndex++, label);
 				}
 				break;
 
 			case Status_ParsingBuffer:
 				if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { System::Memory::copy(op_pMatrix->getBuffer(), pBuffer, m_ui64MatrixBufferSize * sizeof(double)); }
 				break;
+			default: break;
 		}
 	}
 	else
@@ -175,10 +157,7 @@ void CStreamedMatrixDecoder::closeChild()
 		{
 			m_ui32Status = Status_ParsingNothing;
 
-			if (op_pMatrix->getDimensionCount() == 0)
-			{
-				m_ui64MatrixBufferSize = 0;
-			}
+			if (op_pMatrix->getDimensionCount() == 0) { m_ui64MatrixBufferSize = 0; }
 			else
 			{
 				m_ui64MatrixBufferSize = 1;

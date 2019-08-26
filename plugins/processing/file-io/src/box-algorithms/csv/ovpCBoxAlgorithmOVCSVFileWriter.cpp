@@ -109,7 +109,7 @@ bool CBoxAlgorithmOVCSVFileWriter::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmOVCSVFileWriter::processInput(const uint32_t inputIndex)
+bool CBoxAlgorithmOVCSVFileWriter::processInput(const uint32_t index)
 {
 	OV_ERROR_UNLESS_KRF(getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(), "Error while marking algorithm as ready to process", ErrorType::Internal);
 	return true;
@@ -166,7 +166,7 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 					dimensionLabels.push_back(matrix->getDimensionLabel(0, j));
 				}
 
-				OV_ERROR_UNLESS_KRF(m_WriterLib->setSignalInformation(dimensionLabels, static_cast<uint32_t>(m_StreamDecoder.getOutputSamplingRate()), matrix->getDimensionSize(1)),
+				OV_ERROR_UNLESS_KRF(m_WriterLib->setSignalInformation(dimensionLabels, uint32_t(m_StreamDecoder.getOutputSamplingRate()), matrix->getDimensionSize(1)),
 									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
 									ErrorType::Internal);
 
@@ -234,12 +234,9 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 					channelsLabels.push_back(matrix->getDimensionLabel(0, j));
 				}
 
-				for (uint32_t j = 0; j < frequencyAbscissaMatrix->getDimensionSize(0); j++)
-				{
-					frequencyAbscissa.push_back(frequencyAbscissaMatrix->getBuffer()[j]);
-				}
+				for (uint32_t j = 0; j < frequencyAbscissaMatrix->getDimensionSize(0); j++) { frequencyAbscissa.push_back(frequencyAbscissaMatrix->getBuffer()[j]); }
 
-				OV_ERROR_UNLESS_KRF(m_WriterLib->setSpectrumInformation(channelsLabels, frequencyAbscissa, static_cast<uint32_t>(m_StreamDecoder.getOutputSamplingRate())),
+				OV_ERROR_UNLESS_KRF(m_WriterLib->setSpectrumInformation(channelsLabels, frequencyAbscissa, uint32_t(m_StreamDecoder.getOutputSamplingRate())),
 									(OpenViBE::CSV::ICSVHandler::getLogError(m_WriterLib->getLastLogError()) + (m_WriterLib->getLastErrorString().empty() ? "" : "Details: " + m_WriterLib->getLastErrorString())).c_str(),
 									ErrorType::Internal);
 
@@ -270,9 +267,9 @@ bool CBoxAlgorithmOVCSVFileWriter::processStreamedMatrix()
 
 					const uint64_t timeOfNthSample       = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex); // assuming chunk start is 0
 					const uint64_t sampleTime            = chunkStartTime + timeOfNthSample;
-					const double startTime               = static_cast<double>(ITimeArithmetics::timeToSeconds(sampleTime));
+					const double startTime               = double(ITimeArithmetics::timeToSeconds(sampleTime));
 					const uint64_t timeOfNthAndOneSample = ITimeArithmetics::sampleCountToTime(samplingFrequency, sampleIndex + 1);
-					const double endTime                 = static_cast<double>(ITimeArithmetics::timeToSeconds(chunkStartTime + timeOfNthAndOneSample));
+					const double endTime                 = double(ITimeArithmetics::timeToSeconds(chunkStartTime + timeOfNthAndOneSample));
 
 					// get matrix values
 					for (uint32_t channelIndex = 0; channelIndex < channelCount; channelIndex++)

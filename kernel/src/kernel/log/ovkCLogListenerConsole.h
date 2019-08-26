@@ -26,7 +26,7 @@ namespace OpenViBE
 			void log(const uint16_t value) override;
 			void log(const uint8_t value) override;
 			void log(const int64_t value) override;
-			void log(const int32_t value) override;
+			void log(const int value) override;
 			void log(const int16_t value) override;
 			void log(const int8_t value) override;
 			void log(const double value) override;
@@ -49,12 +49,10 @@ namespace OpenViBE
 			ELogColor m_eLogColor;
 			CString m_sApplicationName;
 
-			bool m_bLogWithHexa = false;
-			bool m_bTimeInSeconds = false;
+			bool m_bLogWithHexa          = false;
+			bool m_bTimeInSeconds        = false;
 			uint64_t m_ui64TimePrecision = 0;
-			bool m_bUseColor = false;
+			bool m_bUseColor             = false;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
-
-
+	} // namespace Kernel
+} // namespace OpenViBE

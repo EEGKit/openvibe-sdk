@@ -57,10 +57,7 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 		m_ui32FrequencyBandIndex = 0;
 	}
 	else if (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa) { }
-	else
-	{
-		CStreamedMatrixDecoder::openChild(rIdentifier);
-	}
+	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
 }
 
 void CSpectrumDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
@@ -81,7 +78,7 @@ void CSpectrumDecoder::processChildData(const void* pBuffer, const uint64_t ui64
 			// In the old format, frequencies were separated into bins with lower and upper bounds.
 			// These were calculated as lowerFreq = frequencyIndex/frequencyCount, upperFreq = (frequencyIndex + 1)/frequencyCount, with 0 based indexes.
 			// This formula reverses the calculation and puts the 'middle' frequency into the right place
-			curFrequencyAbscissa = m_lowerFreq + static_cast<double>(m_ui32FrequencyBandIndex) / (op_pFrequencyAbscissa->getDimensionSize(0) - 1) * (upperFreq - m_lowerFreq);
+			curFrequencyAbscissa = m_lowerFreq + double(m_ui32FrequencyBandIndex) / (op_pFrequencyAbscissa->getDimensionSize(0) - 1) * (upperFreq - m_lowerFreq);
 		}
 		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex] = curFrequencyAbscissa;
 		std::ostringstream s;
@@ -89,7 +86,7 @@ void CSpectrumDecoder::processChildData(const void* pBuffer, const uint64_t ui64
 		s << curFrequencyAbscissa;
 		op_pMatrix->setDimensionLabel(1, m_ui32FrequencyBandIndex, s.str().c_str());
 
-		op_pSamplingRate = static_cast<uint64_t>((m_ui32FrequencyBandIndex + 1) * (upperFreq - op_pFrequencyAbscissa->getBuffer()[0]));
+		op_pSamplingRate = uint64_t((m_ui32FrequencyBandIndex + 1) * (upperFreq - op_pFrequencyAbscissa->getBuffer()[0]));
 	}
 	else if (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)
 	{

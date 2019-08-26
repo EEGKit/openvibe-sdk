@@ -31,23 +31,12 @@ namespace FS
 	{
 	public:
 
-		explicit CEntry(const string& sName);
-		const char* getName() override;
-
-	public:
+		explicit CEntry(const string& sName) : m_sName(sName) {}
+		const char* getName() override { return m_sName.c_str(); }
 
 		string m_sName;
 	};
-}
-
-// ________________________________________________________________________________________________________________
-//
-
-IEntryEnumerator::IEntry::~IEntry() {}
-
-CEntry::CEntry(const string& sName) : m_sName(sName) {}
-
-const char* CEntry::getName() { return m_sName.c_str(); }
+} // namespace FS
 
 // ________________________________________________________________________________________________________________
 //
@@ -60,17 +49,15 @@ namespace FS
 
 		CAttributes() {}
 		~CAttributes() override {}
-		bool isFile() override;
-		bool isDirectory() override;
-		bool isSymbolicLink() override;
-		bool isArchive() override;
-		bool isReadOnly() override;
-		bool isHidden() override;
-		bool isSystem() override;
-		bool isExecutable() override;
-		uint64_t getSize() override;
-
-	public:
+		bool isFile() override { return m_bIsFile; }
+		bool isDirectory() override { return m_bIsDirectory; }
+		bool isSymbolicLink() override { return m_bIsSymbolicLink; }
+		bool isArchive() override { return m_bIsArchive; }
+		bool isReadOnly() override { return m_bIsReadOnly; }
+		bool isHidden() override { return m_bIsHidden; }
+		bool isSystem() override { return m_bIsSystem; }
+		bool isExecutable() override { return m_bIsExecutable; }
+		uint64_t getSize() override { return m_ui64Size; }
 
 		bool m_bIsFile = false;
 		bool m_bIsDirectory = false;
@@ -82,30 +69,7 @@ namespace FS
 		bool m_bIsExecutable = false;
 		uint64_t m_ui64Size = 0;
 	};
-};
-
-// ________________________________________________________________________________________________________________
-//
-
-IEntryEnumerator::IAttributes::~IAttributes() {}
-
-// ________________________________________________________________________________________________________________
-//
-
-bool CAttributes::isFile() { return m_bIsFile; }
-bool CAttributes::isDirectory() { return m_bIsDirectory; }
-bool CAttributes::isSymbolicLink() { return m_bIsSymbolicLink; }
-bool CAttributes::isArchive() { return m_bIsArchive; }
-bool CAttributes::isReadOnly() { return m_bIsReadOnly; }
-bool CAttributes::isHidden() { return m_bIsHidden; }
-bool CAttributes::isSystem() { return m_bIsSystem; }
-bool CAttributes::isExecutable() { return m_bIsExecutable; }
-uint64_t CAttributes::getSize() { return m_ui64Size; }
-
-// ________________________________________________________________________________________________________________
-//
-
-IEntryEnumerator::~IEntryEnumerator() {}
+}  // namespace FS
 
 // ________________________________________________________________________________________________________________
 //
@@ -115,20 +79,12 @@ namespace FS
 	class CEntryEnumerator : public IEntryEnumerator
 	{
 	public:
-		explicit CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
-		void release() override;
+		explicit CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : m_rEntryEnumeratorCallBack(rEntryEnumeratorCallBack) {}
+		void release() override { delete this; }
 	protected:
 		IEntryEnumeratorCallBack& m_rEntryEnumeratorCallBack;
 	};
-};
-
-// ________________________________________________________________________________________________________________
-//
-
-CEntryEnumerator::CEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
-	: m_rEntryEnumeratorCallBack(rEntryEnumeratorCallBack) {}
-
-void CEntryEnumerator::release() { delete this; }
+} // namespace FS
 
 // ________________________________________________________________________________________________________________
 //
@@ -140,7 +96,7 @@ namespace FS
 	class CEntryEnumeratorLinux : public CEntryEnumerator
 	{
 	public:
-		CEntryEnumeratorLinux(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
+		CEntryEnumeratorLinux(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) { }
 		virtual bool enumerate(const char* sWildCard, bool bRecursive=false);
 	};
 };
@@ -152,10 +108,10 @@ namespace FS
 	class CEntryEnumeratorWindows : public CEntryEnumerator
 	{
 	public:
-		explicit CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
+		explicit CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) {}
 		bool enumerate(const char* sWildCard, bool bRecursive = false) override;
 	};
-};
+} // namespace FS
 
 #else
 
@@ -164,10 +120,10 @@ namespace FS
 	class CEntryEnumeratorDummy : public CEntryEnumerator
 	{
 	public:
-		explicit CEntryEnumeratorDummy(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack);
-		virtual bool enumerate(const char* sWildCard, bool bRecursive=false);
+		explicit CEntryEnumeratorDummy(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) { }
+		virtual bool enumerate(const char* sWildCard, bool bRecursive=false) { return !sWildCard ? false : true; }
 	};
-};
+} // namespace FS
 
 #endif
 
@@ -175,11 +131,6 @@ namespace FS
 //
 
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
-CEntryEnumeratorLinux::CEntryEnumeratorLinux(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
-	:CEntryEnumerator(rEntryEnumeratorCallBack)
-{
-}
 
 bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 {
@@ -252,9 +203,6 @@ bool CEntryEnumeratorLinux::enumerate(const char* sWildCard, bool bRecursive)
 }
 
 #elif defined TARGET_OS_Windows
-
-CEntryEnumeratorWindows::CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
-	: CEntryEnumerator(rEntryEnumeratorCallBack) {}
 
 bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 {
@@ -365,31 +313,16 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 	return true;
 }
 
-#else
-
-CEntryEnumeratorDummy::CEntryEnumeratorDummy(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
-	:CEntryEnumerator(rEntryEnumeratorCallBack)
-{
-}
-
-bool CEntryEnumeratorDummy::enumerate(const char* sWildCard, bool bRecursive)
-{
-	if(!sWildCard) { return false; }
-
-	return true;
-}
-
 #endif
 
 FS_API IEntryEnumerator* FS::createEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
 {
-	IEntryEnumerator* l_pResult = nullptr;
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-	l_pResult=new CEntryEnumeratorLinux(rEntryEnumeratorCallBack);
+	IEntryEnumerator* res = new CEntryEnumeratorLinux(rEntryEnumeratorCallBack);
 #elif defined TARGET_OS_Windows
-	l_pResult = new CEntryEnumeratorWindows(rEntryEnumeratorCallBack);
+	IEntryEnumerator* res = new CEntryEnumeratorWindows(rEntryEnumeratorCallBack);
 #else
-	l_pResult=new CEntryEnumeratorDummy(rEntryEnumeratorCallBack);
+	IEntryEnumerator* res = new CEntryEnumeratorDummy(rEntryEnumeratorCallBack);
 #endif
-	return l_pResult;
+	return res;
 }

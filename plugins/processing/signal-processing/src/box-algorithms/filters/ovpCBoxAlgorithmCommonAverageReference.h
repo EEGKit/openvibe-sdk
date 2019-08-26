@@ -54,14 +54,14 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_CommonAverageReference; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmCommonAverageReference; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addOutput("Output signal", OV_TypeId_Signal);
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_CommonAverageReferenceDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

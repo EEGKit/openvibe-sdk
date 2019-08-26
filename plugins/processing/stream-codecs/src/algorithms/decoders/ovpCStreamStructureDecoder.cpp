@@ -30,22 +30,13 @@ bool CStreamStructureDecoder::uninitialize()
 // ________________________________________________________________________________________________________________
 //
 
-bool CStreamStructureDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier)
-{
-	return CEBMLBaseDecoder::isMasterChild(rIdentifier);
-}
+bool CStreamStructureDecoder::isMasterChild(const EBML::CIdentifier& rIdentifier) { return CEBMLBaseDecoder::isMasterChild(rIdentifier); }
 
-void CStreamStructureDecoder::openChild(const EBML::CIdentifier& rIdentifier)
-{
-	CEBMLBaseDecoder::openChild(rIdentifier);
-}
+void CStreamStructureDecoder::openChild(const EBML::CIdentifier& rIdentifier) { CEBMLBaseDecoder::openChild(rIdentifier); }
 
 void CStreamStructureDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
 	CEBMLBaseDecoder::processChildData(pBuffer, ui64BufferSize);
 }
 
-void CStreamStructureDecoder::closeChild()
-{
-	CEBMLBaseDecoder::closeChild();
-}
+void CStreamStructureDecoder::closeChild() { CEBMLBaseDecoder::closeChild(); }

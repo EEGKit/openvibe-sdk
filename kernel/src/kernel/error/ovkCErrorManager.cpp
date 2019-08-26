@@ -35,7 +35,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CError(ErrorType type, const char* description, IError* nestedError, const char* filename, unsigned int line) 
+			CError(ErrorType type, const char* description, IError* nestedError, const char* filename, unsigned int line)
 				: m_ErrorType(type), m_NestedError(nestedError), m_Description(description), m_Location(std::string(filename) + ":" + std::to_string(line)) { }
 
 			~CError() override { }
@@ -57,8 +57,8 @@ namespace OpenViBE
 			std::string m_Description;
 			std::string m_Location;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE
 
 // Error manager implementation
 namespace OpenViBE
@@ -110,5 +110,5 @@ namespace OpenViBE
 			std::lock_guard<std::mutex> lock(m_ManagerGuard);
 			return (m_TopError ? m_TopError->getErrorType() : ErrorType::NoErrorFound);
 		}
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

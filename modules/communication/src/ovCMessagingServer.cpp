@@ -7,20 +7,12 @@
 
 using namespace Communication;
 
-MessagingServer::MessagingServer()
-	: CMessaging()
-	  , m_Server(Socket::createConnectionServer()) {}
-
 MessagingServer::~MessagingServer()
 {
 	this->close();
 	m_Server->release();
 }
 
-bool MessagingServer::listen(uint32_t port)
-{
-	return m_Server->listen(port);
-}
 
 bool MessagingServer::accept()
 {
@@ -108,11 +100,6 @@ bool MessagingServer::accept()
 	return true;
 }
 
-bool MessagingServer::getSocketPort(uint32_t& port)
-{
-	return m_Server->getSocketPort(port);
-}
-
 bool MessagingServer::close()
 {
 	this->pushMessage(EndMessage());
@@ -175,19 +162,4 @@ bool MessagingServer::pushError(const EError error, const uint64_t guiltyId)
 bool MessagingServer::pushEBML(const uint32_t index, const uint64_t startTime, const uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml)
 {
 	return this->pushMessage(EBMLMessage(index, startTime, endTime, ebml));
-}
-
-bool MessagingServer::pushTime(const uint64_t time)
-{
-	return this->pushMessage(TimeMessage(time));
-}
-
-bool MessagingServer::pushSync()
-{
-	return this->pushMessage(SyncMessage());
-}
-
-bool MessagingServer::waitForSyncMessage()
-{
-	return CMessaging::waitForSyncMessage();
 }

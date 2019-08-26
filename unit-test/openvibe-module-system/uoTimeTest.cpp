@@ -114,10 +114,7 @@ std::tuple<bool, std::vector<uint64_t>> testClock(uint64_t samplePeriod, unsigne
 	while (nowTime - startTime < samplePeriod)
 	{
 		nowTime = timeFunction();
-		if (nowTime > previousTime)
-		{
-			cumulativeSteps.push_back(nowTime - previousTime);
-		}
+		if (nowTime > previousTime) { cumulativeSteps.push_back(nowTime - previousTime); }
 		else if (nowTime < previousTime)
 		{
 			monotonic = false;
@@ -143,22 +140,22 @@ std::tuple<double, double, double> assessTimeClock(const std::vector<uint64_t>& 
 	for (auto& data : measurements)
 	{
 		// convert data
-		auto seconds                         = static_cast<uint32_t>(data >> 32);
+		auto seconds                         = uint32_t(data >> 32);
 		auto microseconds                    = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
 		std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
 
-		mean += static_cast<double>(chronoData.count()) / (1000 * measurements.size());
+		mean += double(chronoData.count()) / (1000 * measurements.size());
 	}
 
 	// compute deviations
 	for (auto& data : measurements)
 	{
 		// convert data
-		auto seconds                         = static_cast<uint32_t>(data >> 32);
+		auto seconds                         = uint32_t(data >> 32);
 		auto microseconds                    = ((data & 0xFFFFFFFFLL) * 1000000LL) >> 32;
 		std::chrono::microseconds chronoData = std::chrono::seconds(seconds) + std::chrono::microseconds(microseconds);
 
-		double deviation = std::abs(static_cast<double>(chronoData.count()) / 1000 - mean);
+		double deviation = std::abs(double(chronoData.count()) / 1000 - mean);
 		jitterMSE += std::pow(deviation, 2) / measurements.size();
 
 		if (deviation - jitterMax > std::numeric_limits<double>::epsilon())

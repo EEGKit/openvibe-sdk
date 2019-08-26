@@ -20,7 +20,7 @@ namespace OpenViBE
 			CIdentifier getNextScenarioIdentifier(const CIdentifier& rPreviousIdentifier) const override;
 			bool isScenario(const CIdentifier& scenarioIdentifier) const override;
 			bool createScenario(CIdentifier& rScenarioIdentifier) override;
-			bool importScenario(CIdentifier& newScenarioIdentifier, const IMemoryBuffer& inputMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmIdentifier ) override;
+			bool importScenario(CIdentifier& newScenarioIdentifier, const IMemoryBuffer& inputMemoryBuffer, const CIdentifier& scenarioImporterAlgorithmIdentifier) override;
 			bool importScenarioFromFile(CIdentifier& newScenarioIdentifier, const CString& fileName, const CIdentifier& scenarioImporterAlgorithmIdentifier) override;
 			bool importScenarioFromFile(CIdentifier& newScenarioIdentifier, const CIdentifier& importContext, const CString& fileName) override;
 			bool registerScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension, const CIdentifier& scenarioImporterAlgorithmIdentifier) override;
@@ -54,5 +54,5 @@ namespace OpenViBE
 
 			virtual IScenario& getScenario(const CIdentifier& rScenarioIdentifier) const;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

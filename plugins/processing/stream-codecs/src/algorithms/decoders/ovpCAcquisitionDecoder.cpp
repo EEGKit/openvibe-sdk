@@ -79,10 +79,7 @@ void CAcquisitionDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation)
 		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
 	) { }
-	else
-	{
-		CEBMLBaseDecoder::openChild(rIdentifier);
-	}
+	else { CEBMLBaseDecoder::openChild(rIdentifier); }
 }
 
 void CAcquisitionDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)

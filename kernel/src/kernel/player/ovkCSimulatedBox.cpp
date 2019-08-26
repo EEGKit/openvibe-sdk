@@ -22,11 +22,9 @@ using namespace Plugins;
 //
 
 #define OV_IncorrectTime 0xffffffffffffffffULL
-static const CNameValuePairList s_oDummyNameValuePairList;
 
 CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& rScheduler)
-	: TKernelObject<IBoxIO>(rKernelContext), m_rScheduler(rScheduler)
-	  , m_ui64LastClockActivationDate(OV_IncorrectTime) {}
+	: TKernelObject<IBoxIO>(rKernelContext), m_rScheduler(rScheduler), m_ui64LastClockActivationDate(OV_IncorrectTime) {}
 
 CSimulatedBox::~CSimulatedBox() {}
 
@@ -116,8 +114,8 @@ bool CSimulatedBox::processClock()
 			}
 			else
 			{
-				OV_ERROR_UNLESS_KRF(l_ui64NewClockFrequency <= m_rScheduler.getFrequency()<<32, "Box " << m_pBox->getName() << " requested higher clock frequency (" 
-									<< l_ui64NewClockFrequency << " == " << ITimeArithmetics::timeToSeconds(l_ui64NewClockFrequency) << "hz) " << "than what the scheduler can handle (" 
+				OV_ERROR_UNLESS_KRF(l_ui64NewClockFrequency <= m_rScheduler.getFrequency()<<32, "Box " << m_pBox->getName() << " requested higher clock frequency ("
+									<< l_ui64NewClockFrequency << " == " << ITimeArithmetics::timeToSeconds(l_ui64NewClockFrequency) << "hz) " << "than what the scheduler can handle ("
 									<< (m_rScheduler.getFrequency()<<32) << " == " << ITimeArithmetics::timeToSeconds(m_rScheduler.getFrequency()<<32) << "hz)", ErrorType::BadConfig);
 
 				// note: 1LL should be left shifted 64 bits but this
@@ -234,24 +232,15 @@ bool CSimulatedBox::process()
 	return true;
 }
 
-bool CSimulatedBox::isReadyToProcess() const
-{
-	return m_bReadyToProcess;
-}
+bool CSimulatedBox::isReadyToProcess() const { return m_bReadyToProcess; }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // - --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- -
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
-CString CSimulatedBox::getName() const
-{
-	return m_pBox->getName();
-}
+CString CSimulatedBox::getName() const { return m_pBox->getName(); }
 
-const IScenario& CSimulatedBox::getScenario() const
-{
-	return *m_pScenario;
-}
+const IScenario& CSimulatedBox::getScenario() const { return *m_pScenario; }
 
 // ________________________________________________________________________________________________________________
 //
@@ -279,13 +268,13 @@ bool CSimulatedBox::getInputChunk(const uint32_t ui32InputIndex, const uint32_t 
 	return true;
 }
 
-const IMemoryBuffer* CSimulatedBox::getInputChunk(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex) const 
+const IMemoryBuffer* CSimulatedBox::getInputChunk(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex) const
 {
-	OV_ERROR_UNLESS_KRN(ui32InputIndex < m_vInput.size(), 
-						"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])", 
+	OV_ERROR_UNLESS_KRN(ui32InputIndex < m_vInput.size(),
+						"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	OV_ERROR_UNLESS_KRN(ui32ChunkIndex < m_vInput[ui32InputIndex].size(), 
+	OV_ERROR_UNLESS_KRN(ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
 						"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << uint32_t(m_vInput[ui32InputIndex].size() - 1) << "])",
 						ErrorType::OutOfBound);
 
@@ -308,7 +297,7 @@ uint64_t CSimulatedBox::getInputChunkStartTime(const uint32_t ui32InputIndex, co
 
 uint64_t CSimulatedBox::getInputChunkEndTime(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex) const
 {
-	OV_ERROR_UNLESS_KRZ(ui32InputIndex < m_vInput.size(), 
+	OV_ERROR_UNLESS_KRZ(ui32InputIndex < m_vInput.size(),
 						"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
@@ -322,12 +311,12 @@ uint64_t CSimulatedBox::getInputChunkEndTime(const uint32_t ui32InputIndex, cons
 
 bool CSimulatedBox::markInputAsDeprecated(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex)
 {
-	OV_ERROR_UNLESS_KRZ(ui32InputIndex < m_vInput.size(), 
-						"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])", 
+	OV_ERROR_UNLESS_KRZ(ui32InputIndex < m_vInput.size(),
+						"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	OV_ERROR_UNLESS_KRZ(ui32ChunkIndex < m_vInput[ui32InputIndex].size(), 
-						"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << uint32_t(m_vInput[ui32InputIndex].size() - 1) << "])", 
+	OV_ERROR_UNLESS_KRZ(ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
+						"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << uint32_t(m_vInput[ui32InputIndex].size() - 1) << "])",
 						ErrorType::OutOfBound);
 
 	m_vInput[ui32InputIndex][ui32ChunkIndex].markAsDeprecated(true);
@@ -364,7 +353,7 @@ uint8_t* CSimulatedBox::getOutputChunkBuffer(const uint32_t ui32OutputIndex)
 
 bool CSimulatedBox::appendOutputChunkData(const uint32_t ui32OutputIndex, const uint8_t* pBuffer, const uint64_t ui64BufferSize)
 {
-	OV_ERROR_UNLESS_KRF(ui32OutputIndex < m_vCurrentOutput.size(), 
+	OV_ERROR_UNLESS_KRF(ui32OutputIndex < m_vCurrentOutput.size(),
 						"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
@@ -388,7 +377,7 @@ bool CSimulatedBox::markOutputAsReadyToSend(const uint32_t ui32OutputIndex, cons
 
 	if (m_bChunkConsistencyChecking)
 	{
-		bool l_bIsConsistent        = true;
+		bool l_bIsConsistent           = true;
 		const char* l_sSpecificMessage = nullptr;
 
 		// checks chunks consistency

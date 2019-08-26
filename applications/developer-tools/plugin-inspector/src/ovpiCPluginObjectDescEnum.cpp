@@ -20,10 +20,7 @@ bool CPluginObjectDescEnum::enumeratePluginObjectDesc(std::vector<const IPluginO
 bool CPluginObjectDescEnum::enumeratePluginObjectDesc(const CIdentifier& parentClassIdentifier)
 {
 	CIdentifier identifier;
-	while ((identifier = m_KernelContext.getPluginManager().getNextPluginObjectDescIdentifier(identifier, parentClassIdentifier)) != OV_UndefinedIdentifier)
-	{
-		this->callback(*m_KernelContext.getPluginManager().getPluginObjectDesc(identifier));
-	}
+	while ((identifier = m_KernelContext.getPluginManager().getNextPluginObjectDescIdentifier(identifier, parentClassIdentifier)) != OV_UndefinedIdentifier) { this->callback(*m_KernelContext.getPluginManager().getPluginObjectDesc(identifier)); }
 	return true;
 }
 

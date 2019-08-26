@@ -184,7 +184,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::outclassCovAverage(uint32_t skipIndex, 
 	classWeights.resize(m_NumClasses);
 	for (uint32_t i = 0; i < m_NumClasses; i++)
 	{
-		classWeights[i] = i == skipIndex ? 0 : m_IncCovarianceProxies[i].numSamples / static_cast<double>(totalOutclassSamples);
+		classWeights[i] = i == skipIndex ? 0 : m_IncCovarianceProxies[i].numSamples / double(totalOutclassSamples);
 		this->getLogManager() << LogLevel_Debug << "Condition " << i + 1 << " averaging weight = " << classWeights[i] << "\n";
 	}
 
@@ -238,10 +238,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<MatrixXd>&
 
 		covProd[classIndex] = covInv[classIndex] * outclassCov;
 
-		try
-		{
-			eigenSolverGeneral.compute(covProd[classIndex]);
-		}
+		try { eigenSolverGeneral.compute(covProd[classIndex]); }
 		catch (...)
 		{
 			OV_ERROR_KRF("EigenSolver failed for condition [" << classIndex + 1 << "]", OpenViBE::Kernel::ErrorType::BadProcessing);
@@ -262,7 +259,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::computeCSP(const std::vector<MatrixXd>&
 		sortedEigenVectors[classIndex].resizeLike(eigenVectors[classIndex]);
 		for (int i = 0; i < eigenValues[classIndex].size(); i++)
 		{
-			sortedEigenValues[classIndex][i]      = eigenValues[classIndex][indexes[static_cast<size_t>(i)].second];
+			sortedEigenValues[classIndex][i]      = eigenValues[classIndex][indexes[size_t(i)].second];
 			sortedEigenVectors[classIndex].col(i) = eigenVectors[classIndex].col(indexes[i].second);
 			// this->getLogManager() << LogLevel_Info << "E " << i << " " << (l_oSortedEigenValues[classIndex])[i] << "\n";
 		}
@@ -301,10 +298,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 				}
 			}
 		}
-		if (m_StimulationDecoder.isEndReceived())
-		{
-			m_StimulationEncoder.encodeEnd();
-		}
+		if (m_StimulationDecoder.isEndReceived()) { m_StimulationEncoder.encodeEnd(); }
 	}
 
 	// Update all covs with the current data chunks (if any)
@@ -327,7 +321,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 
 		for (uint32_t i = 0; i < m_NumClasses; i++)
 		{
-			OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].numSamples >= 2, 
+			OV_ERROR_UNLESS_KRF(m_IncCovarianceProxies[i].numSamples >= 2,
 								"Invalid sample count of [" <<m_IncCovarianceProxies[i].numSamples << "] for condition number " << i << " (expected value > 2)",
 								OpenViBE::Kernel::ErrorType::BadProcessing);
 
@@ -351,7 +345,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::process()
 			OV_ERROR_UNLESS_KRF(cov[i-1].rows() == cov[i].rows() && cov[i-1].cols() == cov[i].cols(), "Mismatch between the number of channel in both input streams", OpenViBE::Kernel::ErrorType::BadValue);
 		}
 
-		this->getLogManager() << LogLevel_Info << "Data covariance dims are [" << static_cast<uint32_t>(cov[0].rows()) << "x" << static_cast<uint32_t>(cov[0].cols())
+		this->getLogManager() << LogLevel_Info << "Data covariance dims are [" << uint32_t(cov[0].rows()) << "x" << uint32_t(cov[0].cols())
 				<< "]. Number of samples per condition : \n";
 		for (uint32_t i = 0; i < m_NumClasses; i++)
 		{

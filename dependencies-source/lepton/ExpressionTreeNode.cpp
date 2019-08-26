@@ -39,7 +39,9 @@ using namespace std;
 ExpressionTreeNode::ExpressionTreeNode(Operation* operation, const vector<ExpressionTreeNode>& children) : operation(operation), children(children)
 {
 	if (operation->getNumArguments() != children.size())
+	{
 		throw Exception("Parse error: wrong number of arguments to function: " + operation->getName());
+	}
 }
 
 ExpressionTreeNode::ExpressionTreeNode(Operation* operation, const ExpressionTreeNode& child1, const ExpressionTreeNode& child2) : operation(operation)
@@ -47,70 +49,59 @@ ExpressionTreeNode::ExpressionTreeNode(Operation* operation, const ExpressionTre
 	children.push_back(child1);
 	children.push_back(child2);
 	if (operation->getNumArguments() != children.size())
+	{
 		throw Exception("Parse error: wrong number of arguments to function: " + operation->getName());
+	}
 }
 
 ExpressionTreeNode::ExpressionTreeNode(Operation* operation, const ExpressionTreeNode& child) : operation(operation)
 {
 	children.push_back(child);
 	if (operation->getNumArguments() != children.size())
+	{
 		throw Exception("Parse error: wrong number of arguments to function: " + operation->getName());
+	}
 }
 
 ExpressionTreeNode::ExpressionTreeNode(Operation* operation) : operation(operation)
 {
 	if (operation->getNumArguments() != children.size())
+	{
 		throw Exception("Parse error: wrong number of arguments to function: " + operation->getName());
+	}
 }
 
 ExpressionTreeNode::ExpressionTreeNode(const ExpressionTreeNode& node) : operation(node.getOperation().clone()), children(node.getChildren()) {}
 
-ExpressionTreeNode::ExpressionTreeNode() : operation(nullptr) {}
+ExpressionTreeNode::ExpressionTreeNode() {}
 
-ExpressionTreeNode::~ExpressionTreeNode()
-{
-	if (operation != nullptr)
-		delete operation;
-}
+ExpressionTreeNode::~ExpressionTreeNode() { delete operation; }
 
 bool ExpressionTreeNode::operator!=(const ExpressionTreeNode& node) const
 {
-	if (node.getOperation() != getOperation())
-		return true;
+	if (node.getOperation() != getOperation()) return true;
 	if (getOperation().isSymmetric() && getChildren().size() == 2)
 	{
-		if (getChildren()[0] == node.getChildren()[0] && getChildren()[1] == node.getChildren()[1])
-			return false;
-		if (getChildren()[0] == node.getChildren()[1] && getChildren()[1] == node.getChildren()[0])
-			return false;
+		if (getChildren()[0] == node.getChildren()[0] && getChildren()[1] == node.getChildren()[1]) return false;
+		if (getChildren()[0] == node.getChildren()[1] && getChildren()[1] == node.getChildren()[0]) return false;
 		return true;
 	}
-	for (int i = 0; i < (int)getChildren().size(); i++)
-		if (getChildren()[i] != node.getChildren()[i])
-			return true;
+	for (size_t i = 0; i < getChildren().size(); i++)
+	{
+		if (getChildren()[i] != node.getChildren()[i]) return true;
+	}
 	return false;
 }
 
-bool ExpressionTreeNode::operator==(const ExpressionTreeNode& node) const
-{
-	return !(*this != node);
-}
+bool ExpressionTreeNode::operator==(const ExpressionTreeNode& node) const { return !(*this != node); }
 
 ExpressionTreeNode& ExpressionTreeNode::operator=(const ExpressionTreeNode& node)
 {
-	if (operation != nullptr)
-		delete operation;
+	delete operation;
 	operation = node.getOperation().clone();
 	children  = node.getChildren();
 	return *this;
 }
 
-const Operation& ExpressionTreeNode::getOperation() const
-{
-	return *operation;
-}
-
-const vector<ExpressionTreeNode>& ExpressionTreeNode::getChildren() const
-{
-	return children;
-}
+const Operation& ExpressionTreeNode::getOperation() const { return *operation; }
+const vector<ExpressionTreeNode>& ExpressionTreeNode::getChildren() const { return children; }

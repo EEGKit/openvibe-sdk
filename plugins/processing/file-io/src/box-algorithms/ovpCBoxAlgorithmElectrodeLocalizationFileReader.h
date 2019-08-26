@@ -25,8 +25,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pOVMatrixFileReader = nullptr;
-
-			OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>* m_pChannelLocalisationStreamEncoder;
+			OpenViBEToolkit::TChannelLocalisationEncoder<CBoxAlgorithmElectrodeLocalisationFileReader>* m_pChannelLocalisationStreamEncoder = nullptr;
 
 			OpenViBE::CString m_sFilename;
 			bool m_bHeaderSent = false;
@@ -50,18 +49,18 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReader; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmElectrodeLocalisationFileReader; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
 				// Adds box outputs
-				rBoxAlgorithmPrototype.addOutput("Channel localisation", OV_TypeId_ChannelLocalisation);
+				prototype.addOutput("Channel localisation", OV_TypeId_ChannelLocalisation);
 
 				// Adds settings
-				rBoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "");
+				prototype.addSetting("Filename", OV_TypeId_Filename, "");
 
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ElectrodeLocalisationFileReaderDesc)
 		};
-	};
-};
+	} // namespace FileIO
+} // namespace OpenViBEPlugins

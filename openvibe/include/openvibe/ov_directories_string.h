@@ -123,10 +123,7 @@ namespace OpenViBE
 		static std::string guessRootDir()
 		{
 			static std::string rootDir;
-			if (!rootDir.empty())
-			{
-				return rootDir;
-			}
+			if (!rootDir.empty()) { return rootDir; }
 
 			std::string fullpath;
 #if defined TARGET_OS_Windows
@@ -140,11 +137,8 @@ namespace OpenViBE
 				// able to run in any case.
 				std::abort();
 			}
-			std::unique_ptr<char> utf8Value(new char[static_cast<size_t>(multiByteSize)]);
-			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0)
-			{
-				std::abort();
-			}
+			std::unique_ptr<char> utf8Value(new char[size_t(multiByteSize)]);
+			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0) { std::abort(); }
 
 			fullpath = convertPath(utf8Value.get());
 #elif defined TARGET_OS_Linux
@@ -157,10 +151,7 @@ namespace OpenViBE
 			_NSGetExecutablePath(nullptr, &size);
 			std::unique_ptr<char> path(new char[size + 1]);
 
-			if (_NSGetExecutablePath(path.get(), &size) != 0)
-			{
-				std::abort();
-			}
+			if (_NSGetExecutablePath(path.get(), &size) != 0) { std::abort(); }
 
 			fullpath = std::string(path.get());
 #endif
@@ -176,23 +167,14 @@ namespace OpenViBE
 			// Using std::getenv on Windows yields UTF7 strings which do not work with the utf8_to_utf16 function
 			// as this seems to be the only place where we actually get UTF7, let's get it as UTF16 by default
 			DWORD wideBufferSize = GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), nullptr, 0);
-			if (wideBufferSize == 0)
-			{
-				return convertPath(sDefaultPath);
-			}
+			if (wideBufferSize == 0) { return convertPath(sDefaultPath); }
 			std::unique_ptr<wchar_t> utf16value(new wchar_t[wideBufferSize]);
 			GetEnvironmentVariableW(Common::Converter::utf8_to_utf16(sEnvVar).c_str(), utf16value.get(), wideBufferSize);
 
 			int multiByteSize = WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, nullptr, 0, nullptr, nullptr);
-			if (multiByteSize == 0)
-			{
-				return convertPath(sDefaultPath);
-			}
-			std::unique_ptr<char> utf8Value(new char[static_cast<size_t>(multiByteSize)]);
-			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0)
-			{
-				return convertPath(sDefaultPath);
-			}
+			if (multiByteSize == 0) { return convertPath(sDefaultPath); }
+			std::unique_ptr<char> utf8Value(new char[size_t(multiByteSize)]);
+			if (WideCharToMultiByte(CP_UTF8, 0, utf16value.get(), -1, utf8Value.get(), multiByteSize, nullptr, nullptr) == 0) { return convertPath(sDefaultPath); }
 
 			const char* l_sPathPtr = utf8Value.get();
 #else
@@ -221,4 +203,4 @@ namespace OpenViBE
 #endif
 		}
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE

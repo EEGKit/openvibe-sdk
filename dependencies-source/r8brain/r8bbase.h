@@ -725,7 +725,7 @@ namespace r8b
 		///<
 		double svalue2 = 0; ///< Previous sine value.
 		///<
-		double sincr = 0; ///< Sine value increment.
+		double sincr   = 0; ///< Sine value increment.
 		///<
 	};
 

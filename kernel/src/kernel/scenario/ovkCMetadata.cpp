@@ -23,20 +23,11 @@ CMetadata::CMetadata(const IKernelContext& kernelContext, CScenario& ownerScenar
 
 CMetadata::~CMetadata() {}
 
-CIdentifier CMetadata::getIdentifier() const
-{
-	return m_Identifier;
-}
+CIdentifier CMetadata::getIdentifier() const { return m_Identifier; }
 
-CIdentifier CMetadata::getType() const
-{
-	return m_Type;
-}
+CIdentifier CMetadata::getType() const { return m_Type; }
 
-CString CMetadata::getData() const
-{
-	return m_Data;
-}
+CString CMetadata::getData() const { return m_Data; }
 
 bool CMetadata::setIdentifier(const CIdentifier& identifier)
 {

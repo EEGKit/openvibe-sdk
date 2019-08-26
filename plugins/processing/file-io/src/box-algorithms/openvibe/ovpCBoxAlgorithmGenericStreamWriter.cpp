@@ -17,20 +17,14 @@ bool CBoxAlgorithmGenericStreamWriter::initialize()
 	m_sFilename            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 	bool l_bUseCompression = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	if (l_bUseCompression)
-	{
-		OV_WARNING_K("Impossible to use compression as it is not yet implemented");
-	}
+	if (l_bUseCompression) { OV_WARNING_K("Impossible to use compression as it is not yet implemented"); }
 
 	return true;
 }
 
 bool CBoxAlgorithmGenericStreamWriter::uninitialize()
 {
-	if (m_oFile.is_open())
-	{
-		m_oFile.close();
-	}
+	if (m_oFile.is_open()) { m_oFile.close(); }
 	return true;
 }
 

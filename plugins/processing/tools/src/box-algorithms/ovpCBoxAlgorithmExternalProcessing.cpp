@@ -148,7 +148,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 	bool clientConnected    = false;
 	m_HasReceivedEndMessage = false;
 
-	m_AcceptTimeout = ITimeArithmetics::secondsToTime(static_cast<double>(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6)));
+	m_AcceptTimeout = ITimeArithmetics::secondsToTime(double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 6)));
 	m_IsGenerator   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 7);
 
 	while (System::Time::zgetTime() - startTime < m_AcceptTimeout)
@@ -166,10 +166,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 			OV_WARNING_K("A client sent a bad authentication.");
 			break;
 		}
-		if (error == Communication::MessagingServer::ELibraryError::NoAuthenticationReceived)
-		{
-			OV_WARNING_K("The client has not sent authentication.");
-		}
+		if (error == Communication::MessagingServer::ELibraryError::NoAuthenticationReceived) { OV_WARNING_K("The client has not sent authentication."); }
 	}
 
 	OV_ERROR_UNLESS_KRF(clientConnected, "No client connected before the timeout.", ErrorType::Internal);
@@ -182,10 +179,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 	while (m_Messaging.isConnected() && !m_Messaging.waitForSyncMessage())
 	{
-		if (!m_Messaging.waitForSyncMessage())
-		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		}
+		if (!m_Messaging.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 	}
 
 	m_SyncTimeout  = ITimeArithmetics::secondsToTime(0.0625);
@@ -195,10 +189,7 @@ bool CBoxAlgorithmExternalProcessing::initialize()
 
 bool CBoxAlgorithmExternalProcessing::uninitialize()
 {
-	for (auto& decoder : m_StimulationDecoders)
-	{
-		decoder.second.uninitialize();
-	}
+	for (auto& decoder : m_StimulationDecoders) { decoder.second.uninitialize(); }
 
 	if (!m_HasReceivedEndMessage)
 	{
@@ -226,7 +217,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 			}
 			else if (exitCode != 0)
 			{
-				OV_WARNING_K("Third party program [" << m_ThirdPartyProgramProcessId << "] has terminated with exit code [" << static_cast<int>(exitCode) << "]");
+				OV_WARNING_K("Third party program [" << m_ThirdPartyProgramProcessId << "] has terminated with exit code [" << int(exitCode) << "]");
 			}
 		}
 #else
@@ -269,12 +260,9 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*rMessageClock*/)
-{
-	return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
-}
+bool CBoxAlgorithmExternalProcessing::processClock(CMessageClock& /*rMessageClock*/) { return this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
 
-bool CBoxAlgorithmExternalProcessing::processInput(const uint32_t inputIndex)
+bool CBoxAlgorithmExternalProcessing::processInput(const uint32_t index)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -339,7 +327,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 				// Empty the history before to send useful data
 				while (!m_PacketHistory.empty())
 				{
-					OV_ERROR_UNLESS_KRF(m_Messaging.pushEBML(m_PacketHistory.front().inputIndex,
+					OV_ERROR_UNLESS_KRF(m_Messaging.pushEBML(m_PacketHistory.front().index,
 											m_PacketHistory.front().startTime,
 											m_PacketHistory.front().endTime,
 											m_PacketHistory.front().EBML),
@@ -388,10 +376,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 					OV_ERROR_UNLESS_KRF(dynamicBoxContext->markOutputAsReadyToSend(index, startTime, endTime),
 										"Failed to mark output as ready to send.", ErrorType::Internal);
 				}
-				if (!receivedSync)
-				{
-					std::this_thread::sleep_for(std::chrono::milliseconds(1));
-				}
+				if (!receivedSync) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 			}
 		}
 	}
@@ -408,7 +393,7 @@ std::string CBoxAlgorithmExternalProcessing::generateConnectionID(size_t size)
 
 	for (size_t i = 0; i < size; ++i)
 	{
-		char c = static_cast<char>(character(generator));
+		char c = char(character(generator));
 		connectionID.push_back((c < 26) ? ('A' + c) : '1' + (c - 26));
 	}
 
@@ -485,10 +470,7 @@ static std::vector<std::string> splitCommandLine(const std::string& cmdLine)
 		escape = false;
 	}
 
-	if (!arg.empty())
-	{
-		list.push_back(arg);
-	}
+	if (!arg.empty()) { list.push_back(arg); }
 
 	return list;
 }

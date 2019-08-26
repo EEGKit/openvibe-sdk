@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			EBML::IReaderHelper* m_pEBMLReaderHelper = nullptr;
-			EBML::IReader* m_pEBMLReader = nullptr;
+			EBML::IReader* m_pEBMLReader             = nullptr;
 			EBML::TReaderCallbackProxy1<CEBMLBaseDecoder> m_oEBMLReaderCallbackProxy;
 
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pMemoryBufferToDecode;

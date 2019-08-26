@@ -175,10 +175,7 @@ bool CMasterAcquisitionEncoder::process()
 		}
 
 		const TParameterHandler<bool> ip_bEncodeChannelLocalisationData(this->getInputParameter(OVP_Algorithm_MasterAcquisitionStreamEncoder_InputParameterId_EncodeChannelLocalisationData));
-		if (ip_bEncodeChannelLocalisationData)
-		{
-			m_pChannelLocalisationStreamEncoder->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeBuffer);
-		}
+		if (ip_bEncodeChannelLocalisationData) { m_pChannelLocalisationStreamEncoder->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeBuffer); }
 
 		m_pStimulationStreamEncoder->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeBuffer);
 		m_pSignalStreamEncoder->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeBuffer);

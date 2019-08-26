@@ -72,7 +72,5 @@ namespace OpenViBE
 
 			mutable std::recursive_mutex m_oMutex;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
-
-
+	} // namespace Kernel
+} // namespace OpenViBE

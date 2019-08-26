@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 	{
 		class CAlgorithmLDADiscriminantFunction;
 
-		int32_t LDAClassificationCompare(OpenViBE::IMatrix& rFirstClassificationValue, OpenViBE::IMatrix& rSecondClassificationValue);
+		int LDAClassificationCompare(OpenViBE::IMatrix& rFirstClassificationValue, OpenViBE::IMatrix& rSecondClassificationValue);
 
 		typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
@@ -38,9 +38,9 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
 			bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-								  , double& rf64Class
-								  , OpenViBEToolkit::IVector& rDistanceValue
-								  , OpenViBEToolkit::IVector& rProbabilityValue) override;
+						  , double& rf64Class
+						  , OpenViBEToolkit::IVector& rDistanceValue
+						  , OpenViBEToolkit::IVector& rProbabilityValue) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
 			uint32_t getOutputProbabilityVectorLength() override;
@@ -58,9 +58,9 @@ namespace OpenViBEPlugins
 			Eigen::MatrixXd m_oCoefficients;
 			Eigen::MatrixXd m_oWeights;
 			double m_f64BiasDistance = 0;
-			double m_f64w0 = 0;
+			double m_f64w0           = 0;
 
-			uint32_t m_ui32NumCols = 0;
+			uint32_t m_ui32NumCols    = 0;
 			uint32_t m_ui32NumClasses = 0;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pCovarianceAlgorithm = nullptr;
@@ -102,8 +102,8 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(CAlgorithmClassifierDesc, OVP_ClassId_Algorithm_ClassifierLDADesc)
 		};
-	};
-};
+	} // namespace Classification
+} // namespace OpenViBEPlugins
 
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

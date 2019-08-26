@@ -59,5 +59,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StreamDecoderAlgorithmTestDesc)
 		};
-	}  // namespace StreamCodecs
-}  // namespace OpenViBEPlugins
+	} // namespace StreamCodecs
+} // namespace OpenViBEPlugins

@@ -8,8 +8,7 @@ using namespace std;
 bool CCppCodeGenerator::openFile(const char* sFilename)
 {
 	m_oFile.open(sFilename, ios::out | ios::trunc);
-	if (!m_oFile.is_open())
-		return false;
+	if (!m_oFile.is_open()) { return false; }
 	m_oFile << "#include \"toolkit/ovtk_all.h\"" << endl << endl;
 
 

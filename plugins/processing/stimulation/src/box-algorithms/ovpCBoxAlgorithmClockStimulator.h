@@ -26,12 +26,12 @@ namespace OpenViBEPlugins
 		protected:
 
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClockStimulator> m_oStimulationEncoder;
-			uint64_t m_ui64StimulationId = 0;
+			uint64_t m_ui64StimulationId       = 0;
 			uint64_t m_ui64LastStimulationDate = 0;
-			uint64_t m_ui64LastEndTime = 0;
+			uint64_t m_ui64LastEndTime         = 0;
 
 			uint64_t m_SentStimulationCount = 0;
-			double m_StimulationInterval = 0;
+			double m_StimulationInterval    = 0;
 		};
 
 		class CBoxAlgorithmClockStimulatorDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -51,15 +51,15 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ClockStimulator; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmClockStimulator; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addOutput("Generated stimulations", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addSetting("Interstimulation interval (in sec)", OV_TypeId_Float, "1.0");
-				rBoxAlgorithmPrototype.addSetting("Stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+				prototype.addOutput("Generated stimulations", OV_TypeId_Stimulations);
+				prototype.addSetting("Interstimulation interval (in sec)", OV_TypeId_Float, "1.0");
+				prototype.addSetting("Stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ClockStimulatorDesc)
 		};
-	};
-};
+	} // namespace Stimulation
+} // namespace OpenViBEPlugins

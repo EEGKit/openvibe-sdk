@@ -43,7 +43,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pMemoryBuffer;
 
 			EBML::IWriterHelper* m_pEBMLWriterHelper = nullptr;
-			EBML::IWriter* m_pEBMLWriter = nullptr;
+			EBML::IWriter* m_pEBMLWriter             = nullptr;
 			EBML::TWriterCallbackProxy1<CEBMLBaseEncoder> m_oEBMLWriterCallbackProxy;
 		};
 

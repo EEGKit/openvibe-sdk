@@ -8,10 +8,8 @@ namespace
 	using namespace OpenViBE;
 	using namespace Kernel;
 
-	struct SBoxProto : public IBoxProto
+	struct SBoxProto : IBoxProto
 	{
-	public:
-
 		SBoxProto(ITypeManager& typeManager)
 			: m_ui64InputCountHash(0x64AC3CB54A35888CLL)
 			  , m_ui64OutputCountHash(0x21E0FAAFE5CAF1E1LL)
@@ -143,20 +141,20 @@ namespace
 			{
 				uint32_t j = S[i] % sizeof(v);
 				uint32_t k = S[i + 1] % sizeof(v);
-				uint8_t t = V[j];
-				V[j]     = V[k];
-				V[k]     = t;
+				uint8_t t  = V[j];
+				V[j]       = V[k];
+				V[k]       = t;
 			}
 			System::Memory::littleEndianToHost(V, &v);
 		}
 
 		_IsDerivedFromClass_Final_(IBoxProto, OV_UndefinedIdentifier)
 
-		CIdentifier m_oHash = OV_UndefinedIdentifier;
-		bool m_bIsDeprecated = false;
-		uint64_t m_ui64InputCountHash = 0;
-		uint64_t m_ui64OutputCountHash = 0;
+		CIdentifier m_oHash             = OV_UndefinedIdentifier;
+		bool m_bIsDeprecated            = false;
+		uint64_t m_ui64InputCountHash   = 0;
+		uint64_t m_ui64OutputCountHash  = 0;
 		uint64_t m_ui64SettingCountHash = 0;
 		ITypeManager& m_TypeManager;
 	};
-}  // namespace
+} // namespace

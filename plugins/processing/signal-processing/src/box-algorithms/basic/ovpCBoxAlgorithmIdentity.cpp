@@ -10,10 +10,7 @@ using namespace SignalProcessing;
 using namespace OpenViBEToolkit;
 using namespace std;
 
-void CBoxAlgorithmIdentity::release()
-{
-	delete this;
-}
+void CBoxAlgorithmIdentity::release() { delete this; }
 
 bool CBoxAlgorithmIdentity::processInput(const uint32_t ui32InputIndex)
 {

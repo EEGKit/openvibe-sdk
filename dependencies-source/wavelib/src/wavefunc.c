@@ -19,10 +19,10 @@ void meyer(int N, double lb, double ub, double* phi, double* psi, double* tgrid)
 	}
 
 	fft_object obj = fft_init(N, -1);
-	double* w = (double*)malloc(sizeof(double) * N);
+	double* w      = (double*)malloc(sizeof(double) * N);
 	fft_data* phiw = (fft_data*)malloc(sizeof(fft_data) * N);
 	fft_data* psiw = (fft_data*)malloc(sizeof(fft_data) * N);
-	fft_data* oup = (fft_data*)malloc(sizeof(fft_data) * N);
+	fft_data* oup  = (fft_data*)malloc(sizeof(fft_data) * N);
 
 	double delta = 2 * (ub - lb) / PI2;
 
@@ -47,13 +47,13 @@ void meyer(int N, double lb, double ub, double* phi, double* psi, double* tgrid)
 		}
 		if (wf > PI2 / 3.0 && wf <= 2 * PI2 / 3.0)
 		{
-			x     = (3 * wf / PI2) - 1.0;
-			x2    = x * x;
-			x3    = x2 * x;
-			x4    = x3 * x;
-			v     = x4 * (35 - 84 * x + 70 * x2 - 20 * x3);
-			theta = v * PI2 / 4.0;
-			cs    = cos(theta);
+			x         = (3 * wf / PI2) - 1.0;
+			x2        = x * x;
+			x3        = x2 * x;
+			x4        = x3 * x;
+			v         = x4 * (35 - 84 * x + 70 * x2 - 20 * x3);
+			theta     = v * PI2 / 4.0;
+			cs        = cos(theta);
 			double sn = sin(theta);
 
 			phiw[i].re = cs;
@@ -104,8 +104,8 @@ void gauss(int N, int p, double lb, double ub, double* psi, double* t)
 		exit(1);
 	}
 
-	t[0]     = lb;
-	t[N - 1] = ub;
+	t[0]         = lb;
+	t[N - 1]     = ub;
 	double delta = (ub - lb) / (N - 1);
 	for (i = 1; i < N - 1; ++i) { t[i] = lb + delta * i; }
 
@@ -222,8 +222,8 @@ void morlet(int N, double lb, double ub, double* psi, double* t)
 		exit(1);
 	}
 
-	t[0]     = lb;
-	t[N - 1] = ub;
+	t[0]         = lb;
+	t[N - 1]     = ub;
 	double delta = (ub - lb) / (N - 1);
 	for (i = 1; i < N - 1; ++i) { t[i] = lb + delta * i; }
 

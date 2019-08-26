@@ -92,21 +92,21 @@ uint32_t MessagingClient::getParameterCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
 
-	return static_cast<uint32_t>(impl->m_BoxDescription.getParameters()->size());
+	return uint32_t(impl->m_BoxDescription.getParameters()->size());
 }
 
 uint32_t MessagingClient::getInputCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
 
-	return static_cast<uint32_t>(impl->m_BoxDescription.getInputs()->size());
+	return uint32_t(impl->m_BoxDescription.getInputs()->size());
 }
 
 uint32_t MessagingClient::getOutputCount() const
 {
 	if (!m_BoxDescriptionReceived) { return 0; }
 
-	return static_cast<uint32_t>(impl->m_BoxDescription.getOutputs()->size());
+	return uint32_t(impl->m_BoxDescription.getOutputs()->size());
 }
 
 bool MessagingClient::getParameter(const size_t i, uint32_t& id, uint64_t& type, std::string& name, std::string& value) const
@@ -162,17 +162,14 @@ bool MessagingClient::getOutput(const size_t i, uint32_t& id, uint64_t& type, st
 bool MessagingClient::popError(uint64_t& packetId, EError& type, uint64_t& guiltyId)
 {
 	return CMessaging::popError(packetId, type, guiltyId);
-};
+}
 
 bool MessagingClient::popEBML(uint64_t& packetId, uint32_t& index, uint64_t& startTime, uint64_t& endTime, std::shared_ptr<const std::vector<uint8_t>>& ebml)
 {
 	return CMessaging::popEBML(packetId, index, startTime, endTime, ebml);
 }
 
-bool MessagingClient::pushAuthentication(std::string connectionID)
-{
-	return this->pushMessage(AuthenticationMessage(connectionID));
-}
+bool MessagingClient::pushAuthentication(std::string connectionID) { return this->pushMessage(AuthenticationMessage(connectionID)); }
 
 bool MessagingClient::pushLog(ELogLevel logLevel, const std::string& log)
 {
@@ -184,12 +181,6 @@ bool MessagingClient::pushEBML(const uint32_t index, const uint64_t startTime, c
 	return this->pushMessage(EBMLMessage(index, startTime, endTime, ebml));
 }
 
-bool MessagingClient::pushSync()
-{
-	return this->pushMessage(SyncMessage());
-}
+bool MessagingClient::pushSync() { return this->pushMessage(SyncMessage()); }
 
-bool MessagingClient::waitForSyncMessage()
-{
-	return CMessaging::waitForSyncMessage();
-}
+bool MessagingClient::waitForSyncMessage() { return CMessaging::waitForSyncMessage(); }

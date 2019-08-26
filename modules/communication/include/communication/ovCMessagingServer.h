@@ -14,7 +14,7 @@ namespace Communication
 		/**
 		 * \brief	Default constructor.
 		 */
-		MessagingServer();
+		MessagingServer(): CMessaging(), m_Server(Socket::createConnectionServer()) {}
 
 		/**
 		 * \brief	Destructor.
@@ -31,7 +31,7 @@ namespace Communication
 		 *
 		 * \sa close
 		 */
-		bool listen(uint32_t port);
+		bool listen(uint32_t port) { return m_Server->listen(port); }
 
 		/**
 		 * \brief Close the connection
@@ -54,7 +54,7 @@ namespace Communication
 		* This is useful if you set the port to '0'.
 		* \param port [out]: port on the one the server is listening
 		*/
-		bool getSocketPort(uint32_t& port);
+		bool getSocketPort(uint32_t& port) { return m_Server->getSocketPort(port); }
 
 
 		/**
@@ -161,7 +161,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 		 * \retval False if the library is in error state.
 		 */
-		bool pushTime(uint64_t time);
+		bool pushTime(uint64_t time) { return this->pushMessage(TimeMessage(time)); }
 
 		/**
 		 * \brief Push Sync message to the client
@@ -169,7 +169,7 @@ namespace Communication
 		 * \retval True if it succeeds.
 	 * \retval False if the library is in error state.
 		 */
-		bool pushSync();
+		bool pushSync() { return this->pushMessage(SyncMessage()); }
 
 		/**
 		 * \brief Check if a sync message is received.
@@ -177,12 +177,7 @@ namespace Communication
 		 * \retval True if a sync message is received.
 		 * \retval False if no sync message was received.
 		 */
-		bool waitForSyncMessage();
-
-		/**
-		 * \brief Reset to false the value checked to know if a sync message was received.
-		 */
-		void resetSyncMessageReceived();
+		bool waitForSyncMessage() { return CMessaging::waitForSyncMessage(); }
 
 	private:
 		Socket::IConnectionServer* m_Server = nullptr; //< Server connection

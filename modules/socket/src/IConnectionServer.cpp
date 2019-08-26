@@ -87,12 +87,9 @@ namespace Socket
 			int l_iClientAddressSize = sizeof(l_oClientAddress);
 #else
 #endif
-			int32_t l_i32ClientSocket = ::accept(m_i32Socket, (struct sockaddr*)&l_oClientAddress, &l_iClientAddressSize);
-			if (l_i32ClientSocket == -1)
-			{
-				return nullptr;
-			}
-			return new TConnection<IConnection>(static_cast<int32_t>(l_i32ClientSocket));
+			int l_i32ClientSocket = ::accept(m_i32Socket, (struct sockaddr*)&l_oClientAddress, &l_iClientAddressSize);
+			if (l_i32ClientSocket == -1) { return nullptr; }
+			return new TConnection<IConnection>(int(l_i32ClientSocket));
 		}
 
 		bool getSocketPort(uint32_t& port) override
@@ -107,10 +104,10 @@ namespace Socket
 
 			if (getsockname(m_i32Socket, (sockaddr*)&socketInfo, &socketInfoLength) == -1) { return false; }
 
-			port = static_cast<uint32_t>(ntohs(socketInfo.sin_port));
+			port = uint32_t(ntohs(socketInfo.sin_port));
 			return true;
 		}
 	};
 
 	IConnectionServer* createConnectionServer() { return new CConnectionServer(); }
-};
+} // namespace Socket

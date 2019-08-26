@@ -14,11 +14,7 @@ class CBoxSettingModifierVisitor : public OpenViBE::IObjectVisitor, public XML::
 {
 public:
 
-
-	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = nullptr) : IObjectVisitor(),
-																												 m_pObjectVisitorContext(nullptr),
-																												 m_pBox(nullptr),
-																												 m_pConfigurationManager(pConfigurationManager) {}
+	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = nullptr) : IObjectVisitor(), m_pConfigurationManager(pConfigurationManager) {}
 
 	void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount) override;
 	void processChildData(const char* sData) override;
@@ -26,12 +22,12 @@ public:
 	bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox) override;
 	bool processEnd(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox) override;
 
-	OpenViBE::Kernel::IObjectVisitorContext* m_pObjectVisitorContext;
-	OpenViBE::Kernel::IBox* m_pBox;
+	OpenViBE::Kernel::IObjectVisitorContext* m_pObjectVisitorContext = nullptr;
+	OpenViBE::Kernel::IBox* m_pBox = nullptr;
 	uint32_t m_ui32SettingIndex = 0;
-	bool m_bIsParsingSettingValue;
-	bool m_bIsParsingSettingOverride;
-	OpenViBE::Kernel::IConfigurationManager* m_pConfigurationManager;
+	bool m_bIsParsingSettingValue = false;
+	bool m_bIsParsingSettingOverride = false;
+	OpenViBE::Kernel::IConfigurationManager* m_pConfigurationManager = nullptr;
 
 	_IsDerivedFromClass_Final_(OpenViBE::IObjectVisitor, OV_UndefinedIdentifier)
 };

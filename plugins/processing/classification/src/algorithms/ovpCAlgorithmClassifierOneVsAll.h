@@ -22,9 +22,9 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
 			bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-								  , double& rf64Class
-								  , OpenViBEToolkit::IVector& rDistanceValue
-								  , OpenViBEToolkit::IVector& rProbabilityValue) override;
+						  , double& rf64Class
+						  , OpenViBEToolkit::IVector& rDistanceValue
+						  , OpenViBEToolkit::IVector& rProbabilityValue) override;
 			bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
@@ -32,8 +32,6 @@ namespace OpenViBEPlugins
 			uint32_t getOutputDistanceVectorLength() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmPairingStrategy, OVP_ClassId_Algorithm_ClassifierOneVsAll)
-
-		protected:
 
 
 		private:
@@ -75,5 +73,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(CAlgorithmPairingStrategyDesc, OVP_ClassId_Algorithm_ClassifierOneVsAllDesc)
 		};
-	}
-}
+	} // namespace Classification
+} // namespace OpenViBEPlugins

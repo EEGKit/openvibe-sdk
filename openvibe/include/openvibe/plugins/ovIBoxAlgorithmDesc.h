@@ -86,7 +86,7 @@ namespace OpenViBE
 			virtual IBoxListener* createBoxListener() const { return nullptr; }
 			/**
 			 * \brief Releases an existing box listener
-			 * \param pBoxListener [in] : the box listener to release
+			 * \param listener [in] : the box listener to release
 			 *
 			 * This function is called by the kernel as soon as it knows
 			 * a box listener won't be used any more. In case this descriptor
@@ -94,11 +94,11 @@ namespace OpenViBE
 			 * can be freed safely, no more call will be done on this
 			 * box listener.
 			 */
-			virtual void releaseBoxListener(IBoxListener* pBoxListener) const { }
+			virtual void releaseBoxListener(IBoxListener* listener) const { }
 
 			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObjectDesc, OV_ClassId_Plugins_BoxAlgorithmDesc)
 		};
-	}  // namespace Plugins
-}  // namespace OpenViBE
+	} // namespace Plugins
+} // namespace OpenViBE

@@ -28,7 +28,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 	m_EpochDuration = ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds);
 
 	int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
-	m_EpochOffset       = epochOffsetSign * static_cast<int64_t>(ITimeArithmetics::secondsToTime(std::fabs(epochOffset)));
+	m_EpochOffset       = epochOffsetSign * int64_t(ITimeArithmetics::secondsToTime(std::fabs(epochOffset)));
 
 	m_LastReceivedStimulationDate   = 0;
 	m_LastStimulationChunkStartTime = 0;
@@ -93,7 +93,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 								LogLevel_Error << "Input sampling frequency is equal to 0. Plugin can not process.",
 								ErrorType::Internal);
 
-			m_SampleCountPerOutputEpoch = static_cast<uint32_t>(ITimeArithmetics::timeToSampleCount(m_SamplingRate, ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds)));
+			m_SampleCountPerOutputEpoch = uint32_t(ITimeArithmetics::timeToSampleCount(m_SamplingRate, ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds)));
 
 			outputMatrix->setDimensionCount(2);
 			outputMatrix->setDimensionSize(0, m_ChannelCount);
@@ -142,7 +142,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 					{
 						OV_WARNING_K("Skipping stimulation (received at date " << time64(stimulationDate) << ") that predates an already received stimulation (at date " << time64(m_LastReceivedStimulationDate) << ")");
 					}
-					else if (static_cast<int64_t>(stimulationDate) + m_EpochOffset >= 0)
+					else if (int64_t(stimulationDate) + m_EpochOffset >= 0)
 					{
 						m_ReceivedStimulations.push_back(stimulationDate);
 						m_LastReceivedStimulationDate = stimulationDate;
@@ -158,7 +158,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 
 	for (uint64_t stimulationDate : m_ReceivedStimulations)
 	{
-		uint64_t currentEpochStartTime = static_cast<uint64_t>(static_cast<int64_t>(stimulationDate) + m_EpochOffset);
+		uint64_t currentEpochStartTime = uint64_t(int64_t(stimulationDate) + m_EpochOffset);
 
 		// No cache available
 		if (m_CachedChunks.empty()) { break; }
@@ -240,10 +240,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 				m_SignalEncoder.encodeBuffer();
 				dynamicBoxContext.markOutputAsReadyToSend(outputSignalIndex, currentEpochStartTime, currentEpochStartTime + m_EpochDuration);
 			}
-			else
-			{
-				OV_WARNING_K("Skipped creating an epoch on a timespan with no signal. The input signal probably contains non-contiguous chunks.");
-			}
+			else { OV_WARNING_K("Skipped creating an epoch on a timespan with no signal. The input signal probably contains non-contiguous chunks."); }
 
 			lastProcessedStimulationDate = stimulationDate;
 		}
@@ -264,12 +261,12 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 	// Deprecate cached chunks which will no longer be used because they are too far back in history compared to received stimulations
 	uint64_t lastUsefulChunkEndTime = m_ReceivedStimulations.empty() ? m_LastStimulationChunkStartTime : m_ReceivedStimulations.front();
 
-	auto cutoffTime = static_cast<int64_t>(lastUsefulChunkEndTime) + m_EpochOffset;
+	auto cutoffTime = int64_t(lastUsefulChunkEndTime) + m_EpochOffset;
 	if (cutoffTime > 0)
 	{
 		m_CachedChunks.erase(std::remove_if(m_CachedChunks.begin(), m_CachedChunks.end(), [cutoffTime](const CachedChunk& cachedChunk)
 		{
-			return cachedChunk.endTime < static_cast<uint64_t>(cutoffTime);
+			return cachedChunk.endTime < uint64_t(cutoffTime);
 		}), m_CachedChunks.end());
 	}
 

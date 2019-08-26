@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			CBoxAlgorithmCSVFileWriter();
+			CBoxAlgorithmCSVFileWriter() { }
 			void release() override { delete this; }
 			bool initialize() override;
 			bool uninitialize() override;
@@ -39,15 +39,15 @@ namespace OpenViBEPlugins
 
 			OpenViBE::CString m_sSeparator;
 			OpenViBE::CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
-			bool m_bFirstBuffer;
-			bool (CBoxAlgorithmCSVFileWriter::*m_fpRealProcess)();
+			bool m_bFirstBuffer = false;
+			bool (CBoxAlgorithmCSVFileWriter::*m_fpRealProcess)() = nullptr;
 
-			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_pStreamDecoder;
+			OpenViBEToolkit::TDecoder<CBoxAlgorithmCSVFileWriter>* m_pStreamDecoder = nullptr;
 			OpenViBE::CMatrix m_oMatrix;		// This represents the properties of the input, no data
 
-			uint64_t m_ui64SampleCount;
+			uint64_t m_ui64SampleCount = 0;
 
-			bool m_bHeaderReceived;
+			bool m_bHeaderReceived = false;
 		};
 
 		class CBoxAlgorithmCSVFileWriterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
@@ -74,26 +74,26 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_CSVFileWriter; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmCSVFileWriter; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmCSVFileWriterListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input stream", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
-				rBoxAlgorithmPrototype.addSetting("Column separator", OV_TypeId_String, ";");
-				rBoxAlgorithmPrototype.addSetting("Precision", OV_TypeId_Integer, "10");
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addInput("Input stream", OV_TypeId_Signal);
+				prototype.addSetting("Filename", OV_TypeId_Filename, "record-[$core{date}-$core{time}].csv");
+				prototype.addSetting("Column separator", OV_TypeId_String, ";");
+				prototype.addSetting("Precision", OV_TypeId_Integer, "10");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
 
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_FeatureVector);
+				prototype.addInputSupport(OV_TypeId_Signal);
+				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addInputSupport(OV_TypeId_Spectrum);
+				prototype.addInputSupport(OV_TypeId_Stimulations);
+				prototype.addInputSupport(OV_TypeId_FeatureVector);
 
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_CSVFileWriterDesc)
 		};
-	};
-};
+	} // namespace FileIO
+} // namespace OpenViBEPlugins

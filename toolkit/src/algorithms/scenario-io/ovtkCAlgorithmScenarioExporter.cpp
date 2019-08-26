@@ -34,8 +34,8 @@ namespace OpenViBEToolkit
 			IAlgorithmContext& m_rAlgorithmContext;
 			CAlgorithmScenarioExporter& m_rParent;
 		};
-	}  // namespace
-}  // namespace OpenViBEToolkit
+	} // namespace
+} // namespace OpenViBEToolkit
 
 #define exportAttributesMacro(exporter, attributable, memoryBuffer, AttributableName) \
 	do { \
@@ -255,10 +255,8 @@ bool CAlgorithmScenarioExporterHelper::exportBox(IMemoryBuffer& rMemoryBuffer, c
 			rBox.getSettingValue(i, l_sValue);
 			rBox.getSettingMod(i, l_bModifiability);
 			CString l_sModifiability;
-			if (l_bModifiability)
-				l_sModifiability = CString("true");
-			else
-				l_sModifiability = CString("false");
+			if (l_bModifiability) l_sModifiability = CString("true");
+			else l_sModifiability                  = CString("false");
 			m_rParent.exportStart(rMemoryBuffer, OVTK_Algorithm_ScenarioExporter_NodeId_Box_Setting);
 			if (l_oSettingIdentifier != OV_UndefinedIdentifier) // do not export identifier if not defined
 			{

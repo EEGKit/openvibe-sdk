@@ -28,7 +28,7 @@ namespace OpenViBEPlugins
 			std::vector<bool> m_IsSpectrumEncoderActive;
 
 			unsigned int m_ChannelCount = 0;
-			unsigned int m_SampleCount = 0;
+			unsigned int m_SampleCount  = 0;
 			unsigned int m_SamplingRate = 0;
 
 			unsigned int m_FFTSize = 0;
@@ -73,5 +73,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_SpectralAnalysisDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

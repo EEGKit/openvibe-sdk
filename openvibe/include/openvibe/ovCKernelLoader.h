@@ -22,4 +22,4 @@ namespace OpenViBE
 
 		IKernelLoader* m_pKernelLoaderImpl = nullptr; //!< Internal implementation
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE

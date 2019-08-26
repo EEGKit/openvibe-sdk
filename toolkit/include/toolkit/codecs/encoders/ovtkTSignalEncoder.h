@@ -49,30 +49,18 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate()
-		{
-			return m_pInputSamplingRate;
-		}
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getInputSamplingRate() { return m_pInputSamplingRate; }
 
 	protected:
 
 		/*
 		The methods specific to the Signal encoder (overriding the TStreamedMatrixEncoderLocal implementations):
 		*/
-		bool encodeHeaderImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader);
-		}
+		bool encodeHeaderImpl() { return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader); }
 
-		bool encodeBufferImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
-		}
+		bool encodeBufferImpl() { return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer); }
 
-		bool encodeEndImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd);
-		}
+		bool encodeEndImpl() { return m_pCodec->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	/*
@@ -96,6 +84,6 @@ namespace OpenViBEToolkit
 
 		virtual ~TSignalEncoder() { this->uninitialize(); }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

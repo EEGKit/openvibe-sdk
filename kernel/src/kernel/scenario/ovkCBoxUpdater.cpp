@@ -38,10 +38,7 @@ CBoxUpdater::CBoxUpdater(CScenario& scenario, IBox* sourceBox)
 
 CBoxUpdater::~CBoxUpdater()
 {
-	if (!m_KernelBox || !m_UpdatedBox)
-	{
-		return;
-	}
+	if (!m_KernelBox || !m_UpdatedBox) { return; }
 
 	if (m_KernelBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox)
 	{
@@ -108,10 +105,7 @@ bool CBoxUpdater::initialize()
 	}
 
 	// initialize supported types to kernel ones
-	if (m_SourceBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox)
-	{
-		m_UpdatedBox->setSupportTypeFromAlgorithmIdentifier(m_KernelBox->getAlgorithmClassIdentifier());
-	}
+	if (m_SourceBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox) { m_UpdatedBox->setSupportTypeFromAlgorithmIdentifier(m_KernelBox->getAlgorithmClassIdentifier()); }
 	// should not be done before adding IO elements so the box listener is never called
 	// updatedBox->setAlgorithmClassIdentifier(kernelBox->getAlgorithmClassIdentifier());
 	m_Initialized = true;
@@ -288,7 +282,7 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 
 		interfacors.push_back(request);
 
-		m_OriginalToUpdatedCorrespondence[interfacorType][index] = static_cast<uint32_t>(interfacors.size() - 1);
+		m_OriginalToUpdatedCorrespondence[interfacorType][index] = uint32_t(interfacors.size() - 1);
 
 		++index;
 	}
@@ -298,10 +292,10 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 		m_UpdatedBox->addInterfacor(interfacorType, i.name, i.typeIdentifier, i.identifier);
 		if (interfacorType == Setting)
 		{
-			auto index = m_UpdatedBox->getInterfacorCountIncludingDeprecated(Setting) - 1;
-			m_UpdatedBox->setSettingDefaultValue(index, i.defaultValue);
-			m_UpdatedBox->setSettingValue(index, i.value);
-			m_UpdatedBox->setSettingMod(index, i.modifiability);
+			auto idx = m_UpdatedBox->getInterfacorCountIncludingDeprecated(Setting) - 1;
+			m_UpdatedBox->setSettingDefaultValue(idx, i.defaultValue);
+			m_UpdatedBox->setSettingValue(idx, i.value);
+			m_UpdatedBox->setSettingMod(idx, i.modifiability);
 		}
 		if (i.toBeRemoved)
 		{

@@ -15,10 +15,7 @@ CSignalTrial::CSignalTrial() {}
 
 CSignalTrial::~CSignalTrial()
 {
-	for (map<uint32_t, double*>::iterator itChannel = m_vChannelSample.begin(); itChannel != m_vChannelSample.end(); ++itChannel)
-	{
-		delete [] itChannel->second;
-	}
+	for (map<uint32_t, double*>::iterator itChannel = m_vChannelSample.begin(); itChannel != m_vChannelSample.end(); ++itChannel) { delete [] itChannel->second; }
 }
 
 // ________________________________________________________________________________________________________________
@@ -94,35 +91,20 @@ bool CSignalTrial::setSampleCount(const uint32_t ui32SampleCount, const bool bPr
 // ________________________________________________________________________________________________________________
 //
 
-uint32_t CSignalTrial::getSamplingRate() const
-{
-	return m_ui32SamplingRate;
-}
+uint32_t CSignalTrial::getSamplingRate() const { return m_ui32SamplingRate; }
 
-uint32_t CSignalTrial::getChannelCount() const
-{
-	return m_ui32ChannelCount;
-}
+uint32_t CSignalTrial::getChannelCount() const { return m_ui32ChannelCount; }
 
 const char* CSignalTrial::getChannelName(const uint32_t ui32ChannelIndex) const
 {
 	map<uint32_t, string>::const_iterator itChannelName = m_vChannelName.find(ui32ChannelIndex);
-	if (itChannelName != m_vChannelName.end())
-	{
-		return itChannelName->second.c_str();
-	}
+	if (itChannelName != m_vChannelName.end()) { return itChannelName->second.c_str(); }
 	return "";
 }
 
-CIdentifier CSignalTrial::getLabelIdentifier() const
-{
-	return m_oLabelIdentifier;
-}
+CIdentifier CSignalTrial::getLabelIdentifier() const { return m_oLabelIdentifier; }
 
-uint32_t CSignalTrial::getSampleCount() const
-{
-	return m_ui32SampleCount;
-}
+uint32_t CSignalTrial::getSampleCount() const { return m_ui32SampleCount; }
 
 uint64_t CSignalTrial::getDuration() const
 {
@@ -139,12 +121,6 @@ double* CSignalTrial::getChannelSampleBuffer(const uint32_t ui32ChannelIndex) co
 // ________________________________________________________________________________________________________________
 //
 
-ISignalTrial* OpenViBEToolkit::createSignalTrial()
-{
-	return new CSignalTrial();
-}
+ISignalTrial* OpenViBEToolkit::createSignalTrial() { return new CSignalTrial(); }
 
-void OpenViBEToolkit::releaseSignalTrial(ISignalTrial* trial)
-{
-	delete trial;
-}
+void OpenViBEToolkit::releaseSignalTrial(ISignalTrial* trial) { delete trial; }

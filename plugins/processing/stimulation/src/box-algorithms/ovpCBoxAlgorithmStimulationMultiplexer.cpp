@@ -14,11 +14,11 @@ bool CBoxAlgorithmStimulationMultiplexer::initialize()
 	const IBox& staticBoxContext = this->getStaticBoxContext();
 
 	m_StimulationDecoders.resize(staticBoxContext.getInputCount());
-	unsigned int inputIndex = 0;
+	unsigned int index = 0;
 	for (auto& stimulationDecoder : m_StimulationDecoders)
 	{
-		stimulationDecoder.initialize(*this, inputIndex);
-		inputIndex += 1;
+		stimulationDecoder.initialize(*this, index);
+		index += 1;
 	}
 
 	m_StimulationEncoder.initialize(*this, 0);
@@ -73,8 +73,8 @@ bool CBoxAlgorithmStimulationMultiplexer::process()
 				{
 					m_vStimulation.insert(std::make_pair(m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
 														 std::make_tuple(m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationIdentifier(stimulation),
-														 				 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
-														 				 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation))));
+																		 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDate(stimulation),
+																		 m_StimulationDecoders[input].getOutputStimulationSet()->getStimulationDuration(stimulation))));
 				}
 			}
 

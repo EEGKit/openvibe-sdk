@@ -15,20 +15,11 @@ CBoxAlgorithmContext::CBoxAlgorithmContext(const IKernelContext& rKernelContext,
 
 CBoxAlgorithmContext::~CBoxAlgorithmContext() {}
 
-const IBox* CBoxAlgorithmContext::getStaticBoxContext()
-{
-	return m_pStaticBoxContext;
-}
+const IBox* CBoxAlgorithmContext::getStaticBoxContext() { return m_pStaticBoxContext; }
 
-IBoxIO* CBoxAlgorithmContext::getDynamicBoxContext()
-{
-	return m_pDynamicBoxContext;
-}
+IBoxIO* CBoxAlgorithmContext::getDynamicBoxContext() { return m_pDynamicBoxContext; }
 
-IPlayerContext* CBoxAlgorithmContext::getPlayerContext()
-{
-	return &m_oPlayerContext;
-}
+IPlayerContext* CBoxAlgorithmContext::getPlayerContext() { return &m_oPlayerContext; }
 
 bool CBoxAlgorithmContext::markAlgorithmAsReadyToProcess()
 {
@@ -36,7 +27,4 @@ bool CBoxAlgorithmContext::markAlgorithmAsReadyToProcess()
 	return true;
 }
 
-bool CBoxAlgorithmContext::isAlgorithmReadyToProcess()
-{
-	return m_bReadyToProcess;
-}
+bool CBoxAlgorithmContext::isAlgorithmReadyToProcess() { return m_bReadyToProcess; }

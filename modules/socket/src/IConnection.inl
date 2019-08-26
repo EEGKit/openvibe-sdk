@@ -43,8 +43,8 @@ namespace Socket
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int32_t l_i32VersionHigh = 2;
-			int32_t l_i32VersionLow  = 0;
+			int l_i32VersionHigh = 2;
+			int l_i32VersionLow  = 0;
 			WORD l_oWinsockVersion   = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
 			WSAStartup(l_oWinsockVersion, &l_oWSAData);
@@ -52,12 +52,12 @@ namespace Socket
 #endif
 		}
 
-		explicit TConnection(int32_t i32Socket) : m_i32Socket(i32Socket)
+		explicit TConnection(int i32Socket) : m_i32Socket(i32Socket)
 		{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 #elif defined TARGET_OS_Windows
-			int32_t l_i32VersionHigh = 2;
-			int32_t l_i32VersionLow  = 0;
+			int l_i32VersionHigh = 2;
+			int l_i32VersionLow  = 0;
 			WORD l_oWinsockVersion   = MAKEWORD(l_i32VersionHigh, l_i32VersionLow);
 			WSADATA l_oWSAData;
 			WSAStartup(l_oWinsockVersion, &l_oWSAData);
@@ -80,7 +80,7 @@ namespace Socket
 		{
 			if (isConnected()) { return false; }
 
-			m_i32Socket = static_cast<int32_t>(socket(AF_INET, SOCK_STREAM, 0));
+			m_i32Socket = int(socket(AF_INET, SOCK_STREAM, 0));
 			if (m_i32Socket == -1) { return false; }
 
 			return true;
@@ -147,10 +147,7 @@ namespace Socket
 			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
 			int l_iResult = send(m_i32Socket, static_cast<const char*>(pBuffer), ui32BufferSize, Socket_SendFlags);
-			if (ui32BufferSize != 0 && l_iResult <= 0)
-			{
-				close();
-			}
+			if (ui32BufferSize != 0 && l_iResult <= 0) { close(); }
 			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
 		}
 
@@ -162,10 +159,7 @@ namespace Socket
 			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
 			int l_iResult = recv(m_i32Socket, static_cast<char *>(pBuffer), ui32BufferSize, Socket_ReceiveFlags);
-			if (ui32BufferSize != 0 && l_iResult <= 0)
-			{
-				close();
-			}
+			if (ui32BufferSize != 0 && l_iResult <= 0) { close(); }
 			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
 		}
 
@@ -200,15 +194,12 @@ namespace Socket
 
 		virtual void release()
 		{
-			if (isConnected())
-			{
-				close();
-			}
+			if (isConnected()) { close(); }
 			delete this;
 		}
 
 	protected:
 
-		int32_t m_i32Socket;
+		int m_i32Socket;
 	};
 } // namespace Socket

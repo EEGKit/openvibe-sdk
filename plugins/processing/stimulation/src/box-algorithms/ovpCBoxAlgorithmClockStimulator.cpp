@@ -15,8 +15,8 @@ bool CBoxAlgorithmClockStimulator::initialize()
 	double interstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
 	const double minInterstimulationInterval = 0.0001;
-	OV_ERROR_UNLESS_KRF(!(interstimulationInterval < minInterstimulationInterval), 
-						"Invalid stimulation interval [" << interstimulationInterval << "] (expected value > " << minInterstimulationInterval << ")", 
+	OV_ERROR_UNLESS_KRF(!(interstimulationInterval < minInterstimulationInterval),
+						"Invalid stimulation interval [" << interstimulationInterval << "] (expected value > " << minInterstimulationInterval << ")",
 						OpenViBE::Kernel::ErrorType::BadSetting);
 
 	m_StimulationInterval  = interstimulationInterval;

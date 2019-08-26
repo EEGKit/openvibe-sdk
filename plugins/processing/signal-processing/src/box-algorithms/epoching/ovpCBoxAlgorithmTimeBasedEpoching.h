@@ -30,13 +30,13 @@ namespace OpenViBEPlugins
 			double m_EpochDuration = 0;
 			double m_EpochInterval = 0;
 
-			uint64_t m_SamplingRate = 0;
-			uint32_t m_OutputSampleCount = 0;
+			uint64_t m_SamplingRate                  = 0;
+			uint32_t m_OutputSampleCount             = 0;
 			uint32_t m_OutputSampleCountBetweenEpoch = 0;
-			uint64_t m_LastInputEndTime = 0;
-			uint32_t m_OutputSampleIndex = 0;
-			uint32_t m_OutputChunkIndex = 0;
-			uint64_t m_ReferenceTime = 0;
+			uint64_t m_LastInputEndTime              = 0;
+			uint32_t m_OutputSampleIndex             = 0;
+			uint32_t m_OutputChunkIndex              = 0;
+			uint64_t m_ReferenceTime                 = 0;
 		};
 
 		class CBoxAlgorithmTimeBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
@@ -69,5 +69,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_TimeBasedEpochingDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

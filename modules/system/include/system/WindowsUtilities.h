@@ -28,6 +28,6 @@ namespace System
 	private:
 		WindowsUtilities();
 	};
-}  // namespace System
+} // namespace System
 
 #endif // TARGET_OS_Windows

@@ -39,7 +39,7 @@ namespace
 			return a.second < b.second;
 		}
 	};
-}  // namespace
+} // namespace
 
 CTypeManager::CTypeManager(const IKernelContext& rKernelContext)
 	: TKernelObject<ITypeManager>(rKernelContext)
@@ -108,7 +108,7 @@ bool CTypeManager::registerEnumerationType(const CIdentifier& rTypeIdentifier, c
 	{
 		if (m_vName[rTypeIdentifier] != sTypeName)
 		{
-			OV_ERROR_KRF("Trying to register enum type " << rTypeIdentifier.toString() << " that already exists with different value (" << m_vName[rTypeIdentifier] << " != " << sTypeName << ")", 
+			OV_ERROR_KRF("Trying to register enum type " << rTypeIdentifier.toString() << " that already exists with different value (" << m_vName[rTypeIdentifier] << " != " << sTypeName << ")",
 						 OpenViBE::Kernel::ErrorType::BadArgument);
 		}
 		OV_DEBUG_K("Trying to register enum type " << rTypeIdentifier.toString() << " that already exists.");
@@ -322,10 +322,7 @@ uint64_t CTypeManager::getEnumerationEntryValueFromName(const CIdentifier& rType
 		uint64_t l_ui64Value = std::stoull((const char*)rEntryName);
 
 		if ((itEnumeration->second.find(l_ui64Value) != itEnumeration->second.end()) ||
-			(rTypeIdentifier == OV_TypeId_Stimulation && this->getConfigurationManager().expandAsBoolean("Kernel_AllowUnregisteredNumericalStimulationIdentifiers")))
-		{
-			return l_ui64Value;
-		}
+			(rTypeIdentifier == OV_TypeId_Stimulation && this->getConfigurationManager().expandAsBoolean("Kernel_AllowUnregisteredNumericalStimulationIdentifiers"))) { return l_ui64Value; }
 	}
 	catch (const std::exception&) { return OV_IncorrectStimulation; }
 

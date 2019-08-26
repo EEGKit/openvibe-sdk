@@ -38,5 +38,5 @@ namespace OpenViBE
 
 			// TKernelObject();
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	bool ignoreMetaboxes = false;
 	vector<string> metaboxExtensionsToLoad;
 
-	for (int32_t i = 1; i < argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
@@ -52,10 +52,7 @@ int main(int argc, char** argv)
 			boxAlgorithmDocTemplateDirectory = argv[i];
 			cout << "Templates will be generated in folder: [" << boxAlgorithmDocTemplateDirectory.toASCIIString() << "]." << endl;
 		}
-		else if (i < argc)
-		{
-			pluginFilestoLoad.push_back(string(argv[i]));
-		}
+		else if (i < argc) { pluginFilestoLoad.push_back(string(argv[i])); }
 	}
 
 	CKernelLoader kernelLoader;
@@ -107,10 +104,7 @@ int main(int argc, char** argv)
 				}
 				else
 				{
-					for (string pluginFiletoLoad : pluginFilestoLoad)
-					{
-						kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand(CString(pluginFiletoLoad.c_str())));
-					}
+					for (string pluginFiletoLoad : pluginFilestoLoad) { kernelContext->getPluginManager().addPluginsFromFiles(configurationManager.expand(CString(pluginFiletoLoad.c_str()))); }
 				}
 
 				kernelContext->getLogManager() << LogLevel_Info << "[  INF  ] Generate boxes templates in [" << boxAlgorithmDocTemplateDirectory << "]\n";
@@ -135,10 +129,7 @@ int main(int argc, char** argv)
 					// Create a list of metabox descriptors from the Map provided by the MetaboxLoader and enumerate all algorithms within
 					std::vector<const IPluginObjectDesc*> metaboxPluginObjectDescriptors;
 					CIdentifier metaboxDescIdentifier;
-					while ((metaboxDescIdentifier = kernelContext->getMetaboxManager().getNextMetaboxObjectDescIdentifier(metaboxDescIdentifier)) != OV_UndefinedIdentifier)
-					{
-						metaboxPluginObjectDescriptors.push_back(kernelContext->getMetaboxManager().getMetaboxObjectDesc(metaboxDescIdentifier));
-					}
+					while ((metaboxDescIdentifier = kernelContext->getMetaboxManager().getNextMetaboxObjectDescIdentifier(metaboxDescIdentifier)) != OV_UndefinedIdentifier) { metaboxPluginObjectDescriptors.push_back(kernelContext->getMetaboxManager().getMetaboxObjectDesc(metaboxDescIdentifier)); }
 					boxTemplateGenerator.enumeratePluginObjectDesc(metaboxPluginObjectDescriptors);
 				}
 

@@ -130,5 +130,3 @@
 #else
 	#define OVK_API OVK_API_Import
 #endif
-
-

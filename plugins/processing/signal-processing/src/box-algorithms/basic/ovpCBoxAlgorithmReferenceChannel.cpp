@@ -51,7 +51,7 @@ namespace
 
 		return l_ui32Result;
 	}
-}  // namespace
+} // namespace
 
 bool CBoxAlgorithmReferenceChannel::initialize()
 {
@@ -99,7 +99,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 
 			m_ui32ReferenceChannelIndex = _find_channel_(l_rInputMatrix, l_sChannel, l_ui64MatchMethod, 0);
 
-			OV_ERROR_UNLESS_KRF(m_ui32ReferenceChannelIndex != std::numeric_limits<uint32_t>::max(), 
+			OV_ERROR_UNLESS_KRF(m_ui32ReferenceChannelIndex != std::numeric_limits<uint32_t>::max(),
 								"Invalid channel [" << l_sChannel << "]: channel not found", OpenViBE::Kernel::ErrorType::BadSetting);
 
 			if (_find_channel_(*m_oDecoder.getOutputMatrix(), l_sChannel, l_ui64MatchMethod, m_ui32ReferenceChannelIndex + 1) != std::numeric_limits<uint32_t>::max())
@@ -144,10 +144,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 
 			m_oEncoder.encodeBuffer();
 		}
-		if (m_oDecoder.isEndReceived())
-		{
-			m_oEncoder.encodeEnd();
-		}
+		if (m_oDecoder.isEndReceived()) { m_oEncoder.encodeEnd(); }
 		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
 	}
 

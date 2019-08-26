@@ -88,12 +88,9 @@ namespace OpenViBEPlugins
 			//				return true;
 			//			}
 
-			virtual int32_t getStrategySettingsCount(OpenViBE::Kernel::IBox& rBox)
+			virtual int getStrategySettingsCount(OpenViBE::Kernel::IBox& rBox)
 			{
-				if (m_i32StrategyAmountSettings < 0)//The value have never been initialized
-				{
-					initializedStrategy(rBox);
-				}
+				if (m_i32StrategyAmountSettings < 0) { initializedStrategy(rBox); }	//The value have never been initialized
 				return m_i32StrategyAmountSettings;
 			}
 
@@ -111,23 +108,23 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				//ui32Index represent the number of the class (because of rejected offset)
+				//index represent the number of the class (because of rejected offset)
 				char l_sBuffer[64];
-				sprintf(l_sBuffer, "Class %d label", ui32Index);
+				sprintf(l_sBuffer, "Class %d label", index);
 				char l_sStimulation[64];
-				sprintf(l_sStimulation, "OVTK_StimulationId_Label_%02X", ui32Index);
-				rBox.addSetting(l_sBuffer, OV_TypeId_Stimulation, l_sStimulation, 3 - 1 + getStrategySettingsCount(rBox) + ui32Index);
+				sprintf(l_sStimulation, "OVTK_StimulationId_Label_%02X", index);
+				rBox.addSetting(l_sBuffer, OV_TypeId_Stimulation, l_sStimulation, 3 - 1 + getStrategySettingsCount(rBox) + index);
 
 				//Rename input
 				return this->onInputAddedOrRemoved(rBox);
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				//First remove the removed input from settings
-				rBox.removeSetting(3 - 1 + getStrategySettingsCount(rBox) + ui32Index);
+				rBox.removeSetting(3 - 1 + getStrategySettingsCount(rBox) + index);
 
 				//Then rename the remains inputs in settings
 				for (uint32_t i = 1; i < rBox.getInputCount(); ++i)
@@ -175,16 +172,10 @@ namespace OpenViBEPlugins
 				return getStrategySettingsCount(rBox) + 3 + rBox.getInputCount() - 1;
 			}
 
-			bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				if (ui32Index == getClassifierIndex(rBox))
-				{
-					return this->onAlgorithmClassifierChanged(rBox);
-				}
-				if (ui32Index == getStrategyIndex())
-				{
-					return this->onStrategyChanged(rBox);
-				}
+				if (index == getClassifierIndex(rBox)) { return this->onAlgorithmClassifierChanged(rBox); }
+				if (index == getStrategyIndex()) { return this->onStrategyChanged(rBox); }
 				return true;
 			}
 
@@ -281,7 +272,7 @@ namespace OpenViBEPlugins
 						//As we just switch to this strategy, we take the default value set in the strategy to initialize the value
 						OpenViBE::Kernel::IParameter* l_pParameter = m_pStrategy->getInputParameter(OVP_Algorithm_OneVsOneStrategy_InputParameterId_DecisionType);
 						OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64Parameter(l_pParameter);
-						uint64_t l_ui64EnumValue = ip_ui64Parameter;
+						uint64_t l_ui64EnumValue      = ip_ui64Parameter;
 						OpenViBE::CString l_sEnumName = this->getTypeManager().getEnumerationEntryNameFromValue(l_oEnum, l_ui64EnumValue);
 
 						OpenViBE::CString l_sParameterName = this->getTypeManager().getTypeName(l_oEnum);
@@ -357,17 +348,17 @@ namespace OpenViBEPlugins
 
 								case OpenViBE::Kernel::ParameterType_Integer:
 								case OpenViBE::Kernel::ParameterType_UInteger:
-									sprintf(l_sBuffer, "%li", static_cast<int64_t>(ip_i64Parameter));
+									sprintf(l_sBuffer, "%li", int64_t(ip_i64Parameter));
 									l_oTypeIdentifier = OV_TypeId_Integer;
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Boolean:
-									sprintf(l_sBuffer, "%s", (static_cast<bool>(ip_bParameter)) ? "true" : "false");
+									sprintf(l_sBuffer, "%s", (bool(ip_bParameter)) ? "true" : "false");
 									l_oTypeIdentifier = OV_TypeId_Boolean;
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Float:
-									sprintf(l_sBuffer, "%lf", static_cast<double>(ip_f64Parameter));
+									sprintf(l_sBuffer, "%lf", double(ip_f64Parameter));
 									l_oTypeIdentifier = OV_TypeId_Float;
 									break;
 								case OpenViBE::Kernel::ParameterType_String:
@@ -407,7 +398,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStrategy;
 			const uint32_t m_ui32CustomSettingBase;
-			int32_t m_i32StrategyAmountSettings;
+			int m_i32StrategyAmountSettings;
 		};
-	}
-}
+	} // namespace Classification
+} // namespace OpenViBEPlugins

@@ -56,11 +56,11 @@ namespace OpenViBEPlugins
 			std::vector<double> m_vSignalHistory;
 			std::vector<int> m_vStateHistory;
 			double m_f64HysteresisThreshold = 0;
-			uint64_t m_ui64ChunkCount = 0;
+			uint64_t m_ui64ChunkCount       = 0;
 
 			uint32_t m_ui32SamplingRate = 0;
-			double m_f64WindowTime = 0;
-			uint32_t m_ui32WindowTime = 0;
+			double m_f64WindowTime      = 0;
+			uint32_t m_ui32WindowTime   = 0;
 			std::vector<std::vector<uint64_t>> m_vMemoryChunk;
 			std::vector<std::vector<uint32_t>> m_vMemorySample;
 
@@ -71,23 +71,23 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmZeroCrossingDetectorListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(ui32Index, l_oTypeIdentifier);
-				return this->onConnectorTypeChanged(rBox, ui32Index, l_oTypeIdentifier, false);
+				rBox.getInputType(index, l_oTypeIdentifier);
+				return this->onConnectorTypeChanged(rBox, index, l_oTypeIdentifier, false);
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
-				return this->onConnectorTypeChanged(rBox, ui32Index, l_oTypeIdentifier, true);
+				rBox.getOutputType(index, l_oTypeIdentifier);
+				return this->onConnectorTypeChanged(rBox, index, l_oTypeIdentifier, true);
 			}
 
-			virtual bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index, const OpenViBE::CIdentifier& rTypeIdentifier, bool bOutputChanged)
+			virtual bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index, const OpenViBE::CIdentifier& rTypeIdentifier, bool bOutputChanged)
 			{
-				if (ui32Index == 0)
+				if (index == 0)
 				{
 					if (rTypeIdentifier == OV_TypeId_Signal)
 					{
@@ -117,11 +117,11 @@ namespace OpenViBEPlugins
 						}
 					}
 				}
-				if (ui32Index == 1)
+				if (index == 1)
 				{
 					rBox.setOutputType(1, OV_TypeId_Stimulations);
 				}
-				if (ui32Index == 2)
+				if (index == 2)
 				{
 					rBox.setOutputType(2, OV_TypeId_StreamedMatrix);
 				}
@@ -149,25 +149,25 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ZeroCrossingDetector; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmZeroCrossingDetector; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmZeroCrossingDetectorListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Zero-crossing signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Zero-crossing stimulations", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addOutput("Events rythm (per min)", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addSetting("Hysteresis threshold", OV_TypeId_Float, "0.01");
-				rBoxAlgorithmPrototype.addSetting("Rythm estimation window (in sec)", OV_TypeId_Float, "10");
-				rBoxAlgorithmPrototype.addSetting("Negative-to-positive stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_ThresholdPassed_Positive");
-				rBoxAlgorithmPrototype.addSetting("Positive-to-negative stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_ThresholdPassed_Negative");
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addOutput("Zero-crossing signal", OV_TypeId_Signal);
+				prototype.addOutput("Zero-crossing stimulations", OV_TypeId_Stimulations);
+				prototype.addOutput("Events rythm (per min)", OV_TypeId_StreamedMatrix);
+				prototype.addSetting("Hysteresis threshold", OV_TypeId_Float, "0.01");
+				prototype.addSetting("Rythm estimation window (in sec)", OV_TypeId_Float, "10");
+				prototype.addSetting("Negative-to-positive stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_ThresholdPassed_Positive");
+				prototype.addSetting("Positive-to-negative stimulation", OV_TypeId_Stimulation, "OVTK_StimulationId_ThresholdPassed_Negative");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ZeroCrossingDetectorDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

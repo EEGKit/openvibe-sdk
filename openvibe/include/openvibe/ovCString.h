@@ -153,4 +153,4 @@ namespace OpenViBE
 
 		CStringImpl* m_pStringImpl = nullptr; ///< The string implementation
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE

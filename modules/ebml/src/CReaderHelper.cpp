@@ -6,10 +6,7 @@ CReaderHelper::CReaderHelper(){
 	m_pReaderHelperImplementation = createReaderHelper();
 }
 
-CReaderHelper::~CReaderHelper()
-{
-	m_pReaderHelperImplementation->release();
-}
+CReaderHelper::~CReaderHelper() { m_pReaderHelperImplementation->release(); }
 
 uint64_t CReaderHelper::getUIntegerFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {

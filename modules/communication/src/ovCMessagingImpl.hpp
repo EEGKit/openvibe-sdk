@@ -19,7 +19,6 @@ namespace Communication
 {
 	struct CMessaging::MessagingImplementation
 	{
-	public:
 		std::string m_ConnectionID;
 		BoxDescriptionMessage m_BoxDescription;
 		std::atomic<uint64_t> m_Time;

@@ -128,7 +128,7 @@ namespace OpenViBE
 
 		_IsDerivedFromClass_(OpenViBE::IObject, OV_ClassId_Matrix)
 
-		const double& operator [](const uint32_t ui32Index) const { return this->getBuffer()[ui32Index]; }
-		double& operator [](const uint32_t ui32Index) { return this->getBuffer()[ui32Index]; }
+		const double& operator [](const uint32_t index) const { return this->getBuffer()[index]; }
+		double& operator [](const uint32_t index) { return this->getBuffer()[index]; }
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE

@@ -15,7 +15,4 @@ void setLayoutSynthesis (const LayoutBase& proto);
 void setupSynthesis (int order,
               double sampleRate,
               double centerFrequency,
-              double widthFrequency)
-{
-		assert(false);
-}
+              double widthFrequency) { assert(false); }

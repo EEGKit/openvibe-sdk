@@ -37,4 +37,4 @@ namespace System
 		uint64_t m_ui64TotalStepInTime = 0;
 		uint64_t m_ui64TotalStepOutTime = 0;
 	};
-}  // namespace System
+} // namespace System

@@ -29,22 +29,22 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationBasedEpoching> m_StimulationDecoder;
 			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmStimulationBasedEpoching> m_SignalEncoder;
 
-			uint64_t m_StimulationId = 0;
+			uint64_t m_StimulationId        = 0;
 			double m_EpochDurationInSeconds = 0;
-			uint64_t m_EpochDuration = 0;
-			int64_t m_EpochOffset = 0;
+			uint64_t m_EpochDuration        = 0;
+			int64_t m_EpochOffset           = 0;
 
 			// Input matrix parameters
-			uint64_t m_SamplingRate = 0;
+			uint64_t m_SamplingRate              = 0;
 			uint32_t m_SampleCountPerInputBuffer = 0;
 
 			// Output matrix dimensions
-			uint32_t m_ChannelCount = 0;
+			uint32_t m_ChannelCount              = 0;
 			uint32_t m_SampleCountPerOutputEpoch = 0;
 
-			uint64_t m_LastSignalChunkEndTime = 0;
+			uint64_t m_LastSignalChunkEndTime        = 0;
 			uint64_t m_LastStimulationChunkStartTime = 0;
-			uint64_t m_LastReceivedStimulationDate = 0;
+			uint64_t m_LastReceivedStimulationDate   = 0;
 
 			std::deque<uint64_t> m_ReceivedStimulations;
 
@@ -89,21 +89,21 @@ namespace OpenViBEPlugins
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmStimulationBasedEpoching; }
 			OpenViBE::CString getStockItemName() const override { return "gtk-cut"; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInput("Input stimulations", OV_TypeId_Stimulations);
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addInput("Input stimulations", OV_TypeId_Stimulations);
 
-				rBoxAlgorithmPrototype.addOutput("Epoched signal", OV_TypeId_Signal);
+				prototype.addOutput("Epoched signal", OV_TypeId_Signal);
 
-				rBoxAlgorithmPrototype.addSetting("Epoch duration (in sec)", OV_TypeId_Float, "1");
-				rBoxAlgorithmPrototype.addSetting("Epoch offset (in sec)", OV_TypeId_Float, "0.5");
-				rBoxAlgorithmPrototype.addSetting("Stimulation to epoch from", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
+				prototype.addSetting("Epoch duration (in sec)", OV_TypeId_Float, "1");
+				prototype.addSetting("Epoch offset (in sec)", OV_TypeId_Float, "0.5");
+				prototype.addSetting("Stimulation to epoch from", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00");
 
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationBasedEpochingDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

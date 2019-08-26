@@ -76,23 +76,17 @@ namespace Dsp
 			for (int jj = j; jj >= 0; --jj)
 			{
 				complex_t c = m_ad[jj];
-				m_ad[jj] = b;
-				b        = x * b + c;
+				m_ad[jj]    = b;
+				b           = x * b + c;
 			}
 		}
 
 		if (polish)
 		{
-			for (int j = 0; j < m; ++j)
-			{
-				laguerre(degree, m_a, m_root[j], its);
-			}
+			for (int j = 0; j < m; ++j) { laguerre(degree, m_a, m_root[j], its); }
 		}
 
-		if (doSort)
-		{
-			sort(degree);
-		}
+		if (doSort) { sort(degree); }
 	}
 
 	void RootFinderBase::sort(int degree)
@@ -104,10 +98,7 @@ namespace Dsp
 			int i;
 			for (i = j - 1; i >= 0; --i)
 			{
-				if (m_root[i].imag() >= x.imag())
-				{
-					break;
-				}
+				if (m_root[i].imag() >= x.imag()) { break; }
 
 				m_root[i + 1] = m_root[i];
 			}
@@ -134,11 +125,11 @@ namespace Dsp
 		int m = degree;
 		for (int iter = 1; iter <= MAXIT; ++iter)
 		{
-			its        = iter;
+			its         = iter;
 			complex_t b = a[m];
-			double err = std::abs(b);
+			double err  = std::abs(b);
 			complex_t d = f = 0.0;
-			double abx = std::abs(x);
+			double abx  = std::abs(x);
 			for (int j = m - 1; j >= 0; --j)
 			{
 				f   = x * f + d;
@@ -147,13 +138,10 @@ namespace Dsp
 				err = std::abs(b) + abx * err;
 			}
 			err *= EPS;
-			if (std::abs(b) <= err)
-			{
-				return;
-			}
-			complex_t g = d / b;
+			if (std::abs(b) <= err) { return; }
+			complex_t g  = d / b;
 			complex_t g2 = g * g;
-			complex_t h = g2 - 2.0 * f / b;
+			complex_t h  = g2 - 2.0 * f / b;
 
 			complex_t sq = sqrt(double(m - 1) * (double(m) * h - g2));
 			complex_t gp = g + sq;
@@ -167,10 +155,7 @@ namespace Dsp
 			}
 			complex_t dx = std::max(abp, abm) > 0.0 ? double(m) / gp : std::polar(1 + abx, double(iter));
 			complex_t x1 = x - dx;
-			if (x == x1)
-			{
-				return;
-			}
+			if (x == x1) { return; }
 			if (iter % MT != 0)
 			{
 				x = x1;
@@ -205,4 +190,4 @@ namespace Dsp
 
 		return y;
 	}
-}  // namespace Dsp
+} // namespace Dsp

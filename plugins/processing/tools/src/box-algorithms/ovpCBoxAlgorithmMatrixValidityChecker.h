@@ -65,32 +65,32 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				rBox.setInputType(ui32Index, OV_TypeId_StreamedMatrix);
+				rBox.setInputType(index, OV_TypeId_StreamedMatrix);
 				if (rBox.getSettingCount() > 1) { rBox.addOutput("", OV_TypeId_StreamedMatrix); }
 				this->check(rBox);
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				rBox.removeOutput(ui32Index);
+				rBox.removeOutput(index);
 				this->check(rBox);
 				return true;
 			}
 
-			bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				rBox.setOutputType(ui32Index, OV_TypeId_StreamedMatrix);
+				rBox.setOutputType(index, OV_TypeId_StreamedMatrix);
 				rBox.addInput("", OV_TypeId_StreamedMatrix);
 				this->check(rBox);
 				return true;
 			}
 
-			bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				rBox.removeInput(ui32Index);
+				rBox.removeInput(index);
 				this->check(rBox);
 				return true;
 			}
@@ -115,21 +115,21 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_MatrixValidityChecker; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmMatrixValidityChecker; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmMatrixValidityCheckerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Stream 1", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addOutput("Output stream 1", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addSetting("Log level", OV_TypeId_LogLevel, "Warning");
-				rBoxAlgorithmPrototype.addSetting("Action to do", OVP_TypeId_ValidityCheckerType, OVP_TypeId_ValidityCheckerType_LogWarning.toString());
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddOutput);
+				prototype.addInput("Stream 1", OV_TypeId_StreamedMatrix);
+				prototype.addOutput("Output stream 1", OV_TypeId_StreamedMatrix);
+				prototype.addSetting("Log level", OV_TypeId_LogLevel, "Warning");
+				prototype.addSetting("Action to do", OVP_TypeId_ValidityCheckerType, OVP_TypeId_ValidityCheckerType_LogWarning.toString());
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddOutput);
 
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MatrixValidityCheckerDesc)
 		};
-	};
-};
+	} // namespace Tools
+} // namespace OpenViBEPlugins

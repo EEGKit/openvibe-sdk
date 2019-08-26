@@ -32,8 +32,8 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_Final_(IKernelDesc, OVK_ClassId_KernelDesc)
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE
 
 static CKernelDesc gst_oKernelDesc;
 
@@ -51,4 +51,4 @@ OVK_API bool onGetKernelDesc(IKernelDesc*& rpKernelDesc)
 
 OVK_API bool onUninitialize() { return true; }
 
-};
+}

@@ -60,12 +60,12 @@ namespace
 		return std::string(l_ErrorText);
 	}
 #endif
-}  // namespace
+} // namespace
 
 const char* CDynamicModule::getErrorString(unsigned int errorCode) const
 {
 	if (s_ErrorMap.count(ELogErrorCodes(errorCode)) == 0) { return "Invalid error code"; }
-	else { return s_ErrorMap.at(ELogErrorCodes(errorCode)).c_str(); }
+	return s_ErrorMap.at(ELogErrorCodes(errorCode)).c_str();
 }
 
 const char* CDynamicModule::getErrorDetails() const { return &m_ErrorDetails[0]; }
@@ -270,11 +270,8 @@ bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const 
 		strcat(l_DLLPath, modulePath);
 		return loadFromPath(l_DLLPath, symbolNameCheck); // Error set in the loadFromPath function
 	}
-	else
-	{
-		this->setError(LogErrorCodes_RegistryQueryFailed, "Fail to query registry value. Windows error code: " + std::to_string(result));
-		return false;
-	}
+	this->setError(LogErrorCodes_RegistryQueryFailed, "Fail to query registry value. Windows error code: " + std::to_string(result));
+	return false;
 }
 #endif
 
@@ -282,12 +279,7 @@ bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const 
 bool CDynamicModule::isModuleCompatible(const char* filePath, int architecture)
 {
 	IMAGE_NT_HEADERS headers;
-
-	if (!getImageFileHeaders(filePath, headers))
-	{
-		return false; // Error set in the getImageFileHeaders function
-	}
-
+	if (!getImageFileHeaders(filePath, headers)) { return false; } // Error set in the getImageFileHeaders function
 	return headers.FileHeader.Machine == architecture;
 }
 #endif
@@ -317,10 +309,8 @@ bool CDynamicModule::unload()
 	if(::dlclose(m_Handle) != 0)
 	{
 		char* error = ::dlerror();
-
 		if(error) { this->setError(LogErrorCodes_UnloadModuleFailed, "Error: " + std::string(error)); }
 		else { this->setError(LogErrorCodes_UnloadModuleFailed); }
-
 		return false;
 	}
 #else
@@ -333,11 +323,8 @@ bool CDynamicModule::unload()
 }
 
 bool CDynamicModule::isLoaded() const { return m_Handle != nullptr; }
-
 const char* CDynamicModule::getFilename() const { return m_Filename; }
-
 void CDynamicModule::setDynamicModuleErrorMode(unsigned int errorMode) { m_ErrorMode = errorMode; }
-
 void CDynamicModule::setShouldFreeModule(bool shouldFreeModule) { m_ShouldFreeModule = shouldFreeModule; }
 
 CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName) const
@@ -353,7 +340,7 @@ CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName
 	if (m_Handle)
 	{
 #if defined TARGET_OS_Windows
-		l_Result = (symbol_t)GetProcAddress(reinterpret_cast<HMODULE>(m_Handle), symbolName);
+		l_Result = symbol_t(GetProcAddress(reinterpret_cast<HMODULE>(m_Handle), symbolName));
 
 		if (!l_Result)
 		{
@@ -417,7 +404,7 @@ bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS&
 	CloseHandle(l_FileHandle);
 
 	return true;
-};
+}
 #endif
 
 void CDynamicModule::setError(ELogErrorCodes errorCode, const std::string& details)

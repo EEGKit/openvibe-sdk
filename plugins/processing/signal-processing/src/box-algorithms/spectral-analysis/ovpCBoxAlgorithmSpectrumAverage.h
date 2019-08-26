@@ -60,16 +60,16 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SpectrumAverage; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSpectrumAverage; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Spectrum", OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addOutput("Spectrum average", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addSetting("Considers zeros", OV_TypeId_Boolean, "false");
+				prototype.addInput("Spectrum", OV_TypeId_Spectrum);
+				prototype.addOutput("Spectrum average", OV_TypeId_StreamedMatrix);
+				prototype.addSetting("Considers zeros", OV_TypeId_Boolean, "false");
 
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SpectrumAverageDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

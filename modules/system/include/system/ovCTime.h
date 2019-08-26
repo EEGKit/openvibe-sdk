@@ -71,4 +71,4 @@ namespace System
 
 		Time();
 	};
-}  // namespace System
+} // namespace System

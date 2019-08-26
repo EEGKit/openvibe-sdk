@@ -43,10 +43,7 @@ namespace Dsp
 
 	complex_t LowPassTransform::transform(complex_t c)
 	{
-		if (c == infinity())
-		{
-			return complex_t(-1, 0);
-		}
+		if (c == infinity()) { return complex_t(-1, 0); }
 
 		// frequency transform
 		c = f * c; 
@@ -88,10 +85,7 @@ namespace Dsp
 
 	complex_t HighPassTransform::transform(complex_t c)
 	{
-		if (c == infinity())
-		{
-			return complex_t(1, 0);
-		}
+		if (c == infinity()) { return complex_t(1, 0); }
 
 		// frequency transform
 		c = f * c; 
@@ -183,7 +177,7 @@ namespace Dsp
 		{
 			const PoleZeroPair& pair = analog[i];
 			ComplexPair p1           = transform(pair.poles.first);
-			ComplexPair z1           = transform(pair.zeros.first);
+			const ComplexPair z1     = transform(pair.zeros.first);
 
 			//
 			// Optimize out the calculations for conjugates for Release builds
@@ -315,7 +309,7 @@ namespace Dsp
 		if (c == infinity()) { c = -1; }
 		else { c = (1. + c) / (1. - c); }// bilinear 
 
-			complex_t u(0);
+		complex_t u(0);
 		u = addmul(u, 4 * (b2 + a2 - 1), c);
 		u += 8 * (b2 - a2 + 1);
 		u *= c;
@@ -335,4 +329,4 @@ namespace Dsp
 
 		return ComplexPair(u / d, v / d);
 	}
-}  // namespace Dsp
+} // namespace Dsp

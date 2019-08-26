@@ -4,7 +4,10 @@
 
 namespace OpenViBE
 {
-	namespace Kernel { class IAlgorithmContext; }
+	namespace Kernel
+	{
+		class IAlgorithmContext;
+	}
 
 	namespace Plugins
 	{
@@ -62,5 +65,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Plugins::IPluginObject, OV_ClassId_Plugins_Algorithm)
 		};
-	}  // namespace Plugins
-}  // namespace OpenViBE
+	} // namespace Plugins
+} // namespace OpenViBE

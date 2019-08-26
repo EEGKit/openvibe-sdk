@@ -74,7 +74,7 @@ namespace OpenViBE
 			 * \return true if successful
 			 */
 			virtual bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable = false,
-									const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
+									const CIdentifier& rIdentifier                                                                                 = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
 			/**
 			 * \brief Adds a flag to the box
 			 * \param eBoxFlag [in] : the flag to add to the box
@@ -108,5 +108,5 @@ namespace OpenViBE
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxProto)
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

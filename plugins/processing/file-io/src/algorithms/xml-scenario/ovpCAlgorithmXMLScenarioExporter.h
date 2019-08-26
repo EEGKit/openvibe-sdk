@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 		protected:
 			void write(const char* sString) override; // XML::IWriterCallback
 
-			XML::IWriter* m_pWriter = nullptr;
+			XML::IWriter* m_pWriter                  = nullptr;
 			OpenViBE::IMemoryBuffer* m_pMemoryBuffer = nullptr;
 		};
 
@@ -56,5 +56,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioExporterDesc, OVP_ClassId_Algorithm_XMLScenarioExporterDesc)
 		};
-	};
-};
+	} // namespace FileIO
+} // namespace OpenViBEPlugins

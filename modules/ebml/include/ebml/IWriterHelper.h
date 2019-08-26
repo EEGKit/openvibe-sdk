@@ -174,4 +174,4 @@ namespace EBML
 	 * \return \c NULL when something went wrong.
 	 */
 	extern EBML_API IWriterHelper* createWriterHelper();
-}  // namespace EBML
+} // namespace EBML

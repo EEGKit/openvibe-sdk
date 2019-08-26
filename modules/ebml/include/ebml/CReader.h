@@ -23,4 +23,4 @@ namespace EBML
 
 		CReader();
 	};
-}  // namespace EBML
+} // namespace EBML

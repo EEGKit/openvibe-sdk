@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 			std::map<EBML::CIdentifier, std::string> m_vType;
 			uint64_t m_ui64ExpandValuesCount = 0;
 			OpenViBE::Kernel::ELogLevel m_eLogLevel;
-			EBML::IReader* m_pReader = nullptr;
+			EBML::IReader* m_pReader             = nullptr;
 			EBML::IReaderHelper* m_pReaderHelper = nullptr;
 		};
 
@@ -66,8 +66,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); }
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); };
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override { return this->check(box); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override { return this->check(box); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
@@ -89,7 +89,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_EBMLStreamSpy; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmEBMLStreamSpy(); }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmEBMLStreamSpyListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
 			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rPrototype) const override
 			{
@@ -104,5 +104,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_EBMLStreamSpyDesc)
 		};
-	};
-};
+	} // namespace Tools
+} // namespace OpenViBEPlugins

@@ -65,15 +65,15 @@ bool CBoxAlgorithmClassifierTrainer::initialize()
 	CIdentifier l_oClassifierAlgorithmClassIdentifier;
 
 	CIdentifier l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[c_sMulticlassStrategySettingName]);
-	l_oClassifierAlgorithmClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[c_sAlgorithmSettingName]);
+	l_oClassifierAlgorithmClassIdentifier  = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[c_sAlgorithmSettingName]);
 
 	if (l_oStrategyClassIdentifier == OV_UndefinedIdentifier)
 	{
 		//That means that we want to use a classical algorithm so just let's create it
 		const CIdentifier l_oClassifierAlgorithmIdentifier = this->getAlgorithmManager().createAlgorithm(l_oClassifierAlgorithmClassIdentifier);
 
-		OV_ERROR_UNLESS_KRF(l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier, 
-							"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmIdentifier.toString() << "]", 
+		OV_ERROR_UNLESS_KRF(l_oClassifierAlgorithmIdentifier != OV_UndefinedIdentifier,
+							"Unable to instantiate classifier for class [" << l_oClassifierAlgorithmIdentifier.toString() << "]",
 							OpenViBE::Kernel::ErrorType::BadConfig);
 
 		m_pClassifier = &this->getAlgorithmManager().getAlgorithm(l_oClassifierAlgorithmIdentifier);
@@ -192,10 +192,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 	// Collect index set of feature vectors per class
 	std::vector<std::vector<uint32_t>> l_vClassIndexes;
 	l_vClassIndexes.resize(l_ui32ClassCount);
-	for (size_t i = 0; i < m_vDataset.size(); i++)
-	{
-		l_vClassIndexes[m_vDataset[i].m_ui32InputIndex].push_back(i);
-	}
+	for (size_t i = 0; i < m_vDataset.size(); i++) { l_vClassIndexes[m_vDataset[i].m_ui32InputIndex].push_back(i); }
 
 	// Count how many vectors the largest class has
 	uint32_t l_ui32MaxCount = 0;
@@ -224,10 +221,7 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 		// Copy all the examples first to a temporary array so we don't mess with the original data.
 		// This is not too bad as instead of data, we copy the pointer. m_vDataset owns the data pointer.
 		const std::vector<uint32_t>& l_vThisClassesIndexes = l_vClassIndexes[i];
-		for (uint32_t j = 0; j < l_ui32ExamplesInClass; j++)
-		{
-			m_vBalancedDataset.push_back(m_vDataset[l_vThisClassesIndexes[j]]);
-		}
+		for (uint32_t j = 0; j < l_ui32ExamplesInClass; j++) { m_vBalancedDataset.push_back(m_vDataset[l_vThisClassesIndexes[j]]); }
 
 		for (uint32_t j = 0; j < l_ui32PaddingNeeded; j++)
 		{
@@ -243,21 +237,20 @@ bool CBoxAlgorithmClassifierTrainer::balanceDataset()
 
 bool CBoxAlgorithmClassifierTrainer::process()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
+	IBoxIO& boxContext  = this->getDynamicBoxContext();
+	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	uint32_t i;
-	bool l_bTrainStimulationReceived = false;
+	bool startTrain = false;
 
 	// Parses stimulations
-	for (i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
 		m_oStimulationDecoder.decode(i);
 
 		if (m_oStimulationDecoder.isHeaderReceived())
 		{
 			m_oStimulationEncoder.encodeHeader();
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, 0, 0);
+			boxContext.markOutputAsReadyToSend(0, 0, 0);
 		}
 		if (m_oStimulationDecoder.isBufferReceived())
 		{
@@ -269,28 +262,26 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			{
 				if (l_oInputStimulationSet->getStimulationIdentifier(j) == m_ui64TrainStimulation)
 				{
-					l_bTrainStimulationReceived = true;
-
-					uint64_t l_ui32TrainCompletedStimulation = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, "OVTK_StimulationId_TrainCompleted");
-					l_oOutputStimulationSet->appendStimulation(l_ui32TrainCompletedStimulation, l_oInputStimulationSet->getStimulationDate(j), 0);
+					startTrain = true;
+					const uint64_t stimId = this->getTypeManager().getEnumerationEntryValueFromName(OV_TypeId_Stimulation, "OVTK_StimulationId_TrainCompleted");
+					l_oOutputStimulationSet->appendStimulation(stimId, l_oInputStimulationSet->getStimulationDate(j), 0);
 				}
 			}
 			m_oStimulationEncoder.encodeBuffer();
 
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
+			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		}
 		if (m_oStimulationDecoder.isEndReceived())
 		{
 			m_oStimulationEncoder.encodeEnd();
-
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
+			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		}
 	}
 
 	// Parses feature vectors
-	for (i = 1; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 1; i < nInput; i++)
 	{
-		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
 		{
 			m_vFeatureVectorDecoder[i - 1]->decode(j);
 
@@ -301,8 +292,8 @@ bool CBoxAlgorithmClassifierTrainer::process()
 
 				SFeatureVector l_oFeatureVector;
 				l_oFeatureVector.m_pFeatureVectorMatrix = new CMatrix();
-				l_oFeatureVector.m_ui64StartTime        = l_rDynamicBoxContext.getInputChunkStartTime(i, j);
-				l_oFeatureVector.m_ui64EndTime          = l_rDynamicBoxContext.getInputChunkEndTime(i, j);
+				l_oFeatureVector.m_ui64StartTime        = boxContext.getInputChunkStartTime(i, j);
+				l_oFeatureVector.m_ui64EndTime          = boxContext.getInputChunkEndTime(i, j);
 				l_oFeatureVector.m_ui32InputIndex       = i - 1;
 
 				OpenViBEToolkit::Tools::Matrix::copy(*l_oFeatureVector.m_pFeatureVectorMatrix, *pFeatureVectorMatrix);
@@ -314,30 +305,27 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	}
 
 	// On train stimulation reception, build up the labelled feature vector set matrix and go on training
-	if (l_bTrainStimulationReceived)
+	if (startTrain)
 	{
 		OV_ERROR_UNLESS_KRF(m_vDataset.size() >= m_ui64PartitionCount,
-							"Received fewer examples (" << static_cast<uint32_t>(m_vDataset.size()) << ") than specified partition count (" << m_ui64PartitionCount << ")",
+							"Received fewer examples (" << uint32_t(m_vDataset.size()) << ") than specified partition count (" << m_ui64PartitionCount << ")",
 							OpenViBE::Kernel::ErrorType::BadInput);
 
 		OV_ERROR_UNLESS_KRF(!m_vDataset.empty(), "No training example received", OpenViBE::Kernel::ErrorType::BadInput);
 
-		this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << (uint32_t)m_vDataset.size() << "x"
+		this->getLogManager() << LogLevel_Info << "Received train stimulation. Data dim is [" << uint32_t(m_vDataset.size()) << "x"
 				<< m_vDataset[0].m_pFeatureVectorMatrix->getBufferElementCount() << "]\n";
-		for (i = 1; i < l_rStaticBoxContext.getInputCount(); i++)
+		for (uint32_t i = 1; i < nInput; i++)
 		{
 			this->getLogManager() << LogLevel_Info << "For information, we have " << m_vFeatureCount[i] << " feature vector(s) for input " << i << "\n";
 		}
 
 		const bool l_bBalanceDataset = this->getConfigurationManager().expandAsBoolean((*m_pParameter)[c_sBalanceSettingName]);
-		if (l_bBalanceDataset)
-		{
-			balanceDataset();
-		}
+		if (l_bBalanceDataset) { balanceDataset(); }
 
 		const std::vector<SFeatureVector>& l_rActualDataset = (l_bBalanceDataset ? m_vBalancedDataset : m_vDataset);
 
-		vector<double> l_vPartitionAccuracies((unsigned int)m_ui64PartitionCount);
+		vector<double> l_vPartitionAccuracies(static_cast<unsigned int>(m_ui64PartitionCount));
 
 		const bool l_bRandomizeVectorOrder = this->getConfigurationManager().expandAsBoolean("${Plugin_Classification_RandomizeKFoldTestData}", false);
 
@@ -352,7 +340,7 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			random_shuffle(l_vFeaturePermutation.begin(), l_vFeaturePermutation.end(), System::Math::randomUInteger32WithCeiling);
 		}
 
-		const uint32_t l_ui32ClassCount = l_rStaticBoxContext.getInputCount() - 1;
+		const uint32_t l_ui32ClassCount = nInput - 1;
 		CMatrix l_oConfusion;
 		l_oConfusion.setDimensionCount(2);
 		l_oConfusion.setDimensionSize(0, l_ui32ClassCount);
@@ -368,8 +356,8 @@ bool CBoxAlgorithmClassifierTrainer::process()
 			this->getLogManager() << LogLevel_Info << "k-fold test could take quite a long time, be patient\n";
 			for (uint64_t i = 0; i < m_ui64PartitionCount; i++)
 			{
-				const size_t l_uiStartIndex = (size_t)(((i) * l_rActualDataset.size()) / m_ui64PartitionCount);
-				const size_t l_uiStopIndex  = (size_t)(((i + 1) * l_rActualDataset.size()) / m_ui64PartitionCount);
+				const size_t l_uiStartIndex = size_t(((i) * l_rActualDataset.size()) / m_ui64PartitionCount);
+				const size_t l_uiStopIndex  = size_t(((i + 1) * l_rActualDataset.size()) / m_ui64PartitionCount);
 
 				this->getLogManager() << LogLevel_Trace << "Training on partition " << i << " (feature vectors " << (uint32_t)l_uiStartIndex << " to " << (uint32_t)l_uiStopIndex - 1 << ")...\n";
 
@@ -422,11 +410,11 @@ bool CBoxAlgorithmClassifierTrainer::process()
 	return true;
 }
 
-bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, const size_t uiStartIndex, const size_t uiStopIndex)
+bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, const size_t startIndex, const size_t stopIndex)
 {
-	OV_ERROR_UNLESS_KRF(uiStopIndex - uiStartIndex != 1, "Invalid indexes: stopIndex - trainIndex = 1", OpenViBE::Kernel::ErrorType::BadArgument);
+	OV_ERROR_UNLESS_KRF(stopIndex - startIndex != 1, "Invalid indexes: stopIndex - trainIndex = 1", OpenViBE::Kernel::ErrorType::BadArgument);
 
-	const uint32_t l_ui32FeatureVectorCount = rDataset.size() - (uiStopIndex - uiStartIndex);
+	const uint32_t l_ui32FeatureVectorCount = rDataset.size() - (stopIndex - startIndex);
 	const uint32_t l_ui32FeatureVectorSize  = rDataset[0].m_pFeatureVectorMatrix->getBufferElementCount();
 
 	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_FeatureVectorSet));
@@ -436,18 +424,17 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rD
 	ip_pFeatureVectorSet->setDimensionSize(1, l_ui32FeatureVectorSize + 1);
 
 	double* l_pFeatureVectorSetBuffer = ip_pFeatureVectorSet->getBuffer();
-	for (size_t j = 0; j < rDataset.size() - (uiStopIndex - uiStartIndex); j++)
+	for (size_t j = 0; j < rDataset.size() - (stopIndex - startIndex); j++)
 	{
-		size_t k          = rPermutation[(j < uiStartIndex ? j : j + (uiStopIndex - uiStartIndex))];
-		double l_f64Class = (double)rDataset[k].m_ui32InputIndex;
+		const size_t k       = rPermutation[(j < startIndex ? j : j + (stopIndex - startIndex))];
+		const double classId = double(rDataset[k].m_ui32InputIndex);
 		System::Memory::copy(l_pFeatureVectorSetBuffer, rDataset[k].m_pFeatureVectorMatrix->getBuffer(), l_ui32FeatureVectorSize * sizeof(double));
 
-		l_pFeatureVectorSetBuffer[l_ui32FeatureVectorSize] = l_f64Class;
+		l_pFeatureVectorSetBuffer[l_ui32FeatureVectorSize] = classId;
 		l_pFeatureVectorSetBuffer += (l_ui32FeatureVectorSize + 1);
 	}
 
-	OV_ERROR_UNLESS_KRF(m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train),
-						"Training failed", OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_Train), "Training failed", OpenViBE::Kernel::ErrorType::Internal);
 
 	TParameterHandler<XML::IXMLNode*> op_pConfiguration(m_pClassifier->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_Configuration));
 	XML::IXMLNode* l_pTempNode = (XML::IXMLNode*)op_pConfiguration;
@@ -455,13 +442,11 @@ bool CBoxAlgorithmClassifierTrainer::train(const std::vector<SFeatureVector>& rD
 	if (l_pTempNode != nullptr) { l_pTempNode->release(); }
 	op_pConfiguration = nullptr;
 
-	bool l_bReturnValue = m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration);
-
-	return l_bReturnValue;
+	return m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_SaveConfiguration);
 }
 
 // Note that this function is incremental for oConfusionMatrix and can be called many times; so we don't clear the matrix
-double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, 
+double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation,
 												   const size_t uiStartIndex, const size_t uiStopIndex, CMatrix& oConfusionMatrix)
 {
 	OV_ERROR_UNLESS_KRF(uiStopIndex != uiStartIndex, "Invalid indexes: start index equals stop index", OpenViBE::Kernel::ErrorType::BadArgument);
@@ -504,12 +489,12 @@ double CBoxAlgorithmClassifierTrainer::getAccuracy(const std::vector<SFeatureVec
 		if (l_f64PredictedValue < oConfusionMatrix.getDimensionSize(0) && l_f64CorrectValue < oConfusionMatrix.getDimensionSize(0))
 		{
 			double* buf = oConfusionMatrix.getBuffer();
-			buf[static_cast<uint32_t>(l_f64CorrectValue) * oConfusionMatrix.getDimensionSize(1) + static_cast<uint32_t>(l_f64PredictedValue)] += 1.0;
+			buf[uint32_t(l_f64CorrectValue) * oConfusionMatrix.getDimensionSize(1) + uint32_t(l_f64PredictedValue)] += 1.0;
 		}
 		else { std::cout << "errorn\n"; }
 	}
 
-	return static_cast<double>((l_iSuccessCount * 100.0) / (uiStopIndex - uiStartIndex));
+	return double((l_iSuccessCount * 100.0) / (uiStopIndex - uiStartIndex));
 }
 
 bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix)
@@ -562,7 +547,7 @@ bool CBoxAlgorithmClassifierTrainer::printConfusionMatrix(const CMatrix& oMatrix
 		{
 			ss << setw(6) << l_oTmp[i * l_ui32Rows + j] * 100;
 		}
-		this->getLogManager() << LogLevel_Info << ss.str().c_str() << " %, " << static_cast<uint32_t>(l_oRowSum[i]) << " examples\n";
+		this->getLogManager() << LogLevel_Info << ss.str().c_str() << " %, " << uint32_t(l_oRowSum[i]) << " examples\n";
 	}
 
 	return true;
@@ -596,13 +581,13 @@ bool CBoxAlgorithmClassifierTrainer::saveConfiguration()
 	l_sRoot->addAttribute(c_sCreatorAttributeName, this->getConfigurationManager().expand("${Application_Name}"));
 	l_sRoot->addAttribute(c_sCreatorVersionAttributeName, this->getConfigurationManager().expand("${Application_Version}"));
 
-	XML::IXMLNode* l_pTempNode = XML::createNode(c_sStrategyNodeName);
+	XML::IXMLNode* l_pTempNode             = XML::createNode(c_sStrategyNodeName);
 	CIdentifier l_oStrategyClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationStrategy, (*m_pParameter)[c_sMulticlassStrategySettingName]);
 	l_pTempNode->addAttribute(c_sIdentifierAttributeName, l_oStrategyClassIdentifier.toString());
 	l_pTempNode->setPCData((*m_pParameter)[c_sMulticlassStrategySettingName].toASCIIString());
 	l_sRoot->addChild(l_pTempNode);
 
-	l_pTempNode                           = XML::createNode(c_sAlgorithmNodeName);
+	l_pTempNode                                       = XML::createNode(c_sAlgorithmNodeName);
 	CIdentifier l_oClassifierAlgorithmClassIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(OVTK_TypeId_ClassificationAlgorithm, (*m_pParameter)[c_sAlgorithmSettingName]);
 	l_pTempNode->addAttribute(c_sIdentifierAttributeName, l_oClassifierAlgorithmClassIdentifier.toString());
 	l_pTempNode->setPCData((*m_pParameter)[c_sAlgorithmSettingName].toASCIIString());

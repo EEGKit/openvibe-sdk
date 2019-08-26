@@ -58,20 +58,14 @@ namespace Common
 				}
 			}
 
-			~TResampler()
-			{
-				this->clear();
-			}
+			~TResampler() { this->clear(); }
 
 			void clear()
 			{
-				for (size_t j = 0; j < m_vResampler.size(); j++)
-				{
-					delete m_vResampler[j];
-				}
+				for (size_t j = 0; j < m_vResampler.size(); j++) { delete m_vResampler[j]; }
 				m_vResampler.clear();
 
-				m_ui32ChannelCount                  = 0;
+				nChannel                  = 0;
 				m_ui32InputSamplingRate             = 0;
 				m_ui32OutputSamplingRate            = 0;
 				m_iFractionalDelayFilterSampleCount = 6;
@@ -156,19 +150,16 @@ namespace Common
 			/* 
 			 * This fonction initializes the vector of Resampler, using the number of channels, the input and the output sampling rates.
 			 */
-			bool reset(size_t ui32ChannelCount, unsigned int ui32InputSamplingRate, unsigned int ui32OutputSamplingRate)
+			bool reset(size_t ui32ChannelCount, unsigned int iSampleRate, unsigned int oSampleRate)
 			{
 				if (ui32ChannelCount == 0) { return false; }
-				if (ui32InputSamplingRate == 0) { return false; }
-				if (ui32OutputSamplingRate == 0) { return false; }
-				m_ui32ChannelCount       = ui32ChannelCount;
-				m_ui32InputSamplingRate  = ui32InputSamplingRate;
-				m_ui32OutputSamplingRate = ui32OutputSamplingRate;
+				if (iSampleRate == 0) { return false; }
+				if (oSampleRate == 0) { return false; }
+				nChannel       = ui32ChannelCount;
+				m_ui32InputSamplingRate  = iSampleRate;
+				m_ui32OutputSamplingRate = oSampleRate;
 
-				for (size_t i = 0; i < m_vResampler.size(); i++)
-				{
-					delete m_vResampler[i];
-				}
+				for (size_t i = 0; i < m_vResampler.size(); i++) { delete m_vResampler[i]; }
 				m_vResampler.clear();
 				m_vResampler.resize(ui32ChannelCount);
 
@@ -179,58 +170,58 @@ namespace Common
 					switch (m_iFractionalDelayFilterSampleCount) // it defines iFractionalDelayPositionCount 
 					{
 						case 6:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<6, 11>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<6, 11>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 8:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<8, 17>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<8, 17>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 10:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<10, 23>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<10, 23>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 12:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<12, 41>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<12, 41>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 14:
 							//l_f64StopBandAttenuation = 109.56;
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<14, 67>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<14, 67>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 16:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<16, 97>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<16, 97>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 18:
 							//l_f64StopBandAttenuation = 136.45;
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<18, 137>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<18, 137>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 20:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<20, 211>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<20, 211>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 22:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<22, 353>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<22, 353>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 24:
 							//l_f64StopBandAttenuation = 180.15;
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<24, 673>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<24, 673>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 26:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<26, 1051>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<26, 1051>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 28:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<28, 1733>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<28, 1733>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						case 30:
-							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<30, 2833>>(ui32InputSamplingRate, ui32OutputSamplingRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
+							m_vResampler[j] = new r8b::CDSPResampler<r8b::CDSPFracInterpolator<30, 2833>>(iSampleRate, oSampleRate, m_iMaxInputSampleCount, m_f64TransitionBandInPercent, l_f64StopBandAttenuation, r8b::EDSPFilterPhaseResponse(0), false);
 							break;
 
 						default:
@@ -246,10 +237,7 @@ namespace Common
 			 * This value is usually zero if the DSP processor "consumes" the latency
 			 * automatically. (from CDSPProcessor.h)
 			 */
-			virtual int getLatency() const
-			{
-				return m_vResampler[0]->getLatency();
-			}
+			virtual int getLatency() const { return m_vResampler[0]->getLatency(); }
 
 			/*
 			 * Fractional latency, in samples, which is present in the output
@@ -257,10 +245,7 @@ namespace Common
 			 * With minimum-phase filters in use, this value can be non-zero even if
 			 * the getLatency() function returns zero. (from CDSPProcessor.h)
 			 */
-			virtual double getLatencyFrac() const
-			{
-				return m_vResampler[0]->getLatencyFrac();
-			}
+			virtual double getLatencyFrac() const { return m_vResampler[0]->getLatencyFrac(); }
 
 			/*
 			 * The cumulative number of samples that should be passed to *this
@@ -269,10 +254,7 @@ namespace Common
 			 * @param NextInLen The number of input samples required before the output
 			 * starts on the next resampling step. (from CDSPProcessor.h)
 			 */
-			virtual int getInLenBeforeOutStart(const int NextInLen) const
-			{
-				return m_vResampler[0]->getInLenBeforeOutStart(NextInLen);
-			}
+			virtual int getInLenBeforeOutStart(const int NextInLen) const { return m_vResampler[0]->getInLenBeforeOutStart(NextInLen); }
 
 			/*
 			 * The maximal length of the output buffer required when processing
@@ -280,122 +262,108 @@ namespace Common
 			 * @param MaxInLen The number of samples planned to process at once, at
 			 * most. (from CDSPProcessor.h)
 			 */
-			virtual int getMaxOutLen(const int MaxInLen) const
-			{
-				return m_vResampler[0]->getMaxOutLen(MaxInLen);
-			}
+			virtual int getMaxOutLen(const int MaxInLen) const { return m_vResampler[0]->getMaxOutLen(MaxInLen); }
 
 			float getBuiltInLatency() const
 			{
 				return (m_ui32InputSamplingRate != 0) ? (1.0f * m_vResampler[0]->getInLenBeforeOutStart(0) / m_ui32InputSamplingRate) : 0.f;
 			}
 
-			size_t resample(const ICallback& rCallback, const TFloat* pInputSample, size_t ui32InputSampleCount)
+			size_t resample(const ICallback& rCallback, const TFloat* pInputSample, size_t nSampleIn)
 			{
-				return (this->*m_fpResample)(rCallback, pInputSample, ui32InputSampleCount);
+				return (this->*m_fpResample)(rCallback, pInputSample, nSampleIn);
 			}
 
-			size_t downsample(const ICallback& rCallback, const TFloat* pInputSample, size_t ui32InputSampleCount)
+			size_t downsample(const ICallback& rCallback, const TFloat* pInputSample, size_t nSampleIn)
 			{
-				return (this->*m_fpResample)(rCallback, pInputSample, ui32InputSampleCount);
+				return (this->*m_fpResample)(rCallback, pInputSample, nSampleIn);
 			}
 
 		private:
 
 			/*
 			 * This function resamples the signal assuming the input samples are ordered this way :
-			 *  - sample 1 of channel 1, sample 1 of channel 2, ..., sample 1 of channel m_ui32ChannelCount,
-			 *  - sample 2 of channel 1, sample 2 of channel 2, ..., sample 2 of channel m_ui32ChannelCount,
+			 *  - sample 1 of channel 1, sample 1 of channel 2, ..., sample 1 of channel nChannel,
+			 *  - sample 2 of channel 1, sample 2 of channel 2, ..., sample 2 of channel nChannel,
 			 *  - ...
-			 *  - sample ui32InputSampleCount of channel 1, sample ui32InputSampleCount of channel 2, ..., sample ui32InputSampleCount of channel m_ui32ChannelCount,
+			 *  - sample nSampleIn of channel 1, sample nSampleIn of channel 2, ..., sample nSampleIn of channel nChannel,
 			 *
 			 * This is convenient for resampling at the acquisition level.
 			 */
-			size_t resample_channel_wise(const ICallback& rCallback, const TFloat* pInputSample, size_t ui32InputSampleCount)
+			size_t resample_channel_wise(const ICallback& rCallback, const TFloat* pInputSample, size_t nSampleIn)
 			{
-				int l_iCount;
-				bool l_bIsFirstChannel = true;
+				int nI = 0;
+				bool isFirstChannel = true;
 
-				std::vector<double> l_vInputBuffer(ui32InputSampleCount);
+				std::vector<double> l_vInputBuffer(nSampleIn);
 				std::vector<TFloat> l_vOutputBuffer;
 
-				for (uint32_t j = 0; j < m_ui32ChannelCount; j++)
+				for (uint32_t j = 0; j < nChannel; j++)
 				{
-					for (uint32_t k = 0; k < ui32InputSampleCount; k++)
+					for (uint32_t k = 0; k < nSampleIn; k++)
 					{
-						l_vInputBuffer[k] = static_cast<double>(pInputSample[k * m_ui32ChannelCount + j]);
+						l_vInputBuffer[k] = double(pInputSample[k * nChannel + j]);
 					}
 
-					l_iCount = 0;
 					double* l_pResamplerOutputBuffer;
-					l_iCount = m_vResampler[j]->process(&l_vInputBuffer[0], static_cast<int>(ui32InputSampleCount), l_pResamplerOutputBuffer);
+					nI = m_vResampler[j]->process(&l_vInputBuffer[0], int(nSampleIn), l_pResamplerOutputBuffer);
 
-					if (l_bIsFirstChannel)
+					if (isFirstChannel)
 					{
-						l_vOutputBuffer.resize(l_iCount * m_ui32ChannelCount);
-						l_bIsFirstChannel = false;
+						l_vOutputBuffer.resize(nI * nChannel);
+						isFirstChannel = false;
 					}
 
-					for (int k = 0; k < l_iCount; k++)
+					for (int k = 0; k < nI; k++)
 					{
-						l_vOutputBuffer[k * m_ui32ChannelCount + j] = static_cast<TFloat>(l_pResamplerOutputBuffer[k]);
+						l_vOutputBuffer[k * nChannel + j] = TFloat(l_pResamplerOutputBuffer[k]);
 					}
 				}
 
-				for (int k = 0; k < l_iCount; k++)
+				for (int k = 0; k < nI; k++)
 				{
-					rCallback.processResampler(&l_vOutputBuffer[k * m_ui32ChannelCount], m_ui32ChannelCount);
+					rCallback.processResampler(&l_vOutputBuffer[k * nChannel], nChannel);
 				}
 
-				return l_iCount;
+				return nI;
 			}
 
 			/*
 			 * This function resamples the signal assuming the input samples are ordered this way :
-			 *  - sample 1 of channel 1, sample 2 of channel 1, ..., sample ui32InputSampleCount of channel 1,
-			 *  - sample 1 of channel 2, sample 2 of channel 2, ..., sample ui32InputSampleCount of channel 2,
+			 *  - sample 1 of channel 1, sample 2 of channel 1, ..., sample nSampleIn of channel 1,
+			 *  - sample 1 of channel 2, sample 2 of channel 2, ..., sample nSampleIn of channel 2,
 			 *  - ...
-			 *  - sample 1 of channel m_ui32ChannelCount, sample 2 of channel m_ui32ChannelCount, ..., sample ui32InputSampleCount of channel m_ui32ChannelCount,
+			 *  - sample 1 of channel nChannel, sample 2 of channel nChannel, ..., sample nSampleIn of channel nChannel,
 			 *
 			 * This is convenient for resampling at the signal-processing level.
 			 */
-			size_t resample_sample_wise(const ICallback& rCallback, const TFloat* pInputSample, size_t ui32InputSampleCount)
+			size_t resample_sample_wise(const ICallback& rCallback, const TFloat* pInputSample, size_t nSampleIn)
 			{
-				int l_iCount;
-				bool l_bIsFirstChannel = true;
+				int nI = 0;
+				bool isFirstChannel = true;
 
-				std::vector<double> l_vInputBuffer(ui32InputSampleCount);
+				std::vector<double> l_vInputBuffer(nSampleIn);
 				std::vector<TFloat> l_vOutputBuffer;
 
-				for (size_t j = 0; j < m_ui32ChannelCount; j++)
+				for (size_t j = 0; j < nChannel; j++)
 				{
-					for (size_t k = 0; k < ui32InputSampleCount; k++)
-					{
-						l_vInputBuffer[k] = static_cast<double>(pInputSample[j * ui32InputSampleCount + k]);
-					}
+					for (size_t k = 0; k < nSampleIn; k++) { l_vInputBuffer[k] = double(pInputSample[j * nSampleIn + k]); }
 
-					l_iCount = 0;
 					double* l_pResamplerOutputBuffer;
-					l_iCount = m_vResampler[j]->process(&l_vInputBuffer[0], static_cast<int>(ui32InputSampleCount), l_pResamplerOutputBuffer);
+					nI = m_vResampler[j]->process(&l_vInputBuffer[0], int(nSampleIn), l_pResamplerOutputBuffer);
 
-					if (l_bIsFirstChannel)
+					if (isFirstChannel)
 					{
-						l_vOutputBuffer.resize(l_iCount * m_ui32ChannelCount);
-						l_bIsFirstChannel = false;
+						l_vOutputBuffer.resize(nI * nChannel);
+						isFirstChannel = false;
 					}
 
-					for (int k = 0; k < l_iCount; k++)
-					{
-						l_vOutputBuffer[k * m_ui32ChannelCount + j] = static_cast<TFloat>(l_pResamplerOutputBuffer[k]);
-					}
+					for (int k = 0; k < nI; k++) { l_vOutputBuffer[k * nChannel + j] = TFloat(l_pResamplerOutputBuffer[k]); }
 				}
 
-				for (int k = 0; k < l_iCount; k++)
-				{
-					rCallback.processResampler(&l_vOutputBuffer[k * m_ui32ChannelCount], m_ui32ChannelCount);
-				}
+				for (int k = 0; k < nI; k++) { rCallback.processResampler(&l_vOutputBuffer[k * nChannel], nChannel); }
 
-				return l_iCount;
+				return nI;
 			}
 
 		protected:
@@ -448,43 +416,43 @@ namespace Common
 				mutable size_t m_ui32OutputSampleIndex;
 			};
 
-			size_t resample_channel_wise(TFloat* pOutputSample, const TFloat* pInputSample, size_t ui32InputSampleCount, size_t ui32OutputSampleCount) // ui32OutputSampleCount is ignored
+			size_t resample_channel_wise(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn, size_t ui32OutputSampleCount) // ui32OutputSampleCount is ignored
 			{
-				return this->resample(CCallbackChannelWise(pOutputSample), pInputSample, ui32InputSampleCount);
+				return this->resample(CCallbackChannelWise(pOutputSample), pInputSample, nSampleIn);
 			}
 
-			size_t resample_sample_wise(TFloat* pOutputSample, const TFloat* pInputSample, size_t ui32InputSampleCount, size_t ui32OutputSampleCount)
+			size_t resample_sample_wise(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn, size_t ui32OutputSampleCount)
 			{
-				return this->resample(CCallbackSampleWise(pOutputSample, ui32OutputSampleCount), pInputSample, ui32InputSampleCount);
+				return this->resample(CCallbackSampleWise(pOutputSample, ui32OutputSampleCount), pInputSample, nSampleIn);
 			}
 
 		public:
 
-			size_t resample(TFloat* pOutputSample, const TFloat* pInputSample, size_t ui32InputSampleCount, size_t ui32OutputSampleCount = 1)
+			size_t resample(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn, size_t ui32OutputSampleCount = 1)
 			{
-				return (this->*m_fpResampleDirect)(pOutputSample, pInputSample, ui32InputSampleCount, ui32OutputSampleCount);
+				return (this->*m_fpResampleDirect)(pOutputSample, pInputSample, nSampleIn, ui32OutputSampleCount);
 			}
 
-			size_t downsample(TFloat* pOutputSample, const TFloat* pInputSample, size_t ui32InputSampleCount, size_t ui32OutputSampleCount = 1)
+			size_t downsample(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn, size_t ui32OutputSampleCount = 1)
 			{
-				return resample(pOutputSample, pInputSample, ui32InputSampleCount, ui32OutputSampleCount);
+				return resample(pOutputSample, pInputSample, nSampleIn, ui32OutputSampleCount);
 			}
 
 		protected:
 
-			size_t m_ui32ChannelCount = 0;
-			size_t m_ui32InputSamplingRate = 0;
+			size_t nChannel       = 0;
+			size_t m_ui32InputSamplingRate  = 0;
 			size_t m_ui32OutputSamplingRate = 0;
 
 			int m_iFractionalDelayFilterSampleCount = 6;
-			int m_iMaxInputSampleCount = 1024;
-			double m_f64TransitionBandInPercent = 45;
-			double m_f64StopBandAttenuation = 49;
+			int m_iMaxInputSampleCount              = 1024;
+			double m_f64TransitionBandInPercent     = 45;
+			double m_f64StopBandAttenuation         = 49;
 
 			std::vector<r8b::CDSPProcessor*> m_vResampler;
 
-			size_t (TResampler<TFloat, eStoreMode>::*m_fpResample)(const ICallback& rCallback, const TFloat* pInputSample, size_t ui32InputSampleCount);
-			size_t (TResampler<TFloat, eStoreMode>::*m_fpResampleDirect)(TFloat* pOutputSample, const TFloat* pInputSample, size_t ui32InputSampleCount, size_t ui32OutputSampleCount);
+			size_t (TResampler<TFloat, eStoreMode>::*m_fpResample)(const ICallback& rCallback, const TFloat* pInputSample, size_t nSampleIn);
+			size_t (TResampler<TFloat, eStoreMode>::*m_fpResampleDirect)(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn, size_t ui32OutputSampleCount);
 		};
 
 		typedef TResampler<float, ResamplerStoreMode_SampleWise> CResamplerSf;
@@ -496,5 +464,5 @@ namespace Common
 		typedef TResampler<float, ResamplerStoreMode_ChannelWise> CDownsamplerCf;
 		typedef TResampler<double, ResamplerStoreMode_SampleWise> CDownsamplerSd;
 		typedef TResampler<double, ResamplerStoreMode_ChannelWise> CDownsamplerCd;
-	}  // namespace Resampler
-}  // namespace Common
+	} // namespace Resampler
+} // namespace Common

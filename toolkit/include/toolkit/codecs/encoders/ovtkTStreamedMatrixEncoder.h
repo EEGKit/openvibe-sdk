@@ -46,30 +46,18 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputMatrix()
-		{
-			return m_pInputMatrix;
-		}
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::IMatrix*>& getInputMatrix() { return m_pInputMatrix; }
 
 	protected:
 
 		/*
 		The methods specific to the Streamed Matrix encoder :
 		*/
-		bool encodeHeaderImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeHeader);
-		}
+		bool encodeHeaderImpl() { return m_pCodec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeHeader); }
 
-		bool encodeBufferImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer);
-		}
+		bool encodeBufferImpl() { return m_pCodec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer); }
 
-		bool encodeEndImpl()
-		{
-			return m_pCodec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd);
-		}
+		bool encodeEndImpl() { return m_pCodec->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd); }
 	};
 
 	/*
@@ -93,6 +81,6 @@ namespace OpenViBEToolkit
 
 		virtual ~TStreamedMatrixEncoder() { this->uninitialize(); }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

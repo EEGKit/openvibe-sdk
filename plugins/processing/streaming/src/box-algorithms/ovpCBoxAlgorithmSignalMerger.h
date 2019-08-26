@@ -26,18 +26,18 @@ namespace OpenViBEPlugins
 		protected:
 
 			std::vector<OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmSignalMerger>*> m_vStreamDecoder;
-			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>* m_pStreamEncoder;
+			OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalMerger>* m_pStreamEncoder = nullptr;
 		};
 
 		class CBoxAlgorithmSignalMergerListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				char l_sInputName[1024];
-				sprintf(l_sInputName, "Input %i", ui32Index + 1);
-				rBox.setInputName(ui32Index, l_sInputName);
-				rBox.setInputType(ui32Index, OV_TypeId_Signal);
+				sprintf(l_sInputName, "Input %i", index + 1);
+				rBox.setInputName(index, l_sInputName);
+				rBox.setInputType(index, OV_TypeId_Signal);
 				return true;
 			}
 
@@ -61,19 +61,19 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalMerger; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSignalMerger; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmSignalMergerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input 1", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInput("Input 2", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Merged", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addInput("Input 1", OV_TypeId_Signal);
+				prototype.addInput("Input 2", OV_TypeId_Signal);
+				prototype.addOutput("Merged", OV_TypeId_Signal);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalMergerDesc)
 		};
-	};
-};
+	} // namespace Streaming
+} // namespace OpenViBEPlugins

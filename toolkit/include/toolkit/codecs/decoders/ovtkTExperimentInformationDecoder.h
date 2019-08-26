@@ -79,77 +79,38 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputExperimentIdentifier()
-		{
-			return m_ui64OutputExperimentIdentifier;
-		}
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputExperimentIdentifier() { return m_ui64OutputExperimentIdentifier; }
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputExperimentDate()
-		{
-			return m_pOutputpExperimentDate;
-		}
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputExperimentDate() { return m_pOutputpExperimentDate; }
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSubjectIdentifier()
-		{
-			return m_ui64OutputSubjectIdentifier;
-		}
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSubjectIdentifier() { return m_ui64OutputSubjectIdentifier; }
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputSubjectName()
-		{
-			return m_pOutputpSubjectName;
-		}
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputSubjectName() { return m_pOutputpSubjectName; }
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSubjectAge()
-		{
-			return m_ui64OutputSubjectAge;
-		}
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSubjectAge() { return m_ui64OutputSubjectAge; }
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSubjectGender()
-		{
-			return m_ui64OutputSubjectGender;
-		}
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSubjectGender() { return m_ui64OutputSubjectGender; }
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputLaboratoryIdentifier()
-		{
-			return m_ui64OutputLaboratoryIdentifier;
-		}
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputLaboratoryIdentifier() { return m_ui64OutputLaboratoryIdentifier; }
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputLaboratoryName()
-		{
-			return m_pOutputpLaboratoryName;
-		}
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputLaboratoryName() { return m_pOutputpLaboratoryName; }
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputTechnicianIdentifier()
-		{
-			return m_ui64OutputTechnicianIdentifier;
-		}
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputTechnicianIdentifier() { return m_ui64OutputTechnicianIdentifier; }
 
-		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputTechnicianName()
-		{
-			return m_pOutputpTechnicianName;
-		}
+		OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*>& getOutputTechnicianName() { return m_pOutputpTechnicianName; }
 
-		virtual bool isHeaderReceived()
-		{
-			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedHeader);
-		}
+		virtual bool isHeaderReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedHeader); }
 
-		virtual bool isBufferReceived()
-		{
-			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedBuffer);
-		}
+		virtual bool isBufferReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedBuffer); }
 
-		virtual bool isEndReceived()
-		{
-			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedEnd);
-		}
+		virtual bool isEndReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_ExperimentInformationStreamDecoder_OutputTriggerId_ReceivedEnd); }
 	};
 
 	template <class T>
 	class TExperimentInformationDecoder : public TExperimentInformationDecoderLocal<TDecoder<T>>
 	{
 		using TExperimentInformationDecoderLocal<TDecoder<T>>::m_pBoxAlgorithm;
-	
+
 	public:
 		using TExperimentInformationDecoderLocal<TDecoder<T>>::uninitialize;
 
@@ -163,6 +124,6 @@ namespace OpenViBEToolkit
 
 		virtual ~TExperimentInformationDecoder() { this->uninitialize(); }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

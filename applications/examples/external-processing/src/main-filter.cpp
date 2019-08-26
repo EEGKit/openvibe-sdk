@@ -50,11 +50,11 @@ int main(int argc, char** argv)
 
 	while (!client.connect("127.0.0.1", port))
 	{
-		MessagingClient::ELibraryError error = client.getLastError();
+		const MessagingClient::ELibraryError error = client.getLastError();
 
 		if (error == MessagingClient::ELibraryError::Socket_FailedToConnect)
 		{
-			printf("Server not responding\n");
+			std::cout << "Server not responding\n";
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
 		else
@@ -63,10 +63,7 @@ int main(int argc, char** argv)
 			exit(EXIT_FAILURE);
 		}
 
-		if (s_DidRequestForcedQuit)
-		{
-			exit(EXIT_SUCCESS);
-		}
+		if (s_DidRequestForcedQuit) { exit(EXIT_SUCCESS); }
 	}
 
 	std::cout << "Connected to server\n";
@@ -111,10 +108,7 @@ int main(int argc, char** argv)
 	}
 
 	// Announce to server that the box has finished initializing and wait for acknowledgement
-	while (!client.waitForSyncMessage())
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	}
+	while (!client.waitForSyncMessage()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 	client.pushLog(LogLevel_Info, "Received Ping");
 
 	client.pushSync();
@@ -167,7 +161,7 @@ int main(int argc, char** argv)
 
 				/*if (!client.pushLog(Communication::ELogLevel::LogLevel_Info, "EBML received on index: " + std::to_string(index)))
 				{
-					printf("Failed to push log.\n");
+					std::cout << "Failed to push log.\n";
 					client.close();
 					exit(EXIT_FAILURE);
 				}*/
@@ -189,7 +183,7 @@ int main(int argc, char** argv)
 
 			/*if (!client.pushLog(Communication::ELogLevel::LogLevel_Info, "EBML received on index: " + std::to_string(index)))
 			{
-			printf("Failed to push log.\n");
+			std::cout << "Failed to push log.\n";
 			client.close();
 			exit(EXIT_FAILURE);
 			}*/
@@ -203,7 +197,7 @@ int main(int argc, char** argv)
 		while (client.popError(packetId, error, guiltyId))
 		{
 			std::cerr << "Error received:\n";
-			std::cerr << "\tError: " << static_cast<int>(error) << "\n";
+			std::cerr << "\tError: " << int(error) << "\n";
 			std::cerr << "\tGuilty Id: " << guiltyId << "\n";
 		}
 

@@ -33,7 +33,7 @@ bool CAlgorithmPairwiseDecisionHT::uninitialize() { return true; }
 bool CAlgorithmPairwiseDecisionHT::parameterize()
 {
 	TParameterHandler<uint64_t> ip_pClassCount(this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameter_ClassCount));
-	m_ui32ClassCount = static_cast<uint32_t>(ip_pClassCount);
+	m_ui32ClassCount = uint32_t(ip_pClassCount);
 
 	OV_ERROR_UNLESS_KRF(m_ui32ClassCount >= 2, "Pairwise decision HT algorithm needs at least 2 classes [" << m_ui32ClassCount << "] found", OpenViBE::Kernel::ErrorType::BadInput);
 
@@ -67,8 +67,8 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 	for (size_t i = 0; i < pClassificationValueList.size(); ++i)
 	{
 		SClassificationInfo& l_rTemp                                                = pClassificationValueList[i];
-		const uint32_t l_f64FirstIndex                                              = static_cast<uint32_t>(l_rTemp.m_f64FirstClass);
-		const uint32_t l_f64SecondIndex                                             = static_cast<uint32_t>(l_rTemp.m_f64SecondClass);
+		const uint32_t l_f64FirstIndex                                              = uint32_t(l_rTemp.m_f64FirstClass);
+		const uint32_t l_f64SecondIndex                                             = uint32_t(l_rTemp.m_f64SecondClass);
 		const double* l_pValues                                                     = l_rTemp.m_pClassificationValue->getBuffer();
 		l_pProbabilityMatrix[l_f64FirstIndex * m_ui32ClassCount + l_f64SecondIndex] = l_pValues[0];
 		l_pProbabilityMatrix[l_f64SecondIndex * m_ui32ClassCount + l_f64FirstIndex] = 1 - l_pValues[0];
@@ -82,7 +82,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 
 	for (size_t i = 0; i < m_ui32ClassCount; ++i)
 	{
-		l_ui32AmountSample += static_cast<uint32_t>(ip_pRepartitionSetVector->getBuffer()[i]);
+		l_ui32AmountSample += uint32_t(ip_pRepartitionSetVector->getBuffer()[i]);
 	}
 
 	for (size_t i = 0; i < m_ui32ClassCount; ++i)
@@ -135,7 +135,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 		{
 			if (j != l_ui32Index)
 			{
-				const uint32_t l_ui32Temp = static_cast<uint32_t>(l_pProbabilityMatrix[l_ui32Index] + ip_pRepartitionSetVector->getBuffer()[j]);
+				const uint32_t l_ui32Temp = uint32_t(l_pProbabilityMatrix[l_ui32Index] + ip_pRepartitionSetVector->getBuffer()[j]);
 
 				l_f64FirstSum += l_ui32Temp * l_pProbabilityMatrix[l_ui32Index * m_ui32ClassCount + j];
 				l_f64SecondSum += l_ui32Temp * l_pMu[l_ui32Index][j];

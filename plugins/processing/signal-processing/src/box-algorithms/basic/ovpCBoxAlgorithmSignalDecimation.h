@@ -23,19 +23,19 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			int64_t m_i64DecimationFactor = 0;
-			uint32_t m_ui32ChannelCount = 0;
-			uint32_t m_ui32InputSampleIndex = 0;
-			uint32_t m_ui32InputSampleCountPerSentBlock = 0;
-			uint64_t m_ui64InputSamplingFrequency = 0;
-			uint32_t m_ui32OutputSampleIndex = 0;
+			int64_t m_i64DecimationFactor                = 0;
+			uint32_t m_ui32ChannelCount                  = 0;
+			uint32_t m_ui32InputSampleIndex              = 0;
+			uint32_t m_ui32InputSampleCountPerSentBlock  = 0;
+			uint64_t m_ui64InputSamplingFrequency        = 0;
+			uint32_t m_ui32OutputSampleIndex             = 0;
 			uint32_t m_ui32OutputSampleCountPerSentBlock = 0;
-			uint64_t m_ui64OutputSamplingFrequency = 0;
+			uint64_t m_ui64OutputSamplingFrequency       = 0;
 
 			uint64_t m_ui64TotalSampleCount = 0;
-			uint64_t m_ui64StartTimeBase = 0;
-			uint64_t m_ui64LastStartTime = 0;
-			uint64_t m_ui64LastEndTime = 0;
+			uint64_t m_ui64StartTimeBase    = 0;
+			uint64_t m_ui64LastStartTime    = 0;
+			uint64_t m_ui64LastEndTime      = 0;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer;
@@ -65,15 +65,15 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalDecimation; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSignalDecimation; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("Decimation factor", OV_TypeId_Integer, "8");
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addOutput("Output signal", OV_TypeId_Signal);
+				prototype.addSetting("Decimation factor", OV_TypeId_Integer, "8");
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalDecimationDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

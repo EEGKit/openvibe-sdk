@@ -108,12 +108,6 @@ bool CBoxProto::addFlag(const CIdentifier& cIdentifierFlag)
 	return true;
 }
 
-bool CBoxProto::addInputSupport(const CIdentifier& rTypeIdentifier)
-{
-	return m_rBox.addInputSupport(rTypeIdentifier);
-}
+bool CBoxProto::addInputSupport(const CIdentifier& rTypeIdentifier) { return m_rBox.addInputSupport(rTypeIdentifier); }
 
-bool CBoxProto::addOutputSupport(const CIdentifier& rTypeIdentifier)
-{
-	return m_rBox.addOutputSupport(rTypeIdentifier);
-}
+bool CBoxProto::addOutputSupport(const CIdentifier& rTypeIdentifier) { return m_rBox.addOutputSupport(rTypeIdentifier); }

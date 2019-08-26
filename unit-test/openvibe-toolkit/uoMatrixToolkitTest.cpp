@@ -50,7 +50,7 @@ void fillMatrix(CMatrix& matrix)
 
 bool testMatrix(CMatrix& expectedMatrix, const std::string& textFile, unsigned int precision = 6)
 {
-	const double threshold = 1.0 / std::pow(10.0, (double)(precision - 2));
+	const double threshold = 1.0 / std::pow(10.0, double(precision - 2));
 
 	fillMatrix(expectedMatrix);
 

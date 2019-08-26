@@ -16,7 +16,7 @@ namespace OpenViBE
 
 			//virtual bool addSetting(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& sDefaultValue); 
 			bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue,
-									const bool bModifiable = false, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
+							const bool bModifiable = false, const CIdentifier& rIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) override;
 			bool addFlag(const EBoxFlag eBoxFlag) override;
 			bool addFlag(const CIdentifier& cIdentifierFlag) override;
 			bool addInputSupport(const CIdentifier& rTypeIdentifier) override;
@@ -32,5 +32,5 @@ namespace OpenViBE
 
 			CBoxProto();
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

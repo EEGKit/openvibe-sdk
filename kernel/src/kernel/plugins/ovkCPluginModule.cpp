@@ -25,7 +25,7 @@ namespace OpenViBE
 			explicit CPluginModuleBase(const IKernelContext& rKernelContext);
 			~CPluginModuleBase() override;
 			bool initialize() override;
-			bool getPluginObjectDescription(uint32_t ui32Index, IPluginObjectDesc*& rpPluginObjectDescription) override;
+			bool getPluginObjectDescription(uint32_t index, IPluginObjectDesc*& rpPluginObjectDescription) override;
 			bool uninitialize() override;
 			bool getFileName(CString& rFileName) const override;
 
@@ -43,8 +43,8 @@ namespace OpenViBE
 			bool (*onGetPluginObjectDescriptionCB)(const IPluginModuleContext&, uint32_t, IPluginObjectDesc*&);
 			bool (*onUninitializeCB)(const IPluginModuleContext&);
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE
 
 namespace OpenViBE
 {
@@ -74,9 +74,9 @@ namespace OpenViBE
 				ITypeManager& m_rTypeManager;
 				IScenarioManager& m_rScenarioManager;
 			};
-		}  // namespace
-	}  // namespace Kernel
-}  // namespace OpenViBE
+		} // namespace
+	} // namespace Kernel
+} // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
@@ -97,34 +97,31 @@ bool CPluginModuleBase::initialize()
 	return onInitializeCB(CPluginModuleContext(getKernelContext()));
 }
 
-bool CPluginModuleBase::getPluginObjectDescription(uint32_t ui32Index, IPluginObjectDesc*& rpPluginObjectDescription)
+bool CPluginModuleBase::getPluginObjectDescription(uint32_t index, IPluginObjectDesc*& rpPluginObjectDescription)
 {
 	if (!m_bGotDescriptions)
 	{
 		if (!isOpen()) { return false; }
 		if (!onGetPluginObjectDescriptionCB) { return false; }
 
-		uint32_t l_ui32Index                           = 0;
+		uint32_t l_ui32Index                         = 0;
 		IPluginObjectDesc* l_pPluginObjectDescriptor = nullptr;
 		while (onGetPluginObjectDescriptionCB(CPluginModuleContext(getKernelContext()), l_ui32Index, l_pPluginObjectDescriptor))
 		{
-			if (l_pPluginObjectDescriptor)
-			{
-				m_vPluginObjectDescriptor.push_back(l_pPluginObjectDescriptor);
-			}
+			if (l_pPluginObjectDescriptor) { m_vPluginObjectDescriptor.push_back(l_pPluginObjectDescriptor); }
 			l_ui32Index++;
 		}
 
 		m_bGotDescriptions = true;
 	}
 
-	if (ui32Index >= m_vPluginObjectDescriptor.size())
+	if (index >= m_vPluginObjectDescriptor.size())
 	{
 		rpPluginObjectDescription = nullptr;
 		return false;
 	}
 
-	rpPluginObjectDescription = m_vPluginObjectDescriptor[ui32Index];
+	rpPluginObjectDescription = m_vPluginObjectDescriptor[index];
 	return true;
 }
 
@@ -165,8 +162,8 @@ namespace OpenViBE
 
 			void* m_pFileHandle;
 		};
-	};
-};
+	}
+} // namespace OpenViBE
 
 #elif defined TARGET_OS_Windows
 
@@ -191,8 +188,8 @@ namespace OpenViBE
 
 			CString getLastErrorMessageString();
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE
 
 #else
 
@@ -213,8 +210,8 @@ namespace OpenViBE
 
 			virtual bool isOpen() const;
 		};
-	};
-};
+	}
+} // namespace OpenViBE
 
 #endif
 
@@ -398,10 +395,7 @@ CPluginModule::CPluginModule(const IKernelContext& rKernelContext)
 #endif
 }
 
-CPluginModule::~CPluginModule()
-{
-	delete m_pImplementation;
-}
+CPluginModule::~CPluginModule() { delete m_pImplementation; }
 
 bool CPluginModule::load(const CString& sFileName, CString* pError)
 {
@@ -418,10 +412,10 @@ bool CPluginModule::initialize()
 	return !m_pImplementation ? false : m_pImplementation->initialize();
 }
 
-bool CPluginModule::getPluginObjectDescription(uint32_t ui32Index,
-	IPluginObjectDesc*& rpPluginObjectDescription)
+bool CPluginModule::getPluginObjectDescription(uint32_t index,
+											   IPluginObjectDesc*& rpPluginObjectDescription)
 {
-	return !m_pImplementation ? false : m_pImplementation->getPluginObjectDescription(ui32Index, rpPluginObjectDescription);
+	return !m_pImplementation ? false : m_pImplementation->getPluginObjectDescription(index, rpPluginObjectDescription);
 }
 
 bool CPluginModule::uninitialize()

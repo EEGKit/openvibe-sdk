@@ -44,10 +44,7 @@ bool CBoxAlgorithmEpochAverage::initialize()
 
 	if (l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix) { }
 	else if (l_oInputTypeIdentifier == OV_TypeId_FeatureVector) { }
-	else if (l_oInputTypeIdentifier == OV_TypeId_Signal)
-	{
-		m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate));
-	}
+	else if (l_oInputTypeIdentifier == OV_TypeId_Signal) { m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SignalStreamEncoder_InputParameterId_SamplingRate)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SignalStreamDecoder_OutputParameterId_SamplingRate)); }
 	else if (l_oInputTypeIdentifier == OV_TypeId_Spectrum)
 	{
 		m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_SpectrumStreamEncoder_InputParameterId_FrequencyAbscissa)->setReferenceTarget(m_pStreamDecoder->getOutputParameter(OVP_GD_Algorithm_SpectrumStreamDecoder_OutputParameterId_FrequencyAbscissa));

@@ -54,13 +54,13 @@ namespace OpenViBE
 
 			CPlayer& m_rPlayer;
 			CIdentifier m_oScenarioIdentifier = OV_UndefinedIdentifier;
-			IScenario* m_pScenario = nullptr;
-			uint64_t m_ui64Steps = 0;
-			uint64_t m_ui64Frequency = 0;
-			uint64_t m_ui64StepDuration = 0;
-			uint64_t m_ui64CurrentTime = 0;
+			IScenario* m_pScenario            = nullptr;
+			uint64_t m_ui64Steps              = 0;
+			uint64_t m_ui64Frequency          = 0;
+			uint64_t m_ui64StepDuration       = 0;
+			uint64_t m_ui64CurrentTime        = 0;
 
-			std::map<std::pair<int32_t, CIdentifier>, CSimulatedBox*> m_vSimulatedBox;
+			std::map<std::pair<int, CIdentifier>, CSimulatedBox*> m_vSimulatedBox;
 			std::map<CIdentifier, System::CChrono> m_vSimulatedBoxChrono;
 			std::map<CIdentifier, std::map<uint32_t, std::list<CChunk>>> m_vSimulatedBoxInput;
 
@@ -71,7 +71,5 @@ namespace OpenViBE
 			bool flattenScenario();
 			System::CChrono m_oBenchmarkChrono;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
-
-
+	} // namespace Kernel
+} // namespace OpenViBE

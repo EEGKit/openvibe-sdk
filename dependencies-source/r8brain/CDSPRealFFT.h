@@ -56,30 +56,21 @@ namespace r8b
 		 * transform to obtain a correct value scale.
 		 */
 
-		double getInvMulConst() const
-		{
-			return (InvMulConst);
-		}
+		double getInvMulConst() const { return (InvMulConst); }
 
 		/**
 		 * @return The length (the number of real values in a transform) of *this
 		 * FFT object, expressed as Nth power of 2.
 		 */
 
-		int getLenBits() const
-		{
-			return (LenBits);
-		}
+		int getLenBits() const { return (LenBits); }
 
 		/**
 		 * @return The length (the number of real values in a transform) of *this
 		 * FFT object.
 		 */
 
-		int getLen() const
-		{
-			return (Len);
-		}
+		int getLen() const { return (Len); }
 
 		/**
 		 * Function performs in-place forward FFT.
@@ -282,13 +273,13 @@ namespace r8b
 		}
 
 	private:
-		int LenBits = 0; ///< Length of FFT block (expressed as Nth power of 2).
+		int LenBits        = 0; ///< Length of FFT block (expressed as Nth power of 2).
 		///<
-		int Len = 0; ///< Length of FFT block (number of real values).
+		int Len            = 0; ///< Length of FFT block (number of real values).
 		///<
 		double InvMulConst = 0; ///< Inverse FFT multiply constant.
 		///<
-		CDSPRealFFT* Next = nullptr; ///< Next object in a singly-linked list.
+		CDSPRealFFT* Next  = nullptr; ///< Next object in a singly-linked list.
 		///<
 
 #if R8B_IPP
@@ -369,7 +360,7 @@ namespace r8b
 
 #else // R8B_IPP
 
-			wi.alloc((int)ceil(2.0 + sqrt((double)(Len >> 1))));
+			wi.alloc((int)ceil(2.0 + sqrt(double(Len >> 1))));
 			wi[0] = 0;
 			wd.alloc(Len >> 1);
 
@@ -405,10 +396,7 @@ namespace r8b
 
 		~CDSPRealFFTKeeper()
 		{
-			if (Object != nullptr)
-			{
-				release(Object);
-			}
+			if (Object != nullptr) { release(Object); }
 		}
 
 		/**
@@ -434,10 +422,7 @@ namespace r8b
 		{
 			if (Object != nullptr)
 			{
-				if (Object->LenBits == LenBits)
-				{
-					return;
-				}
+				if (Object->LenBits == LenBits) { return; }
 
 				release(Object);
 			}
@@ -480,10 +465,7 @@ namespace r8b
 
 			R8BSYNC(StateSync);
 
-			if (FFTObjects[LenBits] == nullptr)
-			{
-				return (new CDSPRealFFT(LenBits));
-			}
+			if (FFTObjects[LenBits] == nullptr) { return (new CDSPRealFFT(LenBits)); }
 
 			CDSPRealFFT* ffto   = FFTObjects[LenBits];
 			FFTObjects[LenBits] = ffto->Next;

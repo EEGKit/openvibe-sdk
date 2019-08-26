@@ -45,8 +45,8 @@ namespace OpenViBE
 
 			vector<CStimulation> m_vStimulation;
 		};
-	}  // namespace
-}  // namespace OpenViBE
+	} // namespace
+} // namespace OpenViBE
 
 // ________________________________________________________________________________________________________________
 //
@@ -55,42 +55,33 @@ void CStimulationSetImpl::clear() { m_vStimulation.clear(); }
 
 const uint64_t CStimulationSetImpl::getStimulationCount() const { return m_vStimulation.size(); }
 
-const uint64_t CStimulationSetImpl::getStimulationIdentifier(const uint64_t ui64StimulationIndex) const
-{
-	return m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Identifier;
-}
+const uint64_t CStimulationSetImpl::getStimulationIdentifier(const uint64_t ui64StimulationIndex) const { return m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Identifier; }
 
-const uint64_t CStimulationSetImpl::getStimulationDate(const uint64_t ui64StimulationIndex) const
-{
-	return m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Date;
-}
+const uint64_t CStimulationSetImpl::getStimulationDate(const uint64_t ui64StimulationIndex) const { return m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Date; }
 
-const uint64_t CStimulationSetImpl::getStimulationDuration(const uint64_t ui64StimulationIndex) const
-{
-	return m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Duration;
-}
+const uint64_t CStimulationSetImpl::getStimulationDuration(const uint64_t ui64StimulationIndex) const { return m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Duration; }
 
 bool CStimulationSetImpl::setStimulationCount(const uint64_t ui64StimulationCount)
 {
-	m_vStimulation.resize(static_cast<size_t>(ui64StimulationCount));
+	m_vStimulation.resize(size_t(ui64StimulationCount));
 	return true;
 }
 
 bool CStimulationSetImpl::setStimulationIdentifier(const uint64_t ui64StimulationIndex, const uint64_t ui64StimulationIdentifier)
 {
-	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Identifier = ui64StimulationIdentifier;
+	m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Identifier = ui64StimulationIdentifier;
 	return true;
 }
 
 bool CStimulationSetImpl::setStimulationDate(const uint64_t ui64StimulationIndex, const uint64_t ui64StimulationDate)
 {
-	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Date = ui64StimulationDate;
+	m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Date = ui64StimulationDate;
 	return true;
 }
 
 bool CStimulationSetImpl::setStimulationDuration(const uint64_t ui64StimulationIndex, const uint64_t ui64StimulationDuration)
 {
-	m_vStimulation[static_cast<size_t>(ui64StimulationIndex)].m_ui64Duration = ui64StimulationDuration;
+	m_vStimulation[size_t(ui64StimulationIndex)].m_ui64Duration = ui64StimulationDuration;
 	return true;
 }
 
@@ -109,7 +100,7 @@ uint64_t CStimulationSetImpl::insertStimulation(const uint64_t ui64StimulationIn
 	}
 	else
 	{
-		m_vStimulation.insert(m_vStimulation.begin() + static_cast<size_t>(ui64StimulationIndex), CStimulation(ui64StimulationIdentifier, ui64StimulationDate, ui64StimulationDuration));
+		m_vStimulation.insert(m_vStimulation.begin() + size_t(ui64StimulationIndex), CStimulation(ui64StimulationIdentifier, ui64StimulationDate, ui64StimulationDuration));
 	}
 	return true;
 }
@@ -117,7 +108,7 @@ uint64_t CStimulationSetImpl::insertStimulation(const uint64_t ui64StimulationIn
 bool CStimulationSetImpl::removeStimulation(const uint64_t ui64StimulationIndex)
 {
 	if (ui64StimulationIndex >= m_vStimulation.size()) { return false; }
-	m_vStimulation.erase(m_vStimulation.begin() + static_cast<size_t>(ui64StimulationIndex));
+	m_vStimulation.erase(m_vStimulation.begin() + size_t(ui64StimulationIndex));
 	return true;
 }
 
@@ -130,30 +121,15 @@ CStimulationSet::~CStimulationSet() { delete m_pStimulationSetImpl; }
 
 void CStimulationSet::clear() { m_pStimulationSetImpl->clear(); }
 
-const uint64_t CStimulationSet::getStimulationCount() const
-{
-	return m_pStimulationSetImpl->getStimulationCount();
-}
+const uint64_t CStimulationSet::getStimulationCount() const { return m_pStimulationSetImpl->getStimulationCount(); }
 
-const uint64_t CStimulationSet::getStimulationIdentifier(const uint64_t ui64StimulationIndex) const
-{
-	return m_pStimulationSetImpl->getStimulationIdentifier(ui64StimulationIndex);
-}
+const uint64_t CStimulationSet::getStimulationIdentifier(const uint64_t ui64StimulationIndex) const { return m_pStimulationSetImpl->getStimulationIdentifier(ui64StimulationIndex); }
 
-const uint64_t CStimulationSet::getStimulationDate(const uint64_t ui64StimulationIndex) const
-{
-	return m_pStimulationSetImpl->getStimulationDate(ui64StimulationIndex);
-}
+const uint64_t CStimulationSet::getStimulationDate(const uint64_t ui64StimulationIndex) const { return m_pStimulationSetImpl->getStimulationDate(ui64StimulationIndex); }
 
-const uint64_t CStimulationSet::getStimulationDuration(const uint64_t ui64StimulationIndex) const
-{
-	return m_pStimulationSetImpl->getStimulationDuration(ui64StimulationIndex);
-}
+const uint64_t CStimulationSet::getStimulationDuration(const uint64_t ui64StimulationIndex) const { return m_pStimulationSetImpl->getStimulationDuration(ui64StimulationIndex); }
 
-bool CStimulationSet::setStimulationCount(const uint64_t ui64StimulationCount)
-{
-	return m_pStimulationSetImpl->setStimulationCount(ui64StimulationCount);
-}
+bool CStimulationSet::setStimulationCount(const uint64_t ui64StimulationCount) { return m_pStimulationSetImpl->setStimulationCount(ui64StimulationCount); }
 
 bool CStimulationSet::setStimulationIdentifier(const uint64_t ui64StimulationIndex, const uint64_t ui64StimulationIdentifier)
 {
@@ -180,7 +156,4 @@ uint64_t CStimulationSet::insertStimulation(const uint64_t ui64StimulationIndex,
 	return m_pStimulationSetImpl->insertStimulation(ui64StimulationIndex, ui64StimulationIdentifier, ui64StimulationDate, ui64StimulationDuration);
 }
 
-bool CStimulationSet::removeStimulation(const uint64_t ui64StimulationIndex)
-{
-	return m_pStimulationSetImpl->removeStimulation(ui64StimulationIndex);
-}
+bool CStimulationSet::removeStimulation(const uint64_t ui64StimulationIndex) { return m_pStimulationSetImpl->removeStimulation(ui64StimulationIndex); }

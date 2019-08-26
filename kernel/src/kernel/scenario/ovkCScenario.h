@@ -74,7 +74,7 @@ namespace OpenViBE
 			bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) override;
 			bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) override;
 
-			bool removeScenarioInput(uint32_t inputIndex) override;
+			bool removeScenarioInput(uint32_t index) override;
 			bool removeScenarioOutput(uint32_t outputIndex) override;
 
 			const ILink* getLinkDetails(const CIdentifier& linkIdentifier) const override;
@@ -83,7 +83,7 @@ namespace OpenViBE
 			bool connect(CIdentifier& linkIdentifier, const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex,
 						 const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex, const CIdentifier& suggestedLinkIdentifier) override;
 			bool connect(CIdentifier& linkIdentifier, const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier,
-						 const CIdentifier& targetBoxIdentifier,  const CIdentifier& targetBoxInputIdentifier, const CIdentifier& suggestedLinkIdentifier) override;
+						 const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier, const CIdentifier& suggestedLinkIdentifier) override;
 			bool disconnect(const CIdentifier& sourceBoxIdentifier, uint32_t sourceBoxOutputIndex, const CIdentifier& targetBoxIdentifier, uint32_t targetBoxInputIndex) override;
 			bool disconnect(const CIdentifier& sourceBoxIdentifier, const CIdentifier& sourceBoxOutputIdentifier, const CIdentifier& targetBoxIdentifier, const CIdentifier& targetBoxInputIdentifier) override;
 			bool disconnect(const CIdentifier& linkIdentifier) override;
@@ -150,5 +150,5 @@ namespace OpenViBE
 			std::map<CIdentifier, CIdentifier> m_NextMetadataIdentifier;
 			CIdentifier m_FirstMetadataIdentifier = OV_UndefinedIdentifier;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

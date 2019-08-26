@@ -20,4 +20,4 @@ namespace EBML
 
 		IReaderHelper* m_pReaderHelperImplementation = nullptr;
 	};
-}  // namespace EBML
+} // namespace EBML

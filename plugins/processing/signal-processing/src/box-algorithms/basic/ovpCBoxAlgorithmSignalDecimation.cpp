@@ -84,26 +84,26 @@ bool CBoxAlgorithmSignalDecimation::processInput(const uint32_t ui32InputIndex)
 bool CBoxAlgorithmSignalDecimation::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
-		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, i);
-		op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
+		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
+		op_pMemoryBuffer = boxContext.getOutputChunk(0);
 
-		uint64_t l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, i);
-		uint64_t l_ui64EndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, i);
+		uint64_t tStart = boxContext.getInputChunkStartTime(0, i);
+		uint64_t tEnd   = boxContext.getInputChunkEndTime(0, i);
 
-		if (l_ui64StartTime != m_ui64LastEndTime)
+		if (tStart != m_ui64LastEndTime)
 		{
-			m_ui64StartTimeBase     = l_ui64StartTime;
+			m_ui64StartTimeBase     = tStart;
 			m_ui32InputSampleIndex  = 0;
 			m_ui32OutputSampleIndex = 0;
 			m_ui64TotalSampleCount  = 0;
 		}
 
-		m_ui64LastStartTime = l_ui64StartTime;
-		m_ui64LastEndTime   = l_ui64EndTime;
+		m_ui64LastStartTime = tStart;
+		m_ui64LastEndTime   = tEnd;
 
 		m_pStreamDecoder->process();
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader))
@@ -117,7 +117,7 @@ bool CBoxAlgorithmSignalDecimation::process()
 								OpenViBE::Kernel::ErrorType::BadSetting);
 
 			m_ui32OutputSampleIndex             = 0;
-			m_ui32OutputSampleCountPerSentBlock = static_cast<uint32_t>(m_ui32InputSampleCountPerSentBlock / m_i64DecimationFactor);
+			m_ui32OutputSampleCountPerSentBlock = uint32_t(m_ui32InputSampleCountPerSentBlock / m_i64DecimationFactor);
 			m_ui32OutputSampleCountPerSentBlock = (m_ui32OutputSampleCountPerSentBlock ? m_ui32OutputSampleCountPerSentBlock : 1);
 			m_ui64OutputSamplingFrequency       = op_ui64SamplingRate / m_i64DecimationFactor;
 
@@ -132,61 +132,61 @@ bool CBoxAlgorithmSignalDecimation::process()
 			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeHeader);
 			OpenViBEToolkit::Tools::Matrix::clearContent(*ip_pMatrix);
 
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64StartTime); // $$$ supposes we have one node per chunk
+			boxContext.markOutputAsReadyToSend(0, tStart, tStart); // $$$ supposes we have one node per chunk
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			double* l_pInputBuffer  = op_pMatrix->getBuffer();
-			double* l_pOutputBuffer = ip_pMatrix->getBuffer() + m_ui32OutputSampleIndex;
+			double* iBuffer = op_pMatrix->getBuffer();
+			double* oBuffer = ip_pMatrix->getBuffer() + m_ui32OutputSampleIndex;
 
 			for (uint32_t j = 0; j < m_ui32InputSampleCountPerSentBlock; j++)
 			{
-				double* l_pInputBufferTmp  = l_pInputBuffer;
-				double* l_pOutputBufferTmp = l_pOutputBuffer;
+				double* iBufferTmp = iBuffer;
+				double* oBufferTmp = oBuffer;
 				for (uint32_t k = 0; k < m_ui32ChannelCount; k++)
 				{
-					*l_pOutputBufferTmp += *l_pInputBufferTmp;
-					l_pOutputBufferTmp += m_ui32OutputSampleCountPerSentBlock;
-					l_pInputBufferTmp += m_ui32InputSampleCountPerSentBlock;
+					*oBufferTmp += *iBufferTmp;
+					oBufferTmp += m_ui32OutputSampleCountPerSentBlock;
+					iBufferTmp += m_ui32InputSampleCountPerSentBlock;
 				}
 
 				m_ui32InputSampleIndex++;
 				if (m_ui32InputSampleIndex == m_i64DecimationFactor)
 				{
-					m_ui32InputSampleIndex     = 0;
-					double* l_pOutputBufferTmp = l_pOutputBuffer;
+					m_ui32InputSampleIndex = 0;
+					oBufferTmp = oBuffer;
 					for (uint32_t k = 0; k < m_ui32ChannelCount; k++)
 					{
-						*l_pOutputBufferTmp /= m_i64DecimationFactor;
-						l_pOutputBufferTmp += m_ui32OutputSampleCountPerSentBlock;
+						*oBufferTmp /= m_i64DecimationFactor;
+						oBufferTmp += m_ui32OutputSampleCountPerSentBlock;
 					}
 
-					l_pOutputBuffer++;
+					oBuffer++;
 					m_ui32OutputSampleIndex++;
 					if (m_ui32OutputSampleIndex == m_ui32OutputSampleCountPerSentBlock)
 					{
-						l_pOutputBuffer         = ip_pMatrix->getBuffer();
+						oBuffer         = ip_pMatrix->getBuffer();
 						m_ui32OutputSampleIndex = 0;
 						m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeBuffer);
-						uint64_t l_ui64SampleStartTime = m_ui64StartTimeBase + ITimeArithmetics::sampleCountToTime(m_ui64OutputSamplingFrequency, m_ui64TotalSampleCount);
-						uint64_t l_ui64SampleEndTime   = m_ui64StartTimeBase + ITimeArithmetics::sampleCountToTime(m_ui64OutputSamplingFrequency, m_ui64TotalSampleCount + m_ui32OutputSampleCountPerSentBlock);
-						l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64SampleStartTime, l_ui64SampleEndTime);
+						const uint64_t tStartSample = m_ui64StartTimeBase + ITimeArithmetics::sampleCountToTime(m_ui64OutputSamplingFrequency, m_ui64TotalSampleCount);
+						const uint64_t tEndSample   = m_ui64StartTimeBase + ITimeArithmetics::sampleCountToTime(m_ui64OutputSamplingFrequency, m_ui64TotalSampleCount + m_ui32OutputSampleCountPerSentBlock);
+						boxContext.markOutputAsReadyToSend(0, tStartSample, tEndSample);
 						m_ui64TotalSampleCount += m_ui32OutputSampleCountPerSentBlock;
 
 						OpenViBEToolkit::Tools::Matrix::clearContent(*ip_pMatrix);
 					}
 				}
 
-				l_pInputBuffer++;
+				iBuffer++;
 			}
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedEnd))
 		{
 			m_pStreamEncoder->process(OVP_GD_Algorithm_SignalStreamEncoder_InputTriggerId_EncodeEnd);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64StartTime); // $$$ supposes we have one node per chunk
+			boxContext.markOutputAsReadyToSend(0, tStart, tStart); // $$$ supposes we have one node per chunk
 		}
 
-		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
+		boxContext.markInputAsDeprecated(0, i);
 	}
 	return true;
 }

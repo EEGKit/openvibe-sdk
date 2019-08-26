@@ -132,4 +132,4 @@ namespace EBML
 	 * \return \c NULL when something went wrong.
 	 */
 	extern EBML_API IReader* createReader(IReaderCallback& rReaderCallback);
-}  // namespace EBML
+} // namespace EBML

@@ -28,7 +28,7 @@ namespace OpenViBEPlugins
 			bool initialize() override;
 			bool uninitialize() override;
 			bool processClock(OpenViBE::CMessageClock& rMessageClock) override;
-			bool processInput(const uint32_t inputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_ExternalProcessing)
@@ -39,13 +39,13 @@ namespace OpenViBEPlugins
 			{
 				uint64_t startTime;
 				uint64_t endTime;
-				uint32_t inputIndex;
+				uint32_t index;
 				std::shared_ptr<std::vector<uint8_t>> EBML;
 
-				Packet(uint64_t startTime, uint64_t endTime, uint32_t inputIndex, std::shared_ptr<std::vector<uint8_t>> EBML)
+				Packet(uint64_t startTime, uint64_t endTime, uint32_t index, std::shared_ptr<std::vector<uint8_t>> EBML)
 					: startTime(startTime)
 					  , endTime(endTime)
-					  , inputIndex(inputIndex)
+					  , index(index)
 					  , EBML(EBML) { }
 			};
 
@@ -82,11 +82,11 @@ namespace OpenViBEPlugins
 
 			int m_ThirdPartyProgramProcessId = 0;
 
-			uint64_t m_AcceptTimeout = 0;
-			bool m_ShouldLaunchProgram = false;
+			uint64_t m_AcceptTimeout     = 0;
+			bool m_ShouldLaunchProgram   = false;
 			bool m_HasReceivedEndMessage = false;
 			// Synchronization timeout, and save time of last synchronization
-			uint64_t m_SyncTimeout = 0;
+			uint64_t m_SyncTimeout  = 0;
 			uint64_t m_LastSyncTime = 0;
 
 			std::map<uint64_t, OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmExternalProcessing>> m_StimulationDecoders;
@@ -141,5 +141,5 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ExternalProcessingDesc)
 		};
-	};
-};
+	} // namespace Tools
+} // namespace OpenViBEPlugins

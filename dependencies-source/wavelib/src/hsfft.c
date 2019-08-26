@@ -122,8 +122,6 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 
 		op[2].re = tau2r - tau1i;
 		op[2].im = tau2i + tau1r;
-
-		return;
 	}
 	else if (N == 4)
 	{
@@ -1493,18 +1491,18 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 static void bluestein_exp(fft_data* hl, fft_data* hlt, int len, int M)
 {
 	int i;
-	fft_type PI = 3.1415926535897932384626433832795;
+	fft_type PI    = 3.1415926535897932384626433832795;
 	fft_type theta = PI / len;
-	int l2 = 0;
-	int len2 = 2 * len;
+	int l2         = 0;
+	int len2       = 2 * len;
 
 	for (i = 0; i < len; ++i)
 	{
 		fft_type angle = theta * l2;
-		hlt[i].re = cos(angle);
-		hlt[i].im = sin(angle);
-		hl[i].re  = hlt[i].re;
-		hl[i].im  = hlt[i].im;
+		hlt[i].re      = cos(angle);
+		hlt[i].im      = sin(angle);
+		hl[i].re       = hlt[i].re;
+		hl[i].im       = hlt[i].im;
 		l2 += 2 * i + 1;
 		while (l2 > len2)
 		{
@@ -1529,21 +1527,21 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 {
 	int M, ii, i;
 	fft_type temp;
-	obj->lt = 0;
-	int K = (int)pow(2.0, ceil((double)log10((double)N) / log10((double)2.0)));
-	int def_lt = 1;
+	obj->lt     = 0;
+	int K       = (int)pow(2.0, ceil((double)log10((double)N) / log10((double)2.0)));
+	int def_lt  = 1;
 	int def_sgn = obj->sgn;
-	int def_N = obj->N;
+	int def_N   = obj->N;
 
 	if (K < 2 * N - 2) { M = K * 2; }
 	else { M = K; }
 	obj->N = M;
 
-	fft_data* yn = (fft_data*)malloc(sizeof(fft_data) * M);
-	fft_data* hk = (fft_data*)malloc(sizeof(fft_data) * M);
+	fft_data* yn     = (fft_data*)malloc(sizeof(fft_data) * M);
+	fft_data* hk     = (fft_data*)malloc(sizeof(fft_data) * M);
 	fft_data* tempop = (fft_data*)malloc(sizeof(fft_data) * M);
-	fft_data* yno = (fft_data*)malloc(sizeof(fft_data) * M);
-	fft_data* hlt = (fft_data*)malloc(sizeof(fft_data) * N);
+	fft_data* yno    = (fft_data*)malloc(sizeof(fft_data) * M);
+	fft_data* hlt    = (fft_data*)malloc(sizeof(fft_data) * N);
 	//fft_data* twi = (fft_data*) malloc (sizeof(fft_data) * M);
 
 	bluestein_exp(tempop, hlt, N, M);
@@ -1650,16 +1648,16 @@ void fft_exec(fft_object obj, fft_data* inp, fft_data* oup)
 {
 	if (obj->lt == 0)
 	{
-		int nn = obj->N;
+		int nn   = obj->N;
 		int sgn1 = obj->sgn;
-		int l = 1;
-		int inc = 0;
+		int l    = 1;
+		int inc  = 0;
 		//radix3_dit_rec(oup,inp,obj,sgn1,nn,l);
 		mixed_radix_dit_rec(oup, inp, obj, sgn1, nn, l, inc);
 	}
 	else if (obj->lt == 1)
 	{
-		int nn = obj->N;
+		int nn   = obj->N;
 		int sgn1 = obj->sgn;
 		bluestein_fft(inp, oup, obj, sgn1, nn);
 	}
@@ -1814,8 +1812,8 @@ int factors(int M, int* arr)
 		while (N > 1)
 		{
 			int mult = num * 6;
-			int m1 = mult - 1;
-			int m2 = mult + 1;
+			int m1   = mult - 1;
+			int m2   = mult + 1;
 			while (N % m1 == 0)
 			{
 				arr[i] = m1;
@@ -1838,26 +1836,26 @@ int factors(int M, int* arr)
 void twiddle(fft_data* vec, int N, int radix)
 {
 	fft_type theta = PI2 / N;
-	int KL = N / radix;
-	vec[0].re = 1.0;
-	vec[0].im = 0.0;
+	int KL         = N / radix;
+	vec[0].re      = 1.0;
+	vec[0].im      = 0.0;
 
 	for (int K = 1; K < KL; K++)
 	{
 		fft_type theta2 = theta * K;
-		vec[K].re = cos(theta2);
-		vec[K].im = -sin(theta2);
+		vec[K].re       = cos(theta2);
+		vec[K].im       = -sin(theta2);
 	}
 }
 
 void longvectorN(fft_data* sig, int N, int* array, int tx)
 {
-	int L = 1;
+	int L  = 1;
 	int ct = 0;
 	for (int i = 0; i < tx; i++)
 	{
-		L     = L * array[tx - 1 - i];
-		int Ls = L / array[tx - 1 - i];
+		L              = L * array[tx - 1 - i];
+		int Ls         = L / array[tx - 1 - i];
 		fft_type theta = -1.0 * PI2 / L;
 		for (int j = 0; j < Ls; j++)
 		{
@@ -1872,7 +1870,4 @@ void longvectorN(fft_data* sig, int N, int* array, int tx)
 }
 
 
-void free_fft(fft_object object)
-{
-	free(object);
-}
+void free_fft(fft_object object) { free(object); }

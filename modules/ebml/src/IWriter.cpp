@@ -80,8 +80,8 @@ namespace EBML
 			bool m_bBuffered = false;
 			vector<CWriterNode*> m_vChildren;
 		};
-	}  // namespace
-}  // namespace EBML
+	} // namespace
+} // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
@@ -127,10 +127,7 @@ void CWriterNode::process(IWriterCallback& rWriterCallback)
 	}
 	else
 	{
-		for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i)
-		{
-			(*i)->process(rWriterCallback);
-		}
+		for (vector<CWriterNode*>::iterator i = m_vChildren.begin(); i != m_vChildren.end(); ++i) { (*i)->process(rWriterCallback); }
 	}
 }
 
@@ -182,8 +179,8 @@ namespace EBML
 
 			CWriter();
 		};
-	}  // namespace
-}  // namespace EBML
+	} // namespace
+} // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
@@ -213,7 +210,7 @@ bool CWriter::setChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 		if (!pBuffer) { return false; }
 		l_pBufferCopy = new unsigned char[(unsigned int)(ui64BufferSize)];
 		if (!l_pBufferCopy) { return false; }
-		memcpy(l_pBufferCopy, pBuffer, (size_t)(ui64BufferSize));
+		memcpy(l_pBufferCopy, pBuffer, size_t(ui64BufferSize));
 	}
 
 	if (m_pCurrentNode->m_pBuffer) { delete [] m_pCurrentNode->m_pBuffer; }

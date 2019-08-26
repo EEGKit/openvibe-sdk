@@ -15,7 +15,7 @@ bool CBoxAlgorithmTimeout::initialize()
 
 	m_StimulationEncoder.initialize(*this, 0);
 
-	double timeout = static_cast<double>(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
+	double timeout = double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
 	OV_ERROR_UNLESS_KRF(timeout > 0,
 						"Timeout delay value must be positive and non-zero",
 						ErrorType::BadSetting);
@@ -23,7 +23,7 @@ bool CBoxAlgorithmTimeout::initialize()
 						"Timeout delay value is not an integer",
 						ErrorType::BadSetting);
 
-	m_Timeout           = static_cast<uint64_t>(timeout) << 32;
+	m_Timeout           = uint64_t(timeout) << 32;
 	m_StimulationToSend = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
 	m_LastTimePolled = 0;

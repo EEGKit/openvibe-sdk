@@ -53,7 +53,6 @@ namespace
 	const std::string s_NonExistingSymbol = "nonExistingSymbol";
 
 	const std::string s_ExistingEnvironmentPath    = "PATH";
-	const std::string s_NonExistingEnvironmentPath = "randomRandomRandom";
 
 	const std::string s_ExistingRegistryModuleName = s_ExistingModuleName;
 	const std::string s_SymbolNameNTDLL            = "toupper";
@@ -62,7 +61,6 @@ namespace
 	const HKEY s_NonExistingRegistryKey = (HKEY)(ULONG_PTR)((LONG)0x800000FF);
 
 	const std::string s_ExistingRegistryPath    = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer"; // Present on all Windows versions
-	const char* s_ExistingRegistryKeyName       = "InstallerLocation";
 	const std::string s_NonExistingRegistryPath = "SOFTWARE\\Random\\Random\\Random";
 
 	int (*toupperSymbol)(int c);
@@ -278,7 +276,7 @@ TEST(DynamicModule_Test_Case, getSymbolSuccess)
 	ASSERT_TRUE(CDynamicModuleSymbolLoader::getSymbol<>(dynamicModule, s_SymbolNameNTDLL.c_str(), &toupperSymbol));
 
 	char lowerCase = 'r';
-	char upperCase = static_cast<char>(toupperSymbol(lowerCase));
+	char upperCase = char(toupperSymbol(lowerCase));
 
 	ASSERT_EQ(upperCase, 'R');
 

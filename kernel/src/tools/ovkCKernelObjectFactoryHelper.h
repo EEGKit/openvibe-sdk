@@ -19,7 +19,7 @@ namespace OpenViBE
 			T createObject(const CIdentifier& rClassIdentifier)
 			{
 				IObject* l_pObject = m_rKernelObjectFactory.createObject(rClassIdentifier);
-				T l_tResult                  = dynamic_cast<T>(l_pObject);
+				T l_tResult        = dynamic_cast<T>(l_pObject);
 				if (l_pObject && !l_tResult) { m_rKernelObjectFactory.releaseObject(l_pObject); }
 				return l_tResult;
 			}
@@ -37,7 +37,5 @@ namespace OpenViBE
 
 			CKernelObjectFactoryHelper();
 		};
-	}  // namespace Tools
-}  // namespace OpenViBE
-
-
+	} // namespace Tools
+} // namespace OpenViBE

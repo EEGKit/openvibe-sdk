@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmStreamEndDetector> m_StimulationEncoder;
 
 			uint64_t m_StimulationIdentifier = 0;
-			uint64_t m_ActionIdentifier = 0;
+			uint64_t m_ActionIdentifier      = 0;
 
 		private:
 			enum class EEndState
@@ -42,12 +42,12 @@ namespace OpenViBEPlugins
 				Finished
 			};
 
-			uint64_t m_EndDate = 0;
-			uint64_t m_CurrentChunkEndDate = 0;
-			uint64_t m_PreviousTime = 0;
-			uint32_t m_InputEBMLIndex = 0;
+			uint64_t m_EndDate                 = 0;
+			uint64_t m_CurrentChunkEndDate     = 0;
+			uint64_t m_PreviousTime            = 0;
+			uint32_t m_InputEBMLIndex          = 0;
 			uint32_t m_OutputStimulationsIndex = 0;
-			bool m_IsHeaderSent = false;
+			bool m_IsHeaderSent                = false;
 			EEndState m_EndState;
 		};
 
@@ -68,16 +68,16 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StreamEndDetector; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmStreamEndDetector; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("EBML Stream", OV_TypeId_EBMLStream, CBoxAlgorithmStreamEndDetector::id_InputEBML());
-				rBoxAlgorithmPrototype.addOutput("Output Stimulations", OV_TypeId_Stimulations, CBoxAlgorithmStreamEndDetector::id_OutputStimulations());
-				rBoxAlgorithmPrototype.addSetting("Stimulation name", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00", false, CBoxAlgorithmStreamEndDetector::id_SettingStimulationName());
+				prototype.addInput("EBML Stream", OV_TypeId_EBMLStream, CBoxAlgorithmStreamEndDetector::id_InputEBML());
+				prototype.addOutput("Output Stimulations", OV_TypeId_Stimulations, CBoxAlgorithmStreamEndDetector::id_OutputStimulations());
+				prototype.addSetting("Stimulation name", OV_TypeId_Stimulation, "OVTK_StimulationId_Label_00", false, CBoxAlgorithmStreamEndDetector::id_SettingStimulationName());
 
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StreamEndDetectorDesc)
 		};
-	};
-};
+	} // namespace Stimulation
+} // namespace OpenViBEPlugins

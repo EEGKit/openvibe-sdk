@@ -55,7 +55,7 @@ namespace SigProSTD
 
 		return a;
 	}
-}  // namespace SigProSTD
+} // namespace SigProSTD
 
 bool CBoxAlgorithmSignalResampling::initialize()
 {
@@ -69,8 +69,8 @@ bool CBoxAlgorithmSignalResampling::initialize()
 
 	OV_ERROR_UNLESS_KRF(l_i64OutputSampleCount > 0, "Invalid sample count per buffer [" << l_i64OutputSampleCount << "] (expected value > 0)", OpenViBE::Kernel::ErrorType::BadSetting);
 
-	m_outSamplingRate = static_cast<uint32_t>(l_i64OutputSamplingRate);
-	m_outSampleCount  = static_cast<uint32_t>(l_i64OutputSampleCount);
+	m_outSamplingRate = uint32_t(l_i64OutputSamplingRate);
+	m_outSampleCount  = uint32_t(l_i64OutputSampleCount);
 
 	m_iFractionalDelayFilterSampleCount = 6;
 	m_f64TransitionBandInPercent        = 45;
@@ -78,7 +78,7 @@ bool CBoxAlgorithmSignalResampling::initialize()
 
 	m_inSamplingRate = 0;
 
-	m_oEncoder.getInputSamplingRate() = static_cast<uint64_t>(m_outSamplingRate);
+	m_oEncoder.getInputSamplingRate() = uint64_t(m_outSamplingRate);
 
 	return true;
 }
@@ -112,14 +112,14 @@ bool CBoxAlgorithmSignalResampling::process()
 
 		if (m_oDecoder.isHeaderReceived())
 		{
-			m_inSamplingRate = static_cast<uint32_t>(m_oDecoder.getOutputSamplingRate());
+			m_inSamplingRate = uint32_t(m_oDecoder.getOutputSamplingRate());
 
 			OV_ERROR_UNLESS_KRF(m_inSamplingRate > 0, "Invalid input sampling rate [" << m_inSamplingRate << "] (expected value > 0)", OpenViBE::Kernel::ErrorType::BadInput);
 
 			this->getLogManager() << LogLevel_Info << "Resampling from [" << m_inSamplingRate << "] Hz to [" << m_outSamplingRate << "] Hz.\n";
 
 			double src                     = 1.0 * m_outSamplingRate / m_inSamplingRate;
-			uint32_t greatestCommonDivisor = static_cast<uint32_t>(SigProSTD::gcd(m_inSamplingRate, m_outSamplingRate));
+			uint32_t greatestCommonDivisor = uint32_t(SigProSTD::gcd(m_inSamplingRate, m_outSamplingRate));
 			uint32_t factorUpsampling      = m_outSamplingRate / greatestCommonDivisor;
 			uint32_t factorDownsampling    = m_inSamplingRate / greatestCommonDivisor;
 			if (src <= 0.5 || src > 1.0)

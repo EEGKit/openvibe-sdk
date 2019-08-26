@@ -16,7 +16,7 @@ bool CBoxAlgorithmStimulationListener::initialize()
 		m_vStimulationDecoder.push_back(new OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmStimulationListener>(*this, i));
 	}
 
-	m_eLogLevel = static_cast<ELogLevel>((uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
+	m_eLogLevel = ELogLevel((uint64_t)FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
 
 	return true;
 }

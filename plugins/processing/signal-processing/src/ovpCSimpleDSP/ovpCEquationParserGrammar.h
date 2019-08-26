@@ -279,7 +279,7 @@ static CVariableSymbols variable_p;
 /**
 * The parser's grammar.
 */
-struct CEquationGrammar : public grammar<CEquationGrammar>
+struct CEquationGrammar : grammar<CEquationGrammar>
 {
 	static const int realID       = 1;
 	static const int variableID   = 2;

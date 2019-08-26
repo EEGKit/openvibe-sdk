@@ -60,21 +60,21 @@ CMetaboxObjectDesc::CMetaboxObjectDesc(const CString& rMetaboxDescriptor, Kernel
 	}
 }
 
-bool CMetaboxObjectDesc::getBoxPrototype(Kernel::IBoxProto& rBoxAlgorithmPrototype) const
+bool CMetaboxObjectDesc::getBoxPrototype(Kernel::IBoxProto& prototype) const
 {
 	for (auto& input : m_Inputs)
 	{
-		rBoxAlgorithmPrototype.addInput(input.m_sName, input.m_oTypeIdentifier, input.m_oIdentifier);
+		prototype.addInput(input.m_sName, input.m_oTypeIdentifier, input.m_oIdentifier);
 	}
 
 	for (auto& output : m_Outputs)
 	{
-		rBoxAlgorithmPrototype.addOutput(output.m_sName, output.m_oTypeIdentifier, output.m_oIdentifier);
+		prototype.addOutput(output.m_sName, output.m_oTypeIdentifier, output.m_oIdentifier);
 	}
 
 	for (auto& setting : m_Settings)
 	{
-		rBoxAlgorithmPrototype.addSetting(setting.m_sName, setting.m_oTypeIdentifier, setting.m_sDefaultValue, false, setting.m_oIdentifier);
+		prototype.addSetting(setting.m_sName, setting.m_oTypeIdentifier, setting.m_sDefaultValue, false, setting.m_oIdentifier);
 	}
 
 	return true;

@@ -31,8 +31,8 @@ class CAbstractTreeNode;
 */
 union functionContext
 {
-	double m_f64DirectValue = 0;//if the parameter if a value (push_val)
-	double** m_ppIndirectValue;//if it is a pointer to a value (push_var)
+	double m_f64DirectValue = 0;	//if the parameter if a value (push_val)
+	double** m_ppIndirectValue;		//if it is a pointer to a value (push_var)
 };
 
 //! Type of the functions in the function stack generated from the equation.
@@ -43,34 +43,34 @@ class CEquationParser
 protected:
 
 	//! The AST produced by the parsing of the equation
-	CAbstractTree* m_pTree;
+	CAbstractTree* m_pTree = nullptr;
 
 	//! Grammar to use
 	CEquationGrammar m_oGrammar;
 
 	//! Pointer to the data referenced by X in the equation
-	double** m_ppVariable;
+	double** m_ppVariable = nullptr;
 	//! Number of accessible variables
 	uint32_t m_ui32VariableCount = 0;
 
 	//! Size of the "function stack" (where the sucessive function pointers are stored)
-	const uint32_t m_ui32FunctionStackSize;
+	const uint32_t m_ui32FunctionStackSize = 1024;
 	//! Pointer to the top of the function stack
-	functionPointer* m_pFunctionList;
+	functionPointer* m_pFunctionList = nullptr;
 	//! Pointer to the base of the function stack
-	functionPointer* m_pFunctionListBase;
+	functionPointer* m_pFunctionListBase = nullptr;
 
 	//! Size of the "function context stack" (where the sucessive function context are stored)
-	const uint64_t m_ui64FunctionContextStackSize;
+	const uint64_t m_ui64FunctionContextStackSize = 1024;
 	//! Pointer to the top of the function context stack
-	functionContext* m_pFunctionContextList;
+	functionContext* m_pFunctionContextList = nullptr;
 	//! Pointer to the base of the function context stack
-	functionContext* m_pFunctionContextListBase;
+	functionContext* m_pFunctionContextListBase = nullptr;
 
 	//! Size of the "local" stack
-	const uint64_t m_ui64StackSize;
+	const uint64_t m_ui64StackSize = 1024;
 	//! Pointer to the top of the "local" stack
-	double* m_pStack;
+	double* m_pStack = nullptr;
 
 	//! Number of pointers/contexts in the function/context stacks (same for both)
 	uint64_t m_ui64NumberOfOperations = 0;
@@ -79,7 +79,7 @@ protected:
 	static functionPointer m_pFunctionTable[32];
 
 	//! Category of the tree (OP_USERDEF or Special tree)
-	uint64_t m_ui64TreeCategory = 0;
+	uint64_t m_ui64TreeCategory = OP_USERDEF;
 	//! Optional parameter in case of a special tree
 	double m_f64TreeParameter = 0;
 
@@ -110,7 +110,7 @@ public:
 
 	void push_op(uint64_t ui64Operator);
 	void push_value(double f64Value);
-	void push_var(uint32_t ui32Index);
+	void push_var(uint32_t index);
 
 	/**
 	* Returns the tree's category.

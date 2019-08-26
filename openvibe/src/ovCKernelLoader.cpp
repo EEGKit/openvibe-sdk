@@ -39,7 +39,7 @@ namespace OpenViBE
 		bool (*onGetKernelDescCB)(IKernelDesc*&);
 		bool (*onUninitializeCB)();
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE
 
 //___________________________________________________________________//
 //                                                                   //
@@ -112,7 +112,7 @@ namespace OpenViBE
 
 		HMODULE m_pFileHandle;
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE
 
 #else
 
@@ -257,7 +257,8 @@ bool CKernelLoaderWindows::isOpen()
 //___________________________________________________________________//
 //                                                                   //
 
-CKernelLoader::CKernelLoader() {
+CKernelLoader::CKernelLoader()
+{
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 	m_pKernelLoaderImpl=new CKernelLoaderLinux();
 #elif defined TARGET_OS_Windows

@@ -77,16 +77,10 @@ namespace Dsp
 					   const complex_t& x);
 
 		// Direct access to the input coefficient array of size degree+1.
-		complex_t* coef()
-		{
-			return m_a;
-		}
+		complex_t* coef() { return m_a; }
 
 		// Direct access to the resulting roots array of size degree
-		complex_t* root()
-		{
-			return m_root;
-		}
+		complex_t* root() { return m_root; }
 
 		// sort the roots by descending imaginary part
 		void sort(int degree);
@@ -100,9 +94,9 @@ namespace Dsp
 					  int& its);
 
 	protected:
-		int m_maxdegree = 0;
-		complex_t* m_a = nullptr;		// input coefficients (m_maxdegree+1 elements)
-		complex_t* m_ad = nullptr;	// copy of deflating coefficients
+		int m_maxdegree   = 0;
+		complex_t* m_a    = nullptr;		// input coefficients (m_maxdegree+1 elements)
+		complex_t* m_ad   = nullptr;	// copy of deflating coefficients
 		complex_t* m_root = nullptr; // array of roots (maxdegree elements)
 	};
 
@@ -124,6 +118,6 @@ namespace Dsp
 		complex_t m_ad0[maxdegree + 1];
 		complex_t m_r [maxdegree];
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

@@ -27,7 +27,7 @@ namespace OpenViBE
 			void log(const uint16_t value) override;
 			void log(const uint8_t value) override;
 			void log(const int64_t value) override;
-			void log(const int32_t value) override;
+			void log(const int value) override;
 			void log(const int16_t value) override;
 			void log(const int8_t value) override;
 			void log(const double value) override;
@@ -49,8 +49,8 @@ namespace OpenViBE
 			std::fstream m_fsFileStream;
 
 			// Log Settings
-			bool m_bTimeInSeconds = false;
-			bool m_bLogWithHexa = false;
+			bool m_bTimeInSeconds        = false;
+			bool m_bLogWithHexa          = false;
 			uint64_t m_ui64TimePrecision = 0;
 
 		private:
@@ -66,7 +66,5 @@ namespace OpenViBE
 				}
 			}
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
-
-
+	} // namespace Kernel
+} // namespace OpenViBE

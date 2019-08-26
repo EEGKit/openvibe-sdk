@@ -61,7 +61,7 @@ public:
 	{
 		if (m_File)
 		{
-			std::fwrite(pBuffer, static_cast<size_t>(ui64BufferSize), 1, m_File);
+			std::fwrite(pBuffer, size_t(ui64BufferSize), 1, m_File);
 		}
 	}
 
@@ -124,7 +124,7 @@ int uoEBMLWriterTest(int argc, char* argv[])
 	writerHelper.closeChild();
 
 	writerHelper.openChild(0x8765);
-	writerHelper.setFloat32AsChildData(static_cast<float>(M_PI));
+	writerHelper.setFloat32AsChildData(float(M_PI));
 	writerHelper.closeChild();
 	writer->release();
 	writerCallback.release();

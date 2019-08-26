@@ -74,10 +74,7 @@ namespace Dsp
 		{
 			std::vector<PoleZeroPair> vpz;
 			const int pairs = (m_digitalProto.getNumPoles() + 1) / 2;
-			for (int i = 0; i < pairs; ++i)
-			{
-				vpz.push_back(m_digitalProto[i]);
-			}
+			for (int i = 0; i < pairs; ++i) { vpz.push_back(m_digitalProto[i]); }
 			return vpz;
 		}
 #endif
@@ -181,13 +178,13 @@ namespace Dsp
 	private:
 		ComplexPair transform(complex_t c);
 
-		double wc = 0;
-		double wc2 = 0;
-		double a = 0;
-		double b = 0;
-		double a2 = 0;
-		double b2 = 0;
-		double ab = 0;
+		double wc   = 0;
+		double wc2  = 0;
+		double a    = 0;
+		double b    = 0;
+		double a2   = 0;
+		double b2   = 0;
+		double ab   = 0;
 		double ab_2 = 0;
 	};
 
@@ -205,13 +202,13 @@ namespace Dsp
 	private:
 		ComplexPair transform(complex_t c);
 
-		double wc = 0;
+		double wc  = 0;
 		double wc2 = 0;
-		double a = 0;
-		double b = 0;
-		double a2 = 0;
-		double b2 = 0;
+		double a   = 0;
+		double b   = 0;
+		double a2  = 0;
+		double b2  = 0;
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

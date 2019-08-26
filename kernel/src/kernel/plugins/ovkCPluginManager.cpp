@@ -71,8 +71,8 @@ namespace OpenViBE
 				}
 
 				bool l_bPluginObjectDescAdded          = false;
-				uint32_t l_ui32Index                     = 0;
-				uint32_t l_ui32Count                     = 0;
+				uint32_t l_ui32Index                   = 0;
+				uint32_t l_ui32Count                   = 0;
 				IPluginObjectDesc* l_pPluginObjectDesc = nullptr;
 				while (l_pPluginModule->getPluginObjectDescription(l_ui32Index, l_pPluginObjectDesc))
 				{
@@ -118,8 +118,8 @@ namespace OpenViBE
 			map<IPluginObjectDesc*, IPluginModule*>& m_rPluginObjectDesc;
 			bool& m_HaveAllPluginsLoadedCorrectly;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE
 
 CPluginManager::CPluginManager(const IKernelContext& rKernelContext)
 	: TKernelObject<IPluginManager>(rKernelContext) {}
@@ -198,10 +198,7 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier&
 				l_bFoundPrevious = true;
 			}
 		}
-		else
-		{
-			return elem.first->getClassIdentifier();
-		}
+		else { return elem.first->getClassIdentifier(); }
 	}
 	return OV_UndefinedIdentifier;
 }
@@ -222,10 +219,7 @@ CIdentifier CPluginManager::getNextPluginObjectDescIdentifier(const CIdentifier&
 		}
 		else
 		{
-			if (elem.first->isDerivedFromClass(rBaseClassIdentifier))
-			{
-				return elem.first->getClassIdentifier();
-			}
+			if (elem.first->isDerivedFromClass(rBaseClassIdentifier)) { return elem.first->getClassIdentifier(); }
 		}
 	}
 	return OV_UndefinedIdentifier;
@@ -238,9 +232,9 @@ bool CPluginManager::canCreatePluginObject(const CIdentifier& rClassIdentifier)
 	//	this->getLogManager() << LogLevel_Debug << "Searching if can build plugin object\n";
 
 	return std::any_of(m_vPluginObjectDesc.begin(), m_vPluginObjectDesc.end(), [rClassIdentifier](const std::pair<IPluginObjectDesc*, IPluginModule*>& v)
-					   {
-						   return v.first->getCreatedClass() == rClassIdentifier;
-					   });
+	{
+		return v.first->getCreatedClass() == rClassIdentifier;
+	});
 }
 
 const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(const CIdentifier& rClassIdentifier) const
@@ -251,10 +245,7 @@ const IPluginObjectDesc* CPluginManager::getPluginObjectDesc(const CIdentifier& 
 
 	for (auto& pluginObject : m_vPluginObjectDesc)
 	{
-		if (pluginObject.first->getClassIdentifier() == rClassIdentifier)
-		{
-			return pluginObject.first;
-		}
+		if (pluginObject.first->getClassIdentifier() == rClassIdentifier) { return pluginObject.first; }
 	}
 
 	this->getLogManager() << LogLevel_Debug << "Plugin object descriptor class identifier " << rClassIdentifier << " not found\n";
@@ -355,15 +346,15 @@ IAlgorithm* CPluginManager::createAlgorithm(const IAlgorithmDesc& rAlgorithmDesc
 	IAlgorithmDesc* l_pAlgorithmDesc = const_cast<IAlgorithmDesc*>(&rAlgorithmDesc);
 	IPluginObject* l_pPluginObject   = l_pAlgorithmDesc->create();
 
-	OV_ERROR_UNLESS_KRN(l_pPluginObject, 
-						"Could not create plugin object from " << rAlgorithmDesc.getName() << " plugin object descriptor", 
+	OV_ERROR_UNLESS_KRN(l_pPluginObject,
+						"Could not create plugin object from " << rAlgorithmDesc.getName() << " plugin object descriptor",
 						ErrorType::BadResourceCreation);
 
 	IAlgorithmDesc* l_pPluginObjectDescT = dynamic_cast<IAlgorithmDesc*>(l_pAlgorithmDesc);
 	IAlgorithm* l_pPluginObjectT         = dynamic_cast<IAlgorithm*>(l_pPluginObject);
 
-	OV_ERROR_UNLESS_KRN(l_pPluginObjectDescT && l_pPluginObjectT, 
-						"Could not downcast plugin object and/or plugin object descriptor for " << rAlgorithmDesc.getName() << " plugin object descriptor", 
+	OV_ERROR_UNLESS_KRN(l_pPluginObjectDescT && l_pPluginObjectT,
+						"Could not downcast plugin object and/or plugin object descriptor for " << rAlgorithmDesc.getName() << " plugin object descriptor",
 						ErrorType::BadResourceCreation);
 
 	{
@@ -394,7 +385,7 @@ IPluginObjectT* CPluginManager::createPluginObjectT(const CIdentifier& rClassIde
 	if ((l_oSubstitutionTokenIdentifier = this->getConfigurationManager().lookUpConfigurationTokenIdentifier(l_sSubstitutionTokenName)) != OV_UndefinedIdentifier)
 	{
 		CString l_sSubstitutionTokenValue = this->getConfigurationManager().getConfigurationTokenValue(l_oSubstitutionTokenIdentifier);
-		l_sSubstitutionTokenValue = this->getConfigurationManager().expand(l_sSubstitutionTokenValue);
+		l_sSubstitutionTokenValue         = this->getConfigurationManager().expand(l_sSubstitutionTokenValue);
 
 		try
 		{

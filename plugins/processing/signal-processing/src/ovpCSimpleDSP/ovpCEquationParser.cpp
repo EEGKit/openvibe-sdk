@@ -29,10 +29,7 @@ namespace
 	// it can not be easily used in std::transform
 	// this workaround is taken from http://www.gcek.net/ref/books/sw/cpp/ticppv2/
 	template <class charT>
-	charT to_lower(charT c)
-	{
-		return std::tolower(c);
-	}
+	charT to_lower(charT c) { return std::tolower(c); }
 
 	// BOOST::Ast should be able to remove spaces / tabs etc but
 	// unfortunately, it seems it does not work correcly in some
@@ -41,13 +38,10 @@ namespace
 	std::string find_and_replace(std::string s, const std::string& f, const std::string& r)
 	{
 		size_t i;
-		while ((i = s.find(f)) != std::string::npos)
-		{
-			s.replace(i, f.length(), r);
-		}
+		while ((i = s.find(f)) != std::string::npos) { s.replace(i, f.length(), r); }
 		return s;
 	}
-}  // namespace
+} // namespace
 
 functionPointer CEquationParser::m_pFunctionTable[] =
 {
@@ -70,18 +64,7 @@ functionPointer CEquationParser::m_pFunctionTable[] =
 };
 
 CEquationParser::CEquationParser(TBoxAlgorithm<IBoxAlgorithm>& oPlugin, double** ppVariable, uint32_t ui32VariableCount)
-	: m_pTree(nullptr)
-	  , m_ppVariable(ppVariable)
-	  , m_ui32VariableCount(ui32VariableCount)
-	  , m_ui32FunctionStackSize(1024)
-	  , m_pFunctionList(nullptr)
-	  , m_pFunctionListBase(nullptr)
-	  , m_ui64FunctionContextStackSize(1024)
-	  , m_pFunctionContextList(nullptr)
-	  , m_pFunctionContextListBase(nullptr)
-	  , m_ui64StackSize(1024)
-	  , m_pStack(nullptr)
-	  , m_ui64TreeCategory(OP_USERDEF), m_oParentPlugin(oPlugin) {}
+	: m_ppVariable(ppVariable), m_ui32VariableCount(ui32VariableCount), m_oParentPlugin(oPlugin) {}
 
 CEquationParser::~CEquationParser()
 {
@@ -218,10 +201,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 			// -X => (* -1 X), useful to simplify the tree later
 			return new CAbstractTreeParentNode(OP_MUL, new CAbstractTreeValueNode(-1), createNode(i->children.begin()), true);
 		}
-		if (*i->value.begin() == '+')
-		{
-			return createNode(i->children.begin());
-		}
+		if (*i->value.begin() == '+') { return createNode(i->children.begin()); }
 	}
 	else if (i->value.id() == CEquationGrammar::realID)
 	{
@@ -269,7 +249,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), false);
 		}
-			//gets the function's Id from the binary function's symbols table
+		//gets the function's Id from the binary function's symbols table
 		if ((l_ui64FunctionIdentifier = find(binaryFunction_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
@@ -292,7 +272,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
-			//gets the function's Id from the comparison function's symbols table
+		//gets the function's Id from the comparison function's symbols table
 		if ((l_ui64FunctionIdentifier = find(comparison2Function_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
@@ -311,7 +291,7 @@ CAbstractTreeNode* CEquationParser::createNode(iter_t const& i)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
 		}
-			//gets the function's Id from the binary boolean function's symbols table
+		//gets the function's Id from the binary boolean function's symbols table
 		if ((l_ui64FunctionIdentifier = find(binaryBoolean2Function_p, l_sValue.c_str())) != nullptr)
 		{
 			return new CAbstractTreeParentNode(*l_ui64FunctionIdentifier, createNode(i->children.begin()), createNode(i->children.begin() + 1), false);
@@ -337,10 +317,10 @@ void CEquationParser::push_value(double f64Value)
 	(*(m_pFunctionContextList++)).m_f64DirectValue = f64Value;
 }
 
-void CEquationParser::push_var(uint32_t ui32Index)
+void CEquationParser::push_var(uint32_t index)
 {
 	*(m_pFunctionList++)                            = op_loadVar;
-	(*(m_pFunctionContextList++)).m_ppIndirectValue = &m_ppVariable[ui32Index];
+	(*(m_pFunctionContextList++)).m_ppIndirectValue = &m_ppVariable[index];
 }
 
 void CEquationParser::push_op(uint64_t ui64Operator)

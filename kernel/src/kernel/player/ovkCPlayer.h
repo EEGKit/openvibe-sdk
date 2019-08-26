@@ -50,17 +50,17 @@ namespace OpenViBE
 		protected:
 
 			CKernelContextBridge m_oKernelContextBridge;
-			IConfigurationManager* m_pRuntimeConfigurationManager = nullptr;
-			IScenarioManager* m_pRuntimeScenarioManager = nullptr;
+			IConfigurationManager* m_pRuntimeConfigurationManager                          = nullptr;
+			IScenarioManager* m_pRuntimeScenarioManager                                    = nullptr;
 			CScenarioSettingKeywordParserCallback* m_pScenarioSettingKeywordParserCallback = nullptr;
 
 			CScheduler m_oScheduler;
 
-			uint64_t m_ui64CurrentTimeToReach = 0;
-			uint64_t m_ui64Lateness = 0;
-			uint64_t m_ui64InnerLateness = 0;
-			EPlayerStatus m_eStatus;
-			bool m_bIsInitializing = false;
+			uint64_t m_ui64CurrentTimeToReach    = 0;
+			uint64_t m_ui64Lateness              = 0;
+			uint64_t m_ui64InnerLateness         = 0;
+			EPlayerStatus m_eStatus              = PlayerStatus_Stop;
+			bool m_bIsInitializing               = false;
 			double m_f64FastForwardMaximumFactor = 0;
 
 			std::string m_sScenarioConfigurationFile;
@@ -74,7 +74,5 @@ namespace OpenViBE
 
 			System::CChrono m_oBenchmarkChrono;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
-
-
+	} // namespace Kernel
+} // namespace OpenViBE

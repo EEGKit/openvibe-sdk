@@ -58,7 +58,7 @@ namespace OpenViBE
 
 				CString m_sName;
 				CIdentifier m_oTypeIdentifier = OV_UndefinedIdentifier;
-				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
+				CIdentifier m_oIdentifier     = OV_UndefinedIdentifier;
 			} SIOStream;
 
 			typedef struct _SSetting
@@ -81,7 +81,7 @@ namespace OpenViBE
 				CIdentifier m_oIdentifier = OV_UndefinedIdentifier;
 			} SSetting;
 
-			bool getBoxPrototype(Kernel::IBoxProto& rBoxAlgorithmPrototype) const override;
+			bool getBoxPrototype(Kernel::IBoxProto& prototype) const override;
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_MetaboxDesc)
 
@@ -104,5 +104,5 @@ namespace OpenViBE
 			std::vector<SIOStream> m_Outputs;
 			std::vector<SSetting> m_Settings;
 		};
-	}  // namespace Metabox
-}  // namespace OpenViBE
+	} // namespace Metabox
+} // namespace OpenViBE

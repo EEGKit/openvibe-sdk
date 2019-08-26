@@ -46,10 +46,7 @@ namespace Dsp
 #include "DesignSynthesisH.inl"
 
 		// Sampling rate is the first param for every Design filter
-		static const ParamInfo getParamInfo_0()
-		{
-			return ParamInfo::defaultSampleRateParam();
-		}
+		static const ParamInfo getParamInfo_0() { return ParamInfo::defaultSampleRateParam(); }
 
 		// These should never get called
 		static const ParamInfo getParamInfo_1() { return ParamInfo(); }
@@ -60,6 +57,6 @@ namespace Dsp
 		static const ParamInfo getParamInfo_6() { return ParamInfo(); }
 		static const ParamInfo getParamInfo_7() { return ParamInfo(); }
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

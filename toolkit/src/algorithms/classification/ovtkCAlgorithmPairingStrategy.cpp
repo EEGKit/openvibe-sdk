@@ -18,8 +18,7 @@ void OpenViBEToolkit::registerClassificationComparisonFunction(const CIdentifier
 
 fClassifierComparison OpenViBEToolkit::getClassificationComparisonFunction(const CIdentifier& rClassIdentifier)
 {
-	if (mComparisionFunctionMap.count(rClassIdentifier.toUInteger()) == 0)
-		return nullptr;
+	if (mComparisionFunctionMap.count(rClassIdentifier.toUInteger()) == 0) return nullptr;
 	return mComparisionFunctionMap[rClassIdentifier.toUInteger()];
 }
 
@@ -32,7 +31,7 @@ bool CAlgorithmPairingStrategy::process()
 
 		const uint64_t l_ui64ClassCount           = (uint64_t)ip_pClassCount;
 		const CIdentifier l_oClassifierIdentifier = *((CIdentifier*)ip_pClassifierIdentifier);
-		if (this->designArchitecture(l_oClassifierIdentifier, static_cast<uint32_t>(l_ui64ClassCount)))
+		if (this->designArchitecture(l_oClassifierIdentifier, uint32_t(l_ui64ClassCount)))
 		{
 			this->activateOutputTrigger(OVTK_Algorithm_Classifier_OutputTriggerId_Success, true);
 		}

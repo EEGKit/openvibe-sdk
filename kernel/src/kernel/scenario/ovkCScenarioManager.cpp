@@ -57,10 +57,7 @@ CIdentifier CScenarioManager::getNextScenarioIdentifier(const CIdentifier& rPrev
 	else
 	{
 		itScenario = m_vScenario.find(rPreviousIdentifier);
-		if (itScenario == m_vScenario.end())
-		{
-			return OV_UndefinedIdentifier;
-		}
+		if (itScenario == m_vScenario.end()) { return OV_UndefinedIdentifier; }
 		++itScenario;
 	}
 
@@ -195,7 +192,7 @@ bool CScenarioManager::importScenarioFromFile(CIdentifier& newScenarioIdentifier
 		ErrorType::BadFileRead);
 
 	fseek(inputFile, 0, SEEK_END);
-	memoryBuffer.setSize(static_cast<size_t>(ftell(inputFile)), true);
+	memoryBuffer.setSize(size_t(ftell(inputFile)), true);
 	fseek(inputFile, 0, SEEK_SET);
 
 	if (fread(reinterpret_cast<char*>(memoryBuffer.getDirectPointer()), (size_t)memoryBuffer.getSize(), 1, inputFile) != 1)
@@ -278,10 +275,7 @@ CIdentifier CScenarioManager::getNextScenarioImportContext(const CIdentifier& im
 {
 	if (m_ScenarioImporters.empty()) { return OV_UndefinedIdentifier; }
 
-	if (importContext == OV_UndefinedIdentifier)
-	{
-		return m_ScenarioImporters.cbegin()->first;
-	}
+	if (importContext == OV_UndefinedIdentifier) { return m_ScenarioImporters.cbegin()->first; }
 
 	auto current = m_ScenarioImporters.find(importContext);
 	if (current == m_ScenarioImporters.end() || ++current == m_ScenarioImporters.end()) { return OV_UndefinedIdentifier; }
@@ -295,10 +289,7 @@ CString CScenarioManager::getNextScenarioImporter(const CIdentifier& importConte
 
 	const auto& scenarioImportContextMap = m_ScenarioImporters.at(importContext);
 
-	if (fileNameExtension == CString(""))
-	{
-		return scenarioImportContextMap.cbegin()->first.c_str();
-	}
+	if (fileNameExtension == CString("")) { return scenarioImportContextMap.cbegin()->first.c_str(); }
 
 	auto current = scenarioImportContextMap.find(fileNameExtension.toASCIIString());
 	if (current == scenarioImportContextMap.end() || ++current == scenarioImportContextMap.end()) { return ""; }
@@ -475,7 +466,7 @@ bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIden
 		"Failed to open file " << fileName,
 		ErrorType::BadFileRead);
 
-	outputFileStream.write(reinterpret_cast<const char*>(memoryBuffer.getDirectPointer()), static_cast<long>(memoryBuffer.getSize()));
+	outputFileStream.write(reinterpret_cast<const char*>(memoryBuffer.getDirectPointer()), long(memoryBuffer.getSize()));
 	outputFileStream.close();
 
 	return true;
@@ -551,10 +542,7 @@ CIdentifier CScenarioManager::getNextScenarioExportContext(const CIdentifier& ex
 {
 	if (m_ScenarioExporters.empty()) { return OV_UndefinedIdentifier; }
 
-	if (exportContext == OV_UndefinedIdentifier)
-	{
-		return m_ScenarioExporters.cbegin()->first;
-	}
+	if (exportContext == OV_UndefinedIdentifier) { return m_ScenarioExporters.cbegin()->first; }
 
 	auto current = m_ScenarioExporters.find(exportContext);
 	if (current == m_ScenarioExporters.end() || ++current == m_ScenarioExporters.end()) { return OV_UndefinedIdentifier; }
@@ -568,10 +556,7 @@ CString CScenarioManager::getNextScenarioExporter(const CIdentifier& exportConte
 
 	const auto& scenarioExportContextMap = m_ScenarioExporters.at(exportContext);
 
-	if (fileNameExtension == CString(""))
-	{
-		return scenarioExportContextMap.cbegin()->first.c_str();
-	}
+	if (fileNameExtension == CString("")) { return scenarioExportContextMap.cbegin()->first.c_str(); }
 
 	auto current = scenarioExportContextMap.find(fileNameExtension.toASCIIString());
 	if (current == scenarioExportContextMap.end() || ++current == scenarioExportContextMap.end()) { return ""; }

@@ -89,7 +89,7 @@ namespace r8b
 			{
 				for (i = -pc2 + 1; i <= FilterFracs + pc2; i++)
 				{
-					sinc.FracDelay = (double)(FilterFracs - i) / FilterFracs;
+					sinc.FracDelay = double(FilterFracs - i) / FilterFracs;
 					sinc.initFrac(CDSPSincFilterGen::wftVaneev, Params);
 					sinc.generateFrac(p, &CDSPSincFilterGen::calcWindowVaneev,
 									  ElementSize);
@@ -102,7 +102,7 @@ namespace r8b
 			{
 				for (i = -pc2 + 1; i <= FilterFracs + pc2; i++)
 				{
-					sinc.FracDelay = (double)(FilterFracs - i) / FilterFracs;
+					sinc.FracDelay = double(FilterFracs - i) / FilterFracs;
 					sinc.initFrac(CDSPSincFilterGen::wftKaiser, Params, true);
 					sinc.generateFrac(p, &CDSPSincFilterGen::calcWindowKaiser,
 									  ElementSize);
@@ -244,15 +244,9 @@ namespace r8b
 			clear();
 		}
 
-		int getLatency() const override
-		{
-			return (0);
-		}
+		int getLatency() const override { return (0); }
 
-		double getLatencyFrac() const override
-		{
-			return (0.0);
-		}
+		double getLatencyFrac() const override { return (0.0); }
 
 		int getInLenBeforeOutStart(const int NextInLen) const override
 		{
@@ -404,7 +398,7 @@ namespace r8b
 				InPosShift = InPosFrac;
 			}
 
-			return ((int)(op - op0));
+			return (int(op - op0));
 		}
 
 	private:
@@ -455,25 +449,25 @@ namespace r8b
 		///<
 		double DstSampleRate = 0; ///< Destination sample rate.
 		///<
-		double InitFracPos = 0; ///< Initial fractional position, in samples, in the
+		double InitFracPos   = 0; ///< Initial fractional position, in samples, in the
 		///< range [0; 1).
 		///<
-		int BufLeft = 0; ///< The number of samples left in the buffer to process.
+		int BufLeft          = 0; ///< The number of samples left in the buffer to process.
 		///< When this value is below FilterLenD2Plus1, the interpolation
 		///< cycle ends.
 		///<
-		int WritePos = 0; ///< The current buffer write position. Incremented together
+		int WritePos         = 0; ///< The current buffer write position. Incremented together
 		///< with the BufLeft variable.
 		///<
-		int ReadPos = 0; ///< The current buffer read position.
+		int ReadPos          = 0; ///< The current buffer read position.
 		///<
-		int InCounter = 0; ///< Interpolation step counter.
+		int InCounter        = 0; ///< Interpolation step counter.
 		///<
-		int InPosInt = 0; ///< Interpolation position (integer part).
+		int InPosInt         = 0; ///< Interpolation position (integer part).
 		///<
-		double InPosFrac = 0; ///< Interpolation position (fractional part).
+		double InPosFrac     = 0; ///< Interpolation position (fractional part).
 		///<
-		double InPosShift = 0; ///< Interpolation position fractional shift.
+		double InPosShift    = 0; ///< Interpolation position fractional shift.
 		///<
 
 #if !R8B_FLTTEST

@@ -46,17 +46,17 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ReferenceChannel; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmReferenceChannel; }
 			// virtual OpenViBE::Plugins::IBoxListener* createBoxListener() const               { return new CBoxAlgorithmReferenceChannelListener; }
-			// virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const { delete pBoxListener; }
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			// virtual void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const { delete listener; }
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("Channel", OV_TypeId_String, "Ref_Nose");
-				rBoxAlgorithmPrototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, OVP_TypeId_MatchMethod_Smart.toString());
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addOutput("Output signal", OV_TypeId_Signal);
+				prototype.addSetting("Channel", OV_TypeId_String, "Ref_Nose");
+				prototype.addSetting("Channel Matching Method", OVP_TypeId_MatchMethod, OVP_TypeId_MatchMethod_Smart.toString());
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ReferenceChannelDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

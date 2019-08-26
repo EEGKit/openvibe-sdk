@@ -87,8 +87,7 @@ namespace Dsp
 
 				for (int n = 0; n < remainingSamples; ++n)
 				{
-					for (int i = DesignClass::NumParams; --i >= 0;)
-						m_transitionParams[i] += dp[i];
+					for (int i = DesignClass::NumParams; --i >= 0;) m_transitionParams[i] += dp[i];
 
 					m_transitionFilter.setParams(m_transitionParams);
 
@@ -155,6 +154,6 @@ namespace Dsp
 
 		int m_remainingSamples = 0;			// remaining transition samples
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

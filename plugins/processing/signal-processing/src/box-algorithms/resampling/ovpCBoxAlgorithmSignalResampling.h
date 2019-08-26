@@ -61,11 +61,11 @@ namespace OpenViBEPlugins
 			mutable OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmSignalResampling> m_oEncoder;
 
 			uint32_t m_outSamplingRate = 0;
-			uint32_t m_outSampleCount = 0;
+			uint32_t m_outSampleCount  = 0;
 
 			int m_iFractionalDelayFilterSampleCount = 0;
-			double m_f64TransitionBandInPercent = 0;
-			double m_f64StopBandAttenuation = 0;
+			double m_f64TransitionBandInPercent     = 0;
+			double m_f64StopBandAttenuation         = 0;
 
 			uint32_t m_inSamplingRate = 0;
 			mutable uint64_t m_totalOutSampleCount;
@@ -90,22 +90,22 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_SignalResampling; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmSignalResampling; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutput("Output signal", OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addSetting("New Sampling Frequency", OV_TypeId_Integer, "128", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency);
-				rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer", OV_TypeId_Integer, "8", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
-				rBoxAlgorithmPrototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_LowPassFilterSignalFlag); // displayed for backward compatibility, but never used
+				prototype.addInput("Input signal", OV_TypeId_Signal);
+				prototype.addOutput("Output signal", OV_TypeId_Signal);
+				prototype.addSetting("New Sampling Frequency", OV_TypeId_Integer, "128", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_NewSamplingFrequency);
+				prototype.addSetting("Sample Count Per Buffer", OV_TypeId_Integer, "8", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_SampleCountPerBuffer);
+				prototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true", false, OVP_ClassId_BoxAlgorithm_SignalResampling_SettingId_LowPassFilterSignalFlag); // displayed for backward compatibility, but never used
 
-				//rBoxAlgorithmPrototype.addSetting("New Sampling Frequency",OV_TypeId_Integer,"128");
-				//rBoxAlgorithmPrototype.addSetting("Sample Count Per Buffer",OV_TypeId_Integer,"8");
-				//rBoxAlgorithmPrototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true"); // displayed for backward compatibility, but never used
+				//prototype.addSetting("New Sampling Frequency",OV_TypeId_Integer,"128");
+				//prototype.addSetting("Sample Count Per Buffer",OV_TypeId_Integer,"8");
+				//prototype.addSetting("Low Pass Filter Signal Before Downsampling", OV_TypeId_Boolean, "true"); // displayed for backward compatibility, but never used
 
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_SignalResamplingDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

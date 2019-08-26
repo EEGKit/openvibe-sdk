@@ -49,19 +49,13 @@ public:
 	* Used to know if this node is a leaf.
 	* \return True if the node is a leaf.
 	*/
-	virtual bool isTerminal() const
-	{
-		return m_bIsTerminal;
-	}
+	virtual bool isTerminal() const { return m_bIsTerminal; }
 
 	/**
 	 * Used to know if this node is a constant value node.
 	 * \return True if the node is a constant value node.
 	 */
-	virtual bool isConstant() const
-	{
-		return m_bIsConstant;
-	}
+	virtual bool isConstant() const { return m_bIsConstant; }
 
 	//! Prints the node to stdout.
 	virtual void print(OpenViBE::Kernel::ILogManager& rLogManager) = 0;
@@ -115,10 +109,7 @@ public:
 		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative) { }
 
 	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pChild, bool bIsAssociative = false)
-		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative)
-	{
-		m_oChildren.push_back(pChild);
-	}
+		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative) { m_oChildren.push_back(pChild); }
 
 	CAbstractTreeParentNode(uint64_t ui64NodeIdentifier, CAbstractTreeNode* pLeftChild, CAbstractTreeNode* pRightChild, bool bIsAssociative = false)
 		: CAbstractTreeNode(false, false), m_ui64Identifier(ui64NodeIdentifier), m_bIsAssociative(bIsAssociative)
@@ -250,16 +241,13 @@ public:
 		for (size_t i = 0; i < m_oChildren.size(); i++)
 		{
 			if (m_oChildren[i] == nullptr) { }
-			else
-			{
-				m_oChildren[i]->print(rLogManager);
-			}
+			else { m_oChildren[i]->print(rLogManager); }
 			rLogManager << " ";
 		}
 		rLogManager << ")";
 	}
 
-	bool simplify(CAbstractTreeNode*& pModifiedNode) override;
+	bool simplify(CAbstractTreeNode*& node) override;
 	void levelOperators() override;
 	void useNegationOperator() override;
 	void generateCode(CEquationParser& oParser) override;
@@ -318,9 +306,9 @@ class CAbstractTreeVariableNode : public CAbstractTreeNode
 {
 public:
 
-	explicit CAbstractTreeVariableNode(uint32_t ui32Index)
+	explicit CAbstractTreeVariableNode(uint32_t index)
 		: CAbstractTreeNode(true, false)
-		  , m_ui32Index(ui32Index) { }
+		  , m_ui32Index(index) { }
 
 	~CAbstractTreeVariableNode() override { }
 

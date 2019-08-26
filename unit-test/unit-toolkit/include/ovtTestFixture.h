@@ -70,25 +70,13 @@ namespace OpenViBETest
 	{
 		template <typename... Args>
 		ScopedTest(Args&&... args)
-			: fixture(new T(std::forward<Args>(args)...))
-		{
-			fixture->setUp();
-		}
+			: fixture(new T(std::forward<Args>(args)...)) { fixture->setUp(); }
 
-		~ScopedTest()
-		{
-			fixture->tearDown();
-		}
+		~ScopedTest() { fixture->tearDown(); }
 
-		const T* operator->() const
-		{
-			return fixture.get();
-		}
+		const T* operator->() const { return fixture.get(); }
 
-		T* operator->()
-		{
-			return fixture.get();
-		}
+		T* operator->() { return fixture.get(); }
 
 		std::unique_ptr<T> fixture;
 	};

@@ -31,20 +31,11 @@ CAlgorithmProxy::~CAlgorithmProxy()
 	getKernelContext().getKernelObjectFactory().releaseObject(m_pInputConfigurable);
 }
 
-IAlgorithm& CAlgorithmProxy::getAlgorithm()
-{
-	return m_rAlgorithm;
-}
+IAlgorithm& CAlgorithmProxy::getAlgorithm() { return m_rAlgorithm; }
 
-const IAlgorithm& CAlgorithmProxy::getAlgorithm() const
-{
-	return m_rAlgorithm;
-}
+const IAlgorithm& CAlgorithmProxy::getAlgorithm() const { return m_rAlgorithm; }
 
-const IAlgorithmDesc& CAlgorithmProxy::getAlgorithmDesc() const
-{
-	return m_rAlgorithmDesc;
-}
+const IAlgorithmDesc& CAlgorithmProxy::getAlgorithmDesc() const { return m_rAlgorithmDesc; }
 
 bool CAlgorithmProxy::addInputParameter(const CIdentifier& rInputParameterIdentifier, const CString& sInputName, const EParameterType eParameterType, const CIdentifier& rSubTypeIdentifier)
 {
@@ -57,10 +48,7 @@ bool CAlgorithmProxy::addInputParameter(const CIdentifier& rInputParameterIdenti
 	return true;
 }
 
-CIdentifier CAlgorithmProxy::getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const
-{
-	return m_pInputConfigurable->getNextParameterIdentifier(rPreviousInputParameterIdentifier);
-}
+CIdentifier CAlgorithmProxy::getNextInputParameterIdentifier(const CIdentifier& rPreviousInputParameterIdentifier) const { return m_pInputConfigurable->getNextParameterIdentifier(rPreviousInputParameterIdentifier); }
 
 IParameter* CAlgorithmProxy::getInputParameter(const CIdentifier& rInputParameterIdentifier)
 {
@@ -103,10 +91,7 @@ bool CAlgorithmProxy::addOutputParameter(const CIdentifier& rOutputParameterIden
 	return true;
 }
 
-CIdentifier CAlgorithmProxy::getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const
-{
-	return m_pOutputConfigurable->getNextParameterIdentifier(rPreviousOutputParameterIdentifier);
-}
+CIdentifier CAlgorithmProxy::getNextOutputParameterIdentifier(const CIdentifier& rPreviousOutputParameterIdentifier) const { return m_pOutputConfigurable->getNextParameterIdentifier(rPreviousOutputParameterIdentifier); }
 
 IParameter* CAlgorithmProxy::getOutputParameter(const CIdentifier& rOutputParameterIdentifier)
 {
@@ -230,15 +215,15 @@ bool CAlgorithmProxy::initialize()
 	assert(!m_bIsInitialized);
 
 	return translateException([&]()
-		{
-			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
-			// The dual state initialized or not does not take into account
-			// a partially initialized state. Thus, we have to trust algorithms to implement
-			// their initialization routine as a rollback transaction mechanism
-			m_bIsInitialized = m_rAlgorithm.initialize(l_oAlgorithmContext);
-			return m_bIsInitialized;
-		}, 
-		std::bind(&CAlgorithmProxy::handleException, this, "Algorithm initialization", std::placeholders::_1));
+							  {
+								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+								  // The dual state initialized or not does not take into account
+								  // a partially initialized state. Thus, we have to trust algorithms to implement
+								  // their initialization routine as a rollback transaction mechanism
+								  m_bIsInitialized = m_rAlgorithm.initialize(l_oAlgorithmContext);
+								  return m_bIsInitialized;
+							  },
+							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm initialization", std::placeholders::_1));
 }
 
 bool CAlgorithmProxy::uninitialize()
@@ -246,11 +231,11 @@ bool CAlgorithmProxy::uninitialize()
 	assert(m_bIsInitialized);
 
 	return translateException([&]()
-		{
-			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
-			return m_rAlgorithm.uninitialize(l_oAlgorithmContext);
-		},
-		std::bind(&CAlgorithmProxy::handleException, this, "Algorithm uninitialization", std::placeholders::_1));
+							  {
+								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+								  return m_rAlgorithm.uninitialize(l_oAlgorithmContext);
+							  },
+							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm uninitialization", std::placeholders::_1));
 }
 
 bool CAlgorithmProxy::process()
@@ -258,14 +243,14 @@ bool CAlgorithmProxy::process()
 	assert(m_bIsInitialized);
 
 	return translateException([&]()
-		{
-			CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
-			this->setAllOutputTriggers(false);
-			bool l_bResult = m_rAlgorithm.process(l_oAlgorithmContext);
-			this->setAllInputTriggers(false);
-			return l_bResult;
-		},
-		std::bind(&CAlgorithmProxy::handleException, this, "Algorithm processing", std::placeholders::_1));
+							  {
+								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
+								  this->setAllOutputTriggers(false);
+								  bool l_bResult = m_rAlgorithm.process(l_oAlgorithmContext);
+								  this->setAllInputTriggers(false);
+								  return l_bResult;
+							  },
+							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm processing", std::placeholders::_1));
 }
 
 bool CAlgorithmProxy::process(const CIdentifier& rTriggerIdentifier)
@@ -287,10 +272,7 @@ void CAlgorithmProxy::setAllOutputTriggers(const bool bTriggerStatus)
 	for (auto& trigger : m_vOutputTrigger) { trigger.second.second = bTriggerStatus; }
 }
 
-bool CAlgorithmProxy::isAlgorithmDerivedFrom(const CIdentifier& rClassIdentifier)
-{
-	return m_rAlgorithm.isDerivedFromClass(rClassIdentifier);
-}
+bool CAlgorithmProxy::isAlgorithmDerivedFrom(const CIdentifier& rClassIdentifier) { return m_rAlgorithm.isDerivedFromClass(rClassIdentifier); }
 
 void CAlgorithmProxy::handleException(const char* errorHint, const std::exception& exception)
 {

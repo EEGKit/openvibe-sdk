@@ -210,10 +210,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 		this->evaluate();
 		m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer);
 	}
-	if (l_ui32EndCount)
-	{
-		m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd);
-	}
+	if (l_ui32EndCount) { m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd); }
 
 	if (l_ui32HeaderCount || l_ui32BufferCount || l_ui32EndCount)
 	{

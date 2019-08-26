@@ -48,25 +48,13 @@ namespace OpenViBEToolkit
 			return true;
 		}
 
-		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate()
-		{
-			return m_pOutputSamplingRate;
-		}
+		OpenViBE::Kernel::TParameterHandler<uint64_t>& getOutputSamplingRate() { return m_pOutputSamplingRate; }
 
-		virtual bool isHeaderReceived()
-		{
-			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader);
-		}
+		virtual bool isHeaderReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedHeader); }
 
-		virtual bool isBufferReceived()
-		{
-			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer);
-		}
+		virtual bool isBufferReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedBuffer); }
 
-		virtual bool isEndReceived()
-		{
-			return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedEnd);
-		}
+		virtual bool isEndReceived() { return m_pCodec->isOutputTriggerActive(OVP_GD_Algorithm_SignalStreamDecoder_OutputTriggerId_ReceivedEnd); }
 	};
 
 	template <class T>
@@ -86,6 +74,6 @@ namespace OpenViBEToolkit
 
 		virtual ~TSignalDecoder() { this->uninitialize(); }
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit
 
 #endif // TARGET_HAS_ThirdPartyOpenViBEPluginsGlobalDefines

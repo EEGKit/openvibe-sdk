@@ -60,7 +60,7 @@ namespace Dsp
 			template <typename Sample>
 			Sample process(const Sample in, const BiquadBase& b)
 			{
-				return static_cast<Sample>(StateType::process1(in, b, ac()));
+				return Sample(StateType::process1(in, b, ac()));
 			}
 		};
 
@@ -210,6 +210,6 @@ namespace Dsp
 		void setPoleZeroPair(const PoleZeroPair& pair) { BiquadBase::setPoleZeroPair(pair); }
 		void applyScale(double scale) { BiquadBase::applyScale(scale); }
 	};
-}  // namespace Dsp
+} // namespace Dsp
 
 #endif

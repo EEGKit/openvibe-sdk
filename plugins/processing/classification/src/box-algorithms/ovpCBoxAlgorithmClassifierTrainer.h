@@ -52,12 +52,8 @@ namespace OpenViBEPlugins
 				uint32_t m_ui32InputIndex;
 			} SFeatureVector;
 
-			virtual bool train(const std::vector<SFeatureVector>& rDataset,
-							   const std::vector<size_t>& rPermutation,
-							   size_t uiStartIndex, size_t uiStopIndex);
-			virtual double getAccuracy(const std::vector<SFeatureVector>& rDataset,
-									   const std::vector<size_t>& rPermutation,
-									   size_t uiStartIndex, size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
+			virtual bool train(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t startIdx, size_t stopIndex); 
+			virtual double getAccuracy(const std::vector<SFeatureVector>& rDataset, const std::vector<size_t>& rPermutation, size_t uiStartIndex, size_t uiStopIndex, OpenViBE::CMatrix& oConfusionMatrix);
 			virtual bool printConfusionMatrix(const OpenViBE::CMatrix& oMatrix);
 			virtual bool balanceDataset();
 
@@ -69,15 +65,15 @@ namespace OpenViBEPlugins
 			std::map<uint32_t, uint32_t> m_vFeatureCount;
 
 			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier = nullptr;
-			uint64_t m_ui64TrainStimulation = 0;
-			uint64_t m_ui64PartitionCount = 0;
+			uint64_t m_ui64TrainStimulation                  = 0;
+			uint64_t m_ui64PartitionCount                    = 0;
 
 			OpenViBEToolkit::TStimulationDecoder<CBoxAlgorithmClassifierTrainer> m_oStimulationDecoder;
 			std::vector<OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmClassifierTrainer>*> m_vFeatureVectorDecoder;
 
 			OpenViBEToolkit::TStimulationEncoder<CBoxAlgorithmClassifierTrainer> m_oStimulationEncoder;
 
-			std::map<OpenViBE::CString, OpenViBE::CString>* m_pParameter;
+			std::map<OpenViBE::CString, OpenViBE::CString>* m_pParameter = nullptr;
 
 			std::vector<SFeatureVector> m_vDataset;
 
@@ -101,37 +97,37 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_ClassifierTrainer; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmClassifierTrainer; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Stimulations", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addInput("Features for class 1", OV_TypeId_FeatureVector);
-				rBoxAlgorithmPrototype.addInput("Features for class 2", OV_TypeId_FeatureVector);
+				prototype.addInput("Stimulations", OV_TypeId_Stimulations);
+				prototype.addInput("Features for class 1", OV_TypeId_FeatureVector);
+				prototype.addInput("Features for class 2", OV_TypeId_FeatureVector);
 
-				rBoxAlgorithmPrototype.addOutput("Train-completed Flag", OV_TypeId_Stimulations);
+				prototype.addOutput("Train-completed Flag", OV_TypeId_Stimulations);
 
-				rBoxAlgorithmPrototype.addSetting(c_sTrainTriggerSettingName, OV_TypeId_Stimulation, "OVTK_StimulationId_Train");
-				rBoxAlgorithmPrototype.addSetting(c_sFilenameSettingName, OV_TypeId_Filename, "${Path_UserData}/my-classifier.xml");
+				prototype.addSetting(c_sTrainTriggerSettingName, OV_TypeId_Stimulation, "OVTK_StimulationId_Train");
+				prototype.addSetting(c_sFilenameSettingName, OV_TypeId_Filename, "${Path_UserData}/my-classifier.xml");
 
-				rBoxAlgorithmPrototype.addSetting(c_sMulticlassStrategySettingName, OVTK_TypeId_ClassificationStrategy, "Native");
+				prototype.addSetting(c_sMulticlassStrategySettingName, OVTK_TypeId_ClassificationStrategy, "Native");
 				//Pairing startegy argument
 				//Class label
 
-				rBoxAlgorithmPrototype.addSetting(c_sAlgorithmSettingName, OVTK_TypeId_ClassificationAlgorithm, "Linear Discrimimant Analysis (LDA)");
+				prototype.addSetting(c_sAlgorithmSettingName, OVTK_TypeId_ClassificationAlgorithm, "Linear Discrimimant Analysis (LDA)");
 				//Argument of algorithm
 
-				rBoxAlgorithmPrototype.addSetting(c_sKFoldSettingName, OV_TypeId_Integer, "10");
-				rBoxAlgorithmPrototype.addSetting(c_sBalanceSettingName, OV_TypeId_Boolean, "false");
+				prototype.addSetting(c_sKFoldSettingName, OV_TypeId_Integer, "10");
+				prototype.addSetting(c_sBalanceSettingName, OV_TypeId_Boolean, "false");
 
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 
-				//				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_ManualUpdate);
+				//				prototype.addFlag(OpenViBE::Kernel::BoxFlag_ManualUpdate);
 				return true;
 			}
 
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmCommonClassifierListener(OVP_BoxAlgorithm_ClassifierTrainer_CommonSettingsCount); }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_ClassifierTrainerDesc)
 		};
-	}
-}
+	} // namespace Classification
+} // namespace OpenViBEPlugins

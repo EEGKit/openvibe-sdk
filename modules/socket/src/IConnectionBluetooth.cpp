@@ -34,16 +34,15 @@ namespace Socket
 	{
 	public:
 
-		CConnectionBluetooth() : m_sLastError()
 #if defined TARGET_OS_Windows
-								 , m_oSocket(INVALID_SOCKET)
+		CConnectionBluetooth() : m_oSocket(INVALID_SOCKET) { }
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+		CConnectionBluetooth() : m_sLastError() { }
 #endif
-		{ }
-
+		
+#if defined TARGET_OS_Windows
 		bool initialize()
 		{
-#if defined TARGET_OS_Windows
 			WSADATA l_oWSAData;
 
 			// Ask for Winsock version.
@@ -61,13 +60,11 @@ namespace Socket
 				_WINSOCK2API_::WSACleanup();
 				return false;
 			}
-
 			return true;
-
-#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			return false;
-#endif
 		}
+#elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
+		bool initialize() { return false; }
+#endif
 
 		bool open() override { return false; }
 
@@ -82,7 +79,6 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 			bool l_bIsSuccess = true;
-
 			if (m_oSocket != INVALID_SOCKET)
 			{
 				// shutdown the connection since no more data will be sent or received
@@ -114,28 +110,23 @@ namespace Socket
 #endif
 		}
 
-		bool isReadyToSend(const uint32_t ui32TimeOut) const override
-		{
-			if (!this->isConnected()) { return false; }
+		bool isReadyToSend(const uint32_t /*timeOut*/) const override { return this->isConnected(); }
 
-			return true;
-		}
-
-		bool isReadyToReceive(const uint32_t ui32TimeOut) const override
+		bool isReadyToReceive(const uint32_t /*timeOut*/) const override
 		{
 			if (!this->isConnected()) { return false; }
 
 #if defined TARGET_OS_Windows
 
-			unsigned long l_ui32PendingBytesCount = 0;
+			unsigned long nPendingBytes = 0;
 
-			if (_WINSOCK2API_::ioctlsocket(m_oSocket, FIONREAD, &l_ui32PendingBytesCount) == SOCKET_ERROR)
+			if (_WINSOCK2API_::ioctlsocket(m_oSocket, FIONREAD, &nPendingBytes) == SOCKET_ERROR)
 			{
 				//m_sLastError = "Failed to get the pending bytes count: " + this->getLastErrorFormated();
 				return false;
 			}
 
-			return l_ui32PendingBytesCount != 0;
+			return nPendingBytes != 0;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return false;
@@ -152,15 +143,15 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-			unsigned long l_ui32PendingBytesCount = 0;
+			unsigned long nPendingBytes = 0;
 
-			if (_WINSOCK2API_::ioctlsocket(m_oSocket, FIONREAD, &l_ui32PendingBytesCount) == SOCKET_ERROR)
+			if (_WINSOCK2API_::ioctlsocket(m_oSocket, FIONREAD, &nPendingBytes) == SOCKET_ERROR)
 			{
 				m_sLastError = "Failed to get the pending bytes count: " + this->getLastErrorFormated();
 				return 0;
 			}
 
-			return l_ui32PendingBytesCount;
+			return nPendingBytes;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return 0;
@@ -177,16 +168,16 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-			int l_i32BytesSentCount = _WINSOCK2API_::send(m_oSocket, (char *)pBuffer, ui32BufferSize, 0);
+			const int nBytesSent = _WINSOCK2API_::send(m_oSocket, (char *)pBuffer, ui32BufferSize, 0);
 
-			if (l_i32BytesSentCount == SOCKET_ERROR)
+			if (nBytesSent == SOCKET_ERROR)
 			{
 				m_sLastError = "Failed to write on the bluetooth port: " + getLastErrorFormated();
 				this->close();
 				return 0;
 			}
 
-			return static_cast<uint32_t>(l_i32BytesSentCount);
+			return uint32_t(nBytesSent);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return 0;
@@ -204,9 +195,9 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 
-			int l_i32BytesReceivedCount = _WINSOCK2API_::recv(m_oSocket, (char *)pBuffer, ui32BufferSize, 0);
+			const int nBytesReceived = _WINSOCK2API_::recv(m_oSocket, (char *)pBuffer, ui32BufferSize, 0);
 
-			if (l_i32BytesReceivedCount == SOCKET_ERROR)
+			if (nBytesReceived == SOCKET_ERROR)
 			{
 				m_sLastError = "Failed to receive data from bluetooth: " + getLastErrorFormated();
 
@@ -214,7 +205,7 @@ namespace Socket
 				return 0;
 			}
 
-			return static_cast<uint32_t>(l_i32BytesReceivedCount);
+			return uint32_t(nBytesReceived);
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			return 0;
@@ -226,15 +217,15 @@ namespace Socket
 			if (!this->isConnected())
 			{
 				m_sLastError = "Bluetooth device is not connected.";
-				return 0;
+				return false;
 			}
 
-			const char* l_pPointer   = reinterpret_cast<const char*>(pBuffer);
+			const char* p   = reinterpret_cast<const char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->sendBuffer(l_pPointer + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
+				l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
 
 				if (this->isErrorRaised()) { return false; }
 			}
@@ -250,12 +241,12 @@ namespace Socket
 				return 0;
 			}
 
-			char* l_pPointer         = reinterpret_cast<char*>(pBuffer);
+			char* p         = reinterpret_cast<char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->receiveBuffer(l_pPointer + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
+				l_ui32BytesLeft -= this->receiveBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
 
 				if (this->isErrorRaised()) { return false; }
 			}
@@ -274,10 +265,7 @@ namespace Socket
 #endif
 		}
 
-		void release() override
-		{
-			delete this;
-		}
+		void release() override { delete this; }
 
 		bool connect(unsigned long long u64BluetoothAddress) override
 		{
@@ -452,4 +440,4 @@ namespace Socket
 	};
 
 	IConnectionBluetooth* createConnectionBluetooth() { return new CConnectionBluetooth(); }
-};
+} // namespace Socket

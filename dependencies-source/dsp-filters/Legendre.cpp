@@ -214,7 +214,7 @@ namespace Dsp
 			//
 			for (i = n + 1; i >= 0; i--)
 			{
-				m_v[i + 1] = m_v[i] / (double)(i + 1.0);
+				m_v[i + 1] = m_v[i] / double(i + 1.0);
 			}
 			m_v[0] = 0.0;
 			//
@@ -302,10 +302,7 @@ namespace Dsp
 					addPoleZeroConjugatePairs(c, infinity());
 				}
 
-				if (numPoles & 1)
-				{
-					add(poles.root()[pairs].real(), infinity());
-				}
+				if (numPoles & 1) { add(poles.root()[pairs].real(), infinity()); }
 			}
 		}
 
@@ -370,5 +367,5 @@ namespace Dsp
 
 			setLayout(m_digitalProto);
 		}
-	}  // namespace Legendre
-}  // namespace Dsp
+	} // namespace Legendre
+} // namespace Dsp

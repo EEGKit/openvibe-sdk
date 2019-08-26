@@ -36,10 +36,7 @@ namespace OpenViBETest
 		bool initialize();
 		bool uninitialize();
 
-		OpenViBE::Kernel::IKernelContext* operator->()
-		{
-			return m_Context;
-		}
+		OpenViBE::Kernel::IKernelContext* operator->() { return m_Context; }
 
 	private:
 		OpenViBE::Kernel::IKernelContext* m_Context{nullptr};

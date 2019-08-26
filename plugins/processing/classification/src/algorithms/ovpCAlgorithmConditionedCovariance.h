@@ -69,8 +69,8 @@ namespace OpenViBEPlugins
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IAlgorithmDesc, OVP_ClassId_Algorithm_ConditionedCovarianceDesc)
 		};
-	};
-};
+	} // namespace Classification
+} // namespace OpenViBEPlugins
 
 
 #endif // TARGET_HAS_ThirdPartyEIGEN

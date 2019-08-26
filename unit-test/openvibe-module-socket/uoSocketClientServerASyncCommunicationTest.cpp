@@ -145,7 +145,7 @@ int uoSocketClientServerASyncCommunicationTest(int argc, char* argv[])
 	{
 		std::string dataString = baseData + std::to_string(sendIndex);
 		std::strcpy(dataBuffer, dataString.c_str());
-		uint32_t dataSize = static_cast<uint32_t>(dataString.size());
+		uint32_t dataSize = uint32_t(dataString.size());
 
 		sendData(client, &dataSize, sizeof(dataSize));
 		sendData(client, dataBuffer, dataSize);

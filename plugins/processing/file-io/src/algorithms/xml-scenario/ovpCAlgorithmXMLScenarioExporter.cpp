@@ -15,14 +15,12 @@ using namespace std;
 //___________________________________________________________________//
 //                                                                   //
 
-CAlgorithmXMLScenarioExporter::CAlgorithmXMLScenarioExporter(){
+CAlgorithmXMLScenarioExporter::CAlgorithmXMLScenarioExporter()
+{
 	m_pWriter = createWriter(*this);
 }
 
-CAlgorithmXMLScenarioExporter::~CAlgorithmXMLScenarioExporter()
-{
-	m_pWriter->release();
-}
+CAlgorithmXMLScenarioExporter::~CAlgorithmXMLScenarioExporter() { m_pWriter->release(); }
 
 void CAlgorithmXMLScenarioExporter::write(const char* sString)
 {
@@ -35,7 +33,6 @@ bool CAlgorithmXMLScenarioExporter::exportStart(IMemoryBuffer& rMemoryBuffer, co
 
 	CString l_sNodeName;
 
-	if (false) { }
 	if (rIdentifier == OVTK_Algorithm_ScenarioExporter_NodeId_OpenViBEScenario) l_sNodeName = "OpenViBE-Scenario";
 
 	else if (rIdentifier == OVTK_Algorithm_ScenarioExporter_NodeId_Scenario_Settings) l_sNodeName = "Settings";

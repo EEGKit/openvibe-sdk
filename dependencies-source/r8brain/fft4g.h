@@ -69,7 +69,7 @@ function prototypes
                         length of ip >= 2+sqrt(n)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n+0.5)/log(2))/2).
+                            2+(1<<int(log(n+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n/2-1]   :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -118,7 +118,7 @@ function prototypes
                         length of ip >= 2+sqrt(n/2)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n/2+0.5)/log(2))/2).
+                            2+(1<<int(log(n/2+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n/2-1]   :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -156,7 +156,7 @@ function prototypes
                         length of ip >= 2+sqrt(n/2)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n/2+0.5)/log(2))/2).
+                            2+(1<<int(log(n/2+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n*5/4-1] :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -203,7 +203,7 @@ function prototypes
                         length of ip >= 2+sqrt(n/2)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n/2+0.5)/log(2))/2).
+                            2+(1<<int(log(n/2+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n*5/4-1] :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -236,7 +236,7 @@ function prototypes
                         length of ip >= 2+sqrt(n/4)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n/4+0.5)/log(2))/2).
+                            2+(1<<int(log(n/4+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n*5/8-1] :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -273,7 +273,7 @@ function prototypes
                         length of ip >= 2+sqrt(n/4)
                         strictly,
                         length of ip >=
-                            2+(1<<(int)(log(n/4+0.5)/log(2))/2).
+                            2+(1<<int(log(n/4+0.5)/log(2))/2).
                         ip[0],ip[1] are pointers of the cos/sin table.
         w[0...n*5/8-1] :cos/sin table (FPType *)
                         w[],ip[] are initialized if ip[0] == 0.
@@ -325,10 +325,7 @@ namespace r8b
 					cftbsub(n, a, w);
 				}
 			}
-			else if (n == 4)
-			{
-				cftfsub(n, a, w);
-			}
+			else if (n == 4) { cftfsub(n, a, w); }
 		}
 
 		static void rdft(int n, int isgn, FPType* a, int* ip, FPType* w)
@@ -353,10 +350,7 @@ namespace r8b
 					cftfsub(n, a, w);
 					rftfsub(n, a, nc, w + nw);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 				double xi = a[0] - a[1];
 				a[0] += a[1];
 				a[1] = xi;
@@ -371,10 +365,7 @@ namespace r8b
 					bitrv2(n, ip + 2, a);
 					cftbsub(n, a, w);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 			}
 		}
 
@@ -411,10 +402,7 @@ namespace r8b
 					bitrv2(n, ip + 2, a);
 					cftbsub(n, a, w);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 			}
 			dctsub(n, a, nc, w + nw);
 			if (isgn >= 0)
@@ -425,10 +413,7 @@ namespace r8b
 					cftfsub(n, a, w);
 					rftfsub(n, a, nc, w + nw);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 				xr = a[0] - a[1];
 				a[0] += a[1];
 				for (j = 2; j < n; j += 2)
@@ -473,10 +458,7 @@ namespace r8b
 					bitrv2(n, ip + 2, a);
 					cftbsub(n, a, w);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 			}
 			dstsub(n, a, nc, w + nw);
 			if (isgn >= 0)
@@ -487,10 +469,7 @@ namespace r8b
 					cftfsub(n, a, w);
 					rftfsub(n, a, nc, w + nw);
 				}
-				else if (n == 4)
-				{
-					cftfsub(n, a, w);
-				}
+				else if (n == 4) { cftfsub(n, a, w); }
 				xr = a[0] - a[1];
 				a[0] += a[1];
 				for (j = 2; j < n; j += 2)
@@ -518,7 +497,7 @@ namespace r8b
 				nc = n >> 1;
 				makect(nc, ip, w + nw);
 			}
-			int m = n >> 1;
+			int m     = n >> 1;
 			double yi = a[m];
 			double xi = a[0] + a[n];
 			a[0] -= a[n];
@@ -529,15 +508,15 @@ namespace r8b
 				int mh = m >> 1;
 				for (j = 1; j < mh; j++)
 				{
-					k    = m - j;
+					k         = m - j;
 					double xr = a[j] - a[n - j];
-					xi   = a[j] + a[n - j];
+					xi        = a[j] + a[n - j];
 					double yr = a[k] - a[n - k];
-					yi   = a[k] + a[n - k];
-					a[j] = xr;
-					a[k] = yr;
-					t[j] = xi - yi;
-					t[k] = xi + yi;
+					yi        = a[k] + a[n - k];
+					a[j]      = xr;
+					a[k]      = yr;
+					t[j]      = xi - yi;
+					t[k]      = xi + yi;
 				}
 				t[mh] = a[mh] + a[n - mh];
 				a[mh] -= a[n - mh];
@@ -548,10 +527,7 @@ namespace r8b
 					cftfsub(m, a, w);
 					rftfsub(m, a, nc, w + nw);
 				}
-				else if (m == 4)
-				{
-					cftfsub(m, a, w);
-				}
+				else if (m == 4) { cftfsub(m, a, w); }
 				a[n - 1] = a[0] - a[1];
 				a[1]     = a[0] + a[1];
 				for (j = m - 2; j >= 2; j -= 2)
@@ -560,7 +536,7 @@ namespace r8b
 					a[2 * j - 1] = a[j] - a[j + 1];
 				}
 				int l = 2;
-				m = mh;
+				m     = mh;
 				while (m >= 2)
 				{
 					dctsub(m, t, nc, w + nw);
@@ -570,10 +546,7 @@ namespace r8b
 						cftfsub(m, t, w);
 						rftfsub(m, t, nc, w + nw);
 					}
-					else if (m == 4)
-					{
-						cftfsub(m, t, w);
-					}
+					else if (m == 4) { cftfsub(m, t, w); }
 					a[n - l] = t[0] - t[1];
 					a[l]     = t[0] + t[1];
 					k        = 0;
@@ -624,19 +597,19 @@ namespace r8b
 			}
 			if (n > 2)
 			{
-				int m = n >> 1;
+				int m  = n >> 1;
 				int mh = m >> 1;
 				for (j = 1; j < mh; j++)
 				{
-					k    = m - j;
+					k         = m - j;
 					double xr = a[j] + a[n - j];
 					double xi = a[j] - a[n - j];
 					double yr = a[k] + a[n - k];
 					double yi = a[k] - a[n - k];
-					a[j] = xr;
-					a[k] = yr;
-					t[j] = xi + yi;
-					t[k] = xi - yi;
+					a[j]      = xr;
+					a[k]      = yr;
+					t[j]      = xi + yi;
+					t[k]      = xi - yi;
 				}
 				t[0] = a[mh] - a[n - mh];
 				a[mh] += a[n - mh];
@@ -648,10 +621,7 @@ namespace r8b
 					cftfsub(m, a, w);
 					rftfsub(m, a, nc, w + nw);
 				}
-				else if (m == 4)
-				{
-					cftfsub(m, a, w);
-				}
+				else if (m == 4) { cftfsub(m, a, w); }
 				a[n - 1] = a[1] - a[0];
 				a[1]     = a[0] + a[1];
 				for (j = m - 2; j >= 2; j -= 2)
@@ -660,7 +630,7 @@ namespace r8b
 					a[2 * j - 1] = -a[j] - a[j + 1];
 				}
 				int l = 2;
-				m = mh;
+				m     = mh;
 				while (m >= 2)
 				{
 					dstsub(m, t, nc, w + nw);
@@ -670,10 +640,7 @@ namespace r8b
 						cftfsub(m, t, w);
 						rftfsub(m, t, nc, w + nw);
 					}
-					else if (m == 4)
-					{
-						cftfsub(m, t, w);
-					}
+					else if (m == 4) { cftfsub(m, t, w); }
 					a[n - l] = t[1] - t[0];
 					a[l]     = t[0] + t[1];
 					k        = 0;
@@ -707,18 +674,18 @@ namespace r8b
 			ip[1] = 1;
 			if (nw > 2)
 			{
-				int nwh = nw >> 1;
+				int nwh      = nw >> 1;
 				double delta = atan(1.0) / nwh;
-				w[0]       = 1;
-				w[1]       = 0;
-				w[nwh]     = cos(delta * nwh);
-				w[nwh + 1] = w[nwh];
+				w[0]         = 1;
+				w[1]         = 0;
+				w[nwh]       = cos(delta * nwh);
+				w[nwh + 1]   = w[nwh];
 				if (nwh > 2)
 				{
 					for (int j = 2; j < nwh; j += 2)
 					{
-						double x = cos(delta * j);
-						double y = sin(delta * j);
+						double x      = cos(delta * j);
+						double y      = sin(delta * j);
 						w[j]          = x;
 						w[j + 1]      = y;
 						w[nw - j]     = y;
@@ -734,10 +701,10 @@ namespace r8b
 			ip[1] = nc;
 			if (nc > 1)
 			{
-				int nch = nc >> 1;
+				int nch      = nc >> 1;
 				double delta = atan(1.0) / nch;
-				c[0]   = cos(delta * nch);
-				c[nch] = 0.5 * c[0];
+				c[0]         = cos(delta * nch);
+				c[nch]       = 0.5 * c[0];
 				for (int j = 1; j < nch; j++)
 				{
 					c[j]      = 0.5 * cos(delta * j);
@@ -993,25 +960,25 @@ namespace r8b
 			{
 				for (j = 0; j < l; j += 2)
 				{
-					j1        = j + l;
-					int j2 = j1 + l;
-					int j3 = j2 + l;
-					x0r       = a[j] + a[j1];
-					x0i       = a[j + 1] + a[j1 + 1];
+					j1         = j + l;
+					int j2     = j1 + l;
+					int j3     = j2 + l;
+					x0r        = a[j] + a[j1];
+					x0i        = a[j + 1] + a[j1 + 1];
 					double x1r = a[j] - a[j1];
 					double x1i = a[j + 1] - a[j1 + 1];
 					double x2r = a[j2] + a[j3];
 					double x2i = a[j2 + 1] + a[j3 + 1];
 					double x3r = a[j2] - a[j3];
 					double x3i = a[j2 + 1] - a[j3 + 1];
-					a[j]      = x0r + x2r;
-					a[j + 1]  = x0i + x2i;
-					a[j2]     = x0r - x2r;
-					a[j2 + 1] = x0i - x2i;
-					a[j1]     = x1r - x3i;
-					a[j1 + 1] = x1i + x3r;
-					a[j3]     = x1r + x3i;
-					a[j3 + 1] = x1i - x3r;
+					a[j]       = x0r + x2r;
+					a[j + 1]   = x0i + x2i;
+					a[j2]      = x0r - x2r;
+					a[j2 + 1]  = x0i - x2i;
+					a[j1]      = x1r - x3i;
+					a[j1 + 1]  = x1i + x3r;
+					a[j3]      = x1r + x3i;
+					a[j3 + 1]  = x1i - x3r;
 				}
 			}
 			else
@@ -1049,25 +1016,25 @@ namespace r8b
 			{
 				for (j = 0; j < l; j += 2)
 				{
-					j1        = j + l;
-					int j2 = j1 + l;
-					int j3 = j2 + l;
-					x0r       = a[j] + a[j1];
-					x0i       = -a[j + 1] - a[j1 + 1];
+					j1         = j + l;
+					int j2     = j1 + l;
+					int j3     = j2 + l;
+					x0r        = a[j] + a[j1];
+					x0i        = -a[j + 1] - a[j1 + 1];
 					double x1r = a[j] - a[j1];
 					double x1i = -a[j + 1] + a[j1 + 1];
 					double x2r = a[j2] + a[j3];
 					double x2i = a[j2 + 1] + a[j3 + 1];
 					double x3r = a[j2] - a[j3];
 					double x3i = a[j2 + 1] - a[j3 + 1];
-					a[j]      = x0r + x2r;
-					a[j + 1]  = x0i - x2i;
-					a[j2]     = x0r - x2r;
-					a[j2 + 1] = x0i + x2i;
-					a[j1]     = x1r - x3i;
-					a[j1 + 1] = x1i - x3r;
-					a[j3]     = x1r + x3i;
-					a[j3 + 1] = x1i + x3r;
+					a[j]       = x0r + x2r;
+					a[j + 1]   = x0i - x2i;
+					a[j2]      = x0r - x2r;
+					a[j2 + 1]  = x0i + x2i;
+					a[j1]      = x1r - x3i;
+					a[j1 + 1]  = x1i - x3r;
+					a[j3]      = x1r + x3i;
+					a[j3 + 1]  = x1i + x3r;
 				}
 			}
 			else
@@ -1087,64 +1054,64 @@ namespace r8b
 
 		static void cft1st(int n, FPType* a, const FPType* w)
 		{
-			double x0r = a[0] + a[2];
-			double x0i = a[1] + a[3];
-			double x1r = a[0] - a[2];
-			double x1i = a[1] - a[3];
-			double x2r = a[4] + a[6];
-			double x2i = a[5] + a[7];
-			double x3r = a[4] - a[6];
-			double x3i = a[5] - a[7];
-			a[0]  = x0r + x2r;
-			a[1]  = x0i + x2i;
-			a[4]  = x0r - x2r;
-			a[5]  = x0i - x2i;
-			a[2]  = x1r - x3i;
-			a[3]  = x1i + x3r;
-			a[6]  = x1r + x3i;
-			a[7]  = x1i - x3r;
+			double x0r  = a[0] + a[2];
+			double x0i  = a[1] + a[3];
+			double x1r  = a[0] - a[2];
+			double x1i  = a[1] - a[3];
+			double x2r  = a[4] + a[6];
+			double x2i  = a[5] + a[7];
+			double x3r  = a[4] - a[6];
+			double x3i  = a[5] - a[7];
+			a[0]        = x0r + x2r;
+			a[1]        = x0i + x2i;
+			a[4]        = x0r - x2r;
+			a[5]        = x0i - x2i;
+			a[2]        = x1r - x3i;
+			a[3]        = x1i + x3r;
+			a[6]        = x1r + x3i;
+			a[7]        = x1i - x3r;
 			double wk1r = w[2];
-			x0r   = a[8] + a[10];
-			x0i   = a[9] + a[11];
-			x1r   = a[8] - a[10];
-			x1i   = a[9] - a[11];
-			x2r   = a[12] + a[14];
-			x2i   = a[13] + a[15];
-			x3r   = a[12] - a[14];
-			x3i   = a[13] - a[15];
-			a[8]  = x0r + x2r;
-			a[9]  = x0i + x2i;
-			a[12] = x2i - x0i;
-			a[13] = x0r - x2r;
-			x0r   = x1r - x3i;
-			x0i   = x1i + x3r;
-			a[10] = wk1r * (x0r - x0i);
-			a[11] = wk1r * (x0r + x0i);
-			x0r   = x3i + x1r;
-			x0i   = x3r - x1i;
-			a[14] = wk1r * (x0i - x0r);
-			a[15] = wk1r * (x0i + x0r);
-			int k1 = 0;
+			x0r         = a[8] + a[10];
+			x0i         = a[9] + a[11];
+			x1r         = a[8] - a[10];
+			x1i         = a[9] - a[11];
+			x2r         = a[12] + a[14];
+			x2i         = a[13] + a[15];
+			x3r         = a[12] - a[14];
+			x3i         = a[13] - a[15];
+			a[8]        = x0r + x2r;
+			a[9]        = x0i + x2i;
+			a[12]       = x2i - x0i;
+			a[13]       = x0r - x2r;
+			x0r         = x1r - x3i;
+			x0i         = x1i + x3r;
+			a[10]       = wk1r * (x0r - x0i);
+			a[11]       = wk1r * (x0r + x0i);
+			x0r         = x3i + x1r;
+			x0i         = x3r - x1i;
+			a[14]       = wk1r * (x0i - x0r);
+			a[15]       = wk1r * (x0i + x0r);
+			int k1      = 0;
 			for (int j = 16; j < n; j += 16)
 			{
 				k1 += 2;
-				int k2 = 2 * k1;
+				int k2      = 2 * k1;
 				double wk2r = w[k1];
 				double wk2i = w[k1 + 1];
-				wk1r     = w[k2];
+				wk1r        = w[k2];
 				double wk1i = w[k2 + 1];
 				double wk3r = wk1r - 2 * wk2i * wk1i;
 				double wk3i = 2 * wk2i * wk1r - wk1i;
-				x0r      = a[j] + a[j + 2];
-				x0i      = a[j + 1] + a[j + 3];
-				x1r      = a[j] - a[j + 2];
-				x1i      = a[j + 1] - a[j + 3];
-				x2r      = a[j + 4] + a[j + 6];
-				x2i      = a[j + 5] + a[j + 7];
-				x3r      = a[j + 4] - a[j + 6];
-				x3i      = a[j + 5] - a[j + 7];
-				a[j]     = x0r + x2r;
-				a[j + 1] = x0i + x2i;
+				x0r         = a[j] + a[j + 2];
+				x0i         = a[j + 1] + a[j + 3];
+				x1r         = a[j] - a[j + 2];
+				x1i         = a[j + 1] - a[j + 3];
+				x2r         = a[j + 4] + a[j + 6];
+				x2i         = a[j + 5] + a[j + 7];
+				x3r         = a[j + 4] - a[j + 6];
+				x3i         = a[j + 5] - a[j + 7];
+				a[j]        = x0r + x2r;
+				a[j + 1]    = x0i + x2i;
 				x0r -= x2r;
 				x0i -= x2i;
 				a[j + 4] = wk2r * x0r - wk2i * x0i;
@@ -1319,7 +1286,7 @@ namespace r8b
 
 		static void rftfsub(int n, FPType* a, int nc, const FPType* c)
 		{
-			int m = n >> 1;
+			int m  = n >> 1;
 			int ks = 2 * nc / m;
 			int kk = 0;
 			for (int j = 2; j < m; j += 2)
@@ -1328,10 +1295,10 @@ namespace r8b
 				kk += ks;
 				double wkr = 0.5 - c[nc - kk];
 				double wki = c[kk];
-				double xr = a[j] - a[k];
-				double xi = a[j + 1] + a[k + 1];
-				double yr = wkr * xr - wki * xi;
-				double yi = wkr * xi + wki * xr;
+				double xr  = a[j] - a[k];
+				double xi  = a[j + 1] + a[k + 1];
+				double yr  = wkr * xr - wki * xi;
+				double yi  = wkr * xi + wki * xr;
 				a[j] -= yr;
 				a[j + 1] -= yi;
 				a[k] += yr;
@@ -1341,8 +1308,8 @@ namespace r8b
 
 		static void rftbsub(int n, FPType* a, int nc, const FPType* c)
 		{
-			a[1] = -a[1];
-			int m = n >> 1;
+			a[1]   = -a[1];
+			int m  = n >> 1;
 			int ks = 2 * nc / m;
 			int kk = 0;
 			for (int j = 2; j < m; j += 2)
@@ -1351,10 +1318,10 @@ namespace r8b
 				kk += ks;
 				double wkr = 0.5 - c[nc - kk];
 				double wki = c[kk];
-				double xr = a[j] - a[k];
-				double xi = a[j + 1] + a[k + 1];
-				double yr = wkr * xr + wki * xi;
-				double yi = wkr * xi - wki * xr;
+				double xr  = a[j] - a[k];
+				double xi  = a[j + 1] + a[k + 1];
+				double yr  = wkr * xr + wki * xi;
+				double yi  = wkr * xi - wki * xr;
 				a[j] -= yr;
 				a[j + 1] = yi - a[j + 1];
 				a[k] += yr;
@@ -1365,7 +1332,7 @@ namespace r8b
 
 		static void dctsub(int n, FPType* a, int nc, const FPType* c)
 		{
-			int m = n >> 1;
+			int m  = n >> 1;
 			int ks = nc / n;
 			int kk = 0;
 			for (int j = 1; j < m; j++)
@@ -1374,16 +1341,16 @@ namespace r8b
 				kk += ks;
 				double wkr = c[kk] - c[nc - kk];
 				double wki = c[kk] + c[nc - kk];
-				double xr = wki * a[j] - wkr * a[k];
-				a[j] = wkr * a[j] + wki * a[k];
-				a[k] = xr;
+				double xr  = wki * a[j] - wkr * a[k];
+				a[j]       = wkr * a[j] + wki * a[k];
+				a[k]       = xr;
 			}
 			a[m] *= c[0];
 		}
 
 		static void dstsub(int n, FPType* a, int nc, const FPType* c)
 		{
-			int m = n >> 1;
+			int m  = n >> 1;
 			int ks = nc / n;
 			int kk = 0;
 			for (int j = 1; j < m; j++)
@@ -1392,9 +1359,9 @@ namespace r8b
 				kk += ks;
 				double wkr = c[kk] - c[nc - kk];
 				double wki = c[kk] + c[nc - kk];
-				double xr = wki * a[k] - wkr * a[j];
-				a[k] = wkr * a[k] + wki * a[j];
-				a[j] = xr;
+				double xr  = wki * a[k] - wkr * a[j];
+				a[k]       = wkr * a[k] + wki * a[j];
+				a[j]       = xr;
 			}
 			a[m] *= c[0];
 		}

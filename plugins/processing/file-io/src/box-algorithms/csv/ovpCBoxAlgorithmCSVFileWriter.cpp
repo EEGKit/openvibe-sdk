@@ -12,10 +12,6 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-CBoxAlgorithmCSVFileWriter::CBoxAlgorithmCSVFileWriter()
-	: m_fpRealProcess(nullptr)
-	  , m_pStreamDecoder(nullptr) {}
-
 bool CBoxAlgorithmCSVFileWriter::initialize()
 {
 	this->getStaticBoxContext().getInputType(0, m_oTypeIdentifier);
@@ -29,11 +25,11 @@ bool CBoxAlgorithmCSVFileWriter::initialize()
 			m_pStreamDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmCSVFileWriter>();
 			m_pStreamDecoder->initialize(*this, 0);
 		}
-			//		else if(m_oTypeIdentifier==OV_TypeId_Spectrum)
-			//		{
-			//			m_pStreamDecoder=new OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmCSVFileWriter >();
-			//			m_pStreamDecoder->initialize(*this,0);
-			//		}
+			//else if(m_oTypeIdentifier==OV_TypeId_Spectrum)
+			//{
+			//	m_pStreamDecoder=new OpenViBEToolkit::TSpectrumDecoder < CBoxAlgorithmCSVFileWriter >();
+			//	m_pStreamDecoder->initialize(*this,0);
+			//}
 		else if (m_oTypeIdentifier == OV_TypeId_FeatureVector)
 		{
 			m_pStreamDecoder = new OpenViBEToolkit::TFeatureVectorDecoder<CBoxAlgorithmCSVFileWriter>();
@@ -141,9 +137,9 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 					// This [n X 1] will get written as a single row due to transpose later
 					m_oMatrix.setDimensionSize(0, l_pMatrix->getDimensionSize(0));
 					m_oMatrix.setDimensionSize(1, 1);
-					for (uint32_t i = 0; i < l_pMatrix->getDimensionSize(0); i++)
+					for (uint32_t j = 0; j < l_pMatrix->getDimensionSize(0); j++)
 					{
-						m_oMatrix.setDimensionLabel(0, i, l_pMatrix->getDimensionLabel(0, i));
+						m_oMatrix.setDimensionLabel(0, j, l_pMatrix->getDimensionLabel(0, j));
 					}
 				}
 				else
@@ -156,10 +152,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 				for (uint32_t c = 0; c < m_oMatrix.getDimensionSize(0); c++)
 				{
 					std::string l_sLabel(m_oMatrix.getDimensionLabel(0, c));
-					while (l_sLabel.length() > 0 && l_sLabel[l_sLabel.length() - 1] == ' ')
-					{
-						l_sLabel.erase(l_sLabel.length() - 1);
-					}
+					while (l_sLabel.length() > 0 && l_sLabel[l_sLabel.length() - 1] == ' ') { l_sLabel.erase(l_sLabel.length() - 1); }
 					m_oFileStream << m_sSeparator.toASCIIString() << l_sLabel.c_str();
 				}
 

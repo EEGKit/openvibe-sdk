@@ -20,8 +20,7 @@ namespace
 	{
 	protected:
 
-		StreamedMatrixTest()
-		{ }
+		StreamedMatrixTest() { }
 
 
 		~StreamedMatrixTest() override { }

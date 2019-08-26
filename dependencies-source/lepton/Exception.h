@@ -48,10 +48,7 @@ namespace Lepton
 		Exception(const std::string& message) : message(message) { }
 		~Exception() throw() override { }
 
-		const char* what() const throw() override
-		{
-			return message.c_str();
-		}
+		const char* what() const throw() override { return message.c_str(); }
 
 	private:
 		std::string message;

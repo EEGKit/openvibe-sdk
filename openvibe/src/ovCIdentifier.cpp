@@ -66,11 +66,8 @@ namespace OpenViBE
 		return rIdentifier1.m_ui64Identifier < rIdentifier2.m_ui64Identifier;
 	}
 
-	bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2)
-	{
-		return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier;
-	}
-}  // namespace OpenViBE
+	bool operator>(const CIdentifier& rIdentifier1, const CIdentifier& rIdentifier2) { return rIdentifier1.m_ui64Identifier > rIdentifier2.m_ui64Identifier; }
+} // namespace OpenViBE
 
 CString CIdentifier::toString() const
 {
@@ -91,10 +88,7 @@ bool CIdentifier::fromString(const CString& rString)
 	return true;
 }
 
-uint64_t CIdentifier::toUInteger() const
-{
-	return m_ui64Identifier;
-}
+uint64_t CIdentifier::toUInteger() const { return m_ui64Identifier; }
 
 CIdentifier CIdentifier::random()
 {

@@ -54,7 +54,5 @@ namespace OpenViBE
 			ITypeManager& m_rTypeManager;
 			mutable CBoxAlgorithmLogManager m_BoxLogManager;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
-
-
+	} // namespace Kernel
+} // namespace OpenViBE

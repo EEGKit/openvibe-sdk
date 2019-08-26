@@ -7,7 +7,7 @@
 wave_object wave_init(char* wname)
 {
 	wave_object obj = NULL;
-	int retval = 0;
+	int retval      = 0;
 
 	if (wname != NULL)
 	{
@@ -150,9 +150,9 @@ wtree_object wtree_init(wave_object wave, int siglength, int J)
 		printf("\n Error - The Signal Can only be iterated %d times using this wavelet. Exiting\n", MaxIter);
 		exit(-1);
 	}
-	int temp = 1;
+	int temp    = 1;
 	int elength = 0;
-	int nodes = 0;
+	int nodes   = 0;
 	for (i = 0; i < J; ++i)
 	{
 		temp *= 2;
@@ -210,7 +210,7 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 		printf("\n Error - The Signal Can only be iterated %d times using this wavelet. Exiting\n", MaxIter);
 		exit(-1);
 	}
-	int temp = 1;
+	int temp  = 1;
 	int nodes = 0;
 	for (i = 0; i < J; ++i)
 	{
@@ -218,10 +218,10 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 		nodes += temp;
 	}
 
-	i       = J;
-	int p2 = 2;
-	int N = siglength;
-	int lp = size;
+	i           = J;
+	int p2      = 2;
+	int N       = siglength;
+	int lp      = size;
 	int elength = 0;
 	while (i > 0)
 	{
@@ -268,17 +268,17 @@ wpt_object wpt_init(wave_object wave, int siglength, int J)
 cwt_object cwt_init(char* wave, double param, int siglength, double dt, int J)
 {
 	cwt_object obj = NULL;
-	int mother;
-	double s0, dj;
+	int mother = 0;
+	double s0 = 0, dj = 0;
 	char* pdefault = "pow";
 
-	int m = (int)param;
+	int m   = (int)param;
 	int odd = 1;
 	if (2 * (m / 2) == m) { odd = 0; }
 
-	int N = siglength;
+	int N   = siglength;
 	int nj2 = 2 * N * J;
-	obj = (cwt_object)malloc(sizeof(struct cwt_set) + sizeof(double) * (nj2 + 2 * J + N));
+	obj     = (cwt_object)malloc(sizeof(struct cwt_set) + sizeof(double) * (nj2 + 2 * J + N));
 
 	if (!strcmp(wave, "morlet") || !strcmp(wave, "morl"))
 	{
@@ -345,7 +345,7 @@ cwt_object cwt_init(char* wave, double param, int siglength, double dt, int J)
 	obj->mother    = mother;
 	obj->m         = param;
 
-	double t1 = 0.499999 + log((double)N) / log(2.0);
+	double t1  = 0.499999 + log((double)N) / log(2.0);
 	int ibase2 = 1 + (int)t1;
 
 	obj->npad = (int)pow(2.0, (double)ibase2);
@@ -372,10 +372,7 @@ static void wconv(wt_object wt, double* sig, int N, double* filt, int L, double*
 			conv_fft(wt->cobj, sig, filt, oup);
 			free_conv(wt->cobj);
 		}
-		else
-		{
-			conv_fft(wt->cobj, sig, filt, oup);
-		}
+		else { conv_fft(wt->cobj, sig, filt, oup); }
 	}
 	else
 	{
@@ -388,8 +385,8 @@ static void wconv(wt_object wt, double* sig, int N, double* filt, int L, double*
 static void dwt_per(wt_object wt, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
 	int len_avg = wt->wave->lpd_len;
-	int l2 = len_avg / 2;
-	int isodd = N % 2;
+	int l2      = len_avg / 2;
+	int isodd   = N % 2;
 
 	for (int i = 0; i < len_cA; ++i)
 	{
@@ -451,8 +448,8 @@ static void dwt_per(wt_object wt, double* inp, int N, double* cA, int len_cA, do
 static void wtree_per(wtree_object wt, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
 	int len_avg = wt->wave->lpd_len;
-	int l2 = len_avg / 2;
-	int isodd = N % 2;
+	int l2      = len_avg / 2;
+	int isodd   = N % 2;
 
 	for (int i = 0; i < len_cA; ++i)
 	{
@@ -514,8 +511,8 @@ static void wtree_per(wtree_object wt, double* inp, int N, double* cA, int len_c
 static void dwpt_per(wpt_object wt, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
 	int len_avg = wt->wave->lpd_len;
-	int l2 = len_avg / 2;
-	int isodd = N % 2;
+	int l2      = len_avg / 2;
+	int isodd   = N % 2;
 
 	for (int i = 0; i < len_cA; ++i)
 	{
@@ -752,13 +749,13 @@ void dwt(wt_object wt, double* inp)
 	int i, iter;
 	int len_cA;
 
-	int temp_len = wt->siglength;
-	int J = wt->J;
+	int temp_len      = wt->siglength;
+	int J             = wt->J;
 	wt->length[J + 1] = temp_len;
 	wt->outlength     = 0;
 	wt->zpad          = 0;
-	double* orig = (double*)malloc(sizeof(double) * temp_len);
-	double* orig2 = (double*)malloc(sizeof(double) * temp_len);
+	double* orig      = (double*)malloc(sizeof(double) * temp_len);
+	double* orig2     = (double*)malloc(sizeof(double) * temp_len);
 	/*
 	if ((temp_len % 2) == 0) {
 	wt->zpad = 0;
@@ -777,7 +774,7 @@ void dwt(wt_object wt, double* inp)
 
 	if (wt->zpad == 1) { orig[temp_len - 1] = orig[temp_len - 2]; }
 
-	int N = temp_len;
+	int N  = temp_len;
 	int lp = wt->wave->lpd_len;
 
 	if (!strcmp(wt->ext, "per"))
@@ -884,12 +881,12 @@ void wtree(wtree_object wt, double* inp)
 	int i, iter, k, N2, Np;
 	int len_cA;
 
-	int temp_len = wt->siglength;
-	int J = wt->J;
+	int temp_len      = wt->siglength;
+	int J             = wt->J;
 	wt->length[J + 1] = temp_len;
 	wt->outlength     = 0;
 	wt->zpad          = 0;
-	double* orig = (double*)malloc(sizeof(double) * temp_len);
+	double* orig      = (double*)malloc(sizeof(double) * temp_len);
 	/*
 	if ((temp_len % 2) == 0) {
 		wt->zpad = 0;
@@ -905,7 +902,7 @@ void wtree(wtree_object wt, double* inp)
 
 	if (wt->zpad == 1) { orig[temp_len - 1] = orig[temp_len - 2]; }
 
-	int N = temp_len;
+	int N  = temp_len;
 	int lp = wt->wave->lpd_len;
 	int p2 = 1;
 
@@ -996,9 +993,9 @@ void wtree(wtree_object wt, double* inp)
 		exit(-1);
 	}
 
-	J   = wt->J;
-	int t2 = wt->outlength - 2 * wt->length[J];
-	p2  = 2;
+	J       = wt->J;
+	int t2  = wt->outlength - 2 * wt->length[J];
+	p2      = 2;
 	int it1 = 0;
 	for (i = 0; i < J; ++i)
 	{
@@ -1382,7 +1379,7 @@ void getDWPTCoeffs(wpt_object wt, int X, int Y, double* coeffs, int N)
 		exit(-1);
 	}
 
-	int np = 0;
+	int np    = 0;
 	int citer = 0;
 
 	for (i = wt->J; i > X; --i)
@@ -1391,7 +1388,7 @@ void getDWPTCoeffs(wpt_object wt, int X, int Y, double* coeffs, int N)
 		citer += wt->numnodeslevel[i] * wt->coeflength[i];
 	}
 
-	i    = 0;
+	i        = 0;
 	int flag = 0;
 	for (i = 0; i < wt->numnodeslevel[X]; ++i)
 	{
@@ -1418,7 +1415,7 @@ int getCWTScaleLength(int N)
 	double dj = 0.4875;
 
 	double temp = (log((double)N / 2.0) / log(2.0)) / dj;
-	int J = (int)temp;
+	int J       = (int)temp;
 
 	return J;
 }
@@ -1492,8 +1489,8 @@ int cwt(cwt_object wt, double* inp)
 	else { npad = wt->npad; }
 
 	int nj2 = 2 * N * wt->J;
-	int j = wt->J;
-	int j2 = 2 * j;
+	int j   = wt->J;
+	int j2  = 2 * j;
 
 	wt->smean = 0.0;
 
@@ -1508,7 +1505,7 @@ void icwt(cwt_object wt, double* cwtop)
 	double psi;
 	int real;
 
-	int N = wt->siglength;
+	int N   = wt->siglength;
 	int nj2 = N * 2 * wt->J;
 
 	psi0(wt->mother, wt->m, &psi, &real);
@@ -1530,8 +1527,8 @@ void icwt(cwt_object wt, double* cwtop)
 static void idwt1(wt_object wt, double* temp, double* cA_up, double* cA, int len_cA, double* cD, int len_cD, double* X_lp, double* X_hp, double* X)
 {
 	int len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
-	int N = 2 * len_cD;
-	int U = 2;
+	int N       = 2 * len_cD;
+	int U       = 2;
 
 	upsamp2(cA, len_cA, U, cA_up);
 
@@ -1573,9 +1570,9 @@ static void idwt1(wt_object wt, double* temp, double* cA_up, double* cA, int len
 static void idwt_per(wt_object wt, double* cA, int len_cA, double* cD, int len_cD, double* X)
 {
 	int len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
-	int l2 = len_avg / 2;
-	int m = -2;
-	int n = -1;
+	int l2      = len_avg / 2;
+	int m       = -2;
+	int n       = -1;
 
 	for (int i = 0; i < len_cA + l2 - 1; ++i)
 	{
@@ -1608,8 +1605,8 @@ static void idwt_per(wt_object wt, double* cA, int len_cA, double* cD, int len_c
 static void idwt_sym(wt_object wt, double* cA, int len_cA, double* cD, int len_cD, double* X)
 {
 	int len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
-	int m = -2;
-	int n = -1;
+	int m       = -2;
+	int n       = -1;
 
 	for (int v = 0; v < len_cA; ++v)
 	{
@@ -1637,8 +1634,8 @@ void idwt(wt_object wt, double* dwtop)
 	int det_len;
 	double *cA_up, *X_lp, *X_hp;
 
-	int J = wt->J;
-	int U = 2;
+	int J       = wt->J;
+	int U       = 2;
 	int app_len = wt->length[0];
 	double* out = (double*)malloc(sizeof(double) * (wt->siglength + 1));
 	if (!strcmp(wt->ext, "per") && (!strcmp(wt->cmethod, "fft") || !strcmp(wt->cmethod, "FFT")))
@@ -1648,11 +1645,11 @@ void idwt(wt_object wt, double* dwtop)
 		N       = 2 * wt->length[J];
 		lf      = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
 
-		cA_up = (double*)malloc(sizeof(double) * N);
+		cA_up        = (double*)malloc(sizeof(double) * N);
 		double* temp = (double*)malloc(sizeof(double) * (N + lf));
-		X_lp  = (double*)malloc(sizeof(double) * (N + 2 * lf - 1));
-		X_hp  = (double*)malloc(sizeof(double) * (N + 2 * lf - 1));
-		iter  = app_len;
+		X_lp         = (double*)malloc(sizeof(double) * (N + 2 * lf - 1));
+		X_hp         = (double*)malloc(sizeof(double) * (N + 2 * lf - 1));
+		iter         = app_len;
 
 		for (i = 0; i < app_len; ++i)
 		{
@@ -1810,9 +1807,9 @@ void idwt(wt_object wt, double* dwtop)
 static void idwpt_per(wpt_object wt, double* cA, int len_cA, double* cD, int len_cD, double* X)
 {
 	int len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
-	int l2 = len_avg / 2;
-	int m = -2;
-	int n = -1;
+	int l2      = len_avg / 2;
+	int m       = -2;
+	int n       = -1;
 
 	for (int i = 0; i < len_cA + l2 - 1; ++i)
 	{
@@ -1845,8 +1842,8 @@ static void idwpt_per(wpt_object wt, double* cA, int len_cA, double* cD, int len
 static void idwpt_sym(wpt_object wt, double* cA, int len_cA, double* cD, int len_cD, double* X)
 {
 	int len_avg = (wt->wave->lpr_len + wt->wave->hpr_len) / 2;
-	int m = -2;
-	int n = -1;
+	int m       = -2;
+	int n       = -1;
 
 	for (int v = 0; v < len_cA; ++v)
 	{
@@ -2191,8 +2188,8 @@ void idwpt(wpt_object wt, double* dwtop)
 static void swt_per(wt_object wt, int M, double* inp, int N, double* cA, int len_cA, double* cD, int len_cD)
 {
 	int len_avg = M * wt->wave->lpd_len;
-	int l2 = len_avg / 2;
-	int isodd = N % 2;
+	int l2      = len_avg / 2;
+	int isodd   = N % 2;
 
 	for (int i = 0; i < len_cA; ++i)
 	{
@@ -2248,11 +2245,11 @@ static void swt_fft(wt_object wt, double* inp)
 {
 	int i, iter, N;
 
-	int temp_len = wt->siglength;
-	int J = wt->J;
+	int temp_len  = wt->siglength;
+	int J         = wt->J;
 	wt->length[0] = wt->length[J]     = temp_len;
 	wt->outlength = wt->length[J + 1] = (J + 1) * temp_len;
-	int M = 1;
+	int M         = 1;
 	for (iter = 1; iter < J; ++iter)
 	{
 		M                = 2 * M;
@@ -2261,11 +2258,11 @@ static void swt_fft(wt_object wt, double* inp)
 
 	int len_filt = wt->wave->filtlength;
 
-	double* low_pass = (double*)malloc(sizeof(double) * M * len_filt);
+	double* low_pass  = (double*)malloc(sizeof(double) * M * len_filt);
 	double* high_pass = (double*)malloc(sizeof(double) * M * len_filt);
-	double* sig = (double*)malloc(sizeof(double) * (M * len_filt + temp_len + (temp_len % 2)));
-	double* cA = (double*)malloc(sizeof(double) * (2 * M * len_filt + temp_len + (temp_len % 2)) - 1);
-	double* cD = (double*)malloc(sizeof(double) * (2 * M * len_filt + temp_len + (temp_len % 2)) - 1);
+	double* sig       = (double*)malloc(sizeof(double) * (M * len_filt + temp_len + (temp_len % 2)));
+	double* cA        = (double*)malloc(sizeof(double) * (2 * M * len_filt + temp_len + (temp_len % 2)) - 1);
+	double* cD        = (double*)malloc(sizeof(double) * (2 * M * len_filt + temp_len + (temp_len % 2)) - 1);
 
 	M = 1;
 
@@ -2337,12 +2334,12 @@ static void swt_direct(wt_object wt, double* inp)
 {
 	int i, iter, N;
 
-	int temp_len = wt->siglength;
-	int J = wt->J;
+	int temp_len  = wt->siglength;
+	int J         = wt->J;
 	wt->length[0] = wt->length[J]     = temp_len;
 	wt->outlength = wt->length[J + 1] = (J + 1) * temp_len;
-	int len_filt = wt->wave->filtlength;
-	int M = 1;
+	int len_filt  = wt->wave->filtlength;
+	int M         = 1;
 	for (iter = 1; iter < J; ++iter)
 	{
 		M                = 2 * M;
@@ -2403,24 +2400,24 @@ void iswt(wt_object wt, double* swtop)
 	int i, index;
 	int index_shift;
 
-	int N = wt->siglength;
-	int J = wt->J;
-	int U = 2;
+	int N  = wt->siglength;
+	int J  = wt->J;
+	int U  = 2;
 	int lf = wt->wave->lpr_len;
 
 	double* appx_sig = (double*)malloc(sizeof(double) * N);
-	double* det_sig = (double*)malloc(sizeof(double) * N);
-	double* appx1 = (double*)malloc(sizeof(double) * N);
-	double* det1 = (double*)malloc(sizeof(double) * N);
-	double* appx2 = (double*)malloc(sizeof(double) * N);
-	double* det2 = (double*)malloc(sizeof(double) * N);
-	double* tempx = (double*)malloc(sizeof(double) * N);
-	double* cL0 = (double*)malloc(sizeof(double) * (N + (N % 2) + lf));
-	double* cH0 = (double*)malloc(sizeof(double) * (N + (N % 2) + lf));
-	double* oup00L = (double*)malloc(sizeof(double) * (N + 2 * lf));
-	double* oup00H = (double*)malloc(sizeof(double) * (N + 2 * lf));
-	double* oup00 = (double*)malloc(sizeof(double) * N);
-	double* oup01 = (double*)malloc(sizeof(double) * N);
+	double* det_sig  = (double*)malloc(sizeof(double) * N);
+	double* appx1    = (double*)malloc(sizeof(double) * N);
+	double* det1     = (double*)malloc(sizeof(double) * N);
+	double* appx2    = (double*)malloc(sizeof(double) * N);
+	double* det2     = (double*)malloc(sizeof(double) * N);
+	double* tempx    = (double*)malloc(sizeof(double) * N);
+	double* cL0      = (double*)malloc(sizeof(double) * (N + (N % 2) + lf));
+	double* cH0      = (double*)malloc(sizeof(double) * (N + (N % 2) + lf));
+	double* oup00L   = (double*)malloc(sizeof(double) * (N + 2 * lf));
+	double* oup00H   = (double*)malloc(sizeof(double) * (N + 2 * lf));
+	double* oup00    = (double*)malloc(sizeof(double) * N);
+	double* oup01    = (double*)malloc(sizeof(double) * N);
 
 
 	for (int iter = 0; iter < J; ++iter)
@@ -2561,7 +2558,7 @@ static void modwt_per(wt_object wt, int M, double* inp, int N, double* cA, int l
 	int len_avg = wt->wave->lpd_len;
 
 	double* filt = (double*)malloc(sizeof(double) * 2 * len_avg);
-	double s = sqrt(2.0);
+	double s     = sqrt(2.0);
 	for (i = 0; i < len_avg; ++i)
 	{
 		filt[i]           = wt->wave->lpd[i] / s;
@@ -2596,12 +2593,12 @@ void modwt(wt_object wt, double* inp)
 {
 	int i, iter, N;
 
-	int temp_len = wt->siglength;
-	int J = wt->J;
+	int temp_len  = wt->siglength;
+	int J         = wt->J;
 	wt->length[0] = wt->length[J]     = temp_len;
 	wt->outlength = wt->length[J + 1] = (J + 1) * temp_len;
-	int len_filt = wt->wave->filtlength;
-	int M = 1;
+	int len_filt  = wt->wave->filtlength;
+	int M         = 1;
 	for (iter = 1; iter < J; ++iter)
 	{
 		M                = 2 * M;
@@ -2651,7 +2648,7 @@ static void imodwt_per(wt_object wt, int M, double* cA, int len_cA, double* cD, 
 	int len_avg = wt->wave->lpd_len;
 
 	double* filt = (double*)malloc(sizeof(double) * 2 * len_avg);
-	double s = sqrt(2.0);
+	double s     = sqrt(2.0);
 	for (i = 0; i < len_avg; ++i)
 	{
 		filt[i]           = wt->wave->lpd[i] / s;
@@ -2662,7 +2659,7 @@ static void imodwt_per(wt_object wt, int M, double* cA, int len_cA, double* cD, 
 	for (i = 0; i < len_cA; ++i)
 	{
 		int t = i;
-		X[i] = (filt[0] * cA[t]) + (filt[len_avg] * cD[t]);
+		X[i]  = (filt[0] * cA[t]) + (filt[len_avg] * cD[t]);
 		for (int l = 1; l < len_avg; l++)
 		{
 			t += M;
@@ -2683,12 +2680,11 @@ static void imodwt_per(wt_object wt, int M, double* cA, int len_cA, double* cD, 
 
 void imodwt(wt_object wt, double* dwtop)
 {
-	int N = wt->siglength;
-	int J = wt->J;
-	int U = 2;
-	int lf = wt->wave->lpr_len;
-	int lenacc = N;
-	int M = (int)pow(2.0, (double)J - 1.0);
+	const int N = wt->siglength;
+	const int J = wt->J;
+	//int lf      = wt->wave->lpr_len;
+	int lenacc  = N;
+	int M       = (int)pow(2.0, (double)J - 1.0);
 	//M = 1;
 	double* X = (double*)malloc(sizeof(double) * N);
 
@@ -2696,23 +2692,11 @@ void imodwt(wt_object wt, double* dwtop)
 
 	for (int iter = 0; iter < J; ++iter)
 	{
-		if (iter > 0)
-		{
-			M = M / 2;
-		}
+		if (iter > 0) { M = M / 2; }
 		imodwt_per(wt, M, dwtop, N, wt->params + lenacc, N, X);
-		/*
-		for (j = lf - 1; j < N; ++j) {
-			dwtop[j - lf + 1] = X[j];
-		}
-		for (j = 0; j < lf - 1; ++j) {
-			dwtop[N - lf + 1 + j] = X[j];
-		}
-		*/
-		for (int j = 0; j < N; ++j)
-		{
-			dwtop[j] = X[j];
-		}
+		//for (j = lf - 1; j < N; ++j) { dwtop[j - lf + 1] = X[j]; }
+		//for (j = 0; j < lf - 1; ++j) { dwtop[N - lf + 1 + j] = X[j]; }
+		for (int j = 0; j < N; ++j) { dwtop[j] = X[j]; }
 
 		lenacc += N;
 	}
@@ -2860,7 +2844,7 @@ void wtree_summary(wtree_object wt)
 	printf("Wavelet Coefficients are contained in vector : %s \n", "output");
 	printf("\n");
 	printf("Coefficients Access \n");
-	int t = 0;
+	int t  = 0;
 	int p2 = 2;
 	for (int i = 0; i < J; ++i)
 	{
@@ -2938,27 +2922,12 @@ void cwt_summary(cwt_object wt)
 	printf("\n");
 }
 
-void wave_free(wave_object object)
-{
-	free(object);
-}
+void wave_free(wave_object object) { free(object); }
 
-void wt_free(wt_object object)
-{
-	free(object);
-}
+void wt_free(wt_object object) { free(object); }
 
-void wtree_free(wtree_object object)
-{
-	free(object);
-}
+void wtree_free(wtree_object object) { free(object); }
 
-void wpt_free(wpt_object object)
-{
-	free(object);
-}
+void wpt_free(wpt_object object) { free(object); }
 
-void cwt_free(cwt_object object)
-{
-	free(object);
-}
+void cwt_free(cwt_object object) { free(object); }

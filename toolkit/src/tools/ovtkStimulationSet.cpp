@@ -47,10 +47,7 @@ bool OpenViBEToolkit::Tools::StimulationSet::removeRange(IStimulationSet& rStimu
 	for (uint64_t i = 0; i < rStimulationSet.getStimulationCount(); i++)
 	{
 		uint64_t date = rStimulationSet.getStimulationDate(i);
-		if (ui64StartTime <= date && date < ui64EndTime)
-		{
-			rStimulationSet.removeStimulation(i--);
-		}
+		if (ui64StartTime <= date && date < ui64EndTime) { rStimulationSet.removeStimulation(i--); }
 	}
 	return true;
 }

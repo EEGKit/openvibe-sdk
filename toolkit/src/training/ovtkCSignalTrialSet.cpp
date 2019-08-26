@@ -16,22 +16,10 @@ bool CSignalTrialSet::clear()
 	return true;
 }
 
-uint32_t CSignalTrialSet::getSignalTrialCount() const
-{
-	return static_cast<uint32_t>(m_vSignalTrial.size());
-}
+uint32_t CSignalTrialSet::getSignalTrialCount() const { return uint32_t(m_vSignalTrial.size()); }
 
-ISignalTrial& CSignalTrialSet::getSignalTrial(uint32_t ui32Index) const
-{
-	return *m_vSignalTrial[ui32Index];
-}
+ISignalTrial& CSignalTrialSet::getSignalTrial(uint32_t index) const { return *m_vSignalTrial[index]; }
 
-ISignalTrialSet* OpenViBEToolkit::createSignalTrialSet()
-{
-	return new CSignalTrialSet();
-}
+ISignalTrialSet* OpenViBEToolkit::createSignalTrialSet() { return new CSignalTrialSet(); }
 
-void OpenViBEToolkit::releaseSignalTrialSet(ISignalTrialSet* pSignalTrialSet)
-{
-	delete pSignalTrialSet;
-}
+void OpenViBEToolkit::releaseSignalTrialSet(ISignalTrialSet* pSignalTrialSet) { delete pSignalTrialSet; }

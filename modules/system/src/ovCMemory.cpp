@@ -9,7 +9,7 @@ bool Memory::copy(void* pTargetBuffer, const void* pSourceBuffer, const uint64_t
 	// TODO take 64bits size into consideration
 	if (ui64BufferSize == 0) { return true; }
 
-	memcpy(pTargetBuffer, pSourceBuffer, static_cast<size_t>(ui64BufferSize));
+	memcpy(pTargetBuffer, pSourceBuffer, size_t(ui64BufferSize));
 
 	return true;
 }
@@ -19,7 +19,7 @@ bool Memory::move(void* pTargetBuffer, const void* pSourceBuffer, const uint64_t
 	// $$$ TODO take 64bits size into consideration
 	if (ui64BufferSize == 0) { return true; }
 
-	memmove(pTargetBuffer, pSourceBuffer, static_cast<size_t>(ui64BufferSize));
+	memmove(pTargetBuffer, pSourceBuffer, size_t(ui64BufferSize));
 
 	return true;
 }
@@ -28,7 +28,7 @@ bool Memory::set(void* pTargetBuffer, const uint64_t ui64BufferSize, const uint8
 {
 	if (ui64BufferSize == 0) { return true; }
 	// $$$ TODO take 64bits size into consideration
-	memset(pTargetBuffer, ui8Value, static_cast<size_t>(ui64BufferSize));
+	memset(pTargetBuffer, ui8Value, size_t(ui64BufferSize));
 	return true;
 }
 
@@ -36,7 +36,7 @@ bool Memory::compare(const void* pSourceBuffer1, const void* pSourceBuffer2, con
 {
 	if (ui64BufferSize == 0) { return true; }
 	// $$$ TODO take 64bits size into consideration
-	return memcmp(pSourceBuffer1, pSourceBuffer2, static_cast<size_t>(ui64BufferSize)) == 0;
+	return memcmp(pSourceBuffer1, pSourceBuffer2, size_t(ui64BufferSize)) == 0;
 }
 
 // ________________________________________________________________________________________________________________
@@ -83,7 +83,7 @@ bool __hostToLittleEndian(const T& rValue, uint8_t* pBuffer)
 	if (!pBuffer) return false;
 	for (unsigned int i = 0; i < sizeof(T); i++)
 	{
-		pBuffer[i] = static_cast<uint8_t>((rValue >> (i * 8)) & 0xff);
+		pBuffer[i] = uint8_t((rValue >> (i * 8)) & 0xff);
 	}
 	return true;
 }
@@ -111,9 +111,9 @@ bool Memory::hostToLittleEndian(const int16_t i16Value, uint8_t* pBuffer)
 	return __hostToLittleEndian<int16_t>(i16Value, pBuffer);
 }
 
-bool Memory::hostToLittleEndian(const int32_t i32Value, uint8_t* pBuffer)
+bool Memory::hostToLittleEndian(const int i32Value, uint8_t* pBuffer)
 {
-	return __hostToLittleEndian<int32_t>(i32Value, pBuffer);
+	return __hostToLittleEndian<int>(i32Value, pBuffer);
 }
 
 bool Memory::hostToLittleEndian(const int64_t i64Value, uint8_t* pBuffer)
@@ -165,9 +165,9 @@ bool Memory::hostToBigEndian(const int16_t i16Value, uint8_t* pBuffer)
 	return __hostToBigEndian<int16_t>(i16Value, pBuffer);
 }
 
-bool Memory::hostToBigEndian(const int32_t i32Value, uint8_t* pBuffer)
+bool Memory::hostToBigEndian(const int i32Value, uint8_t* pBuffer)
 {
-	return __hostToBigEndian<int32_t>(i32Value, pBuffer);
+	return __hostToBigEndian<int>(i32Value, pBuffer);
 }
 
 bool Memory::hostToBigEndian(const int64_t i64Value, uint8_t* pBuffer)
@@ -218,9 +218,9 @@ bool Memory::littleEndianToHost(const uint8_t* pBuffer, int16_t* pValue)
 	return __littleEndianToHost<int16_t>(pBuffer, pValue);
 }
 
-bool Memory::littleEndianToHost(const uint8_t* pBuffer, int32_t* pValue)
+bool Memory::littleEndianToHost(const uint8_t* pBuffer, int* pValue)
 {
-	return __littleEndianToHost<int32_t>(pBuffer, pValue);
+	return __littleEndianToHost<int>(pBuffer, pValue);
 }
 
 bool Memory::littleEndianToHost(const uint8_t* pBuffer, int64_t* pValue)
@@ -273,9 +273,9 @@ bool Memory::bigEndianToHost(const uint8_t* pBuffer, int16_t* pValue)
 	return __bigEndianToHost<int16_t>(pBuffer, pValue);
 }
 
-bool Memory::bigEndianToHost(const uint8_t* pBuffer, int32_t* pValue)
+bool Memory::bigEndianToHost(const uint8_t* pBuffer, int* pValue)
 {
-	return __bigEndianToHost<int32_t>(pBuffer, pValue);
+	return __bigEndianToHost<int>(pBuffer, pValue);
 }
 
 bool Memory::bigEndianToHost(const uint8_t* pBuffer, int64_t* pValue)

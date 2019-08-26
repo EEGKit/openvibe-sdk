@@ -46,10 +46,7 @@ void CSignalDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 
 	if ((l_rTop == OVTK_NodeId_Header_Signal)
 		|| (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate)) { }
-	else
-	{
-		CStreamedMatrixDecoder::openChild(rIdentifier);
-	}
+	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
 }
 
 void CSignalDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)

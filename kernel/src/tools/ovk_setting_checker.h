@@ -42,10 +42,7 @@ namespace
 		{
 			// If the token is a numeric value, it may be an arithmetic operation
 			// parse and expression with no variables or functions
-			try
-			{
-				Lepton::Parser::parse(value.toASCIIString()).evaluate();
-			}
+			try { Lepton::Parser::parse(value.toASCIIString()).evaluate(); }
 			catch (...) { return false; }
 		}
 		else if (typeIdentifier == OV_TypeId_Boolean)
@@ -58,4 +55,4 @@ namespace
 		//TODO: else
 		return true;
 	}
-}  // namespace
+} // namespace

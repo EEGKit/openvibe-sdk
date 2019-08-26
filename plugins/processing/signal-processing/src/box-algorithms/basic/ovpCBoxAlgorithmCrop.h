@@ -24,30 +24,30 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::IMatrix* m_pMatrix = nullptr;
+			OpenViBE::IMatrix* m_pMatrix                        = nullptr;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamDecoder = nullptr;
 			OpenViBE::Kernel::IAlgorithmProxy* m_pStreamEncoder = nullptr;
-			double m_f64MinCropValue = 0;
-			double m_f64MaxCropValue = 0;
-			uint64_t m_ui64CropMethod = 0;
+			double m_f64MinCropValue                            = 0;
+			double m_f64MaxCropValue                            = 0;
+			uint64_t m_ui64CropMethod                           = 0;
 		};
 
 		class CBoxAlgorithmCropListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(ui32Index, l_oTypeIdentifier);
-				rBox.setOutputType(ui32Index, l_oTypeIdentifier);
+				rBox.getInputType(index, l_oTypeIdentifier);
+				rBox.setOutputType(index, l_oTypeIdentifier);
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(ui32Index, l_oTypeIdentifier);
-				rBox.setInputType(ui32Index, l_oTypeIdentifier);
+				rBox.getOutputType(index, l_oTypeIdentifier);
+				rBox.setInputType(index, l_oTypeIdentifier);
 				return true;
 			}
 
@@ -71,31 +71,31 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_Crop; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmCrop; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmCropListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input matrix", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addOutput("Output matrix", OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addSetting("Crop method", OVP_TypeId_CropMethod, OVP_TypeId_CropMethod_MinMax.toString());
-				rBoxAlgorithmPrototype.addSetting("Min crop value", OV_TypeId_Float, "-1");
-				rBoxAlgorithmPrototype.addSetting("Max crop value", OV_TypeId_Float, "1");
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
+				prototype.addInput("Input matrix", OV_TypeId_StreamedMatrix);
+				prototype.addOutput("Output matrix", OV_TypeId_StreamedMatrix);
+				prototype.addSetting("Crop method", OVP_TypeId_CropMethod, OVP_TypeId_CropMethod_MinMax.toString());
+				prototype.addSetting("Min crop value", OV_TypeId_Float, "-1");
+				prototype.addSetting("Max crop value", OV_TypeId_Float, "1");
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyInput);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanModifyOutput);
 
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_FeatureVector);
+				prototype.addInputSupport(OV_TypeId_Signal);
+				prototype.addInputSupport(OV_TypeId_Spectrum);
+				prototype.addInputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addInputSupport(OV_TypeId_FeatureVector);
 
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Signal);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_Spectrum);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_StreamedMatrix);
-				rBoxAlgorithmPrototype.addOutputSupport(OV_TypeId_FeatureVector);
+				prototype.addOutputSupport(OV_TypeId_Signal);
+				prototype.addOutputSupport(OV_TypeId_Spectrum);
+				prototype.addOutputSupport(OV_TypeId_StreamedMatrix);
+				prototype.addOutputSupport(OV_TypeId_FeatureVector);
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_CropDesc)
 		};
-	}  // namespace SignalProcessing
-}  // namespace OpenViBEPlugins
+	} // namespace SignalProcessing
+} // namespace OpenViBEPlugins

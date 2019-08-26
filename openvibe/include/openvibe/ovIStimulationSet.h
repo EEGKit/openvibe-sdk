@@ -124,9 +124,6 @@ namespace OpenViBE
 		}
 
 		// @deprecated please use OpenViBE::ITimeArithmetics::timeToSampleCount()
-		static uint64_t timeToSampleIndex(uint32_t ui32SamplingRate, uint64_t ui64Time)
-		{
-			return (ui64Time * ui32SamplingRate) >> 32;
-		}
+		static uint64_t timeToSampleIndex(uint32_t ui32SamplingRate, uint64_t ui64Time) { return (ui64Time * ui32SamplingRate) >> 32; }
 	};
-}  // namespace OpenViBE
+} // namespace OpenViBE

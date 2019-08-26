@@ -30,21 +30,15 @@ namespace Socket
 	class CConnectionSerial : public IConnectionSerial
 	{
 	public:
-
-		CConnectionSerial()
-			:
+			
 #if defined TARGET_OS_Windows
-			  m_pFile(nullptr)
+		CConnectionSerial() : m_pFile(nullptr) { }
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-			m_iFile(0)
+		CConnectionSerial() : m_iFile(0) { }
 #endif
-		{ }
+		
 
-		bool open() override
-		{
-			// Should never be used
-			return false;
-		}
+		bool open() override { return false; }	// Should never be used
 
 		bool close() override
 		{
@@ -98,7 +92,6 @@ namespace Socket
 			if(FD_ISSET(m_iFile, &l_oOutputFileDescriptorSet)) { return true; }
 
 #endif
-
 			return false;
 		}
 
@@ -111,10 +104,7 @@ namespace Socket
 			struct _COMSTAT l_oStatus;
 			DWORD l_dwState;
 
-			if (ClearCommError(m_pFile, &l_dwState, &l_oStatus) != 0)
-			{
-				return l_oStatus.cbInQue != 0;
-			}
+			if (ClearCommError(m_pFile, &l_dwState, &l_oStatus) != 0) { return l_oStatus.cbInQue != 0; }
 			return false;
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
@@ -130,9 +120,7 @@ namespace Socket
 			if(!::select(m_iFile+1, &l_oInputFileDescriptorSet, nullptr, nullptr, &l_oTimeout)) { return false; }
 
 			if(FD_ISSET(m_iFile, &l_oInputFileDescriptorSet)) { return true; }
-
 #endif
-
 			return false;
 		}
 
@@ -189,16 +177,13 @@ namespace Socket
 #elif defined TARGET_OS_Android
 			return false;
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
 			if(-1 == ::tcdrain(m_iFile))
 			{
 				m_sLastError = "Could not flush connection in tcdrain";
 				return false;
 			}
 			return true;
-
 #endif
-
 			return false;
 		}
 
@@ -240,9 +225,7 @@ namespace Socket
 			}
 
 			return l_iResult;
-
 #endif
-
 			return 0;
 		}
 
@@ -285,21 +268,18 @@ namespace Socket
 			}
 
 			return l_iResult;
-
 #endif
-
 			return 0;
 		}
 
 		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
 		{
-			const char* l_pPointer   = reinterpret_cast<const char*>(pBuffer);
+			const char* p   = reinterpret_cast<const char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->sendBuffer(l_pPointer + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
-
+				l_ui32BytesLeft -= this->sendBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
 				if (this->isErrorRaised()) { return false; }
 			}
 
@@ -308,36 +288,27 @@ namespace Socket
 
 		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
 		{
-			char* l_pPointer         = reinterpret_cast<char*>(pBuffer);
+			char* p         = reinterpret_cast<char*>(pBuffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
 			{
-				l_ui32BytesLeft -= this->receiveBuffer(l_pPointer + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
-
+				l_ui32BytesLeft -= this->receiveBuffer(p + ui32BufferSize - l_ui32BytesLeft, l_ui32BytesLeft);
 				if (this->isErrorRaised()) { return false; }
 			}
-
 			return l_ui32BytesLeft == 0;
 		}
 
 		bool isConnected() const override
 		{
 #if defined TARGET_OS_Windows
-
 			return ((m_pFile != nullptr) && (m_pFile != INVALID_HANDLE_VALUE));
-
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-
 			return m_iFile != 0;
-
 #endif
 		}
 
-		void release() override
-		{
-			delete this;
-		}
+		void release() override { delete this; }
 
 		bool connect(const char* sURL, unsigned long ul32BaudRate) override
 		{
@@ -413,9 +384,7 @@ namespace Socket
 				this->close();
 				return false;
 			}
-
 #endif
-
 			return true;
 		}
 
@@ -467,21 +436,18 @@ namespace Socket
 			return true;
 		}
 
-		const char* getLastError() override
-		{
-			return m_sLastError.c_str();
-		}
+		const char* getLastError() override { return m_sLastError.c_str(); }
 
 		std::string getLastErrorFormated()
 		{
 #if defined TARGET_OS_Windows
 			LPTSTR l_sErrorText;
-			DWORD l_ui64Error = GetLastError();
+			const DWORD error = GetLastError();
 			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |                  // use system message tables to retrieve error text
 						  FORMAT_MESSAGE_ALLOCATE_BUFFER |              // allocate buffer on local heap for error text
 						  FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
 						  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
-						  l_ui64Error,
+						  error,
 						  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 						  (LPTSTR)&l_sErrorText,                       // output
 						  0,                                           // minimum size for output buffer
@@ -492,15 +458,8 @@ namespace Socket
 #endif
 		}
 
-		bool isErrorRaised() override
-		{
-			return !m_sLastError.empty();
-		}
-
-		void clearError() override
-		{
-			m_sLastError.clear();
-		}
+		bool isErrorRaised() override { return !m_sLastError.empty(); }
+		void clearError() override { m_sLastError.clear(); }
 
 		std::string m_sLastError;
 
@@ -512,4 +471,4 @@ namespace Socket
 	};
 
 	IConnectionSerial* createConnectionSerial() { return new CConnectionSerial(); }
-};
+} // namespace Socket

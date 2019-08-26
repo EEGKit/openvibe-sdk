@@ -382,10 +382,7 @@ namespace OpenViBE
 		int argCount;
 		LPWSTR* argListUtf16 = CommandLineToArgvW(GetCommandLineW(), &argCount);
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-		for (int i = 0; i < argCount; i++)
-		{
-			args.push_back(converter.to_bytes(argListUtf16[i]));
-		}
+		for (int i = 0; i < argCount; i++) { args.push_back(converter.to_bytes(argListUtf16[i])); }
 #else
 		args = std::vector<std::string>(argv, argv + argc);
 #endif
@@ -499,10 +496,7 @@ namespace OpenViBE
 	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::StringList& operand) const { operand.push_back(m_Value); }
 
 	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::TokenPairList& operand) const
-	{
-		operand.push_back(this->parsePair(m_Value));
-	}
+	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::TokenPairList& operand) const { operand.push_back(this->parsePair(m_Value)); }
 
 	template <typename First, typename... Types>
 	ProgramOptionsTraits::TokenPair ProgramOptions<First, Types...>::OptionVisitor::parsePair(const std::string& str) const

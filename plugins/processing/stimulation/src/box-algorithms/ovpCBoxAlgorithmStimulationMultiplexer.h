@@ -35,8 +35,8 @@ namespace OpenViBEPlugins
 			std::vector<uint64_t> m_StreamDecoderEndTimes;
 
 			uint64_t m_LastStartTime = 0;
-			uint64_t m_LastEndTime = 0;
-			bool m_WasHeaderSent = false;
+			uint64_t m_LastEndTime   = 0;
+			bool m_WasHeaderSent     = false;
 
 			std::multimap<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> m_vStimulation;
 		};
@@ -59,8 +59,8 @@ namespace OpenViBEPlugins
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); }
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t ui32Index) override { return this->check(rBox); }
+			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override { return this->check(rBox); }
+			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override { return this->check(rBox); }
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
@@ -86,19 +86,19 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier getCreatedClass() const override { return OVP_ClassId_BoxAlgorithm_StimulationMultiplexer; }
 			OpenViBE::Plugins::IPluginObject* create() override { return new CBoxAlgorithmStimulationMultiplexer; }
 			OpenViBE::Plugins::IBoxListener* createBoxListener() const override { return new CBoxAlgorithmStimulationMultiplexerListener; }
-			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* pBoxListener) const override { delete pBoxListener; }
+			void releaseBoxListener(OpenViBE::Plugins::IBoxListener* listener) const override { delete listener; }
 
-			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& rBoxAlgorithmPrototype) const override
+			bool getBoxPrototype(OpenViBE::Kernel::IBoxProto& prototype) const override
 			{
-				rBoxAlgorithmPrototype.addInput("Input stimulations 1", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addInput("Input stimulations 2", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addOutput("Multiplexed stimulations", OV_TypeId_Stimulations);
-				rBoxAlgorithmPrototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
-				rBoxAlgorithmPrototype.addInputSupport(OV_TypeId_Stimulations);
+				prototype.addInput("Input stimulations 1", OV_TypeId_Stimulations);
+				prototype.addInput("Input stimulations 2", OV_TypeId_Stimulations);
+				prototype.addOutput("Multiplexed stimulations", OV_TypeId_Stimulations);
+				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
+				prototype.addInputSupport(OV_TypeId_Stimulations);
 				return true;
 			}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Plugins::IBoxAlgorithmDesc, OVP_ClassId_BoxAlgorithm_StimulationMultiplexerDesc)
 		};
-	}
-}
+	} // namespace Stimulation
+} // namespace OpenViBEPlugins

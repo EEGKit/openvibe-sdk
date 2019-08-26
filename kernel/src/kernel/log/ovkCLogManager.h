@@ -28,7 +28,7 @@ namespace OpenViBE
 			void log(const uint16_t value) override;
 			void log(const uint8_t value) override;
 			void log(const int64_t value) override;
-			void log(const int32_t value) override;
+			void log(const int value) override;
 			void log(const int16_t value) override;
 			void log(const int8_t value) override;
 			void log(const double value) override;
@@ -60,10 +60,7 @@ namespace OpenViBE
 				{
 					for (std::vector<ILogListener*>::iterator i = m_vListener.begin(); i != m_vListener.end(); ++i)
 					{
-						if ((*i)->isActive(m_eCurrentLogLevel))
-						{
-							(*i)->log(tValue);
-						}
+						if ((*i)->isActive(m_eCurrentLogLevel)) { (*i)->log(tValue); }
 					}
 				}
 			}
@@ -81,5 +78,5 @@ namespace OpenViBE
 			std::condition_variable m_oCondition;
 			std::thread::id m_oOwner;
 		};
-	}  // namespace Kernel
-}  // namespace OpenViBE
+	} // namespace Kernel
+} // namespace OpenViBE

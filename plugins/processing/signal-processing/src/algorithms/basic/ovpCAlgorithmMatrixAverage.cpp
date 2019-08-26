@@ -27,10 +27,7 @@ bool CAlgorithmMatrixAverage::initialize()
 
 bool CAlgorithmMatrixAverage::uninitialize()
 {
-	for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it)
-	{
-		delete *it;
-	}
+	for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete *it; }
 	m_vHistory.clear();
 
 	op_pAveragedMatrix.uninitialize();
@@ -108,10 +105,7 @@ bool CAlgorithmMatrixAverage::process()
 
 			if (m_vHistory.size() >= ip_ui64MatrixCount)
 			{
-				for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it)
-				{
-					delete *it;
-				}
+				for (std::deque<IMatrix*>::iterator it = m_vHistory.begin(); it != m_vHistory.end(); ++it) { delete *it; }
 				m_vHistory.clear();
 			}
 
@@ -154,7 +148,7 @@ bool CAlgorithmMatrixAverage::process()
 			{
 				if (l_Matrix->getBufferElementCount() != m_CumulativeAverageMatrix.size()) { return false; }
 
-				const double n = static_cast<double>(m_CumulativeAverageSampleCount);
+				const double n = double(m_CumulativeAverageSampleCount);
 
 				double* l_pInputMatrixBuffer = l_Matrix->getBuffer();
 
@@ -173,7 +167,7 @@ bool CAlgorithmMatrixAverage::process()
 
 			for (const double& value : m_CumulativeAverageMatrix)
 			{
-				*l_pOutputMatrixBuffer = static_cast<double>(value);
+				*l_pOutputMatrixBuffer = double(value);
 				l_pOutputMatrixBuffer++;
 			}
 

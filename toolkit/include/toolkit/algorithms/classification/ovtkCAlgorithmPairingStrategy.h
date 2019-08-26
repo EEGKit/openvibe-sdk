@@ -17,7 +17,7 @@
 #define OVTK_Algorithm_PairingStrategy_InputTriggerId_DesignArchitecture            OpenViBE::CIdentifier(0x784A9CDF, 0xA41C27F8)
 
 
-typedef int32_t (*fClassifierComparison)(OpenViBE::IMatrix&, OpenViBE::IMatrix&);
+typedef int (*fClassifierComparison)(OpenViBE::IMatrix&, OpenViBE::IMatrix&);
 
 namespace OpenViBEToolkit
 {
@@ -34,9 +34,9 @@ namespace OpenViBEToolkit
 		virtual bool designArchitecture(const OpenViBE::CIdentifier& rId, uint32_t rClassCount) = 0;
 		bool train(const IFeatureVectorSet& rFeatureVectorSet) override = 0;
 		bool classify(const IFeatureVector& rFeatureVector
-							  , double& rf64Class
-							  , IVector& rDistanceValue
-							  , IVector& rProbabilityValue) override = 0;
+					  , double& rf64Class
+					  , IVector& rDistanceValue
+					  , IVector& rProbabilityValue) override = 0;
 		XML::IXMLNode* saveConfiguration() override = 0;
 		bool loadConfiguration(XML::IXMLNode* pConfiguratioNode) override = 0;
 		_IsDerivedFromClass_(CAlgorithmClassifier, OVTK_ClassId_Algorithm_PairingStrategy)
@@ -65,4 +65,4 @@ namespace OpenViBEToolkit
 
 		_IsDerivedFromClass_(OpenViBEToolkit::CAlgorithmClassifierDesc, OVTK_ClassId_Algorithm_PairingStrategyDesc)
 	};
-}  // namespace OpenViBEToolkit
+} // namespace OpenViBEToolkit

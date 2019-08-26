@@ -67,7 +67,7 @@ void CLogListenerConsole::log(const time64 value)
 	if (m_bTimeInSeconds)
 	{
 		uint64_t l_ui64Precision = m_ui64TimePrecision;
-		double l_f64Time      = ITimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
+		double l_f64Time         = ITimeArithmetics::timeToSeconds(value.m_ui64TimeValue);
 		std::stringstream ss;
 		ss.precision(static_cast<long long>(l_ui64Precision));
 		ss.setf(std::ios::fixed, std::ios::floatfield);
@@ -158,7 +158,7 @@ void CLogListenerConsole::log(const int64_t value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const int32_t value)
+void CLogListenerConsole::log(const int value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
@@ -339,10 +339,7 @@ void CLogListenerConsole::log(const ELogColor eLogColor)
 	if (m_bUseColor)
 	{
 		// Tests 'push state' bit
-		if (eLogColor & LogColor_PushStateBit)
-		{
-			m_vLogColor.push(m_eLogColor);
-		}
+		if (eLogColor & LogColor_PushStateBit) { m_vLogColor.push(m_eLogColor); }
 
 		// Tests 'pop state' bit
 		if (eLogColor & LogColor_PopStateBit)
@@ -352,17 +349,11 @@ void CLogListenerConsole::log(const ELogColor eLogColor)
 				m_eLogColor = m_vLogColor.top();
 				m_vLogColor.pop();
 			}
-			else
-			{
-				m_eLogColor = LogColor_Default;
-			}
+			else { m_eLogColor = LogColor_Default; }
 		}
 
 		// Tests 'reset' bit
-		if (eLogColor & LogColor_ResetBit)
-		{
-			m_eLogColor = LogColor_Default;
-		}
+		if (eLogColor & LogColor_ResetBit) { m_eLogColor = LogColor_Default; }
 
 		// Tests 'foreground' bit
 		if (eLogColor & LogColor_ForegroundBit)

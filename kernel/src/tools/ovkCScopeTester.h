@@ -22,7 +22,5 @@ namespace OpenViBE
 			CString m_sPrefix;
 			const Kernel::IKernelContext& m_kernelContext;
 		};
-	}  // namespace Tools
-}  // namespace OpenViBE
-
-
+	} // namespace Tools
+} // namespace OpenViBE
