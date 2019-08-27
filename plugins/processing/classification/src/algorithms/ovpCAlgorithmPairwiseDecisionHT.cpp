@@ -12,8 +12,8 @@
 
 namespace
 {
-	const char* const c_sTypeNodeName        = "PairwiseDecision_HT";
-	const char* const c_sRepartitionNodeName = "Repartition";
+	const char* const TYPE_NODE_NAME        = "PairwiseDecision_HT";
+	const char* const REPARTITION_NODE_NAME = "Repartition";
 }
 
 
@@ -213,7 +213,7 @@ bool CAlgorithmPairwiseDecisionHT::compute(std::vector<SClassificationInfo>& pCl
 
 XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfiguration()
 {
-	XML::IXMLNode* l_pRootNode = XML::createNode(c_sTypeNodeName);
+	XML::IXMLNode* l_pRootNode = XML::createNode(TYPE_NODE_NAME);
 
 	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 	const uint32_t l_ui32ClassCount                      = ip_pRepartitionSetVector->getDimensionSize(0);
@@ -223,7 +223,7 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfiguration()
 	{
 		l_sRepartition << ip_pRepartitionSetVector->getBuffer()[i] << " ";
 	}
-	XML::IXMLNode* l_pRepartition = XML::createNode(c_sRepartitionNodeName);
+	XML::IXMLNode* l_pRepartition = XML::createNode(REPARTITION_NODE_NAME);
 	l_pRepartition->setPCData(l_sRepartition.str().c_str());
 	l_pRootNode->addChild(l_pRepartition);
 
@@ -232,7 +232,7 @@ XML::IXMLNode* CAlgorithmPairwiseDecisionHT::saveConfiguration()
 
 bool CAlgorithmPairwiseDecisionHT::loadConfiguration(XML::IXMLNode& rNode)
 {
-	std::stringstream l_sData(rNode.getChildByName(c_sRepartitionNodeName)->getPCData());
+	std::stringstream l_sData(rNode.getChildByName(REPARTITION_NODE_NAME)->getPCData());
 	TParameterHandler<IMatrix*> ip_pRepartitionSetVector = this->getInputParameter(OVP_Algorithm_Classifier_Pairwise_InputParameterId_SetRepartition);
 
 

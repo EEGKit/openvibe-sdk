@@ -34,11 +34,11 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 	// Check the version of the file
 	OV_ERROR_UNLESS_KRF(
-		l_pRootNode->hasAttribute(c_sFormatVersionAttributeName),
+		l_pRootNode->hasAttribute(FORMAT_VERSION_ATTRIBUTE_NAME),
 		"Configuration file [" << sFilename << "] has no version information",
 		OpenViBE::Kernel::ErrorType::ResourceNotFound);
 
-	string l_sVersion = l_pRootNode->getAttribute(c_sFormatVersionAttributeName);
+	string l_sVersion = l_pRootNode->getAttribute(FORMAT_VERSION_ATTRIBUTE_NAME);
 	std::stringstream l_sData(l_sVersion);
 	uint32_t l_ui32Version;
 	l_sData >> l_ui32Version;
@@ -57,26 +57,26 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 	CIdentifier l_oAlgorithmClassIdentifier = OV_UndefinedIdentifier;
 
-	XML::IXMLNode* l_pTempNode = l_pRootNode->getChildByName(c_sStrategyNodeName);
+	XML::IXMLNode* l_pTempNode = l_pRootNode->getChildByName(STRATEGY_NODE_NAME);
 
 	OV_ERROR_UNLESS_KRF(
 		l_pTempNode,
-		"Configuration file [" << sFilename << "] has no node " << c_sStrategyNodeName,
+		"Configuration file [" << sFilename << "] has no node " << STRATEGY_NODE_NAME,
 		OpenViBE::Kernel::ErrorType::BadParsing);
 
-	l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(c_sIdentifierAttributeName));
+	l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
 
 	//If the Identifier is undefined, that means we need to load a native algorithm
 	if (l_oAlgorithmClassIdentifier == OV_UndefinedIdentifier)
 	{
-		l_pTempNode = l_pRootNode->getChildByName(c_sAlgorithmNodeName);
+		l_pTempNode = l_pRootNode->getChildByName(ALGORITHM_NODE_NAME);
 
 		OV_ERROR_UNLESS_KRF(
 			l_pTempNode,
-			"Configuration file [" << sFilename << "] has no node " << c_sAlgorithmNodeName,
+			"Configuration file [" << sFilename << "] has no node " << ALGORITHM_NODE_NAME,
 			OpenViBE::Kernel::ErrorType::BadParsing);
 
-		l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(c_sIdentifierAttributeName));
+		l_oAlgorithmClassIdentifier.fromString(l_pTempNode->getAttribute(IDENTIFIER_ATTRIBUTE_NAME));
 
 		//If the algorithm is still unknown, that means that we face an error
 		OV_ERROR_UNLESS_KRF(
@@ -86,11 +86,11 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	}
 
 	//Now loading all stimulations output
-	XML::IXMLNode* l_pStimulationsNode = l_pRootNode->getChildByName(c_sStimulationsNodeName);
+	XML::IXMLNode* l_pStimulationsNode = l_pRootNode->getChildByName(STIMULATIONS_NODE_NAME);
 
 	OV_ERROR_UNLESS_KRF(
 		l_pStimulationsNode,
-		"Configuration file [" << sFilename << "] has no node " << c_sStimulationsNodeName,
+		"Configuration file [" << sFilename << "] has no node " << STIMULATIONS_NODE_NAME,
 		OpenViBE::Kernel::ErrorType::BadParsing);
 
 	//Now load every stimulation and store them in the map with the right class id
@@ -100,17 +100,17 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 
 		OV_ERROR_UNLESS_KRF(
 			l_pTempNode,
-			"Invalid NULL child node " << i << " for node [" << c_sStimulationsNodeName << "]",
+			"Invalid NULL child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]",
 			OpenViBE::Kernel::ErrorType::BadParsing);
 
 		CString l_sStimulationName(l_pTempNode->getPCData());
 
 		double l_f64ClassId;
-		const char* l_sAttributeData = l_pTempNode->getAttribute(c_sIdentifierAttributeName);
+		const char* l_sAttributeData = l_pTempNode->getAttribute(IDENTIFIER_ATTRIBUTE_NAME);
 
 		OV_ERROR_UNLESS_KRF(
 			l_sAttributeData,
-			"Invalid child node " << i << " for node [" << c_sStimulationsNodeName << "]: attribute [" << c_sIdentifierAttributeName << "] not found",
+			"Invalid child node " << i << " for node [" << STIMULATIONS_NODE_NAME << "]: attribute [" << IDENTIFIER_ATTRIBUTE_NAME << "] not found",
 			OpenViBE::Kernel::ErrorType::BadParsing);
 
 		std::stringstream l_sIdentifierData(l_sAttributeData);
@@ -138,7 +138,7 @@ bool CBoxAlgorithmClassifierProcessor::loadClassifier(const char* sFilename)
 	// note: labelsencoder cannot be directly bound here as the classifier returns a float, but we need to output a stimulation
 
 	TParameterHandler<XML::IXMLNode*> ip_pClassificationConfiguration(m_pClassifier->getInputParameter(OVTK_Algorithm_Classifier_InputParameterId_Configuration));
-	ip_pClassificationConfiguration = l_pRootNode->getChildByName(c_sClassifierRoot)->getChild(0);
+	ip_pClassificationConfiguration = l_pRootNode->getChildByName(CLASSIFIER_ROOT)->getChild(0);
 
 	OV_ERROR_UNLESS_KRF(
 		m_pClassifier->process(OVTK_Algorithm_Classifier_InputTriggerId_LoadConfiguration),

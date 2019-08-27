@@ -242,16 +242,16 @@ namespace OpenViBEToolkit
 
 		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index)
 		{
-			OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-			rBox.getInputType(index, l_oTypeIdentifier);
-			if (this->isValidInputType(l_oTypeIdentifier, index))
+			OpenViBE::CIdentifier typeId = OV_UndefinedIdentifier;
+			rBox.getInputType(index, typeId);
+			if (this->isValidInputType(typeId, index))
 			{
-				rBox.setOutputType(index, l_oTypeIdentifier);
+				rBox.setOutputType(index, typeId);
 			}
 			else
 			{
-				rBox.getOutputType(index, l_oTypeIdentifier);
-				rBox.setInputType(index, l_oTypeIdentifier);
+				rBox.getOutputType(index, typeId);
+				rBox.setInputType(index, typeId);
 			}
 			return true;
 		}
@@ -264,16 +264,16 @@ namespace OpenViBEToolkit
 
 		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index)
 		{
-			OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-			rBox.getOutputType(index, l_oTypeIdentifier);
-			if (this->isValidOutputType(l_oTypeIdentifier, index))
+			OpenViBE::CIdentifier typeId = OV_UndefinedIdentifier;
+			rBox.getOutputType(index, typeId);
+			if (this->isValidOutputType(typeId, index))
 			{
-				rBox.setInputType(index, l_oTypeIdentifier);
+				rBox.setInputType(index, typeId);
 			}
 			else
 			{
-				rBox.getInputType(index, l_oTypeIdentifier);
-				rBox.setOutputType(index, l_oTypeIdentifier);
+				rBox.getInputType(index, typeId);
+				rBox.setOutputType(index, typeId);
 			}
 			return true;
 		}

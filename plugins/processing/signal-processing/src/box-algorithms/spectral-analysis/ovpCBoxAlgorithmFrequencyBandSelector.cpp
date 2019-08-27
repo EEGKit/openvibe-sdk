@@ -18,9 +18,9 @@ namespace
 {
 	std::vector<std::string> split(const std::string& sString, const char c)
 	{
-		std::vector<std::string> l_vResult;
-		std::string::size_type i = 0;
-		std::string::size_type j = 0;
+		std::vector<std::string> result;
+		size_t i = 0;
+		size_t j = 0;
 		while (i < sString.length())
 		{
 			j = i;
@@ -30,11 +30,11 @@ namespace
 			}
 			if (i != j)
 			{
-				l_vResult.push_back(std::string(sString, i, j - i));
+				result.push_back(std::string(sString, i, j - i));
 			}
 			i = j + 1;
 		}
-		return l_vResult;
+		return result;
 	}
 } // namespace
 

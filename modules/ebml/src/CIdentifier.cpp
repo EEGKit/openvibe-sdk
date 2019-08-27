@@ -9,7 +9,7 @@ CIdentifier::CIdentifier(const uint64_t ui64Identifier)
 
 CIdentifier::CIdentifier(const uint32_t ui32Identifier1, const uint32_t ui32Identifier2)
 {
-	m_ui64Identifier = (((uint64_t)ui32Identifier1) << 32) + ui32Identifier2;
+	m_ui64Identifier = (uint64_t(ui32Identifier1) << 32) + ui32Identifier2;
 }
 
 CIdentifier::CIdentifier(const CIdentifier& rIdentifier)

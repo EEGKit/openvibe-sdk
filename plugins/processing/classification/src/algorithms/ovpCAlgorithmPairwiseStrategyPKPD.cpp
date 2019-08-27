@@ -9,7 +9,7 @@
 
 namespace
 {
-	const char* const c_sTypeNodeName = "PairwiseDecision_PKDP";
+	const char* const TYPE_NODE_NAME = "PairwiseDecision_PKDP";
 }
 
 
@@ -106,7 +106,7 @@ bool CAlgorithmPairwiseStrategyPKPD::compute(std::vector<SClassificationInfo>& p
 
 XML::IXMLNode* CAlgorithmPairwiseStrategyPKPD::saveConfiguration()
 {
-	XML::IXMLNode* l_pRootNode = XML::createNode(c_sTypeNodeName);
+	XML::IXMLNode* l_pRootNode = XML::createNode(TYPE_NODE_NAME);
 	return l_pRootNode;
 }
 

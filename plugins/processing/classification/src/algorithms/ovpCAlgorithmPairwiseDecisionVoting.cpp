@@ -9,7 +9,7 @@
 
 namespace
 {
-	const char* const c_sTypeNodeName = "PairwiseDecision_Voting";
+	const char* const TYPE_NODE_NAME = "PairwiseDecision_Voting";
 }
 
 using namespace OpenViBE;
@@ -87,7 +87,7 @@ bool CAlgorithmPairwiseDecisionVoting::compute(std::vector<SClassificationInfo>&
 
 XML::IXMLNode* CAlgorithmPairwiseDecisionVoting::saveConfiguration()
 {
-	XML::IXMLNode* l_pRootNode = XML::createNode(c_sTypeNodeName);
+	XML::IXMLNode* l_pRootNode = XML::createNode(TYPE_NODE_NAME);
 	return l_pRootNode;
 }
 

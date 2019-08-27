@@ -52,7 +52,7 @@ namespace
 					  FORMAT_MESSAGE_IGNORE_INSERTS,               // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
 					  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
 					  errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-					  (LPTSTR)&l_ErrorText,                        // output
+					  LPTSTR(&l_ErrorText),                        // output
 					  0,                                           // minimum size for output buffer
 					  nullptr
 					  );                                           // arguments - see note
@@ -102,7 +102,7 @@ bool CDynamicModule::loadFromExisting(const char* modulePath, const char* symbol
 
 	if (symbolNameCheck != nullptr)
 	{
-		if (GetProcAddress((HMODULE)m_Handle, symbolNameCheck) == nullptr)
+		if (GetProcAddress(HMODULE(m_Handle), symbolNameCheck) == nullptr)
 		{
 			this->unload();
 			this->setError(LogErrorCodes_InvalidSymbol, "Windows error: " + formatWindowsError(GetLastError()));
@@ -150,7 +150,7 @@ bool CDynamicModule::loadFromPath(const char* modulePath, const char* symbolName
 
 	if (symbolNameCheck != nullptr)
 	{
-		if (GetProcAddress((HMODULE)m_Handle, symbolNameCheck) == nullptr)
+		if (GetProcAddress(HMODULE(m_Handle), symbolNameCheck) == nullptr)
 		{
 			this->unload();
 			this->setError(LogErrorCodes_InvalidSymbol, "Symbol invalid: [" + std::string(symbolNameCheck) + "]. Windows error: " + formatWindowsError(GetLastError()));

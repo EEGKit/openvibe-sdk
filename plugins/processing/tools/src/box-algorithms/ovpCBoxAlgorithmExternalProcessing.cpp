@@ -193,7 +193,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 
 	if (!m_HasReceivedEndMessage)
 	{
-		bool result = m_Messaging.close();
+		const bool result = m_Messaging.close();
 
 #ifdef TARGET_OS_Windows
 		if (m_ShouldLaunchProgram && m_ThirdPartyProgramProcessId > 0)
@@ -201,10 +201,10 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 			DWORD exitCode;
 
 			// Wait for external process to stop by himself, terminate it if necessary
-			auto startTime = System::Time::zgetTime();
+			const auto startTime = System::Time::zgetTime();
 			while (System::Time::zgetTime() - startTime < m_AcceptTimeout)
 			{
-				GetExitCodeProcess((HANDLE)m_ThirdPartyProgramProcessId, &exitCode);
+				GetExitCodeProcess(HANDLE(m_ThirdPartyProgramProcessId), &exitCode);
 
 				if (exitCode != STILL_ACTIVE) { break; }
 				std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -213,7 +213,7 @@ bool CBoxAlgorithmExternalProcessing::uninitialize()
 
 			if (exitCode == STILL_ACTIVE)
 			{
-				OV_ERROR_UNLESS_KRF(::TerminateProcess((HANDLE)m_ThirdPartyProgramProcessId, EXIT_FAILURE), "Failed to kill third party program.", ErrorType::Unknown);
+				OV_ERROR_UNLESS_KRF(::TerminateProcess(HANDLE(m_ThirdPartyProgramProcessId), EXIT_FAILURE), "Failed to kill third party program.", ErrorType::Unknown);
 			}
 			else if (exitCode != 0)
 			{
@@ -272,7 +272,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 {
 	if (m_Messaging.isInErrorState())
 	{
-		std::string errorString = Communication::MessagingServer::getErrorString(m_Messaging.getLastError());
+		const std::string errorString = Communication::MessagingServer::getErrorString(m_Messaging.getLastError());
 		OV_ERROR_KRF("Error state connection: " << errorString.c_str() << ".\n This may be due to a broken client connection.", ErrorType::BadNetworkConnection);
 	}
 
@@ -387,7 +387,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 std::string CBoxAlgorithmExternalProcessing::generateConnectionID(size_t size)
 {
 	std::default_random_engine generator{ std::random_device()() };
-	std::uniform_int_distribution<int> character(0, 34);
+	const std::uniform_int_distribution<int> character(0, 34);
 
 	std::string connectionID;
 
@@ -486,7 +486,7 @@ bool CBoxAlgorithmExternalProcessing::launchThirdPartyProgram(const std::string&
 {
 	m_ThirdPartyProgramProcessId = 0;
 
-	std::vector<std::string> argumentsVector = splitCommandLine(arguments);
+	const std::vector<std::string> argumentsVector = splitCommandLine(arguments);
 
 	std::vector<std::string> programArguments = { programPath, "--connection-id", m_ConnectionID, "--port", std::to_string(m_Port) };
 	programArguments.insert(programArguments.begin() + 1, argumentsVector.cbegin(), argumentsVector.cend()); // Add the arguments after the program path.

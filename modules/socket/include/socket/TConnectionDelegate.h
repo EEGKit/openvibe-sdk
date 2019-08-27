@@ -27,34 +27,34 @@ namespace Socket
 
 		virtual bool close() { return m_oConnectionDelegate.fpClose(m_oConnectionDelegate.pUserData); }
 
-		virtual bool isReadyToSend(const uint32_t ui32TimeOut) const
+		virtual bool isReadyToSend(const uint32_t timeOut) const
 		{
-			return m_oConnectionDelegate.fpIsReadyToSend(m_oConnectionDelegate.pUserData, ui32TimeOut);
+			return m_oConnectionDelegate.fpIsReadyToSend(m_oConnectionDelegate.pUserData, timeOut);
 		}
 
-		virtual bool isReadyToReceive(const uint32_t ui32TimeOut) const
+		virtual bool isReadyToReceive(const uint32_t timeOut) const
 		{
-			return m_oConnectionDelegate.fpIsReadyToReceive(m_oConnectionDelegate.pUserData, ui32TimeOut);
+			return m_oConnectionDelegate.fpIsReadyToReceive(m_oConnectionDelegate.pUserData, timeOut);
 		}
 
-		virtual uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize)
+		virtual uint32_t sendBuffer(const void* buffer, const uint32_t size)
 		{
-			return m_oConnectionDelegate.fpSendBuffer(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
+			return m_oConnectionDelegate.fpSendBuffer(m_oConnectionDelegate.pUserData, buffer, size);
 		}
 
-		virtual uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize)
+		virtual uint32_t receiveBuffer(void* buffer, const uint32_t size)
 		{
-			return m_oConnectionDelegate.fpReceiveBuffer(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
+			return m_oConnectionDelegate.fpReceiveBuffer(m_oConnectionDelegate.pUserData, buffer, size);
 		}
 
-		virtual bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)
+		virtual bool sendBufferBlocking(const void* buffer, const uint32_t size)
 		{
-			return m_oConnectionDelegate.fpSendBufferBlocking(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
+			return m_oConnectionDelegate.fpSendBufferBlocking(m_oConnectionDelegate.pUserData, buffer, size);
 		}
 
-		virtual bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize)
+		virtual bool receiveBufferBlocking(void* buffer, const uint32_t bufferSize)
 		{
-			return m_oConnectionDelegate.fpReceiveBufferBlocking(m_oConnectionDelegate.pUserData, pBuffer, ui32BufferSize);
+			return m_oConnectionDelegate.fpReceiveBufferBlocking(m_oConnectionDelegate.pUserData, buffer, bufferSize);
 		}
 
 		virtual bool isConnected() const { return m_oConnectionDelegate.fpIsConnected(m_oConnectionDelegate.pUserData); }

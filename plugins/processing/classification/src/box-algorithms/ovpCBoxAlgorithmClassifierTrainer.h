@@ -18,12 +18,12 @@
 
 namespace
 {
-	const char* const c_sTrainTriggerSettingName       = "Train trigger";
-	const char* const c_sFilenameSettingName           = "Filename to save configuration to";
-	const char* const c_sMulticlassStrategySettingName = "Multiclass strategy to apply";
-	const char* const c_sAlgorithmSettingName          = "Algorithm to use";
-	const char* const c_sKFoldSettingName              = "Number of partitions for k-fold cross-validation test";
-	const char* const c_sBalanceSettingName            = "Balance classes";
+	const char* const TRAIN_TRIGGER_SETTING_NAME       = "Train trigger";
+	const char* const FILENAME_SETTING_NAME            = "Filename to save configuration to";
+	const char* const MULTICLASS_STRATEGY_SETTING_NAME = "Multiclass strategy to apply";
+	const char* const ALGORITHM_SETTING_NAME           = "Algorithm to use";
+	const char* const FOLD_SETTING_NAME                = "Number of partitions for k-fold cross-validation test";
+	const char* const BALANCE_SETTING_NAME             = "Balance classes";
 }
 
 
@@ -105,18 +105,18 @@ namespace OpenViBEPlugins
 
 				prototype.addOutput("Train-completed Flag", OV_TypeId_Stimulations);
 
-				prototype.addSetting(c_sTrainTriggerSettingName, OV_TypeId_Stimulation, "OVTK_StimulationId_Train");
-				prototype.addSetting(c_sFilenameSettingName, OV_TypeId_Filename, "${Path_UserData}/my-classifier.xml");
+				prototype.addSetting(TRAIN_TRIGGER_SETTING_NAME, OV_TypeId_Stimulation, "OVTK_StimulationId_Train");
+				prototype.addSetting(FILENAME_SETTING_NAME, OV_TypeId_Filename, "${Path_UserData}/my-classifier.xml");
 
-				prototype.addSetting(c_sMulticlassStrategySettingName, OVTK_TypeId_ClassificationStrategy, "Native");
+				prototype.addSetting(MULTICLASS_STRATEGY_SETTING_NAME, OVTK_TypeId_ClassificationStrategy, "Native");
 				//Pairing startegy argument
 				//Class label
 
-				prototype.addSetting(c_sAlgorithmSettingName, OVTK_TypeId_ClassificationAlgorithm, "Linear Discrimimant Analysis (LDA)");
+				prototype.addSetting(ALGORITHM_SETTING_NAME, OVTK_TypeId_ClassificationAlgorithm, "Linear Discrimimant Analysis (LDA)");
 				//Argument of algorithm
 
-				prototype.addSetting(c_sKFoldSettingName, OV_TypeId_Integer, "10");
-				prototype.addSetting(c_sBalanceSettingName, OV_TypeId_Boolean, "false");
+				prototype.addSetting(FOLD_SETTING_NAME, OV_TypeId_Integer, "10");
+				prototype.addSetting(BALANCE_SETTING_NAME, OV_TypeId_Boolean, "false");
 
 				prototype.addFlag(OpenViBE::Kernel::BoxFlag_CanAddInput);
 

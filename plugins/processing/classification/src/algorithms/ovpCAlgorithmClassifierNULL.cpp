@@ -46,13 +46,13 @@ bool CAlgorithmClassifierNULL::train(const IFeatureVectorSet& rFeatureVectorSet)
 	return true;
 }
 
-bool CAlgorithmClassifierNULL::classify(const IFeatureVector& rFeatureVector, double& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
+bool CAlgorithmClassifierNULL::classify(const IFeatureVector& featureVector, double& classId, IVector& rClassificationValues, IVector& rProbabilityValue)
 {
-	rf64Class = 1 + (rand() % 3);
+	classId = 1 + (rand() % 3);
 
 	rClassificationValues.setSize(1);
 	rProbabilityValue.setSize(1);
-	if (rf64Class == 1)
+	if (classId == 1)
 	{
 		rClassificationValues[0] = -1;
 		rProbabilityValue[0]     = 1;

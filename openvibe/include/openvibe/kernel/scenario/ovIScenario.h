@@ -9,7 +9,7 @@ namespace OpenViBE
 	namespace Plugins
 	{
 		class IBoxAlgorithmDesc;
-	}
+	} // namespace Plugins
 
 	namespace Kernel
 	{

@@ -195,7 +195,7 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 
-			const int nBytesReceived = _WINSOCK2API_::recv(m_oSocket, (char *)pBuffer, ui32BufferSize, 0);
+			const int nBytesReceived = _WINSOCK2API_::recv(m_oSocket, static_cast<char *>(pBuffer), ui32BufferSize, 0);
 
 			if (nBytesReceived == SOCKET_ERROR)
 			{
@@ -330,7 +330,7 @@ namespace Socket
 											FORMAT_MESSAGE_IGNORE_INSERTS, // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
 											nullptr, // unused with FORMAT_MESSAGE_FROM_SYSTEM
 											l_ui64Error, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), 
-											(LPTSTR)&l_sErrorText, // output
+											LPTSTR(&l_sErrorText), // output
 											0, // minimum size for output buffer
 											nullptr);
 
@@ -369,7 +369,7 @@ namespace Socket
 			}
 
 			char l_vBuffer[5000];
-			LPWSAQUERYSET l_sWSAQuerySet = (LPWSAQUERYSET)l_vBuffer;
+			const LPWSAQUERYSET l_sWSAQuerySet = LPWSAQUERYSET(l_vBuffer);
 			DWORD l_ui32dwSize           = sizeof(l_vBuffer);
 
 			memset((void *)l_sWSAQuerySet, 0, sizeof(WSAQUERYSET));
@@ -382,7 +382,7 @@ namespace Socket
 			while (l_bLookup)
 			{
 				// Check next bluetooth device
-				int l_i32Result = _WINSOCK2API_::WSALookupServiceNext(l_pHandle, LUP_RETURN_NAME | LUP_RETURN_ADDR, &l_ui32dwSize, l_sWSAQuerySet);
+				const int l_i32Result = _WINSOCK2API_::WSALookupServiceNext(l_pHandle, LUP_RETURN_NAME | LUP_RETURN_ADDR, &l_ui32dwSize, l_sWSAQuerySet);
 
 				if (l_i32Result == SOCKET_ERROR)
 				{

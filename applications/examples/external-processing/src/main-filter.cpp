@@ -9,14 +9,12 @@
 
 #include <communication/ovCMessagingClient.h>
 
-static bool s_DidRequestForcedQuit = false;
+static bool didRequestForcedQuit = false;
 
 using namespace Communication;
+using namespace std;
 
-static void signalHandler(int /* signal */)
-{
-	s_DidRequestForcedQuit = true;
-}
+static void signalHandler(int /* signal */) { didRequestForcedQuit = true; }
 
 int main(int argc, char** argv)
 {
@@ -29,20 +27,14 @@ int main(int argc, char** argv)
 	{
 		if (std::strcmp(argv[i], "--connection-id") == 0)
 		{
-			if (argc > i + 1)
-			{
-				connectionID = argv[i + 1];
-			}
+			if (argc > i + 1) { connectionID = argv[i + 1]; }
 		}
 		else if (std::strcmp(argv[i], "--port") == 0)
 		{
-			if (argc > i + 1)
-			{
-				port = static_cast<unsigned int>(std::stoi(argv[i + 1]));
-			}
+			if (argc > i + 1) { port = static_cast<unsigned int>(std::stoi(argv[i + 1])); }
 		}
 	}
-	s_DidRequestForcedQuit = false;
+	didRequestForcedQuit = false;
 
 	MessagingClient client;
 
@@ -59,11 +51,11 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			printf("Error %d\n", error);
+			std::cout << "Error " << error << std::endl;
 			exit(EXIT_FAILURE);
 		}
 
-		if (s_DidRequestForcedQuit) { exit(EXIT_SUCCESS); }
+		if (didRequestForcedQuit) { exit(EXIT_SUCCESS); }
 	}
 
 	std::cout << "Connected to server\n";
@@ -116,7 +108,7 @@ int main(int argc, char** argv)
 
 	// Process
 
-	while (!s_DidRequestForcedQuit)
+	while (!didRequestForcedQuit)
 	{
 		if (client.isEndReceived())
 		{

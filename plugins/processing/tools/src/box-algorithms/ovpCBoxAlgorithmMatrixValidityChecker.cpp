@@ -11,20 +11,20 @@ using namespace Tools;
 
 bool CBoxAlgorithmMatrixValidityChecker::initialize()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	const IBox& boxContext = this->getStaticBoxContext();
 
-	uint64_t l_ui64LogLevel   = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	m_eLogLevel               = ELogLevel(l_ui64LogLevel);
+	uint64_t logLevel         = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	m_eLogLevel               = ELogLevel(logLevel);
 	m_ui64ValidityCheckerType = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
-	if (l_rStaticBoxContext.getSettingCount() == 1) { m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); } // note that for boxes with one setting, we fallback to the old behavior 
+	if (boxContext.getSettingCount() == 1) { m_ui64ValidityCheckerType = OVP_TypeId_ValidityCheckerType_LogWarning.toUInteger(); } // note that for boxes with one setting, we fallback to the old behavior 
 
-	OV_ERROR_UNLESS_KRF(l_rStaticBoxContext.getSettingCount() <= 1 || l_rStaticBoxContext.getInputCount() == l_rStaticBoxContext.getOutputCount(),
-						"Invalid input count [" << l_rStaticBoxContext.getInputCount() << "] (expected same value as output count [" << l_rStaticBoxContext.getOutputCount() << "])",
+	OV_ERROR_UNLESS_KRF(boxContext.getSettingCount() <= 1 || boxContext.getInputCount() == boxContext.getOutputCount(),
+						"Invalid input count [" << boxContext.getInputCount() << "] (expected same value as output count [" << boxContext.getOutputCount() << "])",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
-	m_vStreamDecoder.resize(l_rStaticBoxContext.getInputCount());
-	m_vStreamEncoder.resize(l_rStaticBoxContext.getInputCount());
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	m_vStreamDecoder.resize(boxContext.getInputCount());
+	m_vStreamEncoder.resize(boxContext.getInputCount());
+	for (uint32_t i = 0; i < boxContext.getInputCount(); i++)
 	{
 		m_vStreamDecoder[i].initialize(*this, i);
 		m_vStreamEncoder[i].initialize(*this, i);
@@ -32,19 +32,19 @@ bool CBoxAlgorithmMatrixValidityChecker::initialize()
 	}
 
 	m_vLastValidSample.clear();
-	m_vLastValidSample.resize(l_rStaticBoxContext.getInputCount());
+	m_vLastValidSample.resize(boxContext.getInputCount());
 	m_ui32TotalInterpolatedSampleCount.clear();
-	m_ui32TotalInterpolatedSampleCount.resize(l_rStaticBoxContext.getInputCount());
+	m_ui32TotalInterpolatedSampleCount.resize(boxContext.getInputCount());
 	m_ui32TotalInterpolatedChunkCount.clear();
-	m_ui32TotalInterpolatedChunkCount.resize(l_rStaticBoxContext.getInputCount());
+	m_ui32TotalInterpolatedChunkCount.resize(boxContext.getInputCount());
 
 	return true;
 }
 
 bool CBoxAlgorithmMatrixValidityChecker::uninitialize()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	const size_t nInput = this->getStaticBoxContext().getInputCount();
+	for (uint32_t i = 0; i < nInput; i++)
 	{
 		m_vStreamDecoder[i].uninitialize();
 		m_vStreamEncoder[i].uninitialize();
@@ -63,19 +63,20 @@ bool CBoxAlgorithmMatrixValidityChecker::processInput(const uint32_t ui32InputIn
 
 bool CBoxAlgorithmMatrixValidityChecker::process()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
+	IBoxIO& boxContext    = this->getDynamicBoxContext();
+	const size_t nInput = this->getStaticBoxContext().getInputCount();
+	const size_t nSetting = this->getStaticBoxContext().getSettingCount();
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < nInput; i++)
 	{
-		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
 		{
 			m_vStreamDecoder[i].decode(j);
 			IMatrix* l_pMatrix = m_vStreamDecoder[i].getOutputMatrix();
 
 			if (m_vStreamDecoder[i].isHeaderReceived())
 			{
-				if (l_rStaticBoxContext.getSettingCount() > 1) { m_vStreamEncoder[i].encodeHeader(); }
+				if (nSetting > 1) { m_vStreamEncoder[i].encodeHeader(); }
 
 				if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
@@ -92,7 +93,7 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 				{
 					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity between " << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << " and " << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << ".\n";
+						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity between " << time64(boxContext.getInputChunkStartTime(i, j)) << " and " << time64(boxContext.getInputChunkEndTime(i, j)) << ".\n";
 					}
 				}
 					// stop player
@@ -101,49 +102,49 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					if (!OpenViBEToolkit::Tools::Matrix::isContentValid(*l_pMatrix))
 					{
 						this->getPlayerContext().stop();
-						OV_ERROR_KRF("Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(l_rDynamicBoxContext.getInputChunkEndTime(i, j)) << "]",
+						OV_ERROR_KRF("Invalid matrix content on input [" << i << "]: either contains NAN or Infinity between [" << time64(boxContext.getInputChunkStartTime(i, j)) << "] and [" << time64(boxContext.getInputChunkEndTime(i, j)) << "]",
 									 OpenViBE::Kernel::ErrorType::BadInput);
 					}
 				}
 					// interpolate
 				else if (m_ui64ValidityCheckerType == OVP_TypeId_ValidityCheckerType_Interpolate.toUInteger())
 				{
-					uint32_t l_ui32ChannelCount            = l_pMatrix->getDimensionSize(0);
-					uint32_t l_ui32SampleCount             = l_pMatrix->getDimensionSize(1);
-					double* l_pBuffer                      = l_pMatrix->getBuffer();
-					uint32_t l_ui32InterpolatedSampleCount = 0;
+					const uint32_t nChannel      = l_pMatrix->getDimensionSize(0);
+					const uint32_t nSample       = l_pMatrix->getDimensionSize(1);
+					double* buffer               = l_pMatrix->getBuffer();
+					uint32_t nInterpolatedSample = 0;
 
-					for (uint32_t k = 0; k < l_ui32ChannelCount; k++)
+					for (uint32_t k = 0; k < nChannel; k++)
 					{
-						for (uint32_t l = 0; l < l_ui32SampleCount; l++)
+						for (uint32_t l = 0; l < nSample; l++)
 						{
-							if (std::isnan(l_pBuffer[l + k * l_ui32SampleCount]) || std::isinf(l_pBuffer[l + k * l_ui32SampleCount]))
+							if (std::isnan(buffer[l + k * nSample]) || std::isinf(buffer[l + k * nSample]))
 							{
 								// interpolation : order 0 (easiest for online interpolation)
-								l_pBuffer[l + k * l_ui32SampleCount] = m_vLastValidSample[i][k];
-								l_ui32InterpolatedSampleCount++;
+								buffer[l + k * nSample] = m_vLastValidSample[i][k];
+								nInterpolatedSample++;
 							}
 							else
 							{
 								// save of the last valid sample of channel k
-								m_vLastValidSample[i][k] = l_pBuffer[l + k * l_ui32SampleCount];
+								m_vLastValidSample[i][k] = buffer[l + k * nSample];
 							}
 						}
 					}
-					m_ui32TotalInterpolatedSampleCount[i] += l_ui32InterpolatedSampleCount;
+					m_ui32TotalInterpolatedSampleCount[i] += nInterpolatedSample;
 
 					// log management
-					if (l_ui32InterpolatedSampleCount > 0 && m_ui32TotalInterpolatedSampleCount[i] == l_ui32InterpolatedSampleCount) // beginning of interpolation
+					if (nInterpolatedSample > 0 && m_ui32TotalInterpolatedSampleCount[i] == nInterpolatedSample) // beginning of interpolation
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << ": interpolation is enable.\n";
+						getLogManager() << m_eLogLevel << "Matrix on input " << i << " either contains NAN or Infinity from " << time64(boxContext.getInputChunkStartTime(i, j)) << ": interpolation is enable.\n";
 					}
-					if (l_ui32InterpolatedSampleCount > 0) // update of ChunkCount during interpolation
+					if (nInterpolatedSample > 0) // update of ChunkCount during interpolation
 					{
 						m_ui32TotalInterpolatedChunkCount[i]++;
 					}
-					if (l_ui32InterpolatedSampleCount == 0 && m_ui32TotalInterpolatedSampleCount[i] > 0) // end of interpolation
+					if (nInterpolatedSample == 0 && m_ui32TotalInterpolatedSampleCount[i] > 0) // end of interpolation
 					{
-						getLogManager() << m_eLogLevel << "Matrix on input " << i << " contained " << 100.0 * m_ui32TotalInterpolatedSampleCount[i] / (m_ui32TotalInterpolatedChunkCount[i] * l_ui32SampleCount * l_ui32ChannelCount) << " % of NAN or Infinity. Interpolation disable from " << time64(l_rDynamicBoxContext.getInputChunkStartTime(i, j)) << ".\n";
+						getLogManager() << m_eLogLevel << "Matrix on input " << i << " contained " << 100.0 * m_ui32TotalInterpolatedSampleCount[i] / (m_ui32TotalInterpolatedChunkCount[i] * nSample * nChannel) << " % of NAN or Infinity. Interpolation disable from " << time64(boxContext.getInputChunkStartTime(i, j)) << ".\n";
 						m_ui32TotalInterpolatedSampleCount[i] = 0; // reset
 						m_ui32TotalInterpolatedChunkCount[i]  = 0;
 					}
@@ -153,13 +154,13 @@ bool CBoxAlgorithmMatrixValidityChecker::process()
 					OV_WARNING_K("Invalid action type [" << m_ui64ValidityCheckerType << "]");
 				}
 
-				if (l_rStaticBoxContext.getSettingCount() > 1) { m_vStreamEncoder[i].encodeBuffer(); }
+				if (nSetting > 1) { m_vStreamEncoder[i].encodeBuffer(); }
 			}
 			if (m_vStreamDecoder[i].isEndReceived())
 			{
-				if (l_rStaticBoxContext.getSettingCount() > 1) { m_vStreamEncoder[i].encodeEnd(); }
+				if (nSetting > 1) { m_vStreamEncoder[i].encodeEnd(); }
 			}
-			if (l_rStaticBoxContext.getSettingCount() > 1) { l_rDynamicBoxContext.markOutputAsReadyToSend(i, l_rDynamicBoxContext.getInputChunkStartTime(i, j), l_rDynamicBoxContext.getInputChunkEndTime(i, j)); }
+			if (nSetting > 1) { boxContext.markOutputAsReadyToSend(i, boxContext.getInputChunkStartTime(i, j), boxContext.getInputChunkEndTime(i, j)); }
 		}
 	}
 

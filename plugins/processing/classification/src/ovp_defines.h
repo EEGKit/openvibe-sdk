@@ -18,21 +18,21 @@
 #define OVP_TypeId_OneVsOne_DecisionAlgorithms OpenViBE::CIdentifier(0xDEC1510, 0xDEC1510)
 
 
-extern const char* const c_sFormatVersionAttributeName;
-extern const char* const c_sIdentifierAttributeName;
+extern const char* const FORMAT_VERSION_ATTRIBUTE_NAME;
+extern const char* const IDENTIFIER_ATTRIBUTE_NAME;
 
-extern const char* const c_sStrategyNodeName;
-extern const char* const c_sAlgorithmNodeName;
-extern const char* const c_sStimulationsNodeName;
-extern const char* const c_sRejectedClassNodeName;
-extern const char* const c_sClassStimulationNodeName;
+extern const char* const STRATEGY_NODE_NAME;
+extern const char* const ALGORITHM_NODE_NAME;
+extern const char* const STIMULATIONS_NODE_NAME;
+extern const char* const REJECTED_CLASS_NODE_NAME;
+extern const char* const CLASS_STIMULATION_NODE_NAME;
 
-extern const char* const c_sClassificationBoxRoot;
-extern const char* const c_sClassifierRoot;
+extern const char* const CLASSIFICATION_BOX_ROOT;
+extern const char* const CLASSIFIER_ROOT;
 
-extern const char* const c_sPairwiseStrategyEnumerationName;
+extern const char* const PAIRWISE_STRATEGY_ENUMERATION_NAME;
 
-extern const char* const c_sMLPEvaluationFunctionName;
-extern const char* const c_sMLPTransfertFunctionName;
+extern const char* const MLP_EVALUATION_FUNCTION_NAME;
+extern const char* const MLP_TRANSFERT_FUNCTION_NAME;
 
-bool ov_float_equal(double f64First, double f64Second);
+bool ov_float_equal(double first, double second);

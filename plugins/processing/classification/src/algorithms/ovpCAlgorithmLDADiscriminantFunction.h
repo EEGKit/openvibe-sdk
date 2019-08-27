@@ -18,24 +18,25 @@ namespace OpenViBEPlugins
 		class CAlgorithmLDADiscriminantFunction
 		{
 		public:
-			CAlgorithmLDADiscriminantFunction();
+			CAlgorithmLDADiscriminantFunction() {}
 
-			void setWeight(const Eigen::VectorXd& rWeigth);
-			void setBias(double f64Bias);
+			void setWeight(const Eigen::VectorXd& weigth) { m_weight = weigth; }
+			void setBias(const double bias) { m_bias = bias; }
 
 			//Return the class membership of the feature vector
-			double getValue(const Eigen::VectorXd& rFeatureVector);
-			uint32_t getWeightVectorSize();
+			double getValue(const Eigen::VectorXd& featureVector) { return (m_weight.transpose() * featureVector)(0) + m_bias; }
+			uint32_t getWeightVectorSize() const { return uint32_t(m_weight.size()); }
 
-			bool loadConfiguration(const XML::IXMLNode* pConfiguration);
+
+			bool loadConfiguration(const XML::IXMLNode* configuration);
 			XML::IXMLNode* getConfiguration();
 
-			const Eigen::VectorXd& getWeight() const { return m_oWeight; }
-			double getBias() const { return m_f64Bias; }
+			const Eigen::VectorXd& getWeight() const { return m_weight; }
+			double getBias() const { return m_bias; }
 
 		private:
-			double m_f64Bias = 0;
-			Eigen::VectorXd m_oWeight;
+			double m_bias = 0;
+			Eigen::VectorXd m_weight;
 		};
 	} // namespace Classification
 } // namespace OpenViBEPlugins

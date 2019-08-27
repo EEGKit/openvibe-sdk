@@ -44,10 +44,10 @@ namespace Socket
 
 			if (m_hmodTVicPort != nullptr)
 			{
-				m_lpfnTVicIsDriverOpened = (LPFNTVICPORTISDRIVEROPENED)GetProcAddress(m_hmodTVicPort, "IsDriverOpened");
-				m_lpfnTVicPortOpen       = (LPFNTVICPORTOPEN)GetProcAddress(m_hmodTVicPort, "OpenTVicPort");
-				m_lpfnTVicPortClose      = (LPFNTVICPORTCLOSE)GetProcAddress(m_hmodTVicPort, "CloseTVicPort");
-				m_lpfnTVicPortWrite      = (LPFNTVICPORTWRITE)GetProcAddress(m_hmodTVicPort, "WritePort");
+				m_lpfnTVicIsDriverOpened = LPFNTVICPORTISDRIVEROPENED(GetProcAddress(m_hmodTVicPort, "IsDriverOpened"));
+				m_lpfnTVicPortOpen       = LPFNTVICPORTOPEN(GetProcAddress(m_hmodTVicPort, "OpenTVicPort"));
+				m_lpfnTVicPortClose      = LPFNTVICPORTCLOSE(GetProcAddress(m_hmodTVicPort, "CloseTVicPort"));
+				m_lpfnTVicPortWrite      = LPFNTVICPORTWRITE(GetProcAddress(m_hmodTVicPort, "WritePort"));
 
 				if (!m_lpfnTVicIsDriverOpened || !m_lpfnTVicPortOpen || !m_lpfnTVicPortClose || !m_lpfnTVicPortWrite)
 				{

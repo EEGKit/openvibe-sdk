@@ -16,15 +16,15 @@ using namespace Classification;
 
 bool CBoxAlgorithmVotingClassifier::initialize()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	const IBox& boxContext = this->getStaticBoxContext();
 
 	m_oClassificationChoiceEncoder.initialize(*this, 0);
 
 	CIdentifier l_oTypeIdentifier;
-	l_rStaticBoxContext.getInputType(0, l_oTypeIdentifier);
+	boxContext.getInputType(0, l_oTypeIdentifier);
 	m_bMatrixBased = (l_oTypeIdentifier == OV_TypeId_StreamedMatrix);
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < boxContext.getInputCount(); i++)
 	{
 		SInput& l_rInput = m_vClassificationResults[i];
 		if (m_bMatrixBased)
@@ -66,9 +66,9 @@ bool CBoxAlgorithmVotingClassifier::initialize()
 
 bool CBoxAlgorithmVotingClassifier::uninitialize()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < nInput; i++)
 	{
 		SInput& l_rInput = m_vClassificationResults[i];
 		l_rInput.m_pDecoder->uninitialize();
@@ -89,16 +89,15 @@ bool CBoxAlgorithmVotingClassifier::processInput(const uint32_t index)
 
 bool CBoxAlgorithmVotingClassifier::process()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
-	uint32_t i, j;
+	IBoxIO& boxContext    = this->getDynamicBoxContext();
+	const size_t nInput = this->getStaticBoxContext().getInputCount();
 
 	bool l_bCanChoose = true;
 
-	for (i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (size_t i = 0; i < nInput; i++)
 	{
 		SInput& l_rInput = m_vClassificationResults[i];
-		for (j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (size_t j = 0; j < boxContext.getInputChunkCount(i); j++)
 		{
 			l_rInput.m_pDecoder->decode(j);
 
@@ -121,25 +120,25 @@ bool CBoxAlgorithmVotingClassifier::process()
 			{
 				if (m_bMatrixBased)
 				{
-					double l_f64Value;
+					double value;
 					if (l_rInput.m_bTwoValueInput)
 					{
-						l_f64Value = l_rInput.op_pMatrix->getBuffer()[1] - l_rInput.op_pMatrix->getBuffer()[0];
+						value = l_rInput.op_pMatrix->getBuffer()[1] - l_rInput.op_pMatrix->getBuffer()[0];
 					}
 					else
 					{
-						l_f64Value = l_rInput.op_pMatrix->getBuffer()[0];
+						value = l_rInput.op_pMatrix->getBuffer()[0];
 					}
-					l_rInput.m_vScore.push_back(std::pair<double, uint64_t>(-l_f64Value, l_rDynamicBoxContext.getInputChunkEndTime(i, j)));
+					l_rInput.m_vScore.push_back(std::pair<double, uint64_t>(-value, boxContext.getInputChunkEndTime(i, j)));
 				}
 				else
 				{
 					for (uint32_t k = 0; k < l_rInput.op_pStimulationSet->getStimulationCount(); k++)
 					{
-						uint64_t l_ui64StimulationIdentifier = l_rInput.op_pStimulationSet->getStimulationIdentifier(k);
-						if (l_ui64StimulationIdentifier == m_ui64TargetClassLabel || l_ui64StimulationIdentifier == m_ui64NonTargetClassLabel || l_ui64StimulationIdentifier == m_ui64RejectClassLabel)
+						const uint64_t stimulationId = l_rInput.op_pStimulationSet->getStimulationIdentifier(k);
+						if (stimulationId == m_ui64TargetClassLabel || stimulationId == m_ui64NonTargetClassLabel || stimulationId == m_ui64RejectClassLabel)
 						{
-							l_rInput.m_vScore.push_back(std::pair<double, uint64_t>(l_ui64StimulationIdentifier == m_ui64TargetClassLabel ? 1 : 0, l_rInput.op_pStimulationSet->getStimulationDate(k)));
+							l_rInput.m_vScore.push_back(std::pair<double, uint64_t>(stimulationId == m_ui64TargetClassLabel ? 1 : 0, l_rInput.op_pStimulationSet->getStimulationDate(k)));
 						}
 					}
 				}
@@ -147,7 +146,7 @@ bool CBoxAlgorithmVotingClassifier::process()
 			if (l_rInput.m_pDecoder->isEndReceived())
 			{
 				m_oClassificationChoiceEncoder.encodeEnd();
-				l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastTime, this->getPlayerContext().getCurrentTime());
+				boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, this->getPlayerContext().getCurrentTime());
 			}
 		}
 
@@ -159,55 +158,55 @@ bool CBoxAlgorithmVotingClassifier::process()
 
 	if (l_bCanChoose)
 	{
-		double l_f64ResultScore         = -1E100;
-		uint64_t l_ui64ResultClassLabel = m_ui64RejectClassLabel;
-		uint64_t l_ui64Time             = 0;
+		double resultScore         = -1E100;
+		uint64_t resultClassLabel = m_ui64RejectClassLabel;
+		uint64_t time             = 0;
 
-		std::map<uint32_t, double> l_vScore;
-		for (i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+		std::map<uint32_t, double> score;
+		for (size_t i = 0; i < nInput; i++)
 		{
-			SInput& l_rInput = m_vClassificationResults[i];
-			l_vScore[i]      = 0;
-			for (j = 0; j < m_ui64NumberOfRepetitions; j++)
+			SInput& input = m_vClassificationResults[i];
+			score[i]      = 0;
+			for (size_t j = 0; j < m_ui64NumberOfRepetitions; j++)
 			{
-				l_vScore[i] += l_rInput.m_vScore[j].first;
+				score[i] += input.m_vScore[j].first;
 			}
 
-			if (l_vScore[i] > l_f64ResultScore)
+			if (score[i] > resultScore)
 			{
-				l_f64ResultScore       = l_vScore[i];
-				l_ui64ResultClassLabel = m_ui64ResultClassLabelBase + i;
-				l_ui64Time             = l_rInput.m_vScore[(unsigned int)(m_ui64NumberOfRepetitions - 1)].second;
+				resultScore       = score[i];
+				resultClassLabel = m_ui64ResultClassLabelBase + i;
+				time             = input.m_vScore[size_t(m_ui64NumberOfRepetitions - 1)].second;
 			}
-			else if (l_vScore[i] == l_f64ResultScore)
+			else if (score[i] == resultScore)
 			{
 				if (!m_bChooseOneIfExAequo)
 				{
-					l_f64ResultScore       = l_vScore[i];
-					l_ui64ResultClassLabel = m_ui64RejectClassLabel;
-					l_ui64Time             = l_rInput.m_vScore[(unsigned int)(m_ui64NumberOfRepetitions - 1)].second;
+					resultScore       = score[i];
+					resultClassLabel = m_ui64RejectClassLabel;
+					time             = input.m_vScore[size_t(m_ui64NumberOfRepetitions - 1)].second;
 				}
 			}
 
-			l_rInput.m_vScore.erase(l_rInput.m_vScore.begin(), l_rInput.m_vScore.begin() + (int)m_ui64NumberOfRepetitions);
+			input.m_vScore.erase(input.m_vScore.begin(), input.m_vScore.begin() + int(m_ui64NumberOfRepetitions));
 
-			this->getLogManager() << LogLevel_Debug << "Input " << i << " got score " << l_vScore[i] << "\n";
+			this->getLogManager() << LogLevel_Debug << "Input " << i << " got score " << score[i] << "\n";
 		}
 
-		if (l_ui64ResultClassLabel != m_ui64RejectClassLabel)
+		if (resultClassLabel != m_ui64RejectClassLabel)
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, l_ui64ResultClassLabel) << " with score " << l_f64ResultScore << "\n";
+			this->getLogManager() << LogLevel_Debug << "Chosen " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, resultClassLabel) << " with score " << resultScore << "\n";
 		}
 		else
 		{
-			this->getLogManager() << LogLevel_Debug << "Chosen rejection " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, l_ui64ResultClassLabel) << "\n";
+			this->getLogManager() << LogLevel_Debug << "Chosen rejection " << this->getTypeManager().getEnumerationEntryNameFromValue(OV_TypeId_Stimulation, resultClassLabel) << "\n";
 		}
 		m_oClassificationChoiceEncoder.getInputStimulationSet()->clear();
-		m_oClassificationChoiceEncoder.getInputStimulationSet()->appendStimulation(l_ui64ResultClassLabel, l_ui64Time, 0);
+		m_oClassificationChoiceEncoder.getInputStimulationSet()->appendStimulation(resultClassLabel, time, 0);
 
 		m_oClassificationChoiceEncoder.encodeBuffer();
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastTime, l_ui64Time);
-		m_ui64LastTime = l_ui64Time;
+		boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, time);
+		m_ui64LastTime = time;
 	}
 
 	return true;

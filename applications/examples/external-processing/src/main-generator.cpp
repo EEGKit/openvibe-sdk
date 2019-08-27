@@ -19,12 +19,12 @@
 #include <openvibe/ovITimeArithmetics.h>
 
 
-static bool s_DidRequestForcedQuit = false;
+static bool didRequestForcedQuit = false;
 
 using namespace Communication;
 using namespace std;
 
-static void signalHandler(int /* signal */) { s_DidRequestForcedQuit = true; }
+static void signalHandler(int /* signal */) { didRequestForcedQuit = true; }
 
 
 class EBMLWriterCallback
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 	EBML::IWriterHelper* writerHelper = EBML::createWriterHelper();
 	writerHelper->connect(writer);
 
-	s_DidRequestForcedQuit = false;
+	didRequestForcedQuit = false;
 
 	MessagingClient client;
 
@@ -86,7 +86,7 @@ int main(int argc, char** argv)
 			exit(EXIT_FAILURE);
 		}
 
-		if (s_DidRequestForcedQuit) { exit(EXIT_SUCCESS); }
+		if (didRequestForcedQuit) { exit(EXIT_SUCCESS); }
 	}
 
 	std::cout << "Connected to server\n";
@@ -210,7 +210,7 @@ int main(int argc, char** argv)
 	client.pushSync();
 
 	uint32_t sentSamples = 0;
-	while (!s_DidRequestForcedQuit || (samplesToSend != 0 && sentSamples < samplesToSend))
+	while (!didRequestForcedQuit || (samplesToSend != 0 && sentSamples < samplesToSend))
 	{
 		if (client.isEndReceived())
 		{

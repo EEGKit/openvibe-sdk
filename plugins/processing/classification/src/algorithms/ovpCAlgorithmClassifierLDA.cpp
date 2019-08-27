@@ -15,25 +15,25 @@
 
 namespace
 {
-	const char* const c_sTypeNodeName    = "LDA";
-	const char* const c_sClassesNodeName = "Classes";
-	//	const char* const c_sCoefficientsNodeName = "Weights";
-	//	const char* const c_sBiasDistanceNodeName = "Bias-distance";
-	//	const char* const c_sCoefficientProbabilityNodeName = "Coefficient-probability";
-	const char* const c_sComputationHelpersConfigurationNode = "Class-config-list";
-	const char* const c_sLDAConfigFileVersionAttributeName   = "version";
+	const char* const TYPE_NODE_NAME    = "LDA";
+	const char* const CLASSES_NODE_NAME = "Classes";
+	//const char* const COEFFICIENTS_NODE_NAME = "Weights";
+	//const char* const BIAS_DISTANCE_NODE_NAME = "Bias-distance";
+	//const char* const COEFFICIENT_PROBABILITY_NODE_NAME = "Coefficient-probability";
+	const char* const COMPUTATION_HELPERS_CONFIGURATION_NODE = "Class-config-list";
+	const char* const LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME   = "version";
 }
 
-extern const char* const c_sClassifierRoot;
+extern const char* const CLASSIFIER_ROOT;
 
-int OpenViBEPlugins::Classification::LDAClassificationCompare(OpenViBE::IMatrix& rFirstClassificationValue, OpenViBE::IMatrix& rSecondClassificationValue)
+int OpenViBEPlugins::Classification::LDAClassificationCompare(OpenViBE::IMatrix& firstClassificationValue, OpenViBE::IMatrix& secondClassificationValue)
 {
 	//We first need to find the best classification of each.
-	double* l_pClassificationValueBuffer = rFirstClassificationValue.getBuffer();
-	const double l_f64MaxFirst           = *(std::max_element(l_pClassificationValueBuffer, l_pClassificationValueBuffer + rFirstClassificationValue.getBufferElementCount()));
+	double* l_pClassificationValueBuffer = firstClassificationValue.getBuffer();
+	const double l_f64MaxFirst           = *(std::max_element(l_pClassificationValueBuffer, l_pClassificationValueBuffer + firstClassificationValue.getBufferElementCount()));
 
-	l_pClassificationValueBuffer = rSecondClassificationValue.getBuffer();
-	const double l_f64MaxSecond  = *(std::max_element(l_pClassificationValueBuffer, l_pClassificationValueBuffer + rSecondClassificationValue.getBufferElementCount()));
+	l_pClassificationValueBuffer = secondClassificationValue.getBuffer();
+	const double l_f64MaxSecond  = *(std::max_element(l_pClassificationValueBuffer, l_pClassificationValueBuffer + secondClassificationValue.getBufferElementCount()));
 
 	//Then we just compared them
 	if (ov_float_equal(l_f64MaxFirst, l_f64MaxSecond)) { return 0; }
@@ -102,7 +102,7 @@ bool CAlgorithmClassifierLDA::uninitialize()
 	return CAlgorithmClassifier::uninitialize();
 }
 
-bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
+bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 {
 	OV_ERROR_UNLESS_KRF(this->initializeExtraParameterMechanism(), "Failed to unitialize extra parameters", OpenViBE::Kernel::ErrorType::Internal);
 
@@ -136,10 +136,10 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 	TParameterHandler<IMatrix*> op_pCovarianceMatrix(m_pCovarianceAlgorithm->getOutputParameter(OVP_Algorithm_ConditionedCovariance_OutputParameterId_CovarianceMatrix));
 	TParameterHandler<IMatrix*> ip_pFeatureVectorSet(m_pCovarianceAlgorithm->getInputParameter(OVP_Algorithm_ConditionedCovariance_InputParameterId_FeatureVectorSet));
 
-	const uint32_t nRows = rFeatureVectorSet.getFeatureVectorCount();
-	const uint32_t nCols = (nRows > 0 ? rFeatureVectorSet[0].getSize() : 0);
+	const uint32_t nRows = featureVectorSet.getFeatureVectorCount();
+	const uint32_t nCols = (nRows > 0 ? featureVectorSet[0].getSize() : 0);
 	this->getLogManager() << LogLevel_Debug << "Feature set input dims ["
-			<< rFeatureVectorSet.getFeatureVectorCount() << "x" << nCols << "]\n";
+			<< featureVectorSet.getFeatureVectorCount() << "x" << nCols << "]\n";
 
 	OV_ERROR_UNLESS_KRF(nRows != 0 && nCols != 0, "Input data has a zero-size dimension, dims = [" << nRows << "x" << nCols << "]", OpenViBE::Kernel::ErrorType::BadInput);
 
@@ -151,9 +151,9 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 	std::vector<uint32_t> l_vClassCounts;
 	l_vClassCounts.resize(m_ui32NumClasses);
 
-	for (uint32_t i = 0; i < rFeatureVectorSet.getFeatureVectorCount(); i++)
+	for (uint32_t i = 0; i < featureVectorSet.getFeatureVectorCount(); i++)
 	{
-		uint32_t classIdx = uint32_t(rFeatureVectorSet[i].getLabel());
+		uint32_t classIdx = uint32_t(featureVectorSet[i].getLabel());
 		l_vClassCounts[classIdx]++;
 	}
 
@@ -184,9 +184,9 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 			double* l_pBuffer = l_oClassData.getBuffer();
 			for (uint32_t i = 0; i < nRows; i++)
 			{
-				if (rFeatureVectorSet[i].getLabel() == l_ui32classIdx)
+				if (featureVectorSet[i].getLabel() == l_ui32classIdx)
 				{
-					System::Memory::copy(l_pBuffer, rFeatureVectorSet[i].getBuffer(), nCols * sizeof(double));
+					System::Memory::copy(l_pBuffer, featureVectorSet[i].getBuffer(), nCols * sizeof(double));
 					l_pBuffer += nCols;
 				}
 			}
@@ -215,7 +215,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 		// Insert all data as the input of the cov algorithm
 		for (uint32_t i = 0; i < nRows; i++)
 		{
-			System::Memory::copy(l_pBuffer, rFeatureVectorSet[i].getBuffer(), nCols * sizeof(double));
+			System::Memory::copy(l_pBuffer, featureVectorSet[i].getBuffer(), nCols * sizeof(double));
 			l_pBuffer += nCols;
 		}
 
@@ -270,7 +270,7 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 		const double l_f64ExamplesInClass = l_vClassCounts[i];
 		if (l_f64ExamplesInClass > 0)
 		{
-			const uint32_t l_ui32TotalExamples = rFeatureVectorSet.getFeatureVectorCount();
+			const uint32_t l_ui32TotalExamples = featureVectorSet.getFeatureVectorCount();
 
 			// This formula e.g. in Hastie, Tibshirani & Friedman: "Elements...", 2nd ed., p. 109
 			const VectorXd l_oWeight = (l_oGlobalCovInv * l_oPerClassMeans[i]);
@@ -323,15 +323,15 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& rFeatureVectorSet)
 	return true;
 }
 
-bool CAlgorithmClassifierLDA::classify(const IFeatureVector& rFeatureVector, double& rf64Class, IVector& rClassificationValues, IVector& rProbabilityValue)
+bool CAlgorithmClassifierLDA::classify(const IFeatureVector& featureVector, double& classId, IVector& rClassificationValues, IVector& rProbabilityValue)
 {
 	OV_ERROR_UNLESS_KRF(!m_vDiscriminantFunctions.empty(), "LDA discriminant function list is empty", OpenViBE::Kernel::ErrorType::BadConfig);
 
-	OV_ERROR_UNLESS_KRF(rFeatureVector.getSize() == m_vDiscriminantFunctions[0].getWeightVectorSize(),
-						"Classifier expected " << m_vDiscriminantFunctions[0].getWeightVectorSize() << " features, got " << rFeatureVector.getSize(),
+	OV_ERROR_UNLESS_KRF(featureVector.getSize() == m_vDiscriminantFunctions[0].getWeightVectorSize(),
+						"Classifier expected " << m_vDiscriminantFunctions[0].getWeightVectorSize() << " features, got " << featureVector.getSize(),
 						OpenViBE::Kernel::ErrorType::BadInput);
 
-	const Map<VectorXd> l_oFeatureVec(const_cast<double*>(rFeatureVector.getBuffer()), rFeatureVector.getSize());
+	const Map<VectorXd> l_oFeatureVec(const_cast<double*>(featureVector.getBuffer()), featureVector.getSize());
 	const VectorXd l_oWeights       = l_oFeatureVec;
 	const uint32_t l_ui32ClassCount = getClassCount();
 
@@ -374,7 +374,7 @@ bool CAlgorithmClassifierLDA::classify(const IFeatureVector& rFeatureVector, dou
 		rProbabilityValue[i]     = l_pProbabilityValue[i];
 	}
 
-	rf64Class = m_vLabelList[l_ui32ClassIndex];
+	classId = m_vLabelList[l_ui32ClassIndex];
 
 	delete[] l_pValueArray;
 	delete[] l_pProbabilityValue;
@@ -386,8 +386,8 @@ uint32_t CAlgorithmClassifierLDA::getClassCount() { return m_ui32NumClasses; }
 
 XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration()
 {
-	XML::IXMLNode* l_pAlgorithmNode = XML::createNode(c_sTypeNodeName);
-	l_pAlgorithmNode->addAttribute(c_sLDAConfigFileVersionAttributeName, "1");
+	XML::IXMLNode* l_pAlgorithmNode = XML::createNode(TYPE_NODE_NAME);
+	l_pAlgorithmNode->addAttribute(LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME, "1");
 
 	// Write the classifier to an .xml
 	std::stringstream l_sClasses;
@@ -395,10 +395,10 @@ XML::IXMLNode* CAlgorithmClassifierLDA::saveConfiguration()
 	for (size_t i = 0; i < getClassCount(); ++i) { l_sClasses << m_vLabelList[i] << " "; }
 
 	//Only new version should be recorded so we don't need to test
-	XML::IXMLNode* l_pHelpersConfiguration = XML::createNode(c_sComputationHelpersConfigurationNode);
+	XML::IXMLNode* l_pHelpersConfiguration = XML::createNode(COMPUTATION_HELPERS_CONFIGURATION_NODE);
 	for (size_t i = 0; i < m_vDiscriminantFunctions.size(); ++i) { l_pHelpersConfiguration->addChild(m_vDiscriminantFunctions[i].getConfiguration()); }
 
-	XML::IXMLNode* l_pTempNode = XML::createNode(c_sClassesNodeName);
+	XML::IXMLNode* l_pTempNode = XML::createNode(CLASSES_NODE_NAME);
 	l_pTempNode->setPCData(l_sClasses.str().c_str());
 	l_pAlgorithmNode->addChild(l_pTempNode);
 	l_pAlgorithmNode->addChild(l_pHelpersConfiguration);
@@ -419,14 +419,14 @@ double getFloatFromNode(XML::IXMLNode* pNode)
 
 bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* pConfigurationNode)
 {
-	OV_ERROR_UNLESS_KRF(pConfigurationNode->hasAttribute(c_sLDAConfigFileVersionAttributeName),
+	OV_ERROR_UNLESS_KRF(pConfigurationNode->hasAttribute(LDA_CONFIG_FILE_VERSION_ATTRIBUTE_NAME),
 						"Invalid model: model trained with an obsolete version of LDA",
 						OpenViBE::Kernel::ErrorType::BadConfig);
 
 	m_vLabelList.clear();
 	m_vDiscriminantFunctions.clear();
 
-	XML::IXMLNode* l_pTempNode = pConfigurationNode->getChildByName(c_sClassesNodeName);
+	XML::IXMLNode* l_pTempNode = pConfigurationNode->getChildByName(CLASSES_NODE_NAME);
 
 	OV_ERROR_UNLESS_KRF(l_pTempNode != nullptr, "Failed to retrieve xml node", OpenViBE::Kernel::ErrorType::BadParsing);
 
@@ -434,7 +434,7 @@ bool CAlgorithmClassifierLDA::loadConfiguration(XML::IXMLNode* pConfigurationNod
 
 
 	//We send corresponding data to the computation helper
-	XML::IXMLNode* l_pConfigsNode = pConfigurationNode->getChildByName(c_sComputationHelpersConfigurationNode);
+	XML::IXMLNode* l_pConfigsNode = pConfigurationNode->getChildByName(COMPUTATION_HELPERS_CONFIGURATION_NODE);
 
 	for (size_t i = 0; i < l_pConfigsNode->getChildCount(); ++i)
 	{

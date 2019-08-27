@@ -21,7 +21,7 @@
 #include "algorithms/ovpCAlgorithmClassifierLDA.h"
 #endif // TARGET_HAS_ThirdPartyEIGEN
 
-const char* const c_sPairwiseStrategyEnumerationName = "Pairwise Decision Strategy";
+const char* const PAIRWISE_STRATEGY_ENUMERATION_NAME = "Pairwise Decision Strategy";
 
 OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationStrategy, "Native", OV_UndefinedIdentifier.toUInteger());
@@ -40,7 +40,7 @@ OVP_Declare_Begin()
 	OVP_Declare_New(OpenViBEPlugins::Classification::CAlgorithmClassifierOneVsOneDesc);
 
 	// Functions related to deciding winner in OneVsOne multiclass decision strategy
-	context.getTypeManager().registerEnumerationType(OVP_TypeId_ClassificationPairwiseStrategy, c_sPairwiseStrategyEnumerationName);
+	context.getTypeManager().registerEnumerationType(OVP_TypeId_ClassificationPairwiseStrategy, PAIRWISE_STRATEGY_ENUMERATION_NAME);
 
 	OVP_Declare_New(OpenViBEPlugins::Classification::CAlgorithmPairwiseStrategyPKPDDesc);
 	context.getTypeManager().registerEnumerationEntry(OVP_TypeId_ClassificationPairwiseStrategy, "PKPD", OVP_ClassId_Algorithm_PairwiseStrategy_PKPD.toUInteger());
@@ -55,7 +55,7 @@ OVP_Declare_Begin()
 	context.getTypeManager().registerEnumerationEntry(OVTK_TypeId_ClassificationAlgorithm, "Linear Discrimimant Analysis (LDA)", OVP_ClassId_Algorithm_ClassifierLDA.toUInteger());
 	OpenViBEToolkit::registerClassificationComparisonFunction(OVP_ClassId_Algorithm_ClassifierLDA, OpenViBEPlugins::Classification::LDAClassificationCompare);
 	OVP_Declare_New(OpenViBEPlugins::Classification::CAlgorithmClassifierLDADesc);
-	context.getTypeManager().registerEnumerationType(OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, c_sPairwiseStrategyEnumerationName);
+	context.getTypeManager().registerEnumerationType(OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, PAIRWISE_STRATEGY_ENUMERATION_NAME);
 	context.getTypeManager().registerEnumerationEntry(OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, "PKPD", OVP_ClassId_Algorithm_PairwiseStrategy_PKPD.toUInteger());
 	context.getTypeManager().registerEnumerationEntry(OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, "Voting", OVP_ClassId_Algorithm_PairwiseDecision_Voting.toUInteger());
 	context.getTypeManager().registerEnumerationEntry(OVP_ClassId_Algorithm_ClassifierLDA_DecisionAvailable, "HT", OVP_ClassId_Algorithm_PairwiseDecision_HT.toUInteger());
@@ -69,8 +69,8 @@ OVP_Declare_End()
 
 #include<cmath>
 
-bool ov_float_equal(double f64First, double f64Second)
+bool ov_float_equal(double first, double second)
 {
-	const double c_f64Epsilon = 0.000001;
-	return c_f64Epsilon > fabs(f64First - f64Second);
+	const double epsilon = 0.000001;
+	return epsilon > fabs(first - second);
 }

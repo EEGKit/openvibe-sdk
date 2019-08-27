@@ -76,7 +76,7 @@ namespace Socket
 			struct sockaddr_in l_oServerAddress;
 			memset(&l_oServerAddress, 0, sizeof(l_oServerAddress));
 			l_oServerAddress.sin_family = AF_INET;
-			l_oServerAddress.sin_port   = htons((unsigned short)ui32ServerPort);
+			l_oServerAddress.sin_port   = htons(static_cast<unsigned short>(ui32ServerPort));
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 			l_oServerAddress.sin_addr=*((struct in_addr*)l_pServerHostEntry->h_addr);
 #elif defined TARGET_OS_Windows

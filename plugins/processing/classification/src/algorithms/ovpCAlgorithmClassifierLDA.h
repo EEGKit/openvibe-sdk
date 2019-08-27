@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 	{
 		class CAlgorithmLDADiscriminantFunction;
 
-		int LDAClassificationCompare(OpenViBE::IMatrix& rFirstClassificationValue, OpenViBE::IMatrix& rSecondClassificationValue);
+		int LDAClassificationCompare(OpenViBE::IMatrix& firstClassificationValue, OpenViBE::IMatrix& secondClassificationValue);
 
 		typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
@@ -36,11 +36,8 @@ namespace OpenViBEPlugins
 		public:
 			bool initialize() override;
 			bool uninitialize() override;
-			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
-			bool classify(const OpenViBEToolkit::IFeatureVector& rFeatureVector
-						  , double& rf64Class
-						  , OpenViBEToolkit::IVector& rDistanceValue
-						  , OpenViBEToolkit::IVector& rProbabilityValue) override;
+			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
+			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& rDistanceValue, OpenViBEToolkit::IVector& rProbabilityValue) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;
 			uint32_t getOutputProbabilityVectorLength() override;

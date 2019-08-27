@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 			bool exportStart(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier) override;
 			bool exportIdentifier(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::CIdentifier& rValue) override;
 			bool exportString(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier, const OpenViBE::CString& rValue) override;
-			bool exportUInteger(OpenViBE::IMemoryBuffer& rMemoryBuffer, const OpenViBE::CIdentifier& rIdentifier, uint64_t ui64Value) override;
+			bool exportUInteger(OpenViBE::IMemoryBuffer& memoryBuffer, const OpenViBE::CIdentifier& identifier, uint64_t value) override;
 			bool exportStop(OpenViBE::IMemoryBuffer& rMemoryBuffer) override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::CAlgorithmScenarioExporter, OVP_ClassId_Algorithm_XMLScenarioExporter)

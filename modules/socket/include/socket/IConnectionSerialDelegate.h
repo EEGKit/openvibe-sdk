@@ -8,7 +8,7 @@ namespace Socket
 	struct Socket_API SConnectionSerialDelegate
 	{
 		SConnectionDelegate oConnectionDelegate;
-		bool (*fpConnect)(void*, const char*, unsigned long);
+		bool (*fpConnect)(void*, const char*,  const unsigned long);
 		unsigned int (*fpGetPendingByteCount)(void*);
 		bool (*fpFlush)(void*);
 		const char* (*fpGetLastError)(void*);

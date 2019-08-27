@@ -30,7 +30,7 @@ std::string CPluginObjectDescEnum::transform(const std::string& sInput, const bo
 	std::string output;
 	bool wasLastASeparator = true;
 
-	for (std::string::size_type i = 0; i < input.length(); i++)
+	for (size_t i = 0; i < input.length(); i++)
 	{
 		if ((input[i] >= 'a' && input[i] <= 'z') || (input[i] >= 'A' && input[i] <= 'Z') || (input[i] >= '0' && input[i] <= '9') || (!bRemoveSlash && input[i] == '/'))
 		{

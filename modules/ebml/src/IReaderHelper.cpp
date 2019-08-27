@@ -66,13 +66,13 @@ double CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64_t 
 			break;
 
 		case 4:
-			l_ui32Result = (uint32_t)getUIntegerFromChildData(pBuffer, ui64BufferSize);
+			l_ui32Result = uint32_t(getUIntegerFromChildData(pBuffer, ui64BufferSize));
 			memcpy(&l_f32Result, &l_ui32Result, sizeof(l_f32Result));
 			l_f64Result = l_f32Result;
 			break;
 
 		case 8:
-			l_ui64Result = (uint64_t)getUIntegerFromChildData(pBuffer, ui64BufferSize);
+			l_ui64Result = uint64_t(getUIntegerFromChildData(pBuffer, ui64BufferSize));
 			memcpy(&l_f64Result, &l_ui64Result, sizeof(l_f64Result));
 			break;
 

@@ -435,8 +435,8 @@ uint64_t CTypeManager::getBitMaskEntryCompositionValueFromName(const CIdentifier
 
 	uint64_t l_ui64Result               = 0;
 	std::string l_sEntryCompositionName = rEntryCompositionName.toASCIIString();
-	std::string::size_type i            = 0;
-	std::string::size_type j            = 0;
+	size_t i            = 0;
+	size_t j            = 0;
 	do
 	{
 		i = l_sEntryCompositionName.find(OV_Value_EnumeratedStringSeparator, i);

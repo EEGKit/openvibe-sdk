@@ -30,7 +30,7 @@ namespace OpenViBEToolkit
 		virtual void setSampleBuffer(const double* pBuffer);
 
 		// Stimulation input reader callback
-		virtual void setStimulationCount(uint32_t count) {}
+		virtual void setStimulationCount(uint32_t /*count*/) {}
 		virtual void setStimulation(uint32_t index, uint64_t identifier, uint64_t date);
 
 		// What should be implemented by the derived class

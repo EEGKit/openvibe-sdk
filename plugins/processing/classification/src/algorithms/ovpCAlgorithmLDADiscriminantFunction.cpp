@@ -17,59 +17,50 @@ using namespace Eigen;
 
 namespace
 {
-	const char* const c_sBaseNodeName   = "Class-config";
-	const char* const c_sWeightNodeName = "Weights";
-	const char* const c_sBiasNodeName   = "Bias";
-}
+	const char* const BASE_NODE_NAME   = "Class-config";
+	const char* const WEIGHT_NODE_NAME = "Weights";
+	const char* const BIAS_NODE_NAME   = "Bias";
+} // namespace
 
-CAlgorithmLDADiscriminantFunction::CAlgorithmLDADiscriminantFunction() {}
-
-void CAlgorithmLDADiscriminantFunction::setWeight(const VectorXd& rWeigth) { m_oWeight = rWeigth; }
-void CAlgorithmLDADiscriminantFunction::setBias(double f64Bias) { m_f64Bias = f64Bias; }
-double CAlgorithmLDADiscriminantFunction::getValue(const VectorXd& rFeatureVector) { return (m_oWeight.transpose() * rFeatureVector)(0) + m_f64Bias; }
-uint32_t CAlgorithmLDADiscriminantFunction::getWeightVectorSize() { return uint32_t(m_oWeight.size()); }
-
-bool CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode* pConfiguration)
+bool CAlgorithmLDADiscriminantFunction::loadConfiguration(const XML::IXMLNode* configuration)
 {
-	std::stringstream l_sBias(pConfiguration->getChildByName(c_sBiasNodeName)->getPCData());
-	l_sBias >> m_f64Bias;
+	std::stringstream bias(configuration->getChildByName(BIAS_NODE_NAME)->getPCData());
+	bias >> m_bias;
 
-	std::stringstream l_sData(pConfiguration->getChildByName(c_sWeightNodeName)->getPCData());
-	std::vector<double> l_vCoefficients;
-	while (!l_sData.eof())
+	std::stringstream data(configuration->getChildByName(WEIGHT_NODE_NAME)->getPCData());
+	std::vector<double> coefficients;
+	while (!data.eof())
 	{
-		double l_f64Value;
-		l_sData >> l_f64Value;
-		l_vCoefficients.push_back(l_f64Value);
+		double value;
+		data >> value;
+		coefficients.push_back(value);
 	}
 
-	m_oWeight.resize(l_vCoefficients.size());
-	for (size_t i = 0; i < l_vCoefficients.size(); i++) { m_oWeight(i, 0) = l_vCoefficients[i]; }
+	m_weight.resize(coefficients.size());
+	for (size_t i = 0; i < coefficients.size(); i++) { m_weight(i, 0) = coefficients[i]; }
 	return true;
 }
 
 XML::IXMLNode* CAlgorithmLDADiscriminantFunction::getConfiguration()
 {
-	XML::IXMLNode* l_pRootNode = XML::createNode(c_sBaseNodeName);
+	XML::IXMLNode* rootNode = XML::createNode(BASE_NODE_NAME);
 
-	std::stringstream l_sWeigths;
-	std::stringstream l_sBias;
+	std::stringstream weigths, bias;
 
+	weigths << std::scientific;
+	for (int i = 0; i < m_weight.size(); i++) { weigths << " " << m_weight(i, 0); }
 
-	l_sWeigths << std::scientific;
-	for (int i = 0; i < m_oWeight.size(); i++) { l_sWeigths << " " << m_oWeight(i, 0); }
+	bias << m_bias;
 
-	l_sBias << m_f64Bias;
+	XML::IXMLNode* tempNode = XML::createNode(WEIGHT_NODE_NAME);
+	tempNode->setPCData(weigths.str().c_str());
+	rootNode->addChild(tempNode);
 
-	XML::IXMLNode* l_pTempNode = XML::createNode(c_sWeightNodeName);
-	l_pTempNode->setPCData(l_sWeigths.str().c_str());
-	l_pRootNode->addChild(l_pTempNode);
+	tempNode = XML::createNode(BIAS_NODE_NAME);
+	tempNode->setPCData(bias.str().c_str());
+	rootNode->addChild(tempNode);
 
-	l_pTempNode = XML::createNode(c_sBiasNodeName);
-	l_pTempNode->setPCData(l_sBias.str().c_str());
-	l_pRootNode->addChild(l_pTempNode);
-
-	return l_pRootNode;
+	return rootNode;
 }
 
 #endif

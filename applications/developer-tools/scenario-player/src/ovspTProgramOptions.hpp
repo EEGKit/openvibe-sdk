@@ -163,7 +163,7 @@ namespace OpenViBE
 		template <typename Head, typename... Tail>
 		struct HasDuplicate<Head, Tail...> :
 				std::conditional<IsIn<Head, Tail...>::value, TrueType, HasDuplicate<Tail...>>::type { };
-	}
+	} // namespace ProgramOptionsUtils
 
 	/**
 	* \class ProgramOptions
@@ -292,25 +292,18 @@ namespace OpenViBE
 
 			OptionVisitor(std::string& value) : m_Value(value) { }
 
-			void operator()(ProgramOptionsTraits::Integer& operand) const;
-
-			void operator()(ProgramOptionsTraits::Float& operand) const;
-
-			void operator()(ProgramOptionsTraits::String& operand) const;
-
-			void operator()(ProgramOptionsTraits::TokenPair& operand) const;
-
-			void operator()(ProgramOptionsTraits::IntegerList& operand) const;
-
-			void operator()(ProgramOptionsTraits::FloatList& operand) const;
-
-			void operator()(ProgramOptionsTraits::StringList& operand) const;
-
-			void operator()(ProgramOptionsTraits::TokenPairList& operand) const;
+			void operator()(ProgramOptionsTraits::Integer& operand) const { operand = std::stoi(m_Value); }
+			void operator()(ProgramOptionsTraits::Float& operand) const { operand = std::stod(m_Value); }
+			void operator()(ProgramOptionsTraits::String& operand) const { operand = m_Value; }
+			void operator()(ProgramOptionsTraits::TokenPair& operand) const { operand = this->parsePair(m_Value); }
+			void operator()(ProgramOptionsTraits::IntegerList& operand) const { operand.push_back(std::stoi(m_Value)); }
+			void operator()(ProgramOptionsTraits::FloatList& operand) const { operand.push_back(std::stod(m_Value)); }
+			void operator()(ProgramOptionsTraits::StringList& operand) const { operand.push_back(m_Value); }
+			void operator()(ProgramOptionsTraits::TokenPairList& operand) const { operand.push_back(this->parsePair(m_Value)); }
 
 		private:
 
-			ProgramOptionsTraits::TokenPair parsePair(const std::string& str) const;
+			static ProgramOptionsTraits::TokenPair parsePair(const std::string& str);
 
 			std::string& m_Value;
 		};
@@ -362,14 +355,8 @@ namespace OpenViBE
 	{
 		T value{};
 
-		try
-		{
-			value = boost::get<T>(m_ValueMap.at(name));
-		}
-		catch (const std::exception& e)
-		{
-			std::cerr << "ERROR: Caught exception during option value retrieval: " << e.what() << std::endl;
-		}
+		try { value = boost::get<T>(m_ValueMap.at(name)); }
+		catch (const std::exception& e) { std::cerr << "ERROR: Caught exception during option value retrieval: " << e.what() << std::endl; }
 
 		return value;
 	}
@@ -390,9 +377,7 @@ namespace OpenViBE
 		for (int i = 1; i < argc; ++i)
 		{
 			std::string arg = args[i];
-
-			auto argSplit = arg.find_first_of("=");				// = is the separator for value option
-
+			const auto argSplit = arg.find_first_of("=");				// = is the separator for value option
 			std::string key;
 
 			if (argSplit == std::string::npos) { key = arg; }	// simple option
@@ -425,10 +410,7 @@ namespace OpenViBE
 
 				std::string val = arg.substr(argSplit + 1, arg.size() - argSplit - 1); // take value part of the arg
 
-				try
-				{
-					boost::apply_visitor(OptionVisitor(val), m_ValueMap[keyMatch->first]);
-				}
+				try { boost::apply_visitor(OptionVisitor(val), m_ValueMap[keyMatch->first]); }
 				catch (const std::exception& e)
 				{
 					std::cerr << "ERROR: Caught exception during option parsing: " << e.what() << std::endl;
@@ -447,24 +429,15 @@ namespace OpenViBE
 	template <typename First, typename... Types>
 	void ProgramOptions<First, Types...>::printOptionsDesc() const
 	{
-		if (!m_GlobalDesc.empty())
-		{
-			std::cout << m_GlobalDesc << std::endl;
-		}
+		if (!m_GlobalDesc.empty()) { std::cout << m_GlobalDesc << std::endl; }
 
 		std::cout << "List of available options:\n" << std::endl;
 
 		for (auto& option : m_DescMap)
 		{
 			std::cout << "Option: --" << option.first << std::endl;
-
 			auto desc = option.second.second;
-
-			if (!desc.m_ShortName.empty())
-			{
-				std::cout << "Shortname: --" << desc.m_ShortName << std::endl;
-			}
-
+			if (!desc.m_ShortName.empty()) { std::cout << "Shortname: --" << desc.m_ShortName << std::endl; }
 			std::cout << "Description: " << std::endl;
 			std::cout << desc.m_Desc << std::endl << std::endl;
 		}
@@ -475,39 +448,14 @@ namespace OpenViBE
 	///////////////////////////////////////////
 
 	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::Integer& operand) const { operand = std::stoi(m_Value); }
-
-	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::Float& operand) const { operand = std::stod(m_Value); }
-
-	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::String& operand) const { operand = m_Value; }
-
-	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::TokenPair& operand) const { operand = this->parsePair(m_Value); }
-
-	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::IntegerList& operand) const { operand.push_back(std::stoi(m_Value)); }
-
-	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::FloatList& operand) const { operand.push_back(std::stod(m_Value)); }
-
-	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::StringList& operand) const { operand.push_back(m_Value); }
-
-	template <typename First, typename... Types>
-	void ProgramOptions<First, Types...>::OptionVisitor::operator()(ProgramOptionsTraits::TokenPairList& operand) const { operand.push_back(this->parsePair(m_Value)); }
-
-	template <typename First, typename... Types>
-	ProgramOptionsTraits::TokenPair ProgramOptions<First, Types...>::OptionVisitor::parsePair(const std::string& str) const
+	ProgramOptionsTraits::TokenPair ProgramOptions<First, Types...>::OptionVisitor::parsePair(const std::string& str)
 	{
-		auto split = str.find_first_of(":");
-		auto size  = str.size();
+		const auto split = str.find_first_of(":");
+		const auto size  = str.size();
 
 		// (a:b) pattern expected
 		// minimal regex std::regex("\\(.+:.+\\)")
-		if (!(size >= 5 && str[0] == '(' && str[size - 1] == ')') ||
-			split == std::string::npos)
+		if (!(size >= 5 && str[0] == '(' && str[size - 1] == ')') || split == std::string::npos)
 		{
 			throw std::runtime_error("Failed to parse token pair from value: " + str);
 		}
@@ -516,4 +464,4 @@ namespace OpenViBE
 		// 2 = remove the last ) + account for the first one
 		return std::make_pair(str.substr(1, split - 1), str.substr(split + 1, size - split - 2));
 	}
-}
+} // namespace OpenViBE

@@ -162,17 +162,17 @@ bool CAlgorithmXMLScenarioExporter::exportString(IMemoryBuffer& rMemoryBuffer, c
 	return true;
 }
 
-bool CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& rMemoryBuffer, const CIdentifier& rIdentifier, const uint64_t ui64Value)
+bool CAlgorithmXMLScenarioExporter::exportUInteger(IMemoryBuffer& memoryBuffer, const CIdentifier& identifier, const uint64_t value)
 {
 	char l_sValue[1024];
-	sprintf(l_sValue, "%lu", ui64Value);
+	sprintf(l_sValue, "%lu", value);
 
-	m_pMemoryBuffer = &rMemoryBuffer;
+	m_pMemoryBuffer = &memoryBuffer;
 
-	OV_ERROR_UNLESS_KRF(this->exportStart(rMemoryBuffer, rIdentifier), "Exporting uint failed", OpenViBE::Kernel::ErrorType::Internal);
+	OV_ERROR_UNLESS_KRF(this->exportStart(memoryBuffer, identifier), "Exporting uint failed", OpenViBE::Kernel::ErrorType::Internal);
 
 	m_pWriter->setChildData(l_sValue);
-	this->exportStop(rMemoryBuffer);
+	this->exportStop(memoryBuffer);
 
 	return true;
 }

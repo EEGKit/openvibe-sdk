@@ -116,7 +116,7 @@ bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputStr
 	buffer.back().erase(lineBreakPos, buffer.back().size());
 
 	outputString.clear();
-	outputString.reserve(std::accumulate(buffer.cbegin(), buffer.cend(), (size_t)0,
+	outputString.reserve(std::accumulate(buffer.cbegin(), buffer.cend(), size_t(0),
 										 [](size_t sumSize, const std::string& str)
 										 {
 											 return sumSize + str.size();
@@ -175,7 +175,7 @@ bool CCSVHandler::setSignalInformation(const std::vector<std::string>& channelNa
 		m_LogError = LogErrorCodes_WrongInputType;
 		return false;
 	}
-	else if (m_IsSetInfoCalled)
+	if (m_IsSetInfoCalled)
 	{
 		m_LastStringError.clear();
 		m_LogError = LogErrorCodes_SetInfoOnce;
@@ -380,7 +380,7 @@ bool CCSVHandler::setStreamedMatrixInformation(const std::vector<uint32_t>& dime
 		return false;
 	}
 
-	uint32_t size = std::accumulate(dimensionSizes.begin(), dimensionSizes.end(), 0);
+	const size_t size = std::accumulate(dimensionSizes.begin(), dimensionSizes.end(), 0);
 
 	if (size != labels.size())
 	{

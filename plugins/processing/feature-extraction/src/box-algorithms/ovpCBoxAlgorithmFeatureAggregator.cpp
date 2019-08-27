@@ -68,34 +68,33 @@ namespace OpenViBEPlugins
 		{
 			IBoxIO* l_pBoxIO = getBoxAlgorithmContext()->getDynamicBoxContext();
 
-			uint64_t l_ui64LastBufferChunkSize;
-			const uint8_t* l_pLastBuffer;
+			uint64_t lastBufferChunkSize;
+			const uint8_t* lastBuffer;
 
-			uint64_t l_ui64CurrentBufferChunkSize;
-			const uint8_t* l_pCurrentBuffer;
+			uint64_t bufferChunkSize;
+			const uint8_t* buffer;
 
 			//gets the first buffer from the concerned input
-			l_pBoxIO->getInputChunk(ui32InputIndex, 0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime, l_ui64LastBufferChunkSize, l_pLastBuffer);
+			l_pBoxIO->getInputChunk(ui32InputIndex, 0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime, lastBufferChunkSize, lastBuffer);
 
-			uint64_t l_ui64StartTime = 0;
-			uint64_t l_ui64EndTime   = 0;
+			uint64_t tStart = 0, tEnd   = 0;
 
-			bool l_bReadyToProcess = true;
+			bool readyToProcess = true;
 
 			//checks every input's first chunk's dates
-			for (uint32_t i = 0; i < m_ui32NumberOfInput && l_bReadyToProcess; i++)
+			for (uint32_t i = 0; i < m_ui32NumberOfInput && readyToProcess; i++)
 			{
 				if (l_pBoxIO->getInputChunkCount(i) != 0)
 				{
-					l_pBoxIO->getInputChunk(i, 0, l_ui64StartTime, l_ui64EndTime, l_ui64CurrentBufferChunkSize, l_pCurrentBuffer);
+					l_pBoxIO->getInputChunk(i, 0, tStart, tEnd, bufferChunkSize, buffer);
 					//if the first buffers don't have the same starting/ending dates, stop
-					if (l_ui64StartTime != m_ui64LastChunkStartTime || l_ui64EndTime != m_ui64LastChunkEndTime)
+					if (tStart != m_ui64LastChunkStartTime || tEnd != m_ui64LastChunkEndTime)
 					{
-						l_bReadyToProcess = false;
+						readyToProcess = false;
 					}
 
 					//checks for problems, buffer lengths differents...
-					if (l_ui64EndTime - l_ui64StartTime != m_ui64LastChunkEndTime - m_ui64LastChunkStartTime)
+					if (tEnd - tStart != m_ui64LastChunkEndTime - m_ui64LastChunkStartTime)
 					{
 						//marks everything as deprecated and sends a warning
 						for (uint32_t input = 0; input < m_ui32NumberOfInput; input++)
@@ -106,80 +105,77 @@ namespace OpenViBEPlugins
 							}
 						}
 
-						l_bReadyToProcess = false;
+						readyToProcess = false;
 
 						OV_ERROR_KRF("Invalid incoming input chunks: duration differs between chunks", OpenViBE::Kernel::ErrorType::BadInput);
 					}
 				}
-				else
-				{
-					l_bReadyToProcess = false;
-				}
+				else { readyToProcess = false; }
 			}
 
 			//If there is one buffer of the same time period per input, process
-			if (l_bReadyToProcess) { getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
+			if (readyToProcess) { getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess(); }
 
 			return true;
 		}
 
 		bool CBoxAlgorithmFeatureAggregator::process()
 		{
-			const IBox* l_pStaticBoxContext = getBoxAlgorithmContext()->getStaticBoxContext();
-			IBoxIO* l_pBoxIO                = getBoxAlgorithmContext()->getDynamicBoxContext();
+			const IBox* boxContext = getBoxAlgorithmContext()->getStaticBoxContext();
+			IBoxIO* boxIO                = getBoxAlgorithmContext()->getDynamicBoxContext();
 
-			IMatrix* l_pOutputMatrix = m_pFeatureVectorEncoder->getInputMatrix();
-			std::vector<double> l_vBufferElements;
-			uint64_t l_ui64TotalBufferSize = 0;
-			bool l_bBufferReceived         = false;
+			IMatrix* oMatrix = m_pFeatureVectorEncoder->getInputMatrix();
+			std::vector<double> bufferElements;
+			uint64_t totalBufferSize = 0;
+			bool bufferReceived         = false;
 
-			for (uint32_t input = 0; input < l_pStaticBoxContext->getInputCount(); input++)
+			for (uint32_t input = 0; input < boxContext->getInputCount(); input++)
 			{
 				m_pStreamedMatrixDecoder[input]->decode(0);
 				//*
 				if ((m_pStreamedMatrixDecoder[input]->isHeaderReceived()) && !m_bHeaderSent)
 				{
 					//getBoxAlgorithmContext()->getPlayerContext()->getLogManager() << LogLevel_Warning << "header " << input << "\n";
-					IMatrix* l_pInputMatrix = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
-					l_ui64TotalBufferSize += l_pInputMatrix->getBufferElementCount();
-					if (input == l_pStaticBoxContext->getInputCount() - 1)
+					IMatrix* iMatrix = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
+					totalBufferSize += iMatrix->getBufferElementCount();
+					if (input == boxContext->getInputCount() - 1)
 					{
-						l_pOutputMatrix->setDimensionCount(1);
-						l_pOutputMatrix->setDimensionSize(0, (uint32_t)l_ui64TotalBufferSize);
+						oMatrix->setDimensionCount(1);
+						oMatrix->setDimensionSize(0, uint32_t(totalBufferSize));
 
-						for (uint32_t i = 0; i < (uint32_t)l_ui64TotalBufferSize; i++)
+						for (uint32_t i = 0; i < uint32_t(totalBufferSize); i++)
 						{
-							char l_sBuffer[64];
-							sprintf(l_sBuffer, "Feature %d", (i + 1));
-							l_pOutputMatrix->setDimensionLabel(0, i, l_sBuffer);
+							char buffer[64];
+							sprintf(buffer, "Feature %d", (i + 1));
+							oMatrix->setDimensionLabel(0, i, buffer);
 						}
 
 						m_pFeatureVectorEncoder->encodeHeader();
-						l_pBoxIO->markOutputAsReadyToSend(0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime);
+						boxIO->markOutputAsReadyToSend(0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime);
 						m_bHeaderSent = true;
 					}
 				}
 				//*/
 				if (m_pStreamedMatrixDecoder[input]->isBufferReceived())
 				{
-					l_bBufferReceived         = true;
-					IMatrix* l_pInputMatrix   = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
-					uint32_t l_ui32BufferSize = l_pInputMatrix->getBufferElementCount();
+					bufferReceived      = true;
+					IMatrix* iMatrix    = m_pStreamedMatrixDecoder[input]->getOutputMatrix();
+					const uint32_t size = iMatrix->getBufferElementCount();
 
-					double* l_pBuffer = l_pInputMatrix->getBuffer();
-					for (uint32_t i = 0; i < l_ui32BufferSize; i++) { l_vBufferElements.push_back(l_pBuffer[i]); }
+					double* buffer = iMatrix->getBuffer();
+					for (uint32_t i = 0; i < size; i++) { bufferElements.push_back(buffer[i]); }
 				}
 			}
 
-			if (m_bHeaderSent && l_bBufferReceived)
+			if (m_bHeaderSent && bufferReceived)
 			{
-				double* l_pOutputBuffer = l_pOutputMatrix->getBuffer();
-				for (uint32_t i = 0; i < l_vBufferElements.size(); i++)
+				double* oBuffer = oMatrix->getBuffer();
+				for (uint32_t i = 0; i < bufferElements.size(); i++)
 				{
-					l_pOutputBuffer[i] = l_vBufferElements[i];
+					oBuffer[i] = bufferElements[i];
 				}
 				m_pFeatureVectorEncoder->encodeBuffer();
-				l_pBoxIO->markOutputAsReadyToSend(0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime);
+				boxIO->markOutputAsReadyToSend(0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime);
 			}
 
 			return true;

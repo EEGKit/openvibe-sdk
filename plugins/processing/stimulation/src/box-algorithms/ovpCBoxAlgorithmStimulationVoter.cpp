@@ -72,39 +72,39 @@ bool CBoxAlgorithmStimulationVoter::process()
 {
 	//	this->getLogManager() << LogLevel_Info << "Process called\n";
 
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	TParameterHandler<IStimulationSet*> ip_pStimulationSet(m_pEncoder->getInputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_InputParameterId_StimulationSet));
 	TParameterHandler<IMemoryBuffer*> op_pMemoryBuffer(m_pEncoder->getOutputParameter(OVP_GD_Algorithm_StimulationStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
-	op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
+	op_pMemoryBuffer = boxContext.getOutputChunk(0);
 
 	// Push the stimulations to a queue
-	bool l_bNewStimulus = false;
-	for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(0); j++)
+	bool newStimulus = false;
+	for (uint32_t j = 0; j < boxContext.getInputChunkCount(0); j++)
 	{
-		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, j);
+		ip_pMemoryBuffer = boxContext.getInputChunk(0, j);
 		m_pDecoder->process();
 		if (m_pDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader)) { }
 		if (m_pDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
 			for (uint32_t k = 0; k < op_pStimulationSet->getStimulationCount(); k++)
 			{
-				uint64_t l_ui64StimulationIdentifier = op_pStimulationSet->getStimulationIdentifier(k);
-				uint64_t l_ui64StimulationDate       = op_pStimulationSet->getStimulationDate(k);
-				m_ui64LatestStimulusDate             = std::max(m_ui64LatestStimulusDate, l_ui64StimulationDate);
-				if (ITimeArithmetics::timeToSeconds(m_ui64LatestStimulusDate - l_ui64StimulationDate) <= m_f64TimeWindow)
+				uint64_t stimulationId = op_pStimulationSet->getStimulationIdentifier(k);
+				uint64_t stimulationDate       = op_pStimulationSet->getStimulationDate(k);
+				m_ui64LatestStimulusDate             = std::max(m_ui64LatestStimulusDate, stimulationDate);
+				if (ITimeArithmetics::timeToSeconds(m_ui64LatestStimulusDate - stimulationDate) <= m_f64TimeWindow)
 				{
 					// Stimulus is fresh, append
-					m_oStimulusDeque.push_back(std::pair<uint64_t, uint64_t>(l_ui64StimulationIdentifier, l_ui64StimulationDate));
-					l_bNewStimulus = true;
+					m_oStimulusDeque.push_back(std::pair<uint64_t, uint64_t>(stimulationId, stimulationDate));
+					newStimulus = true;
 				}
 			}
 		}
 		if (m_pDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedEnd)) { }
-		l_rDynamicBoxContext.markInputAsDeprecated(0, j);
+		boxContext.markInputAsDeprecated(0, j);
 	}
 
-	if (m_oStimulusDeque.empty() || !l_bNewStimulus) { return true; }
+	if (m_oStimulusDeque.empty() || !newStimulus) { return true; }
 
 	// Always clear too old votes that have slipped off the time window. The time window is relative to the time of the latest stimulus received.
 	while (!m_oStimulusDeque.empty())
@@ -182,7 +182,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 	if (m_ui64LastTime == 0)
 	{
 		m_pEncoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeHeader);
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastTime, m_ui64LastTime);
+		boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, m_ui64LastTime);
 	}
 
 	if (m_oRejectClass_CanWin == OVP_TypeId_Voting_RejectClass_CanWin_No && l_ui64ResultClassLabel == m_ui64RejectClassLabel)
@@ -212,7 +212,7 @@ bool CBoxAlgorithmStimulationVoter::process()
 		ip_pStimulationSet->setStimulationCount(0);
 		ip_pStimulationSet->appendStimulation(l_ui64ResultClassLabel, l_ui64TimeStamp, 0);
 		m_pEncoder->process(OVP_GD_Algorithm_StimulationStreamEncoder_InputTriggerId_EncodeBuffer);
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastTime, l_ui64CurrentTime);
+		boxContext.markOutputAsReadyToSend(0, m_ui64LastTime, l_ui64CurrentTime);
 		m_ui64LastTime = l_ui64CurrentTime;
 
 		if (m_oClearVotes == OVP_TypeId_Voting_ClearVotes_AfterOutput) { m_oStimulusDeque.clear(); }

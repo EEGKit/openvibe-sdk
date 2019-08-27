@@ -146,21 +146,21 @@ namespace Socket
 			int l_iTrue=1;
 			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
-			int l_iResult = send(m_i32Socket, static_cast<const char*>(pBuffer), ui32BufferSize, Socket_SendFlags);
-			if (ui32BufferSize != 0 && l_iResult <= 0) { close(); }
-			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
+			const int res = send(m_i32Socket, static_cast<const char*>(pBuffer), ui32BufferSize, Socket_SendFlags);
+			if (ui32BufferSize != 0 && res <= 0) { close(); }
+			return res <= 0 ? 0 : uint32_t(res);
 		}
 
 		virtual uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize)
 		{
 			if (!isConnected() || !ui32BufferSize) { return 0; }
 #if 0
-			int l_iTrue=1;
+			int l_iTrue = 1;
 			setsockopt(m_i32Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&l_iTrue, sizeof(l_iTrue));
 #endif
-			int l_iResult = recv(m_i32Socket, static_cast<char *>(pBuffer), ui32BufferSize, Socket_ReceiveFlags);
-			if (ui32BufferSize != 0 && l_iResult <= 0) { close(); }
-			return l_iResult <= 0 ? 0 : (uint32_t)l_iResult;
+			const int res = recv(m_i32Socket, static_cast<char *>(pBuffer), ui32BufferSize, Socket_ReceiveFlags);
+			if (ui32BufferSize != 0 && res <= 0) { close(); }
+			return res <= 0 ? 0 : uint32_t(res);
 		}
 
 		virtual bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize)

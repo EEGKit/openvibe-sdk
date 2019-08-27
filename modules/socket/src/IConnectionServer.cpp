@@ -34,7 +34,7 @@ namespace Socket
 			struct sockaddr_in l_oLocalHostAddress;
 			memset(&l_oLocalHostAddress, 0, sizeof(l_oLocalHostAddress));
 			l_oLocalHostAddress.sin_family      = AF_INET;
-			l_oLocalHostAddress.sin_port        = htons((unsigned short)ui32Port);
+			l_oLocalHostAddress.sin_port        = htons(static_cast<unsigned short>(ui32Port));
 			l_oLocalHostAddress.sin_addr.s_addr = htonl(INADDR_ANY);
 
 			if (bind(m_i32Socket, (struct sockaddr*)&l_oLocalHostAddress, sizeof(l_oLocalHostAddress)) == -1)
@@ -87,7 +87,7 @@ namespace Socket
 			int l_iClientAddressSize = sizeof(l_oClientAddress);
 #else
 #endif
-			int l_i32ClientSocket = ::accept(m_i32Socket, (struct sockaddr*)&l_oClientAddress, &l_iClientAddressSize);
+			const int l_i32ClientSocket = ::accept(m_i32Socket, (struct sockaddr*)&l_oClientAddress, &l_iClientAddressSize);
 			if (l_i32ClientSocket == -1) { return nullptr; }
 			return new TConnection<IConnection>(int(l_i32ClientSocket));
 		}

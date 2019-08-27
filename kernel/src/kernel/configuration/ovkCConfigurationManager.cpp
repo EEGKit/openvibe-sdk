@@ -58,8 +58,8 @@ namespace OpenViBE
 			{
 				if (sValue.length() == 0) { return ""; }
 
-				std::string::size_type i = 0;
-				std::string::size_type j = sValue.length() - 1;
+				size_t i = 0;
+				size_t j = sValue.length() - 1;
 
 				while (i < sValue.length() && (sValue[i] == '\t' || sValue[i] == ' ')) { i++; }
 				while (j >= i && (sValue[j] == '\t' || sValue[j] == ' ')) { j--; }
@@ -80,7 +80,7 @@ namespace OpenViBE
 				{
 					std::string l_sLine;
 					std::string l_sLinePart;
-					std::string::size_type eq;
+					size_t eq;
 
 					while (!l_oFile.eof() && (l_sLine.length() == 0 || l_sLine[l_sLine.length() - 1] == '\\'))
 					{
@@ -419,7 +419,7 @@ bool CConfigurationManager::internalExpand(const std::string& sValue, std::strin
 	std::string l_sValue;
 	std::string l_sExpandedValue;
 
-	for (std::string::size_type i = 0; i < sValue.length(); i++)
+	for (size_t i = 0; i < sValue.length(); i++)
 	{
 		bool l_bShouldExpand;
 
@@ -578,7 +578,7 @@ bool CConfigurationManager::internalExpandOnlyKeyword(const std::string& sKeywor
 	std::string l_sValue;
 	std::string l_sExpandedValue;
 
-	for (std::string::size_type i = 0; i < sValue.length(); i++)
+	for (size_t i = 0; i < sValue.length(); i++)
 	{
 		bool l_bShouldExpand;
 

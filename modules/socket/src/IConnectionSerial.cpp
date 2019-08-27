@@ -449,7 +449,7 @@ namespace Socket
 						  nullptr,                                        // unused with FORMAT_MESSAGE_FROM_SYSTEM
 						  error,
 						  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-						  (LPTSTR)&l_sErrorText,                       // output
+						  LPTSTR(&l_sErrorText),                       // output
 						  0,                                           // minimum size for output buffer
 						  nullptr);                                       // arguments - see note
 			return l_sErrorText;
