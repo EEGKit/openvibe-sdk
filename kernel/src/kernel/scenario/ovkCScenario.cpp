@@ -1221,9 +1221,9 @@ bool CScenario::hasOutdatedBox()
 	return false;
 }
 
-bool CScenario::isBoxOutdated(const CIdentifier& rBoxIdentifier)
+bool CScenario::isBoxOutdated(const CIdentifier& boxId)
 {
-	IBox* box = getBoxDetails(rBoxIdentifier);
+	IBox* box = getBoxDetails(boxId);
 	if (!box) { return false; }
 	CIdentifier boxHashCode1;
 	CIdentifier boxHashCode2;

@@ -664,17 +664,17 @@ namespace OpenViBE
 				return this->addInterfacor(Input, rsName, rTypeIdentifier, rIdentifier, bNotify);
 			}
 
-			virtual bool removeInput(const uint32_t ui32InputIndex, const bool bNotify = true)
+			virtual bool removeInput(const uint32_t index, const bool bNotify = true)
 			{
-				OV_ERROR_UNLESS_KRF(ui32InputIndex < m_Interfacors[Input].size(),
-									"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_Interfacors[Input].size() - 1) << "])",
+				OV_ERROR_UNLESS_KRF(index < m_Interfacors[Input].size(),
+									"Input index = [" << index << "] is out of range (max index = [" << uint32_t(m_Interfacors[Input].size() - 1) << "])",
 									ErrorType::OutOfBound);
 
 
 				{
 					CIdentifier* identifierList = nullptr;
 					size_t nbElems              = 0;
-					m_pOwnerScenario->getLinkIdentifierToBoxInputList(m_oIdentifier, ui32InputIndex, &identifierList, &nbElems);
+					m_pOwnerScenario->getLinkIdentifierToBoxInputList(m_oIdentifier, index, &identifierList, &nbElems);
 					for (size_t i = 0; i < nbElems; ++i) { m_pOwnerScenario->disconnect(identifierList[i]); }
 					m_pOwnerScenario->releaseIdentifierList(identifierList);
 				}
@@ -696,7 +696,7 @@ namespace OpenViBE
 					{
 						CIdentifier l_oIdentifier = identifierList[i];
 						ILink* l_pLink            = m_pOwnerScenario->getLinkDetails(l_oIdentifier);
-						if (l_pLink->getTargetBoxInputIndex() > ui32InputIndex)
+						if (l_pLink->getTargetBoxInputIndex() > index)
 						{
 							l_vLink.push_back({
 								{
@@ -726,7 +726,7 @@ namespace OpenViBE
 						m_pOwnerScenario->getScenarioInputLink(scenarioInputIndex, l_oBoxIdentifier, l_ui32BoxConnectorIndex);
 						if (l_oBoxIdentifier == m_oIdentifier)
 						{
-							if (l_ui32BoxConnectorIndex > ui32InputIndex)
+							if (l_ui32BoxConnectorIndex > index)
 							{
 								l_vScenarioLink.push_back({
 									scenarioInputIndex,
@@ -736,7 +736,7 @@ namespace OpenViBE
 									}
 								});
 							}
-							if (l_ui32BoxConnectorIndex >= ui32InputIndex)
+							if (l_ui32BoxConnectorIndex >= index)
 							{
 								m_pOwnerScenario->removeScenarioInputLink(scenarioInputIndex, l_oBoxIdentifier, l_ui32BoxConnectorIndex);
 							}
@@ -750,11 +750,11 @@ namespace OpenViBE
 					}
 				}
 
-				CIdentifier toBeRemovedId = m_Interfacors[Input][ui32InputIndex]->m_oIdentifier;
-				CString toBeRemovedName   = m_Interfacors[Input][ui32InputIndex]->m_sName;
+				CIdentifier toBeRemovedId = m_Interfacors[Input][index]->m_oIdentifier;
+				CString toBeRemovedName   = m_Interfacors[Input][index]->m_sName;
 
 				// Erases actual input
-				m_Interfacors[Input].erase(m_Interfacors[Input].begin() + ui32InputIndex);
+				m_Interfacors[Input].erase(m_Interfacors[Input].begin() + index);
 
 				// Reconnects box links
 				for (const auto& link : l_vLink)
@@ -776,21 +776,21 @@ namespace OpenViBE
 					m_InterfacorIdentifierToIndex[Input].erase(itIdent);
 				}
 
-				if (bNotify) { this->notify(BoxModification_InputRemoved, ui32InputIndex); }
+				if (bNotify) { this->notify(BoxModification_InputRemoved, index); }
 
 				return true;
 			}
 
 			virtual uint32_t getInputCount() const { return this->getInterfacorCount(Input); }
 
-			virtual bool getInputType(const uint32_t ui32InputIndex, CIdentifier& rTypeIdentifier) const
+			virtual bool getInputType(const uint32_t index, CIdentifier& rTypeIdentifier) const
 			{
-				return this->getInterfacorType(Input, ui32InputIndex, rTypeIdentifier);
+				return this->getInterfacorType(Input, index, rTypeIdentifier);
 			}
 
-			virtual bool getInputName(const uint32_t ui32InputIndex, CString& rName) const
+			virtual bool getInputName(const uint32_t index, CString& rName) const
 			{
-				return this->getInterfacorName(Input, ui32InputIndex, rName);
+				return this->getInterfacorName(Input, index, rName);
 			}
 
 			virtual bool getInputName(const CIdentifier& rInputIdentifier, CString& rName) const
@@ -798,14 +798,14 @@ namespace OpenViBE
 				return this->getInterfacorName(Input, rInputIdentifier, rName);
 			}
 
-			virtual bool setInputType(const uint32_t ui32InputIndex, const CIdentifier& rTypeIdentifier)
+			virtual bool setInputType(const uint32_t index, const CIdentifier& rTypeIdentifier)
 			{
-				return this->setInterfacorType(Input, ui32InputIndex, rTypeIdentifier);
+				return this->setInterfacorType(Input, index, rTypeIdentifier);
 			}
 
-			virtual bool setInputName(const uint32_t ui32InputIndex, const CString& rName)
+			virtual bool setInputName(const uint32_t index, const CString& rName)
 			{
-				return this->setInterfacorName(Input, ui32InputIndex, rName);
+				return this->setInterfacorName(Input, index, rName);
 			}
 
 			//___________________________________________________________________//

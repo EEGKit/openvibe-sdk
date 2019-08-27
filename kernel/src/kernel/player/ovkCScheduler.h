@@ -29,7 +29,7 @@ namespace OpenViBE
 			CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer);
 			~CScheduler() override;
 
-			virtual bool setScenario(const CIdentifier& rScenarioIdentifier);
+			virtual bool setScenario(const CIdentifier& scenarioId);
 			virtual bool setFrequency(uint64_t ui64Frequency);
 
 			virtual bool isHoldingResources() const;
@@ -38,7 +38,7 @@ namespace OpenViBE
 			virtual bool uninitialize();
 			virtual bool loop();
 
-			virtual bool sendInput(const CChunk& rChunk, const CIdentifier& rBoxIdentifier, uint32_t ui32InputIndex);
+			virtual bool sendInput(const CChunk& rChunk, const CIdentifier& boxId, uint32_t index);
 			virtual uint64_t getCurrentTime() const;
 			virtual uint64_t getCurrentLateness() const;
 			virtual uint64_t getFrequency() const;

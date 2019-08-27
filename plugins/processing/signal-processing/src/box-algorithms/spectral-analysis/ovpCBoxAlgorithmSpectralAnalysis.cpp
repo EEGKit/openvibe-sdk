@@ -93,7 +93,7 @@ bool CBoxAlgorithmSpectralAnalysis::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmSpectralAnalysis::processInput(unsigned int ui32InputIndex)
+bool CBoxAlgorithmSpectralAnalysis::processInput(const uint32_t index)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

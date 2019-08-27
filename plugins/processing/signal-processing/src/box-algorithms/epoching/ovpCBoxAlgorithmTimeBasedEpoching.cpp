@@ -41,7 +41,7 @@ bool CBoxAlgorithmTimeBasedEpoching::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmTimeBasedEpoching::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmTimeBasedEpoching::processInput(const uint32_t index)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 

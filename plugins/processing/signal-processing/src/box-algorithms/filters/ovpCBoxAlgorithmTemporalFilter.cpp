@@ -156,7 +156,7 @@ bool CBoxAlgorithmTemporalFilter::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmTemporalFilter::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmTemporalFilter::processInput(const uint32_t index)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

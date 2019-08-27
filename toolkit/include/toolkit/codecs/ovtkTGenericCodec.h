@@ -111,7 +111,7 @@ namespace OpenViBEToolkit
 		bool decode(int, int)                   = delete;
 		bool decode(unsigned int, unsigned int) = delete;
 
-		bool decode(uint32_t ui32ChunkIndex, bool bMarkInputAsDeprecated = true) { decoder_return_impl(decode(ui32ChunkIndex, bMarkInputAsDeprecated)); }
+		bool decode(uint32_t chunkIdx, bool bMarkInputAsDeprecated = true) { decoder_return_impl(decode(chunkIdx, bMarkInputAsDeprecated)); }
 		bool isHeaderReceived() { decoder_return_impl(isHeaderReceived()); }
 		bool isBufferReceived() { decoder_return_impl(isBufferReceived()); }
 		bool isEndReceived() { decoder_return_impl(isEndReceived()); }

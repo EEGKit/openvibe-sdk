@@ -24,10 +24,10 @@ bool importScenarioFromFile(const char* filename)
 
 	g_context->getErrorManager().releaseErrors();
 
-	CIdentifier scenarioIdentifier;
-	if (g_context->getScenarioManager().importScenarioFromFile(scenarioIdentifier, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
+	CIdentifier scenarioId;
+	if (g_context->getScenarioManager().importScenarioFromFile(scenarioId, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
 	{
-		g_context->getScenarioManager().releaseScenario(scenarioIdentifier);
+		g_context->getScenarioManager().releaseScenario(scenarioId);
 		return true;
 	}
 

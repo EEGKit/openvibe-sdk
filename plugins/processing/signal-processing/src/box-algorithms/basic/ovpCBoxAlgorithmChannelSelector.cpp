@@ -148,7 +148,7 @@ bool CBoxAlgorithmChannelSelector::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmChannelSelector::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmChannelSelector::processInput(const uint32_t index)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

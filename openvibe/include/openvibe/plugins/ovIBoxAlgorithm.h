@@ -207,7 +207,7 @@ namespace OpenViBE
 			/**
 			 * \brief Reaction to an input update
 			 * \param rBoxAlgorithmContext [in] : the box algorithm context to use
-			 * \param ui32InputIndex [in] : the index of the input which has ben updated
+			 * \param index [in] : the index of the input which has ben updated
 			 * \return \e true when the message is processed.
 			 * \return \e false when the message is not processed.
 			 * \note Default implementation returns \e false
@@ -219,7 +219,7 @@ namespace OpenViBE
 			 *
 			 * \sa OpenViBE::Kernel::IBoxAlgorithmContext
 			 */
-			virtual bool processInput(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const uint32_t ui32InputIndex) { return false; }
+			virtual bool processInput(Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const uint32_t index) { return false; }
 
 			//@}
 			/** \name Algorithm processing */

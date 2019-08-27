@@ -52,7 +52,7 @@ bool CBoxAlgorithmCommonAverageReference::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmCommonAverageReference::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmCommonAverageReference::processInput(const uint32_t index)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

@@ -60,13 +60,13 @@ CScheduler::~CScheduler() { this->uninitialize(); }
 //___________________________________________________________________//
 //                                                                   //
 
-bool CScheduler::setScenario(const CIdentifier& rScenarioIdentifier)
+bool CScheduler::setScenario(const CIdentifier& scenarioId)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setScenario\n";
 
 	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall);
 
-	m_oScenarioIdentifier = rScenarioIdentifier;
+	m_oScenarioIdentifier = scenarioId;
 
 	// We need to flatten the scenario here as the application using the scheduler needs time
 	// between the moment the visualisation tree is complete and the moment when boxes are initialized.
@@ -620,34 +620,34 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 //___________________________________________________________________//
 //                                                                   //
 
-bool CScheduler::sendInput(const CChunk& rChunk, const CIdentifier& rBoxIdentifier, const uint32_t ui32InputIndex)
+bool CScheduler::sendInput(const CChunk& rChunk, const CIdentifier& boxId, const uint32_t index)
 {
-	IBox* l_pBox = m_pScenario->getBoxDetails(rBoxIdentifier);
+	IBox* l_pBox = m_pScenario->getBoxDetails(boxId);
 	if (l_pBox->hasAttribute(OV_AttributeId_Box_Disabled)) { return true; }
-	OV_ERROR_UNLESS_KRF(l_pBox, "Tried to send data chunk with invalid box identifier " << rBoxIdentifier.toString(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRF(l_pBox, "Tried to send data chunk with invalid box identifier " << boxId.toString(), ErrorType::ResourceNotFound);
 
-	OV_ERROR_UNLESS_KRF(ui32InputIndex < l_pBox->getInputCount(),
-						"Tried to send data chunk with invalid input index " << ui32InputIndex << " for box identifier" << rBoxIdentifier.toString(),
+	OV_ERROR_UNLESS_KRF(index < l_pBox->getInputCount(),
+						"Tried to send data chunk with invalid input index " << index << " for box identifier" << boxId.toString(),
 						ErrorType::OutOfBound);
 
 	map<pair<int, CIdentifier>, CSimulatedBox*>::iterator itSimulatedBox = m_vSimulatedBox.begin();
-	while (itSimulatedBox != m_vSimulatedBox.end() && itSimulatedBox->first.second != rBoxIdentifier)
+	while (itSimulatedBox != m_vSimulatedBox.end() && itSimulatedBox->first.second != boxId)
 	{
 		++itSimulatedBox;
 	}
 
 	OV_ERROR_UNLESS_KRF(itSimulatedBox != m_vSimulatedBox.end(),
-						"Tried to send data chunk with invalid simulated box identifier " << rBoxIdentifier.toString(),
+						"Tried to send data chunk with invalid simulated box identifier " << boxId.toString(),
 						ErrorType::ResourceNotFound);
 	CSimulatedBox* l_pSimulatedBox = itSimulatedBox->second;
 
 	// use a fatal here because failing to meet this invariant
 	// means there is a bug in the scheduler implementation
-	OV_FATAL_UNLESS_K(l_pSimulatedBox, "Null box found for id " << rBoxIdentifier.toString(), ErrorType::BadValue);
+	OV_FATAL_UNLESS_K(l_pSimulatedBox, "Null box found for id " << boxId.toString(), ErrorType::BadValue);
 
-	// TODO: check if ui32InputIndex does not overflow
+	// TODO: check if index does not overflow
 
-	m_vSimulatedBoxInput[rBoxIdentifier][ui32InputIndex].push_back(rChunk);
+	m_vSimulatedBoxInput[boxId][index].push_back(rChunk);
 
 	return true;
 }

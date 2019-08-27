@@ -64,7 +64,7 @@ namespace OpenViBEPlugins
 			return true;
 		}
 
-		bool CBoxAlgorithmFeatureAggregator::processInput(const uint32_t ui32InputIndex)
+		bool CBoxAlgorithmFeatureAggregator::processInput(const uint32_t index)
 		{
 			IBoxIO* l_pBoxIO = getBoxAlgorithmContext()->getDynamicBoxContext();
 
@@ -75,7 +75,7 @@ namespace OpenViBEPlugins
 			const uint8_t* buffer;
 
 			//gets the first buffer from the concerned input
-			l_pBoxIO->getInputChunk(ui32InputIndex, 0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime, lastBufferChunkSize, lastBuffer);
+			l_pBoxIO->getInputChunk(index, 0, m_ui64LastChunkStartTime, m_ui64LastChunkEndTime, lastBufferChunkSize, lastBuffer);
 
 			uint64_t tStart = 0, tEnd   = 0;
 

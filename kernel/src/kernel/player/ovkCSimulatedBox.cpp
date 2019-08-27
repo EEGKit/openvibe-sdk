@@ -28,29 +28,29 @@ CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& r
 
 CSimulatedBox::~CSimulatedBox() {}
 
-bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& rScenarioIdentifier)
+bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& scenarioId)
 {
-	OV_ERROR_UNLESS_KRF(m_rScheduler.getPlayer().getRuntimeScenarioManager().isScenario(rScenarioIdentifier),
-						"Scenario with identifier " << rScenarioIdentifier.toString() << " does not exist",
+	OV_ERROR_UNLESS_KRF(m_rScheduler.getPlayer().getRuntimeScenarioManager().isScenario(scenarioId),
+						"Scenario with identifier " << scenarioId.toString() << " does not exist",
 						ErrorType::ResourceNotFound);
 
-	m_pScenario = &m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(rScenarioIdentifier);
+	m_pScenario = &m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(scenarioId);
 	return true;
 }
 
-bool CSimulatedBox::getBoxIdentifier(CIdentifier& rBoxIdentifier) const
+bool CSimulatedBox::getBoxIdentifier(CIdentifier& boxId) const
 {
 	OV_ERROR_UNLESS_KRF(m_pBox, "Simulated box not initialized", ErrorType::BadCall);
 
-	rBoxIdentifier = m_pBox->getIdentifier();
+	boxId = m_pBox->getIdentifier();
 	return true;
 }
 
-bool CSimulatedBox::setBoxIdentifier(const CIdentifier& rBoxIdentifier)
+bool CSimulatedBox::setBoxIdentifier(const CIdentifier& boxId)
 {
 	OV_ERROR_UNLESS_KRF(m_pScenario, "No scenario set", ErrorType::BadCall);
 
-	m_pBox = m_pScenario->getBoxDetails(rBoxIdentifier);
+	m_pBox = m_pScenario->getBoxDetails(boxId);
 	return m_pBox != nullptr;
 }
 
@@ -150,14 +150,14 @@ bool CSimulatedBox::processClock()
 	return true;
 }
 
-bool CSimulatedBox::processInput(const uint32_t ui32InputIndex, const CChunk& rChunk)
+bool CSimulatedBox::processInput(const uint32_t index, const CChunk& rChunk)
 {
-	m_vInput[ui32InputIndex].push_back(rChunk);
+	m_vInput[index].push_back(rChunk);
 
 	{
 		CBoxAlgorithmContext l_oBoxAlgorithmContext(getKernelContext(), this, m_pBox);
 		{
-			OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, ui32InputIndex), "Box algorithm <" << m_pBox->getName() << "> processInput() function failed", ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(m_pBoxAlgorithm->processInput(l_oBoxAlgorithmContext, index), "Box algorithm <" << m_pBox->getName() << "> processInput() function failed", ErrorType::Internal);
 		}
 		m_bReadyToProcess |= l_oBoxAlgorithmContext.isAlgorithmReadyToProcess();
 	}
@@ -245,22 +245,22 @@ const IScenario& CSimulatedBox::getScenario() const { return *m_pScenario; }
 // ________________________________________________________________________________________________________________
 //
 
-uint32_t CSimulatedBox::getInputChunkCount(const uint32_t ui32InputIndex) const
+uint32_t CSimulatedBox::getInputChunkCount(const uint32_t index) const
 {
-	OV_ERROR_UNLESS_KRF(ui32InputIndex < m_vInput.size(),
-						"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
+	OV_ERROR_UNLESS_KRF(index < m_vInput.size(),
+						"Input index = [" << index << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	return uint32_t(m_vInput[ui32InputIndex].size());
+	return uint32_t(m_vInput[index].size());
 }
 
-bool CSimulatedBox::getInputChunk(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const
+bool CSimulatedBox::getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const
 {
-	OV_ERROR_UNLESS_KRF(ui32InputIndex < m_vInput.size(), "Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])", ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(inputIdx < m_vInput.size(), "Input index = [" << inputIdx << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])", ErrorType::OutOfBound);
 
-	OV_ERROR_UNLESS_KRF(ui32ChunkIndex < m_vInput[ui32InputIndex].size(), "Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << uint32_t(m_vInput[ui32InputIndex].size() - 1) << "])", ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRF(chunkIdx < m_vInput[inputIdx].size(), "Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << uint32_t(m_vInput[inputIdx].size() - 1) << "])", ErrorType::OutOfBound);
 
-	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
+	const CChunk& l_rChunk = m_vInput[inputIdx][chunkIdx];
 	rStartTime             = l_rChunk.getStartTime();
 	rEndTime               = l_rChunk.getEndTime();
 	rChunkSize             = l_rChunk.getBuffer().getSize();
@@ -268,58 +268,58 @@ bool CSimulatedBox::getInputChunk(const uint32_t ui32InputIndex, const uint32_t 
 	return true;
 }
 
-const IMemoryBuffer* CSimulatedBox::getInputChunk(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex) const
+const IMemoryBuffer* CSimulatedBox::getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx) const
 {
-	OV_ERROR_UNLESS_KRN(ui32InputIndex < m_vInput.size(),
-						"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
+	OV_ERROR_UNLESS_KRN(inputIdx < m_vInput.size(),
+						"Input index = [" << inputIdx << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	OV_ERROR_UNLESS_KRN(ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
-						"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << uint32_t(m_vInput[ui32InputIndex].size() - 1) << "])",
+	OV_ERROR_UNLESS_KRN(chunkIdx < m_vInput[inputIdx].size(),
+						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << uint32_t(m_vInput[inputIdx].size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	return &(m_vInput[ui32InputIndex][ui32ChunkIndex]).getBuffer();
+	return &(m_vInput[inputIdx][chunkIdx]).getBuffer();
 }
 
-uint64_t CSimulatedBox::getInputChunkStartTime(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex) const
+uint64_t CSimulatedBox::getInputChunkStartTime(const uint32_t inputIdx, const uint32_t chunkIdx) const
 {
-	OV_ERROR_UNLESS_KRZ(ui32InputIndex < m_vInput.size(),
-						"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
+	OV_ERROR_UNLESS_KRZ(inputIdx < m_vInput.size(),
+						"Input index = [" << inputIdx << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	OV_ERROR_UNLESS_KRZ(ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
-						"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << uint32_t(m_vInput[ui32InputIndex].size() - 1) << "])",
+	OV_ERROR_UNLESS_KRZ(chunkIdx < m_vInput[inputIdx].size(),
+						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << uint32_t(m_vInput[inputIdx].size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
+	const CChunk& l_rChunk = m_vInput[inputIdx][chunkIdx];
 	return l_rChunk.getStartTime();
 }
 
-uint64_t CSimulatedBox::getInputChunkEndTime(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex) const
+uint64_t CSimulatedBox::getInputChunkEndTime(const uint32_t inputIdx, const uint32_t chunkIdx) const
 {
-	OV_ERROR_UNLESS_KRZ(ui32InputIndex < m_vInput.size(),
-						"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
+	OV_ERROR_UNLESS_KRZ(inputIdx < m_vInput.size(),
+						"Input index = [" << inputIdx << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	OV_ERROR_UNLESS_KRZ(ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
-						"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << uint32_t(m_vInput[ui32InputIndex].size() - 1) << "])",
+	OV_ERROR_UNLESS_KRZ(chunkIdx < m_vInput[inputIdx].size(),
+						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << uint32_t(m_vInput[inputIdx].size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	const CChunk& l_rChunk = m_vInput[ui32InputIndex][ui32ChunkIndex];
+	const CChunk& l_rChunk = m_vInput[inputIdx][chunkIdx];
 	return l_rChunk.getEndTime();
 }
 
-bool CSimulatedBox::markInputAsDeprecated(const uint32_t ui32InputIndex, const uint32_t ui32ChunkIndex)
+bool CSimulatedBox::markInputAsDeprecated(const uint32_t inputIdx, const uint32_t chunkIdx)
 {
-	OV_ERROR_UNLESS_KRZ(ui32InputIndex < m_vInput.size(),
-						"Input index = [" << ui32InputIndex << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
+	OV_ERROR_UNLESS_KRZ(inputIdx < m_vInput.size(),
+						"Input index = [" << inputIdx << "] is out of range (max index = [" << uint32_t(m_vInput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	OV_ERROR_UNLESS_KRZ(ui32ChunkIndex < m_vInput[ui32InputIndex].size(),
-						"Input chunk index = [" << ui32ChunkIndex << "] is out of range (max index = [" << uint32_t(m_vInput[ui32InputIndex].size() - 1) << "])",
+	OV_ERROR_UNLESS_KRZ(chunkIdx < m_vInput[inputIdx].size(),
+						"Input chunk index = [" << chunkIdx << "] is out of range (max index = [" << uint32_t(m_vInput[inputIdx].size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	m_vInput[ui32InputIndex][ui32ChunkIndex].markAsDeprecated(true);
+	m_vInput[inputIdx][chunkIdx].markAsDeprecated(true);
 	return true;
 }
 

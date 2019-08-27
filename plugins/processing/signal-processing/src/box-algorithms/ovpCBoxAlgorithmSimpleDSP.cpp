@@ -127,7 +127,7 @@ bool CBoxAlgorithmSimpleDSP::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmSimpleDSP::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmSimpleDSP::processInput(const uint32_t index)
 {
 	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
 	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();

@@ -178,21 +178,21 @@ namespace OpenViBE
 		std::string scenarioFile = command.scenarioFile.get();
 		std::string scenarioName = command.scenarioName.get();
 
-		CIdentifier scenarioIdentifier;
+		CIdentifier scenarioId;
 		auto& scenarioManager = m_Pimpl->kernelContext->getScenarioManager();
 
-		if (!scenarioManager.importScenarioFromFile(scenarioIdentifier, scenarioFile.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
+		if (!scenarioManager.importScenarioFromFile(scenarioId, scenarioFile.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter))
 		{
 			std::cerr << "ERROR: failed to create scenario " << std::endl;
 			return PlayerReturnCode::KernelInternalFailure;
 		}
 
-		scenarioManager.getScenario(scenarioIdentifier).addAttribute(OV_AttributeId_ScenarioFilename, scenarioFile.c_str());
+		scenarioManager.getScenario(scenarioId).addAttribute(OV_AttributeId_ScenarioFilename, scenarioFile.c_str());
 
 		auto scenarioToReleaseIt = m_Pimpl->scenarioMap.find(scenarioName);
 		if (scenarioToReleaseIt != m_Pimpl->scenarioMap.end()) { scenarioManager.releaseScenario(scenarioToReleaseIt->second); }
 
-		m_Pimpl->scenarioMap[scenarioName] = scenarioIdentifier;
+		m_Pimpl->scenarioMap[scenarioName] = scenarioId;
 
 		return PlayerReturnCode::Success;
 	}

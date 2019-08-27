@@ -36,11 +36,11 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 
 		std::string scenarioFilePath = std::string(dataDirectory) + "/" + s_SimpleScenarioFileName;
 
-		CIdentifier scenarioIdentifier;
-		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioIdentifier, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter), "Failed to import the scenario file");
-		OVT_ASSERT(scenarioIdentifier != OV_UndefinedIdentifier, "Scenario importer failed to import the scenario but failed to report an error");
+		CIdentifier scenarioId;
+		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioId, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter), "Failed to import the scenario file");
+		OVT_ASSERT(scenarioId != OV_UndefinedIdentifier, "Scenario importer failed to import the scenario but failed to report an error");
 
-		auto& scenario = context->getScenarioManager().getScenario(scenarioIdentifier);
+		auto& scenario = context->getScenarioManager().getScenario(scenarioId);
 
 		// Test scenario attributes
 		for (auto& attribute : simpleScenarioAttributes)

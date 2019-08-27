@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 			// virtual bool processEvent(OpenViBE::CMessageEvent& rMessageEvent);
 			// virtual bool processSignal(OpenViBE::CMessageSignal& rMessageSignal);
 			// virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
-			bool processInput(const uint32_t ui32InputIndex) override;
+			bool processInput(const uint32_t index) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_SpectrumAverage)

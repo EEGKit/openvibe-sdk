@@ -99,7 +99,7 @@ namespace OpenViBE
 			bool applyLocalSettings() override;
 			bool checkSettings(IConfigurationManager* configurationManager) override;
 
-			bool isBoxOutdated(const CIdentifier& rBoxIdentifier);
+			bool isBoxOutdated(const CIdentifier& boxId);
 			bool checkOutdatedBoxes() override;
 			bool hasOutdatedBox() override;
 

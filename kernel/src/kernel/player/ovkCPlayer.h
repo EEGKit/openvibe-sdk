@@ -22,7 +22,7 @@ namespace OpenViBE
 
 			explicit CPlayer(const IKernelContext& rKernelContext);
 			~CPlayer() override;
-			bool setScenario(const CIdentifier& rScenarioIdentifier, const CNameValuePairList* pLocalConfigurationTokens) override;
+			bool setScenario(const CIdentifier& scenarioId, const CNameValuePairList* pLocalConfigurationTokens) override;
 			IConfigurationManager& getRuntimeConfigurationManager() const override;
 			IScenarioManager& getRuntimeScenarioManager() const override;
 			CIdentifier getRuntimeScenarioIdentifier() const override;

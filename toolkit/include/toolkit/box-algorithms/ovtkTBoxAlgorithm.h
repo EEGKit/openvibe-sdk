@@ -52,10 +52,10 @@ namespace OpenViBEToolkit
 			return processClock(rMessageClock);
 		}
 
-		virtual bool processInput(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const uint32_t ui32InputIndex)
+		virtual bool processInput(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext, const uint32_t index)
 		{
 			CScopedBoxAlgorithm l_oScopedBoxAlgorithm(m_pBoxAlgorithmContext, &rBoxAlgorithmContext);
-			return processInput(ui32InputIndex);
+			return processInput(index);
 		}
 
 		virtual bool process(OpenViBE::Kernel::IBoxAlgorithmContext& rBoxAlgorithmContext)
@@ -71,10 +71,10 @@ namespace OpenViBEToolkit
 		virtual uint64_t getClockFrequency() { return 0; }
 		virtual bool initialize() { return true; }
 		virtual bool uninitialize() { return true; }
-		virtual bool processEvent(OpenViBE::CMessageEvent& rMessageEvent) { return false; }
-		virtual bool processSignal(OpenViBE::CMessageSignal& rMessageSignal) { return false; }
-		virtual bool processClock(OpenViBE::CMessageClock& rMessageClock) { return false; }
-		virtual bool processInput(const uint32_t ui32InputIndex) { return false; }
+		virtual bool processEvent(OpenViBE::CMessageEvent& messageEvent) { return false; }
+		virtual bool processSignal(OpenViBE::CMessageSignal& messageSignal) { return false; }
+		virtual bool processClock(OpenViBE::CMessageClock& messageClock) { return false; }
+		virtual bool processInput(const uint32_t index) { return false; }
 		virtual bool process() = 0;
 
 		// ====================================================================================================================================

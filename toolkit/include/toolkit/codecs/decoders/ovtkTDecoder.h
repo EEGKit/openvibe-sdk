@@ -43,11 +43,11 @@ namespace OpenViBEToolkit
 		- decode it (specific for each decoder)
 		- mark input as deprecated
 		*/
-		virtual bool decode(uint32_t ui32ChunkIndex, bool bMarkInputAsDeprecated = true)
+		virtual bool decode(uint32_t chunkIdx, bool bMarkInputAsDeprecated = true)
 		{
-			this->setInputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getInputChunk(m_ui32ConnectorIndex, ui32ChunkIndex));
+			this->setInputChunk(m_pBoxAlgorithm->getDynamicBoxContext().getInputChunk(m_ui32ConnectorIndex, chunkIdx));
 			if (! m_pCodec->process()) return false;
-			if (bMarkInputAsDeprecated) m_pBoxAlgorithm->getDynamicBoxContext().markInputAsDeprecated(m_ui32ConnectorIndex, ui32ChunkIndex);
+			if (bMarkInputAsDeprecated) m_pBoxAlgorithm->getDynamicBoxContext().markInputAsDeprecated(m_ui32ConnectorIndex, chunkIdx);
 			return true;
 		}
 

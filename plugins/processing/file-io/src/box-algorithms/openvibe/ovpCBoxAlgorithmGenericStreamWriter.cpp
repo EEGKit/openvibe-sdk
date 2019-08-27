@@ -76,7 +76,7 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 	return true;
 }
 
-bool CBoxAlgorithmGenericStreamWriter::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmGenericStreamWriter::processInput(const uint32_t index)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

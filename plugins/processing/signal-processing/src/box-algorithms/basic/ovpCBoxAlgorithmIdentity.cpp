@@ -12,7 +12,7 @@ using namespace std;
 
 void CBoxAlgorithmIdentity::release() { delete this; }
 
-bool CBoxAlgorithmIdentity::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmIdentity::processInput(const uint32_t index)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

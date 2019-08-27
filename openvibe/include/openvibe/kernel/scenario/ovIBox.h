@@ -206,7 +206,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Removes an input for this box
-			 * \param ui32InputIndex [in] : The index
+			 * \param index [in] : The index
 			 *        of the input to be removed
 			 * \param bNotify manage notify. Is enabled by default
 			 * \return \e true in case of success.
@@ -216,7 +216,7 @@ namespace OpenViBE
 			 * have their indices changing after this,
 			 * they all decrease by 1.
 			 */
-			virtual bool removeInput(const uint32_t ui32InputIndex, const bool bNotify = true) = 0;
+			virtual bool removeInput(const uint32_t index, const bool bNotify = true) = 0;
 
 			/**
 			 * \brief Gets the number of inputs for this box
@@ -226,41 +226,41 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets an input type identifier by index
-			 * \param ui32InputIndex [in] : The input index
+			 * \param index [in] : The input index
 			 * \param rTypeIdentifier [out] : The type identifier
 			 * \return \e true in case of success.
 			 * \return \e false in case of error. In such case,
 			 *         \c rTypeIdentifier remains unchanged.
 			 */
-			virtual bool getInputType(const uint32_t ui32InputIndex, CIdentifier& rTypeIdentifier) const = 0;
+			virtual bool getInputType(const uint32_t index, CIdentifier& rTypeIdentifier) const = 0;
 
 			/**
 			 * \brief Gets an input name by index
-			 * \param ui32InputIndex [in] : The input index
+			 * \param index [in] : The input index
 			 * \param rName [out] : The name of this input
 			 * \return \e true in case of success.
 			 * \return \e false in case of error. In such case,
 			 *         \c rName remains unchanged.
 			 */
-			virtual bool getInputName(const uint32_t ui32InputIndex, CString& rName) const = 0;
+			virtual bool getInputName(const uint32_t index, CString& rName) const = 0;
 
 			/**
 			 * \brief Sets an input type identifier by index
-			 * \param ui32InputIndex [in] : The input index
+			 * \param index [in] : The input index
 			 * \param rTypeIdentifier [in] : The type identifier
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setInputType(const uint32_t ui32InputIndex, const CIdentifier& rTypeIdentifier) = 0;
+			virtual bool setInputType(const uint32_t index, const CIdentifier& rTypeIdentifier) = 0;
 
 			/**
 			 * \brief Sets an input name by index
-			 * \param ui32InputIndex [in] : The input index
+			 * \param index [in] : The input index
 			 * \param rName [in] : The name of this input
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool setInputName(const uint32_t ui32InputIndex, const CString& rName) = 0;
+			virtual bool setInputName(const uint32_t index, const CString& rName) = 0;
 
 			//@}
 			/** \name Output management */

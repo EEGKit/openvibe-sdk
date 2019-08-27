@@ -97,7 +97,7 @@ bool CBoxAlgorithmRegularizedCSPTrainer::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmRegularizedCSPTrainer::processInput(const uint32_t ui32InputIndex)
+bool CBoxAlgorithmRegularizedCSPTrainer::processInput(const uint32_t index)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

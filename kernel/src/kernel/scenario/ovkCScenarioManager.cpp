@@ -64,17 +64,17 @@ CIdentifier CScenarioManager::getNextScenarioIdentifier(const CIdentifier& rPrev
 	return itScenario != m_vScenario.end() ? itScenario->first : OV_UndefinedIdentifier;
 }
 
-bool CScenarioManager::isScenario(const CIdentifier& scenarioIdentifier) const
+bool CScenarioManager::isScenario(const CIdentifier& scenarioId) const
 {
-	return m_vScenario.find(scenarioIdentifier) != m_vScenario.end();
+	return m_vScenario.find(scenarioId) != m_vScenario.end();
 }
 
-bool CScenarioManager::createScenario(CIdentifier& rScenarioIdentifier)
+bool CScenarioManager::createScenario(CIdentifier& scenarioId)
 {
 	//create scenario object
-	rScenarioIdentifier              = getUnusedIdentifier();
-	CScenario* l_pScenario           = new CScenario(getKernelContext(), rScenarioIdentifier);
-	m_vScenario[rScenarioIdentifier] = l_pScenario;
+	scenarioId              = getUnusedIdentifier();
+	CScenario* l_pScenario           = new CScenario(getKernelContext(), scenarioId);
+	m_vScenario[scenarioId] = l_pScenario;
 
 	return true;
 }
@@ -307,16 +307,16 @@ CIdentifier CScenarioManager::getScenarioImporterAlgorithmIdentifier(const CIden
 	return m_ScenarioImporters.at(importContext).at(fileNameExtension.toASCIIString());
 }
 
-bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const CIdentifier& scenarioIdentifier, const CIdentifier& scenarioExporterAlgorithmIdentifier) const
+bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const CIdentifier& scenarioId, const CIdentifier& scenarioExporterAlgorithmIdentifier) const
 {
 	OV_ERROR_UNLESS_KRF(
-		m_vScenario.find(scenarioIdentifier) != m_vScenario.end(),
-		"Scenario with identifier " << scenarioIdentifier.toString() << " does not exist.",
+		m_vScenario.find(scenarioId) != m_vScenario.end(),
+		"Scenario with identifier " << scenarioId.toString() << " does not exist.",
 		ErrorType::ResourceNotFound);
 
 	// If the scenario is a metabox, we will save its prototype hash into an attribute of the scenario
 	// that way the standalone scheduler can check whether metaboxes included inside need updating.
-	IScenario& scenario = this->getScenario(scenarioIdentifier);
+	IScenario& scenario = this->getScenario(scenarioId);
 
 
 	if (scenario.isMetabox())
@@ -444,9 +444,9 @@ bool CScenarioManager::exportScenario(IMemoryBuffer& outputMemoryBuffer, const C
 	return true;
 }
 
-bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioIdentifier, const CIdentifier& scenarioExporterAlgorithmIdentifier) const
+bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioId, const CIdentifier& scenarioExporterAlgorithmIdentifier) const
 {
-	IScenario& scenario = this->getScenario(scenarioIdentifier);
+	IScenario& scenario = this->getScenario(scenarioId);
 	if (scenario.containsBoxWithDeprecatedInterfacors())
 	{
 		OV_WARNING_K(
@@ -456,7 +456,7 @@ bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIden
 	}
 
 	CMemoryBuffer memoryBuffer;
-	this->exportScenario(memoryBuffer, scenarioIdentifier, scenarioExporterAlgorithmIdentifier);
+	this->exportScenario(memoryBuffer, scenarioId, scenarioExporterAlgorithmIdentifier);
 
 	std::ofstream outputFileStream;
 	FS::Files::openOFStream(outputFileStream, fileName, ios::binary);
@@ -472,7 +472,7 @@ bool CScenarioManager::exportScenarioToFile(const CString& fileName, const CIden
 	return true;
 }
 
-bool CScenarioManager::exportScenarioToFile(const CIdentifier& exportContext, const CString& fileName, const CIdentifier& scenarioIdentifier)
+bool CScenarioManager::exportScenarioToFile(const CIdentifier& exportContext, const CString& fileName, const CIdentifier& scenarioId)
 {
 	OV_ERROR_UNLESS_KRF(m_ScenarioExporters.count(exportContext),
 						"The export context " << exportContext.toString() << " has no associated exporters",
@@ -483,7 +483,7 @@ bool CScenarioManager::exportScenarioToFile(const CIdentifier& exportContext, co
 	OV_ERROR_UNLESS_KRF(m_ScenarioExporters[exportContext].count(&fileNameExtension[0]),
 						"The export context " << exportContext.toString() << " has no associated exporters for extension [" << &fileNameExtension[0] << "]",
 						ErrorType::Internal);
-	return this->exportScenarioToFile(fileName, scenarioIdentifier, m_ScenarioExporters[exportContext][&fileNameExtension[0]]);
+	return this->exportScenarioToFile(fileName, scenarioId, m_ScenarioExporters[exportContext][&fileNameExtension[0]]);
 }
 
 bool CScenarioManager::registerScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension, const CIdentifier& scenarioExporterAlgorithmIdentifier)
@@ -574,9 +574,9 @@ CIdentifier CScenarioManager::getScenarioExporterAlgorithmIdentifier(const CIden
 	return m_ScenarioExporters.at(exportContext).at(fileNameExtension.toASCIIString());
 }
 
-bool CScenarioManager::releaseScenario(const CIdentifier& rScenarioIdentifier)
+bool CScenarioManager::releaseScenario(const CIdentifier& scenarioId)
 {
-	map<CIdentifier, CScenario*>::iterator itScenario = m_vScenario.find(rScenarioIdentifier);
+	map<CIdentifier, CScenario*>::iterator itScenario = m_vScenario.find(scenarioId);
 	if (itScenario == m_vScenario.end())
 	{
 		// error is handled on a higher level
@@ -590,20 +590,20 @@ bool CScenarioManager::releaseScenario(const CIdentifier& rScenarioIdentifier)
 	return true;
 }
 
-IScenario& CScenarioManager::getScenario(const CIdentifier& rScenarioIdentifier)
+IScenario& CScenarioManager::getScenario(const CIdentifier& scenarioId)
 {
-	map<CIdentifier, CScenario*>::const_iterator itScenario = m_vScenario.find(rScenarioIdentifier);
+	map<CIdentifier, CScenario*>::const_iterator itScenario = m_vScenario.find(scenarioId);
 
 	// If the call is wrongly handled, and falls in this condition then next instruction causes a crash...
 	// At least, here the abortion is handled!
-	OV_FATAL_UNLESS_K(itScenario != m_vScenario.end(), "Scenario " << rScenarioIdentifier.toString() << " does not exist !", ErrorType::ResourceNotFound);
+	OV_FATAL_UNLESS_K(itScenario != m_vScenario.end(), "Scenario " << scenarioId.toString() << " does not exist !", ErrorType::ResourceNotFound);
 
 	return *itScenario->second;
 }
 
-IScenario& CScenarioManager::getScenario(const CIdentifier& rScenarioIdentifier) const
+IScenario& CScenarioManager::getScenario(const CIdentifier& scenarioId) const
 {
-	return const_cast<CScenarioManager*>(this)->getScenario(rScenarioIdentifier);
+	return const_cast<CScenarioManager*>(this)->getScenario(scenarioId);
 }
 
 CIdentifier CScenarioManager::getUnusedIdentifier() const
