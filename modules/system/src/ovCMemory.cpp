@@ -4,39 +4,39 @@
 
 using namespace System;
 
-bool Memory::copy(void* pTargetBuffer, const void* pSourceBuffer, const uint64_t ui64BufferSize)
+bool Memory::copy(void* pTargetBuffer, const void* pSourceBuffer, const uint64_t size)
 {
 	// TODO take 64bits size into consideration
-	if (ui64BufferSize == 0) { return true; }
+	if (size == 0) { return true; }
 
-	memcpy(pTargetBuffer, pSourceBuffer, size_t(ui64BufferSize));
-
-	return true;
-}
-
-bool Memory::move(void* pTargetBuffer, const void* pSourceBuffer, const uint64_t ui64BufferSize)
-{
-	// $$$ TODO take 64bits size into consideration
-	if (ui64BufferSize == 0) { return true; }
-
-	memmove(pTargetBuffer, pSourceBuffer, size_t(ui64BufferSize));
+	memcpy(pTargetBuffer, pSourceBuffer, size_t(size));
 
 	return true;
 }
 
-bool Memory::set(void* pTargetBuffer, const uint64_t ui64BufferSize, const uint8_t ui8Value)
+bool Memory::move(void* pTargetBuffer, const void* pSourceBuffer, const uint64_t size)
 {
-	if (ui64BufferSize == 0) { return true; }
 	// $$$ TODO take 64bits size into consideration
-	memset(pTargetBuffer, ui8Value, size_t(ui64BufferSize));
+	if (size == 0) { return true; }
+
+	memmove(pTargetBuffer, pSourceBuffer, size_t(size));
+
 	return true;
 }
 
-bool Memory::compare(const void* pSourceBuffer1, const void* pSourceBuffer2, const uint64_t ui64BufferSize)
+bool Memory::set(void* pTargetBuffer, const uint64_t size, const uint8_t ui8Value)
 {
-	if (ui64BufferSize == 0) { return true; }
+	if (size == 0) { return true; }
 	// $$$ TODO take 64bits size into consideration
-	return memcmp(pSourceBuffer1, pSourceBuffer2, size_t(ui64BufferSize)) == 0;
+	memset(pTargetBuffer, ui8Value, size_t(size));
+	return true;
+}
+
+bool Memory::compare(const void* pSourceBuffer1, const void* pSourceBuffer2, const uint64_t size)
+{
+	if (size == 0) { return true; }
+	// $$$ TODO take 64bits size into consideration
+	return memcmp(pSourceBuffer1, pSourceBuffer2, size_t(size)) == 0;
 }
 
 // ________________________________________________________________________________________________________________

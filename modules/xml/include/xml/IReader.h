@@ -18,7 +18,7 @@ namespace XML
 	class XML_API IReader
 	{
 	public:
-		virtual bool processData(const void* pBuffer, uint64_t ui64BufferSize) = 0;
+		virtual bool processData(const void* pBuffer, uint64_t size) = 0;
 		virtual void release() = 0;
 	protected:
 		virtual ~IReader() { }

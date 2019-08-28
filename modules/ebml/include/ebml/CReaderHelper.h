@@ -10,10 +10,10 @@ namespace EBML
 
 		CReaderHelper();
 		~CReaderHelper() override;
-		uint64_t getUIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
-		int64_t getSIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
-		double getFloatFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
-		const char* getASCIIStringFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
+		uint64_t getUIntegerFromChildData(const void* pBuffer, uint64_t size) override;
+		int64_t getSIntegerFromChildData(const void* pBuffer, uint64_t size) override;
+		double getFloatFromChildData(const void* pBuffer, uint64_t size) override;
+		const char* getASCIIStringFromChildData(const void* pBuffer, uint64_t size) override;
 		void release() override;
 
 	protected:

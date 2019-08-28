@@ -44,37 +44,37 @@ namespace OpenViBE
 
 			/**
 			 * \brief Adds an input to the box
-			 * \param sName [in] : the name of the input to add
-			 * \param rTypeIdentifier [in] : the type of the input
-			 * \param oIdentifier [in] : The input identifier
-			 * \param bNotify [in]: if true, activate notification callback (true by default)
+			 * \param name [in] : the name of the input to add
+			 * \param typeID [in] : the type of the input
+			 * \param identifier [in] : The input identifier
+			 * \param notify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
+			virtual bool addInput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
 
 			/**
 			 * \brief Adds an output to the box
-			 * \param sName [in] : the name of the output to add
-			 * \param rTypeIdentifier [in] : the type of the output
-			 * \param oIdentifier [in] : The output identifier
-			 * \param bNotify [in]: if true, activate notification callback (true by default)
+			 * \param name [in] : the name of the output to add
+			 * \param typeID [in] : the type of the output
+			 * \param identifier [in] : The output identifier
+			 * \param notify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
+			virtual bool addOutput(const CString& name, const CIdentifier& typeID, const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
 				
 			/**
 			 * \brief Add an setting to the box
-			 * \param sName [in] : the name of the setting to add
-			 * \param rTypeIdentifier [in] : the type of the setting
-			 * \param sDefaultValue [in] : the default value of this
+			 * \param name [in] : the name of the setting to add
+			 * \param typeID [in] : the type of the setting
+			 * \param defaultValue [in] : the default value of this
 			 *        setting (used to initialize the box itself)
-			 * \param bModifiability [in] : true if modifiable setting 
-			 * \param oIdentifier [in] : The setting identifier
-			 * \param bNotify [in]: if true, activate notification callback (true by default)
+			 * \param modifiable [in] : true if modifiable setting 
+			 * \param identifier [in] : The setting identifier
+			 * \param notify [in]: if true, activate notification callback (true by default)
 			 * \return true if successful
 			 */
-			virtual bool addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable = false,
-									const CIdentifier& rIdentifier                                                                                 = OV_UndefinedIdentifier, const bool bNotify = true) = 0;
+			virtual bool addSetting(const CString& name, const CIdentifier& typeID, const CString& defaultValue, const bool modifiable = false,
+									const CIdentifier& identifier = OV_UndefinedIdentifier, const bool notify = true) = 0;
 			/**
 			 * \brief Adds a flag to the box
 			 * \param eBoxFlag [in] : the flag to add to the box
@@ -85,26 +85,26 @@ namespace OpenViBE
 
 			/**
 			 * \brief Adds a flag to the box
-			 * \param cIdentifierFlag [in] : the flag to add to the box
+			 * \param flagID [in] : the flag to add to the box
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool addFlag(const CIdentifier& cIdentifierFlag) = 0;
+			virtual bool addFlag(const CIdentifier& flagID) = 0;
 
 			/**
 			 * \brief Adds a new type supported by inputs of the box
-			  * \param rTypeIdentifier [in] : The type identifier
+			  * \param typeID [in] : The type identifier
 			  * \return \e true in case of success.
 			  * \return \e false in case of error.
 			  */
-			virtual bool addInputSupport(const CIdentifier& rTypeIdentifier) = 0;
+			virtual bool addInputSupport(const CIdentifier& typeID) = 0;
 			/**
 			 * \brief Adds a new type supported by outputs of the box
-			  * \param rTypeIdentifier [in] : The type identifier
+			  * \param typeID [in] : The type identifier
 			  * \return \e true in case of success.
 			  * \return \e false in case of error.
 			  */
-			virtual bool addOutputSupport(const CIdentifier& rTypeIdentifier) = 0;
+			virtual bool addOutputSupport(const CIdentifier& typeID) = 0;
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IKernelObject, OV_ClassId_Kernel_Scenario_BoxProto)
 		};

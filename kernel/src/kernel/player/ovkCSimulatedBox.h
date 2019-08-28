@@ -88,11 +88,11 @@ namespace OpenViBE
 			/** \name IBoxIO inputs handling */
 			//@{
 			uint32_t getInputChunkCount(const uint32_t index) const override;
-			bool getInputChunk(const uint32_t inputIndex, const uint32_t chunkIndex, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const override;
-			const IMemoryBuffer* getInputChunk(const uint32_t inputIndex, const uint32_t chunkIndex) const override;
-			uint64_t getInputChunkStartTime(const uint32_t inputIndex, const uint32_t chunkIndex) const override;
-			uint64_t getInputChunkEndTime(const uint32_t inputIndex, const uint32_t chunkIndex) const override;
-			bool markInputAsDeprecated(const uint32_t inputIndex, const uint32_t chunkIndex) override;
+			bool getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx, uint64_t& rStartTime, uint64_t& rEndTime, uint64_t& rChunkSize, const uint8_t*& rpChunkBuffer) const override;
+			const IMemoryBuffer* getInputChunk(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
+			uint64_t getInputChunkStartTime(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
+			uint64_t getInputChunkEndTime(const uint32_t inputIdx, const uint32_t chunkIdx) const override;
+			bool markInputAsDeprecated(const uint32_t inputIdx, const uint32_t chunkIdx) override;
 			//@}
 
 			/** \name IBoxIO outputs handling */
@@ -100,7 +100,7 @@ namespace OpenViBE
 			uint64_t getOutputChunkSize(const uint32_t OutputIndex) const override;
 			bool setOutputChunkSize(const uint32_t OutputIndex, const uint64_t ui64Size, const bool bDiscard = true) override;
 			uint8_t* getOutputChunkBuffer(const uint32_t OutputIndex) override;
-			bool appendOutputChunkData(const uint32_t OutputIndex, const uint8_t* pBuffer, const uint64_t ui64BufferSize) override;
+			bool appendOutputChunkData(const uint32_t OutputIndex, const uint8_t* pBuffer, const uint64_t size) override;
 			IMemoryBuffer* getOutputChunk(const uint32_t OutputIndex) override;
 			bool markOutputAsReadyToSend(const uint32_t OutputIndex, const uint64_t ui64StartTime, const uint64_t ui64EndTime) override;
 			//@}

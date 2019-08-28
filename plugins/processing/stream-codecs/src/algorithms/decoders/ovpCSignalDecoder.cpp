@@ -49,7 +49,7 @@ void CSignalDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
 }
 
-void CSignalDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CSignalDecoder::processChildData(const void* pBuffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -58,12 +58,12 @@ void CSignalDecoder::processChildData(const void* pBuffer, const uint64_t ui64Bu
 	{
 		if (l_rTop == OVTK_NodeId_Header_Signal_SamplingRate)
 		{
-			op_ui64SamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize);
+			op_ui64SamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size);
 		}
 	}
 	else
 	{
-		CStreamedMatrixDecoder::processChildData(pBuffer, ui64BufferSize);
+		CStreamedMatrixDecoder::processChildData(pBuffer, size);
 	}
 }
 

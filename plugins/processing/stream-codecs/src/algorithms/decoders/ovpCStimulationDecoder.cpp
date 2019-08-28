@@ -57,7 +57,7 @@ void CStimulationDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	else { CEBMLBaseDecoder::openChild(rIdentifier); }
 }
 
-void CStimulationDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CStimulationDecoder::processChildData(const void* pBuffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -70,16 +70,16 @@ void CStimulationDecoder::processChildData(const void* pBuffer, const uint64_t u
 	{
 		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_NumberOfStimulations)
 		{
-			op_pStimulationSet->setStimulationCount(m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize));
+			op_pStimulationSet->setStimulationCount(m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size));
 			m_ui64StimulationIndex = 0;
 		}
-		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier) { op_pStimulationSet->setStimulationIdentifier(m_ui64StimulationIndex, m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize)); }
-		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date) { op_pStimulationSet->setStimulationDate(m_ui64StimulationIndex, m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize)); }
-		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration) { op_pStimulationSet->setStimulationDuration(m_ui64StimulationIndex, m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize)); }
+		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Identifier) { op_pStimulationSet->setStimulationIdentifier(m_ui64StimulationIndex, m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size)); }
+		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Date) { op_pStimulationSet->setStimulationDate(m_ui64StimulationIndex, m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size)); }
+		if (l_rTop == OVTK_NodeId_Buffer_Stimulation_Stimulation_Duration) { op_pStimulationSet->setStimulationDuration(m_ui64StimulationIndex, m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size)); }
 	}
 	else
 	{
-		CEBMLBaseDecoder::processChildData(pBuffer, ui64BufferSize);
+		CEBMLBaseDecoder::processChildData(pBuffer, size);
 	}
 }
 

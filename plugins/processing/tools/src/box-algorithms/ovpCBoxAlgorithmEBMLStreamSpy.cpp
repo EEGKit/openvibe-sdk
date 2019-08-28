@@ -125,9 +125,9 @@ void CBoxAlgorithmEBMLStreamSpy::openChild(const EBML::CIdentifier& rIdentifier)
 }
 
 template <class T>
-void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const uint64_t ui64BufferSize)
+void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const uint64_t size)
 {
-	const uint64_t n = (ui64BufferSize / sizeof(T));
+	const uint64_t n = (size / sizeof(T));
 	const T* buffer   = static_cast<const T*>(pBuffer);
 	for (uint64_t i = 0; i < std::min(m_ui64ExpandValuesCount, n); i++)
 	{
@@ -136,78 +136,78 @@ void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const u
 	if (m_ui64ExpandValuesCount < n) { getLogManager() << " ..."; }
 }
 
-void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const uint64_t size)
 {
 	const auto t = m_vType.find(m_vNodes.top());
 
 	if (t != m_vType.end())
 	{
-		if (t->second == "uinteger") getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[value:" << m_pReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize) << "]";
-		else if (t->second == "integer") getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[value:" << m_pReaderHelper->getSIntegerFromChildData(pBuffer, ui64BufferSize) << "]";
-		else if (t->second == "float") getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[value:" << m_pReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize) << "]";
-		else if (t->second == "string") getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[value:" << m_pReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize) << "]";
-		else if (t->second == "binary") getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[bytes:" << ui64BufferSize << "]";
+		if (t->second == "uinteger") getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[value:" << m_pReaderHelper->getUIntegerFromChildData(pBuffer, size) << "]";
+		else if (t->second == "integer") getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[value:" << m_pReaderHelper->getSIntegerFromChildData(pBuffer, size) << "]";
+		else if (t->second == "float") getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[value:" << m_pReaderHelper->getFloatFromChildData(pBuffer, size) << "]";
+		else if (t->second == "string") getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[value:" << m_pReaderHelper->getASCIIStringFromChildData(pBuffer, size) << "]";
+		else if (t->second == "binary") getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[bytes:" << size << "]";
 		else if (t->second == "binary(double)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<double>(pBuffer, ui64BufferSize);
+			processBinaryBlock<double>(pBuffer, size);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(float)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<float>(pBuffer, ui64BufferSize);
+			processBinaryBlock<float>(pBuffer, size);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(integer8)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<int8_t>(pBuffer, ui64BufferSize);
+			processBinaryBlock<int8_t>(pBuffer, size);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(integer16)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<int16_t>(pBuffer, ui64BufferSize);
+			processBinaryBlock<int16_t>(pBuffer, size);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(integer32)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<int>(pBuffer, ui64BufferSize);
+			processBinaryBlock<int>(pBuffer, size);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(integer64)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<int64_t>(pBuffer, ui64BufferSize);
+			processBinaryBlock<int64_t>(pBuffer, size);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(uinteger8)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<uint8_t>(pBuffer, ui64BufferSize);
+			processBinaryBlock<uint8_t>(pBuffer, size);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(uinteger16)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<uint16_t>(pBuffer, ui64BufferSize);
+			processBinaryBlock<uint16_t>(pBuffer, size);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(uinteger32)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<uint32_t>(pBuffer, ui64BufferSize);
+			processBinaryBlock<uint32_t>(pBuffer, size);
 			getLogManager() << "]";
 		}
 		else if (t->second == "binary(uinteger64)")
 		{
 			getLogManager() << "-[type:" << CString(t->second.c_str()) << "]-[values:";
-			processBinaryBlock<uint64_t>(pBuffer, ui64BufferSize);
+			processBinaryBlock<uint64_t>(pBuffer, size);
 			getLogManager() << "]";
 		}
-		else getLogManager() << "-[type:" << CString("unknown") << "]-[bytes:" << ui64BufferSize << "]";
+		else getLogManager() << "-[type:" << CString("unknown") << "]-[bytes:" << size << "]";
 	}
 	getLogManager() << "\n";
 }

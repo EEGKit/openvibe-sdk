@@ -63,7 +63,7 @@ namespace OpenViBEPlugins
 			bool initializeFile();
 			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
 			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override;
+			void processChildData(const void* pBuffer, const uint64_t size) override;
 			void closeChild() override;
 		};
 

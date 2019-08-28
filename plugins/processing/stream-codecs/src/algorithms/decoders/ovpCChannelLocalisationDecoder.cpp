@@ -48,7 +48,7 @@ void CChannelLocalisationDecoder::openChild(const EBML::CIdentifier& rIdentifier
 	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
 }
 
-void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -57,12 +57,12 @@ void CChannelLocalisationDecoder::processChildData(const void* pBuffer, const ui
 	{
 		if (l_rTop == OVTK_NodeId_Header_ChannelLocalisation_Dynamic)
 		{
-			op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize) ? true : false);
+			op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size) ? true : false);
 		}
 	}
 	else
 	{
-		CStreamedMatrixDecoder::processChildData(pBuffer, ui64BufferSize);
+		CStreamedMatrixDecoder::processChildData(pBuffer, size);
 	}
 }
 

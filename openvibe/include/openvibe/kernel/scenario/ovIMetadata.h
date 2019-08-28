@@ -55,7 +55,7 @@ namespace OpenViBE
 
 			/**
 			 * \brief Change the enclosed data
-			 * \param[in] sText The text this comment should contain
+			 * \param[in] data The text this comment should contain
 			 * \retval true in case of success.
 			 * \retval false in case of error.
 			 */

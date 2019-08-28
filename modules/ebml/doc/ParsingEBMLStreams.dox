@@ -91,12 +91,12 @@
  *   {
  *     m_oCurrent=rIdentifier;
  *   }
- *   virtual void processChildData(cosnt void* pBuffer, const uint64_t ui64BufferSize)
+ *   virtual void processChildData(cosnt void* pBuffer, const uint64_t size)
  *   {
  *     if(m_oCurrent==EBML_Identifier_DocType)
- *       std::cout << "Doc type:" << m_pReaderHelper->getASCIIStringFromChildData(pBuffer, ui64BufferSize) << std::endl;
+ *       std::cout << "Doc type:" << m_pReaderHelper->getASCIIStringFromChildData(pBuffer, size) << std::endl;
  *     if(m_oCurrent==EBML_Identifier_DocTypeVersion)
- *       std::cout << "Dox type version:" << m_pReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize) << std::endl;
+ *       std::cout << "Dox type version:" << m_pReaderHelper->getUIntegerFromChildData(pBuffer, size) << std::endl;
  *   }
  *   virtual void closeChild()
  *   {
@@ -114,11 +114,11 @@
  * \endcode
  *
  * Now suppose the user application got some data from the file
- * in a \c pBuffer of size \c ui64BufferSize ; it is sent to the
+ * in a \c pBuffer of size \c size ; it is sent to the
  * parser this way :
  *
  * \code
- * pReader->processData(pBuffer, ui64BufferSize);
+ * pReader->processData(pBuffer, size);
  * \endcode
  *
  * Finally, don't forget to release the object and to clean memory :

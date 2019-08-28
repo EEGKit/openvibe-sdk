@@ -57,11 +57,11 @@ public:
 		}
 	}
 
-	void write(const void* pBuffer, const uint64_t ui64BufferSize) override
+	void write(const void* pBuffer, const uint64_t size) override
 	{
 		if (m_File)
 		{
-			std::fwrite(pBuffer, size_t(ui64BufferSize), 1, m_File);
+			std::fwrite(pBuffer, size_t(size), 1, m_File);
 		}
 	}
 

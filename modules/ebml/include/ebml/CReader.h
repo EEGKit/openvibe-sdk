@@ -10,7 +10,7 @@ namespace EBML
 
 		explicit CReader(IReaderCallback& rReaderCallback);
 		~CReader() override;
-		bool processData(const void* pBuffer, uint64_t ui64BufferSize) override;
+		bool processData(const void* pBuffer, uint64_t size) override;
 		CIdentifier getCurrentNodeIdentifier() const override;
 		uint64_t getCurrentNodeSize() const override;
 		void release() override;

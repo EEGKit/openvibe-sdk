@@ -60,18 +60,18 @@ void CSpectrumDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
 }
 
-void CSpectrumDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CSpectrumDecoder::processChildData(const void* pBuffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 	if ((l_rTop == OVTK_NodeId_Header_Spectrum)
 		|| (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyBand_Deprecated)) { }
 	else if (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyBand_Start_Deprecated)
 	{
-		m_lowerFreq = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+		m_lowerFreq = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, size);
 	}
 	else if (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyBand_Stop_Deprecated)
 	{
-		double upperFreq            = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+		double upperFreq            = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, size);
 		double curFrequencyAbscissa = 0;
 		if (op_pFrequencyAbscissa->getDimensionSize(0) > 1)
 		{
@@ -90,15 +90,15 @@ void CSpectrumDecoder::processChildData(const void* pBuffer, const uint64_t ui64
 	}
 	else if (l_rTop == OVTK_NodeId_Header_Spectrum_FrequencyAbscissa)
 	{
-		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex] = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, ui64BufferSize);
+		op_pFrequencyAbscissa->getBuffer()[m_ui32FrequencyBandIndex] = m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, size);
 	}
 	else if (l_rTop == OVTK_NodeId_Header_Spectrum_SamplingRate)
 	{
-		op_pSamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize);
+		op_pSamplingRate = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size);
 	}
 	else
 	{
-		CStreamedMatrixDecoder::processChildData(pBuffer, ui64BufferSize);
+		CStreamedMatrixDecoder::processChildData(pBuffer, size);
 	}
 }
 

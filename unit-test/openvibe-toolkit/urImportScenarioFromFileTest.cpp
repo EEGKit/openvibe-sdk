@@ -105,23 +105,23 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 		// Test outputs
 		OVT_ASSERT(scenario.getOutputCount() == simpleScenarioOutputs.size(), "Imported scenario has wrong number of outputs");
 
-		for (uint32_t outputIndex = 0; outputIndex < uint32_t(simpleScenarioOutputs.size()); outputIndex += 1)
+		for (uint32_t idx = 0; idx < uint32_t(simpleScenarioOutputs.size()); idx += 1)
 		{
 			CIdentifier outputTypeId;
-			OVT_ASSERT(scenario.getOutputType(outputIndex, outputTypeId), "Cannot get output type");
-			OVT_ASSERT(outputTypeId == std::get<0>(simpleScenarioOutputs[outputIndex]), "Output has wrong type");
+			OVT_ASSERT(scenario.getOutputType(idx, outputTypeId), "Cannot get output type");
+			OVT_ASSERT(outputTypeId == std::get<0>(simpleScenarioOutputs[idx]), "Output has wrong type");
 
 			CString outputName;
-			OVT_ASSERT(scenario.getOutputName(outputIndex, outputName), "Cannot get output name");
-			OVT_ASSERT_STREQ(to_cppstring(outputName), std::get<1>(simpleScenarioOutputs[outputIndex]), "Output has wrong name");
+			OVT_ASSERT(scenario.getOutputName(idx, outputName), "Cannot get output name");
+			OVT_ASSERT_STREQ(to_cppstring(outputName), std::get<1>(simpleScenarioOutputs[idx]), "Output has wrong name");
 
 			CIdentifier targetBoxID;
 			uint32_t targetBoxOutputIndex;
 			CIdentifier targetBoxOutputIdentifier = OV_UndefinedIdentifier;
-			OVT_ASSERT(scenario.getScenarioOutputLink(outputIndex, targetBoxID, targetBoxOutputIndex), "Cannot get scenario output details by index");
-			OVT_ASSERT(scenario.getScenarioOutputLink(outputIndex, targetBoxID, targetBoxOutputIdentifier), "Cannot get scenario output details by  identifier");
-			OVT_ASSERT(targetBoxID == std::get<2>(simpleScenarioOutputs[outputIndex]), "Scenario output is not connected to the correct box");
-			OVT_ASSERT(targetBoxOutputIndex == std::get<3>(simpleScenarioOutputs[outputIndex]), "Scenario output is not connected to the correct box output");
+			OVT_ASSERT(scenario.getScenarioOutputLink(idx, targetBoxID, targetBoxOutputIndex), "Cannot get scenario output details by index");
+			OVT_ASSERT(scenario.getScenarioOutputLink(idx, targetBoxID, targetBoxOutputIdentifier), "Cannot get scenario output details by  identifier");
+			OVT_ASSERT(targetBoxID == std::get<2>(simpleScenarioOutputs[idx]), "Scenario output is not connected to the correct box");
+			OVT_ASSERT(targetBoxOutputIndex == std::get<3>(simpleScenarioOutputs[idx]), "Scenario output is not connected to the correct box output");
 		}
 
 		// Test links

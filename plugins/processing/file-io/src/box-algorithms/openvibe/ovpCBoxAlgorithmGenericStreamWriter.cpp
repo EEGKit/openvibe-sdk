@@ -127,7 +127,7 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 	return true;
 }
 
-void CBoxAlgorithmGenericStreamWriter::write(const void* pBuffer, const uint64_t ui64BufferSize)
+void CBoxAlgorithmGenericStreamWriter::write(const void* pBuffer, const uint64_t size)
 {
-	m_oSwap.append(reinterpret_cast<const uint8_t*>(pBuffer), ui64BufferSize);
+	m_oSwap.append(reinterpret_cast<const uint8_t*>(pBuffer), size);
 }

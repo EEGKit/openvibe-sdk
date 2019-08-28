@@ -46,7 +46,7 @@ namespace OpenViBEPlugins
 			EBML::CWriterHelper m_oWriterHelper;
 
 		private:
-			void write(const void* pBuffer, const uint64_t ui64BufferSize) override;
+			void write(const void* pBuffer, const uint64_t size) override;
 
 			OpenViBE::CMemoryBuffer m_oSwap;
 			std::ofstream m_oFile;

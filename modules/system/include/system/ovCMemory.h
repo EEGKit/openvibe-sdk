@@ -8,10 +8,10 @@ namespace System
 	{
 	public:
 
-		static bool copy(void* pTargetBuffer, const void* pSourceBuffer, uint64_t ui64BufferSize);
-		static bool move(void* pTargetBuffer, const void* pSourceBuffer, uint64_t ui64BufferSize);
-		static bool set(void* pTargetBuffer, uint64_t ui64BufferSize, uint8_t ui8Value);
-		static bool compare(const void* pSourceBuffer1, const void* pSourceBuffer2, uint64_t ui64BufferSize);
+		static bool copy(void* pTargetBuffer, const void* pSourceBuffer, uint64_t size);
+		static bool move(void* pTargetBuffer, const void* pSourceBuffer, uint64_t size);
+		static bool set(void* pTargetBuffer, uint64_t size, uint8_t ui8Value);
+		static bool compare(const void* pSourceBuffer1, const void* pSourceBuffer2, uint64_t size);
 
 		static bool hostToLittleEndian(uint16_t ui16Value, uint8_t* pBuffer);
 		static bool hostToLittleEndian(uint32_t ui32Value, uint8_t* pBuffer);

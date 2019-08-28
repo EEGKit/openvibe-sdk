@@ -100,7 +100,7 @@ namespace OpenViBEToolkit
 
 		// ====================================================================================================================================
 
-		virtual void appendOutputChunkData(const uint32_t ui32OutputIndex, const void* pBuffer, const uint64_t ui64BufferSize)
+		virtual void appendOutputChunkData(const uint32_t ui32OutputIndex, const void* pBuffer, const uint64_t size)
 		{
 			OpenViBE::Kernel::IBoxAlgorithmContext* l_pBoxAlgorithmContext = this->getBoxAlgorithmContext();
 			if (l_pBoxAlgorithmContext)
@@ -108,15 +108,15 @@ namespace OpenViBEToolkit
 				OpenViBE::Kernel::IBoxIO* l_pDynamicBoxContext = l_pBoxAlgorithmContext->getDynamicBoxContext();
 				if (l_pDynamicBoxContext)
 				{
-					l_pDynamicBoxContext->appendOutputChunkData(ui32OutputIndex, static_cast<const uint8_t*>(pBuffer), ui64BufferSize);
+					l_pDynamicBoxContext->appendOutputChunkData(ui32OutputIndex, static_cast<const uint8_t*>(pBuffer), size);
 				}
 			}
 		}
 
 		template <uint32_t ui32OutputIndex>
-		void appendOutputChunkData(const void* pBuffer, const uint64_t ui64BufferSize)
+		void appendOutputChunkData(const void* pBuffer, const uint64_t size)
 		{
-			appendOutputChunkData(ui32OutputIndex, pBuffer, ui64BufferSize);
+			appendOutputChunkData(ui32OutputIndex, pBuffer, size);
 		}
 
 		_IsDerivedFromClass_(CBoxAlgorithmParentClass, OVTK_ClassId_)

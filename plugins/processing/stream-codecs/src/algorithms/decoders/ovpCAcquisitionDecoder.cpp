@@ -82,7 +82,7 @@ void CAcquisitionDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	else { CEBMLBaseDecoder::openChild(rIdentifier); }
 }
 
-void CAcquisitionDecoder::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CAcquisitionDecoder::processChildData(const void* pBuffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -99,21 +99,21 @@ void CAcquisitionDecoder::processChildData(const void* pBuffer, const uint64_t u
 		|| (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits)
 	)
 	{
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_BufferDuration) { op_ui64BufferDuration = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, ui64BufferSize); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_ExperimentInformation) { this->appendMemoryBuffer(op_pExperimentInformationStream, pBuffer, ui64BufferSize); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_Signal) { this->appendMemoryBuffer(op_pSignalStream, pBuffer, ui64BufferSize); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_Stimulation) { this->appendMemoryBuffer(op_pStimulationStream, pBuffer, ui64BufferSize); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelLocalisation) { this->appendMemoryBuffer(op_pChannelLocalisationStream, pBuffer, ui64BufferSize); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelUnits) { this->appendMemoryBuffer(op_pChannelUnitsStream, pBuffer, ui64BufferSize); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation) { this->appendMemoryBuffer(op_pExperimentInformationStream, pBuffer, ui64BufferSize); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_Signal) { this->appendMemoryBuffer(op_pSignalStream, pBuffer, ui64BufferSize); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_Stimulation) { this->appendMemoryBuffer(op_pStimulationStream, pBuffer, ui64BufferSize); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation) { this->appendMemoryBuffer(op_pChannelLocalisationStream, pBuffer, ui64BufferSize); }
-		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits) { this->appendMemoryBuffer(op_pChannelUnitsStream, pBuffer, ui64BufferSize); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Header_BufferDuration) { op_ui64BufferDuration = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Header_ExperimentInformation) { this->appendMemoryBuffer(op_pExperimentInformationStream, pBuffer, size); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Header_Signal) { this->appendMemoryBuffer(op_pSignalStream, pBuffer, size); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Header_Stimulation) { this->appendMemoryBuffer(op_pStimulationStream, pBuffer, size); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelLocalisation) { this->appendMemoryBuffer(op_pChannelLocalisationStream, pBuffer, size); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Header_ChannelUnits) { this->appendMemoryBuffer(op_pChannelUnitsStream, pBuffer, size); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ExperimentInformation) { this->appendMemoryBuffer(op_pExperimentInformationStream, pBuffer, size); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_Signal) { this->appendMemoryBuffer(op_pSignalStream, pBuffer, size); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_Stimulation) { this->appendMemoryBuffer(op_pStimulationStream, pBuffer, size); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelLocalisation) { this->appendMemoryBuffer(op_pChannelLocalisationStream, pBuffer, size); }
+		if (l_rTop == OVTK_NodeId_Acquisition_Buffer_ChannelUnits) { this->appendMemoryBuffer(op_pChannelUnitsStream, pBuffer, size); }
 	}
 	else
 	{
-		CEBMLBaseDecoder::processChildData(pBuffer, ui64BufferSize);
+		CEBMLBaseDecoder::processChildData(pBuffer, size);
 	}
 }
 
@@ -138,12 +138,12 @@ void CAcquisitionDecoder::closeChild()
 	m_vNodes.pop();
 }
 
-void CAcquisitionDecoder::appendMemoryBuffer(IMemoryBuffer* pMemoryBuffer, const void* pBuffer, const uint64_t ui64BufferSize)
+void CAcquisitionDecoder::appendMemoryBuffer(IMemoryBuffer* pMemoryBuffer, const void* pBuffer, const uint64_t size)
 {
 	if (pMemoryBuffer)
 	{
 		uint64_t l_ui64CurrentBufferSize = pMemoryBuffer->getSize();
-		pMemoryBuffer->setSize(l_ui64CurrentBufferSize + ui64BufferSize, false);
-		System::Memory::copy(pMemoryBuffer->getDirectPointer() + l_ui64CurrentBufferSize, pBuffer, ui64BufferSize);
+		pMemoryBuffer->setSize(l_ui64CurrentBufferSize + size, false);
+		System::Memory::copy(pMemoryBuffer->getDirectPointer() + l_ui64CurrentBufferSize, pBuffer, size);
 	}
 }

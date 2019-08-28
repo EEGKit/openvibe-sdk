@@ -11,7 +11,7 @@ namespace EBML
 		explicit CWriter(IWriterCallback& rWriterCallback);
 		~CWriter() override;
 		bool openChild(const CIdentifier& rIdentifier) override;
-		bool setChildData(const void* pBuffer, const uint64_t ui64BufferSize) override;
+		bool setChildData(const void* pBuffer, const uint64_t size) override;
 		bool closeChild() override;
 		void release() override;
 

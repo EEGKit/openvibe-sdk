@@ -15,10 +15,10 @@ namespace EBML
 		{
 		public:
 			CReaderHelper();
-			uint64_t getUIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
-			int64_t getSIntegerFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
-			double getFloatFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
-			const char* getASCIIStringFromChildData(const void* pBuffer, uint64_t ui64BufferSize) override;
+			uint64_t getUIntegerFromChildData(const void* pBuffer, uint64_t size) override;
+			int64_t getSIntegerFromChildData(const void* pBuffer, uint64_t size) override;
+			double getFloatFromChildData(const void* pBuffer, uint64_t size) override;
+			const char* getASCIIStringFromChildData(const void* pBuffer, uint64_t size) override;
 			void release() override;
 
 			std::string m_sASCIIString;
@@ -28,10 +28,10 @@ namespace EBML
 
 CReaderHelper::CReaderHelper() {}
 
-uint64_t CReaderHelper::getUIntegerFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+uint64_t CReaderHelper::getUIntegerFromChildData(const void* pBuffer, const uint64_t size)
 {
 	uint64_t result = 0;
-	for (uint64_t i = 0; i < ui64BufferSize; i++)
+	for (uint64_t i = 0; i < size; i++)
 	{
 		result <<= 8;
 		result |= ((unsigned char*)pBuffer)[i];
@@ -39,12 +39,12 @@ uint64_t CReaderHelper::getUIntegerFromChildData(const void* pBuffer, const uint
 	return result;
 }
 
-int64_t CReaderHelper::getSIntegerFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+int64_t CReaderHelper::getSIntegerFromChildData(const void* pBuffer, const uint64_t size)
 {
 	int64_t result = 0;
-	if (ui64BufferSize != 0 && ((unsigned char*)pBuffer)[0] & 0x80) { result = -1; }
+	if (size != 0 && ((unsigned char*)pBuffer)[0] & 0x80) { result = -1; }
 
-	for (uint64_t i = 0; i < ui64BufferSize; i++)
+	for (uint64_t i = 0; i < size; i++)
 	{
 		result <<= 8;
 		result |= ((unsigned char*)pBuffer)[i];
@@ -52,27 +52,27 @@ int64_t CReaderHelper::getSIntegerFromChildData(const void* pBuffer, const uint6
 	return result;
 }
 
-double CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+double CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64_t size)
 {
 	float l_f32Result;
 	double l_f64Result;
 	int l_ui32Result;
 	int64_t l_ui64Result;
 
-	switch (ui64BufferSize)
+	switch (size)
 	{
 		case 0:
 			l_f64Result = 0;
 			break;
 
 		case 4:
-			l_ui32Result = uint32_t(getUIntegerFromChildData(pBuffer, ui64BufferSize));
+			l_ui32Result = uint32_t(getUIntegerFromChildData(pBuffer, size));
 			memcpy(&l_f32Result, &l_ui32Result, sizeof(l_f32Result));
 			l_f64Result = l_f32Result;
 			break;
 
 		case 8:
-			l_ui64Result = uint64_t(getUIntegerFromChildData(pBuffer, ui64BufferSize));
+			l_ui64Result = uint64_t(getUIntegerFromChildData(pBuffer, size));
 			memcpy(&l_f64Result, &l_ui64Result, sizeof(l_f64Result));
 			break;
 
@@ -88,11 +88,11 @@ double CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64_t 
 	return l_f64Result;
 }
 
-const char* CReaderHelper::getASCIIStringFromChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+const char* CReaderHelper::getASCIIStringFromChildData(const void* pBuffer, const uint64_t size)
 {
-	if (ui64BufferSize)
+	if (size)
 	{
-		m_sASCIIString.assign((char*)pBuffer, size_t(ui64BufferSize));
+		m_sASCIIString.assign((char*)pBuffer, size_t(size));
 	}
 	else { m_sASCIIString = ""; }
 	return m_sASCIIString.c_str();

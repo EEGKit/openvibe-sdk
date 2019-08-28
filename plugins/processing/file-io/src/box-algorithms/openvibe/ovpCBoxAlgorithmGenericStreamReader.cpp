@@ -163,28 +163,28 @@ void CBoxAlgorithmGenericStreamReader::openChild(const EBML::CIdentifier& rIdent
 	}
 }
 
-void CBoxAlgorithmGenericStreamReader::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
+void CBoxAlgorithmGenericStreamReader::processChildData(const void* pBuffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
 	// Uncomment this when ebml version will be used
 	//if(l_rTop == EBML_Identifier_EBMLVersion)
 	//{
-	//	const uint64_t l_ui64VersionNumber=(uint64_t)m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize);
+	//	const uint64_t l_ui64VersionNumber=(uint64_t)m_oReaderHelper.getUIntegerFromChildData(pBuffer, size);
 	//}
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Header_Compression)
 	{
-		if (m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize) != 0) { OV_WARNING_K("Impossible to use compression as it is not yet implemented"); }
+		if (m_oReaderHelper.getUIntegerFromChildData(pBuffer, size) != 0) { OV_WARNING_K("Impossible to use compression as it is not yet implemented"); }
 	}
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Header_StreamType)
 	{
-		m_vStreamIndexToTypeIdentifier[m_vStreamIndexToTypeIdentifier.size()] = m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize);
+		m_vStreamIndexToTypeIdentifier[m_vStreamIndexToTypeIdentifier.size()] = m_oReaderHelper.getUIntegerFromChildData(pBuffer, size);
 	}
 
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_StreamIndex)
 	{
-		uint32_t l_ui32StreamIndex = (uint32_t)m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize);
+		uint32_t l_ui32StreamIndex = (uint32_t)m_oReaderHelper.getUIntegerFromChildData(pBuffer, size);
 		if (m_vStreamIndexToTypeIdentifier.find(l_ui32StreamIndex) != m_vStreamIndexToTypeIdentifier.end())
 		{
 			m_ui32OutputIndex = m_vStreamIndexToOutputIndex[l_ui32StreamIndex];
@@ -192,16 +192,16 @@ void CBoxAlgorithmGenericStreamReader::processChildData(const void* pBuffer, con
 	}
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_StartTime)
 	{
-		m_ui64StartTime = m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize);
+		m_ui64StartTime = m_oReaderHelper.getUIntegerFromChildData(pBuffer, size);
 	}
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_EndTime)
 	{
-		m_ui64EndTime = m_oReaderHelper.getUIntegerFromChildData(pBuffer, ui64BufferSize);
+		m_ui64EndTime = m_oReaderHelper.getUIntegerFromChildData(pBuffer, size);
 	}
 	if (l_rTop == OVP_NodeId_OpenViBEStream_Buffer_Content)
 	{
 		m_oPendingChunk.setSize(0, true);
-		m_oPendingChunk.append(reinterpret_cast<const uint8_t*>(pBuffer), ui64BufferSize);
+		m_oPendingChunk.append(reinterpret_cast<const uint8_t*>(pBuffer), size);
 	}
 }
 

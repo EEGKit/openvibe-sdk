@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
 			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, const uint64_t ui64BufferSize) override;
+			void processChildData(const void* pBuffer, const uint64_t size) override;
 			void closeChild() override;
 			bool processInput(const uint32_t index) override;
 			bool process() override;
@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			template <class T>
-			void processBinaryBlock(const void* pBuffer, uint64_t ui64BufferSize);
+			void processBinaryBlock(const void* pBuffer, uint64_t size);
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 			std::map<EBML::CIdentifier, std::string> m_vName;
