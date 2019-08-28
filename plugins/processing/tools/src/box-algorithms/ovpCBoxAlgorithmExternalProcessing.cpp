@@ -387,7 +387,7 @@ bool CBoxAlgorithmExternalProcessing::process()
 std::string CBoxAlgorithmExternalProcessing::generateConnectionID(size_t size)
 {
 	std::default_random_engine generator{ std::random_device()() };
-	const std::uniform_int_distribution<int> character(0, 34);
+	std::uniform_int_distribution<int> character(0, 34);
 
 	std::string connectionID;
 
