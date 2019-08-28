@@ -37,11 +37,11 @@ namespace OpenViBE
 				{
 					const char* fullFileName = rEntry.getName();
 
-					CIdentifier scenarioId, metaboxId, metaboxHash;
-					this->getKernelContext().getScenarioManager().importScenarioFromFile(scenarioId, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
-					if (scenarioId != OV_UndefinedIdentifier)
+					CIdentifier scenarioID, metaboxId, metaboxHash;
+					this->getKernelContext().getScenarioManager().importScenarioFromFile(scenarioID, OV_ScenarioImportContext_OnLoadMetaboxImport, fullFileName);
+					if (scenarioID != OV_UndefinedIdentifier)
 					{
-						IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioId);
+						IScenario& metaboxScenario = this->getKernelContext().getScenarioManager().getScenario(scenarioID);
 						bool isValid               = metaboxId.fromString(metaboxScenario.getAttributeValue(OVP_AttributeId_Metabox_Identifier));
 						if (isValid && metaboxScenario.getAttributeValue(OV_AttributeId_Scenario_Name) != CString())
 						{
@@ -60,7 +60,7 @@ namespace OpenViBE
 							this->getKernelContext().getLogManager() << LogLevel_Warning << "The metabox file " << fullFileName << " is missing elements. Please check it.\n";
 						}
 					}
-					this->getKernelContext().getScenarioManager().releaseScenario(scenarioId);
+					this->getKernelContext().getScenarioManager().releaseScenario(scenarioID);
 				}
 				return true;
 			}

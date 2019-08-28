@@ -311,7 +311,7 @@ namespace OpenViBEPlugins
 							&& (id != OVTK_Algorithm_Classifier_InputParameterId_NumberOfClasses)
 							&& (id != OVTK_Algorithm_Classifier_InputParameterId_ExtraParameter))
 						{
-							OpenViBE::CIdentifier typeId;
+							OpenViBE::CIdentifier typeID;
 							OpenViBE::CString paramName         = m_pClassifier->getInputParameterName(id);
 							OpenViBE::Kernel::IParameter* param = m_pClassifier->getInputParameter(id);
 							OpenViBE::Kernel::TParameterHandler<int64_t> ip_i64Parameter(param);
@@ -325,27 +325,27 @@ namespace OpenViBEPlugins
 							{
 								case OpenViBE::Kernel::ParameterType_Enumeration:
 									strcpy(buffer, this->getTypeManager().getEnumerationEntryNameFromValue(param->getSubTypeIdentifier(), ip_ui64Parameter).toASCIIString());
-									typeId = param->getSubTypeIdentifier();
+									typeID = param->getSubTypeIdentifier();
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Integer:
 								case OpenViBE::Kernel::ParameterType_UInteger:
 									sprintf(buffer, "%li", int64_t(ip_i64Parameter));
-									typeId = OV_TypeId_Integer;
+									typeID = OV_TypeId_Integer;
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Boolean:
 									sprintf(buffer, "%s", (bool(ip_bParameter)) ? "true" : "false");
-									typeId = OV_TypeId_Boolean;
+									typeID = OV_TypeId_Boolean;
 									break;
 
 								case OpenViBE::Kernel::ParameterType_Float:
 									sprintf(buffer, "%lf", double(ip_f64Parameter));
-									typeId = OV_TypeId_Float;
+									typeID = OV_TypeId_Float;
 									break;
 								case OpenViBE::Kernel::ParameterType_String:
 									sprintf(buffer, "%s", (static_cast<OpenViBE::CString*>(ip_sParameter))->toASCIIString());
-									typeId = OV_TypeId_String;
+									typeID = OV_TypeId_String;
 									break;
 								default:
 									std::cout << "Invalid parameter type " << param->getType() << "\n";
@@ -357,7 +357,7 @@ namespace OpenViBEPlugins
 							{
 								// @FIXME argh, the -2 is a hard coding that the classifier trainer has 2 settings after the classifier setting... ouch
 								DEBUG_PRINT(std::cout << "Adding setting (case A) " << paramName << " : " << buffer << " to slot " << rBox.getSettingCount()-2 << "\n";)
-								rBox.addSetting(paramName, typeId, buffer, rBox.getSettingCount() - 2);
+								rBox.addSetting(paramName, typeID, buffer, rBox.getSettingCount() - 2);
 								i++;
 							}
 						}

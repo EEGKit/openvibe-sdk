@@ -36,11 +36,11 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 
 		std::string scenarioFilePath = std::string(dataDirectory) + "/" + s_SimpleScenarioFileName;
 
-		CIdentifier scenarioId;
-		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioId, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter), "Failed to import the scenario file");
-		OVT_ASSERT(scenarioId != OV_UndefinedIdentifier, "Scenario importer failed to import the scenario but failed to report an error");
+		CIdentifier scenarioID;
+		OVT_ASSERT(context->getScenarioManager().importScenarioFromFile(scenarioID, scenarioFilePath.c_str(), OVP_GD_ClassId_Algorithm_XMLScenarioImporter), "Failed to import the scenario file");
+		OVT_ASSERT(scenarioID != OV_UndefinedIdentifier, "Scenario importer failed to import the scenario but failed to report an error");
 
-		auto& scenario = context->getScenarioManager().getScenario(scenarioId);
+		auto& scenario = context->getScenarioManager().getScenario(scenarioID);
 
 		// Test scenario attributes
 		for (auto& attribute : simpleScenarioAttributes)
@@ -93,13 +93,13 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 			OVT_ASSERT(scenario.getInputName(index, inputName), "Cannot get input name");
 			OVT_ASSERT_STREQ(to_cppstring(inputName), std::get<1>(simpleScenarioInputs[index]), "Input has wrong name");
 
-			CIdentifier targetBoxId;
-			uint32_t targetBoxInputIndex;
+			CIdentifier targetBoxID;
+			uint32_t targetBoxInputIdx;
 			CIdentifier targetBoxInputIdentifier = OV_UndefinedIdentifier;
-			OVT_ASSERT(scenario.getScenarioInputLink(index, targetBoxId, targetBoxInputIndex), "Cannot get scenario input details by index");
-			OVT_ASSERT(scenario.getScenarioInputLink(index, targetBoxId, targetBoxInputIdentifier), "Cannot get scenario input details by identifier");
-			OVT_ASSERT(targetBoxId == std::get<2>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box");
-			OVT_ASSERT(targetBoxInputIndex == std::get<3>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box input");
+			OVT_ASSERT(scenario.getScenarioInputLink(index, targetBoxID, targetBoxInputIdx), "Cannot get scenario input details by index");
+			OVT_ASSERT(scenario.getScenarioInputLink(index, targetBoxID, targetBoxInputIdentifier), "Cannot get scenario input details by identifier");
+			OVT_ASSERT(targetBoxID == std::get<2>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box");
+			OVT_ASSERT(targetBoxInputIdx == std::get<3>(simpleScenarioInputs[index]), "Scenario input is not connected to the correct box input");
 		}
 
 		// Test outputs
@@ -115,12 +115,12 @@ int urImportScenarioFromFileTest(int argc, char* argv[])
 			OVT_ASSERT(scenario.getOutputName(outputIndex, outputName), "Cannot get output name");
 			OVT_ASSERT_STREQ(to_cppstring(outputName), std::get<1>(simpleScenarioOutputs[outputIndex]), "Output has wrong name");
 
-			CIdentifier targetBoxId;
+			CIdentifier targetBoxID;
 			uint32_t targetBoxOutputIndex;
 			CIdentifier targetBoxOutputIdentifier = OV_UndefinedIdentifier;
-			OVT_ASSERT(scenario.getScenarioOutputLink(outputIndex, targetBoxId, targetBoxOutputIndex), "Cannot get scenario output details by index");
-			OVT_ASSERT(scenario.getScenarioOutputLink(outputIndex, targetBoxId, targetBoxOutputIdentifier), "Cannot get scenario output details by  identifier");
-			OVT_ASSERT(targetBoxId == std::get<2>(simpleScenarioOutputs[outputIndex]), "Scenario output is not connected to the correct box");
+			OVT_ASSERT(scenario.getScenarioOutputLink(outputIndex, targetBoxID, targetBoxOutputIndex), "Cannot get scenario output details by index");
+			OVT_ASSERT(scenario.getScenarioOutputLink(outputIndex, targetBoxID, targetBoxOutputIdentifier), "Cannot get scenario output details by  identifier");
+			OVT_ASSERT(targetBoxID == std::get<2>(simpleScenarioOutputs[outputIndex]), "Scenario output is not connected to the correct box");
 			OVT_ASSERT(targetBoxOutputIndex == std::get<3>(simpleScenarioOutputs[outputIndex]), "Scenario output is not connected to the correct box output");
 		}
 

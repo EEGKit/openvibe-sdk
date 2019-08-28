@@ -26,8 +26,8 @@ namespace OpenViBEPlugins
 			// Prepares decoders
 			for (uint32_t i = 0; i < m_ui32NumberOfInput; i++)
 			{
-				TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>* l_pStreamedMatrixDecoder = new TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>();
-				m_pStreamedMatrixDecoder.push_back(l_pStreamedMatrixDecoder);
+				TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>* streamedMatrixDecoder = new TStreamedMatrixDecoder<CBoxAlgorithmFeatureAggregator>();
+				m_pStreamedMatrixDecoder.push_back(streamedMatrixDecoder);
 				m_pStreamedMatrixDecoder.back()->initialize(*this, i);
 			}
 			m_pFeatureVectorEncoder = new TFeatureVectorEncoder<CBoxAlgorithmFeatureAggregator>;

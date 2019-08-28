@@ -9,15 +9,14 @@ using namespace Plugins;
 using namespace OpenViBEPlugins;
 using namespace FileIO;
 
-CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter()
-	: m_oWriter(*this) {}
+CBoxAlgorithmGenericStreamWriter::CBoxAlgorithmGenericStreamWriter() : m_oWriter(*this) {}
 
 bool CBoxAlgorithmGenericStreamWriter::initialize()
 {
 	m_sFilename            = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	bool l_bUseCompression = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	const bool compression = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	if (l_bUseCompression) { OV_WARNING_K("Impossible to use compression as it is not yet implemented"); }
+	if (compression) { OV_WARNING_K("Impossible to use compression as it is not yet implemented"); }
 
 	return true;
 }
@@ -30,7 +29,7 @@ bool CBoxAlgorithmGenericStreamWriter::uninitialize()
 
 bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
+	const IBox& boxContext = this->getStaticBoxContext();
 
 	m_oSwap.setSize(0, true);
 
@@ -54,10 +53,10 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 	m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header_Compression);
 	m_oWriterHelper.setUIntegerAsChildData(0 /* compression flag */);
 	m_oWriterHelper.closeChild();
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < boxContext.getInputCount(); i++)
 	{
 		CIdentifier l_oIdentifier;
-		l_rStaticBoxContext.getInputType(i, l_oIdentifier);
+		boxContext.getInputType(i, l_oIdentifier);
 
 		m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Header_StreamType);
 		m_oWriterHelper.setUIntegerAsChildData(l_oIdentifier.toUInteger());
@@ -70,7 +69,7 @@ bool CBoxAlgorithmGenericStreamWriter::generateFileHeader()
 
 	OV_ERROR_UNLESS_KRF(m_oFile.good(), "Error opening file [" << m_sFilename << "] for writing", OpenViBE::Kernel::ErrorType::BadFileWrite);
 
-	m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), (std::streamsize)m_oSwap.getSize());
+	m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), std::streamsize(m_oSwap.getSize()));
 
 	m_bIsHeaderGenerate = true;
 	return true;
@@ -84,8 +83,8 @@ bool CBoxAlgorithmGenericStreamWriter::processInput(const uint32_t index)
 
 bool CBoxAlgorithmGenericStreamWriter::process()
 {
-	const IBox& l_rStaticBoxContext = this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext    = this->getDynamicBoxContext();
+	IBoxIO& boxContext    = this->getDynamicBoxContext();
+	const uint32_t nInput = this->getStaticBoxContext().getInputCount();
 
 	if (!m_bIsHeaderGenerate)
 	{
@@ -94,9 +93,9 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 
 	m_oSwap.setSize(0, true);
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < nInput; i++)
 	{
-		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
 		{
 			m_oWriterHelper.connect(&m_oWriter);
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer);
@@ -104,23 +103,23 @@ bool CBoxAlgorithmGenericStreamWriter::process()
 			m_oWriterHelper.setUIntegerAsChildData(i);
 			m_oWriterHelper.closeChild();
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_StartTime);
-			m_oWriterHelper.setUIntegerAsChildData(l_rDynamicBoxContext.getInputChunkStartTime(i, j));
+			m_oWriterHelper.setUIntegerAsChildData(boxContext.getInputChunkStartTime(i, j));
 			m_oWriterHelper.closeChild();
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_EndTime);
-			m_oWriterHelper.setUIntegerAsChildData(l_rDynamicBoxContext.getInputChunkEndTime(i, j));
+			m_oWriterHelper.setUIntegerAsChildData(boxContext.getInputChunkEndTime(i, j));
 			m_oWriterHelper.closeChild();
 			m_oWriterHelper.openChild(OVP_NodeId_OpenViBEStream_Buffer_Content);
-			m_oWriterHelper.setBinaryAsChildData(l_rDynamicBoxContext.getInputChunk(i, j)->getDirectPointer(), l_rDynamicBoxContext.getInputChunk(i, j)->getSize());
+			m_oWriterHelper.setBinaryAsChildData(boxContext.getInputChunk(i, j)->getDirectPointer(), boxContext.getInputChunk(i, j)->getSize());
 			m_oWriterHelper.closeChild();
 			m_oWriterHelper.closeChild();
 			m_oWriterHelper.disconnect();
-			l_rDynamicBoxContext.markInputAsDeprecated(i, j);
+			boxContext.markInputAsDeprecated(i, j);
 		}
 	}
 
 	if (m_oSwap.getSize() != 0)
 	{
-		m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), (std::streamsize)m_oSwap.getSize());
+		m_oFile.write(reinterpret_cast<const char*>(m_oSwap.getDirectPointer()), std::streamsize(m_oSwap.getSize()));
 
 		OV_ERROR_UNLESS_KRF(m_oFile.good(), "Error opening file [" << m_sFilename << "] for writing", OpenViBE::Kernel::ErrorType::BadFileWrite);
 	}

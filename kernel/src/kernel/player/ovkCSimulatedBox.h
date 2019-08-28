@@ -68,7 +68,7 @@ namespace OpenViBE
 			CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& rScheduler);
 			~CSimulatedBox() override;
 
-			virtual bool setScenarioIdentifier(const CIdentifier& scenarioId);
+			virtual bool setScenarioIdentifier(const CIdentifier& scenarioID);
 
 			virtual bool getBoxIdentifier(CIdentifier& boxId) const;
 

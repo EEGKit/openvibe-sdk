@@ -60,13 +60,13 @@ CScheduler::~CScheduler() { this->uninitialize(); }
 //___________________________________________________________________//
 //                                                                   //
 
-bool CScheduler::setScenario(const CIdentifier& scenarioId)
+bool CScheduler::setScenario(const CIdentifier& scenarioID)
 {
 	this->getLogManager() << LogLevel_Trace << "Scheduler setScenario\n";
 
 	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a scheduler with non-empty resources", ErrorType::BadCall);
 
-	m_oScenarioIdentifier = scenarioId;
+	m_oScenarioIdentifier = scenarioID;
 
 	// We need to flatten the scenario here as the application using the scheduler needs time
 	// between the moment the visualisation tree is complete and the moment when boxes are initialized.
@@ -123,14 +123,14 @@ bool CScheduler::flattenScenario()
 			m_pScenario->getBoxIdentifierList(&identifierList, &nbElems);
 			for (size_t i = 0; i < nbElems; ++i)
 			{
-				const CIdentifier boxIdentifier = identifierList[i];
-				const IBox* box                 = m_pScenario->getBoxDetails(boxIdentifier);
+				const CIdentifier boxID = identifierList[i];
+				const IBox* box                 = m_pScenario->getBoxDetails(boxID);
 
 				if (box->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 				{
 					if (box->hasAttribute(OV_AttributeId_Box_Disabled))	// We only process this box if it is not disabled
 					{
-						m_pScenario->removeBox(boxIdentifier);
+						m_pScenario->removeBox(boxID);
 					}
 					else if (box->hasAttribute(OVP_AttributeId_Metabox_Identifier)) // We verify that the box actually has a backend scenario
 					{
@@ -141,19 +141,19 @@ bool CScheduler::flattenScenario()
 						if (FS::Files::fileExists(metaboxScenarioPath.toASCIIString()))
 						{
 							// If the scenario exists we will handle this metabox
-							l_vScenarioMetabox.push_back(boxIdentifier);
+							l_vScenarioMetabox.push_back(boxID);
 						}
 						else
 						{
 							// Non-utilisable metaboxes can be easily removed
 							OV_WARNING_K("The scenario for metabox [" << metaboxId.toString().toASCIIString() << "] is missing.");
-							m_pScenario->removeBox(boxIdentifier);
+							m_pScenario->removeBox(boxID);
 						}
 					}
 					else
 					{
-						OV_WARNING_K("The metabox [" << boxIdentifier << "] is missing its identifier field.");
-						m_pScenario->removeBox(boxIdentifier);
+						OV_WARNING_K("The metabox [" << boxID << "] is missing its identifier field.");
+						m_pScenario->removeBox(boxID);
 					}
 				}
 			}
@@ -394,10 +394,10 @@ SchedulerInitializationCode CScheduler::initialize()
 
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			const CIdentifier boxIdentifier = identifierList[i];
-			const IBox* l_pBox              = m_pScenario->getBoxDetails(boxIdentifier);
+			const CIdentifier boxID = identifierList[i];
+			const IBox* l_pBox              = m_pScenario->getBoxDetails(boxID);
 			OV_ERROR_UNLESS_K(!m_pScenario->hasOutdatedBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsOutdated}", false),
-							  "Box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "] should be updated",
+							  "Box [" << l_pBox->getName() << "] with class identifier [" << boxID.toString() << "] should be updated",
 							  ErrorType::Internal, SchedulerInitialization_Failed);
 
 			OV_ERROR_UNLESS_K(l_pBox->getAlgorithmClassIdentifier() != OVP_ClassId_BoxAlgorithm_Metabox,
@@ -407,17 +407,17 @@ SchedulerInitializationCode CScheduler::initialize()
 			const IPluginObjectDesc* l_pBoxDesc = this->getPluginManager().getPluginObjectDescCreating(l_pBox->getAlgorithmClassIdentifier());
 
 			OV_ERROR_UNLESS_K(!(l_pBox->hasAttribute(OV_AttributeId_Box_Disabled) && this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsDisabled}", false)),
-							  "Disabled box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "] detected in the scenario",
+							  "Disabled box [" << l_pBox->getName() << "] with class identifier [" << boxID.toString() << "] detected in the scenario",
 							  ErrorType::Internal, SchedulerInitialization_Failed);
 
 			if (!l_pBox->hasAttribute(OV_AttributeId_Box_Disabled))
 			{
-				OV_ERROR_UNLESS_K(l_pBoxDesc != nullptr, "Failed to create runtime box [" << l_pBox->getName() << "] with class identifier [" << boxIdentifier.toString() << "]",
+				OV_ERROR_UNLESS_K(l_pBoxDesc != nullptr, "Failed to create runtime box [" << l_pBox->getName() << "] with class identifier [" << boxID.toString() << "]",
 								  ErrorType::BadResourceCreation, SchedulerInitialization_Failed);
 
 				CSimulatedBox* l_pSimulatedBox = new CSimulatedBox(this->getKernelContext(), *this);
 				l_pSimulatedBox->setScenarioIdentifier(m_oScenarioIdentifier);
-				l_pSimulatedBox->setBoxIdentifier(boxIdentifier);
+				l_pSimulatedBox->setBoxIdentifier(boxID);
 
 
 				// Set priority so boxes execute in this order
@@ -455,8 +455,8 @@ SchedulerInitializationCode CScheduler::initialize()
 					l_iPriority = 0;
 				}
 
-				m_vSimulatedBox[std::make_pair(-l_iPriority, boxIdentifier)] = l_pSimulatedBox;
-				m_vSimulatedBoxChrono[boxIdentifier].reset(uint32_t(m_ui64Frequency));
+				m_vSimulatedBox[std::make_pair(-l_iPriority, boxID)] = l_pSimulatedBox;
+				m_vSimulatedBoxChrono[boxID].reset(uint32_t(m_ui64Frequency));
 			}
 		}
 		m_pScenario->releaseIdentifierList(identifierList);
@@ -583,18 +583,18 @@ bool CScheduler::loop()
 	return l_bBoxProcessing;
 }
 
-bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxIdentifier)
+bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxID)
 {
 	if (simulatedBox)
 	{
-		OV_ERROR_UNLESS_KRF(simulatedBox->processClock(), "Process clock failed for box with id " << boxIdentifier.toString(), ErrorType::Internal);
+		OV_ERROR_UNLESS_KRF(simulatedBox->processClock(), "Process clock failed for box with id " << boxID.toString(), ErrorType::Internal);
 		if (simulatedBox->isReadyToProcess())
 		{
-			OV_ERROR_UNLESS_KRF(simulatedBox->process(), "Process failed for box with id " << boxIdentifier.toString(), ErrorType::Internal);
+			OV_ERROR_UNLESS_KRF(simulatedBox->process(), "Process failed for box with id " << boxID.toString(), ErrorType::Internal);
 		}
 
 		//if the box is muted we still have to erase chunks that arrives at the input
-		map<uint32_t, list<CChunk>>& l_rSimulatedBoxInput = m_vSimulatedBoxInput[boxIdentifier];
+		map<uint32_t, list<CChunk>>& l_rSimulatedBoxInput = m_vSimulatedBoxInput[boxID];
 		for (map<uint32_t, list<CChunk>>::iterator itSimulatedBoxInput = l_rSimulatedBoxInput.begin(); itSimulatedBoxInput != l_rSimulatedBoxInput.end(); ++itSimulatedBoxInput)
 		{
 			list<CChunk>& l_rSimulatedBoxInputChunkList = itSimulatedBoxInput->second;
@@ -602,12 +602,12 @@ bool CScheduler::processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxI
 			for (itSimulatedBoxInputChunkList = l_rSimulatedBoxInputChunkList.begin(); itSimulatedBoxInputChunkList != l_rSimulatedBoxInputChunkList.end(); ++itSimulatedBoxInputChunkList)
 			{
 				OV_ERROR_UNLESS_KRF(simulatedBox->processInput(itSimulatedBoxInput->first, *itSimulatedBoxInputChunkList),
-									"Process failed for box with id " << boxIdentifier.toString() << " on input " << itSimulatedBoxInput->first,
+									"Process failed for box with id " << boxID.toString() << " on input " << itSimulatedBoxInput->first,
 									ErrorType::Internal);
 
 				if (simulatedBox->isReadyToProcess())
 				{
-					OV_ERROR_UNLESS_KRF(simulatedBox->process(), "Process failed for box with id " << boxIdentifier.toString(), ErrorType::Internal);
+					OV_ERROR_UNLESS_KRF(simulatedBox->process(), "Process failed for box with id " << boxID.toString(), ErrorType::Internal);
 				}
 			}
 			l_rSimulatedBoxInputChunkList.clear();

@@ -213,8 +213,8 @@ bool CKernelContext::uninitialize()
 	// As releaseScenario() can call into Plugin Manager we have to clear the scenario manager
 	// before destroying the Plugin Manager. We can not destroy the Scenario Manager first
 	// before Plugin Manager destructor needs it.
-	CIdentifier scenarioId;
-	while ((scenarioId = m_pScenarioManager->getNextScenarioIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier) { m_pScenarioManager->releaseScenario(scenarioId); }
+	CIdentifier scenarioID;
+	while ((scenarioID = m_pScenarioManager->getNextScenarioIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier) { m_pScenarioManager->releaseScenario(scenarioID); }
 
 	CIdentifier algorithmIdentifier;
 	while ((algorithmIdentifier = m_pAlgorithmManager->getNextAlgorithmIdentifier(OV_UndefinedIdentifier)) != OV_UndefinedIdentifier) { m_pAlgorithmManager->releaseAlgorithm(algorithmIdentifier); }

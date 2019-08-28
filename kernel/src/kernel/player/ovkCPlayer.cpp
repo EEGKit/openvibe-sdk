@@ -59,7 +59,7 @@ CPlayer::~CPlayer()
 //___________________________________________________________________//
 //                                                                   //
 
-bool CPlayer::setScenario(const CIdentifier& scenarioId, const CNameValuePairList* pLocalConfigurationTokens)
+bool CPlayer::setScenario(const CIdentifier& scenarioID, const CNameValuePairList* pLocalConfigurationTokens)
 {
 	OV_ERROR_UNLESS_KRF(!this->isHoldingResources(), "Trying to configure a player with non-empty resources", ErrorType::BadCall);
 
@@ -71,7 +71,7 @@ bool CPlayer::setScenario(const CIdentifier& scenarioId, const CNameValuePairLis
 	delete m_pRuntimeConfigurationManager;
 	m_pRuntimeConfigurationManager = new CConfigurationManager(this->getKernelContext(), &this->getKernelContext().getConfigurationManager());
 	m_pRuntimeConfigurationManager->addConfigurationFromFile(this->getKernelContext().getConfigurationManager().expand("${Kernel_DelayedConfiguration}"));
-	IScenario& originalScenario = this->getScenarioManager().getScenario(scenarioId);
+	IScenario& originalScenario = this->getScenarioManager().getScenario(scenarioID);
 
 	delete m_pRuntimeScenarioManager;
 	m_pRuntimeScenarioManager = new CScenarioManager(this->getKernelContext());

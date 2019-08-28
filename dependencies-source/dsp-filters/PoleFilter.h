@@ -33,8 +33,7 @@ THE SOFTWARE.
 
 *******************************************************************************/
 
-#ifndef DSPFILTERS_POLEFILTER_H
-#define DSPFILTERS_POLEFILTER_H
+#pragma once
 
 #include "Common.h"
 #include "MathSupplement.h"
@@ -89,8 +88,7 @@ namespace Dsp
 	class PoleFilterBase : public PoleFilterBase2
 	{
 	protected:
-		void setPrototypeStorage(const LayoutBase& analogStorage,
-								 const LayoutBase& digitalStorage)
+		void setPrototypeStorage(const LayoutBase& analogStorage, const LayoutBase& digitalStorage)
 		{
 			m_analogProto.setStorage(analogStorage);
 			m_digitalProto = digitalStorage;
@@ -138,12 +136,10 @@ namespace Dsp
 	class LowPassTransform
 	{
 	public:
-		LowPassTransform(double fc,
-						 LayoutBase& digital,
-						 LayoutBase const& analog);
+		LowPassTransform(double fc, LayoutBase& digital, LayoutBase const& analog);
 
 	private:
-		complex_t transform(complex_t c);
+		complex_t transform(complex_t c) const;
 
 		double f = 0;
 	};
@@ -154,12 +150,10 @@ namespace Dsp
 	class HighPassTransform
 	{
 	public:
-		HighPassTransform(double fc,
-						  LayoutBase& digital,
-						  LayoutBase const& analog);
+		HighPassTransform(double fc, LayoutBase& digital, LayoutBase const& analog);
 
 	private:
-		complex_t transform(complex_t c);
+		complex_t transform(complex_t c) const;
 
 		double f = 0;
 	};
@@ -170,13 +164,10 @@ namespace Dsp
 	class BandPassTransform
 	{
 	public:
-		BandPassTransform(double fc,
-						  double fw,
-						  LayoutBase& digital,
-						  LayoutBase const& analog);
+		BandPassTransform(double fc, double fw, LayoutBase& digital, LayoutBase const& analog);
 
 	private:
-		ComplexPair transform(complex_t c);
+		ComplexPair transform(complex_t c) const;
 
 		double wc   = 0;
 		double wc2  = 0;
@@ -194,13 +185,10 @@ namespace Dsp
 	class BandStopTransform
 	{
 	public:
-		BandStopTransform(double fc,
-						  double fw,
-						  LayoutBase& digital,
-						  LayoutBase const& analog);
+		BandStopTransform(double fc, double fw, LayoutBase& digital, LayoutBase const& analog);
 
 	private:
-		ComplexPair transform(complex_t c);
+		ComplexPair transform(complex_t c) const;
 
 		double wc  = 0;
 		double wc2 = 0;
@@ -210,5 +198,3 @@ namespace Dsp
 		double b2  = 0;
 	};
 } // namespace Dsp
-
-#endif

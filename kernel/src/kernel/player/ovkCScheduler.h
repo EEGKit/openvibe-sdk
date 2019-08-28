@@ -29,7 +29,7 @@ namespace OpenViBE
 			CScheduler(const IKernelContext& rKernelContext, CPlayer& rPlayer);
 			~CScheduler() override;
 
-			virtual bool setScenario(const CIdentifier& scenarioId);
+			virtual bool setScenario(const CIdentifier& scenarioID);
 			virtual bool setFrequency(uint64_t ui64Frequency);
 
 			virtual bool isHoldingResources() const;
@@ -67,7 +67,7 @@ namespace OpenViBE
 		private:
 
 			void handleException(const CSimulatedBox* box, const char* errorHint, const std::exception& exception);
-			bool processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxIdentifier);
+			bool processBox(CSimulatedBox* simulatedBox, const CIdentifier& boxID);
 			bool flattenScenario();
 			System::CChrono m_oBenchmarkChrono;
 		};

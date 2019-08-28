@@ -24,19 +24,19 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& rBox)
+			static bool check(OpenViBE::Kernel::IBox& rBox)
 			{
-				char l_sName[1024];
+				char name[1024];
 				uint32_t i;
 				for (i = 0; i < rBox.getInputCount(); i++)
 				{
-					sprintf(l_sName, "Input stream %u", i + 1);
-					rBox.setInputName(i, l_sName);
+					sprintf(name, "Input stream %u", i + 1);
+					rBox.setInputName(i, name);
 				}
 				for (i = 0; i < rBox.getOutputCount(); i++)
 				{
-					sprintf(l_sName, "Output stream %u", i + 1);
-					rBox.setOutputName(i, l_sName);
+					sprintf(name, "Output stream %u", i + 1);
+					rBox.setOutputName(i, name);
 				}
 				return true;
 			}
@@ -65,9 +65,9 @@ namespace OpenViBEPlugins
 
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(index, l_oTypeIdentifier);
-				rBox.setOutputType(index, l_oTypeIdentifier);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				rBox.getInputType(index, typeID);
+				rBox.setOutputType(index, typeID);
 				return true;
 			}
 
@@ -88,9 +88,9 @@ namespace OpenViBEPlugins
 
 			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(index, l_oTypeIdentifier);
-				rBox.setInputType(index, l_oTypeIdentifier);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				rBox.getOutputType(index, typeID);
+				rBox.setInputType(index, typeID);
 				return true;
 			}
 

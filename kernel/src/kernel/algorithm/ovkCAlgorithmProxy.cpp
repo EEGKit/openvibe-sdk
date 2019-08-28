@@ -21,8 +21,8 @@ CAlgorithmProxy::CAlgorithmProxy(const IKernelContext& rKernelContext, IAlgorith
 	m_pOutputConfigurable = dynamic_cast<IConfigurable*>(getKernelContext().getKernelObjectFactory().createObject(OV_ClassId_Kernel_Configurable));
 
 	// FIXME
-	CAlgorithmProto l_oProto(rKernelContext, *this);
-	rAlgorithmDesc.getAlgorithmPrototype(l_oProto);
+	CAlgorithmProto algorithmProto(rKernelContext, *this);
+	rAlgorithmDesc.getAlgorithmPrototype(algorithmProto);
 }
 
 CAlgorithmProxy::~CAlgorithmProxy()
@@ -52,23 +52,23 @@ CIdentifier CAlgorithmProxy::getNextInputParameterIdentifier(const CIdentifier& 
 
 IParameter* CAlgorithmProxy::getInputParameter(const CIdentifier& rInputParameterIdentifier)
 {
-	IParameter* l_pParameter = m_pInputConfigurable->getParameter(rInputParameterIdentifier);
+	IParameter* parameter = m_pInputConfigurable->getParameter(rInputParameterIdentifier);
 
-	OV_ERROR_UNLESS_KRN(l_pParameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null input parameter id " << rInputParameterIdentifier.toString(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(parameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null input parameter id " << rInputParameterIdentifier.toString(), ErrorType::ResourceNotFound);
 
-	return l_pParameter;
+	return parameter;
 }
 
 EParameterType CAlgorithmProxy::getInputParameterType(const CIdentifier& rInputParameterIdentifier) const
 {
-	IParameter* l_pParameter = m_pInputConfigurable->getParameter(rInputParameterIdentifier);
-	if (!l_pParameter) { return ParameterType_None; }
-	return l_pParameter->getType();
+	IParameter* parameter = m_pInputConfigurable->getParameter(rInputParameterIdentifier);
+	if (!parameter) { return ParameterType_None; }
+	return parameter->getType();
 }
 
 CString CAlgorithmProxy::getInputParameterName(const CIdentifier& rInputParameterIdentifier) const
 {
-	map<CIdentifier, CString>::const_iterator itName = m_vInputParameterName.find(rInputParameterIdentifier);
+	const auto itName = m_vInputParameterName.find(rInputParameterIdentifier);
 	if (itName == m_vInputParameterName.end()) { return ""; }
 	return itName->second;
 }
@@ -95,23 +95,23 @@ CIdentifier CAlgorithmProxy::getNextOutputParameterIdentifier(const CIdentifier&
 
 IParameter* CAlgorithmProxy::getOutputParameter(const CIdentifier& rOutputParameterIdentifier)
 {
-	IParameter* l_pParameter = m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
+	IParameter* parameter = m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
 
-	OV_ERROR_UNLESS_KRN(l_pParameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null output parameter id " << rOutputParameterIdentifier.toString(), ErrorType::ResourceNotFound);
+	OV_ERROR_UNLESS_KRN(parameter, "For algorithm " << m_rAlgorithmDesc.getName() << " : Requested null output parameter id " << rOutputParameterIdentifier.toString(), ErrorType::ResourceNotFound);
 
-	return l_pParameter;
+	return parameter;
 }
 
 EParameterType CAlgorithmProxy::getOutputParameterType(const CIdentifier& rOutputParameterIdentifier) const
 {
-	IParameter* l_pParameter = m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
-	if (!l_pParameter) { return ParameterType_None; }
-	return l_pParameter->getType();
+	IParameter* parameter = m_pOutputConfigurable->getParameter(rOutputParameterIdentifier);
+	if (!parameter) { return ParameterType_None; }
+	return parameter->getType();
 }
 
 CString CAlgorithmProxy::getOutputParameterName(const CIdentifier& rOutputParameterIdentifier) const
 {
-	map<CIdentifier, CString>::const_iterator itName = m_vOutputParameterName.find(rOutputParameterIdentifier);
+	const auto itName = m_vOutputParameterName.find(rOutputParameterIdentifier);
 	if (itName == m_vOutputParameterName.end()) { return ""; }
 	return itName->second;
 }
@@ -138,7 +138,7 @@ CIdentifier CAlgorithmProxy::getNextInputTriggerIdentifier(const CIdentifier& rP
 
 CString CAlgorithmProxy::getInputTriggerName(const CIdentifier& rInputTriggerIdentifier) const
 {
-	map<CIdentifier, pair<CString, bool>>::const_iterator itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
+	const auto itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
 	if (itTrigger == m_vInputTrigger.end()) { return ""; }
 	return itTrigger->second.first;
 }
@@ -152,7 +152,7 @@ bool CAlgorithmProxy::isInputTriggerActive(const CIdentifier& rInputTriggerIdent
 
 bool CAlgorithmProxy::activateInputTrigger(const CIdentifier& rInputTriggerIdentifier, const bool bTriggerState)
 {
-	map<CIdentifier, pair<CString, bool>>::iterator itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
+	const auto itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
 	if (itTrigger == m_vInputTrigger.end()) { return false; }
 	itTrigger->second.second = true;
 	return true;
@@ -160,7 +160,7 @@ bool CAlgorithmProxy::activateInputTrigger(const CIdentifier& rInputTriggerIdent
 
 bool CAlgorithmProxy::removeInputTrigger(const CIdentifier& rInputTriggerIdentifier)
 {
-	map<CIdentifier, pair<CString, bool>>::iterator itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
+	const auto itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
 	if (itTrigger == m_vInputTrigger.end()) { return false; }
 	m_vInputTrigger.erase(itTrigger);
 	return true;
@@ -181,21 +181,21 @@ CIdentifier CAlgorithmProxy::getNextOutputTriggerIdentifier(const CIdentifier& r
 
 CString CAlgorithmProxy::getOutputTriggerName(const CIdentifier& rOutputTriggerIdentifier) const
 {
-	map<CIdentifier, pair<CString, bool>>::const_iterator itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
+	const auto itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
 	if (itTrigger == m_vOutputTrigger.end()) { return ""; }
 	return itTrigger->second.first;
 }
 
 bool CAlgorithmProxy::isOutputTriggerActive(const CIdentifier& rOutputTriggerIdentifier) const
 {
-	map<CIdentifier, pair<CString, bool>>::const_iterator itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
+	const auto itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
 	if (itTrigger == m_vOutputTrigger.end()) { return false; }
 	return itTrigger->second.second;
 }
 
 bool CAlgorithmProxy::activateOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, const bool bTriggerState)
 {
-	map<CIdentifier, pair<CString, bool>>::iterator itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
+	const auto itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
 	if (itTrigger == m_vOutputTrigger.end()) { return false; }
 	itTrigger->second.second = true;
 	return true;
@@ -203,7 +203,7 @@ bool CAlgorithmProxy::activateOutputTrigger(const CIdentifier& rOutputTriggerIde
 
 bool CAlgorithmProxy::removeOutputTrigger(const CIdentifier& rOutputTriggerIdentifier)
 {
-	map<CIdentifier, pair<CString, bool>>::iterator itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
+	const auto itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
 	if (itTrigger == m_vOutputTrigger.end()) { return false; }
 	m_vOutputTrigger.erase(itTrigger);
 	return true;
@@ -246,9 +246,9 @@ bool CAlgorithmProxy::process()
 							  {
 								  CAlgorithmContext l_oAlgorithmContext(getKernelContext(), *this, m_rAlgorithmDesc);
 								  this->setAllOutputTriggers(false);
-								  bool l_bResult = m_rAlgorithm.process(l_oAlgorithmContext);
+								  const bool result = m_rAlgorithm.process(l_oAlgorithmContext);
 								  this->setAllInputTriggers(false);
-								  return l_bResult;
+								  return result;
 							  },
 							  std::bind(&CAlgorithmProxy::handleException, this, "Algorithm processing", std::placeholders::_1));
 }
@@ -256,9 +256,7 @@ bool CAlgorithmProxy::process()
 bool CAlgorithmProxy::process(const CIdentifier& rTriggerIdentifier)
 {
 	assert(m_bIsInitialized);
-
 	if (!this->activateInputTrigger(rTriggerIdentifier, true)) { return false; }
-
 	return this->process();
 }
 

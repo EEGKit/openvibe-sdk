@@ -81,25 +81,25 @@ bool CPluginObjectDescEnumBoxTemplateGenerator::uninitialize()
 bool CPluginObjectDescEnumBoxTemplateGenerator::callback(const IPluginObjectDesc& rPluginObjectDesc)
 {
 	string fileName = "BoxAlgorithm_" + this->transform(rPluginObjectDesc.getName().toASCIIString());
-	CIdentifier boxIdentifier;
+	CIdentifier boxID;
 
 	if (rPluginObjectDesc.getCreatedClass() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
 		// insert a box into the scenario, initialize it from the proxy-descriptor from the metabox loader
-		if (!m_Scenario->addBox(boxIdentifier, static_cast<const IBoxAlgorithmDesc&>(rPluginObjectDesc), OV_UndefinedIdentifier))
+		if (!m_Scenario->addBox(boxID, static_cast<const IBoxAlgorithmDesc&>(rPluginObjectDesc), OV_UndefinedIdentifier))
 		{
 			m_KernelContext.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
 			return true;
 		}
 	}
-	else if (!m_Scenario->addBox(boxIdentifier, rPluginObjectDesc.getCreatedClassIdentifier(), OV_UndefinedIdentifier))
+	else if (!m_Scenario->addBox(boxID, rPluginObjectDesc.getCreatedClassIdentifier(), OV_UndefinedIdentifier))
 	{
 		m_KernelContext.getLogManager() << LogLevel_Warning << "Skipped [" << CString(fileName.c_str()) << "] (could not create corresponding box)\n";
 		return true;
 	}
 
 
-	IBox& box = *m_Scenario->getBoxDetails(boxIdentifier);
+	IBox& box = *m_Scenario->getBoxDetails(boxID);
 
 	m_KernelContext.getLogManager() << LogLevel_Trace << "Working on [" << CString(fileName.c_str()) << "]\n";
 

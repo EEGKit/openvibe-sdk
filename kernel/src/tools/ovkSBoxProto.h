@@ -12,9 +12,9 @@ namespace
 	{
 		SBoxProto(ITypeManager& typeManager) : m_TypeManager(typeManager) { }
 
-		bool addInput(const CString& /*name*/, const CIdentifier& typeId, const CIdentifier& id, const bool /*notify*/) override
+		bool addInput(const CString& /*name*/, const CIdentifier& typeID, const CIdentifier& id, const bool /*notify*/) override
 		{
-			uint64_t v = typeId.toUInteger();
+			uint64_t v = typeID.toUInteger();
 			swap_byte(v, m_ui64InputCountHash);
 			swap_byte(m_ui64InputCountHash, 0x7936A0F3BD12D936LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
@@ -27,9 +27,9 @@ namespace
 			return true;
 		}
 
-		bool addOutput(const CString& /*name*/, const CIdentifier& typeId, const CIdentifier& id, const bool /*notify*/) override
+		bool addOutput(const CString& /*name*/, const CIdentifier& typeID, const CIdentifier& id, const bool /*notify*/) override
 		{
-			uint64_t v = typeId.toUInteger();
+			uint64_t v = typeID.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
@@ -42,9 +42,9 @@ namespace
 			return true;
 		}
 
-		bool addSetting(const CString& /*name*/, const CIdentifier& typeId, const CString& /*defaultValue*/, const bool /*modifiable*/, const CIdentifier& id, const bool /*notify*/) override
+		bool addSetting(const CString& /*name*/, const CIdentifier& typeID, const CString& /*defaultValue*/, const bool /*modifiable*/, const CIdentifier& id, const bool /*notify*/) override
 		{
-			uint64_t v = typeId.toUInteger();
+			uint64_t v = typeID.toUInteger();
 			swap_byte(v, m_ui64SettingCountHash);
 			swap_byte(m_ui64SettingCountHash, 0x3C87F3AAE9F8303BLL);
 			m_oHash = m_oHash.toUInteger() ^ v;
@@ -57,36 +57,36 @@ namespace
 			return true;
 		}
 
-		bool addInputSupport(const CIdentifier& typeId) override
+		bool addInputSupport(const CIdentifier& typeID) override
 		{
-			uint64_t v = typeId.toUInteger();
+			uint64_t v = typeID.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
 			return true;
 		}
 
-		bool addInputAndDerivedSupport(const CIdentifier& typeId)
+		bool addInputAndDerivedSupport(const CIdentifier& typeID)
 		{
-			uint64_t v = typeId.toUInteger();
+			uint64_t v = typeID.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
 			return true;
 		}
 
-		bool addOutputSupport(const CIdentifier& typeId) override
+		bool addOutputSupport(const CIdentifier& typeID) override
 		{
-			uint64_t v = typeId.toUInteger();
+			uint64_t v = typeID.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;
 			return true;
 		}
 
-		bool addOutputAndDerivedSupport(const CIdentifier& typeId)
+		bool addOutputAndDerivedSupport(const CIdentifier& typeID)
 		{
-			uint64_t v = typeId.toUInteger();
+			uint64_t v = typeID.toUInteger();
 			swap_byte(v, m_ui64OutputCountHash);
 			swap_byte(m_ui64OutputCountHash, 0xCBB66A5B893AA4E9LL);
 			m_oHash = m_oHash.toUInteger() ^ v;

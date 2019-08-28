@@ -37,15 +37,15 @@ namespace OpenViBE
 			 */
 			virtual CIdentifier getNextScenarioIdentifier(const CIdentifier& rPreviousIdentifier) const = 0;
 
-			virtual bool isScenario(const CIdentifier& scenarioId) const = 0;
+			virtual bool isScenario(const CIdentifier& scenarioID) const = 0;
 			/**
 			 * \brief Creates a new scenario
-			 * \param scenarioId [out] : the identifier of
+			 * \param scenarioID [out] : the identifier of
 			 *        the newly created scenario
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool createScenario(CIdentifier& scenarioId) = 0;
+			virtual bool createScenario(CIdentifier& scenarioID) = 0;
 
 			/**
 			 * @brief Import a scenario from a memory buffer and insert it in the scenario manager
@@ -70,37 +70,37 @@ namespace OpenViBE
 			/**
 			 * @brief Export a scenario to a memory buffer
 			 * @param[out] outputMemoryBuffer Buffer to be filled with the serialized scenario
-			 * @param scenarioId Scenario to export
+			 * @param scenarioID Scenario to export
 			 * @param scenarioExporterAlgorithmIdentifier Exporter to use
 			 * @retval true In case of success
 			 * @retval false In case of failure
 			 */
-			virtual bool exportScenario(IMemoryBuffer& outputMemoryBuffer, const CIdentifier& scenarioId, const CIdentifier& scenarioExporterAlgorithmIdentifier) const = 0;
+			virtual bool exportScenario(IMemoryBuffer& outputMemoryBuffer, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmIdentifier) const = 0;
 
 			/**
 			 * @brief Export a scenario to a file
 			 * @param outputMemoryBuffer File to which export the scenario
-			 * @param scenarioId Scenario to export
+			 * @param scenarioID Scenario to export
 			 * @param scenarioExporterAlgorithmIdentifier Exporter to use
 			 * @retval true In case of success
 			 * @retval false In case of failure
 			 */
-			virtual bool exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioId, const CIdentifier& scenarioExporterAlgorithmIdentifier) const = 0;
+			virtual bool exportScenarioToFile(const CString& fileName, const CIdentifier& scenarioID, const CIdentifier& scenarioExporterAlgorithmIdentifier) const = 0;
 
 			/**
 			 * \brief Releases an existing scenario
-			 * \param scenarioId [in] : the existing scenario identifier
+			 * \param scenarioID [in] : the existing scenario identifier
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool releaseScenario(const CIdentifier& scenarioId) = 0;
+			virtual bool releaseScenario(const CIdentifier& scenarioID) = 0;
 			/**
 			 * \brief Gets details on a specific scenario
-			 * \param scenarioId [in] : the scenario identifier which details should be returned
+			 * \param scenarioID [in] : the scenario identifier which details should be returned
 			 * \return the corresponding scenario reference.
 			 * \warning Calling this function with a bad identifier causes a crash
 			 */
-			virtual IScenario& getScenario(const CIdentifier& scenarioId) = 0;
+			virtual IScenario& getScenario(const CIdentifier& scenarioID) = 0;
 
 
 			/** @{
@@ -135,7 +135,7 @@ namespace OpenViBE
 			virtual CString getNextScenarioImporter(const CIdentifier& importContext, const CString& fileNameExtension) const = 0;
 			virtual CIdentifier getScenarioImporterAlgorithmIdentifier(const CIdentifier& importContext, const CString& fileNameExtension) const = 0;
 
-			virtual bool exportScenarioToFile(const CIdentifier& exportContext, const CString& fileName, const CIdentifier& scenarioId) = 0;
+			virtual bool exportScenarioToFile(const CIdentifier& exportContext, const CString& fileName, const CIdentifier& scenarioID) = 0;
 
 			virtual bool registerScenarioExporter(const CIdentifier& exportContext, const CString& fileNameExtension, const CIdentifier& scenarioExporterAlgorithmIdentifier) = 0;
 

@@ -83,69 +83,69 @@ namespace OpenViBE
 
 			/**
 			 * \brief Tests whether a given identifier is a box or not
-			 * \param boxIdentifier the identifier to test
+			 * \param boxID the identifier to test
 			 * \retval true if the identified object is a box
 			 * \retval false if the identified object is not a box
 			 * \note Requesting a bad identifier returns \e false
 			 */
-			virtual bool isBox(const CIdentifier& boxIdentifier) const = 0;
+			virtual bool isBox(const CIdentifier& boxID) const = 0;
 
 			/**
 			 * \brief Gets the details for a specific box
-			 * \param boxIdentifier The identifier of the box which details should be sent.
+			 * \param boxID The identifier of the box which details should be sent.
 			 * \return The box details
 			 */
-			virtual const IBox* getBoxDetails(const CIdentifier& boxIdentifier) const = 0;
+			virtual const IBox* getBoxDetails(const CIdentifier& boxID) const = 0;
 
 			/// \copydoc getBoxDetails(const OpenViBE::CIdentifier&)const
-			virtual IBox* getBoxDetails(const CIdentifier& boxIdentifier) = 0;
+			virtual IBox* getBoxDetails(const CIdentifier& boxID) = 0;
 
 			/**
 			 * \brief Adds a new box in the scenario
-			 * \param[out] boxIdentifier The identifier of the created box
+			 * \param[out] boxID The identifier of the created box
 			 * \param suggestedBoxIdentifier A suggestion for the new box identifier. If this specific identifier is not
 			 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
 			 *        then a random unused identifier will be used.
 			 * \retval true In case of success.
-			 * \retval false In case of error. In such case, \c boxIdentifier remains unchanged.
+			 * \retval false In case of error. In such case, \c boxID remains unchanged.
 			 * \note This produces an empty and unconfigured box!
 			 */
-			virtual bool addBox(CIdentifier& boxIdentifier, const CIdentifier& suggestedBoxIdentifier) = 0;
+			virtual bool addBox(CIdentifier& boxID, const CIdentifier& suggestedBoxIdentifier) = 0;
 			/**
 			 * \brief Adds a new box in the scenario based on an existing box
-			 * \param[out] boxIdentifier The identifier of the created box
+			 * \param[out] boxID The identifier of the created box
 			 * \param box The box to copy in this scenario
 			 * \param suggestedBoxIdentifier a suggestion for the new box identifier. If this specific identifier is not
 			 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
 			 *        then a random unused identifier will be used.
 			 * \retval true In case of success.
-			 * \retval false In case of error. In such case, \c boxIdentifier remains unchanged.
+			 * \retval false In case of error. In such case, \c boxID remains unchanged.
 			 */
-			virtual bool addBox(CIdentifier& boxIdentifier, const IBox& box, const CIdentifier& suggestedBoxIdentifier) = 0;
+			virtual bool addBox(CIdentifier& boxID, const IBox& box, const CIdentifier& suggestedBoxIdentifier) = 0;
 			/**
 			 * \brief Adds a new box in the scenario
-			 * \param[out] boxIdentifier The identifier of the created box
+			 * \param[out] boxID The identifier of the created box
 			 * \param boxAlgorithmClassIdentifier The class identifier of the algorithm for this box
 			 * \param suggestedBoxIdentifier a suggestion for the new box identifier. If this specific identifier is not
 			 *        yet used, this scenario might use it. If the identifier is already used or \c OV_UndefinedIdentifier is passed,
 			 *        then a random unused identifier will be used.
 			 * \retval true In case of success.
-			 * \retval false In case of error. In such case, \c boxIdentifier remains unchanged.
+			 * \retval false In case of error. In such case, \c boxID remains unchanged.
 			 * \note This function prepares the box according to its algorithm class identifier !
 			 */
-			virtual bool addBox(CIdentifier& boxIdentifier, const CIdentifier& boxAlgorithmClassIdentifier, const CIdentifier& suggestedBoxIdentifier) = 0;
+			virtual bool addBox(CIdentifier& boxID, const CIdentifier& boxAlgorithmClassIdentifier, const CIdentifier& suggestedBoxIdentifier) = 0;
 
 			// TODO_JL: Doc
-			virtual bool addBox(CIdentifier& boxIdentifier, const Plugins::IBoxAlgorithmDesc& boxAlgorithmDesc, const CIdentifier& suggestedBoxIdentifier) = 0;
+			virtual bool addBox(CIdentifier& boxID, const Plugins::IBoxAlgorithmDesc& boxAlgorithmDesc, const CIdentifier& suggestedBoxIdentifier) = 0;
 
 			/**
 			 * \brief Removes a box of the scenario
-			 * \param boxIdentifier The box identifier
+			 * \param boxID The box identifier
 			 * \retval true In case of success.
 			 * \retval false In case of error.
 			 * \note Each link related to this box is also removed
 			 */
-			virtual bool removeBox(const CIdentifier& boxIdentifier) = 0;
+			virtual bool removeBox(const CIdentifier& boxID) = 0;
 
 			//@}
 			/** \name Connection management */
@@ -163,44 +163,44 @@ namespace OpenViBE
 			/**
 			 * \brief Gets next link identifier from fixed box
 			 * \param previousIdentifier The identifier for the preceeding link
-			 * \param boxIdentifier The box identifier which the link should end to
+			 * \param boxID The box identifier which the link should end to
 			 * \return The identifier of the next link in case of success.
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual CIdentifier getNextLinkIdentifierFromBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const = 0;
+			virtual CIdentifier getNextLinkIdentifierFromBox(const CIdentifier& previousIdentifier, const CIdentifier& boxID) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box output
 			 * \param previousIdentifier The identifier for the preceeding link
-			 * \param boxIdentifier The box identifier which the link should end to
+			 * \param boxID The box identifier which the link should end to
 			 * \param outputIndex The input index which the link should end to
 			 * \return The identifier of the next link in case of success.
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual CIdentifier getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t outputIndex) const = 0;
+			virtual CIdentifier getNextLinkIdentifierFromBoxOutput(const CIdentifier& previousIdentifier, const CIdentifier& boxID, uint32_t outputIndex) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box
 			 * \param previousIdentifier The identifier for the preceeding link
-			 * \param boxIdentifier The box identifier which the link should start from
+			 * \param boxID The box identifier which the link should start from
 			 * \return The identifier of the next link in case of success.
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual CIdentifier getNextLinkIdentifierToBox(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier) const = 0;
+			virtual CIdentifier getNextLinkIdentifierToBox(const CIdentifier& previousIdentifier, const CIdentifier& boxID) const = 0;
 
 			/**
 			 * \brief Gets next link identifier from fixed box input
 			 * \param previousIdentifier The identifier for the preceeding link
-			 * \param boxIdentifier The box identifier which the link should start from
+			 * \param boxID The box identifier which the link should start from
 			 * \param index The input index which the link should start from
 			 * \return The identifier of the next link in case of success.
 			 * \retval OV_UndefinedIdentifier on error.
 			 * \note Giving \c OV_UndefinedIdentifier as \c previousIdentifier will cause this function to return the first link identifier.
 			 */
-			virtual CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxIdentifier, uint32_t index) const = 0;
+			virtual CIdentifier getNextLinkIdentifierToBoxInput(const CIdentifier& previousIdentifier, const CIdentifier& boxID, uint32_t index) const = 0;
 
 			/**
 			 * \brief Tests whether a given identifier is a link or not
@@ -326,18 +326,18 @@ namespace OpenViBE
 			virtual bool setHasIO(bool hasIO) = 0;
 			virtual bool hasIO() const = 0;
 
-			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) = 0;
-			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxInputIdentifier) = 0;
-			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) = 0;
-			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, const CIdentifier& boxOutputIdentifier) = 0;
+			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxID, uint32_t boxInputIndex) = 0;
+			virtual bool setScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxID, const CIdentifier& boxInputIdentifier) = 0;
+			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxID, uint32_t boxOutputIndex) = 0;
+			virtual bool setScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxID, const CIdentifier& boxOutputIdentifier) = 0;
 
-			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, uint32_t& boxInputIndex) const = 0;
-			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxIdentifier, CIdentifier& boxInputIdentifier) const = 0;
-			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, uint32_t& boxOutputIndex) const = 0;
-			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxIdentifier, CIdentifier& boxOutputIdentifier) const = 0;
+			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxID, uint32_t& boxInputIndex) const = 0;
+			virtual bool getScenarioInputLink(uint32_t scenarioInputIndex, CIdentifier& boxID, CIdentifier& boxInputIdentifier) const = 0;
+			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxID, uint32_t& boxOutputIndex) const = 0;
+			virtual bool getScenarioOutputLink(uint32_t scenarioOutputIndex, CIdentifier& boxID, CIdentifier& boxOutputIdentifier) const = 0;
 
-			virtual bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxIdentifier, uint32_t boxInputIndex) = 0;
-			virtual bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxIdentifier, uint32_t boxOutputIndex) = 0;
+			virtual bool removeScenarioInputLink(uint32_t scenarioInputIndex, const CIdentifier& boxID, uint32_t boxInputIndex) = 0;
+			virtual bool removeScenarioOutputLink(uint32_t scenarioOutputIndex, const CIdentifier& boxID, uint32_t boxOutputIndex) = 0;
 
 			virtual bool removeScenarioInput(uint32_t index) = 0;
 			virtual bool removeScenarioOutput(uint32_t outputIndex) = 0;
@@ -494,19 +494,19 @@ namespace OpenViBE
 
 			/**
 			 * \brief Update the prototypes of the box identified by the given identifier.
-			 * \param boxIdentifier
+			 * \param boxID
 			 * \retval true in case of success
 			 * \retval false in case of error
 			 */
-			virtual bool updateBox(const CIdentifier& boxIdentifier) = 0;
+			virtual bool updateBox(const CIdentifier& boxID) = 0;
 
 			/**
 			 * \brief Remove deprecated interfacors from the box identified by the given identifier.
-			 * \param boxIdentifier Id of the box to clean up
+			 * \param boxID Id of the box to clean up
 			 * \retval true in case of success
 			 * \retval false if the box does not exist
 			 */
-			virtual bool removeDeprecatedInterfacorsFromBox(const CIdentifier& boxIdentifier) = 0;
+			virtual bool removeDeprecatedInterfacorsFromBox(const CIdentifier& boxID) = 0;
 
 			/**
 			 * \brief Check if scenario contains a box with a deprecated interfacor due to an incomplete update
@@ -524,13 +524,12 @@ namespace OpenViBE
 			virtual void getCommentIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getMetadataIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getLinkIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierFromBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierFromBoxOutputList(const CIdentifier& boxIdentifier, uint32_t outputIndex, CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierToBoxList(const CIdentifier& boxIdentifier, CIdentifier** identifierList, size_t* size) const = 0;
-			virtual void getLinkIdentifierToBoxInputList(const CIdentifier& boxIdentifier, uint32_t inputInex, CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierFromBoxList(const CIdentifier& boxID, CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierFromBoxOutputList(const CIdentifier& boxID, uint32_t outputIndex, CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierToBoxList(const CIdentifier& boxID, CIdentifier** identifierList, size_t* size) const = 0;
+			virtual void getLinkIdentifierToBoxInputList(const CIdentifier& boxID, uint32_t inputInex, CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void getOutdatedBoxIdentifierList(CIdentifier** identifierList, size_t* size) const = 0;
 			virtual void releaseIdentifierList(CIdentifier* identifierList) const = 0;
-			//@}
 
 			_IsDerivedFromClass_(OpenViBE::Kernel::IAttributable, OV_ClassId_Kernel_Scenario_Scenario)
 		};

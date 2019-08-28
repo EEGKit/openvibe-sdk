@@ -28,13 +28,13 @@ CSimulatedBox::CSimulatedBox(const IKernelContext& rKernelContext, CScheduler& r
 
 CSimulatedBox::~CSimulatedBox() {}
 
-bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& scenarioId)
+bool CSimulatedBox::setScenarioIdentifier(const CIdentifier& scenarioID)
 {
-	OV_ERROR_UNLESS_KRF(m_rScheduler.getPlayer().getRuntimeScenarioManager().isScenario(scenarioId),
-						"Scenario with identifier " << scenarioId.toString() << " does not exist",
+	OV_ERROR_UNLESS_KRF(m_rScheduler.getPlayer().getRuntimeScenarioManager().isScenario(scenarioID),
+						"Scenario with identifier " << scenarioID.toString() << " does not exist",
 						ErrorType::ResourceNotFound);
 
-	m_pScenario = &m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(scenarioId);
+	m_pScenario = &m_rScheduler.getPlayer().getRuntimeScenarioManager().getScenario(scenarioID);
 	return true;
 }
 

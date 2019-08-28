@@ -10,7 +10,7 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;
 using namespace OpenViBEPlugins;
-using namespace Tools;
+using namespace OpenViBEPlugins::Tools;
 using namespace OpenViBEToolkit;
 using namespace std;
 
@@ -20,62 +20,62 @@ void CBoxAlgorithmEBMLStreamSpy::release() { delete this; }
 
 bool CBoxAlgorithmEBMLStreamSpy::initialize()
 {
-	const IBox& l_rStaticBoxContext = getStaticBoxContext();
+	const IBox& boxContext = getStaticBoxContext();
 
 	m_pReader       = createReader(*this);
 	m_pReaderHelper = EBML::createReaderHelper();
 
-	bool l_bExpand;
-	CString l_sFileName     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	uint64_t l_ui64LogLevel = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	bool expand;
+	const CString fileName     = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	const uint64_t logLevel    = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 
-	if (l_rStaticBoxContext.getSettingCount() > 2)
+	if (boxContext.getSettingCount() > 2)
 	{
-		l_bExpand               = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
+		expand               = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 		m_ui64ExpandValuesCount = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 	}
 	else
 	{
-		l_bExpand               = false;
+		expand               = false;
 		m_ui64ExpandValuesCount = 4;
 	}
 
-	m_eLogLevel = ELogLevel(l_ui64LogLevel);
+	m_eLogLevel = ELogLevel(logLevel);
 
-	ifstream l_oFile;
-	FS::Files::openIFStream(l_oFile, l_sFileName);
-	while (l_oFile.good() && !l_oFile.eof())
+	ifstream file;
+	FS::Files::openIFStream(file, fileName);
+	while (file.good() && !file.eof())
 	{
-		unsigned int l_ui32Identifier1;
-		unsigned int l_ui32Identifier2;
-		string l_sIdentifier1;
-		string l_sIdentifier2;
-		string l_sName;
-		string l_sType;
+		unsigned int id1;
+		unsigned int id2;
+		string identifier1;
+		string identifier2;
+		string name;
+		string type;
 
-		l_oFile >> l_sName;
-		l_oFile >> l_sIdentifier1;
-		l_oFile >> l_sIdentifier2;
-		l_oFile >> l_sType;
+		file >> name;
+		file >> identifier1;
+		file >> identifier2;
+		file >> type;
 
-		sscanf(l_sIdentifier1.c_str(), "EBML::CIdentifier(0x%08x", &l_ui32Identifier1);
-		sscanf(l_sIdentifier2.c_str(), "0x%08x)", &l_ui32Identifier2);
+		sscanf(identifier1.c_str(), "EBML::CIdentifier(0x%08x", &id1);
+		sscanf(identifier2.c_str(), "0x%08x)", &id2);
 
-		if (!l_bExpand)
+		if (!expand)
 		{
-			if ((l_sType == "binary(long double)")
-				|| (l_sType == "binary(double)")
-				|| (l_sType == "binary(float)")
-				|| (l_sType == "binary(integer8)")
-				|| (l_sType == "binary(integer16)")
-				|| (l_sType == "binary(integer32)")
-				|| (l_sType == "binary(integer64)")
-				|| (l_sType == "binary(uinteger8)")
-				|| (l_sType == "binary(uinteger16)")
-				|| (l_sType == "binary(uinteger32)")
-				|| (l_sType == "binary(uinteger64)"))
+			if ((type == "binary(long double)")
+				|| (type == "binary(double)")
+				|| (type == "binary(float)")
+				|| (type == "binary(integer8)")
+				|| (type == "binary(integer16)")
+				|| (type == "binary(integer32)")
+				|| (type == "binary(integer64)")
+				|| (type == "binary(uinteger8)")
+				|| (type == "binary(uinteger16)")
+				|| (type == "binary(uinteger32)")
+				|| (type == "binary(uinteger64)"))
 			{
-				l_sType = "binary";
+				type = "binary";
 			}
 		}
 
@@ -83,8 +83,8 @@ bool CBoxAlgorithmEBMLStreamSpy::initialize()
 		// printf("[EBML::CIdentifier(0x%08X,][0x%08X]\n", l_ui32Identifier1, l_ui32Identifier2);
 		// cout << EBML::CIdentifier(l_ui32Identifier1, l_ui32Identifier2) << endl;
 
-		m_vName[EBML::CIdentifier(l_ui32Identifier1, l_ui32Identifier2)] = l_sName;
-		m_vType[EBML::CIdentifier(l_ui32Identifier1, l_ui32Identifier2)] = l_sType;
+		m_vName[EBML::CIdentifier(id1, id2)] = name;
+		m_vType[EBML::CIdentifier(id1, id2)] = type;
 	}
 
 	return true;
@@ -103,37 +103,23 @@ bool CBoxAlgorithmEBMLStreamSpy::uninitialize()
 
 bool CBoxAlgorithmEBMLStreamSpy::isMasterChild(const EBML::CIdentifier& rIdentifier)
 {
-	map<EBML::CIdentifier, string>::iterator n = m_vName.find(rIdentifier);
-	map<EBML::CIdentifier, string>::iterator t = m_vType.find(rIdentifier);
-	if (n != m_vName.end() && t != m_vType.end())
-	{
-		return (t->second == "master");
-	}
+	const auto n = m_vName.find(rIdentifier);
+	const auto t = m_vType.find(rIdentifier);
+	if (n != m_vName.end() && t != m_vType.end()) { return (t->second == "master"); }
 	return false;
 }
 
 void CBoxAlgorithmEBMLStreamSpy::openChild(const EBML::CIdentifier& rIdentifier)
 {
-	map<EBML::CIdentifier, string>::iterator n = m_vName.find(rIdentifier);
+	const auto n = m_vName.find(rIdentifier);
 
 	getLogManager() << m_eLogLevel;
 
-	for (size_t i = 0; i <= m_vNodes.size(); i++)
-	{
-		getLogManager() << "  ";
-	}
+	for (size_t i = 0; i <= m_vNodes.size(); i++) { getLogManager() << "  "; }
 
-	getLogManager()
-			<< "Opened EBML node [id:"
-			<< CIdentifier(rIdentifier)
-			<< "]-[name:"
-			<< CString(n != m_vName.end() ? n->second.c_str() : "unknown")
-			<< "]";
+	getLogManager() << "Opened EBML node [id:" << CIdentifier(rIdentifier) << "]-[name:" << CString(n != m_vName.end() ? n->second.c_str() : "unknown") << "]";
 
-	if (isMasterChild(rIdentifier))
-	{
-		getLogManager() << "\n";
-	}
+	if (isMasterChild(rIdentifier)) { getLogManager() << "\n"; }
 
 	m_vNodes.push(rIdentifier);
 }
@@ -141,18 +127,18 @@ void CBoxAlgorithmEBMLStreamSpy::openChild(const EBML::CIdentifier& rIdentifier)
 template <class T>
 void CBoxAlgorithmEBMLStreamSpy::processBinaryBlock(const void* pBuffer, const uint64_t ui64BufferSize)
 {
-	uint64_t l_ui64Count = (ui64BufferSize / sizeof(T));
-	const T* l_pBuffer   = static_cast<const T*>(pBuffer);
-	for (uint64_t i = 0; i < std::min(m_ui64ExpandValuesCount, l_ui64Count); i++)
+	const uint64_t n = (ui64BufferSize / sizeof(T));
+	const T* buffer   = static_cast<const T*>(pBuffer);
+	for (uint64_t i = 0; i < std::min(m_ui64ExpandValuesCount, n); i++)
 	{
-		getLogManager() << (i == 0 ? "" : " ") << l_pBuffer[i];
+		getLogManager() << (i == 0 ? "" : " ") << buffer[i];
 	}
-	if (m_ui64ExpandValuesCount < l_ui64Count) { getLogManager() << " ..."; }
+	if (m_ui64ExpandValuesCount < n) { getLogManager() << " ..."; }
 }
 
 void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const uint64_t ui64BufferSize)
 {
-	map<EBML::CIdentifier, string>::iterator t = m_vType.find(m_vNodes.top());
+	const auto t = m_vType.find(m_vNodes.top());
 
 	if (t != m_vType.end())
 	{
@@ -228,7 +214,7 @@ void CBoxAlgorithmEBMLStreamSpy::processChildData(const void* pBuffer, const uin
 
 void CBoxAlgorithmEBMLStreamSpy::closeChild() { m_vNodes.pop(); }
 
-bool CBoxAlgorithmEBMLStreamSpy::processInput(const uint32_t index)
+bool CBoxAlgorithmEBMLStreamSpy::processInput(const uint32_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -236,40 +222,37 @@ bool CBoxAlgorithmEBMLStreamSpy::processInput(const uint32_t index)
 
 bool CBoxAlgorithmEBMLStreamSpy::process()
 {
-	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
-	const IBox& l_rStaticBoxContext = getStaticBoxContext();
+	IBoxIO& boxContext           = getDynamicBoxContext();
+	const IBox& staticBoxContext = getStaticBoxContext();
 
-	uint64_t l_ui64StartTime      = 0;
-	uint64_t l_ui64EndTime        = 0;
-	uint64_t l_ui64ChunkSize      = 0;
-	const uint8_t* l_pChunkBuffer = nullptr;
+	uint64_t tStart       = 0;
+	uint64_t tEnd         = 0;
+	uint64_t size         = 0;
+	const uint8_t* buffer = nullptr;
 
 	getLogManager() << m_eLogLevel << "\n";
 
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	for (uint32_t i = 0; i < staticBoxContext.getInputCount(); i++)
 	{
-		if (l_rDynamicBoxContext.getInputChunkCount(i))
+		if (boxContext.getInputChunkCount(i))
 		{
-			CString l_sInputName;
-			l_rStaticBoxContext.getInputName(i, l_sInputName);
+			CString inputName;
+			staticBoxContext.getInputName(i, inputName);
 
-			CIdentifier l_sInputType;
-			l_rStaticBoxContext.getInputType(i, l_sInputType);
+			CIdentifier inputType;
+			staticBoxContext.getInputType(i, inputType);
 
-			getLogManager() << m_eLogLevel
-					<< "For input " << l_sInputName << " of type " << getTypeManager().getTypeName(l_sInputType) << " :\n";
+			getLogManager() << m_eLogLevel << "For input " << inputName << " of type " << getTypeManager().getTypeName(inputType) << " :\n";
 
-			for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+			for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
 			{
-				l_rDynamicBoxContext.getInputChunk(i, j, l_ui64StartTime, l_ui64EndTime, l_ui64ChunkSize, l_pChunkBuffer);
-				l_rDynamicBoxContext.markInputAsDeprecated(i, j);
+				boxContext.getInputChunk(i, j, tStart, tEnd, size, buffer);
+				boxContext.markInputAsDeprecated(i, j);
 
-				getLogManager() << m_eLogLevel
-						<< "For chunk [id:" << j << "] at [time:" << CIdentifier(l_ui64StartTime) << "," << CIdentifier(l_ui64EndTime)
-						<< " / " << time64(l_ui64StartTime) << "," << time64(l_ui64EndTime)
-						<< "]\n";
+				getLogManager() << m_eLogLevel << "For chunk [id:" << j << "] at [time:" << CIdentifier(tStart) << "," << CIdentifier(tEnd)
+						<< " / " << time64(tStart) << "," << time64(tEnd) << "]\n";
 
-				m_pReader->processData(l_pChunkBuffer, l_ui64ChunkSize);
+				m_pReader->processData(buffer, size);
 			}
 		}
 	}
