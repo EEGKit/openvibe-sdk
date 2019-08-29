@@ -16,13 +16,9 @@ bool CScenarioSettingKeywordParserCallback::expand(const CString& rStringToExpan
 	{
 		if (m_rScenario.hasAttribute(OV_AttributeId_ScenarioFilename))
 		{
-			std::string l_sFilename = m_rScenario.getAttributeValue(OV_AttributeId_ScenarioFilename).toASCIIString();
-
-			size_t iDir = l_sFilename.rfind("/");
-			if (iDir != std::string::npos)
-			{
-				rExpandedString = CString(l_sFilename.substr(0, iDir).c_str());
-			}
+			const std::string filename = m_rScenario.getAttributeValue(OV_AttributeId_ScenarioFilename).toASCIIString();
+			const size_t iDir = filename.rfind("/");
+			if (iDir != std::string::npos) { rExpandedString = CString(filename.substr(0, iDir).c_str()); }
 		}
 		return true;
 	}

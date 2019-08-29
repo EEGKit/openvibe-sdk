@@ -4,7 +4,7 @@ using namespace OpenViBE;
 
 bool OpenViBEToolkit::Tools::StimulationSet::shift(IStimulationSet& rStimulationSet, const uint64_t ui64TimeShift)
 {
-	uint64_t count = rStimulationSet.getStimulationCount();
+	const uint64_t count = rStimulationSet.getStimulationCount();
 	for (uint64_t i = 0; i < count; i++)
 	{
 		rStimulationSet.setStimulationDate(i, rStimulationSet.getStimulationDate(i) + ui64TimeShift);
@@ -20,7 +20,7 @@ bool OpenViBEToolkit::Tools::StimulationSet::copy(IStimulationSet& rDestinationS
 
 bool OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64_t ui64TimeShift)
 {
-	uint64_t count = rSourceStimulationSet.getStimulationCount();
+	const uint64_t count = rSourceStimulationSet.getStimulationCount();
 	for (uint64_t i = 0; i < count; i++)
 	{
 		rDestinationStimulationSet.appendStimulation(rSourceStimulationSet.getStimulationIdentifier(i), rSourceStimulationSet.getStimulationDate(i) + ui64TimeShift, rSourceStimulationSet.getStimulationDuration(i));
@@ -30,10 +30,10 @@ bool OpenViBEToolkit::Tools::StimulationSet::append(IStimulationSet& rDestinatio
 
 bool OpenViBEToolkit::Tools::StimulationSet::appendRange(IStimulationSet& rDestinationStimulationSet, const IStimulationSet& rSourceStimulationSet, const uint64_t ui64SourceStartTime, const uint64_t ui64SourceEndTime, const uint64_t ui64TimeShift)
 {
-	uint64_t count = rSourceStimulationSet.getStimulationCount();
+	const uint64_t count = rSourceStimulationSet.getStimulationCount();
 	for (uint64_t i = 0; i < count; i++)
 	{
-		uint64_t date = rSourceStimulationSet.getStimulationDate(i);
+		const uint64_t date = rSourceStimulationSet.getStimulationDate(i);
 		if (ui64SourceStartTime <= date && date < ui64SourceEndTime)
 		{
 			rDestinationStimulationSet.appendStimulation(rSourceStimulationSet.getStimulationIdentifier(i), rSourceStimulationSet.getStimulationDate(i) + ui64TimeShift, rSourceStimulationSet.getStimulationDuration(i));
@@ -46,7 +46,7 @@ bool OpenViBEToolkit::Tools::StimulationSet::removeRange(IStimulationSet& rStimu
 {
 	for (uint64_t i = 0; i < rStimulationSet.getStimulationCount(); i++)
 	{
-		uint64_t date = rStimulationSet.getStimulationDate(i);
+		const uint64_t date = rStimulationSet.getStimulationDate(i);
 		if (ui64StartTime <= date && date < ui64EndTime) { rStimulationSet.removeStimulation(i--); }
 	}
 	return true;

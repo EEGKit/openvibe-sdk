@@ -12,7 +12,7 @@ uint64_t CBoxAlgorithmClockStimulator::getClockFrequency() { return (1LL << 32) 
 
 bool CBoxAlgorithmClockStimulator::initialize()
 {
-	double interstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
+	const double interstimulationInterval = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
 
 	const double minInterstimulationInterval = 0.0001;
 	OV_ERROR_UNLESS_KRF(!(interstimulationInterval < minInterstimulationInterval),
@@ -49,7 +49,7 @@ bool CBoxAlgorithmClockStimulator::process()
 {
 	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	uint64_t l_ui64CurrentTime = getPlayerContext().getCurrentTime();
+	const uint64_t l_ui64CurrentTime = getPlayerContext().getCurrentTime();
 
 	CStimulationSet l_oStimulationSet;
 	l_oStimulationSet.setStimulationCount(0);

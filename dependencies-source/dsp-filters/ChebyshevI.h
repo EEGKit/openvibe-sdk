@@ -32,9 +32,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 *******************************************************************************/
-
-#ifndef DSPFILTERS_CHEBYSHEVI_H
-#define DSPFILTERS_CHEBYSHEVI_H
+#pragma once
 
 #include "Common.h"
 #include "Cascade.h"
@@ -60,8 +58,7 @@ namespace Dsp
 		public:
 			AnalogLowPass();
 
-			void design(int numPoles,
-						double rippleDb);
+			void design(int numPoles, double rippleDb);
 
 		private:
 			int m_numPoles    = 0;
@@ -75,9 +72,7 @@ namespace Dsp
 		public:
 			AnalogLowShelf();
 
-			void design(int numPoles,
-						double gainDb,
-						double rippleDb);
+			void design(int numPoles, double gainDb, double rippleDb);
 
 		private:
 			int m_numPoles    = 0;
@@ -91,64 +86,37 @@ namespace Dsp
 
 		struct LowPassBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency,
-					   double rippleDb);
+			void setup(int order, double sampleRate, double cutoffFrequency, double rippleDb);
 		};
 
 		struct HighPassBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency,
-					   double rippleDb);
+			void setup(int order, double sampleRate, double cutoffFrequency, double rippleDb);
 		};
 
 		struct BandPassBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double centerFrequency,
-					   double widthFrequency,
-					   double rippleDb);
+			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency, double rippleDb);
 		};
 
 		struct BandStopBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double centerFrequency,
-					   double widthFrequency,
-					   double rippleDb);
+			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency, double rippleDb);
 		};
 
 		struct LowShelfBase : PoleFilterBase<AnalogLowShelf>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency,
-					   double gainDb,
-					   double rippleDb);
+			void setup(int order, double sampleRate, double cutoffFrequency, double gainDb, double rippleDb);
 		};
 
 		struct HighShelfBase : PoleFilterBase<AnalogLowShelf>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency,
-					   double gainDb,
-					   double rippleDb);
+			void setup(int order, double sampleRate, double cutoffFrequency, double gainDb, double rippleDb);
 		};
 
 		struct BandShelfBase : PoleFilterBase<AnalogLowShelf>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double centerFrequency,
-					   double widthFrequency,
-					   double gainDb,
-					   double rippleDb);
+			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency, double gainDb, double rippleDb);
 		};
 
 		//------------------------------------------------------------------------------
@@ -194,19 +162,14 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 4; }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
-
-				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultRippleDbParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
+				static ParamInfo getParamInfo_3() { return ParamInfo::defaultRippleDbParam(); }
 			};
 
 			template <class FilterClass>
 			struct TypeI : TypeIBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2], params[3]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3]); }
 			};
 
 			struct TypeIIBase : DesignBase
@@ -217,21 +180,15 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 5; }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
-
-				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
-
-				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultRippleDbParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
+				static ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
+				static ParamInfo getParamInfo_4() { return ParamInfo::defaultRippleDbParam(); }
 			};
 
 			template <class FilterClass>
 			struct TypeII : TypeIIBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2], params[3], params[4]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3], params[4]); }
 			};
 
 			struct TypeIIIBase : DesignBase
@@ -242,21 +199,15 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 5; }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
-
-				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultGainParam(); }
-
-				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultRippleDbParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
+				static ParamInfo getParamInfo_3() { return ParamInfo::defaultGainParam(); }
+				static ParamInfo getParamInfo_4() { return ParamInfo::defaultRippleDbParam(); }
 			};
 
 			template <class FilterClass>
 			struct TypeIII : TypeIIIBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2], params[3], params[4]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3], params[4]); }
 			};
 
 			struct TypeIVBase : DesignBase
@@ -267,23 +218,16 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 6; }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
-
-				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
-
-				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultGainParam(); }
-
-				static const ParamInfo getParamInfo_5() { return ParamInfo::defaultRippleDbParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
+				static ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
+				static ParamInfo getParamInfo_4() { return ParamInfo::defaultGainParam(); }
+				static ParamInfo getParamInfo_5() { return ParamInfo::defaultRippleDbParam(); }
 			};
 
 			template <class FilterClass>
 			struct TypeIV : TypeIVBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2], params[3], params[4], params[5]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3], params[4], params[5]); }
 			};
 
 			// Factored kind and name
@@ -331,19 +275,10 @@ namespace Dsp
 			};
 
 			// This glues on the Order parameter
-			template <int MaxOrder,
-					  template <class> class TypeClass,
-					  template <int> class FilterClass>
+			template <int MaxOrder, template <class> class TypeClass, template <int> class FilterClass>
 			struct OrderBase : TypeClass<FilterClass<MaxOrder>>
 			{
-				const ParamInfo getParamInfo_1() const
-				{
-					return ParamInfo(idOrder, "Order", "Order",
-									 1, MaxOrder, 2,
-									 &ParamInfo::Int_toControlValue,
-									 &ParamInfo::Int_toNativeValue,
-									 &ParamInfo::Int_toString);
-				}
+				ParamInfo getParamInfo_1() const { return ParamInfo(idOrder, "Order", "Order", 1, MaxOrder, 2, &ParamInfo::Int_toControlValue, &ParamInfo::Int_toNativeValue, &ParamInfo::Int_toString); }
 			};
 
 			//------------------------------------------------------------------------------
@@ -353,34 +288,25 @@ namespace Dsp
 			//
 
 			template <int MaxOrder>
-			struct LowPass : OrderBase<MaxOrder, TypeI, ChebyshevI::LowPass>,
-							 LowPassDescription {};
+			struct LowPass : OrderBase<MaxOrder, TypeI, ChebyshevI::LowPass>, LowPassDescription {};
 
 			template <int MaxOrder>
-			struct HighPass : OrderBase<MaxOrder, TypeI, ChebyshevI::HighPass>,
-							  HighPassDescription {};
+			struct HighPass : OrderBase<MaxOrder, TypeI, ChebyshevI::HighPass>, HighPassDescription {};
 
 			template <int MaxOrder>
-			struct BandPass : OrderBase<MaxOrder, TypeII, ChebyshevI::BandPass>,
-							  BandPassDescription {};
+			struct BandPass : OrderBase<MaxOrder, TypeII, ChebyshevI::BandPass>, BandPassDescription {};
 
 			template <int MaxOrder>
-			struct BandStop : OrderBase<MaxOrder, TypeII, ChebyshevI::BandStop>,
-							  BandStopDescription {};
+			struct BandStop : OrderBase<MaxOrder, TypeII, ChebyshevI::BandStop>, BandStopDescription {};
 
 			template <int MaxOrder>
-			struct LowShelf : OrderBase<MaxOrder, TypeIII, ChebyshevI::LowShelf>,
-							  LowShelfDescription {};
+			struct LowShelf : OrderBase<MaxOrder, TypeIII, ChebyshevI::LowShelf>, LowShelfDescription {};
 
 			template <int MaxOrder>
-			struct HighShelf : OrderBase<MaxOrder, TypeIII, ChebyshevI::HighShelf>,
-							   HighShelfDescription {};
+			struct HighShelf : OrderBase<MaxOrder, TypeIII, ChebyshevI::HighShelf>, HighShelfDescription {};
 
 			template <int MaxOrder>
-			struct BandShelf : OrderBase<MaxOrder, TypeIV, ChebyshevI::BandShelf>,
-							   BandShelfDescription {};
+			struct BandShelf : OrderBase<MaxOrder, TypeIV, ChebyshevI::BandShelf>, BandShelfDescription {};
 		} // namespace Design
 	} // namespace ChebyshevI
 } // namespace Dsp
-
-#endif

@@ -32,9 +32,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 *******************************************************************************/
-
-#ifndef DSPFILTERS_CUSTOM_H
-#define DSPFILTERS_CUSTOM_H
+#pragma once
 
 #include "Common.h"
 #include "Biquad.h"
@@ -59,9 +57,7 @@ namespace Dsp
 
 		struct OnePole : Biquad
 		{
-			void setup(double scale,
-					   double pole,
-					   double zero);
+			void setup(double scale, double pole, double zero);
 		};
 
 		struct TwoPole : Biquad
@@ -85,22 +81,12 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 4; }
-
-				static const ParamInfo getParamInfo_1() { return ParamInfo::defaultGainParam(); }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultPoleRealParam(); }
-
-				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultZeroRealParam(); }
-
+				static ParamInfo getParamInfo_1() { return ParamInfo::defaultGainParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultPoleRealParam(); }
+				static ParamInfo getParamInfo_3() { return ParamInfo::defaultZeroRealParam(); }
 				static Kind getKind() { return kindOther; }
 				static const char* getName() { return "Custom One-Pole"; }
-
-				void setParams(const Params& params)
-				{
-					setup(pow(10., params[1] / 20),
-						  params[2],
-						  params[3]);
-				}
+				void setParams(const Params& params) { setup(pow(10., params[1] / 20), params[2], params[3]); }
 			};
 
 			struct TwoPole : DesignBase, Custom::TwoPole
@@ -111,32 +97,15 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 6; }
-
-				static const ParamInfo getParamInfo_1() { return ParamInfo::defaultGainParam(); }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultPoleRhoParam(); }
-
-				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultPoleThetaParam(); }
-
-				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultZeroRhoParam(); }
-
-				static const ParamInfo getParamInfo_5() { return ParamInfo::defaultZeroThetaParam(); }
-
-
+				static ParamInfo getParamInfo_1() { return ParamInfo::defaultGainParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultPoleRhoParam(); }
+				static ParamInfo getParamInfo_3() { return ParamInfo::defaultPoleThetaParam(); }
+				static ParamInfo getParamInfo_4() { return ParamInfo::defaultZeroRhoParam(); }
+				static ParamInfo getParamInfo_5() { return ParamInfo::defaultZeroThetaParam(); }
 				static Kind getKind() { return kindOther; }
 				static const char* getName() { return "Custom Two-Pole"; }
-
-				void setParams(const Params& params)
-				{
-					setup(pow(10., params[1] / 20),
-						  params[2],
-						  params[3],
-						  params[4],
-						  params[5]);
-				}
+				void setParams(const Params& params) { setup(pow(10., params[1] / 20), params[2], params[3], params[4], params[5]); }
 			};
 		} // namespace Design
 	} // namespace Custom
 } // namespace Dsp
-
-#endif

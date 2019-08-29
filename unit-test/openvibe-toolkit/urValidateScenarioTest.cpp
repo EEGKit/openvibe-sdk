@@ -20,7 +20,7 @@ std::string g_dataDirectory;
 
 bool importScenarioFromFile(const char* filename)
 {
-	std::string scenarioFilePath = std::string(g_dataDirectory) + "/" + filename;
+	const std::string scenarioFilePath = std::string(g_dataDirectory) + "/" + filename;
 
 	g_context->getErrorManager().releaseErrors();
 
@@ -38,13 +38,11 @@ bool importScenarioFromFile(const char* filename)
 bool checkForSchemaValidationError()
 {
 	auto& errorManager = g_context->getErrorManager();
-
 	auto error = errorManager.getLastError();
 
 	while (error)
 	{
 		if (error->getErrorType() == ErrorType::BadXMLSchemaValidation) { return true; }
-
 		error = error->getNestedError();
 	}
 

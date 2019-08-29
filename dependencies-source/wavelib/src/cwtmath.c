@@ -4,11 +4,11 @@ static void nsfft_fd(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 {
 	int i;
 
-	int N = obj->N;
-	int L = N / 2;
+	const int N = obj->N;
+	const int L = N / 2;
 	//w = (double*)malloc(sizeof(double)*N);
 
-	int M = divideby(N, 2);
+	const int M = divideby(N, 2);
 
 	if (M == 0)
 	{
@@ -19,9 +19,9 @@ static void nsfft_fd(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 	double* temp1 = (double*)malloc(sizeof(double) * L);
 	double* temp2 = (double*)malloc(sizeof(double) * L);
 
-	double delta = (ub - lb) / N;
+	const double delta = (ub - lb) / N;
 	int j        = -N;
-	double den   = 2 * (ub - lb);
+	const double den   = 2 * (ub - lb);
 
 	for (i = 0; i < N; ++i)
 	{
@@ -50,13 +50,13 @@ static void nsfft_fd(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 		oup[N - L + i].im = temp2[i];
 	}
 
-	double plb = PI2 * lb;
+	const double plb = PI2 * lb;
 
 	for (i = 0; i < N; ++i)
 	{
-		double tempr = oup[i].re;
-		double tempi = oup[i].im;
-		double theta = w[i] * plb;
+		const double tempr = oup[i].re;
+		const double tempi = oup[i].im;
+		const double theta = w[i] * plb;
 
 		oup[i].re = delta * (tempr * cos(theta) + tempi * sin(theta));
 		oup[i].im = delta * (tempi * cos(theta) - tempr * sin(theta));
@@ -72,10 +72,10 @@ static void nsfft_bk(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 {
 	int i;
 
-	int N = obj->N;
-	int L = N / 2;
+	const int N = obj->N;
+	const int L = N / 2;
 
-	int M = divideby(N, 2);
+	const int M = divideby(N, 2);
 
 	if (M == 0)
 	{
@@ -88,9 +88,9 @@ static void nsfft_bk(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 	double* w      = (double*)malloc(sizeof(double) * N);
 	fft_data* inpt = (fft_data*)malloc(sizeof(fft_data) * N);
 
-	double delta = (ub - lb) / N;
+	const double delta = (ub - lb) / N;
 	int j        = -N;
-	double den   = 2 * (ub - lb);
+	const double den   = 2 * (ub - lb);
 
 	for (i = 0; i < N; ++i)
 	{
@@ -98,11 +98,11 @@ static void nsfft_bk(fft_object obj, fft_data* inp, fft_data* oup, double lb, do
 		j += 2;
 	}
 
-	double plb = PI2 * lb;
+	const double plb = PI2 * lb;
 
 	for (i = 0; i < N; ++i)
 	{
-		double theta = w[i] * plb;
+		const double theta = w[i] * plb;
 
 		inpt[i].re = (inp[i].re * cos(theta) - inp[i].im * sin(theta)) / delta;
 		inpt[i].im = (inp[i].im * cos(theta) + inp[i].re * sin(theta)) / delta;
@@ -151,9 +151,9 @@ static double fix(double x)
 
 int nint(double N)
 {
-	int i = (int)(N + 0.49999);
-
-	return i;
+	//const int i = (int)(N + 0.49999);
+	//return i;
+	return (int)(N + 0.49999);
 }
 
 double gamma(double x)
@@ -176,12 +176,12 @@ double gamma(double x)
 	double oup, yi, z;
 	int i;
 
-	double spi   = 0.9189385332046727417803297;
-	double pi    = 3.1415926535897932384626434;
-	double xmax  = 171.624e+0;
-	double xinf  = 1.79e308;
-	double eps   = 2.22e-16;
-	double xninf = 1.79e-308;
+	const double spi   = 0.9189385332046727417803297;
+	const double pi    = 3.1415926535897932384626434;
+	const double xmax  = 171.624e+0;
+	const double xinf  = 1.79e308;
+	const double eps   = 2.22e-16;
+	const double xninf = 1.79e-308;
 
 	double num[8] = {
 		-1.71618513886549492533811e+0,
@@ -291,7 +291,7 @@ double gamma(double x)
 	{
 		if (y <= xmax)
 		{
-			double y2  = y * y;
+			const double y2  = y * y;
 			double sum = c[6];
 			for (i = 0; i < 6; ++i)
 			{

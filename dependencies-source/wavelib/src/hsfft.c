@@ -14,7 +14,7 @@ fft_object fft_init(int N, int sgn)
 	// Change N/2 to N-1 for longvector case
 
 	int twi_len;
-	int out = dividebyN(N);
+	const int out = dividebyN(N);
 
 	if (out == 1)
 	{
@@ -27,16 +27,10 @@ fft_object fft_init(int N, int sgn)
 	else
 	{
 		int M;
-		int K = (int)pow(2.0, ceil(log10(N) / log10(2.0)));
+		const int K = (int)pow(2.0, ceil(log10(N) / log10(2.0)));
 
-		if (K < 2 * N - 2)
-		{
-			M = K * 2;
-		}
-		else
-		{
-			M = K;
-		}
+		if (K < 2 * N - 2) { M = K * 2; }
+		else { M = K; }
 		obj     = (fft_object)malloc(sizeof(struct fft_set) + sizeof(fft_data) * (M - 1));
 		obj->lf = factors(M, obj->factors);
 		longvectorN(obj->twiddle, M, obj->factors, obj->lf);
@@ -1494,7 +1488,7 @@ static void bluestein_exp(fft_data* hl, fft_data* hlt, int len, int M)
 	fft_type PI    = 3.1415926535897932384626433832795;
 	fft_type theta = PI / len;
 	int l2         = 0;
-	int len2       = 2 * len;
+	const int len2       = 2 * len;
 
 	for (i = 0; i < len; ++i)
 	{
@@ -1528,10 +1522,10 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 	int M, ii, i;
 	fft_type temp;
 	obj->lt     = 0;
-	int K       = (int)pow(2.0, ceil((double)log10((double)N) / log10((double)2.0)));
-	int def_lt  = 1;
-	int def_sgn = obj->sgn;
-	int def_N   = obj->N;
+	const int K       = (int)pow(2.0, ceil((double)log10((double)N) / log10((double)2.0)));
+	const int def_lt  = 1;
+	const int def_sgn = obj->sgn;
+	const int def_N   = obj->N;
 
 	if (K < 2 * N - 2) { M = K * 2; }
 	else { M = K; }
@@ -1648,17 +1642,17 @@ void fft_exec(fft_object obj, fft_data* inp, fft_data* oup)
 {
 	if (obj->lt == 0)
 	{
-		int nn   = obj->N;
-		int sgn1 = obj->sgn;
-		int l    = 1;
-		int inc  = 0;
+		const int nn   = obj->N;
+		const int sgn1 = obj->sgn;
+		const int l    = 1;
+		const int inc  = 0;
 		//radix3_dit_rec(oup,inp,obj,sgn1,nn,l);
 		mixed_radix_dit_rec(oup, inp, obj, sgn1, nn, l, inc);
 	}
 	else if (obj->lt == 1)
 	{
-		int nn   = obj->N;
-		int sgn1 = obj->sgn;
+		const int nn   = obj->N;
+		const int sgn1 = obj->sgn;
 		bluestein_fft(inp, oup, obj, sgn1, nn);
 	}
 }
@@ -1811,9 +1805,9 @@ int factors(int M, int* arr)
 
 		while (N > 1)
 		{
-			int mult = num * 6;
-			int m1   = mult - 1;
-			int m2   = mult + 1;
+			const int mult = num * 6;
+			const int m1   = mult - 1;
+			const int m2   = mult + 1;
 			while (N % m1 == 0)
 			{
 				arr[i] = m1;
@@ -1836,7 +1830,7 @@ int factors(int M, int* arr)
 void twiddle(fft_data* vec, int N, int radix)
 {
 	fft_type theta = PI2 / N;
-	int KL         = N / radix;
+	const int KL         = N / radix;
 	vec[0].re      = 1.0;
 	vec[0].im      = 0.0;
 
@@ -1855,7 +1849,7 @@ void longvectorN(fft_data* sig, int N, int* array, int tx)
 	for (int i = 0; i < tx; i++)
 	{
 		L              = L * array[tx - 1 - i];
-		int Ls         = L / array[tx - 1 - i];
+		const int Ls         = L / array[tx - 1 - i];
 		fft_type theta = -1.0 * PI2 / L;
 		for (int j = 0; j < Ls; j++)
 		{

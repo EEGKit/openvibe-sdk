@@ -15,7 +15,7 @@ bool CBoxAlgorithmTimeout::initialize()
 
 	m_StimulationEncoder.initialize(*this, 0);
 
-	double timeout = double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
+	const double timeout = double(FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0));
 	OV_ERROR_UNLESS_KRF(timeout > 0,
 						"Timeout delay value must be positive and non-zero",
 						ErrorType::BadSetting);

@@ -32,9 +32,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 *******************************************************************************/
-
-#ifndef DSPFILTERS_BUTTERWORTH_H
-#define DSPFILTERS_BUTTERWORTH_H
+#pragma once
 
 #include "Common.h"
 #include "Cascade.h"
@@ -86,59 +84,39 @@ namespace Dsp
 
 		struct LowPassBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency);
+			void setup(int order, double sampleRate, double cutoffFrequency);
 		};
 
 		struct HighPassBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency);
+			void setup(int order, double sampleRate, double cutoffFrequency);
 		};
 
 		struct BandPassBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double centerFrequency,
-					   double widthFrequency);
+			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency);
 
 #include "ButterworthSynthesisH.inl"
 		};
 
 		struct BandStopBase : PoleFilterBase<AnalogLowPass>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double centerFrequency,
-					   double widthFrequency);
+			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency);
 		};
 
 		struct LowShelfBase : PoleFilterBase<AnalogLowShelf>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency,
-					   double gainDb);
+			void setup(int order, double sampleRate, double cutoffFrequency, double gainDb);
 		};
 
 		struct HighShelfBase : PoleFilterBase<AnalogLowShelf>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double cutoffFrequency,
-					   double gainDb);
+			void setup(int order, double sampleRate, double cutoffFrequency, double gainDb);
 		};
 
 		struct BandShelfBase : PoleFilterBase<AnalogLowShelf>
 		{
-			void setup(int order,
-					   double sampleRate,
-					   double centerFrequency,
-					   double widthFrequency,
-					   double gainDb);
+			void setup(int order, double sampleRate, double centerFrequency, double widthFrequency, double gainDb);
 		};
 
 		//------------------------------------------------------------------------------
@@ -184,17 +162,13 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 3; }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
 			};
 
 			template <class FilterClass>
 			struct TypeI : TypeIBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2]); }
 			};
 
 			struct TypeIIBase : DesignBase
@@ -205,19 +179,14 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 4; }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
-
-				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
+				static ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
 			};
 
 			template <class FilterClass>
 			struct TypeII : TypeIIBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2], params[3]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3]); }
 
 #include "ButterworthSynthesisH2.inl"
 			};
@@ -230,22 +199,14 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 4; }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
-
-				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultGainParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCutoffFrequencyParam(); }
+				static ParamInfo getParamInfo_3() { return ParamInfo::defaultGainParam(); }
 			};
 
 			template <class FilterClass>
 			struct TypeIII : TypeIIIBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]),
-									   params[0],
-									   params[2],
-									   params[3]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3]); }
 			};
 
 			struct TypeIVBase : DesignBase
@@ -256,21 +217,15 @@ namespace Dsp
 				};
 
 				static int getNumParams() { return 5; }
-
-				static const ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
-
-				static const ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
-
-				static const ParamInfo getParamInfo_4() { return ParamInfo::defaultGainParam(); }
+				static ParamInfo getParamInfo_2() { return ParamInfo::defaultCenterFrequencyParam(); }
+				static ParamInfo getParamInfo_3() { return ParamInfo::defaultBandwidthHzParam(); }
+				static ParamInfo getParamInfo_4() { return ParamInfo::defaultGainParam(); }
 			};
 
 			template <class FilterClass>
 			struct TypeIV : TypeIVBase, FilterClass
 			{
-				void setParams(const Params& params)
-				{
-					FilterClass::setup(int(params[1]), params[0], params[2], params[3], params[4]);
-				}
+				void setParams(const Params& params) { FilterClass::setup(int(params[1]), params[0], params[2], params[3], params[4]); }
 			};
 
 			// Factored kind and name
@@ -318,18 +273,12 @@ namespace Dsp
 			};
 
 			// This glues on the Order parameter
-			template <int MaxOrder,
-					  template <class> class TypeClass,
-					  template <int> class FilterClass>
+			template <int MaxOrder, template <class> class TypeClass, template <int> class FilterClass>
 			struct OrderBase : TypeClass<FilterClass<MaxOrder>>
 			{
 				const ParamInfo getParamInfo_1() const
 				{
-					return ParamInfo(idOrder, "Order", "Order",
-									 1, MaxOrder, 2,
-									 &ParamInfo::Int_toControlValue,
-									 &ParamInfo::Int_toNativeValue,
-									 &ParamInfo::Int_toString);
+					return ParamInfo(idOrder, "Order", "Order", 1, MaxOrder, 2, &ParamInfo::Int_toControlValue, &ParamInfo::Int_toNativeValue, &ParamInfo::Int_toString);
 				}
 			};
 
@@ -340,34 +289,25 @@ namespace Dsp
 			//
 
 			template <int MaxOrder>
-			struct LowPass : OrderBase<MaxOrder, TypeI, Butterworth::LowPass>,
-							 LowPassDescription {};
+			struct LowPass : OrderBase<MaxOrder, TypeI, Butterworth::LowPass>, LowPassDescription {};
 
 			template <int MaxOrder>
-			struct HighPass : OrderBase<MaxOrder, TypeI, Butterworth::HighPass>,
-							  HighPassDescription {};
+			struct HighPass : OrderBase<MaxOrder, TypeI, Butterworth::HighPass>, HighPassDescription {};
 
 			template <int MaxOrder>
-			struct BandPass : OrderBase<MaxOrder, TypeII, Butterworth::BandPass>,
-							  BandPassDescription {};
+			struct BandPass : OrderBase<MaxOrder, TypeII, Butterworth::BandPass>, BandPassDescription {};
 
 			template <int MaxOrder>
-			struct BandStop : OrderBase<MaxOrder, TypeII, Butterworth::BandStop>,
-							  BandStopDescription {};
+			struct BandStop : OrderBase<MaxOrder, TypeII, Butterworth::BandStop>, BandStopDescription {};
 
 			template <int MaxOrder>
-			struct LowShelf : OrderBase<MaxOrder, TypeIII, Butterworth::LowShelf>,
-							  LowShelfDescription {};
+			struct LowShelf : OrderBase<MaxOrder, TypeIII, Butterworth::LowShelf>, LowShelfDescription {};
 
 			template <int MaxOrder>
-			struct HighShelf : OrderBase<MaxOrder, TypeIII, Butterworth::HighShelf>,
-							   HighShelfDescription {};
+			struct HighShelf : OrderBase<MaxOrder, TypeIII, Butterworth::HighShelf>, HighShelfDescription {};
 
 			template <int MaxOrder>
-			struct BandShelf : OrderBase<MaxOrder, TypeIV, Butterworth::BandShelf>,
-							   BandShelfDescription {};
+			struct BandShelf : OrderBase<MaxOrder, TypeIV, Butterworth::BandShelf>, BandShelfDescription {};
 		} // namespace Design
 	} // namespace Butterworth
 } // namespace Dsp
-
-#endif

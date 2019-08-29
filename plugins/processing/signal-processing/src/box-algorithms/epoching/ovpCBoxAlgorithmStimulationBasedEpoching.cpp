@@ -22,12 +22,12 @@ namespace
 bool CBoxAlgorithmStimulationBasedEpoching::initialize()
 {
 	m_EpochDurationInSeconds = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 0);
-	double epochOffset       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
+	const double epochOffset       = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 1);
 	m_StimulationId          = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 
 	m_EpochDuration = ITimeArithmetics::secondsToTime(m_EpochDurationInSeconds);
 
-	int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
+	const int epochOffsetSign = (epochOffset > 0) - (epochOffset < 0);
 	m_EpochOffset       = epochOffsetSign * int64_t(ITimeArithmetics::secondsToTime(std::fabs(epochOffset)));
 
 	m_LastReceivedStimulationDate   = 0;
@@ -158,7 +158,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 
 	for (uint64_t stimulationDate : m_ReceivedStimulations)
 	{
-		uint64_t currentEpochStartTime = uint64_t(int64_t(stimulationDate) + m_EpochOffset);
+		const uint64_t currentEpochStartTime = uint64_t(int64_t(stimulationDate) + m_EpochOffset);
 
 		// No cache available
 		if (m_CachedChunks.empty()) { break; }
@@ -195,13 +195,13 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 
 				while (currentSampleIndexInOutputBuffer < m_SampleCountPerOutputEpoch)
 				{
-					auto currentOutputSampleTime = currentEpochStartTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, currentSampleIndexInOutputBuffer);
+					const auto currentOutputSampleTime = currentEpochStartTime + ITimeArithmetics::sampleCountToTime(m_SamplingRate, currentSampleIndexInOutputBuffer);
 
 					// If we handle non-dyadic sampling rates then we do not have a guarantee that all chunks will be
 					// dated with exact values. We add a bit of wiggle room around the incoming chunks to consider
 					// whether a sample is in them or not. This wiggle room will be of half of the sample duration
 					// on each side.
-					uint64_t chunkTimeTolerance = ITimeArithmetics::sampleCountToTime(m_SamplingRate, 1) / 2;
+					const uint64_t chunkTimeTolerance = ITimeArithmetics::sampleCountToTime(m_SamplingRate, 1) / 2;
 					if (currentSampleIndexInInputBuffer == m_SampleCountPerInputBuffer)
 					{
 						// advance to beginning of the next cached chunk
@@ -259,7 +259,7 @@ bool CBoxAlgorithmStimulationBasedEpoching::process()
 	}), m_ReceivedStimulations.end());
 
 	// Deprecate cached chunks which will no longer be used because they are too far back in history compared to received stimulations
-	uint64_t lastUsefulChunkEndTime = m_ReceivedStimulations.empty() ? m_LastStimulationChunkStartTime : m_ReceivedStimulations.front();
+	const uint64_t lastUsefulChunkEndTime = m_ReceivedStimulations.empty() ? m_LastStimulationChunkStartTime : m_ReceivedStimulations.front();
 
 	auto cutoffTime = int64_t(lastUsefulChunkEndTime) + m_EpochOffset;
 	if (cutoffTime > 0)
