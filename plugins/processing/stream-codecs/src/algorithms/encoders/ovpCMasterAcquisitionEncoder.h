@@ -21,7 +21,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CMasterAcquisitionEncoder : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CMasterAcquisitionEncoder final : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -41,7 +41,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::IAlgorithmProxy* m_pChannelUnitsStreamEncoder          = nullptr;
 		};
 
-		class CMasterAcquisitionEncoderDesc : public OpenViBE::Plugins::IAlgorithmDesc
+		class CMasterAcquisitionEncoderDesc final : public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
 			void release() override { }

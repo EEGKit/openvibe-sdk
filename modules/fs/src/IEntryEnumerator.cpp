@@ -27,7 +27,7 @@ using namespace FS;
 
 namespace FS
 {
-	class CEntry : public IEntryEnumerator::IEntry
+	class CEntry final : public IEntryEnumerator::IEntry
 	{
 	public:
 
@@ -43,7 +43,7 @@ namespace FS
 
 namespace FS
 {
-	class CAttributes : public IEntryEnumerator::IAttributes
+	class CAttributes final : public IEntryEnumerator::IAttributes
 	{
 	public:
 
@@ -93,7 +93,7 @@ namespace FS
 
 namespace FS
 {
-	class CEntryEnumeratorLinux : public CEntryEnumerator
+	class CEntryEnumeratorLinux final : public CEntryEnumerator
 	{
 	public:
 		CEntryEnumeratorLinux(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) { }
@@ -105,7 +105,7 @@ namespace FS
 
 namespace FS
 {
-	class CEntryEnumeratorWindows : public CEntryEnumerator
+	class CEntryEnumeratorWindows final : public CEntryEnumerator
 	{
 	public:
 		explicit CEntryEnumeratorWindows(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack) : CEntryEnumerator(rEntryEnumeratorCallBack) {}

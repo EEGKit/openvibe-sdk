@@ -27,7 +27,7 @@ namespace OpenViBEToolkit
 		virtual void setChannelName(uint32_t index, const char* name) { m_pPendingSignal->setChannelName(index, name); }
 		virtual void setSampleCountPerBuffer(uint32_t count) { m_ui32SampleCountPerBuffer = count; }
 		virtual void setSamplingRate(uint32_t samplingRate) { m_pPendingSignal->setSamplingRate(samplingRate); }
-		virtual void setSampleBuffer(const double* pBuffer);
+		virtual void setSampleBuffer(const double* buffer);
 
 		// Stimulation input reader callback
 		virtual void setStimulationCount(uint32_t /*count*/) {}
@@ -87,9 +87,9 @@ namespace OpenViBEToolkit
 	//
 
 	template <class CBoxAlgorithmParentClass>
-	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSampleBuffer(const double* pBuffer)
+	void TTrainingBoxAlgorithm<CBoxAlgorithmParentClass>::setSampleBuffer(const double* buffer)
 	{
-		insertBufferSamples(*m_pPendingSignal, m_pPendingSignal->getSampleCount(), m_ui32SampleCountPerBuffer, pBuffer, m_pPendingSignal);
+		insertBufferSamples(*m_pPendingSignal, m_pPendingSignal->getSampleCount(), m_ui32SampleCountPerBuffer, buffer, m_pPendingSignal);
 
 		this->getBoxAlgorithmContext()->getPlayerContext()->getLogManager()
 				<< OpenViBE::Kernel::LogLevel_Debug

@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSpectralAnalysis : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSpectralAnalysis final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			OpenViBE::IMatrix* m_FrequencyAbscissa = nullptr;
 		};
 
-		class CBoxAlgorithmSpectralAnalysisDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmSpectralAnalysisDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

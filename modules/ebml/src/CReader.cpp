@@ -8,9 +8,9 @@ CReader::CReader(IReaderCallback& rReaderCallback){
 
 CReader::~CReader() { m_pReaderImplementation->release(); }
 
-bool CReader::processData(const void* pBuffer, const uint64_t size)
+bool CReader::processData(const void* buffer, const uint64_t size)
 {
-	return m_pReaderImplementation->processData(pBuffer, size);
+	return m_pReaderImplementation->processData(buffer, size);
 }
 
 CIdentifier CReader::getCurrentNodeIdentifier() const { return m_pReaderImplementation->getCurrentNodeIdentifier(); }

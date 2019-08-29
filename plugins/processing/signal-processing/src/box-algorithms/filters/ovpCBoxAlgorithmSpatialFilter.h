@@ -12,7 +12,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSpatialFilter : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSpatialFilter final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 			uint32_t loadCoefficients(const OpenViBE::CString& rCoefficients, char c1, char c2, uint32_t nRows, uint32_t nCols);
 		};
 
-		class CBoxAlgorithmSpatialFilterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmSpatialFilterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmSpatialFilterDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmSpatialFilterDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

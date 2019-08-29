@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CStimulationDecoder : public CEBMLBaseDecoder
+		class CStimulationDecoder final : public CEBMLBaseDecoder
 		{
 		public:
 			void release() override { delete this; }
@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
 			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, uint64_t size) override;
+			void processChildData(const void* buffer, uint64_t size) override;
 			void closeChild() override;
 
 		protected:
@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CStimulationSet m_oStimulationSet;
 		};
 
-		class CStimulationDecoderDesc : public CEBMLBaseDecoderDesc
+		class CStimulationDecoderDesc final : public CEBMLBaseDecoderDesc
 		{
 		public:
 			void release() override { }

@@ -46,21 +46,13 @@ namespace Dsp
 	 * Implements smooth modulation of time-varying filter parameters
 	 *
 	 */
-	template <class DesignClass,
-			  int Channels,
-			  class StateType = DirectFormII>
-	class SmoothedFilterDesign
-			: public FilterDesign<DesignClass,
-								  Channels,
-								  StateType>
+	template <class DesignClass, int Channels, class StateType = DirectFormII>
+	class SmoothedFilterDesign final : public FilterDesign<DesignClass, Channels, StateType>
 	{
 	public:
 		typedef FilterDesign<DesignClass, Channels, StateType> filter_type_t;
 
-		SmoothedFilterDesign(int transitionSamples)
-			: m_transitionSamples(transitionSamples)
-			  , m_remainingSamples(-1) // first time flag
-		{ }
+		SmoothedFilterDesign(int transitionSamples) : m_transitionSamples(transitionSamples) { }
 
 		// Process a block of samples.
 		template <typename Sample>
@@ -100,10 +92,7 @@ namespace Dsp
 
 				m_remainingSamples -= remainingSamples;
 
-				if (m_remainingSamples == 0)
-				{
-					m_transitionParams = this->getParams();
-				}
+				if (m_remainingSamples == 0) { m_transitionParams = this->getParams(); }
 			}
 
 			// do what's left
@@ -112,22 +101,13 @@ namespace Dsp
 				// no transition
 				for (int i = 0; i < numChannels; ++i)
 				{
-					this->m_design.process(numSamples - remainingSamples,
-										   destChannelArray[i] + remainingSamples,
-										   this->m_state[i]);
+					this->m_design.process(numSamples - remainingSamples, destChannelArray[i] + remainingSamples, this->m_state[i]);
 				}
 			}
 		}
 
-		void process(int numSamples, float* const* arrayOfChannels) override
-		{
-			processBlock(numSamples, arrayOfChannels);
-		}
-
-		void process(int numSamples, double* const* arrayOfChannels) override
-		{
-			processBlock(numSamples, arrayOfChannels);
-		}
+		void process(int numSamples, float* const* arrayOfChannels) override { processBlock(numSamples, arrayOfChannels); }
+		void process(int numSamples, double* const* arrayOfChannels) override { processBlock(numSamples, arrayOfChannels); }
 
 #include "SmoothedFilterSynthesisH.inl"
 
@@ -152,7 +132,7 @@ namespace Dsp
 		DesignClass m_transitionFilter;
 		int m_transitionSamples = 0;
 
-		int m_remainingSamples = 0;			// remaining transition samples
+		int m_remainingSamples = -1;			// remaining transition samples
 	};
 } // namespace Dsp
 

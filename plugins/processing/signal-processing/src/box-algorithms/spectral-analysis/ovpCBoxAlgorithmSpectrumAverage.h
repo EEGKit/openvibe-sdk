@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSpectrumAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSpectrumAverage final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -43,7 +43,7 @@ namespace OpenViBEPlugins
 			std::vector<uint32_t> m_vSelectedIndices;
 		};
 
-		class CBoxAlgorithmSpectrumAverageDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmSpectrumAverageDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

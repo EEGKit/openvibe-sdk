@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CBoxAlgorithmElectrodeLocalisationFileReader : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmElectrodeLocalisationFileReader final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 			bool m_bBufferSent = false;
 		};
 
-		class CBoxAlgorithmElectrodeLocalisationFileReaderDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmElectrodeLocalisationFileReaderDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

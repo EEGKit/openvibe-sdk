@@ -6,7 +6,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CScenarioSettingKeywordParserCallback : public IConfigurationKeywordExpandCallback
+		class CScenarioSettingKeywordParserCallback final : public IConfigurationKeywordExpandCallback
 		{
 		public:
 			explicit CScenarioSettingKeywordParserCallback(const IScenario& rScenario)

@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CAlgorithmClassifierOneVsAll : public OpenViBEToolkit::CAlgorithmPairingStrategy
+		class CAlgorithmClassifierOneVsAll final : public OpenViBEToolkit::CAlgorithmPairingStrategy
 		{
 		public:
 			bool initialize() override;
@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 			fClassifierComparison m_fAlgorithmComparison = nullptr;
 		};
 
-		class CAlgorithmClassifierOneVsAllDesc : public OpenViBEToolkit::CAlgorithmPairingStrategyDesc
+		class CAlgorithmClassifierOneVsAllDesc final : public OpenViBEToolkit::CAlgorithmPairingStrategyDesc
 		{
 		public:
 			void release() override { }

@@ -90,7 +90,7 @@ namespace OpenViBEToolkit
 
 	private:
 
-		class CScopedAlgorithm
+		class CScopedAlgorithm final
 		{
 		public:
 
@@ -100,7 +100,7 @@ namespace OpenViBEToolkit
 				m_rpAlgorithmContext = pAlgorithmContext;
 			}
 
-			virtual ~CScopedAlgorithm() { m_rpAlgorithmContext = nullptr; }
+			~CScopedAlgorithm() { m_rpAlgorithmContext = nullptr; }
 
 		protected:
 

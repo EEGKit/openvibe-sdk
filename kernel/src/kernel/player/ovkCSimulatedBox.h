@@ -100,7 +100,7 @@ namespace OpenViBE
 			uint64_t getOutputChunkSize(const uint32_t OutputIndex) const override;
 			bool setOutputChunkSize(const uint32_t OutputIndex, const uint64_t ui64Size, const bool bDiscard = true) override;
 			uint8_t* getOutputChunkBuffer(const uint32_t OutputIndex) override;
-			bool appendOutputChunkData(const uint32_t OutputIndex, const uint8_t* pBuffer, const uint64_t size) override;
+			bool appendOutputChunkData(const uint32_t OutputIndex, const uint8_t* buffer, const uint64_t size) override;
 			IMemoryBuffer* getOutputChunk(const uint32_t OutputIndex) override;
 			bool markOutputAsReadyToSend(const uint32_t OutputIndex, const uint64_t ui64StartTime, const uint64_t ui64EndTime) override;
 			//@}

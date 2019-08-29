@@ -340,7 +340,7 @@ Date_API char* DateParser::windowsStrptime(const char* buf, const char* fmt, str
 	}
 
 	/* LINTED functional specification */
-	return (char *)bp;
+	return const_cast<char *>(bp);
 }
 
 

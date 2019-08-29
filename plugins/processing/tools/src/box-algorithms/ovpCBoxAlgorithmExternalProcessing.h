@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 {
 	namespace Tools
 	{
-		class CBoxAlgorithmExternalProcessing : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmExternalProcessing final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			CBoxAlgorithmExternalProcessing();
@@ -93,13 +93,13 @@ namespace OpenViBEPlugins
 			std::queue<Packet> m_PacketHistory;
 		};
 
-		class CBoxAlgorithmExternalProcessingListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmExternalProcessingListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmExternalProcessingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmExternalProcessingDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override {}

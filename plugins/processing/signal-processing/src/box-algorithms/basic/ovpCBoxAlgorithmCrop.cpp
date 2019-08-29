@@ -83,39 +83,39 @@ bool CBoxAlgorithmCrop::processInput(const uint32_t index)
 bool CBoxAlgorithmCrop::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
 		TParameterHandler<const IMemoryBuffer*> l_oInputMemoryBufferHandle(m_pStreamDecoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
 		TParameterHandler<IMemoryBuffer*> l_oOutputMemoryBufferHandle(m_pStreamEncoder->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_OutputParameterId_EncodedMemoryBuffer));
-		l_oInputMemoryBufferHandle  = l_rDynamicBoxContext.getInputChunk(0, i);
-		l_oOutputMemoryBufferHandle = l_rDynamicBoxContext.getOutputChunk(0);
+		l_oInputMemoryBufferHandle  = boxContext.getInputChunk(0, i);
+		l_oOutputMemoryBufferHandle = boxContext.getOutputChunk(0);
 
 		m_pStreamDecoder->process();
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedHeader))
 		{
 			m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeHeader);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
+			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedBuffer))
 		{
-			double* l_pBuffer = m_pMatrix->getBuffer();
-			for (uint32_t j = 0; j < m_pMatrix->getBufferElementCount(); j++, l_pBuffer++)
+			double* buffer = m_pMatrix->getBuffer();
+			for (uint32_t j = 0; j < m_pMatrix->getBufferElementCount(); j++, buffer++)
 			{
-				if (*l_pBuffer < m_f64MinCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Min || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) { *l_pBuffer = m_f64MinCropValue; }
-				if (*l_pBuffer > m_f64MaxCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Max || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) { *l_pBuffer = m_f64MaxCropValue; }
+				if (*buffer < m_f64MinCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Min || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) { *buffer = m_f64MinCropValue; }
+				if (*buffer > m_f64MaxCropValue && (m_ui64CropMethod == OVP_TypeId_CropMethod_Max || m_ui64CropMethod == OVP_TypeId_CropMethod_MinMax)) { *buffer = m_f64MaxCropValue; }
 			}
 			m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeBuffer);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
+			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedEnd))
 		{
 			m_pStreamEncoder->process(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputTriggerId_EncodeEnd);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
+			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 		}
 
-		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
+		boxContext.markInputAsDeprecated(0, i);
 	}
 
 	return true;

@@ -13,7 +13,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CAlgorithmOVMatrixFileWriter : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CAlgorithmOVMatrixFileWriter final : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CMatrix*> ip_pMatrix;
 		};
 
-		class CAlgorithmOVMatrixFileWriterDesc : public OpenViBE::Plugins::IAlgorithmDesc
+		class CAlgorithmOVMatrixFileWriterDesc final : public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
 			void release() override { }

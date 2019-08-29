@@ -27,7 +27,7 @@
 
 namespace Socket
 {
-	class CConnectionSerial : public IConnectionSerial
+	class CConnectionSerial final : public IConnectionSerial
 	{
 	public:
 			
@@ -187,7 +187,7 @@ namespace Socket
 			return false;
 		}
 
-		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize) override
+		uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -198,7 +198,7 @@ namespace Socket
 #if defined TARGET_OS_Windows
 			DWORD l_dwWritten = 0;
 
-			if (!WriteFile(m_pFile, pBuffer, ui32BufferSize, &l_dwWritten, nullptr))
+			if (!WriteFile(m_pFile, buffer, ui32BufferSize, &l_dwWritten, nullptr))
 			{
 				m_sLastError = "Failed to write on serial port: " + this->getLastErrorFormated();
 				this->close();
@@ -216,7 +216,7 @@ namespace Socket
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			int l_iResult = ::write(m_iFile, pBuffer, ui32BufferSize);
+			int l_iResult = ::write(m_iFile, buffer, ui32BufferSize);
 			if(l_iResult < 0)
 			{
 				m_sLastError = "Could not write on connection";
@@ -229,7 +229,7 @@ namespace Socket
 			return 0;
 		}
 
-		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize) override
+		uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -241,7 +241,7 @@ namespace Socket
 
 			DWORD l_dwRead = 0;
 
-			if (!ReadFile(m_pFile, pBuffer, ui32BufferSize, &l_dwRead, nullptr))
+			if (!ReadFile(m_pFile, buffer, ui32BufferSize, &l_dwRead, nullptr))
 			{
 				m_sLastError = "Failed to read on serial port: " + this->getLastErrorFormated();
 				this->close();
@@ -259,7 +259,7 @@ namespace Socket
 
 #elif defined TARGET_OS_Linux || defined TARGET_OS_MacOS
 
-			int l_iResult = ::read(m_iFile, pBuffer, ui32BufferSize);
+			int l_iResult = ::read(m_iFile, buffer, ui32BufferSize);
 			if (l_iResult < 0)
 			{
 				m_sLastError = "Could not read from connection";
@@ -272,9 +272,9 @@ namespace Socket
 			return 0;
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
+		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
 		{
-			const char* p   = reinterpret_cast<const char*>(pBuffer);
+			const char* p   = reinterpret_cast<const char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -286,9 +286,9 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
+		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
 		{
-			char* p         = reinterpret_cast<char*>(pBuffer);
+			char* p         = reinterpret_cast<char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())

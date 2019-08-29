@@ -371,7 +371,7 @@ namespace Common
 			/*
 			 * Trivial channel wise callback implementation
 			 */
-			class CCallbackChannelWise : public ICallback
+			class CCallbackChannelWise final : public ICallback
 			{
 			public:
 				CCallbackChannelWise(TFloat* pOutputSample)
@@ -393,7 +393,7 @@ namespace Common
 			/*
 			 * Trivial sample wise callback implementation
 			 */
-			class CCallbackSampleWise : public ICallback
+			class CCallbackSampleWise final : public ICallback
 			{
 			public:
 				CCallbackSampleWise(TFloat* pOutputSample, size_t ui32OutputSampleCount)

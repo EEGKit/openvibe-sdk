@@ -21,7 +21,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CMetaboxManagerEntryEnumeratorCallBack : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
+		class CMetaboxManagerEntryEnumeratorCallBack final : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
 		{
 		public:
 

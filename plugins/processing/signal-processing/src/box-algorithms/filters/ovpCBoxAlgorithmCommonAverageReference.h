@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmCommonAverageReference : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmCommonAverageReference final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CMatrix m_oMatrix;
 		};
 
-		class CBoxAlgorithmCommonAverageReferenceDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmCommonAverageReferenceDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

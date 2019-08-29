@@ -24,7 +24,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CBoxAlgorithmGenericStreamReader : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, public EBML::IReaderCallback
+		class CBoxAlgorithmGenericStreamReader final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, public EBML::IReaderCallback
 		{
 		public:
 
@@ -63,11 +63,11 @@ namespace OpenViBEPlugins
 			bool initializeFile();
 			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
 			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, const uint64_t size) override;
+			void processChildData(const void* buffer, const uint64_t size) override;
 			void closeChild() override;
 		};
 
-		class CBoxAlgorithmGenericStreamReaderListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmGenericStreamReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -112,7 +112,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmGenericStreamReaderDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmGenericStreamReaderDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

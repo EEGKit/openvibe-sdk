@@ -21,7 +21,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmWindowing : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmWindowing final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -40,7 +40,7 @@ namespace OpenViBEPlugins
 			std::vector<double> m_WindowCoefficients;
 		};
 
-		class CBoxAlgorithmWindowingDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmWindowingDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CAcquisitionDecoder : public CEBMLBaseDecoder
+		class CAcquisitionDecoder final : public CEBMLBaseDecoder
 		{
 		public:
 
@@ -29,12 +29,12 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
 			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, uint64_t size) override;
+			void processChildData(const void* buffer, uint64_t size) override;
 			void closeChild() override;
 
 		protected:
 
-			void appendMemoryBuffer(OpenViBE::IMemoryBuffer* pMemoryBuffer, const void* pBuffer, uint64_t size);
+			void appendMemoryBuffer(OpenViBE::IMemoryBuffer* pMemoryBuffer, const void* buffer, uint64_t size);
 
 			OpenViBE::Kernel::TParameterHandler<uint64_t> op_ui64BufferDuration;
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> op_pExperimentInformationStream;
@@ -48,7 +48,7 @@ namespace OpenViBEPlugins
 			std::stack<EBML::CIdentifier> m_vNodes;
 		};
 
-		class CAcquisitionDecoderDesc : public CEBMLBaseDecoderDesc
+		class CAcquisitionDecoderDesc final : public CEBMLBaseDecoderDesc
 		{
 		public:
 			void release() override { }

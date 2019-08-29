@@ -142,13 +142,13 @@ namespace OpenViBE
 			/**
 			 * \brief Appends data to the output chunk
 			 * \param index [in] : the index of the output to work on
-			 * \param pBuffer [in] : the buffer to append to the current buffer
+			 * \param buffer [in] : the buffer to append to the current buffer
 			 * \param size [in] : the size of the appended buffer
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 * \warning This function resizes the chunk size calling \c setOutputChunkSize and then appends data doing a copy.
 			 */
-			virtual bool appendOutputChunkData(const uint32_t index, const uint8_t* pBuffer, const uint64_t size) = 0;
+			virtual bool appendOutputChunkData(const uint32_t index, const uint8_t* buffer, const uint64_t size) = 0;
 			/**
 			 * \brief Gets an output chunk.
 			 * \param index [in] : the index of the desired output.

@@ -165,10 +165,10 @@ bool CBoxAlgorithmTemporalFilter::processInput(const uint32_t index)
 bool CBoxAlgorithmTemporalFilter::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 	uint32_t j;
 
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
 		m_oDecoder.decode(i);
 
@@ -252,7 +252,7 @@ bool CBoxAlgorithmTemporalFilter::process()
 		}
 		if (m_oDecoder.isBufferReceived())
 		{
-			double* l_pBuffer = m_oDecoder.getOutputMatrix()->getBuffer();
+			double* buffer = m_oDecoder.getOutputMatrix()->getBuffer();
 
 			//"french cook" to reduce transient for bandpass and highpass filters
 			if (m_vFirstSample.size() == 0)
@@ -262,7 +262,7 @@ bool CBoxAlgorithmTemporalFilter::process()
 				{
 					for (j = 0; j < l_ui32ChannelCount; j++)
 					{
-						m_vFirstSample[j] = l_pBuffer[j * l_ui32SampleCount]; //first value of the signal = DC offset
+						m_vFirstSample[j] = buffer[j * l_ui32SampleCount]; //first value of the signal = DC offset
 					}
 				}
 			}
@@ -273,19 +273,19 @@ bool CBoxAlgorithmTemporalFilter::process()
 				//otherwise, no treatment, since m_vFirstSample = 0
 				for (uint32_t k = 0; k < l_ui32SampleCount; k++)
 				{
-					l_pBuffer[k] -= m_vFirstSample[j];
+					buffer[k] -= m_vFirstSample[j];
 				}
 
 				if (m_vFilter[j])
 				{
-					m_vFilter[j]->process(l_ui32SampleCount, &l_pBuffer);
+					m_vFilter[j]->process(l_ui32SampleCount, &buffer);
 				}
-				l_pBuffer += l_ui32SampleCount;
+				buffer += l_ui32SampleCount;
 			}
 			m_oEncoder.encodeBuffer();
 		}
 		if (m_oDecoder.isEndReceived()) { m_oEncoder.encodeEnd(); }
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
+		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 	}
 
 	return true;
@@ -293,35 +293,35 @@ bool CBoxAlgorithmTemporalFilter::process()
 
 #if 0
 //zero-phase filtering, with two different filters
-void CBoxAlgorithmTemporalFilter::filtfilt2(std::shared_ptr < Dsp::Filter > pFilter1, std::shared_ptr < Dsp::Filter > pFilter2, uint32_t SampleCount, double* pBuffer)
+void CBoxAlgorithmTemporalFilter::filtfilt2(std::shared_ptr < Dsp::Filter > pFilter1, std::shared_ptr < Dsp::Filter > pFilter2, uint32_t SampleCount, double* buffer)
 {
 	uint32_t j;
 
 	//1rst filtering
-	pFilter1->process(SampleCount, &pBuffer);
+	pFilter1->process(SampleCount, &buffer);
 
 	//reversal of the buffer
 	for(j=0; j<SampleCount/2; j++)
 	{
-		double l_f64TemporalVar = pBuffer[j];
-		pBuffer[j] = pBuffer[SampleCount-1-j];
-		pBuffer[SampleCount-1-j] = l_f64TemporalVar;
+		double l_f64TemporalVar = buffer[j];
+		buffer[j] = buffer[SampleCount-1-j];
+		buffer[SampleCount-1-j] = l_f64TemporalVar;
 	}
 
 	//2nd filtering
-	pFilter2->process(SampleCount, &pBuffer);
+	pFilter2->process(SampleCount, &buffer);
 
 	//reversal of the buffer
 	for(j=0; j<SampleCount/2; j++)
 	{
-		double l_f64TemporalVar = pBuffer[j];
-		pBuffer[j] = pBuffer[SampleCount-1-j];
-		pBuffer[SampleCount-1-j] = l_f64TemporalVar;
+		double l_f64TemporalVar = buffer[j];
+		buffer[j] = buffer[SampleCount-1-j];
+		buffer[SampleCount-1-j] = l_f64TemporalVar;
 	}
 }
 
 //zero-phase filtering, with mirror signals on the edges
-void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::Filter* pFilter2, uint32_t SampleCount, double* pBuffer)
+void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::Filter* pFilter2, uint32_t SampleCount, double* buffer)
 {
 	uint32_t j;
 
@@ -332,15 +332,15 @@ void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::F
 
 	for(j=0; j<l_ui32TransientLength; j++)
 	{
-		l_vBuffer[j] = 2*pBuffer[0]-pBuffer[l_ui32TransientLength-j];
+		l_vBuffer[j] = 2*buffer[0]-buffer[l_ui32TransientLength-j];
 	}
 	for(j=0; j<SampleCount; j++)
 	{
-		l_vBuffer[j+l_ui32TransientLength] = pBuffer[j];
+		l_vBuffer[j+l_ui32TransientLength] = buffer[j];
 	}
 	for(j=0; j<l_ui32TransientLength; j++)
 	{
-		l_vBuffer[j+l_ui32TransientLength+SampleCount] = 2*pBuffer[SampleCount-1]-pBuffer[SampleCount-1-j-1];
+		l_vBuffer[j+l_ui32TransientLength+SampleCount] = 2*buffer[SampleCount-1]-buffer[SampleCount-1-j-1];
 	}
 	SampleCount+=2*l_ui32TransientLength;
 
@@ -353,7 +353,7 @@ void CBoxAlgorithmTemporalFilter::filtfilt2mirror (Dsp::Filter* pFilter1, Dsp::F
 	//central part of the buffer
 	for(j=0; j<SampleCount-2*l_ui32TransientLength; j++)
 	{
-		pBuffer[j] = pBufferTemp[j+l_ui32TransientLength];
+		buffer[j] = pBufferTemp[j+l_ui32TransientLength];
 	}
 }
 #endif

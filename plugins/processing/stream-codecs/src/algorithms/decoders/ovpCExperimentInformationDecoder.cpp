@@ -93,7 +93,7 @@ void CExperimentInformationDecoder::openChild(const EBML::CIdentifier& rIdentifi
 	else { CEBMLBaseDecoder::openChild(rIdentifier); }
 }
 
-void CExperimentInformationDecoder::processChildData(const void* pBuffer, const uint64_t size)
+void CExperimentInformationDecoder::processChildData(const void* buffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -112,20 +112,20 @@ void CExperimentInformationDecoder::processChildData(const void* pBuffer, const 
 		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier)
 		|| (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName))
 	{
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier) { op_ui64ExperimentIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size); }
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date) { op_pExperimentDate->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, size)); }
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier) { op_ui64SubjectIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size); }
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Name) { op_pSubjectName->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, size)); }
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Age) { op_ui64SubjectAge = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size); }
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender) { op_ui64SubjectGender = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size); }
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier) { op_ui64LaboratoryIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size); }
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName) { op_pLaboratoryName->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, size)); }
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier) { op_ui64TechnicianIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size); }
-		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName) { op_pTechnicianName->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, size)); }
+		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Identifier) { op_ui64ExperimentIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Experiment_Date) { op_pExperimentDate->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(buffer, size)); }
+		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Identifier) { op_ui64SubjectIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Name) { op_pSubjectName->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(buffer, size)); }
+		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Age) { op_ui64SubjectAge = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Subject_Gender) { op_ui64SubjectGender = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryIdentifier) { op_ui64LaboratoryIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_LaboratoryName) { op_pLaboratoryName->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(buffer, size)); }
+		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianIdentifier) { op_ui64TechnicianIdentifier = m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size); }
+		if (l_rTop == OVTK_NodeId_Header_ExperimentInformation_Context_TechnicianName) { op_pTechnicianName->set(m_pEBMLReaderHelper->getASCIIStringFromChildData(buffer, size)); }
 	}
 	else
 	{
-		CEBMLBaseDecoder::processChildData(pBuffer, size);
+		CEBMLBaseDecoder::processChildData(buffer, size);
 	}
 }
 

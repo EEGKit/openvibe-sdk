@@ -14,7 +14,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CBoxAlgorithmCSVFileReader : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmCSVFileReader final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -68,7 +68,7 @@ namespace OpenViBEPlugins
 			static const uint32_t m_ui32bufferLen = 16384; // Side-effect: a maximum allowed length for a line of a CSV file
 		};
 
-		class CBoxAlgorithmCSVFileReaderListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
@@ -114,7 +114,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmCSVFileReaderDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmCSVFileReaderDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

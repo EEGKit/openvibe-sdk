@@ -37,7 +37,7 @@ namespace OpenViBE
 	* simply builds the commands from the parsed options.
 	*
 	*/
-	class CommandLineOptionParser : public ICommandParser
+	class CommandLineOptionParser final : public ICommandParser
 	{
 	public:
 

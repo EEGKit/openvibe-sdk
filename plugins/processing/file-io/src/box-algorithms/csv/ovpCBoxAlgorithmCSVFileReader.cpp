@@ -222,7 +222,7 @@ bool CBoxAlgorithmCSVFileReader::process()
 	//line buffer
 	char l_pLine[m_ui32bufferLen];
 	const double l_f64currentTime = ITimeArithmetics::timeToSeconds(getPlayerContext().getCurrentTime());
-	//IBoxIO& l_rDynamicBoxContext=this->getDynamicBoxContext();
+	//IBoxIO& boxContext=this->getDynamicBoxContext();
 
 	//if no line was read, read the first data line.
 	if (m_vLastLineSplit.size() == 0)

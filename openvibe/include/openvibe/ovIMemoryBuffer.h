@@ -67,12 +67,12 @@ namespace OpenViBE
 		virtual const uint8_t* getDirectPointer() const = 0;
 		/**
 		 * \brief Appends data to this memory buffer
-		 * \param pBuffer [in] : the buffer containing data that should be appended
+		 * \param buffer [in] : the buffer containing data that should be appended
 		 * \param size [in] : the buffer size that should be appended
 		 * \return \e true in case of success.
 		 * \return \e false in case of error.
 		 */
-		virtual bool append(const uint8_t* pBuffer, const uint64_t size) = 0;
+		virtual bool append(const uint8_t* buffer, const uint64_t size) = 0;
 		/**
 		 * \brief Appends data to this memory buffer
 		 * \param rMemoryBuffer [in] : the memory buffer containing data that should be appended

@@ -10,11 +10,11 @@
 
 #define OVD_AttributeId_SettingOverrideFilename             OpenViBE::CIdentifier(0x8D21FF41, 0xDF6AFE7E)
 
-class CBoxSettingModifierVisitor : public OpenViBE::IObjectVisitor, public XML::IReaderCallback
+class CBoxSettingModifierVisitor final : public OpenViBE::IObjectVisitor, public XML::IReaderCallback
 {
 public:
 
-	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = nullptr) : IObjectVisitor(), m_pConfigurationManager(pConfigurationManager) {}
+	explicit CBoxSettingModifierVisitor(OpenViBE::Kernel::IConfigurationManager* pConfigurationManager = nullptr) : OpenViBE::IObjectVisitor(), m_pConfigurationManager(pConfigurationManager) {}
 
 	void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount) override;
 	void processChildData(const char* sData) override;

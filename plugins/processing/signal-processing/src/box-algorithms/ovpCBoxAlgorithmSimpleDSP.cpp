@@ -130,18 +130,18 @@ bool CBoxAlgorithmSimpleDSP::uninitialize()
 bool CBoxAlgorithmSimpleDSP::processInput(const uint32_t index)
 {
 	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
-	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
 
-	if (l_rDynamicBoxContext.getInputChunkCount(0) == 0) { return true; }
+	if (boxContext.getInputChunkCount(0) == 0) { return true; }
 
-	uint64_t l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, 0);
-	uint64_t l_ui64EndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, 0);
+	uint64_t l_ui64StartTime = boxContext.getInputChunkStartTime(0, 0);
+	uint64_t l_ui64EndTime   = boxContext.getInputChunkEndTime(0, 0);
 	for (uint32_t i = 1; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		if (l_rDynamicBoxContext.getInputChunkCount(i) == 0) { return true; }
+		if (boxContext.getInputChunkCount(i) == 0) { return true; }
 		if (m_bCheckChunkDates)
 		{
-			OV_ERROR_UNLESS_KRF(l_ui64StartTime == l_rDynamicBoxContext.getInputChunkStartTime(i, 0) || l_ui64EndTime == l_rDynamicBoxContext.getInputChunkEndTime(i, 0),
+			OV_ERROR_UNLESS_KRF(l_ui64StartTime == boxContext.getInputChunkStartTime(i, 0) || l_ui64EndTime == boxContext.getInputChunkEndTime(i, 0),
 								"Invalid chunk dates (disable this error check by setting Plugin_SignalProcessing_SimpleDSP_CheckChunkDates to false)",
 								OpenViBE::Kernel::ErrorType::BadInput);
 		}
@@ -155,7 +155,7 @@ bool CBoxAlgorithmSimpleDSP::processInput(const uint32_t index)
 bool CBoxAlgorithmSimpleDSP::process()
 {
 	const IBox& l_rStaticBoxContext          = this->getStaticBoxContext();
-	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
 
 	uint32_t l_ui32HeaderCount = 0;
 	uint32_t l_ui32BufferCount = 0;
@@ -166,12 +166,12 @@ bool CBoxAlgorithmSimpleDSP::process()
 
 	m_vMatrix.clear();
 
-	op_pMemoryBuffer = l_rDynamicBoxContext.getOutputChunk(0);
+	op_pMemoryBuffer = boxContext.getOutputChunk(0);
 	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
 		TParameterHandler<const IMemoryBuffer*> ip_pMemoryBuffer(m_vStreamDecoder[i]->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_InputParameterId_MemoryBufferToDecode));
 		TParameterHandler<IMatrix*> op_pMatrix(m_vStreamDecoder[i]->getOutputParameter(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputParameterId_Matrix));
-		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(i, 0);
+		ip_pMemoryBuffer = boxContext.getInputChunk(i, 0);
 		m_vStreamDecoder[i]->process();
 		if (m_vStreamDecoder[i]->isOutputTriggerActive(OVP_GD_Algorithm_StreamedMatrixStreamDecoder_OutputTriggerId_ReceivedHeader))
 		{
@@ -192,7 +192,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 			l_ui32EndCount++;
 		}
 		m_vMatrix.push_back(op_pMatrix);
-		l_rDynamicBoxContext.markInputAsDeprecated(i, 0);
+		boxContext.markInputAsDeprecated(i, 0);
 	}
 
 	OV_ERROR_UNLESS_KRF((!l_ui32HeaderCount || l_ui32HeaderCount == l_rStaticBoxContext.getInputCount()) &&
@@ -214,7 +214,7 @@ bool CBoxAlgorithmSimpleDSP::process()
 
 	if (l_ui32HeaderCount || l_ui32BufferCount || l_ui32EndCount)
 	{
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, 0), l_rDynamicBoxContext.getInputChunkEndTime(0, 0));
+		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, 0), boxContext.getInputChunkEndTime(0, 0));
 	}
 
 	return true;
@@ -230,19 +230,19 @@ void CBoxAlgorithmSimpleDSP::evaluate()
 	}
 
 	TParameterHandler<IMatrix*> ip_pMatrix(m_pStreamEncoder->getInputParameter(OVP_GD_Algorithm_StreamedMatrixStreamEncoder_InputParameterId_Matrix));
-	double* l_pBuffer    = ip_pMatrix->getBuffer();
-	double* l_pBufferEnd = ip_pMatrix->getBuffer() + ip_pMatrix->getBufferElementCount();
+	double* buffer    = ip_pMatrix->getBuffer();
+	double* bufferEnd = ip_pMatrix->getBuffer() + ip_pMatrix->getBufferElementCount();
 
-	while (l_pBuffer != l_pBufferEnd)
+	while (buffer != bufferEnd)
 	{
-		*l_pBuffer = m_pEquationParser->executeEquation();
+		*buffer = m_pEquationParser->executeEquation();
 
 		for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 		{
 			m_ppVariable[i]++;
 		}
 
-		l_pBuffer++;
+		buffer++;
 	}
 
 #if 0
@@ -253,132 +253,28 @@ void CBoxAlgorithmSimpleDSP::evaluate()
 			//for every samples
 			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
 			{
-				m_f64Variable = pBuffer[i];
+				m_f64Variable = buffer[i];
 				m_pMatrixBuffer[i] = m_pEquationParser->executeEquation();
 			}
 			break;
-
-		case OP_X2:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = pBuffer[i]*pBuffer[i];
-			}
-			break;
-
-		case OP_NONE:
-			System::Memory::copy(m_pMatrixBuffer, pBuffer, m_ui64MatrixBufferSize*sizeof(double));
-			break;
-
-		case OP_ABS:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = abs(pBuffer[i]);
-			}
-			break;
-		case OP_ACOS:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = acos(pBuffer[i]);
-			}
-			break;
-
-		case OP_ASIN:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = asin(pBuffer[i]);
-			}
-			break;
-
-		case OP_ATAN:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = atan(pBuffer[i]);
-			}
-			break;
-
-		case OP_CEIL:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = ceil(pBuffer[i]);
-			}
-			break;
-
-		case OP_COS:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = cos(pBuffer[i]);
-			}
-			break;
-
-		case OP_EXP:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = exp(pBuffer[i]);
-			}
-			break;
-
-		case OP_FLOOR:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = floor(pBuffer[i]);
-			}
-			break;
-
-		case OP_LOG:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = log(pBuffer[i]);
-			}
-			break;
-
-		case OP_LOG10:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = log10(pBuffer[i]);
-			}
-			break;
-
-		case OP_SIN:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = sin(pBuffer[i]);
-			}
-			break;
-
-		case OP_SQRT:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = sqrt(pBuffer[i]);
-			}
-			break;
-
-		case OP_TAN:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = tan(pBuffer[i]);
-			}
-			break;
-
-		case OP_ADD:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = pBuffer[i] + m_f64SpecialEquationParameter;
-			}
-			break;
-
-		case OP_MUL:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = pBuffer[i] * m_f64SpecialEquationParameter;
-			}
-			break;
-
-		case OP_DIV:
-			for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++)
-			{
-				m_pMatrixBuffer[i] = pBuffer[i] / m_f64SpecialEquationParameter;
-			}
-			break;
+		case OP_X2: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = buffer[i]*buffer[i]; } break;
+		case OP_NONE: System::Memory::copy(m_pMatrixBuffer, buffer, m_ui64MatrixBufferSize*sizeof(double)); break;
+		case OP_ABS: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = abs(buffer[i]); } break;
+		case OP_ACOS: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = acos(buffer[i]); } break;
+		case OP_ASIN: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = asin(buffer[i]); } break;
+		case OP_ATAN: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = atan(buffer[i]); } break;
+		case OP_CEIL: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = ceil(buffer[i]); } break;
+		case OP_COS: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = cos(buffer[i]); } break;
+		case OP_EXP: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = exp(buffer[i]); } break;
+		case OP_FLOOR: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = floor(buffer[i]); } break;
+		case OP_LOG: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = log(buffer[i]); } break;
+		case OP_LOG10: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = log10(buffer[i]); } break;
+		case OP_SIN: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = sin(buffer[i]); } break;
+		case OP_SQRT: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = sqrt(buffer[i]); } break;
+		case OP_TAN: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = tan(buffer[i]); } break;
+		case OP_ADD: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = buffer[i] + m_f64SpecialEquationParameter; } break;
+		case OP_MUL: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = buffer[i] * m_f64SpecialEquationParameter; } break;
+		case OP_DIV: for(uint64_t i=0 ; i<m_ui64MatrixBufferSize ; i++) { m_pMatrixBuffer[i] = buffer[i] / m_f64SpecialEquationParameter; } break;
 	}
 #endif
 }

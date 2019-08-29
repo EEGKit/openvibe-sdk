@@ -156,8 +156,8 @@ bool CBoxAlgorithmChannelSelector::processInput(const uint32_t index)
 
 bool CBoxAlgorithmChannelSelector::process()
 {
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	IBoxIO& boxContext = this->getDynamicBoxContext();
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
 		m_pDecoder->decode(i);
 		if (m_pDecoder->isHeaderReceived())
@@ -322,7 +322,7 @@ bool CBoxAlgorithmChannelSelector::process()
 			m_pEncoder->encodeBuffer();
 		}
 		if (m_pDecoder->isEndReceived()) { m_pEncoder->encodeEnd(); }
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
+		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 	}
 
 	return true;

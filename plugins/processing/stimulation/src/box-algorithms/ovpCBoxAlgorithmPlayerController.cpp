@@ -45,11 +45,11 @@ bool CBoxAlgorithmPlayerController::processInput(const uint32_t index)
 bool CBoxAlgorithmPlayerController::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
-		ip_pMemoryBuffer = l_rDynamicBoxContext.getInputChunk(0, i);
+		ip_pMemoryBuffer = boxContext.getInputChunk(0, i);
 		m_pStreamDecoder->process();
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedHeader)) { }
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedBuffer))
@@ -77,7 +77,7 @@ bool CBoxAlgorithmPlayerController::process()
 		}
 		if (m_pStreamDecoder->isOutputTriggerActive(OVP_GD_Algorithm_StimulationStreamDecoder_OutputTriggerId_ReceivedEnd)) { }
 
-		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
+		boxContext.markInputAsDeprecated(0, i);
 	}
 
 	// ...
@@ -86,9 +86,9 @@ bool CBoxAlgorithmPlayerController::process()
 	// l_rStaticBoxContext.getOutputCount();
 	// l_rStaticBoxContext.getSettingCount();
 
-	// l_rDynamicBoxContext.getInputChunkCount()
-	// l_rDynamicBoxContext.getInputChunk(i, )
-	// l_rDynamicBoxContext.getOutputChunk(i, )
+	// boxContext.getInputChunkCount()
+	// boxContext.getInputChunk(i, )
+	// boxContext.getOutputChunk(i, )
 
 	return true;
 }

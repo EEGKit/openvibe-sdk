@@ -63,4 +63,4 @@ namespace OpenViBETest
 
 		return expression;
 	}
-}
+} // namespace OpenViBETest

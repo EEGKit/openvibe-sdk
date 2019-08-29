@@ -92,10 +92,10 @@ bool CBoxAlgorithmZeroCrossingDetector::processInput(const uint32_t index)
 
 bool CBoxAlgorithmZeroCrossingDetector::process()
 {
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 	uint32_t j, k;
 
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
 		m_oDecoder.decode(i);
 		m_oEncoder1.getInputStimulationSet()->clear();
@@ -131,7 +131,7 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 		{
 			if (m_ui64ChunkCount == 0)
 			{
-				m_ui32SamplingRate = l_ui32SampleCount * uint32_t((1LL << 32) / (l_rDynamicBoxContext.getInputChunkEndTime(0, i) - l_rDynamicBoxContext.getInputChunkStartTime(0, i)));
+				m_ui32SamplingRate = l_ui32SampleCount * uint32_t((1LL << 32) / (boxContext.getInputChunkEndTime(0, i) - boxContext.getInputChunkStartTime(0, i)));
 				m_ui32WindowTime   = uint32_t(m_f64WindowTime * m_ui32SamplingRate);
 			}
 
@@ -162,11 +162,11 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 					uint64_t stimulationDate;
 					if (m_ui32SamplingRate > 0)
 					{
-						stimulationDate = l_rDynamicBoxContext.getInputChunkStartTime(0, i) + ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, k);
+						stimulationDate = boxContext.getInputChunkStartTime(0, i) + ITimeArithmetics::sampleCountToTime(m_ui32SamplingRate, k);
 					}
 					else if (l_ui32SampleCount == 1)
 					{
-						stimulationDate = l_rDynamicBoxContext.getInputChunkEndTime(0, i);
+						stimulationDate = boxContext.getInputChunkEndTime(0, i);
 					}
 					else
 					{
@@ -236,9 +236,9 @@ bool CBoxAlgorithmZeroCrossingDetector::process()
 			m_oEncoder1.encodeEnd();
 			m_oEncoder2.encodeEnd();
 		}
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
-		l_rDynamicBoxContext.markOutputAsReadyToSend(1, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
-		l_rDynamicBoxContext.markOutputAsReadyToSend(2, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
+		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
+		boxContext.markOutputAsReadyToSend(1, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
+		boxContext.markOutputAsReadyToSend(2, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 	}
 
 	return true;

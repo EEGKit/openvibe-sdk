@@ -17,7 +17,7 @@ namespace OpenViBEPlugins
 {
 	namespace Tools
 	{
-		class CBoxAlgorithmEBMLStreamSpy : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, virtual public EBML::IReaderCallback
+		class CBoxAlgorithmEBMLStreamSpy final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, virtual public EBML::IReaderCallback
 		{
 		public:
 
@@ -27,7 +27,7 @@ namespace OpenViBEPlugins
 			bool uninitialize() override;
 			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
 			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, const uint64_t size) override;
+			void processChildData(const void* buffer, const uint64_t size) override;
 			void closeChild() override;
 			bool processInput(const uint32_t index) override;
 			bool process() override;
@@ -37,7 +37,7 @@ namespace OpenViBEPlugins
 		protected:
 
 			template <class T>
-			void processBinaryBlock(const void* pBuffer, uint64_t size);
+			void processBinaryBlock(const void* buffer, uint64_t size);
 
 			std::stack<EBML::CIdentifier> m_vNodes;
 			std::map<EBML::CIdentifier, std::string> m_vName;
@@ -48,7 +48,7 @@ namespace OpenViBEPlugins
 			EBML::IReaderHelper* m_pReaderHelper = nullptr;
 		};
 
-		class CBoxAlgorithmEBMLStreamSpyListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmEBMLStreamSpyListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -72,7 +72,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmEBMLStreamSpyDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmEBMLStreamSpyDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

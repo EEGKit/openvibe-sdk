@@ -19,7 +19,7 @@ namespace OpenViBE
 	 *
 	 * \note Implementation based on std::map<std::string, std::string>
 	 */
-	class OV_API CNameValuePairList
+	class OV_API CNameValuePairList final
 	{
 	public:
 

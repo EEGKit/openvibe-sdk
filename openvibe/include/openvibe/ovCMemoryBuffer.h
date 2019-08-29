@@ -18,7 +18,7 @@ namespace OpenViBE
 	 * interface and redirect their calls to this implementation.
 	 */
 
-	class OV_API CMemoryBuffer : public IMemoryBuffer
+	class OV_API CMemoryBuffer final : public IMemoryBuffer
 	{
 	public:
 
@@ -58,7 +58,7 @@ namespace OpenViBE
 		uint64_t getSize() const override;
 		uint8_t* getDirectPointer() override;
 		const uint8_t* getDirectPointer() const override;
-		bool append(const uint8_t* pBuffer, const uint64_t size) override;
+		bool append(const uint8_t* buffer, const uint64_t size) override;
 		bool append(const IMemoryBuffer& rMemoryBuffer) override;
 
 		_IsDerivedFromClass_Final_(OpenViBE::IMemoryBuffer, OV_ClassId_MemoryBufferBridge)

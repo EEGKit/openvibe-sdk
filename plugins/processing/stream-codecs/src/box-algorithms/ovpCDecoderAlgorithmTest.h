@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CDecoderAlgorithmTest : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CDecoderAlgorithmTest final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<const OpenViBE::IMemoryBuffer*> ip_pMemoryBuffer[7];
 		};
 
-		class CDecoderAlgorithmTestDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CDecoderAlgorithmTestDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

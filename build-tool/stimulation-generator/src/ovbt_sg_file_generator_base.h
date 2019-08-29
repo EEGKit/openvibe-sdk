@@ -14,7 +14,7 @@ protected:
 };
 
 
-class CCppDefineGenerator : public CFileGeneratorBase
+class CCppDefineGenerator final : public CFileGeneratorBase
 {
 public:
 	bool openFile(const char* sFilename) override;
@@ -22,7 +22,7 @@ public:
 	bool closeFile() override;
 };
 
-class CCppCodeGenerator : public CFileGeneratorBase
+class CCppCodeGenerator final : public CFileGeneratorBase
 {
 public:
 	bool openFile(const char* sFilename) override;
@@ -30,7 +30,7 @@ public:
 	bool closeFile() override;
 };
 
-class CMatlabGenerator : public CFileGeneratorBase
+class CMatlabGenerator final : public CFileGeneratorBase
 {
 public:
 	bool openFile(const char* sFilename) override;

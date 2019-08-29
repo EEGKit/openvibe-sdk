@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CChannelUnitsEncoder : public CStreamedMatrixEncoder
+		class CChannelUnitsEncoder final : public CStreamedMatrixEncoder
 		{
 		public:
 			void release() override { delete this; }
@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 		};
 
 
-		class CChannelUnitsEncoderDesc : public CStreamedMatrixEncoderDesc
+		class CChannelUnitsEncoderDesc final : public CStreamedMatrixEncoderDesc
 		{
 		public:
 			void release() override { }

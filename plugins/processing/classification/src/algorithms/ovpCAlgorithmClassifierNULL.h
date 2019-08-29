@@ -17,7 +17,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CAlgorithmClassifierNULL : public OpenViBEToolkit::CAlgorithmClassifier
+		class CAlgorithmClassifierNULL final : public OpenViBEToolkit::CAlgorithmClassifier
 		{
 		public:
 
@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(CAlgorithmClassifier, OVP_ClassId_Algorithm_ClassifierNULL)
 		};
 
-		class CAlgorithmClassifierNULLDesc : public OpenViBEToolkit::CAlgorithmClassifierDesc
+		class CAlgorithmClassifierNULLDesc final : public OpenViBEToolkit::CAlgorithmClassifierDesc
 		{
 		public:
 			void release() override { }

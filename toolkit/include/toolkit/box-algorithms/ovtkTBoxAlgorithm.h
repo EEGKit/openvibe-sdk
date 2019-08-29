@@ -100,7 +100,7 @@ namespace OpenViBEToolkit
 
 		// ====================================================================================================================================
 
-		virtual void appendOutputChunkData(const uint32_t ui32OutputIndex, const void* pBuffer, const uint64_t size)
+		virtual void appendOutputChunkData(const uint32_t ui32OutputIndex, const void* buffer, const uint64_t size)
 		{
 			OpenViBE::Kernel::IBoxAlgorithmContext* l_pBoxAlgorithmContext = this->getBoxAlgorithmContext();
 			if (l_pBoxAlgorithmContext)
@@ -108,15 +108,15 @@ namespace OpenViBEToolkit
 				OpenViBE::Kernel::IBoxIO* l_pDynamicBoxContext = l_pBoxAlgorithmContext->getDynamicBoxContext();
 				if (l_pDynamicBoxContext)
 				{
-					l_pDynamicBoxContext->appendOutputChunkData(ui32OutputIndex, static_cast<const uint8_t*>(pBuffer), size);
+					l_pDynamicBoxContext->appendOutputChunkData(ui32OutputIndex, static_cast<const uint8_t*>(buffer), size);
 				}
 			}
 		}
 
 		template <uint32_t ui32OutputIndex>
-		void appendOutputChunkData(const void* pBuffer, const uint64_t size)
+		void appendOutputChunkData(const void* buffer, const uint64_t size)
 		{
-			appendOutputChunkData(ui32OutputIndex, pBuffer, size);
+			appendOutputChunkData(ui32OutputIndex, buffer, size);
 		}
 
 		_IsDerivedFromClass_(CBoxAlgorithmParentClass, OVTK_ClassId_)
@@ -243,7 +243,7 @@ namespace OpenViBEToolkit
 
 	private:
 
-		class CScopedBoxAlgorithm
+		class CScopedBoxAlgorithm final
 		{
 		public:
 			CScopedBoxAlgorithm(OpenViBE::Kernel::IBoxAlgorithmContext*& rpBoxAlgorithmContext, OpenViBE::Kernel::IBoxAlgorithmContext* pBoxAlgorithmContext)
@@ -365,7 +365,7 @@ namespace OpenViBEToolkit
 
 	private:
 
-		class CScopedBoxListener
+		class CScopedBoxListener final
 		{
 		public:
 			CScopedBoxListener(OpenViBE::Kernel::IBoxListenerContext*& rpBoxListenerContext, OpenViBE::Kernel::IBoxListenerContext* pBoxListenerContext)
@@ -374,10 +374,7 @@ namespace OpenViBEToolkit
 				m_rpBoxListenerContext = pBoxListenerContext;
 			}
 
-			virtual ~CScopedBoxListener()
-			{
-				m_rpBoxListenerContext = nullptr;
-			}
+			virtual ~CScopedBoxListener() { m_rpBoxListenerContext = nullptr; }
 
 		protected:
 			OpenViBE::Kernel::IBoxListenerContext*& m_rpBoxListenerContext;

@@ -21,7 +21,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CAlgorithmConditionedCovariance : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CAlgorithmConditionedCovariance final : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 			typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
@@ -38,7 +38,7 @@ namespace OpenViBEPlugins
 			void dumpMatrix(OpenViBE::Kernel::ILogManager& pMgr, const MatrixXdRowMajor& mat, const OpenViBE::CString& desc);
 		};
 
-		class CAlgorithmConditionedCovarianceDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc
+		class CAlgorithmConditionedCovarianceDesc final : virtual public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
 			void release() override { }

@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmReferenceChannel : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmReferenceChannel final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -29,7 +29,7 @@ namespace OpenViBEPlugins
 			uint32_t m_ui32ReferenceChannelIndex = 0;
 		};
 
-		class CBoxAlgorithmReferenceChannelDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmReferenceChannelDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

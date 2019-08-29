@@ -99,7 +99,7 @@ bool CEncoderAlgorithmTest::processClock(IMessageClock& rMessageClock)
 
 bool CEncoderAlgorithmTest::process()
 {
-	IBoxIO& l_rDynamicBoxContext     = getDynamicBoxContext();
+	IBoxIO& boxContext     = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext  = getStaticBoxContext();
 	IPlayerContext& l_rPlayerContext = getPlayerContext();
 
@@ -109,7 +109,7 @@ bool CEncoderAlgorithmTest::process()
 		m_ui64EndTime   = 0;
 		for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++)
 		{
-			op_pMemoryBuffer[i] = l_rDynamicBoxContext.getOutputChunk(i);
+			op_pMemoryBuffer[i] = boxContext.getOutputChunk(i);
 			m_pStreamEncoder[i]->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeHeader);
 		}
 		m_bHasSentHeader = true;
@@ -118,14 +118,14 @@ bool CEncoderAlgorithmTest::process()
 	{
 		for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++)
 		{
-			op_pMemoryBuffer[i] = l_rDynamicBoxContext.getOutputChunk(i);
+			op_pMemoryBuffer[i] = boxContext.getOutputChunk(i);
 			m_pStreamEncoder[i]->process(OVP_Algorithm_EBMLStreamEncoder_InputTriggerId_EncodeBuffer);
 		}
 	}
 
 	for (uint32_t i = 0; i < l_rStaticBoxContext.getOutputCount(); i++)
 	{
-		l_rDynamicBoxContext.markOutputAsReadyToSend(i, m_ui64StartTime, m_ui64EndTime);
+		boxContext.markOutputAsReadyToSend(i, m_ui64StartTime, m_ui64EndTime);
 	}
 
 	m_ui64StartTime = m_ui64EndTime;

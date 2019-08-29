@@ -126,13 +126,13 @@ namespace EBML
 		// virtual bool setDateAsChildData( ??? value)=0;
 		/**
 		 * \brief Sets a buffer as child data
-		 * \param pBuffer [in] : The buffer to send to the writer
+		 * \param buffer [in] : The buffer to send to the writer
 		 * \param ui64BufferLength [in] : The buffer size in bytes
 		 * \note This function simply calls the basic
 		 *       EBML::IWriter::setChildData function with the
 		 *       same two parameters.
 		 */
-		virtual bool setBinaryAsChildData(const void* pBuffer, uint64_t ui64BufferLength) = 0;
+		virtual bool setBinaryAsChildData(const void* buffer, uint64_t ui64BufferLength) = 0;
 		/**
 		 * \brief Sets an ASCII string as child data
 		 * \param sValue [in] : The ASCII string value to set

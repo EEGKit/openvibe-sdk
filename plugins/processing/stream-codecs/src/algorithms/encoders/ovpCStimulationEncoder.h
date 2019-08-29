@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CStimulationEncoder : public CEBMLBaseEncoder
+		class CStimulationEncoder final : public CEBMLBaseEncoder
 		{
 		public:
 			void release() override { delete this; }
@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IStimulationSet*> ip_pStimulationSet;
 		};
 
-		class CStimulationEncoderDesc : public CEBMLBaseEncoderDesc
+		class CStimulationEncoderDesc final : public CEBMLBaseEncoderDesc
 		{
 		public:
 			void release() override { }

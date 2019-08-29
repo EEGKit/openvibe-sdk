@@ -9,7 +9,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CFeatureVectorEncoder : public CStreamedMatrixEncoder
+		class CFeatureVectorEncoder final : public CStreamedMatrixEncoder
 		{
 		public:
 			void release() override { delete this; }
@@ -18,7 +18,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixEncoder, OVP_ClassId_Algorithm_FeatureVectorStreamEncoder)
 		};
 
-		class CFeatureVectorEncoderDesc : public CStreamedMatrixEncoderDesc
+		class CFeatureVectorEncoderDesc final : public CStreamedMatrixEncoderDesc
 		{
 		public:
 			void release() override { }

@@ -35,7 +35,7 @@ namespace r8b
 	 * factor, which simplifies the overall resampling objects topology.
 	 */
 
-	class CDSPBlockConvolver : public CDSPProcessor
+	class CDSPBlockConvolver final : public CDSPProcessor
 	{
 	public:
 		/**

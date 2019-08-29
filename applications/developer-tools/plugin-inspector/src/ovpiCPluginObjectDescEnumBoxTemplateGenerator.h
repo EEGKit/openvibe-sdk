@@ -10,14 +10,14 @@
 // ------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------------------------------------------------------
 
-class CPluginObjectDescEnumBoxTemplateGenerator : public CPluginObjectDescEnum
+class CPluginObjectDescEnumBoxTemplateGenerator final : public CPluginObjectDescEnum
 {
 public:
 
 	CPluginObjectDescEnumBoxTemplateGenerator(const OpenViBE::Kernel::IKernelContext& kernelContext, const OpenViBE::CString& docTemplateDirectory);
 	bool callback(const OpenViBE::Plugins::IPluginObjectDesc& pluginObjectDesc) override;
-	virtual bool initialize();
-	virtual bool uninitialize();
+	bool initialize();
+	bool uninitialize();
 
 private:
 	// Return a string that correspond to the indexed categories under rst format

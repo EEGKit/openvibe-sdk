@@ -11,7 +11,7 @@ namespace OpenViBE
 {
 	namespace
 	{
-		class CMatrixImpl : public IMatrix
+		class CMatrixImpl final : public IMatrix
 		{
 		public:
 

@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 
 		typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
-		class CAlgorithmClassifierLDA : public OpenViBEToolkit::CAlgorithmClassifier
+		class CAlgorithmClassifierLDA final : public OpenViBEToolkit::CAlgorithmClassifier
 		{
 		public:
 			bool initialize() override;
@@ -69,7 +69,7 @@ namespace OpenViBEPlugins
 			uint32_t getClassCount();
 		};
 
-		class CAlgorithmClassifierLDADesc : public OpenViBEToolkit::CAlgorithmClassifierDesc
+		class CAlgorithmClassifierLDADesc final : public OpenViBEToolkit::CAlgorithmClassifierDesc
 		{
 		public:
 			void release() override { }

@@ -127,7 +127,7 @@ namespace OpenViBEToolkit
 		} SScenario;
 	} // namespace
 
-	class CAlgorithmScenarioImporterContext : public IAlgorithmScenarioImporterContext
+	class CAlgorithmScenarioImporterContext final : public IAlgorithmScenarioImporterContext
 	{
 	public:
 

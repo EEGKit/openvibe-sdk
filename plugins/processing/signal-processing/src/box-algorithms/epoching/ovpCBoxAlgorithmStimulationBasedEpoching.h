@@ -71,7 +71,7 @@ namespace OpenViBEPlugins
 			std::deque<CachedChunk> m_CachedChunks;
 		};
 
-		class CBoxAlgorithmStimulationBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmStimulationBasedEpochingDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

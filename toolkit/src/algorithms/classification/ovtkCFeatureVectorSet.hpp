@@ -7,7 +7,7 @@
 
 namespace OpenViBEToolkit
 {
-	class CInternalFeatureVector : public IFeatureVector
+	class CInternalFeatureVector final : public IFeatureVector
 	{
 	public:
 
@@ -29,7 +29,7 @@ namespace OpenViBEToolkit
 		const double* m_pBuffer            = nullptr;
 	};
 
-	class CFeatureVectorSet : public IFeatureVectorSet
+	class CFeatureVectorSet final : public IFeatureVectorSet
 	{
 	public:
 

@@ -201,10 +201,10 @@ bool CBoxAlgorithmClassifierProcessor::processInput(const uint32_t index)
 
 bool CBoxAlgorithmClassifierProcessor::process()
 {
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	// Check if we have a command first
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(1); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(1); i++)
 	{
 		m_oStimulationDecoder.decode(i);
 		if (m_oStimulationDecoder.isHeaderReceived()) { }
@@ -224,10 +224,10 @@ bool CBoxAlgorithmClassifierProcessor::process()
 	}
 
 	// Classify data
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
-		const uint64_t l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, i);
-		const uint64_t l_ui64EndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, i);
+		const uint64_t l_ui64StartTime = boxContext.getInputChunkStartTime(0, i);
+		const uint64_t l_ui64EndTime   = boxContext.getInputChunkEndTime(0, i);
 
 		m_oFeatureVectorDecoder.decode(i);
 		if (m_oFeatureVectorDecoder.isHeaderReceived())
@@ -236,9 +236,9 @@ bool CBoxAlgorithmClassifierProcessor::process()
 			m_oHyperplaneValuesEncoder.encodeHeader();
 			m_oProbabilityValuesEncoder.encodeHeader();
 
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(1, l_ui64StartTime, l_ui64EndTime);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(2, l_ui64StartTime, l_ui64EndTime);
+			boxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
+			boxContext.markOutputAsReadyToSend(1, l_ui64StartTime, l_ui64EndTime);
+			boxContext.markOutputAsReadyToSend(2, l_ui64StartTime, l_ui64EndTime);
 		}
 		if (m_oFeatureVectorDecoder.isBufferReceived())
 		{
@@ -261,9 +261,9 @@ bool CBoxAlgorithmClassifierProcessor::process()
 			m_oHyperplaneValuesEncoder.encodeBuffer();
 			m_oProbabilityValuesEncoder.encodeBuffer();
 
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(1, l_ui64StartTime, l_ui64EndTime);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(2, l_ui64StartTime, l_ui64EndTime);
+			boxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
+			boxContext.markOutputAsReadyToSend(1, l_ui64StartTime, l_ui64EndTime);
+			boxContext.markOutputAsReadyToSend(2, l_ui64StartTime, l_ui64EndTime);
 		}
 
 		if (m_oFeatureVectorDecoder.isEndReceived())
@@ -272,9 +272,9 @@ bool CBoxAlgorithmClassifierProcessor::process()
 			m_oHyperplaneValuesEncoder.encodeEnd();
 			m_oProbabilityValuesEncoder.encodeEnd();
 
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(1, l_ui64StartTime, l_ui64EndTime);
-			l_rDynamicBoxContext.markOutputAsReadyToSend(2, l_ui64StartTime, l_ui64EndTime);
+			boxContext.markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
+			boxContext.markOutputAsReadyToSend(1, l_ui64StartTime, l_ui64EndTime);
+			boxContext.markOutputAsReadyToSend(2, l_ui64StartTime, l_ui64EndTime);
 		}
 	}
 

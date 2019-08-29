@@ -4,7 +4,7 @@
 
 namespace OpenViBE
 {
-	class OV_API CKernelLoader : public IKernelLoader
+	class OV_API CKernelLoader final : public IKernelLoader
 	{
 	public:
 

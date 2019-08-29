@@ -115,16 +115,16 @@ namespace Communication
 	/**
 	 * \brief A header is associated to a message. It give information about the message, like the type and the size.
 	 */
-	class Header : PacketPart
+	class Header final : PacketPart
 	{
 	public:
 		Header();
 		Header(EMessageType type, uint64_t id, uint64_t size);
 		std::vector<uint8_t> toBytes() const override;
 		void setId(uint64_t id) { m_Id = id; }
-		uint64_t getId() { return m_Id; }
+		uint64_t getId() const { return m_Id; }
 		EMessageType getType() const { return m_Type; }
-		uint64_t getSize() const{ return m_Size; }
+		uint64_t getSize() const { return m_Size; }
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 
 	private:
@@ -144,7 +144,7 @@ namespace Communication
 	/**
 	 * \brief Represent an Authentication message.
 	 */
-	class AuthenticationMessage : public Message
+	class AuthenticationMessage final : public Message
 	{
 	public:
 		AuthenticationMessage() { m_IsValid = false; }
@@ -152,7 +152,7 @@ namespace Communication
 		std::vector<uint8_t> toBytes() const override;
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 		EMessageType getMessageType() const override { return MessageType_Authentication; }
-		std::string getConnectionID() { return m_ConnectionID; }
+		std::string getConnectionID() const { return m_ConnectionID; }
 
 	private:
 		static const size_t s_SizeIndex         = 0;
@@ -166,17 +166,17 @@ namespace Communication
 	/**
 	 * \brief This message is used to inform the server or the client about the current communication protocol version used.
 	 */
-	class CommunicationProtocolVersionMessage : public Message
+	class CommunicationProtocolVersionMessage final : public Message
 	{
 	public:
 
 		CommunicationProtocolVersionMessage() { m_IsValid = false; }
-		CommunicationProtocolVersionMessage(uint8_t majorVersion, uint8_t minorVersion)	: m_MinorVersion(minorVersion), m_MajorVersion(majorVersion) { m_IsValid = true; }
+		CommunicationProtocolVersionMessage(uint8_t majorVersion, uint8_t minorVersion) : m_MinorVersion(minorVersion), m_MajorVersion(majorVersion) { m_IsValid = true; }
 		std::vector<uint8_t> toBytes() const override;
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 		EMessageType getMessageType() const override { return MessageType_ProtocolVersion; }
-		uint8_t getMajorVersion() { return m_MajorVersion; }
-		uint8_t getMinorVersion() { return m_MinorVersion; }
+		uint8_t getMajorVersion() const { return m_MajorVersion; }
+		uint8_t getMinorVersion() const { return m_MinorVersion; }
 
 	private:
 		uint8_t m_MinorVersion = 0;
@@ -192,7 +192,7 @@ namespace Communication
 	/**
 	 * \brief InputOutput class describes the input or output of a box.
 	 */
-	class InputOutput : public PacketPart
+	class InputOutput final : public PacketPart
 	{
 	public:
 		InputOutput();
@@ -218,7 +218,7 @@ namespace Communication
 		static const size_t s_MinimumSize   = s_IdSize + s_TypeSize + s_NameSizeSize;
 	};
 
-	class Parameter : public PacketPart
+	class Parameter final : public PacketPart
 	{
 	public:
 		Parameter();
@@ -229,7 +229,7 @@ namespace Communication
 		uint32_t getId() const { return m_Id; }
 		uint64_t getType() const { return m_Type; }
 		std::string getName() const { return m_Name; }
-		std::string getValue() const{ return m_Value; }
+		std::string getValue() const { return m_Value; }
 
 	private:
 		uint32_t m_Id = 0;
@@ -265,7 +265,7 @@ namespace Communication
 
 		const std::vector<InputOutput>* getInputs() const { return &m_Inputs; }
 		const std::vector<InputOutput>* getOutputs() const { return &m_Outputs; }
-		const std::vector<Parameter>* getParameters() const{ return &m_Parameters; }
+		const std::vector<Parameter>* getParameters() const { return &m_Parameters; }
 
 	private:
 		std::vector<InputOutput> m_Inputs;
@@ -323,7 +323,7 @@ namespace Communication
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 
 		EMessageType getMessageType() const override { return MessageType_EBML; }
-		uint32_t getIndex() const{ return m_IOIndex; }
+		uint32_t getIndex() const { return m_IOIndex; }
 		uint64_t getStartTime() const { return m_StartTime; }
 		uint64_t getEndTime() const { return m_EndTime; }
 		std::shared_ptr<const std::vector<uint8_t>> getEBML() const { return m_EBML; }
@@ -401,7 +401,7 @@ namespace Communication
 		std::vector<uint8_t> toBytes() const override;
 		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override;
 
-		EMessageType getMessageType() const override{ return MessageType_Time; }
+		EMessageType getMessageType() const override { return MessageType_Time; }
 		uint64_t getTime() const { return m_Time; }
 
 	private:

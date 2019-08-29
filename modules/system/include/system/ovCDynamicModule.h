@@ -17,7 +17,7 @@ namespace System
 {
 	class CDynamicModuleSymbolLoader; // forward declare to make function declaration possible
 
-	class System_API CDynamicModule
+	class System_API CDynamicModule final
 	{
 	public:
 		enum ELogErrorCodes : unsigned int

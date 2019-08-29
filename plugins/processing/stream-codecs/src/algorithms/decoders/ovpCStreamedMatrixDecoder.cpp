@@ -92,7 +92,7 @@ void CStreamedMatrixDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	else { CEBMLBaseDecoder::openChild(rIdentifier); }
 }
 
-void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const uint64_t size)
+void CStreamedMatrixDecoder::processChildData(const void* buffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -107,28 +107,28 @@ void CStreamedMatrixDecoder::processChildData(const void* pBuffer, const uint64_
 		switch (m_ui32Status)
 		{
 			case Status_ParsingHeader:
-				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { op_pMatrix->setDimensionCount(uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size))); }
+				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_DimensionCount) { op_pMatrix->setDimensionCount(uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size))); }
 				break;
 
 			case Status_ParsingDimension:
-				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) { op_pMatrix->setDimensionSize(m_ui32DimensionIndex, uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size))); }
+				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Size) { op_pMatrix->setDimensionSize(m_ui32DimensionIndex, uint32_t(m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size))); }
 				if (l_rTop == OVTK_NodeId_Header_StreamedMatrix_Dimension_Label)
 				{
 					char label[1024];
-					trim(label, m_pEBMLReaderHelper->getASCIIStringFromChildData(pBuffer, size), nullptr);
+					trim(label, m_pEBMLReaderHelper->getASCIIStringFromChildData(buffer, size), nullptr);
 					op_pMatrix->setDimensionLabel(m_ui32DimensionIndex, m_ui32DimensionEntryIndex++, label);
 				}
 				break;
 
 			case Status_ParsingBuffer:
-				if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { System::Memory::copy(op_pMatrix->getBuffer(), pBuffer, m_ui64MatrixBufferSize * sizeof(double)); }
+				if (l_rTop == OVTK_NodeId_Buffer_StreamedMatrix_RawBuffer) { System::Memory::copy(op_pMatrix->getBuffer(), buffer, m_ui64MatrixBufferSize * sizeof(double)); }
 				break;
 			default: break;
 		}
 	}
 	else
 	{
-		CEBMLBaseDecoder::processChildData(pBuffer, size);
+		CEBMLBaseDecoder::processChildData(buffer, size);
 	}
 }
 

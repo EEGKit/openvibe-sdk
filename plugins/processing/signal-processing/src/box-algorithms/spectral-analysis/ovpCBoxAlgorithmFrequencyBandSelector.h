@@ -16,7 +16,7 @@ namespace OpenViBEPlugins
 	{
 		typedef std::pair<double, double> BandRange;
 
-		class CBoxAlgorithmFrequencyBandSelector : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmFrequencyBandSelector final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 			std::vector<double> m_vSelectionFactor;
 		};
 
-		class CBoxAlgorithmFrequencyBandSelectorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmFrequencyBandSelectorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

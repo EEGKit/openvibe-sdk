@@ -351,13 +351,13 @@ uint8_t* CSimulatedBox::getOutputChunkBuffer(const uint32_t ui32OutputIndex)
 	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getDirectPointer();
 }
 
-bool CSimulatedBox::appendOutputChunkData(const uint32_t ui32OutputIndex, const uint8_t* pBuffer, const uint64_t size)
+bool CSimulatedBox::appendOutputChunkData(const uint32_t ui32OutputIndex, const uint8_t* buffer, const uint64_t size)
 {
 	OV_ERROR_UNLESS_KRF(ui32OutputIndex < m_vCurrentOutput.size(),
 						"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	return m_vCurrentOutput[ui32OutputIndex].getBuffer().append(pBuffer, size);
+	return m_vCurrentOutput[ui32OutputIndex].getBuffer().append(buffer, size);
 }
 
 IMemoryBuffer* CSimulatedBox::getOutputChunk(const uint32_t ui32OutputIndex)

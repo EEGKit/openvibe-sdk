@@ -213,7 +213,7 @@ namespace r8b
 	 */
 
 	template <int FilterLen, int FilterFracs>
-	class CDSPFracInterpolator : public CDSPProcessor
+	class CDSPFracInterpolator final : public CDSPProcessor
 	{
 	public:
 		/**

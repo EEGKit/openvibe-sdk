@@ -263,7 +263,7 @@ bool CDynamicModule::loadFromRegistry(HKEY key, const char* registryPath, const 
 		return false;
 	}
 
-	result = ::RegQueryValueEx(l_Key, registryKeyName, nullptr, nullptr, (unsigned char*)l_DLLPath, &l_Size);
+	result = ::RegQueryValueEx(l_Key, registryKeyName, nullptr, nullptr, reinterpret_cast<unsigned char*>(l_DLLPath), &l_Size);
 
 	if (result == ERROR_SUCCESS)
 	{

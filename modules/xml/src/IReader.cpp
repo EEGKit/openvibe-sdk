@@ -9,16 +9,16 @@ using namespace std;
 
 namespace XML
 {
-	class CReader : public IReader
+	class CReader final : public IReader
 	{
 	public:
 		explicit CReader(IReaderCallback& rReaderCallback);
-		bool processData(const void* pBuffer, uint64_t size) override;
+		bool processData(const void* buffer, uint64_t size) override;
 		void release() override;
 
-		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
-		virtual void processChildData(const char* sData);
-		virtual void closeChild();
+		void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
+		void processChildData(const char* sData);
+		void closeChild();
 
 	protected:
 
@@ -41,10 +41,10 @@ CReader::CReader(IReaderCallback& rReaderCallback)
 	XML_SetUserData(m_pXMLParser, this);
 }
 
-bool CReader::processData(const void* pBuffer, const uint64_t size)
+bool CReader::processData(const void* buffer, const uint64_t size)
 {
 	// $$$ TODO take 64bits size into consideration
-	XML_Status l_eStatus = XML_Parse(m_pXMLParser, static_cast<const char*>(pBuffer), static_cast<const int>(size), false);
+	XML_Status l_eStatus = XML_Parse(m_pXMLParser, static_cast<const char*>(buffer), static_cast<const int>(size), false);
 	if (l_eStatus != XML_STATUS_OK)
 	{
 		XML_Error l_oErrorCode = XML_GetErrorCode(m_pXMLParser);

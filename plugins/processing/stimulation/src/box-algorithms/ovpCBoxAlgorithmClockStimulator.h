@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace Stimulation
 	{
-		class CBoxAlgorithmClockStimulator : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmClockStimulator final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -34,7 +34,7 @@ namespace OpenViBEPlugins
 			double m_StimulationInterval    = 0;
 		};
 
-		class CBoxAlgorithmClockStimulatorDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmClockStimulatorDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

@@ -9,12 +9,12 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CFeatureVectorDecoder : public CStreamedMatrixDecoder
+		class CFeatureVectorDecoder final : public CStreamedMatrixDecoder
 		{
 		public:
 			void release() override { delete this; }
 			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, uint64_t size) override;
+			void processChildData(const void* buffer, uint64_t size) override;
 
 			_IsDerivedFromClass_Final_(OpenViBEPlugins::StreamCodecs::CStreamedMatrixDecoder, OVP_ClassId_Algorithm_FeatureVectorStreamDecoder)
 
@@ -23,7 +23,7 @@ namespace OpenViBEPlugins
 			EBML::CIdentifier m_oTop;
 		};
 
-		class CFeatureVectorDecoderDesc : public CStreamedMatrixDecoderDesc
+		class CFeatureVectorDecoderDesc final : public CStreamedMatrixDecoderDesc
 		{
 		public:
 			void release() override { }

@@ -56,7 +56,7 @@ namespace OpenViBE
 	* \note Use of regex would simplify the implementation but boost::regex is not header-only and std::regex not implemented in gcc 4.8
 	*
 	*/
-	class CommandFileParser : public ICommandParser
+	class CommandFileParser final : public ICommandParser
 	{
 	public:
 
@@ -101,4 +101,4 @@ namespace OpenViBE
 		std::vector<std::shared_ptr<ICommand>> m_CommandList;
 		std::map<std::string, CallbackType> m_CallbackList;
 	};
-}
+} // namespace OpenViBE

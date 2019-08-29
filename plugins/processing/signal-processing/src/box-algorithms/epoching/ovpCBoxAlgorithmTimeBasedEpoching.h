@@ -39,7 +39,7 @@ namespace OpenViBEPlugins
 			uint64_t m_ReferenceTime                 = 0;
 		};
 
-		class CBoxAlgorithmTimeBasedEpochingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmTimeBasedEpochingDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

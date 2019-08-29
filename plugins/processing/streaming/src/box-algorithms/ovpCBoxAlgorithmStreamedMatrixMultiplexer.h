@@ -13,7 +13,7 @@ namespace OpenViBEPlugins
 {
 	namespace Streaming
 	{
-		class CBoxAlgorithmStreamedMatrixMultiplexer : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmStreamedMatrixMultiplexer final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 			bool m_bHeaderSent       = false;
 		};
 
-		class CBoxAlgorithmStreamedMatrixMultiplexerListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmStreamedMatrixMultiplexerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -116,7 +116,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmStreamedMatrixMultiplexerDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmStreamedMatrixMultiplexerDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

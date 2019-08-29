@@ -10,7 +10,7 @@
 
 namespace XML
 {
-	class IXMLHandlerImpl : public IXMLHandler
+	class IXMLHandlerImpl final : public IXMLHandler
 	{
 	public:
 		void release() override;
@@ -27,9 +27,9 @@ namespace XML
 		std::string getLastErrorString() const override;
 
 		//Internal function for parsing
-		virtual void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
-		virtual void processChildData(const char* sData);
-		virtual void closeChild();
+		void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount);
+		void processChildData(const char* sData);
+		void closeChild();
 
 		std::stringstream& getErrorStringStream() const;
 

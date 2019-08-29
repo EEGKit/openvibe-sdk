@@ -201,7 +201,7 @@ namespace Dsp
 		void reset() { m_state.reset(); }
 
 		template <typename Sample>
-		void process(int numSamples, Sample* const* arrayOfChannels) { m_state.process(numSamples, arrayOfChannels, *((FilterClass*)this)); }
+		void process(int numSamples, Sample* const* arrayOfChannels) { m_state.process(numSamples, arrayOfChannels, *static_cast<FilterClass*>(this)); }
 
 	protected:
 		ChannelsState<Channels, typename FilterClass::template State<StateType>> m_state;

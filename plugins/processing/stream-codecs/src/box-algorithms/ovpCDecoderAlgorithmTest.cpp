@@ -87,14 +87,14 @@ bool CDecoderAlgorithmTest::processInput(const uint32_t index)
 
 bool CDecoderAlgorithmTest::process()
 {
-	IBoxIO& l_rDynamicBoxContext    = getDynamicBoxContext();
+	IBoxIO& boxContext    = getDynamicBoxContext();
 	const IBox& l_rStaticBoxContext = getStaticBoxContext();
 
 	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
 	{
-		for (uint32_t j = 0; j < l_rDynamicBoxContext.getInputChunkCount(i); j++)
+		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
 		{
-			ip_pMemoryBuffer[i] = l_rDynamicBoxContext.getInputChunk(i, j);
+			ip_pMemoryBuffer[i] = boxContext.getInputChunk(i, j);
 			m_pStreamDecoder[i]->process();
 
 			if (m_pStreamDecoder[i]->isOutputTriggerActive(OVP_Algorithm_EBMLStreamDecoder_OutputTriggerId_ReceivedHeader))
@@ -126,7 +126,7 @@ bool CDecoderAlgorithmTest::process()
 				}
 			}
 
-			l_rDynamicBoxContext.markInputAsDeprecated(i, j);
+			boxContext.markInputAsDeprecated(i, j);
 		}
 	}
 

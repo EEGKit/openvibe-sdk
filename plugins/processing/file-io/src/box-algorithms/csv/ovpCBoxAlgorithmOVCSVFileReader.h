@@ -56,7 +56,7 @@ namespace OpenViBEPlugins
 			std::vector<double> m_FrequencyAbscissa;
 		};
 
-		class CBoxAlgorithmOVCSVFileReaderListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmOVCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
@@ -87,7 +87,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmOVCSVFileReaderDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmOVCSVFileReaderDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

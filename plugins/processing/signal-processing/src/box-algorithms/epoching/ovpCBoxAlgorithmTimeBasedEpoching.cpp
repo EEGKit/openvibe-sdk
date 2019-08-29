@@ -50,9 +50,9 @@ bool CBoxAlgorithmTimeBasedEpoching::processInput(const uint32_t index)
 
 bool CBoxAlgorithmTimeBasedEpoching::process()
 {
-	IDynamicBoxContext& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IDynamicBoxContext& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t l_ui32ChunkIndex = 0; l_ui32ChunkIndex < l_rDynamicBoxContext.getInputChunkCount(0); l_ui32ChunkIndex++)
+	for (uint32_t l_ui32ChunkIndex = 0; l_ui32ChunkIndex < boxContext.getInputChunkCount(0); l_ui32ChunkIndex++)
 	{
 		OV_ERROR_UNLESS_KRF(m_SignalDecoder.decode(l_ui32ChunkIndex),
 							"Failed to decode chunk",
@@ -93,12 +93,12 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 			}
 
 			m_SignalEncoder.encodeHeader();
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, 0, 0);
+			boxContext.markOutputAsReadyToSend(0, 0, 0);
 		}
 		if (m_SignalDecoder.isBufferReceived())
 		{
-			uint64_t l_ui64InputChunkStartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, l_ui32ChunkIndex);
-			uint64_t l_ui64InputChunkEndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, l_ui32ChunkIndex);
+			uint64_t l_ui64InputChunkStartTime = boxContext.getInputChunkStartTime(0, l_ui32ChunkIndex);
+			uint64_t l_ui64InputChunkEndTime   = boxContext.getInputChunkEndTime(0, l_ui32ChunkIndex);
 
 			if (m_LastInputEndTime != l_ui64InputChunkStartTime)
 			{
@@ -145,7 +145,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 
 						// Writes epoch
 						m_SignalEncoder.encodeBuffer();
-						l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_ui64OutputChunkStartTime, l_ui64OutputChunkEndTime);
+						boxContext.markOutputAsReadyToSend(0, l_ui64OutputChunkStartTime, l_ui64OutputChunkEndTime);
 
 						if (m_OutputSampleCountBetweenEpoch < m_OutputSampleCount)
 						{
@@ -180,7 +180,7 @@ bool CBoxAlgorithmTimeBasedEpoching::process()
 		if (m_SignalDecoder.isEndReceived())
 		{
 			m_SignalEncoder.encodeEnd();
-			l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, l_ui32ChunkIndex), l_rDynamicBoxContext.getInputChunkEndTime(0, l_ui32ChunkIndex));
+			boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, l_ui32ChunkIndex), boxContext.getInputChunkEndTime(0, l_ui32ChunkIndex));
 		}
 	}
 

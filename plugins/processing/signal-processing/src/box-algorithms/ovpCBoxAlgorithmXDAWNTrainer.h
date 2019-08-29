@@ -14,7 +14,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmXDAWNTrainer : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmXDAWNTrainer final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			CBoxAlgorithmXDAWNTrainer();
@@ -38,7 +38,7 @@ namespace OpenViBEPlugins
 			bool m_SaveAsBoxConfig     = false;
 		};
 
-		class CBoxAlgorithmXDAWNTrainerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmXDAWNTrainerDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override {}

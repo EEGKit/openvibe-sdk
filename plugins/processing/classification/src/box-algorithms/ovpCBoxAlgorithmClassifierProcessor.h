@@ -13,7 +13,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CBoxAlgorithmClassifierProcessor : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmClassifierProcessor final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -41,7 +41,7 @@ namespace OpenViBEPlugins
 			std::map<double, uint64_t> m_vStimulation;
 		};
 
-		class CBoxAlgorithmClassifierProcessorDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmClassifierProcessorDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

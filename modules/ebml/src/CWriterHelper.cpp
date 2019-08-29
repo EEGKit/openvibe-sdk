@@ -24,9 +24,9 @@ bool CWriterHelper::setFloat32AsChildData(const float fValue) { return m_pWriter
 
 bool CWriterHelper::setFloat64AsChildData(const double fValue) { return m_pWriterHelperImplementation->setFloat64AsChildData(fValue); }
 
-bool CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64_t ui64BufferLength)
+bool CWriterHelper::setBinaryAsChildData(const void* buffer, const uint64_t ui64BufferLength)
 {
-	return m_pWriterHelperImplementation->setBinaryAsChildData(pBuffer, ui64BufferLength);
+	return m_pWriterHelperImplementation->setBinaryAsChildData(buffer, ui64BufferLength);
 }
 
 bool CWriterHelper::setASCIIStringAsChildData(const char* sValue) { return m_pWriterHelperImplementation->setASCIIStringAsChildData(sValue); }

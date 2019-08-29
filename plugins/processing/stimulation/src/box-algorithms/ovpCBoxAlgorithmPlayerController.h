@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace Stimulation
 	{
-		class CBoxAlgorithmPlayerController : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmPlayerController final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 			uint64_t m_ui64ActionIdentifier      = 0;
 		};
 
-		class CBoxAlgorithmPlayerControllerDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmPlayerControllerDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

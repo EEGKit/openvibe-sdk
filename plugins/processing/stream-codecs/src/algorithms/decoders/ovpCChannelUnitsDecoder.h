@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CChannelUnitsDecoder : public CStreamedMatrixDecoder
+		class CChannelUnitsDecoder final : public CStreamedMatrixDecoder
 		{
 		public:
 			void release() override { delete this; }
@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 			// ebml callbacks
 			bool isMasterChild(const EBML::CIdentifier& rIdentifier) override;
 			void openChild(const EBML::CIdentifier& rIdentifier) override;
-			void processChildData(const void* pBuffer, uint64_t size) override;
+			void processChildData(const void* buffer, uint64_t size) override;
 			void closeChild() override;
 
 		protected:
@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 			//			uint32_t m_ui32UnitIndex = 0;
 		};
 
-		class CChannelUnitsDecoderDesc : public CStreamedMatrixDecoderDesc
+		class CChannelUnitsDecoderDesc final : public CStreamedMatrixDecoderDesc
 		{
 		public:
 			void release() override { }

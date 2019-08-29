@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CBoxAlgorithmClassifierTrainer : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmClassifierTrainer final : virtual public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -80,7 +80,7 @@ namespace OpenViBEPlugins
 			std::vector<SFeatureVector> m_vBalancedDataset;
 		};
 
-		class CBoxAlgorithmClassifierTrainerDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmClassifierTrainerDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

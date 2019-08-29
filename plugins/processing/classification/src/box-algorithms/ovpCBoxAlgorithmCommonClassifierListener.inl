@@ -22,17 +22,14 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CBoxAlgorithmCommonClassifierListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmCommonClassifierListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
 			explicit CBoxAlgorithmCommonClassifierListener(const uint32_t ui32CustomSettingBase)
 				: m_oClassifierClassIdentifier(OV_UndefinedIdentifier),
 				  m_oStrategyClassIdentifier(0x0),//OV_UndefinedIdentifier is already use for the native, We initialize to an unused identifier in the strategy list
-				  m_pClassifier(nullptr),
-				  m_pStrategy(nullptr),
-				  m_ui32CustomSettingBase(ui32CustomSettingBase),
-				  m_i32StrategyAmountSettings(-1) { }
+				  m_ui32CustomSettingBase(ui32CustomSettingBase) { }
 
 			bool initialize() override
 			{
@@ -375,12 +372,12 @@ namespace OpenViBEPlugins
 
 		protected:
 
-			OpenViBE::CIdentifier m_oClassifierClassIdentifier;
-			OpenViBE::CIdentifier m_oStrategyClassIdentifier;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier;
-			OpenViBE::Kernel::IAlgorithmProxy* m_pStrategy;
-			const uint32_t m_ui32CustomSettingBase;
-			int m_i32StrategyAmountSettings;
+			OpenViBE::CIdentifier m_oClassifierClassIdentifier = OV_UndefinedIdentifier;
+			OpenViBE::CIdentifier m_oStrategyClassIdentifier = OV_UndefinedIdentifier;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pClassifier = nullptr;
+			OpenViBE::Kernel::IAlgorithmProxy* m_pStrategy = nullptr;
+			const uint32_t m_ui32CustomSettingBase = 0;
+			int m_i32StrategyAmountSettings = -1;
 		};
 	} // namespace Classification
 } // namespace OpenViBEPlugins

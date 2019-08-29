@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CAlgorithmOnlineCovariance : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CAlgorithmOnlineCovariance final : virtual public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 			typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixXdRowMajor;
 
@@ -57,7 +57,7 @@ namespace OpenViBEPlugins
 			uint64_t m_ui64Count = 0;
 		};
 
-		class CAlgorithmOnlineCovarianceDesc : virtual public OpenViBE::Plugins::IAlgorithmDesc
+		class CAlgorithmOnlineCovarianceDesc final : virtual public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
 			void release() override { }

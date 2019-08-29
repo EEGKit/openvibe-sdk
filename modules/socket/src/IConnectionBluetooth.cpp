@@ -30,7 +30,7 @@
 
 namespace Socket
 {
-	class CConnectionBluetooth : public IConnectionBluetooth
+	class CConnectionBluetooth final : public IConnectionBluetooth
 	{
 	public:
 
@@ -158,7 +158,7 @@ namespace Socket
 #endif
 		}
 
-		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize) override
+		uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -168,7 +168,7 @@ namespace Socket
 
 #if defined TARGET_OS_Windows
 
-			const int nBytesSent = _WINSOCK2API_::send(m_oSocket, (char *)pBuffer, ui32BufferSize, 0);
+			const int nBytesSent = _WINSOCK2API_::send(m_oSocket, (char *)buffer, ui32BufferSize, 0);
 
 			if (nBytesSent == SOCKET_ERROR)
 			{
@@ -184,7 +184,7 @@ namespace Socket
 #endif
 		}
 
-		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize) override
+		uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -195,7 +195,7 @@ namespace Socket
 #if defined TARGET_OS_Windows
 
 
-			const int nBytesReceived = _WINSOCK2API_::recv(m_oSocket, static_cast<char *>(pBuffer), ui32BufferSize, 0);
+			const int nBytesReceived = _WINSOCK2API_::recv(m_oSocket, static_cast<char *>(buffer), ui32BufferSize, 0);
 
 			if (nBytesReceived == SOCKET_ERROR)
 			{
@@ -212,7 +212,7 @@ namespace Socket
 #endif
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
+		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
@@ -220,7 +220,7 @@ namespace Socket
 				return false;
 			}
 
-			const char* p   = reinterpret_cast<const char*>(pBuffer);
+			const char* p   = reinterpret_cast<const char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -233,15 +233,15 @@ namespace Socket
 			return l_ui32BytesLeft == 0;
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
+		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
 		{
 			if (!this->isConnected())
 			{
 				m_sLastError = "Bluetooth device is not connected.";
-				return 0;
+				return false;
 			}
 
-			char* p         = reinterpret_cast<char*>(pBuffer);
+			char* p         = reinterpret_cast<char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -296,7 +296,7 @@ namespace Socket
 			l_oSockAddressBlutoothServer.serviceClassId = RFCOMM_PROTOCOL_UUID;
 			l_oSockAddressBlutoothServer.port           = BT_PORT_ANY;
 
-			if (_WINSOCK2API_::connect(m_oSocket, (SOCKADDR*)&l_oSockAddressBlutoothServer, sizeof(SOCKADDR_BTH)) == SOCKET_ERROR)
+			if (_WINSOCK2API_::connect(m_oSocket, reinterpret_cast<SOCKADDR*>(&l_oSockAddressBlutoothServer), sizeof(SOCKADDR_BTH)) == SOCKET_ERROR)
 			{
 				m_sLastError = "Failed to connect the socket to the bluetooth address [" + std::to_string(l_oSockAddressBlutoothServer.btAddr) + "]: " + getLastErrorFormated();
 
@@ -398,7 +398,7 @@ namespace Socket
 					break;
 				}
 				// Get bluetooth MAC address and name
-				bluetoothDevicesAddress.push_back(((SOCKADDR_BTH *)l_sWSAQuerySet->lpcsaBuffer->RemoteAddr.lpSockaddr)->btAddr);
+				bluetoothDevicesAddress.push_back(reinterpret_cast<SOCKADDR_BTH *>(l_sWSAQuerySet->lpcsaBuffer->RemoteAddr.lpSockaddr)->btAddr);
 
 				std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converterX;
 				bluetoothDevicesName.push_back(converterX.to_bytes(l_sWSAQuerySet->lpszServiceInstanceName));

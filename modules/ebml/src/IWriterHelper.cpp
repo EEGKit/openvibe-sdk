@@ -13,7 +13,7 @@ namespace EBML
 {
 	namespace
 	{
-		class CWriterHelper : public IWriterHelper
+		class CWriterHelper final : public IWriterHelper
 		{
 		public:
 
@@ -26,7 +26,7 @@ namespace EBML
 			bool setUIntegerAsChildData(uint64_t uiValue) override;
 			bool setFloat32AsChildData(float fValue) override;
 			bool setFloat64AsChildData(double fValue) override;
-			bool setBinaryAsChildData(const void* pBuffer, uint64_t ui64BufferLength) override;
+			bool setBinaryAsChildData(const void* buffer, uint64_t ui64BufferLength) override;
 			bool setASCIIStringAsChildData(const char* sValue) override;
 			void release() override;
 
@@ -77,7 +77,7 @@ bool CWriterHelper::closeChild()
 bool CWriterHelper::setSIntegerAsChildData(const int64_t iValue)
 {
 	uint64_t size = 0;
-	unsigned char l_pBuffer[8];
+	unsigned char buffer[8];
 
 	if (iValue == 0x00000000000000LL) { size = 0; }
 	else if (iValue >= -0x00000000000080LL && iValue <= 0x0000000000007fLL) { size = 1; }
@@ -91,16 +91,16 @@ bool CWriterHelper::setSIntegerAsChildData(const int64_t iValue)
 
 	for (uint64_t i = 0; i < size; i++)
 	{
-		l_pBuffer[size - i - 1] = static_cast<unsigned char>((iValue >> (i * 8)) & 0xff);
+		buffer[size - i - 1] = static_cast<unsigned char>((iValue >> (i * 8)) & 0xff);
 	}
 
-	return m_pWriter->setChildData(l_pBuffer, size);
+	return m_pWriter->setChildData(buffer, size);
 }
 
 bool CWriterHelper::setUIntegerAsChildData(const uint64_t uiValue)
 {
 	uint64_t size = 8;
-	unsigned char l_pBuffer[8];
+	unsigned char buffer[8];
 
 	if (uiValue == 0x000000000000000LL) { size = 0; }
 	else if (uiValue < 0x000000000000100LL) { size = 1; }
@@ -113,43 +113,43 @@ bool CWriterHelper::setUIntegerAsChildData(const uint64_t uiValue)
 
 	for (uint64_t i = 0; i < size; i++)
 	{
-		l_pBuffer[size - i - 1] = static_cast<unsigned char>((uiValue >> (i * 8)) & 0xff);
+		buffer[size - i - 1] = static_cast<unsigned char>((uiValue >> (i * 8)) & 0xff);
 	}
 
-	return m_pWriter->setChildData(l_pBuffer, size);
+	return m_pWriter->setChildData(buffer, size);
 }
 
 bool CWriterHelper::setFloat32AsChildData(const float fValue)
 {
 	uint32_t l_uiValue;
 	uint64_t size = 0;
-	unsigned char l_pBuffer[8];
+	unsigned char buffer[8];
 	memcpy(&l_uiValue, &fValue, sizeof(fValue));
 
 	size = (fValue != 0 ? 4 : 0);
 	for (uint64_t i = 0; i < size; i++)
 	{
-		l_pBuffer[size - i - 1] = static_cast<unsigned char>((l_uiValue >> (i * 8)) & 0xff);
+		buffer[size - i - 1] = static_cast<unsigned char>((l_uiValue >> (i * 8)) & 0xff);
 	}
-	return m_pWriter->setChildData(l_pBuffer, size);
+	return m_pWriter->setChildData(buffer, size);
 }
 
 bool CWriterHelper::setFloat64AsChildData(const double fValue)
 {
 	uint64_t l_uiValue;
-	unsigned char l_pBuffer[8];
+	unsigned char buffer[8];
 	memcpy(&l_uiValue, &fValue, sizeof(fValue));
 	const uint64_t size = (fValue != 0 ? 8 : 0);
 	for (uint64_t i = 0; i < size; i++)
 	{
-		l_pBuffer[size - i - 1] = static_cast<unsigned char>((l_uiValue >> (i * 8)) & 0xff);
+		buffer[size - i - 1] = static_cast<unsigned char>((l_uiValue >> (i * 8)) & 0xff);
 	}
-	return m_pWriter->setChildData(l_pBuffer, size);
+	return m_pWriter->setChildData(buffer, size);
 }
 
-bool CWriterHelper::setBinaryAsChildData(const void* pBuffer, const uint64_t ui64BufferLength)
+bool CWriterHelper::setBinaryAsChildData(const void* buffer, const uint64_t ui64BufferLength)
 {
-	return m_pWriter->setChildData(pBuffer, ui64BufferLength);
+	return m_pWriter->setChildData(buffer, ui64BufferLength);
 }
 
 bool CWriterHelper::setASCIIStringAsChildData(const char* sValue)

@@ -23,7 +23,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CBoxAlgorithmGenericStreamWriter : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, public EBML::IWriterCallback
+		class CBoxAlgorithmGenericStreamWriter final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, public EBML::IWriterCallback
 		{
 		public:
 
@@ -46,13 +46,13 @@ namespace OpenViBEPlugins
 			EBML::CWriterHelper m_oWriterHelper;
 
 		private:
-			void write(const void* pBuffer, const uint64_t size) override;
+			void write(const void* buffer, const uint64_t size) override;
 
 			OpenViBE::CMemoryBuffer m_oSwap;
 			std::ofstream m_oFile;
 		};
 
-		class CBoxAlgorithmGenericStreamWriterListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmGenericStreamWriterListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -106,7 +106,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmGenericStreamWriterDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmGenericStreamWriterDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

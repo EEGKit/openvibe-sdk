@@ -76,6 +76,6 @@ void CEBMLBaseDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	}
 }
 
-void CEBMLBaseDecoder::processChildData(const void* pBuffer, const uint64_t size) {}
+void CEBMLBaseDecoder::processChildData(const void* buffer, const uint64_t size) {}
 
 void CEBMLBaseDecoder::closeChild() {}

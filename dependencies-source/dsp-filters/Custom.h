@@ -66,11 +66,7 @@ namespace Dsp
 
 		struct TwoPole : Biquad
 		{
-			void setup(double scale,
-					   double poleRho,
-					   double poleTheta,
-					   double zeroRho,
-					   double zeroTheta);
+			void setup(double scale, double poleRho, double poleTheta, double zeroRho, double zeroTheta);
 		};
 
 		//------------------------------------------------------------------------------

@@ -32,7 +32,7 @@
 
 #include <gtest/gtest.h>
 
-class CReaderCallBack : public XML::IReaderCallBack
+class CReaderCallBack final : public XML::IReaderCallBack
 {
 public:
 

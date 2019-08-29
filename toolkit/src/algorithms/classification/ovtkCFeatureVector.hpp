@@ -6,7 +6,7 @@
 namespace OpenViBEToolkit
 {
 	template <class CParent>
-	class TFeatureVector : public TVector<CParent>
+	class TFeatureVector final : public TVector<CParent>
 	{
 	public:
 

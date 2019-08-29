@@ -27,7 +27,7 @@
 
 #include "ovtAssert.h"
 
-class EntryEnumeratorCallBack : public FS::IEntryEnumeratorCallBack
+class EntryEnumeratorCallBack final : public FS::IEntryEnumeratorCallBack
 {
 public:
 

@@ -47,7 +47,7 @@ bool CBoxAlgorithmClockStimulator::processClock(IMessageClock& rMessageClock)
 
 bool CBoxAlgorithmClockStimulator::process()
 {
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
 	uint64_t l_ui64CurrentTime = getPlayerContext().getCurrentTime();
 
@@ -64,12 +64,12 @@ bool CBoxAlgorithmClockStimulator::process()
 	if (l_ui64CurrentTime == 0)
 	{
 		m_oStimulationEncoder.encodeHeader();
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, m_ui64LastEndTime);
+		boxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, m_ui64LastEndTime);
 	}
 	m_oStimulationEncoder.getInputStimulationSet() = &l_oStimulationSet;
 
 	m_oStimulationEncoder.encodeBuffer();
-	l_rDynamicBoxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, l_ui64CurrentTime);
+	boxContext.markOutputAsReadyToSend(0, m_ui64LastEndTime, l_ui64CurrentTime);
 
 	m_ui64LastEndTime = l_ui64CurrentTime;
 

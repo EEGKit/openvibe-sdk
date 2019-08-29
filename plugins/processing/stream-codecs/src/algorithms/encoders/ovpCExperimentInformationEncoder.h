@@ -19,7 +19,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CExperimentInformationEncoder : public CEBMLBaseEncoder
+		class CExperimentInformationEncoder final : public CEBMLBaseEncoder
 		{
 		public:
 			void release() override { delete this; }
@@ -45,7 +45,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::CString*> ip_pTechnicianName;
 		};
 
-		class CExperimentInformationEncoderDesc : public CEBMLBaseEncoderDesc
+		class CExperimentInformationEncoderDesc final : public CEBMLBaseEncoderDesc
 		{
 		public:
 			void release() override { }

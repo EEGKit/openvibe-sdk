@@ -23,7 +23,7 @@ namespace OpenViBE
 			uint64_t m_duration = 0;
 		};
 
-		class CStimulationSetImpl : public IStimulationSet
+		class CStimulationSetImpl final : public IStimulationSet
 		{
 		public:
 			void clear() override { m_stimulations.clear(); }

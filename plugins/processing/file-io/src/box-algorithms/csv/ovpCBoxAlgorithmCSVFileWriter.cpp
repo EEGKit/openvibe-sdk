@@ -110,11 +110,11 @@ bool CBoxAlgorithmCSVFileWriter::process()
 
 bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 {
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	IBoxIO& boxContext = this->getDynamicBoxContext();
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
-		const uint64_t l_ui64StartTime = l_rDynamicBoxContext.getInputChunkStartTime(0, i);
-		const uint64_t l_ui64EndTime   = l_rDynamicBoxContext.getInputChunkEndTime(0, i);
+		const uint64_t l_ui64StartTime = boxContext.getInputChunkStartTime(0, i);
+		const uint64_t l_ui64EndTime   = boxContext.getInputChunkEndTime(0, i);
 
 		m_pStreamDecoder->decode(i);
 
@@ -250,7 +250,7 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 			m_bFirstBuffer = false;
 		}
 		if (m_pStreamDecoder->isEndReceived()) { }
-		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
+		boxContext.markInputAsDeprecated(0, i);
 	}
 
 	return true;
@@ -258,9 +258,9 @@ bool CBoxAlgorithmCSVFileWriter::process_streamedMatrix()
 
 bool CBoxAlgorithmCSVFileWriter::process_stimulation()
 {
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
 		m_pStreamDecoder->decode(i);
 		if (m_pStreamDecoder->isHeaderReceived())
@@ -289,7 +289,7 @@ bool CBoxAlgorithmCSVFileWriter::process_stimulation()
 			}
 		}
 		if (m_pStreamDecoder->isEndReceived()) { }
-		l_rDynamicBoxContext.markInputAsDeprecated(0, i);
+		boxContext.markInputAsDeprecated(0, i);
 	}
 
 	return true;

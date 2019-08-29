@@ -84,7 +84,7 @@ namespace Socket
 			freeaddrinfo(addr);
 #endif
 			errno = 0;
-			if (::connect(m_i32Socket, (struct sockaddr*)&l_oServerAddress, sizeof(struct sockaddr_in)) < 0)
+			if (::connect(m_i32Socket, reinterpret_cast<struct sockaddr*>(&l_oServerAddress), sizeof(struct sockaddr_in)) < 0)
 			{
 				bool l_bInProgress;
 
@@ -133,7 +133,7 @@ namespace Socket
 					::getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, (void*)(&l_iOption), &l_iOptionLength);
 #elif defined TARGET_OS_Windows
 					int l_iOptionLength = sizeof(l_iOption);
-					getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, (char*)(&l_iOption), &l_iOptionLength);
+					getsockopt(m_i32Socket, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&l_iOption), &l_iOptionLength);
 #endif
 					if (l_iOption != 0)
 					{

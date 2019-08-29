@@ -8,7 +8,7 @@ using namespace std;
 
 namespace XML
 {
-	class CWriter : public IWriter
+	class CWriter final : public IWriter
 	{
 	public:
 		explicit CWriter(IWriterCallback& rWriterCallback);

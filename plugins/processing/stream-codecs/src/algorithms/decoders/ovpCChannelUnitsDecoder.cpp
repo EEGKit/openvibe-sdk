@@ -52,7 +52,7 @@ void CChannelUnitsDecoder::openChild(const EBML::CIdentifier& rIdentifier)
 	else { CStreamedMatrixDecoder::openChild(rIdentifier); }
 }
 
-void CChannelUnitsDecoder::processChildData(const void* pBuffer, const uint64_t size)
+void CChannelUnitsDecoder::processChildData(const void* buffer, const uint64_t size)
 {
 	EBML::CIdentifier& l_rTop = m_vNodes.top();
 
@@ -62,15 +62,15 @@ void CChannelUnitsDecoder::processChildData(const void* pBuffer, const uint64_t 
 	{
 		if (l_rTop == OVTK_NodeId_Header_ChannelUnits_Dynamic)
 		{
-			op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(pBuffer, size) ? true : false);
+			op_bDynamic = (m_pEBMLReaderHelper->getUIntegerFromChildData(buffer, size) ? true : false);
 		}
 
-		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_ui32UnitIndex*2  ]=m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, size);
-		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Factor)  op_pMeasurementUnits->getBuffer()[m_ui32UnitIndex*2+1]=m_pEBMLReaderHelper->getFloatFromChildData(pBuffer, size);
+		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Unit)    op_pMeasurementUnits->getBuffer()[m_ui32UnitIndex*2  ]=m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
+		//if(l_rTop==OVTK_NodeId_Header_ChannelUnits_MeasurementUnit_Factor)  op_pMeasurementUnits->getBuffer()[m_ui32UnitIndex*2+1]=m_pEBMLReaderHelper->getFloatFromChildData(buffer, size);
 	}
 	else
 	{
-		CStreamedMatrixDecoder::processChildData(pBuffer, size);
+		CStreamedMatrixDecoder::processChildData(buffer, size);
 	}
 }
 

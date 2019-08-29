@@ -18,7 +18,7 @@ namespace OpenViBEToolkit
 			};
 
 			template <class TContainer>
-			class TSplitCallback : public ISplitCallback
+			class TSplitCallback final : public ISplitCallback
 			{
 			public:
 

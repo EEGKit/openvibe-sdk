@@ -41,7 +41,7 @@ namespace OpenViBEPlugins
 	{
 		typedef Common::Resampler::CResamplerSd CResampler;
 
-		class CBoxAlgorithmSignalResampling : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, CResampler::ICallback
+		class CBoxAlgorithmSignalResampling final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>, CResampler::ICallback
 		{
 		public:
 			void release() override { delete this; }
@@ -73,7 +73,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::IBoxIO* m_pDynamicBoxContext = nullptr;
 		};
 
-		class CBoxAlgorithmSignalResamplingDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmSignalResamplingDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

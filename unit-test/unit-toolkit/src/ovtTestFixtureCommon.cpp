@@ -107,4 +107,4 @@ namespace OpenViBETest
 		m_KernelLoader.uninitialize();
 		m_KernelLoader.unload();
 	}
-}
+} // namespace OpenViBETest

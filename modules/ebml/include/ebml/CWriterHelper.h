@@ -4,7 +4,7 @@
 
 namespace EBML
 {
-	class EBML_API CWriterHelper : public IWriterHelper
+	class EBML_API CWriterHelper final : public IWriterHelper
 	{
 	public:
 
@@ -18,7 +18,7 @@ namespace EBML
 		bool setUIntegerAsChildData(uint64_t uiValue) override;
 		bool setFloat32AsChildData(float fValue) override;
 		bool setFloat64AsChildData(double fValue) override;
-		bool setBinaryAsChildData(const void* pBuffer, uint64_t ui64BufferLength) override;
+		bool setBinaryAsChildData(const void* buffer, uint64_t ui64BufferLength) override;
 		bool setASCIIStringAsChildData(const char* sValue) override;
 		void release() override;
 

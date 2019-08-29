@@ -25,7 +25,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CAlgorithmMatrixAverage : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
+		class CAlgorithmMatrixAverage final : public OpenViBEToolkit::TAlgorithm<OpenViBE::Plugins::IAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -44,10 +44,10 @@ namespace OpenViBEPlugins
 
 			std::deque<OpenViBE::IMatrix*> m_vHistory;
 			std::vector<double> m_CumulativeAverageMatrix;
-			unsigned long long m_CumulativeAverageSampleCount;
+			unsigned long long m_CumulativeAverageSampleCount = 0;
 		};
 
-		class CAlgorithmMatrixAverageDesc : public OpenViBE::Plugins::IAlgorithmDesc
+		class CAlgorithmMatrixAverageDesc final : public OpenViBE::Plugins::IAlgorithmDesc
 		{
 		public:
 			void release() override { }

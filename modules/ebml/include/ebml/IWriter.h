@@ -25,13 +25,13 @@ namespace EBML
 		virtual ~IWriterCallback() { }
 		/**
 		 * \brief Gives the callback object a new stream chunk
-		 * \param pBuffer [in] : The buffer to write in the stream
+		 * \param buffer [in] : The buffer to write in the stream
 		 * \param size [in] : The buffer size in bytes
 		 *
 		 * This function tells the callback object new data are ready to send in the EBML stream. This function
 		 * may be called while the user sends data to the writer.
 		 */
-		virtual void write(const void* pBuffer, const uint64_t size) = 0;
+		virtual void write(const void* buffer, const uint64_t size) = 0;
 	};
 
 	class EBML_API IWriterCallBack : public IWriterCallback { };
@@ -77,7 +77,7 @@ namespace EBML
 		virtual bool openChild(const CIdentifier& rIdentifier) = 0;
 		/**
 		 * \brief Sets data for simple child node
-		 * \param pBuffer [in] : The buffer to set as child data
+		 * \param buffer [in] : The buffer to set as child data
 		 * \param size [in] : The buffer size in bytes
 		 * \return \e true on success.
 		 * \return \e false on error.
@@ -86,7 +86,7 @@ namespace EBML
 		 * If the currently opened node has children, it is a master node so it can't receive data. In such case, the function returns \e false. However,
 		 * it the currently opened node already has data, it returns \e false too.
 		 */
-		virtual bool setChildData(const void* pBuffer, const uint64_t size) = 0;
+		virtual bool setChildData(const void* buffer, const uint64_t size) = 0;
 		/**
 		 * \brief Closes currently opened child node
 		 * \return \e true on success.

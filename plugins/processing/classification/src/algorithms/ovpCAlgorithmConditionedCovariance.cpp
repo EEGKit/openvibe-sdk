@@ -71,10 +71,10 @@ bool CAlgorithmConditionedCovariance::process()
 						"Invalid input matrix [" << l_ui32nRows << "x" << l_ui32nCols << "] (expected at least 1x1 size)",
 						OpenViBE::Kernel::ErrorType::BadInput);
 
-	const double* l_pBuffer = ip_pFeatureVectorSet->getBuffer();
+	const double* buffer = ip_pFeatureVectorSet->getBuffer();
 
 
-	OV_ERROR_UNLESS_KRF(l_pBuffer, "Invalid NULL feature set buffer", OpenViBE::Kernel::ErrorType::BadInput);
+	OV_ERROR_UNLESS_KRF(buffer, "Invalid NULL feature set buffer", OpenViBE::Kernel::ErrorType::BadInput);
 
 	// Set the output buffers so we can write the results to them without copy
 	op_pMean->setDimensionCount(2);
@@ -85,7 +85,7 @@ bool CAlgorithmConditionedCovariance::process()
 	op_pCovarianceMatrix->setDimensionSize(1, l_ui32nCols);
 
 	// Insert our data into an Eigen matrix. As Eigen doesn't have const double* constructor, we cast away the const.
-	const Map<MatrixXdRowMajor> l_oDataMatrix(const_cast<double*>(l_pBuffer), l_ui32nRows, l_ui32nCols);
+	const Map<MatrixXdRowMajor> l_oDataMatrix(const_cast<double*>(buffer), l_ui32nRows, l_ui32nCols);
 
 	// Estimate the data center and center the data
 	Map<MatrixXdRowMajor> l_oDataMean(op_pMean->getBuffer(), 1, l_ui32nCols);

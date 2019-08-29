@@ -27,7 +27,7 @@ inline size_t getCodedSizeLength(const uint64_t uiValue)
 	return codeSizeLength;
 }
 
-inline bool getCodedBuffer(const uint64_t uiValue, unsigned char* pBuffer, uint64_t* pBufferLength)
+inline bool getCodedBuffer(const uint64_t uiValue, unsigned char* buffer, uint64_t* pBufferLength)
 {
 	const size_t codeSizeLength = getCodedSizeLength(uiValue);
 
@@ -41,7 +41,7 @@ inline bool getCodedBuffer(const uint64_t uiValue, unsigned char* pBuffer, uint6
 		l_ulByte |= (l_ulIthBit > 0 && l_ulIthBit <= 8 ? (1 << (8 - l_ulIthBit)) : 0);
 		l_ulIthBit -= 8;
 
-		pBuffer[i] = static_cast<unsigned char>(l_ulByte);
+		buffer[i] = static_cast<unsigned char>(l_ulByte);
 	}
 
 	*pBufferLength = codeSizeLength;
@@ -55,12 +55,12 @@ namespace EBML
 {
 	namespace
 	{
-		class CWriterNode
+		class CWriterNode final
 		{
 		public:
 
 			CWriterNode(const CIdentifier& rIdentifier, CWriterNode* pParentNode);
-			virtual ~CWriterNode();
+			~CWriterNode();
 			void process(IWriterCallback& rWriterCallback);
 
 		protected:
@@ -157,11 +157,11 @@ namespace EBML
 {
 	namespace
 	{
-		class CWriter : public IWriter
+		class CWriter final : public IWriter
 		{
 		public:
 
-			explicit CWriter(IWriterCallback& rWriterCallback);
+			explicit CWriter(IWriterCallback& rWriterCallback) : m_rWriterCallback(rWriterCallback) {}
 			bool openChild(const CIdentifier& rIdentifier) override;
 			bool setChildData(const void* buffer, const uint64_t size) override;
 			bool closeChild() override;
@@ -173,17 +173,13 @@ namespace EBML
 			IWriterCallback& m_rWriterCallback;
 
 		private:
-
-			CWriter();
+			CWriter() = delete;
 		};
 	} // namespace
 } // namespace EBML
 
 // ________________________________________________________________________________________________________________
 //
-
-CWriter::CWriter(IWriterCallback& rWriterCallback)
-	: m_rWriterCallback(rWriterCallback) {}
 
 bool CWriter::openChild(const CIdentifier& rIdentifier)
 {

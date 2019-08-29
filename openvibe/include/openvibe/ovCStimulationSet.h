@@ -17,7 +17,7 @@ namespace OpenViBE
 	 * Instances of this class use an internal implementation of the OpenViBE::IStimulationSet
 	 * interface and redirect their calls to this implementation.
 	 */
-	class OV_API CStimulationSet : public IStimulationSet
+	class OV_API CStimulationSet final : public IStimulationSet
 	{
 	public:
 

@@ -18,7 +18,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CAlgorithmXMLScenarioImporter : public OpenViBEToolkit::CAlgorithmScenarioImporter, public XML::IReaderCallback
+		class CAlgorithmXMLScenarioImporter final : public OpenViBEToolkit::CAlgorithmScenarioImporter, public XML::IReaderCallback
 		{
 		public:
 
@@ -42,7 +42,7 @@ namespace OpenViBEPlugins
 			std::stack<std::string> m_vNodes;
 		};
 
-		class CAlgorithmXMLScenarioImporterDesc : public OpenViBEToolkit::CAlgorithmScenarioImporterDesc
+		class CAlgorithmXMLScenarioImporterDesc final : public OpenViBEToolkit::CAlgorithmScenarioImporterDesc
 		{
 		public:
 			void release() override { }

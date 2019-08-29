@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CSpectrumEncoder : public CStreamedMatrixEncoder
+		class CSpectrumEncoder final : public CStreamedMatrixEncoder
 		{
 		public:
 			void release() override { delete this; }
@@ -26,7 +26,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_pSamplingRate;
 		};
 
-		class CSpectrumEncoderDesc : public CStreamedMatrixEncoderDesc
+		class CSpectrumEncoderDesc final : public CStreamedMatrixEncoderDesc
 		{
 		public:
 			void release() override { }

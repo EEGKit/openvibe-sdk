@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 {
 	namespace Classification
 	{
-		class CBoxAlgorithmVotingClassifier : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmVotingClassifier final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -56,7 +56,7 @@ namespace OpenViBEPlugins
 		};
 
 
-		class CBoxAlgorithmVotingClassifierListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmVotingClassifierListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -101,7 +101,7 @@ namespace OpenViBEPlugins
 			OpenViBE::CIdentifier m_oInputTypeIdentifier = OV_UndefinedIdentifier;
 		};
 
-		class CBoxAlgorithmVotingClassifierDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmVotingClassifierDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

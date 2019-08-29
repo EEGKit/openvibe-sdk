@@ -42,7 +42,7 @@ namespace Lepton
 	 * This class is used for all exceptions thrown by Lepton.
 	 */
 
-	class Exception : public std::exception
+	class Exception final : public std::exception
 	{
 	public:
 		Exception(const std::string& message) : message(message) { }

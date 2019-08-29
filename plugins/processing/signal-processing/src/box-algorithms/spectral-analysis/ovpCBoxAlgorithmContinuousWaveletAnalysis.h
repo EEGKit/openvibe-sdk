@@ -11,7 +11,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmContinuousWaveletAnalysis : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmContinuousWaveletAnalysis final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -40,7 +40,7 @@ namespace OpenViBEPlugins
 			cwt_object m_oWaveletTransform = nullptr;
 		};
 
-		class CBoxAlgorithmContinuousWaveletAnalysisDesc : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmContinuousWaveletAnalysisDesc final : virtual public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

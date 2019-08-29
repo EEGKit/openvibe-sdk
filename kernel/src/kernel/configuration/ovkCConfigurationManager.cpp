@@ -45,7 +45,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CConfigurationManagerEntryEnumeratorCallBack : public FS::IEntryEnumeratorCallBack
+		class CConfigurationManagerEntryEnumeratorCallBack final : public FS::IEntryEnumeratorCallBack
 		{
 		public:
 

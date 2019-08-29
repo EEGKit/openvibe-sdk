@@ -10,7 +10,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmEpochAverage : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmEpochAverage final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -31,7 +31,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<uint64_t> ip_ui64AveragingMethod;
 		};
 
-		class CBoxAlgorithmEpochAverageListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmEpochAverageListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
@@ -53,7 +53,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmEpochAverageDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmEpochAverageDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

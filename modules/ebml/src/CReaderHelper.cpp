@@ -8,24 +8,24 @@ CReaderHelper::CReaderHelper(){
 
 CReaderHelper::~CReaderHelper() { m_pReaderHelperImplementation->release(); }
 
-uint64_t CReaderHelper::getUIntegerFromChildData(const void* pBuffer, const uint64_t size)
+uint64_t CReaderHelper::getUIntegerFromChildData(const void* buffer, const uint64_t size)
 {
-	return m_pReaderHelperImplementation->getUIntegerFromChildData(pBuffer, size);
+	return m_pReaderHelperImplementation->getUIntegerFromChildData(buffer, size);
 }
 
-int64_t CReaderHelper::getSIntegerFromChildData(const void* pBuffer, const uint64_t size)
+int64_t CReaderHelper::getSIntegerFromChildData(const void* buffer, const uint64_t size)
 {
-	return m_pReaderHelperImplementation->getSIntegerFromChildData(pBuffer, size);
+	return m_pReaderHelperImplementation->getSIntegerFromChildData(buffer, size);
 }
 
-double CReaderHelper::getFloatFromChildData(const void* pBuffer, const uint64_t size)
+double CReaderHelper::getFloatFromChildData(const void* buffer, const uint64_t size)
 {
-	return m_pReaderHelperImplementation->getFloatFromChildData(pBuffer, size);
+	return m_pReaderHelperImplementation->getFloatFromChildData(buffer, size);
 }
 
-const char* CReaderHelper::getASCIIStringFromChildData(const void* pBuffer, const uint64_t size)
+const char* CReaderHelper::getASCIIStringFromChildData(const void* buffer, const uint64_t size)
 {
-	return m_pReaderHelperImplementation->getASCIIStringFromChildData(pBuffer, size);
+	return m_pReaderHelperImplementation->getASCIIStringFromChildData(buffer, size);
 }
 
 void CReaderHelper::release() {}

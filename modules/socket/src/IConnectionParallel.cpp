@@ -24,7 +24,7 @@
 
 namespace Socket
 {
-	class CConnectionParallel : public IConnectionParallel
+	class CConnectionParallel final : public IConnectionParallel
 	{
 	protected:
 		unsigned short m_ui16PortNumber;
@@ -105,12 +105,12 @@ namespace Socket
 
 		uint32_t getPendingByteCount() { return (this->isConnected() ? 0 : 1); }
 
-		uint32_t sendBuffer(const void* pBuffer, const uint32_t ui32BufferSize = 8) override
+		uint32_t sendBuffer(const void* buffer, const uint32_t ui32BufferSize = 8) override
 		{
 			if (!this->isConnected()) { return 0; }
 
 #if defined TARGET_OS_Windows
-			uint8_t l_ui8Value = *(static_cast<const uint8_t*>(pBuffer));
+			uint8_t l_ui8Value = *(static_cast<const uint8_t*>(buffer));
 
 			m_lpfnTVicPortWrite(m_ui16PortNumber, l_ui8Value);
 			return ui32BufferSize;
@@ -124,7 +124,7 @@ namespace Socket
 #endif
 		}
 
-		uint32_t receiveBuffer(void* pBuffer, const uint32_t ui32BufferSize = 8) override
+		uint32_t receiveBuffer(void* buffer, const uint32_t ui32BufferSize = 8) override
 		{
 			if (!this->isConnected()) { return 0; }
 
@@ -147,7 +147,7 @@ namespace Socket
 				return 0;
 			}
 
-			int l_iResult = ::read(m_iFile, pBuffer, ui32BufferSize);
+			int l_iResult = ::read(m_iFile, buffer, ui32BufferSize);
 			if(l_iResult < 0)
 			{
 				this->close();
@@ -161,9 +161,9 @@ namespace Socket
 			return 0;
 		}
 
-		bool sendBufferBlocking(const void* pBuffer, const uint32_t ui32BufferSize) override
+		bool sendBufferBlocking(const void* buffer, const uint32_t ui32BufferSize) override
 		{
-			const char* p   = reinterpret_cast<const char*>(pBuffer);
+			const char* p   = reinterpret_cast<const char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())
@@ -174,9 +174,9 @@ namespace Socket
 			return this->isConnected();
 		}
 
-		bool receiveBufferBlocking(void* pBuffer, const uint32_t ui32BufferSize) override
+		bool receiveBufferBlocking(void* buffer, const uint32_t ui32BufferSize) override
 		{
-			char* p         = reinterpret_cast<char*>(pBuffer);
+			char* p         = reinterpret_cast<char*>(buffer);
 			uint32_t l_ui32BytesLeft = ui32BufferSize;
 
 			while (l_ui32BytesLeft != 0 && this->isConnected())

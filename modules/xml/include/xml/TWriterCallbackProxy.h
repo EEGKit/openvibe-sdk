@@ -9,7 +9,7 @@ namespace XML
 	//
 
 	template <class COwnerClass>
-	class TWriterCallbackProxy1 : public IWriterCallback
+	class TWriterCallbackProxy1 final : public IWriterCallback
 	{
 	public:
 		TWriterCallbackProxy1(COwnerClass& rOwnerObject, void (COwnerClass::*mfpWrite)(const char* sString)) : m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }
@@ -28,7 +28,7 @@ namespace XML
 	//
 
 	template <class COwnerClass, void (COwnerClass::*mfpWrite)(const char* sString)>
-	class TWriterCallbackProxy2 : public IWriterCallback
+	class TWriterCallbackProxy2 final : public IWriterCallback
 	{
 	public:
 		TWriterCallbackProxy2(COwnerClass rOwnerObject) : m_rOwnerObject(rOwnerObject), m_mfpWrite(mfpWrite) { }

@@ -10,7 +10,7 @@ namespace OpenViBE
 	{
 		typedef TBaseConfigurable<TKernelObject<IConfigurable>> _Base__CConfigurable_;
 
-		class CConfigurable : public _Base__CConfigurable_
+		class CConfigurable final : public _Base__CConfigurable_
 		{
 		public:
 

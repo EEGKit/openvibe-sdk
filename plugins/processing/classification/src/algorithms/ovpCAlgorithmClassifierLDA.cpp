@@ -181,13 +181,13 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 			l_oClassData.setDimensionCount(2);
 			l_oClassData.setDimensionSize(0, l_ui32nExamplesInClass);
 			l_oClassData.setDimensionSize(1, nCols);
-			double* l_pBuffer = l_oClassData.getBuffer();
+			double* buffer = l_oClassData.getBuffer();
 			for (uint32_t i = 0; i < nRows; i++)
 			{
 				if (featureVectorSet[i].getLabel() == l_ui32classIdx)
 				{
-					System::Memory::copy(l_pBuffer, featureVectorSet[i].getBuffer(), nCols * sizeof(double));
-					l_pBuffer += nCols;
+					System::Memory::copy(buffer, featureVectorSet[i].getBuffer(), nCols * sizeof(double));
+					buffer += nCols;
 				}
 			}
 
@@ -210,13 +210,13 @@ bool CAlgorithmClassifierLDA::train(const IFeatureVectorSet& featureVectorSet)
 		ip_pFeatureVectorSet->setDimensionCount(2);
 		ip_pFeatureVectorSet->setDimensionSize(0, nRows);
 		ip_pFeatureVectorSet->setDimensionSize(1, nCols);
-		double* l_pBuffer = ip_pFeatureVectorSet->getBuffer();
+		double* buffer = ip_pFeatureVectorSet->getBuffer();
 
 		// Insert all data as the input of the cov algorithm
 		for (uint32_t i = 0; i < nRows; i++)
 		{
-			System::Memory::copy(l_pBuffer, featureVectorSet[i].getBuffer(), nCols * sizeof(double));
-			l_pBuffer += nCols;
+			System::Memory::copy(buffer, featureVectorSet[i].getBuffer(), nCols * sizeof(double));
+			buffer += nCols;
 		}
 
 		// Compute cov

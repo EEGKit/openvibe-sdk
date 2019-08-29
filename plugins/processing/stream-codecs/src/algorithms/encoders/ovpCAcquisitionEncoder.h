@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 {
 	namespace StreamCodecs
 	{
-		class CAcquisitionEncoder : public CEBMLBaseEncoder
+		class CAcquisitionEncoder final : public CEBMLBaseEncoder
 		{
 		public:
 			void release() override { delete this; }
@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			OpenViBE::Kernel::TParameterHandler<OpenViBE::IMemoryBuffer*> ip_pChannelUnitsStream;
 		};
 
-		class CAcquisitionEncoderDesc : public CEBMLBaseEncoderDesc
+		class CAcquisitionEncoderDesc final : public CEBMLBaseEncoderDesc
 		{
 		public:
 			void release() override { }

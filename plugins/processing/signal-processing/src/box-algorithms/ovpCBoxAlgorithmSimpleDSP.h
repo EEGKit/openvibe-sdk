@@ -17,7 +17,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmSimpleDSP : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmSimpleDSP final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -44,7 +44,7 @@ namespace OpenViBEPlugins
 			bool m_bCheckChunkDates = false;
 		};
 
-		class CBoxAlgorithmSimpleDSPListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmSimpleDSPListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
@@ -85,7 +85,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmSimpleDSPDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmSimpleDSPDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

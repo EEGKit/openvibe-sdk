@@ -79,10 +79,10 @@ bool CBoxAlgorithmReferenceChannel::processInput(const uint32_t index)
 bool CBoxAlgorithmReferenceChannel::process()
 {
 	// IBox& l_rStaticBoxContext=this->getStaticBoxContext();
-	IBoxIO& l_rDynamicBoxContext = this->getDynamicBoxContext();
+	IBoxIO& boxContext = this->getDynamicBoxContext();
 	uint32_t j, k;
 
-	for (uint32_t i = 0; i < l_rDynamicBoxContext.getInputChunkCount(0); i++)
+	for (uint32_t i = 0; i < boxContext.getInputChunkCount(0); i++)
 	{
 		m_oDecoder.decode(i);
 		if (m_oDecoder.isHeaderReceived())
@@ -145,7 +145,7 @@ bool CBoxAlgorithmReferenceChannel::process()
 			m_oEncoder.encodeBuffer();
 		}
 		if (m_oDecoder.isEndReceived()) { m_oEncoder.encodeEnd(); }
-		l_rDynamicBoxContext.markOutputAsReadyToSend(0, l_rDynamicBoxContext.getInputChunkStartTime(0, i), l_rDynamicBoxContext.getInputChunkEndTime(0, i));
+		boxContext.markOutputAsReadyToSend(0, boxContext.getInputChunkStartTime(0, i), boxContext.getInputChunkEndTime(0, i));
 	}
 
 	return true;

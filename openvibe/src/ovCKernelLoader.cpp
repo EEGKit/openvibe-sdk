@@ -100,7 +100,7 @@ namespace OpenViBE
 
 namespace OpenViBE
 {
-	class CKernelLoaderWindows : public CKernelLoaderBase
+	class CKernelLoaderWindows final : public CKernelLoaderBase
 	{
 	public:
 		CKernelLoaderWindows();

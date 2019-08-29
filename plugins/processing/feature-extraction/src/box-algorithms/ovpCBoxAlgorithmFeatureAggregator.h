@@ -22,7 +22,7 @@ namespace OpenViBEPlugins
 		 * Main plugin class of the feature aggregator plugins.
 		 * Aggregates the features received in a feature vector then outputs it.
 		 * */
-		class CBoxAlgorithmFeatureAggregator : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmFeatureAggregator final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 
@@ -66,7 +66,7 @@ namespace OpenViBEPlugins
 			bool m_bHeaderSent = false;
 		};
 
-		class CBoxAlgorithmFeatureAggregatorListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmFeatureAggregatorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 
@@ -93,7 +93,7 @@ namespace OpenViBEPlugins
 		/**
 		* Plugin's description
 		*/
-		class CBoxAlgorithmFeatureAggregatorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmFeatureAggregatorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			OpenViBE::CString getName() const override { return OpenViBE::CString("Feature aggregator"); }

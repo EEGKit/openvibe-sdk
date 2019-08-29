@@ -15,7 +15,7 @@ namespace OpenViBEPlugins
 {
 	namespace FileIO
 	{
-		class CAlgorithmXMLScenarioExporter : public OpenViBEToolkit::CAlgorithmScenarioExporter, public XML::IWriterCallback
+		class CAlgorithmXMLScenarioExporter final : public OpenViBEToolkit::CAlgorithmScenarioExporter, public XML::IWriterCallback
 		{
 		public:
 
@@ -36,7 +36,7 @@ namespace OpenViBEPlugins
 			OpenViBE::IMemoryBuffer* m_pMemoryBuffer = nullptr;
 		};
 
-		class CAlgorithmXMLScenarioExporterDesc : public OpenViBEToolkit::CAlgorithmScenarioExporterDesc
+		class CAlgorithmXMLScenarioExporterDesc final : public OpenViBEToolkit::CAlgorithmScenarioExporterDesc
 		{
 		public:
 			void release() override { }

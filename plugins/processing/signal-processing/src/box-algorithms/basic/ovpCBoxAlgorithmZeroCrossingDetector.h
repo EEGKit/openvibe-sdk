@@ -35,7 +35,7 @@ namespace OpenViBEPlugins
 {
 	namespace SignalProcessing
 	{
-		class CBoxAlgorithmZeroCrossingDetector : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
+		class CBoxAlgorithmZeroCrossingDetector final : public OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>
 		{
 		public:
 			void release() override { delete this; }
@@ -68,7 +68,7 @@ namespace OpenViBEPlugins
 			uint64_t m_ui64StimulationId2 = 0;
 		};
 
-		class CBoxAlgorithmZeroCrossingDetectorListener : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
+		class CBoxAlgorithmZeroCrossingDetectorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
 			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
@@ -132,7 +132,7 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxListener < OpenViBE::Plugins::IBoxListener >, OV_UndefinedIdentifier)
 		};
 
-		class CBoxAlgorithmZeroCrossingDetectorDesc : public OpenViBE::Plugins::IBoxAlgorithmDesc
+		class CBoxAlgorithmZeroCrossingDetectorDesc final : public OpenViBE::Plugins::IBoxAlgorithmDesc
 		{
 		public:
 			void release() override { }

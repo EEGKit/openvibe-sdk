@@ -178,12 +178,12 @@ bool CBoxAlgorithmSignalResampling::process()
 
 void CBoxAlgorithmSignalResampling::processResampler(const double* pSample, size_t ui32ChannelCount) const
 {
-	double* l_pBuffer                = m_oEncoder.getInputMatrix()->getBuffer();
+	double* buffer                = m_oEncoder.getInputMatrix()->getBuffer();
 	uint64_t l_ui64OutputSampleIndex = m_totalOutSampleCount % m_outSampleCount;
 
 	for (uint32_t j = 0; j < ui32ChannelCount; j++)
 	{
-		l_pBuffer[j * m_outSampleCount + l_ui64OutputSampleIndex] = pSample[j];
+		buffer[j * m_outSampleCount + l_ui64OutputSampleIndex] = pSample[j];
 	}
 	m_totalOutSampleCount++;
 

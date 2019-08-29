@@ -25,7 +25,7 @@ namespace OpenViBE
 {
 	namespace Kernel
 	{
-		class CPluginManagerEntryEnumeratorCallBack : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
+		class CPluginManagerEntryEnumeratorCallBack final : public TKernelObject<IObject>, public FS::IEntryEnumeratorCallBack
 		{
 		public:
 

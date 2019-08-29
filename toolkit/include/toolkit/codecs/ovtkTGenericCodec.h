@@ -212,7 +212,7 @@ namespace OpenViBEToolkit
 	//
 
 	template <class T>
-	class TGenericListener : public T
+	class TGenericListener final : public T
 	{
 	public:
 
