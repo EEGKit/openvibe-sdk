@@ -416,7 +416,7 @@ namespace Common
 				mutable size_t m_ui32OutputSampleIndex;
 			};
 
-			size_t resample_channel_wise(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn, size_t ui32OutputSampleCount) // ui32OutputSampleCount is ignored
+			size_t resample_channel_wise(TFloat* pOutputSample, const TFloat* pInputSample, size_t nSampleIn, size_t /*ui32OutputSampleCount*/) 
 			{
 				return this->resample(CCallbackChannelWise(pOutputSample), pInputSample, nSampleIn);
 			}

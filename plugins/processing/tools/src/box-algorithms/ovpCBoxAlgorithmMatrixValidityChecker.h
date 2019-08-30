@@ -32,7 +32,7 @@ namespace OpenViBEPlugins
 
 			std::vector<OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmMatrixValidityChecker>> m_vStreamDecoder;
 			std::vector<OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmMatrixValidityChecker>> m_vStreamEncoder;
-			OpenViBE::Kernel::ELogLevel m_eLogLevel;
+			OpenViBE::Kernel::ELogLevel m_eLogLevel = OpenViBE::Kernel::ELogLevel::LogLevel_None;
 			uint64_t m_ui64ValidityCheckerType = 0;
 
 			std::vector<uint32_t> m_ui32TotalInterpolatedSampleCount;
@@ -44,54 +44,54 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& rBox)
+			bool check(OpenViBE::Kernel::IBox& box)
 			{
 				char l_sName[1024];
 				uint32_t i;
 
-				for (i = 0; i < rBox.getInputCount(); i++)
+				for (i = 0; i < box.getInputCount(); i++)
 				{
 					sprintf(l_sName, "Stream %u", i + 1);
-					rBox.setInputName(i, l_sName);
-					rBox.setInputType(i, OV_TypeId_StreamedMatrix);
+					box.setInputName(i, l_sName);
+					box.setInputType(i, OV_TypeId_StreamedMatrix);
 				}
-				for (i = 0; i < rBox.getOutputCount(); i++)
+				for (i = 0; i < box.getOutputCount(); i++)
 				{
 					sprintf(l_sName, "Output stream %u", i + 1);
-					rBox.setOutputName(i, l_sName);
-					rBox.setInputType(i, OV_TypeId_StreamedMatrix);
+					box.setOutputName(i, l_sName);
+					box.setInputType(i, OV_TypeId_StreamedMatrix);
 				}
 
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				rBox.setInputType(index, OV_TypeId_StreamedMatrix);
-				if (rBox.getSettingCount() > 1) { rBox.addOutput("", OV_TypeId_StreamedMatrix); }
-				this->check(rBox);
+				box.setInputType(index, OV_TypeId_StreamedMatrix);
+				if (box.getSettingCount() > 1) { box.addOutput("", OV_TypeId_StreamedMatrix); }
+				this->check(box);
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				rBox.removeOutput(index);
-				this->check(rBox);
+				box.removeOutput(index);
+				this->check(box);
 				return true;
 			}
 
-			bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				rBox.setOutputType(index, OV_TypeId_StreamedMatrix);
-				rBox.addInput("", OV_TypeId_StreamedMatrix);
-				this->check(rBox);
+				box.setOutputType(index, OV_TypeId_StreamedMatrix);
+				box.addInput("", OV_TypeId_StreamedMatrix);
+				this->check(box);
 				return true;
 			}
 
-			bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				rBox.removeInput(index);
-				this->check(rBox);
+				box.removeInput(index);
+				this->check(box);
 				return true;
 			}
 

@@ -36,10 +36,10 @@ namespace OpenViBEPlugins
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TAlgorithm < OpenViBE::Plugins::IAlgorithm >, OVP_ClassId_Algorithm_EBMLBaseStreamDecoder)
 
 			// ebml callbacks
-			virtual bool isMasterChild(const EBML::CIdentifier& rIdentifier);
-			virtual void openChild(const EBML::CIdentifier& rIdentifier);
-			virtual void processChildData(const void* buffer, uint64_t size);
-			virtual void closeChild();
+			virtual bool isMasterChild(const EBML::CIdentifier& identifier);
+			virtual void openChild(const EBML::CIdentifier& identifier);
+			virtual void processChildData(const void* /*buffer*/, const uint64_t /*size*/) { }
+			virtual void closeChild() { }
 
 		protected:
 

@@ -19,13 +19,13 @@ namespace OpenViBE
 	{
 	public:
 
-		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IBox& rBox) { return true; }
+		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IBox& box) { return true; }
 		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IComment& rComment) { return true; }
 		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IMetadata& rMetadata) { return true; }
 		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::ILink& rLink) { return true; }
 		virtual bool processBegin(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IScenario& rScenario) { return true; }
 
-		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IBox& rBox) { return true; }
+		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IBox& box) { return true; }
 		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IComment& rComment) { return true; }
 		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::IMetadata& rMetadata) { return true; }
 		virtual bool processEnd(Kernel::IObjectVisitorContext& rObjectVisitorContext, Kernel::ILink& rLink) { return true; }

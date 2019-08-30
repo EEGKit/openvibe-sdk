@@ -18,7 +18,7 @@ namespace OpenViBE
 		{
 			uint32_t index             = OV_Value_UndefinedIndexUInt;
 			CIdentifier identifier     = OV_UndefinedIdentifier;
-			CIdentifier typeIdentifier = OV_UndefinedIdentifier;
+			CIdentifier typeID = OV_UndefinedIdentifier;
 			CString name;
 			bool toBeRemoved;
 
@@ -62,7 +62,7 @@ namespace OpenViBE
 
 		private:
 
-			static uint32_t getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeIdentifier, const CIdentifier& identifier, const CString& name);
+			static uint32_t getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier, const CString& name);
 			bool updateInterfacors(BoxInterfacorType interfacorType);
 
 			/**
@@ -82,7 +82,7 @@ namespace OpenViBE
 			// pointer to the original box to be updated
 			IBox* m_SourceBox = nullptr;
 			// pointer to the kernel box
-			const IBox* m_KernelBox;
+			const IBox* m_KernelBox = nullptr;
 			// pointer to the updated box. This box will be used to update the prototype of the original box
 			IBox* m_UpdatedBox = nullptr;
 			// true when updater has been initialized

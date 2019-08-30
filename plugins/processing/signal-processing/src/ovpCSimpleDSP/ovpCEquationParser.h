@@ -91,7 +91,7 @@ public:
 	* Constructor.
 	* \param pVariable Pointer to the data known as X in the equation.
 	*/
-	CEquationParser(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& oPlugin, double** ppVarialbe, uint32_t ui32VariableCount);
+	CEquationParser(OpenViBEToolkit::TBoxAlgorithm<OpenViBE::Plugins::IBoxAlgorithm>& oPlugin, double** ppVariable, uint32_t ui32VariableCount);
 
 	//! Destructor.
 	~CEquationParser();

@@ -95,7 +95,7 @@ bool CAlgorithmClassifierOneVsAll::train(const IFeatureVectorSet& featureVectorS
 	return true;
 }
 
-bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector, double& classId, IVector& classificationValues, IVector& probabilityValue)
+bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector, double& classId, IVector& distanceValue, IVector& probabilityValue)
 {
 	std::vector<CClassifierOutput> classification;
 
@@ -185,8 +185,8 @@ bool CAlgorithmClassifierOneVsAll::classify(const IFeatureVector& featureVector,
 	IAlgorithmProxy* winner = this->m_oSubClassifierList[uint32_t(classId)];
 	TParameterHandler<IMatrix*> op_pClassificationWinnerValues(winner->getOutputParameter(OVTK_Algorithm_Classifier_OutputParameterId_ClassificationValues));
 	IMatrix* l_pTempMatrix = static_cast<IMatrix*>(op_pClassificationWinnerValues);
-	classificationValues.setSize(l_pTempMatrix->getBufferElementCount());
-	System::Memory::copy(classificationValues.getBuffer(), l_pTempMatrix->getBuffer(), l_pTempMatrix->getBufferElementCount() * sizeof(double));
+	distanceValue.setSize(l_pTempMatrix->getBufferElementCount());
+	System::Memory::copy(distanceValue.getBuffer(), l_pTempMatrix->getBuffer(), l_pTempMatrix->getBufferElementCount() * sizeof(double));
 
 	// We take the probabilities of the single class winning from each of the sub classifiers and normalize them
 	double subProbabilitySum = 0;

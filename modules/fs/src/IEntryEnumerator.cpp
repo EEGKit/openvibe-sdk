@@ -315,14 +315,14 @@ bool CEntryEnumeratorWindows::enumerate(const char* sWildCard, bool bRecursive)
 
 #endif
 
-FS_API IEntryEnumerator* FS::createEntryEnumerator(IEntryEnumeratorCallBack& rEntryEnumeratorCallBack)
+FS_API IEntryEnumerator* FS::createEntryEnumerator(IEntryEnumeratorCallBack& rCallBack)
 {
 #if defined TARGET_OS_Linux || defined TARGET_OS_MacOS
-	IEntryEnumerator* res = new CEntryEnumeratorLinux(rEntryEnumeratorCallBack);
+	IEntryEnumerator* res = new CEntryEnumeratorLinux(rCallBack);
 #elif defined TARGET_OS_Windows
-	IEntryEnumerator* res = new CEntryEnumeratorWindows(rEntryEnumeratorCallBack);
+	IEntryEnumerator* res = new CEntryEnumeratorWindows(rCallBack);
 #else
-	IEntryEnumerator* res = new CEntryEnumeratorDummy(rEntryEnumeratorCallBack);
+	IEntryEnumerator* res = new CEntryEnumeratorDummy(rCallBack);
 #endif
 	return res;
 }

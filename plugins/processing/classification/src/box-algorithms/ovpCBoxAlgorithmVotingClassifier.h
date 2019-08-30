@@ -63,33 +63,33 @@ namespace OpenViBEPlugins
 			CBoxAlgorithmVotingClassifierListener()
 				: m_oInputTypeIdentifier(OV_TypeId_Stimulations) { }
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
 				OpenViBE::CIdentifier l_oInputTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(index, l_oInputTypeIdentifier);
+				box.getInputType(index, l_oInputTypeIdentifier);
 				if (l_oInputTypeIdentifier == OV_TypeId_Stimulations || l_oInputTypeIdentifier == OV_TypeId_StreamedMatrix)
 				{
 					m_oInputTypeIdentifier = l_oInputTypeIdentifier;
-					for (uint32_t i = 0; i < rBox.getInputCount(); i++)
+					for (uint32_t i = 0; i < box.getInputCount(); i++)
 					{
-						rBox.setInputType(i, m_oInputTypeIdentifier);
+						box.setInputType(i, m_oInputTypeIdentifier);
 					}
 				}
 				else
 				{
-					rBox.setInputType(index, m_oInputTypeIdentifier);
+					box.setInputType(index, m_oInputTypeIdentifier);
 				}
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				for (uint32_t i = 0; i < rBox.getInputCount(); i++)
+				for (uint32_t i = 0; i < box.getInputCount(); i++)
 				{
 					char l_sBuffer[1024];
 					sprintf(l_sBuffer, "Classification result %i", i);
-					rBox.setInputType(i, m_oInputTypeIdentifier);
-					rBox.setInputName(i, l_sBuffer);
+					box.setInputType(i, m_oInputTypeIdentifier);
+					box.setInputName(i, l_sBuffer);
 				}
 				return true;
 			}

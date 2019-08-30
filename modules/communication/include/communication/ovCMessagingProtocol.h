@@ -387,7 +387,7 @@ namespace Communication
 	public:
 		EndMessage() {}
 		std::vector<uint8_t> toBytes() const override { return std::vector<uint8_t>(); }
-		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override { return false; }
+		bool fromBytes(const std::vector<uint8_t>& /*buffer*/, size_t& /*index*/) override { return false; }
 		EMessageType getMessageType() const override { return MessageType_End; }
 	};
 
@@ -420,7 +420,7 @@ namespace Communication
 	public:
 		SyncMessage() {}
 		std::vector<uint8_t> toBytes() const override { return std::vector<uint8_t>(); }
-		bool fromBytes(const std::vector<uint8_t>& buffer, size_t& bufferIndex) override { return false; }
+		bool fromBytes(const std::vector<uint8_t>& /*buffer*/, size_t& /*index*/) override { return false; }
 		EMessageType getMessageType() const override { return MessageType_Sync; }
 	};
 }

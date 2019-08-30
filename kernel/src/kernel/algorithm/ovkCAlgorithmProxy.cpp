@@ -150,7 +150,7 @@ bool CAlgorithmProxy::isInputTriggerActive(const CIdentifier& rInputTriggerIdent
 	return itTrigger->second.second;
 }
 
-bool CAlgorithmProxy::activateInputTrigger(const CIdentifier& rInputTriggerIdentifier, const bool bTriggerState)
+bool CAlgorithmProxy::activateInputTrigger(const CIdentifier& rInputTriggerIdentifier, const bool /*bTriggerState*/)
 {
 	const auto itTrigger = m_vInputTrigger.find(rInputTriggerIdentifier);
 	if (itTrigger == m_vInputTrigger.end()) { return false; }
@@ -193,7 +193,7 @@ bool CAlgorithmProxy::isOutputTriggerActive(const CIdentifier& rOutputTriggerIde
 	return itTrigger->second.second;
 }
 
-bool CAlgorithmProxy::activateOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, const bool bTriggerState)
+bool CAlgorithmProxy::activateOutputTrigger(const CIdentifier& rOutputTriggerIdentifier, const bool /*bTriggerState*/)
 {
 	const auto itTrigger = m_vOutputTrigger.find(rOutputTriggerIdentifier);
 	if (itTrigger == m_vOutputTrigger.end()) { return false; }

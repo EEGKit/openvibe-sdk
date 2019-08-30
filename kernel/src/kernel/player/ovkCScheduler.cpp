@@ -118,12 +118,12 @@ bool CScheduler::flattenScenario()
 		std::vector<CIdentifier> l_vScenarioMetabox;
 
 		{
-			CIdentifier* identifierList = nullptr;
+			CIdentifier* listID = nullptr;
 			size_t nbElems              = 0;
-			m_pScenario->getBoxIdentifierList(&identifierList, &nbElems);
+			m_pScenario->getBoxIdentifierList(&listID, &nbElems);
 			for (size_t i = 0; i < nbElems; ++i)
 			{
-				const CIdentifier boxID = identifierList[i];
+				const CIdentifier boxID = listID[i];
 				const IBox* box                 = m_pScenario->getBoxDetails(boxID);
 
 				if (box->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
@@ -157,7 +157,7 @@ bool CScheduler::flattenScenario()
 					}
 				}
 			}
-			m_pScenario->releaseIdentifierList(identifierList);
+			m_pScenario->releaseIdentifierList(listID);
 		}
 
 		if (l_vScenarioMetabox.empty())
@@ -260,12 +260,12 @@ bool CScheduler::flattenScenario()
 
 			// Connect metabox inputs
 			{
-				CIdentifier* identifierList = nullptr;
+				CIdentifier* listID = nullptr;
 				size_t nbElems              = 0;
-				m_pScenario->getLinkIdentifierToBoxList(l_pBox->getIdentifier(), &identifierList, &nbElems);
+				m_pScenario->getLinkIdentifierToBoxList(l_pBox->getIdentifier(), &listID, &nbElems);
 				for (size_t i = 0; i < nbElems; ++i)
 				{
-					ILink* l_rLink = m_pScenario->getLinkDetails(identifierList[i]);
+					ILink* l_rLink = m_pScenario->getLinkDetails(listID[i]);
 					// Find out the target inside the metabox scenario
 					CIdentifier l_oTargetBoxIdentifier;
 					uint32_t l_ui32TargetBoxInputIndex    = 0;
@@ -290,17 +290,17 @@ bool CScheduler::flattenScenario()
 						l_rLink->setTarget(l_mIdentifierCorrespondence[l_oTargetBoxIdentifier], l_ui32TargetBoxInputIndex, l_oTargetBoxInputIdentifier);
 					}
 				}
-				m_pScenario->releaseIdentifierList(identifierList);
+				m_pScenario->releaseIdentifierList(listID);
 			}
 
 			// Connect metabox outputs
 			{
-				CIdentifier* identifierList = nullptr;
+				CIdentifier* listID = nullptr;
 				size_t nbElems              = 0;
-				m_pScenario->getLinkIdentifierFromBoxList(l_pBox->getIdentifier(), &identifierList, &nbElems);
+				m_pScenario->getLinkIdentifierFromBoxList(l_pBox->getIdentifier(), &listID, &nbElems);
 				for (size_t i = 0; i < nbElems; ++i)
 				{
-					ILink* l_rLink = m_pScenario->getLinkDetails(identifierList[i]);
+					ILink* l_rLink = m_pScenario->getLinkDetails(listID[i]);
 					// Find out the Source inside the metabox scenario
 					CIdentifier l_oSourceBoxIdentifier;
 					uint32_t l_ui32SourceBoxOutputIndex    = 0;
@@ -323,7 +323,7 @@ bool CScheduler::flattenScenario()
 						l_rLink->setSource(l_mIdentifierCorrespondence[l_oSourceBoxIdentifier], l_ui32SourceBoxOutputIndex, l_oSourceBoxOutputIdentifier);
 					}
 				}
-				m_pScenario->releaseIdentifierList(identifierList);
+				m_pScenario->releaseIdentifierList(listID);
 			}
 		}
 
@@ -354,9 +354,9 @@ SchedulerInitializationCode CScheduler::initialize()
 
 
 	{
-		CIdentifier* identifierList = nullptr;
+		CIdentifier* listID = nullptr;
 		size_t nbElems              = 0;
-		m_pScenario->getBoxIdentifierList(&identifierList, &nbElems);
+		m_pScenario->getBoxIdentifierList(&listID, &nbElems);
 
 		// Create sets of x and y positions, note that C++ sets are always ordered
 		// We work with indexes rather than just positions because the positions are not bounded and can overflow
@@ -364,7 +364,7 @@ SchedulerInitializationCode CScheduler::initialize()
 		std::set<int> ypositions;
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			const IBox* box = m_pScenario->getBoxDetails(identifierList[i]);
+			const IBox* box = m_pScenario->getBoxDetails(listID[i]);
 
 			if (box->hasAttribute(OV_AttributeId_Box_YCenterPosition))
 			{
@@ -375,7 +375,7 @@ SchedulerInitializationCode CScheduler::initialize()
 				}
 				catch (const std::exception&)
 				{
-					OV_WARNING_K("The Y position (" << box->getAttributeValue(OV_AttributeId_Box_YCenterPosition) << ") " << " in the Box " << identifierList[i] << " is corrupted");
+					OV_WARNING_K("The Y position (" << box->getAttributeValue(OV_AttributeId_Box_YCenterPosition) << ") " << " in the Box " << listID[i] << " is corrupted");
 				}
 			}
 			if (box->hasAttribute(OV_AttributeId_Box_XCenterPosition))
@@ -387,14 +387,14 @@ SchedulerInitializationCode CScheduler::initialize()
 				}
 				catch (const std::exception&)
 				{
-					OV_WARNING_K("The X position (" << box->getAttributeValue(OV_AttributeId_Box_XCenterPosition) << ") " << " in the Box " << identifierList[i] << " is corrupted");
+					OV_WARNING_K("The X position (" << box->getAttributeValue(OV_AttributeId_Box_XCenterPosition) << ") " << " in the Box " << listID[i] << " is corrupted");
 				}
 			}
 		}
 
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			const CIdentifier boxID = identifierList[i];
+			const CIdentifier boxID = listID[i];
 			const IBox* l_pBox              = m_pScenario->getBoxDetails(boxID);
 			OV_ERROR_UNLESS_K(!m_pScenario->hasOutdatedBox() || !this->getConfigurationManager().expandAsBoolean("${Kernel_AbortPlayerWhenBoxIsOutdated}", false),
 							  "Box [" << l_pBox->getName() << "] with class identifier [" << boxID.toString() << "] should be updated",
@@ -459,7 +459,7 @@ SchedulerInitializationCode CScheduler::initialize()
 				m_vSimulatedBoxChrono[boxID].reset(uint32_t(m_ui64Frequency));
 			}
 		}
-		m_pScenario->releaseIdentifierList(identifierList);
+		m_pScenario->releaseIdentifierList(listID);
 	}
 
 	OV_ERROR_UNLESS_K(!m_vSimulatedBox.empty(), "Cannot initialize scheduler with an empty scenario", ErrorType::BadCall, SchedulerInitialization_Failed);

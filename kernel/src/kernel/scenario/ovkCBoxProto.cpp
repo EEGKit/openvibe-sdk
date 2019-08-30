@@ -8,12 +8,12 @@ using namespace OpenViBE;
 using namespace Kernel;
 using namespace Plugins;
 
-CBoxProto::CBoxProto(const IKernelContext& rKernelContext, IBox& rBox)
-	: TKernelObject<IBoxProto>(rKernelContext), m_rBox(rBox) {}
+CBoxProto::CBoxProto(const IKernelContext& rKernelContext, IBox& box)
+	: TKernelObject<IBoxProto>(rKernelContext), m_rBox(box) {}
 
-bool CBoxProto::addInput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& oIdentifier, const bool bNotify)
+bool CBoxProto::addInput(const CString& sName, const CIdentifier& typeID, const CIdentifier& oIdentifier, const bool bNotify)
 {
-	if (!m_rBox.addInput(sName, rTypeIdentifier, oIdentifier, bNotify)) { return false; }
+	if (!m_rBox.addInput(sName, typeID, oIdentifier, bNotify)) { return false; }
 
 	char l_sBuffer[1024];
 	sprintf(l_sBuffer, "%d", m_rBox.getInputCount());
@@ -29,9 +29,9 @@ bool CBoxProto::addInput(const CString& sName, const CIdentifier& rTypeIdentifie
 	return true;
 }
 
-bool CBoxProto::addOutput(const CString& sName, const CIdentifier& rTypeIdentifier, const CIdentifier& rIdentifier, const bool bNotify)
+bool CBoxProto::addOutput(const CString& sName, const CIdentifier& typeID, const CIdentifier& rIdentifier, const bool bNotify)
 {
-	if (!m_rBox.addOutput(sName, rTypeIdentifier, rIdentifier, bNotify)) { return false; }
+	if (!m_rBox.addOutput(sName, typeID, rIdentifier, bNotify)) { return false; }
 
 	char l_sBuffer[1024];
 	sprintf(l_sBuffer, "%d", m_rBox.getOutputCount());
@@ -47,9 +47,9 @@ bool CBoxProto::addOutput(const CString& sName, const CIdentifier& rTypeIdentifi
 	return true;
 }
 
-bool CBoxProto::addSetting(const CString& sName, const CIdentifier& rTypeIdentifier, const CString& sDefaultValue, const bool bModifiable, const CIdentifier& rIdentifier, const bool bNotify)
+bool CBoxProto::addSetting(const CString& sName, const CIdentifier& typeID, const CString& sDefaultValue, const bool bModifiable, const CIdentifier& rIdentifier, const bool bNotify)
 {
-	if (!m_rBox.addSetting(sName, rTypeIdentifier, sDefaultValue, OV_Value_UndefinedIndexUInt, bModifiable, rIdentifier, bNotify)) { return false; }
+	if (!m_rBox.addSetting(sName, typeID, sDefaultValue, OV_Value_UndefinedIndexUInt, bModifiable, rIdentifier, bNotify)) { return false; }
 
 	char l_sBuffer[1024];
 	sprintf(l_sBuffer, "%d", m_rBox.getSettingCount());
@@ -65,9 +65,9 @@ bool CBoxProto::addSetting(const CString& sName, const CIdentifier& rTypeIdentif
 	return true;
 }
 /*
-uint32_t CBoxProto::addSetting(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& rTypeIdentifier, const OpenViBE::CString& sDefaultValue, const bool bModifiable)
+uint32_t CBoxProto::addSetting(const OpenViBE::CString& sName, const OpenViBE::CIdentifier& typeID, const OpenViBE::CString& sDefaultValue, const bool bModifiable)
 {
-	addSetting(sName, rTypeIdentifier, sDefaultValue);
+	addSetting(sName, typeID, sDefaultValue);
 	uint32_t l_ui32LastSetting = m_rBox.getSettingCount();
 	m_rBox.setSettingMod(l_ui32LastSetting, bModifiable);
 	return true;
@@ -108,6 +108,6 @@ bool CBoxProto::addFlag(const CIdentifier& cIdentifierFlag)
 	return true;
 }
 
-bool CBoxProto::addInputSupport(const CIdentifier& rTypeIdentifier) { return m_rBox.addInputSupport(rTypeIdentifier); }
+bool CBoxProto::addInputSupport(const CIdentifier& typeID) { return m_rBox.addInputSupport(typeID); }
 
-bool CBoxProto::addOutputSupport(const CIdentifier& rTypeIdentifier) { return m_rBox.addOutputSupport(rTypeIdentifier); }
+bool CBoxProto::addOutputSupport(const CIdentifier& typeID) { return m_rBox.addOutputSupport(typeID); }

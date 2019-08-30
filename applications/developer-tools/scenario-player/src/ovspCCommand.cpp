@@ -95,7 +95,7 @@ namespace OpenViBE
 		os << "ScenarioFile: " << (this->scenarioFile ? this->scenarioFile.get() : "not set") << std::endl;
 	}
 
-	PlayerReturnCode ResetCommand::execute(KernelFacade& kernelFacade) const
+	PlayerReturnCode ResetCommand::execute(KernelFacade& /*kernelFacade*/) const
 	{
 		// to be implemented
 
@@ -107,10 +107,7 @@ namespace OpenViBE
 		return PlayerReturnCode::Success;
 	}
 
-	void ResetCommand::doPrint(std::ostream& os) const
-	{
-		os << "command name: ResetCommand" << std::endl;
-	}
+	void ResetCommand::doPrint(std::ostream& os) const { os << "command name: ResetCommand" << std::endl; }
 
 	PlayerReturnCode RunScenarioCommand::execute(KernelFacade& kernelFacade) const
 	{
@@ -131,17 +128,8 @@ namespace OpenViBE
 		os << "command name: RunScenarioCommand" << std::endl;
 
 		os << "ScenarioList:";
-		if (this->scenarioList)
-		{
-			for (auto& scenario : this->scenarioList.get())
-			{
-				os << " " << scenario;
-			}
-		}
-		else
-		{
-			os << " not set";
-		}
+		if (this->scenarioList) { for (auto& scenario : this->scenarioList.get()) { os << " " << scenario; } }
+		else { os << " not set"; }
 		os << std::endl;
 
 		os << "PlayMode: ";
@@ -150,27 +138,14 @@ namespace OpenViBE
 			std::string modeAsString = (this->playMode == PlayerPlayMode::Fastfoward) ? "fastforward" : "standard";
 			os << modeAsString;
 		}
-		else
-		{
-			os << "not set";
-		}
+		else { os << "not set"; }
 		os << std::endl;
-
 
 		os << "MaximumExecutionTime: " << (this->maximumExecutionTime ? std::to_string(this->maximumExecutionTime.get()) : "not set") << std::endl;
 
 		os << "TokenList:";
-		if (this->tokenList)
-		{
-			for (auto& token : this->tokenList.get())
-			{
-				os << " (" << token.first << "," << token.second << ")";
-			}
-		}
-		else
-		{
-			os << " not set";
-		}
+		if (this->tokenList) { for (auto& token : this->tokenList.get()) { os << " (" << token.first << "," << token.second << ")"; } }
+		else { os << " not set"; }
 		os << std::endl;
 	}
 
@@ -195,17 +170,8 @@ namespace OpenViBE
 		os << "ScenarioName: " << (this->scenarioName ? this->scenarioName.get() : "not set") << std::endl;
 
 		os << "TokenList:";
-		if (this->tokenList)
-		{
-			for (auto& token : this->tokenList.get())
-			{
-				os << " (" << token.first << "," << token.second << ")";
-			}
-		}
-		else
-		{
-			os << " not set";
-		}
+		if (this->tokenList) { for (auto& token : this->tokenList.get()) { os << " (" << token.first << "," << token.second << ")"; } }
+		else { os << " not set"; }
 		os << std::endl;
 	}
 }

@@ -49,10 +49,10 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 	m_ui64StimulationId1 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 2);
 	m_ui64StimulationId2 = FSettingValueAutoCast(*this->getBoxAlgorithmContext(), 3);
 
-	CIdentifier l_oTypeIdentifier;
-	this->getStaticBoxContext().getInputType(0, l_oTypeIdentifier);
+	CIdentifier typeID;
+	this->getStaticBoxContext().getInputType(0, typeID);
 
-	if (l_oTypeIdentifier == OV_TypeId_Signal)
+	if (typeID == OV_TypeId_Signal)
 	{
 		OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>* l_pDecoder = new OpenViBEToolkit::TSignalDecoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
 		OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>* l_pEncoder = new OpenViBEToolkit::TSignalEncoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
@@ -60,7 +60,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 		m_oDecoder  = l_pDecoder;
 		m_oEncoder0 = l_pEncoder;
 	}
-	else if (l_oTypeIdentifier == OV_TypeId_StreamedMatrix)
+	else if (typeID == OV_TypeId_StreamedMatrix)
 	{
 		OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>* l_pDecoder = new OpenViBEToolkit::TStreamedMatrixDecoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
 		OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>* l_pEncoder = new OpenViBEToolkit::TStreamedMatrixEncoder<CBoxAlgorithmZeroCrossingDetector>(*this, 0);
@@ -69,7 +69,7 @@ bool CBoxAlgorithmZeroCrossingDetector::initialize()
 	}
 	else
 	{
-		OV_ERROR_KRF("Invalid input type [" << l_oTypeIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput);
+		OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput);
 	}
 
 	return true;
@@ -84,7 +84,7 @@ bool CBoxAlgorithmZeroCrossingDetector::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmZeroCrossingDetector::processInput(const uint32_t index)
+bool CBoxAlgorithmZeroCrossingDetector::processInput(const uint32_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

@@ -74,7 +74,7 @@ bool CBoxAlgorithmCrop::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmCrop::processInput(const uint32_t index)
+bool CBoxAlgorithmCrop::processInput(const uint32_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

@@ -59,9 +59,9 @@ namespace OpenViBEPlugins
 			{
 				if (index == 1)
 				{
-					OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-					box.getInputType(1, l_oTypeIdentifier);
-					if (l_oTypeIdentifier != OV_TypeId_Stimulations)
+					OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+					box.getInputType(1, typeID);
+					if (typeID != OV_TypeId_Stimulations)
 					{
 						box.setInputType(1, OV_TypeId_Stimulations);
 						return true;

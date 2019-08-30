@@ -81,26 +81,26 @@ int urExportScenarioToFileTest(int argc, char* argv[])
 		IBox* stimulatorListenerBox = scenario.getBoxDetails(s_StimulationListenerBoxId);
 		stimulatorListenerBox->addInput("Stimulation stream 2", OV_TypeId_Stimulations);
 
-		int scenarioInputIndex = 0;
+		int scenarioInputIdx = 0;
 		for (auto& scenarioInput : simpleScenarioInputs)
 		{
 			scenario.addInput(std::get<1>(scenarioInput).c_str(), std::get<0>(scenarioInput));
 			if (std::get<2>(scenarioInput) != OV_UndefinedIdentifier)
 			{
-				scenario.setScenarioInputLink(scenarioInputIndex, std::get<2>(scenarioInput), std::get<3>(scenarioInput));
+				scenario.setScenarioInputLink(scenarioInputIdx, std::get<2>(scenarioInput), std::get<3>(scenarioInput));
 			}
-			scenarioInputIndex += 1;
+			scenarioInputIdx += 1;
 		}
 
-		int scenarioOutputIndex = 0;
+		int scenarioOutputIdx = 0;
 		for (auto& scenarioOutput : simpleScenarioOutputs)
 		{
 			scenario.addOutput(std::get<1>(scenarioOutput).c_str(), std::get<0>(scenarioOutput));
 			if (std::get<2>(scenarioOutput) != OV_UndefinedIdentifier)
 			{
-				scenario.setScenarioOutputLink(scenarioOutputIndex, std::get<2>(scenarioOutput), std::get<3>(scenarioOutput));
+				scenario.setScenarioOutputLink(scenarioOutputIdx, std::get<2>(scenarioOutput), std::get<3>(scenarioOutput));
 			}
-			scenarioOutputIndex += 1;
+			scenarioOutputIdx += 1;
 		}
 
 		CIdentifier actualClockStimulatorToStimulationListenerLinkId;

@@ -11,7 +11,7 @@ namespace OpenViBEToolkit
 	public:
 
 		virtual uint32_t getFeatureVectorCount() const = 0;
-		virtual bool setFeatureVectorCount(const uint32_t ui32FeatureVectorCount) = 0;
+		virtual bool setFeatureVectorCount(const uint32_t nFeatureVector) = 0;
 		virtual bool addFeatureVector(const IFeatureVector& rFeatureVector) = 0;
 
 		virtual IFeatureVector& getFeatureVector(const uint32_t index) = 0;

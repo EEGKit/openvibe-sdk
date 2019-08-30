@@ -43,7 +43,7 @@ bool CBoxAlgorithmTimeout::uninitialize()
 /*******************************************************************************/
 
 
-bool CBoxAlgorithmTimeout::processClock(IMessageClock& rMessageClock)
+bool CBoxAlgorithmTimeout::processClock(IMessageClock& messageClock)
 {
 	// if there was nothing received on the input for a period of time we raise the
 	// timeout flag and let the box send a stimulation
@@ -67,7 +67,7 @@ uint64_t CBoxAlgorithmTimeout::getClockFrequency()
 /*******************************************************************************/
 
 
-bool CBoxAlgorithmTimeout::processInput(const uint32_t index)
+bool CBoxAlgorithmTimeout::processInput(const uint32_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 

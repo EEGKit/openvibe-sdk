@@ -364,9 +364,9 @@ CDynamicModule::symbol_t CDynamicModule::getSymbolGeneric(const char* symbolName
 }
 
 #ifdef TARGET_OS_Windows
-bool CDynamicModule::getImageFileHeaders(const char* fileName, IMAGE_NT_HEADERS& headers)
+bool CDynamicModule::getImageFileHeaders(const char* filename, IMAGE_NT_HEADERS& headers)
 {
-	HANDLE l_FileHandle = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	HANDLE l_FileHandle = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
 	if (l_FileHandle == INVALID_HANDLE_VALUE) { return false; }
 

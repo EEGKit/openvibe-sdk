@@ -25,11 +25,8 @@ const std::array<CIdentifier, 10> CBoxUpdater::updatableAttributes = {
 	OV_AttributeId_Box_FlagCanModifySetting
 };
 
-CBoxUpdater::CBoxUpdater(CScenario& scenario, IBox* sourceBox)
-	: TKernelObject<IKernelObject>(scenario.getKernelContext())
-	  , m_Scenario(&scenario)
-	  , m_SourceBox(sourceBox)
-	  , m_KernelBox(nullptr)
+CBoxUpdater::CBoxUpdater(CScenario& scenario, IBox* srcBox)
+	: TKernelObject<IKernelObject>(scenario.getKernelContext()), m_Scenario(&scenario), m_SourceBox(srcBox)
 {
 	m_OriginalToUpdatedCorrespondence[Input]   = std::map<uint32_t, uint32_t>();
 	m_OriginalToUpdatedCorrespondence[Output]  = std::map<uint32_t, uint32_t>();
@@ -54,13 +51,11 @@ bool CBoxUpdater::initialize()
 	// initialize kernel box reference
 	if (m_SourceBox->getAlgorithmClassIdentifier() == OVP_ClassId_BoxAlgorithm_Metabox)
 	{
-		CString metaboxIdentifier = m_SourceBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
-		OV_ERROR_UNLESS_KRF(metaboxIdentifier != CString(""),
-							"Failed to find metabox with id " << metaboxIdentifier,
-							ErrorType::BadCall);
+		const CString metaboxID = m_SourceBox->getAttributeValue(OVP_AttributeId_Metabox_Identifier);
+		OV_ERROR_UNLESS_KRF(metaboxID != CString(""), "Failed to find metabox with id " << metaboxID, ErrorType::BadCall);
 
 		CIdentifier metaboxId;
-		metaboxId.fromString(metaboxIdentifier);
+		metaboxId.fromString(metaboxID);
 		CString metaboxScenarioPath(this->getKernelContext().getMetaboxManager().getMetaboxFilePath(metaboxId));
 
 		OV_ERROR_UNLESS_KRF(metaboxScenarioPath != CString(""),
@@ -192,7 +187,7 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 		request.index          = index;
 		request.identifier     = kIdentifier;
 		request.name           = kName;
-		request.typeIdentifier = kTypeIdentifier;
+		request.typeID = kTypeIdentifier;
 		request.toBeRemoved    = false;
 
 		if (interfacorType == Setting)
@@ -262,7 +257,7 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 		request.index          = index;
 		request.identifier     = sIdentifier;
 		request.name           = sName;
-		request.typeIdentifier = sTypeIdentifier;
+		request.typeID = sTypeIdentifier;
 		request.toBeRemoved    = true;
 
 		if (interfacorType == Setting)
@@ -289,7 +284,7 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 
 	for (auto& i : interfacors)
 	{
-		m_UpdatedBox->addInterfacor(interfacorType, i.name, i.typeIdentifier, i.identifier);
+		m_UpdatedBox->addInterfacor(interfacorType, i.name, i.typeID, i.identifier);
 		if (interfacorType == Setting)
 		{
 			auto idx = m_UpdatedBox->getInterfacorCountIncludingDeprecated(Setting) - 1;
@@ -306,14 +301,14 @@ bool CBoxUpdater::updateInterfacors(BoxInterfacorType interfacorType)
 	return updated;
 }
 
-uint32_t CBoxUpdater::getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeIdentifier, const CIdentifier& identifier, const CString& name)
+uint32_t CBoxUpdater::getInterfacorIndex(BoxInterfacorType interfacorType, const IBox& box, const CIdentifier& typeID, const CIdentifier& identifier, const CString& name)
 {
 	uint32_t index = OV_Value_UndefinedIndexUInt;
 	if (identifier != OV_UndefinedIdentifier && box.hasInterfacorWithIdentifier(interfacorType, identifier))
 	{
 		box.getInterfacorIndex(interfacorType, identifier, index);
 	}
-	else if (box.hasInterfacorWithNameAndType(interfacorType, name, typeIdentifier))
+	else if (box.hasInterfacorWithNameAndType(interfacorType, name, typeID))
 	{
 		box.getInterfacorIndex(interfacorType, name, index);
 	}

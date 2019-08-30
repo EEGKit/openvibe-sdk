@@ -117,12 +117,12 @@ bool CMetaboxManager::addMetaboxesFromFiles(const CString& fileNameWildCard)
 	return true;
 }
 
-CIdentifier CMetaboxManager::getNextMetaboxObjectDescIdentifier(const CIdentifier& previousIdentifier) const
+CIdentifier CMetaboxManager::getNextMetaboxObjectDescIdentifier(const CIdentifier& previousID) const
 {
 	if (m_MetaboxObjectDesc.empty()) { return OV_UndefinedIdentifier; }
-	if (previousIdentifier == OV_UndefinedIdentifier) { return m_MetaboxObjectDesc.begin()->first; }
+	if (previousID == OV_UndefinedIdentifier) { return m_MetaboxObjectDesc.begin()->first; }
 
-	auto result = m_MetaboxObjectDesc.find(previousIdentifier);
+	auto result = m_MetaboxObjectDesc.find(previousID);
 	if (result == m_MetaboxObjectDesc.end() || std::next(result, 1) == m_MetaboxObjectDesc.end()) { return OV_UndefinedIdentifier; }
 	return std::next(result, 1)->first;
 }

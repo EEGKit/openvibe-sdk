@@ -178,12 +178,12 @@ bool CSimulatedBox::process()
 
 	// perform output sending
 	{
-		CIdentifier* identifierList = nullptr;
+		CIdentifier* listID = nullptr;
 		size_t nbElems              = 0;
-		m_pScenario->getLinkIdentifierFromBoxList(m_pBox->getIdentifier(), &identifierList, &nbElems);
+		m_pScenario->getLinkIdentifierFromBoxList(m_pBox->getIdentifier(), &listID, &nbElems);
 		for (size_t i = 0; i < nbElems; ++i)
 		{
-			const ILink* l_pLink = m_pScenario->getLinkDetails(identifierList[i]);
+			const ILink* l_pLink = m_pScenario->getLinkDetails(listID[i]);
 			if (l_pLink)
 			{
 				CIdentifier l_oTargetBoxIdentifier = l_pLink->getTargetBoxIdentifier();
@@ -196,7 +196,7 @@ bool CSimulatedBox::process()
 				}
 			}
 		}
-		m_pScenario->releaseIdentifierList(identifierList);
+		m_pScenario->releaseIdentifierList(listID);
 	}
 
 	// perform input cleaning
@@ -326,53 +326,53 @@ bool CSimulatedBox::markInputAsDeprecated(const uint32_t inputIdx, const uint32_
 // ________________________________________________________________________________________________________________
 //
 
-uint64_t CSimulatedBox::getOutputChunkSize(const uint32_t ui32OutputIndex) const
+uint64_t CSimulatedBox::getOutputChunkSize(const uint32_t outputIdx) const
 {
-	OV_ERROR_UNLESS_KRZ(ui32OutputIndex < m_vCurrentOutput.size(), "Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])", ErrorType::OutOfBound);
+	OV_ERROR_UNLESS_KRZ(outputIdx < m_vCurrentOutput.size(), "Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])", ErrorType::OutOfBound);
 
-	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getSize();
+	return m_vCurrentOutput[outputIdx].getBuffer().getSize();
 }
 
-bool CSimulatedBox::setOutputChunkSize(const uint32_t ui32OutputIndex, const uint64_t ui64Size, const bool bDiscard)
+bool CSimulatedBox::setOutputChunkSize(const uint32_t outputIdx, const uint64_t size, const bool bDiscard)
 {
-	OV_ERROR_UNLESS_KRF(ui32OutputIndex < m_vCurrentOutput.size(),
-						"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+	OV_ERROR_UNLESS_KRF(outputIdx < m_vCurrentOutput.size(),
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	return m_vCurrentOutput[ui32OutputIndex].getBuffer().setSize(ui64Size, bDiscard);
+	return m_vCurrentOutput[outputIdx].getBuffer().setSize(size, bDiscard);
 }
 
-uint8_t* CSimulatedBox::getOutputChunkBuffer(const uint32_t ui32OutputIndex)
+uint8_t* CSimulatedBox::getOutputChunkBuffer(const uint32_t outputIdx)
 {
-	OV_ERROR_UNLESS_KRN(ui32OutputIndex < m_vCurrentOutput.size(),
-						"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+	OV_ERROR_UNLESS_KRN(outputIdx < m_vCurrentOutput.size(),
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	return m_vCurrentOutput[ui32OutputIndex].getBuffer().getDirectPointer();
+	return m_vCurrentOutput[outputIdx].getBuffer().getDirectPointer();
 }
 
-bool CSimulatedBox::appendOutputChunkData(const uint32_t ui32OutputIndex, const uint8_t* buffer, const uint64_t size)
+bool CSimulatedBox::appendOutputChunkData(const uint32_t outputIdx, const uint8_t* buffer, const uint64_t size)
 {
-	OV_ERROR_UNLESS_KRF(ui32OutputIndex < m_vCurrentOutput.size(),
-						"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+	OV_ERROR_UNLESS_KRF(outputIdx < m_vCurrentOutput.size(),
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	return m_vCurrentOutput[ui32OutputIndex].getBuffer().append(buffer, size);
+	return m_vCurrentOutput[outputIdx].getBuffer().append(buffer, size);
 }
 
-IMemoryBuffer* CSimulatedBox::getOutputChunk(const uint32_t ui32OutputIndex)
+IMemoryBuffer* CSimulatedBox::getOutputChunk(const uint32_t outputIdx)
 {
-	OV_ERROR_UNLESS_KRN(ui32OutputIndex < m_vCurrentOutput.size(),
-						"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+	OV_ERROR_UNLESS_KRN(outputIdx < m_vCurrentOutput.size(),
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
-	return &m_vCurrentOutput[ui32OutputIndex].getBuffer();
+	return &m_vCurrentOutput[outputIdx].getBuffer();
 }
 
-bool CSimulatedBox::markOutputAsReadyToSend(const uint32_t ui32OutputIndex, const uint64_t ui64StartTime, const uint64_t ui64EndTime)
+bool CSimulatedBox::markOutputAsReadyToSend(const uint32_t outputIdx, const uint64_t ui64StartTime, const uint64_t ui64EndTime)
 {
-	OV_ERROR_UNLESS_KRF(ui32OutputIndex < m_vCurrentOutput.size(),
-						"Output index = [" << ui32OutputIndex << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
+	OV_ERROR_UNLESS_KRF(outputIdx < m_vCurrentOutput.size(),
+						"Output index = [" << outputIdx << "] is out of range (max index = [" << uint32_t(m_vCurrentOutput.size() - 1) << "])",
 						ErrorType::OutOfBound);
 
 	if (m_bChunkConsistencyChecking)
@@ -382,23 +382,23 @@ bool CSimulatedBox::markOutputAsReadyToSend(const uint32_t ui32OutputIndex, cons
 
 		// checks chunks consistency
 		CIdentifier l_oType;
-		m_pBox->getOutputType(ui32OutputIndex, l_oType);
+		m_pBox->getOutputType(outputIdx, l_oType);
 		if (l_oType == OV_TypeId_Stimulations)
 		{
-			if (m_vLastOutputEndTime[ui32OutputIndex] != ui64StartTime)
+			if (m_vLastOutputEndTime[outputIdx] != ui64StartTime)
 			{
 				l_bIsConsistent    = false;
 				l_sSpecificMessage = "'Stimulations' streams should have continuously dated chunks";
 			}
 		}
 
-		if (m_vLastOutputEndTime[ui32OutputIndex] > ui64EndTime)
+		if (m_vLastOutputEndTime[outputIdx] > ui64EndTime)
 		{
 			l_bIsConsistent    = false;
 			l_sSpecificMessage = "Current 'end time' can not be earlier than previous 'end time'";
 		}
 
-		if (m_vLastOutputStartTime[ui32OutputIndex] > ui64StartTime)
+		if (m_vLastOutputStartTime[outputIdx] > ui64StartTime)
 		{
 			l_bIsConsistent    = false;
 			l_sSpecificMessage = "Current 'start time' can not be earlier than previous 'start time'";
@@ -406,7 +406,7 @@ bool CSimulatedBox::markOutputAsReadyToSend(const uint32_t ui32OutputIndex, cons
 
 		if (!l_bIsConsistent)
 		{
-			this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << "Box <" << m_pBox->getName() << "> sends inconsistent chunk dates on output [" << ui32OutputIndex << "] (current chunk dates are [" << ui64StartTime << "," << ui64EndTime << "] whereas previous chunk dates were [" << m_vLastOutputStartTime[ui32OutputIndex] << "," << m_vLastOutputEndTime[ui32OutputIndex] << "])\n";
+			this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << "Box <" << m_pBox->getName() << "> sends inconsistent chunk dates on output [" << outputIdx << "] (current chunk dates are [" << ui64StartTime << "," << ui64EndTime << "] whereas previous chunk dates were [" << m_vLastOutputStartTime[outputIdx] << "," << m_vLastOutputEndTime[outputIdx] << "])\n";
 			if (l_sSpecificMessage) { this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << l_sSpecificMessage << "\n"; }
 			this->getLogManager() << m_eChunkConsistencyCheckingLogLevel << "Please report to box author and attach your scenario\n";
 			this->getLogManager() << LogLevel_Trace << "Previous warning can be disabled setting Kernel_CheckChunkConsistency to false\n";
@@ -414,19 +414,19 @@ bool CSimulatedBox::markOutputAsReadyToSend(const uint32_t ui32OutputIndex, cons
 		}
 
 		// sets last times
-		m_vLastOutputStartTime[ui32OutputIndex] = ui64StartTime;
-		m_vLastOutputEndTime[ui32OutputIndex]   = ui64EndTime;
+		m_vLastOutputStartTime[outputIdx] = ui64StartTime;
+		m_vLastOutputEndTime[outputIdx]   = ui64EndTime;
 	}
 
 	// sets start and end time
-	m_vCurrentOutput[ui32OutputIndex].setStartTime(std::min(ui64StartTime, ui64EndTime));
-	m_vCurrentOutput[ui32OutputIndex].setEndTime(std::max(ui64StartTime, ui64EndTime));
+	m_vCurrentOutput[outputIdx].setStartTime(std::min(ui64StartTime, ui64EndTime));
+	m_vCurrentOutput[outputIdx].setEndTime(std::max(ui64StartTime, ui64EndTime));
 
 	// copies chunk
-	m_vOutput[ui32OutputIndex].push_back(m_vCurrentOutput[ui32OutputIndex]);
+	m_vOutput[outputIdx].push_back(m_vCurrentOutput[outputIdx]);
 
 	// resets chunk size
-	m_vCurrentOutput[ui32OutputIndex].getBuffer().setSize(0, true);
+	m_vCurrentOutput[outputIdx].getBuffer().setSize(0, true);
 
 	return true;
 }

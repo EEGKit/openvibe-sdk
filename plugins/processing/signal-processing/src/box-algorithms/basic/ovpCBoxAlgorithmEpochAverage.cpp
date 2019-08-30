@@ -86,7 +86,7 @@ bool CBoxAlgorithmEpochAverage::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmEpochAverage::processInput(const uint32_t index)
+bool CBoxAlgorithmEpochAverage::processInput(const uint32_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

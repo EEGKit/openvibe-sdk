@@ -19,9 +19,9 @@ namespace OpenViBEPlugins
 			// virtual uint64_t getClockFrequency();
 			bool initialize() override;
 			bool uninitialize() override;
-			// virtual bool processEvent(OpenViBE::CMessageEvent& rMessageEvent);
-			// virtual bool processSignal(OpenViBE::CMessageSignal& rMessageSignal);
-			// virtual bool processClock(OpenViBE::CMessageClock& rMessageClock);
+			// virtual bool processEvent(OpenViBE::CMessageEvent& messageEvent);
+			// virtual bool processSignal(OpenViBE::CMessageSignal& messageSignal);
+			// virtual bool processClock(OpenViBE::CMessageClock& messageClock);
 			bool processInput(const uint32_t index) override;
 			bool process() override;
 

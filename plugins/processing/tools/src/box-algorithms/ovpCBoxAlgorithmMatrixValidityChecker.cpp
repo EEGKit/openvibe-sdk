@@ -55,7 +55,7 @@ bool CBoxAlgorithmMatrixValidityChecker::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmMatrixValidityChecker::processInput(const uint32_t index)
+bool CBoxAlgorithmMatrixValidityChecker::processInput(const uint32_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

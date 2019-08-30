@@ -42,13 +42,7 @@ fft_object fft_init(int N, int sgn)
 	obj->N   = N;
 	obj->sgn = sgn;
 
-	if (sgn == -1)
-	{
-		for (int ct = 0; ct < twi_len; ct++)
-		{
-			(obj->twiddle + ct)->im = - (obj->twiddle + ct)->im;
-		}
-	}
+	if (sgn == -1) { for (int ct = 0; ct < twi_len; ct++) { (obj->twiddle + ct)->im = - (obj->twiddle + ct)->im; } }
 
 	return obj;
 }
@@ -1385,10 +1379,7 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 		m  = N / radix;
 		ll = radix * l;
 
-		for (i = 0; i < radix; ++i)
-		{
-			mixed_radix_dit_rec(op + i * m, ip + i * l, obj, sgn, m, ll, inc + 1);
-		}
+		for (i = 0; i < radix; ++i) { mixed_radix_dit_rec(op + i * m, ip + i * l, obj, sgn, m, ll, inc + 1); }
 
 		M = (radix - 1) / 2;
 
@@ -1449,10 +1440,7 @@ static void mixed_radix_dit_rec(fft_data* op, fft_data* ip, const fft_object obj
 				{
 					//int ind2 = (u+v)%M;
 					t = (u + 1) * (v + 1);
-					while (t >= radix)
-					{
-						t -= radix;
-					}
+					while (t >= radix) { t -= radix; }
 					tt = t - 1;
 
 					temp1r += c1[tt] * taur[v];
@@ -1488,7 +1476,7 @@ static void bluestein_exp(fft_data* hl, fft_data* hlt, int len, int M)
 	fft_type PI    = 3.1415926535897932384626433832795;
 	fft_type theta = PI / len;
 	int l2         = 0;
-	const int len2       = 2 * len;
+	const int len2 = 2 * len;
 
 	for (i = 0; i < len; ++i)
 	{
@@ -1498,10 +1486,7 @@ static void bluestein_exp(fft_data* hl, fft_data* hlt, int len, int M)
 		hl[i].re       = hlt[i].re;
 		hl[i].im       = hlt[i].im;
 		l2 += 2 * i + 1;
-		while (l2 > len2)
-		{
-			l2 -= len2;
-		}
+		while (l2 > len2) { l2 -= len2; }
 	}
 
 	for (i = len; i < M - len + 1; i++)
@@ -1521,7 +1506,7 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 {
 	int M, ii, i;
 	fft_type temp;
-	obj->lt     = 0;
+	obj->lt           = 0;
 	const int K       = (int)pow(2.0, ceil((double)log10((double)N) / log10((double)2.0)));
 	const int def_lt  = 1;
 	const int def_sgn = obj->sgn;
@@ -1596,10 +1581,7 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 
 	//IFFT
 
-	for (ii = 0; ii < M; ++ii)
-	{
-		(obj->twiddle + ii)->im = -(obj->twiddle + ii)->im;
-	}
+	for (ii = 0; ii < M; ++ii) { (obj->twiddle + ii)->im = -(obj->twiddle + ii)->im; }
 
 	obj->sgn = -1 * sgn;
 
@@ -1625,10 +1607,7 @@ static void bluestein_fft(fft_data* data, fft_data* oup, fft_object obj, int sgn
 	obj->sgn = def_sgn;
 	obj->N   = def_N;
 	obj->lt  = def_lt;
-	for (ii = 0; ii < M; ++ii)
-	{
-		(obj->twiddle + ii)->im = -(obj->twiddle + ii)->im;
-	}
+	for (ii = 0; ii < M; ++ii) { (obj->twiddle + ii)->im = -(obj->twiddle + ii)->im; }
 
 	free(yn);
 	free(yno);
@@ -1830,7 +1809,7 @@ int factors(int M, int* arr)
 void twiddle(fft_data* vec, int N, int radix)
 {
 	fft_type theta = PI2 / N;
-	const int KL         = N / radix;
+	const int KL   = N / radix;
 	vec[0].re      = 1.0;
 	vec[0].im      = 0.0;
 
@@ -1849,7 +1828,7 @@ void longvectorN(fft_data* sig, int N, int* array, int tx)
 	for (int i = 0; i < tx; i++)
 	{
 		L              = L * array[tx - 1 - i];
-		const int Ls         = L / array[tx - 1 - i];
+		const int Ls   = L / array[tx - 1 - i];
 		fft_type theta = -1.0 * PI2 / L;
 		for (int j = 0; j < Ls; j++)
 		{

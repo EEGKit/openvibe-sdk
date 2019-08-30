@@ -54,7 +54,7 @@ bool CBoxAlgorithmGenericStreamReader::initializeFile()
 	return true;
 }
 
-bool CBoxAlgorithmGenericStreamReader::processClock(IMessageClock& rMessageClock)
+bool CBoxAlgorithmGenericStreamReader::processClock(IMessageClock& messageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 

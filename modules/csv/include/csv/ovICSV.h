@@ -132,9 +132,9 @@ namespace OpenViBE
 			/**
 			 * \brief Set the format type that will be written or read.
 			 *
-			 * \param typeIdentifier Could be Streamed Matrix, Signal, Covariance Matrix, etc ...
+			 * \param typeID Could be Streamed Matrix, Signal, Covariance Matrix, etc ...
 			 */
-			virtual void setFormatType(EStreamType typeIdentifier) = 0;
+			virtual void setFormatType(EStreamType typeID) = 0;
 
 			/**
 			 * \brief Return the format type

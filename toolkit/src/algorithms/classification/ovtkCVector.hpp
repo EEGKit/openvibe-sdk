@@ -15,10 +15,10 @@ namespace OpenViBEToolkit
 
 		virtual uint32_t getSize() const { return m_rMatrix.getBufferElementCount(); }
 
-		virtual bool setSize(const uint32_t ui32Size)
+		virtual bool setSize(const uint32_t size)
 		{
 			m_rMatrix.setDimensionCount(1);
-			m_rMatrix.setDimensionSize(0, ui32Size);
+			m_rMatrix.setDimensionSize(0, size);
 			return true;
 		}
 

@@ -255,4 +255,4 @@ bool OpenViBEToolkit::initialize(const IKernelContext& rKernelContext)
 	return true;
 }
 
-bool OpenViBEToolkit::uninitialize(const IKernelContext& rKernelContext) { return true; }
+bool OpenViBEToolkit::uninitialize(const IKernelContext& /*rKernelContext*/) { return true; }

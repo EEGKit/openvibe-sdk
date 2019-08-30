@@ -23,7 +23,7 @@ namespace OpenViBEPlugins
 
 			CAlgorithmClassifierNULL();
 			bool initialize() override;
-			bool train(const OpenViBEToolkit::IFeatureVectorSet& rFeatureVectorSet) override;
+			bool train(const OpenViBEToolkit::IFeatureVectorSet& featureVectorSet) override;
 			bool classify(const OpenViBEToolkit::IFeatureVector& featureVector, double& classId, OpenViBEToolkit::IVector& rDistanceValue, OpenViBEToolkit::IVector& rProbabilityValue) override;
 			XML::IXMLNode* saveConfiguration() override;
 			bool loadConfiguration(XML::IXMLNode* pConfigurationNode) override;

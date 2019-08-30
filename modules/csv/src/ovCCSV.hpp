@@ -59,7 +59,7 @@ namespace OpenViBE
 			 */
 			void setOutputFloatPrecision(uint32_t precision) override { m_OutputFloatPrecision = precision; }
 
-			void setFormatType(EStreamType typeIdentifier) override;
+			void setFormatType(EStreamType typeID) override;
 			EStreamType getFormatType() override;
 
 			void setLastMatrixOnlyMode(bool isActivated) override { m_LastMatrixOnly = isActivated; }
@@ -190,11 +190,11 @@ namespace OpenViBE
 			/**
 			 * \brief Split a string into a vector of strings.
 			 *
-			 * \param string String to split.
-			 * \param delimitor Delimitor.
-			 * \param elements[out] Vector of string.
+			 * \param input String to split.
+			 * \param delimiter Delimitor.
+			 * \param output[out] Vector of string.
 			 */
-			void split(const std::string& string, char delimitor, std::vector<std::string>& elements) const;
+			void split(const std::string& input, char delimiter, std::vector<std::string>& output) const;
 
 			/**
 			 * \brief Create a string with stimulations to add in the buffer.
@@ -317,8 +317,8 @@ namespace OpenViBE
 			std::string m_Filename;
 			std::deque<SMatrixChunk> m_Chunks;
 			std::deque<SStimulationChunk> m_Stimulations;
-			ELogErrorCodes m_LogError;
-			std::string m_LastStringError;
+			ELogErrorCodes m_LogError = LogErrorCodes_NoError;
+			std::string m_LastStringError = "";
 
 			EStreamType m_InputTypeIdentifier;
 
@@ -332,7 +332,7 @@ namespace OpenViBE
 			std::vector<double> m_FrequencyAbscissa;
 
 			uint32_t m_SamplingRate = 0;
-			size_t m_ColumnCount;
+			size_t m_ColumnCount = 0;
 
 			bool m_HasInputType = false;
 			bool m_IsFirstLineWritten = false;
@@ -341,13 +341,13 @@ namespace OpenViBE
 			bool m_HasEpoch = false;
 
 			uint32_t m_OriginalSampleNumber = 0;
-			uint32_t m_OutputFloatPrecision = 0;
+			uint32_t m_OutputFloatPrecision = 10;
 
 			bool m_LastMatrixOnly = false;
 
 			std::string m_BufferReadFileLine; // Buffer used to store unused read chars.
 
-			bool m_HasDataToRead = false;
+			bool m_HasDataToRead = true;
 
 			bool m_IsCRLFEOL = false; // Is a CRLF end of line
 		};

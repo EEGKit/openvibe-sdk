@@ -137,10 +137,7 @@ bool CCSVHandler::streamReader(std::istream& inputStream, std::string& outputStr
 	return true;
 }
 
-CCSVHandler::CCSVHandler()
-	: m_LogError(LogErrorCodes_NoError)
-	  , m_LastStringError("")
-	  , m_InputTypeIdentifier(EStreamType::StreamedMatrix), m_DimensionSizes({}), m_ColumnCount(0), m_OutputFloatPrecision(10), m_HasDataToRead(true) {}
+CCSVHandler::CCSVHandler() : m_InputTypeIdentifier(EStreamType::StreamedMatrix), m_DimensionSizes({}) {}
 
 CCSVHandler::~CCSVHandler() { this->closeFile(); }
 
@@ -159,9 +156,9 @@ void CCSVHandler::split(const std::string& input, char delimiter, std::vector<st
 	if (this->streamReader(stringStream, item, '\0', buffer)) { output.push_back(item); }
 }
 
-void CCSVHandler::setFormatType(EStreamType typeIdentifier)
+void CCSVHandler::setFormatType(EStreamType typeID)
 {
-	m_InputTypeIdentifier = typeIdentifier;
+	m_InputTypeIdentifier = typeID;
 	m_HasInputType        = true;
 }
 
@@ -544,12 +541,12 @@ bool CCSVHandler::readSamplesAndEventsFromFile(size_t chunksToRead, std::vector<
 
 	if (m_InputTypeIdentifier == EStreamType::Signal)
 	{
-		size_t signalSize = size_t(m_ColumnCount - (s_PreDataColumnCount + s_PostDataColumnCount));
+		const size_t signalSize = size_t(m_ColumnCount - (s_PreDataColumnCount + s_PostDataColumnCount));
 		matrixSize *= signalSize;
 	}
 	else if (m_InputTypeIdentifier == EStreamType::Spectrum)
 	{
-		size_t spectrumSize = m_DimensionSizes[0] * m_DimensionSizes[1];
+		const size_t spectrumSize = m_DimensionSizes[0] * m_DimensionSizes[1];
 		matrixSize *= spectrumSize;
 	}
 	else { matrixSize = 0; }
@@ -618,7 +615,7 @@ bool CCSVHandler::writeHeaderToFile()
 	}
 
 	// set header (in case of error, logError set in function)
-	std::string header = this->createHeaderString();
+	const std::string header = this->createHeaderString();
 	if (header.empty()) { return false; }
 
 	m_IsFirstLineWritten = true;
@@ -735,7 +732,7 @@ bool CCSVHandler::addSample(const SMatrixChunk& sample)
 			break;
 
 		default:
-			uint32_t columnsToHave = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1U, std::multiplies<uint32_t>());
+			const uint32_t columnsToHave = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1U, std::multiplies<uint32_t>());
 
 			if (sample.matrix.size() != columnsToHave)
 			{
@@ -1036,7 +1033,7 @@ std::string CCSVHandler::createHeaderString()
 		case EStreamType::CovarianceMatrix:
 		case EStreamType::StreamedMatrix:
 		{
-			uint32_t matrixColumns = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1U, std::multiplies<uint32_t>());
+			const uint32_t matrixColumns = std::accumulate(m_DimensionSizes.begin(), m_DimensionSizes.end(), 1U, std::multiplies<uint32_t>());
 
 			if (matrixColumns == 0)
 			{
@@ -1788,7 +1785,7 @@ bool CCSVHandler::increasePositionIndexes(std::vector<uint32_t>& position)
 
 	for (size_t counter = 1; counter <= position.size(); counter++)
 	{
-		size_t index = position.size() - counter;
+		const size_t index = position.size() - counter;
 
 		if ((position[index] + 1) > m_DimensionSizes[index])
 		{

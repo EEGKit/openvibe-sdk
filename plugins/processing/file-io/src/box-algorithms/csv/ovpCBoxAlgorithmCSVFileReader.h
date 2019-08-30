@@ -23,7 +23,7 @@ namespace OpenViBEPlugins
 			uint64_t getClockFrequency() override;
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processClock(OpenViBE::CMessageClock& rMessageClock) override;
+			bool processClock(OpenViBE::CMessageClock& messageClock) override;
 			bool process() override;
 
 			bool process_streamedMatrix();
@@ -71,42 +71,42 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmCSVFileReaderListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(index, l_oTypeIdentifier);
-				if (l_oTypeIdentifier == OV_TypeId_Spectrum)
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getOutputType(index, typeID);
+				if (typeID == OV_TypeId_Spectrum)
 				{
-					rBox.setSettingName(3, "Unused parameter");
-					rBox.setSettingValue(3, "0");
+					box.setSettingName(3, "Unused parameter");
+					box.setSettingValue(3, "0");
 				}
-				else if (l_oTypeIdentifier == OV_TypeId_ChannelLocalisation)
+				else if (typeID == OV_TypeId_ChannelLocalisation)
 				{
-					rBox.setSettingName(3, "Channels number");
-					rBox.setSettingValue(3, "32");
+					box.setSettingName(3, "Channels number");
+					box.setSettingValue(3, "32");
 				}
-				else if (l_oTypeIdentifier == OV_TypeId_FeatureVector)
+				else if (typeID == OV_TypeId_FeatureVector)
 				{
-					rBox.setSettingName(3, "Unused parameter");
-					rBox.setSettingValue(3, "0");
+					box.setSettingName(3, "Unused parameter");
+					box.setSettingValue(3, "0");
 				}
-				else if (l_oTypeIdentifier == OV_TypeId_StreamedMatrix)
+				else if (typeID == OV_TypeId_StreamedMatrix)
 				{
-					rBox.setSettingName(3, "Samples per buffer");
-					rBox.setSettingValue(3, "32");
+					box.setSettingName(3, "Samples per buffer");
+					box.setSettingValue(3, "32");
 				}
-				else if (l_oTypeIdentifier == OV_TypeId_Stimulations)
+				else if (typeID == OV_TypeId_Stimulations)
 				{
-					rBox.setSettingName(3, "Unused parameter");
-					rBox.setSettingValue(3, "0");
+					box.setSettingName(3, "Unused parameter");
+					box.setSettingValue(3, "0");
 				}
 				else
 				{
-					rBox.setOutputType(index, OV_TypeId_Signal);
-					rBox.setSettingName(3, "Samples per buffer");
-					rBox.setSettingValue(3, "32");
+					box.setOutputType(index, OV_TypeId_Signal);
+					box.setSettingName(3, "Samples per buffer");
+					box.setSettingValue(3, "32");
 
-					OV_ERROR_KRF("Unsupported stream type " << l_oTypeIdentifier.toString(), OpenViBE::Kernel::ErrorType::BadOutput);
+					OV_ERROR_KRF("Unsupported stream type " << typeID.toString(), OpenViBE::Kernel::ErrorType::BadOutput);
 				}
 				return true;
 			}

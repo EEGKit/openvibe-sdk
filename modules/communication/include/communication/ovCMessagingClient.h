@@ -167,7 +167,7 @@ namespace Communication
 		 *
 		 * \param	index	 	Index of the box output.
 		 * \param	startTime	The start time.
-		 * \param	endtime  	The endtime.
+		 * \param	endTime  	The endtime.
 		 * \param	ebml	 	The ebml vector.
 		 *
 		 * \retval True if it succeeds.
@@ -178,7 +178,7 @@ namespace Communication
 		 *
 		 * \sa getLastError
 		 */
-		bool pushEBML(uint32_t index, uint64_t startTime, uint64_t endtime, std::shared_ptr<const std::vector<uint8_t>> ebml);
+		bool pushEBML(uint32_t index, uint64_t startTime, uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml);
 
 		/**
 		 * \brief Push Sync message to the server.

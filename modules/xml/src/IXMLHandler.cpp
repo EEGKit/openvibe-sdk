@@ -203,7 +203,7 @@ static void XMLCALL XML::expat_xml_start(void* pData, const char* pElement, cons
 	delete [] l_pAttributeValue;
 }
 
-static void XMLCALL XML::expat_xml_end(void* pData, const char* pElement)
+static void XMLCALL XML::expat_xml_end(void* pData, const char* /*pElement*/)
 {
 	static_cast<IXMLHandlerImpl*>(pData)->closeChild();
 }

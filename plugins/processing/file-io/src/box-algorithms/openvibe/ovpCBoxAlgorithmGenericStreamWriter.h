@@ -59,47 +59,47 @@ namespace OpenViBEPlugins
 			//it seems the only purpose of the check was to give a name when adding an input
 			//without it, the input configuration dialog display random characters in the name field
 			//the check is unnecessary when removing/changing inputs and on already named inputs
-			bool check(OpenViBE::Kernel::IBox& rBox)
+			bool check(OpenViBE::Kernel::IBox& box)
 			{
 				char l_sName[1024];
-				uint32_t i = rBox.getInputCount() - 1;
+				uint32_t i = box.getInputCount() - 1;
 				//only check last input (we assume previous inputs have benn named, how could they not?)
 				sprintf(l_sName, "Input stream %u", i + 1);
-				rBox.setInputName(i, l_sName);
+				box.setInputName(i, l_sName);
 				/*
-				for(i=0; i<rBox.getInputCount(); i++)
+				for(i=0; i<box.getInputCount(); i++)
 				{
 					sprintf(l_sName, "Input stream %u", i+1);
-					rBox.setInputName(i, l_sName);
+					box.setInputName(i, l_sName);
 				}
 				//*/
 				return true;
 			}
 
-			bool onDefaultInitialized(OpenViBE::Kernel::IBox& rBox) override
+			bool onDefaultInitialized(OpenViBE::Kernel::IBox& box) override
 			{
-				rBox.setInputName(0, "Input Signal");
-				rBox.setInputType(0, OV_TypeId_Signal);
-				rBox.addInput("Input Stimulations", OV_TypeId_Stimulations);
+				box.setInputName(0, "Input Signal");
+				box.setInputType(0, OV_TypeId_Signal);
+				box.addInput("Input Stimulations", OV_TypeId_Stimulations);
 				return true;
 			}
 
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				rBox.setInputType(index, OV_TypeId_EBMLStream);
-				this->check(rBox);
+				box.setInputType(index, OV_TypeId_EBMLStream);
+				this->check(box);
 				return true;
 			}
 
-			bool onInputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputRemoved(OpenViBE::Kernel::IBox& /*box*/, const uint32_t /*index*/) override
 			{
-				//this->check(rBox);
+				//this->check(box);
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& /*box*/, const uint32_t /*index*/) override
 			{
-				//this->check(rBox);
+				//this->check(box);
 				return true;
 			}
 

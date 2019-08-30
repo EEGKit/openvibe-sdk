@@ -29,7 +29,7 @@ namespace Socket
 
 		bool isErrorRaised() override { return false; }	// return m_oConnectionSerialDelegate.fpIsErrorRaised(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
 		void clearError() override { }					// return m_oConnectionSerialDelegate.fpClearError(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData);
-		bool setTimeouts(unsigned long ui32DecisecondsTimeout) override { return true; }	// return m_oConnectionSerialDelegate.fpSetTimeouts(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData, ui32DecisecondsTimeout);
+		bool setTimeouts(const uint32_t /*decisecondsTimeout*/) override { return true; }	// return m_oConnectionSerialDelegate.fpSetTimeouts(m_oConnectionSerialDelegate.oConnectionDelegate.pUserData, decisecondsTimeout);
 	};
 
 	IConnectionSerialDelegate* createConnectionSerialDelegate(SConnectionSerialDelegate oConnectionSerialDelegate) { return new CConnectionSerialDelegate(oConnectionSerialDelegate); }

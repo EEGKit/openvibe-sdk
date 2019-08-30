@@ -388,7 +388,7 @@ namespace Socket
 			return true;
 		}
 
-		bool setTimeouts(unsigned long ui32DecisecondsTimeout) override
+		bool setTimeouts(const uint32_t decisecondsTimeout) override
 		{
 			if (!this->isConnected()) { return false; }
 
@@ -403,8 +403,8 @@ namespace Socket
 				return false;
 			}
 
-			l_Timeouts.ReadTotalTimeoutConstant  = ui32DecisecondsTimeout * 100; // Deciseconds to milliseconds
-			l_Timeouts.WriteTotalTimeoutConstant = ui32DecisecondsTimeout * 100; // Deciseconds to milliseconds
+			l_Timeouts.ReadTotalTimeoutConstant  = decisecondsTimeout * 100; // Deciseconds to milliseconds
+			l_Timeouts.WriteTotalTimeoutConstant = decisecondsTimeout * 100; // Deciseconds to milliseconds
 
 			if (!SetCommTimeouts(m_pFile, &l_Timeouts))
 			{
@@ -423,7 +423,7 @@ namespace Socket
 				return false;
 			}
 
-			l_oTerminalAttributes.c_cc[VTIME] = ui32DecisecondsTimeout;
+			l_oTerminalAttributes.c_cc[VTIME] = decisecondsTimeout;
 
 			if (::tcsetattr(m_iFile, TCSAFLUSH, &l_oTerminalAttributes) != 0)
 			{

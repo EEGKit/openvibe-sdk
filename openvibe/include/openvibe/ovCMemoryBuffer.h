@@ -18,7 +18,7 @@ namespace OpenViBE
 	 * interface and redirect their calls to this implementation.
 	 */
 
-	class OV_API CMemoryBuffer final : public IMemoryBuffer
+	class OV_API CMemoryBuffer : public IMemoryBuffer
 	{
 	public:
 

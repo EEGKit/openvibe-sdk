@@ -79,7 +79,7 @@ bool CDecoderAlgorithmTest::uininitialize()
 	return true;
 }
 
-bool CDecoderAlgorithmTest::processInput(const uint32_t index)
+bool CDecoderAlgorithmTest::processInput(const uint32_t /*index*/)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -88,9 +88,9 @@ bool CDecoderAlgorithmTest::processInput(const uint32_t index)
 bool CDecoderAlgorithmTest::process()
 {
 	IBoxIO& boxContext    = getDynamicBoxContext();
-	const IBox& l_rStaticBoxContext = getStaticBoxContext();
-
-	for (uint32_t i = 0; i < l_rStaticBoxContext.getInputCount(); i++)
+	const uint32_t nInput = getStaticBoxContext().getInputCount();
+	
+	for (uint32_t i = 0; i < nInput; i++)
 	{
 		for (uint32_t j = 0; j < boxContext.getInputChunkCount(i); j++)
 		{

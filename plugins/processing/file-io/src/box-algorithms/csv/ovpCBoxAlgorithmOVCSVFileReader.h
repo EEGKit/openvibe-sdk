@@ -61,16 +61,16 @@ namespace OpenViBEPlugins
 		public:
 			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier typeIdentifier = OV_UndefinedIdentifier;
-				box.getOutputType(index, typeIdentifier);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getOutputType(index, typeID);
 
-				if (index == 0 && typeIdentifier == OV_TypeId_Stimulations)
+				if (index == 0 && typeID == OV_TypeId_Stimulations)
 				{
 					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Signal),
 										"Failed to reset output type to signal",
 										OpenViBE::Kernel::ErrorType::Internal);
 				}
-				else if (index == 1 && typeIdentifier != OV_TypeId_Stimulations)
+				else if (index == 1 && typeID != OV_TypeId_Stimulations)
 				{
 					OV_ERROR_UNLESS_KRF(box.setOutputType(index, OV_TypeId_Stimulations),
 										"Failed to reset output type to stimulations",

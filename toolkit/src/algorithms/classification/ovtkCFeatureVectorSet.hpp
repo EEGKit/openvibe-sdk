@@ -11,21 +11,21 @@ namespace OpenViBEToolkit
 	{
 	public:
 
-		CInternalFeatureVector();
-		uint32_t getSize() const override;
-		bool setSize(const uint32_t ui32Size) override;
-		double* getBuffer() override;
-		const double* getBuffer() const override;
-		const char* getElementLabel(const uint32_t index) const override;
-		bool setElementLabel(const uint32_t index, const char* sElementLabel) override;
-		double getLabel() const override;
-		bool setLabel(const double f64Label) override;
+		CInternalFeatureVector() { }
+		uint32_t getSize() const override { return m_size; }
+		bool setSize(const uint32_t /*size*/) override { return false; }
+		double* getBuffer() override { return nullptr; }
+		const double* getBuffer() const override { return m_pBuffer; }
+		const char* getElementLabel(const uint32_t index) const override { return m_pMatrix->getDimensionLabel(m_dimensionIdx, index); }
+		bool setElementLabel(const uint32_t /*index*/, const char* /*elementLabel*/) override { return false; }
+		double getLabel() const override { return m_pBuffer[m_size]; }
+		bool setLabel(const double /*label*/) override { return false; }
 
 		_IsDerivedFromClass_Final_(OpenViBEToolkit::IFeatureVector, OV_UndefinedIdentifier)
 
 		const OpenViBE::IMatrix* m_pMatrix = nullptr;
-		uint32_t m_ui32DimensionIndex      = 0;
-		uint32_t m_ui32BufferElementCount  = 0;
+		uint32_t m_dimensionIdx      = 0;
+		uint32_t m_size  = 0;
 		const double* m_pBuffer            = nullptr;
 	};
 
@@ -34,9 +34,9 @@ namespace OpenViBEToolkit
 	public:
 
 		explicit CFeatureVectorSet(const OpenViBE::IMatrix& rMatrix);
-		uint32_t getFeatureVectorCount() const override;
-		bool setFeatureVectorCount(const uint32_t ui32FeatureVectorCount) override;
-		bool addFeatureVector(const IFeatureVector& rFeatureVector) override;
+		uint32_t getFeatureVectorCount() const override { return m_rMatrix.getDimensionSize(0); }
+		bool setFeatureVectorCount(const uint32_t /*nFeatureVector*/) override { return false; }
+		bool addFeatureVector(const IFeatureVector& /*featureVector*/) override { return false; }
 		IFeatureVector& getFeatureVector(const uint32_t index) override;
 		const IFeatureVector& getFeatureVector(const uint32_t index) const override;
 		uint32_t getLabelCount() const override;

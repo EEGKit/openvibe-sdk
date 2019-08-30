@@ -43,13 +43,13 @@ bool CMetadata::setIdentifier(const CIdentifier& identifier)
 	return true;
 }
 
-bool CMetadata::setType(const CIdentifier& type)
+bool CMetadata::setType(const CIdentifier& typeID)
 {
-	OV_ERROR_UNLESS_KRF(type != OV_UndefinedIdentifier,
-						"Attempted to assign undefined type to Metadata [" << m_Identifier.toString() << "] in scenario [" << m_OwnerScenario.getIdentifier().toString() << "].",
+	OV_ERROR_UNLESS_KRF(typeID != OV_UndefinedIdentifier,
+						"Attempted to assign undefined typeID to Metadata [" << m_Identifier.toString() << "] in scenario [" << m_OwnerScenario.getIdentifier().toString() << "].",
 						ErrorType::BadArgument);
 
-	m_Type = type;
+	m_Type = typeID;
 	return true;
 }
 

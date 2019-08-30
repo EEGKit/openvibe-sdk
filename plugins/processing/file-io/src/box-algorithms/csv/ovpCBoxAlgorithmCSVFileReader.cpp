@@ -207,7 +207,7 @@ bool CBoxAlgorithmCSVFileReader::initializeFile()
 	return true;
 }
 
-bool CBoxAlgorithmCSVFileReader::processClock(IMessageClock& rMessageClock)
+bool CBoxAlgorithmCSVFileReader::processClock(IMessageClock& messageClock)
 {
 	getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

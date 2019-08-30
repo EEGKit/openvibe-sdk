@@ -69,11 +69,11 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmRegularizedCSPTrainerListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
 				std::stringstream name;
 				name << "Signal condition " << index;
-				rBox.setInputName(index, name.str().c_str());
+				box.setInputName(index, name.str().c_str());
 
 				return true;
 			}

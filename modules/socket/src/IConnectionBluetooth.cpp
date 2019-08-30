@@ -325,7 +325,7 @@ namespace Socket
 			LPTSTR l_sErrorText;
 			DWORD l_ui64Error = GetLastError();
 
-			size_t ui32Size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | // use system message tables to retrieve error text
+			size_t size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | // use system message tables to retrieve error text
 											FORMAT_MESSAGE_ALLOCATE_BUFFER |  // allocate buffer on local heap for error text
 											FORMAT_MESSAGE_IGNORE_INSERTS, // Important! will fail otherwise, since we're not (and CANNOT) pass insertion parameters
 											nullptr, // unused with FORMAT_MESSAGE_FROM_SYSTEM
@@ -335,7 +335,7 @@ namespace Socket
 											nullptr);
 
 			// Converts std::wstring to std::string and returns it. 
-			std::wstring l_sErrorMessage(l_sErrorText, ui32Size);
+			std::wstring l_sErrorMessage(l_sErrorText, size);
 			LocalFree(l_sErrorText);
 			std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> l_oConverter;
 			return l_oConverter.to_bytes(l_sErrorMessage);

@@ -19,8 +19,8 @@ public:
 	void openChild(const char* sName, const char** sAttributeName, const char** sAttributeValue, uint64_t ui64AttributeCount) override;
 	void processChildData(const char* sData) override;
 	void closeChild() override;
-	bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox) override;
-	bool processEnd(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& rBox) override;
+	bool processBegin(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& box) override;
+	bool processEnd(OpenViBE::Kernel::IObjectVisitorContext& rObjectVisitorContext, OpenViBE::Kernel::IBox& box) override;
 
 	OpenViBE::Kernel::IObjectVisitorContext* m_pObjectVisitorContext = nullptr;
 	OpenViBE::Kernel::IBox* m_pBox = nullptr;

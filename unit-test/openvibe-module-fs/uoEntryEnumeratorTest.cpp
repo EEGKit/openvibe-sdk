@@ -43,9 +43,9 @@ public:
 	std::vector<std::string> files;
 };
 
-int uoEntryEnumeratorTest(int argc, char* argv[])
+int uoEntryEnumeratorTest(int /*argc*/, char* argv[])
 {
-	std::string dataDirectory = argv[1];
+	const std::string dataDirectory = argv[1];
 
 	EntryEnumeratorCallBack cb;
 	FS::IEntryEnumerator* enumerator = createEntryEnumerator(cb);

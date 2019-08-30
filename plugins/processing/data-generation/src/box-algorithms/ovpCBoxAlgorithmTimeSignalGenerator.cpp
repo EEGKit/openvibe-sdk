@@ -39,7 +39,7 @@ bool CBoxAlgorithmTimeSignalGenerator::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& rMessageClock)
+bool CBoxAlgorithmTimeSignalGenerator::processClock(CMessageClock& messageClock)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;
@@ -83,11 +83,11 @@ bool CBoxAlgorithmTimeSignalGenerator::process()
 
 			m_oSignalEncoder.encodeBuffer();
 
-			uint64_t l_ui64StartTime = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
+			uint64_t tStart = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
 			m_ui32SentSampleCount += m_ui32GeneratedEpochSampleCount;
-			uint64_t l_ui64EndTime = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
+			uint64_t tEnd = ITimeArithmetics::sampleCountToTime(m_ui32SamplingFrequency, m_ui32SentSampleCount);
 
-			l_pDynamicBoxContext->markOutputAsReadyToSend(0, l_ui64StartTime, l_ui64EndTime);
+			l_pDynamicBoxContext->markOutputAsReadyToSend(0, tStart, tEnd);
 		}
 	}
 

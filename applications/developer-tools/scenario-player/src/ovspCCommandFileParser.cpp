@@ -146,8 +146,8 @@ namespace OpenViBE
 		{
 			// rawToken is expected to be trimmed
 
-			auto split = rawToken.find_first_of(":");
-			auto size  = rawToken.size();
+			const auto split = rawToken.find_first_of(":");
+			const auto size  = rawToken.size();
 
 			// (a:b) pattern expected
 			// minimal regex std::regex("\\(.+:.+\\)")
@@ -170,9 +170,6 @@ namespace OpenViBE
 		return vec;
 	}
 
-	CommandFileParser::CommandFileParser(const std::string& file)
-		: m_CommandFile(file) { }
-
 	void CommandFileParser::initialize()
 	{
 		// using a callback mechanism allows us to implement the core parse() method
@@ -190,8 +187,6 @@ namespace OpenViBE
 		m_CallbackList.clear();
 		m_CommandList.clear();
 	}
-
-	std::vector<std::shared_ptr<ICommand>> CommandFileParser::getCommandList() const { return m_CommandList; }
 
 	PlayerReturnCode CommandFileParser::parse()
 	{
@@ -211,7 +206,7 @@ namespace OpenViBE
 		while (std::getline(fileStream, line))
 		{
 			auto trimmedLine = trim(line);
-			auto size        = trimmedLine.size();
+			const auto size  = trimmedLine.size();
 
 			// [a] pattern expected
 			// minimal regex std::regex("^(?!\\#)\\[.+\\])")
@@ -220,7 +215,7 @@ namespace OpenViBE
 			{
 				if (isFillingSection) // flush the section that was beeing filled
 				{
-					auto errorCode = this->flush(sectionTag, sectionContent);
+					const auto errorCode = this->flush(sectionTag, sectionContent);
 
 					if (errorCode != PlayerReturnCode::Success) { return errorCode; }
 				}
@@ -244,7 +239,7 @@ namespace OpenViBE
 
 		if (isFillingSection)
 		{
-			auto errorCode = this->flush(sectionTag, sectionContent);
+			const auto errorCode = this->flush(sectionTag, sectionContent);
 
 			if (errorCode != PlayerReturnCode::Success) { return errorCode; }
 		}
@@ -256,7 +251,7 @@ namespace OpenViBE
 	{
 		try // try block here as some conversions are made with the stl in the callback and might throw
 		{
-			auto returnCode = m_CallbackList[sectionTag](sectionContent);
+			const auto returnCode = m_CallbackList[sectionTag](sectionContent);
 
 			if (returnCode != PlayerReturnCode::Success) { return returnCode; }
 		}
@@ -284,14 +279,8 @@ namespace OpenViBE
 			{
 				auto param = tokenize(line);
 
-				if (param.first == "Benchmark")
-				{
-					command->benchmark = toBool(param.second);
-				}
-				else
-				{
-					std::cout << "WARNING: Unknown parameter for Init command: " << param.first << std::endl;
-				}
+				if (param.first == "Benchmark") { command->benchmark = toBool(param.second); }
+				else { std::cout << "WARNING: Unknown parameter for Init command: " << param.first << std::endl; }
 			}
 		}
 
@@ -300,9 +289,9 @@ namespace OpenViBE
 		return PlayerReturnCode::Success;
 	}
 
-	PlayerReturnCode CommandFileParser::resetCommandCb(const std::vector<std::string>& sectionContent)
+	PlayerReturnCode CommandFileParser::resetCommandCb(const std::vector<std::string>& /*sectionContent*/)
 	{
-		std::shared_ptr<ResetCommand> command = std::make_shared<ResetCommand>();
+		const std::shared_ptr<ResetCommand> command = std::make_shared<ResetCommand>();
 
 		m_CommandList.push_back(command);
 

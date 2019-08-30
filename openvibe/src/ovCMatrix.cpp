@@ -38,7 +38,7 @@ namespace OpenViBE
 		protected:
 
 			mutable double* m_pBuffer                 = nullptr;
-			mutable uint32_t m_ui32BufferElementCount = 0;
+			mutable uint32_t m_size = 0;
 
 			std::vector<uint32_t> m_vDimensionSize;
 			std::vector<std::vector<std::string>> m_vDimensionLabel;
@@ -108,8 +108,8 @@ const double* CMatrixImpl::getBuffer() const
 
 uint32_t CMatrixImpl::getBufferElementCount() const
 {
-	if (!m_pBuffer || !m_ui32BufferElementCount) { this->refreshInternalBuffer(); }
-	return m_ui32BufferElementCount;
+	if (!m_pBuffer || !m_size) { this->refreshInternalBuffer(); }
+	return m_size;
 }
 
 bool CMatrixImpl::setDimensionCount(const uint32_t count)
@@ -165,15 +165,15 @@ bool CMatrixImpl::refreshInternalBuffer() const
 {
 	if (m_pBuffer || m_vDimensionSize.size() == 0) { return false; }
 
-	m_ui32BufferElementCount = 1;
-	for (size_t i = 0; i < m_vDimensionSize.size(); i++) { m_ui32BufferElementCount *= m_vDimensionSize[i]; }
+	m_size = 1;
+	for (size_t i = 0; i < m_vDimensionSize.size(); i++) { m_size *= m_vDimensionSize[i]; }
 
-	if (m_ui32BufferElementCount == 0) { return false; }
+	if (m_size == 0) { return false; }
 
-	m_pBuffer = new double[m_ui32BufferElementCount];
+	m_pBuffer = new double[m_size];
 	if (!m_pBuffer)
 	{
-		m_ui32BufferElementCount = 0;
+		m_size = 0;
 		return false;
 	}
 

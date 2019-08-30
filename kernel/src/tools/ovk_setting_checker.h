@@ -28,24 +28,24 @@ namespace
 	* \return \e false in case of error. In such case,
 	*         \c rValue remains unchanged.
 	*/
-	bool checkSettingValue(const OpenViBE::CString& value, const OpenViBE::CIdentifier& typeIdentifier, const OpenViBE::Kernel::ITypeManager& typeManager)
+	bool checkSettingValue(const OpenViBE::CString& value, const OpenViBE::CIdentifier& typeID, const OpenViBE::Kernel::ITypeManager& typeManager)
 	{
-		if (typeManager.isEnumeration(typeIdentifier))
+		if (typeManager.isEnumeration(typeID))
 		{
-			auto enumerationEntryValue        = typeManager.getEnumerationEntryValueFromName(typeIdentifier, value);
-			auto enumerationEntryReversedName = typeManager.getEnumerationEntryNameFromValue(typeIdentifier, enumerationEntryValue);
+			auto enumerationEntryValue        = typeManager.getEnumerationEntryValueFromName(typeID, value);
+			auto enumerationEntryReversedName = typeManager.getEnumerationEntryNameFromValue(typeID, enumerationEntryValue);
 			// We need to compare the reversed name of the enumerations because some enumeration values actually use max int
 			// which is the same value as the guard value for incorrect stimulations
 			if (enumerationEntryValue == OV_IncorrectStimulation && enumerationEntryReversedName != value) { return false; }
 		}
-		else if (typeIdentifier == OV_TypeId_Float || typeIdentifier == OV_TypeId_Integer)
+		else if (typeID == OV_TypeId_Float || typeID == OV_TypeId_Integer)
 		{
 			// If the token is a numeric value, it may be an arithmetic operation
 			// parse and expression with no variables or functions
 			try { Lepton::Parser::parse(value.toASCIIString()).evaluate(); }
 			catch (...) { return false; }
 		}
-		else if (typeIdentifier == OV_TypeId_Boolean)
+		else if (typeID == OV_TypeId_Boolean)
 		{
 			std::string val = value.toASCIIString();
 			std::transform(val.begin(), val.end(), val.begin(), ::to_lower<std::string::value_type>);

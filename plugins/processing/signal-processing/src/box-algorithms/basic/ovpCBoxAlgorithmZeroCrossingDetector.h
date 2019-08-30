@@ -71,33 +71,33 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmZeroCrossingDetectorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(index, l_oTypeIdentifier);
-				return this->onConnectorTypeChanged(rBox, index, l_oTypeIdentifier, false);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getInputType(index, typeID);
+				return this->onConnectorTypeChanged(box, index, typeID, false);
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(index, l_oTypeIdentifier);
-				return this->onConnectorTypeChanged(rBox, index, l_oTypeIdentifier, true);
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getOutputType(index, typeID);
+				return this->onConnectorTypeChanged(box, index, typeID, true);
 			}
 
-			virtual bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index, const OpenViBE::CIdentifier& rTypeIdentifier, bool bOutputChanged)
+			virtual bool onConnectorTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index, const OpenViBE::CIdentifier& typeID, bool bOutputChanged)
 			{
 				if (index == 0)
 				{
-					if (rTypeIdentifier == OV_TypeId_Signal)
+					if (typeID == OV_TypeId_Signal)
 					{
-						rBox.setInputType(0, OV_TypeId_Signal);
-						rBox.setOutputType(0, OV_TypeId_Signal);
+						box.setInputType(0, OV_TypeId_Signal);
+						box.setOutputType(0, OV_TypeId_Signal);
 					}
-					else if (rTypeIdentifier == OV_TypeId_StreamedMatrix)
+					else if (typeID == OV_TypeId_StreamedMatrix)
 					{
-						rBox.setInputType(0, OV_TypeId_StreamedMatrix);
-						rBox.setOutputType(0, OV_TypeId_StreamedMatrix);
+						box.setInputType(0, OV_TypeId_StreamedMatrix);
+						box.setOutputType(0, OV_TypeId_StreamedMatrix);
 					}
 					else
 					{
@@ -106,24 +106,24 @@ namespace OpenViBEPlugins
 						if (bOutputChanged)
 						{
 							// Restores output
-							rBox.getInputType(0, l_oOriginalTypeIdentifier);
-							rBox.setOutputType(0, l_oOriginalTypeIdentifier);
+							box.getInputType(0, l_oOriginalTypeIdentifier);
+							box.setOutputType(0, l_oOriginalTypeIdentifier);
 						}
 						else
 						{
 							// Restores input
-							rBox.getOutputType(0, l_oOriginalTypeIdentifier);
-							rBox.setInputType(0, l_oOriginalTypeIdentifier);
+							box.getOutputType(0, l_oOriginalTypeIdentifier);
+							box.setInputType(0, l_oOriginalTypeIdentifier);
 						}
 					}
 				}
 				if (index == 1)
 				{
-					rBox.setOutputType(1, OV_TypeId_Stimulations);
+					box.setOutputType(1, OV_TypeId_Stimulations);
 				}
 				if (index == 2)
 				{
-					rBox.setOutputType(2, OV_TypeId_StreamedMatrix);
+					box.setOutputType(2, OV_TypeId_StreamedMatrix);
 				}
 
 				return true;

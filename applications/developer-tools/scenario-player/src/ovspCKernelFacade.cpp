@@ -46,7 +46,7 @@ namespace OpenViBE
 				configurationManager.addOrReplaceConfigurationToken(token.first.c_str(), token.second.c_str());
 			}
 		}
-	}
+	} // namespace
 
 	struct KernelFacade::KernelFacadeImpl
 	{
@@ -68,7 +68,7 @@ namespace OpenViBE
 		this->uninitialize();
 	}
 
-	PlayerReturnCode KernelFacade::initialize(const InitCommand& command) { return PlayerReturnCode::Success; }
+	PlayerReturnCode KernelFacade::initialize(const InitCommand& /*command*/) { return PlayerReturnCode::Success; }
 
 	PlayerReturnCode KernelFacade::uninitialize() { return PlayerReturnCode::Success; }
 
@@ -218,10 +218,10 @@ namespace OpenViBE
 		//		scenario.checkBoxesRequiringUpdate();
 
 		// update boxes to be updated
-		CIdentifier* identifierList = nullptr;
+		CIdentifier* listID = nullptr;
 		size_t elemCount            = 0;
-		scenario.getOutdatedBoxIdentifierList(&identifierList, &elemCount);
-		for (size_t i = 0; i < elemCount; ++i) { scenario.updateBox(identifierList[i]); }
+		scenario.getOutdatedBoxIdentifierList(&listID, &elemCount);
+		for (size_t i = 0; i < elemCount; ++i) { scenario.updateBox(listID[i]); }
 
 		// export scenario to the destination file
 		if (!scenarioManager.exportScenarioToFile(scenarioFile.c_str(), m_Pimpl->scenarioMap[scenarioName], OVP_GD_ClassId_Algorithm_XMLScenarioExporter))

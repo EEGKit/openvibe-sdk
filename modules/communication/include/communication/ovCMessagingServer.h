@@ -145,13 +145,13 @@ namespace Communication
 		 *
 		 * \param	index  		Index of the input.
 		 * \param	startTime  	Chunk time in OpenViBE 32:32 format
-		 * \param	endtime  	Chunk time in OpenViBE 32:32 format
+		 * \param	endTime  	Chunk time in OpenViBE 32:32 format
 		 * \param	ebml  		EBML data
 		 *
 		 * \retval True if it succeeds.
 		 * \retval False if the library is in error state.
 		 */
-		bool pushEBML(uint32_t index, uint64_t startTime, uint64_t endtime, std::shared_ptr<const std::vector<uint8_t>> ebml);
+		bool pushEBML(uint32_t index, uint64_t startTime, uint64_t endTime, std::shared_ptr<const std::vector<uint8_t>> ebml);
 
 		/**
 		 * \brief Push Time message to the client

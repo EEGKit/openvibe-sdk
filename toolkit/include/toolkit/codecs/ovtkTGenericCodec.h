@@ -234,46 +234,46 @@ namespace OpenViBEToolkit
 			if (typeFlag & Type_Covariance) m_vAllowedTypeIdentifier[OV_TypeId_CovarianceMatrix] = true;
 		}
 
-		bool isValidInputType(const OpenViBE::CIdentifier& rTypeIdentifier, uint32_t /*index*/)
+		bool isValidInputType(const OpenViBE::CIdentifier& typeID, uint32_t /*index*/)
 		{
-			return m_vAllowedTypeIdentifier[rTypeIdentifier];
-			//return (rTypeIdentifier==OV_TypeId_Signal || rTypeIdentifier==OV_TypeId_Spectrum);
+			return m_vAllowedTypeIdentifier[typeID];
+			//return (typeID==OV_TypeId_Signal || typeID==OV_TypeId_Spectrum);
 		}
 
-		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index)
+		virtual bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index)
 		{
 			OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
-			rBox.getInputType(index, typeID);
+			box.getInputType(index, typeID);
 			if (this->isValidInputType(typeID, index))
 			{
-				rBox.setOutputType(index, typeID);
+				box.setOutputType(index, typeID);
 			}
 			else
 			{
-				rBox.getOutputType(index, typeID);
-				rBox.setInputType(index, typeID);
+				box.getOutputType(index, typeID);
+				box.setInputType(index, typeID);
 			}
 			return true;
 		}
 
-		bool isValidOutputType(const OpenViBE::CIdentifier& rTypeIdentifier, uint32_t /*index*/)
+		bool isValidOutputType(const OpenViBE::CIdentifier& typeID, uint32_t /*index*/)
 		{
-			return m_vAllowedTypeIdentifier[rTypeIdentifier];
-			//return (rTypeIdentifier==OV_TypeId_Signal || rTypeIdentifier==OV_TypeId_Spectrum);
+			return m_vAllowedTypeIdentifier[typeID];
+			//return (typeID==OV_TypeId_Signal || typeID==OV_TypeId_Spectrum);
 		}
 
-		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index)
+		virtual bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index)
 		{
 			OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
-			rBox.getOutputType(index, typeID);
+			box.getOutputType(index, typeID);
 			if (this->isValidOutputType(typeID, index))
 			{
-				rBox.setInputType(index, typeID);
+				box.setInputType(index, typeID);
 			}
 			else
 			{
-				rBox.getInputType(index, typeID);
-				rBox.setOutputType(index, typeID);
+				box.getInputType(index, typeID);
+				box.setOutputType(index, typeID);
 			}
 			return true;
 		}

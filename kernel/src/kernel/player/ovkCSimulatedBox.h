@@ -97,12 +97,12 @@ namespace OpenViBE
 
 			/** \name IBoxIO outputs handling */
 			//@{
-			uint64_t getOutputChunkSize(const uint32_t OutputIndex) const override;
-			bool setOutputChunkSize(const uint32_t OutputIndex, const uint64_t ui64Size, const bool bDiscard = true) override;
-			uint8_t* getOutputChunkBuffer(const uint32_t OutputIndex) override;
-			bool appendOutputChunkData(const uint32_t OutputIndex, const uint8_t* buffer, const uint64_t size) override;
-			IMemoryBuffer* getOutputChunk(const uint32_t OutputIndex) override;
-			bool markOutputAsReadyToSend(const uint32_t OutputIndex, const uint64_t ui64StartTime, const uint64_t ui64EndTime) override;
+			uint64_t getOutputChunkSize(const uint32_t outputIdx) const override;
+			bool setOutputChunkSize(const uint32_t outputIdx, const uint64_t size, const bool bDiscard = true) override;
+			uint8_t* getOutputChunkBuffer(const uint32_t outputIdx) override;
+			bool appendOutputChunkData(const uint32_t outputIdx, const uint8_t* buffer, const uint64_t size) override;
+			IMemoryBuffer* getOutputChunk(const uint32_t outputIdx) override;
+			bool markOutputAsReadyToSend(const uint32_t outputIdx, const uint64_t ui64StartTime, const uint64_t ui64EndTime) override;
 			//@}
 
 			_IsDerivedFromClass_Final_(OpenViBE::Kernel::TKernelObject < OpenViBE::Kernel::IBoxIO >, OVK_ClassId_Kernel_Player_SimulatedBox)

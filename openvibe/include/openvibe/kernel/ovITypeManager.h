@@ -48,15 +48,15 @@ namespace OpenViBE
 			
 			/**
 			 * \brief Registers a new simple type of data
-			 * \param typeIdentifier [in] : the identifier for this type
+			 * \param typeID [in] : the identifier for this type
 			 * \param sTypeName [in] : the name for this type
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool registerType(const CIdentifier& typeIdentifier, const CString& sTypeName) = 0;
+			virtual bool registerType(const CIdentifier& typeID, const CString& sTypeName) = 0;
 			/**
 			 * \brief Registers a new communication stream type
-			 * \param typeIdentifier [in] : the identifier for this type
+			 * \param typeID [in] : the identifier for this type
 			 * \param sTypeName [in] : the name for this type
 			 * \param parentTypeIdentifier [in] : the parent stream type identifier
 			 * \return \e true in case of success.
@@ -68,10 +68,10 @@ namespace OpenViBE
 			 * to determine what stream is compatible with what other stream and
 			 * to allow box connections or not.
 			 */
-			virtual bool registerStreamType(const CIdentifier& typeIdentifier, const CString& sTypeName, const CIdentifier& parentTypeIdentifier) = 0;
+			virtual bool registerStreamType(const CIdentifier& typeID, const CString& sTypeName, const CIdentifier& parentTypeIdentifier) = 0;
 			/**
 			 * \brief Registers a new enumeration type
-			 * \param typeIdentifier [in] : the type identifier for this type
+			 * \param typeID [in] : the type identifier for this type
 			 * \param sTypeName [in] : the name for this type
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
@@ -80,10 +80,10 @@ namespace OpenViBE
 			 * An enumeration should have several possible values.
 			 * This values have to be created thanks to \c registerEnumerationEntry
 			 */
-			virtual bool registerEnumerationType(const CIdentifier& typeIdentifier, const CString& sTypeName) = 0;
+			virtual bool registerEnumerationType(const CIdentifier& typeID, const CString& sTypeName) = 0;
 			/**
 			 * \brief Registers a new enumeration value for a given enumeration type
-			 * \param typeIdentifier [in] : the type identifier of the enumeration which new entry has to be registered
+			 * \param typeID [in] : the type identifier of the enumeration which new entry has to be registered
 			 * \param name [in] : the name of the entry to register
 			 * \param value [in] : the value of the entry to register
 			 * \return \e true in case of success.
@@ -91,10 +91,10 @@ namespace OpenViBE
 			 * \note the enumeration has to be registered
 			 * \sa registerEnumerationType
 			 */
-			virtual bool registerEnumerationEntry(const CIdentifier& typeIdentifier, const CString& name, uint64_t value) = 0;
+			virtual bool registerEnumerationEntry(const CIdentifier& typeID, const CString& name, uint64_t value) = 0;
 			/**
 			 * \brief Registers a new bitmask type
-			 * \param typeIdentifier [in] : the type identifier for this type
+			 * \param typeID [in] : the type identifier for this type
 			 * \param sTypeName [in] : the name for this type
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
@@ -103,10 +103,10 @@ namespace OpenViBE
 			 * A bitmask should have several possible values.
 			 * This values have to be created thanks to \c registerBitMaskEntry
 			 */
-			virtual bool registerBitMaskType(const CIdentifier& typeIdentifier, const CString& sTypeName) = 0;
+			virtual bool registerBitMaskType(const CIdentifier& typeID, const CString& sTypeName) = 0;
 			/**
 			 * \brief Registers a new bitmask value for a given bitmask type
-			 * \param typeIdentifier [in] : the type identifier of the bitmask which new entry has to be registered
+			 * \param typeID [in] : the type identifier of the bitmask which new entry has to be registered
 			 * \param name [in] : the name of the entry to register
 			 * \param value [in] : the value of the entry to register
 			 * \return \e true in case of success.
@@ -114,7 +114,7 @@ namespace OpenViBE
 			 * \note the bitmask has to be registered
 			 * \sa registerBitMaskType
 			 */
-			virtual bool registerBitMaskEntry(const CIdentifier& typeIdentifier, const CString& name, uint64_t value) = 0;
+			virtual bool registerBitMaskEntry(const CIdentifier& typeID, const CString& name, uint64_t value) = 0;
 
 			//@}
 			/** \name Registration verification */
@@ -122,46 +122,46 @@ namespace OpenViBE
 
 			/**
 			 * \brief Tests if a specific type has been registered
-			 * \param typeIdentifier [in] : the type identifier which registration has to be tested
+			 * \param typeID [in] : the type identifier which registration has to be tested
 			 * \return \e true if the specified type has been registered.
 			 * \return \e false if the specified type has not been registered.
 			 */
-			virtual bool isRegistered(const CIdentifier& typeIdentifier) const = 0;
+			virtual bool isRegistered(const CIdentifier& typeID) const = 0;
 			/**
 			 * \brief Tests if a specific type has been registered and is a stream
-			 * \param typeIdentifier [in] : the type identifier which registration has to be tested
+			 * \param typeID [in] : the type identifier which registration has to be tested
 			 * \return \e true if the specified type has been registered is a stream.
 			 * \return \e false if the specified type has not been registered or is not a stream.
 			 */
-			virtual bool isStream(const CIdentifier& typeIdentifier) const = 0;
+			virtual bool isStream(const CIdentifier& typeID) const = 0;
 			/**
 			 * \brief Tests is a specific type has been registered, is a stream and is derived from another registered stream type
-			 * \param typeIdentifier [in] : the type identifier which registration and derivation has to be tested
+			 * \param typeID [in] : the type identifier which registration and derivation has to be tested
 			 * \param parentTypeIdentifier [in] : the type identifier of the supposed parent stream
-			 * \return \e true in case \c typeIdentifier is registered as a stream type and derived from \c parentTypeIdentifier
+			 * \return \e true in case \c typeID is registered as a stream type and derived from \c parentTypeIdentifier
 			 * \return \e false in case \c parentTypeIdentifier is not registered
 			 * \return \e false in case \c parentTypeIdentifier is not a stream
-			 * \return \e false in case \c typeIdentifier is not registered
-			 * \return \e false in case \c typeIdentifier is not a stream
-			 * \return \e false in case \c typeIdentifier is not derived from parentTypeIdentifier
-			 * \note The derivation can be indirect (\c typeIdentifier can derive an
+			 * \return \e false in case \c typeID is not registered
+			 * \return \e false in case \c typeID is not a stream
+			 * \return \e false in case \c typeID is not derived from parentTypeIdentifier
+			 * \note The derivation can be indirect (\c typeID can derive an
 			 *       intermediate stream type which derives \c parentTypeIdentifier)
 			 */
-			virtual bool isDerivedFromStream(const CIdentifier& typeIdentifier, const CIdentifier& parentTypeIdentifier) const = 0;
+			virtual bool isDerivedFromStream(const CIdentifier& typeID, const CIdentifier& parentTypeIdentifier) const = 0;
 			/**
 			 * \brief Tests if a specific type has been registered and is an enumeration
-			 * \param typeIdentifier [in] : the type identifier which registration has to be tested
+			 * \param typeID [in] : the type identifier which registration has to be tested
 			 * \return \e true if the specified type has been registered and is an enumeration.
 			 * \return \e false if the specified type has not been registered or is not an enumeration.
 			 */
-			virtual bool isEnumeration(const CIdentifier& typeIdentifier) const = 0;
+			virtual bool isEnumeration(const CIdentifier& typeID) const = 0;
 			/**
 			 * \brief Tests if a specific type has been registered and is a bitmask
-			 * \param typeIdentifier [in] : the type identifier which registration has to be tested
+			 * \param typeID [in] : the type identifier which registration has to be tested
 			 * \return \e true if the specified type has been registered and is a bitmask.
 			 * \return \e false if the specified type has not been registered or is not a bitmask.
 			 */
-			virtual bool isBitMask(const CIdentifier& typeIdentifier) const = 0;
+			virtual bool isBitMask(const CIdentifier& typeID) const = 0;
 
 			//@}
 			/** \name Type identification */
@@ -169,18 +169,18 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets the name of a specified type
-			 * \param typeIdentifier [in] : the type identifier which name should be returned
+			 * \param typeID [in] : the type identifier which name should be returned
 			 * \return the name of the speficied type.
 			 */
-			virtual CString getTypeName(const CIdentifier& typeIdentifier) const = 0;
+			virtual CString getTypeName(const CIdentifier& typeID) const = 0;
 			/**
 			 * \brief Gets the parent stream type for a stream type
-			 * \param typeIdentifier [in] : the stream type identifier which parent stream type be returned
+			 * \param typeID [in] : the stream type identifier which parent stream type be returned
 			 * \return the parent stream type on success.
 			 * \return \c OV_UndefinedIdentifier on error.
 			 * \note The specified type identifier has to be a stream type.
 			 */
-			virtual CIdentifier getStreamParentType(const CIdentifier& typeIdentifier) const = 0;
+			virtual CIdentifier getStreamParentType(const CIdentifier& typeID) const = 0;
 
 			//@}
 			/** \name Enumeration entry accessors */
@@ -188,36 +188,36 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets the number of enumeration entry for an enumeration type
-			 * \param typeIdentifier [in] : the enumeration type identifier
+			 * \param typeID [in] : the enumeration type identifier
 			 * \return the number of entry for this enumeration type.
 			 */
-			virtual uint64_t getEnumerationEntryCount(const CIdentifier& typeIdentifier) const = 0;
+			virtual uint64_t getEnumerationEntryCount(const CIdentifier& typeID) const = 0;
 			/**
 			 * \brief Gets details for a specific enumeration type entry
-			 * \param typeIdentifier [in] : the enumeration type identifier
+			 * \param typeID [in] : the enumeration type identifier
 			 * \param ui64EntryIndex [in] : the index of the entry which details should be returned
 			 * \param name [out] : the name of the specified entry
 			 * \param value [out] : the value of the speficied entry
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getEnumerationEntry(const CIdentifier& typeIdentifier, uint64_t ui64EntryIndex, CString& name, uint64_t& value) const = 0;
+			virtual bool getEnumerationEntry(const CIdentifier& typeID, uint64_t ui64EntryIndex, CString& name, uint64_t& value) const = 0;
 			/**
 			 * \brief Converts an enumeration entry value to an enumeration entry name
-			 * \param typeIdentifier [in] : the enumeration type identifier
+			 * \param typeID [in] : the enumeration type identifier
 			 * \param value [in] : the enumeration entry value
 			 * \return the enumeration entry name corresponding to the specified value.
 			 * \warning on error, an empty string is returned.
 			 */
-			virtual CString getEnumerationEntryNameFromValue(const CIdentifier& typeIdentifier, uint64_t value) const = 0;
+			virtual CString getEnumerationEntryNameFromValue(const CIdentifier& typeID, uint64_t value) const = 0;
 			/**
 			 * \brief Converts an enumeration entry name to an enumeration entry value
-			 * \param typeIdentifier [in] : the enumeration type identifier
+			 * \param typeID [in] : the enumeration type identifier
 			 * \param name [in] : the enumeration entry name
 			 * \return the enumeration entry value corresponding to the specified name.
 			 * \warning on error, \c 0xffffffffffffffffLL is returned.
 			 */
-			virtual uint64_t getEnumerationEntryValueFromName(const CIdentifier& typeIdentifier, const CString& name) const = 0;
+			virtual uint64_t getEnumerationEntryValueFromName(const CIdentifier& typeID, const CString& name) const = 0;
 
 			//@}
 			/** \name Bitmask entry accessors */
@@ -225,52 +225,52 @@ namespace OpenViBE
 
 			/**
 			 * \brief Gets the number of bitmask entry for a bitmask type
-			 * \param typeIdentifier [in] : the bitmask type identifier
+			 * \param typeID [in] : the bitmask type identifier
 			 * \return the number of entry for this bitmask type.
 			 */
-			virtual uint64_t getBitMaskEntryCount(const CIdentifier& typeIdentifier) const = 0;
+			virtual uint64_t getBitMaskEntryCount(const CIdentifier& typeID) const = 0;
 			/**
 			 * \brief Gets details for a specific bitmask type entry
-			 * \param typeIdentifier [in] : the bitmask type identifier
+			 * \param typeID [in] : the bitmask type identifier
 			 * \param index [in] : the index of the entry which details should be returned
 			 * \param name [out] : the name of the specified entry
 			 * \param value [out] : the value of the speficied entry
 			 * \return \e true in case of success.
 			 * \return \e false in case of error.
 			 */
-			virtual bool getBitMaskEntry(const CIdentifier& typeIdentifier, uint64_t index, CString& name, uint64_t& value) const = 0;
+			virtual bool getBitMaskEntry(const CIdentifier& typeID, uint64_t index, CString& name, uint64_t& value) const = 0;
 			/**
 			 * \brief Converts a bitmask entry value to a bitmask entry name
-			 * \param typeIdentifier [in] : the bitmask type identifier
+			 * \param typeID [in] : the bitmask type identifier
 			 * \param value [in] : the bitmask entry value
 			 * \return the bitmask entry name corresponding to the specified value.
 			 * \warning on error, an empty string is returned.
 			 */
-			virtual CString getBitMaskEntryNameFromValue(const CIdentifier& typeIdentifier, uint64_t value) const = 0;
+			virtual CString getBitMaskEntryNameFromValue(const CIdentifier& typeID, uint64_t value) const = 0;
 			/**
 			 * \brief Converts a bitmask entry name to a bitmask entry value
-			 * \param typeIdentifier [in] : the bitmask type identifier
+			 * \param typeID [in] : the bitmask type identifier
 			 * \param name [in] : the bitmask entry name
 			 * \return the bitmask entry value corresponding to the specified name.
 			 * \warning on error, \c 0xffffffffffffffffLL is returned.
 			 */
-			virtual uint64_t getBitMaskEntryValueFromName(const CIdentifier& typeIdentifier, const CString& name) const = 0;
+			virtual uint64_t getBitMaskEntryValueFromName(const CIdentifier& typeID, const CString& name) const = 0;
 			/**
 			 * \brief Computes the textual value of a composition of numerical entries
-			 * \param typeIdentifier [in] : the bitmask type identifier
+			 * \param typeID [in] : the bitmask type identifier
 			 * \param value [in] : the composition of numerical entries
 			 * \return the bitmask entry composition name.
 			 * \warning on error, an empty string is returned.
 			 */
-			virtual CString getBitMaskEntryCompositionNameFromValue(const CIdentifier& typeIdentifier, uint64_t value) const = 0;
+			virtual CString getBitMaskEntryCompositionNameFromValue(const CIdentifier& typeID, uint64_t value) const = 0;
 			/**
 			 * \brief Computes the integer value of a composition of textual entries
-			 * \param typeIdentifier [in] : the bitmask type identifier
+			 * \param typeID [in] : the bitmask type identifier
 			 * \param name [in] : the composition of textual entries
 			 * \return the bitmask entry composition value.
 			 * \warning on error, \c 0x0000000000000000LL is returned.
 			 */
-			virtual uint64_t getBitMaskEntryCompositionValueFromName(const CIdentifier& typeIdentifier, const CString& name) const = 0;
+			virtual uint64_t getBitMaskEntryCompositionValueFromName(const CIdentifier& typeID, const CString& name) const = 0;
 
 			/**
 			* \brief Evaluate the string arithmetic expression settingValue 

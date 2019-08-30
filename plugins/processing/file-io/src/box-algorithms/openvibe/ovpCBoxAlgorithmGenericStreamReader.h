@@ -33,7 +33,7 @@ namespace OpenViBEPlugins
 			uint64_t getClockFrequency() override;
 			bool initialize() override;
 			bool uninitialize() override;
-			bool processClock(OpenViBE::CMessageClock& rMessageClock) override;
+			bool processClock(OpenViBE::CMessageClock& messageClock) override;
 			bool process() override;
 
 			_IsDerivedFromClass_Final_(OpenViBEToolkit::TBoxAlgorithm < OpenViBE::Plugins::IBoxAlgorithm >, OVP_ClassId_BoxAlgorithm_GenericStreamReader)
@@ -71,41 +71,41 @@ namespace OpenViBEPlugins
 		{
 		public:
 
-			bool check(OpenViBE::Kernel::IBox& rBox)
+			bool check(OpenViBE::Kernel::IBox& box)
 			{
 				char l_sName[1024];
-				for (uint32_t i = 0; i < rBox.getOutputCount(); i++)
+				for (uint32_t i = 0; i < box.getOutputCount(); i++)
 				{
 					sprintf(l_sName, "Output stream %u", i + 1);
-					rBox.setOutputName(i, l_sName);
+					box.setOutputName(i, l_sName);
 				}
 				return true;
 			}
 
-			bool onDefaultInitialized(OpenViBE::Kernel::IBox& rBox) override
+			bool onDefaultInitialized(OpenViBE::Kernel::IBox& box) override
 			{
-				rBox.setOutputName(0, "Output Signal");
-				rBox.setOutputType(0, OV_TypeId_Signal);
-				rBox.addOutput("Output Stimulations", OV_TypeId_Stimulations);
+				box.setOutputName(0, "Output Signal");
+				box.setOutputType(0, OV_TypeId_Signal);
+				box.addOutput("Output Stimulations", OV_TypeId_Stimulations);
 				return true;
 			}
 
-			bool onOutputAdded(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onOutputAdded(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				rBox.setOutputType(index, OV_TypeId_EBMLStream);
-				this->check(rBox);
+				box.setOutputType(index, OV_TypeId_EBMLStream);
+				this->check(box);
 				return true;
 			}
 
-			bool onOutputRemoved(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onOutputRemoved(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
 			{
-				this->check(rBox);
+				this->check(box);
 				return true;
 			}
 
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t /*index*/) override
 			{
-				this->check(rBox);
+				this->check(box);
 				return true;
 			}
 

@@ -63,16 +63,16 @@ namespace OpenViBE
 		/**
 		*
 		* \brief Constructor
-		* \param[in] commandFile path to the command file
+		* \param[in] file path to the command file
 		*
 		*/
-		explicit CommandFileParser(const std::string& commandFile);
+		explicit CommandFileParser(const std::string& file) : m_CommandFile(file) { }
 
 		void initialize() override;
 
 		void uninitialize() override;
 
-		std::vector<std::shared_ptr<ICommand>> getCommandList() const override;
+		std::vector<std::shared_ptr<ICommand>> getCommandList() const override { return m_CommandList; }
 
 		PlayerReturnCode parse() override;
 

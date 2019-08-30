@@ -313,7 +313,7 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 #endif // CPlayer_Debug_Time
 
 	uint64_t l_ui64SchedulerStepDuration = m_oScheduler.getStepDuration();
-	uint64_t l_ui64StartTime             = System::Time::zgetTime();
+	uint64_t tStart             = System::Time::zgetTime();
 	bool l_bFinished                     = false;
 	while (!l_bFinished)
 	{
@@ -350,7 +350,7 @@ bool CPlayer::loop(const uint64_t ui64ElapsedTime, const uint64_t ui64MaximumTim
 ::printf("Iterates (%f / %f - %s)\n", (m_oScheduler.getCurrentTime()>>22)/1024., (ui64MaximumTimeToReach>>22)/1024., (m_eStatus==PlayerStatus_Forward?"true":"false"));
 #endif // CPlayer_Debug_Time
 		}
-		if (System::Time::zgetTime() > l_ui64StartTime + g_ui64Scheduler_Maximum_Loops_Duration_)
+		if (System::Time::zgetTime() > tStart + g_ui64Scheduler_Maximum_Loops_Duration_)
 		{
 			l_bFinished = true;
 #if defined CPlayer_Debug_Time

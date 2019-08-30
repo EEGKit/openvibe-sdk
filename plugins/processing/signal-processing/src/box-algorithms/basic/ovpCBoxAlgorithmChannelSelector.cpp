@@ -62,13 +62,13 @@ bool CBoxAlgorithmChannelSelector::initialize()
 {
 	const IBox& boxContext = this->getStaticBoxContext();
 
-	CIdentifier l_oTypeIdentifier;
-	boxContext.getOutputType(0, l_oTypeIdentifier);
+	CIdentifier typeID;
+	boxContext.getOutputType(0, typeID);
 
 	m_pDecoder = nullptr;
 	m_pEncoder = nullptr;
 
-	if (l_oTypeIdentifier == OV_TypeId_Signal)
+	if (typeID == OV_TypeId_Signal)
 	{
 		TSignalEncoder<CBoxAlgorithmChannelSelector>* l_pEncoder = new TSignalEncoder<CBoxAlgorithmChannelSelector>;
 		TSignalDecoder<CBoxAlgorithmChannelSelector>* l_pDecoder = new TSignalDecoder<CBoxAlgorithmChannelSelector>;
@@ -80,7 +80,7 @@ bool CBoxAlgorithmChannelSelector::initialize()
 		m_pInputMatrix  = l_pDecoder->getOutputMatrix();
 		m_pOutputMatrix = l_pEncoder->getInputMatrix();
 	}
-	else if (l_oTypeIdentifier == OV_TypeId_Spectrum)
+	else if (typeID == OV_TypeId_Spectrum)
 	{
 		TSpectrumEncoder<CBoxAlgorithmChannelSelector>* l_pEncoder = new TSpectrumEncoder<CBoxAlgorithmChannelSelector>;
 		TSpectrumDecoder<CBoxAlgorithmChannelSelector>* l_pDecoder = new TSpectrumDecoder<CBoxAlgorithmChannelSelector>;
@@ -94,7 +94,7 @@ bool CBoxAlgorithmChannelSelector::initialize()
 		m_pInputMatrix  = l_pDecoder->getOutputMatrix();
 		m_pOutputMatrix = l_pEncoder->getInputMatrix();
 	}
-	else if (l_oTypeIdentifier == OV_TypeId_StreamedMatrix)
+	else if (typeID == OV_TypeId_StreamedMatrix)
 	{
 		TStreamedMatrixEncoder<CBoxAlgorithmChannelSelector>* l_pEncoder = new TStreamedMatrixEncoder<CBoxAlgorithmChannelSelector>;
 		TStreamedMatrixDecoder<CBoxAlgorithmChannelSelector>* l_pDecoder = new TStreamedMatrixDecoder<CBoxAlgorithmChannelSelector>;
@@ -105,7 +105,7 @@ bool CBoxAlgorithmChannelSelector::initialize()
 		m_pInputMatrix  = l_pDecoder->getOutputMatrix();
 		m_pOutputMatrix = l_pEncoder->getInputMatrix();
 	}
-	else { OV_ERROR_KRF("Invalid input type [" << l_oTypeIdentifier.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
+	else { OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "]", OpenViBE::Kernel::ErrorType::BadInput); }
 
 	m_vLookup.clear();
 	return true;
@@ -127,7 +127,7 @@ bool CBoxAlgorithmChannelSelector::uninitialize()
 	return true;
 }
 
-bool CBoxAlgorithmChannelSelector::processInput(const uint32_t index)
+bool CBoxAlgorithmChannelSelector::processInput(const uint32_t /*index*/)
 {
 	this->getBoxAlgorithmContext()->markAlgorithmAsReadyToProcess();
 	return true;

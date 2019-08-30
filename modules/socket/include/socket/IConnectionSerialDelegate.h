@@ -16,7 +16,7 @@ namespace Socket
 		// TODO for Android compatibility
 		//bool(*fpIsErrorRaised)(void*); 
 		//void(*fpClearError)(void*);
-		//bool(*fSetTimeouts)(void*, unsigned long ui32DecisecondsTimeout);
+		//bool(*fSetTimeouts)(void*, const uint32_t decisecondsTimeout);
 	};
 
 	class Socket_API IConnectionSerialDelegate : public TConnectionDelegate<IConnectionSerial>

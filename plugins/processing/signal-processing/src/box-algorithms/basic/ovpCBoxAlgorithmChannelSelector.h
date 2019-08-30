@@ -38,50 +38,50 @@ namespace OpenViBEPlugins
 		class CBoxAlgorithmChannelSelectorListener final : public OpenViBEToolkit::TBoxListener<OpenViBE::Plugins::IBoxListener>
 		{
 		public:
-			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onOutputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getOutputType(0, l_oTypeIdentifier);
-				if (l_oTypeIdentifier == OV_TypeId_Signal || l_oTypeIdentifier == OV_TypeId_Spectrum || l_oTypeIdentifier == OV_TypeId_StreamedMatrix)
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getOutputType(0, typeID);
+				if (typeID == OV_TypeId_Signal || typeID == OV_TypeId_Spectrum || typeID == OV_TypeId_StreamedMatrix)
 				{
-					rBox.setInputType(0, l_oTypeIdentifier);
+					box.setInputType(0, typeID);
 					return true;
 				}
-				rBox.getInputType(0, l_oTypeIdentifier);
-				rBox.setOutputType(0, l_oTypeIdentifier);
+				box.getInputType(0, typeID);
+				box.setOutputType(0, typeID);
 
-				OV_ERROR_KRF("Invalid output type [" << l_oTypeIdentifier.toString() << "] (expected Signal, Spectrum or Streamed Matrix)", OpenViBE::Kernel::ErrorType::BadOutput);
+				OV_ERROR_KRF("Invalid output type [" << typeID.toString() << "] (expected Signal, Spectrum or Streamed Matrix)", OpenViBE::Kernel::ErrorType::BadOutput);
 				return true;
 			}
 
-			bool onInputTypeChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onInputTypeChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
-				OpenViBE::CIdentifier l_oTypeIdentifier = OV_UndefinedIdentifier;
-				rBox.getInputType(0, l_oTypeIdentifier);
-				if (l_oTypeIdentifier == OV_TypeId_Signal || l_oTypeIdentifier == OV_TypeId_Spectrum
-					|| l_oTypeIdentifier == OV_TypeId_StreamedMatrix)
+				OpenViBE::CIdentifier typeID = OV_UndefinedIdentifier;
+				box.getInputType(0, typeID);
+				if (typeID == OV_TypeId_Signal || typeID == OV_TypeId_Spectrum
+					|| typeID == OV_TypeId_StreamedMatrix)
 				{
-					rBox.setOutputType(0, l_oTypeIdentifier);
+					box.setOutputType(0, typeID);
 					return true;
 				}
-				rBox.getOutputType(0, l_oTypeIdentifier);
-				rBox.setInputType(0, l_oTypeIdentifier);
+				box.getOutputType(0, typeID);
+				box.setInputType(0, typeID);
 
-				OV_ERROR_KRF("Invalid input type [" << l_oTypeIdentifier.toString() << "] (expected Signal, Spectrum or Streamed Matrix)", OpenViBE::Kernel::ErrorType::BadInput);
+				OV_ERROR_KRF("Invalid input type [" << typeID.toString() << "] (expected Signal, Spectrum or Streamed Matrix)", OpenViBE::Kernel::ErrorType::BadInput);
 			}
 
-			bool onSettingValueChanged(OpenViBE::Kernel::IBox& rBox, const uint32_t index) override
+			bool onSettingValueChanged(OpenViBE::Kernel::IBox& box, const uint32_t index) override
 			{
 				//we are only interested in the setting 0 and the type changes (select or reject)
 				if ((index == 0 || index == 1) && (!m_bHasUserSetName))
 				{
 					OpenViBE::CString l_sChannels;
-					rBox.getSettingValue(0, l_sChannels);
+					box.getSettingValue(0, l_sChannels);
 
 					OpenViBE::CString l_sSelectionMethod;
 					OpenViBE::CIdentifier l_oSelectionEnumIdentifier = OV_UndefinedIdentifier;
-					rBox.getSettingValue(1, l_sSelectionMethod);
-					rBox.getSettingType(1, l_oSelectionEnumIdentifier);
+					box.getSettingValue(1, l_sSelectionMethod);
+					box.getSettingType(1, l_oSelectionEnumIdentifier);
 
 					const OpenViBE::CIdentifier l_oSelectionMethodIdentifier = this->getTypeManager().getEnumerationEntryValueFromName(l_oSelectionEnumIdentifier, l_sSelectionMethod);
 
@@ -89,17 +89,17 @@ namespace OpenViBEPlugins
 					{
 						l_sChannels = OpenViBE::CString("!") + l_sChannels;
 					}
-					rBox.setName(l_sChannels);
+					box.setName(l_sChannels);
 				}
 				return true;
 			}
 
-			bool onNameChanged(OpenViBE::Kernel::IBox& rBox) override
+			bool onNameChanged(OpenViBE::Kernel::IBox& box) override
 			//when user set box name manually
 			{
 				if (m_bHasUserSetName)
 				{
-					OpenViBE::CString l_sRename = rBox.getName();
+					OpenViBE::CString l_sRename = box.getName();
 					if (l_sRename == OpenViBE::CString("Channel Selector"))
 					{//default name, we switch back to default behaviour
 						m_bHasUserSetName = false;

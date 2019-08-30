@@ -191,11 +191,11 @@ void CLogListenerConsole::log(const int8_t value)
 	this->log(LogColor_PopStateBit);
 }
 
-void CLogListenerConsole::log(const double f64Value)
+void CLogListenerConsole::log(const double value)
 {
 	this->log(LogColor_PushStateBit);
 	this->log(LogColor_ForegroundMagenta);
-	cout << f64Value;
+	cout << value;
 	this->log(LogColor_PopStateBit);
 }
 

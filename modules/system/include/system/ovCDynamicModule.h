@@ -82,9 +82,9 @@ namespace System
 		/**
 		 * \brief Load module from Windows environment. Windows only.
 		 *
-		 * \param sEnvironmentPath Environment path.
-		 * \param sModulePath Module file path.
-		 * \param sSymbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
+		 * \param environmentPath Environment path.
+		 * \param modulePath Module file path.
+		 * \param symbolNameCheck Symbol to check if it is present in the module. It is optionnal and is nullptr by default.
 		 *
 		 * \retval true If the module loaded successfully.
 		 * \retval false If module loading failed.
@@ -230,7 +230,7 @@ namespace System
 		/**
 		* \brief Get a symbol from the module.
 		*
-		* \param sSymbolName Symbol name.
+		* \param symbolName Symbol name.
 		*
 		* \return The symbol.
 		*/
@@ -240,13 +240,13 @@ namespace System
 		/**
 		 * \brief Get the image file headers. Windows only.
 		 * 
-		 * \param sFileName The file path.
+		 * \param filename The file path.
 		 * \param headers [out] The header.
 		 *
 		 * \retval true In case of success.
 		 * \retval false In case of failure.
 		 */
-		static bool getImageFileHeaders(const char* filePath, IMAGE_NT_HEADERS& headers);
+		static bool getImageFileHeaders(const char* filename, IMAGE_NT_HEADERS& headers);
 #endif
 	};
 
@@ -256,8 +256,9 @@ namespace System
 		/**
 		 * \brief Get a symbol from the module.
 		 *
-		 * \param sSymbolName The symbol name.
-		 * \param pSymbol [out] The symbol.
+		 * \param dynamicModule
+		 * \param symbolName The symbol name.
+		 * \param symbol [out] The symbol.
 		 *
 		 * \retval true If the symbol exists.
 		 * \retval false If the symbol does not exist.

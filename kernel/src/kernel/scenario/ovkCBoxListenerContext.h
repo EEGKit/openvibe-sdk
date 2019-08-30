@@ -10,7 +10,7 @@ namespace OpenViBE
 		{
 		public:
 
-			CBoxListenerContext(const IKernelContext& rKernelContext, IBox& rBox, uint32_t index) : TKernelObject<IBoxListenerContext>(rKernelContext), m_rBox(rBox), m_ui32Index(index) { }
+			CBoxListenerContext(const IKernelContext& rKernelContext, IBox& box, uint32_t index) : TKernelObject<IBoxListenerContext>(rKernelContext), m_rBox(box), m_ui32Index(index) { }
 			IAlgorithmManager& getAlgorithmManager() const override { return this->getKernelContext().getAlgorithmManager(); }
 			IPlayerManager& getPlayerManager() const override { return this->getKernelContext().getPlayerManager(); }
 			IPluginManager& getPluginManager() const override { return this->getKernelContext().getPluginManager(); }
